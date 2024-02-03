@@ -409,6 +409,9 @@ namespace TheOtherRoles.Patches {
 				AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
 				RPCProcedure.setSwoop(Jackal.jackal.PlayerId, byte.MaxValue);
             }
+            if (Jackal.jackal != null && Jackal.canSwoop){
+                Swooper.swooper = Jackal.jackal;
+            }
         }
 
         static void ninjaUpdate()

@@ -338,7 +338,7 @@ namespace TheOtherRoles.Patches {
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
             }
             else if (AdditionalTempData.winCondition == WinCondition.JackalWin) {
-                textRenderer.text = "Team Swooper Wins";
+                textRenderer.text = "Team Jackal Wins";
                 textRenderer.color = Jackal.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.MiniLose) {

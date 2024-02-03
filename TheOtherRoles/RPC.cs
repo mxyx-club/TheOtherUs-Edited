@@ -90,6 +90,7 @@ namespace TheOtherRoles
         Tiebreaker,
         Indomitable,
         Slueth,
+        Swooper,
         Sunglasses,
         Torch,
         Multitasker,
@@ -513,6 +514,9 @@ namespace TheOtherRoles
                     break;
                 case RoleId.Slueth:
                     Slueth.slueth = player;
+                    break;
+                case RoleId.Swooper:
+                    Swooper.swooper = player;
                     break;
                 case RoleId.Cursed:
                     Cursed.cursed = player;
@@ -1587,6 +1591,7 @@ namespace TheOtherRoles
                 if (player == Indomitable.indomitable) Indomitable.clearAndReload();
                 if (player == Tunneler.tunneler) Tunneler.clearAndReload();
                 if (player == Slueth.slueth) Slueth.clearAndReload();
+                //if (player == Swooper.swooper) Swooper.clearAndReload();
                 if (player == Blind.blind) Blind.clearAndReload();
                 if (player == Cursed.cursed) Cursed.clearAndReload();
                 if (Vip.vip.Any(x => x.PlayerId == player.PlayerId)) Vip.vip.RemoveAll(x => x.PlayerId == player.PlayerId);

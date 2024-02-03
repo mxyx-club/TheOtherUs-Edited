@@ -113,6 +113,7 @@ namespace TheOtherRoles
         public static RoleInfo vip = new RoleInfo("VIP", Color.yellow, "You are the VIP", "Everyone is notified when you die", RoleId.Vip, false, true);
         public static RoleInfo indomitable  = new RoleInfo("Indomitable", Color.yellow, "Your role cannot be guessed", "You are Indomitable!", RoleId.Indomitable, false, true);
         public static RoleInfo slueth  = new RoleInfo("Sleuth", Color.yellow, "Learn the roles of bodies you report", "You know the roles of bodies you report", RoleId.Slueth, false, true);
+        
         public static RoleInfo cursed  = new RoleInfo("Fanatic", Color.yellow, "You are crewmate....for now", "Discover your true potential", RoleId.Cursed, false, true, true);
         public static RoleInfo invert = new RoleInfo("Invert", Color.yellow, "Your movement is inverted", "Your movement is inverted", RoleId.Invert, false, true);
         public static RoleInfo blind  = new RoleInfo("Blind", Color.yellow, "You cannot see your report button!", "Was that a dead body?", RoleId.Blind, false, true);
@@ -121,8 +122,10 @@ namespace TheOtherRoles
         public static RoleInfo tunneler  = new RoleInfo("Tunneler", Color.yellow, "Complete your tasks to gain the ability to vent", "Finish work so you can play", RoleId.Tunneler, false, true);
         public static RoleInfo disperser = new RoleInfo("Disperser", Color.red, "Separate the Crew", "Separate the Crew", RoleId.Disperser, false, true);
         public static RoleInfo chameleon = new RoleInfo("Chameleon", Color.yellow, "You're hard to see when not moving", "You're hard to see when not moving", RoleId.Chameleon, false, true);
-        public static RoleInfo assassin = new RoleInfo("Assassin", Color.red, "Guess and shoot", "Guess and shoot", RoleId.EvilGuesser, false, true);
         public static RoleInfo shifter = new RoleInfo("Shifter", Color.yellow, "Shift your role", "Shift your role", RoleId.Shifter, false, true);
+        public static RoleInfo swooper = new RoleInfo("Swooper", Swooper.color, "Turn Invisible and kill everyone", "Turn Invisible", RoleId.Swooper, false, true);
+        public static RoleInfo assassin = new RoleInfo("Assassin", Color.red, "Guess and shoot", "Guess and shoot", RoleId.EvilGuesser, false, true);
+        
 
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
@@ -199,6 +202,7 @@ namespace TheOtherRoles
             vip,
             indomitable,
             slueth,
+            swooper,
             blind,
             watcher,
             radar,
@@ -235,6 +239,7 @@ namespace TheOtherRoles
                 if (p == Radar.radar) infos.Add(radar);
                 if (p == Tunneler.tunneler) infos.Add(tunneler);
                 if (p == Slueth.slueth) infos.Add(slueth);
+                if (p == Swooper.swooper) infos.Add(swooper);
                 if (p == Disperser.disperser) infos.Add(disperser);
                 if (Invert.invert.Any(x => x.PlayerId == p.PlayerId)) infos.Add(invert);
                 if (Chameleon.chameleon.Any(x => x.PlayerId == p.PlayerId)) infos.Add(chameleon);

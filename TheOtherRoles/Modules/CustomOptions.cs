@@ -998,10 +998,10 @@ namespace TheOtherRoles {
                         sb.AppendLine($"- {Helpers.cs(Sidekick.color, "Sidekick")}: {option.selections[option.selection].ToString()}");
                     else if (option.id == 358) //Prosecutor
                         sb.AppendLine($"- {Helpers.cs(Lawyer.color, "Prosecutor")}: {option.selections[option.selection].ToString()}");
-                    /*
+                    
                     else if (option.id == 3642134) //Can Swoop
-                        sb.AppendLine($"- {Helpers.cs(Jackal.color, "Can Swoop")}: {option.selections[option.selection].ToString()}");
-                    */
+                        sb.AppendLine($"- {Helpers.cs(Swooper.color, "Swooper")}: {option.selections[option.selection].ToString()}");
+                    
                 }
             }
             if (headerOnly) return sb.ToString();
