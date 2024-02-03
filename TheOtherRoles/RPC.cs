@@ -152,7 +152,7 @@ namespace TheOtherRoles
         SwapperSwap,
         MorphlingMorph,
         CamouflagerCamouflage,
-        CamoComms,
+        //CamoComms,
         TrackerUsedTracker,
         VampireSetBitten,
         PlaceGarlic,
@@ -197,6 +197,7 @@ namespace TheOtherRoles
         SetTiebreak,
         SetInvisibleGen,
         SetSwoop,
+        SetSwooper,
         SetInvisible,
         ThiefStealsRole,
         SetTrap,
@@ -1401,7 +1402,7 @@ namespace TheOtherRoles
             foreach (PlayerControl player in CachedPlayer.AllPlayers)
                 player.setLook("", 6, "", "", "", "");
         }
-
+/*
         public static void camoComms() {
             if (!Helpers.isCamoComms()) return;
 
@@ -1411,6 +1412,7 @@ namespace TheOtherRoles
                 player.setLook("", 6, "", "", "", "");
 
         }
+        */
 
         public static void vampireSetBitten(byte targetId, byte performReset) {
             if (performReset != 0) {
@@ -1897,6 +1899,12 @@ namespace TheOtherRoles
             Jackal.isInvisable = true;
         }
 
+        public static void setSwooper(byte playerId) {        
+            PlayerControl target = Helpers.playerById(playerId);
+            if (target == null) return;
+            Swooper.swooper = Jackal.jackal;
+        }
+
 
         public static void setInvisibleGen(byte playerId, byte flag)
         {
@@ -2119,11 +2127,12 @@ namespace TheOtherRoles
                     FastDestroyableSingleton<UnityTelemetry>.Instance.SendWho();
             }
         }
-
+/*
          public static void useAdminTime(float time)
         {
             TORMapOptions.restrictAdminTime -= time;
         }
+        */
 
         public static void useCameraTime(float time)
         {
@@ -2589,9 +2598,10 @@ namespace TheOtherRoles
                 case (byte)CustomRPC.EngineerUsedRepair:
                     RPCProcedure.engineerUsedRepair();
                     break;
+                    /*
                 case (byte)CustomRPC.UseAdminTime:
                     RPCProcedure.useAdminTime(reader.ReadSingle());
-                    break;
+                    break;*/
                 case (byte)CustomRPC.UseCameraTime:
                     RPCProcedure.useCameraTime(reader.ReadSingle());
                     break;
@@ -2657,10 +2667,10 @@ namespace TheOtherRoles
                 case (byte)CustomRPC.CamouflagerCamouflage:
                     byte setTimer = reader.ReadByte();
                     RPCProcedure.camouflagerCamouflage(setTimer);
-                break;
+                break;/*
                 case (byte)CustomRPC.CamoComms:
                     RPCProcedure.camoComms();
-                    break;
+                    break;*/
                 case (byte)CustomRPC.VampireSetBitten:
                     byte bittenId = reader.ReadByte();
                     byte reset = reader.ReadByte();
@@ -2790,6 +2800,10 @@ namespace TheOtherRoles
                     byte invisiblePlayer2 = reader.ReadByte();
                     byte invisibleFlag2 = reader.ReadByte();
                     RPCProcedure.setSwoop(invisiblePlayer2, invisibleFlag2);
+                    break;  
+                case (byte)CustomRPC.SetSwooper:
+                    byte jackalPlayer2 = reader.ReadByte();
+                    RPCProcedure.setSwooper(jackalPlayer2);
                     break;  
                 case (byte)CustomRPC.SetInvisibleGen:
                     byte invisiblePlayer3 = reader.ReadByte();

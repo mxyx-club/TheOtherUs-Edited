@@ -895,6 +895,7 @@ namespace TheOtherRoles
                 if (p == Ninja.ninja && Ninja.isInvisble || p == Jackal.jackal && Jackal.isInvisable)
                     continue;
                 p.setDefaultLook();
+                Camouflager.camoComms = false;
             }
         }
 

@@ -27,8 +27,8 @@ namespace TheOtherRoles{
         public static bool ShowVentsOnMap = true;
         public static bool disableMedscanWalking = false;
         public static int restrictDevices = 0;
-        public static float restrictAdminTime = 600f;
-        public static float restrictAdminTimeMax = 600f;
+       // public static float restrictAdminTime = 600f;
+        //public static float restrictAdminTimeMax = 600f;
         public static float restrictCamerasTime = 600f;
         public static float restrictCamerasTimeMax = 600f;
         public static float restrictVitalsTime = 600f;
@@ -67,7 +67,7 @@ namespace TheOtherRoles{
             impostorSeeRoles = CustomOptionHolder.impostorSeeRoles.getBool();
             transparentTasks = CustomOptionHolder.transparentTasks.getBool();
             restrictDevices = CustomOptionHolder.restrictDevices.getSelection();
-            restrictAdminTime = restrictAdminTimeMax = CustomOptionHolder.restrictAdmin.getFloat();
+            //restrictAdminTime = restrictAdminTimeMax = CustomOptionHolder.restrictAdmin.getFloat();
             restrictCamerasTime = restrictCamerasTimeMax = CustomOptionHolder.restrictCameras.getFloat();
             restrictVitalsTime = restrictVitalsTimeMax = CustomOptionHolder.restrictVents.getFloat();
             disableCamsRoundOne = CustomOptionHolder.disableCamsRound1.getBool();
@@ -92,14 +92,14 @@ namespace TheOtherRoles{
             //Patches.ShouldAlwaysHorseAround.isHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
         }
     public static void resetDeviceTimes() {
-            restrictAdminTime = restrictAdminTimeMax;
+            //restrictAdminTime = restrictAdminTimeMax;
             restrictCamerasTime = restrictCamerasTimeMax;
             restrictVitalsTime = restrictVitalsTimeMax;
         }
 
-        public static bool canUseAdmin  { get { return restrictDevices == 0 || restrictAdminTime > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead; }}
+       // public static bool canUseAdmin  { get { return restrictDevices == 0 || restrictAdminTime > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead; }}
 
-        public static bool couldUseAdmin { get { return restrictDevices == 0 || restrictAdminTimeMax > 0f  || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead; }}
+        //public static bool couldUseAdmin { get { return restrictDevices == 0 || restrictAdminTimeMax > 0f  || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead; }}
 
         public static bool canUseCameras {get { return restrictDevices == 0 || restrictCamerasTime > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead; }}
 

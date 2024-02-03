@@ -1294,7 +1294,8 @@ namespace TheOtherRoles
                     return Jackal.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
                 () => { jackalKillButton.Timer = jackalKillButton.MaxTimer;},
                 __instance.KillButton.graphic.sprite,
-                CustomButton.ButtonPositions.upperRowRight,
+                //CustomButton.ButtonPositions.upperRowRight,
+                CustomButton.ButtonPositions.upperRowCenter,
                 __instance,
                 KeyCode.Q
             );
@@ -1340,7 +1341,8 @@ namespace TheOtherRoles
                     return Sidekick.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
                 () => { sidekickKillButton.Timer = sidekickKillButton.MaxTimer;},
                 __instance.KillButton.graphic.sprite,
-                CustomButton.ButtonPositions.upperRowRight,
+                //CustomButton.ButtonPositions.upperRowRight,
+                CustomButton.ButtonPositions.upperRowCenter,
                 __instance,
                 KeyCode.Q
             );

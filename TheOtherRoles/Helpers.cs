@@ -653,7 +653,7 @@ namespace TheOtherRoles {
             if (Patches.SurveillanceMinigamePatch.nightVisionIsActive) return true;
             else if (Ninja.isInvisble && Ninja.ninja == target) return true;
             else if (Jackal.isInvisable && Jackal.jackal == target) return true;
-            else if (TORMapOptions.hideOutOfSightNametags && PhysicsHelpers.AnythingBetween(localPlayer.GetTruePosition(), target.GetTruePosition(), Constants.ShadowMask, false)) return true;
+            else if (TORMapOptions.hideOutOfSightNametags && gameStarted && !source.Data.IsDead &&  PhysicsHelpers.AnythingBetween(localPlayer.GetTruePosition(), target.GetTruePosition(), Constants.ShadowMask, false)) return true;
 		/*
         {
 			float num = (isLightsActive() ? 2f : 1.25f);
@@ -757,6 +757,8 @@ namespace TheOtherRoles {
 
         public static bool roleCanUseVents(this PlayerControl player) {
             bool roleCouldUse = false;
+            if (player.inVent) //test
+                return true;
             if (Engineer.engineer != null && Engineer.engineer == player)
                 roleCouldUse = true;
             else if (Werewolf.canUseVents && Werewolf.werewolf != null && Werewolf.werewolf == player)

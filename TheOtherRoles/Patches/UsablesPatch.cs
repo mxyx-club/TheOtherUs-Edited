@@ -191,6 +191,9 @@ namespace TheOtherRoles.Patches {
                 __instance.graphic.sprite = isSpecialVent ?  Trickster.getTricksterVentButtonSprite() : defaultVentSprite;
                 __instance.buttonLabelText.enabled = !isSpecialVent;
             }
+            if (Tunneler.tunneler != null && Tunneler.tunneler == CachedPlayer.LocalPlayer.PlayerControl) {
+                __instance.graphic.transform.localPosition = new Vector3(0, 2, 0);
+        }
         }
     }
 

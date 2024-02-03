@@ -442,7 +442,7 @@ namespace TheOtherRoles {
         public static CustomOption enableCamoComms;
 
         public static CustomOption restrictDevices;
-        public static CustomOption restrictAdmin;
+        //public static CustomOption restrictAdmin;
         public static CustomOption restrictCameras;
         public static CustomOption restrictVents;
 
@@ -1046,7 +1046,7 @@ namespace TheOtherRoles {
             enableCamoComms = CustomOption.Create(1105, Types.General, "Enable Camouflage Comms", false,  null, false);
             disableMedbayWalk = CustomOption.Create(8847, Types.General, "Disable MedBay Animations", false, null, false);
             restrictDevices = CustomOption.Create(1101, Types.General, "Restrict Map Information", new string[] {"Off", "Per Round", "Per Game"},  null, false);
-            restrictAdmin = CustomOption.Create(1102, Types.General, "Restrict Admin Table", 30f, 0f, 600f, 5f, restrictDevices);
+            //restrictAdmin = CustomOption.Create(1102, Types.General, "Restrict Admin Table", 30f, 0f, 600f, 5f, restrictDevices);
             restrictCameras = CustomOption.Create(1103, Types.General, "Restrict Cameras", 30f, 0f, 600f, 5f, restrictDevices);
             restrictVents = CustomOption.Create(1104, Types.General, "Restrict Vitals", 30f, 0f, 600f, 5f, restrictDevices);
             disableCamsRound1 = CustomOption.Create(8834, Types.General, "No Cameras First Round", false, null, false);
