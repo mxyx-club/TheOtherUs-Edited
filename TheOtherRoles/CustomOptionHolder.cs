@@ -383,7 +383,7 @@ namespace TheOtherRoles {
         public static CustomOption modifierRadar;
 
         public static CustomOption modifierSlueth;
-        public static CustomOption modifierSwooper;
+        //public static CustomOption modifierSwooper;
 
         public static CustomOption modifierCursed;
 

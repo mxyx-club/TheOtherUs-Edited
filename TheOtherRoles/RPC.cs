@@ -197,7 +197,7 @@ namespace TheOtherRoles
         SetTiebreak,
         SetInvisibleGen,
         SetSwoop,
-        SetSwooper,
+       // SetSwooper,
         SetInvisible,
         ThiefStealsRole,
         SetTrap,
@@ -491,6 +491,9 @@ namespace TheOtherRoles
                 case RoleId.EvilGuesser:
                     Guesser.evilGuesser.Add(player);
                     break;
+                case RoleId.Swooper:
+                    Swooper.swooper = player;
+                    break;
                 case RoleId.Bait:
                     Bait.bait.Add(player);
                     break;
@@ -516,9 +519,7 @@ namespace TheOtherRoles
                 case RoleId.Slueth:
                     Slueth.slueth = player;
                     break;
-                case RoleId.Swooper:
-                    Swooper.swooper = player;
-                    break;
+                
                 case RoleId.Cursed:
                     Cursed.cursed = player;
                     break;
@@ -1214,7 +1215,7 @@ namespace TheOtherRoles
                     break;
 
                 case RoleId.NiceGuesser:
-                    if (Amnisiac.resetRole) Guesser.clearAndReload();
+                    if (Amnisiac.resetRole) //Guesser.clearAndReload();
                     Guesser.niceGuesser = Mimic.mimic;
 					Mimic.hasMimic = true;
                     break;
@@ -1496,6 +1497,7 @@ namespace TheOtherRoles
             Jackal.wasTeamRed = Sidekick.wasTeamRed;
             Jackal.wasSpy = Sidekick.wasSpy;
             Jackal.wasImpostor = Sidekick.wasImpostor;
+            Jackal.canSwoop = false;
             Sidekick.clearAndReload();
             return;
         }
@@ -1507,6 +1509,7 @@ namespace TheOtherRoles
 
             // Crewmate roles
             if (Guesser.evilGuesser.Any(x => x.PlayerId == player.PlayerId)) Guesser.evilGuesser.RemoveAll(x => x.PlayerId == player.PlayerId);
+            if (player == Swooper.swooper) Swooper.clearAndReload();
             if (player == Mayor.mayor) Mayor.clearAndReload();
             if (player == Portalmaker.portalmaker) Portalmaker.clearAndReload();
             if (player == Engineer.engineer) Engineer.clearAndReload();
@@ -1593,7 +1596,6 @@ namespace TheOtherRoles
                 if (player == Indomitable.indomitable) Indomitable.clearAndReload();
                 if (player == Tunneler.tunneler) Tunneler.clearAndReload();
                 if (player == Slueth.slueth) Slueth.clearAndReload();
-                //if (player == Swooper.swooper) Swooper.clearAndReload();
                 if (player == Blind.blind) Blind.clearAndReload();
                 if (player == Cursed.cursed) Cursed.clearAndReload();
                 if (Vip.vip.Any(x => x.PlayerId == player.PlayerId)) Vip.vip.RemoveAll(x => x.PlayerId == player.PlayerId);
@@ -1898,13 +1900,13 @@ namespace TheOtherRoles
             Jackal.swoopTimer = Jackal.duration;
             Jackal.isInvisable = true;
         }
-
+/*
         public static void setSwooper(byte playerId) {        
             PlayerControl target = Helpers.playerById(playerId);
             if (target == null) return;
             Swooper.swooper = Jackal.jackal;
         }
-
+*/
 
         public static void setInvisibleGen(byte playerId, byte flag)
         {
@@ -2800,11 +2802,11 @@ namespace TheOtherRoles
                     byte invisiblePlayer2 = reader.ReadByte();
                     byte invisibleFlag2 = reader.ReadByte();
                     RPCProcedure.setSwoop(invisiblePlayer2, invisibleFlag2);
-                    break;  
+                    break;  /*
                 case (byte)CustomRPC.SetSwooper:
                     byte jackalPlayer2 = reader.ReadByte();
                     RPCProcedure.setSwooper(jackalPlayer2);
-                    break;  
+                    break;  */
                 case (byte)CustomRPC.SetInvisibleGen:
                     byte invisiblePlayer3 = reader.ReadByte();
                     byte invisibleFlag3 = reader.ReadByte();

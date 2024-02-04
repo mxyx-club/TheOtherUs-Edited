@@ -314,6 +314,26 @@ namespace TheOtherRoles.Patches {
         }
     }
 
+    [HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.DoClick))]
+    public static class SabotageButtonDoClickPatch {
+        public static bool Prefix(SabotageButton __instance) {
+            // The sabotage button behaves just fine if it's a regular impostor
+            if (PlayerControl.LocalPlayer.Data.Role.TeamType == RoleTeamTypes.Impostor) return true;
+			//(Il2CppSystem.Action<MapBehaviour>)((m) => { m.ShowSabotageMap(); } 	);
+//			MapOptions options = DestroyableSingleton<HudManager>.Instance;
+  //          DestroyableSingleton<HudManager>.Instance.ToggleMapVisible((Il2CppSystem.Action<MapBehaviour>)((m) => { m.ShowSabotageMap(); }));
+			//MapOptionsTor.Mode = MapOptionsTor.Modes.Sabotage;
+			//DestroyableSingleton<HudManager>.Instance.ToggleMapVisible(DestroyableSingleton<MapOptions>.Instance.Modes.Sabotage);
+			
+			DestroyableSingleton<HudManager>.Instance.ToggleMapVisible(new MapOptions
+			{
+				Mode = MapOptions.Modes.Sabotage
+			});
+
+            return false;
+        }
+    }
+
     [HarmonyPatch(typeof(ReportButton), nameof(ReportButton.DoClick))]
     class ReportButtonDoClickPatch {
         public static bool Prefix(ReportButton __instance) {

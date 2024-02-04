@@ -408,7 +408,7 @@ namespace TheOtherRoles.Patches {
 				invisibleWriter.Write(byte.MaxValue);
 				AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
 				RPCProcedure.setSwoop(Jackal.jackal.PlayerId, byte.MaxValue);
-            }
+            }/*
             if (Jackal.jackal != null && Jackal.canSwoop){
                 {
 				MessageWriter invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetSwooper, Hazel.SendOption.Reliable, -1);
@@ -417,7 +417,7 @@ namespace TheOtherRoles.Patches {
 				AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
 				RPCProcedure.setSwooper(Jackal.jackal.PlayerId);
             }
-            }
+            }*/
         }
 
         static void ninjaUpdate()
@@ -589,7 +589,7 @@ namespace TheOtherRoles.Patches {
 
                     string playerInfoText = "";
                     string meetingInfoText = "";                    
-                    if (p == CachedPlayer.LocalPlayer.PlayerControl || (TORMapOptions.impostorSeeRoles && Spy.spy == null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor && !CachedPlayer.LocalPlayer.Data.IsDead && p == (p.Data.Role.IsImpostor  && !p.Data.IsDead))) {
+                    if (p == CachedPlayer.LocalPlayer.PlayerControl || (TORMapOptions.impostorSeeRoles && Spy.spy == null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor && !CachedPlayer.LocalPlayer.Data.IsDead && p == (p.Data.Role.IsImpostor && !p.Data.IsDead))) {
                         if (p.Data.IsDead) roleNames = roleText;
                         playerInfoText = $"{roleNames}";
                         if (p == Swapper.swapper) playerInfoText = $"{roleNames}" + Helpers.cs(Swapper.color, $" ({Swapper.charges})");

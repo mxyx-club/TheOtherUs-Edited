@@ -1208,6 +1208,7 @@ namespace TheOtherRoles
         public static bool wasSpy;
         public static float chanceSwoop = 0f;
         public static bool canSwoop = false;
+        
 
         public static Sprite getSidekickButtonSprite() {
             if (buttonSprite) return buttonSprite;
@@ -1257,6 +1258,7 @@ namespace TheOtherRoles
             else {
                 canSwoop = false;
             }
+            
 
         }
         
