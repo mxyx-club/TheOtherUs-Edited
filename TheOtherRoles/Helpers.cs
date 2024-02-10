@@ -460,6 +460,15 @@ namespace TheOtherRoles {
             RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
         }
 
+        public static void handleBomber2ExplodeOnBodyReport() {
+            // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
+            Helpers.checkMuderAttemptAndKill(Bomber2.bomber2, Bomber2.hasBomb, true, false);
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, Hazel.SendOption.Reliable, -1);
+            writer.Write(byte.MaxValue);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.giveBomb(byte.MaxValue);
+        }
+
         public static void refreshRoleDescription(PlayerControl player) {
             List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(player); 
             List<string> taskTexts = new(infos.Count); 

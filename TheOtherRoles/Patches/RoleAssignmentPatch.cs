@@ -125,6 +125,7 @@ namespace TheOtherRoles.Patches {
             impSettings.Add((byte)RoleId.Poucher, CustomOptionHolder.poucherSpawnRate.getSelection());
             impSettings.Add((byte)RoleId.Mimic, CustomOptionHolder.mimicSpawnRate.getSelection());
             impSettings.Add((byte)RoleId.Bomber, CustomOptionHolder.bomberSpawnRate.getSelection());
+            impSettings.Add((byte)RoleId.Bomber2, CustomOptionHolder.bomber2SpawnRate.getSelection());
             impSettings.Add((byte)RoleId.Blackmailer, CustomOptionHolder.blackmailerSpawnRate.getSelection());
 
             neutralSettings.Add((byte)RoleId.Jester, CustomOptionHolder.jesterSpawnRate.getSelection());
@@ -700,7 +701,7 @@ namespace TheOtherRoles.Patches {
                 playerList.RemoveAll(x => x.PlayerId == playerId);
                 modifiers.RemoveAll(x => x == RoleId.Tunneler);
             }
-
+/*
             if (modifiers.Contains(RoleId.Watcher)) {
                 List<PlayerControl> crewPlayerW = new List<PlayerControl>(playerList);
                 crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor);
@@ -708,7 +709,7 @@ namespace TheOtherRoles.Patches {
                 playerList.RemoveAll(x => x.PlayerId == playerId);
                 modifiers.RemoveAll(x => x == RoleId.Watcher);
             }
-
+*/
             List<PlayerControl> crewPlayer = new List<PlayerControl>(playerList);
             crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
             if (modifiers.Contains(RoleId.Shifter)) {

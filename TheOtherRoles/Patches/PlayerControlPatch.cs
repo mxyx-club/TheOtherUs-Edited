@@ -155,6 +155,19 @@ namespace TheOtherRoles.Patches {
             if (!Medic.usedShield) setPlayerOutline(Medic.currentTarget, Medic.shieldedColor);
         }
 
+        static void bomber2SetTarget() {
+            setBomber2BombTarget();
+            if (Bomber2.bomber2 == null || Bomber2.bomber2 != CachedPlayer.LocalPlayer.PlayerControl) return;
+            Bomber2.currentTarget = setTarget();
+            if (Bomber2.hasBomb == null) setPlayerOutline(Bomber2.currentTarget, Bomber2.color);
+        }
+        
+        static void setBomber2BombTarget() {
+            if (Bomber2.bomber2 == null || Bomber2.hasBomb != CachedPlayer.LocalPlayer.PlayerControl) return;
+            Bomber2.currentBombTarget = setTarget();
+    //        if (Bomber2.hasBomb != null) setPlayerOutline(Bomber2.currentBombTarget, Bomber2.color);
+        }
+
         static void bodyGuardSetTarget() {
             if (BodyGuard.bodyguard == null || BodyGuard.bodyguard != CachedPlayer.LocalPlayer.PlayerControl) return;
             BodyGuard.currentTarget = setTarget();
@@ -418,6 +431,13 @@ namespace TheOtherRoles.Patches {
 				RPCProcedure.setSwooper(Jackal.jackal.PlayerId);
             }
             }*/
+            /*
+            if ((Swooper.swooper = Jackal.jackal) && Jackal.canSwoop2){
+                foreach (PlayerControl player in CachedPlayer.AllPlayers) {
+                Swooper.swooper = Jackal.jackal;
+                }
+            }
+            */
         }
 
         static void ninjaUpdate()
@@ -1075,6 +1095,7 @@ namespace TheOtherRoles.Patches {
                     Bait.active.Remove(entry.Key);
                     if (entry.Key.killerIfExisting != null && entry.Key.killerIfExisting.PlayerId == CachedPlayer.LocalPlayer.PlayerId) {
                         Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                        Helpers.handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                         RPCProcedure.uncheckedCmdReportDeadBody(entry.Key.killerIfExisting.PlayerId, entry.Key.player.PlayerId);
 
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedCmdReportDeadBody, Hazel.SendOption.Reliable, -1);
@@ -1274,6 +1295,8 @@ namespace TheOtherRoles.Patches {
 				privateInvestigatorSetTarget();
                 // Medic
                 medicSetTarget();
+                // Bomber2
+                bomber2SetTarget();
                 // Set Werewolf Target
                 werewolfSetTarget();
                 // Shifter
@@ -1395,6 +1418,7 @@ namespace TheOtherRoles.Patches {
         public static bool Prefix(PlayerControl __instance) {
             if (HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM) return false;
             Helpers.handleVampireBiteOnBodyReport();
+            Helpers.handleBomber2ExplodeOnBodyReport();
             return true;
         }
     }

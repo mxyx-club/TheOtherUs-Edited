@@ -46,6 +46,7 @@ namespace TheOtherRoles
         public static RoleInfo mafioso = new RoleInfo("Mafioso", Mafioso.color, "Work with the <color=#FF1919FF>Mafia</color> to kill the Crewmates", "Kill all Crewmates", RoleId.Mafioso);
         public static RoleInfo janitor = new RoleInfo("Janitor", Janitor.color, "Work with the <color=#FF1919FF>Mafia</color> by hiding dead bodies", "Hide dead bodies", RoleId.Janitor);
         public static RoleInfo morphling = new RoleInfo("Morphling", Morphling.color, "Change your look to not get caught", "Change your look", RoleId.Morphling);
+        public static RoleInfo bomber2 = new RoleInfo("Bomber", Bomber2.color, "Give bombs to players", "Bomb Everyone", RoleId.Bomber2);
         public static RoleInfo poucher = new RoleInfo("Poucher", Poucher.color, "Keep info on the players you kill", "Investigate the kills", RoleId.Poucher);
         public static RoleInfo mimic = new RoleInfo("Mimic", Mimic.color, "Pose as a crewmate by killing one", "Pose as a crewmate", RoleId.Mimic);
         public static RoleInfo camouflager = new RoleInfo("Camouflager", Camouflager.color, "Camouflage and kill the Crewmates", "Hide among others", RoleId.Camouflager);
@@ -91,7 +92,7 @@ namespace TheOtherRoles
         public static RoleInfo ninja = new RoleInfo("Ninja", Ninja.color, "Surprise and assassinate your foes", "Surprise and assassinate your foes", RoleId.Ninja);
         public static RoleInfo blackmailer = new RoleInfo("Blackmailer", Blackmailer.color, "Blackmail those who seek to hurt you", "Blackmail those who seek to hurt you", RoleId.Blackmailer);
         public static RoleInfo thief = new RoleInfo("Thief", Thief.color, "Steal a killers role by killing them", "Steal a killers role", RoleId.Thief, true);
-        public static RoleInfo bomber = new RoleInfo("Bomber", Bomber.color, "Bomb all Crewmates", "Bomb all Crewmates", RoleId.Bomber);
+        public static RoleInfo bomber = new RoleInfo("Terrorist", Bomber.color, "Bomb all Crewmates", "Bomb all Crewmates", RoleId.Bomber);
 
         public static RoleInfo hunter = new RoleInfo("Hunter", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "Seek and kill everyone"), "Seek and kill everyone", RoleId.Impostor);
         public static RoleInfo hunted = new RoleInfo("Hunted", Color.white, "Hide", "Hide", RoleId.Crewmate);
@@ -134,6 +135,7 @@ namespace TheOtherRoles
             mafioso,
             janitor,
             morphling,
+            bomber2,
             camouflager,
             vampire,
             eraser,
@@ -263,6 +265,7 @@ namespace TheOtherRoles
             if (p == Mafioso.mafioso) infos.Add(mafioso);
             if (p == Janitor.janitor) infos.Add(janitor);
             if (p == Morphling.morphling) infos.Add(morphling);
+            if (p == Bomber2.bomber2) infos.Add(bomber2);
             if (p == Camouflager.camouflager) infos.Add(camouflager);
             if (p == Vampire.vampire) infos.Add(vampire);
             if (p == Eraser.eraser) infos.Add(eraser);
@@ -357,7 +360,7 @@ namespace TheOtherRoles
                     if (p == Jackal.fakeSidekick)
                         roleName = Helpers.cs(Sidekick.color, $" (fake SK) ") + roleName;
                         /*
-                    if (p == Jackal.jackal && Jackal.canSwoop)
+                    if ((p == Swooper.swooper) && Jackal.canSwoop2)
                         roleName = Helpers.cs(Swooper.color, $" (Swooper) ") + roleName;
                         */
 

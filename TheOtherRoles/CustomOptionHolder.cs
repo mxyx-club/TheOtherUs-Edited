@@ -35,6 +35,12 @@ namespace TheOtherRoles {
         public static CustomOption morphlingCooldown;
         public static CustomOption morphlingDuration;
 
+        public static CustomOption bomber2SpawnRate;
+        public static CustomOption bomber2BombCooldown;
+        public static CustomOption bomber2Delay;
+        public static CustomOption bomber2Timer;
+        //public static CustomOption bomber2HotPotatoMode;
+
         public static CustomOption undertakerSpawnRate;
         public static CustomOption undertakerDragingDelaiAfterKill;
         public static CustomOption undertakerCanDragAndVent;
@@ -46,6 +52,7 @@ namespace TheOtherRoles {
         public static CustomOption vampireSpawnRate;
         public static CustomOption vampireKillDelay;
         public static CustomOption vampireCooldown;
+        public static CustomOption vampireGarlicButton;
         public static CustomOption vampireCanKillNearGarlics;
 
         public static CustomOption poucherSpawnRate;
@@ -571,6 +578,12 @@ namespace TheOtherRoles {
             morphlingCooldown = CustomOption.Create(21, Types.Impostor, "Morphling Cooldown", 30f, 10f, 60f, 2.5f, morphlingSpawnRate);
             morphlingDuration = CustomOption.Create(22, Types.Impostor, "Morph Duration", 10f, 1f, 20f, 0.5f, morphlingSpawnRate);
 
+            bomber2SpawnRate = CustomOption.Create(8840, Types.Impostor, cs(Bomber2.color, "Bomber [BETA]"), rates, null, true);
+            bomber2BombCooldown = CustomOption.Create(8841, Types.Impostor, "Bomber2 Cooldown", 30f, 25f, 60f, 2.5f, bomber2SpawnRate);
+            bomber2Delay = CustomOption.Create(8842, Types.Impostor, "Bomb Delay", 10f, 1f, 20f, 0.5f, bomber2SpawnRate);
+            bomber2Timer = CustomOption.Create(8843, Types.Impostor, "Bomb Timer", 10f, 5f, 30f, 5f, bomber2SpawnRate);
+            //bomber2HotPotatoMode = CustomOption.Create(2526236, Types.Impostor, "Hot Potato Mode", false, bomber2SpawnRate);
+
             undertakerSpawnRate = CustomOption.Create(1201, Types.Impostor, cs(Undertaker.color, "Undertaker"), rates, null, true);
             undertakerDragingDelaiAfterKill = CustomOption.Create(1202, Types.Impostor, "Draging Delay After Kill", 0f, 0f, 15, 1f, undertakerSpawnRate);                     
             undertakerCanDragAndVent = CustomOption.Create(1203, Types.Impostor, "Can Vent While Dragging", true, undertakerSpawnRate);
@@ -582,7 +595,8 @@ namespace TheOtherRoles {
             vampireSpawnRate = CustomOption.Create(40, Types.Impostor, cs(Vampire.color, "Vampire"), rates, null, true);
             vampireKillDelay = CustomOption.Create(41, Types.Impostor, "Vampire Kill Delay", 10f, 1f, 20f, 1f, vampireSpawnRate);
             vampireCooldown = CustomOption.Create(42, Types.Impostor, "Vampire Cooldown", 30f, 10f, 60f, 2.5f, vampireSpawnRate);
-            vampireCanKillNearGarlics = CustomOption.Create(43, Types.Impostor, "Vampire Can Kill Near Garlics", true, vampireSpawnRate);
+            vampireGarlicButton = CustomOption.Create(43277854, Types.Impostor, "Enable Garlic", true, vampireSpawnRate);
+            vampireCanKillNearGarlics = CustomOption.Create(43, Types.Impostor, "Vampire Can Kill Near Garlics", true, vampireGarlicButton);
 
             eraserSpawnRate = CustomOption.Create(230, Types.Impostor, cs(Eraser.color, "Eraser"), rates, null, true);
             eraserCooldown = CustomOption.Create(231, Types.Impostor, "Eraser Cooldown", 30f, 10f, 120f, 5f, eraserSpawnRate);
@@ -637,7 +651,7 @@ namespace TheOtherRoles {
             blackmailerSpawnRate = CustomOption.Create(710, Types.Impostor, cs(Blackmailer.color, "Blackmailer"), rates, null, true);
             blackmailerCooldown = CustomOption.Create(711, Types.Impostor, "Blackmail Cooldown", 30f, 5f, 120f, 5f, blackmailerSpawnRate);
 
-            bomberSpawnRate = CustomOption.Create(460, Types.Impostor, cs(Bomber.color, "Bomber"), rates, null, true);
+            bomberSpawnRate = CustomOption.Create(460, Types.Impostor, cs(Bomber.color, "Terrorist"), rates, null, true);
             bomberBombDestructionTime = CustomOption.Create(461, Types.Impostor, "Bomb Destruction Time", 20f, 2.5f, 120f, 2.5f, bomberSpawnRate);
             bomberBombDestructionRange = CustomOption.Create(462, Types.Impostor, "Bomb Destruction Range", 50f, 5f, 150f, 5f, bomberSpawnRate);
             bomberBombHearRange = CustomOption.Create(463, Types.Impostor, "Bomb Hear Range", 60f, 5f, 150f, 5f, bomberSpawnRate);
@@ -1068,6 +1082,8 @@ namespace TheOtherRoles {
             blockedRolePairings.Add((byte)RoleId.Watcher, new [] { (byte)RoleId.Mayor});
             blockedRolePairings.Add((byte)RoleId.Engineer, new [] { (byte)RoleId.Tunneler});
             blockedRolePairings.Add((byte)RoleId.Tunneler, new [] { (byte)RoleId.Engineer});
+            blockedRolePairings.Add((byte)RoleId.Bomber2, new [] { (byte)RoleId.Bait});
+            blockedRolePairings.Add((byte)RoleId.Bait, new [] { (byte)RoleId.Bomber2});
             
         }
     }

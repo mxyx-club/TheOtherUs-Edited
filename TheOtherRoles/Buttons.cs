@@ -26,6 +26,8 @@ namespace TheOtherRoles
         private static CustomButton amnisiacRememberButton;
         public static CustomButton veterenAlertButton;
         public static CustomButton medicShieldButton;
+        private static CustomButton bomber2BombButton;
+        private static CustomButton bomber2KillButton;
         private static CustomButton cultistTurnButton;
         private static CustomButton shifterShiftButton;
         private static CustomButton disperserDisperseButton;
@@ -122,6 +124,7 @@ namespace TheOtherRoles
             shifterShiftButton.MaxTimer = 0f;
             disperserDisperseButton.MaxTimer = 0f;
             morphlingButton.MaxTimer = Morphling.cooldown;
+            bomber2BombButton.MaxTimer = Bomber2.cooldown;
             camouflagerButton.MaxTimer = Camouflager.cooldown;
             portalmakerPlacePortalButton.MaxTimer = Portalmaker.cooldown;
             usePortalButton.MaxTimer = Portalmaker.usePortalCooldown;
@@ -150,6 +153,8 @@ namespace TheOtherRoles
             arsonistButton.MaxTimer = Arsonist.cooldown;
             vultureEatButton.MaxTimer = Vulture.cooldown;
             amnisiacRememberButton.MaxTimer = 0f;
+            bomber2KillButton.MaxTimer = 0f;
+            bomber2KillButton.Timer = 0f;
             mediumButton.MaxTimer = Medium.cooldown;
             pursuerButton.MaxTimer = Pursuer.cooldown;
             trackerTrackCorpsesButton.MaxTimer = Tracker.corpsesTrackingCooldown;
@@ -188,6 +193,7 @@ namespace TheOtherRoles
             minerMineButton.EffectDuration = Jackal.duration; // Jackal?
             camouflagerButton.EffectDuration = Camouflager.duration;
             morphlingButton.EffectDuration = Morphling.duration;
+            bomber2BombButton.EffectDuration = Bomber2.bombDelay + Bomber2.bombTimer;
             lightsOutButton.EffectDuration = Trickster.lightsOutDuration;
             arsonistButton.EffectDuration = Arsonist.duration;
             mediumButton.EffectDuration = Medium.duration;
@@ -698,7 +704,7 @@ namespace TheOtherRoles
                 },
                 () => { },
                 Disperser.getButtonSprite(),
-                new Vector3(0, 0, 0),
+                new Vector3(0, 0f, 0),
                 __instance,
                 null,
                 true
@@ -1116,11 +1122,11 @@ namespace TheOtherRoles
                     RPCProcedure.placeGarlic(buff);
                     SoundEffectsManager.play("garlic");
                 },
-                () => { return !Vampire.localPlacedGarlic && !CachedPlayer.LocalPlayer.Data.IsDead && Vampire.garlicsActive && !HideNSeek.isHideNSeekGM && !PropHunt.isPropHuntGM; },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Vampire.localPlacedGarlic; },
+                () => { return Vampire.garlicButton && !Vampire.localPlacedGarlic && !CachedPlayer.LocalPlayer.Data.IsDead && Vampire.garlicsActive && !HideNSeek.isHideNSeekGM && !PropHunt.isPropHuntGM; },
+                () => { return Vampire.garlicButton && CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Vampire.localPlacedGarlic; },
                 () => { },
                 Vampire.getGarlicButtonSprite(),
-                new Vector3(0, -0.06f, 0),
+                new Vector3(0, 1f, 0),
                 __instance,
                 null,
                 true
@@ -1310,7 +1316,10 @@ namespace TheOtherRoles
                     RPCProcedure.setSwoop(Jackal.jackal.PlayerId, byte.MinValue);
                 },
                 () => { /* Can See */ return Jackal.canSwoop && Jackal.jackal != null && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
-                () => {  /* On Click */ return Jackal.canSwoop && (CachedPlayer.LocalPlayer.PlayerControl.CanMove); },
+                () => {  /* On Click */ 
+                Swooper.swooper = Jackal.jackal;
+                Jackal.canSwoop2 = true;
+                return Jackal.canSwoop && (CachedPlayer.LocalPlayer.PlayerControl.CanMove); },
                 () => {  /* On Meeting End */
                     swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer;
                     swooperSwoopButton.isEffectActive = false;
@@ -1382,6 +1391,65 @@ namespace TheOtherRoles
                 CustomButton.ButtonPositions.upperRowLeft, //brb
                 __instance,
                 KeyCode.V
+            );
+
+            bomber2BombButton = new CustomButton(
+                () => { /* On Use */ 
+                if (Helpers.checkAndDoVetKill(Bomber2.currentTarget)) return;
+					Helpers.checkWatchFlash(Bomber2.currentTarget);
+                    MessageWriter bombWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, Hazel.SendOption.Reliable, -1);
+                    bombWriter.Write(Bomber2.currentTarget.PlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
+                    RPCProcedure.giveBomb(Bomber2.currentTarget.PlayerId);
+                    Bomber2.bomber2.killTimer = Bomber2.bombTimer + Bomber2.bombDelay;
+                    bomber2BombButton.Timer = bomber2BombButton.MaxTimer;
+                },
+                () => { /* Can See */ return Bomber2.bomber2 != null && Bomber2.bomber2 == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+                () => {  /* On Click */ return (Bomber2.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove); },
+                () => {  /* On Meeting End */
+                    bomber2BombButton.Timer = bomber2BombButton.MaxTimer;
+                    bomber2BombButton.isEffectActive = false;
+                    bomber2BombButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+                    Bomber2.hasBomb = null;
+                },
+                Bomber2.getButtonSprite(),
+                CustomButton.ButtonPositions.upperRowLeft, //brb
+                __instance,
+                KeyCode.V
+            );
+            
+            bomber2KillButton = new CustomButton(
+                () => { /* On Use */ 
+                    if (Bomber2.currentBombTarget == Bomber2.bomber2) {
+                        MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedMurderPlayer, Hazel.SendOption.Reliable, -1);
+                        killWriter.Write(Bomber2.bomber2.Data.PlayerId);
+                        killWriter.Write(Bomber2.hasBomb.Data.PlayerId);
+                        killWriter.Write(0);
+                        AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                        RPCProcedure.uncheckedMurderPlayer(Bomber2.bomber2.Data.PlayerId, Bomber2.hasBomb.Data.PlayerId, 0);
+                        
+                        MessageWriter bombWriter1 = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, Hazel.SendOption.Reliable, -1);
+                        bombWriter1.Write(byte.MaxValue);
+                        AmongUsClient.Instance.FinishRpcImmediately(bombWriter1);
+                        RPCProcedure.giveBomb(byte.MaxValue);
+                        return;
+                    }
+                    if (Helpers.checkAndDoVetKill(Bomber2.currentBombTarget)) return;
+                    if (Helpers.checkMuderAttemptAndKill(Bomber2.hasBomb, Bomber2.currentBombTarget) == MurderAttemptResult.SuppressKill) return;
+                    MessageWriter bombWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, Hazel.SendOption.Reliable, -1);
+                    bombWriter.Write(byte.MaxValue);
+                    AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
+                    RPCProcedure.giveBomb(byte.MaxValue);
+                    
+                },
+                () => { /* Can See */ return Bomber2.bomber2 != null && Bomber2.hasBomb == CachedPlayer.LocalPlayer.PlayerControl && Bomber2.bombActive && !CachedPlayer.LocalPlayer.Data.IsDead; },
+                () => {  /* Can Click */ return (Bomber2.currentBombTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove); },
+                () => {  /* On Meeting End */ },
+                Bomber2.getButtonSprite(),
+                //          0, -0.06f, 0
+                new Vector3(-4.5f, 1.5f, 0),
+                __instance,
+                KeyCode.B
             );
 
              // Werewolf Kill
@@ -2309,6 +2377,7 @@ namespace TheOtherRoles
                    CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
                    Mayor.remoteMeetingsLeft--;
 	               Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                   Helpers.handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                    RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, Byte.MaxValue);
 
                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedCmdReportDeadBody, Hazel.SendOption.Reliable, -1);

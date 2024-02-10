@@ -44,6 +44,7 @@ namespace TheOtherRoles
         Swapper,
         Seer,
         Morphling,
+        Bomber2,
         Camouflager,
         Hacker,
         Tracker,
@@ -156,6 +157,7 @@ namespace TheOtherRoles
         TrackerUsedTracker,
         VampireSetBitten,
         PlaceGarlic,
+        GiveBomb,
         DeputyUsedHandcuffs,
         DeputyPromotes,
         JackalCreatesSidekick,
@@ -368,6 +370,9 @@ namespace TheOtherRoles
                         break;
                     case RoleId.Morphling:
                         Morphling.morphling = player;
+                        break;
+                    case RoleId.Bomber2:
+                        Bomber2.bomber2 = player;
                         break;
                     case RoleId.Camouflager:
                         Camouflager.camouflager = player;
@@ -876,6 +881,12 @@ namespace TheOtherRoles
                     Helpers.turnToImpostor(Amnisiac.amnisiac);
                     if (Amnisiac.resetRole) Morphling.clearAndReload();
                     Morphling.morphling = amnisiac;
+                    Amnisiac.clearAndReload();
+                    break;
+                case RoleId.Bomber2:
+                    Helpers.turnToImpostor(Amnisiac.amnisiac);
+                    if (Amnisiac.resetRole) Bomber2.clearAndReload();
+                    Bomber2.bomber2 = amnisiac;
                     Amnisiac.clearAndReload();
                     break;
                     
@@ -1537,6 +1548,7 @@ namespace TheOtherRoles
 
             // Impostor roles
             if (player == Morphling.morphling) Morphling.clearAndReload();
+            if (player == Bomber2.bomber2) Bomber2.clearAndReload();
             if (player == Camouflager.camouflager) Camouflager.clearAndReload();
             if (player == Godfather.godfather) Godfather.clearAndReload();
             if (player == Mafioso.mafioso) Mafioso.clearAndReload();
@@ -1798,6 +1810,50 @@ namespace TheOtherRoles
         public static void setFutureShielded(byte playerId) {
             Medic.futureShielded = Helpers.playerById(playerId);
             Medic.usedShield = true;
+        }
+
+        public static void giveBomb(byte playerId) {
+            if (playerId == Byte.MaxValue) {
+                Bomber2.hasBomb = null;
+                Bomber2.bombActive = false;
+                Bomber2.hasAlerted = false;
+                Bomber2.timeLeft = 0;
+
+                return;
+            }
+            Bomber2.hasBomb = Helpers.playerById(playerId);
+            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber2.bombDelay, new Action<float>((p) => {
+                if (p == 1f) Bomber2.bombActive = true;
+            })));
+            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber2.bombDelay + Bomber2.bombTimer, new Action<float>((p) => { // Delayed action
+				if (!Helpers.isAlive(Bomber2.hasBomb)) return;
+                if (p == 1f && Bomber2.bombActive) {
+                    // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
+                    Helpers.checkMuderAttemptAndKill(Bomber2.hasBomb, Bomber2.hasBomb);
+                    Bomber2.hasBomb = null;
+                    Bomber2.bombActive = false;
+                    Bomber2.hasAlerted = false;
+                    Bomber2.timeLeft = 0;
+                }
+                if (CachedPlayer.LocalPlayer.PlayerControl == Bomber2.hasBomb) {
+                    int totalTime = (int)(Bomber2.bombDelay + Bomber2.bombTimer);
+                    int timeLeft = (int)(totalTime - (totalTime * p));
+                    if (timeLeft <= Bomber2.bombTimer) {
+                        if (Bomber2.timeLeft != timeLeft) {
+                            new CustomMessage("Your Bomb will explode in " + timeLeft + " seconds!", 1f);
+                            Bomber2.timeLeft = timeLeft;
+                        }
+                        if (timeLeft % 5 == 0) {
+                            if (!Bomber2.hasAlerted) {
+                                Helpers.showFlash(Bomber2.alertColor, 1f);
+                                Bomber2.hasAlerted = true;
+                            }
+                        } else Bomber2.hasAlerted = false;
+                    }
+
+                }
+
+            })));
         }
 
         public static void setFutureSpelled(byte playerId) {
@@ -2307,6 +2363,7 @@ namespace TheOtherRoles
             if (target == Ninja.ninja) Ninja.ninja = thief;
             if (target == Escapist.escapist) Escapist.escapist = thief;
             if (target == Bomber.bomber) Bomber.bomber = thief;
+            if (target == Bomber2.bomber2) Bomber2.bomber2 = thief;
             if (target == Miner.miner) Miner.miner = thief;
             if (target == Undertaker.undertaker) Undertaker.undertaker = thief;
             if (target.Data.Role.IsImpostor) {
@@ -2766,6 +2823,9 @@ namespace TheOtherRoles
                     break;
                 case (byte)CustomRPC.SetFutureSpelled:
                     RPCProcedure.setFutureSpelled(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.GiveBomb:
+                    RPCProcedure.giveBomb(reader.ReadByte());
                     break;
                 case (byte)CustomRPC.Bloody:
                     byte bloodyKiller = reader.ReadByte();
