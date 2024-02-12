@@ -17,6 +17,7 @@ namespace TheOtherRoles.Patches {
         public static bool Prefix(ref float __result, ShipStatus __instance, [HarmonyArgument(0)] GameData.PlayerInfo player) {
             if ((!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.isFungle()) || GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return true;
             var switchSystem = GameOptionsManager.Instance.currentNormalGameOptions.MapId == 5 ? null : __instance.Systems[SystemTypes.Electrical]?.TryCast<SwitchSystem>();
+
             // If Game Mode is PropHunt:
             if (PropHunt.isPropHuntGM) {
                 if (!PropHunt.timerRunning) {
@@ -79,8 +80,8 @@ namespace TheOtherRoles.Patches {
             //var switchSystem = GameOptionsManager.Instance.currentNormalGameOptions.MapId == 5 ? null : __instance.Systems[SystemTypes.Electrical]?.TryCast<SwitchSystem>();
             var t = switchSystem != null ? switchSystem.Value / 255f : 1;
             if (Torch.torch.FindAll(x => x.PlayerId == player.PlayerId).Count > 0) t = 1;
-            //__result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, t) *
-            //           GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
+            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, t) *
+                       GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
 
             if (Sunglasses.sunglasses.FindAll(x => x.PlayerId == player.PlayerId).Count > 0) // Sunglasses
                 __result *= 1f - Sunglasses.vision * 0.1f;

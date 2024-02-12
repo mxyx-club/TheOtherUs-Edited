@@ -33,7 +33,8 @@ namespace TheOtherRoles.Patches {
                     p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
                     player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
                     player.cosmetics.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
-                   // PlayerControl.SetPetImage(data.DefaultOutfit.PetId, data.DefaultOutfit.ColorId, player.PetSlot);
+                    CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(25f);
+                    //PlayerControl.SetPetImage(data.DefaultOutfit.PetId, data.DefaultOutfit.ColorId, player.PetSlot);
                     player.cosmetics.nameText.text = data.PlayerName;
                     player.SetFlipX(true);
                     TORMapOptions.playerIcons[p.PlayerId] = player;
@@ -180,8 +181,8 @@ namespace TheOtherRoles.Patches {
                 new Vector3(10f, -14f, 0.0f), //below storrage
                 new Vector3(21.5f, -12.5f, 0.0f), //storrage vent
                 new Vector3(19f, -11f, 0.0f), //storrage toolrack
-                new Vector3(12f, -7f, 0.0f), //left fuel
-                new Vector3(5f, -7.5f, 0.0f), //above elec
+                new Vector3(12f, -7.6f, 0.0f), //left fuel
+                new Vector3(5f, -7.6f, 0.0f), //above elec
                 new Vector3(10f, -12f, 0.0f), //elec fence
                 new Vector3(9f, -9f, 0.0f), //elec lockers
                 new Vector3(5f, -9f, 0.0f), //elec window
@@ -242,6 +243,36 @@ namespace TheOtherRoles.Patches {
                 new Vector3(6.5f, -4.5f, 0.0f) //medbay bottom
                 };
 
+                List<Vector3> fungleSpawn = new List<Vector3>() {
+                new Vector3(-10.0842f, 13.0026f, 0.013f),
+                new Vector3(0.9815f, 6.7968f, 0.0068f),
+                new Vector3(22.5621f, 3.2779f, 0.0033f),
+                new Vector3(-1.8699f, -1.3406f, -0.0013f),
+                new Vector3(12.0036f, 2.6763f, 0.0027f),
+                new Vector3(21.705f, -7.8691f, -0.0079f),
+                new Vector3(1.4485f, -1.6105f, -0.0016f),
+                new Vector3(-4.0766f, -8.7178f, -0.0087f),
+                new Vector3(2.9486f, 1.1347f, 0.0011f),
+                new Vector3(-4.2181f, -8.6795f, -0.0087f),
+                new Vector3(19.5553f, -12.5014f, -0.0125f),
+                new Vector3(15.2497f, -16.5009f, -0.0165f),
+                new Vector3(-22.7174f, -7.0523f, 0.0071f),
+                new Vector3(-16.5819f, -2.1575f, 0.0022f),
+                new Vector3(9.399f, -9.7127f, -0.0097f),
+                new Vector3(7.3723f, 1.7373f, 0.0017f),
+                new Vector3(22.0777f, -7.9315f, -0.0079f),
+                new Vector3(-15.3916f, -9.3659f, -0.0094f),
+                new Vector3(-16.1207f, -0.1746f, -0.0002f),
+                new Vector3(-23.1353f, -7.2472f, -0.0072f),
+                new Vector3(-20.0692f, -2.6245f, -0.0026f),
+                new Vector3(-4.2181f, -8.6795f, -0.0087f),
+                new Vector3(-9.9285f, 12.9848f, 0.013f),
+                new Vector3(-8.3475f, 1.6215f, 0.0016f),
+                new Vector3(-17.7614f, 6.9115f, 0.0069f),
+                new Vector3(-0.5743f, -4.7235f, -0.0047f),
+                new Vector3(-20.8897f, 2.7606f, 0.002f)
+                };
+
                 List<Vector3> airshipSpawn = new List<Vector3>() { }; //no spawns since it already has random spawns
 
                 if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 0) CachedPlayer.LocalPlayer.PlayerControl.transform.position = skeldSpawn[rnd.Next(skeldSpawn.Count)];
@@ -249,6 +280,7 @@ namespace TheOtherRoles.Patches {
                 if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 2) CachedPlayer.LocalPlayer.PlayerControl.transform.position = polusSpawn[rnd.Next(polusSpawn.Count)];
                 if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 3) CachedPlayer.LocalPlayer.PlayerControl.transform.position = dleksSpawn[rnd.Next(dleksSpawn.Count)];
                 if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 4) CachedPlayer.LocalPlayer.PlayerControl.transform.position = airshipSpawn[rnd.Next(airshipSpawn.Count)];
+                if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 5) CachedPlayer.LocalPlayer.PlayerControl.transform.position = fungleSpawn[rnd.Next(fungleSpawn.Count)];
 
             }
 
@@ -343,7 +375,7 @@ namespace TheOtherRoles.Patches {
             if (roleInfo.isNeutral) {
                 var neutralColor = new Color32(76, 84, 78, 255);
                __instance.BackgroundBar.material.color = roleInfo.color;
-                __instance.TeamTitle.text = "Neutral";
+                __instance.TeamTitle.text = "中立阵营";
                 __instance.TeamTitle.color = neutralColor;
 
             } else {
@@ -351,11 +383,11 @@ namespace TheOtherRoles.Patches {
                 if (roleInfo.color == Palette.ImpostorRed) isCrew = false;
                 if (isCrew) {
                     __instance.BackgroundBar.material.color = roleInfo.color;
-                    __instance.TeamTitle.text = "Crewmate";
+                    __instance.TeamTitle.text = "船员阵营";
                     __instance.TeamTitle.color = Color.cyan;
                 } else {
                     __instance.BackgroundBar.material.color = roleInfo.color;
-                    __instance.TeamTitle.text = "Impostor";
+                    __instance.TeamTitle.text = "伪装者阵营";
                     __instance.TeamTitle.color = Palette.ImpostorRed;
                 }
             }
@@ -408,14 +440,14 @@ namespace TheOtherRoles.Patches {
                         __instance.RoleBlurbText.text += Helpers.cs(modifierInfo.color, $"\n{modifierInfo.introDescription}");
                     else {
                         PlayerControl otherLover = CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 ? Lovers.lover2 : Lovers.lover1;
-                        __instance.RoleBlurbText.text += Helpers.cs(Lovers.color, $"\n♥ You are in love with {otherLover?.Data?.PlayerName ?? ""} ♥");
+                        __instance.RoleBlurbText.text += Helpers.cs(Lovers.color, $"\n♥ 你和 {otherLover?.Data?.PlayerName ?? ""} 坠入了爱河♥");
                     }
                 }
                 if (Deputy.knowsSheriff && Deputy.deputy != null && Sheriff.sheriff != null) {
                     if (infos.Any(info => info.roleId == RoleId.Sheriff))
-                        __instance.RoleBlurbText.text += Helpers.cs(Sheriff.color, $"\nYour Deputy is {Deputy.deputy?.Data?.PlayerName ?? ""}");
+                        __instance.RoleBlurbText.text += Helpers.cs(Sheriff.color, $"\n你的捕快是 {Deputy.deputy?.Data?.PlayerName ?? ""}");
                     else if (infos.Any(info => info.roleId == RoleId.Deputy))
-                        __instance.RoleBlurbText.text += Helpers.cs(Sheriff.color, $"\nYour Sheriff is {Sheriff.sheriff?.Data?.PlayerName ?? ""}");
+                        __instance.RoleBlurbText.text += Helpers.cs(Sheriff.color, $"\n你的警长是 {Sheriff.sheriff?.Data?.PlayerName ?? ""}");
                 }
             }
             public static bool Prefix(IntroCutscene __instance) {

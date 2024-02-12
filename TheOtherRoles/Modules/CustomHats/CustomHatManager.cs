@@ -19,7 +19,7 @@ public static class CustomHatManager
         get
         {
             var (owner, repository) = Repository;
-            return $"https://raw.githubusercontent.com/{owner}/{repository}/master";
+            return $"https://mirror.ghproxy.com/https://raw.githubusercontent.com/{owner}/{repository}/master";
         }
     }
 

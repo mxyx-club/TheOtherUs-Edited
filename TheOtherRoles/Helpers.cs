@@ -460,7 +460,8 @@ namespace TheOtherRoles {
             RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
         }
 
-        public static void handleBomber2ExplodeOnBodyReport() {
+        public static void handleBomber2ExplodeOnBodyReport()
+        {
             // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
             Helpers.checkMuderAttemptAndKill(Bomber2.bomber2, Bomber2.hasBomb, true, false);
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, Hazel.SendOption.Reliable, -1);
@@ -468,7 +469,6 @@ namespace TheOtherRoles {
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.giveBomb(byte.MaxValue);
         }
-
         public static void refreshRoleDescription(PlayerControl player) {
             List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(player); 
             List<string> taskTexts = new(infos.Count); 
@@ -606,10 +606,11 @@ namespace TheOtherRoles {
             return GameOptionsManager.Instance.CurrentGameOptions.MapId == 2;
         }
 
+        
         public static bool isFungle() {           
             return GameOptionsManager.Instance.CurrentGameOptions.MapId == 5;
-        }
-
+        } 
+        
         public static bool MushroomSabotageActive() {
             return CachedPlayer.LocalPlayer.PlayerControl.myTasks.ToArray().Any((x) => x.TaskType == TaskTypes.MushroomMixupSabotage);
         }
@@ -1162,6 +1163,14 @@ public static bool isTeamCultist(PlayerControl player)
             RoleInfo roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
             if (roleInfo != null)
                 return roleInfo.isNeutral;
+            return false;
+        }
+        public static bool isJackalAndSidekickAndLawyer(PlayerControl player)
+        //好人交换师代码target
+        {
+            RoleInfo roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
+            if (roleInfo != null)
+                return roleInfo.name.Equals("豺狼") || roleInfo.name.Equals("跟班") || roleInfo.name.Equals("律师") || roleInfo.name.Equals("月下狼人") || roleInfo.name.Equals("纵火犯");
             return false;
         }
 

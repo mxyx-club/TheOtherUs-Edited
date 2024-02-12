@@ -271,13 +271,13 @@ namespace TheOtherRoles.Patches {
                 } else {
                     selections[i] = true;
                     renderer.color = Color.yellow;
-                    meetingExtraButtonLabel.text = Helpers.cs(Color.yellow, "Confirm Swap");
+                    meetingExtraButtonLabel.text = Helpers.cs(Color.yellow, "确认交换");
                 }
             } else if (selectedCount == 2) {
                 if (selections[i]) {
                     renderer.color = Color.red;
                     selections[i] = false;
-                    meetingExtraButtonLabel.text = Helpers.cs(Color.red, "Confirm Swap");
+                    meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认交换");
                 }
             }
         }
@@ -310,9 +310,9 @@ namespace TheOtherRoles.Patches {
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
 
                 RPCProcedure.swapperSwap((byte)firstPlayer.TargetPlayerId, (byte)secondPlayer.TargetPlayerId);
-                meetingExtraButtonLabel.text = Helpers.cs(Color.green, "Swapping!");
+                meetingExtraButtonLabel.text = Helpers.cs(Color.green, "交换成功!");
                 Swapper.charges--;
-                meetingExtraButtonText.text = $"Swaps: {Swapper.charges}";
+                meetingExtraButtonText.text = $"交换次数: {Swapper.charges}";
             }
         }
 
@@ -351,8 +351,8 @@ namespace TheOtherRoles.Patches {
                 swapperButtonList[i].OnClick.RemoveAllListeners();
                 swapperButtonList[i].OnClick.AddListener((System.Action)(() => swapperOnClick(copyI, __instance)));
             }
-            meetingExtraButtonText.text = $"Swaps: {Swapper.charges}";
-            meetingExtraButtonLabel.text = Helpers.cs(Color.red, "Confirm Swap");
+            meetingExtraButtonText.text = $"交换次数: {Swapper.charges}";
+            meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认交换");
 
         }
 
@@ -373,7 +373,7 @@ namespace TheOtherRoles.Patches {
             writer.Write(Mayor.voteTwice);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
 
-            meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "Double Vote: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "On ") : Helpers.cs(Color.red, "Off")));
+            meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "投出两票: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "开") : Helpers.cs(Color.red, "关")));
         }
 
         public static GameObject guesserUI;
@@ -593,7 +593,7 @@ namespace TheOtherRoles.Patches {
                 Transform infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
                 TMPro.TextMeshPro meetingInfo = infoTransform != null ? infoTransform.GetComponent<TMPro.TextMeshPro>() : null;
                 meetingExtraButtonText = UnityEngine.Object.Instantiate(__instance.playerStates[0].NameText, meetingExtraButtonParent);
-                meetingExtraButtonText.text = addSwapperButtons ? $"Swaps: {Swapper.charges}" : "";
+                meetingExtraButtonText.text = addSwapperButtons ? $"交换次数: {Swapper.charges}" : "";
                 meetingExtraButtonText.enableWordWrapping = false;
                 meetingExtraButtonText.transform.localScale = Vector3.one * 1.7f;
                 meetingExtraButtonText.transform.localPosition = new Vector3(-2.5f, 0f, 0f);
@@ -608,10 +608,10 @@ namespace TheOtherRoles.Patches {
                 meetingExtraButtonLabel.transform.localPosition = new Vector3(0, 0, meetingExtraButtonLabel.transform.localPosition.z);
                 if (addSwapperButtons) {
                     meetingExtraButtonLabel.transform.localScale *= 1.7f;
-                    meetingExtraButtonLabel.text = Helpers.cs(Color.red, "Confirm Swap");
+                    meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认交换");
                 } else if (addMayorButton) {
                     meetingExtraButtonLabel.transform.localScale = new Vector3(meetingExtraButtonLabel.transform.localScale.x * 1.5f, meetingExtraButtonLabel.transform.localScale.x * 1.7f, meetingExtraButtonLabel.transform.localScale.x * 1.7f);
-                    meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "Double Vote: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "On ") : Helpers.cs(Color.red, "Off")));
+                    meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "投出两票: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "开") : Helpers.cs(Color.red, "关")));
                 }
                 PassiveButton passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
                 passiveButton.OnClick.RemoveAllListeners();
@@ -739,11 +739,11 @@ namespace TheOtherRoles.Patches {
                 // Add Portal info into Portalmaker Chat:
                 if (Portalmaker.portalmaker != null && (CachedPlayer.LocalPlayer.PlayerControl == Portalmaker.portalmaker || Helpers.shouldShowGhostInfo()) && !Portalmaker.portalmaker.Data.IsDead) {
                     if (Portal.teleportedPlayers.Count > 0) {
-                        string msg = "Portal Log:\n";
+                        string msg = "星门日志:\n";
                         foreach (var entry in Portal.teleportedPlayers) {
                             float timeBeforeMeeting = ((float)(DateTime.UtcNow - entry.time).TotalMilliseconds) / 1000;
-                            msg += Portalmaker.logShowsTime ? $"{(int)timeBeforeMeeting}s ago: " : "";
-                            msg = msg + $"{entry.name} used the teleporter\n";
+                            msg += Portalmaker.logShowsTime ? $"{(int)timeBeforeMeeting} 秒前: " : "";
+                            msg = msg + $"{entry.name} 玩家进入了星门\n";
                         }
                         FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Portalmaker.portalmaker, $"{msg}");
                     }
@@ -752,16 +752,16 @@ namespace TheOtherRoles.Patches {
                 // Add trapped Info into Trapper chat
                 if (Trapper.trapper != null && (CachedPlayer.LocalPlayer.PlayerControl == Trapper.trapper || Helpers.shouldShowGhostInfo()) && !Trapper.trapper.Data.IsDead) {
                     if (Trap.traps.Any(x => x.revealed))
-                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, "Trap Logs:");
+                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, "陷阱日志:");
                     foreach (Trap trap in Trap.traps) {
                         if (!trap.revealed) continue;
-                        string message = $"Trap {trap.instanceId}: \n";
+                        string message = $"陷阱 {trap.instanceId}: \n";
                         trap.trappedPlayer = trap.trappedPlayer.OrderBy(x => rnd.Next()).ToList();
                         foreach (PlayerControl p in trap.trappedPlayer) {
                             if (Trapper.infoType == 0) message += RoleInfo.GetRolesString(p, false, false, true) + "\n";
                             else if (Trapper.infoType == 1) {
-                                if (Helpers.isNeutral(p) || p.Data.Role.IsImpostor) message += "Evil Role \n";
-                                else message += "Good Role \n";
+                                if (Helpers.isNeutral(p) || p.Data.Role.IsImpostor) message += "邪恶职业 \n";
+                                else message += "善良职业 \n";
                             }
                             else message += p.Data.PlayerName + "\n";
                         }
@@ -776,7 +776,7 @@ namespace TheOtherRoles.Patches {
                     var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
                     int numberOfTasks = playerTotal - playerCompleted;
                     if (numberOfTasks == 0) {
-                        output = $"Bad alive roles in game: \n \n";
+                        output = $"场上的邪恶玩家: \n \n";
                         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.4f, new Action<float>((x) => {
                             if (x == 1f) {
                                 foreach (PlayerControl p in CachedPlayer.AllPlayers) {
@@ -785,11 +785,11 @@ namespace TheOtherRoles.Patches {
                                     if (!Snitch.playerRoomMap.ContainsKey(p.PlayerId)) continue;
                                     if (p.Data.IsDead) continue;
                                     var room = Snitch.playerRoomMap[p.PlayerId];
-                                    var roomName = "open fields";
+                                    var roomName = "室外";
                                     if (room != byte.MinValue) {
                                         roomName = DestroyableSingleton<TranslationController>.Instance.GetString((SystemTypes)room);
                                     }
-                                    output += "- " + RoleInfo.GetRolesString(p, false, false, true) + ", was last seen " + roomName + "\n";
+                                    output += "- " + RoleInfo.GetRolesString(p, false, false, true) + ", 最后一次出现 " + roomName + "\n";
                                 }
                                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Snitch.snitch, $"{output}");
                             }

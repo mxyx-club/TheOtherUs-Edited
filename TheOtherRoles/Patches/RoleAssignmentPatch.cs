@@ -701,15 +701,17 @@ namespace TheOtherRoles.Patches {
                 playerList.RemoveAll(x => x.PlayerId == playerId);
                 modifiers.RemoveAll(x => x == RoleId.Tunneler);
             }
-/*
-            if (modifiers.Contains(RoleId.Watcher)) {
-                List<PlayerControl> crewPlayerW = new List<PlayerControl>(playerList);
-                crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor);
-                playerId = setModifierToRandomPlayer((byte)RoleId.Watcher, crewPlayerW);
-                playerList.RemoveAll(x => x.PlayerId == playerId);
-                modifiers.RemoveAll(x => x == RoleId.Watcher);
-            }
-*/
+
+            /*
+                if (modifiers.Contains(RoleId.Watcher)) {
+                    List<PlayerControl> crewPlayerW = new List<PlayerControl>(playerList);
+                    crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor);
+                    playerId = setModifierToRandomPlayer((byte)RoleId.Watcher, crewPlayerW);
+                    playerList.RemoveAll(x => x.PlayerId == playerId);
+                    modifiers.RemoveAll(x => x == RoleId.Watcher);
+                }
+            */
+
             List<PlayerControl> crewPlayer = new List<PlayerControl>(playerList);
             crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
             if (modifiers.Contains(RoleId.Shifter)) {

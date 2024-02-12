@@ -1212,7 +1212,7 @@ namespace TheOtherRoles
         public static float chanceSwoop = 0f;
         public static bool canSwoop = false;
         public static bool canSwoop2 = false;
-        
+
 
         public static Sprite getSidekickButtonSprite() {
             if (buttonSprite) return buttonSprite;
@@ -1263,7 +1263,6 @@ namespace TheOtherRoles
                 canSwoop = false;
             }
             canSwoop2 = false;
-            
 
         }
         
@@ -1401,7 +1400,8 @@ namespace TheOtherRoles
         }
     }
 
-    public static class Bomber2 {
+    public static class Bomber2
+    {
         public static PlayerControl bomber2;
         public static Color color = Palette.ImpostorRed;
         public static Color alertColor = Palette.ImpostorRed;
@@ -1410,22 +1410,24 @@ namespace TheOtherRoles
         public static float bombDelay = 10f;
         public static float bombTimer = 10f;
         public static bool bombActive = false;
-       // public static bool hotPotatoMode = false;
+        // public static bool hotPotatoMode = false;
         public static PlayerControl currentBombTarget = null;
         public static bool hasAlerted = false;
         public static int timeLeft = 0;
         public static PlayerControl currentTarget = null;
         public static PlayerControl hasBomb = null;
-        
+
 
         private static Sprite buttonSprite;
-        public static Sprite getButtonSprite() {
+        public static Sprite getButtonSprite()
+        {
             if (buttonSprite) return buttonSprite;
             buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Bomber2.png", 115f);
             return buttonSprite;
         }
 
-        public static void clearAndReload() {
+        public static void clearAndReload()
+        {
             bomber2 = null;
             bombActive = false;
             cooldown = CustomOptionHolder.bomber2BombCooldown.getFloat();
@@ -1931,48 +1933,48 @@ namespace TheOtherRoles
                 var selectedInfo = infos[rnd.Next(infos.Count)];
                 switch (selectedInfo) {
                     case SpecialMediumInfo.SheriffSuicide:
-                        msg = "Yikes, that Sheriff shot backfired.";
+                        msg = "哎呀，枪走火了！[警长自杀].";
                         break;
                     case SpecialMediumInfo.WarlockSuicide:
-                        msg = "MAYBE I cursed the person next to me and killed myself. Oops.";
+                        msg = "啊哦，我好像把自己咒死了耶。[术士死于自杀].";
                         break;
                     case SpecialMediumInfo.ThiefSuicide:
-                        msg = "I tried to steal the gun from their pocket, but they were just happy to see me.";
+                        msg = "我试图从他们口袋里偷枪，却把自己害死了。[窃贼自杀].";
                         break;
                     case SpecialMediumInfo.ActiveLoverDies:
-                        msg = "I wanted to get out of this toxic relationship anyways.";
+                        msg = "无论如何，我都想摆脱这种有毒的关系。[带着恋人死去].";
                         break;
                     case SpecialMediumInfo.PassiveLoverSuicide:
-                        msg = "The love of my life died, thus with a kiss I die.";
+                        msg = "在天愿作比翼鸟,在地愿为连理枝，所爱以逝，吾亦寻之。[被恋人带死].";
                         break;
                     case SpecialMediumInfo.LawyerKilledByClient:
-                        msg = "My client killed me. Do I still get paid?";
+                        msg = "我的客户杀了我。我还能得到报酬吗？[律师被客户杀害]";
                         break;
                     case SpecialMediumInfo.JackalKillsSidekick:
-                        msg = "First they sidekicked me, then they killed me. At least I don't need to do tasks anymore.";
+                        msg = "既已纳我为伍，何必取我性命，算了，至少不用做任务了。[跟班被豺狼杀害]";
                         break;
                     case SpecialMediumInfo.ImpostorTeamkill:
-                        msg = "I guess they confused me for the Spy, is there even one?";
+                        msg = "他们肯定是把我当成卧底才杀了我，有没有？[内鬼死于队友]";
                         break;
                     case SpecialMediumInfo.BodyCleaned:
-                        msg = "Is my dead body some kind of art now or... aaand it's gone.";
+                        msg = "我的尸体现在是某种艺术还是。。。啊，它不见了。[尸体被清理或吃了]";
                         break;
                 }
             } else {
                 int randomNumber = rnd.Next(4);
-                string typeOfColor = Helpers.isLighterColor(Medium.target.killerIfExisting) ? "lighter" : "darker";
+                string typeOfColor = Helpers.isLighterColor(Medium.target.killerIfExisting) ? "浅" : "深";
                 float timeSinceDeath = ((float)(Medium.meetingStartTime - Medium.target.timeOfDeath).TotalMilliseconds);
                 var roleString = RoleInfo.GetRolesString(Medium.target.player, false);
                 if (randomNumber == 0) {
-                    if (!roleString.Contains("Impostor") && !roleString.Contains("Crewmate"))
-                        msg = "If my role hasn't been saved, there's no " + roleString + " in the game anymore.";
+                    if (!roleString.Contains("伪装者阵营") && !roleString.Contains("船员阵营"))
+                        msg = "除了我自己，场上已经没有 " + roleString + " 了.";
                     else
-                        msg = "I am a " + roleString + " without an other role."; 
-                } else if (randomNumber == 1) msg = "I'm not sure, but I guess a " + typeOfColor + " color killed me.";
-                else if (randomNumber == 2) msg = "If I counted correctly, I died " + Math.Round(timeSinceDeath / 1000) + "s before the next meeting started.";
-                else msg = "It seems like my killer is the " + RoleInfo.GetRolesString(Medium.target.killerIfExisting, false, false, true) + ".";
+                        msg = "我是一名 " + roleString + " ."; 
+                } else if (randomNumber == 1) msg = "我不确定，但我想应该是 " + typeOfColor + " 色的凶手杀了我.";
+                else if (randomNumber == 2) msg = "如果我数对了，我就在会议前 " + Math.Round(timeSinceDeath / 1000) + " 秒死了.";
+                else msg = "我好像是被 " + RoleInfo.GetRolesString(Medium.target.killerIfExisting, false, false, true) + " 无情的杀害了.";
             }
-
+            
             if (rnd.NextDouble() < chanceAdditionalInfo) {
                 int count = 0;
                 string condition = "";
@@ -1980,24 +1982,24 @@ namespace TheOtherRoles
                 switch (rnd.Next(3)) {
                     case 0:
                         count = alivePlayersList.Where(pc => pc.Data.Role.IsImpostor || new List<RoleInfo>() { RoleInfo.jackal, RoleInfo.sidekick, RoleInfo.sheriff, RoleInfo.thief }.Contains(RoleInfo.getRoleInfoForPlayer(pc, false).FirstOrDefault())).Count();
-                        condition = "killer" + (count == 1 ? "" : "s");
+                        condition = "个杀手" + (count == 1 ? "" : "");
                         break;
                     case 1:
                         count = alivePlayersList.Where(Helpers.roleCanUseVents).Count();
-                        condition = "player" + (count == 1 ? "" : "s") + " who can use vents";
+                        condition = "个可以使用管道的玩家" + (count == 1 ? "" : "");
                         break;
                     case 2:
                         count = alivePlayersList.Where(pc => Helpers.isNeutral(pc) && pc != Jackal.jackal && pc != Sidekick.sidekick && pc != Thief.thief).Count();
-                        condition = "player" + (count == 1 ? "" : "s") + " who " + (count == 1 ? "is" : "are") + " neutral but cannot kill";
+                        condition = "个中立不带刀的玩家" + (count == 1 ? "" : "") + " 他们 " + (count == 1 ? "" : "当时还") + " ";
                         break;
                     case 3:
                         //count = alivePlayersList.Where(pc =>
                         break;               
                 }
-                msg += $"\nWhen you asked, {count} " + condition + (count == 1 ? " was" : " were") + " still alive";
+                msg += $"\n你问我的时候,有, {count} " + condition + (count == 1 ? " " : "都") + " 依然活着";
             }
 
-            return Medium.target.player.Data.PlayerName + "'s Soul:\n" + msg;
+            return Medium.target.player.Data.PlayerName + " 的灵魂说:\n" + msg;
         }
     }
 
@@ -2740,69 +2742,146 @@ namespace TheOtherRoles
             return buttonSprite;
         }
 
-        public static void shiftRole (PlayerControl player1, PlayerControl player2, bool repeat = true) {
-            if (Mayor.mayor != null && Mayor.mayor == player2) {
+        public static void shiftRole(PlayerControl player1, PlayerControl player2, bool repeat = true)
+        {
+            //好人交换师代码target
+            if (Mayor.mayor != null && Mayor.mayor == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Mayor.mayor = player1;
-            } else if (Portalmaker.portalmaker != null && Portalmaker.portalmaker == player2) {
+            }
+            else if (Portalmaker.portalmaker != null && Portalmaker.portalmaker == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Portalmaker.portalmaker = player1;
-            } else if (Engineer.engineer != null && Engineer.engineer == player2) {
+            }
+            else if (Engineer.engineer != null && Engineer.engineer == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Engineer.engineer = player1;
-            } else if (Sheriff.sheriff != null && Sheriff.sheriff == player2) {
+            }
+            else if (Sheriff.sheriff != null && Sheriff.sheriff == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 if (Sheriff.formerDeputy != null && Sheriff.formerDeputy == Sheriff.sheriff) Sheriff.formerDeputy = player1;  // Shifter also shifts info on promoted deputy (to get handcuffs)
                 Sheriff.sheriff = player1;
-            } else if (Deputy.deputy != null && Deputy.deputy == player2) {
+            }
+            else if (Deputy.deputy != null && Deputy.deputy == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Deputy.deputy = player1;
-            } else if (Lighter.lighter != null && Lighter.lighter == player2) {
+            }
+            else if (Lighter.lighter != null && Lighter.lighter == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Lighter.lighter = player1;
-            } else if (Detective.detective != null && Detective.detective == player2) {
+            }
+            else if (Detective.detective != null && Detective.detective == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Detective.detective = player1;
-            } else if (TimeMaster.timeMaster != null && TimeMaster.timeMaster == player2) {
+            }
+            else if (TimeMaster.timeMaster != null && TimeMaster.timeMaster == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 TimeMaster.timeMaster = player1;
-            }  else if (Medic.medic != null && Medic.medic == player2) {
+            }
+            else if (Medic.medic != null && Medic.medic == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Medic.medic = player1;
-            } else if (Swapper.swapper != null && Swapper.swapper == player2) {
+            }
+            else if (Swapper.swapper != null && Swapper.swapper == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Swapper.swapper = player1;
-            } else if (Seer.seer != null && Seer.seer == player2) {
+            }
+            else if (Seer.seer != null && Seer.seer == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Seer.seer = player1;
-            } else if (Hacker.hacker != null && Hacker.hacker == player2) {
+            }
+            else if (Hacker.hacker != null && Hacker.hacker == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Hacker.hacker = player1;
-            } else if (Tracker.tracker != null && Tracker.tracker == player2) {
+            }
+            else if (Tracker.tracker != null && Tracker.tracker == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Tracker.tracker = player1;
-            } else if (Snitch.snitch != null && Snitch.snitch == player2) {
+            }
+            else if (Snitch.snitch != null && Snitch.snitch == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Snitch.snitch = player1;
-            } else if (Spy.spy != null && Spy.spy == player2) {
+            }
+            else if (Spy.spy != null && Spy.spy == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Spy.spy = player1;
-            } else if (SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == player2) {
+            }
+            else if (SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 SecurityGuard.securityGuard = player1;
-            } else if (Guesser.niceGuesser != null && Guesser.niceGuesser == player2) {
+            }
+            else if (Guesser.niceGuesser != null && Guesser.niceGuesser == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Guesser.niceGuesser = player1;
-            } else if (Medium.medium != null && Medium.medium == player2) {
+            }
+            else if (Medium.medium != null && Medium.medium == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Medium.medium = player1;
-            } else if (Pursuer.pursuer != null && Pursuer.pursuer == player2) {
+            }
+            else if (Pursuer.pursuer != null && Pursuer.pursuer == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Pursuer.pursuer = player1;
-            } else if (Trapper.trapper != null && Trapper.trapper == player2) {
+            }
+            else if (Trapper.trapper != null && Trapper.trapper == player2)
+            {
                 if (repeat) shiftRole(player2, player1, false);
                 Trapper.trapper = player1;
             }
+            else if (Jester.jester != null && Jester.jester == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Jester.jester = player1;
+            }
+            else if (Amnisiac.amnisiac != null && Amnisiac.amnisiac == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Amnisiac.amnisiac = player1;
+            }
+            else if (Arsonist.arsonist != null && Arsonist.arsonist == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Arsonist.arsonist = player1;
+            }
+            else if (Vulture.vulture != null && Vulture.vulture == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Vulture.vulture = player1;
+            }
+            else if (Thief.thief != null && Thief.thief == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Thief.thief = player1;
+            }
+            else if (Werewolf.werewolf != null && Werewolf.werewolf == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Werewolf.werewolf = player1;
+            }
+            else if (Pursuer.pursuer != null && Pursuer.pursuer == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Pursuer.pursuer = player1;
+            }
+
         }
 
         public static void clearAndReload() {

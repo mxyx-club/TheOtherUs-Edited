@@ -308,49 +308,49 @@ namespace TheOtherRoles.Patches {
             textRenderer.text = "";
 
             if (AdditionalTempData.winCondition == WinCondition.JesterWin) {
-                textRenderer.text = "Jester Wins";
+                textRenderer.text = "听我说谢谢你";
                 textRenderer.color = Jester.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.ArsonistWin) {
-                textRenderer.text = "Arsonist Wins";
+                textRenderer.text = "用火焰净化一切";
                 textRenderer.color = Arsonist.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.VultureWin) {
-                textRenderer.text = "Vulture Wins";
+                textRenderer.text = "吃饱饱！";
                 textRenderer.color = Vulture.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.WerewolfWin) {
-                textRenderer.text = "Werewolf Wins";
+                textRenderer.text = "月下狼人获胜！";
                 textRenderer.color = Werewolf.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.ProsecutorWin) {
-                textRenderer.text = "Prosecutor Wins";
+                textRenderer.text = "小嘴叭叭!";
                 textRenderer.color = Lawyer.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin) {
-                textRenderer.text = "Lovers And Crewmates Win";
+                textRenderer.text = "船员和恋人获胜";
                 textRenderer.color = Lovers.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
             } 
             else if (AdditionalTempData.winCondition == WinCondition.LoversSoloWin) {
-                textRenderer.text = "Lovers Win";
+                textRenderer.text = "与你的爱恋心意合一~";
                 textRenderer.color = Lovers.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
             }
             else if (AdditionalTempData.winCondition == WinCondition.JackalWin) {
-                textRenderer.text = "Team Jackal Wins";
+                textRenderer.text = "豺狼的全家福.jpg";
                 textRenderer.color = Jackal.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.MiniLose) {
-                textRenderer.text = "Mini died";
+                textRenderer.text = "他就只是个孩子啊！";
                 textRenderer.color = Mini.color;
             }
 
             foreach (WinCondition cond in AdditionalTempData.additionalWinConditions) {
                 if (cond == WinCondition.AdditionalLawyerBonusWin) {
-                    textRenderer.text += $"\n{Helpers.cs(Lawyer.color, "The Lawyer wins with the client")}";
+                    textRenderer.text += $"\n{Helpers.cs(Lawyer.color, "律师和客户胜利")}";
                 } else if (cond == WinCondition.AdditionalAlivePursuerWin) {
-                    textRenderer.text += $"\n{Helpers.cs(Pursuer.color, "The Pursuer survived")}";
+                    textRenderer.text += $"\n{Helpers.cs(Pursuer.color, "起诉人存活")}";
                 }
             }
 
@@ -364,15 +364,15 @@ namespace TheOtherRoles.Patches {
                 if (HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM) {
                     int minutes = (int)AdditionalTempData.timer / 60;
                     int seconds = (int)AdditionalTempData.timer % 60;
-                    roleSummaryText.AppendLine($"<color=#FAD934FF>Time: {minutes:00}:{seconds:00}</color> \n");
+                    roleSummaryText.AppendLine($"<color=#FAD934FF>剩余时间: {minutes:00}:{seconds:00}</color> \n");
                 }
-                roleSummaryText.AppendLine("Players and roles at the end of the game:");
+                roleSummaryText.AppendLine("游戏总结:");
                 foreach(var data in AdditionalTempData.playerRoles) {
                     //var roles = string.Join(" ", data.Roles.Select(x => Helpers.cs(x.color, x.name)));
                     string roles = data.RoleNames;
                     //if (data.IsGuesser) roles += " (Guesser)";
                     var taskInfo = data.TasksTotal > 0 ? $" - <color=#FAD934FF>({data.TasksCompleted}/{data.TasksTotal})</color>" : "";
-                    if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(Kills: {data.Kills})</color>";
+                    if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(击杀: {data.Kills})</color>";
                     roleSummaryText.AppendLine($"{Helpers.cs(data.IsAlive ? Color.white : new Color(.7f,.7f,.7f), data.PlayerName)} - {roles}{taskInfo}"); 
                 }
                 TMPro.TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMPro.TMP_Text>();

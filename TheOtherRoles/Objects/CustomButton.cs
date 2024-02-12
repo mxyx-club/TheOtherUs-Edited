@@ -64,7 +64,7 @@ namespace TheOtherRoles.Objects {
             this.mirror = mirror;
             this.hotkey = hotkey;
             this.buttonText = buttonText;
-            Timer = 16.2f;
+            Timer = 33.5f;
             buttons.Add(this);
             actionButton = UnityEngine.Object.Instantiate(hudManager.KillButton, hudManager.KillButton.transform.parent);
             actionButtonGameObject = actionButton.gameObject;

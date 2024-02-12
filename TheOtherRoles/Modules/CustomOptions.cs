@@ -81,7 +81,7 @@ namespace TheOtherRoles {
         }
 
         public static CustomOption Create(int id, CustomOptionType type, string name, bool defaultValue, CustomOption parent = null, bool isHeader = false, Action onChange = null) {
-            return new CustomOption(id, type, name, new string[]{"Off", "On"}, defaultValue ? "On" : "Off", parent, isHeader, onChange);
+            return new CustomOption(id, type, name, new string[]{"关闭", "开启"}, defaultValue ? "开启" : "关闭", parent, isHeader, onChange);
         }
 
         // Static behaviour
@@ -89,7 +89,7 @@ namespace TheOtherRoles {
         public static void switchPreset(int newPreset) {
             saveVanillaOptions();
             CustomOption.preset = newPreset;
-            vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", "GameOptions", "");
+            vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", "游戏预设", "");
             loadVanillaOptions();
             foreach (CustomOption option in CustomOption.options) {
                 if (option.id == 0) continue;
@@ -227,7 +227,7 @@ namespace TheOtherRoles {
                     CustomOption option = CustomOption.options.First(option => option.id == id);
                     option.updateSelection(selection);
                 } catch (Exception e) {
-                    TheOtherRolesPlugin.Logger.LogWarning($"{e}: while deserializing - tried to paste invalid settings!");
+                    TheOtherRolesPlugin.Logger.LogWarning($"{e}: 反序列化时 - 试图粘贴无效设置！");
                 }
             }
         }
@@ -250,7 +250,7 @@ namespace TheOtherRoles {
                 loadVanillaOptions();
                 return true;
             } catch (Exception e) {
-                TheOtherRolesPlugin.Logger.LogWarning($"{e}: tried to paste invalid settings!");
+                TheOtherRolesPlugin.Logger.LogWarning($"{e}: 尝试粘贴无效设置！");
                 SoundEffectsManager.Load();
                 SoundEffectsManager.play("fail");
                 return false;
@@ -316,11 +316,11 @@ namespace TheOtherRoles {
         private static void createClassicTabs(GameOptionsMenu __instance) {
             bool isReturn = setNames(
                 new Dictionary<string, string>() {
-                    ["TORSettings"] = "The Other Roles Settings",
-                    ["ImpostorSettings"] = "Impostor Roles Settings",
-                    ["NeutralSettings"] = "Neutral Roles Settings",
-                    ["CrewmateSettings"] = "Crewmate Roles Settings",
-                    ["ModifierSettings"] = "Modifier Settings"
+                    ["TORSettings"] = "模组设置",
+                    ["ImpostorSettings"] = "伪装者职业设置",
+                    ["NeutralSettings"] = "中立职业设置",
+                    ["CrewmateSettings"] = "船员职业设置",
+                    ["ModifierSettings"] = "附加职业设置"
                 });
 
             if (isReturn) return;
@@ -439,12 +439,12 @@ namespace TheOtherRoles {
         private static void createGuesserTabs(GameOptionsMenu __instance) {
             bool isReturn = setNames(
                 new Dictionary<string, string>() {
-                    ["TORSettings"] = "The Other Roles Settings",
-                    ["GuesserSettings"] = "Guesser Mode Settings",
-                    ["ImpostorSettings"] = "Impostor Roles Settings",
-                    ["NeutralSettings"] = "Neutral Roles Settings",
-                    ["CrewmateSettings"] = "Crewmate Roles Settings",
-                    ["ModifierSettings"] = "Modifier Settings"
+                    ["TORSettings"] = "模组设置",
+                    ["GuesserSettings"] = "赌怪模式设置",
+                    ["ImpostorSettings"] = "伪装者职业设置",
+                    ["NeutralSettings"] = "中立职业设置",
+                    ["CrewmateSettings"] = "船员职业设置",
+                    ["ModifierSettings"] = "附加职业设置"
                 });
 
             if (isReturn) return;
@@ -574,8 +574,8 @@ namespace TheOtherRoles {
         private static void createHideNSeekTabs(GameOptionsMenu __instance) {
             bool isReturn = setNames(
                 new Dictionary<string, string>(){ 
-                    ["TORSettings"] = "The Other Roles Settings", 
-                    ["HideNSeekSettings"] = "Hide 'N Seek Settings" 
+                    ["TORSettings"] = "模组设置", 
+                    ["HideNSeekSettings"] = "躲猫猫模式设置" 
                 });
 
             if (isReturn) return;
@@ -667,7 +667,7 @@ namespace TheOtherRoles {
         private static void createPropHuntTabs(GameOptionsMenu __instance) {
             bool isReturn = setNames(
                 new Dictionary<string, string>() {
-                    ["TORSettings"] = "Prop Hunt Settings"
+                    ["TORSettings"] = "道具躲猫猫模式设置"
                 });
 
             if (isReturn) return;
@@ -952,10 +952,10 @@ namespace TheOtherRoles {
     class GameOptionsDataPatch
     {
         private static string buildRoleOptions() {
-            var impRoles = "<size=150%><color=#ff1c1c>Impostors</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Impostor, true) + "\n";
-            var neutralRoles = "<size=150%><color=#50544c>Neutrals</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Neutral, true) + "\n";
-            var crewRoles = "<size=150%><color=#08fcfc>Crewmates</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Crewmate, true) + "\n";
-            var modifiers = "<size=150%><color=#ffec04>Modifiers</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Modifier, true);
+            var impRoles = "<size=150%><color=#ff1c1c>伪装者阵营</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Impostor, true) + "\n";
+            var neutralRoles = "<size=150%><color=#50544c>中立阵营</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Neutral, true) + "\n";
+            var crewRoles = "<size=150%><color=#08fcfc>船员阵营</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Crewmate, true) + "\n";
+            var modifiers = "<size=150%><color=#ffec04>附加职业</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Modifier, true);
             return impRoles + neutralRoles + crewRoles + modifiers;
         }
         private static string buildModifierExtras(CustomOption customOption) {
@@ -993,14 +993,14 @@ namespace TheOtherRoles {
                 }
                 else if (option.parent.getSelection() > 0) {
                     if (option.id == 103) //Deputy
-                        sb.AppendLine($"- {Helpers.cs(Deputy.color, "Deputy")}: {option.selections[option.selection].ToString()}");
+                        sb.AppendLine($"- {Helpers.cs(Deputy.color, "捕快")}: {option.selections[option.selection].ToString()}");
                     else if (option.id == 224) //Sidekick
-                        sb.AppendLine($"- {Helpers.cs(Sidekick.color, "Sidekick")}: {option.selections[option.selection].ToString()}");
+                        sb.AppendLine($"- {Helpers.cs(Sidekick.color, "跟班")}: {option.selections[option.selection].ToString()}");
                     else if (option.id == 358) //Prosecutor
-                        sb.AppendLine($"- {Helpers.cs(Lawyer.color, "Prosecutor")}: {option.selections[option.selection].ToString()}");
+                        sb.AppendLine($"- {Helpers.cs(Lawyer.color, "处刑者")}: {option.selections[option.selection].ToString()}");
                     
                     else if (option.id == 3642134) //Can Swoop
-                        sb.AppendLine($"- {Helpers.cs(Swooper.color, "Swooper")}: {option.selections[option.selection].ToString()}");
+                        sb.AppendLine($"- {Helpers.cs(Swooper.color, "隐身人")}: {option.selections[option.selection].ToString()}");
                     
                 }
             }
@@ -1018,7 +1018,7 @@ namespace TheOtherRoles {
                     sb.AppendLine(Helpers.cs(c, $"{option.name}: {option.selections[option.selection].ToString()}"));
                 } else {
                     if (option == CustomOptionHolder.crewmateRolesCountMin) {
-                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Crewmate Roles");
+                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "船员阵营");
                         var min = CustomOptionHolder.crewmateRolesCountMin.getSelection();
                         var max = CustomOptionHolder.crewmateRolesCountMax.getSelection();
                         string optionValue = "";
@@ -1037,14 +1037,14 @@ namespace TheOtherRoles {
                         optionValue += (min == max) ? $"{max}" : $"{min} - {max}";
                         sb.AppendLine($"{optionName}: {optionValue}");
                     } else if (option == CustomOptionHolder.neutralRolesCountMin) {
-                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Neutral Roles");
+                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "中立阵营");
                         var min = CustomOptionHolder.neutralRolesCountMin.getSelection();
                         var max = CustomOptionHolder.neutralRolesCountMax.getSelection();
                         if (min > max) min = max;
                         var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
                         sb.AppendLine($"{optionName}: {optionValue}");
                     } else if (option == CustomOptionHolder.impostorRolesCountMin) {
-                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Impostor Roles");
+                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "伪装者阵营");
                         var min = CustomOptionHolder.impostorRolesCountMin.getSelection();
                         var max = CustomOptionHolder.impostorRolesCountMax.getSelection();
                         if (max > GameOptionsManager.Instance.currentGameOptions.NumImpostors) max = GameOptionsManager.Instance.currentGameOptions.NumImpostors;
@@ -1052,7 +1052,7 @@ namespace TheOtherRoles {
                         var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
                         sb.AppendLine($"{optionName}: {optionValue}");
                     } else if (option == CustomOptionHolder.modifiersCountMin) {
-                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Modifiers");
+                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "附加职业");
                         var min = CustomOptionHolder.modifiersCountMin.getSelection();
                         var max = CustomOptionHolder.modifiersCountMax.getSelection();
                         if (min > max) min = max;
@@ -1074,54 +1074,54 @@ namespace TheOtherRoles {
             if (vanillaSettings == "")
                 vanillaSettings = GameOptionsManager.Instance.CurrentGameOptions.ToHudString(PlayerControl.AllPlayerControls.Count);
             int counter = TheOtherRolesPlugin.optionsPage;
-            string hudString = counter != 0 && !hideExtras ? Helpers.cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "(Use scroll wheel if necessary)\n\n") : "";
+            string hudString = counter != 0 && !hideExtras ? Helpers.cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "(如有必要，请使用滚轮)\n\n") : "";
             
             if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek) {
                 if (TheOtherRolesPlugin.optionsPage > 1) TheOtherRolesPlugin.optionsPage = 0;
                 maxPage = 2;
                 switch (counter) {
                     case 0:
-                        hudString += "Page 1: Hide N Seek Settings \n\n" + buildOptionsOfType(CustomOption.CustomOptionType.HideNSeekMain, false);
+                        hudString += "第1页: 躲猫猫模式设置 \n\n" + buildOptionsOfType(CustomOption.CustomOptionType.HideNSeekMain, false);
                         break;
                     case 1:
-                        hudString += "Page 2: Hide N Seek Role Settings \n\n" + buildOptionsOfType(CustomOption.CustomOptionType.HideNSeekRoles, false);
+                        hudString += "第2页: 躲猫猫职业设置 \n\n" + buildOptionsOfType(CustomOption.CustomOptionType.HideNSeekRoles, false);
                         break;
                 }
             } else if (TORMapOptions.gameMode == CustomGamemodes.PropHunt) {
                 maxPage = 1;
                 switch (counter) {
                     case 0:
-                        hudString += "Page 1: Prop Hunt Settings \n\n" + buildOptionsOfType(CustomOption.CustomOptionType.PropHunt, false);
+                        hudString += "第1页: 道具躲猫猫模式设置 \n\n" + buildOptionsOfType(CustomOption.CustomOptionType.PropHunt, false);
                         break;
                 }
             } else {
                 maxPage = 7;
                 switch (counter) {
                     case 0:
-                        hudString += (!hideExtras ? "" : "Page 1: Vanilla Settings \n\n") + vanillaSettings;
+                        hudString += (!hideExtras ? "" : "第1页: 游戏设置 \n\n") + vanillaSettings;
                         break;
                     case 1:
-                        hudString += "Page 2: The Other Roles Settings \n" + buildOptionsOfType(CustomOption.CustomOptionType.General, false);
+                        hudString += "第2页: 超多职业模组设置 \n" + buildOptionsOfType(CustomOption.CustomOptionType.General, false);
                         break;
                     case 2:
-                        hudString += "Page 3: Role and Modifier Rates \n" + buildRoleOptions();
+                        hudString += "第3页: 职业和附加职业设置 \n" + buildRoleOptions();
                         break;
                     case 3:
-                        hudString += "Page 4: Impostor Role Settings \n" + buildOptionsOfType(CustomOption.CustomOptionType.Impostor, false);
+                        hudString += "第4页: 伪装者职业设置 \n" + buildOptionsOfType(CustomOption.CustomOptionType.Impostor, false);
                         break;
                     case 4:
-                        hudString += "Page 5: Neutral Role Settings \n" + buildOptionsOfType(CustomOption.CustomOptionType.Neutral, false);
+                        hudString += "第5页: 中立职业设置 \n" + buildOptionsOfType(CustomOption.CustomOptionType.Neutral, false);
                         break;
                     case 5:
-                        hudString += "Page 6: Crewmate Role Settings \n" + buildOptionsOfType(CustomOption.CustomOptionType.Crewmate, false);
+                        hudString += "第6页: 船员职业设置 \n" + buildOptionsOfType(CustomOption.CustomOptionType.Crewmate, false);
                         break;
                     case 6:
-                        hudString += "Page 7: Modifier Settings \n" + buildOptionsOfType(CustomOption.CustomOptionType.Modifier, false);
+                        hudString += "第7页: 附加职业设置 \n" + buildOptionsOfType(CustomOption.CustomOptionType.Modifier, false);
                         break;
                 }
             }
 
-            if (!hideExtras || counter != 0) hudString += $"\n Press TAB or Page Number for more... ({counter + 1}/{maxPage})";
+            if (!hideExtras || counter != 0) hudString += $"\n 按Tab或者数字键查看更多... ({counter + 1}/{maxPage})";
             return hudString;
         }
 
@@ -1204,7 +1204,7 @@ namespace TheOtherRoles {
         public static bool Prefix(ref string __result, ref StringNames id)
         {
             if ((int)id == 49999) {
-                __result = "Very Short";
+                __result = "非常短";
                 return false;
             }
             return true;
@@ -1304,7 +1304,7 @@ namespace TheOtherRoles {
             if (!Scroller.gameObject.active) return;
 
             var rows = __instance.GameSettings.text.Count(c => c == '\n');
-            float LobbyTextRowHeight = 0.06F;
+            float LobbyTextRowHeight = 0.12F;
             var maxY = Mathf.Max(MinY, rows * LobbyTextRowHeight + (rows - 38) * LobbyTextRowHeight);
 
             Scroller.ContentYBounds = new FloatRange(MinY, maxY);

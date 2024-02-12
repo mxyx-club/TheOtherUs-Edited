@@ -883,13 +883,14 @@ namespace TheOtherRoles
                     Morphling.morphling = amnisiac;
                     Amnisiac.clearAndReload();
                     break;
+
                 case RoleId.Bomber2:
                     Helpers.turnToImpostor(Amnisiac.amnisiac);
                     if (Amnisiac.resetRole) Bomber2.clearAndReload();
                     Bomber2.bomber2 = amnisiac;
                     Amnisiac.clearAndReload();
                     break;
-                    
+
                 case RoleId.Bomber:
                     Helpers.turnToImpostor(Amnisiac.amnisiac);
                     if (Amnisiac.resetRole) Bomber.clearAndReload();
@@ -1368,9 +1369,9 @@ namespace TheOtherRoles
 
             Shifter.futureShift = null;
             Shifter.clearAndReload();
-
+        
             // Suicide (exile) when impostor or impostor variants
-            if ((player.Data.Role.IsImpostor || Helpers.isNeutral(player)) && !oldShifter.Data.IsDead) {
+            if ((player.Data.Role.IsImpostor || Helpers.isJackalAndSidekickAndLawyer(player)) && !oldShifter.Data.IsDead) {
                 oldShifter.Exiled();
                 GameHistory.overrideDeathReasonAndKiller(oldShifter, DeadPlayer.CustomDeathReason.Shift, player);
                 if (oldShifter == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null) {
@@ -1547,8 +1548,8 @@ namespace TheOtherRoles
             if (player == Trapper.trapper) Trapper.clearAndReload();
 
             // Impostor roles
-            if (player == Morphling.morphling) Morphling.clearAndReload();
             if (player == Bomber2.bomber2) Bomber2.clearAndReload();
+            if (player == Morphling.morphling) Morphling.clearAndReload();
             if (player == Camouflager.camouflager) Camouflager.clearAndReload();
             if (player == Godfather.godfather) Godfather.clearAndReload();
             if (player == Mafioso.mafioso) Mafioso.clearAndReload();
@@ -1850,9 +1851,7 @@ namespace TheOtherRoles
                             }
                         } else Bomber2.hasAlerted = false;
                     }
-
                 }
-
             })));
         }
 
@@ -2363,8 +2362,8 @@ namespace TheOtherRoles
             if (target == Ninja.ninja) Ninja.ninja = thief;
             if (target == Escapist.escapist) Escapist.escapist = thief;
             if (target == Bomber.bomber) Bomber.bomber = thief;
-            if (target == Bomber2.bomber2) Bomber2.bomber2 = thief;
             if (target == Miner.miner) Miner.miner = thief;
+            if (target == Bomber2.bomber2) Bomber2.bomber2 = thief;
             if (target == Undertaker.undertaker) Undertaker.undertaker = thief;
             if (target.Data.Role.IsImpostor) {
                 RoleManager.Instance.SetRole(Thief.thief, RoleTypes.Impostor);
@@ -2821,11 +2820,11 @@ namespace TheOtherRoles
                     var blankedValue = reader.ReadByte();
                     RPCProcedure.setBlanked(pid, blankedValue);
                     break;
-                case (byte)CustomRPC.SetFutureSpelled:
-                    RPCProcedure.setFutureSpelled(reader.ReadByte());
-                    break;
                 case (byte)CustomRPC.GiveBomb:
                     RPCProcedure.giveBomb(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.SetFutureSpelled:
+                    RPCProcedure.setFutureSpelled(reader.ReadByte());
                     break;
                 case (byte)CustomRPC.Bloody:
                     byte bloodyKiller = reader.ReadByte();

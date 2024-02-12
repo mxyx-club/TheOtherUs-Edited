@@ -93,12 +93,22 @@ namespace TheOtherRoles.Patches {
                     setPlayerNameColor(Deputy.deputy, Deputy.color);
                 }
             } else*/
-            if (Deputy.deputy != null && Deputy.deputy == localPlayer) {
+            if (Deputy.deputy != null && Deputy.deputy == localPlayer) 
+            {
                 setPlayerNameColor(Deputy.deputy, Deputy.color);
                 if (Sheriff.sheriff != null && Deputy.knowsSheriff) {
                     setPlayerNameColor(Sheriff.sheriff, Sheriff.color);
                 }
-            } /*else if (Portalmaker.portalmaker != null && Portalmaker.portalmaker == localPlayer)
+            }
+            
+            if (Sheriff.sheriff !=null && Sheriff.sheriff ==localPlayer)
+            {
+                setPlayerNameColor(Sheriff.sheriff, Sheriff.color);
+                if (Deputy.deputy != null && Deputy.knowsSheriff) setPlayerNameColor(Deputy.deputy, Sheriff.color);
+            }
+            
+            
+            /*else if (Portalmaker.portalmaker != null && Portalmaker.portalmaker == localPlayer)
                 setPlayerNameColor(Portalmaker.portalmaker, Portalmaker.color);
             else if (Lighter.lighter != null && Lighter.lighter == localPlayer)
                 setPlayerNameColor(Lighter.lighter, Lighter.color);
@@ -181,19 +191,19 @@ namespace TheOtherRoles.Patches {
             if (CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor) {
                 foreach (PlayerControl player in CachedPlayer.AllPlayers)
                     if (Godfather.godfather != null && Godfather.godfather == player)
-                            player.cosmetics.nameText.text = player.Data.PlayerName + " (G)";
+                            player.cosmetics.nameText.text = player.Data.PlayerName + " (教父)";
                     else if (Mafioso.mafioso != null && Mafioso.mafioso == player)
-                            player.cosmetics.nameText.text = player.Data.PlayerName + " (M)";
+                            player.cosmetics.nameText.text = player.Data.PlayerName + " (小弟)";
                     else if (Janitor.janitor != null && Janitor.janitor == player)
-                            player.cosmetics.nameText.text = player.Data.PlayerName + " (J)";
+                            player.cosmetics.nameText.text = player.Data.PlayerName + " (清洁工)";
                 if (MeetingHud.Instance != null)
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                         if (Godfather.godfather != null && Godfather.godfather.PlayerId == player.TargetPlayerId)
-                            player.NameText.text = Godfather.godfather.Data.PlayerName + " (G)";
+                            player.NameText.text = Godfather.godfather.Data.PlayerName + " (教父)";
                         else if (Mafioso.mafioso != null && Mafioso.mafioso.PlayerId == player.TargetPlayerId)
-                            player.NameText.text = Mafioso.mafioso.Data.PlayerName + " (M)";
+                            player.NameText.text = Mafioso.mafioso.Data.PlayerName + " (小弟)";
                         else if (Janitor.janitor != null && Janitor.janitor.PlayerId == player.TargetPlayerId)
-                            player.NameText.text = Janitor.janitor.Data.PlayerName + " (J)";
+                            player.NameText.text = Janitor.janitor.Data.PlayerName + " (清洁工)";
             }
 
             // Lovers
@@ -237,7 +247,7 @@ namespace TheOtherRoles.Patches {
             if (CachedPlayer.LocalPlayer != null && MeetingHud.Instance != null && TORMapOptions.showLighterDarker) {
                 foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates) {
                     var target = Helpers.playerById(player.TargetPlayerId);
-                    if (target != null)  player.NameText.text += $" ({(Helpers.isLighterColor(target) ? "L" : "D")})";
+                    if (target != null)  player.NameText.text += $" ({(Helpers.isLighterColor(target) ? "浅" : "深")})";
                 }
             }
         }
