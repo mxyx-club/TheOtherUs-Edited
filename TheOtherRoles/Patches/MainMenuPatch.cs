@@ -194,7 +194,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
 
                 template.StartCoroutine(Effects.Lerp(0.1f, new System.Action<float>((p) => {
                     guesserButtonText.SetText("赌怪模式");
-                    HideNSeekButtonText.SetText("TOU躲猫猫");
+                    HideNSeekButtonText.SetText("躲猫猫模式");
                     PropHuntButtonText.SetText("道具躲猫猫");
                 })));
             }));

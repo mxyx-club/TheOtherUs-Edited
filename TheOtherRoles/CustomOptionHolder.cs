@@ -438,7 +438,10 @@ namespace TheOtherRoles {
         public static CustomOption dynamicMapEnableSubmerged;
         public static CustomOption dynamicMapSeparateSettings;
 
+
         public static CustomOption movePolusVents;
+        //添加新管道
+        public static CustomOption addPolusVents;
 		public static CustomOption swapNavWifi;
 		public static CustomOption movePolusVitals;
 		public static CustomOption enableBetterPolus;
@@ -1053,7 +1056,8 @@ namespace TheOtherRoles {
             dynamicMapEnableSubmerged = CustomOption.Create(505, Types.General, "Submerged", rates, dynamicMap, false);
             dynamicMapSeparateSettings = CustomOption.Create(509, Types.General, "使用随机地图设置预设", false, dynamicMap, false);
             enableBetterPolus = CustomOption.Create(7878, Types.General, "更好的Polus地图", false, null, false);
-            movePolusVents = CustomOption.Create(7879, Types.General, "管道调整", false, enableBetterPolus, false);
+            movePolusVents = CustomOption.Create(7879, Types.General, "改变管道布局", false, enableBetterPolus, false);
+            addPolusVents = CustomOption.Create(7892, Types.General, "添加新管道\n样本室-办公室-武器室", false, enableBetterPolus, false);
             movePolusVitals = CustomOption.Create(7880, Types.General, "将生命检测仪移动到实验室", false, enableBetterPolus, false);
 			swapNavWifi = CustomOption.Create(7881, Types.General, "重启WIFI与导航任务位置交换", false, enableBetterPolus, false);
 			moveColdTemp = CustomOption.Create(7882, Types.General, "温度调节任务移动至配电室下方", false, enableBetterPolus, false);

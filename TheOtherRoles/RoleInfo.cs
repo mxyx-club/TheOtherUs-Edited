@@ -37,7 +37,7 @@ namespace TheOtherRoles
         public static RoleInfo mayor = new RoleInfo("市长", Mayor.color, "我持有一票否决权!!!", "用你的权力帮助船员", RoleId.Mayor);
         public static RoleInfo portalmaker = new RoleInfo("星门缔造者", Portalmaker.color, "以[星]之铭", "筑[星]之门", RoleId.Portalmaker);
         public static RoleInfo engineer = new RoleInfo("工程师",  Engineer.color, "没人比我更懂得窃听", "维修飞船", RoleId.Engineer);
-        public static RoleInfo privateInvestigator = new RoleInfo("特工",  PrivateInvestigator.color, "查看谁在与他人互动", "卧底在飞船之中", RoleId.PrivateInvestigator);
+        public static RoleInfo privateInvestigator = new RoleInfo("观察者",  PrivateInvestigator.color, "查看谁在与他人互动", "卧底在飞船之中", RoleId.PrivateInvestigator);
         public static RoleInfo sheriff = new RoleInfo("警长", Sheriff.color, "<color=#FF1919FF>严禁</color>小脑行为！！！", "毙了伪装者", RoleId.Sheriff);
         public static RoleInfo bodyguard  = new RoleInfo("保镖", BodyGuard.color, "用自己的生命保护他人", "用自己的生命保护他人", RoleId.BodyGuard, false);
         public static RoleInfo deputy = new RoleInfo("捕快", Sheriff.color, "逮捕<color=#FF1919FF>伪装者</color>", "逮捕伪装者", RoleId.Deputy);

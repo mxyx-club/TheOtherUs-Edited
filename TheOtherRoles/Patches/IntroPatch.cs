@@ -73,6 +73,9 @@ namespace TheOtherRoles.Patches {
                 }
             }
 
+            // Polus管道追加
+            AdditionalVents.AddAdditionalVents();
+
             // Force Bounty Hunter to load a new Bounty when the Intro is over
             if (BountyHunter.bounty != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter) {
                 BountyHunter.bountyUpdateTimer = 0f;
