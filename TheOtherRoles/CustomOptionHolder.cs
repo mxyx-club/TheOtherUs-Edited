@@ -447,7 +447,7 @@ namespace TheOtherRoles {
 		public static CustomOption movePolusVitals;
 		public static CustomOption moveColdTemp;
 
-		public static CustomOption enableAirShipmodify;
+		public static CustomOption enableAirShipModify;
 		public static CustomOption addAirShipVents;
 
         public static CustomOption disableMedbayWalk;
@@ -1066,8 +1066,8 @@ namespace TheOtherRoles {
 			swapNavWifi = CustomOption.Create(7881, Types.General, "重启WIFI与导航任务位置交换", false, enableBetterPolus, false);
 			moveColdTemp = CustomOption.Create(7882, Types.General, "温度调节任务移动至配电室下方", false, enableBetterPolus, false);
 
-            enableAirShipmodify = CustomOption.Create(7895, Types.General, "更好的AirShip地图", false, null, false);
-            addPolusVents = CustomOption.Create(7896, Types.General, "添加新管道\n会议室-配电室", false, enableAirShipmodify, false);
+            enableAirShipModify = CustomOption.Create(7895, Types.General, "更好的AirShip地图", false, null, false);
+            addAirShipVents = CustomOption.Create(7896, Types.General, "添加新管道\n会议室-配电室", false, enableAirShipModify, false);
 
             enableCamoComms = CustomOption.Create(1105, Types.General, "通信破坏开启小黑人", false,  null, false);
             disableMedbayWalk = CustomOption.Create(8847, Types.General, "任务动画不可见", false, null, false);

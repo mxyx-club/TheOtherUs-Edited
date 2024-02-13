@@ -58,7 +58,7 @@ namespace TheOtherRoles
 
             // AirShip管道追加
             
-             if(GameOptionsManager.Instance.currentNormalGameOptions.MapId == 4 && CustomOptionHolder.addAirShipVents.getBool()){
+             if(GameOptionsManager.Instance.currentNormalGameOptions.MapId == 4 && CustomOptionHolder.enableAirShipModify.getBool() && CustomOptionHolder.addAirShipVents.getBool()){
                  AdditionalVents vents1 = new AdditionalVents(new Vector3(17.086f, 15.24f, CachedPlayer.LocalPlayer.PlayerControl.transform.position.z + 1f)); // 会议室
                  AdditionalVents vents2 = new AdditionalVents(new Vector3(19.137f, -11.32f, CachedPlayer.LocalPlayer.PlayerControl.transform.position.z + 1f)); // 电力
                  vents1.vent.Right = vents2.vent;
