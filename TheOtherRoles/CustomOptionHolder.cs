@@ -901,7 +901,7 @@ namespace TheOtherRoles {
             thiefCanStealWithGuess = CustomOption.Create(405, Types.Neutral, "身份窃贼可通过猜测窃取身份\n(赌怪模式)", false, thiefSpawnRate);
 
             juggernautSpawnRate = CustomOption.Create(10101, Types.Neutral, cs(Juggernaut.color, "天启"), rates, null, true);
-            juggernautCooldown = CustomOption.Create(10102, Types.Neutral, "击杀冷却", 27.5f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
+            juggernautCooldown = CustomOption.Create(10102, Types.Neutral, "击杀冷却", 30f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
             juggernautHasImpVision = CustomOption.Create(10103, Types.Neutral, "天启拥有伪装者视野", true, juggernautSpawnRate);
             juggernautReducedkillEach = CustomOption.Create(10104, Types.Neutral, "每次击杀后减少的cd", 5f, 2.5f, 10f, 2.5f, juggernautSpawnRate);
 
@@ -922,7 +922,7 @@ namespace TheOtherRoles {
              */
 
             doomsayerSpawnRate = CustomOption.Create(10111, Types.Neutral, cs(Doomsayer.color, "末日预言家"), rates, null, true);
-            doomsayerCooldown = CustomOption.Create(10112, Types.Neutral, "技能冷却", 27.5f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
+            doomsayerCooldown = CustomOption.Create(10112, Types.Neutral, "技能冷却", 30f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
             doomsayerHasMultipleShotsPerMeeting = CustomOption.Create(10113, Types.Neutral, "同一轮会议可多次猜测", true, doomsayerSpawnRate);
             doomsayerShowInfoInGhostChat = CustomOption.Create(10114, Types.Neutral, "灵魂可见猜测结果", true, doomsayerSpawnRate);
             doomsayerCanGuessNeutral = CustomOption.Create(10115, Types.Neutral, "可以猜测中立", true, doomsayerSpawnRate);

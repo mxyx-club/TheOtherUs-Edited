@@ -16,16 +16,17 @@ namespace TheOtherRoles.Patches {
         public static string fullCredentialsVersion = 
 $@"<size=130%><color=#ff351f>我们的超多职业</color></size> v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays>0 ? "-BETA": "")}";
 public static string fullCredentials =
-$@"<size=750%>模组制作：<color=#FCCE03FF>Spex</color>
-<size=65%>汉化:<color=#FFB793>沫夏悠轩</color></size> 模组修改：<color=#FCCE03FF>沫夏悠轩, 善良的好人</color></size>";
+$@"<size=70%>模组制作：<color=#FCCE03FF>Spex</color>
+模组修改：<color=#FFB793>沫夏悠轩</color>, <color=#FCCE03FF>善良的好人</color>
+汉化:<color=#FFB793>沫夏悠轩</color></size>";
 
     public static string mainMenuCredentials = 
 $@"模组作者: <color=#FCCE03FF>Spex</color>
-<size=80%>汉化：<color=#FFB793>沫夏悠轩</color> 模组修改：<color=#FCCE03FF>沫夏悠轩, 善良的好人</color>
-<color=#FFB793>沫夏悠轩</color> - <color=#FFB793>mxyx.club</color></size>";
+<size=85%>模组修改：<color=#FFB793>沫夏悠轩</color>, <color=#FCCE03FF>善良的好人</color>
+汉化：<color=#FFB793>沫夏悠轩</color></size>";
 
         public static string contributorsCredentials =
-$@"<size=60%> <color=#FCCE03FF>特别感谢 Smeggy, Scoom, Xer, and Mr_Fluuff</color></size>";
+$@"<size=70%> <color=#FCCE03FF>特别感谢 Smeggy, Scoom, Xer, and Mr_Fluuff</color></size>";
 
         [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
         internal static class PingTrackerPatch
@@ -52,7 +53,7 @@ $@"<size=60%> <color=#FCCE03FF>特别感谢 Smeggy, Scoom, Xer, and Mr_Fluuff</c
                     else if (HandleGuesser.isGuesserGm) gameModeText = $"赌怪模式";
                     else if (PropHunt.isPropHuntGM) gameModeText = "道具躲猫猫";
                     if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
-                    __instance.text.text = $"<size=110%><color=#ff351f>我们的超多职业</color></size> v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "") + ("\n<size=80%><color=#FFB793>沫夏悠轩</color> - <color=#FFB793>mxyx.club</color></size>")}\n<size=90%>{gameModeText}</size>" + __instance.text.text;
+                    __instance.text.text = $"<size=120%><color=#ff351f>我们的超多职业</color></size> v{TheOtherRolesPlugin.Version.ToString() + ("\n<size=75%><color=#FFB793>沫夏悠轩</color> - <color=#FFB793>mxyx.club</color></size>")}\n<size=90%>{gameModeText}</size>" + __instance.text.text;
                     if (CachedPlayer.LocalPlayer.Data.IsDead || (!(CachedPlayer.LocalPlayer.PlayerControl == null) && (CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 || CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover2))) {
                         __instance.transform.localPosition = new Vector3(3.45f, __instance.transform.localPosition.y, __instance.transform.localPosition.z);
                     } else {
