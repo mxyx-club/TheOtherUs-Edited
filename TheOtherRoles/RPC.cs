@@ -232,6 +232,7 @@ namespace TheOtherRoles
             Garlic.clearGarlics();
             JackInTheBox.clearJackInTheBoxes();
             NinjaTrace.clearTraces();
+            AdditionalVents.clearAndReload();
             Portal.clearPortals();
             Bloodytrail.resetSprites();
             Trap.clearTraps();

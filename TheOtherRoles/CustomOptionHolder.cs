@@ -439,13 +439,16 @@ namespace TheOtherRoles {
         public static CustomOption dynamicMapSeparateSettings;
 
 
+		public static CustomOption enableBetterPolus;
         public static CustomOption movePolusVents;
         //添加新管道
         public static CustomOption addPolusVents;
 		public static CustomOption swapNavWifi;
 		public static CustomOption movePolusVitals;
-		public static CustomOption enableBetterPolus;
 		public static CustomOption moveColdTemp;
+
+		public static CustomOption enableAirShipmodify;
+		public static CustomOption addAirShipVents;
 
         public static CustomOption disableMedbayWalk;
 
@@ -1055,12 +1058,17 @@ namespace TheOtherRoles {
             dynamicMapEnableFungle = CustomOption.Create(506, Types.General, "Fungle", rates, dynamicMap, false);
             dynamicMapEnableSubmerged = CustomOption.Create(505, Types.General, "Submerged", rates, dynamicMap, false);
             dynamicMapSeparateSettings = CustomOption.Create(509, Types.General, "使用随机地图设置预设", false, dynamicMap, false);
+
             enableBetterPolus = CustomOption.Create(7878, Types.General, "更好的Polus地图", false, null, false);
             movePolusVents = CustomOption.Create(7879, Types.General, "改变管道布局", false, enableBetterPolus, false);
             addPolusVents = CustomOption.Create(7892, Types.General, "添加新管道\n样本室-办公室-武器室", false, enableBetterPolus, false);
             movePolusVitals = CustomOption.Create(7880, Types.General, "将生命检测仪移动到实验室", false, enableBetterPolus, false);
 			swapNavWifi = CustomOption.Create(7881, Types.General, "重启WIFI与导航任务位置交换", false, enableBetterPolus, false);
 			moveColdTemp = CustomOption.Create(7882, Types.General, "温度调节任务移动至配电室下方", false, enableBetterPolus, false);
+
+            enableAirShipmodify = CustomOption.Create(7895, Types.General, "更好的AirShip地图", false, null, false);
+            addPolusVents = CustomOption.Create(7896, Types.General, "添加新管道\n会议室-配电室", false, enableAirShipmodify, false);
+
             enableCamoComms = CustomOption.Create(1105, Types.General, "通信破坏开启小黑人", false,  null, false);
             disableMedbayWalk = CustomOption.Create(8847, Types.General, "任务动画不可见", false, null, false);
             restrictDevices = CustomOption.Create(1101, Types.General, "限制信息设备使用", new string[] { "否", "每一回合", "每局游戏" },  null, false);
