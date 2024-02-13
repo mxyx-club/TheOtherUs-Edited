@@ -33,7 +33,7 @@ namespace TheOtherRoles.Patches {
                     p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
                     player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
                     player.cosmetics.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
-                    CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(25f);
+                    CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(22.5f);
                     //PlayerControl.SetPetImage(data.DefaultOutfit.PetId, data.DefaultOutfit.ColorId, player.PetSlot);
                     player.cosmetics.nameText.text = data.PlayerName;
                     player.SetFlipX(true);
@@ -184,8 +184,8 @@ namespace TheOtherRoles.Patches {
                 new Vector3(10f, -14f, 0.0f), //below storrage
                 new Vector3(21.5f, -12.5f, 0.0f), //storrage vent
                 new Vector3(19f, -11f, 0.0f), //storrage toolrack
-                new Vector3(12f, -7.6f, 0.0f), //left fuel
-                new Vector3(5f, -7.6f, 0.0f), //above elec
+                new Vector3(12f, -7.2f, 0.0f), //left fuel
+                new Vector3(5f, -7.5f, 0.0f), //above elec
                 new Vector3(10f, -12f, 0.0f), //elec fence
                 new Vector3(9f, -9f, 0.0f), //elec lockers
                 new Vector3(5f, -9f, 0.0f), //elec window

@@ -100,7 +100,7 @@ namespace TheOtherRoles.Patches {
                     setPlayerNameColor(Sheriff.sheriff, Sheriff.color);
                 }
             }
-            
+            //警长可见捕快
             if (Sheriff.sheriff !=null && Sheriff.sheriff ==localPlayer)
             {
                 setPlayerNameColor(Sheriff.sheriff, Sheriff.color);

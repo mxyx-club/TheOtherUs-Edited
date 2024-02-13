@@ -178,7 +178,18 @@ namespace TheOtherRoles.Patches {
             if (Werewolf.werewolf == null || Werewolf.werewolf != CachedPlayer.LocalPlayer.PlayerControl) return;
             Werewolf.currentTarget = setTarget();
         }
+        static void juggernautSetTarget()
+        {
+            if (Juggernaut.juggernaut == null || Juggernaut.juggernaut != CachedPlayer.LocalPlayer.PlayerControl) return;
+            Juggernaut.currentTarget = setTarget();
+        }
 
+
+        static void doomsayerSetTarget()
+        {
+            if (Doomsayer.doomsayer == null || Doomsayer.doomsayer != CachedPlayer.LocalPlayer.PlayerControl) return;
+            Doomsayer.currentTarget = setTarget();
+        }
         static void blackMailerSetTarget() {
             if (Blackmailer.blackmailer == null || Blackmailer.blackmailer != CachedPlayer.LocalPlayer.PlayerControl) return;
             Blackmailer.currentTarget = setTarget();
@@ -1298,6 +1309,10 @@ namespace TheOtherRoles.Patches {
                 bomber2SetTarget();
                 // Set Werewolf Target
                 werewolfSetTarget();
+                //ÃÏ∆Ù
+                juggernautSetTarget();
+                //ƒ©»’‘§—‘º“
+                doomsayerSetTarget();
                 // Shifter
                 shifterSetTarget();
                 // Sheriff

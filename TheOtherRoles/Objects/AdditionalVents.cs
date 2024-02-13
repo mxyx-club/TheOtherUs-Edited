@@ -43,7 +43,7 @@ namespace TheOtherRoles
             System.Console.WriteLine("AddAdditionalVents");
 
             // Polus管道追加
-            if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 2 && CustomOptionHolder.addPolusVents.getBool())
+            if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 2 && CustomOptionHolder.enableBetterPolus.getBool() && CustomOptionHolder.addPolusVents.getBool())
             {
                 AdditionalVents vents1 = new(new Vector3(36.54f, -21.77f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // 样本室
                 AdditionalVents vents2 = new(new Vector3(11.5522f, -21.1158f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // 武器室

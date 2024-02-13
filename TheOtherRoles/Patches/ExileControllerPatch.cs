@@ -34,7 +34,11 @@ namespace TheOtherRoles.Patches {
                 RPCProcedure.shifterShift(Shifter.futureShift.PlayerId);
             }
             Shifter.futureShift = null;
-
+            //Ä©ÈÕÔ¤ÑÔ¼Ò
+            if (Doomsayer.doomsayer != null && AmongUsClient.Instance.AmHost && !Doomsayer.canGuess)
+            {
+                Doomsayer.canGuess = true;
+            }
             // Eraser erase
             if (Eraser.eraser != null && AmongUsClient.Instance.AmHost && Eraser.futureErased != null) {  // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
                 foreach (PlayerControl target in Eraser.futureErased) {
@@ -365,8 +369,8 @@ namespace TheOtherRoles.Patches {
                 new Vector3(10f, -14f, 0.0f), //below storrage
                 new Vector3(21.5f, -12.5f, 0.0f), //storrage vent
                 new Vector3(19f, -11f, 0.0f), //storrage toolrack
-                new Vector3(12f, -7.6f, 0.0f), //left fue 
-                new Vector3(5f, -7.6f, 0.0f), //above elec
+                new Vector3(12f, -7.2f, 0.0f), //left fuel
+                new Vector3(5f, -7.5f, 0.0f), //above elec
                 new Vector3(10f, -12f, 0.0f), //elec fence
                 new Vector3(9f, -9f, 0.0f), //elec lockers
                 new Vector3(5f, -9f, 0.0f), //elec window
@@ -455,7 +459,7 @@ namespace TheOtherRoles.Patches {
                 new Vector3(-17.7614f, 6.9115f, 0.0069f),
                 new Vector3(-0.5743f, -4.7235f, -0.0047f),
                 new Vector3(-20.8897f, 2.7606f, 0.002f)
-                };
+                };  
 
                 List<Vector3> airshipSpawn = new List<Vector3>() { }; //no spawns since it already has random spawns
 

@@ -98,7 +98,7 @@ namespace TheOtherRoles.Patches {
                             if (pair.Value != maxVoteValue || isTiebreakerSkip) continue;
                             if (pair.Key != 253)
                                 potentialExiled.Add(GameData.Instance.AllPlayers.ToArray().FirstOrDefault(x => x.PlayerId == pair.Key));
-                            else 
+                            else
                                 skipIsTie = true;
                         }
                     }
@@ -217,7 +217,7 @@ namespace TheOtherRoles.Patches {
                         // Major vote, redo this iteration to place a second vote
                         if (Mayor.mayor != null && voterState.VoterId == (sbyte)Mayor.mayor.PlayerId && !mayorFirstVoteDisplayed && Mayor.voteTwice) {
                             mayorFirstVoteDisplayed = true;
-                            j--;    
+                            j--;
                         }
                     }
                 }
@@ -310,9 +310,9 @@ namespace TheOtherRoles.Patches {
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
 
                 RPCProcedure.swapperSwap((byte)firstPlayer.TargetPlayerId, (byte)secondPlayer.TargetPlayerId);
-                meetingExtraButtonLabel.text = Helpers.cs(Color.green, "交换成功!");
+                meetingExtraButtonLabel.text = Helpers.cs(Color.green, "换票成功!");
                 Swapper.charges--;
-                meetingExtraButtonText.text = $"交换次数: {Swapper.charges}";
+                meetingExtraButtonText.text = $"换票次数: {Swapper.charges}";
             }
         }
 
@@ -351,7 +351,7 @@ namespace TheOtherRoles.Patches {
                 swapperButtonList[i].OnClick.RemoveAllListeners();
                 swapperButtonList[i].OnClick.AddListener((System.Action)(() => swapperOnClick(copyI, __instance)));
             }
-            meetingExtraButtonText.text = $"交换次数: {Swapper.charges}";
+            meetingExtraButtonText.text = $"换票次数: {Swapper.charges}";
             meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认交换");
 
         }
@@ -373,7 +373,7 @@ namespace TheOtherRoles.Patches {
             writer.Write(Mayor.voteTwice);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
 
-            meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "投出两票: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "开") : Helpers.cs(Color.red, "关")));
+            meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "双倍票数: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "开") : Helpers.cs(Color.red, "关")));
         }
 
         public static GameObject guesserUI;
@@ -432,9 +432,9 @@ namespace TheOtherRoles.Patches {
                         roleInfo.roleId != RoleId.Radar &&
                         roleInfo.roleId != RoleId.Tunneler &&
                         roleInfo.roleId != RoleId.Multitasker &&
-                    //    roleInfo.roleId != RoleId.Shifter &&
+                        //roleInfo.roleId != RoleId.Shifter &&
 						roleInfo.roleId != RoleId.Lover &&
-                   //     roleInfo.roleId != RoleId.LifeGuard &&
+                        //roleInfo.roleId != RoleId.LifeGuard &&
                         roleInfo.roleId != RoleId.Vip) continue;
                 } else
                     if (roleInfo.isModifier) continue;
@@ -546,6 +546,7 @@ namespace TheOtherRoles.Patches {
         static void populateButtonsPostfix(MeetingHud __instance) {
             // Add Swapper Buttons
             bool addSwapperButtons = Swapper.swapper != null && CachedPlayer.LocalPlayer.PlayerControl == Swapper.swapper && !Swapper.swapper.Data.IsDead;
+            bool addDoomsayerButtons = Doomsayer.doomsayer != null && CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && !Doomsayer.doomsayer.Data.IsDead;
             bool addMayorButton = Mayor.mayor != null && CachedPlayer.LocalPlayer.PlayerControl == Mayor.mayor && !Mayor.mayor.Data.IsDead && Mayor.mayorChooseSingleVote > 0;
             if (addSwapperButtons) {
                 selections = new bool[__instance.playerStates.Length];
@@ -573,7 +574,7 @@ namespace TheOtherRoles.Patches {
                     button.OnClick.RemoveAllListeners();
                     int copiedIndex = i;
                     button.OnClick.AddListener((System.Action)(() => swapperOnClick(copiedIndex, __instance)));
-                    
+
                     selections[i] = false;
                     renderers[i] = renderer;
                 }
@@ -593,7 +594,7 @@ namespace TheOtherRoles.Patches {
                 Transform infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
                 TMPro.TextMeshPro meetingInfo = infoTransform != null ? infoTransform.GetComponent<TMPro.TextMeshPro>() : null;
                 meetingExtraButtonText = UnityEngine.Object.Instantiate(__instance.playerStates[0].NameText, meetingExtraButtonParent);
-                meetingExtraButtonText.text = addSwapperButtons ? $"交换次数: {Swapper.charges}" : "";
+                meetingExtraButtonText.text = addSwapperButtons ? $"换票次数: {Swapper.charges}" : "";
                 meetingExtraButtonText.enableWordWrapping = false;
                 meetingExtraButtonText.transform.localScale = Vector3.one * 1.7f;
                 meetingExtraButtonText.transform.localPosition = new Vector3(-2.5f, 0f, 0f);
@@ -611,7 +612,7 @@ namespace TheOtherRoles.Patches {
                     meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认交换");
                 } else if (addMayorButton) {
                     meetingExtraButtonLabel.transform.localScale = new Vector3(meetingExtraButtonLabel.transform.localScale.x * 1.5f, meetingExtraButtonLabel.transform.localScale.x * 1.7f, meetingExtraButtonLabel.transform.localScale.x * 1.7f);
-                    meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "投出两票: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "开") : Helpers.cs(Color.red, "关")));
+                    meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "双倍票数: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "开") : Helpers.cs(Color.red, "关")));
                 }
                 PassiveButton passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
                 passiveButton.OnClick.RemoveAllListeners();
@@ -655,9 +656,34 @@ namespace TheOtherRoles.Patches {
 
             // Add Guesser Buttons
             int remainingShots = HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId);
+            //!!!添加末日预言家赌
+            if (addDoomsayerButtons)
+            {
+                for (int i = 0; i < __instance.playerStates.Length; i++)
+                {
+                    PlayerVoteArea playerVoteArea = __instance.playerStates[i];
+                    if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == CachedPlayer.LocalPlayer.PlayerId) continue;
 
-            if (isGuesser && !CachedPlayer.LocalPlayer.Data.IsDead && remainingShots > 0) {
-                for (int i = 0; i < __instance.playerStates.Length; i++) {
+                    //                if (CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.PlayerControl == Eraser.eraser && 
+                    //                    Eraser.alreadyErased.Contains(playerVoteArea.TargetPlayerId)) continue;
+
+                    GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
+                    GameObject targetBox = UnityEngine.Object.Instantiate(template, playerVoteArea.transform);
+                    targetBox.name = "ShootButton";
+                    targetBox.transform.localPosition = new Vector3(-0.95f, 0.03f, -1.3f);
+                    SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();
+                    renderer.sprite = HandleGuesser.getTargetSprite();
+                    PassiveButton button = targetBox.GetComponent<PassiveButton>();
+                    button.OnClick.RemoveAllListeners();
+                    int copiedIndex = i;
+                    button.OnClick.AddListener((System.Action)(() => guesserOnClick(copiedIndex, __instance)));
+                }
+
+            }
+            if (isGuesser && !CachedPlayer.LocalPlayer.Data.IsDead && remainingShots > 0)
+            {
+                for (int i = 0; i < __instance.playerStates.Length; i++)
+                {
                     PlayerVoteArea playerVoteArea = __instance.playerStates[i];
                     if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == CachedPlayer.LocalPlayer.PlayerId) continue;
                     if (CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.PlayerControl == Eraser.eraser && Eraser.alreadyErased.Contains(playerVoteArea.TargetPlayerId)) continue;
@@ -677,7 +703,8 @@ namespace TheOtherRoles.Patches {
         }
 
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.ServerStart))]
-        class MeetingServerStartPatch {
+        class MeetingServerStartPatch
+        {
             static void Postfix(MeetingHud __instance)
             {
                 populateButtonsPostfix(__instance);
@@ -685,11 +712,13 @@ namespace TheOtherRoles.Patches {
         }
 
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Deserialize))]
-        class MeetingDeserializePatch {
-            static void Postfix(MeetingHud __instance, [HarmonyArgument(0)]MessageReader reader, [HarmonyArgument(1)]bool initialState)
+        class MeetingDeserializePatch
+        {
+            static void Postfix(MeetingHud __instance, [HarmonyArgument(0)] MessageReader reader, [HarmonyArgument(1)] bool initialState)
             {
                 // Add swapper buttons
-                if (initialState) {
+                if (initialState)
+                {
                     populateButtonsPostfix(__instance);
                 }
             }
@@ -737,13 +766,16 @@ namespace TheOtherRoles.Patches {
 
 
                 // Add Portal info into Portalmaker Chat:
-                if (Portalmaker.portalmaker != null && (CachedPlayer.LocalPlayer.PlayerControl == Portalmaker.portalmaker || Helpers.shouldShowGhostInfo()) && !Portalmaker.portalmaker.Data.IsDead) {
-                    if (Portal.teleportedPlayers.Count > 0) {
-                        string msg = "星门日志:\n";
-                        foreach (var entry in Portal.teleportedPlayers) {
+                if (Portalmaker.portalmaker != null && (CachedPlayer.LocalPlayer.PlayerControl == Portalmaker.portalmaker || Helpers.shouldShowGhostInfo()) && !Portalmaker.portalmaker.Data.IsDead)
+                {
+                    if (Portal.teleportedPlayers.Count > 0)
+                    {
+                        string msg = "星门使用日志:\n";
+                        foreach (var entry in Portal.teleportedPlayers)
+                        {
                             float timeBeforeMeeting = ((float)(DateTime.UtcNow - entry.time).TotalMilliseconds) / 1000;
                             msg += Portalmaker.logShowsTime ? $"{(int)timeBeforeMeeting} 秒前: " : "";
-                            msg = msg + $"{entry.name} 玩家进入了星门\n";
+                            msg = msg + $"{entry.name} 使用了星门\n";
                         }
                         FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Portalmaker.portalmaker, $"{msg}");
                     }

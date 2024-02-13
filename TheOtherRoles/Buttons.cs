@@ -10,6 +10,7 @@ using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Patches;
+using TheOtherRoles;
 
 namespace TheOtherRoles
 {
@@ -73,6 +74,7 @@ namespace TheOtherRoles
         public static CustomButton blackmailerButton;
         public static CustomButton thiefKillButton;
         public static CustomButton trapperButton;
+        public static CustomButton juggernautKillButton;
         public static CustomButton bomberButton;
         public static CustomButton defuseButton;
         public static CustomButton zoomOutButton;
@@ -429,52 +431,52 @@ namespace TheOtherRoles
                 __instance,
                 KeyCode.F
             );
-/*
-            // Sheriff Kill
-            sheriffKillButton = new CustomButton(
-                () => {
-                    if (Helpers.checkAndDoVetKill(Sheriff.currentTarget)) return;
-                    MurderAttemptResult murderAttemptResult = Helpers.checkMuderAttempt(Sheriff.sheriff, Sheriff.currentTarget);
-                    if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
+            /*
+                        // Sheriff Kill
+                        sheriffKillButton = new CustomButton(
+                            () => {
+                                if (Helpers.checkAndDoVetKill(Sheriff.currentTarget)) return;
+                                MurderAttemptResult murderAttemptResult = Helpers.checkMuderAttempt(Sheriff.sheriff, Sheriff.currentTarget);
+                                if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
 
-                    if (murderAttemptResult == MurderAttemptResult.PerformKill) {
-                        byte targetId = 0;
-                        if ((Sheriff.currentTarget.Data.Role.IsImpostor && (Sheriff.currentTarget != Mini.mini || Mini.isGrownUp())) ||
-                            (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
-                            (Sheriff.canKillNeutrals && Helpers.isNeutral(Sheriff.currentTarget)) ||
-                            (Jackal.jackal == Sheriff.currentTarget || Sidekick.sidekick == Sheriff.currentTarget)) {
-                            targetId = Sheriff.currentTarget.PlayerId;
-                        }
-                        else {
-                            targetId = CachedPlayer.LocalPlayer.PlayerId;
-                        }
+                                if (murderAttemptResult == MurderAttemptResult.PerformKill) {
+                                    byte targetId = 0;
+                                    if ((Sheriff.currentTarget.Data.Role.IsImpostor && (Sheriff.currentTarget != Mini.mini || Mini.isGrownUp())) ||
+                                        (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
+                                        (Sheriff.canKillNeutrals && Helpers.isNeutral(Sheriff.currentTarget)) ||
+                                        (Jackal.jackal == Sheriff.currentTarget || Sidekick.sidekick == Sheriff.currentTarget)) {
+                                        targetId = Sheriff.currentTarget.PlayerId;
+                                    }
+                                    else {
+                                        targetId = CachedPlayer.LocalPlayer.PlayerId;
+                                    }
 
-                        MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedMurderPlayer, Hazel.SendOption.Reliable, -1);
-                        killWriter.Write(Sheriff.sheriff.Data.PlayerId);
-                        killWriter.Write(targetId);
-                        killWriter.Write(byte.MaxValue);
-                        AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-                        RPCProcedure.uncheckedMurderPlayer(Sheriff.sheriff.Data.PlayerId, targetId, Byte.MaxValue);
-                    }
-                     if (murderAttemptResult == MurderAttemptResult.BodyGuardKill) {
-                        Helpers.checkMuderAttemptAndKill(Sheriff.sheriff, Sheriff.currentTarget);
-                    }
+                                    MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedMurderPlayer, Hazel.SendOption.Reliable, -1);
+                                    killWriter.Write(Sheriff.sheriff.Data.PlayerId);
+                                    killWriter.Write(targetId);
+                                    killWriter.Write(byte.MaxValue);
+                                    AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                                    RPCProcedure.uncheckedMurderPlayer(Sheriff.sheriff.Data.PlayerId, targetId, Byte.MaxValue);
+                                }
+                                 if (murderAttemptResult == MurderAttemptResult.BodyGuardKill) {
+                                    Helpers.checkMuderAttemptAndKill(Sheriff.sheriff, Sheriff.currentTarget);
+                                }
 
-                    sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
-                    Sheriff.currentTarget = null;
-                },
-                () => { return Sheriff.sheriff != null && Sheriff.sheriff == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
-                () => { 
-                    showTargetNameOnButton(Sheriff.currentTarget, sheriffKillButton, "KILL");
-                    return Sheriff.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; 
-                    },
-                () => { sheriffKillButton.Timer = sheriffKillButton.MaxTimer;},
-                __instance.KillButton.graphic.sprite,
-                CustomButton.ButtonPositions.upperRowRight,
-                __instance,
-                KeyCode.Q
-            );
-            */
+                                sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
+                                Sheriff.currentTarget = null;
+                            },
+                            () => { return Sheriff.sheriff != null && Sheriff.sheriff == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+                            () => { 
+                                showTargetNameOnButton(Sheriff.currentTarget, sheriffKillButton, "KILL");
+                                return Sheriff.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; 
+                                },
+                            () => { sheriffKillButton.Timer = sheriffKillButton.MaxTimer;},
+                            __instance.KillButton.graphic.sprite,
+                            CustomButton.ButtonPositions.upperRowRight,
+                            __instance,
+                            KeyCode.Q
+                        );
+                        */
             //Sheriff Kill
             sheriffKillButton = new CustomButton(
                 () => {
@@ -488,6 +490,7 @@ namespace TheOtherRoles
                         (Sheriff.currentTarget.Data.Role.IsImpostor ||
                         Jackal.jackal == Sheriff.currentTarget ||
                         Sidekick.sidekick == Sheriff.currentTarget ||
+                        Juggernaut.juggernaut == Sheriff.currentTarget ||
                         Werewolf.werewolf == Sheriff.currentTarget ||
                             (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
                             (Sheriff.canKillNeutrals &&
@@ -498,7 +501,8 @@ namespace TheOtherRoles
                             Thief.thief == Sheriff.currentTarget && Sheriff.canKillThief ||
                             Amnisiac.amnisiac == Sheriff.currentTarget && Sheriff.canKillAmnesiac ||
                             Lawyer.lawyer == Sheriff.currentTarget && Sheriff.canKillProsecutor && Lawyer.isProsecutor ||
-                            Pursuer.pursuer == Sheriff.currentTarget && Sheriff.canKillPursuer))))
+                            Pursuer.pursuer == Sheriff.currentTarget && Sheriff.canKillPursuer ||
+                            Doomsayer.doomsayer == Sheriff.currentTarget && Sheriff.canKillDoomsayer))))
                         {
                             targetId = Sheriff.currentTarget.PlayerId;
                         }
@@ -1471,8 +1475,39 @@ namespace TheOtherRoles
                 __instance,
                 KeyCode.Q
             );
+// ÌìÆô Kill
+juggernautKillButton = new CustomButton(
+ () => {
+     if (Helpers.checkAndDoVetKill(Juggernaut.currentTarget))
+     {
+         
+         return;
+     }
+     if (Helpers.checkMuderAttemptAndKill(Juggernaut.juggernaut, Juggernaut.currentTarget) == MurderAttemptResult.SuppressKill) return;
+     if (juggernautKillButton.MaxTimer >= 0f)
+     {
+         juggernautKillButton.MaxTimer = Juggernaut.cooldown - Juggernaut.reducedkill;
+     }
+     if (juggernautKillButton.MaxTimer < 0f)
+     {
+         juggernautKillButton.MaxTimer = 0f;
+     }
+     juggernautKillButton.Timer = juggernautKillButton.MaxTimer;
+     Juggernaut.currentTarget = null;
+ },
+ () => { return Juggernaut.juggernaut != null && Juggernaut.juggernaut == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+ () => {
+     showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, "»÷É±");
+     return Juggernaut.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+ },
+ () => { juggernautKillButton.Timer = juggernautKillButton.MaxTimer; },
+ __instance.KillButton.graphic.sprite,
+ new Vector3(0, 1f, 0),
+ __instance,
+ KeyCode.Q
+);
 
-            werewolfRampageButton = new CustomButton(
+werewolfRampageButton = new CustomButton(
                 () => { Werewolf.canKill = true; Werewolf.hasImpostorVision = true; werewolfKillButton.Timer = 0f;},
                 () => { /* Can See */ return Werewolf.werewolf != null && Werewolf.werewolf == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () => {  /* On Click */ return (CachedPlayer.LocalPlayer.PlayerControl.CanMove); },

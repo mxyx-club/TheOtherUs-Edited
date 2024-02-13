@@ -165,6 +165,7 @@ namespace TheOtherRoles {
         public static CustomOption sheriffCanKillThief;
         public static CustomOption sheriffCanKillAmnesiac;
         public static CustomOption sheriffCanKillPursuer;
+        public static CustomOption sheriffCanKillDoomsayer;
         public static CustomOption deputySpawnRate;
 
         public static CustomOption deputyNumberOfHandcuffs;
@@ -316,6 +317,20 @@ namespace TheOtherRoles {
         public static CustomOption thiefCanKillSheriff;
         public static CustomOption thiefCanStealWithGuess;
 
+        //天启添加
+        public static CustomOption juggernautSpawnRate;
+        public static CustomOption juggernautCooldown;
+        public static CustomOption juggernautHasImpVision;
+        public static CustomOption juggernautReducedkillEach;
+        //末日预言家
+        public static CustomOption doomsayerSpawnRate;
+        public static CustomOption doomsayerCooldown;
+        public static CustomOption doomsayerHasMultipleShotsPerMeeting;
+        public static CustomOption doomsayerShowInfoInGhostChat;
+        public static CustomOption doomsayerCanGuessNeutral;
+        public static CustomOption doomsayerCanGuessImpostor;
+        public static CustomOption doomsayerGuesserCantGuessSnitch;
+        public static CustomOption doomsayerkillToWin;
 
         public static CustomOption trapperSpawnRate;
         public static CustomOption trapperCooldown;
@@ -547,7 +562,7 @@ namespace TheOtherRoles {
 
         public static void Load() {
 
-            CustomOption.vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind("Preset0", "VanillaOptions", "");
+            CustomOption.vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind("预设0", "原版设置", "");
 
             // Role Options
             presetSelection = CustomOption.Create(0, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "预设"), presets, null, true);
@@ -585,13 +600,13 @@ namespace TheOtherRoles {
             morphlingDuration = CustomOption.Create(22, Types.Impostor, "化形持续时间", 10f, 1f, 20f, 0.5f, morphlingSpawnRate);
 
             bomber2SpawnRate = CustomOption.Create(8840, Types.Impostor, cs(Bomber2.color, "炸弹狂"), rates, null, true);
-            bomber2BombCooldown = CustomOption.Create(8841, Types.Impostor, "传递冷却", 30f, 10f, 60f, 2.5f, bomber2SpawnRate);
-            bomber2Delay = CustomOption.Create(8842, Types.Impostor, "炸弹激活时间", 6f, 0f, 20f, 0.5f, bomber2SpawnRate);
+            bomber2BombCooldown = CustomOption.Create(8841, Types.Impostor, "炸弹冷却", 30f, 10f, 60f, 2.5f, bomber2SpawnRate);
+            bomber2Delay = CustomOption.Create(8842, Types.Impostor, "炸弹激活时间", 5f, 0f, 20f, 0.5f, bomber2SpawnRate);
             bomber2Timer = CustomOption.Create(8843, Types.Impostor, "炸弹爆炸时间", 15f, 5f, 30f, 0.5f, bomber2SpawnRate);
             //bomber2HotPotatoMode = CustomOption.Create(2526236, Types.Impostor, "Hot Potato Mode", false, bomber2SpawnRate);
 
             undertakerSpawnRate = CustomOption.Create(1201, Types.Impostor, cs(Undertaker.color, "送葬者"), rates, null, true);
-            undertakerDragingDelaiAfterKill = CustomOption.Create(1202, Types.Impostor, "从击杀到恢复拖曳能力所需时间", 0f, 0f, 15, 0.5f, undertakerSpawnRate);                     
+            undertakerDragingDelaiAfterKill = CustomOption.Create(1202, Types.Impostor, "从击杀到恢复拖曳能力所需时间", 0f, 0f, 15, 0.5f, undertakerSpawnRate);
             undertakerCanDragAndVent = CustomOption.Create(1203, Types.Impostor, "拖曳过程中可使用管道", true, undertakerSpawnRate);
 
             camouflagerSpawnRate = CustomOption.Create(30, Types.Impostor, cs(Camouflager.color, "隐蔽者"), rates, null, true);
@@ -658,9 +673,9 @@ namespace TheOtherRoles {
             blackmailerCooldown = CustomOption.Create(711, Types.Impostor, "勒索冷却", 15f, 5f, 120f, 2.5f, blackmailerSpawnRate);
 
             bomberSpawnRate = CustomOption.Create(460, Types.Impostor, cs(Bomber.color, "恐怖分子"), rates, null, true);
-            bomberBombDestructionTime = CustomOption.Create(461, Types.Impostor, "炸弹爆炸时间", 20f, 2.5f, 120f, 2.5f, bomberSpawnRate);
-            bomberBombDestructionRange = CustomOption.Create(462, Types.Impostor, "炸弹爆炸范围", 50f, 5f, 200f, 5f, bomberSpawnRate);
-            bomberBombHearRange = CustomOption.Create(463, Types.Impostor, "炸弹音效范围", 60f, 5f, 200f, 5f, bomberSpawnRate);
+            bomberBombDestructionTime = CustomOption.Create(461, Types.Impostor, "炸弹引爆时间", 20f, 2.5f, 120f, 2.5f, bomberSpawnRate);
+            bomberBombDestructionRange = CustomOption.Create(462, Types.Impostor, "炸弹爆炸范围", 60f, 5f, 250f, 5f, bomberSpawnRate);
+            bomberBombHearRange = CustomOption.Create(463, Types.Impostor, "炸弹可见范围", 50f, 5f, 250f, 5f, bomberSpawnRate);
             bomberDefuseDuration = CustomOption.Create(464, Types.Impostor, "拆除炸弹所需时间", 3f, 0.5f, 30f, 0.5f, bomberSpawnRate);
             bomberBombCooldown = CustomOption.Create(465, Types.Impostor, "炸弹放置冷却", 15f, 2.5f, 30f, 2.5f, bomberSpawnRate);
             bomberBombActiveAfter = CustomOption.Create(466, Types.Impostor, "炸弹激活时间", 3f, 0.5f, 15f, 0.5f, bomberSpawnRate);
@@ -765,6 +780,7 @@ namespace TheOtherRoles {
             sheriffCanKillLawyer = CustomOption.Create(2103, Types.Crewmate, " 可执法 " + cs(Lawyer.color, "律师"), false, sheriffCanKillNeutrals);
             sheriffCanKillThief = CustomOption.Create(210277, Types.Crewmate, "可执法 " + cs(Thief.color, "身份窃贼"), false, sheriffCanKillNeutrals);
             sheriffCanKillPursuer = CustomOption.Create(2106, Types.Crewmate, "可执法 " + cs(Pursuer.color, "起诉人"), false, sheriffCanKillNeutrals);
+            sheriffCanKillDoomsayer = CustomOption.Create(2108, Types.Crewmate, "可执法 " + cs(Doomsayer.color, "末日预言家"), false, sheriffCanKillNeutrals);
 
             deputySpawnRate = CustomOption.Create(103, Types.Crewmate, "可拥有一名捕快", rates, sheriffSpawnRate);
             deputyNumberOfHandcuffs = CustomOption.Create(104, Types.Crewmate, "手铐可用次数", 3f, 1f, 10f, 1f, deputySpawnRate);
@@ -869,8 +885,8 @@ namespace TheOtherRoles {
             jumperSpawnRate = CustomOption.Create(9050, Types.Crewmate, cs(Jumper.color, "传送师"), rates, null, true);
             jumperJumpTime = CustomOption.Create(9051, Types.Crewmate, "传送冷却", 15f, 0f, 60f, 2.5f, jumperSpawnRate);
             jumperChargesOnPlace = CustomOption.Create(9052, Types.Crewmate, "每次传送所消耗点数", 1, 1, 10, 1, jumperSpawnRate);
-     //       jumperResetPlaceAfterMeeting = CustomOption.Create(9052, Types.Crewmate, "Reset Places After Meeting", true, jumperSpawnRate);
-     //       jumperChargesGainOnMeeting = CustomOption.Create(9053, Types.Crewmate, "Charges Gained After Meeting", 2, 0, 10, 1, jumperSpawnRate);
+            //jumperResetPlaceAfterMeeting = CustomOption.Create(9052, Types.Crewmate, "Reset Places After Meeting", true, jumperSpawnRate);
+            //jumperChargesGainOnMeeting = CustomOption.Create(9053, Types.Crewmate, "Charges Gained After Meeting", 2, 0, 10, 1, jumperSpawnRate);
             //jumperMaxCharges = CustomOption.Create(9054, Types.Crewmate, "Maximum Charges", 3, 0, 10, 1, jumperSpawnRate);
 
             bodyGuardSpawnRate = CustomOption.Create(8820, Types.Crewmate, cs(BodyGuard.color, "保镖"), rates, null, true);
@@ -878,11 +894,40 @@ namespace TheOtherRoles {
             bodyGuardFlash = CustomOption.Create(8822, Types.Crewmate, "死亡闪光", true, bodyGuardSpawnRate);
 
             thiefSpawnRate = CustomOption.Create(400, Types.Neutral, cs(Thief.color, "身份窃贼"), rates, null, true);
-            thiefCooldown = CustomOption.Create(401, Types.Neutral, "窃取冷却", 30f, 5f, 120f, 5f, thiefSpawnRate);
+            thiefCooldown = CustomOption.Create(401, Types.Neutral, "窃取冷却", 30f, 5f, 120f, 2.5f, thiefSpawnRate);
             thiefCanKillSheriff = CustomOption.Create(402, Types.Neutral, "身份窃贼可以击杀警长", true, thiefSpawnRate);
             thiefHasImpVision = CustomOption.Create(403, Types.Neutral, "身份窃贼拥有伪装者视野", true, thiefSpawnRate);
             thiefCanUseVents = CustomOption.Create(404, Types.Neutral, "身份窃贼可以使用管道", true, thiefSpawnRate);
             thiefCanStealWithGuess = CustomOption.Create(405, Types.Neutral, "身份窃贼可通过猜测窃取身份\n(赌怪模式)", false, thiefSpawnRate);
+
+            juggernautSpawnRate = CustomOption.Create(10101, Types.Neutral, cs(Juggernaut.color, "天启"), rates, null, true);
+            juggernautCooldown = CustomOption.Create(10102, Types.Neutral, "击杀冷却", 27.5f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
+            juggernautHasImpVision = CustomOption.Create(10103, Types.Neutral, "天启拥有伪装者视野", true, juggernautSpawnRate);
+            juggernautReducedkillEach = CustomOption.Create(10104, Types.Neutral, "每次击杀后减少的cd", 5f, 2.5f, 10f, 2.5f, juggernautSpawnRate);
+
+            /*
+           public static CustomOption doomsayerSpawnRate;
+        public static CustomOption doomsayerCooldown;
+        public static CustomOption doomsayerHasMultipleShotsPerMeeting;
+        public static CustomOption doomsayerShowInfoInGhostChat;
+        public static CustomOption doomsayerCanGuessNeutral;
+        public static CustomOption doomsayerCanGuessImpostor;
+        public static CustomOption doomsayerGuesserCantGuessSnitch;
+        public static CustomOption doomsayerkillToWin;
+                        guesserSpawnRate = CustomOption.Create(310, Types.Crewmate, cs(Guesser.color, "赌怪"), rates, null, true);
+            guesserNumberOfShots = CustomOption.Create(311, Types.Crewmate, "可猜测次数", 5f, 1f, 15f, 1f, guesserSpawnRate);
+            guesserHasMultipleShotsPerMeeting = CustomOption.Create(312, Types.Crewmate, "同一轮会议可多次猜测", true, guesserSpawnRate);
+            guesserShowInfoInGhostChat = CustomOption.Create(313, Types.Crewmate, "灵魂可见猜测结果", true, guesserSpawnRate);
+            guesserKillsThroughShield = CustomOption.Create(314, Types.Crewmate, "猜测无视法医护盾保护", false, guesserSpawnRate);
+             */
+
+            doomsayerSpawnRate = CustomOption.Create(10111, Types.Neutral, cs(Doomsayer.color, "末日预言家"), rates, null, true);
+            doomsayerCooldown = CustomOption.Create(10112, Types.Neutral, "技能冷却", 27.5f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
+            doomsayerHasMultipleShotsPerMeeting = CustomOption.Create(10113, Types.Neutral, "同一轮会议可多次猜测", true, doomsayerSpawnRate);
+            doomsayerShowInfoInGhostChat = CustomOption.Create(10114, Types.Neutral, "灵魂可见猜测结果", true, doomsayerSpawnRate);
+            doomsayerCanGuessNeutral = CustomOption.Create(10115, Types.Neutral, "可以猜测中立", true, doomsayerSpawnRate);
+            doomsayerCanGuessImpostor = CustomOption.Create(10116, Types.Neutral, "可以猜测伪装者", true, doomsayerSpawnRate);
+            doomsayerkillToWin = CustomOption.Create(10117, Types.Neutral, "需要成功猜测几次获胜", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
 
             trapperSpawnRate = CustomOption.Create(410, Types.Crewmate, cs(Trapper.color, "设陷师"), rates, null, true);
             trapperCooldown = CustomOption.Create(420, Types.Crewmate, "放置冷却", 20f, 5f, 120f, 2.5f, trapperSpawnRate);
@@ -1027,11 +1072,11 @@ namespace TheOtherRoles {
             // Prop Options
             propBecomesHunterWhenFound = CustomOption.Create(4003, Types.PropHunt, cs(Palette.CrewmateBlue, "猎物被发现后转化为猎人"), false, null, true);
             propHuntInvisEnabled = CustomOption.Create(4013, Types.PropHunt, cs(Palette.CrewmateBlue, "启用隐形"), true, null, true);
-            propHuntInvisCooldown = CustomOption.Create(4014, Types.PropHunt, cs(Palette.CrewmateBlue, "隐形冷却时间"), 120f, 10f, 1800f, 2.5f, propHuntInvisEnabled);
-            propHuntInvisDuration = CustomOption.Create(4015, Types.PropHunt, cs(Palette.CrewmateBlue, "隐形持续时间"), 5f, 1f, 30f, 1f, propHuntInvisEnabled);
+            propHuntInvisCooldown = CustomOption.Create(4014, Types.PropHunt, cs(Palette.CrewmateBlue, "隐形冷却时间"), 40f, 10f, 120f, 2.5f, propHuntInvisEnabled);
+            propHuntInvisDuration = CustomOption.Create(4015, Types.PropHunt, cs(Palette.CrewmateBlue, "隐形持续时间"), 5f, 2.5f, 30f, 2.5f, propHuntInvisEnabled);
             propHuntSpeedboostEnabled = CustomOption.Create(4016, Types.PropHunt, cs(Palette.CrewmateBlue, "启用疾跑"), true, null, true);
-            propHuntSpeedboostCooldown = CustomOption.Create(4017, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑冷却时间"), 60f, 2.5f, 1800f, 2.5f, propHuntSpeedboostEnabled);
-            propHuntSpeedboostDuration = CustomOption.Create(4018, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑持续时间"), 5f, 1f, 15f, 1f, propHuntSpeedboostEnabled);
+            propHuntSpeedboostCooldown = CustomOption.Create(4017, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑冷却时间"), 45f, 2.5f, 120f, 2.5f, propHuntSpeedboostEnabled);
+            propHuntSpeedboostDuration = CustomOption.Create(4018, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑持续时间"), 10f, 2.5f, 30f, 2.5f, propHuntSpeedboostEnabled);
             propHuntSpeedboostSpeed = CustomOption.Create(4019, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑提升速度"), 2f, 1.25f, 5f, 0.25f, propHuntSpeedboostEnabled);
 
 
@@ -1049,7 +1094,7 @@ namespace TheOtherRoles {
             camsNightVision = CustomOption.Create(11, Types.General, "熄灯时监控开启夜视模式", false, null, true);
             camsNoNightVisionIfImpVision = CustomOption.Create(12, Types.General, "内鬼无视监控的夜视模式", false, camsNightVision, false);
             impostorSeeRoles = CustomOption.Create(9, Types.General, "内鬼可见队友职业", false);
-            transparentTasks = CustomOption.Create(814142, Types.General, "任务是透明的", false);
+            transparentTasks = CustomOption.Create(814142, Types.General, "任务界面透明", false);
             dynamicMap = CustomOption.Create(500, Types.General, "随机地图", false, null, true);
             dynamicMapEnableSkeld = CustomOption.Create(501, Types.General, "Skeld", rates, dynamicMap, false);
             dynamicMapEnableMira = CustomOption.Create(502, Types.General, "Mira", rates, dynamicMap, false);
@@ -1061,7 +1106,7 @@ namespace TheOtherRoles {
 
             enableBetterPolus = CustomOption.Create(7878, Types.General, "更好的Polus地图", false, null, false);
             movePolusVents = CustomOption.Create(7879, Types.General, "改变管道布局", false, enableBetterPolus, false);
-            addPolusVents = CustomOption.Create(7892, Types.General, "添加新管道\n样本室-办公室-武器室", false, enableBetterPolus, false);
+            addPolusVents = CustomOption.Create(7883, Types.General, "添加新管道\n样本室-办公室-武器室", false, enableBetterPolus, false);
             movePolusVitals = CustomOption.Create(7880, Types.General, "将生命检测仪移动到实验室", false, enableBetterPolus, false);
 			swapNavWifi = CustomOption.Create(7881, Types.General, "重启WIFI与导航任务位置交换", false, enableBetterPolus, false);
 			moveColdTemp = CustomOption.Create(7882, Types.General, "温度调节任务移动至配电室下方", false, enableBetterPolus, false);

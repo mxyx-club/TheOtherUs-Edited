@@ -10,6 +10,7 @@ using TheOtherRoles.CustomGameModes;
 using static TheOtherRoles.TheOtherRoles;
 using AmongUs.Data;
 using Hazel;
+using static TheOtherRoles.Guesser;
 
 namespace TheOtherRoles
 {
@@ -77,6 +78,9 @@ namespace TheOtherRoles
             Miner.clearAndReload();
             Trapper.clearAndReload();
             Bomber.clearAndReload();
+            //天启添加
+            Juggernaut.clearAndReload();
+            Doomsayer.clearAndReload();
             //Guesser.clearAndReload();
             //Swooper.clearAndReload();
 
@@ -433,6 +437,7 @@ namespace TheOtherRoles
             public static bool canKillThief = false;
             public static bool canKillAmnesiac = false;
             public static bool canKillProsecutor = false;
+            public static bool canKillDoomsayer = false;
             public static bool spyCanDieToSheriff = false;
             public static int misfireKills; // Self: 0, Target: 1, Both: 2
 
@@ -466,6 +471,7 @@ namespace TheOtherRoles
                 canKillAmnesiac = CustomOptionHolder.sheriffCanKillAmnesiac.getBool();
                 canKillProsecutor = CustomOptionHolder.sheriffCanKillProsecutor.getBool();
                 spyCanDieToSheriff = CustomOptionHolder.spyCanDieToSheriff.getBool();
+                canKillDoomsayer = CustomOptionHolder.spyCanDieToSheriff.getBool();
             }
         }
 
@@ -775,6 +781,7 @@ namespace TheOtherRoles
             return existing() && (lover1 == Jackal.jackal     || lover2 == Jackal.jackal
                                || lover1 == Sidekick.sidekick || lover2 == Sidekick.sidekick
                                || lover1 == Werewolf.werewolf || lover2 == Werewolf.werewolf
+                               || lover1 == Juggernaut.juggernaut || lover2 == Juggernaut.juggernaut
                                || lover1.Data.Role.IsImpostor      || lover2.Data.Role.IsImpostor);
         }
 
@@ -1697,6 +1704,39 @@ namespace TheOtherRoles
         }
     }
 
+    public static class Doomsayer
+    {
+        public static PlayerControl doomsayer;
+        //public static PlayerControl evilGuesser;
+        public static Color color = new Color(0f, 1f, 0.5f, 1f);
+        public static PlayerControl currentTarget;
+        public static float cooldown = 30f;
+        public static bool hasMultipleShotsPerMeeting = false;
+        public static bool showInfoInGhostChat = true;
+        public static bool canGuessNeutral = false;
+        public static bool canGuessImpostor = false;
+        public static bool triggerDoomsayerrWin = false;
+        public static bool canGuess = true;
+        public static float killToWin = 3;
+        public static float killedToWin = 3;
+
+
+        public static void clearAndReload()
+        {
+            doomsayer = null;
+            currentTarget = null;
+            killedToWin = 0;
+            canGuess = true;
+            cooldown = CustomOptionHolder.doomsayerCooldown.getFloat();
+            hasMultipleShotsPerMeeting = CustomOptionHolder.doomsayerHasMultipleShotsPerMeeting.getBool();
+            showInfoInGhostChat = CustomOptionHolder.doomsayerShowInfoInGhostChat.getBool();
+            canGuessNeutral = CustomOptionHolder.doomsayerCanGuessNeutral.getBool();
+            canGuessImpostor = CustomOptionHolder.doomsayerCanGuessImpostor.getBool();
+            killToWin = CustomOptionHolder.doomsayerkillToWin.getFloat();
+
+        }
+    }
+
     public static class Guesser {
         public static PlayerControl niceGuesser;
         //public static PlayerControl evilGuesser;
@@ -1730,22 +1770,22 @@ namespace TheOtherRoles
 		return false;
 	}
 
-	public static void clear(byte playerId)
-	{
-		if (niceGuesser != null && niceGuesser.PlayerId == playerId)
-		{
-			niceGuesser = null;
-		}
-		foreach (PlayerControl item in evilGuesser)
-		{
-			if (item.PlayerId == playerId && evilGuesser != null)
-			{
-				evilGuesser = null;
-			}
-		}
-	}
+        public static void clear(byte playerId)
+        {
+            if (niceGuesser != null && niceGuesser.PlayerId == playerId)
+            {
+                niceGuesser = null;
+            }
+            foreach (PlayerControl item in evilGuesser)
+            {
+                if (item.PlayerId == playerId && evilGuesser != null)
+                {
+                    evilGuesser = null;
+                }
+            }
+        }
 
-	public static int remainingShots(byte playerId, bool shoot = false)
+        public static int remainingShots(byte playerId, bool shoot = false)
 	{
 		int result = remainingShotsEvilGuesser;
 		if (niceGuesser != null && niceGuesser.PlayerId == playerId)
@@ -1996,7 +2036,7 @@ namespace TheOtherRoles
                         //count = alivePlayersList.Where(pc =>
                         break;               
                 }
-                msg += $"\n你问我的时候,有, {count} " + condition + (count == 1 ? " " : "都") + " 依然活着";
+                msg += $"\n你问我的时候,有{count} " + condition + (count == 1 ? " " : "都") + " 依然活着";
             }
 
             return Medium.target.player.Data.PlayerName + " 的灵魂说:\n" + msg;
@@ -2323,8 +2363,39 @@ namespace TheOtherRoles
             return killer == Thief.thief && !target.Data.Role.IsImpostor && !new List<RoleInfo> { RoleInfo.jackal, canKillSheriff ? RoleInfo.sheriff : null, RoleInfo.sidekick }.Contains(targetRole);
         }
     }
+    //天启
+    public static class Juggernaut
+    {
+        public static PlayerControl juggernaut;
+        public static Color color = new Color(0.55f, 0f, 0.3f, Byte.MaxValue);
+        public static PlayerControl currentTarget;
 
-        public static class Trapper {
+        public static float cooldown = 30f;
+        public static float reducedkill = 5f;
+        public static bool hasImpostorVision = false;
+
+        public static void setkill()
+        {
+            cooldown = cooldown - reducedkill;
+            if (cooldown <= 0f)
+            {
+                cooldown = 0f;
+            }
+
+        }
+        public static void clearAndReload()
+        {
+            juggernaut = null;
+            currentTarget = null;
+            hasImpostorVision = CustomOptionHolder.juggernautHasImpVision.getBool();
+            cooldown = CustomOptionHolder.juggernautCooldown.getFloat();
+            reducedkill = CustomOptionHolder.juggernautReducedkillEach.getFloat();
+
+        }
+
+    }
+
+    public static class Trapper {
         public static PlayerControl trapper;
         public static Color color = new Color32(110, 57, 105, byte.MaxValue);
 
