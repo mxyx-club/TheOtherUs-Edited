@@ -179,6 +179,18 @@ namespace TheOtherRoles.Patches {
             Werewolf.currentTarget = setTarget();
         }
 
+        static void juggernautSetTarget()
+        {
+            if (Juggernaut.juggernaut == null || Juggernaut.juggernaut != CachedPlayer.LocalPlayer.PlayerControl) return;
+            Juggernaut.currentTarget = setTarget();
+        }
+
+
+        static void doomsayerSetTarget()
+        {
+            if (Doomsayer.doomsayer == null || Doomsayer.doomsayer != CachedPlayer.LocalPlayer.PlayerControl) return;
+            Doomsayer.currentTarget = setTarget();
+        }
         static void blackMailerSetTarget() {
             if (Blackmailer.blackmailer == null || Blackmailer.blackmailer != CachedPlayer.LocalPlayer.PlayerControl) return;
             Blackmailer.currentTarget = setTarget();
@@ -706,8 +718,8 @@ namespace TheOtherRoles.Patches {
                     Snitch.text.transform.localPosition += new Vector3(0f, 1.8f, -69f);
                     Snitch.text.gameObject.SetActive(true);
                 } else {
-                    Snitch.text.text = $"Snitch is alive: " + playerCompleted + "/" + playerTotal;
-                    if (snitchIsDead) Snitch.text.text = $"Snitch is dead!";
+                    Snitch.text.text = $"告密者存活: " + playerCompleted + "/" + playerTotal;
+                    if (snitchIsDead) Snitch.text.text = $"告密者已死亡!";
                 }
             } else if (Snitch.text != null)
                 Snitch.text.Destroy();
@@ -1299,6 +1311,10 @@ namespace TheOtherRoles.Patches {
                 bomber2SetTarget();
                 // Set Werewolf Target
                 werewolfSetTarget();
+                //天启
+                juggernautSetTarget();
+                //末日预言家
+                doomsayerSetTarget();
                 // Shifter
                 shifterSetTarget();
                 // Sheriff
@@ -1441,15 +1457,22 @@ namespace TheOtherRoles.Patches {
                     string msg = "";
 
                     if (isMedicReport) {
-                        msg = $"Body Report: Killed {Math.Round(timeSinceDeath / 1000)}s ago!";
-                    } else if (isDetectiveReport) {
-                        if (timeSinceDeath < Detective.reportNameDuration * 1000) {
-                            msg =  $"Body Report: The killer appears to be {deadPlayer.killerIfExisting.Data.PlayerName}!";
-                        } else if (timeSinceDeath < Detective.reportColorDuration * 1000) {
-                            var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting) ? "lighter" : "darker";
-                            msg =  $"Body Report: The killer appears to be a {typeOfColor} color!";
-                        } else {
-                            msg = $"Body Report: The corpse is too old to gain information from!";
+                        msg = $"尸检报告: 死于 {Math.Round(timeSinceDeath / 1000)}s 前!";
+                    }
+                    else if (isDetectiveReport)
+                    {
+                        if (timeSinceDeath < Detective.reportNameDuration * 1000)
+                        {
+                            msg = $"尸检报告: 凶手似乎是 {deadPlayer.killerIfExisting.Data.PlayerName}!";
+                        }
+                        else if (timeSinceDeath < Detective.reportColorDuration * 1000)
+                        {
+                            var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting) ? "浅" : "深";
+                            msg = $"尸检报告: 凶手似乎是 {typeOfColor} 色的!";
+                        }
+                        else
+                        {
+                            msg = $"尸检报告: 死亡时间太久，无法获取信息!";
                         }
                     }
 

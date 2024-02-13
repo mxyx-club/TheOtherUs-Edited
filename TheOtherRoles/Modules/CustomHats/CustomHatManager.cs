@@ -13,13 +13,13 @@ public static class CustomHatManager
     public const string InnerslothPackageName = "Innersloth Hats";
     public const string DeveloperPackageName = "Developer Hats";
     
-    internal static readonly Tuple<string, string> Repository = new("TheOtherRolesAU", "TheOtherHats");
+    internal static readonly Tuple<string, string> Repository = new("mxyx-club", "TheOtherHats");
     internal static string RepositoryUrl
     {
         get
         {
             var (owner, repository) = Repository;
-            return $"https://raw.githubusercontent.com/{owner}/{repository}/master";
+            return $"https://mirror.ghproxy.com/https://raw.githubusercontent.com/{owner}/{repository}/main";
         }
     }
 

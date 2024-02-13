@@ -16,6 +16,7 @@ using TheOtherRoles.CustomGameModes;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
+using static TheOtherRoles.Guesser;
 
 namespace TheOtherRoles
 {
@@ -81,6 +82,10 @@ namespace TheOtherRoles
         Thief,
         Poucher,
         Bomber,
+        //天启添加
+        Juggernaut,
+        //末日预言家
+        Doomsayer,
         Crewmate,
         Impostor,
         // Modifier ---
@@ -199,7 +204,7 @@ namespace TheOtherRoles
         SetTiebreak,
         SetInvisibleGen,
         SetSwoop,
-       // SetSwooper,
+        // SetSwooper,
         SetInvisible,
         ThiefStealsRole,
         SetTrap,
@@ -485,6 +490,12 @@ namespace TheOtherRoles
                         break;
                     case RoleId.Bomber:
                         Bomber.bomber = player;
+                        break;
+                    case RoleId.Juggernaut:
+                        Juggernaut.juggernaut = player;
+                        break;
+                    case RoleId.Doomsayer:
+                        Doomsayer.doomsayer = player;
                         break;
                     }
         }
@@ -1145,6 +1156,20 @@ namespace TheOtherRoles
                     Trapper.trapper = amnisiac;
                     Amnisiac.clearAndReload();
                     break;
+                //天启添加
+                case RoleId.Juggernaut:
+                    if (Amnisiac.resetRole) Juggernaut.clearAndReload();
+                    Juggernaut.juggernaut = amnisiac;
+                    Amnisiac.clearAndReload();
+                    Amnisiac.amnisiac = target;
+                    break;
+                //末日预言家
+                case RoleId.Doomsayer:
+                    if (Amnisiac.resetRole) Doomsayer.clearAndReload();
+                    Doomsayer.doomsayer = amnisiac;
+                    Amnisiac.clearAndReload();
+                    Amnisiac.amnisiac = target;
+                    break;
 
                 case RoleId.Ninja:
                     Helpers.turnToImpostor(Amnisiac.amnisiac);
@@ -1370,7 +1395,7 @@ namespace TheOtherRoles
             Shifter.clearAndReload();
 
             // Suicide (exile) when impostor or impostor variants
-            if ((player.Data.Role.IsImpostor || Helpers.isNeutral(player)) && !oldShifter.Data.IsDead) {
+            if((player.Data.Role.IsImpostor || Helpers.isJackalAndSidekickAndLawyer(player)) && !oldShifter.Data.IsDead) {
                 oldShifter.Exiled();
                 GameHistory.overrideDeathReasonAndKiller(oldShifter, DeadPlayer.CustomDeathReason.Shift, player);
                 if (oldShifter == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null) {
@@ -1589,6 +1614,9 @@ namespace TheOtherRoles
             if (player == Lawyer.lawyer) Lawyer.clearAndReload();
             if (player == Pursuer.pursuer) Pursuer.clearAndReload();
             if (player == Thief.thief) Thief.clearAndReload();
+            //天启添加
+            if (player == Juggernaut.juggernaut) Juggernaut.clearAndReload();
+            if (player == Doomsayer.doomsayer) Doomsayer.clearAndReload();
 
             // Modifier
             if (!ignoreModifier)
@@ -1840,7 +1868,7 @@ namespace TheOtherRoles
                     int timeLeft = (int)(totalTime - (totalTime * p));
                     if (timeLeft <= Bomber2.bombTimer) {
                         if (Bomber2.timeLeft != timeLeft) {
-                            new CustomMessage("Your Bomb will explode in " + timeLeft + " seconds!", 1f);
+                            new CustomMessage("你手中的炸弹将在 " + timeLeft + " 秒后引爆!", 1f);
                             Bomber2.timeLeft = timeLeft;
                         }
                         if (timeLeft % 5 == 0) {
@@ -2117,6 +2145,18 @@ namespace TheOtherRoles
                 }
             }
 
+            if (Doomsayer.doomsayer != null && Doomsayer.doomsayer.PlayerId == killerId && Doomsayer.canGuess)
+            {
+                RoleInfo roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
+                if (!Doomsayer.doomsayer.Data.IsDead)
+                {
+                    Doomsayer.killedToWin++;
+                    if (Doomsayer.killedToWin >= Doomsayer.killToWin) {
+                        Doomsayer.triggerDoomsayerrWin = true;
+                    }
+                }
+            }
+
             if (Lawyer.lawyer != null && !Lawyer.isProsecutor && Lawyer.lawyer.PlayerId == killerId && Lawyer.target != null && Lawyer.target.PlayerId == dyingTargetId) {
                 // Lawyer guessed client.
                 if (CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer) {
@@ -2151,15 +2191,42 @@ namespace TheOtherRoles
                 if (AmongUsClient.Instance.AmHost) 
                     MeetingHud.Instance.CheckForEndVoting();
             }
-            if (FastDestroyableSingleton<HudManager>.Instance != null && guesser != null)
-                if (CachedPlayer.LocalPlayer.PlayerControl == dyingTarget) {
+
+
+            //末日预言家
+            if (FastDestroyableSingleton<HudManager>.Instance != null && guesser != null && guesser != Doomsayer.doomsayer)
+            {
+                if (CachedPlayer.LocalPlayer.PlayerControl == dyingTarget)
+                {
                     FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(guesser.Data, dyingTarget.Data);
                     if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
-                } else if (dyingLoverPartner != null && CachedPlayer.LocalPlayer.PlayerControl == dyingLoverPartner) {
+                }
+                else if (dyingLoverPartner != null && CachedPlayer.LocalPlayer.PlayerControl == dyingLoverPartner)
+                {
                     FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data, dyingLoverPartner.Data);
                     if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
                 }
+            }
+            else {
+                if (CachedPlayer.LocalPlayer.PlayerControl == dyingTarget)
+                {
+                    FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(guesser.Data, dyingTarget.Data);
+                    if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+                }
+                else if (dyingLoverPartner != null && CachedPlayer.LocalPlayer.PlayerControl == dyingLoverPartner)
+                {
+                    Helpers.showFlash(new Color32(255, 197, 97, byte.MinValue));
+                //   __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
+                //    UnityEngine.Object.Destroy(container.gameObject);
 
+                    MessageWriter murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
+                    AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
+                    RPCProcedure.shieldedMurderAttempt(0);
+                    SoundEffectsManager.play("fail");
+                    Doomsayer.canGuess = false;
+                    if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+                }
+            }
             // remove shoot button from targets for all guessers and close their guesserUI
             if (GuesserGM.isGuesser(PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer != guesser && !PlayerControl.LocalPlayer.Data.IsDead && GuesserGM.remainingShots(PlayerControl.LocalPlayer.PlayerId) > 0 && MeetingHud.Instance) {
                 MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
@@ -2372,6 +2439,9 @@ namespace TheOtherRoles
             }
 
             if (target == Werewolf.werewolf) Werewolf.werewolf = thief;
+            //天启添加
+            if (target == Juggernaut.juggernaut) Juggernaut.juggernaut = thief;
+
             if (target == BodyGuard.bodyguard) BodyGuard.bodyguard = thief;
             if (target == Veteren.veteren) Veteren.veteren = thief;
             if (target == Blackmailer.blackmailer) Blackmailer.blackmailer = thief;

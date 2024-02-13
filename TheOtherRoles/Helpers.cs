@@ -557,12 +557,13 @@ namespace TheOtherRoles {
             return !isDead(player);
         }
 
+        //假任务
         public static bool hasFakeTasks(this PlayerControl player) {
-            return (player == Werewolf.werewolf || player == Jester.jester || player == Amnisiac.amnisiac || player == Jackal.jackal || player == Sidekick.sidekick || player == Arsonist.arsonist || player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player));
+            return (player == Werewolf.werewolf || player == Doomsayer.doomsayer || player == Juggernaut.juggernaut || player == Jester.jester || player == Amnisiac.amnisiac || player == Jackal.jackal || player == Sidekick.sidekick || player == Arsonist.arsonist || player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player));
         }
 
         public static bool canBeErased(this PlayerControl player) {
-            return (player != Jackal.jackal && player != Sidekick.sidekick && !Jackal.formerJackals.Any(x => x == player) && player != Werewolf.werewolf);
+            return (player != Jackal.jackal && player != Juggernaut.juggernaut && player != Sidekick.sidekick && !Jackal.formerJackals.Any(x => x == player) && player != Werewolf.werewolf);
         }
 
         public static bool shouldShowGhostInfo() {
@@ -792,6 +793,9 @@ namespace TheOtherRoles {
                 else
                     roleCouldUse = true;
             } else if (Jester.jester != null && Jester.jester == player && Jester.canVent)
+                roleCouldUse = true;
+            //天启跳洞添加
+            else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player)
                 roleCouldUse = true;
             if (Tunneler.tunneler != null && Tunneler.tunneler == player) {
                 var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Tunneler.tunneler.Data);
@@ -1040,10 +1044,12 @@ namespace TheOtherRoles {
             return (role != null && isAlive(role));
         }
 
+        //强力船员判定
         public static bool killingCrewAlive() {
+            bool powerCrewAlive = false;
             // This functions blocks the game from ending if specified crewmate roles are alive
             if (!CustomOptionHolder.blockGameEnd.getBool()) return false;
-            bool powerCrewAlive = false;
+            
 
             if (isRoleAlive(Sheriff.sheriff)) powerCrewAlive = true;
             if (isRoleAlive(Veteren.veteren)) powerCrewAlive = true;
@@ -1165,11 +1171,21 @@ public static bool isTeamCultist(PlayerControl player)
             return false;
         }
 
+        public static bool isJackalAndSidekickAndLawyer(PlayerControl player)
+        //好人交换师代码target
+        {
+            RoleInfo roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
+            if (roleInfo != null)
+                return roleInfo.color.Equals(Jackal.color) || roleInfo.color.Equals(Lawyer.color);
+            return false;
+        }
+
         public static bool isKiller(PlayerControl player) {
             return player.Data.Role.IsImpostor || 
                 (isNeutral(player) && 
                 player != Jester.jester && 
-                player != Arsonist.arsonist && 
+                player != Arsonist.arsonist &&
+                player != Doomsayer.doomsayer &&
                 player != Vulture.vulture && 
                 player != Lawyer.lawyer && 
                 player != Pursuer.pursuer);
@@ -1238,11 +1254,13 @@ public static bool isTeamCultist(PlayerControl player)
             }
         }
 
+        //红狼视野
         public static bool hasImpVision(GameData.PlayerInfo player) {
             return player.Role.IsImpostor
                 || ((Jackal.jackal != null && Jackal.jackal.PlayerId == player.PlayerId || Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.hasImpostorVision)
                 || (Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == player.PlayerId && Sidekick.hasImpostorVision)
                 || (Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision)
+                || (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == player.PlayerId && Spy.hasImpostorVision)
                 || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
                 || (Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision)
                 || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId && Werewolf.hasImpostorVision);

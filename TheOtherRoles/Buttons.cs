@@ -67,11 +67,12 @@ namespace TheOtherRoles
         public static CustomButton escapistButton;
         public static CustomButton ninjaButton;
         public static CustomButton werewolfRampageButton;
-        public static CustomButton werewolfKillButton;
+        public static CustomButton werewolfKillButton;      
         public static CustomButton minerMineButton;
         public static CustomButton mayorMeetingButton;
         public static CustomButton blackmailerButton;
         public static CustomButton thiefKillButton;
+        public static CustomButton juggernautKillButton;
         public static CustomButton trapperButton;
         public static CustomButton bomberButton;
         public static CustomButton defuseButton;
@@ -164,6 +165,7 @@ namespace TheOtherRoles
             minerMineButton.MaxTimer = Miner.cooldown;
             blackmailerButton.MaxTimer = Blackmailer.cooldown;
             thiefKillButton.MaxTimer = Thief.cooldown;
+            juggernautKillButton.MaxTimer = Juggernaut.cooldown;
             mayorMeetingButton.MaxTimer = GameManager.Instance.LogicOptions.GetEmergencyCooldown();
             trapperButton.MaxTimer = Trapper.cooldown;
             bomberButton.MaxTimer = Bomber.bombCooldown;
@@ -488,6 +490,7 @@ namespace TheOtherRoles
                         (Sheriff.currentTarget.Data.Role.IsImpostor ||
                         Jackal.jackal == Sheriff.currentTarget ||
                         Sidekick.sidekick == Sheriff.currentTarget ||
+                        Juggernaut.juggernaut == Sheriff.currentTarget ||
                         Werewolf.werewolf == Sheriff.currentTarget ||
                             (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
                             (Sheriff.canKillNeutrals &&
@@ -498,7 +501,8 @@ namespace TheOtherRoles
                             Thief.thief == Sheriff.currentTarget && Sheriff.canKillThief ||
                             Amnisiac.amnisiac == Sheriff.currentTarget && Sheriff.canKillAmnesiac ||
                             Lawyer.lawyer == Sheriff.currentTarget && Sheriff.canKillProsecutor && Lawyer.isProsecutor ||
-                            Pursuer.pursuer == Sheriff.currentTarget && Sheriff.canKillPursuer))))
+                            Pursuer.pursuer == Sheriff.currentTarget && Sheriff.canKillPursuer ||
+                            Doomsayer.doomsayer == Sheriff.currentTarget && Sheriff.canKillDoomsayer))))
                         {
                             targetId = Sheriff.currentTarget.PlayerId;
                         }
@@ -1469,6 +1473,33 @@ namespace TheOtherRoles
                 __instance,
                 KeyCode.Q
             );
+            // ÃÏ∆Ùª˜…± Kill
+            juggernautKillButton = new CustomButton(
+             () => {
+                 if (Helpers.checkAndDoVetKill(Juggernaut.currentTarget)) {
+                     
+                     return;
+                 } 
+                 if (Helpers.checkMuderAttemptAndKill(Juggernaut.juggernaut, Juggernaut.currentTarget) == MurderAttemptResult.SuppressKill) return;
+                 if (juggernautKillButton.MaxTimer >= 0f) {
+                     juggernautKillButton.MaxTimer = Juggernaut.cooldown - Juggernaut.reducedkill;
+                 }
+                 if (juggernautKillButton.MaxTimer < 0f) {
+                     juggernautKillButton.MaxTimer = 0f;
+                 }
+                 juggernautKillButton.Timer = juggernautKillButton.MaxTimer;
+                 Juggernaut.currentTarget = null;
+
+             },
+             () => { return Juggernaut.juggernaut != null && Juggernaut.juggernaut == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+             () => { showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, "KILL");
+                 return Juggernaut.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+             () => { juggernautKillButton.Timer = juggernautKillButton.MaxTimer; },
+             __instance.KillButton.graphic.sprite,
+             new Vector3(0, 1f, 0),
+             __instance,
+             KeyCode.Q
+         ) ;
 
             werewolfRampageButton = new CustomButton(
                 () => { Werewolf.canKill = true; Werewolf.hasImpostorVision = true; werewolfKillButton.Timer = 0f;},
@@ -2388,7 +2419,7 @@ namespace TheOtherRoles
                },
                () => { return Mayor.mayor != null && Mayor.mayor == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead && Mayor.meetingButton; },
                () => {
-                   mayorMeetingButton.actionButton.OverrideText("Emergency ("+ Mayor.remoteMeetingsLeft + ")");
+                   mayorMeetingButton.actionButton.OverrideText("ΩÙº±ª·“È (" + Mayor.remoteMeetingsLeft + ")");
                    bool sabotageActive = false;
                    foreach (PlayerTask task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
                        if (task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor || task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles

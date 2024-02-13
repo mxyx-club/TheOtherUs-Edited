@@ -21,13 +21,13 @@ namespace TheOtherRoles.Patches {
             __instance.SetGameMode(GameModes.Normal);
             CustomGamemodes gm = (CustomGamemodes)((int) mode - 2);
             if (gm == CustomGamemodes.Guesser) {
-                __instance.GameModeText.text = "TOR Guesser";
+                __instance.GameModeText.text = "TOR 赌怪模式";
                 TORMapOptions.gameMode = CustomGamemodes.Guesser;
             } else if (gm == CustomGamemodes.HideNSeek) {
-                __instance.GameModeText.text = "TOR Hide N Seek";
+                __instance.GameModeText.text = "TOR 猎杀模式";
                 TORMapOptions.gameMode = CustomGamemodes.HideNSeek;
             } else if (gm == CustomGamemodes.PropHunt) {
-                __instance.GameModeText.text = "TOR Prop Hunt";
+                __instance.GameModeText.text = "TOR 躲猫猫";
                 TORMapOptions.gameMode = CustomGamemodes.PropHunt;
             }
             return false;
@@ -37,12 +37,12 @@ namespace TheOtherRoles.Patches {
         [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.Refresh))]
         public static void Postfix(CreateOptionsPicker __instance) {
             if (TORMapOptions.gameMode == CustomGamemodes.Guesser) {
-                __instance.GameModeText.text = "TOR Guesser";
+                __instance.GameModeText.text = "TOR 赌怪模式";
             }
             else if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek) {
-                __instance.GameModeText.text = "TOR Hide N Seek";
+                __instance.GameModeText.text = "TOR 猎杀模式";
             } else if (TORMapOptions.gameMode == CustomGamemodes.PropHunt) {
-                __instance.GameModeText.text = "TOR Prop Hunt";
+                __instance.GameModeText.text = "TOR 躲猫猫";
             }
         }
     }
@@ -64,9 +64,9 @@ namespace TheOtherRoles.Patches {
                     if (i <= 2)
                         chatLanguageButton.Text.text = DestroyableSingleton<TranslationController>.Instance.GetString(GameModesHelpers.ModeToName[entry], new Il2CppReferenceArray<Il2CppSystem.Object>(0));
                     else {
-                        chatLanguageButton.Text.text = i == 3 ? "TOR Guesser" : "TOR Hide N Seek";
+                        chatLanguageButton.Text.text = i == 3 ? "TOR 赌怪模式" : "TOR 猎杀模式";
                         if (i == 5)
-                            chatLanguageButton.Text.text = "TOR Prop Hunt";
+                            chatLanguageButton.Text.text = "TOR 躲猫猫";
                     }
                     chatLanguageButton.Button.OnClick.RemoveAllListeners();
                     chatLanguageButton.Button.OnClick.AddListener((System.Action)delegate {

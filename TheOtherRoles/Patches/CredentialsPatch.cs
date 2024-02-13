@@ -12,20 +12,22 @@ using UnityEngine;
 
 namespace TheOtherRoles.Patches {
     [HarmonyPatch]
-    public static class CredentialsPatch {
-        public static string fullCredentialsVersion = 
-$@"<size=130%><color=#ff351f>TheOtherUs</color></size> v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays>0 ? "-BETA": "")}";
-public static string fullCredentials =
-$@"<size=60%>Modified by <color=#FCCE03FF>Spex</color>
-Based on TheOtherRoles";
+    public static class CredentialsPatch
+    {
+        public static string fullCredentialsVersion =
+$@"<size=130%><color=#ff351f>我们的超多职业</color></size> v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")} --BETA版";
+        public static string fullCredentials =
+        $@"<size=60%>模组制作： <color=#FCCE03FF>Spex</color></size>
+<size=60%>汉化:<color=#00BFFF>CConscience</color></size>  <size=60%>修改:<color=#FCCE03FF>善良的好人</color></size>
+<size=60%>QQ群:<color=#DC143C>足球围棋社 694185885</color></size>";
 
-    public static string mainMenuCredentials = 
-$@"Modified by <color=#FCCE03FF>Spex</color>, based on TheOtherRoles by <color=#FCCE03FF>Eisbison</color>, <color=#FCCE03FF>Thunderstorm584</color>, 
-<color=#FCCE03FF>EndOfFile</color>, <color=#FCCE03FF>Mallöris</color> & <color=#FCCE03FF>Gendelo</color>
-Design by <color=#FCCE03FF>Bavari</color>";
+        public static string mainMenuCredentials =
+    $@"模组制作：<color=#FCCE03FF>Spex</color>
+汉化：<color=#00BFFF>CConscience.mycc</color>  修改：<color=#FCCE03FF>善良的好人</color>
+QQ群：<color=#FCCE03FF>足球围棋社 694185885</color>";
 
         public static string contributorsCredentials =
-$@"<size=60%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, and Mr_Fluuff</color></size>";
+$@"<size=60%> <color=#FCCE03FF>特别感谢 Smeggy, Scoom, Xer, and Mr_Fluuff</color></size>";
 
         [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
         internal static class PingTrackerPatch
@@ -48,11 +50,11 @@ $@"<size=60%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, and Mr_Fluu
                 __instance.text.alignment = TMPro.TextAlignmentOptions.TopRight;
                 if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started) {
                     string gameModeText = $"";
-                    if (HideNSeek.isHideNSeekGM) gameModeText = $"Hide 'N Seek";
-                    else if (HandleGuesser.isGuesserGm) gameModeText = $"Guesser";
-                    else if (PropHunt.isPropHuntGM) gameModeText = "Prop Hunt";
+                    if (HideNSeek.isHideNSeekGM) gameModeText = $"猎杀模式";
+                    else if (HandleGuesser.isGuesserGm) gameModeText = $"赌怪模式";
+                    else if (PropHunt.isPropHuntGM) gameModeText = "躲猫猫";
                     if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
-                    __instance.text.text = $"<size=130%><color=#ff351f>TheOtherUs</color></size> v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}\n{gameModeText}" + __instance.text.text;
+                    __instance.text.text = $"<size=110%><color=#ff351f>我们的超多职业</color></size> v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "" + "-BETA版")}\n<size=75%>汉化：<color=#00BFFF>CConscience.mycc</color></size>\nQQ群：<size=90%><color=#FCCE03FF>足球围棋社</color> - <color=#FCCE03FF>694185885</color></size>\n{gameModeText}" + __instance.text.text;
                     if (CachedPlayer.LocalPlayer.Data.IsDead || (!(CachedPlayer.LocalPlayer.PlayerControl == null) && (CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 || CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover2))) {
                         __instance.transform.localPosition = new Vector3(3.45f, __instance.transform.localPosition.y, __instance.transform.localPosition.z);
                     } else {
@@ -60,9 +62,9 @@ $@"<size=60%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, and Mr_Fluu
                     }
                 } else {
                     string gameModeText = $"";
-                    if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek) gameModeText = $"Hide 'N Seek";
-                    else if (TORMapOptions.gameMode == CustomGamemodes.Guesser) gameModeText = $"Guesser";
-                    else if (TORMapOptions.gameMode == CustomGamemodes.PropHunt) gameModeText = $"Prop Hunt";
+                    if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek) gameModeText = $"猎杀模式";
+                    else if (TORMapOptions.gameMode == CustomGamemodes.Guesser) gameModeText = $"赌怪模式";
+                    else if (TORMapOptions.gameMode == CustomGamemodes.PropHunt) gameModeText = $"躲猫猫";
                     if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
 
                     __instance.text.text = $"{fullCredentialsVersion}\n  {gameModeText + fullCredentials}\n {__instance.text.text}";

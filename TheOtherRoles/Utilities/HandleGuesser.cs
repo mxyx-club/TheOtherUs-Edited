@@ -50,6 +50,7 @@ namespace TheOtherRoles.Utilities {
                 evilGuesserCanGuessSpy = CustomOptionHolder.guesserEvilCanKillSpy.getBool();
             }
 
+
         }
     }
 }

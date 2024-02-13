@@ -133,6 +133,10 @@ namespace TheOtherRoles.Patches {
             neutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Jackal, CustomOptionHolder.jackalSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Werewolf, CustomOptionHolder.werewolfSpawnRate.getSelection());
+            //天启添加
+            neutralSettings.Add((byte)RoleId.Juggernaut, CustomOptionHolder.juggernautSpawnRate.getSelection());
+            //末日预言家
+            neutralSettings.Add((byte)RoleId.Doomsayer, CustomOptionHolder.doomsayerSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Vulture, CustomOptionHolder.vultureSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Thief, CustomOptionHolder.thiefSpawnRate.getSelection());
 
@@ -426,8 +430,9 @@ namespace TheOtherRoles.Patches {
             if (Lawyer.lawyer != null) {
                 var possibleTargets = new List<PlayerControl>();
                 if (!Lawyer.isProsecutor) { // Lawyer
+                    //天启添加
                     foreach (PlayerControl p in CachedPlayer.AllPlayers) {
-                        if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 && (p.Data.Role.IsImpostor || p == Jackal.jackal || p == Werewolf.werewolf || (Lawyer.targetCanBeJester && p == Jester.jester)))
+                        if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 && (p.Data.Role.IsImpostor || p == Jackal.jackal || p == Juggernaut.juggernaut || p == Werewolf.werewolf || (Lawyer.targetCanBeJester && p == Jester.jester)))
                             possibleTargets.Add(p);
                     }
                 } else { // Prosecutor
@@ -701,25 +706,27 @@ namespace TheOtherRoles.Patches {
                 playerList.RemoveAll(x => x.PlayerId == playerId);
                 modifiers.RemoveAll(x => x == RoleId.Tunneler);
             }
-/*
             if (modifiers.Contains(RoleId.Watcher)) {
-                List<PlayerControl> crewPlayerW = new List<PlayerControl>(playerList);
-                crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor);
-                playerId = setModifierToRandomPlayer((byte)RoleId.Watcher, crewPlayerW);
-                playerList.RemoveAll(x => x.PlayerId == playerId);
-                modifiers.RemoveAll(x => x == RoleId.Watcher);
+                            List<PlayerControl> crewPlayerW = new List<PlayerControl>(playerList);
+                            crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor);
+                            playerId = setModifierToRandomPlayer((byte)RoleId.Watcher, crewPlayerW);
+                            playerList.RemoveAll(x => x.PlayerId == playerId);
+                            modifiers.RemoveAll(x => x == RoleId.Watcher);
             }
-*/
-            List<PlayerControl> crewPlayer = new List<PlayerControl>(playerList);
-            crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
-            if (modifiers.Contains(RoleId.Shifter)) {
-                var crewPlayerShifter = new List<PlayerControl>(crewPlayer);
-                crewPlayerShifter.RemoveAll(x => x == Spy.spy);
-                playerId = setModifierToRandomPlayer((byte)RoleId.Shifter, crewPlayerShifter);
-                crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+            
+            
+            if (modifiers.Contains(RoleId.Shifter))
+            {
+                List<PlayerControl> crewPlayerS = new List<PlayerControl>(playerList);
+                crewPlayerS.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.roleId == RoleId.Jackal) || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.roleId == RoleId.Lawyer));
+                playerId = setModifierToRandomPlayer((byte)RoleId.Shifter, crewPlayerS);
                 playerList.RemoveAll(x => x.PlayerId == playerId);
                 modifiers.RemoveAll(x => x == RoleId.Shifter);
             }
+
+            List<PlayerControl> crewPlayer = new List<PlayerControl>(playerList);
+            crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
+            
             if (modifiers.Contains(RoleId.Sunglasses)) {
                 int sunglassesCount = 0;
                 while (sunglassesCount < modifiers.FindAll(x => x == RoleId.Sunglasses).Count) {
