@@ -707,8 +707,6 @@ namespace TheOtherRoles.Patches {
                 playerList.RemoveAll(x => x.PlayerId == playerId);
                 modifiers.RemoveAll(x => x == RoleId.Tunneler);
             }
-
-            /***/
             if (modifiers.Contains(RoleId.Watcher))
             {
                 List<PlayerControl> crewPlayerW = new List<PlayerControl>(playerList);

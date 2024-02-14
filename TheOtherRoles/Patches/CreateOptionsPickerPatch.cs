@@ -24,10 +24,10 @@ namespace TheOtherRoles.Patches {
                 __instance.GameModeText.text = "赌怪模式";
                 TORMapOptions.gameMode = CustomGamemodes.Guesser;
             } else if (gm == CustomGamemodes.HideNSeek) {
-                __instance.GameModeText.text = "躲猫猫模式";
+                __instance.GameModeText.text = "猎杀模式";
                 TORMapOptions.gameMode = CustomGamemodes.HideNSeek;
             } else if (gm == CustomGamemodes.PropHunt) {
-                __instance.GameModeText.text = "道具躲猫猫";
+                __instance.GameModeText.text = "躲猫猫";
                 TORMapOptions.gameMode = CustomGamemodes.PropHunt;
             }
             return false;
@@ -40,9 +40,9 @@ namespace TheOtherRoles.Patches {
                 __instance.GameModeText.text = "赌怪模式";
             }
             else if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek) {
-                __instance.GameModeText.text = "躲猫猫模式";
+                __instance.GameModeText.text = "猎杀模式";
             } else if (TORMapOptions.gameMode == CustomGamemodes.PropHunt) {
-                __instance.GameModeText.text = "道具躲猫猫";
+                __instance.GameModeText.text = "躲猫猫";
             }
         }
     }
@@ -64,9 +64,9 @@ namespace TheOtherRoles.Patches {
                     if (i <= 2)
                         chatLanguageButton.Text.text = DestroyableSingleton<TranslationController>.Instance.GetString(GameModesHelpers.ModeToName[entry], new Il2CppReferenceArray<Il2CppSystem.Object>(0));
                     else {
-                        chatLanguageButton.Text.text = i == 3 ? "赌怪模式" : "躲猫猫模式";
+                        chatLanguageButton.Text.text = i == 3 ? "赌怪模式" : "猎杀模式";
                         if (i == 5)
-                            chatLanguageButton.Text.text = "道具躲猫猫";
+                            chatLanguageButton.Text.text = "躲猫猫";
                     }
                     chatLanguageButton.Button.OnClick.RemoveAllListeners();
                     chatLanguageButton.Button.OnClick.AddListener((System.Action)delegate {

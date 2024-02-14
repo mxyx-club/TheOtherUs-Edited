@@ -18,6 +18,7 @@ using AmongUs.GameOptions;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Objects;
 using System.Collections;
+using UnityEngine.Playables;
 
 namespace TheOtherRoles {
 
@@ -434,6 +435,42 @@ namespace TheOtherRoles {
             return textStreamReader.ReadToEnd();
         }
 
+        public static List<RoleInfo> allRoleInfos()
+        {
+
+            List<RoleInfo> allRoleInfo = new List<RoleInfo>();
+            foreach (RoleInfo player in RoleInfo.allRoleInfos)
+            {
+                if (player.isModifier) continue;
+                allRoleInfo.Add(player);
+            }
+
+            return allRoleInfo;
+        }
+        /*
+        public static List<RoleInfo> onlineRoleInfos()
+        {
+            List<RoleInfo> allRoleInfo = new List<RoleInfo>();
+            foreach (var player in GameData.Instance.AllPlayers)
+            {
+                foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
+                {
+
+                    allRoleInfo.Add(roleInfo);
+                }
+            }
+
+            return allRoleInfo;
+        }*/
+        public static List<RoleInfo> onlineRoleInfos()
+        {
+            var roleInfos = new List<RoleInfo>();
+            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+            {
+                roleInfos = RoleInfo.getRoleInfoForPlayer(p);
+            }
+            return roleInfos;
+        }
         public static PlayerControl playerById(byte id)
         {
             foreach (PlayerControl player in CachedPlayer.AllPlayers)
@@ -469,6 +506,7 @@ namespace TheOtherRoles {
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.giveBomb(byte.MaxValue);
         }
+
         public static void refreshRoleDescription(PlayerControl player) {
             List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(player); 
             List<string> taskTexts = new(infos.Count); 
@@ -609,7 +647,6 @@ namespace TheOtherRoles {
             return GameOptionsManager.Instance.CurrentGameOptions.MapId == 2;
         }
 
-        
         public static bool isFungle() {           
             return GameOptionsManager.Instance.CurrentGameOptions.MapId == 5;
         } 

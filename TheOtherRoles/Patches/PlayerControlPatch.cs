@@ -1096,18 +1096,23 @@ namespace TheOtherRoles.Patches {
 
 
 
-        static void baitUpdate() {
+        static void baitUpdate()
+        {
             if (!Bait.active.Any()) return;
 
             // Bait report
-            foreach (KeyValuePair<DeadPlayer, float> entry in new Dictionary<DeadPlayer, float>(Bait.active)) {
+            foreach (KeyValuePair<DeadPlayer, float> entry in new Dictionary<DeadPlayer, float>(Bait.active))
+            {
                 Bait.active[entry.Key] = entry.Value - Time.fixedDeltaTime;
-                if (entry.Value <= 0) {
+                if (entry.Value <= 0)
+                {
                     Bait.active.Remove(entry.Key);
-                    if (entry.Key.killerIfExisting != null && entry.Key.killerIfExisting.PlayerId == CachedPlayer.LocalPlayer.PlayerId) {
+                    if (entry.Key.killerIfExisting != null && entry.Key.killerIfExisting.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
+                    {
                         Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                        RPCProcedure.uncheckedCmdReportDeadBody(entry.Key.killerIfExisting.PlayerId, entry.Key.player.PlayerId);
                         Helpers.handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                        RPCProcedure.uncheckedCmdReportDeadBody(entry.Key.killerIfExisting.PlayerId, entry.Key.player.PlayerId);
+
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedCmdReportDeadBody, Hazel.SendOption.Reliable, -1);
                         writer.Write(entry.Key.killerIfExisting.PlayerId);
                         writer.Write(entry.Key.player.PlayerId);
@@ -1145,6 +1150,9 @@ namespace TheOtherRoles.Patches {
                 HudManagerStartPatch.witchSpellButton.MaxTimer = (Witch.cooldown + Witch.currentCooldownAddition) * multiplier;
                 HudManagerStartPatch.ninjaButton.MaxTimer = Ninja.cooldown * multiplier;
                 HudManagerStartPatch.thiefKillButton.MaxTimer = Thief.cooldown * multiplier;
+                //!!!
+                HudManagerStartPatch.werewolfRampageButton.MaxTimer = Thief.cooldown * multiplier;
+                HudManagerStartPatch.juggernautKillButton.MaxTimer = Thief.cooldown * multiplier;
             }
         }
 

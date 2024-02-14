@@ -390,8 +390,14 @@ namespace TheOtherRoles.Patches
                 textRenderer.text = "听我说谢谢你";
                 textRenderer.color = Jester.color;
             }
+            else if (AdditionalTempData.winCondition == WinCondition.DoomsayerWin)
+            {
+                textRenderer.text = "末日预言家获胜";
+                textRenderer.color = Doomsayer.color;
+            }
             else if (AdditionalTempData.winCondition == WinCondition.ArsonistWin) {
                 textRenderer.text = "用火焰净化一切";
+
                 textRenderer.color = Arsonist.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.VultureWin) {
@@ -483,6 +489,7 @@ namespace TheOtherRoles.Patches
             var statistics = new PlayerStatistics(__instance);
             if (CheckAndEndGameForMiniLose(__instance)) return false;
             if (CheckAndEndGameForJesterWin(__instance)) return false;
+            if (CheckAndEndGameForDoomsayerWin(__instance)) return false;
             if (CheckAndEndGameForArsonistWin(__instance)) return false;
             if (CheckAndEndGameForVultureWin(__instance)) return false;
             if (CheckAndEndGameForSabotageWin(__instance)) return false;
@@ -493,6 +500,7 @@ namespace TheOtherRoles.Patches
             if (CheckAndEndGameForJackalWin(__instance, statistics)) return false;
             if (CheckAndEndGameForImpostorWin(__instance, statistics)) return false;
             if (CheckAndEndGameForCrewmateWin(__instance, statistics)) return false;
+            if (CheckAndEndGameForJuggernautWin(__instance, statistics)) return false;
             return false;
         }
 
@@ -509,6 +517,16 @@ namespace TheOtherRoles.Patches
             if (Jester.triggerJesterWin) {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.JesterWin, false);
+                return true;
+            }
+            return false;
+        }
+        private static bool CheckAndEndGameForDoomsayerWin(ShipStatus __instance)
+        {
+            if (Doomsayer.triggerDoomsayerrWin)
+            {
+                //__instance.enabled = false;
+                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.DoomsayerWin, false);
                 return true;
             }
             return false;
@@ -586,8 +604,15 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static bool CheckAndEndGameForJackalWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive && statistics.TeamImpostorsAlive == 0 && statistics.TeamWerewolfAlive == 0 && !(statistics.TeamJackalHasAliveLover && statistics.TeamLoversAlive == 2) && !Helpers.killingCrewAlive()) {
+        private static bool CheckAndEndGameForJackalWin(ShipStatus __instance, PlayerStatistics statistics)
+        {
+            if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive &&
+                statistics.TeamImpostorsAlive == 0 &&
+                statistics.TeamJuggernautAlive == 0 &&
+                statistics.TeamWerewolfAlive == 0 &&
+                !(statistics.TeamJackalHasAliveLover &&
+                statistics.TeamLoversAlive == 2) && !Helpers.killingCrewAlive())
+            {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.TeamJackalWin, false);
                 return true;
@@ -595,16 +620,39 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static bool CheckAndEndGameForWerewolfWin(ShipStatus __instance, PlayerStatistics statistics) {
+        private static bool CheckAndEndGameForWerewolfWin(ShipStatus __instance, PlayerStatistics statistics)
+        {
             if (
-                statistics.TeamWerewolfAlive >= statistics.TotalAlive - statistics.TeamWerewolfAlive && 
-                statistics.TeamImpostorsAlive == 0 &&  
-                statistics.TeamJackalAlive == 0 && 
-                !(statistics.TeamWerewolfHasAliveLover && statistics.TeamLoversAlive == 2) &&
+                statistics.TeamWerewolfAlive >= statistics.TotalAlive - statistics.TeamWerewolfAlive &&
+                statistics.TeamImpostorsAlive == 0 &&
+                statistics.TeamJuggernautAlive == 0 &&
+                statistics.TeamJackalAlive == 0 &&
+                !(statistics.TeamWerewolfHasAliveLover &&
+                statistics.TeamLoversAlive == 2) &&
                 !Helpers.killingCrewAlive()
-            ) {
+            )
+            {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.WerewolfWin, false);
+                return true;
+            }
+            return false;
+        }
+        //天启添加
+        private static bool CheckAndEndGameForJuggernautWin(ShipStatus __instance, PlayerStatistics statistics)
+        {
+            if (
+                statistics.TeamJuggernautAlive >= statistics.TotalAlive - statistics.TeamJuggernautAlive &&
+                statistics.TeamImpostorsAlive == 0 &&
+                statistics.TeamJackalAlive == 0 &&
+                statistics.TeamWerewolfAlive == 0 &&
+                !(statistics.TeamJuggernautHasAliveLover &&
+                statistics.TeamLoversAlive == 2) &&
+                !Helpers.killingCrewAlive()
+            )
+            {
+                //__instance.enabled = false;
+                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.JuggernautWin, false);
                 return true;
             }
             return false;
@@ -614,7 +662,12 @@ namespace TheOtherRoles.Patches
             if (HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM) 
                 if ((0 != statistics.TotalAlive - statistics.TeamImpostorsAlive)) return false;
 
-            if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive && statistics.TeamJackalAlive == 0 && statistics.TeamWerewolfAlive == 0 && !(statistics.TeamImpostorHasAliveLover && statistics.TeamLoversAlive == 2) && !Helpers.killingCrewAlive()) {
+            if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive &&
+                statistics.TeamJackalAlive == 0 &&
+                statistics.TeamWerewolfAlive == 0 &&
+                statistics.TeamJuggernautAlive == 0 &&
+                !(statistics.TeamImpostorHasAliveLover && statistics.TeamLoversAlive == 2) && !Helpers.killingCrewAlive())
+            {
                 //__instance.enabled = false;
                 GameOverReason endReason;
                 switch (TempData.LastDeathReason) {
@@ -644,7 +697,8 @@ namespace TheOtherRoles.Patches
                 GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
                 return true;
             }
-            if (statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalAlive == 0 && statistics.TeamWerewolfAlive == 0) {
+            if (statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamJuggernautAlive == 0)
+            {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
                 return true;
@@ -669,7 +723,9 @@ namespace TheOtherRoles.Patches
         public bool TeamJackalHasAliveLover {get;set;}
         public int TeamWerewolfAlive {get;set;}
 		public bool TeamWerewolfHasAliveLover {get;set;}
-
+        //天启添加
+        public int TeamJuggernautAlive { get; set; }
+        public bool TeamJuggernautHasAliveLover { get; set; }
         public PlayerStatistics(ShipStatus __instance) {
             GetPlayerCounts();
         }
@@ -686,7 +742,10 @@ namespace TheOtherRoles.Patches
             bool impLover = false;
             bool jackalLover = false;
             int numWerewolfAlive = 0;
-			bool werewolfLover = false; 
+            bool werewolfLover = false; 
+            //天启添加
+            int numJuggernautAlive = 0;
+            bool juggernautLover = false;
 
             foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
             {
@@ -715,6 +774,12 @@ namespace TheOtherRoles.Patches
                             numWerewolfAlive++;
                             if (lover) werewolfLover = true;
                         }
+                        //天启添加
+                        if (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == playerInfo.PlayerId)
+                        {
+                            numJuggernautAlive++;
+                            if (lover) juggernautLover = true;
+                        }
                     }
                 }
             }
@@ -727,6 +792,9 @@ namespace TheOtherRoles.Patches
             TeamJackalHasAliveLover = jackalLover;
             TeamWerewolfHasAliveLover = werewolfLover;
 			TeamWerewolfAlive = numWerewolfAlive;
+            //天启添加
+            TeamJuggernautAlive = numJuggernautAlive;
+            TeamJuggernautHasAliveLover = juggernautLover;
         }
     }
 }

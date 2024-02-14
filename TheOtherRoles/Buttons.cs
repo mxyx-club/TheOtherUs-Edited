@@ -72,8 +72,10 @@ namespace TheOtherRoles
         public static CustomButton mayorMeetingButton;
         public static CustomButton blackmailerButton;
         public static CustomButton thiefKillButton;
-        public static CustomButton trapperButton;
         public static CustomButton juggernautKillButton;
+        //Ä©ÈÕÔ¤ÑÔ¼Ò
+        public static CustomButton doomsayerButton;
+        public static CustomButton trapperButton;
         public static CustomButton bomberButton;
         public static CustomButton defuseButton;
         public static CustomButton zoomOutButton;
@@ -123,9 +125,9 @@ namespace TheOtherRoles
             veterenAlertButton.MaxTimer = Veteren.cooldown;
             medicShieldButton.MaxTimer = 0f;
             shifterShiftButton.MaxTimer = 0f;
-            bomber2BombButton.MaxTimer = Bomber2.cooldown;
             disperserDisperseButton.MaxTimer = 0f;
             morphlingButton.MaxTimer = Morphling.cooldown;
+            bomber2BombButton.MaxTimer = Bomber2.cooldown;
             camouflagerButton.MaxTimer = Camouflager.cooldown;
             portalmakerPlacePortalButton.MaxTimer = Portalmaker.cooldown;
             usePortalButton.MaxTimer = Portalmaker.usePortalCooldown;
@@ -165,6 +167,10 @@ namespace TheOtherRoles
             minerMineButton.MaxTimer = Miner.cooldown;
             blackmailerButton.MaxTimer = Blackmailer.cooldown;
             thiefKillButton.MaxTimer = Thief.cooldown;
+            juggernautKillButton.MaxTimer = Juggernaut.cooldown;
+
+            doomsayerButton.MaxTimer = Doomsayer.cooldown;
+
             mayorMeetingButton.MaxTimer = GameManager.Instance.LogicOptions.GetEmergencyCooldown();
             trapperButton.MaxTimer = Trapper.cooldown;
             bomberButton.MaxTimer = Bomber.bombCooldown;
@@ -668,7 +674,42 @@ namespace TheOtherRoles
                 KeyCode.F
             );
 
-            
+            // doomsayer Shield
+            doomsayerButton = new CustomButton(
+                () => {
+                    if (Helpers.checkAndDoVetKill(Doomsayer.currentTarget)) return;
+                    Helpers.checkWatchFlash(Doomsayer.currentTarget);
+
+                    doomsayerButton.Timer = doomsayerButton.MaxTimer;
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetFutureReveal, Hazel.SendOption.Reliable, -1);
+                    writer.Write(Doomsayer.currentTarget.PlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.setFutureReveal(Doomsayer.currentTarget.PlayerId);
+
+                    SoundEffectsManager.play("knockKnock");
+                },
+
+
+                () => { return Doomsayer.doomsayer != null && Doomsayer.doomsayer == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+                () => {
+                    showTargetNameOnButton(Doomsayer.currentTarget, doomsayerButton, "½ÒÊ¾");
+                    return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Doomsayer.currentTarget != null;
+                },
+                () => { doomsayerButton.Timer = doomsayerButton.MaxTimer; },
+                Doomsayer.getButtonSprite(),
+                CustomButton.ButtonPositions.lowerRowRight,
+                __instance,
+                KeyCode.F
+            );
+            // () => { return Juggernaut.juggernaut != null && Juggernaut.juggernaut == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+            //     () => {
+            //          showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, "KILL");
+            //         return Juggernaut.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+            //      },
+            //     () => { juggernautKillButton.Timer = juggernautKillButton.MaxTimer; },
+
+
+
             // Shifter shift
             shifterShiftButton = new CustomButton(
                 () => {
@@ -1485,19 +1526,17 @@ namespace TheOtherRoles
                  if (Helpers.checkMuderAttemptAndKill(Juggernaut.juggernaut, Juggernaut.currentTarget) == MurderAttemptResult.SuppressKill) return;
                  if (juggernautKillButton.MaxTimer >= 0f)
                  {
-                     juggernautKillButton.MaxTimer = Juggernaut.cooldown - Juggernaut.reducedkill;
+                     Juggernaut.setkill();
+                     juggernautKillButton.MaxTimer = Juggernaut.cooldown;
                  }
-                 if (juggernautKillButton.MaxTimer < 0f)
-                 {
-                     juggernautKillButton.MaxTimer = 0f;
-                 }
+
                  juggernautKillButton.Timer = juggernautKillButton.MaxTimer;
                  Juggernaut.currentTarget = null;
 
              },
              () => { return Juggernaut.juggernaut != null && Juggernaut.juggernaut == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
              () => {
-                 showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, "KILL");
+                 showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, "»÷É±");
                  return Juggernaut.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
              },
              () => { juggernautKillButton.Timer = juggernautKillButton.MaxTimer; },
