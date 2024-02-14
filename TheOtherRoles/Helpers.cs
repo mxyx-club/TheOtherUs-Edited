@@ -467,7 +467,8 @@ namespace TheOtherRoles {
             var roleInfos = new List<RoleInfo>();
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
-                roleInfos = RoleInfo.getRoleInfoForPlayer(p);
+                if (RoleInfo.getRoleInfoForPlayer(p)[0].isModifier) continue;
+                roleInfos.Add(RoleInfo.getRoleInfoForPlayer(p)[0]);
             }
             return roleInfos;
         }

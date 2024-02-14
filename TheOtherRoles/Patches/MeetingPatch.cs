@@ -11,6 +11,8 @@ using TheOtherRoles.Utilities;
 using UnityEngine;
 using Innersloth.Assets;
 using Reactor.Utilities;
+using UnityEngine.ProBuilder;
+using BepInEx.Logging;
 
 namespace TheOtherRoles.Patches
 {
@@ -895,8 +897,11 @@ namespace TheOtherRoles.Patches
                         string message = $"т╓ят " + i + ": " + predictionTarget.name + "\n";
                         List<int> temp = Enumerable.Range(0, allRoleInfo.ToArray().Length).OrderBy(q => Guid.NewGuid()).Take((int)Doomsayer.formationNum).ToList();
 
-                        for (int num = 0, tempNum = 0; num < Doomsayer.formationNum; num++)
+                        List<string> allProperty = new List<string>();
+
+                        for (int num = 0, tempNum = 0; num < Doomsayer.formationNum && tempNum < Doomsayer.formationNum; num++)
                         {
+
                             if (allRoleInfo[temp[tempNum]].name.Equals(roleInfoTarget.name))
                             {
                                 tempNum++;
@@ -909,13 +914,52 @@ namespace TheOtherRoles.Patches
                             }
                             else
                             {
-
                                 message += allRoleInfo[temp[tempNum]].name + ",";
                                 tempNum++;
                             }
                         }
+
+
+
+                        /*
+                        for (int num = 0 ,tempNum = 0; num < Doomsayer.formationNum && tempNum < Doomsayer.formationNum; num++)
+                        {
+                           
+                            if (allRoleInfo[temp[tempNum]].name.Equals(roleInfoTarget.name)) {
+                                tempNum++;
+                                num--;
+                                continue;
+                            }
+                            if (num == x){
+                                message += roleInfoTarget.name + ",";
+                            }
+                            else {
+                                message += allRoleInfo[temp[tempNum]].name + ",";
+                                tempNum++;
+                            }
+                        }
+                        for (int num = 0, tempNum = 0; num < Doomsayer.formationNum; num++)
+                        {
+                            if (allRoleInfo[temp[tempNum]].name.Equals(roleInfoTarget.name))
+                            {
+                                tempNum++;
+                                num--;
+                                continue;
+
+                            }
+                            if (num == x)
+                            {
+                                message += roleInfoTarget.name + ",";
+                            }
+                            else
+                            {
+                                message += allRoleInfo[temp[tempNum]].name + ",";
+                                tempNum++;
+                            }
+                        }*/
                         i++;
                         FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Doomsayer.doomsayer, $"{message}");
+                        
                     }
                     Doomsayer.playerTargetinformation.Clear();
                 }

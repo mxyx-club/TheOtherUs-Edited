@@ -14,10 +14,6 @@
     <ItemGroup>
         <EmbeddedResource Include="Resources\**" />
     </ItemGroup>
-
-    <ItemGroup>
-      <None Include="TheOtherRoles.sln" />
-    </ItemGroup>
    
 	<ItemGroup>
 		<PackageReference Include="AmongUs.GameLibs.Steam" Version="2023.11.28" />
