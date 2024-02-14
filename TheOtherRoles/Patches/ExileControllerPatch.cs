@@ -1,13 +1,13 @@
 using HarmonyLib;
 using Hazel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using static TheOtherRoles.TheOtherRoles;
 using TheOtherRoles.Objects;
-using System;
 using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
+using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles.Patches
 {
@@ -108,7 +108,8 @@ namespace TheOtherRoles.Patches
 
             // SecurityGuard vents and cameras
             var allCameras = MapUtilities.CachedShipStatus.AllCameras.ToList();
-            TORMapOptions.camerasToAdd.ForEach(camera => {
+            TORMapOptions.camerasToAdd.ForEach(camera =>
+            {
                 camera.gameObject.SetActive(true);
                 camera.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
                 allCameras.Add(camera);
@@ -145,52 +146,65 @@ namespace TheOtherRoles.Patches
     }
 
     [HarmonyPatch]
-    class ExileControllerWrapUpPatch {
+    class ExileControllerWrapUpPatch
+    {
 
         [HarmonyPatch(typeof(ExileController), nameof(ExileController.WrapUp))]
-        class BaseExileControllerPatch {
-            public static void Postfix(ExileController __instance) {
+        class BaseExileControllerPatch
+        {
+            public static void Postfix(ExileController __instance)
+            {
                 WrapUpPostfix(__instance.exiled);
             }
         }
 
         [HarmonyPatch(typeof(AirshipExileController), nameof(AirshipExileController.WrapUpAndSpawn))]
-        class AirshipExileControllerPatch {
-            public static void Postfix(AirshipExileController __instance) {
+        class AirshipExileControllerPatch
+        {
+            public static void Postfix(AirshipExileController __instance)
+            {
                 WrapUpPostfix(__instance.exiled);
             }
         }
 
         // Workaround to add a "postfix" to the destroying of the exile controller (i.e. cutscene) and SpwanInMinigame of submerged
         [HarmonyPatch(typeof(UnityEngine.Object), nameof(UnityEngine.Object.Destroy), new Type[] { typeof(GameObject) })]
-        public static void Prefix(GameObject obj) {
+        public static void Prefix(GameObject obj)
+        {
             // Nightvision:
-            if (obj != null && obj.name != null && obj.name.Contains("FungleSecurity")) {
+            if (obj != null && obj.name != null && obj.name.Contains("FungleSecurity"))
+            {
                 SurveillanceMinigamePatch.resetNightVision();
                 return;
             }
 
             // submerged
             if (!SubmergedCompatibility.IsSubmerged) return;
-            if (obj.name.Contains("ExileCutscene")) {
+            if (obj.name.Contains("ExileCutscene"))
+            {
                 WrapUpPostfix(ExileControllerBeginPatch.lastExiled);
-            } else if (obj.name.Contains("SpawnInMinigame")) {
+            }
+            else if (obj.name.Contains("SpawnInMinigame"))
+            {
                 AntiTeleport.setPosition();
                 Chameleon.lastMoved.Clear();
             }
         }
 
-        static void WrapUpPostfix(GameData.PlayerInfo exiled) {
+        static void WrapUpPostfix(GameData.PlayerInfo exiled)
+        {
             // Prosecutor win condition
             if (exiled != null && Lawyer.lawyer != null && Lawyer.target != null && Lawyer.isProsecutor && Lawyer.target.PlayerId == exiled.PlayerId && !Lawyer.lawyer.Data.IsDead)
                 Lawyer.triggerProsecutorWin = true;
 
             // Mini exile lose condition
-            else if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() && !Mini.mini.Data.Role.IsImpostor && !RoleInfo.getRoleInfoForPlayer(Mini.mini).Any(x => x.isNeutral)) {
+            else if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() && !Mini.mini.Data.Role.IsImpostor && !RoleInfo.getRoleInfoForPlayer(Mini.mini).Any(x => x.isNeutral))
+            {
                 Mini.triggerMiniLose = true;
             }
             // Jester win condition
-            else if (exiled != null && Jester.jester != null && Jester.jester.PlayerId == exiled.PlayerId) {
+            else if (exiled != null && Jester.jester != null && Jester.jester.PlayerId == exiled.PlayerId)
+            {
                 Jester.triggerJesterWin = true;
             }
 
@@ -199,14 +213,17 @@ namespace TheOtherRoles.Patches
             CustomButton.MeetingEndedUpdate();
 
             // Mini set adapted cooldown
-            if (Mini.mini != null && CachedPlayer.LocalPlayer.PlayerControl == Mini.mini && Mini.mini.Data.Role.IsImpostor) {
+            if (Mini.mini != null && CachedPlayer.LocalPlayer.PlayerControl == Mini.mini && Mini.mini.Data.Role.IsImpostor)
+            {
                 var multiplier = Mini.isGrownUp() ? 0.66f : 2f;
                 Mini.mini.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * multiplier);
             }
 
             // Seer spawn souls
-            if (Seer.deadBodyPositions != null && Seer.seer != null && CachedPlayer.LocalPlayer.PlayerControl == Seer.seer && (Seer.mode == 0 || Seer.mode == 2)) {
-                foreach (Vector3 pos in Seer.deadBodyPositions) {
+            if (Seer.deadBodyPositions != null && Seer.seer != null && CachedPlayer.LocalPlayer.PlayerControl == Seer.seer && (Seer.mode == 0 || Seer.mode == 2))
+            {
+                foreach (Vector3 pos in Seer.deadBodyPositions)
+                {
                     GameObject soul = new GameObject();
                     //soul.transform.position = pos;
                     soul.transform.position = new Vector3(pos.x, pos.y, pos.y / 1000 - 1f);
@@ -214,14 +231,17 @@ namespace TheOtherRoles.Patches
                     var rend = soul.AddComponent<SpriteRenderer>();
                     soul.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
                     rend.sprite = Seer.getSoulSprite();
-                    
-                    if(Seer.limitSoulDuration) {
-                        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Seer.soulDuration, new Action<float>((p) => {
-                            if (rend != null) {
+
+                    if (Seer.limitSoulDuration)
+                    {
+                        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Seer.soulDuration, new Action<float>((p) =>
+                        {
+                            if (rend != null)
+                            {
                                 var tmp = rend.color;
                                 tmp.a = Mathf.Clamp01(1 - p);
                                 rend.color = tmp;
-                            }    
+                            }
                             if (p == 1f && rend != null && rend.gameObject != null) UnityEngine.Object.Destroy(rend.gameObject);
                         })));
                     }
@@ -232,23 +252,29 @@ namespace TheOtherRoles.Patches
             // Tracker reset deadBodyPositions
             Tracker.deadBodyPositions = new List<Vector3>();
 
-            if (Blackmailer.blackmailer != null && Blackmailer.blackmailed != null) {
-    	        // Blackmailer reset blackmailed
- 	        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UnblackmailPlayer, Hazel.SendOption.Reliable, -1);
-	        AmongUsClient.Instance.FinishRpcImmediately(writer);
-	        RPCProcedure.unblackmailPlayer();
-	    }	    
+            if (Blackmailer.blackmailer != null && Blackmailer.blackmailed != null)
+            {
+                // Blackmailer reset blackmailed
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UnblackmailPlayer, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.unblackmailPlayer();
+            }
 
             // Arsonist deactivate dead poolable players
-            if (Arsonist.arsonist != null && Arsonist.arsonist == CachedPlayer.LocalPlayer.PlayerControl) {
+            if (Arsonist.arsonist != null && Arsonist.arsonist == CachedPlayer.LocalPlayer.PlayerControl)
+            {
                 int visibleCounter = 0;
                 Vector3 newBottomLeft = IntroCutsceneOnDestroyPatch.bottomLeft;
                 var BottomLeft = newBottomLeft + new Vector3(-0.25f, -0.25f, 0);
-                foreach (PlayerControl p in CachedPlayer.AllPlayers) {
+                foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                {
                     if (!TORMapOptions.playerIcons.ContainsKey(p.PlayerId)) continue;
-                    if (p.Data.IsDead || p.Data.Disconnected) {
+                    if (p.Data.IsDead || p.Data.Disconnected)
+                    {
                         TORMapOptions.playerIcons[p.PlayerId].gameObject.SetActive(false);
-                    } else {
+                    }
+                    else
+                    {
                         TORMapOptions.playerIcons[p.PlayerId].transform.localPosition = newBottomLeft + Vector3.right * visibleCounter * 0.35f;
                         visibleCounter++;
                     }
@@ -266,14 +292,18 @@ namespace TheOtherRoles.Patches
                 BountyHunter.bountyUpdateTimer = 0f;
 
             // Medium spawn souls
-            if (Medium.medium != null && CachedPlayer.LocalPlayer.PlayerControl == Medium.medium) {
-                if (Medium.souls != null) {
+            if (Medium.medium != null && CachedPlayer.LocalPlayer.PlayerControl == Medium.medium)
+            {
+                if (Medium.souls != null)
+                {
                     foreach (SpriteRenderer sr in Medium.souls) UnityEngine.Object.Destroy(sr.gameObject);
                     Medium.souls = new List<SpriteRenderer>();
                 }
 
-                if (Medium.futureDeadBodies != null) {
-                    foreach ((DeadPlayer db, Vector3 ps) in Medium.futureDeadBodies) {
+                if (Medium.futureDeadBodies != null)
+                {
+                    foreach ((DeadPlayer db, Vector3 ps) in Medium.futureDeadBodies)
+                    {
                         GameObject s = new GameObject();
                         //s.transform.position = ps;
                         s.transform.position = new Vector3(ps.x, ps.y, ps.y / 1000 - 1f);
@@ -291,7 +321,8 @@ namespace TheOtherRoles.Patches
             // AntiTeleport set position
             AntiTeleport.setPosition();
 
-            if (CustomOptionHolder.randomGameStartPosition.getBool() &&  (AntiTeleport.antiTeleport.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId).Count == 0)) { //Random spawn on round start
+            if (CustomOptionHolder.randomGameStartPosition.getBool() && (AntiTeleport.antiTeleport.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId).Count == 0))
+            { //Random spawn on round start
 
                 List<Vector3> skeldSpawn = new List<Vector3>() {
                 new Vector3(-2.2f, 2.2f, 0.0f), //cafeteria. botton. top left.
@@ -474,7 +505,7 @@ namespace TheOtherRoles.Patches
                 new Vector3(-17.7614f, 6.9115f, 0.0069f),
                 new Vector3(-0.5743f, -4.7235f, -0.0047f),
                 new Vector3(-20.8897f, 2.7606f, 0.002f)
-                };  
+                };
 
                 List<Vector3> airshipSpawn = new List<Vector3>() { }; //no spawns since it already has random spawns
 
@@ -493,39 +524,50 @@ namespace TheOtherRoles.Patches
             Chameleon.lastMoved.Clear();
 
             foreach (Trap trap in Trap.traps) trap.triggerable = false;
-            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown / 2 + 2, new Action<float>((p) => {
-            if (p == 1f) foreach (Trap trap in Trap.traps) trap.triggerable = true;
+            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown / 2 + 2, new Action<float>((p) =>
+            {
+                if (p == 1f) foreach (Trap trap in Trap.traps) trap.triggerable = true;
             })));
         }
     }
 
     [HarmonyPatch(typeof(SpawnInMinigame), nameof(SpawnInMinigame.Close))]  // Set position of AntiTp players AFTER they have selected a spawn.
-    class AirshipSpawnInPatch {
-        static void Postfix() {
+    class AirshipSpawnInPatch
+    {
+        static void Postfix()
+        {
             AntiTeleport.setPosition();
             Chameleon.lastMoved.Clear();
         }
     }
 
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), new Type[] { typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>) })]
-    class ExileControllerMessagePatch {
-        static void Postfix(ref string __result, [HarmonyArgument(0)]StringNames id) {
-            try {
-                if (ExileController.Instance != null && ExileController.Instance.exiled != null) {
+    class ExileControllerMessagePatch
+    {
+        static void Postfix(ref string __result, [HarmonyArgument(0)] StringNames id)
+        {
+            try
+            {
+                if (ExileController.Instance != null && ExileController.Instance.exiled != null)
+                {
                     PlayerControl player = Helpers.playerById(ExileController.Instance.exiled.Object.PlayerId);
                     if (player == null) return;
                     // Exile role text
-                    if (id == StringNames.ExileTextPN || id == StringNames.ExileTextSN || id == StringNames.ExileTextPP || id == StringNames.ExileTextSP) {
+                    if (id == StringNames.ExileTextPN || id == StringNames.ExileTextSN || id == StringNames.ExileTextPP || id == StringNames.ExileTextSP)
+                    {
                         __result = player.Data.PlayerName + " was The " + String.Join(" ", RoleInfo.getRoleInfoForPlayer(player, false).Select(x => x.name).ToArray());
                     }
                     // Hide number of remaining impostors on Jester win
-                    if (id == StringNames.ImpostorsRemainP || id == StringNames.ImpostorsRemainS) {
+                    if (id == StringNames.ImpostorsRemainP || id == StringNames.ImpostorsRemainS)
+                    {
                         if (Jester.jester != null && player.PlayerId == Jester.jester.PlayerId) __result = "";
                     }
                     if (Tiebreaker.isTiebreak) __result += " (ÆÆÆ½)";
                     Tiebreaker.isTiebreak = false;
                 }
-            } catch {
+            }
+            catch
+            {
                 // pass - Hopefully prevent leaving while exiling to softlock game
             }
         }

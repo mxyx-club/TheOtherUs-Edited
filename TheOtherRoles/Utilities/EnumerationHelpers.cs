@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Il2CppSystem.Collections.Generic;
+using System;
 using System.Collections;
 using System.Linq.Expressions;
-using Il2CppSystem.Collections.Generic;
 
 namespace TheOtherRoles.Utilities;
 
 public static class EnumerationHelpers
-{ 
+{
     public static System.Collections.Generic.IEnumerable<T> GetFastEnumerator<T>(this List<T> list) where T : Il2CppSystem.Object => new Il2CppListEnumerable<T>(list);
 }
 
@@ -24,17 +24,17 @@ public unsafe class Il2CppListEnumerable<T> : System.Collections.Generic.IEnumer
         public int _size;
 #pragma warning restore CS0649
     }
-    
+
     private static readonly int _elemSize;
     private static readonly int _offset;
     private static Func<IntPtr, T> _objFactory;
-    
+
     static Il2CppListEnumerable()
     {
         _elemSize = IntPtr.Size;
         _offset = 4 * IntPtr.Size;
 
-        var constructor = typeof(T).GetConstructor(new[] {typeof(IntPtr)});
+        var constructor = typeof(T).GetConstructor(new[] { typeof(IntPtr) });
         var ptr = Expression.Parameter(typeof(IntPtr));
         var create = Expression.New(constructor!, ptr);
         var lambda = Expression.Lambda<Func<IntPtr, T>>(create, ptr);
@@ -47,9 +47,9 @@ public unsafe class Il2CppListEnumerable<T> : System.Collections.Generic.IEnumer
 
     public Il2CppListEnumerable(List<T> list)
     {
-        var listStruct = (Il2CppListStruct*) list.Pointer;
+        var listStruct = (Il2CppListStruct*)list.Pointer;
         _count = listStruct->_size;
-        _arrayPointer =  listStruct->_items;
+        _arrayPointer = listStruct->_items;
     }
 
     object IEnumerator.Current => Current;
@@ -58,7 +58,7 @@ public unsafe class Il2CppListEnumerable<T> : System.Collections.Generic.IEnumer
     public bool MoveNext()
     {
         if (++_index >= _count) return false;
-        var refPtr = *(IntPtr*) IntPtr.Add(IntPtr.Add(_arrayPointer, _offset), _index * _elemSize);
+        var refPtr = *(IntPtr*)IntPtr.Add(IntPtr.Add(_arrayPointer, _offset), _index * _elemSize);
         Current = _objFactory(refPtr);
         return true;
     }
@@ -67,7 +67,7 @@ public unsafe class Il2CppListEnumerable<T> : System.Collections.Generic.IEnumer
     {
         _index = -1;
     }
-    
+
     public System.Collections.Generic.IEnumerator<T> GetEnumerator()
     {
         return this;

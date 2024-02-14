@@ -1,13 +1,11 @@
 using HarmonyLib;
 using Hazel;
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
-using static TheOtherRoles.GameHistory;
-using System.Reflection;
+using System.Linq;
 using TheOtherRoles.Players;
+using UnityEngine;
+using static TheOtherRoles.GameHistory;
 
 namespace TheOtherRoles.Patches
 {

@@ -1,14 +1,12 @@
-using System.Linq;
 using System;
 using System.Collections.Generic;
-using TheOtherRoles.Players;
-using static TheOtherRoles.TheOtherRoles;
-using UnityEngine;
-using TheOtherRoles.Utilities;
-using TheOtherRoles.CustomGameModes;
-using System.Threading.Tasks;
+using System.Linq;
 using System.Net.Http;
-using static TheOtherRoles.Guesser;
+using System.Threading.Tasks;
+using TheOtherRoles.Players;
+using TheOtherRoles.Utilities;
+using UnityEngine;
+using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles
 {
@@ -84,11 +82,11 @@ namespace TheOtherRoles
         public static RoleInfo goodGuesser = new RoleInfo("侠客", Guesser.color, "Guess and shoot", "Guess and shoot", RoleId.NiceGuesser);
         public static RoleInfo mayor = new RoleInfo("市长", Mayor.color, "我持有一票否决权!!!", "用你的权力帮助船员", RoleId.Mayor);
         public static RoleInfo portalmaker = new RoleInfo("星门缔造者", Portalmaker.color, "以[星]之铭", "筑[星]之门", RoleId.Portalmaker);
-        public static RoleInfo engineer = new RoleInfo("工程师",  Engineer.color, "没人比我更懂得窃听", "维修飞船", RoleId.Engineer);
-        public static RoleInfo privateInvestigator = new RoleInfo("观察者",  PrivateInvestigator.color, "查看谁在与他人互动", "卧底在飞船之中", RoleId.PrivateInvestigator);
+        public static RoleInfo engineer = new RoleInfo("工程师", Engineer.color, "没人比我更懂得窃听", "维修飞船", RoleId.Engineer);
+        public static RoleInfo privateInvestigator = new RoleInfo("观察者", PrivateInvestigator.color, "查看谁在与他人互动", "卧底在飞船之中", RoleId.PrivateInvestigator);
         public static RoleInfo sheriff = new RoleInfo("警长", Sheriff.color, "<color=#FF1919FF>严禁</color>小脑行为！！！", "毙了伪装者", RoleId.Sheriff);
         public static RoleInfo deputy = new RoleInfo("捕快", Sheriff.color, "逮捕<color=#FF1919FF>伪装者</color>", "逮捕伪装者", RoleId.Deputy);
-        public static RoleInfo bodyguard  = new RoleInfo("保镖", BodyGuard.color, "用自己的生命保护他人", "用自己的生命保护他人", RoleId.BodyGuard, false);
+        public static RoleInfo bodyguard = new RoleInfo("保镖", BodyGuard.color, "用自己的生命保护他人", "用自己的生命保护他人", RoleId.BodyGuard, false);
         public static RoleInfo lighter = new RoleInfo("执灯人", Lighter.color, "你 是 一 个 电 灯 泡a.a", "你的灯光永不熄灭", RoleId.Lighter);
         public static RoleInfo jumper = new RoleInfo("传送师", Jumper.color, "空！间！错！乱！", "放置锚点并传送", RoleId.Jumper);
         public static RoleInfo detective = new RoleInfo("侦探", Detective.color, "从脚印之中发现<color=#FF1919FF>伪装者</color>", "检查足迹并检验尸体", RoleId.Detective);
@@ -123,18 +121,18 @@ namespace TheOtherRoles
         public static RoleInfo lover = new RoleInfo("恋人", Lovers.color, $"你坠入了爱河", $"你坠入了爱河", RoleId.Lover, false, true);
         public static RoleInfo mini = new RoleInfo("小孩", Color.yellow, "《未成年人保护法》第127条[不，是第133条]", "长大之前没有人能伤害你", RoleId.Mini, false, true);
         public static RoleInfo vip = new RoleInfo("VIP", Color.yellow, "我宣布个事儿", "所有人都知道你的死讯", RoleId.Vip, false, true);
-        public static RoleInfo indomitable  = new RoleInfo("不屈者", Color.yellow, "无所畏惧，愈战愈勇", "无法被猜测", RoleId.Indomitable, false, true);
-        public static RoleInfo slueth  = new RoleInfo("掘墓人", Color.yellow, "我才是法医！", "报告可知晓死者职业", RoleId.Slueth, false, true);
-        public static RoleInfo cursed  = new RoleInfo("反骨", Color.yellow, "你是船员....至少现在是", "被内鬼击杀会变成内鬼", RoleId.Cursed, false, true, true);
+        public static RoleInfo indomitable = new RoleInfo("不屈者", Color.yellow, "无所畏惧，愈战愈勇", "无法被猜测", RoleId.Indomitable, false, true);
+        public static RoleInfo slueth = new RoleInfo("掘墓人", Color.yellow, "我才是法医！", "报告可知晓死者职业", RoleId.Slueth, false, true);
+        public static RoleInfo cursed = new RoleInfo("反骨", Color.yellow, "你是船员....至少现在是", "被内鬼击杀会变成内鬼", RoleId.Cursed, false, true, true);
         public static RoleInfo invert = new RoleInfo("酒鬼", Color.yellow, "打烊前的最后一杯", "你的移动方向被颠倒了", RoleId.Invert, false, true);
-        public static RoleInfo blind  = new RoleInfo("胆小鬼", Color.yellow, "外面的世界好可怕……", "无法报告尸体", RoleId.Blind, false, true);
-        
-        public static RoleInfo watcher  = new RoleInfo("窥视者", Color.yellow, "来来来，我看看你们怎么投票的啊", "你可以知晓所有人的投票情况", RoleId.Watcher, false, true);
-        public static RoleInfo radar  = new RoleInfo("雷达", Color.yellow, "时刻警惕！", "得知距离最近的玩家位置", RoleId.Radar, false, true);
-        public static RoleInfo tunneler  = new RoleInfo("管道工程师", Color.yellow, "让我看看这个管道", "完成任务可使用管道", RoleId.Tunneler, false, true);
+        public static RoleInfo blind = new RoleInfo("胆小鬼", Color.yellow, "外面的世界好可怕……", "无法报告尸体", RoleId.Blind, false, true);
+
+        public static RoleInfo watcher = new RoleInfo("窥视者", Color.yellow, "来来来，我看看你们怎么投票的啊", "你可以知晓所有人的投票情况", RoleId.Watcher, false, true);
+        public static RoleInfo radar = new RoleInfo("雷达", Color.yellow, "时刻警惕！", "得知距离最近的玩家位置", RoleId.Radar, false, true);
+        public static RoleInfo tunneler = new RoleInfo("管道工程师", Color.yellow, "让我看看这个管道", "完成任务可使用管道", RoleId.Tunneler, false, true);
         public static RoleInfo chameleon = new RoleInfo("变色龙", Color.yellow, "看不见我`看不见我`", "静止时可隐身", RoleId.Chameleon, false, true);
         public static RoleInfo shifter = new RoleInfo("交换师", Color.yellow, "你的能力真好用！马上就是我的了！", "与他人交换职业", RoleId.Shifter, false, true);
-        
+
 
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
@@ -229,12 +227,14 @@ namespace TheOtherRoles
             shifter
         };
 
-        public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true) {
+        public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true)
+        {
             List<RoleInfo> infos = new List<RoleInfo>();
             if (p == null) return infos;
 
             // Modifier
-            if (showModifier) {
+            if (showModifier)
+            {
                 // after dead modifier
                 if (!CustomOptionHolder.modifiersAreHidden.getBool() || PlayerControl.LocalPlayer.Data.IsDead || AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Ended)
                 {
@@ -330,7 +330,8 @@ namespace TheOtherRoles
             if (p == Doomsayer.doomsayer) infos.Add(doomsayer);
 
             // Default roles (just impostor, just crewmate, or hunter / hunted for hide n seek, prop hunt prop ...
-            if (infos.Count == count) {
+            if (infos.Count == count)
+            {
                 if (p.Data.Role.IsImpostor)
                     infos.Add(TORMapOptions.gameMode == CustomGamemodes.HideNSeek || TORMapOptions.gameMode == CustomGamemodes.PropHunt ? RoleInfo.hunter : RoleInfo.impostor);
                 else
@@ -340,19 +341,22 @@ namespace TheOtherRoles
             return infos;
         }
 
-        public static String GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, bool suppressGhostInfo = false) {
+        public static String GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, bool suppressGhostInfo = false)
+        {
             string roleName;
             roleName = String.Join(" ", getRoleInfoForPlayer(p, showModifier).Select(x => useColors ? Helpers.cs(x.color, x.name) : x.name).ToArray());
-            if (Lawyer.target != null && p.PlayerId == Lawyer.target.PlayerId && CachedPlayer.LocalPlayer.PlayerControl != Lawyer.target) 
+            if (Lawyer.target != null && p.PlayerId == Lawyer.target.PlayerId && CachedPlayer.LocalPlayer.PlayerControl != Lawyer.target)
                 roleName += (useColors ? Helpers.cs(Pursuer.color, " §") : " §");
             if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId)) roleName += " (赌怪)";
 
-            if (!suppressGhostInfo && p != null) {
+            if (!suppressGhostInfo && p != null)
+            {
                 if (p == Shifter.shifter && (CachedPlayer.LocalPlayer.PlayerControl == Shifter.shifter || Helpers.shouldShowGhostInfo()) && Shifter.futureShift != null)
                     roleName += Helpers.cs(Color.yellow, " ← " + Shifter.futureShift.Data.PlayerName);
                 if (p == Vulture.vulture && (CachedPlayer.LocalPlayer.PlayerControl == Vulture.vulture || Helpers.shouldShowGhostInfo()))
                     roleName = roleName + Helpers.cs(Vulture.color, $" ({Vulture.vultureNumberToWin - Vulture.eatenBodies} 剩余)");
-                if (Helpers.shouldShowGhostInfo()) {
+                if (Helpers.shouldShowGhostInfo())
+                {
                     if (Eraser.futureErased.Contains(p))
                         roleName = Helpers.cs(Color.gray, "(被抹除) ") + roleName;
                     if (Vampire.vampire != null && !Vampire.vampire.Data.IsDead && Vampire.bitten == p && !p.Data.IsDead)
@@ -383,17 +387,21 @@ namespace TheOtherRoles
                     */
 
                     // Death Reason on Ghosts
-                    if (p.Data.IsDead) {
+                    if (p.Data.IsDead)
+                    {
                         string deathReasonString = "";
                         var deadPlayer = GameHistory.deadPlayers.FirstOrDefault(x => x.player.PlayerId == p.PlayerId);
 
                         Color killerColor = new();
-                        if (deadPlayer != null && deadPlayer.killerIfExisting != null) {
+                        if (deadPlayer != null && deadPlayer.killerIfExisting != null)
+                        {
                             killerColor = RoleInfo.getRoleInfoForPlayer(deadPlayer.killerIfExisting, false).FirstOrDefault().color;
                         }
 
-                        if (deadPlayer != null) {
-                            switch (deadPlayer.deathReason) {
+                        if (deadPlayer != null)
+                        {
+                            switch (deadPlayer.deathReason)
+                            {
                                 case DeadPlayer.CustomDeathReason.Disconnect:
                                     deathReasonString = " - 断开连接";
                                     break;
@@ -438,8 +446,10 @@ namespace TheOtherRoles
 
 
         static string ReadmePage = "";
-        public static async Task loadReadme() {
-            if (ReadmePage == "") {
+        public static async Task loadReadme()
+        {
+            if (ReadmePage == "")
+            {
                 HttpClient client = new HttpClient();
                 HttpResponseMessage response = await client.GetAsync("https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherRoles/main/README.md");
                 response.EnsureSuccessStatusCode();
@@ -447,10 +457,12 @@ namespace TheOtherRoles
                 ReadmePage = httpres;
             }
         }
-        public static string GetRoleDescription(RoleInfo roleInfo) {
-            while (ReadmePage == "") {
+        public static string GetRoleDescription(RoleInfo roleInfo)
+        {
+            while (ReadmePage == "")
+            {
             }
-                
+
             int index = ReadmePage.IndexOf($"## {roleInfo.name}");
             int endindex = ReadmePage.Substring(index).IndexOf("### Game Options");
             return ReadmePage.Substring(index, endindex);

@@ -1,17 +1,19 @@
-  
+
 using HarmonyLib;
-using UnityEngine;
-using System.Reflection;
-using System.Collections.Generic;
 using Hazel;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
-using System.Linq;
+using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
 
-namespace TheOtherRoles.Patches {
-    public class GameStartManagerPatch  {
+namespace TheOtherRoles.Patches
+{
+    public class GameStartManagerPatch
+    {
         public static Dictionary<int, PlayerVersion> playerVersions = new Dictionary<int, PlayerVersion>();
         public static float timer = 600f;
         private static float kickingTimer = 0f;
@@ -19,21 +21,26 @@ namespace TheOtherRoles.Patches {
         private static string lobbyCodeText = "";
 
         [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerJoined))]
-        public class AmongUsClientOnPlayerJoinedPatch {
-            public static void Postfix(AmongUsClient __instance) {
-                if (CachedPlayer.LocalPlayer != null) {
+        public class AmongUsClientOnPlayerJoinedPatch
+        {
+            public static void Postfix(AmongUsClient __instance)
+            {
+                if (CachedPlayer.LocalPlayer != null)
+                {
                     Helpers.shareGameVersion();
                 }
             }
         }
 
         [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Start))]
-        public class GameStartManagerStartPatch {
-            public static void Postfix(GameStartManager __instance) {
+        public class GameStartManagerStartPatch
+        {
+            public static void Postfix(GameStartManager __instance)
+            {
                 // Trigger version refresh
                 versionSent = false;
                 // Reset lobby countdown timer
-                timer = 600f; 
+                timer = 600f;
                 // Reset kicking timer
                 kickingTimer = 0f;
                 // Copy lobby code
@@ -44,20 +51,24 @@ namespace TheOtherRoles.Patches {
         }
 
         [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
-        public class GameStartManagerUpdatePatch {
+        public class GameStartManagerUpdatePatch
+        {
             public static float startingTimer = 0;
             private static bool update = false;
             private static string currentText = "";
-        
-            public static void Prefix(GameStartManager __instance) {
-                if (!GameData.Instance ) return; // No instance
+
+            public static void Prefix(GameStartManager __instance)
+            {
+                if (!GameData.Instance) return; // No instance
                 __instance.MinPlayers = 1;
                 update = GameData.Instance.PlayerCount != __instance.LastPlayerCount;
             }
 
-            public static void Postfix(GameStartManager __instance) {
+            public static void Postfix(GameStartManager __instance)
+            {
                 // Send version as soon as CachedPlayer.LocalPlayer.PlayerControl exists
-                if (PlayerControl.LocalPlayer != null && !versionSent) {
+                if (PlayerControl.LocalPlayer != null && !versionSent)
+                {
                     versionSent = true;
                     Helpers.shareGameVersion();
                 }
@@ -66,24 +77,33 @@ namespace TheOtherRoles.Patches {
 
                 bool versionMismatch = false;
                 string message = "";
-                foreach (InnerNet.ClientData client in AmongUsClient.Instance.allClients.ToArray()) {
+                foreach (InnerNet.ClientData client in AmongUsClient.Instance.allClients.ToArray())
+                {
                     if (client.Character == null) continue;
                     var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
                     if (dummyComponent != null && dummyComponent.enabled)
                         continue;
-                    else if (!playerVersions.ContainsKey(client.Id))  {
+                    else if (!playerVersions.ContainsKey(client.Id))
+                    {
                         versionMismatch = true;
                         message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了个不同版本的TheOtherUs\n</color>";
-                    } else {
+                    }
+                    else
+                    {
                         PlayerVersion PV = playerVersions[client.Id];
                         int diff = TheOtherRolesPlugin.Version.CompareTo(PV.version);
-                        if (diff > 0) {
+                        if (diff > 0)
+                        {
                             message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了一个旧版本的TheOtherUs (v{playerVersions[client.Id].version.ToString()})\n</color>";
                             versionMismatch = true;
-                        } else if (diff < 0) {
+                        }
+                        else if (diff < 0)
+                        {
                             message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了一个较新版本的TheOtherUs (v{playerVersions[client.Id].version.ToString()})\n</color>";
                             versionMismatch = true;
-                        } else if (!PV.GuidMatches()) { // version presumably matches, check if Guid matches
+                        }
+                        else if (!PV.GuidMatches())
+                        { // version presumably matches, check if Guid matches
                             message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了一个修改过的TheOtherUs v{playerVersions[client.Id].version.ToString()} <size=30%>({PV.guid.ToString()})</size>\n</color>";
                             versionMismatch = true;
                         }
@@ -91,18 +111,23 @@ namespace TheOtherRoles.Patches {
                 }
 
                 // Display message to the host
-                if (AmongUsClient.Instance.AmHost) {
-                    if (versionMismatch) {
+                if (AmongUsClient.Instance.AmHost)
+                {
+                    if (versionMismatch)
+                    {
                         __instance.StartButton.color = __instance.startLabelText.color = Palette.DisabledClear;
                         __instance.GameStartText.text = message;
                         __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
-                    } else {
+                    }
+                    else
+                    {
                         __instance.StartButton.color = __instance.startLabelText.color = ((__instance.LastPlayerCount >= __instance.MinPlayers) ? Palette.EnabledColor : Palette.DisabledClear);
                         __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition;
                     }
 
                     // Make starting info available to clients:
-                    if (startingTimer <= 0 && __instance.startState == GameStartManager.StartingStates.Countdown) {
+                    if (startingTimer <= 0 && __instance.startState == GameStartManager.StartingStates.Countdown)
+                    {
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetGameStarting, Hazel.SendOption.Reliable, -1);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
                         RPCProcedure.setGameStarting();
@@ -110,28 +135,38 @@ namespace TheOtherRoles.Patches {
                 }
 
                 // Client update with handshake infos
-                else {
-                    if (!playerVersions.ContainsKey(AmongUsClient.Instance.HostId) || TheOtherRolesPlugin.Version.CompareTo(playerVersions[AmongUsClient.Instance.HostId].version) != 0) {
+                else
+                {
+                    if (!playerVersions.ContainsKey(AmongUsClient.Instance.HostId) || TheOtherRolesPlugin.Version.CompareTo(playerVersions[AmongUsClient.Instance.HostId].version) != 0)
+                    {
                         kickingTimer += Time.deltaTime;
-                        if (kickingTimer > 10) {
+                        if (kickingTimer > 10)
+                        {
                             kickingTimer = 0;
-			                AmongUsClient.Instance.ExitGame(DisconnectReasons.ExitGame);
+                            AmongUsClient.Instance.ExitGame(DisconnectReasons.ExitGame);
                             SceneChanger.ChangeScene("MainMenu");
                         }
 
                         __instance.GameStartText.text = $"<color=#FF0000FF>房主没有或不同版本的TheOtherUs\n即将被踢出房间 {Math.Round(10 - kickingTimer)}s</color>";
                         __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
-                    } else if (versionMismatch) {
+                    }
+                    else if (versionMismatch)
+                    {
                         __instance.GameStartText.text = $"<color=#FF0000FF>装了不同版本模组的玩家:\n</color>" + message;
                         __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
-                    } else {
+                    }
+                    else
+                    {
                         __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition;
-                        if (__instance.startState != GameStartManager.StartingStates.Countdown && startingTimer <= 0) {
+                        if (__instance.startState != GameStartManager.StartingStates.Countdown && startingTimer <= 0)
+                        {
                             __instance.GameStartText.text = String.Empty;
                         }
-                        else {
+                        else
+                        {
                             __instance.GameStartText.text = $"距离开始还有 {(int)startingTimer + 1}";
-                            if (startingTimer <= 0) {
+                            if (startingTimer <= 0)
+                            {
                                 __instance.GameStartText.text = String.Empty;
                             }
                         }
@@ -146,15 +181,17 @@ namespace TheOtherRoles.Patches {
                 if (Input.GetKeyDown(KeyCode.C) && GameStartManager.InstanceExists && GameStartManager.Instance.startState == GameStartManager.StartingStates.Countdown)
                 {
                     GameStartManager.Instance.ResetStartState();
-                    if (Cultist.isCultistGame) {
+                    if (Cultist.isCultistGame)
+                    {
                         GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors = 2;
-       //                 Cultist.isCultistGame = false;
+                        //                 Cultist.isCultistGame = false;
                     }
 
                 }
 
                 // Start Timer
-                if (startingTimer > 0) {
+                if (startingTimer > 0)
+                {
                     startingTimer -= Time.deltaTime;
                 }
                 // Lobby timer
@@ -170,41 +207,49 @@ namespace TheOtherRoles.Patches {
                 __instance.PlayerCounter.text = currentText + suffix;
                 __instance.PlayerCounter.autoSizeTextContainer = true;
 
-                if (AmongUsClient.Instance.AmHost) {
+                if (AmongUsClient.Instance.AmHost)
+                {
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGamemode, Hazel.SendOption.Reliable, -1);
-                    writer.Write((byte) TORMapOptions.gameMode);
+                    writer.Write((byte)TORMapOptions.gameMode);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.shareGamemode((byte) TORMapOptions.gameMode);
+                    RPCProcedure.shareGamemode((byte)TORMapOptions.gameMode);
                 }
             }
         }
 
         [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.BeginGame))]
-        public class GameStartManagerBeginGame {
-            public static bool Prefix(GameStartManager __instance) {
+        public class GameStartManagerBeginGame
+        {
+            public static bool Prefix(GameStartManager __instance)
+            {
                 // Block game start if not everyone has the same mod version
                 bool continueStart = true;
 
-                if (AmongUsClient.Instance.AmHost) {
-                    foreach (InnerNet.ClientData client in AmongUsClient.Instance.allClients.GetFastEnumerator()) {
+                if (AmongUsClient.Instance.AmHost)
+                {
+                    foreach (InnerNet.ClientData client in AmongUsClient.Instance.allClients.GetFastEnumerator())
+                    {
                         if (client.Character == null) continue;
                         var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
                         if (dummyComponent != null && dummyComponent.enabled)
                             continue;
-                        
-                        if (!playerVersions.ContainsKey(client.Id)) {
+
+                        if (!playerVersions.ContainsKey(client.Id))
+                        {
                             continueStart = false;
                             break;
                         }
-                        
+
                         PlayerVersion PV = playerVersions[client.Id];
                         int diff = TheOtherRolesPlugin.Version.CompareTo(PV.version);
-                        if (diff != 0 || !PV.GuidMatches()) {
+                        if (diff != 0 || !PV.GuidMatches())
+                        {
                             continueStart = false;
                             break;
                         }
                     }
-                    if (continueStart && (TORMapOptions.gameMode == CustomGamemodes.HideNSeek || TORMapOptions.gameMode == CustomGamemodes.PropHunt) && GameOptionsManager.Instance.CurrentGameOptions.MapId != 6) {
+                    if (continueStart && (TORMapOptions.gameMode == CustomGamemodes.HideNSeek || TORMapOptions.gameMode == CustomGamemodes.PropHunt) && GameOptionsManager.Instance.CurrentGameOptions.MapId != 6)
+                    {
                         byte mapId = 0;
                         if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek) mapId = (byte)CustomOptionHolder.hideNSeekMap.getSelection();
                         else if (TORMapOptions.gameMode == CustomGamemodes.PropHunt) mapId = (byte)CustomOptionHolder.propHuntMap.getSelection();
@@ -213,22 +258,27 @@ namespace TheOtherRoles.Patches {
                         writer.Write(mapId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
                         RPCProcedure.dynamicMapOption(mapId);
-                    }       
+                    }
 
-                    if (Cultist.isCultistGame)  {
-                       GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors = 2;
-                       Cultist.isCultistGame = false;
+                    if (Cultist.isCultistGame)
+                    {
+                        GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors = 2;
+                        Cultist.isCultistGame = false;
                     }
                     bool cultistCheck = CustomOptionHolder.cultistSpawnRate.getSelection() != 0 && (rnd.Next(1, 101) <= CustomOptionHolder.cultistSpawnRate.getSelection() * 10);
-                    if (cultistCheck) {
-                      // We should have Custist (Cultist is only supported on 2 Impostors)
-                      Cultist.isCultistGame = true;
-                      GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors = 1;
-                    } else if (cultistCheck){
-                      Cultist.isCultistGame = false;
+                    if (cultistCheck)
+                    {
+                        // We should have Custist (Cultist is only supported on 2 Impostors)
+                        Cultist.isCultistGame = true;
+                        GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors = 1;
+                    }
+                    else if (cultistCheck)
+                    {
+                        Cultist.isCultistGame = false;
                     }
 
-                    else if (CustomOptionHolder.dynamicMap.getBool() && continueStart) {
+                    else if (CustomOptionHolder.dynamicMap.getBool() && continueStart)
+                    {
                         // 0 = Skeld
                         // 1 = Mira HQ
                         // 2 = Polus
@@ -245,33 +295,39 @@ namespace TheOtherRoles.Patches {
                         probabilities.Add(CustomOptionHolder.dynamicMapEnableSubmerged.getSelection() / 10f);
 
                         // if any map is at 100%, remove all maps that are not!
-                        if (probabilities.Contains(1.0f)) {
-                            for (int i=0; i < probabilities.Count; i++) {
+                        if (probabilities.Contains(1.0f))
+                        {
+                            for (int i = 0; i < probabilities.Count; i++)
+                            {
                                 if (probabilities[i] != 1.0) probabilities[i] = 0;
                             }
                         }
 
                         float sum = probabilities.Sum();
                         if (sum == 0) return continueStart;  // All maps set to 0, why are you doing this???
-                        for (int i = 0; i < probabilities.Count; i++) {  // Normalize to [0,1]
+                        for (int i = 0; i < probabilities.Count; i++)
+                        {  // Normalize to [0,1]
                             probabilities[i] /= sum;
                         }
                         float selection = (float)TheOtherRoles.rnd.NextDouble();
                         float cumsum = 0;
-                        for (byte i = 0; i < probabilities.Count; i++) {
+                        for (byte i = 0; i < probabilities.Count; i++)
+                        {
                             cumsum += probabilities[i];
-                            if (cumsum > selection) {
+                            if (cumsum > selection)
+                            {
                                 chosenMapId = i;
                                 break;
                             }
                         }
 
                         // Translate chosen map to presets page and use that maps random map preset page
-                        if (CustomOptionHolder.dynamicMapSeparateSettings.getBool()) {
+                        if (CustomOptionHolder.dynamicMapSeparateSettings.getBool())
+                        {
                             CustomOptionHolder.presetSelection.updateSelection(chosenMapId + 2);
                         }
                         if (chosenMapId >= 3) chosenMapId++;  // Skip dlekS
-                                                              
+
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DynamicMapOption, Hazel.SendOption.Reliable, -1);
                         writer.Write(chosenMapId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -282,16 +338,19 @@ namespace TheOtherRoles.Patches {
             }
         }
 
-        public class PlayerVersion {
+        public class PlayerVersion
+        {
             public readonly Version version;
             public readonly Guid guid;
 
-            public PlayerVersion(Version version, Guid guid) {
+            public PlayerVersion(Version version, Guid guid)
+            {
                 this.version = version;
                 this.guid = guid;
             }
 
-            public bool GuidMatches() {
+            public bool GuidMatches()
+            {
                 return Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.Equals(this.guid);
             }
         }

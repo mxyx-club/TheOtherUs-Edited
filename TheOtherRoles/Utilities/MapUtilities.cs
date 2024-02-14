@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using HarmonyLib;
 using Il2CppSystem;
+using System.Collections.Generic;
 
 namespace TheOtherRoles.Utilities;
 
@@ -30,7 +30,7 @@ public static class MapUtilities
 
         var systems = CachedShipStatus.Systems;
         if (systems.Count <= 0) return;
-        
+
         foreach (var systemTypes in SystemTypeHelpers.AllTypes)
         {
             if (!systems.ContainsKey(systemTypes)) continue;

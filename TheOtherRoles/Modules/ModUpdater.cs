@@ -1,23 +1,24 @@
-﻿using System;
+﻿using AmongUs.Data;
+using Assets.InnerNet;
+using BepInEx;
+using BepInEx.Unity.IL2CPP.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using BepInEx;
-using BepInEx.Unity.IL2CPP.Utils;
+using Twitch;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using AmongUs.Data;
-using Assets.InnerNet;
-using Twitch;
-using static StarGen;
+using UnityEngine.UI;
 
-namespace TheOtherRoles.Modules {
-    public class ModUpdater : MonoBehaviour {
+namespace TheOtherRoles.Modules
+{
+    public class ModUpdater : MonoBehaviour
+    {
         public const string RepositoryOwner = "SpexGH";
         public const string RepositoryName = "TheOtherUs";
         public static ModUpdater Instance { get; private set; }
@@ -28,29 +29,34 @@ namespace TheOtherRoles.Modules {
         private bool showPopUp = true;
         public List<GithubRelease> Releases;
 
-        public void Awake() {
+        public void Awake()
+        {
             if (Instance) Destroy(Instance);
             Instance = this;
-            foreach (var file in Directory.GetFiles(Paths.PluginPath, "*.old")) {
+            foreach (var file in Directory.GetFiles(Paths.PluginPath, "*.old"))
+            {
                 File.Delete(file);
             }
         }
 
-        private void Start() {
+        private void Start()
+        {
             if (_busy) return;
             this.StartCoroutine(CoCheckForUpdate());
             SceneManager.add_sceneLoaded((System.Action<Scene, LoadSceneMode>)(OnSceneLoaded));
         }
-        
-            
+
+
         [HideFromIl2Cpp]
-        public void StartDownloadRelease(GithubRelease release) {
+        public void StartDownloadRelease(GithubRelease release)
+        {
             if (_busy) return;
             this.StartCoroutine(CoDownloadRelease(release));
         }
 
         [HideFromIl2Cpp]
-        private IEnumerator CoCheckForUpdate() {
+        private IEnumerator CoCheckForUpdate()
+        {
             _busy = true;
             var www = new UnityWebRequest();
             www.SetMethod(UnityWebRequest.UnityWebRequestMethod.Get);
@@ -58,11 +64,13 @@ namespace TheOtherRoles.Modules {
             www.downloadHandler = new DownloadHandlerBuffer();
             var operation = www.SendWebRequest();
 
-            while (!operation.isDone) {
+            while (!operation.isDone)
+            {
                 yield return new WaitForEndOfFrame();
             }
 
-            if (www.isNetworkError || www.isHttpError) {
+            if (www.isNetworkError || www.isHttpError)
+            {
                 yield break;
             }
 
@@ -74,7 +82,8 @@ namespace TheOtherRoles.Modules {
         }
 
         [HideFromIl2Cpp]
-        private IEnumerator CoDownloadRelease(GithubRelease release) {
+        private IEnumerator CoDownloadRelease(GithubRelease release)
+        {
             _busy = true;
 
             var popup = Instantiate(TwitchManager.Instance.TwitchPopup);
@@ -94,14 +103,16 @@ namespace TheOtherRoles.Modules {
             www.downloadHandler = new DownloadHandlerBuffer();
             var operation = www.SendWebRequest();
 
-            while (!operation.isDone) {
+            while (!operation.isDone)
+            {
                 int stars = Mathf.CeilToInt(www.downloadProgress * 10);
                 string progress = $"Updating TOR\nPlease wait...\nDownloading...\n{new String((char)0x25A0, stars) + new String((char)0x25A1, 10 - stars)}";
                 popup.TextAreaTMP.text = progress;
                 yield return new WaitForEndOfFrame();
             }
-            
-            if (www.isNetworkError || www.isHttpError) {
+
+            if (www.isNetworkError || www.isHttpError)
+            {
                 popup.TextAreaTMP.text = "Update wasn't successful\nTry again later,\nor update manually.";
                 yield break;
             }
@@ -114,19 +125,22 @@ namespace TheOtherRoles.Modules {
 
             var persistTask = File.WriteAllBytesAsync(filePath, www.downloadHandler.data);
             var hasError = false;
-            while (!persistTask.IsCompleted) {
-                if (persistTask.Exception != null) {
+            while (!persistTask.IsCompleted)
+            {
+                if (persistTask.Exception != null)
+                {
                     hasError = true;
                     break;
                 }
-                
+
                 yield return new WaitForEndOfFrame();
             }
 
             www.downloadHandler.Dispose();
             www.Dispose();
 
-            if (!hasError) {
+            if (!hasError)
+            {
                 popup.TextAreaTMP.text = $"TheOtherUs\nupdated successfully\nPlease restart the game.";
             }
             button.SetActive(true);
@@ -134,23 +148,27 @@ namespace TheOtherRoles.Modules {
         }
 
         [HideFromIl2Cpp]
-        private static bool FilterLatestRelease(GithubRelease release) {
+        private static bool FilterLatestRelease(GithubRelease release)
+        {
             return release.IsNewer(TheOtherRolesPlugin.Version) && release.Assets.Any(FilterPluginAsset);
         }
 
         [HideFromIl2Cpp]
-        private static bool FilterPluginAsset(GithubAsset asset) {
+        private static bool FilterPluginAsset(GithubAsset asset)
+        {
             return asset.Name == "TheOtherRoles.dll";
         }
 
         [HideFromIl2Cpp]
-        private static int SortReleases(GithubRelease a, GithubRelease b) {
+        private static int SortReleases(GithubRelease a, GithubRelease b)
+        {
             if (a.IsNewer(b.Version)) return -1;
             if (b.IsNewer(a.Version)) return 1;
             return 0;
         }
 
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
             if (_busy || scene.name != "MainMenu") return;
             var latestRelease = Releases.FirstOrDefault();
             if (latestRelease == null || latestRelease.Version <= TheOtherRolesPlugin.Version)
@@ -179,16 +197,18 @@ namespace TheOtherRoles.Modules {
             passiveButton.OnMouseOver.AddListener((Action)(() => text.color = Color.white));
             var announcement = $"<size=150%>A new THE OTHER US update to {latestRelease.Tag} is available</size>\n{latestRelease.Description}";
             var mgr = FindObjectOfType<MainMenuManager>(true);
-            if (showPopUp) mgr.StartCoroutine(CoShowAnnouncement(announcement, shortTitle: "TOR Update", date : latestRelease.PublishedAt)) ;
+            if (showPopUp) mgr.StartCoroutine(CoShowAnnouncement(announcement, shortTitle: "TOR Update", date: latestRelease.PublishedAt));
             showPopUp = false;
 
         }
 
         [HideFromIl2Cpp]
-        public IEnumerator CoShowAnnouncement(string announcement, bool show = true, string shortTitle = "TOR Update", string title = "", string date = "") {
+        public IEnumerator CoShowAnnouncement(string announcement, bool show = true, string shortTitle = "TOR Update", string title = "", string date = "")
+        {
             var mgr = FindObjectOfType<MainMenuManager>(true);
             var popUpTemplate = UnityEngine.Object.FindObjectOfType<AnnouncementPopUp>(true);
-            if (popUpTemplate == null) {
+            if (popUpTemplate == null)
+            {
                 TheOtherRolesPlugin.Logger.LogError("couldnt show credits, popUp is null");
                 yield return null;
             }
@@ -196,7 +216,8 @@ namespace TheOtherRoles.Modules {
 
             popUp.gameObject.SetActive(true);
 
-            Assets.InnerNet.Announcement creditsAnnouncement = new() {
+            Assets.InnerNet.Announcement creditsAnnouncement = new()
+            {
                 Id = "torAnnouncement",
                 Language = 0,
                 Number = 6969,
@@ -207,8 +228,10 @@ namespace TheOtherRoles.Modules {
                 Date = date == "" ? DateTime.Now.Date.ToString() : date,
                 Text = announcement,
             };
-            mgr.StartCoroutine(Effects.Lerp(0.1f, new Action<float>((p) => {
-                if (p == 1) {
+            mgr.StartCoroutine(Effects.Lerp(0.1f, new Action<float>((p) =>
+            {
+                if (p == 1)
+                {
                     var backup = DataManager.Player.Announcements.allAnnouncements;
                     DataManager.Player.Announcements.allAnnouncements = new();
                     popUp.Init(false);
@@ -222,7 +245,8 @@ namespace TheOtherRoles.Modules {
         }
     }
 
-    public class GithubRelease {
+    public class GithubRelease
+    {
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
@@ -252,12 +276,14 @@ namespace TheOtherRoles.Modules {
 
         public Version Version => Version.Parse(Tag.Replace("v", string.Empty));
 
-        public bool IsNewer(Version version) {
+        public bool IsNewer(Version version)
+        {
             return Version > version;
         }
     }
 
-    public class GithubAsset {
+    public class GithubAsset
+    {
         [JsonPropertyName("url")]
         public string Url { get; set; }
 

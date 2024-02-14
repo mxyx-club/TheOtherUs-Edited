@@ -1,14 +1,14 @@
 
 using HarmonyLib;
-using static TheOtherRoles.TheOtherRoles;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
-using TheOtherRoles.CustomGameModes;
+using UnityEngine;
+using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles.Patches
 {
@@ -386,7 +386,8 @@ namespace TheOtherRoles.Patches
             TMPro.TMP_Text textRenderer = bonusText.GetComponent<TMPro.TMP_Text>();
             textRenderer.text = "";
 
-            if (AdditionalTempData.winCondition == WinCondition.JesterWin) {
+            if (AdditionalTempData.winCondition == WinCondition.JesterWin)
+            {
                 textRenderer.text = "听我说谢谢你";
                 textRenderer.color = Jester.color;
             }
@@ -395,16 +396,19 @@ namespace TheOtherRoles.Patches
                 textRenderer.text = "末日预言家获胜";
                 textRenderer.color = Doomsayer.color;
             }
-            else if (AdditionalTempData.winCondition == WinCondition.ArsonistWin) {
+            else if (AdditionalTempData.winCondition == WinCondition.ArsonistWin)
+            {
                 textRenderer.text = "用火焰净化一切";
 
                 textRenderer.color = Arsonist.color;
             }
-            else if (AdditionalTempData.winCondition == WinCondition.VultureWin) {
+            else if (AdditionalTempData.winCondition == WinCondition.VultureWin)
+            {
                 textRenderer.text = "吃饱饱！";
                 textRenderer.color = Vulture.color;
             }
-            else if (AdditionalTempData.winCondition == WinCondition.WerewolfWin) {
+            else if (AdditionalTempData.winCondition == WinCondition.WerewolfWin)
+            {
                 textRenderer.text = "月下狼人获胜！";
                 textRenderer.color = Werewolf.color;
             }
@@ -413,57 +417,69 @@ namespace TheOtherRoles.Patches
                 textRenderer.text = "天启获胜";
                 textRenderer.color = Juggernaut.color;
             }
-            else if (AdditionalTempData.winCondition == WinCondition.ProsecutorWin) {
+            else if (AdditionalTempData.winCondition == WinCondition.ProsecutorWin)
+            {
                 textRenderer.text = "小嘴叭叭!";
                 textRenderer.color = Lawyer.color;
             }
-            else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin) {
+            else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin)
+            {
                 textRenderer.text = "船员和恋人获胜";
                 textRenderer.color = Lovers.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
-            } 
-            else if (AdditionalTempData.winCondition == WinCondition.LoversSoloWin) {
+            }
+            else if (AdditionalTempData.winCondition == WinCondition.LoversSoloWin)
+            {
                 textRenderer.text = "与你的爱恋心意合一~";
                 textRenderer.color = Lovers.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
             }
-            else if (AdditionalTempData.winCondition == WinCondition.JackalWin) {
+            else if (AdditionalTempData.winCondition == WinCondition.JackalWin)
+            {
                 textRenderer.text = "豺狼的全家福.jpg";
                 textRenderer.color = Jackal.color;
             }
-            else if (AdditionalTempData.winCondition == WinCondition.MiniLose) {
+            else if (AdditionalTempData.winCondition == WinCondition.MiniLose)
+            {
                 textRenderer.text = "他就只是个孩子啊！";
                 textRenderer.color = Mini.color;
             }
 
-            foreach (WinCondition cond in AdditionalTempData.additionalWinConditions) {
-                if (cond == WinCondition.AdditionalLawyerBonusWin) {
+            foreach (WinCondition cond in AdditionalTempData.additionalWinConditions)
+            {
+                if (cond == WinCondition.AdditionalLawyerBonusWin)
+                {
                     textRenderer.text += $"\n{Helpers.cs(Lawyer.color, "律师和客户胜利")}";
-                } else if (cond == WinCondition.AdditionalAlivePursuerWin) {
+                }
+                else if (cond == WinCondition.AdditionalAlivePursuerWin)
+                {
                     textRenderer.text += $"\n{Helpers.cs(Pursuer.color, "起诉人存活")}";
                 }
             }
 
-            if (TORMapOptions.showRoleSummary || HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM) {
+            if (TORMapOptions.showRoleSummary || HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM)
+            {
                 var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
                 GameObject roleSummary = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
-                roleSummary.transform.position = new Vector3(__instance.Navigation.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -214f); 
+                roleSummary.transform.position = new Vector3(__instance.Navigation.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -214f);
                 roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
 
                 var roleSummaryText = new StringBuilder();
-                if (HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM) {
+                if (HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM)
+                {
                     int minutes = (int)AdditionalTempData.timer / 60;
                     int seconds = (int)AdditionalTempData.timer % 60;
                     roleSummaryText.AppendLine($"<color=#FAD934FF>剩余时间: {minutes:00}:{seconds:00}</color> \n");
                 }
                 roleSummaryText.AppendLine("游戏总结:");
-                foreach(var data in AdditionalTempData.playerRoles) {
+                foreach (var data in AdditionalTempData.playerRoles)
+                {
                     //var roles = string.Join(" ", data.Roles.Select(x => Helpers.cs(x.color, x.name)));
                     string roles = data.RoleNames;
                     //if (data.IsGuesser) roles += " (Guesser)";
                     var taskInfo = data.TasksTotal > 0 ? $" - <color=#FAD934FF>({data.TasksCompleted}/{data.TasksTotal})</color>" : "";
                     if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(击杀: {data.Kills})</color>";
-                    roleSummaryText.AppendLine($"{Helpers.cs(data.IsAlive ? Color.white : new Color(.7f,.7f,.7f), data.PlayerName)} - {roles}{taskInfo}"); 
+                    roleSummaryText.AppendLine($"{Helpers.cs(data.IsAlive ? Color.white : new Color(.7f, .7f, .7f), data.PlayerName)} - {roles}{taskInfo}");
                 }
                 TMPro.TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMPro.TMP_Text>();
                 roleSummaryTextMesh.alignment = TMPro.TextAlignmentOptions.TopLeft;
@@ -471,7 +487,7 @@ namespace TheOtherRoles.Patches
                 roleSummaryTextMesh.fontSizeMin = 1.5f;
                 roleSummaryTextMesh.fontSizeMax = 1.5f;
                 roleSummaryTextMesh.fontSize = 1.5f;
-                
+
                 var roleSummaryTextMeshRectTransform = roleSummaryTextMesh.GetComponent<RectTransform>();
                 roleSummaryTextMeshRectTransform.anchoredPosition = new Vector2(position.x + 3.5f, position.y - 0.1f);
                 roleSummaryTextMesh.text = roleSummaryText.ToString();
@@ -480,9 +496,11 @@ namespace TheOtherRoles.Patches
         }
     }
 
-    [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.CheckEndCriteria))] 
-    class CheckEndCriteriaPatch {
-        public static bool Prefix(ShipStatus __instance) {
+    [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.CheckEndCriteria))]
+    class CheckEndCriteriaPatch
+    {
+        public static bool Prefix(ShipStatus __instance)
+        {
             if (!GameData.Instance) return false;
             if (DestroyableSingleton<TutorialManager>.InstanceExists) // InstanceExists | Don't check Custom Criteria when in Tutorial
                 return true;
@@ -495,7 +513,7 @@ namespace TheOtherRoles.Patches
             if (CheckAndEndGameForSabotageWin(__instance)) return false;
             if (CheckAndEndGameForTaskWin(__instance)) return false;
             if (CheckAndEndGameForProsecutorWin(__instance)) return false;
-            if (CheckAndEndGameForWerewolfWin(__instance,statistics)) return false;
+            if (CheckAndEndGameForWerewolfWin(__instance, statistics)) return false;
             if (CheckAndEndGameForLoverWin(__instance, statistics)) return false;
             if (CheckAndEndGameForJackalWin(__instance, statistics)) return false;
             if (CheckAndEndGameForImpostorWin(__instance, statistics)) return false;
@@ -504,8 +522,10 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static bool CheckAndEndGameForMiniLose(ShipStatus __instance) {
-            if (Mini.triggerMiniLose) {
+        private static bool CheckAndEndGameForMiniLose(ShipStatus __instance)
+        {
+            if (Mini.triggerMiniLose)
+            {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.MiniLose, false);
                 return true;
@@ -513,8 +533,10 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static bool CheckAndEndGameForJesterWin(ShipStatus __instance) {
-            if (Jester.triggerJesterWin) {
+        private static bool CheckAndEndGameForJesterWin(ShipStatus __instance)
+        {
+            if (Jester.triggerJesterWin)
+            {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.JesterWin, false);
                 return true;
@@ -532,8 +554,10 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static bool CheckAndEndGameForArsonistWin(ShipStatus __instance) {
-            if (Arsonist.triggerArsonistWin) {
+        private static bool CheckAndEndGameForArsonistWin(ShipStatus __instance)
+        {
+            if (Arsonist.triggerArsonistWin)
+            {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ArsonistWin, false);
                 return true;
@@ -541,8 +565,10 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static bool CheckAndEndGameForVultureWin(ShipStatus __instance) {
-            if (Vulture.triggerVultureWin) {
+        private static bool CheckAndEndGameForVultureWin(ShipStatus __instance)
+        {
+            if (Vulture.triggerVultureWin)
+            {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.VultureWin, false);
                 return true;
@@ -550,24 +576,30 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static bool CheckAndEndGameForSabotageWin(ShipStatus __instance) {
+        private static bool CheckAndEndGameForSabotageWin(ShipStatus __instance)
+        {
             if (MapUtilities.Systems == null) return false;
             var systemType = MapUtilities.Systems.ContainsKey(SystemTypes.LifeSupp) ? MapUtilities.Systems[SystemTypes.LifeSupp] : null;
-            if (systemType != null) {
+            if (systemType != null)
+            {
                 LifeSuppSystemType lifeSuppSystemType = systemType.TryCast<LifeSuppSystemType>();
-                if (lifeSuppSystemType != null && lifeSuppSystemType.Countdown < 0f) {
+                if (lifeSuppSystemType != null && lifeSuppSystemType.Countdown < 0f)
+                {
                     EndGameForSabotage(__instance);
                     lifeSuppSystemType.Countdown = 10000f;
                     return true;
                 }
             }
             var systemType2 = MapUtilities.Systems.ContainsKey(SystemTypes.Reactor) ? MapUtilities.Systems[SystemTypes.Reactor] : null;
-            if (systemType2 == null) {
+            if (systemType2 == null)
+            {
                 systemType2 = MapUtilities.Systems.ContainsKey(SystemTypes.Laboratory) ? MapUtilities.Systems[SystemTypes.Laboratory] : null;
             }
-            if (systemType2 != null) {
+            if (systemType2 != null)
+            {
                 ICriticalSabotage criticalSystem = systemType2.TryCast<ICriticalSabotage>();
-                if (criticalSystem != null && criticalSystem.Countdown < 0f) {
+                if (criticalSystem != null && criticalSystem.Countdown < 0f)
+                {
                     EndGameForSabotage(__instance);
                     criticalSystem.ClearSabotage();
                     return true;
@@ -576,9 +608,11 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static bool CheckAndEndGameForTaskWin(ShipStatus __instance) {
+        private static bool CheckAndEndGameForTaskWin(ShipStatus __instance)
+        {
             if (HideNSeek.isHideNSeekGM && !HideNSeek.taskWinPossible || PropHunt.isPropHuntGM) return false;
-            if (GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks) {
+            if (GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks)
+            {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame(GameOverReason.HumansByTask, false);
                 return true;
@@ -586,8 +620,10 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static bool CheckAndEndGameForProsecutorWin(ShipStatus __instance) {
-            if (Lawyer.triggerProsecutorWin) {
+        private static bool CheckAndEndGameForProsecutorWin(ShipStatus __instance)
+        {
+            if (Lawyer.triggerProsecutorWin)
+            {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ProsecutorWin, false);
                 return true;
@@ -595,8 +631,10 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static bool CheckAndEndGameForLoverWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TeamLoversAlive == 2 && statistics.TotalAlive <= 3) {
+        private static bool CheckAndEndGameForLoverWin(ShipStatus __instance, PlayerStatistics statistics)
+        {
+            if (statistics.TeamLoversAlive == 2 && statistics.TotalAlive <= 3)
+            {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.LoversWin, false);
                 return true;
@@ -658,8 +696,9 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static bool CheckAndEndGameForImpostorWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM) 
+        private static bool CheckAndEndGameForImpostorWin(ShipStatus __instance, PlayerStatistics statistics)
+        {
+            if (HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM)
                 if ((0 != statistics.TotalAlive - statistics.TeamImpostorsAlive)) return false;
 
             if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive &&
@@ -670,7 +709,8 @@ namespace TheOtherRoles.Patches
             {
                 //__instance.enabled = false;
                 GameOverReason endReason;
-                switch (TempData.LastDeathReason) {
+                switch (TempData.LastDeathReason)
+                {
                     case DeathReason.Exile:
                         endReason = GameOverReason.ImpostorByVote;
                         break;
@@ -687,13 +727,16 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static bool CheckAndEndGameForCrewmateWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (HideNSeek.isHideNSeekGM && HideNSeek.timer <= 0 && !HideNSeek.isWaitingTimer) {
+        private static bool CheckAndEndGameForCrewmateWin(ShipStatus __instance, PlayerStatistics statistics)
+        {
+            if (HideNSeek.isHideNSeekGM && HideNSeek.timer <= 0 && !HideNSeek.isWaitingTimer)
+            {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
                 return true;
             }
-            if (PropHunt.isPropHuntGM && PropHunt.timer <= 0 && PropHunt.timerRunning) {
+            if (PropHunt.isPropHuntGM && PropHunt.timer <= 0 && PropHunt.timerRunning)
+            {
                 GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
                 return true;
             }
@@ -706,7 +749,8 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        private static void EndGameForSabotage(ShipStatus __instance) {
+        private static void EndGameForSabotage(ShipStatus __instance)
+        {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame(GameOverReason.ImpostorBySabotage, false);
             return;
@@ -714,27 +758,31 @@ namespace TheOtherRoles.Patches
 
     }
 
-    internal class PlayerStatistics {
-        public int TeamImpostorsAlive {get;set;}
-        public int TeamJackalAlive {get;set;}
-        public int TeamLoversAlive {get;set;}
-        public int TotalAlive {get;set;}
-        public bool TeamImpostorHasAliveLover {get;set;}
-        public bool TeamJackalHasAliveLover {get;set;}
-        public int TeamWerewolfAlive {get;set;}
-		public bool TeamWerewolfHasAliveLover {get;set;}
+    internal class PlayerStatistics
+    {
+        public int TeamImpostorsAlive { get; set; }
+        public int TeamJackalAlive { get; set; }
+        public int TeamLoversAlive { get; set; }
+        public int TotalAlive { get; set; }
+        public bool TeamImpostorHasAliveLover { get; set; }
+        public bool TeamJackalHasAliveLover { get; set; }
+        public int TeamWerewolfAlive { get; set; }
+        public bool TeamWerewolfHasAliveLover { get; set; }
         //天启添加
         public int TeamJuggernautAlive { get; set; }
         public bool TeamJuggernautHasAliveLover { get; set; }
-        public PlayerStatistics(ShipStatus __instance) {
+        public PlayerStatistics(ShipStatus __instance)
+        {
             GetPlayerCounts();
         }
 
-        private bool isLover(GameData.PlayerInfo p) {
+        private bool isLover(GameData.PlayerInfo p)
+        {
             return (Lovers.lover1 != null && Lovers.lover1.PlayerId == p.PlayerId) || (Lovers.lover2 != null && Lovers.lover2.PlayerId == p.PlayerId);
         }
 
-        private void GetPlayerCounts() {
+        private void GetPlayerCounts()
+        {
             int numJackalAlive = 0;
             int numImpostorsAlive = 0;
             int numLoversAlive = 0;
@@ -742,7 +790,7 @@ namespace TheOtherRoles.Patches
             bool impLover = false;
             bool jackalLover = false;
             int numWerewolfAlive = 0;
-            bool werewolfLover = false; 
+            bool werewolfLover = false;
             //天启添加
             int numJuggernautAlive = 0;
             bool juggernautLover = false;
@@ -758,19 +806,23 @@ namespace TheOtherRoles.Patches
                         bool lover = isLover(playerInfo);
                         if (lover) numLoversAlive++;
 
-                        if (playerInfo.Role.IsImpostor) {
+                        if (playerInfo.Role.IsImpostor)
+                        {
                             numImpostorsAlive++;
                             if (lover) impLover = true;
                         }
-                        if (Jackal.jackal != null && Jackal.jackal.PlayerId == playerInfo.PlayerId) {
+                        if (Jackal.jackal != null && Jackal.jackal.PlayerId == playerInfo.PlayerId)
+                        {
                             numJackalAlive++;
                             if (lover) jackalLover = true;
                         }
-                        if (Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == playerInfo.PlayerId) {
+                        if (Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == playerInfo.PlayerId)
+                        {
                             numJackalAlive++;
                             if (lover) jackalLover = true;
                         }
-                        if (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == playerInfo.PlayerId) {
+                        if (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == playerInfo.PlayerId)
+                        {
                             numWerewolfAlive++;
                             if (lover) werewolfLover = true;
                         }
@@ -791,7 +843,7 @@ namespace TheOtherRoles.Patches
             TeamImpostorHasAliveLover = impLover;
             TeamJackalHasAliveLover = jackalLover;
             TeamWerewolfHasAliveLover = werewolfLover;
-			TeamWerewolfAlive = numWerewolfAlive;
+            TeamWerewolfAlive = numWerewolfAlive;
             //天启添加
             TeamJuggernautAlive = numJuggernautAlive;
             TeamJuggernautHasAliveLover = juggernautLover;

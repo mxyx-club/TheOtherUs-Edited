@@ -1,17 +1,14 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
 using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 using UnityEngine;
-using System.Linq;
 
 namespace TheOtherRoles
 {
     // Class to preload all audio/sound effects that are contained in the embedded resources.
     // The effects are made available through the soundEffects Dict / the get and the play methods.
     public static class SoundEffectsManager
-        
+
     {
         private static Dictionary<string, AudioClip> soundEffects = new();
 
@@ -38,25 +35,30 @@ namespace TheOtherRoles
         }
 
 
-        public static void play(string path, float volume=0.8f, bool loop = false)
+        public static void play(string path, float volume = 0.8f, bool loop = false)
         {
             if (!TORMapOptions.enableSoundEffects) return;
             AudioClip clipToPlay = get(path);
             stop(path);
-            if (Constants.ShouldPlaySfx() && clipToPlay != null) {
+            if (Constants.ShouldPlaySfx() && clipToPlay != null)
+            {
                 AudioSource source = SoundManager.Instance.PlaySound(clipToPlay, false, volume);
                 source.loop = loop;
             }
         }
-        public static void playAtPosition(string path, Vector2 position, float maxDuration = 15f, float range = 5f, bool loop = false) {
+        public static void playAtPosition(string path, Vector2 position, float maxDuration = 15f, float range = 5f, bool loop = false)
+        {
             if (!TORMapOptions.enableSoundEffects || !Constants.ShouldPlaySfx()) return;
             AudioClip clipToPlay = get(path);
 
             AudioSource source = SoundManager.Instance.PlaySound(clipToPlay, false, 1f);
             source.loop = loop;
-            HudManager.Instance.StartCoroutine(Effects.Lerp(maxDuration, new Action<float>((p) => {
-                if (source != null) {
-                    if (p == 1) {
+            HudManager.Instance.StartCoroutine(Effects.Lerp(maxDuration, new Action<float>((p) =>
+            {
+                if (source != null)
+                {
+                    if (p == 1)
+                    {
                         source.Stop();
                     }
                     float distance, volume;
@@ -70,13 +72,15 @@ namespace TheOtherRoles
             })));
         }
 
-        public static void stop(string path) {
+        public static void stop(string path)
+        {
             var soundToStop = get(path);
             if (soundToStop != null)
                 if (Constants.ShouldPlaySfx()) SoundManager.Instance.StopSound(soundToStop);
         }
 
-        public static void stopAll() {
+        public static void stopAll()
+        {
             if (soundEffects == null) return;
             foreach (var path in soundEffects.Keys) stop(path);
         }
