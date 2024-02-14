@@ -925,7 +925,14 @@ namespace TheOtherRoles.Patches
                     }
                 }
                 //Ä©ÈÕ
-                if (Doomsayer.doomsayer != null && (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer || Helpers.shouldShowGhostInfo()) && !Doomsayer.doomsayer.Data.IsDead)
+                if (
+                    Doomsayer.doomsayer != null 
+                    &&
+                    (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer || Helpers.shouldShowGhostInfo()) 
+                    &&
+                    !Doomsayer.doomsayer.Data.IsDead
+                    &&
+                    Doomsayer.playerTargetinformation != null)
                 {
                     int i = 1;
                     List<RoleInfo> allRoleInfo = new List<RoleInfo>(10);
@@ -937,9 +944,6 @@ namespace TheOtherRoles.Patches
                     {
                         allRoleInfo = Helpers.allRoleInfos();
                     }
-
-
-
                     foreach (PlayerControl predictionTarget in Doomsayer.playerTargetinformation)
                     {
                         System.Random random = new System.Random();
