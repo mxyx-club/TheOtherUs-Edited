@@ -1,5 +1,5 @@
-﻿using TheOtherRoles.Modules.CustomHats.Extensions;
-using HarmonyLib;
+﻿using HarmonyLib;
+using TheOtherRoles.Modules.CustomHats.Extensions;
 
 namespace TheOtherRoles.Modules.CustomHats.Patches;
 

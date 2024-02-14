@@ -1,9 +1,9 @@
-﻿using System;
+﻿using AmongUs.Data;
+using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using AmongUs.Data;
 using TheOtherRoles.Modules.CustomHats.Extensions;
-using HarmonyLib;
 using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -14,7 +14,7 @@ namespace TheOtherRoles.Modules.CustomHats.Patches;
 internal static class HatsTabPatches
 {
     private static TextMeshPro textTemplate;
-    
+
     [HarmonyPatch(nameof(HatsTab.OnEnable))]
     [HarmonyPostfix]
     private static void OnEnablePostfix(HatsTab __instance)
@@ -64,7 +64,7 @@ internal static class HatsTabPatches
             var value = packages[key];
             yOffset = CreateHatPackage(value, key, yOffset, __instance);
         }
-        
+
         __instance.scroller.ContentYBounds.max = -(yOffset + 4.1f);
     }
 
@@ -113,15 +113,18 @@ internal static class HatsTabPatches
 
             if (ext != null)
             {
-                if (background != null) {
+                if (background != null)
+                {
                     background.localPosition = Vector3.down * 0.243f;
                     background.localScale = new Vector3(background.localScale.x, 0.8f, background.localScale.y);
                 }
-                if (foreground != null) {
+                if (foreground != null)
+                {
                     foreground.localPosition = Vector3.down * 0.243f;
                 }
-                
-                if (textTemplate != null) {
+
+                if (textTemplate != null)
+                {
                     var description = Object.Instantiate(textTemplate, colorChip.transform);
                     description.transform.localPosition = new Vector3(0f, -0.65f, -1f);
                     description.alignment = TextAlignmentOptions.Center;
@@ -129,7 +132,7 @@ internal static class HatsTabPatches
                     hatsTab.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => { description.SetText($"{hat.name}\nby {ext.Author}"); })));
                 }
             }
-            
+
             colorChip.transform.localPosition = new Vector3(xPos, yPos, -1f);
             colorChip.Inner.SetHat(hat, hatsTab.HasLocalPlayer() ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId : DataManager.Player.Customization.Color);
             colorChip.Inner.transform.localPosition = hat.ChipOffset;

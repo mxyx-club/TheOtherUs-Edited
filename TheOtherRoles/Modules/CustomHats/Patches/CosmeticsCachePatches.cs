@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using TheOtherRoles;
 
 namespace TheOtherRoles.Modules.CustomHats.Patches;
 

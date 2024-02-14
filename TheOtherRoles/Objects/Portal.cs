@@ -1,13 +1,15 @@
 using System;
-using UnityEngine;
 using System.Collections.Generic;
 using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
+using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
 
-namespace TheOtherRoles.Objects {
+namespace TheOtherRoles.Objects
+{
 
-    public class Portal {
+    public class Portal
+    {
         public static Portal firstPortal = null;
         public static Portal secondPortal = null;
         public static bool bothPlacedAndEnabled = false;
@@ -17,11 +19,13 @@ namespace TheOtherRoles.Objects {
         public static float teleportDuration = 3.4166666667f;
         public string room;
 
-        public struct tpLogEntry {
+        public struct tpLogEntry
+        {
             public byte playerId;
             public string name;
             public DateTime time;
-            public tpLogEntry(byte playerId, string name, DateTime time) {
+            public tpLogEntry(byte playerId, string name, DateTime time)
+            {
                 this.playerId = playerId;
                 this.time = time;
                 this.name = name;
@@ -30,7 +34,8 @@ namespace TheOtherRoles.Objects {
 
         public static List<tpLogEntry> teleportedPlayers;
 
-        public static Sprite getFgAnimationSprite(int index) {
+        public static Sprite getFgAnimationSprite(int index)
+        {
             if (portalFgAnimationSprites == null || portalFgAnimationSprites.Length == 0) return null;
             index = Mathf.Clamp(index, 0, portalFgAnimationSprites.Length - 1);
             if (portalFgAnimationSprites[index] == null)
@@ -38,35 +43,40 @@ namespace TheOtherRoles.Objects {
             return portalFgAnimationSprites[index];
         }
 
-        public static void startTeleport(byte playerId, byte exit) {
+        public static void startTeleport(byte playerId, byte exit)
+        {
             if (firstPortal == null || secondPortal == null) return;
             isTeleporting = true;
-            
+
             // Generate log info
             PlayerControl playerControl = Helpers.playerById(playerId);
             bool flip = playerControl.cosmetics.currentBodySprite.BodySprite.flipX; // use the original player control here, not the morhpTarget.
             firstPortal.animationFgRenderer.flipX = flip;
             secondPortal.animationFgRenderer.flipX = flip;
             if (Morphling.morphling != null && Morphling.morphTimer > 0) playerControl = Morphling.morphTarget;  // Will output info of morph-target instead
-            string playerNameDisplay = Portalmaker.logOnlyHasColors ? "A player (" + (Helpers.isLighterColor(playerControl) ? "L" : "D") + ")" : playerControl.Data.PlayerName;
+            string playerNameDisplay = Portalmaker.logOnlyHasColors ? "一名玩家 (" + (Helpers.isLighterColor(playerControl) ? "浅" : "深") + ")" : playerControl.Data.PlayerName;
 
             int colorId = playerControl.Data.DefaultOutfit.ColorId;
 
-            if (Camouflager.camouflageTimer > 0 || Helpers.MushroomSabotageActive()) {
+            if (Camouflager.camouflageTimer > 0 || Helpers.MushroomSabotageActive())
+            {
                 playerNameDisplay = "A camouflaged player";
                 colorId = 6;
             }
-            
+
             if (!playerControl.Data.IsDead)
                 teleportedPlayers.Add(new tpLogEntry(playerId, playerNameDisplay, DateTime.UtcNow));
-            
-            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(teleportDuration, new Action<float>((p) => {
-                if (firstPortal != null && firstPortal.animationFgRenderer != null && secondPortal != null && secondPortal.animationFgRenderer != null) {
+
+            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(teleportDuration, new Action<float>((p) =>
+            {
+                if (firstPortal != null && firstPortal.animationFgRenderer != null && secondPortal != null && secondPortal.animationFgRenderer != null)
+                {
                     if (exit == 0 || exit == 1) firstPortal.animationFgRenderer.sprite = getFgAnimationSprite((int)(p * portalFgAnimationSprites.Length));
                     if (exit == 0 || exit == 2) secondPortal.animationFgRenderer.sprite = getFgAnimationSprite((int)(p * portalFgAnimationSprites.Length));
                     playerControl.SetPlayerMaterialColors(firstPortal.animationFgRenderer);
                     playerControl.SetPlayerMaterialColors(secondPortal.animationFgRenderer);
-                    if (p == 1f) {
+                    if (p == 1f)
+                    {
                         firstPortal.animationFgRenderer.sprite = null;
                         secondPortal.animationFgRenderer.sprite = null;
                         isTeleporting = false;
@@ -80,8 +90,9 @@ namespace TheOtherRoles.Objects {
         private SpriteRenderer animationFgRenderer;
         private SpriteRenderer portalRenderer;
 
-        public Portal(Vector2 p) {
-            portalGameObject = new GameObject("Portal"){ layer = 11 };
+        public Portal(Vector2 p)
+        {
+            portalGameObject = new GameObject("Portal") { layer = 11 };
             //Vector3 position = new Vector3(p.x, p.y, CachedPlayer.LocalPlayer.transform.position.z + 1f);
             Vector3 position = new Vector3(p.x, p.y, p.y / 1000f + 0.01f);
 
@@ -105,14 +116,16 @@ namespace TheOtherRoles.Objects {
             portalFgAnimationGameObject.SetActive(true);
 
             if (firstPortal == null) firstPortal = this;
-            else if (secondPortal == null) {
+            else if (secondPortal == null)
+            {
                 secondPortal = this;
             }
             var lastRoom = FastDestroyableSingleton<HudManager>.Instance?.roomTracker.LastRoom.RoomId;
             this.room = lastRoom != null ? DestroyableSingleton<TranslationController>.Instance.GetString((SystemTypes)lastRoom) : "Open Field";
         }
 
-        public static bool locationNearEntry(Vector2 p) {
+        public static bool locationNearEntry(Vector2 p)
+        {
             if (!bothPlacedAndEnabled) return false;
             float maxDist = 0.25f;
 
@@ -122,21 +135,25 @@ namespace TheOtherRoles.Objects {
             return true;
         }
 
-        public static Vector2 findExit(Vector2 p) {
+        public static Vector2 findExit(Vector2 p)
+        {
             var dist1 = Vector2.Distance(p, firstPortal.portalGameObject.transform.position);
             var dist2 = Vector2.Distance(p, secondPortal.portalGameObject.transform.position);
             return dist1 < dist2 ? secondPortal.portalGameObject.transform.position : firstPortal.portalGameObject.transform.position;
         }
 
-        public static Vector2 findEntry(Vector2 p) {
+        public static Vector2 findEntry(Vector2 p)
+        {
             var dist1 = Vector2.Distance(p, firstPortal.portalGameObject.transform.position);
             var dist2 = Vector2.Distance(p, secondPortal.portalGameObject.transform.position);
             return dist1 > dist2 ? secondPortal.portalGameObject.transform.position : firstPortal.portalGameObject.transform.position;
         }
 
-        public static void meetingEndsUpdate() {
+        public static void meetingEndsUpdate()
+        {
             // checkAndEnable
-            if (secondPortal != null) {
+            if (secondPortal != null)
+            {
                 firstPortal.portalGameObject.SetActive(true);
                 secondPortal.portalGameObject.SetActive(true);
                 bothPlacedAndEnabled = true;
@@ -147,14 +164,17 @@ namespace TheOtherRoles.Objects {
             teleportedPlayers = new List<tpLogEntry>();
         }
 
-        private static void preloadSprites() {
-            for (int i = 0; i < portalFgAnimationSprites.Length; i++) {
+        private static void preloadSprites()
+        {
+            for (int i = 0; i < portalFgAnimationSprites.Length; i++)
+            {
                 getFgAnimationSprite(i);
             }
             portalSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.PortalAnimation.plattform.png", 115f);
         }
 
-        public static void clearPortals() {
+        public static void clearPortals()
+        {
             preloadSprites();  // Force preload of sprites to avoid lag
             bothPlacedAndEnabled = false;
             firstPortal = null;

@@ -1,26 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using HarmonyLib;
-using UnityEngine;
-using UnityEngine.UI;
-using static UnityEngine.UI.Button;
-using Object = UnityEngine.Object;
-using TheOtherRoles.Patches;
-using UnityEngine.SceneManagement;
-using TheOtherRoles.Utilities;
-using AmongUs.Data;
+﻿using AmongUs.Data;
 using Assets.InnerNet;
-using System.Linq;
+using HarmonyLib;
+using System;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
-namespace TheOtherRoles.Modules {
+namespace TheOtherRoles.Modules
+{
     [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start))]
-    public class MainMenuPatch {
+    public class MainMenuPatch
+    {
         private static bool horseButtonState = TORMapOptions.enableHorseMode;
         //private static Sprite horseModeOffSprite = null;
         //private static Sprite horseModeOnSprite = null;
         private static AnnouncementPopUp popUp;
 
-        private static void Prefix(MainMenuManager __instance) {
+        private static void Prefix(MainMenuManager __instance)
+        {
             var template = GameObject.Find("ExitGameButton");
             var template2 = GameObject.Find("CreditsButton");
             if (template == null || template2 == null) return;
@@ -41,16 +39,17 @@ namespace TheOtherRoles.Modules {
             buttonDiscord.GetComponent<AspectPosition>().anchorPoint = new Vector2(0.542f, 0.5f);
 
             var textDiscord = buttonDiscord.transform.GetComponentInChildren<TMPro.TMP_Text>();
-            __instance.StartCoroutine(Effects.Lerp(0.5f, new System.Action<float>((p) => {
+            __instance.StartCoroutine(Effects.Lerp(0.5f, new System.Action<float>((p) =>
+            {
                 textDiscord.SetText("TOU Discord");
             })));
             PassiveButton passiveButtonDiscord = buttonDiscord.GetComponent<PassiveButton>();
-            
+
             passiveButtonDiscord.OnClick = new Button.ButtonClickedEvent();
             passiveButtonDiscord.OnClick.AddListener((System.Action)(() => Application.OpenURL("https://discord.gg/yspVyP5meR")));
 
 
-            
+
             // TOR credits button
             if (template == null) return;
             var creditsButton = Object.Instantiate(template, template.transform.parent);
@@ -59,18 +58,21 @@ namespace TheOtherRoles.Modules {
             creditsButton.GetComponent<AspectPosition>().anchorPoint = new Vector2(0.462f, 0.5f);
 
             var textCreditsButton = creditsButton.transform.GetComponentInChildren<TMPro.TMP_Text>();
-            __instance.StartCoroutine(Effects.Lerp(0.5f, new System.Action<float>((p) => {
+            __instance.StartCoroutine(Effects.Lerp(0.5f, new System.Action<float>((p) =>
+            {
                 textCreditsButton.SetText("TOU Credits");
             })));
             PassiveButton passiveCreditsButton = creditsButton.GetComponent<PassiveButton>();
 
             passiveCreditsButton.OnClick = new Button.ButtonClickedEvent();
 
-            passiveCreditsButton.OnClick.AddListener((System.Action)delegate {
+            passiveCreditsButton.OnClick.AddListener((System.Action)delegate
+            {
                 // do stuff
                 if (popUp != null) Object.Destroy(popUp);
                 var popUpTemplate = Object.FindObjectOfType<AnnouncementPopUp>(true);
-                if (popUpTemplate == null) {
+                if (popUpTemplate == null)
+                {
                     TheOtherRolesPlugin.Logger.LogError("couldnt show credits, popUp is null");
                     return;
                 }
@@ -122,7 +124,8 @@ TheEpicRoles - Idea for the first kill shield (partly) and the tabbed option men
 ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
                 creditsString += "</align>";
 
-                Assets.InnerNet.Announcement creditsAnnouncement = new() {
+                Assets.InnerNet.Announcement creditsAnnouncement = new()
+                {
                     Id = "torCredits",
                     Language = 0,
                     Number = 500,
@@ -133,8 +136,10 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
                     Date = "01.07.2021",
                     Text = creditsString,
                 };
-                __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>((p) => {
-                    if (p == 1) {
+                __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>((p) =>
+                {
+                    if (p == 1)
+                    {
                         var backup = DataManager.Player.Announcements.allAnnouncements;
                         DataManager.Player.Announcements.allAnnouncements = new();
                         popUp.Init(false);
@@ -146,11 +151,13 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
                     }
                 })));
             });
-            
+
         }
 
-        public static void addSceneChangeCallbacks() {
-            SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>)((scene, _) => {
+        public static void addSceneChangeCallbacks()
+        {
+            SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>)((scene, _) =>
+            {
                 if (!scene.name.Equals("MatchMaking", StringComparison.Ordinal)) return;
                 TORMapOptions.gameMode = CustomGamemodes.Classic;
                 // Add buttons For Guesser Mode, Hide N Seek in this scene.
@@ -163,9 +170,10 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
                 guesserButton.transform.localPosition += new Vector3(0f, -0.5f);
                 var guesserButtonText = guesserButton.GetComponentInChildren<TMPro.TextMeshPro>();
                 var guesserButtonPassiveButton = guesserButton.GetComponentInChildren<PassiveButton>();
-                
+
                 guesserButtonPassiveButton.OnClick = new Button.ButtonClickedEvent();
-                guesserButtonPassiveButton.OnClick.AddListener((System.Action)(() => {
+                guesserButtonPassiveButton.OnClick.AddListener((System.Action)(() =>
+                {
                     TORMapOptions.gameMode = CustomGamemodes.Guesser;
                     template.OnClick();
                 }));
@@ -174,9 +182,10 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
                 HideNSeekButton.transform.localPosition += new Vector3(1.7f, -0.5f);
                 var HideNSeekButtonText = HideNSeekButton.GetComponentInChildren<TMPro.TextMeshPro>();
                 var HideNSeekButtonPassiveButton = HideNSeekButton.GetComponentInChildren<PassiveButton>();
-                
+
                 HideNSeekButtonPassiveButton.OnClick = new Button.ButtonClickedEvent();
-                HideNSeekButtonPassiveButton.OnClick.AddListener((System.Action)(() => {
+                HideNSeekButtonPassiveButton.OnClick.AddListener((System.Action)(() =>
+                {
                     TORMapOptions.gameMode = CustomGamemodes.HideNSeek;
                     template.OnClick();
                 }));
@@ -187,15 +196,17 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
                 var PropHuntButtonPassiveButton = PropHuntButton.GetComponentInChildren<PassiveButton>();
 
                 PropHuntButtonPassiveButton.OnClick = new Button.ButtonClickedEvent();
-                PropHuntButtonPassiveButton.OnClick.AddListener((System.Action)(() => {
+                PropHuntButtonPassiveButton.OnClick.AddListener((System.Action)(() =>
+                {
                     TORMapOptions.gameMode = CustomGamemodes.PropHunt;
                     template.OnClick();
                 }));
 
-                template.StartCoroutine(Effects.Lerp(0.1f, new System.Action<float>((p) => {
-                    guesserButtonText.SetText("TOU Guesser");
-                    HideNSeekButtonText.SetText("TOU Hide N Seek");
-                    PropHuntButtonText.SetText("TOU Prop Hunt");
+                template.StartCoroutine(Effects.Lerp(0.1f, new System.Action<float>((p) =>
+                {
+                    guesserButtonText.SetText("TOU 赌怪模式");
+                    HideNSeekButtonText.SetText("TOU 猎杀模式");
+                    PropHuntButtonText.SetText("TOU 躲猫猫");
                 })));
             }));
         }

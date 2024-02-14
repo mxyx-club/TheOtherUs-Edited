@@ -4,8 +4,10 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Players;
 using UnityEngine;
 
-namespace TheOtherRoles.CustomGameModes {
-    public static class HideNSeek { // HideNSeek Gamemode
+namespace TheOtherRoles.CustomGameModes
+{
+    public static class HideNSeek
+    { // HideNSeek Gamemode
         public static bool isHideNSeekGM = false;
         public static TMPro.TMP_Text timerText = null;
         public static Vent polusVent = null;
@@ -21,21 +23,25 @@ namespace TheOtherRoles.CustomGameModes {
         public static bool canSabotage = false;
         public static float killCooldown = 10f;
         public static float hunterWaitingTime = 15f;
-        public static bool isHunter() {
+        public static bool isHunter()
+        {
             return isHideNSeekGM && CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor;
         }
 
-        public static List<CachedPlayer> getHunters() {
+        public static List<CachedPlayer> getHunters()
+        {
             List<CachedPlayer> hunters = new List<CachedPlayer>(CachedPlayer.AllPlayers);
             hunters.RemoveAll(x => !x.Data.Role.IsImpostor);
             return hunters;
         }
 
-        public static bool isHunted() {
+        public static bool isHunted()
+        {
             return isHideNSeekGM && CachedPlayer.LocalPlayer != null && !CachedPlayer.LocalPlayer.Data.Role.IsImpostor;
         }
 
-        public static void clearAndReload() {
+        public static void clearAndReload()
+        {
             isHideNSeekGM = TORMapOptions.gameMode == CustomGamemodes.HideNSeek;
             if (timerText != null) UnityEngine.Object.Destroy(timerText);
             timerText = null;
@@ -59,7 +65,8 @@ namespace TheOtherRoles.CustomGameModes {
         }
     }
 
-    public static class Hunter {
+    public static class Hunter
+    {
         public static List<Arrow> localArrows = new List<Arrow>();
         public static List<byte> lightActive = new List<byte>();
         public static bool arrowActive = false;
@@ -78,24 +85,29 @@ namespace TheOtherRoles.CustomGameModes {
         private static Sprite buttonSpriteLight;
         private static Sprite buttonSpriteArrow;
 
-        public static bool isLightActive (byte playerId) {
+        public static bool isLightActive(byte playerId)
+        {
             return lightActive.Contains(playerId);
         }
 
-        public static Sprite getArrowSprite() {
+        public static Sprite getArrowSprite()
+        {
             if (buttonSpriteArrow) return buttonSpriteArrow;
             buttonSpriteArrow = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.HideNSeekArrowButton.png", 115f);
             return buttonSpriteArrow;
         }
 
-        public static Sprite getLightSprite() {
+        public static Sprite getLightSprite()
+        {
             if (buttonSpriteLight) return buttonSpriteLight;
             buttonSpriteLight = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.LighterButton.png", 115f);
             return buttonSpriteLight;
         }
 
-        public static void clearAndReload() {
-            if (localArrows != null) {
+        public static void clearAndReload()
+        {
+            if (localArrows != null)
+            {
                 foreach (Arrow arrow in localArrows)
                     if (arrow?.arrow != null)
                         UnityEngine.Object.Destroy(arrow.arrow);
@@ -117,7 +129,8 @@ namespace TheOtherRoles.CustomGameModes {
         }
     }
 
-    public static class Hunted {
+    public static class Hunted
+    {
         public static List<byte> timeshieldActive = new List<byte>();
         public static int shieldCount = 3;
 
@@ -125,7 +138,8 @@ namespace TheOtherRoles.CustomGameModes {
         public static float shieldDuration = 5f;
         public static float shieldRewindTime = 3f;
         public static bool taskPunish = false;
-        public static void clearAndReload() {
+        public static void clearAndReload()
+        {
             timeshieldActive = new List<byte>();
             taskPunish = false;
 

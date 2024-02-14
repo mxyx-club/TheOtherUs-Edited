@@ -1,18 +1,8 @@
 using HarmonyLib;
-using System;
-using Hazel;
 using UnityEngine;
-using System.Linq;
-using static TheOtherRoles.TheOtherRoles;
-using static TheOtherRoles.GameHistory;
-using static TheOtherRoles.TORMapOptions;
-using System.Collections.Generic;
-using TheOtherRoles.Players;
-using TheOtherRoles.Utilities;
-using TheOtherRoles.Objects;
-using TheOtherRoles.CustomGameModes;
 
-namespace TheOtherRoles.Patches {
+namespace TheOtherRoles.Patches
+{
 
     [HarmonyPatch(typeof(MedScanMinigame._WalkToOffset_d__15), nameof(MedScanMinigame._WalkToPad_d__16.MoveNext))]
     class MedscanMiniGamePatchWTP

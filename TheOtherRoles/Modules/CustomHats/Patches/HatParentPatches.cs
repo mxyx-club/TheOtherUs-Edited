@@ -1,9 +1,8 @@
-﻿using System;
+﻿using HarmonyLib;
+using PowerTools;
+using System;
 using System.IO;
 using System.Linq;
-using HarmonyLib;
-using PowerTools;
-using TheOtherRoles;
 using UnityEngine;
 
 namespace TheOtherRoles.Modules.CustomHats.Patches;

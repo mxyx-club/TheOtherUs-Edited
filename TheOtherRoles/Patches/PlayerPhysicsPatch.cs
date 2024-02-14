@@ -1,9 +1,6 @@
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
 using TheOtherRoles.Players;
+using UnityEngine;
 
 namespace TheOtherRoles.Patches
 {
@@ -19,7 +16,7 @@ namespace TheOtherRoles.Patches
         static void updateUndertakerMoveSpeed(PlayerPhysics playerPhysics)
         {
             if (Undertaker.undertaker == null || Undertaker.undertaker != CachedPlayer.LocalPlayer.PlayerControl) return;
-            if(Undertaker.deadBodyDraged != null )
+            if (Undertaker.deadBodyDraged != null)
             {
                 if (playerPhysics.AmOwner && GameData.Instance && playerPhysics.myPlayer.CanMove)
                     playerPhysics.body.velocity /= 2;
