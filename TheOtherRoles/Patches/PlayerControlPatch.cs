@@ -1147,6 +1147,9 @@ namespace TheOtherRoles.Patches {
                 HudManagerStartPatch.witchSpellButton.MaxTimer = (Witch.cooldown + Witch.currentCooldownAddition) * multiplier;
                 HudManagerStartPatch.ninjaButton.MaxTimer = Ninja.cooldown * multiplier;
                 HudManagerStartPatch.thiefKillButton.MaxTimer = Thief.cooldown * multiplier;
+                //!!!
+                HudManagerStartPatch.werewolfRampageButton.MaxTimer = Thief.cooldown * multiplier;
+                HudManagerStartPatch.juggernautKillButton.MaxTimer = Thief.cooldown * multiplier;
             }
         }
 

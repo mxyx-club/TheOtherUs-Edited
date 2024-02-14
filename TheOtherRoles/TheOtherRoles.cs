@@ -11,6 +11,7 @@ using static TheOtherRoles.TheOtherRoles;
 using AmongUs.Data;
 using Hazel;
 using static TheOtherRoles.Guesser;
+using Microsoft.VisualBasic;
 
 namespace TheOtherRoles
 {
@@ -1707,29 +1708,43 @@ namespace TheOtherRoles
         //public static PlayerControl evilGuesser;
         public static Color color = new Color(0f, 1f, 0.5f, 1f);
         public static PlayerControl currentTarget;
+        public static List<PlayerControl> playerTargetinformation = new List<PlayerControl>();
         public static float cooldown = 30f;
+        public static float formationNum = 1f;
         public static bool hasMultipleShotsPerMeeting = false;
         public static bool showInfoInGhostChat = true;
         public static bool canGuessNeutral = false;
         public static bool canGuessImpostor = false;
         public static bool triggerDoomsayerrWin = false;
         public static bool canGuess = true;
+        public static bool onlineTarger = false;
         public static float killToWin = 3;
-        public static float killedToWin = 3;
+        public static float killedToWin = 0;
 
 
+        private static Sprite buttonSprite;
+
+        public static Sprite getButtonSprite() {
+            if (buttonSprite) return buttonSprite;
+            buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SeerButton.png", 115f);
+            return buttonSprite;
+
+        }
         public static void clearAndReload()
         {
             doomsayer = null;
             currentTarget = null;
             killedToWin = 0;
             canGuess = true;
+            triggerDoomsayerrWin = false;
             cooldown = CustomOptionHolder.doomsayerCooldown.getFloat();
             hasMultipleShotsPerMeeting = CustomOptionHolder.doomsayerHasMultipleShotsPerMeeting.getBool();
             showInfoInGhostChat = CustomOptionHolder.doomsayerShowInfoInGhostChat.getBool();
             canGuessNeutral = CustomOptionHolder.doomsayerCanGuessNeutral.getBool();
             canGuessImpostor = CustomOptionHolder.doomsayerCanGuessImpostor.getBool();
-            killToWin = CustomOptionHolder.doomsayerkillToWin.getFloat();
+            formationNum = CustomOptionHolder.doomsayerDormationNum.getFloat();
+            killToWin = CustomOptionHolder.doomsayerKillToWin.getFloat();
+            onlineTarger = CustomOptionHolder.doomsayerOnlineTarger.getBool();
 
         }
     }

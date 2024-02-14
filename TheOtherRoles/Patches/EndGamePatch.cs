@@ -630,7 +630,9 @@ namespace TheOtherRoles.Patches {
                 if ((0 != statistics.TotalAlive - statistics.TeamImpostorsAlive)) return false;
 
             if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive && 
-                statistics.TeamJackalAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamJuggernautAlive == 0 &&
+                statistics.TeamJackalAlive == 0 && 
+                statistics.TeamWerewolfAlive == 0 &&
+                statistics.TeamJuggernautAlive == 0 &&
                 !(statistics.TeamImpostorHasAliveLover && statistics.TeamLoversAlive == 2) && !Helpers.killingCrewAlive()) {
                 //__instance.enabled = false;
                 GameOverReason endReason;
@@ -661,7 +663,7 @@ namespace TheOtherRoles.Patches {
                 GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
                 return true;
             }
-            if (statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalAlive == 0 && statistics.TeamWerewolfAlive == 0) {
+            if (statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamJuggernautAlive == 0) {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
                 return true;

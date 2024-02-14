@@ -18,6 +18,7 @@ using AmongUs.GameOptions;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Objects;
 using System.Collections;
+using UnityEngine.Playables;
 
 namespace TheOtherRoles {
 
@@ -434,6 +435,33 @@ namespace TheOtherRoles {
             return textStreamReader.ReadToEnd();
         }
 
+        public static List<RoleInfo> allRoleInfos()
+        {
+            
+            List<RoleInfo> allRoleInfo = new List<RoleInfo>();
+            foreach (RoleInfo player in RoleInfo.allRoleInfos) {
+                if (player.isModifier) continue;
+                allRoleInfo.Add(player);
+            }
+                
+            return allRoleInfo;
+        }
+
+       public static List<RoleInfo> onlineRoleInfos()
+        {
+            List<RoleInfo> allRoleInfo = new List<RoleInfo>();
+            foreach (var player in GameData.Instance.AllPlayers)
+            {
+                foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos  )
+                {
+
+                   allRoleInfo.Add(roleInfo);
+                }
+            }
+
+            return allRoleInfo;
+        }
+     
         public static PlayerControl playerById(byte id)
         {
             foreach (PlayerControl player in CachedPlayer.AllPlayers)
@@ -559,7 +587,10 @@ namespace TheOtherRoles {
 
         //假任务
         public static bool hasFakeTasks(this PlayerControl player) {
-            return (player == Werewolf.werewolf || player == Doomsayer.doomsayer || player == Juggernaut.juggernaut || player == Jester.jester || player == Amnisiac.amnisiac || player == Jackal.jackal || player == Sidekick.sidekick || player == Arsonist.arsonist || player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player));
+            return (player == Pursuer.pursuer || player == Werewolf.werewolf || player == Doomsayer.doomsayer || 
+                player == Juggernaut.juggernaut || player == Jester.jester  || 
+                player == Jackal.jackal || player == Sidekick.sidekick || player == Arsonist.arsonist ||
+                player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player));
         }
 
         public static bool canBeErased(this PlayerControl player) {

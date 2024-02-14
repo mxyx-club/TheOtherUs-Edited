@@ -11,6 +11,8 @@ using TheOtherRoles.Utilities;
 using UnityEngine;
 using Innersloth.Assets;
 using Reactor.Utilities;
+using Il2CppSystem.Runtime.Remoting.Messaging;
+using UnityEngine.UIElements;
 
 namespace TheOtherRoles.Patches
 {
@@ -607,7 +609,8 @@ namespace TheOtherRoles.Patches
                         __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
                         UnityEngine.Object.Destroy(container.gameObject);
                         if (HandleGuesser.hasMultipleShotsPerMeeting && HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 1 && dyingTarget != CachedPlayer.LocalPlayer.PlayerControl)
-                            __instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
+                            __instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == dyingTarget.PlayerId && 
+                                x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
                         else
                             __instance.playerStates.ToList().ForEach(x => { if (x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
 
@@ -914,6 +917,54 @@ namespace TheOtherRoles.Patches
                         FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, $"{message}");
                     }
                 }
+
+                //Ä©ÈÕ
+                if (Doomsayer.doomsayer != null && (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer || Helpers.shouldShowGhostInfo()) && !Doomsayer.doomsayer.Data.IsDead)
+                {
+                    int i = 1;
+                    List<RoleInfo> allRoleInfo = new List<RoleInfo>();
+                    if (Doomsayer.onlineTarger)    
+                    {
+                        allRoleInfo = Helpers.allRoleInfos();
+                    }
+                    else
+                    {
+                        allRoleInfo = Helpers.allRoleInfos();
+                    }
+                   
+                    
+
+                    foreach (PlayerControl predictionTarget in Doomsayer.playerTargetinformation)
+                    {
+                        System.Random random = new System.Random();
+                        int x = random.Next(0, (int)Doomsayer.formationNum);
+                        RoleInfo roleInfoTarget = RoleInfo.getRoleInfoForPlayer(predictionTarget, false).FirstOrDefault();
+                        string message = $"Ô¤ÑÔ " + i + ": "+ predictionTarget.name + "\n";
+                        List<int> temp = Enumerable.Range(0, allRoleInfo.ToArray().Length).OrderBy(q => Guid.NewGuid()).Take((int)Doomsayer.formationNum).ToList();
+                        
+                        for (int num = 0 ,tempNum = 0; num < Doomsayer.formationNum; num++)
+                        {
+                            if (allRoleInfo[temp[tempNum]].name.Equals(roleInfoTarget.name)) {
+                                tempNum++; continue;
+                            }
+                            if (num == x)
+                            {
+                                message += roleInfoTarget.name + ",";
+                            }
+                            else {
+                                
+                                message += allRoleInfo[temp[tempNum]].name + ",";
+                                tempNum++;
+                            }
+                        }
+
+
+                        i++;
+                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Doomsayer.doomsayer, $"{message}");
+                    }
+                    Doomsayer.playerTargetinformation.Clear();
+                }
+
 
                 // Add Snitch info
                 string output = "";

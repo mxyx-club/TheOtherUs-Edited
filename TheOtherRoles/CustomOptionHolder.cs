@@ -330,8 +330,10 @@ namespace TheOtherRoles {
         public static CustomOption doomsayerShowInfoInGhostChat;
         public static CustomOption doomsayerCanGuessNeutral;
         public static CustomOption doomsayerCanGuessImpostor;
+        public static CustomOption doomsayerOnlineTarger;
         public static CustomOption doomsayerGuesserCantGuessSnitch;
-        public static CustomOption doomsayerkillToWin;
+        public static CustomOption doomsayerKillToWin;
+        public static CustomOption doomsayerDormationNum;
 
         public static CustomOption trapperSpawnRate;
         public static CustomOption trapperCooldown;
@@ -924,7 +926,9 @@ namespace TheOtherRoles {
             doomsayerShowInfoInGhostChat = CustomOption.Create(10114, Types.Neutral, "灵魂可见猜测结果", true, doomsayerSpawnRate);
             doomsayerCanGuessNeutral = CustomOption.Create(10115, Types.Neutral, "可以猜测中立", true, doomsayerSpawnRate);
             doomsayerCanGuessImpostor = CustomOption.Create(10116, Types.Neutral, "可以猜测内鬼", true, doomsayerSpawnRate);
-            doomsayerkillToWin = CustomOption.Create(10117, Types.Neutral, "需要成功猜测几次获胜", 3f,1f,10f,1f, doomsayerSpawnRate);
+            doomsayerOnlineTarger = CustomOption.Create(10117, Types.Neutral, "是否获取已有职业", false, doomsayerSpawnRate);
+            doomsayerKillToWin = CustomOption.Create(10118, Types.Neutral, "需要成功猜测几次获胜", 3f,1f,10f,1f, doomsayerSpawnRate);
+            doomsayerDormationNum = CustomOption.Create(10119, Types.Neutral, "预言的职业数量", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
 
 
             trapperSpawnRate = CustomOption.Create(410, Types.Crewmate, cs(Trapper.color, "陷阱师"), rates, null, true);
