@@ -9,16 +9,20 @@ using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
-namespace TheOtherRoles.Patches {
+namespace TheOtherRoles.Patches
+{
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.Begin))]
     [HarmonyPriority(Priority.First)]
-    class ExileControllerBeginPatch {
+    class ExileControllerBeginPatch
+    {
         public static GameData.PlayerInfo lastExiled;
-        public static void Prefix(ExileController __instance, [HarmonyArgument(0)]ref GameData.PlayerInfo exiled, [HarmonyArgument(1)]bool tie) {
+        public static void Prefix(ExileController __instance, [HarmonyArgument(0)] ref GameData.PlayerInfo exiled, [HarmonyArgument(1)] bool tie)
+        {
             lastExiled = exiled;
 
             // Medic shield
-            if (Medic.medic != null && AmongUsClient.Instance.AmHost && Medic.futureShielded != null && !Medic.medic.Data.IsDead) { // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
+            if (Medic.medic != null && AmongUsClient.Instance.AmHost && Medic.futureShielded != null && !Medic.medic.Data.IsDead)
+            { // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.MedicSetShielded, Hazel.SendOption.Reliable, -1);
                 writer.Write(Medic.futureShielded.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -27,7 +31,8 @@ namespace TheOtherRoles.Patches {
             if (Medic.usedShield) Medic.meetingAfterShielding = true;  // Has to be after the setting of the shield
 
             // Shifter shift
-            if (Shifter.shifter != null && AmongUsClient.Instance.AmHost && Shifter.futureShift != null) { // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
+            if (Shifter.shifter != null && AmongUsClient.Instance.AmHost && Shifter.futureShift != null)
+            { // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShifterShift, Hazel.SendOption.Reliable, -1);
                 writer.Write(Shifter.futureShift.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -39,9 +44,12 @@ namespace TheOtherRoles.Patches {
             {
                 Doomsayer.canGuess = true;
             }
+
             // Eraser erase
-            if (Eraser.eraser != null && AmongUsClient.Instance.AmHost && Eraser.futureErased != null) {  // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
-                foreach (PlayerControl target in Eraser.futureErased) {
+            if (Eraser.eraser != null && AmongUsClient.Instance.AmHost && Eraser.futureErased != null)
+            {  // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
+                foreach (PlayerControl target in Eraser.futureErased)
+                {
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ErasePlayerRoles, Hazel.SendOption.Reliable, -1);
                     writer.Write(target.PlayerId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -52,7 +60,8 @@ namespace TheOtherRoles.Patches {
             Eraser.futureErased = new List<PlayerControl>();
 
             // Trickster boxes
-            if (Trickster.trickster != null && JackInTheBox.hasJackInTheBoxLimitReached()) {
+            if (Trickster.trickster != null && JackInTheBox.hasJackInTheBoxLimitReached())
+            {
                 JackInTheBox.convertToVents();
             }
 
@@ -60,16 +69,20 @@ namespace TheOtherRoles.Patches {
             Portal.meetingEndsUpdate();
 
             // Witch execute casted spells
-            if (Witch.witch != null && Witch.futureSpelled != null && AmongUsClient.Instance.AmHost) {
+            if (Witch.witch != null && Witch.futureSpelled != null && AmongUsClient.Instance.AmHost)
+            {
                 bool exiledIsWitch = exiled != null && exiled.PlayerId == Witch.witch.PlayerId;
                 bool witchDiesWithExiledLover = exiled != null && Lovers.existing() && Lovers.bothDie && (Lovers.lover1.PlayerId == Witch.witch.PlayerId || Lovers.lover2.PlayerId == Witch.witch.PlayerId) && (exiled.PlayerId == Lovers.lover1.PlayerId || exiled.PlayerId == Lovers.lover2.PlayerId);
 
                 if ((witchDiesWithExiledLover || exiledIsWitch) && Witch.witchVoteSavesTargets) Witch.futureSpelled = new List<PlayerControl>();
-                foreach (PlayerControl target in Witch.futureSpelled) {
-                    if (target != null && !target.Data.IsDead && Helpers.checkMuderAttempt(Witch.witch, target, true) == MurderAttemptResult.PerformKill){
+                foreach (PlayerControl target in Witch.futureSpelled)
+                {
+                    if (target != null && !target.Data.IsDead && Helpers.checkMuderAttempt(Witch.witch, target, true) == MurderAttemptResult.PerformKill)
+                    {
                         if (exiled != null && Lawyer.lawyer != null && (target == Lawyer.lawyer || target == Lovers.otherLover(Lawyer.lawyer)) && Lawyer.target != null && Lawyer.isProsecutor && Lawyer.target.PlayerId == exiled.PlayerId)
                             continue;
-                        if (target == Lawyer.target && Lawyer.lawyer != null) {
+                        if (target == Lawyer.target && Lawyer.lawyer != null)
+                        {
                             MessageWriter writer2 = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.LawyerPromotesToPursuer, Hazel.SendOption.Reliable, -1);
                             AmongUsClient.Instance.FinishRpcImmediately(writer2);
                             RPCProcedure.lawyerPromotesToPursuer();
@@ -103,12 +116,14 @@ namespace TheOtherRoles.Patches {
             MapUtilities.CachedShipStatus.AllCameras = allCameras.ToArray();
             TORMapOptions.camerasToAdd = new List<SurvCamera>();
 
-            foreach (Vent vent in TORMapOptions.ventsToSeal) {
+            foreach (Vent vent in TORMapOptions.ventsToSeal)
+            {
                 PowerTools.SpriteAnim animator = vent.GetComponent<PowerTools.SpriteAnim>();
                 vent.EnterVentAnim = vent.ExitVentAnim = null;
                 Sprite newSprite = animator == null ? SecurityGuard.getStaticVentSealedSprite() : SecurityGuard.getAnimatedVentSealedSprite();
                 SpriteRenderer rend = vent.myRend;
-                if (Helpers.isFungle()) {
+                if (Helpers.isFungle())
+                {
                     newSprite = SecurityGuard.getFungleVentSealedSprite();
                     rend = vent.transform.GetChild(3).GetComponent<SpriteRenderer>();
                     animator = vent.transform.GetChild(3).GetComponent<PowerTools.SpriteAnim>();

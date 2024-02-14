@@ -383,6 +383,7 @@ namespace TheOtherRoles {
         public static CustomOption modifierSunglassesVision;
 
         public static CustomOption modifierTorch;
+        public static CustomOption modifierTorchVision;
         public static CustomOption modifierTorchQuantity;
 
         public static CustomOption modifierMultitasker;
@@ -965,10 +966,11 @@ namespace TheOtherRoles {
 
             modifierSunglasses = CustomOption.Create(1050, Types.Modifier, cs(Color.yellow, "太阳镜"), rates, null, true);
             modifierSunglassesQuantity = CustomOption.Create(1051, Types.Modifier, cs(Color.yellow, "太阳镜数量"), ratesModifier, modifierSunglasses);
-            modifierSunglassesVision = CustomOption.Create(1052, Types.Modifier, "太阳镜的视野", new string[] { "-10%", "-20%", "-30%", "-40%", "-50%" }, modifierSunglasses);
+            modifierSunglassesVision = CustomOption.Create(1052, Types.Modifier, "太阳镜的视野倍率", new string[] { "-10%", "-20%", "-30%", "-40%", "-50%" }, modifierSunglasses);
 
             modifierTorch = CustomOption.Create(1053, Types.Modifier, cs(Color.yellow, "火炬"), rates, null, true);
             modifierTorchQuantity = CustomOption.Create(1054, Types.Modifier, cs(Color.yellow, "火炬人数"), ratesModifier, modifierTorch);
+            modifierTorchVision = CustomOption.Create(1056, Types.Modifier, "火炬的视野倍率", new string[] { "+10%", "+20%", "+30%", "+40%", "+50%" }, modifierTorch);
 
             modifierMultitasker = CustomOption.Create(10523233, Types.Modifier, cs(Color.yellow, "多线程"), rates, null, true);
             modifierMultitaskerQuantity = CustomOption.Create(10232354, Types.Modifier, cs(Color.yellow, "多线程人数"), ratesModifier, modifierMultitasker);

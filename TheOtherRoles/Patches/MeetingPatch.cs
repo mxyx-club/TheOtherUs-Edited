@@ -12,9 +12,11 @@ using UnityEngine;
 using Innersloth.Assets;
 using Reactor.Utilities;
 
-namespace TheOtherRoles.Patches {
+namespace TheOtherRoles.Patches
+{
     [HarmonyPatch]
-    class MeetingHudPatch {
+    class MeetingHudPatch
+    {
         static bool[] selections;
         static SpriteRenderer[] renderers;
         private static GameData.PlayerInfo target = null;
@@ -27,12 +29,16 @@ namespace TheOtherRoles.Patches {
         private static PlayerVoteArea swapped2 = null;
 
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
-        class MeetingCalculateVotesPatch {
-            private static Dictionary<byte, int> CalculateVotes(MeetingHud __instance) {
+        class MeetingCalculateVotesPatch
+        {
+            private static Dictionary<byte, int> CalculateVotes(MeetingHud __instance)
+            {
                 Dictionary<byte, int> dictionary = new Dictionary<byte, int>();
-                for (int i = 0; i < __instance.playerStates.Length; i++) {
+                for (int i = 0; i < __instance.playerStates.Length; i++)
+                {
                     PlayerVoteArea playerVoteArea = __instance.playerStates[i];
-                    if (playerVoteArea.VotedFor != 252 && playerVoteArea.VotedFor != 255 && playerVoteArea.VotedFor != 254) {
+                    if (playerVoteArea.VotedFor != 252 && playerVoteArea.VotedFor != 255 && playerVoteArea.VotedFor != 254)
+                    {
                         PlayerControl player = Helpers.playerById((byte)playerVoteArea.TargetPlayerId);
                         if (player == null || player.Data == null || player.Data.IsDead || player.Data.Disconnected) continue;
 

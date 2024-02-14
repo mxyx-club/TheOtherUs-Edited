@@ -718,18 +718,18 @@ namespace TheOtherRoles.Patches {
                 modifiers.RemoveAll(x => x == RoleId.Watcher);
             }
 
-
+            //交换师
+            List<PlayerControl> crewPlayer = new List<PlayerControl>(playerList);
+            crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
             if (modifiers.Contains(RoleId.Shifter))
             {
-                List<PlayerControl> crewPlayerS = new List<PlayerControl>(playerList);
-                crewPlayerS.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.roleId == RoleId.Jackal) || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.roleId == RoleId.Lawyer));
-                playerId = setModifierToRandomPlayer((byte)RoleId.Shifter, crewPlayerS);
+                var crewPlayerShifter = new List<PlayerControl>(crewPlayer);
+                crewPlayerShifter.RemoveAll(x => x == Spy.spy);
+                playerId = setModifierToRandomPlayer((byte)RoleId.Shifter, crewPlayerShifter);
+                crewPlayer.RemoveAll(x => x.PlayerId == playerId);
                 playerList.RemoveAll(x => x.PlayerId == playerId);
                 modifiers.RemoveAll(x => x == RoleId.Shifter);
             }
-            List<PlayerControl> crewPlayer = new List<PlayerControl>(playerList);
-            crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
-            /***/
             if (modifiers.Contains(RoleId.Sunglasses)) {
                 int sunglassesCount = 0;
                 while (sunglassesCount < modifiers.FindAll(x => x == RoleId.Sunglasses).Count) {

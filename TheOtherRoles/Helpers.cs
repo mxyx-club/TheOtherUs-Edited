@@ -560,7 +560,7 @@ namespace TheOtherRoles {
         //假任务
         public static bool hasFakeTasks(this PlayerControl player)
         {
-            return (player == Werewolf.werewolf || player == Doomsayer.doomsayer || player == Juggernaut.juggernaut || player == Jester.jester || player == Amnisiac.amnisiac || player == Jackal.jackal || player == Sidekick.sidekick || player == Arsonist.arsonist || player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player));
+            return (player == Werewolf.werewolf || player == Doomsayer.doomsayer || player == Juggernaut.juggernaut || player == Jester.jester || player == Amnisiac.amnisiac || player == Jackal.jackal || player == Sidekick.sidekick || player == Doomsayer.doomsayer || player == Pursuer.pursuer || player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player));
         }
 
         public static bool canBeErased(this PlayerControl player)
@@ -795,12 +795,14 @@ namespace TheOtherRoles {
                     roleCouldUse = false;
                 else
                     roleCouldUse = true;
-            } else if (Jester.jester != null && Jester.jester == player && Jester.canVent)
+            }
+            else if (Jester.jester != null && Jester.jester == player && Jester.canVent)
                 roleCouldUse = true;
             //天启跳洞添加
             else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player)
                 roleCouldUse = true;
-            if (Tunneler.tunneler != null && Tunneler.tunneler == player) {
+            if (Tunneler.tunneler != null && Tunneler.tunneler == player)
+            {
                 var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Tunneler.tunneler.Data);
                 int numberOfTasks = playerTotal - playerCompleted;
                 if (numberOfTasks == 0) roleCouldUse = true;
@@ -1053,6 +1055,9 @@ namespace TheOtherRoles {
             bool powerCrewAlive = false;
             // This functions blocks the game from ending if specified crewmate roles are alive
             if (!CustomOptionHolder.blockGameEnd.getBool()) return false;
+
+
+            if (isRoleAlive(Sheriff.sheriff)) powerCrewAlive = true;
             if (isRoleAlive(Veteren.veteren)) powerCrewAlive = true;
             if (isRoleAlive(Mayor.mayor)) powerCrewAlive = true;
             if (isRoleAlive(Swapper.swapper)) powerCrewAlive = true;
@@ -1254,19 +1259,18 @@ public static bool isTeamCultist(PlayerControl player)
         }
 
         //红狼视野
-        public static bool hasImpVision(GameData.PlayerInfo player) {
+        public static bool hasImpVision(GameData.PlayerInfo player)
+        {
             return player.Role.IsImpostor
                 || ((Jackal.jackal != null && Jackal.jackal.PlayerId == player.PlayerId || Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.hasImpostorVision)
                 || (Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == player.PlayerId && Sidekick.hasImpostorVision)
                 || (Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision)
-                || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
                 || (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == player.PlayerId && Spy.hasImpostorVision)
+                || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
                 || (Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision)
-                //添加火炬内鬼视野
-                || (Torch.torch != null && player.PlayerId == Torch.torch[0].PlayerId)
                 || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId && Werewolf.hasImpostorVision);
         }
-        
+
         public static object TryCast(this Il2CppObjectBase self, Type type)
         {
             return AccessTools.Method(self.GetType(), nameof(Il2CppObjectBase.TryCast)).MakeGenericMethod(type).Invoke(self, Array.Empty<object>());

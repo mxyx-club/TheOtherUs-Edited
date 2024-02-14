@@ -19,7 +19,8 @@ namespace TheOtherRoles
     {
         public static System.Random rnd = new System.Random((int)DateTime.Now.Ticks);
 
-        public static void clearAndReloadRoles() {
+        public static void clearAndReloadRoles()
+        {
             Jester.clearAndReload();
             Mayor.clearAndReload();
             Portalmaker.clearAndReload();
@@ -1737,7 +1738,9 @@ namespace TheOtherRoles
         }
     }
 
-    public static class Guesser {
+
+    public static class Guesser
+    {
         public static PlayerControl niceGuesser;
         //public static PlayerControl evilGuesser;
         public static List<PlayerControl> evilGuesser = new List<PlayerControl>();
@@ -1755,20 +1758,20 @@ namespace TheOtherRoles
         public static bool evilGuesserCanGuessCrewmate = true;
 
         public static bool isGuesser(byte playerId)
-	{
-		foreach (PlayerControl item in evilGuesser)
-		{
-			if (item.PlayerId == playerId && evilGuesser != null)
-			{
-				return true;
-			}
-		}
-		if (niceGuesser != null && niceGuesser.PlayerId == playerId)
-		{
-			return true;
-		}
-		return false;
-	}
+        {
+            foreach (PlayerControl item in evilGuesser)
+            {
+                if (item.PlayerId == playerId && evilGuesser != null)
+                {
+                    return true;
+                }
+            }
+            if (niceGuesser != null && niceGuesser.PlayerId == playerId)
+            {
+                return true;
+            }
+            return false;
+        }
 
         public static void clear(byte playerId)
         {
@@ -1785,23 +1788,25 @@ namespace TheOtherRoles
             }
         }
 
+
+
         public static int remainingShots(byte playerId, bool shoot = false)
-	{
-		int result = remainingShotsEvilGuesser;
-		if (niceGuesser != null && niceGuesser.PlayerId == playerId)
-		{
-			result = remainingShotsNiceGuesser;
-			if (shoot)
-			{
-				remainingShotsNiceGuesser = Mathf.Max(0, remainingShotsNiceGuesser - 1);
-			}
-		}
-		else if (shoot)
-		{
-			remainingShotsEvilGuesser = Mathf.Max(0, remainingShotsEvilGuesser - 1);
-		}
-		return result;
-	}
+        {
+            int result = remainingShotsEvilGuesser;
+            if (niceGuesser != null && niceGuesser.PlayerId == playerId)
+            {
+                result = remainingShotsNiceGuesser;
+                if (shoot)
+                {
+                    remainingShotsNiceGuesser = Mathf.Max(0, remainingShotsNiceGuesser - 1);
+                }
+            }
+            else if (shoot)
+            {
+                remainingShotsEvilGuesser = Mathf.Max(0, remainingShotsEvilGuesser - 1);
+            }
+            return result;
+        }
 
         public static void clearAndReload() {
             niceGuesser = null;
@@ -2363,7 +2368,7 @@ namespace TheOtherRoles
             return killer == Thief.thief && !target.Data.Role.IsImpostor && !new List<RoleInfo> { RoleInfo.jackal, canKillSheriff ? RoleInfo.sheriff : null, RoleInfo.sidekick }.Contains(targetRole);
         }
     }
-    //ÃÏ∆Ù
+
     public static class Juggernaut
     {
         public static PlayerControl juggernaut;
@@ -2394,6 +2399,7 @@ namespace TheOtherRoles
         }
 
     }
+
 
     public static class Trapper {
         public static PlayerControl trapper;
@@ -2644,7 +2650,8 @@ namespace TheOtherRoles
         public static List<PlayerControl> sunglasses = new List<PlayerControl>();
         public static int vision = 1;
 
-        public static void clearAndReload() {
+        public static void clearAndReload() 
+        {
             sunglasses = new List<PlayerControl>();
             vision = CustomOptionHolder.modifierSunglassesVision.getSelection() + 1;
         }
@@ -2654,8 +2661,10 @@ namespace TheOtherRoles
         public static List<PlayerControl> torch = new List<PlayerControl>();
         public static int vision = 1;
 
-        public static void clearAndReload() {
+        public static void clearAndReload()
+        {
             torch = new List<PlayerControl>();
+            vision = CustomOptionHolder.modifierTorchVision.getSelection() + 1;
         }
     }
 
@@ -2930,7 +2939,9 @@ namespace TheOtherRoles
             else if (Arsonist.arsonist != null && Arsonist.arsonist == player2)
             {
                 if (repeat) shiftRole(player2, player1, false);
+
                 Arsonist.arsonist = player1;
+
             }
             else if (Vulture.vulture != null && Vulture.vulture == player2)
             {
@@ -2952,10 +2963,36 @@ namespace TheOtherRoles
                 if (repeat) shiftRole(player2, player1, false);
                 Pursuer.pursuer = player1;
             }
-
+            else if (Jackal.jackal != null && Jackal.jackal == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Jackal.jackal = player1;
+            }
+            else if (Sidekick.sidekick != null && Sidekick.sidekick == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Sidekick.sidekick = player1;
+            }
+            else if (Lawyer.lawyer != null && Lawyer.lawyer == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Lawyer.lawyer = player1;
+            }
+            //ÃÏ∆ÙÃÌº”
+            else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Juggernaut.juggernaut = player1;
+            }
+            else if (Doomsayer.doomsayer != null && Doomsayer.doomsayer == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Doomsayer.doomsayer = player1;
+            }
         }
 
-        public static void clearAndReload() {
+        public static void clearAndReload()
+        {
             shifter = null;
             currentTarget = null;
             futureShift = null;

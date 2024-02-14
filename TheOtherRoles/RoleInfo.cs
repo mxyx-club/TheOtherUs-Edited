@@ -12,7 +12,8 @@ using static TheOtherRoles.Guesser;
 
 namespace TheOtherRoles
 {
-    public class RoleInfo {
+    public class RoleInfo
+    {
         public Color color;
         public string name;
         public string introDescription;
@@ -36,16 +37,8 @@ namespace TheOtherRoles
             this.isImpostor = isImpostor;
         }
 
-        public static RoleInfo jester = new RoleInfo("小丑", Jester.color, "让别人对你的表演叹为观止吧", "想办法驱逐自己", RoleId.Jester, true);
-        public static RoleInfo werewolf = new RoleInfo("月下狼人", Werewolf.color, "狂暴之下，万物凋零", "暴走并杀死其他的玩家", RoleId.Werewolf, true);
-        public static RoleInfo mayor = new RoleInfo("市长", Mayor.color, "我持有一票否决权!!!", "用你的权力帮助船员", RoleId.Mayor);
-        public static RoleInfo portalmaker = new RoleInfo("星门缔造者", Portalmaker.color, "以[星]之铭", "筑[星]之门", RoleId.Portalmaker);
-        public static RoleInfo engineer = new RoleInfo("工程师",  Engineer.color, "没人比我更懂得窃听", "维修飞船", RoleId.Engineer);
-        public static RoleInfo privateInvestigator = new RoleInfo("观察者",  PrivateInvestigator.color, "查看谁在与他人互动", "卧底在飞船之中", RoleId.PrivateInvestigator);
-        public static RoleInfo sheriff = new RoleInfo("警长", Sheriff.color, "<color=#FF1919FF>严禁</color>小脑行为！！！", "毙了伪装者", RoleId.Sheriff);
-        public static RoleInfo bodyguard  = new RoleInfo("保镖", BodyGuard.color, "用自己的生命保护他人", "用自己的生命保护他人", RoleId.BodyGuard, false);
-        public static RoleInfo deputy = new RoleInfo("捕快", Sheriff.color, "逮捕<color=#FF1919FF>伪装者</color>", "逮捕伪装者", RoleId.Deputy);
-        public static RoleInfo lighter = new RoleInfo("执灯人", Lighter.color, "你 是 一 个 电 灯 泡a.a", "你的灯光永不熄灭", RoleId.Lighter);
+        public static RoleInfo impostor = new RoleInfo("伪装者", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "哈哈！白板内鬼~"), "破坏并击杀所有人", RoleId.Impostor);
+        public static RoleInfo assassin = new RoleInfo("刺客", Color.red, "艺术就是刺杀！", "生命就是一场豪赌！", RoleId.EvilGuesser, false, true);
         public static RoleInfo godfather = new RoleInfo("教父", Godfather.color, "懂不懂什么叫黑手啊", "干掉船员", RoleId.Godfather);
         public static RoleInfo mafioso = new RoleInfo("小弟", Mafioso.color, "懂不懂什么叫黑手啊", "帮助<color=#FF1919FF>教父</color>干掉船员", RoleId.Mafioso);
         public static RoleInfo janitor = new RoleInfo("清洁工", Janitor.color, "你有个双胞胎哥哥叫清理者", "帮助教父清理死尸", RoleId.Janitor);
@@ -55,13 +48,48 @@ namespace TheOtherRoles
         public static RoleInfo mimic = new RoleInfo("模仿者", Mimic.color, "夺走你的一切，我很抱歉", "夺走第一个被你击杀船员的职业", RoleId.Mimic);
         public static RoleInfo camouflager = new RoleInfo("隐蔽者", Camouflager.color, "让我们来猎杀那些陷入黑暗中的人吧", "隐藏在他人之中", RoleId.Camouflager);
         public static RoleInfo miner = new RoleInfo("管道工", Miner.color, "在飞船上打洞", "制造管道", RoleId.Miner);
-        public static RoleInfo vampire = new RoleInfo("吸血鬼", Vampire.color, "让我吸一口，就亿口", "撕咬敌人延迟击杀", RoleId.Vampire);
         public static RoleInfo eraser = new RoleInfo("抹除者", Eraser.color, "你明明拥有一切的....", "抹去敌人的职业", RoleId.Eraser);
-        public static RoleInfo trickster = new RoleInfo("骗术师", Trickster.color, "黑夜是咱的伪装", "放置惊吓盒并使黑暗降临", RoleId.Trickster);
+        public static RoleInfo vampire = new RoleInfo("吸血鬼", Vampire.color, "让我吸一口，就亿口", "撕咬敌人延迟击杀", RoleId.Vampire);
         public static RoleInfo cleaner = new RoleInfo("清理者", Cleaner.color, "要留清白在人间...吗", "清理尸体", RoleId.Cleaner);
         public static RoleInfo undertaker = new RoleInfo("送葬者", Undertaker.color, "您需要夺命丧葬一条龙服务吗", "拖拽尸体，掩埋命案", RoleId.Undertaker);
+        public static RoleInfo escapist = new RoleInfo("逃逸者", Escapist.color, "拜拜了您嘞", "放置锚点并传送", RoleId.Escapist);
         public static RoleInfo warlock = new RoleInfo("术士", Warlock.color, "给其他玩家下咒击杀第三者", "使用术法击杀第三人", RoleId.Warlock);
+        public static RoleInfo trickster = new RoleInfo("骗术师", Trickster.color, "黑夜是咱的伪装", "放置惊吓盒并使黑暗降临", RoleId.Trickster);
         public static RoleInfo bountyHunter = new RoleInfo("赏金猎人", BountyHunter.color, "追捕你的赏金目标", "追捕你的赏金目标", RoleId.BountyHunter);
+        public static RoleInfo cultist = new RoleInfo("传教士", Cultist.color, "为了古神的诞生", "招募信徒并杀害所有敌人", RoleId.Cultist);
+        public static RoleInfo follower = new RoleInfo("新信徒", Cleaner.color, "为了古神的诞生", "杀死所有敌人", RoleId.Follower, true);
+        public static RoleInfo bomber = new RoleInfo("恐怖分子", Bomber.color, "我是个疯子，有医生开的证明", "我会给你们数到3的时间，3!bom!", RoleId.Bomber);
+        public static RoleInfo blackmailer = new RoleInfo("勒索者", Blackmailer.color, "嘘——红温警告", "勒索其他玩家使其无法发言", RoleId.Blackmailer);
+        public static RoleInfo witch = new RoleInfo("女巫", Witch.color, "那么，代价是什么？", "对敌人下咒", RoleId.Witch);
+        public static RoleInfo ninja = new RoleInfo("忍者", Ninja.color, "忍者之道，在于隐忍", "标记目标并闪现击杀", RoleId.Ninja);
+
+        public static RoleInfo amnisiac = new RoleInfo("失忆者", Amnisiac.color, "我是你，那你是谁？", "回忆死者的记忆获取职业", RoleId.Amnisiac, true);
+        public static RoleInfo jester = new RoleInfo("小丑", Jester.color, "让别人对你的表演叹为观止吧", "想办法驱逐自己", RoleId.Jester, true);
+        public static RoleInfo vulture = new RoleInfo("秃鹫", Vulture.color, "人畜无害，可可爱爱~", "吃鸡腿咯~", RoleId.Vulture, true);
+        public static RoleInfo lawyer = new RoleInfo("律师", Lawyer.color, "听说每个律师都有专属夺命人", "为客户辩驳帮助胜利", RoleId.Lawyer, true);
+        public static RoleInfo prosecutor = new RoleInfo("处刑者", Lawyer.color, "虚假的处刑人，真正的守护天使", "投出你的放逐目标", RoleId.Prosecutor, true);
+        public static RoleInfo pursuer = new RoleInfo("起诉人", Pursuer.color, "活下去！", "活下去！", RoleId.Pursuer, true);
+        public static RoleInfo jackal = new RoleInfo("豺狼", Jackal.color, "杀死所有船员和<color=#FF1919FF>内鬼</color>", "杀死所有人", RoleId.Jackal, true);
+        public static RoleInfo sidekick = new RoleInfo("跟班", Sidekick.color, "帮助豺狼获得胜利", "帮助豺狼获得胜利", RoleId.Sidekick, true);
+        public static RoleInfo swooper = new RoleInfo("隐身人", Swooper.color, "嘿！你的小可爱突然出现啦", "隐身并杀死敌人", RoleId.Swooper, false, true);
+        public static RoleInfo arsonist = new RoleInfo("纵火犯", Arsonist.color, "火焰啊赐予我力量！", "燃烧吧，都给我化成灰烬", RoleId.Arsonist, true);
+        public static RoleInfo werewolf = new RoleInfo("月下狼人", Werewolf.color, "狂暴之下，万物凋零", "暴走并杀死其他的玩家", RoleId.Werewolf, true);
+        //添加天启
+        public static RoleInfo thief = new RoleInfo("身份窃贼", Thief.color, "拿来吧你", "通过击杀或猜测窃取对方职业", RoleId.Thief, true);
+        public static RoleInfo juggernaut = new RoleInfo("天启", Juggernaut.color, "吾将送汝等救赎，汝等应心怀感激", "减少CD，杀光所有人", RoleId.Juggernaut, true);
+        //添加末日预言家
+        public static RoleInfo doomsayer = new RoleInfo("末日预言家", Doomsayer.color, "将人类以善恶来区分这根本就是愚蠢的想法", "观察其他玩家，并在会议时刺杀他们", RoleId.Doomsayer, true);
+
+        public static RoleInfo crewmate = new RoleInfo("船员", Color.white, "哈哈！白板船员~", "发现并驱逐伪装者", RoleId.Crewmate);
+        public static RoleInfo goodGuesser = new RoleInfo("侠客", Guesser.color, "Guess and shoot", "Guess and shoot", RoleId.NiceGuesser);
+        public static RoleInfo mayor = new RoleInfo("市长", Mayor.color, "我持有一票否决权!!!", "用你的权力帮助船员", RoleId.Mayor);
+        public static RoleInfo portalmaker = new RoleInfo("星门缔造者", Portalmaker.color, "以[星]之铭", "筑[星]之门", RoleId.Portalmaker);
+        public static RoleInfo engineer = new RoleInfo("工程师",  Engineer.color, "没人比我更懂得窃听", "维修飞船", RoleId.Engineer);
+        public static RoleInfo privateInvestigator = new RoleInfo("观察者",  PrivateInvestigator.color, "查看谁在与他人互动", "卧底在飞船之中", RoleId.PrivateInvestigator);
+        public static RoleInfo sheriff = new RoleInfo("警长", Sheriff.color, "<color=#FF1919FF>严禁</color>小脑行为！！！", "毙了伪装者", RoleId.Sheriff);
+        public static RoleInfo deputy = new RoleInfo("捕快", Sheriff.color, "逮捕<color=#FF1919FF>伪装者</color>", "逮捕伪装者", RoleId.Deputy);
+        public static RoleInfo bodyguard  = new RoleInfo("保镖", BodyGuard.color, "用自己的生命保护他人", "用自己的生命保护他人", RoleId.BodyGuard, false);
+        public static RoleInfo lighter = new RoleInfo("执灯人", Lighter.color, "你 是 一 个 电 灯 泡a.a", "你的灯光永不熄灭", RoleId.Lighter);
         public static RoleInfo jumper = new RoleInfo("传送师", Jumper.color, "空！间！错！乱！", "放置锚点并传送", RoleId.Jumper);
         public static RoleInfo detective = new RoleInfo("侦探", Detective.color, "从脚印之中发现<color=#FF1919FF>伪装者</color>", "检查足迹并检验尸体", RoleId.Detective);
         public static RoleInfo timeMaster = new RoleInfo("时间之主", TimeMaster.color, "知道我刚在时空旅行的时候见到谁了么?", "用你的护盾保护你自己", RoleId.TimeMaster);
@@ -73,43 +101,18 @@ namespace TheOtherRoles
         public static RoleInfo tracker = new RoleInfo("追踪者", Tracker.color, "你的一举一动已经暴露", "跟踪可疑玩家", RoleId.Tracker);
         public static RoleInfo snitch = new RoleInfo("告密者", Snitch.color, "无惧生死，秘密行动", "完成任务揭示内鬼", RoleId.Snitch);
         //public static RoleInfo jackal = new RoleInfo("Jackal", Jackal.color, "Kill all Crewmates and <color=#FF1919FF>Impostors</color> to win", "Kill everyone", RoleId.Jackal, true);
-        public static RoleInfo jackal = new RoleInfo("豺狼", Jackal.color, "杀死所有船员和<color=#FF1919FF>内鬼</color>", "杀死所有人", RoleId.Jackal, true);
-        public static RoleInfo sidekick = new RoleInfo("跟班", Sidekick.color, "帮助豺狼获得胜利", "帮助豺狼获得胜利", RoleId.Sidekick, true);
-        public static RoleInfo follower = new RoleInfo("新信徒", Cleaner.color, "为了古神的诞生", "杀死所有敌人", RoleId.Follower, true);
         public static RoleInfo spy = new RoleInfo("卧底", Spy.color, "对不起，我是一个[好]人", "潜伏起来，找出内鬼", RoleId.Spy);
         public static RoleInfo securityGuard = new RoleInfo("保安", SecurityGuard.color, "维护飞船秩序", "封锁管道并安放监控", RoleId.SecurityGuard);
-        public static RoleInfo arsonist = new RoleInfo("纵火犯", Arsonist.color, "火焰啊赐予我力量！", "燃烧吧，都给我化成灰烬", RoleId.Arsonist, true);
-        public static RoleInfo amnisiac = new RoleInfo("失忆者", Amnisiac.color, "我是你，那你是谁？", "回忆死者的记忆获取职业", RoleId.Amnisiac, true);
-        public static RoleInfo goodGuesser = new RoleInfo("侠客", Guesser.color, "Guess and shoot", "Guess and shoot", RoleId.NiceGuesser);
         //public static RoleInfo badGuesser = new RoleInfo("Evil Guesser", Palette.ImpostorRed, "Guess and shoot", "Guess and shoot", RoleId.EvilGuesser);
-        public static RoleInfo vulture = new RoleInfo("秃鹫", Vulture.color, "人畜无害，可可爱爱~", "吃鸡腿咯~", RoleId.Vulture, true);
         public static RoleInfo medium = new RoleInfo("通灵师", Medium.color, "这不是封建迷信！", "对灵魂通灵获取信息", RoleId.Medium);
         public static RoleInfo trapper = new RoleInfo("设陷师", Trapper.color, "困于陷阱中...", "放置陷阱获取信息", RoleId.Trapper);
-        public static RoleInfo lawyer = new RoleInfo("律师", Lawyer.color, "听说每个律师都有专属夺命人", "为客户辩驳帮助胜利", RoleId.Lawyer, true);
-        public static RoleInfo prosecutor = new RoleInfo("处刑者", Lawyer.color, "虚假的处刑人，真正的守护天使", "投出你的放逐目标", RoleId.Prosecutor, true);
-        public static RoleInfo pursuer = new RoleInfo("起诉人", Pursuer.color, "活下去！", "活下去！", RoleId.Pursuer);
-        public static RoleInfo impostor = new RoleInfo("伪装者", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "哈哈！白板内鬼~"), "破坏并击杀所有人", RoleId.Impostor);
-        public static RoleInfo crewmate = new RoleInfo("船员", Color.white, "哈哈！白板船员~", "发现并驱逐伪装者", RoleId.Crewmate);
-        public static RoleInfo witch = new RoleInfo("女巫", Witch.color, "那么，代价是什么？", "对敌人下咒", RoleId.Witch);
-        public static RoleInfo escapist = new RoleInfo("逃逸者", Escapist.color, "拜拜了您嘞", "放置锚点并传送", RoleId.Escapist);
-        public static RoleInfo cultist = new RoleInfo("传教士", Cultist.color, "为了古神的诞生", "招募信徒并杀害所有敌人", RoleId.Cultist);
-        public static RoleInfo ninja = new RoleInfo("忍者", Ninja.color, "忍者之道，在于隐忍", "标记目标并闪现击杀", RoleId.Ninja);
-        public static RoleInfo blackmailer = new RoleInfo("勒索者", Blackmailer.color, "嘘——红温警告", "勒索其他玩家使其无法发言", RoleId.Blackmailer);
-        public static RoleInfo thief = new RoleInfo("身份窃贼", Thief.color, "拿来吧你", "通过击杀或猜测窃取对方职业", RoleId.Thief, true);
-        public static RoleInfo bomber = new RoleInfo("恐怖分子", Bomber.color, "我是个疯子，有医生开的证明", "我会给你们数到3的时间，3!bom!", RoleId.Bomber);
-        //添加天启
-        public static RoleInfo juggernaut = new RoleInfo("天启", Juggernaut.color, "吾将送汝等救赎，汝等应心怀感激", "减少CD，杀光所有人", RoleId.Juggernaut, true);
-        //添加末日预言家
-        public static RoleInfo doomsayer = new RoleInfo("末日预言家", Doomsayer.color, "将人类以善恶来区分这根本就是愚蠢的想法", "观察其他玩家，并在会议时刺杀他们", RoleId.Doomsayer, true);
 
         public static RoleInfo hunter = new RoleInfo("猎人", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "抓捕"), "找到并击杀所有猎物", RoleId.Impostor);
         public static RoleInfo hunted = new RoleInfo("猎物", Color.white, "躲起来", "躲起来", RoleId.Crewmate);
-
         public static RoleInfo prop = new RoleInfo("躲藏者", Color.white, "伪装成物品并生存", "伪装成物品并生存", RoleId.Crewmate);
 
-
-
         // Modifier
+        public static RoleInfo disperser = new RoleInfo("分散者", Color.red, "大伙！该上路了！", "分散所有人", RoleId.Disperser, false, true);
         public static RoleInfo bloody = new RoleInfo("溅血者", Color.yellow, "以吾之血咒汝之身", "用你的血留下死亡信息", RoleId.Bloody, false, true);
         public static RoleInfo antiTeleport = new RoleInfo("通讯兵", Color.yellow, "线上会议！", "无需回到会议室开会", RoleId.AntiTeleport, false, true);
         public static RoleInfo tiebreaker = new RoleInfo("破平者", Color.yellow, "你说得对...但是，规则就是用来打破的", "打破平局", RoleId.Tiebreaker, false, true);
@@ -122,78 +125,74 @@ namespace TheOtherRoles
         public static RoleInfo vip = new RoleInfo("VIP", Color.yellow, "我宣布个事儿", "所有人都知道你的死讯", RoleId.Vip, false, true);
         public static RoleInfo indomitable  = new RoleInfo("不屈者", Color.yellow, "无所畏惧，愈战愈勇", "无法被猜测", RoleId.Indomitable, false, true);
         public static RoleInfo slueth  = new RoleInfo("掘墓人", Color.yellow, "我才是法医！", "报告可知晓死者职业", RoleId.Slueth, false, true);
-        
         public static RoleInfo cursed  = new RoleInfo("反骨", Color.yellow, "你是船员....至少现在是", "被内鬼击杀会变成内鬼", RoleId.Cursed, false, true, true);
         public static RoleInfo invert = new RoleInfo("酒鬼", Color.yellow, "打烊前的最后一杯", "你的移动方向被颠倒了", RoleId.Invert, false, true);
         public static RoleInfo blind  = new RoleInfo("胆小鬼", Color.yellow, "外面的世界好可怕……", "无法报告尸体", RoleId.Blind, false, true);
+        
         public static RoleInfo watcher  = new RoleInfo("窥视者", Color.yellow, "来来来，我看看你们怎么投票的啊", "你可以知晓所有人的投票情况", RoleId.Watcher, false, true);
         public static RoleInfo radar  = new RoleInfo("雷达", Color.yellow, "时刻警惕！", "得知距离最近的玩家位置", RoleId.Radar, false, true);
         public static RoleInfo tunneler  = new RoleInfo("管道工程师", Color.yellow, "让我看看这个管道", "完成任务可使用管道", RoleId.Tunneler, false, true);
-        public static RoleInfo disperser = new RoleInfo("分散者", Color.red, "大伙！该上路了！", "分散所有人", RoleId.Disperser, false, true);
         public static RoleInfo chameleon = new RoleInfo("变色龙", Color.yellow, "看不见我`看不见我`", "静止时可隐身", RoleId.Chameleon, false, true);
         public static RoleInfo shifter = new RoleInfo("交换师", Color.yellow, "你的能力真好用！马上就是我的了！", "与他人交换职业", RoleId.Shifter, false, true);
-        public static RoleInfo swooper = new RoleInfo("隐身人", Swooper.color, "嘿！你的小可爱突然出现啦", "隐身并杀死敌人", RoleId.Swooper, false, true);
-        public static RoleInfo assassin = new RoleInfo("刺客", Color.red, "艺术就是刺杀！", "生命就是一场豪赌！", RoleId.EvilGuesser, false, true);
         
 
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
             impostor,
+            assassin,
             godfather,
             mafioso,
             janitor,
             morphling,
             bomber2,
+            poucher,
+            mimic,
             camouflager,
-            vampire,
+            miner,
             eraser,
-            trickster,
-            cleaner,
+            vampire,
             undertaker,
+            escapist,
             warlock,
+            trickster,
+            bountyHunter,
+            cultist,
+            cleaner,
+            bomber,
+            blackmailer,
+            witch,
+            ninja,
+
+            amnisiac,
+            jester,
+            vulture,
+            lawyer,
+            prosecutor,
+            pursuer,
+            jackal,
+            sidekick,
+            arsonist,
             werewolf,
+            thief,
+            //swooper,
             //天启
             juggernaut,
             //末日预言家
             doomsayer,
-            cursed,
-            bountyHunter,
-            witch,
-            escapist,
-            ninja,
-            bodyguard,
-            blackmailer,
-            miner,
-            bomber,
-            goodGuesser,
-            privateInvestigator,
-            mimic,
-            poucher,
-            assassin,
-            //badGuesser,
-            disperser,
-            cultist,
-            lover,
-            jester,
-            arsonist,
-            jackal,
-            sidekick,
-            vulture,
-            pursuer,
-            lawyer,
-            thief,
-            prosecutor,
+
             crewmate,
+            goodGuesser,
             mayor,
             portalmaker,
             engineer,
+            privateInvestigator,
             sheriff,
-            jumper,
             deputy,
+            bodyguard,
             lighter,
+            jumper,
             detective,
             timeMaster,
-            amnisiac,
             veteren,
             medic,
             swapper,
@@ -203,25 +202,29 @@ namespace TheOtherRoles
             snitch,
             spy,
             securityGuard,
-            bait,
             medium,
             trapper,
+
+            //badGuesser,
+            disperser,
             bloody,
             antiTeleport,
             tiebreaker,
+            bait,
             sunglasses,
             torch,
             multitasker,
+            lover,
             mini,
             vip,
             indomitable,
             slueth,
-            //swooper,
+            cursed,
+            invert,
             blind,
             watcher,
             radar,
             tunneler,
-            invert,
             chameleon,
             shifter
         };

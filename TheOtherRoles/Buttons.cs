@@ -10,7 +10,6 @@ using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Patches;
-using TheOtherRoles;
 
 namespace TheOtherRoles
 {
@@ -1475,40 +1474,41 @@ namespace TheOtherRoles
                 __instance,
                 KeyCode.Q
             );
-// ÌìÆô Kill
-juggernautKillButton = new CustomButton(
- () => {
-     if (Helpers.checkAndDoVetKill(Juggernaut.currentTarget))
-     {
-         
-         return;
-     }
-     if (Helpers.checkMuderAttemptAndKill(Juggernaut.juggernaut, Juggernaut.currentTarget) == MurderAttemptResult.SuppressKill) return;
-     if (juggernautKillButton.MaxTimer >= 0f)
-     {
-         juggernautKillButton.MaxTimer = Juggernaut.cooldown - Juggernaut.reducedkill;
-     }
-     if (juggernautKillButton.MaxTimer < 0f)
-     {
-         juggernautKillButton.MaxTimer = 0f;
-     }
-     juggernautKillButton.Timer = juggernautKillButton.MaxTimer;
-     Juggernaut.currentTarget = null;
- },
- () => { return Juggernaut.juggernaut != null && Juggernaut.juggernaut == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
- () => {
-     showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, "»÷É±");
-     return Juggernaut.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
- },
- () => { juggernautKillButton.Timer = juggernautKillButton.MaxTimer; },
- __instance.KillButton.graphic.sprite,
- new Vector3(0, 1f, 0),
- __instance,
- KeyCode.Q
-);
+            // ÌìÆô»÷É± Kill
+            juggernautKillButton = new CustomButton(
+             () => {
+                 if (Helpers.checkAndDoVetKill(Juggernaut.currentTarget))
+                 {
 
-werewolfRampageButton = new CustomButton(
-                () => { Werewolf.canKill = true; Werewolf.hasImpostorVision = true; werewolfKillButton.Timer = 0f;},
+                     return;
+                 }
+                 if (Helpers.checkMuderAttemptAndKill(Juggernaut.juggernaut, Juggernaut.currentTarget) == MurderAttemptResult.SuppressKill) return;
+                 if (juggernautKillButton.MaxTimer >= 0f)
+                 {
+                     juggernautKillButton.MaxTimer = Juggernaut.cooldown - Juggernaut.reducedkill;
+                 }
+                 if (juggernautKillButton.MaxTimer < 0f)
+                 {
+                     juggernautKillButton.MaxTimer = 0f;
+                 }
+                 juggernautKillButton.Timer = juggernautKillButton.MaxTimer;
+                 Juggernaut.currentTarget = null;
+
+             },
+             () => { return Juggernaut.juggernaut != null && Juggernaut.juggernaut == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+             () => {
+                 showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, "KILL");
+                 return Juggernaut.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+             },
+             () => { juggernautKillButton.Timer = juggernautKillButton.MaxTimer; },
+             __instance.KillButton.graphic.sprite,
+             new Vector3(0, 1f, 0),
+             __instance,
+             KeyCode.Q
+         );
+
+            werewolfRampageButton = new CustomButton(
+                () => { Werewolf.canKill = true; Werewolf.hasImpostorVision = true; werewolfKillButton.Timer = 0f; },
                 () => { /* Can See */ return Werewolf.werewolf != null && Werewolf.werewolf == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () => {  /* On Click */ return (CachedPlayer.LocalPlayer.PlayerControl.CanMove); },
                 () => {  /* On Meeting End */
@@ -1516,9 +1516,9 @@ werewolfRampageButton = new CustomButton(
                     werewolfRampageButton.isEffectActive = false;
                     werewolfRampageButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                     Werewolf.canKill = false;
-                  //  Werewolf.canUseVents = false;
-                    Werewolf.hasImpostorVision = false;                  
-                    
+                    //  Werewolf.canUseVents = false;
+                    Werewolf.hasImpostorVision = false;
+
                 },
                 Werewolf.getRampageButtonSprite(),
                 CustomButton.ButtonPositions.lowerRowRight, //brb
