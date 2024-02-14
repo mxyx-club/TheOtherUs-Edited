@@ -387,6 +387,7 @@ namespace TheOtherRoles {
 
         public static CustomOption modifierTorch;
         public static CustomOption modifierTorchQuantity;
+        public static CustomOption modifierTorchVision;
 
         public static CustomOption modifierMultitasker;
         public static CustomOption modifierMultitaskerQuantity;
@@ -971,6 +972,7 @@ namespace TheOtherRoles {
 
             modifierTorch = CustomOption.Create(1053, Types.Modifier, cs(Color.yellow, "火炬"), rates, null, true);
             modifierTorchQuantity = CustomOption.Create(1054, Types.Modifier, cs(Color.yellow, "火炬人数"), ratesModifier, modifierTorch);
+            modifierTorchVision = CustomOption.Create(1055, Types.Modifier, "火炬的视野", new string[] { "-10%", "-20%", "-30%", "-40%", "-50%" }, modifierTorch);
 
             modifierMultitasker = CustomOption.Create(10523233, Types.Modifier, cs(Color.yellow, "多线程"), rates, null, true);
             modifierMultitaskerQuantity = CustomOption.Create(10232354, Types.Modifier, cs(Color.yellow, "多线程人数"), ratesModifier, modifierMultitasker);

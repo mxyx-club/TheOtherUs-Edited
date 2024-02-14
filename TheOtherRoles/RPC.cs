@@ -2167,11 +2167,10 @@ namespace TheOtherRoles
                     Doomsayer.killedToWin++;
                     if (Doomsayer.killedToWin >= Doomsayer.killToWin)
                     {
-
                         Doomsayer.triggerDoomsayerrWin = true;
 
                     }
-                    dyingTarget.Exiled();
+                    //!!!dyingTarget.Exiled();
                     FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(guesser.Data, dyingTarget.Data);
                     if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
 
@@ -2179,8 +2178,6 @@ namespace TheOtherRoles
                 else {
                     return;
                 }
-
-                
             }
 
 

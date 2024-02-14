@@ -346,7 +346,7 @@ namespace TheOtherRoles.Patches {
                 textRenderer.text = "小丑获胜";
                 textRenderer.color = Jester.color;
             }
-            if (AdditionalTempData.winCondition == WinCondition.DoomsayerWin)
+            else if(AdditionalTempData.winCondition == WinCondition.DoomsayerWin)
             {
                 textRenderer.text = "末日预言家获胜";
                 textRenderer.color = Doomsayer.color;

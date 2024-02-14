@@ -1720,8 +1720,6 @@ namespace TheOtherRoles
         public static bool onlineTarger = false;
         public static float killToWin = 3;
         public static float killedToWin = 0;
-
-
         private static Sprite buttonSprite;
 
         public static Sprite getButtonSprite() {
@@ -2676,6 +2674,7 @@ namespace TheOtherRoles
 
         public static void clearAndReload() {
             torch = new List<PlayerControl>();
+            vision = CustomOptionHolder.modifierTorchVision.getSelection() + 1;
         }
     }
 

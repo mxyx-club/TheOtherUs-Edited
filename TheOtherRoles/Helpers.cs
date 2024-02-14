@@ -449,17 +449,10 @@ namespace TheOtherRoles {
 
        public static List<RoleInfo> onlineRoleInfos()
         {
-            List<RoleInfo> allRoleInfo = new List<RoleInfo>();
-            foreach (var player in GameData.Instance.AllPlayers)
-            {
-                foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos  )
-                {
-
-                   allRoleInfo.Add(roleInfo);
-                }
-            }
-
-            return allRoleInfo;
+            var roleInfos = new List<RoleInfo>();
+            roleInfos.AddRange(CachedPlayer.AllPlayers.Select(
+                n => RoleInfo.getRoleInfoForPlayer(n,false)).SelectMany(n => n));
+            return roleInfos;
         }
      
         public static PlayerControl playerById(byte id)
@@ -1080,8 +1073,8 @@ namespace TheOtherRoles {
             bool powerCrewAlive = false;
             // This functions blocks the game from ending if specified crewmate roles are alive
             if (!CustomOptionHolder.blockGameEnd.getBool()) return false;
-            
 
+            if (isRoleAlive(Doomsayer.doomsayer)) powerCrewAlive = true;
             if (isRoleAlive(Sheriff.sheriff)) powerCrewAlive = true;
             if (isRoleAlive(Veteren.veteren)) powerCrewAlive = true;
             if (isRoleAlive(Mayor.mayor)) powerCrewAlive = true;

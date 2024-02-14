@@ -80,7 +80,7 @@ namespace TheOtherRoles.Patches {
             var t = switchSystem != null ? switchSystem.Value / 255f : 1;
             if (Torch.torch.FindAll(x => x.PlayerId == player.PlayerId).Count > 0) t = 1;
             __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, t) *
-                       GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
+                       GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod+(1f + Torch.vision * 0.1f);
 
             if (Sunglasses.sunglasses.FindAll(x => x.PlayerId == player.PlayerId).Count > 0) // Sunglasses
                 __result *= 1f - Sunglasses.vision * 0.1f;
