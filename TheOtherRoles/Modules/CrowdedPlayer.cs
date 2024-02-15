@@ -41,11 +41,10 @@ public static class CrowdedPlayer
     public static void GameOptionsMenu_Start_Postfix(ref GameOptionsMenu __instance)
     {
         if (!Enable) return;
-        var options = __instance.GetComponents<OptionBehaviour>();
+        var options = Object.FindObjectsOfType<NumberOption>();
         var option = options.FirstOrDefault(o => o.Title == StringNames.GameNumImpostors);
         if (option == null) return;
-        var numberOption = (NumberOption)option;
-        numberOption.ValidRange = new FloatRange(1, MaxImpostor);
+        option.ValidRange = new FloatRange(1, MaxImpostor);
     }
         
     [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.AreInvalid)), HarmonyPrefix]
@@ -66,12 +65,11 @@ public static class CrowdedPlayer
         if (!Enable) return;
         if (__instance.mode != SettingsMode.Host) return;
         
-        System.Console.WriteLine("信息点1");
         var firstButtonRenderer = __instance.MaxPlayerButtons.Get(0);
         firstButtonRenderer.GetComponentInChildren<TextMeshPro>().text = "-";
         firstButtonRenderer.enabled = false;
 
-        System.Console.WriteLine("信息点2");
+
         var firstButtonButton = firstButtonRenderer.GetComponent<PassiveButton>();
         firstButtonButton.OnClick.RemoveAllListeners();
         firstButtonButton.OnClick.AddListener((Action)(() =>
