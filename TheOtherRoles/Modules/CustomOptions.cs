@@ -176,7 +176,7 @@ namespace TheOtherRoles
             return (float)selections[selection];
         }
 
-        public int GetInt() => (int)selections[selection];
+        public int GetInt() => (int)getFloat();
 
         public int getQuantity()
         {

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "dependencies": {
-    "net6.0": {
+    "net8.0": {
       "AmongUs.GameLibs.Steam": {
         "type": "Direct",
         "requested": "[2023.11.28, )",
@@ -149,6 +149,11 @@
           "Iced": "1.17.0",
           "Il2CppInterop.Common": "1.4.6-ci.389"
         }
+      },
+      "IndexRange": {
+        "type": "Transitive",
+        "resolved": "1.0.2",
+        "contentHash": "BxTYJba0X+rMh7kyA2fYpOrFR3+bIVnBT/VzRinlAe7UZmHGcZk2SoWEIXzqnSFdkfCoi4K0QoHoE/nc71lmDg=="
       },
       "js6pak.Gee.External.Capstone": {
         "type": "Transitive",
@@ -312,6 +317,7 @@
           "Iced": "1.18.0",
           "Samboy063.LibCpp2IL": "2022.1.0-development.866",
           "StableNameDotNet": "0.1.0-development.866",
+          "System.ValueTuple": "4.5.0",
           "js6pak.Gee.External.Capstone": "2.1.0"
         }
       },
@@ -321,7 +327,9 @@
         "contentHash": "EcJSWTfQko8SQozozoUT+aQJVWC8wj8C0YUiPBF4rNRId19yTKp2IXcXnI747v+8/aal222QR6WHfoBK2WlVLg==",
         "dependencies": {
           "AssetRipper.VersionUtilities": "1.3.1",
-          "Samboy063.WasmDisassembler": "2022.1.0-development.866"
+          "IndexRange": "1.0.2",
+          "Samboy063.WasmDisassembler": "2022.1.0-development.866",
+          "System.Memory": "4.5.5"
         }
       },
       "Samboy063.WasmDisassembler": {
@@ -545,6 +553,11 @@
           "System.Runtime": "4.3.0",
           "System.Runtime.Extensions": "4.3.0"
         }
+      },
+      "System.Memory": {
+        "type": "Transitive",
+        "resolved": "4.5.5",
+        "contentHash": "XIWiDvKPXaTveaB7HVganDlOCRoj03l+jrwNvcge/t8vhGYKvqV+dMv6G4SAX2NoNmN0wZfVPTAlFwZcZvVOUw=="
       },
       "System.Net.Http": {
         "type": "Transitive",
@@ -902,6 +915,11 @@
           "Microsoft.NETCore.Targets": "1.1.0",
           "System.Runtime": "4.3.0"
         }
+      },
+      "System.ValueTuple": {
+        "type": "Transitive",
+        "resolved": "4.5.0",
+        "contentHash": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ=="
       }
     }
   }
