@@ -77,7 +77,7 @@ namespace TheOtherRoles.Objects
             button.OnClick = new Button.ButtonClickedEvent();
             button.OnClick.AddListener((UnityEngine.Events.UnityAction)onClickEvent);
 
-            Timer = 5f;
+            Timer = 31.3f;
 
             setActive(false);
         }

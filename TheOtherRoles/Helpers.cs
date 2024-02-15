@@ -1344,7 +1344,11 @@ namespace TheOtherRoles
         {
             RoleInfo roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
             if (roleInfo != null)
-                return roleInfo.color.Equals(Jackal.color) || roleInfo.color.Equals(Sidekick.color) || roleInfo.color.Equals(Lawyer.color) || roleInfo.color.Equals(Werewolf.color) || roleInfo.color.Equals(Arsonist.color);
+                return roleInfo.color.Equals(Jackal.color) || 
+                    roleInfo.color.Equals(Sidekick.color) || 
+                    roleInfo.color.Equals(Werewolf.color) || 
+                    roleInfo.color.Equals(Juggernaut.color) || 
+                    roleInfo.color.Equals(Arsonist.color);
             return false;
         }
 
