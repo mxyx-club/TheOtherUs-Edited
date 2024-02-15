@@ -117,6 +117,7 @@ namespace TheOtherRoles
             defaultRegions = ServerManager.DefaultRegions;
 
             UpdateRegions();
+            CrowdedPlayer.Start();
 
             DebugMode = Config.Bind("Custom", "Enable Debug Mode", "false");
             Harmony.PatchAll();
@@ -148,6 +149,7 @@ namespace TheOtherRoles
             __result = false;
         }
     }
+    
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.Awake))]
     public static class ChatControllerAwakePatch
     {
