@@ -925,6 +925,61 @@ namespace TheOtherRoles.Patches
                     }
                 }
                 //Ä©ÈÕ
+                if (
+                    Doomsayer.doomsayer != null 
+                    &&
+                    (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer || Helpers.shouldShowGhostInfo()) 
+                    &&
+                    !Doomsayer.doomsayer.Data.IsDead
+                    &&
+                    Doomsayer.playerTargetinformation != null)
+                {
+                    int i = 1;
+                    List<RoleInfo> allRoleInfo = new List<RoleInfo>(10);
+                    if (Doomsayer.onlineTarger)
+                    {
+                        allRoleInfo = Helpers.onlineRoleInfos();
+                    }
+                    else
+                    {
+                        allRoleInfo = Helpers.allRoleInfos();
+                    }
+                    foreach (PlayerControl predictionTarget in Doomsayer.playerTargetinformation)
+                    {
+                        System.Random random = new System.Random();
+                        int x = random.Next(0, (int)Doomsayer.formationNum);
+                        RoleInfo roleInfoTarget = RoleInfo.getRoleInfoForPlayer(predictionTarget, false).FirstOrDefault();
+                        string message = $"Ô¤ÑÔ " + i + ": " + predictionTarget.name + "\n";
+                        List<int> temp = Enumerable.Range(0, allRoleInfo.Count).OrderBy(q => Guid.NewGuid()).Take((int)Doomsayer.formationNum).ToList();
+                        List<string> allProperty = new List<string>();
+
+
+                        for (int num = 0, tempNum = 0; num < Doomsayer.formationNum && tempNum < Doomsayer.formationNum; num++)
+                        {
+
+                            if (allRoleInfo[temp[tempNum]].name.Equals(roleInfoTarget.name))
+                            {
+                                tempNum++;
+                                num--;
+                                continue;
+                            }
+
+                            if (num == x)
+                            {
+                                message += roleInfoTarget.name + ",";
+                            }
+                            else
+                            {
+                                message += allRoleInfo[temp[tempNum]].name + ",";
+                                tempNum++;
+                            }
+                        }
+                        if (x == Doomsayer.formationNum - 1 && Doomsayer.onlineTarger)
+                        {
+                            message += roleInfoTarget.name + ",";
+                        }
+                }
+                //Ä©ÈÕ
                 if (Doomsayer.doomsayer != null && (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer || Helpers.shouldShowGhostInfo()) && !Doomsayer.doomsayer.Data.IsDead)
                 {
                     int i = 1;
