@@ -26,7 +26,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.x
+          dotnet-version: 6.x
 
       - name: install wget
         run: sudo apt install wget

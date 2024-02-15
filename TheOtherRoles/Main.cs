@@ -13,6 +13,7 @@ using Reactor.Networking.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Modules.CustomHats;
@@ -94,6 +95,7 @@ namespace TheOtherRoles
 
         public override void Load()
         {
+            System.Console.OutputEncoding = Encoding.UTF8;
             Logger = Log;
             Instance = this;
             
