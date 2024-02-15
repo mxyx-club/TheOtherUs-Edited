@@ -2296,8 +2296,7 @@ namespace TheOtherRoles
                     RPCProcedure.thiefStealsRole(dyingTarget.PlayerId);
                 }
             }
-            //Ä©ÈÕÉä»÷
-            //Ä©ÈÕ
+            //Ä©ÈÕ²Â²â
             if (Doomsayer.doomsayer != null && Doomsayer.doomsayer == guesser && Doomsayer.canGuess)
             {
                 RoleInfo roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
@@ -2311,7 +2310,6 @@ namespace TheOtherRoles
                         Doomsayer.triggerDoomsayerrWin = true;
 
                     }
-                    FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(guesser.Data, dyingTarget.Data);
                     if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
 
                 }

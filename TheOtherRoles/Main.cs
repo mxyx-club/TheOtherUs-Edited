@@ -134,7 +134,6 @@ namespace TheOtherRoles
                 return;
             }
 
-            AddComponent<ModUpdater>();
 
             EventUtility.Load();
             SubmergedCompatibility.Initialize();
