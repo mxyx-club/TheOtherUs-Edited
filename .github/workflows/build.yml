@@ -3,11 +3,11 @@ name: AutoBuild .NET
 on:
   push:
     branches:
-      - main
+      - Dev
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/cache@v2
@@ -24,16 +24,36 @@ jobs:
           submodules: true
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 6.x
 
-      - name: Build
-        run: dotnet build TheOtherRoles/TheOtherRoles.csproj --configuration Release
+      - name: install wget
+        run: sudo apt install wget
 
-      - name: Upload TheOtherRoles
-        uses: actions/upload-artifact@v2
+      - name: download BepInEx
+        run: wget https://builds.bepinex.dev/projects/bepinex_be/688/BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.688%2B4901521.zip
+
+      - name: unzip BepInEx
+        run: unzip BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.688+4901521.zip -d ./Release/
+
+      - name: download Reactor
+        run: wget https://github.com/NuclearPowered/Reactor/releases/download/2.2.0/Reactor.dll -P ./Release/BepInEx/plugins
+        
+      - name: path
+        run: sudo chmod -R 777 ./Release
+        
+      - name: Build
+        run: dotnet build TheOtherRoles/TheOtherRoles.csproj --configuration Release --output ./Release/BepInEx/plugins
+
+      - name: Upload TheOtherUsDll
+        uses: actions/upload-artifact@v4.3.1
         with:
           name: TheOtherRoles.dll
-          path: TheOtherRoles/bin/Release/net6.0/TheOtherRoles.dll
-
+          path: ./Release/BepInEx/plugins/TheOtherRoles.dll
+          
+      - name: Upload TheOtherUs
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: TheOtherUs
+          path: ./Release/

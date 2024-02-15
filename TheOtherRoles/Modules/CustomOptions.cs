@@ -192,23 +192,25 @@ namespace TheOtherRoles
             {
                 if (onChange != null) onChange();
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
+
             if (optionBehaviour != null && optionBehaviour is StringOption stringOption)
             {
                 stringOption.oldValue = stringOption.Value = selection;
                 stringOption.ValueText.text = selections[selection].ToString();
-                if (AmongUsClient.Instance?.AmHost == true && CachedPlayer.LocalPlayer.PlayerControl)
+                if (AmongUsClient.Instance?.AmHost != true || !CachedPlayer.LocalPlayer.PlayerControl) return;
+                if (id == 0 && selection != preset)
                 {
-                    if (id == 0 && selection != preset)
-                    {
-                        switchPreset(selection); // Switch presets
-                        ShareOptionSelections();
-                    }
-                    else if (entry != null)
-                    {
-                        entry.Value = selection; // Save selection to config
-                        ShareOptionChange((uint)id);// Share single selection
-                    }
+                    switchPreset(selection); // Switch presets
+                    ShareOptionSelections();
+                }
+                else if (entry != null)
+                {
+                    entry.Value = selection; // Save selection to config
+                    ShareOptionChange((uint)id);// Share single selection
                 }
             }
             else if (id == 0 && AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)

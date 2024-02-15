@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using TheOtherRoles.Helper;
 using UnityEngine;
@@ -256,21 +257,20 @@ public static class CustomHatManager
         return !resHash.Equals(hash);
     }
 
-    internal static List<string> GenerateDownloadList(List<CustomHat> hats)
+    internal static List<string> GenerateDownloadList(IEnumerable<CustomHat> hats)
     {
         var algorithm = MD5.Create();
         var toDownload = new List<string>();
 
-        foreach (var hat in hats)
+        foreach (var files in hats.Select(hat => new List<Tuple<string, string>>
+                 {
+                     new(hat.Resource, hat.ResHashA),
+                     new(hat.BackResource, hat.ResHashB),
+                     new(hat.ClimbResource, hat.ResHashC),
+                     new(hat.FlipResource, hat.ResHashF),
+                     new(hat.BackFlipResource, hat.ResHashBf)
+                 }))
         {
-            var files = new List<Tuple<string, string>>
-            {
-                new(hat.Resource, hat.ResHashA),
-                new(hat.BackResource, hat.ResHashB),
-                new(hat.ClimbResource, hat.ResHashC),
-                new(hat.FlipResource, hat.ResHashF),
-                new(hat.BackFlipResource, hat.ResHashBf)
-            };
             foreach (var (fileName, fileHash) in files)
             {
                 if (fileName != null && ResourceRequireDownload(fileName, fileHash, algorithm))

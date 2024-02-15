@@ -22,8 +22,8 @@ public static class CrowdedPlayer
 
     public static void Start()
     {
-        NormalGameOptionsV07.RecommendedImpostors = NormalGameOptionsV07.MaxImpostors = Enumerable.Repeat(MaxImpostor, MaxPlayer).ToArray();
-        NormalGameOptionsV07.MinPlayers = Enumerable.Repeat(4, MaxPlayer).ToArray();
+        NormalGameOptionsV07.RecommendedImpostors = NormalGameOptionsV07.MaxImpostors = Enumerable.Repeat(127, 127).ToArray();
+        NormalGameOptionsV07.MinPlayers = Enumerable.Repeat(4, 127).ToArray();
     }
     
 
