@@ -7,7 +7,6 @@
 		<LangVersion>latest</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-        <AmongUsLatest>E:/Code/Test</AmongUsLatest>
     </PropertyGroup>
 
     <ItemGroup>
