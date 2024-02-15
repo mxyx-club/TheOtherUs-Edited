@@ -8,20 +8,23 @@ using Reactor.Utilities.Extensions;
 using TheOtherRoles.Helper;
 using TMPro;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Modules;
 
+[Harmony]
 public static class CrowdedPlayer
 {
-    private static int MaxPlayer = CustomOptionHolder.MaxPlayer.GetInt();
+    public static int MaxPlayer = 20;
 
-    private static int MaxImpostor = MaxPlayer / 5;
+    public static int MaxImpostor = MaxPlayer / 5;
 
-    private static bool Enable = CustomOptionHolder.enableCrowdedPlayer.getBool();
+    public static bool Enable = false;
 
 
     public static void Start()
     {
+        if (!Enable) return;
         NormalGameOptionsV07.RecommendedImpostors = NormalGameOptionsV07.MaxImpostors = Enumerable.Repeat(127, 127).ToArray();
         NormalGameOptionsV07.MinPlayers = Enumerable.Repeat(4, 127).ToArray();
     }
@@ -38,9 +41,10 @@ public static class CrowdedPlayer
     public static void GameOptionsMenu_Start_Postfix(ref GameOptionsMenu __instance)
     {
         if (!Enable) return;
-        var options = __instance.GetComponentsInChildren<NumberOption>();
-        options.First(o => o.Title == StringNames.GameNumImpostors)
-            .ValidRange = new FloatRange(1, MaxImpostor);
+        var options = Object.FindObjectsOfType<NumberOption>();
+        var option = options.FirstOrDefault(o => o.Title == StringNames.GameNumImpostors);
+        if (option == null) return;
+        option.ValidRange = new FloatRange(1, MaxImpostor);
     }
         
     [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.AreInvalid)), HarmonyPrefix]
@@ -65,6 +69,7 @@ public static class CrowdedPlayer
         firstButtonRenderer.GetComponentInChildren<TextMeshPro>().text = "-";
         firstButtonRenderer.enabled = false;
 
+
         var firstButtonButton = firstButtonRenderer.GetComponent<PassiveButton>();
         firstButtonButton.OnClick.RemoveAllListeners();
         firstButtonButton.OnClick.AddListener((Action)(() =>
@@ -82,11 +87,11 @@ public static class CrowdedPlayer
         }));
             
         firstButtonRenderer.Destroy();
-
-        var lastButtonRenderer = __instance.MaxPlayerButtons.Get(^1);
+        
+        var lastButtonRenderer = __instance.MaxPlayerButtons.Get(__instance.MaxPlayerButtons.Count - 1);
         lastButtonRenderer.GetComponentInChildren<TextMeshPro>().text = "+";
         lastButtonRenderer.enabled = false;
-
+        
         var lastButtonButton = lastButtonRenderer.GetComponent<PassiveButton>();
         lastButtonButton.OnClick.RemoveAllListeners();
         lastButtonButton.OnClick.AddListener((Action)(() =>
@@ -104,7 +109,7 @@ public static class CrowdedPlayer
             __instance.UpdateMaxPlayersButtons(__instance.GetTargetOptions());
         }));
         lastButtonRenderer.Destroy();
-
+        
         for (var i = 1; i < 11; i++)
         {
             var playerButton = __instance.MaxPlayerButtons.Get(i).GetComponent<PassiveButton>();
@@ -120,7 +125,7 @@ public static class CrowdedPlayer
                 __instance.SetMaxPlayersButtons(maxPlayers);
             }));
         }
-
+        
         foreach (var button in __instance.MaxPlayerButtons)
         {
             button.enabled = button.GetComponentInChildren<TextMeshPro>().text == __instance.GetTargetOptions().MaxPlayers.ToString();
@@ -131,10 +136,10 @@ public static class CrowdedPlayer
         secondButton.transform.FindChild("ConsoleHighlight").gameObject.Destroy();
         secondButton.PassiveButton.Destroy();
         secondButton.BoxCollider.Destroy();
-
+        
         var secondButtonText = secondButton.TextMesh;
         secondButtonText.text = __instance.GetTargetOptions().NumImpostors.ToString();
-
+        
         var firstButton = __instance.ImpostorButtons[0];
         firstButton.SpriteRenderer.enabled = false;
         firstButton.TextMesh.text = "-";
@@ -156,7 +161,7 @@ public static class CrowdedPlayer
         var thirdButton = __instance.ImpostorButtons[2];
         thirdButton.SpriteRenderer.enabled = false;
         thirdButton.TextMesh.text = "+";
-
+        
         var thirdPassiveButton = thirdButton.PassiveButton;
         thirdPassiveButton.OnClick.RemoveAllListeners();
         thirdPassiveButton.OnClick.AddListener((Action)(() => {
@@ -168,10 +173,11 @@ public static class CrowdedPlayer
             __instance.SetImpostorButtons(newVal);
             secondButtonText.text = newVal.ToString();
         }));
+        Start();
     }
 
 
-    [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.UpdateMaxPlayersButtons))]
+    [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.UpdateMaxPlayersButtons)), HarmonyPrefix]
     public static bool CreateOptionsPicker_UpdateMaxPlayersButtons_Prefix(CreateOptionsPicker __instance, [HarmonyArgument(0)] IGameOptions opts)
     {
         if (!Enable) return true;
@@ -203,7 +209,7 @@ public static class CrowdedPlayer
         __instance.gameObject.AddComponent<ShapeShifterPagingBehaviour>().shapeshifterMinigame = __instance;
     }
     
-    [HarmonyPatch(typeof(VitalsMinigame), nameof(VitalsMinigame.Begin))]
+    [HarmonyPatch(typeof(VitalsMinigame), nameof(VitalsMinigame.Begin)), HarmonyPostfix]
     public static void VitalsMinigameBeginPatch_Postfix(VitalsMinigame __instance)
     {
         if (!Enable) return;
