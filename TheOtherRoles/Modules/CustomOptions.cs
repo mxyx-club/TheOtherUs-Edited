@@ -176,6 +176,8 @@ namespace TheOtherRoles
             return (float)selections[selection];
         }
 
+        public int GetInt() => (int)selections[selection];
+
         public int getQuantity()
         {
             return selection + 1;

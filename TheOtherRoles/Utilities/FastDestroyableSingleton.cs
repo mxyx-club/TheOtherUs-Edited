@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace TheOtherRoles.Utilities;
@@ -18,14 +19,14 @@ public static unsafe class FastDestroyableSingleton<T> where T : MonoBehaviour
         _createObject = lambda.Compile();
     }
 
+    [System.Diagnostics.CodeAnalysis.NotNull]
     public static T Instance
     {
         get
         {
             IntPtr objectPointer;
             IL2CPP.il2cpp_field_static_get_value(_fieldPtr, &objectPointer);
-            if (objectPointer == IntPtr.Zero) return DestroyableSingleton<T>.Instance;
-            return _createObject(objectPointer);
+            return objectPointer == IntPtr.Zero ? DestroyableSingleton<T>.Instance : _createObject(objectPointer);
         }
     }
 }
