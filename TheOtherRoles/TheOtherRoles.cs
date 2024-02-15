@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
@@ -1868,7 +1869,7 @@ namespace TheOtherRoles
         public static PlayerControl currentTarget;
         public static List<PlayerControl> playerTargetinformation = new List<PlayerControl>();
         public static float cooldown = 30f;
-        public static float formationNum = 1f;
+        public static int formationNum = 1;
         public static bool hasMultipleShotsPerMeeting = false;
         public static bool showInfoInGhostChat = true;
         public static bool canGuessNeutral = false;
@@ -1901,7 +1902,7 @@ namespace TheOtherRoles
             showInfoInGhostChat = CustomOptionHolder.doomsayerShowInfoInGhostChat.getBool();
             canGuessNeutral = CustomOptionHolder.doomsayerCanGuessNeutral.getBool();
             canGuessImpostor = CustomOptionHolder.doomsayerCanGuessImpostor.getBool();
-            formationNum = CustomOptionHolder.doomsayerDormationNum.getFloat();
+            formationNum = CustomOptionHolder.doomsayerDormationNum.GetInt();
             killToWin = CustomOptionHolder.doomsayerKillToWin.getFloat();
             onlineTarger = CustomOptionHolder.doomsayerOnlineTarger.getBool();
 

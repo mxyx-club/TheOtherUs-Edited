@@ -360,3 +360,10 @@ tools
 
 Among Us/*.*
 Among Us/*/*
+
+TheOtherRoles/obj
+TheOtherRoles/bin
+
+.idea/
+.vs/
+.vscode/

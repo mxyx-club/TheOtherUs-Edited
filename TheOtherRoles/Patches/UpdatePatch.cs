@@ -3,6 +3,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;

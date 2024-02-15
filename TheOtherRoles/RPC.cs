@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Players;
@@ -148,7 +149,6 @@ namespace TheOtherRoles
         TimeMasterShield,
         TimeMasterRewindTime,
         TurnToImpostor,
-        TurnToImpostorFollower,
         BodyGuardGuardPlayer,
         PrivateInvestigatorWatchPlayer,
         PrivateInvestigatorWatchFlash,
@@ -158,6 +158,7 @@ namespace TheOtherRoles
         SwapperSwap,
         MorphlingMorph,
         CamouflagerCamouflage,
+        DoomsayerMeeting,
         //CamoComms,
         TrackerUsedTracker,
         VampireSetBitten,
@@ -166,7 +167,6 @@ namespace TheOtherRoles
         DeputyUsedHandcuffs,
         DeputyPromotes,
         JackalCreatesSidekick,
-        CreateCrewmate,
         SidekickPromotes,
         ErasePlayerRoles,
         SetFutureErased,
@@ -191,7 +191,6 @@ namespace TheOtherRoles
         LawyerSetTarget,
         LawyerPromotesToPursuer,
         BlackmailPlayer,
-        UseAdminTime,
         UseCameraTime,
         UseVitalsTime,
         UnblackmailPlayer,
@@ -201,7 +200,6 @@ namespace TheOtherRoles
         SetMeetingChatOverlay,
         SetPosition,
         SetPositionESC,
-        Invert,
         SetTiebreak,
         SetInvisibleGen,
         SetSwoop,
@@ -3025,9 +3023,21 @@ namespace TheOtherRoles
                     RPCProcedure.morphlingMorph(reader.ReadByte());
                     break;
                 case (byte)CustomRPC.CamouflagerCamouflage:
-                    byte setTimer = reader.ReadByte();
+                    var setTimer = reader.ReadByte();
                     RPCProcedure.camouflagerCamouflage(setTimer);
-                    break;/*
+                    break;
+                
+                case (byte)CustomRPC.DoomsayerMeeting:
+                    if (!Helpers.shouldShowGhostInfo()) break;
+                    var index = reader.ReadPackedInt32();
+                    for (var i = 1; i < index; i++)
+                    {
+                       var message = reader.ReadString();
+                       FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Doomsayer.doomsayer, message);
+                    }
+                    break;
+                
+                /*
                 case (byte)CustomRPC.CamoComms:
                     RPCProcedure.camoComms();
                     break;*/

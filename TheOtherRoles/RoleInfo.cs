@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using TheOtherRoles.Helper;
 using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -451,7 +452,7 @@ namespace TheOtherRoles
             if (ReadmePage == "")
             {
                 HttpClient client = new HttpClient();
-                HttpResponseMessage response = await client.GetAsync("https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherRoles/main/README.md");
+                HttpResponseMessage response = await client.GetAsync("https://mirror.ghproxy.com/https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherRoles/main/README.md");
                 response.EnsureSuccessStatusCode();
                 string httpres = await response.Content.ReadAsStringAsync();
                 ReadmePage = httpres;

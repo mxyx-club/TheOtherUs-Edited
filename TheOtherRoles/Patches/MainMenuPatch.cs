@@ -2,6 +2,7 @@
 using Assets.InnerNet;
 using HarmonyLib;
 using System;
+using TheOtherRoles.Helper;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;

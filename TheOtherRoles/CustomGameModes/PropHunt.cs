@@ -5,6 +5,7 @@ using Reactor.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TheOtherRoles.Helper;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;

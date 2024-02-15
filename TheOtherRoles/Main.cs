@@ -13,6 +13,7 @@ using Reactor.Networking.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TheOtherRoles.Helper;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Modules.CustomHats;
 using TheOtherRoles.Players;
@@ -95,8 +96,7 @@ namespace TheOtherRoles
         {
             Logger = Log;
             Instance = this;
-
-            _ = Helpers.checkBeta(); // Exit if running an expired beta
+            
             _ = Patches.CredentialsPatch.MOTD.loadMOTDs();
 
             DebugMode = Config.Bind("Custom", "Enable Debug Mode", "false");
@@ -128,11 +128,6 @@ namespace TheOtherRoles
             {
                 Helpers.enableCursor(true);
             }
-            if (BepInExUpdater.UpdateRequired)
-            {
-                AddComponent<BepInExUpdater>();
-                return;
-            }
 
 
             EventUtility.Load();
@@ -140,7 +135,7 @@ namespace TheOtherRoles
             MainMenuPatch.addSceneChangeCallbacks();
             _ = RoleInfo.loadReadme();
             AddToKillDistanceSetting.addKillDistance();
-            TheOtherRolesPlugin.Logger.LogInfo("Loading TOR completed!");
+            Logger.LogInfo("Loading TOR completed!");
         }
     }
 

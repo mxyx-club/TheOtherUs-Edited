@@ -4,12 +4,16 @@ using Reactor.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
 using static TheOtherRoles.TORMapOptions;
+using Object = UnityEngine.Object;
+using Random = System.Random;
 
 namespace TheOtherRoles.Patches
 {
@@ -530,21 +534,18 @@ namespace TheOtherRoles.Patches
                 if (HandleGuesser.isGuesserGm && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor &&
                     !HandleGuesser.evilGuesserCanGuessSpy && roleInfo.roleId == RoleId.Spy) continue;
                 // remove all roles that cannot spawn due to the settings from the ui.
-                RoleManagerSelectRolesPatch.RoleAssignmentData roleData = RoleManagerSelectRolesPatch.getRoleAssignmentData();
-                //if (roleData.neutralSettings.ContainsKey((byte)roleInfo.roleId) && roleData.neutralSettings[(byte)roleInfo.roleId] == 0) continue;
-                //else if (roleData.impSettings.ContainsKey((byte)roleInfo.roleId) && roleData.impSettings[(byte)roleInfo.roleId] == 0) continue;
-                //else if (roleData.crewSettings.ContainsKey((byte)roleInfo.roleId) && roleData.crewSettings[(byte)roleInfo.roleId] == 0) continue;
-                //else if (new List<RoleId>() { RoleId.Janitor, RoleId.Godfather, RoleId.Mafioso }.Contains(roleInfo.roleId) && CustomOptionHolder.mafiaSpawnRate.getSelection() == 0) continue;
-                //else if (roleInfo.roleId == RoleId.Sidekick && (!CustomOptionHolder.jackalCanCreateSidekick.getBool() || CustomOptionHolder.jackalSpawnRate.getSelection() == 0)) continue;
-                //if (roleInfo.roleId == RoleId.Deputy && (CustomOptionHolder.deputySpawnRate.getSelection() == 0 || CustomOptionHolder.sheriffSpawnRate.getSelection() == 0)) continue;
-                if (roleInfo.roleId == RoleId.Pursuer && CustomOptionHolder.lawyerSpawnRate.getSelection() == 0) continue;
-                if (roleInfo.roleId == RoleId.Spy && roleData.impostors.Count <= 1) continue;
-                //if (roleInfo.roleId == RoleId.Prosecutor && (CustomOptionHolder.lawyerIsProsecutorChance.getSelection() == 0 || CustomOptionHolder.lawyerSpawnRate.getSelection() == 0)) continue;
-                //if (roleInfo.roleId == RoleId.Lawyer && (CustomOptionHolder.lawyerIsProsecutorChance.getSelection() == 10 || CustomOptionHolder.lawyerSpawnRate.getSelection() == 0)) continue;
+                var roleData = RoleManagerSelectRolesPatch.getRoleAssignmentData();
+                switch (roleInfo.roleId)
+                {
+                    case RoleId.Pursuer when CustomOptionHolder.lawyerSpawnRate.getSelection() == 0:
+                    case RoleId.Spy when roleData.impostors.Count <= 1:
+                        continue;
+                }
+
                 if (Snitch.snitch != null && HandleGuesser.guesserCantGuessSnitch)
                 {
                     var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
-                    int numberOfLeftTasks = playerTotal - playerCompleted;
+                    var numberOfLeftTasks = playerTotal - playerCompleted;
                     if (numberOfLeftTasks <= 0 && roleInfo.roleId == RoleId.Snitch) continue;
                 }
 
@@ -610,18 +611,34 @@ namespace TheOtherRoles.Patches
 
                         // Reset the GUI
                         __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
-                        UnityEngine.Object.Destroy(container.gameObject);
-                        if (HandleGuesser.hasMultipleShotsPerMeeting && HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 1 && dyingTarget != CachedPlayer.LocalPlayer.PlayerControl)
+                        Object.Destroy(container.gameObject);
+                        if (
+                            (
+                            (
+                                HandleGuesser.hasMultipleShotsPerMeeting 
+                                && 
+                                HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 1
+                            ) 
+                            || 
+                            Doomsayer.hasMultipleShotsPerMeeting
+                            )
+                            &&
+                            dyingTarget != CachedPlayer.LocalPlayer.PlayerControl
+                            )
                             __instance.playerStates.ToList().ForEach(x =>
                             {
                                 if (x.TargetPlayerId == dyingTarget.PlayerId &&
-                                x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                                    x.transform.FindChild("ShootButton") != null)
+                                    Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
                             });
                         else
-                            __instance.playerStates.ToList().ForEach(x => { if (x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
-
+                            __instance.playerStates.ToList().ForEach(x =>
+                            {
+                                if (x.transform.FindChild("ShootButton") != null)
+                                    Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                            });
                         // Shoot player and send chat info if activated
-                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GuesserShoot, Hazel.SendOption.Reliable, -1);
+                        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GuesserShoot, Hazel.SendOption.Reliable, -1);
                         writer.Write(CachedPlayer.LocalPlayer.PlayerId);
                         writer.Write(dyingTarget.PlayerId);
                         writer.Write(focusedTarget.PlayerId);
@@ -880,7 +897,7 @@ namespace TheOtherRoles.Patches
                 if (meetingTarget == null) meetingsCount++;
                 // Save the meeting target
                 target = meetingTarget;
-                TORMapOptions.isRoundOne = false;
+                isRoundOne = false;
 
                 if (Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl) { Coroutines.Start(Helpers.BlackmailShhh()); }
 
@@ -924,62 +941,87 @@ namespace TheOtherRoles.Patches
                         FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, $"{message}");
                     }
                 }
-                if (Doomsayer.doomsayer != null && (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer || Helpers.shouldShowGhostInfo()) && !Doomsayer.doomsayer.Data.IsDead)
+                
+                try
                 {
-                    int i = 1;
-                    List<RoleInfo> allRoleInfo = new List<RoleInfo>(10);
-                    if (Doomsayer.onlineTarger)
+                    //Ä©ÈÕ
+                    if (
+                        Doomsayer.doomsayer != null
+                        && 
+                        CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer
+                        && 
+                        !Doomsayer.doomsayer.Data.IsDead
+                        && 
+                        Doomsayer.playerTargetinformation != null
+                    )
                     {
-                        allRoleInfo = Helpers.onlineRoleInfos();
-                    }
-                    else
-                    {
-                        allRoleInfo = Helpers.allRoleInfos();
-                    }
+                        var i = 1;
+                        var random = new Random();
+                        var allRoleInfo = (Doomsayer.onlineTarger ? Helpers.onlineRoleInfos() : Helpers.allRoleInfos());
+                        var OtherRoles = Helpers.allRoleInfos().Where(n => allRoleInfo.All(y => y != n)).OrderBy(_ => random.Next()).ToList();
+                        var OtherIndex = -1;
+                        var AllMessage = new List<string>();
+                    
+                        allRoleInfo.Remove(RoleInfo.doomsayer);
+                        OtherRoles.Remove(RoleInfo.doomsayer);
 
-
-
-                    foreach (PlayerControl predictionTarget in Doomsayer.playerTargetinformation)
-                    {
-                        System.Random random = new System.Random();
-                        int x = random.Next(0, (int)Doomsayer.formationNum);
-                        RoleInfo roleInfoTarget = RoleInfo.getRoleInfoForPlayer(predictionTarget, false).FirstOrDefault();
-                        string message = $"Ô¤ÑÔ " + i + ": " + predictionTarget.name + "\n";
-                        List<int> temp = Enumerable.Range(0, allRoleInfo.Count).OrderBy(q => Guid.NewGuid()).Take((int)Doomsayer.formationNum).ToList();
-                        List<string> allProperty = new List<string>();
-
-
-                        for (int num = 0, tempNum = 0; num < Doomsayer.formationNum && tempNum < Doomsayer.formationNum; num++)
+                        foreach (var predictionTarget in Doomsayer.playerTargetinformation)
                         {
-
-                            if (allRoleInfo[temp[tempNum]].name.Equals(roleInfoTarget.name))
+                            var formation = Doomsayer.formationNum;
+                            var x = random.Next(1, formation) - 1;
+                            var roleInfoTarget = RoleInfo.getRoleInfoForPlayer(predictionTarget, false).FirstOrDefault();
+                            var message = new StringBuilder();
+                            var tempNumList = Enumerable.Range(0, allRoleInfo.Count - 1).ToList();
+                            var temp = 
+                                (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList)
+                                .OrderBy(_ => random.Next()).ToList();
+                        
+                            message.AppendLine($"Ô¤ÑÔ {i} : {predictionTarget.name}");
+                        
+                            for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
                             {
-                                tempNum++;
-                                num--;
-                                continue;
+                            
+                                var info = tempNum > temp.Count - 1 ? 
+                                    GetOther() 
+                                    : 
+                                    allRoleInfo[temp[tempNum]];
+                            
+                                if (info == roleInfoTarget)
+                                {
+                                    num--;
+                                    continue;
+                                }
+
+                                message.Append(num == x ? roleInfoTarget.name : info.name);
+
+                                message.Append(num < formation - 1 ? ',' : ';');
                             }
 
-                            if (num == x)
+                            i++;
+                            FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Doomsayer.doomsayer, $"{message}");
+                            AllMessage.Add(message.ToString());
+                            continue;
+
+                            RoleInfo GetOther()
                             {
-                                message += roleInfoTarget.name + ",";
-                            }
-                            else
-                            {
-                                message += allRoleInfo[temp[tempNum]].name + ",";
-                                tempNum++;
+                                OtherIndex++;
+                                return OtherRoles[OtherIndex];
                             }
                         }
-                        if (x == Doomsayer.formationNum - 1 && Doomsayer.onlineTarger)
-                        {
-                            message += roleInfoTarget.name + ",";
-                        }
 
-
-                        i++;
-                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Doomsayer.doomsayer, $"{message}");
+                        var writer = AmongUsClient.Instance.StartRpcImmediately(
+                            CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DoomsayerMeeting,
+                            SendOption.Reliable);
+                        writer.WritePacked(AllMessage.Count);
+                        AllMessage.Do(writer.Write);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    
+                        Doomsayer.playerTargetinformation.Clear();
                     }
-                    allRoleInfo.Clear();
-                    Doomsayer.playerTargetinformation.Clear();
+                }
+                catch
+                {
+                    TheOtherRolesPlugin.Logger.LogError("Ä©ÈÕÔ¤ÑÔ¼Ò±¨´í");
                 }
 
                 // Add Snitch info
