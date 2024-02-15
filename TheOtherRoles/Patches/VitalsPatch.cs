@@ -3,6 +3,7 @@ using Hazel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TheOtherRoles.Helper;
 using TheOtherRoles.Players;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
@@ -14,7 +15,7 @@ namespace TheOtherRoles.Patches
     {
         static float vitalsTimer = 0f;
         static TMPro.TextMeshPro TimeRemaining;
-        private static List<TMPro.TextMeshPro> hackerTexts = new List<TMPro.TextMeshPro>();
+        private static List<TMPro.TextMeshPro> hackerTexts = new();
 
         public static void ResetData()
         {
@@ -107,7 +108,7 @@ namespace TheOtherRoles.Patches
                     for (int k = 0; k < __instance.vitals.Length; k++)
                     {
                         VitalsPanel vitalsPanel = __instance.vitals[k];
-                        GameData.PlayerInfo player = GameData.Instance.AllPlayers[k];
+                        GameData.PlayerInfo player = GameData.Instance.AllPlayers.Get(k);
 
                         // Hacker update
                         if (vitalsPanel.IsDead)

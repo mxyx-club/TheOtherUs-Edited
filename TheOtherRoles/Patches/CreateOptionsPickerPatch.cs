@@ -1,6 +1,7 @@
 ﻿using AmongUs.GameOptions;
 using HarmonyLib;
 using System.Collections.Generic;
+using TheOtherRoles.Helper;
 using UnityEngine;
 
 namespace TheOtherRoles.Patches

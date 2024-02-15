@@ -2,6 +2,7 @@ using HarmonyLib;
 using Hazel;
 using System;
 using System.Linq;
+using TheOtherRoles.Helper;
 using TheOtherRoles.Players;
 using UnityEngine;
 
