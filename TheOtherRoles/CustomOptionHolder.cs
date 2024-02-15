@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
@@ -588,10 +589,12 @@ namespace TheOtherRoles
 
             enableCrowdedPlayer = CustomOption.Create(15000, Types.General,
                 cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "启用百人"), false, null, true);
+            CrowdedPlayer.Enable = enableCrowdedPlayer.getBool();
             
             MaxPlayer = CustomOption.Create(15001, Types.General,
-                cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "最大玩家数"), 20f, 20f, 120f, 1f);
+                cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "最大玩家数"), 20f, 20f, 120f, 1f, enableCrowdedPlayer);
             
+            CrowdedPlayer.MaxPlayer = MaxPlayer.GetInt();
             // Using new id's for the options to not break compatibilty with older versions
             crewmateRolesCountMin = CustomOption.Create(300, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最小船员阵营职业数"), 15f, 0f, 15f, 1f, null, true);
             crewmateRolesCountMax = CustomOption.Create(301, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最大船员阵营职业数"), 15f, 0f, 15f, 1f);

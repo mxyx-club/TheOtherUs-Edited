@@ -95,7 +95,10 @@ namespace TheOtherRoles
 
         public override void Load()
         {
-            System.Console.OutputEncoding = Encoding.UTF8;
+            if (ConsoleManager.ConsoleEnabled)
+            {
+                System.Console.OutputEncoding = Encoding.UTF8;
+            }
             Logger = Log;
             Instance = this;
             

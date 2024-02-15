@@ -34,18 +34,6 @@ $@"<size=70%> <color=#FCCE03FF>特别感谢 Smeggy, Scoom, Xer, and Mr_Fluuff</c
         internal static class PingTrackerPatch
         {
             public static GameObject modStamp;
-            /*static void Prefix(PingTracker __instance) {
-                if (modStamp == null) {
-                    modStamp = new GameObject("ModStamp");
-                    var rend = modStamp.AddComponent<SpriteRenderer>();
-                    rend.sprite = TheOtherRolesPlugin.GetModStamp();
-                    rend.color = new Color(1, 1, 1, 0.5f);
-                    modStamp.transform.parent = __instance.transform.parent;
-                    modStamp.transform.localScale *= SubmergedCompatibility.Loaded ? 0 : 0.6f;
-                }
-                float offset = (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started) ? 0.75f : 0f;
-                modStamp.transform.position = FastDestroyableSingleton<HudManager>.Instance.MapButton.transform.position + Vector3.down * offset;
-            }*/
 
             static void Postfix(PingTracker __instance)
             {
@@ -60,11 +48,17 @@ $@"<size=70%> <color=#FCCE03FF>特别感谢 Smeggy, Scoom, Xer, and Mr_Fluuff</c
                     __instance.text.text = $"<size=120%><color=#ff351f>我们的超多职业</color></size> v{TheOtherRolesPlugin.Version.ToString() + ("\n<size=75%><color=#FFB793>沫夏悠轩</color> - <color=#FFB793>mxyx.club</color></size>")}\n<size=90%>{gameModeText}</size>" + __instance.text.text;
                     if (CachedPlayer.LocalPlayer.Data.IsDead || (!(CachedPlayer.LocalPlayer.PlayerControl == null) && (CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 || CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover2)))
                     {
-                        __instance.transform.localPosition = new Vector3(3.45f, __instance.transform.localPosition.y, __instance.transform.localPosition.z);
+                        var transform = __instance.transform;
+                        var localPosition = transform.localPosition;
+                        localPosition = new Vector3(3.45f, localPosition.y, localPosition.z);
+                        transform.localPosition = localPosition;
                     }
                     else
                     {
-                        __instance.transform.localPosition = new Vector3(4.2f, __instance.transform.localPosition.y, __instance.transform.localPosition.z);
+                        var transform = __instance.transform;
+                        var localPosition = transform.localPosition;
+                        localPosition = new Vector3(4.2f, localPosition.y, localPosition.z);
+                        transform.localPosition = localPosition;
                     }
                 }
                 else
@@ -76,7 +70,10 @@ $@"<size=70%> <color=#FCCE03FF>特别感谢 Smeggy, Scoom, Xer, and Mr_Fluuff</c
                     if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
 
                     __instance.text.text = $"{fullCredentialsVersion}\n  {gameModeText + fullCredentials}\n {__instance.text.text}";
-                    __instance.transform.localPosition = new Vector3(3.5f, __instance.transform.localPosition.y, __instance.transform.localPosition.z);
+                    var transform = __instance.transform;
+                    var localPosition = transform.localPosition;
+                    localPosition = new Vector3(3.5f, localPosition.y, localPosition.z);
+                    transform.localPosition = localPosition;
                 }
             }
         }
@@ -128,7 +125,7 @@ $@"<size=70%> <color=#FCCE03FF>特别感谢 Smeggy, Scoom, Xer, and Mr_Fluuff</c
                 motdText.transform.localPosition = Vector3.down * 2.25f;
                 motdText.color = new Color(1, 53f / 255, 31f / 255);
                 Material mat = motdText.fontSharedMaterial;
-                mat.shaderKeywords = new string[] { "OUTLINE_ON" };
+                mat.shaderKeywords = new[] { "OUTLINE_ON" };
                 motdText.SetOutlineColor(Color.white);
                 motdText.SetOutlineThickness(0.025f);
             }
@@ -165,7 +162,7 @@ $@"<size=70%> <color=#FCCE03FF>特别感谢 Smeggy, Scoom, Xer, and Mr_Fluuff</c
         [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.LateUpdate))]
         public static class MOTD
         {
-            public static List<string> motds = new List<string>();
+            public static List<string> motds = new();
             private static float timer = 0f;
             private static float maxTimer = 5f;
             private static int currentIndex = 0;
