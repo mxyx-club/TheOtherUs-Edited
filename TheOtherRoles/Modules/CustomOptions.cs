@@ -88,7 +88,7 @@ namespace TheOtherRoles
 
         public static CustomOption Create(int id, CustomOptionType type, string name, bool defaultValue, CustomOption parent = null, bool isHeader = false, Action onChange = null)
         {
-            return new CustomOption(id, type, name, new string[] { "¹Ø±Õ", "¿ªÆô" }, defaultValue ? "¿ªÆô" : "¹Ø±Õ", parent, isHeader, onChange);
+            return new CustomOption(id, type, name, new string[] { "ï¿½Ø±ï¿½", "ï¿½ï¿½ï¿½ï¿½" }, defaultValue ? "ï¿½ï¿½ï¿½ï¿½" : "ï¿½Ø±ï¿½", parent, isHeader, onChange);
         }
 
         // Static behaviour
@@ -97,7 +97,7 @@ namespace TheOtherRoles
         {
             saveVanillaOptions();
             CustomOption.preset = newPreset;
-            vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", "ÓÎÏ·Ô¤Éè", "");
+            vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", "ï¿½ï¿½Ï·Ô¤ï¿½ï¿½", "");
             loadVanillaOptions();
             foreach (CustomOption option in CustomOption.options)
             {
@@ -266,12 +266,12 @@ namespace TheOtherRoles
                     }
                     if (id == 0) continue;
                     lastId = id;
-                    CustomOption option = CustomOption.options.First(option => option.id == id);
+                    CustomOption option = options.First(option => option.id == id);
                     option.updateSelection(selection);
                 }
                 catch (Exception e)
                 {
-                    TheOtherRolesPlugin.Logger.LogWarning($"{e}: ·´ÐòÁÐ»¯Ê± - ÊÔÍ¼Õ³ÌùÎÞÐ§ÉèÖÃ£¡");
+                    Warn($"{e}: é€‰é¡¹åŠ è½½å¤±è´¥");
                 }
             }
         }
@@ -299,7 +299,7 @@ namespace TheOtherRoles
             }
             catch (Exception e)
             {
-                TheOtherRolesPlugin.Logger.LogWarning($"{e}: ³¢ÊÔÕ³ÌùÎÞÐ§ÉèÖÃ£¡");
+                Warn($"{e}: ï¿½ï¿½ï¿½ï¿½Õ³ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½Ã£ï¿½");
                 SoundEffectsManager.Load();
                 SoundEffectsManager.play("fail");
                 return false;
@@ -374,11 +374,11 @@ namespace TheOtherRoles
             bool isReturn = setNames(
                 new Dictionary<string, string>()
                 {
-                    ["TORSettings"] = "Ä£×éÉèÖÃ",
-                    ["ImpostorSettings"] = "Î±×°ÕßÖ°ÒµÉèÖÃ",
-                    ["NeutralSettings"] = "ÖÐÁ¢Ö°ÒµÉèÖÃ",
-                    ["CrewmateSettings"] = "´¬Ô±Ö°ÒµÉèÖÃ",
-                    ["ModifierSettings"] = "¸½¼ÓÖ°ÒµÉèÖÃ"
+                    ["TORSettings"] = "Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
+                    ["ImpostorSettings"] = "Î±×°ï¿½ï¿½Ö°Òµï¿½ï¿½ï¿½ï¿½",
+                    ["NeutralSettings"] = "ï¿½ï¿½ï¿½ï¿½Ö°Òµï¿½ï¿½ï¿½ï¿½",
+                    ["CrewmateSettings"] = "ï¿½ï¿½Ô±Ö°Òµï¿½ï¿½ï¿½ï¿½",
+                    ["ModifierSettings"] = "ï¿½ï¿½ï¿½ï¿½Ö°Òµï¿½ï¿½ï¿½ï¿½"
                 });
 
             if (isReturn) return;
@@ -504,12 +504,12 @@ namespace TheOtherRoles
             bool isReturn = setNames(
                 new Dictionary<string, string>()
                 {
-                    ["TORSettings"] = "Ä£×éÉèÖÃ",
-                    ["GuesserSettings"] = "¶Ä¹ÖÄ£Ê½ÉèÖÃ",
-                    ["ImpostorSettings"] = "Î±×°ÕßÖ°ÒµÉèÖÃ",
-                    ["NeutralSettings"] = "ÖÐÁ¢Ö°ÒµÉèÖÃ",
-                    ["CrewmateSettings"] = "´¬Ô±Ö°ÒµÉèÖÃ",
-                    ["ModifierSettings"] = "¸½¼ÓÖ°ÒµÉèÖÃ"
+                    ["TORSettings"] = "Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
+                    ["GuesserSettings"] = "ï¿½Ä¹ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½",
+                    ["ImpostorSettings"] = "Î±×°ï¿½ï¿½Ö°Òµï¿½ï¿½ï¿½ï¿½",
+                    ["NeutralSettings"] = "ï¿½ï¿½ï¿½ï¿½Ö°Òµï¿½ï¿½ï¿½ï¿½",
+                    ["CrewmateSettings"] = "ï¿½ï¿½Ô±Ö°Òµï¿½ï¿½ï¿½ï¿½",
+                    ["ModifierSettings"] = "ï¿½ï¿½ï¿½ï¿½Ö°Òµï¿½ï¿½ï¿½ï¿½"
                 });
 
             if (isReturn) return;
@@ -646,8 +646,8 @@ namespace TheOtherRoles
             bool isReturn = setNames(
                 new Dictionary<string, string>()
                 {
-                    ["TORSettings"] = "Ä£×éÉèÖÃ",
-                    ["HideNSeekSettings"] = "¶ãÃ¨Ã¨Ä£Ê½ÉèÖÃ"
+                    ["TORSettings"] = "Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
+                    ["HideNSeekSettings"] = "ï¿½ï¿½Ã¨Ã¨Ä£Ê½ï¿½ï¿½ï¿½ï¿½"
                 });
 
             if (isReturn) return;
@@ -746,7 +746,7 @@ namespace TheOtherRoles
             bool isReturn = setNames(
                 new Dictionary<string, string>()
                 {
-                    ["TORSettings"] = "µÀ¾ß¶ãÃ¨Ã¨Ä£Ê½ÉèÖÃ"
+                    ["TORSettings"] = "ï¿½ï¿½ï¿½ß¶ï¿½Ã¨Ã¨Ä£Ê½ï¿½ï¿½ï¿½ï¿½"
                 });
 
             if (isReturn) return;
@@ -883,7 +883,7 @@ namespace TheOtherRoles
         {
             if (!(menus.Count == options.Count && options.Count == settings.Count))
             {
-                TheOtherRolesPlugin.Logger.LogError("List counts are not equal");
+                Error("List counts are not equal");
                 return;
             }
             for (int i = 0; i < menus.Count; i++)
@@ -1066,10 +1066,10 @@ namespace TheOtherRoles
     {
         private static string buildRoleOptions()
         {
-            var impRoles = "<size=150%><color=#ff1c1c>Î±×°ÕßÕóÓª</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Impostor, true) + "\n";
-            var neutralRoles = "<size=150%><color=#50544c>ÖÐÁ¢ÕóÓª</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Neutral, true) + "\n";
-            var crewRoles = "<size=150%><color=#08fcfc>´¬Ô±ÕóÓª</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Crewmate, true) + "\n";
-            var modifiers = "<size=150%><color=#ffec04>¸½¼ÓÖ°Òµ</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Modifier, true);
+            var impRoles = "<size=150%><color=#ff1c1c>Î±×°ï¿½ï¿½ï¿½ï¿½Óª</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Impostor, true) + "\n";
+            var neutralRoles = "<size=150%><color=#50544c>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óª</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Neutral, true) + "\n";
+            var crewRoles = "<size=150%><color=#08fcfc>ï¿½ï¿½Ô±ï¿½ï¿½Óª</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Crewmate, true) + "\n";
+            var modifiers = "<size=150%><color=#ffec04>ï¿½ï¿½ï¿½ï¿½Ö°Òµ</color></size>" + buildOptionsOfType(CustomOption.CustomOptionType.Modifier, true);
             return impRoles + neutralRoles + crewRoles + modifiers;
         }
         private static string buildModifierExtras(CustomOption customOption)
@@ -1115,14 +1115,14 @@ namespace TheOtherRoles
                 else if (option.parent.getSelection() > 0)
                 {
                     if (option.id == 103) //Deputy
-                        sb.AppendLine($"- {Helpers.cs(Deputy.color, "²¶¿ì")}: {option.selections[option.selection].ToString()}");
+                        sb.AppendLine($"- {Helpers.cs(Deputy.color, "ï¿½ï¿½ï¿½ï¿½")}: {option.selections[option.selection].ToString()}");
                     else if (option.id == 224) //Sidekick
-                        sb.AppendLine($"- {Helpers.cs(Sidekick.color, "¸ú°à")}: {option.selections[option.selection].ToString()}");
+                        sb.AppendLine($"- {Helpers.cs(Sidekick.color, "ï¿½ï¿½ï¿½ï¿½")}: {option.selections[option.selection].ToString()}");
                     else if (option.id == 358) //Prosecutor
-                        sb.AppendLine($"- {Helpers.cs(Lawyer.color, "´¦ÐÌÕß")}: {option.selections[option.selection].ToString()}");
+                        sb.AppendLine($"- {Helpers.cs(Lawyer.color, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")}: {option.selections[option.selection].ToString()}");
 
                     else if (option.id == 3642134) //Can Swoop
-                        sb.AppendLine($"- {Helpers.cs(Swooper.color, "ÒþÉíÈË")}: {option.selections[option.selection].ToString()}");
+                        sb.AppendLine($"- {Helpers.cs(Swooper.color, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")}: {option.selections[option.selection].ToString()}");
 
                 }
             }
@@ -1145,7 +1145,7 @@ namespace TheOtherRoles
                 {
                     if (option == CustomOptionHolder.crewmateRolesCountMin)
                     {
-                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "´¬Ô±ÕóÓª");
+                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "ï¿½ï¿½Ô±ï¿½ï¿½Óª");
                         var min = CustomOptionHolder.crewmateRolesCountMin.getSelection();
                         var max = CustomOptionHolder.crewmateRolesCountMax.getSelection();
                         string optionValue = "";
@@ -1167,7 +1167,7 @@ namespace TheOtherRoles
                     }
                     else if (option == CustomOptionHolder.neutralRolesCountMin)
                     {
-                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "ÖÐÁ¢ÕóÓª");
+                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óª");
                         var min = CustomOptionHolder.neutralRolesCountMin.getSelection();
                         var max = CustomOptionHolder.neutralRolesCountMax.getSelection();
                         if (min > max) min = max;
@@ -1176,7 +1176,7 @@ namespace TheOtherRoles
                     }
                     else if (option == CustomOptionHolder.impostorRolesCountMin)
                     {
-                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Î±×°ÕßÕóÓª");
+                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Î±×°ï¿½ï¿½ï¿½ï¿½Óª");
                         var min = CustomOptionHolder.impostorRolesCountMin.getSelection();
                         var max = CustomOptionHolder.impostorRolesCountMax.getSelection();
                         if (max > GameOptionsManager.Instance.currentGameOptions.NumImpostors) max = GameOptionsManager.Instance.currentGameOptions.NumImpostors;
@@ -1186,7 +1186,7 @@ namespace TheOtherRoles
                     }
                     else if (option == CustomOptionHolder.modifiersCountMin)
                     {
-                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "¸½¼ÓÖ°Òµ");
+                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "ï¿½ï¿½ï¿½ï¿½Ö°Òµ");
                         var min = CustomOptionHolder.modifiersCountMin.getSelection();
                         var max = CustomOptionHolder.modifiersCountMax.getSelection();
                         if (min > max) min = max;
@@ -1213,7 +1213,7 @@ namespace TheOtherRoles
             if (vanillaSettings == "")
                 vanillaSettings = GameOptionsManager.Instance.CurrentGameOptions.ToHudString(PlayerControl.AllPlayerControls.Count);
             int counter = TheOtherRolesPlugin.optionsPage;
-            string hudString = counter != 0 && !hideExtras ? Helpers.cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "(ÈçÓÐ±ØÒª£¬ÇëÊ¹ÓÃ¹öÂÖ)\n\n") : "";
+            string hudString = counter != 0 && !hideExtras ? Helpers.cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "(ï¿½ï¿½ï¿½Ð±ï¿½Òªï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¹ï¿½ï¿½ï¿½)\n\n") : "";
 
             if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek)
             {
@@ -1222,10 +1222,10 @@ namespace TheOtherRoles
                 switch (counter)
                 {
                     case 0:
-                        hudString += "µÚ1Ò³: ¶ãÃ¨Ã¨Ä£Ê½ÉèÖÃ \n\n" + buildOptionsOfType(CustomOption.CustomOptionType.HideNSeekMain, false);
+                        hudString += "ï¿½ï¿½1Ò³: ï¿½ï¿½Ã¨Ã¨Ä£Ê½ï¿½ï¿½ï¿½ï¿½ \n\n" + buildOptionsOfType(CustomOption.CustomOptionType.HideNSeekMain, false);
                         break;
                     case 1:
-                        hudString += "µÚ2Ò³: ¶ãÃ¨Ã¨Ö°ÒµÉèÖÃ \n\n" + buildOptionsOfType(CustomOption.CustomOptionType.HideNSeekRoles, false);
+                        hudString += "ï¿½ï¿½2Ò³: ï¿½ï¿½Ã¨Ã¨Ö°Òµï¿½ï¿½ï¿½ï¿½ \n\n" + buildOptionsOfType(CustomOption.CustomOptionType.HideNSeekRoles, false);
                         break;
                 }
             }
@@ -1235,7 +1235,7 @@ namespace TheOtherRoles
                 switch (counter)
                 {
                     case 0:
-                        hudString += "µÚ1Ò³: µÀ¾ß¶ãÃ¨Ã¨Ä£Ê½ÉèÖÃ \n\n" + buildOptionsOfType(CustomOption.CustomOptionType.PropHunt, false);
+                        hudString += "ï¿½ï¿½1Ò³: ï¿½ï¿½ï¿½ß¶ï¿½Ã¨Ã¨Ä£Ê½ï¿½ï¿½ï¿½ï¿½ \n\n" + buildOptionsOfType(CustomOption.CustomOptionType.PropHunt, false);
                         break;
                 }
             }
@@ -1245,30 +1245,30 @@ namespace TheOtherRoles
                 switch (counter)
                 {
                     case 0:
-                        hudString += (!hideExtras ? "" : "µÚ1Ò³: ÓÎÏ·ÉèÖÃ \n\n") + vanillaSettings;
+                        hudString += (!hideExtras ? "" : "ï¿½ï¿½1Ò³: ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ \n\n") + vanillaSettings;
                         break;
                     case 1:
-                        hudString += "µÚ2Ò³: ³¬¶àÖ°ÒµÄ£×éÉèÖÃ \n" + buildOptionsOfType(CustomOption.CustomOptionType.General, false);
+                        hudString += "ï¿½ï¿½2Ò³: ï¿½ï¿½ï¿½ï¿½Ö°ÒµÄ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ \n" + buildOptionsOfType(CustomOption.CustomOptionType.General, false);
                         break;
                     case 2:
-                        hudString += "µÚ3Ò³: Ö°ÒµºÍ¸½¼ÓÖ°ÒµÉèÖÃ \n" + buildRoleOptions();
+                        hudString += "ï¿½ï¿½3Ò³: Ö°Òµï¿½Í¸ï¿½ï¿½ï¿½Ö°Òµï¿½ï¿½ï¿½ï¿½ \n" + buildRoleOptions();
                         break;
                     case 3:
-                        hudString += "µÚ4Ò³: Î±×°ÕßÖ°ÒµÉèÖÃ \n" + buildOptionsOfType(CustomOption.CustomOptionType.Impostor, false);
+                        hudString += "ï¿½ï¿½4Ò³: Î±×°ï¿½ï¿½Ö°Òµï¿½ï¿½ï¿½ï¿½ \n" + buildOptionsOfType(CustomOption.CustomOptionType.Impostor, false);
                         break;
                     case 4:
-                        hudString += "µÚ5Ò³: ÖÐÁ¢Ö°ÒµÉèÖÃ \n" + buildOptionsOfType(CustomOption.CustomOptionType.Neutral, false);
+                        hudString += "ï¿½ï¿½5Ò³: ï¿½ï¿½ï¿½ï¿½Ö°Òµï¿½ï¿½ï¿½ï¿½ \n" + buildOptionsOfType(CustomOption.CustomOptionType.Neutral, false);
                         break;
                     case 5:
-                        hudString += "µÚ6Ò³: ´¬Ô±Ö°ÒµÉèÖÃ \n" + buildOptionsOfType(CustomOption.CustomOptionType.Crewmate, false);
+                        hudString += "ï¿½ï¿½6Ò³: ï¿½ï¿½Ô±Ö°Òµï¿½ï¿½ï¿½ï¿½ \n" + buildOptionsOfType(CustomOption.CustomOptionType.Crewmate, false);
                         break;
                     case 6:
-                        hudString += "µÚ7Ò³: ¸½¼ÓÖ°ÒµÉèÖÃ \n" + buildOptionsOfType(CustomOption.CustomOptionType.Modifier, false);
+                        hudString += "ï¿½ï¿½7Ò³: ï¿½ï¿½ï¿½ï¿½Ö°Òµï¿½ï¿½ï¿½ï¿½ \n" + buildOptionsOfType(CustomOption.CustomOptionType.Modifier, false);
                         break;
                 }
             }
 
-            if (!hideExtras || counter != 0) hudString += $"\n °´Tab»òÕßÊý×Ö¼ü²é¿´¸ü¶à... ({counter + 1}/{maxPage})";
+            if (!hideExtras || counter != 0) hudString += $"\n ï¿½ï¿½Tabï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½é¿´ï¿½ï¿½ï¿½ï¿½... ({counter + 1}/{maxPage})";
             return hudString;
         }
 
@@ -1355,7 +1355,7 @@ namespace TheOtherRoles
         {
             if ((int)id == 49999)
             {
-                __result = "·Ç³£¶Ì";
+                __result = "ï¿½Ç³ï¿½ï¿½ï¿½";
                 return false;
             }
             return true;

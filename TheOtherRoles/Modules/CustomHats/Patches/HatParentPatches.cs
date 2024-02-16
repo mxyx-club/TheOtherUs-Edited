@@ -259,7 +259,7 @@ internal static class HatParentPatches
         }
         catch (Exception err)
         {
-            TheOtherRolesPlugin.Logger.LogWarning($"Unable to create test hat \n{err}");
+            Warn($"Unable to create test hat \n{err}");
             return true;
         }
 

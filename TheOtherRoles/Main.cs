@@ -30,9 +30,8 @@ namespace TheOtherRoles
         public static uint betaDays = 0;  // amount of days for the build to be usable (0 for infinite!)
 
         public static Version Version = Version.Parse(VersionString);
-        internal static BepInEx.Logging.ManualLogSource Logger;
-
-        public Harmony Harmony { get; } = new Harmony(Id);
+        public Harmony Harmony { get; } = new(Id);
+        
         public static TheOtherRolesPlugin Instance;
 
         public static int optionsPage = 2;
@@ -61,17 +60,17 @@ namespace TheOtherRoles
         // file="RegionInstallPlugin.cs" company="miniduikboot">
         public static void UpdateRegions()
         {
-            ServerManager serverManager = FastDestroyableSingleton<ServerManager>.Instance;
-            var regions = new IRegionInfo[] {
+            var serverManager = FastDestroyableSingleton<ServerManager>.Instance;
+            var regions = new[] {
                 new StaticHttpRegionInfo("Custom", StringNames.NoTranslation, Ip.Value, new Il2CppReferenceArray<ServerInfo>(new ServerInfo[1] { new ServerInfo("Custom", Ip.Value, Port.Value, false) })).CastFast<IRegionInfo>()
             };
-
-            IRegionInfo currentRegion = serverManager.CurrentRegion;
-            Logger.LogInfo($"Adding {regions.Length} regions");
+            
+            var currentRegion = serverManager.CurrentRegion;
+            Info($"Adding {regions.Length} regions");
             foreach (IRegionInfo region in regions)
             {
                 if (region == null)
-                    Logger.LogError("Could not add region");
+                    Error("Could not add region");
                 else
                 {
                     if (currentRegion != null && region.Name.Equals(currentRegion.Name, StringComparison.OrdinalIgnoreCase))
@@ -81,11 +80,9 @@ namespace TheOtherRoles
             }
 
             // AU remembers the previous region that was set, so we need to restore it
-            if (currentRegion != null)
-            {
-                Logger.LogDebug("Resetting previous region");
-                serverManager.SetRegion(currentRegion);
-            }
+            if (currentRegion == null) return;
+            Debug("Resetting previous region");
+            serverManager.SetRegion(currentRegion);
         }
 
         public override void Load()
@@ -94,7 +91,7 @@ namespace TheOtherRoles
             {
                 System.Console.OutputEncoding = Encoding.UTF8;
             }
-            Logger = Log;
+            logSource = Log;
             Instance = this;
             
             _ = Patches.CredentialsPatch.MOTD.loadMOTDs();
@@ -136,7 +133,7 @@ namespace TheOtherRoles
             MainMenuPatch.addSceneChangeCallbacks();
             _ = RoleInfo.loadReadme();
             AddToKillDistanceSetting.addKillDistance();
-            Logger.LogInfo("Loading TOR completed!");
+            Info("Loading TOR completed!");
         }
     }
 

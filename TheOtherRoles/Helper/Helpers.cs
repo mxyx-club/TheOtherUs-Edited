@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AmongUs.GameOptions;
+using BepInEx.Logging;
 using HarmonyLib;
 using Hazel;
 using Reactor.Utilities.Extensions;
@@ -160,43 +161,7 @@ public static class Helpers
             roleCouldUse = true;
         return roleCouldUse;
     }
-
-
-
-
-    public static void Log(LogLevel errorLevel, object @object)
-    {
-        BepInEx.Logging.ManualLogSource Logger = TheOtherRolesPlugin.Logger;
-        string Message = @object as string;
-        switch (errorLevel)
-        {
-            case LogLevel.Message:
-                Logger.LogMessage(Message);
-                break;
-            case LogLevel.Error:
-                Logger.LogError(Message);
-                break;
-            case LogLevel.Warning:
-                Logger.LogWarning(Message);
-                break;
-            case LogLevel.Fatal:
-                Logger.LogFatal(Message);
-                break;
-            case LogLevel.Info:
-                Logger.LogInfo(Message);
-                break;
-            case LogLevel.Debug:
-#if DEBUG
-                Logger.LogDebug(Message);
-#endif
-                break;
-        }
-    }
-
-    public static void Log(object @object)
-    {
-        Log(LogLevel.Error, @object);
-    }
+    
 
     public static SabatageTypes getActiveSabo()
     {
@@ -445,7 +410,7 @@ public static class Helpers
         }
         catch
         {
-            TheOtherRolesPlugin.Logger.LogError("Error loading texture from disk: " + path);
+            Error("Error loading texture from disk: " + path);
         }
         return null;
     }

@@ -31,8 +31,6 @@ mono_crash.*
 bld/
 */[Bb]in/*
 [Oo]bj/
-[Ll]og/
-[Ll]ogs/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -44,7 +42,7 @@ Generated\ Files/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
+
 
 # NUnit
 *.VisualState.xml
@@ -87,12 +85,10 @@ StyleCopReport.xml
 *.tmp
 *.tmp_proj
 *_wpftmp.csproj
-*.log
 *.vspscc
 *.vssscc
 .builds
 *.pidb
-*.svclog
 *.scc
 
 # Chutzpah Test files
@@ -237,8 +233,6 @@ Generated_Code/
 # because we have git ;-)
 _UpgradeReport_Files/
 Backup*/
-UpgradeLog*.XML
-UpgradeLog*.htm
 ServiceFabricBackup/
 *.rptproj.bak
 
