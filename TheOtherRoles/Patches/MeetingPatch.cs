@@ -234,7 +234,7 @@ namespace TheOtherRoles.Patches
                         GameData.PlayerInfo playerById = GameData.Instance.GetPlayerById(voterState.VoterId);
                         if (playerById == null)
                         {
-                            Debug.LogError(string.Format("Couldn't find player info for voter: {0}", voterState.VoterId));
+                            Warn($"Couldn't find player info for voter: {voterState.VoterId}");
                         }
                         else if (i == 0 && voterState.SkippedVote && !playerById.IsDead)
                         {
@@ -1092,20 +1092,18 @@ namespace TheOtherRoles.Patches
                 if (__instance.state >= MeetingHud.VoteStates.Discussion)
                 {
                     // Remove first kill shield
-                    TORMapOptions.firstKillPlayer = null;
+                    firstKillPlayer = null;
                 }
-                if (Blackmailer.blackmailer != null)
-                {
-                    // Blackmailer show overlay
-                    var playerState = __instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == Blackmailer.blackmailed.PlayerId);
-                    playerState.Overlay.gameObject.SetActive(true);
-                    playerState.Overlay.sprite = Overlay;
-                    if (__instance.state != MeetingHud.VoteStates.Animating && shookAlready == false)
-                    {
-                        shookAlready = true;
-                        (__instance as MonoBehaviour).StartCoroutine(Effects.SwayX(playerState.transform));
-                    }
-                }
+
+                if (Blackmailer.blackmailer == null) return;
+                // Blackmailer show overlay
+                var playerState = __instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == Blackmailer.blackmailed.PlayerId);
+                if (playerState == null) return;
+                playerState.Overlay.gameObject.SetActive(true);
+                playerState.Overlay.sprite = Overlay;
+                if (__instance.state == MeetingHud.VoteStates.Animating || shookAlready) return;
+                shookAlready = true;
+                __instance.StartCoroutine(Effects.SwayX(playerState.transform));
             }
         }
 

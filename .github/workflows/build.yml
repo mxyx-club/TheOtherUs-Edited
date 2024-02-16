@@ -37,11 +37,11 @@ jobs:
       - name: unzip BepInEx
         run: unzip BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.688+4901521.zip -d ./Release/
 
-      - name: download Reactor
-        run: wget https://github.com/NuclearPowered/Reactor/releases/download/2.2.0/Reactor.dll -P ./Release/BepInEx/plugins
-        
       - name: path
         run: sudo chmod -R 777 ./Release
+
+      - name: download Reactor
+        run: wget https://github.com/NuclearPowered/Reactor/releases/download/2.2.0/Reactor.dll -P ./Release/BepInEx/plugins
         
       - name: Build
         run: dotnet build TheOtherRoles/TheOtherRoles.csproj --configuration Release --output ./Release/BepInEx/plugins
