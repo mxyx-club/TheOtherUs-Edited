@@ -314,7 +314,7 @@ namespace TheOtherRoles.Patches
                 {
                     selections[i] = true;
                     renderer.color = Color.yellow;
-                    meetingExtraButtonLabel.text = Helpers.cs(Color.yellow, "ȷ�ϻ�Ʊ");
+                    meetingExtraButtonLabel.text = Helpers.cs(Color.yellow, "确认换票");
                 }
             }
             else if (selectedCount == 2)
@@ -323,7 +323,7 @@ namespace TheOtherRoles.Patches
                 {
                     renderer.color = Color.red;
                     selections[i] = false;
-                    meetingExtraButtonLabel.text = Helpers.cs(Color.red, "ȷ�ϻ�Ʊ");
+                    meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认换票");
                 }
             }
         }
@@ -365,9 +365,9 @@ namespace TheOtherRoles.Patches
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
 
                 RPCProcedure.swapperSwap((byte)firstPlayer.TargetPlayerId, (byte)secondPlayer.TargetPlayerId);
-                meetingExtraButtonLabel.text = Helpers.cs(Color.green, "��Ʊ�ɹ�!");
+                meetingExtraButtonLabel.text = Helpers.cs(Color.green, "换票成功!");
                 Swapper.charges--;
-                meetingExtraButtonText.text = $"��Ʊ����: {Swapper.charges}";
+                meetingExtraButtonText.text = $"换票次数: {Swapper.charges}";
             }
         }
 
@@ -410,8 +410,8 @@ namespace TheOtherRoles.Patches
                 swapperButtonList[i].OnClick.RemoveAllListeners();
                 swapperButtonList[i].OnClick.AddListener((System.Action)(() => swapperOnClick(copyI, __instance)));
             }
-            meetingExtraButtonText.text = $"��Ʊ����: {Swapper.charges}";
-            meetingExtraButtonLabel.text = Helpers.cs(Color.red, "ȷ�Ͻ���");
+            meetingExtraButtonText.text = $"换票次数: {Swapper.charges}";
+            meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认交换");
 
         }
 
@@ -435,7 +435,7 @@ namespace TheOtherRoles.Patches
             writer.Write(Mayor.voteTwice);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
 
-            meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "˫��Ʊ��: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "��") : Helpers.cs(Color.red, "��")));
+            meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "双倍票数: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "开") : Helpers.cs(Color.red, "关")));
         }
 
         public static GameObject guesserUI;
@@ -716,7 +716,7 @@ namespace TheOtherRoles.Patches
                 Transform infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
                 TMPro.TextMeshPro meetingInfo = infoTransform != null ? infoTransform.GetComponent<TMPro.TextMeshPro>() : null;
                 meetingExtraButtonText = UnityEngine.Object.Instantiate(__instance.playerStates[0].NameText, meetingExtraButtonParent);
-                meetingExtraButtonText.text = addSwapperButtons ? $"��Ʊ����: {Swapper.charges}" : "";
+                meetingExtraButtonText.text = addSwapperButtons ? $"换票次数: {Swapper.charges}" : "";
                 meetingExtraButtonText.enableWordWrapping = false;
                 meetingExtraButtonText.transform.localScale = Vector3.one * 1.7f;
                 meetingExtraButtonText.transform.localPosition = new Vector3(-2.5f, 0f, 0f);
@@ -732,12 +732,12 @@ namespace TheOtherRoles.Patches
                 if (addSwapperButtons)
                 {
                     meetingExtraButtonLabel.transform.localScale *= 1.7f;
-                    meetingExtraButtonLabel.text = Helpers.cs(Color.red, "ȷ�Ͻ���");
+                    meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认交换");
                 }
                 else if (addMayorButton)
                 {
                     meetingExtraButtonLabel.transform.localScale = new Vector3(meetingExtraButtonLabel.transform.localScale.x * 1.5f, meetingExtraButtonLabel.transform.localScale.x * 1.7f, meetingExtraButtonLabel.transform.localScale.x * 1.7f);
-                    meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "˫��Ʊ��: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "��") : Helpers.cs(Color.red, "��")));
+                    meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "双倍票数: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "开") : Helpers.cs(Color.red, "关")));
                 }
                 PassiveButton passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
                 passiveButton.OnClick.RemoveAllListeners();
@@ -787,7 +787,7 @@ namespace TheOtherRoles.Patches
 
             // Add Guesser Buttons
             int remainingShots = HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId);
-            //!!!���ĩ��Ԥ�ԼҶ�
+            //!!!添加末日预言家赌
             if (addDoomsayerButtons)
             {
                 for (int i = 0; i < __instance.playerStates.Length; i++)
@@ -906,12 +906,12 @@ namespace TheOtherRoles.Patches
                 {
                     if (Portal.teleportedPlayers.Count > 0)
                     {
-                        string msg = "����ʹ����־:\n";
+                        string msg = "星门使用日志:\n";
                         foreach (var entry in Portal.teleportedPlayers)
                         {
                             float timeBeforeMeeting = ((float)(DateTime.UtcNow - entry.time).TotalMilliseconds) / 1000;
-                            msg += Portalmaker.logShowsTime ? $"{(int)timeBeforeMeeting} ��ǰ: " : "";
-                            msg = msg + $"{entry.name} ʹ��������\n";
+                            msg += Portalmaker.logShowsTime ? $"{(int)timeBeforeMeeting} 秒前: " : "";
+                            msg = msg + $"{entry.name} 使用了星门\n";
                         }
                         FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Portalmaker.portalmaker, $"{msg}");
                     }
@@ -921,19 +921,19 @@ namespace TheOtherRoles.Patches
                 if (Trapper.trapper != null && (CachedPlayer.LocalPlayer.PlayerControl == Trapper.trapper || Helpers.shouldShowGhostInfo()) && !Trapper.trapper.Data.IsDead)
                 {
                     if (Trap.traps.Any(x => x.revealed))
-                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, "������־:");
+                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, "陷阱日志:");
                     foreach (Trap trap in Trap.traps)
                     {
                         if (!trap.revealed) continue;
-                        string message = $"���� {trap.instanceId}: \n";
+                        string message = $"陷阱 {trap.instanceId}: \n";
                         trap.trappedPlayer = trap.trappedPlayer.OrderBy(x => rnd.Next()).ToList();
                         foreach (PlayerControl p in trap.trappedPlayer)
                         {
                             if (Trapper.infoType == 0) message += RoleInfo.GetRolesString(p, false, false, true) + "\n";
                             else if (Trapper.infoType == 1)
                             {
-                                if (Helpers.isNeutral(p) || p.Data.Role.IsImpostor) message += "а��ְҵ \n";
-                                else message += "����ְҵ \n";
+                                if (Helpers.isNeutral(p) || p.Data.Role.IsImpostor) message += "邪恶职业 \n";
+                                else message += "善良职业 \n";
                             }
                             else message += p.Data.PlayerName + "\n";
                         }
@@ -943,7 +943,7 @@ namespace TheOtherRoles.Patches
                 
                 try
                 {
-                    //ĩ��
+                    //末日
                     if (
                         Doomsayer.doomsayer != null
                         && 
@@ -975,7 +975,7 @@ namespace TheOtherRoles.Patches
                                 (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList)
                                 .OrderBy(_ => random.Next()).ToList();
                         
-                            message.AppendLine($"Ԥ�� {i} : {predictionTarget.name}");
+                            message.AppendLine($"预言 {i} : {predictionTarget.name}");
                         
                             for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
                             {
@@ -1020,7 +1020,7 @@ namespace TheOtherRoles.Patches
                 }
                 catch
                 {
-                    Error("ĩ��Ԥ�Լұ���");
+                    Error("末日预言家报错");
                 }
 
                 // Add Snitch info
@@ -1032,7 +1032,7 @@ namespace TheOtherRoles.Patches
                     int numberOfTasks = playerTotal - playerCompleted;
                     if (numberOfTasks == 0)
                     {
-                        output = $"���ϵ�а�����: \n \n";
+                        output = $"场上的邪恶玩家: \n \n";
                         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.4f, new Action<float>((x) =>
                         {
                             if (x == 1f)
@@ -1044,12 +1044,12 @@ namespace TheOtherRoles.Patches
                                     if (!Snitch.playerRoomMap.ContainsKey(p.PlayerId)) continue;
                                     if (p.Data.IsDead) continue;
                                     var room = Snitch.playerRoomMap[p.PlayerId];
-                                    var roomName = "����";
+                                    var roomName = "室外";
                                     if (room != byte.MinValue)
                                     {
                                         roomName = DestroyableSingleton<TranslationController>.Instance.GetString((SystemTypes)room);
                                     }
-                                    output += "- " + RoleInfo.GetRolesString(p, false, false, true) + ", ���һ�γ��� " + roomName + "\n";
+                                    output += "- " + RoleInfo.GetRolesString(p, false, false, true) + ", 最后一次出现 " + roomName + "\n";
                                 }
                                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Snitch.snitch, $"{output}");
                             }
