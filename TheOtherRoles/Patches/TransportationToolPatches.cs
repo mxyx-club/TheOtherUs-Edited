@@ -1,39 +1,40 @@
-﻿using HarmonyLib;
-using System;
+﻿using System;
+using HarmonyLib;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Utilities;
 
-namespace TheOtherRoles.Patches
+namespace TheOtherRoles.Patches;
+
+[HarmonyPatch]
+public static class TransportationToolPatches
 {
-    [HarmonyPatch]
-    public static class TransportationToolPatches
+    /*
+     * Moving Plattform / Zipline / Ladders move the player out of bounds, thus we want to disable functions of the mod if the player is currently using one of these.
+     * Save the players anti tp position before using it.
+     *
+     * Zipline can also break camo, fix that one too.
+     */
+
+    public static bool isUsingTransportation(PlayerControl pc)
     {
-        /* 
-         * Moving Plattform / Zipline / Ladders move the player out of bounds, thus we want to disable functions of the mod if the player is currently using one of these.
-         * Save the players anti tp position before using it.
-         * 
-         * Zipline can also break camo, fix that one too.
-         */
+        return pc.inMovingPlat || pc.onLadder;
+    }
 
-        public static bool isUsingTransportation(PlayerControl pc)
-        {
-            return pc.inMovingPlat || pc.onLadder;
-        }
+    // Zipline:
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(ZiplineBehaviour), nameof(ZiplineBehaviour.Use), typeof(PlayerControl), typeof(bool))]
+    public static void prefix3(ZiplineBehaviour __instance, PlayerControl player, bool fromTop)
+    {
+        AntiTeleport.position = CachedPlayer.LocalPlayer.transform.position;
+    }
 
-        // Zipline:
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(ZiplineBehaviour), nameof(ZiplineBehaviour.Use), new Type[] { typeof(PlayerControl), typeof(bool) })]
-        public static void prefix3(ZiplineBehaviour __instance, PlayerControl player, bool fromTop)
-        {
-            AntiTeleport.position = CachedPlayer.LocalPlayer.transform.position;
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(ZiplineBehaviour), nameof(ZiplineBehaviour.Use), new Type[] { typeof(PlayerControl), typeof(bool) })]
-        public static void postfix(ZiplineBehaviour __instance, PlayerControl player, bool fromTop)
-        {
-            // Fix camo:
-            __instance.StartCoroutine(Effects.Lerp(fromTop ? __instance.downTravelTime : __instance.upTravelTime, new System.Action<float>((p) =>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(ZiplineBehaviour), nameof(ZiplineBehaviour.Use), typeof(PlayerControl), typeof(bool))]
+    public static void postfix(ZiplineBehaviour __instance, PlayerControl player, bool fromTop)
+    {
+        // Fix camo:
+        __instance.StartCoroutine(Effects.Lerp(fromTop ? __instance.downTravelTime : __instance.upTravelTime,
+            new Action<float>(p =>
             {
                 HandZiplinePoolable hand;
                 __instance.playerIdHands.TryGetValue(player.PlayerId, out hand);
@@ -45,7 +46,8 @@ namespace TheOtherRoles.Patches
                         {
                             hand.SetPlayerColor(Morphling.morphTarget.CurrentOutfit, PlayerMaterial.MaskType.None);
                             // Also set hat color, cause the line destroys it...
-                            player.RawSetHat(Morphling.morphTarget.Data.DefaultOutfit.HatId, Morphling.morphTarget.Data.DefaultOutfit.ColorId);
+                            player.RawSetHat(Morphling.morphTarget.Data.DefaultOutfit.HatId,
+                                Morphling.morphTarget.Data.DefaultOutfit.ColorId);
                         }
                         else
                         {
@@ -58,36 +60,35 @@ namespace TheOtherRoles.Patches
                     }
                 }
             })));
-        }
+    }
 
-        // Save the position of the player prior to starting the climb / gap platform
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.ClimbLadder))]
-        public static void prefix()
-        {
-            AntiTeleport.position = CachedPlayer.LocalPlayer.transform.position;
-        }
+    // Save the position of the player prior to starting the climb / gap platform
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.ClimbLadder))]
+    public static void prefix()
+    {
+        AntiTeleport.position = CachedPlayer.LocalPlayer.transform.position;
+    }
 
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.ClimbLadder))]
-        public static void postfix2(PlayerPhysics __instance, Ladder source, byte climbLadderSid)
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.ClimbLadder))]
+    public static void postfix2(PlayerPhysics __instance, Ladder source, byte climbLadderSid)
+    {
+        // Fix camo:
+        var player = __instance.myPlayer;
+        __instance.StartCoroutine(Effects.Lerp(5.0f, new Action<float>(p =>
         {
-            // Fix camo:
-            var player = __instance.myPlayer;
-            __instance.StartCoroutine(Effects.Lerp(5.0f, new System.Action<float>((p) =>
-            {
-                if (Camouflager.camouflageTimer <= 0 && !Helpers.MushroomSabotageActive() && player == Morphling.morphling && Morphling.morphTimer > 0.1f)
-                {
-                    player.RawSetHat(Morphling.morphTarget.Data.DefaultOutfit.HatId, Morphling.morphTarget.Data.DefaultOutfit.ColorId);
-                }
-            })));
-        }
+            if (Camouflager.camouflageTimer <= 0 && !Helpers.MushroomSabotageActive() &&
+                player == Morphling.morphling && Morphling.morphTimer > 0.1f)
+                player.RawSetHat(Morphling.morphTarget.Data.DefaultOutfit.HatId,
+                    Morphling.morphTarget.Data.DefaultOutfit.ColorId);
+        })));
+    }
 
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(MovingPlatformBehaviour), nameof(MovingPlatformBehaviour.UsePlatform))]
-        public static void prefix2()
-        {
-            AntiTeleport.position = CachedPlayer.LocalPlayer.transform.position;
-        }
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(MovingPlatformBehaviour), nameof(MovingPlatformBehaviour.UsePlatform))]
+    public static void prefix2()
+    {
+        AntiTeleport.position = CachedPlayer.LocalPlayer.transform.position;
     }
 }

@@ -25,19 +25,22 @@ public static class CrowdedPlayer
     public static void Start()
     {
         if (!Enable) return;
-        NormalGameOptionsV07.RecommendedImpostors = NormalGameOptionsV07.MaxImpostors = Enumerable.Repeat(127, 127).ToArray();
+        NormalGameOptionsV07.RecommendedImpostors =
+            NormalGameOptionsV07.MaxImpostors = Enumerable.Repeat(127, 127).ToArray();
         NormalGameOptionsV07.MinPlayers = Enumerable.Repeat(4, 127).ToArray();
     }
-    
 
-    [HarmonyPatch(typeof(SecurityLogger), nameof(SecurityLogger.Awake)), HarmonyPostfix]
+
+    [HarmonyPatch(typeof(SecurityLogger), nameof(SecurityLogger.Awake))]
+    [HarmonyPostfix]
     public static void SecurityLoggerPatch_Postfix(ref SecurityLogger __instance)
     {
         if (!Enable) return;
         __instance.Timers = new float[MaxPlayer];
     }
 
-    [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.Start)), HarmonyPostfix]
+    [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.Start))]
+    [HarmonyPostfix]
     public static void GameOptionsMenu_Start_Postfix(ref GameOptionsMenu __instance)
     {
         if (!Enable) return;
@@ -46,8 +49,9 @@ public static class CrowdedPlayer
         if (option == null) return;
         option.ValidRange = new FloatRange(1, MaxImpostor);
     }
-        
-    [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.AreInvalid)), HarmonyPrefix]
+
+    [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.AreInvalid))]
+    [HarmonyPrefix]
     public static bool InvalidOptionsPatches_Prefix
         (GameOptionsData __instance, [HarmonyArgument(0)] int maxExpectedPlayers)
     {
@@ -58,13 +62,14 @@ public static class CrowdedPlayer
                __instance.KillDistance is < 0 or > 2 ||
                __instance.PlayerSpeedMod is <= 0f or > 3f;
     }
-    
-    [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.Awake)), HarmonyPostfix]
+
+    [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.Awake))]
+    [HarmonyPostfix]
     public static void CreateOptionsPicker_Awake_Postfix(CreateOptionsPicker __instance)
     {
         if (!Enable) return;
         if (__instance.mode != SettingsMode.Host) return;
-        
+
         var firstButtonRenderer = __instance.MaxPlayerButtons.Get(0);
         firstButtonRenderer.GetComponentInChildren<TextMeshPro>().text = "-";
         firstButtonRenderer.enabled = false;
@@ -73,25 +78,25 @@ public static class CrowdedPlayer
         var firstButtonButton = firstButtonRenderer.GetComponent<PassiveButton>();
         firstButtonButton.OnClick.RemoveAllListeners();
         firstButtonButton.OnClick.AddListener((Action)(() =>
-        { 
+        {
             for (var i = 1; i < 11; i++)
             {
-                    var playerButton = __instance.MaxPlayerButtons.Get(i);
-                    
-                    var tmp = playerButton.GetComponentInChildren<TextMeshPro>();
-                    var newValue = Mathf.Max(byte.Parse(tmp.text) - 10, byte.Parse(playerButton.name) - 2); 
-                    tmp.text = newValue.ToString();
+                var playerButton = __instance.MaxPlayerButtons.Get(i);
+
+                var tmp = playerButton.GetComponentInChildren<TextMeshPro>();
+                var newValue = Mathf.Max(byte.Parse(tmp.text) - 10, byte.Parse(playerButton.name) - 2);
+                tmp.text = newValue.ToString();
             }
-                
-            __instance.UpdateMaxPlayersButtons(__instance.GetTargetOptions()); 
+
+            __instance.UpdateMaxPlayersButtons(__instance.GetTargetOptions());
         }));
-            
+
         firstButtonRenderer.Destroy();
-        
+
         var lastButtonRenderer = __instance.MaxPlayerButtons.Get(__instance.MaxPlayerButtons.Count - 1);
         lastButtonRenderer.GetComponentInChildren<TextMeshPro>().text = "+";
         lastButtonRenderer.enabled = false;
-        
+
         var lastButtonButton = lastButtonRenderer.GetComponent<PassiveButton>();
         lastButtonButton.OnClick.RemoveAllListeners();
         lastButtonButton.OnClick.AddListener((Action)(() =>
@@ -101,7 +106,7 @@ public static class CrowdedPlayer
                 var playerButton = __instance.MaxPlayerButtons.Get(i);
 
                 var tmp = playerButton.GetComponentInChildren<TextMeshPro>();
-                var newValue = Mathf.Min(byte.Parse(tmp.text) + 10, 
+                var newValue = Mathf.Min(byte.Parse(tmp.text) + 10,
                     MaxPlayer - 14 + byte.Parse(playerButton.name));
                 tmp.text = newValue.ToString();
             }
@@ -109,7 +114,7 @@ public static class CrowdedPlayer
             __instance.UpdateMaxPlayersButtons(__instance.GetTargetOptions());
         }));
         lastButtonRenderer.Destroy();
-        
+
         for (var i = 1; i < 11; i++)
         {
             var playerButton = __instance.MaxPlayerButtons.Get(i).GetComponent<PassiveButton>();
@@ -125,51 +130,51 @@ public static class CrowdedPlayer
                 __instance.SetMaxPlayersButtons(maxPlayers);
             }));
         }
-        
+
         foreach (var button in __instance.MaxPlayerButtons)
-        {
-            button.enabled = button.GetComponentInChildren<TextMeshPro>().text == __instance.GetTargetOptions().MaxPlayers.ToString();
-        }
-        
+            button.enabled = button.GetComponentInChildren<TextMeshPro>().text ==
+                             __instance.GetTargetOptions().MaxPlayers.ToString();
+
         var secondButton = __instance.ImpostorButtons[1];
         secondButton.SpriteRenderer.enabled = false;
         secondButton.transform.FindChild("ConsoleHighlight").gameObject.Destroy();
         secondButton.PassiveButton.Destroy();
         secondButton.BoxCollider.Destroy();
-        
+
         var secondButtonText = secondButton.TextMesh;
         secondButtonText.text = __instance.GetTargetOptions().NumImpostors.ToString();
-        
+
         var firstButton = __instance.ImpostorButtons[0];
         firstButton.SpriteRenderer.enabled = false;
         firstButton.TextMesh.text = "-";
 
         var firstPassiveButton = firstButton.PassiveButton;
         firstPassiveButton.OnClick.RemoveAllListeners();
-        firstPassiveButton.OnClick.AddListener((Action)(() => 
-        { 
+        firstPassiveButton.OnClick.AddListener((Action)(() =>
+        {
             var newVal = Mathf.Clamp(
-                byte.Parse(secondButtonText.text) - 1, 
-                1, 
+                byte.Parse(secondButtonText.text) - 1,
+                1,
                 __instance.GetTargetOptions().MaxPlayers / 2
-                ); 
-            
-            __instance.SetImpostorButtons(newVal); 
+            );
+
+            __instance.SetImpostorButtons(newVal);
             secondButtonText.text = newVal.ToString();
         }));
 
         var thirdButton = __instance.ImpostorButtons[2];
         thirdButton.SpriteRenderer.enabled = false;
         thirdButton.TextMesh.text = "+";
-        
+
         var thirdPassiveButton = thirdButton.PassiveButton;
         thirdPassiveButton.OnClick.RemoveAllListeners();
-        thirdPassiveButton.OnClick.AddListener((Action)(() => {
+        thirdPassiveButton.OnClick.AddListener((Action)(() =>
+        {
             var newVal = Mathf.Clamp(
-                    byte.Parse(secondButtonText.text) + 1, 
-                    1, 
-                    __instance.GetTargetOptions().MaxPlayers / 2
-                    );
+                byte.Parse(secondButtonText.text) + 1,
+                1,
+                __instance.GetTargetOptions().MaxPlayers / 2
+            );
             __instance.SetImpostorButtons(newVal);
             secondButtonText.text = newVal.ToString();
         }));
@@ -177,45 +182,53 @@ public static class CrowdedPlayer
     }
 
 
-    [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.UpdateMaxPlayersButtons)), HarmonyPrefix]
-    public static bool CreateOptionsPicker_UpdateMaxPlayersButtons_Prefix(CreateOptionsPicker __instance, [HarmonyArgument(0)] IGameOptions opts)
+    [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.UpdateMaxPlayersButtons))]
+    [HarmonyPrefix]
+    public static bool CreateOptionsPicker_UpdateMaxPlayersButtons_Prefix(CreateOptionsPicker __instance,
+        [HarmonyArgument(0)] IGameOptions opts)
     {
         if (!Enable) return true;
-        if (__instance.CrewArea)
-        {
-            __instance.CrewArea.SetCrewSize(opts.MaxPlayers, opts.NumImpostors);
-        }
+        if (__instance.CrewArea) __instance.CrewArea.SetCrewSize(opts.MaxPlayers, opts.NumImpostors);
 
         var selectedAsString = opts.MaxPlayers.ToString();
         for (var i = 1; i < __instance.MaxPlayerButtons.Count - 1; i++)
-        {
-            __instance.MaxPlayerButtons.Get(i).enabled = __instance.MaxPlayerButtons.Get(i).GetComponentInChildren<TextMeshPro>().text == selectedAsString;
-        }
+            __instance.MaxPlayerButtons.Get(i).enabled =
+                __instance.MaxPlayerButtons.Get(i).GetComponentInChildren<TextMeshPro>().text == selectedAsString;
 
         return false;
     }
-    
-    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start)), HarmonyPostfix]
+
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
+    [HarmonyPostfix]
     public static void MeetingHudStartPatch_Postfix(MeetingHud __instance)
     {
         if (!Enable) return;
         __instance.gameObject.AddComponent<MeetingHudPagingBehaviour>().meetingHud = __instance;
     }
-    
-    [HarmonyPatch(typeof(ShapeshifterMinigame), nameof(ShapeshifterMinigame.Begin)), HarmonyPostfix]
+
+    [HarmonyPatch(typeof(ShapeshifterMinigame), nameof(ShapeshifterMinigame.Begin))]
+    [HarmonyPostfix]
     public static void ShapeshifterMinigameBeginPatch_Postfix(ShapeshifterMinigame __instance)
     {
         if (!Enable) return;
         __instance.gameObject.AddComponent<ShapeShifterPagingBehaviour>().shapeshifterMinigame = __instance;
     }
-    
-    [HarmonyPatch(typeof(VitalsMinigame), nameof(VitalsMinigame.Begin)), HarmonyPostfix]
+
+    [HarmonyPatch(typeof(VitalsMinigame), nameof(VitalsMinigame.Begin))]
+    [HarmonyPostfix]
     public static void VitalsMinigameBeginPatch_Postfix(VitalsMinigame __instance)
     {
         if (!Enable) return;
         __instance.gameObject.AddComponent<VitalsPagingBehaviour>().vitalsMinigame = __instance;
     }
-    
+
+    [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.UpdateImpostorsButtons))]
+    [HarmonyPrefix]
+    public static bool CreateOptionsPicker_UpdateImpostorsButtons_Prefix()
+    {
+        return !Enable;
+    }
+
     private class AbstractPagingBehaviour : MonoBehaviour
     {
         protected const string PAGE_INDEX_GAME_OBJECT_NAME = "PageIndex";
@@ -237,21 +250,29 @@ public static class CrowdedPlayer
 
         public virtual int MaxPageIndex => throw new NotImplementedException();
 
-        public virtual void OnPageChanged() => throw new NotImplementedException();
-
-        public virtual void Start() => OnPageChanged();
+        public virtual void Start()
+        {
+            OnPageChanged();
+        }
 
         public virtual void Update()
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.mouseScrollDelta.y > 0f)
+            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) ||
+                Input.mouseScrollDelta.y > 0f)
                 Cycle(false);
-            else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.mouseScrollDelta.y < 0f)
+            else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow) ||
+                     Input.mouseScrollDelta.y < 0f)
                 Cycle(true);
         }
 
+        public virtual void OnPageChanged()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
-        /// Loops around if you go over the limits.<br/>
-        /// Attempting to go up a page while on the first page will take you to the last page and vice versa.
+        ///     Loops around if you go over the limits.<br />
+        ///     Attempting to go up a page while on the first page will take you to the last page and vice versa.
         /// </summary>
         public virtual void Cycle(bool increment)
         {
@@ -259,23 +280,27 @@ public static class CrowdedPlayer
             PageIndex = Mathf.Clamp(PageIndex + change, 0, MaxPageIndex);
         }
     }
-    
+
     [RegisterInIl2Cpp]
     private class MeetingHudPagingBehaviour : AbstractPagingBehaviour
     {
         internal MeetingHud meetingHud = null!;
 
-        [HideFromIl2Cpp]
-        public IEnumerable<PlayerVoteArea> Targets => meetingHud.playerStates.OrderBy(p => p.AmDead);
+        [HideFromIl2Cpp] public IEnumerable<PlayerVoteArea> Targets => meetingHud.playerStates.OrderBy(p => p.AmDead);
+
         public override int MaxPageIndex => (Targets.Count() - 1) / MaxPerPage;
 
-        public override void Start() => OnPageChanged();
+        public override void Start()
+        {
+            OnPageChanged();
+        }
 
         public override void Update()
         {
             base.Update();
 
-            if (meetingHud.state is MeetingHud.VoteStates.Animating or MeetingHud.VoteStates.Proceeding || meetingHud.TimerText.text.Contains($" ({PageIndex + 1}/{MaxPageIndex + 1})"))
+            if (meetingHud.state is MeetingHud.VoteStates.Animating or MeetingHud.VoteStates.Proceeding ||
+                meetingHud.TimerText.text.Contains($" ({PageIndex + 1}/{MaxPageIndex + 1})"))
                 return; // TimerText does not update there                                                 ^ Sometimes the timer text is spammed with the page counter for some weird reason so this is just a band-aid fix for it
 
             meetingHud.TimerText.text += $" ({PageIndex + 1}/{MaxPageIndex + 1})";
@@ -285,8 +310,10 @@ public static class CrowdedPlayer
         {
             var i = 0;
 
-            foreach (var button in Targets) {
-                if (i >= PageIndex * MaxPerPage && i < (PageIndex + 1) * MaxPerPage) {
+            foreach (var button in Targets)
+            {
+                if (i >= PageIndex * MaxPerPage && i < (PageIndex + 1) * MaxPerPage)
+                {
                     button.gameObject.SetActive(true);
 
                     var relativeIndex = i % MaxPerPage;
@@ -299,24 +326,27 @@ public static class CrowdedPlayer
                                                         meetingHud.VoteButtonOffsets.y * row,
                                                         buttonTransform.localPosition.z
                                                     );
-                } else {
+                }
+                else
+                {
                     button.gameObject.SetActive(false);
                 }
+
                 i++;
             }
         }
     }
-    
+
     [RegisterInIl2Cpp]
     private class ShapeShifterPagingBehaviour : AbstractPagingBehaviour
     {
         public ShapeshifterMinigame shapeshifterMinigame = null!;
-        
+        private TextMeshPro PageText = null!;
+
         [HideFromIl2Cpp]
         public IEnumerable<ShapeshifterPanel> Targets => shapeshifterMinigame.potentialVictims.ToArray();
 
         public override int MaxPageIndex => (Targets.Count() - 1) / MaxPerPage;
-        private TextMeshPro PageText = null!;
 
         public override void Start()
         {
@@ -336,7 +366,8 @@ public static class CrowdedPlayer
 
             foreach (var panel in Targets)
             {
-                if (i >= PageIndex * MaxPerPage && i < (PageIndex + 1) * MaxPerPage) {
+                if (i >= PageIndex * MaxPerPage && i < (PageIndex + 1) * MaxPerPage)
+                {
                     panel.gameObject.SetActive(true);
 
                     var relativeIndex = i % MaxPerPage;
@@ -344,11 +375,13 @@ public static class CrowdedPlayer
                     var col = relativeIndex % 3;
                     var buttonTransform = panel.transform;
                     buttonTransform.localPosition = new Vector3(
-                        shapeshifterMinigame.XStart + shapeshifterMinigame.XOffset * col,
-                        shapeshifterMinigame.YStart + shapeshifterMinigame.YOffset * row,
+                        shapeshifterMinigame.XStart + (shapeshifterMinigame.XOffset * col),
+                        shapeshifterMinigame.YStart + (shapeshifterMinigame.YOffset * row),
                         buttonTransform.localPosition.z
                     );
-                } else {
+                }
+                else
+                {
                     panel.gameObject.SetActive(false);
                 }
 
@@ -361,10 +394,10 @@ public static class CrowdedPlayer
     private class VitalsPagingBehaviour : AbstractPagingBehaviour
     {
         public VitalsMinigame vitalsMinigame = null!;
+        private TextMeshPro PageText = null!;
 
         [HideFromIl2Cpp] public IEnumerable<VitalsPanel> Targets => vitalsMinigame.vitals.ToArray();
         public override int MaxPageIndex => (Targets.Count() - 1) / MaxPerPage;
-        private TextMeshPro PageText = null!;
 
         public override void Start()
         {
@@ -395,20 +428,18 @@ public static class CrowdedPlayer
                     var col = relativeIndex % 3;
                     var panelTransform = panel.transform;
                     panelTransform.localPosition = new Vector3(
-                        vitalsMinigame.XStart + vitalsMinigame.XOffset * col,
-                        vitalsMinigame.YStart + vitalsMinigame.YOffset * row,
+                        vitalsMinigame.XStart + (vitalsMinigame.XOffset * col),
+                        vitalsMinigame.YStart + (vitalsMinigame.YOffset * row),
                         panelTransform.localPosition.z
                     );
                 }
                 else
+                {
                     panel.gameObject.SetActive(false);
+                }
 
                 i++;
             }
         }
     }
-
-    [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.UpdateImpostorsButtons)), HarmonyPrefix]
-    public static bool CreateOptionsPicker_UpdateImpostorsButtons_Prefix() => !Enable;
-
 }

@@ -6,38 +6,59 @@ namespace TheOtherRoles.Logs;
 internal static class ModLog
 {
     internal static ManualLogSource logSource { get; set; }
-    
-    /// <summary>
-    /// 一般信息
-    /// </summary>
-    /// <param name="Message"></param>
-    public static void Info(string Message) => logSource.LogInfo(Message);
 
     /// <summary>
-    /// 报错
+    ///     一般信息
     /// </summary>
     /// <param name="Message"></param>
-    public static void Error(string Message) => logSource.LogError(Message);
-    
-    /// <summary>
-    /// 测试
-    /// </summary>
-    /// <param name="Message"></param>
-    public static void Debug(string Message) => logSource.LogDebug(Message);
-    
-    public static void Fatal(string Message) => logSource.LogFatal(Message);
-    
-    /// <summary>
-    /// 警告
-    /// </summary>
-    /// <param name="Message"></param>
-    public static void Warn(string Message) => logSource.LogWarning(Message);
-    
-    
-    public static void Message(string Message) => logSource.LogMessage(Message);
+    public static void Info(string Message)
+    {
+        logSource.LogInfo(Message);
+    }
 
-    public static void Exception(Exception exception) => Error(exception.ToString());
-    
+    /// <summary>
+    ///     报错
+    /// </summary>
+    /// <param name="Message"></param>
+    public static void Error(string Message)
+    {
+        logSource.LogError(Message);
+    }
+
+    /// <summary>
+    ///     测试
+    /// </summary>
+    /// <param name="Message"></param>
+    public static void Debug(string Message)
+    {
+        logSource.LogDebug(Message);
+    }
+
+    public static void Fatal(string Message)
+    {
+        logSource.LogFatal(Message);
+    }
+
+    /// <summary>
+    ///     警告
+    /// </summary>
+    /// <param name="Message"></param>
+    public static void Warn(string Message)
+    {
+        logSource.LogWarning(Message);
+    }
+
+
+    public static void Message(string Message)
+    {
+        logSource.LogMessage(Message);
+    }
+
+    public static void Exception(Exception exception)
+    {
+        Error(exception.ToString());
+    }
+
     public static void FastLog(LogLevel errorLevel, object @object)
     {
         var Logger = logSource;

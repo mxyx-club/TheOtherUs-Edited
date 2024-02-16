@@ -1,51 +1,50 @@
 using TheOtherRoles.Helper;
 using UnityEngine;
 
-namespace TheOtherRoles.Objects
+namespace TheOtherRoles.Objects;
+
+public class Arrow
 {
-    public class Arrow
+    private static Sprite sprite;
+    public GameObject arrow;
+    private readonly ArrowBehaviour arrowBehaviour;
+    public SpriteRenderer image;
+    private Vector3 oldTarget;
+    public float perc = 0.925f;
+
+
+    public Arrow(Color color)
     {
-        public float perc = 0.925f;
-        public SpriteRenderer image;
-        public GameObject arrow;
-        private Vector3 oldTarget;
-        private ArrowBehaviour arrowBehaviour;
+        arrow = new GameObject("Arrow");
+        arrow.layer = 5;
+        image = arrow.AddComponent<SpriteRenderer>();
+        image.sprite = getSprite();
+        image.color = color;
+        arrowBehaviour = arrow.AddComponent<ArrowBehaviour>();
+        arrowBehaviour.image = image;
+    }
 
-        private static Sprite sprite;
-        public static Sprite getSprite()
-        {
-            if (sprite) return sprite;
-            sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Arrow.png", 200f);
-            return sprite;
-        }
+    public static Sprite getSprite()
+    {
+        if (sprite) return sprite;
+        sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Arrow.png", 200f);
+        return sprite;
+    }
 
+    public void Update()
+    {
+        var target = oldTarget;
+        Update(target);
+    }
 
-        public Arrow(Color color)
-        {
-            arrow = new GameObject("Arrow");
-            arrow.layer = 5;
-            image = arrow.AddComponent<SpriteRenderer>();
-            image.sprite = getSprite();
-            image.color = color;
-            arrowBehaviour = arrow.AddComponent<ArrowBehaviour>();
-            arrowBehaviour.image = image;
-        }
+    public void Update(Vector3 target, Color? color = null)
+    {
+        if (arrow == null) return;
+        oldTarget = target;
 
-        public void Update()
-        {
-            Vector3 target = oldTarget;
-            Update(target);
-        }
+        if (color.HasValue) image.color = color.Value;
 
-        public void Update(Vector3 target, Color? color = null)
-        {
-            if (arrow == null) return;
-            oldTarget = target;
-
-            if (color.HasValue) image.color = color.Value;
-
-            arrowBehaviour.target = target;
-            arrowBehaviour.Update();
-        }
+        arrowBehaviour.target = target;
+        arrowBehaviour.Update();
     }
 }

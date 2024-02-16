@@ -1,6 +1,6 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace TheOtherRoles.Utilities;
@@ -9,9 +9,11 @@ public static unsafe class FastDestroyableSingleton<T> where T : MonoBehaviour
 {
     private static readonly IntPtr _fieldPtr;
     private static readonly Func<IntPtr, T> _createObject;
+
     static FastDestroyableSingleton()
     {
-        _fieldPtr = IL2CPP.GetIl2CppField(Il2CppClassPointerStore<DestroyableSingleton<T>>.NativeClassPtr, nameof(DestroyableSingleton<T>._instance));
+        _fieldPtr = IL2CPP.GetIl2CppField(Il2CppClassPointerStore<DestroyableSingleton<T>>.NativeClassPtr,
+            nameof(DestroyableSingleton<T>._instance));
         var constructor = typeof(T).GetConstructor(new[] { typeof(IntPtr) });
         var ptr = Expression.Parameter(typeof(IntPtr));
         var create = Expression.New(constructor!, ptr);
@@ -19,7 +21,7 @@ public static unsafe class FastDestroyableSingleton<T> where T : MonoBehaviour
         _createObject = lambda.Compile();
     }
 
-    [System.Diagnostics.CodeAnalysis.NotNull]
+    [NotNull]
     public static T Instance
     {
         get
