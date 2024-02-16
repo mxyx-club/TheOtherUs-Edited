@@ -53,9 +53,7 @@ public class RoleInfo
     public static RoleInfo prosecutor = new("处刑者", Lawyer.color, "虚假的处刑人，真正的守护天使", "投出你的放逐目标", RoleId.Prosecutor, true);
     public static RoleInfo pursuer = new("起诉人", Pursuer.color, "活下去！", "活下去！", RoleId.Pursuer, true);
 
-    public static RoleInfo jackal = new("豺狼", Jackal.color, "杀死所有船员和<color=#FF1919FF>内鬼</color>", "杀死所有人",
-        RoleId.Jackal, true);
-
+    public static RoleInfo jackal = new("豺狼", Jackal.color, "杀死所有船员和<color=#FF1919FF>内鬼</color>", "杀死所有人", RoleId.Jackal, true);
     public static RoleInfo sidekick = new("跟班", Sidekick.color, "帮助豺狼获得胜利", "帮助豺狼获得胜利", RoleId.Sidekick, true);
     public static RoleInfo swooper = new("隐身人", Swooper.color, "嘿！你的小可爱突然出现啦", "隐身并杀死敌人", RoleId.Swooper, false, true);
     public static RoleInfo arsonist = new("纵火犯", Arsonist.color, "火焰啊赐予我力量！", "燃烧吧，都给我化成灰烬", RoleId.Arsonist, true);
@@ -75,7 +73,7 @@ public class RoleInfo
     public static RoleInfo crewmate = new("船员", Color.white, "哈哈！白板船员~", "发现并驱逐伪装者", RoleId.Crewmate);
 
     public static RoleInfo goodGuesser =
-        new("侠客", Guesser.color, "Guess and shoot", "Guess and shoot", RoleId.NiceGuesser);
+        new("侠客", Guesser.color, "生命就是一场豪赌", "在会议上刺杀坏人", RoleId.NiceGuesser);
 
     public static RoleInfo mayor = new("市长", Mayor.color, "我持有一票否决权!!!", "用你的权力帮助船员", RoleId.Mayor);
     public static RoleInfo portalmaker = new("星门缔造者", Portalmaker.color, "以[星]之铭", "筑[星]之门", RoleId.Portalmaker);

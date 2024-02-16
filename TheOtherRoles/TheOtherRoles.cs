@@ -3286,6 +3286,11 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Jester.jester = player1;
         }
+        else if (Jumper.jumper != null && Jumper.jumper == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Jumper.jumper = player1;
+        }
         else if (Amnisiac.amnisiac != null && Amnisiac.amnisiac == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
