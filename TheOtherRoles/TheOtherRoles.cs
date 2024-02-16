@@ -7,7 +7,6 @@ using System.Linq;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
@@ -17,7 +16,7 @@ namespace TheOtherRoles
     [HarmonyPatch]
     public static class TheOtherRoles
     {
-        public static System.Random rnd = new System.Random((int)DateTime.Now.Ticks);
+        public static readonly System.Random rnd = new((int)DateTime.Now.Ticks);
 
         public static void clearAndReloadRoles()
         {
@@ -79,7 +78,7 @@ namespace TheOtherRoles
             Miner.clearAndReload();
             Trapper.clearAndReload();
             Bomber.clearAndReload();
-            //ÌìÆôÌí¼Ó
+            //å¤©å¯æ·»åŠ 
             Juggernaut.clearAndReload();
             Doomsayer.clearAndReload();
             //Guesser.clearAndReload();
@@ -2168,50 +2167,50 @@ namespace TheOtherRoles
                 switch (selectedInfo)
                 {
                     case SpecialMediumInfo.SheriffSuicide:
-                        msg = "°¥Ñ½£¬Ç¹×ß»ğÁË£¡[¾¯³¤×ÔÉ±].";
+                        msg = "å“å‘€ï¼Œæªèµ°ç«äº†ï¼[è­¦é•¿è‡ªæ€].";
                         break;
                     case SpecialMediumInfo.WarlockSuicide:
-                        msg = "°¡Å¶£¬ÎÒºÃÏñ°Ñ×Ô¼ºÖäËÀÁËÒ®¡£[ÊõÊ¿ËÀÓÚ×ÔÉ±].";
+                        msg = "å•Šå“¦ï¼Œæˆ‘å¥½åƒæŠŠè‡ªå·±å’’æ­»äº†è€¶ã€‚[æœ¯å£«æ­»äºè‡ªæ€].";
                         break;
                     case SpecialMediumInfo.ThiefSuicide:
-                        msg = "ÎÒÊÔÍ¼´ÓËûÃÇ¿Ú´üÀïÍµÇ¹£¬È´°Ñ×Ô¼ºº¦ËÀÁË¡£[ÇÔÔô×ÔÉ±].";
+                        msg = "æˆ‘è¯•å›¾ä»ä»–ä»¬å£è¢‹é‡Œå·æªï¼Œå´æŠŠè‡ªå·±å®³æ­»äº†ã€‚[çªƒè´¼è‡ªæ€].";
                         break;
                     case SpecialMediumInfo.ActiveLoverDies:
-                        msg = "ÎŞÂÛÈçºÎ£¬ÎÒ¶¼Ïë°ÚÍÑÕâÖÖÓĞ¶¾µÄ¹ØÏµ¡£[´ø×ÅÁµÈËËÀÈ¥].";
+                        msg = "æ— è®ºå¦‚ä½•ï¼Œæˆ‘éƒ½æƒ³æ‘†è„±è¿™ç§æœ‰æ¯’çš„å…³ç³»ã€‚[å¸¦ç€æ‹äººæ­»å»].";
                         break;
                     case SpecialMediumInfo.PassiveLoverSuicide:
-                        msg = "ÔÚÌìÔ¸×÷±ÈÒíÄñ,ÔÚµØÔ¸ÎªÁ¬ÀíÖ¦£¬Ëù°®ÒÔÊÅ£¬ÎáÒàÑ°Ö®¡£[±»ÁµÈË´øËÀ].";
+                        msg = "åœ¨å¤©æ„¿ä½œæ¯”ç¿¼é¸Ÿ,åœ¨åœ°æ„¿ä¸ºè¿ç†æï¼Œæ‰€çˆ±ä»¥é€ï¼Œå¾äº¦å¯»ä¹‹ã€‚[è¢«æ‹äººå¸¦æ­»].";
                         break;
                     case SpecialMediumInfo.LawyerKilledByClient:
-                        msg = "ÎÒµÄ¿Í»§É±ÁËÎÒ¡£ÎÒ»¹ÄÜµÃµ½±¨³êÂğ£¿[ÂÉÊ¦±»¿Í»§É±º¦]";
+                        msg = "æˆ‘çš„å®¢æˆ·æ€äº†æˆ‘ã€‚æˆ‘è¿˜èƒ½å¾—åˆ°æŠ¥é…¬å—ï¼Ÿ[å¾‹å¸ˆè¢«å®¢æˆ·æ€å®³]";
                         break;
                     case SpecialMediumInfo.JackalKillsSidekick:
-                        msg = "¼ÈÒÑÄÉÎÒÎªÎé£¬ºÎ±ØÈ¡ÎÒĞÔÃü£¬ËãÁË£¬ÖÁÉÙ²»ÓÃ×öÈÎÎñÁË¡£[¸ú°à±»²òÀÇÉ±º¦]";
+                        msg = "æ—¢å·²çº³æˆ‘ä¸ºä¼ï¼Œä½•å¿…å–æˆ‘æ€§å‘½ï¼Œç®—äº†ï¼Œè‡³å°‘ä¸ç”¨åšä»»åŠ¡äº†ã€‚[è·Ÿç­è¢«è±ºç‹¼æ€å®³]";
                         break;
                     case SpecialMediumInfo.ImpostorTeamkill:
-                        msg = "ËûÃÇ¿Ï¶¨ÊÇ°ÑÎÒµ±³ÉÎÔµ×²ÅÉ±ÁËÎÒ£¬ÓĞÃ»ÓĞ£¿[ÄÚ¹íËÀÓÚ¶ÓÓÑ]";
+                        msg = "ä»–ä»¬è‚¯å®šæ˜¯æŠŠæˆ‘å½“æˆå§åº•æ‰æ€äº†æˆ‘ï¼Œæœ‰æ²¡æœ‰ï¼Ÿ[å†…é¬¼æ­»äºé˜Ÿå‹]";
                         break;
                     case SpecialMediumInfo.BodyCleaned:
-                        msg = "ÎÒµÄÊ¬ÌåÏÖÔÚÊÇÄ³ÖÖÒÕÊõ»¹ÊÇ¡£¡£¡£°¡£¬Ëü²»¼ûÁË¡£[Ê¬Ìå±»ÇåÀí»ò³ÔÁË]";
+                        msg = "æˆ‘çš„å°¸ä½“ç°åœ¨æ˜¯æŸç§è‰ºæœ¯è¿˜æ˜¯ã€‚ã€‚ã€‚å•Šï¼Œå®ƒä¸è§äº†ã€‚[å°¸ä½“è¢«æ¸…ç†æˆ–åƒäº†]";
                         break;
                 }
             }
             else
             {
                 int randomNumber = rnd.Next(4);
-                string typeOfColor = Helpers.isLighterColor(Medium.target.killerIfExisting) ? "Ç³" : "Éî";
+                string typeOfColor = Helpers.isLighterColor(Medium.target.killerIfExisting) ? "æµ…" : "æ·±";
                 float timeSinceDeath = ((float)(Medium.meetingStartTime - Medium.target.timeOfDeath).TotalMilliseconds);
                 var roleString = RoleInfo.GetRolesString(Medium.target.player, false);
                 if (randomNumber == 0)
                 {
-                    if (!roleString.Contains("Î±×°ÕßÕóÓª") && !roleString.Contains("´¬Ô±ÕóÓª"))
-                        msg = "³ıÁËÎÒ×Ô¼º£¬³¡ÉÏÒÑ¾­Ã»ÓĞ " + roleString + " ÁË.";
+                    if (!roleString.Contains("ä¼ªè£…è€…é˜µè¥") && !roleString.Contains("èˆ¹å‘˜é˜µè¥"))
+                        msg = "é™¤äº†æˆ‘è‡ªå·±ï¼Œåœºä¸Šå·²ç»æ²¡æœ‰ " + roleString + " äº†.";
                     else
-                        msg = "ÎÒÊÇÒ»Ãû " + roleString + " .";
+                        msg = "æˆ‘æ˜¯ä¸€å " + roleString + " .";
                 }
-                else if (randomNumber == 1) msg = "ÎÒ²»È·¶¨£¬µ«ÎÒÏëÓ¦¸ÃÊÇ " + typeOfColor + " É«µÄĞ×ÊÖÉ±ÁËÎÒ.";
-                else if (randomNumber == 2) msg = "Èç¹ûÎÒÊı¶ÔÁË£¬ÎÒ¾ÍÔÚ»áÒéÇ° " + Math.Round(timeSinceDeath / 1000) + " ÃëËÀÁË.";
-                else msg = "ÎÒºÃÏñÊÇ±» " + RoleInfo.GetRolesString(Medium.target.killerIfExisting, false, false, true) + " ÎŞÇéµÄÉ±º¦ÁË.";
+                else if (randomNumber == 1) msg = "æˆ‘ä¸ç¡®å®šï¼Œä½†æˆ‘æƒ³åº”è¯¥æ˜¯ " + typeOfColor + " è‰²çš„å‡¶æ‰‹æ€äº†æˆ‘.";
+                else if (randomNumber == 2) msg = "å¦‚æœæˆ‘æ•°å¯¹äº†ï¼Œæˆ‘å°±åœ¨ä¼šè®®å‰ " + Math.Round(timeSinceDeath / 1000) + " ç§’æ­»äº†.";
+                else msg = "æˆ‘å¥½åƒæ˜¯è¢« " + RoleInfo.GetRolesString(Medium.target.killerIfExisting, false, false, true) + " æ— æƒ…çš„æ€å®³äº†.";
             }
 
             if (rnd.NextDouble() < chanceAdditionalInfo)
@@ -2223,24 +2222,24 @@ namespace TheOtherRoles
                 {
                     case 0:
                         count = alivePlayersList.Where(pc => pc.Data.Role.IsImpostor || new List<RoleInfo>() { RoleInfo.jackal, RoleInfo.sidekick, RoleInfo.sheriff, RoleInfo.thief }.Contains(RoleInfo.getRoleInfoForPlayer(pc, false).FirstOrDefault())).Count();
-                        condition = "¸öÉ±ÊÖ" + (count == 1 ? "" : "");
+                        condition = "ä¸ªæ€æ‰‹" + (count == 1 ? "" : "");
                         break;
                     case 1:
                         count = alivePlayersList.Where(Helpers.roleCanUseVents).Count();
-                        condition = "¸ö¿ÉÒÔÊ¹ÓÃ¹ÜµÀµÄÍæ¼Ò" + (count == 1 ? "" : "");
+                        condition = "ä¸ªå¯ä»¥ä½¿ç”¨ç®¡é“çš„ç©å®¶" + (count == 1 ? "" : "");
                         break;
                     case 2:
                         count = alivePlayersList.Where(pc => Helpers.isNeutral(pc) && pc != Jackal.jackal && pc != Sidekick.sidekick && pc != Thief.thief).Count();
-                        condition = "¸öÖĞÁ¢²»´øµ¶µÄÍæ¼Ò" + (count == 1 ? "" : "") + " ËûÃÇ " + (count == 1 ? "" : "µ±Ê±»¹") + " ";
+                        condition = "ä¸ªä¸­ç«‹ä¸å¸¦åˆ€çš„ç©å®¶" + (count == 1 ? "" : "") + " ä»–ä»¬ " + (count == 1 ? "" : "å½“æ—¶è¿˜") + " ";
                         break;
                     case 3:
                         //count = alivePlayersList.Where(pc =>
                         break;
                 }
-                msg += $"\nÄãÎÊÎÒµÄÊ±ºò,ÓĞ{count} " + condition + (count == 1 ? " " : "¶¼") + " ÒÀÈ»»î×Å";
+                msg += $"\nä½ é—®æˆ‘çš„æ—¶å€™,æœ‰{count} " + condition + (count == 1 ? " " : "éƒ½") + " ä¾ç„¶æ´»ç€";
             }
 
-            return Medium.target.player.Data.PlayerName + " µÄÁé»êËµ:\n" + msg;
+            return Medium.target.player.Data.PlayerName + " çš„çµé­‚è¯´:\n" + msg;
         }
     }
 
@@ -3114,7 +3113,7 @@ namespace TheOtherRoles
 
         public static void shiftRole(PlayerControl player1, PlayerControl player2, bool repeat = true)
         {
-            //ºÃÈË½»»»Ê¦´úÂëtarget
+            //å¥½äººäº¤æ¢å¸ˆä»£ç target
             if (Mayor.mayor != null && Mayor.mayor == player2)
             {
                 if (repeat) shiftRole(player2, player1, false);
@@ -3268,7 +3267,7 @@ namespace TheOtherRoles
                 if (repeat) shiftRole(player2, player1, false);
                 Lawyer.lawyer = player1;
             }
-            //ÌìÆôÌí¼Ó
+            //å¤©å¯æ·»åŠ 
             else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player2)
             {
                 if (repeat) shiftRole(player2, player1, false);

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using TheOtherRoles.Players;
+using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

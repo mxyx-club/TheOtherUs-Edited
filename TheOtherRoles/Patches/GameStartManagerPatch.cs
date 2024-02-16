@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using TheOtherRoles.Helper;
-using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
@@ -26,6 +25,9 @@ namespace TheOtherRoles.Patches
         {
             public static void Postfix(AmongUsClient __instance)
             {
+#if DEBUG
+               return;
+#endif
                 if (CachedPlayer.LocalPlayer != null)
                 {
                     Helpers.shareGameVersion();
@@ -67,8 +69,12 @@ namespace TheOtherRoles.Patches
 
             public static void Postfix(GameStartManager __instance)
             {
+                if (__instance.GameStartText == null || __instance.StartButton == null || __instance.startLabelText == null) return;
+#if DEBUG
+                return;
+#endif
                 // Send version as soon as CachedPlayer.LocalPlayer.PlayerControl exists
-                if (PlayerControl.LocalPlayer != null && !versionSent)
+                if (CachedPlayer.LocalPlayer != null && !versionSent)
                 {
                     versionSent = true;
                     Helpers.shareGameVersion();
@@ -223,6 +229,9 @@ namespace TheOtherRoles.Patches
         {
             public static bool Prefix(GameStartManager __instance)
             {
+#if DEBUG
+                return true;
+#endif
                 // Block game start if not everyone has the same mod version
                 bool continueStart = true;
 

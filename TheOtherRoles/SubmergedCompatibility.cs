@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Players;
+using TheOtherRoles.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -187,9 +187,8 @@ namespace TheOtherRoles
         }
     }
 
-    public class MissingSubmergedBehaviour : MonoBehaviour
+    public class MissingSubmergedBehaviour(IntPtr ptr) : MonoBehaviour(ptr)
     {
         static MissingSubmergedBehaviour() => ClassInjector.RegisterTypeInIl2Cpp<MissingSubmergedBehaviour>();
-        public MissingSubmergedBehaviour(IntPtr ptr) : base(ptr) { }
     }
 }

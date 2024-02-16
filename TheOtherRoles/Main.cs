@@ -12,7 +12,6 @@ using System.Text;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Modules.CustomHats;
-using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 

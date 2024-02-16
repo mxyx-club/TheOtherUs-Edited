@@ -1,12 +1,12 @@
-using HarmonyLib;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using HarmonyLib;
 using UnityEngine;
 
-namespace TheOtherRoles.Players;
+namespace TheOtherRoles.Utilities;
 
 public class CachedPlayer
 {

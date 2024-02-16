@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
-using TheOtherRoles.Players;
+using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
 
