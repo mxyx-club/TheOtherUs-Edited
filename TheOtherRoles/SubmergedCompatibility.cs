@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Players;
+using TheOtherRoles.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

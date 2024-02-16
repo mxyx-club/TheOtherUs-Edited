@@ -15,15 +15,15 @@ namespace TheOtherRoles.Patches
     public static class ClientOptionsPatch
     {
         private static readonly SelectionBehaviour[] AllOptions = {
-            new("灵魂可见任务&其他信息", () => TORMapOptions.ghostsSeeInformation = TheOtherRolesPlugin.GhostsSeeInformation.Value = !TheOtherRolesPlugin.GhostsSeeInformation.Value, TheOtherRolesPlugin.GhostsSeeInformation.Value),
-            new("灵魂可见投票", () => TORMapOptions.ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value = !TheOtherRolesPlugin.GhostsSeeVotes.Value, TheOtherRolesPlugin.GhostsSeeVotes.Value),
-            new("灵魂可以看到职业", () => TORMapOptions.ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value = !TheOtherRolesPlugin.GhostsSeeRoles.Value, TheOtherRolesPlugin.GhostsSeeRoles.Value),
-            new("灵魂可见附加职业", () => TORMapOptions.ghostsSeeModifier = TheOtherRolesPlugin.GhostsSeeModifier.Value = !TheOtherRolesPlugin.GhostsSeeModifier.Value, TheOtherRolesPlugin.GhostsSeeModifier.Value),
-            new("显示职业总结", () => TORMapOptions.showRoleSummary = TheOtherRolesPlugin.ShowRoleSummary.Value = !TheOtherRolesPlugin.ShowRoleSummary.Value, TheOtherRolesPlugin.ShowRoleSummary.Value),
-            new("显示颜色深浅", () => TORMapOptions.showLighterDarker = TheOtherRolesPlugin.ShowLighterDarker.Value = !TheOtherRolesPlugin.ShowLighterDarker.Value, TheOtherRolesPlugin.ShowLighterDarker.Value),
-            new SelectionBehaviour("启用模组光标", () => TORMapOptions.toggleCursor = TheOtherRolesPlugin.ToggleCursor.Value = !TheOtherRolesPlugin.ToggleCursor.Value, TheOtherRolesPlugin.ToggleCursor.Value),
-            new("启用模组音效", () => TORMapOptions.enableSoundEffects = TheOtherRolesPlugin.EnableSoundEffects.Value = !TheOtherRolesPlugin.EnableSoundEffects.Value, TheOtherRolesPlugin.EnableSoundEffects.Value),
-            new("在地图上显示管道", () => TORMapOptions.ShowVentsOnMap = TheOtherRolesPlugin.ShowVentsOnMap.Value = !TheOtherRolesPlugin.ShowVentsOnMap.Value, TheOtherRolesPlugin.ShowVentsOnMap.Value),
+            new("鐏甸瓊鍙浠诲姟&鍏朵粬淇℃伅", () => TORMapOptions.ghostsSeeInformation = TheOtherRolesPlugin.GhostsSeeInformation.Value = !TheOtherRolesPlugin.GhostsSeeInformation.Value, TheOtherRolesPlugin.GhostsSeeInformation.Value),
+            new("鐏甸瓊鍙鎶曠エ", () => TORMapOptions.ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value = !TheOtherRolesPlugin.GhostsSeeVotes.Value, TheOtherRolesPlugin.GhostsSeeVotes.Value),
+            new("鐏甸瓊鍙互鐪嬪埌鑱屼笟", () => TORMapOptions.ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value = !TheOtherRolesPlugin.GhostsSeeRoles.Value, TheOtherRolesPlugin.GhostsSeeRoles.Value),
+            new("鐏甸瓊鍙闄勫姞鑱屼笟", () => TORMapOptions.ghostsSeeModifier = TheOtherRolesPlugin.GhostsSeeModifier.Value = !TheOtherRolesPlugin.GhostsSeeModifier.Value, TheOtherRolesPlugin.GhostsSeeModifier.Value),
+            new("鏄剧ず鑱屼笟鎬荤粨", () => TORMapOptions.showRoleSummary = TheOtherRolesPlugin.ShowRoleSummary.Value = !TheOtherRolesPlugin.ShowRoleSummary.Value, TheOtherRolesPlugin.ShowRoleSummary.Value),
+            new("鏄剧ず棰滆壊娣辨祬", () => TORMapOptions.showLighterDarker = TheOtherRolesPlugin.ShowLighterDarker.Value = !TheOtherRolesPlugin.ShowLighterDarker.Value, TheOtherRolesPlugin.ShowLighterDarker.Value),
+            new SelectionBehaviour("鍚敤妯＄粍鍏夋爣", () => TORMapOptions.toggleCursor = TheOtherRolesPlugin.ToggleCursor.Value = !TheOtherRolesPlugin.ToggleCursor.Value, TheOtherRolesPlugin.ToggleCursor.Value),
+            new("鍚敤妯＄粍闊虫晥", () => TORMapOptions.enableSoundEffects = TheOtherRolesPlugin.EnableSoundEffects.Value = !TheOtherRolesPlugin.EnableSoundEffects.Value, TheOtherRolesPlugin.EnableSoundEffects.Value),
+            new("鍦ㄥ湴鍥句笂鏄剧ず绠￠亾", () => TORMapOptions.ShowVentsOnMap = TheOtherRolesPlugin.ShowVentsOnMap.Value = !TheOtherRolesPlugin.ShowVentsOnMap.Value, TheOtherRolesPlugin.ShowVentsOnMap.Value),
         };
 
         private static GameObject popUp;
@@ -104,7 +104,7 @@ namespace TheOtherRoles.Patches
             moreOptions.transform.localScale = new Vector3(0.66f, 1, 1);
 
             moreOptions.gameObject.SetActive(true);
-            moreOptions.Text.text = "模组选项";
+            moreOptions.Text.text = "妯＄粍閫夐」";
             moreOptions.Text.transform.localScale = new Vector3(1 / 0.66f, 1, 1);
             var moreOptionsButton = moreOptions.GetComponent<PassiveButton>();
             moreOptionsButton.OnClick = new ButtonClickedEvent();
@@ -146,7 +146,7 @@ namespace TheOtherRoles.Patches
             var title = Object.Instantiate(titleText, popUp.transform);
             title.GetComponent<RectTransform>().localPosition = Vector3.up * 2.3f;
             title.gameObject.SetActive(true);
-            title.text = "模组选项";
+            title.text = "妯＄粍閫夐」";
             title.name = "TitleText";
         }
 
@@ -186,7 +186,7 @@ namespace TheOtherRoles.Patches
 
                 passiveButton.OnClick.AddListener((Action)(() =>
                 {
-                    if (info.Title == "启用模组光标")
+                    if (info.Title == "鍚敤妯＄粍鍏夋爣")
                     {
                         Helpers.enableCursor(false);
                     }

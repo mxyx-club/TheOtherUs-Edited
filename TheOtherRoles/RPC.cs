@@ -10,7 +10,6 @@ using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
@@ -83,9 +82,9 @@ namespace TheOtherRoles
         Thief,
         Poucher,
         Bomber,
-        //ÌìÆôÌí¼Ó
+        //å¤©å¯æ·»åŠ 
         Juggernaut,
-        //Ä©ÈÕÔ¤ÑÔ¼Ò
+        //æœ«æ—¥é¢„è¨€å®¶
         Doomsayer,
         Crewmate,
         Impostor,
@@ -238,7 +237,7 @@ namespace TheOtherRoles
             Garlic.clearGarlics();
             JackInTheBox.clearJackInTheBoxes();
             NinjaTrace.clearTraces();
-            //ÖØÖÃÍ¨·ç¿Ú
+            //é‡ç½®é€šé£å£
             AdditionalVents.clearAndReload();
             Portal.clearPortals();
             Bloodytrail.resetSprites();
@@ -1204,14 +1203,14 @@ namespace TheOtherRoles
                     Trapper.trapper = amnisiac;
                     Amnisiac.clearAndReload();
                     break;
-                //ÌìÆôÌí¼Ó
+                //å¤©å¯æ·»åŠ 
                 case RoleId.Juggernaut:
                     if (Amnisiac.resetRole) Juggernaut.clearAndReload();
                     Juggernaut.juggernaut = amnisiac;
                     Amnisiac.clearAndReload();
                     Amnisiac.amnisiac = target;
                     break;
-                //Ä©ÈÕÔ¤ÑÔ¼Ò
+                //æœ«æ—¥é¢„è¨€å®¶
                 case RoleId.Doomsayer:
                     if (Amnisiac.resetRole) Doomsayer.clearAndReload();
                     Doomsayer.doomsayer = amnisiac;
@@ -1700,7 +1699,7 @@ namespace TheOtherRoles
             if (player == Lawyer.lawyer) Lawyer.clearAndReload();
             if (player == Pursuer.pursuer) Pursuer.clearAndReload();
             if (player == Thief.thief) Thief.clearAndReload();
-            //ÌìÆôÌí¼Ó
+            //å¤©å¯æ·»åŠ 
             if (player == Juggernaut.juggernaut) Juggernaut.clearAndReload();
             if (player == Doomsayer.doomsayer) Doomsayer.clearAndReload();
 
@@ -1981,7 +1980,7 @@ namespace TheOtherRoles
                     {
                         if (Bomber2.timeLeft != timeLeft)
                         {
-                            new CustomMessage("ÄãÊÖÖĞµÄÕ¨µ¯½«ÔÚ " + timeLeft + " ÃëºóÒı±¬!", 1f);
+                            new CustomMessage("ä½ æ‰‹ä¸­çš„ç‚¸å¼¹å°†åœ¨ " + timeLeft + " ç§’åå¼•çˆ†!", 1f);
                             Bomber2.timeLeft = timeLeft;
                         }
                         if (timeLeft % 5 == 0)
@@ -2294,7 +2293,7 @@ namespace TheOtherRoles
                     RPCProcedure.thiefStealsRole(dyingTarget.PlayerId);
                 }
             }
-            //Ä©ÈÕ²Â²â
+            //æœ«æ—¥çŒœæµ‹
             if (Doomsayer.doomsayer != null && Doomsayer.doomsayer == guesser && Doomsayer.canGuess)
             {
                 RoleInfo roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
@@ -2409,7 +2408,7 @@ namespace TheOtherRoles
             if (CachedPlayer.LocalPlayer.Data.IsDead && guessedTarget != null && guesser != null)
             {
                 RoleInfo roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
-                string msg = $"{guesser.Data.PlayerName} ¶Ä¹Ö²Â²â {guessedTarget.Data.PlayerName} ÊÇ {roleInfo?.name ?? ""}!";
+                string msg = $"{guesser.Data.PlayerName} èµŒæ€ªçŒœæµ‹ {guessedTarget.Data.PlayerName} æ˜¯ {roleInfo?.name ?? ""}!";
                 if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
                     FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(guesser, msg);
                 if (msg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -2634,7 +2633,7 @@ namespace TheOtherRoles
             }
 
             if (target == Werewolf.werewolf) Werewolf.werewolf = thief;
-            //ÌìÆôÌí¼Ó
+            //å¤©å¯æ·»åŠ 
             if (target == Juggernaut.juggernaut) Juggernaut.juggernaut = thief;
 
             if (target == BodyGuard.bodyguard) BodyGuard.bodyguard = thief;

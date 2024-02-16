@@ -11,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using TheOtherRoles.Helper;
-using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.CustomOption;

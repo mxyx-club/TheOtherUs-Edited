@@ -3,7 +3,7 @@ using HarmonyLib;
 using System;
 using System.Linq;
 using TheOtherRoles.CustomGameModes;
-using TheOtherRoles.Players;
+using TheOtherRoles.Utilities;
 
 namespace TheOtherRoles.Patches
 {

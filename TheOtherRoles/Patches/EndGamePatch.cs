@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
-using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
@@ -96,7 +95,7 @@ namespace TheOtherRoles.Patches
             {
                 var roles = RoleInfo.getRoleInfoForPlayer(playerControl);
                 var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(playerControl.Data);
-                //Ä©ÈÕÔ¤ÑÔ¼Ò¶ÄµÄ¹¦ÄÜ
+                //æœ«æ—¥é¢„è¨€å®¶èµŒçš„åŠŸèƒ½
                 bool isGuesser = HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(playerControl.PlayerId);
                 int? killCount = GameHistory.deadPlayers.FindAll(x => x.killerIfExisting != null && x.killerIfExisting.PlayerId == playerControl.PlayerId).Count;
                 if (killCount == 0 && !(new List<RoleInfo>() { RoleInfo.sheriff, RoleInfo.jackal, RoleInfo.sidekick, RoleInfo.thief, RoleInfo.juggernaut }.Contains(RoleInfo.getRoleInfoForPlayer(playerControl, false).FirstOrDefault()) || playerControl.Data.Role.IsImpostor))
@@ -134,7 +133,7 @@ namespace TheOtherRoles.Patches
             if (Lawyer.lawyer != null) notWinners.Add(Lawyer.lawyer);
             if (Pursuer.pursuer != null) notWinners.Add(Pursuer.pursuer);
             if (Thief.thief != null) notWinners.Add(Thief.thief);
-            //ÌìÆôÌí¼Ó
+            //å¤©å¯æ·»åŠ 
             if (Juggernaut.juggernaut != null) notWinners.Add(Juggernaut.juggernaut);
             if (Doomsayer.doomsayer != null) notWinners.Add(Doomsayer.doomsayer);
             notWinners.AddRange(Jackal.formerJackals);
@@ -270,7 +269,7 @@ namespace TheOtherRoles.Patches
                 wpd.IsImpostor = false;
                 TempData.winners.Add(wpd);
             }
-            //ÌìÆôÌí¼Ó
+            //å¤©å¯æ·»åŠ 
             else if (juggernautWin)
             {
                 // JuggernautWin wins if nobody except jackal is alive
@@ -280,7 +279,7 @@ namespace TheOtherRoles.Patches
                 wpd.IsImpostor = false;
                 TempData.winners.Add(wpd);
             }
-            //Ä©ÈÕÔ¤ÑÔ¼Ò
+            //æœ«æ—¥é¢„è¨€å®¶
             else if (doomsayerWin)
             {
                 // DoomsayerWin wins if nobody except jackal is alive
@@ -389,60 +388,60 @@ namespace TheOtherRoles.Patches
 
             if (AdditionalTempData.winCondition == WinCondition.JesterWin)
             {
-                textRenderer.text = "ÌıÎÒËµĞ»Ğ»Äã";
+                textRenderer.text = "å¬æˆ‘è¯´è°¢è°¢ä½ ";
                 textRenderer.color = Jester.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.DoomsayerWin)
             {
-                textRenderer.text = "Ä©ÈÕÔ¤ÑÔ¼Ò»ñÊ¤";
+                textRenderer.text = "æœ«æ—¥é¢„è¨€å®¶è·èƒœ";
                 textRenderer.color = Doomsayer.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.ArsonistWin)
             {
-                textRenderer.text = "ÓÃ»ğÑæ¾»»¯Ò»ÇĞ";
+                textRenderer.text = "ç”¨ç«ç„°å‡€åŒ–ä¸€åˆ‡";
 
                 textRenderer.color = Arsonist.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.VultureWin)
             {
-                textRenderer.text = "³Ô±¥±¥£¡";
+                textRenderer.text = "åƒé¥±é¥±ï¼";
                 textRenderer.color = Vulture.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.WerewolfWin)
             {
-                textRenderer.text = "ÔÂÏÂÀÇÈË»ñÊ¤£¡";
+                textRenderer.text = "æœˆä¸‹ç‹¼äººè·èƒœï¼";
                 textRenderer.color = Werewolf.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.JuggernautWin)
             {
-                textRenderer.text = "ÌìÆô»ñÊ¤";
+                textRenderer.text = "å¤©å¯è·èƒœ";
                 textRenderer.color = Juggernaut.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.ProsecutorWin)
             {
-                textRenderer.text = "Ğ¡×ì°È°È!";
+                textRenderer.text = "å°å˜´å­å­!";
                 textRenderer.color = Lawyer.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin)
             {
-                textRenderer.text = "´¬Ô±ºÍÁµÈË»ñÊ¤";
+                textRenderer.text = "èˆ¹å‘˜å’Œæ‹äººè·èƒœ";
                 textRenderer.color = Lovers.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
             }
             else if (AdditionalTempData.winCondition == WinCondition.LoversSoloWin)
             {
-                textRenderer.text = "ÓëÄãµÄ°®ÁµĞÄÒâºÏÒ»~";
+                textRenderer.text = "ä¸ä½ çš„çˆ±æ‹å¿ƒæ„åˆä¸€~";
                 textRenderer.color = Lovers.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
             }
             else if (AdditionalTempData.winCondition == WinCondition.JackalWin)
             {
-                textRenderer.text = "²òÀÇµÄÈ«¼Ò¸£.jpg";
+                textRenderer.text = "è±ºç‹¼çš„å…¨å®¶ç¦.jpg";
                 textRenderer.color = Jackal.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.MiniLose)
             {
-                textRenderer.text = "Ëû¾ÍÖ»ÊÇ¸öº¢×Ó°¡£¡";
+                textRenderer.text = "ä»–å°±åªæ˜¯ä¸ªå­©å­å•Šï¼";
                 textRenderer.color = Mini.color;
             }
 
@@ -450,11 +449,11 @@ namespace TheOtherRoles.Patches
             {
                 if (cond == WinCondition.AdditionalLawyerBonusWin)
                 {
-                    textRenderer.text += $"\n{Helpers.cs(Lawyer.color, "ÂÉÊ¦ºÍ¿Í»§Ê¤Àû")}";
+                    textRenderer.text += $"\n{Helpers.cs(Lawyer.color, "å¾‹å¸ˆå’Œå®¢æˆ·èƒœåˆ©")}";
                 }
                 else if (cond == WinCondition.AdditionalAlivePursuerWin)
                 {
-                    textRenderer.text += $"\n{Helpers.cs(Pursuer.color, "ÆğËßÈË´æ»î")}";
+                    textRenderer.text += $"\n{Helpers.cs(Pursuer.color, "èµ·è¯‰äººå­˜æ´»")}";
                 }
             }
 
@@ -470,16 +469,16 @@ namespace TheOtherRoles.Patches
                 {
                     int minutes = (int)AdditionalTempData.timer / 60;
                     int seconds = (int)AdditionalTempData.timer % 60;
-                    roleSummaryText.AppendLine($"<color=#FAD934FF>Ê£ÓàÊ±¼ä: {minutes:00}:{seconds:00}</color> \n");
+                    roleSummaryText.AppendLine($"<color=#FAD934FF>å‰©ä½™æ—¶é—´: {minutes:00}:{seconds:00}</color> \n");
                 }
-                roleSummaryText.AppendLine("ÓÎÏ·×Ü½á:");
+                roleSummaryText.AppendLine("æ¸¸æˆæ€»ç»“:");
                 foreach (var data in AdditionalTempData.playerRoles)
                 {
                     //var roles = string.Join(" ", data.Roles.Select(x => Helpers.cs(x.color, x.name)));
                     string roles = data.RoleNames;
                     //if (data.IsGuesser) roles += " (Guesser)";
                     var taskInfo = data.TasksTotal > 0 ? $" - <color=#FAD934FF>({data.TasksCompleted}/{data.TasksTotal})</color>" : "";
-                    if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(»÷É±: {data.Kills})</color>";
+                    if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(å‡»æ€: {data.Kills})</color>";
                     roleSummaryText.AppendLine($"{Helpers.cs(data.IsAlive ? Color.white : new Color(.7f, .7f, .7f), data.PlayerName)} - {roles}{taskInfo}");
                 }
                 TMPro.TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMPro.TMP_Text>();
@@ -677,7 +676,7 @@ namespace TheOtherRoles.Patches
             }
             return false;
         }
-        //ÌìÆôÌí¼Ó
+        //å¤©å¯æ·»åŠ 
         private static bool CheckAndEndGameForJuggernautWin(ShipStatus __instance, PlayerStatistics statistics)
         {
             if (
@@ -769,7 +768,7 @@ namespace TheOtherRoles.Patches
         public bool TeamJackalHasAliveLover { get; set; }
         public int TeamWerewolfAlive { get; set; }
         public bool TeamWerewolfHasAliveLover { get; set; }
-        //ÌìÆôÌí¼Ó
+        //å¤©å¯æ·»åŠ 
         public int TeamJuggernautAlive { get; set; }
         public bool TeamJuggernautHasAliveLover { get; set; }
         public PlayerStatistics(ShipStatus __instance)
@@ -792,7 +791,7 @@ namespace TheOtherRoles.Patches
             bool jackalLover = false;
             int numWerewolfAlive = 0;
             bool werewolfLover = false;
-            //ÌìÆôÌí¼Ó
+            //å¤©å¯æ·»åŠ 
             int numJuggernautAlive = 0;
             bool juggernautLover = false;
 
@@ -827,7 +826,7 @@ namespace TheOtherRoles.Patches
                             numWerewolfAlive++;
                             if (lover) werewolfLover = true;
                         }
-                        //ÌìÆôÌí¼Ó
+                        //å¤©å¯æ·»åŠ 
                         if (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == playerInfo.PlayerId)
                         {
                             numJuggernautAlive++;
@@ -845,7 +844,7 @@ namespace TheOtherRoles.Patches
             TeamJackalHasAliveLover = jackalLover;
             TeamWerewolfHasAliveLover = werewolfLover;
             TeamWerewolfAlive = numWerewolfAlive;
-            //ÌìÆôÌí¼Ó
+            //å¤©å¯æ·»åŠ 
             TeamJuggernautAlive = numJuggernautAlive;
             TeamJuggernautHasAliveLover = juggernautLover;
         }

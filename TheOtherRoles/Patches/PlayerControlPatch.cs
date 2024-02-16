@@ -10,7 +10,6 @@ using System.Linq;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
@@ -832,8 +831,8 @@ namespace TheOtherRoles.Patches
                 }
                 else
                 {
-                    Snitch.text.text = $"¸æÃÜÕß»¹»î×Å: " + playerCompleted + "/" + playerTotal;
-                    if (snitchIsDead) Snitch.text.text = $"¸æÃÜÕßÒÑËÀÍö!";
+                    Snitch.text.text = $"å‘Šå¯†è€…è¿˜æ´»ç€: " + playerCompleted + "/" + playerTotal;
+                    if (snitchIsDead) Snitch.text.text = $"å‘Šå¯†è€…å·²æ­»äº¡!";
                 }
             }
             else if (Snitch.text != null)
@@ -1516,9 +1515,9 @@ namespace TheOtherRoles.Patches
                 bomber2SetTarget();
                 // Set Werewolf Target
                 werewolfSetTarget();
-                //ÌìÆô
+                //å¤©å¯
                 juggernautSetTarget();
-                //Ä©ÈÕÔ¤ÑÔ¼Ò
+                //æœ«æ—¥é¢„è¨€å®¶
                 doomsayerSetTarget();
                 // Shifter
                 shifterSetTarget();
@@ -1669,22 +1668,22 @@ namespace TheOtherRoles.Patches
 
                     if (isMedicReport)
                     {
-                        msg = $"Ê¬¼ì±¨¸æ: Ğ×ÊÖËÆºõÊÇ {Math.Round(timeSinceDeath / 1000)}ÃëÇ°ËÀÍö!";
+                        msg = $"å°¸æ£€æŠ¥å‘Š: å‡¶æ‰‹ä¼¼ä¹æ˜¯ {Math.Round(timeSinceDeath / 1000)}ç§’å‰æ­»äº¡!";
                     }
                     else if (isDetectiveReport)
                     {
                         if (timeSinceDeath < Detective.reportNameDuration * 1000)
                         {
-                            msg = $"Ê¬¼ì±¨¸æ: Ğ×ÊÖËÆºõÊÇ {deadPlayer.killerIfExisting.Data.PlayerName}!";
+                            msg = $"å°¸æ£€æŠ¥å‘Š: å‡¶æ‰‹ä¼¼ä¹æ˜¯ {deadPlayer.killerIfExisting.Data.PlayerName}!";
                         }
                         else if (timeSinceDeath < Detective.reportColorDuration * 1000)
                         {
-                            var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting) ? "Ç³" : "Éî";
-                            msg = $"Ê¬¼ì±¨¸æ: Ğ×ÊÖËÆºõÊÇ {typeOfColor} É«µÄ!";
+                            var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting) ? "æµ…" : "æ·±";
+                            msg = $"å°¸æ£€æŠ¥å‘Š: å‡¶æ‰‹ä¼¼ä¹æ˜¯ {typeOfColor} è‰²çš„!";
                         }
                         else
                         {
-                            msg = $"Ê¬¼ì±¨¸æ: ËÀÍöÊ±¼äÌ«¾Ã£¬ÎŞ·¨»ñÈ¡ĞÅÏ¢!";
+                            msg = $"å°¸æ£€æŠ¥å‘Š: æ­»äº¡æ—¶é—´å¤ªä¹…ï¼Œæ— æ³•è·å–ä¿¡æ¯!";
                         }
                     }
 
@@ -1782,7 +1781,7 @@ namespace TheOtherRoles.Patches
             // Seer show flash and add dead player position
             if (Seer.seer != null && (CachedPlayer.LocalPlayer.PlayerControl == Seer.seer || Helpers.shouldShowGhostInfo()) && !Seer.seer.Data.IsDead && Seer.seer != target && Seer.mode <= 1)
             {
-                Helpers.showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f), message: "ÁéÃ½ĞÅÏ¢: ÓĞÈËËÀÍö");
+                Helpers.showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f), message: "çµåª’ä¿¡æ¯: æœ‰äººæ­»äº¡");
             }
             if (Seer.deadBodyPositions != null) Seer.deadBodyPositions.Add(target.transform.position);
 
