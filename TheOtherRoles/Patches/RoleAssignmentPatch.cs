@@ -710,32 +710,30 @@ internal class RoleManagerSelectRolesPatch
         assignGuesserGamemodeToPlayers(neutralPlayer,
             Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeNeutralNumber.getFloat()),
             CustomOptionHolder.guesserForceJackalGuesser.getBool(),
-            CustomOptionHolder.guesserForceThiefGuesser.getBool());
+            CustomOptionHolder.guesserForceThiefGuesser.getBool(), true);
         assignGuesserGamemodeToPlayers(impPlayer,
             Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeImpNumber.getFloat()));
     }
 
     private static void assignGuesserGamemodeToPlayers(List<PlayerControl> playerList, int count,
-        bool forceJackal = false, bool forceThief = false)
+        bool forceJackal = false, bool forceThief = false, bool forceDoomsayer = false)
     {
+        var IndexList = new Queue<PlayerControl>();
+
+        if (Doomsayer.doomsayer != null && forceDoomsayer)
+            IndexList.Enqueue(Doomsayer.doomsayer);
+
+        if (Thief.thief != null && forceThief)
+            IndexList.Enqueue(Thief.thief);
+
+
+        if (Jackal.jackal != null && forceJackal)
+           IndexList.Enqueue(Jackal.jackal);
+        
         for (var i = 0; i < count && playerList.Count > 0; i++)
         {
-            var index = rnd.Next(0, playerList.Count);
-            if (forceThief && !forceJackal)
-            {
-                if (Thief.thief != null)
-                    index = playerList.FindIndex(x => x == Thief.thief);
-                forceThief = false;
-            }
-
-            if (forceJackal)
-            {
-                if (Jackal.jackal != null)
-                    index = playerList.FindIndex(x => x == Jackal.jackal);
-                forceJackal = false;
-            }
-
-            if (Doomsayer.doomsayer != null) index = playerList.FindIndex(x => x == Doomsayer.doomsayer);
+            var index = IndexList.Count > 0 ? 
+                playerList.FindIndex(n => n == IndexList.Dequeue()) : rnd.Next(0, playerList.Count);
 
             var playerId = playerList[index].PlayerId;
             playerList.RemoveAt(index);

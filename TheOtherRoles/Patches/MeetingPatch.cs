@@ -41,36 +41,31 @@ internal class MeetingHudPatch
         if (__instance.state == MeetingHud.VoteStates.Results || Swapper.charges <= 0) return;
         if (__instance.playerStates[i].AmDead) return;
 
-        var selectedCount = selections.Where(b => b).Count();
+        var selectedCount = selections.Count(b => b);
         var renderer = renderers[i];
 
-        if (selectedCount == 0)
+        switch (selectedCount)
         {
-            renderer.color = Color.yellow;
-            selections[i] = true;
-        }
-        else if (selectedCount == 1)
-        {
-            if (selections[i])
-            {
+            case 0:
+                renderer.color = Color.yellow;
+                selections[i] = true;
+                break;
+            case 1 when selections[i]:
                 renderer.color = Color.red;
                 selections[i] = false;
-            }
-            else
-            {
+                break;
+            case 1:
                 selections[i] = true;
                 renderer.color = Color.yellow;
                 meetingExtraButtonLabel.text = Helpers.cs(Color.yellow, "确认换票");
-            }
-        }
-        else if (selectedCount == 2)
-        {
-            if (selections[i])
-            {
+                break;
+            case 2 when !selections[i]:
+                return;
+            case 2:
                 renderer.color = Color.red;
                 selections[i] = false;
                 meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认换票");
-            }
+                break;
         }
     }
 
@@ -78,7 +73,7 @@ internal class MeetingHudPatch
     {
         __instance.playerStates[0].Cancel(); // This will stop the underlying buttons of the template from showing up
         if (__instance.state == MeetingHud.VoteStates.Results) return;
-        if (selections.Where(b => b).Count() != 2) return;
+        if (selections.Count(b => b) != 2) return;
         if (Swapper.charges <= 0 || Swapper.playerId1 != byte.MaxValue) return;
 
         PlayerVoteArea firstPlayer = null;
@@ -384,12 +379,20 @@ internal class MeetingHudPatch
                         Object.Destroy(container.gameObject);
                         if (
                             (
+                                (
                                 HandleGuesser.hasMultipleShotsPerMeeting
+                                &&
+                                HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 1
+                                &&
+                                HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId)
+                                )
                                 ||
+                                (
                                 Doomsayer.hasMultipleShotsPerMeeting
+                                &&
+                                Doomsayer.doomsayer == CachedPlayer.LocalPlayer.PlayerControl
+                                )
                             )
-                            &&
-                            HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 1
                             &&
                             dyingTarget != CachedPlayer.LocalPlayer.PlayerControl
                         )
@@ -550,11 +553,9 @@ internal class MeetingHudPatch
                         rend.transform.localPosition = new Vector3(-0.725f, -0.15f, -1f);
                     rend.sprite = Witch.getSpelledOverlaySprite();
                 }
-
-        // Add Guesser Buttons
-        var remainingShots = HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId);
+        
         //!!!添加末日预言家赌
-        if (addDoomsayerButtons)
+        if (addDoomsayerButtons) 
             for (var i = 0; i < __instance.playerStates.Length; i++)
             {
                 var playerVoteArea = __instance.playerStates[i];
@@ -572,7 +573,9 @@ internal class MeetingHudPatch
                 button.OnClick.AddListener((Action)(() => guesserOnClick(copiedIndex, __instance)));
             }
 
-        if (isGuesser && !CachedPlayer.LocalPlayer.Data.IsDead && remainingShots > 0)
+        // Add Guesser Buttons
+        var GuesserRemainingShots = HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId);
+        if (isGuesser && !CachedPlayer.LocalPlayer.Data.IsDead && GuesserRemainingShots > 0)
             for (var i = 0; i < __instance.playerStates.Length; i++)
             {
                 var playerVoteArea = __instance.playerStates[i];
