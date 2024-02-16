@@ -269,7 +269,7 @@ namespace TheOtherRoles
             }
             catch (Exception e)
             {
-                TheOtherRolesPlugin.Logger.LogError("Error while deserializing options: " + e.Message);
+                Error("Error while deserializing options: " + e.Message);
             }
         }
 
@@ -307,7 +307,7 @@ namespace TheOtherRoles
                 }
                 catch (Exception e)
                 {
-                    TheOtherRolesPlugin.Logger.LogError("Error while deserializing roles: " + e.Message);
+                    Error("Error while deserializing roles: " + e.Message);
                 }
             }
 

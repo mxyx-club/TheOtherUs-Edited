@@ -74,7 +74,7 @@ namespace TheOtherRoles.Modules
                 var popUpTemplate = Object.FindObjectOfType<AnnouncementPopUp>(true);
                 if (popUpTemplate == null)
                 {
-                    TheOtherRolesPlugin.Logger.LogError("couldnt show credits, popUp is null");
+                    Error("couldnt show credits, popUp is null");
                     return;
                 }
                 popUp = Object.Instantiate(popUpTemplate);

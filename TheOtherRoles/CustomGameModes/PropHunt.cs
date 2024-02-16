@@ -128,16 +128,11 @@ namespace TheOtherRoles.CustomGameModes
         public static void updateWhitelistedObjects()
         {
             string allNames = Helpers.readTextFromResources("TheOtherRoles.Resources.Txt.Props.txt");
-            bool debug = false;
-            if (debug)
-            {
-                allNames = Helpers.readTextFromFile(System.IO.Directory.GetCurrentDirectory() + "\\Props.txt");
-            }
-            TheOtherRolesPlugin.Logger.LogMessage($"after debug");
+            Message($"after debug");
             whitelistedObjects = allNames.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
-            TheOtherRolesPlugin.Logger.LogMessage($"after split");
+            Message($"after split");
 
-            TheOtherRolesPlugin.Logger.LogMessage($"Last element: {whitelistedObjects.Last()}");
+            Message($"Last element: {whitelistedObjects.Last()}");
         }
 
 
@@ -418,24 +413,21 @@ namespace TheOtherRoles.CustomGameModes
                 {
                     if (verbose)
                     {
-                        TheOtherRolesPlugin.Logger.LogMessage($"Nearby Object: {collider.gameObject.name}");
+                        Message($"Nearby Object: {collider.gameObject.name}");
                     }
-                    bool whiteListed = false;
-                    foreach (var whiteListedWord in whitelistedObjects)
+                    var whiteListed = false;
+                    foreach (var whiteListedWord in whitelistedObjects.Where(whiteListedWord => collider.gameObject.name.Contains(whiteListedWord)))
                     {
-                        if (collider.gameObject.name.Contains(whiteListedWord)) whiteListed = true;
+                        whiteListed = true;
                     }
-                    if (collider.GetComponent<Console>() != null || whiteListed)
-                    {
-                        float dist = Vector2.Distance(origin.transform.position, collider.transform.position);
-                        if (dist < bestDist)
-                        {
-                            bestCollider = collider;
-                            bestDist = dist;
-                        }
-                    }
+
+                    if (collider.GetComponent<Console>() == null && !whiteListed) continue;
+                    var dist = Vector2.Distance(origin.transform.position, collider.transform.position);
+                    if (!(dist < bestDist)) continue;
+                    bestCollider = collider;
+                    bestDist = dist;
                 }
-                return bestCollider.gameObject;
+                return bestCollider!.gameObject;
             }
             catch { return null; }
         }

@@ -72,7 +72,7 @@ namespace TheOtherRoles
         {
             try
             {
-                TheOtherRolesPlugin.Logger.LogMessage("Trying to load Submerged...");
+                Message("Trying to load Submerged...");
                 var thisAsm = Assembly.GetCallingAssembly();
                 var resourceName = thisAsm.GetManifestResourceNames().FirstOrDefault(s => s.EndsWith("Submerged.dll"));
                 if (resourceName == default) return false;
@@ -93,7 +93,7 @@ namespace TheOtherRoles
             }
             catch (Exception e)
             {
-                TheOtherRolesPlugin.Logger.LogError(e);
+                Exception(e);
             }
             return false;
         }
@@ -179,9 +179,9 @@ namespace TheOtherRoles
                 ShipStatus.Instance.RpcRepairSystem((SystemTypes)130, 64);
                 RepairDamageMethod.Invoke(SubmarineOxygenSystemInstanceField.Invoke(null, Array.Empty<object>()), new object[] { CachedPlayer.LocalPlayer.PlayerControl, 64 });
             }
-            catch (System.NullReferenceException)
+            catch (NullReferenceException)
             {
-                TheOtherRolesPlugin.Logger.LogMessage("null reference in engineer oxygen fix");
+                Message("null reference in engineer oxygen fix");
             }
 
         }

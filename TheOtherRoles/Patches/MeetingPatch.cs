@@ -1021,7 +1021,7 @@ namespace TheOtherRoles.Patches
                 }
                 catch
                 {
-                    TheOtherRolesPlugin.Logger.LogError("末日预言家报错");
+                    Error("末日预言家报错");
                 }
 
                 // Add Snitch info

@@ -118,7 +118,7 @@ namespace TheOtherRoles
                 }
                 catch
                 {
-                    TheOtherRolesPlugin.Logger.LogWarning("Button cooldowns not set, either the gamemode does not require them or there's something wrong.");
+                    Warn("Button cooldowns not set, either the gamemode does not require them or there's something wrong.");
                     return;
                 }
             }

@@ -4,4 +4,4 @@ global using Il2CppInterop.Runtime.Injection;
 global using Il2CppInterop.Runtime.InteropTypes;
 global using Il2CppInterop.Runtime.InteropTypes.Arrays;
 global using Main = TheOtherRoles.TheOtherRolesPlugin;
-global using static TheOtherRoles.Logs.Log;
+global using static TheOtherRoles.Logs.ModLog;
