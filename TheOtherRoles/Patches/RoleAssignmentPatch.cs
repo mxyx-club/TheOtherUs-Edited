@@ -663,7 +663,7 @@ namespace TheOtherRoles.Patches
 
         private static void assignGuesserGamemodeToPlayers(List<PlayerControl> playerList, int count, bool forceJackal = false, bool forceThief = false)
         {
-            for (int i = 0; i < count && playerList.Count > 0; i++)
+            for (var i = 0; i < count && playerList.Count > 0; i++)
             {
                 var index = rnd.Next(0, playerList.Count);
                 if (forceThief && !forceJackal)
@@ -678,10 +678,16 @@ namespace TheOtherRoles.Patches
                         index = playerList.FindIndex(x => x == Jackal.jackal);
                     forceJackal = false;
                 }
-                byte playerId = playerList[index].PlayerId;
+
+                if (Doomsayer.doomsayer != null)
+                {
+                    index = playerList.FindIndex(x => x == Doomsayer.doomsayer);
+                }
+                
+                var playerId = playerList[index].PlayerId;
                 playerList.RemoveAt(index);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetGuesserGm, Hazel.SendOption.Reliable, -1);
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetGuesserGm, Hazel.SendOption.Reliable, -1);
                 writer.Write(playerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.setGuesserGm(playerId);
