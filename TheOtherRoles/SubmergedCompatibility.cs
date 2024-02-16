@@ -187,9 +187,8 @@ namespace TheOtherRoles
         }
     }
 
-    public class MissingSubmergedBehaviour : MonoBehaviour
+    public class MissingSubmergedBehaviour(IntPtr ptr) : MonoBehaviour(ptr)
     {
         static MissingSubmergedBehaviour() => ClassInjector.RegisterTypeInIl2Cpp<MissingSubmergedBehaviour>();
-        public MissingSubmergedBehaviour(IntPtr ptr) : base(ptr) { }
     }
 }

@@ -52,6 +52,9 @@ jobs:
           name: TheOtherRoles.dll
           path: ./Release/BepInEx/plugins/TheOtherRoles.dll
           
+      - name: 删除多余
+        run: rm -rf ./Release/BepInEx/plugins/TheOtherRoles.deps.json ./Release/BepInEx/plugins/TheOtherRoles.pdb
+          
       - name: Upload TheOtherUs
         uses: actions/upload-artifact@v4.3.1
         with:

@@ -25,7 +25,7 @@ public static class InfoListener
                 .Where(m => m != null)!;
         }
 
-        public static void Prefix(InnerNetObject __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
+        public static void Postfix(InnerNetObject __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
         {
             Info($"Rpc {callId} received, rpc length => {reader.Length}");
         }
