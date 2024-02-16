@@ -1,7 +1,7 @@
-﻿using Cpp2IL.Core.Extensions;
-using HarmonyLib;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Cpp2IL.Core.Extensions;
+using HarmonyLib;
 
 namespace TheOtherRoles.Modules.CustomHats.Patches;
 
@@ -22,7 +22,6 @@ internal static class HatManagerPatches
         allHats = __instance.allHats.ToList();
         var cache = CustomHatManager.UnregisteredHats.Clone();
         foreach (var hat in cache)
-        {
             try
             {
                 allHats.Add(CustomHatManager.CreateHatBehaviour(hat));
@@ -32,7 +31,7 @@ internal static class HatManagerPatches
             {
                 // This means the file has not been downloaded yet, do nothing...
             }
-        }
+
         if (CustomHatManager.UnregisteredHats.Count == 0)
             isLoaded = true;
         cache.Clear();
