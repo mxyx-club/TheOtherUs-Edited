@@ -8,6 +8,7 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 
 namespace TheOtherRoles.Patches
@@ -41,19 +42,20 @@ namespace TheOtherRoles.Patches
         static void Postfix(MapBehaviour __instance)
         {
             __instance.HerePoint.transform.SetLocalZ(-2.1f);
+            if (__instance.HerePoint == null) return;
             if (Trapper.trapper != null && CachedPlayer.LocalPlayer.PlayerId == Trapper.trapper.PlayerId)
             {
                 foreach (PlayerControl player in Trapper.playersOnMap)
                 {
                     if (herePoints.ContainsKey(player)) continue;
-                    Vector3 v = Trap.trapPlayerIdMap[player.PlayerId].trap.transform.position;
+                    var v = Trap.trapPlayerIdMap[player.PlayerId].trap.transform.position;
                     v /= MapUtilities.CachedShipStatus.MapScale;
                     v.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
                     v.z = -2.1f;
                     var herePoint = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent, true);
                     herePoint.transform.localPosition = v;
                     herePoint.enabled = true;
-                    int colorId = player.CurrentOutfit.ColorId;
+                    var colorId = player.CurrentOutfit.ColorId;
                     if (Trapper.anonymousMap) player.CurrentOutfit.ColorId = 6;
                     player.SetPlayerMaterialColors(herePoint);
                     player.CurrentOutfit.ColorId = colorId;
@@ -113,7 +115,7 @@ namespace TheOtherRoles.Patches
             {
                 if ((vent.name.StartsWith("JackInThe") && !(PlayerControl.LocalPlayer == Trickster.trickster || PlayerControl.LocalPlayer.Data.IsDead))) continue; //for trickster vents
 
-                if (!TheOtherRolesPlugin.ShowVentsOnMap.Value)
+                if (!Main.ShowVentsOnMap.Value)
                 {
                     if (mapIcons.Count > 0)
                     {
@@ -125,6 +127,7 @@ namespace TheOtherRoles.Patches
 
                 var Instance = DestroyableSingleton<MapTaskOverlay>.Instance;
                 var task = PlayerControl.LocalPlayer.myTasks.ToArray().FirstOrDefault(x => x.TaskType == TaskTypes.VentCleaning);
+                if (task == null) break;
 
                 var location = vent.transform.position / MapUtilities.CachedShipStatus.MapScale;
                 location.z = -2f; //show above sabotage buttons
@@ -132,7 +135,7 @@ namespace TheOtherRoles.Patches
                 GameObject MapIcon;
                 if (!mapIcons.ContainsKey($"vent {vent.Id} icon"))
                 {
-                    MapIcon = GameObject.Instantiate(__instance.HerePoint.gameObject, __instance.HerePoint.transform.parent);
+                    MapIcon = Object.Instantiate(__instance.HerePoint.gameObject, __instance.HerePoint.transform.parent);
                     mapIcons.Add($"vent {vent.Id} icon", MapIcon);
                 }
                 else
@@ -159,12 +162,12 @@ namespace TheOtherRoles.Patches
                 if (AllVentsRegistered(Instance))
                 {
                     var array = VentNetworks.ToArray();
-                    foreach (var connectedgroup in VentNetworks)
+                    foreach (var connectedGroup in VentNetworks)
                     {
-                        var index = Array.IndexOf(array, connectedgroup);
-                        if (connectedgroup[0].name.StartsWith("JackInThe"))
+                        var index = Array.IndexOf(array, connectedGroup);
+                        if (connectedGroup[0].name.StartsWith("JackInThe"))
                             continue;
-                        connectedgroup.Do(x => GetIcon(x).GetComponent<SpriteRenderer>().color = Palette.PlayerColors[index]);
+                        connectedGroup.Do(x => GetIcon(x).GetComponent<SpriteRenderer>().color = Palette.PlayerColors[index]);
                     }
                     continue;
                 }
@@ -174,11 +177,11 @@ namespace TheOtherRoles.Patches
                 var network = GetNetworkFor(vent);
                 if (network == null)
                 {
-                    VentNetworks.Add(new(vent.NearbyVents.Where(x => x != null)) { vent });
+                    VentNetworks.Add([..vent.NearbyVents.Where(x => x != null), vent]);
                 }
                 else
                 {
-                    if (!network.Any(x => x == vent)) network.Add(vent);
+                    if (network.All(x => x != vent)) network.Add(vent);
                 }
             }
             HudManagerUpdate.CloseSettings();
