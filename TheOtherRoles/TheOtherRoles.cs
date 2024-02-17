@@ -1928,6 +1928,7 @@ public static class Doomsayer
     public static bool onlineTarger;
     public static float killToWin = 3;
     public static float killedToWin;
+    public static bool CanShoot = true;
 
 
     private static Sprite buttonSprite;
@@ -1978,19 +1979,18 @@ public static class Guesser
 
     public static bool isGuesser(byte playerId)
     {
-        foreach (var item in evilGuesser)
-            if (item.PlayerId == playerId && evilGuesser != null)
-                return true;
-        if (niceGuesser != null && niceGuesser.PlayerId == playerId) return true;
-        return false;
+        if (evilGuesser.Any(item => item.PlayerId == playerId && evilGuesser != null))
+        {
+            return true;
+        }
+        return niceGuesser != null && niceGuesser.PlayerId == playerId;
     }
 
     public static void clear(byte playerId)
     {
         if (niceGuesser != null && niceGuesser.PlayerId == playerId) niceGuesser = null;
-        foreach (var item in evilGuesser)
-            if (item.PlayerId == playerId && evilGuesser != null)
-                evilGuesser = null;
+        foreach (var item in evilGuesser.Where(item => item.PlayerId == playerId && evilGuesser != null))
+            evilGuesser = null;
     }
 
 

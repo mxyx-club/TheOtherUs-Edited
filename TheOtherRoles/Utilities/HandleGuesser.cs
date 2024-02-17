@@ -34,8 +34,7 @@ public static class HandleGuesser
 
     public static int remainingShots(byte playerId, bool shoot = false)
     {
-        if (isGuesserGm) return GuesserGM.remainingShots(playerId, shoot);
-        return Guesser.remainingShots(playerId, shoot);
+        return isGuesserGm ? GuesserGM.remainingShots(playerId, shoot) : Guesser.remainingShots(playerId, shoot);
     }
 
     public static void clearAndReload()
