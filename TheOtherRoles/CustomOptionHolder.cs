@@ -1047,26 +1047,26 @@ public class CustomOptionHolder
         juggernautHasImpVision = CustomOption.Create(10103, Types.Neutral, "天启拥有伪装者视野", true, juggernautSpawnRate);
         juggernautReducedkillEach =
             CustomOption.Create(10104, Types.Neutral, "每次击杀后减少的cd", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
-
         /*
-       public static CustomOption doomsayerSpawnRate;
-    public static CustomOption doomsayerCooldown;
-    public static CustomOption doomsayerHasMultipleShotsPerMeeting;
-    public static CustomOption doomsayerShowInfoInGhostChat;
-    public static CustomOption doomsayerCanGuessNeutral;
-    public static CustomOption doomsayerCanGuessImpostor;
-    public static CustomOption doomsayerGuesserCantGuessSnitch;
-    public static CustomOption doomsayerkillToWin;
-                    guesserSpawnRate = CustomOption.Create(310, Types.Crewmate, cs(Guesser.color, "赌怪"), rates, null, true);
+        public static CustomOption doomsayerSpawnRate;
+        public static CustomOption doomsayerCooldown;
+        public static CustomOption doomsayerHasMultipleShotsPerMeeting;
+        public static CustomOption doomsayerShowInfoInGhostChat;
+        public static CustomOption doomsayerCanGuessNeutral;
+        public static CustomOption doomsayerCanGuessImpostor;
+        public static CustomOption doomsayerGuesserCantGuessSnitch;
+        public static CustomOption doomsayerkillToWin;
+
+        guesserSpawnRate = CustomOption.Create(310, Types.Crewmate, cs(Guesser.color, "赌怪"), rates, null, true);
         guesserNumberOfShots = CustomOption.Create(311, Types.Crewmate, "可猜测次数", 5f, 1f, 15f, 1f, guesserSpawnRate);
         guesserHasMultipleShotsPerMeeting = CustomOption.Create(312, Types.Crewmate, "同一轮会议可多次猜测", true, guesserSpawnRate);
         guesserShowInfoInGhostChat = CustomOption.Create(313, Types.Crewmate, "灵魂可见猜测结果", true, guesserSpawnRate);
         guesserKillsThroughShield = CustomOption.Create(314, Types.Crewmate, "猜测无视法医护盾保护", false, guesserSpawnRate);
-         */
+        */
         doomsayerSpawnRate = CustomOption.Create(10111, Types.Neutral, cs(Doomsayer.color, "末日预言家"), rates, null, true);
         doomsayerCooldown = CustomOption.Create(10112, Types.Neutral, "技能冷却", 30f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
         doomsayerHasMultipleShotsPerMeeting =
-            CustomOption.Create(10113, Types.Neutral, "同一轮会议可多次猜测\n该选项暂时无效", true, doomsayerSpawnRate);
+            CustomOption.Create(10113, Types.Neutral, "猜测成功后可继续猜测", true, doomsayerSpawnRate);
         doomsayerShowInfoInGhostChat = CustomOption.Create(10114, Types.Neutral, "灵魂可见猜测结果", true, doomsayerSpawnRate);
         doomsayerCanGuessNeutral = CustomOption.Create(10115, Types.Neutral, "可以猜测中立", true, doomsayerSpawnRate);
         doomsayerCanGuessImpostor = CustomOption.Create(10116, Types.Neutral, "可以猜测伪装者", true, doomsayerSpawnRate);

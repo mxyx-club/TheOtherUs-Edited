@@ -46,6 +46,9 @@ public static class TasksHandler
                     || playerInfo.PlayerId ==
                     Thief.thief
                         ?.PlayerId // Thief's tasks only count after joining crew team as sheriff (and then the thief is not the thief anymore)
+                    || playerInfo.PlayerId ==
+                    Jumper.jumper
+                        ?.PlayerId // Thief's tasks only count after joining crew team as sheriff (and then the thief is not the thief anymore)
                    )
                     continue;
                 var (playerCompleted, playerTotal) = taskInfo(playerInfo);
