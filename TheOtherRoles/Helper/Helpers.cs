@@ -585,8 +585,7 @@ public static class Helpers
         return player == Werewolf.werewolf || player == Doomsayer.doomsayer || player == Juggernaut.juggernaut ||
                player == Jester.jester || player == Arsonist.arsonist || player == Jackal.jackal ||
                player == Sidekick.sidekick || player == Doomsayer.doomsayer || player == Pursuer.pursuer ||
-               player == Lawyer.lawyer || player == Lawyer.isProsecutor || player == Vulture.vulture ||
-               Jackal.formerJackals.Any(x => x == player);
+               player == Lawyer.lawyer || player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player);
     }
     
     public static bool canBeErased(this PlayerControl player)
