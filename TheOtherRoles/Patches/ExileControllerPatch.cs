@@ -50,7 +50,7 @@ internal class ExileControllerBeginPatch
         }
 
         Shifter.futureShift = null;
-        //???????
+        //末日预言家
         if (Doomsayer.doomsayer != null && AmongUsClient.Instance.AmHost && !Doomsayer.canGuess)
             Doomsayer.canGuess = true;
 
@@ -605,7 +605,7 @@ internal class ExileControllerMessagePatch
                 if (id == StringNames.ImpostorsRemainP || id == StringNames.ImpostorsRemainS)
                     if (Jester.jester != null && player.PlayerId == Jester.jester.PlayerId)
                         __result = "";
-                if (Tiebreaker.isTiebreak) __result += " (???)";
+                if (Tiebreaker.isTiebreak) __result += " (破平)";
                 Tiebreaker.isTiebreak = false;
             }
         }
