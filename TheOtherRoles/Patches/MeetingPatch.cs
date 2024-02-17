@@ -279,7 +279,7 @@ internal class MeetingHudPatch
 
             switch (HandleGuesser.isGuesserGm)
             {
-                case true when roleInfo.roleId == RoleId.NiceGuesser || roleInfo.roleId == RoleId.EvilGuesser:
+                case true when roleInfo.roleId is RoleId.NiceGuesser or RoleId.EvilGuesser:
                 case true when CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor &&
                                !HandleGuesser.evilGuesserCanGuessSpy && roleInfo.roleId == RoleId.Spy:
                     continue; // remove Guesser for guesser game mode
@@ -377,25 +377,7 @@ internal class MeetingHudPatch
                         // Reset the GUI
                         __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
                         Object.Destroy(container.gameObject);
-                        if (
-                            (
-                                (
-                                HandleGuesser.hasMultipleShotsPerMeeting
-                                &&
-                                HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 1
-                                &&
-                                HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId)
-                                )
-                                ||
-                                (
-                                Doomsayer.hasMultipleShotsPerMeeting
-                                &&
-                                Doomsayer.doomsayer == CachedPlayer.LocalPlayer.PlayerControl
-                                )
-                            )
-                            &&
-                            dyingTarget != CachedPlayer.LocalPlayer.PlayerControl
-                        )
+                        if (RoleHelpers.CanMultipleShots(dyingTarget))
                             __instance.playerStates.ToList().ForEach(x =>
                             {
                                 if (x.TargetPlayerId == dyingTarget.PlayerId &&
@@ -451,8 +433,7 @@ internal class MeetingHudPatch
                                               Swapper.canOnlySwapOthers)) continue;
 
                 var template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-                var checkbox = Object.Instantiate(template);
-                checkbox.transform.SetParent(playerVoteArea.transform);
+                var checkbox = Object.Instantiate(template, playerVoteArea.transform, true);
                 checkbox.transform.position = template.transform.position;
                 checkbox.transform.localPosition = new Vector3(-0.95f, 0.03f, -1.3f);
                 if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId))
@@ -509,12 +490,14 @@ internal class MeetingHudPatch
                 meetingExtraButtonLabel.transform.localScale *= 1.7f;
                 meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认交换");
             }
-            else if (addMayorButton)
+            else
             {
-                meetingExtraButtonLabel.transform.localScale = new Vector3(
-                    meetingExtraButtonLabel.transform.localScale.x * 1.5f,
-                    meetingExtraButtonLabel.transform.localScale.x * 1.7f,
-                    meetingExtraButtonLabel.transform.localScale.x * 1.7f);
+                var localScale = meetingExtraButtonLabel.transform.localScale;
+                localScale = new Vector3(
+                    localScale.x * 1.5f,
+                    localScale.x * 1.7f,
+                    localScale.x * 1.7f);
+                meetingExtraButtonLabel.transform.localScale = localScale;
                 meetingExtraButtonLabel.text = Helpers.cs(Mayor.color,
                     "双倍票数: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "开") : Helpers.cs(Color.red, "关")));
             }
@@ -525,7 +508,7 @@ internal class MeetingHudPatch
             {
                 if (addSwapperButtons)
                     passiveButton.OnClick.AddListener((Action)(() => swapperConfirm(__instance)));
-                else if (addMayorButton)
+                else
                     passiveButton.OnClick.AddListener((Action)(() => mayorToggleVoteTwice(__instance)));
             }
 
@@ -533,7 +516,7 @@ internal class MeetingHudPatch
             __instance.StartCoroutine(Effects.Lerp(7.27f, new Action<float>(p =>
             {
                 // Button appears delayed, so that its visible in the voting screen only!
-                if (p == 1f) meetingExtraButton.parent.gameObject.SetActive(true);
+                if ((int)p == 1) meetingExtraButton.parent.gameObject.SetActive(true);
             })));
         }
 
@@ -575,7 +558,8 @@ internal class MeetingHudPatch
 
         // Add Guesser Buttons
         var GuesserRemainingShots = HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId);
-        if (isGuesser && !CachedPlayer.LocalPlayer.Data.IsDead && GuesserRemainingShots > 0)
+        if (!isGuesser || CachedPlayer.LocalPlayer.Data.IsDead || GuesserRemainingShots <= 0) return;
+        {
             for (var i = 0; i < __instance.playerStates.Length; i++)
             {
                 var playerVoteArea = __instance.playerStates[i];
@@ -595,6 +579,7 @@ internal class MeetingHudPatch
                 var copiedIndex = i;
                 button.OnClick.AddListener((Action)(() => guesserOnClick(copiedIndex, __instance)));
             }
+        }
     }
 
     [HarmonyPrefix]
@@ -610,29 +595,26 @@ internal class MeetingHudPatch
         private static Dictionary<byte, int> CalculateVotes(MeetingHud __instance)
         {
             var dictionary = new Dictionary<byte, int>();
-            for (var i = 0; i < __instance.playerStates.Length; i++)
+            foreach (var playerVoteArea in __instance.playerStates)
             {
-                var playerVoteArea = __instance.playerStates[i];
-                if (playerVoteArea.VotedFor != 252 && playerVoteArea.VotedFor != 255 && playerVoteArea.VotedFor != 254)
-                {
-                    var player = Helpers.playerById(playerVoteArea.TargetPlayerId);
-                    if (player == null || player.Data == null || player.Data.IsDead ||
-                        player.Data.Disconnected) continue;
+                if (playerVoteArea.VotedFor == 252 || playerVoteArea.VotedFor == 255 ||
+                    playerVoteArea.VotedFor == 254) continue;
+                var player = Helpers.playerById(playerVoteArea.TargetPlayerId);
+                if (player == null || player.Data == null || player.Data.IsDead ||
+                    player.Data.Disconnected) continue;
 
-                    int currentVotes;
-                    var additionalVotes = Mayor.mayor != null &&
-                                          Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId && Mayor.voteTwice
-                        ? 2
-                        : 1; // Mayor vote
-                    if (dictionary.TryGetValue(playerVoteArea.VotedFor, out currentVotes))
-                        dictionary[playerVoteArea.VotedFor] = currentVotes + additionalVotes;
-                    else
-                        dictionary[playerVoteArea.VotedFor] = additionalVotes;
-                }
+                var additionalVotes = Mayor.mayor != null &&
+                                      Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId && Mayor.voteTwice
+                    ? 2
+                    : 1; // Mayor vote
+                if (dictionary.TryGetValue(playerVoteArea.VotedFor, out var currentVotes))
+                    dictionary[playerVoteArea.VotedFor] = currentVotes + additionalVotes;
+                else
+                    dictionary[playerVoteArea.VotedFor] = additionalVotes;
             }
 
             // Swapper swap votes
-            if (Swapper.swapper != null && !Swapper.swapper.Data.IsDead)
+            if (Swapper.swapper == null || Swapper.swapper.Data.IsDead) return dictionary;
             {
                 swapped1 = null;
                 swapped2 = null;
@@ -642,14 +624,10 @@ internal class MeetingHudPatch
                     if (playerVoteArea.TargetPlayerId == Swapper.playerId2) swapped2 = playerVoteArea;
                 }
 
-                if (swapped1 != null && swapped2 != null)
-                {
-                    if (!dictionary.ContainsKey(swapped1.TargetPlayerId)) dictionary[swapped1.TargetPlayerId] = 0;
-                    if (!dictionary.ContainsKey(swapped2.TargetPlayerId)) dictionary[swapped2.TargetPlayerId] = 0;
-                    var tmp = dictionary[swapped1.TargetPlayerId];
-                    dictionary[swapped1.TargetPlayerId] = dictionary[swapped2.TargetPlayerId];
-                    dictionary[swapped2.TargetPlayerId] = tmp;
-                }
+                if (swapped1 == null || swapped2 == null) return dictionary;
+                dictionary.TryAdd(swapped1.TargetPlayerId, 0);
+                dictionary.TryAdd(swapped2.TargetPlayerId, 0);
+                (dictionary[swapped1.TargetPlayerId], dictionary[swapped2.TargetPlayerId]) = (dictionary[swapped2.TargetPlayerId], dictionary[swapped1.TargetPlayerId]);
             }
 
 
@@ -659,82 +637,75 @@ internal class MeetingHudPatch
 
         private static bool Prefix(MeetingHud __instance)
         {
-            if (__instance.playerStates.All(ps => ps.AmDead || ps.DidVote))
+            if (!__instance.playerStates.All(ps => ps.AmDead || ps.DidVote)) return false;
+            // If skipping is disabled, replace skipps/no-votes with self vote
+            if (target == null && blockSkippingInEmergencyMeetings && noVoteIsSelfVote)
+                foreach (var playerVoteArea in __instance.playerStates)
+                    if (playerVoteArea.VotedFor == byte.MaxValue - 1)
+                        playerVoteArea.VotedFor = playerVoteArea.TargetPlayerId; // TargetPlayerId
+
+            var self = CalculateVotes(__instance);
+            var max = self.MaxPair(out var tie);
+            var exiled = GameData.Instance.AllPlayers.ToArray()
+                .FirstOrDefault(v => !tie && v.PlayerId == max.Key && !v.IsDead);
+
+            // TieBreaker 
+            var potentialExiled = new List<GameData.PlayerInfo>();
+            var skipIsTie = false;
+            if (self.Count > 0)
             {
-                // If skipping is disabled, replace skipps/no-votes with self vote
-                if (target == null && blockSkippingInEmergencyMeetings && noVoteIsSelfVote)
-                    foreach (var playerVoteArea in __instance.playerStates)
-                        if (playerVoteArea.VotedFor == byte.MaxValue - 1)
-                            playerVoteArea.VotedFor = playerVoteArea.TargetPlayerId; // TargetPlayerId
+                Tiebreaker.isTiebreak = false;
+                var maxVoteValue = self.Values.Max();
+                PlayerVoteArea tb = null;
+                if (Tiebreaker.tiebreaker != null)
+                    tb = __instance.playerStates.ToArray()
+                        .FirstOrDefault(x => x.TargetPlayerId == Tiebreaker.tiebreaker.PlayerId);
+                var isTiebreakerSkip = tb == null || tb.VotedFor == 253 || tb != null && tb.AmDead;
 
-                var self = CalculateVotes(__instance);
-                bool tie;
-                var max = self.MaxPair(out tie);
-                var exiled = GameData.Instance.AllPlayers.ToArray()
-                    .FirstOrDefault(v => !tie && v.PlayerId == max.Key && !v.IsDead);
-
-                // TieBreaker 
-                var potentialExiled = new List<GameData.PlayerInfo>();
-                var skipIsTie = false;
-                if (self.Count > 0)
+                foreach (var pair in self.Where(pair => pair.Value == maxVoteValue && !isTiebreakerSkip))
                 {
-                    Tiebreaker.isTiebreak = false;
-                    var maxVoteValue = self.Values.Max();
-                    PlayerVoteArea tb = null;
-                    if (Tiebreaker.tiebreaker != null)
-                        tb = __instance.playerStates.ToArray()
-                            .FirstOrDefault(x => x.TargetPlayerId == Tiebreaker.tiebreaker.PlayerId);
-                    var isTiebreakerSkip = tb == null || tb.VotedFor == 253;
-                    if (tb != null && tb.AmDead) isTiebreakerSkip = true;
-
-                    foreach (var pair in self)
-                    {
-                        if (pair.Value != maxVoteValue || isTiebreakerSkip) continue;
-                        if (pair.Key != 253)
-                            potentialExiled.Add(GameData.Instance.AllPlayers.ToArray()
-                                .FirstOrDefault(x => x.PlayerId == pair.Key));
-                        else
-                            skipIsTie = true;
-                    }
+                    if (pair.Key != 253)
+                        potentialExiled.Add(GameData.Instance.AllPlayers.ToArray()
+                            .FirstOrDefault(x => x.PlayerId == pair.Key));
+                    else
+                        skipIsTie = true;
                 }
-
-                var array = new MeetingHud.VoterState[__instance.playerStates.Length];
-                for (var i = 0; i < __instance.playerStates.Length; i++)
-                {
-                    var playerVoteArea = __instance.playerStates[i];
-                    array[i] = new MeetingHud.VoterState
-                    {
-                        VoterId = playerVoteArea.TargetPlayerId,
-                        VotedForId = playerVoteArea.VotedFor
-                    };
-
-                    if (Tiebreaker.tiebreaker == null ||
-                        playerVoteArea.TargetPlayerId != Tiebreaker.tiebreaker.PlayerId) continue;
-
-                    var tiebreakerVote = playerVoteArea.VotedFor;
-                    if (swapped1 != null && swapped2 != null)
-                    {
-                        if (tiebreakerVote == swapped1.TargetPlayerId) tiebreakerVote = swapped2.TargetPlayerId;
-                        else if (tiebreakerVote == swapped2.TargetPlayerId) tiebreakerVote = swapped1.TargetPlayerId;
-                    }
-
-                    if (potentialExiled.FindAll(x => x != null && x.PlayerId == tiebreakerVote).Count > 0 &&
-                        (potentialExiled.Count > 1 || skipIsTie))
-                    {
-                        exiled = potentialExiled.ToArray().FirstOrDefault(v => v.PlayerId == tiebreakerVote);
-                        tie = false;
-
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(
-                            CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetTiebreak,
-                            SendOption.Reliable);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.setTiebreak();
-                    }
-                }
-
-                // RPCVotingComplete
-                __instance.RpcVotingComplete(array, exiled, tie);
             }
+
+            var array = new MeetingHud.VoterState[__instance.playerStates.Length];
+            for (var i = 0; i < __instance.playerStates.Length; i++)
+            {
+                var playerVoteArea = __instance.playerStates[i];
+                array[i] = new MeetingHud.VoterState
+                {
+                    VoterId = playerVoteArea.TargetPlayerId,
+                    VotedForId = playerVoteArea.VotedFor
+                };
+
+                if (Tiebreaker.tiebreaker == null ||
+                    playerVoteArea.TargetPlayerId != Tiebreaker.tiebreaker.PlayerId) continue;
+
+                var tiebreakerVote = playerVoteArea.VotedFor;
+                if (swapped1 != null && swapped2 != null)
+                {
+                    if (tiebreakerVote == swapped1.TargetPlayerId) tiebreakerVote = swapped2.TargetPlayerId;
+                    else if (tiebreakerVote == swapped2.TargetPlayerId) tiebreakerVote = swapped1.TargetPlayerId;
+                }
+
+                if (potentialExiled.FindAll(x => x != null && x.PlayerId == tiebreakerVote).Count <= 0 ||
+                    (potentialExiled.Count <= 1 && !skipIsTie)) continue;
+                exiled = potentialExiled.ToArray().FirstOrDefault(v => v.PlayerId == tiebreakerVote);
+                tie = false;
+
+                var writer = AmongUsClient.Instance.StartRpcImmediately(
+                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetTiebreak,
+                    SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.setTiebreak();
+            }
+
+            // RPCVotingComplete
+            __instance.RpcVotingComplete(array, exiled, tie);
 
             return false;
         }
@@ -789,10 +760,11 @@ internal class MeetingHudPatch
                          !Swapper.swapper.Data.IsDead;
             if (doSwap)
             {
-                __instance.StartCoroutine(Effects.Slide3D(swapped1.transform, swapped1.transform.localPosition,
+                var localPosition = swapped1.transform.localPosition;
+                __instance.StartCoroutine(Effects.Slide3D(swapped1.transform, localPosition,
                     swapped2.transform.localPosition, 1.5f));
                 __instance.StartCoroutine(Effects.Slide3D(swapped2.transform, swapped2.transform.localPosition,
-                    swapped1.transform.localPosition, 1.5f));
+                    localPosition, 1.5f));
             }
 
 
@@ -804,9 +776,13 @@ internal class MeetingHudPatch
             {
                 var playerVoteArea = __instance.playerStates[i];
                 var targetPlayerId = playerVoteArea.TargetPlayerId;
-                // Swapper change playerVoteArea that gets the votes
-                if (doSwap && playerVoteArea.TargetPlayerId == swapped1.TargetPlayerId) playerVoteArea = swapped2;
-                else if (doSwap && playerVoteArea.TargetPlayerId == swapped2.TargetPlayerId) playerVoteArea = swapped1;
+                playerVoteArea = doSwap switch
+                {
+                    // Swapper change playerVoteArea that gets the votes
+                    true when playerVoteArea.TargetPlayerId == swapped1.TargetPlayerId => swapped2,
+                    true when playerVoteArea.TargetPlayerId == swapped2.TargetPlayerId => swapped1,
+                    _ => playerVoteArea
+                };
 
                 playerVoteArea.ClearForResults();
                 var num2 = 0;
@@ -831,12 +807,10 @@ internal class MeetingHudPatch
                     }
 
                     // Major vote, redo this iteration to place a second vote
-                    if (Mayor.mayor != null && voterState.VoterId == (sbyte)Mayor.mayor.PlayerId &&
-                        !mayorFirstVoteDisplayed && Mayor.voteTwice)
-                    {
-                        mayorFirstVoteDisplayed = true;
-                        j--;
-                    }
+                    if (Mayor.mayor == null || voterState.VoterId != (sbyte)Mayor.mayor.PlayerId ||
+                        mayorFirstVoteDisplayed || !Mayor.voteTwice) continue;
+                    mayorFirstVoteDisplayed = true;
+                    j--;
                 }
             }
 
@@ -915,9 +889,9 @@ internal class MeetingHudPatch
     {
         public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo meetingTarget)
         {
-            var roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
+            var roomTracker = FastDestroyableSingleton<HudManager>.Instance.roomTracker;
             var roomId = byte.MinValue;
-            if (roomTracker != null && roomTracker.LastRoom != null) roomId = (byte)roomTracker.LastRoom?.RoomId;
+            if (roomTracker != null && roomTracker.LastRoom != null) roomId = (byte)roomTracker.LastRoom.RoomId;
             if (Snitch.snitch != null && roomTracker != null)
             {
                 var roomWriter = AmongUsClient.Instance.StartRpcImmediately(
@@ -989,20 +963,13 @@ internal class MeetingHudPatch
                     if (!trap.revealed) continue;
                     var message = $"陷阱 {trap.instanceId}: \n";
                     trap.trappedPlayer = trap.trappedPlayer.OrderBy(x => rnd.Next()).ToList();
-                    foreach (var p in trap.trappedPlayer)
-                        if (Trapper.infoType == 0)
-                        {
-                            message += RoleInfo.GetRolesString(p, false, false, true) + "\n";
-                        }
-                        else if (Trapper.infoType == 1)
-                        {
-                            if (Helpers.isNeutral(p) || p.Data.Role.IsImpostor) message += "邪恶职业 \n";
-                            else message += "善良职业 \n";
-                        }
-                        else
-                        {
-                            message += p.Data.PlayerName + "\n";
-                        }
+                    message = trap.trappedPlayer.Aggregate(message, (current, p) => current + Trapper.infoType switch
+                    {
+                        0 => RoleInfo.GetRolesString(p, false, false, true) + "\n",
+                        1 when Helpers.isNeutral(p) || p.Data.Role.IsImpostor => "邪恶职业 \n",
+                        1 => "善良职业 \n",
+                        _ => p.Data.PlayerName + "\n"
+                    });
 
                     FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, $"{message}");
                 }
@@ -1104,26 +1071,29 @@ internal class MeetingHudPatch
                     FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.4f,
                         new Action<float>(x =>
                         {
-                            if (x == 1f)
+                            if ((int)x != 1) return;
+                            foreach (PlayerControl p in CachedPlayer.AllPlayers)
                             {
-                                foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                                switch (Snitch.targets)
                                 {
-                                    if (Snitch.targets == Snitch.Targets.Killers && !Helpers.isKiller(p)) continue;
-                                    if (Snitch.targets == Snitch.Targets.EvilPlayers && !Helpers.isEvil(p)) continue;
-                                    if (!Snitch.playerRoomMap.ContainsKey(p.PlayerId)) continue;
-                                    if (p.Data.IsDead) continue;
-                                    var room = Snitch.playerRoomMap[p.PlayerId];
-                                    var roomName = "室外";
-                                    if (room != byte.MinValue)
-                                        roomName =
-                                            DestroyableSingleton<TranslationController>.Instance.GetString(
-                                                (SystemTypes)room);
-                                    output += "- " + RoleInfo.GetRolesString(p, false, false, true) + ", 最后一次出现 " +
-                                              roomName + "\n";
+                                    case Snitch.Targets.Killers when !Helpers.isKiller(p):
+                                    case Snitch.Targets.EvilPlayers when !Helpers.isEvil(p):
+                                        continue;
                                 }
 
-                                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Snitch.snitch, $"{output}");
+                                if (!Snitch.playerRoomMap.ContainsKey(p.PlayerId)) continue;
+                                if (p.Data.IsDead) continue;
+                                var room = Snitch.playerRoomMap[p.PlayerId];
+                                var roomName = "室外";
+                                if (room != byte.MinValue)
+                                    roomName =
+                                        DestroyableSingleton<TranslationController>.Instance.GetString(
+                                            (SystemTypes)room);
+                                output += "- " + RoleInfo.GetRolesString(p, false, false, true) + ", 最后一次出现 " +
+                                          roomName + "\n";
                             }
+
+                            FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Snitch.snitch, $"{output}");
                         })));
                 }
             }
@@ -1189,17 +1159,15 @@ internal class MeetingHudPatch
             foreach (var allPlayer in CachedPlayer.AllPlayers)
             {
                 PlayerControl playerControl2 = allPlayer;
-                if (playerControl2 == playerControl && !playerControl2.Data.IsDead && num == 0)
-                {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetMeetingChatOverlay,
-                        SendOption.Reliable);
-                    writer.Write(playerControl2.PlayerId);
-                    writer.Write(playerControl.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.setChatNotificationOverlay(playerControl.PlayerId, playerControl2.PlayerId);
-                    break;
-                }
+                if (playerControl2 != playerControl || playerControl2.Data.IsDead || num != 0) continue;
+                var writer = AmongUsClient.Instance.StartRpcImmediately(
+                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetMeetingChatOverlay,
+                    SendOption.Reliable);
+                writer.Write(playerControl2.PlayerId);
+                writer.Write(playerControl.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.setChatNotificationOverlay(playerControl.PlayerId, playerControl2.PlayerId);
+                break;
             }
         }
     }
@@ -1209,14 +1177,9 @@ internal class MeetingHudPatch
     {
         public static bool Prefix(TextBoxTMP __instance)
         {
-            if (Blackmailer.blackmailer != null)
-                if (Blackmailer.blackmailed != null)
-                {
-                    if (Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl) return false;
-                    return true;
-                }
-
-            return true;
+            if (Blackmailer.blackmailer == null) return true;
+            if (Blackmailer.blackmailed == null) return true;
+            return Blackmailer.blackmailed != CachedPlayer.LocalPlayer.PlayerControl;
         }
     }
 
@@ -1230,12 +1193,12 @@ internal class MeetingHudPatch
         {
             shookAlready = false;
             if (Blackmailer.blackmailed == null) return;
-            if (Blackmailer.blackmailed.Data.PlayerId == CachedPlayer.LocalPlayer.PlayerId &&
-                !Blackmailer.blackmailed.Data.IsDead)
-                // Nothing here for now. What to do when local player who is blackmailed starts meeting
-                //Coroutines.Start(BlackmailShhh());
-                if (Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl)
-                    Coroutines.Start(Helpers.BlackmailShhh());
+            if (Blackmailer.blackmailed.Data.PlayerId != CachedPlayer.LocalPlayer.PlayerId ||
+                Blackmailer.blackmailed.Data.IsDead) return;
+            // Nothing here for now. What to do when local player who is blackmailed starts meeting
+            //Coroutines.Start(BlackmailShhh());
+            if (Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl)
+                Coroutines.Start(Helpers.BlackmailShhh());
         }
     }
 }
