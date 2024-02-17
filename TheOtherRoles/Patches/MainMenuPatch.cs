@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AmongUs.Data;
 using Assets.InnerNet;
 using HarmonyLib;
@@ -201,9 +201,9 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
 
             template.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p =>
             {
-                guesserButtonText.SetText("TOU 赌怪模式");
-                HideNSeekButtonText.SetText("TOU 猎杀模式");
-                PropHuntButtonText.SetText("TOU 躲猫猫");
+                guesserButtonText.SetText("TOR 赌怪模式");
+                HideNSeekButtonText.SetText("TOR 猎杀模式");
+                PropHuntButtonText.SetText("TOR 躲猫猫");
             })));
         }));
     }
