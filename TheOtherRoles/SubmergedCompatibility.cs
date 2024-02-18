@@ -75,14 +75,14 @@ public static class SubmergedCompatibility
 
             using var submergedStream = thisAsm.GetManifestResourceStream(resourceName)!;
             var assemblyBuffer = new byte[submergedStream.Length];
-            submergedStream.Read(assemblyBuffer, 0, assemblyBuffer.Length);
+            var read = submergedStream.Read(assemblyBuffer, 0, assemblyBuffer.Length);
             Assembly = Assembly.Load(assemblyBuffer);
 
             var pluginType = Assembly.GetTypes().FirstOrDefault(t => t.IsSubclassOf(typeof(BasePlugin)));
             Plugin = (BasePlugin)Activator.CreateInstance(pluginType!);
-            Plugin.Load();
+            Plugin?.Load();
 
-            Version = pluginType.GetCustomAttribute<BepInPlugin>().Version.BaseVersion();
+            Version = pluginType.GetCustomAttribute<BepInPlugin>()?.Version.BaseVersion();
             ;
 
             IL2CPPChainloader.Instance.Plugins[SUBMERGED_GUID] = new PluginInfo();
@@ -138,7 +138,7 @@ public static class SubmergedCompatibility
         RetrieveOxigenMaskField = AccessTools.Field(CustomTaskTypesType, "RetrieveOxygenMask");
         var RetrieveOxigenMaskTaskTypeField = AccessTools.Field(CustomTaskTypesType, "taskType");
         var OxygenMaskCustomTaskType = RetrieveOxigenMaskField.GetValue(null);
-        RetrieveOxygenMask = (TaskTypes)RetrieveOxigenMaskTaskTypeField.GetValue(OxygenMaskCustomTaskType);
+        RetrieveOxygenMask = (TaskTypes)RetrieveOxigenMaskTaskTypeField.GetValue(OxygenMaskCustomTaskType)!;
 
         SubmarineOxygenSystemType =
             Types.First(t => t.Name == "SubmarineOxygenSystem" && t.Namespace == "Submerged.Systems.Oxygen");
@@ -158,7 +158,7 @@ public static class SubmergedCompatibility
     public static float GetSubmergedNeutralLightRadius(bool isImpostor)
     {
         if (!Loaded) return 0;
-        return (float)CalculateLightRadiusMethod.Invoke(SubmarineStatus, new object[] { null, true, isImpostor });
+        return (float)CalculateLightRadiusMethod.Invoke(SubmarineStatus, [null, true, isImpostor])!;
     }
 
     public static void ChangeFloor(bool toUpper)
@@ -173,7 +173,7 @@ public static class SubmergedCompatibility
     public static bool getInTransition()
     {
         if (!Loaded) return false;
-        return (bool)InTransitionField.GetValue(null);
+        return (bool)InTransitionField.GetValue(null)!;
     }
 
     public static void RepairOxygen()

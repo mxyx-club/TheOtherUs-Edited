@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Hazel;
 using InnerNet;
 using TheOtherRoles.Helper;
@@ -14,7 +13,7 @@ namespace TheOtherRoles.Patches;
 
 public class GameStartManagerPatch
 {
-    public static readonly Dictionary<int, PlayerVersion> playerVersions = new();
+    public static readonly Dictionary<int, HandshakeHelper.PlayerVersion> playerVersions = new();
     public static float timer = 600f;
     private static float kickingTimer;
     private static string lobbyCodeText = "";
@@ -24,6 +23,14 @@ public class GameStartManagerPatch
     {
         public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ClientData data)
         {
+            if (AmongUsClient.Instance.AmHost)
+            {
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
+                    (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
+                writer.Write((byte)TORMapOptions.gameMode);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+            }
+            
 #if DEBUG
                return;
 #endif
@@ -31,14 +38,6 @@ public class GameStartManagerPatch
             {
                 HandshakeHelper.shareGameVersion();
                 HandshakeHelper.shareGameGUID();
-            }
-            
-            if (AmongUsClient.Instance.AmHost)
-            {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
-                    (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
-                writer.Write((byte)TORMapOptions.gameMode);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
         }
     }
@@ -48,9 +47,6 @@ public class GameStartManagerPatch
     {
         public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ClientData data)
         {
-#if DEBUG
-               return;
-#endif
             if (AmongUsClient.Instance.AmHost)
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
@@ -80,7 +76,9 @@ public class GameStartManagerPatch
             lobbyCodeText =
                 FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoomCode,
                     new Il2CppReferenceArray<Object>(0)) + "\r\n" + code;
-            
+#if DEBUG
+               return;
+#endif
             // Send version as soon as CachedPlayer.LocalPlayer.PlayerControl exists
             if (CachedPlayer.LocalPlayer != null)
             {
@@ -89,7 +87,6 @@ public class GameStartManagerPatch
             }
 
             HandshakeHelper.PlayerAgainInfo.Clear();
-            
         }
     }
 
@@ -294,12 +291,10 @@ public class GameStartManagerPatch
                     }
 
                     var PV = playerVersions[client.Id];
-                    var diff = TheOtherRolesPlugin.Version.CompareTo(PV.version);
-                    if (diff != 0 || !PV.GuidMatches())
-                    {
-                        continueStart = false;
-                        break;
-                    }
+                    var diff = Main.Version.CompareTo(PV.version);
+                    if (diff == 0 && PV.GuidMatches()) continue;
+                    continueStart = false;
+                    break;
                 }
 
                 if (continueStart &&
@@ -307,11 +302,12 @@ public class GameStartManagerPatch
                      TORMapOptions.gameMode == CustomGamemodes.PropHunt) &&
                     GameOptionsManager.Instance.CurrentGameOptions.MapId != 6)
                 {
-                    byte mapId = 0;
-                    if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek)
-                        mapId = (byte)CustomOptionHolder.hideNSeekMap.getSelection();
-                    else if (TORMapOptions.gameMode == CustomGamemodes.PropHunt)
-                        mapId = (byte)CustomOptionHolder.propHuntMap.getSelection();
+                    byte mapId = TORMapOptions.gameMode switch
+                    {
+                        CustomGamemodes.HideNSeek => (byte)CustomOptionHolder.hideNSeekMap.getSelection(),
+                        CustomGamemodes.PropHunt => (byte)CustomOptionHolder.propHuntMap.getSelection(),
+                        _ => 0
+                    };
                     if (mapId >= 3) mapId++;
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
                         CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DynamicMapOption,
@@ -335,11 +331,6 @@ public class GameStartManagerPatch
                     Cultist.isCultistGame = true;
                     GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors = 1;
                 }
-                else if (cultistCheck)
-                {
-                    Cultist.isCultistGame = false;
-                }
-
                 else if (CustomOptionHolder.dynamicMap.getBool() && continueStart)
                 {
                     // 0 = Skeld
@@ -360,7 +351,7 @@ public class GameStartManagerPatch
                     // if any map is at 100%, remove all maps that are not!
                     if (probabilities.Contains(1.0f))
                         for (var i = 0; i < probabilities.Count; i++)
-                            if (probabilities[i] != 1.0)
+                            if ((int)probabilities[i] != 1)
                                 probabilities[i] = 0;
 
                     var sum = probabilities.Sum();
@@ -373,11 +364,9 @@ public class GameStartManagerPatch
                     for (byte i = 0; i < probabilities.Count; i++)
                     {
                         cumsum += probabilities[i];
-                        if (cumsum > selection)
-                        {
-                            chosenMapId = i;
-                            break;
-                        }
+                        if (!(cumsum > selection)) continue;
+                        chosenMapId = i;
+                        break;
                     }
 
                     // Translate chosen map to presets page and use that maps random map preset page
@@ -397,16 +386,5 @@ public class GameStartManagerPatch
             return continueStart;
         }
     }
-
-    public class PlayerVersion(Version version)
-    {
-        public readonly Version version = version;
-        public int PlayerId { get; set; }
-        public Guid? guid { get; set; } = null;
-
-        public bool GuidMatches()
-        {
-            return Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.Equals(guid);
-        }
-    }
+    
 }

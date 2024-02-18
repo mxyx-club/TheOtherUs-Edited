@@ -37,7 +37,7 @@ public static class HandshakeHelper
     public static void versionHandshake(int major, int minor, int build, int revision, int clientId)
     {
         var ver = revision < 0 ? new Version(major, minor, build) : new Version(major, minor, build, revision);
-        GameStartManagerPatch.playerVersions[clientId] = new GameStartManagerPatch.PlayerVersion(ver)
+        GameStartManagerPatch.playerVersions[clientId] = new PlayerVersion(ver)
         {
             PlayerId = clientId
         };
@@ -107,6 +107,18 @@ public static class HandshakeHelper
         {
             var info = PlayerAgainInfo[playerId] = new AgainInfo { playerId = playerId };
             info.Start(mode);
+        }
+    }
+    
+    public class PlayerVersion(Version version)
+    {
+        public readonly Version version = version;
+        public int PlayerId { get; set; }
+        public Guid? guid { get; set; } = null;
+
+        public bool GuidMatches()
+        {
+            return Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.Equals(guid);
         }
     }
 
