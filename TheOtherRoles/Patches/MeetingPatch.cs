@@ -184,8 +184,7 @@ internal class MeetingHudPatch
 
     private static void guesserOnClick(int buttonTarget, MeetingHud __instance)
     {
-        if (guesserUI != null || !(__instance.state == MeetingHud.VoteStates.Voted ||
-                                   __instance.state == MeetingHud.VoteStates.NotVoted)) return;
+        if (guesserUI != null || __instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)) return;
         __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(false));
 
         var PhoneUI = Object.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
@@ -332,9 +331,24 @@ internal class MeetingHudPatch
                     else
                     {
                         var focusedTarget = Helpers.playerById(__instance.playerStates[buttonTarget].TargetPlayerId);
-                        if (!(__instance.state == MeetingHud.VoteStates.Voted ||
-                              __instance.state == MeetingHud.VoteStates.NotVoted) || focusedTarget == null ||
-                            HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) <= 0) return;
+                        if 
+                        (
+                            __instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted) 
+                            || 
+                            focusedTarget == null 
+                            || 
+                            (
+                                HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) <= 0 
+                                && 
+                                HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId)
+                                )
+                            ||
+                            (
+                                CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer
+                                &&
+                                !Doomsayer.CanShoot
+                            )
+                            ) return;
 
                         if (!HandleGuesser.killsThroughShield && focusedTarget == Medic.shielded)
                         {
@@ -373,6 +387,21 @@ internal class MeetingHudPatch
                             ? focusedTarget
                             : CachedPlayer.LocalPlayer.PlayerControl;
 
+                        if (dyingTarget == CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer)
+                            Doomsayer.CanShoot = false;
+                        
+                        // Shoot player and send chat info if activated
+                        var writer = AmongUsClient.Instance.StartRpcImmediately(
+                            CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GuesserShoot,
+                            SendOption.Reliable);
+                        writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                        writer.Write(dyingTarget.PlayerId);
+                        writer.Write(focusedTarget.PlayerId);
+                        writer.Write((byte)roleInfo.roleId);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        RPCProcedure.guesserShoot(CachedPlayer.LocalPlayer.PlayerId, dyingTarget.PlayerId,
+                            focusedTarget.PlayerId, (byte)roleInfo.roleId);
+
                         // Reset the GUI
                         __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
                         Object.Destroy(container.gameObject);
@@ -388,18 +417,7 @@ internal class MeetingHudPatch
                             {
                                 if (x.transform.FindChild("ShootButton") != null)
                                     Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
-                            });
-                        // Shoot player and send chat info if activated
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(
-                            CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GuesserShoot,
-                            SendOption.Reliable);
-                        writer.Write(CachedPlayer.LocalPlayer.PlayerId);
-                        writer.Write(dyingTarget.PlayerId);
-                        writer.Write(focusedTarget.PlayerId);
-                        writer.Write((byte)roleInfo.roleId);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.guesserShoot(CachedPlayer.LocalPlayer.PlayerId, dyingTarget.PlayerId,
-                            focusedTarget.PlayerId, (byte)roleInfo.roleId);
+                            }); 
                     }
                 }));
 
@@ -537,7 +555,9 @@ internal class MeetingHudPatch
                 }
 
         //!!!添加末日预言家赌
-        if (addDoomsayerButtons) 
+        if (addDoomsayerButtons)
+        {
+            Doomsayer.CanShoot = true;
             for (var i = 0; i < __instance.playerStates.Length; i++)
             {
                 var playerVoteArea = __instance.playerStates[i];
@@ -554,6 +574,7 @@ internal class MeetingHudPatch
                 var copiedIndex = i;
                 button.OnClick.AddListener((Action)(() => guesserOnClick(copiedIndex, __instance)));
             }
+        }
 
         // Add Guesser Buttons
         var GuesserRemainingShots = HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId);

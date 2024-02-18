@@ -22,8 +22,7 @@ public static class HandleGuesser
 
     public static bool isGuesser(byte playerId)
     {
-        if (isGuesserGm) return GuesserGM.isGuesser(playerId);
-        return Guesser.isGuesser(playerId);
+        return isGuesserGm ? GuesserGM.isGuesser(playerId) : Guesser.isGuesser(playerId);
     }
 
     public static void clear(byte playerId)

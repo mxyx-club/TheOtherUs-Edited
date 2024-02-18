@@ -12,7 +12,8 @@ public static class RoleHelpers
         if (HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId)
             &&
             HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 1
-            && HandleGuesser.hasMultipleShotsPerMeeting
+            &&
+            HandleGuesser.hasMultipleShotsPerMeeting
            )
             return true;
 
