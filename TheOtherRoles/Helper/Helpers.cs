@@ -582,11 +582,11 @@ public static class Helpers
     public static bool hasFakeTasks(this PlayerControl player)
     {
         return player == Werewolf.werewolf || player == Doomsayer.doomsayer || player == Juggernaut.juggernaut ||
-               player == Jester.jester || player == Amnisiac.amnisiac || player == Jackal.jackal ||
+               player == Jester.jester || player == Arsonist.arsonist || player == Jackal.jackal ||
                player == Sidekick.sidekick || player == Doomsayer.doomsayer || player == Pursuer.pursuer ||
-               player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player);
+               player == Lawyer.lawyer || player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player);
     }
-
+    
     public static bool canBeErased(this PlayerControl player)
     {
         return player != Jackal.jackal && player != Juggernaut.juggernaut && player != Sidekick.sidekick &&

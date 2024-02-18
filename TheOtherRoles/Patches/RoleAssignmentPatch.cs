@@ -718,7 +718,7 @@ internal class RoleManagerSelectRolesPatch
         bool forceJackal = false, bool forceThief = false, bool forceDoomsayer = false)
     {
         var IndexList = new Queue<PlayerControl>();
-
+      
         if (Doomsayer.doomsayer != null && forceDoomsayer)
             IndexList.Enqueue(Doomsayer.doomsayer);
 

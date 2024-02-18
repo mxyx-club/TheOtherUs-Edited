@@ -1978,7 +1978,10 @@ public static class Guesser
 
     public static bool isGuesser(byte playerId)
     {
-        if (evilGuesser.Any(item => item.PlayerId == playerId && evilGuesser != null)) return true;
+        if (evilGuesser.Any(item => item.PlayerId == playerId && evilGuesser != null))
+        {
+            return true;
+        }
         return niceGuesser != null && niceGuesser.PlayerId == playerId;
     }
 

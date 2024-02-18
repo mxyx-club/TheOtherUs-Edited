@@ -46,7 +46,7 @@ public static class TasksHandler
                     Thief.thief
                         ?.PlayerId // Thief's tasks only count after joining crew team as sheriff (and then the thief is not the thief anymore)
                     || playerInfo.PlayerId ==
-                    Jumper.jumper
+                    Amnisiac.amnisiac
                         ?.PlayerId // Thief's tasks only count after joining crew team as sheriff (and then the thief is not the thief anymore)
                    )
                     continue;
