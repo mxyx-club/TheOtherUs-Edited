@@ -18,7 +18,6 @@ public class GameStartManagerPatch
     public static Dictionary<int, PlayerVersion> playerVersions = new();
     public static float timer = 600f;
     private static float kickingTimer;
-    private static bool versionSent;
     private static string lobbyCodeText = "";
 
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerJoined))]
@@ -29,7 +28,11 @@ public class GameStartManagerPatch
 #if DEBUG
                return;
 #endif
-            if (CachedPlayer.LocalPlayer != null) Helpers.shareGameVersion();
+            if (CachedPlayer.LocalPlayer != null)
+            {
+                HandshakeHelper.shareGameVersion();
+                HandshakeHelper.shareGameGUID();
+            }
         }
     }
 
@@ -38,8 +41,6 @@ public class GameStartManagerPatch
     {
         public static void Postfix(GameStartManager __instance)
         {
-            // Trigger version refresh
-            versionSent = false;
             // Reset lobby countdown timer
             timer = 600f;
             // Reset kicking timer
@@ -49,7 +50,25 @@ public class GameStartManagerPatch
             GUIUtility.systemCopyBuffer = code;
             lobbyCodeText =
                 FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoomCode,
-                    new Il2CppReferenceArray<Object>(0)) + "\r\n" + code;
+                    new Il2CppReferenceArray<Object>(0)) + "\r\n" + code; 
+            
+            // Send version as soon as CachedPlayer.LocalPlayer.PlayerControl exists
+            if (CachedPlayer.LocalPlayer != null)
+            {
+                HandshakeHelper.shareGameVersion();
+                HandshakeHelper.shareGameGUID();
+            }
+            
+            HandshakeHelper.PlayerAgainInfo.Clear();
+            
+            if (AmongUsClient.Instance.AmHost)
+            {
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
+                    (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
+                writer.Write((byte)TORMapOptions.gameMode);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.shareGamemode((byte)TORMapOptions.gameMode);
+            }
         }
     }
 
@@ -74,13 +93,6 @@ public class GameStartManagerPatch
 #if DEBUG
                 return;
 #endif
-            // Send version as soon as CachedPlayer.LocalPlayer.PlayerControl exists
-            if (CachedPlayer.LocalPlayer != null && !versionSent)
-            {
-                versionSent = true;
-                Helpers.shareGameVersion();
-            }
-
             // Check version handshake infos
 
             var versionMismatch = false;
@@ -93,31 +105,43 @@ public class GameStartManagerPatch
 
                 if (!playerVersions.ContainsKey(client.Id))
                 {
+                    HandshakeHelper.againSend(client.Id, HandshakeHelper.ShareMode.Again);
                     versionMismatch = true;
                     message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了个不同版本的TheOtherUs\n</color>";
                 }
                 else
                 {
                     var PV = playerVersions[client.Id];
-                    var diff = TheOtherRolesPlugin.Version.CompareTo(PV.version);
-                    if (diff > 0)
+                    var diff = Main.Version.CompareTo(PV.version);
+                    if (PV.guid == null)
                     {
-                        message +=
-                            $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了一个旧版本的TheOtherUs (v{playerVersions[client.Id].version.ToString()})\n</color>";
-                        versionMismatch = true;
+                        HandshakeHelper.againSend(client.Id, HandshakeHelper.ShareMode.Guid);
+                        continue;
                     }
-                    else if (diff < 0)
+                    switch (diff)
                     {
-                        message +=
-                            $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了一个较新版本的TheOtherUs (v{playerVersions[client.Id].version.ToString()})\n</color>";
-                        versionMismatch = true;
-                    }
-                    else if (!PV.GuidMatches())
-                    {
-                        // version presumably matches, check if Guid matches
-                        message +=
-                            $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了一个修改过的TheOtherUs v{playerVersions[client.Id].version.ToString()} <size=30%>({PV.guid.ToString()})</size>\n</color>";
-                        versionMismatch = true;
+                        case > 0:
+                            message +=
+                                $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了一个旧版本的TheOtherUs (v{playerVersions[client.Id].version.ToString()})\n</color>";
+                            versionMismatch = true;
+                            break;
+                        case < 0:
+                            message +=
+                                $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了一个较新版本的TheOtherUs (v{playerVersions[client.Id].version.ToString()})\n</color>";
+                            versionMismatch = true;
+                            break;
+                        default:
+                        {
+                            if (!PV.GuidMatches())
+                            {
+                                // version presumably matches, check if Guid matches
+                                message +=
+                                    $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了一个修改过的TheOtherUs v{playerVersions[client.Id].version.ToString()} <size=30%>({PV.guid.ToString()})</size>\n</color>";
+                                versionMismatch = true;
+                            }
+
+                            break;
+                        }
                     }
                 }
             }
@@ -145,7 +169,7 @@ public class GameStartManagerPatch
                 if (startingTimer <= 0 && __instance.startState == GameStartManager.StartingStates.Countdown)
                 {
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetGameStarting,
+                        CachedPlayer.LocalPlayer!.PlayerControl.NetId, (byte)CustomRPC.SetGameStarting,
                         SendOption.Reliable);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.setGameStarting();
@@ -156,7 +180,7 @@ public class GameStartManagerPatch
             else
             {
                 if (!playerVersions.ContainsKey(AmongUsClient.Instance.HostId) ||
-                    TheOtherRolesPlugin.Version.CompareTo(playerVersions[AmongUsClient.Instance.HostId].version) != 0)
+                    Main.Version.CompareTo(playerVersions[AmongUsClient.Instance.HostId].version) != 0)
                 {
                     kickingTimer += Time.deltaTime;
                     if (kickingTimer > 10)
@@ -218,15 +242,7 @@ public class GameStartManagerPatch
 
             __instance.PlayerCounter.text = currentText + suffix;
             __instance.PlayerCounter.autoSizeTextContainer = true;
-
-            if (AmongUsClient.Instance.AmHost)
-            {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                    (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
-                writer.Write((byte)TORMapOptions.gameMode);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.shareGamemode((byte)TORMapOptions.gameMode);
-            }
+            
         }
     }
 
@@ -361,16 +377,11 @@ public class GameStartManagerPatch
         }
     }
 
-    public class PlayerVersion
+    public class PlayerVersion(Version version)
     {
-        public readonly Guid guid;
-        public readonly Version version;
-
-        public PlayerVersion(Version version, Guid guid)
-        {
-            this.version = version;
-            this.guid = guid;
-        }
+        public int PlayerId { get; set; }
+        public Guid? guid { get; set; } = null;
+        public readonly Version version = version;
 
         public bool GuidMatches()
         {
