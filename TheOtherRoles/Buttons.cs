@@ -913,7 +913,7 @@ internal static class HudManagerStartPatch
             () => { return Disperser.remainingDisperses > 0 && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => { },
             Disperser.getButtonSprite(),
-            new Vector3(0, 0f, 0),
+            new Vector3(0, 1f, 0),
             __instance,
             null,
             true
@@ -1484,7 +1484,7 @@ internal static class HudManagerStartPatch
             },
             () => { },
             Vampire.getGarlicButtonSprite(),
-            new Vector3(0, 1f, 0),
+            new Vector3(0, 0f, 0),
             __instance,
             null,
             true
