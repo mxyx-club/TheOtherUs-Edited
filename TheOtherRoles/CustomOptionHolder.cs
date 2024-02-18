@@ -831,6 +831,26 @@ public class CustomOptionHolder
             CustomOption.Create(1503, Types.Neutral, "狂暴持续时间", 15f, 1f, 20f, 0.5f, werewolfSpawnRate);
         werewolfKillCooldown = CustomOption.Create(1504, Types.Neutral, "击杀冷却", 3f, 1f, 60f, 0.5f, werewolfSpawnRate);
 
+        juggernautSpawnRate = CustomOption.Create(10101, Types.Neutral, cs(Juggernaut.color, "天启"), rates, null, true);
+        juggernautCooldown =
+            CustomOption.Create(10102, Types.Neutral, "击杀冷却", 30f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
+        juggernautHasImpVision = CustomOption.Create(10103, Types.Neutral, "天启拥有伪装者视野", true, juggernautSpawnRate);
+        juggernautReducedkillEach =
+            CustomOption.Create(10104, Types.Neutral, "每次击杀后减少的cd", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
+
+        doomsayerSpawnRate = CustomOption.Create(10111, Types.Neutral, cs(Doomsayer.color, "末日预言家"), rates, null, true);
+        doomsayerCooldown = CustomOption.Create(10112, Types.Neutral, "技能冷却", 30f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
+        doomsayerHasMultipleShotsPerMeeting =
+            CustomOption.Create(10113, Types.Neutral, "猜测成功后可继续猜测", true, doomsayerSpawnRate);
+        doomsayerShowInfoInGhostChat = CustomOption.Create(10114, Types.Neutral, "灵魂可见猜测结果", true, doomsayerSpawnRate);
+        doomsayerCanGuessNeutral = CustomOption.Create(10115, Types.Neutral, "可以猜测中立", true, doomsayerSpawnRate);
+        doomsayerCanGuessImpostor = CustomOption.Create(10116, Types.Neutral, "可以猜测伪装者", true, doomsayerSpawnRate);
+        doomsayerOnlineTarger = CustomOption.Create(10117, Types.Neutral, "是否获取已有职业", false, doomsayerSpawnRate);
+        doomsayerKillToWin =
+            CustomOption.Create(10118, Types.Neutral, "需要成功猜测几次获胜", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
+        doomsayerDormationNum =
+            CustomOption.Create(10119, Types.Neutral, "预言的职业数量", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
+
         guesserSpawnRate = CustomOption.Create(310, Types.Crewmate, cs(Guesser.color, "侠客"), rates, null, true);
         guesserNumberOfShots = CustomOption.Create(311, Types.Crewmate, "可猜测次数", 3f, 1f, 15f, 1f, guesserSpawnRate);
         guesserHasMultipleShotsPerMeeting =
@@ -846,7 +866,7 @@ public class CustomOptionHolder
         mayorMaxRemoteMeetings =
             CustomOption.Create(84, Types.Crewmate, "远程召开会议可用次数", 1f, 1f, 5f, 1f, mayorMeetingButton);
         mayorTaskRemoteMeetings =
-            CustomOption.Create(85, Types.Crewmate, "可在破坏时使用",true, mayorMeetingButton);
+            CustomOption.Create(85, Types.Crewmate, "可在破坏时使用", false, mayorMeetingButton);
         mayorChooseSingleVote = CustomOption.Create(85, Types.Crewmate, "市长可选择投单票", new[] { "关闭", "投票前选择", "会议结束前选择" },
             mayorSpawnRate);
 
@@ -1044,12 +1064,6 @@ public class CustomOptionHolder
         thiefCanStealWithGuess =
             CustomOption.Create(405, Types.Neutral, "身份窃贼可通过猜测窃取身份\n(赌怪模式)", false, thiefSpawnRate);
 
-        juggernautSpawnRate = CustomOption.Create(10101, Types.Neutral, cs(Juggernaut.color, "天启"), rates, null, true);
-        juggernautCooldown =
-            CustomOption.Create(10102, Types.Neutral, "击杀冷却", 30f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
-        juggernautHasImpVision = CustomOption.Create(10103, Types.Neutral, "天启拥有伪装者视野", true, juggernautSpawnRate);
-        juggernautReducedkillEach =
-            CustomOption.Create(10104, Types.Neutral, "每次击杀后减少的cd", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
         /*
         public static CustomOption doomsayerSpawnRate;
         public static CustomOption doomsayerCooldown;
@@ -1066,19 +1080,6 @@ public class CustomOptionHolder
         guesserShowInfoInGhostChat = CustomOption.Create(313, Types.Crewmate, "灵魂可见猜测结果", true, guesserSpawnRate);
         guesserKillsThroughShield = CustomOption.Create(314, Types.Crewmate, "猜测无视法医护盾保护", false, guesserSpawnRate);
         */
-        doomsayerSpawnRate = CustomOption.Create(10111, Types.Neutral, cs(Doomsayer.color, "末日预言家"), rates, null, true);
-        doomsayerCooldown = CustomOption.Create(10112, Types.Neutral, "技能冷却", 30f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
-        doomsayerHasMultipleShotsPerMeeting =
-            CustomOption.Create(10113, Types.Neutral, "猜测成功后可继续猜测", true, doomsayerSpawnRate);
-        doomsayerShowInfoInGhostChat = CustomOption.Create(10114, Types.Neutral, "灵魂可见猜测结果", true, doomsayerSpawnRate);
-        doomsayerCanGuessNeutral = CustomOption.Create(10115, Types.Neutral, "可以猜测中立", true, doomsayerSpawnRate);
-        doomsayerCanGuessImpostor = CustomOption.Create(10116, Types.Neutral, "可以猜测伪装者", true, doomsayerSpawnRate);
-        doomsayerOnlineTarger = CustomOption.Create(10117, Types.Neutral, "是否获取已有职业", false, doomsayerSpawnRate);
-        doomsayerKillToWin =
-            CustomOption.Create(10118, Types.Neutral, "需要成功猜测几次获胜", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
-        doomsayerDormationNum =
-            CustomOption.Create(10119, Types.Neutral, "预言的职业数量", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
-
         trapperSpawnRate = CustomOption.Create(410, Types.Crewmate, cs(Trapper.color, "设陷师"), rates, null, true);
         trapperCooldown = CustomOption.Create(420, Types.Crewmate, "放置冷却", 20f, 5f, 120f, 2.5f, trapperSpawnRate);
         trapperMaxCharges = CustomOption.Create(440, Types.Crewmate, "最大陷阱数", 3f, 1f, 15f, 1f, trapperSpawnRate);
@@ -1324,17 +1325,19 @@ public class CustomOptionHolder
         dynamicMapEnableSubmerged = CustomOption.Create(505, Types.General, "Submerged", rates, dynamicMap);
         dynamicMapSeparateSettings = CustomOption.Create(509, Types.General, "使用随机地图设置预设", false, dynamicMap);
 
-        enableBetterPolus = CustomOption.Create(7878, Types.General, "更好的Polus地图", false);
+        enableBetterPolus =
+            CustomOption.Create(7878, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "更好的Polus地图"), false);
         movePolusVents = CustomOption.Create(7879, Types.General, "改变管道布局", false, enableBetterPolus);
-        addPolusVents = CustomOption.Create(7883, Types.General, "添加新管道\n样本室-办公室-武器室", false, enableBetterPolus);
+        addPolusVents = CustomOption.Create(7883, Types.General, "添加新管道\n 样本室-办公室-武器室", false, enableBetterPolus);
         movePolusVitals = CustomOption.Create(7880, Types.General, "将生命检测仪移动到实验室", false, enableBetterPolus);
         swapNavWifi = CustomOption.Create(7881, Types.General, "重启WIFI与导航任务位置交换", false, enableBetterPolus);
         moveColdTemp = CustomOption.Create(7882, Types.General, "温度调节任务移动至配电室下方", false, enableBetterPolus);
 
-        enableAirShipModify = CustomOption.Create(7895, Types.General, "更好的AirShip地图", false);
-        addAirShipVents = CustomOption.Create(7896, Types.General, "添加新管道\n会议室-配电室", false, enableAirShipModify);
+        enableAirShipModify =
+            CustomOption.Create(7895, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "更好的AirShip地图"), false);
+        addAirShipVents = CustomOption.Create(7896, Types.General, "添加新管道\n 会议室-配电室", false, enableAirShipModify);
 
-        enableCamoComms = CustomOption.Create(1105, Types.General, "通信破坏开启小黑人", false);
+        enableCamoComms = CustomOption.Create(1105, Types.General, cs(Color.red, "通信破坏开启小黑人"), false);
         disableMedbayWalk = CustomOption.Create(8847, Types.General, "任务动画不可见", false);
         restrictDevices = CustomOption.Create(1101, Types.General, "限制信息设备使用", new[] { "否", "每一回合", "每局游戏" });
         //restrictAdmin = CustomOption.Create(1102, Types.General, "Restrict Admin Table", 30f, 0f, 600f, 5f, restrictDevices);
@@ -1342,7 +1345,7 @@ public class CustomOptionHolder
         restrictVents = CustomOption.Create(1104, Types.General, "限制心电图观看", 30f, 0f, 600f, 5f, restrictDevices);
         disableCamsRound1 = CustomOption.Create(8834, Types.General, "第一回合无法看监控", false);
         showButtonTarget = CustomOption.Create(9994, Types.General, "技能按钮显示目标", true);
-        blockGameEnd = CustomOption.Create(9995, Types.General, "强力职业在场不结束游戏", false);
+        blockGameEnd = CustomOption.Create(9995, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "强力职业在场不结束游戏"), false);
         randomGameStartPosition = CustomOption.Create(9041, Types.General, "随机出生点", false);
         allowModGuess = CustomOption.Create(9043, Types.General, "允许猜测部分附加职业", false);
 
