@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 using Hazel;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
@@ -2774,7 +2773,7 @@ internal static class HudManagerStartPatch
                     var closestDistance = float.MaxValue;
                     SpriteRenderer target = null;
 
-                    foreach ((var db, var ps) in Medium.deadBodies)
+                    foreach (var (db, ps) in Medium.deadBodies)
                         if (db == Medium.target)
                         {
                             var deadBody = Tuple.Create(db, ps);

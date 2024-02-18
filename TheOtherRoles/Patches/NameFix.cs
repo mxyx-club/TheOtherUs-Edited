@@ -1,6 +1,5 @@
 using AmongUs.Data;
 using AmongUs.Data.Legacy;
-using HarmonyLib;
 
 namespace TheOtherRoles.Patches;
 

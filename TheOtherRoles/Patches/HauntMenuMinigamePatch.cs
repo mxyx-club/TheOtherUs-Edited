@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using AmongUs.GameOptions;
-using HarmonyLib;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Utilities;
 using UnityEngine;

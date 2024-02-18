@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using HarmonyLib;
 using InnerNet;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;

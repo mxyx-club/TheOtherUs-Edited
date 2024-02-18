@@ -1,6 +1,4 @@
-﻿using HarmonyLib;
-
-namespace TheOtherRoles.Patches;
+﻿namespace TheOtherRoles.Patches;
 
 [HarmonyPatch(typeof(Constants), nameof(Constants.GetBroadcastVersion))]
 public static class ConstantsPatch

@@ -14,12 +14,15 @@ public class CustomButton
 {
     public static List<CustomButton> buttons = new();
     private static readonly int Desat = Shader.PropertyToID("_Desat");
+    private readonly string buttonText;
+    private readonly Action InitialOnClick;
+    private readonly Action OnEffectEnds;
+    private readonly Action OnMeetingEnds;
     public ActionButton actionButton;
     public GameObject actionButtonGameObject;
     public TextMeshPro actionButtonLabelText;
     public Material actionButtonMat;
     public SpriteRenderer actionButtonRenderer;
-    private readonly string buttonText;
     public Func<bool> CouldUse;
     public float DeputyTimer;
     public float EffectDuration;
@@ -27,14 +30,11 @@ public class CustomButton
     public bool HasEffect;
     public KeyCode? hotkey;
     public HudManager hudManager;
-    private readonly Action InitialOnClick;
     public bool isEffectActive;
     public bool isHandcuffed = false;
     public float MaxTimer = float.MaxValue;
     public bool mirror;
     private Action OnClick;
-    private readonly Action OnEffectEnds;
-    private readonly Action OnMeetingEnds;
     public Vector3 PositionOffset;
     public bool showButtonText;
     public Sprite Sprite;

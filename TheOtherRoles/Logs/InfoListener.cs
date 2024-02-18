@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using HarmonyLib;
 using Hazel;
 using InnerNet;
 
@@ -16,7 +15,8 @@ public static class InfoListener
     {
         private static IEnumerable<Type> InnerNetObjectTypes { get; } =
             typeof(InnerNetObject).Assembly.GetTypes()
-                .Where(x => x.IsSubclassOf(typeof(InnerNetObject)) && x != typeof(LobbyBehaviour)).ToList();
+                .Where(x => x.IsSubclassOf(typeof(InnerNetObject)) && x != typeof(LobbyBehaviour) &&
+                            x != typeof(PlayerControl)).ToList();
 
         public static IEnumerable<MethodBase> TargetMethods()
         {
@@ -28,7 +28,8 @@ public static class InfoListener
         public static void Postfix(InnerNetObject __instance, [HarmonyArgument(0)] byte callId,
             [HarmonyArgument(1)] MessageReader reader)
         {
-            Info($"Rpc {callId} received, rpc length => {reader.Length}");
+            Info($"object: {__instance.name} obejctNetId:{__instance.NetId} " +
+                 $"Rpc {callId} received, rpc length => {reader.Length}");
         }
     }
 }

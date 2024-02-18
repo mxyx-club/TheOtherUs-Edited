@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using AmongUs.GameOptions;
-using HarmonyLib;
 using Hazel;
 using InnerNet;
 using Reactor.Utilities.Extensions;
@@ -1190,23 +1189,6 @@ public static class Helpers
         }
 
         return shouldVetKill;
-    }
-
-    public static void shareGameVersion()
-    {
-        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-            (byte)CustomRPC.VersionHandshake, SendOption.Reliable);
-        writer.Write((byte)TheOtherRolesPlugin.Version.Major);
-        writer.Write((byte)TheOtherRolesPlugin.Version.Minor);
-        writer.Write((byte)TheOtherRolesPlugin.Version.Build);
-        writer.Write(AmongUsClient.Instance.AmHost ? GameStartManagerPatch.timer : -1f);
-        writer.WritePacked(AmongUsClient.Instance.ClientId);
-        writer.Write((byte)(TheOtherRolesPlugin.Version.Revision < 0 ? 0xFF : TheOtherRolesPlugin.Version.Revision));
-        writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.versionHandshake(TheOtherRolesPlugin.Version.Major, TheOtherRolesPlugin.Version.Minor,
-            TheOtherRolesPlugin.Version.Build, TheOtherRolesPlugin.Version.Revision,
-            Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
     }
 
     public static List<PlayerControl> getKillerTeamMembers(PlayerControl player)
