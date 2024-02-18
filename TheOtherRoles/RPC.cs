@@ -118,7 +118,7 @@ public enum RoleId
     Shifter
 }
 
-internal enum CustomRPC
+public enum CustomRPC
 {
     // Main Controls
 
@@ -719,7 +719,7 @@ public static class RPCProcedure
     {
         if (Medium.futureDeadBodies != null)
         {
-            var deadBody = Medium.futureDeadBodies.Find(x => x.Item1.player.PlayerId == playerId).Item1;
+            var deadBody = Medium.futureDeadBodies.Find(x => x.Item1.player.PlayerId == playerId)?.Item1;
             if (deadBody != null) deadBody.wasCleaned = true;
         }
 
@@ -795,7 +795,7 @@ public static class RPCProcedure
         if (target == null || amnisiac == null) return;
         var targetInfo = RoleInfo.getRoleInfoForPlayer(target);
         var roleInfo = targetInfo.Where(info => !info.isModifier).FirstOrDefault();
-        switch (roleInfo.roleId)
+        switch (roleInfo!.roleId)
         {
             case RoleId.Crewmate:
                 Amnisiac.clearAndReload();
@@ -1252,8 +1252,8 @@ public static class RPCProcedure
         var target = Helpers.playerById(targetId);
         if (target == null || Mimic.mimic == null) return;
         var targetInfo = RoleInfo.getRoleInfoForPlayer(target);
-        var roleInfo = targetInfo.Where(info => !info.isModifier).FirstOrDefault();
-        switch (roleInfo.roleId)
+        var roleInfo = targetInfo.FirstOrDefault(info => !info.isModifier);
+        switch (roleInfo!.roleId)
         {
             case RoleId.BodyGuard:
                 if (Amnisiac.resetRole) BodyGuard.clearAndReload();
@@ -2455,17 +2455,12 @@ public static class RPCProcedure
             var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
             var msg = $"{guesser.Data.PlayerName} 赌怪猜测 {guessedTarget.Data.PlayerName} 是 {roleInfo?.name ?? ""}!";
             if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
-                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(guesser, msg);
+                FastDestroyableSingleton<HudManager>.Instance!.Chat.AddChat(guesser, msg);
             if (msg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
                 FastDestroyableSingleton<UnityTelemetry>.Instance.SendWho();
         }
     }
-    /*
-             public static void useAdminTime(float time)
-            {
-                TORMapOptions.restrictAdminTime -= time;
-            }
-            */
+
 
     public static void useCameraTime(float time)
     {

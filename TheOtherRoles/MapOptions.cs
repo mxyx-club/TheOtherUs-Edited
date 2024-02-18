@@ -76,8 +76,8 @@ internal static class TORMapOptions
     public static void clearAndReloadMapOptions()
     {
         meetingsCount = 0;
-        camerasToAdd = new List<SurvCamera>();
-        ventsToSeal = new List<Vent>();
+        camerasToAdd = [];
+        ventsToSeal = [];
         playerIcons = new Dictionary<byte, PoolablePlayer>();
         ;
 

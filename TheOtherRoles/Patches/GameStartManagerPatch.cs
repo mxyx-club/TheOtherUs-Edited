@@ -22,7 +22,7 @@ public class GameStartManagerPatch
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerJoined))]
     public class AmongUsClientOnPlayerJoinedPatch
     {
-        public static void Postfix(AmongUsClient __instance)
+        public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ClientData data)
         {
 #if DEBUG
                return;
@@ -32,6 +32,14 @@ public class GameStartManagerPatch
                 HandshakeHelper.shareGameVersion();
                 HandshakeHelper.shareGameGUID();
             }
+            
+            if (AmongUsClient.Instance.AmHost)
+            {
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
+                    (byte)CustomRPC.ShareGamemode, SendOption.Reliable, data.Id);
+                writer.Write((byte)TORMapOptions.gameMode);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+            }
         }
     }
 
@@ -40,17 +48,21 @@ public class GameStartManagerPatch
     {
         public static void Postfix(GameStartManager __instance)
         {
+
             // Reset lobby countdown timer
             timer = 600f;
+
             // Reset kicking timer
             kickingTimer = 0f;
+
             // Copy lobby code
             var code = GameCode.IntToGameName(AmongUsClient.Instance.GameId);
             GUIUtility.systemCopyBuffer = code;
+
             lobbyCodeText =
                 FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoomCode,
                     new Il2CppReferenceArray<Object>(0)) + "\r\n" + code;
-
+            
             // Send version as soon as CachedPlayer.LocalPlayer.PlayerControl exists
             if (CachedPlayer.LocalPlayer != null)
             {
@@ -59,15 +71,7 @@ public class GameStartManagerPatch
             }
 
             HandshakeHelper.PlayerAgainInfo.Clear();
-
-            if (AmongUsClient.Instance.AmHost)
-            {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
-                    (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
-                writer.Write((byte)TORMapOptions.gameMode);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.shareGamemode((byte)TORMapOptions.gameMode);
-            }
+            
         }
     }
 
