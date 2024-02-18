@@ -2881,11 +2881,11 @@ public static class RPCProcedure
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
 internal class RPCHandlerPatch
 {
-    private static readonly Dictionary<CustomRPC, string> RpcNames;
+    private static readonly Dictionary<CustomRPC, string> RpcNames = null!;
 
     private static void GetRpcNames()
     {
-        var values = Enum.GetValues<CustomRPC>();
+        var values = EnumHelper.GetAllValues<CustomRPC>();
         foreach (var value in values) RpcNames.Add(value, Enum.GetName(value));
     }
 
