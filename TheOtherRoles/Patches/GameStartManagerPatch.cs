@@ -14,7 +14,7 @@ namespace TheOtherRoles.Patches;
 
 public class GameStartManagerPatch
 {
-    public static Dictionary<int, PlayerVersion> playerVersions = new();
+    public static readonly Dictionary<int, PlayerVersion> playerVersions = new();
     public static float timer = 600f;
     private static float kickingTimer;
     private static string lobbyCodeText = "";
@@ -36,7 +36,25 @@ public class GameStartManagerPatch
             if (AmongUsClient.Instance.AmHost)
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
-                    (byte)CustomRPC.ShareGamemode, SendOption.Reliable, data.Id);
+                    (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
+                writer.Write((byte)TORMapOptions.gameMode);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+            }
+        }
+    }
+    
+    [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
+    public class AmongUsClientOnOnGameEndPatch
+    {
+        public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ClientData data)
+        {
+#if DEBUG
+               return;
+#endif
+            if (AmongUsClient.Instance.AmHost)
+            {
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
+                    (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
                 writer.Write((byte)TORMapOptions.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
