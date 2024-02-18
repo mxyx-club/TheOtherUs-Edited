@@ -63,6 +63,7 @@ public static class HandshakeHelper
         {
             var length = reader.ReadInt32();
             var bytes = reader.ReadBytes(length);
+            GameStartManagerPatch.playerVersions[clientId].guid = new Guid(bytes);
         }
 
         void Again()
@@ -141,14 +142,8 @@ public static class HandshakeHelper
 
         public void Send(ShareMode mode)
         {
-            if (playerId == -1)
-            {
-                MaxCount = 0;
-                var key = PlayerAgainInfo.First(n => n.Value == this).Key;
-                PlayerAgainInfo.Remove(key);
-                Warn("-1 No AgainInfo");
-                return;
-            }
+            
+            Info($"again send mode{mode} id{playerId}");
 
             var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                 (byte)CustomRPC.VersionHandshakeEx, SendOption.Reliable, playerId);
