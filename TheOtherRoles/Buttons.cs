@@ -3257,11 +3257,9 @@ internal static class HudManagerStartPatch
                 mayorMeetingButton.actionButton.OverrideText("紧急会议 (" + Mayor.remoteMeetingsLeft + ")");
                 var sabotageActive = false;
                 foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
-                    if (task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy ||
-                        task.TaskType == TaskTypes.ResetReactor || task.TaskType == TaskTypes.ResetSeismic ||
-                        task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles
-                        || (SubmergedCompatibility.IsSubmerged &&
-                            task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
+                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy ||task.TaskType == TaskTypes.ResetReactor || 
+                    task.TaskType == TaskTypes.ResetSeismic ||task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles || 
+                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && CustomOptionHolder.mayorTaskRemoteMeetings.getBool() == false)
                         sabotageActive = true;
                 return !sabotageActive && CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
                        Mayor.remoteMeetingsLeft > 0;
