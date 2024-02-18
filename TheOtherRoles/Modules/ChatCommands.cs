@@ -70,29 +70,31 @@ public static class ChatCommands
                 }
                 else if (text.ToLower().StartsWith("/gm"))
                 {
-                    var gm = text.Substring(4).ToLower();
+                    var gm = text[4..].ToLower();
                     var gameMode = CustomGamemodes.Classic;
+                    
                     if (gm.StartsWith("prop") || gm.StartsWith("ph"))
                         gameMode = CustomGamemodes.PropHunt;
-                    else if (gm.StartsWith("guess") || gm.StartsWith("gm"))
+                    
+                    if (gm.StartsWith("guess") || gm.StartsWith("gm"))
                         gameMode = CustomGamemodes.Guesser;
-                    else if (gm.StartsWith("hide") || gm.StartsWith("hn")) gameMode = CustomGamemodes.HideNSeek;
-                    // else its classic!
-
+                    
+                    if (gm.StartsWith("hide") || gm.StartsWith("hn")) 
+                        gameMode = CustomGamemodes.HideNSeek;
+                    
                     if (AmongUsClient.Instance.AmHost)
                     {
                         var writer = AmongUsClient.Instance.StartRpcImmediately(
                             CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGamemode,
                             SendOption.Reliable);
-                        writer.Write((byte)TORMapOptions.gameMode);
+                        writer.Write((byte)gameMode);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.shareGamemode((byte)gameMode);
-                        RPCProcedure.shareGamemode((byte)TORMapOptions.gameMode);
+                        RPCProcedure.shareGameMode((byte)gameMode);
                     }
                     else
                     {
                         __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl,
-                            "Nice try, but you have to be the host to use this feature");
+                            "Nice try, but you have to be the host to use this feature 这是房主至高无上的权利");
                     }
 
                     handled = true;

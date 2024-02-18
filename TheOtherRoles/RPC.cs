@@ -312,7 +312,7 @@ public static class RPCProcedure
             }
     }
 
-    public static void shareGamemode(byte gm)
+    public static void shareGameMode(byte gm)
     {
         gameMode = (CustomGamemodes)gm;
     }
@@ -3316,7 +3316,7 @@ internal class RPCHandlerPatch
 
             case CustomRPC.ShareGamemode:
                 var gm = reader.ReadByte();
-                RPCProcedure.shareGamemode(gm);
+                RPCProcedure.shareGameMode(gm);
                 break;
 
             // Game mode

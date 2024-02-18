@@ -67,10 +67,13 @@ public static class CredentialsPatch
             }
             else
             {
-                var gameModeText = "";
-                if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek) gameModeText = "躲猫猫模式";
-                else if (TORMapOptions.gameMode == CustomGamemodes.Guesser) gameModeText = "赌怪模式";
-                else if (TORMapOptions.gameMode == CustomGamemodes.PropHunt) gameModeText = "道具躲猫猫";
+                var gameModeText = TORMapOptions.gameMode switch
+                {
+                    CustomGamemodes.HideNSeek => "躲猫猫模式",
+                    CustomGamemodes.Guesser => "赌怪模式",
+                    CustomGamemodes.PropHunt => "道具躲猫猫",
+                    _ => ""
+                };
                 if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
 
                 __instance.text.text =
