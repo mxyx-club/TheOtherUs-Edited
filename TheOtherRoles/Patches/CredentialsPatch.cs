@@ -19,12 +19,12 @@ public static class CredentialsPatch
 
     public static string fullCredentials =
         @"<size=70%>模组制作：<color=#FCCE03FF>Spex</color>
-模组修改：<color=#FFB793>沫夏悠轩</color>, <color=#FCCE03FF>善良的好人</color>
+模组修改：<color=#FFB793>沫夏悠轩</color>, <color=#FCCE03FF>善良的好人</color>，<color=#FCCE03FF>天寸梦初</color>
 汉化:<color=#FFB793>沫夏悠轩</color></size>";
 
     public static string mainMenuCredentials =
         @"模组作者: <color=#FCCE03FF>Spex</color>
-<size=85%>模组修改：<color=#FFB793>沫夏悠轩</color>, <color=#FCCE03FF>善良的好人</color>
+<size=85%>模组修改：<color=#FFB793>沫夏悠轩</color>, <color=#FCCE03FF>善良的好人</color>，<color=#FCCE03FF>天寸梦初</color>
 汉化：<color=#FFB793>沫夏悠轩</color></size>";
 
     public static string contributorsCredentials =
@@ -54,7 +54,7 @@ public static class CredentialsPatch
                 {
                     var transform = __instance.transform;
                     var localPosition = transform.localPosition;
-                    localPosition = new Vector3(3.45f, localPosition.y, localPosition.z);
+                    localPosition = new Vector3(3.4f, localPosition.y, localPosition.z);
                     transform.localPosition = localPosition;
                 }
                 else

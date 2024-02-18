@@ -1034,7 +1034,7 @@ internal class MeetingHudPatch
                             (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList)
                             .OrderBy(_ => random.Next()).ToList();
 
-                        message.AppendLine($"预言 {i} : {predictionTarget.name}");
+                        message.AppendLine($"{i}. {predictionTarget.name} 的职业可能是：\n");
 
                         for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
                         {
