@@ -2888,11 +2888,23 @@ internal class RPCHandlerPatch
 
     private static void Postfix([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
     {
+        var packetId = (CustomRPC)callId;
+        if (RpcNames!.ContainsKey(packetId))
+            return;
+        
+        Info($"接收 PlayerControl 原版Rpc RpcId{callId} Message Size {reader.Length}");
+    }
+
+    private static bool Prefix([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
+    {
         if (RpcNames == null)
             GetRpcNames();
 
         var packetId = (CustomRPC)callId;
-        Info($"接收 PlayerControl Rpc RpcId{callId} Rpc Name{RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
+        if (!RpcNames!.ContainsKey(packetId))
+            return true;
+        
+        Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc Name{RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
         switch (packetId)
         {
             // Main Controls
@@ -3357,5 +3369,7 @@ internal class RPCHandlerPatch
                 RPCProcedure.shareRoom(roomPlayer, roomId);
                 break;
         }
+
+        return false;
     }
 }
