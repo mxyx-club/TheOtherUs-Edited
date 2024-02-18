@@ -4,15 +4,15 @@ using InnerNet;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
-namespace TheOtherRoles;
+namespace TheOtherRoles.Objects;
 
 public class AdditionalVents
 {
-    public static List<AdditionalVents> AllVents = new();
-    public static bool flag;
-    public Vent vent;
+    private static List<AdditionalVents> AllVents = new();
+    private static bool flag;
+    private readonly Vent vent;
 
-    public AdditionalVents(Vector3 p)
+    private AdditionalVents(Vector3 p)
     {
         // Create the vent
         var referenceVent = Object.FindObjectOfType<Vent>();
@@ -41,35 +41,41 @@ public class AdditionalVents
         if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
         System.Console.WriteLine("AddAdditionalVents");
 
-        // Polus管道追加
-        if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 2 &&
-            CustomOptionHolder.enableBetterPolus.getBool() && CustomOptionHolder.addPolusVents.getBool())
+        switch (GameOptionsManager.Instance.currentNormalGameOptions.MapId)
         {
-            AdditionalVents vents1 =
-                new(new Vector3(36.54f, -21.77f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // 样本室
-            AdditionalVents vents2 =
-                new(new Vector3(11.5522f, -21.1158f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // 武器室
-            AdditionalVents vents3 =
-                new(new Vector3(26.67f, -17.54f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // 办公室
-            vents1.vent.Left = vents3.vent; // 样本室 - 办公室
-            vents1.vent.Right = vents2.vent; // 样本室 - 武器室
-            vents2.vent.Center = vents3.vent; // 武器室 - 办公室
-            vents2.vent.Left = vents1.vent; // 武器室 - 样本室
-            vents3.vent.Right = vents1.vent; // 办公室 - 样本室
-            vents3.vent.Left = vents2.vent; // 办公室 - 武器室
-        }
-
-        // AirShip管道追加
-
-        if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 4 &&
-            CustomOptionHolder.enableAirShipModify.getBool() && CustomOptionHolder.addAirShipVents.getBool())
-        {
-            var vents1 = new AdditionalVents(new Vector3(17.086f, 15.24f,
-                CachedPlayer.LocalPlayer.PlayerControl.transform.position.z + 1f)); // 会议室
-            var vents2 = new AdditionalVents(new Vector3(19.137f, -11.32f,
-                CachedPlayer.LocalPlayer.PlayerControl.transform.position.z + 1f)); // 电力
-            vents1.vent.Right = vents2.vent;
-            vents2.vent.Left = vents1.vent;
+            // Polus管道追加
+            case 2 when
+                CustomOptionHolder.enableBetterPolus.getBool() && CustomOptionHolder.addPolusVents.getBool():
+            {
+                var position = PlayerControl.LocalPlayer.transform.position;
+                AdditionalVents vents1 =
+                    new(new Vector3(36.54f, -21.77f, position.z + 1f)); // 样本室
+                AdditionalVents vents2 =
+                    new(new Vector3(11.5522f, -21.1158f, position.z + 1f)); // 武器室
+                AdditionalVents vents3 =
+                    new(new Vector3(26.67f, -17.54f, position.z + 1f)); // 办公室
+                vents1.vent.Left = vents3.vent; // 样本室 - 办公室
+                vents1.vent.Right = vents2.vent; // 样本室 - 武器室
+                vents2.vent.Center = vents3.vent; // 武器室 - 办公室
+                vents2.vent.Left = vents1.vent; // 武器室 - 样本室
+                vents3.vent.Right = vents1.vent; // 办公室 - 样本室
+                vents3.vent.Left = vents2.vent; // 办公室 - 武器室
+                break;
+            }
+            // AirShip管道追加
+            case 4 when
+                CustomOptionHolder.enableAirShipModify.getBool() && CustomOptionHolder.addAirShipVents.getBool():
+            {
+                var transform = CachedPlayer.LocalPlayer.PlayerControl.transform;
+                var position = transform.position;
+                var vents1 = new AdditionalVents(new Vector3(17.086f, 15.24f,
+                    position.z + 1f)); // 会议室
+                var vents2 = new AdditionalVents(new Vector3(19.137f, -11.32f,
+                    position.z + 1f)); // 电力
+                vents1.vent.Right = vents2.vent;
+                vents2.vent.Left = vents1.vent;
+                break;
+            }
         }
     }
 
@@ -77,6 +83,6 @@ public class AdditionalVents
     {
         System.Console.WriteLine("additionalVentsClearAndReload");
         flag = false;
-        AllVents = new List<AdditionalVents>();
+        AllVents = [];
     }
 }

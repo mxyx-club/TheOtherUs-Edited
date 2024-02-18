@@ -18,10 +18,10 @@ internal class Trap
 
     private static Sprite trapSprite;
     private readonly Arrow arrow = new(Color.blue);
-    private readonly int neededCount = Trapper.trapCountToReveal;
-    public int instanceId;
+    private readonly int neededCount;
+    public readonly int instanceId;
     public bool revealed;
-    public GameObject trap;
+    public readonly GameObject trap;
     public List<PlayerControl> trappedPlayer = new();
     public bool triggerable;
     private int usedCount;
@@ -44,7 +44,7 @@ internal class Trap
         arrow.arrow.SetActive(false);
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(5, new Action<float>(x =>
         {
-            if (x == 1f) triggerable = true;
+            if ((int)x == 1) triggerable = true;
         })));
     }
 
@@ -63,7 +63,7 @@ internal class Trap
             Object.Destroy(t.trap);
         }
 
-        traps = new List<Trap>();
+        traps = [];
         trapPlayerIdMap = new Dictionary<byte, Trap>();
         instanceCounter = 0;
     }
@@ -85,7 +85,7 @@ internal class Trap
         var player = Helpers.playerById(playerId);
         if (Trapper.trapper == null || t == null || player == null) return;
         var localIsTrapper = CachedPlayer.LocalPlayer.PlayerId == Trapper.trapper.PlayerId;
-        if (!trapPlayerIdMap.ContainsKey(playerId)) trapPlayerIdMap.Add(playerId, t);
+        trapPlayerIdMap.TryAdd(playerId, t);
         t.usedCount++;
         t.triggerable = false;
         if (playerId == CachedPlayer.LocalPlayer.PlayerId || playerId == Trapper.trapper.PlayerId)
@@ -133,11 +133,9 @@ internal class Trap
             if (trap.revealed || !trap.triggerable || trap.trappedPlayer.Contains(player.PlayerControl)) continue;
             if (player.PlayerControl.inVent || !player.PlayerControl.CanMove) continue;
             var distance = Vector2.Distance(trap.trap.transform.position, player.PlayerControl.GetTruePosition());
-            if (distance <= ud && distance < closestDistance)
-            {
-                closestDistance = distance;
-                target = trap;
-            }
+            if (!(distance <= ud) || !(distance < closestDistance)) continue;
+            closestDistance = distance;
+            target = trap;
         }
 
         if (target != null && player.PlayerId != Trapper.trapper.PlayerId && !player.Data.IsDead)
@@ -152,8 +150,7 @@ internal class Trap
 
 
         if (!player.Data.IsDead || player.PlayerId == Trapper.trapper.PlayerId) return;
-        foreach (var trap in traps)
-            if (!trap.trap.active)
-                trap.trap.SetActive(true);
+        foreach (var trap in traps.Where(trap => !trap.trap.active))
+            trap.trap.SetActive(true);
     }
 }

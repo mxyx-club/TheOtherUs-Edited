@@ -52,10 +52,8 @@ public class Portal
 
         if (firstPortal == null) firstPortal = this;
         else if (secondPortal == null) secondPortal = this;
-        var lastRoom = FastDestroyableSingleton<HudManager>.Instance?.roomTracker.LastRoom.RoomId;
-        room = lastRoom != null
-            ? DestroyableSingleton<TranslationController>.Instance.GetString((SystemTypes)lastRoom)
-            : "Open Field";
+        var lastRoom = FastDestroyableSingleton<HudManager>.Instance.roomTracker.LastRoom.RoomId;
+        room = DestroyableSingleton<TranslationController>.Instance.GetString(lastRoom);
     }
 
     public static Sprite getFgAnimationSprite(int index)
@@ -86,12 +84,9 @@ public class Portal
             ? "一名玩家 (" + (Helpers.isLighterColor(playerControl) ? "浅" : "深") + ")"
             : playerControl.Data.PlayerName;
 
-        var colorId = playerControl.Data.DefaultOutfit.ColorId;
-
         if (Camouflager.camouflageTimer > 0 || Helpers.MushroomSabotageActive())
         {
             playerNameDisplay = "A camouflaged player";
-            colorId = 6;
         }
 
         if (!playerControl.Data.IsDead)
@@ -100,36 +95,31 @@ public class Portal
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(teleportDuration,
             new Action<float>(p =>
             {
-                if (firstPortal != null && firstPortal.animationFgRenderer != null && secondPortal != null &&
-                    secondPortal.animationFgRenderer != null)
-                {
-                    if (exit == 0 || exit == 1)
-                        firstPortal.animationFgRenderer.sprite =
-                            getFgAnimationSprite((int)(p * portalFgAnimationSprites.Length));
-                    if (exit == 0 || exit == 2)
-                        secondPortal.animationFgRenderer.sprite =
-                            getFgAnimationSprite((int)(p * portalFgAnimationSprites.Length));
-                    playerControl.SetPlayerMaterialColors(firstPortal.animationFgRenderer);
-                    playerControl.SetPlayerMaterialColors(secondPortal.animationFgRenderer);
-                    if (p == 1f)
-                    {
-                        firstPortal.animationFgRenderer.sprite = null;
-                        secondPortal.animationFgRenderer.sprite = null;
-                        isTeleporting = false;
-                    }
-                }
+                if (firstPortal == null || firstPortal.animationFgRenderer == null || secondPortal == null ||
+                    secondPortal.animationFgRenderer == null) return;
+                if (exit is 0 or 1)
+                    firstPortal.animationFgRenderer.sprite =
+                        getFgAnimationSprite((int)(p * portalFgAnimationSprites.Length));
+                if (exit is 0 or 2)
+                    secondPortal.animationFgRenderer.sprite =
+                        getFgAnimationSprite((int)(p * portalFgAnimationSprites.Length));
+                playerControl.SetPlayerMaterialColors(firstPortal.animationFgRenderer);
+                playerControl.SetPlayerMaterialColors(secondPortal.animationFgRenderer);
+                if ((int)p != 1) return;
+                firstPortal.animationFgRenderer.sprite = null;
+                secondPortal.animationFgRenderer.sprite = null;
+                isTeleporting = false;
             })));
     }
 
     public static bool locationNearEntry(Vector2 p)
     {
         if (!bothPlacedAndEnabled) return false;
-        var maxDist = 0.25f;
+        const float maxDist = 0.25f;
 
         var dist1 = Vector2.Distance(p, firstPortal.portalGameObject.transform.position);
         var dist2 = Vector2.Distance(p, secondPortal.portalGameObject.transform.position);
-        if (dist1 > maxDist && dist2 > maxDist) return false;
-        return true;
+        return !(dist1 > maxDist) || !(dist2 > maxDist);
     }
 
     public static Vector2 findExit(Vector2 p)
@@ -181,17 +171,10 @@ public class Portal
         teleportedPlayers = new List<tpLogEntry>();
     }
 
-    public struct tpLogEntry
+    public struct tpLogEntry(byte playerId, string name, DateTime time)
     {
-        public byte playerId;
-        public string name;
-        public DateTime time;
-
-        public tpLogEntry(byte playerId, string name, DateTime time)
-        {
-            this.playerId = playerId;
-            this.time = time;
-            this.name = name;
-        }
+        public byte playerId = playerId;
+        public string name = name;
+        public DateTime time = time;
     }
 }

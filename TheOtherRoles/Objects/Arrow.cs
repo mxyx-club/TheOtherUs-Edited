@@ -7,16 +7,17 @@ public class Arrow
 {
     private static Sprite sprite;
     private readonly ArrowBehaviour arrowBehaviour;
-    public GameObject arrow;
-    public SpriteRenderer image;
+    public readonly GameObject arrow;
+    private readonly SpriteRenderer image;
     private Vector3 oldTarget;
-    public float perc = 0.925f;
 
 
     public Arrow(Color color)
     {
-        arrow = new GameObject("Arrow");
-        arrow.layer = 5;
+        arrow = new GameObject("Arrow")
+        {
+            layer = 5
+        };
         image = arrow.AddComponent<SpriteRenderer>();
         image.sprite = getSprite();
         image.color = color;
@@ -24,7 +25,7 @@ public class Arrow
         arrowBehaviour.image = image;
     }
 
-    public static Sprite getSprite()
+    private static Sprite getSprite()
     {
         if (sprite) return sprite;
         sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Arrow.png", 200f);

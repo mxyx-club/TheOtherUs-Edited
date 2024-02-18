@@ -84,65 +84,59 @@ public class CustomButton
 
     public void onClickEvent()
     {
-        if (Timer < 0f && HasButton() && CouldUse())
-        {
-            actionButtonRenderer.color = new Color(1f, 1f, 1f, 0.3f);
-            OnClick();
+        if (!(Timer < 0f) || !HasButton() || !CouldUse()) return;
+        actionButtonRenderer.color = new Color(1f, 1f, 1f, 0.3f);
+        OnClick();
 
-            // Deputy skip onClickEvent if handcuffed
-            if (Deputy.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
-                Deputy.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0f) return;
+        // Deputy skip onClickEvent if handcuffed
+        if (Deputy.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
+            Deputy.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0f) return;
 
-            if (HasEffect && !isEffectActive)
-            {
-                DeputyTimer = EffectDuration;
-                Timer = EffectDuration;
-                actionButton.cooldownTimerText.color = new Color(0F, 0.8F, 0F);
-                isEffectActive = true;
-            }
-        }
+        if (!HasEffect || isEffectActive) return;
+        DeputyTimer = EffectDuration;
+        Timer = EffectDuration;
+        actionButton.cooldownTimerText.color = new Color(0F, 0.8F, 0F);
+        isEffectActive = true;
     }
 
     public static void HudUpdate()
     {
         buttons.RemoveAll(item => item.actionButton == null);
 
-        for (var i = 0; i < buttons.Count; i++)
+        foreach (var t in buttons)
             try
             {
-                buttons[i].Update();
+                t.Update();
             }
             catch (NullReferenceException)
             {
-                System.Console.WriteLine(
-                    "[WARNING] NullReferenceException from HudUpdate().HasButton(), if theres only one warning its fine");
+                Warn("NullReferenceException from HudUpdate().HasButton(), if theres only one warning its fine");
             }
     }
 
     public static void MeetingEndedUpdate()
     {
         buttons.RemoveAll(item => item.actionButton == null);
-        for (var i = 0; i < buttons.Count; i++)
+        foreach (var t in buttons)
             try
             {
-                buttons[i].OnMeetingEnds();
-                buttons[i].Update();
+                t.OnMeetingEnds();
+                t.Update();
             }
             catch (NullReferenceException)
             {
-                System.Console.WriteLine(
-                    "[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
+                Warn("NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
             }
     }
 
     public static void ResetAllCooldowns()
     {
-        for (var i = 0; i < buttons.Count; i++)
+        foreach (var t in buttons)
             try
             {
-                buttons[i].Timer = buttons[i].MaxTimer;
-                buttons[i].DeputyTimer = buttons[i].MaxTimer;
-                buttons[i].Update();
+                t.Timer = t.MaxTimer;
+                t.DeputyTimer = t.MaxTimer;
+                t.Update();
             }
             catch (NullReferenceException)
             {

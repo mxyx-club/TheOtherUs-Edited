@@ -9,7 +9,7 @@ namespace TheOtherRoles.Objects;
 
 internal class NinjaTrace
 {
-    public static List<NinjaTrace> traces = new();
+    public static List<NinjaTrace> traces = [];
 
     private static Sprite TraceSprite;
 
@@ -56,9 +56,10 @@ internal class NinjaTrace
             if (p < (duration - fadeOutDuration) / duration)
                 interP = 0f;
             else interP = ((p * duration) + fadeOutDuration - duration) / fadeOutDuration;
-            if (traceRenderer)
-                traceRenderer.color = new Color(traceRenderer.color.r, traceRenderer.color.g, traceRenderer.color.b,
-                    Mathf.Clamp01(1 - interP));
+            if (!traceRenderer) return;
+            var color = traceRenderer.color;
+            traceRenderer.color = new Color(color.r, color.g, color.b,
+                Mathf.Clamp01(1 - interP));
         })));
 
         trace.SetActive(true);
@@ -74,7 +75,7 @@ internal class NinjaTrace
 
     public static void clearTraces()
     {
-        traces = new List<NinjaTrace>();
+        traces = [];
     }
 
     public static void UpdateAll()
@@ -82,12 +83,10 @@ internal class NinjaTrace
         foreach (var traceCurrent in new List<NinjaTrace>(traces))
         {
             traceCurrent.timeRemaining -= Time.fixedDeltaTime;
-            if (traceCurrent.timeRemaining < 0)
-            {
-                traceCurrent.trace.SetActive(false);
-                Object.Destroy(traceCurrent.trace);
-                traces.Remove(traceCurrent);
-            }
+            if (!(traceCurrent.timeRemaining < 0)) continue;
+            traceCurrent.trace.SetActive(false);
+            Object.Destroy(traceCurrent.trace);
+            traces.Remove(traceCurrent);
         }
     }
 }

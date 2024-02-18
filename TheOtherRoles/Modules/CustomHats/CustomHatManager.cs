@@ -182,10 +182,8 @@ public static class CustomHatManager
 
         var hats = new List<CustomHat>();
 
-        foreach (var frontKvP in fronts)
+        foreach (var (k, hat) in fronts)
         {
-            var k = frontKvP.Key;
-            var hat = frontKvP.Value;
             backs.TryGetValue(k, out var backResource);
             climbs.TryGetValue(k, out var climbResource);
             flips.TryGetValue(k, out var flipResource);
@@ -201,7 +199,7 @@ public static class CustomHatManager
         return hats;
     }
 
-    internal static List<CustomHat> SanitizeHats(SkinsConfigFile response)
+    internal static IEnumerable<CustomHat> SanitizeHats(SkinsConfigFile response)
     {
         foreach (var hat in response.Hats)
         {

@@ -23,20 +23,20 @@ internal class CreateOptionsPickerPatch
 
         __instance.SetGameMode(GameModes.Normal);
         var gm = (CustomGamemodes)((int)mode - 2);
-        if (gm == CustomGamemodes.Guesser)
+        switch (gm)
         {
-            __instance.GameModeText.text = "赌怪模式";
-            TORMapOptions.gameMode = CustomGamemodes.Guesser;
-        }
-        else if (gm == CustomGamemodes.HideNSeek)
-        {
-            __instance.GameModeText.text = "猎杀模式";
-            TORMapOptions.gameMode = CustomGamemodes.HideNSeek;
-        }
-        else if (gm == CustomGamemodes.PropHunt)
-        {
-            __instance.GameModeText.text = "躲猫猫";
-            TORMapOptions.gameMode = CustomGamemodes.PropHunt;
+            case CustomGamemodes.Guesser:
+                __instance.GameModeText.text = "赌怪模式";
+                TORMapOptions.gameMode = CustomGamemodes.Guesser;
+                break;
+            case CustomGamemodes.HideNSeek:
+                __instance.GameModeText.text = "猎杀模式";
+                TORMapOptions.gameMode = CustomGamemodes.HideNSeek;
+                break;
+            case CustomGamemodes.PropHunt:
+                __instance.GameModeText.text = "躲猫猫";
+                TORMapOptions.gameMode = CustomGamemodes.PropHunt;
+                break;
         }
 
         return false;
@@ -46,11 +46,13 @@ internal class CreateOptionsPickerPatch
     [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.Refresh))]
     public static void Postfix(CreateOptionsPicker __instance)
     {
-        if (TORMapOptions.gameMode == CustomGamemodes.Guesser)
-            __instance.GameModeText.text = "赌怪模式";
-        else if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek)
-            __instance.GameModeText.text = "猎杀模式";
-        else if (TORMapOptions.gameMode == CustomGamemodes.PropHunt) __instance.GameModeText.text = "躲猫猫";
+        __instance.GameModeText.text = TORMapOptions.gameMode switch
+        {
+            CustomGamemodes.Guesser => "赌怪模式",
+            CustomGamemodes.HideNSeek => "猎杀模式",
+            CustomGamemodes.PropHunt => "躲猫猫",
+            _ => __instance.GameModeText.text
+        };
     }
 }
 
@@ -68,37 +70,35 @@ internal class GameModeMenuPatch
         for (var i = 0; i <= 5; i++)
         {
             var entry = (GameModes)i;
-            if (entry != GameModes.None)
+            if (entry == GameModes.None) continue;
+            var chatLanguageButton = __instance.ButtonPool.Get<ChatLanguageButton>();
+            chatLanguageButton.transform.localPosition =
+                new Vector3(num + (num2 / 10 * 2.5f), 2f - (num2 % 10 * 0.5f), 0f);
+            if (i <= 2)
             {
-                var chatLanguageButton = __instance.ButtonPool.Get<ChatLanguageButton>();
-                chatLanguageButton.transform.localPosition =
-                    new Vector3(num + (num2 / 10 * 2.5f), 2f - (num2 % 10 * 0.5f), 0f);
-                if (i <= 2)
-                {
-                    chatLanguageButton.Text.text =
-                        DestroyableSingleton<TranslationController>.Instance.GetString(
-                            GameModesHelpers.ModeToName[entry], new Il2CppReferenceArray<Object>(0));
-                }
-                else
-                {
-                    chatLanguageButton.Text.text = i == 3 ? "赌怪模式" : "猎杀模式";
-                    if (i == 5)
-                        chatLanguageButton.Text.text = "躲猫猫";
-                }
-
-                chatLanguageButton.Button.OnClick.RemoveAllListeners();
-                chatLanguageButton.Button.OnClick.AddListener((Action)delegate { __instance.ChooseOption(entry); });
-
-                var isCurrentMode = i <= 2 && TORMapOptions.gameMode == CustomGamemodes.Classic
-                    ? (long)entry == gameMode
-                    : (i == 3 && TORMapOptions.gameMode == CustomGamemodes.Guesser) ||
-                      (i == 4 && TORMapOptions.gameMode == CustomGamemodes.HideNSeek) ||
-                      (i == 5 && TORMapOptions.gameMode == CustomGamemodes.PropHunt);
-                chatLanguageButton.SetSelected(isCurrentMode);
-                __instance.controllerSelectable.Add(chatLanguageButton.Button);
-                if (isCurrentMode) __instance.defaultButtonSelected = chatLanguageButton.Button;
-                num2++;
+                chatLanguageButton.Text.text =
+                    DestroyableSingleton<TranslationController>.Instance.GetString(
+                        GameModesHelpers.ModeToName[entry], new Il2CppReferenceArray<Object>(0));
             }
+            else
+            {
+                chatLanguageButton.Text.text = i == 3 ? "赌怪模式" : "猎杀模式";
+                if (i == 5)
+                    chatLanguageButton.Text.text = "躲猫猫";
+            }
+
+            chatLanguageButton.Button.OnClick.RemoveAllListeners();
+            chatLanguageButton.Button.OnClick.AddListener((Action)delegate { __instance.ChooseOption(entry); });
+
+            var isCurrentMode = i <= 2 && TORMapOptions.gameMode == CustomGamemodes.Classic
+                ? (long)entry == gameMode
+                : (i == 3 && TORMapOptions.gameMode == CustomGamemodes.Guesser) ||
+                  (i == 4 && TORMapOptions.gameMode == CustomGamemodes.HideNSeek) ||
+                  (i == 5 && TORMapOptions.gameMode == CustomGamemodes.PropHunt);
+            chatLanguageButton.SetSelected(isCurrentMode);
+            __instance.controllerSelectable.Add(chatLanguageButton.Button);
+            if (isCurrentMode) __instance.defaultButtonSelected = chatLanguageButton.Button;
+            num2++;
         }
 
         ControllerManager.Instance.OpenOverlayMenu(__instance.name, __instance.BackButton,

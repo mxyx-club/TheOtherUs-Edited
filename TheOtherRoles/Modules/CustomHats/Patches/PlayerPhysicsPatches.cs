@@ -19,18 +19,10 @@ internal static class PlayerPhysicsPatches
         if (extend == null) return;
         if (extend.FlipImage != null)
         {
-            if (__instance.FlipX)
-                hatParent.FrontLayer.sprite = extend.FlipImage;
-            else
-                hatParent.FrontLayer.sprite = viewData.MainImage;
+            hatParent.FrontLayer.sprite = __instance.FlipX ? extend.FlipImage : viewData.MainImage;
         }
 
-        if (extend.BackFlipImage != null)
-        {
-            if (__instance.FlipX)
-                hatParent.BackLayer.sprite = extend.BackFlipImage;
-            else
-                hatParent.BackLayer.sprite = viewData.BackImage;
-        }
+        if (extend.BackFlipImage == null) return;
+        hatParent.BackLayer.sprite = __instance.FlipX ? extend.BackFlipImage : viewData.BackImage;
     }
 }

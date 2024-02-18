@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TheOtherRoles.Helper;
 using UnityEngine;
 
@@ -6,14 +7,14 @@ namespace TheOtherRoles.Objects;
 
 internal class Garlic
 {
-    public static List<Garlic> garlics = new();
+    public static List<Garlic> garlics = [];
 
     private static Sprite garlicSprite;
 
     private static Sprite backgroundSprite;
     private readonly GameObject background;
 
-    public GameObject garlic;
+    public readonly GameObject garlic;
 
     public Garlic(Vector2 p)
     {
@@ -51,14 +52,13 @@ internal class Garlic
 
     public static void clearGarlics()
     {
-        garlics = new List<Garlic>();
+        garlics = [];
     }
 
     public static void UpdateAll()
     {
-        foreach (var garlic in garlics)
-            if (garlic != null)
-                garlic.Update();
+        foreach (var garlic in garlics.Where(garlic => garlic != null))
+            garlic.Update();
     }
 
     public void Update()

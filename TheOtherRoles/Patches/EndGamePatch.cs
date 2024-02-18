@@ -383,133 +383,133 @@ public class EndGameManagerSetUpPatch
             poolablePlayer.cosmetics.nameText.color = Color.white;
             poolablePlayer.cosmetics.nameText.transform.localScale =
                 new Vector3(1f / vector.x, 1f / vector.y, 1f / vector.z);
-            poolablePlayer.cosmetics.nameText.transform.localPosition = new Vector3(
-                poolablePlayer.cosmetics.nameText.transform.localPosition.x,
-                poolablePlayer.cosmetics.nameText.transform.localPosition.y, -15f);
+            var localPosition = poolablePlayer.cosmetics.nameText.transform.localPosition;
+            localPosition = new Vector3(
+                localPosition.x,
+                localPosition.y, -15f);
+            poolablePlayer.cosmetics.nameText.transform.localPosition = localPosition;
             poolablePlayer.cosmetics.nameText.text = winningPlayerData2.PlayerName;
 
-            foreach (var data in AdditionalTempData.playerRoles)
+            foreach (var roles in from data in AdditionalTempData.playerRoles where data.PlayerName == winningPlayerData2.PlayerName select poolablePlayer.cosmetics.nameText.text +=
+                         $"\n{string.Join("\n", data.Roles.Select(x => Helpers.cs(x.color, x.name)))}")
             {
-                if (data.PlayerName != winningPlayerData2.PlayerName) continue;
-                var roles =
-                    poolablePlayer.cosmetics.nameText.text +=
-                        $"\n{string.Join("\n", data.Roles.Select(x => Helpers.cs(x.color, x.name)))}";
             }
         }
 
         // Additional code
         var bonusText = Object.Instantiate(__instance.WinText.gameObject);
-        bonusText.transform.position = new Vector3(__instance.WinText.transform.position.x,
-            __instance.WinText.transform.position.y - 0.5f, __instance.WinText.transform.position.z);
+        var position1 = __instance.WinText.transform.position;
+        bonusText.transform.position = new Vector3(position1.x,
+            position1.y - 0.5f, position1.z);
         bonusText.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
         var textRenderer = bonusText.GetComponent<TMP_Text>();
         textRenderer.text = "";
 
-        if (AdditionalTempData.winCondition == WinCondition.JesterWin)
+        switch (AdditionalTempData.winCondition)
         {
-            textRenderer.text = "听我说谢谢你";
-            textRenderer.color = Jester.color;
-        }
-        else if (AdditionalTempData.winCondition == WinCondition.DoomsayerWin)
-        {
-            textRenderer.text = "末日预言家获胜";
-            textRenderer.color = Doomsayer.color;
-        }
-        else if (AdditionalTempData.winCondition == WinCondition.ArsonistWin)
-        {
-            textRenderer.text = "用火焰净化一切";
+            case WinCondition.JesterWin:
+                textRenderer.text = "听我说谢谢你";
+                textRenderer.color = Jester.color;
+                break;
+            case WinCondition.DoomsayerWin:
+                textRenderer.text = "末日预言家获胜";
+                textRenderer.color = Doomsayer.color;
+                break;
+            case WinCondition.ArsonistWin:
+                textRenderer.text = "用火焰净化一切";
 
-            textRenderer.color = Arsonist.color;
-        }
-        else if (AdditionalTempData.winCondition == WinCondition.VultureWin)
-        {
-            textRenderer.text = "吃饱饱！";
-            textRenderer.color = Vulture.color;
-        }
-        else if (AdditionalTempData.winCondition == WinCondition.WerewolfWin)
-        {
-            textRenderer.text = "月下狼人获胜！";
-            textRenderer.color = Werewolf.color;
-        }
-        else if (AdditionalTempData.winCondition == WinCondition.JuggernautWin)
-        {
-            textRenderer.text = "天启获胜";
-            textRenderer.color = Juggernaut.color;
-        }
-        else if (AdditionalTempData.winCondition == WinCondition.ProsecutorWin)
-        {
-            textRenderer.text = "小嘴叭叭!";
-            textRenderer.color = Lawyer.color;
-        }
-        else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin)
-        {
-            textRenderer.text = "船员和恋人获胜";
-            textRenderer.color = Lovers.color;
-            __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
-        }
-        else if (AdditionalTempData.winCondition == WinCondition.LoversSoloWin)
-        {
-            textRenderer.text = "与你的爱恋心意合一~";
-            textRenderer.color = Lovers.color;
-            __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
-        }
-        else if (AdditionalTempData.winCondition == WinCondition.JackalWin)
-        {
-            textRenderer.text = "豺狼的全家福.jpg";
-            textRenderer.color = Jackal.color;
-        }
-        else if (AdditionalTempData.winCondition == WinCondition.MiniLose)
-        {
-            textRenderer.text = "他就只是个孩子啊！";
-            textRenderer.color = Mini.color;
+                textRenderer.color = Arsonist.color;
+                break;
+            case WinCondition.VultureWin:
+                textRenderer.text = "吃饱饱！";
+                textRenderer.color = Vulture.color;
+                break;
+            case WinCondition.WerewolfWin:
+                textRenderer.text = "月下狼人获胜！";
+                textRenderer.color = Werewolf.color;
+                break;
+            case WinCondition.JuggernautWin:
+                textRenderer.text = "天启获胜";
+                textRenderer.color = Juggernaut.color;
+                break;
+            case WinCondition.ProsecutorWin:
+                textRenderer.text = "小嘴叭叭!";
+                textRenderer.color = Lawyer.color;
+                break;
+            case WinCondition.LoversTeamWin:
+                textRenderer.text = "船员和恋人获胜";
+                textRenderer.color = Lovers.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
+                break;
+            case WinCondition.LoversSoloWin:
+                textRenderer.text = "与你的爱恋心意合一~";
+                textRenderer.color = Lovers.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
+                break;
+            case WinCondition.JackalWin:
+                textRenderer.text = "豺狼的全家福.jpg";
+                textRenderer.color = Jackal.color;
+                break;
+            case WinCondition.MiniLose:
+                textRenderer.text = "他就只是个孩子啊！";
+                textRenderer.color = Mini.color;
+                break;
         }
 
         foreach (var cond in AdditionalTempData.additionalWinConditions)
-            if (cond == WinCondition.AdditionalLawyerBonusWin)
-                textRenderer.text += $"\n{Helpers.cs(Lawyer.color, "律师和客户胜利")}";
-            else if (cond == WinCondition.AdditionalAlivePursuerWin)
-                textRenderer.text += $"\n{Helpers.cs(Pursuer.color, "起诉人存活")}";
+            switch (cond)
+            {
+                case WinCondition.AdditionalLawyerBonusWin:
+                    textRenderer.text += $"\n{Helpers.cs(Lawyer.color, "律师和客户胜利")}";
+                    break;
+                case WinCondition.AdditionalAlivePursuerWin:
+                    textRenderer.text += $"\n{Helpers.cs(Pursuer.color, "起诉人存活")}";
+                    break;
+            }
 
         if (TORMapOptions.showRoleSummary || HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM)
         {
-            var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
-            var roleSummary = Object.Instantiate(__instance.WinText.gameObject);
-            roleSummary.transform.position = new Vector3(__instance.Navigation.ExitButton.transform.position.x + 0.1f,
-                position.y - 0.1f, -214f);
-            roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
-
-            var roleSummaryText = new StringBuilder();
-            if (HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM)
+            if (Camera.main != null)
             {
-                var minutes = (int)AdditionalTempData.timer / 60;
-                var seconds = (int)AdditionalTempData.timer % 60;
-                roleSummaryText.AppendLine($"<color=#FAD934FF>剩余时间: {minutes:00}:{seconds:00}</color> \n");
+                var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
+                var roleSummary = Object.Instantiate(__instance.WinText.gameObject);
+                roleSummary.transform.position = new Vector3(__instance.Navigation.ExitButton.transform.position.x + 0.1f,
+                    position.y - 0.1f, -214f);
+                roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
+
+                var roleSummaryText = new StringBuilder();
+                if (HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM)
+                {
+                    var minutes = (int)AdditionalTempData.timer / 60;
+                    var seconds = (int)AdditionalTempData.timer % 60;
+                    roleSummaryText.AppendLine($"<color=#FAD934FF>剩余时间: {minutes:00}:{seconds:00}</color> \n");
+                }
+
+                roleSummaryText.AppendLine("游戏总结:");
+                foreach (var data in AdditionalTempData.playerRoles)
+                {
+                    //var roles = string.Join(" ", data.Roles.Select(x => Helpers.cs(x.color, x.name)));
+                    var roles = data.RoleNames;
+                    //if (data.IsGuesser) roles += " (Guesser)";
+                    var taskInfo = data.TasksTotal > 0
+                        ? $" - <color=#FAD934FF>({data.TasksCompleted}/{data.TasksTotal})</color>"
+                        : "";
+                    if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(击杀: {data.Kills})</color>";
+                    roleSummaryText.AppendLine(
+                        $"{Helpers.cs(data.IsAlive ? Color.white : new Color(.7f, .7f, .7f), data.PlayerName)} - {roles}{taskInfo}");
+                }
+
+                var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
+                roleSummaryTextMesh.alignment = TextAlignmentOptions.TopLeft;
+                roleSummaryTextMesh.color = Color.white;
+                roleSummaryTextMesh.fontSizeMin = 1.5f;
+                roleSummaryTextMesh.fontSizeMax = 1.5f;
+                roleSummaryTextMesh.fontSize = 1.5f;
+
+                var roleSummaryTextMeshRectTransform = roleSummaryTextMesh.GetComponent<RectTransform>();
+                roleSummaryTextMeshRectTransform.anchoredPosition = new Vector2(position.x + 3.5f, position.y - 0.1f);
+                roleSummaryTextMesh.text = roleSummaryText.ToString();
             }
-
-            roleSummaryText.AppendLine("游戏总结:");
-            foreach (var data in AdditionalTempData.playerRoles)
-            {
-                //var roles = string.Join(" ", data.Roles.Select(x => Helpers.cs(x.color, x.name)));
-                var roles = data.RoleNames;
-                //if (data.IsGuesser) roles += " (Guesser)";
-                var taskInfo = data.TasksTotal > 0
-                    ? $" - <color=#FAD934FF>({data.TasksCompleted}/{data.TasksTotal})</color>"
-                    : "";
-                if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(击杀: {data.Kills})</color>";
-                roleSummaryText.AppendLine(
-                    $"{Helpers.cs(data.IsAlive ? Color.white : new Color(.7f, .7f, .7f), data.PlayerName)} - {roles}{taskInfo}");
-            }
-
-            var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
-            roleSummaryTextMesh.alignment = TextAlignmentOptions.TopLeft;
-            roleSummaryTextMesh.color = Color.white;
-            roleSummaryTextMesh.fontSizeMin = 1.5f;
-            roleSummaryTextMesh.fontSizeMax = 1.5f;
-            roleSummaryTextMesh.fontSize = 1.5f;
-
-            var roleSummaryTextMeshRectTransform = roleSummaryTextMesh.GetComponent<RectTransform>();
-            roleSummaryTextMeshRectTransform.anchoredPosition = new Vector2(position.x + 3.5f, position.y - 0.1f);
-            roleSummaryTextMesh.text = roleSummaryText.ToString();
         }
 
         AdditionalTempData.clear();
@@ -545,14 +545,11 @@ internal class CheckEndCriteriaPatch
 
     private static bool CheckAndEndGameForMiniLose(ShipStatus __instance)
     {
-        if (Mini.triggerMiniLose)
-        {
-            //__instance.enabled = false;
-            GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.MiniLose, false);
-            return true;
-        }
+        if (!Mini.triggerMiniLose) return false;
+        //__instance.enabled = false;
+        GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.MiniLose, false);
+        return true;
 
-        return false;
     }
 
     private static bool CheckAndEndGameForJesterWin(ShipStatus __instance)

@@ -31,7 +31,7 @@ internal static class HatsTabPatches
             if (ext != null)
             {
                 if (!packages.ContainsKey(ext.Package))
-                    packages[ext.Package] = new List<Tuple<HatData, HatExtension>>();
+                    packages[ext.Package] = [];
                 packages[ext.Package].Add(new Tuple<HatData, HatExtension>(hatBehaviour, ext));
             }
             else

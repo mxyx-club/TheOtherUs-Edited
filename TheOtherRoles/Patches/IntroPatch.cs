@@ -4,6 +4,7 @@ using Hazel;
 using Il2CppSystem.Collections.Generic;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
+using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;

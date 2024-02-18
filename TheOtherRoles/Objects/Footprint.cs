@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace TheOtherRoles.Objects;
 
-public class FootprintHolder : MonoBehaviour
+public class FootprintHolder(IntPtr ptr) : MonoBehaviour(ptr)
 {
     private static FootprintHolder _instance;
 
@@ -21,10 +21,6 @@ public class FootprintHolder : MonoBehaviour
     static FootprintHolder()
     {
         ClassInjector.RegisterTypeInIl2Cpp<FootprintHolder>();
-    }
-
-    public FootprintHolder(IntPtr ptr) : base(ptr)
-    {
     }
 
     public static FootprintHolder Instance

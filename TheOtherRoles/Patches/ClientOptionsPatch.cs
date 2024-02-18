@@ -14,40 +14,40 @@ namespace TheOtherRoles.Patches;
 public static class ClientOptionsPatch
 {
     private static readonly SelectionBehaviour[] AllOptions =
-    {
-        new("灵魂可见任务&其他信息",
-            () => TORMapOptions.ghostsSeeInformation = TheOtherRolesPlugin.GhostsSeeInformation.Value =
-                !TheOtherRolesPlugin.GhostsSeeInformation.Value, TheOtherRolesPlugin.GhostsSeeInformation.Value),
-        new("灵魂可见投票",
+    [
+        new SelectionBehaviour("灵魂可见任务&其他信息",
+            () => TORMapOptions.ghostsSeeInformation = Main.GhostsSeeInformation.Value =
+                !Main.GhostsSeeInformation.Value, Main.GhostsSeeInformation.Value),
+        new SelectionBehaviour("灵魂可见投票",
             () => TORMapOptions.ghostsSeeVotes =
-                TheOtherRolesPlugin.GhostsSeeVotes.Value = !TheOtherRolesPlugin.GhostsSeeVotes.Value,
-            TheOtherRolesPlugin.GhostsSeeVotes.Value),
-        new("灵魂可以看到职业",
+                Main.GhostsSeeVotes.Value = !Main.GhostsSeeVotes.Value,
+            Main.GhostsSeeVotes.Value),
+        new SelectionBehaviour("灵魂可以看到职业",
             () => TORMapOptions.ghostsSeeRoles =
-                TheOtherRolesPlugin.GhostsSeeRoles.Value = !TheOtherRolesPlugin.GhostsSeeRoles.Value,
-            TheOtherRolesPlugin.GhostsSeeRoles.Value),
-        new("灵魂可见附加职业",
-            () => TORMapOptions.ghostsSeeModifier = TheOtherRolesPlugin.GhostsSeeModifier.Value =
-                !TheOtherRolesPlugin.GhostsSeeModifier.Value, TheOtherRolesPlugin.GhostsSeeModifier.Value),
-        new("显示职业总结",
+                Main.GhostsSeeRoles.Value = !Main.GhostsSeeRoles.Value,
+            Main.GhostsSeeRoles.Value),
+        new SelectionBehaviour("灵魂可见附加职业",
+            () => TORMapOptions.ghostsSeeModifier = Main.GhostsSeeModifier.Value =
+                !Main.GhostsSeeModifier.Value, Main.GhostsSeeModifier.Value),
+        new SelectionBehaviour("显示职业总结",
             () => TORMapOptions.showRoleSummary =
-                TheOtherRolesPlugin.ShowRoleSummary.Value = !TheOtherRolesPlugin.ShowRoleSummary.Value,
-            TheOtherRolesPlugin.ShowRoleSummary.Value),
-        new("显示颜色深浅",
-            () => TORMapOptions.showLighterDarker = TheOtherRolesPlugin.ShowLighterDarker.Value =
-                !TheOtherRolesPlugin.ShowLighterDarker.Value, TheOtherRolesPlugin.ShowLighterDarker.Value),
-        new("启用模组光标",
+                Main.ShowRoleSummary.Value = !Main.ShowRoleSummary.Value,
+            Main.ShowRoleSummary.Value),
+        new SelectionBehaviour("显示颜色深浅",
+            () => TORMapOptions.showLighterDarker = Main.ShowLighterDarker.Value =
+                !Main.ShowLighterDarker.Value, Main.ShowLighterDarker.Value),
+        new SelectionBehaviour("启用模组光标",
             () => TORMapOptions.toggleCursor =
-                TheOtherRolesPlugin.ToggleCursor.Value = !TheOtherRolesPlugin.ToggleCursor.Value,
-            TheOtherRolesPlugin.ToggleCursor.Value),
-        new("启用模组音效",
-            () => TORMapOptions.enableSoundEffects = TheOtherRolesPlugin.EnableSoundEffects.Value =
-                !TheOtherRolesPlugin.EnableSoundEffects.Value, TheOtherRolesPlugin.EnableSoundEffects.Value),
-        new("在地图上显示管道",
+                Main.ToggleCursor.Value = !Main.ToggleCursor.Value,
+            Main.ToggleCursor.Value),
+        new SelectionBehaviour("启用模组音效",
+            () => TORMapOptions.enableSoundEffects = Main.EnableSoundEffects.Value =
+                !Main.EnableSoundEffects.Value, Main.EnableSoundEffects.Value),
+        new SelectionBehaviour("在地图上显示管道",
             () => TORMapOptions.ShowVentsOnMap =
-                TheOtherRolesPlugin.ShowVentsOnMap.Value = !TheOtherRolesPlugin.ShowVentsOnMap.Value,
-            TheOtherRolesPlugin.ShowVentsOnMap.Value)
-    };
+                Main.ShowVentsOnMap.Value = !Main.ShowVentsOnMap.Value,
+            Main.ShowVentsOnMap.Value)
+    ];
 
     private static GameObject popUp;
     private static TextMeshPro titleText;
@@ -115,12 +115,14 @@ public static class ClientOptionsPatch
 
         transform.localPosition = _origin.Value + (Vector3.left * 0.45f);
         transform.localScale = new Vector3(0.66f, 1, 1);
-        __instance.EnableFriendInvitesButton.transform.localScale = new Vector3(0.66f, 1, 1);
-        __instance.EnableFriendInvitesButton.transform.localPosition += Vector3.right * 0.5f;
+        var transform1 = __instance.EnableFriendInvitesButton.transform;
+        transform1.localScale = new Vector3(0.66f, 1, 1);
+        transform1.localPosition += Vector3.right * 0.5f;
         __instance.EnableFriendInvitesButton.Text.transform.localScale = new Vector3(1.2f, 1, 1);
 
-        moreOptions.transform.localPosition = _origin.Value + (Vector3.right * 4f / 3f);
-        moreOptions.transform.localScale = new Vector3(0.66f, 1, 1);
+        var transform2 = moreOptions.transform;
+        transform2.localPosition = _origin.Value + (Vector3.right * 4f / 3f);
+        transform2.localScale = new Vector3(0.66f, 1, 1);
 
         moreOptions.gameObject.SetActive(true);
         moreOptions.Text.text = "模组选项";
@@ -226,17 +228,10 @@ public static class ClientOptionsPatch
         for (var i = 0; i < Go.transform.childCount; i++) yield return Go.transform.GetChild(i).gameObject;
     }
 
-    public class SelectionBehaviour
+    public class SelectionBehaviour(string title, Func<bool> onClick, bool defaultValue)
     {
-        public bool DefaultValue;
-        public Func<bool> OnClick;
-        public string Title;
-
-        public SelectionBehaviour(string title, Func<bool> onClick, bool defaultValue)
-        {
-            Title = title;
-            OnClick = onClick;
-            DefaultValue = defaultValue;
-        }
+        public bool DefaultValue = defaultValue;
+        public Func<bool> OnClick = onClick;
+        public string Title = title;
     }
 }

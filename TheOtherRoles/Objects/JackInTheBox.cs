@@ -12,14 +12,14 @@ namespace TheOtherRoles.Objects;
 public class JackInTheBox
 {
     public static List<JackInTheBox> AllJackInTheBoxes = new();
-    public static int JackInTheBoxLimit = 3;
+    public static readonly int JackInTheBoxLimit = 3;
     public static bool boxesConvertedToVents;
-    public static Sprite[] boxAnimationSprites = new Sprite[18];
+    public static readonly Sprite[] boxAnimationSprites = new Sprite[18];
     private readonly SpriteRenderer boxRenderer;
 
     private readonly GameObject gameObject;
     private readonly SpriteRenderer ventRenderer;
-    public Vent vent;
+    public readonly Vent vent;
 
     public JackInTheBox(Vector2 p)
     {
@@ -52,7 +52,7 @@ public class JackInTheBox
         {
             ventRenderer = vent.transform.GetChild(3).GetComponent<SpriteRenderer>();
             var animator = vent.transform.GetChild(3).GetComponent<SpriteAnim>();
-            animator?.Stop();
+            animator.Stop();
         }
 
         //ventRenderer.Destroy();
@@ -90,11 +90,9 @@ public class JackInTheBox
 
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.6f, new Action<float>(p =>
         {
-            if (box.boxRenderer != null)
-            {
-                box.boxRenderer.sprite = getBoxAnimationSprite((int)(p * boxAnimationSprites.Length));
-                if (p == 1f) box.boxRenderer.sprite = getBoxAnimationSprite(0);
-            }
+            if (box.boxRenderer == null) return;
+            box.boxRenderer.sprite = getBoxAnimationSprite((int)(p * boxAnimationSprites.Length));
+            if ((int)p == 1) box.boxRenderer.sprite = getBoxAnimationSprite(0);
         })));
     }
 
@@ -147,6 +145,6 @@ public class JackInTheBox
     public static void clearJackInTheBoxes()
     {
         boxesConvertedToVents = false;
-        AllJackInTheBoxes = new List<JackInTheBox>();
+        AllJackInTheBoxes = [];
     }
 }

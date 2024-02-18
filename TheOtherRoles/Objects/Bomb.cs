@@ -12,8 +12,8 @@ public class Bomb
     private static Sprite backgroundSprite;
     private static Sprite defuseSprite;
     public static bool canDefuse;
-    public GameObject background;
-    public GameObject bomb;
+    public readonly GameObject background;
+    public readonly GameObject bomb;
 
     public Bomb(Vector2 p)
     {
@@ -44,23 +44,21 @@ public class Bomb
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombActiveAfter,
             new Action<float>(x =>
             {
-                if (x == 1f && this != null)
-                {
-                    bomb.SetActive(true);
-                    background.SetActive(true);
-                    SoundEffectsManager.playAtPosition("bombFuseBurning", p, Bomber.destructionTime, Bomber.hearRange,
-                        true);
-                    Bomber.isActive = true;
+                if ((int)x != 1) return;
+                bomb.SetActive(true);
+                background.SetActive(true);
+                SoundEffectsManager.playAtPosition("bombFuseBurning", p, Bomber.destructionTime, Bomber.hearRange,
+                    true);
+                Bomber.isActive = true;
 
-                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.destructionTime,
-                        new Action<float>(x =>
-                        {
-                            // can you feel the pain?
-                            var combinedColor = (Mathf.Clamp01(x) * g) + (Mathf.Clamp01(1 - x) * c);
-                            if (backgroundRenderer) backgroundRenderer.color = combinedColor;
-                            if (x == 1f && this != null) explode(this);
-                        })));
-                }
+                FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.destructionTime,
+                    new Action<float>(f =>
+                    {
+                        // can you feel the pain?
+                        var combinedColor = (Mathf.Clamp01(f) * g) + (Mathf.Clamp01(1 - f) * c);
+                        if (backgroundRenderer) backgroundRenderer.color = combinedColor;
+                        if ((int)f == 1) explode(this);
+                    })));
             })));
     }
 
