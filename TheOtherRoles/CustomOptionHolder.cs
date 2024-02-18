@@ -144,6 +144,7 @@ public class CustomOptionHolder
     public static CustomOption mayorTasksNeededToSeeVoteColors;
     public static CustomOption mayorMeetingButton;
     public static CustomOption mayorMaxRemoteMeetings;
+    public static CustomOption mayorTaskRemoteMeetings;
     public static CustomOption mayorChooseSingleVote;
 
     public static CustomOption portalmakerSpawnRate;
@@ -844,6 +845,8 @@ public class CustomOptionHolder
         mayorMeetingButton = CustomOption.Create(83, Types.Crewmate, "可远程召开会议", true, mayorSpawnRate);
         mayorMaxRemoteMeetings =
             CustomOption.Create(84, Types.Crewmate, "远程召开会议可用次数", 1f, 1f, 5f, 1f, mayorMeetingButton);
+        mayorTaskRemoteMeetings =
+            CustomOption.Create(85, Types.Crewmate, "可在破坏时使用",true, mayorMeetingButton);
         mayorChooseSingleVote = CustomOption.Create(85, Types.Crewmate, "市长可选择投单票", new[] { "关闭", "投票前选择", "会议结束前选择" },
             mayorSpawnRate);
 
