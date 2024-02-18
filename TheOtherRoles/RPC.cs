@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -2881,12 +2882,13 @@ public static class RPCProcedure
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
 internal class RPCHandlerPatch
 {
-    private static readonly Dictionary<CustomRPC, string> RpcNames = null!;
+    private static Dictionary<CustomRPC, string>? RpcNames;
 
     private static void GetRpcNames()
     {
+        RpcNames ??= new Dictionary<CustomRPC, string>();
         var values = EnumHelper.GetAllValues<CustomRPC>();
-        foreach (var value in values) RpcNames.Add(value, Enum.GetName(value));
+        foreach (var value in values) RpcNames.Add(value, Enum.GetName(value) ?? string.Empty);
     }
 
     private static void Postfix([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
@@ -2894,9 +2896,8 @@ internal class RPCHandlerPatch
         if (RpcNames == null)
             GetRpcNames();
 
-        Info($"接收 PlayerControl Rpc RpcId{callId} Rpc Name{RpcNames![(CustomRPC)callId]} Message Size {reader.Length}");
-
         var packetId = (CustomRPC)callId;
+        Info($"接收 PlayerControl Rpc RpcId{callId} Rpc Name{RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
         switch (packetId)
         {
             // Main Controls
