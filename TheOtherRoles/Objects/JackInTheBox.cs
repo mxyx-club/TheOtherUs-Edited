@@ -18,8 +18,8 @@ public class JackInTheBox
     private readonly SpriteRenderer boxRenderer;
 
     private readonly GameObject gameObject;
-    public Vent vent;
     private readonly SpriteRenderer ventRenderer;
+    public Vent vent;
 
     public JackInTheBox(Vector2 p)
     {

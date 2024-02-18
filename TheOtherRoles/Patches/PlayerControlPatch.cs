@@ -4,7 +4,6 @@ using System.Linq;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
-using HarmonyLib;
 using Hazel;
 using InnerNet;
 using Reactor.Utilities.Extensions;
@@ -1209,7 +1208,7 @@ public static class PlayerControlFixedUpdatePatch
         var truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
         var closestDistance = float.MaxValue;
         var usableDistance = MapUtilities.CachedShipStatus.AllVents.FirstOrDefault().UsableDistance;
-        foreach ((var dp, var ps) in Medium.deadBodies)
+        foreach (var (dp, ps) in Medium.deadBodies)
         {
             var distance = Vector2.Distance(ps, truePosition);
             if (distance <= usableDistance && distance < closestDistance)

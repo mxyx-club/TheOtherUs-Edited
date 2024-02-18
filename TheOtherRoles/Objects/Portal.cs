@@ -19,10 +19,10 @@ public class Portal
 
     public static List<tpLogEntry> teleportedPlayers;
     private readonly SpriteRenderer animationFgRenderer;
+    private readonly SpriteRenderer portalRenderer;
 
     public GameObject portalFgAnimationGameObject;
     public GameObject portalGameObject;
-    private readonly SpriteRenderer portalRenderer;
     public string room;
 
     public Portal(Vector2 p)

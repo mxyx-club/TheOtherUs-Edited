@@ -6,8 +6,8 @@ namespace TheOtherRoles.Objects;
 public class Arrow
 {
     private static Sprite sprite;
-    public GameObject arrow;
     private readonly ArrowBehaviour arrowBehaviour;
+    public GameObject arrow;
     public SpriteRenderer image;
     private Vector3 oldTarget;
     public float perc = 0.925f;

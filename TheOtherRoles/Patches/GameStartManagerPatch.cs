@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using HarmonyLib;
 using Hazel;
 using InnerNet;
 using TheOtherRoles.Helper;
@@ -50,17 +49,17 @@ public class GameStartManagerPatch
             GUIUtility.systemCopyBuffer = code;
             lobbyCodeText =
                 FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoomCode,
-                    new Il2CppReferenceArray<Object>(0)) + "\r\n" + code; 
-            
+                    new Il2CppReferenceArray<Object>(0)) + "\r\n" + code;
+
             // Send version as soon as CachedPlayer.LocalPlayer.PlayerControl exists
             if (CachedPlayer.LocalPlayer != null)
             {
                 HandshakeHelper.shareGameVersion();
                 HandshakeHelper.shareGameGUID();
             }
-            
+
             HandshakeHelper.PlayerAgainInfo.Clear();
-            
+
             if (AmongUsClient.Instance.AmHost)
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
@@ -118,6 +117,7 @@ public class GameStartManagerPatch
                         HandshakeHelper.againSend(client.Id, HandshakeHelper.ShareMode.Guid);
                         continue;
                     }
+
                     switch (diff)
                     {
                         case > 0:
@@ -242,7 +242,6 @@ public class GameStartManagerPatch
 
             __instance.PlayerCounter.text = currentText + suffix;
             __instance.PlayerCounter.autoSizeTextContainer = true;
-            
         }
     }
 
@@ -379,9 +378,9 @@ public class GameStartManagerPatch
 
     public class PlayerVersion(Version version)
     {
+        public readonly Version version = version;
         public int PlayerId { get; set; }
         public Guid? guid { get; set; } = null;
-        public readonly Version version = version;
 
         public bool GuidMatches()
         {

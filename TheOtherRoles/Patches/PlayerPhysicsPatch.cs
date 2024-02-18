@@ -1,4 +1,3 @@
-using HarmonyLib;
 using InnerNet;
 using TheOtherRoles.Utilities;
 using UnityEngine;

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using HarmonyLib;
 using Hazel;
 using Reactor.Utilities;
 using TheOtherRoles.Helper;
@@ -536,9 +535,9 @@ internal class MeetingHudPatch
                         rend.transform.localPosition = new Vector3(-0.725f, -0.15f, -1f);
                     rend.sprite = Witch.getSpelledOverlaySprite();
                 }
-        
+
         //!!!添加末日预言家赌
-        if (addDoomsayerButtons) 
+        if (addDoomsayerButtons)
             for (var i = 0; i < __instance.playerStates.Length; i++)
             {
                 var playerVoteArea = __instance.playerStates[i];
@@ -627,7 +626,8 @@ internal class MeetingHudPatch
                 if (swapped1 == null || swapped2 == null) return dictionary;
                 dictionary.TryAdd(swapped1.TargetPlayerId, 0);
                 dictionary.TryAdd(swapped2.TargetPlayerId, 0);
-                (dictionary[swapped1.TargetPlayerId], dictionary[swapped2.TargetPlayerId]) = (dictionary[swapped2.TargetPlayerId], dictionary[swapped1.TargetPlayerId]);
+                (dictionary[swapped1.TargetPlayerId], dictionary[swapped2.TargetPlayerId]) = (
+                    dictionary[swapped2.TargetPlayerId], dictionary[swapped1.TargetPlayerId]);
             }
 
 
@@ -660,16 +660,14 @@ internal class MeetingHudPatch
                 if (Tiebreaker.tiebreaker != null)
                     tb = __instance.playerStates.ToArray()
                         .FirstOrDefault(x => x.TargetPlayerId == Tiebreaker.tiebreaker.PlayerId);
-                var isTiebreakerSkip = tb == null || tb.VotedFor == 253 || tb != null && tb.AmDead;
+                var isTiebreakerSkip = tb == null || tb.VotedFor == 253 || (tb != null && tb.AmDead);
 
                 foreach (var pair in self.Where(pair => pair.Value == maxVoteValue && !isTiebreakerSkip))
-                {
                     if (pair.Key != 253)
                         potentialExiled.Add(GameData.Instance.AllPlayers.ToArray()
                             .FirstOrDefault(x => x.PlayerId == pair.Key));
                     else
                         skipIsTie = true;
-                }
             }
 
             var array = new MeetingHud.VoterState[__instance.playerStates.Length];

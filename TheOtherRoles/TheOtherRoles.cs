@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.Data;
-using HarmonyLib;
 using Hazel;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
@@ -1979,10 +1978,7 @@ public static class Guesser
 
     public static bool isGuesser(byte playerId)
     {
-        if (evilGuesser.Any(item => item.PlayerId == playerId && evilGuesser != null))
-        {
-            return true;
-        }
+        if (evilGuesser.Any(item => item.PlayerId == playerId && evilGuesser != null)) return true;
         return niceGuesser != null && niceGuesser.PlayerId == playerId;
     }
 

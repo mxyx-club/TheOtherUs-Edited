@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using HarmonyLib;
 using Hazel;
 using InnerNet;
 
@@ -16,7 +15,8 @@ public static class InfoListener
     {
         private static IEnumerable<Type> InnerNetObjectTypes { get; } =
             typeof(InnerNetObject).Assembly.GetTypes()
-                .Where(x => x.IsSubclassOf(typeof(InnerNetObject)) && x != typeof(LobbyBehaviour) && x != typeof(PlayerControl)).ToList();
+                .Where(x => x.IsSubclassOf(typeof(InnerNetObject)) && x != typeof(LobbyBehaviour) &&
+                            x != typeof(PlayerControl)).ToList();
 
         public static IEnumerable<MethodBase> TargetMethods()
         {

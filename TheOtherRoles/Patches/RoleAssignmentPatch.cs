@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
-using HarmonyLib;
 using Hazel;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
@@ -728,12 +727,13 @@ internal class RoleManagerSelectRolesPatch
 
 
         if (Jackal.jackal != null && forceJackal)
-           IndexList.Enqueue(Jackal.jackal);
-        
+            IndexList.Enqueue(Jackal.jackal);
+
         for (var i = 0; i < count && playerList.Count > 0; i++)
         {
-            var index = IndexList.Count > 0 ? 
-                playerList.FindIndex(n => n == IndexList.Dequeue()) : rnd.Next(0, playerList.Count);
+            var index = IndexList.Count > 0
+                ? playerList.FindIndex(n => n == IndexList.Dequeue())
+                : rnd.Next(0, playerList.Count);
 
             var playerId = playerList[index].PlayerId;
             playerList.RemoveAt(index);

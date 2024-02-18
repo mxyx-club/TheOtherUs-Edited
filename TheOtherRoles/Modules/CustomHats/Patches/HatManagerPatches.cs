@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Cpp2IL.Core.Extensions;
-using HarmonyLib;
 
 namespace TheOtherRoles.Modules.CustomHats.Patches;
 

@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using HarmonyLib;
 using Hazel;
 using InnerNet;
 using TheOtherRoles.Helper;

@@ -10,13 +10,19 @@ namespace TheOtherRoles.Helper;
 
 public static class HandshakeHelper
 {
+    public enum ShareMode
+    {
+        Guid = 0,
+        Again = 1
+    }
+
     public static readonly Dictionary<int, AgainInfo> PlayerAgainInfo = new();
-    
+
     public static void shareGameVersion()
     {
         versionHandshake(Main.Version.Major, Main.Version.Minor,
             Main.Version.Build, Main.Version.Revision, AmongUsClient.Instance.ClientId);
-        
+
         var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
             (byte)CustomRPC.VersionHandshake, SendOption.Reliable);
         writer.WritePacked(AmongUsClient.Instance.ClientId);
@@ -27,7 +33,7 @@ public static class HandshakeHelper
         writer.Write((byte)(Main.Version.Revision < 0 ? 0xFF : Main.Version.Revision));
         AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
-    
+
     public static void versionHandshake(int major, int minor, int build, int revision, int clientId)
     {
         var ver = revision < 0 ? new Version(major, minor, build) : new Version(major, minor, build, revision);
@@ -45,7 +51,7 @@ public static class HandshakeHelper
             case ShareMode.Guid:
                 ShareGuid();
                 break;
-            
+
             case ShareMode.Again:
                 Again();
                 break;
@@ -62,7 +68,7 @@ public static class HandshakeHelper
         void Again()
         {
             var mode = (ShareMode)reader.ReadByte();
-            
+
             switch (mode)
             {
                 case ShareMode.Again:
@@ -80,7 +86,7 @@ public static class HandshakeHelper
         var clientId = AmongUsClient.Instance.ClientId;
         var bytes = Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray();
         GameStartManagerPatch.playerVersions[clientId].guid = new Guid(bytes);
-        
+
         var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
             (byte)CustomRPC.VersionHandshakeEx, SendOption.Reliable);
         writer.WritePacked(AmongUsClient.Instance.ClientId);
@@ -98,27 +104,26 @@ public static class HandshakeHelper
         }
         else
         {
-            var info = PlayerAgainInfo[playerId] = new AgainInfo { playerId = playerId};
+            var info = PlayerAgainInfo[playerId] = new AgainInfo { playerId = playerId };
             info.Start(mode);
         }
     }
 
     public class AgainInfo
     {
+        public int playerId = -1;
         public int MaxCount { get; set; } = 5;
-        public int Count { get; set; } = 0;
-        public int Time { get; set; } = 0;
+        public int Count { get; set; }
+        public int Time { get; set; }
 
         public int MaxTime { get; set; } = 2;
-
-        public int playerId = -1;
 
         public void Start(ShareMode mode)
         {
             Send(mode);
             Time = MaxTime;
         }
-        
+
         public void Update(ShareMode mode)
         {
             if (Count == MaxCount) return;
@@ -144,7 +149,7 @@ public static class HandshakeHelper
                 Warn("-1 No AgainInfo");
                 return;
             }
-            
+
             var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                 (byte)CustomRPC.VersionHandshakeEx, SendOption.Reliable, playerId);
             writer.WritePacked(AmongUsClient.Instance.ClientId);
@@ -152,11 +157,5 @@ public static class HandshakeHelper
             writer.Write((byte)mode);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
-    }
-
-    public enum ShareMode
-    {
-        Guid = 0,
-        Again = 1
     }
 }

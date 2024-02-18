@@ -6,7 +6,6 @@ using AmongUs.Data;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
-using HarmonyLib;
 using Hazel;
 using InnerNet;
 using Reactor.Networking;

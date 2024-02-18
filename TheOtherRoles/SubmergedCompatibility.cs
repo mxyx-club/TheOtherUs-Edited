@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
-using HarmonyLib;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;

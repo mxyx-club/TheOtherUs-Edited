@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.Data;
-using HarmonyLib;
 using TheOtherRoles.Modules.CustomHats.Extensions;
 using TMPro;
 using UnityEngine;

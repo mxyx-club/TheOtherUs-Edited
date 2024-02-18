@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.Data.Legacy;
-using HarmonyLib;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using Object = Il2CppSystem.Object;
