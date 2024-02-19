@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text.Json;
+using System.Threading.Tasks;
+using BepInEx;
 using TheOtherRoles.Helper;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -14,12 +17,12 @@ public static class CustomHatManager
     public const string ResourcesDirectory = "TheOtherHats";
     public const string InnerslothPackageName = "Innersloth Hats";
     public const string DeveloperPackageName = "Developer Hats";
-
-    internal static readonly Tuple<string, string> Repository = new("TheOtherRolesAU", "TheOtherHats");
+    
+    internal static readonly HashSet<string> Urls = [];
 
     internal static readonly string ManifestFileName = "CustomHats.json";
 
-    internal static readonly List<CustomHat> UnregisteredHats = new();
+    internal static readonly List<CustomHat> UnregisteredHats = [];
     internal static readonly Dictionary<string, HatViewData> ViewDataCache = new();
     internal static readonly Dictionary<string, HatExtension> ExtensionCache = new();
 
@@ -29,15 +32,7 @@ public static class CustomHatManager
     static CustomHatManager()
     {
         Loader = Main.Instance.AddComponent<HatsLoader>();
-    }
-
-    internal static string RepositoryUrl
-    {
-        get
-        {
-            var (owner, repository) = Repository;
-            return $"https://mirror.ghproxy.com/https://raw.githubusercontent.com/{owner}/{repository}/master";
-        }
+        Urls.Add($"https://mirror.ghproxy.com/https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherHats/master");
     }
 
     internal static string CustomSkinsDirectory =>
@@ -49,7 +44,52 @@ public static class CustomHatManager
 
     internal static void LoadHats()
     {
-        Loader.FetchHats();
+        var configDir = Path.Combine(Paths.GameRootPath, "FastConfigs");
+        if (!Directory.Exists(configDir))
+            Directory.CreateDirectory(configDir);
+
+        var filePath = Path.Combine(configDir, "HatsURLS.json");
+        if (!File.Exists(filePath))
+            File.Create(filePath);
+        
+        try
+        {
+            using var stream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            if (stream.Length != 0) 
+            {
+                using var Reader = new StreamReader(stream);
+                try
+                {
+                    var document = JsonDocument.Parse(Reader.ReadToEnd());
+                    var datas = document.Deserialize<List<RepositoryData>>();
+                    foreach (var data in datas)
+                    {
+                        Loader.FetchHats(data.url);
+                    }
+                }
+                catch (Exception _)
+                {
+                    // ignored
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Exception(e);
+        }
+
+        foreach (var url in Urls)
+        {
+            Loader.FetchHats(url);
+        }
+
+        Task.WhenAll(Loader.DownloadLoads);
+    }
+    
+    public class RepositoryData
+    {
+        public string name { get; set; }
+        public string url { get; set; }
     }
 
     internal static bool TryGetCached(this HatParent hatParent, out HatViewData asset)

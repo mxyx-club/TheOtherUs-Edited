@@ -1,6 +1,8 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using BepInEx.Unity.IL2CPP.Utils;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -12,20 +14,20 @@ public class HatsLoader : MonoBehaviour
 {
     private bool isRunning;
 
-    public void FetchHats()
+    public readonly List<Task> DownloadLoads = [];
+
+    public void FetchHats(string url)
     {
-        if (isRunning) return;
-        this.StartCoroutine(CoFetchHats());
+        DownloadLoads.Add(new Task(() => this.StartCoroutine(CoFetchHats(url))));
     }
 
     [HideFromIl2Cpp]
-    private IEnumerator CoFetchHats()
+    private IEnumerator CoFetchHats(string url)
     {
-        isRunning = true;
         var www = new UnityWebRequest();
         www.SetMethod(UnityWebRequest.UnityWebRequestMethod.Get);
-        Message($"Download manifest at: {RepositoryUrl}/{ManifestFileName}");
-        www.SetUrl($"{RepositoryUrl}/{ManifestFileName}");
+        Message($"Download manifest at: {url}/{ManifestFileName}");
+        www.SetUrl($"{url}/{ManifestFileName}");
         www.downloadHandler = new DownloadHandlerBuffer();
         var operation = www.SendWebRequest();
 
@@ -51,18 +53,16 @@ public class HatsLoader : MonoBehaviour
 
         Message($"I'll download {toDownload.Count} hat files");
 
-        foreach (var fileName in toDownload) yield return CoDownloadHatAsset(fileName);
-
-        isRunning = false;
+        foreach (var fileName in toDownload) yield return CoDownloadHatAsset(fileName, url);
     }
 
-    private static IEnumerator CoDownloadHatAsset(string fileName)
+    private static IEnumerator CoDownloadHatAsset(string fileName, string url)
     {
         var www = new UnityWebRequest();
         www.SetMethod(UnityWebRequest.UnityWebRequestMethod.Get);
         fileName = fileName.Replace(" ", "%20");
         Message($"downloading hat: {fileName}");
-        www.SetUrl($"{RepositoryUrl}/hats/{fileName}");
+        www.SetUrl($"{url}/hats/{fileName}");
         www.downloadHandler = new DownloadHandlerBuffer();
         var operation = www.SendWebRequest();
 
