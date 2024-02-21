@@ -12,16 +12,25 @@ namespace TheOtherRoles.Modules.CustomHats;
 
 public class HatsLoader : MonoBehaviour
 {
-    public readonly List<Task> DownloadLoads = [];
+    public readonly List<IEnumerator> DownloadLoads = [];
 
     public void FetchHats(string url)
     {
-        DownloadLoads.Add(new Task(() => this.StartCoroutine(CoFetchHats(url))));
+        DownloadLoads.Add(CoFetchHats(url));
+    }
+
+    public void StartDownload()
+    {
+        foreach (var downloadLoad in DownloadLoads)
+        {
+            this.StartCoroutine(downloadLoad);
+        }
     }
 
     [HideFromIl2Cpp]
     private IEnumerator CoFetchHats(string url)
     {
+        Info($"开始加载帽子url {url}");
         var www = new UnityWebRequest();
         www.SetMethod(UnityWebRequest.UnityWebRequestMethod.Get);
         Message($"Download manifest at: {url}/{ManifestFileName}");
@@ -52,10 +61,12 @@ public class HatsLoader : MonoBehaviour
         Message($"I'll download {toDownload.Count} hat files");
 
         foreach (var fileName in toDownload) yield return CoDownloadHatAsset(fileName, url);
+        Info($"加载帽子url {url} 结束");
     }
 
     private static IEnumerator CoDownloadHatAsset(string fileName, string url)
     {
+        Info($"开始下载帽子url {url} {fileName}");
         var www = new UnityWebRequest();
         www.SetMethod(UnityWebRequest.UnityWebRequestMethod.Get);
         fileName = fileName.Replace(" ", "%20");

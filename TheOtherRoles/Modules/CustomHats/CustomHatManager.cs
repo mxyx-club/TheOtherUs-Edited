@@ -98,7 +98,7 @@ public static class CustomHatManager
             Loader.FetchHats(url);
         }
 
-        Task.WhenAll(Loader.DownloadLoads);
+        Loader.StartDownload();
     }
     
     public class RepositoryData
