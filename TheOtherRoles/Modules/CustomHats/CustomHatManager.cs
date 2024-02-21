@@ -50,8 +50,13 @@ public static class CustomHatManager
 
         var filePath = Path.Combine(configDir, "HatsURLS.json");
         if (!File.Exists(filePath))
+        {
             File.Create(filePath);
-        
+            var text = JsonSerializer.Serialize(Urls);
+            File.WriteAllText(filePath,text);
+            goto fetch;
+        }
+
         try
         {
             using var stream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
@@ -62,7 +67,7 @@ public static class CustomHatManager
                 {
                     var document = JsonDocument.Parse(Reader.ReadToEnd());
                     var datas = document.Deserialize<List<RepositoryData>>();
-                    foreach (var data in datas)
+                    foreach (var data in datas.Where(data => !Urls.Contains(data.url)))
                     {
                         Loader.FetchHats(data.url);
                     }
@@ -77,7 +82,7 @@ public static class CustomHatManager
         {
             Exception(e);
         }
-
+fetch:
         foreach (var url in Urls)
         {
             Loader.FetchHats(url);
