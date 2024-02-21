@@ -51,9 +51,11 @@ public static class CustomHatManager
         var filePath = Path.Combine(configDir, "HatsURLS.json");
         if (!File.Exists(filePath))
         {
-            File.Create(filePath);
-            var text = JsonSerializer.Serialize(Urls);
-            File.WriteAllText(filePath,text);
+            var stream = File.Create(filePath);
+            var list = Urls.Select(url => new RepositoryData { name = "Vanlia", url = url }).ToList();
+            var text = JsonSerializer.Serialize(list);
+            using var writer = new StreamWriter(stream);
+            writer.Write(text);
             goto fetch;
         }
 
@@ -70,12 +72,20 @@ public static class CustomHatManager
                     foreach (var data in datas.Where(data => !Urls.Contains(data.url)))
                     {
                         Urls.Add(data.url);
+                        Info($"添加配置读取帽子仓库 url:{data.url} Name:{data.name}");
                     }
                 }
                 catch (Exception)
                 {
                     // ignored
                 }
+            }
+            else
+            {
+                var list = Urls.Select(url => new RepositoryData { name = "Vanlia", url = url }).ToList();
+                var text = JsonSerializer.Serialize(list);
+                using var writer = new StreamWriter(stream);
+                writer.Write(text);
             }
         }
         catch (Exception e)
