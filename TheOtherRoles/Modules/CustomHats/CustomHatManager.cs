@@ -69,10 +69,10 @@ public static class CustomHatManager
                     var datas = document.Deserialize<List<RepositoryData>>();
                     foreach (var data in datas.Where(data => !Urls.Contains(data.url)))
                     {
-                        Loader.FetchHats(data.url);
+                        Urls.Add(data.url);
                     }
                 }
-                catch (Exception _)
+                catch (Exception)
                 {
                     // ignored
                 }
@@ -82,7 +82,7 @@ public static class CustomHatManager
         {
             Exception(e);
         }
-fetch:
+        fetch:
         foreach (var url in Urls)
         {
             Loader.FetchHats(url);

@@ -133,18 +133,14 @@ public class CameraPatch
                 timer += Time.deltaTime;
                 var numberOfPages = Mathf.CeilToInt(ShipStatus.Instance.AllCameras.Length / 4f);
 
-                var update = false;
-
                 if (timer > 3f || Input.GetKeyDown(KeyCode.RightArrow))
                 {
-                    update = true;
                     timer = 0f;
                     page = (page + 1) % numberOfPages;
                 }
                 else if (Input.GetKeyDown(KeyCode.LeftArrow))
                 {
                     page = (page + numberOfPages - 1) % numberOfPages;
-                    update = true;
                     timer = 0f;
                 }
 

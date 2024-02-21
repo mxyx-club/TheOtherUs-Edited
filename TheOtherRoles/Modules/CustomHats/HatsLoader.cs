@@ -12,8 +12,6 @@ namespace TheOtherRoles.Modules.CustomHats;
 
 public class HatsLoader : MonoBehaviour
 {
-    private bool isRunning;
-
     public readonly List<Task> DownloadLoads = [];
 
     public void FetchHats(string url)
