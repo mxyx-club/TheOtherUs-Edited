@@ -14,6 +14,7 @@ namespace TheOtherRoles {
             Shift,
             LawyerSuicide,
             LoverSuicide, // not necessary
+            Loneliness,
             WitchExile,
             Bomb,
             Arson,

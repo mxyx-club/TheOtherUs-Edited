@@ -334,6 +334,11 @@ namespace TheOtherRoles {
         public static CustomOption doomsayerGuesserCantGuessSnitch;
         public static CustomOption doomsayerKillToWin;
         public static CustomOption doomsayerDormationNum;
+        //魅魔
+        public static CustomOption akujoSpawnRate;
+        public static CustomOption akujoTimeLimit;
+        public static CustomOption akujoKnowsRoles;
+        public static CustomOption akujoNumKeeps;
 
         public static CustomOption trapperSpawnRate;
         public static CustomOption trapperCooldown;
@@ -930,6 +935,11 @@ namespace TheOtherRoles {
             doomsayerOnlineTarger = CustomOption.Create(10117, Types.Neutral, "是否获取已有职业", false, doomsayerSpawnRate);
             doomsayerKillToWin = CustomOption.Create(10118, Types.Neutral, "需要成功猜测几次获胜", 3f,1f,10f,1f, doomsayerSpawnRate);
             doomsayerDormationNum = CustomOption.Create(10119, Types.Neutral, "预言的职业数量", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
+
+            akujoSpawnRate = CustomOption.Create(10120, Types.Neutral, cs(Akujo.color,"魅魔"), rates, null, true);
+            akujoTimeLimit = CustomOption.Create(10121, Types.Neutral, "魅魔招募备胎的预计时间", 300f, 30f, 1200f, 15f, akujoSpawnRate);
+            akujoNumKeeps = CustomOption.Create(10122, Types.Neutral, "可招募备胎的数量", 2f, 0f, 10f, 1f, akujoSpawnRate);
+            akujoKnowsRoles = CustomOption.Create(10123, Types.Neutral, "魅魔是否知道目标职业", true, akujoSpawnRate);
 
 
             trapperSpawnRate = CustomOption.Create(410, Types.Crewmate, cs(Trapper.color, "陷阱师"), rates, null, true);

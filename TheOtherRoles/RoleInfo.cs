@@ -107,6 +107,7 @@ namespace TheOtherRoles
         //天启添加
         public static RoleInfo juggernaut = new RoleInfo("天启", Juggernaut.color, "吾将送汝等救赎，汝等应心怀感激", "减少CD，杀光所有人", RoleId.Juggernaut, true);
         public static RoleInfo doomsayer = new RoleInfo("末日预言家", Doomsayer.color, "你的死兆星在天上闪耀", "预言出职业，赌死到目标数", RoleId.Doomsayer, true);
+        public static RoleInfo akujo = new RoleInfo("魅魔", Akujo.color, "大家不要再为我打架了！", "在限定时间给出真爱和备胎,并且和真爱一起活下去", RoleId.Akujo, true);
         public static RoleInfo hunter = new RoleInfo("猎人", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "抓捕"), "找到并击杀所有猎物", RoleId.Impostor);
         public static RoleInfo hunted = new RoleInfo("猎物", Color.white, "躲起来", "躲起来", RoleId.Crewmate);
         public static RoleInfo prop = new RoleInfo("躲藏者", Color.white, "伪装成物品并活下去", "伪装成物品并活下去", RoleId.Crewmate);
@@ -182,6 +183,7 @@ namespace TheOtherRoles
             juggernaut,
             //末日预言家
             doomsayer,
+            akujo,
 
             crewmate,
             goodGuesser,
@@ -331,6 +333,7 @@ namespace TheOtherRoles
             //天启
             if (p == Juggernaut.juggernaut) infos.Add(juggernaut);
             if (p == Doomsayer.doomsayer) infos.Add(doomsayer);
+            if (p == Akujo.akujo) infos.Add(akujo);
 
             // Default roles (just impostor, just crewmate, or hunter / hunted for hide n seek, prop hunt prop ...
             if (infos.Count == count) {
@@ -382,10 +385,14 @@ namespace TheOtherRoles
                         roleName = roleName + Helpers.cs(Arsonist.color, $" ({CachedPlayer.AllPlayers.Count(x => { return x.PlayerControl != Arsonist.arsonist && !x.Data.IsDead && !x.Data.Disconnected && !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); })} 剩余)");
                     if (p == Jackal.fakeSidekick)
                         roleName = Helpers.cs(Sidekick.color, $" (fake跟班) ") + roleName;
-                        /*
-                    if ((p == Swooper.swooper) && Jackal.canSwoop2)
-                        roleName = Helpers.cs(Swooper.color, $" (Swooper) ") + roleName;
-                        */
+                    if (Akujo.keeps.Contains(p))
+                        roleName = Helpers.cs(Color.gray, "(备胎)") + roleName;
+                    if (p == Akujo.honmei)
+                        roleName = Helpers.cs(Akujo.color, "(真爱)") + roleName;
+                    /*
+                if ((p == Swooper.swooper) && Jackal.canSwoop2)
+                    roleName = Helpers.cs(Swooper.color, $" (Swooper) ") + roleName;
+                    */
 
                     // Death Reason on Ghosts
                     if (p.Data.IsDead) {
@@ -422,6 +429,9 @@ namespace TheOtherRoles
                                     break;
                                 case DeadPlayer.CustomDeathReason.LoverSuicide:
                                     deathReasonString = $" - {Helpers.cs(Lovers.color, "恋人死亡")}";
+                                    break;
+                                case DeadPlayer.CustomDeathReason.Loneliness:
+                                    deathReasonString = $" - {Helpers.cs(Akujo.color, "被榨干")}";
                                     break;
                                 case DeadPlayer.CustomDeathReason.LawyerSuicide:
                                     deathReasonString = $" - {Helpers.cs(Lawyer.color, "客户被投")}";

@@ -923,64 +923,80 @@ namespace TheOtherRoles.Patches
                     }
                 }
 
+                List<RoleInfo> allRoleInfo = new List<RoleInfo>();
                 //Ä©ÈÕ
-                if (Doomsayer.doomsayer != null && (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer || Helpers.shouldShowGhostInfo()) && !Doomsayer.doomsayer.Data.IsDead)
-                {
-                    int i = 1;
-                    List<RoleInfo> allRoleInfo = new List<RoleInfo>(10);
-                    if (Doomsayer.onlineTarger)
+                try {
+                    if (Doomsayer.doomsayer != null && (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer || Helpers.shouldShowGhostInfo()) && !Doomsayer.doomsayer.Data.IsDead)
                     {
-                        allRoleInfo = Helpers.onlineRoleInfos();
-                    }
-                    else
-                    {
-                        allRoleInfo = Helpers.allRoleInfos();
-                    }
+                        int i = 1;
 
-
-
-                    foreach (PlayerControl predictionTarget in Doomsayer.playerTargetinformation)
-                    {
-                        System.Random random = new System.Random();
-                        int x = random.Next(0, (int)Doomsayer.formationNum);
-                        RoleInfo roleInfoTarget = RoleInfo.getRoleInfoForPlayer(predictionTarget, false).FirstOrDefault();
-                        string message = $"Ô¤ÑÔ " + i + ": " + predictionTarget.name + "\n";
-                        List<int> temp = Enumerable.Range(0, allRoleInfo.Count).OrderBy(q => Guid.NewGuid()).Take((int)Doomsayer.formationNum).ToList();
-                        List<string> allProperty = new List<string>();
-
-
-                        for (int num = 0, tempNum = 0; num < Doomsayer.formationNum && tempNum < Doomsayer.formationNum; num++)
+                        if (Doomsayer.onlineTarger)
                         {
+                            allRoleInfo = Helpers.onlineRoleInfos();
 
-                            if (allRoleInfo[temp[tempNum]].name.Equals(roleInfoTarget.name))
-                            {
-                                tempNum++;
-                                num--;
-                                continue;
-                            }
-
-                            if (num == x)
-                            {
-                                message += roleInfoTarget.name + ",";
-                            }
-                            else
-                            {
-                                message += allRoleInfo[temp[tempNum]].name + ",";
-                                tempNum++;
-                            }
                         }
-                        if (x == Doomsayer.formationNum - 1 && Doomsayer.onlineTarger)
+                        else
                         {
-                            message += roleInfoTarget.name + ",";
+                            allRoleInfo = Helpers.allRoleInfos();
+                        }
+                        foreach (PlayerControl predictionTarget in Doomsayer.playerTargetinformation)
+                        {
+                            System.Random random = new System.Random();
+                            int x = random.Next(0, (int)Doomsayer.formationNum);
+                            RoleInfo roleInfoTarget = RoleInfo.getRoleInfoForPlayer(predictionTarget, false).FirstOrDefault();
+                            string message = $"Ô¤ÑÔ " + i + ": " + predictionTarget.name + "\n";
+                            List<int> temp = Enumerable.Range(0, allRoleInfo.Count).OrderBy(q => Guid.NewGuid()).Take((int)Doomsayer.formationNum).ToList();
+                            List<string> allProperty = new List<string>();
+
+
+                            for (int num = 0, tempNum = 0; num < Doomsayer.formationNum && tempNum < Doomsayer.formationNum; num++)
+                            {
+                                if (temp[tempNum] >= allRoleInfo.Count || tempNum >= temp.Count) break;
+
+                                if (allRoleInfo[temp[tempNum]].name.Equals(roleInfoTarget.name))
+                                {
+                                    tempNum++;
+                                    num--;
+                                    continue;
+                                }
+
+                                if (num == x)
+                                {
+                                    message += roleInfoTarget.name + ",";
+                                }
+                                else
+                                {
+                                    message += allRoleInfo[temp[tempNum]].name + ",";
+                                    tempNum++;
+                                }
+                            }
+                            if (x == Doomsayer.formationNum - 1)
+                            {
+                                for (int j = 0; j < message.Length; j++)
+                                {
+                                    if (i <= message.Length - roleInfoTarget.name.Length)
+                                    {
+                                        if (message.IndexOf(roleInfoTarget.name, j) > 0)
+                                        {
+                                            message += roleInfoTarget.name + ",";
+                                        }
+                                    }
+                                }
+
+                            }
+
+
+                            i++;
+                            FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Doomsayer.doomsayer, $"{message}");
                         }
 
-
-                        i++;
-                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Doomsayer.doomsayer, $"{message}");
                     }
-                    allRoleInfo.Clear();
-                    Doomsayer.playerTargetinformation.Clear();
                 }
+                catch (Exception ex)
+                {
+                    
+                }
+               
 
 
                 // Add Snitch info
@@ -1034,6 +1050,8 @@ namespace TheOtherRoles.Patches
 
                 // Close In-Game Settings Display if open
                 HudManagerUpdate.CloseSettings();
+
+                Doomsayer.playerTargetinformation.Clear();
             }
         }
 

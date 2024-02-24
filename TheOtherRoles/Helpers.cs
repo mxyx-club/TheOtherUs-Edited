@@ -581,7 +581,9 @@ namespace TheOtherRoles {
         //假任务
         public static bool hasFakeTasks(this PlayerControl player) {
             return (player == Pursuer.pursuer || player == Werewolf.werewolf || player == Doomsayer.doomsayer || 
-                player == Juggernaut.juggernaut || player == Jester.jester  || 
+                player == Juggernaut.juggernaut || player == Jester.jester  ||
+                player == Amnisiac.amnisiac ||
+                 player == Akujo.akujo ||
                 player == Jackal.jackal || player == Sidekick.sidekick || player == Arsonist.arsonist ||
                 player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player));
         }
@@ -1073,8 +1075,6 @@ namespace TheOtherRoles {
             bool powerCrewAlive = false;
             // This functions blocks the game from ending if specified crewmate roles are alive
             if (!CustomOptionHolder.blockGameEnd.getBool()) return false;
-
-            if (isRoleAlive(Doomsayer.doomsayer)) powerCrewAlive = true;
             if (isRoleAlive(Sheriff.sheriff)) powerCrewAlive = true;
             if (isRoleAlive(Veteren.veteren)) powerCrewAlive = true;
             if (isRoleAlive(Mayor.mayor)) powerCrewAlive = true;
@@ -1210,6 +1210,7 @@ public static bool isTeamCultist(PlayerControl player)
                 player != Jester.jester && 
                 player != Arsonist.arsonist &&
                 player != Doomsayer.doomsayer &&
+                player != Akujo.akujo &&
                 player != Vulture.vulture && 
                 player != Lawyer.lawyer && 
                 player != Pursuer.pursuer);

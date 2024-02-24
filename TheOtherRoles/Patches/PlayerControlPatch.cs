@@ -588,7 +588,13 @@ namespace TheOtherRoles.Patches {
 
                 p.cosmetics.nameText.transform.parent.SetLocalZ(-0.0001f);  // This moves both the name AND the colorblindtext behind objects (if the player is behind the object), like the rock on polus
 
-                if ((Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target) || p == CachedPlayer.LocalPlayer.PlayerControl || CachedPlayer.LocalPlayer.Data.IsDead || (CachedPlayer.LocalPlayer.PlayerControl == Slueth.slueth && Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) || TORMapOptions.impostorSeeRoles && Spy.spy == null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor && !CachedPlayer.LocalPlayer.Data.IsDead && p == (p.Data.Role.IsImpostor && !p.Data.IsDead) || (CachedPlayer.LocalPlayer.PlayerControl == Poucher.poucher && Poucher.killed.Any(x => x.PlayerId == p.PlayerId))) {
+                if ((Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target) ||
+                   (Akujo.knowsRoles && CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo && (p == Akujo.honmei || Akujo.keeps.Any(x => x.PlayerId == p.PlayerId)))  || 
+                    p == CachedPlayer.LocalPlayer.PlayerControl || CachedPlayer.LocalPlayer.Data.IsDead || 
+                    (CachedPlayer.LocalPlayer.PlayerControl == Slueth.slueth && Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) || 
+                    TORMapOptions.impostorSeeRoles && Spy.spy == null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor && !CachedPlayer.LocalPlayer.Data.IsDead &&
+                    p == (p.Data.Role.IsImpostor && !p.Data.IsDead) || (CachedPlayer.LocalPlayer.PlayerControl == Poucher.poucher &&
+                    Poucher.killed.Any(x => x.PlayerId == p.PlayerId))) {
                     Transform playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
                     TMPro.TextMeshPro playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TMPro.TextMeshPro>() : null;
                     if (playerInfo == null) {
@@ -1278,6 +1284,46 @@ namespace TheOtherRoles.Patches {
             }
         }
 
+        public static void akujoUpdate()
+        {
+            if (Akujo.akujo == null || Akujo.akujo.Data.IsDead || CachedPlayer.LocalPlayer.PlayerControl != Akujo.akujo) return;
+            Akujo.timeLeft = (int)Math.Ceiling(Akujo.timeLimit - (DateTime.UtcNow - Akujo.startTime).TotalSeconds);
+            if (Akujo.timeLeft > 0)
+            {
+                if (Akujo.honmei == null)
+                {
+                    if (HudManagerStartPatch.akujoTimeRemainingText != null)
+                    {
+                        HudManagerStartPatch.akujoTimeRemainingText.text = TimeSpan.FromSeconds(Akujo.timeLeft).ToString(@"mm\:ss");
+                    }
+                    HudManagerStartPatch.akujoTimeRemainingText.enabled = !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) &&
+                      !MeetingHud.Instance &&
+                      !ExileController.Instance;
+                }
+                else HudManagerStartPatch.akujoTimeRemainingText.enabled = false;
+            }
+            else if (Akujo.timeLeft <= 0)
+            {
+                if (Akujo.honmei == null)
+                {
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSuicide, Hazel.SendOption.Reliable, -1);
+                    writer.Write(Akujo.akujo.PlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.akujoSuicide(Akujo.akujo.PlayerId);
+                }
+            }
+        }
+
+        public static void akujoSetTarget()
+        {
+            if (Akujo.akujo == null || Akujo.akujo.Data.IsDead || CachedPlayer.LocalPlayer.PlayerControl != Akujo.akujo) return;
+            var untargetables = new List<PlayerControl>();
+            if (Akujo.honmei != null) untargetables.Add(Akujo.honmei);
+            if (Akujo.keeps != null) untargetables.AddRange(Akujo.keeps);
+            Akujo.currentTarget = setTarget(untargetablePlayers: untargetables);
+            if (Akujo.honmei == null || Akujo.keepsLeft > 0) setPlayerOutline(Akujo.currentTarget, Akujo.color);
+        }
+
         public static void Postfix(PlayerControl __instance) {
             if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started || GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
 
@@ -1411,6 +1457,10 @@ namespace TheOtherRoles.Patches {
                 // Chameleon (invis stuff, timers)
                 Chameleon.update();
                 Bomb.update();
+
+                akujoUpdate();
+
+                akujoSetTarget();
 
                 // -- GAME MODE --
                 hunterUpdate();
@@ -1665,6 +1715,17 @@ namespace TheOtherRoles.Patches {
                     MapBehaviourPatch.herePoints.Remove(a.Key);
                 }
             }
+
+            // Akujo Lovers trigger suicide
+            if ((Akujo.akujo != null && target == Akujo.akujo) || (Akujo.honmei != null && target == Akujo.honmei))
+            {
+                PlayerControl akujoPartner = target == Akujo.akujo ? Akujo.honmei : Akujo.akujo;
+                if (akujoPartner != null && !akujoPartner.Data.IsDead)
+                {
+                    akujoPartner.MurderPlayer(akujoPartner, MurderResultFlags.Succeeded);
+                    GameHistory.overrideDeathReasonAndKiller(akujoPartner, DeadPlayer.CustomDeathReason.LoverSuicide);
+                }
+            }
         }
     }
 
@@ -1733,7 +1794,8 @@ namespace TheOtherRoles.Patches {
                     GameHistory.overrideDeathReasonAndKiller(otherLover, DeadPlayer.CustomDeathReason.LoverSuicide);
                 }
 
-            }            
+            }
+
             // Sidekick promotion trigger on exile
             if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead && __instance == Jackal.jackal && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl) {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SidekickPromotes, Hazel.SendOption.Reliable, -1);
@@ -1764,6 +1826,32 @@ namespace TheOtherRoles.Patches {
                     GameHistory.overrideDeathReasonAndKiller(lawyer, DeadPlayer.CustomDeathReason.LawyerSuicide, lawyer);  // TODO: only executed on host?!
                 }
             }
+            // Akujo Partner suicide
+            if ((Akujo.akujo != null && Akujo.akujo == __instance) || (Akujo.honmei != null && Akujo.honmei == __instance))
+            {
+                PlayerControl akujoPartner = __instance == Akujo.akujo ? Akujo.honmei : Akujo.akujo;
+                if (akujoPartner != null && !akujoPartner.Data.IsDead)
+                {
+                    akujoPartner.Exiled();
+                    GameHistory.overrideDeathReasonAndKiller(akujoPartner, DeadPlayer.CustomDeathReason.LoverSuicide);
+                }
+
+                if (MeetingHud.Instance && akujoPartner != null)
+                {
+                    foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates)
+                    {
+                        if (pva.VotedFor != akujoPartner.PlayerId) continue;
+                        pva.UnsetVote();
+                        var voteAreaPlayer = Helpers.playerById(pva.TargetPlayerId);
+                        if (!voteAreaPlayer.AmOwner) continue;
+                        MeetingHud.Instance.ClearVote();
+                    }
+
+                    if (AmongUsClient.Instance.AmHost)
+                        MeetingHud.Instance.CheckForEndVoting();
+                }
+            }
+
         }
     }
 
