@@ -42,7 +42,7 @@ internal static class HatParentPatches
     [HarmonyPrefix]
     private static bool UpdateMaterialPrefix(HatParent __instance)
     {
-        Info("信息点1");
+        //Info("信息点1");
         if (!__instance.TryGetCached(out var asset)) return true;
         if (asset && asset.AltShader)
         {
@@ -60,7 +60,7 @@ internal static class HatParentPatches
         PlayerMaterial.SetColors(colorId, __instance.FrontLayer);
         if (__instance.BackLayer) PlayerMaterial.SetColors(colorId, __instance.BackLayer);
 
-        Info("信息点2");
+        //Info("信息点2");
         __instance.FrontLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
         if (__instance.BackLayer)
             __instance.BackLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
@@ -91,12 +91,12 @@ internal static class HatParentPatches
 
                 break;
         }
-        Info("信息点3");
+        //Info("信息点3");
         if (__instance.matProperties.MaskLayer > 0) return false;
         PlayerMaterial.SetMaskLayerBasedOnLocalPlayer(__instance.FrontLayer, __instance.matProperties.IsLocalPlayer);
         if (!__instance.BackLayer) return false;
         PlayerMaterial.SetMaskLayerBasedOnLocalPlayer(__instance.BackLayer, __instance.matProperties.IsLocalPlayer);
-        Info("信息点4");
+        //Info("信息点4");
         return false;
     }
 

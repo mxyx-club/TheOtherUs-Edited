@@ -93,6 +93,7 @@ public class TheOtherRolesPlugin : BasePlugin
 
     public override void Load()
     {
+        ModTranslation.Load();
         if (ConsoleManager.ConsoleEnabled) System.Console.OutputEncoding = Encoding.UTF8;
         logSource = Log;
         Instance = this;

@@ -42,7 +42,8 @@ internal class IntroCutsceneOnDestroyPatch
                 p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
                 player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
                 player.cosmetics.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
-                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(22.5f);
+                //开局击杀cd
+                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(CustomOptionHolder.buttonCooldownFormat.getFloat());
                 //PlayerControl.SetPetImage(data.DefaultOutfit.PetId, data.DefaultOutfit.ColorId, player.PetSlot);
                 player.cosmetics.nameText.text = data.PlayerName;
                 player.SetFlipX(true);

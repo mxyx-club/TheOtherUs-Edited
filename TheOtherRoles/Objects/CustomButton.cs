@@ -69,7 +69,8 @@ public class CustomButton
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
 
-        Timer = 31.3f;
+        //开局按钮cd
+        Timer = CustomOptionHolder.buttonCooldownFormat.getFloat() + 8.4f;
 
         setActive(false);
     }

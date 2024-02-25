@@ -10,6 +10,7 @@ using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRoles.Portalmaker;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -110,6 +111,7 @@ public static class TheOtherRoles
         HandleGuesser.clearAndReload();
         HideNSeek.clearAndReload();
         PropHunt.clearAndReload();
+        ButtonCooldownFormat.clearAndReload();
     }
 
     public static class Jester
@@ -198,6 +200,15 @@ public static class TheOtherRoles
             usePortalButtonSprite =
                 Helpers.loadSpriteFromResources("TheOtherRoles.Resources.UsePortalButton.png", 115f);
             return usePortalButtonSprite;
+        }
+
+        public static class ButtonCooldownFormat
+        {
+            public static float killCooldown;
+            public static void clearAndReload()
+            {
+                killCooldown = CustomOptionHolder.buttonCooldownFormat.getFloat();
+            }
         }
 
         public static Sprite getUsePortalSpecialButtonSprite(bool first)
@@ -1350,6 +1361,7 @@ public static class Jackal
     public static bool jackalPromotedFromSidekickCanCreateSidekick = true;
     public static bool canCreateSidekickFromImpostor = true;
     public static bool hasImpostorVision;
+    public static bool jackalCanImpostorFindSidekick;
     public static bool killFakeImpostor;
     public static bool wasTeamRed;
     public static bool canSabotage;
@@ -1400,6 +1412,7 @@ public static class Jackal
         canUseVents = CustomOptionHolder.jackalCanUseVents.getBool();
         canSabotage = CustomOptionHolder.jackalCanUseSabo.getBool();
         canCreateSidekick = CustomOptionHolder.jackalCanCreateSidekick.getBool();
+        jackalCanImpostorFindSidekick = CustomOptionHolder.jackalCanImpostorFindSidekick.getBool();
         jackalPromotedFromSidekickCanCreateSidekick =
             CustomOptionHolder.jackalPromotedFromSidekickCanCreateSidekick.getBool();
         canCreateSidekickFromImpostor = CustomOptionHolder.jackalCanCreateSidekickFromImpostor.getBool();

@@ -14,21 +14,13 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch]
 public static class CredentialsPatch
 {
-    public static string fullCredentialsVersion =
-        $@"<size=130%><color=#ff351f>我们的超多职业</color></size> v{TheOtherRolesPlugin.Version + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}";
+    public static string fullCredentialsVersion = $"{ModTranslation.getString("fullCredentialsVersion")}v{TheOtherRolesPlugin.Version + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}";
 
-    public static string fullCredentials =
-        @"<size=70%>模组制作：<color=#FCCE03FF>Spex</color>
-模组修改：<color=#FFB793>沫夏悠轩</color>, <color=#FCCE03FF>善良的好人</color>，<color=#FCCE03FF>天寸梦初</color>
-汉化:<color=#FFB793>沫夏悠轩</color></size>";
+    public static string fullCredentials = ModTranslation.getString("fullCredentials");
 
-    public static string mainMenuCredentials =
-        @"模组作者: <color=#FCCE03FF>Spex</color>
-<size=85%>模组修改：<color=#FFB793>沫夏悠轩</color>, <color=#FCCE03FF>善良的好人</color>，<color=#FCCE03FF>天寸梦初</color>
-汉化：<color=#FFB793>沫夏悠轩</color></size>";
+    public static string mainMenuCredentials = ModTranslation.getString("mainMenuCredentials");
 
-    public static string contributorsCredentials =
-        @"<size=70%> <color=#FCCE03FF>特别感谢 Smeggy, Scoom, Xer, and Mr_Fluuff</color></size>";
+    public static string contributorsCredentials = ModTranslation.getString("contributorsCredentials");
 
     [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
     internal static class PingTrackerPatch
@@ -41,12 +33,12 @@ public static class CredentialsPatch
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {
                 var gameModeText = "";
-                if (HideNSeek.isHideNSeekGM) gameModeText = "躲猫猫模式";
-                else if (HandleGuesser.isGuesserGm) gameModeText = "赌怪模式";
-                else if (PropHunt.isPropHuntGM) gameModeText = "道具躲猫猫";
+                if (HideNSeek.isHideNSeekGM) gameModeText = ModTranslation.getString("isHideNSeekGM");
+                else if (HandleGuesser.isGuesserGm) gameModeText = ModTranslation.getString("isGuesserGm");
+                else if (PropHunt.isPropHuntGM) gameModeText = ModTranslation.getString("isPropHuntGM");
                 if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
                 __instance.text.text =
-                    $"<size=120%><color=#ff351f>我们的超多职业</color></size> v{TheOtherRolesPlugin.Version + "\n<size=75%><color=#FFB793>沫夏悠轩</color> - <color=#FFB793>mxyx.club</color></size>"}\n<size=90%>{gameModeText}</size>" +
+                    $"{ModTranslation.getString("fullCredentialsVersion2")} v{TheOtherRolesPlugin.Version + "\n"}+{ModTranslation.getString("gameTitle2")}\n<size=90%>{gameModeText}</size>" +
                     __instance.text.text;
                 if (CachedPlayer.LocalPlayer.Data.IsDead || (!(CachedPlayer.LocalPlayer.PlayerControl == null) &&
                                                              (CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 ||
@@ -69,9 +61,9 @@ public static class CredentialsPatch
             {
                 var gameModeText = TORMapOptions.gameMode switch
                 {
-                    CustomGamemodes.HideNSeek => "躲猫猫模式",
-                    CustomGamemodes.Guesser => "赌怪模式",
-                    CustomGamemodes.PropHunt => "道具躲猫猫",
+                    CustomGamemodes.HideNSeek => ModTranslation.getString("isHideNSeekGM"),
+                    CustomGamemodes.Guesser => ModTranslation.getString("isGuesserGm"),
+                    CustomGamemodes.PropHunt => ModTranslation.getString("isPropHuntGM"),
                     _ => ""
                 };
                 if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";

@@ -1448,7 +1448,7 @@ public static class RPCProcedure
         var isMedicAndShow = Medic.medic == CachedPlayer.LocalPlayer.PlayerControl && Medic.showAttemptToMedic;
 
         if (isShieldedAndShow || isMedicAndShow || Helpers.shouldShowGhostInfo())
-            Helpers.showFlash(Palette.ImpostorRed, 0.5f, "Failed Murder Attempt on Shielded Player");
+            Helpers.showFlash(Palette.ImpostorRed, 0.5f, ModTranslation.getString("medicShowAttemptText"));
     }
 
     public static void shifterShift(byte targetId)
@@ -1605,7 +1605,7 @@ public static class RPCProcedure
             Sidekick.sidekick = player;
             if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
                 CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
-            if (wasSpy || wasImpostor) Sidekick.wasTeamRed = true;
+            if ((wasSpy || wasImpostor) && CustomOptionHolder.jackalCanImpostorFindSidekick.getBool()) Sidekick.wasTeamRed = true;
             Sidekick.wasSpy = wasSpy;
             Sidekick.wasImpostor = wasImpostor;
             if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");

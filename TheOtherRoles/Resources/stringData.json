@@ -1,0 +1,419 @@
+{
+    "torSettings": {
+        "0": "The Other Roles Settings",
+        "11": "The Other Roles\u8a2d\u5b9a",
+        "13": "The Other Roles \u8bbe\u7f6e"
+    },
+    "fullCredentialsVersion": {
+        "0": "<size=130%><color=#ff351f>TheOtherUs</color></size> ",
+        "13": "<size=130%><color=#ff351f>\u6211\u4eec\u7684\u8d85\u591a\u804c\u4e1a</color></size> "
+    },
+    "fullCredentialsVersion2": {
+        "0": "<size=120%><color=#ff351f>TheOtherUs</color></size> ",
+        "13": "<size=110%><color=#ff351f>\u6211\u4eec\u7684\u8d85\u591a\u804c\u4e1a</color></size> "
+    },
+    "isHideNSeekGM": {
+        "0": "HideNSeek",
+        "13": "\u730e\u6740\u6a21\u5f0f"
+    },
+    "isGuesserGm": {
+        "0": "Guesser",
+        "13": "\u8d4c\u602a\u6a21\u5f0f"
+    },
+    "isPropHuntGM": {
+        "0": "PropHunt",
+        "13": "\u9053\u5177\u8eb2\u732b\u732b"
+    },
+    "fullCredentials": {
+        "0": "<size=70%>Modified by <color=#FFB793>mxyx-club</color>\n<size=65%>Based on TheOtherUs</size>",
+        "13": "<size=75%>\u6a21\u7ec4\u4fee\u6539\uff1a<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color>&<color=#FCCE03FF>\u5584\u826f\u7684\u597d\u4eba</color>&<color=#FCCE03FF>\u5929\u5bf8\u68a6\u521d</color>\n\u4e2d\u6587\u6c49\u5316:<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color></size>\n<size=65%>\u57fa\u4e8eTheotherUs</size>"
+    },
+    "mainMenuCredentials": {
+        "0": "<size=80%>Modified by <color=#FFB793>mxyx-club</color>\n<size=75%>Based on TheOtherUs</size>",
+        "13": "<size=85%>\u6a21\u7ec4\u4fee\u6539\uff1a<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color>&<color=#FCCE03FF>\u5584\u826f\u7684\u597d\u4eba</color>&<color=#FCCE03FF>\u5929\u5bf8\u68a6\u521d</color>\n\u4e2d\u6587\u6c49\u5316\uff1a<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color></size>\n<size=80%>\u57fa\u4e8eTheotherUs</size>"
+    },
+    "contributorsCredentials": {
+        "0": "<size=70%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, and Mr_Fluuff</color></size>",
+        "13": "<size=70%> <color=#FCCE03FF>\u7279\u522b\u611f\u8c22 Smeggy, Scoom, Xer, and Mr_Fluuff</color></size>"
+    },
+    "colorSalmon": {
+        "0": "Salmon",
+        "11": "\u30b5\u30fc\u30e2\u30f3\u30d4\u30f3\u30af",
+        "13": "\u9c91\u9c7c\u7ea2",
+        "14": "\u9bad\u9b5a\u8272"
+    },
+    "colorBordeaux": {
+        "0": "Bordeaux",
+        "11": "\u30dc\u30eb\u30c9\u30fc",
+        "13": "\u67a3\u7ea2",
+        "14": "\u6ce2\u723e\u591a\u9152\u7d05"
+    },
+    "colorOlive": {
+        "0": "Olive",
+        "11": "\u30aa\u30ea\u30fc\u30d6",
+        "13": "\u6a44\u6984\u8272",
+        "14": "\u6a44\u6b16\u7da0"
+    },
+    "colorTurquoise": {
+        "0": "Turquoise",
+        "11": "\u30bf\u30fc\u30b3\u30a4\u30ba",
+        "13": "\u7eff\u677e\u77f3\u8272",
+        "14": "\u7da0\u677e\u77f3\u85cd"
+    },
+    "colorMint": {
+        "0": "Mint",
+        "11": "\u30df\u30f3\u30c8",
+        "13": "\u8584\u8377\u7eff",
+        "14": "\u8584\u8377\u7da0"
+    },
+    "colorLavender": {
+        "0": "Lavender",
+        "11": "\u30e9\u30d9\u30f3\u30c0\u30fc",
+        "13": "\u85b0\u8863\u7d2b",
+        "14": "\u85b0\u8863\u8349\u7d2b"
+    },
+    "colorNougat": {
+        "0": "Nougat",
+        "11": "\u30cc\u30ac\u30fc",
+        "13": "\u68d5\u8910\u8272",
+        "14": "\u725b\u8ecb\u7cd6\u8272"
+    },
+    "colorPeach": {
+        "0": "Peach",
+        "11": "\u30d4\u30fc\u30c1",
+        "13": "\u6843\u7ea2",
+        "14": "\u6843\u7d05"
+    },
+    "colorWasabi": {
+        "0": "Wasabi",
+        "11": "\u30ef\u30b5\u30d3\u8272",
+        "13": "\u82a5\u672b\u7eff",
+        "14": "\u5c71\u8475\u7da0"
+    },
+    "colorHotPink": {
+        "0": "Hot Pink",
+        "11": "\u30db\u30c3\u30c8\u30d4\u30f3\u30af",
+        "13": "\u70ed\u7c89\u8272",
+        "14": "\u71b1\u7c89\u7d05"
+    },
+    "colorPetrol": {
+        "0": "Petrol Blue",
+        "11": "\u30da\u30c8\u30ed\u30fc\u30eb\u30d6\u30eb\u30fc",
+        "13": "\u6cb9\u753b\u84dd",
+        "14": "\u77f3\u6cb9\u85cd"
+    },
+    "colorLemon": {
+        "0": "Lemon",
+        "11": "\u30ec\u30e2\u30f3\u8272",
+        "13": "\u67e0\u6aac\u9ec4",
+        "14": "\u6ab8\u6aac\u9ec3"
+    },
+    "colorSignalOrange": {
+        "0": "Signal Orange",
+        "11": "\u30b7\u30b0\u30ca\u30eb\u30aa\u30ec\u30f3\u30b8",
+        "13": "\u4fe1\u53f7\u6a59",
+        "14": "\u4fe1\u865f\u6a59"
+    },
+    "colorTeal": {
+        "0": "Teal",
+        "11": "\u30c6\u30a3\u30fc\u30eb",
+        "13": "\u84dd\u7eff\u8272",
+        "14": "\u6c34\u9d28\u7da0"
+    },
+    "colorBlurple": {
+        "0": "Blurple",
+        "11": "\u30d6\u30e9\u30fc\u30d7\u30eb",
+        "13": "\u84dd\u7d2b\u8272",
+        "14": "\u85cd\u7d2b\u8272"
+    },
+    "colorSunrise": {
+        "0": "Sunrise",
+        "11": "\u65e5\u306e\u51fa",
+        "13": "\u65e5\u51fa\u7ea2",
+        "14": "\u65e5\u51fa"
+    },
+    "colorIce": {
+        "0": "Ice",
+        "11": "\u30a2\u30a4\u30b9\u30ab\u30e9\u30fc",
+        "13": "\u51b0\u84dd\u8272",
+        "14": "\u51b0\u8272"
+    },
+    "colorArmy": {
+        "0": "Army",
+        "11": "\u30a2\u30fc\u30df\u30fc\u30b0\u30ea\u30fc\u30f3",
+        "13": "\u519b\u7eff\u8272",
+        "14": "\u8ecd\u7da0\u8272"
+    },
+    "colorTamarind": {
+        "0": "Tamarind",
+        "11": "\u30bf\u30de\u30ea\u30f3\u30c9",
+        "13": "\u7f57\u671b\u5b50\u8272",
+        "14": "\u7f85\u671b\u5b50\u8272"
+    },
+    "colorFuchsia": {
+        "0": "Fuchsia",
+        "11": "\u30d5\u30af\u30b7\u30e3",
+        "13": "\u7d2b\u7ea2\u8272",
+        "14": "\u7d2b\u7d05\u8272"
+    },
+    "colorSlime": {
+        "0": "Slime",
+        "11": "\u30b9\u30e9\u30a4\u30e0\u30b0\u30ea\u30fc\u30f3",
+        "13": "\u9ecf\u6db2\u7eff",
+        "14": "\u9ecf\u6db2\u7da0"
+    },
+    "colorRoyalGreen": {
+        "0": "Royal Green",
+        "11": "\u30ed\u30a4\u30e4\u30eb\u30b0\u30ea\u30fc\u30f3",
+        "13": "\u7687\u5bb6\u7eff",
+        "14": "\u7687\u5bb6\u7da0"
+    },
+    "colorNavy": {
+        "0": "Navy",
+        "11": "\u30cd\u30a4\u30d3\u30fc",
+        "13": "\u6d77\u519b\u84dd",
+        "14": "\u6d77\u8ecd\u85cd"
+    },
+    "colorDarkness": {
+        "0": "Darkness",
+        "11": "\u30c0\u30fc\u30af\u30cd\u30b9",
+        "13": "\u6df1\u9ed1\u8272",
+        "14": "\u6df1\u9ed1\u8272"
+    },
+    "colorOcean": {
+        "0": "Ocean",
+        "11": "\u30aa\u30fc\u30b7\u30e3\u30f3\u30d6\u30eb\u30fc",
+        "13": "\u6d77\u6d0b\u84dd",
+        "14": "\u6d77\u6d0b\u85cd"
+    },
+    "colorSundown": {
+        "0": "Sundown",
+        "11": "\u30b5\u30f3\u30c0\u30a6\u30f3",
+        "13": "\u65e5\u843d\u6a59",
+        "14": "\u65e5\u843d\u6a59"
+    },
+    "CamoText": {
+        "0": "[BLANK]",
+        "13": "\u9690\u853d"
+    },
+    "CleanText": {
+        "0": "[BLANK]",
+        "13": "\u6e05\u7406"
+    },
+    "CloseVentText": {
+        "0": "[BLANK]",
+        "13": "\u5c01\u9501"
+    },
+    "CurseText": {
+        "0": "[BLANK]",
+        "13": "\u8bc5\u5492"
+    },
+    "CurseKillText": {
+        "0": "[BLANK]",
+        "13": "\u5492\u6740"
+    },
+    "DouseText": {
+        "0": "[BLANK]",
+        "13": "\u6d47\u6cb9"
+    },
+    "EraserText": {
+        "0": "[BLANK]",
+        "13": "\u62b9\u9664"
+    },
+    "GarlicText": {
+        "0": "[BLANK]",
+        "13": "\u5927\u849c"
+    },
+    "HackerText": {
+        "0": "[BLANK]",
+        "13": "\u9ed1\u5165"
+    },
+    "IgniteText": {
+        "0": "[BLANK]",
+        "13": "\u7eb5\u706b"
+    },
+    "LighterText": {
+        "0": "[BLANK]",
+        "13": "\u70b9\u706f"
+    },
+    "LightsOutText": {
+        "0": "[BLANK]",
+        "13": "\u5173\u706f"
+    },
+    "MorphText": {
+        "0": "[BLANK]",
+        "13": "\u5316\u5f62"
+    },
+    "PlaceCameraText": {
+        "0": "[BLANK]",
+        "13": "\u5b89\u88c5"
+    },
+    "PlaceJackInTheBoxText": {
+        "0": "[BLANK]",
+        "13": "\u653e\u7f6e"
+    },
+    "RepairText": {
+        "0": "[BLANK]",
+        "13": "\u4fee\u7406"
+    },
+    "RewindText": {
+        "0": "[BLANK]",
+        "13": "\u56de\u6eaf"
+    },
+    "SampleText": {
+        "0": "[BLANK]",
+        "13": "\u53d6\u6837"
+    },
+    "SeerText": {
+        "0": "[BLANK]",
+        "13": "\u63ed\u793a"
+    },
+    "ShieldText": {
+        "0": "[BLANK]",
+        "13": "\u62a4\u76fe"
+    },
+    "ShiftText": {
+        "0": "[BLANK]",
+        "13": "\u4ea4\u6362"
+    },
+    "SidekickText": {
+        "0": "[BLANK]",
+        "13": "\u62db\u52df"
+    },
+    "TimeShieldText": {
+        "0": "[BLANK]",
+        "13": "\u65f6\u95f4\u4e4b\u76fe"
+    },
+    "TrackerText": {
+        "0": "[BLANK]",
+        "13": "\u8ffd\u8e2a"
+    },
+    "TricksterVentText": {
+        "0": "[BLANK]",
+        "13": "\u9a97\u672f\u76d2\u5b50"
+    },
+    "VampireText": {
+        "0": "[BLANK]",
+        "13": "\u5438\u8840"
+    },
+    "VultureText": {
+        "0": "[BLANK]",
+        "13": "\u541e\u566c"
+    },
+    "MediumText": {
+        "0": "[BLANK]",
+        "13": "\u901a\u7075"
+    },
+    "PathfindText": {
+        "0": "[BLANK]",
+        "13": "\u5bfb\u627e"
+    },
+    "PursuerText": {
+        "0": "[BLANK]",
+        "13": "\u7a7a\u5305\u5f39"
+    },
+    "WitchText": {
+        "0": "[BLANK]",
+        "13": "\u4e0b\u5492"
+    },
+    "NinjaText": {
+        "0": "[BLANK]",
+        "13": "\u9690\u8eab"
+    },
+    "NinjaUnstealthText": {
+        "0": "[BLANK]",
+        "13": "\u89e3\u9664"
+    },
+    "HandcuffText": {
+        "0": "[BLANK]",
+        "13": "\u6234\u4e0a\u624b\u94d0"
+    },
+    "PlacePortalText": {
+        "0": "[BLANK]",
+        "13": "\u8bbe\u7f6e"
+    },
+    "PortalTeleportText": {
+        "0": "[BLANK]",
+        "13": "\u4f20\u9001"
+    },
+    "DrugText": {
+        "0": "[BLANK]",
+        "13": "\u79d8\u836f"
+    },
+    "InfectText": {
+        "0": "[BLANK]",
+        "13": "\u611f\u67d3"
+    },
+    "MadmateText": {
+        "0": "[BLANK]",
+        "13": "\u53db\u5f92"
+    },
+    "PlaceTrapText": {
+        "0": "[BLANK]",
+        "13": "\u5e03\u4e0b\u9677\u9631"
+    },
+    "BrainwashText": {
+        "0": "[BLANK]",
+        "13": "\u6d17\u8111"
+    },
+    "AlertText": {
+        "0": "[BLANK]",
+        "13": "\u8b66\u6212"
+    },
+    "PlantBombText": {
+        "0": "[BLANK]",
+        "13": "\u653e\u7f6e\u70b8\u5f39"
+    },
+    "ReleaseBombText": {
+        "0": "[BLANK]",
+        "13": "\u5f15\u7206"
+    },
+    "DragBodyText": {
+        "0": "[BLANK]",
+        "13": "\u62d6\u62fd"
+    },
+    "DropBodyText": {
+        "0": "[BLANK]",
+        "13": "\u653e\u4e0b"
+    },
+    "InvestigateText": {
+        "0": "[BLANK]",
+        "13": "\u8c03\u67e5"
+    },
+    "AkujoHonmeiText": {
+        "0": "[BLANK]",
+        "13": "\u9009\u4e3a\u771f\u7231"
+    },
+    "AkujoBackupText": {
+        "0": "[BLANK]",
+        "13": "\u9009\u4e3a\u5907\u80ce"
+    },
+    "SprintText": {
+        "0": "[BLANK]",
+        "13": "\u51b2\u523a"
+    },
+    "SprinterStopText": {
+        "0": "[BLANK]",
+        "13": "\u505c\u4e0b"
+    },
+    "TeleporterSampleText": {
+        "0": "[BLANK]",
+        "13": "\u9009\u62e9\u5bf9\u8c61"
+    },
+    "TeleporterTeleportText": {
+        "0": "[BLANK]",
+        "13": "\u4f20\u9001"
+    },
+    "CupidArrowText": {
+        "0": "[BLANK]",
+        "13": "\u7231\u4e4b\u7bad"
+    },
+    "BlackmailerText": {
+        "0": "[BLANK]",
+        "13": "\u52d2\u7d22"
+    },
+    "ProphetText": {
+        "0": "[BLANK]",
+        "13": "\u63ed\u793a"
+    }
+}

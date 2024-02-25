@@ -1,6 +1,6 @@
+using AmongUs.Data.Legacy;
 using System.Collections.Generic;
 using System.Linq;
-using AmongUs.Data.Legacy;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using Object = Il2CppSystem.Object;
@@ -34,14 +34,14 @@ public class CustomColors
         /* Custom Colors, starting with id (for ORDER) 18 */
         colors.Add(new CustomColor
         {
-            longname = "Tamarind", //18
+            longname = ModTranslation.getString("colorTamarind"), //18
             color = new Color32(48, 28, 34, byte.MaxValue),
             shadow = new Color32(30, 11, 16, byte.MaxValue),
             isLighterColor = true
         });
         colors.Add(new CustomColor
         {
-            longname = "Army", // 19
+            longname = ModTranslation.getString("colorArmy"),
             color = new Color32(39, 45, 31, byte.MaxValue),
             shadow = new Color32(11, 30, 24, byte.MaxValue),
             isLighterColor = false
@@ -49,35 +49,35 @@ public class CustomColors
         // 20
         colors.Add(new CustomColor
         {
-            longname = "Olive",
+            longname = ModTranslation.getString("colorOlive"),
             color = new Color32(154, 140, 61, byte.MaxValue),
             shadow = new Color32(104, 95, 40, byte.MaxValue),
             isLighterColor = true
         });
         colors.Add(new CustomColor
         {
-            longname = "Turquoise",
+            longname = ModTranslation.getString("colorTurquoise"),
             color = new Color32(22, 132, 176, byte.MaxValue),
             shadow = new Color32(15, 89, 117, byte.MaxValue),
             isLighterColor = false
         });
         colors.Add(new CustomColor
         {
-            longname = "Mint",
+            longname = ModTranslation.getString("colorMint"),
             color = new Color32(111, 192, 156, byte.MaxValue),
             shadow = new Color32(65, 148, 111, byte.MaxValue),
             isLighterColor = true
         });
         colors.Add(new CustomColor
         {
-            longname = "Lavender",
+            longname = ModTranslation.getString("colorLavender"),
             color = new Color32(173, 126, 201, byte.MaxValue),
             shadow = new Color32(131, 58, 203, byte.MaxValue),
             isLighterColor = true
         });
         colors.Add(new CustomColor
         {
-            longname = "Nougat",
+            longname = ModTranslation.getString("colorNougat"),
             color = new Color32(160, 101, 56, byte.MaxValue),
             shadow = new Color32(115, 15, 78, byte.MaxValue),
             isLighterColor = false
@@ -85,35 +85,35 @@ public class CustomColors
         // 25
         colors.Add(new CustomColor
         {
-            longname = "Peach",
+            longname = ModTranslation.getString("colorPeach"),
             color = new Color32(255, 164, 119, byte.MaxValue),
             shadow = new Color32(238, 128, 100, byte.MaxValue),
             isLighterColor = true
         });
         colors.Add(new CustomColor
         {
-            longname = "Wasabi",
+            longname = ModTranslation.getString("colorWasabi"),
             color = new Color32(112, 143, 46, byte.MaxValue),
             shadow = new Color32(72, 92, 29, byte.MaxValue),
             isLighterColor = false
         });
         colors.Add(new CustomColor
         {
-            longname = "Hot Pink",
+            longname = ModTranslation.getString("colorHotPink"),
             color = new Color32(255, 51, 102, byte.MaxValue),
             shadow = new Color32(232, 0, 58, byte.MaxValue),
             isLighterColor = true
         });
         colors.Add(new CustomColor
         {
-            longname = "Petrol",
+            longname = ModTranslation.getString("colorPetrol"),
             color = new Color32(0, 99, 105, byte.MaxValue),
             shadow = new Color32(0, 61, 54, byte.MaxValue),
             isLighterColor = false
         });
         colors.Add(new CustomColor
         {
-            longname = "Lemon",
+            longname = ModTranslation.getString("colorLemon"),
             color = new Color32(0xDB, 0xFD, 0x2F, byte.MaxValue),
             shadow = new Color32(0x74, 0xE5, 0x10, byte.MaxValue),
             isLighterColor = true
@@ -121,14 +121,14 @@ public class CustomColors
         // 30
         colors.Add(new CustomColor
         {
-            longname = "Signal\nOrange",
+            longname = ModTranslation.getString("colorSignalOrange"),
             color = new Color32(0xF7, 0x44, 0x17, byte.MaxValue),
             shadow = new Color32(0x9B, 0x2E, 0x0F, byte.MaxValue),
             isLighterColor = true
         });
         colors.Add(new CustomColor
         {
-            longname = "Teal",
+            longname = ModTranslation.getString("colorTeal"),
             color = new Color32(0x25, 0xB8, 0xBF, byte.MaxValue),
             shadow = new Color32(0x12, 0x89, 0x86, byte.MaxValue),
             isLighterColor = true
@@ -136,7 +136,7 @@ public class CustomColors
 
         colors.Add(new CustomColor
         {
-            longname = "Blurple",
+            longname = ModTranslation.getString("colorBlurple"),
             color = new Color32(61, 44, 142, byte.MaxValue),
             shadow = new Color32(25, 14, 90, byte.MaxValue),
             isLighterColor = false
@@ -144,14 +144,14 @@ public class CustomColors
 
         colors.Add(new CustomColor
         {
-            longname = "Sunrise",
+            longname = ModTranslation.getString("colorSunrise"),
             color = new Color32(0xFF, 0xCA, 0x19, byte.MaxValue),
             shadow = new Color32(0xDB, 0x44, 0x42, byte.MaxValue),
             isLighterColor = true
         });
         colors.Add(new CustomColor
         {
-            longname = "Ice",
+            longname = ModTranslation.getString("colorIce"),
             color = new Color32(0xA8, 0xDF, 0xFF, byte.MaxValue),
             shadow = new Color32(0x59, 0x9F, 0xC8, byte.MaxValue),
             isLighterColor = true
@@ -159,49 +159,49 @@ public class CustomColors
         // 35
         colors.Add(new CustomColor
         {
-            longname = "Fuchsia", //35 Color Credit: LaikosVK
+            longname = ModTranslation.getString("colorFuchsia"),//35 Color Credit: LaikosVK
             color = new Color32(164, 17, 129, byte.MaxValue),
             shadow = new Color32(104, 3, 79, byte.MaxValue),
             isLighterColor = false
         });
         colors.Add(new CustomColor
         {
-            longname = "Royal\nGreen", //36
+            longname = ModTranslation.getString("colorRoyalGreen"),//36
             color = new Color32(9, 82, 33, byte.MaxValue),
             shadow = new Color32(0, 46, 8, byte.MaxValue),
             isLighterColor = false
         });
         colors.Add(new CustomColor
         {
-            longname = "Slime",
+            longname = ModTranslation.getString("colorSlime"),
             color = new Color32(244, 255, 188, byte.MaxValue),
             shadow = new Color32(167, 239, 112, byte.MaxValue),
             isLighterColor = false
         });
         colors.Add(new CustomColor
         {
-            longname = "Navy", //38
+            longname = ModTranslation.getString("colorNavy"),//38
             color = new Color32(9, 43, 119, byte.MaxValue),
             shadow = new Color32(0, 13, 56, byte.MaxValue),
             isLighterColor = false
         });
         colors.Add(new CustomColor
         {
-            longname = "Darkness", //39
+            longname = ModTranslation.getString("colorDarkness"),//39
             color = new Color32(36, 39, 40, byte.MaxValue),
             shadow = new Color32(10, 10, 10, byte.MaxValue),
             isLighterColor = false
         });
         colors.Add(new CustomColor
         {
-            longname = "Ocean", //40
+            longname = ModTranslation.getString("colorOcean"),//40
             color = new Color32(55, 159, 218, byte.MaxValue),
             shadow = new Color32(62, 92, 158, byte.MaxValue),
             isLighterColor = false
         });
         colors.Add(new CustomColor
         {
-            longname = "Sundown", // 41
+            longname = ModTranslation.getString("colorSundown"),//41
             color = new Color32(252, 194, 100, byte.MaxValue),
             shadow = new Color32(197, 98, 54, byte.MaxValue),
             isLighterColor = false

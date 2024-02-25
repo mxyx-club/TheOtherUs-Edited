@@ -1,757 +1,112 @@
-![eisbison banner](./Images/TOR_logo.png)
-<p align="center"><a href="https://github.com/Eisbison/TheOtherRoles/releases/"><img src="https://badgen.net/github/release/eisbison/theotherroles"></a></p>
+## Note: This repository is an unofficial continuation of [The Other Roles](https://github.com/TheOtherRolesAU/TheOtherRoles) and [Town of Us](https://github.com/slushiegoose/Town-Of-Us)/[Town of Us R](https://github.com/eDonnes124/Town-Of-Us-R), as well as [The Other Roles Community Edition](https://github.com/JustASysAdmin/TheOtherRoles2).
 
+![TOU_Logo](https://user-images.githubusercontent.com/113001912/192659417-85c94f28-d9b9-454a-a6b4-6679fe9dca91.png)
+<p align="center"><a href="https://github.com/SpexGH/TheOtherUs/releases/"><img src="https://badgen.net/github/release/SpexGH/theotherus"></a></p>
 
-This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.</p>
 <p align="center">
-  To other mod devs: for usage of our code, please read and respect the <a href="#license">license</a></p>
+Credit to The Other Roles, Town of Us, and The Other Roles Community Edition for everything. This wouldn't be possible without them. </p>
+The Other Roles: https://github.com/TheOtherRolesAU/TheOtherRoles </p>
+Town of Us: https://github.com/eDonnes124/Town-Of-Us-R </p>
+The Other Roles Community Edition: https://github.com/JustASysAdmin/TheOtherRoles2 </p>
 
-[![Discord](./Images/TOR_server.png)](https://discord.gg/77RkMJHWsM)
+<p align="center">
+The Other Us Is a project created to expand on the Open Source mod "The Other Roles". It does this in the form of expanding on existing settings, adding new settings, adding/removing roles, balancing roles for competitive viability, and fixing bugs.</p>
+
+<p align="center">
+This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.</p>
+
+[![Discord](./Images/TOR_server.png)](https://discord.gg/yspVyP5meR)
 ![eisbison infographic](./Images/TOR_Roles.png)
 
+# The Other Us
 
-# The Other Roles
+Credit to [The Other Roles](https://github.com/TheOtherRolesAU/TheOtherRoles) and [The Other Roles Community Edition](https://github.com/JustASysAdmin/TheOtherRoles2) for everything. This wouldn't be possible without them. Also Credit to [Town of Us](https://github.com/eDonnes124/Town-Of-Us-R)
 
-The **The Other Roles** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
+**The Other Us**, is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
 Even more roles are coming soon. :)
 
 | Impostor | Crewmate | Neutral | Modifier | Gamemode |
 |----------|-------------|-----------------|----------------|----------------|
 | [Godfather (Mafia)](#mafia) | [Mayor](#mayor) | [Jester](#jester) | [Bloody](#bloody) | [Classic](#roles) |
-| [Mafioso (Mafia)](#mafia) | [Engineer](#engineer) | [Arsonist](#arsonist) | [Anti Teleport](#anti-teleport) | [Guesser Modifier](#guesser-modifier) |
-| [Janitor (Mafia)](#mafia) | [Sheriff](#sheriff) | [Jackal](#jackal) | [Tie Breaker](#tie-breaker) | [Hide 'n' Seek](#hide-n-seek) |
-| [Morphling](#morphling) | [Deputy](#deputy) | [Sidekick](#sidekick) | [Bait](#bait) | [Vanilla Hide 'n' Seek](https://www.innersloth.com/new-game-mode-hide-n-seek-is-here-emergency-meeting-35/) |
-| [Camouflager](#camouflager) | [Lighter](#lighter) | [Vulture](#vulture) | [Lovers](#lovers) | [PropHunt](#prophunt)|
-| [Vampire](#vampire) | [Detective](#detective) | [Lawyer](#lawyer) | [Sunglasses](#sunglasses) |
-| [Eraser](#eraser) | [Time Master](#time-master) | [Prosecutor](#prosecutor) | [Mini](#mini) |
-| [Trickster](#trickster) | [Medic](#medic) | [Pursuer](#pursuer) | [VIP](#vip) |
-| [Cleaner](#cleaner) | [Swapper](#swapper) | [Thief](#thief) | [Invert](#invert) |
-| [Warlock](#warlock) | [Seer](#seer) |  | [Chameleon](#chameleon) |
-| [Bounty Hunter](#bounty-hunter) | [Hacker](#hacker) |  | [Shifter](#shifter)
-| [Witch](#witch) | [Tracker](#tracker) |  |  |
-| [Ninja](#ninja) | [Snitch](#snitch) |  |  |
-| [Bomber](#bomber) | [Spy](#spy) |  |  |
-| [Evil Guesser](#guesser) | [Portalmaker](#portalmaker) |  |  |
-|  | [Security Guard](#security-guard) |  |  |
-|  | [Medium](#medium) |  |  |
-|  | [Trapper](#trapper) |  |  |
-|  | [Nice Guesser](#guesser) |  |  |
+| [Mafioso (Mafia)](#mafia) | [Engineer](#engineer) | [Arsonist](#arsonist) | [Anti Teleport](#anti-teleport) | [Guesser](#guesser-modifier) |
+| [Janitor (Mafia)](#mafia) | [Sheriff](#sheriff) | [Jackal](#jackal) | [Tie Breaker](#tie-breaker) | [Hide 'n Seek](#hide-n-seek) |
+| [Morphling](#morphling) | [Deputy](#deputy) | [Sidekick](#sidekick) | [Bait](#bait) |
+| [Camouflager](#camouflager) | [Lighter](#lighter) | [Vulture](#vulture) | [Lovers](#lovers) |
+| [Vampire](#vampire) | [Investigator](#investigator) | [Lawyer](#lawyer) | [Sunglasses](#sunglasses) |
+| [Eraser](#eraser) | [Time Master](#time-master) | [Pursuer](#pursuer) | [Mini](#mini) |
+| [Trickster](#trickster) | [Medic](#medic) | [Thief](#thief) | [VIP](#vip) |
+| [Cleaner](#cleaner) | [Swapper](#swapper) | [Executioner](#executioner) | [Invert](#invert) |
+| [Warlock](#warlock) | [Seer](#seer) | [Amnesiac](#amnesiac) | [Chameleon](#chameleon) |
+| [Bounty Hunter](#bounty-hunter) | [Hacker](#hacker) | [Swooper](#swooper) | [Shifter](#shifter)
+| [Witch](#witch) | [Tracker](#tracker) | [Werewolf](#werewolf) | [Indomitable](#indomitable) |
+| [Ninja](#ninja) | [Snitch](#snitch) |  | [Blind](#blind) |
+| [Miner](#miner) | [Spy](#spy) |  | [Sleuth](#sleuth) |
+| [Blackmailer](#blackmailer) | [Portalmaker](#portalmaker) | | [Fanatic](#fanatic) |  |
+| [Bomber](#bomber) | [Security Guard](#security-guard) | | [Torch](#torch) |  |
+| [Escapist](#escapist) | [Medium](#medium) |  | [Tunneler](#tunneler) |
+| [Assassin](#assassin) | [Trapper](#trapper) |  | [Watcher](#watcher) |
+|  | [Vigilante](#vigilante) |  | [Multitasker](#multitasker) |
+|  | [Veteran](#veteran) |  | [Disperser](#disperser) |
+|  | [Bodyguard](#bodyguard) |  | |
+|  | [Jumper](#jumper) |  | |
 
-The [Role Assignment](#role-assignment) section explains how the roles are being distributed among the players.
+The [Role Assignment](#role-assignment) sections explains how the roles are being distributed among the players.
 
 # Releases
 | Among Us - Version| Mod Version | Link |
 |----------|-------------|-----------------|
-| 2023.11.28s| v4.5.1| [Download](https://github.com/TheOtherRolesAU/TheOtherRoles/releases/download/v4.5.1/TheOtherRoles.zip)
-| 2023.11.28s| v4.5.0| [Download](https://github.com/TheOtherRolesAU/TheOtherRoles/releases/download/v4.5.0/TheOtherRoles.zip)
-| 2023.07.12s| v4.4.2| [Download](https://github.com/TheOtherRolesAU/TheOtherRoles/releases/download/v4.4.2/TheOtherRoles.zip)
+| 2022.10.25s| v1.1.4| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.1.4/TheOtherUs.zip)
+| 2022.10.25s| v1.1.3| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.1.3/TheOtherUs.zip)
+| 2022.10.25s| v1.1.2| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.1.2/TheOtherUs.zip)
+| 2022.10.25s| v1.1.1| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.1.1/TheOtherUs.zip)
+| 2022.10.25s| v1.1.0| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.1.0/TheOtherUs.zip)
+| 2022.8.24| v1.0.9| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.9/TheOtherUs.zip)
+| 2022.8.24| v1.0.8| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.8/TheOtherUs.zip)
+| 2022.8.24| v1.0.7| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.7/TheOtherUs.zip)
+| 2022.8.24| v1.0.6| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.6/TheOtherUs.zip)
+| 2022.8.24| v1.0.5| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.5/TheOtherUs.zip)
+| 2022.8.24| v1.0.4| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.4/TheOtherUs.zip)
+| 2022.8.24| v1.0.3| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.3/TheOtherUs.zip)
+| 2022.8.24| v1.0.2| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.2/TheOtherUs.zip)
+| 2022.8.24| v1.0.1| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.1/TheOtherUs.zip)
+| 2022.8.24| v1.0.0| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.0/TheOtherUs.zip)
 
-<details>
-  <summary>Click to show older versions</summary>
-  
-| Among Us - Version| Mod Version | Link |
-|----------|-------------|-----------------|
-| 2023.07.12s| v4.4.1| [Download](https://github.com/TheOtherRolesAU/TheOtherRoles/releases/download/v4.4.1/TheOtherRoles.zip)
-| 2023.07.12s| v4.4.0| [Download](https://github.com/TheOtherRolesAU/TheOtherRoles/releases/download/v4.4.0/TheOtherRoles.zip)
-| 2023.07.12s| v4.3.4| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.3.4/TheOtherRoles.zip)
-| 2023.07.12s| v4.3.3| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.3.3/TheOtherRoles.zip)
-| 2023.03.28s| v4.3.2| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.3.2/TheOtherRoles.zip)
-| 2023.03.28s| v4.3.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.3.1/TheOtherRoles.zip)
-| 2023.02.28s| v4.3.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.3.0/TheOtherRoles.zip)
-| 2022.12.14s| v4.2.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.2.1/TheOtherRoles.zip)
-| 2022.10.25s| v4.2.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.2.0/TheOtherRoles.zip)
-| 2022.9.20s| v4.1.7| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.1.7/TheOtherRoles.zip)
-| 2022.6.21s| v4.1.6| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.1.6/TheOtherRoles.zip)
-| 2022.6.21s| v4.1.5| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.1.5/TheOtherRoles.zip)
-| 2022.3.29s| v4.1.4| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.1.4/TheOtherRoles.zip)
-| 2022.3.29s| v4.1.3| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.1.3/TheOtherRoles.zip)
-| 2022.3.29s| v4.1.2| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.1.2/TheOtherRoles.zip)
-| 2022.3.29s| v4.1.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.1.1/TheOtherRoles.zip)
-| 2022.3.29s| v4.1.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.1.0/TheOtherRoles.zip)
-| 2022.3.29s| v4.0.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v4.0.0/TheOtherRoles.zip)
-| 2022.3.29s| v3.4.5| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.4.5/TheOtherRoles.zip)
-| 2022.2.23s| v3.4.4| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.4.4/TheOtherRoles.zip)
-| 2021.12.15s| v3.4.3| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.4.3/TheOtherRoles.zip)
-| 2021.12.15s| v3.4.2| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.4.2/TheOtherRoles.zip)
-| 2021.12.15s| v3.4.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.4.1/TheOtherRoles.zip)
-| 2021.12.15s| v3.4.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.4.0/TheOtherRoles.zip)
-| 2021.12.15s| v3.3.3| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.3.3/TheOtherRoles.zip)
-| 2021.12.15s| v3.3.2| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.3.2/TheOtherRoles.zip)
-| 2021.12.14s| v3.3.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.3.1/TheOtherRoles.zip)
-| 2021.12.14s| v3.3.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.3.0/TheOtherRoles.zip)
-| 2021.11.9.5s| v3.2.4| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.2.4/TheOtherRoles.zip)
-| 2021.11.9.5s| v3.2.3| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.2.3/TheOtherRoles.zip)
-| 2021.11.9.5s| v3.2.2| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.2.2/TheOtherRoles.zip)
-| 2021.11.9.5s| v3.2.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.2.1/TheOtherRoles.zip)
-| 2021.11.9.5s| v3.2.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.2.0/TheOtherRoles.zip)
-| 2021.11.9.5s| v3.1.2| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.1.2/TheOtherRoles.zip)
-| 2021.11.9.5s| v3.1.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.1.1/TheOtherRoles.zip)
-| 2021.11.9.5s| v3.1.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.1.0/TheOtherRoles.zip)
-| 2021.11.9.5s| v3.0.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v3.0.0/TheOtherRoles.zip)
-| 2021.6.30s| v2.9.2| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.9.2/TheOtherRoles.zip)
-| 2021.6.30s| v2.9.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.9.1/TheOtherRoles.zip)
-| 2021.6.30s| v2.9.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.9.0/TheOtherRoles.zip)
-| 2021.6.30s| v2.8.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.8.1/TheOtherRoles.zip)
-| 2021.6.30s| v2.8.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.8.0/TheOtherRoles.zip)
-| 2021.6.30s| v2.7.3| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.7.3/TheOtherRoles.zip)
-| 2021.6.15s| v2.7.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.7.1/TheOtherRoles.zip)
-| 2021.6.15s| v2.7.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.7.0/TheOtherRoles.zip)
-| 2021.5.25.2s| v2.6.7| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.6.7/TheOtherRoles.zip)
-| 2021.5.10s| v2.6.6| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.6.6/TheOtherRoles.zip)
-| 2021.5.10s| v2.6.5| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.6.5/TheOtherRoles.zip)
-| 2021.5.10s| v2.6.4| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.6.4/TheOtherRoles.zip)
-| 2021.5.10s| v2.6.3| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.6.3/TheOtherRoles.zip)
-| 2021.5.10s| v2.6.2| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.6.2/TheOtherRoles.zip)
-| 2021.4.14s| v2.6.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.6.1/TheOtherRoles.zip)
-| 2021.4.14s| v2.6.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.6.0/TheOtherRoles.zip)
-| 2021.4.14s| v2.5.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.5.1/TheOtherRoles.zip)
-| 2021.4.14s| v2.5.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.5.0/TheOtherRoles.zip)
-| 2021.4.14s| v2.4.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.4.0/TheOtherRoles.zip)
-| 2021.4.14s| v2.3.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.3.0/TheOtherRoles.zip)
-| 2021.4.14s| v2.2.2| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.2.2/TheOtherRoles.zip)
-| 2021.4.12s| v2.2.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.2.1/TheOtherRoles.zip)
-| 2021.4.12s| v2.2.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.2.0/TheOtherRoles.zip)
-| 2021.3.31.3s| v2.1.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.1.0/TheOtherRoles.zip)
-| 2021.3.31.3s| v2.0.1 beta| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.0.1/TheOtherRoles.zip)
-| 2021.3.31.3s | v2.0.0 beta | [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.0.0/TheOtherRoles.zip)
-| 2021.3.5s | v1.8.2 | [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v1.8.2/TheOtherRoles.zip)
-| 2021.3.5s | v1.8.1 | [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v1.8.1/TheOtherRoles.zip)
-| 2021.3.5s | v1.8 | [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v1.8/TheOtherRoles.zip)
-| 2021.3.5s | v1.7 | [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v1.7/TheOtherRoles.zip)
-| 2021.3.5s | v1.6 | [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v1.6/TheOtherRoles.zip)
-| 2021.3.5s | v1.5 | [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v1.5/TheOtherRoles.zip)
-| 2021.3.5s | v1.4 | [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v1.4/TheOtherRoles.zip)
-| 2021.3.5s | v1.3 | [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v1.3/TheOtherRoles.zip)
-| 2020.12.19s | v1.1 | [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v1.1/TheOtherRoles.zip)
-| 2020.12.19s | v1.0 | [Download](https://github.com/Eisbison/TheOtherRoles/files/6097191/TheOtherRoles.zip)
-</details>
-  
-  
 # Changelog
 <details>
   <summary>Click to show the Changelog</summary>
-  
-**Version 4.5.1**
-- Fix a bug that lead to Props not being able to use the disguise button
 
-**Version 4.5.0**
-- Updated to Among Us version 2023.11.28 (with the new map, Fungle)
-- Added a new feature: Show Vents on Map (toggle in your local options)
-- Added a new kill distance: Very Short (thanks twix)
-- Added a feature to change the gamemode in the settings: `/gm <gamemode>` (host only)
-- Fixed a bug where Pet visibility was sometimes wron
-- Fixed the HatLoader - testing hats should work again (thanks EnoPM)
-- Changed the HatLoader - loading the hats does not require a restart of the mod anymore
-- Changed the ModUpdater (thanks EnoPM)
-- Changed the Vampire: Kills will be delayed a bit longer if the target is using a ladder, platform or zipline
-- Note: Compatibility with Submerged and LevelImposter is not tested yet.
-
-**Version 4.4.2**
-- Added 10 new colors and adapted some existing ones (thanks to Avlona & Listoric for sorting our colors!)
-- Added a message of the day feature in the main menu. Look out for interesting news and lame jokes!
-
-**Version 4.4.1**
-- Fixed a bug where PropHunt buttons did not work for the Hunters after watching the intro cutscene.
-
-**Version 4.4.0**
-- Added a new gamemode, PropHunt. Players can disguise as objects on the map
-- Changed Lighter and Darker colors: L/D are no longer random, but rather assigned in alternating order.
-
-**Version 4.3.4**
-- Updated BepInEx dependency to 671
-- Fixed compatibility to Submerged (not thouroughly tested)
-- Fixed a bug where the death reason of a guessed shifter was incorrectly displayed as "shifted xy"
-- Make it possible to disable the Mod-Updater (see [details](#gcerror) ), to circumvent a crash at startup with a GC-Error
-- Fixed the hats in freeplay partially
-
-**Version 4.3.3**
-- Updated to Among Us version 2023.07.12
-- Fixed an issue where the swap icon of a swapper guesser would be in front of the witch icon on a spelled player 
-- Fixed an issue where haunting was impossible in vanilla Hide'n'Seek
-- Fixed an issue where the settings for the Trapper would not appear in the in-game settings shower
-- Fixed a bug where the Arsonists win would show "killed by" on dead players in the summary screen
-- Fixed a bug where placing a garlic would convert a random player into a horse for the rest of the round
-- Changed the Eraser Guesser: Jackal and Sidekick are no longer guessable after being fake-"erased"
-  
-**Version 4.3.2**
-- Added new option to Thief: Can Guess To Steal Role
-- Added new option to Guesser Mode: Force Thief Guesser
-- Added the death reason to the additional infos for ghosts.
-- Added the possibility to copy and paste the settings for the current preset to / from the clipboard (buttons)
-- Added a feature to the swapper: The swap resets if one of the target players is guessed or disconnects
-- Fixed the Security Guard Mobile Cams and the Hacker Vitals Panel when playing on LevelImposter maps (don't rename the panels for now, please)
-- Fixed several bugs in Vanilla Hide'n'Seek
-- Fixed an issue where Crewmate "Fill" did not work correcty if min neutrals was set bigger than max neutrals
-- Fixed a bug where the colorblind-text of the ninja remained visible when using the ninja-ability
-- Fixed a bug where the bomb could explode in a meeting due to desync and bad timing
-- Fixed a bug where the host Eraser could guess erased players
-
-**Version 4.3.1**
-- Added new options (Information mode - Chat/Map/Both, Roles - Evil Killing / Evil)  to the snitch and fixed bugs affecting the snitch
-- Changed the maximum amount per modifier to 15 (where applicable)
-- Changed the colorblind text and player name to be behind certain objects again (rock on Polus etc.)
-- Fixed a bug where a sidekicked bomber would not lose the bomber role
-- Fixed a bug where enabled vanilla roles would be assigned even if "block vanilla roles" was turned on
-- Fixed several Bugs in both Hide N Seek modes (should be playable again)
-- Fixed a bug where Trickster JackInTheBoxes could sometimes not be used if they were placed behind objects
-- Fixed a bug where the cosmetics of an invisible Ninja became visible when the camouflage ended
-- Fixed a bug where the mini would show a "jump" in age at the end of a meeting due to the time spent in cutscenes
-- Fixed a bug where the mayor would always have the mobile emergency button, no matter which setting was selected 
-
-
-**Version 4.3.0**
-- Updated to Among Us version 2023.2.28
-- Added a new role: [Bomber](#bomber)
-- Added more information for ghosts (e.g. who is cuffed, witched, ninja marked etc.), can be turned off in the mod options menu
-- Added the option to change between cameras (Polus & Airship) with A & D and left & right arrow keys on your keyboard
-- Added a new feature in settings: Fill Crewmate Roles
-- Added a new option: Cams Switch To Night Vision If Lights Are Off (+ Option: Impostor Vision Ignores Night Vision Cams)
-- Added a new option: Finish Tasks Before Haunting Or Zooming Out
-- Added a new option to Mayor: Mayor Can Choose Single Vote
-- Added a button to see the game settings while ingame (F1-Key)
-- Added a new ability to Portalmaker: Port to any of the portals from anywhere
-- Added a new option to Medium: Chance That The Answer Contains Additional Information (see [Medium](#medium))
-- Changed the question pattern for the Medium
-- Changed the role: Lighter (Flashlight vision)
-- Changed the role: Snitch (no more arrows, location information instead)
-- Fixed a bug where entering a custom server manually did not work anymore (+ nicer UI for entering a custom server)
-- Fixed a bug where a witch-spelled prosecutor would not win if their target was voted
-  
-**Version 4.2.1**
-- Updated to Among Us version 2022.12.14
-- Added a new option for random maps: Use Random Map Setting Presets, see [random maps](#random-maps)
-- Added the possibility to play the Vanilla Hide 'n' Seek mode
-- Added the possibility to filter for another faction when haunting players: Evil (Impostors + Neutral)
-- Changed the way option presets work: They now include all vanilla options (e.g. amount of tasks, movement speed etc.) 
-- Changed the animation of the TOR Hunter to the Seeker animation of vanilla
-- Fixed a bug where the prosecutor did not promote to pursuer when the target shifted an evil role and died. 
-- Fixed a bug where the prosecutor did not promote to pursuer when the target is Witch exiled
-- Removed Horse Mode (for now)
-
-**Version 4.2.0**
-- Added a new Guesser-Gamemode
-- Added a new Hide 'n Seek-Gamemode | Thanks to [Oberbayer](https://twitch.tv/oberbayer)
-- Added a new role for Hide 'n Seek-Gamemode: Hunter
-- Added a new role for Hide 'n Seek-Gamemode: Hunted
-- Added a new role: Thief
-- Added a new role: Trapper
-- Added a new modifier: Chameleon
-- Added a new feature to hide the "Colorblind"-Text when hiding behind obstacles
-- Added a new role: Prosecutor (in the Lawyer settings) | Thanks to [Scoom](https://github.com/JustASysAdmin)
-- Added a new option to the Mini Modifier: "Mini Grows Up In Meeting"
-- Added a new server: Modded Asia (MAS) | Thanks to [miniduikboot](https://github.com/miniduikboot)
-- Added support for joining public TOR lobbies using the "Find Game"-Button **on Modded Servers (only!)** | Thanks to [miniduikboot](https://github.com/miniduikboot)
-- Changed Shifter to be a Modifier instead of being a role
-- Changed Eraser to only erase the role and not the Modifier
-- Changed that neutral roles doesn't have to do tasks anymore to get the overview when they died before their client
-- Changed "Play On Random Map". You can now set percentages for each map (like you can do for roles)
-- Fixed a bug where the trail color of the player with the "Bloody"-Modifier sometimes had the wrong color when they got killed
-- Fixed a bug where the Ninja could target the Spy, but not the Impostor
-- Fixed a bug where the countdown wasn't displayed for all player when starting a game
-- Fixed bugs in Freeplay (hats were always adaptive when testing & Meetingscreen fixed)
-- Fixed a bug where Crewmate/Impostor wasn't displayed correctly in Endscreen
-- Fixed a bug where Crewmate/Impostor wasn't displayed correctly in Meetingscreen
-- Fixed a bug where Lawyer didn't get promoted to Pursuer when client died (in a Meeting)
-- Fixed a bug in Meetings when a Tiebreaker and Swapper where involved
-
-**Version 4.1.7**
-- Updated to Among Us version 2022.8.24
-
-**Version 4.1.6**  
-- Added Sound Effects: Most buttons / role funcionalities now have a sound!
-- Added a mod option: Enable Sound Effects  
-- Added an option: Hide After Death Modifiers: Modifiers which will have an effect after your death will be hidden while the player is alive so they cant be claimed / called
-- Added lobby timer sync, so that each player can see when the lobby will close on Vanilla Servers
-- Added a credits screen to the main menu
-- Re-Added the player's last position to the map in meetings
-- Changed the custom region ui   
-- Fixed a bug where the Spy's Name appearing in white to the impostors in the intro cutscene
-- Fixed a bug where the zoom function for ghosts would zoom in too far
-- Fixed a bug where custom color names did not work (TOR is now compatible with colorblind mode)
-- Fixed a bug where the ninjas color name did not become invisible in colorblind mode
-- Fixed a bug where Morphling & Camouflager did not work correctly for skins with adaptive color
-- Fixed a bug where the first kill shield was given to the wrong lover
-- Fixed a bug where Pursuer appeared in the GuesserUI even when Lawyer was disabled
-- Fixed a bug where a guessed Guesser could still guess if they had the guesser ui open
-- Fixed a bug where the role assignment did not work properly (fingers crossed)
-
-**Version 4.1.5**
-- Updated to Among Us version 2022.6.21
-- Added Custom servers (Modded EU & Modded NA). Thanks to [miniduikboot](https://github.com/miniduikboot) & GD
-- Changed that the Guesser can only guess roles > 0%
-- Changed min/max default values
-- Fixed a bug where the Lighter's vision did not work properly
-- Fixed a bug where a Mini Ninja revealed themself
-- Fixed a bug where a Mini Ninja's cooldown did not work properly
-- Fixed a bug where a camouflaged Ninja revealed themself
-- Fixed a bug where a Vampire reported the Bait multiple times
-- Fixed a bug where a last second guess locked the Meeting
-- Fixed a bug where the version handshake did not work properly 
-- Fixed a bug where players with Anti TP were stuck on Airship 
-- Removed streamer mode
-  
-**Version 4.1.4**
-- Added auto updating for BepInEx
-- Fixed hat testing in freeplay for meetings / exile etc.
-- Fixed players not being able to move
-- Fixed getting stuck on the polus laboratory vent
-- Fixed Sherrif suicide with bloody modifier having a trail as a ghost
-- Fixed being able to kill the first killed protected player when a meeting was starting
-- Fixed some cases of the Reliable Packet Not Ack'ed disconnections
-- Fixed the double mod stamp being shown in game
-- Further improvements towards rubberbanding
-
-**Version 4.1.3**
-- Fixed morphling's being morphed during meetings
-- Fixed hide player names hiding the player's name during meetings
-- Added an option to the mayor: "Number Of Remote Meetings", so that the amount of mobile meetings is limited.
-
-**Version 4.1.2**
-- Made some general performance fixes. Special thanks to [probablyadnf](https://github.com/simonkellly)
-- Added an option to the ninja to get invisible after kill for x-seconds
-- Added a zoom out/overview function if you're dead and done with tasks
-- Added the sampled player to the morphling button
-- Fixed a bug where footsteps of the Detective and certain other game objects were visible in the fog of war
-- Fixed lawyer being exiled when their client is guessed in a meeting
-- Fixed multiple mod icons being shown when Submerged is loaded
-
-
-**Version 4.1.1**
-- Fixed a bug where the download submerged button did not work
-- Fixed a bug where the medium revealed a evil mini
-- Fixed a bug where the teleporter teleported while meeting is called
-- Fixed a bug where buttons appeared in meeting
-- Fixed the Popup  
-- Fixed some ui bugs  
-  
-**Version 4.1.0**
-- Added support for the Submerged map (https://github.com/SubmergedAmongUs/Submerged), which can be downloaded ingame with the Update button. If there is also a mod update, it will be prioritized
-- Added an option to give the Mayor a portable Meeting Button
-- Fixed a bug where the Lawyer didn't die with their client when voted out
-- Removed Lawyer option "Wins after Meetings"
-- Changed Medium question if the killer of a body is the Mini, the medium can now randomly ask the role question
-  
-**Version 4.0.0**
-- Added new role [Ninja](#ninja) thanks [gendelo3](https://github.com/gendelo3)
-- Added new role [Portalmaker](#portalmaker) thanks [gendelo3](https://github.com/gendelo3)
-- Added option Shield Last Round First Kill (until the first meeting)
-- Added option that medic shield will be set instantly, but shows up after meeting
-- Added additions to Swapper (charges mechanic, confirm swap button, UI & color changes in meeting)
-- Added option Mayor can always see the vote color (after finishing x-amount of tasks)
-- Added possibility to enter a name
-- Added map in meeting with last position and list of tasks
-- Added Bait, Mini, Lover, Bloody, Sunglasses, Anti Teleport, Tiebreaker & Invert modifier
-- Changed lobby/settings ui
-- Changed that a sidekicked Spy/Impostor is still shown red to Impostor
-- Changed the position of the Guesser to The Neutral Roles (Guesser still remains Imp/Crew when setting up roles)
-- Reworked the Lawyer
-- Removed Bait, Mini & Lover role
-- Fixed a bug with the color of the scream robe
-- Fixed a bug where the Jack In The Box size was not properly on Airship
-- Fixed a bug where "No vote is self vote" did not work
-
-**Version 3.4.5**
-- Update to Among Us version 2022.3.29s
-- Added horse-mode button in the main menu (bottom right)  
-- Added TheOtherRoles-discord button in the main menu (bottom left, report your bugs and feature suggestions here)
-- Fixed a bug where the deputy was not assigned properly
-- Fixed a bug where a promoted deputy had wrong cooldown 
-- Fixed a bug where the killer doesn't teleport to the body
-- Changed the light source to prevent vanilla bugs
-- Removed dlekS (for now) :c 
-
-**Version 3.4.4**
-- Fixed a bug where games were not finished properly on offical servers (special thanks to miniduikboot & 6pak)
-  
-**Version 3.4.3**
-- Fixed a bug where "Guesser Is Impostor Chance" crashed the role system
-- Fixed a bug where a sidekicked Hacker was stuck
-- Fixed a bug where a sidekicked Security Guard was stuck
-- Fixed a bug where a disabled Report Button triggered handcuffs
-- Fixed a bug where the Evil Guesser spawn rate was not correct
-- Changed that Cleaner & Vulture exclude each other
-- Changed that the lighter/darker color indicator can be displayed as dead
-
-**Version 3.4.2**
-- Fixed a game breaking bug
-  
-**Version 3.4.2**
-- Fixed a game breaking bug
-  
-**Version 3.4.1**
-- Added a new mod option "Show Lighter/Darker" for meetings
-- Added options for choosing which maps are enabled for random maps thanks [EvilScum](https://github.com/JustASysAdmin)
-- Added Jester option "Jester Has Impostor Vision" thanks [EvilScum](https://github.com/JustASysAdmin)
-- Fixed a bug where the Bounty Hunter had no bounty
-- Fixed a bug where the Guesser & Sheriff were not assigned properly (fingers crossed)
-- Fixed a bug where Hacker buttons didn't work as intended with "random map" option
-- Fixed a bug where the Security Guard could not access cams on Skeld, dlekS & Airship
-- Changed Tracker update intervall to a minimum of 1 thanks [LaicosVK](https://github.com/LaicosVK)
-
-**Version 3.4.0**
-- Added new Role [Deputy](#deputy) thanks [gendelo3](https://github.com/gendelo3)
-- Added Hacker option "Cant Move During Mobile Gadget Duration"
-- Added Security Guard mobile cams after placing all screws
-- Added Lover option "Enable Lover Chat"
-- Added return votes in meetings: You'll now get your votes back if your target got shot by the Guesser
-- Added New Option for Guesser: Guesser can't guess Snitch if they has done all tasks (created by [MaximeGillot](https://github.com/MaximeGillot))
-- Added The Other Roles changelog announcement popup
-- Changed that the Bounty Hunter exclude their Lover
-- Changed the position of the Witch icon in meetings for better visibility
-- Fixed a bug where the spy had a white name for Impostors in chat
-- Fixed a bug where the Guesser and Swapper UI in meetings was behind the visor cosmetics
-
-**Version 3.3.3**
-- Fixed a bug where a guessed Guesser could guess
-- Fixed a bug where buttons were visible during the meeting
-- Removed Hacker vitals for Skeld & dlekS
-- Changed the Guesser option "Other Guesser Spawn Rate" to "Both Guesser Spawn Rate" (now only take effect when the chance for the first guesser was successful)
-- Changed Hacker vitals to doorlog for MIRA HQ
-
-**Version 3.3.2**
-- Fixed a bug where you can't create a lobby on Among Us 2021.12.15
-
-**Version 3.3.1**
-- Fixed a bug where sometimes the Evil Guesser could not guess. Thanks @tomarai
-
-**Version 3.3.0**
-- Update to Among Us version 2021.12.14s
-- Fixed a bug where the Pursuer won if the Pursuer was the last killed or voted player
-- Fixed a bug where the option "Enable Mod Roles And Block Vanilla Roles" was not set correctly
-- New option for the Guesser "Evil Guesser can guess spy"
-- New option for the Guesser "Other Guesser Spawn Rate"
-- New ability for the Hacker "Mobile Gadgets" (including vitals & admin table)
-- New option for the Hacker "Max Mobile Gadget Charges"
-- New option for the Hacker "Number Of Tasks Needed For Recharging"
-- Fixed some UI bugs during the meeting  
-
-**Version 3.2.4**
-- Fixed a bug where the Vampire teleported when the bitten player died
-- The settings UI has been improved by [Amsyar Rasyiq](https://github.com/amsyarasyiq)
-- New option to the Bait "Warn The Killer With A Flash", created by [gendelo3](https://github.com/gendelo3)
-
-**Version 3.2.3**
-- Fixed a bug where the role of a dead client was visible to the Pursuer
-- Fixed a bug where the Morphling changed their color when killing players
-- Fixed a bug where voting the Lover partner of a Lover Witch did not safe the spellbound players
-- When the Lawyer dies, the client doesn't have the client mark (§) anymore, making the client aware of the fact that the Lawyer can't steal the win anymore (only relevant if the "Client Knows" option is on)
-
-**Version 3.2.2**
-- Add new option "Play On A Random Map" created by [Alex2911](https://github.com/Alex2911)
-- Add Witch option "Voting The Witch Saves All The Targets"
-- Add Lawyer option "Lawyer Knows Target Role"
-- We changed the win conditions of the [Lawyer](#lawyer), to make it more viable
-- Bug fix: The Medium now shows the roles of players in the right format
-- The name and the role of all winners is now being displayed on the end screen
-- We changed the way settings are being shared among the players (which caused some people to be unable to join the lobby). This might resolve the problem or make it even worse... we'll see.
-
-**Version 3.2.1**
-- Hotfix for 3.2.0
-- Bug fix: The Warlock is again able to kill with the curse abilty
-
-**Version 3.2.0**
-- **New Role:** [Witch](#witch) created by [Alex2911](https://github.com/Alex2911)
-- **New Role:** [Lawyer](#lawyer)
-- Bug fix: Choosing an Impostor as a Sidekick won't resulted in an Impostor/Sidekick mix anymore.
-- Bug fix: The Guesser info now shows the right information, when the Guesser guesses the wrong role and kills himself.
-- Bug fix: Hats are being displayed in alphabetic order. Hats demo in freeplay is working again. Fixed a bug where hats would not load when accessed from the main menu.
-- Bug fix: The Detective now shows the name of the players in any case.
-
-**Hotfix 3.1.2**
-- Don't ask, just update. I messed up.
-
-**Hotfix 3.1.1**
-- Bug fix: You're again able to connect to custom servers
-- Bug fix: The option "Guesses Visible In Ghost Chat" doesn't result in a ban of the Guesser anymore
-- Bug fix: The position of the Spy on the intro screen is again random
-- Bug fix: Re-added some venting rules that were lost (Spy can't move between vents, only Trickster can use boxes, ...)
-
-**Version 3.1.0**
-- Hopefully temporary fixing the issue of being kicked by Innersloth servers for regular kills, until Innersloth fixes it on their side.
-- **NOTE:** Do not combine modded and unmodded versions of the game (even if you don't activate anything). Because of the kicking fix, your kills won't be performed for players that do not share the exact same modded version. Due to this you now can't start a game as the host, if not everyone in the lobby has the same version of the mod. Additionally you'll be kicked out of a lobby after 10 seconds, if the host doesn't have the mod installed (or the same mod version).
-- **Tracker:** The Tracker has been reworked by [Alex2911](https://github.com/Alex2911). The Tracker now has an additional optional ability that tracks all corpses on the map for a few seconds.
-- Add new option: Allow Parallel MedBay Scans
-- Add new [Guesser](#guesser) option: "Guesses Visible In Ghost Chat"
-- Add new [Guesser](#guesser) option: "Guesses Ignore The Medic Shield". If this option is set to false, no matter what the Guesser guessed, no one will die and the shielded player/Medic might be notified
-- Add new [Medic](#medic) option: "Medic Sees Murder Attempt On Shielded Player". This includes attempts from any kind of killer (Sheriff, Jackal, Guesser if the shield is not being ignored, ...)
-- During meetings the [Detective](#detective), [Hacker](#hacker) and [Medium](#medium) now display, whether a player wears a darker or lighter color
-- Bug fix: Bounty Hunter, Mini and Engineer in vent kills do not result in players being kicked anymore
-- Bug fix: The Trickster vent button now doesn't show the text "vent" twice anymore
-- Bug fix: Fixed the visual bug where both Lovers always showed dead during the meeting after a correct guess of one of them even if the option "Both Lovers Die" was disabled
-
-**Version 3.0.0**
-- Updated to Among Us version v2021.11.9.5s
-- **Note:** We wanted to update as fast as possible, that's why you can't use both the Innersloth and mod roles at the same time. We'll make that possible in the future, but there are various things that need to be modified (e.g. Shifter, Guesser, ...) to make that work, so that'll take a little longer. Also, be aware that this version might contain more bugs than usual because Innersloth changed a lot of things and we might have missed some of them.
-- Ability buttons are now bind to the Q key (if it's a killing ability) or to the F key (otherwise). We'll make the binds adaptable in the future.
-- For now we removed the option "Jester Can Sabotage"
-- The Sheriff now always dies, when they try to kill a not fully grown Mini
-
-**Hotfix 2.9.2**
-- Fixed a bug where the names of all players were visible during camouflage
-- Fixed a bug where the Morphling didn't take over the name of its target
-
-**Version 2.9.1**
-- Fixed a bug where [Camouflager](#camouflager) & [Morphling](#morphling) caused performance issues
-- Fixed a bug where [Medium](#medium) did not exlude the Evil [Mini](#mini)
-- [Vulture](#vulture) "Number Of Corpses Needed To Be Eaten" max value extended to 10
-- Added Vulture Option: "Show Arrows Pointing Towards The Corpes"
-- Removed Medium Question: "What is your name?" (name of the soul is added after each question)
-
-
-**Version 2.9.0**
-- **New Role:** [Medium](#medium)
-- **New Role:** [Vulture](#vulture)
-- Added Jackal Option: "Jackal Can See If Engineer Is In A Vent"
-- Added Guesser Option: "Guesser Can Shoot Multiple Times Per Meeting"
-- Fixed a bug that occured when the Shifter shifted the Bait
-
-**Hotfix 2.8.1**
-- Fixed a game breaking bug where killing the Bait resulted in a ban of the Bait
-
-**Version 2.8.0**
-- **New Role:** [Bait](#bait)
-- Added Tracker Option: "Tracker Reset Target After Meeting" (feature created by [MaximeGillot](https://github.com/MaximeGillot))
-- Added Snitch Options: "Include Team Jackal" and "Use Different Arrow Color For Team Jackal"
-- Added Medic Option: "Shield Will Be Set After Next Meeting"
-
-**Version 2.7.3**
-- Updated to Among Us v2021.6.30
-- Updated BepInEx version
-- Updated Credentials
-- Fixed some Colors being considered darker, when they should be lighter
-- Added /size command for Lobby
-- Added /color and /murder command to Freeplay (for the Hat Designers)
-
-**Version 2.7.1**
-- Fixed a bug where [swapped](#swapper) votes were sometimes counted wrongly
-- Fixed the positioning of the player name while [morphed](#morphling)
-- Fixed a bug where the window of the [Guesser](#guesser) sometimes showed no "close button"
-- Fixed a bug where the [garlics](#vampire) were not displayed properly
-
-**Version 2.7.0**
-- **New Role:** [Bounty Hunter](#bounty-hunter)
-- Added more new [colors](#colors) (Thanks to [Drakoni](https://twitter.com/Drakoni13) for sorting them)
-- Added a setting to the [Shifter](#shifter), that will prevent [Medic Shield](#medic) & [Lover](#lovers) Roles to be shifted
-- Changed [Jackal](#jackal) & [Sidekick](#sidekick) to always be killable by [Sheriff](#sheriff)
-- Changed [Jackal](#jackal) & [Sidekick](#sidekick) to not be [erasable](#eraser) anymore
-- Changed [Role Assignment](#role-assignment) slightly to make chances more consistent
-- Fixed a bug where votes would still count after the [Guesser](#guesser) or it's target died
-- Fixed a bug where a [lover partner](#lovers) would not be shown as dead when killed by the [Guesser](#guesser)
-- Fixed a bug on the Airship, where the [Jester](#jester) win was not triggered in some cases
-
-**Version 2.6.7**
-- **New Role:** [Guesser](#guesser)
-- We changed the colors of some of our roles
-- We renamed the Child to Mini
-- Fixed a bug where a Jester win was triggered, when the partner of a Jester Lover was voted out
-- Fixed a bug where a Mini lose was triggered, when the partner of a Crew Mini Lover was voted out
-
-**Version 2.6.6**
-- Fixed a bug introduced in v2.6.5 that caused all player to be able to use vents when the new option for spy was enabled
-
-**Version 2.6.5**
-- Added the ability to increase the number of tasks assigned to crewmates
-- New option: A role summary in the end screen (Client option)
-- **[Spy](#spy):** New option for spy to have the same vision as impostors
-- **[Spy](#spy):** New option for spy to be able to jump into vents (but they can't move between them)
-- Fixed a bug causing a crewmate task win when lovers were in the game even when not all crewmates had completed all their tasks
-- Restored the original Among Us color for crewmates in the intro cutscene
-
-**Version 2.6.4**
-- **[Lovers](#lovers):** You can now select that Lovers may have a second role (could be a Crewmate, Neutral or Impostor role)
-- **[Seer](#seer):** Fixed souls and flash sometimes not being visible (Thanks to [orangeNKeks](https://github.com/orangeNKeks))
-- New option: [Swapper](#swapper) can only swap others
-- New option: Ghosts can see votes
-- New option: [Jackal](#jackal) and [Sidekick](#sidekick) have Impostor vision
-- New option: [Jester](#jester) can sabotage
-- Changed Freeplay mode to not assign custom roles anymore
-- Fixed a bug with directional hats not using their flip image after a while
-
-**Version 2.6.3**
-- Changed the role limits options to allow for minimum and maximum bounds
-- Changed the role assignment to be more random when assigning roles (previously assigned the neutral roles before assigning the crewmate roles)
-- Added new `flip` option to [Custom Hats](#custom-hats)
-
-**Version 2.6.2**
-- The Other Roles now supports the new Among Us version **2021.5.10s**
-- Added a chat command to kick players as the host of a lobby (`/kick playerName`)
-
-**Version 2.6.1**
-- Fixed a bug where the Sheriff was unable to kill the Arsonist
-- Fixed a bug in the role assignment system
-- Added the option to select the Dleks map
-- Improved the overlay of the Arsonist
-
-**Version 2.6.0**
-- **New Role:** [Arsonist](#arsonist)
-- Added an In-Game Updater, to make it easier to update the Mod
-- Added synchronization for Airship toilet doors. Doors now open/close for everyone
-- Changed Shifter to also die when shifting a neutral role (Jester, Arsonist, Jackal, ...)
-- Changed the option "Jester Can Die To Sheriff" to "Neutrals Can Die To Sheriff"
-- Changed the role assignment system. You can now set how many neutral roles you want in your game
-- Changed Hacker to see colors more clearly on Admin Table
-- Changed version handshake to give more clear info
-- Fixed a problem with the Hat Tab leaving too much space between categories
-- Fixed an Among Us bug, which made the selected region always show "North America"
-- Fixed an Among Us bug, which made the disconnect info be off-screen. (hopefully)
-
-**Version 2.5.1**
-- **New Hats:** We added the support for custom hats and there are already a few hats inside the game. We can add new hats without updating the mod and we're awaiting your hat designs on our discord server.
-- Changed Lovers to ignore Lover's Tasks for task win, while an ImpLover is alive
-- Fixed a bug where garlic was not visible in some places
-- The Security Guard can't place cameras on MiraHQ anymore
-- Fixed a bug on the Airship, where the view of the cameras that the Security Guard placed wasn't centered on the camera.
-
-**Version 2.5.0**
-- **New Role:** [Security Guard](#security-guard)
-- Fixed a bug where the game would stop after the first meeting
-- Fixed a bug where killing with the hotkey Q ignored shields
-
-**Version 2.4.0**
-- **New Role:** [Warlock](#warlock)
-- Added an option that allows ghosts to see the roles and remaining tasks of other players
-- Added options to configure Morph & Camo duration
-- Added hotkeys to the custom buttons (**Q** for the buttons that are on the same place as the kill button, **F** for the buttons that are above the kill button)
-- Fixed an oversight which made StreamerMode only work as host
-- Fixed an oversight which required Jackals to finish Tasks, after Sidekick was promoted
-- Fixed an oversight which made Sidekicks not promote, if the Jackal disconnected
-- Fixed a bug where the Trickster box was invisible
-- Fixed a bug where changes to the server ip and port would only be applied if the game was restarted
-- Added a way to get the 2 Hidden [Colors](#colors)
-
-**Version 2.3.0**
-- **New Role:** [Cleaner](#cleaner)
-- Added 12 new [Colors](#colors)
-- We added support for creating [Custom Hats](#custom-hats). New hats are coming with the next version, but you can already create and submit your own hats on [Discord](https://discord.gg/77RkMJHWsM).
-- Added the option to hide the name of players with an unknown role
-- Added Trickster Box vent animation. Thanks to [Drakoni](https://twitter.com/Drakoni13)
-- You can now change the custom server ip/port right inside the game
-- The Jackal, the Sidekick and the Jester now have fake tasks
-- Added outlines, to show who you're targeting with your ability. Thanks to [Sihaack](https://github.com/sihaack) for part of the code.
-- Added a streamer mode to Among Us, which hides lobby codes, the ip of your custom server and the port of your custom server. You can also modify the text that replaces the lobby code, check [Settings](#settings) for more details.
-- Changed Meeting HUD Layout when playing with more than 10 players
-- Fixed a bug where **ImpLovers** would hardly spawn
-- Fixed a bug where players could get stuck on ladders/platforms when being rewound
-- Fixed a bug where players could only use quickchat
-- Fixed a bug which prevented to play in Freeplay mode
-- Fixed a bug which moved the Ping info off-screen
-
-**Version 2.2.2**
-- Among Us version 2021.4.14s compatibility
-- Improved the block votes on emergency meeting option
-
-**Version 2.2.1**
-- Trickster: The vent button now has a custom texture. Fixed a bug where the Trickster could clip out of bounds when their box was close to a wall.
-- Fixed a bug where the Bad Mini's kill button went on cooldown when someone else performed a kill
-- Fixed a few bugs with footprints, Seer souls and the Vampire delayed kill
-- Fixed a bug where the Mini was banned for hacking (because of its reduced kill cooldown)
-- Improved the version handshake
-
-**Version 2.2.0**
-- **Works with the latest Among Us version (2021.4.12s)**
-- **Added support for 10+ player lobbies on custom servers:** Check the [Custom Servers and 10+ Players](#Custom-Servers-and-10+-Players) section. During meetings use the up/down keys, on vitals use the left/right keys.
-- **Added a new Impostor role: The Trickster** check the [Trickster](#trickster) section for more info
-- You can now set how long the Time Master shield lasts
-- The host now sees for how long the lobby will remain open
-- We changed the look/layout of the settings
-- Added a new option that deactivates skipping in meetings (if the player does not vote, they vote themself)
-- You can now choose whether the Eraser is able to erase the Spy/Impostors or not
-- Fixed a bug where a Lovers win wasn't displayed properly
-- Fixed the Among Us bug where people were unable to move after meetings
-- We added a version checking system: The host can only start the game if everyone in their lobby has the same version of the mod installed (they will see, who is using a wrong version). This prevents hacking in public lobbies and bugs because of version mismatches.
-- Fixed a bug where the Mini Impostor had the same cooldowns as normal Impostors
-- Fixed a bug where the Vampire/Janitor/Mafioso would lose their kill button after being erased
-- The Mini is now able to use ladders and it can do all the tasks right away
-
-**Version 2.1.0**
-- **New Role:** [Spy](#spy)
-- **Eraser:** The Eraser can now also remove the role of other Impostors. This enables them to reveal the Spy, but might result in removing the special ability of their partner.
-- **Camouflager:** The Mini age/size will now also be hidden, to allow the Mini Impostor to kill during camouflage
-
-**Hotfix 2.0.1**
-- Fixed a bug where camouflaged players would get stuck on ladders/platforms on the airship
-- Introduced a one-second cooldown after the Morphling sampled another player
-- The Mini can now always reach all usables (ladders, tasks, ...)
-- We removed a bug, where some footprints remained on the ground forever
-- We removed a bug, where the Detective didn't see the right color type when reporting a player
-- We changed the Jester win and Mini lose conditions, they're not being affected by server delays anymore
-
-**Changes in 2.0.0**
-- **New button art** created by **Bavari**
-- **New mod updater/installer tool** created by [Narua](https://github.com/Narua2010) and [Jolle](https://github.com/joelweih). Check the [Installation](#installation) section for more details.
-- **Custom options:** Introduced customizable presets. Starting with 2.0.0, settings can be copied and used with higher versions (2.0.0).
-- **Time Master rework:** Check [Time Master](#time-master) for more information
-- **Medic:** The Medic report changed, it only shows the time since death (see Detective)
-- **Detective:** The Detective now sees the name/color type of the killer when they report a dead body (ability moved from the Medic to the Detective)
-- **Lighter:** We changed and tried to nerf the Lighter, see the [Lighter](#lighter) section for more details.
-- **Seer:** As the role didn't work the way it was, we completely changed it. We're still working on the role, for now we're trying a few things. Check the [Seer](#seer) section to get more details about the new Seer.
-- **Shifter:** We reworked the Shifter, they are now part of the crew. Check out the [Shifter](#shifter) sections for more details.
-- **Hacker:** The Hacker is basically the old Spy. We added the option to only show the color type instead of the color on the admin table.
-- **Camouflager:** Now also overrides the information of other roles, check the [Camouflager](#camouflager) section for more details.
-- **Morphling:** Now also overrides the information of other roles, check the [Morphling](#morphling) section for more details
-- **Mini:** The Mini can now be a Crewmate Mini or an Impostor Mini, check the [Mini](#mini) section for more details
-- **Eraser:** The Eraser, a new Impostor role, is now part of the mod. Check the [Eraser](#eraser) section for more details
-- **New options:**
-  - You can now set the maximum number of meetings in a game: Every player still only has one meeting. The Mayor can always use their meeting (even if the maximum number of meetings was reached). Impostor/Jackal meetings also count.
-
-**Hotfix 1.8.2**
-- Add map and Impostor count to lobby settings.
-- Fixed bugs where changing players to be the Sidekick didn't reset all the effects of their previous role.
-
-**Hotfix 1.8.1** Resolves bugs that occurred when the Jackal recruited a Medic, Swapper and Tracker\
-\
-**Changes in v1.8:**
-- **New Roles:** Added the Jackal and Sidekick roles
-- Vampire: Medic report shows the right info now. A bitten Swapper is not able to swap if they die at the beginning of a meeting. One can now set the cooldown and whether a normal kill is possible when a target is next to a garlic or not.
-- Lover: New option that sets how often an ImpLover appears. If a Lover is exiled, their partner doesn't spawn a dead body anymore.
-- Cooldowns now stop cooling down, if a player sits inside a vent.
-- Fixed a bug that prevented the game from continuing after a meeting (for an edge case with Lovers)
-- If two players try to kill each other at the same time both should die (e.g. Sheriff vs Impostor)
-- We added a description for your current role right above the task list
-- Added a description for the [Role Assignment System](#role-assignment)
-
-\
-**Changes in v1.7:**
-- **New Roles:** The Vampire, the Tracker and the Snitch are now in the game
-- The role assignment system has been changed
-- Impostors now see a blue outline around all vents of the map, if the Engineer sits inside one of them
-
-\
-**Changes in v1.6:**
-- This update is a small hotfix, fixing the bug where some people were unable to join lobbies.
-- The Mini can't be voted out anymore before it turns 18, hence games can't end anymore because the Mini died.
-- Footprints are no longer visible to the Detective, if players are inside vents.
-
-\
-**Changes in v1.5:**
-- Time Master - Buff: They are not affected by their rewind anymore, which gives them more utility. Players will now be rewound out of vents.
-- Mini - Nerf: The Mini now grows up (see [Mini](#mini)) and becomes a normal Crewmate at some point. A growing Mini is not killable anymore. Some tasks are still not doable for the small Mini, we are working on that. But eventually when growing up it can do all the tasks as it's size increases.
-- Seer - Nerf: Added an option that sets how often the Seer mistakes the player for another.
-- Hacker - Nerf: The Hacker now only sees the additional information when they activate their "Hacker mode". That should stop the Hacker from camping the admin table/vitals.
-- Other: Camouflager/Morphling cooldowns were fixed. Custom regions code was removed to enable 3rd party tools. Some minor bugfixes.
-
-**Changes in v1.4:**
-- Fixing a Camouflager/Morphling animation bug
-- Fixing a bug where the Swapper could swap votes even if they are dead
-- The custom cooldown buttons now render the cooldown progress (the grey overlay) in the right way (v1.3 introduced the bug)
-- Players in vents are not targetable anymore by the role actions, the button does not activate (e.g. Seer revealing, Morphling sample). Exception: Impostor killing an Engineer in a vent
-
-**Changes in v1.3:**
-- Adds support for the Among Us version **2021.3.5s**
-- Fixes a bug where an edge case caused all players to start the game with the camouflaged look
-- There might be a few bugs, since I focused on getting the update out fast. A new version resolving the bugs will be published tomorrow.
-
-**Changes in v1.1:**
-- Morphling: The color of pet now also morphs. The skin animation now starts at the right point.
-- The game over screen now shows if the Jester/Mini/Lovers won.
-- A bug was removed where the Jester won together with the Crewmates.
-- A bug was removed where the game of the Lovers crashed if they were the last players killed by the host of the lobby.
+**Version 1.0.0**  
+- New Colors!
+- New Imposter Roles: Bomber, Undertaker, Blackmailer, Miner
+- New Neutral Roles: Executioner, Amnesiac, Swooper, Werewolf
+- New Crewmate Roles: Vigilante, Veteran, Bodyguard
+- New Modifiers: Assassin, Indomitable, Blind, Sleuth
+- Renamed Nice Guesser role to Vigilante
+- Renamed Evil Guesser role to Assassin and made it a Modifier
+- New Game Settings and Role & Modifier Settings
+- Sound Effects: Most buttons / role functionalities have a sound!
+- Mod option: Enable Sound Effects
+- Support for the Submerged map (https://github.com/SubmergedAmongUs/Submerged)
+- Games might not work properly unless the Submerged map is downloaded->Click the "Download Submerged" button in the bottom left of the main menu screen and then restart your game to fix this issue
+- New Option Features:
+- Camouflage Comms
+- Restrict Map Imformation (Restricts Admin Table use, Camera use, and Vitals use for a set amount of time per round or per game)
+- Show Button Target
+- Random Spawn Location
+- Allow Guessing Some Modifiers
+- Reset Spawn Cooldown
+- Option to Disable Garlic
+- Option for Swooper to Spawn as Alternate Jackal
+- Laywer Client Options (Non-Crew, Crew, or Any)
+- Sheriff Misfire Options (Misfire Kills Self, Target, or Both)
+- Added Options to choose specific Neutral roles that the Sheriff is able to kill
+- Assassin Modifier Quantity allows for more than one imposter to be able to guess roles
 </details>
 
 # Installation
 
 ## Windows Installation Steam
-1. Download the newest [release](https://github.com/Eisbison/TheOtherRoles/releases/latest)
+1. Download the newest [release](https://github.com/SpexGH/TheOtherUs/releases/latest)
 2. Find the folder of your game. You can right click on the game in your library, a menu will appear, click on properties, local data, browse
 3. Go back one folder to common and make a copy of your Among Us game folder and paste it somewhere on the same drive.
 4. Now unzip and drag or extract the files from the .zip into your Among Us game folder that you just copied, at the `.exe` level (just into the folder).
@@ -760,7 +115,7 @@ The [Role Assignment](#role-assignment) section explains how the roles are being
 Not working? You might want to install the dependency [vc_redist](https://aka.ms/vs/16/release/vc_redist.x86.exe)
 
 ## Windows Installation Epic
-1. Download the newest [release](https://github.com/Eisbison/TheOtherRoles/releases/latest)
+1. Download the newest [release](https://github.com/SpexGH/TheOtherUs/releases/latest)
 2. Find the folder of your game. Should be stored in "Epic/AmongUs" (wherever you installed Epic on your PC)
 3. Now unzip and drag or extract the files from the .zip into the original Epic Among Us game folder.
 4. Run the game by starting the game in your Epic Games launcher (the first launch might take a while).
@@ -771,7 +126,7 @@ Not working? You might want to install the dependency [vc_redist](https://aka.ms
 
 ## Linux Installation
 1. Install Among Us via Steam
-2. Download newest [release](https://github.com/Eisbison/TheOtherRoles/releases/latest) and extract it to ~/.steam/steam/steamapps/common/Among Us
+2. Download newest [release](https://github.com/SpexGH/TheOtherUs/releases/latest) and extract it to ~/.steam/steam/steamapps/common/Among Us
 3. Enable winhttp.dll via the proton winecfg (https://docs.bepinex.dev/articles/advanced/proton_wine.html)
 4. Launch the game via Steam
 
@@ -809,26 +164,7 @@ docker run -d -p 22023:22023/udp --env IMPOSTOR_AntiCheatEnabled=false --env IMP
 
 
 # Credits & Resources
-Team:
-Mallöris    K3ndo    Bavari    Gendelo
-
-Former Team Members:
-Eisbison (GOAT)    Thunderstorm584    EndOfFile
-
-Additional Devs:
-EnoPM    twix    NesTT
-
-Github Contributors:
-Alex2911    amsyarasyiq    MaximeGillot
-Psynomit    probablyadnf    JustASysAdmin
-
-[Discord](https://discord.gg/77RkMJHWsM]Discord) Moderators:</b>
-Draco Cordraconis    Streamblox (formerly)
-Thanks to all our discord helpers!
-
-Thanks to miniduikboot & GD for hosting modded servers (and so much more)
-
-
+Credit to The Other Roles and The Other Roles Community Edition for their code for their updates and their assets and resources and artwork and everything else!\
 [OxygenFilter](https://github.com/NuclearPowered/Reactor.OxygenFilter) - For all the versions between v2.3.0 and v2.6.1, we were using the OxygenFilter for automatic deobfuscation\
 [Reactor](https://github.com/NuclearPowered/Reactor) - The framework used for all versions before v2.0.0\
 [BepInEx](https://github.com/BepInEx) - Used to hook to game functions\
@@ -847,14 +183,28 @@ Thanks to miniduikboot & GD for hosting modded servers (and so much more)
 [Ottomated](https://twitter.com/ottomated_) - Idea for the Morphling, Snitch and Camouflager role came from **Ottomated**\
 [Crowded-Mod](https://github.com/CrowdedMods/CrowdedMod) - Our implementation for 10+ player lobbies were inspired by the one from the **Crowded Mod Team**\
 [Goose-Goose-Duck](https://store.steampowered.com/app/1568590/Goose_Goose_Duck) - Idea for the Vulture role came from **Slushiegoose**\
-[TheEpicRoles](https://github.com/LaicosVK/TheEpicRoles) - Idea for the first kill shield (partly) and the tabbed option menu (fully + some code), by **LaicosVK** **DasMonschta** **Nova**\
-[Ninja](#ninja), [Thief](#thief), [Lawyer](#lawyer) / [Pursuer](#pursuer), [Deputy](#deputy), [Portalmaker](#portalmaker), [Guesser Modifier](#guesser-modifier) - Idea: [K3ndo](https://github.com/K3ndoo) ; Developed by [Gendelo](https://github.com/gendelo3) & [Mallöris](https://github.com/Mallaris) \
-[ugackMiner53](https://github.com/ugackMiner53/PropHunt) - Idea and core code for the Prop Hunt game mode
+[Ninja](#ninja), [Thief](#thief), [Lawyer](#lawyer) / [Pursuer](#pursuer), [Deputy](#deputy), [Portalmaker](#portalmaker), [Guesser Modifier](#guesser-modifier) - Idea: [K3ndo](https://github.com/K3ndoo) ; Developed by [Gendelo](https://github.com/gendelo3) & [Mallöris](https://github.com/Mallaris)
+
+# Features
+## Hotkeys
+
+#### Host Only
+| HotKey              | Function                       | Usable Scene    |
+| ------------------------ | ------------------------------ | --------------- |
+| `Left Shift + L + Enter` | Terminate the game             | In Game         |
+| `Left Shift + M + Enter` | Terminate meeting              | In Game         |
+| `C`                      | Cancel game start              | In Countdown    |
+| `Shift`                  | Start the game immediately     | In Countdown    |
+| `Right Shift + F`        | Spawn dummy                    | In Lobby        |
+
+#### Anyone
+| HotKey                   | Function                       | Usable Scene    |
+| ------------------------ | -------------------------------| --------------- |
+| `Ctrl`                   | Walk through walls             | Lobby           |
 
 # Settings
 The mod adds a few new settings to Among Us (in addition to the role settings):
 - **Number of Crewmates:** The number of Crewmate roles can be set inside a lobby.
-- **Fill Crewmate Roles (Ignores Min/Max):** Everyone will get a role, even if the settings say there would be plain Crewmates (needs enough roles over 0%).
 - **Number of Neutrals:** The number of Neutral roles can be set inside a lobby.
 - **Number of Impostors:** The number of Impostor roles can be set inside a lobby.
 - **Number of Modifiers:** The number of Modifiers can be set inside a lobby.
@@ -864,21 +214,28 @@ The mod adds a few new settings to Among Us (in addition to the role settings):
 - **Hide Player Names:** Hides the names of all players that have role which is unknown to you. Team Lovers/Impostors/Jackal still see the names of their teammates. Impostors can also see the name of the Spy and everyone can still see the age of the mini.
 - **Allow Parallel MedBay Scans:** Allows players to perform their MedBay scans at the same time.
 - **Shield Last Game First Kill** The first killed player of the previous round will be shielded for all players visible until the first meeting.
-- **Finish Tasks Before Haunting Or Zooming Out ** The zoom out function as well as haunting will be hidden for the player until all their tasks are finished
-- **Admin Table Shows Dead Bodies**
-- **Cams Switch To Night Vision If Lights Are Off**  No colors and cosmetics can be seen on the cameras when the lights are off. Mini can be spottet!
-- **Impostor Vision Ignores Night Vision Cams**
+- **Impostor Can Kill Players In the Vent:** Impostors can kill players in vents.
+- **Impostors Can See The Roles Of Their Team:** Impostors can see each others roles.
+- **Camouflage Comms:** Comms Sabotage camouflages players until fixed.
+- **Tasks Are Transparent:** All tasks are transparent
+- **Restrict Map Information:** Restricts Admin Table use, Vital use, and Camera use (per round or per game)
+- **Show Button Target:** Button's show the name of the player you are targeting.
+- **Block Game End if Power Crew is Alive:** Game won't end if Power Crew is alive with a killing role (includes Sheriff, Veteran, Mayor, Swapper, Vigilante)
+- **Random Spawn Location:** Players will spawn in random locations at the start of the game and after meetings.
+- **Allow Guessing Some Modifiers:** Some modifiers can be guessed (includes Bait, Tiebreaker, Bloody, Fanatic, Torch, Sleuth, Watcher, Tunneler, Multitasker, Lover, Vip)
 - **Play On A Random Map** If enabled it allows you to set percentages for each current map, except ehT dlekS. 
+- **Enable Better Polus:** Adjust Vents, Move Vitals To Labs, Swap Reboot And Chart Course, and Move Cold Temp To Death Valley
+- **Reset Spawn Cooldown:** Resets cooldown on spawn
+- **Debug Mode:** Allows Host to spawn dummies, end game, and end meetings
 - **Ghosts Can See Roles.**
 - **Ghosts Can See Votes.**
 - **Ghosts Can Additionally See Modifier.**
-- **Ghosts See Tasks And Other Info** Other Info: Things like who is cursed, cuffed etc. but also the medic shield, flashes, engineer fix etc.
+- **Ghosts Can See The Number Of Remaining Tasks.**
 - **The map is accessable during a meeting and will show your last location when a body gets reported/meeting gets called.**
 - **When you're a ghost and done with tasks, you'll get a zoom out/overview function.**
 - **Task Counts:** You are now able to select more tasks.
 - **Role Summary:** When a game ends there will be a list of all players, their roles, their task progression and how many player a killer killed.
 - **Darker/Lighter:** Displays color type of each player in meetings.
-- **Show The Settings In-Game** You can use the button located under the map button or the F1-key to open or close the display of the lobby settings
 
 ### Task Count Limits per map
 You can configure:
@@ -896,17 +253,6 @@ Example: If you configure 4 common tasks on Airship crewmates will only receive 
 | Polus | 4 | 14 | 15
 | Airship | 2 | 23 | 15
 -----------------------
-
-### Random Maps
-**Play On A Random Map** If enabled it allows you to set percentages for each current map.
-
-**Finish Tasks Before Haunting Or Zooming Out** You have to finish your tasks before you get the possibility to zoom out.
-
-**Use Random Map Setting Presets:** When this option is turned on, the game will switch to the `Random Preset <MapName>` when a game is started on a random map. **This includes vanilla options!**. This makes it possible to e.g. play with less tasks on large maps like Airship.
-The game will **remain** in the preset for that random map after the match.
-
-The random map presets can still be used like normal presets, if you **turn of** `Play On A Random Map` (make sure you do this in all presets you are using).
-
 
 
 # Custom Hats
@@ -935,12 +281,9 @@ Here are a few instructions, on how to create a custom hat:
     - The name of the texture needs to follow the pattern `hatname_climb.png`.
 - **Testing:** You can test your hat design by putting all the files in the `\TheOtherHats\Test` subfolder of your mod folder. Then whenever you start a Freeplay game, you and all the dummies will be wearing the new hat. You don't need to restart Among Us if you change the hat files, just exit and reenter the Freeplay mode.
 
-- **Submission:** If you got a hat design, you can submit it on our [Discord server](https://discord.gg/77RkMJHWsM). We'll look at all the hats and add all the good ones to the game.
+- **Submission:** If you got a hat design, you can submit it on our [Discord server](https://discord.gg/yspVyP5meR). We'll look at all the hats and add all the good ones to the game.
 
 # Colors
-Note: Lighter and Darker colors are no longer based on the players color. Instead they are assigned alternatingly, s.t. they are always balanced in a lobby.
-
-A big thank you goes to Avlona & Listoric for sorting the colors in the best possible order (which is surprisingly hard to do)!
 ![TOR Colors](./Images/TOR_colors.jpg)
 
 # Roles
@@ -957,6 +300,7 @@ The count you set will only be reached, if there are enough Crewmates/Impostors 
 Settings: 2 special Crewmate roles, Snitch: 100%, Hacker: 10%, Tracker: 30%\
 Result: Snitch is assigned, then one role out of the pool [Hacker, Tracker, Tracker, Tracker] is being selected\
 Note: Changing the settings to Hacker: 20%, Tracker: 60% would statistically result in the same outcome .
+
 
 
 ## Mafia
@@ -986,7 +330,7 @@ The Morphling is an Impostor which can additionally scan the appearance of a pla
 - The color of the footprints changes accordingly (also the ones that were already on the ground).
 - The other Impostor still sees that they are an Impostor (the name remains red).
 - The shield indicator changes accordingly (the Morphling gains or loses the shield indicator).
-- Tracker arrows keep working.
+- Tracker and Snitch arrows keep working.
 
 ### Game Options
 | Name | Description |
@@ -1007,7 +351,7 @@ are hidden and all players have the same color.\
 - The color of the footprints turns gray (also the ones that were already on the ground).
 - The Hacker sees gray icons on the admin table
 - The shield is not visible anymore
-- Tracker arrows keep working
+- Tracker and Snitch arrows keep working
 
 ### Game Options
 | Name | Description |
@@ -1020,15 +364,11 @@ are hidden and all players have the same color.\
 ## Vampire
 ### **Team: Impostors**
 The Vampire is an Impostor, that can bite other player. Bitten players die after a configurable amount of time.\
-If the Vampire spawn chance is greater 0 (even if there is no Vampire in the game), all players can place one garlic.\
-If a victim is near a garlic, the "Bite Button" turns into the default "Kill Button" and the Vampire can only perform a normal kill.\
 \
 **NOTE:**
 - If a bitten player is still alive when a meeting is being called, they die at the start of the meeting.
 - The cooldown is the same as the default kill cooldown (+ the kill delay if the Vampire bites the target).
 - If there is a Vampire in the game, there can't be a Warlock.
-- If the Vampire bites a player and the Thief kills the Vampire, the bite will still be performed, but the new Vampire will be displayed in the kill animation.
-- If the Vampire bites a player and gets killed before the bite is performed, the biten player will survive.
 
 ### Game Options
 | Name | Description |
@@ -1036,7 +376,6 @@ If a victim is near a garlic, the "Bite Button" turns into the default "Kill But
 | Vampire Spawn Chance | -
 | Vampire Kill Delay | -
 | Vampire Cooldown | Sets the kill/bite cooldown
-| Vampire Can Kill Near Garlics | The Vampire can never bite when their victim is near a garlic. If this option is set to true, they can still perform a normal kill there.
 -----------------------
 
 ## Eraser
@@ -1116,6 +455,7 @@ The Warlock can still perform normal kills, but the two buttons share the same c
 
 ## Bounty Hunter
 ### **Team: Impostors**
+\
 The Bounty Hunter is an Impostor, that continuously get bounties (the targeted player doesn't get notified).\
 The target of the Bounty Hunter swaps after every meeting and after a configurable amount of time.\
 If the Bounty Hunter kills their target, their kill cooldown will be a lot less than usual.\
@@ -1189,58 +529,95 @@ When performing a ninja ability kill, the ninja can be invisible for some second
 | Time The Ninja Is Invisible | -
 -----------------------
 
+## Miner
+### **Team: Impostors**
+The Miner is an Impostor who has the ability to place new vents around the map.\
+These vents only connect to each other, forming a new passway.\
+Unlike the [Trickster](#trickster) the vents created by the Miner can be used by any venter.
+
+
+### Game Options
+| Name | Description |
+|----------|:-------------:|
+| Miner Spawn Chance | -
+| Mine Cooldown | -
+-----------------------
+
+## Blackmailer
+### **Team: Impostors**
+The Blackmailer is an Impostor who has the ability to silence someone during a meeting..\
+\
+**NOTE:**
+The Blackmailer is an Impostor that can silence people in meetings.\
+During each round, the Blackmailer can go up to someone and blackmail them.\
+This prevents the blackmailed person from speaking during the next meeting.\
+The blackmailer has a special ability that allows them to see who they are targeting, even if lights are out, camo is active, etc. \
+\
+**Intended Play:** If you are playing proxy, it is the intention of the developer that anyone who is blackmailed is blackmailed until the start of the next meeting. Essentially this means that the player who was blackmailed is not able to utilize proxy the next round.
+
+
+### Game Options
+| Name | Description |
+|----------|:-------------:|
+| Blackmailer Spawn Chance | - 
+| Blackmail Cooldown | - 
+-----------------------
+
 ## Bomber
 ### **Team: Impostors**
-The Bomber is an Impostor who has the ability to be very explosive. They have the ability to plant bombs to spread grouping Crewmates and also kill them.\
-The Bomber also has the ability to perform a normal kill like all Impostors.\
-The plant time of the bomb can be different to the kill cooldown depending on the settings.\
-Crewmates can defuse a bomb depending on the settings.
+The Bomber is an Impostor who has the ability to give bombs to other players.\
+If a player has a bomb, that player will explode within a set amount of time, unless they give their bomb to another player before their time runs out.\
+Giving another player a bomb appears as you killing them.\
+If a player with a bomb attempts to give the bomb to the Bomber, that player will instantly die.
 
-**NOTE:**
-- The bomb won't kill a shielded player (Medic, First Kill Shield)
-- The bomb won't kill a Mini until it's grown up
-- The bomb can kill the bomber as well as their teammate(s)
-- The hearing range can be higher/lower than the actual destruction range, depending on the settings, and has a visual indicator
-- The visual indicator slowly fades into red until the bomb explodes and it does not show the explosion range (only hearing range)!
-- The bomb can be defused by standing on it and snipping the fuse (button)
 
 ### Game Options
 | Name | Description |
 |----------|:-------------:|
 | Bomber Spawn Chance | -
-| Bomb Destruction Time | -
-| Bomb Destruction Range | -
-| Bomb Hear Range | -
-| Bomb Defuse Duration | -
 | Bomb Cooldown | -
-| Bomb Is Active After |
+| Bomb Delay | -
+| Bomb Timer | -
 -----------------------
 
-## Guesser
-### **Team: Crewmates or Impostors**
-The Guesser can be a Crewmate or an Impostor (depending on the settings).\
-The Guesser can shoot players during the meeting, by guessing its role. If the guess is wrong, the Guesser dies instead.\
-You can select how many players can be shot per game and if multiple players can be shot during a single meeting.\
-The guesses Impostor and Crewmate are only right, if the player is part of the corresponding team and has no special role.\
-You can only shoot during the voting time.\
-Depending on the options, the Guesser can't guess the shielded player and depending on the Medic options the Medic/shielded player might be notified (no one will die, independently of what the Guesser guessed).\
-\
+## Escapist
+### **Team: Impostors**
+The Escapist is an Impostor that can mark a location and teleport across the map to it later.
+
 **NOTE:**
-- If a player gets shot, you'll get back your votes
-- Jester wins won't be triggered, if the Guesser shoots the Jester before the Jester gets voted out
+- Every escape requires one charge. Mark resets along with the charges after each meeting
 
 ### Game Options
 | Name | Description |
 |----------|:-------------:|
-| Guesser Spawn Chance | -
-| Chance That The Guesser Is An Impostor | -
-| Guesser Number Of Shots Per Game | -
-| Guesser Can Shoot Multiple Times Per Meeting |  -
-| Guesses Visible In Ghost Chat | -
+| Escape Cooldown | -
+| Charges On Place | -
+| Maximum Charges | -
+-----------------------
+
+## Assassin Ability
+### **Team: Impostors**
+The Assassin is an Imposter ability that gives the Imposters the ability to shoot players during the meeting, by guessing its role. If the guess is wrong, the Assassin dies instead.\
+You can select how many players can be shot per game and if multiple players can be shot during a single meeting.\
+The guesses Impostor and Crewmate are only right, if the player is part of the corresponding team and has no special role.\
+You can only shoot during the voting time.\
+Depending on the options, the Assassin can't guess the shielded player and depending on the Medic options the Medic/shielded player might be notified (no one will die, independently of what the Assassin guessed).\
+\
+**NOTE:**
+- If a player gets shot, you'll get back your votes
+- Jester wins won't be triggered, if the Assassin shoots the Jester before the Jester gets voted out
+
+### Game Options
+| Name | Description |
+|----------|:-------------:|
+| Assassin Spawn Chance | -
+| Assassin Quantity | -
+| Assassin Number Of Shots Per Game | -
+| Assassin Can Shoot Multiple Times Per Meeting |  -
+| Assassin Can Guess Crewmate | -
+| Assassin Can Guess The Spy | -
+| Assassin Can't Guess Snitch When Tasks Completed | -
 | Guesses Ignore The Medic Shield | -
-| Evil Guesser Can Guess The Spy | -
-| Both Guesser Spawn Rate | -
-| Guesser Can't Guess Snitch When Tasks Completed | -
 
 -----------------------
 
@@ -1253,6 +630,8 @@ The Jester does not have any tasks. They win the game as a solo, if they get vot
 |----------|:-------------:|
 | Jester Spawn Chance | -
 | Jester Can Call Emergency Meeting | Option to disable the emergency button for the Jester
+| Jester Can Hide in Vent | -
+| Jester Has Imposter Vision | -
 -----------------------
 
 ## Arsonist
@@ -1312,6 +691,7 @@ If both Impostors and Jackals are in the game, the game continues even if all Cr
 | Jackal can create a Sidekick | Yes/No |
 | Jackals promoted from Sidekick can create a Sidekick | Yes/No (to prevent the Jackal team from growing) |
 | Jackals can make an Impostor to their Sidekick | Yes/No (to prevent a Jackal from turning an Impostor into a Sidekick, if they use the ability on an Impostor they see the Impostor as Sidekick, but the Impostor isn't converted to Sidekick. If this option is set to "No" Jackal and Sidekick can kill each other.) |
+| Kill A Failed Sidekick Attempt | Yes/No |
 | Jackal and Sidekick have Impostor vision | - |
 -----------------------
 
@@ -1336,6 +716,7 @@ Upon the death of the Jackal (depending on the options), they might get promoted
 
 ## Vulture
 ### **Team: Neutral**
+
 The Vulture does not have any tasks, they have to win the game as a solo.\
 The Vulture is a neutral role that must eat a specified number of corpses (depending on the options) in order to win.\
 Depending on the options, when a player dies, the Vulture gets an arrow pointing to the corpse.\
@@ -1377,29 +758,12 @@ How the Lawyer wins:
 ### Game Options
 | Name | Description |
 |----------|:-------------:|
-| Lawyer Spawn Chance | -
-| Chance That The Lawyer Is Prosecutor | -
-| Lawyer/Prosecutor Vision | Pursuer has normal vision
-| Lawyer/Prosecutor Knows Target Role | -
-| Lawyer/Prosecutor Can Call Emergency Meeting | -
+| Lawyer Spawn Chance | - 
+| Lawyer Target Knows | - Lawyer Target Knows that they have a Lawyer, but they don't know who
 | Lawyer Target Can Be The Jester | -
+| Lawyer Vision | Pursuer has normal vision
+| Lawyer Knows Target Role | -
 -----------------------
-
-## Prosecutor
-### **Team: Neutral**
-The Prosecutor is a neutral role that resembles the Lawyer. The Prosecutor has a client who is a Crewmate.\
-The Prosecutor needs their client to be voted out in order to win the game.\
-The Prosecutor's client doesn't know that they are their client.\
-If the client gets sidekicked, the Prosecutor changes their role and becomes the client's [Lawyer](#lawyer) and has to protect the
-client from now on.\
-If the Prosecutor's client dies, the Prosecutor changes their role and becomes the [Pursuer](#pursuer), which has a different goal to win the game.
-
-**NOTE:**
-- The Prosecutor's role settings are shared with the Lawyer settings.
-- If the client disconnects, the Prosecutor will also turn into the Pursuer.
-- The Prosecutor needs to figure out the role of their client depending on the options.
-- The tasks only count, if the Prosecutor gets promoted to Pursuer.
-- If the Prosecutor dies before their client, they will lose all their tasks and will get the overview immediately.
 
 ## Pursuer
 ### **Team: Neutral**
@@ -1428,8 +792,6 @@ If the Thief tries to kill any non-killing role (Crewmate or Neutral), they die 
 - If the option "Thief Can Kill Sheriff" is On, the Thief has tasks which will ONLY begin to count, if they kill
 the Sheriff. While the Thief hasn't fired, their tasks do not count towards the taskwin.
 - If the option "Thief Can Kill Sheriff" is Off, the Thief will not have tasks. 
-- If the Thief kills the witch, already witched players stay witched (except for the Thief).
-- If the Thief can guess to steal the role, guessing the witch will either save all targets or none of the targets (depending on the setting for Witch: Voting The Witch Saves All The Targets)
 
 ### Game Options
 | Name | Description |
@@ -1439,7 +801,69 @@ the Sheriff. While the Thief hasn't fired, their tasks do not count towards the 
 | Thief Can Kill Sheriff | -
 | Thief Has Impostor Vision | -
 | Thief Can Use Vents | -
-| Thief Can Guess To Steal Role | -
+-----------------------
+
+## Executioner
+### **Team: Neutral**
+The Executioner is still a neutral role, but has a different goal to win the game; they have to vote out a specific player.\
+In order to achieve this goal, they will always be able to see their targets name, even when names are hidden. They will also see the skin of their target on their intro screen.\
+There are a few things to note about how the Executioners role can change.\
+If the target is killed: Executioner -> [Pursuer](#pursuer)\
+If the taget disconnects: Executioner -> [Pursuer](#pursuer)\
+If the target is sidekicked: Executioner -> [Lawyer](#Lawyer) (Client: Target)\
+\
+The target of a Executioner cannot be the following: Impostor, [Jackal](#jackal), [Mayor](#mayor), [Sheriff](#sheriff), [Spy](#spy), [Swapper](#swapper), or a [Lover](#lovers)
+
+## Amnesiac
+### **Team: Neutral**
+The Amesiac has no win condition and cannot win the game as Amnesiac.\
+In order to gain a win condition, they must take a role from a dead body.\
+There are a few things to note about how the Amnesiacs role can change.\
+If the target is Bounty Hunter: Amnesiac -> Impostor (Red flash to signafy this)\
+If the taget is Arsonist: Red Flash; Arsonist cannot be taken\
+If the target body was on a team with Jackal or Impostor, that player will still be on that team.
+
+### Game Options
+| Name | Description |
+|----------|:-------------:|
+| Amnesiac Spawn Chance | -
+| Show arrows to dead bodies | If set to true, the Amnesiac will get arrows to dead bodies when they die.
+| Reset role when taken | If set to true, the role that is taken will be fully reset, allowing the abilities to be reused. Note: Weird stuff might happen with this setting off.
+
+## Swooper
+### **Team: Neutral**
+The Swooper is a solo nuetral killer with the option to replace the Jackal.\
+
+If it is not an Alternate Jackal, it is on it's own team, and must eliminate all opposing factions.
+The Swooper uses the [Jackal](#jackal) kill cooldown.
+
+### Game Options
+| Name | Description |
+|----------|:-------------:|
+| Swooper Spawn Chance | -
+| Spawn as Alternate Jackal | false
+| Swoop Cooldown | -
+| Swoop Duration | -
+| Has Impostor Vision | true
+-----------------------
+
+## Werewolf
+### **Team: Neutral**
+The Werewolf is a Neutral role with its own win condition.\
+Although the Werwolf has a kill button, they can't use it unless they are Rampaged.\
+Once the Werewolf rampages they gain Impostor vision and the ability to kill.\
+However, unlike most killers their kill cooldown is really short.\
+The Werewolf needs to be the last killer alive to win the game.
+
+
+### Game Options
+| Name | Description |
+|----------|:-------------:|
+| Werewolf Spawn Chance | -
+| Rampage Cooldown | -
+| Rampage Duration | -
+| Kiil Cooldown | - Kill Cooldown when rampaged
+
 -----------------------
 
 ## Mayor
@@ -1447,8 +871,7 @@ the Sheriff. While the Thief hasn't fired, their tasks do not count towards the 
 The Mayor leads the Crewmates by having a vote that counts twice.\
 The Mayor can always use their meeting, even if the maximum number of meetings was reached.\
 The Mayor has a portable Meeting Button, depending on the options.\
-The Mayor can see the vote colors after completing a configurable amount of tasks, depending on the options.\
-The Mayor has the option to vote with only one vote instead of two (via a button in the meeting screen), depending on the settings.
+The Mayor can see the vote colors after completing a configurable amount of tasks, depending on the options.
 
 ### Game Options
 | Name | Description |
@@ -1457,7 +880,6 @@ The Mayor has the option to vote with only one vote instead of two (via a button
 | Mayor Can See Vote Colors | -
 | Completed Tasks Needed To See Vote Colors | -
 | Mobile Emergency Button | -
-| Mayor Can Choose Single Vote | Off, On (Before Voting), On (Until Meeting Ends)
 -----------------------
 
 ## Engineer
@@ -1474,6 +896,7 @@ Because of the vents the Engineer might not be able to start some tasks using th
 | Name | Description |
 |----------|:-------------:|
 | Engineer Spawn Chance | -
+| Reset Fixes After Meeting | -
 | Number Of Sabotage Fixes| -
 | Impostors See Vents Highlighted | -
 | Jackal and Sidekick See Vents Highlighted | -
@@ -1493,7 +916,8 @@ If they try to kill a Crewmate, they die instead.\
 |----------|:-------------:|
 | Sheriff Spawn Chance | -
 | Sheriff Cooldown | -
-| Sheriff Can Kill Neutrals | -
+| Misfire Kills | Options for Sheriff Misfires to kill Self, Target, or Both
+| Sheriff Can Kill Neutrals | Options for Sheriff to kill specific Neutral roles including Arsonist, Lawyer, Jester, Executioner, Pursuer, Vulture, Amnesiac, and Thief
 | Sheriff Has A Deputy | Deputy can not be in game without Sheriff
 -----------------------
 
@@ -1524,37 +948,37 @@ Handcuffs disable:
 
 ## Lighter
 ### **Team: Crewmates**
-The Lighter has a different vision than everyone else depending on the settings.\
-Their vision looks like a flashlight cone which can be moved around (known from the Hide'n'Seek mode).
+The Lighter can turn on their Lighter every now and then, which increases their vision by a customizable amount.
 
 ### Game Options
 | Name | Description |
 |----------|:-------------:|
 | Lighter Spawn Chance | -
-| Vision On Lights On | The vision the Lighter has when the lights are on
-| Vision On Lights Off | The vision the Lighter has when the lights are down
-| Flashlight Width | -
+| Lighter Mode Vision On Lights On | The vision the Lighter has when the lights are on and the Lighter mode is on
+| Lighter Mode Vision On Lights Off | The vision the Lighter has when the lights are down and the Lighter mode is on
+| Lighter Cooldown | -
+| Lighter Duration | -
 -----------------------
 
-## Detective
+## Investigator
 ### **Team: Crewmates**
-The Detective can see footprints that other players leave behind.\
-The Detective's other feature shows when they report a corpse: they receive clues about the killer's identity. The type of information they get is based on the time it took them to find the corpse.
+The Investigator can see footprints that other players leave behind.\
+The Investigator's other feature shows when they report a corpse: they receive clues about the killer's identity. The type of information they get is based on the time it took them to find the corpse.
 
 **NOTE:**
 - When people change their colors (because of a morph or camouflage), all the footprints also change their colors (also the ones that were already on the ground). If the effects are over, all footprints switch back to the original color.
-- The Detective does not see footprints of players that sit in vents
+- The Investigator does not see footprints of players that sit in vents
 - More information about the [colors](#colors)
 
 ### Game Options
 | Name | Description |
 |----------|:-------------:|
-| Detective Spawn Chance | -
+| Investigator Spawn Chance | -
 | Anonymous Footprints | If set to true, all footprints will have the same color. Otherwise they will have the color of the respective player.
 | Footprint Interval | The interval between two footprints
 | Footprint Duration | Sets how long the footprints remain visible.
-| Time Where Detective Reports Will Have Name | The amount of time that the Detective will have to report the body since death to get the killer's name.  |
-| Time Where Detective Reports Will Have Color Type| The amount of time that the Detective will have to report the body since death to get the killer's color type. |
+| Time Where Investigator Reports Will Have Name | The amount of time that the Investigator will have to report the body since death to get the killer's name.  |
+| Time Where Investigator Reports Will Have Color Type| The amount of time that the Investigator will have to report the body since death to get the killer's color type. |
 -----------------------
 
 ## Time Master
@@ -1600,8 +1024,9 @@ The Medic's other feature shows when they report a corpse: they will see how lon
 ### Game Options
 | Name | Description | Options |
 |----------|:-------------:|:-------------:|
-| Medic Spawn Chance | - | -
+| Medic Spawn Chance | - |
 | Show Shielded Player | Sets who sees if a player has a shield | "Everyone", "Shielded + Medic", "Medic"
+| Shield Is Unbreakable | Yes/No |
 | Shielded Player Sees Murder Attempt| Whether a shielded player sees if someone tries to kill them | True/false |
 | Shield Will Be Activated | Sets when the shield will be active | "Instantly", "Instantly, Visible After Meeting", "After Meeting"
 | Medic Sees Murder Attempt On Shielded Player | - | If anyone tries to harm the shielded player (Impostor, Sheriff, Guesser, ...), the Medic will see a red flash
@@ -1622,6 +1047,7 @@ The Swapper now has initial swap charges and can recharge those charges after co
 | Name | Description
 |----------|:-------------:|
 | Swapper Spawn Chance | -
+| Swapper Can Fix Sabotages | Option to prevent Swapper from fixing Sabotages
 | Swapper can call emergency meeting | Option to disable the emergency button for the Swapper
 | Swapper can only swap others | Sets whether the Swapper can swap themself or not
 | Initial Swap Charges | -
@@ -1691,20 +1117,20 @@ Depending on the options, the Tracker has another ability: They can track all co
 
 ## Snitch
 ### **Team: Crewmates**
-When the Snitch finishes all their tasks, they will get information in chat of the last location of all killers when the meeting starts.\
-When the Snitch only has a configurable amount of tasks left, it will be revealed that there is a Snitch in the game with a text on evil player's screens.
+When the Snitch finishes all the tasks, arrows will appear (only visible to the Snitch) that point to the Impostors (depending on the options also to members of team Jackal).\
+When the Snitch has one task left (configurable) the Snitch will be revealed to the Impostors (depending on the options also to members of team Jackal) with an arrow pointing to the Snitch.
 
-**NOTE:**
-- If the Snitch dies, all killers will be informed that the Snitch is dead
-- Last location can be a room or open field
+**NOTE**
+- If the Impostor(s)/Jackal(s) is/are on a different floor on Submerged when the Snitch finished their tasks, the arrow will always point to the elevator
 
 ### Game Options
 | Name | Description
 |----------|:-------------:|
 | Snitch Spawn Chance | -
 | Task Count Where The Snitch Will Be Revealed | -
-| Information Mode  | Whether the snitch will get info on the map and/or in the chat 
-| Targets | Snitch Will See All Evil Players or Killing Evil Players
+| Include Team Jackal | -
+| Use Different Arrow Color For Team Jackal | -
+| Snitch can't be guessed after finishing all their tasks | -
 -----------------------
 
 ## Spy
@@ -1734,11 +1160,10 @@ You can set whether the Sheriff can kill the Spy or not (in order to keep the li
 The Portalmaker is a Crewmate that can place two portals on the map.\
 These two portals are connected to each other.\
 Those portals will be visible after the next meeting and can be used by everyone.\
-Additionally to that, the Portalmaker gets information about who used the portals and when in the chat during each meeting, depending on the options.\
-The Portalmaker can teleport themself to their placed portals from anywhere if the setting is enabled.
+Additionally to that, the Portalmaker gets information about who used the portals and when in the chat during each meeting, depending on the options.
 
 **NOTE:**
-- The extra button to use a portal will appear after the Portalmaker set their portals and a meeting/body report was called.
+- The extra button to use a portal will appear after the Portalmaker set his portals and a meeting/body report was called.
 - While one player uses a portal, it is blocked for any other player until the player got teleported.
 - All ghosts can still use the portals, but won't block any living player from using it and the Portalmaker won't get any information about it in chat.
 - If a morphed person uses a portal it will show the morphed name/color depending on the options.
@@ -1752,7 +1177,6 @@ The Portalmaker can teleport themself to their placed portals from anywhere if t
 | Use Portal Cooldown | -
 | Portalmaker Log Only Shows Color Type | -
 | Log Shows Time | -
-| Can Port To Portal From Everywhere | -
 -----------------------
 
 ## Security Guard
@@ -1786,33 +1210,14 @@ The vents will be sealed after the next meeting, players can't enter or exit sea
 
 ## Medium
 ### **Team: Crewmates**
-The medium is a crewmate who can ask the souls of dead players for information. Like the Seer, the medium will see the souls of the players who have died (after the next meeting) and can question them. They then gets random information about the soul or the killer in the chat. The souls only stay for one round, i.e. until the next meeting. Depending on the options, the souls can only be questioned once and then disappear.
-\
-**Questions:**
-The souls will always prefer to answer with the role specific information first!
 
-**Role specific:**
-- Sheriff suicide: "Yikes, that Sheriff shot backfired."
-- Thief suicide: "I tried to steal the gun from their pocket, but they were just happy to see me."
-- Active Lover dies: "I wanted to get out of this toxic relationship anyways."
-- Passiv Lover suicide: "The love of my life died, thus with a kiss I die."
-- Lawyer client kills Lawyer: "My client killed me. Do I still get paid?"
-- Teamkill Jackal/Sidekick: "First they sidekicked me, then they killed me... BUT WHY?"
-- Teamkill Impostor: "I guess they confused me for the Spy, is there even one?"
-- Submerged o2-Kill: "Do I really need that mask for breathing?"
-- Warlock self kill: "MAYBE I cursed the person next to me and killed myself. Oops."
-- Vulture/Cleaner eats/cleans body: "Is my dead body some kind of art now or... aaand it's gone."
+The medium is a crewmate who can ask the souls of dead players for information. Like the Seer, it sees the places where the players have died (after the next meeting) and can question them. It then gets random information about the soul or the killer in the chat. The souls only stay for one round, i.e. until the next meeting. Depending on the options, the souls can only be questioned once and then disappear.\
 
-**Else random:**
-- "I'm not sure, but I guess a darker/lighter color killed me."
-- "If I counted correctly, then I died x seconds before the meeting started."
-- "If my role hasn't been saved, there's no (role) in the game anymore."
-- "It seems like my killer was the (role)."
-
-**Chance That The Answer Contains Additional Information:**
-- When you asked, x killer(s) was/were still alive.
-- When you asked, x player(s) who can use vents was/were still alive.
-- When you asked, x player(s) who is/are neutral but cannot kill was/were still alive.
+Questions:
+What is your Role?
+What is your killer's color type?
+When did you die?
+What is your killers role?
 
 ### Game Options
 | Name | Description
@@ -1821,7 +1226,6 @@ The souls will always prefer to answer with the role specific information first!
 | Medium Cooldown | -
 | Medium Duration | The time it takes to question a soul
 | Medium Each Soul Can Only Be Questioned Once | If set to true, souls can only be questioned once and then disappear
-| Chance That The Answer Contains The Remaining Amount Of Killing Roles | Chance includes Sheriff and Thief
 -----------------------
 
 ## Trapper
@@ -1849,6 +1253,72 @@ The traps have a maximum of charges (uses) and a configurable amount of tasks ar
 | Show Anonymous Map | -
 | Trap Information Type | "Name", "Role", "Good/Evil Role"
 | Trap Duration | -
+-----------------------
+
+## Vigilante
+### **Team: Crewmates**
+The Vigilante is a Crewmate can shoot players during the meeting, by guessing its role. If the guess is wrong, the Vigilante dies instead.\
+You can select how many players can be shot per game and if multiple players can be shot during a single meeting.\
+The guesses Impostor and Crewmate are only right, if the player is part of the corresponding team and has no special role.\
+You can only shoot during the voting time.\
+Depending on the options, the Vigilante can't guess the shielded player and depending on the Medic options the Medic/shielded player might be notified (no one will die, independently of what the Vigilante guessed).\
+\
+**NOTE:**
+- If a player gets shot, you'll get back your votes
+- Jester wins won't be triggered, if the Vigilante shoots the Jester before the Jester gets voted out
+
+### Game Options
+| Name | Description |
+|----------|:-------------:|
+| Vigilante Spawn Chance | -
+| Vigilante Number Of Shots Per Game | -
+| Vigilante Can Shoot Multiple Times Per Meeting |  -
+| Guesses Visible In Ghost Chat | -
+| Guesses Ignore The Medic Shield | -
+-----------------------
+
+## Veteran
+### **Team: Crewmates**
+The Veteran is a Crewmate that can go on alert.
+When the Veteran is on alert, anyone, whether crew, neutral or impostor, if they interact with the Veteran, they die.
+
+### Game Options
+| Name | Description |
+|----------|:-------------:|
+| Veteran Spawn Chance | -
+| Veteran Cooldown | -
+| Veteran Duration | -
+-----------------------
+
+## Bodyguard
+### **Team: Crewmates**
+The BodyGuard is a killing crewmate whose ability protects another player at the cost of the life of the BodyGuard. If someone attempts to kill a guarded player, both the attacker, and the BodyGuard will die
+
+**NOTE:**
+- There is no visible signal that a player is guarded.
+
+### Game Options
+| Name | Description |
+|----------|:-------------:|
+| Bodyguard Spawn Chance | -
+| Reset Target After Meeting | -
+| Show Flash On Death | -
+-----------------------
+
+## Jumper
+### **Team: Crewmates**
+The Jumper is a Crewmate that can mark a location and jump across the map to it later.
+
+**NOTE:**
+- Every jump requires one charge. Mark resets along with the charges after each meeting
+
+### Game Options
+| Name | Description |
+|----------|:-------------:|
+| Jump Cooldown | -
+| Charges On Place | -
+| Maximum Charges | -
+
 -----------------------
 
 # Modifier
@@ -2067,10 +1537,106 @@ can only use them, if the previous player did not use them before)
 | Shifter Spawn Chance | -
 -----------------------
 
-# Gamemodes
-Gamemodes can be switched when creating a lobby or inside the lobby by using a command in the chat:
-`/gm <gamemode>`. Use the following gamemodes: `guess` or `gm`,`prophunt` or `ph`, `hidenseek` or `hns`. If `/gm` is used without argument or the argument can't be parsed, the lobby will switch to classic mode.
+## Fanatic
 
+The Fanatic modifier is a Crewmate only modifier. If the Impostor attempts to kill the Fanatic, the Impostor is instantly blanked and the Fanatic joins team Impostor.
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| Fanatic Spawn Chance | -
+-----------------------
+
+## Tunneler
+
+The Tunneler modifier is a Crewmate only modifier. When the Tunneler is done with their tasks, they gain the abilty to vent.
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| Fanatic Spawn Chance | -
+-----------------------
+
+## Indomitable
+
+Indomitable is a modifier that keeps you protected from the Assassin.
+If the Assassin attempts to guess an Indomitable player, the guess will fail instantly, and the Indomitable will be alerted.
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| Indomitable Spawn Chance | -
+-----------------------
+
+## Blind
+
+The Blind Modifier prevents your report button from lighting up. You can still click it to report, and you can still click a body to report it.
+The Blind can affect all teams (Impostor, Neutral, Crewmate).
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| Blind Spawn Chance | -
+-----------------------
+
+## Sleuth
+
+The Sleuth Modifier tells you the roles of bodies you report.\
+The Sleuth can affect all teams (Impostor, Neutral, Crewmate).
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| Sleuth Spawn Chance | -
+-----------------------
+
+## Torch
+
+The Torch Modifier is a crewmate modifier that makes it so that the players vision doesn't get reduced when the lights are sabotaged.
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| Torch Spawn Chance | -
+| Torch Quantity | -
+-----------------------
+
+## Watcher
+
+The Watcher modifier allows the player to see everyone's votes during meetings.
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| Watcher Spawn Chance | -
+-----------------------
+
+## Multitasker
+
+The Multitasker modifier is a Crewmate only modifier. This modifiers makes all the players tasks transparent.
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| Multitasker Spawn Chance | -
+| Multitasker Quantity | -
+-----------------------
+
+## Disperser
+
+The Disperser modifier is an Impostor only modifier. This modifier gives the impostor a 1 time use ability to send all players to a random location on the map.\
+\
+**NOTE:**
+- Players with Anti Teleport are not effected by a disperse.
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| Disperser Spawn Chance | -
+
+-----------------------
+
+# Gamemodes
 
 ## Guesser Modifier
 The **Guesser-Gamemode** is an extension to the Classic-Gamemode and gives you a multitude of new options for Guessers.\
@@ -2086,7 +1652,6 @@ Players can additionally have a modifier, if enabled (e.g. Medic Guesser Mini).
 | Number of Neutral Guessers | -
 | Number of Impostor Guessers | -
 | Force Jackal Guesser | If set to "On", the first neutral role who will be Guesser is the Jackal. 
-| Force Thief Guesser | If set to "On", the first (or second if Force Jackal Guesser) neutral role who will be Guesser is the Thief. 
 | Guessers Can Have A Modifier | -
 | Guesser Number Of Shots | -
 | Guesser Can Shoot Multiple Times Per Meeting | -
@@ -2129,71 +1694,17 @@ Each Hunter action or finished Crew task will lower the timer by a configurable 
 | Kill Cooldown | -                      | Hunter Light Vision | -                    | Hunted Rewind Time | -
 | Hunter Vision | -                      | Hunter Light Punish in Sec | -             | Hunted Shield Number | -
 | Hunted Vision | -                      | Hunter Admin Cooldown | -
-|  | -                       | Hunter Admin Duration | -
-|  | -                        | Hunter Admin Punish In Sec | -
-|  | -                         | Hunter Arrow Cooldown | -
-|  | -                       | Hunter Arrow Duration | -
+| Common Tasks | -                       | Hunter Admin Duration | -
+| Short Tasks | -                        | Hunter Admin Punish In Sec | -
+| Long Tasks | -                         | Hunter Arrow Cooldown | -
+| Timer In Min | -                       | Hunter Arrow Duration | -
 | Task Win Is Possible | -               | Hunter Arrow Punish In Sec | -
 | Finish Tasks Punish In Sec | -
 | Enable Sabotages | -
 | Time The Hunter Needs To Wait | -
 
-## PropHunt
-The **Prop-Gamemode** is a standalone Gamemode where Hunters have to find the disguised players ("Props").\
-The Hunters and Props who are still alive are displayed to everyone in the bottom left corner (similar to the Arsonist display).\
-When the game starts, the Hunter's movement is disabled for x-seconds (depends on the settings), and their screen is blacked out.\
-There is a time-limit for each round, if the timer runs out and at least one Prop is still alive, the remaining Props win.\
-If the Hunters kill all players before the timer runs out the Hunters win.\
-When a Prop dies, they will either join the Hunter team or die (setting).
-
-#### Shared Abilities:
-- Unstuck: By pressing this button, you can travel through walls for a short time. This is needed, because props sometimes get stuck in walls, due to their changed colliders. Don't use it to cheat!
-
-#### Hunter Abilities:
-- Reveal: A random players current prop is revealed to all players for x seconds (according to settings). The timer will be reduced by *punish* s.
-- Mobile Admin table (like Hacker) - Normal Admin table shares the cooldown
-- Find: Display the DangerMeter known from Vanilla HideNSeek for x seconds. The dangerlevel is rising the closer the Hunter gets to the neares prop.  
-#### Prop Abilities:
-- Invisibility: As a disguised Prop, become invisible for x seconds.
-- Speedboost: Move faster for x seconds.
-- Disguise: While near a usable object, press the button to disguise as the displayed object!
-
-**NOTE:**
-- The Report button lights up, but cannot be pressed.
-- Hunters can vent
-- The Kill Button and Vent Button are permanently enabled, so that you cannot use them to check if there is a prop nearby
-- The Kill Button can always be pressed, but you can also miss if no Prop is nearby. The cooldown can be configured for hits and misses seperately.
-- Usable prop objects are: All task consoles as well as many objects (rocks, snowpeople, barriers, beds, tables, ...)
-- Any object on **LevelImposter** maps, that contains `liprop` in its name and has a `SpriteRenderer` (+ Sprite) will be usable as a prop too!
-
-
-### Game Options
-| General | Description | Hunter | Description | Hunted | Description |
-|----------|:-------------:|----------|:-------------:|----------|:-------------:|
-| Map | -                     | Number of Hunters | -                  | Props Become Hunters When Found | -
-| Timer in Min | -            | Initial Blackout Duration | -          | Invisibility Enabled | -
-| Unstuck Cooldown | -        | Kill Cooldown After Miss | -           | Invisibility Cooldown | -
-| Unstuck Duration | -        | Kill Cooldown After Hit | -            | Invisibility Duration | -
-| Hunter Vision | -           | Reveal Prop Cooldown | -               | Speedboost Enabled | -
-| Prop Vision | -             | Reveal Prop Duration | -               | Speedboost Cooldown | -
-|  | -             | Reveal Time Punish | deducted from rem. timer | Speedboost Duration | - 
-|  | -                         |  Hunter Admin Cooldown | - | Speedboost Ratio | Factor with which speed is multiplied 
-|  | -                       | Find Cooldown | -
-|  | -               | Find Duration | -
-
-## GCERROR
-If the error message "Fatal Error in GC - Collecting from unknown thread" stops you from playing the game, you can now disable the mod-updater, which causes this error.
-In order to do this, create a file called `noupdater.txt` in your modded Among Us folder.
-
-# License
-TheOtherRolesAU/TheOtherRoles is licensed under the
-
-[GNU General Public License v3.0](https://github.com/TheOtherRolesAU/TheOtherRoles/blob/main/LICENSE)
-
-Permissions of this strong copyleft license are conditioned on making available **complete source code of licensed works and modifications**, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
+# Source code
+You can use parts of the code but don't copy paste the whole thing. Make sure you give credits to the other developers, because some parts of the code are based on theirs.
 
 # Bugs, suggestions and requests
-If you found any bugs, have an idea for a new role or any other request, join our [Discord server](https://discord.gg/77RkMJHWsM).
-
-# Copyedit
-Thanks for fixing our typos [jacktose](https://github.com/jacktose) ✌️
+If you found any bugs, have an idea for a new role or any other request, join our [Discord server](https://discord.gg/yspVyP5meR).
