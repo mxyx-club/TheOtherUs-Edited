@@ -159,6 +159,7 @@ internal class RoleManagerSelectRolesPatch
         neutralSettings.Add((byte)RoleId.Amnisiac, CustomOptionHolder.amnisiacSpawnRate.getSelection());
         neutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.getSelection());
         neutralSettings.Add((byte)RoleId.Jackal, CustomOptionHolder.jackalSpawnRate.getSelection());
+        neutralSettings.Add((byte)RoleId.Swooper, CustomOptionHolder.swooperSpawnRate.getSelection());
         neutralSettings.Add((byte)RoleId.Werewolf, CustomOptionHolder.werewolfSpawnRate.getSelection());
         //天启添加
         neutralSettings.Add((byte)RoleId.Juggernaut, CustomOptionHolder.juggernautSpawnRate.getSelection());
@@ -171,12 +172,10 @@ internal class RoleManagerSelectRolesPatch
             neutralSettings.Add((byte)RoleId.Prosecutor, CustomOptionHolder.lawyerSpawnRate.getSelection());
         else
             neutralSettings.Add((byte)RoleId.Lawyer, CustomOptionHolder.lawyerSpawnRate.getSelection());
-
         crewSettings.Add((byte)RoleId.Mayor, CustomOptionHolder.mayorSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Portalmaker, CustomOptionHolder.portalmakerSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Engineer, CustomOptionHolder.engineerSpawnRate.getSelection());
-        crewSettings.Add((byte)RoleId.PrivateInvestigator,
-            CustomOptionHolder.privateInvestigatorSpawnRate.getSelection());
+        crewSettings.Add((byte)RoleId.PrivateInvestigator, CustomOptionHolder.privateInvestigatorSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Lighter, CustomOptionHolder.lighterSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.BodyGuard, CustomOptionHolder.bodyGuardSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Detective, CustomOptionHolder.detectiveSpawnRate.getSelection());
@@ -517,7 +516,7 @@ internal class RoleManagerSelectRolesPatch
                 //天启添加
                 foreach (PlayerControl p in CachedPlayer.AllPlayers)
                     if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
-                        (p.Data.Role.IsImpostor || p == Jackal.jackal || p == Juggernaut.juggernaut ||
+                        (p.Data.Role.IsImpostor || p == Swooper.swooper || p == Jackal.jackal || p == Juggernaut.juggernaut ||
                          p == Werewolf.werewolf || (Lawyer.targetCanBeJester && p == Jester.jester)))
                         possibleTargets.Add(p);
             }

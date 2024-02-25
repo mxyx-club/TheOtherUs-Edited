@@ -1622,7 +1622,6 @@ public static class RPCProcedure
         Jackal.wasTeamRed = Sidekick.wasTeamRed;
         Jackal.wasSpy = Sidekick.wasSpy;
         Jackal.wasImpostor = Sidekick.wasImpostor;
-        Jackal.canSwoop = false;
         Sidekick.clearAndReload();
     }
 
@@ -2134,7 +2133,7 @@ public static class RPCProcedure
             target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(1f);
             if (Camouflager.camouflageTimer <= 0 && !Helpers.MushroomSabotageActive() & !Helpers.isCamoComms())
                 target.setDefaultLook();
-            Jackal.isInvisable = false;
+            Swooper.isInvisable = false;
             return;
         }
 
@@ -2146,8 +2145,8 @@ public static class RPCProcedure
         target.cosmetics.currentBodySprite.BodySprite.color = color;
         target.cosmetics.colorBlindText.gameObject.SetActive(false);
         target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(canSee ? 0.1f : 0f);
-        Jackal.swoopTimer = Jackal.duration;
-        Jackal.isInvisable = true;
+        Swooper.swoopTimer = Swooper.duration;
+        Swooper.isInvisable = true;
     }
     /*
             public static void setSwooper(byte playerId) {

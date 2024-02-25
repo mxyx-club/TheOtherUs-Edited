@@ -287,7 +287,7 @@ public static class Helpers
                 text = defaultText; // set to default if trickster ability is active
             else if (Morphling.morphling != null && Morphling.morphTarget != null && target == Morphling.morphling &&
                      Morphling.morphTimer > 0) text = Morphling.morphTarget.Data.PlayerName; // set to morphed player
-            else if (target == Jackal.jackal && Jackal.isInvisable) text = defaultText;
+            else if (target == Swooper.swooper && Swooper.isInvisable) text = defaultText;
             //else if (target == PhantomRole.phantomRole) text = defaultText;
             else if (target == null) text = defaultText; // Set text to defaultText if no target
             else text = target.Data.PlayerName; // Set text to playername
@@ -307,7 +307,7 @@ public static class Helpers
 
     public static bool isInvisible(PlayerControl player)
     {
-        if (Jackal.jackal != null && Jackal.jackal == player && Jackal.isInvisable) return true;
+        if (Swooper.swooper != null && Swooper.swooper == player && Swooper.isInvisable) return true;
         return false;
     }
 
@@ -581,15 +581,24 @@ public static class Helpers
     //假任务
     public static bool hasFakeTasks(this PlayerControl player)
     {
-        return player == Werewolf.werewolf || player == Doomsayer.doomsayer || player == Juggernaut.juggernaut ||
-               player == Jester.jester || player == Arsonist.arsonist || player == Jackal.jackal ||
-               player == Sidekick.sidekick || player == Doomsayer.doomsayer || player == Pursuer.pursuer ||
-               player == Lawyer.lawyer || player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player);
+        return player == Werewolf.werewolf ||
+            player == Doomsayer.doomsayer ||
+            player == Juggernaut.juggernaut ||
+               player == Jester.jester ||
+               player == Arsonist.arsonist ||
+               player == Jackal.jackal ||
+               player == Sidekick.sidekick ||
+               player == Doomsayer.doomsayer ||
+               player == Pursuer.pursuer ||
+               player == Swooper.swooper ||
+               player == Lawyer.lawyer ||
+               player == Vulture.vulture ||
+               Jackal.formerJackals.Any(x => x == player);
     }
     
     public static bool canBeErased(this PlayerControl player)
     {
-        return player != Jackal.jackal && player != Juggernaut.juggernaut && player != Sidekick.sidekick &&
+        return player != Jackal.jackal && player != Juggernaut.juggernaut && player != Swooper.swooper && player != Sidekick.sidekick &&
                !Jackal.formerJackals.Any(x => x == player) && player != Werewolf.werewolf;
     }
 
@@ -712,7 +721,7 @@ public static class Helpers
             return true; // No names are visible
         if (SurveillanceMinigamePatch.nightVisionIsActive) return true;
         if (Ninja.isInvisble && Ninja.ninja == target) return true;
-        if (Jackal.isInvisable && Jackal.jackal == target) return true;
+        if (Swooper.isInvisable && Swooper.swooper == target) return true;
         if (TORMapOptions.hideOutOfSightNametags && gameStarted && !source.Data.IsDead &&
             PhysicsHelpers.AnythingBetween(localPlayer.GetTruePosition(), target.GetTruePosition(),
                 Constants.ShadowMask, false)) return true;
@@ -913,7 +922,10 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
-
+        else if (Swooper.swooper != null && Swooper.swooper == player)
+        {
+            roleCouldUse = true;
+        }
         if (Tunneler.tunneler != null && Tunneler.tunneler == player)
         {
             var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Tunneler.tunneler.Data);
@@ -1327,6 +1339,7 @@ public static class Helpers
                    roleInfo.color.Equals(Sidekick.color) ||
                    roleInfo.color.Equals(Werewolf.color) ||
                    roleInfo.color.Equals(Juggernaut.color) ||
+                   roleInfo.color.Equals(Swooper.color) ||
                    roleInfo.color.Equals(Arsonist.color);
         return false;
     }
@@ -1396,6 +1409,7 @@ public static class Helpers
                    Spy.hasImpostorVision)
                || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
                || (Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision)
+               || (Swooper.swooper != null && Swooper.swooper.PlayerId == player.PlayerId && Swooper.hasImpVision)
                || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId &&
                    Werewolf.hasImpostorVision);
     }

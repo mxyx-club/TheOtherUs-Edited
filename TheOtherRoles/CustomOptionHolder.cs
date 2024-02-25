@@ -99,21 +99,25 @@ public class CustomOptionHolder
 
     public static CustomOption jackalSpawnRate;
     public static CustomOption jackalKillCooldown;
-    public static CustomOption jackalChanceSwoop;
-    public static CustomOption swooperCooldown;
-    public static CustomOption swooperDuration;
     public static CustomOption jackalCreateSidekickCooldown;
     public static CustomOption jackalKillFakeImpostor;
     public static CustomOption jackalCanUseVents;
     public static CustomOption jackalCanUseSabo;
     public static CustomOption jackalCanCreateSidekick;
-    public static CustomOption sidekickPromotesToJackal;
     public static CustomOption jackalCanImpostorFindSidekick;
+    public static CustomOption sidekickPromotesToJackal;
     public static CustomOption sidekickCanKill;
     public static CustomOption sidekickCanUseVents;
     public static CustomOption jackalPromotedFromSidekickCanCreateSidekick;
     public static CustomOption jackalCanCreateSidekickFromImpostor;
     public static CustomOption jackalAndSidekickHaveImpostorVision;
+
+
+    public static CustomOption swooperSpawnRate;
+    public static CustomOption swooperKillCooldown;
+    public static CustomOption swooperCooldown;
+    public static CustomOption swooperDuration;
+    public static CustomOption swooperHasImpVision;
 
     public static CustomOption bountyHunterSpawnRate;
     public static CustomOption bountyHunterBountyDuration;
@@ -745,9 +749,6 @@ public class CustomOptionHolder
 
         jackalSpawnRate = CustomOption.Create(220, Types.Neutral, cs(Jackal.color, "豺狼"), rates, null, true);
         jackalKillCooldown = CustomOption.Create(221, Types.Neutral, "豺狼/跟班击杀冷却", 30f, 10f, 60f, 2.5f, jackalSpawnRate);
-        jackalChanceSwoop = CustomOption.Create(3642134, Types.Neutral, "豺狼获得隐身能力的概率", rates, jackalSpawnRate);
-        swooperCooldown = CustomOption.Create(1111, Types.Neutral, "隐身冷却", 30f, 10f, 60f, 2.5f, jackalChanceSwoop);
-        swooperDuration = CustomOption.Create(1112, Types.Neutral, "隐身持续时间", 10f, 1f, 20f, 0.5f, jackalChanceSwoop);
         jackalCanUseVents = CustomOption.Create(223, Types.Neutral, "豺狼可使用管道", true, jackalSpawnRate);
         jackalCanUseSabo = CustomOption.Create(8876, Types.Neutral, "豺狼/跟班可进行破坏", false, jackalSpawnRate);
         jackalAndSidekickHaveImpostorVision = CustomOption.Create(430, Types.Neutral, "豺狼/跟班拥有内鬼视野", false, jackalSpawnRate);
@@ -760,6 +761,12 @@ public class CustomOptionHolder
         jackalPromotedFromSidekickCanCreateSidekick = CustomOption.Create(228, Types.Neutral, "晋升后的豺狼可以招募跟班", true, sidekickPromotesToJackal);
         jackalCanCreateSidekickFromImpostor = CustomOption.Create(229, Types.Neutral, "豺狼可以招募伪装者为跟班", true, jackalCanCreateSidekick);
         jackalKillFakeImpostor = CustomOption.Create(7885, Types.Neutral, "豺狼不可击杀被招募失败的伪装者", true, jackalCanCreateSidekick);
+
+        swooperSpawnRate = CustomOption.Create(3650, Types.Neutral, cs(Swooper.color, "隐身人"), rates, null, true);
+        swooperKillCooldown = CustomOption.Create(3651, Types.Neutral, "击杀冷却", 30f, 10f, 60f, 2.5f, swooperSpawnRate);
+        swooperCooldown = CustomOption.Create(3651, Types.Neutral, "隐身冷却", 30f, 10f, 60f, 2.5f, swooperSpawnRate);
+        swooperDuration = CustomOption.Create(3652, Types.Neutral, "隐身持续时间", 10f, 1f, 20f, 0.5f, swooperSpawnRate);
+        swooperHasImpVision = CustomOption.Create(3653, Types.Neutral, "拥有内鬼视野", true, swooperSpawnRate);
 
         minerSpawnRate = CustomOption.Create(1120, Types.Impostor, cs(Miner.color, "管道工"), rates, null, true);
         minerCooldown = CustomOption.Create(1121, Types.Impostor, "制造管道冷却", 25f, 10f, 60f, 2.5f, minerSpawnRate);
@@ -834,11 +841,10 @@ public class CustomOptionHolder
         sheriffCanKillAmnesiac = CustomOption.Create(210278, Types.Crewmate, "可执法 " + cs(Amnisiac.color, "失忆者"), false, sheriffCanKillNeutrals);
         sheriffCanKillArsonist = CustomOption.Create(2102, Types.Crewmate, "可执法 " + cs(Arsonist.color, "纵火犯"), false, sheriffCanKillNeutrals);
         sheriffCanKillVulture = CustomOption.Create(2107, Types.Crewmate, "可执法 " + cs(Vulture.color, "秃鹫"), false, sheriffCanKillNeutrals);
-        sheriffCanKillLawyer = CustomOption.Create(2103, Types.Crewmate, " 可执法 " + cs(Lawyer.color, "律师"), false, sheriffCanKillNeutrals);
+        sheriffCanKillLawyer = CustomOption.Create(2103, Types.Crewmate, "可执法 " + cs(Lawyer.color, "律师"), false, sheriffCanKillNeutrals);
         sheriffCanKillThief = CustomOption.Create(210277, Types.Crewmate, "可执法 " + cs(Thief.color, "身份窃贼"), false, sheriffCanKillNeutrals);
         sheriffCanKillPursuer = CustomOption.Create(2106, Types.Crewmate, "可执法 " + cs(Pursuer.color, "起诉人"), false, sheriffCanKillNeutrals);
         sheriffCanKillDoomsayer = CustomOption.Create(2108, Types.Crewmate, "可执法 " + cs(Doomsayer.color, "末日预言家"), false, sheriffCanKillNeutrals);
-
         deputySpawnRate = CustomOption.Create(103, Types.Crewmate, "可拥有一名捕快", rates, sheriffSpawnRate);
         deputyNumberOfHandcuffs = CustomOption.Create(104, Types.Crewmate, "手铐可用次数", 3f, 1f, 10f, 1f, deputySpawnRate);
         deputyHandcuffCooldown = CustomOption.Create(105, Types.Crewmate, "手铐冷却", 30f, 10f, 60f, 2.5f, deputySpawnRate);

@@ -367,7 +367,6 @@ public static class PlayerControlFixedUpdatePatch
             // Only exclude sidekick from beeing targeted if the jackal can create sidekicks from impostors
             if (Sidekick.sidekick != null)
                 untargetablePlayers.Add(Sidekick.sidekick);
-        if (Jackal.jackal != null && Jackal.isInvisable) untargetablePlayers.Add(Jackal.jackal);
         if (Mini.mini != null && !Mini.isGrownUp())
             untargetablePlayers.Add(Mini.mini); // Exclude Jackal from targeting the Mini unless it has grown up
         Jackal.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
@@ -398,12 +397,19 @@ public static class PlayerControlFixedUpdatePatch
             RPCProcedure.sidekickPromotes();
         }
     }
-
+    static void swooperSetTarget()
+    {
+        if (Swooper.swooper == null || Swooper.swooper != CachedPlayer.LocalPlayer.PlayerControl) return;
+        var untargetablePlayers = new List<PlayerControl>();
+        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini); // Exclude Jackal from targeting the Mini unless it has grown up
+        Swooper.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
+        setPlayerOutline(Swooper.currentTarget, Palette.ImpostorRed);
+    }
     private static void cultistSetFollower()
     {
         if (Cultist.cultist == null || Cultist.cultist != CachedPlayer.LocalPlayer.PlayerControl) return;
         var untargetablePlayers = new List<PlayerControl>();
-        if (Jackal.jackal != null && Jackal.isInvisable) untargetablePlayers.Add(Jackal.jackal);
+        if (Swooper.swooper != null && Swooper.isInvisable) untargetablePlayers.Add(Swooper.swooper);
         if (Mini.mini != null && !Mini.isGrownUp())
             untargetablePlayers.Add(Mini.mini); // Exclude Jackal from targeting the Mini unless it has grown up
         Cultist.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
@@ -526,31 +532,15 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void swooperUpdate()
     {
-        if (Jackal.isInvisable && Jackal.swoopTimer <= 0 && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl)
+        if (Swooper.isInvisable && Swooper.swoopTimer <= 0 && Swooper.swooper == CachedPlayer.LocalPlayer.PlayerControl)
         {
             var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(
                 CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetSwoop, SendOption.Reliable);
-            invisibleWriter.Write(Jackal.jackal.PlayerId);
+            invisibleWriter.Write(Swooper.swooper.PlayerId);
             invisibleWriter.Write(byte.MaxValue);
             AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
-            RPCProcedure.setSwoop(Jackal.jackal.PlayerId, byte.MaxValue);
-        } /*
-        if (Jackal.jackal != null && Jackal.canSwoop){
-            {
-            MessageWriter invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetSwooper, Hazel.SendOption.Reliable, -1);
-            invisibleWriter.Write(Jackal.jackal.PlayerId);
-            invisibleWriter.Write(byte.MaxValue);
-            AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
-            RPCProcedure.setSwooper(Jackal.jackal.PlayerId);
-        }
-        }*/
-        /*
-        if ((Swooper.swooper = Jackal.jackal) && Jackal.canSwoop2){
-            foreach (PlayerControl player in CachedPlayer.AllPlayers) {
-            Swooper.swooper = Jackal.jackal;
-            }
-        }
-        */
+            RPCProcedure.setSwoop(Swooper.swooper.PlayerId, byte.MaxValue);
+        } 
     }
 
     private static void ninjaUpdate()
@@ -1641,6 +1631,9 @@ public static class PlayerControlFixedUpdatePatch
             juggernautSetTarget();
             //末日预言家
             doomsayerSetTarget();
+            // Swooper
+            swooperSetTarget();
+            swooperUpdate();
             // Shifter
             shifterSetTarget();
             // Sheriff

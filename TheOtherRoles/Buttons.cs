@@ -53,6 +53,7 @@ internal static class HudManagerStartPatch
     public static CustomButton jackalKillButton;
     public static CustomButton sidekickKillButton;
     public static CustomButton swooperSwoopButton;
+    public static CustomButton swooperKillButton;
     private static CustomButton jackalSidekickButton;
     private static CustomButton eraserButton;
     private static CustomButton placeJackInTheBoxButton;
@@ -172,11 +173,14 @@ internal static class HudManagerStartPatch
         trackerTrackCorpsesButton.MaxTimer = Tracker.corpsesTrackingCooldown;
         witchSpellButton.MaxTimer = Witch.cooldown;
         ninjaButton.MaxTimer = Ninja.cooldown;
-        swooperSwoopButton.MaxTimer = Jackal.swoopCooldown;
+        swooperSwoopButton.MaxTimer = Swooper.swoopCooldown;
         minerMineButton.MaxTimer = Miner.cooldown;
         blackmailerButton.MaxTimer = Blackmailer.cooldown;
         thiefKillButton.MaxTimer = Thief.cooldown;
         juggernautKillButton.MaxTimer = Juggernaut.cooldown;
+        swooperSwoopButton.MaxTimer = Swooper.swoopCooldown;
+        swooperKillButton.MaxTimer = Swooper.cooldown;
+        swooperSwoopButton.EffectDuration = Swooper.duration;
 
         doomsayerButton.MaxTimer = Doomsayer.cooldown;
 
@@ -203,10 +207,8 @@ internal static class HudManagerStartPatch
         hackerVitalsButton.EffectDuration = Hacker.duration;
         hackerAdminTableButton.EffectDuration = Hacker.duration;
         vampireKillButton.EffectDuration = Vampire.delay;
-        swooperSwoopButton.EffectDuration = Jackal.duration;
         werewolfRampageButton.MaxTimer = Werewolf.rampageCooldown;
         werewolfRampageButton.EffectDuration = Werewolf.rampageDuration;
-        minerMineButton.EffectDuration = Jackal.duration; // Jackal?
         camouflagerButton.EffectDuration = Camouflager.duration;
         morphlingButton.EffectDuration = Morphling.duration;
         bomber2BombButton.EffectDuration = Bomber2.bombDelay + Bomber2.bombTimer;
@@ -591,6 +593,7 @@ internal static class HudManagerStartPatch
                          Sidekick.sidekick == Sheriff.currentTarget ||
                          Juggernaut.juggernaut == Sheriff.currentTarget ||
                          Werewolf.werewolf == Sheriff.currentTarget ||
+                         Swooper.swooper == Sheriff.currentTarget ||
                          (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
                          (Sheriff.canKillNeutrals &&
                           ((Arsonist.arsonist == Sheriff.currentTarget && Sheriff.canKillArsonist) ||
@@ -1691,7 +1694,8 @@ internal static class HudManagerStartPatch
             Jackal.getSidekickButtonSprite(),
             CustomButton.ButtonPositions.lowerRowCenter,
             __instance,
-            KeyCode.F
+            KeyCode.F,
+            buttonText:"招募"
         );
 
         // Jackal Kill
@@ -1723,48 +1727,55 @@ internal static class HudManagerStartPatch
             KeyCode.Q
         );
 
-        //if (rnd.NextDouble() < Jackal.chanceSwoop) {
+
+        // Swooper Kill
+        swooperKillButton = new CustomButton(
+            () =>
+            {
+                if (Helpers.checkAndDoVetKill(Swooper.currentTarget)) return;
+                if (Helpers.checkMuderAttemptAndKill(Swooper.swooper, Swooper.currentTarget) == MurderAttemptResult.SuppressKill) return;
+
+                swooperKillButton.Timer = swooperKillButton.MaxTimer;
+                Swooper.currentTarget = null;
+            },
+            () => { return Swooper.swooper != null && Swooper.swooper == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+            () => { showTargetNameOnButton(Swooper.currentTarget, swooperKillButton, "击杀"); return Swooper.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { swooperKillButton.Timer = swooperKillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            CustomButton.ButtonPositions.upperRowCenter,
+            //new Vector3(0, 1f, 0),
+            __instance,
+            KeyCode.Q
+        );
+
         swooperSwoopButton = new CustomButton(
             () =>
-            {
-                /* On Use */
-                var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(
-                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetSwoop, SendOption.Reliable);
-                invisibleWriter.Write(Jackal.jackal.PlayerId);
+            { /* On Use */
+                MessageWriter invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetSwoop, Hazel.SendOption.Reliable, -1);
+                invisibleWriter.Write(Swooper.swooper.PlayerId);
                 invisibleWriter.Write(byte.MinValue);
                 AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
-                RPCProcedure.setSwoop(Jackal.jackal.PlayerId, byte.MinValue);
+                RPCProcedure.setSwoop(Swooper.swooper.PlayerId, byte.MinValue);
             },
+            () => { /* Can See */ return Swooper.swooper != null && Swooper.swooper == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+            () => {  /* On Click */ return (CachedPlayer.LocalPlayer.PlayerControl.CanMove); },
             () =>
-            {
-                /* Can See */
-                return Jackal.canSwoop && Jackal.jackal != null &&
-                       Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead;
-            },
-            () =>
-            {
-                /* On Click */
-                Swooper.swooper = Jackal.jackal;
-                Jackal.canSwoop2 = true;
-                return Jackal.canSwoop && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
-            },
-            () =>
-            {
-                /* On Meeting End */
+            {  /* On Meeting End */
                 swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer;
                 swooperSwoopButton.isEffectActive = false;
                 swooperSwoopButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-                Jackal.isInvisable = false;
+                Swooper.isInvisable = false;
             },
-            Jackal.getSwoopButtonSprite(),
-            Jackal.getSwooperSwoopVector(),
+            Swooper.getSwoopButtonSprite(),
+            Swooper.getSwooperSwoopVector(),
             __instance,
             KeyCode.V,
             true,
-            Jackal.duration,
-            () => { swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer; }
+            Swooper.duration,
+            () => { swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer; },
+            buttonText:"隐身"
         );
-        // }
+
 
         // Sidekick Kill
         sidekickKillButton = new CustomButton(
