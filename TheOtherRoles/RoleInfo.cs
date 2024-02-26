@@ -190,7 +190,7 @@ public class RoleInfo
         arsonist,
         werewolf,
         thief,
-        //swooper,
+        swooper,
         //天启
         juggernaut,
         //末日预言家
@@ -302,7 +302,6 @@ public class RoleInfo
             if (p == Radar.radar) infos.Add(radar);
             if (p == Tunneler.tunneler) infos.Add(tunneler);
             if (p == Slueth.slueth) infos.Add(slueth);
-            if (p == Swooper.swooper) infos.Add(swooper);
             if (p == Disperser.disperser) infos.Add(disperser);
             if (Invert.invert.Any(x => x.PlayerId == p.PlayerId)) infos.Add(invert);
             if (Chameleon.chameleon.Any(x => x.PlayerId == p.PlayerId)) infos.Add(chameleon);
@@ -314,6 +313,7 @@ public class RoleInfo
 
         // Special roles
         if (p == Jester.jester) infos.Add(jester);
+        if (p == Swooper.swooper) infos.Add(swooper);
         if (p == Werewolf.werewolf) infos.Add(werewolf);
         if (p == Mayor.mayor) infos.Add(mayor);
         if (p == Portalmaker.portalmaker) infos.Add(portalmaker);

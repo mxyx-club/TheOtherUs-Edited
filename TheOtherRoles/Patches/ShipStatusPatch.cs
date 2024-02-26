@@ -107,9 +107,10 @@ public class ShipStatusPatch
         }
 
         // Additional code
+        //var switchSystem = GameOptionsManager.Instance.currentNormalGameOptions.MapId == 5 ? null : __instance.Systems[SystemTypes.Electrical]?.TryCast<SwitchSystem>();
         var t = switchSystem != null ? switchSystem.Value / 255f : 1;
         if (Torch.torch.FindAll(x => x.PlayerId == player.PlayerId).Count > 0) t = 1;
-        __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1) *
+        __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, t) *
                    GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod * (1f + (Torch.vision * 0.1f));
         ;
         //__result *= 1f - Torch.vision / 0.1f;
