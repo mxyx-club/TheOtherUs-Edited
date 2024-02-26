@@ -9,8 +9,12 @@
         "13": "<size=130%><color=#ff351f>\u6211\u4eec\u7684\u8d85\u591a\u804c\u4e1a</color></size> "
     },
     "fullCredentialsVersion2": {
-        "0": "<size=120%><color=#ff351f>TheOtherUs</color></size> ",
+        "0": "<size=110%><color=#ff351f>TheOtherUs</color></size> ",
         "13": "<size=110%><color=#ff351f>\u6211\u4eec\u7684\u8d85\u591a\u804c\u4e1a</color></size> "
+    },
+    "gameTitle2": {
+        "0": "<size=75%>Modified by <color=#FFB793>mxyx.club</color>\nBased on TheOtherUs</size>",
+        "13": "<size=80%><color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> - <color=#FFB793>mxyx.club</color></size>"
     },
     "isHideNSeekGM": {
         "0": "HideNSeek",
@@ -26,15 +30,19 @@
     },
     "fullCredentials": {
         "0": "<size=70%>Modified by <color=#FFB793>mxyx-club</color>\n<size=65%>Based on TheOtherUs</size>",
-        "13": "<size=75%>\u6a21\u7ec4\u4fee\u6539\uff1a<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color>&<color=#FCCE03FF>\u5584\u826f\u7684\u597d\u4eba</color>&<color=#FCCE03FF>\u5929\u5bf8\u68a6\u521d</color>\n\u4e2d\u6587\u6c49\u5316:<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color></size>\n<size=65%>\u57fa\u4e8eTheotherUs</size>"
+        "13": "<size=75%>Mod\u4fee\u6539: <color=#FFB793>\u6cab\u590f\u60a0\u8f69</color>&<color=#FCCE03FF>\u5584\u826f\u7684\u597d\u4eba</color>\n<color=#FCCE03FF>\u5929\u5bf8\u68a6\u521d</color>&<color=#FCCE03FF>Imp11</color>\n\u7f8e\u5de5: <color=#FCCE03FF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheotherUs</size>"
     },
     "mainMenuCredentials": {
         "0": "<size=80%>Modified by <color=#FFB793>mxyx-club</color>\n<size=75%>Based on TheOtherUs</size>",
-        "13": "<size=85%>\u6a21\u7ec4\u4fee\u6539\uff1a<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color>&<color=#FCCE03FF>\u5584\u826f\u7684\u597d\u4eba</color>&<color=#FCCE03FF>\u5929\u5bf8\u68a6\u521d</color>\n\u4e2d\u6587\u6c49\u5316\uff1a<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color></size>\n<size=80%>\u57fa\u4e8eTheotherUs</size>"
+        "13": "<size=75%>Mod\u4fee\u6539\uff1a<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color>&<color=#FCCE03FF>\u5584\u826f\u7684\u597d\u4eba</color>\n<color=#FCCE03FF>\u5929\u5bf8\u68a6\u521d</color>&<color=#FCCE03FF>Imp11</color>\n\u7f8e\u5de5: <color=#FCCE03FF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheotherUs</size>"
     },
     "contributorsCredentials": {
         "0": "<size=70%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, and Mr_Fluuff</color></size>",
         "13": "<size=70%> <color=#FCCE03FF>\u7279\u522b\u611f\u8c22 Smeggy, Scoom, Xer, and Mr_Fluuff</color></size>"
+    },
+    "medicShowAttemptText": {
+        "0": "Failed Murder Attempt on Shielded Player",
+        "13": "\u5c1d\u8bd5\u51fb\u6740\u88ab\u4fdd\u62a4\u73a9\u5bb6"
     },
     "colorSalmon": {
         "0": "Salmon",
@@ -46,7 +54,7 @@
         "0": "Bordeaux",
         "11": "\u30dc\u30eb\u30c9\u30fc",
         "13": "\u67a3\u7ea2",
-        "14": "\u6ce2\u723e\u591a\u9152\u7d05"
+        "14": "\u6ce2\u723e\u591a"
     },
     "colorOlive": {
         "0": "Olive",
@@ -147,8 +155,8 @@
     "colorTamarind": {
         "0": "Tamarind",
         "11": "\u30bf\u30de\u30ea\u30f3\u30c9",
-        "13": "\u7f57\u671b\u5b50\u8272",
-        "14": "\u7f85\u671b\u5b50\u8272"
+        "13": "\u7f57\u671b\u5b50",
+        "14": "\u7f85\u671b\u5b50"
     },
     "colorFuchsia": {
         "0": "Fuchsia",
@@ -326,7 +334,7 @@
     },
     "HandcuffText": {
         "0": "[BLANK]",
-        "13": "\u6234\u4e0a\u624b\u94d0"
+        "13": "\u4e0a\u94d0"
     },
     "PlacePortalText": {
         "0": "[BLANK]",
@@ -415,5 +423,9 @@
     "ProphetText": {
         "0": "[BLANK]",
         "13": "\u63ed\u793a"
+    },
+    "minerText": {
+        "0": "[BLANK]",
+        "13": "\u6316\u6d1e"
     }
 }

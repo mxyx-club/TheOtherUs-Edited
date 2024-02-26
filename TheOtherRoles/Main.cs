@@ -27,7 +27,7 @@ namespace TheOtherRoles;
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
 public class TheOtherRolesPlugin : BasePlugin
 {
-    public const string Id = "me.eisbison.theotherroles";
+    public const string Id = "me.eisbison.theotherus.mxyx.club";
     public const string VersionString = "1.3.4";
     public static uint betaDays = 0; // amount of days for the build to be usable (0 for infinite!)
 
@@ -53,6 +53,7 @@ public class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> EnableHorseMode { get; set; }
     public static ConfigEntry<bool> ToggleCursor { get; set; }
     public static ConfigEntry<bool> ShowVentsOnMap { get; set; }
+    public static ConfigEntry<bool> enableDebugLogMode { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
     public static ConfigEntry<string> ShowPopUpVersion { get; set; }
@@ -112,6 +113,7 @@ public class TheOtherRolesPlugin : BasePlugin
         EnableHorseMode = Config.Bind("Custom", "Enable Horse Mode", false);
         ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
         ShowVentsOnMap = Config.Bind("Custom", "Show vent positions on minimap", false);
+        enableDebugLogMode = Config.Bind("Custom", "Debug Log Mode", false);
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);

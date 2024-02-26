@@ -883,8 +883,8 @@ internal class GameOptionsMenuStartPatch
     private static void destroyOptions(List<List<OptionBehaviour>> optionBehavioursList)
     {
         foreach (var optionBehaviours in optionBehavioursList)
-        foreach (var option in optionBehaviours)
-            Object.Destroy(option.gameObject);
+            foreach (var option in optionBehaviours)
+                Object.Destroy(option.gameObject);
     }
 
     private static bool setNames(Dictionary<string, string> gameObjectNameDisplayNameMap)
@@ -1184,10 +1184,6 @@ internal class GameOptionsDataPatch
                 else if (option.id == 358) //Prosecutor
                     sb.AppendLine(
                         $"- {Helpers.cs(Lawyer.color, "处刑者")}: {option.selections[option.selection].ToString()}");
-
-                else if (option.id == 3642134) //Can Swoop
-                    sb.AppendLine(
-                        $"- {Helpers.cs(Swooper.color, "隐身人")}: {option.selections[option.selection].ToString()}");
             }
 
         if (headerOnly) return sb.ToString();

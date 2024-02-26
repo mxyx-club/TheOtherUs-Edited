@@ -85,7 +85,7 @@ public static class TheOtherRoles
         Juggernaut.clearAndReload();
         Doomsayer.clearAndReload();
         //Guesser.clearAndReload();
-        //Swooper.clearAndReload();
+        Swooper.clearAndReload();
 
         // Modifier
         Bait.clearAndReload();
@@ -1485,7 +1485,42 @@ public static class Spy
         hasImpostorVision = CustomOptionHolder.spyHasImpostorVision.getBool();
     }
 }
+public static class Swooper
+{
+    public static PlayerControl swooper;
+    public static PlayerControl currentTarget;
+    public static float cooldown = 30f;
+    public static bool isInvisable = false;
+    public static Color color = new Color32(224, 197, 219, byte.MaxValue);
+    public static float duration = 5f;
+    public static float swoopCooldown = 30f;
+    public static float swoopTimer = 0f;
+    public static Sprite buttonSprite;
+    public static bool hasImpVision = false;
 
+    public static Sprite getSwoopButtonSprite()
+    {
+        if (buttonSprite) return buttonSprite;
+        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Swoop.png", 115f);
+        return buttonSprite;
+    }
+
+    public static Vector3 getSwooperSwoopVector()
+    {
+        return CustomButton.ButtonPositions.upperRowLeft; //brb
+    }
+
+    public static void clearAndReload()
+    {
+        swooper = null;
+        isInvisable = false;
+        cooldown = CustomOptionHolder.swooperKillCooldown.getFloat();
+        swoopCooldown = CustomOptionHolder.swooperCooldown.getFloat();
+        duration = CustomOptionHolder.swooperDuration.getFloat();
+        hasImpVision = CustomOptionHolder.swooperHasImpVision.getBool();
+
+    }
+}
 public static class Trickster
 {
     public static PlayerControl trickster;
@@ -2777,6 +2812,8 @@ public static class Bait
     public static Color color = new Color32(0, 247, 255, byte.MaxValue);
 
     public static float reportDelayMin;
+    public static bool SwapNeutral;
+    public static bool SwapImpostor;
     public static float reportDelayMax;
     public static bool showKillFlash = true;
 
@@ -2788,6 +2825,8 @@ public static class Bait
         reportDelayMax = CustomOptionHolder.modifierBaitReportDelayMax.getFloat();
         if (reportDelayMin > reportDelayMax) reportDelayMin = reportDelayMax;
         showKillFlash = CustomOptionHolder.modifierBaitShowKillFlash.getBool();
+        SwapNeutral = CustomOptionHolder.modifierBaitSwapNeutral.getBool();
+        SwapImpostor = CustomOptionHolder.modifierBaitSwapImpostor.getBool();
     }
 }
 
@@ -2879,43 +2918,6 @@ public static class Slueth
     {
         slueth = null;
         reported = new List<PlayerControl>();
-    }
-}
-
-public static class Swooper
-{
-    public static PlayerControl swooper;
-    public static PlayerControl currentTarget;
-    public static float cooldown = 30f;
-    public static bool isInvisable = false;
-    public static Color color = new Color32(224, 197, 219, byte.MaxValue);
-    public static float duration = 5f;
-    public static float swoopCooldown = 30f;
-    public static float swoopTimer = 0f;
-    public static Sprite buttonSprite;
-    public static bool hasImpVision = false;
-
-    public static Sprite getSwoopButtonSprite()
-    {
-        if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Swoop.png", 115f);
-        return buttonSprite;
-    }
-
-    public static Vector3 getSwooperSwoopVector()
-    {
-        return CustomButton.ButtonPositions.upperRowLeft; //brb
-    }
-
-    public static void clearAndReload()
-    {
-        swooper = null;
-        isInvisable = false;
-        cooldown = CustomOptionHolder.swooperKillCooldown.getFloat();
-        swoopCooldown = CustomOptionHolder.swooperCooldown.getFloat();
-        duration = CustomOptionHolder.swooperDuration.getFloat();
-        hasImpVision = CustomOptionHolder.swooperHasImpVision.getBool();
-
     }
 }
 
@@ -3178,6 +3180,7 @@ public static class Shifter
 
     public static PlayerControl futureShift;
     public static PlayerControl currentTarget;
+    public static PlayerControl InvertDuration;
 
     private static Sprite buttonSprite;
 
@@ -3267,6 +3270,11 @@ public static class Shifter
         {
             if (repeat) shiftRole(player2, player1, false);
             Spy.spy = player1;
+        }
+        else if (Jumper.jumper != null && Jumper.jumper == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Jumper.jumper = player1;
         }
         else if (SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == player2)
         {
@@ -3359,6 +3367,11 @@ public static class Shifter
         {
             if (repeat) shiftRole(player2, player1, false);
             Doomsayer.doomsayer = player1;
+        }
+        else if (Swooper.swooper != null && Swooper.swooper == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Swooper.swooper = player1;
         }
     }
 

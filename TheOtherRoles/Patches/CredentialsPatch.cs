@@ -38,11 +38,11 @@ public static class CredentialsPatch
                 else if (PropHunt.isPropHuntGM) gameModeText = ModTranslation.getString("isPropHuntGM");
                 if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
                 __instance.text.text =
-                    $"{ModTranslation.getString("fullCredentialsVersion2")} v{TheOtherRolesPlugin.Version + "\n"}+{ModTranslation.getString("gameTitle2")}\n<size=90%>{gameModeText}</size>" +
+                    $"{ModTranslation.getString("fullCredentialsVersion2")} v{TheOtherRolesPlugin.Version + "\n" + ModTranslation.getString("gameTitle2")}\n<size=90%>{gameModeText}</size>" +
                     __instance.text.text;
-                if (CachedPlayer.LocalPlayer.Data.IsDead || (!(CachedPlayer.LocalPlayer.PlayerControl == null) &&
-                                                             (CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 ||
-                                                              CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover2)))
+                if (CachedPlayer.LocalPlayer.Data.IsDead ||(!(CachedPlayer.LocalPlayer.PlayerControl == null) &&
+                                                           (CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 ||
+                                                            CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover2)))
                 {
                     var transform = __instance.transform;
                     var localPosition = transform.localPosition;

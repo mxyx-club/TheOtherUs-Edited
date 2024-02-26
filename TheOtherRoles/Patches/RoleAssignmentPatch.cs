@@ -717,7 +717,7 @@ internal class RoleManagerSelectRolesPatch
         bool forceJackal = false, bool forceThief = false, bool forceDoomsayer = false)
     {
         var IndexList = new Queue<PlayerControl>();
-      
+
         if (Doomsayer.doomsayer != null && forceDoomsayer)
             IndexList.Enqueue(Doomsayer.doomsayer);
 
@@ -875,6 +875,22 @@ internal class RoleManagerSelectRolesPatch
 
             modifiers.RemoveAll(x => x == RoleId.Sunglasses);
         }
+        //诱饵
+        /*
+        if (modifiers.Contains(RoleId.Bait))
+        {
+            var baitCount = 0;
+            var impPlayer = new List<PlayerControl>(playerList); //testing
+            while (baitCount < modifiers.FindAll(x => x == RoleId.Bait).Count)
+            {
+                playerId = setModifierToRandomPlayer((byte)RoleId.Bait, crewPlayer);
+                crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+                playerList.RemoveAll(x => x.PlayerId == playerId);
+                baitCount++;
+            }
+
+            modifiers.RemoveAll(x => x == RoleId.Bait);
+        }*/
 
         if (modifiers.Contains(RoleId.Torch))
         {
@@ -949,7 +965,6 @@ internal class RoleManagerSelectRolesPatch
                 break;
             case RoleId.Bait:
                 selection = CustomOptionHolder.modifierBait.getSelection();
-                if (multiplyQuantity) selection *= CustomOptionHolder.modifierBaitQuantity.getQuantity();
                 break;
             case RoleId.Bloody:
                 selection = CustomOptionHolder.modifierBloody.getSelection();

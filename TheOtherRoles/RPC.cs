@@ -436,6 +436,9 @@ public static class RPCProcedure
                     case RoleId.Sidekick:
                         Sidekick.sidekick = player;
                         break;
+                    case RoleId.Swooper:
+                        Swooper.swooper = player;
+                        break;
                     case RoleId.Follower:
                         Follower.follower = player;
                         break;
@@ -543,9 +546,6 @@ public static class RPCProcedure
         {
             case RoleId.EvilGuesser:
                 Guesser.evilGuesser.Add(player);
-                break;
-            case RoleId.Swooper:
-                Swooper.swooper = player;
                 break;
             case RoleId.Bait:
                 Bait.bait.Add(player);
@@ -1224,6 +1224,12 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 Amnisiac.amnisiac = target;
                 break;
+            case RoleId.Swooper:
+                if (Amnisiac.resetRole) Swooper.clearAndReload();
+                Swooper.swooper = amnisiac;
+                Amnisiac.clearAndReload();
+                Amnisiac.amnisiac = target;
+                break;
             case RoleId.Ninja:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Ninja.clearAndReload();
@@ -1461,7 +1467,7 @@ public static class RPCProcedure
         Shifter.clearAndReload();
 
         // Suicide (exile) when impostor or impostor variants
-        if ((player.Data.Role.IsImpostor || Helpers.isJackalAndSidekickAndLawyer(player)) && !oldShifter.Data.IsDead)
+        if ((player.Data.Role.IsImpostor || Helpers.isShiftNeutral(player)) && !oldShifter.Data.IsDead)
         {
             oldShifter.Exiled();
             overrideDeathReasonAndKiller(oldShifter, DeadPlayer.CustomDeathReason.Shift, player);
@@ -1923,6 +1929,36 @@ public static class RPCProcedure
             new(10.5f, -2.0f, 0.0f), //medbay top
             new(6.5f, -4.5f, 0.0f) //medbay bottom
         };
+        var fungleSpawn = new List<Vector3>
+            {
+                new(-10.0842f, 13.0026f, 0.013f),
+                new(0.9815f, 6.7968f, 0.0068f),
+                new(22.5621f, 3.2779f, 0.0033f),
+                new(-1.8699f, -1.3406f, -0.0013f),
+                new(12.0036f, 2.6763f, 0.0027f),
+                new(21.705f, -7.8691f, -0.0079f),
+                new(1.4485f, -1.6105f, -0.0016f),
+                new(-4.0766f, -8.7178f, -0.0087f),
+                new(2.9486f, 1.1347f, 0.0011f),
+                new(-4.2181f, -8.6795f, -0.0087f),
+                new(19.5553f, -12.5014f, -0.0125f),
+                new(15.2497f, -16.5009f, -0.0165f),
+                new(-22.7174f, -7.0523f, 0.0071f),
+                new(-16.5819f, -2.1575f, 0.0022f),
+                new(9.399f, -9.7127f, -0.0097f),
+                new(7.3723f, 1.7373f, 0.0017f),
+                new(22.0777f, -7.9315f, -0.0079f),
+                new(-15.3916f, -9.3659f, -0.0094f),
+                new(-16.1207f, -0.1746f, -0.0002f),
+                new(-23.1353f, -7.2472f, -0.0072f),
+                new(-20.0692f, -2.6245f, -0.0026f),
+                new(-4.2181f, -8.6795f, -0.0087f),
+                new(-9.9285f, 12.9848f, 0.013f),
+                new(-8.3475f, 1.6215f, 0.0016f),
+                new(-17.7614f, 6.9115f, 0.0069f),
+                new(-0.5743f, -4.7235f, -0.0047f),
+                new(-20.8897f, 2.7606f, 0.002f)
+            };
 
         var airshipSpawn = new List<Vector3>(); //no spawns since it already has random spawns
 
@@ -1954,6 +1990,8 @@ public static class RPCProcedure
                 if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 4)
                     CachedPlayer.LocalPlayer.PlayerControl.transform.position =
                         airshipSpawn[rnd.Next(airshipSpawn.Count)];
+                if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 5)
+                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = fungleSpawn[rnd.Next(fungleSpawn.Count)];
             }
 
             Disperser.remainingDisperses--;
@@ -2139,8 +2177,7 @@ public static class RPCProcedure
 
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
-        var canSee = Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl || CachedPlayer.LocalPlayer.Data.IsDead ||
-                     Sidekick.sidekick == CachedPlayer.LocalPlayer.PlayerControl;
+        var canSee = Swooper.swooper == CachedPlayer.LocalPlayer.PlayerControl || CachedPlayer.LocalPlayer.Data.IsDead;
         if (canSee) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
         target.cosmetics.colorBlindText.gameObject.SetActive(false);
@@ -2578,7 +2615,7 @@ public static class RPCProcedure
             rend.sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ChatOverlay.png", 130f);
             if (playerControl.PlayerId != localPlayerId) rend.gameObject.SetActive(true);
             FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(2f,
-                (Action<float>)delegate(float p)
+                (Action<float>)delegate (float p)
                 {
                     if (p == 1f)
                     {
@@ -2657,6 +2694,7 @@ public static class RPCProcedure
         //天启添加
         if (target == Juggernaut.juggernaut) Juggernaut.juggernaut = thief;
 
+        if (target == Swooper.swooper) Swooper.swooper = thief;
         if (target == BodyGuard.bodyguard) BodyGuard.bodyguard = thief;
         if (target == Veteren.veteren) Veteren.veteren = thief;
         if (target == Blackmailer.blackmailer) Blackmailer.blackmailer = thief;
@@ -2890,8 +2928,10 @@ internal class RPCHandlerPatch
         var packetId = (CustomRPC)callId;
         if (RpcNames!.ContainsKey(packetId))
             return;
-        
-        Info($"接收 PlayerControl 原版Rpc RpcId{callId} Message Size {reader.Length}");
+        if (enableDebugLogMode)
+        {
+            Info($"接收 PlayerControl 原版Rpc RpcId{callId} Message Size {reader.Length}");
+        }
     }
 
     private static bool Prefix([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
@@ -2902,8 +2942,11 @@ internal class RPCHandlerPatch
         var packetId = (CustomRPC)callId;
         if (!RpcNames!.ContainsKey(packetId))
             return true;
-        
-        Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc Name{RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
+
+        if (enableDebugLogMode)
+        {
+            Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc Name{RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
+        }
         switch (packetId)
         {
             // Main Controls

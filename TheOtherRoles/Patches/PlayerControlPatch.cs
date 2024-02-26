@@ -540,7 +540,7 @@ public static class PlayerControlFixedUpdatePatch
             invisibleWriter.Write(byte.MaxValue);
             AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
             RPCProcedure.setSwoop(Swooper.swooper.PlayerId, byte.MaxValue);
-        } 
+        }
     }
 
     private static void ninjaUpdate()
@@ -1706,7 +1706,6 @@ public static class PlayerControlFixedUpdatePatch
             ninjaSetTarget();
             NinjaTrace.UpdateAll();
             ninjaUpdate();
-            swooperUpdate();
             // Thief
             thiefSetTarget();
 

@@ -46,7 +46,11 @@ public static class ClientOptionsPatch
         new SelectionBehaviour("在地图上显示管道",
             () => TORMapOptions.ShowVentsOnMap =
                 Main.ShowVentsOnMap.Value = !Main.ShowVentsOnMap.Value,
-            Main.ShowVentsOnMap.Value)
+            Main.ShowVentsOnMap.Value),
+        new SelectionBehaviour("Debug日志模式",
+            () => TORMapOptions.enableDebugLogMode =
+                Main.enableDebugLogMode.Value = !Main.enableDebugLogMode.Value,
+            Main.enableDebugLogMode.Value)
     ];
 
     private static GameObject popUp;

@@ -1230,8 +1230,8 @@ public static class Helpers
         // This functions blocks the game from ending if specified crewmate roles are alive
         if (!CustomOptionHolder.blockGameEnd.getBool()) return false;
 
-
         if (isRoleAlive(Sheriff.sheriff)) powerCrewAlive = true;
+        if (isRoleAlive(Deputy.deputy)) powerCrewAlive = true;
         if (isRoleAlive(Veteren.veteren)) powerCrewAlive = true;
         if (isRoleAlive(Mayor.mayor)) powerCrewAlive = true;
         if (isRoleAlive(Swapper.swapper)) powerCrewAlive = true;
@@ -1330,18 +1330,27 @@ public static class Helpers
         return false;
     }
 
-    public static bool isJackalAndSidekickAndLawyer(PlayerControl player)
-        //好人交换师代码target
+    //好人交换师代码target
+    public static bool isShiftNeutral(PlayerControl player)
     {
-        var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
-        if (roleInfo != null)
-            return roleInfo.color.Equals(Jackal.color) ||
-                   roleInfo.color.Equals(Sidekick.color) ||
-                   roleInfo.color.Equals(Werewolf.color) ||
-                   roleInfo.color.Equals(Juggernaut.color) ||
-                   roleInfo.color.Equals(Swooper.color) ||
-                   roleInfo.color.Equals(Arsonist.color);
-        return false;
+        if (CustomOptionHolder.modifierShiftNeutral.getBool()) 
+        {
+            var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
+            if (roleInfo != null)
+                return roleInfo.color.Equals(Jackal.color) ||
+                       roleInfo.color.Equals(Sidekick.color) ||
+                       roleInfo.color.Equals(Werewolf.color) ||
+                       roleInfo.color.Equals(Juggernaut.color) ||
+                       roleInfo.color.Equals(Swooper.color) ||
+                       roleInfo.color.Equals(Arsonist.color);
+            return false;
+        }else {
+            var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
+            if (roleInfo != null)
+                return roleInfo.isNeutral;
+            return false;
+        }
+        
     }
 
     public static bool isKiller(PlayerControl player)

@@ -384,10 +384,11 @@ public class CustomOptionHolder
     public static CustomOption modifierAssassinCultist;
 
     public static CustomOption modifierBait;
-    public static CustomOption modifierBaitQuantity;
     public static CustomOption modifierBaitReportDelayMin;
     public static CustomOption modifierBaitReportDelayMax;
     public static CustomOption modifierBaitShowKillFlash;
+    public static CustomOption modifierBaitSwapNeutral;
+    public static CustomOption modifierBaitSwapImpostor;
 
     public static CustomOption modifierLover;
     public static CustomOption modifierLoverImpLoverRate;
@@ -450,7 +451,9 @@ public class CustomOptionHolder
     public static CustomOption modifierChameleonMinVisibility;
 
     public static CustomOption modifierShifter;
+    public static CustomOption modifierShiftNeutral;
 
+    public static CustomOption buttonCooldownFormat;
     public static CustomOption maxNumberOfMeetings;
     public static CustomOption blockSkippingInEmergencyMeetings;
     public static CustomOption noVoteIsSelfVote;
@@ -480,20 +483,26 @@ public class CustomOptionHolder
     public static CustomOption dynamicMapEnableSubmerged;
     public static CustomOption dynamicMapSeparateSettings;
 
-
     public static CustomOption enableBetterPolus;
 
     public static CustomOption movePolusVents;
 
-    public static CustomOption buttonCooldownFormat;
     //添加新管道
     public static CustomOption addPolusVents;
     public static CustomOption swapNavWifi;
     public static CustomOption movePolusVitals;
     public static CustomOption moveColdTemp;
 
+    public static CustomOption enableMiraModify;
+    public static CustomOption miraVitals;
+
     public static CustomOption enableAirShipModify;
+    public static CustomOption airshipOptimize;
+    public static CustomOption airshipLadder;
     public static CustomOption addAirShipVents;
+
+    public static CustomOption enableFungleModify;
+    public static CustomOption fungleElectrical;
 
     public static CustomOption disableMedbayWalk;
 
@@ -609,18 +618,18 @@ public class CustomOptionHolder
             enableCodenameDisableHorses = CustomOption.Create(10424, Types.General, cs(Color.green, "禁用马模式"), false, enableCodenameHorsemode);
 
         enableCrowdedPlayer = CustomOption.Create(15000, Types.General,
-            cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "启用百人"), false, null, true);
+            cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "启用百人"), true, null, true);
         CrowdedPlayer.Enable = enableCrowdedPlayer.getBool();
 
         MaxPlayer = CustomOption.Create(15001, Types.General,
-            cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "最大玩家数"), 20f, 20f, 120f, 1f, enableCrowdedPlayer);
+            cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "最大玩家数"), 30f, 18f, 120f, 3f, enableCrowdedPlayer);
 
         CrowdedPlayer.MaxPlayer = MaxPlayer.GetInt();
         // Using new id's for the options to not break compatibilty with older versions
         crewmateRolesCountMin = CustomOption.Create(300, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最小船员阵营职业数"), 15f, 0f, 15f, 1f, null, true);
+            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最小船员阵营职业数"), 15f, 0f, 30f, 1f, null, true);
         crewmateRolesCountMax = CustomOption.Create(301, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最大船员阵营职业数"), 15f, 0f, 15f, 1f);
+            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最大船员阵营职业数"), 15f, 0f, 30f, 1f);
         crewmateRolesFill = CustomOption.Create(308, Types.General,
             cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "所有船员必定拥有职业\n(无视最小/最大数量)"), false);
         neutralRolesCountMin = CustomOption.Create(302, Types.General,
@@ -632,9 +641,9 @@ public class CustomOptionHolder
         impostorRolesCountMax = CustomOption.Create(305, Types.General,
             cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最大内鬼阵营职业数"), 15f, 0f, 15f, 1f);
         modifiersCountMin = CustomOption.Create(306, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最小附加职业数"), 15f, 0f, 15f, 1f);
+            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最小附加职业数"), 15f, 0f, 30f, 1f);
         modifiersCountMax = CustomOption.Create(307, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最大附加职业数"), 15f, 0f, 15f, 1f);
+            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最大附加职业数"), 15f, 0f, 30f, 1f);
 
         modifierAssassin = CustomOption.Create(2000, Types.Impostor, cs(Color.red, "刺客"), rates, null, true);
         modifierAssassinQuantity = CustomOption.Create(2001, Types.Impostor, cs(Color.red, "刺客数量"), ratesModifier, modifierAssassin);
@@ -946,9 +955,9 @@ public class CustomOptionHolder
         jumperSpawnRate = CustomOption.Create(9050, Types.Crewmate, cs(Jumper.color, "传送师"), rates, null, true);
         jumperJumpTime = CustomOption.Create(9051, Types.Crewmate, "传送冷却", 15f, 0f, 60f, 2.5f, jumperSpawnRate);
         jumperChargesOnPlace = CustomOption.Create(9052, Types.Crewmate, "每次传送所消耗点数", 1, 1, 10, 1, jumperSpawnRate);
-        //jumperResetPlaceAfterMeeting = CustomOption.Create(9052, Types.Crewmate, "Reset Places After Meeting", true, jumperSpawnRate);
-        //jumperChargesGainOnMeeting = CustomOption.Create(9053, Types.Crewmate, "Charges Gained After Meeting", 2, 0, 10, 1, jumperSpawnRate);
-        //jumperMaxCharges = CustomOption.Create(9054, Types.Crewmate, "Maximum Charges", 3, 0, 10, 1, jumperSpawnRate);
+        //jumperResetPlaceAfterMeeting = CustomOption.Create(9052, Types.Crewmate, "会议后重置标记位置", true, jumperSpawnRate);
+        //jumperChargesGainOnMeeting = CustomOption.Create(9053, Types.Crewmate, "会议后增加传送点数", 2, 0, 10, 1, jumperSpawnRate);
+        //jumperMaxCharges = CustomOption.Create(9054, Types.Crewmate, "最多传送点数", 3, 0, 10, 1, jumperSpawnRate);
 
         bodyGuardSpawnRate = CustomOption.Create(8820, Types.Crewmate, cs(BodyGuard.color, "保镖"), rates, null, true);
         bodyGuardResetTargetAfterMeeting = CustomOption.Create(8821, Types.Crewmate, "会议后重置保护目标", true, bodyGuardSpawnRate);
@@ -984,9 +993,10 @@ public class CustomOptionHolder
         modifierTieBreaker = CustomOption.Create(1020, Types.Modifier, cs(Color.yellow, "破平者"), rates, null, true);
 
         modifierBait = CustomOption.Create(1030, Types.Modifier, cs(Color.yellow, "诱饵"), rates, null, true);
-        modifierBaitQuantity = CustomOption.Create(1031, Types.Modifier, cs(Color.yellow, "诱饵数量"), ratesModifier, modifierBait);
-        modifierBaitReportDelayMin = CustomOption.Create(1032, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 1f, modifierBait);
-        modifierBaitReportDelayMax = CustomOption.Create(1033, Types.Modifier, "诱饵报告延迟时间(最大)", 0f, 0f, 10f, 1f, modifierBait);
+        modifierBaitSwapNeutral = CustomOption.Create(1035, Types.Modifier, "可分配至中立阵营", true, modifierBait);
+        modifierBaitSwapImpostor = CustomOption.Create(1036, Types.Modifier, "可分配至伪装者阵营", true, modifierBait);
+        modifierBaitReportDelayMin = CustomOption.Create(1032, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 0.5f, modifierBait);
+        modifierBaitReportDelayMax = CustomOption.Create(1033, Types.Modifier, "诱饵报告延迟时间(最大)", 0f, 0f, 10f, 0.5f, modifierBait);
         modifierBaitShowKillFlash = CustomOption.Create(1034, Types.Modifier, "用闪光灯警告杀手", true, modifierBait);
 
         modifierLover = CustomOption.Create(1040, Types.Modifier, cs(Color.yellow, "恋人"), rates, null, true);
@@ -1000,7 +1010,7 @@ public class CustomOptionHolder
 
         modifierTorch = CustomOption.Create(1053, Types.Modifier, cs(Color.yellow, "火炬"), rates, null, true);
         modifierTorchQuantity = CustomOption.Create(1054, Types.Modifier, cs(Color.yellow, "火炬人数"), ratesModifier, modifierTorch);
-        modifierTorchVision = CustomOption.Create(1056, Types.Modifier, "火炬的视野倍率", new[] { "+10%", "+20%", "+30%", "+40%", "+50%" }, modifierTorch);
+        modifierTorchVision = CustomOption.Create(1056, Types.Modifier, "火炬的视野倍率", rates, modifierTorch);
 
         modifierMultitasker = CustomOption.Create(10523233, Types.Modifier, cs(Color.yellow, "多线程"), rates, null, true);
         modifierMultitaskerQuantity = CustomOption.Create(10232354, Types.Modifier, cs(Color.yellow, "多线程人数"), ratesModifier, modifierMultitasker);
@@ -1038,6 +1048,7 @@ public class CustomOptionHolder
         modifierChameleonMinVisibility = CustomOption.Create(1094, Types.Modifier, "最低透明度", new[] { "0%", "10%", "20%", "30%", "40%", "50%" }, modifierChameleon);
 
         modifierShifter = CustomOption.Create(1100, Types.Modifier, cs(Color.yellow, "交换师"), rates, null, true);
+        modifierShiftNeutral = CustomOption.Create(1091, Types.Modifier, "可交换部分中立职业", false, modifierShifter);
 
         // Guesser Gamemode (2000 - 2999)
         guesserGamemodeCrewNumber = CustomOption.Create(2001, Types.Guesser, cs(Guesser.color, "船员阵营赌怪数"), 15f, 1f, 15f, 1f, null, true);
@@ -1148,15 +1159,23 @@ public class CustomOptionHolder
         dynamicMapEnableSubmerged = CustomOption.Create(505, Types.General, "Submerged", rates, dynamicMap);
         dynamicMapSeparateSettings = CustomOption.Create(509, Types.General, "使用随机地图设置预设", false, dynamicMap);
         //Map options 7800-7899 
-        enableBetterPolus = CustomOption.Create(7878, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "更好的Polus地图"), false);
+        enableBetterPolus = CustomOption.Create(7878, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Polus"), false);
         movePolusVents = CustomOption.Create(7879, Types.General, "改变管道布局", false, enableBetterPolus);
-        addPolusVents = CustomOption.Create(7883, Types.General, "添加新管道\n 样本室-办公室-武器室", false, enableBetterPolus);
+        addPolusVents = CustomOption.Create(7883, Types.General, "添加新管道\n (样本室-办公室-运输船)", false, enableBetterPolus);
         movePolusVitals = CustomOption.Create(7880, Types.General, "将生命检测仪移动到实验室", false, enableBetterPolus);
         swapNavWifi = CustomOption.Create(7881, Types.General, "重启WIFI与导航任务位置交换", false, enableBetterPolus);
         moveColdTemp = CustomOption.Create(7882, Types.General, "温度调节任务移动至配电室下方", false, enableBetterPolus);
 
-        enableAirShipModify = CustomOption.Create(7895, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "更好的AirShip地图"), false);
-        addAirShipVents = CustomOption.Create(7896, Types.General, "添加新管道\n 会议室-配电室", false, enableAirShipModify);
+        enableMiraModify = CustomOption.Create(7940, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Mira"), false);
+        miraVitals = CustomOption.Create(7941, Types.General, "添加生命检测装置", false, enableMiraModify);
+
+        enableAirShipModify = CustomOption.Create(7890, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "AirShip"), false);
+        airshipOptimize = CustomOption.Create(7891, Types.General, "优化地图", false, enableAirShipModify);
+        addAirShipVents = CustomOption.Create(7892, Types.General, "添加新管道\n (会议室-配电室)", false, enableAirShipModify);
+        airshipLadder = CustomOption.Create(7893, Types.General, "增加额外梯子\n (会议室-间隙室)", false, enableAirShipModify);
+
+        enableFungleModify = CustomOption.Create(7980, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Fungle"), false);
+        fungleElectrical = CustomOption.Create(7981, Types.General, "添加电力系统\n (食堂-实验室-上引擎)", false, enableFungleModify);
 
         enableCamoComms = CustomOption.Create(1105, Types.General, cs(Color.red, "通信破坏开启小黑人"), false);
         disableMedbayWalk = CustomOption.Create(8847, Types.General, "任务动画不可见", false);

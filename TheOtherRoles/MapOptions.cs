@@ -28,6 +28,7 @@ internal static class TORMapOptions
     public static bool transparentTasks;
     public static bool hideOutOfSightNametags;
     public static bool ShowVentsOnMap = true;
+    public static bool enableDebugLogMode = false;
     public static bool disableMedscanWalking;
 
     public static int restrictDevices;
@@ -116,6 +117,7 @@ internal static class TORMapOptions
         enableSoundEffects = TheOtherRolesPlugin.EnableSoundEffects.Value;
         enableHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
         ShowVentsOnMap = TheOtherRolesPlugin.ShowVentsOnMap.Value;
+        ShowVentsOnMap = TheOtherRolesPlugin.enableDebugLogMode.Value;
 
         //Patches.ShouldAlwaysHorseAround.isHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
     }
