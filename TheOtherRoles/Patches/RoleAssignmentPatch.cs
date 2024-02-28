@@ -876,8 +876,8 @@ internal class RoleManagerSelectRolesPatch
             modifiers.RemoveAll(x => x == RoleId.Sunglasses);
         }
         //诱饵
-        /*
-        if (modifiers.Contains(RoleId.Bait))
+        
+        if (CustomOptionHolder.modifierBaitSwapCrewmate.getBool() & modifiers.Contains(RoleId.Bait))
         {
             var baitCount = 0;
             var impPlayer = new List<PlayerControl>(playerList); //testing
@@ -890,7 +890,7 @@ internal class RoleManagerSelectRolesPatch
             }
 
             modifiers.RemoveAll(x => x == RoleId.Bait);
-        }*/
+        }
 
         if (modifiers.Contains(RoleId.Torch))
         {

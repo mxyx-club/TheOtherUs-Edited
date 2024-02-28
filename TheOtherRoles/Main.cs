@@ -27,7 +27,7 @@ namespace TheOtherRoles;
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
 public class TheOtherRolesPlugin : BasePlugin
 {
-    public const string Id = "me.eisbison.theotherus.mxyx.club";
+    public const string Id = "me.eisbison.TheOtherUs.mxyx.club";
     public const string VersionString = "1.3.4";
     public static uint betaDays = 0; // amount of days for the build to be usable (0 for infinite!)
 
@@ -107,12 +107,12 @@ public class TheOtherRolesPlugin : BasePlugin
         GhostsSeeModifier = Config.Bind("Custom", "Ghosts See Modifier", true);
         GhostsSeeVotes = Config.Bind("Custom", "Ghosts See Votes", true);
         ShowRoleSummary = Config.Bind("Custom", "Show Role Summary", true);
-        ShowLighterDarker = Config.Bind("Custom", "Show Lighter / Darker", false);
+        ShowLighterDarker = Config.Bind("Custom", "Show Lighter / Darker", true);
         ToggleCursor = Config.Bind("Custom", "Better Cursor", true);
         EnableSoundEffects = Config.Bind("Custom", "Enable Sound Effects", true);
         EnableHorseMode = Config.Bind("Custom", "Enable Horse Mode", false);
         ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
-        ShowVentsOnMap = Config.Bind("Custom", "Show vent positions on minimap", false);
+        ShowVentsOnMap = Config.Bind("Custom", "Show vent positions on minimap", true);
         enableDebugLogMode = Config.Bind("Custom", "Debug Log Mode", false);
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");

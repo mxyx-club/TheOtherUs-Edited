@@ -86,12 +86,15 @@ public enum RoleId
     Thief,
     Poucher,
     Bomber,
-
+    //邪恶的陷阱师
+    //EvilTrapper,
+    //魔术师
+    //Arcanist,
     //天启添加
     Juggernaut,
-
     //末日预言家
     Doomsayer,
+
     Crewmate,
     Impostor,
 
@@ -1611,7 +1614,7 @@ public static class RPCProcedure
             Sidekick.sidekick = player;
             if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
                 CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
-            if ((wasSpy || wasImpostor) && CustomOptionHolder.jackalCanImpostorFindSidekick.getBool()) Sidekick.wasTeamRed = true;
+            if ((wasSpy || wasImpostor) && CustomOptionHolder.jackalCanImpostorFindSidekick.getBool() == false) Sidekick.wasTeamRed = true;
             Sidekick.wasSpy = wasSpy;
             Sidekick.wasImpostor = wasImpostor;
             if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");

@@ -633,6 +633,8 @@ public static class TheOtherRoles
         public static float reportNameDuration;
         public static float reportColorDuration = 20f;
         public static float timer = 6.2f;
+        //public static float reportRoleDuration;
+        //public static float reportInfoDuration = 20f;
 
         public static void clearAndReload()
         {
@@ -643,6 +645,8 @@ public static class TheOtherRoles
             reportNameDuration = CustomOptionHolder.detectiveReportNameDuration.getFloat();
             reportColorDuration = CustomOptionHolder.detectiveReportColorDuration.getFloat();
             timer = 6.2f;
+            //reportRoleDuration = CustomOptionHolder.detectiveReportRoleDuration.getFloat();
+            //reportInfoDuration = CustomOptionHolder.detectiveReportInfoDuration.getFloat();
         }
     }
 }
@@ -757,6 +761,8 @@ public static class Medic
     public static bool showShieldAfterMeeting;
     public static bool meetingAfterShielding;
     public static bool reset;
+    public static float ReportNameDuration;
+    public static float ReportColorDuration;
 
     public static Color shieldedColor = new Color32(0, 221, 255, byte.MaxValue);
     public static PlayerControl currentTarget;
@@ -791,6 +797,8 @@ public static class Medic
         showAttemptToMedic = CustomOptionHolder.medicShowAttemptToMedic.getBool();
         setShieldAfterMeeting = CustomOptionHolder.medicSetOrShowShieldAfterMeeting.getSelection() == 2;
         showShieldAfterMeeting = CustomOptionHolder.medicSetOrShowShieldAfterMeeting.getSelection() == 1;
+        ReportNameDuration = CustomOptionHolder.medicReportNameDuration.getFloat();
+        ReportColorDuration = CustomOptionHolder.medicReportColorDuration.getFloat();
         meetingAfterShielding = false;
     }
 }
@@ -830,7 +838,49 @@ public static class Swapper
         rechargedTasks = Mathf.RoundToInt(CustomOptionHolder.swapperRechargeTasksNumber.getFloat());
     }
 }
+/*
+public static class Arcanist
+{
+    public static PlayerControl arcanist;
+    public static Color color = new Color32(82, 108, 173, byte.MaxValue);
 
+    public static float placeHatCooldown = 10f;
+    public static float TeleportTime = 10f;
+    public static float probabilityBlueCards;
+    public static float probabilityRedCards;
+    public static float probabilityWhiteCards;
+    public static bool resetPlaceAfterMeeting;
+
+
+
+    private static Sprite useHatSpecialButtonSprite1;
+    private static Sprite useHatSpecialButtonSprite2;
+
+    public static Sprite getUsePortalSpecialButtonSprite(bool first)
+    {
+        if (first)
+        {
+            if (useHatSpecialButtonSprite1) return useHatSpecialButtonSprite1;
+            useHatSpecialButtonSprite1 =
+                Helpers.loadSpriteFromResources("TheOtherRoles.Resources.UsePortalSpecialButton1.png", 115f);
+            return useHatSpecialButtonSprite1;
+        }
+
+        if (useHatSpecialButtonSprite2) return useHatSpecialButtonSprite2;
+        useHatSpecialButtonSprite2 =
+            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.UsePortalSpecialButton2.png", 115f);
+        return useHatSpecialButtonSprite2;
+    }
+    public static void clearAndReload()
+    {
+        arcanist = null;
+        TeleportTime = CustomOptionHolder.jumperJumpTime.getFloat();
+        probabilityBlueCards = CustomOptionHolder.ArcanistProbabilityBlueCards.getFloat();
+        probabilityRedCards = CustomOptionHolder.ArcanistProbabilityRedCards.getFloat();
+        probabilityWhiteCards = CustomOptionHolder.ArcanistProbabilityWhiteCards.getFloat();
+    }
+}
+*/
 public static class Lovers
 {
     public static PlayerControl lover1;
@@ -1602,8 +1652,8 @@ public static class Bomber2
     public static float bombTimer = 10f;
 
     public static bool bombActive;
+    //public static bool hotPotatoMode = false;
 
-    // public static bool hotPotatoMode = false;
     public static PlayerControl currentBombTarget = null;
     public static bool hasAlerted = false;
     public static int timeLeft = 0;
@@ -2813,6 +2863,7 @@ public static class Bait
 
     public static float reportDelayMin;
     public static bool SwapNeutral;
+    public static bool SwapCrewmate;
     public static bool SwapImpostor;
     public static float reportDelayMax;
     public static bool showKillFlash = true;
@@ -2825,6 +2876,7 @@ public static class Bait
         reportDelayMax = CustomOptionHolder.modifierBaitReportDelayMax.getFloat();
         if (reportDelayMin > reportDelayMax) reportDelayMin = reportDelayMax;
         showKillFlash = CustomOptionHolder.modifierBaitShowKillFlash.getBool();
+        SwapCrewmate = CustomOptionHolder.modifierBaitSwapCrewmate.getBool();
         SwapNeutral = CustomOptionHolder.modifierBaitSwapNeutral.getBool();
         SwapImpostor = CustomOptionHolder.modifierBaitSwapImpostor.getBool();
     }
