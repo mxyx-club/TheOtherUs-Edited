@@ -26,15 +26,15 @@ internal class CreateOptionsPickerPatch
         switch (gm)
         {
             case CustomGamemodes.Guesser:
-                __instance.GameModeText.text = "赌怪模式";
+                __instance.GameModeText.text = ModTranslation.getString("isGuesserGm");
                 TORMapOptions.gameMode = CustomGamemodes.Guesser;
                 break;
             case CustomGamemodes.HideNSeek:
-                __instance.GameModeText.text = "猎杀模式";
+                __instance.GameModeText.text = ModTranslation.getString("isHideNSeekGM");
                 TORMapOptions.gameMode = CustomGamemodes.HideNSeek;
                 break;
             case CustomGamemodes.PropHunt:
-                __instance.GameModeText.text = "躲猫猫";
+                __instance.GameModeText.text = ModTranslation.getString("isPropHuntGM");
                 TORMapOptions.gameMode = CustomGamemodes.PropHunt;
                 break;
         }
@@ -48,9 +48,9 @@ internal class CreateOptionsPickerPatch
     {
         __instance.GameModeText.text = TORMapOptions.gameMode switch
         {
-            CustomGamemodes.Guesser => "赌怪模式",
-            CustomGamemodes.HideNSeek => "猎杀模式",
-            CustomGamemodes.PropHunt => "躲猫猫",
+            CustomGamemodes.Guesser => ModTranslation.getString("isGuesserGm"),
+            CustomGamemodes.HideNSeek => ModTranslation.getString("isHideNSeekGM"),
+            CustomGamemodes.PropHunt => ModTranslation.getString("isPropHuntGM"),
             _ => __instance.GameModeText.text
         };
     }
@@ -82,9 +82,9 @@ internal class GameModeMenuPatch
             }
             else
             {
-                chatLanguageButton.Text.text = i == 3 ? "赌怪模式" : "猎杀模式";
+                chatLanguageButton.Text.text = i == 3 ? ModTranslation.getString("isGuesserGm") : ModTranslation.getString("isHideNSeekGM");
                 if (i == 5)
-                    chatLanguageButton.Text.text = "躲猫猫";
+                    chatLanguageButton.Text.text = ModTranslation.getString("isPropHuntGM");
             }
 
             chatLanguageButton.Button.OnClick.RemoveAllListeners();

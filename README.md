@@ -1,7 +1,7 @@
 ## Note: This repository is an unofficial continuation of [The Other Roles](https://github.com/TheOtherRolesAU/TheOtherRoles) and [Town of Us](https://github.com/slushiegoose/Town-Of-Us)/[Town of Us R](https://github.com/eDonnes124/Town-Of-Us-R), as well as [The Other Roles Community Edition](https://github.com/JustASysAdmin/TheOtherRoles2).
 
 ![TOU_Logo](https://user-images.githubusercontent.com/113001912/192659417-85c94f28-d9b9-454a-a6b4-6679fe9dca91.png)
-<p align="center"><a href="https://github.com/SpexGH/TheOtherUs/releases/"><img src="https://badgen.net/github/release/SpexGH/theotherus"></a></p>
+<p align="center"><a href="https://github.com/mxyx-club/TheOtherUs/releases/"><img src="https://badgen.net/github/release/mxyx-club/theotherus"></a></p>
 
 <p align="center">
 Credit to The Other Roles, Town of Us, and The Other Roles Community Edition for everything. This wouldn't be possible without them. </p>

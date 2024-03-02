@@ -41,11 +41,11 @@ public class MainMenuPatch
         buttonDiscord.GetComponent<AspectPosition>().anchorPoint = new Vector2(0.542f, 0.5f);
 
         var textDiscord = buttonDiscord.transform.GetComponentInChildren<TMP_Text>();
-        __instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>(p => { textDiscord.SetText("TOU Discord"); })));
+        __instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>(p => { textDiscord.SetText("GitHub"); })));
         var passiveButtonDiscord = buttonDiscord.GetComponent<PassiveButton>();
 
         passiveButtonDiscord.OnClick = new Button.ButtonClickedEvent();
-        passiveButtonDiscord.OnClick.AddListener((Action)(() => Application.OpenURL("https://discord.gg/yspVyP5meR")));
+        passiveButtonDiscord.OnClick.AddListener((Action)(() => Application.OpenURL("https://github.com/mxyx-club/TheOtherUs/")));
 
 
         // TOR credits button
@@ -57,7 +57,7 @@ public class MainMenuPatch
 
         var textCreditsButton = creditsButton.transform.GetComponentInChildren<TMP_Text>();
         __instance.StartCoroutine(Effects.Lerp(0.5f,
-            new Action<float>(p => { textCreditsButton.SetText("TOU Credits"); })));
+            new Action<float>(p => { textCreditsButton.SetText(ModTranslation.getString("Credits")); })));
         var passiveCreditsButton = creditsButton.GetComponent<PassiveButton>();
 
         passiveCreditsButton.OnClick = new Button.ButtonClickedEvent();
@@ -200,9 +200,9 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
 
             template.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p =>
             {
-                guesserButtonText.SetText("TOR 赌怪模式");
-                HideNSeekButtonText.SetText("TOR 猎杀模式");
-                PropHuntButtonText.SetText("TOR 躲猫猫");
+                guesserButtonText.SetText(ModTranslation.getString("isGuesserGm"));
+                HideNSeekButtonText.SetText(ModTranslation.getString("isHideNSeekGM"));
+                PropHuntButtonText.SetText(ModTranslation.getString("isPropHuntGM"));
             })));
         }));
     }

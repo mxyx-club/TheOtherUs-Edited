@@ -749,12 +749,12 @@ public class CustomOptionHolder
         blackmailerCooldown = CustomOption.Create(711, Types.Impostor, "勒索冷却", 15f, 5f, 120f, 2.5f, blackmailerSpawnRate);
 
         bomberSpawnRate = CustomOption.Create(460, Types.Impostor, cs(Bomber.color, "恐怖分子"), rates, null, true);
-        bomberBombDestructionTime = CustomOption.Create(461, Types.Impostor, "炸弹引爆时间", 20f, 2.5f, 120f, 2.5f, bomberSpawnRate);
+        bomberBombDestructionTime = CustomOption.Create(461, Types.Impostor, "炸弹引爆时间", 20f, 0f, 120f, 2.5f, bomberSpawnRate);
         bomberBombDestructionRange = CustomOption.Create(462, Types.Impostor, "炸弹爆炸范围", 60f, 5f, 250f, 5f, bomberSpawnRate);
         bomberBombHearRange = CustomOption.Create(463, Types.Impostor, "爆炸前预警范围", 50f, 5f, 250f, 5f, bomberSpawnRate);
-        bomberDefuseDuration = CustomOption.Create(464, Types.Impostor, "拆除炸弹所需时间", 3f, 0.5f, 30f, 0.5f, bomberSpawnRate);
-        bomberBombCooldown = CustomOption.Create(465, Types.Impostor, "炸弹放置冷却", 15f, 2.5f, 30f, 2.5f, bomberSpawnRate);
-        bomberBombActiveAfter = CustomOption.Create(466, Types.Impostor, "炸弹激活时间", 3f, 0.5f, 15f, 0.5f, bomberSpawnRate);
+        bomberDefuseDuration = CustomOption.Create(464, Types.Impostor, "拆除炸弹所需时间", 3f, 0f, 30f, 0.5f, bomberSpawnRate);
+        bomberBombCooldown = CustomOption.Create(465, Types.Impostor, "炸弹放置冷却", 15f, 5f, 30f, 2.5f, bomberSpawnRate);
+        bomberBombActiveAfter = CustomOption.Create(466, Types.Impostor, "炸弹激活时间", 3f, 0f, 15f, 0.5f, bomberSpawnRate);
 
         jesterSpawnRate = CustomOption.Create(60, Types.Neutral, cs(Jester.color, "小丑"), rates, null, true);
         jesterCanCallEmergency = CustomOption.Create(61, Types.Neutral, "小丑可召开会议", true, jesterSpawnRate);
