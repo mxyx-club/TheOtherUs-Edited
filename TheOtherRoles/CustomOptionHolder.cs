@@ -631,7 +631,7 @@ public class CustomOptionHolder
             enableCodenameDisableHorses = CustomOption.Create(10424, Types.General, cs(Color.green, "禁用马模式"), false, enableCodenameHorsemode);
 
         enableCrowdedPlayer = CustomOption.Create(15000, Types.General,
-            cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "启用百人"), true, null, true);
+            cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "启用百人（重启游戏生效）"), true, null, true);
         CrowdedPlayer.Enable = enableCrowdedPlayer.getBool();
 
         MaxPlayer = CustomOption.Create(15001, Types.General,
@@ -1071,7 +1071,7 @@ public class CustomOptionHolder
         modifierChameleonMinVisibility = CustomOption.Create(1094, Types.Modifier, "最低透明度", ["0%", "10%", "20%", "30%", "40%", "50%"], modifierChameleon);
 
         modifierShifter = CustomOption.Create(1100, Types.Modifier, cs(Color.yellow, "交换师"), rates, null, true);
-        modifierShiftNeutral = CustomOption.Create(1091, Types.Modifier, "可交换部分中立职业", false, modifierShifter);
+        modifierShiftNeutral = CustomOption.Create(1106, Types.Modifier, "可交换部分中立不带刀职业", false, modifierShifter);
 
         // Guesser Gamemode (2000 - 2999)
         guesserGamemodeCrewNumber = CustomOption.Create(2001, Types.Guesser, cs(Guesser.color, "船员阵营赌怪数"), 15f, 1f, 15f, 1f, null, true);

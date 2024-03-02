@@ -3235,6 +3235,8 @@ public static class Shifter
     public static PlayerControl currentTarget;
     public static PlayerControl InvertDuration;
 
+    public static bool modifierShiftNeutral;
+
     private static Sprite buttonSprite;
 
     public static Sprite getButtonSprite()
@@ -3433,5 +3435,6 @@ public static class Shifter
         shifter = null;
         currentTarget = null;
         futureShift = null;
+        modifierShiftNeutral = CustomOptionHolder.modifierShiftNeutral.getBool();
     }
 }
