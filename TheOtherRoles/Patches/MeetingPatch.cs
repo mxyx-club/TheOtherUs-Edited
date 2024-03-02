@@ -1113,7 +1113,7 @@ internal class MeetingHudPatch
                                     roomName =
                                         DestroyableSingleton<TranslationController>.Instance.GetString(
                                             (SystemTypes)room);
-                                output += "- " + RoleInfo.GetRolesString(p, false, false, true) + ", 最后一次出现 " +
+                                output += "- " + RoleInfo.GetRolesString(p, false, false, true) + ", 最后一次出现在 " +
                                           roomName + "\n";
                             }
 

@@ -336,8 +336,7 @@ public class OnGameEndPatch
         }
 
         // Possible Additional winner: Pursuer
-        if (Pursuer.pursuer != null && !Pursuer.pursuer.Data.IsDead && !Pursuer.notAckedExiled && !isPursurerLose &&
-            !TempData.winners.ToArray().Any(x => x.IsImpostor))
+        if (Pursuer.pursuer != null && !Pursuer.pursuer.Data.IsDead && !Pursuer.notAckedExiled && !isPursurerLose)
         {
             if (!TempData.winners.ToArray().Any(x => x.PlayerName == Pursuer.pursuer.Data.PlayerName))
                 TempData.winners.Add(new WinningPlayerData(Pursuer.pursuer.Data));

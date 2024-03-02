@@ -3,7 +3,7 @@ name: AutoBuild .NET
 on:
   push:
     branches:
-      - Dev
+      - Beta
 
 jobs:
   build:

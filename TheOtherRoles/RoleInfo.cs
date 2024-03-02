@@ -42,7 +42,6 @@ public class RoleInfo
     public static RoleInfo blackmailer = new("勒索者", Blackmailer.color, "嘘——红温警告", "勒索其他玩家使其无法发言", RoleId.Blackmailer);
     public static RoleInfo witch = new("女巫", Witch.color, "那么，代价是什么？", "对敌人下咒", RoleId.Witch);
     public static RoleInfo ninja = new("忍者", Ninja.color, "忍者之道，在于隐忍", "标记目标并闪现击杀", RoleId.Ninja);
-    //public static RoleInfo evilTrapper = new("邪恶的陷阱师", Ninja.color, "放置陷阱击杀他人", "放置陷阱击杀他人", RoleId.EvilTrapper);
 
     public static RoleInfo amnisiac = new("失忆者", Amnisiac.color, "我是你，那你是谁？", "回忆死者的记忆获取职业", RoleId.Amnisiac, true);
     public static RoleInfo jester = new("小丑", Jester.color, "让别人对你的表演叹为观止吧", "想办法驱逐自己", RoleId.Jester, true);
@@ -107,7 +106,7 @@ public class RoleInfo
 
     //public static RoleInfo badGuesser = new RoleInfo("Evil Guesser", Palette.ImpostorRed, "Guess and shoot", "Guess and shoot", RoleId.EvilGuesser);
     public static RoleInfo medium = new("通灵师", Medium.color, "这不是封建迷信！", "对灵魂通灵获取信息", RoleId.Medium);
-    public static RoleInfo trapper = new("正义的陷阱师", Trapper.color, "困于陷阱中...", "放置陷阱获取信息", RoleId.Trapper);
+    public static RoleInfo trapper = new("设陷师", Trapper.color, "困于陷阱中...", "放置陷阱获取信息", RoleId.Trapper);
 
     public static RoleInfo hunter = new("猎人", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "抓捕"), "找到并击杀所有猎物", RoleId.Impostor);
 
@@ -181,8 +180,6 @@ public class RoleInfo
         blackmailer,
         witch,
         ninja,
-        //邪恶的陷阱师
-        //evilTrapper,
 
         amnisiac,
         jester,
@@ -347,7 +344,6 @@ public class RoleInfo
         if (p == Witch.witch) infos.Add(witch);
         if (p == Escapist.escapist) infos.Add(escapist);
         if (p == Ninja.ninja) infos.Add(ninja);
-        //if (p == EvilTrapper.evilTrapper) infos.Add(evilTrapper);
         if (p == Blackmailer.blackmailer) infos.Add(blackmailer);
         if (p == Bomber.bomber) infos.Add(bomber);
         if (p == Detective.detective) infos.Add(detective);

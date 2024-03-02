@@ -86,8 +86,6 @@ public enum RoleId
     Thief,
     Poucher,
     Bomber,
-    //邪恶的陷阱师
-    //EvilTrapper,
     //魔术师
     //Arcanist,
     //天启添加

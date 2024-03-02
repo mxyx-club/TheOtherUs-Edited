@@ -792,13 +792,13 @@ public static class Medic
         reset = CustomOptionHolder.medicResetTargetAfterMeeting.getBool();
         showShielded = CustomOptionHolder.medicShowShielded.getSelection();
         showAttemptToShielded = CustomOptionHolder.medicShowAttemptToShielded.getBool();
-        //      unbreakableShield = true; //CustomOptionHolder.medicBreakShield.getBool();
+        //unbreakableShield = true; //CustomOptionHolder.medicBreakShield.getBool();
         unbreakableShield = CustomOptionHolder.medicBreakShield.getBool();
         showAttemptToMedic = CustomOptionHolder.medicShowAttemptToMedic.getBool();
         setShieldAfterMeeting = CustomOptionHolder.medicSetOrShowShieldAfterMeeting.getSelection() == 2;
         showShieldAfterMeeting = CustomOptionHolder.medicSetOrShowShieldAfterMeeting.getSelection() == 1;
-        ReportNameDuration = CustomOptionHolder.medicReportNameDuration.getFloat();
-        ReportColorDuration = CustomOptionHolder.medicReportColorDuration.getFloat();
+        //ReportNameDuration = CustomOptionHolder.medicReportNameDuration.getFloat();
+        //ReportColorDuration = CustomOptionHolder.medicReportColorDuration.getFloat();
         meetingAfterShielding = false;
     }
 }
@@ -2346,7 +2346,7 @@ public static class Medium
                     break;
             }
 
-            msg += $"\n你问我的时候,有{count} " + condition + (count == 1 ? " " : "都") + " 依然活着";
+            msg += $"\n你问我的时候,有{count} " + condition + (count == 1 ? "" : "") + " 活着";
         }
 
         return Medium.target.player.Data.PlayerName + " 的灵魂说:\n" + msg;
@@ -2862,9 +2862,9 @@ public static class Bait
     public static Color color = new Color32(0, 247, 255, byte.MaxValue);
 
     public static float reportDelayMin;
-    public static bool SwapNeutral;
     public static bool SwapCrewmate;
-    public static bool SwapImpostor;
+    //public static bool SwapImpostor;
+    //public static bool SwapNeutral;
     public static float reportDelayMax;
     public static bool showKillFlash = true;
 
@@ -2877,8 +2877,8 @@ public static class Bait
         if (reportDelayMin > reportDelayMax) reportDelayMin = reportDelayMax;
         showKillFlash = CustomOptionHolder.modifierBaitShowKillFlash.getBool();
         SwapCrewmate = CustomOptionHolder.modifierBaitSwapCrewmate.getBool();
-        SwapNeutral = CustomOptionHolder.modifierBaitSwapNeutral.getBool();
-        SwapImpostor = CustomOptionHolder.modifierBaitSwapImpostor.getBool();
+        //SwapNeutral = CustomOptionHolder.modifierBaitSwapNeutral.getBool();
+        //SwapImpostor = CustomOptionHolder.modifierBaitSwapImpostor.getBool();
     }
 }
 
@@ -3050,6 +3050,7 @@ public static class Torch
     public static void clearAndReload()
     {
         torch = new List<PlayerControl>();
+        vision = CustomOptionHolder.modifierTorchVision.getSelection() + 1;
     }
 }
 

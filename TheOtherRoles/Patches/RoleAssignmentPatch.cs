@@ -188,11 +188,16 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Tracker, CustomOptionHolder.trackerSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Snitch, CustomOptionHolder.snitchSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Medium, CustomOptionHolder.mediumSpawnRate.getSelection());
-        crewSettings.Add((byte)RoleId.NiceGuesser, CustomOptionHolder.guesserSpawnRate.getSelection());
+        if (isGuesserGamemode == false)
+        {
+            crewSettings.Add((byte)RoleId.NiceGuesser, CustomOptionHolder.guesserSpawnRate.getSelection());
+        }
         crewSettings.Add((byte)RoleId.Trapper, CustomOptionHolder.trapperSpawnRate.getSelection());
         if (impostors.Count > 1)
+        {
             // Only add Spy if more than 1 impostor as the spy role is otherwise useless
             crewSettings.Add((byte)RoleId.Spy, CustomOptionHolder.spySpawnRate.getSelection());
+        }
         crewSettings.Add((byte)RoleId.SecurityGuard, CustomOptionHolder.securityGuardSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Jumper, CustomOptionHolder.jumperSpawnRate.getSelection());
 
@@ -875,20 +880,39 @@ internal class RoleManagerSelectRolesPatch
 
             modifiers.RemoveAll(x => x == RoleId.Sunglasses);
         }
-        //诱饵
-        
-        if (CustomOptionHolder.modifierBaitSwapCrewmate.getBool() & modifiers.Contains(RoleId.Bait))
+        /*
+        if(CustomOptionHolder.modifierBaitSwapImpostor.getBool() && 
+            CustomOptionHolder.modifierBaitSwapNeutral.getBool() &&
+            modifiers.Contains(RoleId.Bait))
         {
-            var baitCount = 0;
-            var impPlayer = new List<PlayerControl>(playerList); //testing
-            while (baitCount < modifiers.FindAll(x => x == RoleId.Bait).Count)
+            var crewPlayerS = new List<PlayerControl>(playerList);
+            if (CustomOptionHolder.modifierBaitSwapImpostor.getBool())
             {
-                playerId = setModifierToRandomPlayer((byte)RoleId.Bait, crewPlayer);
-                crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+                playerId = setModifierToRandomPlayer((byte)RoleId.Bait, crewPlayerS);
+                crewPlayerS.RemoveAll(x => RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
                 playerList.RemoveAll(x => x.PlayerId == playerId);
-                baitCount++;
+                modifiers.RemoveAll(x => x == RoleId.Bait);
             }
-
+            else if (CustomOptionHolder.modifierBaitSwapNeutral.getBool())
+            {
+                playerId = setModifierToRandomPlayer((byte)RoleId.Bait, crewPlayerS);
+                crewPlayerS.RemoveAll(x => x.Data.Role.IsImpostor);
+                playerList.RemoveAll(x => x.PlayerId == playerId);
+                modifiers.RemoveAll(x => x == RoleId.Bait);
+            }
+            else
+            {
+                playerId = setModifierToRandomPlayer((byte)RoleId.Bait, crewPlayerS);
+                crewPlayerS.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
+                playerList.RemoveAll(x => x.PlayerId == playerId);
+                modifiers.RemoveAll(x => x == RoleId.Bait);
+            }
+        }*/
+        if (CustomOptionHolder.modifierBaitSwapCrewmate.getBool() && modifiers.Contains(RoleId.Bait))
+        {
+            playerId = setModifierToRandomPlayer((byte)RoleId.Bait, crewPlayer);
+            crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+            playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Bait);
         }
 

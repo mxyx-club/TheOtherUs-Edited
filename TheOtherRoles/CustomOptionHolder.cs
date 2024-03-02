@@ -226,8 +226,8 @@ public class CustomOptionHolder
     public static CustomOption medicSetShieldAfterMeeting;
     public static CustomOption medicBreakShield;
     public static CustomOption medicResetTargetAfterMeeting;
-    public static CustomOption medicReportNameDuration;
-    public static CustomOption medicReportColorDuration;
+    //public static CustomOption medicReportNameDuration;
+    //public static CustomOption medicReportColorDuration;
 
     public static CustomOption swapperSpawnRate;
     public static CustomOption swapperCanCallEmergency;
@@ -271,16 +271,6 @@ public class CustomOptionHolder
     public static CustomOption tricksterPlaceBoxCooldown;
     public static CustomOption tricksterLightsOutCooldown;
     public static CustomOption tricksterLightsOutDuration;
-
-    public static CustomOption EvilTrapperSpawnRate;
-    public static CustomOption EvilTrapperNumTrap;
-    public static CustomOption EvilTrapperExtensionTime;
-    public static CustomOption EvilTrapperCooldown;
-    public static CustomOption EvilTrapperKillTimer;
-    public static CustomOption EvilTrapperTrapRange;
-    public static CustomOption EvilTrapperMaxDistance;
-    public static CustomOption EvilTrapperPenaltyTime;
-    public static CustomOption EvilTrapperBonusTime;
 
     public static CustomOption cleanerSpawnRate;
     public static CustomOption cleanerCooldown;
@@ -409,9 +399,9 @@ public class CustomOptionHolder
     public static CustomOption modifierBaitReportDelayMin;
     public static CustomOption modifierBaitReportDelayMax;
     public static CustomOption modifierBaitShowKillFlash;
-    public static CustomOption modifierBaitSwapNeutral;
-    public static CustomOption modifierBaitSwapImpostor;
     public static CustomOption modifierBaitSwapCrewmate;
+    //public static CustomOption modifierBaitSwapNeutral;
+    //public static CustomOption modifierBaitSwapImpostor;
 
     public static CustomOption modifierLover;
     public static CustomOption modifierLoverImpLoverRate;
@@ -725,17 +715,7 @@ public class CustomOptionHolder
         tricksterPlaceBoxCooldown = CustomOption.Create(251, Types.Impostor, "放置惊吓盒冷却", 10f, 2.5f, 30f, 2.5f, tricksterSpawnRate);
         tricksterLightsOutCooldown = CustomOption.Create(252, Types.Impostor, "熄灯冷却", 30f, 10f, 60f, 2.5f, tricksterSpawnRate);
         tricksterLightsOutDuration = CustomOption.Create(253, Types.Impostor, "熄灯持续时间", 10f, 5f, 60f, 0.5f, tricksterSpawnRate);
-        /*
-        EvilTrapperSpawnRate = CustomOption.Create(8016, Types.Impostor, cs(Trapper.color, "邪恶的陷阱师"), rates, null, true);
-        EvilTrapperNumTrap = CustomOption.Create(8017, Types.Impostor, "最大可同时放下的陷阱数", 2f, 1f, 10f, 1f, EvilTrapperSpawnRate);
-        EvilTrapperExtensionTime = CustomOption.Create(8018, Types.Impostor, "陷阱激活所需时间", 5f, 1f, 15f, 0.5f, EvilTrapperSpawnRate);
-        EvilTrapperCooldown = CustomOption.Create(8019, Types.Impostor, "放置陷阱冷却", 10f, 10f, 60f, 2.5f, EvilTrapperSpawnRate);
-        EvilTrapperKillTimer = CustomOption.Create(8025, Types.Impostor, "掉进陷阱后被陷阱击杀所需时间", 5f, 0f, 30f, 0.5f, EvilTrapperSpawnRate);
-        EvilTrapperTrapRange = CustomOption.Create(8021, Types.Impostor, "陷阱有效范围", 1f, 0.5f, 5f, 0.1f, EvilTrapperSpawnRate);
-        EvilTrapperMaxDistance = CustomOption.Create(8022, Types.Impostor, "陷阱击杀声音播放有效范围", 10f, 1f, 60f, 1f, EvilTrapperSpawnRate);
-        EvilTrapperPenaltyTime = CustomOption.Create(8023, Types.Impostor, "设陷者进行通常击杀的追加冷却", 10f, 0f, 30f, 0.5f, EvilTrapperSpawnRate);
-        EvilTrapperBonusTime = CustomOption.Create(8024, Types.Impostor, "设陷者通常击杀落入陷阱的玩家的缩减冷却", 5f, 0f, 15f, 0.5f, EvilTrapperSpawnRate);
-        */
+
         cleanerSpawnRate = CustomOption.Create(260, Types.Impostor, cs(Cleaner.color, "清理者"), rates, null, true);
         cleanerCooldown = CustomOption.Create(261, Types.Impostor, "清理冷却", 30f, 10f, 60f, 2.5f, cleanerSpawnRate);
 
@@ -861,7 +841,7 @@ public class CustomOptionHolder
         mayorMeetingButton = CustomOption.Create(83, Types.Crewmate, "可远程召开会议", true, mayorSpawnRate);
         mayorMaxRemoteMeetings = CustomOption.Create(84, Types.Crewmate, "远程召开会议可用次数", 1f, 1f, 5f, 1f, mayorMeetingButton);
         mayorTaskRemoteMeetings = CustomOption.Create(85, Types.Crewmate, "可在破坏时使用", false, mayorMeetingButton);
-        mayorChooseSingleVote = CustomOption.Create(85, Types.Crewmate, "市长可选择投单票", new[] { "关闭", "投票前选择", "会议结束前选择" }, mayorSpawnRate);
+        mayorChooseSingleVote = CustomOption.Create(85, Types.Crewmate, "市长可选择投单票", ["关闭", "投票前选择", "会议结束前选择"], mayorSpawnRate);
 
         engineerSpawnRate = CustomOption.Create(90, Types.Crewmate, cs(Engineer.color, "工程师"), rates, null, true);
         engineerRemoteFix = CustomOption.Create(911221, Types.Crewmate, "可远程修理破坏", true, engineerSpawnRate);
@@ -876,7 +856,7 @@ public class CustomOptionHolder
 
         sheriffSpawnRate = CustomOption.Create(100, Types.Crewmate, cs(Sheriff.color, "警长"), rates, null, true);
         sheriffCooldown = CustomOption.Create(101, Types.Crewmate, "执法冷却", 30f, 10f, 60f, 2.5f, sheriffSpawnRate);
-        sheriffMisfireKills = CustomOption.Create(2101, Types.Crewmate, "走火时死亡对象", new[] { "警长", "对方", "双方" }, sheriffSpawnRate);
+        sheriffMisfireKills = CustomOption.Create(2101, Types.Crewmate, "走火时死亡对象", ["警长", "对方", "双方"], sheriffSpawnRate);
         sheriffCanKillNeutrals = CustomOption.Create(102, Types.Crewmate, "可执法独立阵营", false, sheriffSpawnRate);
         sheriffCanKillJester = CustomOption.Create(2104, Types.Crewmate, "可执法 " + cs(Jester.color, "小丑"), false, sheriffCanKillNeutrals);
         sheriffCanKillProsecutor = CustomOption.Create(2105, Types.Crewmate, "可执法 " + cs(Lawyer.color, "处刑者"), false, sheriffCanKillNeutrals);
@@ -892,7 +872,7 @@ public class CustomOptionHolder
         deputyHandcuffCooldown = CustomOption.Create(105, Types.Crewmate, "手铐冷却", 30f, 10f, 60f, 2.5f, deputySpawnRate);
         deputyHandcuffDuration = CustomOption.Create(106, Types.Crewmate, "手铐持续时间", 15f, 5f, 60f, 2.5f, deputySpawnRate);
         deputyKnowsSheriff = CustomOption.Create(107, Types.Crewmate, "警长/捕快可以互相确认 ", true, deputySpawnRate);
-        deputyGetsPromoted = CustomOption.Create(108, Types.Crewmate, "警长死后捕快可晋升", new[] { "否", "立即晋升", "会议后晋升" }, deputySpawnRate);
+        deputyGetsPromoted = CustomOption.Create(108, Types.Crewmate, "警长死后捕快可晋升", ["否", "立即晋升", "会议后晋升"], deputySpawnRate);
         deputyKeepsHandcuffs = CustomOption.Create(109, Types.Crewmate, "晋升后保留手铐技能", true, deputyGetsPromoted);
 
         lighterSpawnRate = CustomOption.Create(110, Types.Crewmate, cs(Lighter.color, "执灯人"), rates, null, true);
@@ -913,7 +893,7 @@ public class CustomOptionHolder
         medicShowAttemptToMedic = CustomOption.Create(146, Types.Crewmate, "法医可见击杀尝试", true, medicBreakShield);
         medicShowAttemptToShielded = CustomOption.Create(144, Types.Crewmate, "被保护者可见击杀尝试", false, medicBreakShield);
         medicResetTargetAfterMeeting = CustomOption.Create(147, Types.Crewmate, "会议后重置保护目标", false, medicSpawnRate);
-        medicSetOrShowShieldAfterMeeting = CustomOption.Create(145, Types.Crewmate, "护盾生效与可见时机", new[] { "立即生效且可见", "立即生效且会议后可见", "会议后生效且可见" },medicSpawnRate);
+        medicSetOrShowShieldAfterMeeting = CustomOption.Create(145, Types.Crewmate, "护盾生效与可见时机", ["立即生效且可见", "立即生效且会议后可见", "会议后生效且可见"],medicSpawnRate);
         //medicReportNameDuration = CustomOption.Create(148, Types.Crewmate, "以下时间内报告可得知凶手名字", 5, 0, 60, 2.5f, medicBreakShield);
         //medicReportColorDuration = CustomOption.Create(149, Types.Crewmate, "以下时间内报告可得知凶手颜色类型", 30, 0, 120, 2.5f, medicBreakShield);
 
@@ -934,7 +914,7 @@ public class CustomOptionHolder
         swapperRechargeTasksNumber = CustomOption.Create(154, Types.Crewmate, "充能所需任务数", 2f, 1f, 10f, 1f, swapperSpawnRate);
 
         seerSpawnRate = CustomOption.Create(160, Types.Crewmate, cs(Seer.color, "灵媒"), rates, null, true);
-        seerMode = CustomOption.Create(161, Types.Crewmate, "感知模式", new[] { "死亡闪光+可见灵魂", "死亡闪光", "可见灵魂" }, seerSpawnRate);
+        seerMode = CustomOption.Create(161, Types.Crewmate, "感知模式", ["死亡闪光+可见灵魂", "死亡闪光", "可见灵魂"], seerSpawnRate);
         seerLimitSoulDuration = CustomOption.Create(163, Types.Crewmate, "限制灵魂可见时间", false, seerSpawnRate);
         seerSoulDuration = CustomOption.Create(162, Types.Crewmate, "灵魂可见时间", 15f, 0f, 120f, 2.5f, seerLimitSoulDuration);
 
@@ -955,8 +935,8 @@ public class CustomOptionHolder
 
         snitchSpawnRate = CustomOption.Create(210, Types.Crewmate, cs(Snitch.color, "告密者"), rates, null, true);
         snitchLeftTasksForReveal = CustomOption.Create(219, Types.Crewmate, "剩余多少任务时可被发现", 1f, 0f, 10f, 1f, snitchSpawnRate);
-        snitchMode = CustomOption.Create(211, Types.Crewmate, "信息显示", new[] { "聊天框", "地图", "聊天框+地图" }, snitchSpawnRate);
-        snitchTargets = CustomOption.Create(212, Types.Crewmate, "显示目标", new[] { "所有邪恶职业", "杀手职业" }, snitchSpawnRate);
+        snitchMode = CustomOption.Create(211, Types.Crewmate, "信息显示", ["聊天框", "地图", "聊天框+地图"], snitchSpawnRate);
+        snitchTargets = CustomOption.Create(212, Types.Crewmate, "显示目标", ["所有邪恶职业", "杀手职业"], snitchSpawnRate);
 
         spySpawnRate = CustomOption.Create(240, Types.Crewmate, cs(Spy.color, "卧底"), rates, null, true);
         spyCanDieToSheriff = CustomOption.Create(241, Types.Crewmate, "可被警长执法", false, spySpawnRate);
@@ -999,7 +979,7 @@ public class CustomOptionHolder
         ArcanistTeleportTime = CustomOption.Create(11243, Types.Crewmate, "传送冷却", 15f, 0f, 60f, 2.5f, ArcanistSpawnRate);
         ArcanistProbabilityBlueCards = CustomOption.Create(11244, Types.Crewmate, "抽到蓝牌的概率", rates, ArcanistSpawnRate);
         ArcanistProbabilityRedCards = CustomOption.Create(11245, Types.Crewmate, "抽到红牌的概率", rates, ArcanistSpawnRate);
-        ArcanistProbabilityWhiteCards = CustomOption.Create(11246, Types.Crewmate, "抽到白牌的概率", rates, ArcanistSpawnRate);
+        ArcanistProbabilityWhiteCards = CustomOption.Create(11246, Types.Crewmate, "抽到紫牌的概率", rates, ArcanistSpawnRate);
         */
         bodyGuardSpawnRate = CustomOption.Create(8820, Types.Crewmate, cs(BodyGuard.color, "保镖"), rates, null, true);
         bodyGuardResetTargetAfterMeeting = CustomOption.Create(8821, Types.Crewmate, "会议后重置保护目标", true, bodyGuardSpawnRate);
@@ -1012,13 +992,13 @@ public class CustomOptionHolder
         thiefCanUseVents = CustomOption.Create(404, Types.Neutral, "身份窃贼可以使用管道", true, thiefSpawnRate);
         thiefCanStealWithGuess = CustomOption.Create(405, Types.Neutral, "身份窃贼可通过猜测窃取身份\n(赌怪模式)", false, thiefSpawnRate);
 
-        trapperSpawnRate = CustomOption.Create(410, Types.Crewmate, cs(Trapper.color, "正义的陷阱师"), rates, null, true);
+        trapperSpawnRate = CustomOption.Create(410, Types.Crewmate, cs(Trapper.color, "设陷师"), rates, null, true);
         trapperCooldown = CustomOption.Create(420, Types.Crewmate, "放置冷却", 20f, 5f, 120f, 2.5f, trapperSpawnRate);
         trapperMaxCharges = CustomOption.Create(440, Types.Crewmate, "最大陷阱数", 3f, 1f, 15f, 1f, trapperSpawnRate);
         trapperRechargeTasksNumber = CustomOption.Create(450, Types.Crewmate, "充能所需任务数", 2f, 1f, 15f, 1f, trapperSpawnRate);
         trapperTrapNeededTriggerToReveal = CustomOption.Create(451, Types.Crewmate, "陷阱触发提示所需人数", 2f, 1f, 10f, 1f, trapperSpawnRate);
         trapperAnonymousMap = CustomOption.Create(452, Types.Crewmate, "显示匿名地图", false, trapperSpawnRate);
-        trapperInfoType = CustomOption.Create(453, Types.Crewmate, "陷阱信息类型", new[] { "职业", "善良/邪恶", "名字" }, trapperSpawnRate);
+        trapperInfoType = CustomOption.Create(453, Types.Crewmate, "陷阱信息类型", ["职业", "善良/邪恶", "名字"], trapperSpawnRate);
         trapperTrapDuration = CustomOption.Create(454, Types.Crewmate, "陷阱定身时间", 5f, 1f, 15f, 0.5f, trapperSpawnRate);
         // Modifier (1000 - 1999)
         modifiersAreHidden = CustomOption.Create(1009, Types.Modifier, cs(Color.yellow, "隐藏死亡触发的附加职业"), true, null, true);
@@ -1035,7 +1015,7 @@ public class CustomOptionHolder
         modifierTieBreaker = CustomOption.Create(1020, Types.Modifier, cs(Color.yellow, "破平者"), rates, null, true);
 
         modifierBait = CustomOption.Create(1030, Types.Modifier, cs(Color.yellow, "诱饵"), rates, null, true);
-        modifierBaitSwapCrewmate = CustomOption.Create(1037, Types.Modifier, "只分配给船员阵营", false, modifierBait);
+        modifierBaitSwapCrewmate = CustomOption.Create(1035, Types.Modifier, "只分配给船员阵营", true, modifierBait);
         //modifierBaitSwapNeutral = CustomOption.Create(1035, Types.Modifier, "可分配至中立阵营", true, modifierBait);
         //modifierBaitSwapImpostor = CustomOption.Create(1036, Types.Modifier, "可分配至伪装者阵营", true, modifierBait);
         modifierBaitReportDelayMin = CustomOption.Create(1032, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 0.1f, modifierBait);
@@ -1049,7 +1029,7 @@ public class CustomOptionHolder
 
         modifierSunglasses = CustomOption.Create(1050, Types.Modifier, cs(Color.yellow, "太阳镜"), rates, null, true);
         modifierSunglassesQuantity = CustomOption.Create(1051, Types.Modifier, cs(Color.yellow, "太阳镜数量"), ratesModifier, modifierSunglasses);
-        modifierSunglassesVision = CustomOption.Create(1052, Types.Modifier, "太阳镜的视野倍率", new[] { "-10%", "-20%", "-30%", "-40%", "-50%" }, modifierSunglasses);
+        modifierSunglassesVision = CustomOption.Create(1052, Types.Modifier, "太阳镜的视野倍率", ["-10%", "-20%", "-30%", "-40%", "-50%"], modifierSunglasses);
 
         modifierTorch = CustomOption.Create(1053, Types.Modifier, cs(Color.yellow, "火炬"), rates, null, true);
         modifierTorchQuantity = CustomOption.Create(1054, Types.Modifier, cs(Color.yellow, "火炬人数"), ratesModifier, modifierTorch);
@@ -1088,7 +1068,7 @@ public class CustomOptionHolder
         modifierChameleonQuantity = CustomOption.Create(1091, Types.Modifier, cs(Color.yellow, "变色龙数量"), ratesModifier, modifierChameleon);
         modifierChameleonHoldDuration = CustomOption.Create(1092, Types.Modifier, "从不动到褪色开始的间隔时间", 3f, 1f, 10f, 0.5f, modifierChameleon);
         modifierChameleonFadeDuration = CustomOption.Create(1093, Types.Modifier, "褪色过程持续时间", 1f, 0.25f, 10f, 0.25f, modifierChameleon);
-        modifierChameleonMinVisibility = CustomOption.Create(1094, Types.Modifier, "最低透明度", new[] { "0%", "10%", "20%", "30%", "40%", "50%" }, modifierChameleon);
+        modifierChameleonMinVisibility = CustomOption.Create(1094, Types.Modifier, "最低透明度", ["0%", "10%", "20%", "30%", "40%", "50%"], modifierChameleon);
 
         modifierShifter = CustomOption.Create(1100, Types.Modifier, cs(Color.yellow, "交换师"), rates, null, true);
         modifierShiftNeutral = CustomOption.Create(1091, Types.Modifier, "可交换部分中立职业", false, modifierShifter);
@@ -1108,7 +1088,7 @@ public class CustomOptionHolder
 
         // Hide N Seek Gamemode (3000 - 3999)
         hideNSeekMap = CustomOption.Create(3020, Types.HideNSeekMain, cs(Color.yellow, "地图"),
-            new[] { "骷髅舰", "米拉总部", "波鲁斯", "飞艇", "真菌丛林", "潜艇", "自定义地图" }, null, true, () =>
+            ["骷髅舰", "米拉总部", "波鲁斯", "飞艇", "真菌丛林", "潜艇", "自定义地图"], null, true, () =>
             {
                 var map = hideNSeekMap.selection;
                 if (map >= 3) map++;
@@ -1176,7 +1156,6 @@ public class CustomOptionHolder
         propHuntSpeedboostCooldown = CustomOption.Create(4017, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑冷却时间"), 45f, 2.5f, 120f, 2.5f, propHuntSpeedboostEnabled);
         propHuntSpeedboostDuration = CustomOption.Create(4018, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑持续时间"), 10f, 2.5f, 30f, 2.5f, propHuntSpeedboostEnabled);
         propHuntSpeedboostSpeed = CustomOption.Create(4019, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑提升速度"), 2f, 1.25f, 5f, 0.25f, propHuntSpeedboostEnabled);
-
 
         // Other options 1-599
         buttonCooldownFormat = CustomOption.Create(16, Types.General, "游戏开局时重置CD", 10f, 2.5f, 30f, 2.5f);
