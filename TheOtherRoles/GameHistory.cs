@@ -18,6 +18,8 @@ public class DeadPlayer
         LoverSuicide, // not necessary
         WitchExile,
         Bomb,
+        LoveStolen,
+        Loneliness,
         Arson
     }
 

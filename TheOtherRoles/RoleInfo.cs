@@ -67,6 +67,8 @@ public class RoleInfo
     //添加末日预言家
     public static RoleInfo doomsayer = new("末日预言家", Doomsayer.color, "将人类以善恶来区分这根本就是愚蠢的想法", "观察其他玩家，并在会议时刺杀他们", RoleId.Doomsayer, true);
 
+    public static RoleInfo akujo = new RoleInfo("魅魔", Akujo.color, "你们都是我的翅膀！", "招募真爱和备胎并且活下去！", RoleId.Akujo, true);
+
     public static RoleInfo crewmate = new("船员", Color.white, "哈哈！白板船员~", "发现并驱逐伪装者", RoleId.Crewmate);
 
     public static RoleInfo goodGuesser = new("侠客", Guesser.color, "生命就是一场豪赌", "在会议上刺杀坏人", RoleId.NiceGuesser);
@@ -197,6 +199,7 @@ public class RoleInfo
         juggernaut,
         //末日预言家
         doomsayer,
+        akujo,
 
         crewmate,
         goodGuesser,
@@ -380,6 +383,7 @@ public class RoleInfo
         //天启
         if (p == Juggernaut.juggernaut) infos.Add(juggernaut);
         if (p == Doomsayer.doomsayer) infos.Add(doomsayer);
+        if (p == Akujo.akujo) infos.Add(akujo);
 
         // Default roles (just impostor, just crewmate, or hunter / hunted for hide n seek, prop hunt prop ...
         if (infos.Count == count)
@@ -447,6 +451,10 @@ public class RoleInfo
                         $" ({CachedPlayer.AllPlayers.Count(x => { return x.PlayerControl != Arsonist.arsonist && !x.Data.IsDead && !x.Data.Disconnected && !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); })} left)");
                 if (p == Jackal.fakeSidekick)
                     roleName = Helpers.cs(Sidekick.color, " (假跟班) ") + roleName;
+                if (Akujo.keeps.Contains(p))
+                    roleName = Helpers.cs(Color.gray, "(备胎)") + roleName;
+                if (p == Akujo.honmei)
+                    roleName = Helpers.cs(Akujo.color, "(真爱)") + roleName;
                 /*
                 if ((p == Swooper.swooper) && Jackal.canSwoop2)
                     roleName = Helpers.cs(Swooper.color, $" (Swooper) ") + roleName;
@@ -504,6 +512,14 @@ public class RoleInfo
                             case DeadPlayer.CustomDeathReason.Arson:
                                 deathReasonString =
                                     $" - 被烧死于 {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
+                                break;
+                            case DeadPlayer.CustomDeathReason.LoveStolen:
+                                deathReasonString = 
+                                    $" - {Helpers.cs(Lovers.color, "爱人被夺")}";
+                                break;
+                            case DeadPlayer.CustomDeathReason.Loneliness:
+                                deathReasonString = 
+                                    $" - {Helpers.cs(Akujo.color, "精力衰竭")}";
                                 break;
                         }
 

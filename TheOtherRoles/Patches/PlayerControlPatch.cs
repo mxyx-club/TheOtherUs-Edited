@@ -721,8 +721,10 @@ public static class PlayerControlFixedUpdatePatch
             p.cosmetics.nameText.transform.parent
                 .SetLocalZ(-0.0001f); // This moves both the name AND the colorblindtext behind objects (if the player is behind the object), like the rock on polus
 
-            if ((Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer &&
-                 p == Lawyer.target) || p == CachedPlayer.LocalPlayer.PlayerControl ||
+            if ((Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target) ||
+                   (Akujo.knowsRoles && CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo &&
+                   (p == Akujo.honmei || Akujo.keeps.Any(x => x.PlayerId == p.PlayerId))) || 
+                   p == CachedPlayer.LocalPlayer.PlayerControl ||
                 CachedPlayer.LocalPlayer.Data.IsDead ||
                 (CachedPlayer.LocalPlayer.PlayerControl == Slueth.slueth &&
                  Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) ||
@@ -1587,6 +1589,45 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
+    public static void akujoUpdate()
+    {
+        if (Akujo.akujo == null || Akujo.akujo.Data.IsDead || CachedPlayer.LocalPlayer.PlayerControl != Akujo.akujo) return;
+        Akujo.timeLeft = (int)Math.Ceiling(Akujo.timeLimit - (DateTime.UtcNow - Akujo.startTime).TotalSeconds);
+        if (Akujo.timeLeft > 0)
+        {
+            if (Akujo.honmei == null)
+            {
+                if (HudManagerStartPatch.akujoTimeRemainingText != null)
+                {
+                    HudManagerStartPatch.akujoTimeRemainingText.text = TimeSpan.FromSeconds(Akujo.timeLeft).ToString(@"mm\:ss");
+                }
+                HudManagerStartPatch.akujoTimeRemainingText.enabled = !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) &&
+                  !MeetingHud.Instance &&
+                  !ExileController.Instance;
+            }
+            else HudManagerStartPatch.akujoTimeRemainingText.enabled = false;
+        }
+        else if (Akujo.timeLeft <= 0)
+        {
+            if (Akujo.honmei == null)
+            {
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSuicide, Hazel.SendOption.Reliable, -1);
+                writer.Write(Akujo.akujo.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.akujoSuicide(Akujo.akujo.PlayerId);
+            }
+        }
+    }
+
+    public static void akujoSetTarget()
+    {
+        if (Akujo.akujo == null || Akujo.akujo.Data.IsDead || CachedPlayer.LocalPlayer.PlayerControl != Akujo.akujo) return;
+        var untargetables = new List<PlayerControl>();
+        if (Akujo.honmei != null) untargetables.Add(Akujo.honmei);
+        if (Akujo.keeps != null) untargetables.AddRange(Akujo.keeps);
+        Akujo.currentTarget = setTarget(untargetablePlayers: untargetables);
+        if (Akujo.honmei == null || Akujo.keepsLeft > 0) setPlayerOutline(Akujo.currentTarget, Akujo.color);
+    }
     public static void Postfix(PlayerControl __instance)
     {
         if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started ||
@@ -1715,7 +1756,9 @@ public static class PlayerControlFixedUpdatePatch
             hackerUpdate();
             // Trapper
             trapperUpdate();
-
+            //魅魔
+            akujoUpdate();
+            akujoSetTarget();
             // -- MODIFIER--
             // Bait
             baitUpdate();
@@ -2024,15 +2067,27 @@ public static class MurderPlayerPatch
                 }
             }
         }
-
         // Snitch
         if (Snitch.snitch != null && CachedPlayer.LocalPlayer.PlayerId == Snitch.snitch.PlayerId &&
             MapBehaviourPatch.herePoints.Keys.Any(x => x.PlayerId == target.PlayerId))
+        {
             foreach (var a in MapBehaviourPatch.herePoints.Where(x => x.Key.PlayerId == target.PlayerId))
             {
                 Object.Destroy(a.Value);
                 MapBehaviourPatch.herePoints.Remove(a.Key);
             }
+        }
+        // Akujo Lovers trigger suicide
+        if ((Akujo.akujo != null && target == Akujo.akujo) || (Akujo.honmei != null && target == Akujo.honmei))
+        {
+            PlayerControl akujoPartner = target == Akujo.akujo ? Akujo.honmei : Akujo.akujo;
+            if (akujoPartner != null && !akujoPartner.Data.IsDead)
+            {
+                akujoPartner.MurderPlayer(akujoPartner, MurderResultFlags.Succeeded);
+                GameHistory.overrideDeathReasonAndKiller(akujoPartner, DeadPlayer.CustomDeathReason.LoverSuicide);
+            }
+        }
+
     }
 }
 
@@ -2159,6 +2214,31 @@ public static class ExilePlayerPatch
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 overrideDeathReasonAndKiller(lawyer, DeadPlayer.CustomDeathReason.LawyerSuicide,
                     lawyer); // TODO: only executed on host?!
+            }
+        }
+        // Akujo Partner suicide
+        if ((Akujo.akujo != null && Akujo.akujo == __instance) || (Akujo.honmei != null && Akujo.honmei == __instance))
+        {
+            PlayerControl akujoPartner = __instance == Akujo.akujo ? Akujo.honmei : Akujo.akujo;
+            if (akujoPartner != null && !akujoPartner.Data.IsDead)
+            {
+                akujoPartner.Exiled();
+                GameHistory.overrideDeathReasonAndKiller(akujoPartner, DeadPlayer.CustomDeathReason.LoverSuicide);
+            }
+
+            if (MeetingHud.Instance && akujoPartner != null)
+            {
+                foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates)
+                {
+                    if (pva.VotedFor != akujoPartner.PlayerId) continue;
+                    pva.UnsetVote();
+                    var voteAreaPlayer = Helpers.playerById(pva.TargetPlayerId);
+                    if (!voteAreaPlayer.AmOwner) continue;
+                    MeetingHud.Instance.ClearVote();
+                }
+
+                if (AmongUsClient.Instance.AmHost)
+                    MeetingHud.Instance.CheckForEndVoting();
             }
         }
     }

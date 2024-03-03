@@ -590,6 +590,7 @@ public static class Helpers
                player == Sidekick.sidekick ||
                player == Doomsayer.doomsayer ||
                player == Pursuer.pursuer ||
+               player == Akujo.akujo ||
                player == Swooper.swooper ||
                player == Lawyer.lawyer ||
                player == Vulture.vulture ||
@@ -1341,6 +1342,7 @@ public static class Helpers
                        roleInfo.color.Equals(Sidekick.color) ||
                        roleInfo.color.Equals(Werewolf.color) ||
                        roleInfo.color.Equals(Lawyer.color) ||
+                       roleInfo.color.Equals(Akujo.color) ||
                        roleInfo.color.Equals(Juggernaut.color) ||
                        roleInfo.color.Equals(Swooper.color) ||
                        roleInfo.color.Equals(Arsonist.color);
@@ -1361,6 +1363,7 @@ public static class Helpers
                 player != Jester.jester &&
                 player != Arsonist.arsonist &&
                 player != Vulture.vulture &&
+                player != Akujo.akujo &&
                 player != Lawyer.lawyer &&
                 player != Pursuer.pursuer);
     }
