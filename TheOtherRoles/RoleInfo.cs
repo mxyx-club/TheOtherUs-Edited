@@ -422,7 +422,7 @@ public class RoleInfo
             if (p == Vulture.vulture && (CachedPlayer.LocalPlayer.PlayerControl == Vulture.vulture ||
                                          Helpers.shouldShowGhostInfo()))
                 roleName = roleName + Helpers.cs(Vulture.color,
-                    $" ({Vulture.vultureNumberToWin - Vulture.eatenBodies} 剩余)");
+                    $" (剩余 {Vulture.vultureNumberToWin - Vulture.eatenBodies} )");
             if (Helpers.shouldShowGhostInfo())
             {
                 if (Eraser.futureErased.Contains(p))
@@ -448,13 +448,14 @@ public class RoleInfo
                     roleName = Helpers.cs(Arsonist.color, "♨ ") + roleName;
                 if (p == Arsonist.arsonist)
                     roleName = roleName + Helpers.cs(Arsonist.color,
-                        $" ({CachedPlayer.AllPlayers.Count(x => { return x.PlayerControl != Arsonist.arsonist && !x.Data.IsDead && !x.Data.Disconnected && !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); })} left)");
+                        $" (剩余 {CachedPlayer.AllPlayers.Count(x => { return x.PlayerControl != Arsonist.arsonist && !x.Data.IsDead && !x.Data.Disconnected && !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); })} )");
                 if (p == Jackal.fakeSidekick)
                     roleName = Helpers.cs(Sidekick.color, " (假跟班) ") + roleName;
                 if (Akujo.keeps.Contains(p))
-                    roleName = Helpers.cs(Color.gray, "(备胎)") + roleName;
+                    roleName = Helpers.cs(Color.gray, "(备胎) ") + roleName;
                 if (p == Akujo.honmei)
-                    roleName = Helpers.cs(Akujo.color, "(真爱)") + roleName;
+                    roleName = Helpers.cs(Akujo.color, "(真爱) ") + roleName;
+
                 /*
                 if ((p == Swooper.swooper) && Jackal.canSwoop2)
                     roleName = Helpers.cs(Swooper.color, $" (Swooper) ") + roleName;
@@ -497,7 +498,7 @@ public class RoleInfo
                                 break;
                             case DeadPlayer.CustomDeathReason.WitchExile:
                                 deathReasonString =
-                                    $" - {Helpers.cs(Witch.color, "被咒杀")} 于 {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
+                                    $" - {Helpers.cs(Witch.color, "被咒杀于")} {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
                                 break;
                             case DeadPlayer.CustomDeathReason.LoverSuicide:
                                 deathReasonString = $" - {Helpers.cs(Lovers.color, "殉情")}";
@@ -507,7 +508,7 @@ public class RoleInfo
                                 break;
                             case DeadPlayer.CustomDeathReason.Bomb:
                                 deathReasonString =
-                                    $" - 被爆破于 {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
+                                    $" - 被恐袭于 {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
                                 break;
                             case DeadPlayer.CustomDeathReason.Arson:
                                 deathReasonString =
@@ -522,7 +523,6 @@ public class RoleInfo
                                     $" - {Helpers.cs(Akujo.color, "精力衰竭")}";
                                 break;
                         }
-
                         roleName = roleName + deathReasonString;
                     }
                 }

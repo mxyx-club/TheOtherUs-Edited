@@ -2156,6 +2156,7 @@ public static class RPCProcedure
             Akujo.keepsLeft--;
         }
     }
+
     public static void akujoSuicide(byte akujoId)
     {
         var akujo = Helpers.playerById(akujoId);

@@ -18,7 +18,7 @@ public static class PlayerPhysicsFixedUpdatePatch
         if (Undertaker.undertaker == null || Undertaker.undertaker != CachedPlayer.LocalPlayer.PlayerControl) return;
         if (Undertaker.deadBodyDraged != null)
             if (playerPhysics.AmOwner && GameData.Instance && playerPhysics.myPlayer.CanMove)
-                playerPhysics.body.velocity /= 2;
+                playerPhysics.body.velocity *= Undertaker.velocity;
     }
 }
 

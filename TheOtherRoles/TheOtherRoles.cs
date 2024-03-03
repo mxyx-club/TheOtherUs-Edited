@@ -112,7 +112,7 @@ public static class TheOtherRoles
         HandleGuesser.clearAndReload();
         HideNSeek.clearAndReload();
         PropHunt.clearAndReload();
-        ButtonCooldownFormat.clearAndReload();
+        ResetButtonCooldown.clearAndReload();
     }
 
     public static class Jester
@@ -203,15 +203,6 @@ public static class TheOtherRoles
             return usePortalButtonSprite;
         }
 
-        public static class ButtonCooldownFormat
-        {
-            public static float killCooldown;
-            public static void clearAndReload()
-            {
-                killCooldown = CustomOptionHolder.buttonCooldownFormat.getFloat();
-            }
-        }
-
         public static Sprite getUsePortalSpecialButtonSprite(bool first)
         {
             if (first)
@@ -247,6 +238,14 @@ public static class TheOtherRoles
         }
     }
 
+    public static class ResetButtonCooldown
+    {
+        public static float killCooldown;
+        public static void clearAndReload()
+        {
+            killCooldown = CustomOptionHolder.resteButtonCooldown.getFloat();
+        }
+    }
     public static class Cultist
     {
         public static PlayerControl cultist;
@@ -1612,7 +1611,7 @@ public static class Akujo
             {
                 Lovers.clearAndReload();
                 otherLover.MurderPlayer(otherLover, MurderResultFlags.Succeeded);
-                GameHistory.overrideDeathReasonAndKiller(otherLover, DeadPlayer.CustomDeathReason.LoverSuicide);
+                GameHistory.overrideDeathReasonAndKiller(otherLover, DeadPlayer.CustomDeathReason.LoveStolen);
             }
         }
     }
@@ -1754,6 +1753,8 @@ public static class Undertaker
     public static DeadBody deadBodyDraged;
     public static bool canDragAndVent;
 
+    public static float velocity = 1;
+
     private static Sprite buttonSprite;
 
     public static Sprite getButtonSprite()
@@ -1769,6 +1770,7 @@ public static class Undertaker
         isDraging = false;
         canDragAndVent = CustomOptionHolder.undertakerCanDragAndVent.getBool();
         deadBodyDraged = null;
+        velocity = CustomOptionHolder.undertakerDragingAfterVelocity.getFloat();
         dragingDelaiAfterKill = CustomOptionHolder.undertakerDragingDelaiAfterKill.getFloat();
     }
 }

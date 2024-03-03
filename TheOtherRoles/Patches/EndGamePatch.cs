@@ -845,26 +845,22 @@ internal class CheckEndCriteriaPatch
             GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
             return true;
         }
-
         if (PropHunt.isPropHuntGM && PropHunt.timer <= 0 && PropHunt.timerRunning)
         {
             GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
             return true;
         }
-
         if (statistics.TeamImpostorsAlive == 0 &&
             statistics.TeamJackalAlive == 0 &&
-            statistics.TeamSwooperAlive == 0 &&
-            statistics.TeamAkujoAlive == 0 &&
-            (statistics.TeamAkujoAlive == 1 && statistics.TotalAlive ==1) &&
             statistics.TeamWerewolfAlive == 0 &&
-            statistics.TeamJuggernautAlive == 0)
+            statistics.TeamSwooperAlive == 0 &&
+            statistics.TeamJuggernautAlive == 0 &&
+            statistics.TeamAkujoAlive <= 1)
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
             return true;
         }
-
         return false;
     }
 

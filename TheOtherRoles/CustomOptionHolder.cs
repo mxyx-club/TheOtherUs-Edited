@@ -55,6 +55,7 @@ public class CustomOptionHolder
 
     public static CustomOption undertakerSpawnRate;
     public static CustomOption undertakerDragingDelaiAfterKill;
+    public static CustomOption undertakerDragingAfterVelocity;
     public static CustomOption undertakerCanDragAndVent;
 
     public static CustomOption camouflagerSpawnRate;
@@ -318,14 +319,14 @@ public class CustomOptionHolder
     public static CustomOption jumperSpawnRate;
     public static CustomOption jumperJumpTime;
     public static CustomOption jumperChargesOnPlace;
-    
+    /*
     public static CustomOption ArcanistSpawnRate;
     public static CustomOption ArcanistCooldown;
     public static CustomOption ArcanistTeleportTime;
     public static CustomOption ArcanistProbabilityBlueCards;
     public static CustomOption ArcanistProbabilityRedCards;
-    public static CustomOption ArcanistProbabilityWhiteCards;
-
+    public static CustomOption ArcanistProbabilityPurpleCards;
+    */
     public static CustomOption jumperResetPlaceAfterMeeting;
     //public static CustomOption jumperChargesGainOnMeeting;
     //public static CustomOption jumperMaxCharges;
@@ -471,7 +472,7 @@ public class CustomOptionHolder
     public static CustomOption modifierShifter;
     public static CustomOption modifierShiftNeutral;
 
-    public static CustomOption buttonCooldownFormat;
+    public static CustomOption resteButtonCooldown;
     public static CustomOption maxNumberOfMeetings;
     public static CustomOption blockSkippingInEmergencyMeetings;
     public static CustomOption noVoteIsSelfVote;
@@ -690,7 +691,8 @@ public class CustomOptionHolder
 
         undertakerSpawnRate = CustomOption.Create(10130, Types.Impostor, cs(Undertaker.color, "送葬者"), rates, null, true);
         undertakerDragingDelaiAfterKill = CustomOption.Create(10131, Types.Impostor, "从击杀到恢复拖曳能力所需时间", 0f, 0f, 15, 0.5f, undertakerSpawnRate);
-        undertakerCanDragAndVent = CustomOption.Create(10132, Types.Impostor, "拖曳过程中可使用管道", true, undertakerSpawnRate);
+        undertakerDragingAfterVelocity = CustomOption.Create(10132, Types.Impostor, "拖拽过程的行动速度", 0.75f, 0.5f, 2f, 0.125f, undertakerSpawnRate);
+        undertakerCanDragAndVent = CustomOption.Create(10133, Types.Impostor, "拖曳过程中可使用管道", true, undertakerSpawnRate);
 
         camouflagerSpawnRate = CustomOption.Create(10140, Types.Impostor, cs(Camouflager.color, "隐蔽者"), rates, null, true);
         camouflagerCooldown = CustomOption.Create(10141, Types.Impostor, "隐蔽状态冷却", 30f, 10f, 60f, 2.5f, camouflagerSpawnRate);
@@ -899,8 +901,8 @@ public class CustomOptionHolder
         deputyKeepsHandcuffs = CustomOption.Create(30176, Types.Crewmate, "晋升后保留手铐技能", true, deputyGetsPromoted);
 
         lighterSpawnRate = CustomOption.Create(30180, Types.Crewmate, cs(Lighter.color, "执灯人"), rates, null, true);
-        lighterModeLightsOnVision = CustomOption.Create(30181, Types.Crewmate, "灯光正常时点灯状态下的视野倍率", 1.5f, 0.25f, 5f, 0.25f, lighterSpawnRate);
-        lighterModeLightsOffVision = CustomOption.Create(30182, Types.Crewmate, "熄灯时点灯状态下的视野倍率", 0.5f, 0.25f, 5f, 0.25f, lighterSpawnRate);
+        lighterModeLightsOnVision = CustomOption.Create(30181, Types.Crewmate, "灯光正常时的视野倍率", 1.5f, 0.25f, 5f, 0.25f, lighterSpawnRate);
+        lighterModeLightsOffVision = CustomOption.Create(30182, Types.Crewmate, "熄灯时的视野倍率", 0.5f, 0.25f, 5f, 0.25f, lighterSpawnRate);
         lighterFlashlightWidth = CustomOption.Create(30183, Types.Crewmate, "手电筒范围", 0.3f, 0.1f, 1f, 0.1f, lighterSpawnRate);
 
         detectiveSpawnRate = CustomOption.Create(30190, Types.Crewmate, cs(Detective.color, "侦探"), rates, null, true);
@@ -911,7 +913,7 @@ public class CustomOptionHolder
         detectiveReportColorDuration = CustomOption.Create(30195, Types.Crewmate, "以下时间内报告可得知凶手颜色类型", 30, 0, 120, 2.5f, detectiveSpawnRate);
 
         medicSpawnRate = CustomOption.Create(30200, Types.Crewmate, cs(Medic.color, "医生"), rates, null, true);
-        medicShowShielded = CustomOption.Create(30201, Types.Crewmate, "可见医生护盾的玩家", new[] { "所有人", "被保护者+法医", "法医" }, medicSpawnRate);
+        medicShowShielded = CustomOption.Create(30201, Types.Crewmate, "可见医生护盾的玩家", ["所有人", "被保护者+法医", "法医"], medicSpawnRate);
         medicBreakShield = CustomOption.Create(30202, Types.Crewmate, "护盾持续生效", true, medicSpawnRate);
         medicShowAttemptToMedic = CustomOption.Create(30203, Types.Crewmate, "法医可见击杀尝试", true, medicBreakShield);
         medicShowAttemptToShielded = CustomOption.Create(30204, Types.Crewmate, "被保护者可见击杀尝试", false, medicBreakShield);
@@ -1002,7 +1004,7 @@ public class CustomOptionHolder
         ArcanistTeleportTime = CustomOption.Create(30332, Types.Crewmate, "传送冷却", 15f, 0f, 60f, 2.5f, ArcanistSpawnRate);
         ArcanistProbabilityBlueCards = CustomOption.Create(30333, Types.Crewmate, "抽到蓝牌的概率", rates, ArcanistSpawnRate);
         ArcanistProbabilityRedCards = CustomOption.Create(30334, Types.Crewmate, "抽到红牌的概率", rates, ArcanistSpawnRate);
-        ArcanistProbabilityWhiteCards = CustomOption.Create(30335, Types.Crewmate, "抽到紫牌的概率", rates, ArcanistSpawnRate);
+        ArcanistProbabilityPurpleCards = CustomOption.Create(30335, Types.Crewmate, "抽到紫牌的概率", rates, ArcanistSpawnRate);
         */
         bodyGuardSpawnRate = CustomOption.Create(30340, Types.Crewmate, cs(BodyGuard.color, "保镖"), rates, null, true);
         bodyGuardResetTargetAfterMeeting = CustomOption.Create(30341, Types.Crewmate, "会议后重置保护目标", true, bodyGuardSpawnRate);
@@ -1176,7 +1178,7 @@ public class CustomOptionHolder
         propHuntSpeedboostSpeed = CustomOption.Create(4019, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑提升速度"), 2f, 1.25f, 5f, 0.25f, propHuntSpeedboostEnabled);
 
         // Other options 1-599
-        buttonCooldownFormat = CustomOption.Create(14, Types.General, "游戏开局时重置CD", 10f, 2.5f, 30f, 2.5f);
+        resteButtonCooldown = CustomOption.Create(14, Types.General, "游戏开局时重置CD", 10f, 2.5f, 30f, 2.5f);
         maxNumberOfMeetings = CustomOption.Create(15, Types.General, "会议总次数(不计入市长会议次数)", 10, 0, 15, 1, null, true);
         blockSkippingInEmergencyMeetings = CustomOption.Create(16, Types.General, "会议禁止跳过", false);
         noVoteIsSelfVote = CustomOption.Create(17, Types.General, "不投票默认投自己", false, blockSkippingInEmergencyMeetings);
