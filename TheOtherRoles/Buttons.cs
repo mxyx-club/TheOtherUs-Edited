@@ -1,7 +1,7 @@
+using Hazel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hazel;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
@@ -82,6 +82,10 @@ internal static class HudManagerStartPatch
 
     //末日预言家
     public static CustomButton doomsayerButton;
+    //魅魔
+    public static CustomButton akujoHonmeiButton;
+    public static CustomButton akujoBackupButton;
+
     public static CustomButton trapperButton;
     public static CustomButton bomberButton;
     public static CustomButton defuseButton;
@@ -113,6 +117,8 @@ internal static class HudManagerStartPatch
     public static TMP_Text portalmakerButtonText1;
     public static TMP_Text portalmakerButtonText2;
     public static TMP_Text huntedShieldCountText;
+    public static TMP_Text akujoTimeRemainingText;
+    public static TMP_Text akujoBackupLeftText;
 
     public static void setCustomButtonCooldowns()
     {
@@ -183,6 +189,8 @@ internal static class HudManagerStartPatch
         swooperSwoopButton.EffectDuration = Swooper.duration;
 
         doomsayerButton.MaxTimer = Doomsayer.cooldown;
+        akujoHonmeiButton.MaxTimer = 2.5f;
+        akujoBackupButton.MaxTimer = 2.5f;
 
         mayorMeetingButton.MaxTimer = GameManager.Instance.LogicOptions.GetEmergencyCooldown();
         trapperButton.MaxTimer = Trapper.cooldown;
@@ -605,6 +613,7 @@ internal static class HudManagerStartPatch
                            (Lawyer.lawyer == Sheriff.currentTarget && Sheriff.canKillProsecutor &&
                             Lawyer.isProsecutor) ||
                            (Pursuer.pursuer == Sheriff.currentTarget && Sheriff.canKillPursuer) ||
+                            Akujo.akujo == Sheriff.currentTarget ||
                            (Doomsayer.doomsayer == Sheriff.currentTarget && Sheriff.canKillDoomsayer)))))
                     {
                         targetId = Sheriff.currentTarget.PlayerId;
@@ -864,6 +873,110 @@ internal static class HudManagerStartPatch
         //      },
         //     () => { juggernautKillButton.Timer = juggernautKillButton.MaxTimer; },
 
+        // doomsayer Shield
+        doomsayerButton = new CustomButton(
+            () =>
+            {
+                if (Helpers.checkAndDoVetKill(Doomsayer.currentTarget)) return;
+                Helpers.checkWatchFlash(Doomsayer.currentTarget);
+
+                doomsayerButton.Timer = doomsayerButton.MaxTimer;
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetFutureReveal, Hazel.SendOption.Reliable, -1);
+                writer.Write(Doomsayer.currentTarget.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.setFutureReveal(Doomsayer.currentTarget.PlayerId);
+
+                SoundEffectsManager.play("knockKnock");
+            },
+
+
+            () => { return Doomsayer.doomsayer != null && Doomsayer.doomsayer == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+            () =>
+            {
+                showTargetNameOnButton(Doomsayer.currentTarget, doomsayerButton, "揭示");
+                return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Doomsayer.currentTarget != null;
+            },
+            () => { doomsayerButton.Timer = doomsayerButton.MaxTimer; },
+            Doomsayer.getButtonSprite(),
+            CustomButton.ButtonPositions.lowerRowRight,
+            __instance,
+            KeyCode.F
+        );
+
+        // Akujo Honmei
+        akujoHonmeiButton = new CustomButton(
+            () =>
+            {
+                if (Veteren.veteren != null && Akujo.currentTarget == Veteren.veteren && Veteren.alertActive)
+                {
+                    Helpers.checkMurderAttemptAndKill(Veteren.veteren, Akujo.akujo);
+                    return;
+                }
+
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSetHonmei, Hazel.SendOption.Reliable, -1);
+                writer.Write(Akujo.akujo.PlayerId);
+                writer.Write(Akujo.currentTarget.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.akujoSetHonmei(CachedPlayer.LocalPlayer.PlayerControl.PlayerId, Akujo.currentTarget.PlayerId);
+            },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && Akujo.honmei == null && Akujo.timeLeft > 0; },
+            () =>
+            {
+                return CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && Akujo.currentTarget != null && Akujo.honmei == null && Akujo.timeLeft > 0;
+            },
+            () => { akujoHonmeiButton.Timer = akujoHonmeiButton.MaxTimer; },
+            Akujo.getHonmeiSprite(),
+            CustomButton.ButtonPositions.upperRowRight,
+            __instance,
+            KeyCode.F,
+            buttonText: "选为真爱"
+        );
+        akujoTimeRemainingText = GameObject.Instantiate(akujoHonmeiButton.actionButton.cooldownTimerText, __instance.transform);
+        akujoTimeRemainingText.text = "";
+        akujoTimeRemainingText.enableWordWrapping = false;
+        akujoTimeRemainingText.transform.localScale = Vector3.one * 0.45f;
+        akujoTimeRemainingText.transform.localPosition = akujoHonmeiButton.actionButton.cooldownTimerText.transform.parent.localPosition + new Vector3(-0.1f, 0.35f, 0f);
+
+        // Akujo Keep
+        akujoBackupButton = new CustomButton(
+            () =>
+            {
+                if (Veteren.veteren != null && Akujo.currentTarget == Veteren.veteren && Veteren.alertActive)
+                {
+                    Helpers.checkMurderAttemptAndKill(Veteren.veteren, Akujo.akujo);
+                    return;
+                }
+
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSetKeep, Hazel.SendOption.Reliable, -1);
+                writer.Write(Akujo.akujo.PlayerId);
+                writer.Write(Akujo.currentTarget.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.akujoSetKeep(CachedPlayer.LocalPlayer.PlayerControl.PlayerId, Akujo.currentTarget.PlayerId);
+            },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && Akujo.keepsLeft > 0 && Akujo.timeLeft > 0; },
+            () =>
+            {
+                if (akujoBackupLeftText != null)
+                {
+                    if (Akujo.keepsLeft > 0)
+                        akujoBackupLeftText.text = Akujo.keepsLeft.ToString();
+                    else
+                        akujoBackupLeftText.text = "";
+                }
+                return CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && Akujo.currentTarget != null && Akujo.keepsLeft > 0 && Akujo.timeLeft > 0;
+            },
+            () => { akujoBackupButton.Timer = akujoBackupButton.MaxTimer; },
+            Akujo.getKeepSprite(),
+            CustomButton.ButtonPositions.upperRowCenter,
+            __instance,
+            KeyCode.K,
+            buttonText: "选为备胎"
+        );
+        akujoBackupLeftText = GameObject.Instantiate(akujoBackupButton.actionButton.cooldownTimerText, akujoBackupButton.actionButton.cooldownTimerText.transform.parent);
+        akujoBackupLeftText.text = "";
+        akujoBackupLeftText.enableWordWrapping = false;
+        akujoBackupLeftText.transform.localScale = Vector3.one * 0.5f;
+        akujoBackupLeftText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         // Shifter shift
         shifterShiftButton = new CustomButton(
@@ -1695,7 +1808,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.lowerRowCenter,
             __instance,
             KeyCode.F,
-            buttonText:"招募"
+            buttonText: "招募"
         );
 
         // Jackal Kill
@@ -1773,7 +1886,7 @@ internal static class HudManagerStartPatch
             true,
             Swooper.duration,
             () => { swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer; },
-            buttonText:"隐身"
+            buttonText: "隐身"
         );
 
 
@@ -3268,8 +3381,8 @@ internal static class HudManagerStartPatch
                 mayorMeetingButton.actionButton.OverrideText("紧急会议 (" + Mayor.remoteMeetingsLeft + ")");
                 var sabotageActive = false;
                 foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
-                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy ||task.TaskType == TaskTypes.ResetReactor || 
-                    task.TaskType == TaskTypes.ResetSeismic ||task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles || 
+                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
+                    task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
                         (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && CustomOptionHolder.mayorTaskRemoteMeetings.getBool() == false)
                         sabotageActive = true;
                 return !sabotageActive && CachedPlayer.LocalPlayer.PlayerControl.CanMove &&

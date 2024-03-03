@@ -1,4 +1,4 @@
-## Note: This repository is an unofficial continuation of [The Other Roles](https://github.com/TheOtherRolesAU/TheOtherRoles) and [Town of Us](https://github.com/slushiegoose/Town-Of-Us)/[Town of Us R](https://github.com/eDonnes124/Town-Of-Us-R), as well as [The Other Roles Community Edition](https://github.com/JustASysAdmin/TheOtherRoles2).
+Note: This repository is an unofficial continuation of [The Other Roles](https://github.com/TheOtherRolesAU/TheOtherRoles) and [Town of Us](https://github.com/slushiegoose/Town-Of-Us)/[Town of Us R](https://github.com/eDonnes124/Town-Of-Us-R), as well as [The Other Roles Community Edition](https://github.com/JustASysAdmin/TheOtherRoles2).
 
 ![TOU_Logo](https://user-images.githubusercontent.com/113001912/192659417-85c94f28-d9b9-454a-a6b4-6679fe9dca91.png)
 <p align="center"><a href="https://github.com/mxyx-club/TheOtherUs/releases/"><img src="https://badgen.net/github/release/mxyx-club/theotherus"></a></p>
@@ -14,9 +14,7 @@ The Other Us Is a project created to expand on the Open Source mod "The Other Ro
 
 <p align="center">
 This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.</p>
-
 [![Discord](./Images/TOR_server.png)](https://discord.gg/yspVyP5meR)
-![eisbison infographic](./Images/TOR_Roles.png)
 
 # The Other Us
 
@@ -30,78 +28,41 @@ Even more roles are coming soon. :)
 | [Godfather (Mafia)](#mafia) | [Mayor](#mayor) | [Jester](#jester) | [Bloody](#bloody) | [Classic](#roles) |
 | [Mafioso (Mafia)](#mafia) | [Engineer](#engineer) | [Arsonist](#arsonist) | [Anti Teleport](#anti-teleport) | [Guesser](#guesser-modifier) |
 | [Janitor (Mafia)](#mafia) | [Sheriff](#sheriff) | [Jackal](#jackal) | [Tie Breaker](#tie-breaker) | [Hide 'n Seek](#hide-n-seek) |
-| [Morphling](#morphling) | [Deputy](#deputy) | [Sidekick](#sidekick) | [Bait](#bait) |
-| [Camouflager](#camouflager) | [Lighter](#lighter) | [Vulture](#vulture) | [Lovers](#lovers) |
-| [Vampire](#vampire) | [Investigator](#investigator) | [Lawyer](#lawyer) | [Sunglasses](#sunglasses) |
-| [Eraser](#eraser) | [Time Master](#time-master) | [Pursuer](#pursuer) | [Mini](#mini) |
-| [Trickster](#trickster) | [Medic](#medic) | [Thief](#thief) | [VIP](#vip) |
-| [Cleaner](#cleaner) | [Swapper](#swapper) | [Executioner](#executioner) | [Invert](#invert) |
-| [Warlock](#warlock) | [Seer](#seer) | [Amnesiac](#amnesiac) | [Chameleon](#chameleon) |
-| [Bounty Hunter](#bounty-hunter) | [Hacker](#hacker) | [Swooper](#swooper) | [Shifter](#shifter)
-| [Witch](#witch) | [Tracker](#tracker) | [Werewolf](#werewolf) | [Indomitable](#indomitable) |
-| [Ninja](#ninja) | [Snitch](#snitch) |  | [Blind](#blind) |
-| [Miner](#miner) | [Spy](#spy) |  | [Sleuth](#sleuth) |
-| [Blackmailer](#blackmailer) | [Portalmaker](#portalmaker) | | [Fanatic](#fanatic) |  |
+| [Morphling](#morphling) | [Deputy](#deputy) | [Sidekick](#sidekick) | [Bait](#bait) ||
+| [Camouflager](#camouflager) | [Lighter](#lighter) | [Vulture](#vulture) | [Lovers](#lovers) ||
+| [Vampire](#vampire) | [Investigator](#investigator) | [Lawyer](#lawyer) | [Sunglasses](#sunglasses) ||
+| [Eraser](#eraser) | [Time Master](#time-master) | [Pursuer](#pursuer) | [Mini](#mini) ||
+| [Trickster](#trickster) | [Medic](#medic) | [Thief](#thief) | [VIP](#vip) ||
+| [Cleaner](#cleaner) | [Swapper](#swapper) | [Executioner](#executioner) | [Invert](#invert) ||
+| [Warlock](#warlock) | [Seer](#seer) | [Amnesiac](#amnesiac) | [Chameleon](#chameleon) ||
+| [Bounty Hunter](#bounty-hunter) | [Hacker](#hacker) | [Swooper](#swooper) | [Shifter](#shifter)|
+| [Witch](#witch) | [Tracker](#tracker) | [Werewolf](#werewolf) | [Indomitable](#indomitable) ||
+| [Ninja](#ninja) | [Snitch](#snitch) | [Juggernaut](#juggernaut) | [Blind](#blind) ||
+| [Miner](#miner) | [Spy](#spy) | [Doomsayer](#doomsayer) | [Sleuth](#sleuth) ||
+| [Blackmailer](#blackmailer) | [Portalmaker](#portalmaker) | [Akujo](#akujo) | [Fanatic](#fanatic) |  |
 | [Bomber](#bomber) | [Security Guard](#security-guard) | | [Torch](#torch) |  |
-| [Escapist](#escapist) | [Medium](#medium) |  | [Tunneler](#tunneler) |
-| [Assassin](#assassin) | [Trapper](#trapper) |  | [Watcher](#watcher) |
-|  | [Vigilante](#vigilante) |  | [Multitasker](#multitasker) |
-|  | [Veteran](#veteran) |  | [Disperser](#disperser) |
-|  | [Bodyguard](#bodyguard) |  | |
-|  | [Jumper](#jumper) |  | |
+| [Escapist](#escapist) | [Medium](#medium) |  | [Tunneler](#tunneler) ||
+| [Assassin](#assassin) | [Trapper](#trapper) |  | [Watcher](#watcher) ||
+|  | [Vigilante](#vigilante) |  | [Multitasker](#multitasker) ||
+|  | [Veteran](#veteran) |  | [Disperser](#disperser) ||
+|  | [Bodyguard](#bodyguard) |  | ||
+|  | [Jumper](#jumper) |  | ||
 
 The [Role Assignment](#role-assignment) sections explains how the roles are being distributed among the players.
 
 # Releases
 | Among Us - Version| Mod Version | Link |
 |----------|-------------|-----------------|
-| 2022.10.25s| v1.1.4| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.1.4/TheOtherUs.zip)
-| 2022.10.25s| v1.1.3| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.1.3/TheOtherUs.zip)
-| 2022.10.25s| v1.1.2| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.1.2/TheOtherUs.zip)
-| 2022.10.25s| v1.1.1| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.1.1/TheOtherUs.zip)
-| 2022.10.25s| v1.1.0| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.1.0/TheOtherUs.zip)
-| 2022.8.24| v1.0.9| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.9/TheOtherUs.zip)
-| 2022.8.24| v1.0.8| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.8/TheOtherUs.zip)
-| 2022.8.24| v1.0.7| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.7/TheOtherUs.zip)
-| 2022.8.24| v1.0.6| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.6/TheOtherUs.zip)
-| 2022.8.24| v1.0.5| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.5/TheOtherUs.zip)
-| 2022.8.24| v1.0.4| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.4/TheOtherUs.zip)
-| 2022.8.24| v1.0.3| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.3/TheOtherUs.zip)
-| 2022.8.24| v1.0.2| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.2/TheOtherUs.zip)
-| 2022.8.24| v1.0.1| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.1/TheOtherUs.zip)
-| 2022.8.24| v1.0.0| [Download](https://github.com/SpexGH/TheOtherUs/releases/download/v1.0.0/TheOtherUs.zip)
+| 2024.11.28s| v1.0.2| [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/1.0.2/TheOtherUs.zip)
+| 2024.11.28s| v1.0.1| [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/1.0.1/TheOtherUs.zip)
 
 # Changelog
 <details>
   <summary>Click to show the Changelog</summary>
+**Version 1.0.1**  
 
-**Version 1.0.0**  
-- New Colors!
-- New Imposter Roles: Bomber, Undertaker, Blackmailer, Miner
-- New Neutral Roles: Executioner, Amnesiac, Swooper, Werewolf
-- New Crewmate Roles: Vigilante, Veteran, Bodyguard
-- New Modifiers: Assassin, Indomitable, Blind, Sleuth
-- Renamed Nice Guesser role to Vigilante
-- Renamed Evil Guesser role to Assassin and made it a Modifier
-- New Game Settings and Role & Modifier Settings
-- Sound Effects: Most buttons / role functionalities have a sound!
-- Mod option: Enable Sound Effects
-- Support for the Submerged map (https://github.com/SubmergedAmongUs/Submerged)
-- Games might not work properly unless the Submerged map is downloaded->Click the "Download Submerged" button in the bottom left of the main menu screen and then restart your game to fix this issue
-- New Option Features:
-- Camouflage Comms
-- Restrict Map Imformation (Restricts Admin Table use, Camera use, and Vitals use for a set amount of time per round or per game)
-- Show Button Target
-- Random Spawn Location
-- Allow Guessing Some Modifiers
-- Reset Spawn Cooldown
-- Option to Disable Garlic
-- Option for Swooper to Spawn as Alternate Jackal
-- Laywer Client Options (Non-Crew, Crew, or Any)
-- Sheriff Misfire Options (Misfire Kills Self, Target, or Both)
-- Added Options to choose specific Neutral roles that the Sheriff is able to kill
-- Assassin Modifier Quantity allows for more than one imposter to be able to guess roles
-</details>
+- No Change log
+    </details>
 
 # Installation
 

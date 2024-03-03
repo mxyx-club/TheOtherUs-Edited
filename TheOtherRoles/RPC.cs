@@ -92,6 +92,7 @@ public enum RoleId
     Juggernaut,
     //末日预言家
     Doomsayer,
+    Akujo,
 
     Crewmate,
     Impostor,
@@ -235,7 +236,12 @@ public enum CustomRPC
 
     // Other functionality
     ShareTimer = 186,
-    ShareGhostInfo = 187
+    ShareGhostInfo = 187,
+
+    //魅魔
+    AkujoSetHonmei = 188,
+    AkujoSetKeep = 189,
+    AkujoSuicide = 190
 }
 
 public static class RPCProcedure
@@ -536,6 +542,9 @@ public static class RPCProcedure
                         break;
                     case RoleId.Doomsayer:
                         Doomsayer.doomsayer = player;
+                        break;
+                    case RoleId.Akujo:
+                        Akujo.akujo = player;
                         break;
                 }
     }
@@ -1238,6 +1247,13 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 break;
 
+            case RoleId.Akujo:
+                Helpers.turnToImpostor(Akujo.akujo);
+                if (Amnisiac.resetRole) Mimic.clearAndReload();
+                Akujo.akujo = amnisiac;
+                Amnisiac.clearAndReload();
+                break;
+
             case RoleId.Blackmailer:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Blackmailer.clearAndReload();
@@ -1715,6 +1731,7 @@ public static class RPCProcedure
         //天启添加
         if (player == Juggernaut.juggernaut) Juggernaut.clearAndReload();
         if (player == Doomsayer.doomsayer) Doomsayer.clearAndReload();
+        if (player == Akujo.akujo) Akujo.clearAndReload();
 
         // Modifier
         if (!ignoreModifier)
@@ -2112,6 +2129,43 @@ public static class RPCProcedure
         Ninja.isInvisble = true;
     }
 
+
+    //魅魔
+
+    public static void akujoSetHonmei(byte akujoId, byte targetId)
+    {
+        PlayerControl akujo = Helpers.playerById(akujoId);
+        PlayerControl target = Helpers.playerById(targetId);
+
+        if (akujo != null && Akujo.honmei == null)
+        {
+            Akujo.honmei = target;
+            Akujo.breakLovers(target);
+        }
+    }
+
+    public static void akujoSetKeep(byte akujoId, byte targetId)
+    {
+        var akujo = Helpers.playerById(akujoId);
+        PlayerControl target = Helpers.playerById(targetId);
+
+        if (akujo != null && Akujo.keepsLeft > 0)
+        {
+            Akujo.keeps.Add(target);
+            Akujo.breakLovers(target);
+            Akujo.keepsLeft--;
+        }
+    }
+    public static void akujoSuicide(byte akujoId)
+    {
+        var akujo = Helpers.playerById(akujoId);
+        if (akujo != null)
+        {
+            akujo.MurderPlayer(akujo, MurderResultFlags.Succeeded);
+            GameHistory.overrideDeathReasonAndKiller(akujo, DeadPlayer.CustomDeathReason.Loneliness);
+        }
+    }
+
     public static void Mine(int ventId, PlayerControl role, byte[] buff, float zAxis)
     {
         var position = Vector3.zero;
@@ -2360,6 +2414,7 @@ public static class RPCProcedure
     public static void guesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleId)
     {
         var dyingTarget = Helpers.playerById(dyingTargetId);
+        PlayerControl? dyingAkujoPartner;
         if (dyingTarget == null) return;
         if (Lawyer.target != null && dyingTarget == Lawyer.target)
             Lawyer.targetWasGuessed = true; // Lawyer shouldn't be exiled with the client for guesses
@@ -2375,6 +2430,8 @@ public static class RPCProcedure
                 thiefStealsRole(dyingTarget.PlayerId);
         }
 
+        if ((Akujo.akujo != null && dyingTarget == Akujo.akujo) || (Akujo.honmei != null && dyingTarget == Akujo.honmei)) dyingAkujoPartner = dyingTarget == Akujo.akujo ? Akujo.honmei : Akujo.akujo;
+        else dyingAkujoPartner = null;
         //末日猜测
         if (Doomsayer.doomsayer != null && Doomsayer.doomsayer == guesser && Doomsayer.canGuess)
         {
@@ -2413,14 +2470,14 @@ public static class RPCProcedure
         dyingTarget.Exiled();
         overrideDeathReasonAndKiller(dyingTarget, DeadPlayer.CustomDeathReason.Guess, guesser);
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
-
+        byte akujoPartnerId = dyingAkujoPartner != null ? dyingAkujoPartner.PlayerId : byte.MaxValue;
 
         if (MeetingHud.Instance)
         {
             MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, dyingTargetId);
             foreach (var pva in MeetingHud.Instance.playerStates)
             {
-                if (pva.TargetPlayerId == dyingTargetId || pva.TargetPlayerId == partnerId)
+                if (pva.TargetPlayerId == dyingTargetId || pva.TargetPlayerId == partnerId || pva.TargetPlayerId == akujoPartnerId)
                 {
                     pva.SetDead(pva.DidReport, true);
                     pva.Overlay.gameObject.SetActive(true);
@@ -2454,6 +2511,11 @@ public static class RPCProcedure
             {
                 FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data,
                     dyingLoverPartner.Data);
+                if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+            }
+            else if (dyingAkujoPartner != null && CachedPlayer.LocalPlayer.PlayerControl == dyingAkujoPartner)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingAkujoPartner.Data, dyingAkujoPartner.Data);
                 if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
             }
         }
@@ -3405,11 +3467,22 @@ internal class RPCHandlerPatch
                 RPCProcedure.receiveGhostInfo(reader.ReadByte(), reader);
                 break;
 
-
             case CustomRPC.ShareRoom:
                 var roomPlayer = reader.ReadByte();
                 var roomId = reader.ReadByte();
                 RPCProcedure.shareRoom(roomPlayer, roomId);
+                break;
+
+            case CustomRPC.AkujoSetHonmei:
+                RPCProcedure.akujoSetHonmei(reader.ReadByte(), reader.ReadByte());
+                break;
+
+            case CustomRPC.AkujoSetKeep:
+                RPCProcedure.akujoSetKeep(reader.ReadByte(), reader.ReadByte());
+                break;
+
+            case CustomRPC.AkujoSuicide:
+                RPCProcedure.akujoSuicide(reader.ReadByte());
                 break;
         }
 
