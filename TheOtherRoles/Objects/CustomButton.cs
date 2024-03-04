@@ -39,6 +39,7 @@ public class CustomButton
     public bool showButtonText;
     public Sprite Sprite;
     public float Timer;
+    public string buttonTextstring = "";
 
     public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite,
         Vector3 PositionOffset, HudManager hudManager, KeyCode? hotkey, bool HasEffect, float EffectDuration,

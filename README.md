@@ -35,7 +35,7 @@ Even more roles are coming soon. :)
 | [Trickster](#trickster) | [Medic](#medic) | [Thief](#thief) | [VIP](#vip) ||
 | [Cleaner](#cleaner) | [Swapper](#swapper) | [Executioner](#executioner) | [Invert](#invert) ||
 | [Warlock](#warlock) | [Seer](#seer) | [Amnesiac](#amnesiac) | [Chameleon](#chameleon) ||
-| [Bounty Hunter](#bounty-hunter) | [Hacker](#hacker) | [Swooper](#swooper) | [Shifter](#shifter)|
+| [Bounty Hunter](#bounty-hunter) | [Hacker](#hacker) | [Swooper](#swooper) | [Shifter](#shifter)||
 | [Witch](#witch) | [Tracker](#tracker) | [Werewolf](#werewolf) | [Indomitable](#indomitable) ||
 | [Ninja](#ninja) | [Snitch](#snitch) | [Juggernaut](#juggernaut) | [Blind](#blind) ||
 | [Miner](#miner) | [Spy](#spy) | [Doomsayer](#doomsayer) | [Sleuth](#sleuth) ||
@@ -43,7 +43,7 @@ Even more roles are coming soon. :)
 | [Bomber](#bomber) | [Security Guard](#security-guard) | | [Torch](#torch) |  |
 | [Escapist](#escapist) | [Medium](#medium) |  | [Tunneler](#tunneler) ||
 | [Assassin](#assassin) | [Trapper](#trapper) |  | [Watcher](#watcher) ||
-|  | [Vigilante](#vigilante) |  | [Multitasker](#multitasker) ||
+| [Terrorist](#terrorist) | [Vigilante](#vigilante) |  | [Multitasker](#multitasker) ||
 |  | [Veteran](#veteran) |  | [Disperser](#disperser) ||
 |  | [Bodyguard](#bodyguard) |  | ||
 |  | [Jumper](#jumper) |  | ||

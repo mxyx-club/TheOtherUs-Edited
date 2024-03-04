@@ -218,7 +218,7 @@
     },
     "CurseText": {
         "0": "[BLANK]",
-        "13": "\u8bc5\u5492"
+        "13": "\u4e0b\u5492 "
     },
     "CurseKillText": {
         "0": "[BLANK]",
@@ -234,7 +234,7 @@
     },
     "GarlicText": {
         "0": "[BLANK]",
-        "13": "\u5927\u849c"
+        "13": "\u653e\u7f6e\u5927\u849c"
     },
     "HackerText": {
         "0": "[BLANK]",
@@ -262,7 +262,7 @@
     },
     "PlaceJackInTheBoxText": {
         "0": "[BLANK]",
-        "13": "\u653e\u7f6e"
+        "13": "\u5b89\u88c5\u661f\u95e8"
     },
     "RepairText": {
         "0": "[BLANK]",
@@ -326,11 +326,11 @@
     },
     "WitchText": {
         "0": "[BLANK]",
-        "13": "\u4e0b\u5492"
+        "13": "\u8bc5\u5492"
     },
     "NinjaText": {
         "0": "[BLANK]",
-        "13": "\u9690\u8eab"
+        "13": "\u523a\u6740"
     },
     "NinjaUnstealthText": {
         "0": "[BLANK]",
@@ -364,7 +364,7 @@
         "0": "[BLANK]",
         "13": "\u5e03\u4e0b\u9677\u9631"
     },
-    "BrainwashText": {
+    "ConvertText": {
         "0": "[BLANK]",
         "13": "\u6d17\u8111"
     },
@@ -408,17 +408,13 @@
         "0": "[BLANK]",
         "13": "\u505c\u4e0b"
     },
-    "TeleporterSampleText": {
+    "jumperText": {
         "0": "[BLANK]",
-        "13": "\u9009\u62e9\u5bf9\u8c61"
+        "13": "\u6807\u8bb0/\u4f20\u9001"
     },
-    "TeleporterTeleportText": {
+    "jumperJumpText": {
         "0": "[BLANK]",
         "13": "\u4f20\u9001"
-    },
-    "CupidArrowText": {
-        "0": "[BLANK]",
-        "13": "\u7231\u4e4b\u7bad"
     },
     "BlackmailerText": {
         "0": "[BLANK]",
@@ -431,5 +427,70 @@
     "minerText": {
         "0": "[BLANK]",
         "13": "\u6316\u6d1e"
+    },
+    "jackalSidekickText": {
+        "0": "[BLANK]",
+        "13": "\u62db\u52df"
+    },
+    "killButtonText": {
+        "0": "[BLANK]",
+        "13": "\u51fb\u6740"
+    },
+    "doomsayerText": {
+        "0": "[BLANK]",
+        "13": "\u63ed\u793a"
+    },
+    "hackerVitalText": {
+        "0": "[BLANK]",
+        "13": "\u751f\u547d\u68c0\u6d4b\u4eea"
+    },
+    "hackerDoorLogText": {
+        "0": "[BLANK]",
+        "13": "\u65e5\u5fd7"
+    },
+    "bodyGuardText": {
+        "0": "[BLANK]",
+        "13": "\u4fdd\u62a4"
+    },
+    "PrivateInvestigatorWatchText": {
+        "0": "[BLANK]",
+        "13": "\u89c2\u5bdf"
+    },
+    "usePortalText": {
+        "0": "[BLANK]",
+        "13": "\u4f7f\u7528"
+    },
+    "SwoopText": {
+        "0": "[BLANK]",
+        "13": "\u9690\u8eab"
+    },
+    "RememberText": {
+        "0": "[BLANK]",
+        "13": "\u56de\u5fc6"
+    },
+    "CamButtonText": {
+        "0": "[BLANK]",
+        "13": "\u76d1\u63a7"
+    },
+    "MayorButtonText": {
+        "0": "[BLANK]",
+        "13": "\u7d27\u6025\u4f1a\u8bae"
+    },
+    "trapperTrapText": {
+        "0": "[BLANK]",
+        "13": "\u653e\u7f6e\u9677\u9631"
+    },
+    "TerroristBombText": {
+        "0": "[BLANK]",
+        "13": "\u653e\u7f6e\u70b8\u5f39"
+    },
+    "AdminMapText": {
+        "0": "[BLANK]",
+        "13": "\u7ba1\u7406\u5730\u56fe",
+        "15": " "
+    },
+    "hackerButtonText": {
+        "0": "[BLANK]",
+        "13": "\u9ed1\u5165"
     }
 }
