@@ -3457,10 +3457,6 @@ internal static class HudManagerStartPatch
             () => { defuseButton.HasEffect = true; },
             () =>
             {
-                if (shifterShiftButton.HasButton())
-                    defuseButton.PositionOffset = new Vector3(0f, 2f, 0f);
-                else
-                    defuseButton.PositionOffset = new Vector3(0f, 1f, 0f);
                 return Bomber.bomb != null && Bomb.canDefuse && !CachedPlayer.LocalPlayer.Data.IsDead;
             },
             () =>
@@ -3479,7 +3475,7 @@ internal static class HudManagerStartPatch
                 defuseButton.isEffectActive = false;
             },
             Bomb.getDefuseSprite(),
-            new Vector3(2f, 2f, 0),
+            new Vector3(4f, 1f, 0),
             __instance,
             null,
             true,
@@ -3494,7 +3490,8 @@ internal static class HudManagerStartPatch
                 defuseButton.Timer = 0f;
                 Bomb.canDefuse = false;
             },
-            true
+            true,
+            buttonText: ModTranslation.getString("defuseBombText")
         );
 
         thiefKillButton = new CustomButton(

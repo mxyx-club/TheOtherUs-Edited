@@ -492,5 +492,9 @@
     "hackerButtonText": {
         "0": "[BLANK]",
         "13": "\u9ed1\u5165"
+    },
+    "defuseBombText": {
+        "0": "[BLANK]",
+        "13": "\u62c6\u5f39"
     }
 }
