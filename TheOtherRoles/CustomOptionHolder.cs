@@ -1202,6 +1202,7 @@ public class CustomOptionHolder
         dynamicMapEnableSubmerged = CustomOption.Create(57, Types.General, "Submerged", rates, dynamicMap);
         dynamicMapSeparateSettings = CustomOption.Create(58, Types.General, "使用随机地图设置预设", false, dynamicMap);
         //Map options 7800-7899 
+        randomGameStartPosition = CustomOption.Create(7910, Types.General, "随机出生点", false);
         enableBetterPolus = CustomOption.Create(7801, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Polus"), false);
         movePolusVents = CustomOption.Create(7802, Types.General, "改变管道布局", false, enableBetterPolus);
         addPolusVents = CustomOption.Create(7803, Types.General, "添加新管道\n (样本室-办公室-运输船)", false, enableBetterPolus);
@@ -1229,7 +1230,6 @@ public class CustomOptionHolder
         disableCamsRound1 = CustomOption.Create(7907, Types.General, "第一回合无法看监控", false);
         showButtonTarget = CustomOption.Create(7908, Types.General, "技能按钮显示目标", true);
         blockGameEnd = CustomOption.Create(7909, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "强力职业在场不结束游戏"), false);
-        randomGameStartPosition = CustomOption.Create(7910, Types.General, "随机出生点", false);
 
 
         blockedRolePairings.Add((byte)RoleId.Vampire, new[] { (byte)RoleId.Warlock });

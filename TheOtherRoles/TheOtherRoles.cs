@@ -23,6 +23,7 @@ public static class TheOtherRoles
 
     public static void clearAndReloadRoles()
     {
+        ResetButtonCooldown.clearAndReload();
         Jester.clearAndReload();
         Mayor.clearAndReload();
         Portalmaker.clearAndReload();
@@ -112,7 +113,6 @@ public static class TheOtherRoles
         HandleGuesser.clearAndReload();
         HideNSeek.clearAndReload();
         PropHunt.clearAndReload();
-        ResetButtonCooldown.clearAndReload();
     }
 
     public static class Jester
