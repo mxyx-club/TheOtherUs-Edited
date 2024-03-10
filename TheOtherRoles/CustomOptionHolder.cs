@@ -20,8 +20,6 @@ public class CustomOptionHolder
 
     public static CustomOption presetSelection;
     public static CustomOption activateRoles;
-    public static CustomOption enableCrowdedPlayer;
-    public static CustomOption MaxPlayer;
     public static CustomOption crewmateRolesCountMin;
     public static CustomOption crewmateRolesCountMax;
     public static CustomOption crewmateRolesFill;

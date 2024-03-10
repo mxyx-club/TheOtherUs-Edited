@@ -16,17 +16,16 @@ public static class CrowdedPlayer
 {
     public static int MaxPlayer = 120;
 
-    public static int MaxImpostor = MaxPlayer / 4;
+    public static int MaxImpostor = MaxPlayer / 5;
 
-    public static bool Enable = false;
+    public static bool Enable = true;
 
 
     public static void Start()
     {
         if (!Enable) return;
-        NormalGameOptionsV07.RecommendedImpostors =
-            NormalGameOptionsV07.MaxImpostors = Enumerable.Repeat(127, 127).ToArray();
-        NormalGameOptionsV07.MinPlayers = Enumerable.Repeat(4, 127).ToArray();
+        NormalGameOptionsV07.RecommendedImpostors = NormalGameOptionsV07.MaxImpostors = Enumerable.Repeat(120, 120).ToArray();
+        NormalGameOptionsV07.MinPlayers = Enumerable.Repeat(4, 120).ToArray();
     }
 
 
