@@ -56,7 +56,7 @@ public class RoleInfo
 
     public static RoleInfo crewmate = new("船员", Color.white, "哈哈！白板船员~", "发现并驱逐伪装者", RoleId.Crewmate);
     public static RoleInfo goodGuesser = new("侠客", Guesser.color, "生命就是一场豪赌", "在会议上刺杀坏人", RoleId.NiceGuesser);
-    //public static RoleInfo modifierNiceGuesser = new("赌怪", Guesser.color, "生命就是一场豪赌", "在会议上刺杀", RoleId.ModifierNiceGuesser,false, true);
+    public static RoleInfo modifierNiceGuesser = new("赌怪", Guesser.color, "生命就是一场豪赌", "在会议上刺杀", RoleId.ModifierNiceGuesser,false, true);
     public static RoleInfo mayor = new("市长", Mayor.color, "我持有一票否决权!!!", "用你的权力帮助船员", RoleId.Mayor);
     public static RoleInfo portalmaker = new("星门缔造者", Portalmaker.color, "以[星]之铭", "筑[星]之门", RoleId.Portalmaker);
     public static RoleInfo engineer = new("工程师", Engineer.color, "没人比我更懂得窃听", "维修飞船", RoleId.Engineer);
@@ -182,6 +182,7 @@ public class RoleInfo
 
         disperser,
         bloody,
+        modifierNiceGuesser,
         antiTeleport,
         tiebreaker,
         bait,
@@ -255,6 +256,7 @@ public class RoleInfo
             if (Sunglasses.sunglasses.Any(x => x.PlayerId == p.PlayerId)) infos.Add(sunglasses);
             if (Torch.torch.Any(x => x.PlayerId == p.PlayerId)) infos.Add(torch);
             if (Flash.flash.Any(x => x.PlayerId == p.PlayerId)) infos.Add(flash);
+            if (Guesser.modifierNiceGuesser.Any(x => x.PlayerId == p.PlayerId)) infos.Add(modifierNiceGuesser);
             if (Multitasker.multitasker.Any(x => x.PlayerId == p.PlayerId)) infos.Add(multitasker);
             if (p == Mini.mini) infos.Add(mini);
             if (p == Blind.blind) infos.Add(blind);

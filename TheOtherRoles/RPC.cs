@@ -88,9 +88,7 @@ public enum RoleId
     Bomber,
     //魔术师
     //Arcanist,
-    //天启添加
     Juggernaut,
-    //末日预言家
     Doomsayer,
     Akujo,
 
@@ -109,6 +107,7 @@ public enum RoleId
     Sunglasses,
     Torch,
     Flash,
+    ModifierNiceGuesser,
     Multitasker,
     Mini,
     Vip,
@@ -582,6 +581,9 @@ public static class RPCProcedure
                 break;            
             case RoleId.Flash:
                 Flash.flash.Add(player);
+                break;       
+            case RoleId.ModifierNiceGuesser:
+                Guesser.modifierNiceGuesser.Add(player);
                 break;  
             case RoleId.Slueth:
                 Slueth.slueth = player;
@@ -1754,6 +1756,8 @@ public static class RPCProcedure
                 Torch.torch.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (Flash.flash.Any(x => x.PlayerId == player.PlayerId))
                 Flash.flash.RemoveAll(x => x.PlayerId == player.PlayerId);
+            if (Guesser.modifierNiceGuesser.Any(x => x.PlayerId == player.PlayerId))
+                Guesser.modifierNiceGuesser.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (Multitasker.multitasker.Any(x => x.PlayerId == player.PlayerId))
                 Multitasker.multitasker.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (player == Tiebreaker.tiebreaker) Tiebreaker.clearAndReload();

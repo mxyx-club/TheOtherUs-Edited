@@ -74,8 +74,8 @@ public class CustomOptionHolder
     public static CustomOption eraserCanEraseAnyone;
 
     public static CustomOption guesserSpawnRate;
-    //public static CustomOption guesserModifier;
-    //public static CustomOption guesserModifierQuantity;
+    public static CustomOption guesserModifier;
+    public static CustomOption guesserModifierQuantity;
     public static CustomOption guesserIsImpGuesserRate;
     public static CustomOption guesserNumberOfShots;
     public static CustomOption guesserHasMultipleShotsPerMeeting;
@@ -851,8 +851,8 @@ public class CustomOptionHolder
         //-------------------------- Crewmate Options 30000-39999 -------------------------- //
 
         guesserSpawnRate = CustomOption.Create(30100, Types.Crewmate, cs(Guesser.color, "侠客"), rates, null, true);
-        //guesserModifier = CustomOption.Create(30105, Types.Crewmate, "分配为附加职业", true, guesserSpawnRate);
-        //guesserModifierQuantity = CustomOption.Create(30106, Types.Crewmate, "赌怪数量", ratesModifier, guesserModifier);
+        guesserModifier = CustomOption.Create(30105, Types.Crewmate, "分配为附加职业", true, guesserSpawnRate);
+        guesserModifierQuantity = CustomOption.Create(30106, Types.Crewmate, "赌怪数量", 1, 1,15,1, guesserModifier);
         guesserNumberOfShots = CustomOption.Create(30101, Types.Crewmate, "可猜测次数", 3f, 1f, 15f, 1f, guesserSpawnRate);
         guesserHasMultipleShotsPerMeeting = CustomOption.Create(30102, Types.Crewmate, "同一轮会议可多次猜测", true, guesserSpawnRate);
         guesserShowInfoInGhostChat = CustomOption.Create(30103, Types.Crewmate, "灵魂可见猜测结果", true, guesserSpawnRate);

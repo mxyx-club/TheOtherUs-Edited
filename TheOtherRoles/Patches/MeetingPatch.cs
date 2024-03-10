@@ -227,12 +227,11 @@ internal class MeetingHudPatch
 
         foreach (var roleInfo in RoleInfo.allRoleInfos)
         {
-            var guesserRole =
-                Guesser.niceGuesser != null && CachedPlayer.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId
+            var guesserRole = Guesser.niceGuesser != null && CachedPlayer.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId
                     ? RoleId.NiceGuesser
                     : RoleId.EvilGuesser;
-            if (Doomsayer.doomsayer != null && CachedPlayer.LocalPlayer.PlayerId == Doomsayer.doomsayer.PlayerId)
-                guesserRole = RoleId.Doomsayer;
+            if (Guesser.modifierNiceGuesser.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId))guesserRole = RoleId.ModifierNiceGuesser;
+            if (Doomsayer.doomsayer != null && CachedPlayer.LocalPlayer.PlayerId == Doomsayer.doomsayer.PlayerId) guesserRole = RoleId.Doomsayer;
 
 
             switch (guesserRole)
@@ -242,15 +241,12 @@ internal class MeetingHudPatch
                     continue;
             }
 
-
             if (CustomOptionHolder.allowModGuess.getBool() && roleInfo.isModifier)
             {
                 // Allow Guessing the following mods: Bait, TieBreaker, Bloody, and VIP
                 if (roleInfo.roleId != RoleId.Bait &&
                     roleInfo.roleId != RoleId.Tiebreaker &&
                     roleInfo.roleId != RoleId.Bloody &&
-                    //     roleInfo.roleId != RoleId.EvilGuesser &&
-                    //     roleInfo.roleId != RoleId.NiceGuesser &&
                     roleInfo.roleId != RoleId.Cursed &&
                     roleInfo.roleId != RoleId.Torch &&
                     roleInfo.roleId != RoleId.Slueth &&
@@ -258,9 +254,7 @@ internal class MeetingHudPatch
                     roleInfo.roleId != RoleId.Radar &&
                     roleInfo.roleId != RoleId.Tunneler &&
                     roleInfo.roleId != RoleId.Multitasker &&
-                    //    roleInfo.roleId != RoleId.Shifter &&
                     roleInfo.roleId != RoleId.Lover &&
-                    //     roleInfo.roleId != RoleId.LifeGuard &&
                     roleInfo.roleId != RoleId.Vip) continue;
             }
             else if (roleInfo.isModifier)
@@ -277,7 +271,7 @@ internal class MeetingHudPatch
 
             switch (HandleGuesser.isGuesserGm)
             {
-                case true when roleInfo.roleId is RoleId.NiceGuesser or RoleId.EvilGuesser:
+                case true when roleInfo.roleId is RoleId.NiceGuesser or RoleId.EvilGuesser or RoleId.ModifierNiceGuesser:
                 case true when CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor &&
                                !HandleGuesser.evilGuesserCanGuessSpy && roleInfo.roleId == RoleId.Spy:
                     continue; // remove Guesser for guesser game mode

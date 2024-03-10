@@ -2099,10 +2099,13 @@ public static class Guesser
 {
     public static PlayerControl niceGuesser;
 
-    //public static PlayerControl evilGuesser;
     public static List<PlayerControl> evilGuesser = new();
+    public static List<PlayerControl> modifierNiceGuesser = new();
     public static Color color = new Color32(255, 255, 0, byte.MaxValue);
-
+    
+    public static bool guesserModifier = false;
+    public static int guesserModifierQuantity = 1;
+    
     public static int remainingShotsEvilGuesser = 2;
     public static int remainingShotsNiceGuesser = 2;
     public static bool hasMultipleShotsPerMeeting;
@@ -2114,12 +2117,13 @@ public static class Guesser
     public static bool guesserCantGuessSnitch;
     public static bool evilGuesserCanGuessCrewmate = true;
 
+
     public static bool isGuesser(byte playerId)
     {
-        if (evilGuesser.Any(item => item.PlayerId == playerId && evilGuesser != null))
-        {
-            return true;
-        }
+        if (evilGuesser.Any(item => item.PlayerId == playerId && evilGuesser != null)) return true;
+
+        if(modifierNiceGuesser.Any(item => item.PlayerId == playerId && modifierNiceGuesser != null)) return true;
+
         return niceGuesser != null && niceGuesser.PlayerId == playerId;
     }
 
@@ -2128,8 +2132,9 @@ public static class Guesser
         if (niceGuesser != null && niceGuesser.PlayerId == playerId) niceGuesser = null;
         foreach (var item in evilGuesser.Where(item => item.PlayerId == playerId && evilGuesser != null))
             evilGuesser = null;
+        foreach (var item in modifierNiceGuesser.Where(item => item.PlayerId == playerId && modifierNiceGuesser != null))
+            modifierNiceGuesser = null;
     }
-
 
     public static int remainingShots(byte playerId, bool shoot = false)
     {
@@ -2138,12 +2143,15 @@ public static class Guesser
         {
             result = remainingShotsNiceGuesser;
             if (shoot) remainingShotsNiceGuesser = Mathf.Max(0, remainingShotsNiceGuesser - 1);
+        }else if(Guesser.modifierNiceGuesser.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId))
+        {
+            result = remainingShotsNiceGuesser;
+            if (shoot) remainingShotsNiceGuesser = Mathf.Max(0, remainingShotsNiceGuesser - 1);
         }
         else if (shoot)
         {
             remainingShotsEvilGuesser = Mathf.Max(0, remainingShotsEvilGuesser - 1);
         }
-
         return result;
     }
 
@@ -2151,9 +2159,12 @@ public static class Guesser
     {
         niceGuesser = null;
         evilGuesser = new List<PlayerControl>();
-
+        
+        guesserModifier = CustomOptionHolder.guesserModifier.getBool();
+        guesserModifierQuantity = CustomOptionHolder.guesserModifierQuantity.GetInt();
+        
         guesserCantGuessSnitch = CustomOptionHolder.guesserCantGuessSnitchIfTaksDone.getBool();
-        remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.modifierAssassinNumberOfShots.getFloat());
+        remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.modifierAssassinNumberOfShots.getFloat() + 1);
         remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
         hasMultipleShotsPerMeeting = CustomOptionHolder.guesserHasMultipleShotsPerMeeting.getBool();
         assassinMultipleShotsPerMeeting = CustomOptionHolder.modifierAssassinMultipleShotsPerMeeting.getBool();
