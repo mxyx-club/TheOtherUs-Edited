@@ -76,6 +76,8 @@ public class CustomOptionHolder
     public static CustomOption eraserCanEraseAnyone;
 
     public static CustomOption guesserSpawnRate;
+    //public static CustomOption guesserModifier;
+    //public static CustomOption guesserModifierQuantity;
     public static CustomOption guesserIsImpGuesserRate;
     public static CustomOption guesserNumberOfShots;
     public static CustomOption guesserHasMultipleShotsPerMeeting;
@@ -430,6 +432,10 @@ public class CustomOptionHolder
     public static CustomOption modifierTorch;
     public static CustomOption modifierTorchVision;
     public static CustomOption modifierTorchQuantity;
+    
+    public static CustomOption modifierFlash;
+    public static CustomOption modifierFlashQuantity;
+    public static CustomOption modifierFlashSpeed;
 
     public static CustomOption modifierMultitasker;
     public static CustomOption modifierMultitaskerQuantity;
@@ -636,14 +642,6 @@ public class CustomOptionHolder
         if (EventUtility.canBeEnabled)
             enableCodenameDisableHorses = CustomOption.Create(4, Types.General, cs(Color.green, "禁用马模式"), false, enableCodenameHorsemode);
 
-        enableCrowdedPlayer = CustomOption.Create(101, Types.General,
-            cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "启用百人（重启游戏生效）"), true, null, true);
-        CrowdedPlayer.Enable = enableCrowdedPlayer.getBool();
-
-        MaxPlayer = CustomOption.Create(102, Types.General,
-            cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "最大玩家数"), 30f, 18f, 120f, 3f, enableCrowdedPlayer);
-
-        CrowdedPlayer.MaxPlayer = MaxPlayer.GetInt();
         // Using new id's for the options to not break compatibilty with older versions
         crewmateRolesCountMin = CustomOption.Create(5, Types.General,
             cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最小船员阵营职业数"), 15f, 0f, 30f, 1f, null, true);
@@ -855,6 +853,8 @@ public class CustomOptionHolder
         //-------------------------- Crewmate Options 30000-39999 -------------------------- //
 
         guesserSpawnRate = CustomOption.Create(30100, Types.Crewmate, cs(Guesser.color, "侠客"), rates, null, true);
+        //guesserModifier = CustomOption.Create(30105, Types.Crewmate, "分配为附加职业", true, guesserSpawnRate);
+        //guesserModifierQuantity = CustomOption.Create(30106, Types.Crewmate, "赌怪数量", ratesModifier, guesserModifier);
         guesserNumberOfShots = CustomOption.Create(30101, Types.Crewmate, "可猜测次数", 3f, 1f, 15f, 1f, guesserSpawnRate);
         guesserHasMultipleShotsPerMeeting = CustomOption.Create(30102, Types.Crewmate, "同一轮会议可多次猜测", true, guesserSpawnRate);
         guesserShowInfoInGhostChat = CustomOption.Create(30103, Types.Crewmate, "灵魂可见猜测结果", true, guesserSpawnRate);
@@ -1035,9 +1035,7 @@ public class CustomOptionHolder
         modifierTieBreaker = CustomOption.Create(1030, Types.Modifier, cs(Color.yellow, "破平者"), rates, null, true);
 
         modifierBait = CustomOption.Create(1040, Types.Modifier, cs(Color.yellow, "诱饵"), rates, null, true);
-        modifierBaitSwapCrewmate = CustomOption.Create(1041, Types.Modifier, "只分配给船员阵营", true, modifierBait);
-        //modifierBaitSwapNeutral = CustomOption.Create(1042, Types.Modifier, "可分配至中立阵营", true, modifierBait);
-        //modifierBaitSwapImpostor = CustomOption.Create(1043 Types.Modifier, "可分配至伪装者阵营", true, modifierBait);
+        modifierBaitSwapCrewmate = CustomOption.Create(1041, Types.Modifier, "只分配给船员阵营", false, modifierBait);
         modifierBaitReportDelayMin = CustomOption.Create(1044, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 0.1f, modifierBait);
         modifierBaitReportDelayMax = CustomOption.Create(1045, Types.Modifier, "诱饵报告延迟时间(最大)", 0f, 0f, 10f, 0.5f, modifierBait);
         modifierBaitShowKillFlash = CustomOption.Create(1046, Types.Modifier, "用闪光灯警告杀手", true, modifierBait);
@@ -1054,6 +1052,10 @@ public class CustomOptionHolder
         modifierTorch = CustomOption.Create(1070, Types.Modifier, cs(Color.yellow, "火炬"), rates, null, true);
         modifierTorchQuantity = CustomOption.Create(1071, Types.Modifier, cs(Color.yellow, "火炬人数"), ratesModifier, modifierTorch);
         modifierTorchVision = CustomOption.Create(1072, Types.Modifier, "火炬的视野倍率", rates, modifierTorch);
+        
+        modifierFlash = CustomOption.Create(1210, Types.Modifier, cs(Color.yellow, "闪电侠"), rates, null, true);
+        modifierFlashQuantity = CustomOption.Create(1211, Types.Modifier, cs(Color.yellow, "闪电侠人数"), ratesModifier, modifierFlash);
+        modifierFlashSpeed = CustomOption.Create(1212, Types.Modifier, "闪电侠的移速倍率", 1.25f,1f,3f,0.125f, modifierFlash);
 
         modifierMultitasker = CustomOption.Create(1080, Types.Modifier, cs(Color.yellow, "多线程"), rates, null, true);
         modifierMultitaskerQuantity = CustomOption.Create(1081, Types.Modifier, cs(Color.yellow, "多线程人数"), ratesModifier, modifierMultitasker);

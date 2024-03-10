@@ -14,9 +14,9 @@ namespace TheOtherRoles.Modules;
 [Harmony]
 public static class CrowdedPlayer
 {
-    public static int MaxPlayer = 20;
+    public static int MaxPlayer = 120;
 
-    public static int MaxImpostor = MaxPlayer / 5;
+    public static int MaxImpostor = MaxPlayer / 4;
 
     public static bool Enable = false;
 

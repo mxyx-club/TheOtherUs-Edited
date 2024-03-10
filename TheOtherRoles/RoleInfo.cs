@@ -73,6 +73,8 @@ public class RoleInfo
 
     public static RoleInfo goodGuesser = new("侠客", Guesser.color, "生命就是一场豪赌", "在会议上刺杀坏人", RoleId.NiceGuesser);
 
+    //public static RoleInfo modifierNiceGuesser = new("赌怪", Guesser.color, "生命就是一场豪赌", "在会议上刺杀", RoleId.ModifierNiceGuesser,false, true);
+
     public static RoleInfo mayor = new("市长", Mayor.color, "我持有一票否决权!!!", "用你的权力帮助船员", RoleId.Mayor);
     public static RoleInfo portalmaker = new("星门缔造者", Portalmaker.color, "以[星]之铭", "筑[星]之门", RoleId.Portalmaker);
     public static RoleInfo engineer = new("工程师", Engineer.color, "没人比我更懂得窃听", "维修飞船", RoleId.Engineer);
@@ -101,22 +103,23 @@ public class RoleInfo
 
     public static RoleInfo snitch = new("告密者", Snitch.color, "无惧生死，秘密行动", "完成任务揭示内鬼", RoleId.Snitch);
 
-    //public static RoleInfo jackal = new RoleInfo("Jackal", Jackal.color, "Kill all Crewmates and <color=#FF1919FF>Impostors</color> to win", "Kill everyone", RoleId.Jackal, true);
     public static RoleInfo spy = new("卧底", Spy.color, "对不起，我是一个[好]人", "潜伏起来，找出内鬼", RoleId.Spy);
 
     public static RoleInfo securityGuard = new("保安", SecurityGuard.color, "维护飞船秩序", "封锁管道并安放监控", RoleId.SecurityGuard);
 
-    //public static RoleInfo badGuesser = new RoleInfo("Evil Guesser", Palette.ImpostorRed, "Guess and shoot", "Guess and shoot", RoleId.EvilGuesser);
     public static RoleInfo medium = new("通灵师", Medium.color, "这不是封建迷信！", "对灵魂通灵获取信息", RoleId.Medium);
     public static RoleInfo trapper = new("设陷师", Trapper.color, "困于陷阱中...", "放置陷阱获取信息", RoleId.Trapper);
-
+    
+    //躲猫猫
     public static RoleInfo hunter = new("猎人", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "抓捕"), "找到并击杀所有猎物", RoleId.Impostor);
 
     public static RoleInfo hunted = new("猎物", Color.white, "躲起来", "躲起来", RoleId.Crewmate);
+
     public static RoleInfo prop = new("躲藏者", Color.white, "伪装成物品并生存", "伪装成物品并生存", RoleId.Crewmate);
 
     // Modifier
     public static RoleInfo disperser = new("分散者", Color.red, "大伙！该上路了！", "分散所有人", RoleId.Disperser, false, true);
+
     public static RoleInfo bloody = new("溅血者", Color.yellow, "以吾之血咒汝之身", "用你的血留下死亡信息", RoleId.Bloody, false, true);
 
     public static RoleInfo antiTeleport = new("通讯兵", Color.yellow, "线上会议！", "无需回到会议室开会", RoleId.AntiTeleport, false, true);
@@ -124,8 +127,12 @@ public class RoleInfo
     public static RoleInfo tiebreaker = new("破平者", Color.yellow, "你说得对...但是，规则就是用来打破的", "打破平局", RoleId.Tiebreaker, false, true);
 
     public static RoleInfo bait = new("诱饵", Color.yellow, "大奖小奖，能记住就是好奖", "击杀你的人会立即报警", RoleId.Bait, false, true);
+
     public static RoleInfo sunglasses = new("太阳镜", Color.yellow, "这真是，泰酷辣", "你的视野变得更小", RoleId.Sunglasses, false, true);
+
     public static RoleInfo torch = new("火炬", Color.yellow, "心中有光，照耀四方", "视野增加，无视熄灯", RoleId.Torch, false, true);
+
+    public static RoleInfo flash = new("闪电侠", Color.yellow, "你拥有更快的移动速度!", "你拥有更快的移动速度!", RoleId.Flash, false, true);
 
     public static RoleInfo multitasker = new("多线程", Color.yellow, "虽然人不可以三心二意，但是你可以一心二用", "交互界面透明", RoleId.Multitasker, false, true);
 
@@ -236,6 +243,7 @@ public class RoleInfo
         bait,
         sunglasses,
         torch,
+        flash,
         multitasker,
         lover,
         mini,
@@ -302,6 +310,7 @@ public class RoleInfo
             if (AntiTeleport.antiTeleport.Any(x => x.PlayerId == p.PlayerId)) infos.Add(antiTeleport);
             if (Sunglasses.sunglasses.Any(x => x.PlayerId == p.PlayerId)) infos.Add(sunglasses);
             if (Torch.torch.Any(x => x.PlayerId == p.PlayerId)) infos.Add(torch);
+            if (Flash.flash.Any(x => x.PlayerId == p.PlayerId)) infos.Add(flash);
             if (Multitasker.multitasker.Any(x => x.PlayerId == p.PlayerId)) infos.Add(multitasker);
             if (p == Mini.mini) infos.Add(mini);
             if (p == Blind.blind) infos.Add(blind);

@@ -108,6 +108,7 @@ public enum RoleId
     Swooper,
     Sunglasses,
     Torch,
+    Flash,
     Multitasker,
     Mini,
     Vip,
@@ -578,7 +579,10 @@ public static class RPCProcedure
                 break;
             case RoleId.Torch:
                 Torch.torch.Add(player);
-                break;
+                break;            
+            case RoleId.Flash:
+                Flash.flash.Add(player);
+                break;  
             case RoleId.Slueth:
                 Slueth.slueth = player;
                 break;
@@ -1748,6 +1752,8 @@ public static class RPCProcedure
                 Sunglasses.sunglasses.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (Torch.torch.Any(x => x.PlayerId == player.PlayerId))
                 Torch.torch.RemoveAll(x => x.PlayerId == player.PlayerId);
+            if (Flash.flash.Any(x => x.PlayerId == player.PlayerId))
+                Flash.flash.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (Multitasker.multitasker.Any(x => x.PlayerId == player.PlayerId))
                 Multitasker.multitasker.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (player == Tiebreaker.tiebreaker) Tiebreaker.clearAndReload();

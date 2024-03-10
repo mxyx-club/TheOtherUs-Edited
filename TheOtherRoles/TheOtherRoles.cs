@@ -96,6 +96,7 @@ public static class TheOtherRoles
         Tiebreaker.clearAndReload();
         Sunglasses.clearAndReload();
         Torch.clearAndReload();
+        Flash.clearAndReload();
         Blind.clearAndReload();
         Watcher.clearAndReload();
         Radar.clearAndReload();
@@ -2150,6 +2151,7 @@ public static class Guesser
     {
         niceGuesser = null;
         evilGuesser = new List<PlayerControl>();
+
         guesserCantGuessSnitch = CustomOptionHolder.guesserCantGuessSnitchIfTaksDone.getBool();
         remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.modifierAssassinNumberOfShots.getFloat());
         remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
@@ -3118,6 +3120,17 @@ public static class Torch
     }
 }
 
+public static class Flash
+{
+    public static List<PlayerControl> flash = new();
+    public static float speed = 1f;
+
+    public static void clearAndReload()
+    {
+        flash = new List<PlayerControl>();
+        speed = CustomOptionHolder.modifierFlashSpeed.getFloat();
+    }
+}
 public static class Multitasker
 {
     public static List<PlayerControl> multitasker = new();

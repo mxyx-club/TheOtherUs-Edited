@@ -121,8 +121,7 @@ namespace TheOtherRoles.Patches
 
             if (Torch.torch.FindAll(x => x.PlayerId == player.PlayerId).Count > 0) // Torch
             {
-                var t = switchSystem != null ? switchSystem.Value / 255f : 1;
-                __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, t) * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod * (1f + (Torch.vision * 0.1f));
+                __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1) * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod * (1f + (Torch.vision * 0.1f));
             }
 
             return false;

@@ -593,6 +593,7 @@ internal class RoleManagerSelectRolesPatch
             RoleId.AntiTeleport,
             RoleId.Sunglasses,
             RoleId.Torch,
+            RoleId.Flash,
             RoleId.Multitasker,
             RoleId.Vip,
             RoleId.Invert,
@@ -1009,7 +1010,11 @@ internal class RoleManagerSelectRolesPatch
             case RoleId.Torch:
                 selection = CustomOptionHolder.modifierTorch.getSelection();
                 if (multiplyQuantity) selection *= CustomOptionHolder.modifierTorchQuantity.getQuantity();
-                break;
+                break;            
+            case RoleId.Flash:
+                selection = CustomOptionHolder.modifierFlash.getSelection();
+                if (multiplyQuantity) selection *= CustomOptionHolder.modifierFlashQuantity.getQuantity();
+                break;            
             case RoleId.Multitasker:
                 selection = CustomOptionHolder.modifierMultitasker.getSelection();
                 if (multiplyQuantity) selection *= CustomOptionHolder.modifierMultitaskerQuantity.getQuantity();
@@ -1030,10 +1035,13 @@ internal class RoleManagerSelectRolesPatch
                 selection = CustomOptionHolder.modifierShifter.getSelection();
                 break;
             case RoleId.EvilGuesser:
-                selection = CustomOptionHolder.modifierAssassin.getSelection();
-                if (!Cultist.isCultistGame)
-                    if (multiplyQuantity)
-                        selection *= CustomOptionHolder.modifierAssassinQuantity.getQuantity();
+                if(isGuesserGamemode == false)
+                {
+                    selection = CustomOptionHolder.modifierAssassin.getSelection();
+                    if (!Cultist.isCultistGame)
+                        if (multiplyQuantity)
+                            selection *= CustomOptionHolder.modifierAssassinQuantity.getQuantity();
+                }
                 break;
         }
 
