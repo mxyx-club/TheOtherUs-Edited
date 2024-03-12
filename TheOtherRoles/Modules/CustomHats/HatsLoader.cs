@@ -1,10 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 using BepInEx.Unity.IL2CPP.Utils;
+using TheOtherRoles.Utilities;
 using UnityEngine;
+using TheOtherRoles.Logs;
 using UnityEngine.Networking;
 using static TheOtherRoles.Modules.CustomHats.CustomHatManager;
 
@@ -12,37 +12,33 @@ namespace TheOtherRoles.Modules.CustomHats;
 
 public class HatsLoader : MonoBehaviour
 {
-    public readonly List<IEnumerator> DownloadLoads = [];
+    private bool isRunning;
 
-    public void FetchHats(string url)
+    public void FetchHats()
     {
-        DownloadLoads.Add(CoFetchHats(url));
-    }
-
-    public void StartDownload()
-    {
-        foreach (var downloadLoad in DownloadLoads)
-        {
-            this.StartCoroutine(downloadLoad);
-        }
+        if (isRunning) return;
+        this.StartCoroutine(CoFetchHats());
     }
 
     [HideFromIl2Cpp]
-    private IEnumerator CoFetchHats(string url)
+    private IEnumerator CoFetchHats()
     {
-        Info($"开始加载帽子url {url}");
+        isRunning = true;
         var www = new UnityWebRequest();
         www.SetMethod(UnityWebRequest.UnityWebRequestMethod.Get);
-        Message($"Download manifest at: {url}/{ManifestFileName}");
-        www.SetUrl($"{url}/{ManifestFileName}");
+        Info($"Download manifest at: {RepositoryUrl}/{ManifestFileName}");
+        www.SetUrl($"{RepositoryUrl}/{ManifestFileName}");
         www.downloadHandler = new DownloadHandlerBuffer();
         var operation = www.SendWebRequest();
 
-        while (!operation.isDone) yield return new WaitForEndOfFrame();
+        while (!operation.isDone)
+        {
+            yield return new WaitForEndOfFrame();
+        }
 
         if (www.isNetworkError || www.isHttpError)
         {
-            Error(www.error);
+            Info(www.error);
             yield break;
         }
 
@@ -57,29 +53,36 @@ public class HatsLoader : MonoBehaviour
 
         UnregisteredHats.AddRange(SanitizeHats(response));
         var toDownload = GenerateDownloadList(UnregisteredHats);
+        if (EventUtility.isEnabled) UnregisteredHats.AddRange(CustomHatManager.loadHorseHats());
 
-        Message($"I'll download {toDownload.Count} hat files");
+        Info($"I'll download {toDownload.Count} hat files");
 
-        foreach (var fileName in toDownload) yield return CoDownloadHatAsset(fileName, url);
-        Info($"加载帽子url {url} 结束");
+        foreach (var fileName in toDownload)
+        {
+            yield return CoDownloadHatAsset(fileName);
+        }
+
+        isRunning = false;
     }
 
-    private static IEnumerator CoDownloadHatAsset(string fileName, string url)
+    private static IEnumerator CoDownloadHatAsset(string fileName)
     {
-        Info($"开始下载帽子url {url} {fileName}");
         var www = new UnityWebRequest();
         www.SetMethod(UnityWebRequest.UnityWebRequestMethod.Get);
         fileName = fileName.Replace(" ", "%20");
-        Message($"downloading hat: {fileName}");
-        www.SetUrl($"{url}/hats/{fileName}");
+        Info($"downloading hat: {fileName}");
+        www.SetUrl($"{RepositoryUrl}/hats/{fileName}");
         www.downloadHandler = new DownloadHandlerBuffer();
         var operation = www.SendWebRequest();
 
-        while (!operation.isDone) yield return new WaitForEndOfFrame();
+        while (!operation.isDone)
+        {
+            yield return new WaitForEndOfFrame();
+        }
 
         if (www.isNetworkError || www.isHttpError)
         {
-            Error(www.error);
+            Info(www.error);
             yield break;
         }
 
@@ -90,7 +93,7 @@ public class HatsLoader : MonoBehaviour
         {
             if (persistTask.Exception != null)
             {
-                Error(persistTask.Exception.Message);
+                Info(persistTask.Exception.Message);
                 break;
             }
 

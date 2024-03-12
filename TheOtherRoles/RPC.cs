@@ -140,6 +140,7 @@ public enum CustomRPC
     SetGameStarting = 72,
     ShareGamemode = 73,
     VersionHandshakeEx = 74,
+    StopStart,
 
     // Role functionality
 
@@ -326,7 +327,14 @@ public static class RPCProcedure
     {
         gameMode = (CustomGamemodes)gm;
     }
-
+    public static void stopStart(byte playerId)
+    {
+        if (AmongUsClient.Instance.AmHost && CustomOptionHolder.anyPlayerCanStopStart.getBool())
+        {
+            GameStartManager.Instance.ResetStartState();
+            PlayerControl.LocalPlayer.RpcSendChat($"{Helpers.playerById(playerId).Data.PlayerName} 阻止游戏开始");
+        }
+    }
     public static void workaroundSetRoles(byte numberOfRoles, MessageReader reader)
     {
         for (var i = 0; i < numberOfRoles; i++)
@@ -347,7 +355,8 @@ public static class RPCProcedure
     public static void setRole(byte roleId, byte playerId)
     {
         foreach (PlayerControl player in CachedPlayer.AllPlayers)
-            if (player.PlayerId == playerId)
+        {
+            if (player.PlayerId == playerId) {
                 switch ((RoleId)roleId)
                 {
                     case RoleId.Jester:
@@ -550,6 +559,13 @@ public static class RPCProcedure
                         Akujo.akujo = player;
                         break;
                 }
+            }
+            if (AmongUsClient.Instance.AmHost && Helpers.roleCanUseVents(player) && !player.Data.Role.IsImpostor)
+            {
+                player.RpcSetRole(RoleTypes.Engineer);
+                player.SetRole(RoleTypes.Engineer);
+            }
+        }
     }
 
     public static void setModifier(byte modifierId, byte playerId, byte flag)
@@ -2401,6 +2417,7 @@ public static class RPCProcedure
     {
         Arsonist.triggerArsonistWin = true;
         foreach (PlayerControl p in CachedPlayer.AllPlayers)
+            //if (p != Arsonist.arsonist && !p.Data.IsDead)
             if (p != Arsonist.arsonist)
             {
                 p.Exiled();
@@ -3441,6 +3458,20 @@ internal class RPCHandlerPatch
                 var gm = reader.ReadByte();
                 RPCProcedure.shareGameMode(gm);
                 break;
+            case CustomRPC.AkujoSetHonmei:
+                RPCProcedure.akujoSetHonmei(reader.ReadByte(), reader.ReadByte());
+                break;
+
+            case CustomRPC.AkujoSetKeep:
+                RPCProcedure.akujoSetKeep(reader.ReadByte(), reader.ReadByte());
+                break;
+
+            case CustomRPC.AkujoSuicide:
+                RPCProcedure.akujoSuicide(reader.ReadByte());
+                break;
+            case CustomRPC.StopStart:
+                RPCProcedure.stopStart(reader.ReadByte());
+                break;
 
             // Game mode
             case CustomRPC.SetGuesserGm:
@@ -3489,18 +3520,6 @@ internal class RPCHandlerPatch
                 var roomPlayer = reader.ReadByte();
                 var roomId = reader.ReadByte();
                 RPCProcedure.shareRoom(roomPlayer, roomId);
-                break;
-
-            case CustomRPC.AkujoSetHonmei:
-                RPCProcedure.akujoSetHonmei(reader.ReadByte(), reader.ReadByte());
-                break;
-
-            case CustomRPC.AkujoSetKeep:
-                RPCProcedure.akujoSetKeep(reader.ReadByte(), reader.ReadByte());
-                break;
-
-            case CustomRPC.AkujoSuicide:
-                RPCProcedure.akujoSuicide(reader.ReadByte());
                 break;
         }
 

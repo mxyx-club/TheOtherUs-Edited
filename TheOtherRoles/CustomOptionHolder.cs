@@ -30,8 +30,8 @@ public class CustomOptionHolder
     public static CustomOption modifiersCountMin;
     public static CustomOption modifiersCountMax;
 
-    public static CustomOption enableCodenameHorsemode;
-    public static CustomOption enableCodenameDisableHorses;
+    public static CustomOption anyPlayerCanStopStart;
+    public static CustomOption enableEventMode;
 
     public static CustomOption cultistSpawnRate;
 
@@ -637,11 +637,9 @@ public class CustomOptionHolder
         presetSelection = CustomOption.Create(0, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "预设"), presets, null, true);
         activateRoles = CustomOption.Create(1, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "启用模组职业并禁用原版职业"), true, null, true);
 
-        if (EventUtility.canBeEnabled)
-            enableCodenameHorsemode = CustomOption.Create(3, Types.General, cs(Color.green, "启用愚人节马模式"), true, null, true);
+        anyPlayerCanStopStart = CustomOption.Create(3, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "任何玩家都可以阻止游戏开始"), false, null, false);
 
-        if (EventUtility.canBeEnabled)
-            enableCodenameDisableHorses = CustomOption.Create(4, Types.General, cs(Color.green, "禁用马模式"), false, enableCodenameHorsemode);
+        if (Utilities.EventUtility.canBeEnabled) enableEventMode = CustomOption.Create(4, Types.General, cs(Color.green, "启用特殊模式"), true, null, true);
 
         // Using new id's for the options to not break compatibilty with older versions
         crewmateRolesCountMin = CustomOption.Create(5, Types.General,

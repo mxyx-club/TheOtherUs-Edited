@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text.Json;
-using System.Threading.Tasks;
-using BepInEx;
-using TheOtherRoles.Helper;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using System.Reflection;
+using TheOtherRoles.Helper;
 
 namespace TheOtherRoles.Modules.CustomHats;
 
@@ -17,94 +15,38 @@ public static class CustomHatManager
     public const string ResourcesDirectory = "TheOtherHats";
     public const string InnerslothPackageName = "Innersloth Hats";
     public const string DeveloperPackageName = "Developer Hats";
-    
-    internal static readonly HashSet<string> Urls = [];
+
+    internal static readonly Tuple<string, string> Repository = new("TheOtherRolesAU", "TheOtherHats");
+    internal static string RepositoryUrl
+    {
+        get
+        {
+            var (owner, repository) = Repository;
+            return $"https://raw.githubusercontent.com/{owner}/{repository}/master";
+        }
+    }
 
     internal static readonly string ManifestFileName = "CustomHats.json";
 
-    internal static readonly List<CustomHat> UnregisteredHats = [];
+    internal static string CustomSkinsDirectory => Path.Combine(Path.GetDirectoryName(Application.dataPath)!, ResourcesDirectory);
+    internal static string HatsDirectory => CustomSkinsDirectory;
+
+    internal static List<CustomHat> UnregisteredHats = new();
     internal static readonly Dictionary<string, HatViewData> ViewDataCache = new();
     internal static readonly Dictionary<string, HatExtension> ExtensionCache = new();
 
     private static readonly HatsLoader Loader;
-    private static Material cachedShader;
-
-    static CustomHatManager()
-    {
-        Loader = Main.Instance.AddComponent<HatsLoader>();
-        Urls.Add($"https://mirror.ghproxy.com/https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherHats/master");
-    }
-
-    internal static string CustomSkinsDirectory =>
-        Path.Combine(Path.GetDirectoryName(Application.dataPath)!, ResourcesDirectory);
-
-    internal static string HatsDirectory => CustomSkinsDirectory;
 
     internal static HatExtension TestExtension { get; private set; }
 
+    static CustomHatManager()
+    {
+        Loader = TheOtherRolesPlugin.Instance.AddComponent<HatsLoader>();
+    }
+
     internal static void LoadHats()
     {
-        var configDir = Path.Combine(Paths.GameRootPath, "FastConfigs");
-        if (!Directory.Exists(configDir))
-            Directory.CreateDirectory(configDir);
-
-        var filePath = Path.Combine(configDir, "HatsURLS.json");
-        if (!File.Exists(filePath))
-        {
-            var stream = File.Create(filePath);
-            var list = Urls.Select(url => new RepositoryData { name = "Vanlia", url = url }).ToList();
-            var text = JsonSerializer.Serialize(list);
-            using var writer = new StreamWriter(stream);
-            writer.Write(text);
-            goto fetch;
-        }
-
-        try
-        {
-            using var stream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            if (stream.Length != 0) 
-            {
-                using var Reader = new StreamReader(stream);
-                try
-                {
-                    var document = JsonDocument.Parse(Reader.ReadToEnd());
-                    var datas = document.Deserialize<List<RepositoryData>>();
-                    foreach (var data in datas.Where(data => !Urls.Contains(data.url)))
-                    {
-                        Urls.Add(data.url);
-                        Info($"添加配置读取帽子仓库 url:{data.url} Name:{data.name}");
-                    }
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            }
-            else
-            {
-                var list = Urls.Select(url => new RepositoryData { name = "Vanlia", url = url }).ToList();
-                var text = JsonSerializer.Serialize(list);
-                using var writer = new StreamWriter(stream);
-                writer.Write(text);
-            }
-        }
-        catch (Exception e)
-        {
-            Exception(e);
-        }
-        fetch:
-        foreach (var url in Urls)
-        {
-            Loader.FetchHats(url);
-        }
-
-        Loader.StartDownload();
-    }
-    
-    public class RepositoryData
-    {
-        public string name { get; set; }
-        public string url { get; set; }
+        Loader.FetchHats();
     }
 
     internal static bool TryGetCached(this HatParent hatParent, out HatViewData asset)
@@ -131,13 +73,14 @@ public static class CustomHatManager
 
     internal static HatData CreateHatBehaviour(CustomHat ch, bool testOnly = false)
     {
-        if (cachedShader == null) cachedShader = DestroyableSingleton<HatManager>.Instance.PlayerMaterial;
-
         var viewData = ViewDataCache[ch.Name] = ScriptableObject.CreateInstance<HatViewData>();
         var hat = ScriptableObject.CreateInstance<HatData>();
 
         viewData.MainImage = CreateHatSprite(ch.Resource);
-        if (viewData.MainImage == null) throw new FileNotFoundException("File not downloaded yet");
+        if (viewData.MainImage == null)
+        {
+            throw new FileNotFoundException("File not downloaded yet");
+        }
         viewData.FloorImage = viewData.MainImage;
         if (ch.BackResource != null)
         {
@@ -159,18 +102,23 @@ public static class CustomHatManager
         hat.ChipOffset = new Vector2(0f, 0.2f);
         hat.Free = true;
 
-        if (ch.Adaptive && cachedShader != null) viewData.AltShader = cachedShader;
-
         var extend = new HatExtension
         {
             Author = ch.Author ?? "Unknown",
             Package = ch.Package ?? "Misc.",
-            Condition = ch.Condition ?? "none"
+            Condition = ch.Condition ?? "none",
+            Adaptive = ch.Adaptive,
         };
 
-        if (ch.FlipResource != null) extend.FlipImage = CreateHatSprite(ch.FlipResource);
+        if (ch.FlipResource != null)
+        {
+            extend.FlipImage = CreateHatSprite(ch.FlipResource);
+        }
 
-        if (ch.BackFlipResource != null) extend.BackFlipImage = CreateHatSprite(ch.BackFlipResource);
+        if (ch.BackFlipResource != null)
+        {
+            extend.BackFlipImage = CreateHatSprite(ch.BackFlipResource);
+        }
 
         if (testOnly)
         {
@@ -190,6 +138,8 @@ public static class CustomHatManager
     private static Sprite CreateHatSprite(string path)
     {
         var texture = Helpers.loadTextureFromDisk(Path.Combine(HatsDirectory, path));
+        if (texture == null)
+            texture = Helpers.loadTextureFromResources(path);
         if (texture == null) return null;
         var sprite = Sprite.Create(texture,
             new Rect(0, 0, texture.width, texture.height),
@@ -217,28 +167,40 @@ public static class CustomHatManager
             var p = s.Split('_');
             var options = new HashSet<string>(p);
             if (options.Contains("back") && options.Contains("flip"))
+            {
                 backFlips[p[0]] = fileName;
+            }
             else if (options.Contains("climb"))
+            {
                 climbs[p[0]] = fileName;
+            }
             else if (options.Contains("back"))
+            {
                 backs[p[0]] = fileName;
+            }
             else if (options.Contains("flip"))
+            {
                 flips[p[0]] = fileName;
+            }
             else
+            {
                 fronts[p[0]] = new CustomHat
                 {
                     Resource = fileName,
                     Name = p[0].Replace('-', ' '),
                     Bounce = options.Contains("bounce"),
                     Adaptive = options.Contains("adaptive"),
-                    Behind = options.Contains("behind")
+                    Behind = options.Contains("behind"),
                 };
+            }
         }
 
         var hats = new List<CustomHat>();
 
-        foreach (var (k, hat) in fronts)
+        foreach (var frontKvP in fronts)
         {
+            var k = frontKvP.Key;
+            var hat = frontKvP.Value;
             backs.TryGetValue(k, out var backResource);
             climbs.TryGetValue(k, out var climbResource);
             flips.TryGetValue(k, out var flipResource);
@@ -254,7 +216,7 @@ public static class CustomHatManager
         return hats;
     }
 
-    internal static IEnumerable<CustomHat> SanitizeHats(SkinsConfigFile response)
+    internal static List<CustomHat> SanitizeHats(SkinsConfigFile response)
     {
         foreach (var hat in response.Hats)
         {
@@ -280,7 +242,10 @@ public static class CustomHatManager
     private static bool ResourceRequireDownload(string resFile, string resHash, HashAlgorithm algorithm)
     {
         var filePath = Path.Combine(HatsDirectory, resFile);
-        if (resHash == null || !File.Exists(filePath)) return true;
+        if (resHash == null || !File.Exists(filePath))
+        {
+            return true;
+        }
         using var stream = File.OpenRead(filePath);
         var hash = BitConverter.ToString(algorithm.ComputeHash(stream))
             .Replace("-", string.Empty)
@@ -288,23 +253,71 @@ public static class CustomHatManager
         return !resHash.Equals(hash);
     }
 
-    internal static List<string> GenerateDownloadList(IEnumerable<CustomHat> hats)
+    internal static List<string> GenerateDownloadList(List<CustomHat> hats)
     {
         var algorithm = MD5.Create();
         var toDownload = new List<string>();
 
-        foreach (var files in hats.Select(hat => new List<Tuple<string, string>>
-                 {
-                     new(hat.Resource, hat.ResHashA),
-                     new(hat.BackResource, hat.ResHashB),
-                     new(hat.ClimbResource, hat.ResHashC),
-                     new(hat.FlipResource, hat.ResHashF),
-                     new(hat.BackFlipResource, hat.ResHashBf)
-                 }))
-        foreach (var (fileName, fileHash) in files)
-            if (fileName != null && ResourceRequireDownload(fileName, fileHash, algorithm))
-                toDownload.Add(fileName);
+        foreach (var hat in hats)
+        {
+            var files = new List<Tuple<string, string>>
+            {
+                new(hat.Resource, hat.ResHashA),
+                new(hat.BackResource, hat.ResHashB),
+                new(hat.ClimbResource, hat.ResHashC),
+                new(hat.FlipResource, hat.ResHashF),
+                new(hat.BackFlipResource, hat.ResHashBf)
+            };
+            foreach (var (fileName, fileHash) in files)
+            {
+                if (fileName != null && ResourceRequireDownload(fileName, fileHash, algorithm))
+                {
+                    toDownload.Add(fileName);
+                }
+            }
+        }
 
         return toDownload;
+    }
+
+    public static List<CustomHat> loadHorseHats()
+    {
+        List<CustomHat> hatdatas = new();
+        Assembly assembly = Assembly.GetExecutingAssembly();
+        string[] resourceNames = assembly.GetManifestResourceNames();
+        List<string> hatFiles = new();
+        Dictionary<string, List<string>> hatFilesSorted = new Dictionary<string, List<string>>();
+        foreach (string resourceName in resourceNames)
+        {
+            if (resourceName.Contains("TheOtherRoles.Resources.HorseHats.") && resourceName.Contains(".png"))
+            {
+                hatFiles.Add(resourceName);
+            }
+        }
+
+        foreach (string s in hatFiles)
+        {
+            string value = s.Substring(0, s.LastIndexOf("HorseSpecialHat") + 17);
+            if (value.Contains(".")) value.Remove(value.LastIndexOf("."));
+            if (!hatFilesSorted.ContainsKey(value)) hatFilesSorted.Add(value, new List<string>());
+            hatFilesSorted[value].Add(s);
+        }
+        int i = 0;
+        foreach (var item in hatFilesSorted)
+        {
+            CustomHat info = new CustomHat();
+            info.Name = $"April Hat {i++:D2}";
+            info.Author = "A Fool";
+            info.Resource = item.Value.FirstOrDefault(x => !x.Contains("back"));
+            info.BackResource = item.Value.FirstOrDefault(x => x.Contains("back"));
+            info.Adaptive = info.Resource != null && info.Resource.Contains("adaptive");
+            info.FlipResource = item.Value.FirstOrDefault(x => x.Contains("flip"));
+            info.ClimbResource = item.Value.FirstOrDefault(x => x.Contains("climb"));
+            info.Package = "April Fools Hats";
+            if (info.Resource == null || info.Name == null) // required
+                continue;
+            hatdatas.Add(info);
+        }
+        return hatdatas;
     }
 }

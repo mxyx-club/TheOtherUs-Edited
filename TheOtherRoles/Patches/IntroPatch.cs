@@ -589,12 +589,20 @@ internal class IntroPatch
     }
 }
 
-[HarmonyPatch(typeof(Constants), nameof(Constants.ShouldHorseAround))]
-public static class ShouldAlwaysHorseAround
-{
-    public static bool Prefix(ref bool __result)
-    {
-        __result = EventUtility.isEnabled && !EventUtility.disableHorses;
+/* Horses are broken since 2024.3.5 - keeping this code in case they return.
+ * [HarmonyPatch(typeof(AprilFoolsMode), nameof(AprilFoolsMode.ShouldHorseAround))]
+public static class ShouldAlwaysHorseAround {
+    public static bool Prefix(ref bool __result) {
+        __result = EventUtility.isEnabled && !EventUtility.disableEventMode;
         return false;
+    }
+}*/
+
+[HarmonyPatch(typeof(AprilFoolsMode), nameof(AprilFoolsMode.ShouldShowAprilFoolsToggle))]
+public static class ShouldShowAprilFoolsToggle
+{
+    public static void Postfix(ref bool __result)
+    {
+        __result = __result || EventUtility.isEventDate || EventUtility.canBeEnabled;  // Extend it to a 7 day window instead of just 1st day of the Month
     }
 }

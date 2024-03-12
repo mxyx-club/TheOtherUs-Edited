@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Hazel;
 using InnerNet;
+using Reactor.Utilities.Extensions;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -96,6 +97,7 @@ public class GameStartManagerPatch
         public static float startingTimer;
         private static bool update;
         private static string currentText = "";
+        private static GameObject copiedStartButton;
 
         public static void Prefix(GameStartManager __instance)
         {
@@ -125,7 +127,7 @@ public class GameStartManagerPatch
                 {
                     HandshakeHelper.againSend(client.Id, HandshakeHelper.ShareMode.Again);
                     versionMismatch = true;
-                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了个不同版本的TheOtherUs\n</color>";
+                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了不同版本的TheOtherUs\n</color>";
                 }
                 else
                 {
@@ -141,12 +143,12 @@ public class GameStartManagerPatch
                     {
                         case > 0:
                             message +=
-                                $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了一个旧版本的TheOtherUs (v{playerVersions[client.Id].version.ToString()})\n</color>";
+                                $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了旧版本的TheOtherUs (v{playerVersions[client.Id].version.ToString()})\n</color>";
                             versionMismatch = true;
                             break;
                         case < 0:
                             message +=
-                                $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了一个较新版本的TheOtherUs (v{playerVersions[client.Id].version.ToString()})\n</color>";
+                                $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了较新版本的TheOtherUs (v{playerVersions[client.Id].version.ToString()})\n</color>";
                             versionMismatch = true;
                             break;
                         default:
@@ -155,7 +157,7 @@ public class GameStartManagerPatch
                             {
                                 // version presumably matches, check if Guid matches
                                 message +=
-                                    $"<color=#FF0000FF>{client.Character.Data.PlayerName} 装了一个修改过的TheOtherUs v{playerVersions[client.Id].version.ToString()} <size=30%>({PV.guid.ToString()})</size>\n</color>";
+                                    $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了修改过的TheOtherUs v{playerVersions[client.Id].version.ToString()}\n<size=40%>({PV.guid.ToString()})</size>\n</color>";
                                 versionMismatch = true;
                             }
 
@@ -172,34 +174,56 @@ public class GameStartManagerPatch
                 {
                     __instance.StartButton.color = __instance.startLabelText.color = Palette.DisabledClear;
                     __instance.GameStartText.text = message;
-                    __instance.GameStartText.transform.localPosition =
-                        __instance.StartButton.transform.localPosition + (Vector3.up * 2);
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
                 }
                 else
                 {
-                    __instance.StartButton.color = __instance.startLabelText.color =
-                        __instance.LastPlayerCount >= __instance.MinPlayers
-                            ? Palette.EnabledColor
-                            : Palette.DisabledClear;
+                    __instance.StartButton.color = __instance.startLabelText.color = ((__instance.LastPlayerCount >= __instance.MinPlayers) ? Palette.EnabledColor : Palette.DisabledClear);
                     __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition;
                 }
+
+                if (__instance.startState != GameStartManager.StartingStates.Countdown)
+                    copiedStartButton?.Destroy();
 
                 // Make starting info available to clients:
                 if (startingTimer <= 0 && __instance.startState == GameStartManager.StartingStates.Countdown)
                 {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        CachedPlayer.LocalPlayer!.PlayerControl.NetId, (byte)CustomRPC.SetGameStarting,
-                        SendOption.Reliable);
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetGameStarting, Hazel.SendOption.Reliable, -1);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.setGameStarting();
+
+                    // Activate Stop-Button
+                    copiedStartButton = GameObject.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
+                    copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
+                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 180f);
+                    copiedStartButton.SetActive(true);
+                    var startButtonText = copiedStartButton.GetComponentInChildren<TMPro.TextMeshPro>();
+                    startButtonText.text = "STOP";
+                    startButtonText.fontSize *= 0.8f;
+                    startButtonText.fontSizeMax = startButtonText.fontSize;
+                    startButtonText.gameObject.transform.localPosition = Vector3.zero;
+                    PassiveButton startButtonPassiveButton = copiedStartButton.GetComponent<PassiveButton>();
+
+                    void StopStartFunc()
+                    {
+                        __instance.ResetStartState();
+                        copiedStartButton.Destroy();
+                        startingTimer = 0;
+                    }
+                    startButtonPassiveButton.OnClick.AddListener((Action)(() => StopStartFunc()));
+                    __instance.StartCoroutine(Effects.Lerp(.1f, new System.Action<float>((p) => {
+                        startButtonText.text = "STOP";
+                    })));
+
                 }
+                if (__instance.startState == GameStartManager.StartingStates.Countdown)
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 0.6f;
             }
 
             // Client update with handshake infos
             else
             {
-                if (!playerVersions.ContainsKey(AmongUsClient.Instance.HostId) ||
-                    Main.Version.CompareTo(playerVersions[AmongUsClient.Instance.HostId].version) != 0)
+                if (!playerVersions.ContainsKey(AmongUsClient.Instance.HostId) || TheOtherRolesPlugin.Version.CompareTo(playerVersions[AmongUsClient.Instance.HostId].version) != 0)
                 {
                     kickingTimer += Time.deltaTime;
                     if (kickingTimer > 10)
@@ -209,58 +233,82 @@ public class GameStartManagerPatch
                         SceneChanger.ChangeScene("MainMenu");
                     }
 
-                    __instance.GameStartText.text =
-                        $"<color=#FF0000FF>房主没有或不同版本的TheOtherUs\n即将被踢出房间 {Math.Round(10 - kickingTimer)}s</color>";
-                    __instance.GameStartText.transform.localPosition =
-                        __instance.StartButton.transform.localPosition + (Vector3.up * 2);
+                    __instance.GameStartText.text = $"<color=#FF0000FF>The host has no or a different version of The Other Roles\nYou will be kicked in {Math.Round(10 - kickingTimer)}s</color>";
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
                 }
                 else if (versionMismatch)
                 {
-                    __instance.GameStartText.text = "<color=#FF0000FF>装了不同版本模组的玩家:\n</color>" + message;
-                    __instance.GameStartText.transform.localPosition =
-                        __instance.StartButton.transform.localPosition + (Vector3.up * 2);
+                    __instance.GameStartText.text = $"<color=#FF0000FF>Players With Different Versions:\n</color>" + message;
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
                 }
                 else
                 {
                     __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition;
-                    if (__instance.startState != GameStartManager.StartingStates.Countdown && startingTimer <= 0)
-                    {
-                        __instance.GameStartText.text = string.Empty;
-                    }
-                    else
-                    {
-                        __instance.GameStartText.text = $"距离开始还有 {(int)startingTimer + 1}";
-                        if (startingTimer <= 0) __instance.GameStartText.text = string.Empty;
-                    }
+                    if (!__instance.GameStartText.text.StartsWith("Starting"))
+                        __instance.GameStartText.text = String.Empty;
                 }
-            }
 
-            if (Input.GetKeyDown(KeyCode.LeftShift) && GameStartManager.InstanceExists &&
-                GameStartManager.Instance.startState == GameStartManager.StartingStates.Countdown &&
-                startingTimer <= 4) GameStartManager.Instance.countDownTimer = 0;
-            //カウントダウンキャンセル
-            if (Input.GetKeyDown(KeyCode.C) && GameStartManager.InstanceExists &&
-                GameStartManager.Instance.startState == GameStartManager.StartingStates.Countdown)
-            {
-                GameStartManager.Instance.ResetStartState();
-                if (Cultist.isCultistGame) GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors = 2;
-                //                 Cultist.isCultistGame = false;
+                if (!__instance.GameStartText.text.StartsWith("Starting") || !CustomOptionHolder.anyPlayerCanStopStart.getBool())
+                    copiedStartButton?.Destroy();
+                if (CustomOptionHolder.anyPlayerCanStopStart.getBool() && copiedStartButton == null && __instance.GameStartText.text.StartsWith("Starting"))
+                {
+
+                    // Activate Stop-Button
+                    copiedStartButton = GameObject.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
+                    copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
+                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 180f);
+                    copiedStartButton.SetActive(true);
+                    var startButtonText = copiedStartButton.GetComponentInChildren<TMPro.TextMeshPro>();
+                    startButtonText.text = "STOP";
+                    startButtonText.fontSize *= 0.8f;
+                    startButtonText.fontSizeMax = startButtonText.fontSize;
+                    startButtonText.gameObject.transform.localPosition = Vector3.zero;
+                    PassiveButton startButtonPassiveButton = copiedStartButton.GetComponent<PassiveButton>();
+
+                    void StopStartFunc()
+                    {
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.StopStart, Hazel.SendOption.Reliable, AmongUsClient.Instance.HostId);
+                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        copiedStartButton.Destroy();
+                        __instance.GameStartText.text = String.Empty;
+                        startingTimer = 0;
+                    }
+                    startButtonPassiveButton.OnClick.AddListener((Action)(() => StopStartFunc()));
+                    __instance.StartCoroutine(Effects.Lerp(.1f, new System.Action<float>((p) => {
+                        startButtonText.text = "STOP";
+                    })));
+
+                }
+                if (__instance.GameStartText.text.StartsWith("Starting") && CustomOptionHolder.anyPlayerCanStopStart.getBool())
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 0.6f;
             }
 
             // Start Timer
-            if (startingTimer > 0) startingTimer -= Time.deltaTime;
+            if (startingTimer > 0)
+            {
+                startingTimer -= Time.deltaTime;
+            }
             // Lobby timer
             if (!GameData.Instance) return; // No instance
 
             if (update) currentText = __instance.PlayerCounter.text;
 
             timer = Mathf.Max(0f, timer -= Time.deltaTime);
-            var minutes = (int)timer / 60;
-            var seconds = (int)timer % 60;
-            var suffix = $" ({minutes:00}:{seconds:00})";
+            int minutes = (int)timer / 60;
+            int seconds = (int)timer % 60;
+            string suffix = $" ({minutes:00}:{seconds:00})";
 
             __instance.PlayerCounter.text = currentText + suffix;
             __instance.PlayerCounter.autoSizeTextContainer = true;
+
+            if (AmongUsClient.Instance.AmHost)
+            {
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGamemode, Hazel.SendOption.Reliable, -1);
+                writer.Write((byte)TORMapOptions.gameMode);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.shareGameMode((byte)TORMapOptions.gameMode);
+            }
         }
     }
 
