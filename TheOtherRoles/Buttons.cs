@@ -962,21 +962,41 @@ internal static class HudManagerStartPatch
         // ButtonBarry Meetings
         buttonBarryButton = new CustomButton(
             () =>
-            {
-                CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
+            {                
+                //CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
                 ButtonBarry.remoteMeetingsLeft--;
-                Helpers
-                    .handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                Helpers
-                    .handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+
+                Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                Helpers.handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                    (byte)CustomRPC.UncheckedCmdReportDeadBody, SendOption.Reliable);
-                writer.Write(CachedPlayer.LocalPlayer.PlayerId);
-                writer.Write(byte.MaxValue);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var sabotageActive = false;
+                foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
+                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
+                    task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
+                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)))
+                        sabotageActive = true;
 
+                if (sabotageActive)
+                {
+                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
+                    PlayerControl.LocalPlayer.RpcStartMeeting(null);
+                }
+                else
+                {
+                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        (byte)CustomRPC.UncheckedCmdReportDeadBody, SendOption.Reliable);
+                    writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                    writer.Write(byte.MaxValue);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                }
+
+                /*
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                             (byte)CustomRPC.MayorMeeting, SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.StartMayorMeeting();
+                */
                 buttonBarryButton.Timer = 1f;
             },
             () =>
@@ -3339,12 +3359,11 @@ internal static class HudManagerStartPatch
         mayorMeetingButton = new CustomButton(
             () =>
             {
-                CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
+                //CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
                 Mayor.remoteMeetingsLeft--;
-                Helpers
-                    .handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                Helpers
-                    .handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                
+                Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                Helpers.handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
 
                 var sabotageActive = false;
@@ -3367,7 +3386,13 @@ internal static class HudManagerStartPatch
                     writer.Write(byte.MaxValue);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                 }
-
+                
+                /*
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                             (byte)CustomRPC.MayorMeeting, SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.StartMayorMeeting();
+                */
                 mayorMeetingButton.Timer = 1f;
 
             },

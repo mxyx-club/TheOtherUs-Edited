@@ -245,7 +245,9 @@ public enum CustomRPC
     AkujoSetKeep = 189,
     AkujoSuicide = 190,
 
-    ButtonBarry = 191
+    ButtonBarry = 191,
+
+    MayorMeeting = 192,
 }
 
 public static class RPCProcedure
@@ -824,6 +826,15 @@ public static class RPCProcedure
             {
                 if (p == 1f) TimeMaster.shieldActive = false;
             })));
+    }
+    
+    public static void StartMayorMeeting()
+    {
+        CachedPlayer.LocalPlayer.NetTransform.Halt();
+        var mayor = Mayor.mayor;
+
+        FastDestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(mayor);
+        FastDestroyableSingleton<ShipStatus>.Instance.StartMeeting(mayor, null);
     }
 
     public static void amnisiacTakeRole(byte targetId)
@@ -3520,6 +3531,9 @@ internal class RPCHandlerPatch
                 var roomPlayer = reader.ReadByte();
                 var roomId = reader.ReadByte();
                 RPCProcedure.shareRoom(roomPlayer, roomId);
+                break;
+            case CustomRPC.MayorMeeting:
+                RPCProcedure.StartMayorMeeting();
                 break;
         }
 
