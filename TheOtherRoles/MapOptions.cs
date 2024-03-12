@@ -84,6 +84,7 @@ internal static class TORMapOptions
 
         maxNumberOfMeetings = Mathf.RoundToInt(CustomOptionHolder.maxNumberOfMeetings.getSelection());
         blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.getBool();
+        blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.getBool();
         noVoteIsSelfVote = CustomOptionHolder.noVoteIsSelfVote.getBool();
         hidePlayerNames = CustomOptionHolder.hidePlayerNames.getBool();
         hideOutOfSightNametags = CustomOptionHolder.hideOutOfSightNametags.getBool();

@@ -596,6 +596,7 @@ internal class RoleManagerSelectRolesPatch
             RoleId.Flash,
             RoleId.ModifierNiceGuesser,
             RoleId.Multitasker,
+            RoleId.ButtonBarry,
             RoleId.Vip,
             RoleId.Invert,
             RoleId.Indomitable,
@@ -905,6 +906,17 @@ internal class RoleManagerSelectRolesPatch
             modifiers.RemoveAll(x => x == RoleId.Torch);
         }
         
+        if (modifiers.Contains(RoleId.ButtonBarry))
+        {
+            var Barry = new List<PlayerControl>(playerList);
+            Barry.RemoveAll(x => x.Data.Role.IsImpostor);
+
+            playerId = setModifierToRandomPlayer((byte)RoleId.ButtonBarry, Barry);
+            Barry.RemoveAll(x => x.PlayerId == playerId);
+            playerList.RemoveAll(x => x.PlayerId == playerId);
+            modifiers.RemoveAll(x => x == RoleId.ButtonBarry);
+        }
+        
         if (modifiers.Contains(RoleId.ModifierNiceGuesser))
         {
             var modifierNiceGuesserCount = 0;
@@ -989,6 +1001,9 @@ internal class RoleManagerSelectRolesPatch
                 break;
             case RoleId.Tunneler:
                 selection = CustomOptionHolder.modifierTunneler.getSelection();
+                break;
+            case RoleId.ButtonBarry:
+                selection = CustomOptionHolder.modifierButtonBarry.getSelection();
                 break;
             case RoleId.Sunglasses:
                 selection = CustomOptionHolder.modifierSunglasses.getSelection();

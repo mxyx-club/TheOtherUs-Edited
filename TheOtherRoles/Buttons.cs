@@ -33,6 +33,7 @@ internal static class HudManagerStartPatch
     private static CustomButton bomber2BombButton;
     private static CustomButton bomber2KillButton;
     private static CustomButton disperserDisperseButton;
+    private static CustomButton buttonBarryButton;
     private static CustomButton morphlingButton;
     private static CustomButton camouflagerButton;
     public static CustomButton portalmakerPlacePortalButton;
@@ -142,6 +143,7 @@ internal static class HudManagerStartPatch
         medicShieldButton.MaxTimer = 0f;
         shifterShiftButton.MaxTimer = 0f;
         disperserDisperseButton.MaxTimer = 0f;
+        buttonBarryButton.MaxTimer = 0f;
         morphlingButton.MaxTimer = Morphling.cooldown;
         bomber2BombButton.MaxTimer = Bomber2.cooldown;
         camouflagerButton.MaxTimer = Camouflager.cooldown;
@@ -714,7 +716,8 @@ internal static class HudManagerStartPatch
             {
                 timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
                 SoundEffectsManager.stop("timemasterShield");
-            }
+            },
+            buttonText: ModTranslation.getString("TimeShieldText")
         );
 
         // Veteren Alert
@@ -744,7 +747,8 @@ internal static class HudManagerStartPatch
             KeyCode.F,
             true,
             Veteren.alertDuration,
-            () => { veterenAlertButton.Timer = veterenAlertButton.MaxTimer; }
+            () => { veterenAlertButton.Timer = veterenAlertButton.MaxTimer; },
+            buttonText: ModTranslation.getString("AlertText")
         );
 
         // Medic Shield
@@ -821,12 +825,6 @@ internal static class HudManagerStartPatch
             __instance,
             KeyCode.F
         );
-        // () => { return Juggernaut.juggernaut != null && Juggernaut.juggernaut == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
-        //     () => {
-        //          showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, "KILL");
-        //         return Juggernaut.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
-        //      },
-        //     () => { juggernautKillBu
 
         // Akujo Honmei
         akujoHonmeiButton = new CustomButton(
@@ -895,7 +893,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowCenter,
             __instance,
             KeyCode.C,
-            buttonText: "(C)"+ModTranslation.getString("AkujoBackupText")
+            buttonText: "(C)" + ModTranslation.getString("AkujoBackupText")
         );
         akujoBackupLeftText = GameObject.Instantiate(akujoBackupButton.actionButton.cooldownTimerText, akujoBackupButton.actionButton.cooldownTimerText.transform.parent);
         akujoBackupLeftText.text = "";
@@ -957,7 +955,53 @@ internal static class HudManagerStartPatch
             new Vector3(0, 1f, 0),
             __instance,
             null,
-            true
+            true,
+            buttonText: ModTranslation.getString("DisperseText")
+        );
+
+        // ButtonBarry Meetings
+        buttonBarryButton = new CustomButton(
+            () =>
+            {
+                CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
+                ButtonBarry.remoteMeetingsLeft--;
+                Helpers
+                    .handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                Helpers
+                    .handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
+
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.UncheckedCmdReportDeadBody, SendOption.Reliable);
+                writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                writer.Write(byte.MaxValue);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+
+                buttonBarryButton.Timer = 1f;
+            },
+            () =>
+            {
+                return ButtonBarry.buttonBarry != null && ButtonBarry.buttonBarry == CachedPlayer.LocalPlayer.PlayerControl &&
+                       !CachedPlayer.LocalPlayer.Data.IsDead;
+            },
+            () =>
+            {
+                var sabotageActive = false;
+                foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
+                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
+                    task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
+                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && ButtonBarry.TaskRemoteMeetings == false)
+                        sabotageActive = true;
+                return !sabotageActive && CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
+                       ButtonBarry.remoteMeetingsLeft > 0;
+            },
+            () => { buttonBarryButton.Timer = buttonBarryButton.MaxTimer; },
+            ButtonBarry.getButtonSprite(),
+            new Vector3(0, 1f, 0),
+            __instance,
+            null,
+            true,
+            buttonText: ModTranslation.getString("buttonBarryText")
         );
 
         // Morphling morph
@@ -1094,7 +1138,7 @@ internal static class HudManagerStartPatch
             true,
             0f,
             () => { hackerButton.Timer = hackerButton.MaxTimer; },
-            buttonText:ModTranslation.getString("hackerButtonText")
+            buttonText: ModTranslation.getString("hackerButtonText")
         );
 
         hackerAdminTableButton = new CustomButton(
@@ -1530,7 +1574,7 @@ internal static class HudManagerStartPatch
             __instance,
             null,
             true,
-            buttonText:ModTranslation.getString("GarlicText")
+            buttonText: ModTranslation.getString("GarlicText")
         );
 
         portalmakerPlacePortalButton = new CustomButton(
@@ -1562,7 +1606,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.lowerRowRight,
             __instance,
             KeyCode.F,
-            buttonText:ModTranslation.getString("PlaceJackInTheBoxText")
+            buttonText: ModTranslation.getString("PlaceJackInTheBoxText")
         );
 
         usePortalButton = new CustomButton(
@@ -1634,7 +1678,7 @@ internal static class HudManagerStartPatch
             __instance,
             KeyCode.H,
             true,
-            buttonText:ModTranslation.getString("usePortalText")
+            buttonText: ModTranslation.getString("usePortalText")
         );
 
         portalmakerMoveToPortalButton = new CustomButton(
@@ -1896,7 +1940,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowLeft, //brb
             __instance,
             KeyCode.F,
-            buttonText:ModTranslation.getString("minerText")
+            buttonText: ModTranslation.getString("minerText")
         );
 
         bomber2BombButton = new CustomButton(
@@ -2160,7 +2204,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowLeft,
             __instance,
             KeyCode.F,
-            buttonText:ModTranslation.getString("")
+            buttonText: ModTranslation.getString("")
         );
 
         lightsOutButton = new CustomButton(
@@ -2255,7 +2299,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowLeft,
             __instance,
             KeyCode.F,
-            buttonText:ModTranslation.getString("CleanText")
+            buttonText: ModTranslation.getString("CleanText")
         );
 
         // Cleaner Clean
@@ -2337,7 +2381,7 @@ internal static class HudManagerStartPatch
             true,
             0f,
             () => { },
-            buttonText:ModTranslation.getString("DragBodyText")
+            buttonText: ModTranslation.getString("DragBodyText")
         );
 
         // Warlock curse
@@ -2556,7 +2600,7 @@ internal static class HudManagerStartPatch
                     securityGuardChargesText.text = $"{SecurityGuard.charges} / {SecurityGuard.maxCharges}";
                 securityGuardCamButton.actionButton.graphic.sprite =
                     Helpers.isMira() ? SecurityGuard.getLogSprite() : SecurityGuard.getCamSprite();
-                securityGuardCamButton.actionButton.OverrideText(Helpers.isMira() ? 
+                securityGuardCamButton.actionButton.OverrideText(Helpers.isMira() ?
                     ModTranslation.getString("hackerDoorLogText") : ModTranslation.getString("CamButtonText"));
                 return CachedPlayer.LocalPlayer.PlayerControl.CanMove && SecurityGuard.charges > 0;
             },
@@ -2720,7 +2764,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.lowerRowCenter,
             __instance,
             KeyCode.F,
-            buttonText:ModTranslation.getString("VultureText")
+            buttonText: ModTranslation.getString("VultureText")
         );
 
         amnisiacRememberButton = new CustomButton(
@@ -2770,7 +2814,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.lowerRowRight, //brb
             __instance,
             KeyCode.F,
-            buttonText:ModTranslation.getString("RememberText")
+            buttonText: ModTranslation.getString("RememberText")
         );
 
         // Medium button
@@ -3061,7 +3105,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.lowerRowRight, //brb
             __instance,
             KeyCode.F,
-            buttonText:ModTranslation.getString("jumperText")
+            buttonText: ModTranslation.getString("jumperText")
         );
 
         // Escapist Escape
@@ -3303,12 +3347,29 @@ internal static class HudManagerStartPatch
                     .handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                    (byte)CustomRPC.UncheckedCmdReportDeadBody, SendOption.Reliable);
-                writer.Write(CachedPlayer.LocalPlayer.PlayerId);
-                writer.Write(byte.MaxValue);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var sabotageActive = false;
+                foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
+                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
+                    task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
+                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)))
+                        sabotageActive = true;
+
+                if (sabotageActive)
+                {
+                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
+                    PlayerControl.LocalPlayer.RpcStartMeeting(null);
+                }
+                else
+                {
+                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        (byte)CustomRPC.UncheckedCmdReportDeadBody, SendOption.Reliable);
+                    writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                    writer.Write(byte.MaxValue);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                }
+
                 mayorMeetingButton.Timer = 1f;
+
             },
             () =>
             {
@@ -3322,7 +3383,7 @@ internal static class HudManagerStartPatch
                 foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
                     if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
                     task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
-                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && CustomOptionHolder.mayorTaskRemoteMeetings.getBool() == false)
+                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && Mayor.TaskRemoteMeetings == false)
                         sabotageActive = true;
                 return !sabotageActive && CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
                        Mayor.remoteMeetingsLeft > 0;
@@ -3450,7 +3511,7 @@ internal static class HudManagerStartPatch
                 bomberButton.isEffectActive = false;
                 bomberButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
-            buttonText:ModTranslation.getString("TerroristBombText")
+            buttonText: ModTranslation.getString("TerroristBombText")
         );
 
         defuseButton = new CustomButton(
@@ -3555,7 +3616,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowRight,
             __instance,
             KeyCode.Q,
-            buttonText:ModTranslation.getString("killButtonText")
+            buttonText: ModTranslation.getString("killButtonText")
         );
 
         // Trapper Charges
@@ -3656,7 +3717,7 @@ internal static class HudManagerStartPatch
                 hunterLighterButton.Timer = hunterLighterButton.MaxTimer;
                 SoundEffectsManager.play("lighterLight");
             },
-            buttonText:"(F)"+ModTranslation.getString("LighterText")
+            buttonText: "(F)" + ModTranslation.getString("LighterText")
         );
 
         hunterAdminTableButton = new CustomButton(
@@ -3697,7 +3758,7 @@ internal static class HudManagerStartPatch
                 if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
             },
             false,
-            "(G)"+ModTranslation.getString("AdminMapText")
+            "(G)" + ModTranslation.getString("AdminMapText")
         );
 
         hunterArrowButton = new CustomButton(

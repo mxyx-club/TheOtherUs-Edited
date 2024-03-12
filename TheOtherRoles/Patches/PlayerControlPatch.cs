@@ -1827,7 +1827,6 @@ internal class BodyReportPatch
         if (isMedicReport || isDetectiveReport)
         {
             var deadPlayer = deadPlayers?.Where(x => x.player?.PlayerId == target?.PlayerId)?.FirstOrDefault();
-
             if (deadPlayer != null && deadPlayer.killerIfExisting != null)
             {
                 var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.timeOfDeath).TotalMilliseconds;
@@ -1835,7 +1834,20 @@ internal class BodyReportPatch
 
                 if (isMedicReport)
                 {
-                    msg = $"尸检报告: 凶手似乎是 {Math.Round(timeSinceDeath / 1000)}秒前死亡!";
+                    //msg = $"尸检报告: 尸体在 {Math.Round(timeSinceDeath / 1000)}秒前死亡!";
+                    if (timeSinceDeath < Medic.ReportNameDuration * 1000)
+                    {
+                        msg = $"尸检报告: 凶手似乎是 {deadPlayer.killerIfExisting.Data.PlayerName}!";
+                    }
+                    else if (timeSinceDeath < Medic.ReportColorDuration * 1000)
+                    {
+                        var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting) ? "浅" : "深";
+                        msg = $"尸检报告: 凶手似乎是 {typeOfColor} 色的!";
+                    }
+                    else
+                    {
+                        msg = $"尸检报告: 死亡时间太久，无法获取信息! {Math.Round(timeSinceDeath / 1000)}秒前死亡";
+                    }
                 }
                 else if (isDetectiveReport)
                 {
@@ -1850,7 +1862,7 @@ internal class BodyReportPatch
                     }
                     else
                     {
-                        msg = "尸检报告: 死亡时间太久，无法获取信息!";
+                        msg = $"尸检报告: 死亡时间太久，无法获取信息! {Math.Round(timeSinceDeath / 1000)}秒前死亡";
                     }
                 }
 

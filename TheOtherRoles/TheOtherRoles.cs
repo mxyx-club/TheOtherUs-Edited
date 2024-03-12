@@ -109,6 +109,7 @@ public static class TheOtherRoles
         Vip.clearAndReload();
         Invert.clearAndReload();
         Chameleon.clearAndReload();
+        ButtonBarry.clearAndReload();
 
         // Gamemodes
         HandleGuesser.clearAndReload();
@@ -336,6 +337,7 @@ public static class TheOtherRoles
         public static int mayorChooseSingleVote;
 
         public static bool voteTwice = true;
+        public static bool TaskRemoteMeetings = true;
 
         public static Sprite getMeetingSprite()
         {
@@ -354,6 +356,7 @@ public static class TheOtherRoles
             tasksNeededToSeeVoteColors = (int)CustomOptionHolder.mayorTasksNeededToSeeVoteColors.getFloat();
             meetingButton = CustomOptionHolder.mayorMeetingButton.getBool();
             mayorChooseSingleVote = CustomOptionHolder.mayorChooseSingleVote.getSelection();
+            TaskRemoteMeetings = CustomOptionHolder.mayorTaskRemoteMeetings.getBool();
             voteTwice = true;
         }
     }
@@ -793,13 +796,12 @@ public static class Medic
         reset = CustomOptionHolder.medicResetTargetAfterMeeting.getBool();
         showShielded = CustomOptionHolder.medicShowShielded.getSelection();
         showAttemptToShielded = CustomOptionHolder.medicShowAttemptToShielded.getBool();
-        //unbreakableShield = true; //CustomOptionHolder.medicBreakShield.getBool();
         unbreakableShield = CustomOptionHolder.medicBreakShield.getBool();
         showAttemptToMedic = CustomOptionHolder.medicShowAttemptToMedic.getBool();
         setShieldAfterMeeting = CustomOptionHolder.medicSetOrShowShieldAfterMeeting.getSelection() == 2;
         showShieldAfterMeeting = CustomOptionHolder.medicSetOrShowShieldAfterMeeting.getSelection() == 1;
-        //ReportNameDuration = CustomOptionHolder.medicReportNameDuration.getFloat();
-        //ReportColorDuration = CustomOptionHolder.medicReportColorDuration.getFloat();
+        ReportNameDuration = CustomOptionHolder.medicReportNameDuration.getFloat();
+        ReportColorDuration = CustomOptionHolder.medicReportColorDuration.getFloat();
         meetingAfterShielding = false;
     }
 }
@@ -2102,10 +2104,10 @@ public static class Guesser
     public static List<PlayerControl> evilGuesser = new();
     public static List<PlayerControl> modifierNiceGuesser = new();
     public static Color color = new Color32(255, 255, 0, byte.MaxValue);
-    
+
     public static bool guesserModifier = false;
     public static int guesserModifierQuantity = 1;
-    
+
     public static int remainingShotsEvilGuesser = 2;
     public static int remainingShotsNiceGuesser = 2;
     public static bool hasMultipleShotsPerMeeting;
@@ -2122,7 +2124,7 @@ public static class Guesser
     {
         if (evilGuesser.Any(item => item.PlayerId == playerId && evilGuesser != null)) return true;
 
-        if(modifierNiceGuesser.Any(item => item.PlayerId == playerId && modifierNiceGuesser != null)) return true;
+        if (modifierNiceGuesser.Any(item => item.PlayerId == playerId && modifierNiceGuesser != null)) return true;
 
         return niceGuesser != null && niceGuesser.PlayerId == playerId;
     }
@@ -2143,7 +2145,8 @@ public static class Guesser
         {
             result = remainingShotsNiceGuesser;
             if (shoot) remainingShotsNiceGuesser = Mathf.Max(0, remainingShotsNiceGuesser - 1);
-        }else if(Guesser.modifierNiceGuesser.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId))
+        }
+        else if (Guesser.modifierNiceGuesser.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId))
         {
             result = remainingShotsNiceGuesser;
             if (shoot) remainingShotsNiceGuesser = Mathf.Max(0, remainingShotsNiceGuesser - 1);
@@ -2159,13 +2162,13 @@ public static class Guesser
     {
         niceGuesser = null;
         evilGuesser = new List<PlayerControl>();
-        
+
         guesserModifier = CustomOptionHolder.guesserModifier.getBool();
         guesserModifierQuantity = CustomOptionHolder.guesserModifierQuantity.GetInt();
-        
+
         guesserCantGuessSnitch = CustomOptionHolder.guesserCantGuessSnitchIfTaksDone.getBool();
         remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.modifierAssassinNumberOfShots.getFloat() + 1);
-        remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
+        remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat() + 1);
         hasMultipleShotsPerMeeting = CustomOptionHolder.guesserHasMultipleShotsPerMeeting.getBool();
         assassinMultipleShotsPerMeeting = CustomOptionHolder.modifierAssassinMultipleShotsPerMeeting.getBool();
         showInfoInGhostChat = CustomOptionHolder.guesserShowInfoInGhostChat.getBool();
@@ -2373,8 +2376,8 @@ public static class Medium
             var roleString = RoleInfo.GetRolesString(Medium.target.player, false);
             if (randomNumber == 0)
             {
-                if (!roleString.Contains("伪装者阵营") && !roleString.Contains("船员阵营"))
-                    msg = "除了我自己，场上已经没有 " + roleString + " 了.";
+                if (!roleString.Contains(RoleInfo.impostor.name) && !roleString.Contains(RoleInfo.crewmate.name))
+                    msg = "场上没有 " + roleString + " 了";
                 else
                     msg = "我是一名 " + roleString + " .";
             }
@@ -2416,14 +2419,14 @@ public static class Medium
                             Helpers.isNeutral(pc) && pc != Jackal.jackal && pc != Sidekick.sidekick &&
                             pc != Thief.thief)
                         .Count();
-                    condition = "个中立不带刀的玩家" + (count == 1 ? "" : "") + " 他们 " + (count == 1 ? "" : "当时还") + " ";
+                    condition = "名玩家" + (count == 1 ? "" : "") + "" + (count == 1 ? "是" : "是") + "中立但是不能击杀";
                     break;
                 case 3:
                     //count = alivePlayersList.Where(pc =>
                     break;
             }
 
-            msg += $"\n你问我的时候,有{count} " + condition + (count == 1 ? "" : "") + " 活着";
+            msg += $"\n你问我的时候,还有{count} " + condition + (count == 1 ? "" : "") + " 活着";
         }
 
         return Medium.target.player.Data.PlayerName + " 的灵魂说:\n" + msg;
@@ -3312,6 +3315,28 @@ public static class Chameleon
             {
             }
         }
+    }
+}
+
+public static class ButtonBarry
+{
+    public static PlayerControl buttonBarry;
+    public static int remoteMeetingsLeft = 1;
+    public static bool TaskRemoteMeetings = false;
+
+    private static Sprite buttonSprite;
+
+    public static Sprite getButtonSprite()
+    {
+        if (buttonSprite) return buttonSprite;
+        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.EmergencyButton.png", 550f);
+        return buttonSprite;
+    }
+    public static void clearAndReload()
+    {
+        buttonBarry = null;
+        remoteMeetingsLeft = 1;
+        TaskRemoteMeetings = CustomOptionHolder.modifierButtonTaskRemoteMeetings.getBool();
     }
 }
 

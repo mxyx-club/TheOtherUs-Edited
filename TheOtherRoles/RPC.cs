@@ -112,6 +112,7 @@ public enum RoleId
     Mini,
     Vip,
     Tunneler,
+    ButtonBarry,
     Watcher,
     Radar,
     Blind,
@@ -241,7 +242,9 @@ public enum CustomRPC
     //魅魔
     AkujoSetHonmei = 188,
     AkujoSetKeep = 189,
-    AkujoSuicide = 190
+    AkujoSuicide = 190,
+
+    ButtonBarry = 191
 }
 
 public static class RPCProcedure
@@ -578,7 +581,7 @@ public static class RPCProcedure
                 break;
             case RoleId.Torch:
                 Torch.torch.Add(player);
-                break;            
+                break;         
             case RoleId.Flash:
                 Flash.flash.Add(player);
                 break;       
@@ -603,6 +606,9 @@ public static class RPCProcedure
                 break;
             case RoleId.Tunneler:
                 Tunneler.tunneler = player;
+                break;
+            case RoleId.ButtonBarry:
+                ButtonBarry.buttonBarry = player;
                 break;
             case RoleId.Multitasker:
                 Multitasker.multitasker.Add(player);
@@ -1764,6 +1770,7 @@ public static class RPCProcedure
             if (player == Mini.mini) Mini.clearAndReload();
             if (player == Watcher.watcher) Watcher.clearAndReload();
             if (player == Radar.radar) Radar.clearAndReload();
+            if (player == ButtonBarry.buttonBarry) ButtonBarry.clearAndReload();
             if (player == Disperser.disperser) Disperser.clearAndReload();
             if (player == Indomitable.indomitable) Indomitable.clearAndReload();
             if (player == Tunneler.tunneler) Tunneler.clearAndReload();

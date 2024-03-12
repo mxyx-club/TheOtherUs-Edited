@@ -496,5 +496,9 @@
     "defuseBombText": {
         "0": "[BLANK]",
         "13": "\u62c6\u5f39"
+    },
+    "buttonBarryText": {
+        "0": "[BLANK]",
+        "13": "\u7d27\u6025\u4f1a\u8bae"
     }
 }

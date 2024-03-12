@@ -107,6 +107,7 @@ public class RoleInfo
     public static RoleInfo watcher = new("窥视者", Color.yellow, "来来来，我看看你们怎么投票的啊", "你可以知晓所有人的投票情况", RoleId.Watcher, false, true);
     public static RoleInfo radar = new("雷达", Color.yellow, "时刻警惕！", "得知距离最近的玩家位置", RoleId.Radar, false, true);
     public static RoleInfo tunneler = new("管道工程师", Color.yellow, "让我看看这个管道", "完成任务可使用管道", RoleId.Tunneler, false, true);
+    public static RoleInfo buttonBarry = new("执钮人", Color.yellow, "你可以随时召开紧急会议!", "你可以随时召开紧急会议!", RoleId.ButtonBarry, false, true);
     public static RoleInfo chameleon = new("变色龙", Color.yellow, "看不见我`看不见我`", "静止时可隐身", RoleId.Chameleon, false, true);
     public static RoleInfo shifter = new("交换师", Color.yellow, "你的能力真好用！马上就是我的了！", "与他人交换职业", RoleId.Shifter, false, true);
 
@@ -201,6 +202,7 @@ public class RoleInfo
         watcher,
         radar,
         tunneler,
+        buttonBarry,
         chameleon,
         shifter
     };
@@ -263,6 +265,7 @@ public class RoleInfo
             if (p == Watcher.watcher) infos.Add(watcher);
             if (p == Radar.radar) infos.Add(radar);
             if (p == Tunneler.tunneler) infos.Add(tunneler);
+            if (p == ButtonBarry.buttonBarry) infos.Add(buttonBarry);
             if (p == Slueth.slueth) infos.Add(slueth);
             if (p == Disperser.disperser) infos.Add(disperser);
             if (Invert.invert.Any(x => x.PlayerId == p.PlayerId)) infos.Add(invert);

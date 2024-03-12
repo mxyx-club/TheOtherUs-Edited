@@ -227,8 +227,8 @@ public class CustomOptionHolder
     public static CustomOption medicSetShieldAfterMeeting;
     public static CustomOption medicBreakShield;
     public static CustomOption medicResetTargetAfterMeeting;
-    //public static CustomOption medicReportNameDuration;
-    //public static CustomOption medicReportColorDuration;
+    public static CustomOption medicReportNameDuration;
+    public static CustomOption medicReportColorDuration;
 
     public static CustomOption swapperSpawnRate;
     public static CustomOption swapperCanCallEmergency;
@@ -430,7 +430,7 @@ public class CustomOptionHolder
     public static CustomOption modifierTorch;
     public static CustomOption modifierTorchVision;
     public static CustomOption modifierTorchQuantity;
-    
+
     public static CustomOption modifierFlash;
     public static CustomOption modifierFlashQuantity;
     public static CustomOption modifierFlashSpeed;
@@ -449,6 +449,9 @@ public class CustomOptionHolder
     public static CustomOption modifierBlind;
 
     public static CustomOption modifierTunneler;
+
+    public static CustomOption modifierButtonBarry;
+    public static CustomOption modifierButtonTaskRemoteMeetings;
 
     public static CustomOption modifierWatcher;
 
@@ -852,7 +855,7 @@ public class CustomOptionHolder
 
         guesserSpawnRate = CustomOption.Create(30100, Types.Crewmate, cs(Guesser.color, "侠客"), rates, null, true);
         guesserModifier = CustomOption.Create(30105, Types.Crewmate, "分配为附加职业", true, guesserSpawnRate);
-        guesserModifierQuantity = CustomOption.Create(30106, Types.Crewmate, "赌怪数量", 1, 1,15,1, guesserModifier);
+        guesserModifierQuantity = CustomOption.Create(30106, Types.Crewmate, "赌怪数量", 1, 1, 15, 1, guesserModifier);
         guesserNumberOfShots = CustomOption.Create(30101, Types.Crewmate, "可猜测次数", 3f, 1f, 15f, 1f, guesserSpawnRate);
         guesserHasMultipleShotsPerMeeting = CustomOption.Create(30102, Types.Crewmate, "同一轮会议可多次猜测", true, guesserSpawnRate);
         guesserShowInfoInGhostChat = CustomOption.Create(30103, Types.Crewmate, "灵魂可见猜测结果", true, guesserSpawnRate);
@@ -863,7 +866,7 @@ public class CustomOptionHolder
         mayorTasksNeededToSeeVoteColors = CustomOption.Create(30112, Types.Crewmate, "获得窥视能力所需完成的任务数", 5f, 0f, 20f, 1f, mayorCanSeeVoteColors);
         mayorMeetingButton = CustomOption.Create(30113, Types.Crewmate, "可远程召开会议", true, mayorSpawnRate);
         mayorMaxRemoteMeetings = CustomOption.Create(30114, Types.Crewmate, "远程召开会议可用次数", 1f, 1f, 5f, 1f, mayorMeetingButton);
-        mayorTaskRemoteMeetings = CustomOption.Create(30115, Types.Crewmate, "可在破坏时使用", false, mayorMeetingButton);
+        mayorTaskRemoteMeetings = CustomOption.Create(30115, Types.Crewmate, "可在破坏时使用（无效设置）", false, mayorMeetingButton);
         mayorChooseSingleVote = CustomOption.Create(30116, Types.Crewmate, "市长可选择投单票", ["关闭", "投票前选择", "会议结束前选择"], mayorSpawnRate);
 
         engineerSpawnRate = CustomOption.Create(30120, Types.Crewmate, cs(Engineer.color, "工程师"), rates, null, true);
@@ -916,9 +919,9 @@ public class CustomOptionHolder
         medicShowAttemptToMedic = CustomOption.Create(30203, Types.Crewmate, "法医可见击杀尝试", true, medicBreakShield);
         medicShowAttemptToShielded = CustomOption.Create(30204, Types.Crewmate, "被保护者可见击杀尝试", false, medicBreakShield);
         medicResetTargetAfterMeeting = CustomOption.Create(30205, Types.Crewmate, "会议后重置保护目标", false, medicSpawnRate);
-        medicSetOrShowShieldAfterMeeting = CustomOption.Create(30206, Types.Crewmate, "护盾生效与可见时机", ["立即生效且可见", "立即生效且会议后可见", "会议后生效且可见"],medicSpawnRate);
-        //medicReportNameDuration = CustomOption.Create(30207, Types.Crewmate, "以下时间内报告可得知凶手名字", 5, 0, 60, 2.5f, medicBreakShield);
-        //medicReportColorDuration = CustomOption.Create(30208, Types.Crewmate, "以下时间内报告可得知凶手颜色类型", 30, 0, 120, 2.5f, medicBreakShield);
+        medicSetOrShowShieldAfterMeeting = CustomOption.Create(30206, Types.Crewmate, "护盾生效与可见时机", ["立即生效且可见", "立即生效且会议后可见", "会议后生效且可见"], medicSpawnRate);
+        medicReportNameDuration = CustomOption.Create(30207, Types.Crewmate, "以下时间内报告可得知凶手名字", 5, 0, 60, 2.5f, medicBreakShield);
+        medicReportColorDuration = CustomOption.Create(30208, Types.Crewmate, "以下时间内报告可得知凶手颜色类型", 30, 0, 120, 2.5f, medicBreakShield);
 
         timeMasterSpawnRate = CustomOption.Create(30210, Types.Crewmate, cs(TimeMaster.color, "时间之主"), rates, null, true);
         timeMasterCooldown = CustomOption.Create(30211, Types.Crewmate, "时光之盾冷却", 30f, 10f, 60f, 2.5f, timeMasterSpawnRate);
@@ -1050,10 +1053,10 @@ public class CustomOptionHolder
         modifierTorch = CustomOption.Create(1070, Types.Modifier, cs(Color.yellow, "火炬"), rates, null, true);
         modifierTorchQuantity = CustomOption.Create(1071, Types.Modifier, cs(Color.yellow, "火炬人数"), ratesModifier, modifierTorch);
         modifierTorchVision = CustomOption.Create(1072, Types.Modifier, "火炬的视野倍率", rates, modifierTorch);
-        
+
         modifierFlash = CustomOption.Create(1210, Types.Modifier, cs(Color.yellow, "闪电侠"), rates, null, true);
         modifierFlashQuantity = CustomOption.Create(1211, Types.Modifier, cs(Color.yellow, "闪电侠人数"), ratesModifier, modifierFlash);
-        modifierFlashSpeed = CustomOption.Create(1212, Types.Modifier, "闪电侠的移速倍率", 1.25f,1f,3f,0.125f, modifierFlash);
+        modifierFlashSpeed = CustomOption.Create(1212, Types.Modifier, "闪电侠的移速倍率", 1.25f, 1f, 3f, 0.125f, modifierFlash);
 
         modifierMultitasker = CustomOption.Create(1080, Types.Modifier, cs(Color.yellow, "多线程"), rates, null, true);
         modifierMultitaskerQuantity = CustomOption.Create(1081, Types.Modifier, cs(Color.yellow, "多线程人数"), ratesModifier, modifierMultitasker);
@@ -1071,6 +1074,9 @@ public class CustomOptionHolder
         modifierRadar = CustomOption.Create(1130, Types.Modifier, cs(Color.yellow, "雷达"), rates, null, true);
 
         modifierTunneler = CustomOption.Create(1140, Types.Modifier, cs(Color.yellow, "管道工程师"), rates, null, true);
+
+        modifierButtonBarry = CustomOption.Create(1220, Types.Modifier, cs(Color.yellow, "执钮人"), rates, null, true);
+        modifierButtonTaskRemoteMeetings = CustomOption.Create(1221, Types.Modifier, "可在破坏时使用（无效设置）", false, modifierButtonBarry);
 
         modifierSlueth = CustomOption.Create(1150, Types.Modifier, cs(Color.yellow, "掘墓人"), rates, null, true);
 
@@ -1093,7 +1099,8 @@ public class CustomOptionHolder
         modifierShifter = CustomOption.Create(1200, Types.Modifier, cs(Color.yellow, "交换师"), rates, null, true);
         modifierShiftNeutral = CustomOption.Create(1201, Types.Modifier, "可交换部分中立不带刀职业", false, modifierShifter);
 
-        // Guesser Gamemode (2000 - 2999)
+        //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
+
         guesserGamemodeCrewNumber = CustomOption.Create(2001, Types.Guesser, cs(Guesser.color, "船员阵营赌怪数"), 15f, 1f, 15f, 1f, null, true);
         guesserGamemodeNeutralNumber = CustomOption.Create(2002, Types.Guesser, cs(Guesser.color, "中立阵营赌怪数"), 15f, 1f, 15f, 1f, null, true);
         guesserGamemodeImpNumber = CustomOption.Create(2003, Types.Guesser, cs(Guesser.color, "伪装者阵营赌怪数"), 15f, 1f, 15f, 1f, null, true);
@@ -1106,7 +1113,8 @@ public class CustomOptionHolder
         guesserGamemodeEvilCanKillSpy = CustomOption.Create(2009, Types.Guesser, "邪恶的赌怪可猜测卧底", true);
         guesserGamemodeCantGuessSnitchIfTaksDone = CustomOption.Create(2010, Types.Guesser, "赌怪不可猜测已完成任务的告密者", true);
 
-        // Hide N Seek Gamemode (3000 - 3999)
+        //-------------------------- Hide N Seek 3000 - 3999 -------------------------- //
+
         hideNSeekMap = CustomOption.Create(3020, Types.HideNSeekMain, cs(Color.yellow, "地图"),
             ["骷髅舰", "米拉总部", "波鲁斯", "飞艇", "真菌丛林", "潜艇", "自定义地图"], null, true, () =>
             {
@@ -1143,7 +1151,8 @@ public class CustomOptionHolder
         huntedShieldRewindTime = CustomOption.Create(3018, Types.HideNSeekRoles, cs(Color.gray, "躲藏者回溯时间"), 3f, 1f, 10f, 1f);
         huntedShieldNumber = CustomOption.Create(3026, Types.HideNSeekRoles, cs(Color.grey, "躲藏者护盾数量"), 3f, 1f, 15f, 1f);
 
-        // Prop Hunt General Options
+        //-------------------------- Prop Hunt General Options 4000 - 4999 -------------------------- //
+
         propHuntMap = CustomOption.Create(4020, Types.PropHunt, cs(Color.yellow, "地图"),
             new[] { "骷髅舰", "米拉总部", "波鲁斯", "飞艇", "蘑菇岛", "潜艇", "自定义地图" }, null, true, () =>
             {
@@ -1177,11 +1186,13 @@ public class CustomOptionHolder
         propHuntSpeedboostDuration = CustomOption.Create(4018, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑持续时间"), 10f, 2.5f, 30f, 2.5f, propHuntSpeedboostEnabled);
         propHuntSpeedboostSpeed = CustomOption.Create(4019, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑提升速度"), 2f, 1.25f, 5f, 0.25f, propHuntSpeedboostEnabled);
 
-        // Other options 1-599
+        //-------------------------- Other options 1 - 599 -------------------------- //
+
         resteButtonCooldown = CustomOption.Create(14, Types.General, "游戏开局时重置CD", 10f, 2.5f, 30f, 2.5f);
         maxNumberOfMeetings = CustomOption.Create(15, Types.General, "会议总次数(不计入市长会议次数)", 10, 0, 15, 1, null, true);
-        blockSkippingInEmergencyMeetings = CustomOption.Create(16, Types.General, "会议禁止跳过", false);
+        blockSkippingInEmergencyMeetings = CustomOption.Create(16, Types.General, "紧急会议禁止跳过", false);
         noVoteIsSelfVote = CustomOption.Create(17, Types.General, "不投票默认投自己", false, blockSkippingInEmergencyMeetings);
+        blockGameEnd = CustomOption.Create(29, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "强力职业在场不结束游戏"), true);
         hidePlayerNames = CustomOption.Create(18, Types.General, "隐藏玩家名字", false);
         allowParallelMedBayScans = CustomOption.Create(19, Types.General, "允许同时进行扫描任务", false);
         allowModGuess = CustomOption.Create(20, Types.General, "允许猜测部分附加职业", false);
@@ -1201,7 +1212,8 @@ public class CustomOptionHolder
         dynamicMapEnableFungle = CustomOption.Create(56, Types.General, "Fungle", rates, dynamicMap);
         dynamicMapEnableSubmerged = CustomOption.Create(57, Types.General, "Submerged", rates, dynamicMap);
         dynamicMapSeparateSettings = CustomOption.Create(58, Types.General, "使用随机地图设置预设", false, dynamicMap);
-        //Map options 7800-7899 
+
+        //Map options
         randomGameStartPosition = CustomOption.Create(7910, Types.General, "随机出生点", false);
         enableBetterPolus = CustomOption.Create(7801, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Polus"), false);
         movePolusVents = CustomOption.Create(7802, Types.General, "改变管道布局", false, enableBetterPolus);
@@ -1229,7 +1241,6 @@ public class CustomOptionHolder
         restrictVents = CustomOption.Create(7906, Types.General, "限制心电图观看", 30f, 0f, 600f, 5f, restrictDevices);
         disableCamsRound1 = CustomOption.Create(7907, Types.General, "第一回合无法看监控", false);
         showButtonTarget = CustomOption.Create(7908, Types.General, "技能按钮显示目标", true);
-        blockGameEnd = CustomOption.Create(7909, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "强力职业在场不结束游戏"), false);
 
 
         blockedRolePairings.Add((byte)RoleId.Vampire, new[] { (byte)RoleId.Warlock });
