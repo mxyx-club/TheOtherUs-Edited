@@ -155,7 +155,10 @@ public static class HandshakeHelper
         public void Send(ShareMode mode)
         {
             
-            Info($"again send mode{mode} id{playerId}");
+            Info($"again send mode:{mode} id:{playerId}");
+
+            if (AmongUsClient.Instance == null || CachedPlayer.LocalPlayer.PlayerControl == null) return;
+
 
             var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                 (byte)CustomRPC.VersionHandshakeEx, SendOption.Reliable, playerId);
