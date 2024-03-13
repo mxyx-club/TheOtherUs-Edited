@@ -1,8 +1,8 @@
+using AmongUs.Data;
+using Hazel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AmongUs.Data;
-using Hazel;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
@@ -10,7 +10,6 @@ using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
-using static TheOtherRoles.TheOtherRoles.Portalmaker;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -785,7 +784,25 @@ public static class Medic
         buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ShieldButton.png", 115f);
         return buttonSprite;
     }
+    public static bool shieldVisible(PlayerControl target)
+    {
+        bool hasVisibleShield = false;
 
+        bool isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
+        if (Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
+        {   // Everyone or Ghost info
+            hasVisibleShield = Medic.showShielded == 0 || Helpers.shouldShowGhostInfo() 
+                || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.shielded 
+                || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic)) // Shielded + Medic
+                || (Medic.showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl == Medic.medic); // Medic only
+                // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
+            hasVisibleShield = hasVisibleShield && (Medic.meetingAfterShielding 
+                || !Medic.showShieldAfterMeeting 
+                || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic 
+                || Helpers.shouldShowGhostInfo());
+        }
+        return hasVisibleShield;
+    }
     public static void clearAndReload()
     {
         medic = null;
@@ -1633,7 +1650,6 @@ public static class Akujo
         keepsLeft = numKeeps;
     }
 }
-
 
 public static class Trickster
 {
@@ -2630,7 +2646,7 @@ public static class Jumper
 
     public static bool resetPlaceAfterMeeting;
 
-    //    public static float jumperChargesGainOnMeeting = 2f;
+    //public static float jumperChargesGainOnMeeting = 2f;
     //public static float jumperMaxCharges = 3f;
     public static float jumperCharges = 1f;
 
@@ -2666,11 +2682,11 @@ public static class Jumper
         resetPlaces();
         jumpLocation = Vector3.zero;
         jumper = null;
-        resetPlaceAfterMeeting = true;
+        resetPlaceAfterMeeting = CustomOptionHolder.jumperResetPlaceAfterMeeting.getBool();
         jumperCharges = 1f;
         jumperJumpTime = CustomOptionHolder.jumperJumpTime.getFloat();
         jumperChargesOnPlace = CustomOptionHolder.jumperChargesOnPlace.getFloat();
-        //      jumperChargesGainOnMeeting = CustomOptionHolder.jumperChargesGainOnMeeting.getFloat();
+        //jumperChargesGainOnMeeting = CustomOptionHolder.jumperChargesGainOnMeeting.getFloat();
         //jumperMaxCharges = CustomOptionHolder.jumperMaxCharges.getFloat();
         usedPlace = false;
     }
@@ -2686,7 +2702,7 @@ public static class Escapist
 
     public static bool resetPlaceAfterMeeting;
 
-    //    public static float jumperChargesGainOnMeeting = 2f;
+    //public static float escapistChargesGainOnMeeting = 2f;
     //public static float escapistMaxCharges = 3f;
     public static float escapistCharges = 1f;
 
@@ -2722,11 +2738,11 @@ public static class Escapist
         resetPlaces();
         escapeLocation = Vector3.zero;
         escapist = null;
-        resetPlaceAfterMeeting = true;
+        resetPlaceAfterMeeting = CustomOptionHolder.escapistResetPlaceAfterMeeting.getBool();
         escapistCharges = 1f;
         escapistEscapeTime = CustomOptionHolder.escapistEscapeTime.getFloat();
         escapistChargesOnPlace = CustomOptionHolder.escapistChargesOnPlace.getFloat();
-        //      jumperChargesGainOnMeeting = CustomOptionHolder.jumperChargesGainOnMeeting.getFloat();
+        //escapistChargesGainOnMeeting = CustomOptionHolder.escapistChargesGainOnMeeting.getFloat();
         //escapistMaxCharges = CustomOptionHolder.escapistMaxCharges.getFloat();
         usedPlace = false;
     }

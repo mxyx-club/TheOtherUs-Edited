@@ -723,7 +723,7 @@ public static class Helpers
         if (SurveillanceMinigamePatch.nightVisionIsActive) return true;
         if (Ninja.isInvisble && Ninja.ninja == target) return true;
         if (Swooper.isInvisable && Swooper.swooper == target) return true;
-        if (TORMapOptions.hideOutOfSightNametags && gameStarted && !source.Data.IsDead &&
+        if (TORMapOptions.hideOutOfSightNametags && gameStarted && !source.Data.IsDead && GameOptionsManager.Instance.currentNormalGameOptions.MapId != 5 &&
             PhysicsHelpers.AnythingBetween(localPlayer.GetTruePosition(), target.GetTruePosition(),
                 Constants.ShadowMask, false)) return true;
         /*

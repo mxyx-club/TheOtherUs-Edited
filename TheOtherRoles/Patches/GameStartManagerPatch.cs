@@ -195,11 +195,11 @@ public class GameStartManagerPatch
                     // Activate Stop-Button
                     copiedStartButton = GameObject.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
                     copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
-                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 180f);
+                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 240f);
                     copiedStartButton.SetActive(true);
                     var startButtonText = copiedStartButton.GetComponentInChildren<TMPro.TextMeshPro>();
                     startButtonText.text = "STOP";
-                    startButtonText.fontSize *= 0.8f;
+                    startButtonText.fontSize *= 0.72f;
                     startButtonText.fontSizeMax = startButtonText.fontSize;
                     startButtonText.gameObject.transform.localPosition = Vector3.zero;
                     PassiveButton startButtonPassiveButton = copiedStartButton.GetComponent<PassiveButton>();
@@ -256,11 +256,11 @@ public class GameStartManagerPatch
                     // Activate Stop-Button
                     copiedStartButton = GameObject.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
                     copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
-                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 180f);
+                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 240f);
                     copiedStartButton.SetActive(true);
                     var startButtonText = copiedStartButton.GetComponentInChildren<TMPro.TextMeshPro>();
                     startButtonText.text = "STOP";
-                    startButtonText.fontSize *= 0.8f;
+                    startButtonText.fontSize *= 0.72f;
                     startButtonText.fontSizeMax = startButtonText.fontSize;
                     startButtonText.gameObject.transform.localPosition = Vector3.zero;
                     PassiveButton startButtonPassiveButton = copiedStartButton.GetComponent<PassiveButton>();

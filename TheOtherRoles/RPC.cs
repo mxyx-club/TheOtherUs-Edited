@@ -248,6 +248,7 @@ public enum CustomRPC
     ButtonBarry = 191,
 
     MayorMeeting = 192,
+    ButtonBarryMeeting = 193,
 }
 
 public static class RPCProcedure
@@ -829,6 +830,15 @@ public static class RPCProcedure
     }
     
     public static void StartMayorMeeting()
+    {
+        CachedPlayer.LocalPlayer.NetTransform.Halt();
+        var mayor = Mayor.mayor;
+
+        FastDestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(mayor);
+        FastDestroyableSingleton<ShipStatus>.Instance.StartMeeting(mayor, null);
+    }
+
+    public static void StartButtonBarryMeeting()
     {
         CachedPlayer.LocalPlayer.NetTransform.Halt();
         var mayor = Mayor.mayor;
@@ -1671,6 +1681,8 @@ public static class RPCProcedure
             Sidekick.wasSpy = wasSpy;
             Sidekick.wasImpostor = wasImpostor;
             if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
+            if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(targetId))
+                setGuesserGm(targetId);
         }
 
         Jackal.canCreateSidekick = false;
@@ -2759,7 +2771,9 @@ public static class RPCProcedure
         if (target == Sidekick.sidekick)
         {
             Sidekick.sidekick = thief;
-            Jackal.formerJackals.Add(target);
+            Jackal.formerJackals.Add(target); 
+            if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(thief.PlayerId))
+                setGuesserGm(thief.PlayerId);
         }
 
         //if (target == Guesser.evilGuesser) Guesser.evilGuesser = thief;
@@ -3534,6 +3548,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.MayorMeeting:
                 RPCProcedure.StartMayorMeeting();
+                break;
+            case CustomRPC.ButtonBarryMeeting:
+                RPCProcedure.StartButtonBarryMeeting();
                 break;
         }
 

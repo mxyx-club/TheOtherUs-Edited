@@ -290,6 +290,17 @@ internal class HudManagerUpdatePatch
                 var target = Helpers.playerById(player.TargetPlayerId);
                 if (target != null) player.NameText.text += $" ({(Helpers.isLighterColor(target) ? "浅" : "深")})";
             }
+        // Add medic shield info:
+        if (MeetingHud.Instance != null && Medic.medic != null && Medic.shielded != null && Medic.shieldVisible(Medic.shielded))
+        {
+            foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
+                if (player.TargetPlayerId == Medic.shielded.PlayerId)
+                {
+                    player.NameText.text = Helpers.cs(Medic.color, "[") + player.NameText.text + Helpers.cs(Medic.color, "]");
+                    // player.HighlightedFX.color = Medic.color;
+                    // player.HighlightedFX.enabled = true;
+                }
+        }
     }
 
     private static void updateShielded()
