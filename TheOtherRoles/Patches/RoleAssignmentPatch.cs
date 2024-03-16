@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
 using Hazel;
+using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Utilities;
@@ -740,12 +741,19 @@ internal class RoleManagerSelectRolesPatch
 
         for (var i = 0; i < count && playerList.Count > 0; i++)
         {
-            var index = IndexList.Count > 0
-                ? playerList.FindIndex(n => n == IndexList.Dequeue())
-                : rnd.Next(0, playerList.Count);
+            byte playerId;
 
-            var playerId = playerList[index].PlayerId;
-            playerList.RemoveAt(index);
+            if (IndexList.Count > 0 && IndexList.TryDequeue(out var player))
+            {
+                playerId = player.PlayerId;
+                playerList.Remove(player);
+            }
+            else
+            {
+                var player2 = playerList.Random();
+                playerId = player2.PlayerId;
+                playerList.Remove(player2);
+            }
 
             var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                 (byte)CustomRPC.SetGuesserGm, SendOption.Reliable);
