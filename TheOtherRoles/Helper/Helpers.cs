@@ -212,8 +212,8 @@ public static class Helpers
             HudManager.Instance.shhhEmblem.transform.localPosition.x,
             HudManager.Instance.shhhEmblem.transform.localPosition.y,
             HudManager.Instance.FullScreen.transform.position.z + 1f);
-        HudManager.Instance.shhhEmblem.TextImage.text = "YOU ARE BLACKMAILED";
-        HudManager.Instance.shhhEmblem.HoldDuration = 2.5f;
+        HudManager.Instance.shhhEmblem.TextImage.text = ModTranslation.getString("BlackmailShhhText");
+        HudManager.Instance.shhhEmblem.HoldDuration = 3f;
         yield return HudManager.Instance.ShowEmblem(true);
         HudManager.Instance.shhhEmblem.transform.localPosition = TempPosition;
         HudManager.Instance.shhhEmblem.HoldDuration = TempDuration;
@@ -521,7 +521,7 @@ public static class Helpers
             player.myTasks.Insert(0, task);
         }
     }
-
+     
     internal static string getRoleString(RoleInfo roleInfo)
     {
         if (roleInfo.name == "Jackal")

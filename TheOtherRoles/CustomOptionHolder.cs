@@ -384,6 +384,17 @@ public class CustomOptionHolder
     public static CustomOption trapperInfoType;
     public static CustomOption trapperTrapDuration;
 
+    public static CustomOption prophetSpawnRate;
+    public static CustomOption prophetCooldown;
+    public static CustomOption prophetNumExamines;
+    public static CustomOption prophetKillCrewAsRed;
+    public static CustomOption prophetBenignNeutralAsRed;
+    public static CustomOption prophetEvilNeutralAsRed;
+    public static CustomOption prophetKillNeutralAsRed;
+    public static CustomOption prophetCanCallEmergency;
+    public static CustomOption prophetIsRevealed;
+    public static CustomOption prophetExaminesToBeRevealed;
+
     public static CustomOption bomberSpawnRate;
     public static CustomOption bomberBombDestructionTime;
     public static CustomOption bomberBombDestructionRange;
@@ -439,6 +450,8 @@ public class CustomOptionHolder
     public static CustomOption modifierMultitaskerQuantity;
 
     public static CustomOption modifierDisperser;
+    //public static CustomOption modifierDisperserRemainingDisperses;
+    public static CustomOption modifierDisperserDispersesToVent;
 
     public static CustomOption modifierMini;
     public static CustomOption modifierMiniGrowingUpDuration;
@@ -883,15 +896,15 @@ public class CustomOptionHolder
         sheriffCooldown = CustomOption.Create(30142, Types.Crewmate, "执法冷却", 30f, 10f, 60f, 2.5f, sheriffSpawnRate);
         sheriffMisfireKills = CustomOption.Create(30143, Types.Crewmate, "走火时死亡对象", ["警长", "对方", "双方"], sheriffSpawnRate);
         sheriffCanKillNeutrals = CustomOption.Create(30150, Types.Crewmate, "可执法独立阵营", false, sheriffSpawnRate);
-        sheriffCanKillJester = CustomOption.Create(30151, Types.Crewmate, "可执法 " + cs(Jester.color, "小丑"), true, sheriffCanKillNeutrals);
-        sheriffCanKillProsecutor = CustomOption.Create(30152, Types.Crewmate, "可执法 " + cs(Lawyer.color, "处刑者"), true, sheriffCanKillNeutrals);
         sheriffCanKillAmnesiac = CustomOption.Create(30153, Types.Crewmate, "可执法 " + cs(Amnisiac.color, "失忆者"), false, sheriffCanKillNeutrals);
-        sheriffCanKillArsonist = CustomOption.Create(30154, Types.Crewmate, "可执法 " + cs(Arsonist.color, "纵火犯"), true, sheriffCanKillNeutrals);
-        sheriffCanKillVulture = CustomOption.Create(30155, Types.Crewmate, "可执法 " + cs(Vulture.color, "秃鹫"), true, sheriffCanKillNeutrals);
+        sheriffCanKillJester = CustomOption.Create(30151, Types.Crewmate, "可执法 " + cs(Jester.color, "小丑"), true, sheriffCanKillNeutrals);
         sheriffCanKillLawyer = CustomOption.Create(30156, Types.Crewmate, "可执法 " + cs(Lawyer.color, "律师"), true, sheriffCanKillNeutrals);
-        sheriffCanKillThief = CustomOption.Create(30157, Types.Crewmate, "可执法 " + cs(Thief.color, "身份窃贼"), true, sheriffCanKillNeutrals);
+        sheriffCanKillProsecutor = CustomOption.Create(30152, Types.Crewmate, "可执法 " + cs(Lawyer.color, "处刑者"), true, sheriffCanKillNeutrals);
         sheriffCanKillPursuer = CustomOption.Create(30158, Types.Crewmate, "可执法 " + cs(Pursuer.color, "起诉人"), false, sheriffCanKillNeutrals);
+        sheriffCanKillVulture = CustomOption.Create(30155, Types.Crewmate, "可执法 " + cs(Vulture.color, "秃鹫"), true, sheriffCanKillNeutrals);
+        sheriffCanKillThief = CustomOption.Create(30157, Types.Crewmate, "可执法 " + cs(Thief.color, "身份窃贼"), true, sheriffCanKillNeutrals);
         sheriffCanKillDoomsayer = CustomOption.Create(30159, Types.Crewmate, "可执法 " + cs(Doomsayer.color, "末日预言家"), true, sheriffCanKillNeutrals);
+        sheriffCanKillArsonist = CustomOption.Create(30154, Types.Crewmate, "可执法 " + cs(Arsonist.color, "纵火犯"), true, sheriffCanKillNeutrals);
         deputySpawnRate = CustomOption.Create(30170, Types.Crewmate, "可拥有一名捕快", rates, sheriffSpawnRate);
         deputyNumberOfHandcuffs = CustomOption.Create(30171, Types.Crewmate, "手铐可用次数", 5f, 1f, 10f, 1f, deputySpawnRate);
         deputyHandcuffCooldown = CustomOption.Create(30172, Types.Crewmate, "手铐冷却", 25f, 10f, 60f, 2.5f, deputySpawnRate);
@@ -909,8 +922,8 @@ public class CustomOptionHolder
         detectiveAnonymousFootprints = CustomOption.Create(30191, Types.Crewmate, "匿名脚印", false, detectiveSpawnRate);
         detectiveFootprintIntervall = CustomOption.Create(30192, Types.Crewmate, "脚印更新间隔", 0.25f, 0.25f, 10f, 0.25f, detectiveSpawnRate);
         detectiveFootprintDuration = CustomOption.Create(30193, Types.Crewmate, "脚印持续时间", 12.5f, 0.5f, 30f, 0.5f, detectiveSpawnRate);
-        detectiveReportNameDuration = CustomOption.Create(30194, Types.Crewmate, "以下时间内报告可得知凶手名字", 5, 0, 60, 2.5f, detectiveSpawnRate);
-        detectiveReportColorDuration = CustomOption.Create(30195, Types.Crewmate, "以下时间内报告可得知凶手颜色类型", 30, 0, 120, 2.5f, detectiveSpawnRate);
+        detectiveReportNameDuration = CustomOption.Create(30194, Types.Crewmate, "以下时间内报告可得知凶手职业", 15f, 0f, 60f, 2.5f, detectiveSpawnRate);
+        detectiveReportColorDuration = CustomOption.Create(30195, Types.Crewmate, "以下时间内报告可得知凶手颜色类型", 60f, 0f, 120f, 2.5f, detectiveSpawnRate);
 
         medicSpawnRate = CustomOption.Create(30200, Types.Crewmate, cs(Medic.color, "医生"), rates, null, true);
         medicShowShielded = CustomOption.Create(30201, Types.Crewmate, "可见医生护盾的玩家", ["所有人", "被保护者+法医", "法医"], medicSpawnRate);
@@ -919,8 +932,8 @@ public class CustomOptionHolder
         medicShowAttemptToShielded = CustomOption.Create(30204, Types.Crewmate, "被保护者可见击杀尝试", false, medicBreakShield);
         medicResetTargetAfterMeeting = CustomOption.Create(30205, Types.Crewmate, "会议后重置保护目标", false, medicSpawnRate);
         medicSetOrShowShieldAfterMeeting = CustomOption.Create(30206, Types.Crewmate, "护盾生效与可见时机", ["立即生效且可见", "立即生效且会议后可见", "会议后生效且可见"], medicSpawnRate);
-        medicReportNameDuration = CustomOption.Create(30207, Types.Crewmate, "以下时间内报告可得知凶手名字", 5, 0, 60, 2.5f, medicBreakShield);
-        medicReportColorDuration = CustomOption.Create(30208, Types.Crewmate, "以下时间内报告可得知凶手颜色类型", 30, 0, 120, 2.5f, medicBreakShield);
+        medicReportNameDuration = CustomOption.Create(30207, Types.Crewmate, "以下时间内报告可得知凶手名字", 5f, 0f, 60f, 2.5f, medicBreakShield);
+        medicReportColorDuration = CustomOption.Create(30208, Types.Crewmate, "以下时间内报告可得知凶手颜色类型", 30f, 0f, 120f, 2.5f, medicBreakShield);
 
         timeMasterSpawnRate = CustomOption.Create(30210, Types.Crewmate, cs(TimeMaster.color, "时间之主"), rates, null, true);
         timeMasterCooldown = CustomOption.Create(30211, Types.Crewmate, "时光之盾冷却", 25f, 10f, 60f, 2.5f, timeMasterSpawnRate);
@@ -957,6 +970,17 @@ public class CustomOptionHolder
         trackerCanTrackCorpses = CustomOption.Create(30263, Types.Crewmate, "可寻找尸体", true, trackerSpawnRate);
         trackerCorpsesTrackingCooldown = CustomOption.Create(30264, Types.Crewmate, "寻找尸体冷却", 20f, 5f, 120f, 2.5f, trackerCanTrackCorpses);
         trackerCorpsesTrackingDuration = CustomOption.Create(30265, Types.Crewmate, "寻找持续时间", 5f, 2.5f, 30f, 2.5f, trackerCanTrackCorpses);
+
+        prophetSpawnRate = CustomOption.Create(30360, Types.Crewmate, cs(Prophet.color, "预言家"), rates, null, true);
+        prophetCooldown = CustomOption.Create(30361, Types.Crewmate, "冷却时间", 25f, 5f, 60f, 2.5f, prophetSpawnRate);
+        prophetNumExamines = CustomOption.Create(30362, Types.Crewmate, "预言总次数", 4f, 1f, 10f, 1f, prophetSpawnRate);
+        prophetCanCallEmergency = CustomOption.Create(30363, Types.Crewmate, "可以召开紧急会议", true, prophetSpawnRate);
+        prophetIsRevealed = CustomOption.Create(30364, Types.Crewmate, "可以被执刃者发现", false, prophetSpawnRate);
+        prophetExaminesToBeRevealed = CustomOption.Create(30365, Types.Crewmate, "被发现所需揭示次数", 3f, 1f, 10f, 1f, prophetIsRevealed);
+        prophetKillCrewAsRed = CustomOption.Create(30366, Types.Crewmate, "击杀型船员显示为红名", false, prophetSpawnRate);
+        prophetBenignNeutralAsRed = CustomOption.Create(30367, Types.Crewmate, "善良型中立显示为红名", false, prophetSpawnRate);
+        prophetEvilNeutralAsRed = CustomOption.Create(30368, Types.Crewmate, "邪恶型中立显示为红名", true, prophetSpawnRate);
+        prophetKillNeutralAsRed = CustomOption.Create(30369, Types.Crewmate, "击杀型中立显示为红名", true, prophetSpawnRate);
 
         snitchSpawnRate = CustomOption.Create(30270, Types.Crewmate, cs(Snitch.color, "告密者"), rates, null, true);
         snitchLeftTasksForReveal = CustomOption.Create(30271, Types.Crewmate, "剩余多少任务时可被发现", 1f, 0f, 10f, 1f, snitchSpawnRate);
@@ -995,7 +1019,7 @@ public class CustomOptionHolder
         jumperSpawnRate = CustomOption.Create(30320, Types.Crewmate, cs(Jumper.color, "传送师"), rates, null, true);
         jumperJumpTime = CustomOption.Create(30321, Types.Crewmate, "标记/传送冷却", 10f, 0f, 60f, 2.5f, jumperSpawnRate);
         jumperChargesOnPlace = CustomOption.Create(30322, Types.Crewmate, "每次传送所消耗点数", 1, 1, 10, 1, jumperSpawnRate);
-        jumperResetPlaceAfterMeeting = CustomOption.Create(30323, Types.Crewmate, "会议后重置标记位置", true, jumperSpawnRate);
+        jumperResetPlaceAfterMeeting = CustomOption.Create(30323, Types.Crewmate, "会议后重置标记位置", false, jumperSpawnRate);
         //jumperChargesGainOnMeeting = CustomOption.Create(30324, Types.Crewmate, "会议后增加传送点数", 2, 0, 10, 1, jumperSpawnRate);
         //jumperMaxCharges = CustomOption.Create(30325, Types.Crewmate, "最多传送点数", 3, 0, 10, 1, jumperSpawnRate);
         /*
@@ -1024,6 +1048,8 @@ public class CustomOptionHolder
         modifiersAreHidden = CustomOption.Create(1000, Types.Modifier, cs(Color.yellow, "隐藏死亡触发的附加职业"), true, null, true);
 
         modifierDisperser = CustomOption.Create(1001, Types.Modifier, cs(Color.red, "分散者"), rates, null, true);
+        //modifierDisperserRemainingDisperses = CustomOption.Create(1002, Types.Modifier, "分散次数", 1f,1f,5f,1f, modifierDisperser);
+        modifierDisperserDispersesToVent = CustomOption.Create(1003, Types.Modifier, "分散至管道位置", false, modifierDisperser);
 
         modifierBloody = CustomOption.Create(1010, Types.Modifier, cs(Color.yellow, "溅血者"), rates, null, true);
         modifierBloodyQuantity = CustomOption.Create(1011, Types.Modifier, cs(Color.yellow, "溅血数量"), ratesModifier, modifierBloody);
@@ -1051,7 +1077,7 @@ public class CustomOptionHolder
 
         modifierTorch = CustomOption.Create(1070, Types.Modifier, cs(Color.yellow, "火炬"), rates, null, true);
         modifierTorchQuantity = CustomOption.Create(1071, Types.Modifier, cs(Color.yellow, "火炬人数"), ratesModifier, modifierTorch);
-        modifierTorchVision = CustomOption.Create(1072, Types.Modifier, "火炬的视野倍率", rates, modifierTorch);
+        modifierTorchVision = CustomOption.Create(1072, Types.Modifier, "火炬的视野倍率", 1.5f, 1f, 3f, 0.125f, modifierTorch);
 
         modifierFlash = CustomOption.Create(1210, Types.Modifier, cs(Color.yellow, "闪电侠"), rates, null, true);
         modifierFlashQuantity = CustomOption.Create(1211, Types.Modifier, cs(Color.yellow, "闪电侠人数"), ratesModifier, modifierFlash);
@@ -1100,9 +1126,9 @@ public class CustomOptionHolder
 
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
 
-        guesserGamemodeCrewNumber = CustomOption.Create(2001, Types.Guesser, cs(Guesser.color, "船员阵营赌怪数"), 3f, 1f, 15f, 1f, null, true);
-        guesserGamemodeNeutralNumber = CustomOption.Create(2002, Types.Guesser, cs(Guesser.color, "中立阵营赌怪数"), 3f, 1f, 15f, 1f, null, true);
-        guesserGamemodeImpNumber = CustomOption.Create(2003, Types.Guesser, cs(Guesser.color, "伪装者阵营赌怪数"), 3f, 1f, 15f, 1f, null, true);
+        guesserGamemodeCrewNumber = CustomOption.Create(2001, Types.Guesser, cs(Guesser.color, "船员阵营赌怪数"), 3f, 0f, 15f, 1f, null, true);
+        guesserGamemodeNeutralNumber = CustomOption.Create(2002, Types.Guesser, cs(Guesser.color, "中立阵营赌怪数"), 3f, 0f, 15f, 1f, null, true);
+        guesserGamemodeImpNumber = CustomOption.Create(2003, Types.Guesser, cs(Guesser.color, "伪装者阵营赌怪数"), 3f, 0f, 15f, 1f, null, true);
         guesserForceJackalGuesser = CustomOption.Create(2007, Types.Guesser, "强制豺狼成为赌怪", false, null, true);
         guesserGamemodeSidekickIsAlwaysGuesser = CustomOption.Create(2012, Types.Guesser, "跟班继承赌怪", false, null, true);
         guesserForceThiefGuesser = CustomOption.Create(2011, Types.Guesser, "强制身份窃贼为赌怪", false, null, true);

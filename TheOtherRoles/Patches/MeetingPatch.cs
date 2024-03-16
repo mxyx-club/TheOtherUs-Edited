@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AmongUs.QuickChat;
 using Hazel;
 using Reactor.Utilities;
 using TheOtherRoles.Helper;
@@ -948,9 +949,11 @@ internal class MeetingHudPatch
             target = meetingTarget;
             isRoundOne = false;
 
-            if (Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl)
+            // Blackmail target
+            if (Blackmailer.blackmailed != null && Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl)
+            {
                 Coroutines.Start(Helpers.BlackmailShhh());
-
+            }
 
             // Add Portal info into Portalmaker Chat:
             if (Portalmaker.portalmaker != null &&
@@ -1135,6 +1138,7 @@ internal class MeetingHudPatch
 
             // Close In-Game Settings Display if open
             HudManagerUpdate.CloseSettings();
+
         }
     }
 
@@ -1153,16 +1157,18 @@ internal class MeetingHudPatch
                 // Remove first kill shield
                 firstKillPlayer = null;
 
-            if (Blackmailer.blackmailer == null) return;
-            // Blackmailer show overlay
-            var playerState =
-                __instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == Blackmailer.blackmailed.PlayerId);
-            if (playerState == null) return;
-            playerState.Overlay.gameObject.SetActive(true);
-            playerState.Overlay.sprite = Overlay;
-            if (__instance.state == MeetingHud.VoteStates.Animating || shookAlready) return;
-            shookAlready = true;
-            __instance.StartCoroutine(Effects.SwayX(playerState.transform));
+            if (Blackmailer.blackmailer != null && Blackmailer.blackmailed != null)
+            {
+                // Blackmailer show overlay
+                var playerState = __instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == Blackmailer.blackmailed.PlayerId);
+                playerState.Overlay.gameObject.SetActive(true);
+                playerState.Overlay.sprite = Overlay;
+                if (__instance.state != MeetingHud.VoteStates.Animating && !Blackmailer.alreadyShook)
+                {
+                    Blackmailer.alreadyShook = true;
+                    __instance.StartCoroutine(Effects.SwayX(playerState.transform));
+                }
+            }
         }
     }
 
@@ -1193,11 +1199,13 @@ internal class MeetingHudPatch
     [HarmonyPatch(typeof(TextBoxTMP), nameof(TextBoxTMP.SetText))]
     public class BlockChatBlackmailed
     {
-        public static bool Prefix(TextBoxTMP __instance)
+        public static bool Prefix(QuickChatMenu __instance)
         {
-            if (Blackmailer.blackmailer == null) return true;
-            if (Blackmailer.blackmailed == null) return true;
-            return Blackmailer.blackmailed != CachedPlayer.LocalPlayer.PlayerControl;
+            if (Blackmailer.blackmailer != null && Blackmailer.blackmailed != null && Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl)
+            {
+                return false;
+            }
+            return true;
         }
     }
 

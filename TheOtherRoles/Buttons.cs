@@ -88,6 +88,7 @@ internal static class HudManagerStartPatch
     public static CustomButton akujoBackupButton;
 
     public static CustomButton trapperButton;
+    public static CustomButton prophetButton;
     public static CustomButton bomberButton;
     public static CustomButton defuseButton;
     public static CustomButton zoomOutButton;
@@ -115,6 +116,7 @@ internal static class HudManagerStartPatch
     public static TMP_Text hackerAdminTableChargesText;
     public static TMP_Text hackerVitalsChargesText;
     public static TMP_Text trapperChargesText;
+    public static TMP_Text prophetButtonText;
     public static TMP_Text portalmakerButtonText1;
     public static TMP_Text portalmakerButtonText2;
     public static TMP_Text huntedShieldCountText;
@@ -179,6 +181,7 @@ internal static class HudManagerStartPatch
         mediumButton.MaxTimer = Medium.cooldown;
         pursuerButton.MaxTimer = Pursuer.cooldown;
         trackerTrackCorpsesButton.MaxTimer = Tracker.corpsesTrackingCooldown;
+        prophetButton.MaxTimer = Prophet.cooldown;
         witchSpellButton.MaxTimer = Witch.cooldown;
         ninjaButton.MaxTimer = Ninja.cooldown;
         swooperSwoopButton.MaxTimer = Swooper.swoopCooldown;
@@ -194,7 +197,7 @@ internal static class HudManagerStartPatch
         akujoHonmeiButton.MaxTimer = 2.5f;
         akujoBackupButton.MaxTimer = 2.5f;
 
-        mayorMeetingButton.MaxTimer = GameManager.Instance.LogicOptions.GetEmergencyCooldown();
+        mayorMeetingButton.MaxTimer = 1f;
         trapperButton.MaxTimer = Trapper.cooldown;
         bomberButton.MaxTimer = Bomber.bombCooldown;
         hunterLighterButton.MaxTimer = Hunter.lightCooldown;
@@ -942,7 +945,7 @@ internal static class HudManagerStartPatch
                     (byte)CustomRPC.Disperse, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.disperse();
-                //              SoundEffectsManager.play("shifterShift");
+                //SoundEffectsManager.play("shifterShift");
             },
             () =>
             {
@@ -1068,7 +1071,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                morphlingButton.Timer = morphlingButton.MaxTimer;
+                morphlingButton.Timer = morphlingButton.MaxTimer; 
                 morphlingButton.Sprite = Morphling.getSampleSprite();
                 morphlingButton.isEffectActive = false;
                 morphlingButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
@@ -1596,6 +1599,43 @@ internal static class HudManagerStartPatch
             true,
             buttonText: ModTranslation.getString("GarlicText")
         );
+
+        prophetButton = new CustomButton(
+                () =>
+                {
+                    if (Prophet.currentTarget != null)
+                    {
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ProphetExamine, Hazel.SendOption.Reliable, -1);
+                        writer.Write(Prophet.currentTarget.PlayerId);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        RPCProcedure.prophetExamine(Prophet.currentTarget.PlayerId);
+                        prophetButton.Timer = prophetButton.MaxTimer;
+                    }
+                },
+                () => { return Prophet.prophet != null && CachedPlayer.LocalPlayer.PlayerControl == Prophet.prophet && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && Prophet.examinesLeft > 0; },
+                () =>
+                {
+                    if (prophetButtonText != null)
+                    {
+                        if (Prophet.examinesLeft > 0)
+                            prophetButtonText.text = $"{Prophet.examinesLeft}";
+                        else
+                            prophetButtonText.text = "";
+                    }
+                    return Prophet.currentTarget != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                },
+                () => { prophetButton.Timer = prophetButton.MaxTimer; },
+                Prophet.getButtonSprite(),
+                CustomButton.ButtonPositions.lowerRowRight,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("ProphetText")
+            );
+        prophetButtonText = Object.Instantiate(prophetButton.actionButton.cooldownTimerText, prophetButton.actionButton.cooldownTimerText.transform.parent);
+        prophetButtonText.text = "";
+        prophetButtonText.enableWordWrapping = false;
+        prophetButtonText.transform.localScale = Vector3.one * 0.5f;
+        prophetButtonText.transform.localPosition += new Vector3(-0.05f, 0.55f, -1f);
 
         portalmakerPlacePortalButton = new CustomButton(
             () =>
@@ -2224,7 +2264,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowLeft,
             __instance,
             KeyCode.F,
-            buttonText: ModTranslation.getString("")
+            buttonText: ModTranslation.getString("TricksterPlaceText")
         );
 
         lightsOutButton = new CustomButton(
@@ -3350,10 +3390,10 @@ internal static class HudManagerStartPatch
             __instance,
             KeyCode.F,
             true,
-            0f,
+            1f,
             () => { },
             false,
-            ModTranslation.getString("BlackmailerText")
+            "Blackmail"
         );
 
         mayorMeetingButton = new CustomButton(
@@ -3422,7 +3462,7 @@ internal static class HudManagerStartPatch
             0f,
             () => { },
             false,
-            ModTranslation.getString("MayorButtonText")
+            "Meeting"
         );
 
         // Jackal Sidekick Button
@@ -3523,7 +3563,9 @@ internal static class HudManagerStartPatch
                        !CachedPlayer.LocalPlayer.Data.IsDead;
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Bomber.isPlanted; },
-            () => { bomberButton.Timer = bomberButton.MaxTimer; },
+            () => {
+                bomberButton.Timer = bomberButton.MaxTimer; 
+            },
             Bomber.getButtonSprite(),
             CustomButton.ButtonPositions.upperRowLeft,
             __instance,
@@ -3536,7 +3578,7 @@ internal static class HudManagerStartPatch
                 bomberButton.isEffectActive = false;
                 bomberButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
-            buttonText: ModTranslation.getString("TerroristBombText")
+            buttonText: Bomber.bombText
         );
 
         defuseButton = new CustomButton(
@@ -3572,7 +3614,7 @@ internal static class HudManagerStartPatch
                     (byte)CustomRPC.DefuseBomb, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.defuseBomb();
-
+                
                 defuseButton.Timer = 0f;
                 Bomb.canDefuse = false;
             },

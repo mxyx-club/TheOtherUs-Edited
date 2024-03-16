@@ -74,6 +74,7 @@ public static class TheOtherRoles
         Pursuer.clearAndReload();
         Witch.clearAndReload();
         Jumper.clearAndReload();
+        Prophet.clearAndReload();
         Escapist.clearAndReload();
         Ninja.clearAndReload();
         Blackmailer.clearAndReload();
@@ -355,8 +356,10 @@ public static class TheOtherRoles
             tasksNeededToSeeVoteColors = (int)CustomOptionHolder.mayorTasksNeededToSeeVoteColors.getFloat();
             meetingButton = CustomOptionHolder.mayorMeetingButton.getBool();
             mayorChooseSingleVote = CustomOptionHolder.mayorChooseSingleVote.getSelection();
-            TaskRemoteMeetings = CustomOptionHolder.mayorTaskRemoteMeetings.getBool();
             voteTwice = true;
+
+            TaskRemoteMeetings = false;
+            //TaskRemoteMeetings = CustomOptionHolder.mayorTaskRemoteMeetings.getBool();
         }
     }
 
@@ -641,7 +644,7 @@ public static class TheOtherRoles
 
         public static void clearAndReload()
         {
-            detective = null;
+            detective = null; 
             anonymousFootprints = CustomOptionHolder.detectiveAnonymousFootprints.getBool();
             footprintIntervall = CustomOptionHolder.detectiveFootprintIntervall.getFloat();
             footprintDuration = CustomOptionHolder.detectiveFootprintDuration.getFloat();
@@ -2392,10 +2395,7 @@ public static class Medium
             var roleString = RoleInfo.GetRolesString(Medium.target.player, false);
             if (randomNumber == 0)
             {
-                if (!roleString.Contains(RoleInfo.impostor.name) && !roleString.Contains(RoleInfo.crewmate.name))
-                    msg = "场上没有 " + roleString + " 了";
-                else
-                    msg = "我是一名 " + roleString + " .";
+                msg = "我是一名 " + roleString + " .";
             }
             else if (randomNumber == 1)
             {
@@ -2407,8 +2407,7 @@ public static class Medium
             }
             else
             {
-                msg = "我好像是被 " + RoleInfo.GetRolesString(Medium.target.killerIfExisting, false, false, true) +
-                      " 无情的杀害了.";
+                msg = "我好像是被 " + RoleInfo.GetRolesString(Medium.target.killerIfExisting, false, false, true) + " 无情的杀害了.";
             }
         }
 
@@ -2854,6 +2853,87 @@ public static class Juggernaut
     }
 }
 
+public static class Prophet
+{
+    public static PlayerControl prophet;
+    public static Color32 color = new Color32(255, 204, 127, byte.MaxValue);
+
+    public static float cooldown = 25f;
+    public static bool killCrewAsRed = false;
+    public static bool benignNeutralAsRed = false;
+    public static bool evilNeutralAsRed = true;
+    public static bool killNeutralAsRed = true;
+    public static bool canCallEmergency = false;
+    public static int examineNum = 3;
+    public static int examinesToBeRevealed = 1;
+    public static int examinesLeft;
+    public static bool revealProphet = true;
+    public static bool isRevealed = false;
+    public static List<Arrow> arrows = new List<Arrow>();
+
+    public static Dictionary<PlayerControl, bool> examined = new Dictionary<PlayerControl, bool>();
+    public static PlayerControl currentTarget;
+
+    private static Sprite buttonSprite;
+    public static Sprite getButtonSprite()
+    {
+        if (buttonSprite) return buttonSprite;
+        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SeerButton.png", 115f);
+        return buttonSprite;
+    }
+
+    public static bool IsKiller(PlayerControl p)
+    {
+        return Helpers.isKiller(p)
+            || ((p == Sheriff.sheriff 
+            || p == Deputy.deputy
+            || p == Veteren.veteren ) 
+            && killCrewAsRed) 
+            || ((p == Amnisiac.amnisiac
+            || p == Pursuer.pursuer) 
+            && benignNeutralAsRed)
+            || ((p == Jester.jester
+            || p == Vulture.vulture
+            || p == Lawyer.lawyer 
+            || p == Doomsayer.doomsayer
+            || p == Thief.thief
+            || p == Akujo.akujo) 
+            && evilNeutralAsRed)
+            || ((p == Jackal.jackal
+            || p == Sidekick.sidekick
+            || p == Swooper.swooper
+            || p == Arsonist.arsonist
+            || p == Werewolf.werewolf
+            || p == Juggernaut.juggernaut) 
+            && killNeutralAsRed)
+        ;
+    }
+
+    public static void clearAndReload()
+    {
+        prophet = null;
+        currentTarget = null;
+        isRevealed = false;
+        examined = new Dictionary<PlayerControl, bool>();
+        revealProphet = CustomOptionHolder.prophetIsRevealed.getBool();
+        cooldown = CustomOptionHolder.prophetCooldown.getFloat();
+        examineNum = Mathf.RoundToInt(CustomOptionHolder.prophetNumExamines.getFloat());
+        killCrewAsRed = CustomOptionHolder.prophetKillCrewAsRed.getBool();
+        benignNeutralAsRed = CustomOptionHolder.prophetBenignNeutralAsRed.getBool();
+        evilNeutralAsRed = CustomOptionHolder.prophetEvilNeutralAsRed.getBool();
+        killNeutralAsRed = CustomOptionHolder.prophetKillNeutralAsRed.getBool();
+        canCallEmergency = CustomOptionHolder.prophetCanCallEmergency.getBool();
+        examinesToBeRevealed = Math.Min(examineNum, Mathf.RoundToInt(CustomOptionHolder.prophetExaminesToBeRevealed.getFloat()));
+        examinesLeft = examineNum;
+        if (arrows != null)
+        {
+            foreach (Arrow arrow in arrows)
+                if (arrow?.arrow != null)
+                    UnityEngine.Object.Destroy(arrow.arrow);
+        }
+        arrows = new List<Arrow>();
+    }
+}
 public static class Trapper
 {
     public static PlayerControl trapper;
@@ -2909,6 +2989,7 @@ public static class Bomber
     public static float defuseDuration = 3f;
     public static float bombCooldown = 15f;
     public static float bombActiveAfter = 3f;
+    public static string bombText = ModTranslation.getString("TricksterPlaceText1");
 
     private static Sprite buttonSprite;
 
@@ -2947,6 +3028,8 @@ public static class Bomber
         bombCooldown = CustomOptionHolder.bomberBombCooldown.getFloat();
         bombActiveAfter = CustomOptionHolder.bomberBombActiveAfter.getFloat();
         Bomb.clearBackgroundSprite();
+        if (bombActiveAfter == 0)bombText = ModTranslation.getString("TricksterPlaceText2");
+        if (bombActiveAfter != 0) bombText = ModTranslation.getString("TricksterPlaceText1");
     }
 }
 
@@ -3141,12 +3224,12 @@ public static class Sunglasses
 public static class Torch
 {
     public static List<PlayerControl> torch = new();
-    public static int vision = 1;
+    public static float vision = 1;
 
     public static void clearAndReload()
     {
         torch = new List<PlayerControl>();
-        vision = CustomOptionHolder.modifierTorchVision.getSelection() + 1;
+        vision = CustomOptionHolder.modifierTorchVision.getFloat();
     }
 }
 
@@ -3176,6 +3259,7 @@ public static class Disperser
     public static PlayerControl disperser;
     public static Color color = new Color32(48, 21, 89, byte.MaxValue);
     public static int remainingDisperses = 1;
+    public static bool DispersesToVent = false;
     private static Sprite buttonSprite;
 
     public static Sprite getButtonSprite()
@@ -3190,6 +3274,8 @@ public static class Disperser
     {
         disperser = null;
         remainingDisperses = 1;
+        //remainingDisperses = CustomOptionHolder.modifierDisperserRemainingDisperses.GetInt();
+        DispersesToVent = CustomOptionHolder.modifierDisperserDispersesToVent.getBool();
     }
 }
 
@@ -3352,7 +3438,9 @@ public static class ButtonBarry
     {
         buttonBarry = null;
         remoteMeetingsLeft = 1;
-        TaskRemoteMeetings = CustomOptionHolder.modifierButtonTaskRemoteMeetings.getBool();
+
+        TaskRemoteMeetings = false;
+        //TaskRemoteMeetings = CustomOptionHolder.modifierButtonTaskRemoteMeetings.getBool();
     }
 }
 
@@ -3515,6 +3603,11 @@ public static class Shifter
         {
             if (repeat) shiftRole(player2, player1, false);
             Thief.thief = player1;
+        }
+        else if (Prophet.prophet != null && Prophet.prophet == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Prophet.prophet = player1;
         }
         else if (Werewolf.werewolf != null && Werewolf.werewolf == player2)
         {

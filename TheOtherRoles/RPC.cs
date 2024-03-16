@@ -75,6 +75,7 @@ public enum RoleId
     Vulture,
     Medium,
     Trapper,
+    Prophet,
     Lawyer,
     Prosecutor,
     Pursuer,
@@ -249,6 +250,7 @@ public enum CustomRPC
 
     MayorMeeting = 192,
     ButtonBarryMeeting = 193,
+    ProphetExamine = 194,
 }
 
 public static class RPCProcedure
@@ -275,7 +277,6 @@ public static class RPCProcedure
         Garlic.clearGarlics();
         JackInTheBox.clearJackInTheBoxes();
         NinjaTrace.clearTraces();
-        //重置通风口
         AdditionalVents.clearAndReload();
         Portal.clearPortals();
         Bloodytrail.resetSprites();
@@ -560,6 +561,9 @@ public static class RPCProcedure
                         break;
                     case RoleId.Akujo:
                         Akujo.akujo = player;
+                        break;
+                    case RoleId.Prophet:
+                        Prophet.prophet = player;
                         break;
                 }
             }
@@ -1613,6 +1617,16 @@ public static class RPCProcedure
                 Vampire.bitten = player;
     }
 
+    public static void prophetExamine(byte targetId)
+    {
+        var target = Helpers.playerById(targetId);
+        if (target == null) return;
+        if (Prophet.examined.ContainsKey(target)) Prophet.examined.Remove(target);
+        Prophet.examined.Add(target, Prophet.IsKiller(target));
+        Prophet.examinesLeft--;
+        if ((Prophet.examineNum - Prophet.examinesLeft >= Prophet.examinesToBeRevealed) && Prophet.revealProphet) Prophet.isRevealed = true;
+    }
+
     public static void placeGarlic(byte[] buff)
     {
         var position = Vector3.zero;
@@ -1733,6 +1747,7 @@ public static class RPCProcedure
         if (player == Medium.medium) Medium.clearAndReload();
         if (player == Jumper.jumper) Jumper.clearAndReload();
         if (player == Trapper.trapper) Trapper.clearAndReload();
+        if (player == Prophet.prophet) Prophet.clearAndReload();
 
         // Impostor roles
         if (player == Morphling.morphling) Morphling.clearAndReload();
@@ -1756,6 +1771,7 @@ public static class RPCProcedure
         if (player == Blackmailer.blackmailer) Blackmailer.clearAndReload();
         if (player == Follower.follower) Follower.clearAndReload();
         if (player == Bomber.bomber) Bomber.clearAndReload();
+            if (player == Prophet.prophet) Prophet.clearAndReload();
 
 
         // Other roles
@@ -1843,6 +1859,18 @@ public static class RPCProcedure
     public static void setFutureShifted(byte playerId)
     {
         Shifter.futureShift = Helpers.playerById(playerId);
+    }
+
+    public static List<Vector3> FindVentPoss()
+    {
+        var poss = new List<Vector3>();
+        foreach (var vent in DestroyableSingleton<ShipStatus>.Instance.AllVents)
+        {
+            var Transform = vent.transform;
+            var position = Transform.position;
+            poss.Add(new Vector3(position.x, position.y + 0.12f, position.z - 50));
+        }
+        return poss;
     }
 
     public static void disperse()
@@ -2053,19 +2081,34 @@ public static class RPCProcedure
                     PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
                 }
 
-                if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 0)
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = skeldSpawn[rnd.Next(skeldSpawn.Count)];
-                if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 1)
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = miraSpawn[rnd.Next(miraSpawn.Count)];
-                if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 2)
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = polusSpawn[rnd.Next(polusSpawn.Count)];
-                if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 3)
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = dleksSpawn[rnd.Next(dleksSpawn.Count)];
-                if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 4)
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position =
-                        airshipSpawn[rnd.Next(airshipSpawn.Count)];
-                if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 5)
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = fungleSpawn[rnd.Next(fungleSpawn.Count)];
+                if (Disperser.DispersesToVent)
+                {
+                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = FindVentPoss()[rnd.Next(FindVentPoss().Count)];
+                }
+                else
+                {
+                    switch (GameOptionsManager.Instance.currentNormalGameOptions.MapId)
+                    {
+                        case 0:
+                            CachedPlayer.LocalPlayer.PlayerControl.transform.position = skeldSpawn[rnd.Next(skeldSpawn.Count)];
+                            break;
+                        case 1:
+                            CachedPlayer.LocalPlayer.PlayerControl.transform.position = miraSpawn[rnd.Next(miraSpawn.Count)];
+                            break;
+                        case 2:
+                            CachedPlayer.LocalPlayer.PlayerControl.transform.position = polusSpawn[rnd.Next(polusSpawn.Count)];
+                            break;
+                        case 3:
+                            CachedPlayer.LocalPlayer.PlayerControl.transform.position = dleksSpawn[rnd.Next(dleksSpawn.Count)];
+                            break;
+                        case 4:
+                            CachedPlayer.LocalPlayer.PlayerControl.transform.position = airshipSpawn[rnd.Next(airshipSpawn.Count)];
+                            break;
+                        case 5:
+                            CachedPlayer.LocalPlayer.PlayerControl.transform.position = fungleSpawn[rnd.Next(fungleSpawn.Count)];
+                            break;
+                    }
+                }
             }
 
             Disperser.remainingDisperses--;
@@ -3551,6 +3594,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.ButtonBarryMeeting:
                 RPCProcedure.StartButtonBarryMeeting();
+                break;
+            case CustomRPC.ProphetExamine:
+                RPCProcedure.prophetExamine(reader.ReadByte());
                 break;
         }
 

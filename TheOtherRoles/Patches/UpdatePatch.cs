@@ -102,6 +102,17 @@ internal class HudManagerUpdatePatch
             if (Sheriff.sheriff != null && Deputy.knowsSheriff) setPlayerNameColor(Sheriff.sheriff, Sheriff.color);
         }
 
+        if (Prophet.prophet != null && Prophet.prophet == localPlayer)
+        {
+            setPlayerNameColor(Prophet.prophet, Prophet.color);
+            if (Prophet.examined != null && !localPlayer.Data.IsDead) // Reset the name tags when Prophet is dead
+            {
+                foreach (var p in Prophet.examined)
+                {
+                    setPlayerNameColor(p.Key, p.Value ? Palette.ImpostorRed : Color.green);
+                }
+            }
+        }
         //警长可见捕快
         if (Sheriff.sheriff != null && Sheriff.sheriff == localPlayer)
         {

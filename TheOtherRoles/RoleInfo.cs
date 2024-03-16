@@ -80,6 +80,7 @@ public class RoleInfo
     public static RoleInfo securityGuard = new("保安", SecurityGuard.color, "维护飞船秩序", "封锁管道并安放监控", RoleId.SecurityGuard);
     public static RoleInfo medium = new("通灵师", Medium.color, "这不是封建迷信！", "对灵魂通灵获取信息", RoleId.Medium);
     public static RoleInfo trapper = new("设陷师", Trapper.color, "困于陷阱中...", "放置陷阱获取信息", RoleId.Trapper);
+    public static RoleInfo prophet = new("预言家", Prophet.color, "我看透了你的心", "通过预言揭示对方阵营", RoleId.Prophet);
 
     //躲猫猫
     public static RoleInfo hunter = new("猎人", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "抓捕"), "找到并击杀所有猎物", RoleId.Impostor);
@@ -178,6 +179,7 @@ public class RoleInfo
         securityGuard,
         medium,
         trapper,
+        prophet,
         //魔术师
         //arcanist
 
@@ -335,6 +337,7 @@ public class RoleInfo
         if (p == Lawyer.lawyer && !Lawyer.isProsecutor) infos.Add(lawyer);
         if (p == Lawyer.lawyer && Lawyer.isProsecutor) infos.Add(prosecutor);
         if (p == Trapper.trapper) infos.Add(trapper);
+        if (p == Prophet.prophet) infos.Add(prophet);
         if (p == Pursuer.pursuer) infos.Add(pursuer);
         if (p == Jumper.jumper) infos.Add(jumper);
         if (p == Thief.thief) infos.Add(thief);

@@ -524,18 +524,27 @@ internal class ExileControllerWrapUpPatch
 
             var airshipSpawn = new List<Vector3>(); //no spawns since it already has random spawns
 
-            if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 0)
-                CachedPlayer.LocalPlayer.PlayerControl.transform.position = skeldSpawn[rnd.Next(skeldSpawn.Count)];
-            if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 1)
-                CachedPlayer.LocalPlayer.PlayerControl.transform.position = miraSpawn[rnd.Next(miraSpawn.Count)];
-            if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 2)
-                CachedPlayer.LocalPlayer.PlayerControl.transform.position = polusSpawn[rnd.Next(polusSpawn.Count)];
-            if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 3)
-                CachedPlayer.LocalPlayer.PlayerControl.transform.position = dleksSpawn[rnd.Next(dleksSpawn.Count)];
-            if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 4)
-                CachedPlayer.LocalPlayer.PlayerControl.transform.position = airshipSpawn[rnd.Next(airshipSpawn.Count)];
-            if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 5)
-                CachedPlayer.LocalPlayer.PlayerControl.transform.position = fungleSpawn[rnd.Next(fungleSpawn.Count)];
+            switch (GameOptionsManager.Instance.currentNormalGameOptions.MapId)
+            {
+                case 0:
+                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = skeldSpawn[rnd.Next(skeldSpawn.Count)];
+                    break;
+                case 1:
+                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = miraSpawn[rnd.Next(miraSpawn.Count)];
+                    break;
+                case 2:
+                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = polusSpawn[rnd.Next(polusSpawn.Count)];
+                    break;
+                case 3:
+                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = dleksSpawn[rnd.Next(dleksSpawn.Count)];
+                    break;
+                case 4:
+                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = airshipSpawn[rnd.Next(airshipSpawn.Count)];
+                    break;
+                case 5:
+                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = fungleSpawn[rnd.Next(fungleSpawn.Count)];
+                    break;
+            }
         }
 
         // Invert add meeting

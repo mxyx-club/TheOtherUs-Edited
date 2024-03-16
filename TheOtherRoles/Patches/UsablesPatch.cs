@@ -401,7 +401,7 @@ internal class EmergencyMinigameUpdatePatch
             !Swapper.canCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusText = "The Swapper can't start an emergency meeting";
+            statusText = ModTranslation.getString("swapperMeetingButton");
         }
 
         // Potentially deactivate emergency button for Jester
@@ -409,7 +409,7 @@ internal class EmergencyMinigameUpdatePatch
             !Jester.canCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusText = "The Jester can't start an emergency meeting";
+            statusText = ModTranslation.getString("jesterMeetingButton");
         }
 
         // Potentially deactivate emergency button for Lawyer/Prosecutor
@@ -417,8 +417,15 @@ internal class EmergencyMinigameUpdatePatch
             !Lawyer.canCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusText = "The Lawyer can't start an emergency meeting";
-            if (Lawyer.isProsecutor) statusText = "The Prosecutor can't start an emergency meeting";
+            statusText = ModTranslation.getString("lawyerMeetingButton");
+            if (Lawyer.isProsecutor) statusText = ModTranslation.getString("ProsecutorMeetingButton");
+        }
+
+        // Potentially deactivate emergency button for Prophet
+        if (Prophet.prophet != null && Prophet.prophet == CachedPlayer.LocalPlayer.PlayerControl && !Prophet.canCallEmergency)
+        {
+            roleCanCallEmergency = false;
+            statusText = ModTranslation.getString("prophetMeetingButton");
         }
 
         if (!roleCanCallEmergency)
@@ -438,7 +445,7 @@ internal class EmergencyMinigameUpdatePatch
             var teamRemaining = Mathf.Max(0, maxNumberOfMeetings - meetingsCount);
             var remaining = Mathf.Min(localRemaining,
                 Mayor.mayor != null && Mayor.mayor == CachedPlayer.LocalPlayer.PlayerControl ? 1 : teamRemaining);
-            __instance.NumberText.text = $"{localRemaining.ToString()} and the ship has {teamRemaining.ToString()}";
+            __instance.NumberText.text = String.Format(ModTranslation.getString("meetingCount"), localRemaining.ToString(), teamRemaining.ToString());
             __instance.ButtonActive = remaining > 0;
             __instance.ClosedLid.gameObject.SetActive(!__instance.ButtonActive);
             __instance.OpenLid.gameObject.SetActive(__instance.ButtonActive);

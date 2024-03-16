@@ -590,6 +590,32 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
+    static void prophetSetTarget()
+    {
+        if (Prophet.prophet == null || CachedPlayer.LocalPlayer.PlayerControl != Prophet.prophet) return;
+        Prophet.currentTarget = setTarget();
+        if (Prophet.examinesLeft > 0) setPlayerOutline(Prophet.currentTarget, Prophet.color);
+    }
+
+    static void prophetUpdate()
+    {
+        if (Prophet.arrows == null) return;
+
+        foreach (var arrow in Prophet.arrows) arrow.arrow.SetActive(false);
+
+        if (Prophet.prophet == null || Prophet.prophet.Data.IsDead) return;
+
+        if (Prophet.isRevealed && Helpers.isKiller(CachedPlayer.LocalPlayer.PlayerControl))
+        {
+            if (Prophet.arrows.Count == 0) Prophet.arrows.Add(new Arrow(Prophet.color));
+            if (Prophet.arrows.Count != 0 && Prophet.arrows[0] != null)
+            {
+                Prophet.arrows[0].arrow.SetActive(true);
+                Prophet.arrows[0].Update(Prophet.prophet.transform.position);
+            }
+        }
+    }
+
     private static void trackerUpdate()
     {
         // Handle player tracking
@@ -1675,6 +1701,9 @@ public static class PlayerControlFixedUpdatePatch
             // Swooper
             swooperSetTarget();
             swooperUpdate();
+            // Prophet
+            prophetSetTarget();
+            prophetUpdate();
             // Shifter
             shifterSetTarget();
             // Sheriff
@@ -1834,35 +1863,34 @@ internal class BodyReportPatch
 
                 if (isMedicReport)
                 {
-                    //msg = $"尸检报告: 尸体在 {Math.Round(timeSinceDeath / 1000)}秒前死亡!";
                     if (timeSinceDeath < Medic.ReportNameDuration * 1000)
                     {
-                        msg = $"尸检报告: 凶手似乎是 {deadPlayer.killerIfExisting.Data.PlayerName}!";
+                        msg = $"尸检报告: 凶手似乎是 {deadPlayer.killerIfExisting.Data.PlayerName}!\n尸体在 {Math.Round(timeSinceDeath / 1000)} 秒前死亡";
                     }
                     else if (timeSinceDeath < Medic.ReportColorDuration * 1000)
                     {
                         var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting) ? "浅" : "深";
-                        msg = $"尸检报告: 凶手似乎是 {typeOfColor} 色的!";
+                        msg = $"尸检报告: 凶手似乎是 {typeOfColor} 色的!\n尸体在{Math.Round(timeSinceDeath / 1000)}秒前死亡";
                     }
                     else
                     {
-                        msg = $"尸检报告: 死亡时间太久，无法获取信息! {Math.Round(timeSinceDeath / 1000)}秒前死亡";
+                        msg = $"尸检报告: 死亡时间太久，无法获取信息! \n尸体在{Math.Round(timeSinceDeath / 1000)}秒前死亡";
                     }
                 }
                 else if (isDetectiveReport)
                 {
                     if (timeSinceDeath < Detective.reportNameDuration * 1000)
                     {
-                        msg = $"尸检报告: 凶手似乎是 {deadPlayer.killerIfExisting.Data.PlayerName}!";
+                        msg = $"尸检报告: 凶手似乎是 {RoleInfo.getRoleInfoForPlayer(deadPlayer.killerIfExisting).First(x => !x.isModifier).name} !\n尸体在 {Math.Round(timeSinceDeath / 1000)} 秒前死亡";
                     }
                     else if (timeSinceDeath < Detective.reportColorDuration * 1000)
                     {
                         var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting) ? "浅" : "深";
-                        msg = $"尸检报告: 凶手似乎是 {typeOfColor} 色的!";
+                        msg = $"尸检报告: 凶手似乎是 {typeOfColor} 色的!\n尸体在{Math.Round(timeSinceDeath / 1000)}秒前死亡";
                     }
                     else
                     {
-                        msg = $"尸检报告: 死亡时间太久，无法获取信息! {Math.Round(timeSinceDeath / 1000)}秒前死亡";
+                        msg = $"尸检报告: 死亡时间太久，无法获取信息\n尸体在 {Math.Round(timeSinceDeath / 1000)} 秒前死亡";
                     }
                 }
 
