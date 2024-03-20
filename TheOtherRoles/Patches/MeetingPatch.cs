@@ -231,7 +231,6 @@ internal class MeetingHudPatch
             var guesserRole = Guesser.niceGuesser != null && CachedPlayer.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId
                     ? RoleId.NiceGuesser
                     : RoleId.EvilGuesser;
-            if (Guesser.modifierNiceGuesser.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId))guesserRole = RoleId.ModifierNiceGuesser;
             if (Doomsayer.doomsayer != null && CachedPlayer.LocalPlayer.PlayerId == Doomsayer.doomsayer.PlayerId) guesserRole = RoleId.Doomsayer;
 
 
@@ -272,7 +271,7 @@ internal class MeetingHudPatch
 
             switch (HandleGuesser.isGuesserGm)
             {
-                case true when roleInfo.roleId is RoleId.NiceGuesser or RoleId.EvilGuesser or RoleId.ModifierNiceGuesser:
+                case true when roleInfo.roleId is RoleId.NiceGuesser or RoleId.EvilGuesser:
                 case true when CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor &&
                                !HandleGuesser.evilGuesserCanGuessSpy && roleInfo.roleId == RoleId.Spy:
                     continue; // remove Guesser for guesser game mode
@@ -866,10 +865,11 @@ internal class MeetingHudPatch
             if (!Mini.isGrowingUpInMeeting)
                 Mini.timeOfGrowthStart = Mini.timeOfGrowthStart.Add(DateTime.UtcNow.Subtract(Mini.timeOfMeetingStart))
                     .AddSeconds(10);
-
+            /*
             // Snitch
             if (Snitch.snitch != null && !Snitch.needsUpdate && Snitch.snitch.Data.IsDead && Snitch.text != null)
                 Object.Destroy(Snitch.text);
+            */
         }
     }
 
@@ -1076,7 +1076,7 @@ internal class MeetingHudPatch
             {
                 Error("末日预言家报错");
             }
-
+            /*
             // Add Snitch info
             var output = "";
 
@@ -1118,12 +1118,14 @@ internal class MeetingHudPatch
                         })));
                 }
             }
-
+            
             if (CachedPlayer.LocalPlayer.Data.IsDead && output != "")
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(CachedPlayer.LocalPlayer, $"{output}");
 
-            Trapper.playersOnMap = new List<PlayerControl>();
             Snitch.playerRoomMap = new Dictionary<byte, byte>();
+            */
+
+            Trapper.playersOnMap = new List<PlayerControl>();
 
             // Remove revealed traps
             Trap.clearRevealedTraps();

@@ -108,7 +108,6 @@ public enum RoleId
     Sunglasses,
     Torch,
     Flash,
-    ModifierNiceGuesser,
     Multitasker,
     Mini,
     Vip,
@@ -607,10 +606,7 @@ public static class RPCProcedure
                 break;         
             case RoleId.Flash:
                 Flash.flash.Add(player);
-                break;       
-            case RoleId.ModifierNiceGuesser:
-                Guesser.modifierNiceGuesser.Add(player);
-                break;  
+                break;
             case RoleId.Slueth:
                 Slueth.slueth = player;
                 break;
@@ -1817,8 +1813,6 @@ public static class RPCProcedure
                 Torch.torch.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (Flash.flash.Any(x => x.PlayerId == player.PlayerId))
                 Flash.flash.RemoveAll(x => x.PlayerId == player.PlayerId);
-            if (Guesser.modifierNiceGuesser.Any(x => x.PlayerId == player.PlayerId))
-                Guesser.modifierNiceGuesser.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (Multitasker.multitasker.Any(x => x.PlayerId == player.PlayerId))
                 Multitasker.multitasker.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (player == Tiebreaker.tiebreaker) Tiebreaker.clearAndReload();
@@ -3069,12 +3063,13 @@ public static class RPCProcedure
         bomberButton.isEffectActive = false;
         bomberButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
     }
-
+    /*
     public static void shareRoom(byte playerId, byte roomId)
     {
         if (Snitch.playerRoomMap.ContainsKey(playerId)) Snitch.playerRoomMap[playerId] = roomId;
         else Snitch.playerRoomMap.Add(playerId, roomId);
     }
+    */
 }
 
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
@@ -3583,12 +3578,13 @@ internal class RPCHandlerPatch
             case CustomRPC.ShareGhostInfo:
                 RPCProcedure.receiveGhostInfo(reader.ReadByte(), reader);
                 break;
-
+                /*
             case CustomRPC.ShareRoom:
                 var roomPlayer = reader.ReadByte();
                 var roomId = reader.ReadByte();
                 RPCProcedure.shareRoom(roomPlayer, roomId);
                 break;
+                */
             case CustomRPC.MayorMeeting:
                 RPCProcedure.StartMayorMeeting();
                 break;

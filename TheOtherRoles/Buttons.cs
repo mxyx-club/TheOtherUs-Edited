@@ -1603,6 +1603,7 @@ internal static class HudManagerStartPatch
         prophetButton = new CustomButton(
                 () =>
                 {
+                    if (Helpers.checkAndDoVetKill(Prophet.currentTarget)) return;
                     if (Prophet.currentTarget != null)
                     {
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ProphetExamine, Hazel.SendOption.Reliable, -1);

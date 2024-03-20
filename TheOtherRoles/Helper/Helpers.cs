@@ -1341,7 +1341,7 @@ public static class Helpers
                 return roleInfo.color.Equals(Jackal.color) ||
                        roleInfo.color.Equals(Sidekick.color) ||
                        roleInfo.color.Equals(Werewolf.color) ||
-                       roleInfo.color.Equals(Lawyer.color) ||
+                       //roleInfo.color.Equals(Lawyer.color) ||
                        roleInfo.color.Equals(Akujo.color) ||
                        roleInfo.color.Equals(Juggernaut.color) ||
                        roleInfo.color.Equals(Swooper.color) ||
@@ -1361,6 +1361,7 @@ public static class Helpers
         return player.Data.Role.IsImpostor ||
                (isNeutral(player) &&
                 player != Jester.jester &&
+                player != Amnisiac.amnisiac &&
                 player != Arsonist.arsonist &&
                 player != Vulture.vulture &&
                 player != Akujo.akujo &&

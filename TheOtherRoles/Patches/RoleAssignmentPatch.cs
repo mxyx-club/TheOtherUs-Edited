@@ -191,7 +191,7 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Snitch, CustomOptionHolder.snitchSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Medium, CustomOptionHolder.mediumSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Prophet, CustomOptionHolder.prophetSpawnRate.getSelection());
-        if (isGuesserGamemode == false && Guesser.guesserModifier == false)
+        if (isGuesserGamemode == false)
         {
             crewSettings.Add((byte)RoleId.NiceGuesser, CustomOptionHolder.guesserSpawnRate.getSelection());
         }
@@ -596,7 +596,6 @@ internal class RoleManagerSelectRolesPatch
             RoleId.Sunglasses,
             RoleId.Torch,
             RoleId.Flash,
-            RoleId.ModifierNiceGuesser,
             RoleId.Multitasker,
             RoleId.ButtonBarry,
             RoleId.Vip,
@@ -917,29 +916,15 @@ internal class RoleManagerSelectRolesPatch
         
         if (modifiers.Contains(RoleId.ButtonBarry))
         {
-            var Barry = new List<PlayerControl>(playerList);
-            Barry.RemoveAll(x => x.Data.Role.IsImpostor);
+            var buttonPlayer = new List<PlayerControl>(playerList); 
+            buttonPlayer.RemoveAll(x => x.Data.Role.IsImpostor);
 
-            playerId = setModifierToRandomPlayer((byte)RoleId.ButtonBarry, Barry);
-            Barry.RemoveAll(x => x.PlayerId == playerId);
+            playerId = setModifierToRandomPlayer((byte)RoleId.ButtonBarry, buttonPlayer);
+            buttonPlayer.RemoveAll(x => x.PlayerId == playerId);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.ButtonBarry);
         }
         
-        if (modifiers.Contains(RoleId.ModifierNiceGuesser))
-        {
-            var modifierNiceGuesserCount = 0;
-            while (modifierNiceGuesserCount < modifiers.FindAll(x => x == RoleId.ModifierNiceGuesser).Count)
-            {
-                playerId = setModifierToRandomPlayer((byte)RoleId.ModifierNiceGuesser, crewPlayer);
-                crewPlayer.RemoveAll(x => x.PlayerId == playerId);
-                playerList.RemoveAll(x => x.PlayerId == playerId);
-                modifierNiceGuesserCount++;
-            }
-
-            modifiers.RemoveAll(x => x == RoleId.ModifierNiceGuesser);
-        }
-
         if (modifiers.Contains(RoleId.Multitasker))
         {
             var multitaskerCount = 0;
@@ -1025,12 +1010,6 @@ internal class RoleManagerSelectRolesPatch
             case RoleId.Flash:
                 selection = CustomOptionHolder.modifierFlash.getSelection();
                 if (multiplyQuantity) selection *= CustomOptionHolder.modifierFlashQuantity.getQuantity();
-                break;           
-            case RoleId.ModifierNiceGuesser:
-                if (Guesser.guesserModifier == true){
-                    selection = CustomOptionHolder.guesserSpawnRate.getSelection();
-                    if (multiplyQuantity) selection *= CustomOptionHolder.guesserModifierQuantity.getQuantity();
-                }
                 break;
             case RoleId.Multitasker:
                 selection = CustomOptionHolder.modifierMultitasker.getSelection();

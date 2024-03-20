@@ -62,7 +62,9 @@ internal static class MapBehaviourPatch
             }
         }
         else if (Snitch.snitch != null && CachedPlayer.LocalPlayer.PlayerId == Snitch.snitch.PlayerId &&
-                 !Snitch.snitch.Data.IsDead && Snitch.mode != Snitch.Mode.Chat)
+                 !Snitch.snitch.Data.IsDead)
+                 //&& Snitch.mode != Snitch.Mode.Chat
+                 
         {
             var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
             var numberOfTasks = playerTotal - playerCompleted;
@@ -72,8 +74,8 @@ internal static class MapBehaviourPatch
                 if (MeetingHud.Instance == null)
                     foreach (PlayerControl player in CachedPlayer.AllPlayers)
                     {
-                        if (Snitch.targets == Snitch.Targets.EvilPlayers && !Helpers.isEvil(player)) continue;
-                        if (Snitch.targets == Snitch.Targets.Killers && !Helpers.isKiller(player)) continue;
+                        //if (Snitch.targets == Snitch.Targets.EvilPlayers && !Helpers.isEvil(player)) continue;
+                        //if (Snitch.targets == Snitch.Targets.Killers && !Helpers.isKiller(player)) continue;
                         if (player.Data.IsDead) continue;
                         var v = player.transform.position;
                         v /= MapUtilities.CachedShipStatus.MapScale;

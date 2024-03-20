@@ -174,7 +174,7 @@ public class OnGameEndPatch
                             gameOverReason == (GameOverReason)CustomGameOverReason.ProsecutorWin;
         var akujoWin = Akujo.akujo != null && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin && (Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead);
 
-        var isPursurerLose = jesterWin || arsonistWin || miniLose || vultureWin || teamJackalWin || doomsayerWin;
+        var isPursurerLose = jesterWin || arsonistWin || miniLose;
 
         // Mini lose
         if (miniLose)
@@ -344,7 +344,7 @@ public class OnGameEndPatch
                 if (!TempData.winners.ToArray().Any(x => x.PlayerName == Lawyer.lawyer.Data.PlayerName))
                     TempData.winners.Add(new WinningPlayerData(Lawyer.lawyer.Data));
                 AdditionalTempData.additionalWinConditions.Add(WinCondition
-                    .AdditionalLawyerBonusWin); // The Lawyer wins together with the client
+                    .AdditionalLawyerBonusWin); // The Lawyer wins together with the client 
             }
         }
 

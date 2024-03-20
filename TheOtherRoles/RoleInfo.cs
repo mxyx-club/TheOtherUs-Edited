@@ -56,7 +56,6 @@ public class RoleInfo
 
     public static RoleInfo crewmate = new("船员", Color.white, "哈哈！白板船员~", "发现并驱逐伪装者", RoleId.Crewmate);
     public static RoleInfo goodGuesser = new("侠客", Guesser.color, "生命就是一场豪赌", "在会议上刺杀坏人", RoleId.NiceGuesser);
-    public static RoleInfo modifierNiceGuesser = new("赌怪", Guesser.color, "生命就是一场豪赌", "在会议上刺杀", RoleId.ModifierNiceGuesser,false, true);
     public static RoleInfo mayor = new("市长", Mayor.color, "我持有一票否决权!!!", "用你的权力帮助船员", RoleId.Mayor);
     public static RoleInfo portalmaker = new("星门缔造者", Portalmaker.color, "以[星]之铭", "筑[星]之门", RoleId.Portalmaker);
     public static RoleInfo engineer = new("工程师", Engineer.color, "没人比我更懂得窃听", "维修飞船", RoleId.Engineer);
@@ -90,7 +89,7 @@ public class RoleInfo
     // Modifier
     public static RoleInfo disperser = new("分散者", Color.red, "大伙！该上路了！", "分散所有人", RoleId.Disperser, false, true);
     public static RoleInfo bloody = new("溅血者", Color.yellow, "以吾之血咒汝之身", "用你的血留下死亡信息", RoleId.Bloody, false, true);
-    public static RoleInfo antiTeleport = new("通讯兵", Color.yellow, "线上会议！", "无需回到会议室开会", RoleId.AntiTeleport, false, true);
+    public static RoleInfo antiTeleport = new("通讯兵", Color.yellow, "你不会被传送!", "你不会被传送!", RoleId.AntiTeleport, false, true);
     public static RoleInfo tiebreaker = new("破平者", Color.yellow, "你说得对...但是，规则就是用来打破的", "打破平局", RoleId.Tiebreaker, false, true);
     public static RoleInfo bait = new("诱饵", Color.yellow, "大奖小奖，能记住就是好奖", "击杀你的人会立即报警", RoleId.Bait, false, true);
     public static RoleInfo sunglasses = new("太阳镜", Color.yellow, "这真是，泰酷辣", "你的视野变得更小", RoleId.Sunglasses, false, true);
@@ -185,7 +184,6 @@ public class RoleInfo
 
         disperser,
         bloody,
-        modifierNiceGuesser,
         antiTeleport,
         tiebreaker,
         bait,
@@ -260,7 +258,6 @@ public class RoleInfo
             if (Sunglasses.sunglasses.Any(x => x.PlayerId == p.PlayerId)) infos.Add(sunglasses);
             if (Torch.torch.Any(x => x.PlayerId == p.PlayerId)) infos.Add(torch);
             if (Flash.flash.Any(x => x.PlayerId == p.PlayerId)) infos.Add(flash);
-            if (Guesser.modifierNiceGuesser.Any(x => x.PlayerId == p.PlayerId)) infos.Add(modifierNiceGuesser);
             if (Multitasker.multitasker.Any(x => x.PlayerId == p.PlayerId)) infos.Add(multitasker);
             if (p == Mini.mini) infos.Add(mini);
             if (p == Blind.blind) infos.Add(blind);

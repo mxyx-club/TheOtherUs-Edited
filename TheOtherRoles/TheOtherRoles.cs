@@ -1297,7 +1297,7 @@ public static class Vampire
         garlicButton = CustomOptionHolder.vampireGarlicButton.getBool();
     }
 }
-
+/*
 public static class Snitch
 {
     public enum Mode
@@ -1336,6 +1336,38 @@ public static class Snitch
         needsUpdate = true;
         mode = (Mode)CustomOptionHolder.snitchMode.getSelection();
         targets = (Targets)CustomOptionHolder.snitchTargets.getSelection();
+    }
+}
+*/
+
+public static class Snitch
+{
+    public static PlayerControl snitch;
+    public static Color color = new Color32(184, 251, 79, byte.MaxValue);
+
+    public static List<Arrow> localArrows = new List<Arrow>();
+    public static int taskCountForReveal = 1;
+    public static bool seeInMeeting = false;
+    //public static bool canSeeRoles = false;
+    public static bool includeTeamJackal = false;
+    public static bool teamJackalUseDifferentArrowColor = true;
+
+
+    public static void clearAndReload()
+    {
+        if (localArrows != null)
+        {
+            foreach (Arrow arrow in localArrows)
+                if (arrow?.arrow != null)
+                    UnityEngine.Object.Destroy(arrow.arrow);
+        }
+        localArrows = new List<Arrow>();
+        taskCountForReveal = Mathf.RoundToInt(CustomOptionHolder.snitchLeftTasksForReveal.getFloat());
+        seeInMeeting = CustomOptionHolder.snitchSeeMeeting.getBool();
+        //canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();
+        includeTeamJackal = CustomOptionHolder.snitchIncludeTeamJackal.getBool();
+        teamJackalUseDifferentArrowColor = CustomOptionHolder.snitchTeamJackalUseDifferentArrowColor.getBool();
+        snitch = null;
     }
 }
 
@@ -2071,7 +2103,6 @@ public static class Doomsayer
 {
     public static PlayerControl doomsayer;
 
-    //public static PlayerControl evilGuesser;
     public static Color color = new(0f, 1f, 0.5f, 1f);
     public static PlayerControl currentTarget;
     public static List<PlayerControl> playerTargetinformation = new();
@@ -2121,11 +2152,7 @@ public static class Guesser
     public static PlayerControl niceGuesser;
 
     public static List<PlayerControl> evilGuesser = new();
-    public static List<PlayerControl> modifierNiceGuesser = new();
     public static Color color = new Color32(255, 255, 0, byte.MaxValue);
-
-    public static bool guesserModifier = false;
-    public static int guesserModifierQuantity = 1;
 
     public static int remainingShotsEvilGuesser = 2;
     public static int remainingShotsNiceGuesser = 2;
@@ -2143,8 +2170,6 @@ public static class Guesser
     {
         if (evilGuesser.Any(item => item.PlayerId == playerId && evilGuesser != null)) return true;
 
-        if (modifierNiceGuesser.Any(item => item.PlayerId == playerId && modifierNiceGuesser != null)) return true;
-
         return niceGuesser != null && niceGuesser.PlayerId == playerId;
     }
 
@@ -2153,19 +2178,12 @@ public static class Guesser
         if (niceGuesser != null && niceGuesser.PlayerId == playerId) niceGuesser = null;
         foreach (var item in evilGuesser.Where(item => item.PlayerId == playerId && evilGuesser != null))
             evilGuesser = null;
-        foreach (var item in modifierNiceGuesser.Where(item => item.PlayerId == playerId && modifierNiceGuesser != null))
-            modifierNiceGuesser = null;
     }
 
     public static int remainingShots(byte playerId, bool shoot = false)
     {
         var result = remainingShotsEvilGuesser;
         if (niceGuesser != null && niceGuesser.PlayerId == playerId)
-        {
-            result = remainingShotsNiceGuesser;
-            if (shoot) remainingShotsNiceGuesser = Mathf.Max(0, remainingShotsNiceGuesser - 1);
-        }
-        else if (Guesser.modifierNiceGuesser.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId))
         {
             result = remainingShotsNiceGuesser;
             if (shoot) remainingShotsNiceGuesser = Mathf.Max(0, remainingShotsNiceGuesser - 1);
@@ -2181,9 +2199,6 @@ public static class Guesser
     {
         niceGuesser = null;
         evilGuesser = new List<PlayerControl>();
-
-        guesserModifier = CustomOptionHolder.guesserModifier.getBool();
-        guesserModifierQuantity = CustomOptionHolder.guesserModifierQuantity.GetInt();
 
         guesserCantGuessSnitch = CustomOptionHolder.guesserCantGuessSnitchIfTaksDone.getBool();
         remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.modifierAssassinNumberOfShots.getFloat() + 1);
@@ -2434,14 +2449,14 @@ public static class Medium
                             Helpers.isNeutral(pc) && pc != Jackal.jackal && pc != Sidekick.sidekick &&
                             pc != Thief.thief)
                         .Count();
-                    condition = "名玩家" + (count == 1 ? "" : "") + "" + (count == 1 ? "是" : "是") + "中立但是不能击杀";
+                    condition = "名玩家" + (count == 1 ? "" : "") + "" + (count == 1 ? "是" : "是") + "非击杀型中立";
                     break;
                 case 3:
                     //count = alivePlayersList.Where(pc =>
                     break;
             }
 
-            msg += $"\n你问我的时候,还有{count} " + condition + (count == 1 ? "" : "") + " 活着";
+            msg += $"\n你问我的时候,有{count} " + condition + (count == 1 ? "" : "") + " 还活着";
         }
 
         return Medium.target.player.Data.PlayerName + " 的灵魂说:\n" + msg;
@@ -2671,7 +2686,7 @@ public static class Jumper
 
     public static void resetPlaces()
     {
-        jumperCharges = Mathf.RoundToInt(CustomOptionHolder.jumperChargesOnPlace.getFloat());
+        jumperCharges = Mathf.RoundToInt(jumperChargesOnPlace);
         jumpLocation = Vector3.zero;
         usedPlace = false;
     }
@@ -2682,9 +2697,9 @@ public static class Jumper
         jumpLocation = Vector3.zero;
         jumper = null;
         resetPlaceAfterMeeting = CustomOptionHolder.jumperResetPlaceAfterMeeting.getBool();
-        jumperCharges = 1f;
+        jumperCharges = CustomOptionHolder.jumperMaxCharges.getFloat();
         jumperJumpTime = CustomOptionHolder.jumperJumpTime.getFloat();
-        jumperChargesOnPlace = CustomOptionHolder.jumperChargesOnPlace.getFloat();
+        jumperChargesOnPlace = 1f;
         //jumperChargesGainOnMeeting = CustomOptionHolder.jumperChargesGainOnMeeting.getFloat();
         //jumperMaxCharges = CustomOptionHolder.jumperMaxCharges.getFloat();
         usedPlace = false;
@@ -3236,7 +3251,7 @@ public static class Torch
 public static class Flash
 {
     public static List<PlayerControl> flash = new();
-    public static float speed = 1f;
+    public static float speed = 1.5f;
 
     public static void clearAndReload()
     {
@@ -3650,10 +3665,10 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Swooper.swooper = player1;
         }
-        else if (Akujo.akujo != null && Akujo.akujo == player2)
+        else if (Prophet.prophet != null && Prophet.prophet == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
-            Akujo.akujo = player1;
+            Prophet.prophet = player1;
         }
     }
 
