@@ -1,19 +1,19 @@
-![mod banner](./Images/TOR_Logo.png)
+![mod banner](./Images/TOR_logo.png)
 <p align="center"><a href="https://github.com/mxyx-club/TheOtherUs/releases/"><img src="https://badgen.net/github/release/mxyx-club/theotherus"></a></p>
 
 
-This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.</p>
-<p align="center">
-  To other mod devs: for usage of our code, please read and respect the <a href="#license">license</a></p>
-[![Discord](./Images/TOR_server.png)](https://discord.gg/yspVyP5meR)
+This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.
 
+<p align="center">To other mod devs: for usage of our code, please read and respect the <a href="#license">license</a></p>
+
+[![Discord](./Images/TOR_server.png)](https://discord.gg/yspVyP5meR)
 
 # The Other Roles
 
 **The Other Roles** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
 Even more roles are coming soon. :)
 
-# Releases
+## Releases
 | Among Us - Version| Mod Version | Link |
 |----------|-------------|-----------------|
 | 2024.3.5s    | v1.0.3.1 | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip)    |
@@ -21,7 +21,7 @@ Even more roles are coming soon. :)
 
 
 
-# Changelog
+## Changelog
 
 <details>
   <summary>Click to show the Changelog</summary>
@@ -41,7 +41,7 @@ Even more roles are coming soon. :)
 
 </details>
 
-# GameMode
+## GameMode
 
 - Classic
 - Guesser Modifier
@@ -49,7 +49,9 @@ Even more roles are coming soon. :)
 - Vanilla Hide 'n' Seek
 - PropHunt
 
-# Roles
+## Roles
+<details>
+  <summary>Click to show the Roles</summary>
 
 **Impostor**
 
@@ -145,23 +147,32 @@ Even more roles are coming soon. :)
 - Shifter
 
 
+</details>
 
-# Credits & Resources
+
+## Credits & Resources
+
 Team:
+
 Mallöris    K3ndo    Bavari    Gendelo
 
 Former Team Members:
+
 Eisbison (GOAT)    Thunderstorm584    EndOfFile
 
 Additional Devs:
+
 EnoPM    twix    NesTT
 
 Github Contributors:
+
 Alex2911    amsyarasyiq    MaximeGillot
 Psynomit    probablyadnf    JustASysAdmin
 
 [Discord](https://discord.gg/yspVyP5meR) Moderators:</b>
+
 Draco Cordraconis    Streamblox (formerly)
+
 Thanks to all our discord helpers!
 
 Thanks to miniduikboot & GD for hosting modded servers (and so much more)
