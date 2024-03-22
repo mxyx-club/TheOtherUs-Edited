@@ -20,8 +20,8 @@ Even more roles are coming soon. :)
 | [Janitor (Mafia)](#mafia)   | [Sheriff](#sheriff)               | [Jackal](#jackal)         | [Tie Breaker](#tie-breaker)     | [Hide 'n' Seek](#hide-n-seek)                                |
 | [Morphling](#morphling)     | [Deputy](#deputy)                 | [Sidekick](#sidekick)     | [Bait](#bait)                   | [Vanilla Hide 'n' Seek](https://www.innersloth.com/new-game-mode-hide-n-seek-is-here-emergency-meeting-35/) |
 | [Camouflager](#camouflager) | [Lighter](#lighter)               | [Vulture](#vulture)       | [Lovers](#lovers)               | [PropHunt](#prophunt)                                        |
-| [Vampire](#vampire)         | [Detective](#detective)           | [Lawyer](#lawyer)         | [Sunglasses](                   |                                                              |
-| [Trickster](#trickster)     | [Medic](#medic)                   | [Pursuer](#pursuer)       | [VIP](#vip)  #sunglasses)       |                                                              |
+| [Vampire](#vampire)         | [Detective](#detective)           | [Lawyer](#lawyer)         | [Sunglasses](#sunglasses)       |                                                              |
+| [Trickster](#trickster)     | [Medic](#medic)                   | [Pursuer](#pursuer)       | [VIP](#vip)                     |                                                              |
 | [Eraser](#eraser)           | [Time Master](#time-master)       | [Prosecutor](#prosecutor) | [Mini](#mini)                   |                                                              |
 | [Cleaner](#cleaner)         | [Swapper](#swapper)               | [Thief](#thief)           | [Invert](#invert)               |                                                              |
 | [Warlock](#warlock)         | [Seer](#seer)                     | [Doomsayer](#Doomsayer)   | [Chameleon](#chameleon)         |                                                              |
