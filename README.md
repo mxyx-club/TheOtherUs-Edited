@@ -20,14 +20,14 @@ Even more roles are coming soon. :)
 | [Janitor (Mafia)](#mafia)   | [Sheriff](#sheriff)               | [Jackal](#jackal)         | [Tie Breaker](#tie-breaker)     | [Hide 'n' Seek](#hide-n-seek)                                |
 | [Morphling](#morphling)     | [Deputy](#deputy)                 | [Sidekick](#sidekick)     | [Bait](#bait)                   | [Vanilla Hide 'n' Seek](https://www.innersloth.com/new-game-mode-hide-n-seek-is-here-emergency-meeting-35/) |
 | [Camouflager](#camouflager) | [Lighter](#lighter)               | [Vulture](#vulture)       | [Lovers](#lovers)               | [PropHunt](#prophunt)                                        |
-| [Vampire](#vampire)         | [Detective](#detective)           | [Lawyer](#lawyer)         | [Sunglasses](#sunglasses)       |                                                              |
+| [Vampire](#vampire)         | [Detective](#detective)           | [Lawyer](#lawyer)         | [Sunglasses](                   |                                                              |
+| [Trickster](#trickster)     | [Medic](#medic)                   | [Pursuer](#pursuer)       | [VIP](#vip)  #sunglasses)       |                                                              |
 | [Eraser](#eraser)           | [Time Master](#time-master)       | [Prosecutor](#prosecutor) | [Mini](#mini)                   |                                                              |
-| [Trickster](#trickster)     | [Medic](#medic)                   | [Pursuer](#pursuer)       | [VIP](#vip)                     |                                                              |
 | [Cleaner](#cleaner)         | [Swapper](#swapper)               | [Thief](#thief)           | [Invert](#invert)               |                                                              |
-| [Warlock](#warlock)         | [Seer](#seer)                     | [Doomsayer]               | [Chameleon](#chameleon)         |                                                              |
-| [Bounty Hunter](#bounty-hunter) | [Hacker](#hacker)             | [Juggernaut]              | [Shifter](#shifter)             |                                                              |
-| [Witch](#witch)             | [Tracker](#tracker)               | [Akujo]                   | [Disperser](#disperser)         |                                                              |
-| [Ninja](#ninja)             | [Snitch](#snitch)                 |                           | [Poucher]                       |                                                              |
+| [Warlock](#warlock)         | [Seer](#seer)                     | [Doomsayer](#Doomsayer)   | [Chameleon](#chameleon)         |                                                              |
+| [Bounty Hunter](#bounty-hunter)   | [Hacker](#hacker)           | [Juggernaut](#Juggernaut) | [Shifter](#shifter)             |                                                              |
+| [Witch](#witch)             | [Tracker](#tracker)               | [Akujo](#Akujo)           | [Disperser](#disperser)         |                                                              |
+| [Ninja](#ninja)             | [Snitch](#snitch)                 |                           | [Poucher](#disperser)           |                                                              |
 | [Bomber](#bomber)           | [Spy](#spy)                       |                           |                                 |                                                              |
 | [Evil Guesser](#guesser)    | [Portalmaker](#portalmaker)       |                           |                                 |                                                              |
 |                             | [Security Guard](#security-guard) |                           |                                 |                                                              |
@@ -54,15 +54,15 @@ The [Role Assignment](#role-assignment) section explains how the roles are being
 
 **Changes in v1.0.3:**
 
-- null
+- 
 
 **Changes in v1.0.2:**
 
-- null
+- 
 
 **Changes in v1.0.1:**
 
-- null
+- 
 
 - 
 </details>
