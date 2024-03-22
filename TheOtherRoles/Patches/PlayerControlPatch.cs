@@ -2444,7 +2444,7 @@ public static class PlayerPhysicsFixedUpdate
                 __instance.myPlayer.CanMove &&
                 Flash.flash.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId))
         {
-            __instance.body.velocity *= 1f + Flash.speed;
+            __instance.body.velocity *= Flash.speed;
         }
     }
 }

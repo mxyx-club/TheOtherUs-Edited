@@ -138,9 +138,9 @@ internal class HudManagerUpdatePatch
         else if (Hacker.hacker != null && Hacker.hacker == localPlayer)
             setPlayerNameColor(Hacker.hacker, Hacker.color);
         else if (Tracker.tracker != null && Tracker.tracker == localPlayer)
-            setPlayerNameColor(Tracker.tracker, Tracker.color);
+            setPlayerNameColor(Tracker.tracker, Tracker.color);*/
         else if (Snitch.snitch != null && Snitch.snitch == localPlayer)
-            setPlayerNameColor(Snitch.snitch, Snitch.color);*/
+            setPlayerNameColor(Snitch.snitch, Snitch.color);
         else if (Jackal.jackal != null && Jackal.jackal == localPlayer)
         {
             // Jackal can see his sidekick

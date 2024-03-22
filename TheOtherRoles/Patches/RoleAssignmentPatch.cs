@@ -150,7 +150,6 @@ internal class RoleManagerSelectRolesPatch
         impSettings.Add((byte)RoleId.Witch, CustomOptionHolder.witchSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Escapist, CustomOptionHolder.escapistSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Ninja, CustomOptionHolder.ninjaSpawnRate.getSelection());
-        impSettings.Add((byte)RoleId.Poucher, CustomOptionHolder.poucherSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Mimic, CustomOptionHolder.mimicSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Bomber, CustomOptionHolder.bomberSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Bomber2, CustomOptionHolder.bomber2SpawnRate.getSelection());
@@ -169,7 +168,6 @@ internal class RoleManagerSelectRolesPatch
         neutralSettings.Add((byte)RoleId.Akujo, CustomOptionHolder.akujoSpawnRate.getSelection());
         neutralSettings.Add((byte)RoleId.Vulture, CustomOptionHolder.vultureSpawnRate.getSelection());
         neutralSettings.Add((byte)RoleId.Thief, CustomOptionHolder.thiefSpawnRate.getSelection());
-
         if (rnd.Next(1, 101) <= CustomOptionHolder.lawyerIsProsecutorChance.getSelection() * 10) // Lawyer or Prosecutor
             neutralSettings.Add((byte)RoleId.Prosecutor, CustomOptionHolder.lawyerSpawnRate.getSelection());
         else
@@ -607,6 +605,7 @@ internal class RoleManagerSelectRolesPatch
             RoleId.Watcher,
             RoleId.Radar,
             RoleId.Disperser,
+            RoleId.Poucher,
             RoleId.Cursed,
             RoleId.Chameleon,
             RoleId.Shifter
@@ -831,9 +830,18 @@ internal class RoleManagerSelectRolesPatch
             var impPlayer = new List<PlayerControl>(playerList); //testing
             impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
             playerId = setModifierToRandomPlayer((byte)RoleId.Disperser, impPlayer);
-            //   crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+            //crewPlayer.RemoveAll(x => x.PlayerId == playerId);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Disperser);
+        }
+
+        if (modifiers.Contains(RoleId.Poucher))
+        {
+            var impPlayer = new List<PlayerControl>(playerList);
+            impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
+            playerId = setModifierToRandomPlayer((byte)RoleId.Poucher, impPlayer);
+            playerList.RemoveAll(x => x.PlayerId == playerId);
+            modifiers.RemoveAll(x => x == RoleId.Poucher);
         }
 
         if (modifiers.Contains(RoleId.Cursed))
@@ -978,6 +986,9 @@ internal class RoleManagerSelectRolesPatch
                 break;
             case RoleId.Disperser:
                 selection = CustomOptionHolder.modifierDisperser.getSelection();
+                break;
+            case RoleId.Poucher:
+                selection = CustomOptionHolder.poucherSpawnRate.getSelection();
                 break;
             case RoleId.Mini:
                 selection = CustomOptionHolder.modifierMini.getSelection();

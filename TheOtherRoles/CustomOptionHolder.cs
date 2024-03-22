@@ -74,16 +74,12 @@ public class CustomOptionHolder
     public static CustomOption eraserCanEraseAnyone;
 
     public static CustomOption guesserSpawnRate;
-    public static CustomOption guesserModifier;
-    public static CustomOption guesserModifierQuantity;
-    public static CustomOption guesserIsImpGuesserRate;
     public static CustomOption guesserNumberOfShots;
     public static CustomOption guesserHasMultipleShotsPerMeeting;
     public static CustomOption guesserShowInfoInGhostChat;
     public static CustomOption guesserKillsThroughShield;
     public static CustomOption guesserEvilCanKillSpy;
     public static CustomOption guesserEvilCanKillCrewmate;
-    public static CustomOption guesserSpawnBothRate;
     public static CustomOption guesserCantGuessSnitchIfTaksDone;
 
     public static CustomOption jesterSpawnRate;
@@ -721,8 +717,7 @@ public class CustomOptionHolder
         eraserCooldown = CustomOption.Create(10161, Types.Impostor, "抹除冷却", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
         eraserCanEraseAnyone = CustomOption.Create(10162, Types.Impostor, "可抹除任何人", false, eraserSpawnRate);
 
-        poucherSpawnRate = CustomOption.Create(10170, Types.Impostor, cs(Poucher.color, "入殓师"), rates, null, true);
-        mimicSpawnRate = CustomOption.Create(10171, Types.Impostor, cs(Mimic.color, "模仿者"), rates, null, true);
+        mimicSpawnRate = CustomOption.Create(10170, Types.Impostor, cs(Mimic.color, "模仿者"), rates, null, true);
 
         escapistSpawnRate = CustomOption.Create(10180, Types.Impostor, cs(Escapist.color, "逃逸者"), rates, null, true);
         escapistEscapeTime = CustomOption.Create(10181, Types.Impostor, "标记/逃逸冷却", 15f, 0f, 60f, 2.5f, escapistSpawnRate);
@@ -868,8 +863,6 @@ public class CustomOptionHolder
         //-------------------------- Crewmate Options 30000-39999 -------------------------- //
 
         guesserSpawnRate = CustomOption.Create(30100, Types.Crewmate, cs(Guesser.color, "侠客"), rates, null, true);
-        guesserModifier = CustomOption.Create(30105, Types.Crewmate, "分配为附加职业", true, guesserSpawnRate);
-        guesserModifierQuantity = CustomOption.Create(30106, Types.Crewmate, "赌怪数量", 1f, 1f, 15f, 1f, guesserModifier);
         guesserNumberOfShots = CustomOption.Create(30101, Types.Crewmate, "可猜测次数", 3f, 1f, 15f, 1f, guesserSpawnRate);
         guesserHasMultipleShotsPerMeeting = CustomOption.Create(30102, Types.Crewmate, "同一轮会议可多次猜测", true, guesserSpawnRate);
         guesserShowInfoInGhostChat = CustomOption.Create(30103, Types.Crewmate, "灵魂可见猜测结果", true, guesserSpawnRate);
@@ -988,15 +981,13 @@ public class CustomOptionHolder
         snitchLeftTasksForReveal = CustomOption.Create(30271, Types.Crewmate, "剩余多少任务时可被发现", 1f, 0f, 10f, 1f, snitchSpawnRate);
         snitchMode = CustomOption.Create(30272, Types.Crewmate, "信息显示", ["聊天框", "地图", "聊天框+地图"], snitchSpawnRate);
         snitchTargets = CustomOption.Create(30273, Types.Crewmate, "显示目标", ["所有邪恶职业", "杀手职业"], snitchSpawnRate);
-        snitchSpawnRate = CustomOption.Create(210, Types.Crewmate, cs(Snitch.color, "Snitch"), rates, null, true);
-        snitchLeftTasksForReveal = CustomOption.Create(211, Types.Crewmate, "Task Count Where The Snitch Will Be Revealed", 1f, 0f, 5f, 1f, snitchSpawnRate);
         */
-        snitchSpawnRate = CustomOption.Create(210, Types.Crewmate, cs(Snitch.color, "告密者"), rates, null, true);
-        snitchLeftTasksForReveal = CustomOption.Create(211, Types.Crewmate, "剩余多少任务揭示告密者的位置", 1f, 0f, 5f, 1f, snitchSpawnRate);
-        snitchSeeMeeting = CustomOption.Create(8836, Types.Crewmate, "可在会议中查看信息", false, snitchSpawnRate);
-        //snitchCanSeeRoles = CustomOption.Create(2112234, Types.Crewmate, "Can See Roles", false, snitchSpawnRate);
-        snitchIncludeTeamJackal = CustomOption.Create(212, Types.Crewmate, "可揭示豺狼阵营", false, snitchSpawnRate);
-        snitchTeamJackalUseDifferentArrowColor = CustomOption.Create(213, Types.Crewmate, "为豺狼阵营使用不同颜色的箭头", true, snitchIncludeTeamJackal);
+        snitchSpawnRate = CustomOption.Create(30270, Types.Crewmate, cs(Snitch.color, "告密者"), rates, null, true);
+        snitchLeftTasksForReveal = CustomOption.Create(30271, Types.Crewmate, "剩余多少任务揭示告密者的位置", 1f, 0f, 5f, 1f, snitchSpawnRate);
+        snitchSeeMeeting = CustomOption.Create(30272, Types.Crewmate, "可在会议中查看信息", false, snitchSpawnRate);
+        //snitchCanSeeRoles = CustomOption.Create(30273, Types.Crewmate, "Can See Roles", false, snitchSpawnRate);
+        snitchIncludeTeamJackal = CustomOption.Create(30274, Types.Crewmate, "可揭示豺狼阵营", false, snitchSpawnRate);
+        snitchTeamJackalUseDifferentArrowColor = CustomOption.Create(30275, Types.Crewmate, "为豺狼阵营使用不同颜色的箭头", true, snitchIncludeTeamJackal);
 
         spySpawnRate = CustomOption.Create(30280, Types.Crewmate, cs(Spy.color, "卧底"), rates, null, true);
         spyCanDieToSheriff = CustomOption.Create(30281, Types.Crewmate, "可被警长执法", false, spySpawnRate);
@@ -1062,6 +1053,8 @@ public class CustomOptionHolder
         //modifierDisperserRemainingDisperses = CustomOption.Create(1002, Types.Modifier, "分散次数", 1f,1f,5f,1f, modifierDisperser);
         modifierDisperserDispersesToVent = CustomOption.Create(1003, Types.Modifier, "分散至管道位置", false, modifierDisperser);
 
+        poucherSpawnRate = CustomOption.Create(1230, Types.Modifier, cs(Color.red, "入殓师"), rates, null, true);
+
         modifierBloody = CustomOption.Create(1010, Types.Modifier, cs(Color.yellow, "溅血者"), rates, null, true);
         modifierBloodyQuantity = CustomOption.Create(1011, Types.Modifier, cs(Color.yellow, "溅血数量"), ratesModifier, modifierBloody);
         modifierBloodyDuration = CustomOption.Create(1012, Types.Modifier, "痕迹持续时间", 10f, 3f, 60f, 0.5f, modifierBloody);
@@ -1073,7 +1066,7 @@ public class CustomOptionHolder
 
         modifierBait = CustomOption.Create(1040, Types.Modifier, cs(Color.yellow, "诱饵"), rates, null, true);
         modifierBaitSwapCrewmate = CustomOption.Create(1041, Types.Modifier, "只分配给船员阵营", false, modifierBait);
-        modifierBaitReportDelayMin = CustomOption.Create(1044, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 0.1f, modifierBait);
+        modifierBaitReportDelayMin = CustomOption.Create(1044, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 0.125f, modifierBait);
         modifierBaitReportDelayMax = CustomOption.Create(1045, Types.Modifier, "诱饵报告延迟时间(最大)", 0f, 0f, 10f, 0.5f, modifierBait);
         modifierBaitShowKillFlash = CustomOption.Create(1046, Types.Modifier, "用闪光灯警告杀手", true, modifierBait);
 

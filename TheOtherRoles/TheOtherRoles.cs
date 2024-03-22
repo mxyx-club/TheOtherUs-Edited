@@ -1348,7 +1348,7 @@ public static class Snitch
     public static List<Arrow> localArrows = new List<Arrow>();
     public static int taskCountForReveal = 1;
     public static bool seeInMeeting = false;
-    //public static bool canSeeRoles = false;
+    public static bool canSeeRoles = false;
     public static bool includeTeamJackal = false;
     public static bool teamJackalUseDifferentArrowColor = true;
 

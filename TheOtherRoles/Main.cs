@@ -28,7 +28,7 @@ namespace TheOtherRoles;
 public class TheOtherRolesPlugin : BasePlugin
 {
     public const string Id = "TheOtherUs.Options.v1";
-    public const string VersionString = "1.0.3";
+    public const string VersionString = "1.0.3.1";
     public static uint betaDays = 0; // amount of days for the build to be usable (0 for infinite!)
 
     public static Version Version = Version.Parse(VersionString);

@@ -69,7 +69,6 @@ public enum RoleId
     Arsonist,
     EvilGuesser,
     NiceGuesser,
-    Disperser,
     BountyHunter,
     Miner,
     Vulture,
@@ -85,7 +84,6 @@ public enum RoleId
     Ninja,
     Blackmailer,
     Thief,
-    Poucher,
     Bomber,
     //魔术师
     //Arcanist,
@@ -97,6 +95,8 @@ public enum RoleId
     Impostor,
 
     // Modifier ---
+    Disperser,
+    Poucher,
     Lover,
     Bait,
     Bloody,
@@ -479,9 +479,6 @@ public static class RPCProcedure
                     case RoleId.Undertaker:
                         Undertaker.undertaker = player;
                         break;
-                    case RoleId.Poucher:
-                        Poucher.poucher = player;
-                        break;
                     case RoleId.PrivateInvestigator:
                         PrivateInvestigator.privateInvestigator = player;
                         break;
@@ -610,7 +607,9 @@ public static class RPCProcedure
             case RoleId.Slueth:
                 Slueth.slueth = player;
                 break;
-
+            case RoleId.Poucher:
+                Poucher.poucher = player;
+                break;
             case RoleId.Cursed:
                 Cursed.cursed = player;
                 break;
@@ -1049,7 +1048,6 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 break;
 
-
             case RoleId.Snitch:
                 if (Amnisiac.resetRole) Snitch.clearAndReload();
                 Snitch.snitch = amnisiac;
@@ -1061,7 +1059,6 @@ public static class RPCProcedure
                 Jackal.formerJackals.Add(target);
                 Amnisiac.clearAndReload();
                 break;
-
 
             case RoleId.Sidekick:
                 Jackal.formerJackals.Add(target);
@@ -1090,21 +1087,12 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 break;
 
-            case RoleId.Poucher:
-                Helpers.turnToImpostor(Amnisiac.amnisiac);
-                if (Amnisiac.resetRole) Poucher.clearAndReload(false);
-                Poucher.poucher = amnisiac;
-                Amnisiac.clearAndReload();
-                break;
-
-
             case RoleId.Mimic:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Mimic.clearAndReload(false);
                 Mimic.mimic = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
-
 
             case RoleId.Cleaner:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
@@ -1269,14 +1257,12 @@ public static class RPCProcedure
                 Trapper.trapper = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
-            //天启添加
             case RoleId.Juggernaut:
                 if (Amnisiac.resetRole) Juggernaut.clearAndReload();
                 Juggernaut.juggernaut = amnisiac;
                 Amnisiac.clearAndReload();
                 Amnisiac.amnisiac = target;
                 break;
-            //末日预言家
             case RoleId.Doomsayer:
                 if (Amnisiac.resetRole) Doomsayer.clearAndReload();
                 Doomsayer.doomsayer = amnisiac;
@@ -1369,7 +1355,6 @@ public static class RPCProcedure
                 jumperButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 Mimic.hasMimic = true;
                 break;
-
 
             case RoleId.Detective:
                 if (Amnisiac.resetRole) Detective.clearAndReload();
@@ -1758,7 +1743,6 @@ public static class RPCProcedure
         if (player == Trickster.trickster) Trickster.clearAndReload();
         if (player == Cleaner.cleaner) Cleaner.clearAndReload();
         if (player == Undertaker.undertaker) Undertaker.clearAndReload();
-        if (player == Poucher.poucher) Poucher.clearAndReload();
         if (player == Mimic.mimic) Mimic.clearAndReload();
         if (player == Warlock.warlock) Warlock.clearAndReload();
         if (player == Witch.witch) Witch.clearAndReload();
@@ -1819,6 +1803,7 @@ public static class RPCProcedure
             if (player == Mini.mini) Mini.clearAndReload();
             if (player == Watcher.watcher) Watcher.clearAndReload();
             if (player == Radar.radar) Radar.clearAndReload();
+            if (player == Poucher.poucher) Poucher.clearAndReload();
             if (player == ButtonBarry.buttonBarry) ButtonBarry.clearAndReload();
             if (player == Disperser.disperser) Disperser.clearAndReload();
             if (player == Indomitable.indomitable) Indomitable.clearAndReload();

@@ -19,7 +19,6 @@ public class RoleInfo
     public static RoleInfo janitor = new("清洁工", Janitor.color, "你有个双胞胎哥哥叫清理者", "帮助教父清理死尸", RoleId.Janitor);
     public static RoleInfo morphling = new("化形者", Morphling.color, "变换你的外形不被抓到", "变换你的外形", RoleId.Morphling);
     public static RoleInfo bomber2 = new("炸弹狂", Bomber2.color, "给其他玩家送炸弹", "炸死所有船员", RoleId.Bomber2);
-    public static RoleInfo poucher = new("入殓师", Poucher.color, "你的人生我从未参与，但我送你最后一程", "调查被击杀者的职业", RoleId.Poucher);
     public static RoleInfo mimic = new("模仿者", Mimic.color, "夺走你的一切，我很抱歉", "夺走第一个被你击杀船员的职业", RoleId.Mimic);
     public static RoleInfo camouflager = new("隐蔽者", Camouflager.color, "让我们来猎杀那些陷入黑暗中的人吧", "隐藏在他人之中", RoleId.Camouflager);
     public static RoleInfo miner = new("管道工", Miner.color, "在飞船上打洞", "制造管道", RoleId.Miner);
@@ -88,6 +87,7 @@ public class RoleInfo
 
     // Modifier
     public static RoleInfo disperser = new("分散者", Color.red, "大伙！该上路了！", "分散所有人", RoleId.Disperser, false, true);
+    public static RoleInfo poucher = new("入殓师", Poucher.color, "你的人生我从未参与，但我送你最后一程", "调查被击杀者的职业", RoleId.Poucher, false, true);
     public static RoleInfo bloody = new("溅血者", Color.yellow, "以吾之血咒汝之身", "用你的血留下死亡信息", RoleId.Bloody, false, true);
     public static RoleInfo antiTeleport = new("通讯兵", Color.yellow, "你不会被传送!", "你不会被传送!", RoleId.AntiTeleport, false, true);
     public static RoleInfo tiebreaker = new("破平者", Color.yellow, "你说得对...但是，规则就是用来打破的", "打破平局", RoleId.Tiebreaker, false, true);
@@ -120,7 +120,6 @@ public class RoleInfo
         janitor,
         morphling,
         bomber2,
-        poucher,
         mimic,
         camouflager,
         miner,
@@ -183,6 +182,7 @@ public class RoleInfo
         //arcanist
 
         disperser,
+        poucher,
         bloody,
         antiTeleport,
         tiebreaker,
@@ -267,6 +267,7 @@ public class RoleInfo
             if (p == ButtonBarry.buttonBarry) infos.Add(buttonBarry);
             if (p == Slueth.slueth) infos.Add(slueth);
             if (p == Disperser.disperser) infos.Add(disperser);
+            if (p == Poucher.poucher) infos.Add(poucher);
             if (Invert.invert.Any(x => x.PlayerId == p.PlayerId)) infos.Add(invert);
             if (Chameleon.chameleon.Any(x => x.PlayerId == p.PlayerId)) infos.Add(chameleon);
             if (p == Shifter.shifter) infos.Add(shifter);
@@ -298,7 +299,6 @@ public class RoleInfo
         if (p == Cleaner.cleaner) infos.Add(cleaner);
         if (p == Undertaker.undertaker) infos.Add(undertaker);
         if (p == PrivateInvestigator.privateInvestigator) infos.Add(privateInvestigator);
-        if (p == Poucher.poucher) infos.Add(poucher);
         if (p == Mimic.mimic) infos.Add(mimic);
         if (p == Warlock.warlock) infos.Add(warlock);
         if (p == Witch.witch) infos.Add(witch);
