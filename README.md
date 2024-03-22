@@ -1,5 +1,5 @@
-![mod banner](./Images/TOU_Logo.png)
-<p align="center"><a href="https://github.com/mxyx-club/TheOtherUs/releases/"><img src="https://badgen.net/github/release/SpexGH/theotherus"></a></p>
+![mod banner](./Images/TOR_Logo.png)
+<p align="center"><a href="https://github.com/mxyx-club/TheOtherUs/releases/"><img src="https://badgen.net/github/release/mxyx-club/theotherus"></a></p>
 
 
 This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.</p>
@@ -10,33 +10,8 @@ This mod is not affiliated with Among Us or Innersloth LLC, and the content cont
 
 # The Other Roles
 
-该 **The Other Roles** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
+**The Other Roles** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
 Even more roles are coming soon. :)
-
-| Impostor                    | Crewmate                          | Neutral                   | Modifier                        | Gamemode                                                     |
-| --------------------------- | --------------------------------- | ------------------------- | ------------------------------- | ------------------------------------------------------------ |
-| [Godfather (Mafia)](#mafia) | [Mayor](#mayor)                   | [Jester](#jester)         | [Bloody](#bloody)               | [Classic](#roles)                                            |
-| [Mafioso (Mafia)](#mafia)   | [Engineer](#engineer)             | [Arsonist](#arsonist)     | [Anti Teleport](#anti-teleport) | [Guesser Modifier](#guesser-modifier)                        |
-| [Janitor (Mafia)](#mafia)   | [Sheriff](#sheriff)               | [Jackal](#jackal)         | [Tie Breaker](#tie-breaker)     | [Hide 'n' Seek](#hide-n-seek)                                |
-| [Morphling](#morphling)     | [Deputy](#deputy)                 | [Sidekick](#sidekick)     | [Bait](#bait)                   | [Vanilla Hide 'n' Seek](https://www.innersloth.com/new-game-mode-hide-n-seek-is-here-emergency-meeting-35/) |
-| [Camouflager](#camouflager) | [Lighter](#lighter)               | [Vulture](#vulture)       | [Lovers](#lovers)               | [PropHunt](#prophunt)                                        |
-| [Vampire](#vampire)         | [Detective](#detective)           | [Lawyer](#lawyer)         | [Sunglasses](#sunglasses)       |                                                              |
-| [Trickster](#trickster)     | [Medic](#medic)                   | [Pursuer](#pursuer)       | [VIP](#vip)                     |                                                              |
-| [Eraser](#eraser)           | [Time Master](#time-master)       | [Prosecutor](#prosecutor) | [Mini](#mini)                   |                                                              |
-| [Cleaner](#cleaner)         | [Swapper](#swapper)               | [Thief](#thief)           | [Invert](#invert)               |                                                              |
-| [Warlock](#warlock)         | [Seer](#seer)                     | [Doomsayer](#Doomsayer)   | [Chameleon](#chameleon)         |                                                              |
-| [Bounty Hunter](#bounty-hunter)   | [Hacker](#hacker)           | [Juggernaut](#Juggernaut) | [Shifter](#shifter)             |                                                              |
-| [Witch](#witch)             | [Tracker](#tracker)               | [Akujo](#Akujo)           | [Disperser](#disperser)         |                                                              |
-| [Ninja](#ninja)             | [Snitch](#snitch)                 |                           | [Poucher](#disperser)           |                                                              |
-| [Bomber](#bomber)           | [Spy](#spy)                       |                           |                                 |                                                              |
-| [Evil Guesser](#guesser)    | [Portalmaker](#portalmaker)       |                           |                                 |                                                              |
-|                             | [Security Guard](#security-guard) |                           |                                 |                                                              |
-|                             | [Medium](#medium)                 |                           |                                 |                                                              |
-|                             | [Trapper](#trapper)               |                           |                                 |                                                              |
-|                             | [Prophet](#Prophet)               |                           |                                 |                                                              |
-|                             | [Nice Guesser](#guesser)          |                           |                                 |                                                              |
-
-The [Role Assignment](#role-assignment) section explains how the roles are being distributed among the players.
 
 # Releases
 | Among Us - Version| Mod Version | Link |
@@ -64,8 +39,111 @@ The [Role Assignment](#role-assignment) section explains how the roles are being
 
 - 
 
-- 
 </details>
+
+# GameMode
+
+- Classic
+- Guesser Modifier
+- Hide 'n' Seek
+- Vanilla Hide 'n' Seek
+- PropHunt
+
+# Roles
+
+**Impostor**
+
+- Godfather(Mafia)
+- Mafioso(Mafia)
+- Janitor(Mafia)
+- Morphling
+- Bomber
+- Mimic
+- Camouflager
+- Miner
+- Eraser
+- Vampire
+- Cleaner
+- Undertaker
+- Escapist
+- Warlock
+- Trickster
+- BountyHunter
+- Cultist
+- Terrorist
+- Blackmailer
+- Witch
+- Ninja
+
+**Neutral**
+
+- Amnisiac
+- Jester
+- Vulture
+- Lawyer
+- Prosecutor
+- Pursuer
+- Jackal
+- Swooper
+- Arsonist
+- Werewolf
+- Thief
+- Juggernaut
+- Doomsayer
+- Akujo
+
+**Crewmate**
+
+- NiceGuesser
+- Mayor
+- Portalmaker
+- Engineer
+- PrivateInvestigator
+- Sheriff
+- Deputy
+- BodyGuard
+- Lighter
+- Jumper
+- Detective
+- TimeMaster
+- Veteren
+- Medic
+- Swapper
+- Seer
+- Hacker
+- Tracker
+- Snitch
+- Spy
+- SecurityGuard
+- Medium
+- Trapper
+- Prophet
+
+**Modifier**
+
+- Disperser
+- Poucher
+- Bloody
+- AntiTeleport
+- Tiebreaker
+- Bait
+- Sunglasses
+- Torch
+- Flash
+- Multitasker
+- Mini
+- Vip
+- Indomitable
+- Slueth
+- Cursed
+- Invert
+- Blind
+- Watcher
+- Radar
+- ButtonBarry
+- Chameleon
+- Shifter
+
 
 
 # Credits & Resources
