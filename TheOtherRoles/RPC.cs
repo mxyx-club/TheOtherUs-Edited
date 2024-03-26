@@ -3231,7 +3231,7 @@ internal class RPCHandlerPatch
                 RPCProcedure.amnisiacTakeRole(reader.ReadByte());
                 break;
 
-            case (byte)CustomRPC.ImpostorPromotesToLastImpostor:
+            case CustomRPC.ImpostorPromotesToLastImpostor:
                 RPCProcedure.impostorPromotesToLastImpostor(reader.ReadByte());
                 break;
 
