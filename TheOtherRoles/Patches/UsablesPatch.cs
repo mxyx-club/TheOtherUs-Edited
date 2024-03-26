@@ -476,7 +476,7 @@ internal class CommsMinigameBeginPatch
     private static void Postfix(TuneRadioMinigame __instance)
     {
         // Block Swapper from fixing comms. Still looking for a better way to do this, but deleting the task doesn't seem like a viable option since then the camera, admin table, ... work while comms are out
-        if (Swapper.swapper != null && Swapper.swapper == CachedPlayer.LocalPlayer.PlayerControl) __instance.Close();
+        if (Swapper.swapper != null && Swapper.swapper == CachedPlayer.LocalPlayer.PlayerControl && !Swapper.canFixSabotages) __instance.Close();
     }
 }
 
@@ -486,7 +486,7 @@ internal class LightsMinigameBeginPatch
     private static void Postfix(SwitchMinigame __instance)
     {
         // Block Swapper from fixing lights. One could also just delete the PlayerTask, but I wanted to do it the same way as with coms for now.
-        if (Swapper.swapper != null && Swapper.swapper == CachedPlayer.LocalPlayer.PlayerControl) __instance.Close();
+        if (Swapper.swapper != null && Swapper.swapper == CachedPlayer.LocalPlayer.PlayerControl && !Swapper.canFixSabotages) __instance.Close();
     }
 }
 
