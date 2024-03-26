@@ -110,6 +110,7 @@ public static class TheOtherRoles
         Invert.clearAndReload();
         Chameleon.clearAndReload();
         ButtonBarry.clearAndReload();
+        LastImpostor.clearAndReload();
 
         // Gamemodes
         HandleGuesser.clearAndReload();
@@ -1630,6 +1631,7 @@ public static class LastImpostor
 {
     public static PlayerControl lastImpostor;
     public static float deduce = 10f;
+    public static bool isEnable = false;
 
     public static void promoteToLastImpostor()
     {
@@ -1653,6 +1655,7 @@ public static class LastImpostor
     {
         lastImpostor = null;
         deduce = CustomOptionHolder.modifierLastImpostorDeduce.getFloat();
+        isEnable = CustomOptionHolder.modifierLastImpostor.getBool();
     }
 }
 
