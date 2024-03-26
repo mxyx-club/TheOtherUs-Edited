@@ -2106,6 +2106,11 @@ public static class MurderPlayerPatch
             }
         }
 
+        if (target.Data.Role.IsImpostor && AmongUsClient.Instance.AmHost)
+        {
+            LastImpostor.promoteToLastImpostor();
+        }
+
         // Sidekick promotion trigger on murder
         if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead &&
             target == Jackal.jackal && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl)
@@ -2352,6 +2357,11 @@ public static class ExilePlayerPatch
                 otherLover.Exiled();
                 overrideDeathReasonAndKiller(otherLover, DeadPlayer.CustomDeathReason.LoverSuicide);
             }
+        }
+
+        if (__instance.Data.Role.IsImpostor && AmongUsClient.Instance.AmHost)
+        {
+            LastImpostor.promoteToLastImpostor();
         }
 
         // Sidekick promotion trigger on exile
