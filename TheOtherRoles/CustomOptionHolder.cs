@@ -490,6 +490,9 @@ public class CustomOptionHolder
     public static CustomOption modifierShifter;
     public static CustomOption modifierShiftNeutral;
 
+    public static CustomOption modifierLastImpostor;
+    public static CustomOption modifierLastImpostorDeduce;
+
     public static CustomOption resteButtonCooldown;
     public static CustomOption maxNumberOfMeetings;
     public static CustomOption blockSkippingInEmergencyMeetings;
@@ -1127,6 +1130,9 @@ public class CustomOptionHolder
 
         modifierShifter = CustomOption.Create(1200, Types.Modifier, cs(Color.yellow, "交换师"), rates, null, true);
         modifierShiftNeutral = CustomOption.Create(1201, Types.Modifier, "可交换部分中立不带刀职业", false, modifierShifter);
+
+        modifierLastImpostor = CustomOption.Create(1202, Types.Modifier, cs(Palette.ImpostorRed, "绝境者"), false, null, true);
+        modifierLastImpostorDeduce = CustomOption.Create(1203, Types.Modifier, "绝境者击杀冷却减少", 10f, 2f, 60f, 1f, modifierLastImpostor);
 
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
 
