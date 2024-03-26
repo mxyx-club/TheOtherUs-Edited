@@ -118,7 +118,8 @@ public enum RoleId
     Blind,
     Invert,
     Chameleon,
-    Shifter
+    Shifter,
+    LastImpostor
 }
 
 public enum CustomRPC
@@ -844,6 +845,12 @@ public static class RPCProcedure
 
         FastDestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(mayor);
         FastDestroyableSingleton<ShipStatus>.Instance.StartMeeting(mayor, null);
+    }
+
+    public static void impostorPromotesToLastImpostor(byte targetId)
+    {
+        PlayerControl player = Helpers.playerById(targetId);
+        LastImpostor.lastImpostor = player;
     }
 
     public static void amnisiacTakeRole(byte targetId)
@@ -3221,6 +3228,10 @@ internal class RPCHandlerPatch
 
             case CustomRPC.AmnisiacTakeRole:
                 RPCProcedure.amnisiacTakeRole(reader.ReadByte());
+                break;
+
+            case (byte)CustomRPC.ImpostorPromotesToLastImpostor:
+                RPCProcedure.impostorPromotesToLastImpostor(reader.ReadByte());
                 break;
 
             case CustomRPC.MimicMimicRole:
