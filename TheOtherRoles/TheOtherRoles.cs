@@ -110,6 +110,7 @@ public static class TheOtherRoles
         Invert.clearAndReload();
         Chameleon.clearAndReload();
         ButtonBarry.clearAndReload();
+        LastImpostor.clearAndReload();
 
         // Gamemodes
         HandleGuesser.clearAndReload();
@@ -1623,6 +1624,38 @@ public static class Swooper
         swoopCooldown = CustomOptionHolder.swooperCooldown.getFloat();
         duration = CustomOptionHolder.swooperDuration.getFloat();
         hasImpVision = CustomOptionHolder.swooperHasImpVision.getBool();
+    }
+}
+
+public static class LastImpostor
+{
+    public static PlayerControl lastImpostor;
+    public static float deduce = 10f;
+    public static bool isEnable = false;
+
+    public static void promoteToLastImpostor()
+    {
+        if (!isEnable) return;
+
+        var impList = new List<PlayerControl>();
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            if (p.Data.Role.IsImpostor && !p.Data.IsDead) impList.Add(p);
+        }
+        if (impList.Count == 1)
+        {
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ImpostorPromotesToLastImpostor, Hazel.SendOption.Reliable, -1);
+            writer.Write(impList[0].PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.impostorPromotesToLastImpostor(impList[0].PlayerId);
+        }
+    }
+
+    public static void clearAndReload()
+    {
+        lastImpostor = null;
+        deduce = CustomOptionHolder.modifierLastImpostorDeduce.getFloat();
+        isEnable = CustomOptionHolder.modifierLastImpostor.getBool();
     }
 }
 

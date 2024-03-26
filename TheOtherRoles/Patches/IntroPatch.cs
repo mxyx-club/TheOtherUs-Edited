@@ -107,6 +107,10 @@ internal class IntroCutsceneOnDestroyPatch
         // Force Reload of SoundEffectHolder
         SoundEffectsManager.Load();
 
+        if (AmongUsClient.Instance.AmHost)
+        {
+            LastImpostor.promoteToLastImpostor();
+        }
 
         // Force Bounty Hunter to load a new Bounty when the Intro is over
         if (BountyHunter.bounty != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter)

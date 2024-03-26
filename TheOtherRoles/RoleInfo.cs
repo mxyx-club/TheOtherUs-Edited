@@ -110,6 +110,7 @@ public class RoleInfo
     public static RoleInfo buttonBarry = new("执钮人", Color.yellow, "你可以随时召开紧急会议!", "你可以随时召开紧急会议!", RoleId.ButtonBarry, false, true);
     public static RoleInfo chameleon = new("变色龙", Color.yellow, "看不见我`看不见我`", "静止时可隐身", RoleId.Chameleon, false, true);
     public static RoleInfo shifter = new("交换师", Color.yellow, "你的能力真好用！马上就是我的了！", "与他人交换职业", RoleId.Shifter, false, true);
+    public static RoleInfo lastImpostor = new("绝境者", Palette.ImpostorRed, "你是狼村最后的希望...", "你的击杀冷却会大幅度减少", RoleId.LastImpostor, false, true);
 
     public static List<RoleInfo> allRoleInfos = new()
     {
@@ -204,7 +205,8 @@ public class RoleInfo
         tunneler,
         buttonBarry,
         chameleon,
-        shifter
+        shifter,
+        lastImpostor
     };
 
 
@@ -272,6 +274,7 @@ public class RoleInfo
             if (Chameleon.chameleon.Any(x => x.PlayerId == p.PlayerId)) infos.Add(chameleon);
             if (p == Shifter.shifter) infos.Add(shifter);
             if (Guesser.evilGuesser.Any(x => x.PlayerId == p.PlayerId)) infos.Add(assassin);
+            if (p == LastImpostor.lastImpostor) infos.Add(lastImpostor);
         }
 
         var count = infos.Count; // Save count after modifiers are added so that the role count can be checked

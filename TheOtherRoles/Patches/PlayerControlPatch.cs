@@ -2106,6 +2106,11 @@ public static class MurderPlayerPatch
             }
         }
 
+        if (target.Data.Role.IsImpostor && AmongUsClient.Instance.AmHost)
+        {
+            LastImpostor.promoteToLastImpostor();
+        }
+
         // Sidekick promotion trigger on murder
         if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead &&
             target == Jackal.jackal && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl)
@@ -2158,6 +2163,11 @@ public static class MurderPlayerPatch
                 BountyHunter.bountyHunter.SetKillTimer(
                     GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + BountyHunter.punishmentTime);
             }
+        }
+
+        if (LastImpostor.lastImpostor != null && __instance == LastImpostor.lastImpostor && CachedPlayer.LocalPlayer.PlayerControl == __instance)
+        {
+            LastImpostor.lastImpostor.SetKillTimer(Mathf.Min(1f, GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - LastImpostor.deduce));
         }
 
         // Mini Set Impostor Mini kill timer (Due to mini being a modifier, all "SetKillTimers" must have happened before this!)
@@ -2282,6 +2292,8 @@ internal class PlayerControlSetCoolDownPatch
             multiplier = Mini.isGrownUp() ? 0.66f : 2f;
         if (BountyHunter.bountyHunter != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter)
             addition = BountyHunter.punishmentTime;
+        if (LastImpostor.lastImpostor != null && CachedPlayer.LocalPlayer.PlayerControl == LastImpostor.lastImpostor)
+            addition = -Mathf.Max((GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - LastImpostor.deduce), __instance.killTimer - 1f);
 
         __instance.killTimer = Mathf.Clamp(time, 0f,
             (GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * multiplier) + addition);
@@ -2352,6 +2364,11 @@ public static class ExilePlayerPatch
                 otherLover.Exiled();
                 overrideDeathReasonAndKiller(otherLover, DeadPlayer.CustomDeathReason.LoverSuicide);
             }
+        }
+
+        if (__instance.Data.Role.IsImpostor && AmongUsClient.Instance.AmHost)
+        {
+            LastImpostor.promoteToLastImpostor();
         }
 
         // Sidekick promotion trigger on exile
