@@ -1058,6 +1058,9 @@ public class CustomOptionHolder
 
         poucherSpawnRate = CustomOption.Create(1230, Types.Modifier, cs(Color.red, "入殓师"), rates, null, true);
 
+        modifierLastImpostor = CustomOption.Create(1240, Types.Modifier, cs(Color.red, "绝境者"), false, null, true);
+        modifierLastImpostorDeduce = CustomOption.Create(1241, Types.Modifier, "绝境者击杀冷却减少", 5f, 2.5f, 15f, 2.5f, modifierLastImpostor);
+
         modifierBloody = CustomOption.Create(1010, Types.Modifier, cs(Color.yellow, "溅血者"), rates, null, true);
         modifierBloodyQuantity = CustomOption.Create(1011, Types.Modifier, cs(Color.yellow, "溅血数量"), ratesModifier, modifierBloody);
         modifierBloodyDuration = CustomOption.Create(1012, Types.Modifier, "痕迹持续时间", 10f, 3f, 60f, 0.5f, modifierBloody);
@@ -1131,8 +1134,6 @@ public class CustomOptionHolder
         modifierShifter = CustomOption.Create(1200, Types.Modifier, cs(Color.yellow, "交换师"), rates, null, true);
         modifierShiftNeutral = CustomOption.Create(1201, Types.Modifier, "可交换部分中立不带刀职业", false, modifierShifter);
 
-        modifierLastImpostor = CustomOption.Create(1202, Types.Modifier, cs(Palette.ImpostorRed, "绝境者"), false, null, true);
-        modifierLastImpostorDeduce = CustomOption.Create(1203, Types.Modifier, "绝境者击杀冷却减少", 10f, 2f, 60f, 1f, modifierLastImpostor);
 
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
 

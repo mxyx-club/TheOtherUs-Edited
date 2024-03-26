@@ -645,7 +645,7 @@ public static class TheOtherRoles
 
         public static void clearAndReload()
         {
-            detective = null; 
+            detective = null;
             anonymousFootprints = CustomOptionHolder.detectiveAnonymousFootprints.getBool();
             footprintIntervall = CustomOptionHolder.detectiveFootprintIntervall.getFloat();
             footprintDuration = CustomOptionHolder.detectiveFootprintDuration.getFloat();
@@ -795,14 +795,14 @@ public static class Medic
         bool isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
         if (Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
         {   // Everyone or Ghost info
-            hasVisibleShield = Medic.showShielded == 0 || Helpers.shouldShowGhostInfo() 
-                || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.shielded 
+            hasVisibleShield = Medic.showShielded == 0 || Helpers.shouldShowGhostInfo()
+                || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.shielded
                 || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic)) // Shielded + Medic
                 || (Medic.showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl == Medic.medic); // Medic only
-                // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
-            hasVisibleShield = hasVisibleShield && (Medic.meetingAfterShielding 
-                || !Medic.showShieldAfterMeeting 
-                || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic 
+                                                                                                       // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
+            hasVisibleShield = hasVisibleShield && (Medic.meetingAfterShielding
+                || !Medic.showShieldAfterMeeting
+                || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic
                 || Helpers.shouldShowGhostInfo());
         }
         return hasVisibleShield;
@@ -1455,10 +1455,6 @@ public static class Jackal
     public static List<PlayerControl> formerJackals = new();
 
     public static float cooldown = 30f;
-    //public static bool isInvisable;
-    //public static float duration = 5f;
-    //public static float swoopCooldown = 30f;
-    //public static float swoopTimer = 0f;
     public static float createSidekickCooldown = 30f;
     public static bool canUseVents = true;
     public static bool canCreateSidekick = true;
@@ -1467,6 +1463,7 @@ public static class Jackal
     public static bool jackalPromotedFromSidekickCanCreateSidekick = true;
     public static bool canCreateSidekickFromImpostor = true;
     public static bool hasImpostorVision;
+    public static bool CanImpostorFindSidekick;//
     public static bool killFakeImpostor;
     public static bool wasTeamRed;
     public static bool canSabotage;
@@ -1500,10 +1497,9 @@ public static class Jackal
         createSidekickCooldown = CustomOptionHolder.jackalCreateSidekickCooldown.getFloat();
         canUseVents = CustomOptionHolder.jackalCanUseVents.getBool();
         canSabotage = CustomOptionHolder.jackalCanUseSabo.getBool();
-        canSabotage = CustomOptionHolder.jackalCanImpostorFindSidekick.getBool();
+        CanImpostorFindSidekick = CustomOptionHolder.jackalCanImpostorFindSidekick.getBool();//
         canCreateSidekick = CustomOptionHolder.jackalCanCreateSidekick.getBool();
-        jackalPromotedFromSidekickCanCreateSidekick =
-            CustomOptionHolder.jackalPromotedFromSidekickCanCreateSidekick.getBool();
+        jackalPromotedFromSidekickCanCreateSidekick = CustomOptionHolder.jackalPromotedFromSidekickCanCreateSidekick.getBool();
         canCreateSidekickFromImpostor = CustomOptionHolder.jackalCanCreateSidekickFromImpostor.getBool();
         killFakeImpostor = CustomOptionHolder.jackalKillFakeImpostor.getBool();
         formerJackals.Clear();
@@ -1630,7 +1626,7 @@ public static class Swooper
 public static class LastImpostor
 {
     public static PlayerControl lastImpostor;
-    public static float deduce = 10f;
+    public static float deduce = 2.5f;
     public static bool isEnable = false;
 
     public static void promoteToLastImpostor()
@@ -2933,26 +2929,26 @@ public static class Prophet
     public static bool IsKiller(PlayerControl p)
     {
         return Helpers.isKiller(p)
-            || ((p == Sheriff.sheriff 
+            || ((p == Sheriff.sheriff
             || p == Deputy.deputy
-            || p == Veteren.veteren ) 
-            && killCrewAsRed) 
+            || p == Veteren.veteren)
+            && killCrewAsRed)
             || ((p == Amnisiac.amnisiac
-            || p == Pursuer.pursuer) 
+            || p == Pursuer.pursuer)
             && benignNeutralAsRed)
             || ((p == Jester.jester
             || p == Vulture.vulture
-            || p == Lawyer.lawyer 
+            || p == Lawyer.lawyer
             || p == Doomsayer.doomsayer
             || p == Thief.thief
-            || p == Akujo.akujo) 
+            || p == Akujo.akujo)
             && evilNeutralAsRed)
             || ((p == Jackal.jackal
             || p == Sidekick.sidekick
             || p == Swooper.swooper
             || p == Arsonist.arsonist
             || p == Werewolf.werewolf
-            || p == Juggernaut.juggernaut) 
+            || p == Juggernaut.juggernaut)
             && killNeutralAsRed)
         ;
     }
@@ -3076,7 +3072,7 @@ public static class Bomber
         bombCooldown = CustomOptionHolder.bomberBombCooldown.getFloat();
         bombActiveAfter = CustomOptionHolder.bomberBombActiveAfter.getFloat();
         Bomb.clearBackgroundSprite();
-        if (bombActiveAfter == 0)bombText = ModTranslation.getString("TricksterPlaceText2");
+        if (bombActiveAfter == 0) bombText = ModTranslation.getString("TricksterPlaceText2");
         if (bombActiveAfter != 0) bombText = ModTranslation.getString("TricksterPlaceText1");
     }
 }
