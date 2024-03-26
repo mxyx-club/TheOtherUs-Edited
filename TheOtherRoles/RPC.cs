@@ -251,6 +251,7 @@ public enum CustomRPC
     MayorMeeting = 192,
     ButtonBarryMeeting = 193,
     ProphetExamine = 194,
+    ImpostorPromotesToLastImpostor = 195
 }
 
 public static class RPCProcedure
