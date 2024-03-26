@@ -2167,7 +2167,7 @@ public static class MurderPlayerPatch
 
         if (LastImpostor.lastImpostor != null && __instance == LastImpostor.lastImpostor && CachedPlayer.LocalPlayer.PlayerControl == __instance)
         {
-            LastImpostor.lastImpostor.SetKillTimer(Mathf.Min(1f, GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - LastImpostor.Deduce));
+            LastImpostor.lastImpostor.SetKillTimer(Mathf.Min(1f, GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - LastImpostor.deduce));
         }
 
         // Mini Set Impostor Mini kill timer (Due to mini being a modifier, all "SetKillTimers" must have happened before this!)
@@ -2293,7 +2293,7 @@ internal class PlayerControlSetCoolDownPatch
         if (BountyHunter.bountyHunter != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter)
             addition = BountyHunter.punishmentTime;
         if (LastImpostor.lastImpostor != null && CachedPlayer.LocalPlayer.PlayerControl == LastImpostor.lastImpostor)
-            addition = -Mathf.Max((GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - LastImpostor.Deduce), __instance.killTimer - 1f);
+            addition = -Mathf.Max((GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - LastImpostor.deduce), __instance.killTimer - 1f);
 
         __instance.killTimer = Mathf.Clamp(time, 0f,
             (GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * multiplier) + addition);
