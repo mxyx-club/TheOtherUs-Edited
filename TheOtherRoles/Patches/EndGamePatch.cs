@@ -141,6 +141,7 @@ public class OnGameEndPatch
         if (Juggernaut.juggernaut != null) notWinners.Add(Juggernaut.juggernaut);
         if (Doomsayer.doomsayer != null) notWinners.Add(Doomsayer.doomsayer);
         if (Akujo.akujo != null) notWinners.Add(Akujo.akujo);
+        if (Akujo.honmei != null && Akujo.honmeiCannotFollowWin) notWinners.Add(Akujo.honmei);
         notWinners.AddRange(Jackal.formerJackals);
 
         var winnersToRemove = new List<WinningPlayerData>();

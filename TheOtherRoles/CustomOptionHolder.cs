@@ -320,7 +320,6 @@ public class CustomOptionHolder
     public static CustomOption jumperResetPlaceAfterMeeting;
     //public static CustomOption jumperChargesGainOnMeeting;
     public static CustomOption jumperMaxCharges;
-
     /*
     public static CustomOption ArcanistSpawnRate;
     public static CustomOption ArcanistCooldown;
@@ -329,7 +328,6 @@ public class CustomOptionHolder
     public static CustomOption ArcanistProbabilityRedCards;
     public static CustomOption ArcanistProbabilityPurpleCards;
     */
-
     public static CustomOption escapistSpawnRate;
     public static CustomOption escapistEscapeTime;
     public static CustomOption escapistChargesOnPlace;
@@ -349,14 +347,11 @@ public class CustomOptionHolder
     public static CustomOption thiefCanKillSheriff;
     public static CustomOption thiefCanStealWithGuess;
 
-    //天启添加
     public static CustomOption juggernautSpawnRate;
     public static CustomOption juggernautCooldown;
     public static CustomOption juggernautHasImpVision;
-
     public static CustomOption juggernautReducedkillEach;
 
-    //末日预言家
     public static CustomOption doomsayerSpawnRate;
     public static CustomOption doomsayerCooldown;
     public static CustomOption doomsayerHasMultipleShotsPerMeeting;
@@ -367,11 +362,12 @@ public class CustomOptionHolder
     public static CustomOption doomsayerGuesserCantGuessSnitch;
     public static CustomOption doomsayerKillToWin;
     public static CustomOption doomsayerDormationNum;
-    //魅魔
+
     public static CustomOption akujoSpawnRate;
     public static CustomOption akujoTimeLimit;
     public static CustomOption akujoKnowsRoles;
     public static CustomOption akujoNumKeeps;
+    public static CustomOption akujoHonmeiCannotFollowWin;
 
     public static CustomOption trapperSpawnRate;
     public static CustomOption trapperCooldown;
@@ -855,6 +851,7 @@ public class CustomOptionHolder
         akujoTimeLimit = CustomOption.Create(20232, Types.Neutral, "魅魔招募真爱的时间", 300f, 60f, 1200f, 15f, akujoSpawnRate);
         akujoNumKeeps = CustomOption.Create(20233, Types.Neutral, "可招募备胎的数量", 1f, 0f, 10f, 1f, akujoSpawnRate);
         akujoKnowsRoles = CustomOption.Create(20234, Types.Neutral, "魅魔是否知道目标职业", true, akujoSpawnRate);
+        akujoHonmeiCannotFollowWin = CustomOption.Create(20235, Types.Neutral, "真爱无法跟随阵营获胜", true, akujoSpawnRate);
 
         thiefSpawnRate = CustomOption.Create(20240, Types.Neutral, cs(Thief.color, "身份窃贼"), rates, null, true);
         thiefCooldown = CustomOption.Create(20241, Types.Neutral, "窃取冷却", 30f, 5f, 120f, 2.5f, thiefSpawnRate);

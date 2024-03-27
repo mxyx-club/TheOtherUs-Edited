@@ -2149,6 +2149,12 @@ public static class MurderPlayerPatch
         if (Medium.deadBodies != null)
             Medium.futureDeadBodies.Add(new Tuple<DeadPlayer, Vector3>(deadPlayer, target.transform.position));
 
+        // LastImpostor cooldown
+        if (LastImpostor.lastImpostor != null && __instance == LastImpostor.lastImpostor && CachedPlayer.LocalPlayer.PlayerControl == __instance)
+        {
+            LastImpostor.lastImpostor.SetKillTimer(Mathf.Max(1f, GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - LastImpostor.deduce));
+        }
+
         // Set bountyHunter cooldown
         if (BountyHunter.bountyHunter != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter &&
             __instance == BountyHunter.bountyHunter)
@@ -2163,11 +2169,6 @@ public static class MurderPlayerPatch
                 BountyHunter.bountyHunter.SetKillTimer(
                     GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + BountyHunter.punishmentTime);
             }
-        }
-
-        if (LastImpostor.lastImpostor != null && __instance == LastImpostor.lastImpostor && CachedPlayer.LocalPlayer.PlayerControl == __instance)
-        {
-            LastImpostor.lastImpostor.SetKillTimer(Mathf.Min(1f, GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - LastImpostor.deduce));
         }
 
         // Mini Set Impostor Mini kill timer (Due to mini being a modifier, all "SetKillTimers" must have happened before this!)
@@ -2290,10 +2291,10 @@ internal class PlayerControlSetCoolDownPatch
         var addition = 0f;
         if (Mini.mini != null && CachedPlayer.LocalPlayer.PlayerControl == Mini.mini)
             multiplier = Mini.isGrownUp() ? 0.66f : 2f;
+        if (LastImpostor.lastImpostor != null && CachedPlayer.LocalPlayer.PlayerControl == LastImpostor.lastImpostor)
+            addition = -Mathf.Min((LastImpostor.deduce), __instance.killTimer - 1f);
         if (BountyHunter.bountyHunter != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter)
             addition = BountyHunter.punishmentTime;
-        if (LastImpostor.lastImpostor != null && CachedPlayer.LocalPlayer.PlayerControl == LastImpostor.lastImpostor)
-            addition = -Mathf.Max((GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - LastImpostor.deduce), __instance.killTimer - 1f);
 
         __instance.killTimer = Mathf.Clamp(time, 0f,
             (GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * multiplier) + addition);

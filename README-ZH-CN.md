@@ -1,5 +1,3 @@
-<p align="center"> <a href="README_ZH-CN"> 简体中文 </a> </p>
-
 ![mod banner](./Images/TOR_logo.png)
 
 <p align="center"><a href="https://github.com/mxyx-club/TheOtherUs/releases/"><img src="https://badgen.net/github/release/mxyx-club/theotherus"></a></p>
@@ -16,31 +14,66 @@ This mod is not affiliated with Among Us or Innersloth LLC, and the content cont
 **The Other Roles** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
 Even more roles are coming soon. :)
 
-## Releases
+## 发行版
 | Among Us - Version| Mod Version | Link |
 |----------|-------------|-----------------|
-| 2024.3.5s    | v1.0.3.1 | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip)    |
-| 2023.11.28s  | v1.0.1   | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.1/TheOtherUs.zip)      |
+| 2024.3.5s    | v1.0.3.1 | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip)    |
+| 2023.11.28s  | v1.0.1   | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.1/TheOtherUs.zip)      |
 
 
 
-## Changelog
+## 更新日志
 
 <details>
-  <summary>Click to show the Changelog</summary>
+  <summary>点我查看更新日志</summary>
 
+### Changes in v1.0.3.2:
 
-**Changes in v1.0.3:**
+ - #### 新增内容
 
-- 
+	- 新增附加职业：绝境者（在内鬼阵营只剩1名时减少击杀cd）
+	- 魅魔：新增真爱无法跟随原阵营获胜的选项
+ -  #### Bug修复：
 
-**Changes in v1.0.2:**
+	- 豺狼：关闭豺狼可破坏的选项仍然可以破坏的问题
+	- 换票师：无法修理破坏的问题
 
-- 
+### Changes in v1.0.3.1:
 
-**Changes in v1.0.1:**
+ - 新增主职业：预言家
+ - 删除内鬼职业：入殓师
+ - 新增内鬼附加职业：入殓师
 
-- 
+### Changes in v1.0.2:
+
+ - 新增主职业：魅魔
+ - 新增附加职业：闪电侠
+ - 隐身人：从豺狼分离为独立职业
+ - 修复了更多的Bug (想不起来了)
+
+### Changes in v1.0.1:
+
+ - #### 新增内容：
+
+	- 新增职业：天启、末日预言家
+	- 统一开局cd
+	- 内置百人模组
+	- 更好的地图选项
+	- 真菌丛林：增加随机出生、增加分散坐标
+	- 火炬：增加视野倍率选项
+	- 交换师：增加可交换中立选项
+	- 诱饵：新增只分配给船员选项
+	- 豺狼：新增内鬼可发现队友变为跟班选项
+	- 中立阵营：改为假任务以不影响船员阵营任务胜利
+	- 失忆者：删除假任务限制（可在获得身份前做任务，但不影响船员）
+ 
+ - #### Bug修复：
+
+	- 起诉人：无法跟随除内鬼及其他阵营获胜
+	- 真菌丛林：修复视野问题
+	- 火炬：修复视野问题
+	- 警长：无法在游戏内得知捕快身份的问题
+	- 修复了其它BUG
 
 </details>
 
@@ -53,9 +86,10 @@ Even more roles are coming soon. :)
 
 ## Roles
 <details>
-  <summary>Click to show the Roles</summary>
+  <summary>点我查看职业</summary>
 
-**Impostor**
+
+### Impostor
 
 - Godfather(Mafia)
 - Mafioso(Mafia)
@@ -79,7 +113,7 @@ Even more roles are coming soon. :)
 - Witch
 - Ninja
 
-**Neutral**
+### Neutral
 
 - Amnisiac
 - Jester
@@ -96,7 +130,7 @@ Even more roles are coming soon. :)
 - Doomsayer
 - Akujo
 
-**Crewmate**
+### Crewmate
 
 - NiceGuesser
 - Mayor
@@ -123,7 +157,7 @@ Even more roles are coming soon. :)
 - Trapper
 - Prophet
 
-**Modifier**
+### Modifier
 
 - Disperser
 - Poucher

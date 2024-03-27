@@ -1666,6 +1666,7 @@ public static class Akujo
 
     public static float timeLimit = 1300f;
     public static bool knowsRoles = true;
+    public static bool honmeiCannotFollowWin;
     public static int timeLeft;
     public static int keepsLeft;
     public static int numKeeps;
@@ -1709,6 +1710,7 @@ public static class Akujo
         startTime = DateTime.UtcNow;
         timeLimit = CustomOptionHolder.akujoTimeLimit.getFloat() + 30f;
         knowsRoles = CustomOptionHolder.akujoKnowsRoles.getBool();
+        honmeiCannotFollowWin = CustomOptionHolder.akujoHonmeiCannotFollowWin.getBool();
         timeLeft = (int)Math.Ceiling(timeLimit - (DateTime.UtcNow - startTime).TotalSeconds);
         numKeeps = Math.Min((int)CustomOptionHolder.akujoNumKeeps.getFloat(), PlayerControl.AllPlayerControls.Count - 2);
         keepsLeft = numKeeps;
