@@ -2292,7 +2292,7 @@ internal class PlayerControlSetCoolDownPatch
         if (Mini.mini != null && CachedPlayer.LocalPlayer.PlayerControl == Mini.mini)
             multiplier = Mini.isGrownUp() ? 0.66f : 2f;
         if (LastImpostor.lastImpostor != null && CachedPlayer.LocalPlayer.PlayerControl == LastImpostor.lastImpostor)
-            addition = -Mathf.Min((LastImpostor.deduce), __instance.killTimer - 1f);
+            addition = -LastImpostor.deduce;
         if (BountyHunter.bountyHunter != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter)
             addition = BountyHunter.punishmentTime;
 

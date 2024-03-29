@@ -17,10 +17,10 @@ This mod is not affiliated with Among Us or Innersloth LLC, and the content cont
 Even more roles are coming soon. :)
 
 ## Releases
-| Among Us - Version| Mod Version | Link |
-|----------|-------------|-----------------|
-| 2024.3.5s    | v1.0.3.1 | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip)    |
-| 2023.11.28s  | v1.0.1   | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.1/TheOtherUs.zip)      |
+| Among Us - Version | Mod Version | Link                                                         |
+| ------------------ | ----------- | ------------------------------------------------------------ |
+| 2024.3.5s          | v1.0.3.1    | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
+| 2023.11.28s        | v1.0.1      | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.1/TheOtherUs.zip) |
 
 
 
@@ -51,106 +51,36 @@ Even more roles are coming soon. :)
 - Hide 'n' Seek
 - PropHunt
 
+
 ## Roles
-<details>
-  <summary>Click to show the Roles</summary>
 
-**Impostor**
+|     Impostor     |  Neutral   |      Crewmate       |   Modifier   |
+| :--------------: | :--------: | :-----------------: | :----------: |
+| Godfather(Mafia) |  Amnisiac  |     NiceGuesser     |  Disperser   |
+|  Mafioso(Mafia)  |   Jester   |        Mayor        |   Poucher    |
+|  Janitor(Mafia)  |  Vulture   |     Portalmaker     | lastImpostor |
+|    Morphling     |   Lawyer   |      Engineer       |    Torch     |
+|      Bomber      | Prosecutor | PrivateInvestigator |  Sunglasses  |
+|      Mimic       |  Pursuer   |       Sheriff       |     Bait     |
+|   Camouflager    |   Jackal   |       Deputy        |    Bloody    |
+|      Miner       |  Swooper   |      BodyGuard      | AntiTeleport |
+|      Eraser      |  Arsonist  |       Lighter       |  Tiebreaker  |
+|     Vampire      |  Werewolf  |       Jumper        |    Flash     |
+|     Cleaner      |   Thief    |      Detective      | Multitasker  |
+|    Undertaker    | Juggernaut |     TimeMaster      |     Mini     |
+|     Escapist     | Doomsayer  |       Veteren       |     Vip      |
+|     Warlock      |   Akujo    |        Medic        | Indomitable  |
+|    Trickster     |            |       Swapper       |    Slueth    |
+|   BountyHunter   |            |        Seer         |    Cursed    |
+|     Cultist      |            |       Hacker        |    Invert    |
+|    Terrorist     |            |       Tracker       |    Blind     |
+|   Blackmailer    |            |       Snitch        |   Watcher    |
+|      Witch       |            |         Spy         |    Radar     |
+|      Ninja       |            |    SecurityGuard    | ButtonBarry  |
+|                  |            |       Medium        |  Chameleon   |
+|                  |            |       Trapper       |   Shifter    |
+|                  |            |       Prophet       |              |
 
-- Godfather(Mafia)
-- Mafioso(Mafia)
-- Janitor(Mafia)
-- Morphling
-- Bomber
-- Mimic
-- Camouflager
-- Miner
-- Eraser
-- Vampire
-- Cleaner
-- Undertaker
-- Escapist
-- Warlock
-- Trickster
-- BountyHunter
-- Cultist
-- Terrorist
-- Blackmailer
-- Witch
-- Ninja
-
-**Neutral**
-
-- Amnisiac
-- Jester
-- Vulture
-- Lawyer
-- Prosecutor
-- Pursuer
-- Jackal
-- Swooper
-- Arsonist
-- Werewolf
-- Thief
-- Juggernaut
-- Doomsayer
-- Akujo
-
-**Crewmate**
-
-- NiceGuesser
-- Mayor
-- Portalmaker
-- Engineer
-- PrivateInvestigator
-- Sheriff
-- Deputy
-- BodyGuard
-- Lighter
-- Jumper
-- Detective
-- TimeMaster
-- Veteren
-- Medic
-- Swapper
-- Seer
-- Hacker
-- Tracker
-- Snitch
-- Spy
-- SecurityGuard
-- Medium
-- Trapper
-- Prophet
-
-**Modifier**
-
-- Disperser
-- Poucher
-- Bloody
-- AntiTeleport
-- Tiebreaker
-- Bait
-- Sunglasses
-- Torch
-- Flash
-- Multitasker
-- Mini
-- Vip
-- Indomitable
-- Slueth
-- Cursed
-- Invert
-- Blind
-- Watcher
-- Radar
-- ButtonBarry
-- Chameleon
-- Shifter
-- lastImpostor
-
-
-</details>
 
 
 ## Credits & Resources

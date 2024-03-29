@@ -3512,7 +3512,12 @@ public static class Shifter
     public static void shiftRole(PlayerControl player1, PlayerControl player2, bool repeat = true)
     {
         //好人交换师代码target
-        if (Mayor.mayor != null && Mayor.mayor == player2)
+        if (Guesser.niceGuesser != null && Guesser.niceGuesser == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Guesser.niceGuesser = player1;
+        }
+        else if (Mayor.mayor != null && Mayor.mayor == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
             Mayor.mayor = player1;
@@ -3527,6 +3532,11 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Engineer.engineer = player1;
         }
+        else if (PrivateInvestigator.privateInvestigator != null && PrivateInvestigator.privateInvestigator == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            PrivateInvestigator.privateInvestigator = player1;
+        }
         else if (Sheriff.sheriff != null && Sheriff.sheriff == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
@@ -3539,10 +3549,20 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Deputy.deputy = player1;
         }
+        else if (BodyGuard.bodyguard != null && BodyGuard.bodyguard == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            BodyGuard.bodyguard = player1;
+        }
         else if (Lighter.lighter != null && Lighter.lighter == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
             Lighter.lighter = player1;
+        }
+        else if (Jumper.jumper != null && Jumper.jumper == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Jumper.jumper = player1;
         }
         else if (Detective.detective != null && Detective.detective == player2)
         {
@@ -3553,6 +3573,11 @@ public static class Shifter
         {
             if (repeat) shiftRole(player2, player1, false);
             TimeMaster.timeMaster = player1;
+        }
+        else if (Veteren.veteren != null && Veteren.veteren == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Veteren.veteren = player1;
         }
         else if (Medic.medic != null && Medic.medic == player2)
         {
@@ -3574,10 +3599,10 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Hacker.hacker = player1;
         }
-        else if (Tracker.tracker != null && Tracker.tracker == player2)
+        else if (Tracker.tracked != null && Tracker.tracked == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
-            Tracker.tracker = player1;
+            Tracker.tracked = player1;
         }
         else if (Snitch.snitch != null && Snitch.snitch == player2)
         {
@@ -3589,117 +3614,65 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Spy.spy = player1;
         }
-        else if (Jumper.jumper != null && Jumper.jumper == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Jumper.jumper = player1;
-        }
         else if (SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
             SecurityGuard.securityGuard = player1;
-        }
-        else if (Guesser.niceGuesser != null && Guesser.niceGuesser == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Guesser.niceGuesser = player1;
         }
         else if (Medium.medium != null && Medium.medium == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
             Medium.medium = player1;
         }
-        else if (Pursuer.pursuer != null && Pursuer.pursuer == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Pursuer.pursuer = player1;
-        }
         else if (Trapper.trapper != null && Trapper.trapper == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
             Trapper.trapper = player1;
         }
-        else if (Jester.jester != null && Jester.jester == player2)
+        else if (Prophet.prophet != null && Prophet.prophet == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
-            Jester.jester = player1;
-        }
-        else if (Jumper.jumper != null && Jumper.jumper == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Jumper.jumper = player1;
+            Prophet.prophet = player1;
         }
         else if (Amnisiac.amnisiac != null && Amnisiac.amnisiac == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
             Amnisiac.amnisiac = player1;
         }
-        else if (Arsonist.arsonist != null && Arsonist.arsonist == player2)
+        else if (Jester.jester != null && Jester.jester == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
-
-            Arsonist.arsonist = player1;
+            Jester.jester = player1;
         }
         else if (Vulture.vulture != null && Vulture.vulture == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
             Vulture.vulture = player1;
         }
-        else if (Thief.thief != null && Thief.thief == player2)
+        else if (Lawyer.lawyer != null && Lawyer.lawyer == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
-            Thief.thief = player1;
-        }
-        else if (Prophet.prophet != null && Prophet.prophet == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Prophet.prophet = player1;
-        }
-        else if (Werewolf.werewolf != null && Werewolf.werewolf == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Werewolf.werewolf = player1;
+            Lawyer.lawyer = player1;
         }
         else if (Pursuer.pursuer != null && Pursuer.pursuer == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
             Pursuer.pursuer = player1;
         }
-        else if (Jackal.jackal != null && Jackal.jackal == player2)
+        else if (Arsonist.arsonist != null && Arsonist.arsonist == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
-            Jackal.jackal = player1;
+            Arsonist.arsonist = player1;
         }
-        else if (Sidekick.sidekick != null && Sidekick.sidekick == player2)
+        else if (Thief.thief != null && Thief.thief == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
-            Sidekick.sidekick = player1;
-        }
-        else if (Lawyer.lawyer != null && Lawyer.lawyer == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Lawyer.lawyer = player1;
-        }
-        //天启添加
-        else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Juggernaut.juggernaut = player1;
+            Thief.thief = player1;
         }
         else if (Doomsayer.doomsayer != null && Doomsayer.doomsayer == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
             Doomsayer.doomsayer = player1;
-        }
-        else if (Swooper.swooper != null && Swooper.swooper == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Swooper.swooper = player1;
-        }
-        else if (Prophet.prophet != null && Prophet.prophet == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Prophet.prophet = player1;
         }
     }
 

@@ -347,7 +347,7 @@ public static class Helpers
         }
         catch
         {
-            System.Console.WriteLine("Error loading texture from resources: " + path);
+            //System.Console.WriteLine("Error loading texture from resources: " + path);
         }
 
         return null;

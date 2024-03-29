@@ -1666,6 +1666,7 @@ public static class RPCProcedure
         }
         else
         {
+            LastImpostor.promoteToLastImpostor();
             var wasSpy = Spy.spy != null && player == Spy.spy;
             var wasImpostor = player.Data.Role.IsImpostor; // This can only be reached if impostors can be sidekicked.
             FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
