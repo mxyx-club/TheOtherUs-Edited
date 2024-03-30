@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Objects;
 
-internal class Trap
+public class Trap
 {
     public static List<Trap> traps = new();
     public static Dictionary<byte, Trap> trapPlayerIdMap = new();

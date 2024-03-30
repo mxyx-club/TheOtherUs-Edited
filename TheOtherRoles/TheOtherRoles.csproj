@@ -2,11 +2,13 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Version>1.0.3.1</Version>
+		<AssemblyName>TheOtherRoles</AssemblyName>
         <Description>TheOtherUs</Description>
         <Authors>mxyx-club</Authors>
         <LangVersion>latest</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+		<AmongUsLatest>F:\AmongUs\v2024.3.5</AmongUsLatest>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,6 +20,7 @@
         <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.688" />
         <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="2.1.0-rc.1" />
         <PackageReference Include="Reactor" Version="2.2.0" />
+		<PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
     </ItemGroup>
 
     <Target Name="Date" BeforeTargets="BeforeBuild">  <!--Will make the compile time available s.t. we can let betas expire-->
@@ -29,6 +32,6 @@
 
     <Target Name="CopyCustomContent" AfterTargets="AfterBuild" Condition="Exists('$(AmongUsLatest)/BepInEx/plugins/')">
         <Message Text="Second occurrence" />
-        <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\net6.0\TheOtherRoles.dll" DestinationFolder="$(AmongUsLatest)/BepInEx/plugins/" />
+        <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\net6.0\$(AssemblyName).dll" DestinationFolder="$(AmongUsLatest)/BepInEx/plugins/" />
     </Target>
 </Project>
