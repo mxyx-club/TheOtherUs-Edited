@@ -417,11 +417,6 @@ public class RoleInfo
                 if (p == Akujo.honmei)
                     roleName = Helpers.cs(Akujo.color, "(真爱) ") + roleName;
 
-                /*
-                if ((p == Swooper.swooper) && Jackal.canSwoop2)
-                    roleName = Helpers.cs(Swooper.color, $" (Swooper) ") + roleName;
-                */
-
                 // Death Reason on Ghosts
                 if (p.Data.IsDead)
                 {

@@ -16,7 +16,7 @@ public class CustomOptionHolder
         { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15" };
 
     public static string[] presets =
-        { "预设 1", "预设 2", "随机地图预设Skeld", "随机地图预设Mira", "随机地图预设Polus", "随机地图预设Airship", "随机地图预设Submerged" };
+        { "预设 1", "预设 2", "Skeld预设", "Mira预设", "Polus预设", "Airship预设", "Fungle预设", "Submerged预设" };
 
     public static CustomOption presetSelection;
     public static CustomOption activateRoles;
@@ -1025,12 +1025,12 @@ public class CustomOptionHolder
         jumperResetPlaceAfterMeeting = CustomOption.Create(30323, Types.Crewmate, "会议后重置标记位置", false, jumperSpawnRate);
         //jumperChargesGainOnMeeting = CustomOption.Create(30324, Types.Crewmate, "会议后增加传送点数", 2, 0, 10, 1, jumperSpawnRate);
         /*
-        ArcanistSpawnRate = CustomOption.Create(30330, Types.Crewmate, cs(Arcanist.color, "魔术师"), rates, null, true);
-        ArcanistCooldown = CustomOption.Create(30331, Types.Crewmate, "放置冷却", 15f, 0f, 60f, 2.5f, ArcanistSpawnRate);
-        ArcanistTeleportTime = CustomOption.Create(30332, Types.Crewmate, "传送冷却", 15f, 0f, 60f, 2.5f, ArcanistSpawnRate);
-        ArcanistProbabilityBlueCards = CustomOption.Create(30333, Types.Crewmate, "抽到蓝牌的概率", rates, ArcanistSpawnRate);
-        ArcanistProbabilityRedCards = CustomOption.Create(30334, Types.Crewmate, "抽到红牌的概率", rates, ArcanistSpawnRate);
-        ArcanistProbabilityPurpleCards = CustomOption.Create(30335, Types.Crewmate, "抽到紫牌的概率", rates, ArcanistSpawnRate);
+        magicianSpawnRate = CustomOption.Create(30330, Types.Crewmate, cs(Magician.color, "魔术师"), rates, null, true);
+        magicianCooldown = CustomOption.Create(30331, Types.Crewmate, "放置冷却", 15f, 0f, 60f, 2.5f, magicianSpawnRate);
+        magicianTeleportTime = CustomOption.Create(30332, Types.Crewmate, "传送冷却", 15f, 0f, 60f, 2.5f, magicianSpawnRate);
+        magicianProbabilityBlueCards = CustomOption.Create(30333, Types.Crewmate, "抽到蓝牌的概率", rates, magicianSpawnRate);
+        magicianProbabilityRedCards = CustomOption.Create(30334, Types.Crewmate, "抽到红牌的概率", rates, magicianSpawnRate);
+        magicianProbabilityPurpleCards = CustomOption.Create(30335, Types.Crewmate, "抽到紫牌的概率", rates, magicianSpawnRate);
         */
         bodyGuardSpawnRate = CustomOption.Create(30340, Types.Crewmate, cs(BodyGuard.color, "保镖"), rates, null, true);
         bodyGuardResetTargetAfterMeeting = CustomOption.Create(30341, Types.Crewmate, "会议后重置保护目标", true, bodyGuardSpawnRate);
@@ -1138,7 +1138,7 @@ public class CustomOptionHolder
         guesserGamemodeNeutralNumber = CustomOption.Create(2002, Types.Guesser, cs(Guesser.color, "中立阵营赌怪数"), 3f, 0f, 15f, 1f, null, true);
         guesserGamemodeImpNumber = CustomOption.Create(2003, Types.Guesser, cs(Guesser.color, "伪装者阵营赌怪数"), 3f, 0f, 15f, 1f, null, true);
         guesserForceJackalGuesser = CustomOption.Create(2007, Types.Guesser, "强制豺狼成为赌怪", false, null, true);
-        guesserGamemodeSidekickIsAlwaysGuesser = CustomOption.Create(2012, Types.Guesser, "跟班继承赌怪", false, null, true);
+        //guesserGamemodeSidekickIsAlwaysGuesser = CustomOption.Create(2012, Types.Guesser, "跟班继承赌怪", false, null, true);
         guesserForceThiefGuesser = CustomOption.Create(2011, Types.Guesser, "强制身份窃贼为赌怪", false, null, true);
         guesserGamemodeHaveModifier = CustomOption.Create(2004, Types.Guesser, "赌怪可以拥有附加职业", true);
         guesserGamemodeNumberOfShots = CustomOption.Create(2005, Types.Guesser, "赌怪猜测最大次数", 2f, 1f, 15f, 1f);

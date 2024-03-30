@@ -85,11 +85,10 @@ public enum RoleId
     Blackmailer,
     Thief,
     Bomber,
-    //魔术师
-    //Arcanist,
     Juggernaut,
     Doomsayer,
     Akujo,
+    //Magician,
 
     Crewmate,
     Impostor,

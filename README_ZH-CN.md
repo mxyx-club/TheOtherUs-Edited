@@ -10,12 +10,13 @@
 
 # The Other Roles
 
-The Other Roles is a mod for Among Us which adds many new roles, new settings and new Custom Hats to the game. Even more roles are coming soon. :)
+The Other Roles is a mod for Among Us which adds many new roles, new settings and new Custom Hats to the game. Even more roles are coming soon :)
 
 ## 发行版
 
 | Among Us - Version | Mod Version | Link                                                         |
 | ------------------ | ----------- | ------------------------------------------------------------ |
+| 2024.3.5s          | v1.0.3.2    | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.2/TheOtherUs.zip) |
 | 2024.3.5s          | v1.0.3.1    | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
 | 2023.11.28s        | v1.0.1      | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.1/TheOtherUs.zip) |
 
@@ -31,8 +32,11 @@ The Other Roles is a mod for Among Us which adds many new roles, new settings an
 
  - #### 新增内容
 
+    - 新增主职业：邪恶的设陷者
     - 新增附加职业：绝境者（在内鬼阵营只剩1名时减少击杀cd）
     - 魅魔：新增真爱无法跟随原阵营获胜的选项
+    - 变色龙：不会分配给隐身人、忍者
+    - 执钮人：不会分配给市长
 
  - #### Bug修复：
 
@@ -43,16 +47,17 @@ The Other Roles is a mod for Among Us which adds many new roles, new settings an
 
  - 新增主职业：预言家
  - 入殓师：更改为内鬼阵营专属附加职业
- - 赌怪模式：修复赌怪分配的bug
- - 告密者：重做为旧版（并未完全可用）
+ - 告密者：重做职业，还原为旧版（并未完全可用）
 
 ### v1.0.3:
 
 - 新增附加职业：执钮人、闪电侠
 - 修复火炬视野bug
+- 赌怪模式：修复赌怪分配的bug
 
 ###  v1.0.2:
 
+ - #### 基于TheOtherRoles - v4.5.2
  - 适配游戏新版本v2024.3.5
  - 新增游戏开始时Stop按钮
  - 新增主职业：魅魔
@@ -63,6 +68,8 @@ The Other Roles is a mod for Among Us which adds many new roles, new settings an
  - 修复了更多的Bug (想不起来了)
 
 ###  v1.0.1:
+
+ - #### 基于TheOtherUs - v1.3.4
 
  - #### 新增内容：
 
@@ -89,9 +96,8 @@ The Other Roles is a mod for Among Us which adds many new roles, new settings an
 
 </details>
 
-## 模式
+## TOR游戏模式
 
-- 默认
 - 赌怪模式
 - TOR躲猫猫
 - 道具躲猫猫
@@ -123,20 +129,22 @@ The Other Roles is a mod for Among Us which adds many new roles, new settings an
 |     勒索者     |            |   告密者   |   窥视者   |
 |      女巫      |            |    卧底    |    雷达    |
 |      忍者      |            |    保安    |   执钮人   |
-|                |            |   通灵师   |   变色龙   |
-|                |            |   陷阱师   |   交换师   |
+|  邪恶的设陷师  |            |   通灵师   |   变色龙   |
+|                |            |   设陷师   |   交换师   |
 |                |            |   预言家   |            |
 
 ## 模组贡献者
 
 **主要开发者：**
-沫夏悠轩、善良的好人、天寸梦初、Imp11
+沫夏悠轩、善良的好人、天寸梦初
 
 **美工：**
 方块
 
 **翻译**
+九头蛇(EN)
 
+本模组使用了部分[TheOtherRolesGMIA](https://github.com/dabao40/TheOtherRolesGMIA)的代码，感谢Imp11的支持！
 
 [OxygenFilter](https://github.com/NuclearPowered/Reactor.OxygenFilter) - For all the versions between v2.3.0 and v2.6.1, we were using the OxygenFilter for automatic deobfuscation\
 [Reactor](https://github.com/NuclearPowered/Reactor) - The framework used for all versions before v2.0.0\

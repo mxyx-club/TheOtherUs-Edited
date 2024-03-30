@@ -1,4 +1,4 @@
-<p align="center"> <a href="README_ZH-CN"> 简体中文 </a> </p>
+<p align="center"> <a href="README_ZH-CN.md"> 简体中文 </a> </p>
 
 ![mod banner](./Images/TOR_logo.png)
 

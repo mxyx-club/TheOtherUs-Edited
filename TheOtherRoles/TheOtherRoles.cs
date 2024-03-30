@@ -863,16 +863,16 @@ public static class Swapper
     }
 }
 /*
-public static class Arcanist
+public static class Magician
 {
-    public static PlayerControl arcanist;
+    public static PlayerControl magician;
     public static Color color = new Color32(82, 108, 173, byte.MaxValue);
 
     public static float placeHatCooldown = 10f;
     public static float TeleportTime = 10f;
     public static float probabilityBlueCards;
     public static float probabilityRedCards;
-    public static float probabilityWhiteCards;
+    public static float probabilityPurpleCards;
     public static bool resetPlaceAfterMeeting;
 
 
@@ -897,11 +897,11 @@ public static class Arcanist
     }
     public static void clearAndReload()
     {
-        arcanist = null;
+        magician = null;
         TeleportTime = CustomOptionHolder.jumperJumpTime.getFloat();
-        probabilityBlueCards = CustomOptionHolder.ArcanistProbabilityBlueCards.getFloat();
-        probabilityRedCards = CustomOptionHolder.ArcanistProbabilityRedCards.getFloat();
-        probabilityWhiteCards = CustomOptionHolder.ArcanistProbabilityWhiteCards.getFloat();
+        probabilityBlueCards = CustomOptionHolder.magicianProbabilityBlueCards.getFloat();
+        probabilityRedCards = CustomOptionHolder.magicianProbabilityRedCards.getFloat();
+        probabilityPurpleCards = CustomOptionHolder.magicianProbabilityPurpleCards.getFloat();
     }
 }
 */
