@@ -519,7 +519,6 @@ internal class RoleManagerSelectRolesPatch
             if (!Lawyer.isProsecutor)
             {
                 // Lawyer
-                //天启添加
                 foreach (PlayerControl p in CachedPlayer.AllPlayers)
                     if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
                         (p.Data.Role.IsImpostor || p == Swooper.swooper || p == Jackal.jackal || p == Juggernaut.juggernaut ||
@@ -925,7 +924,7 @@ internal class RoleManagerSelectRolesPatch
         if (modifiers.Contains(RoleId.ButtonBarry))
         {
             var buttonPlayer = new List<PlayerControl>(playerList); 
-            buttonPlayer.RemoveAll(x => x.Data.Role.IsImpostor);
+            buttonPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x == Mayor.mayor);
 
             playerId = setModifierToRandomPlayer((byte)RoleId.ButtonBarry, buttonPlayer);
             buttonPlayer.RemoveAll(x => x.PlayerId == playerId);
@@ -945,6 +944,22 @@ internal class RoleManagerSelectRolesPatch
             }
 
             modifiers.RemoveAll(x => x == RoleId.Multitasker);
+        }
+
+        if (modifiers.Contains(RoleId.Chameleon))
+        {
+            var chameleonPlayer = new List<PlayerControl>(playerList);
+            chameleonPlayer.RemoveAll(x => x == Swooper.swooper || x == Ninja.ninja);
+            int chameleonCount = 0;
+            while (chameleonCount < modifiers.FindAll(x => x == RoleId.Chameleon).Count)
+            {
+                playerId = setModifierToRandomPlayer((byte)RoleId.Chameleon, chameleonPlayer);
+                crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+                playerList.RemoveAll(x => x.PlayerId == playerId);
+                //chameleonPlayer.RemoveAll(x => x.PlayerId == playerId);
+                chameleonCount++;
+            }
+            modifiers.RemoveAll(x => x == RoleId.Chameleon);
         }
 
         foreach (var modifier in modifiers)
