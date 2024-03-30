@@ -45,7 +45,8 @@ internal enum WinCondition
     WerewolfWin,
     JuggernautWin,
     DoomsayerWin,
-    AkujoWin
+    AkujoWin,
+    EveryoneDied
 }
 
 internal static class AdditionalTempData
@@ -162,17 +163,17 @@ public class OnGameEndPatch
         var miniLose = Mini.mini != null && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
         var doomsayerWin = Doomsayer.doomsayer != null &&
                            gameOverReason == (GameOverReason)CustomGameOverReason.DoomsayerWin;
+        // Either they win if they are among the last 3 players, or they win if they are both Crewmates and both alive and the Crew wins (Team Imp/Jackal Lovers can only win solo wins)
         var loversWin = Lovers.existingAndAlive() &&
                         (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin ||
                          (GameManager.Instance.DidHumansWin(gameOverReason) &&
-                          !Lovers
-                              .existingWithKiller())); // Either they win if they are among the last 3 players, or they win if they are both Crewmates and both alive and the Crew wins (Team Imp/Jackal Lovers can only win solo wins)
-        var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin &&
+                          !Lovers .existingWithKiller())); 
+        var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && 
                             ((Jackal.jackal != null && !Jackal.jackal.Data.IsDead) ||
-                             (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
+                            (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
         var vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
-        var prosecutorWin = Lawyer.lawyer != null &&
-                            gameOverReason == (GameOverReason)CustomGameOverReason.ProsecutorWin;
+        var prosecutorWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.ProsecutorWin;
+        var everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
         var akujoWin = Akujo.akujo != null && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin && (Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead);
 
         var isPursurerLose = jesterWin || arsonistWin || miniLose;
@@ -203,6 +204,13 @@ public class OnGameEndPatch
             var wpd = new WinningPlayerData(Arsonist.arsonist.Data);
             TempData.winners.Add(wpd);
             AdditionalTempData.winCondition = WinCondition.ArsonistWin;
+        }
+
+        // Everyone Died
+        else if (everyoneDead)
+        {
+            TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+            AdditionalTempData.winCondition = WinCondition.EveryoneDied;
         }
 
         // Vulture win
@@ -483,11 +491,17 @@ public class EndGameManagerSetUpPatch
                 textRenderer.text = "豺狼的全家福.jpg";
                 textRenderer.color = Jackal.color;
                 break;
+            case WinCondition.EveryoneDied:
+                    textRenderer.text = "无人生还";
+                    textRenderer.color = Palette.DisabledGrey;
+                    __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey); 
+                break;
             case WinCondition.AkujoWin:
                     textRenderer.text = "请给我扭曲你人生的权利！";
                     textRenderer.color = Akujo.color;
                     __instance.BackgroundBar.material.SetColor("_Color", Akujo.color);
                 break;
+
             case WinCondition.MiniLose:
                 textRenderer.text = "他就只是个孩子啊！";
                 textRenderer.color = Mini.color;

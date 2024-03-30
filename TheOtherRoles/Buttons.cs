@@ -157,8 +157,8 @@ internal static class HudManagerStartPatch
         hackerAdminTableButton.MaxTimer = Hacker.cooldown;
         vampireKillButton.MaxTimer = Vampire.cooldown;
         trackerTrackPlayerButton.MaxTimer = 0f;
-        jumperButton.MaxTimer = Jumper.jumperJumpTime;
-        escapistButton.MaxTimer = Escapist.escapistEscapeTime;
+        jumperButton.MaxTimer = Jumper.JumpTime;
+        escapistButton.MaxTimer = Escapist.EscapeTime;
         bodyGuardGuardButton.MaxTimer = 0f;
         garlicButton.MaxTimer = 0f;
         jackalKillButton.MaxTimer = Jackal.cooldown;
@@ -1328,7 +1328,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (!Tracker.usedTracker)
-                    showTargetNameOnButton(Tracker.currentTarget, trackerTrackPlayerButton, "");
+                    showTargetNameOnButton(Tracker.currentTarget, trackerTrackPlayerButton, ModTranslation.getString("TrackerText"));
                 return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Tracker.currentTarget != null &&
                        !Tracker.usedTracker;
             },
@@ -1400,7 +1400,8 @@ internal static class HudManagerStartPatch
             BodyGuard.getGuardButtonSprite(),
             CustomButton.ButtonPositions.lowerRowRight, //brb
             __instance,
-            KeyCode.F
+            KeyCode.F,
+            buttonText:ModTranslation.getString("TrackerDeadBodyText")
         );
 
         privateInvestigatorWatchButton = new CustomButton(
@@ -3118,9 +3119,9 @@ internal static class HudManagerStartPatch
                     //set location
                     Jumper.jumpLocation = PlayerControl.LocalPlayer.transform.localPosition;
                     jumperButton.Sprite = Jumper.getJumpButtonSprite();
-                    Jumper.jumperCharges = Jumper.jumperChargesOnPlace;
+                    Jumper.Charges = Jumper.ChargesOnPlace;
                 }
-                else if (Jumper.jumperCharges >= 1f)
+                else if (Jumper.Charges >= 1f)
                 {
                     //teleport to location if you have one
                     var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
@@ -3133,10 +3134,10 @@ internal static class HudManagerStartPatch
                     PlayerControl.LocalPlayer.transform.position = Jumper.jumpLocation;
 
 
-                    Jumper.jumperCharges -= 1f;
+                    Jumper.Charges -= 1f;
                 }
 
-                if (Jumper.jumperCharges > 0) jumperButton.Timer = jumperButton.MaxTimer;
+                if (Jumper.Charges > 0) jumperButton.Timer = jumperButton.MaxTimer;
             },
             () =>
             {
@@ -3145,9 +3146,9 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                //   if (jumperChargesText != null) jumperChargesText.text = $"{Jumper.jumperCharges}";
+                //if (jumperChargesText != null) jumperChargesText.text = $"{Jumper.jumperCharges}";
                 Jumper.usedPlace = true;
-                return (Jumper.jumpLocation == Vector3.zero || Jumper.jumperCharges >= 1f) &&
+                return (Jumper.jumpLocation == Vector3.zero || Jumper.Charges >= 1f) &&
                        PlayerControl.LocalPlayer.CanMove;
 
             },
@@ -3157,10 +3158,10 @@ internal static class HudManagerStartPatch
                 {
                     jumperButton.Sprite = Jumper.getJumpMarkButtonSprite();
                 }
-                //    Jumper.jumperCharges += Jumper.jumperChargesGainOnMeeting;
-                //if (Jumper.jumperCharges > Jumper.jumperMaxCharges) Jumper.jumperCharges = Jumper.jumperMaxCharges;
+                Jumper.Charges += Jumper.ChargesGainOnMeeting;
+                if (Jumper.Charges > Jumper.MaxCharges) Jumper.Charges = Jumper.MaxCharges;
 
-                if (Jumper.jumperCharges > 0) jumperButton.Timer = jumperButton.MaxTimer;
+                if (Jumper.Charges > 0) jumperButton.Timer = jumperButton.MaxTimer;
             },
             Jumper.getJumpMarkButtonSprite(),
             CustomButton.ButtonPositions.lowerRowRight, //brb
@@ -3178,9 +3179,9 @@ internal static class HudManagerStartPatch
                     //set location
                     Escapist.escapeLocation = PlayerControl.LocalPlayer.transform.localPosition;
                     escapistButton.Sprite = Escapist.getEscapeButtonSprite();
-                    Escapist.escapistCharges = Escapist.escapistChargesOnPlace;
+                    Escapist.Charges = Escapist.ChargesOnPlace;
                 }
-                else if (Escapist.escapistCharges >= 1f)
+                else if (Escapist.Charges >= 1f)
                 {
                     //teleport to location if you have one
                     var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
@@ -3193,10 +3194,10 @@ internal static class HudManagerStartPatch
                     PlayerControl.LocalPlayer.transform.position = Escapist.escapeLocation;
 
 
-                    Escapist.escapistCharges -= 1f;
+                    Escapist.Charges -= 1f;
                 }
 
-                if (Escapist.escapistCharges > 0) escapistButton.Timer = escapistButton.MaxTimer;
+                if (Escapist.Charges > 0) escapistButton.Timer = escapistButton.MaxTimer;
             },
             () =>
             {
@@ -3205,9 +3206,9 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                //   if (jumperChargesText != null) jumperChargesText.text = $"{Jumper.jumperCharges}";
+                //if (jumperChargesText != null) jumperChargesText.text = $"{Jumper.jumperCharges}";
                 Escapist.usedPlace = true;
-                return (Escapist.escapeLocation == Vector3.zero || Escapist.escapistCharges >= 1f) &&
+                return (Escapist.escapeLocation == Vector3.zero || Escapist.Charges >= 1f) &&
                        PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -3216,10 +3217,10 @@ internal static class HudManagerStartPatch
                 {
                     escapistButton.Sprite = Escapist.getEscapeMarkButtonSprite();
                 }
-                //    Jumper.jumperCharges += Jumper.jumperChargesGainOnMeeting;
-                //if (Escapist.escapistCharges > Escapist.escapistMaxCharges) Escapist.escapistCharges = Escapist.escapistMaxCharges;
+                Escapist.Charges += Escapist.ChargesGainOnMeeting;
+                if (Escapist.Charges > Escapist.MaxCharges) Escapist.Charges = Escapist.MaxCharges;
 
-                if (Escapist.escapistCharges > 0) escapistButton.Timer = escapistButton.MaxTimer;
+                if (Escapist.Charges > 0) escapistButton.Timer = escapistButton.MaxTimer;
             },
             Escapist.getEscapeMarkButtonSprite(),
             CustomButton.ButtonPositions.upperRowLeft, //brb

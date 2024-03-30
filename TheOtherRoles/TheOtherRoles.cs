@@ -172,7 +172,20 @@ public static class TheOtherRoles
             usedGuard = false;
         }
     }
-
+    public static class FindVentPoss
+    {
+        public static List<Vector3> findVentPoss()
+        {
+            var poss = new List<Vector3>();
+            foreach (var vent in DestroyableSingleton<ShipStatus>.Instance.AllVents)
+            {
+                var Transform = vent.transform;
+                var position = Transform.position;
+                poss.Add(new Vector3(position.x, position.y + 0.12f, position.z - 50));
+            }
+            return poss;
+        }
+    }
     public static class Portalmaker
     {
         public static PlayerControl portalmaker;
@@ -2686,14 +2699,14 @@ public static class Jumper
     public static PlayerControl jumper;
     public static Color color = new Color32(204, 155, 20, byte.MaxValue); // mint
 
-    public static float jumperJumpTime = 30f;
-    public static float jumperChargesOnPlace = 1f;
+    public static float JumpTime = 30f;
+    public static float ChargesOnPlace = 1f;
 
     public static bool resetPlaceAfterMeeting;
 
-    //public static float jumperChargesGainOnMeeting = 2f;
-    //public static float jumperMaxCharges = 3f;
-    public static float jumperCharges = 1f;
+    public static float ChargesGainOnMeeting = 2f;
+    public static float MaxCharges = 3f;
+    public static float Charges = 1f;
 
     public static Vector3 jumpLocation;
 
@@ -2717,7 +2730,7 @@ public static class Jumper
 
     public static void resetPlaces()
     {
-        jumperCharges = Mathf.RoundToInt(jumperChargesOnPlace);
+        Charges = Mathf.RoundToInt(ChargesOnPlace);
         jumpLocation = Vector3.zero;
         usedPlace = false;
     }
@@ -2728,11 +2741,11 @@ public static class Jumper
         jumpLocation = Vector3.zero;
         jumper = null;
         resetPlaceAfterMeeting = CustomOptionHolder.jumperResetPlaceAfterMeeting.getBool();
-        jumperCharges = CustomOptionHolder.jumperMaxCharges.getFloat();
-        jumperJumpTime = CustomOptionHolder.jumperJumpTime.getFloat();
-        jumperChargesOnPlace = 1f;
-        //jumperChargesGainOnMeeting = CustomOptionHolder.jumperChargesGainOnMeeting.getFloat();
-        //jumperMaxCharges = CustomOptionHolder.jumperMaxCharges.getFloat();
+        Charges = CustomOptionHolder.jumperMaxCharges.getFloat();
+        JumpTime = CustomOptionHolder.jumperJumpTime.getFloat();
+        ChargesOnPlace = 1f;
+        ChargesGainOnMeeting = CustomOptionHolder.jumperChargesGainOnMeeting.getFloat();
+        MaxCharges = CustomOptionHolder.jumperMaxCharges.getFloat();
         usedPlace = false;
     }
 }
@@ -2742,14 +2755,14 @@ public static class Escapist
     public static PlayerControl escapist;
     public static Color color = Palette.ImpostorRed;
 
-    public static float escapistEscapeTime = 30f;
-    public static float escapistChargesOnPlace = 1f;
+    public static float EscapeTime = 30f;
+    public static float ChargesOnPlace = 1f;
 
     public static bool resetPlaceAfterMeeting;
 
-    //public static float escapistChargesGainOnMeeting = 2f;
-    //public static float escapistMaxCharges = 3f;
-    public static float escapistCharges = 1f;
+    public static float ChargesGainOnMeeting = 2f;
+    public static float MaxCharges = 3f;
+    public static float Charges = 1f;
 
     public static Vector3 escapeLocation;
 
@@ -2773,7 +2786,7 @@ public static class Escapist
 
     public static void resetPlaces()
     {
-        escapistCharges = Mathf.RoundToInt(CustomOptionHolder.escapistChargesOnPlace.getFloat());
+        Charges = Mathf.RoundToInt(ChargesOnPlace);
         escapeLocation = Vector3.zero;
         usedPlace = false;
     }
@@ -2784,11 +2797,10 @@ public static class Escapist
         escapeLocation = Vector3.zero;
         escapist = null;
         resetPlaceAfterMeeting = CustomOptionHolder.escapistResetPlaceAfterMeeting.getBool();
-        escapistCharges = 1f;
-        escapistEscapeTime = CustomOptionHolder.escapistEscapeTime.getFloat();
-        escapistChargesOnPlace = CustomOptionHolder.escapistChargesOnPlace.getFloat();
-        //escapistChargesGainOnMeeting = CustomOptionHolder.escapistChargesGainOnMeeting.getFloat();
-        //escapistMaxCharges = CustomOptionHolder.escapistMaxCharges.getFloat();
+        Charges = 1f;
+        EscapeTime = CustomOptionHolder.escapistEscapeTime.getFloat();
+        ChargesGainOnMeeting = CustomOptionHolder.escapistChargesGainOnMeeting.getFloat();
+        MaxCharges = CustomOptionHolder.escapistMaxCharges.getFloat();
         usedPlace = false;
     }
 }

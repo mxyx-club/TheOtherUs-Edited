@@ -177,6 +177,7 @@ internal class ExileControllerWrapUpPatch
 {
     // Workaround to add a "postfix" to the destroying of the exile controller (i.e. cutscene) and SpwanInMinigame of submerged
     [HarmonyPatch(typeof(Object), nameof(Object.Destroy), typeof(GameObject))]
+
     public static void Prefix(GameObject obj)
     {
         // Nightvision:
@@ -521,29 +522,33 @@ internal class ExileControllerWrapUpPatch
                 new(-0.5743f, -4.7235f, -0.0047f),
                 new(-20.8897f, 2.7606f, 0.002f)
             };
-
-            var airshipSpawn = new List<Vector3>(); //no spawns since it already has random spawns
-
-            switch (GameOptionsManager.Instance.currentNormalGameOptions.MapId)
+            if (CustomOptionHolder.randomGameStartToVents.getBool())
             {
-                case 0:
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = skeldSpawn[rnd.Next(skeldSpawn.Count)];
-                    break;
-                case 1:
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = miraSpawn[rnd.Next(miraSpawn.Count)];
-                    break;
-                case 2:
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = polusSpawn[rnd.Next(polusSpawn.Count)];
-                    break;
-                case 3:
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = dleksSpawn[rnd.Next(dleksSpawn.Count)];
-                    break;
-                case 4:
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = airshipSpawn[rnd.Next(airshipSpawn.Count)];
-                    break;
-                case 5:
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = fungleSpawn[rnd.Next(fungleSpawn.Count)];
-                    break;
+                CachedPlayer.LocalPlayer.PlayerControl.transform.position = FindVentPoss.findVentPoss()[rnd.Next(FindVentPoss.findVentPoss().Count)];
+            }
+            else {
+                var airshipSpawn = new List<Vector3>(); //no spawns since it already has random spawns
+                switch (GameOptionsManager.Instance.currentNormalGameOptions.MapId)
+                {
+                    case 0:
+                        CachedPlayer.LocalPlayer.PlayerControl.transform.position = skeldSpawn[rnd.Next(skeldSpawn.Count)];
+                        break;
+                    case 1:
+                        CachedPlayer.LocalPlayer.PlayerControl.transform.position = miraSpawn[rnd.Next(miraSpawn.Count)];
+                        break;
+                    case 2:
+                        CachedPlayer.LocalPlayer.PlayerControl.transform.position = polusSpawn[rnd.Next(polusSpawn.Count)];
+                        break;
+                    case 3:
+                        CachedPlayer.LocalPlayer.PlayerControl.transform.position = dleksSpawn[rnd.Next(dleksSpawn.Count)];
+                        break;
+                    case 4:
+                        CachedPlayer.LocalPlayer.PlayerControl.transform.position = airshipSpawn[rnd.Next(airshipSpawn.Count)];
+                        break;
+                    case 5:
+                        CachedPlayer.LocalPlayer.PlayerControl.transform.position = fungleSpawn[rnd.Next(fungleSpawn.Count)];
+                        break;
+                }
             }
         }
 

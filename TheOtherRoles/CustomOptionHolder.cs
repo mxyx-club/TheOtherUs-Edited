@@ -314,26 +314,36 @@ public class CustomOptionHolder
     public static CustomOption pursuerCooldown;
     public static CustomOption pursuerBlanksNumber;
 
+    public static CustomOption evilTrapperSpawnRate;
+    public static CustomOption evilTrapperNumTrap;
+    public static CustomOption evilTrapperKillTimer;
+    public static CustomOption evilTrapperCooldown;
+    public static CustomOption evilTrapperMaxDistance;
+    public static CustomOption evilTrapperTrapRange;
+    public static CustomOption evilTrapperExtensionTime;
+    public static CustomOption evilTrapperPenaltyTime;
+    public static CustomOption evilTrapperBonusTime;
+
     public static CustomOption jumperSpawnRate;
     public static CustomOption jumperJumpTime;
-    public static CustomOption jumperChargesOnPlace;
     public static CustomOption jumperResetPlaceAfterMeeting;
-    //public static CustomOption jumperChargesGainOnMeeting;
+    public static CustomOption jumperChargesGainOnMeeting;
     public static CustomOption jumperMaxCharges;
-    /*
-    public static CustomOption ArcanistSpawnRate;
-    public static CustomOption ArcanistCooldown;
-    public static CustomOption ArcanistTeleportTime;
-    public static CustomOption ArcanistProbabilityBlueCards;
-    public static CustomOption ArcanistProbabilityRedCards;
-    public static CustomOption ArcanistProbabilityPurpleCards;
-    */
+
     public static CustomOption escapistSpawnRate;
     public static CustomOption escapistEscapeTime;
-    public static CustomOption escapistChargesOnPlace;
     public static CustomOption escapistResetPlaceAfterMeeting;
-    //public static CustomOption escapistChargesGainOnMeeting;
-    //public static CustomOption escapistMaxCharges;
+    public static CustomOption escapistChargesGainOnMeeting;
+    public static CustomOption escapistMaxCharges;
+
+    /*
+    public static CustomOption MagicianSpawnRate;
+    public static CustomOption MagicianCooldown;
+    public static CustomOption MagicianTeleportTime;
+    public static CustomOption MagicianProbabilityBlueCards;
+    public static CustomOption MagicianProbabilityRedCards;
+    public static CustomOption MagicianProbabilityPurpleCards;
+    */
 
     public static CustomOption werewolfSpawnRate;
     public static CustomOption werewolfRampageCooldown;
@@ -504,6 +514,7 @@ public class CustomOptionHolder
     public static CustomOption impostorSeeRoles;
     public static CustomOption transparentTasks;
     public static CustomOption randomGameStartPosition;
+    public static CustomOption randomGameStartToVents;
     public static CustomOption allowModGuess;
     public static CustomOption finishTasksBeforeHauntingOrZoomingOut;
     public static CustomOption camsNightVision;
@@ -720,10 +731,9 @@ public class CustomOptionHolder
 
         escapistSpawnRate = CustomOption.Create(10180, Types.Impostor, cs(Escapist.color, "逃逸者"), rates, null, true);
         escapistEscapeTime = CustomOption.Create(10181, Types.Impostor, "标记/逃逸冷却", 15f, 0f, 60f, 2.5f, escapistSpawnRate);
-        escapistChargesOnPlace = CustomOption.Create(10182, Types.Impostor, "每次逃逸/传送消耗点数", 1, 1, 10, 1, escapistSpawnRate);
+        escapistMaxCharges = CustomOption.Create(10185, Types.Impostor, "可传送次数", 3, 1, 10, 1, escapistSpawnRate);
         escapistResetPlaceAfterMeeting = CustomOption.Create(10183, Types.Impostor, "会议后重置目标地点", false, escapistSpawnRate);
-        //jumperChargesGainOnMeeting = CustomOption.Create(10184, Types.Crewmate, "会议后增加点数", 2, 0, 10, 1, escapistSpawnRate);
-        //escapistMaxCharges = CustomOption.Create(10185, Types.Impostor, "技能点数上限", 3, 0, 10, 1, escapistSpawnRate);
+        escapistChargesGainOnMeeting = CustomOption.Create(10184, Types.Crewmate, "会议后增加次数", 2, 0, 10, 1, escapistSpawnRate);
 
         cultistSpawnRate = CustomOption.Create(10190, Types.Impostor, cs(Cultist.color, "传教士"), rates, null, true);
 
@@ -1020,10 +1030,9 @@ public class CustomOptionHolder
 
         jumperSpawnRate = CustomOption.Create(30320, Types.Crewmate, cs(Jumper.color, "传送师"), rates, null, true);
         jumperJumpTime = CustomOption.Create(30321, Types.Crewmate, "标记/传送冷却", 10f, 0f, 60f, 2.5f, jumperSpawnRate);
-        //jumperChargesOnPlace = CustomOption.Create(30322, Types.Crewmate, "每次传送所消耗点数", 1, 1, 10, 1, jumperSpawnRate);
         jumperMaxCharges = CustomOption.Create(30325, Types.Crewmate, "可传送次数", 3, 0, 10, 1, jumperSpawnRate);
         jumperResetPlaceAfterMeeting = CustomOption.Create(30323, Types.Crewmate, "会议后重置标记位置", false, jumperSpawnRate);
-        //jumperChargesGainOnMeeting = CustomOption.Create(30324, Types.Crewmate, "会议后增加传送点数", 2, 0, 10, 1, jumperSpawnRate);
+        jumperChargesGainOnMeeting = CustomOption.Create(30324, Types.Crewmate, "会议后增加传送次数", 2, 0, 10, 1, jumperSpawnRate);
         /*
         magicianSpawnRate = CustomOption.Create(30330, Types.Crewmate, cs(Magician.color, "魔术师"), rates, null, true);
         magicianCooldown = CustomOption.Create(30331, Types.Crewmate, "放置冷却", 15f, 0f, 60f, 2.5f, magicianSpawnRate);
@@ -1249,6 +1258,7 @@ public class CustomOptionHolder
 
         //Map options
         randomGameStartPosition = CustomOption.Create(7910, Types.General, "随机出生点", false);
+        randomGameStartToVents = CustomOption.Create(7911, Types.General, "随机出生在通风口上", false, randomGameStartPosition);
         enableBetterPolus = CustomOption.Create(7801, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Polus"), false);
         movePolusVents = CustomOption.Create(7802, Types.General, "改变管道布局", false, enableBetterPolus);
         addPolusVents = CustomOption.Create(7803, Types.General, "添加新管道\n (样本室-办公室-运输船)", false, enableBetterPolus);
