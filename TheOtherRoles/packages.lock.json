@@ -14,6 +14,12 @@
         "resolved": "2.1.0-rc.1",
         "contentHash": "WI/7TbJwWl5P4B6UXGtKI1VMe6fA6h3fcbp3ZjJKqOBQ5MJfDMmeVB4fb+RW1tUQdxnlSWV3Ul62PHFyTqp4PA=="
       },
+      "BepInEx.PluginInfoProps": {
+        "type": "Direct",
+        "requested": "[2.1.0, )",
+        "resolved": "2.1.0",
+        "contentHash": "VCG3QRiqNdW9ku2FEcNsbK+HKxrZmW0VxwMNyLNO7h0xGorU+C6vBHN8Qq4eAL5fU11Uks5x2uoYdqEoKD3P8A=="
+      },
       "BepInEx.Unity.IL2CPP": {
         "type": "Direct",
         "requested": "[6.0.0-be.688, )",

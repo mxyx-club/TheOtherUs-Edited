@@ -21,16 +21,16 @@ using Random = System.Random;
 
 namespace TheOtherRoles;
 
-[BepInPlugin(Id, "TheOtherUs", VersionString)]
+[BepInPlugin(Id, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency(SubmergedCompatibility.SUBMERGED_GUID, BepInDependency.DependencyFlags.SoftDependency)]
 [BepInProcess("Among Us.exe")]
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
 public class TheOtherRolesPlugin : BasePlugin
 {
-    public const string Id = "TheOtherUs.Options.v1";
-    public const string VersionString = "1.0.3.1";
+    public const string Id = "TheOtherUs.Options.v1"; // Config files name
+    public const string VersionString = MyPluginInfo.PLUGIN_VERSION;
     public static uint betaDays = 0; // amount of days for the build to be usable (0 for infinite!)
-
+    
     public static Version Version = Version.Parse(VersionString);
 
     public static TheOtherRolesPlugin Instance;
@@ -57,7 +57,6 @@ public class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
     public static ConfigEntry<string> ShowPopUpVersion { get; set; }
-
 
     // This is part of the Mini.RegionInstaller, Licensed under GPLv3
     // file="RegionInstallPlugin.cs" company="miniduikboot">
