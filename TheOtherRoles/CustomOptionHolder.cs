@@ -254,9 +254,9 @@ public class CustomOptionHolder
     public static CustomOption snitchSpawnRate;
     public static CustomOption snitchLeftTasksForReveal;
     public static CustomOption snitchSeeMeeting;
-    //public static CustomOption snitchCanSeeRoles;
-    public static CustomOption snitchIncludeTeamJackal;
-    public static CustomOption snitchTeamJackalUseDifferentArrowColor;
+    public static CustomOption snitchCanSeeRoles;
+    public static CustomOption snitchIncludeNeutralTeam;
+    public static CustomOption snitchTeamNeutraUseDifferentArrowColor;
     //public static CustomOption snitchMode;
     //public static CustomOption snitchTargets;
 
@@ -993,11 +993,11 @@ public class CustomOptionHolder
         snitchTargets = CustomOption.Create(30273, Types.Crewmate, "显示目标", ["所有邪恶职业", "杀手职业"], snitchSpawnRate);
         */
         snitchSpawnRate = CustomOption.Create(30270, Types.Crewmate, cs(Snitch.color, "告密者"), rates, null, true);
-        snitchLeftTasksForReveal = CustomOption.Create(30271, Types.Crewmate, "剩余多少任务揭示告密者的位置", 1f, 0f, 5f, 1f, snitchSpawnRate);
+        snitchLeftTasksForReveal = CustomOption.Create(30271, Types.Crewmate, "剩余多少任务时可被发现", 1f, 0f, 10f, 1f, snitchSpawnRate);
         snitchSeeMeeting = CustomOption.Create(30272, Types.Crewmate, "可在会议中查看信息", false, snitchSpawnRate);
-        //snitchCanSeeRoles = CustomOption.Create(30273, Types.Crewmate, "Can See Roles", false, snitchSpawnRate);
-        snitchIncludeTeamJackal = CustomOption.Create(30274, Types.Crewmate, "可揭示豺狼阵营", false, snitchSpawnRate);
-        snitchTeamJackalUseDifferentArrowColor = CustomOption.Create(30275, Types.Crewmate, "为豺狼阵营使用不同颜色的箭头", true, snitchIncludeTeamJackal);
+        snitchCanSeeRoles = CustomOption.Create(30273, Types.Crewmate, "可以在会议中查看具体职业", false, snitchSpawnRate);
+        snitchIncludeNeutralTeam = CustomOption.Create(30274, Types.Crewmate, "可揭示中立阵营", ["关闭", "仅杀手中立", "所有邪恶中立", "全部中立阵营"], snitchSpawnRate);
+        snitchTeamNeutraUseDifferentArrowColor = CustomOption.Create(30275, Types.Crewmate, "为中立阵营使用不同颜色的提示", true, snitchIncludeNeutralTeam);
 
         spySpawnRate = CustomOption.Create(30280, Types.Crewmate, cs(Spy.color, "卧底"), rates, null, true);
         spyCanDieToSheriff = CustomOption.Create(30281, Types.Crewmate, "可被警长执法", false, spySpawnRate);

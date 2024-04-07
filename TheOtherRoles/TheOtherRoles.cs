@@ -1363,8 +1363,22 @@ public static class Snitch
     public static int taskCountForReveal = 1;
     public static bool seeInMeeting = false;
     public static bool canSeeRoles = false;
-    public static bool includeTeamJackal = false;
-    public static bool teamJackalUseDifferentArrowColor = true;
+    //public static bool includeTeamJackal = false;
+    //public static bool includeNeutralTeam = false;
+    public static bool teamNeutraUseDifferentArrowColor = true;
+    public static bool needsUpdate = true;
+
+    public enum includeNeutralTeam
+    {
+        NoIncNeutral = 0,
+        KillNeutral = 1,
+        EvilNeutral = 2,
+        AllNeutral = 3
+    }
+
+    public static includeNeutralTeam Team = includeNeutralTeam.KillNeutral;
+    public static TextMeshPro text;
+    public static bool isRevealed;
 
 
     public static void clearAndReload()
@@ -1378,9 +1392,15 @@ public static class Snitch
         localArrows = new List<Arrow>();
         taskCountForReveal = Mathf.RoundToInt(CustomOptionHolder.snitchLeftTasksForReveal.getFloat());
         seeInMeeting = CustomOptionHolder.snitchSeeMeeting.getBool();
-        //canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();
-        includeTeamJackal = CustomOptionHolder.snitchIncludeTeamJackal.getBool();
-        teamJackalUseDifferentArrowColor = CustomOptionHolder.snitchTeamJackalUseDifferentArrowColor.getBool();
+        isRevealed = false;
+        if (text != null) Object.Destroy(text);
+        text = null;
+        needsUpdate = true;
+
+        canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();
+        //includeNeutralTeam = CustomOptionHolder.snitchIncludeNeutralTeam.getBool();
+        Team = (includeNeutralTeam)CustomOptionHolder.snitchIncludeNeutralTeam.getSelection();
+        teamNeutraUseDifferentArrowColor = CustomOptionHolder.snitchTeamNeutraUseDifferentArrowColor.getBool();
         snitch = null;
     }
 }

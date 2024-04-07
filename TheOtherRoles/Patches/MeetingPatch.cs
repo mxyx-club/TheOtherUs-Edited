@@ -536,17 +536,20 @@ internal class MeetingHudPatch
 
         // Add overlay for spelled players
         if (Witch.witch != null && Witch.futureSpelled != null)
-            foreach (var pva in __instance.playerStates)
+        {
+            foreach (PlayerVoteArea pva in __instance.playerStates)
+            {
                 if (Witch.futureSpelled.Any(x => x.PlayerId == pva.TargetPlayerId))
                 {
-                    var rend = new GameObject().AddComponent<SpriteRenderer>();
+                    SpriteRenderer rend = (new GameObject()).AddComponent<SpriteRenderer>();
                     rend.transform.SetParent(pva.transform);
                     rend.gameObject.layer = pva.Megaphone.gameObject.layer;
                     rend.transform.localPosition = new Vector3(-0.5f, -0.03f, -1f);
-                    if (CachedPlayer.LocalPlayer.PlayerControl == Swapper.swapper && isGuesser)
-                        rend.transform.localPosition = new Vector3(-0.725f, -0.15f, -1f);
+                    if (CachedPlayer.LocalPlayer.PlayerControl == Swapper.swapper && isGuesser) rend.transform.localPosition = new Vector3(-0.725f, -0.15f, -1f);
                     rend.sprite = Witch.getSpelledOverlaySprite();
                 }
+            }
+        }
 
         //!!!添加末日预言家赌
         if (addDoomsayerButtons)
