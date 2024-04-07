@@ -10,28 +10,36 @@
 
 # The Other Roles
 
-The Other Roles is a mod for Among Us which adds many new roles, new settings and new Custom Hats to the game. Even more roles are coming soon :)
+**The Other Roles** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
+Even more roles are coming soon.
 
 ## 发行版
 
 | Among Us - Version | Mod Version | Link                                                         |
 | ------------------ | ----------- | ------------------------------------------------------------ |
-| 2024.3.5s          | v1.0.3.2    | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.2/TheOtherUs.zip) |
+| 2024.3.5s          | v1.0.3.3    | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.3/TheOtherUs.zip) |
 | 2024.3.5s          | v1.0.3.1    | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
-| 2023.11.28s        | v1.0.1      | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.1/TheOtherUs.zip) |
 
 
 
 ## 更新日志
 
+###  v1.0.3.3:
+
+ - #### 新增内容
+
+    - 增加阻止任务获胜的选项（并未测试）
+    - 使一部分职业无法共同出现
+    - 多线程：不会在任务透明模式开启时生成
+    - 告密者：现在可以在会议中查看信息，并且被发现时不能无法被猜测
+
 <details>
-  <summary>点我查看更新日志</summary>
+  <summary>点我查看更多更新日志</summary>
 
 ###  v1.0.3.2:
 
  - #### 新增内容
 
-    - 新增主职业：邪恶的设陷者
     - 新增附加职业：绝境者（在内鬼阵营只剩1名时减少击杀cd）
     - 随机出生点可选随机出生至通风口上
     - 新增无人生还结局
@@ -47,10 +55,12 @@ The Other Roles is a mod for Among Us which adds many new roles, new settings an
 
 ###  v1.0.3.1:
 
- - 新增主职业：预言家
- - 入殓师：更改为内鬼阵营专属附加职业
- - 告密者：职业重做，还原为旧版效果（并未完全可用）
- - 闪电侠：修复移速不生效的问题
+ - #### 新增内容：
+
+    - 新增主职业：预言家
+    - 入殓师：更改为内鬼阵营专属附加职业
+    - 告密者：职业重做，还原为旧版效果（并未完全可用）
+    - 闪电侠：修复移速不生效的问题
 
 ### v1.0.3:
 
@@ -77,9 +87,11 @@ The Other Roles is a mod for Among Us which adds many new roles, new settings an
 
 ###  v1.0.2:
 
- - 新增主职业：魅魔
- - 替换无文字的按钮图标并在游戏中增加按钮文本
- - 送葬者：增加移速选项
+ - #### 新增内容：
+
+    - 新增主职业：魅魔
+    - 替换无文字的按钮图标并在游戏中增加按钮文本
+    - 送葬者：增加移速选项
 
 ###  v1.0.1:
 
@@ -130,33 +142,36 @@ The Other Roles is a mod for Among Us which adds many new roles, new settings an
 |     炸弹狂     |   处刑者   |   观察者   |   太阳镜   |
 |     模仿者     |   起诉人   |    警长    |    诱饵    |
 |     隐蔽者     |    豺狼    |    捕快    |   溅血者   |
-|     管道工     |   隐身人   |    保镖    |   通讯兵   |
-|     抹除者     |   纵火犯   |   执灯人   |   破平者   |
-|     吸血鬼     |  月下狼人  |   传送师   |   闪电侠   |
-|     清理者     |  身份窃贼  |    侦探    |   多线程   |
-|     送葬者     |    天启    |  时间之主  |    小孩    |
-|     逃逸者     | 末日预言家 |    老兵    |    Vip     |
-|      术士      |    魅魔    |    医生    |   不屈者   |
-|     骗术师     |            |   换票师   |    反骨    |
+|     管道工     |    跟班    |    保镖    |   通讯兵   |
+|     抹除者     |   隐身人   |   执灯人   |   破平者   |
+|     吸血鬼     |   纵火犯   |   传送师   |   闪电侠   |
+|     清理者     |  月下狼人  |    侦探    |   多线程   |
+|     送葬者     |  身份窃贼  |  时间之主  |    小孩    |
+|     逃逸者     |    天启    |    老兵    |    Vip     |
+|      术士      | 末日预言家 |    医生    |   不屈者   |
+|     骗术师     |    魅魔    |   换票师   |    反骨    |
 |    赏金猎人    |            |    黑客    | 管道工程师 |
 |     传教师     |            |    灵媒    |    酒鬼    |
 |    恐怖分子    |            |   追踪者   |   胆小鬼   |
 |     勒索者     |            |   告密者   |   窥视者   |
 |      女巫      |            |    卧底    |    雷达    |
 |      忍者      |            |    保安    |   执钮人   |
-|  邪恶的设陷师  |            |   通灵师   |   变色龙   |
+|                |            |   通灵师   |   变色龙   |
 |                |            |   设陷师   |   交换师   |
 |                |            |   预言家   |            |
 
 ## 模组贡献者
 
-**主要开发者：**
+<p align="center">
+
+主要开发者：
 沫夏悠轩、善良的好人、天寸梦初
 
-**美工：**
+美工：
 方块
 
-**翻译**
+翻译：
+沫夏悠轩、方块、CC(CN)
 九头蛇(EN)
 
 本模组使用了部分[TheOtherRolesGMIA](https://github.com/dabao40/TheOtherRolesGMIA)的代码，感谢Imp11的支持！
@@ -165,11 +180,10 @@ The Other Roles is a mod for Among Us which adds many new roles, new settings an
 [Reactor](https://github.com/NuclearPowered/Reactor) - The framework used for all versions before v2.0.0\
 [BepInEx](https://github.com/BepInEx) - Used to hook to game functions\
 [Essentials](https://github.com/DorCoMaNdO/Reactor-Essentials) - Custom game options by **DorCoMaNdO** :
-
 - Before v1.6: We used the default Essentials release
-- v1.6-v1.8: We slightly changed the default Essentials release. The changes can be found on this [branch]
+- v1.6-v1.8: We slightly changed the default Essentials release. The changes can be found on this 
 
-(https://github.com/Eisbison/Reactor-Essentials/tree/feature/TheOtherRoles-Adaption) of our fork.
+[branch](https://github.com/Eisbison/Reactor-Essentials/tree/feature/TheOtherRoles-Adaption) of our fork.
 - v2.0.0 and later: We're no longer using Reactor anymore we are using our own implementation inspired by the one from **DorCoMaNdO**
 
 [Jackal and Sidekick](https://www.twitch.tv/dhalucard) - Original idea for the Jackal and Sidekick came from **Dhalucard**\
@@ -196,9 +210,8 @@ Permissions of this strong copyleft license are conditioned on making available 
 
 ## 错误报告
 
-如预见游戏性Bug或者有更多的建议可以提issue。
+如预见游戏性Bug或者有更多的建议可以在仓库issue提出，或加QQ群：[702829332](https://qm.qq.com/q/3WJt8CjJt)
 
-
-## 翻译
+## 多语言翻译
 
 翻译文件并未完成，预计在1.4.0完成多语言修改。

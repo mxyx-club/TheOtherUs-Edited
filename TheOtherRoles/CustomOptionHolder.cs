@@ -394,7 +394,6 @@ public class CustomOptionHolder
     public static CustomOption prophetKillCrewAsRed;
     public static CustomOption prophetBenignNeutralAsRed;
     public static CustomOption prophetEvilNeutralAsRed;
-    public static CustomOption prophetKillNeutralAsRed;
     public static CustomOption prophetCanCallEmergency;
     public static CustomOption prophetIsRevealed;
     public static CustomOption prophetExaminesToBeRevealed;
@@ -478,6 +477,7 @@ public class CustomOptionHolder
     //public static CustomOption modifierSwooper;
 
     public static CustomOption modifierCursed;
+    public static CustomOption modifierShowCursed;
 
     public static CustomOption modifierVip;
     public static CustomOption modifierVipQuantity;
@@ -520,7 +520,7 @@ public class CustomOptionHolder
     public static CustomOption camsNightVision;
     public static CustomOption camsNoNightVisionIfImpVision;
 
-
+    public static CustomOption preventTaskEnd;
     public static CustomOption dynamicMap;
     public static CustomOption dynamicMapEnableSkeld;
     public static CustomOption dynamicMapEnableMira;
@@ -985,7 +985,6 @@ public class CustomOptionHolder
         prophetKillCrewAsRed = CustomOption.Create(30366, Types.Crewmate, "击杀型船员显示为红名", false, prophetSpawnRate);
         prophetBenignNeutralAsRed = CustomOption.Create(30367, Types.Crewmate, "善良型中立显示为红名", false, prophetSpawnRate);
         prophetEvilNeutralAsRed = CustomOption.Create(30368, Types.Crewmate, "邪恶型中立显示为红名", true, prophetSpawnRate);
-        prophetKillNeutralAsRed = CustomOption.Create(30369, Types.Crewmate, "击杀型中立显示为红名", true, prophetSpawnRate);
         /*
         snitchSpawnRate = CustomOption.Create(30270, Types.Crewmate, cs(Snitch.color, "告密者"), rates, null, true);
         snitchLeftTasksForReveal = CustomOption.Create(30271, Types.Crewmate, "剩余多少任务时可被发现", 1f, 0f, 10f, 1f, snitchSpawnRate);
@@ -1122,6 +1121,7 @@ public class CustomOptionHolder
         modifierSlueth = CustomOption.Create(1150, Types.Modifier, cs(Color.yellow, "掘墓人"), rates, null, true);
 
         modifierCursed = CustomOption.Create(1160, Types.Modifier, cs(Color.yellow, "反骨"), rates, null, true);
+        modifierShowCursed = CustomOption.Create(1161, Types.Modifier, "隐藏职业", false, modifierCursed);
 
         modifierVip = CustomOption.Create(1170, Types.Modifier, cs(Color.yellow, "VIP"), rates, null, true);
         modifierVipQuantity = CustomOption.Create(1171, Types.Modifier, cs(Color.yellow, "VIP人数"), ratesModifier, modifierVip);
@@ -1289,16 +1289,14 @@ public class CustomOptionHolder
 
         blockedRolePairings.Add((byte)RoleId.Vampire, new[] { (byte)RoleId.Warlock });
         blockedRolePairings.Add((byte)RoleId.Warlock, new[] { (byte)RoleId.Vampire });
-        blockedRolePairings.Add((byte)RoleId.Spy, new[] { (byte)RoleId.Mini });
-        blockedRolePairings.Add((byte)RoleId.Mini, new[] { (byte)RoleId.Spy });
+
+        blockedRolePairings.Add((byte)RoleId.Witch, new[] { (byte)RoleId.Warlock });
+        blockedRolePairings.Add((byte)RoleId.Warlock, new[] { (byte)RoleId.Witch });
+
         blockedRolePairings.Add((byte)RoleId.Vulture, new[] { (byte)RoleId.Cleaner });
         blockedRolePairings.Add((byte)RoleId.Cleaner, new[] { (byte)RoleId.Vulture });
 
-        blockedRolePairings.Add((byte)RoleId.Mayor, new[] { (byte)RoleId.Watcher });
-        blockedRolePairings.Add((byte)RoleId.Watcher, new[] { (byte)RoleId.Mayor });
-        blockedRolePairings.Add((byte)RoleId.Engineer, new[] { (byte)RoleId.Tunneler });
-        blockedRolePairings.Add((byte)RoleId.Tunneler, new[] { (byte)RoleId.Engineer });
-        blockedRolePairings.Add((byte)RoleId.Bomber2, new[] { (byte)RoleId.Bait });
-        blockedRolePairings.Add((byte)RoleId.Bait, new[] { (byte)RoleId.Bomber2 });
+        blockedRolePairings.Add((byte)RoleId.Ninja, new[] { (byte)RoleId.Swooper });
+        blockedRolePairings.Add((byte)RoleId.Swooper, new[] { (byte)RoleId.Ninja });
     }
 }

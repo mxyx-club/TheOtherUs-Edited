@@ -1,4 +1,4 @@
-<p align="center"> <a href="README_ZH-CN.md"> 简体中文 </a> </p>
+<p align="center"> <a href="README_ZH-CN"> 简体中文 </a> </p>
 
 ![mod banner](./Images/TOR_logo.png)
 
@@ -11,36 +11,131 @@ This mod is not affiliated with Among Us or Innersloth LLC, and the content cont
 
 [![Discord](./Images/TOR_server.png)](https://discord.gg/yspVyP5meR)
 
-# The Other Roles
+# The Other Us-
 
 **The Other Roles** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
-Even more roles are coming soon. :)
+Even more roles are coming soon.
 
 ## Releases
-| Among Us - Version | Mod Version | Link                                                         |
-| ------------------ | ----------- | ------------------------------------------------------------ |
-| 2024.3.5s          | v1.0.3.1    | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
-| 2023.11.28s        | v1.0.1      | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.1/TheOtherUs.zip) |
+| Among Us - Version| Mod Version | Link |
+|----------|-------------|-----------------|
+| 2024.3.5s    | v1.0.3.3 | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.3/TheOtherUs.zip)    |
+| 2024.3.5s    | v1.0.3.1 | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip)    |
 
 
 
 ## Changelog
 
+###  v1.0.3.3:
+
+ - #### 新增内容
+
+    - 新增主职业：邪恶的设陷者
+    - 新增附加职业：绝境者（在内鬼阵营只剩1名时减少击杀cd）
+    - 随机出生点可选随机出生至通风口上
+    - 新增无人生还结局
+    - 魅魔：新增真爱无法跟随原阵营获胜的选项
+    - 变色龙：不会分配给隐身人、忍者
+    - 执钮人：不会分配给市长
+    - 传送师 & 逃逸者：增加总传送次数的选项，以避免一回合只能传送一次的问题
+
+ - #### Bug修复：
+
+    - 豺狼：关闭豺狼可破坏的选项仍然可以破坏的问题
+    - 换票师：无法修理破坏的问题
+
+
 <details>
   <summary>Click to show the Changelog</summary>
 
 
-**Changes in v1.0.3:**
+###  v1.0.3.2:
 
-- 
+ - #### Newly added
 
-**Changes in v1.0.2:**
+    - New Modifier: lastImposter (gain lower kill cd when there is only 1 imposter left)
+    - When born may choose to born on random vents
+    - New ending added: And Then There Were None
+    - Akujo: Update with the true love can't win together with the original team
+    - Chameleon: Will not be given to Swooper and Ninja
+    - ButtonBarry: Won't be given to the Mayor
+    - Snitch: Can't be guessed during the meeting after being exposed, and now given an option of expose the range of Neutral
+    - Jumper & Escapist: Given option that can increase numbers of teleportation, to avoid the problem of only teleport once a round
 
-- 
+ - #### Bug fixed:
 
-**Changes in v1.0.1:**
+    - Jackal: Fix the problem that Jackal can still destroy
+    - Swapper: Fix the problem that Swapper can't fix destructions
 
-- 
+
+###  v1.0.3.1:
+
+ - #### Newly added
+
+    - A new role added: Prophet 
+    - Poucher: changed to be Imposters used only
+    - Snitch: remake, return to old version (Not fully functional)
+    - Flash: Fix the problem of no speed up
+
+### v1.0.3:
+
+ - #### Based on TheOtherRoles - v4.5.2 
+
+    - Compatible for v2024.3.5
+    - Add a "Stop" button when game is about to start
+    - Detective: optimize the slow movement when footprints appears
+    - Medic: Medic now can see which player is being protected by Medic, a blue bracket will appear on the name of the player as a signal
+
+ - #### Newly added:
+
+    - New Modifiers added: ButtonBarry and Flash
+    - Detective: Autopsy report now changes to examine the role and color of the murderer
+    - Medic: Autopsy report now add information of role and color of the murderer
+    - Jumper & Escapist: Add an option that after the mmeting the marked spot won't being resetted
+    - Disperser: Add an option to teleport to vents
+
+ - #### Newly added:
+
+    - Fix the bug in Guesser Modifier players will be given multiple roles
+    - Torch: Fix the bug of torch's eyesight
+
+
+###  v1.0.2:
+
+ - #### 新增内容
+
+    - New role added: Akujo
+    - Replace buttons with no text and add button texts in games
+    - Undertaker: add the option of increase speed
+
+
+ ###  v1.0.1:
+
+ - #### Based on TheOtherUs - v1.3.4
+
+ - #### Newly added:
+
+    - New roles added: Juggernaut and Doomsayer
+    - synchronized cd at the beginning of game
+    - Add a "hundred players" mod
+    - Better map options
+    - implant with multi-language, more convinent for further translation on mods with other languages
+    - Fungus forest: add with randomly born and more spots for Disperser
+    - Torch: add an option to increase the rate of eyesight
+    - Shifter: add the option that can switch Neutral roles
+    - Bait: newly add the option of only being given to crewmates
+    - Swooper: now a Neutral role not an Imposter role
+    - Jackal: newly added with a option that Imposters can see if their teammates get turned to follower
+    - Neutral: Their missions are now fake so their missions won't impact on crewmates
+    - Amnisiac: delete the limitation of fake missions (Amnisiac may do missions before acquire a role, but won't impact on crewmates)
+
+ - #### Bugs fixed
+
+    - Pursuer: can't win with other teams except Imposters
+    - Fungus forest: fix the eyesight problem
+    - Torch: Fix the eyesight problem
+    - Sheriff: fix the problem that can't figure out who is the Deputy in the game
+    - Fix other bugs
 
 </details>
 
@@ -63,14 +158,14 @@ Even more roles are coming soon. :)
 |      Bomber      | Prosecutor | PrivateInvestigator |  Sunglasses  |
 |      Mimic       |  Pursuer   |       Sheriff       |     Bait     |
 |   Camouflager    |   Jackal   |       Deputy        |    Bloody    |
-|      Miner       |  Swooper   |      BodyGuard      | AntiTeleport |
-|      Eraser      |  Arsonist  |       Lighter       |  Tiebreaker  |
-|     Vampire      |  Werewolf  |       Jumper        |    Flash     |
-|     Cleaner      |   Thief    |      Detective      | Multitasker  |
-|    Undertaker    | Juggernaut |     TimeMaster      |     Mini     |
-|     Escapist     | Doomsayer  |       Veteren       |     Vip      |
-|     Warlock      |   Akujo    |        Medic        | Indomitable  |
-|    Trickster     |            |       Swapper       |    Slueth    |
+|      Miner       |  Sidekick  |      BodyGuard      | AntiTeleport |
+|      Eraser      |  Swooper   |       Lighter       |  Tiebreaker  |
+|     Vampire      |  Arsonist  |       Jumper        |    Flash     |
+|     Cleaner      |  Werewolf  |      Detective      | Multitasker  |
+|    Undertaker    |   Thief    |     TimeMaster      |     Mini     |
+|     Escapist     | Juggernaut |       Veteren       |     Vip      |
+|     Warlock      | Doomsayer  |        Medic        | Indomitable  |
+|    Trickster     |   Akujo    |       Swapper       |    Slueth    |
 |   BountyHunter   |            |        Seer         |    Cursed    |
 |     Cultist      |            |       Hacker        |    Invert    |
 |    Terrorist     |            |       Tracker       |    Blind     |
@@ -84,32 +179,23 @@ Even more roles are coming soon. :)
 
 
 ## Credits & Resources
+<p align="center">
 
 Team:
+mxyx    Huier-Huang    haoren    Imp11    FangKuaiYa
 
-Mallöris    K3ndo    Bavari    Gendelo
+Former TheOtherUs Team Members:
+SpexGH    Xer    FangKuaiYa    mxyx    Huier-Huang
 
-Former Team Members:
 
-Eisbison (GOAT)    Thunderstorm584    EndOfFile
-
-Additional Devs:
-
-EnoPM    twix    NesTT
-
-Github Contributors:
-
-Alex2911    amsyarasyiq    MaximeGillot
-Psynomit    probablyadnf    JustASysAdmin
-
-[Discord](https://discord.gg/yspVyP5meR) Moderators:</b>
-
-Draco Cordraconis    Streamblox (formerly)
-
-Thanks to all our discord helpers!
+Thanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles!
 
 Thanks to miniduikboot & GD for hosting modded servers (and so much more)
 
+
+Other Credits & Resources:
+
+</p>
 
 [OxygenFilter](https://github.com/NuclearPowered/Reactor.OxygenFilter) - For all the versions between v2.3.0 and v2.6.1, we were using the OxygenFilter for automatic deobfuscation\
 [Reactor](https://github.com/NuclearPowered/Reactor) - The framework used for all versions before v2.0.0\
@@ -146,6 +232,7 @@ TheOtherRolesAU/TheOtherRoles is licensed under the
 Permissions of this strong copyleft license are conditioned on making available **complete source code of licensed works and modifications**, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
 
 # Bugs, suggestions and requests
+
 If you found any bugs, have an idea for a new role or any other request, join our [Discord server](https://discord.gg/77RkMJHWsM).
 
 # Copyedit

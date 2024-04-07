@@ -1358,20 +1358,20 @@ public static class Helpers
 
     public static bool isKiller(PlayerControl player)
     {
-        return player.Data.Role.IsImpostor ||
-               (isNeutral(player) &&
-                player != Jester.jester &&
-                player != Amnisiac.amnisiac &&
-                player != Arsonist.arsonist &&
-                player != Vulture.vulture &&
-                player != Akujo.akujo &&
-                player != Lawyer.lawyer &&
-                player != Pursuer.pursuer);
+        return isNeutral(player) &&
+                player == Juggernaut.juggernaut &&
+                player == Werewolf.werewolf &&
+                player == Swooper.swooper &&
+                player == Arsonist.arsonist &&
+                player == Jackal.jackal &&
+                player == Sidekick.sidekick;
     }
 
     public static bool isEvil(PlayerControl player)
     {
-        return player.Data.Role.IsImpostor || isNeutral(player);
+        return isNeutral(player) &&
+                player != Amnisiac.amnisiac &&
+                player != Pursuer.pursuer;
     }
 
     public static void toggleZoom(bool reset = false)

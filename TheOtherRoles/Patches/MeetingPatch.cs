@@ -290,7 +290,7 @@ internal class MeetingHudPatch
             {
                 var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
                 var numberOfLeftTasks = playerTotal - playerCompleted;
-                if (numberOfLeftTasks <= 0 && roleInfo.roleId == RoleId.Snitch) continue;
+                if (numberOfLeftTasks <= Snitch.taskCountForReveal && roleInfo.roleId == RoleId.Snitch) continue;
             }
 
 

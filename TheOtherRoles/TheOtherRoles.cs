@@ -117,6 +117,37 @@ public static class TheOtherRoles
         HideNSeek.clearAndReload();
         PropHunt.clearAndReload();
     }
+    public static class FindVentPoss
+    {
+        public static List<Vector3> findVentPoss()
+        {
+            var poss = new List<Vector3>();
+            foreach (var vent in DestroyableSingleton<ShipStatus>.Instance.AllVents)
+            {
+                var Transform = vent.transform;
+                var position = Transform.position;
+                poss.Add(new Vector3(position.x, position.y + 0.24f, position.z - 50));
+            }
+            return poss;
+        }
+    }
+    public static class PreventTaskEnd
+    {
+        public static bool Enable = false;
+        public static void clearAndReload()
+        {
+            Enable = CustomOptionHolder.preventTaskEnd.getBool();
+        }
+    }
+
+    public static class ResetButtonCooldown
+    {
+        public static float killCooldown;
+        public static void clearAndReload()
+        {
+            killCooldown = CustomOptionHolder.resteButtonCooldown.getFloat();
+        }
+    }
 
     public static class Jester
     {
@@ -172,20 +203,7 @@ public static class TheOtherRoles
             usedGuard = false;
         }
     }
-    public static class FindVentPoss
-    {
-        public static List<Vector3> findVentPoss()
-        {
-            var poss = new List<Vector3>();
-            foreach (var vent in DestroyableSingleton<ShipStatus>.Instance.AllVents)
-            {
-                var Transform = vent.transform;
-                var position = Transform.position;
-                poss.Add(new Vector3(position.x, position.y + 0.12f, position.z - 50));
-            }
-            return poss;
-        }
-    }
+
     public static class Portalmaker
     {
         public static PlayerControl portalmaker;
@@ -254,14 +272,6 @@ public static class TheOtherRoles
         }
     }
 
-    public static class ResetButtonCooldown
-    {
-        public static float killCooldown;
-        public static void clearAndReload()
-        {
-            killCooldown = CustomOptionHolder.resteButtonCooldown.getFloat();
-        }
-    }
     public static class Cultist
     {
         public static PlayerControl cultist;
@@ -2940,7 +2950,6 @@ public static class Prophet
     public static bool killCrewAsRed = false;
     public static bool benignNeutralAsRed = false;
     public static bool evilNeutralAsRed = true;
-    public static bool killNeutralAsRed = true;
     public static bool canCallEmergency = false;
     public static int examineNum = 3;
     public static int examinesToBeRevealed = 1;
@@ -2963,27 +2972,13 @@ public static class Prophet
     public static bool IsKiller(PlayerControl p)
     {
         return Helpers.isKiller(p)
+            || p.Data.Role.IsImpostor
             || ((p == Sheriff.sheriff
             || p == Deputy.deputy
             || p == Veteren.veteren)
             && killCrewAsRed)
-            || ((p == Amnisiac.amnisiac
-            || p == Pursuer.pursuer)
-            && benignNeutralAsRed)
-            || ((p == Jester.jester
-            || p == Vulture.vulture
-            || p == Lawyer.lawyer
-            || p == Doomsayer.doomsayer
-            || p == Thief.thief
-            || p == Akujo.akujo)
-            && evilNeutralAsRed)
-            || ((p == Jackal.jackal
-            || p == Sidekick.sidekick
-            || p == Swooper.swooper
-            || p == Arsonist.arsonist
-            || p == Werewolf.werewolf
-            || p == Juggernaut.juggernaut)
-            && killNeutralAsRed)
+            || (Helpers.isEvil(p) && evilNeutralAsRed)
+            || (!Helpers.isEvil(p) && benignNeutralAsRed)
         ;
     }
 
@@ -2999,7 +2994,6 @@ public static class Prophet
         killCrewAsRed = CustomOptionHolder.prophetKillCrewAsRed.getBool();
         benignNeutralAsRed = CustomOptionHolder.prophetBenignNeutralAsRed.getBool();
         evilNeutralAsRed = CustomOptionHolder.prophetEvilNeutralAsRed.getBool();
-        killNeutralAsRed = CustomOptionHolder.prophetKillNeutralAsRed.getBool();
         canCallEmergency = CustomOptionHolder.prophetCanCallEmergency.getBool();
         examinesToBeRevealed = Math.Min(examineNum, Mathf.RoundToInt(CustomOptionHolder.prophetExaminesToBeRevealed.getFloat()));
         examinesLeft = examineNum;
@@ -3210,10 +3204,12 @@ public static class Cursed
     public static Color crewColor = new Color32(0, 247, 255, byte.MaxValue);
     public static Color impColor = Palette.ImpostorRed;
     public static Color color = crewColor;
+    public static bool showModifier = false;
 
     public static void clearAndReload()
     {
         cursed = null;
+        showModifier = CustomOptionHolder.modifierShowCursed.getBool();
     }
 }
 

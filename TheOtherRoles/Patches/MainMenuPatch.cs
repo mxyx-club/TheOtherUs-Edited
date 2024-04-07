@@ -76,25 +76,14 @@ public class MainMenuPatch
             popUp = Object.Instantiate(popUpTemplate);
 
             popUp.gameObject.SetActive(true);
-            var creditsString = @"<align=""center""><b>TOR Team:</b>
-Mallöris    K3ndo    Bavari    Gendelo
+            var creditsString = @"<align=""center""><b>TheOtherUs-Edited Team:</b>
+mxyx    Huier-Huang    haoren
+Imp11    FangKuaiYa
 
-<b>Former TOR Team Members:</b>
-Eisbison (GOAT)    Thunderstorm584    EndOfFile
+<b>Former TheOtherUs Team Members:</b>
+SpexGH    Xer    FangKuaiYa    mxyx    Huier-Huang
 
-<b>Additional Devs:</b>
-EnoPM    twix    NesTT
-
-<b>Github Contributors:</b>
-Alex2911    amsyarasyiq    MaximeGillot
-Psynomit    probablyadnf    JustASysAdmin (Scoom)
-Mr-Fluuff    Xer
-
-<b>[https://discord.gg/77RkMJHWsM]Discord[] Moderators (TOR):</b>
-Draco Cordraconis    Streamblox (formerly)
-Thanks to all our discord helpers!
-
-Thanks to The Other Roles, The Other Roles CE, Town of Us, Stellar Roles!
+Thanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles!
 
 Thanks to miniduikboot & GD for hosting modded servers (and so much more)
 
@@ -114,8 +103,7 @@ ExtraRolesAmongUs - Idea for the Engineer and Medic role came from NotHunter101.
 Among-Us-Sheriff-Mod - Idea for the Sheriff role came from Woodi-dev
 TooManyRolesMods - Idea for the Detective and Time Master roles comes from Hardel-DW. Also some code snippets from their implementation were used.
 TownOfUs - Idea for the Swapper, Shifter, Arsonist and a similar Mayor role came from Slushiegoose
-Ottomated - Idea for the 
-Morphling, Snitch and Camouflager role came from Ottomated
+Ottomated - Idea for the Morphling, Snitch and Camouflager role came from Ottomated
 Crowded-Mod - Our implementation for 10+ player lobbies was inspired by the one from the Crowded Mod Team
 Goose-Goose-Duck - Idea for the Vulture role came from Slushiegoose
 TheEpicRoles - Idea for the first kill shield (partly) and the tabbed option menu (fully + some code), by LaicosVK DasMonschta Nova
@@ -124,14 +112,14 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
 
             Announcement creditsAnnouncement = new()
             {
-                Id = "torCredits",
+                Id = "Credits",
                 Language = 0,
                 Number = 500,
-                Title = "The Other Us\nCredits & Resources",
+                Title = "The Other Us Edited\nCredits & Resources",
                 ShortTitle = "TOU Credits",
                 SubTitle = "",
                 PinState = false,
-                Date = "01.07.2021",
+                Date = "03.03.2024",
                 Text = creditsString
             };
             __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p =>

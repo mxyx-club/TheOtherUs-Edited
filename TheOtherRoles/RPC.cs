@@ -1848,18 +1848,6 @@ public static class RPCProcedure
         Shifter.futureShift = Helpers.playerById(playerId);
     }
 
-    public static List<Vector3> FindVentPoss()
-    {
-        var poss = new List<Vector3>();
-        foreach (var vent in DestroyableSingleton<ShipStatus>.Instance.AllVents)
-        {
-            var Transform = vent.transform;
-            var position = Transform.position;
-            poss.Add(new Vector3(position.x, position.y + 0.12f, position.z - 50));
-        }
-        return poss;
-    }
-
     public static void disperse()
     {
         var skeldSpawn = new List<Vector3>
@@ -2070,7 +2058,7 @@ public static class RPCProcedure
 
                 if (Disperser.DispersesToVent)
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = FindVentPoss()[rnd.Next(FindVentPoss().Count)];
+                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = FindVentPoss.findVentPoss()[rnd.Next(FindVentPoss.findVentPoss().Count)];
                 }
                 else
                 {

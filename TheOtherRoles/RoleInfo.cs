@@ -64,7 +64,7 @@ public class RoleInfo
     public static RoleInfo bodyguard = new("保镖", BodyGuard.color, "用自己的生命保护他人", "用自己的生命保护他人", RoleId.BodyGuard);
     public static RoleInfo lighter = new("执灯人", Lighter.color, "你 是 一 个 电 灯 泡a.a", "你的灯光永不熄灭", RoleId.Lighter);
     public static RoleInfo jumper = new("传送师", Jumper.color, "空！间！错！乱！", "放置锚点并传送", RoleId.Jumper);
-    //public static RoleInfo arcanist = new("魔术师", Arcanist.color, "使用魔术干扰伪装者", "使用魔术干扰伪装者", RoleId.Arcanist);
+    //public static RoleInfo magician = new("魔术师", Magician.color, "使用魔术干扰伪装者", "使用魔术干扰伪装者", RoleId.Magician);
     public static RoleInfo detective = new("侦探", Detective.color, "从脚印之中发现<color=#FF1919FF>伪装者</color>", "检查足迹并检验尸体", RoleId.Detective);
     public static RoleInfo timeMaster = new("时间之主", TimeMaster.color, "知道我刚在时空旅行的时候见到谁了么?", "用你的护盾保护你自己", RoleId.TimeMaster);
     public static RoleInfo veteren = new("老兵", Veteren.color, "没有人比我更懂作案时机", "时刻警惕，反弹！", RoleId.Veteren);
@@ -179,8 +179,7 @@ public class RoleInfo
         medium,
         trapper,
         prophet,
-        //魔术师
-        //arcanist
+        //Magician
 
         disperser,
         poucher,
@@ -252,7 +251,7 @@ public class RoleInfo
                 if (Vip.vip.Any(x => x.PlayerId == p.PlayerId)) infos.Add(vip);
                 if (p == Tiebreaker.tiebreaker) infos.Add(tiebreaker);
                 if (p == Indomitable.indomitable) infos.Add(indomitable);
-                if (p == Cursed.cursed) infos.Add(cursed);
+                if (p == Cursed.cursed && !Cursed.showModifier) infos.Add(cursed);
             }
 
             if (p == Lovers.lover1 || p == Lovers.lover2) infos.Add(lover);
