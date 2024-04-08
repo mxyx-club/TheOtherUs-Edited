@@ -38,14 +38,14 @@ jobs:
       - name: unzip BepInEx
         run: unzip BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.688+4901521.zip -d ./Release/
 
-      - name: download Config
+      - name: path
+        run: sudo chmod -R 777 ./Release
+
+      - name: download ExtraData
         run: wget https://raw.githubusercontent.com/mxyx-club/ExtraData/main/ExtraData.zip
 
       - name: unzip ExtraData
         run: unzip ExtraData.zip -d ./Release/
-
-      - name: path
-        run: sudo chmod -R 777 ./Release
 
       - name: download Reactor
         run: wget https://github.com/NuclearPowered/Reactor/releases/download/2.2.0/Reactor.dll -P ./Release/BepInEx/plugins
@@ -59,11 +59,11 @@ jobs:
           name: TheOtherRoles.dll
           path: ./Release/BepInEx/plugins/TheOtherRoles.dll
           
-      - name: 删除多余
+      - name: Del Other Files
         run: rm -rf ./Release/BepInEx/plugins/TheOtherRoles.deps.json ./Release/BepInEx/plugins/TheOtherRoles.pdb
           
       - name: Upload TheOtherUs
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: TheOtherUs
+          name: TheOtherUs.zip
           path: ./Release/
