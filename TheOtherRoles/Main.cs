@@ -27,7 +27,7 @@ namespace TheOtherRoles;
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
 public class TheOtherRolesPlugin : BasePlugin
 {
-    public const string Id = "TheOtherUs.Options.v1"; // Config files name
+    public const string Id = "TheOtherUs.Options.v2"; // Config files name
     public const string ModName = "TheOtherUs";
     public const string VersionString = MyPluginInfo.PLUGIN_VERSION;
     public static uint betaDays = 0; // amount of days for the build to be usable (0 for infinite!)

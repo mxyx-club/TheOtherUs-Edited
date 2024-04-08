@@ -680,6 +680,68 @@ public class CustomOptionHolder
         modifiersCountMax = CustomOption.Create(13, Types.General,
             cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "最大附加职业数"), 15f, 0f, 30f, 1f);
 
+
+        //-------------------------- Other options 1 - 599 -------------------------- //
+
+        resteButtonCooldown = CustomOption.Create(20, Types.General, "游戏开局时重置CD", 10f, 2.5f, 30f, 2.5f, null, true);
+
+        maxNumberOfMeetings = CustomOption.Create(21, Types.General, "会议总次数(不计入市长会议次数)", 10, 0, 15, 1, null, true);
+        blockSkippingInEmergencyMeetings = CustomOption.Create(22, Types.General, "紧急会议禁止跳过", false);
+        noVoteIsSelfVote = CustomOption.Create(23, Types.General, "不投票默认投自己", false, blockSkippingInEmergencyMeetings);
+        shieldFirstKill = CustomOption.Create(24, Types.General, "首刀保护", false);
+        hidePlayerNames = CustomOption.Create(25, Types.General, "隐藏玩家名字", false);
+        hideOutOfSightNametags = CustomOption.Create(26, Types.General, "隐藏受阻碍的玩家名称", true);
+        hideVentAnimOnShadows = CustomOption.Create(27, Types.General, "隐藏视野外管道动画", false);
+        showButtonTarget = CustomOption.Create(28, Types.General, "技能按钮显示目标", true);
+        impostorSeeRoles = CustomOption.Create(30, Types.General, "内鬼可见队友职业", false);
+        blockGameEnd = CustomOption.Create(29, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "强力职业在场不结束游戏"), true);
+        allowModGuess = CustomOption.Create(31, Types.General, "允许猜测部分附加职业", false);
+
+        transparentTasks = CustomOption.Create(40, Types.General, "任务界面透明", false, null, true);
+        disableMedbayWalk = CustomOption.Create(41, Types.General, "任务动画不可见", false);
+        allowParallelMedBayScans = CustomOption.Create(44, Types.General, "允许同时进行扫描任务", false);
+        finishTasksBeforeHauntingOrZoomingOut = CustomOption.Create(42, Types.General, "未完成任务前不能使用跟随及千里眼", false);
+        preventTaskEnd = CustomOption.Create(43, Types.General, "阻止任务结束游戏", false);
+        //Map options
+        randomGameStartPosition = CustomOption.Create(50, Types.General, "随机出生点", false, null, true);
+        randomGameStartToVents = CustomOption.Create(51, Types.General, "随机出生在通风口上", false, randomGameStartPosition);
+
+        enableMiraModify = CustomOption.Create(70, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Mira"), false, null, true);
+        miraVitals = CustomOption.Create(71, Types.General, "添加生命检测装置", false, enableMiraModify);
+
+        enableBetterPolus = CustomOption.Create(80, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Polus"), false, null, true);
+        movePolusVents = CustomOption.Create(81, Types.General, "改变管道布局", false, enableBetterPolus);
+        addPolusVents = CustomOption.Create(82, Types.General, "添加新管道\n (样本室-办公室-运输船)", false, enableBetterPolus);
+        movePolusVitals = CustomOption.Create(83, Types.General, "将生命检测仪移动到实验室", false, enableBetterPolus);
+        swapNavWifi = CustomOption.Create(84, Types.General, "重启WIFI与导航任务位置交换", false, enableBetterPolus);
+        moveColdTemp = CustomOption.Create(85, Types.General, "温度调节任务移动至配电室下方", false, enableBetterPolus);
+
+        enableAirShipModify = CustomOption.Create(90, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "AirShip"), false, null, true);
+        airshipOptimize = CustomOption.Create(91, Types.General, "优化地图", false, enableAirShipModify);
+        addAirShipVents = CustomOption.Create(92, Types.General, "添加新管道\n (会议室-配电室)", false, enableAirShipModify);
+        airshipLadder = CustomOption.Create(93, Types.General, "增加额外梯子\n (会议室-间隙室)", false, enableAirShipModify);
+
+        enableFungleModify = CustomOption.Create(100, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Fungle"), false, null, true);
+        fungleElectrical = CustomOption.Create(101, Types.General, "添加电力系统\n (食堂-实验室-上引擎)", false, enableFungleModify);
+
+        enableCamoComms = CustomOption.Create(120, Types.General, cs(Color.red, "通信破坏开启小黑人"), false, null, true);
+        restrictDevices = CustomOption.Create(121, Types.General, "限制信息设备使用", ["否", "每一回合", "每局游戏"]);
+        //restrictAdmin = CustomOption.Create(122, Types.General, "限制使用管理室地图时长", 30f, 0f, 600f, 5f, restrictDevices);
+        restrictCameras = CustomOption.Create(123, Types.General, "限制使用监控时长", 30f, 0f, 600f, 5f, restrictDevices);
+        restrictVents = CustomOption.Create(124, Types.General, "限制使用心电图时长", 30f, 0f, 600f, 5f, restrictDevices);
+        disableCamsRound1 = CustomOption.Create(125, Types.General, "第一回合无法使用监控", false);
+        camsNightVision = CustomOption.Create(126, Types.General, "熄灯时监控开启夜视模式", false, null, true);
+        camsNoNightVisionIfImpVision = CustomOption.Create(127, Types.General, "内鬼无视监控的夜视模式", false, camsNightVision);
+
+        dynamicMap = CustomOption.Create(130, Types.General, "随机地图玩法", false, null, true);
+        dynamicMapEnableSkeld = CustomOption.Create(131, Types.General, "Skeld", rates, dynamicMap);
+        dynamicMapEnableMira = CustomOption.Create(132, Types.General, "Mira", rates, dynamicMap);
+        dynamicMapEnablePolus = CustomOption.Create(133, Types.General, "Polus", rates, dynamicMap);
+        dynamicMapEnableAirShip = CustomOption.Create(134, Types.General, "Airship", rates, dynamicMap);
+        dynamicMapEnableFungle = CustomOption.Create(135, Types.General, "Fungle", rates, dynamicMap);
+        dynamicMapEnableSubmerged = CustomOption.Create(136, Types.General, "Submerged", rates, dynamicMap);
+        dynamicMapSeparateSettings = CustomOption.Create(137, Types.General, "使用随机地图设置预设", false, dynamicMap);
+
         //-------------------------- Impostor Options 10000-19999 -------------------------- //
 
         modifierAssassin = CustomOption.Create(10000, Types.Impostor, cs(Color.red, "刺客"), rates, null, true);
@@ -1225,64 +1287,6 @@ public class CustomOptionHolder
         propHuntSpeedboostCooldown = CustomOption.Create(4017, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑冷却时间"), 45f, 2.5f, 120f, 2.5f, propHuntSpeedboostEnabled);
         propHuntSpeedboostDuration = CustomOption.Create(4018, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑持续时间"), 10f, 2.5f, 30f, 2.5f, propHuntSpeedboostEnabled);
         propHuntSpeedboostSpeed = CustomOption.Create(4019, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑提升速度"), 2f, 1.25f, 5f, 0.25f, propHuntSpeedboostEnabled);
-
-        //-------------------------- Other options 1 - 599 -------------------------- //
-
-        resteButtonCooldown = CustomOption.Create(14, Types.General, "游戏开局时重置CD", 10f, 2.5f, 30f, 2.5f);
-        maxNumberOfMeetings = CustomOption.Create(15, Types.General, "会议总次数(不计入市长会议次数)", 10, 0, 15, 1, null, true);
-        blockSkippingInEmergencyMeetings = CustomOption.Create(16, Types.General, "紧急会议禁止跳过", false);
-        noVoteIsSelfVote = CustomOption.Create(17, Types.General, "不投票默认投自己", false, blockSkippingInEmergencyMeetings);
-        blockGameEnd = CustomOption.Create(29, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "强力职业在场不结束游戏"), true);
-        hidePlayerNames = CustomOption.Create(18, Types.General, "隐藏玩家名字", false);
-        allowParallelMedBayScans = CustomOption.Create(19, Types.General, "允许同时进行扫描任务", false);
-        allowModGuess = CustomOption.Create(20, Types.General, "允许猜测部分附加职业", false);
-        shieldFirstKill = CustomOption.Create(21, Types.General, "首刀保护", false);
-        hideOutOfSightNametags = CustomOption.Create(22, Types.General, "隐藏受阻碍的玩家名称", true);
-        hideVentAnimOnShadows = CustomOption.Create(23, Types.General, "隐藏视野外管道动画", false);
-        finishTasksBeforeHauntingOrZoomingOut = CustomOption.Create(24, Types.General, "未完成所有任务前不能使用跟随及千里眼", true);
-        camsNightVision = CustomOption.Create(25, Types.General, "熄灯时监控开启夜视模式", false, null, true);
-        camsNoNightVisionIfImpVision = CustomOption.Create(26, Types.General, "内鬼无视监控的夜视模式", false, camsNightVision);
-        impostorSeeRoles = CustomOption.Create(27, Types.General, "内鬼可见队友职业", false);
-        transparentTasks = CustomOption.Create(28, Types.General, "任务界面透明", false);
-        dynamicMap = CustomOption.Create(51, Types.General, "随机地图", false, null, true);
-        preventTaskEnd = CustomOption.Create(43, Types.General, "阻止任务结束游戏", false);
-        dynamicMapEnableSkeld = CustomOption.Create(52, Types.General, "Skeld", rates, dynamicMap);
-        dynamicMapEnableMira = CustomOption.Create(53, Types.General, "Mira", rates, dynamicMap);
-        dynamicMapEnablePolus = CustomOption.Create(54, Types.General, "Polus", rates, dynamicMap);
-        dynamicMapEnableAirShip = CustomOption.Create(55, Types.General, "Airship", rates, dynamicMap);
-        dynamicMapEnableFungle = CustomOption.Create(56, Types.General, "Fungle", rates, dynamicMap);
-        dynamicMapEnableSubmerged = CustomOption.Create(57, Types.General, "Submerged", rates, dynamicMap);
-        dynamicMapSeparateSettings = CustomOption.Create(58, Types.General, "使用随机地图设置预设", false, dynamicMap);
-
-        //Map options
-        randomGameStartPosition = CustomOption.Create(7910, Types.General, "随机出生点", false);
-        randomGameStartToVents = CustomOption.Create(7911, Types.General, "随机出生在通风口上", false, randomGameStartPosition);
-        enableBetterPolus = CustomOption.Create(7801, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Polus"), false);
-        movePolusVents = CustomOption.Create(7802, Types.General, "改变管道布局", false, enableBetterPolus);
-        addPolusVents = CustomOption.Create(7803, Types.General, "添加新管道\n (样本室-办公室-运输船)", false, enableBetterPolus);
-        movePolusVitals = CustomOption.Create(7804, Types.General, "将生命检测仪移动到实验室", false, enableBetterPolus);
-        swapNavWifi = CustomOption.Create(7805, Types.General, "重启WIFI与导航任务位置交换", false, enableBetterPolus);
-        moveColdTemp = CustomOption.Create(7806, Types.General, "温度调节任务移动至配电室下方", false, enableBetterPolus);
-
-        enableMiraModify = CustomOption.Create(7811, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Mira"), false);
-        miraVitals = CustomOption.Create(7812, Types.General, "添加生命检测装置", false, enableMiraModify);
-
-        enableAirShipModify = CustomOption.Create(7821, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "AirShip"), false);
-        airshipOptimize = CustomOption.Create(7822, Types.General, "优化地图", false, enableAirShipModify);
-        addAirShipVents = CustomOption.Create(7823, Types.General, "添加新管道\n (会议室-配电室)", false, enableAirShipModify);
-        airshipLadder = CustomOption.Create(7824, Types.General, "增加额外梯子\n (会议室-间隙室)", false, enableAirShipModify);
-
-        enableFungleModify = CustomOption.Create(7831, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Fungle"), false);
-        fungleElectrical = CustomOption.Create(7832, Types.General, "添加电力系统\n (食堂-实验室-上引擎)", false, enableFungleModify);
-
-        enableCamoComms = CustomOption.Create(7901, Types.General, cs(Color.red, "通信破坏开启小黑人"), false);
-        disableMedbayWalk = CustomOption.Create(7902, Types.General, "任务动画不可见", false);
-        restrictDevices = CustomOption.Create(7903, Types.General, "限制信息设备使用", new[] { "否", "每一回合", "每局游戏" });
-        //restrictAdmin = CustomOption.Create(7904, Types.General, "Restrict Admin Table", 30f, 0f, 600f, 5f, restrictDevices);
-        restrictCameras = CustomOption.Create(7905, Types.General, "限制监控观看", 30f, 0f, 600f, 5f, restrictDevices);
-        restrictVents = CustomOption.Create(7906, Types.General, "限制心电图观看", 30f, 0f, 600f, 5f, restrictDevices);
-        disableCamsRound1 = CustomOption.Create(7907, Types.General, "第一回合无法看监控", false);
-        showButtonTarget = CustomOption.Create(7908, Types.General, "技能按钮显示目标", true);
 
         blockedRolePairings.Add((byte)RoleId.Vampire, new[] { (byte)RoleId.Warlock });
         blockedRolePairings.Add((byte)RoleId.Witch, new[] { (byte)RoleId.Warlock });
