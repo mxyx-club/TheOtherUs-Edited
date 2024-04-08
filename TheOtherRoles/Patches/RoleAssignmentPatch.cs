@@ -39,7 +39,7 @@ internal class GameOptionsDataGetAdjustedNumImpostorsPatch
         else if (GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal)
         {
             // Ignore Vanilla impostor limits in TOR Games.
-            __result = Mathf.Clamp(GameOptionsManager.Instance.CurrentGameOptions.NumImpostors, 1, 3);
+            __result = Mathf.Clamp(GameOptionsManager.Instance.CurrentGameOptions.NumImpostors, 1, 15);
         }
     }
 }

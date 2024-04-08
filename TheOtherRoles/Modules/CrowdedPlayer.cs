@@ -16,7 +16,7 @@ public static class CrowdedPlayer
 {
     public static int MaxPlayer = 120;
 
-    public static int MaxImpostor = MaxPlayer / 5;
+    public static int MaxImpostor = 15;
 
     public static bool Enable = true;
 
@@ -56,7 +56,7 @@ public static class CrowdedPlayer
         if (!Enable) return true;
         return __instance.MaxPlayers > maxExpectedPlayers ||
                __instance.NumImpostors < 1 ||
-               __instance.NumImpostors + 1 > maxExpectedPlayers / 2 ||
+               __instance.NumImpostors + 1 > maxExpectedPlayers / 4 ||
                __instance.KillDistance is < 0 or > 2 ||
                __instance.PlayerSpeedMod is <= 0f or > 3f;
     }
@@ -122,7 +122,7 @@ public static class CrowdedPlayer
             playerButton.OnClick.AddListener((Action)(() =>
             {
                 var maxPlayers = byte.Parse(text.text);
-                var maxImp = Mathf.Min(__instance.GetTargetOptions().NumImpostors, maxPlayers / 2);
+                var maxImp = Mathf.Min(__instance.GetTargetOptions().NumImpostors, maxPlayers / 4);
                 __instance.GetTargetOptions().SetInt(Int32OptionNames.NumImpostors, maxImp);
                 __instance.ImpostorButtons[1].TextMesh.text = maxImp.ToString();
                 __instance.SetMaxPlayersButtons(maxPlayers);
@@ -153,7 +153,7 @@ public static class CrowdedPlayer
             var newVal = Mathf.Clamp(
                 byte.Parse(secondButtonText.text) - 1,
                 1,
-                __instance.GetTargetOptions().MaxPlayers / 2
+                __instance.GetTargetOptions().MaxPlayers / 4
             );
 
             __instance.SetImpostorButtons(newVal);
@@ -171,7 +171,7 @@ public static class CrowdedPlayer
             var newVal = Mathf.Clamp(
                 byte.Parse(secondButtonText.text) + 1,
                 1,
-                __instance.GetTargetOptions().MaxPlayers / 2
+                __instance.GetTargetOptions().MaxPlayers / 4
             );
             __instance.SetImpostorButtons(newVal);
             secondButtonText.text = newVal.ToString();
