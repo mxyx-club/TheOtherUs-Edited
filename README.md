@@ -53,6 +53,7 @@ Even more roles are coming soon.
     - ButtonBarry: Won't be given to the Mayor
     - Snitch: Can't be guessed during the meeting after being exposed, and now given an option of expose the range of Neutral
     - Jumper & Escapist: Given option that can increase numbers of teleportation, to avoid the problem of only teleport once a round
+    - 告密者：目前可以在会议中查看红名（还无法得知具体职业）
 
  - #### Bug fixed:
 
