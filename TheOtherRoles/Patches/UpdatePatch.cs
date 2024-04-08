@@ -1,8 +1,8 @@
+using AmongUs.GameOptions;
+using InnerNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AmongUs.GameOptions;
-using InnerNet;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;

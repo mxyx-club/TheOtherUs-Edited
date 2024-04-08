@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AmongUs.GameOptions;
 using PowerTools;
 using Reactor.Utilities.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Utilities;
@@ -884,12 +884,12 @@ internal class SurveillanceMinigamePatch
     {
         if (!nightVisionIsActive) return;
         foreach (var deadBody in Object.FindObjectsOfType<DeadBody>())
-        foreach (var component in new SpriteRenderer[2]
-                     { deadBody.bodyRenderers.FirstOrDefault(), deadBody.bloodSplatter })
-        {
-            component.material.SetColor("_BackColor", Palette.ShadowColors[11]);
-            component.material.SetColor("_BodyColor", Palette.PlayerColors[11]);
-        }
+            foreach (var component in new SpriteRenderer[2]
+                         { deadBody.bodyRenderers.FirstOrDefault(), deadBody.bloodSplatter })
+            {
+                component.material.SetColor("_BackColor", Palette.ShadowColors[11]);
+                component.material.SetColor("_BodyColor", Palette.PlayerColors[11]);
+            }
     }
 
     [HarmonyPatch(typeof(SurveillanceMinigame), nameof(SurveillanceMinigame.Begin))]

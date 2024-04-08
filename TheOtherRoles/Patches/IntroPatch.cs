@@ -1,7 +1,7 @@
-using System;
-using System.Linq;
 using Hazel;
 using Il2CppSystem.Collections.Generic;
+using System;
+using System.Linq;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
@@ -19,7 +19,7 @@ internal class IntroCutsceneOnDestroyPatch
 {
     public static PoolablePlayer playerPrefab;
     public static Vector3 bottomLeft;
-    
+
     public static void Prefix(IntroCutscene __instance)
     {
         // Generate and initialize player icons

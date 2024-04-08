@@ -35,18 +35,18 @@ public static class TasksHandler
             //任务结算
             foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
             {
-                if ((playerInfo.Object && playerInfo.Object.hasAliveKillingLover()) 
+                if ((playerInfo.Object && playerInfo.Object.hasAliveKillingLover())
                     // Tasks do not count if a Crewmate has an alive killing Lover
-                    || playerInfo.PlayerId == Lawyer.lawyer?.PlayerId 
+                    || playerInfo.PlayerId == Lawyer.lawyer?.PlayerId
                     // Tasks of the Lawyer do not count
-                    || (playerInfo.PlayerId == Pursuer.pursuer?.PlayerId) 
+                    || (playerInfo.PlayerId == Pursuer.pursuer?.PlayerId)
                     // Tasks of the Pursuer only count, if he's alive
-                    || playerInfo.PlayerId == Swooper.swooper?.PlayerId 
+                    || playerInfo.PlayerId == Swooper.swooper?.PlayerId
                     // Tasks of the Swooper do not count
-                    || playerInfo.PlayerId == Thief.thief?.PlayerId 
+                    || playerInfo.PlayerId == Thief.thief?.PlayerId
                     // Thief's tasks only count after joining crew team as sheriff (and then the thief is not the thief anymore)
-                    || playerInfo.PlayerId == Amnisiac.amnisiac?.PlayerId 
-                    // Thief's tasks only count after joining crew team as sheriff (and then the thief is not the thief anymore)
+                    || playerInfo.PlayerId == Amnisiac.amnisiac?.PlayerId
+                   // Thief's tasks only count after joining crew team as sheriff (and then the thief is not the thief anymore)
                    )
                     continue;
                 var (playerCompleted, playerTotal) = taskInfo(playerInfo);

@@ -167,8 +167,8 @@ public class OnGameEndPatch
         var loversWin = Lovers.existingAndAlive() &&
                         (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin ||
                          (GameManager.Instance.DidHumansWin(gameOverReason) &&
-                          !Lovers .existingWithKiller())); 
-        var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && 
+                          !Lovers.existingWithKiller()));
+        var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin &&
                             ((Jackal.jackal != null && !Jackal.jackal.Data.IsDead) ||
                             (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
         var vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
@@ -385,7 +385,7 @@ public class EndGameManagerSetUpPatch
         foreach (var pb in __instance.transform.GetComponentsInChildren<PoolablePlayer>())
             Object.Destroy(pb.gameObject);
         var num = Mathf.CeilToInt(7.5f);
-        var list = TempData.winners.ToArray().ToList().OrderBy(delegate(WinningPlayerData b)
+        var list = TempData.winners.ToArray().ToList().OrderBy(delegate (WinningPlayerData b)
         {
             if (!b.IsYou) return 0;
             return -1;
@@ -427,7 +427,9 @@ public class EndGameManagerSetUpPatch
             poolablePlayer.cosmetics.nameText.transform.localPosition = localPosition;
             poolablePlayer.cosmetics.nameText.text = winningPlayerData2.PlayerName;
 
-            foreach (var roles in from data in AdditionalTempData.playerRoles where data.PlayerName == winningPlayerData2.PlayerName select poolablePlayer.cosmetics.nameText.text +=
+            foreach (var roles in from data in AdditionalTempData.playerRoles
+                                  where data.PlayerName == winningPlayerData2.PlayerName
+                                  select poolablePlayer.cosmetics.nameText.text +=
                          $"\n{string.Join("\n", data.Roles.Select(x => Helpers.cs(x.color, x.name)))}")
             {
             }
@@ -492,14 +494,14 @@ public class EndGameManagerSetUpPatch
                 textRenderer.color = Jackal.color;
                 break;
             case WinCondition.EveryoneDied:
-                    textRenderer.text = "无人生还";
-                    textRenderer.color = Palette.DisabledGrey;
-                    __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey); 
+                textRenderer.text = "无人生还";
+                textRenderer.color = Palette.DisabledGrey;
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.AkujoWin:
-                    textRenderer.text = "请给我扭曲你人生的权利！";
-                    textRenderer.color = Akujo.color;
-                    __instance.BackgroundBar.material.SetColor("_Color", Akujo.color);
+                textRenderer.text = "请给我扭曲你人生的权利！";
+                textRenderer.color = Akujo.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Akujo.color);
                 break;
 
             case WinCondition.MiniLose:

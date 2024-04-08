@@ -1,8 +1,8 @@
-﻿using System;
+﻿using InnerNet;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using InnerNet;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Utilities;
@@ -40,7 +40,7 @@ public static class CredentialsPatch
                 __instance.text.text =
                     $"{ModTranslation.getString("fullCredentialsVersion2")} v{TheOtherRolesPlugin.Version + "\n" + ModTranslation.getString("gameTitle2")}\n<size=90%>{gameModeText}</size>" +
                     __instance.text.text;
-                if (CachedPlayer.LocalPlayer.Data.IsDead ||(!(CachedPlayer.LocalPlayer.PlayerControl == null) &&
+                if (CachedPlayer.LocalPlayer.Data.IsDead || (!(CachedPlayer.LocalPlayer.PlayerControl == null) &&
                                                            (CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 ||
                                                             CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover2)))
                 {

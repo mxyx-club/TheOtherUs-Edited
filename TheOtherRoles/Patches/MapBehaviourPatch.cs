@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Reactor.Utilities.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Reactor.Utilities.Extensions;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
@@ -177,7 +177,7 @@ internal static class MapBehaviourPatch
             var network = GetNetworkFor(vent);
             if (network == null)
             {
-                VentNetworks.Add([..vent.NearbyVents.Where(x => x != null), vent]);
+                VentNetworks.Add([.. vent.NearbyVents.Where(x => x != null), vent]);
             }
             else
             {

@@ -1,10 +1,10 @@
+using AmongUs.QuickChat;
+using Hazel;
+using Reactor.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AmongUs.QuickChat;
-using Hazel;
-using Reactor.Utilities;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
@@ -325,15 +325,15 @@ internal class MeetingHudPatch
                     else
                     {
                         var focusedTarget = Helpers.playerById(__instance.playerStates[buttonTarget].TargetPlayerId);
-                        if 
+                        if
                         (
-                            __instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted) 
-                            || 
-                            focusedTarget == null 
-                            || 
+                            __instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)
+                            ||
+                            focusedTarget == null
+                            ||
                             (
-                                HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) <= 0 
-                                && 
+                                HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) <= 0
+                                &&
                                 HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId)
                                 )
                             ||
@@ -383,7 +383,7 @@ internal class MeetingHudPatch
 
                         if (dyingTarget == CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer)
                             Doomsayer.CanShoot = false;
-                        
+
                         // Shoot player and send chat info if activated
                         var writer = AmongUsClient.Instance.StartRpcImmediately(
                             CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GuesserShoot,
@@ -411,7 +411,7 @@ internal class MeetingHudPatch
                             {
                                 if (x.transform.FindChild("ShootButton") != null)
                                     Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
-                            }); 
+                            });
                     }
                 }));
 
@@ -642,10 +642,10 @@ internal class MeetingHudPatch
                 }
 
                 if (swapped1 == null || swapped2 == null) return dictionary;
-              
+
                 dictionary.TryAdd(swapped1.TargetPlayerId, 0);
                 dictionary.TryAdd(swapped2.TargetPlayerId, 0);
-              
+
                 (dictionary[swapped1.TargetPlayerId], dictionary[swapped2.TargetPlayerId]) = (
                     dictionary[swapped2.TargetPlayerId], dictionary[swapped1.TargetPlayerId]);
             }

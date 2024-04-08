@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Hazel;
 using InnerNet;
 using Reactor.Utilities.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -31,7 +31,7 @@ public class GameStartManagerPatch
                 writer.Write((byte)TORMapOptions.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
-            
+
 #if DEBUG
                return;
 #endif
@@ -42,7 +42,7 @@ public class GameStartManagerPatch
             }
         }
     }
-    
+
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
     public class AmongUsClientOnOnGameEndPatch
     {
@@ -152,17 +152,17 @@ public class GameStartManagerPatch
                             versionMismatch = true;
                             break;
                         default:
-                        {
-                            if (!PV.GuidMatches())
                             {
-                                // version presumably matches, check if Guid matches
-                                message +=
-                                    $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了修改过的TheOtherUs v{playerVersions[client.Id].version.ToString()}\n<size=40%>({PV.guid.ToString()})</size>\n</color>";
-                                versionMismatch = true;
-                            }
+                                if (!PV.GuidMatches())
+                                {
+                                    // version presumably matches, check if Guid matches
+                                    message +=
+                                        $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了修改过的TheOtherUs v{playerVersions[client.Id].version.ToString()}\n<size=40%>({PV.guid.ToString()})</size>\n</color>";
+                                    versionMismatch = true;
+                                }
 
-                            break;
-                        }
+                                break;
+                            }
                     }
                 }
             }
@@ -211,7 +211,8 @@ public class GameStartManagerPatch
                         startingTimer = 0;
                     }
                     startButtonPassiveButton.OnClick.AddListener((Action)(() => StopStartFunc()));
-                    __instance.StartCoroutine(Effects.Lerp(.1f, new System.Action<float>((p) => {
+                    __instance.StartCoroutine(Effects.Lerp(.1f, new System.Action<float>((p) =>
+                    {
                         startButtonText.text = "STOP";
                     })));
 
@@ -275,7 +276,8 @@ public class GameStartManagerPatch
                         startingTimer = 0;
                     }
                     startButtonPassiveButton.OnClick.AddListener((Action)(() => StopStartFunc()));
-                    __instance.StartCoroutine(Effects.Lerp(.1f, new System.Action<float>((p) => {
+                    __instance.StartCoroutine(Effects.Lerp(.1f, new System.Action<float>((p) =>
+                    {
                         startButtonText.text = "STOP";
                     })));
 
@@ -434,5 +436,5 @@ public class GameStartManagerPatch
             return continueStart;
         }
     }
-    
+
 }

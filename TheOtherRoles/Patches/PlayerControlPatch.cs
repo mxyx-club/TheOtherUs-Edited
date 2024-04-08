@@ -1,20 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
 using InnerNet;
-using Reactor.Utilities.Extensions;
-using Sentry.Internal;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
@@ -2387,7 +2384,7 @@ public static class PlayerPhysicsFixedUpdate
             shouldInvert &&
             GameData.Instance &&
             __instance.myPlayer.CanMove)
-            __instance.body.velocity *= -1; 
+            __instance.body.velocity *= -1;
         if (__instance.AmOwner &&
                 AmongUsClient.Instance &&
                 AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started &&

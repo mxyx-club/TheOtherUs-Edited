@@ -1,9 +1,7 @@
-﻿using System;
+﻿using PowerTools;
+using System;
 using System.IO;
 using System.Linq;
-using HarmonyLib;
-using PowerTools;
-using TheOtherRoles;
 using TheOtherRoles.Modules.CustomHats.Extensions;
 using UnityEngine;
 

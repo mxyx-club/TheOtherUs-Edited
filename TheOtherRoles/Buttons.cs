@@ -965,7 +965,7 @@ internal static class HudManagerStartPatch
         // ButtonBarry Meetings
         buttonBarryButton = new CustomButton(
             () =>
-            {                
+            {
                 //CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
                 ButtonBarry.remoteMeetingsLeft--;
 
@@ -1071,7 +1071,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                morphlingButton.Timer = morphlingButton.MaxTimer; 
+                morphlingButton.Timer = morphlingButton.MaxTimer;
                 morphlingButton.Sprite = Morphling.getSampleSprite();
                 morphlingButton.isEffectActive = false;
                 morphlingButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
@@ -1401,7 +1401,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.lowerRowRight, //brb
             __instance,
             KeyCode.F,
-            buttonText:ModTranslation.getString("TrackerDeadBodyText")
+            buttonText: ModTranslation.getString("TrackerDeadBodyText")
         );
 
         privateInvestigatorWatchButton = new CustomButton(
@@ -3403,7 +3403,7 @@ internal static class HudManagerStartPatch
             {
                 //CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
                 Mayor.remoteMeetingsLeft--;
-                
+
                 Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                 Helpers.handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
@@ -3428,7 +3428,7 @@ internal static class HudManagerStartPatch
                     writer.Write(byte.MaxValue);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                 }
-                
+
                 /*
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                              (byte)CustomRPC.MayorMeeting, SendOption.Reliable);
@@ -3565,8 +3565,9 @@ internal static class HudManagerStartPatch
                        !CachedPlayer.LocalPlayer.Data.IsDead;
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Bomber.isPlanted; },
-            () => {
-                bomberButton.Timer = bomberButton.MaxTimer; 
+            () =>
+            {
+                bomberButton.Timer = bomberButton.MaxTimer;
             },
             Bomber.getButtonSprite(),
             CustomButton.ButtonPositions.upperRowLeft,
@@ -3616,7 +3617,7 @@ internal static class HudManagerStartPatch
                     (byte)CustomRPC.DefuseBomb, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.defuseBomb();
-                
+
                 defuseButton.Timer = 0f;
                 Bomb.canDefuse = false;
             },

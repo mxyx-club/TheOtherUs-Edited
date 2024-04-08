@@ -1,5 +1,5 @@
-using System;
 using BepInEx.Logging;
+using System;
 
 namespace TheOtherRoles.Logs;
 

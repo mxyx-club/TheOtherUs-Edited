@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AmongUs.Data;
+﻿using AmongUs.Data;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
@@ -10,6 +6,10 @@ using Hazel;
 using InnerNet;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Modules.CustomHats;
@@ -31,7 +31,7 @@ public class TheOtherRolesPlugin : BasePlugin
     public const string ModName = "TheOtherUs";
     public const string VersionString = MyPluginInfo.PLUGIN_VERSION;
     public static uint betaDays = 0; // amount of days for the build to be usable (0 for infinite!)
-    
+
     public static Version Version = Version.Parse(VersionString);
 
     public static TheOtherRolesPlugin Instance;

@@ -1,13 +1,13 @@
+using AmongUs.GameOptions;
+using Hazel;
+using InnerNet;
+using Reactor.Utilities.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using AmongUs.GameOptions;
-using Hazel;
-using InnerNet;
-using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
@@ -521,7 +521,7 @@ public static class Helpers
             player.myTasks.Insert(0, task);
         }
     }
-     
+
     internal static string getRoleString(RoleInfo roleInfo)
     {
         if (roleInfo.name == "Jackal")
@@ -596,7 +596,7 @@ public static class Helpers
                player == Vulture.vulture ||
                Jackal.formerJackals.Any(x => x == player);
     }
-    
+
     public static bool canBeErased(this PlayerControl player)
     {
         return player != Jackal.jackal && player != Juggernaut.juggernaut && player != Swooper.swooper && player != Sidekick.sidekick &&
@@ -1334,7 +1334,7 @@ public static class Helpers
     //好人交换师代码target
     public static bool isShiftNeutral(PlayerControl player)
     {
-        if (CustomOptionHolder.modifierShiftNeutral.getBool()) 
+        if (CustomOptionHolder.modifierShiftNeutral.getBool())
         {
             var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
             if (roleInfo != null)
@@ -1347,13 +1347,15 @@ public static class Helpers
                        roleInfo.color.Equals(Swooper.color) ||
                        roleInfo.color.Equals(Arsonist.color);
             return false;
-        }else {
+        }
+        else
+        {
             var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
             if (roleInfo != null)
                 return roleInfo.isNeutral;
             return false;
         }
-        
+
     }
 
     public static bool isKiller(PlayerControl player)

@@ -1,8 +1,8 @@
+using Hazel;
+using PowerTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hazel;
-using PowerTools;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
@@ -526,7 +526,8 @@ internal class ExileControllerWrapUpPatch
             {
                 CachedPlayer.LocalPlayer.PlayerControl.transform.position = FindVentPoss.findVentPoss()[rnd.Next(FindVentPoss.findVentPoss().Count)];
             }
-            else {
+            else
+            {
                 var airshipSpawn = new List<Vector3>(); //no spawns since it already has random spawns
                 switch (GameOptionsManager.Instance.currentNormalGameOptions.MapId)
                 {

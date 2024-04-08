@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AmongUs.GameOptions;
+﻿using AmongUs.GameOptions;
 using Hazel;
 using Reactor.Utilities.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Utilities;
@@ -920,10 +920,10 @@ internal class RoleManagerSelectRolesPatch
 
             modifiers.RemoveAll(x => x == RoleId.Torch);
         }
-        
+
         if (modifiers.Contains(RoleId.ButtonBarry))
         {
-            var buttonPlayer = new List<PlayerControl>(playerList); 
+            var buttonPlayer = new List<PlayerControl>(playerList);
             buttonPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x == Mayor.mayor);
 
             playerId = setModifierToRandomPlayer((byte)RoleId.ButtonBarry, buttonPlayer);
@@ -931,7 +931,7 @@ internal class RoleManagerSelectRolesPatch
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.ButtonBarry);
         }
-        
+
         if (modifiers.Contains(RoleId.Multitasker))
         {
             var multitaskerCount = 0;
@@ -1032,7 +1032,7 @@ internal class RoleManagerSelectRolesPatch
             case RoleId.Torch:
                 selection = CustomOptionHolder.modifierTorch.getSelection();
                 if (multiplyQuantity) selection *= CustomOptionHolder.modifierTorchQuantity.getQuantity();
-                break;            
+                break;
             case RoleId.Flash:
                 selection = CustomOptionHolder.modifierFlash.getSelection();
                 if (multiplyQuantity) selection *= CustomOptionHolder.modifierFlashQuantity.getQuantity();
@@ -1041,7 +1041,7 @@ internal class RoleManagerSelectRolesPatch
                 selection = CustomOptionHolder.modifierMultitasker.getSelection();
                 if (multiplyQuantity) selection *= CustomOptionHolder.modifierMultitaskerQuantity.getQuantity();
                 break;
-            case RoleId.Vip: 
+            case RoleId.Vip:
                 selection = CustomOptionHolder.modifierVip.getSelection();
                 if (multiplyQuantity) selection *= CustomOptionHolder.modifierVipQuantity.getQuantity();
                 break;
@@ -1057,7 +1057,7 @@ internal class RoleManagerSelectRolesPatch
                 selection = CustomOptionHolder.modifierShifter.getSelection();
                 break;
             case RoleId.EvilGuesser:
-                if(isGuesserGamemode == false)
+                if (isGuesserGamemode == false)
                 {
                     selection = CustomOptionHolder.modifierAssassin.getSelection();
                     if (!Cultist.isCultistGame)

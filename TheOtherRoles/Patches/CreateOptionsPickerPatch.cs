@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AmongUs.GameOptions;
+using System;
 using System.Collections.Generic;
-using AmongUs.GameOptions;
 using TheOtherRoles.Helper;
 using UnityEngine;
 using Object = Il2CppSystem.Object;

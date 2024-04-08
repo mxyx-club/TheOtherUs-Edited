@@ -1,14 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
-using TheOtherRoles;
-using TheOtherRoles.Patches;
-using static TheOtherRoles.TheOtherRoles;
-using System.Linq;
-using InnerNet;
-using TheOtherRoles.Modules;
-using HarmonyLib;
 
 namespace TheOtherRoles.Utilities;
 

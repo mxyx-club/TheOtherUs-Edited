@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AmongUs.GameOptions;
+using System;
 using System.Linq;
-using AmongUs.GameOptions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Utilities;
 using UnityEngine;

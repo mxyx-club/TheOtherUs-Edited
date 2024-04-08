@@ -1,13 +1,13 @@
 #nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
 using InnerNet;
 using PowerTools;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
@@ -360,7 +360,8 @@ public static class RPCProcedure
     {
         foreach (PlayerControl player in CachedPlayer.AllPlayers)
         {
-            if (player.PlayerId == playerId) {
+            if (player.PlayerId == playerId)
+            {
                 switch ((RoleId)roleId)
                 {
                     case RoleId.Jester:
@@ -601,7 +602,7 @@ public static class RPCProcedure
                 break;
             case RoleId.Torch:
                 Torch.torch.Add(player);
-                break;         
+                break;
             case RoleId.Flash:
                 Flash.flash.Add(player);
                 break;
@@ -828,7 +829,7 @@ public static class RPCProcedure
                 if (p == 1f) TimeMaster.shieldActive = false;
             })));
     }
-    
+
     public static void StartMayorMeeting()
     {
         CachedPlayer.LocalPlayer.NetTransform.Halt();
@@ -1759,7 +1760,7 @@ public static class RPCProcedure
         if (player == Blackmailer.blackmailer) Blackmailer.clearAndReload();
         if (player == Follower.follower) Follower.clearAndReload();
         if (player == Bomber.bomber) Bomber.clearAndReload();
-            if (player == Prophet.prophet) Prophet.clearAndReload();
+        if (player == Prophet.prophet) Prophet.clearAndReload();
 
 
         // Other roles
@@ -2789,7 +2790,7 @@ public static class RPCProcedure
         if (target == Sidekick.sidekick)
         {
             Sidekick.sidekick = thief;
-            Jackal.formerJackals.Add(target); 
+            Jackal.formerJackals.Add(target);
             if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(thief.PlayerId))
                 setGuesserGm(thief.PlayerId);
         }
@@ -3563,13 +3564,13 @@ internal class RPCHandlerPatch
             case CustomRPC.ShareGhostInfo:
                 RPCProcedure.receiveGhostInfo(reader.ReadByte(), reader);
                 break;
-                /*
-            case CustomRPC.ShareRoom:
-                var roomPlayer = reader.ReadByte();
-                var roomId = reader.ReadByte();
-                RPCProcedure.shareRoom(roomPlayer, roomId);
-                break;
-                */
+            /*
+        case CustomRPC.ShareRoom:
+            var roomPlayer = reader.ReadByte();
+            var roomId = reader.ReadByte();
+            RPCProcedure.shareRoom(roomPlayer, roomId);
+            break;
+            */
             case CustomRPC.MayorMeeting:
                 RPCProcedure.StartMayorMeeting();
                 break;

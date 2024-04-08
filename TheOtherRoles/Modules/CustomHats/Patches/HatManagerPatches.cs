@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Cpp2IL.Core.Extensions;
+using System.Collections.Generic;
 using System.Linq;
-using Cpp2IL.Core.Extensions;
 
 namespace TheOtherRoles.Modules.CustomHats.Patches;
 

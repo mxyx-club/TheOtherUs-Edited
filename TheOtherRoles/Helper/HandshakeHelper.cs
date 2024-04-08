@@ -1,8 +1,7 @@
+using Hazel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using Hazel;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 
@@ -109,7 +108,7 @@ public static class HandshakeHelper
             info.Start(mode);
         }
     }
-    
+
     public class PlayerVersion(Version version)
     {
         public readonly Version version = version;
@@ -154,7 +153,7 @@ public static class HandshakeHelper
 
         public void Send(ShareMode mode)
         {
-            
+
             Info($"again send mode:{mode} id:{playerId}");
 
             if (AmongUsClient.Instance == null || CachedPlayer.LocalPlayer.PlayerControl == null) return;

@@ -1,7 +1,7 @@
-using System;
-using System.Linq;
 using Hazel;
 using InnerNet;
+using System;
+using System.Linq;
 using TheOtherRoles.Helper;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -72,16 +72,16 @@ public static class ChatCommands
                 {
                     var gm = text[4..].ToLower();
                     var gameMode = CustomGamemodes.Classic;
-                    
+
                     if (gm.StartsWith("prop") || gm.StartsWith("ph"))
                         gameMode = CustomGamemodes.PropHunt;
-                    
+
                     if (gm.StartsWith("guess") || gm.StartsWith("gm"))
                         gameMode = CustomGamemodes.Guesser;
-                    
-                    if (gm.StartsWith("hide") || gm.StartsWith("hn")) 
+
+                    if (gm.StartsWith("hide") || gm.StartsWith("hn"))
                         gameMode = CustomGamemodes.HideNSeek;
-                    
+
                     if (AmongUsClient.Instance.AmHost)
                     {
                         var writer = AmongUsClient.Instance.StartRpcImmediately(
