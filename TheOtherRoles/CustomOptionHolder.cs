@@ -1248,6 +1248,7 @@ public class CustomOptionHolder
         impostorSeeRoles = CustomOption.Create(27, Types.General, "内鬼可见队友职业", false);
         transparentTasks = CustomOption.Create(28, Types.General, "任务界面透明", false);
         dynamicMap = CustomOption.Create(51, Types.General, "随机地图", false, null, true);
+        preventTaskEnd = CustomOption.Create(43, Types.General, "阻止任务结束游戏", false);
         dynamicMapEnableSkeld = CustomOption.Create(52, Types.General, "Skeld", rates, dynamicMap);
         dynamicMapEnableMira = CustomOption.Create(53, Types.General, "Mira", rates, dynamicMap);
         dynamicMapEnablePolus = CustomOption.Create(54, Types.General, "Polus", rates, dynamicMap);
@@ -1286,12 +1287,9 @@ public class CustomOptionHolder
         disableCamsRound1 = CustomOption.Create(7907, Types.General, "第一回合无法看监控", false);
         showButtonTarget = CustomOption.Create(7908, Types.General, "技能按钮显示目标", true);
 
-
         blockedRolePairings.Add((byte)RoleId.Vampire, new[] { (byte)RoleId.Warlock });
-        blockedRolePairings.Add((byte)RoleId.Warlock, new[] { (byte)RoleId.Vampire });
-
         blockedRolePairings.Add((byte)RoleId.Witch, new[] { (byte)RoleId.Warlock });
-        blockedRolePairings.Add((byte)RoleId.Warlock, new[] { (byte)RoleId.Witch });
+        blockedRolePairings.Add((byte)RoleId.Warlock, new[] { (byte)RoleId.Vampire });
 
         blockedRolePairings.Add((byte)RoleId.Vulture, new[] { (byte)RoleId.Cleaner });
         blockedRolePairings.Add((byte)RoleId.Cleaner, new[] { (byte)RoleId.Vulture });

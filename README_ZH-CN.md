@@ -171,8 +171,8 @@ Even more roles are coming soon.
 方块
 
 翻译：
-沫夏悠轩、方块、CC(CN)
-九头蛇(EN)
+CN：沫夏悠轩、CC
+EN：九头蛇
 
 本模组使用了部分[TheOtherRolesGMIA](https://github.com/dabao40/TheOtherRolesGMIA)的代码，感谢Imp11的支持！
 

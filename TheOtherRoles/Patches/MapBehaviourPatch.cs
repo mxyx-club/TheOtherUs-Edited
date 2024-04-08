@@ -60,7 +60,7 @@ internal static class MapBehaviourPatch
                 Object.Destroy(s.Value);
                 herePoints.Remove(s.Key);
             }
-        }
+        }/*
         else if (Snitch.snitch != null && CachedPlayer.LocalPlayer.PlayerId == Snitch.snitch.PlayerId &&
                  !Snitch.snitch.Data.IsDead)
                  //&& Snitch.mode != Snitch.Mode.Chat
@@ -105,7 +105,7 @@ internal static class MapBehaviourPatch
                     }
             }
         }
-
+        */
         foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
         {
             if (vent.name.StartsWith("JackInThe") && !(PlayerControl.LocalPlayer == Trickster.trickster ||

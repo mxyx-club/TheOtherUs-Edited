@@ -751,17 +751,15 @@ public static class PlayerControlFixedUpdatePatch
 
             //Snitch See Roles
             bool snitchFlag = false;
-
-            var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
-            int numberOfTasks = playerTotal - playerCompleted;
-
-            bool completedSnitch = (Snitch.seeInMeeting && CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch && numberOfTasks == 0);
-            bool forImpTeam = p.Data.Role.IsImpostor;
-            bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && Helpers.isKiller(p);
-            bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && Helpers.isEvil(p);
-            bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && Helpers.isNeutral(p);
             if (Snitch.snitch != null && Snitch.seeInMeeting && Snitch.canSeeRoles && !Snitch.snitch.Data.IsDead)
             {
+                var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
+                int numberOfTasks = playerTotal - playerCompleted;
+                bool completedSnitch = (Snitch.seeInMeeting && CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch && numberOfTasks == 0);
+                bool forImpTeam = p.Data.Role.IsImpostor;
+                bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && Helpers.isKiller(p);
+                bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && Helpers.isEvil(p);
+                bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && Helpers.isNeutral(p);
                 snitchFlag = completedSnitch && (p == (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam));
             }
 

@@ -119,7 +119,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
                 ShortTitle = "TOU Credits",
                 SubTitle = "",
                 PinState = false,
-                Date = "03.03.2024",
+                Date = "01.07.2021",
                 Text = creditsString
             };
             __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p =>
