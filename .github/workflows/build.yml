@@ -65,5 +65,5 @@ jobs:
       - name: Upload TheOtherUs
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: TheOtherUs.zip
+          name: TheOtherUs
           path: ./Release/
