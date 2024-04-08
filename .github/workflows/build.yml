@@ -38,6 +38,12 @@ jobs:
       - name: unzip BepInEx
         run: unzip BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.688+4901521.zip -d ./Release/
 
+      - name: download Config
+        run: wget https://raw.githubusercontent.com/mxyx-club/ExtraData/main/ExtraData.zip
+
+      - name: unzip ExtraData
+        run: unzip ExtraData.zip -d ./Release/
+
       - name: path
         run: sudo chmod -R 777 ./Release
 
