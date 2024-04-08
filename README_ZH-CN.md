@@ -166,17 +166,23 @@ Even more roles are coming soon.
 
 <p align="center">
 
-主要开发者：
+### 主要开发者：
 沫夏悠轩、善良的好人、天寸梦初
 
-美工：
+### 美工：
 方块
 
-翻译：
+### 翻译：
 CN：沫夏悠轩、CC
 EN：九头蛇
 
+
 本模组使用了部分[TheOtherRolesGMIA](https://github.com/dabao40/TheOtherRolesGMIA)的代码，感谢Imp11的支持！
+
+
+### Other Credits & Resources:
+
+</p>
 
 [OxygenFilter](https://github.com/NuclearPowered/Reactor.OxygenFilter) - For all the versions between v2.3.0 and v2.6.1, we were using the OxygenFilter for automatic deobfuscation\
 [Reactor](https://github.com/NuclearPowered/Reactor) - The framework used for all versions before v2.0.0\

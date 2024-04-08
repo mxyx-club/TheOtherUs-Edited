@@ -45,7 +45,7 @@ Even more roles are coming soon.
 
  - #### Newly added
 
-    - New Modifier: lastImposter (gain lower kill cd when there is only 1 imposter left)
+    - New Modifier: LastImposter (gain lower kill cooldown when there is only 1 imposter left)
     - When born may choose to born on random vents
     - New ending added: And Then There Were None
     - Akujo: Update with the true love can't win together with the original team
@@ -53,7 +53,7 @@ Even more roles are coming soon.
     - ButtonBarry: Won't be given to the Mayor
     - Snitch: Can't be guessed during the meeting after being exposed, and now given an option of expose the range of Neutral
     - Jumper & Escapist: Given option that can increase numbers of teleportation, to avoid the problem of only teleport once a round
-    - 告密者：目前可以在会议中查看红名（还无法得知具体职业）
+    - Snitch：目前可以在会议中查看邪恶玩家（还无法查看具体职业）
 
  - #### Bug fixed:
 
@@ -65,7 +65,7 @@ Even more roles are coming soon.
 
  - #### Newly added
 
-    - A new role added: Prophet 
+    - New role added: Prophet 
     - Poucher: changed to be Imposters used only
     - Snitch: remake, return to old version (Not fully functional)
     - Flash: Fix the problem of no speed up
@@ -77,7 +77,7 @@ Even more roles are coming soon.
     - Compatible for v2024.3.5
     - Add a "Stop" button when game is about to start
     - Detective: optimize the slow movement when footprints appears
-    - Medic: Medic now can see which player is being protected by Medic, a blue bracket will appear on the name of the player as a signal
+    - Medic: Is now also displayed in meetings to players who can see it, with brackets around the name
 
  - #### Newly added:
 
@@ -90,7 +90,7 @@ Even more roles are coming soon.
  - #### Newly added:
 
     - Fix the bug in Guesser Modifier players will be given multiple roles
-    - Torch: Fix the bug of torch's eyesight
+    - Torch: Fix the bug of torch's Vision
 
 
 ###  v1.0.2:
@@ -109,25 +109,25 @@ Even more roles are coming soon.
  - #### Newly added:
 
     - New roles added: Juggernaut and Doomsayer
-    - synchronized cd at the beginning of game
-    - Add a "hundred players" mod
+    - Synchronized cooldown at the start of game
+    - Integrating the "CrowdedMod" feature into the game
     - Better map options
-    - implant with multi-language, more convinent for further translation on mods with other languages
-    - Fungus forest: add with randomly born and more spots for Disperser
-    - Torch: add an option to increase the rate of eyesight
-    - Shifter: add the option that can switch Neutral roles
-    - Bait: newly add the option of only being given to crewmates
-    - Swooper: now a Neutral role not an Imposter role
-    - Jackal: newly added with a option that Imposters can see if their teammates get turned to follower
-    - Neutral: Their missions are now fake so their missions won't impact on crewmates
-    - Amnisiac: delete the limitation of fake missions (Amnisiac may do missions before acquire a role, but won't impact on crewmates)
+    - Added ModTranslation, more convinent for further translation on mods with other languages
+    - Fungus Aorest: add with randomly born and more spots for Disperser
+    - Torch: Add an option to increase the rate of Vision
+    - Shifter: Add the option that can switch Neutral Roles
+    - Bait: Newly add the option of only being given to Crewmates
+    - Swooper: Now a Neutral role not an Imposter Role
+    - Jackal: Newly added with a option that Imposters can see if their teammates get turned to Sidekick
+    - Neutral: Their tasks are now fake so their tasks won't impact on Crewmates
+    - Amnisiac: Delete the limitation of fake Tasks (Amnisiac may do Tasks before acquire a role, but won't impact on Crewmates)
 
  - #### Bugs fixed
 
-    - Pursuer: can't win with other teams except Imposters
-    - Fungus forest: fix the eyesight problem
-    - Torch: Fix the eyesight problem
-    - Sheriff: fix the problem that can't figure out who is the Deputy in the game
+    - Pursuer: Can't win with other teams except Imposters
+    - Fungle: Fix the Vision problem
+    - Torch: Fix the Vision problem
+    - Sheriff: Fix the problem that can't figure out who is the Deputy in the game
     - Fix other bugs
 
 </details>
@@ -174,10 +174,10 @@ Even more roles are coming soon.
 ## Credits & Resources
 <p align="center">
 
-Team:
+### Team:
 mxyx    Huier-Huang    haoren    Imp11    FangKuaiYa
 
-Former TheOtherUs Team Members:
+### Former TheOtherUs Team Members:
 SpexGH    Xer    FangKuaiYa    mxyx    Huier-Huang
 
 
@@ -186,7 +186,7 @@ Thanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us
 Thanks to miniduikboot & GD for hosting modded servers (and so much more)
 
 
-Other Credits & Resources:
+### Other Credits & Resources:
 
 </p>
 
@@ -195,7 +195,9 @@ Other Credits & Resources:
 [BepInEx](https://github.com/BepInEx) - Used to hook to game functions\
 [Essentials](https://github.com/DorCoMaNdO/Reactor-Essentials) - Custom game options by **DorCoMaNdO**:
 - Before v1.6: We used the default Essentials release
-- v1.6-v1.8: We slightly changed the default Essentials release. The changes can be found on this [branch](https://github.com/Eisbison/Reactor-Essentials/tree/feature/TheOtherRoles-Adaption) of our fork.
+- v1.6-v1.8: We slightly changed the default Essentials release. The changes can be found on this 
+
+[branch](https://github.com/Eisbison/Reactor-Essentials/tree/feature/TheOtherRoles-Adaption) of our fork.
 - v2.0.0 and later: We're no longer using Reactor anymore we are using our own implementation inspired by the one from **DorCoMaNdO**
 
 [Jackal and Sidekick](https://www.twitch.tv/dhalucard) - Original idea for the Jackal and Sidekick came from **Dhalucard**\
