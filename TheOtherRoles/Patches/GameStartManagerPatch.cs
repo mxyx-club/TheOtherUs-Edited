@@ -421,7 +421,7 @@ public class GameStartManagerPatch
 
                     // Translate chosen map to presets page and use that maps random map preset page
                     if (CustomOptionHolder.dynamicMapSeparateSettings.getBool())
-                        CustomOptionHolder.presetSelection.updateSelection(chosenMapId + 2);
+                        CustomOptionHolder.presetSelection.updateSelection(chosenMapId + 3);
                     if (chosenMapId >= 3) chosenMapId++; // Skip dlekS
 
                     var writer = AmongUsClient.Instance.StartRpcImmediately(

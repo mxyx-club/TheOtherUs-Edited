@@ -839,7 +839,7 @@ public static class PlayerControlFixedUpdatePatch
                     playerInfoText = $"{taskInfo}".Trim();
                     meetingInfoText = playerInfoText;
                 }
-                else if (TORMapOptions.ghostsSeeRoles || (Lawyer.lawyerKnowsRole &&
+                else if (TORMapOptions.ghostsSeeRoles || (Lawyer.lawyerKnowsRole && !Lawyer.isProsecutor &&
                                                           CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer &&
                                                           p == Lawyer.target))
                 {

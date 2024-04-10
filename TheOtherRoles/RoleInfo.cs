@@ -101,7 +101,7 @@ public class RoleInfo
     public static RoleInfo vip = new("VIP", Color.yellow, "我宣布个事儿", "所有人都知道你的死讯", RoleId.Vip, false, true);
     public static RoleInfo indomitable = new("不屈者", Color.yellow, "无所畏惧，愈战愈勇", "无法被猜测", RoleId.Indomitable, false, true);
     public static RoleInfo slueth = new("掘墓人", Color.yellow, "我才是法医！", "报告可知晓死者职业", RoleId.Slueth, false, true);
-    public static RoleInfo cursed = new("反骨", Color.yellow, "你是船员....至少现在是", "被内鬼击杀会变成内鬼", RoleId.Cursed, false, true, true);
+    public static RoleInfo cursed = new("反骨", Color.yellow, "你是船员....至少现在是", "被内鬼击杀会加入内鬼阵营", RoleId.Cursed, false, true, true);
     public static RoleInfo invert = new("酒鬼", Color.yellow, "打烊前的最后一杯", "你的移动方向被颠倒了", RoleId.Invert, false, true);
     public static RoleInfo blind = new("胆小鬼", Color.yellow, "外面的世界好可怕……", "无法报告尸体", RoleId.Blind, false, true);
     public static RoleInfo watcher = new("窥视者", Color.yellow, "来来来，我看看你们怎么投票的啊", "你可以知晓所有人的投票情况", RoleId.Watcher, false, true);

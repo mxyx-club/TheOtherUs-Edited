@@ -93,7 +93,7 @@ public class CustomOption
     public static CustomOption Create(int id, CustomOptionType type, string name, bool defaultValue,
         CustomOption parent = null, bool isHeader = false, Action onChange = null)
     {
-        return new CustomOption(id, type, name, new[] { "关闭", "开启" }, defaultValue ? "开启" : "关闭", parent, isHeader,
+        return new CustomOption(id, type, name, new[] { ModTranslation.getString("OFF"), ModTranslation.getString("ON") }, defaultValue ? ModTranslation.getString("ON") : ModTranslation.getString("OFF"), parent, isHeader,
             onChange);
     }
 
@@ -103,7 +103,7 @@ public class CustomOption
     {
         saveVanillaOptions();
         preset = newPreset;
-        vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", "游戏预设", "");
+        vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", "GameOptions", "");
         loadVanillaOptions();
         foreach (var option in options)
         {

@@ -1,6 +1,6 @@
 ![mod banner](./Images/TOR_logo.png)
 
-<p align="center"><a href="https://github.com/mxyx-club/TheOtherUs/releases/"><img src="https://badgen.net/github/release/mxyx-club/theotherus"></a></p>
+<p align="center"><a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited"></a></p>
 
 本模组不隶属于 Among Us 或 Innersloth LLC，其包含的内容也未得到 Innersloth LLC 的认可或以其他方式赞助。此处包含的部分材料是Innersloth LLC的财产。
 
@@ -8,16 +8,16 @@
 
 [![Discord](./Images/TOR_server.png)](https://discord.gg/yspVyP5meR)
 
-# The Other Roles
+# The Other Us - Edited
 
-**The Other Roles** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
+**The Other Us - Edited** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
 Even more roles are coming soon.
 
 ## 发行版
 
 | Among Us - Version | Mod Version | Link                                                         |
 | ------------------ | ----------- | ------------------------------------------------------------ |
-| 2024.3.5s          | v1.0.3.3    | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.3/TheOtherUs.zip) |
+| 2024.3.5s          | v1.0.3.3    | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherUs.zip) |
 | 2024.3.5s          | v1.0.3.1    | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
 
 
@@ -33,6 +33,7 @@ Even more roles are coming soon.
     - 多线程：不会在任务透明模式开启时生成
     - 告密者：现在可以在会议中查看信息，并且被发现时不能无法被猜测
     - 修复内鬼阵营无法超过3名的问题
+    - 豺狼：修复招募后技能按钮不会消失的问题
 
 <details>
   <summary>点我查看更多更新日志</summary>
@@ -81,11 +82,10 @@ Even more roles are coming soon.
     - 传送师 & 逃逸者：新增会议后不重置标记点的选项
     - 分散者：增加传送至通风口上的选项 
 
- - #### 新增内容：
+ - #### Bug修复：
 
     - 修复赌怪模式中会被分配多重职业的bug
     - 火炬：修复火炬视野的bug
-
 
 ###  v1.0.2:
 
@@ -167,12 +167,13 @@ Even more roles are coming soon.
 <p align="center">
 
 ### 主要开发者：
-沫夏悠轩、善良的好人、天寸梦初
+沫夏悠轩、善良的好人、天寸梦初、Imp11
 
 ### 美工：
 方块
 
 ### 翻译：
+
 CN：沫夏悠轩、CC
 EN：九头蛇
 

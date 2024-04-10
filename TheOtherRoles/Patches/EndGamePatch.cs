@@ -20,7 +20,8 @@ internal enum CustomGameOverReason
     JesterWin = 13,
     ArsonistWin = 14,
     VultureWin = 15,
-    ProsecutorWin = 16,
+    LawyerSoloWin = 16,
+    ProsecutorWin = 17,
     SwooperWin = 18,
     WerewolfWin = 19,
     JuggernautWin = 20,
@@ -39,7 +40,9 @@ internal enum WinCondition
     MiniLose,
     ArsonistWin,
     VultureWin,
+    LawyerSoloWin,
     AdditionalLawyerBonusWin,
+    AdditionalLawyerStolenWin,
     AdditionalAlivePursuerWin,
     ProsecutorWin,
     WerewolfWin,
@@ -175,6 +178,7 @@ public class OnGameEndPatch
         var prosecutorWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.ProsecutorWin;
         var everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
         var akujoWin = Akujo.akujo != null && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin && (Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead);
+        bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
 
         var isPursurerLose = jesterWin || arsonistWin || miniLose;
 
@@ -338,8 +342,19 @@ public class OnGameEndPatch
             TempData.winners.Add(new WinningPlayerData(Akujo.akujo.Data));
             TempData.winners.Add(new WinningPlayerData(Akujo.honmei.Data));
         }
+
+
+        // Lawyer solo win 
+        else if (lawyerSoloWin)
+        {
+            TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+            WinningPlayerData wpd = new WinningPlayerData(Lawyer.lawyer.Data);
+            TempData.winners.Add(wpd);
+            AdditionalTempData.winCondition = WinCondition.LawyerSoloWin;
+        }
+
         // Possible Additional winner: Lawyer
-        if (Lawyer.lawyer != null && Lawyer.target != null &&
+        if (!lawyerSoloWin && Lawyer.lawyer != null && Lawyer.target != null &&
             (!Lawyer.target.Data.IsDead || Lawyer.target == Jester.jester) && !Pursuer.notAckedExiled &&
             !Lawyer.isProsecutor)
         {
@@ -463,6 +478,10 @@ public class EndGameManagerSetUpPatch
                 textRenderer.text = "吃饱饱！";
                 textRenderer.color = Vulture.color;
                 break;
+            case WinCondition.LawyerSoloWin:
+                textRenderer.text = "律师获胜";
+                textRenderer.color = Lawyer.color;
+                break;
             case WinCondition.WerewolfWin:
                 textRenderer.text = "月下狼人获胜！";
                 textRenderer.color = Werewolf.color;
@@ -513,6 +532,9 @@ public class EndGameManagerSetUpPatch
         foreach (var cond in AdditionalTempData.additionalWinConditions)
             switch (cond)
             {
+                case WinCondition.AdditionalLawyerStolenWin:
+                    textRenderer.text += $"\n{Helpers.cs(Lawyer.color, "律师代替客户胜利")}";
+                    break;
                 case WinCondition.AdditionalLawyerBonusWin:
                     textRenderer.text += $"\n{Helpers.cs(Lawyer.color, "律师和客户胜利")}";
                     break;

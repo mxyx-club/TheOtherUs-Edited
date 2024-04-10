@@ -481,7 +481,7 @@ internal class IntroPatch
                 __instance.TeamTitle.color = Color.cyan;
             }
             else
-            {
+            { 
                 __instance.BackgroundBar.material.color = roleInfo.color;
                 __instance.TeamTitle.text = "伪装者阵营";
                 __instance.TeamTitle.color = Palette.ImpostorRed;

@@ -13,7 +13,7 @@ public class CustomOptionHolder
         { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15" };
 
     public static string[] presets =
-        { "预设 1", "预设 2", "Skeld预设", "Mira预设", "Polus预设", "Airship预设", "Fungle预设", "Submerged预设" };
+        { "预设 1", "预设 2", "预设 3", "Skeld预设", "Mira预设", "Polus预设", "Airship预设", "Fungle预设", "Submerged预设" };
 
     public static CustomOption presetSelection;
     public static CustomOption activateRoles;
@@ -650,15 +650,15 @@ public class CustomOptionHolder
 
     public static void Load()
     {
-        CustomOption.vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind("预设0", "原版设置", "");
+        CustomOption.vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind("Preset0", "VanillaOptions", "");
 
         // Role Options
-        presetSelection = CustomOption.Create(0, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "预设"), presets, null, true);
-        activateRoles = CustomOption.Create(1, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "启用模组职业并禁用原版职业"), true, null, true);
+        presetSelection = CustomOption.Create(0, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), ModTranslation.getString("presetSelection")), presets, null, true);
+        activateRoles = CustomOption.Create(1, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), ModTranslation.getString("activateRoles")), true, null, true);
 
-        anyPlayerCanStopStart = CustomOption.Create(3, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "任何玩家都可以阻止游戏开始"), false, null, false);
+        anyPlayerCanStopStart = CustomOption.Create(3, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), ModTranslation.getString("anyPlayerCanStopStart")), false, null, false);
 
-        if (Utilities.EventUtility.canBeEnabled) enableEventMode = CustomOption.Create(4, Types.General, cs(Color.green, "启用特殊模式"), true, null, true);
+        if (Utilities.EventUtility.canBeEnabled) enableEventMode = CustomOption.Create(4, Types.General, cs(Color.green, ModTranslation.getString("enableEventMode")), true, null, true);
 
         // Using new id's for the options to not break compatibilty with older versions
         crewmateRolesCountMin = CustomOption.Create(5, Types.General,
@@ -724,8 +724,8 @@ public class CustomOptionHolder
         enableFungleModify = CustomOption.Create(100, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Fungle"), false, null, true);
         fungleElectrical = CustomOption.Create(101, Types.General, "添加电力系统\n (食堂-实验室-上引擎)", false, enableFungleModify);
 
-        enableCamoComms = CustomOption.Create(120, Types.General, cs(Color.red, "通信破坏开启小黑人"), false, null, true);
-        restrictDevices = CustomOption.Create(121, Types.General, "限制信息设备使用", ["否", "每一回合", "每局游戏"]);
+        enableCamoComms = CustomOption.Create(120, Types.General, cs(Palette.ImpostorRed, "通信破坏开启小黑人"), false, null, true);
+        restrictDevices = CustomOption.Create(121, Types.General, "限制信息设备使用", ["关闭", "每一回合", "每局游戏"]);
         //restrictAdmin = CustomOption.Create(122, Types.General, "限制使用管理室地图时长", 30f, 0f, 600f, 5f, restrictDevices);
         restrictCameras = CustomOption.Create(123, Types.General, "限制使用监控时长", 30f, 0f, 600f, 5f, restrictDevices);
         restrictVents = CustomOption.Create(124, Types.General, "限制使用心电图时长", 30f, 0f, 600f, 5f, restrictDevices);
@@ -744,8 +744,8 @@ public class CustomOptionHolder
 
         //-------------------------- Impostor Options 10000-19999 -------------------------- //
 
-        modifierAssassin = CustomOption.Create(10000, Types.Impostor, cs(Color.red, "刺客"), rates, null, true);
-        modifierAssassinQuantity = CustomOption.Create(10001, Types.Impostor, cs(Color.red, "刺客数量"), ratesModifier, modifierAssassin);
+        modifierAssassin = CustomOption.Create(10000, Types.Impostor, cs(Palette.ImpostorRed, "刺客"), rates, null, true);
+        modifierAssassinQuantity = CustomOption.Create(10001, Types.Impostor, "刺客数量", ratesModifier, modifierAssassin);
         modifierAssassinNumberOfShots = CustomOption.Create(10002, Types.Impostor, "猜测次数（刺客共享）", 3f, 1f, 15f, 1f, modifierAssassin);
         modifierAssassinMultipleShotsPerMeeting = CustomOption.Create(10003, Types.Impostor, "同一轮会议可多次猜测", true, modifierAssassin);
         guesserEvilCanKillSpy = CustomOption.Create(10004, Types.Impostor, "可以猜测职业“卧底”", true, modifierAssassin);
@@ -866,7 +866,7 @@ public class CustomOptionHolder
         jackalAndSidekickHaveImpostorVision = CustomOption.Create(20134, Types.Neutral, "豺狼/跟班拥有内鬼视野", false, jackalSpawnRate);
         jackalCanCreateSidekick = CustomOption.Create(20135, Types.Neutral, cs(Jackal.color, "豺狼可以招募跟班"), false, jackalSpawnRate);
         jackalCreateSidekickCooldown = CustomOption.Create(20136, Types.Neutral, "豺狼招募冷却", 30f, 10f, 60f, 2.5f, jackalCanCreateSidekick);
-        jackalCanImpostorFindSidekick = CustomOption.Create(20137, Types.Neutral, cs(Color.red, "伪装者可以发现队友变为跟班"), true, jackalCanCreateSidekick);
+        jackalCanImpostorFindSidekick = CustomOption.Create(20137, Types.Neutral, cs(Palette.ImpostorRed, "伪装者可以发现队友变为跟班"), true, jackalCanCreateSidekick);
         sidekickCanKill = CustomOption.Create(20138, Types.Neutral, "跟班可进行击杀", false, jackalCanCreateSidekick);
         sidekickCanUseVents = CustomOption.Create(20139, Types.Neutral, "跟班可使用管道", true, jackalCanCreateSidekick);
         sidekickPromotesToJackal = CustomOption.Create(20140, Types.Neutral, "豺狼死后跟班可晋升", false, jackalCanCreateSidekick);
@@ -884,7 +884,7 @@ public class CustomOptionHolder
         lawyerIsProsecutorChance = CustomOption.Create(20181, Types.Neutral, "律师为处刑者的概率", rates, lawyerSpawnRate);
         lawyerTargetKnows = CustomOption.Create(20182, Types.Neutral, "客户知道律师存在", true, lawyerSpawnRate);
         lawyerVision = CustomOption.Create(20183, Types.Neutral, "视野倍率", 1.5f, 0.25f, 3f, 0.25f, lawyerSpawnRate);
-        lawyerKnowsRole = CustomOption.Create(20184, Types.Neutral, "律师/处刑者可得知目标职业", false, lawyerSpawnRate);
+        lawyerKnowsRole = CustomOption.Create(20184, Types.Neutral, "律师可得知目标职业", false, lawyerSpawnRate);
         lawyerCanCallEmergency = CustomOption.Create(20185, Types.Neutral, "律师/处刑者可召开会议", true, lawyerSpawnRate);
         lawyerTargetCanBeJester = CustomOption.Create(20186, Types.Neutral, "小丑可以成为律师的客户", false, lawyerSpawnRate);
         pursuerCooldown = CustomOption.Create(20187, Types.Neutral, "起诉人空包弹冷却", 20f, 5f, 60f, 2.5f, lawyerSpawnRate);
@@ -1116,13 +1116,13 @@ public class CustomOptionHolder
 
         modifiersAreHidden = CustomOption.Create(1000, Types.Modifier, cs(Color.yellow, "隐藏死亡触发的附加职业"), true, null, true);
 
-        modifierDisperser = CustomOption.Create(1001, Types.Modifier, cs(Color.red, "分散者"), rates, null, true);
+        modifierDisperser = CustomOption.Create(1001, Types.Modifier, cs(Palette.ImpostorRed, "分散者"), rates, null, true);
         //modifierDisperserRemainingDisperses = CustomOption.Create(1002, Types.Modifier, "分散次数", 1f,1f,5f,1f, modifierDisperser);
         modifierDisperserDispersesToVent = CustomOption.Create(1003, Types.Modifier, "分散至管道位置", false, modifierDisperser);
 
-        poucherSpawnRate = CustomOption.Create(1230, Types.Modifier, cs(Color.red, "入殓师"), rates, null, true);
+        poucherSpawnRate = CustomOption.Create(1230, Types.Modifier, cs(Palette.ImpostorRed, "入殓师"), rates, null, true);
 
-        modifierLastImpostor = CustomOption.Create(1240, Types.Modifier, cs(Color.red, "绝境者"), false, null, true);
+        modifierLastImpostor = CustomOption.Create(1240, Types.Modifier, cs(Palette.ImpostorRed, "绝境者"), false, null, true);
         modifierLastImpostorDeduce = CustomOption.Create(1241, Types.Modifier, "绝境者击杀冷却减少", 5f, 2.5f, 15f, 2.5f, modifierLastImpostor);
 
         modifierBloody = CustomOption.Create(1010, Types.Modifier, cs(Color.yellow, "溅血者"), rates, null, true);

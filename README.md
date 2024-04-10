@@ -11,9 +11,9 @@ This mod is not affiliated with Among Us or Innersloth LLC, and the content cont
 
 [![Discord](./Images/TOR_server.png)](https://discord.gg/yspVyP5meR)
 
-# The Other Us-
+# The Other Us - Edited
 
-**The Other Roles** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
+**The Other Us** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
 Even more roles are coming soon.
 
 ## Releases
@@ -28,14 +28,13 @@ Even more roles are coming soon.
 
 ###  v1.0.3.3:
 
- - #### 新增内容
+ - #### Newly added
 
-    - 增加阻止任务获胜的选项（并未测试）
-    - 使一部分职业无法共同出现
-    - 多线程：不会在任务透明模式开启时生成
-    - 告密者：现在可以在会议中查看信息，并且被发现时不能无法被猜测
-    - 修复内鬼阵营无法超过3名的问题
-
+    - 
+    
+ - #### Bug fixed:
+ 
+    - 
 
 <details>
   <summary>Click to show the Changelog</summary>

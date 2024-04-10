@@ -76,19 +76,10 @@ public class MainMenuPatch
             popUp = Object.Instantiate(popUpTemplate);
 
             popUp.gameObject.SetActive(true);
-            var creditsString = @"<align=""center""><b>TheOtherUs-Edited Team:</b>
-mxyx    Huier-Huang    haoren
-Imp11    FangKuaiYa
+            var creditsString = ModTranslation.getString("creditsString1");
 
-<b>Former TheOtherUs Team Members:</b>
-SpexGH    Xer    FangKuaiYa    mxyx    Huier-Huang
-
-Thanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles!
-
-Thanks to miniduikboot & GD for hosting modded servers (and so much more)
-
-";
-            creditsString += @"<size=60%> <b>Other Credits & Resources:</b>
+            creditsString += @"
+<size=60%> <b>Other Credits & Resources:</b>
 OxygenFilter - For the versions v2.3.0 to v2.6.1, we were using the OxygenFilter for automatic deobfuscation
 Reactor - The framework used for all versions before v2.0.0, and again since 4.2.0
 BepInEx - Used to hook game functions
@@ -119,7 +110,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
                 ShortTitle = "TOU Credits",
                 SubTitle = "",
                 PinState = false,
-                Date = "01.07.2021",
+                Date = "03.03.2024",
                 Text = creditsString
             };
             __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p =>

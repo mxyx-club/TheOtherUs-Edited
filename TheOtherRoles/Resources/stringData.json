@@ -34,15 +34,19 @@
     },
     "fullCredentials": {
         "0": "<size=70%>Modified by <color=#FFB793>mxyx-club</color>\n<size=65%>Based on TheOtherUs</size>",
-        "13": "<size=75%>Mod\u4fee\u6539: <color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> \n\u7f8e\u5de5: <color=#00FFFFFF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheOtherUs</size>"
+        "13": "<size=75%>\u6a21\u7ec4\u4fee\u6539: <color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> \n\u7f8e\u5de5: <color=#00FFFFFF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheOtherUs</size>"
     },
     "mainMenuCredentials": {
         "0": "<size=90%>Modified by <color=#FFB793>mxyx-club</color>\n<size=80%>Based on TheOtherUs</size>",
-        "13": "<size=80%>Mod\u4fee\u6539\uff1a<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> \n\u7f8e\u5de5: <color=#00FFFFFF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheOtherUs</size>"
+        "13": "<size=80%>\u6a21\u7ec4\u4fee\u6539\uff1a<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> \n\u7f8e\u5de5: <color=#00FFFFFF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheOtherUs</size>"
     },
     "contributorsCredentials": {
         "0": "<size=80%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, and Mr_Fluuff</color></size>",
         "13": "<size=80%> <color=#FCCE03FF>\u7279\u522b\u611f\u8c22\uff1a<color=#FCCE03FF>\u5584\u826f\u7684\u597d\u4eba</color> & <color=#FCCE03FF>\u5929\u5bf8\u68a6\u521d</color> & <color=#FCCE03FF>Imp11</color></color></size>"
+    },
+    "creditsString1": {
+        "0": "<align=\"center\"><b>TheOtherUs-Edited Team:</b>\nmxyx    Huier-Huang    haoren\nImp2    FangKuaiYa\n\n<b>Former TheOtherUs Team Members:</b>\nSpexGH    Xer    FangKuaiYa    mxyx    Huier-Huang\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n\n",
+        "13": "<align=\"center\"><b>TheOtherUs-Edited \u5f00\u53d1\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    \u5584\u826f\u7684\u597d\u4eba    Imp11\n\n<b>\u7f8e\u5de5:</b>\n\u65b9\u5757\n\n<b>\u7ffb\u8bd1:</b>\nEN\uff1a\u4e5d\u5934\u86c7\nCN\uff1a\u6cab\u590f\u60a0\u8f69\n\n<b>GitHub\u8d21\u732e\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    Imp11\n\n<b>\u524d TheOtherUs \u5f00\u53d1\u8005:</b>\nSpexGH    Xer    \u65b9\u5757    \u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d\n\n\u672c\u6a21\u7ec4\u4f7f\u7528\u4e86\u90e8\u5206[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA[]\u7684\u4ee3\u7801\uff0c\u611f\u8c22Imp11\u7684\u652f\u6301\uff01\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n\n"
     },
     "medicShowAttemptText": {
         "0": "Failed Murder Attempt on Shielded Player",
@@ -79,6 +83,316 @@
         "0": "{0} and the ship has {1}",
         "11": "{0}\u3068\u8239\u306b{1}\u304c\u3044\u307e\u3059",
         "13": "{0}\u6b21\uff0c\u5168\u8239\u5269\u4f59{1}\u6b21"
+    },
+    "OFF": {
+        "0": "Off",
+        "13": "\u5173\u95ed"
+    },
+    "ON": {
+        "0": "On",
+        "13": "\u5f00\u542f"
+    },
+    "presetSelection": {
+        "0": "Preset",
+        "11": "\u30d7\u30ea\u30bb\u30c3\u30c8",
+        "13": "\u9884\u8bbe"
+    },
+    "preset0": {
+        "0": "preset 0",
+        "13": "\u9884\u8bbe 0"
+    },
+    "preset1": {
+        "0": "preset 1",
+        "13": "\u9884\u8bbe 1"
+    },
+    "preset2": {
+        "0": "preset 2",
+        "13": "\u9884\u8bbe 2"
+    },
+    "preset3": {
+        "0": "preset 3",
+        "13": "\u9884\u8bbe 3"
+    },
+    "RandomPresetSkeld": {
+        "0": "Random Preset Skeld",
+        "13": "Skeld\u9884\u8bbe"
+    },
+    "RandomPresetMira": {
+        "0": "Random Preset Mira HQ",
+        "13": "Mira\u9884\u8bbe"
+    },
+    "RandomPresetPolus": {
+        "0": "Random Preset Polus",
+        "13": "Polus\u9884\u8bbe"
+    },
+    "RandomPresetAirship": {
+        "0": "Random Preset Airship",
+        "13": "Airship\u9884\u8bbe"
+    },
+    "RandomPresetFungle": {
+        "0": "Random Preset Fungle",
+        "13": "Fungle\u9884\u8bbe"
+    },
+    "RandomPresetSubmerged": {
+        "0": "Random Preset Submerged",
+        "13": "Submerged\u9884\u8bbe"
+    },
+    "activateRoles": {
+        "0": "Enable Mod Roles And Block Vanilla Roles",
+        "13": "\u542f\u7528\u6a21\u7ec4\u804c\u4e1a\u5e76\u7981\u7528\u539f\u7248\u804c\u4e1a"
+    },
+    "anyPlayerCanStopStart": {
+        "0": "Any Player Can Stop The Start",
+        "13": "\u4efb\u4f55\u73a9\u5bb6\u90fd\u53ef\u4ee5\u963b\u6b62\u6e38\u620f\u5f00\u59cb"
+    },
+    "enableEventMode": {
+        "0": "Enable Special Mode",
+        "13": "\u542f\u7528\u7279\u6b8a\u6a21\u5f0f"
+    },
+    "crewmateRolesCountMin": {
+        "0": "Minimum Crewmate Roles",
+        "13": "\u6700\u5c0f\u8239\u5458\u9635\u8425\u804c\u4e1a\u6570"
+    },
+    "crewmateRolesCountMax": {
+        "0": "Maximum Crewmate Roles",
+        "13": "\u6700\u5927\u8239\u5458\u9635\u8425\u804c\u4e1a\u6570"
+    },
+    "crewmateRolesFill": {
+        "0": "Crewmate Roles\n(Ignores Min/Max)",
+        "13": "\u6240\u6709\u8239\u5458\u5fc5\u5b9a\u62e5\u6709\u804c\u4e1a\n(\u65e0\u89c6\u6700\u5c0f/\u6700\u5927\u6570\u91cf)"
+    },
+    "neutralRolesCountMin": {
+        "0": "Minimum Neutral Roles",
+        "13": "\u6700\u5c0f\u72ec\u7acb\u9635\u8425\u804c\u4e1a\u6570"
+    },
+    "neutralRolesCountMax": {
+        "0": "Maximum Neutral Roles",
+        "13": "\u6700\u5927\u72ec\u7acb\u9635\u8425\u804c\u4e1a\u6570"
+    },
+    "impostorRolesCountMin": {
+        "0": "Minimum Impostor Roles",
+        "13": "\u6700\u5c0f\u5185\u9b3c\u9635\u8425\u804c\u4e1a\u6570"
+    },
+    "impostorRolesCountMax": {
+        "0": "Maximum Impostor Roles",
+        "13": "\u6700\u5927\u5185\u9b3c\u9635\u8425\u804c\u4e1a\u6570"
+    },
+    "modifiersCountMin": {
+        "0": "Minimum Modifiers",
+        "13": "\u6700\u5c0f\u9644\u52a0\u804c\u4e1a\u6570"
+    },
+    "modifiersCountMax": {
+        "0": "Maximum Modifiers",
+        "13": "\u6700\u5927\u9644\u52a0\u804c\u4e1a\u6570"
+    },
+    "resteButtonCooldown": {
+        "13": "\u6e38\u620f\u5f00\u5c40\u65f6\u91cd\u7f6eCD"
+    },
+    "maxNumberOfMeetings": {
+        "0": "Number Of Meetings (excluding Mayor meeting)",
+        "13": "\u4f1a\u8bae\u603b\u6b21\u6570(\u4e0d\u8ba1\u5165\u5e02\u957f\u4f1a\u8bae\u6b21\u6570)"
+    },
+    "blockSkippingInEmergencyMeetings": {
+        "0": "Block Skipping In Emergency Meetings",
+        "13": "\u7d27\u6025\u4f1a\u8bae\u7981\u6b62\u8df3\u8fc7"
+    },
+    "noVoteIsSelfVote": {
+        "0": "No Vote Is Self Vote",
+        "13": "\u4e0d\u6295\u7968\u9ed8\u8ba4\u6295\u81ea\u5df1"
+    },
+    "shieldFirstKill": {
+        "0": "Shield Last Game First Kill",
+        "13": "\u9996\u5200\u4fdd\u62a4"
+    },
+    "hidePlayerNames": {
+        "0": "Hide Player Names",
+        "13": "\u9690\u85cf\u73a9\u5bb6\u540d\u5b57"
+    },
+    "hideOutOfSightNametags": {
+        "0": "Hide Obstructed Player Names",
+        "13": "\u9690\u85cf\u53d7\u963b\u788d\u7684\u73a9\u5bb6\u540d\u79f0"
+    },
+    "hideVentAnimOnShadows": {
+        "0": "Hide Vent Animation Out Of Vision",
+        "13": "\u9690\u85cf\u89c6\u91ce\u5916\u7ba1\u9053\u52a8\u753b"
+    },
+    "showButtonTarget": {
+        "0": "Show Button Target",
+        "13": "\u6280\u80fd\u6309\u94ae\u663e\u793a\u76ee\u6807"
+    },
+    "impostorSeeRoles": {
+        "0": "Impostors Can See The Roles Of Their Team",
+        "13": "\u5185\u9b3c\u53ef\u89c1\u961f\u53cb\u804c\u4e1a"
+    },
+    "blockGameEnd": {
+        "0": "Block Game End If Power Crew Is Alive",
+        "13": "\u5f3a\u529b\u804c\u4e1a\u5728\u573a\u4e0d\u7ed3\u675f\u6e38\u620f"
+    },
+    "allowModGuess": {
+        "0": "Allow Guessing Some Modifiers",
+        "13": "\u5141\u8bb8\u731c\u6d4b\u90e8\u5206\u9644\u52a0\u804c\u4e1a"
+    },
+    "transparentTasks": {
+        "0": "Tasks Are Transparent",
+        "13": "\u4efb\u52a1\u754c\u9762\u900f\u660e"
+    },
+    "disableMedbayWalk": {
+        "0": "Disable MedBay Animations",
+        "13": "\u4efb\u52a1\u52a8\u753b\u4e0d\u53ef\u89c1"
+    },
+    "allowParallelMedBayScans": {
+        "0": "Allow Parallel MedBay Scans",
+        "13": "\u5141\u8bb8\u540c\u65f6\u8fdb\u884c\u626b\u63cf\u4efb\u52a1"
+    },
+    "finishTasksBeforeHauntingOrZoomingOut": {
+        "0": "Finish Tasks Before Haunting Or Zooming Out",
+        "13": "\u672a\u5b8c\u6210\u4efb\u52a1\u524d\u4e0d\u80fd\u4f7f\u7528\u8ddf\u968f\u53ca\u5343\u91cc\u773c"
+    },
+    "preventTaskEnd": {
+        "13": "\u963b\u6b62\u4efb\u52a1\u7ed3\u675f\u6e38\u620f"
+    },
+    "randomGameStartPosition": {
+        "0": "Random Spawn Location",
+        "13": "\u968f\u673a\u51fa\u751f\u70b9"
+    },
+    "randomGameStartToVents": {
+        "0": "Spawn Location to vent",
+        "13": "\u968f\u673a\u51fa\u751f\u5728\u901a\u98ce\u53e3\u4e0a"
+    },
+    "enableMiraModify": {
+        "0": "Mira",
+        "13": "Mira"
+    },
+    "miraVitals": {
+        "13": "\u6dfb\u52a0\u751f\u547d\u68c0\u6d4b\u88c5\u7f6e"
+    },
+    "enableBetterPolus": {
+        "0": "Polus",
+        "13": "Polus"
+    },
+    "movePolusVents": {
+        "0": "Adjust Vents",
+        "13": "\u6539\u53d8\u7ba1\u9053\u5e03\u5c40"
+    },
+    "addPolusVents": {
+        "13": "\u6dfb\u52a0\u65b0\u7ba1\u9053\n (\u6837\u672c\u5ba4-\u529e\u516c\u5ba4-\u8fd0\u8f93\u8239)"
+    },
+    "movePolusVitals": {
+        "0": "Move Vitals To Labs",
+        "13": "\u5c06\u751f\u547d\u68c0\u6d4b\u4eea\u79fb\u52a8\u5230\u5b9e\u9a8c\u5ba4"
+    },
+    "swapNavWifi": {
+        "0": "Swap Reboot And Chart Course",
+        "13": "\u91cd\u542fWIFI\u4e0e\u5bfc\u822a\u4efb\u52a1\u4f4d\u7f6e\u4ea4\u6362"
+    },
+    "moveColdTemp": {
+        "0": "Move Cold Temp To Death Valley",
+        "13": "\u6e29\u5ea6\u8c03\u8282\u4efb\u52a1\u79fb\u52a8\u81f3\u914d\u7535\u5ba4\u4e0b\u65b9"
+    },
+    "enableAirShipModify": {
+        "0": "AirShip",
+        "13": "AirShip"
+    },
+    "airshipOptimize": {
+        "13": "\u4f18\u5316\u5730\u56fe"
+    },
+    "addAirShipVents": {
+        "13": "\u6dfb\u52a0\u65b0\u7ba1\u9053\n (\u4f1a\u8bae\u5ba4-\u914d\u7535\u5ba4)"
+    },
+    "airshipLadder": {
+        "13": "\u589e\u52a0\u989d\u5916\u68af\u5b50\n (\u4f1a\u8bae\u5ba4-\u95f4\u9699\u5ba4)"
+    },
+    "enableFungleModify": {
+        "0": "Fungle",
+        "13": "Fungle"
+    },
+    "fungleElectrical": {
+        "13": "\u6dfb\u52a0\u7535\u529b\u7cfb\u7edf\n (\u98df\u5802-\u5b9e\u9a8c\u5ba4-\u4e0a\u5f15\u64ce)"
+    },
+    "enableCamoComms": {
+        "0": "Enable Camouflage Comms",
+        "13": "\u901a\u4fe1\u7834\u574f\u5f00\u542f\u5c0f\u9ed1\u4eba"
+    },
+    "restrictDevices": {
+        "0": "Restrict Map Information",
+        "13": "\u9650\u5236\u4fe1\u606f\u8bbe\u5907\u4f7f\u7528"
+    },
+    "restrictDevices2": {
+        "0": "Per Round",
+        "13": "\u6bcf\u4e00\u56de\u5408"
+    },
+    "restrictDevices3": {
+        "0": "Per Game",
+        "13": "\u6bcf\u5c40\u6e38\u620f"
+    },
+    "restrictAdmin": {
+        "0": "Restrict Admin Table",
+        "13": "\u9650\u5236\u4f7f\u7528\u7ba1\u7406\u5ba4\u5730\u56fe\u65f6\u957f"
+    },
+    "restrictCameras": {
+        "0": "Restrict Cameras",
+        "13": "\u9650\u5236\u4f7f\u7528\u76d1\u63a7\u65f6\u957f"
+    },
+    "restrictVents": {
+        "0": "Restrict Vitals",
+        "13": "\u9650\u5236\u4f7f\u7528\u5fc3\u7535\u56fe\u65f6\u957f"
+    },
+    "disableCamsRound1": {
+        "0": "No Cameras First Round",
+        "13": "\u7b2c\u4e00\u56de\u5408\u65e0\u6cd5\u4f7f\u7528\u76d1\u63a7"
+    },
+    "camsNightVision": {
+        "0": "Cams Switch To Night Vision If Lights Are Off",
+        "13": "\u7184\u706f\u65f6\u76d1\u63a7\u5f00\u542f\u591c\u89c6\u6a21\u5f0f"
+    },
+    "camsNoNightVisionIfImpVision": {
+        "0": "Impostor Vision Ignores Night Vision Cams",
+        "13": "\u5185\u9b3c\u65e0\u89c6\u76d1\u63a7\u7684\u591c\u89c6\u6a21\u5f0f"
+    },
+    "dynamicMap": {
+        "0": "Play On A Random Map",
+        "13": "\u968f\u673a\u5730\u56fe\u73a9\u6cd5"
+    },
+    "dynamicMapSeparateSettings": {
+        "0": "Use Random Map Setting Presets",
+        "13": "\u4f7f\u7528\u968f\u673a\u5730\u56fe\u8bbe\u7f6e\u9884\u8bbe"
+    },
+    "modifierAssassin": {
+        "0": "Assassin",
+        "13": "\u523a\u5ba2"
+    },
+    "modifierAssassinQuantity": {
+        "0": "Assassin Quantity",
+        "13": "\u523a\u5ba2\u6570\u91cf"
+    },
+    "modifierAssassinNumberOfShots": {
+        "0": "Number Of Shots"
+    },
+    "modifierAssassinMultipleShotsPerMeeting": {
+        "0": "Can Shoot Multiple Times Per Meeting"
+    },
+    "guesserEvilCanKillSpy": {
+        "0": "Can Guess The Spy"
+    },
+    "guesserEvilCanKillCrewmate": {
+        "0": "Can Guess Crewmate"
+    },
+    "guesserCantGuessSnitchIfTaksDone": {
+        "0": "Can't Guess Snitch When Revealed"
+    },
+    "modifierAssassinKillsThroughShield": {
+        "0": "Guesses Ignore The Medic Shield"
+    },
+    "modifierAssassinCultist": {
+        "0": "Cultist Follower Gets Ability"
+    },
+    "mafiaSpawnRate": {
+        "0": "Mafia",
+        "13": "\u9ed1\u624b\u515a"
+    },
+    "janitorCooldown": {
+        "0": "Janitor Cooldown",
+        "13": "\u6e05\u6d01\u5de5\u6e05\u7406\u51b7\u5374"
     },
     "BlackmailShhhText": {
         "0": "YOU ARE BLACKMAILED",
@@ -283,10 +597,6 @@
     "TrackerText": {
         "0": "[BLANK]",
         "13": "\u8ffd\u8e2a"
-    },
-    "TrackerDeadBodyText": {
-        "0": "[BLANK]",
-        "13": "\u5bfb\u627e\u5c38\u4f53"
     },
     "TricksterVentText": {
         "0": "[BLANK]",

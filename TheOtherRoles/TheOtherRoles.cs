@@ -2509,8 +2509,8 @@ public static class Medium
             {
                 case 0:
                     count = alivePlayersList.Where(pc =>
-                        pc.Data.Role.IsImpostor ||
-                        new List<RoleInfo> { RoleInfo.jackal, RoleInfo.sidekick, RoleInfo.sheriff, RoleInfo.thief }
+                        pc.Data.Role.IsImpostor || Helpers.isKiller(pc) ||
+                        new List<RoleInfo> { RoleInfo.sheriff, RoleInfo.veteren, RoleInfo.thief }
                             .Contains(RoleInfo.getRoleInfoForPlayer(pc, false).FirstOrDefault())).Count();
                     condition = "个杀手" + (count == 1 ? "" : "");
                     break;
