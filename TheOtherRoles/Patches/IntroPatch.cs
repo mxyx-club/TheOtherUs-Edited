@@ -3,7 +3,6 @@ using Il2CppSystem.Collections.Generic;
 using System;
 using System.Linq;
 using TheOtherRoles.CustomGameModes;
-using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;

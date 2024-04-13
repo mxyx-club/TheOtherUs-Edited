@@ -1,11 +1,18 @@
 using BepInEx.Logging;
 using System;
+using System.Text;
 
-namespace TheOtherRoles.Logs;
+namespace TheOtherRoles.Helper;
 
-internal static class ModLog
+internal static class LogHelper
 {
-    internal static ManualLogSource logSource { get; set; }
+    private static ManualLogSource logSource { get; set; }
+
+    internal static void SetLogSource(ManualLogSource Source)
+    {
+        System.Console.OutputEncoding = Encoding.UTF8;
+        logSource = Source;
+    }
 
     /// <summary>
     ///     一般信息
@@ -83,6 +90,8 @@ internal static class ModLog
             case LogLevel.Debug:
                 Logger.LogDebug(Message);
                 break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(errorLevel), errorLevel, null);
         }
     }
 
@@ -91,3 +100,21 @@ internal static class ModLog
         FastLog(LogLevel.Error, @object);
     }
 }
+
+#if DEBUG
+[HarmonyPatch]
+internal static class LogListener
+{
+    [HarmonyTargetMethods]
+    private static IEnumerable<MethodBase> taregetMethodBases() => typeof(AmongUsClient).Assembly.GetTypes()
+        .Where(n => n.IsSubclassOf(typeof(InnerNetObject)))
+        .Select(x => x.GetMethod(nameof(InnerNetObject.HandleRpc), AccessTools.allDeclared))
+        .Where(m => m != null);
+    
+    [HarmonyPostfix]
+    internal static void OnRpc(InnerNetObject __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
+    {
+        Info($"{__instance.name} {callId} {reader.Length} {reader.Tag}");
+    }
+}
+#endif

@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TheOtherRoles.Helper;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Modules.CustomHats;
 using TheOtherRoles.Patches;
@@ -96,7 +95,7 @@ public class TheOtherRolesPlugin : BasePlugin
     {
         ModTranslation.Load();
         if (ConsoleManager.ConsoleEnabled) System.Console.OutputEncoding = Encoding.UTF8;
-        logSource = Log;
+        SetLogSource(Log);
         Instance = this;
 
         _ = CredentialsPatch.MOTD.loadMOTDs();
@@ -170,18 +169,6 @@ public static class DebugManager
 
     public static void Postfix(KeyboardJoystick __instance)
     {
-        /*
-            // Check if debug mode is active.
-            StringBuilder builder = new StringBuilder();
-            SHA256 sha = SHA256Managed.Create();
-            Byte[] hashed = sha.ComputeHash(Encoding.UTF8.GetBytes(TheOtherRolesPlugin.DebugMode.Value));
-            foreach (var b in hashed) {
-                builder.Append(b.ToString("x2"));
-            }
-            string enteredHash = builder.ToString();
-            if (enteredHash != passwordHash) return;
-    */
-
         // Spawn dummys
         if (AmongUsClient.Instance.AmHost && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.RightShift))
         {

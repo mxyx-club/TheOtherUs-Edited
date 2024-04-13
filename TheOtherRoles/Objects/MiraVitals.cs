@@ -1,5 +1,4 @@
-﻿using TheOtherRoles.Helper;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace TheOtherRoles.Objects
 {

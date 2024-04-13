@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TheOtherRoles.CustomGameModes;
-using TheOtherRoles.Helper;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;

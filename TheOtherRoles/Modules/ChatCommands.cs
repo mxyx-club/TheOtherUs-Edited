@@ -2,7 +2,6 @@ using Hazel;
 using InnerNet;
 using System;
 using System.Linq;
-using TheOtherRoles.Helper;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
