@@ -60,7 +60,7 @@ jobs:
           path: ./Release/BepInEx/plugins/TheOtherRoles.dll
           
       - name: Del Other Files
-        run: rm -rf ./Release/BepInEx/plugins/TheOtherRoles.deps.json ./Release/BepInEx/plugins/TheOtherRoles.pdb
+        run: rm -rf ./Release/BepInEx/plugins/TheOtherRoles.deps.json ./Release/BepInEx/plugins/TheOtherRoles.pdb ./Release/changelog.txt
           
       - name: Upload TheOtherUs
         uses: actions/upload-artifact@v4.3.1
