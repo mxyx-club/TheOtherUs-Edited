@@ -311,16 +311,6 @@ public class CustomOptionHolder
     public static CustomOption pursuerCooldown;
     public static CustomOption pursuerBlanksNumber;
 
-    public static CustomOption evilTrapperSpawnRate;
-    public static CustomOption evilTrapperNumTrap;
-    public static CustomOption evilTrapperKillTimer;
-    public static CustomOption evilTrapperCooldown;
-    public static CustomOption evilTrapperMaxDistance;
-    public static CustomOption evilTrapperTrapRange;
-    public static CustomOption evilTrapperExtensionTime;
-    public static CustomOption evilTrapperPenaltyTime;
-    public static CustomOption evilTrapperBonusTime;
-
     public static CustomOption jumperSpawnRate;
     public static CustomOption jumperJumpTime;
     public static CustomOption jumperResetPlaceAfterMeeting;
@@ -332,7 +322,6 @@ public class CustomOptionHolder
     public static CustomOption escapistResetPlaceAfterMeeting;
     public static CustomOption escapistChargesGainOnMeeting;
     public static CustomOption escapistMaxCharges;
-
     /*
     public static CustomOption MagicianSpawnRate;
     public static CustomOption MagicianCooldown;
@@ -341,7 +330,6 @@ public class CustomOptionHolder
     public static CustomOption MagicianProbabilityRedCards;
     public static CustomOption MagicianProbabilityPurpleCards;
     */
-
     public static CustomOption werewolfSpawnRate;
     public static CustomOption werewolfRampageCooldown;
     public static CustomOption werewolfRampageDuration;
@@ -792,7 +780,7 @@ public class CustomOptionHolder
         escapistEscapeTime = CustomOption.Create(10181, Types.Impostor, "标记/逃逸冷却", 15f, 0f, 60f, 2.5f, escapistSpawnRate);
         escapistMaxCharges = CustomOption.Create(10185, Types.Impostor, "可传送次数", 3, 1, 10, 1, escapistSpawnRate);
         escapistResetPlaceAfterMeeting = CustomOption.Create(10183, Types.Impostor, "会议后重置目标地点", false, escapistSpawnRate);
-        escapistChargesGainOnMeeting = CustomOption.Create(10184, Types.Crewmate, "会议后增加次数", 2, 0, 10, 1, escapistSpawnRate);
+        escapistChargesGainOnMeeting = CustomOption.Create(10184, Types.Impostor, "会议后增加次数", 2, 0, 10, 1, escapistSpawnRate);
 
         cultistSpawnRate = CustomOption.Create(10190, Types.Impostor, cs(Cultist.color, "传教士"), rates, null, true);
 
