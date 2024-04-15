@@ -915,6 +915,7 @@ internal class MeetingHudPatch
             var roomTracker = FastDestroyableSingleton<HudManager>.Instance.roomTracker;
             var roomId = byte.MinValue;
             if (roomTracker != null && roomTracker.LastRoom != null) roomId = (byte)roomTracker.LastRoom.RoomId;
+            /*
             if (Snitch.snitch != null && roomTracker != null)
             {
                 var roomWriter = AmongUsClient.Instance.StartRpcImmediately(
@@ -923,7 +924,7 @@ internal class MeetingHudPatch
                 roomWriter.Write(roomId);
                 AmongUsClient.Instance.FinishRpcImmediately(roomWriter);
             }
-
+            */
             // Resett Bait list
             Bait.active = new Dictionary<DeadPlayer, float>();
             // Save AntiTeleport position, if the player is able to move (i.e. not on a ladder or a gap thingy)

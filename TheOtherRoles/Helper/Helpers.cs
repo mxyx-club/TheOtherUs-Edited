@@ -1360,13 +1360,13 @@ public static class Helpers
 
     public static bool isKiller(PlayerControl player)
     {
-        return isNeutral(player) &&
-                player == Juggernaut.juggernaut &&
-                player == Werewolf.werewolf &&
-                player == Swooper.swooper &&
-                player == Arsonist.arsonist &&
-                player == Jackal.jackal &&
-                player == Sidekick.sidekick;
+        return isNeutral(player) && (
+                player == Juggernaut.juggernaut ||
+                player == Werewolf.werewolf ||
+                player == Swooper.swooper ||
+                player == Arsonist.arsonist ||
+                player == Jackal.jackal ||
+                player == Sidekick.sidekick);
     }
 
     public static bool isEvil(PlayerControl player)

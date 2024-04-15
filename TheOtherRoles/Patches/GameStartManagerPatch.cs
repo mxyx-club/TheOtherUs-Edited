@@ -387,15 +387,18 @@ public class GameStartManagerPatch
                     // 2 = Polus
                     // 3 = Dleks - deactivated
                     // 4 = Airship
-                    // 5 = Submerged
+                    // 5 = Fungle
+                    // 6 = Submerged
                     byte chosenMapId = 0;
-                    var probabilities = new List<float>();
-                    probabilities.Add(CustomOptionHolder.dynamicMapEnableSkeld.getSelection() / 10f);
-                    probabilities.Add(CustomOptionHolder.dynamicMapEnableMira.getSelection() / 10f);
-                    probabilities.Add(CustomOptionHolder.dynamicMapEnablePolus.getSelection() / 10f);
-                    probabilities.Add(CustomOptionHolder.dynamicMapEnableAirShip.getSelection() / 10f);
-                    probabilities.Add(CustomOptionHolder.dynamicMapEnableFungle.getSelection() / 10f);
-                    probabilities.Add(CustomOptionHolder.dynamicMapEnableSubmerged.getSelection() / 10f);
+                    var probabilities = new List<float>
+                    {
+                        CustomOptionHolder.dynamicMapEnableSkeld.getSelection() / 10f,
+                        CustomOptionHolder.dynamicMapEnableMira.getSelection() / 10f,
+                        CustomOptionHolder.dynamicMapEnablePolus.getSelection() / 10f,
+                        CustomOptionHolder.dynamicMapEnableAirShip.getSelection() / 10f,
+                        CustomOptionHolder.dynamicMapEnableFungle.getSelection() / 10f,
+                        CustomOptionHolder.dynamicMapEnableSubmerged.getSelection() / 10f
+                    };
 
                     // if any map is at 100%, remove all maps that are not!
                     if (probabilities.Contains(1.0f))

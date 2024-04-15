@@ -33,7 +33,7 @@ Even more roles are coming soon.
     - 
     
  - #### Bug fixed:
- 
+
     - 
 
 <details>
@@ -112,7 +112,7 @@ Even more roles are coming soon.
     - Integrating the "CrowdedMod" feature into the game
     - Better map options
     - Added ModTranslation, more convinent for further translation on mods with other languages
-    - Fungus Aorest: add with randomly born and more spots for Disperser
+    - Fungle: add with randomly born and more spots for Disperser
     - Torch: Add an option to increase the rate of Vision
     - Shifter: Add the option that can switch Neutral Roles
     - Bait: Newly add the option of only being given to Crewmates

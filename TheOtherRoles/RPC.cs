@@ -223,7 +223,7 @@ public enum CustomRPC
     MayorSetVoteTwice = 174,
     PlaceBomb = 175,
     DefuseBomb = 176,
-    ShareRoom = 177,
+    //ShareRoom = 177,
 
     // Gamemode
     SetGuesserGm = 178,
@@ -1368,13 +1368,13 @@ public static class RPCProcedure
                 Detective.detective = Mimic.mimic;
                 Mimic.hasMimic = true;
                 break;
-
+                /*
             case RoleId.NiceGuesser:
                 if (Amnisiac.resetRole) //Guesser.clearAndReload();
                     Guesser.niceGuesser = Mimic.mimic;
                 Mimic.hasMimic = true;
                 break;
-
+                */
             case RoleId.TimeMaster:
                 if (Amnisiac.resetRole) TimeMaster.clearAndReload();
                 TimeMaster.timeMaster = Mimic.mimic;
@@ -1414,7 +1414,6 @@ public static class RPCProcedure
                 hackerAdminTableButton.PositionOffset = CustomButton.ButtonPositions.upperRowFarLeft;
                 hackerVitalsButton.PositionOffset = CustomButton.ButtonPositions.lowerRowFarLeft;
                 hackerButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
-
                 Mimic.hasMimic = true;
                 break;
 
@@ -1680,7 +1679,7 @@ public static class RPCProcedure
             Sidekick.sidekick = player;
             if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
                 CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
-            if ((wasSpy || wasImpostor) && CustomOptionHolder.jackalCanImpostorFindSidekick.getBool() == false) Sidekick.wasTeamRed = true;
+            if ((wasSpy || wasImpostor) && Jackal.CanImpostorFindSidekick) Sidekick.wasTeamRed = true;
             Sidekick.wasSpy = wasSpy;
             Sidekick.wasImpostor = wasImpostor;
             if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");

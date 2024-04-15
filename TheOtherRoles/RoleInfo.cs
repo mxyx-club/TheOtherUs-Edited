@@ -87,6 +87,7 @@ public class RoleInfo
     // Modifier
     public static RoleInfo disperser = new("分散者", Color.red, "大伙！该上路了！", "分散所有人", RoleId.Disperser, false, true);
     public static RoleInfo poucher = new("入殓师", Poucher.color, "你的人生我从未参与，但我送你最后一程", "调查被击杀者的职业", RoleId.Poucher, false, true);
+    public static RoleInfo lastImpostor = new("绝境者", Palette.ImpostorRed, "你是狼村最后的希望...", "你的击杀冷却会大幅度减少", RoleId.LastImpostor, false, true);
     public static RoleInfo bloody = new("溅血者", Color.yellow, "以吾之血咒汝之身", "用你的血留下死亡信息", RoleId.Bloody, false, true);
     public static RoleInfo antiTeleport = new("通讯兵", Color.yellow, "你不会被传送!", "你不会被传送!", RoleId.AntiTeleport, false, true);
     public static RoleInfo tiebreaker = new("破平者", Color.yellow, "你说得对...但是，规则就是用来打破的", "打破平局", RoleId.Tiebreaker, false, true);
@@ -109,7 +110,6 @@ public class RoleInfo
     public static RoleInfo buttonBarry = new("执钮人", Color.yellow, "你可以随时召开紧急会议!", "你可以随时召开紧急会议!", RoleId.ButtonBarry, false, true);
     public static RoleInfo chameleon = new("变色龙", Color.yellow, "看不见我`看不见我`", "静止时可隐身", RoleId.Chameleon, false, true);
     public static RoleInfo shifter = new("交换师", Color.yellow, "你的能力真好用！马上就是我的了！", "与他人交换职业", RoleId.Shifter, false, true);
-    public static RoleInfo lastImpostor = new("绝境者", Palette.ImpostorRed, "你是狼村最后的希望...", "你的击杀冷却会大幅度减少", RoleId.LastImpostor, false, true);
 
     public static List<RoleInfo> allRoleInfos = new()
     {
@@ -491,9 +491,7 @@ public class RoleInfo
         if (ReadmePage == "")
         {
             var client = new HttpClient();
-            var response =
-                await client.GetAsync(
-                    "https://mirror.ghproxy.com/https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherRoles/main/README.md");
+            var response = await client.GetAsync("https://mirror.ghproxy.com/https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherRoles/main/README.md");
             response.EnsureSuccessStatusCode();
             var httpres = await response.Content.ReadAsStringAsync();
             ReadmePage = httpres;

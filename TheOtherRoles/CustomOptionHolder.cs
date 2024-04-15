@@ -718,7 +718,7 @@ public class CustomOptionHolder
         restrictCameras = CustomOption.Create(123, Types.General, "限制使用监控时长", 30f, 0f, 600f, 5f, restrictDevices);
         restrictVents = CustomOption.Create(124, Types.General, "限制使用心电图时长", 30f, 0f, 600f, 5f, restrictDevices);
         disableCamsRound1 = CustomOption.Create(125, Types.General, "第一回合无法使用监控", false);
-        camsNightVision = CustomOption.Create(126, Types.General, "熄灯时监控开启夜视模式", false, null, true);
+        camsNightVision = CustomOption.Create(126, Types.General, "熄灯时监控开启夜视模式", false);
         camsNoNightVisionIfImpVision = CustomOption.Create(127, Types.General, "内鬼无视监控的夜视模式", false, camsNightVision);
 
         dynamicMap = CustomOption.Create(130, Types.General, "随机地图玩法", false, null, true);
