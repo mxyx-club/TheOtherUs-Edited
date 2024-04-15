@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <Version>1.0.3.3</Version>
+        <Version>1.0.3.4</Version>
 		<AssemblyName>TheOtherRoles</AssemblyName>
         <Description>TheOtherUs</Description>
         <Authors>mxyx-club</Authors>
