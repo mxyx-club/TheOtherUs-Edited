@@ -487,7 +487,8 @@ internal static class HudManagerStartPatch
             Engineer.getButtonSprite(),
             CustomButton.ButtonPositions.upperRowRight,
             __instance,
-            KeyCode.F
+            KeyCode.F,
+            buttonText: getString("RepairText")
         );
 
         // Janitor Clean
@@ -541,7 +542,8 @@ internal static class HudManagerStartPatch
             Janitor.getButtonSprite(),
             CustomButton.ButtonPositions.upperRowLeft,
             __instance,
-            KeyCode.F
+            KeyCode.F,
+            buttonText: getString("CleanText")
         );
 
         //Sheriff Kill
@@ -1365,7 +1367,8 @@ internal static class HudManagerStartPatch
             KeyCode.Q,
             true,
             Tracker.corpsesTrackingDuration,
-            () => { trackerTrackCorpsesButton.Timer = trackerTrackCorpsesButton.MaxTimer; }
+            () => { trackerTrackCorpsesButton.Timer = trackerTrackCorpsesButton.MaxTimer; },
+            buttonText: getString("TrackerCorpsesText")
         );
 
         bodyGuardGuardButton = new CustomButton(
@@ -1399,8 +1402,7 @@ internal static class HudManagerStartPatch
             BodyGuard.getGuardButtonSprite(),
             CustomButton.ButtonPositions.lowerRowRight, //brb
             __instance,
-            KeyCode.F,
-            buttonText: ModTranslation.getString("TrackerDeadBodyText")
+            KeyCode.F
         );
 
         privateInvestigatorWatchButton = new CustomButton(
@@ -1667,7 +1669,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.lowerRowRight,
             __instance,
             KeyCode.F,
-            buttonText: ModTranslation.getString("PlaceJackInTheBoxText")
+            buttonText: ModTranslation.getString("PlacePortalText")
         );
 
         usePortalButton = new CustomButton(
@@ -2305,7 +2307,7 @@ internal static class HudManagerStartPatch
                 lightsOutButton.Timer = lightsOutButton.MaxTimer;
                 SoundEffectsManager.play("lighterLight");
             },
-            buttonText: ModTranslation.getString("LighterText")
+            buttonText: ModTranslation.getString("LightsOutText")
         );
 
         // Cleaner Clean

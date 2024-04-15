@@ -821,9 +821,6 @@ public class CustomOptionHolder
         blackmailerSpawnRate = CustomOption.Create(10260, Types.Impostor, cs(Blackmailer.color, "勒索者"), rates, null, true);
         blackmailerCooldown = CustomOption.Create(10261, Types.Impostor, "勒索冷却", 15f, 5f, 120f, 2.5f, blackmailerSpawnRate);
 
-        minerSpawnRate = CustomOption.Create(10280, Types.Impostor, cs(Miner.color, "管道工"), rates, null, true);
-        minerCooldown = CustomOption.Create(10281, Types.Impostor, "制造管道冷却", 20f, 10f, 60f, 2.5f, minerSpawnRate);
-
         bomberSpawnRate = CustomOption.Create(10270, Types.Impostor, cs(Bomber.color, "恐怖分子"), rates, null, true);
         bomberBombDestructionTime = CustomOption.Create(10271, Types.Impostor, "炸弹引爆时间", 0f, 0f, 120f, 2.5f, bomberSpawnRate);
         bomberBombDestructionRange = CustomOption.Create(10272, Types.Impostor, "炸弹爆炸范围", 40f, 5f, 250f, 5f, bomberSpawnRate);
@@ -831,6 +828,9 @@ public class CustomOptionHolder
         bomberDefuseDuration = CustomOption.Create(10274, Types.Impostor, "拆除炸弹所需时间", 0f, 0f, 30f, 0.5f, bomberSpawnRate);
         bomberBombCooldown = CustomOption.Create(10275, Types.Impostor, "炸弹放置冷却", 0f, 5f, 60f, 2.5f, bomberSpawnRate);
         bomberBombActiveAfter = CustomOption.Create(10276, Types.Impostor, "炸弹激活时间", 0f, 0f, 15f, 0.5f, bomberSpawnRate);
+
+        minerSpawnRate = CustomOption.Create(10280, Types.Impostor, cs(Miner.color, "管道工"), rates, null, true);
+        minerCooldown = CustomOption.Create(10281, Types.Impostor, "制造管道冷却", 20f, 10f, 60f, 2.5f, minerSpawnRate);
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 

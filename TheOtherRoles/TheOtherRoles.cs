@@ -3060,7 +3060,7 @@ public static class Bomber
     public static float defuseDuration = 3f;
     public static float bombCooldown = 15f;
     public static float bombActiveAfter = 3f;
-    public static string bombText = ModTranslation.getString("TricksterPlaceText1");
+    public static string bombText = getString("TricksterPlaceText1");
 
     private static Sprite buttonSprite;
 
@@ -3092,6 +3092,8 @@ public static class Bomber
         bomb = null;
         isPlanted = false;
         isActive = false;
+        bombText = getString("TerroristBombText1");
+        if (destructionTime + bombActiveAfter == 0) bombText = getString("TerroristBombText2");
         destructionTime = CustomOptionHolder.bomberBombDestructionTime.getFloat();
         destructionRange = CustomOptionHolder.bomberBombDestructionRange.getFloat() / 10;
         hearRange = CustomOptionHolder.bomberBombHearRange.getFloat() / 10;
@@ -3099,8 +3101,6 @@ public static class Bomber
         bombCooldown = CustomOptionHolder.bomberBombCooldown.getFloat();
         bombActiveAfter = CustomOptionHolder.bomberBombActiveAfter.getFloat();
         Bomb.clearBackgroundSprite();
-        if (bombActiveAfter == 0) bombText = ModTranslation.getString("TricksterPlaceText2");
-        if (bombActiveAfter != 0) bombText = ModTranslation.getString("TricksterPlaceText1");
     }
 }
 
@@ -3538,7 +3538,6 @@ public static class Shifter
 
     public static void shiftRole(PlayerControl player1, PlayerControl player2, bool repeat = true)
     {
-        //好人交换师代码target
         if (Guesser.niceGuesser != null && Guesser.niceGuesser == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
@@ -3626,10 +3625,10 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Hacker.hacker = player1;
         }
-        else if (Tracker.tracked != null && Tracker.tracked == player2)
+        else if (Tracker.tracker != null && Tracker.tracker == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
-            Tracker.tracked = player1;
+            Tracker.tracker = player1;
         }
         else if (Snitch.snitch != null && Snitch.snitch == player2)
         {

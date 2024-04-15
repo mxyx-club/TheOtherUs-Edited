@@ -5,12 +5,12 @@
         "13": "The Other Roles \u8bbe\u7f6e"
     },
     "fullCredentialsVersion": {
-        "0": "<size=130%><color=#ff351f>TheOtherUs</color></size> ",
-        "13": "<size=130%><color=#ff351f>\u6211\u4eec\u7684\u8d85\u591a\u804c\u4e1a</color></size> "
+        "0": "<size=130%><color=#ff351f>TheOtherUs-Edited</color></size> ",
+        "13": "<size=130%><color=#ff351f>TheOtherUs-Edited</color></size> "
     },
     "fullCredentialsVersion2": {
-        "0": "<size=110%><color=#ff351f>TheOtherUs</color></size> ",
-        "13": "<size=110%><color=#ff351f>\u6211\u4eec\u7684\u8d85\u591a\u804c\u4e1a</color></size> "
+        "0": "<size=110%><color=#ff351f>TheOtherUs-Edited</color></size> ",
+        "13": "<size=110%><color=#ff351f>TheOtherUs-Edited</color></size> "
     },
     "gameTitle2": {
         "0": "<size=75%>Modified by <color=#FFB793>mxyx.club</color>\nBased on TheOtherUs</size>",
@@ -46,7 +46,7 @@
     },
     "creditsString1": {
         "0": "<align=\"center\"><b>TheOtherUs-Edited Team:</b>\nmxyx    Huier-Huang    haoren\nImp2    FangKuaiYa\n\n<b>Former TheOtherUs Team Members:</b>\nSpexGH    Xer    FangKuaiYa    mxyx    Huier-Huang\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n\n",
-        "13": "<align=\"center\"><b>TheOtherUs-Edited \u5f00\u53d1\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    \u5584\u826f\u7684\u597d\u4eba    Imp11\n\n<b>\u7f8e\u5de5:</b>\n\u65b9\u5757\n\n<b>\u7ffb\u8bd1:</b>\nEN\uff1a\u4e5d\u5934\u86c7\nCN\uff1a\u6cab\u590f\u60a0\u8f69\n\n<b>GitHub\u8d21\u732e\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    Imp11\n\n<b>\u524d TheOtherUs \u5f00\u53d1\u8005:</b>\nSpexGH    Xer    \u65b9\u5757    \u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d\n\n\u672c\u6a21\u7ec4\u4f7f\u7528\u4e86\u90e8\u5206[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA[]\u7684\u4ee3\u7801\uff0c\u611f\u8c22Imp11\u7684\u652f\u6301\uff01\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n\n"
+        "13": "<align=\"center\"><b>TheOtherUs-Edited \u5f00\u53d1\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    \u5584\u826f\u7684\u597d\u4eba    Imp11\n\n<b>\u7f8e\u5de5:</b>\n\u65b9\u5757\n\n<b>\u7ffb\u8bd1:</b>\nEN\uff1a\u4e5d\u5934\u86c7\nCN\uff1a\u6cab\u590f\u60a0\u8f69\n\n<b>GitHub\u8d21\u732e\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    Imp11\n\n<b>\u524d TheOtherUs \u5f00\u53d1\u8005:</b>\nSpexGH    Xer    \u65b9\u5757    \u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d\n\n\n\u672c\u6a21\u7ec4\u4f7f\u7528\u4e86\u90e8\u5206[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA[]\u7684\u4ee3\u7801\uff0c\u611f\u8c22Imp11\u7684\u652f\u6301\uff01\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
     },
     "medicShowAttemptText": {
         "0": "Failed Murder Attempt on Shielded Player",
@@ -366,25 +366,32 @@
         "13": "\u523a\u5ba2\u6570\u91cf"
     },
     "modifierAssassinNumberOfShots": {
-        "0": "Number Of Shots"
+        "0": "Number Of Shots",
+        "13": "\u731c\u6d4b\u6b21\u6570\uff08\u523a\u5ba2\u5171\u4eab\uff09"
     },
     "modifierAssassinMultipleShotsPerMeeting": {
-        "0": "Can Shoot Multiple Times Per Meeting"
+        "0": "Can Shoot Multiple Times Per Meeting",
+        "13": "\u540c\u4e00\u8f6e\u4f1a\u8bae\u53ef\u591a\u6b21\u731c\u6d4b"
     },
     "guesserEvilCanKillSpy": {
-        "0": "Can Guess The Spy"
+        "0": "Can Guess The Spy",
+        "13": "\u53ef\u4ee5\u731c\u6d4b\u804c\u4e1a\u201c\u5367\u5e95\u201d"
     },
     "guesserEvilCanKillCrewmate": {
-        "0": "Can Guess Crewmate"
+        "0": "Can Guess Crewmate",
+        "13": "\u53ef\u4ee5\u731c\u6d4b\u804c\u4e1a\u201c\u8239\u5458\u201d"
     },
     "guesserCantGuessSnitchIfTaksDone": {
-        "0": "Can't Guess Snitch When Revealed"
+        "0": "Can't Guess Snitch When Revealed",
+        "13": "\u4e0d\u53ef\u731c\u6d4b\u5b8c\u6210\u4efb\u52a1\u7684\u544a\u5bc6\u8005"
     },
     "modifierAssassinKillsThroughShield": {
-        "0": "Guesses Ignore The Medic Shield"
+        "0": "Guesses Ignore The Medic Shield",
+        "13": "\u731c\u6d4b\u65e0\u89c6\u6cd5\u533b\u62a4\u76fe\u4fdd\u62a4"
     },
     "modifierAssassinCultist": {
-        "0": "Cultist Follower Gets Ability"
+        "0": "Cultist Follower Gets Ability",
+        "13": "\u65b0\u4fe1\u5f92\u53ef\u6210\u4e3a\u523a\u5ba2"
     },
     "mafiaSpawnRate": {
         "0": "Mafia",
@@ -544,7 +551,8 @@
     },
     "LighterText": {
         "0": "[BLANK]",
-        "13": "\u70b9\u706f"
+        "13": "\u70b9\u706f",
+        "15": " "
     },
     "LightsOutText": {
         "0": "[BLANK]",
@@ -558,9 +566,9 @@
         "0": "[BLANK]",
         "13": "\u5b89\u88c5"
     },
-    "PlaceJackInTheBoxText": {
+    "PlacePortalText": {
         "0": "[BLANK]",
-        "13": "\u5b89\u88c5\u661f\u95e8"
+        "13": "\u8bbe\u7f6e"
     },
     "RepairText": {
         "0": "[BLANK]",
@@ -597,6 +605,10 @@
     "TrackerText": {
         "0": "[BLANK]",
         "13": "\u8ffd\u8e2a"
+    },
+    "TrackerCorpsesText": {
+        "0": "[BLANK]",
+        "13": "\u5bfb\u627e\u5c38\u4f53"
     },
     "TricksterVentText": {
         "0": "[BLANK]",
@@ -637,10 +649,6 @@
     "HandcuffText": {
         "0": "[BLANK]",
         "13": "\u4e0a\u94d0"
-    },
-    "PlacePortalText": {
-        "0": "[BLANK]",
-        "13": "\u8bbe\u7f6e"
     },
     "PortalTeleportText": {
         "0": "[BLANK]",
@@ -803,11 +811,15 @@
         "0": "[BLANK]",
         "13": "\u5206\u6563"
     },
-    "TricksterPlaceText1": {
+    "TricksterPlaceText": {
         "0": "[BLANK]",
         "13": "\u653e\u7f6e"
     },
-    "TricksterPlaceText2": {
+    "TerroristBombText1": {
+        "0": "[BLANK]",
+        "13": "\u653e\u7f6e"
+    },
+    "TerroristBombText2": {
         "0": "[BLANK]",
         "13": "\u81ea\u7206"
     }

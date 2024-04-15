@@ -1,3 +1,4 @@
+using BepInEx;
 using BepInEx.Logging;
 using System;
 using System.Text;
@@ -10,7 +11,7 @@ internal static class LogHelper
 
     internal static void SetLogSource(ManualLogSource Source)
     {
-        System.Console.OutputEncoding = Encoding.UTF8;
+        if (ConsoleManager.ConsoleEnabled) System.Console.OutputEncoding = Encoding.UTF8;
         logSource = Source;
     }
 
