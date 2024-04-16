@@ -1,13 +1,14 @@
 #nullable enable
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
 using InnerNet;
 using PowerTools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
@@ -24,100 +25,102 @@ namespace TheOtherRoles;
 
 public enum RoleId
 {
+    Impostor,
+    Godfather,
+    Mafioso,
+    Janitor,
+    Morphling,
+    Bomber2,
+    Mimic,
+    Camouflager,
+    Miner,
+    Eraser,
+    Vampire,
+    Undertaker,
+    Escapist,
+    Warlock,
+    Trickster,
+    BountyHunter,
+    Cultist,
+    Cleaner,
+    Bomber,
+    Blackmailer,
+    Witch,
+    Ninja,
+    Follower,
+
+    Amnisiac,
     Jester,
+    Vulture,
+    Lawyer,
+    Prosecutor,
+    Pursuer,
+    Doomsayer,
+    Arsonist,
+    Jackal,
+    Sidekick,
+    Werewolf,
+    Swooper,
+    Juggernaut,
+    Akujo,
+    Thief,
+
+
+    Crew,
+    Crewmate,
+    NiceGuesser,
     Mayor,
     Portalmaker,
     Engineer,
     PrivateInvestigator,
     Sheriff,
     Deputy,
-    Cultist,
+    BodyGuard,
     Lighter,
-    Werewolf,
-    Godfather,
-    Mafioso,
-    Crew,
-    Janitor,
+    Jumper,
     Detective,
     TimeMaster,
-    Mimic,
     Veteren,
-    Amnisiac,
-    Cursed,
     Medic,
     Swapper,
     Seer,
-    Morphling,
-    Bomber2,
-    Camouflager,
     Hacker,
     Tracker,
-    Vampire,
     Snitch,
-    Jackal,
-    Sidekick,
-    Follower,
-    Eraser,
-    BodyGuard,
     Spy,
-    Trickster,
-    Cleaner,
-    Undertaker,
-    Warlock,
     SecurityGuard,
-    Arsonist,
-    EvilGuesser,
-    NiceGuesser,
-    BountyHunter,
-    Miner,
-    Vulture,
     Medium,
     Trapper,
     Prophet,
-    Lawyer,
-    Prosecutor,
-    Pursuer,
-    Witch,
-    Jumper,
-    Escapist,
-    Ninja,
-    Blackmailer,
-    Thief,
-    Bomber,
-    Juggernaut,
-    Doomsayer,
-    Akujo,
     //Magician,
 
-    Crewmate,
-    Impostor,
-
     // Modifier ---
+    Lover,
+    EvilGuesser,
     Disperser,
     Poucher,
-    Lover,
-    Bait,
+    LastImpostor,
     Bloody,
     AntiTeleport,
     Tiebreaker,
-    Indomitable,
-    Slueth,
-    Swooper,
-    Sunglasses,
-    Torch,
+    Bait,
     Flash,
+    Torch,
+    Sunglasses,
     Multitasker,
     Mini,
     Vip,
-    Tunneler,
-    ButtonBarry,
+    Indomitable,
+    Slueth,
+    Cursed,
+    Invert,
+    Blind,
     Watcher,
     Radar,
-    Blind,
-    Invert,
+    Tunneler,
+    ButtonBarry,
     Chameleon,
     Shifter,
-    LastImpostor
 }
 
 public enum CustomRPC
@@ -125,131 +128,131 @@ public enum CustomRPC
     // Main Controls
 
     ResetVaribles = 60,
-    ShareOptions = 61,
-    ForceEnd = 62,
-    WorkaroundSetRoles = 63,
-    SetRole = 64,
-    SetModifier = 65,
-    VersionHandshake = 66,
-    UseUncheckedVent = 67,
-    UncheckedMurderPlayer = 68,
-    UncheckedCmdReportDeadBody = 69,
-    UncheckedExilePlayer = 70,
-    DynamicMapOption = 71,
-    SetGameStarting = 72,
-    ShareGamemode = 73,
-    VersionHandshakeEx = 74,
+    ShareOptions,
+    ForceEnd,
+    WorkaroundSetRoles,
+    SetRole,
+    SetModifier,
+    VersionHandshake,
+    UseUncheckedVent,
+    UncheckedMurderPlayer,
+    UncheckedCmdReportDeadBody,
+    UncheckedExilePlayer,
+    DynamicMapOption,
+    SetGameStarting,
+    ShareGamemode,
+    VersionHandshakeEx,
     StopStart,
 
     // Role functionality
 
     EngineerFixLights = 101,
-    EngineerFixSubmergedOxygen = 102,
-    EngineerUsedRepair = 103,
-    CleanBody = 104,
-    Mine = 105,
-    ShowIndomitableFlash = 106,
-    DragBody = 107,
-    DropBody = 108,
-    MedicSetShielded = 109,
-    ShowBodyGuardFlash = 110,
-    ShowCultistFlash = 111,
-    ShowFollowerFlash = 112,
-    ShieldedMurderAttempt = 113,
-    TimeMasterShield = 114,
-    TimeMasterRewindTime = 115,
-    TurnToImpostor = 116,
-    BodyGuardGuardPlayer = 117,
-    PrivateInvestigatorWatchPlayer = 118,
-    PrivateInvestigatorWatchFlash = 119,
-    VeterenAlert = 120,
-    VeterenKill = 121,
-    ShifterShift = 122,
-    SwapperSwap = 123,
-    MorphlingMorph = 124,
-    CamouflagerCamouflage = 125,
-    DoomsayerMeeting = 126,
+    EngineerFixSubmergedOxygen,
+    EngineerUsedRepair,
+    CleanBody,
+    Mine,
+    ShowIndomitableFlash,
+    DragBody,
+    DropBody,
+    MedicSetShielded,
+    ShowBodyGuardFlash,
+    ShowCultistFlash,
+    ShowFollowerFlash,
+    ShieldedMurderAttempt,
+    TimeMasterShield,
+    TimeMasterRewindTime,
+    TurnToImpostor,
+    BodyGuardGuardPlayer,
+    PrivateInvestigatorWatchPlayer,
+    PrivateInvestigatorWatchFlash,
+    VeterenAlert,
+    VeterenKill,
+    ShifterShift,
+    SwapperSwap,
+    MorphlingMorph,
+    CamouflagerCamouflage,
+    DoomsayerMeeting,
 
     //CamoComms,
-    TrackerUsedTracker = 127,
-    VampireSetBitten = 128,
-    PlaceGarlic = 129,
-    GiveBomb = 130,
-    DeputyUsedHandcuffs = 131,
-    DeputyPromotes = 132,
-    JackalCreatesSidekick = 133,
-    SidekickPromotes = 134,
-    ErasePlayerRoles = 135,
-    SetFutureErased = 136,
-    SetFutureReveal = 137,
-    SetFutureShifted = 138,
-    Disperse = 139,
-    SetFutureShielded = 140,
-    SetFutureSpelled = 141,
-    PlaceNinjaTrace = 142,
-    PlacePortal = 143,
-    AmnisiacTakeRole = 144,
-    MimicMimicRole = 145,
-    UsePortal = 146,
-    CultistCreateImposter = 147,
-    TurnToCrewmate = 148,
-    PlaceJackInTheBox = 149,
-    LightsOut = 150,
-    PlaceCamera = 151,
-    SealVent = 152,
-    ArsonistWin = 153,
-    GuesserShoot = 154,
-    LawyerSetTarget = 155,
-    LawyerPromotesToPursuer = 156,
-    BlackmailPlayer = 157,
-    UseCameraTime = 158,
-    UseVitalsTime = 159,
-    UnblackmailPlayer = 160,
-    SetBlanked = 161,
-    Bloody = 162,
-    SetFirstKill = 163,
-    SetMeetingChatOverlay = 164,
-    SetPosition = 165,
-    SetPositionESC = 166,
-    SetTiebreak = 167,
-    SetInvisibleGen = 168,
-    SetSwoop = 169,
+    TrackerUsedTracker,
+    VampireSetBitten,
+    PlaceGarlic,
+    GiveBomb,
+    DeputyUsedHandcuffs,
+    DeputyPromotes,
+    JackalCreatesSidekick,
+    SidekickPromotes,
+    ErasePlayerRoles,
+    SetFutureErased,
+    SetFutureReveal,
+    SetFutureShifted,
+    Disperse,
+    SetFutureShielded,
+    SetFutureSpelled,
+    PlaceNinjaTrace,
+    PlacePortal,
+    AmnisiacTakeRole,
+    MimicMimicRole,
+    UsePortal,
+    CultistCreateImposter,
+    TurnToCrewmate,
+    PlaceJackInTheBox,
+    LightsOut,
+    PlaceCamera,
+    SealVent,
+    ArsonistWin,
+    GuesserShoot,
+    LawyerSetTarget,
+    LawyerPromotesToPursuer,
+    BlackmailPlayer,
+    UseCameraTime,
+    UseVitalsTime,
+    UnblackmailPlayer,
+    SetBlanked,
+    Bloody,
+    SetFirstKill,
+    SetMeetingChatOverlay,
+    SetPosition,
+    SetPositionESC,
+    SetTiebreak,
+    SetInvisibleGen,
+    SetSwoop,
 
     // SetSwooper,
-    SetInvisible = 170,
-    ThiefStealsRole = 171,
-    SetTrap = 172,
-    TriggerTrap = 173,
-    MayorSetVoteTwice = 174,
-    PlaceBomb = 175,
-    DefuseBomb = 176,
-    //ShareRoom = 177,
+    SetInvisible,
+    ThiefStealsRole,
+    SetTrap,
+    TriggerTrap,
+    MayorSetVoteTwice,
+    PlaceBomb,
+    DefuseBomb,
+    //ShareRoom,
 
     // Gamemode
-    SetGuesserGm = 178,
-    HuntedShield = 179,
-    HuntedRewindTime = 180,
-    SetProp = 181,
-    SetRevealed = 182,
-    PropHuntStartTimer = 183,
-    PropHuntSetInvis = 184,
-    PropHuntSetSpeedboost = 185,
+    SetGuesserGm,
+    HuntedShield,
+    HuntedRewindTime,
+    SetProp,
+    SetRevealed,
+    PropHuntStartTimer,
+    PropHuntSetInvis,
+    PropHuntSetSpeedboost,
 
     // Other functionality
-    ShareTimer = 186,
-    ShareGhostInfo = 187,
+    ShareTimer,
+    ShareGhostInfo,
 
     //魅魔
-    AkujoSetHonmei = 188,
-    AkujoSetKeep = 189,
-    AkujoSuicide = 190,
+    AkujoSetHonmei,
+    AkujoSetKeep,
+    AkujoSuicide,
 
-    ButtonBarry = 191,
+    ButtonBarry,
 
-    MayorMeeting = 192,
-    ButtonBarryMeeting = 193,
-    ProphetExamine = 194,
-    ImpostorPromotesToLastImpostor = 195
+    MayorMeeting,
+    ButtonBarryMeeting,
+    ProphetExamine,
+    ImpostorPromotesToLastImpostor
 }
 
 public static class RPCProcedure
@@ -1368,13 +1371,13 @@ public static class RPCProcedure
                 Detective.detective = Mimic.mimic;
                 Mimic.hasMimic = true;
                 break;
-                /*
-            case RoleId.NiceGuesser:
-                if (Amnisiac.resetRole) //Guesser.clearAndReload();
-                    Guesser.niceGuesser = Mimic.mimic;
-                Mimic.hasMimic = true;
-                break;
-                */
+            /*
+        case RoleId.NiceGuesser:
+            if (Amnisiac.resetRole) //Guesser.clearAndReload();
+                Guesser.niceGuesser = Mimic.mimic;
+            Mimic.hasMimic = true;
+            break;
+            */
             case RoleId.TimeMaster:
                 if (Amnisiac.resetRole) TimeMaster.clearAndReload();
                 TimeMaster.timeMaster = Mimic.mimic;
@@ -1664,7 +1667,6 @@ public static class RPCProcedure
         }
         else
         {
-            LastImpostor.promoteToLastImpostor();
             var wasSpy = Spy.spy != null && player == Spy.spy;
             var wasImpostor = player.Data.Role.IsImpostor; // This can only be reached if impostors can be sidekicked.
             FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
@@ -1849,199 +1851,10 @@ public static class RPCProcedure
 
     public static void disperse()
     {
-        var skeldSpawn = new List<Vector3>
-        {
-            new(-2.2f, 2.2f, 0.0f), //cafeteria. botton. top left.
-            new(0.7f, 2.2f, 0.0f), //caffeteria. button. top right.
-            new(-2.2f, -0.2f, 0.0f), //caffeteria. button. bottom left.
-            new(0.7f, -0.2f, 0.0f), //caffeteria. button. bottom right.
-            new(10.0f, 3.0f, 0.0f), //weapons top
-            new(9.0f, 1.0f, 0.0f), //weapons bottom
-            new(6.5f, -3.5f, 0.0f), //O2
-            new(11.5f, -3.5f, 0.0f), //O2-nav hall
-            new(17.0f, -3.5f, 0.0f), //navigation top
-            new(18.2f, -5.7f, 0.0f), //navigation bottom
-            new(11.5f, -6.5f, 0.0f), //nav-shields top
-            new(9.5f, -8.5f, 0.0f), //nav-shields bottom
-            new(9.2f, -12.2f, 0.0f), //shields top
-            new(8.0f, -14.3f, 0.0f), //shields bottom
-            new(2.5f, -16f, 0.0f), //coms left
-            new(4.2f, -16.4f, 0.0f), //coms middle
-            new(5.5f, -16f, 0.0f), //coms right
-            new(-1.5f, -10.0f, 0.0f), //storage top
-            new(-1.5f, -15.5f, 0.0f), //storage bottom
-            new(-4.5f, -12.5f, 0.0f), //storrage left
-            new(0.3f, -12.5f, 0.0f), //storrage right
-            new(4.5f, -7.5f, 0.0f), //admin top
-            new(4.5f, -9.5f, 0.0f), //admin bottom
-            new(-9.0f, -8.0f, 0.0f), //elec top left
-            new(-6.0f, -8.0f, 0.0f), //elec top right
-            new(-8.0f, -11.0f, 0.0f), //elec bottom
-            new(-12.0f, -13.0f, 0.0f), //elec-lower hall
-            new(-17f, -10f, 0.0f), //lower engine top
-            new(-17.0f, -13.0f, 0.0f), //lower engine bottom
-            new(-21.5f, -3.0f, 0.0f), //reactor top
-            new(-21.5f, -8.0f, 0.0f), //reactor bottom
-            new(-13.0f, -3.0f, 0.0f), //security top
-            new(-12.6f, -5.6f, 0.0f), // security bottom
-            new(-17.0f, 2.5f, 0.0f), //upper engibe top
-            new(-17.0f, -1.0f, 0.0f), //upper engine bottom
-            new(-10.5f, 1.0f, 0.0f), //upper-mad hall
-            new(-10.5f, -2.0f, 0.0f), //medbay top
-            new(-6.5f, -4.5f, 0.0f) //medbay bottom
-        };
-
-        var miraSpawn = new List<Vector3>
-        {
-            new(-4.5f, 3.5f, 0.0f), //launchpad top
-            new(-4.5f, -1.4f, 0.0f), //launchpad bottom
-            new(8.5f, -1f, 0.0f), //launchpad- med hall
-            new(14f, -1.5f, 0.0f), //medbay
-            new(16.5f, 3f, 0.0f), // comms
-            new(10f, 5f, 0.0f), //lockers
-            new(6f, 1.5f, 0.0f), //locker room
-            new(2.5f, 13.6f, 0.0f), //reactor
-            new(6f, 12f, 0.0f), //reactor middle
-            new(9.5f, 13f, 0.0f), //lab
-            new(15f, 9f, 0.0f), //bottom left cross
-            new(17.9f, 11.5f, 0.0f), //middle cross
-            new(14f, 17.3f, 0.0f), //office
-            new(19.5f, 21f, 0.0f), //admin
-            new(14f, 24f, 0.0f), //greenhouse left
-            new(22f, 24f, 0.0f), //greenhouse right
-            new(21f, 8.5f, 0.0f), //bottom right cross
-            new(28f, 3f, 0.0f), //caf right
-            new(22f, 3f, 0.0f), //caf left
-            new(19f, 4f, 0.0f), //storage
-            new(22f, -2f, 0.0f) //balcony
-        };
-
-        var polusSpawn = new List<Vector3>
-        {
-            new(16.6f, -1f, 0.0f), //dropship top
-            new(16.6f, -5f, 0.0f), //dropship bottom
-            new(20f, -9f, 0.0f), //above storrage
-            new(22f, -7f, 0.0f), //right fuel
-            new(25.5f, -6.9f, 0.0f), //drill
-            new(29f, -9.5f, 0.0f), //lab lockers
-            new(29.5f, -8f, 0.0f), //lab weather notes
-            new(35f, -7.6f, 0.0f), //lab table
-            new(40.4f, -8f, 0.0f), //lab scan
-            new(33f, -10f, 0.0f), //lab toilet
-            new(39f, -15f, 0.0f), //specimen hall top
-            new(36.5f, -19.5f, 0.0f), //specimen top
-            new(36.5f, -21f, 0.0f), //specimen bottom
-            new(28f, -21f, 0.0f), //specimen hall bottom
-            new(24f, -20.5f, 0.0f), //admin tv
-            new(22f, -25f, 0.0f), //admin books
-            new(16.6f, -17.5f, 0.0f), //office coffe
-            new(22.5f, -16.5f, 0.0f), //office projector
-            new(24f, -17f, 0.0f), //office figure
-            new(27f, -16.5f, 0.0f), //office lifelines
-            new(32.7f, -15.7f, 0.0f), //lavapool
-            new(31.5f, -12f, 0.0f), //snowmad below lab
-            new(10f, -14f, 0.0f), //below storrage
-            new(21.5f, -12.5f, 0.0f), //storrage vent
-            new(19f, -11f, 0.0f), //storrage toolrack
-            new(12f, -7f, 0.0f), //left fuel
-            new(5f, -7.5f, 0.0f), //above elec
-            new(10f, -12f, 0.0f), //elec fence
-            new(9f, -9f, 0.0f), //elec lockers
-            new(5f, -9f, 0.0f), //elec window
-            new(4f, -11.2f, 0.0f), //elec tapes
-            new(5.5f, -16f, 0.0f), //elec-O2 hall
-            new(1f, -17.5f, 0.0f), //O2 tree hayball
-            new(3f, -21f, 0.0f), //O2 middle
-            new(2f, -19f, 0.0f), //O2 gas
-            new(1f, -24f, 0.0f), //O2 water
-            new(7f, -24f, 0.0f), //under O2
-            new(9f, -20f, 0.0f), //right outside of O2
-            new(7f, -15.8f, 0.0f), //snowman under elec
-            new(11f, -17f, 0.0f), //comms table
-            new(12.7f, -15.5f, 0.0f), //coms antenna pult
-            new(13f, -24.5f, 0.0f), //weapons window
-            new(15f, -17f, 0.0f), //between coms-office
-            new(17.5f, -25.7f, 0.0f) //snowman under office
-        };
-
-        var dleksSpawn = new List<Vector3>
-        {
-            new(2.2f, 2.2f, 0.0f), //cafeteria. botton. top left.
-            new(-0.7f, 2.2f, 0.0f), //caffeteria. button. top right.
-            new(2.2f, -0.2f, 0.0f), //caffeteria. button. bottom left.
-            new(-0.7f, -0.2f, 0.0f), //caffeteria. button. bottom right.
-            new(-10.0f, 3.0f, 0.0f), //weapons top
-            new(-9.0f, 1.0f, 0.0f), //weapons bottom
-            new(-6.5f, -3.5f, 0.0f), //O2
-            new(-11.5f, -3.5f, 0.0f), //O2-nav hall
-            new(-17.0f, -3.5f, 0.0f), //navigation top
-            new(-18.2f, -5.7f, 0.0f), //navigation bottom
-            new(-11.5f, -6.5f, 0.0f), //nav-shields top
-            new(-9.5f, -8.5f, 0.0f), //nav-shields bottom
-            new(-9.2f, -12.2f, 0.0f), //shields top
-            new(-8.0f, -14.3f, 0.0f), //shields bottom
-            new(-2.5f, -16f, 0.0f), //coms left
-            new(-4.2f, -16.4f, 0.0f), //coms middle
-            new(-5.5f, -16f, 0.0f), //coms right
-            new(1.5f, -10.0f, 0.0f), //storage top
-            new(1.5f, -15.5f, 0.0f), //storage bottom
-            new(4.5f, -12.5f, 0.0f), //storrage left
-            new(-0.3f, -12.5f, 0.0f), //storrage right
-            new(-4.5f, -7.5f, 0.0f), //admin top
-            new(-4.5f, -9.5f, 0.0f), //admin bottom
-            new(9.0f, -8.0f, 0.0f), //elec top left
-            new(6.0f, -8.0f, 0.0f), //elec top right
-            new(8.0f, -11.0f, 0.0f), //elec bottom
-            new(12.0f, -13.0f, 0.0f), //elec-lower hall
-            new(17f, -10f, 0.0f), //lower engine top
-            new(17.0f, -13.0f, 0.0f), //lower engine bottom
-            new(21.5f, -3.0f, 0.0f), //reactor top
-            new(21.5f, -8.0f, 0.0f), //reactor bottom
-            new(13.0f, -3.0f, 0.0f), //security top
-            new(12.6f, -5.6f, 0.0f), // security bottom
-            new(17.0f, 2.5f, 0.0f), //upper engibe top
-            new(17.0f, -1.0f, 0.0f), //upper engine bottom
-            new(10.5f, 1.0f, 0.0f), //upper-mad hall
-            new(10.5f, -2.0f, 0.0f), //medbay top
-            new(6.5f, -4.5f, 0.0f) //medbay bottom
-        };
-        var fungleSpawn = new List<Vector3>
-            {
-                new(-10.0842f, 13.0026f, 0.013f),
-                new(0.9815f, 6.7968f, 0.0068f),
-                new(22.5621f, 3.2779f, 0.0033f),
-                new(-1.8699f, -1.3406f, -0.0013f),
-                new(12.0036f, 2.6763f, 0.0027f),
-                new(21.705f, -7.8691f, -0.0079f),
-                new(1.4485f, -1.6105f, -0.0016f),
-                new(-4.0766f, -8.7178f, -0.0087f),
-                new(2.9486f, 1.1347f, 0.0011f),
-                new(-4.2181f, -8.6795f, -0.0087f),
-                new(19.5553f, -12.5014f, -0.0125f),
-                new(15.2497f, -16.5009f, -0.0165f),
-                new(-22.7174f, -7.0523f, 0.0071f),
-                new(-16.5819f, -2.1575f, 0.0022f),
-                new(9.399f, -9.7127f, -0.0097f),
-                new(7.3723f, 1.7373f, 0.0017f),
-                new(22.0777f, -7.9315f, -0.0079f),
-                new(-15.3916f, -9.3659f, -0.0094f),
-                new(-16.1207f, -0.1746f, -0.0002f),
-                new(-23.1353f, -7.2472f, -0.0072f),
-                new(-20.0692f, -2.6245f, -0.0026f),
-                new(-4.2181f, -8.6795f, -0.0087f),
-                new(-9.9285f, 12.9848f, 0.013f),
-                new(-8.3475f, 1.6215f, 0.0016f),
-                new(-17.7614f, 6.9115f, 0.0069f),
-                new(-0.5743f, -4.7235f, -0.0047f),
-                new(-20.8897f, 2.7606f, 0.002f)
-            };
-
-        var airshipSpawn = new List<Vector3>(); //no spawns since it already has random spawns
-
         AntiTeleport.setPosition();
         Helpers.showFlash(Cleaner.color);
-        if (AntiTeleport.antiTeleport.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId)
-                .Count == 0 && !CachedPlayer.LocalPlayer.Data.IsDead)
+
+        if (AntiTeleport.antiTeleport.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId).Count == 0 && !CachedPlayer.LocalPlayer.Data.IsDead)
         {
             foreach (PlayerControl player in CachedPlayer.AllPlayers)
             {
@@ -2053,38 +1866,26 @@ public static class RPCProcedure
                 {
                     PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
                     PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
-                }
-
+                };
                 if (Disperser.DispersesToVent)
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = FindVentPoss.findVentPoss()[rnd.Next(FindVentPoss.findVentPoss().Count)];
+                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = MapData.FindVentSpawnPositions().Random();
                 }
                 else
                 {
-                    switch (GameOptionsManager.Instance.currentNormalGameOptions.MapId)
-                    {
-                        case 0:
-                            CachedPlayer.LocalPlayer.PlayerControl.transform.position = skeldSpawn[rnd.Next(skeldSpawn.Count)];
-                            break;
-                        case 1:
-                            CachedPlayer.LocalPlayer.PlayerControl.transform.position = miraSpawn[rnd.Next(miraSpawn.Count)];
-                            break;
-                        case 2:
-                            CachedPlayer.LocalPlayer.PlayerControl.transform.position = polusSpawn[rnd.Next(polusSpawn.Count)];
-                            break;
-                        case 3:
-                            CachedPlayer.LocalPlayer.PlayerControl.transform.position = dleksSpawn[rnd.Next(dleksSpawn.Count)];
-                            break;
-                        case 4:
-                            CachedPlayer.LocalPlayer.PlayerControl.transform.position = airshipSpawn[rnd.Next(airshipSpawn.Count)];
-                            break;
-                        case 5:
-                            CachedPlayer.LocalPlayer.PlayerControl.transform.position = fungleSpawn[rnd.Next(fungleSpawn.Count)];
-                            break;
-                    }
+                    CachedPlayer.LocalPlayer.PlayerControl.transform.position =
+                        GameOptionsManager.Instance.currentNormalGameOptions.MapId switch
+                        {
+                            0 => MapData.SkeldSpawnPosition.Random(),
+                            1 => MapData.MiraSpawnPosition.Random(),
+                            2 => MapData.PolusSpawnPosition.Random(),
+                            3 => MapData.DleksSpawnPosition.Random(),
+                            4 => MapData.AirshipSpawnPosition.Random(),
+                            5 => MapData.FungleSpawnPosition.Random(),
+                            _ => CachedPlayer.LocalPlayer.PlayerControl.transform.position
+                        };
                 }
             }
-
             Disperser.remainingDisperses--;
         }
     }
@@ -3069,10 +2870,7 @@ internal class RPCHandlerPatch
         var packetId = (CustomRPC)callId;
         if (RpcNames!.ContainsKey(packetId))
             return;
-        if (enableDebugLogMode)
-        {
-            Info($"接收 PlayerControl 原版Rpc RpcId{callId} Message Size {reader.Length}");
-        }
+        if (enableDebugLogMode)Info($"接收 PlayerControl 原版Rpc RpcId{callId} Message Size {reader.Length}");
     }
 
     private static bool Prefix([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
@@ -3084,10 +2882,7 @@ internal class RPCHandlerPatch
         if (!RpcNames!.ContainsKey(packetId))
             return true;
 
-        if (enableDebugLogMode)
-        {
-            Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc Name{RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
-        }
+        if (enableDebugLogMode) Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc Name{RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
         switch (packetId)
         {
             // Main Controls
@@ -3279,7 +3074,6 @@ internal class RPCHandlerPatch
                 }
 
                 break;
-
 
             case CustomRPC.VampireSetBitten:
                 var bittenId = reader.ReadByte();
@@ -3563,11 +3357,11 @@ internal class RPCHandlerPatch
                 RPCProcedure.receiveGhostInfo(reader.ReadByte(), reader);
                 break;
             /*
-        case CustomRPC.ShareRoom:
-            var roomPlayer = reader.ReadByte();
-            var roomId = reader.ReadByte();
-            RPCProcedure.shareRoom(roomPlayer, roomId);
-            break;
+            case CustomRPC.ShareRoom:
+                var roomPlayer = reader.ReadByte();
+                var roomId = reader.ReadByte();
+                RPCProcedure.shareRoom(roomPlayer, roomId);
+                break;
             */
             case CustomRPC.MayorMeeting:
                 RPCProcedure.StartMayorMeeting();

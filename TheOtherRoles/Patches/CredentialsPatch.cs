@@ -1,8 +1,8 @@
-﻿using InnerNet;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using InnerNet;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Utilities;
 using TMPro;

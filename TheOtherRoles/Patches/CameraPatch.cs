@@ -1,6 +1,6 @@
-using Hazel;
 using System;
 using System.Linq;
+using Hazel;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;

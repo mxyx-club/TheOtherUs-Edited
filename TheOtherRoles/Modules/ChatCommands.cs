@@ -1,7 +1,7 @@
-using Hazel;
-using InnerNet;
 using System;
 using System.Linq;
+using Hazel;
+using InnerNet;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;

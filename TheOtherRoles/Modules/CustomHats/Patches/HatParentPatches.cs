@@ -1,7 +1,7 @@
-﻿using PowerTools;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
+using PowerTools;
 using TheOtherRoles.Modules.CustomHats.Extensions;
 using UnityEngine;
 

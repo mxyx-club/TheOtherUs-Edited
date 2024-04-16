@@ -1,9 +1,9 @@
-using AmongUs.GameOptions;
-using PowerTools;
-using Reactor.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AmongUs.GameOptions;
+using PowerTools;
+using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Utilities;
 using TMPro;

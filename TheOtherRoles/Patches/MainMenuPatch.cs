@@ -1,7 +1,7 @@
+using System;
 using AmongUs.Data;
 using Assets.InnerNet;
 using Il2CppSystem.Collections.Generic;
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;

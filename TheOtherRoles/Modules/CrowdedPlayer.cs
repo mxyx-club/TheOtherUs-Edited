@@ -1,9 +1,9 @@
-using AmongUs.GameOptions;
-using Reactor.Utilities.Attributes;
-using Reactor.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AmongUs.GameOptions;
+using Reactor.Utilities.Attributes;
+using Reactor.Utilities.Extensions;
 using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;

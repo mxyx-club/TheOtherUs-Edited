@@ -1,5 +1,5 @@
-using Hazel;
 using System;
+using Hazel;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 

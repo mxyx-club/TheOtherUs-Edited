@@ -1,8 +1,8 @@
-using InnerNet;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using InnerNet;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
@@ -114,7 +114,6 @@ public class RoleInfo
     public static List<RoleInfo> allRoleInfos = new()
     {
         impostor,
-        assassin,
         godfather,
         mafioso,
         janitor,
@@ -143,15 +142,15 @@ public class RoleInfo
         lawyer,
         prosecutor,
         pursuer,
+        doomsayer,
+        arsonist,
         jackal,
         sidekick,
-        arsonist,
         werewolf,
-        thief,
         swooper,
         juggernaut,
-        doomsayer,
         akujo,
+        thief,
 
         crewmate,
         goodGuesser,
@@ -180,17 +179,19 @@ public class RoleInfo
         prophet,
         //Magician
 
+        lover,
+        assassin,
         disperser,
         poucher,
+        lastImpostor,
         bloody,
         antiTeleport,
         tiebreaker,
         bait,
-        sunglasses,
-        torch,
         flash,
+        torch,
+        sunglasses,
         multitasker,
-        lover,
         mini,
         vip,
         indomitable,
@@ -204,7 +205,6 @@ public class RoleInfo
         buttonBarry,
         chameleon,
         shifter,
-        lastImpostor
     };
 
 

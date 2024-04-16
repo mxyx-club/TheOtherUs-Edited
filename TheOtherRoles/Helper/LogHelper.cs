@@ -1,7 +1,7 @@
-using BepInEx;
-using BepInEx.Logging;
 using System;
 using System.Text;
+using BepInEx;
+using BepInEx.Logging;
 
 namespace TheOtherRoles.Helper;
 

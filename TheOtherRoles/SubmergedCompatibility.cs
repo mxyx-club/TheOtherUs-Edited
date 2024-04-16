@@ -1,9 +1,9 @@
-﻿using BepInEx;
-using BepInEx.Unity.IL2CPP;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using BepInEx;
+using BepInEx.Unity.IL2CPP;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using UnityEngine;

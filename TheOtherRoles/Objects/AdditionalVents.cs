@@ -1,6 +1,6 @@
-﻿using InnerNet;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using InnerNet;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
