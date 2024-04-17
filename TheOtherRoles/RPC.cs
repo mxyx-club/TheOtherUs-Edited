@@ -43,7 +43,7 @@ public enum RoleId
     BountyHunter,
     Cultist,
     Cleaner,
-    Bomber,
+    Terrorist,
     Blackmailer,
     Witch,
     Ninja,
@@ -550,8 +550,8 @@ public static class RPCProcedure
                     case RoleId.Thief:
                         Thief.thief = player;
                         break;
-                    case RoleId.Bomber:
-                        Bomber.bomber = player;
+                    case RoleId.Terrorist:
+                        Terrorist.terrorist = player;
                         break;
                     case RoleId.Juggernaut:
                         Juggernaut.juggernaut = player;
@@ -1018,10 +1018,10 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 break;
 
-            case RoleId.Bomber:
+            case RoleId.Terrorist:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
-                if (Amnisiac.resetRole) Bomber.clearAndReload();
-                Bomber.bomber = amnisiac;
+                if (Amnisiac.resetRole) Terrorist.clearAndReload();
+                Terrorist.terrorist = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1759,7 +1759,7 @@ public static class RPCProcedure
         if (player == Ninja.ninja) Ninja.clearAndReload();
         if (player == Blackmailer.blackmailer) Blackmailer.clearAndReload();
         if (player == Follower.follower) Follower.clearAndReload();
-        if (player == Bomber.bomber) Bomber.clearAndReload();
+        if (player == Terrorist.terrorist) Terrorist.clearAndReload();
         if (player == Prophet.prophet) Prophet.clearAndReload();
 
 
@@ -2620,7 +2620,7 @@ public static class RPCProcedure
 
         if (target == Ninja.ninja) Ninja.ninja = thief;
         if (target == Escapist.escapist) Escapist.escapist = thief;
-        if (target == Bomber.bomber) Bomber.bomber = thief;
+        if (target == Terrorist.terrorist) Terrorist.terrorist = thief;
         if (target == Bomber2.bomber2) Bomber2.bomber2 = thief;
         if (target == Miner.miner) Miner.miner = thief;
         if (target == Undertaker.undertaker) Undertaker.undertaker = thief;
@@ -2821,7 +2821,7 @@ public static class RPCProcedure
 
     public static void placeBomb(byte[] buff)
     {
-        if (Bomber.bomber == null) return;
+        if (Terrorist.terrorist == null) return;
         var position = Vector3.zero;
         position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
         position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
@@ -2832,17 +2832,17 @@ public static class RPCProcedure
     {
         try
         {
-            SoundEffectsManager.playAtPosition("bombDefused", Bomber.bomb.bomb.transform.position,
-                range: Bomber.hearRange);
+            SoundEffectsManager.playAtPosition("bombDefused", Terrorist.bomb.bomb.transform.position,
+                range: Terrorist.hearRange);
         }
         catch
         {
         }
 
-        Bomber.clearBomb();
-        bomberButton.Timer = bomberButton.MaxTimer;
-        bomberButton.isEffectActive = false;
-        bomberButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+        Terrorist.clearBomb();
+        terroristButton.Timer = terroristButton.MaxTimer;
+        terroristButton.isEffectActive = false;
+        terroristButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
     }
     /*
     public static void shareRoom(byte playerId, byte roomId)

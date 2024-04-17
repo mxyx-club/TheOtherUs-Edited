@@ -31,7 +31,7 @@ public class RoleInfo
     public static RoleInfo bountyHunter = new("赏金猎人", BountyHunter.color, "追捕你的赏金目标", "追捕你的赏金目标", RoleId.BountyHunter);
     public static RoleInfo cultist = new("传教士", Cultist.color, "为了古神的诞生", "招募信徒并杀害所有敌人", RoleId.Cultist);
     public static RoleInfo follower = new("新信徒", Cleaner.color, "为了古神的诞生", "杀死所有敌人", RoleId.Follower, true);
-    public static RoleInfo bomber = new("恐怖分子", Bomber.color, "我是个疯子，有医生开的证明", "我会给你们数到3的时间，3!bom!", RoleId.Bomber);
+    public static RoleInfo terrorist = new("恐怖分子", Terrorist.color, "我会给你们数到3的时间，3!bom!", "炸死所有敌人!", RoleId.Terrorist);
     public static RoleInfo blackmailer = new("勒索者", Blackmailer.color, "嘘——红温警告", "勒索其他玩家使其无法发言", RoleId.Blackmailer);
     public static RoleInfo witch = new("女巫", Witch.color, "那么，代价是什么？", "对敌人下咒", RoleId.Witch);
     public static RoleInfo ninja = new("忍者", Ninja.color, "忍者之道，在于隐忍", "标记目标并闪现击杀", RoleId.Ninja);
@@ -131,7 +131,7 @@ public class RoleInfo
         bountyHunter,
         cultist,
         cleaner,
-        bomber,
+        terrorist,
         blackmailer,
         witch,
         ninja,
@@ -306,7 +306,7 @@ public class RoleInfo
         if (p == Escapist.escapist) infos.Add(escapist);
         if (p == Ninja.ninja) infos.Add(ninja);
         if (p == Blackmailer.blackmailer) infos.Add(blackmailer);
-        if (p == Bomber.bomber) infos.Add(bomber);
+        if (p == Terrorist.terrorist) infos.Add(terrorist);
         if (p == Detective.detective) infos.Add(detective);
         if (p == TimeMaster.timeMaster) infos.Add(timeMaster);
         if (p == Cultist.cultist) infos.Add(cultist);

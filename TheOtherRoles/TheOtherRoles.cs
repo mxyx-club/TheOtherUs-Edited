@@ -80,7 +80,7 @@ public static class TheOtherRoles
         Thief.clearAndReload();
         Miner.clearAndReload();
         Trapper.clearAndReload();
-        Bomber.clearAndReload();
+        Terrorist.clearAndReload();
         //天启添加
         Juggernaut.clearAndReload();
         Doomsayer.clearAndReload();
@@ -3046,9 +3046,9 @@ public static class Trapper
     }
 }
 
-public static class Bomber
+public static class Terrorist
 {
-    public static PlayerControl bomber;
+    public static PlayerControl terrorist;
     public static Color color = Palette.ImpostorRed;
 
     public static Bomb bomb;
@@ -3088,18 +3088,18 @@ public static class Bomber
     public static void clearAndReload()
     {
         clearBomb(false);
-        bomber = null;
+        terrorist = null;
         bomb = null;
         isPlanted = false;
         isActive = false;
         bombText = getString("TerroristBombText1");
         if (destructionTime + bombActiveAfter == 0) bombText = getString("TerroristBombText2");
-        destructionTime = CustomOptionHolder.bomberBombDestructionTime.getFloat();
-        destructionRange = CustomOptionHolder.bomberBombDestructionRange.getFloat() / 10;
-        hearRange = CustomOptionHolder.bomberBombHearRange.getFloat() / 10;
-        defuseDuration = CustomOptionHolder.bomberDefuseDuration.getFloat();
-        bombCooldown = CustomOptionHolder.bomberBombCooldown.getFloat();
-        bombActiveAfter = CustomOptionHolder.bomberBombActiveAfter.getFloat();
+        destructionTime = CustomOptionHolder.terroristBombDestructionTime.getFloat();
+        destructionRange = CustomOptionHolder.terroristBombDestructionRange.getFloat() / 10;
+        hearRange = CustomOptionHolder.terroristBombHearRange.getFloat() / 10;
+        defuseDuration = CustomOptionHolder.terroristDefuseDuration.getFloat();
+        bombCooldown = CustomOptionHolder.terroristBombCooldown.getFloat();
+        bombActiveAfter = CustomOptionHolder.terroristBombActiveAfter.getFloat();
         Bomb.clearBackgroundSprite();
     }
 }

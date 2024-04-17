@@ -33,24 +33,24 @@ public class Bomb
 
         bomb.SetActive(false);
         background.SetActive(false);
-        if (CachedPlayer.LocalPlayer.PlayerControl == Bomber.bomber) bomb.SetActive(true);
-        Bomber.bomb = this;
+        if (CachedPlayer.LocalPlayer.PlayerControl == Terrorist.terrorist) bomb.SetActive(true);
+        Terrorist.bomb = this;
         var c = Color.white;
         var g = Color.red;
         backgroundRenderer.color = Color.white;
-        Bomber.isActive = false;
+        Terrorist.isActive = false;
 
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombActiveAfter,
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Terrorist.bombActiveAfter,
             new Action<float>(x =>
             {
                 if ((int)x != 1) return;
                 bomb.SetActive(true);
                 background.SetActive(true);
-                SoundEffectsManager.playAtPosition("bombFuseBurning", p, Bomber.destructionTime, Bomber.hearRange,
+                SoundEffectsManager.playAtPosition("bombFuseBurning", p, Terrorist.destructionTime, Terrorist.hearRange,
                     true);
-                Bomber.isActive = true;
+                Terrorist.isActive = true;
 
-                FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.destructionTime,
+                FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Terrorist.destructionTime,
                     new Action<float>(f =>
                     {
                         // can you feel the pain?
@@ -72,7 +72,7 @@ public class Bomb
     {
         if (backgroundSprite) return backgroundSprite;
         backgroundSprite =
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.BombBackground.png", 110f / Bomber.hearRange);
+            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.hearRange);
         return backgroundSprite;
     }
 
@@ -86,16 +86,16 @@ public class Bomb
     public static void explode(Bomb b)
     {
         if (b == null) return;
-        if (Bomber.bomber != null)
+        if (Terrorist.terrorist != null)
         {
             var position = b.bomb.transform.position;
             var distance =
                 Vector2.Distance(position,
                     CachedPlayer.LocalPlayer.transform
                         .position); // every player only checks that for their own client (desynct with positions sucks)
-            if (distance < Bomber.destructionRange && !CachedPlayer.LocalPlayer.Data.IsDead)
+            if (distance < Terrorist.destructionRange && !CachedPlayer.LocalPlayer.Data.IsDead)
             {
-                Helpers.checkMurderAttemptAndKill(Bomber.bomber, CachedPlayer.LocalPlayer.PlayerControl, false, false,
+                Helpers.checkMurderAttemptAndKill(Terrorist.terrorist, CachedPlayer.LocalPlayer.PlayerControl, false, false,
                     true, true);
 
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
@@ -104,34 +104,34 @@ public class Bomb
                 writer.Write((byte)RPCProcedure.GhostInfoTypes.DeathReasonAndKiller);
                 writer.Write(CachedPlayer.LocalPlayer.PlayerId);
                 writer.Write((byte)DeadPlayer.CustomDeathReason.Bomb);
-                writer.Write(Bomber.bomber.PlayerId);
+                writer.Write(Terrorist.terrorist.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 GameHistory.overrideDeathReasonAndKiller(CachedPlayer.LocalPlayer, DeadPlayer.CustomDeathReason.Bomb,
-                    Bomber.bomber);
+                    Terrorist.terrorist);
             }
 
-            SoundEffectsManager.playAtPosition("bombExplosion", position, range: Bomber.hearRange);
+            SoundEffectsManager.playAtPosition("bombExplosion", position, range: Terrorist.hearRange);
         }
 
-        Bomber.clearBomb();
+        Terrorist.clearBomb();
         canDefuse = false;
-        Bomber.isActive = false;
+        Terrorist.isActive = false;
     }
 
     public static void update()
     {
-        if (Bomber.bomb == null || !Bomber.isActive)
+        if (Terrorist.bomb == null || !Terrorist.isActive)
         {
             canDefuse = false;
             return;
         }
 
-        Bomber.bomb.background.transform.Rotate(Vector3.forward * 50 * Time.fixedDeltaTime);
+        Terrorist.bomb.background.transform.Rotate(Vector3.forward * 50 * Time.fixedDeltaTime);
 
-        if (MeetingHud.Instance && Bomber.bomb != null) Bomber.clearBomb();
+        if (MeetingHud.Instance && Terrorist.bomb != null) Terrorist.clearBomb();
 
         if (Vector2.Distance(CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(),
-                Bomber.bomb.bomb.transform.position) > 1f) canDefuse = false;
+                Terrorist.bomb.bomb.transform.position) > 1f) canDefuse = false;
         else canDefuse = true;
     }
 

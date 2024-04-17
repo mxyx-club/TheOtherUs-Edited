@@ -1135,7 +1135,7 @@ internal class MeetingHudPatch
             // Remove revealed traps
             Trap.clearRevealedTraps();
 
-            Bomber.clearBomb();
+            Terrorist.clearBomb();
 
             // Reset zoomed out ghosts
             Helpers.toggleZoom(true);
@@ -1228,7 +1228,7 @@ internal class MeetingHudPatch
             if (Blackmailer.blackmailed == null) return;
             if (Blackmailer.blackmailed.Data.PlayerId != CachedPlayer.LocalPlayer.PlayerId ||
                 Blackmailer.blackmailed.Data.IsDead) return;
-            // Nothing here for now. What to do when local player who is blackmailed starts meeting
+            //Nothing here for now. What to do when local player who is blackmailed starts meeting
             //Coroutines.Start(BlackmailShhh());
             if (Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl)
                 Coroutines.Start(Helpers.BlackmailShhh());

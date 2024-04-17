@@ -9,6 +9,7 @@ using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
+using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -88,7 +89,7 @@ internal static class HudManagerStartPatch
 
     public static CustomButton trapperButton;
     public static CustomButton prophetButton;
-    public static CustomButton bomberButton;
+    public static CustomButton terroristButton;
     public static CustomButton defuseButton;
     public static CustomButton zoomOutButton;
     private static CustomButton hunterLighterButton;
@@ -198,7 +199,7 @@ internal static class HudManagerStartPatch
 
         mayorMeetingButton.MaxTimer = 1f;
         trapperButton.MaxTimer = Trapper.cooldown;
-        bomberButton.MaxTimer = Bomber.bombCooldown;
+        terroristButton.MaxTimer = Terrorist.bombCooldown;
         hunterLighterButton.MaxTimer = Hunter.lightCooldown;
         hunterAdminTableButton.MaxTimer = Hunter.AdminCooldown;
         hunterArrowButton.MaxTimer = Hunter.ArrowCooldown;
@@ -233,8 +234,8 @@ internal static class HudManagerStartPatch
         hunterLighterButton.EffectDuration = Hunter.lightDuration;
         hunterArrowButton.EffectDuration = Hunter.ArrowDuration;
         huntedShieldButton.EffectDuration = Hunted.shieldDuration;
-        defuseButton.EffectDuration = Bomber.defuseDuration;
-        bomberButton.EffectDuration = Bomber.destructionTime + Bomber.bombActiveAfter;
+        defuseButton.EffectDuration = Terrorist.defuseDuration;
+        terroristButton.EffectDuration = Terrorist.destructionTime + Terrorist.bombActiveAfter;
         propHuntUnstuckButton.EffectDuration = PropHunt.unstuckDuration;
         propHuntRevealButton.EffectDuration = PropHunt.revealDuration;
         propHuntInvisButton.EffectDuration = PropHunt.invisDuration;
@@ -3538,10 +3539,10 @@ internal static class HudManagerStartPatch
         );
 
         // Bomber button
-        bomberButton = new CustomButton(
+        terroristButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkMuderAttempt(Bomber.bomber, Bomber.bomber) != MurderAttemptResult.BlankKill)
+                if (Helpers.checkMuderAttempt(Terrorist.terrorist, Terrorist.terrorist) != MurderAttemptResult.BlankKill)
                 {
                     var pos = CachedPlayer.LocalPlayer.transform.position;
                     var buff = new byte[sizeof(float) * 2];
@@ -3557,39 +3558,52 @@ internal static class HudManagerStartPatch
                     SoundEffectsManager.play("trapperTrap");
                 }
 
-                bomberButton.Timer = bomberButton.MaxTimer;
-                Bomber.isPlanted = true;
+                terroristButton.Timer = terroristButton.MaxTimer;
+                Terrorist.isPlanted = true;
+                if (Terrorist.defuseDuration + Terrorist.bombActiveAfter <= 1)
+                {
+                    var loacl = CachedPlayer.LocalPlayer.PlayerId;
+
+                    var killWriter = AmongUsClient.Instance.StartRpcImmediately(
+                        CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedMurderPlayer,
+                        SendOption.Reliable);
+                    killWriter.Write(Terrorist.terrorist.Data.PlayerId);
+                    killWriter.Write(loacl);
+                    killWriter.Write(byte.MaxValue);
+                    AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                    RPCProcedure.uncheckedMurderPlayer(Terrorist.terrorist.Data.PlayerId, loacl, byte.MaxValue);
+                }
             },
             () =>
             {
-                return Bomber.bomber != null && Bomber.bomber == CachedPlayer.LocalPlayer.PlayerControl &&
+                return Terrorist.terrorist != null && Terrorist.terrorist == CachedPlayer.LocalPlayer.PlayerControl &&
                        !CachedPlayer.LocalPlayer.Data.IsDead;
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Bomber.isPlanted; },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Terrorist.isPlanted; },
             () =>
             {
-                bomberButton.Timer = bomberButton.MaxTimer;
+                terroristButton.Timer = terroristButton.MaxTimer;
             },
-            Bomber.getButtonSprite(),
+            Terrorist.getButtonSprite(),
             CustomButton.ButtonPositions.upperRowLeft,
             __instance,
             KeyCode.F,
             true,
-            Bomber.destructionTime,
+            Terrorist.destructionTime,
             () =>
             {
-                bomberButton.Timer = bomberButton.MaxTimer;
-                bomberButton.isEffectActive = false;
-                bomberButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+                terroristButton.Timer = terroristButton.MaxTimer;
+                terroristButton.isEffectActive = false;
+                terroristButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
-            buttonText: Bomber.bombText
+            buttonText: Terrorist.bombText
         );
 
         defuseButton = new CustomButton(
             () => { defuseButton.HasEffect = true; },
             () =>
             {
-                return Bomber.bomb != null && Bomb.canDefuse && !CachedPlayer.LocalPlayer.Data.IsDead;
+                return Terrorist.bomb != null && Bomb.canDefuse && !CachedPlayer.LocalPlayer.Data.IsDead;
             },
             () =>
             {
@@ -3611,7 +3625,7 @@ internal static class HudManagerStartPatch
             __instance,
             null,
             true,
-            Bomber.defuseDuration,
+            Terrorist.defuseDuration,
             () =>
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
