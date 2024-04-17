@@ -41,12 +41,11 @@ public class CustomOptionHolder
     public static CustomOption morphlingCooldown;
     public static CustomOption morphlingDuration;
 
-    public static CustomOption bomber2SpawnRate;
-    public static CustomOption bomber2BombCooldown;
-    public static CustomOption bomber2Delay;
-
-    public static CustomOption bomber2Timer;
-    //public static CustomOption bomber2HotPotatoMode;
+    public static CustomOption bomberSpawnRate;
+    public static CustomOption bomberBombCooldown;
+    public static CustomOption bomberDelay;
+    public static CustomOption bomberTimer;
+    //public static CustomOption bomberHotPotatoMode;
 
     public static CustomOption undertakerSpawnRate;
     public static CustomOption undertakerDragingDelaiAfterKill;
@@ -749,11 +748,11 @@ public class CustomOptionHolder
         morphlingCooldown = CustomOption.Create(10111, Types.Impostor, "化形冷却", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);
         morphlingDuration = CustomOption.Create(10112, Types.Impostor, "化形持续时间", 15f, 1f, 20f, 0.5f, morphlingSpawnRate);
 
-        bomber2SpawnRate = CustomOption.Create(10120, Types.Impostor, cs(Bomber2.color, "炸弹狂"), rates, null, true);
-        bomber2BombCooldown = CustomOption.Create(10121, Types.Impostor, "炸弹冷却", 25f, 10f, 60f, 2.5f, bomber2SpawnRate);
-        bomber2Delay = CustomOption.Create(10122, Types.Impostor, "炸弹激活时间", 5f, 0f, 20f, 0.5f, bomber2SpawnRate);
-        bomber2Timer = CustomOption.Create(10123, Types.Impostor, "炸弹爆炸时间", 10f, 5f, 30f, 0.5f, bomber2SpawnRate);
-        //bomber2HotPotatoMode = CustomOption.Create(10124, Types.Impostor, "烫手山芋模式", true, bomber2SpawnRate);
+        bomberSpawnRate = CustomOption.Create(10120, Types.Impostor, cs(Bomber.color, "炸弹狂"), rates, null, true);
+        bomberBombCooldown = CustomOption.Create(10121, Types.Impostor, "炸弹冷却", 25f, 10f, 60f, 2.5f, bomberSpawnRate);
+        bomberDelay = CustomOption.Create(10122, Types.Impostor, "炸弹激活时间", 5f, 0f, 20f, 0.5f, bomberSpawnRate);
+        bomberTimer = CustomOption.Create(10123, Types.Impostor, "炸弹爆炸时间", 10f, 5f, 30f, 0.5f, bomberSpawnRate);
+        //bomberHotPotatoMode = CustomOption.Create(10124, Types.Impostor, "烫手山芋模式", true, bomberSpawnRate);
 
         undertakerSpawnRate = CustomOption.Create(10130, Types.Impostor, cs(Undertaker.color, "送葬者"), rates, null, true);
         undertakerDragingDelaiAfterKill = CustomOption.Create(10131, Types.Impostor, "从击杀到恢复拖曳能力所需时间", 0f, 0f, 15, 0.5f, undertakerSpawnRate);

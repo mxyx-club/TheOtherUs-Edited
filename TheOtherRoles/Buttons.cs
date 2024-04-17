@@ -30,8 +30,8 @@ internal static class HudManagerStartPatch
     public static CustomButton medicShieldButton;
     private static CustomButton cultistTurnButton;
     private static CustomButton shifterShiftButton;
-    private static CustomButton bomber2BombButton;
-    private static CustomButton bomber2KillButton;
+    private static CustomButton bomberBombButton;
+    private static CustomButton bomberKillButton;
     private static CustomButton disperserDisperseButton;
     private static CustomButton buttonBarryButton;
     private static CustomButton morphlingButton;
@@ -147,7 +147,7 @@ internal static class HudManagerStartPatch
         disperserDisperseButton.MaxTimer = 0f;
         buttonBarryButton.MaxTimer = 0f;
         morphlingButton.MaxTimer = Morphling.cooldown;
-        bomber2BombButton.MaxTimer = Bomber2.cooldown;
+        bomberBombButton.MaxTimer = Bomber.cooldown;
         camouflagerButton.MaxTimer = Camouflager.cooldown;
         portalmakerPlacePortalButton.MaxTimer = Portalmaker.cooldown;
         usePortalButton.MaxTimer = Portalmaker.usePortalCooldown;
@@ -176,8 +176,8 @@ internal static class HudManagerStartPatch
         arsonistButton.MaxTimer = Arsonist.cooldown;
         vultureEatButton.MaxTimer = Vulture.cooldown;
         amnisiacRememberButton.MaxTimer = 0f;
-        bomber2KillButton.MaxTimer = 0f;
-        bomber2KillButton.Timer = 0f;
+        bomberKillButton.MaxTimer = 0f;
+        bomberKillButton.Timer = 0f;
         mediumButton.MaxTimer = Medium.cooldown;
         pursuerButton.MaxTimer = Pursuer.cooldown;
         trackerTrackCorpsesButton.MaxTimer = Tracker.corpsesTrackingCooldown;
@@ -224,7 +224,7 @@ internal static class HudManagerStartPatch
         werewolfRampageButton.EffectDuration = Werewolf.rampageDuration;
         camouflagerButton.EffectDuration = Camouflager.duration;
         morphlingButton.EffectDuration = Morphling.duration;
-        bomber2BombButton.EffectDuration = Bomber2.bombDelay + Bomber2.bombTimer;
+        bomberBombButton.EffectDuration = Bomber.bombDelay + Bomber.bombTimer;
         lightsOutButton.EffectDuration = Trickster.lightsOutDuration;
         arsonistButton.EffectDuration = Arsonist.duration;
         mediumButton.EffectDuration = Medium.duration;
@@ -972,7 +972,7 @@ internal static class HudManagerStartPatch
                 ButtonBarry.remoteMeetingsLeft--;
 
                 Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                Helpers.handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                Helpers.handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
 
                 var sabotageActive = false;
@@ -2007,59 +2007,59 @@ internal static class HudManagerStartPatch
             buttonText: ModTranslation.getString("minerText")
         );
 
-        bomber2BombButton = new CustomButton(
+        bomberBombButton = new CustomButton(
             () =>
             {
                 /* On Use */
-                if (Helpers.checkAndDoVetKill(Bomber2.currentTarget)) return;
-                Helpers.checkWatchFlash(Bomber2.currentTarget);
+                if (Helpers.checkAndDoVetKill(Bomber.currentTarget)) return;
+                Helpers.checkWatchFlash(Bomber.currentTarget);
                 var bombWriter = AmongUsClient.Instance.StartRpcImmediately(
                     CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, SendOption.Reliable);
-                bombWriter.Write(Bomber2.currentTarget.PlayerId);
+                bombWriter.Write(Bomber.currentTarget.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
-                RPCProcedure.giveBomb(Bomber2.currentTarget.PlayerId);
-                Bomber2.bomber2.killTimer = Bomber2.bombTimer + Bomber2.bombDelay;
-                bomber2BombButton.Timer = bomber2BombButton.MaxTimer;
+                RPCProcedure.giveBomb(Bomber.currentTarget.PlayerId);
+                Bomber.bomber.killTimer = Bomber.bombTimer + Bomber.bombDelay;
+                bomberBombButton.Timer = bomberBombButton.MaxTimer;
             },
             () =>
             {
                 /* Can See */
-                return Bomber2.bomber2 != null && Bomber2.bomber2 == CachedPlayer.LocalPlayer.PlayerControl &&
+                return Bomber.bomber != null && Bomber.bomber == CachedPlayer.LocalPlayer.PlayerControl &&
                        !CachedPlayer.LocalPlayer.Data.IsDead;
             },
             () =>
             {
                 /* On Click */
-                return Bomber2.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                return Bomber.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () =>
             {
                 /* On Meeting End */
-                bomber2BombButton.Timer = bomber2BombButton.MaxTimer;
-                bomber2BombButton.isEffectActive = false;
-                bomber2BombButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-                Bomber2.hasBomb = null;
+                bomberBombButton.Timer = bomberBombButton.MaxTimer;
+                bomberBombButton.isEffectActive = false;
+                bomberBombButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+                Bomber.hasBomb = null;
             },
-            Bomber2.getButtonSprite(),
+            Bomber.getButtonSprite(),
             CustomButton.ButtonPositions.upperRowLeft, //brb
             __instance,
             KeyCode.F
         );
 
-        bomber2KillButton = new CustomButton(
+        bomberKillButton = new CustomButton(
             () =>
             {
                 /* On Use */
-                if (Bomber2.currentBombTarget == Bomber2.bomber2)
+                if (Bomber.currentBombTarget == Bomber.bomber)
                 {
                     var killWriter = AmongUsClient.Instance.StartRpcImmediately(
                         CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedMurderPlayer,
                         SendOption.Reliable);
-                    killWriter.Write(Bomber2.bomber2.Data.PlayerId);
-                    killWriter.Write(Bomber2.hasBomb.Data.PlayerId);
+                    killWriter.Write(Bomber.bomber.Data.PlayerId);
+                    killWriter.Write(Bomber.hasBomb.Data.PlayerId);
                     killWriter.Write(0);
                     AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-                    RPCProcedure.uncheckedMurderPlayer(Bomber2.bomber2.Data.PlayerId, Bomber2.hasBomb.Data.PlayerId, 0);
+                    RPCProcedure.uncheckedMurderPlayer(Bomber.bomber.Data.PlayerId, Bomber.hasBomb.Data.PlayerId, 0);
 
                     var bombWriter1 = AmongUsClient.Instance.StartRpcImmediately(
                         CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, SendOption.Reliable);
@@ -2069,8 +2069,8 @@ internal static class HudManagerStartPatch
                     return;
                 }
 
-                if (Helpers.checkAndDoVetKill(Bomber2.currentBombTarget)) return;
-                if (Helpers.checkMuderAttemptAndKill(Bomber2.hasBomb, Bomber2.currentBombTarget) ==
+                if (Helpers.checkAndDoVetKill(Bomber.currentBombTarget)) return;
+                if (Helpers.checkMuderAttemptAndKill(Bomber.hasBomb, Bomber.currentBombTarget) ==
                     MurderAttemptResult.SuppressKill) return;
                 var bombWriter = AmongUsClient.Instance.StartRpcImmediately(
                     CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, SendOption.Reliable);
@@ -2081,19 +2081,19 @@ internal static class HudManagerStartPatch
             () =>
             {
                 /* Can See */
-                return Bomber2.bomber2 != null && Bomber2.hasBomb == CachedPlayer.LocalPlayer.PlayerControl &&
-                       Bomber2.bombActive && !CachedPlayer.LocalPlayer.Data.IsDead;
+                return Bomber.bomber != null && Bomber.hasBomb == CachedPlayer.LocalPlayer.PlayerControl &&
+                       Bomber.bombActive && !CachedPlayer.LocalPlayer.Data.IsDead;
             },
             () =>
             {
                 /* Can Click */
-                return Bomber2.currentBombTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                return Bomber.currentBombTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () =>
             {
                 /* On Meeting End */
             },
-            Bomber2.getButtonSprite(),
+            Bomber.getButtonSprite(),
             //          0, -0.06f, 0
             new Vector3(-4.5f, 1.5f, 0),
             __instance,
@@ -3407,7 +3407,7 @@ internal static class HudManagerStartPatch
                 Mayor.remoteMeetingsLeft--;
 
                 Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                Helpers.handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                Helpers.handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
 
                 var sabotageActive = false;

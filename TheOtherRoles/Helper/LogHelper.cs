@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using BepInEx;
 using BepInEx.Logging;
+using InnerNet;
 
 namespace TheOtherRoles.Helper;
 
@@ -113,7 +117,7 @@ internal static class LogListener
         .Where(m => m != null);
     
     [HarmonyPostfix]
-    internal static void OnRpc(InnerNetObject __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
+    internal static void OnRpc(InnerNetObject __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] Hazel.MessageReader reader)
     {
         Info($"{__instance.name} {callId} {reader.Length} {reader.Tag}");
     }

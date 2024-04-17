@@ -473,10 +473,10 @@ public static class Helpers
         RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
     }
 
-    public static void handleBomber2ExplodeOnBodyReport()
+    public static void handleBomberExplodeOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        checkMuderAttemptAndKill(Bomber2.bomber2, Bomber2.hasBomb, true, false);
+        checkMuderAttemptAndKill(Bomber.bomber, Bomber.hasBomb, true, false);
         var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
             (byte)CustomRPC.GiveBomb, SendOption.Reliable);
         writer.Write(byte.MaxValue);

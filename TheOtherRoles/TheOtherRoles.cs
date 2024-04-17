@@ -48,7 +48,6 @@ public static class TheOtherRoles
         Lovers.clearAndReload();
         Seer.clearAndReload();
         Morphling.clearAndReload();
-        Bomber2.clearAndReload();
         Camouflager.clearAndReload();
         Cultist.clearAndReload();
         Hacker.clearAndReload();
@@ -69,6 +68,7 @@ public static class TheOtherRoles
         BountyHunter.clearAndReload();
         Vulture.clearAndReload();
         Medium.clearAndReload();
+        Bomber.clearAndReload();
         Lawyer.clearAndReload();
         Pursuer.clearAndReload();
         Witch.clearAndReload();
@@ -1829,9 +1829,9 @@ public static class Cleaner
     }
 }
 
-public static class Bomber2
+public static class Bomber
 {
-    public static PlayerControl bomber2;
+    public static PlayerControl bomber;
     public static Color color = Palette.ImpostorRed;
     public static Color alertColor = Palette.ImpostorRed;
 
@@ -1860,12 +1860,12 @@ public static class Bomber2
 
     public static void clearAndReload()
     {
-        bomber2 = null;
+        bomber = null;
         bombActive = false;
-        cooldown = CustomOptionHolder.bomber2BombCooldown.getFloat();
-        bombDelay = CustomOptionHolder.bomber2Delay.getFloat();
-        bombTimer = CustomOptionHolder.bomber2Timer.getFloat();
-        //hotPotatoMode = CustomOptionHolder.bomber2HotPotatoMode.getBool();
+        cooldown = CustomOptionHolder.bomberBombCooldown.getFloat();
+        bombDelay = CustomOptionHolder.bomberDelay.getFloat();
+        bombTimer = CustomOptionHolder.bomberTimer.getFloat();
+        //hotPotatoMode = CustomOptionHolder.bomberHotPotatoMode.getBool();
     }
 }
 

@@ -200,19 +200,19 @@ public static class PlayerControlFixedUpdatePatch
         if (!Medic.usedShield) setPlayerOutline(Medic.currentTarget, Medic.shieldedColor);
     }
 
-    private static void bomber2SetTarget()
+    private static void bomberSetTarget()
     {
-        setBomber2BombTarget();
-        if (Bomber2.bomber2 == null || Bomber2.bomber2 != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Bomber2.currentTarget = setTarget();
-        if (Bomber2.hasBomb == null) setPlayerOutline(Bomber2.currentTarget, Bomber2.color);
+        setBomberBombTarget();
+        if (Bomber.bomber == null || Bomber.bomber != CachedPlayer.LocalPlayer.PlayerControl) return;
+        Bomber.currentTarget = setTarget();
+        if (Bomber.hasBomb == null) setPlayerOutline(Bomber.currentTarget, Bomber.color);
     }
 
-    private static void setBomber2BombTarget()
+    private static void setBomberBombTarget()
     {
-        if (Bomber2.bomber2 == null || Bomber2.hasBomb != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Bomber2.currentBombTarget = setTarget();
-        //        if (Bomber2.hasBomb != null) setPlayerOutline(Bomber2.currentBombTarget, Bomber2.color);
+        if (Bomber.bomber == null || Bomber.hasBomb != CachedPlayer.LocalPlayer.PlayerControl) return;
+        Bomber.currentBombTarget = setTarget();
+        //if (Bomber.hasBomb != null) setPlayerOutline(Bomber.currentBombTarget, Bomber.color);
     }
 
     private static void bodyGuardSetTarget()
@@ -1476,7 +1476,7 @@ public static class PlayerControlFixedUpdatePatch
                     Helpers
                         .handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                     Helpers
-                        .handleBomber2ExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                        .handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                     RPCProcedure.uncheckedCmdReportDeadBody(entry.Key.killerIfExisting.PlayerId,
                         entry.Key.player.PlayerId);
 
@@ -1757,8 +1757,8 @@ public static class PlayerControlFixedUpdatePatch
             privateInvestigatorSetTarget();
             // Medic
             medicSetTarget();
-            // Bomber2
-            bomber2SetTarget();
+            // Bomber
+            bomberSetTarget();
             // Set Werewolf Target
             werewolfSetTarget();
             //天启
@@ -1903,7 +1903,7 @@ internal class PlayerControlCmdReportDeadBodyPatch
     {
         if (HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM) return false;
         Helpers.handleVampireBiteOnBodyReport();
-        Helpers.handleBomber2ExplodeOnBodyReport();
+        Helpers.handleBomberExplodeOnBodyReport();
         return true;
     }
 }

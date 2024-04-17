@@ -30,7 +30,7 @@ public enum RoleId
     Mafioso,
     Janitor,
     Morphling,
-    Bomber2,
+    Bomber,
     Mimic,
     Camouflager,
     Miner,
@@ -438,8 +438,8 @@ public static class RPCProcedure
                     case RoleId.Morphling:
                         Morphling.morphling = player;
                         break;
-                    case RoleId.Bomber2:
-                        Bomber2.bomber2 = player;
+                    case RoleId.Bomber:
+                        Bomber.bomber = player;
                         break;
                     case RoleId.Camouflager:
                         Camouflager.camouflager = player;
@@ -1011,10 +1011,10 @@ public static class RPCProcedure
                 Morphling.morphling = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
-            case RoleId.Bomber2:
+            case RoleId.Bomber:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
-                if (Amnisiac.resetRole) Bomber2.clearAndReload();
-                Bomber2.bomber2 = amnisiac;
+                if (Amnisiac.resetRole) Bomber.clearAndReload();
+                Bomber.bomber = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1741,7 +1741,7 @@ public static class RPCProcedure
 
         // Impostor roles
         if (player == Morphling.morphling) Morphling.clearAndReload();
-        if (player == Bomber2.bomber2) Bomber2.clearAndReload();
+        if (player == Bomber.bomber) Bomber.clearAndReload();
         if (player == Camouflager.camouflager) Camouflager.clearAndReload();
         if (player == Godfather.godfather) Godfather.clearAndReload();
         if (player == Mafioso.mafioso) Mafioso.clearAndReload();
@@ -1900,58 +1900,58 @@ public static class RPCProcedure
     {
         if (playerId == byte.MaxValue)
         {
-            Bomber2.hasBomb = null;
-            Bomber2.bombActive = false;
-            Bomber2.hasAlerted = false;
-            Bomber2.timeLeft = 0;
+            Bomber.hasBomb = null;
+            Bomber.bombActive = false;
+            Bomber.hasAlerted = false;
+            Bomber.timeLeft = 0;
 
             return;
         }
 
-        Bomber2.hasBomb = Helpers.playerById(playerId);
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber2.bombDelay,
+        Bomber.hasBomb = Helpers.playerById(playerId);
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombDelay,
             new Action<float>(p =>
             {
-                if (p == 1f) Bomber2.bombActive = true;
+                if (p == 1f) Bomber.bombActive = true;
             })));
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber2.bombDelay + Bomber2.bombTimer,
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombDelay + Bomber.bombTimer,
             new Action<float>(p =>
             {
                 // Delayed action
-                if (!Bomber2.hasBomb.isAlive()) return;
-                if (p == 1f && Bomber2.bombActive)
+                if (!Bomber.hasBomb.isAlive()) return;
+                if (p == 1f && Bomber.bombActive)
                 {
                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                    Helpers.checkMuderAttemptAndKill(Bomber2.hasBomb, Bomber2.hasBomb);
-                    Bomber2.hasBomb = null;
-                    Bomber2.bombActive = false;
-                    Bomber2.hasAlerted = false;
-                    Bomber2.timeLeft = 0;
+                    Helpers.checkMuderAttemptAndKill(Bomber.hasBomb, Bomber.hasBomb);
+                    Bomber.hasBomb = null;
+                    Bomber.bombActive = false;
+                    Bomber.hasAlerted = false;
+                    Bomber.timeLeft = 0;
                 }
 
-                if (CachedPlayer.LocalPlayer.PlayerControl == Bomber2.hasBomb)
+                if (CachedPlayer.LocalPlayer.PlayerControl == Bomber.hasBomb)
                 {
-                    var totalTime = (int)(Bomber2.bombDelay + Bomber2.bombTimer);
+                    var totalTime = (int)(Bomber.bombDelay + Bomber.bombTimer);
                     var timeLeft = (int)(totalTime - (totalTime * p));
-                    if (timeLeft <= Bomber2.bombTimer)
+                    if (timeLeft <= Bomber.bombTimer)
                     {
-                        if (Bomber2.timeLeft != timeLeft)
+                        if (Bomber.timeLeft != timeLeft)
                         {
                             new CustomMessage("你手中的炸弹将在 " + timeLeft + " 秒后引爆!", 1f);
-                            Bomber2.timeLeft = timeLeft;
+                            Bomber.timeLeft = timeLeft;
                         }
 
                         if (timeLeft % 5 == 0)
                         {
-                            if (!Bomber2.hasAlerted)
+                            if (!Bomber.hasAlerted)
                             {
-                                Helpers.showFlash(Bomber2.alertColor);
-                                Bomber2.hasAlerted = true;
+                                Helpers.showFlash(Bomber.alertColor);
+                                Bomber.hasAlerted = true;
                             }
                         }
                         else
                         {
-                            Bomber2.hasAlerted = false;
+                            Bomber.hasAlerted = false;
                         }
                     }
                 }
@@ -2621,7 +2621,7 @@ public static class RPCProcedure
         if (target == Ninja.ninja) Ninja.ninja = thief;
         if (target == Escapist.escapist) Escapist.escapist = thief;
         if (target == Terrorist.terrorist) Terrorist.terrorist = thief;
-        if (target == Bomber2.bomber2) Bomber2.bomber2 = thief;
+        if (target == Bomber.bomber) Bomber.bomber = thief;
         if (target == Miner.miner) Miner.miner = thief;
         if (target == Undertaker.undertaker) Undertaker.undertaker = thief;
         if (target.Data.Role.IsImpostor)
