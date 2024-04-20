@@ -31,7 +31,7 @@
     </Target>
 	
 	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-		<Exec Command="python &quot;$(SolutionDir)stringsToJson.py&quot;" />
+		<Exec Condition=" '$(CI)' != 'true' " Command="python &quot;$(SolutionDir)stringsToJson.py&quot;" />
 	</Target>
 	
     <Target Name="CopyCustomContent" AfterTargets="AfterBuild" Condition="Exists('$(AmongUsLatest)/BepInEx/plugins/')">
