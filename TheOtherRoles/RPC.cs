@@ -1514,7 +1514,7 @@ public static class RPCProcedure
         var isMedicAndShow = Medic.medic == CachedPlayer.LocalPlayer.PlayerControl && Medic.showAttemptToMedic;
 
         if (isShieldedAndShow || isMedicAndShow || Helpers.shouldShowGhostInfo())
-            Helpers.showFlash(Palette.ImpostorRed, 0.5f, ModTranslation.getString("medicShowAttemptText"));
+            Helpers.showFlash(Palette.ImpostorRed, 1.5f, ModTranslation.getString("medicShowAttemptText"));
     }
 
     public static void shifterShift(byte targetId)

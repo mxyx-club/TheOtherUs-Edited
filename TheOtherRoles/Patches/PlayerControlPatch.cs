@@ -2069,7 +2069,7 @@ public static class MurderPlayerPatch
         if (Seer.seer != null &&
             (CachedPlayer.LocalPlayer.PlayerControl == Seer.seer || Helpers.shouldShowGhostInfo()) &&
             !Seer.seer.Data.IsDead && Seer.seer != target && Seer.mode <= 1)
-            Helpers.showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f), message: "灵媒信息: 有人死亡");
+            Helpers.showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f), message: getString("seerShowInfoText"));
         if (Seer.deadBodyPositions != null) Seer.deadBodyPositions.Add(target.transform.position);
 
         // Tracker store body positions
