@@ -1173,13 +1173,13 @@ internal class GameOptionsDataPatch
             }
             else if (option.parent.getSelection() > 0)
             {
-                if (option.id == 103) //Deputy
+                if (option.id == 30170) //Deputy
                     sb.AppendLine(
                         $"- {Helpers.cs(Deputy.color, "捕快")}: {option.selections[option.selection].ToString()}");
-                else if (option.id == 224) //Sidekick
+                else if (option.id == 20136) //Sidekick
                     sb.AppendLine(
                         $"- {Helpers.cs(Sidekick.color, "跟班")}: {option.selections[option.selection].ToString()}");
-                else if (option.id == 358) //Prosecutor
+                else if (option.id == 20181) //Prosecutor
                     sb.AppendLine(
                         $"- {Helpers.cs(Lawyer.color, "处刑者")}: {option.selections[option.selection].ToString()}");
             }
@@ -1250,7 +1250,7 @@ internal class GameOptionsDataPatch
                 }
                 else if (option == CustomOptionHolder.modifiersCountMin)
                 {
-                    var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "附加职业");
+                    var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "附加能力");
                     var min = CustomOptionHolder.modifiersCountMin.getSelection();
                     var max = CustomOptionHolder.modifiersCountMax.getSelection();
                     if (min > max) min = max;

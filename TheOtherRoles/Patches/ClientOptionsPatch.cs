@@ -14,39 +14,39 @@ public static class ClientOptionsPatch
 {
     private static readonly SelectionBehaviour[] AllOptions =
     [
-        new SelectionBehaviour("灵魂可见任务&其他信息",
+        new SelectionBehaviour(getString("GhostsSeeInformationText"),
             () => TORMapOptions.ghostsSeeInformation = Main.GhostsSeeInformation.Value =
                 !Main.GhostsSeeInformation.Value, Main.GhostsSeeInformation.Value),
-        new SelectionBehaviour("灵魂可见投票",
+        new SelectionBehaviour(getString("GhostsSeeVotesText"),
             () => TORMapOptions.ghostsSeeVotes =
                 Main.GhostsSeeVotes.Value = !Main.GhostsSeeVotes.Value,
             Main.GhostsSeeVotes.Value),
-        new SelectionBehaviour("灵魂可以看到职业",
+        new SelectionBehaviour(getString("GhostsSeeRolesText"),
             () => TORMapOptions.ghostsSeeRoles =
                 Main.GhostsSeeRoles.Value = !Main.GhostsSeeRoles.Value,
             Main.GhostsSeeRoles.Value),
-        new SelectionBehaviour("灵魂可见附加职业",
+        new SelectionBehaviour(getString("GhostsSeeModifierText"),
             () => TORMapOptions.ghostsSeeModifier = Main.GhostsSeeModifier.Value =
                 !Main.GhostsSeeModifier.Value, Main.GhostsSeeModifier.Value),
-        new SelectionBehaviour("显示职业总结",
+        new SelectionBehaviour(getString("ShowRoleSummaryText"),
             () => TORMapOptions.showRoleSummary =
                 Main.ShowRoleSummary.Value = !Main.ShowRoleSummary.Value,
             Main.ShowRoleSummary.Value),
-        new SelectionBehaviour("显示颜色深浅",
+        new SelectionBehaviour(getString("ShowLighterDarkerText"),
             () => TORMapOptions.showLighterDarker = Main.ShowLighterDarker.Value =
                 !Main.ShowLighterDarker.Value, Main.ShowLighterDarker.Value),
-        new SelectionBehaviour("启用模组光标",
+        new SelectionBehaviour(getString("ToggleCursorText"),
             () => TORMapOptions.toggleCursor =
                 Main.ToggleCursor.Value = !Main.ToggleCursor.Value,
             Main.ToggleCursor.Value),
-        new SelectionBehaviour("启用模组音效",
+        new SelectionBehaviour(getString("EnableSoundEffectsText"),
             () => TORMapOptions.enableSoundEffects = Main.EnableSoundEffects.Value =
                 !Main.EnableSoundEffects.Value, Main.EnableSoundEffects.Value),
-        new SelectionBehaviour("在地图上显示管道",
+        new SelectionBehaviour(getString("ShowVentsOnMapText"),
             () => TORMapOptions.ShowVentsOnMap =
                 Main.ShowVentsOnMap.Value = !Main.ShowVentsOnMap.Value,
             Main.ShowVentsOnMap.Value),
-        new SelectionBehaviour("Debug日志模式",
+        new SelectionBehaviour(getString("EnableDebugLogModeText"),
             () => TORMapOptions.enableDebugLogMode =
                 Main.enableDebugLogMode.Value = !Main.enableDebugLogMode.Value,
             Main.enableDebugLogMode.Value)
@@ -128,7 +128,7 @@ public static class ClientOptionsPatch
         transform2.localScale = new Vector3(0.66f, 1, 1);
 
         moreOptions.gameObject.SetActive(true);
-        moreOptions.Text.text = "模组选项";
+        moreOptions.Text.text = getString("TORMapOptionsButtonText");
         moreOptions.Text.transform.localScale = new Vector3(1 / 0.66f, 1, 1);
         var moreOptionsButton = moreOptions.GetComponent<PassiveButton>();
         moreOptionsButton.OnClick = new ButtonClickedEvent();
@@ -171,7 +171,7 @@ public static class ClientOptionsPatch
         var title = Object.Instantiate(titleText, popUp.transform);
         title.GetComponent<RectTransform>().localPosition = Vector3.up * 2.3f;
         title.gameObject.SetActive(true);
-        title.text = "模组选项";
+        title.text = getString("TORMapOptionsTitleText");
         title.name = "TitleText";
     }
 
@@ -211,7 +211,7 @@ public static class ClientOptionsPatch
 
             passiveButton.OnClick.AddListener((Action)(() =>
             {
-                if (info.Title == "启用模组光标") Helpers.enableCursor(false);
+                if (info.Title == "Better Cursor") Helpers.enableCursor(false);
                 button.onState = info.OnClick();
                 button.Background.color = button.onState ? Color.green : Palette.ImpostorRed;
             }));
