@@ -6,8 +6,6 @@
 
 <p align="center">To other mod devs: for usage of our code, please read and respect the <a href="#license">license</a></p>
 
-[![Discord](./Images/TOR_server.png)](https://discord.gg/yspVyP5meR)
-
 # The Other Us - Edited
 
 **The Other Us - Edited** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
@@ -15,10 +13,10 @@ Even more roles are coming soon.
 
 ## 发行版
 
-| Among Us - Version | Mod Version | Link                                                         |
-| ------------------ | ----------- | ------------------------------------------------------------ |
-| 2024.3.5s          | v1.0.3.3    | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherUs.zip) |
-| 2024.3.5s          | v1.0.3.1    | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
+| 游戏版本  | 模组版本 | 下载链接                                                     |
+| --------- | -------- | ------------------------------------------------------------ |
+| 2024.3.5s | v1.0.3.3 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherUs.zip) |
+| 2024.3.5s | v1.0.3.1 | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
 
 
 
@@ -27,10 +25,10 @@ Even more roles are coming soon.
 ###  v1.0.3.5:
 
  - #### 新增内容：
- 
+
     - 对模组选项增加英译
     - 对所有按钮增加默认冷却为2.5s（给一部分无冷却技能增加提醒）
-    - 法医：延长被保护的玩家被击杀时闪光提醒时间（从0.5s增加到1.5s）
+    - 法医：延长被保护的玩家被击杀时的闪光提醒时间（从0.5s增加到1.5s）
     - 
 
 ###  v1.0.3.4:
@@ -182,6 +180,14 @@ Even more roles are coming soon.
 |                |            |   设陷师   |   交换师   |
 |                |            |   预言家   |            |
 
+## 错误报告
+
+如预见游戏性Bug或者有更多的建议可以在仓库issue提出，或加QQ群：[702829332](https://qm.qq.com/q/3WJt8CjJt)
+
+## 多语言翻译
+
+翻译文件并未完成，预计在1.4.0完成多语言的增加。
+
 ## 模组贡献者
 
 <p align="center">
@@ -236,11 +242,3 @@ TheOtherRolesAU/TheOtherRoles is licensed under the
 [GNU General Public License v3.0](https://github.com/TheOtherRolesAU/TheOtherRoles/blob/main/LICENSE)
 
 Permissions of this strong copyleft license are conditioned on making available **complete source code of licensed works and modifications**, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
-
-## 错误报告
-
-如预见游戏性Bug或者有更多的建议可以在仓库issue提出，或加QQ群：[702829332](https://qm.qq.com/q/3WJt8CjJt)
-
-## 多语言翻译
-
-翻译文件并未完成，预计在1.4.0完成多语言修改。
