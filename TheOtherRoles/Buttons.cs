@@ -20,6 +20,7 @@ internal static class HudManagerStartPatch
 {
     private static bool initialized;
 
+    private static float defaultMaxTimer = 2.5f;
     public static CustomButton engineerRepairButton;
     private static CustomButton janitorCleanButton;
     public static CustomButton sheriffKillButton;
@@ -136,16 +137,16 @@ internal static class HudManagerStartPatch
                 return;
             }
 
-        engineerRepairButton.MaxTimer = 0f;
+        engineerRepairButton.MaxTimer = defaultMaxTimer;
         janitorCleanButton.MaxTimer = Janitor.cooldown;
         sheriffKillButton.MaxTimer = Sheriff.cooldown;
         deputyHandcuffButton.MaxTimer = Deputy.handcuffCooldown;
         timeMasterShieldButton.MaxTimer = TimeMaster.cooldown;
         veterenAlertButton.MaxTimer = Veteren.cooldown;
-        medicShieldButton.MaxTimer = 0f;
-        shifterShiftButton.MaxTimer = 0f;
-        disperserDisperseButton.MaxTimer = 0f;
-        buttonBarryButton.MaxTimer = 0f;
+        medicShieldButton.MaxTimer = defaultMaxTimer;
+        shifterShiftButton.MaxTimer = defaultMaxTimer;
+        disperserDisperseButton.MaxTimer = defaultMaxTimer;
+        buttonBarryButton.MaxTimer = defaultMaxTimer;
         morphlingButton.MaxTimer = Morphling.cooldown;
         bomberBombButton.MaxTimer = Bomber.cooldown;
         camouflagerButton.MaxTimer = Camouflager.cooldown;
@@ -156,11 +157,11 @@ internal static class HudManagerStartPatch
         hackerVitalsButton.MaxTimer = Hacker.cooldown;
         hackerAdminTableButton.MaxTimer = Hacker.cooldown;
         vampireKillButton.MaxTimer = Vampire.cooldown;
-        trackerTrackPlayerButton.MaxTimer = 0f;
+        trackerTrackPlayerButton.MaxTimer = defaultMaxTimer;
         jumperButton.MaxTimer = Jumper.JumpTime;
         escapistButton.MaxTimer = Escapist.EscapeTime;
-        bodyGuardGuardButton.MaxTimer = 0f;
-        garlicButton.MaxTimer = 0f;
+        bodyGuardGuardButton.MaxTimer = defaultMaxTimer;
+        garlicButton.MaxTimer = defaultMaxTimer;
         jackalKillButton.MaxTimer = Jackal.cooldown;
         werewolfKillButton.MaxTimer = Werewolf.killCooldown;
         sidekickKillButton.MaxTimer = Sidekick.cooldown;
@@ -169,15 +170,15 @@ internal static class HudManagerStartPatch
         placeJackInTheBoxButton.MaxTimer = Trickster.placeBoxCooldown;
         lightsOutButton.MaxTimer = Trickster.lightsOutCooldown;
         cleanerCleanButton.MaxTimer = Cleaner.cooldown;
-        undertakerDragButton.MaxTimer = 0f;
+        undertakerDragButton.MaxTimer = defaultMaxTimer;
         warlockCurseButton.MaxTimer = Warlock.cooldown;
         securityGuardButton.MaxTimer = SecurityGuard.cooldown;
         securityGuardCamButton.MaxTimer = SecurityGuard.cooldown;
         arsonistButton.MaxTimer = Arsonist.cooldown;
         vultureEatButton.MaxTimer = Vulture.cooldown;
-        amnisiacRememberButton.MaxTimer = 0f;
-        bomberKillButton.MaxTimer = 0f;
-        bomberKillButton.Timer = 0f;
+        amnisiacRememberButton.MaxTimer = defaultMaxTimer;
+        bomberKillButton.MaxTimer = defaultMaxTimer;
+        bomberKillButton.Timer = defaultMaxTimer;
         mediumButton.MaxTimer = Medium.cooldown;
         pursuerButton.MaxTimer = Pursuer.cooldown;
         trackerTrackCorpsesButton.MaxTimer = Tracker.corpsesTrackingCooldown;
@@ -194,19 +195,19 @@ internal static class HudManagerStartPatch
         swooperSwoopButton.EffectDuration = Swooper.duration;
 
         doomsayerButton.MaxTimer = Doomsayer.cooldown;
-        akujoHonmeiButton.MaxTimer = 2.5f;
-        akujoBackupButton.MaxTimer = 2.5f;
+        akujoHonmeiButton.MaxTimer = defaultMaxTimer;
+        akujoBackupButton.MaxTimer = defaultMaxTimer;
 
-        mayorMeetingButton.MaxTimer = 1f;
+        mayorMeetingButton.MaxTimer = defaultMaxTimer;
         trapperButton.MaxTimer = Trapper.cooldown;
         terroristButton.MaxTimer = Terrorist.bombCooldown;
         hunterLighterButton.MaxTimer = Hunter.lightCooldown;
         hunterAdminTableButton.MaxTimer = Hunter.AdminCooldown;
         hunterArrowButton.MaxTimer = Hunter.ArrowCooldown;
         huntedShieldButton.MaxTimer = Hunted.shieldCooldown;
-        defuseButton.MaxTimer = 0f;
-        defuseButton.Timer = 0f;
-        propDisguiseButton.MaxTimer = 1f;
+        defuseButton.MaxTimer = defaultMaxTimer;
+        defuseButton.Timer = defaultMaxTimer;
+        propDisguiseButton.MaxTimer = defaultMaxTimer;
         propHuntUnstuckButton.MaxTimer = PropHunt.unstuckCooldown;
         propHuntRevealButton.MaxTimer = PropHunt.revealCooldown;
         propHuntInvisButton.MaxTimer = PropHunt.invisCooldown;

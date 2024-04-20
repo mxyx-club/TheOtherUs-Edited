@@ -1505,7 +1505,7 @@ public static class Jackal
     public static bool jackalPromotedFromSidekickCanCreateSidekick = true;
     public static bool canCreateSidekickFromImpostor = true;
     public static bool hasImpostorVision;
-    public static bool CanImpostorFindSidekick;//
+    public static bool CanImpostorFindSidekick;
     public static bool killFakeImpostor;
     public static bool wasTeamRed;
     public static bool canSabotage;
@@ -1539,7 +1539,7 @@ public static class Jackal
         createSidekickCooldown = CustomOptionHolder.jackalCreateSidekickCooldown.getFloat();
         canUseVents = CustomOptionHolder.jackalCanUseVents.getBool();
         canSabotage = CustomOptionHolder.jackalCanUseSabo.getBool();
-        CanImpostorFindSidekick = CustomOptionHolder.jackalCanImpostorFindSidekick.getBool();//
+        CanImpostorFindSidekick = CustomOptionHolder.jackalCanImpostorFindSidekick.getBool();
         canCreateSidekick = CustomOptionHolder.jackalCanCreateSidekick.getBool();
         jackalPromotedFromSidekickCanCreateSidekick = CustomOptionHolder.jackalPromotedFromSidekickCanCreateSidekick.getBool();
         canCreateSidekickFromImpostor = CustomOptionHolder.jackalCanCreateSidekickFromImpostor.getBool();

@@ -1681,7 +1681,7 @@ public static class RPCProcedure
             Sidekick.sidekick = player;
             if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
                 CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
-            if ((wasSpy || wasImpostor) && Jackal.CanImpostorFindSidekick) Sidekick.wasTeamRed = true;
+            if ((wasSpy || wasImpostor) && !Jackal.CanImpostorFindSidekick) Sidekick.wasTeamRed = true;
             Sidekick.wasSpy = wasSpy;
             Sidekick.wasImpostor = wasImpostor;
             if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
