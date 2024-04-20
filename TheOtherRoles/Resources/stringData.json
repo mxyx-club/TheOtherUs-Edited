@@ -86,11 +86,11 @@
     },
     "OFF": {
         "0": "Off",
-        "13": "\u5173\u95ed"
+        "13": "<color=#CCCCCC>\u5173\u95ed</color>"
     },
     "ON": {
         "0": "On",
-        "13": "\u5f00\u542f"
+        "13": "<color=#FFFF00>\u5f00\u542f</color>"
     },
     "presetSelection": {
         "0": "Preset",

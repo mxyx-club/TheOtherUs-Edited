@@ -11,8 +11,8 @@ namespace TheOtherRoles;
 
 public class RoleInfo
 {
-    public static RoleInfo impostor = new("伪装者", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "哈哈！白板内鬼~"), "破坏并击杀所有人", RoleId.Impostor);
-    public static RoleInfo assassin = new("刺客", Color.red, "艺术就是刺杀！", "生命就是一场豪赌！", RoleId.EvilGuesser, false, true);
+    public static RoleInfo impostor = new("伪装者", Palette.ImpostorRed, "哈哈！白板内鬼~", "破坏并击杀所有人", RoleId.Impostor);
+    public static RoleInfo assassin = new("刺客", Palette.ImpostorRed, "艺术就是刺杀！", "生命就是一场豪赌！", RoleId.EvilGuesser, false, true);
     public static RoleInfo godfather = new("教父", Godfather.color, "懂不懂什么叫黑手啊", "干掉船员", RoleId.Godfather);
     public static RoleInfo mafioso = new("小弟", Mafioso.color, "懂不懂什么叫黑手啊", "帮助<color=#FF1919FF>教父</color>干掉船员", RoleId.Mafioso);
     public static RoleInfo janitor = new("清洁工", Janitor.color, "你有个双胞胎哥哥叫清理者", "帮助教父清理死尸", RoleId.Janitor);
@@ -177,7 +177,7 @@ public class RoleInfo
         medium,
         trapper,
         prophet,
-        //Magician
+        //Magician，
 
         lover,
         assassin,

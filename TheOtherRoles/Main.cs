@@ -36,8 +36,6 @@ public class TheOtherRolesPlugin : BasePlugin
 
     public static int optionsPage = 2;
 
-    public static Sprite ModStamp;
-
     public static IRegionInfo[] defaultRegions;
     public Harmony Harmony { get; } = new(Id);
 
