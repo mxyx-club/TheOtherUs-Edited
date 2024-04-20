@@ -29,7 +29,11 @@
             <Compile Include="$(IntermediateOutputPath)gen.cs" />
         </ItemGroup>
     </Target>
-
+	
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		<Exec Command="python &quot;$(SolutionDir)stringsToJson.py&quot;" />
+	</Target>
+	
     <Target Name="CopyCustomContent" AfterTargets="AfterBuild" Condition="Exists('$(AmongUsLatest)/BepInEx/plugins/')">
         <Message Text="Second occurrence" />
         <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\net6.0\$(AssemblyName).dll" DestinationFolder="$(AmongUsLatest)/BepInEx/plugins/" />
