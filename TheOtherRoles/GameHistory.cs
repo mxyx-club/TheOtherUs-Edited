@@ -20,7 +20,7 @@ public class DeadPlayer
         Bomb,
         LoveStolen,
         Loneliness,
-        Arson
+        Arson,
     }
 
     public CustomDeathReason deathReason;

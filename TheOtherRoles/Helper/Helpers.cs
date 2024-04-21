@@ -399,7 +399,7 @@ public static class Helpers
         }
         catch
         {
-            System.Console.WriteLine("Error loading AudioClip from resources: " + path);
+            Error("Error loading AudioClip from resources: " + path);
         }
 
         return null;
@@ -1336,16 +1336,14 @@ public static class Helpers
     {
         if (CustomOptionHolder.modifierShiftNeutral.getBool())
         {
-            var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
-            if (roleInfo != null)
-                return roleInfo.color.Equals(Jackal.color) ||
-                       roleInfo.color.Equals(Sidekick.color) ||
-                       roleInfo.color.Equals(Werewolf.color) ||
-                       //roleInfo.color.Equals(Lawyer.color) ||
-                       roleInfo.color.Equals(Akujo.color) ||
-                       roleInfo.color.Equals(Juggernaut.color) ||
-                       roleInfo.color.Equals(Swooper.color) ||
-                       roleInfo.color.Equals(Arsonist.color);
+            if (player != null)
+                return player == (Jackal.jackal
+                        || Sidekick.sidekick
+                        || Werewolf.werewolf
+                        || Akujo.akujo
+                        || Juggernaut.juggernaut
+                        || Swooper.swooper
+                        || Arsonist.arsonist);
             return false;
         }
         else

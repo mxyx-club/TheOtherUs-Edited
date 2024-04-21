@@ -11,13 +11,14 @@
 **The Other Us - Edited** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
 Even more roles are coming soon.
 
-## 发行版
+## 模组下载
 
 | 游戏版本  | 模组版本 | 下载链接                                                     |
 | --------- | -------- | ------------------------------------------------------------ |
 | 2024.3.5s | v1.0.3.3 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherUs.zip) |
 | 2024.3.5s | v1.0.3.1 | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
 
+注：本模组只发布经过测试后的文件，其余仅为内测版本。
 
 
 ## 更新日志
@@ -26,10 +27,17 @@ Even more roles are coming soon.
 
  - #### 新增内容：
 
-    - 对模组选项增加英译
     - 对所有按钮增加默认冷却为2.5s（给一部分无冷却技能增加提醒）
     - 法医：延长被保护的玩家被击杀时的闪光提醒时间（从0.5s增加到1.5s）
-    - 
+    - 魅魔：将真爱的任务从船员中移除
+
+ - #### Bug修复：
+
+    - 恐怖分子：修复自爆时会死两次的问题
+    - 豺狼：尝试修复招募按钮
+
+<details>
+  <summary>点我查看更多更新日志</summary>
 
 ###  v1.0.3.4:
 
@@ -39,9 +47,7 @@ Even more roles are coming soon.
     - 修复一部分技能按钮文本错误
     - 交换师：修复无法与追踪者交换的问题
     - 告密者：在设置告密者可揭示击杀中立但实际无法揭示的问题
-
-<details>
-  <summary>点我查看更多更新日志</summary>
+    - 恐怖分子：对自爆的情况下强制自杀（避免小孩自爆不会死的问题）
 
 ###  v1.0.3.3:
 
@@ -68,6 +74,7 @@ Even more roles are coming soon.
     - 执钮人：不会分配给市长
     - 传送师 & 逃逸者：增加总传送次数的选项，以避免一回合只能传送一次的问题
     - 告密者：目前可以在会议中查看红名（还无法得知具体职业）
+    - 反骨：增加隐藏职业选项
 
  - #### Bug修复：
 

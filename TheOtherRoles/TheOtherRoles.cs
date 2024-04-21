@@ -2480,10 +2480,10 @@ public static class Medium
             var randomNumber = rnd.Next(4);
             var typeOfColor = Helpers.isLighterColor(Medium.target.killerIfExisting) ? "浅" : "深";
             var timeSinceDeath = (float)(meetingStartTime - Medium.target.timeOfDeath).TotalMilliseconds;
-            var roleString = RoleInfo.GetRolesString(Medium.target.player, false);
+            var roleString = RoleInfo.GetRolesString(Medium.target.player, false, false, false);
             if (randomNumber == 0)
             {
-                msg = "我是一名 " + roleString + " .";
+                msg = "我的职业是 " + roleString + " .";
             }
             else if (randomNumber == 1)
             {
@@ -2495,7 +2495,7 @@ public static class Medium
             }
             else
             {
-                msg = "我好像是被 " + RoleInfo.GetRolesString(Medium.target.killerIfExisting, false, false, true) + " 无情的杀害了.";
+                msg = "我好像是被 " + RoleInfo.GetRolesString(Medium.target.killerIfExisting, false, false, false) + " 无情的杀害了.";
             }
         }
 
@@ -3060,7 +3060,8 @@ public static class Terrorist
     public static float defuseDuration = 3f;
     public static float bombCooldown = 15f;
     public static float bombActiveAfter = 3f;
-    public static string bombText = getString("TricksterPlaceText1");
+    public static string bombText = getString("TerroristBombText1");
+    public static bool selfExplosion = false;
 
     private static Sprite buttonSprite;
 
@@ -3087,13 +3088,16 @@ public static class Terrorist
 
     public static void clearAndReload()
     {
+        if (defuseDuration + bombActiveAfter <= 1)
+        {
+            bombText = getString("TerroristBombText2");
+            selfExplosion = true;
+        };
         clearBomb(false);
         terrorist = null;
         bomb = null;
         isPlanted = false;
         isActive = false;
-        bombText = getString("TerroristBombText1");
-        if (destructionTime + bombActiveAfter == 0) bombText = getString("TerroristBombText2");
         destructionTime = CustomOptionHolder.terroristBombDestructionTime.getFloat();
         destructionRange = CustomOptionHolder.terroristBombDestructionRange.getFloat() / 10;
         hearRange = CustomOptionHolder.terroristBombHearRange.getFloat() / 10;

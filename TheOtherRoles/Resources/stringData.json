@@ -96,6 +96,10 @@
         "0": "Enable Debug Log Mode",
         "13": "\u6536\u96c6Debug\u65e5\u5fd7"
     },
+    "seerShowInfoText": {
+        "0": "Seer Info: Someone Died",
+        "13": "\u7075\u5a92\u4fe1\u606f: \u6709\u4eba\u6b7b\u4ea1"
+    },
     "medicShowAttemptText": {
         "0": "Failed Murder Attempt on Shielded Player",
         "13": "\u5c1d\u8bd5\u51fb\u6740\u88ab\u4fdd\u62a4\u73a9\u5bb6"

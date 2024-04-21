@@ -3561,17 +3561,18 @@ internal static class HudManagerStartPatch
 
                 terroristButton.Timer = terroristButton.MaxTimer;
                 Terrorist.isPlanted = true;
-                if (Terrorist.defuseDuration + Terrorist.bombActiveAfter <= 1)
+                //在自爆时增加强制自杀
+                if (Terrorist.selfExplosion)
                 {
                     var loacl = CachedPlayer.LocalPlayer.PlayerId;
 
-                    var killWriter = AmongUsClient.Instance.StartRpcImmediately(
+                    var writer = AmongUsClient.Instance.StartRpcImmediately(
                         CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedMurderPlayer,
                         SendOption.Reliable);
-                    killWriter.Write(Terrorist.terrorist.Data.PlayerId);
-                    killWriter.Write(loacl);
-                    killWriter.Write(byte.MaxValue);
-                    AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                    writer.Write(Terrorist.terrorist.Data.PlayerId);
+                    writer.Write(loacl);
+                    writer.Write(byte.MaxValue);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.uncheckedMurderPlayer(Terrorist.terrorist.Data.PlayerId, loacl, byte.MaxValue);
                 }
             },

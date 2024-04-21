@@ -174,7 +174,7 @@ public enum CustomRPC
     DoomsayerMeeting,
 
     //CamoComms,
-    TrackerUsedTracker,
+    TrackerUsedTracker = 150,
     VampireSetBitten,
     PlaceGarlic,
     GiveBomb,
@@ -252,7 +252,7 @@ public enum CustomRPC
     MayorMeeting,
     ButtonBarryMeeting,
     ProphetExamine,
-    ImpostorPromotesToLastImpostor
+    ImpostorPromotesToLastImpostor,
 }
 
 public static class RPCProcedure
@@ -1655,15 +1655,12 @@ public static class RPCProcedure
     {
         var player = Helpers.playerById(targetId);
         if (player == null) return;
-        if (Lawyer.target == player && Lawyer.isProsecutor && Lawyer.lawyer != null && !Lawyer.lawyer.Data.IsDead)
+        if (Lawyer.target == player && Lawyer.isProsecutor && Lawyer.lawyer != null && !Lawyer.lawyer.Data.IsDead) 
             Lawyer.isProsecutor = false;
 
         if (!Jackal.canCreateSidekickFromImpostor && player.Data.Role.IsImpostor)
         {
-            if (Jackal.killFakeImpostor)
-                uncheckedMurderPlayer(Jackal.jackal.PlayerId, player.PlayerId, 1);
-            else
-                Jackal.fakeSidekick = player;
+            Jackal.fakeSidekick = player;
         }
         else
         {
@@ -1677,9 +1674,9 @@ public static class RPCProcedure
                 if (playerInfo != null) playerInfo.text = "";
             }
 
-            erasePlayerRoles(player.PlayerId);
+            erasePlayerRoles(player.PlayerId, false);
             Sidekick.sidekick = player;
-            if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
+            if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId) 
                 CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
             if ((wasSpy || wasImpostor) && !Jackal.CanImpostorFindSidekick) Sidekick.wasTeamRed = true;
             Sidekick.wasSpy = wasSpy;
@@ -1688,7 +1685,6 @@ public static class RPCProcedure
             if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(targetId))
                 setGuesserGm(targetId);
         }
-
         Jackal.canCreateSidekick = false;
     }
 
@@ -1701,6 +1697,7 @@ public static class RPCProcedure
         Jackal.wasSpy = Sidekick.wasSpy;
         Jackal.wasImpostor = Sidekick.wasImpostor;
         Sidekick.clearAndReload();
+        return;
     }
 
     public static void erasePlayerRoles(byte playerId, bool ignoreModifier = true)

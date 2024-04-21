@@ -85,6 +85,7 @@ public class Bomb
 
     public static void explode(Bomb b)
     {
+        var local = CachedPlayer.LocalPlayer.PlayerControl;
         if (b == null) return;
         if (Terrorist.terrorist != null)
         {
@@ -93,7 +94,8 @@ public class Bomb
                 Vector2.Distance(position,
                     CachedPlayer.LocalPlayer.transform
                         .position); // every player only checks that for their own client (desynct with positions sucks)
-            if (distance < Terrorist.destructionRange && !CachedPlayer.LocalPlayer.Data.IsDead)
+            if (distance < Terrorist.destructionRange && !CachedPlayer.LocalPlayer.Data.IsDead 
+                || (Terrorist.selfExplosion && local != Terrorist.terrorist))
             {
                 Helpers.checkMurderAttemptAndKill(Terrorist.terrorist, CachedPlayer.LocalPlayer.PlayerControl, false, false,
                     true, true);
