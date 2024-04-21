@@ -395,7 +395,8 @@ public static class PlayerControlFixedUpdatePatch
             RPCProcedure.sidekickPromotes();
         }
     }
-    static void swooperSetTarget()
+
+    private static void swooperSetTarget()
     {
         if (Swooper.swooper == null || Swooper.swooper != CachedPlayer.LocalPlayer.PlayerControl) return;
         var untargetablePlayers = new List<PlayerControl>();
@@ -588,14 +589,14 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
-    static void prophetSetTarget()
+    private static void prophetSetTarget()
     {
         if (Prophet.prophet == null || CachedPlayer.LocalPlayer.PlayerControl != Prophet.prophet) return;
         Prophet.currentTarget = setTarget();
         if (Prophet.examinesLeft > 0) setPlayerOutline(Prophet.currentTarget, Prophet.color);
     }
 
-    static void prophetUpdate()
+    private static void prophetUpdate()
     {
         if (Prophet.arrows == null) return;
 
@@ -916,7 +917,7 @@ public static class PlayerControlFixedUpdatePatch
         if (Arsonist.currentTarget != null) setPlayerOutline(Arsonist.currentTarget, Arsonist.color);
     }
 
-    static void snitchUpdate()
+    private static void snitchUpdate()
     {
         if (Snitch.localArrows == null) return;
 
@@ -981,7 +982,7 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
-    static void snitchTextUpdate()
+    private static void snitchTextUpdate()
     {
         if (Snitch.localArrows == null) return;
         if (Snitch.snitch == null) return;

@@ -41,7 +41,7 @@ namespace TheOtherRoles.Objects
         }
 
         [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.Awake))]
-        class MapBehaviourAwakePatch
+        private class MapBehaviourAwakePatch
         {
             public static void Postfix(MapBehaviour __instance)
             {

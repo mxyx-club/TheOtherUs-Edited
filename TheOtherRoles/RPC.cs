@@ -1655,7 +1655,7 @@ public static class RPCProcedure
     {
         var player = Helpers.playerById(targetId);
         if (player == null) return;
-        if (Lawyer.target == player && Lawyer.isProsecutor && Lawyer.lawyer != null && !Lawyer.lawyer.Data.IsDead) 
+        if (Lawyer.target == player && Lawyer.isProsecutor && Lawyer.lawyer != null && !Lawyer.lawyer.Data.IsDead)
             Lawyer.isProsecutor = false;
 
         if (!Jackal.canCreateSidekickFromImpostor && player.Data.Role.IsImpostor)
@@ -1676,7 +1676,7 @@ public static class RPCProcedure
 
             erasePlayerRoles(player.PlayerId, false);
             Sidekick.sidekick = player;
-            if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId) 
+            if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
                 CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
             if ((wasSpy || wasImpostor) && !Jackal.CanImpostorFindSidekick) Sidekick.wasTeamRed = true;
             Sidekick.wasSpy = wasSpy;
@@ -2867,7 +2867,7 @@ internal class RPCHandlerPatch
         var packetId = (CustomRPC)callId;
         if (RpcNames!.ContainsKey(packetId))
             return;
-        if (enableDebugLogMode)Info($"接收 PlayerControl 原版Rpc RpcId{callId} Message Size {reader.Length}");
+        if (enableDebugLogMode) Info($"接收 PlayerControl 原版Rpc RpcId{callId} Message Size {reader.Length}");
     }
 
     private static bool Prefix([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)

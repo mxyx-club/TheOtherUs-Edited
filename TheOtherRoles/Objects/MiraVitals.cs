@@ -17,9 +17,9 @@ namespace TheOtherRoles.Objects
     }
 
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
-    static class ShipStatus_AwakePatch
+    internal static class ShipStatus_AwakePatch
     {
-        static void Postfix(ShipStatus __instance)
+        private static void Postfix(ShipStatus __instance)
         {
             AddVitals.AddVital();
         }

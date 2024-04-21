@@ -151,17 +151,17 @@ public class GameStartManagerPatch
                             versionMismatch = true;
                             break;
                         default:
+                        {
+                            if (!PV.GuidMatches())
                             {
-                                if (!PV.GuidMatches())
-                                {
-                                    // version presumably matches, check if Guid matches
-                                    message +=
-                                        $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了修改过的TheOtherUs v{playerVersions[client.Id].version.ToString()}\n<size=40%>({PV.guid.ToString()})</size>\n</color>";
-                                    versionMismatch = true;
-                                }
-
-                                break;
+                                // version presumably matches, check if Guid matches
+                                message +=
+                                    $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了修改过的TheOtherUs v{playerVersions[client.Id].version.ToString()}\n<size=40%>({PV.guid.ToString()})</size>\n</color>";
+                                versionMismatch = true;
                             }
+
+                            break;
+                        }
                     }
                 }
             }

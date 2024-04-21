@@ -6,10 +6,10 @@ using UnityEngine;
 namespace TheOtherRoles.Patches
 {
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
-    class OptimizeMapPatch
+    internal class OptimizeMapPatch
     {
-        static Sprite ladderSprite;
-        static Sprite ladderBgSprite;
+        private static Sprite ladderSprite;
+        private static Sprite ladderBgSprite;
 
         public static void Postfix(ShipStatus __instance)
         {

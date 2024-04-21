@@ -147,33 +147,33 @@ public class CameraPatch
                 {
                     case true or true when
                         !PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(CachedPlayer.LocalPlayer.PlayerControl):
+                    {
+                        __instance.isStatic = false;
+                        for (var i = 0; i < __instance.ViewPorts.Length; i++)
                         {
-                            __instance.isStatic = false;
-                            for (var i = 0; i < __instance.ViewPorts.Length; i++)
-                            {
-                                __instance.ViewPorts[i].sharedMaterial = __instance.DefaultMaterial;
-                                __instance.SabText[i].gameObject.SetActive(false);
-                                if ((page * 4) + i < __instance.textures.Length)
-                                    __instance.ViewPorts[i].material
-                                        .SetTexture("_MainTex", __instance.textures[(page * 4) + i]);
-                                else
-                                    __instance.ViewPorts[i].sharedMaterial = __instance.StaticMaterial;
-                            }
-
-                            break;
+                            __instance.ViewPorts[i].sharedMaterial = __instance.DefaultMaterial;
+                            __instance.SabText[i].gameObject.SetActive(false);
+                            if ((page * 4) + i < __instance.textures.Length)
+                                __instance.ViewPorts[i].material
+                                    .SetTexture("_MainTex", __instance.textures[(page * 4) + i]);
+                            else
+                                __instance.ViewPorts[i].sharedMaterial = __instance.StaticMaterial;
                         }
+
+                        break;
+                    }
                     case false when
                         PlayerTask.PlayerHasTaskOfType<HudOverrideTask>(CachedPlayer.LocalPlayer.PlayerControl):
+                    {
+                        __instance.isStatic = true;
+                        for (var j = 0; j < __instance.ViewPorts.Length; j++)
                         {
-                            __instance.isStatic = true;
-                            for (var j = 0; j < __instance.ViewPorts.Length; j++)
-                            {
-                                __instance.ViewPorts[j].sharedMaterial = __instance.StaticMaterial;
-                                __instance.SabText[j].gameObject.SetActive(true);
-                            }
-
-                            break;
+                            __instance.ViewPorts[j].sharedMaterial = __instance.StaticMaterial;
+                            __instance.SabText[j].gameObject.SetActive(true);
                         }
+
+                        break;
+                    }
                 }
 
                 return false;
