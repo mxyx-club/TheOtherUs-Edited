@@ -1396,7 +1396,7 @@ public static class Snitch
         {
             foreach (Arrow arrow in localArrows)
                 if (arrow?.arrow != null)
-                    UnityEngine.Object.Destroy(arrow.arrow);
+                    Object.Destroy(arrow.arrow);
         }
         localArrows = new List<Arrow>();
         taskCountForReveal = Mathf.RoundToInt(CustomOptionHolder.snitchLeftTasksForReveal.getFloat());
@@ -1404,6 +1404,7 @@ public static class Snitch
         isRevealed = false;
         if (text != null) Object.Destroy(text);
         text = null;
+        text.text = null;
         needsUpdate = true;
 
         canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();

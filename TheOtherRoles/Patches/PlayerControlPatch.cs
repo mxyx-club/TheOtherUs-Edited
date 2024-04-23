@@ -984,9 +984,11 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void snitchTextUpdate()
     {
-        if (Snitch.localArrows == null) return;
-        if (Snitch.snitch == null) return;
-        //foreach (Arrow arrow in Snitch.localArrows) arrow.arrow.SetActive(false);
+        if (Snitch.localArrows == null || Snitch.snitch == null)
+        {
+            Snitch.text.text = null;
+            return;
+        }
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
         int numberOfTasks = playerTotal - playerCompleted;
 
@@ -1011,7 +1013,7 @@ public static class PlayerControlFixedUpdatePatch
             {
                 Snitch.text.text = "告密者还活着 " + playerCompleted + "/" + playerTotal;
             }
-            else if (snitchIsDead)
+            else if (snitchIsDead || Snitch.snitch == null)
             {
                 Snitch.text.text = null;
             }
@@ -1854,7 +1856,7 @@ public static class PlayerControlFixedUpdatePatch
             hackerUpdate();
             // Trapper
             trapperUpdate();
-            //魅魔
+            // Akojo
             akujoUpdate();
             akujoSetTarget();
             // -- MODIFIER--
