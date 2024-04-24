@@ -13,13 +13,13 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch]
 public static class CredentialsPatch
 {
-    public static string fullCredentialsVersion = $"{ModTranslation.getString("fullCredentialsVersion")}v{TheOtherRolesPlugin.Version + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}";
+    public static string fullCredentialsVersion = $"{getString("fullCredentialsVersion")}v{TheOtherRolesPlugin.Version + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}";
 
-    public static string fullCredentials = ModTranslation.getString("fullCredentials");
+    public static string fullCredentials = getString("fullCredentials");
 
-    public static string mainMenuCredentials = ModTranslation.getString("mainMenuCredentials");
+    public static string mainMenuCredentials = getString("mainMenuCredentials");
 
-    public static string contributorsCredentials = ModTranslation.getString("contributorsCredentials");
+    public static string contributorsCredentials = getString("contributorsCredentials");
 
     [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
     internal static class PingTrackerPatch
@@ -32,12 +32,12 @@ public static class CredentialsPatch
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {
                 var gameModeText = "";
-                if (HideNSeek.isHideNSeekGM) gameModeText = ModTranslation.getString("isHideNSeekGM");
-                else if (HandleGuesser.isGuesserGm) gameModeText = ModTranslation.getString("isGuesserGm");
-                else if (PropHunt.isPropHuntGM) gameModeText = ModTranslation.getString("isPropHuntGM");
+                if (HideNSeek.isHideNSeekGM) gameModeText = getString("isHideNSeekGM");
+                else if (HandleGuesser.isGuesserGm) gameModeText = getString("isGuesserGm");
+                else if (PropHunt.isPropHuntGM) gameModeText = getString("isPropHuntGM");
                 if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
                 __instance.text.text =
-                    $"{ModTranslation.getString("fullCredentialsVersion2")} v{TheOtherRolesPlugin.Version + "\n" + ModTranslation.getString("gameTitle2")}\n<size=90%>{gameModeText}</size>" +
+                    $"{getString("fullCredentialsVersion2")} v{TheOtherRolesPlugin.Version + "\n" + getString("gameTitle2")}\n<size=90%>{gameModeText}</size>" +
                     __instance.text.text;
                 if (CachedPlayer.LocalPlayer.Data.IsDead || (!(CachedPlayer.LocalPlayer.PlayerControl == null) &&
                                                            (CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 ||
@@ -60,9 +60,9 @@ public static class CredentialsPatch
             {
                 var gameModeText = TORMapOptions.gameMode switch
                 {
-                    CustomGamemodes.HideNSeek => ModTranslation.getString("isHideNSeekGM"),
-                    CustomGamemodes.Guesser => ModTranslation.getString("isGuesserGm"),
-                    CustomGamemodes.PropHunt => ModTranslation.getString("isPropHuntGM"),
+                    CustomGamemodes.HideNSeek => getString("isHideNSeekGM"),
+                    CustomGamemodes.Guesser => getString("isGuesserGm"),
+                    CustomGamemodes.PropHunt => getString("isPropHuntGM"),
                     _ => ""
                 };
                 if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";

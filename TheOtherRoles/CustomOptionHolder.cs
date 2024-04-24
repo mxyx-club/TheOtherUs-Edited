@@ -497,6 +497,8 @@ public class CustomOptionHolder
     public static CustomOption hideOutOfSightNametags;
     public static CustomOption impostorSeeRoles;
     public static CustomOption transparentTasks;
+
+    public static CustomOption enableMapOptions;
     public static CustomOption randomGameStartPosition;
     public static CustomOption randomGameStartToVents;
     public static CustomOption allowModGuess;
@@ -518,6 +520,14 @@ public class CustomOptionHolder
 
     public static CustomOption movePolusVents;
 
+    public static CustomOption IsReactorDurationSetting;
+    public static CustomOption SkeldLifeSuppTimeLimit;
+    public static CustomOption SkeldReactorTimeLimit;
+    public static CustomOption MiraLifeSuppTimeLimit;
+    public static CustomOption MiraReactorTimeLimit;
+    public static CustomOption PolusReactorTimeLimit;
+    public static CustomOption AirshipReactorTimeLimit;
+    public static CustomOption FungleReactorTimeLimit;
     //添加新管道
     public static CustomOption addPolusVents;
     public static CustomOption swapNavWifi;
@@ -643,9 +653,9 @@ public class CustomOptionHolder
         presetSelection = CustomOption.Create(0, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), getString("presetSelection")), presets, null, true);
         activateRoles = CustomOption.Create(1, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), getString("activateRoles")), true, null, true);
 
-        anyPlayerCanStopStart = CustomOption.Create(3, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), ModTranslation.getString("anyPlayerCanStopStart")), false, null, false);
+        anyPlayerCanStopStart = CustomOption.Create(3, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), getString("anyPlayerCanStopStart")), false, null, false);
 
-        if (Utilities.EventUtility.canBeEnabled) enableEventMode = CustomOption.Create(4, Types.General, cs(Color.green, ModTranslation.getString("enableEventMode")), true, null, true);
+        if (Utilities.EventUtility.canBeEnabled) enableEventMode = CustomOption.Create(4, Types.General, cs(Color.green, getString("enableEventMode")), true, null, true);
 
         // Using new id's for the options to not break compatibilty with older versions
         crewmateRolesCountMin = CustomOption.Create(5, Types.General,
@@ -689,30 +699,42 @@ public class CustomOptionHolder
         allowParallelMedBayScans = CustomOption.Create(44, Types.General, "允许同时进行扫描任务", false);
         finishTasksBeforeHauntingOrZoomingOut = CustomOption.Create(42, Types.General, "未完成任务前不能使用跟随及千里眼", false);
         preventTaskEnd = CustomOption.Create(43, Types.General, "阻止任务结束游戏", false);
+
         //Map options
-        randomGameStartPosition = CustomOption.Create(50, Types.General, "随机出生点", false, null, true);
+        enableMapOptions = CustomOption.Create(200, Types.General, "地图设置", false, null, true);
+
+        IsReactorDurationSetting = CustomOption.Create(201, Types.General, "调整紧急破坏持续时间", false, enableMapOptions, true);
+        SkeldLifeSuppTimeLimit = CustomOption.Create(202, Types.General, "The Skeld 核反应堆破坏持续时间", 30f, 15f, 60f, 2.5f, IsReactorDurationSetting);
+        SkeldReactorTimeLimit = CustomOption.Create(203, Types.General, "The Skeld 氧气破坏持续时间", 30f, 15f, 60f, 2.5f, IsReactorDurationSetting);
+        MiraLifeSuppTimeLimit = CustomOption.Create(204, Types.General, "Mira 核反应堆破坏持续时间", 30f, 15f, 60f, 2.5f, IsReactorDurationSetting);
+        MiraReactorTimeLimit = CustomOption.Create(205, Types.General, "Mira 氧气破坏持续时间", 30f, 15f, 60f, 2.5f, IsReactorDurationSetting);
+        PolusReactorTimeLimit = CustomOption.Create(206, Types.General, "Polus 抗震器破坏持续时间", 60f, 15f, 90f, 2.5f, IsReactorDurationSetting);
+        AirshipReactorTimeLimit = CustomOption.Create(207, Types.General, "AirShip 撞毁路线破坏持续时间", 75f, 15f, 120f, 2.5f, IsReactorDurationSetting);
+        FungleReactorTimeLimit = CustomOption.Create(208, Types.General, "The Fungle 核反应堆破坏持续时间", 45f, 15f, 60f, 2.5f, IsReactorDurationSetting);
+
+        randomGameStartPosition = CustomOption.Create(50, Types.General, "随机出生点", false, enableMapOptions, true);
         randomGameStartToVents = CustomOption.Create(51, Types.General, "随机出生在通风口上", false, randomGameStartPosition);
 
-        enableMiraModify = CustomOption.Create(70, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Mira"), false, null, true);
+        enableMiraModify = CustomOption.Create(70, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Mira"), false, enableMapOptions, true);
         miraVitals = CustomOption.Create(71, Types.General, "添加生命检测装置", false, enableMiraModify);
 
-        enableBetterPolus = CustomOption.Create(80, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Polus"), false, null, true);
+        enableBetterPolus = CustomOption.Create(80, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Polus"), false, enableMapOptions);
         movePolusVents = CustomOption.Create(81, Types.General, "改变管道布局", false, enableBetterPolus);
         addPolusVents = CustomOption.Create(82, Types.General, "添加新管道\n (样本室-办公室-运输船)", false, enableBetterPolus);
         movePolusVitals = CustomOption.Create(83, Types.General, "将生命检测仪移动到实验室", false, enableBetterPolus);
         swapNavWifi = CustomOption.Create(84, Types.General, "重启WIFI与导航任务位置交换", false, enableBetterPolus);
         moveColdTemp = CustomOption.Create(85, Types.General, "温度调节任务移动至配电室下方", false, enableBetterPolus);
 
-        enableAirShipModify = CustomOption.Create(90, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "AirShip"), false, null, true);
+        enableAirShipModify = CustomOption.Create(90, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "AirShip"), false, enableMapOptions);
         airshipOptimize = CustomOption.Create(91, Types.General, "优化地图", false, enableAirShipModify);
         addAirShipVents = CustomOption.Create(92, Types.General, "添加新管道\n (会议室-配电室)", false, enableAirShipModify);
         airshipLadder = CustomOption.Create(93, Types.General, "增加额外梯子\n (会议室-间隙室)", false, enableAirShipModify);
 
-        enableFungleModify = CustomOption.Create(100, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Fungle"), false, null, true);
+        enableFungleModify = CustomOption.Create(100, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Fungle"), false, enableMapOptions);
         fungleElectrical = CustomOption.Create(101, Types.General, "添加电力系统\n (食堂-实验室-上引擎)", false, enableFungleModify);
 
-        enableCamoComms = CustomOption.Create(120, Types.General, cs(Palette.ImpostorRed, "通信破坏开启小黑人"), false, null, true);
-        restrictDevices = CustomOption.Create(121, Types.General, "限制信息设备使用", ["关闭", "每一回合", "每局游戏"]);
+        enableCamoComms = CustomOption.Create(120, Types.General, cs(Palette.ImpostorRed, "通信破坏开启小黑人"), false, enableMapOptions, true);
+        restrictDevices = CustomOption.Create(121, Types.General, "限制信息设备使用", [getString("OFF"), "每一回合", "每局游戏"]);
         //restrictAdmin = CustomOption.Create(122, Types.General, "限制使用管理室地图时长", 30f, 0f, 600f, 5f, restrictDevices);
         restrictCameras = CustomOption.Create(123, Types.General, "限制使用监控时长", 30f, 0f, 600f, 5f, restrictDevices);
         restrictVents = CustomOption.Create(124, Types.General, "限制使用心电图时长", 30f, 0f, 600f, 5f, restrictDevices);
@@ -720,7 +742,7 @@ public class CustomOptionHolder
         camsNightVision = CustomOption.Create(126, Types.General, "熄灯时监控开启夜视模式", false);
         camsNoNightVisionIfImpVision = CustomOption.Create(127, Types.General, "内鬼无视监控的夜视模式", false, camsNightVision);
 
-        dynamicMap = CustomOption.Create(130, Types.General, "随机地图玩法", false, null, true);
+        dynamicMap = CustomOption.Create(130, Types.General, "随机地图玩法", false, enableMapOptions, true);
         dynamicMapEnableSkeld = CustomOption.Create(131, Types.General, "Skeld", rates, dynamicMap);
         dynamicMapEnableMira = CustomOption.Create(132, Types.General, "Mira", rates, dynamicMap);
         dynamicMapEnablePolus = CustomOption.Create(133, Types.General, "Polus", rates, dynamicMap);

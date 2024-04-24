@@ -56,7 +56,7 @@ public class MainMenuPatch
 
         var textCreditsButton = creditsButton.transform.GetComponentInChildren<TMP_Text>();
         __instance.StartCoroutine(Effects.Lerp(0.5f,
-            new Action<float>(p => { textCreditsButton.SetText(ModTranslation.getString("Credits")); })));
+            new Action<float>(p => { textCreditsButton.SetText(getString("Credits")); })));
         var passiveCreditsButton = creditsButton.GetComponent<PassiveButton>();
 
         passiveCreditsButton.OnClick = new Button.ButtonClickedEvent();
@@ -75,7 +75,7 @@ public class MainMenuPatch
             popUp = Object.Instantiate(popUpTemplate);
 
             popUp.gameObject.SetActive(true);
-            var creditsString = ModTranslation.getString("creditsString1");
+            var creditsString = getString("creditsString1");
 
             creditsString += @"
 <size=60%> <b>Other Credits & Resources:</b>
@@ -179,9 +179,9 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
 
             template.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p =>
             {
-                guesserButtonText.SetText(ModTranslation.getString("isGuesserGm"));
-                HideNSeekButtonText.SetText(ModTranslation.getString("isHideNSeekGM"));
-                PropHuntButtonText.SetText(ModTranslation.getString("isPropHuntGM"));
+                guesserButtonText.SetText(getString("isGuesserGm"));
+                HideNSeekButtonText.SetText(getString("isHideNSeekGM"));
+                PropHuntButtonText.SetText(getString("isPropHuntGM"));
             })));
         }));
     }

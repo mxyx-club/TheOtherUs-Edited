@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace TheOtherRoles.Objects
+namespace TheOtherRoles.Objects.BetterMap
 {
     public static class FungleAdditionalElectrical
     {
@@ -21,15 +21,15 @@ namespace TheOtherRoles.Objects
             Tasks.Add(MapLoader.Airship.SpecialTasks.FirstOrDefault(x => x.TaskType == TaskTypes.FixLights));
             ShipStatus.Instance.SpecialTasks = new(Tasks.ToArray());
 
-            Console console1 = GameObject.Instantiate(MapLoader.Airship.transform.FindChild("Storage/task_lightssabotage (cargo)"), fungleShipStatus.transform).GetComponent<Console>();
+            Console console1 = Object.Instantiate(MapLoader.Airship.transform.FindChild("Storage/task_lightssabotage (cargo)"), fungleShipStatus.transform).GetComponent<Console>();
             console1.transform.localPosition = new(-16.2f, 7.67f, 0);
             console1.ConsoleId = 0;
 
-            Console console2 = GameObject.Instantiate(MapLoader.Skeld.transform.FindChild("Electrical/Ground/electric_frontset/SwitchConsole"), fungleShipStatus.transform).GetComponent<Console>();
+            Console console2 = Object.Instantiate(MapLoader.Skeld.transform.FindChild("Electrical/Ground/electric_frontset/SwitchConsole"), fungleShipStatus.transform).GetComponent<Console>();
             console2.transform.localPosition = new(-5.7f, -7.7f, -1.008f);
             console2.ConsoleId = 1;
 
-            Console console3 = GameObject.Instantiate(console1, fungleShipStatus.transform);
+            Console console3 = Object.Instantiate(console1, fungleShipStatus.transform);
             console3.transform.localPosition = new(21.48f, 4.27f, 0f);
             console3.ConsoleId = 2;
             //Agartha.MapLoader.Airship.transform.FindChild("Storage/task_lightssabotage (cargo)"), fungleShipStatus.transform).GetComponent<Console>();
@@ -48,7 +48,7 @@ namespace TheOtherRoles.Objects
                 if (!Helpers.isFungle() || !CustomOptionHolder.fungleElectrical.getBool())
                     return;
 
-                MapRoom mapRoom = GameObject.Instantiate(MapLoader.Airship.MapPrefab.infectedOverlay.rooms.FirstOrDefault(x => x.room == SystemTypes.Electrical), __instance.infectedOverlay.transform);
+                MapRoom mapRoom = Object.Instantiate(MapLoader.Airship.MapPrefab.infectedOverlay.rooms.FirstOrDefault(x => x.room == SystemTypes.Electrical), __instance.infectedOverlay.transform);
                 mapRoom.Parent = __instance.infectedOverlay;
                 mapRoom.transform.localPosition = new(-0.83f, -1.8f, -1f);
                 var buttons = __instance.infectedOverlay.allButtons.ToList();

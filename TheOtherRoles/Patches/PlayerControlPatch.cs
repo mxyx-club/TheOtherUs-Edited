@@ -978,44 +978,26 @@ public static class PlayerControlFixedUpdatePatch
                     }
                     arrowIndex++;
                 }
-            }
-        }
-    }
-
-    private static void snitchTextUpdate()
-    {
-        if (Snitch.localArrows == null || Snitch.snitch == null)
-        {
-            Snitch.text.text = null;
-            return;
-        }
-        var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
-        int numberOfTasks = playerTotal - playerCompleted;
-
-        var snitchIsDead = Snitch.snitch.Data.IsDead;
-        var local = CachedPlayer.LocalPlayer.PlayerControl;
-
-        bool forImpTeam = local.Data.Role.IsImpostor;
-        bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && Helpers.isKiller(local);
-        bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && Helpers.isEvil(local);
-        bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && Helpers.isNeutral(local);
-        if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam))
-        {
-            if (Snitch.text == null)
-            {
-                Snitch.text = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
-                Snitch.text.enableWordWrapping = false;
-                Snitch.text.transform.localScale = Vector3.one * 0.75f;
-                Snitch.text.transform.localPosition += new Vector3(0f, 1.8f, -69f);
-                Snitch.text.gameObject.SetActive(true);
-            }
-            else if (!snitchIsDead)
-            {
-                Snitch.text.text = "告密者还活着 " + playerCompleted + "/" + playerTotal;
-            }
-            else if (snitchIsDead || Snitch.snitch == null)
-            {
-                Snitch.text.text = null;
+                // Text
+                if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam))
+                {
+                    if (Snitch.text == null)
+                    {
+                        Snitch.text = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                        Snitch.text.enableWordWrapping = false;
+                        Snitch.text.transform.localScale = Vector3.one * 0.75f;
+                        Snitch.text.transform.localPosition += new Vector3(0f, 1.8f, -69f);
+                        Snitch.text.gameObject.SetActive(true);
+                    }
+                    else if (!snitchIsDead && Snitch.snitch != null)
+                    {
+                        Snitch.text.text = "告密者还活着 " + playerCompleted + "/" + playerTotal;
+                    }
+                    else if (snitchIsDead || Snitch.snitch == null)
+                    {
+                        Snitch.text = null;
+                    }
+                }
             }
         }
     }
@@ -1707,7 +1689,7 @@ public static class PlayerControlFixedUpdatePatch
         {
             if (Akujo.honmei == null)
             {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSuicide, Hazel.SendOption.Reliable, -1);
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSuicide, SendOption.Reliable, -1);
                 writer.Write(Akujo.akujo.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.akujoSuicide(Akujo.akujo.PlayerId);
@@ -1814,7 +1796,6 @@ public static class PlayerControlFixedUpdatePatch
             arsonistSetTarget();
             // Snitch
             snitchUpdate();
-            snitchTextUpdate();
             // BodyGuard
             bodyGuardSetTarget();
             // undertaker
@@ -2206,7 +2187,7 @@ public static class MurderPlayerPatch
             if (akujoPartner != null && !akujoPartner.Data.IsDead)
             {
                 akujoPartner.MurderPlayer(akujoPartner, MurderResultFlags.Succeeded);
-                GameHistory.overrideDeathReasonAndKiller(akujoPartner, DeadPlayer.CustomDeathReason.LoverSuicide);
+                overrideDeathReasonAndKiller(akujoPartner, DeadPlayer.CustomDeathReason.LoverSuicide);
             }
         }
 
@@ -2352,7 +2333,7 @@ public static class ExilePlayerPatch
             if (akujoPartner != null && !akujoPartner.Data.IsDead)
             {
                 akujoPartner.Exiled();
-                GameHistory.overrideDeathReasonAndKiller(akujoPartner, DeadPlayer.CustomDeathReason.LoverSuicide);
+                overrideDeathReasonAndKiller(akujoPartner, DeadPlayer.CustomDeathReason.LoverSuicide);
             }
 
             if (MeetingHud.Instance && akujoPartner != null)
@@ -2381,7 +2362,7 @@ public static class PlayerPhysicsFixedUpdate
         bool shouldInvert = Invert.invert.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count > 0 && Invert.meetings > 0;
         if (__instance.AmOwner &&
             AmongUsClient.Instance &&
-            AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started &&
+            AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
             !CachedPlayer.LocalPlayer.Data.IsDead &&
             shouldInvert &&
             GameData.Instance &&
@@ -2389,7 +2370,7 @@ public static class PlayerPhysicsFixedUpdate
             __instance.body.velocity *= -1;
         if (__instance.AmOwner &&
                 AmongUsClient.Instance &&
-                AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started &&
+                AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
                 !CachedPlayer.LocalPlayer.Data.IsDead &&
                 GameData.Instance &&
                 __instance.myPlayer.CanMove &&

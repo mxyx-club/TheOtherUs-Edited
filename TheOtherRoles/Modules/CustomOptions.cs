@@ -56,7 +56,8 @@ public class CustomOption
         CustomOption parent, bool isHeader, Action onChange = null)
     {
         this.id = id;
-        this.name = parent == null ? name : "- " + name;
+        //this.name = parent == null ? name : " - " + name;
+        this.name = name;
         this.selections = selections;
         var index = Array.IndexOf(selections, defaultValue);
         defaultSelection = index >= 0 ? index : 0;
@@ -92,7 +93,7 @@ public class CustomOption
     public static CustomOption Create(int id, CustomOptionType type, string name, bool defaultValue,
         CustomOption parent = null, bool isHeader = false, Action onChange = null)
     {
-        return new CustomOption(id, type, name, new[] { ModTranslation.getString("OFF"), ModTranslation.getString("ON") }, defaultValue ? ModTranslation.getString("ON") : ModTranslation.getString("OFF"), parent, isHeader,
+        return new CustomOption(id, type, name, new[] { getString("OFF"), getString("ON") }, defaultValue ? getString("ON") : getString("OFF"), parent, isHeader,
             onChange);
     }
 

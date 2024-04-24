@@ -3,7 +3,7 @@ using System.Linq;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
-namespace TheOtherRoles.Patches
+namespace TheOtherRoles.Objects.BetterMap
 {
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
     internal class OptimizeMapPatch
@@ -60,7 +60,7 @@ namespace TheOtherRoles.Patches
                 {
                     // 梯子追加
                     GameObject ladder = meetingRoom.GetComponentsInChildren<SpriteRenderer>().Where(x => x.name == "ladder_meeting").FirstOrDefault().gameObject;
-                    GameObject newLadder = GameObject.Instantiate(ladder, ladder.transform.parent);
+                    GameObject newLadder = UnityEngine.Object.Instantiate(ladder, ladder.transform.parent);
                     Il2CppArrayBase<Ladder> ladders = newLadder.GetComponentsInChildren<Ladder>();
                     int id = 100;
                     foreach (var l in ladders)
@@ -75,7 +75,7 @@ namespace TheOtherRoles.Patches
                     newLadder.GetComponentInChildren<SpriteRenderer>().sprite = ladderSprite;
 
                     // 梯子の周りの影を消す
-                    GameObject.Destroy(gapRoom.GetComponentsInChildren<EdgeCollider2D>().Where(x => Math.Abs(x.points[0].x + 6.2984f) < 0.1).FirstOrDefault());
+                    UnityEngine.Object.Destroy(gapRoom.GetComponentsInChildren<EdgeCollider2D>().Where(x => Math.Abs(x.points[0].x + 6.2984f) < 0.1).FirstOrDefault());
                     EdgeCollider2D collider = meetingRoom.GetComponentsInChildren<EdgeCollider2D>().Where(x => x.pointCount == 46).FirstOrDefault();
                     Il2CppSystem.Collections.Generic.List<Vector2> points = new();
                     EdgeCollider2D newCollider = collider.gameObject.AddComponent<EdgeCollider2D>();
@@ -92,11 +92,11 @@ namespace TheOtherRoles.Patches
                         points.Add(collider.points[i]);
                     }
                     newCollider2.SetPoints(points);
-                    GameObject.DestroyObject(collider);
+                    UnityEngine.Object.DestroyObject(collider);
 
                     // 梯子の背景を変更
                     SpriteRenderer side = meetingRoom.GetComponentsInChildren<SpriteRenderer>().Where(x => x.name == "meeting_side").FirstOrDefault();
-                    SpriteRenderer bg = GameObject.Instantiate(side, side.transform.parent);
+                    SpriteRenderer bg = UnityEngine.Object.Instantiate(side, side.transform.parent);
                     if (!ladderBgSprite) ladderBgSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ladder_bg.png", 100f);
                     bg.sprite = ladderBgSprite;
                     bg.transform.localPosition = new Vector3(9.57f, -3.355f, 4.9f);

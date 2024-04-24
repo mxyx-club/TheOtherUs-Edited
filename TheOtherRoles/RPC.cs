@@ -11,6 +11,7 @@ using PowerTools;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
+using TheOtherRoles.Objects.BetterMap;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -1514,7 +1515,7 @@ public static class RPCProcedure
         var isMedicAndShow = Medic.medic == CachedPlayer.LocalPlayer.PlayerControl && Medic.showAttemptToMedic;
 
         if (isShieldedAndShow || isMedicAndShow || Helpers.shouldShowGhostInfo())
-            Helpers.showFlash(Palette.ImpostorRed, 1.5f, ModTranslation.getString("medicShowAttemptText"));
+            Helpers.showFlash(Palette.ImpostorRed, 1.5f, getString("medicShowAttemptText"));
     }
 
     public static void shifterShift(byte targetId)
@@ -2034,7 +2035,7 @@ public static class RPCProcedure
         if (akujo != null)
         {
             akujo.MurderPlayer(akujo, MurderResultFlags.Succeeded);
-            GameHistory.overrideDeathReasonAndKiller(akujo, DeadPlayer.CustomDeathReason.Loneliness);
+            overrideDeathReasonAndKiller(akujo, DeadPlayer.CustomDeathReason.Loneliness);
         }
     }
 

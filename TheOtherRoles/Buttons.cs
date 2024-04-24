@@ -625,7 +625,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Sheriff.currentTarget, sheriffKillButton, ModTranslation.getString("killButtonText"));
+                showTargetNameOnButton(Sheriff.currentTarget, sheriffKillButton, getString("killButtonText"));
                 return Sheriff.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { sheriffKillButton.Timer = sheriffKillButton.MaxTimer; },
@@ -665,7 +665,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Deputy.currentTarget, deputyHandcuffButton, ModTranslation.getString("HandcuffText"));
+                showTargetNameOnButton(Deputy.currentTarget, deputyHandcuffButton, getString("HandcuffText"));
                 if (deputyButtonHandcuffsText != null) deputyButtonHandcuffsText.text = $"{Deputy.remainingHandcuffs}";
                 return ((Deputy.deputy != null && Deputy.deputy == CachedPlayer.LocalPlayer.PlayerControl &&
                          Deputy.currentTarget) ||
@@ -722,7 +722,7 @@ internal static class HudManagerStartPatch
                 timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
                 SoundEffectsManager.stop("timemasterShield");
             },
-            buttonText: ModTranslation.getString("TimeShieldText")
+            buttonText: getString("TimeShieldText")
         );
 
         // Veteren Alert
@@ -753,7 +753,7 @@ internal static class HudManagerStartPatch
             true,
             Veteren.alertDuration,
             () => { veterenAlertButton.Timer = veterenAlertButton.MaxTimer; },
-            buttonText: ModTranslation.getString("AlertText")
+            buttonText: getString("AlertText")
         );
 
         // Medic Shield
@@ -785,7 +785,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Medic.currentTarget, medicShieldButton, ModTranslation.getString("ShieldText"));
+                showTargetNameOnButton(Medic.currentTarget, medicShieldButton, getString("ShieldText"));
                 return !Medic.usedShield && Medic.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () =>
@@ -821,7 +821,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Doomsayer.currentTarget, doomsayerButton, ModTranslation.getString("doomsayerText"));
+                showTargetNameOnButton(Doomsayer.currentTarget, doomsayerButton, getString("doomsayerText"));
                 return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Doomsayer.currentTarget != null;
             },
             () => { doomsayerButton.Timer = doomsayerButton.MaxTimer; },
@@ -841,7 +841,7 @@ internal static class HudManagerStartPatch
                     return;
                 }
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSetHonmei, Hazel.SendOption.Reliable, -1);
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSetHonmei, SendOption.Reliable, -1);
                 writer.Write(Akujo.akujo.PlayerId);
                 writer.Write(Akujo.currentTarget.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -857,9 +857,9 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowRight,
             __instance,
             KeyCode.F,
-            buttonText: "(F)" + ModTranslation.getString("AkujoHonmeiText")
+            buttonText: "(F)" + getString("AkujoHonmeiText")
         );
-        akujoTimeRemainingText = GameObject.Instantiate(akujoHonmeiButton.actionButton.cooldownTimerText, __instance.transform);
+        akujoTimeRemainingText = Object.Instantiate(akujoHonmeiButton.actionButton.cooldownTimerText, __instance.transform);
         akujoTimeRemainingText.text = "";
         akujoTimeRemainingText.enableWordWrapping = false;
         akujoTimeRemainingText.transform.localScale = Vector3.one * 0.45f;
@@ -875,7 +875,7 @@ internal static class HudManagerStartPatch
                     return;
                 }
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSetKeep, Hazel.SendOption.Reliable, -1);
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSetKeep, SendOption.Reliable, -1);
                 writer.Write(Akujo.akujo.PlayerId);
                 writer.Write(Akujo.currentTarget.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -898,9 +898,9 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowCenter,
             __instance,
             KeyCode.C,
-            buttonText: "(C)" + ModTranslation.getString("AkujoBackupText")
+            buttonText: "(C)" + getString("AkujoBackupText")
         );
-        akujoBackupLeftText = GameObject.Instantiate(akujoBackupButton.actionButton.cooldownTimerText, akujoBackupButton.actionButton.cooldownTimerText.transform.parent);
+        akujoBackupLeftText = Object.Instantiate(akujoBackupButton.actionButton.cooldownTimerText, akujoBackupButton.actionButton.cooldownTimerText.transform.parent);
         akujoBackupLeftText.text = "";
         akujoBackupLeftText.enableWordWrapping = false;
         akujoBackupLeftText.transform.localScale = Vector3.one * 0.5f;
@@ -927,7 +927,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Shifter.currentTarget, shifterShiftButton, ModTranslation.getString("ShiftText"));
+                showTargetNameOnButton(Shifter.currentTarget, shifterShiftButton, getString("ShiftText"));
                 return Shifter.currentTarget && Shifter.futureShift == null &&
                        CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
@@ -961,7 +961,7 @@ internal static class HudManagerStartPatch
             __instance,
             null,
             true,
-            buttonText: ModTranslation.getString("DisperseText")
+            buttonText: getString("DisperseText")
         );
 
         // ButtonBarry Meetings
@@ -1026,7 +1026,7 @@ internal static class HudManagerStartPatch
             __instance,
             null,
             true,
-            buttonText: ModTranslation.getString("buttonBarryText")
+            buttonText: getString("buttonBarryText")
         );
 
         // Morphling morph
@@ -1067,7 +1067,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (Morphling.sampledTarget == null)
-                    showTargetNameOnButton(Morphling.currentTarget, morphlingButton, ModTranslation.getString("SampleText"));
+                    showTargetNameOnButton(Morphling.currentTarget, morphlingButton, getString("SampleText"));
                 return (Morphling.currentTarget || Morphling.sampledTarget) && !Helpers.isActiveCamoComms() &&
                        CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Helpers.MushroomSabotageActive();
             },
@@ -1163,7 +1163,7 @@ internal static class HudManagerStartPatch
             true,
             0f,
             () => { hackerButton.Timer = hackerButton.MaxTimer; },
-            buttonText: ModTranslation.getString("hackerButtonText")
+            buttonText: getString("hackerButtonText")
         );
 
         hackerAdminTableButton = new CustomButton(
@@ -1210,7 +1210,7 @@ internal static class HudManagerStartPatch
                 if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
             },
             GameOptionsManager.Instance.currentNormalGameOptions.MapId == 3,
-            ModTranslation.getString("AdminMapText")
+            getString("AdminMapText")
         );
 
         // Hacker Admin Table Charges
@@ -1271,7 +1271,7 @@ internal static class HudManagerStartPatch
                     hackerVitalsChargesText.text = $"{Hacker.chargesVitals} / {Hacker.toolsNumber}";
                 hackerVitalsButton.actionButton.graphic.sprite =
                     Helpers.isMira() ? Hacker.getLogSprite() : Hacker.getVitalsSprite();
-                hackerVitalsButton.actionButton.OverrideText(Helpers.isMira() ? ModTranslation.getString("hackerDoorLogText") : ModTranslation.getString("hackerVitalText"));
+                hackerVitalsButton.actionButton.OverrideText(Helpers.isMira() ? getString("hackerDoorLogText") : getString("hackerVitalText"));
                 return Hacker.chargesVitals > 0;
             },
             () =>
@@ -1297,7 +1297,7 @@ internal static class HudManagerStartPatch
                 }
             },
             false,
-            Helpers.isMira() ? ModTranslation.getString("hackerDoorLogText") : ModTranslation.getString("hackerVitalText")
+            Helpers.isMira() ? getString("hackerDoorLogText") : getString("hackerVitalText")
         );
 
         // Hacker Vitals Charges
@@ -1330,7 +1330,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (!Tracker.usedTracker)
-                    showTargetNameOnButton(Tracker.currentTarget, trackerTrackPlayerButton, ModTranslation.getString("TrackerText"));
+                    showTargetNameOnButton(Tracker.currentTarget, trackerTrackPlayerButton, getString("TrackerText"));
                 return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Tracker.currentTarget != null &&
                        !Tracker.usedTracker;
             },
@@ -1392,7 +1392,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (!BodyGuard.usedGuard)
-                    showTargetNameOnButton(BodyGuard.currentTarget, bodyGuardGuardButton, ModTranslation.getString("bodyGuardText"));
+                    showTargetNameOnButton(BodyGuard.currentTarget, bodyGuardGuardButton, getString("bodyGuardText"));
                 return CachedPlayer.LocalPlayer.PlayerControl.CanMove && BodyGuard.currentTarget != null &&
                        !BodyGuard.usedGuard;
             },
@@ -1426,7 +1426,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (PrivateInvestigator.watching == null)
-                    showTargetNameOnButton(PrivateInvestigator.currentTarget, privateInvestigatorWatchButton, ModTranslation.getString("PrivateInvestigatorWatchText"));
+                    showTargetNameOnButton(PrivateInvestigator.currentTarget, privateInvestigatorWatchButton, getString("PrivateInvestigatorWatchText"));
                 return CachedPlayer.LocalPlayer.PlayerControl.CanMove && PrivateInvestigator.currentTarget != null &&
                        PrivateInvestigator.watching == null;
             },
@@ -1536,9 +1536,9 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (Vampire.targetNearGarlic)
-                    showTargetNameOnButton(Vampire.currentTarget, vampireKillButton, ModTranslation.getString("killButtonText"));
+                    showTargetNameOnButton(Vampire.currentTarget, vampireKillButton, getString("killButtonText"));
                 else
-                    showTargetNameOnButton(Vampire.currentTarget, vampireKillButton, ModTranslation.getString("VampireText"));
+                    showTargetNameOnButton(Vampire.currentTarget, vampireKillButton, getString("VampireText"));
                 if (Vampire.targetNearGarlic && Vampire.canKillNearGarlics)
                 {
                     vampireKillButton.actionButton.graphic.sprite = __instance.KillButton.graphic.sprite;
@@ -1600,7 +1600,7 @@ internal static class HudManagerStartPatch
             __instance,
             null,
             true,
-            buttonText: ModTranslation.getString("GarlicText")
+            buttonText: getString("GarlicText")
         );
 
         prophetButton = new CustomButton(
@@ -1609,7 +1609,7 @@ internal static class HudManagerStartPatch
                     if (Helpers.checkAndDoVetKill(Prophet.currentTarget)) return;
                     if (Prophet.currentTarget != null)
                     {
-                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ProphetExamine, Hazel.SendOption.Reliable, -1);
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ProphetExamine, SendOption.Reliable, -1);
                         writer.Write(Prophet.currentTarget.PlayerId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
                         RPCProcedure.prophetExamine(Prophet.currentTarget.PlayerId);
@@ -1633,7 +1633,7 @@ internal static class HudManagerStartPatch
                 CustomButton.ButtonPositions.lowerRowRight,
                 __instance,
                 KeyCode.F,
-                buttonText: ModTranslation.getString("ProphetText")
+                buttonText: getString("ProphetText")
             );
         prophetButtonText = Object.Instantiate(prophetButton.actionButton.cooldownTimerText, prophetButton.actionButton.cooldownTimerText.transform.parent);
         prophetButtonText.text = "";
@@ -1670,7 +1670,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.lowerRowRight,
             __instance,
             KeyCode.F,
-            buttonText: ModTranslation.getString("PlacePortalText")
+            buttonText: getString("PlacePortalText")
         );
 
         usePortalButton = new CustomButton(
@@ -1742,7 +1742,7 @@ internal static class HudManagerStartPatch
             __instance,
             KeyCode.H,
             true,
-            buttonText: ModTranslation.getString("usePortalText")
+            buttonText: getString("usePortalText")
         );
 
         portalmakerMoveToPortalButton = new CustomButton(
@@ -1835,7 +1835,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Jackal.currentTarget, jackalSidekickButton, ModTranslation.getString("jackalSidekickText")); // Show now text since the button already says sidekick
+                showTargetNameOnButton(Jackal.currentTarget, jackalSidekickButton, getString("jackalSidekickText")); // Show now text since the button already says sidekick
                 return Jackal.canCreateSidekick && Jackal.currentTarget != null &&
                        CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
@@ -1864,7 +1864,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Jackal.currentTarget, jackalKillButton, ModTranslation.getString("killButtonText"));
+                showTargetNameOnButton(Jackal.currentTarget, jackalKillButton, getString("killButtonText"));
                 return Jackal.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { jackalKillButton.Timer = jackalKillButton.MaxTimer; },
@@ -1887,7 +1887,7 @@ internal static class HudManagerStartPatch
                 Swooper.currentTarget = null;
             },
             () => { return Swooper.swooper != null && Swooper.swooper == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
-            () => { showTargetNameOnButton(Swooper.currentTarget, swooperKillButton, ModTranslation.getString("killButtonText")); return Swooper.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { showTargetNameOnButton(Swooper.currentTarget, swooperKillButton, getString("killButtonText")); return Swooper.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => { swooperKillButton.Timer = swooperKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
             CustomButton.ButtonPositions.upperRowCenter,
@@ -1899,7 +1899,7 @@ internal static class HudManagerStartPatch
         swooperSwoopButton = new CustomButton(
             () =>
             { /* On Use */
-                MessageWriter invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetSwoop, Hazel.SendOption.Reliable, -1);
+                MessageWriter invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetSwoop, SendOption.Reliable, -1);
                 invisibleWriter.Write(Swooper.swooper.PlayerId);
                 invisibleWriter.Write(byte.MinValue);
                 AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
@@ -1921,7 +1921,7 @@ internal static class HudManagerStartPatch
             true,
             Swooper.duration,
             () => { swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer; },
-            buttonText: ModTranslation.getString("SwoopText")
+            buttonText: getString("SwoopText")
         );
 
 
@@ -1943,7 +1943,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Sidekick.currentTarget, sidekickKillButton, ModTranslation.getString("killButtonText"));
+                showTargetNameOnButton(Sidekick.currentTarget, sidekickKillButton, getString("killButtonText"));
                 return Sidekick.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { sidekickKillButton.Timer = sidekickKillButton.MaxTimer; },
@@ -2004,7 +2004,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowLeft, //brb
             __instance,
             KeyCode.F,
-            buttonText: ModTranslation.getString("minerText")
+            buttonText: getString("minerText")
         );
 
         bomberBombButton = new CustomButton(
@@ -2118,7 +2118,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Werewolf.currentTarget, werewolfKillButton, ModTranslation.getString("killButtonText"));
+                showTargetNameOnButton(Werewolf.currentTarget, werewolfKillButton, getString("killButtonText"));
                 return Werewolf.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { werewolfKillButton.Timer = werewolfKillButton.MaxTimer; },
@@ -2194,7 +2194,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, ModTranslation.getString("killButtonText"));
+                showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, getString("killButtonText"));
                 return Juggernaut.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { juggernautKillButton.Timer = juggernautKillButton.MaxTimer; },
@@ -2227,7 +2227,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Eraser.currentTarget, eraserButton, ModTranslation.getString("EraserText"));
+                showTargetNameOnButton(Eraser.currentTarget, eraserButton, getString("EraserText"));
                 return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Eraser.currentTarget != null;
             },
             () => { eraserButton.Timer = eraserButton.MaxTimer; },
@@ -2268,7 +2268,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowLeft,
             __instance,
             KeyCode.F,
-            buttonText: ModTranslation.getString("TricksterPlaceText")
+            buttonText: getString("TricksterPlaceText")
         );
 
         lightsOutButton = new CustomButton(
@@ -2308,7 +2308,7 @@ internal static class HudManagerStartPatch
                 lightsOutButton.Timer = lightsOutButton.MaxTimer;
                 SoundEffectsManager.play("lighterLight");
             },
-            buttonText: ModTranslation.getString("LightsOutText")
+            buttonText: getString("LightsOutText")
         );
 
         // Cleaner Clean
@@ -2363,7 +2363,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowLeft,
             __instance,
             KeyCode.F,
-            buttonText: ModTranslation.getString("CleanText")
+            buttonText: getString("CleanText")
         );
 
         // Cleaner Clean
@@ -2445,7 +2445,7 @@ internal static class HudManagerStartPatch
             true,
             0f,
             () => { },
-            buttonText: ModTranslation.getString("DragBodyText")
+            buttonText: getString("DragBodyText")
         );
 
         // Warlock curse
@@ -2514,9 +2514,9 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (Warlock.curseVictim != null)
-                    showTargetNameOnButton(Warlock.currentTarget, warlockCurseButton, ModTranslation.getString("CurseKillText"));
+                    showTargetNameOnButton(Warlock.currentTarget, warlockCurseButton, getString("CurseKillText"));
                 else
-                    showTargetNameOnButton(Warlock.currentTarget, warlockCurseButton, ModTranslation.getString("CurseText"));
+                    showTargetNameOnButton(Warlock.currentTarget, warlockCurseButton, getString("CurseText"));
                 return ((Warlock.curseVictim == null && Warlock.currentTarget != null) ||
                         (Warlock.curseVictim != null && Warlock.curseVictimTarget != null)) &&
                        CachedPlayer.LocalPlayer.PlayerControl.CanMove;
@@ -2665,7 +2665,7 @@ internal static class HudManagerStartPatch
                 securityGuardCamButton.actionButton.graphic.sprite =
                     Helpers.isMira() ? SecurityGuard.getLogSprite() : SecurityGuard.getCamSprite();
                 securityGuardCamButton.actionButton.OverrideText(Helpers.isMira() ?
-                    ModTranslation.getString("hackerDoorLogText") : ModTranslation.getString("CamButtonText"));
+                    getString("hackerDoorLogText") : getString("CamButtonText"));
                 return CachedPlayer.LocalPlayer.PlayerControl.CanMove && SecurityGuard.charges > 0;
             },
             () =>
@@ -2687,7 +2687,7 @@ internal static class HudManagerStartPatch
                 CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
             },
             false,
-            Helpers.isMira() ? ModTranslation.getString("hackerDoorLogText") : ModTranslation.getString("CamButtonText")
+            Helpers.isMira() ? getString("hackerDoorLogText") : getString("CamButtonText")
         );
 
         // Security Guard cam button charges
@@ -2729,7 +2729,7 @@ internal static class HudManagerStartPatch
             {
                 var dousedEveryoneAlive = Arsonist.dousedEveryoneAlive();
                 if (!dousedEveryoneAlive)
-                    showTargetNameOnButton(Arsonist.currentTarget, arsonistButton, ModTranslation.getString("DouseText"));
+                    showTargetNameOnButton(Arsonist.currentTarget, arsonistButton, getString("DouseText"));
                 if (dousedEveryoneAlive) arsonistButton.actionButton.graphic.sprite = Arsonist.getIgniteSprite();
 
                 if (arsonistButton.isEffectActive && Arsonist.douseTarget != Arsonist.currentTarget)
@@ -2828,7 +2828,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.lowerRowCenter,
             __instance,
             KeyCode.F,
-            buttonText: ModTranslation.getString("VultureText")
+            buttonText: getString("VultureText")
         );
 
         amnisiacRememberButton = new CustomButton(
@@ -2878,7 +2878,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.lowerRowRight, //brb
             __instance,
             KeyCode.F,
-            buttonText: ModTranslation.getString("RememberText")
+            buttonText: getString("RememberText")
         );
 
         // Medium button
@@ -3008,7 +3008,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Pursuer.target, pursuerButton, ModTranslation.getString("PursuerText"));
+                showTargetNameOnButton(Pursuer.target, pursuerButton, getString("PursuerText"));
                 if (pursuerButtonBlanksText != null)
                     pursuerButtonBlanksText.text = $"{Pursuer.blanksNumber - Pursuer.blanks}";
 
@@ -3062,7 +3062,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(null, arsonistButton, ModTranslation.getString("WitchText"));
+                showTargetNameOnButton(null, arsonistButton, getString("WitchText"));
                 witchSpellButton.Timer = witchSpellButton.MaxTimer;
                 witchSpellButton.isEffectActive = false;
                 Witch.spellCastingTarget = null;
@@ -3169,7 +3169,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.lowerRowRight, //brb
             __instance,
             KeyCode.F,
-            buttonText: ModTranslation.getString("jumperText")
+            buttonText: getString("jumperText")
         );
 
         // Escapist Escape
@@ -3228,7 +3228,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowLeft, //brb
             __instance,
             KeyCode.F,
-            buttonText: ModTranslation.getString("jumperText")
+            buttonText: getString("jumperText")
         );
 
         // Ninja mark and assassinate button 
@@ -3335,7 +3335,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 // CouldUse
-                showTargetNameOnButton(Ninja.currentTarget, ninjaButton, ModTranslation.getString("NinjaText"));
+                showTargetNameOnButton(Ninja.currentTarget, ninjaButton, getString("NinjaText"));
                 ninjaButton.Sprite = Ninja.ninjaMarked != null
                     ? Ninja.getKillButtonSprite()
                     : Ninja.getMarkButtonSprite();
@@ -3382,7 +3382,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 // Could Use
-                var text = ModTranslation.getString("BlackmailerText");
+                var text = getString("BlackmailerText");
                 if (Blackmailer.blackmailed != null) text = Blackmailer.blackmailed.Data.PlayerName;
                 showTargetNameOnButtonExplicit(Blackmailer.currentTarget, blackmailerButton,
                     text); //Show target name under button if setting is true
@@ -3447,7 +3447,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                mayorMeetingButton.actionButton.OverrideText(ModTranslation.getString("MayorButtonText") + "(" + Mayor.remoteMeetingsLeft + ")");
+                mayorMeetingButton.actionButton.OverrideText(getString("MayorButtonText") + "(" + Mayor.remoteMeetingsLeft + ")");
                 var sabotageActive = false;
                 foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
                     if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
@@ -3491,7 +3491,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 showTargetNameOnButton(Cultist.currentTarget, cultistTurnButton,
-                    ModTranslation.getString("ConvertText")); // Show now text since the button already says sidekick
+                    getString("ConvertText")); // Show now text since the button already says sidekick
                 return Cultist.needsFollower && Cultist.currentTarget != null &&
                        CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
@@ -3535,7 +3535,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.lowerRowRight,
             __instance,
             KeyCode.F,
-            buttonText: ModTranslation.getString("trapperTrapText")
+            buttonText: getString("trapperTrapText")
         );
 
         // Bomber button
@@ -3638,7 +3638,7 @@ internal static class HudManagerStartPatch
                 Bomb.canDefuse = false;
             },
             true,
-            buttonText: ModTranslation.getString("defuseBombText")
+            buttonText: getString("defuseBombText")
         );
 
         thiefKillButton = new CustomButton(
@@ -3702,7 +3702,7 @@ internal static class HudManagerStartPatch
             CustomButton.ButtonPositions.upperRowRight,
             __instance,
             KeyCode.Q,
-            buttonText: ModTranslation.getString("killButtonText")
+            buttonText: getString("killButtonText")
         );
 
         // Trapper Charges
@@ -3803,7 +3803,7 @@ internal static class HudManagerStartPatch
                 hunterLighterButton.Timer = hunterLighterButton.MaxTimer;
                 SoundEffectsManager.play("lighterLight");
             },
-            buttonText: "(F)" + ModTranslation.getString("LighterText")
+            buttonText: "(F)" + getString("LighterText")
         );
 
         hunterAdminTableButton = new CustomButton(
@@ -3844,7 +3844,7 @@ internal static class HudManagerStartPatch
                 if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
             },
             false,
-            "(G)" + ModTranslation.getString("AdminMapText")
+            "(G)" + getString("AdminMapText")
         );
 
         hunterArrowButton = new CustomButton(
@@ -4054,7 +4054,7 @@ internal static class HudManagerStartPatch
                 SoundEffectsManager.play("morphlingMorph");
                 propHuntInvisButton.Timer = propHuntInvisButton.MaxTimer;
             },
-            buttonText: ModTranslation.getString("SwoopText")
+            buttonText: getString("SwoopText")
         );
 
         propHuntSpeedboostButton = new CustomButton(
@@ -4130,7 +4130,7 @@ internal static class HudManagerStartPatch
                 if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
             },
             false,
-            ModTranslation.getString("AdminMapText")
+            getString("AdminMapText")
         );
         propHuntFindButton = new CustomButton(
             () => { SoundEffectsManager.play("timemasterShield"); },

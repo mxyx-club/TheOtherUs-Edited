@@ -11,6 +11,7 @@ using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 using Random = System.Random;
+using TheOtherRoles.Objects.BetterMap;
 
 namespace TheOtherRoles;
 
@@ -22,6 +23,7 @@ public static class TheOtherRoles
     public static void clearAndReloadRoles()
     {
         ResetButtonCooldown.clearAndReload();
+        ElectricPatch.Reset();
         Jester.clearAndReload();
         Mayor.clearAndReload();
         Portalmaker.clearAndReload();
@@ -815,16 +817,16 @@ public static class Medic
         bool hasVisibleShield = false;
 
         bool isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
-        if (Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
+        if (shielded != null && ((target == shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == shielded)))
         {   // Everyone or Ghost info
-            hasVisibleShield = Medic.showShielded == 0 || Helpers.shouldShowGhostInfo()
-                || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.shielded
-                || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic)) // Shielded + Medic
-                || (Medic.showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl == Medic.medic); // Medic only
+            hasVisibleShield = showShielded == 0 || Helpers.shouldShowGhostInfo()
+                || (showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == shielded
+                || CachedPlayer.LocalPlayer.PlayerControl == medic)) // Shielded + Medic
+                || (showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl == medic); // Medic only
                                                                                                        // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
-            hasVisibleShield = hasVisibleShield && (Medic.meetingAfterShielding
-                || !Medic.showShieldAfterMeeting
-                || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic
+            hasVisibleShield = hasVisibleShield && (meetingAfterShielding
+                || !showShieldAfterMeeting
+                || CachedPlayer.LocalPlayer.PlayerControl == medic
                 || Helpers.shouldShowGhostInfo());
         }
         return hasVisibleShield;
@@ -1404,7 +1406,6 @@ public static class Snitch
         isRevealed = false;
         if (text != null) Object.Destroy(text);
         text = null;
-        text.text = null;
         needsUpdate = true;
 
         canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();
@@ -1683,7 +1684,7 @@ public static class LastImpostor
         }
         if (impList.Count == 1)
         {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ImpostorPromotesToLastImpostor, Hazel.SendOption.Reliable, -1);
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ImpostorPromotesToLastImpostor, SendOption.Reliable, -1);
             writer.Write(impList[0].PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.impostorPromotesToLastImpostor(impList[0].PlayerId);
@@ -3001,7 +3002,7 @@ public static class Prophet
         {
             foreach (Arrow arrow in arrows)
                 if (arrow?.arrow != null)
-                    UnityEngine.Object.Destroy(arrow.arrow);
+                    Object.Destroy(arrow.arrow);
         }
         arrows = new List<Arrow>();
     }

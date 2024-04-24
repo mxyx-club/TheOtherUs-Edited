@@ -4,7 +4,7 @@ using InnerNet;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
-namespace TheOtherRoles.Objects;
+namespace TheOtherRoles.Objects.BetterMap;
 
 public class AdditionalVents
 {
@@ -46,36 +46,36 @@ public class AdditionalVents
             // Polus管道追加
             case 2 when
                 CustomOptionHolder.enableBetterPolus.getBool() && CustomOptionHolder.addPolusVents.getBool():
-            {
-                var position = PlayerControl.LocalPlayer.transform.position;
-                AdditionalVents vents1 =
-                    new(new Vector3(36.54f, -21.77f, position.z + 1f)); // 样本室
-                AdditionalVents vents2 =
-                    new(new Vector3(16.64f, -2.46f, position.z + 1f)); // 运输船
-                AdditionalVents vents3 =
-                    new(new Vector3(26.67f, -17.54f, position.z + 1f)); // 办公室
-                vents1.vent.Left = vents3.vent; // 样本室 - 办公室
-                vents1.vent.Right = vents2.vent; // 样本室 - 运输船
-                vents2.vent.Center = vents3.vent; // 运输船 - 办公室
-                vents2.vent.Left = vents1.vent; // 运输船 - 样本室
-                vents3.vent.Right = vents1.vent; // 办公室 - 样本室
-                vents3.vent.Left = vents2.vent; // 办公室 - 运输船
-                break;
-            }
+                {
+                    var position = PlayerControl.LocalPlayer.transform.position;
+                    AdditionalVents vents1 =
+                        new(new Vector3(36.54f, -21.77f, position.z + 1f)); // 样本室
+                    AdditionalVents vents2 =
+                        new(new Vector3(16.64f, -2.46f, position.z + 1f)); // 运输船
+                    AdditionalVents vents3 =
+                        new(new Vector3(26.67f, -17.54f, position.z + 1f)); // 办公室
+                    vents1.vent.Left = vents3.vent; // 样本室 - 办公室
+                    vents1.vent.Right = vents2.vent; // 样本室 - 运输船
+                    vents2.vent.Center = vents3.vent; // 运输船 - 办公室
+                    vents2.vent.Left = vents1.vent; // 运输船 - 样本室
+                    vents3.vent.Right = vents1.vent; // 办公室 - 样本室
+                    vents3.vent.Left = vents2.vent; // 办公室 - 运输船
+                    break;
+                }
             // AirShip管道追加
             case 4 when
                 CustomOptionHolder.enableAirShipModify.getBool() && CustomOptionHolder.addAirShipVents.getBool():
-            {
-                var transform = CachedPlayer.LocalPlayer.PlayerControl.transform;
-                var position = transform.position;
-                var vents1 = new AdditionalVents(new Vector3(17.086f, 15.24f,
-                    position.z + 1f)); // 会议室
-                var vents2 = new AdditionalVents(new Vector3(19.137f, -11.32f,
-                    position.z + 1f)); // 电力
-                vents1.vent.Right = vents2.vent;
-                vents2.vent.Left = vents1.vent;
-                break;
-            }
+                {
+                    var transform = CachedPlayer.LocalPlayer.PlayerControl.transform;
+                    var position = transform.position;
+                    var vents1 = new AdditionalVents(new Vector3(17.086f, 15.24f,
+                        position.z + 1f)); // 会议室
+                    var vents2 = new AdditionalVents(new Vector3(19.137f, -11.32f,
+                        position.z + 1f)); // 电力
+                    vents1.vent.Right = vents2.vent;
+                    vents2.vent.Left = vents1.vent;
+                    break;
+                }
         }
     }
 

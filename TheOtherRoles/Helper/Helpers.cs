@@ -212,7 +212,7 @@ public static class Helpers
             HudManager.Instance.shhhEmblem.transform.localPosition.x,
             HudManager.Instance.shhhEmblem.transform.localPosition.y,
             HudManager.Instance.FullScreen.transform.position.z + 1f);
-        HudManager.Instance.shhhEmblem.TextImage.text = ModTranslation.getString("BlackmailShhhText");
+        HudManager.Instance.shhhEmblem.TextImage.text = getString("BlackmailShhhText");
         HudManager.Instance.shhhEmblem.HoldDuration = 3f;
         yield return HudManager.Instance.ShowEmblem(true);
         HudManager.Instance.shhhEmblem.transform.localPosition = TempPosition;

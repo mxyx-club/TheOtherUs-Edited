@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TheOtherRoles.Objects
+namespace TheOtherRoles.Objects.BetterMap
 {
     public class AddVitals
     {
@@ -8,7 +8,7 @@ namespace TheOtherRoles.Objects
         {
             if (Helpers.isMira() && CustomOptionHolder.miraVitals.getBool())
             {
-                Transform Vital = GameObject.Instantiate(PolusObject.transform.FindChild("Office").FindChild("panel_vitals"), GameObject.Find("MiraShip(Clone)").transform);
+                Transform Vital = Object.Instantiate(PolusObject.transform.FindChild("Office").FindChild("panel_vitals"), GameObject.Find("MiraShip(Clone)").transform);
                 Vital.transform.position = new Vector3(8.5969f, 14.6337f, 0.0142f);
             }
         }

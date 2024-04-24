@@ -4,7 +4,7 @@ using Hazel;
 using Il2CppSystem.Collections.Generic;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
-using TheOtherRoles.Objects;
+using TheOtherRoles.Objects.BetterMap;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -98,7 +98,7 @@ internal class IntroCutsceneOnDestroyPatch
             }
         }
 
-        // Polus管道追加
+        // 管道追加
         AdditionalVents.AddAdditionalVents();
 
         // Add Electrical

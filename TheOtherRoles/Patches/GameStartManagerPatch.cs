@@ -187,12 +187,12 @@ public class GameStartManagerPatch
                 // Make starting info available to clients:
                 if (startingTimer <= 0 && __instance.startState == GameStartManager.StartingStates.Countdown)
                 {
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetGameStarting, Hazel.SendOption.Reliable, -1);
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetGameStarting, SendOption.Reliable, -1);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.setGameStarting();
 
                     // Activate Stop-Button
-                    copiedStartButton = GameObject.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
+                    copiedStartButton = UnityEngine.Object.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
                     copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
                     copiedStartButton.GetComponent<SpriteRenderer>().sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 200f);
                     copiedStartButton.SetActive(true);
@@ -254,7 +254,7 @@ public class GameStartManagerPatch
                 {
 
                     // Activate Stop-Button
-                    copiedStartButton = GameObject.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
+                    copiedStartButton = UnityEngine.Object.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
                     copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
                     copiedStartButton.GetComponent<SpriteRenderer>().sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 200f);
                     copiedStartButton.SetActive(true);
@@ -267,7 +267,7 @@ public class GameStartManagerPatch
 
                     void StopStartFunc()
                     {
-                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.StopStart, Hazel.SendOption.Reliable, AmongUsClient.Instance.HostId);
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.StopStart, SendOption.Reliable, AmongUsClient.Instance.HostId);
                         writer.Write(PlayerControl.LocalPlayer.PlayerId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
                         copiedStartButton.Destroy();
@@ -305,7 +305,7 @@ public class GameStartManagerPatch
 
             if (AmongUsClient.Instance.AmHost)
             {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGamemode, Hazel.SendOption.Reliable, -1);
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGamemode, SendOption.Reliable, -1);
                 writer.Write((byte)TORMapOptions.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.shareGameMode((byte)TORMapOptions.gameMode);
