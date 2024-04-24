@@ -491,7 +491,7 @@ public class RoleInfo
         if (ReadmePage == "")
         {
             var client = new HttpClient();
-            var response = await client.GetAsync("https://mirror.ghproxy.com/https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherRoles/main/README.md");
+            var response = await client.GetAsync("https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherRoles/main/README.md".GithubUrl());
             response.EnsureSuccessStatusCode();
             var httpres = await response.Content.ReadAsStringAsync();
             ReadmePage = httpres;

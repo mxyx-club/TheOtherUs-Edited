@@ -1,10 +1,8 @@
-﻿using System.Globalization;
-
-namespace TheOtherRoles.Utilities;
+﻿namespace TheOtherRoles.Utilities;
 
 public static class GithubUtils
 {
-    public static bool IsCN() => RegionInfo.CurrentRegion.ThreeLetterISORegionName == "CHN";
+    public static bool IsCN() => (int)AmongUs.Data.DataManager.Settings.Language.CurrentLanguage == 13;
 
     public static string GithubUrl(this string url) 
     {

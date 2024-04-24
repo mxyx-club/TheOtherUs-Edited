@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
+using TheOtherRoles.Utilities;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -19,7 +20,8 @@ public static class CustomHatManager
     {
         get
         {
-            return $"https://github.moeyy.xyz/https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherHats/master";
+            var Url = $"https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherHats/master".GithubUrl();
+            return Url;
         }
     }
 
