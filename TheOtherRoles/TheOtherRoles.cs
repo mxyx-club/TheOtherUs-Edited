@@ -5,13 +5,13 @@ using AmongUs.Data;
 using Hazel;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
+using TheOtherRoles.Objects.BetterMap;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 using Random = System.Random;
-using TheOtherRoles.Objects.BetterMap;
 
 namespace TheOtherRoles;
 
@@ -22,8 +22,10 @@ public static class TheOtherRoles
 
     public static void clearAndReloadRoles()
     {
+        // MapOptions
         ResetButtonCooldown.clearAndReload();
         ElectricPatch.Reset();
+
         Jester.clearAndReload();
         Mayor.clearAndReload();
         Portalmaker.clearAndReload();
@@ -83,7 +85,6 @@ public static class TheOtherRoles
         Miner.clearAndReload();
         Trapper.clearAndReload();
         Terrorist.clearAndReload();
-        //天启添加
         Juggernaut.clearAndReload();
         Doomsayer.clearAndReload();
         //Guesser.clearAndReload();
@@ -823,7 +824,7 @@ public static class Medic
                 || (showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == shielded
                 || CachedPlayer.LocalPlayer.PlayerControl == medic)) // Shielded + Medic
                 || (showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl == medic); // Medic only
-                                                                                                       // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
+                                                                                           // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
             hasVisibleShield = hasVisibleShield && (meetingAfterShielding
                 || !showShieldAfterMeeting
                 || CachedPlayer.LocalPlayer.PlayerControl == medic
@@ -1374,8 +1375,6 @@ public static class Snitch
     public static int taskCountForReveal = 1;
     public static bool seeInMeeting = false;
     public static bool canSeeRoles = false;
-    //public static bool includeTeamJackal = false;
-    //public static bool includeNeutralTeam = false;
     public static bool teamNeutraUseDifferentArrowColor = true;
     public static bool needsUpdate = true;
 
@@ -1409,7 +1408,6 @@ public static class Snitch
         needsUpdate = true;
 
         canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();
-        //includeNeutralTeam = CustomOptionHolder.snitchIncludeNeutralTeam.getBool();
         Team = (includeNeutralTeam)CustomOptionHolder.snitchIncludeNeutralTeam.getSelection();
         teamNeutraUseDifferentArrowColor = CustomOptionHolder.snitchTeamNeutraUseDifferentArrowColor.getBool();
         snitch = null;

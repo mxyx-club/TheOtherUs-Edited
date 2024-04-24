@@ -19,18 +19,18 @@ public static class ElectricPatch
     public static DateTime lastUpdate;
 
     [HarmonyPatch(typeof(SwitchMinigame), nameof(SwitchMinigame.Begin))]
-    class VitalsMinigameStartPatch
+    private class VitalsMinigameStartPatch
     {
-        static void Postfix(VitalsMinigame __instance)
+        private static void Postfix(VitalsMinigame __instance)
         {
             onTask = true;
             done = false;
         }
     }
     [HarmonyPatch(typeof(SwitchMinigame), nameof(SwitchMinigame.FixedUpdate))]
-    class SwitchMinigameClosePatch
+    private class SwitchMinigameClosePatch
     {
-        static void Postfix(SwitchMinigame __instance)
+        private static void Postfix(SwitchMinigame __instance)
         {
             lastUpdate = DateTime.UtcNow;
             FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(1f, new Action<float>((p) =>
