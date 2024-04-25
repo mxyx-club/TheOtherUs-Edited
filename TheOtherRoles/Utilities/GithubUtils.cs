@@ -18,7 +18,7 @@ public static class GithubUtils
                 return url.Replace("https://raw.githubusercontent.com", "https://github.moeyy.xyz/https://raw.githubusercontent.com");
             }
         }
-
+        Info("Rewrite URL" + url);
         return url;
     }
 }

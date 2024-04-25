@@ -1331,19 +1331,18 @@ public static class Helpers
         return false;
     }
 
-    //好人交换师代码target
     public static bool isShiftNeutral(PlayerControl player)
     {
         if (CustomOptionHolder.modifierShiftNeutral.getBool())
         {
             if (player != null)
-                return player == (Jackal.jackal
-                        || Sidekick.sidekick
-                        || Werewolf.werewolf
-                        || Akujo.akujo
-                        || Juggernaut.juggernaut
-                        || Swooper.swooper
-                        || Arsonist.arsonist);
+                return player == Jackal.jackal ||
+                       player == Sidekick.sidekick ||
+                       player == Werewolf.werewolf ||
+                       player == Akujo.akujo ||
+                       player == Juggernaut.juggernaut ||
+                       player == Swooper.swooper ||
+                       player == Arsonist.arsonist;
             return false;
         }
         else
