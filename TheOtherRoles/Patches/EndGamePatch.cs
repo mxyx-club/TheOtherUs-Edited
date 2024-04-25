@@ -153,6 +153,7 @@ public class OnGameEndPatch
                 winnersToRemove.Add(winner);
         foreach (var winner in winnersToRemove) TempData.winners.Remove(winner);
 
+        var everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
         var jesterWin = Jester.jester != null && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
         var werewolfWin = gameOverReason == (GameOverReason)CustomGameOverReason.WerewolfWin &&
                           Werewolf.werewolf != null && !Werewolf.werewolf.Data.IsDead;
@@ -175,7 +176,6 @@ public class OnGameEndPatch
                             (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
         var vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
         var prosecutorWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.ProsecutorWin;
-        var everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
         var akujoWin = Akujo.akujo != null && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin && (Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead);
         bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
 
@@ -460,6 +460,11 @@ public class EndGameManagerSetUpPatch
 
         switch (AdditionalTempData.winCondition)
         {
+            case WinCondition.EveryoneDied:
+                textRenderer.text = "无人生还";
+                textRenderer.color = Palette.DisabledGrey;
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
+                break;
             case WinCondition.JesterWin:
                 textRenderer.text = "听我说谢谢你";
                 textRenderer.color = Jester.color;
@@ -510,11 +515,6 @@ public class EndGameManagerSetUpPatch
             case WinCondition.JackalWin:
                 textRenderer.text = "豺狼的全家福.jpg";
                 textRenderer.color = Jackal.color;
-                break;
-            case WinCondition.EveryoneDied:
-                textRenderer.text = "无人生还";
-                textRenderer.color = Palette.DisabledGrey;
-                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.AkujoWin:
                 textRenderer.text = "请给我扭曲你人生的权利！";

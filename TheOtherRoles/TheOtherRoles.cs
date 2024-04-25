@@ -3088,11 +3088,15 @@ public static class Terrorist
 
     public static void clearAndReload()
     {
-        if (defuseDuration + bombActiveAfter <= 1)
+        if (destructionTime + bombActiveAfter <= 1)
         {
             bombText = getString("TerroristBombText2");
             selfExplosion = true;
         };
+
+        Info("Terrorist Debug" + destructionTime + bombActiveAfter + " - " + selfExplosion.ToString());
+        Info("Terrorist Debug INT:" + (int)destructionTime + (int)bombActiveAfter + " - " + selfExplosion.ToString());
+
         clearBomb(false);
         terrorist = null;
         bomb = null;

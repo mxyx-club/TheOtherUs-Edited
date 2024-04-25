@@ -734,12 +734,12 @@ public class CustomOptionHolder
         fungleElectrical = CustomOption.Create(101, Types.General, "添加电力系统\n (食堂-实验室-上引擎)", false, enableFungleModify);
 
         enableCamoComms = CustomOption.Create(120, Types.General, cs(Palette.ImpostorRed, "通信破坏开启小黑人"), false, enableMapOptions, true);
-        restrictDevices = CustomOption.Create(121, Types.General, "限制信息设备使用", [getString("OFF"), "每一回合", "每局游戏"]);
+        restrictDevices = CustomOption.Create(121, Types.General, "限制信息设备使用", [getString("OFF"), "每一回合", "每局游戏"], enableMapOptions);
         //restrictAdmin = CustomOption.Create(122, Types.General, "限制使用管理室地图时长", 30f, 0f, 600f, 5f, restrictDevices);
         restrictCameras = CustomOption.Create(123, Types.General, "限制使用监控时长", 30f, 0f, 600f, 5f, restrictDevices);
         restrictVents = CustomOption.Create(124, Types.General, "限制使用心电图时长", 30f, 0f, 600f, 5f, restrictDevices);
-        disableCamsRound1 = CustomOption.Create(125, Types.General, "第一回合无法使用监控", false);
-        camsNightVision = CustomOption.Create(126, Types.General, "熄灯时监控开启夜视模式", false);
+        disableCamsRound1 = CustomOption.Create(125, Types.General, "第一回合无法使用监控", false, enableMapOptions);
+        camsNightVision = CustomOption.Create(126, Types.General, "熄灯时监控开启夜视模式", false, enableMapOptions);
         camsNoNightVisionIfImpVision = CustomOption.Create(127, Types.General, "内鬼无视监控的夜视模式", false, camsNightVision);
 
         dynamicMap = CustomOption.Create(130, Types.General, "随机地图玩法", false, enableMapOptions, true);

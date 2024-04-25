@@ -978,26 +978,40 @@ public static class PlayerControlFixedUpdatePatch
                     }
                     arrowIndex++;
                 }
-                // Text
-                if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam))
-                {
-                    if (Snitch.text == null)
-                    {
-                        Snitch.text = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
-                        Snitch.text.enableWordWrapping = false;
-                        Snitch.text.transform.localScale = Vector3.one * 0.75f;
-                        Snitch.text.transform.localPosition += new Vector3(0f, 1.8f, -69f);
-                        Snitch.text.gameObject.SetActive(true);
-                    }
-                    else if (!snitchIsDead && Snitch.snitch != null)
-                    {
-                        Snitch.text.text = "告密者还活着 " + playerCompleted + "/" + playerTotal;
-                    }
-                    else if (snitchIsDead || Snitch.snitch == null)
-                    {
-                        Snitch.text = null;
-                    }
-                }
+            }
+        }
+    }
+    // Text
+    private static void snitchTextUpdate()
+    {
+        if (Snitch.localArrows == null || Snitch.snitch == null) return;
+        var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
+        int numberOfTasks = playerTotal - playerCompleted;
+
+        var snitchIsDead = Snitch.snitch.Data.IsDead;
+        var local = CachedPlayer.LocalPlayer.PlayerControl;
+
+        bool forImpTeam = local.Data.Role.IsImpostor;
+        bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && Helpers.isKiller(local);
+        bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && Helpers.isEvil(local);
+        bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && Helpers.isNeutral(local);
+        if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam))
+        {
+            if (Snitch.text == null)
+            {
+                Snitch.text = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                Snitch.text.enableWordWrapping = false;
+                Snitch.text.transform.localScale = Vector3.one * 0.75f;
+                Snitch.text.transform.localPosition += new Vector3(0f, 1.8f, -69f);
+                Snitch.text.gameObject.SetActive(true);
+            }
+            else if (!snitchIsDead && Snitch.snitch != null)
+            {
+                Snitch.text.text = "告密者还活着 " + playerCompleted + "/" + playerTotal;
+            }
+            else if (snitchIsDead || Snitch.snitch == null)
+            {
+                Snitch.text.text = null;
             }
         }
     }
@@ -1796,6 +1810,7 @@ public static class PlayerControlFixedUpdatePatch
             arsonistSetTarget();
             // Snitch
             snitchUpdate();
+            snitchTextUpdate();
             // BodyGuard
             bodyGuardSetTarget();
             // undertaker

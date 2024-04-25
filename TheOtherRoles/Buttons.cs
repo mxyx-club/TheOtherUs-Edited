@@ -3574,6 +3574,7 @@ internal static class HudManagerStartPatch
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.uncheckedMurderPlayer(Terrorist.terrorist.Data.PlayerId, loacl, byte.MaxValue);
                 }
+                Error(((int)Terrorist.destructionTime + (int)Terrorist.bombActiveAfter) + Terrorist.selfExplosion.ToString());
             },
             () =>
             {
