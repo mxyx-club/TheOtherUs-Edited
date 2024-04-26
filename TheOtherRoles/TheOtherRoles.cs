@@ -119,20 +119,7 @@ public static class TheOtherRoles
         HideNSeek.clearAndReload();
         PropHunt.clearAndReload();
     }
-    public static class FindVentPoss
-    {
-        public static List<Vector3> findVentPoss()
-        {
-            var poss = new List<Vector3>();
-            foreach (var vent in DestroyableSingleton<ShipStatus>.Instance.AllVents)
-            {
-                var Transform = vent.transform;
-                var position = Transform.position;
-                poss.Add(new Vector3(position.x, position.y + 0.24f, position.z - 50));
-            }
-            return poss;
-        }
-    }
+
     public static class PreventTaskEnd
     {
         public static bool Enable = false;
