@@ -2162,7 +2162,7 @@ public static class MurderPlayerPatch
                 else if (RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault().isNeutral) color = Color.blue;
             }
 
-            Helpers.showFlash(color, 1.5f);
+            Helpers.showFlash(color, 1.75f);
         }
 
         // HideNSeek

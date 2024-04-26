@@ -337,21 +337,24 @@ internal class ExileControllerWrapUpPatch
 
             if (CustomOptionHolder.randomGameStartToVents.getBool())
             {
-                CachedPlayer.LocalPlayer.PlayerControl.transform.position = MapData.FindVentSpawnPositions().Random();
+                CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo
+                    (MapData.FindVentSpawnPositions()[rnd.Next(MapData.FindVentSpawnPositions().Count)]);
             }
             else
             {
-                CachedPlayer.LocalPlayer.PlayerControl.transform.position =
+                var SpawnPositions =
                     GameOptionsManager.Instance.currentNormalGameOptions.MapId switch
                     {
-                        0 => MapData.SkeldSpawnPosition.Random(),
-                        1 => MapData.MiraSpawnPosition.Random(),
-                        2 => MapData.PolusSpawnPosition.Random(),
-                        3 => MapData.DleksSpawnPosition.Random(),
-                        4 => MapData.AirshipSpawnPosition.Random(),
-                        5 => MapData.FungleSpawnPosition.Random(),
-                        _ => CachedPlayer.LocalPlayer.PlayerControl.transform.position
+                        0 => MapData.SkeldSpawnPosition,
+                        1 => MapData.MiraSpawnPosition,
+                        2 => MapData.PolusSpawnPosition,
+                        3 => MapData.DleksSpawnPosition,
+                        4 => MapData.AirshipSpawnPosition,
+                        5 => MapData.FungleSpawnPosition,
+                        _ => MapData.FindVentSpawnPositions()
                     };
+                CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo
+                    (SpawnPositions[rnd.Next(SpawnPositions.Count)]);
             }
         }
 

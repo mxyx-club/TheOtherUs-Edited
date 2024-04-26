@@ -3133,7 +3133,7 @@ internal static class HudManagerStartPatch
                     writer.Write(Jumper.jumpLocation.y);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
 
-                    PlayerControl.LocalPlayer.transform.position = Jumper.jumpLocation;
+                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Jumper.jumpLocation);
 
 
                     Jumper.Charges -= 1f;
@@ -3193,7 +3193,7 @@ internal static class HudManagerStartPatch
                     writer.Write(Escapist.escapeLocation.y);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
 
-                    PlayerControl.LocalPlayer.transform.position = Escapist.escapeLocation;
+                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Escapist.escapeLocation);
 
 
                     Escapist.Charges -= 1f;
