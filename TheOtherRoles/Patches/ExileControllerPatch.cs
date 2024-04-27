@@ -129,16 +129,16 @@ internal class ExileControllerBeginPatch
 
         // SecurityGuard vents and cameras
         var allCameras = MapUtilities.CachedShipStatus.AllCameras.ToList();
-        TORMapOptions.camerasToAdd.ForEach(camera =>
+        MapOptions.camerasToAdd.ForEach(camera =>
         {
             camera.gameObject.SetActive(true);
             camera.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
             allCameras.Add(camera);
         });
         MapUtilities.CachedShipStatus.AllCameras = allCameras.ToArray();
-        TORMapOptions.camerasToAdd = new List<SurvCamera>();
+        MapOptions.camerasToAdd = new List<SurvCamera>();
 
-        foreach (var vent in TORMapOptions.ventsToSeal)
+        foreach (var vent in MapOptions.ventsToSeal)
         {
             var animator = vent.GetComponent<SpriteAnim>();
             vent.EnterVentAnim = vent.ExitVentAnim = null;
@@ -163,10 +163,10 @@ internal class ExileControllerBeginPatch
             vent.name = "SealedVent_" + vent.name;
         }
 
-        TORMapOptions.ventsToSeal = new List<Vent>();
+        MapOptions.ventsToSeal = new List<Vent>();
         // 1 = reset per turn
-        if (TORMapOptions.restrictDevices == 1)
-            TORMapOptions.resetDeviceTimes();
+        if (MapOptions.restrictDevices == 1)
+            MapOptions.resetDeviceTimes();
 
         EventUtility.meetingEndsUpdate();
     }
@@ -278,14 +278,14 @@ internal class ExileControllerWrapUpPatch
             var BottomLeft = newBottomLeft + new Vector3(-0.25f, -0.25f, 0);
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
-                if (!TORMapOptions.playerIcons.ContainsKey(p.PlayerId)) continue;
+                if (!MapOptions.playerIcons.ContainsKey(p.PlayerId)) continue;
                 if (p.Data.IsDead || p.Data.Disconnected)
                 {
-                    TORMapOptions.playerIcons[p.PlayerId].gameObject.SetActive(false);
+                    MapOptions.playerIcons[p.PlayerId].gameObject.SetActive(false);
                 }
                 else
                 {
-                    TORMapOptions.playerIcons[p.PlayerId].transform.localPosition =
+                    MapOptions.playerIcons[p.PlayerId].transform.localPosition =
                         newBottomLeft + (Vector3.right * visibleCounter * 0.35f);
                     visibleCounter++;
                 }

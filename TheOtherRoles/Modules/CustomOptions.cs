@@ -331,7 +331,7 @@ internal class GameOptionsMenuStartPatch
 {
     public static void Postfix(GameOptionsMenu __instance)
     {
-        switch (TORMapOptions.gameMode)
+        switch (MapOptions.gameMode)
         {
             case CustomGamemodes.Classic:
                 createClassicTabs(__instance);
@@ -1143,24 +1143,24 @@ internal class GameOptionsDataPatch
     {
         var sb = new StringBuilder("\n");
         var options = CustomOption.options.Where(o => o.type == type);
-        if (TORMapOptions.gameMode == CustomGamemodes.Guesser)
+        if (MapOptions.gameMode == CustomGamemodes.Guesser)
         {
             if (type == CustomOptionType.General)
                 options = CustomOption.options.Where(o => o.type == type || o.type == CustomOptionType.Guesser);
             var remove = new List<int> { 308, 310, 311, 312, 313, 314, 315, 316, 317, 318 };
             options = options.Where(x => !remove.Contains(x.id));
         }
-        else if (TORMapOptions.gameMode == CustomGamemodes.Classic)
+        else if (MapOptions.gameMode == CustomGamemodes.Classic)
         {
             options = options.Where(x =>
                 !(x.type == CustomOptionType.Guesser || x == CustomOptionHolder.crewmateRolesFill));
         }
-        else if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek)
+        else if (MapOptions.gameMode == CustomGamemodes.HideNSeek)
         {
             options = options.Where(x =>
                 x.type == CustomOptionType.HideNSeekMain || x.type == CustomOptionType.HideNSeekRoles);
         }
-        else if (TORMapOptions.gameMode == CustomGamemodes.PropHunt)
+        else if (MapOptions.gameMode == CustomGamemodes.PropHunt)
         {
             options = options.Where(x => x.type == CustomOptionType.PropHunt);
         }
@@ -1177,7 +1177,7 @@ internal class GameOptionsDataPatch
                 if (option.id == 30170) //Deputy
                     sb.AppendLine(
                         $"- {Helpers.cs(Deputy.color, "捕快")}: {option.selections[option.selection].ToString()}");
-                else if (option.id == 20136) //Sidekick
+                else if (option.id == 20135) //Sidekick
                     sb.AppendLine(
                         $"- {Helpers.cs(Sidekick.color, "跟班")}: {option.selections[option.selection].ToString()}");
                 else if (option.id == 20181) //Prosecutor
@@ -1190,9 +1190,9 @@ internal class GameOptionsDataPatch
 
         foreach (var option in options)
         {
-            if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek && option.type != CustomOptionType.HideNSeekMain &&
+            if (MapOptions.gameMode == CustomGamemodes.HideNSeek && option.type != CustomOptionType.HideNSeekMain &&
                 option.type != CustomOptionType.HideNSeekRoles) continue;
-            if (TORMapOptions.gameMode == CustomGamemodes.PropHunt &&
+            if (MapOptions.gameMode == CustomGamemodes.PropHunt &&
                 option.type != CustomOptionType.PropHunt) continue;
             if (option.parent != null)
             {
@@ -1284,7 +1284,7 @@ internal class GameOptionsDataPatch
             ? Helpers.cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "(如有必要，请使用滚轮)\n\n")
             : "";
 
-        if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek)
+        if (MapOptions.gameMode == CustomGamemodes.HideNSeek)
         {
             if (TheOtherRolesPlugin.optionsPage > 1) TheOtherRolesPlugin.optionsPage = 0;
             maxPage = 2;
@@ -1298,7 +1298,7 @@ internal class GameOptionsDataPatch
                     break;
             }
         }
-        else if (TORMapOptions.gameMode == CustomGamemodes.PropHunt)
+        else if (MapOptions.gameMode == CustomGamemodes.PropHunt)
         {
             maxPage = 1;
             switch (counter)

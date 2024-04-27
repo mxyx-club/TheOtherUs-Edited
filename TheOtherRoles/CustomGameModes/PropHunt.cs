@@ -80,7 +80,7 @@ internal class PropHunt
     public static void clearAndReload()
     {
         remainingShots.Clear();
-        isPropHuntGM = TORMapOptions.gameMode == CustomGamemodes.PropHunt;
+        isPropHuntGM = MapOptions.gameMode == CustomGamemodes.PropHunt;
         numberOfHunters = CustomOptionHolder.propHuntNumberOfHunters.getQuantity();
         initialBlackoutTime = CustomOptionHolder.hunterInitialBlackoutTime.getFloat();
         //maxMissesBeforeDeath = CustomOptionHolder.hunterMaxMissesBeforeDeath.getQuantity();
@@ -202,8 +202,8 @@ internal class PropHunt
 
         foreach (var pc in PlayerControl.AllPlayerControls)
         {
-            if (!TORMapOptions.playerIcons.ContainsKey(pc.PlayerId)) continue;
-            var poolablePlayer = TORMapOptions.playerIcons[pc.PlayerId];
+            if (!MapOptions.playerIcons.ContainsKey(pc.PlayerId)) continue;
+            var poolablePlayer = MapOptions.playerIcons[pc.PlayerId];
             if (pc.Data.IsDead)
             {
                 poolablePlayer.setSemiTransparent(true);
@@ -620,14 +620,14 @@ internal class PropHunt
     public static void MapSetPostfix()
     {
         // Make sure the map in the settings is in sync with the map from li
-        if ((TORMapOptions.gameMode != CustomGamemodes.PropHunt &&
-             TORMapOptions.gameMode != CustomGamemodes.HideNSeek) || AmongUsClient.Instance.IsGameStarted) return;
+        if ((MapOptions.gameMode != CustomGamemodes.PropHunt &&
+             MapOptions.gameMode != CustomGamemodes.HideNSeek) || AmongUsClient.Instance.IsGameStarted) return;
         int map = GameOptionsManager.Instance.currentGameOptions.MapId;
         if (map > 3) map--;
-        if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek)
+        if (MapOptions.gameMode == CustomGamemodes.HideNSeek)
             if (CustomOptionHolder.hideNSeekMap.selection != map)
                 CustomOptionHolder.hideNSeekMap.updateSelection(map);
-        if (TORMapOptions.gameMode == CustomGamemodes.PropHunt)
+        if (MapOptions.gameMode == CustomGamemodes.PropHunt)
             if (CustomOptionHolder.propHuntMap.selection != map)
                 CustomOptionHolder.propHuntMap.updateSelection(map);
     }
@@ -721,10 +721,10 @@ internal class PropHunt
 
     [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.Show))]
     [HarmonyPrefix]
-    public static void MapBehaviourShowPatch(MapBehaviour __instance, ref MapOptions opts)
+    public static void MapBehaviourShowPatch(MapBehaviour __instance, ref global::MapOptions opts)
     {
         if (!isPropHuntGM) return;
-        if (opts.Mode == MapOptions.Modes.Sabotage) opts.Mode = MapOptions.Modes.Normal;
+        if (opts.Mode == global::MapOptions.Modes.Sabotage) opts.Mode = global::MapOptions.Modes.Normal;
     }
 
 

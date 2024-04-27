@@ -2761,8 +2761,8 @@ internal static class HudManagerStartPatch
                 arsonistButton.Timer = Arsonist.dousedEveryoneAlive() ? 0 : arsonistButton.MaxTimer;
 
                 foreach (var p in Arsonist.dousedPlayers)
-                    if (TORMapOptions.playerIcons.ContainsKey(p.PlayerId))
-                        TORMapOptions.playerIcons[p.PlayerId].setSemiTransparent(false);
+                    if (MapOptions.playerIcons.ContainsKey(p.PlayerId))
+                        MapOptions.playerIcons[p.PlayerId].setSemiTransparent(false);
 
                 // Ghost Info
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,

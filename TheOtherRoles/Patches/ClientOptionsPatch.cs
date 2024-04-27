@@ -15,39 +15,35 @@ public static class ClientOptionsPatch
     private static readonly SelectionBehaviour[] AllOptions =
     [
         new SelectionBehaviour(getString("GhostsSeeInformationText"),
-            () => TORMapOptions.ghostsSeeInformation = Main.GhostsSeeInformation.Value =
+            () => MapOptions.ghostsSeeInformation = Main.GhostsSeeInformation.Value =
                 !Main.GhostsSeeInformation.Value, Main.GhostsSeeInformation.Value),
         new SelectionBehaviour(getString("GhostsSeeVotesText"),
-            () => TORMapOptions.ghostsSeeVotes =
+            () => MapOptions.ghostsSeeVotes =
                 Main.GhostsSeeVotes.Value = !Main.GhostsSeeVotes.Value,
             Main.GhostsSeeVotes.Value),
         new SelectionBehaviour(getString("GhostsSeeRolesText"),
-            () => TORMapOptions.ghostsSeeRoles =
+            () => MapOptions.ghostsSeeRoles =
                 Main.GhostsSeeRoles.Value = !Main.GhostsSeeRoles.Value,
             Main.GhostsSeeRoles.Value),
         new SelectionBehaviour(getString("GhostsSeeModifierText"),
-            () => TORMapOptions.ghostsSeeModifier = Main.GhostsSeeModifier.Value =
+            () => MapOptions.ghostsSeeModifier = Main.GhostsSeeModifier.Value =
                 !Main.GhostsSeeModifier.Value, Main.GhostsSeeModifier.Value),
         new SelectionBehaviour(getString("ShowRoleSummaryText"),
-            () => TORMapOptions.showRoleSummary =
+            () => MapOptions.showRoleSummary =
                 Main.ShowRoleSummary.Value = !Main.ShowRoleSummary.Value,
             Main.ShowRoleSummary.Value),
         new SelectionBehaviour(getString("ShowLighterDarkerText"),
-            () => TORMapOptions.showLighterDarker = Main.ShowLighterDarker.Value =
+            () => MapOptions.showLighterDarker = Main.ShowLighterDarker.Value =
                 !Main.ShowLighterDarker.Value, Main.ShowLighterDarker.Value),
         new SelectionBehaviour(getString("ToggleCursorText"),
-            () => TORMapOptions.toggleCursor =
+            () => MapOptions.toggleCursor =
                 Main.ToggleCursor.Value = !Main.ToggleCursor.Value,
             Main.ToggleCursor.Value),
         new SelectionBehaviour(getString("EnableSoundEffectsText"),
-            () => TORMapOptions.enableSoundEffects = Main.EnableSoundEffects.Value =
+            () => MapOptions.enableSoundEffects = Main.EnableSoundEffects.Value =
                 !Main.EnableSoundEffects.Value, Main.EnableSoundEffects.Value),
-        new SelectionBehaviour(getString("ShowVentsOnMapText"),
-            () => TORMapOptions.ShowVentsOnMap =
-                Main.ShowVentsOnMap.Value = !Main.ShowVentsOnMap.Value,
-            Main.ShowVentsOnMap.Value),
         new SelectionBehaviour(getString("EnableDebugLogModeText"),
-            () => TORMapOptions.enableDebugLogMode =
+            () => MapOptions.enableDebugLogMode =
                 Main.enableDebugLogMode.Value = !Main.enableDebugLogMode.Value,
             Main.enableDebugLogMode.Value)
     ];

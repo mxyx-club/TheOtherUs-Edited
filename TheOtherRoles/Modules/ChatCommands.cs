@@ -179,7 +179,7 @@ public static class ChatCommands
                 __instance.Chat.SetVisible(true);
 
             if (Multitasker.multitasker.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count > 0 ||
-                TORMapOptions.transparentTasks)
+                MapOptions.transparentTasks)
             {
                 if (PlayerControl.LocalPlayer.Data.IsDead || PlayerControl.LocalPlayer.Data.Disconnected) return;
                 if (!Minigame.Instance) return;

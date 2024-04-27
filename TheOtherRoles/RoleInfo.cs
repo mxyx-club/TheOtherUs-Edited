@@ -348,13 +348,13 @@ public class RoleInfo
         if (infos.Count == count)
         {
             if (p.Data.Role.IsImpostor)
-                infos.Add(TORMapOptions.gameMode == CustomGamemodes.HideNSeek ||
-                          TORMapOptions.gameMode == CustomGamemodes.PropHunt
+                infos.Add(MapOptions.gameMode == CustomGamemodes.HideNSeek ||
+                          MapOptions.gameMode == CustomGamemodes.PropHunt
                     ? hunter
                     : impostor);
             else
-                infos.Add(TORMapOptions.gameMode == CustomGamemodes.HideNSeek ? hunted :
-                    TORMapOptions.gameMode == CustomGamemodes.PropHunt ? prop : crewmate);
+                infos.Add(MapOptions.gameMode == CustomGamemodes.HideNSeek ? hunted :
+                    MapOptions.gameMode == CustomGamemodes.PropHunt ? prop : crewmate);
         }
 
         return infos;
@@ -365,8 +365,7 @@ public class RoleInfo
     {
         string roleName;
         roleName = string.Join(" ",
-            getRoleInfoForPlayer(p, showModifier).Select(x => useColors ? Helpers.cs(x.color, x.name) : x.name)
-                .ToArray());
+            getRoleInfoForPlayer(p, showModifier).Select(x => useColors ? Helpers.cs(x.color, x.name) : x.name).ToArray());
         if (Lawyer.target != null && p.PlayerId == Lawyer.target.PlayerId &&
             CachedPlayer.LocalPlayer.PlayerControl != Lawyer.target)
             roleName += useColors ? Helpers.cs(Pursuer.color, " §") : " §";
@@ -378,10 +377,8 @@ public class RoleInfo
                 (CachedPlayer.LocalPlayer.PlayerControl == Shifter.shifter || Helpers.shouldShowGhostInfo()) &&
                 Shifter.futureShift != null)
                 roleName += Helpers.cs(Color.yellow, " ← " + Shifter.futureShift.Data.PlayerName);
-            if (p == Vulture.vulture && (CachedPlayer.LocalPlayer.PlayerControl == Vulture.vulture ||
-                                         Helpers.shouldShowGhostInfo()))
-                roleName = roleName + Helpers.cs(Vulture.color,
-                    $" (剩余 {Vulture.vultureNumberToWin - Vulture.eatenBodies} )");
+            if (p == Vulture.vulture && (CachedPlayer.LocalPlayer.PlayerControl == Vulture.vulture || Helpers.shouldShowGhostInfo()))
+                roleName += Helpers.cs(Vulture.color, $" (剩余 {Vulture.vultureNumberToWin - Vulture.eatenBodies} )");
             if (Helpers.shouldShowGhostInfo())
             {
                 if (Eraser.futureErased.Contains(p))
@@ -406,7 +403,7 @@ public class RoleInfo
                 if (Arsonist.dousedPlayers.Contains(p))
                     roleName = Helpers.cs(Arsonist.color, "♨ ") + roleName;
                 if (p == Arsonist.arsonist)
-                    roleName = roleName + Helpers.cs(Arsonist.color,
+                    roleName += Helpers.cs(Arsonist.color,
                         $" (剩余 {CachedPlayer.AllPlayers.Count(x => { return x.PlayerControl != Arsonist.arsonist && !x.Data.IsDead && !x.Data.Disconnected && !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); })} )");
                 if (p == Jackal.fakeSidekick)
                     roleName = Helpers.cs(Sidekick.color, " (假跟班) ") + roleName;
@@ -431,6 +428,21 @@ public class RoleInfo
                         {
                             case DeadPlayer.CustomDeathReason.Disconnect:
                                 deathReasonString = " - 断开连接";
+                                break;
+                            case DeadPlayer.CustomDeathReason.SheriffKill:
+                                deathReasonString = $" - 出警 {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
+                                break;
+                            case DeadPlayer.CustomDeathReason.SheriffMisfire:
+                                deathReasonString = " - 走火";
+                                break;
+                            case DeadPlayer.CustomDeathReason.SheriffMisadventure:
+                                deathReasonString = $" - 被误杀于 {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
+                                break;
+                            case DeadPlayer.CustomDeathReason.Suicide:
+                                deathReasonString = " - 自杀";
+                                break;
+                            case DeadPlayer.CustomDeathReason.BombVictim:
+                                deathReasonString = " - 恐袭";
                                 break;
                             case DeadPlayer.CustomDeathReason.Exile:
                                 deathReasonString = " - 被驱逐";

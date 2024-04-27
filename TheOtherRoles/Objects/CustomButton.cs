@@ -71,7 +71,7 @@ public class CustomButton
         button.OnClick.AddListener((UnityAction)onClickEvent);
 
         //开局按钮cd
-        Timer = CustomOptionHolder.resteButtonCooldown.getFloat() + 8.5f;
+        Timer = ResetButtonCooldown.killCooldown + 8.5f;
 
         setActive(false);
     }

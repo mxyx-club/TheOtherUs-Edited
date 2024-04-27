@@ -58,7 +58,7 @@ public static class CredentialsPatch
             }
             else
             {
-                var gameModeText = TORMapOptions.gameMode switch
+                var gameModeText = MapOptions.gameMode switch
                 {
                     CustomGamemodes.HideNSeek => getString("isHideNSeekGM"),
                     CustomGamemodes.Guesser => getString("isGuesserGm"),
@@ -152,7 +152,7 @@ public static class CredentialsPatch
                     renderer.color = new Color(1, 1, 1, 1 - p);
                     if (p == 1)
                     {
-                        renderer.sprite = TORMapOptions.enableHorseMode ? horseBannerSprite : bannerSprite;
+                        renderer.sprite = MapOptions.enableHorseMode ? horseBannerSprite : bannerSprite;
                         instance.StartCoroutine(Effects.Lerp(fadeDuration,
                             new Action<float>(p => { renderer.color = new Color(1, 1, 1, p); })));
                     }

@@ -21,6 +21,11 @@ public class DeadPlayer
         LoveStolen,
         Loneliness,
         Arson,
+        SheriffKill,
+        SheriffMisfire,
+        SheriffMisadventure,
+        Suicide,
+        BombVictim,
     }
 
     public CustomDeathReason deathReason;

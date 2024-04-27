@@ -498,6 +498,7 @@ public class CustomOptionHolder
     public static CustomOption impostorSeeRoles;
     public static CustomOption transparentTasks;
 
+    public static CustomOption ShowVentsOnMap;
     public static CustomOption enableMapOptions;
     public static CustomOption randomGameStartPosition;
     public static CustomOption randomGameStartToVents;
@@ -714,6 +715,8 @@ public class CustomOptionHolder
 
         randomGameStartPosition = CustomOption.Create(50, Types.General, "随机出生点", false, enableMapOptions, true);
         randomGameStartToVents = CustomOption.Create(51, Types.General, "随机出生在通风口上", false, randomGameStartPosition);
+
+        ShowVentsOnMap = CustomOption.Create(211, Types.General, getString("ShowVentsOnMapText"), false, enableMapOptions, true);
 
         enableMiraModify = CustomOption.Create(70, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Mira"), false, enableMapOptions, true);
         miraVitals = CustomOption.Create(71, Types.General, "添加生命检测装置", false, enableMiraModify);

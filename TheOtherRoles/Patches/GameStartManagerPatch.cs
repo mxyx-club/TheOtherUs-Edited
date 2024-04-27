@@ -27,7 +27,7 @@ public class GameStartManagerPatch
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
                     (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
-                writer.Write((byte)TORMapOptions.gameMode);
+                writer.Write((byte)MapOptions.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
 
@@ -51,7 +51,7 @@ public class GameStartManagerPatch
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
                     (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
-                writer.Write((byte)TORMapOptions.gameMode);
+                writer.Write((byte)MapOptions.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
         }
@@ -306,9 +306,9 @@ public class GameStartManagerPatch
             if (AmongUsClient.Instance.AmHost)
             {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGamemode, SendOption.Reliable, -1);
-                writer.Write((byte)TORMapOptions.gameMode);
+                writer.Write((byte)MapOptions.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.shareGameMode((byte)TORMapOptions.gameMode);
+                RPCProcedure.shareGameMode((byte)MapOptions.gameMode);
             }
         }
     }
@@ -347,11 +347,11 @@ public class GameStartManagerPatch
                 }
 
                 if (continueStart &&
-                    (TORMapOptions.gameMode == CustomGamemodes.HideNSeek ||
-                     TORMapOptions.gameMode == CustomGamemodes.PropHunt) &&
+                    (MapOptions.gameMode == CustomGamemodes.HideNSeek ||
+                     MapOptions.gameMode == CustomGamemodes.PropHunt) &&
                     GameOptionsManager.Instance.CurrentGameOptions.MapId != 6)
                 {
-                    byte mapId = TORMapOptions.gameMode switch
+                    byte mapId = MapOptions.gameMode switch
                     {
                         CustomGamemodes.HideNSeek => (byte)CustomOptionHolder.hideNSeekMap.getSelection(),
                         CustomGamemodes.PropHunt => (byte)CustomOptionHolder.propHuntMap.getSelection(),

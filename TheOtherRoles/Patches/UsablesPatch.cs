@@ -10,7 +10,7 @@ using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.TheOtherRoles;
-using static TheOtherRoles.TORMapOptions;
+using static TheOtherRoles.MapOptions;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -367,9 +367,9 @@ public static class SabotageButtonDoClickPatch
         //MapOptionsTor.Mode = MapOptionsTor.Modes.Sabotage;
         //DestroyableSingleton<HudManager>.Instance.ToggleMapVisible(DestroyableSingleton<MapOptions>.Instance.Modes.Sabotage);
 
-        DestroyableSingleton<HudManager>.Instance.ToggleMapVisible(new MapOptions
+        DestroyableSingleton<HudManager>.Instance.ToggleMapVisible(new global::MapOptions
         {
-            Mode = MapOptions.Modes.Sabotage
+            Mode = global::MapOptions.Modes.Sabotage
         });
 
         return false;

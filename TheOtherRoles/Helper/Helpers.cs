@@ -177,7 +177,7 @@ public static class Helpers
 
     public static bool isCamoComms()
     {
-        return isCommsActive() && TORMapOptions.camoComms;
+        return isCommsActive() && MapOptions.camoComms;
     }
 
     public static bool isActiveCamoComms()
@@ -606,7 +606,7 @@ public static class Helpers
     public static bool shouldShowGhostInfo()
     {
         return (CachedPlayer.LocalPlayer.PlayerControl != null && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead &&
-                TORMapOptions.ghostsSeeInformation) ||
+                MapOptions.ghostsSeeInformation) ||
                AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Ended;
     }
 
@@ -658,6 +658,30 @@ public static class Helpers
     public static bool isFungle()
     {
         return GameOptionsManager.Instance.CurrentGameOptions.MapId == 5;
+    }
+
+
+    public static bool IsCN()
+    {
+        return (int)AmongUs.Data.DataManager.Settings.Language.CurrentLanguage == 13;
+    }
+
+    public static string GithubUrl(this string url)
+    {
+        if (IsCN() && !url.Contains("github.moeyy.xyz"))
+        {
+            if (url.Contains("github.com"))
+            {
+                return url.Replace("https://github.com", "https://github.moeyy.xyz/https://github.com");
+            }
+
+            if (url.Contains("raw.githubusercontent.com"))
+            {
+                return url.Replace("https://raw.githubusercontent.com", "https://github.moeyy.xyz/https://raw.githubusercontent.com");
+            }
+        }
+        Info("Rewrite URL" + url);
+        return url;
     }
 
     public static bool MushroomSabotageActive()
@@ -723,7 +747,7 @@ public static class Helpers
         if (SurveillanceMinigamePatch.nightVisionIsActive) return true;
         if (Ninja.isInvisble && Ninja.ninja == target) return true;
         if (Swooper.isInvisable && Swooper.swooper == target) return true;
-        if (TORMapOptions.hideOutOfSightNametags && gameStarted && !source.Data.IsDead && GameOptionsManager.Instance.currentNormalGameOptions.MapId != 5 &&
+        if (MapOptions.hideOutOfSightNametags && gameStarted && !source.Data.IsDead && GameOptionsManager.Instance.currentNormalGameOptions.MapId != 5 &&
             PhysicsHelpers.AnythingBetween(localPlayer.GetTruePosition(), target.GetTruePosition(),
                 Constants.ShadowMask, false)) return true;
         /*
@@ -736,7 +760,7 @@ public static class Helpers
             }
         }
         */
-        if (!TORMapOptions.hidePlayerNames) return false; // All names are visible
+        if (!MapOptions.hidePlayerNames) return false; // All names are visible
         if (source == null || target == null) return true;
         if (source == target) return false; // Player sees his own name
         if (source.Data.Role.IsImpostor && (target.Data.Role.IsImpostor || target == Spy.spy ||
@@ -953,7 +977,7 @@ public static class Helpers
             return MurderAttemptResult.PerformKill;
 
         // Handle first kill attempt
-        if (TORMapOptions.shieldFirstKill && TORMapOptions.firstKillPlayer == target)
+        if (MapOptions.shieldFirstKill && MapOptions.firstKillPlayer == target)
             return MurderAttemptResult.SuppressKill;
 
         // Handle blank shot

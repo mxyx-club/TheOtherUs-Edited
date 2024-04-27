@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TheOtherRoles;
 
-internal static class TORMapOptions
+internal static class MapOptions
 {
     // Set values
     public static int maxNumberOfMeetings = 10;
@@ -26,8 +26,8 @@ internal static class TORMapOptions
     public static bool impostorSeeRoles;
     public static bool transparentTasks;
     public static bool hideOutOfSightNametags;
-    public static bool ShowVentsOnMap = true;
-    public static bool enableDebugLogMode = false;
+    public static bool ShowVentsOnMap;
+    public static bool enableDebugLogMode;
     public static bool disableMedscanWalking;
 
     public static int restrictDevices;
@@ -116,8 +116,8 @@ internal static class TORMapOptions
         toggleCursor = TheOtherRolesPlugin.ToggleCursor.Value;
         enableSoundEffects = TheOtherRolesPlugin.EnableSoundEffects.Value;
         enableHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
-        ShowVentsOnMap = TheOtherRolesPlugin.ShowVentsOnMap.Value;
-        ShowVentsOnMap = TheOtherRolesPlugin.enableDebugLogMode.Value;
+        ShowVentsOnMap = CustomOptionHolder.ShowVentsOnMap.getBool();
+        enableDebugLogMode = TheOtherRolesPlugin.enableDebugLogMode.Value;
 
         //Patches.ShouldAlwaysHorseAround.isHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
     }

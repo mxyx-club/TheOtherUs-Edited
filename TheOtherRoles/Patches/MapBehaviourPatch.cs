@@ -111,7 +111,7 @@ internal static class MapBehaviourPatch
                                                        PlayerControl.LocalPlayer.Data.IsDead))
                 continue; //for trickster vents
 
-            if (!Main.ShowVentsOnMap.Value)
+            if (!MapOptions.ShowVentsOnMap)
             {
                 if (mapIcons.Count > 0)
                 {

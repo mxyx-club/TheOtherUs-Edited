@@ -19,7 +19,7 @@ using UnityEngine;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.HudManagerStartPatch;
 using static TheOtherRoles.TheOtherRoles;
-using static TheOtherRoles.TORMapOptions;
+using static TheOtherRoles.MapOptions;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles;
@@ -2871,8 +2871,7 @@ internal class RPCHandlerPatch
     private static void Postfix([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
     {
         var packetId = (CustomRPC)callId;
-        if (RpcNames!.ContainsKey(packetId))
-            return;
+        if (RpcNames!.ContainsKey(packetId)) return;
         if (enableDebugLogMode) Info($"接收 PlayerControl 原版Rpc RpcId{callId} Message Size {reader.Length}");
     }
 

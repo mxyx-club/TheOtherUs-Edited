@@ -16,7 +16,7 @@ internal class CreateOptionsPickerPatch
     {
         if (mode <= GameModes.HideNSeek)
         {
-            TORMapOptions.gameMode = CustomGamemodes.Classic;
+            MapOptions.gameMode = CustomGamemodes.Classic;
             return true;
         }
 
@@ -26,15 +26,15 @@ internal class CreateOptionsPickerPatch
         {
             case CustomGamemodes.Guesser:
                 __instance.GameModeText.text = getString("isGuesserGm");
-                TORMapOptions.gameMode = CustomGamemodes.Guesser;
+                MapOptions.gameMode = CustomGamemodes.Guesser;
                 break;
             case CustomGamemodes.HideNSeek:
                 __instance.GameModeText.text = getString("isHideNSeekGM");
-                TORMapOptions.gameMode = CustomGamemodes.HideNSeek;
+                MapOptions.gameMode = CustomGamemodes.HideNSeek;
                 break;
             case CustomGamemodes.PropHunt:
                 __instance.GameModeText.text = getString("isPropHuntGM");
-                TORMapOptions.gameMode = CustomGamemodes.PropHunt;
+                MapOptions.gameMode = CustomGamemodes.PropHunt;
                 break;
         }
 
@@ -45,7 +45,7 @@ internal class CreateOptionsPickerPatch
     [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.Refresh))]
     public static void Postfix(CreateOptionsPicker __instance)
     {
-        __instance.GameModeText.text = TORMapOptions.gameMode switch
+        __instance.GameModeText.text = MapOptions.gameMode switch
         {
             CustomGamemodes.Guesser => getString("isGuesserGm"),
             CustomGamemodes.HideNSeek => getString("isHideNSeekGM"),
@@ -89,11 +89,11 @@ internal class GameModeMenuPatch
             chatLanguageButton.Button.OnClick.RemoveAllListeners();
             chatLanguageButton.Button.OnClick.AddListener((Action)delegate { __instance.ChooseOption(entry); });
 
-            var isCurrentMode = i <= 2 && TORMapOptions.gameMode == CustomGamemodes.Classic
+            var isCurrentMode = i <= 2 && MapOptions.gameMode == CustomGamemodes.Classic
                 ? (long)entry == gameMode
-                : (i == 3 && TORMapOptions.gameMode == CustomGamemodes.Guesser) ||
-                  (i == 4 && TORMapOptions.gameMode == CustomGamemodes.HideNSeek) ||
-                  (i == 5 && TORMapOptions.gameMode == CustomGamemodes.PropHunt);
+                : (i == 3 && MapOptions.gameMode == CustomGamemodes.Guesser) ||
+                  (i == 4 && MapOptions.gameMode == CustomGamemodes.HideNSeek) ||
+                  (i == 5 && MapOptions.gameMode == CustomGamemodes.PropHunt);
             chatLanguageButton.SetSelected(isCurrentMode);
             __instance.controllerSelectable.Add(chatLanguageButton.Button);
             if (isCurrentMode) __instance.defaultButtonSelected = chatLanguageButton.Button;

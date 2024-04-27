@@ -10,7 +10,7 @@ using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
-using static TheOtherRoles.TORMapOptions;
+using static TheOtherRoles.MapOptions;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 

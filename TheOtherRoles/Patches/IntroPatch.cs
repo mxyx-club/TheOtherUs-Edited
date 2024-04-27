@@ -47,7 +47,7 @@ internal class IntroCutsceneOnDestroyPatch
                 //PlayerControl.SetPetImage(data.DefaultOutfit.PetId, data.DefaultOutfit.ColorId, player.PetSlot);
                 player.cosmetics.nameText.text = data.PlayerName;
                 player.SetFlipX(true);
-                TORMapOptions.playerIcons[p.PlayerId] = player;
+                MapOptions.playerIcons[p.PlayerId] = player;
                 player.gameObject.SetActive(false);
 
                 if (CachedPlayer.LocalPlayer.PlayerControl == Arsonist.arsonist && p != Arsonist.arsonist)
@@ -155,11 +155,11 @@ internal class IntroCutsceneOnDestroyPatch
         }
 
         // First kill
-        if (AmongUsClient.Instance.AmHost && TORMapOptions.shieldFirstKill && TORMapOptions.firstKillName != "" &&
+        if (AmongUsClient.Instance.AmHost && MapOptions.shieldFirstKill && MapOptions.firstKillName != "" &&
             !HideNSeek.isHideNSeekGM && !PropHunt.isPropHuntGM)
         {
             var target = PlayerControl.AllPlayerControls.ToArray().ToList()
-                .FirstOrDefault(x => x.Data.PlayerName.Equals(TORMapOptions.firstKillName));
+                .FirstOrDefault(x => x.Data.PlayerName.Equals(MapOptions.firstKillName));
             if (target != null)
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
@@ -170,7 +170,7 @@ internal class IntroCutsceneOnDestroyPatch
             }
         }
 
-        TORMapOptions.firstKillName = "";
+        MapOptions.firstKillName = "";
 
         EventUtility.gameStartsUpdate();
 
