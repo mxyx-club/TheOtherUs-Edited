@@ -8,8 +8,6 @@
         <LangVersion>latest</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-		<AmongUsLatest>F:\AmongUs\v2024.3.5</AmongUsLatest>
-		<AnalysisLevel>6.0</AnalysisLevel>
     </PropertyGroup>
 
     <ItemGroup>
