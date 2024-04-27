@@ -143,30 +143,30 @@ Even more roles are coming soon.
 
 |     Impostor     |  Neutral   |      Crewmate       |   Modifier   |
 | :--------------: | :--------: | :-----------------: | :----------: |
-| Godfather(Mafia) |  Amnisiac  |     NiceGuesser     |  Disperser   |
-|  Mafioso(Mafia)  |   Jester   |        Mayor        |   Poucher    |
-|  Janitor(Mafia)  |  Vulture   |     Portalmaker     | lastImpostor |
-|    Morphling     |   Lawyer   |      Engineer       |    Torch     |
-|      Bomber      | Prosecutor | PrivateInvestigator |  Sunglasses  |
-|      Mimic       |  Pursuer   |       Sheriff       |     Bait     |
-|   Camouflager    |   Jackal   |       Deputy        |    Bloody    |
-|      Miner       |  Sidekick  |      BodyGuard      | AntiTeleport |
-|      Eraser      |  Swooper   |       Lighter       |  Tiebreaker  |
-|     Vampire      |  Arsonist  |       Jumper        |    Flash     |
-|     Cleaner      |  Werewolf  |      Detective      | Multitasker  |
-|    Undertaker    |   Thief    |     TimeMaster      |     Mini     |
-|     Escapist     | Juggernaut |       Veteren       |     Vip      |
-|     Warlock      | Doomsayer  |        Medic        | Indomitable  |
-|    Trickster     |   Akujo    |       Swapper       |    Slueth    |
-|   BountyHunter   |            |        Seer         |    Cursed    |
-|     Cultist      |            |       Hacker        |    Invert    |
-|    Terrorist     |            |       Tracker       |    Blind     |
-|   Blackmailer    |            |       Snitch        |   Watcher    |
-|      Witch       |            |         Spy         |    Radar     |
-|      Ninja       |            |    SecurityGuard    | ButtonBarry  |
-|                  |            |       Medium        |  Chameleon   |
-|                  |            |       Trapper       |   Shifter    |
-|                  |            |       Prophet       |              |
+| Godfather(Mafia) |  Amnisiac  |     NiceGuesser     |   Assassin   |
+|  Mafioso(Mafia)  |   Jester   |        Mayor        |  Disperser   |
+|  Janitor(Mafia)  |  Vulture   |     Portalmaker     |   Poucher    |
+|    Morphling     |   Lawyer   |      Engineer       | lastImpostor |
+|      Bomber      | Prosecutor | PrivateInvestigator |    Torch     |
+|      Mimic       |  Pursuer   |       Sheriff       |  Sunglasses  |
+|   Camouflager    |   Jackal   |       Deputy        |     Bait     |
+|      Miner       |  Sidekick  |      BodyGuard      |    Bloody    |
+|      Eraser      |  Swooper   |       Lighter       | AntiTeleport |
+|     Vampire      |  Arsonist  |       Jumper        |  Tiebreaker  |
+|     Cleaner      |  Werewolf  |      Detective      |    Flash     |
+|    Undertaker    |   Thief    |     TimeMaster      | Multitasker  |
+|     Escapist     | Juggernaut |       Veteren       |     Mini     |
+|     Warlock      | Doomsayer  |        Medic        |     Vip      |
+|    Trickster     |   Akujo    |       Swapper       | Indomitable  |
+|   BountyHunter   |            |        Seer         |    Slueth    |
+|     Cultist      |            |       Hacker        |    Cursed    |
+|    Terrorist     |            |       Tracker       |    Invert    |
+|   Blackmailer    |            |       Snitch        |    Blind     |
+|      Witch       |            |         Spy         |   Watcher    |
+|      Ninja       |            |    SecurityGuard    |    Radar     |
+|                  |            |       Medium        | ButtonBarry  |
+|                  |            |       Trapper       |  Chameleon   |
+|                  |            |       Prophet       |   Shifter    |
 
 
 
