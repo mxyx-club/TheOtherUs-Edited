@@ -2,7 +2,7 @@
 
 ![mod banner](./Images/TOR_logo.png)
 
-<p align="center"><a href="https://github.com/mxyx-club/TheOtherUs/releases/"><img src="https://badgen.net/github/release/mxyx-club/theotherus"></a></p>
+<p align="center"><a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited"></a></p>
 
 
 This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.
@@ -19,7 +19,7 @@ Even more roles are coming soon.
 ## Releases
 | Among Us - Version| Mod Version | Link |
 |----------|-------------|-----------------|
-| 2024.3.5s    | v1.0.3.3 | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.3/TheOtherUs.zip)    |
+| 2024.3.5s    | v1.0.3.3 | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherUs.zip)    |
 | 2024.3.5s    | v1.0.3.1 | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip)    |
 
 
