@@ -2976,7 +2976,8 @@ internal static class HudManagerStartPatch
                 }
 
                 SoundEffectsManager.stop("mediumAsk");
-            }
+            },
+            buttonText:getString("MediumText")
         );
 
         // Pursuer button

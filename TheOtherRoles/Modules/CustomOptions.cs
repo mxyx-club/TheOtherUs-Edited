@@ -57,7 +57,7 @@ public class CustomOption
     {
         this.id = id;
         //this.name = parent == null ? name : " - " + name;
-        this.name = name;
+        this.name = name.Translate();
         this.selections = selections;
         var index = Array.IndexOf(selections, defaultValue);
         defaultSelection = index >= 0 ? index : 0;
@@ -645,7 +645,7 @@ internal class GameOptionsMenuStartPatch
         };
         var optionBehaviours = new List<List<OptionBehaviour>>
             { torOptions, impostorOptions, neutralOptions, crewmateOptions, modifierOptions, guesserOptions };
-        var exludedIds = new List<int> { 310, 311, 312, 313, 314, 315, 316, 317, 318 };
+        var exludedIds = new List<int> { 7, 10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 30100, 30101, 30102, 301003, 301004 };
 
         for (var i = 0; i < options.Count; i++)
         {
@@ -1147,7 +1147,7 @@ internal class GameOptionsDataPatch
         {
             if (type == CustomOptionType.General)
                 options = CustomOption.options.Where(o => o.type == type || o.type == CustomOptionType.Guesser);
-            var remove = new List<int> { 308, 310, 311, 312, 313, 314, 315, 316, 317, 318 };
+            var remove = new List<int> { 7, 10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 30100, 30101, 30102, 301003, 301004 };
             options = options.Where(x => !remove.Contains(x.id));
         }
         else if (MapOptions.gameMode == CustomGamemodes.Classic)

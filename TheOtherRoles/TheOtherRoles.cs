@@ -131,7 +131,7 @@ public static class TheOtherRoles
 
     public static class ResetButtonCooldown
     {
-        public static float killCooldown;
+        public static float killCooldown = 20f;
         public static void clearAndReload()
         {
             killCooldown = CustomOptionHolder.resteButtonCooldown.getFloat();

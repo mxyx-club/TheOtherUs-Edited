@@ -89,7 +89,7 @@
         "13": "\u542f\u7528\u6a21\u7ec4\u97f3\u6548"
     },
     "ShowVentsOnMapText": {
-        "0": "Enable Sound Effects",
+        "0": "Show Vents On Map",
         "13": "\u5728\u5730\u56fe\u4e0a\u663e\u793a\u7ba1\u9053"
     },
     "EnableDebugLogModeText": {
@@ -137,11 +137,11 @@
         "13": "{0}\u6b21\uff0c\u5168\u8239\u5269\u4f59{1}\u6b21"
     },
     "OFF": {
-        "0": "Off",
+        "0": "<color=#CCCCCC>Off</color>",
         "13": "<color=#CCCCCC>\u5173\u95ed</color>"
     },
     "ON": {
-        "0": "On",
+        "0": "<color=#FFFF00>On</color>",
         "13": "<color=#FFFF00>\u5f00\u542f</color>"
     },
     "presetSelection": {
@@ -303,6 +303,10 @@
     "preventTaskEnd": {
         "13": "\u963b\u6b62\u4efb\u52a1\u7ed3\u675f\u6e38\u620f"
     },
+    "enableMapOptions": {
+        "0": "Map Options",
+        "13": "\u5730\u56fe\u8bbe\u7f6e"
+    },
     "randomGameStartPosition": {
         "0": "Random Spawn Location",
         "13": "\u968f\u673a\u51fa\u751f\u70b9"
@@ -311,11 +315,36 @@
         "0": "Spawn Location to vent",
         "13": "\u968f\u673a\u51fa\u751f\u5728\u901a\u98ce\u53e3\u4e0a"
     },
+    "IsReactorDurationSetting": {
+        "13": "\u8c03\u6574\u7d27\u6025\u7834\u574f\u6301\u7eed\u65f6\u95f4"
+    },
+    "SkeldLifeSuppTimeLimit": {
+        "13": "The Skeld \u6838\u53cd\u5e94\u5806\u7834\u574f\u6301\u7eed\u65f6\u95f4"
+    },
+    "SkeldReactorTimeLimit": {
+        "13": "The Skeld \u6c27\u6c14\u7834\u574f\u6301\u7eed\u65f6\u95f4"
+    },
+    "MiraLifeSuppTimeLimit": {
+        "13": "Mira \u6838\u53cd\u5e94\u5806\u7834\u574f\u6301\u7eed\u65f6\u95f4"
+    },
+    "MiraReactorTimeLimit": {
+        "13": "Mira \u6c27\u6c14\u7834\u574f\u6301\u7eed\u65f6\u95f4"
+    },
+    "PolusReactorTimeLimit": {
+        "13": "Polus \u6297\u9707\u5668\u7834\u574f\u6301\u7eed\u65f6\u95f4"
+    },
+    "AirshipReactorTimeLimit": {
+        "13": "AirShip \u649e\u6bc1\u8def\u7ebf\u7834\u574f\u6301\u7eed\u65f6\u95f4"
+    },
+    "FungleReactorTimeLimit": {
+        "13": "The Fungle \u6838\u53cd\u5e94\u5806\u7834\u574f\u6301\u7eed\u65f6\u95f4"
+    },
     "enableMiraModify": {
         "0": "Mira",
         "13": "Mira"
     },
     "miraVitals": {
+        "0": "Add Vitals",
         "13": "\u6dfb\u52a0\u751f\u547d\u68c0\u6d4b\u88c5\u7f6e"
     },
     "enableBetterPolus": {
@@ -327,6 +356,7 @@
         "13": "\u6539\u53d8\u7ba1\u9053\u5e03\u5c40"
     },
     "addPolusVents": {
+        "0": "Add New Vents",
         "13": "\u6dfb\u52a0\u65b0\u7ba1\u9053\n (\u6837\u672c\u5ba4-\u529e\u516c\u5ba4-\u8fd0\u8f93\u8239)"
     },
     "movePolusVitals": {
