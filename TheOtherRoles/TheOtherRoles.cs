@@ -5,7 +5,7 @@ using AmongUs.Data;
 using Hazel;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Objects.BetterMap;
+using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;

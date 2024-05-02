@@ -192,14 +192,5 @@ public static class CredentialsPatch
                 currentIndex = (currentIndex + 1) % motds.Count;
             }
         }
-
-        public static async Task loadMOTDs()
-        {
-            var client = new HttpClient();
-            var response = await client.GetAsync("https://api.mxyx.club/download/among-us/TOUs/home.txt");
-            response.EnsureSuccessStatusCode();
-            var motds = await response.Content.ReadAsStringAsync();
-            foreach (var line in motds.Split("\n", StringSplitOptions.RemoveEmptyEntries)) MOTD.motds.Add(line);
-        }
     }
 }

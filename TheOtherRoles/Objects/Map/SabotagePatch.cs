@@ -4,7 +4,7 @@ using TheOtherRoles.Utilities;
 // 参考 => https://github.com/Koke1024/Town-Of-Moss/blob/main/TownOfMoss/Patches/MeltDownBoost.cs
 // 来源 => https://github.com/SuperNewRoles/SuperNewRoles/blob/master/SuperNewRoles/MapOption/MapOption.cs
 
-namespace TheOtherRoles.Objects.BetterMap;
+namespace TheOtherRoles.Objects.Map;
 
 public static class ElectricPatch
 {

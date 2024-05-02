@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace TheOtherRoles.Objects.BetterMap;
+namespace TheOtherRoles.Objects.Map;
 
 [HarmonyPatch(typeof(ShipStatus))]
 public static class ShipStatusPatch2

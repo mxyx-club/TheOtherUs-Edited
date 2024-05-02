@@ -39,7 +39,7 @@ public class TheOtherRolesPlugin : BasePlugin
     public static IRegionInfo[] defaultRegions;
     public Harmony Harmony { get; } = new(Id);
 
-    public static ConfigEntry<string> DebugMode { get; private set; }
+    public static ConfigEntry<bool> DebugMode { get;  set; }
     public static ConfigEntry<bool> GhostsSeeInformation { get; set; }
     public static ConfigEntry<bool> GhostsSeeRoles { get; set; }
     public static ConfigEntry<bool> GhostsSeeModifier { get; set; }
@@ -93,9 +93,6 @@ public class TheOtherRolesPlugin : BasePlugin
         SetLogSource(Log);
         Instance = this;
 
-        _ = CredentialsPatch.MOTD.loadMOTDs();
-
-        DebugMode = Config.Bind("Custom", "Enable Debug Mode", "false");
         GhostsSeeInformation = Config.Bind("Custom", "Ghosts See Remaining Tasks", true);
         GhostsSeeRoles = Config.Bind("Custom", "Ghosts See Roles", true);
         GhostsSeeModifier = Config.Bind("Custom", "Ghosts See Modifier", true);
@@ -108,6 +105,8 @@ public class TheOtherRolesPlugin : BasePlugin
         ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
         enableDebugLogMode = Config.Bind("Custom", "Debug Log Mode", false);
 
+        DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
+
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
         defaultRegions = ServerManager.DefaultRegions;
@@ -115,12 +114,12 @@ public class TheOtherRolesPlugin : BasePlugin
         UpdateRegions();
         CrowdedPlayer.Start();
 
-        DebugMode = Config.Bind("Custom", "Enable Debug Mode", "false");
+        DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
         Harmony.PatchAll();
 
-        CustomOptionHolder.Load();
-        CustomColors.Load();
         CustomHatManager.LoadHats();
+        CustomColors.Load();
+        CustomOptionHolder.Load();
         if (ToggleCursor.Value) Helpers.enableCursor(true);
 
 
