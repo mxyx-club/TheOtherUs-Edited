@@ -8,10 +8,8 @@ using Assets.CoreScripts;
 using Hazel;
 using InnerNet;
 using PowerTools;
-using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Objects.BetterMap;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -21,6 +19,7 @@ using static TheOtherRoles.HudManagerStartPatch;
 using static TheOtherRoles.TheOtherRoles;
 using static TheOtherRoles.MapOptions;
 using Object = UnityEngine.Object;
+using TheOtherRoles.Objects.Map;
 
 namespace TheOtherRoles;
 

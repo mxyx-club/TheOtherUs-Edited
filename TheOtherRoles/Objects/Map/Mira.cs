@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TheOtherRoles.Objects.BetterMap
+namespace TheOtherRoles.Objects.Map
 {
     public class AddVitals
     {
