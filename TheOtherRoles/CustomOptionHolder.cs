@@ -702,7 +702,7 @@ public class CustomOptionHolder
         preventTaskEnd = CustomOption.Create(43, Types.General, "preventTaskEnd", false);
 
         //Map options
-        enableMapOptions = CustomOption.Create(200, Types.General, "MapOptions", false, null, true);
+        enableMapOptions = CustomOption.Create(200, Types.General, "enableMapOptions", false, null, true);
 
         IsReactorDurationSetting = CustomOption.Create(201, Types.General, "IsReactorDurationSetting", false, enableMapOptions, true);
         SkeldReactorTimeLimit = CustomOption.Create(202, Types.General, "SkeldReactorTimeLimit", 30f, 15f, 60f, 2.5f, IsReactorDurationSetting);
