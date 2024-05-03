@@ -214,7 +214,6 @@ public class CustomOptionHolder
     public static CustomOption medicShowAttemptToShielded;
     public static CustomOption medicSetOrShowShieldAfterMeeting;
     public static CustomOption medicShowAttemptToMedic;
-    public static CustomOption medicSetShieldAfterMeeting;
     public static CustomOption medicBreakShield;
     public static CustomOption medicResetTargetAfterMeeting;
     public static CustomOption medicReportNameDuration;
@@ -321,14 +320,14 @@ public class CustomOptionHolder
     public static CustomOption escapistResetPlaceAfterMeeting;
     public static CustomOption escapistChargesGainOnMeeting;
     public static CustomOption escapistMaxCharges;
-    /*
+
     public static CustomOption MagicianSpawnRate;
     public static CustomOption MagicianCooldown;
     public static CustomOption MagicianTeleportTime;
     public static CustomOption MagicianProbabilityBlueCards;
     public static CustomOption MagicianProbabilityRedCards;
     public static CustomOption MagicianProbabilityPurpleCards;
-    */
+
     public static CustomOption werewolfSpawnRate;
     public static CustomOption werewolfRampageCooldown;
     public static CustomOption werewolfRampageDuration;
@@ -458,7 +457,6 @@ public class CustomOptionHolder
     public static CustomOption modifierRadar;
 
     public static CustomOption modifierSlueth;
-    //public static CustomOption modifierSwooper;
 
     public static CustomOption modifierCursed;
     public static CustomOption modifierShowCursed;
