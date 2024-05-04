@@ -42,7 +42,7 @@ internal class IntroCutsceneOnDestroyPatch
                 player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
                 player.cosmetics.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
                 //开局击杀cd
-                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(ResetButtonCooldown.killCooldown);
+                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(ResetButtonCooldown.ButtonCooldown);
                 player.cosmetics.nameText.text = data.PlayerName;
                 player.SetFlipX(true);
                 MapOptions.playerIcons[p.PlayerId] = player;

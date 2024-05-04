@@ -96,53 +96,133 @@
         "0": "Enable Debug Log Mode",
         "13": "\u6536\u96c6Debug\u65e5\u5fd7"
     },
-    "seerShowInfoText": {
-        "0": "Seer Info: Someone Died",
-        "13": "\u7075\u5a92\u4fe1\u606f: \u6709\u4eba\u6b7b\u4ea1"
+    "pressTabForMore": {
+        "0": "\n Press TAB or Page Number for more... ({0}/{1})",
+        "13": "\n \u6309Tab\u952e\u67e5\u770b\u66f4\u591a... ({0}/{1})"
     },
-    "medicShowAttemptText": {
-        "0": "Failed Murder Attempt on Shielded Player",
-        "13": "\u5c1d\u8bd5\u51fb\u6740\u88ab\u4fdd\u62a4\u73a9\u5bb6"
+    "useScrollWheel": {
+        "0": "(Use scroll wheel if necessary)\n\n",
+        "13": "(\u5982\u6709\u5fc5\u8981\uff0c\u8bf7\u4f7f\u7528\u6eda\u8f6e)\n\n"
     },
-    "swapperMeetingButton": {
-        "0": "The Swapper can't start an emergency meeting",
-        "11": "\u30b9\u30ef\u30c3\u30d1\u30fc\u306f\u30df\u30fc\u30c6\u30a3\u30f3\u30b0\u3092\u62db\u96c6\u3067\u304d\u306a\u3044",
-        "13": "\u6362\u7968\u5e08\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    "KillDistancesVeryShort": {
+        "0": "Very Short",
+        "13": "\u975e\u5e38\u77ed"
     },
-    "jesterMeetingButton": {
-        "0": "The Jester can't start an emergency meeting",
-        "11": "\u30b8\u30a7\u30b9\u30bf\u30fc\u306f\u30df\u30fc\u30c6\u30a3\u30f3\u30b0\u3092\u62db\u96c6\u3067\u304d\u306a\u3044",
-        "13": "\u5c0f\u4e11\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    "theOtherRolesSettings": {
+        "0": "The Other Us Settings",
+        "13": "\u6a21\u7ec4\u8bbe\u7f6e"
     },
-    "lawyerMeetingButton": {
-        "0": "The Lawyer can't start an emergency meeting",
-        "11": "\u5f01\u8b77\u58eb\u306f\u30df\u30fc\u30c6\u30a3\u30f3\u30b0\u3092\u62db\u96c6\u3067\u304d\u306a\u3044",
-        "13": "\u5f8b\u5e08\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    "hideNSeekSettings": {
+        "0": "Hide 'N Seek Settings",
+        "13": "\u8eb2\u732b\u732b\u6a21\u5f0f\u8bbe\u7f6e"
     },
-    "fortuneTellerMeetingButton": {
-        "0": "The Fortune Teller can't start an emergency meeting",
-        "13": "\u5360\u535c\u5e08\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    "PropHuntSettings": {
+        "0": "Prop Hunt Settings",
+        "13": "\u9053\u5177\u8eb2\u732b\u732b\u6a21\u5f0f\u8bbe\u7f6e"
     },
-    "prophetMeetingButton": {
-        "0": "The Prophet can't start an emergency meeting",
-        "13": "\u9884\u8a00\u5bb6\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    "CrewmateRolesText": {
+        "0": "Crewmate Roles",
+        "13": "\u8239\u5458\u9635\u8425"
     },
-    "ProsecutorMeetingButton": {
-        "0": "The Prosecutor can't start an emergency meeting",
-        "13": "\u5904\u5211\u8005\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    "NeutralRolesText": {
+        "0": "Neutral Roles",
+        "13": "\u4e2d\u7acb\u9635\u8425"
+    },
+    "ImpostorRolesText": {
+        "0": "Impostor Roles",
+        "13": "\u4f2a\u88c5\u8005\u9635\u8425"
+    },
+    "ModifiersText": {
+        "0": "Modifiers",
+        "13": "\u9644\u52a0\u80fd\u529b"
+    },
+    "impostorRoles": {
+        "0": "Impostors",
+        "13": "\u4f2a\u88c5\u8005\u9635\u8425"
+    },
+    "neutralRoles": {
+        "0": "Neutrals",
+        "13": "\u4e2d\u7acb\u9635\u8425"
+    },
+    "crewmateRoles": {
+        "0": "Crewmates",
+        "13": "\u8239\u5458\u9635\u8425"
+    },
+    "modifiers": {
+        "0": "Modifiers",
+        "13": "\u9644\u52a0\u804c\u4e1a"
+    },
+    "page1": {
+        "0": "Page 1: Vanilla Settings \n\n",
+        "11": "Page 1: \u30d0\u30cb\u30e9\u306e\u8a2d\u5b9a \uffe4\u30d0\u30cb\u30e9\u306e\u8a2d\u5b9a",
+        "13": "\u7b2c\u4e00\u9875\uff1a\u6e38\u620f\u8bbe\u7f6e \n\n"
+    },
+    "page2": {
+        "0": "Page 2: The Other Us Settings \n",
+        "13": "\u7b2c2\u9875: \u8d85\u591a\u804c\u4e1a\u6a21\u7ec4\u8bbe\u7f6e \n"
+    },
+    "page3": {
+        "0": "Page 3: Role and Modifier Rates \n",
+        "13": "\u7b2c3\u9875: \u804c\u4e1a\u548c\u9644\u52a0\u804c\u4e1a\u8bbe\u7f6e \n"
+    },
+    "page4": {
+        "0": "Page 4: Impostor Role Settings \n",
+        "13": "\u7b2c4\u9875: \u4f2a\u88c5\u8005\u804c\u4e1a\u8bbe\u7f6e \n"
+    },
+    "page5": {
+        "0": "Page 5: Neutral Role Settings \n",
+        "13": "\u7b2c5\u9875: \u4e2d\u7acb\u804c\u4e1a\u8bbe\u7f6e \n"
+    },
+    "page6": {
+        "0": "Page 6: Crewmate Role Settings \n",
+        "13": "\u7b2c6\u9875: \u8239\u5458\u804c\u4e1a\u8bbe\u7f6e \n"
+    },
+    "page7": {
+        "0": "Page 7: Modifier Settings \n",
+        "13": "\u7b2c7\u9875: \u9644\u52a0\u804c\u4e1a\u8bbe\u7f6e \n"
+    },
+    "hideNSeekPage1": {
+        "0": "Page 1: Hide N Seek Settings \n\n",
+        "13": "\u7b2c1\u9875\uff1a\u8eb2\u732b\u732b\u6a21\u5f0f\u8bbe\u7f6e \n\n"
+    },
+    "hideNSeekPage2": {
+        "0": "Page 2: Hide N Seek Role Settings \n\n",
+        "13": "\u7b2c2\u9875\uff1a\u8eb2\u732b\u732b\u804c\u4e1a\u8bbe\u7f6e \n\n"
+    },
+    "PropHuntPage": {
+        "0": "Page 1: Prop Hunt Settings \n\n",
+        "13": "\u7b2c1\u9875: \u9053\u5177\u8eb2\u732b\u732b\u6a21\u5f0f\u8bbe\u7f6e \n\n"
+    },
+    "theOtherUsSettings": {
+        "13": "\u6a21\u7ec4\u8bbe\u7f6e"
+    },
+    "guesserSettings": {
+        "13": "\u8d4c\u602a\u6a21\u5f0f\u8bbe\u7f6e"
+    },
+    "impostorRolesSettings": {
+        "13": "\u4f2a\u88c5\u8005\u804c\u4e1a\u8bbe\u7f6e"
+    },
+    "neutralRolesSettings": {
+        "13": "\u4e2d\u7acb\u804c\u4e1a\u8bbe\u7f6e"
+    },
+    "crewmateRolesSettings": {
+        "13": "\u8239\u5458\u804c\u4e1a\u8bbe\u7f6e"
+    },
+    "modifierSettings": {
+        "13": "\u9644\u52a0\u804c\u4e1a\u8bbe\u7f6e"
     },
     "meetingCount": {
         "0": "{0} and the ship has {1}",
         "11": "{0}\u3068\u8239\u306b{1}\u304c\u3044\u307e\u3059",
         "13": "{0}\u6b21\uff0c\u5168\u8239\u5269\u4f59{1}\u6b21"
     },
-    "OFF": {
-        "0": "<color=#CCCCCC>Off</color>",
-        "13": "<color=#CCCCCC>\u5173\u95ed</color>"
+    "optionOff": {
+        "0": "<color=#CCCCCCFF>Off</color>",
+        "13": "<color=#CCCCCCFF>\u5173\u95ed</color>"
     },
-    "ON": {
-        "0": "<color=#FFFF00>On</color>",
-        "13": "<color=#FFFF00>\u5f00\u542f</color>"
+    "optionOn": {
+        "0": "<color=#FFFF00FF>On</color>",
+        "13": "<color=#FFFF00FF>\u5f00\u542f</color>"
     },
     "presetSelection": {
         "0": "Preset",
@@ -482,6 +562,41 @@
     "janitorCooldown": {
         "0": "Janitor Cooldown",
         "13": "\u6e05\u6d01\u5de5\u6e05\u7406\u51b7\u5374"
+    },
+    "seerShowInfoText": {
+        "0": "Seer Info: Someone Died",
+        "13": "\u7075\u5a92\u4fe1\u606f: \u6709\u4eba\u6b7b\u4ea1"
+    },
+    "medicShowAttemptText": {
+        "0": "Failed Murder Attempt on Shielded Player",
+        "13": "\u5c1d\u8bd5\u51fb\u6740\u88ab\u4fdd\u62a4\u73a9\u5bb6"
+    },
+    "swapperMeetingButton": {
+        "0": "The Swapper can't start an emergency meeting",
+        "11": "\u30b9\u30ef\u30c3\u30d1\u30fc\u306f\u30df\u30fc\u30c6\u30a3\u30f3\u30b0\u3092\u62db\u96c6\u3067\u304d\u306a\u3044",
+        "13": "\u6362\u7968\u5e08\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    },
+    "jesterMeetingButton": {
+        "0": "The Jester can't start an emergency meeting",
+        "11": "\u30b8\u30a7\u30b9\u30bf\u30fc\u306f\u30df\u30fc\u30c6\u30a3\u30f3\u30b0\u3092\u62db\u96c6\u3067\u304d\u306a\u3044",
+        "13": "\u5c0f\u4e11\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    },
+    "lawyerMeetingButton": {
+        "0": "The Lawyer can't start an emergency meeting",
+        "11": "\u5f01\u8b77\u58eb\u306f\u30df\u30fc\u30c6\u30a3\u30f3\u30b0\u3092\u62db\u96c6\u3067\u304d\u306a\u3044",
+        "13": "\u5f8b\u5e08\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    },
+    "fortuneTellerMeetingButton": {
+        "0": "The Fortune Teller can't start an emergency meeting",
+        "13": "\u5360\u535c\u5e08\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    },
+    "prophetMeetingButton": {
+        "0": "The Prophet can't start an emergency meeting",
+        "13": "\u9884\u8a00\u5bb6\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    },
+    "ProsecutorMeetingButton": {
+        "0": "The Prosecutor can't start an emergency meeting",
+        "13": "\u5904\u5211\u8005\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
     },
     "BlackmailShhhText": {
         "0": "YOU ARE BLACKMAILED",

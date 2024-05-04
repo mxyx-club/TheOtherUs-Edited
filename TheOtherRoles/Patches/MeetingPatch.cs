@@ -992,7 +992,7 @@ internal class MeetingHudPatch
                     message = trap.trappedPlayer.Aggregate(message, (current, p) => current + Trapper.infoType switch
                     {
                         0 => RoleInfo.GetRolesString(p, false, false, true) + "\n",
-                        1 when Helpers.isNeutral(p) || p.Data.Role.IsImpostor => "邪恶职业 \n",
+                        1 when Helpers.isEvil(p) || p.Data.Role.IsImpostor => "邪恶职业 \n",
                         1 => "善良职业 \n",
                         _ => p.Data.PlayerName + "\n"
                     });

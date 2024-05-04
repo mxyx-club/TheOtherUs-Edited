@@ -7,6 +7,7 @@ using AmongUs.GameOptions;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using Hazel;
+using Il2CppSystem.Linq;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -93,7 +94,7 @@ public class CustomOption
     public static CustomOption Create(int id, CustomOptionType type, string name, bool defaultValue,
         CustomOption parent = null, bool isHeader = false, Action onChange = null)
     {
-        return new CustomOption(id, type, name, new[] { getString("OFF"), getString("ON") }, defaultValue ? getString("ON") : getString("OFF"), parent, isHeader,
+        return new CustomOption(id, type, name, new[] { "optionOff".Translate(), "optionOn".Translate() }, defaultValue ? "optionOn".Translate() : "optionOff".Translate(), parent, isHeader,
             onChange);
     }
 
@@ -201,8 +202,12 @@ public class CustomOption
         return selection + 1;
     }
 
-    // Option changes
+    public virtual string getName()
+    {
+        return ModTranslation.getString(name);
+    }
 
+    // Option changes
     public void updateSelection(int newSelection)
     {
         selection = Mathf.Clamp((newSelection + selections.Length) % selections.Length, 0, selections.Length - 1);
@@ -290,7 +295,7 @@ public class CustomOption
             }
             catch (Exception e)
             {
-                Warn($"{e}: 反序列化时 - 试图粘贴无效设置！");
+                Warn($"{e}: 试图粘贴无效设置！");
             }
     }
 
@@ -391,11 +396,11 @@ internal class GameOptionsMenuStartPatch
         var isReturn = setNames(
             new Dictionary<string, string>
             {
-                ["TORSettings"] = "模组设置",
-                ["ImpostorSettings"] = "伪装者职业设置",
-                ["NeutralSettings"] = "中立职业设置",
-                ["CrewmateSettings"] = "船员职业设置",
-                ["ModifierSettings"] = "附加职业设置"
+                ["TORSettings"] = "theOtherUsSettings".Translate(),
+                ["ImpostorSettings"] = "impostorRolesSettings".Translate(),
+                ["NeutralSettings"] = "neutralRolesSettings".Translate(),
+                ["CrewmateSettings"] = "crewmateRolesSettings".Translate(),
+                ["ModifierSettings"] = "modifierSettings".Translate()
             });
 
         if (isReturn) return;
@@ -530,12 +535,12 @@ internal class GameOptionsMenuStartPatch
         var isReturn = setNames(
             new Dictionary<string, string>
             {
-                ["TORSettings"] = "模组设置",
-                ["GuesserSettings"] = "赌怪模式设置",
-                ["ImpostorSettings"] = "伪装者职业设置",
-                ["NeutralSettings"] = "中立职业设置",
-                ["CrewmateSettings"] = "船员职业设置",
-                ["ModifierSettings"] = "附加职业设置"
+                ["TORSettings"] = "theOtherUsSettings".Translate(),
+                ["GuesserSettings"] = "guesserSettings".Translate(),
+                ["ImpostorSettings"] = "impostorRolesSettings".Translate(),
+                ["NeutralSettings"] = "neutralRolesSettings".Translate(),
+                ["CrewmateSettings"] = "crewmateRolesSettings".Translate(),
+                ["ModifierSettings"] = "modifierSettings".Translate()
             });
 
         if (isReturn) return;
@@ -683,8 +688,8 @@ internal class GameOptionsMenuStartPatch
         var isReturn = setNames(
             new Dictionary<string, string>
             {
-                ["TORSettings"] = "模组设置",
-                ["HideNSeekSettings"] = "躲猫猫模式设置"
+                ["TORSettings"] = "theOtherRolesSettings".Translate(),
+                ["HideNSeekSettings"] = "hideNSeekSettings".Translate()
             });
 
         if (isReturn) return;
@@ -785,7 +790,7 @@ internal class GameOptionsMenuStartPatch
         var isReturn = setNames(
             new Dictionary<string, string>
             {
-                ["TORSettings"] = "道具躲猫猫模式设置"
+                ["TORSettings"] = "PropHuntSettings".Translate()
             });
 
         if (isReturn) return;
@@ -960,7 +965,7 @@ public class StringOptionEnablePatch
         if (option == null) return true;
 
         __instance.OnValueChanged = new Action<OptionBehaviour>(o => { });
-        __instance.TitleText.text = option.name;
+        __instance.TitleText.text = option.getName();
         __instance.Value = __instance.oldValue = option.selection;
         __instance.ValueText.text = option.selections[option.selection].ToString();
 
@@ -1116,14 +1121,10 @@ internal class GameOptionsDataPatch
 
     private static string buildRoleOptions()
     {
-        var impRoles = "<size=150%><color=#ff1c1c>伪装者阵营</color></size>" +
-                       buildOptionsOfType(CustomOptionType.Impostor, true) + "\n";
-        var neutralRoles = "<size=150%><color=#50544c>中立阵营</color></size>" +
-                           buildOptionsOfType(CustomOptionType.Neutral, true) + "\n";
-        var crewRoles = "<size=150%><color=#08fcfc>船员阵营</color></size>" +
-                        buildOptionsOfType(CustomOptionType.Crewmate, true) + "\n";
-        var modifiers = "<size=150%><color=#ffec04>附加职业</color></size>" +
-                        buildOptionsOfType(CustomOptionType.Modifier, true);
+        var impRoles = $"<size=150%><color=#ff1c1c>{"impostorRoles".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Impostor, true)}\n";
+        var neutralRoles = $"<size=150%><color=#50544c>{"neutralRoles".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Neutral, true)}\n";
+        var crewRoles = $"<size=150%><color=#08fcfc>{"crewmateRoles".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Crewmate, true)}\n";
+        var modifiers = $"<size=150%><color=#ffec04>{"modifiers".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Modifier, true)}";
         return impRoles + neutralRoles + crewRoles + modifiers;
     }
 
@@ -1207,7 +1208,7 @@ internal class GameOptionsDataPatch
             {
                 if (option == CustomOptionHolder.crewmateRolesCountMin)
                 {
-                    var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "船员阵营");
+                    var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "CrewmateRolesText".Translate());
                     var min = CustomOptionHolder.crewmateRolesCountMin.getSelection();
                     var max = CustomOptionHolder.crewmateRolesCountMax.getSelection();
                     var optionValue = "";
@@ -1231,7 +1232,7 @@ internal class GameOptionsDataPatch
                 }
                 else if (option == CustomOptionHolder.neutralRolesCountMin)
                 {
-                    var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "中立阵营");
+                    var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "NeutralRolesText".Translate());
                     var min = CustomOptionHolder.neutralRolesCountMin.getSelection();
                     var max = CustomOptionHolder.neutralRolesCountMax.getSelection();
                     if (min > max) min = max;
@@ -1240,7 +1241,7 @@ internal class GameOptionsDataPatch
                 }
                 else if (option == CustomOptionHolder.impostorRolesCountMin)
                 {
-                    var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "伪装者阵营");
+                    var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "ImpostorRolesText".Translate());
                     var min = CustomOptionHolder.impostorRolesCountMin.getSelection();
                     var max = CustomOptionHolder.impostorRolesCountMax.getSelection();
                     if (max > GameOptionsManager.Instance.currentGameOptions.NumImpostors)
@@ -1251,7 +1252,7 @@ internal class GameOptionsDataPatch
                 }
                 else if (option == CustomOptionHolder.modifiersCountMin)
                 {
-                    var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "附加能力");
+                    var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "ModifiersText".Translate());
                     var min = CustomOptionHolder.modifiersCountMin.getSelection();
                     var max = CustomOptionHolder.modifiersCountMax.getSelection();
                     if (min > max) min = max;
@@ -1281,7 +1282,7 @@ internal class GameOptionsDataPatch
                 GameOptionsManager.Instance.CurrentGameOptions.ToHudString(PlayerControl.AllPlayerControls.Count);
         var counter = TheOtherRolesPlugin.optionsPage;
         var hudString = counter != 0 && !hideExtras
-            ? Helpers.cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "(如有必要，请使用滚轮)\n\n")
+            ? Helpers.cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "useScrollWheel".Translate())
             : "";
 
         if (MapOptions.gameMode == CustomGamemodes.HideNSeek)
@@ -1291,10 +1292,10 @@ internal class GameOptionsDataPatch
             switch (counter)
             {
                 case 0:
-                    hudString += "第1页: 躲猫猫模式设置 \n\n" + buildOptionsOfType(CustomOptionType.HideNSeekMain, false);
+                    hudString += "hideNSeekPage1".Translate() + buildOptionsOfType(CustomOptionType.HideNSeekMain, false);
                     break;
                 case 1:
-                    hudString += "第2页: 躲猫猫职业设置 \n\n" + buildOptionsOfType(CustomOptionType.HideNSeekRoles, false);
+                    hudString += "hideNSeekPage2".Translate() + buildOptionsOfType(CustomOptionType.HideNSeekRoles, false);
                     break;
             }
         }
@@ -1304,7 +1305,7 @@ internal class GameOptionsDataPatch
             switch (counter)
             {
                 case 0:
-                    hudString += "第1页: 道具躲猫猫模式设置 \n\n" + buildOptionsOfType(CustomOptionType.PropHunt, false);
+                    hudString += "PropHuntPage".Translate() + buildOptionsOfType(CustomOptionType.PropHunt, false);
                     break;
             }
         }
@@ -1314,30 +1315,30 @@ internal class GameOptionsDataPatch
             switch (counter)
             {
                 case 0:
-                    hudString += (!hideExtras ? "" : "第1页: 游戏设置 \n\n") + vanillaSettings;
+                    hudString += (!hideExtras ? "" : "page1".Translate()) + vanillaSettings;
                     break;
                 case 1:
-                    hudString += "第2页: 超多职业模组设置 \n" + buildOptionsOfType(CustomOptionType.General, false);
+                    hudString += "page2".Translate() + buildOptionsOfType(CustomOptionType.General, false);
                     break;
                 case 2:
-                    hudString += "第3页: 职业和附加职业设置 \n" + buildRoleOptions();
+                    hudString += "page3".Translate() + buildRoleOptions();
                     break;
                 case 3:
-                    hudString += "第4页: 伪装者职业设置 \n" + buildOptionsOfType(CustomOptionType.Impostor, false);
+                    hudString += "page4".Translate() + buildOptionsOfType(CustomOptionType.Impostor, false);
                     break;
                 case 4:
-                    hudString += "第5页: 中立职业设置 \n" + buildOptionsOfType(CustomOptionType.Neutral, false);
+                    hudString += "page5".Translate() + buildOptionsOfType(CustomOptionType.Neutral, false);
                     break;
                 case 5:
-                    hudString += "第6页: 船员职业设置 \n" + buildOptionsOfType(CustomOptionType.Crewmate, false);
+                    hudString += "page6".Translate() + buildOptionsOfType(CustomOptionType.Crewmate, false);
                     break;
                 case 6:
-                    hudString += "第7页: 附加职业设置 \n" + buildOptionsOfType(CustomOptionType.Modifier, false);
+                    hudString += "page7".Translate() + buildOptionsOfType(CustomOptionType.Modifier, false);
                     break;
             }
         }
 
-        if (!hideExtras || counter != 0) hudString += $"\n 按Tab或者数字键查看更多... ({counter + 1}/{maxPage})";
+        if (!hideExtras || counter != 0) hudString += string.Format("pressTabForMore".Translate(), (counter + 1), maxPage);
         return hudString;
     }
 
@@ -1424,7 +1425,7 @@ public class AddToKillDistanceSetting
     {
         if ((int)id == 49999)
         {
-            __result = "非常短";
+            __result = "KillDistancesVeryShort".Translate();
             return false;
         }
 
@@ -1433,7 +1434,7 @@ public class AddToKillDistanceSetting
 
     public static void addKillDistance()
     {
-        GameOptionsData.KillDistances = new Il2CppStructArray<float>(new[] { 0.5f, 1f, 1.8f, 2.5f });
+        GameOptionsData.KillDistances = new Il2CppStructArray<float>(new[] { 0.6f, 1f, 1.8f, 2.5f });
         GameOptionsData.KillDistanceStrings = new Il2CppStringArray(new[] { "Very Short", "Short", "Medium", "Long" });
     }
 }

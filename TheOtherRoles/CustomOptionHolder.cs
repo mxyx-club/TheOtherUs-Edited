@@ -143,7 +143,7 @@ public class CustomOptionHolder
     public static CustomOption mayorTasksNeededToSeeVoteColors;
     public static CustomOption mayorMeetingButton;
     public static CustomOption mayorMaxRemoteMeetings;
-    public static CustomOption mayorTaskRemoteMeetings;
+    public static CustomOption mayorSabotageRemoteMeetings;
     public static CustomOption mayorChooseSingleVote;
 
     public static CustomOption portalmakerSpawnRate;
@@ -736,7 +736,7 @@ public class CustomOptionHolder
 
         enableCamoComms = CustomOption.Create(120, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, enableMapOptions, true);
         restrictDevices = CustomOption.Create(121, Types.General, "restrictDevices", 
-            ["OFF".Translate(), "restrictDevices2".Translate(), "restrictDevices3".Translate()], enableMapOptions);
+            ["optionOff".Translate(), "restrictDevices2".Translate(), "restrictDevices3".Translate()], enableMapOptions);
         //restrictAdmin = CustomOption.Create(122, Types.General, "restrictAdmin", 30f, 0f, 600f, 5f, restrictDevices);
         restrictCameras = CustomOption.Create(123, Types.General, "restrictCameras", 30f, 0f, 600f, 5f, restrictDevices);
         restrictVents = CustomOption.Create(124, Types.General, "restrictVents", 30f, 0f, 600f, 5f, restrictDevices);
@@ -953,7 +953,7 @@ public class CustomOptionHolder
         mayorTasksNeededToSeeVoteColors = CustomOption.Create(30112, Types.Crewmate, "获得窥视能力所需完成的任务数", 5f, 0f, 20f, 1f, mayorCanSeeVoteColors);
         mayorMeetingButton = CustomOption.Create(30113, Types.Crewmate, "可远程召开会议", true, mayorSpawnRate);
         mayorMaxRemoteMeetings = CustomOption.Create(30114, Types.Crewmate, "远程召开会议可用次数", 1f, 1f, 5f, 1f, mayorMeetingButton);
-        mayorTaskRemoteMeetings = CustomOption.Create(30115, Types.Crewmate, "可在破坏时使用（无效设置）", false, mayorMeetingButton);
+        mayorSabotageRemoteMeetings = CustomOption.Create(30115, Types.Crewmate, "可在破坏时使用", false, mayorMeetingButton);
         mayorChooseSingleVote = CustomOption.Create(30116, Types.Crewmate, "市长可选择投单票", ["关闭", "投票前选择", "会议结束前选择"], mayorSpawnRate);
 
         engineerSpawnRate = CustomOption.Create(30120, Types.Crewmate, cs(Engineer.color, "工程师"), rates, null, true);
@@ -1050,7 +1050,7 @@ public class CustomOptionHolder
         prophetCooldown = CustomOption.Create(30361, Types.Crewmate, "冷却时间", 25f, 5f, 60f, 2.5f, prophetSpawnRate);
         prophetNumExamines = CustomOption.Create(30362, Types.Crewmate, "预言总次数", 4f, 1f, 10f, 1f, prophetSpawnRate);
         prophetCanCallEmergency = CustomOption.Create(30363, Types.Crewmate, "可以召开紧急会议", true, prophetSpawnRate);
-        prophetIsRevealed = CustomOption.Create(30364, Types.Crewmate, "可以被执刃者发现", false, prophetSpawnRate);
+        prophetIsRevealed = CustomOption.Create(30364, Types.Crewmate, "可以被杀手发现", false, prophetSpawnRate);
         prophetExaminesToBeRevealed = CustomOption.Create(30365, Types.Crewmate, "被发现所需揭示次数", 3f, 1f, 10f, 1f, prophetIsRevealed);
         prophetKillCrewAsRed = CustomOption.Create(30366, Types.Crewmate, "击杀型船员显示为红名", false, prophetSpawnRate);
         prophetBenignNeutralAsRed = CustomOption.Create(30367, Types.Crewmate, "善良型中立显示为红名", false, prophetSpawnRate);
@@ -1186,7 +1186,7 @@ public class CustomOptionHolder
         modifierTunneler = CustomOption.Create(1140, Types.Modifier, cs(Color.yellow, "管道工程师"), rates, null, true);
 
         modifierButtonBarry = CustomOption.Create(1220, Types.Modifier, cs(Color.yellow, "执钮人"), rates, null, true);
-        modifierButtonTaskRemoteMeetings = CustomOption.Create(1221, Types.Modifier, "可在破坏时使用（无效设置）", false, modifierButtonBarry);
+        modifierButtonTaskRemoteMeetings = CustomOption.Create(1221, Types.Modifier, "可在破坏时使用", false, modifierButtonBarry);
 
         modifierSlueth = CustomOption.Create(1150, Types.Modifier, cs(Color.yellow, "掘墓人"), rates, null, true);
 
@@ -1217,9 +1217,9 @@ public class CustomOptionHolder
         guesserGamemodeNeutralNumber = CustomOption.Create(2002, Types.Guesser, cs(Guesser.color, "中立阵营赌怪数"), 3f, 0f, 15f, 1f, null, true);
         guesserGamemodeImpNumber = CustomOption.Create(2003, Types.Guesser, cs(Guesser.color, "伪装者阵营赌怪数"), 3f, 0f, 15f, 1f, null, true);
         guesserForceJackalGuesser = CustomOption.Create(2007, Types.Guesser, "强制豺狼成为赌怪", false, null, true);
-        //guesserGamemodeSidekickIsAlwaysGuesser = CustomOption.Create(2012, Types.Guesser, "跟班继承赌怪", false, null, true);
-        guesserForceThiefGuesser = CustomOption.Create(2011, Types.Guesser, "强制身份窃贼为赌怪", false, null, true);
-        guesserGamemodeHaveModifier = CustomOption.Create(2004, Types.Guesser, "赌怪可以拥有附加职业", true);
+        guesserGamemodeSidekickIsAlwaysGuesser = CustomOption.Create(2012, Types.Guesser, "跟班继承赌怪", false);
+        guesserForceThiefGuesser = CustomOption.Create(2011, Types.Guesser, "强制身份窃贼为赌怪", false);
+        guesserGamemodeHaveModifier = CustomOption.Create(2004, Types.Guesser, "赌怪可以拥有附加职业", true, null, true);
         guesserGamemodeNumberOfShots = CustomOption.Create(2005, Types.Guesser, "赌怪猜测最大次数", 2f, 1f, 15f, 1f);
         guesserGamemodeHasMultipleShotsPerMeeting = CustomOption.Create(2006, Types.Guesser, "一轮会议可多次猜测", false);
         guesserGamemodeKillsThroughShield = CustomOption.Create(2008, Types.Guesser, "赌怪猜测无视护盾", true);

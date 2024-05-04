@@ -70,7 +70,7 @@ public class CustomButton
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
 
-        Timer = ResetButtonCooldown.killCooldown + 8.5f;
+        Timer = ResetButtonCooldown.ButtonCooldown + 8.5f;
 
         setActive(false);
     }

@@ -331,6 +331,12 @@ public static class Helpers
         return null;
     }
 
+    public static void AddUnique<T>(this Il2CppSystem.Collections.Generic.List<T> self, T item)
+            where T : IDisconnectHandler
+    {
+        if (!self.Contains(item)) self.Add(item);
+    }
+
     public static unsafe Texture2D loadTextureFromResources(string path)
     {
         try

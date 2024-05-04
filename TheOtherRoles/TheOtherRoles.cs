@@ -22,8 +22,7 @@ public static class TheOtherRoles
 
     public static void clearAndReloadRoles()
     {
-        // MapOptions
-        ResetButtonCooldown.clearAndReload();
+        // Other Clear
         ElectricPatch.Reset();
 
         Jester.clearAndReload();
@@ -131,11 +130,7 @@ public static class TheOtherRoles
 
     public static class ResetButtonCooldown
     {
-        public static float killCooldown = 20f;
-        public static void clearAndReload()
-        {
-            killCooldown = CustomOptionHolder.resteButtonCooldown.getFloat();
-        }
+        public static float ButtonCooldown { get { return CustomOptionHolder.resteButtonCooldown.getFloat(); } }
     }
 
     public static class Jester
@@ -350,7 +345,7 @@ public static class TheOtherRoles
         public static int mayorChooseSingleVote;
 
         public static bool voteTwice = true;
-        public static bool TaskRemoteMeetings = true;
+        public static bool SabotageRemoteMeetings = true;
 
         public static Sprite getMeetingSprite()
         {
@@ -371,8 +366,8 @@ public static class TheOtherRoles
             mayorChooseSingleVote = CustomOptionHolder.mayorChooseSingleVote.getSelection();
             voteTwice = true;
 
-            TaskRemoteMeetings = false;
-            //TaskRemoteMeetings = CustomOptionHolder.mayorTaskRemoteMeetings.getBool();
+            //SabotageRemoteMeetings = false;
+            SabotageRemoteMeetings = CustomOptionHolder.mayorSabotageRemoteMeetings.getBool();
         }
     }
 

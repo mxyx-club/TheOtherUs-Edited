@@ -1,188 +1,221 @@
-<p align="center"> <a href="README_ZH-CN.md"> 简体中文 </a> </p>
+![mod banner](./Images/TOR_logo.png)
 
 <a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited"><img src="https://badgen.net/github/assets-dl/mxyx-club/TheOtherUs-Edited"><img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></a>
 
-![mod banner](./Images/TOR_logo.png)
+本模组不隶属于 Among Us 或 Innersloth LLC，其包含的内容也未得到 Innersloth LLC 的认可或以其他方式赞助。此处包含的部分材料是Innersloth LLC的财产。
 
-
-This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.
-
-<p align="center">To other mod devs: for usage of our code, please read and respect the <a href="#license">license</a></p>
-
-[![Discord](./Images/TOR_server.png)](https://discord.gg/yspVyP5meR)
+<p align="center"><a href="#license">license</a></p>
 
 # The Other Us - Edited
 
-**The Other Us** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
-Even more roles are coming soon.
+## 模组下载
 
-## Releases
-| Among Us - Version| Mod Version | Link |
-|----------|-------------|-----------------|
-| 2024.3.5s    | v1.0.3.3 | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherUs.zip)    |
-| 2024.3.5s    | v1.0.3.1 | [Download](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip)    |
+| 游戏版本  | 模组版本 | 链接                                                         |
+| --------- | -------- | ------------------------------------------------------------ |
+| 2024.3.5s | v1.0.3.3 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherUs.zip) |
+| 2024.3.5s | v1.0.3.1 | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
+
+注：本模组只发布经过测试后的文件，其余仅为内测版本。
 
 
+## 更新日志
 
-## Changelog
+###  v1.0.3.5:
+
+ - #### 新增内容：
+
+    - 对所有按钮增加默认冷却为2.5s（给一部分无冷却技能增加提醒）
+    - 将模组设置中“在地图上显示管道”选项移动到游戏内预设中，并新增仅在会议中显示管道信息选项
+    - 新增 “ 调整紧急破坏持续时间 ” 的选项（使用了[SuperNewRoles](https://github.com/SuperNewRoles/SuperNewRoles)的部分代码）
+    - 优化随机出生，现在分散不会有延迟了
+    - 为中国玩家在连接GitHub时自动替换链接为国内镜像源
+    - 法医：延长被保护的玩家被击杀时的闪光提醒时间（从0.5s增加到1.5s）
+    - 魅魔：将真爱的任务从船员中移除
+    - 设陷师：“失忆者”和“起诉人”踩到夹子时不会显示为邪恶阵营
+    - 市长、执钮人：可在破坏中使用紧急会议按钮，可开关
+
+ - #### Bug修复：
+
+    - 修复游戏开始时重置cd不会立即生效的问题
+    - 恐怖分子：修复自爆时会死两次的问题
+    - 豺狼：修复招募按钮在赌怪模式中不会消失的问题
+
+<details>
+  <summary>点我查看更多更新日志</summary>
+
+###  v1.0.3.4:
+
+ - #### Bug修复：
+
+    - 优化随机出生与分散技能的代码逻辑（删除多余代码）
+    - 修复一部分技能按钮文本错误
+    - 交换师：修复无法与追踪者交换的问题
+    - 告密者：修复在设置告密者可揭示击杀中立但实际无法揭示的问题
+    - 恐怖分子：在自爆的情况下增加强制自杀（避免部分情况自爆不会死的问题）
 
 ###  v1.0.3.3:
 
- - #### Newly added
+ - #### 新增内容：
 
-    - 
-    
- - #### Bug fixed:
+    - 增加阻止任务获胜的选项（目前无效）
+    - 使一部分职业无法共同出现
+    - 多线程：不会在任务透明模式开启时生成
+    - 告密者：现在可以在会议中查看信息，并且被发现时不能无法被猜测
 
-    - 
+ - #### Bug修复：
 
-<details>
-  <summary>Click to show the Changelog</summary>
-
+    - 修复内鬼阵营无法超过3名的问题
 
 ###  v1.0.3.2:
 
- - #### Newly added
+ - #### 新增内容：
 
-    - New Modifier: LastImposter (gain lower kill cooldown when there is only 1 imposter left)
-    - When born may choose to born on random vents
-    - New ending added: And Then There Were None
-    - Akujo: Update with the true love can't win together with the original team
-    - Chameleon: Will not be given to Swooper and Ninja
-    - ButtonBarry: Won't be given to the Mayor
-    - Snitch: Can't be guessed during the meeting after being exposed, and now given an option of expose the range of Neutral
-    - Jumper & Escapist: Given option that can increase numbers of teleportation, to avoid the problem of only teleport once a round
-    - Snitch：目前可以在会议中查看邪恶玩家（还无法查看具体职业）
+    - 新增附加职业：绝境者（在内鬼阵营只剩1名时减少击杀cd）
+    - 随机出生点可选随机出生至通风口上
+    - 新增无人生还结局
+    - 魅魔：新增真爱无法跟随原阵营获胜的选项
+    - 变色龙：不会分配给隐身人、忍者
+    - 执钮人：不会分配给市长
+    - 传送师 & 逃逸者：增加总传送次数的选项，以避免一回合只能传送一次的问题
+    - 告密者：目前可以在会议中查看红名（还无法得知具体职业）
+    - 反骨：增加隐藏职业选项
 
- - #### Bug fixed:
+ - #### Bug修复：
 
-    - Jackal: Fix the problem that Jackal can still destroy
-    - Swapper: Fix the problem that Swapper can't fix destructions
-
+    - 豺狼：关闭豺狼可破坏的选项仍然可以破坏的问题
+    - 换票师：修复无法修理破坏的问题
 
 ###  v1.0.3.1:
 
- - #### Newly added
+ - #### 新增内容：
 
-    - New role added: Prophet 
-    - Poucher: changed to be Imposters used only
-    - Snitch: remake, return to old version (Not fully functional)
-    - Flash: Fix the problem of no speed up
+    - 新增主职业：预言家
+    - 入殓师：更改为内鬼阵营专属附加职业
+    - 告密者：职业重做，还原为旧版效果（并未完全可用）
+    - 闪电侠：修复移速不生效的问题
 
 ### v1.0.3:
 
- - #### Based on TheOtherRoles - v4.5.2 
+ - #### 基于TheOtherRoles - v4.5.2 
 
-    - Compatible for v2024.3.5
-    - Add a "Stop" button when game is about to start
-    - Detective: optimize the slow movement when footprints appears
-    - Medic: Is now also displayed in meetings to players who can see it, with brackets around the name
+    - 适配游戏新版本v2024.3.5
+    - 新增游戏开始时Stop按钮
+    - 侦探：优化脚印生成导致的卡顿
+    - 医生：医生可以在会议中查看被保护的玩家，有蓝色括号提示
 
- - #### Newly added:
+ - #### 新增内容：
 
-    - New Modifiers added: ButtonBarry and Flash
-    - Detective: Autopsy report now changes to examine the role and color of the murderer
-    - Medic: Autopsy report now add information of role and color of the murderer
-    - Jumper & Escapist: Add an option that after the mmeting the marked spot won't being resetted
-    - Disperser: Add an option to teleport to vents
+    - 新增附加职业：执钮人、闪电侠
+    - 侦探：尸检报告改为查验凶手职业与凶手颜色
+    - 医生：新增尸检报告为查验凶手名字与凶手颜色
+    - 传送师 & 逃逸者：新增会议后不重置标记点的选项
+    - 分散者：增加传送至通风口上的选项 
 
- - #### Newly added:
+ - #### Bug修复：
 
-    - Fix the bug in Guesser Modifier players will be given multiple roles
-    - Torch: Fix the bug of torch's Vision
-
+    - 修复赌怪模式中会被分配多重职业的bug
+    - 火炬：修复火炬视野的bug
 
 ###  v1.0.2:
 
- - #### 新增内容
+ - #### 新增内容：
 
-    - New role added: Akujo
-    - Replace buttons with no text and add button texts in games
-    - Undertaker: add the option of increase speed
+    - 新增主职业：魅魔
+    - 替换无文字的按钮图标并在游戏中增加按钮文本
+    - 送葬者：增加移速选项
 
+###  v1.0.1:
 
- ###  v1.0.1:
+ - #### 基于TheOtherUs - v1.3.4
 
- - #### Based on TheOtherUs - v1.3.4
+ - #### 新增内容：
 
- - #### Newly added:
+    - 新增职业：天启、末日预言家
+    - 统一开局cd
+    - 内置百人模组
+    - 更好的地图选项
+    - 内置多语言，为以后翻译外语模组打下基础
+    - 真菌丛林：增加随机出生、增加分散坐标
+    - 火炬：增加视野倍率选项
+    - 交换师：增加可交换中立选项
+    - 诱饵：新增只分配给船员选项
+    - 隐身人：从豺狼分离为独立职业
+    - 豺狼：新增内鬼可发现队友变为跟班选项
+    - 中立阵营：改为假任务以不影响船员阵营任务胜利
+    - 失忆者：删除假任务限制（可在获得身份前做任务，但不影响船员）
 
-    - New roles added: Juggernaut and Doomsayer
-    - Synchronized cooldown at the start of game
-    - Integrating the "CrowdedMod" feature into the game
-    - Better map options
-    - Added ModTranslation, more convinent for further translation on mods with other languages
-    - Fungle: add with randomly born and more spots for Disperser
-    - Torch: Add an option to increase the rate of Vision
-    - Shifter: Add the option that can switch Neutral Roles
-    - Bait: Newly add the option of only being given to Crewmates
-    - Swooper: Now a Neutral role not an Imposter Role
-    - Jackal: Newly added with a option that Imposters can see if their teammates get turned to Sidekick
-    - Neutral: Their tasks are now fake so their tasks won't impact on Crewmates
-    - Amnisiac: Delete the limitation of fake Tasks (Amnisiac may do Tasks before acquire a role, but won't impact on Crewmates)
+ - #### Bug修复：
 
- - #### Bugs fixed
-
-    - Pursuer: Can't win with other teams except Imposters
-    - Fungle: Fix the Vision problem
-    - Torch: Fix the Vision problem
-    - Sheriff: Fix the problem that can't figure out who is the Deputy in the game
-    - Fix other bugs
+    - 起诉人：修复无法跟随除内鬼及其他阵营获胜
+    - 真菌丛林：修复视野问题
+    - 火炬：修复视野问题
+    - 警长：修复无法在游戏内得知捕快身份的问题
+    - 修复了其它BUG（想不起来了）
 
 </details>
 
-## GameMode
+## TOR游戏模式
 
-- Classic
-- Guesser Modifier
-- Hide 'n' Seek
-- PropHunt
+- 赌怪模式
+- TOR躲猫猫
+- 道具躲猫猫
 
+在游戏未开始时主持人可以在聊天栏输入指令<code>/gm</code> 切换游戏模式。例如：<code>guess</code>, <code>hide</code>, <code>prop</code> 。
 
-## Roles
+## 职业列表
 
-|     Impostor     |  Neutral   |      Crewmate       |   Modifier   |
-| :--------------: | :--------: | :-----------------: | :----------: |
-| Godfather(Mafia) |  Amnisiac  |     NiceGuesser     |   Assassin   |
-|  Mafioso(Mafia)  |   Jester   |        Mayor        |  Disperser   |
-|  Janitor(Mafia)  |  Vulture   |     Portalmaker     |   Poucher    |
-|    Morphling     |   Lawyer   |      Engineer       | lastImpostor |
-|      Bomber      | Prosecutor | PrivateInvestigator |    Torch     |
-|      Mimic       |  Pursuer   |       Sheriff       |  Sunglasses  |
-|   Camouflager    |   Jackal   |       Deputy        |     Bait     |
-|      Miner       |  Sidekick  |      BodyGuard      |    Bloody    |
-|      Eraser      |  Swooper   |       Lighter       | AntiTeleport |
-|     Vampire      |  Arsonist  |       Jumper        |  Tiebreaker  |
-|     Cleaner      |  Werewolf  |      Detective      |    Flash     |
-|    Undertaker    |   Thief    |     TimeMaster      | Multitasker  |
-|     Escapist     | Juggernaut |       Veteren       |     Mini     |
-|     Warlock      | Doomsayer  |        Medic        |     Vip      |
-|    Trickster     |   Akujo    |       Swapper       | Indomitable  |
-|   BountyHunter   |            |        Seer         |    Slueth    |
-|     Cultist      |            |       Hacker        |    Cursed    |
-|    Terrorist     |            |       Tracker       |    Invert    |
-|   Blackmailer    |            |       Snitch        |    Blind     |
-|      Witch       |            |         Spy         |   Watcher    |
-|      Ninja       |            |    SecurityGuard    |    Radar     |
-|                  |            |       Medium        | ButtonBarry  |
-|                  |            |       Trapper       |  Chameleon   |
-|                  |            |       Prophet       |   Shifter    |
+|    内鬼阵营    |  中立阵营  |  船员阵营  |  附加职业  |
+| :------------: | :--------: | :--------: | :--------: |
+|  教父(黑手党)  |   失忆者   |    侠客    |    刺客    |
+|  小弟(黑手党)  |    小丑    |    市长    |   分散者   |
+| 清洁工(黑手党) |    秃鹫    | 星门缔造者 |   入殓师   |
+|     化形者     |    律师    |   工程师   |   绝境者   |
+|     炸弹狂     |   处刑者   |   观察者   |    火炬    |
+|     模仿者     |   起诉人   |    警长    |   太阳镜   |
+|     隐蔽者     |    豺狼    |    捕快    |    诱饵    |
+|     管道工     |    跟班    |    保镖    |   溅血者   |
+|     抹除者     |   隐身人   |   执灯人   |   通讯兵   |
+|     吸血鬼     |   纵火犯   |   传送师   |   破平者   |
+|     清理者     |  月下狼人  |    侦探    |   闪电侠   |
+|     送葬者     |  身份窃贼  |  时间之主  |   多线程   |
+|     逃逸者     |    天启    |    老兵    |    小孩    |
+|      术士      | 末日预言家 |    医生    |    Vip     |
+|     骗术师     |    魅魔    |   换票师   |   不屈者   |
+|    赏金猎人    |            |    黑客    |    反骨    |
+|     传教师     |            |    灵媒    | 管道工程师 |
+|    恐怖分子    |            |   追踪者   |    酒鬼    |
+|     勒索者     |            |   告密者   |   胆小鬼   |
+|      女巫      |            |    卧底    |   窥视者   |
+|      忍者      |            |    保安    |    雷达    |
+|                |            |   通灵师   |   执钮人   |
+|                |            |   设陷师   |   变色龙   |
+|                |            |   预言家   |   交换师   |
 
+## 错误报告
 
+如预见游戏性Bug或者有更多的建议可以在仓库issue提出，或加QQ群：[702829332](https://qm.qq.com/q/3WJt8CjJt)
 
-## Credits & Resources
+## 多语言翻译
+
+翻译文件并未完成，预计在1.4.0完成多语言的增加。
+
+## 模组贡献者
+
 <p align="center">
 
-### Team:
-mxyx    Huier-Huang    haoren    Imp11    FangKuaiYa
+### 主要开发者：
+沫夏悠轩、善良的好人、天寸梦初、Imp11
 
-### Former TheOtherUs Team Members:
-SpexGH    Xer    FangKuaiYa    mxyx    Huier-Huang
+### 美工：
+方块
+
+### 翻译：
+
+CN：沫夏悠轩、CC
+EN：九头蛇
 
 
-Thanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles!
-
-Thanks to miniduikboot & GD for hosting modded servers (and so much more)
+本模组使用了部分[TheOtherRolesGMIA](https://github.com/dabao40/TheOtherRolesGMIA)的代码，感谢Imp11的支持！
 
 
 ### Other Credits & Resources:
@@ -192,7 +225,7 @@ Thanks to miniduikboot & GD for hosting modded servers (and so much more)
 [OxygenFilter](https://github.com/NuclearPowered/Reactor.OxygenFilter) - For all the versions between v2.3.0 and v2.6.1, we were using the OxygenFilter for automatic deobfuscation\
 [Reactor](https://github.com/NuclearPowered/Reactor) - The framework used for all versions before v2.0.0\
 [BepInEx](https://github.com/BepInEx) - Used to hook to game functions\
-[Essentials](https://github.com/DorCoMaNdO/Reactor-Essentials) - Custom game options by **DorCoMaNdO**:
+[Essentials](https://github.com/DorCoMaNdO/Reactor-Essentials) - Custom game options by **DorCoMaNdO** :
 - Before v1.6: We used the default Essentials release
 - v1.6-v1.8: We slightly changed the default Essentials release. The changes can be found on this 
 
@@ -213,21 +246,10 @@ Thanks to miniduikboot & GD for hosting modded servers (and so much more)
 [Ninja](#ninja), [Thief](#thief), [Lawyer](#lawyer) / [Pursuer](#pursuer), [Deputy](#deputy), [Portalmaker](#portalmaker), [Guesser Modifier](#guesser-modifier) - Idea: [K3ndo](https://github.com/K3ndoo) ; Developed by [Gendelo](https://github.com/gendelo3) & [Mallöris](https://github.com/Mallaris) \
 [ugackMiner53](https://github.com/ugackMiner53/PropHunt) - Idea and core code for the Prop Hunt game mode
 
+## 许可证
 
-## GCERROR
-If the error message "Fatal Error in GC - Collecting from unknown thread" stops you from playing the game, you can now disable the mod-updater, which causes this error.
-In order to do this, create a file called `noupdater.txt` in your modded Among Us folder.
-
-# License
 TheOtherRolesAU/TheOtherRoles is licensed under the
 
 [GNU General Public License v3.0](https://github.com/TheOtherRolesAU/TheOtherRoles/blob/main/LICENSE)
 
 Permissions of this strong copyleft license are conditioned on making available **complete source code of licensed works and modifications**, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
-
-# Bugs, suggestions and requests
-
-If you found any bugs, have an idea for a new role or any other request, join our [Discord server](https://discord.gg/77RkMJHWsM).
-
-# Copyedit
-Thanks for fixing our typos [jacktose](https://github.com/jacktose) ✌️

@@ -3420,8 +3420,13 @@ internal static class HudManagerStartPatch
 
                 if (sabotageActive)
                 {
-                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
-                    PlayerControl.LocalPlayer.RpcStartMeeting(null);
+                    //DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
+                    //PlayerControl.LocalPlayer.RpcStartMeeting(null);
+                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        (byte)CustomRPC.MayorMeeting, SendOption.Reliable);
+                    writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                    writer.Write(byte.MaxValue);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
                 }
                 else
                 {
@@ -3431,13 +3436,6 @@ internal static class HudManagerStartPatch
                     writer.Write(byte.MaxValue);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                 }
-
-                /*
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                             (byte)CustomRPC.MayorMeeting, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.StartMayorMeeting();
-                */
                 mayorMeetingButton.Timer = 1f;
 
             },
@@ -3453,7 +3451,7 @@ internal static class HudManagerStartPatch
                 foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
                     if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
                     task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
-                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && Mayor.TaskRemoteMeetings == false)
+                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && !Mayor.SabotageRemoteMeetings)
                         sabotageActive = true;
                 return !sabotageActive && CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
                        Mayor.remoteMeetingsLeft > 0;

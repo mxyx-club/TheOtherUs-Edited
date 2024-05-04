@@ -172,6 +172,13 @@ public enum CustomRPC
     MorphlingMorph,
     CamouflagerCamouflage,
     DoomsayerMeeting,
+    AkujoSetHonmei,
+    AkujoSetKeep,
+    AkujoSuicide,
+    MayorMeeting,
+    ButtonBarryMeeting,
+    ProphetExamine,
+    ImpostorPromotesToLastImpostor,
 
     //CamoComms,
     TrackerUsedTracker = 150,
@@ -241,18 +248,6 @@ public enum CustomRPC
     // Other functionality
     ShareTimer,
     ShareGhostInfo,
-
-    //魅魔
-    AkujoSetHonmei,
-    AkujoSetKeep,
-    AkujoSuicide,
-
-    ButtonBarry,
-
-    MayorMeeting,
-    ButtonBarryMeeting,
-    ProphetExamine,
-    ImpostorPromotesToLastImpostor,
 }
 
 public static class RPCProcedure
@@ -830,24 +825,6 @@ public static class RPCProcedure
             {
                 if (p == 1f) TimeMaster.shieldActive = false;
             })));
-    }
-
-    public static void StartMayorMeeting()
-    {
-        CachedPlayer.LocalPlayer.NetTransform.Halt();
-        var mayor = Mayor.mayor;
-
-        FastDestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(mayor);
-        FastDestroyableSingleton<ShipStatus>.Instance.StartMeeting(mayor, null);
-    }
-
-    public static void StartButtonBarryMeeting()
-    {
-        CachedPlayer.LocalPlayer.NetTransform.Halt();
-        var mayor = Mayor.mayor;
-
-        FastDestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(mayor);
-        FastDestroyableSingleton<ShipStatus>.Instance.StartMeeting(mayor, null);
     }
 
     public static void impostorPromotesToLastImpostor(byte targetId)
@@ -3366,10 +3343,26 @@ internal class RPCHandlerPatch
                 break;
             */
             case CustomRPC.MayorMeeting:
-                RPCProcedure.StartMayorMeeting();
+                if (AmongUsClient.Instance.AmHost)
+                {
+                    MeetingRoomManager.Instance.reporter = Mayor.mayor;
+                    MeetingRoomManager.Instance.target = null;
+                    AmongUsClient.Instance.DisconnectHandlers.AddUnique(MeetingRoomManager.Instance.Cast<IDisconnectHandler>());
+
+                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(Mayor.mayor);
+                    Mayor.mayor.RpcStartMeeting(null);
+                }
                 break;
             case CustomRPC.ButtonBarryMeeting:
-                RPCProcedure.StartButtonBarryMeeting();
+                if (AmongUsClient.Instance.AmHost)
+                {
+                    MeetingRoomManager.Instance.reporter = ButtonBarry.buttonBarry;
+                    MeetingRoomManager.Instance.target = null;
+                    AmongUsClient.Instance.DisconnectHandlers.AddUnique(MeetingRoomManager.Instance.Cast<IDisconnectHandler>());
+
+                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(ButtonBarry.buttonBarry);
+                    ButtonBarry.buttonBarry.RpcStartMeeting(null);
+                }
                 break;
             case CustomRPC.ProphetExamine:
                 RPCProcedure.prophetExamine(reader.ReadByte());
