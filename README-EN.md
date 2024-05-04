@@ -1,6 +1,6 @@
 <p align="center"> <a href="README_ZH-CN.md"> 简体中文 </a> </p>
 
-<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited"><img src="https://badgen.net/github/assets-dl/mxyx-club/TheOtherUs-Edited"><img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></a>
+<p align="center"><a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited">    <img src="https://badgen.net/github/assets-dl/mxyx-club/TheOtherUs-Edited">    <img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></a></p>
 
 ![mod banner](./Images/TOR_logo.png)
 
