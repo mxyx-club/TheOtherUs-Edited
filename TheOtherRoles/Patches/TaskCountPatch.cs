@@ -4,8 +4,10 @@ using System.Linq;
 using AmongUs.GameOptions;
 using TheOtherRoles.Utilities;
 
-namespace TheOtherRoles.Patches;
 // 参照: https://github.com/SuperNewRoles/SuperNewRoles/blob/master/SuperNewRoles/Patches/TaskCountPatch.cs
+
+namespace TheOtherRoles.Patches;
+
 class TaskCount
 {
     public static bool WireTaskIsRandom { get { return CustomOptionHolder.WireTaskIsRandomOption.getBool(); } }

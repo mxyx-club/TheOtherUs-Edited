@@ -252,19 +252,12 @@ public class CustomButton
 
     public static class ButtonPositions
     {
-        public static readonly Vector3
-            lowerRowRight = new(-2f, -0.06f, 0); // Not usable for imps beacuse of new button positions!
-
+        public static readonly Vector3 lowerRowRight = new(-2f, -0.06f, 0); // Not usable for imps beacuse of new button positions!
         public static readonly Vector3 lowerRowCenter = new(-3f, -0.06f, 0);
         public static readonly Vector3 lowerRowLeft = new(-4f, -0.06f, 0);
         public static readonly Vector3 lowerRowFarLeft = new(-3f, -0.06f, 0f);
-
-        public static readonly Vector3
-            upperRowRight = new(0f, 1f, 0f); // Not usable for imps beacuse of new button positions!
-
-        public static readonly Vector3
-            upperRowCenter = new(-1f, 1f, 0f); // Not usable for imps beacuse of new button positions!
-
+        public static readonly Vector3 upperRowRight = new(0f, 1f, 0f); // Not usable for imps beacuse of new button positions!
+        public static readonly Vector3 upperRowCenter = new(-1f, 1f, 0f); // Not usable for imps beacuse of new button positions!
         public static readonly Vector3 upperRowLeft = new(-2f, 1f, 0f);
         public static readonly Vector3 upperRowFarLeft = new(-3f, 1f, 0f);
     }
