@@ -8,8 +8,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other Files", "Other Files", "{3001A2DD-334B-4483-A9AF-0B64F733CDBC}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		README-EN.md = README-EN.md
 		README.md = README.md
+		README_EN.md = README_EN.md
 	EndProjectSection
 EndProject
 Global

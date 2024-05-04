@@ -1,4 +1,4 @@
-<p align="center"> <a href="README_ZH-CN.md"> English </a> </p>
+<p align="center"> <a href="README_EN.md"> English </a> </p>
 
 ![mod banner](./Images/TOR_logo.png)
 
