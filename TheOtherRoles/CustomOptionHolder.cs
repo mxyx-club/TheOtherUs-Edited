@@ -697,7 +697,7 @@ public class CustomOptionHolder
         disableMedbayWalk = CustomOption.Create(41, Types.General, "disableMedbayWalk", false);
         allowParallelMedBayScans = CustomOption.Create(44, Types.General, "allowParallelMedBayScans", false);
         finishTasksBeforeHauntingOrZoomingOut = CustomOption.Create(42, Types.General, "finishTasksBeforeHauntingOrZoomingOut", false);
-        preventTaskEnd = CustomOption.Create(43, Types.General, "preventTaskEnd", false);
+        //preventTaskEnd = CustomOption.Create(43, Types.General, "preventTaskEnd", false);
 
         //Map options
         enableMapOptions = CustomOption.Create(200, Types.General, "enableMapOptions", false, null, true);

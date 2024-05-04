@@ -118,7 +118,7 @@ public static class TheOtherRoles
         HideNSeek.clearAndReload();
         PropHunt.clearAndReload();
     }
-
+    /*
     public static class PreventTaskEnd
     {
         public static bool Enable = false;
@@ -127,7 +127,7 @@ public static class TheOtherRoles
             Enable = CustomOptionHolder.preventTaskEnd.getBool();
         }
     }
-
+    */
     public static class ResetButtonCooldown
     {
         public static float ButtonCooldown { get { return CustomOptionHolder.resteButtonCooldown.getFloat(); } }

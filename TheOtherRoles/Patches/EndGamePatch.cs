@@ -718,7 +718,7 @@ internal class CheckEndCriteriaPatch
     private static bool CheckAndEndGameForTaskWin(ShipStatus __instance)
     {
         if ((HideNSeek.isHideNSeekGM && !HideNSeek.taskWinPossible) || PropHunt.isPropHuntGM) return false;
-        if (GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks && !PreventTaskEnd.Enable)
+        if (GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks)
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame(GameOverReason.HumansByTask, false);
