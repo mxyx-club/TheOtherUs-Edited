@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static TheOtherRoles.CustomOption;
 using static TheOtherRoles.TheOtherRoles;
 using Types = TheOtherRoles.CustomOption.CustomOptionType;
 
@@ -450,7 +451,7 @@ public class CustomOptionHolder
     public static CustomOption modifierTunneler;
 
     public static CustomOption modifierButtonBarry;
-    public static CustomOption modifierButtonTaskRemoteMeetings;
+    public static CustomOption modifierButtonSabotageRemoteMeetings;
 
     public static CustomOption modifierWatcher;
 
@@ -543,6 +544,10 @@ public class CustomOptionHolder
 
     public static CustomOption enableFungleModify;
     public static CustomOption fungleElectrical;
+
+    public static CustomOption WireTaskIsRandomOption;
+    public static CustomOption WireTaskNumOption;
+
 
     public static CustomOption disableMedbayWalk;
 
@@ -733,6 +738,9 @@ public class CustomOptionHolder
 
         enableFungleModify = CustomOption.Create(100, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Fungle"), false, enableMapOptions);
         fungleElectrical = CustomOption.Create(101, Types.General, "fungleElectrical", false, enableFungleModify);
+
+        WireTaskIsRandomOption = Create(211, Types.General, "随机分配修复配线的任务地点", false, enableMapOptions, true);
+        WireTaskNumOption = Create(212, Types.General, "修复配线任务总数", 5f, 1f, 8f, 1f, WireTaskIsRandomOption);
 
         enableCamoComms = CustomOption.Create(120, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, enableMapOptions, true);
         restrictDevices = CustomOption.Create(121, Types.General, "restrictDevices", 
@@ -1186,7 +1194,7 @@ public class CustomOptionHolder
         modifierTunneler = CustomOption.Create(1140, Types.Modifier, cs(Color.yellow, "管道工程师"), rates, null, true);
 
         modifierButtonBarry = CustomOption.Create(1220, Types.Modifier, cs(Color.yellow, "执钮人"), rates, null, true);
-        modifierButtonTaskRemoteMeetings = CustomOption.Create(1221, Types.Modifier, "可在破坏时使用", false, modifierButtonBarry);
+        modifierButtonSabotageRemoteMeetings = CustomOption.Create(1221, Types.Modifier, "可在破坏时使用", false, modifierButtonBarry);
 
         modifierSlueth = CustomOption.Create(1150, Types.Modifier, cs(Color.yellow, "掘墓人"), rates, null, true);
 
@@ -1214,10 +1222,10 @@ public class CustomOptionHolder
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
 
         guesserGamemodeCrewNumber = CustomOption.Create(2001, Types.Guesser, cs(Guesser.color, "船员阵营赌怪数"), 3f, 0f, 15f, 1f, null, true);
-        guesserGamemodeNeutralNumber = CustomOption.Create(2002, Types.Guesser, cs(Guesser.color, "中立阵营赌怪数"), 3f, 0f, 15f, 1f, null, true);
-        guesserGamemodeImpNumber = CustomOption.Create(2003, Types.Guesser, cs(Guesser.color, "伪装者阵营赌怪数"), 3f, 0f, 15f, 1f, null, true);
+        guesserGamemodeNeutralNumber = CustomOption.Create(2002, Types.Guesser, cs(Guesser.color, "中立阵营赌怪数"), 3f, 0f, 15f, 1f);
+        guesserGamemodeImpNumber = CustomOption.Create(2003, Types.Guesser, cs(Guesser.color, "伪装者阵营赌怪数"), 3f, 0f, 15f, 1f);
         guesserForceJackalGuesser = CustomOption.Create(2007, Types.Guesser, "强制豺狼成为赌怪", false, null, true);
-        guesserGamemodeSidekickIsAlwaysGuesser = CustomOption.Create(2012, Types.Guesser, "跟班继承赌怪", false);
+        guesserGamemodeSidekickIsAlwaysGuesser = CustomOption.Create(2012, Types.Guesser, "强制跟班成为赌怪", false);
         guesserForceThiefGuesser = CustomOption.Create(2011, Types.Guesser, "强制身份窃贼为赌怪", false);
         guesserGamemodeHaveModifier = CustomOption.Create(2004, Types.Guesser, "赌怪可以拥有附加职业", true, null, true);
         guesserGamemodeNumberOfShots = CustomOption.Create(2005, Types.Guesser, "赌怪猜测最大次数", 2f, 1f, 15f, 1f);

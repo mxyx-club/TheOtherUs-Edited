@@ -3489,7 +3489,7 @@ public static class ButtonBarry
 {
     public static PlayerControl buttonBarry;
     public static int remoteMeetingsLeft = 1;
-    public static bool TaskRemoteMeetings = false;
+    public static bool SabotageRemoteMeetings = false;
 
     private static Sprite buttonSprite;
 
@@ -3504,8 +3504,7 @@ public static class ButtonBarry
         buttonBarry = null;
         remoteMeetingsLeft = 1;
 
-        TaskRemoteMeetings = false;
-        //TaskRemoteMeetings = CustomOptionHolder.modifierButtonTaskRemoteMeetings.getBool();
+        SabotageRemoteMeetings = CustomOptionHolder.modifierButtonSabotageRemoteMeetings.getBool();
     }
 }
 

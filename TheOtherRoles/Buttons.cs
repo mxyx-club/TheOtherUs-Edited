@@ -964,6 +964,56 @@ internal static class HudManagerStartPatch
             buttonText: getString("DisperseText")
         );
 
+        mayorMeetingButton = new CustomButton(
+            () =>
+            {
+                //CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
+                Mayor.remoteMeetingsLeft--;
+
+                Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                Helpers.handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
+
+                //DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
+                //PlayerControl.LocalPlayer.RpcStartMeeting(null);
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.MayorMeeting, SendOption.Reliable);
+                writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                writer.Write(byte.MaxValue);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+
+                mayorMeetingButton.Timer = 1f;
+
+            },
+            () =>
+            {
+                return Mayor.mayor != null && Mayor.mayor == CachedPlayer.LocalPlayer.PlayerControl &&
+                       !CachedPlayer.LocalPlayer.Data.IsDead && Mayor.meetingButton;
+            },
+            () =>
+            {
+                mayorMeetingButton.actionButton.OverrideText(getString("MayorButtonText") + "(" + Mayor.remoteMeetingsLeft + ")");
+                var sabotageActive = false;
+                foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
+                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
+                    task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
+                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && !Mayor.SabotageRemoteMeetings)
+                        sabotageActive = true;
+                return !sabotageActive && CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
+                       Mayor.remoteMeetingsLeft > 0;
+            },
+            () => { mayorMeetingButton.Timer = mayorMeetingButton.MaxTimer; },
+            Mayor.getMeetingSprite(),
+            CustomButton.ButtonPositions.lowerRowRight,
+            __instance,
+            KeyCode.F,
+            true,
+            0f,
+            () => { },
+            false,
+            "Meeting"
+        );
+
         // ButtonBarry Meetings
         buttonBarryButton = new CustomButton(
             () =>
@@ -975,33 +1025,60 @@ internal static class HudManagerStartPatch
                 Helpers.handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
 
+                //DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
+                //PlayerControl.LocalPlayer.RpcStartMeeting(null);
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.ButtonBarryMeeting, SendOption.Reliable);
+                writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                writer.Write(byte.MaxValue);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+
+                buttonBarryButton.Timer = 1f;
+
+            },
+            () =>
+            {
+                return ButtonBarry.buttonBarry != null && ButtonBarry.buttonBarry == CachedPlayer.LocalPlayer.PlayerControl &&
+                       !CachedPlayer.LocalPlayer.Data.IsDead;
+            },
+            () =>
+            {
                 var sabotageActive = false;
                 foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
                     if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
                     task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
-                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)))
+                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && !ButtonBarry.SabotageRemoteMeetings)
                         sabotageActive = true;
+                return !sabotageActive && CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
+                       ButtonBarry.remoteMeetingsLeft > 0;
+            },
+            () => { buttonBarryButton.Timer = buttonBarryButton.MaxTimer; },
+            ButtonBarry.getButtonSprite(),
+            new Vector3(0, 1f, 0),
+            __instance,
+            null,
+            true
+        );
+        /*
+        // ButtonBarry Meetings
+        buttonBarryButton = new CustomButton(
+            () =>
+            {
+                //CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
+                ButtonBarry.remoteMeetingsLeft--;
 
-                if (sabotageActive)
-                {
-                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
-                    PlayerControl.LocalPlayer.RpcStartMeeting(null);
-                }
-                else
-                {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                        (byte)CustomRPC.UncheckedCmdReportDeadBody, SendOption.Reliable);
-                    writer.Write(CachedPlayer.LocalPlayer.PlayerId);
-                    writer.Write(byte.MaxValue);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                }
+                Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                Helpers.handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
 
-                /*
+                //DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
+                //PlayerControl.LocalPlayer.RpcStartMeeting(null);
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                             (byte)CustomRPC.MayorMeeting, SendOption.Reliable);
+                    (byte)CustomRPC.ButtonBarryMeeting, SendOption.Reliable);
+                writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                writer.Write(byte.MaxValue);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.StartMayorMeeting();
-                */
+
                 buttonBarryButton.Timer = 1f;
             },
             () =>
@@ -1015,7 +1092,7 @@ internal static class HudManagerStartPatch
                 foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
                     if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
                     task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
-                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && ButtonBarry.TaskRemoteMeetings == false)
+                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && ButtonBarry.SabotageRemoteMeetings == false)
                         sabotageActive = true;
                 return !sabotageActive && CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
                        ButtonBarry.remoteMeetingsLeft > 0;
@@ -1028,9 +1105,9 @@ internal static class HudManagerStartPatch
             true,
             buttonText: getString("buttonBarryText")
         );
+        */
 
-        // Morphling morph
-
+        // Morphling morphs
         morphlingButton = new CustomButton(
             () =>
             {
@@ -3399,73 +3476,6 @@ internal static class HudManagerStartPatch
             () => { },
             false,
             "Blackmail"
-        );
-
-        mayorMeetingButton = new CustomButton(
-            () =>
-            {
-                //CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
-                Mayor.remoteMeetingsLeft--;
-
-                Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                Helpers.handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
-
-                var sabotageActive = false;
-                foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
-                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
-                    task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
-                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)))
-                        sabotageActive = true;
-
-                if (sabotageActive)
-                {
-                    //DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
-                    //PlayerControl.LocalPlayer.RpcStartMeeting(null);
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                        (byte)CustomRPC.MayorMeeting, SendOption.Reliable);
-                    writer.Write(CachedPlayer.LocalPlayer.PlayerId);
-                    writer.Write(byte.MaxValue);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                }
-                else
-                {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                        (byte)CustomRPC.UncheckedCmdReportDeadBody, SendOption.Reliable);
-                    writer.Write(CachedPlayer.LocalPlayer.PlayerId);
-                    writer.Write(byte.MaxValue);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                }
-                mayorMeetingButton.Timer = 1f;
-
-            },
-            () =>
-            {
-                return Mayor.mayor != null && Mayor.mayor == CachedPlayer.LocalPlayer.PlayerControl &&
-                       !CachedPlayer.LocalPlayer.Data.IsDead && Mayor.meetingButton;
-            },
-            () =>
-            {
-                mayorMeetingButton.actionButton.OverrideText(getString("MayorButtonText") + "(" + Mayor.remoteMeetingsLeft + ")");
-                var sabotageActive = false;
-                foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
-                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
-                    task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
-                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && !Mayor.SabotageRemoteMeetings)
-                        sabotageActive = true;
-                return !sabotageActive && CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
-                       Mayor.remoteMeetingsLeft > 0;
-            },
-            () => { mayorMeetingButton.Timer = mayorMeetingButton.MaxTimer; },
-            Mayor.getMeetingSprite(),
-            CustomButton.ButtonPositions.lowerRowRight,
-            __instance,
-            KeyCode.F,
-            true,
-            0f,
-            () => { },
-            false,
-            "Meeting"
         );
 
         // Jackal Sidekick Button

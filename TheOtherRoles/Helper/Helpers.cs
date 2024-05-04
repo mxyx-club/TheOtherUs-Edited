@@ -337,6 +337,12 @@ public static class Helpers
         if (!self.Contains(item)) self.Add(item);
     }
 
+    public static int GetRandomIndex<T>(List<T> list)
+    {
+        var indexData = UnityEngine.Random.Range(0, list.Count);
+        return indexData;
+    }
+
     public static unsafe Texture2D loadTextureFromResources(string path)
     {
         try
