@@ -3075,9 +3075,11 @@ public static class Terrorist
             bombText = getString("TerroristBombText2");
             selfExplosion = true;
         };
-
-        Info("Terrorist Debug" + destructionTime + bombActiveAfter + " - " + selfExplosion.ToString());
-        Info("Terrorist Debug INT:" + (int)destructionTime + (int)bombActiveAfter + " - " + selfExplosion.ToString());
+        if (MapOptions.enableDebugLogMode)
+        {
+            Info("Terrorist Debug: " + destructionTime + bombActiveAfter + " - " + selfExplosion.ToString());
+            Info("Terrorist Debug INT:" + (int)destructionTime + (int)bombActiveAfter + " - " + selfExplosion.ToString());
+        }
 
         clearBomb(false);
         terrorist = null;
