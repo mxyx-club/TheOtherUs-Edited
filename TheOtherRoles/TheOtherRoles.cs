@@ -365,9 +365,9 @@ public static class TheOtherRoles
             meetingButton = CustomOptionHolder.mayorMeetingButton.getBool();
             mayorChooseSingleVote = CustomOptionHolder.mayorChooseSingleVote.getSelection();
             voteTwice = true;
-
-            //SabotageRemoteMeetings = false;
-            SabotageRemoteMeetings = CustomOptionHolder.mayorSabotageRemoteMeetings.getBool();
+             
+            SabotageRemoteMeetings = false;
+            //SabotageRemoteMeetings = CustomOptionHolder.mayorSabotageRemoteMeetings.getBool();
         }
     }
 
@@ -3504,7 +3504,8 @@ public static class ButtonBarry
         buttonBarry = null;
         remoteMeetingsLeft = 1;
 
-        SabotageRemoteMeetings = CustomOptionHolder.modifierButtonSabotageRemoteMeetings.getBool();
+        SabotageRemoteMeetings = false;
+        //SabotageRemoteMeetings = CustomOptionHolder.modifierButtonSabotageRemoteMeetings.getBool();
     }
 }
 

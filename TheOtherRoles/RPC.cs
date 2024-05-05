@@ -175,7 +175,8 @@ public enum CustomRPC
     AkujoSetHonmei,
     AkujoSetKeep,
     AkujoSuicide,
-    MeetingButton,
+    MayorMeetingButton,
+    BarryMeetingButton,
     ProphetExamine,
     ImpostorPromotesToLastImpostor,
 
@@ -3341,14 +3342,24 @@ internal class RPCHandlerPatch
                 RPCProcedure.shareRoom(roomPlayer, roomId);
                 break;
             */
-            case CustomRPC.MeetingButton:
+            case CustomRPC.MayorMeetingButton:
                 if (AmongUsClient.Instance.AmHost)
                 {
-                    MeetingRoomManager.Instance.reporter = CachedPlayer.LocalPlayer.PlayerControl;
+                    MeetingRoomManager.Instance.reporter = Mayor.mayor;
                     MeetingRoomManager.Instance.target = null;
                     AmongUsClient.Instance.DisconnectHandlers.AddUnique(MeetingRoomManager.Instance.Cast<IDisconnectHandler>());
-                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(CachedPlayer.LocalPlayer.PlayerControl);
-                    CachedPlayer.LocalPlayer.PlayerControl.RpcStartMeeting(null);
+                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
+                    Mayor.mayor.RpcStartMeeting(null);
+                }
+                break;
+            case CustomRPC.BarryMeetingButton:
+                if (AmongUsClient.Instance.AmHost)
+                {
+                    MeetingRoomManager.Instance.reporter = ButtonBarry.buttonBarry;
+                    MeetingRoomManager.Instance.target = null;
+                    AmongUsClient.Instance.DisconnectHandlers.AddUnique(MeetingRoomManager.Instance.Cast<IDisconnectHandler>());
+                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(ButtonBarry.buttonBarry);
+                    ButtonBarry.buttonBarry.RpcStartMeeting(null);
                 }
                 break;
             case CustomRPC.ProphetExamine:
