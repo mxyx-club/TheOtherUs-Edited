@@ -199,22 +199,16 @@ public class MapData
         new Vector3(-20.8897f, 2.7606f, 0.002f)
     ];
 
-
-    private static List<Vector3>? VentSpawnPositions;
-
     public static List<Vector3> FindVentSpawnPositions()
     {
-        if (VentSpawnPositions != null) return VentSpawnPositions;
-
         var poss = new List<Vector3>();
         foreach (var vent in DestroyableSingleton<ShipStatus>.Instance.AllVents)
         {
             var Transform = vent.transform;
             var position = Transform.position;
-            poss.Add(new Vector3(position.x, position.y + 0.2f, position.z - 50));
+            poss.Add(new Vector3(position.x, position.y + 0.3f, position.z = 0.0f));
         }
 
-        VentSpawnPositions = poss;
         return poss;
     }
 }

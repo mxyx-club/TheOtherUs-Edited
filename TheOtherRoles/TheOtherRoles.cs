@@ -288,7 +288,7 @@ public static class TheOtherRoles
             localArrows = new List<Arrow>();
             cultist = null;
             currentTarget = null;
-            //            currentFollower = null;
+            //currentFollower = null;
             needsFollower = true;
             chatTarget = true;
             chatTarget2 = true;

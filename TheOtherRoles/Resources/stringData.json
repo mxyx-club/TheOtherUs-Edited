@@ -707,31 +707,31 @@
         "13": "\u65e5\u843d\u6a59"
     },
     "CamoText": {
-        "0": "[BLANK]",
+        "0": "CAMO",
         "13": "\u9690\u853d"
     },
     "CleanText": {
-        "0": "[BLANK]",
+        "0": "CLEAN",
         "13": "\u6e05\u7406"
     },
     "CloseVentText": {
-        "0": "[BLANK]",
+        "0": "SEAL",
         "13": "\u5c01\u9501"
     },
     "CurseText": {
-        "0": "[BLANK]",
+        "0": "CURSE",
         "13": "\u4e0b\u5492 "
     },
     "CurseKillText": {
-        "0": "[BLANK]",
+        "0": "KILL",
         "13": "\u5492\u6740"
     },
     "DouseText": {
-        "0": "[BLANK]",
+        "0": "DOUSE",
         "13": "\u6d47\u6cb9"
     },
     "EraserText": {
-        "0": "[BLANK]",
+        "0": "EARSE",
         "13": "\u62b9\u9664"
     },
     "GarlicText": {
@@ -739,28 +739,28 @@
         "13": "\u653e\u7f6e\u5927\u849c"
     },
     "HackerText": {
-        "0": "[BLANK]",
+        "0": "HARK",
         "13": "\u9ed1\u5165"
     },
     "IgniteText": {
-        "0": "[BLANK]",
+        "0": "LGNITE",
         "13": "\u7eb5\u706b"
     },
     "LighterText": {
-        "0": "[BLANK]",
+        "0": "LIGET",
         "13": "\u70b9\u706f",
         "15": " "
     },
     "LightsOutText": {
-        "0": "[BLANK]",
+        "0": "LIGET",
         "13": "\u5173\u706f"
     },
     "MorphText": {
-        "0": "[BLANK]",
+        "0": "MORPH",
         "13": "\u5316\u5f62"
     },
     "PlaceCameraText": {
-        "0": "[BLANK]",
+        "0": "CAM",
         "13": "\u5b89\u88c5"
     },
     "PlacePortalText": {
@@ -768,71 +768,67 @@
         "13": "\u8bbe\u7f6e"
     },
     "RepairText": {
-        "0": "[BLANK]",
+        "0": "REPAIR",
         "13": "\u4fee\u7406"
     },
     "RewindText": {
-        "0": "[BLANK]",
+        "0": "REWIND",
         "13": "\u56de\u6eaf"
     },
     "SampleText": {
-        "0": "[BLANK]",
+        "0": "SAMPLE",
         "13": "\u53d6\u6837"
     },
     "SeerText": {
-        "0": "[BLANK]",
+        "0": "REVEAL",
         "13": "\u63ed\u793a"
     },
     "ShieldText": {
-        "0": "[BLANK]",
+        "0": "SHIELD",
         "13": "\u62a4\u76fe"
     },
     "ShiftText": {
-        "0": "[BLANK]",
+        "0": "SHIFT",
         "13": "\u4ea4\u6362"
     },
     "SidekickText": {
-        "0": "[BLANK]",
+        "0": "SIDEKICK",
         "13": "\u62db\u52df"
     },
     "TimeShieldText": {
-        "0": "[BLANK]",
+        "0": "TIMESHIELD",
         "13": "\u65f6\u95f4\u4e4b\u76fe"
     },
     "TrackerText": {
-        "0": "[BLANK]",
+        "0": "TRACK",
         "13": "\u8ffd\u8e2a"
     },
     "TrackerCorpsesText": {
-        "0": "[BLANK]",
+        "0": "FIND",
         "13": "\u5bfb\u627e\u5c38\u4f53"
     },
     "TricksterVentText": {
-        "0": "[BLANK]",
+        "0": "VENT",
         "13": "\u9a97\u672f\u76d2\u5b50"
     },
     "VampireText": {
-        "0": "[BLANK]",
+        "0": "BITE",
         "13": "\u5438\u8840"
     },
     "VultureText": {
-        "0": "[BLANK]",
+        "0": "EAT",
         "13": "\u541e\u566c"
     },
     "MediumText": {
-        "0": "[BLANK]",
+        "0": "ASK",
         "13": "\u901a\u7075"
     },
-    "PathfindText": {
-        "0": "[BLANK]",
-        "13": "\u5bfb\u627e"
-    },
     "PursuerText": {
-        "0": "[BLANK]",
+        "0": "BLANK",
         "13": "\u7a7a\u5305\u5f39"
     },
     "WitchText": {
-        "0": "[BLANK]",
+        "0": "SPELL",
         "13": "\u8bc5\u5492"
     },
     "NinjaText": {
