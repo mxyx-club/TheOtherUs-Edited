@@ -14,6 +14,7 @@
 
 | 游戏版本  | 模组版本 | 链接                                                         |
 | --------- | -------- | ------------------------------------------------------------ |
+| 2024.3.5s | v1.0.3.6 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherUs.zip) |
 | 2024.3.5s | v1.0.3.3 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherUs.zip) |
 | 2024.3.5s | v1.0.3.1 | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
 
