@@ -1,3 +1,4 @@
+//extern alias JetBrains;
 global using HarmonyLib;
 global using Il2CppInterop.Runtime;
 global using Il2CppInterop.Runtime.Attributes;

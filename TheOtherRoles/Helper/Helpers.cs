@@ -445,15 +445,13 @@ public static class Helpers
             if (player.isModifier) continue;
             allRoleInfo.Add(player);
         }
-
         return allRoleInfo;
     }
 
     public static List<RoleInfo> onlineRoleInfos()
     {
         var roleInfos = new List<RoleInfo>();
-        roleInfos.AddRange(CachedPlayer.AllPlayers.Select(
-            n => RoleInfo.getRoleInfoForPlayer(n, false)).SelectMany(n => n));
+        roleInfos.AddRange(CachedPlayer.AllPlayers.Select(n => RoleInfo.getRoleInfoForPlayer(n, false)).SelectMany(n => n));
         return roleInfos;
     }
 

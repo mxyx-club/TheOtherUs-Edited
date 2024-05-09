@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Hazel;
 using PowerTools;
-using Reactor.Utilities.Extensions;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using UnityEngine;

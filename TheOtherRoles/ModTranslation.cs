@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Il2CppSystem.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace TheOtherRoles;

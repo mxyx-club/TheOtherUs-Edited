@@ -9,8 +9,8 @@ using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
-using static TheOtherRoles.TheOtherRoles;
 using static TheOtherRoles.MapOptions;
+using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 

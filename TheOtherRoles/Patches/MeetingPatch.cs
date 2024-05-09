@@ -9,8 +9,8 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using static TheOtherRoles.MapOptions;
+using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -1001,86 +1001,78 @@ internal class MeetingHudPatch
                 }
             }
 
-            try
+            // 末日
+            if (Doomsayer.doomsayer != null && CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && !Doomsayer.doomsayer.Data.IsDead && Doomsayer.playerTargetinformation != null)
             {
-                //末日
-                if (
-                    Doomsayer.doomsayer != null
-                    &&
-                    CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer
-                    &&
-                    !Doomsayer.doomsayer.Data.IsDead
-                    &&
-                    Doomsayer.playerTargetinformation != null
-                )
+                var i = 1;
+                var random = new Random();
+                var allRoleInfo = (Doomsayer.onlineTarger ? Helpers.onlineRoleInfos() : Helpers.allRoleInfos()).OrderBy(_ => random.Next()).ToList();
+                var OtherRoles = Helpers.allRoleInfos().Where(n => allRoleInfo.All(y => y != n)).OrderBy(_ => random.Next()).ToList();
+                var OtherIndex = -1;
+                var AllMessage = new List<string>();
+                allRoleInfo.Remove(RoleInfo.doomsayer);
+                OtherRoles.Remove(RoleInfo.doomsayer);
+
+                if (enableDebugLogMode)
                 {
-                    var i = 1;
-                    var random = new Random();
-                    var allRoleInfo = Doomsayer.onlineTarger ? Helpers.onlineRoleInfos() : Helpers.allRoleInfos();
-                    var OtherRoles = Helpers.allRoleInfos().Where(n => allRoleInfo.All(y => y != n))
-                        .OrderBy(_ => random.Next()).ToList();
-                    var OtherIndex = -1;
-                    var AllMessage = new List<string>();
-
-                    allRoleInfo.Remove(RoleInfo.doomsayer);
-                    OtherRoles.Remove(RoleInfo.doomsayer);
-
-                    foreach (var predictionTarget in Doomsayer.playerTargetinformation)
+                    foreach (var roleInfo in allRoleInfo)
                     {
-                        var formation = Doomsayer.formationNum;
-                        var x = random.Next(1, formation) - 1;
-                        var roleInfoTarget = RoleInfo.getRoleInfoForPlayer(predictionTarget, false).FirstOrDefault();
-                        var message = new StringBuilder();
-                        var tempNumList = Enumerable.Range(0, allRoleInfo.Count - 1).ToList();
-                        var temp =
-                            (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList)
-                            .OrderBy(_ => random.Next()).ToList();
+                        Warn(roleInfo.name.ToString());
+                    }
+                }
 
-                        message.AppendLine($"{i}. {predictionTarget.name} 的职业可能是：\n");
+                foreach (var predictionTarget in Doomsayer.playerTargetinformation)
+                {
+                    var formation = Doomsayer.formationNum;
+                    var x = random.Next(1, formation) - 1;
+                    var roleInfoTarget = RoleInfo.getRoleInfoForPlayer(predictionTarget, false).FirstOrDefault();
+                    var message = new StringBuilder();
+                    var tempNumList = Enumerable.Range(0, allRoleInfo.Count - 1).ToList();
+                    var temp =
+                        (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList)
+                        .OrderBy(_ => random.Next()).ToList();
 
-                        for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
+                    message.AppendLine($"{i}. {predictionTarget.name} 的职业可能是：\n");
+
+                    for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
+                    {
+                        var info = tempNum > temp.Count - 1
+                            ? GetOther()
+                            : allRoleInfo[temp[tempNum]];
+
+                        if (info == roleInfoTarget)
                         {
-                            var info = tempNum > temp.Count - 1
-                                ? GetOther()
-                                : allRoleInfo[temp[tempNum]];
-
-                            if (info == roleInfoTarget)
-                            {
-                                num--;
-                                continue;
-                            }
-
-                            message.Append(num == x ? roleInfoTarget.name : info.name);
-
-                            message.Append(num < formation - 1 ? ',' : ';');
+                            num--;
+                            continue;
                         }
 
-                        i++;
-                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Doomsayer.doomsayer, $"{message}");
-                        AllMessage.Add(message.ToString());
-                        continue;
+                        message.Append(num == x ? roleInfoTarget.name : info.name);
 
-                        RoleInfo GetOther()
-                        {
-                            OtherIndex++;
-                            return OtherRoles[OtherIndex];
-                        }
+                        message.Append(num < formation - 1 ? ',' : ';');
                     }
 
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DoomsayerMeeting,
-                        SendOption.Reliable);
-                    writer.WritePacked(AllMessage.Count);
-                    AllMessage.Do(writer.Write);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    i++;
+                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Doomsayer.doomsayer, $"{message}");
+                    AllMessage.Add(message.ToString());
+                    continue;
 
-                    Doomsayer.playerTargetinformation.Clear();
+                    RoleInfo GetOther()
+                    {
+                        OtherIndex++;
+                        return OtherRoles[OtherIndex];
+                    }
                 }
+
+                var writer = AmongUsClient.Instance.StartRpcImmediately(
+                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DoomsayerMeeting,
+                    SendOption.Reliable);
+                writer.WritePacked(AllMessage.Count);
+                AllMessage.Do(writer.Write);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+
+                Doomsayer.playerTargetinformation.Clear();
             }
-            catch
-            {
-                Error("末日预言家报错");
-            }
+
             /*
             // Add Snitch info
             var output = "";
