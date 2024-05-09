@@ -17,7 +17,7 @@ internal static class MapOptions
     public static bool ghostsSeeVotes = true;
     public static bool showRoleSummary = true;
     public static bool allowParallelMedBayScans;
-    public static bool showLighterDarker;
+    public static bool showLighterDarker = true;
     public static bool toggleCursor = true;
     public static bool enableSoundEffects = true;
     public static bool enableHorseMode;
@@ -107,17 +107,16 @@ internal static class MapOptions
 
     public static void reloadPluginOptions()
     {
-        ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;
-        ghostsSeeModifier = TheOtherRolesPlugin.GhostsSeeModifier.Value;
-        ghostsSeeInformation = TheOtherRolesPlugin.GhostsSeeInformation.Value;
-        ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
-        showRoleSummary = TheOtherRolesPlugin.ShowRoleSummary.Value;
-        showLighterDarker = true;
-        toggleCursor = TheOtherRolesPlugin.ToggleCursor.Value;
-        enableSoundEffects = TheOtherRolesPlugin.EnableSoundEffects.Value;
-        enableHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
+        ghostsSeeRoles = Main.GhostsSeeRoles.Value;
+        ghostsSeeModifier = Main.GhostsSeeModifier.Value;
+        ghostsSeeInformation = Main.GhostsSeeInformation.Value;
+        ghostsSeeVotes = Main.GhostsSeeVotes.Value;
+        showRoleSummary = Main.ShowRoleSummary.Value;
+        toggleCursor = Main.ToggleCursor.Value;
+        enableSoundEffects = Main.EnableSoundEffects.Value;
+        enableHorseMode = Main.EnableHorseMode.Value;
         ShowVentsOnMap = CustomOptionHolder.ShowVentsOnMap.getBool();
-        enableDebugLogMode = TheOtherRolesPlugin.enableDebugLogMode.Value;
+        enableDebugLogMode = Main.enableDebugLogMode.Value;
 
         //Patches.ShouldAlwaysHorseAround.isHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
     }

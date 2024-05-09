@@ -128,7 +128,7 @@ public static class TheOtherRoles
         }
     }
     */
-    public static class ResetButtonCooldown
+    public static class OtherClear
     {
         public static float ButtonCooldown { get { return CustomOptionHolder.resteButtonCooldown.getFloat(); } }
     }

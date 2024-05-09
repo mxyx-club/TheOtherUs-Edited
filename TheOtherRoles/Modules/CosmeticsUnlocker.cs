@@ -53,7 +53,6 @@
             { //Visors
                 visor.Free = true;
             }
-
         }
     }
 }
