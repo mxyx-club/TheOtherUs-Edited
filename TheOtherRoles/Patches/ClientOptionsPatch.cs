@@ -32,9 +32,6 @@ public static class ClientOptionsPatch
             () => MapOptions.showRoleSummary =
                 Main.ShowRoleSummary.Value = !Main.ShowRoleSummary.Value,
             Main.ShowRoleSummary.Value),
-        new SelectionBehaviour(getString("ShowLighterDarkerText"),
-            () => MapOptions.showLighterDarker = Main.ShowLighterDarker.Value =
-                !Main.ShowLighterDarker.Value, Main.ShowLighterDarker.Value),
         new SelectionBehaviour(getString("ToggleCursorText"),
             () => MapOptions.toggleCursor =
                 Main.ToggleCursor.Value = !Main.ToggleCursor.Value,

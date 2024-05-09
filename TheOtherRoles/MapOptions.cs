@@ -112,7 +112,7 @@ internal static class MapOptions
         ghostsSeeInformation = TheOtherRolesPlugin.GhostsSeeInformation.Value;
         ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
         showRoleSummary = TheOtherRolesPlugin.ShowRoleSummary.Value;
-        showLighterDarker = TheOtherRolesPlugin.ShowLighterDarker.Value;
+        showLighterDarker = true;
         toggleCursor = TheOtherRolesPlugin.ToggleCursor.Value;
         enableSoundEffects = TheOtherRolesPlugin.EnableSoundEffects.Value;
         enableHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;

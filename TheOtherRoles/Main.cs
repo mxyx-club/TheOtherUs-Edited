@@ -45,7 +45,6 @@ public class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> GhostsSeeModifier { get; set; }
     public static ConfigEntry<bool> GhostsSeeVotes { get; set; }
     public static ConfigEntry<bool> ShowRoleSummary { get; set; }
-    public static ConfigEntry<bool> ShowLighterDarker { get; set; }
     public static ConfigEntry<bool> EnableSoundEffects { get; set; }
     public static ConfigEntry<bool> EnableHorseMode { get; set; }
     public static ConfigEntry<bool> ToggleCursor { get; set; }
@@ -98,7 +97,6 @@ public class TheOtherRolesPlugin : BasePlugin
         GhostsSeeModifier = Config.Bind("Custom", "Ghosts See Modifier", true);
         GhostsSeeVotes = Config.Bind("Custom", "Ghosts See Votes", true);
         ShowRoleSummary = Config.Bind("Custom", "Show Role Summary", true);
-        ShowLighterDarker = Config.Bind("Custom", "Show Lighter / Darker", true);
         ToggleCursor = Config.Bind("Custom", "Better Cursor", true);
         EnableSoundEffects = Config.Bind("Custom", "Enable Sound Effects", true);
         EnableHorseMode = Config.Bind("Custom", "Enable Horse Mode", false);
