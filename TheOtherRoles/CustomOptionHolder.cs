@@ -728,8 +728,8 @@ public class CustomOptionHolder
         enableFungleModify = Create(100, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Fungle"), false, enableMapOptions);
         fungleElectrical = Create(101, Types.General, "fungleElectrical", false, enableFungleModify);
 
-        WireTaskIsRandomOption = Create(211, Types.General, "随机分配修复配线的任务地点", false, enableMapOptions, true);
-        WireTaskNumOption = Create(212, Types.General, "修复配线任务总数", 5f, 1f, 8f, 1f, WireTaskIsRandomOption);
+        WireTaskIsRandomOption = Create(211, Types.General, "WireTaskIsRandomOption", false, enableMapOptions, true);
+        WireTaskNumOption = Create(212, Types.General, "WireTaskNumOption", 5f, 1f, 8f, 1f, WireTaskIsRandomOption);
 
         enableCamoComms = Create(120, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, enableMapOptions, true);
         restrictDevices = Create(121, Types.General, "restrictDevices", ["optionOff".Translate(), "restrictDevices2".Translate(), "restrictDevices3".Translate()], enableMapOptions);

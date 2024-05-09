@@ -471,6 +471,14 @@
     "fungleElectrical": {
         "13": "\u6dfb\u52a0\u7535\u529b\u7cfb\u7edf\n (\u98df\u5802-\u5b9e\u9a8c\u5ba4-\u4e0a\u5f15\u64ce)"
     },
+    "WireTaskIsRandomOption": {
+        "0": "Wire Task Random",
+        "13": "\u968f\u673a\u5206\u914d\u4fee\u590d\u914d\u7ebf\u7684\u4efb\u52a1\u5730\u70b9"
+    },
+    "WireTaskNumOption": {
+        "0": "WireTask Num",
+        "13": "\u4fee\u590d\u914d\u7ebf\u4efb\u52a1\u603b\u6570"
+    },
     "enableCamoComms": {
         "0": "Enable Camouflage Comms",
         "13": "\u901a\u4fe1\u7834\u574f\u5f00\u542f\u5c0f\u9ed1\u4eba"
