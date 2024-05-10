@@ -111,7 +111,6 @@ public class TheOtherRolesPlugin : BasePlugin
         UpdateRegions();
         CrowdedPlayer.Start();
 
-        DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
         Harmony.PatchAll();
 
         CustomHatManager.LoadHats();

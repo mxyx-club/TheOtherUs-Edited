@@ -109,7 +109,7 @@ public static class CredentialsPatch
             credentials.fontSize *= 0.05f;
 
             credentials.transform.SetParent(torLogo.transform);
-            credentials.transform.localPosition = Vector3.down * 1.25f;
+            credentials.transform.localPosition = Vector3.down * 1.5f;
             motdObject = new GameObject("torMOTD");
             motdText = motdObject.AddComponent<TextMeshPro>();
             motdText.alignment = TextAlignmentOptions.Center;
