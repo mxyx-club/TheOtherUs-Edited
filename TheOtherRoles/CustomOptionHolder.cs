@@ -1263,7 +1263,7 @@ public class CustomOptionHolder
         //-------------------------- Prop Hunt General Options 4000 - 4999 -------------------------- //
 
         propHuntMap = Create(4020, Types.PropHunt, cs(Color.yellow, "地图"),
-            new[] { "骷髅舰", "米拉总部", "波鲁斯", "飞艇", "蘑菇岛", "潜艇", "自定义地图" }, null, true, () =>
+            ["骷髅舰", "米拉总部", "波鲁斯", "飞艇", "蘑菇岛", "潜艇", "自定义地图"], null, true, () =>
             {
                 var map = propHuntMap.selection;
                 if (map >= 3) map++;
@@ -1295,14 +1295,14 @@ public class CustomOptionHolder
         propHuntSpeedboostDuration = Create(4018, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑持续时间"), 10f, 2.5f, 30f, 2.5f, propHuntSpeedboostEnabled);
         propHuntSpeedboostSpeed = Create(4019, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑提升速度"), 2f, 1.25f, 5f, 0.25f, propHuntSpeedboostEnabled);
 
-        blockedRolePairings.Add((byte)RoleId.Vampire, new[] { (byte)RoleId.Warlock });
-        blockedRolePairings.Add((byte)RoleId.Witch, new[] { (byte)RoleId.Warlock });
-        blockedRolePairings.Add((byte)RoleId.Warlock, new[] { (byte)RoleId.Vampire });
+        blockedRolePairings.Add((byte)RoleId.Vampire, [(byte)RoleId.Warlock]);
+        blockedRolePairings.Add((byte)RoleId.Witch, [(byte)RoleId.Warlock]);
+        blockedRolePairings.Add((byte)RoleId.Warlock, [(byte)RoleId.Vampire]);
 
-        blockedRolePairings.Add((byte)RoleId.Vulture, new[] { (byte)RoleId.Cleaner });
-        blockedRolePairings.Add((byte)RoleId.Cleaner, new[] { (byte)RoleId.Vulture });
+        blockedRolePairings.Add((byte)RoleId.Vulture, [(byte)RoleId.Cleaner]);
+        blockedRolePairings.Add((byte)RoleId.Cleaner, [(byte)RoleId.Vulture]);
 
-        blockedRolePairings.Add((byte)RoleId.Ninja, new[] { (byte)RoleId.Swooper });
-        blockedRolePairings.Add((byte)RoleId.Swooper, new[] { (byte)RoleId.Ninja });
+        blockedRolePairings.Add((byte)RoleId.Ninja, [(byte)RoleId.Swooper]);
+        blockedRolePairings.Add((byte)RoleId.Swooper, [(byte)RoleId.Ninja]);
     }
 }

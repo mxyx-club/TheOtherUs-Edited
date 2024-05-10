@@ -21,7 +21,7 @@
         <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="2.1.0-rc.1" />
         <PackageReference Include="Reactor" Version="2.2.0" />
 		<PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
-		<!--PackageReference Include="JetBrains.Annotations" Version="2023.3.0" Aliases="JetBrains" /-->
+		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" Aliases="JetBrains" />
     </ItemGroup>
 
     <Target Name="Date" BeforeTargets="BeforeBuild">  <!--Will make the compile time available s.t. we can let betas expire-->
