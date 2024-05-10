@@ -14,9 +14,9 @@
 
 | 游戏版本  | 模组版本 | 链接                                                         |
 | --------- | -------- | ------------------------------------------------------------ |
-| 2024.3.5s | v1.0.3.7 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.7/TheOtherUs.zip) |
-| 2024.3.5s | v1.0.3.6 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherUs.zip) |
-| 2024.3.5s | v1.0.3.3 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherUs.zip) |
+| 2024.3.5s | v1.0.3.7 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.7/TheOtherRoles.zip) |
+| 2024.3.5s | v1.0.3.6 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherRoles.zip) |
+| 2024.3.5s | v1.0.3.3 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherRoles.zip) |
 | 2024.3.5s | v1.0.3.1 | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
 
 注：本模组只发布经过测试后的文件，其余仅为内测版本。如有其它渠道获得非以上公开版本，请（特指名游社）删除。
