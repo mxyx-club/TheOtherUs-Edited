@@ -14,6 +14,7 @@
 
 | 游戏版本  | 模组版本 | 链接                                                         |
 | --------- | -------- | ------------------------------------------------------------ |
+| 2024.3.5s | v1.0.3.7 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.7/TheOtherUs.zip) |
 | 2024.3.5s | v1.0.3.6 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherUs.zip) |
 | 2024.3.5s | v1.0.3.3 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherUs.zip) |
 | 2024.3.5s | v1.0.3.1 | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
@@ -30,8 +31,6 @@
 
     - 内置解锁原版衣柜
     - 删除“显示颜色深浅”设置按钮，强制开启
-     （毕竟深浅是随机分配的，不开则与深浅相关的职业没有意义了）
-    - 
 
  - #### Bug修复：
 
