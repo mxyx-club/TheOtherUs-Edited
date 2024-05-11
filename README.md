@@ -19,8 +19,8 @@
 | 2024.3.5s | v1.0.3.3 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherRoles.zip) |
 | 2024.3.5s | v1.0.3.1 | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
 
-注：本模组只发布经过测试后的文件，其余仅为内测版本。如有其它渠道获得非以上公开版本，请（特指名游社）删除。
-
+注：本模组只发布经过测试后的文件，其余仅为内测版本。
+    如在其它渠道获得非以上的公开版本，请删除。如有更多此类现象则会在后续禁止游戏。
 
 ## 更新日志
 
