@@ -11,7 +11,7 @@ namespace TheOtherRoles.Modules.CustomHats;
 
 public static class CustomHatManager
 {
-    public const string ResourcesDirectory = "TheOtherHats";
+    public const string ResourcesDirectory = Main.ModName + "/CustomHats";
     public const string InnerslothPackageName = "Innersloth Hats";
     public const string DeveloperPackageName = "Developer Hats";
 
