@@ -65,26 +65,11 @@ public static class Helpers
 
     public static bool zoomOutStatus;
 
-    /*
-            public static Sprite getTeamCultistChatButtonSprite()
-        {
-            if (teamCultistChat != null)
-            {
-                return teamCultistChat;
-            }
-            teamCultistChat = loadSpriteFromResources("TheOtherRoles.Resources.TeamJackalChat.png", 115f);
-            return teamCultistChat;
-        }
-
-                public static Sprite getLoversChatButtonSprite() {
-            if (teamLoverChat != null)
-            {
-                return teamLoverChat;
-            }
-            teamLoverChat = loadSpriteFromResources("TheOtherRoles.Resources.LoversChat.png", 150f);
-            return teamLoverChat;
-        }
-        */
+    public static string ReadToEnd(this Stream stream)
+    {
+        using var reader = new StreamReader(stream);
+        return reader.ReadToEnd();
+    }
 
     public static bool gameStarted => AmongUsClient.Instance != null &&
                                       AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started; //new
