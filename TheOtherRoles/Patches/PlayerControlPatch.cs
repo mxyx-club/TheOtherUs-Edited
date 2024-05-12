@@ -691,7 +691,7 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
-    public static void playerSizeUpdate(PlayerControl p)
+    public static void MiniSizeUpdate(PlayerControl p)
     {
         // Set default player size
         var collider = p.Collider.CastFast<CircleCollider2D>();
@@ -699,21 +699,15 @@ public static class PlayerControlFixedUpdatePatch
         p.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
         collider.radius = Mini.defaultColliderRadius;
         collider.offset = Mini.defaultColliderOffset * Vector2.down;
-        if (p == Giant.giant)
-        {
-            if (Giant.giant == Morphling.morphling && Morphling.morphTimer > 0) return;
-            p.transform.localScale = new Vector3(Giant.size, Giant.size, 1f);
-            collider.radius = Mini.defaultColliderRadius * Giant.size;
-        }
+
         // Set adapted player size to Mini and Morphling
         if (Mini.mini == null || Helpers.isCamoComms() || Camouflager.camouflageTimer > 0f ||
         Helpers.MushroomSabotageActive() || (Mini.mini == Morphling.morphling && Morphling.morphTimer > 0)) return;
 
         var growingProgress = Mini.growingProgress();
         var scale = (growingProgress * 0.35f) + 0.35f;
-        var correctedColliderRadius =
-            Mini.defaultColliderRadius * 0.7f /
-            scale; // scale / 0.7f is the factor by which we decrease the player size, hence we need to increase the collider size by 0.7f / scale
+        var correctedColliderRadius = Mini.defaultColliderRadius * 0.7f / scale;
+        // scale / 0.7f is the factor by which we decrease the player size, hence we need to increase the collider size by 0.7f / scale
 
         if (p == Mini.mini)
         {
@@ -728,8 +722,20 @@ public static class PlayerControlFixedUpdatePatch
             collider.radius = correctedColliderRadius;
         }
     }
+    public static void GiantSizeUpdate(PlayerControl p)
+    {
 
-    public static void updatePlayerInfo()
+        var collider = p.Collider.CastFast<CircleCollider2D>();
+        collider.offset = Mini.defaultColliderOffset * Vector2.down;
+        // Giant
+        if (p == Giant.giant || (Morphling.morphling != null && Morphling.morphTarget == Giant.giant))
+        {
+            if ((Giant.giant == Morphling.morphling && Morphling.morphTimer > 0) || Helpers.MushroomSabotageActive()) return;
+            p.transform.localScale = new Vector3(Giant.size, Giant.size, 1f);
+            collider.radius *= 0.85f;
+        }
+    }
+        public static void updatePlayerInfo()
     {
         var colorBlindTextMeetingInitialLocalPos = new Vector3(0.3384f, -0.16666f, -0.01f);
         var colorBlindTextMeetingInitialLocalScale = new Vector3(0.9f, 1f, 1f);
@@ -1736,7 +1742,8 @@ public static class PlayerControlFixedUpdatePatch
             GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
 
         // Mini and Morphling shrink
-        if (!PropHunt.isPropHuntGM) playerSizeUpdate(__instance);
+        if (!PropHunt.isPropHuntGM) MiniSizeUpdate(__instance);
+        if (!PropHunt.isPropHuntGM) GiantSizeUpdate(__instance);
 
         // set position of colorblind text
         foreach (var pc in PlayerControl.AllPlayerControls)
@@ -2385,6 +2392,7 @@ public static class PlayerPhysicsFixedUpdate
     public static void Postfix(PlayerPhysics __instance)
     {
         bool shouldInvert = Invert.invert.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count > 0 && Invert.meetings > 0;
+        if (__instance == null) return;
         if (__instance.AmOwner &&
             AmongUsClient.Instance &&
             AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
@@ -2394,24 +2402,14 @@ public static class PlayerPhysicsFixedUpdate
             __instance.myPlayer.CanMove)
             __instance.body.velocity *= -1;
         if (__instance.AmOwner &&
-                AmongUsClient.Instance &&
-                AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
-                !CachedPlayer.LocalPlayer.Data.IsDead &&
-                GameData.Instance &&
-                __instance.myPlayer.CanMove &&
-                Flash.flash.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId))
+            AmongUsClient.Instance &&
+            AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
+            !CachedPlayer.LocalPlayer.Data.IsDead &&
+            GameData.Instance &&
+            __instance.myPlayer.CanMove)
         {
-            __instance.body.velocity *= Flash.speed;
-        }
-        if (__instance.AmOwner &&
-                AmongUsClient.Instance &&
-                AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
-                !CachedPlayer.LocalPlayer.Data.IsDead &&
-                GameData.Instance &&
-                __instance.myPlayer.CanMove &&
-                Giant.giant.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
-        {
-            __instance.body.velocity *= Giant.speed;
+            if (Flash.flash != null && Flash.flash.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl)) __instance.body.velocity *= Flash.speed;
+            if (Giant.giant != null && Giant.giant == CachedPlayer.LocalPlayer.PlayerControl) __instance.body.velocity *= Giant.speed;
         }
     }
 }

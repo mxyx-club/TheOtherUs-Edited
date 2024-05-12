@@ -1357,14 +1357,6 @@ public static class Helpers
         return null;
     }
 
-    public static bool isNeutral(PlayerControl player)
-    {
-        var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
-        if (roleInfo != null)
-            return roleInfo.isNeutral;
-        return false;
-    }
-
     public static bool isShiftNeutral(PlayerControl player)
     {
         if (CustomOptionHolder.modifierShiftNeutral.getBool())
@@ -1387,6 +1379,14 @@ public static class Helpers
             return false;
         }
 
+    }
+
+    public static bool isNeutral(PlayerControl player)
+    {
+        var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
+        if (roleInfo != null)
+            return roleInfo.isNeutral;
+        return false;
     }
 
     public static bool isKiller(PlayerControl player)

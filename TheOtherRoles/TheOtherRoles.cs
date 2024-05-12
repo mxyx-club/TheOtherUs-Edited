@@ -2459,10 +2459,7 @@ public static class Medium
                     condition = "个可以使用管道的玩家" + (count == 1 ? "" : "");
                     break;
                 case 2:
-                    count = alivePlayersList.Where(pc =>
-                            Helpers.isNeutral(pc) && pc != Jackal.jackal && pc != Sidekick.sidekick &&
-                            pc != Thief.thief)
-                        .Count();
+                    count = alivePlayersList.Where(pc => Helpers.isEvil(pc) || pc == Amnisiac.amnisiac || pc == Pursuer.pursuer).Count();
                     condition = "名玩家" + (count == 1 ? "" : "") + "" + (count == 1 ? "是" : "是") + "非击杀型中立";
                     break;
                 case 3:
@@ -3342,7 +3339,7 @@ public static class Giant
 {
     public static PlayerControl giant;
     public static float speed = 0.75f;
-    public static float size = 1.1f; // 体型大小
+    public static float size = 1.05f;
 
     public static void clearAndReload()
     {

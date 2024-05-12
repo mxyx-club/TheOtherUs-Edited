@@ -1434,8 +1434,8 @@ public class AddToKillDistanceSetting
 
     public static void addKillDistance()
     {
-        GameOptionsData.KillDistances = new Il2CppStructArray<float>(new[] { 0.6f, 1f, 1.8f, 2.5f });
-        GameOptionsData.KillDistanceStrings = new Il2CppStringArray(new[] { "Very Short", "Short", "Medium", "Long" });
+        GameOptionsData.KillDistances = new Il2CppStructArray<float>([0.6f, 1f, 1.8f, 2.5f]);
+        GameOptionsData.KillDistanceStrings = new Il2CppStringArray(["Very Short", "Short", "Medium", "Long"]);
     }
 }
 
