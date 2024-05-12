@@ -10,7 +10,7 @@ using InnerNet;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
 using TheOtherRoles.Modules;
-using TheOtherRoles.Modules.CustomHats;
+using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -113,7 +113,7 @@ public class TheOtherRolesPlugin : BasePlugin
 
         Harmony.PatchAll();
 
-        CustomHatManager.LoadHats();
+        //CosmeticsManager.LoadHats();
         CustomColors.Load();
         CustomOptionHolder.Load();
         if (ToggleCursor.Value) Helpers.enableCursor(true);
