@@ -1742,8 +1742,11 @@ public static class PlayerControlFixedUpdatePatch
             GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
 
         // Mini and Morphling shrink
-        if (!PropHunt.isPropHuntGM) MiniSizeUpdate(__instance);
-        if (!PropHunt.isPropHuntGM) GiantSizeUpdate(__instance);
+        if (!PropHunt.isPropHuntGM)
+        {
+            MiniSizeUpdate(__instance);
+            GiantSizeUpdate(__instance);
+        }
 
         // set position of colorblind text
         foreach (var pc in PlayerControl.AllPlayerControls)
@@ -2409,7 +2412,11 @@ public static class PlayerPhysicsFixedUpdate
             __instance.myPlayer.CanMove)
         {
             if (Flash.flash != null && Flash.flash.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl)) __instance.body.velocity *= Flash.speed;
-            if (Giant.giant != null && Giant.giant == CachedPlayer.LocalPlayer.PlayerControl) __instance.body.velocity *= Giant.speed;
+            if (Giant.giant != null && Giant.giant == CachedPlayer.LocalPlayer.PlayerControl)
+            {
+                if (Morphling.morphling != null && Morphling.morphTarget == Giant.giant) return;
+                    __instance.body.velocity *= Giant.speed;
+            }
         }
     }
 }

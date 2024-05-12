@@ -19,7 +19,7 @@ internal static class HudManagerStartPatch
 {
     private static bool initialized;
 
-    private static float defaultMaxTimer = 2.5f;
+    private static float defaultMaxTimer = 0.5f;
     public static CustomButton engineerRepairButton;
     private static CustomButton janitorCleanButton;
     public static CustomButton sheriffKillButton;
