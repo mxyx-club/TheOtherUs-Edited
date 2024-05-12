@@ -98,6 +98,7 @@ public class RoleInfo
     public static RoleInfo multitasker = new("多线程", Color.yellow, "虽然人不可以三心二意，但是你可以一心二用", "交互界面透明", RoleId.Multitasker, false, true);
     public static RoleInfo lover = new("恋人", Lovers.color, "你坠入了爱河", "你坠入了爱河", RoleId.Lover, false, true);
     public static RoleInfo mini = new("小孩", Color.yellow, "《未成年人保护法》第127条[不，是第133条]", "长大之前没有人能伤害你", RoleId.Mini, false, true);
+    public static RoleInfo giant = new("巨人", Color.yellow, "又大，又慢...", "又大，又慢...", RoleId.Giant, false, true);
     public static RoleInfo vip = new("VIP", Color.yellow, "我宣布个事儿", "所有人都知道你的死讯", RoleId.Vip, false, true);
     public static RoleInfo indomitable = new("不屈者", Color.yellow, "无所畏惧，愈战愈勇", "无法被猜测", RoleId.Indomitable, false, true);
     public static RoleInfo slueth = new("掘墓人", Color.yellow, "我才是法医！", "报告可知晓死者职业", RoleId.Slueth, false, true);
@@ -193,6 +194,7 @@ public class RoleInfo
         sunglasses,
         multitasker,
         mini,
+        giant,
         vip,
         indomitable,
         slueth,
@@ -267,6 +269,7 @@ public class RoleInfo
             if (p == ButtonBarry.buttonBarry) infos.Add(buttonBarry);
             if (p == Slueth.slueth) infos.Add(slueth);
             if (p == Disperser.disperser) infos.Add(disperser);
+            if (p == Giant.giant) infos.Add(giant);
             if (p == Poucher.poucher) infos.Add(poucher);
             if (Invert.invert.Any(x => x.PlayerId == p.PlayerId)) infos.Add(invert);
             if (Chameleon.chameleon.Any(x => x.PlayerId == p.PlayerId)) infos.Add(chameleon);

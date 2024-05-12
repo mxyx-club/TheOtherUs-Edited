@@ -109,6 +109,7 @@ public enum RoleId
     Sunglasses,
     Multitasker,
     Mini,
+    Giant,
     Vip,
     Indomitable,
     Slueth,
@@ -635,6 +636,9 @@ public static class RPCProcedure
                 break;
             case RoleId.Mini:
                 Mini.mini = player;
+                break;
+            case RoleId.Giant:
+                Giant.giant = player;
                 break;
             case RoleId.Vip:
                 Vip.vip.Add(player);
@@ -1785,6 +1789,7 @@ public static class RPCProcedure
                 Multitasker.multitasker.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (player == Tiebreaker.tiebreaker) Tiebreaker.clearAndReload();
             if (player == Mini.mini) Mini.clearAndReload();
+            if (player == Giant.giant) Giant.clearAndReload();
             if (player == Watcher.watcher) Watcher.clearAndReload();
             if (player == Radar.radar) Radar.clearAndReload();
             if (player == Poucher.poucher) Poucher.clearAndReload();

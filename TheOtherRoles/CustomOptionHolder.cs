@@ -444,6 +444,9 @@ public class CustomOptionHolder
     public static CustomOption modifierMiniGrowingUpDuration;
     public static CustomOption modifierMiniGrowingUpInMeeting;
 
+    public static CustomOption modifierGiant;
+    public static CustomOption modifierGiantSpped;
+
     public static CustomOption modifierIndomitable;
 
     public static CustomOption modifierBlind;
@@ -1170,6 +1173,9 @@ public class CustomOptionHolder
         modifierMini = Create(1090, Types.Modifier, cs(Color.yellow, "小孩"), rates, null, true);
         modifierMiniGrowingUpDuration = Create(1091, Types.Modifier, "小孩长大所需时间", 400f, 100f, 1500f, 25f, modifierMini);
         modifierMiniGrowingUpInMeeting = Create(1092, Types.Modifier, "小孩会议期间可成长", true, modifierMini);
+
+        modifierGiant = Create(1260, Types.Modifier, cs(Color.yellow, "巨人"), rates, null, true);
+        modifierGiantSpped = Create(1261, Types.Modifier, "巨人的移速倍率", 0.75f, 0.5f, 1.5f, 0.05f, modifierMini);
 
         modifierIndomitable = Create(1100, Types.Modifier, cs(Color.yellow, "不屈者"), rates, null, true);
 

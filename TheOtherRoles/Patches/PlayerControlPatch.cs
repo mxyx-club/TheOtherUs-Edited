@@ -5,6 +5,7 @@ using AmongUs.Data;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
@@ -698,10 +699,15 @@ public static class PlayerControlFixedUpdatePatch
         p.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
         collider.radius = Mini.defaultColliderRadius;
         collider.offset = Mini.defaultColliderOffset * Vector2.down;
-
+        if (p == Giant.giant)
+        {
+            if (Giant.giant == Morphling.morphling && Morphling.morphTimer > 0) return;
+            p.transform.localScale = new Vector3(Giant.size, Giant.size, 1f);
+            collider.radius = Mini.defaultColliderRadius * Giant.size;
+        }
         // Set adapted player size to Mini and Morphling
         if (Mini.mini == null || Helpers.isCamoComms() || Camouflager.camouflageTimer > 0f ||
-            Helpers.MushroomSabotageActive() || (Mini.mini == Morphling.morphling && Morphling.morphTimer > 0)) return;
+        Helpers.MushroomSabotageActive() || (Mini.mini == Morphling.morphling && Morphling.morphTimer > 0)) return;
 
         var growingProgress = Mini.growingProgress();
         var scale = (growingProgress * 0.35f) + 0.35f;
@@ -981,10 +987,14 @@ public static class PlayerControlFixedUpdatePatch
             }
         }
     }
-    // Text
+    // Snitch Text
     private static void snitchTextUpdate()
     {
-        if (Snitch.localArrows == null || Snitch.snitch == null) return;
+        if (Snitch.localArrows == null || Snitch.snitch == null)
+        {
+            Snitch.text = null;
+            return;
+        };
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
         int numberOfTasks = playerTotal - playerCompleted;
 
@@ -2392,6 +2402,16 @@ public static class PlayerPhysicsFixedUpdate
                 Flash.flash.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId))
         {
             __instance.body.velocity *= Flash.speed;
+        }
+        if (__instance.AmOwner &&
+                AmongUsClient.Instance &&
+                AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
+                !CachedPlayer.LocalPlayer.Data.IsDead &&
+                GameData.Instance &&
+                __instance.myPlayer.CanMove &&
+                Giant.giant.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
+        {
+            __instance.body.velocity *= Giant.speed;
         }
     }
 }

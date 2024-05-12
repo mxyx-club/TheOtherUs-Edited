@@ -586,6 +586,7 @@ internal class RoleManagerSelectRolesPatch
         {
             RoleId.Tiebreaker,
             RoleId.Mini,
+            RoleId.Giant,
             RoleId.Bait,
             RoleId.Bloody,
             RoleId.AntiTeleport,
@@ -1006,6 +1007,9 @@ internal class RoleManagerSelectRolesPatch
                 break;
             case RoleId.Mini:
                 selection = CustomOptionHolder.modifierMini.getSelection();
+                break;
+            case RoleId.Giant:
+                selection = CustomOptionHolder.modifierGiant.getSelection();
                 break;
             case RoleId.Bait:
                 selection = CustomOptionHolder.modifierBait.getSelection();
