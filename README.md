@@ -2,11 +2,10 @@
 
 ![mod banner](./Images/TOR_logo.png)
 
-<p align="center"><a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited">    <img src="https://badgen.net/github/assets-dl/mxyx-club/TheOtherUs-Edited">    <img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></a></p>
+<p align="center"><a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/latest"><img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited"></a>
+<img src="https://badgen.net/github/assets-dl/mxyx-club/TheOtherUs-Edited">    <img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></p>
 
 本模组不隶属于 Among Us 或 Innersloth LLC，其包含的内容也未得到 Innersloth LLC 的认可或以其他方式赞助。此处包含的部分材料是Innersloth LLC的财产。
-
-<p align="center"><a href="#license">license</a></p>
 
 # The Other Us - Edited
 
@@ -225,23 +224,23 @@
 <p align="center">
 
 ### 主要开发者：
+
 沫夏悠轩、善良的好人、天寸梦初、Imp11
 
 ### 美工：
+
 方块
 
 ### 翻译：
 
 CN：沫夏悠轩、CC
+
 EN：九头蛇
 
-
-本模组使用了部分[TheOtherRolesGMIA](https://github.com/dabao40/TheOtherRolesGMIA)的代码，感谢Imp11的支持！
-
-
-### Other Credits & Resources:
-
 </p>
+
+### 其他贡献者:
+
 
 [OxygenFilter](https://github.com/NuclearPowered/Reactor.OxygenFilter) - For all the versions between v2.3.0 and v2.6.1, we were using the OxygenFilter for automatic deobfuscation\
 [Reactor](https://github.com/NuclearPowered/Reactor) - The framework used for all versions before v2.0.0\
@@ -267,7 +266,7 @@ EN：九头蛇
 [Ninja](#ninja), [Thief](#thief), [Lawyer](#lawyer) / [Pursuer](#pursuer), [Deputy](#deputy), [Portalmaker](#portalmaker), [Guesser Modifier](#guesser-modifier) - Idea: [K3ndo](https://github.com/K3ndoo) ; Developed by [Gendelo](https://github.com/gendelo3) & [Mallöris](https://github.com/Mallaris) \
 [ugackMiner53](https://github.com/ugackMiner53/PropHunt) - Idea and core code for the Prop Hunt game mode
 
-## 许可证
+## 许可
 
 TheOtherRolesAU/TheOtherRoles is licensed under the
 
