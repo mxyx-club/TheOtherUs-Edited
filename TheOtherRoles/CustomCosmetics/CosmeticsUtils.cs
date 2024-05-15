@@ -11,7 +11,7 @@ public static class CosmeticsUtils
             this CustomHatConfig config, 
             Sprite sprite,
             Sprite backSprite,
-            Sprite ClimbSprite,
+            Sprite climbSprite,
             out string id,
             out HatViewData view
         )
@@ -28,13 +28,14 @@ public static class CosmeticsUtils
             config.Behind = true;
         }
 
-        if (ClimbSprite)
+        if (climbSprite)
         {
-            viewData.ClimbImage = ClimbSprite;
+            viewData.ClimbImage = climbSprite;
             viewData.LeftClimbImage = viewData.ClimbImage;
         }
 
-        hat.name = config.Name;
+        viewData.hideFlags = hat.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.HideAndDontSave;
+        viewData.name = hat.name = config.Name;
         hat.displayOrder = 99;
         id = hat.ProductId = hat.BundleId = "TOUs_Hat_" + config.Name.Replace(' ', '_');
         hat.InFront = !config.Behind;
@@ -62,7 +63,8 @@ public static class CosmeticsUtils
         viewData.IdleFrame = sprite;
         viewData.MatchPlayerColor = config.Adaptive;
         
-        hat.name = config.Name;
+        viewData.hideFlags = hat.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.HideAndDontSave;
+        viewData.name = hat.name = config.Name;
         hat.displayOrder = 99;
         id = hat.ProductId = hat.BundleId = "TOUs_Visor_" + config.Name.Replace(' ', '_');
         hat.ChipOffset = new Vector2(0f, 0.2f);
@@ -87,7 +89,8 @@ public static class CosmeticsUtils
 
         viewData.Image = sprite;
 
-        hat.name = config.Name;
+        viewData.hideFlags = hat.hideFlags = HideFlags.DontUnloadUnusedAsset | HideFlags.HideAndDontSave;
+        viewData.name = hat.name = config.Name;
         hat.displayOrder = 99;
         Id = hat.ProductId = hat.BundleId = "TOUs_NamePlate_" + config.Name.Replace(' ', '_');
         hat.ChipOffset = new Vector2(0f, 0.2f);

@@ -1,10 +1,61 @@
-﻿using System.Linq;
+﻿
+using System.Linq;
+using Il2CppSystem;
+using Innersloth.Assets;
+using UnityEngine;
 
 namespace TheOtherRoles.CustomCosmetics.Patches;
 
 [HarmonyPatch(typeof(CosmeticsCache))]
 internal static class CosmeticsCachePatches
 {
+    /*[HarmonyPatch(typeof(HatData), nameof(HatData.CoLoadIcon)), HarmonyPrefix]
+    private static bool CoLoadHatIcon(HatData __instance, ref Action<Sprite, AddressableAsset> __result)
+    {
+        if (!CosmeticsManager.Instance.TryGetHat(__instance.ProductId, out var data)) return true;
+
+        __result.Invoke(data.Resource, data.Data.CreateAddressableAsset().Cast<AddressableAsset>());
+        return false;
+    }
+    
+    [HarmonyPatch(typeof(NamePlateData), nameof(NamePlateData.CoLoadIcon)), HarmonyPrefix]
+    private static bool CoLoadNamePlateIcon(NamePlateData __instance, ref Action<Sprite, AddressableAsset> __result)
+    {
+        if (!CosmeticsManager.Instance.TryGetNamePlate(__instance.ProductId, out var data)) return true;
+
+        __result.Invoke(data.Resource, data.Data.CreateAddressableAsset());
+        return false;
+    }
+    
+    [HarmonyPatch(typeof(VisorData), nameof(VisorData.CoLoadIcon)), HarmonyPrefix]
+    private static bool CoLoadHatIcon(VisorData __instance, ref Action<Sprite, AddressableAsset> __result)
+    {
+        if (!CosmeticsManager.Instance.TryGetVisor(__instance.ProductId, out var data)) return true;
+
+        __result.Invoke(data.Resource, data.Data.CreateAddressableAsset());
+        return false;
+    }*/
+
+    [HarmonyPatch(typeof(CosmeticData), nameof(CosmeticData.SetPreview)), HarmonyPrefix]
+    private static bool SetPre(CosmeticData __instance, SpriteRenderer renderer, int color)
+    {
+        if (!CosmeticsManager.Instance.TryGet(__instance.ProductId, out var data)) return true;
+        renderer.sprite = data.Resource;
+        if (Application.isPlaying)
+            PlayerMaterial.SetColors(color, renderer);
+        return false;
+    }
+    
+    [HarmonyPatch(typeof(CosmeticData), nameof(CosmeticData.GetItemName)), HarmonyPrefix]
+    private static bool ItemNam(CosmeticData __instance, ref string __result)
+    {
+        var data = CosmeticsManager.Instance.customCosmetics.FirstOrDefault(n => n.Id == __instance.ProductId);
+        if (data == null) return true;
+        __result = data.config.Name;
+        return false;
+    }
+    
+    
     [HarmonyPatch(nameof(CosmeticsCache.GetHat)), HarmonyPrefix]
     private static bool GetHatPrefix(string id, ref HatViewData __result)
     {
@@ -19,8 +70,9 @@ internal static class CosmeticsCachePatches
         return !CosmeticsManager.Instance.TryGetVisorView(id, out __result);
     }
     
+    
     [HarmonyPatch(nameof(CosmeticsCache.GetNameplate)), HarmonyPrefix]
-    private static bool GetVisorPrefix(string id, ref NamePlateViewData __result)
+    private static bool GetNamePlatePrefix(string id, ref NamePlateViewData __result)
     {
         Info($"trying to load hat {id} from cosmetics cache");
         return !CosmeticsManager.Instance.TryGetNamePlateView(id, out __result);

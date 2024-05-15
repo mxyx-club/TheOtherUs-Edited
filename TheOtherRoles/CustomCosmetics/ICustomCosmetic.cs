@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using UnityEngine;
 
@@ -7,11 +8,19 @@ public interface ICustomCosmetic
 {
     public CustomCosmeticConfig config { get; set; }
     public Sprite Resource { get; set; }
-    public CosmeticData data { get; set; }
-    
     public CosmeticsManagerConfig ManagerConfig { get; set; }
+
+    public string[] Resources { get; }
+
+    public CustomCosmeticsFlags Flags
+    {
+        get;
+        set;
+    }
     
     public string Id { get; set; }
+
+    public void Create(List<Sprite> sprites);
 };
 
 public class CustomCosmeticConfig

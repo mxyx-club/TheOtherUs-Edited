@@ -9,6 +9,7 @@ using Hazel;
 using InnerNet;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
+using Reactor.Utilities.Extensions;
 using TheOtherRoles.Modules;
 using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Utilities;
@@ -112,8 +113,9 @@ public class TheOtherRolesPlugin : BasePlugin
         CrowdedPlayer.Start();
 
         Harmony.PatchAll();
-
-        //CosmeticsManager.LoadHats();
+        
+        AddComponent<SpriteReader>().DontDestroyOnLoad();
+        CosmeticsManager.Instance.DefConfigCreateAndInit();
         CustomColors.Load();
         CustomOptionHolder.Load();
         if (ToggleCursor.Value) Helpers.enableCursor(true);

@@ -65,12 +65,6 @@ public static class Helpers
 
     public static bool zoomOutStatus;
 
-    public static string ReadToEnd(this Stream stream)
-    {
-        using var reader = new StreamReader(stream);
-        return reader.ReadToEnd();
-    }
-
     public static bool gameStarted => AmongUsClient.Instance != null &&
                                       AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started; //new
 
@@ -663,20 +657,21 @@ public static class Helpers
 
     public static string GithubUrl(this string url)
     {
-        if (IsCN() && !url.Contains("github.moeyy.xyz"))
+        if (IsCN() && !url.Contains("https://file.sweatent.link/"))
         {
-            if (url.Contains("github.com"))
-            {
-                return url.Replace("https://github.com", "https://github.moeyy.xyz/https://github.com");
-            }
-
-            if (url.Contains("raw.githubusercontent.com"))
-            {
-                return url.Replace("https://raw.githubusercontent.com", "https://github.moeyy.xyz/https://raw.githubusercontent.com");
-            }
+            return "https://file.sweatent.link/" + url;
         }
-        //Info("Rewrite URL: " + url);
         return url;
+    }
+
+    public static void DontDe(this Sprite sprite)
+    {
+        sprite.hideFlags = HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
+    }
+    
+    public static void DontDe(this Texture2D sprite)
+    {
+        sprite.hideFlags = HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
     }
 
     public static bool MushroomSabotageActive()

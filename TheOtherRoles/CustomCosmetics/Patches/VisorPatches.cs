@@ -1,4 +1,5 @@
 using System;
+using Rewired.Utils;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -8,18 +9,20 @@ namespace TheOtherRoles.CustomCosmetics.Patches;
 [Harmony]
 public static class VisorPatches
 {
-    [HarmonyPatch(typeof(VisorsTab), nameof(VisorsTab.OnEnable)), HarmonyPostfix]
+    /*[HarmonyPatch(typeof(VisorsTab), nameof(VisorsTab.OnEnable)), HarmonyPostfix]
     private static void TabOnEnablePostfix(VisorsTab __instance) 
     {
         foreach (var chip in __instance.scroller.Inner.GetComponentsInChildren<ColorChip>())
         {
-            if (!CosmeticsManager.Instance.TryGetVisorView(chip.ProductId ,out var visor)) continue;
-            chip.Inner.FrontLayer.sprite = visor.IdleFrame;
+            if (!CosmeticsManager.Instance.TryGetVisor(chip.ProductId ,out var visor)) continue;
+            chip.Inner.FrontLayer.sprite = visor.Resource;
         }
-    }
+    }*/
     
     [HarmonyPatch(typeof(VisorLayer), nameof(VisorLayer.UpdateMaterial)), HarmonyPrefix]
-    private static bool VisorLayerUpdateMaterialPatch(VisorLayer __instance) {
+    private static bool VisorLayerUpdateMaterialPatch(VisorLayer __instance) 
+    {
+        if (__instance.IsDestroyedOrNull() || __instance.visorData.IsNullOrDestroyed()) return false;
         if (!CosmeticsManager.Instance.TryGetVisorView(__instance.visorData.ProductId ,out var visor)) return true;
         var maskType = __instance.matProperties.MaskType;
         __instance.Image.sharedMaterial = visor.MatchPlayerColor switch
@@ -56,7 +59,9 @@ public static class VisorPatches
     }
 
     [HarmonyPatch(typeof(VisorLayer), nameof(VisorLayer.SetFlipX)), HarmonyPrefix]
-    private static bool VisorLayerSetFlipXPatchPrefix(VisorLayer __instance, bool flipX) {
+    private static bool VisorLayerSetFlipXPatchPrefix(VisorLayer __instance, bool flipX)
+    {
+        if (__instance.IsDestroyedOrNull() || __instance.visorData.IsNullOrDestroyed()) return false;
         if (!CosmeticsManager.Instance.TryGetVisorView(__instance.visorData.ProductId ,out var asset)) return true;
         __instance.Image.flipX = flipX;
         __instance.Image.sprite = flipX && asset.LeftIdleFrame ? asset.LeftIdleFrame : asset.IdleFrame;
@@ -71,20 +76,20 @@ public static class VisorPatches
     }
     
     [HarmonyPatch(typeof(VisorLayer), nameof(VisorLayer.PopulateFromViewData)), HarmonyPrefix]
-    private static bool VisorLayerPopulateFromViewDataPatchPrefix(VisorLayer __instance) 
+    private static bool VisorLayerPopulateFromViewDataPatchPrefix(VisorLayer __instance)
     {
         if (!CosmeticsManager.Instance.TryGetVisorView(__instance.visorData.ProductId ,out var asset)) return true;
-        __instance.UpdateMaterial();
         if (__instance.IsDestroyedOrNull()) return false;
+        __instance.UpdateMaterial();
         __instance.transform.SetLocalZ(__instance.DesiredLocalZPosition);
         __instance.SetFlipX(__instance.Image.flipX);
         return false;
     }
 
     [HarmonyPatch(typeof(VisorLayer), nameof(VisorLayer.SetVisor), [typeof(VisorData), typeof(int)]), HarmonyPrefix]
-    private static bool VisorLayerSetVisorPatchPrefix(VisorLayer __instance, VisorData data, int color) 
+    private static bool VisorLayerSetVisorPatchPrefix(VisorLayer __instance, VisorData data, int color)
     {
-        if (!CosmeticsManager.Instance.TryGetVisorView(__instance.visorData.ProductId ,out var asset)) return true;
+        if (!CosmeticsManager.Instance.TryGetVisorView(data.ProductId ,out var asset)) return true;
         __instance.visorData = data;
         __instance.SetMaterialColor(color);
         __instance.PopulateFromViewData();

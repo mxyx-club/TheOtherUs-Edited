@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AmongUs.Data;
 using PowerTools;
+using Rewired.Utils;
 using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -14,7 +15,7 @@ public static class HatPatches
 {
     private static TextMeshPro textTemplate;
 
-    [HarmonyPatch(typeof(HatsTab), nameof(HatsTab.OnEnable))]
+    /*[HarmonyPatch(typeof(HatsTab), nameof(HatsTab.OnEnable))]
     [HarmonyPostfix]
     private static void OnEnablePostfix(HatsTab __instance)
     {
@@ -60,13 +61,14 @@ public static class HatPatches
 
         __instance.scroller.ContentYBounds.max = -(yOffset + 4.1f);
     }
+    
 
     private static float CreateHatPackage(List<Tuple<HatData, CustomHat>> hats, string packageName, float yStart,
         HatsTab hatsTab)
     {
         var isDefaultPackage = CosmeticsManager.InnerslothPackageName == packageName;
-        if (!isDefaultPackage) 
-            hats = hats.OrderBy(x => x.Item1.name).ToList();
+        /*if (!isDefaultPackage) 
+            hats = hats.OrderBy(x => x.Item1.name).ToList();#1#
 
         var offset = yStart;
         if (textTemplate != null)
@@ -80,9 +82,9 @@ public static class HatPatches
             offset -= 0.8f * hatsTab.YOffset;
         }
 
-        for (var i = 0; i < hats.Count; i++)
+        var i = 0;
+        foreach ((HatData hat, CustomHat ext) in hats)
         {
-            var (hat, ext) = hats[i];
             var xPos = hatsTab.XRange.Lerp(i % hatsTab.NumPerRow / (hatsTab.NumPerRow - 1f));
             var yPos = offset - (i / (float)hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset);
             var colorChip = Object.Instantiate(hatsTab.ColorTabPrefab, hatsTab.scroller.Inner);
@@ -125,30 +127,29 @@ public static class HatPatches
                     description.alignment = TextAlignmentOptions.Center;
                     description.transform.localScale = Vector3.one * 0.65f;
                     hatsTab.StartCoroutine(Effects.Lerp(0.1f,
-                        new Action<float>(p => { description.SetText($"{hat.name}\nby {ext.config.Author}"); })));
+                        new Action<float>(p => { description.SetText($"{ext.config.Name}\nby {ext.config.Author}"); })));
                 }
             }
 
+            hat.SetPreview(colorChip.Inner.FrontLayer, hatsTab.HasLocalPlayer() ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId : ((int)DataManager.Player.Customization.Color));
+
             colorChip.transform.localPosition = new Vector3(xPos, yPos, -1f);
-            colorChip.Inner.SetHat(hat,
-                hatsTab.HasLocalPlayer()
-                    ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId
-                    : DataManager.Player.Customization.Color);
             colorChip.Inner.transform.localPosition = hat.ChipOffset;
             colorChip.Tag = hat;
             colorChip.SelectionHighlight.gameObject.SetActive(false);
             hatsTab.ColorChips.Add(colorChip);
+            i++;
         }
-
         return offset - ((hats.Count - 1) / (float)hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset) -
                1.75f;
-    }
+    }*/
     
     
-    [HarmonyPatch(typeof(HatParent), nameof(PlayerPhysics.HandleAnimation))]
+    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.HandleAnimation))]
     [HarmonyPostfix]
     private static void HandleAnimationPostfix(PlayerPhysics __instance)
     {
+        if (__instance.IsDestroyedOrNull()) return;
         var currentAnimation = __instance.Animations.Animator.GetCurrentAnimation();
         var hatParent = __instance.myPlayer.cosmetics.hat;
         if (currentAnimation == __instance.Animations.group.ClimbUpAnim || currentAnimation == __instance.Animations.group.ClimbDownAnim || !CosmeticsManager.Instance.TryGetHat(hatParent.Hat.ProductId, out var hat)) return;
@@ -164,7 +165,8 @@ public static class HatPatches
     [HarmonyPrefix]
     private static bool SetHatPrefix(HatParent __instance, int color)
     {
-        if (CosmeticsManager.Instance.CustomHats.All(n => n.Id != __instance.Hat.ProductId)) return true;
+        if (__instance.IsDestroyedOrNull() || __instance.Hat.IsNullOrDestroyed()) return true;
+        if (!CosmeticsManager.Instance.TryGetHatView(__instance.Hat.ProductId, out var viewData)) return true;
         __instance.viewAsset = null;
         __instance.PopulateFromViewData();
         __instance.SetMaterialColor(color);
@@ -175,6 +177,7 @@ public static class HatPatches
     [HarmonyPrefix]
     private static bool UpdateMaterialPrefix(HatParent __instance)
     {
+        if (__instance.IsDestroyedOrNull() || __instance.Hat.IsNullOrDestroyed()) return false;
         if (!CosmeticsManager.Instance.TryGetHat(__instance.Hat.ProductId, out var hat)) return true;
         var asset = hat.View;
         if (asset.MatchPlayerColor)
@@ -239,7 +242,7 @@ public static class HatPatches
     [HarmonyPrefix]
     private static bool LateUpdatePrefix(HatParent __instance)
     {
-        if (!__instance.Parent || !__instance.Hat) return false;
+        if (!__instance.Hat) return false;
         if (!CosmeticsManager.Instance.TryGetHat(__instance.Hat.ProductId, out var hat)) return true;
         var hatViewData = hat.View;
         if (__instance.FrontLayer.sprite == hatViewData.ClimbImage ||
@@ -278,6 +281,7 @@ public static class HatPatches
     [HarmonyPrefix]
     private static bool SetFloorAnimPrefix(HatParent __instance)
     {
+        if (!__instance.Hat) return false;
         if (!CosmeticsManager.Instance.TryGetHat(__instance.Hat.ProductId, out var hat)) return true;
         __instance.BackLayer.enabled = false;
         __instance.FrontLayer.enabled = true;
@@ -289,6 +293,7 @@ public static class HatPatches
     [HarmonyPrefix]
     private static bool SetIdleAnimPrefix(HatParent __instance, int colorId)
     {
+        if (!__instance.Hat) return false;
         if (!CosmeticsManager.Instance.TryGetHat(__instance.Hat.ProductId, out var hat)) return true;
         __instance.viewAsset = null;
         __instance.PopulateFromViewData();
@@ -300,6 +305,7 @@ public static class HatPatches
     [HarmonyPrefix]
     private static bool SetClimbAnimPrefix(HatParent __instance)
     {
+        if (!__instance.Hat) return false;
         if (!CosmeticsManager.Instance.TryGetHat(__instance.Hat.ProductId, out var hat)) return true;
         if (!__instance.options.ShowForClimb) return false;
         __instance.BackLayer.enabled = false;
