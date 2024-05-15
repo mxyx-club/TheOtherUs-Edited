@@ -5,7 +5,6 @@ using Reactor.Utilities.Extensions;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 
 
@@ -34,6 +33,38 @@ internal static class MapBehaviourPatch
     [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.FixedUpdate))]
     private static void Postfix(MapBehaviour __instance)
     {
+        if (__instance.infectedOverlay.gameObject.active && PlayerControl.LocalPlayer.Data.IsDead && CustomOptionHolder.deadImpsBlockSabotage.getBool())
+        {
+            __instance.Close();
+        }
+        // Show location of all players on the map for ghosts!
+        if (PlayerControl.LocalPlayer.Data.IsDead && (!PlayerControl.LocalPlayer.Data.Role.IsImpostor || CustomOptionHolder.deadImpsBlockSabotage.getBool()))
+        {
+            foreach (PlayerControl player in CachedPlayer.AllPlayers)
+            {
+                if (player == PlayerControl.LocalPlayer)
+                    continue;
+                var alpha = player.Data.IsDead ? 0.25f : 1f;
+                Vector3 v = player.transform.position;
+                v /= MapUtilities.CachedShipStatus.MapScale;
+                v.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
+                v.z = -2.1f;
+                if (herePoints.ContainsKey(player))
+                {
+                    herePoints[player].transform.localPosition = v;
+                    herePoints[player].color = herePoints[player].color.SetAlpha(alpha);
+                    continue;
+                }
+                var herePoint = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent, true);
+                herePoint.transform.localPosition = v;
+                herePoint.enabled = true;
+
+                int colorId = player.CurrentOutfit.ColorId;
+                player.SetPlayerMaterialColors(herePoint);
+                herePoints.Add(player, herePoint);
+            }
+        }
+
         __instance.HerePoint.transform.SetLocalZ(-2.1f);
         if (__instance.HerePoint == null) return;
         if (Trapper.trapper != null && CachedPlayer.LocalPlayer.PlayerId == Trapper.trapper.PlayerId)

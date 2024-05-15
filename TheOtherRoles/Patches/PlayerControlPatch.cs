@@ -615,7 +615,7 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
-    private static void trackerUpdate()
+    static void trackerUpdate()
     {
         // Handle player tracking
         if (Tracker.arrow?.arrow != null)
@@ -623,23 +623,21 @@ public static class PlayerControlFixedUpdatePatch
             if (Tracker.tracker == null || CachedPlayer.LocalPlayer.PlayerControl != Tracker.tracker)
             {
                 Tracker.arrow.arrow.SetActive(false);
+                if (Tracker.DangerMeterParent) Tracker.DangerMeterParent.SetActive(false);
                 return;
             }
 
-            if (Tracker.tracker != null && Tracker.tracked != null &&
-                CachedPlayer.LocalPlayer.PlayerControl == Tracker.tracker && !Tracker.tracker.Data.IsDead)
+            if (Tracker.tracked != null && !Tracker.tracker.Data.IsDead)
             {
                 Tracker.timeUntilUpdate -= Time.fixedDeltaTime;
 
                 if (Tracker.timeUntilUpdate <= 0f)
                 {
-                    var trackedOnMap = !Tracker.tracked.Data.IsDead;
-                    var position = Tracker.tracked.transform.position;
+                    bool trackedOnMap = !Tracker.tracked.Data.IsDead;
+                    Vector3 position = Tracker.tracked.transform.position;
                     if (!trackedOnMap)
-                    {
-                        // Check for dead body
-                        var body = Object.FindObjectsOfType<DeadBody>()
-                            .FirstOrDefault(b => b.ParentId == Tracker.tracked.PlayerId);
+                    { // Check for dead body
+                        DeadBody body = UnityEngine.Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == Tracker.tracked.PlayerId);
                         if (body != null)
                         {
                             trackedOnMap = true;
@@ -647,49 +645,54 @@ public static class PlayerControlFixedUpdatePatch
                         }
                     }
 
-                    Tracker.arrow.Update(position);
-                    Tracker.arrow.arrow.SetActive(trackedOnMap);
+                    if (Tracker.trackingMode == 1 || Tracker.trackingMode == 2) Arrow.UpdateProximity(position);
+                    if (Tracker.trackingMode == 0 || Tracker.trackingMode == 2)
+                    {
+                        Tracker.arrow.Update(position);
+                        Tracker.arrow.arrow.SetActive(trackedOnMap);
+                    }
                     Tracker.timeUntilUpdate = Tracker.updateIntervall;
                 }
                 else
                 {
-                    Tracker.arrow.Update();
+                    if (Tracker.trackingMode == 0 || Tracker.trackingMode == 2) Tracker.arrow.Update();
                 }
+            }
+            else if (Tracker.tracker.Data.IsDead)
+            {
+                Tracker.DangerMeterParent?.SetActive(false);
+                Tracker.Meter?.gameObject.SetActive(false);
             }
         }
 
         // Handle corpses tracking
-        if (Tracker.tracker != null && Tracker.tracker == CachedPlayer.LocalPlayer.PlayerControl &&
-            Tracker.corpsesTrackingTimer >= 0f && !Tracker.tracker.Data.IsDead)
+        if (Tracker.tracker != null && Tracker.tracker == CachedPlayer.LocalPlayer.PlayerControl && Tracker.corpsesTrackingTimer >= 0f && !Tracker.tracker.Data.IsDead)
         {
-            var arrowsCountChanged = Tracker.localArrows.Count != Tracker.deadBodyPositions.Count();
-            var index = 0;
+            bool arrowsCountChanged = Tracker.localArrows.Count != Tracker.deadBodyPositions.Count();
+            int index = 0;
 
             if (arrowsCountChanged)
             {
-                foreach (var arrow in Tracker.localArrows) Object.Destroy(arrow.arrow);
+                foreach (Arrow arrow in Tracker.localArrows) UnityEngine.Object.Destroy(arrow.arrow);
                 Tracker.localArrows = new List<Arrow>();
             }
-
-            foreach (var position in Tracker.deadBodyPositions)
+            foreach (Vector3 position in Tracker.deadBodyPositions)
             {
                 if (arrowsCountChanged)
                 {
                     Tracker.localArrows.Add(new Arrow(Tracker.color));
                     Tracker.localArrows[index].arrow.SetActive(true);
                 }
-
                 if (Tracker.localArrows[index] != null) Tracker.localArrows[index].Update(position);
                 index++;
             }
         }
         else if (Tracker.localArrows.Count > 0)
         {
-            foreach (var arrow in Tracker.localArrows) Object.Destroy(arrow.arrow);
+            foreach (Arrow arrow in Tracker.localArrows) UnityEngine.Object.Destroy(arrow.arrow);
             Tracker.localArrows = new List<Arrow>();
         }
     }
-
     public static void MiniSizeUpdate(PlayerControl p)
     {
         // Set default player size
@@ -726,10 +729,10 @@ public static class PlayerControlFixedUpdatePatch
 
         var collider = p.Collider.CastFast<CircleCollider2D>();
         collider.offset = Mini.defaultColliderOffset * Vector2.down;
+        if (Helpers.MushroomSabotageActive()) return;
         // Giant
-        if (p == Giant.giant || (Morphling.morphling != null && Morphling.morphTarget == Giant.giant))
+        if (p == Giant.giant)
         {
-            if ((Giant.giant == Morphling.morphling && Morphling.morphTimer > 0) || Helpers.MushroomSabotageActive()) return;
             p.transform.localScale = new Vector3(Giant.size, Giant.size, 1f);
             collider.radius *= 0.85f;
         }
@@ -1864,6 +1867,8 @@ public static class PlayerControlFixedUpdatePatch
             ninjaUpdate();
             // Thief
             thiefSetTarget();
+            // yoyo
+            Silhouette.UpdateAll();
 
             hackerUpdate();
             swapperUpdate();

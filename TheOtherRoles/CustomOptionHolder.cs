@@ -8,13 +8,13 @@ namespace TheOtherRoles;
 
 public class CustomOptionHolder
 {
-    public static string[] rates = { "0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%" };
+    public static string[] rates = ["0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"];
 
     public static string[] ratesModifier =
-        { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15" };
+        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"];
 
     public static string[] presets =
-        { "预设 1", "预设 2", "预设 3", "Skeld预设", "Mira预设", "Polus预设", "Airship预设", "Fungle预设", "Submerged预设" };
+        ["预设 1", "预设 2", "预设 3", "Skeld预设", "Mira预设", "Polus预设", "Airship预设", "Fungle预设", "Submerged预设"];
 
     public static CustomOption presetSelection;
     public static CustomOption activateRoles;
@@ -30,6 +30,7 @@ public class CustomOptionHolder
 
     public static CustomOption anyPlayerCanStopStart;
     public static CustomOption enableEventMode;
+    public static CustomOption deadImpsBlockSabotage;
 
     public static CustomOption cultistSpawnRate;
 
@@ -37,6 +38,14 @@ public class CustomOptionHolder
     public static CustomOption minerCooldown;
     public static CustomOption mafiaSpawnRate;
     public static CustomOption janitorCooldown;
+
+    public static CustomOption yoyoSpawnRate;
+    public static CustomOption yoyoBlinkDuration;
+    public static CustomOption yoyoMarkCooldown;
+    public static CustomOption yoyoMarkStaysOverMeeting;
+    public static CustomOption yoyoHasAdminTable;
+    public static CustomOption yoyoAdminTableCooldown;
+    public static CustomOption yoyoSilhouetteVisibility;
 
     public static CustomOption morphlingSpawnRate;
     public static CustomOption morphlingCooldown;
@@ -246,6 +255,7 @@ public class CustomOptionHolder
     public static CustomOption trackerCanTrackCorpses;
     public static CustomOption trackerCorpsesTrackingCooldown;
     public static CustomOption trackerCorpsesTrackingDuration;
+    public static CustomOption trackerTrackingMethod;
 
     public static CustomOption snitchSpawnRate;
     public static CustomOption snitchLeftTasksForReveal;
@@ -689,6 +699,7 @@ public class CustomOptionHolder
         showButtonTarget = Create(28, Types.General, "showButtonTarget", true);
         impostorSeeRoles = Create(30, Types.General, "impostorSeeRoles", false);
         blockGameEnd = Create(29, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "blockGameEnd"), true);
+        deadImpsBlockSabotage = Create(32, Types.General, cs(Palette.ImpostorRed, "deadImpsBlockSabotage"), false);
         allowModGuess = Create(31, Types.General, "allowModGuess", false);
 
         transparentTasks = Create(40, Types.General, "transparentTasks", false, null, true);
@@ -855,6 +866,15 @@ public class CustomOptionHolder
 
         minerSpawnRate = Create(10280, Types.Impostor, cs(Miner.color, "管道工"), rates, null, true);
         minerCooldown = Create(10281, Types.Impostor, "制造管道冷却", 20f, 10f, 60f, 2.5f, minerSpawnRate);
+
+        yoyoSpawnRate = Create(10290, Types.Impostor, cs(Yoyo.color, "Yo-Yo"), rates, null, true);
+        yoyoMarkCooldown = Create(10292, Types.Impostor, "标记冷却", 15f, 2.5f, 120f, 2.5f, yoyoSpawnRate);
+        yoyoBlinkDuration = Create(10291, Types.Impostor, "两段瞬移间隔时间", 15f, 2.5f, 120f, 2.5f, yoyoSpawnRate);
+        yoyoMarkStaysOverMeeting = Create(10293, Types.Impostor, "会议后不重置标记地点", true, yoyoSpawnRate);
+        yoyoHasAdminTable = Create(10294, Types.Impostor, "随身管理室地图", true, yoyoSpawnRate);
+        yoyoAdminTableCooldown = Create(10295, Types.Impostor, "查看地图冷却", 15f, 2.5f, 120f, 2.5f, yoyoHasAdminTable);
+        yoyoSilhouetteVisibility = Create(10296, Types.Impostor, "第一段残影透明度", ["0%", "10%", "20%", "30%", "40%", "50%"], yoyoSpawnRate);
+
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 
@@ -1046,6 +1066,7 @@ public class CustomOptionHolder
         trackerCanTrackCorpses = Create(30263, Types.Crewmate, "可寻找尸体", true, trackerSpawnRate);
         trackerCorpsesTrackingCooldown = Create(30264, Types.Crewmate, "寻找尸体冷却", 20f, 5f, 120f, 2.5f, trackerCanTrackCorpses);
         trackerCorpsesTrackingDuration = Create(30265, Types.Crewmate, "寻找持续时间", 5f, 2.5f, 30f, 2.5f, trackerCanTrackCorpses);
+        trackerTrackingMethod = Create(30266, Types.Crewmate, "追踪模式", ["仅箭头", "仅检测是否接近", "两者皆有"], trackerSpawnRate);
 
         prophetSpawnRate = Create(30360, Types.Crewmate, cs(Prophet.color, "预言家"), rates, null, true);
         prophetCooldown = Create(30361, Types.Crewmate, "冷却时间", 25f, 5f, 60f, 2.5f, prophetSpawnRate);

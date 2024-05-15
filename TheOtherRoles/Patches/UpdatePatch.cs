@@ -461,6 +461,7 @@ internal class HudManagerUpdatePatch
     {
         if (MeetingHud.Instance || MapOptions.gameMode == CustomGamemodes.HideNSeek ||
             MapOptions.gameMode == CustomGamemodes.PropHunt) __instance.SabotageButton.Hide();
+        if (PlayerControl.LocalPlayer.Data.IsDead && CustomOptionHolder.deadImpsBlockSabotage.getBool()) __instance.SabotageButton.Hide();
     }
 
     private static void updateMapButton(HudManager __instance)

@@ -14,7 +14,7 @@ public class CustomButton
 {
     public static List<CustomButton> buttons = new();
     private static readonly int Desat = Shader.PropertyToID("_Desat");
-    private readonly string buttonText;
+    public string buttonText;
     private readonly Action InitialOnClick;
     private readonly Action OnEffectEnds;
     private readonly Action OnMeetingEnds;

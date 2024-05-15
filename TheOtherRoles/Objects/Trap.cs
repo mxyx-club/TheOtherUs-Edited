@@ -37,6 +37,7 @@ public class Trap
         trapRenderer.sprite = getTrapSprite();
         trap.SetActive(false);
         if (CachedPlayer.LocalPlayer.PlayerId == Trapper.trapper.PlayerId) trap.SetActive(true);
+        trapRenderer.color = Color.white * new Vector4(1, 1, 1, 0.5f);
         instanceId = ++instanceCounter;
         traps.Add(this);
         arrow.Update(position);
@@ -44,6 +45,7 @@ public class Trap
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(5, new Action<float>(x =>
         {
             if ((int)x == 1) triggerable = true;
+            trapRenderer.color = Color.white;
         })));
     }
 

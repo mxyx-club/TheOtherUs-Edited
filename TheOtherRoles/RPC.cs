@@ -47,6 +47,7 @@ public enum RoleId
     Blackmailer,
     Witch,
     Ninja,
+    Yoyo,
     Follower,
 
     Amnisiac,
@@ -235,6 +236,8 @@ public enum CustomRPC
     PlaceBomb,
     DefuseBomb,
     //ShareRoom,
+    YoyoMarkLocation,
+    YoyoBlink,
 
     // Gamemode
     SetGuesserGm,
@@ -279,6 +282,7 @@ public static class RPCProcedure
         Portal.clearPortals();
         Bloodytrail.resetSprites();
         Trap.clearTraps();
+        Silhouette.clearSilhouettes();
         clearAndReloadMapOptions();
         clearAndReloadRoles();
         clearGameHistory();
@@ -560,6 +564,9 @@ public static class RPCProcedure
                         break;
                     case RoleId.Prophet:
                         Prophet.prophet = player;
+                        break;
+                    case RoleId.Yoyo:
+                        Yoyo.yoyo = player;
                         break;
                 }
             }
@@ -996,6 +1003,13 @@ public static class RPCProcedure
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Bomber.clearAndReload();
                 Bomber.bomber = amnisiac;
+                Amnisiac.clearAndReload();
+                break;
+                
+            case RoleId.Yoyo:
+                Helpers.turnToImpostor(Amnisiac.amnisiac);
+                if (Amnisiac.resetRole) Yoyo.clearAndReload();
+                Yoyo.yoyo = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1736,6 +1750,7 @@ public static class RPCProcedure
         if (player == Witch.witch) Witch.clearAndReload();
         if (player == Escapist.escapist) Escapist.clearAndReload();
         if (player == Ninja.ninja) Ninja.clearAndReload();
+        if (player == Yoyo.yoyo) Yoyo.clearAndReload();
         if (player == Blackmailer.blackmailer) Blackmailer.clearAndReload();
         if (player == Follower.follower) Follower.clearAndReload();
         if (player == Terrorist.terrorist) Terrorist.clearAndReload();
@@ -1988,9 +2003,46 @@ public static class RPCProcedure
         Ninja.isInvisble = true;
     }
 
+    public static void yoyoMarkLocation(byte[] buff)
+    {
+        if (Yoyo.yoyo == null) return;
+        Vector3 position = Vector3.zero;
+        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+        Yoyo.markLocation(position);
+        new Silhouette(position, -1, false);
+    }
+
+    public static void yoyoBlink(bool isFirstJump, byte[] buff)
+    {
+        Message($"blink fistjumpo: {isFirstJump}");
+        if (Yoyo.yoyo == null || Yoyo.markedLocation == null) return;
+        var markedPos = (Vector3)Yoyo.markedLocation;
+        Yoyo.yoyo.NetTransform.SnapTo(markedPos);
+
+        var markedSilhouette = Silhouette.silhouettes.FirstOrDefault(s => s.gameObject.transform.position.x == markedPos.x && s.gameObject.transform.position.y == markedPos.y);
+        if (markedSilhouette != null)
+            markedSilhouette.permanent = false;
+
+        Vector3 position = Vector3.zero;
+        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+        // Create Silhoutte At Start Position:
+        if (isFirstJump)
+        {
+            Yoyo.markLocation(position);
+            new Silhouette(position, Yoyo.blinkDuration, true);
+        }
+        else
+        {
+            new Silhouette(position, 5, true);
+            Yoyo.markedLocation = null;
+        }
+        if (Chameleon.chameleon.Any(x => x.PlayerId == Yoyo.yoyo.PlayerId)) // Make the Yoyo visible if chameleon!
+            Chameleon.lastMoved[Yoyo.yoyo.PlayerId] = Time.time;
+    }
 
     //魅魔
-
     public static void akujoSetHonmei(byte akujoId, byte targetId)
     {
         PlayerControl akujo = Helpers.playerById(akujoId);
@@ -2609,6 +2661,11 @@ public static class RPCProcedure
         if (target == Bomber.bomber) Bomber.bomber = thief;
         if (target == Miner.miner) Miner.miner = thief;
         if (target == Undertaker.undertaker) Undertaker.undertaker = thief;
+        if (target == Yoyo.yoyo)
+        {
+            Yoyo.yoyo = thief;
+            Yoyo.markedLocation = null;
+        }
         if (target.Data.Role.IsImpostor)
         {
             RoleManager.Instance.SetRole(Thief.thief, RoleTypes.Impostor);
@@ -3369,6 +3426,12 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.ProphetExamine:
                 RPCProcedure.prophetExamine(reader.ReadByte());
+                break;
+            case CustomRPC.YoyoMarkLocation:
+                RPCProcedure.yoyoMarkLocation(reader.ReadBytesAndSize());
+                break;
+            case CustomRPC.YoyoBlink:
+                RPCProcedure.yoyoBlink(reader.ReadByte() == byte.MaxValue, reader.ReadBytesAndSize());
                 break;
         }
 

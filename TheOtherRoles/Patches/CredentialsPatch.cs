@@ -22,56 +22,34 @@ public static class CredentialsPatch
     [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
     internal static class PingTrackerPatch
     {
-        public static GameObject modStamp;
-
         private static void Postfix(PingTracker __instance)
         {
             __instance.text.alignment = TextAlignmentOptions.TopRight;
+            var position = __instance.GetComponent<AspectPosition>();
+            var gameModeText = MapOptions.gameMode switch
+            {
+                CustomGamemodes.HideNSeek => getString("isHideNSeekGM"),
+                CustomGamemodes.Guesser => getString("isGuesserGm"),
+                CustomGamemodes.PropHunt => getString("isPropHuntGM"),
+                _ => ""
+            };
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {
-                var gameModeText = "";
-                if (HideNSeek.isHideNSeekGM) gameModeText = getString("isHideNSeekGM");
-                else if (HandleGuesser.isGuesserGm) gameModeText = getString("isGuesserGm");
-                else if (PropHunt.isPropHuntGM) gameModeText = getString("isPropHuntGM");
+                
                 if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
-                __instance.text.text =
-                    $"{getString("fullCredentialsVersion2")} v{TheOtherRolesPlugin.Version + "\n" + getString("gameTitle2")}\n<size=90%>{gameModeText}</size>" +
+                __instance.text.text = $"{getString("fullCredentialsVersion2")} v{TheOtherRolesPlugin.Version + "\n" + getString("gameTitle2")}\n<size=90%>{gameModeText}</size>" +
                     __instance.text.text;
-                if (CachedPlayer.LocalPlayer.Data.IsDead || (!(CachedPlayer.LocalPlayer.PlayerControl == null) &&
-                                                           (CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 ||
-                                                            CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover2)))
-                {
-                    var transform = __instance.transform;
-                    var localPosition = transform.localPosition;
-                    localPosition = new Vector3(3.4f, localPosition.y, localPosition.z);
-                    transform.localPosition = localPosition;
-                }
-                else
-                {
-                    var transform = __instance.transform;
-                    var localPosition = transform.localPosition;
-                    localPosition = new Vector3(4.2f, localPosition.y, localPosition.z);
-                    transform.localPosition = localPosition;
-                }
+                position.DistanceFromEdge = new Vector3(2.25f, 0.11f, 0);
             }
             else
             {
-                var gameModeText = MapOptions.gameMode switch
-                {
-                    CustomGamemodes.HideNSeek => getString("isHideNSeekGM"),
-                    CustomGamemodes.Guesser => getString("isGuesserGm"),
-                    CustomGamemodes.PropHunt => getString("isPropHuntGM"),
-                    _ => ""
-                };
                 if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
 
-                __instance.text.text =
-                    $"{fullCredentialsVersion}\n  {gameModeText + fullCredentials}\n {__instance.text.text}";
-                var transform = __instance.transform;
-                var localPosition = transform.localPosition;
-                localPosition = new Vector3(3.5f, localPosition.y, localPosition.z);
-                transform.localPosition = localPosition;
+                var host = $"Host: {GameData.Instance?.GetHost()?.PlayerName}";
+                __instance.text.text = $"{fullCredentialsVersion}\n  {gameModeText + fullCredentials}\n {host}\n {__instance.text.text}";
+                position.DistanceFromEdge = new Vector3(3.5f, 0.1f, 0);
             }
+            position.AdjustPosition();
         }
     }
 

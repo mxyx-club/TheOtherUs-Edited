@@ -356,6 +356,10 @@
         "0": "Block Game End If Power Crew Is Alive",
         "13": "\u5f3a\u529b\u804c\u4e1a\u5728\u573a\u4e0d\u7ed3\u675f\u6e38\u620f"
     },
+    "deadImpsBlockSabotage": {
+        "0": "Block Dead Impostor From Sabotaging",
+        "13": "\u4f2a\u88c5\u8005\u6b7b\u4ea1\u540e\u4e0d\u80fd\u7834\u574f"
+    },
     "allowModGuess": {
         "0": "Allow Guessing Some Modifiers",
         "13": "\u5141\u8bb8\u731c\u6d4b\u90e8\u5206\u9644\u52a0\u804c\u4e1a"

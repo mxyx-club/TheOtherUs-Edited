@@ -54,7 +54,7 @@ public static class ChatCommands
                 }
                 else if (text.ToLower().StartsWith("/ban "))
                 {
-                    var playerName = text.Substring(6);
+                    var playerName = text.Substring(5);
                     PlayerControl target =
                         CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
                     if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
