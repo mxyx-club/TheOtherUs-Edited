@@ -27,6 +27,7 @@ internal static class MapOptions
     public static bool transparentTasks;
     public static bool hideOutOfSightNametags;
     public static bool ShowVentsOnMap;
+    public static bool ShowVentsOnMeetingMap;
     public static bool enableDebugLogMode;
     public static bool disableMedscanWalking;
 
@@ -116,6 +117,7 @@ internal static class MapOptions
         enableSoundEffects = Main.EnableSoundEffects.Value;
         enableHorseMode = Main.EnableHorseMode.Value;
         ShowVentsOnMap = CustomOptionHolder.ShowVentsOnMap.getBool();
+        ShowVentsOnMeetingMap = CustomOptionHolder.ShowVentsOnMeetingMap.getBool();
         enableDebugLogMode = Main.enableDebugLogMode.Value;
 
         //Patches.ShouldAlwaysHorseAround.isHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;

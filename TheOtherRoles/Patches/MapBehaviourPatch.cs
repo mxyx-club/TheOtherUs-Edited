@@ -60,56 +60,12 @@ internal static class MapBehaviourPatch
                 Object.Destroy(s.Value);
                 herePoints.Remove(s.Key);
             }
-        }/*
-        else if (Snitch.snitch != null && CachedPlayer.LocalPlayer.PlayerId == Snitch.snitch.PlayerId &&
-                 !Snitch.snitch.Data.IsDead)
-                 //&& Snitch.mode != Snitch.Mode.Chat
-                 
-        {
-            var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
-            var numberOfTasks = playerTotal - playerCompleted;
-
-            if (numberOfTasks == 0)
-            {
-                if (MeetingHud.Instance == null)
-                    foreach (PlayerControl player in CachedPlayer.AllPlayers)
-                    {
-                        //if (Snitch.targets == Snitch.Targets.EvilPlayers && !Helpers.isEvil(player)) continue;
-                        //if (Snitch.targets == Snitch.Targets.Killers && !Helpers.isKiller(player)) continue;
-                        if (player.Data.IsDead) continue;
-                        var v = player.transform.position;
-                        v /= MapUtilities.CachedShipStatus.MapScale;
-                        v.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
-                        v.z = -2.1f;
-                        if (herePoints.ContainsKey(player))
-                        {
-                            herePoints[player].transform.localPosition = v;
-                            continue;
-                        }
-
-                        var herePoint = Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent,
-                            true);
-                        herePoint.transform.localPosition = v;
-                        herePoint.enabled = true;
-                        var colorId = player.CurrentOutfit.ColorId;
-                        player.CurrentOutfit.ColorId = 6;
-                        player.SetPlayerMaterialColors(herePoint);
-                        player.CurrentOutfit.ColorId = colorId;
-                        herePoints.Add(player, herePoint);
-                    }
-                else
-                    foreach (var s in herePoints)
-                    {
-                        Object.Destroy(s.Value);
-                        herePoints.Remove(s.Key);
-                    }
-            }
         }
-        */
+
         foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
         {
-            if (OtherClear.ShowVentsOnMeetingMap && MeetingHud.Instance == null) return;
-            if (vent.name.StartsWith("JackInThe") && !(PlayerControl.LocalPlayer == Trickster.trickster ||
+            if (MapOptions.ShowVentsOnMeetingMap && MeetingHud.Instance == null) return;
+            if (vent.name.StartsWith("JackInTheBox") && !(PlayerControl.LocalPlayer == Trickster.trickster ||
                                                        PlayerControl.LocalPlayer.Data.IsDead))
                 continue; //for trickster vents
 
@@ -133,7 +89,7 @@ internal static class MapBehaviourPatch
             GameObject MapIcon;
             if (!mapIcons.ContainsKey($"vent {vent.Id} icon"))
             {
-                MapIcon = GameObject.Instantiate(__instance.HerePoint.gameObject, __instance.HerePoint.transform.parent);
+                MapIcon = Object.Instantiate(__instance.HerePoint.gameObject, __instance.HerePoint.transform.parent);
                 mapIcons.Add($"vent {vent.Id} icon", MapIcon);
             }
             else
