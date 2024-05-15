@@ -132,6 +132,7 @@ public static class TheOtherRoles
     public static class OtherClear
     {
         public static float ButtonCooldown { get { return CustomOptionHolder.resteButtonCooldown.getFloat(); } }
+        public static bool ShowVentsOnMeetingMap { get { return CustomOptionHolder.ShowVentsOnMeetingMap.getBool(); } }
     }
 
     public static class Jester

@@ -501,6 +501,7 @@ public class CustomOptionHolder
     public static CustomOption transparentTasks;
 
     public static CustomOption ShowVentsOnMap;
+    public static CustomOption ShowVentsOnMeetingMap;
     public static CustomOption enableMapOptions;
     public static CustomOption randomGameStartPosition;
     public static CustomOption randomGameStartToVents;
@@ -634,7 +635,7 @@ public class CustomOptionHolder
     public static CustomOption propHuntFindCooldown;
     public static CustomOption propHuntFindDuration;
 
-    internal static readonly Dictionary<byte, byte[]> blockedRolePairings = new();
+    internal static readonly Dictionary<byte, byte[]> blockedRolePairings = [];
 
     public static string cs(Color c, string s)
     {
@@ -712,6 +713,7 @@ public class CustomOptionHolder
         randomGameStartToVents = Create(51, Types.General, "randomGameStartToVents", false, randomGameStartPosition);
 
         ShowVentsOnMap = Create(211, Types.General, getString("ShowVentsOnMapText"), false, enableMapOptions, true);
+        ShowVentsOnMeetingMap = Create(212, Types.General, getString("ShowVentsOnMeetingMap"), true, ShowVentsOnMap);
 
         enableMiraModify = Create(70, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Mira"), false, enableMapOptions, true);
         miraVitals = Create(71, Types.General, "miraVitals", false, enableMiraModify);
@@ -731,8 +733,8 @@ public class CustomOptionHolder
         enableFungleModify = Create(100, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Fungle"), false, enableMapOptions);
         fungleElectrical = Create(101, Types.General, "fungleElectrical", false, enableFungleModify);
 
-        WireTaskIsRandomOption = Create(211, Types.General, "WireTaskIsRandomOption", false, enableMapOptions, true);
-        WireTaskNumOption = Create(212, Types.General, "WireTaskNumOption", 5f, 1f, 8f, 1f, WireTaskIsRandomOption);
+        WireTaskIsRandomOption = Create(221, Types.General, "WireTaskIsRandomOption", false, enableMapOptions, true);
+        WireTaskNumOption = Create(222, Types.General, "WireTaskNumOption", 5f, 1f, 8f, 1f, WireTaskIsRandomOption);
 
         enableCamoComms = Create(120, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, enableMapOptions, true);
         restrictDevices = Create(121, Types.General, "restrictDevices", ["optionOff".Translate(), "restrictDevices2".Translate(), "restrictDevices3".Translate()], enableMapOptions);

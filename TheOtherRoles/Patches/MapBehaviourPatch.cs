@@ -5,6 +5,7 @@ using Reactor.Utilities.Extensions;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using UnityEngine;
+using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 
 
@@ -107,6 +108,7 @@ internal static class MapBehaviourPatch
         */
         foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
         {
+            if (OtherClear.ShowVentsOnMeetingMap && MeetingHud.Instance == null) return;
             if (vent.name.StartsWith("JackInThe") && !(PlayerControl.LocalPlayer == Trickster.trickster ||
                                                        PlayerControl.LocalPlayer.Data.IsDead))
                 continue; //for trickster vents
@@ -118,14 +120,12 @@ internal static class MapBehaviourPatch
                     mapIcons.Values.Do(x => x.Destroy());
                     mapIcons.Clear();
                 }
-
                 break;
             }
 
             var Instance = DestroyableSingleton<MapTaskOverlay>.Instance;
-            var task = PlayerControl.LocalPlayer.myTasks.ToArray()
-                .FirstOrDefault(x => x.TaskType == TaskTypes.VentCleaning);
-            if (task == null) break;
+            var task = PlayerControl.LocalPlayer.myTasks.ToArray().
+                FirstOrDefault(x => x.TaskType == TaskTypes.VentCleaning);
 
             var location = vent.transform.position / MapUtilities.CachedShipStatus.MapScale;
             location.z = -2f; //show above sabotage buttons
@@ -133,7 +133,7 @@ internal static class MapBehaviourPatch
             GameObject MapIcon;
             if (!mapIcons.ContainsKey($"vent {vent.Id} icon"))
             {
-                MapIcon = Object.Instantiate(__instance.HerePoint.gameObject, __instance.HerePoint.transform.parent);
+                MapIcon = GameObject.Instantiate(__instance.HerePoint.gameObject, __instance.HerePoint.transform.parent);
                 mapIcons.Add($"vent {vent.Id} icon", MapIcon);
             }
             else
@@ -146,28 +146,25 @@ internal static class MapBehaviourPatch
             MapIcon.name = $"vent {vent.Id} icon";
             MapIcon.transform.localPosition = location;
 
-            if (task.IsComplete == false && task.FindConsoles().Get(0).ConsoleId == vent.Id)
+            if (task?.IsComplete == false && task.FindConsoles()[0].ConsoleId == vent.Id)
                 MapIcon.transform.localScale *= 0.6f;
             if (vent.name.StartsWith("JackInThe"))
             {
                 MapIcon.GetComponent<SpriteRenderer>().sprite = JackInTheBox.getBoxAnimationSprite(0);
                 MapIcon.transform.localScale = new Vector3(0.5f, 0.5f, 1);
-                MapIcon.GetComponent<SpriteRenderer>().color =
-                    vent.isActiveAndEnabled ? Color.yellow : Color.yellow.SetAlpha(0.5f);
+                MapIcon.GetComponent<SpriteRenderer>().color = vent.isActiveAndEnabled ? Color.yellow : Color.yellow.SetAlpha(0.5f);
             }
 
             if (AllVentsRegistered(Instance))
             {
                 var array = VentNetworks.ToArray();
-                foreach (var connectedGroup in VentNetworks)
+                foreach (var connectedgroup in VentNetworks)
                 {
-                    var index = Array.IndexOf(array, connectedGroup);
-                    if (connectedGroup[0].name.StartsWith("JackInThe"))
+                    var index = Array.IndexOf(array, connectedgroup);
+                    if (connectedgroup[0].name.StartsWith("JackInThe"))
                         continue;
-                    connectedGroup.Do(
-                        x => GetIcon(x).GetComponent<SpriteRenderer>().color = Palette.PlayerColors[index]);
+                    connectedgroup.Do(x => GetIcon(x).GetComponent<SpriteRenderer>().color = Palette.PlayerColors[index]);
                 }
-
                 continue;
             }
 
@@ -176,14 +173,13 @@ internal static class MapBehaviourPatch
             var network = GetNetworkFor(vent);
             if (network == null)
             {
-                VentNetworks.Add([.. vent.NearbyVents.Where(x => x != null), vent]);
+                VentNetworks.Add(new(vent.NearbyVents.Where(x => x != null)) { vent });
             }
             else
             {
-                if (network.All(x => x != vent)) network.Add(vent);
+                if (!network.Any(x => x == vent)) network.Add(vent);
             }
         }
-
         HudManagerUpdate.CloseSettings();
     }
 

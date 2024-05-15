@@ -5,7 +5,6 @@ using AmongUs.Data;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
-using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;

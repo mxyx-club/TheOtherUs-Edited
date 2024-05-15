@@ -388,8 +388,16 @@
         "13": "\u968f\u673a\u51fa\u751f\u70b9"
     },
     "randomGameStartToVents": {
-        "0": "Spawn Location to vent",
+        "0": "Spawn Location to Vent",
         "13": "\u968f\u673a\u51fa\u751f\u5728\u901a\u98ce\u53e3\u4e0a\n(\u5efa\u8bae\u5f00\u542f)"
+    },
+    "ShowVentsOnMapText": {
+        "0": "Show Vent Positions On Minimap",
+        "13": "\u5728\u5730\u56fe\u4e0a\u663e\u793a\u7ba1\u9053"
+    },
+    "ShowVentsOnMeetingMap": {
+        "0": "Show Only In Meetings",
+        "13": "\u53ea\u5728\u4f1a\u8bae\u4e2d\u663e\u793a\u7ba1\u9053\u4f4d\u7f6e"
     },
     "IsReactorDurationSetting": {
         "13": "\u8c03\u6574\u7d27\u6025\u7834\u574f\u6301\u7eed\u65f6\u95f4"
@@ -414,10 +422,6 @@
     },
     "FungleReactorTimeLimit": {
         "13": "The Fungle \u6838\u53cd\u5e94\u5806\u7834\u574f\u6301\u7eed\u65f6\u95f4"
-    },
-    "ShowVentsOnMapText": {
-        "0": "Show Vents On Map",
-        "13": "\u5728\u5730\u56fe\u4e0a\u663e\u793a\u7ba1\u9053\n\uff08\u65e0\u6548\u8bbe\u7f6e\uff09"
     },
     "enableMiraModify": {
         "0": "Mira",
