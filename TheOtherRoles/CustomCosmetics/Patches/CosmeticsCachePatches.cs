@@ -49,7 +49,7 @@ internal static class CosmeticsCachePatches
     [HarmonyPatch(typeof(CosmeticData), nameof(CosmeticData.GetItemName)), HarmonyPrefix]
     private static bool ItemNam(CosmeticData __instance, ref string __result)
     {
-        var data = CosmeticsManager.Instance.customCosmetics.FirstOrDefault(n => n.Id == __instance.ProductId);
+        var data = CosmeticsManager.Instance.CustomCosmetics.FirstOrDefault(n => n.Id == __instance.ProductId);
         if (data == null) return true;
         __result = data.config.Name;
         return false;

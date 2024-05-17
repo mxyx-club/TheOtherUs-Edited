@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -9,7 +10,6 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BepInEx;
-using Newtonsoft.Json.Utilities;
 using TheOtherRoles.CustomCosmetics.Configs;
 using TheOtherRoles.Modules;
 using UnityEngine;
@@ -19,7 +19,7 @@ namespace TheOtherRoles.CustomCosmetics;
 [Harmony]
 public class CosmeticsManager : ManagerBase<CosmeticsManager>
 {
-    public readonly List<Sprite> Sprites = [];
+    public readonly System.Collections.Concurrent.BlockingCollection<Sprite> Sprites = [];
     public HashSet<Sprite> HatSprites => Sprites.Where(n => n.name.StartsWith("Hats/")).ToHashSet();
     public HashSet<Sprite> VisorSprites => Sprites.Where(n => n.name.StartsWith("Visors/")).ToHashSet();
     public HashSet<Sprite> NamePlateSprites => Sprites.Where(n => n.name.StartsWith("NamePlates/")).ToHashSet();
@@ -58,15 +58,16 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
 
     public readonly HashSet<CosmeticsManagerConfig> configs = [];
 
-    public readonly List<ICustomCosmetic> customCosmetics = [];
+    public readonly BlockingCollection<ICustomCosmetic> CustomCosmetics = [];
+    public readonly ConcurrentQueue<ICustomCosmetic> NoLoad = [];
     public HashSet<CustomHat> CustomHats => 
-        customCosmetics.Where(n => n is CustomHat custom && custom.Data != null).Cast<CustomHat>().ToHashSet();
+        CustomCosmetics.Where(n => n is CustomHat custom && custom.Data != null).Cast<CustomHat>().ToHashSet();
 
     public HashSet<CustomVisor> CustomVisors =>
-        customCosmetics.Where(n => n is CustomVisor custom && custom.Data != null).Cast<CustomVisor>().ToHashSet();
+        CustomCosmetics.Where(n => n is CustomVisor custom && custom.Data != null).Cast<CustomVisor>().ToHashSet();
 
     public HashSet<CustomNamePlate> CustomNamePlates =>
-        customCosmetics.Where(n => n is CustomNamePlate custom && custom.Data != null).Cast<CustomNamePlate>().ToHashSet();
+        CustomCosmetics.Where(n => n is CustomNamePlate custom && custom.Data != null).Cast<CustomNamePlate>().ToHashSet();
     
     
     public bool TryGetHatView(string Id, [MaybeNullWhen(false)] out HatViewData data)
@@ -78,14 +79,14 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
     
     public bool TryGet<T>(string Id, [MaybeNullWhen(false)] out T data) where T : class, ICustomCosmetic
     {
-        var custom = customCosmetics.FirstOrDefault(n => n.Id == Id && n is T) as T;
+        var custom = CustomCosmetics.FirstOrDefault(n => n.Id == Id && n is T) as T;
         data = custom;
         return custom != null;
     }
     
     public bool TryGet(string Id, [MaybeNullWhen(false)] out ICustomCosmetic data)
     {
-        var custom = customCosmetics.FirstOrDefault(n => n.Id == Id);
+        var custom = CustomCosmetics.FirstOrDefault(n => n.Id == Id);
         data = custom;
         return custom != null;
     }
@@ -136,135 +137,20 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
     public void DefConfigCreateAndInit()
     {
         ServicePointManager.ServerCertificateValidationCallback += (_, _, _, _) => true;
-        InitManager();
-        Init(DefConfig);
-        Init(new CosmeticsManagerConfig
+        Task.Run(() => LoadConfigFormDisk(new DirectoryInfo(ManagerConfigDir)));
+        Task.Run(() =>
         {
+            Init(DefConfig);
+            Init(new CosmeticsManagerConfig
+            {
                 RootUrl = "https://raw.githubusercontent.com/SuperNewRoles/SuperNewCosmetics/main",
                 hasCosmetics = CustomCosmeticsFlags.Hat | CustomCosmeticsFlags.Visor | CustomCosmeticsFlags.NamePlate
+            });
         });
-            /*Task.Run(LoadSpriteFormDisk);*/
     }
-
-    public void InitManager()
-    {
-        LoadConfigFormDisk(new DirectoryInfo(ManagerConfigDir));
-        /*LoadFormDisk();*/
-    }
-
-    /*public void LoadFormDisk()
-    {
-        try
-        {
-            var hatPath = Path.Combine(LocalDir, "CustomHat.json");
-            if (File.Exists(hatPath))
-            {
-                var json = JsonDocument.Parse(File.ReadAllText(hatPath));
-                var hats = json.RootElement.GetProperty("hats").Deserialize<List<CustomHatConfig>>();
-                foreach (var hatConfig in hats)
-                {
-                    var res = new[]
-                    {
-                        hatConfig.Resource, hatConfig.BackResource, hatConfig.BackFlipResource, hatConfig.ClimbResource,
-                        hatConfig.FlipResource
-                    }.Where(n => n != string.Empty);
-                    foreach (var r in res)
-                    {
-                        var p = Path.Combine(LocalHatDir, r);
-                        var s = SpriteLoader.LoadHatSpriteFormDisk(File.OpenRead(p), $"Hats/Local/{r}");
-                        sprites.Add(s);
-                    }
-
-                    var hat = new CustomHat
-                    {
-                        ManagerConfig = null,
-                        config = hatConfig,
-                        Resource = GetSprite(CustomCosmeticsFlags.Hat, hatConfig.Resource),
-                        BackSprite = GetSprite(CustomCosmeticsFlags.Hat, hatConfig.BackResource),
-                        BackFlipSprite = GetSprite(CustomCosmeticsFlags.Hat, hatConfig.BackFlipResource),
-                        ClimbSprite = GetSprite(CustomCosmeticsFlags.Hat, hatConfig.ClimbResource),
-                        FlipSprite = GetSprite(CustomCosmeticsFlags.Hat, hatConfig.FlipResource)
-                    };
-                    hat.data = hatConfig.createHatData(hat.Resource, hat.BackSprite, hat.ClimbSprite, out var id,
-                        out var view);
-                    hat.Id = id;
-                    hat.View = view;
-                    customCosmetics.Add(hat);
-                }
-            }
-
-            var visorPath = Path.Combine(LocalDir, "CustomVisor.json");
-            if (File.Exists(visorPath))
-            {
-                var json = JsonDocument.Parse(File.ReadAllText(visorPath));
-                var visors = json.RootElement.GetProperty("Visors").Deserialize<List<CustomCosmeticConfig>>();
-                foreach (var visorConfig in visors)
-                {
-                    var p = Path.Combine(LocalHatDir, visorConfig.Resource);
-                    var s = SpriteLoader.LoadHatSpriteFormDisk(File.OpenRead(p),
-                        $"Visors/Local/{visorConfig.Resource}");
-                    sprites.Add(s);
-
-                    var visor = new CustomVisor
-                    {
-                        ManagerConfig = null,
-                        config = visorConfig,
-                        Resource = GetSprite(CustomCosmeticsFlags.Visor, visorConfig.Resource),
-                    };
-                    visor.data = visorConfig.createVisorData(visor.Resource, out var id, out var view);
-                    visor.Id = id;
-                    visor.View = view;
-
-                    customCosmetics.Add(visor);
-                }
-            }
-
-            var namePlatePath = Path.Combine(LocalDir, "CustomNamePlate.json");
-            if (File.Exists(namePlatePath))
-            {
-                var json = JsonDocument.Parse(File.ReadAllText(namePlatePath));
-                var namePlates = json.RootElement.GetProperty("NamePlates").Deserialize<List<CustomCosmeticConfig>>();
-                foreach (var namePlateConfig in namePlates)
-                {
-                    var p = Path.Combine(LocalHatDir, namePlateConfig.Resource);
-                    var s = SpriteLoader.LoadHatSpriteFormDisk(File.OpenRead(p),
-                        $"NamePlates/Local/{namePlateConfig.Resource}");
-                    sprites.Add(s);
-
-                    var NamePlate = new CustomNamePlate
-                    {
-                        ManagerConfig = null,
-                        config = namePlateConfig,
-                        Resource = GetSprite(CustomCosmeticsFlags.NamePlate, namePlateConfig.Resource)
-                    };
-                    NamePlate.data = namePlateConfig.createNamePlateData(NamePlate.Resource, out var id, out var view);
-                    NamePlate.Id = id;
-                    NamePlate.View = view;
-
-                    customCosmetics.Add(NamePlate);
-                }
-            }
-
-            CheckAddAll();
-        }
-        catch
-        {
-            Info("LOCAL");
-        }
-    }*/
 
     private static bool AddEnd = false;
-
-    /*private static List<HatData> CacheVanillaHats = [];
-    private static List<VisorData> CacheVanillaVisor = [];
-    private static List<NamePlateData> CacheVanillaNamePlate = [];
-    private static void CacheVanilla(HatManager __instance)
-    {
-        CacheVanillaHats = __instance.allHats.ToList();
-        CacheVanillaVisor = __instance.allVisors.ToList();
-        CacheVanillaNamePlate = __instance.allNamePlates.ToList();
-        Info("Cache Vanilla End");
-    }*/
+    
 
     [HarmonyPatch(typeof(HatManager), nameof(HatManager.Initialize)), HarmonyPostfix]
     private static void OnInit(HatManager __instance) => OnHatManager_InstantiatePostfix(__instance);
@@ -301,7 +187,7 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
     [HarmonyPrefix]
     [HarmonyPatch(typeof(HatsTab), nameof(HatsTab.OnEnable))]
     [HarmonyPatch(typeof(VisorsTab), nameof(VisorsTab.OnEnable))]
-    [HarmonyPatch(typeof(VisorsTab), nameof(VisorsTab.OnEnable))]
+    [HarmonyPatch(typeof(NameplatesTab), nameof(NameplatesTab.OnEnable))]
     private static void OnTabPrefix()
     {
         if (checkEd) return;
@@ -310,7 +196,17 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
     }
 
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd)), HarmonyPostfix]
-    private static void OnStart() => checkEd = false;
+    private static void OnEnd() => checkEd = false;
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(InventoryTab), nameof(InventoryTab.OnDisable))]
+    private static void OnTabDisablePostfix()
+    {
+        if (SpriteReader.Instance.createRunning || Instance.NoLoad.Any())
+        {
+            checkEd = false;
+        }
+    }
 
     public void LoadConfigFormDisk(DirectoryInfo dir)
     {
@@ -322,19 +218,7 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
             Init(config);
         }
     }
-
-    /*public void LoadSpriteFormDisk()
-    {
-        string[] spriteDir = [HatDir, VisorDir, NamePlateDir];
-        foreach (var spDir in spriteDir)
-        {
-            foreach (var sp in new SpriteLoader(spDir).LoadAllHatSprite(".png"))
-            {
-                sprites.Add(sp);
-            }
-        }
-    }*/
-
+    
     public void Init(CosmeticsManagerConfig config)
     {
         /*config.RootUrl = config.RootUrl.GithubUrl();*/
@@ -345,23 +229,6 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
 
     private readonly HttpClient _client = new();
 
-/*#nullable enable
-    public Sprite? GetSprite(CustomCosmeticsFlags flags, string name)
-    {
-        var na = name.Replace(".png", string.Empty);
-        if (!sprites.Any(n => n.name.Contains(na)))
-        {
-            SpriteLoader.LoadHatSprite(flags, name);
-            return null;
-        }
-        
-        var sp = sprites.FirstOrDefault(n => n.name.Contains(na));
-        Info($"GetSprite {flags} {na} {sp != null}");
-        return sp;
-    }
-#nullable disable*/
-
-
     public async Task<bool> DownLoadSprite(ICustomCosmetic customCosmetic, string root, string dir)
     {
         try
@@ -371,7 +238,6 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
                 var localPath = GetLocalPath(customCosmetic.Flags, r);
                 if (File.Exists(localPath) && !Sprites.Any(n => n.name.Contains(r)))
                 {
-                    SpriteReader.Instance.Paths.Enqueue(localPath);
                     continue;
                 }
 
@@ -380,7 +246,6 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
                 await using var stream = await _client.GetStreamAsync(url);
                 await using var file = File.Create(localPath!);
                 await stream.CopyToAsync(file);
-                SpriteReader.Instance.Paths.Enqueue(localPath);
             }
 
             return true;
@@ -445,7 +310,8 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
                     {
                         continue;
                     }
-                    customCosmetics.Add(hat);
+                    CustomCosmetics.Add(hat);
+                    NoLoad.Enqueue(hat);
                 }
             }
 
@@ -465,7 +331,8 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
                         continue;
                     }
 
-                    customCosmetics.Add(visor);
+                    CustomCosmetics.Add(visor);
+                    NoLoad.Enqueue(visor);
                 }
             }
 
@@ -484,7 +351,8 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
                     {
                         continue;
                     }
-                    customCosmetics.Add(namePlate);
+                    CustomCosmetics.Add(namePlate);
+                    NoLoad.Enqueue(namePlate);
                 }
             }
         }
@@ -496,7 +364,8 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
 
     public static void CheckAddAll()
     {
-        foreach (var cc in Instance.customCosmetics.Where(cc => HatManager.Instance.allHats.All(n => n.ProductId != cc.Id) && HatManager.Instance.allVisors.All(n => n.ProductId != cc.Id) && HatManager.Instance.allNamePlates.All(n => n.ProductId != cc.Id)))
+        if (!HatManager._instance) return;
+        foreach (var cc in Instance.CustomCosmetics.Where(cc => HatManager.Instance.allHats.All(n => n.ProductId != cc.Id) && HatManager.Instance.allVisors.All(n => n.ProductId != cc.Id) && HatManager.Instance.allNamePlates.All(n => n.ProductId != cc.Id)))
         {
             AddEnd = false;
             break;

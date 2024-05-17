@@ -1,9 +1,11 @@
 #nullable enable
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using Reactor.Utilities.Attributes;
 using Reactor.Utilities.Extensions;
@@ -75,7 +77,7 @@ public class SpriteLoader(DirectoryInfo directory)
         return sprite;
     }
 
-    public static void LoadHatSprite(CustomCosmeticsFlags flags, string name)
+    /*public static void LoadHatSprite(CustomCosmeticsFlags flags, string name)
     {
         var path = Path.Combine(flags switch
         {
@@ -86,18 +88,16 @@ public class SpriteLoader(DirectoryInfo directory)
         }, name);
         if (!File.Exists(path)) return;
         SpriteReader.Instance.Paths.Enqueue(path);
-    }
+    }*/
 }
 
 [RegisterInIl2Cpp]
 public sealed class SpriteReader : MonoBehaviour
 {
-
-    public readonly Queue<string> Paths = new();
-    public bool running;
+    
     public bool createRunning;
     private static SpriteReader? instance;
-    public List<Sprite> sprites = CosmeticsManager.Instance.Sprites;
+    public BlockingCollection<Sprite> sprites = CosmeticsManager.Instance.Sprites;
 
     public static SpriteReader Instance => instance ??= Main.Instance.AddComponent<SpriteReader>();
 
@@ -105,45 +105,22 @@ public sealed class SpriteReader : MonoBehaviour
     {
         instance = this;
     }
+    
 
-    public void Update()
+    public void LateUpdate()
     {
-        if (Paths.Any() && !running) 
-            StartCoroutine(Load().WrapToIl2Cpp());
-        
-        if (!CreateEnd && !createRunning) 
+        if (!createRunning && CosmeticsManager.Instance.NoLoad.Any())
             StartCoroutine(Create().WrapToIl2Cpp());
     }
 
-    public IEnumerator Load()
-    {
-        running = true;
-        dep:
-        if (Paths.TryDequeue(out var path))
-        {
-            if (!File.Exists(path))
-                goto dep;
-            var info = new FileInfo(path);
-            if (sprites.Any(n => n.name.Contains(info.Name)))
-                goto dep;
-            using var stream = info.OpenRead();
-            var sp = SpriteLoader.LoadHatSpriteFormDisk(stream, $"{info.DirectoryName}/{info.Name}");
-            CosmeticsManager.Instance.Sprites.Add(sp);
-            Info($"AddSprite {sp.name} {path}");
-            yield return null;
-            goto dep;
-        }
-        
-        running = false;
-    }
-
-    private bool CreateEnd;
+    private static int Max => CosmeticsManager.Instance.CustomCosmetics.Count;
+    public int count = 1;
     public IEnumerator Create()
     {
         createRunning = true;
-        var max = CosmeticsManager.Instance.customCosmetics.Count;
-        var count = 1;
-        foreach (var cosmetic in CosmeticsManager.Instance.customCosmetics)
+
+        Dequeue:
+        if (CosmeticsManager.Instance.NoLoad.TryDequeue(out var cosmetic) && count <= Max)
         {
             var sprite = new List<Sprite>();
             foreach (var r in cosmetic.Resources)
@@ -152,20 +129,22 @@ public sealed class SpriteReader : MonoBehaviour
                 {
                     var p = CosmeticsManager.GetLocalPath(cosmetic.Flags, r);
                     if (!File.Exists(p))continue;
-                    sprites.Add(SpriteLoader.LoadHatSpriteFormDisk(
-                        File.OpenRead(p), $"{cosmetic.Flags}/{r}"));
+                    var info = new FileInfo(p);
+                    using var stream = info.OpenRead();
+                    sprites.Add(SpriteLoader.LoadHatSpriteFormDisk(stream, $"{info.DirectoryName}/{info.Name}"));
                 }
                 var sp = sprites.FirstOrDefault(n => n.name.EndsWith(r));
                 if (sp) sprite.Add(sp!);
             }
             cosmetic.Create(sprite);
-            Info($"Create {count}/{max} {cosmetic.Id} {cosmetic.config.Name}");
+            Info($"Create {count}/{Max} {cosmetic.Id} {cosmetic.config.Name}");
             count++;
             yield return null;
+            goto Dequeue;
         }
+
         CosmeticsManager.CheckAddAll();
         yield return null;
-        CreateEnd = true;
         createRunning = false;
     }
 }

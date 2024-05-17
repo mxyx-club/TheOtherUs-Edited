@@ -93,7 +93,6 @@ public static class CosmeticsUtils
         viewData.name = hat.name = config.Name;
         hat.displayOrder = 99;
         Id = hat.ProductId = hat.BundleId = "TOUs_NamePlate_" + config.Name.Replace(' ', '_');
-        hat.ChipOffset = new Vector2(0f, 0.2f);
         hat.Free = true;
 
         view = viewData;

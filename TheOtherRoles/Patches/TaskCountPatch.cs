@@ -62,7 +62,7 @@ class TaskCount
         for (int j = 0; j < playerInfo.Tasks.Count; j++)
         {
             TotalTasks++;
-            if (playerInfo.Tasks[j].Complete)
+            if (playerInfo.Tasks.Get(j).Complete)
             {
                 CompletedTasks++;
             }
@@ -82,7 +82,7 @@ class TaskCount
             for (int j = 0; j < playerInfo.Tasks.Count; j++)
             {
                 TotalTasks++;
-                if (playerInfo.Tasks[j].Complete)
+                if (playerInfo.Tasks.Get(j).Complete)
                 {
                     CompletedTasks++;
                 }
