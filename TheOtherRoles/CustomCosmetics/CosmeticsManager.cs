@@ -52,8 +52,16 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
 
     public static readonly CosmeticsManagerConfig DefConfig = new()
     {
+        ConfigName = "TheOtherHats",
         RootUrl = "https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherHats/master",
         hasCosmetics = CustomCosmeticsFlags.Hat
+    };
+
+    public static readonly CosmeticsManagerConfig SNRConfig = new()
+    {
+        ConfigName = "SuperNewCosmetic",
+        RootUrl = "https://raw.githubusercontent.com/SuperNewRoles/SuperNewCosmetics/main",
+        hasCosmetics = CustomCosmeticsFlags.Hat | CustomCosmeticsFlags.Visor | CustomCosmeticsFlags.NamePlate
     };
 
     public readonly HashSet<CosmeticsManagerConfig> configs = [];
@@ -133,23 +141,27 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
         return namePlate != null;
     }
 
-
+    public void AddDefConfig()
+    {
+        
+    }
+    
+    
     public void DefConfigCreateAndInit()
     {
         ServicePointManager.ServerCertificateValidationCallback += (_, _, _, _) => true;
-        Task.Run(() => LoadConfigFormDisk(new DirectoryInfo(ManagerConfigDir)));
-        Task.Run(() =>
-        {
-            Init(DefConfig);
-            Init(new CosmeticsManagerConfig
+        AddDefConfig();
+        Task.Run(() => LoadConfigFormDisk(new DirectoryInfo(ManagerConfigDir))).GetAwaiter().OnCompleted(
+            () =>
             {
-                RootUrl = "https://raw.githubusercontent.com/SuperNewRoles/SuperNewCosmetics/main",
-                hasCosmetics = CustomCosmeticsFlags.Hat | CustomCosmeticsFlags.Visor | CustomCosmeticsFlags.NamePlate
+                foreach (var config in configs)
+                {
+                    Task.Run(() => Start(config));
+                }
             });
-        });
     }
 
-    private static bool AddEnd = false;
+    private static bool AddEnd;
     
 
     [HarmonyPatch(typeof(HatManager), nameof(HatManager.Initialize)), HarmonyPostfix]
@@ -215,15 +227,8 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
         {
             var str = File.ReadAllText(file.FullName);
             var config = JsonSerializer.Deserialize<CosmeticsManagerConfig>(str);
-            Init(config);
-        }
-    }
-    
-    public void Init(CosmeticsManagerConfig config)
-    {
-        /*config.RootUrl = config.RootUrl.GithubUrl();*/
-        configs.Add(config);
-        Start(config);
+            configs.Add(config);
+        };
     }
     
 
@@ -236,7 +241,7 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
             foreach (var r in customCosmetic.Resources)
             {
                 var localPath = GetLocalPath(customCosmetic.Flags, r);
-                if (File.Exists(localPath) && !Sprites.Any(n => n.name.Contains(r)))
+                if (File.Exists(localPath) || Sprites.Any(n => n.name.Contains(r)))
                 {
                     continue;
                 }
@@ -377,6 +382,7 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
 
 public class CosmeticsManagerConfig
 {
+    public string ConfigName = "None";
     public string RootUrl { get; set; }
     public CustomCosmeticsFlags hasCosmetics { get; set; }
     public string HatDirName { get; set; } = "hats";

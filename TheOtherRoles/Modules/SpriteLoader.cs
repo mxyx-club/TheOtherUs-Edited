@@ -115,6 +115,8 @@ public sealed class SpriteReader : MonoBehaviour
 
     private static int Max => CosmeticsManager.Instance.CustomCosmetics.Count;
     public int count = 1;
+    
+    
     public IEnumerator Create()
     {
         createRunning = true;
