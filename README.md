@@ -39,6 +39,7 @@
 
  - #### Bug修复：
 
+    - 躲猫猫模式汉化修正
     - 修复 “在地图上显示管道” 功能，并新增 “只在会议中显示管道位置” 选项
     - 通灵师：优化对非击杀中立的结果
     
@@ -214,7 +215,7 @@
 |     勒索者     |            |   告密者   |    酒鬼    |
 |      女巫      |            |    卧底    |   胆小鬼   |
 |      忍者      |            |    保安    |   窥视者   |
-|                |            |   通灵师   |    雷达    |
+|     Yo-Yo      |            |   通灵师   |    雷达    |
 |                |            |   设陷师   |   执钮人   |
 |                |            |   预言家   |   变色龙   |
 |                |            |            |   交换师   |
@@ -241,13 +242,14 @@
 
 ### 翻译：
 
-CN：沫夏悠轩、CC
+**CN：** 沫夏悠轩、Conscience
+（部分汉化参考：四个憨批汉化组、Hero汉化组）
 
-EN：九头蛇
+**EN：** 九头蛇
 
 </p>
 
-### 其他贡献者:
+### 其他贡献参考:
 
 
 [OxygenFilter](https://github.com/NuclearPowered/Reactor.OxygenFilter) - For all the versions between v2.3.0 and v2.6.1, we were using the OxygenFilter for automatic deobfuscation\

@@ -1253,76 +1253,76 @@ public class CustomOptionHolder
 
         //-------------------------- Hide N Seek 3000 - 3999 -------------------------- //
 
-        hideNSeekMap = Create(3020, Types.HideNSeekMain, cs(Color.yellow, "地图"),
-            ["骷髅舰", "米拉总部", "波鲁斯", "飞艇", "真菌丛林", "潜艇", "自定义地图"], null, true, () =>
+        hideNSeekMap = Create(3020, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekMap"),
+            ["Skeld", "Mira", "Polus", "Airship", "Fungle", "Submerged", "LevelImpostor"], null, true, () =>
             {
                 var map = hideNSeekMap.selection;
                 if (map >= 3) map++;
                 GameOptionsManager.Instance.currentNormalGameOptions.MapId = (byte)map;
             });
-        hideNSeekHunterCount = Create(3000, Types.HideNSeekMain, cs(Color.yellow, "猎人数量"), 1f, 1f, 3f, 1f);
-        hideNSeekKillCooldown = Create(3021, Types.HideNSeekMain, cs(Color.yellow, "击杀冷却"), 10f, 2.5f, 60f, 2.5f);
-        hideNSeekHunterVision = Create(3001, Types.HideNSeekMain, cs(Color.yellow, "猎人视野"), 0.5f, 0.25f, 2f, 0.25f);
-        hideNSeekHuntedVision = Create(3002, Types.HideNSeekMain, cs(Color.yellow, "猎物视野"), 2f, 0.25f, 5f, 0.25f);
-        hideNSeekCommonTasks = Create(3023, Types.HideNSeekMain, cs(Color.yellow, "普通任务"), 1f, 0f, 4f, 1f);
-        hideNSeekShortTasks = Create(3024, Types.HideNSeekMain, cs(Color.yellow, "短任务"), 3f, 1f, 23f, 1f);
-        hideNSeekLongTasks = Create(3025, Types.HideNSeekMain, cs(Color.yellow, "长任务"), 3f, 0f, 15f, 1f);
-        hideNSeekTimer = Create(3003, Types.HideNSeekMain, cs(Color.yellow, "最少躲藏时间"), 5f, 1f, 30f, 0.5f);
-        hideNSeekTaskWin = Create(3004, Types.HideNSeekMain, cs(Color.yellow, "可以任务获胜"), false);
-        hideNSeekTaskPunish = Create(3017, Types.HideNSeekMain, cs(Color.yellow, "完成任务减少躲藏时间"), 10f, 0f, 30f, 1f);
-        hideNSeekCanSabotage = Create(3019, Types.HideNSeekMain, cs(Color.yellow, "启用破坏"), false);
-        hideNSeekHunterWaiting = Create(3022, Types.HideNSeekMain, cs(Color.yellow, "猎人等待入场时间"), 15f, 2.5f, 60f, 2.5f);
+        hideNSeekHunterCount = Create(3000, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekHunterCount"), 1f, 1f, 3f, 1f);
+        hideNSeekKillCooldown = Create(3021, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekKillCooldown"), 10f, 2.5f, 60f, 2.5f);
+        hideNSeekHunterVision = Create(3001, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekHunterVision"), 0.5f, 0.25f, 2f, 0.25f);
+        hideNSeekHuntedVision = Create(3002, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekHuntedVision"), 2f, 0.25f, 5f, 0.25f);
+        hideNSeekCommonTasks = Create(3023, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekCommonTasks"), 1f, 0f, 4f, 1f);
+        hideNSeekShortTasks = Create(3024, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekShortTasks"), 3f, 1f, 23f, 1f);
+        hideNSeekLongTasks = Create(3025, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekLongTasks"), 3f, 0f, 15f, 1f);
+        hideNSeekTimer = Create(3003, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekTimer"), 5f, 1f, 30f, 0.5f);
+        hideNSeekTaskWin = Create(3004, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekTaskWin"), false);
+        hideNSeekTaskPunish = Create(3017, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekTaskPunish"), 10f, 0f, 30f, 1f);
+        hideNSeekCanSabotage = Create(3019, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekCanSabotage"), false);
+        hideNSeekHunterWaiting = Create(3022, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekHunterWaiting"), 15f, 2.5f, 60f, 2.5f);
 
-        hunterLightCooldown = Create(3005, Types.HideNSeekRoles, cs(Color.red, "猎人电灯冷却"), 30f, 5f, 60f, 1f, null, true);
-        hunterLightDuration = Create(3006, Types.HideNSeekRoles, cs(Color.red, "猎人电灯持续时间"), 10f, 1f, 60f, 1f);
-        hunterLightVision = Create(3007, Types.HideNSeekRoles, cs(Color.red, "猎人电灯视野"), 2f, 1f, 5f, 0.25f);
-        hunterLightPunish = Create(3008, Types.HideNSeekRoles, cs(Color.red, "猎人电灯惩罚躲藏时间"), 5f, 0f, 30f, 1f);
-        hunterAdminCooldown = Create(3009, Types.HideNSeekRoles, cs(Color.red, "猎人管理地图冷却"), 30f, 5f, 60f, 1f);
-        hunterAdminDuration = Create(3010, Types.HideNSeekRoles, cs(Color.red, "猎人管理地图持续时间"), 5f, 1f, 60f, 1f);
-        hunterAdminPunish = Create(3011, Types.HideNSeekRoles, cs(Color.red, "猎人管理地图惩罚躲藏时间"), 5f, 0f, 30f, 1f);
-        hunterArrowCooldown = Create(3012, Types.HideNSeekRoles, cs(Color.red, "猎人追踪冷却时间"), 30f, 5f, 60f, 1f);
-        hunterArrowDuration = Create(3013, Types.HideNSeekRoles, cs(Color.red, "猎人追踪持续时间"), 5f, 0f, 60f, 1f);
-        hunterArrowPunish = Create(3014, Types.HideNSeekRoles, cs(Color.red, "猎人追踪惩罚躲藏时间"), 5f, 0f, 30f, 1f);
+        hunterLightCooldown = Create(3005, Types.HideNSeekRoles, cs(Color.red, "hunterLightCooldown"), 30f, 5f, 60f, 1f, null, true);
+        hunterLightDuration = Create(3006, Types.HideNSeekRoles, cs(Color.red, "hunterLightDuration"), 10f, 1f, 60f, 1f);
+        hunterLightVision = Create(3007, Types.HideNSeekRoles, cs(Color.red, "hunterLightVision"), 2f, 1f, 5f, 0.25f);
+        hunterLightPunish = Create(3008, Types.HideNSeekRoles, cs(Color.red, "hunterLightPunish"), 5f, 0f, 30f, 1f);
+        hunterAdminCooldown = Create(3009, Types.HideNSeekRoles, cs(Color.red, "hunterAdminCooldown"), 30f, 5f, 60f, 1f);
+        hunterAdminDuration = Create(3010, Types.HideNSeekRoles, cs(Color.red, "hunterAdminDuration"), 5f, 1f, 60f, 1f);
+        hunterAdminPunish = Create(3011, Types.HideNSeekRoles, cs(Color.red, "hunterAdminPunish"), 5f, 0f, 30f, 1f);
+        hunterArrowCooldown = Create(3012, Types.HideNSeekRoles, cs(Color.red, "hunterArrowCooldown"), 30f, 5f, 60f, 1f);
+        hunterArrowDuration = Create(3013, Types.HideNSeekRoles, cs(Color.red, "hunterArrowDuration"), 5f, 0f, 60f, 1f);
+        hunterArrowPunish = Create(3014, Types.HideNSeekRoles, cs(Color.red, "hunterArrowPunish"), 5f, 0f, 30f, 1f);
 
-        huntedShieldCooldown = Create(3015, Types.HideNSeekRoles, cs(Color.gray, "躲藏者护盾冷却时间"), 30f, 5f, 60f, 1f, null, true);
-        huntedShieldDuration = Create(3016, Types.HideNSeekRoles, cs(Color.gray, "躲藏者护盾持续时间"), 5f, 1f, 60f, 1f);
-        huntedShieldRewindTime = Create(3018, Types.HideNSeekRoles, cs(Color.gray, "躲藏者回溯时间"), 3f, 1f, 10f, 1f);
-        huntedShieldNumber = Create(3026, Types.HideNSeekRoles, cs(Color.grey, "躲藏者护盾数量"), 3f, 1f, 15f, 1f);
+        huntedShieldCooldown = Create(3015, Types.HideNSeekRoles, cs(Color.gray, "huntedShieldCooldown"), 30f, 5f, 60f, 1f, null, true);
+        huntedShieldDuration = Create(3016, Types.HideNSeekRoles, cs(Color.gray, "huntedShieldDuration"), 5f, 1f, 60f, 1f);
+        huntedShieldRewindTime = Create(3018, Types.HideNSeekRoles, cs(Color.gray, "huntedShieldRewindTime"), 3f, 1f, 10f, 1f);
+        huntedShieldNumber = Create(3026, Types.HideNSeekRoles, cs(Color.grey, "huntedShieldNumber"), 3f, 1f, 15f, 1f);
 
         //-------------------------- Prop Hunt General Options 4000 - 4999 -------------------------- //
 
-        propHuntMap = Create(4020, Types.PropHunt, cs(Color.yellow, "地图"),
-            ["骷髅舰", "米拉总部", "波鲁斯", "飞艇", "蘑菇岛", "潜艇", "自定义地图"], null, true, () =>
+        propHuntMap = Create(4020, Types.PropHunt, cs(Color.yellow, "propHuntMap"),
+            ["Skeld", "Mira", "Polus", "Airship", "Fungle", "Submerged", "LevelImpostor"], null, true, () =>
             {
                 var map = propHuntMap.selection;
                 if (map >= 3) map++;
                 GameOptionsManager.Instance.currentNormalGameOptions.MapId = (byte)map;
             });
-        propHuntTimer = Create(4021, Types.PropHunt, cs(Color.yellow, "最少躲藏时间"), 5f, 1f, 30f, 0.5f);
-        propHuntUnstuckCooldown = Create(4011, Types.PropHunt, cs(Color.yellow, "穿墙冷却时间"), 30f, 2.5f, 60f, 2.5f);
-        propHuntUnstuckDuration = Create(4012, Types.PropHunt, cs(Color.yellow, "穿墙持续时间"), 2f, 1f, 60f, 1f);
-        propHunterVision = Create(4006, Types.PropHunt, cs(Color.yellow, "猎人视野"), 0.5f, 0.25f, 2f, 0.25f);
-        propVision = Create(4007, Types.PropHunt, cs(Color.yellow, "躲藏者视野"), 2f, 0.25f, 5f, 0.25f);
+        propHuntTimer = Create(4021, Types.PropHunt, cs(Color.yellow, "propHuntTimer"), 5f, 1f, 30f, 0.5f);
+        propHuntUnstuckCooldown = Create(4011, Types.PropHunt, cs(Color.yellow, "propHuntUnstuckCooldown"), 30f, 2.5f, 60f, 2.5f);
+        propHuntUnstuckDuration = Create(4012, Types.PropHunt, cs(Color.yellow, "propHuntUnstuckDuration"), 2f, 1f, 60f, 1f);
+        propHunterVision = Create(4006, Types.PropHunt, cs(Color.yellow, "propHunterVision"), 0.5f, 0.25f, 2f, 0.25f);
+        propVision = Create(4007, Types.PropHunt, cs(Color.yellow, "propVision"), 2f, 0.25f, 5f, 0.25f);
         // Hunter Options
-        propHuntNumberOfHunters = Create(4000, Types.PropHunt, cs(Color.red, "猎人数量"), 1f, 1f, 5f, 1f, null, true);
-        hunterInitialBlackoutTime = Create(4001, Types.PropHunt, cs(Color.red, "猎人等待入场时间"), 10f, 5f, 20f, 1f);
-        hunterMissCooldown = Create(4004, Types.PropHunt, cs(Color.red, "错误击杀后的冷却"), 10f, 2.5f, 60f, 2.5f);
-        hunterHitCooldown = Create(4005, Types.PropHunt, cs(Color.red, "击杀后的冷却"), 10f, 2.5f, 60f, 2.5f);
-        propHuntRevealCooldown = Create(4008, Types.PropHunt, cs(Color.red, "变形冷却时间"), 30f, 10f, 90f, 2.5f);
-        propHuntRevealDuration = Create(4009, Types.PropHunt, cs(Color.red, "变形持续时间"), 5f, 1f, 60f, 1f);
-        propHuntRevealPunish = Create(4010, Types.PropHunt, cs(Color.red, "揭示惩罚时间"), 10f, 0f, 1800f, 5f);
-        propHuntAdminCooldown = Create(4022, Types.PropHunt, cs(Color.red, "猎人查看管理地图冷却时间"), 30f, 2.5f, 1800f, 2.5f);
-        propHuntFindCooldown = Create(4023, Types.PropHunt, cs(Color.red, "寻找冷却时间"), 60f, 2.5f, 1800f, 2.5f);
-        propHuntFindDuration = Create(4024, Types.PropHunt, cs(Color.red, "寻找持续时间"), 5f, 1f, 15f, 1f);
+        propHuntNumberOfHunters = Create(4000, Types.PropHunt, cs(Color.red, "propHuntNumberOfHunters"), 1f, 1f, 5f, 1f, null, true);
+        hunterInitialBlackoutTime = Create(4001, Types.PropHunt, cs(Color.red, "hunterInitialBlackoutTime"), 10f, 5f, 20f, 1f);
+        hunterMissCooldown = Create(4004, Types.PropHunt, cs(Color.red, "hunterMissCooldown"), 10f, 2.5f, 60f, 2.5f);
+        hunterHitCooldown = Create(4005, Types.PropHunt, cs(Color.red, "hunterHitCooldown"), 10f, 2.5f, 60f, 2.5f);
+        propHuntRevealCooldown = Create(4008, Types.PropHunt, cs(Color.red, "propHuntRevealCooldown"), 30f, 10f, 90f, 2.5f);
+        propHuntRevealDuration = Create(4009, Types.PropHunt, cs(Color.red, "propHuntRevealDuration"), 5f, 1f, 60f, 1f);
+        propHuntRevealPunish = Create(4010, Types.PropHunt, cs(Color.red, "propHuntRevealPunish"), 10f, 0f, 1800f, 5f);
+        propHuntAdminCooldown = Create(4022, Types.PropHunt, cs(Color.red, "propHuntAdminCooldown"), 30f, 2.5f, 1800f, 2.5f);
+        propHuntFindCooldown = Create(4023, Types.PropHunt, cs(Color.red, "propHuntFindCooldown"), 60f, 2.5f, 1800f, 2.5f);
+        propHuntFindDuration = Create(4024, Types.PropHunt, cs(Color.red, "propHuntFindDuration"), 5f, 1f, 15f, 1f);
         // Prop Options
-        propBecomesHunterWhenFound = Create(4003, Types.PropHunt, cs(Palette.CrewmateBlue, "猎物被发现后转化为猎人"), false, null, true);
-        propHuntInvisEnabled = Create(4013, Types.PropHunt, cs(Palette.CrewmateBlue, "启用隐形"), true, null, true);
-        propHuntInvisCooldown = Create(4014, Types.PropHunt, cs(Palette.CrewmateBlue, "隐形冷却时间"), 40f, 10f, 120f, 2.5f, propHuntInvisEnabled);
-        propHuntInvisDuration = Create(4015, Types.PropHunt, cs(Palette.CrewmateBlue, "隐形持续时间"), 5f, 2.5f, 30f, 2.5f, propHuntInvisEnabled);
-        propHuntSpeedboostEnabled = Create(4016, Types.PropHunt, cs(Palette.CrewmateBlue, "启用疾跑"), true, null, true);
-        propHuntSpeedboostCooldown = Create(4017, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑冷却时间"), 45f, 2.5f, 120f, 2.5f, propHuntSpeedboostEnabled);
-        propHuntSpeedboostDuration = Create(4018, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑持续时间"), 10f, 2.5f, 30f, 2.5f, propHuntSpeedboostEnabled);
-        propHuntSpeedboostSpeed = Create(4019, Types.PropHunt, cs(Palette.CrewmateBlue, "疾跑提升速度"), 2f, 1.25f, 5f, 0.25f, propHuntSpeedboostEnabled);
+        propBecomesHunterWhenFound = Create(4003, Types.PropHunt, cs(Palette.CrewmateBlue, "propBecomesHunterWhenFound"), false, null, true);
+        propHuntInvisEnabled = Create(4013, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntInvisEnabled"), true, null, true);
+        propHuntInvisCooldown = Create(4014, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntInvisCooldown"), 40f, 10f, 120f, 2.5f, propHuntInvisEnabled);
+        propHuntInvisDuration = Create(4015, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntInvisDuration"), 5f, 2.5f, 30f, 2.5f, propHuntInvisEnabled);
+        propHuntSpeedboostEnabled = Create(4016, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostEnabled"), true, null, true);
+        propHuntSpeedboostCooldown = Create(4017, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostCooldown"), 45f, 2.5f, 120f, 2.5f, propHuntSpeedboostEnabled);
+        propHuntSpeedboostDuration = Create(4018, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostDuration"), 10f, 2.5f, 30f, 2.5f, propHuntSpeedboostEnabled);
+        propHuntSpeedboostSpeed = Create(4019, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostSpeed"), 2f, 1.25f, 5f, 0.25f, propHuntSpeedboostEnabled);
 
         blockedRolePairings.Add((byte)RoleId.Vampire, [(byte)RoleId.Warlock]);
         blockedRolePairings.Add((byte)RoleId.Witch, [(byte)RoleId.Warlock]);
