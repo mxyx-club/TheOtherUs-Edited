@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using BepInEx;
 using TheOtherRoles.CustomCosmetics.Configs;
@@ -302,6 +303,9 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
     public void Start(CosmeticsManagerConfig config)
     {
         Info($"Start {config.RootUrl}");
+        var filePath = Path.Combine(ManagerConfigDir, $"{config.ConfigName}.json");
+        if (!File.Exists(filePath))
+            File.WriteAllText(filePath, JsonSerializer.Serialize(config));
         try
         {
             if (config.hasCosmetics.HasFlag(CustomCosmeticsFlags.Hat))
@@ -401,7 +405,7 @@ public class CosmeticsManagerConfig
     public string NamePlatePropertyName { get; set; } ="nameplates";
 }
 
-[Flags]
+[Flags, JsonConverter(typeof(JsonStringEnumConverter))]
 public enum CustomCosmeticsFlags
 {
     Hat,
