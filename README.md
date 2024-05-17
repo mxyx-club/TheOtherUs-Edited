@@ -222,15 +222,13 @@
 
 ## 错误报告
 
-如预见游戏性Bug或者有更多的建议可以在仓库issue提出，或加QQ群：[702829332](https://qm.qq.com/q/3WJt8CjJt)
+如预见游戏性Bug或者有更多的建议可以在仓库[issue](https://github.com/mxyx-club/TheOtherUs-Edited/issues/new/choose)提出，或加QQ群：[961341019](https://qm.qq.com/q/MlhqY3QcYU)
 
 ## 多语言翻译
 
 翻译文件并未完成，预计在1.4.0完成多语言的增加。
 
 ## 模组贡献者
-
-<p align="center">
 
 ### 主要开发者：
 
@@ -247,7 +245,6 @@
 
 **EN：** 九头蛇
 
-</p>
 
 ### 其他贡献参考:
 
