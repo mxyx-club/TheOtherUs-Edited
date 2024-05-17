@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AmongUs.Data;
 using PowerTools;
+using Reactor.Utilities.Extensions;
 using Rewired.Utils;
 using TMPro;
 using UnityEngine;
@@ -15,13 +16,16 @@ public static class HatPatches
 {
     private static TextMeshPro textTemplate;
 
-    /*[HarmonyPatch(typeof(HatsTab), nameof(HatsTab.OnEnable))]
-    [HarmonyPostfix]
-    private static void OnEnablePostfix(HatsTab __instance)
+    [HarmonyPatch(typeof(HatsTab), nameof(HatsTab.OnEnable))]
+    [HarmonyPrefix]
+    private static bool OnEnablPrefix(HatsTab __instance)
     {
-        for (var i = 0; i < __instance.scroller.Inner.childCount; i++)
-            Object.Destroy(__instance.scroller.Inner.GetChild(i).gameObject);
-
+        __instance.PlayerPreview.gameObject.SetActive(true);
+        if (__instance.HasLocalPlayer())
+            __instance.PlayerPreview.UpdateFromLocalPlayer(PlayerMaterial.MaskType.None);
+        else
+            __instance.PlayerPreview.UpdateFromDataManager(PlayerMaterial.MaskType.None);
+        
         __instance.ColorChips = new Il2CppSystem.Collections.Generic.List<ColorChip>();
         var unlockedHats = DestroyableSingleton<HatManager>.Instance.GetUnlockedHats();
         var packages = new Dictionary<string, List<Tuple<HatData, CustomHat>>>();
@@ -49,8 +53,8 @@ public static class HatPatches
         var orderedKeys = packages.Keys.OrderBy(x =>
             x switch
             {
-                CosmeticsManager.InnerslothPackageName => 1000,
-                _ => 0
+                CosmeticsManager.InnerslothPackageName => 0,
+                _ => 1000
             });
         
         foreach (var key in orderedKeys)
@@ -60,15 +64,22 @@ public static class HatPatches
         }
 
         __instance.scroller.ContentYBounds.max = -(yOffset + 4.1f);
+        return false;
     }
-    
 
+    [HarmonyPatch(typeof(InventoryTab), nameof(InventoryTab.OnDisable)), HarmonyPostfix]
+    public static void OnDisable()
+    {
+        texts.Do(n => n.Destroy());
+        texts.Clear();
+    }
+
+
+    private static List<GameObject> texts = [];
     private static float CreateHatPackage(List<Tuple<HatData, CustomHat>> hats, string packageName, float yStart,
         HatsTab hatsTab)
     {
         var isDefaultPackage = CosmeticsManager.InnerslothPackageName == packageName;
-        /*if (!isDefaultPackage) 
-            hats = hats.OrderBy(x => x.Item1.name).ToList();#1#
 
         var offset = yStart;
         if (textTemplate != null)
@@ -80,6 +91,7 @@ public static class HatPatches
             title.enableAutoSizing = false;
             hatsTab.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => { title.SetText(packageName); })));
             offset -= 0.8f * hatsTab.YOffset;
+            texts.Add(title.gameObject);
         }
 
         var i = 0;
@@ -142,7 +154,7 @@ public static class HatPatches
         }
         return offset - ((hats.Count - 1) / (float)hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset) -
                1.75f;
-    }*/
+    }
     
     
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.HandleAnimation))]

@@ -19,7 +19,7 @@ namespace TheOtherRoles.CustomCosmetics;
 [Harmony]
 public class CosmeticsManager : ManagerBase<CosmeticsManager>
 {
-    public readonly System.Collections.Concurrent.BlockingCollection<Sprite> Sprites = [];
+    public readonly BlockingCollection<Sprite> Sprites = [];
     public HashSet<Sprite> HatSprites => Sprites.Where(n => n.name.StartsWith("Hats/")).ToHashSet();
     public HashSet<Sprite> VisorSprites => Sprites.Where(n => n.name.StartsWith("Visors/")).ToHashSet();
     public HashSet<Sprite> NamePlateSprites => Sprites.Where(n => n.name.StartsWith("NamePlates/")).ToHashSet();
@@ -143,7 +143,8 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
 
     public void AddDefConfig()
     {
-        
+        configs.Add(DefConfig);
+        configs.Add(SNRConfig);
     }
     
     
@@ -156,7 +157,7 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
             {
                 foreach (var config in configs)
                 {
-                    Task.Run(() => Start(config));
+                    Start(config);
                 }
             });
     }
@@ -225,8 +226,11 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
         var files = dir.GetFiles(".json");
         foreach (var file in files)
         {
+            if (configs.Any(n => n.ConfigName == file.Name))
+                continue;
             var str = File.ReadAllText(file.FullName);
             var config = JsonSerializer.Deserialize<CosmeticsManagerConfig>(str);
+            config.ConfigName = file.Name;
             configs.Add(config);
         };
     }

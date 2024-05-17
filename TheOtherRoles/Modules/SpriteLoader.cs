@@ -109,8 +109,26 @@ public sealed class SpriteReader : MonoBehaviour
 
     public void LateUpdate()
     {
-        if (!createRunning && CosmeticsManager.Instance.NoLoad.Any())
-            StartCoroutine(Create().WrapToIl2Cpp());
+        /*if (!createRunning && CosmeticsManager.Instance.NoLoad.Any())
+            StartCoroutine(Create().WrapToIl2Cpp());*/
+        if (!CosmeticsManager.Instance.NoLoad.TryDequeue(out var cosmetic) || count > Max) return;
+        var sprite = new List<Sprite>();
+        foreach (var r in cosmetic.Resources)
+        {
+            if (!sprites.Any(n => n.name.EndsWith(r)))
+            {
+                var p = CosmeticsManager.GetLocalPath(cosmetic.Flags, r);
+                if (!File.Exists(p))continue;
+                var info = new FileInfo(p);
+                using var stream = info.OpenRead();
+                sprites.Add(SpriteLoader.LoadHatSpriteFormDisk(stream, $"{info.DirectoryName}/{info.Name}"));
+            }
+            var sp = sprites.FirstOrDefault(n => n.name.EndsWith(r));
+            if (sp) sprite.Add(sp!);
+        }
+        cosmetic.Create(sprite);
+        Info($"Create {count}/{Max} {cosmetic.Id} {cosmetic.config.Name}");
+        count++;
     }
 
     private static int Max => CosmeticsManager.Instance.CustomCosmetics.Count;
