@@ -4157,7 +4157,8 @@ internal static class HudManagerStartPatch
             KeyCode.R,
             true,
             5f,
-            () => { propHuntRevealButton.Timer = propHuntRevealButton.MaxTimer; }
+            () => { propHuntRevealButton.Timer = propHuntRevealButton.MaxTimer; },
+            buttonText: getString("揭示")
         );
 
         propHuntInvisButton = new CustomButton(
@@ -4219,7 +4220,7 @@ internal static class HudManagerStartPatch
                 SoundEffectsManager.stop("timemasterShield");
                 propHuntSpeedboostButton.Timer = propHuntSpeedboostButton.MaxTimer;
             },
-            buttonText: "提速"
+            buttonText: "疾跑"
         );
 
         propHuntAdminButton = new CustomButton(
@@ -4287,7 +4288,7 @@ internal static class HudManagerStartPatch
                 propHuntFindButton.Timer = propHuntFindButton.MaxTimer;
                 propHuntFindButton.isEffectActive = false;
             },
-            buttonText: "寻找"
+            buttonText: "探测"
         );
 
         // Set the default (or settings from the previous game) timers / durations when spawning the buttons
