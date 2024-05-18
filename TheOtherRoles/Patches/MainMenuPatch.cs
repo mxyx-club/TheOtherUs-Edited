@@ -56,7 +56,7 @@ public class MainMenuPatch
             _ = __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>((p) =>
             {
                 if (textDiscord != null)
-                    textDiscord.SetText("加入QQ群");
+                    textDiscord.SetText("模组QQ群");
             })));
 
             PassiveButton passiveButtonDiscord = buttonDiscord.GetComponent<PassiveButton>();
