@@ -35,7 +35,7 @@ public class RoleInfo
     public static RoleInfo blackmailer = new("勒索者", Blackmailer.color, "嘘——红温警告", "勒索其他玩家使其无法发言", RoleId.Blackmailer);
     public static RoleInfo witch = new("女巫", Witch.color, "那么，代价是什么？", "对敌人下咒", RoleId.Witch);
     public static RoleInfo ninja = new("忍者", Ninja.color, "忍者之道，在于隐忍", "标记目标并闪现击杀", RoleId.Ninja);
-    public static RoleInfo yoyo = new("Yo-Yo", Yoyo.color, "飞雷神！", "标记位置后可以瞬移两次回到原点", RoleId.Yoyo);
+    public static RoleInfo yoyo = new("悠悠球", Yoyo.color, "飞！雷！神！", "标记位置后可以瞬移一次后再回到原点", RoleId.Yoyo);
 
     public static RoleInfo amnisiac = new("失忆者", Amnisiac.color, "我是你，那你是谁？", "回忆死者的记忆获取职业", RoleId.Amnisiac, true);
     public static RoleInfo jester = new("小丑", Jester.color, "让别人对你的表演叹为观止吧", "想办法驱逐自己", RoleId.Jester, true);

@@ -170,7 +170,7 @@ public static class SubmergedCompatibility
             ShipStatus.Instance.RpcRepairSystem((SystemTypes)130, 64);
             RepairDamageMethod.Invoke(SubmarineOxygenSystemInstanceField.Invoke(null, Array.Empty<object>()), new object[] { CachedPlayer.LocalPlayer.PlayerControl, 64 });
         }
-        catch (System.NullReferenceException)
+        catch (NullReferenceException)
         {
             Message("null reference in engineer oxygen fix");
         }

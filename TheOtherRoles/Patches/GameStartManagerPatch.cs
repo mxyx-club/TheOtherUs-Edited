@@ -210,7 +210,7 @@ public class GameStartManagerPatch
                         startingTimer = 0;
                     }
                     startButtonPassiveButton.OnClick.AddListener((Action)(() => StopStartFunc()));
-                    __instance.StartCoroutine(Effects.Lerp(.1f, new System.Action<float>((p) =>
+                    __instance.StartCoroutine(Effects.Lerp(.1f, new Action<float>((p) =>
                     {
                         startButtonText.text = "STOP";
                     })));
@@ -275,7 +275,7 @@ public class GameStartManagerPatch
                         startingTimer = 0;
                     }
                     startButtonPassiveButton.OnClick.AddListener((Action)(() => StopStartFunc()));
-                    __instance.StartCoroutine(Effects.Lerp(.1f, new System.Action<float>((p) =>
+                    __instance.StartCoroutine(Effects.Lerp(.1f, new Action<float>((p) =>
                     {
                         startButtonText.text = "STOP";
                     })));

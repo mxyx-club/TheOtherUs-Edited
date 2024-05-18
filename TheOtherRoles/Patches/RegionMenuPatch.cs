@@ -77,11 +77,11 @@ public static class RegionMenuOpenPatch
             ipField.characterLimit = 30;
             ipField.AllowSymbols = true;
             ipField.ForceUppercase = false;
-            ipField.SetText(TheOtherRolesPlugin.Ip.Value);
+            ipField.SetText(Main.Ip.Value);
             __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p =>
             {
-                ipField.outputText.SetText(TheOtherRolesPlugin.Ip.Value);
-                ipField.SetText(TheOtherRolesPlugin.Ip.Value);
+                ipField.outputText.SetText(Main.Ip.Value);
+                ipField.SetText(Main.Ip.Value);
             })));
 
             ipField.ClearOnFocus = false;
@@ -93,12 +93,12 @@ public static class RegionMenuOpenPatch
 
             void onEnterOrIpChange()
             {
-                TheOtherRolesPlugin.Ip.Value = ipField.text;
+                Main.Ip.Value = ipField.text;
             }
 
             void onFocusLost()
             {
-                TheOtherRolesPlugin.UpdateRegions();
+                Main.UpdateRegions();
             }
         }
 
@@ -112,11 +112,11 @@ public static class RegionMenuOpenPatch
 
             portField.transform.localPosition = new Vector3(3.225f, -1.55f, -100f);
             portField.characterLimit = 5;
-            portField.SetText(TheOtherRolesPlugin.Port.Value.ToString());
+            portField.SetText(Main.Port.Value.ToString());
             __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p =>
             {
-                portField.outputText.SetText(TheOtherRolesPlugin.Port.Value.ToString());
-                portField.SetText(TheOtherRolesPlugin.Port.Value.ToString());
+                portField.outputText.SetText(Main.Port.Value.ToString());
+                portField.SetText(Main.Port.Value.ToString());
             })));
 
 
@@ -132,7 +132,7 @@ public static class RegionMenuOpenPatch
                 ushort port = 0;
                 if (ushort.TryParse(portField.text, out port))
                 {
-                    TheOtherRolesPlugin.Port.Value = port;
+                    Main.Port.Value = port;
                     portField.outputText.color = Color.white;
                 }
                 else
@@ -143,7 +143,7 @@ public static class RegionMenuOpenPatch
 
             void onFocusLost()
             {
-                TheOtherRolesPlugin.UpdateRegions();
+                Main.UpdateRegions();
             }
         }
     }

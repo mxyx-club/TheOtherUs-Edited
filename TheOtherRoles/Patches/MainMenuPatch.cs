@@ -5,10 +5,10 @@ using Il2CppSystem.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using static UnityEngine.UI.Button;
 using Object = UnityEngine.Object;
 
-namespace TheOtherRoles.Modules;
+namespace TheOtherRoles.Patches;
 
 [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start))]
 public class MainMenuPatch
@@ -34,19 +34,45 @@ public class MainMenuPatch
         template2.transform.FindChild("FontPlacer").transform.localScale = new Vector3(1.8f, 0.9f, 0.9f);
         template2.transform.FindChild("FontPlacer").transform.localPosition = new Vector3(-1.1f, 0f, 0f);
 
-
-        var buttonDiscord = Object.Instantiate(template, template.transform.parent);
-        buttonDiscord.transform.localScale = new Vector3(0.42f, 0.84f, 0.84f);
-        buttonDiscord.GetComponent<AspectPosition>().anchorPoint = new Vector2(0.542f, 0.5f);
-
-        var textDiscord = buttonDiscord.transform.GetComponentInChildren<TMP_Text>();
-        __instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>(p => { textDiscord.SetText("GitHub"); })));
-        var passiveButtonDiscord = buttonDiscord.GetComponent<PassiveButton>();
-
-        passiveButtonDiscord.OnClick = new Button.ButtonClickedEvent();
-        passiveButtonDiscord.OnClick.AddListener((Action)(() => Application.OpenURL("https://github.com/mxyx-club/TheOtherUs/")));
+        var buttonGitHub = Object.Instantiate(template, template.transform.parent);
+        buttonGitHub.transform.localScale = new Vector3(0.42f, 0.84f, 0.84f);
+        buttonGitHub.GetComponent<AspectPosition>().anchorPoint = new Vector2(0.542f, 0.5f);
+        var textGitHub = buttonGitHub.transform.GetComponentInChildren<TMP_Text>();
+        __instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>(p => { textGitHub.SetText("GitHub"); })));
+        var passiveButtonGitHub = buttonGitHub.GetComponent<PassiveButton>();
+        passiveButtonGitHub.OnClick = new ButtonClickedEvent();
+        passiveButtonGitHub.OnClick.AddListener((Action)(() => Application.OpenURL("https://github.com/mxyx-club/TheOtherUs/")));
 
 
+        if (Helpers.IsCN())
+        {
+            var buttonDiscord = Object.Instantiate(template, null);
+            Object.Destroy(buttonDiscord.GetComponent<AspectPosition>());
+            buttonDiscord.transform.localPosition = new(-0.459f, -1.5f, 0);
+
+            var textDiscord = buttonDiscord.GetComponentInChildren<TextMeshPro>();
+            textDiscord.transform.localPosition = new(0, 0.035f, -2);
+            textDiscord.alignment = TextAlignmentOptions.Right;
+            _ = __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>((p) =>
+            {
+                if (textDiscord != null)
+                    textDiscord.SetText("加入QQ群");
+            })));
+
+            PassiveButton passiveButtonDiscord = buttonDiscord.GetComponent<PassiveButton>();
+            SpriteRenderer buttonSpriteDiscord = buttonDiscord.transform.FindChild("Inactive").GetComponent<SpriteRenderer>();
+
+            passiveButtonDiscord.OnClick = new ButtonClickedEvent();
+            passiveButtonDiscord.OnClick.AddListener((Action)(() => Application.OpenURL("https://qm.qq.com/q/Xr8HijGZK8")));
+
+            Color discordColor = new Color32(88, 101, 242, byte.MaxValue);
+            buttonSpriteDiscord.color = textDiscord.color = discordColor;
+            passiveButtonDiscord.OnMouseOut.AddListener((Action)delegate
+            {
+                buttonSpriteDiscord.color = textDiscord.color = discordColor;
+            });
+
+        }
         // TOR credits button
         if (template == null) return;
         var creditsButton = Object.Instantiate(template, template.transform.parent);
@@ -59,7 +85,7 @@ public class MainMenuPatch
             new Action<float>(p => { textCreditsButton.SetText(getString("Credits")); })));
         var passiveCreditsButton = creditsButton.GetComponent<PassiveButton>();
 
-        passiveCreditsButton.OnClick = new Button.ButtonClickedEvent();
+        passiveCreditsButton.OnClick = new ButtonClickedEvent();
 
         passiveCreditsButton.OnClick.AddListener((Action)delegate
         {
@@ -146,7 +172,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
             var guesserButtonText = guesserButton.GetComponentInChildren<TextMeshPro>();
             var guesserButtonPassiveButton = guesserButton.GetComponentInChildren<PassiveButton>();
 
-            guesserButtonPassiveButton.OnClick = new Button.ButtonClickedEvent();
+            guesserButtonPassiveButton.OnClick = new ButtonClickedEvent();
             guesserButtonPassiveButton.OnClick.AddListener((Action)(() =>
             {
                 MapOptions.gameMode = CustomGamemodes.Guesser;
@@ -158,7 +184,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
             var HideNSeekButtonText = HideNSeekButton.GetComponentInChildren<TextMeshPro>();
             var HideNSeekButtonPassiveButton = HideNSeekButton.GetComponentInChildren<PassiveButton>();
 
-            HideNSeekButtonPassiveButton.OnClick = new Button.ButtonClickedEvent();
+            HideNSeekButtonPassiveButton.OnClick = new ButtonClickedEvent();
             HideNSeekButtonPassiveButton.OnClick.AddListener((Action)(() =>
             {
                 MapOptions.gameMode = CustomGamemodes.HideNSeek;
@@ -170,7 +196,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
             var PropHuntButtonText = PropHuntButton.GetComponentInChildren<TextMeshPro>();
             var PropHuntButtonPassiveButton = PropHuntButton.GetComponentInChildren<PassiveButton>();
 
-            PropHuntButtonPassiveButton.OnClick = new Button.ButtonClickedEvent();
+            PropHuntButtonPassiveButton.OnClick = new ButtonClickedEvent();
             PropHuntButtonPassiveButton.OnClick.AddListener((Action)(() =>
             {
                 MapOptions.gameMode = CustomGamemodes.PropHunt;
@@ -184,5 +210,13 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
                 PropHuntButtonText.SetText(getString("isPropHuntGM"));
             })));
         }));
+    }
+}
+[HarmonyPatch(typeof(VersionShower), nameof(VersionShower.Start))]
+public static class VersionShower_Start
+{
+    public static void Postfix(VersionShower __instance)
+    {
+        __instance.text.text = $"Among Us {Application.version}  <color=#ff351f>The Other Us Edition</color> <color=#FCCE03FF>v{Main.Version.ToString() + (Main.betaDays > 0 ? "-BETA" : "")}</color>";
     }
 }
