@@ -12,6 +12,7 @@ using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
+using static TheOtherRoles.SubmergedCompatibility;
 using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 
@@ -327,26 +328,16 @@ public static class PlayerControlFixedUpdatePatch
     {
         if (Vampire.vampire == null || Vampire.vampire != CachedPlayer.LocalPlayer.PlayerControl) return;
 
-        PlayerControl target = null;
-        if (Spy.spy != null || Sidekick.wasSpy || Jackal.wasSpy)
-        {
-            if (Spy.impostorsCanKillAnyone)
-                target = setTarget(false, true);
-            else
-                target = setTarget(true, true,
-                    new List<PlayerControl>
-                    {
+        PlayerControl target = Spy.spy != null || Sidekick.wasSpy || Jackal.wasSpy
+            ? Spy.impostorsCanKillAnyone
+                ? setTarget(false, true)
+                : setTarget(true, true,
+                    [
                         Spy.spy, Sidekick.wasTeamRed ? Sidekick.sidekick : null,
                         Jackal.wasTeamRed ? Jackal.jackal : null
-                    });
-        }
-        else
-        {
-            target = setTarget(true, true,
-                new List<PlayerControl>
-                    { Sidekick.wasImpostor ? Sidekick.sidekick : null, Jackal.wasImpostor ? Jackal.jackal : null });
-        }
-
+                    ])
+            : setTarget(true, true,
+                [Sidekick.wasImpostor ? Sidekick.sidekick : null, Jackal.wasImpostor ? Jackal.jackal : null]);
         var targetNearGarlic = false;
         if (target != null)
             foreach (var garlic in Garlic.garlics)
@@ -425,7 +416,7 @@ public static class PlayerControlFixedUpdatePatch
         if (Sidekick.wasTeamRed) untargetables.Add(Sidekick.sidekick);
         if (Jackal.wasTeamRed) untargetables.Add(Jackal.jackal);
         Eraser.currentTarget = setTarget(!Eraser.canEraseAnyone,
-            untargetablePlayers: Eraser.canEraseAnyone ? new List<PlayerControl>() : untargetables);
+            untargetablePlayers: Eraser.canEraseAnyone ? [] : untargetables);
         setPlayerOutline(Eraser.currentTarget, Eraser.color);
     }
 
@@ -487,26 +478,16 @@ public static class PlayerControlFixedUpdatePatch
             return;
         }
 
-        PlayerControl target = null;
-        if (Spy.spy != null || Sidekick.wasSpy || Jackal.wasSpy)
-        {
-            if (Spy.impostorsCanKillAnyone)
-                target = setTarget(false, true);
-            else
-                target = setTarget(true, true,
-                    new List<PlayerControl>
-                    {
+        PlayerControl target = Spy.spy != null || Sidekick.wasSpy || Jackal.wasSpy
+            ? Spy.impostorsCanKillAnyone
+                ? setTarget(false, true)
+                : setTarget(true, true,
+                    [
                         Spy.spy, Sidekick.wasTeamRed ? Sidekick.sidekick : null,
                         Jackal.wasTeamRed ? Jackal.jackal : null
-                    });
-        }
-        else
-        {
-            target = setTarget(true, true,
-                new List<PlayerControl>
-                    { Sidekick.wasImpostor ? Sidekick.sidekick : null, Jackal.wasImpostor ? Jackal.jackal : null });
-        }
-
+                    ])
+            : setTarget(true, true,
+                [Sidekick.wasImpostor ? Sidekick.sidekick : null, Jackal.wasImpostor ? Jackal.jackal : null]);
         FastDestroyableSingleton<HudManager>.Instance.KillButton
             .SetTarget(target); // Includes setPlayerOutline(target, Palette.ImpstorRed);
     }
@@ -615,7 +596,7 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
-    static void trackerUpdate()
+    private static void trackerUpdate()
     {
         // Handle player tracking
         if (Tracker.arrow?.arrow != null)
@@ -674,7 +655,7 @@ public static class PlayerControlFixedUpdatePatch
             if (arrowsCountChanged)
             {
                 foreach (Arrow arrow in Tracker.localArrows) UnityEngine.Object.Destroy(arrow.arrow);
-                Tracker.localArrows = new List<Arrow>();
+                Tracker.localArrows = [];
             }
             foreach (Vector3 position in Tracker.deadBodyPositions)
             {
@@ -690,7 +671,7 @@ public static class PlayerControlFixedUpdatePatch
         else if (Tracker.localArrows.Count > 0)
         {
             foreach (Arrow arrow in Tracker.localArrows) UnityEngine.Object.Destroy(arrow.arrow);
-            Tracker.localArrows = new List<Arrow>();
+            Tracker.localArrows = [];
         }
     }
     public static void MiniSizeUpdate(PlayerControl p)
@@ -766,7 +747,7 @@ public static class PlayerControlFixedUpdatePatch
             {
                 var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
                 int numberOfTasks = playerTotal - playerCompleted;
-                bool completedSnitch = (Snitch.seeInMeeting && CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch && numberOfTasks == 0);
+                bool completedSnitch = Snitch.seeInMeeting && CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch && numberOfTasks == 0;
                 bool forImpTeam = p.Data.Role.IsImpostor;
                 bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && Helpers.isKiller(p);
                 bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && Helpers.isEvil(p);
@@ -917,7 +898,7 @@ public static class PlayerControlFixedUpdatePatch
         List<PlayerControl> untargetables;
         if (Arsonist.douseTarget != null)
         {
-            untargetables = new List<PlayerControl>();
+            untargetables = [];
             foreach (var cachedPlayer in CachedPlayer.AllPlayers)
                 if (cachedPlayer.PlayerId != Arsonist.douseTarget.PlayerId)
                     untargetables.Add(cachedPlayer);
@@ -1136,7 +1117,7 @@ public static class PlayerControlFixedUpdatePatch
         if (Vulture.vulture.Data.IsDead)
         {
             foreach (var arrow in Vulture.localArrows) Object.Destroy(arrow.arrow);
-            Vulture.localArrows = new List<Arrow>();
+            Vulture.localArrows = [];
             return;
         }
 
@@ -1147,7 +1128,7 @@ public static class PlayerControlFixedUpdatePatch
         if (arrowUpdate)
         {
             foreach (var arrow in Vulture.localArrows) Object.Destroy(arrow.arrow);
-            Vulture.localArrows = new List<Arrow>();
+            Vulture.localArrows = [];
         }
 
         foreach (var db in deadBodies)
@@ -1170,7 +1151,7 @@ public static class PlayerControlFixedUpdatePatch
         if (Amnisiac.amnisiac.Data.IsDead)
         {
             foreach (var arrow in Amnisiac.localArrows) Object.Destroy(arrow.arrow);
-            Amnisiac.localArrows = new List<Arrow>();
+            Amnisiac.localArrows = [];
             return;
         }
 
@@ -1181,7 +1162,7 @@ public static class PlayerControlFixedUpdatePatch
         if (arrowUpdate)
         {
             foreach (var arrow in Amnisiac.localArrows) Object.Destroy(arrow.arrow);
-            Amnisiac.localArrows = new List<Arrow>();
+            Amnisiac.localArrows = [];
         }
 
         foreach (var db in deadBodies)
@@ -1204,7 +1185,7 @@ public static class PlayerControlFixedUpdatePatch
         if (Radar.radar.Data.IsDead)
         {
             foreach (var arrow in Radar.localArrows) Object.Destroy(arrow.arrow);
-            Radar.localArrows = new List<Arrow>();
+            Radar.localArrows = [];
             return;
         }
 
@@ -1216,7 +1197,7 @@ public static class PlayerControlFixedUpdatePatch
             foreach (var arrow in Radar.localArrows) Object.Destroy(arrow.arrow);
             Radar.ClosestPlayer = GetClosestPlayer(PlayerControl.LocalPlayer,
                 PlayerControl.AllPlayerControls.ToArray().ToList());
-            Radar.localArrows = new List<Arrow>();
+            Radar.localArrows = [];
         }
 
 
@@ -1442,8 +1423,8 @@ public static class PlayerControlFixedUpdatePatch
         }
         else
         {
-            untargetables =
-                new List<PlayerControl>(); // Also target players that have already been spelled, to hide spells that were blanks/blocked by shields
+            // Also target players that have already been spelled, to hide spells that were blanks/blocked by shields
+            untargetables = []; 
             if (Spy.spy != null && !Witch.canSpellAnyone) untargetables.Add(Spy.spy);
             if (Sidekick.wasTeamRed && !Witch.canSpellAnyone) untargetables.Add(Sidekick.sidekick);
             if (Jackal.wasTeamRed && !Witch.canSpellAnyone) untargetables.Add(Jackal.jackal);
@@ -2399,28 +2380,21 @@ public static class PlayerPhysicsFixedUpdate
     public static void Postfix(PlayerPhysics __instance)
     {
         bool shouldInvert = Invert.invert.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count > 0 && Invert.meetings > 0;
-        if (__instance == null) return;
-        if (__instance.AmOwner &&
-            AmongUsClient.Instance &&
-            AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
-            !CachedPlayer.LocalPlayer.Data.IsDead &&
-            shouldInvert &&
-            GameData.Instance &&
-            __instance.myPlayer.CanMove)
-            __instance.body.velocity *= -1;
-        if (__instance.AmOwner &&
-            AmongUsClient.Instance &&
-            AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
-            !CachedPlayer.LocalPlayer.Data.IsDead &&
-            GameData.Instance &&
-            __instance.myPlayer.CanMove)
+
+        if (__instance == null || (!__instance.AmOwner && !AmongUsClient.Instance && AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started && !GameData.Instance && !__instance.myPlayer.CanMove)) return;
+
+        if (CachedPlayer.LocalPlayer.Data.IsDead && !PropHunt.isPropHuntGM && !HideNSeek.isHideNSeekGM) __instance.body.velocity *= OtherClear.ghostSpeed;
+
+        if (!CachedPlayer.LocalPlayer.Data.IsDead) return;
+
+        if (shouldInvert) __instance.body.velocity *= -1;
+
+        if (Flash.flash != null && Flash.flash.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl))
+            __instance.body.velocity *= Flash.speed;
+        if (Giant.giant != null && Giant.giant == CachedPlayer.LocalPlayer.PlayerControl)
         {
-            if (Flash.flash != null && Flash.flash.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl)) __instance.body.velocity *= Flash.speed;
-            if (Giant.giant != null && Giant.giant == CachedPlayer.LocalPlayer.PlayerControl)
-            {
-                if (Morphling.morphling != null && Morphling.morphTarget == Giant.giant) return;
-                    __instance.body.velocity *= Giant.speed;
-            }
+            if (Morphling.morphling != null && Morphling.morphTarget == Giant.giant) return;
+            __instance.body.velocity *= Giant.speed;
         }
     }
 }

@@ -60,7 +60,7 @@ public class RoleInfo
     public static RoleInfo engineer = new("工程师", Engineer.color, "没人比我更懂得窃听", "维修飞船", RoleId.Engineer);
     public static RoleInfo privateInvestigator = new("观察者", PrivateInvestigator.color, "查看谁在与他人互动", "卧底在飞船之中", RoleId.PrivateInvestigator);
     public static RoleInfo sheriff = new("警长", Sheriff.color, "<color=#FF1919FF>严禁</color>小脑行为！！！", "毙了伪装者", RoleId.Sheriff);
-    public static RoleInfo deputy = new("捕快", Sheriff.color, "逮捕<color=#FF1919FF>伪装者</color>", "逮捕伪装者", RoleId.Deputy);
+    public static RoleInfo deputy = new("捕快", Deputy.color, "逮捕<color=#FF1919FF>伪装者</color>", "逮捕伪装者", RoleId.Deputy);
     public static RoleInfo bodyguard = new("保镖", BodyGuard.color, "用自己的生命保护他人", "用自己的生命保护他人", RoleId.BodyGuard);
     public static RoleInfo lighter = new("执灯人", Lighter.color, "你 是 一 个 电 灯 泡a.a", "你的灯光永不熄灭", RoleId.Lighter);
     public static RoleInfo jumper = new("传送师", Jumper.color, "空！间！错！乱！", "放置锚点并传送", RoleId.Jumper);

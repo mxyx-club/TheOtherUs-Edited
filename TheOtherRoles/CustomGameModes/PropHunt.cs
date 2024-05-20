@@ -31,8 +31,6 @@ internal class PropHunt
     public static float propVision;
     public static float revealCooldown = 5f;
     public static float revealDuration = 5f;
-    public static float unstuckDuration = 5f;
-    public static float unstuckCooldown = 5f;
     public static float revealPunish;
 
     public static float invisCooldown;
@@ -40,6 +38,9 @@ internal class PropHunt
     public static float speedboostCooldown;
     public static float speedboostDuration;
     public static float speedboostRatio;
+
+    public static float hunterSpeed => CustomOptionHolder.propHuntSpeed.getFloat();
+    public static float propSpeed => CustomOptionHolder.propPropSpeed.getFloat();
 
     public static float adminCooldown = 5f;
     public static float adminDuration = 10f;
@@ -92,8 +93,6 @@ internal class PropHunt
         timer = CustomOptionHolder.propHuntTimer.getFloat() * 60;
         revealDuration = CustomOptionHolder.propHuntRevealDuration.getFloat();
         revealCooldown = CustomOptionHolder.propHuntRevealCooldown.getFloat();
-        unstuckDuration = CustomOptionHolder.propHuntUnstuckDuration.getFloat();
-        unstuckCooldown = CustomOptionHolder.propHuntUnstuckCooldown.getFloat();
         revealPunish = CustomOptionHolder.propHuntRevealPunish.getFloat();
         invisCooldown = CustomOptionHolder.propHuntInvisCooldown.getFloat();
         invisDuration = CustomOptionHolder.propHuntInvisDuration.getFloat();
@@ -736,5 +735,24 @@ internal class PropHunt
     {
         if (!isPropHuntGM) return true;
         return false;
+    }
+}
+
+[HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.FixedUpdate))]
+public static class PropSpeedFix
+{
+    public static void Postfix(PlayerPhysics __instance)
+    {
+        if (__instance != null
+            && __instance.AmOwner
+            && GameData.Instance
+            && !CachedPlayer.LocalPlayer.Data.IsDead
+            && __instance.myPlayer.CanMove
+            && PropHunt.isPropHuntGM)
+        {
+            var players = CachedPlayer.LocalPlayer.PlayerControl;
+            if (players.Data.Role.IsImpostor) __instance.body.velocity *= PropHunt.hunterSpeed;
+            else __instance.body.velocity *= PropHunt.propSpeed;
+        }
     }
 }

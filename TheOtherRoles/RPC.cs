@@ -908,8 +908,11 @@ public static class RPCProcedure
             case RoleId.Sheriff:
                 // Never reload Sheriff
                 if (Sheriff.formerDeputy != null && Sheriff.formerDeputy == Sheriff.sheriff)
-                    Sheriff.formerDeputy = amnisiac; // Ensure amni gets handcuffs
-                Sheriff.sheriff = amnisiac;
+                {
+                    Sheriff.formerDeputy = null;
+                    Deputy.deputy = amnisiac;
+                }
+                else Sheriff.sheriff = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1005,7 +1008,7 @@ public static class RPCProcedure
                 Bomber.bomber = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
-                
+
             case RoleId.Yoyo:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Yoyo.clearAndReload();
@@ -1307,6 +1310,17 @@ public static class RPCProcedure
                 Miner.miner = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
+            case RoleId.Undertaker:
+                Helpers.turnToImpostor(Amnisiac.amnisiac);
+                if (Amnisiac.resetRole) Undertaker.clearAndReload();
+                Undertaker.undertaker = amnisiac;
+                Amnisiac.clearAndReload();
+                break;
+            case RoleId.Prophet:
+                if (Amnisiac.resetRole) Prophet.clearAndReload();
+                Prophet.prophet = amnisiac;
+                Amnisiac.clearAndReload();
+                break;
         }
     }
 
@@ -1419,7 +1433,6 @@ public static class RPCProcedure
                 if (Amnisiac.resetRole) Tracker.clearAndReload();
                 Tracker.tracker = Mimic.mimic;
                 trackerTrackPlayerButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
-
                 Mimic.hasMimic = true;
                 break;
 
@@ -1428,7 +1441,6 @@ public static class RPCProcedure
                 SecurityGuard.securityGuard = Mimic.mimic;
                 securityGuardButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 securityGuardCamButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
-
                 Mimic.hasMimic = true;
                 break;
 
@@ -1436,6 +1448,13 @@ public static class RPCProcedure
                 if (Amnisiac.resetRole) Medium.clearAndReload();
                 Medium.medium = Mimic.mimic;
                 mediumButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
+                Mimic.hasMimic = true;
+                break;
+
+            case RoleId.Prophet:
+                if (Amnisiac.resetRole) Prophet.clearAndReload();
+                Prophet.prophet = Mimic.mimic;
+                prophetButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 Mimic.hasMimic = true;
                 break;
         }
@@ -2617,6 +2636,8 @@ public static class RPCProcedure
         var thief = Thief.thief;
         if (target == null) return;
         if (target == Sheriff.sheriff) Sheriff.sheriff = thief;
+        if (target == Deputy.deputy) Deputy.deputy = thief;
+        if (target == Veteren.veteren) Veteren.veteren = thief;
         if (target == Jackal.jackal)
         {
             Jackal.jackal = thief;
@@ -2661,6 +2682,11 @@ public static class RPCProcedure
         if (target == Bomber.bomber) Bomber.bomber = thief;
         if (target == Miner.miner) Miner.miner = thief;
         if (target == Undertaker.undertaker) Undertaker.undertaker = thief;
+        if (target == Mimic.mimic)
+        {
+            Mimic.mimic = thief;
+            Mimic.hasMimic = false;
+        }
         if (target == Yoyo.yoyo)
         {
             Yoyo.yoyo = thief;
@@ -2674,20 +2700,12 @@ public static class RPCProcedure
         }
 
         if (target == Werewolf.werewolf) Werewolf.werewolf = thief;
-        //天启添加
         if (target == Juggernaut.juggernaut) Juggernaut.juggernaut = thief;
-
         if (target == Swooper.swooper) Swooper.swooper = thief;
-        if (target == BodyGuard.bodyguard) BodyGuard.bodyguard = thief;
+
+        if (target == Deputy.deputy) Deputy.deputy = thief;
         if (target == Veteren.veteren) Veteren.veteren = thief;
         if (target == Blackmailer.blackmailer) Blackmailer.blackmailer = thief;
-        if (target == Mimic.mimic)
-        {
-            Mimic.mimic = thief;
-            Mimic.hasMimic = false;
-        }
-
-        if (target == Poucher.poucher) Poucher.poucher = thief;
 
         if (Lawyer.lawyer != null && target == Lawyer.target)
             Lawyer.target = thief;

@@ -134,6 +134,7 @@ public static class TheOtherRoles
     public static class OtherClear
     {
         public static float ButtonCooldown { get { return CustomOptionHolder.resteButtonCooldown.getFloat(); } }
+        public static float ghostSpeed { get { return CustomOptionHolder.ghostSpeed.getFloat(); } }
     }
 
     public static class Jester
@@ -2893,6 +2894,8 @@ public static class Thief
     public static bool hasImpostorVision;
     public static bool canUseVents;
     public static bool canKillSheriff;
+    public static bool canKillDeputy;
+    public static bool canKillVeteren;
     public static bool canStealWithGuess;
 
     public static void clearAndReload()
@@ -2905,13 +2908,20 @@ public static class Thief
         cooldown = CustomOptionHolder.thiefCooldown.getFloat();
         canUseVents = CustomOptionHolder.thiefCanUseVents.getBool();
         canKillSheriff = CustomOptionHolder.thiefCanKillSheriff.getBool();
+        canKillDeputy = CustomOptionHolder.thiefCanKillDeputy.getBool();
+        canKillVeteren = CustomOptionHolder.thiefCanKillVeteren.getBool();
         canStealWithGuess = CustomOptionHolder.thiefCanStealWithGuess.getBool();
     }
 
     public static bool isFailedThiefKill(PlayerControl target, PlayerControl killer, RoleInfo targetRole)
     {
         return killer == thief && !target.Data.Role.IsImpostor && !new List<RoleInfo>
-            { RoleInfo.jackal, canKillSheriff ? RoleInfo.sheriff : null, RoleInfo.sidekick }.Contains(targetRole);
+        {   RoleInfo.jackal,
+            RoleInfo.sidekick,
+            canKillSheriff ? RoleInfo.sheriff : null,
+            canKillDeputy ? RoleInfo.deputy : null,
+            canKillVeteren ? RoleInfo.veteren : null
+        }.Contains(targetRole);
     }
 }
 

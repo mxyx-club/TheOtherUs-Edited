@@ -364,6 +364,10 @@
         "0": "Allow Guessing Some Modifiers",
         "13": "\u5141\u8bb8\u731c\u6d4b\u90e8\u5206\u9644\u52a0\u804c\u4e1a"
     },
+    "ghostSpeed": {
+        "0": "Ghost Speed",
+        "13": "\u9b3c\u9b42\u79fb\u901f\u500d\u7387"
+    },
     "transparentTasks": {
         "0": "Tasks Are Transparent",
         "13": "\u4efb\u52a1\u754c\u9762\u900f\u660e"
@@ -607,6 +611,14 @@
     "hideNSeekCanSabotage": {
         "13": "\u542f\u7528\u7834\u574f"
     },
+    "hideHuntSpeed": {
+        "0": "Hunter Speed",
+        "13": "\u730e\u4eba\u79fb\u901f\u500d\u7387"
+    },
+    "hideCrewSpeed": {
+        "0": "Hunted Speed",
+        "13": "\u8eb2\u85cf\u8005\u79fb\u901f\u500d\u7387"
+    },
     "hideNSeekHunterWaiting": {
         "13": "\u730e\u4eba\u7b49\u5f85\u5165\u573a\u65f6\u95f4"
     },
@@ -669,6 +681,14 @@
     },
     "propVision": {
         "13": "\u8eb2\u85cf\u8005\u89c6\u91ce"
+    },
+    "propHuntSpeed": {
+        "0": "Hunter Speed",
+        "13": "\u730e\u4eba\u79fb\u901f\u500d\u7387"
+    },
+    "propPropSpeed": {
+        "0": "Prop Speed",
+        "13": "\u8eb2\u85cf\u8005\u79fb\u901f\u500d\u7387"
     },
     "propHuntNumberOfHunters": {
         "13": "\u730e\u4eba\u6570\u91cf"

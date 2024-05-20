@@ -880,7 +880,7 @@ internal class RoleManagerSelectRolesPatch
         if (modifiers.Contains(RoleId.Shifter))
         {
             var crewPlayerShifter = new List<PlayerControl>(crewPlayer);
-            crewPlayerShifter.RemoveAll(x => x == Spy.spy);
+            crewPlayerShifter.RemoveAll(x => x == Spy.spy || x == Sheriff.sheriff);
             playerId = setModifierToRandomPlayer((byte)RoleId.Shifter, crewPlayerShifter);
             crewPlayer.RemoveAll(x => x.PlayerId == playerId);
             playerList.RemoveAll(x => x.PlayerId == playerId);

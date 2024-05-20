@@ -17,6 +17,9 @@ public static class HideNSeek
     public static bool isWaitingTimer = true;
     public static DateTime startTime = DateTime.UtcNow;
 
+    public static float hunterSpeed => CustomOptionHolder.hideHuntSpeed.getFloat();
+    public static float crewSpeed => CustomOptionHolder.hideCrewSpeed.getFloat();
+
     public static float timer = 300f;
     public static float hunterVision = 0.5f;
     public static float huntedVision = 2f;
@@ -150,5 +153,24 @@ public static class Hunted
         shieldCooldown = CustomOptionHolder.huntedShieldCooldown.getFloat();
         shieldDuration = CustomOptionHolder.huntedShieldDuration.getFloat();
         shieldRewindTime = CustomOptionHolder.huntedShieldRewindTime.getFloat();
+    }
+}
+
+[HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.FixedUpdate))]
+public static class HideSpeedFix
+{
+    public static void Postfix(PlayerPhysics __instance)
+    {
+        if (__instance != null
+            && __instance.AmOwner
+            && GameData.Instance
+            && !CachedPlayer.LocalPlayer.Data.IsDead
+            && __instance.myPlayer.CanMove
+            && HideNSeek.isHideNSeekGM)
+        {
+            var players = CachedPlayer.LocalPlayer.PlayerControl;
+            if (players.Data.Role.IsImpostor) __instance.body.velocity *= HideNSeek.hunterSpeed;
+            else __instance.body.velocity *= HideNSeek.crewSpeed;
+        }
     }
 }

@@ -98,7 +98,7 @@ internal static class HudManagerStartPatch
     private static CustomButton hunterArrowButton;
     private static CustomButton huntedShieldButton;
     public static CustomButton propDisguiseButton;
-    private static CustomButton propHuntUnstuckButton;
+    //private static CustomButton propHuntUnstuckButton;
     public static CustomButton propHuntRevealButton;
     private static CustomButton propHuntInvisButton;
     private static CustomButton propHuntSpeedboostButton;
@@ -210,7 +210,7 @@ internal static class HudManagerStartPatch
         defuseButton.MaxTimer = defaultMaxTimer;
         defuseButton.Timer = defaultMaxTimer;
         propDisguiseButton.MaxTimer = defaultMaxTimer;
-        propHuntUnstuckButton.MaxTimer = PropHunt.unstuckCooldown;
+        //propHuntUnstuckButton.MaxTimer = PropHunt.unstuckCooldown;
         propHuntRevealButton.MaxTimer = PropHunt.revealCooldown;
         propHuntInvisButton.MaxTimer = PropHunt.invisCooldown;
         propHuntSpeedboostButton.MaxTimer = PropHunt.speedboostCooldown;
@@ -239,7 +239,7 @@ internal static class HudManagerStartPatch
         huntedShieldButton.EffectDuration = Hunted.shieldDuration;
         defuseButton.EffectDuration = Terrorist.defuseDuration;
         terroristButton.EffectDuration = Terrorist.destructionTime + Terrorist.bombActiveAfter;
-        propHuntUnstuckButton.EffectDuration = PropHunt.unstuckDuration;
+        //propHuntUnstuckButton.EffectDuration = PropHunt.unstuckDuration;
         propHuntRevealButton.EffectDuration = PropHunt.revealDuration;
         propHuntInvisButton.EffectDuration = PropHunt.invisDuration;
         propHuntSpeedboostButton.EffectDuration = PropHunt.speedboostDuration;
@@ -958,7 +958,7 @@ internal static class HudManagerStartPatch
                        !CachedPlayer.LocalPlayer.Data.IsDead;
             },
             () => { return Disperser.remainingDisperses > 0 && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
-            () => { },
+            () => { if (Disperser.remainingDisperses > 0) disperserDisperseButton.Timer = disperserDisperseButton.MaxTimer; },
             Disperser.getButtonSprite(),
             new Vector3(0, 1f, 0),
             __instance,
@@ -4108,7 +4108,7 @@ internal static class HudManagerStartPatch
         propSpriteRenderer = propSpriteHolder.AddComponent<SpriteRenderer>();
         propSpriteHolder.transform.SetParent(propDisguiseButton.actionButtonGameObject.transform, false);
         propSpriteHolder.transform.localPosition = new Vector3(0, 0, -2f);
-
+        /*
         propHuntUnstuckButton = new CustomButton(
             () => { PlayerControl.LocalPlayer.Collider.enabled = false; },
             () => { return PropHunt.isPropHuntGM && !PlayerControl.LocalPlayer.Data.IsDead; },
@@ -4127,7 +4127,7 @@ internal static class HudManagerStartPatch
             },
             buttonText: "穿墙"
         );
-
+        */
         propHuntRevealButton = new CustomButton(
             () =>
             {

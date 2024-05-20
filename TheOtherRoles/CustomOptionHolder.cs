@@ -349,6 +349,8 @@ public class CustomOptionHolder
     public static CustomOption thiefHasImpVision;
     public static CustomOption thiefCanUseVents;
     public static CustomOption thiefCanKillSheriff;
+    public static CustomOption thiefCanKillDeputy;
+    public static CustomOption thiefCanKillVeteren;
     public static CustomOption thiefCanStealWithGuess;
 
     public static CustomOption juggernautSpawnRate;
@@ -516,6 +518,7 @@ public class CustomOptionHolder
     public static CustomOption randomGameStartPosition;
     public static CustomOption randomGameStartToVents;
     public static CustomOption allowModGuess;
+    public static CustomOption ghostSpeed;
     public static CustomOption finishTasksBeforeHauntingOrZoomingOut;
     public static CustomOption camsNightVision;
     public static CustomOption camsNoNightVisionIfImpVision;
@@ -601,6 +604,8 @@ public class CustomOptionHolder
     public static CustomOption hideNSeekCanSabotage;
     public static CustomOption hideNSeekMap;
     public static CustomOption hideNSeekHunterWaiting;
+    public static CustomOption hideHuntSpeed;
+    public static CustomOption hideCrewSpeed;
 
     public static CustomOption hunterLightCooldown;
     public static CustomOption hunterLightDuration;
@@ -629,11 +634,11 @@ public class CustomOptionHolder
     public static CustomOption propBecomesHunterWhenFound;
     public static CustomOption propHunterVision;
     public static CustomOption propVision;
+    public static CustomOption propHuntSpeed;
+    public static CustomOption propPropSpeed;
     public static CustomOption propHuntRevealCooldown;
     public static CustomOption propHuntRevealDuration;
     public static CustomOption propHuntRevealPunish;
-    public static CustomOption propHuntUnstuckCooldown;
-    public static CustomOption propHuntUnstuckDuration;
     public static CustomOption propHuntInvisCooldown;
     public static CustomOption propHuntInvisDuration;
     public static CustomOption propHuntSpeedboostCooldown;
@@ -701,6 +706,7 @@ public class CustomOptionHolder
         blockGameEnd = Create(29, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "blockGameEnd"), true);
         deadImpsBlockSabotage = Create(32, Types.General, cs(Palette.ImpostorRed, "deadImpsBlockSabotage"), false);
         allowModGuess = Create(31, Types.General, "allowModGuess", false);
+        ghostSpeed = Create(33, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
 
         transparentTasks = Create(40, Types.General, "transparentTasks", false, null, true);
         disableMedbayWalk = Create(41, Types.General, "disableMedbayWalk", false);
@@ -956,7 +962,9 @@ public class CustomOptionHolder
 
         thiefSpawnRate = Create(20240, Types.Neutral, cs(Thief.color, "身份窃贼"), rates, null, true);
         thiefCooldown = Create(20241, Types.Neutral, "窃取冷却", 30f, 5f, 120f, 2.5f, thiefSpawnRate);
-        thiefCanKillSheriff = Create(20242, Types.Neutral, "身份窃贼可以击杀警长", true, thiefSpawnRate);
+        thiefCanKillSheriff = Create(20242, Types.Neutral, "身份窃贼可以击杀" + cs(Sheriff.color, "警长"), true, thiefSpawnRate);
+        thiefCanKillDeputy = Create(20246, Types.Neutral, "身份窃贼可以击杀" + cs(Deputy.color, "捕快"), true, thiefSpawnRate);
+        thiefCanKillVeteren = Create(20247, Types.Neutral, "身份窃贼可以击杀" + cs(Veteren.color, "老兵"), true, thiefSpawnRate);
         thiefHasImpVision = Create(20243, Types.Neutral, "身份窃贼拥有伪装者视野", true, thiefSpawnRate);
         thiefCanUseVents = Create(20244, Types.Neutral, "身份窃贼可以使用管道", true, thiefSpawnRate);
         thiefCanStealWithGuess = Create(20245, Types.Neutral, "身份窃贼可通过猜测窃取身份\n(赌怪模式)", false, thiefSpawnRate);
@@ -1001,7 +1009,7 @@ public class CustomOptionHolder
         sheriffCanKillThief = Create(30157, Types.Crewmate, "可执法 " + cs(Thief.color, "身份窃贼"), true, sheriffCanKillNeutrals);
         sheriffCanKillDoomsayer = Create(30159, Types.Crewmate, "可执法 " + cs(Doomsayer.color, "末日预言家"), true, sheriffCanKillNeutrals);
         sheriffCanKillArsonist = Create(30154, Types.Crewmate, "可执法 " + cs(Arsonist.color, "纵火犯"), true, sheriffCanKillNeutrals);
-        deputySpawnRate = Create(30170, Types.Crewmate, "可拥有一名捕快", rates, sheriffSpawnRate);
+        deputySpawnRate = Create(30170, Types.Crewmate, cs(Deputy.color, "可拥有一名捕快"), rates, sheriffSpawnRate);
         deputyNumberOfHandcuffs = Create(30171, Types.Crewmate, "手铐可用次数", 5f, 1f, 10f, 1f, deputySpawnRate);
         deputyHandcuffCooldown = Create(30172, Types.Crewmate, "手铐冷却", 25f, 10f, 60f, 2.5f, deputySpawnRate);
         deputyHandcuffDuration = Create(30173, Types.Crewmate, "手铐持续时间", 12.5f, 5f, 60f, 2.5f, deputySpawnRate);
@@ -1271,9 +1279,11 @@ public class CustomOptionHolder
         hideNSeekTaskWin = Create(3004, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekTaskWin"), false);
         hideNSeekTaskPunish = Create(3017, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekTaskPunish"), 10f, 0f, 30f, 1f);
         hideNSeekCanSabotage = Create(3019, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekCanSabotage"), false);
-        hideNSeekHunterWaiting = Create(3022, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekHunterWaiting"), 15f, 2.5f, 60f, 2.5f);
+        hideHuntSpeed = Create(3027, Types.HideNSeekMain, cs(Color.yellow, "hideHuntSpeed"), 1f, 0.5f, 2f, 0.125f);
+        hideCrewSpeed = Create(3028, Types.HideNSeekMain, cs(Color.yellow, "hideCrewSpeed"), 1f, 0.5f, 2f, 0.125f);
 
-        hunterLightCooldown = Create(3005, Types.HideNSeekRoles, cs(Color.red, "hunterLightCooldown"), 30f, 5f, 60f, 1f, null, true);
+        hideNSeekHunterWaiting = Create(3022, Types.HideNSeekMain, cs(Color.red, "hideNSeekHunterWaiting"), 15f, 2.5f, 60f, 2.5f, null, true);
+        hunterLightCooldown = Create(3005, Types.HideNSeekRoles, cs(Color.red, "hunterLightCooldown"), 30f, 5f, 60f, 1f);
         hunterLightDuration = Create(3006, Types.HideNSeekRoles, cs(Color.red, "hunterLightDuration"), 10f, 1f, 60f, 1f);
         hunterLightVision = Create(3007, Types.HideNSeekRoles, cs(Color.red, "hunterLightVision"), 2f, 1f, 5f, 0.25f);
         hunterLightPunish = Create(3008, Types.HideNSeekRoles, cs(Color.red, "hunterLightPunish"), 5f, 0f, 30f, 1f);
@@ -1299,10 +1309,10 @@ public class CustomOptionHolder
                 GameOptionsManager.Instance.currentNormalGameOptions.MapId = (byte)map;
             });
         propHuntTimer = Create(4021, Types.PropHunt, cs(Color.yellow, "propHuntTimer"), 5f, 1f, 30f, 0.5f);
-        propHuntUnstuckCooldown = Create(4011, Types.PropHunt, cs(Color.yellow, "propHuntUnstuckCooldown"), 30f, 2.5f, 60f, 2.5f);
-        propHuntUnstuckDuration = Create(4012, Types.PropHunt, cs(Color.yellow, "propHuntUnstuckDuration"), 2f, 1f, 60f, 1f);
         propHunterVision = Create(4006, Types.PropHunt, cs(Color.yellow, "propHunterVision"), 0.5f, 0.25f, 2f, 0.25f);
         propVision = Create(4007, Types.PropHunt, cs(Color.yellow, "propVision"), 2f, 0.25f, 5f, 0.25f);
+        propHuntSpeed = Create(4025, Types.PropHunt, cs(Color.yellow, "propHuntSpeed"), 1f, 0.5f, 2f, 0.125f);
+        propPropSpeed = Create(4026, Types.PropHunt, cs(Color.yellow, "propPropSpeed"), 1f, 0.5f, 2f, 0.125f);
         // Hunter Options
         propHuntNumberOfHunters = Create(4000, Types.PropHunt, cs(Color.red, "propHuntNumberOfHunters"), 1f, 1f, 5f, 1f, null, true);
         hunterInitialBlackoutTime = Create(4001, Types.PropHunt, cs(Color.red, "hunterInitialBlackoutTime"), 10f, 5f, 20f, 1f);
