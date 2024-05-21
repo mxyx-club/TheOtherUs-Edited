@@ -3,9 +3,9 @@
 ![mod banner](./Images/TOR_logo.png)
 
 <p align="center"><a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/latest">
-<img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited">
+<img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited"></a>
 <img src="https://badgen.net/github/assets-dl/mxyx-club/TheOtherUs-Edited">
-<img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></a></p>
+<img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></p>
 
 本模组不隶属于 Among Us 或 Innersloth LLC，其包含的内容也未得到 Innersloth LLC 的认可或以其他方式赞助。此处包含的部分材料是Innersloth LLC的财产。
 
