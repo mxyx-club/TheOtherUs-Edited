@@ -475,7 +475,6 @@ public class EndGameManagerSetUpPatch
                 break;
             case WinCondition.ArsonistWin:
                 textRenderer.text = "用火焰净化一切";
-
                 textRenderer.color = Arsonist.color;
                 break;
             case WinCondition.VultureWin:
