@@ -9,6 +9,7 @@ public static class PlayerPhysicsFixedUpdatePatch
 {
     public static void Postfix(PlayerPhysics __instance)
     {
+        if (__instance == null) return;
         if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
         updateUndertakerMoveSpeed(__instance);
     }
@@ -16,9 +17,8 @@ public static class PlayerPhysicsFixedUpdatePatch
     private static void updateUndertakerMoveSpeed(PlayerPhysics playerPhysics)
     {
         if (Undertaker.undertaker == null || Undertaker.undertaker != CachedPlayer.LocalPlayer.PlayerControl) return;
-        if (Undertaker.deadBodyDraged != null)
-            if (playerPhysics.AmOwner && GameData.Instance && playerPhysics.myPlayer.CanMove)
-                playerPhysics.body.velocity *= Undertaker.velocity;
+        if (Undertaker.deadBodyDraged != null && playerPhysics.AmOwner && GameData.Instance && playerPhysics.myPlayer.CanMove)
+            playerPhysics.body.velocity *= Undertaker.velocity;
     }
 }
 

@@ -1060,7 +1060,6 @@ public static class Helpers
             AmongUsClient.Instance.FinishRpcImmediately(write);
             RPCProcedure.setBlanked(killer.PlayerId, 0);
             Medic.shielded = null;
-
             return MurderAttemptResult.BlankKill;
         }
 
@@ -1072,6 +1071,8 @@ public static class Helpers
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
             SoundEffectsManager.play("fail");
+            killer.SetKillTimer(25f);
+
             return MurderAttemptResult.SuppressKill;
         }
 

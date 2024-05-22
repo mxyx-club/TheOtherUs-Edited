@@ -107,7 +107,7 @@ public class GameStartManagerPatch
 
         public static void Postfix(GameStartManager __instance)
         {
-            if (__instance.GameStartText == null || __instance.StartButton == null ||
+            if (__instance == null || __instance.GameStartText == null || __instance.StartButton == null ||
                 __instance.startLabelText == null) return;
 #if DEBUG
                 return;
@@ -142,12 +142,12 @@ public class GameStartManagerPatch
                     {
                         case > 0:
                             message +=
-                                $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了旧版本的TheOtherUs (v{playerVersions[client.Id].version.ToString()})\n</color>";
+                                $"<color=#FF0000FF>{client.Character.Data.PlayerName} {"oldTouVersion".Translate()} (v{playerVersions[client.Id].version})\n</color>";
                             versionMismatch = true;
                             break;
                         case < 0:
                             message +=
-                                $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了较新版本的TheOtherUs (v{playerVersions[client.Id].version.ToString()})\n</color>";
+                                $"<color=#FF0000FF>{client.Character.Data.PlayerName} {"newTouVersion".Translate()} (v{playerVersions[client.Id].version})\n</color>";
                             versionMismatch = true;
                             break;
                         default:
@@ -156,7 +156,7 @@ public class GameStartManagerPatch
                             {
                                 // version presumably matches, check if Guid matches
                                 message +=
-                                    $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了修改过的TheOtherUs v{playerVersions[client.Id].version.ToString()}\n<size=40%>({PV.guid.ToString()})</size>\n</color>";
+                                    $"<color=#FF0000FF>{client.Character.Data.PlayerName} {"modifiedTouVersion".Translate()} v{playerVersions[client.Id].version}\n<size=40%>({PV.guid})</size>\n</color>";
                                 versionMismatch = true;
                             }
 
@@ -233,12 +233,12 @@ public class GameStartManagerPatch
                         SceneChanger.ChangeScene("MainMenu");
                     }
 
-                    __instance.GameStartText.text = $"<color=#FF0000FF>房主没有或不同版本的TheOtherUs\n即将被踢出房间 {Math.Round(10 - kickingTimer)}s</color>";
+                    __instance.GameStartText.text = $"<color=#FF0000FF>{"HostNoTOU".Translate()} {Math.Round(10 - kickingTimer)}s</color>";
                     __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
                 }
                 else if (versionMismatch)
                 {
-                    __instance.GameStartText.text = $"<color=#FF0000FF>装了不同版本模组的玩家:\n</color>" + message;
+                    __instance.GameStartText.text = $"<color=#FF0000FF>{"DifferentTouVersions".Translate()}\n</color>" + message;
                     __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
                 }
                 else
@@ -434,7 +434,6 @@ public class GameStartManagerPatch
                     RPCProcedure.dynamicMapOption(chosenMapId);
                 }
             }
-
             return continueStart;
         }
     }
