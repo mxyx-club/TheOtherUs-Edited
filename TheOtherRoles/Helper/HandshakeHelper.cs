@@ -113,7 +113,7 @@ public static class HandshakeHelper
     {
         public readonly Version version = version;
         public int PlayerId { get; set; }
-        public Guid? guid { get; set; } = null;
+        public Guid? guid { get; set; }
 
         public bool GuidMatches()
         {

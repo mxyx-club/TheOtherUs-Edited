@@ -12,7 +12,6 @@ using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
-using static TheOtherRoles.SubmergedCompatibility;
 using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 
@@ -2380,21 +2379,23 @@ public static class PlayerPhysicsFixedUpdate
     public static void Postfix(PlayerPhysics __instance)
     {
         bool shouldInvert = Invert.invert.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count > 0 && Invert.meetings > 0;
+        if (__instance.AmOwner &&
+            AmongUsClient.Instance &&
+            AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started &&
+            !CachedPlayer.LocalPlayer.Data.IsDead &&
+            shouldInvert &&
+            GameData.Instance &&
+            __instance.myPlayer.CanMove) __instance.body.velocity *= -1;
 
-        if (__instance == null || (!__instance.AmOwner && !AmongUsClient.Instance && AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started && !GameData.Instance && !__instance.myPlayer.CanMove)) return;
-
-        if (CachedPlayer.LocalPlayer.Data.IsDead && !PropHunt.isPropHuntGM && !HideNSeek.isHideNSeekGM) __instance.body.velocity *= OtherClear.ghostSpeed;
-
-        if (!CachedPlayer.LocalPlayer.Data.IsDead) return;
-
-        if (shouldInvert) __instance.body.velocity *= -1;
-
-        if (Flash.flash != null && Flash.flash.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl))
-            __instance.body.velocity *= Flash.speed;
-        if (Giant.giant != null && Giant.giant == CachedPlayer.LocalPlayer.PlayerControl)
+        if (__instance.AmOwner &&
+                AmongUsClient.Instance &&
+                AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started &&
+                !CachedPlayer.LocalPlayer.Data.IsDead &&
+                GameData.Instance &&
+                __instance.myPlayer.CanMove)
         {
-            if (Morphling.morphling != null && Morphling.morphTarget == Giant.giant) return;
-            __instance.body.velocity *= Giant.speed;
+            if (Flash.flash != null && Flash.flash.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId)) __instance.body.velocity *= Flash.speed;
+            if (Giant.giant != null && Giant.giant == CachedPlayer.LocalPlayer.PlayerControl) __instance.body.velocity *= Giant.speed;
         }
     }
 }

@@ -96,3 +96,25 @@ public static class HauntMenuMinigamePatch
         }
     }
 }
+[HarmonyPatch(typeof(HauntMenuMinigame), nameof(HauntMenuMinigame.Start))]
+public static class AddNeutralHauntPatch
+{
+    public static bool Prefix(HauntMenuMinigame __instance)
+    {
+        __instance.FilterButtons[0].gameObject.SetActive(true);
+        var numActive = 0;
+        var numButtons = __instance.FilterButtons.Count(x => x.isActiveAndEnabled);
+        var edgeDist = 0.6f * numButtons;
+
+        foreach (var button in __instance.FilterButtons)
+        {
+            if (button.isActiveAndEnabled)
+            {
+                button.transform.SetLocalX(FloatRange.SpreadToEdges(-edgeDist, edgeDist, numActive, numButtons));
+                numActive++;
+            }
+        }
+
+        return false;
+    }
+}

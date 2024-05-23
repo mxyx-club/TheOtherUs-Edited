@@ -13,9 +13,9 @@ namespace TheOtherRoles.Patches
         private static int originalNumCommonTasksOption;
         private static int originalNumShortTasksOption;
         private static int originalNumLongTasksOption;
-        public static float originalNumCrewVisionOption = 0;
-        public static float originalNumImpVisionOption = 0;
-        public static float originalNumKillCooldownOption = 0;
+        public static float originalNumCrewVisionOption;
+        public static float originalNumImpVisionOption;
+        public static float originalNumKillCooldownOption;
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]

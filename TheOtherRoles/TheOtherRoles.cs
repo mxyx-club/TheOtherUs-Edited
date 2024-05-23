@@ -134,7 +134,7 @@ public static class TheOtherRoles
     public static class OtherClear
     {
         public static float ButtonCooldown { get { return CustomOptionHolder.resteButtonCooldown.getFloat(); } }
-        public static float ghostSpeed { get { return CustomOptionHolder.ghostSpeed.getFloat(); } }
+        //public static float ghostSpeed { get { return CustomOptionHolder.ghostSpeed.getFloat(); } }
     }
 
     public static class Jester
@@ -268,7 +268,7 @@ public static class TheOtherRoles
         public static List<Arrow> localArrows = new();
         public static bool chatTarget = true;
         public static bool chatTarget2 = true;
-        public static bool isCultistGame = false;
+        public static bool isCultistGame;
 
         public static bool needsFollower = true;
 
@@ -674,7 +674,7 @@ public static class TimeMaster
     public static PlayerControl timeMaster;
     public static Color color = new Color32(112, 142, 239, byte.MaxValue);
 
-    public static bool reviveDuringRewind = false;
+    public static bool reviveDuringRewind;
     public static float rewindTime = 3f;
     public static float shieldDuration = 3f;
     public static float cooldown = 30f;
@@ -1202,18 +1202,18 @@ public static class Tracker
     public static List<Arrow> localArrows = new();
 
     public static float updateIntervall = 5f;
-    public static bool resetTargetAfterMeeting = false;
-    public static bool canTrackCorpses = false;
+    public static bool resetTargetAfterMeeting;
+    public static bool canTrackCorpses;
     public static float corpsesTrackingCooldown = 30f;
     public static float corpsesTrackingDuration = 5f;
-    public static float corpsesTrackingTimer = 0f;
-    public static int trackingMode = 0;
+    public static float corpsesTrackingTimer;
+    public static int trackingMode;
     public static List<Vector3> deadBodyPositions = new();
 
     public static PlayerControl currentTarget;
     public static PlayerControl tracked;
-    public static bool usedTracker = false;
-    public static float timeUntilUpdate = 0f;
+    public static bool usedTracker;
+    public static float timeUntilUpdate;
     public static Arrow arrow = new(Color.blue);
 
     public static GameObject DangerMeterParent;
@@ -1273,18 +1273,18 @@ public static class Tracker
 
 public static class Yoyo
 {
-    public static PlayerControl yoyo = null;
+    public static PlayerControl yoyo;
     public static Color color = Palette.ImpostorRed;
 
-    public static float blinkDuration = 0;
-    public static float markCooldown = 0;
-    public static bool markStaysOverMeeting = false;
-    public static bool hasAdminTable = false;
-    public static float adminCooldown = 0;
+    public static float blinkDuration;
+    public static float markCooldown;
+    public static bool markStaysOverMeeting;
+    public static bool hasAdminTable;
+    public static float adminCooldown;
     public static float SilhouetteVisibility => (silhouetteVisibility == 0 && (PlayerControl.LocalPlayer == yoyo || PlayerControl.LocalPlayer.Data.IsDead)) ? 0.1f : silhouetteVisibility;
-    public static float silhouetteVisibility = 0;
+    public static float silhouetteVisibility;
 
-    public static Vector3? markedLocation = null;
+    public static Vector3? markedLocation;
 
     private static Sprite markButtonSprite;
 
@@ -1378,8 +1378,8 @@ public static class Snitch
 
     public static List<Arrow> localArrows = new List<Arrow>();
     public static int taskCountForReveal = 1;
-    public static bool seeInMeeting = false;
-    public static bool canSeeRoles = false;
+    public static bool seeInMeeting;
+    public static bool canSeeRoles;
     public static bool teamNeutraUseDifferentArrowColor = true;
     public static bool needsUpdate = true;
 
@@ -1639,13 +1639,13 @@ public static class Swooper
     public static PlayerControl swooper;
     public static PlayerControl currentTarget;
     public static float cooldown = 30f;
-    public static bool isInvisable = false;
+    public static bool isInvisable;
     public static Color color = new Color32(224, 197, 219, byte.MaxValue);
     public static float duration = 5f;
     public static float swoopCooldown = 30f;
-    public static float swoopTimer = 0f;
+    public static float swoopTimer;
     public static Sprite buttonSprite;
-    public static bool hasImpVision = false;
+    public static bool hasImpVision;
 
     public static Sprite getSwoopButtonSprite()
     {
@@ -1674,7 +1674,7 @@ public static class LastImpostor
 {
     public static PlayerControl lastImpostor;
     public static float deduce = 2.5f;
-    public static bool isEnable = false;
+    public static bool isEnable;
 
     public static void promoteToLastImpostor()
     {
@@ -1847,11 +1847,11 @@ public static class Bomber
     public static bool bombActive;
     //public static bool hotPotatoMode = false;
 
-    public static PlayerControl currentBombTarget = null;
-    public static bool hasAlerted = false;
-    public static int timeLeft = 0;
-    public static PlayerControl currentTarget = null;
-    public static PlayerControl hasBomb = null;
+    public static PlayerControl currentBombTarget;
+    public static bool hasAlerted;
+    public static int timeLeft;
+    public static PlayerControl currentTarget;
+    public static PlayerControl hasBomb;
 
 
     private static Sprite buttonSprite;
@@ -2842,7 +2842,7 @@ public static class Blackmailer
     public static Color color = Palette.ImpostorRed;
     public static Color blackmailedColor = Palette.White;
 
-    public static bool alreadyShook = false;
+    public static bool alreadyShook;
     public static PlayerControl blackmailed;
     public static PlayerControl currentTarget;
     public static float cooldown = 30f;
@@ -2957,15 +2957,15 @@ public static class Prophet
     public static Color32 color = new Color32(255, 204, 127, byte.MaxValue);
 
     public static float cooldown = 25f;
-    public static bool killCrewAsRed = false;
-    public static bool benignNeutralAsRed = false;
+    public static bool killCrewAsRed;
+    public static bool benignNeutralAsRed;
     public static bool evilNeutralAsRed = true;
-    public static bool canCallEmergency = false;
+    public static bool canCallEmergency;
     public static int examineNum = 3;
     public static int examinesToBeRevealed = 1;
     public static int examinesLeft;
     public static bool revealProphet = true;
-    public static bool isRevealed = false;
+    public static bool isRevealed;
     public static List<Arrow> arrows = new List<Arrow>();
 
     public static Dictionary<PlayerControl, bool> examined = new Dictionary<PlayerControl, bool>();
@@ -3072,7 +3072,7 @@ public static class Terrorist
     public static float bombCooldown = 15f;
     public static float bombActiveAfter = 3f;
     public static string bombText = getString("TerroristBombText1");
-    public static bool selfExplosion = false;
+    public static bool selfExplosion;
 
     private static Sprite buttonSprite;
 
@@ -3104,11 +3104,6 @@ public static class Terrorist
             bombText = getString("TerroristBombText2");
             selfExplosion = true;
         };
-        if (MapOptions.enableDebugLogMode)
-        {
-            Info("Terrorist Debug: " + destructionTime + bombActiveAfter + " - " + selfExplosion.ToString());
-            Info("Terrorist Debug INT:" + (int)destructionTime + (int)bombActiveAfter + " - " + selfExplosion.ToString());
-        }
 
         clearBomb(false);
         terrorist = null;
@@ -3224,7 +3219,7 @@ public static class Cursed
     public static Color crewColor = new Color32(0, 247, 255, byte.MaxValue);
     public static Color impColor = Palette.ImpostorRed;
     public static Color color = crewColor;
-    public static bool showModifier = false;
+    public static bool showModifier;
 
     public static void clearAndReload()
     {
@@ -3353,7 +3348,7 @@ public static class Disperser
     public static PlayerControl disperser;
     public static Color color = new Color32(48, 21, 89, byte.MaxValue);
     public static int remainingDisperses = 1;
-    public static bool DispersesToVent = false;
+    public static bool DispersesToVent;
     private static Sprite buttonSprite;
 
     public static Sprite getButtonSprite()
@@ -3384,7 +3379,7 @@ public static class Mini
     public static bool isGrowingUpInMeeting = true;
     public static DateTime timeOfGrowthStart = DateTime.UtcNow;
     public static DateTime timeOfMeetingStart = DateTime.UtcNow;
-    public static float ageOnMeetingStart = 0f;
+    public static float ageOnMeetingStart;
     public static bool triggerMiniLose;
 
     public static void clearAndReload()
@@ -3531,7 +3526,7 @@ public static class ButtonBarry
 {
     public static PlayerControl buttonBarry;
     public static int remoteMeetingsLeft = 1;
-    public static bool SabotageRemoteMeetings = false;
+    public static bool SabotageRemoteMeetings;
 
     private static Sprite buttonSprite;
 

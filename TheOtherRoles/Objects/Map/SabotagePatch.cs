@@ -14,8 +14,8 @@ public static class ElectricPatch
         onTask = false;
         IsReactorDurationSetting = CustomOptionHolder.IsReactorDurationSetting.getBool();
     }
-    public static bool onTask = false;
-    public static bool done = false;
+    public static bool onTask;
+    public static bool done;
     public static DateTime lastUpdate;
 
     [HarmonyPatch(typeof(SwitchMinigame), nameof(SwitchMinigame.Begin))]

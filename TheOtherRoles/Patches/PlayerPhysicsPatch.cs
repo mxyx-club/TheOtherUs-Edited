@@ -5,11 +5,10 @@ using UnityEngine;
 namespace TheOtherRoles.Patches;
 
 [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.FixedUpdate))]
-public static class PlayerPhysicsFixedUpdatePatch
+public static class PlayerPhysicsUpdatePatch
 {
     public static void Postfix(PlayerPhysics __instance)
     {
-        if (__instance == null) return;
         if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
         updateUndertakerMoveSpeed(__instance);
     }

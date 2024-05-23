@@ -4,15 +4,11 @@
         "11": "The Other Roles\u8a2d\u5b9a",
         "13": "The Other Roles \u8bbe\u7f6e"
     },
-    "fullCredentialsVersion": {
+    "TouTitle": {
         "0": "<size=130%><color=#ff351f>TheOtherUs-Edited</color></size> ",
         "13": "<size=130%><color=#ff351f>TheOtherUs-Edited</color></size> "
     },
-    "fullCredentialsVersion2": {
-        "0": "<size=110%><color=#ff351f>TheOtherUs-Edited</color></size> ",
-        "13": "<size=110%><color=#ff351f>TheOtherUs-Edited</color></size> "
-    },
-    "gameTitle2": {
+    "inGameTitle": {
         "0": "<size=75%>Modified by <color=#FFB793>mxyx.club</color>\nBased on TheOtherUs</size>",
         "13": "<size=80%><color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> - <color=#FFB793>mxyx.club</color></size>"
     },

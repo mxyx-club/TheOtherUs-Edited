@@ -11,7 +11,7 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch]
 public static class CredentialsPatch
 {
-    public static string fullCredentialsVersion = $"{getString("fullCredentialsVersion")}v{TheOtherRolesPlugin.Version + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}";
+    public static string fullCredentialsVersion = $"<size=130%>{getString("TouTitle")}</size> v{TheOtherRolesPlugin.Version + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}";
 
     public static string fullCredentials = getString("fullCredentials");
 
@@ -22,8 +22,15 @@ public static class CredentialsPatch
     [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
     internal static class PingTrackerPatch
     {
+        private static float DeltaTime;
+
         private static void Postfix(PingTracker __instance)
         {
+
+            DeltaTime += (Time.deltaTime - DeltaTime) * 0.1f;
+            var fps = Mathf.Ceil(1f / DeltaTime);
+            var PingText = $"<size=80%>Ping: {AmongUsClient.Instance.Ping}ms FPS: {fps}</size>";
+
             __instance.text.alignment = TextAlignmentOptions.TopRight;
             var position = __instance.GetComponent<AspectPosition>();
             var gameModeText = MapOptions.gameMode switch
@@ -33,20 +40,17 @@ public static class CredentialsPatch
                 CustomGamemodes.PropHunt => getString("isPropHuntGM"),
                 _ => ""
             };
+
+            if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {
-                
-                if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
-                __instance.text.text = $"{getString("fullCredentialsVersion2")} v{TheOtherRolesPlugin.Version + "\n" + getString("gameTitle2")}\n<size=90%>{gameModeText}</size>" +
-                    __instance.text.text;
+                __instance.text.text = $"<size=110%>{getString("TouTitle")}</size>  v{TheOtherRolesPlugin.Version + "\n" + getString("inGameTitle")}<size=90%>\n{PingText}\n {gameModeText}</size>";
                 position.DistanceFromEdge = new Vector3(2.25f, 0.11f, 0);
             }
             else
             {
-                if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
-
-                var host = $"Host: {GameData.Instance?.GetHost()?.PlayerName}";
-                __instance.text.text = $"{fullCredentialsVersion}\n  {gameModeText + fullCredentials}\n {host}\n {__instance.text.text}";
+                var host = $"<size=80%>Host: {GameData.Instance?.GetHost()?.PlayerName}</size>";
+                __instance.text.text = $"{fullCredentialsVersion}\n {PingText}\n  {gameModeText + fullCredentials}\n {host}";
                 position.DistanceFromEdge = new Vector3(3.5f, 0.1f, 0);
             }
             position.AdjustPosition();
@@ -82,7 +86,7 @@ public static class CredentialsPatch
             var credentialObject = new GameObject("credentialsTOR");
             var credentials = credentialObject.AddComponent<TextMeshPro>();
             credentials.SetText(
-                $"<size=90%>TheOtherUs-Edited v{TheOtherRolesPlugin.Version + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</size>\n<size=30%>\n</size>{mainMenuCredentials}\n<size=30%>\n</size>{contributorsCredentials}");
+                $"<size=90%>{getString("TouTitle")} v{TheOtherRolesPlugin.Version + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</size>\n<size=30%>\n</size>{mainMenuCredentials}\n<size=30%>\n</size>{contributorsCredentials}");
             credentials.alignment = TextAlignmentOptions.Center;
             credentials.fontSize *= 0.05f;
 

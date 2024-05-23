@@ -610,7 +610,7 @@ internal class MeetingHudPatch
     [HarmonyPatch]
     public class ShowHost
     {
-        private static TextMeshPro Text = null;
+        private static TextMeshPro Text;
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
         [HarmonyPostfix]
 

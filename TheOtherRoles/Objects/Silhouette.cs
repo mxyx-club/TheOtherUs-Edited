@@ -7,8 +7,8 @@ public class Silhouette
 {
     public GameObject gameObject;
     public float timeRemaining;
-    public bool permanent = false;
-    private bool visibleForEveryOne = false;
+    public bool permanent;
+    private bool visibleForEveryOne;
     private SpriteRenderer renderer;
 
     public static List<Silhouette> silhouettes = new List<Silhouette>();

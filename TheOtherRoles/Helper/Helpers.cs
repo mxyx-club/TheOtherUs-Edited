@@ -60,8 +60,8 @@ public enum LogLevel
 public static class Helpers
 {
     public static Dictionary<string, Sprite> CachedSprites = new();
-    public static Sprite teamCultistChat = null;
-    public static Sprite teamLoverChat = null;
+    public static Sprite teamCultistChat;
+    public static Sprite teamLoverChat;
 
     public static bool zoomOutStatus;
 

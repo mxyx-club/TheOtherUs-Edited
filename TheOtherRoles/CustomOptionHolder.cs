@@ -706,7 +706,7 @@ public class CustomOptionHolder
         blockGameEnd = Create(29, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "blockGameEnd"), true);
         deadImpsBlockSabotage = Create(32, Types.General, cs(Palette.ImpostorRed, "deadImpsBlockSabotage"), false);
         allowModGuess = Create(31, Types.General, "allowModGuess", false);
-        ghostSpeed = Create(33, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
+        //ghostSpeed = Create(33, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
 
         transparentTasks = Create(40, Types.General, "transparentTasks", false, null, true);
         disableMedbayWalk = Create(41, Types.General, "disableMedbayWalk", false);

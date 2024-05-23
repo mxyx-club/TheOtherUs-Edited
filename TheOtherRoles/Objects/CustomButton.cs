@@ -31,7 +31,7 @@ public class CustomButton
     public KeyCode? hotkey;
     public HudManager hudManager;
     public bool isEffectActive;
-    public bool isHandcuffed = false;
+    public bool isHandcuffed;
     public float MaxTimer = float.MaxValue;
     public bool mirror;
     private Action OnClick;
