@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TheOtherRoles.CustomGameModes;
 using UnityEngine;
 using static TheOtherRoles.CustomOption;
 using static TheOtherRoles.TheOtherRoles;
@@ -626,6 +627,9 @@ public class CustomOptionHolder
     // Prop Hunt Settings
     public static CustomOption propHuntMap;
     public static CustomOption propHuntTimer;
+    public static CustomOption propHuntEnableUnstuck;
+    public static CustomOption propHuntUnstuckCooldown;
+    public static CustomOption propHuntUnstuckDuration;
     public static CustomOption propHuntNumberOfHunters;
     public static CustomOption hunterInitialBlackoutTime;
     public static CustomOption hunterMissCooldown;
@@ -1096,7 +1100,7 @@ public class CustomOptionHolder
         snitchSeeMeeting = Create(30272, Types.Crewmate, "可在会议中查看信息", false, snitchSpawnRate);
         snitchCanSeeRoles = Create(30273, Types.Crewmate, "可以在会议中查看具体职业", false, snitchSpawnRate);
         snitchIncludeNeutralTeam = Create(30274, Types.Crewmate, "可揭示中立阵营", ["关闭", "仅杀手中立", "所有邪恶中立", "全部中立阵营"], snitchSpawnRate);
-        snitchTeamNeutraUseDifferentArrowColor = Create(30275, Types.Crewmate, "为中立阵营使用不同颜色的提示", true, snitchIncludeNeutralTeam);
+        snitchTeamNeutraUseDifferentArrowColor = Create(30275, Types.Crewmate, "为中立阵营使用不同颜色的提醒", true, snitchIncludeNeutralTeam);
 
         spySpawnRate = Create(30280, Types.Crewmate, cs(Spy.color, "卧底"), rates, null, true);
         spyCanDieToSheriff = Create(30281, Types.Crewmate, "可被警长执法", false, spySpawnRate);
@@ -1261,7 +1265,7 @@ public class CustomOptionHolder
 
         //-------------------------- Hide N Seek 3000 - 3999 -------------------------- //
 
-        hideNSeekMap = Create(3020, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekMap"),
+        hideNSeekMap = Create(3020, Types.HideNSeekMain, cs(Color.yellow, "CustomMap"),
             ["Skeld", "Mira", "Polus", "Airship", "Fungle", "Submerged", "LevelImpostor"], null, true, () =>
             {
                 var map = hideNSeekMap.selection;
@@ -1301,7 +1305,7 @@ public class CustomOptionHolder
 
         //-------------------------- Prop Hunt General Options 4000 - 4999 -------------------------- //
 
-        propHuntMap = Create(4020, Types.PropHunt, cs(Color.yellow, "propHuntMap"),
+        propHuntMap = Create(4020, Types.PropHunt, cs(Color.yellow, "CustomMap"),
             ["Skeld", "Mira", "Polus", "Airship", "Fungle", "Submerged", "LevelImpostor"], null, true, () =>
             {
                 var map = propHuntMap.selection;
@@ -1313,6 +1317,10 @@ public class CustomOptionHolder
         propVision = Create(4007, Types.PropHunt, cs(Color.yellow, "propVision"), 2f, 0.25f, 5f, 0.25f);
         propHuntSpeed = Create(4025, Types.PropHunt, cs(Color.yellow, "propHuntSpeed"), 1f, 0.5f, 2f, 0.125f);
         propPropSpeed = Create(4026, Types.PropHunt, cs(Color.yellow, "propPropSpeed"), 1f, 0.5f, 2f, 0.125f);
+
+        propHuntEnableUnstuck = Create(4027, Types.PropHunt, cs(Color.yellow, "启用穿墙技能"), ["关闭", "猎人", "躲藏者", "开启"], null, true);
+        propHuntUnstuckCooldown = Create(4011, Types.PropHunt, cs(Color.yellow, "穿墙冷却时间"), 30f, 2.5f, 60f, 2.5f, propHuntEnableUnstuck);
+        propHuntUnstuckDuration = Create(4012, Types.PropHunt, cs(Color.yellow, "穿墙持续时间"), 2f, 1f, 60f, 1f, propHuntEnableUnstuck);
         // Hunter Options
         propHuntNumberOfHunters = Create(4000, Types.PropHunt, cs(Color.red, "propHuntNumberOfHunters"), 1f, 1f, 5f, 1f, null, true);
         hunterInitialBlackoutTime = Create(4001, Types.PropHunt, cs(Color.red, "hunterInitialBlackoutTime"), 10f, 5f, 20f, 1f);

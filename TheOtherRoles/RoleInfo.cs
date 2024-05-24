@@ -51,7 +51,7 @@ public class RoleInfo
     public static RoleInfo thief = new("身份窃贼", Thief.color, "拿来吧你", "通过击杀或猜测窃取对方职业", RoleId.Thief, true);
     public static RoleInfo juggernaut = new("天启", Juggernaut.color, "吾将送汝等救赎，汝等应心怀感激", "减少CD，杀光所有人", RoleId.Juggernaut, true);
     public static RoleInfo doomsayer = new("末日预言家", Doomsayer.color, "将人类以善恶来区分这根本就是愚蠢的想法", "观察其他玩家，并在会议时刺杀他们", RoleId.Doomsayer, true);
-    public static RoleInfo akujo = new RoleInfo("魅魔", Akujo.color, "你们都是我的翅膀！", "招募真爱和备胎并且活下去！", RoleId.Akujo, true);
+    public static RoleInfo akujo = new("魅魔", Akujo.color, "你们都是我的翅膀！", "招募真爱和备胎并且活下去！", RoleId.Akujo, true);
 
     public static RoleInfo crewmate = new("船员", Color.white, "哈哈！白板船员~", "发现并驱逐伪装者", RoleId.Crewmate);
     public static RoleInfo goodGuesser = new("侠客", Guesser.color, "生命就是一场豪赌", "在会议上刺杀坏人", RoleId.NiceGuesser);
@@ -227,7 +227,7 @@ public class RoleInfo
         bool isNeutral = false, bool isModifier = false, bool isGuessable = false, bool isImpostor = false)
     {
         this.color = color;
-        this.name = name;
+        this.name = name.Translate();
         this.introDescription = introDescription;
         this.shortDescription = shortDescription;
         this.roleId = roleId;

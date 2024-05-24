@@ -217,7 +217,7 @@ public static class VersionShower_Start
 {
     public static void Postfix(VersionShower __instance)
     {
-        __instance.text.text = $"Among Us {Application.version}  <color=#ff351f>The Other Us Edition</color> <color=#FCCE03FF>v{Main.Version.ToString() + (Main.betaDays > 0 ? "-BETA" : "")}</color>";
+        __instance.text.text = $"Among Us v{Application.version} - <color=#ff351f>The Other Us Edition</color> <color=#FCCE03FF>v{Main.Version.ToString() + (Main.betaDays > 0 ? "-BETA" : "")}</color>";
     }
 }
 /*

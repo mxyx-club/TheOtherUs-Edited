@@ -30,6 +30,8 @@ public static class CredentialsPatch
             DeltaTime += (Time.deltaTime - DeltaTime) * 0.1f;
             var fps = Mathf.Ceil(1f / DeltaTime);
             var PingText = $"<size=80%>Ping: {AmongUsClient.Instance.Ping}ms FPS: {fps}</size>";
+            var host = $"<size=80%>Host: {GameData.Instance?.GetHost()?.PlayerName}</size>";
+
 
             __instance.text.alignment = TextAlignmentOptions.TopRight;
             var position = __instance.GetComponent<AspectPosition>();
@@ -49,7 +51,6 @@ public static class CredentialsPatch
             }
             else
             {
-                var host = $"<size=80%>Host: {GameData.Instance?.GetHost()?.PlayerName}</size>";
                 __instance.text.text = $"{fullCredentialsVersion}\n {PingText}\n  {gameModeText + fullCredentials}\n {host}";
                 position.DistanceFromEdge = new Vector3(3.5f, 0.1f, 0);
             }
@@ -86,7 +87,7 @@ public static class CredentialsPatch
             var credentialObject = new GameObject("credentialsTOR");
             var credentials = credentialObject.AddComponent<TextMeshPro>();
             credentials.SetText(
-                $"<size=90%>{getString("TouTitle")} v{TheOtherRolesPlugin.Version + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</size>\n<size=30%>\n</size>{mainMenuCredentials}\n<size=30%>\n</size>{contributorsCredentials}");
+                $"<size=90%>TheOtherUs-Edited v{TheOtherRolesPlugin.Version + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</size>\n<size=30%>\n</size>{mainMenuCredentials}\n<size=30%>\n</size>{contributorsCredentials}");
             credentials.alignment = TextAlignmentOptions.Center;
             credentials.fontSize *= 0.05f;
 

@@ -33,6 +33,10 @@ internal class PropHunt
     public static float revealDuration = 5f;
     public static float revealPunish;
 
+    public static float enableUnstuck;
+    public static float unstuckDuration = 5f;
+    public static float unstuckCooldown = 5f;
+
     public static float invisCooldown;
     public static float invisDuration;
     public static float speedboostCooldown;
@@ -73,7 +77,7 @@ internal class PropHunt
     public static GameObject currentTarget;
     private static GameObject poolablesBackground;
 
-    public static float dangerMeterActive;
+    //public static float dangerMeterActive;
 
     private static List<GameObject> duplicatedCollider = new();
     private static GameObject introObject;
@@ -94,6 +98,9 @@ internal class PropHunt
         revealDuration = CustomOptionHolder.propHuntRevealDuration.getFloat();
         revealCooldown = CustomOptionHolder.propHuntRevealCooldown.getFloat();
         revealPunish = CustomOptionHolder.propHuntRevealPunish.getFloat();
+        enableUnstuck = CustomOptionHolder.propHuntEnableUnstuck.getSelection();
+        unstuckDuration = CustomOptionHolder.propHuntUnstuckDuration.getFloat();
+        unstuckCooldown = CustomOptionHolder.propHuntUnstuckCooldown.getFloat();
         invisCooldown = CustomOptionHolder.propHuntInvisCooldown.getFloat();
         invisDuration = CustomOptionHolder.propHuntInvisDuration.getFloat();
         speedboostCooldown = CustomOptionHolder.propHuntSpeedboostCooldown.getFloat();

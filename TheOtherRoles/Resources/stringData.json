@@ -5,8 +5,8 @@
         "13": "The Other Roles \u8bbe\u7f6e"
     },
     "TouTitle": {
-        "0": "<size=130%><color=#ff351f>TheOtherUs-Edited</color></size> ",
-        "13": "<size=130%><color=#ff351f>TheOtherUs-Edited</color></size> "
+        "0": "<color=#ff351f>TheOtherUs-Edited</color>",
+        "13": "<color=#ff351f>TheOtherUs-Edited</color>"
     },
     "inGameTitle": {
         "0": "<size=75%>Modified by <color=#FFB793>mxyx.club</color>\nBased on TheOtherUs</size>",
@@ -571,7 +571,7 @@
     "guesserGamemodeCantGuessSnitchIfTaksDone": {
         "13": "\u8d4c\u602a\u4e0d\u53ef\u731c\u6d4b\u5df2\u5b8c\u6210\u4efb\u52a1\u7684\u544a\u5bc6\u8005"
     },
-    "hideNSeekMap": {
+    "CustomMap": {
         "13": "\u5730\u56fe"
     },
     "hideNSeekKillCooldown": {
@@ -660,9 +660,6 @@
     "huntedShieldNumber": {
         "13": "\u65f6\u95f4\u4e4b\u76fe\u6570\u91cf"
     },
-    "propHuntMap": {
-        "13": "\u5730\u56fe"
-    },
     "propHuntTimer": {
         "13": "\u6700\u5c11\u8eb2\u85cf\u65f6\u95f4"
     },
@@ -685,6 +682,9 @@
     "propPropSpeed": {
         "0": "Prop Speed",
         "13": "\u8eb2\u85cf\u8005\u79fb\u901f\u500d\u7387"
+    },
+    "propHuntEnableUnstuck": {
+        "13": "\u542f\u7528\u7a7f\u5899\u6280\u80fd"
     },
     "propHuntNumberOfHunters": {
         "13": "\u730e\u4eba\u6570\u91cf"
