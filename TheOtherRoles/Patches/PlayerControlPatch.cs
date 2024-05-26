@@ -989,11 +989,12 @@ public static class PlayerControlFixedUpdatePatch
         var snitchIsDead = Snitch.snitch.Data.IsDead;
         var local = CachedPlayer.LocalPlayer.PlayerControl;
 
+        var isDead = local == Snitch.snitch || local.Data.IsDead;
         bool forImpTeam = local.Data.Role.IsImpostor;
         bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && Helpers.isKiller(local);
         bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && Helpers.isEvil(local);
         bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && Helpers.isNeutral(local);
-        if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam))
+        if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam || isDead))
         {
             if (Snitch.text == null)
             {

@@ -1755,7 +1755,7 @@ public static class Akujo
         keeps = new List<PlayerControl>();
         currentTarget = null;
         startTime = DateTime.UtcNow;
-        timeLimit = CustomOptionHolder.akujoTimeLimit.getFloat() + 30f;
+        timeLimit = CustomOptionHolder.akujoTimeLimit.getFloat();
         knowsRoles = CustomOptionHolder.akujoKnowsRoles.getBool();
         honmeiCannotFollowWin = CustomOptionHolder.akujoHonmeiCannotFollowWin.getBool();
         timeLeft = (int)Math.Ceiling(timeLimit - (DateTime.UtcNow - startTime).TotalSeconds);
