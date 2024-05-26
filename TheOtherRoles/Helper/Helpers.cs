@@ -916,6 +916,13 @@ public static class Helpers
         }
     }
 
+    public static void handleTrapperTrapOnBodyReport()
+    {
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TrapperMeetingFlag, Hazel.SendOption.Reliable, -1);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        RPCProcedure.trapperMeetingFlag();
+    }
+
     public static bool roleCanUseVents(this PlayerControl player)
     {
         var roleCouldUse = false;

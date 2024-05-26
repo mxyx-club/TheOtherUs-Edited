@@ -617,7 +617,7 @@ public static class PlayerControlFixedUpdatePatch
                     Vector3 position = Tracker.tracked.transform.position;
                     if (!trackedOnMap)
                     { // Check for dead body
-                        DeadBody body = UnityEngine.Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == Tracker.tracked.PlayerId);
+                        DeadBody body = Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == Tracker.tracked.PlayerId);
                         if (body != null)
                         {
                             trackedOnMap = true;
@@ -653,7 +653,7 @@ public static class PlayerControlFixedUpdatePatch
 
             if (arrowsCountChanged)
             {
-                foreach (Arrow arrow in Tracker.localArrows) UnityEngine.Object.Destroy(arrow.arrow);
+                foreach (Arrow arrow in Tracker.localArrows) Object.Destroy(arrow.arrow);
                 Tracker.localArrows = [];
             }
             foreach (Vector3 position in Tracker.deadBodyPositions)
@@ -669,7 +669,7 @@ public static class PlayerControlFixedUpdatePatch
         }
         else if (Tracker.localArrows.Count > 0)
         {
-            foreach (Arrow arrow in Tracker.localArrows) UnityEngine.Object.Destroy(arrow.arrow);
+            foreach (Arrow arrow in Tracker.localArrows) Object.Destroy(arrow.arrow);
             Tracker.localArrows = [];
         }
     }
@@ -717,7 +717,7 @@ public static class PlayerControlFixedUpdatePatch
             collider.radius *= 0.85f;
         }
     }
-        public static void updatePlayerInfo()
+    public static void updatePlayerInfo()
     {
         var colorBlindTextMeetingInitialLocalPos = new Vector3(0.3384f, -0.16666f, -0.01f);
         var colorBlindTextMeetingInitialLocalScale = new Vector3(0.9f, 1f, 1f);
@@ -1178,6 +1178,82 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
+    public static void evilTrapperUpdate()
+    {
+        try
+        {
+            if (CachedPlayer.LocalPlayer.PlayerControl == EvilTrapper.evilTrapper && KillTrap.traps.Count != 0 && !KillTrap.hasTrappedPlayer() && !EvilTrapper.meetingFlag)
+            {
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                {
+                    foreach (var trap in KillTrap.traps)
+                    {
+                        if (DateTime.UtcNow.Subtract(trap.Value.placedTime).TotalSeconds < EvilTrapper.extensionTime) continue;
+                        if (trap.Value.isActive || p.Data.IsDead || p.inVent || EvilTrapper.meetingFlag) continue;
+                        var p1 = p.transform.localPosition;
+                        Dictionary<GameObject, byte> listActivate = new();
+                        var p2 = trap.Value.killtrap.transform.localPosition;
+                        var distance = Vector3.Distance(p1, p2);
+                        if (distance < EvilTrapper.trapRange)
+                        {
+                            TMPro.TMP_Text text;
+                            RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
+                            GameObject gameObject = UnityEngine.Object.Instantiate(roomTracker.gameObject);
+                            UnityEngine.Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
+                            gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
+                            gameObject.transform.localPosition = new Vector3(0, -1.8f, gameObject.transform.localPosition.z);
+                            gameObject.transform.localScale = Vector3.one * 2f;
+                            text = gameObject.GetComponent<TMPro.TMP_Text>();
+                            text.text = string.Format(ModTranslation.getString("trapperGotTrapText"), p.Data.PlayerName);
+                            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>((p) =>
+                            {
+                                if (p == 1f && text != null && text.gameObject != null)
+                                {
+                                    UnityEngine.Object.Destroy(text.gameObject);
+                                }
+                            })));
+                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ActivateTrap, Hazel.SendOption.Reliable, -1);
+                            writer.Write(trap.Key);
+                            writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                            writer.Write(p.PlayerId);
+                            AmongUsClient.Instance.FinishRpcImmediately(writer);
+                            RPCProcedure.activateTrap(trap.Key, EvilTrapper.evilTrapper.PlayerId, p.PlayerId);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (CachedPlayer.LocalPlayer.PlayerControl == EvilTrapper.evilTrapper && KillTrap.hasTrappedPlayer() && !EvilTrapper.meetingFlag)
+            {
+                // トラップにかかっているプレイヤーを救出する
+                foreach (var trap in KillTrap.traps)
+                {
+                    if (trap.Value.killtrap == null || !trap.Value.isActive) return;
+                    Vector3 p1 = trap.Value.killtrap.transform.position;
+                    foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                    {
+                        if (player.PlayerId == trap.Value.target.PlayerId || player.Data.IsDead || player.inVent || player == EvilTrapper.evilTrapper) continue;
+                        Vector3 p2 = player.transform.position;
+                        float distance = Vector3.Distance(p1, p2);
+                        if (distance < 0.5)
+                        {
+                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DisableTrap, Hazel.SendOption.Reliable, -1);
+                            writer.Write(trap.Key);
+                            AmongUsClient.Instance.FinishRpcImmediately(writer);
+                            RPCProcedure.disableTrap(trap.Key);
+                        }
+                    }
+
+                }
+            }
+        }
+        catch (NullReferenceException e)
+        {
+            Warn(e.Message);
+        }
+    }
+
     private static void radarUpdate()
     {
         if (Radar.radar == null || CachedPlayer.LocalPlayer.PlayerControl != Radar.radar || Radar.localArrows == null ||
@@ -1424,7 +1500,7 @@ public static class PlayerControlFixedUpdatePatch
         else
         {
             // Also target players that have already been spelled, to hide spells that were blanks/blocked by shields
-            untargetables = []; 
+            untargetables = [];
             if (Spy.spy != null && !Witch.canSpellAnyone) untargetables.Add(Spy.spy);
             if (Sidekick.wasTeamRed && !Witch.canSpellAnyone) untargetables.Add(Sidekick.sidekick);
             if (Jackal.wasTeamRed && !Witch.canSpellAnyone) untargetables.Add(Jackal.jackal);
@@ -1751,6 +1827,8 @@ public static class PlayerControlFixedUpdatePatch
             //Update pet visibility
             setPetVisibility();
 
+            // EvilTrapper
+            evilTrapperUpdate();
             // Time Master
             bendTimeUpdate();
             // Morphling
@@ -1908,6 +1986,7 @@ internal class PlayerControlCmdReportDeadBodyPatch
         if (HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM) return false;
         Helpers.handleVampireBiteOnBodyReport();
         Helpers.handleBomberExplodeOnBodyReport();
+        Helpers.handleTrapperTrapOnBodyReport();
         return true;
     }
 }
@@ -2134,6 +2213,34 @@ public static class MurderPlayerPatch
         if (Ninja.ninja != null && CachedPlayer.LocalPlayer.PlayerControl == Ninja.ninja && __instance == Ninja.ninja &&
             HudManagerStartPatch.ninjaButton != null)
             HudManagerStartPatch.ninjaButton.Timer = HudManagerStartPatch.ninjaButton.MaxTimer;
+
+        // EvilTrapper peforms normal kills
+        if (EvilTrapper.evilTrapper != null && CachedPlayer.LocalPlayer.PlayerControl == EvilTrapper.evilTrapper && __instance == EvilTrapper.evilTrapper)
+        {
+            if (KillTrap.isTrapped(target) && !EvilTrapper.isTrapKill)  // トラップにかかっている対象をキルした場合のボーナス
+            {
+                EvilTrapper.evilTrapper.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - EvilTrapper.bonusTime;
+                HudManagerStartPatch.evilTrapperSetTrapButton.Timer = EvilTrapper.cooldown - EvilTrapper.bonusTime;
+            }
+            else if (KillTrap.isTrapped(target) && EvilTrapper.isTrapKill)  // トラップキルした場合のペナルティ
+            {
+                EvilTrapper.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
+                HudManagerStartPatch.evilTrapperSetTrapButton.Timer = EvilTrapper.cooldown;
+            }
+            else // トラップにかかっていない対象を通常キルした場合はペナルティーを受ける
+            {
+                EvilTrapper.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + EvilTrapper.penaltyTime;
+                HudManagerStartPatch.evilTrapperSetTrapButton.Timer = EvilTrapper.cooldown + EvilTrapper.penaltyTime;
+            }
+            if (!EvilTrapper.isTrapKill)
+            {
+                MessageWriter writer;
+                writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ClearTrap, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.clearTrap();
+            }
+            EvilTrapper.isTrapKill = false;
+        }
 
         // Bait
         if (Bait.bait.FindAll(x => x.PlayerId == target.PlayerId).Count > 0)
@@ -2382,7 +2489,7 @@ public static class PlayerPhysicsFixedUpdate
         bool shouldInvert = Invert.invert.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count > 0 && Invert.meetings > 0;
         if (__instance.AmOwner &&
             AmongUsClient.Instance &&
-            AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started &&
+            AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
             !CachedPlayer.LocalPlayer.Data.IsDead &&
             shouldInvert &&
             GameData.Instance &&
@@ -2390,7 +2497,7 @@ public static class PlayerPhysicsFixedUpdate
 
         if (__instance.AmOwner &&
                 AmongUsClient.Instance &&
-                AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started &&
+                AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
                 !CachedPlayer.LocalPlayer.Data.IsDead &&
                 GameData.Instance &&
                 __instance.myPlayer.CanMove)

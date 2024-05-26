@@ -57,7 +57,7 @@ internal class FastRpcWriter
         writer.StartRPCMessage();
         return writer;
     }
-    
+
     internal static FastRpcWriter StartNewRpcWriter(CustomRPC rpc, InnerNetObject obNetObject, SendOption option = SendOption.Reliable,
         RPCSendMode mode = RPCSendMode.SendToAll, int TargetId = -1)
     {
@@ -360,7 +360,7 @@ internal class RPCListener : Attribute
         var reader = __instance.reader;
 
         if (__instance.__1__state != 0) return;
-        
+
         var HandleReader = MessageReader.Get(reader);
         HandleReader.Position = 0;
         var tag = reader.Tag;
@@ -368,7 +368,7 @@ internal class RPCListener : Attribute
             goto recycle;
         var objetId = HandleReader.ReadPackedUInt32();
         var callId = HandleReader.ReadByte();
-        if (_allListeners.All(n => n.RPCId != (CustomRPC)callId)) 
+        if (_allListeners.All(n => n.RPCId != (CustomRPC)callId))
             goto recycle;
         try
         {
@@ -384,11 +384,11 @@ internal class RPCListener : Attribute
         {
             HandleReader.Recycle();
         }
-        
+
         return;
-        recycle:
-          HandleReader.Recycle();
-          return;
+    recycle:
+        HandleReader.Recycle();
+        return;
     }
 }
 

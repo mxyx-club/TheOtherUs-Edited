@@ -43,7 +43,7 @@ public class VoteData
 }
 public static class Data
 {
-    public static string RemoveHtmlTags(this string str) => Regex.Replace(str, "<[^>]*?>", string.Empty);   
+    public static string RemoveHtmlTags(this string str) => Regex.Replace(str, "<[^>]*?>", string.Empty);
     public static string GetAllRoleName(this PlayerControl player)
     {
         if (!player) return null;

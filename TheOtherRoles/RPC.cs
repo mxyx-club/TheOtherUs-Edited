@@ -48,6 +48,7 @@ public enum RoleId
     Witch,
     Ninja,
     Yoyo,
+    EvilTrapper,
     Follower,
 
     Amnisiac,
@@ -226,6 +227,13 @@ public enum CustomRPC
     SetTiebreak,
     SetInvisibleGen,
     SetSwoop,
+
+    TrapperKill,
+    PlaceTrap,
+    ClearTrap,
+    ActivateTrap,
+    DisableTrap,
+    TrapperMeetingFlag,
 
     // SetSwooper,
     SetInvisible,
@@ -567,6 +575,9 @@ public static class RPCProcedure
                         break;
                     case RoleId.Yoyo:
                         Yoyo.yoyo = player;
+                        break;
+                    case RoleId.EvilTrapper:
+                        EvilTrapper.evilTrapper = player;
                         break;
                 }
             }
@@ -1770,6 +1781,7 @@ public static class RPCProcedure
         if (player == Escapist.escapist) Escapist.clearAndReload();
         if (player == Ninja.ninja) Ninja.clearAndReload();
         if (player == Yoyo.yoyo) Yoyo.clearAndReload();
+        if (player == EvilTrapper.evilTrapper) EvilTrapper.clearAndReload();
         if (player == Blackmailer.blackmailer) Blackmailer.clearAndReload();
         if (player == Follower.follower) Follower.clearAndReload();
         if (player == Terrorist.terrorist) Terrorist.clearAndReload();
@@ -2178,6 +2190,44 @@ public static class RPCProcedure
                 Swooper.swooper = Jackal.jackal;
             }
     */
+
+
+    public static void trapperKill(byte trapId, byte trapperId, byte playerId)
+    {
+        var trapper = Helpers.playerById(trapperId);
+        var target = Helpers.playerById(playerId);
+        KillTrap.trapKill(trapId, trapper, target);
+    }
+
+    public static void placeTrap(byte[] buff)
+    {
+        Vector3 pos = Vector3.zero;
+        pos.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+        pos.y = BitConverter.ToSingle(buff, 1 * sizeof(float)) - 0.2f;
+        KillTrap trap = new(pos);
+    }
+
+    public static void clearTrap()
+    {
+        KillTrap.clearAllTraps();
+    }
+
+    public static void activateTrap(byte trapId, byte trapperId, byte playerId)
+    {
+        var trapper = Helpers.playerById(trapperId);
+        var player = Helpers.playerById(playerId);
+        KillTrap.activateTrap(trapId, trapper, player);
+    }
+
+    public static void disableTrap(byte trapId)
+    {
+        KillTrap.disableTrap(trapId);
+    }
+
+    public static void trapperMeetingFlag()
+    {
+        KillTrap.onMeeting();
+    }
 
     public static void setInvisibleGen(byte playerId, byte flag)
     {
@@ -2706,6 +2756,7 @@ public static class RPCProcedure
         if (target == Deputy.deputy) Deputy.deputy = thief;
         if (target == Veteren.veteren) Veteren.veteren = thief;
         if (target == Blackmailer.blackmailer) Blackmailer.blackmailer = thief;
+        if (target == EvilTrapper.evilTrapper) EvilTrapper.evilTrapper = thief;
 
         if (Lawyer.lawyer != null && target == Lawyer.target)
             Lawyer.target = thief;
@@ -3450,6 +3501,30 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.YoyoBlink:
                 RPCProcedure.yoyoBlink(reader.ReadByte() == byte.MaxValue, reader.ReadBytesAndSize());
+                break;
+            case CustomRPC.SetFutureReveal:
+                break;
+            case CustomRPC.SetPosition:
+                break;
+            case CustomRPC.SetPositionESC:
+                break;
+            case CustomRPC.TrapperKill:
+                RPCProcedure.trapperKill(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.PlaceTrap:
+                RPCProcedure.placeTrap(reader.ReadBytesAndSize());
+                break;
+            case CustomRPC.ClearTrap:
+                RPCProcedure.clearTrap();
+                break;
+            case CustomRPC.ActivateTrap:
+                RPCProcedure.activateTrap(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.DisableTrap:
+                RPCProcedure.disableTrap(reader.ReadByte());
+                break;
+            case CustomRPC.TrapperMeetingFlag:
+                RPCProcedure.trapperMeetingFlag();
                 break;
         }
 

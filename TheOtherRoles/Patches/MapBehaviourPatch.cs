@@ -55,7 +55,7 @@ internal static class MapBehaviourPatch
                     herePoints[player].color = herePoints[player].color.SetAlpha(alpha);
                     continue;
                 }
-                var herePoint = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent, true);
+                var herePoint = Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent, true);
                 herePoint.transform.localPosition = v;
                 herePoint.enabled = true;
 
