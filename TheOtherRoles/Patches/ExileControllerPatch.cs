@@ -218,6 +218,10 @@ internal class ExileControllerWrapUpPatch
         // Reset custom button timers where necessary
         CustomButton.MeetingEndedUpdate();
 
+        // Clear all traps
+        KillTrap.clearAllTraps();
+        EvilTrapper.meetingFlag = false;
+
         // Mini set adapted cooldown
         if (Mini.mini != null && CachedPlayer.LocalPlayer.PlayerControl == Mini.mini && Mini.mini.Data.Role.IsImpostor)
         {

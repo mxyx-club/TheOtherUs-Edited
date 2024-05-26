@@ -117,6 +117,15 @@ public class CustomOptionHolder
     public static CustomOption jackalCanCreateSidekickFromImpostor;
     public static CustomOption jackalAndSidekickHaveImpostorVision;
 
+    public static CustomOption evilTrapperSpawnRate;
+    public static CustomOption evilTrapperNumTrap;
+    public static CustomOption evilTrapperKillTimer;
+    public static CustomOption evilTrapperCooldown;
+    public static CustomOption evilTrapperMaxDistance;
+    public static CustomOption evilTrapperTrapRange;
+    public static CustomOption evilTrapperExtensionTime;
+    public static CustomOption evilTrapperPenaltyTime;
+    public static CustomOption evilTrapperBonusTime;
 
     public static CustomOption swooperSpawnRate;
     public static CustomOption swooperKillCooldown;
@@ -884,6 +893,18 @@ public class CustomOptionHolder
         yoyoHasAdminTable = Create(10294, Types.Impostor, "随身管理室地图", true, yoyoSpawnRate);
         yoyoAdminTableCooldown = Create(10295, Types.Impostor, "查看地图冷却", 15f, 2.5f, 120f, 2.5f, yoyoHasAdminTable);
         yoyoSilhouetteVisibility = Create(10296, Types.Impostor, "第一段残影透明度", ["0%", "10%", "20%", "30%", "40%", "50%"], yoyoSpawnRate);
+
+
+        evilTrapperSpawnRate = Create(10300, Types.Impostor, cs(EvilTrapper.color, "邪恶的设陷师"), rates, null, true);
+        evilTrapperNumTrap = Create(10301, Types.Impostor, "最大可同时放下的陷阱数", 2f, 1f, 10f, 1f, evilTrapperSpawnRate);
+        evilTrapperExtensionTime = Create(10302, Types.Impostor, "陷阱激活所需时间", 5f, 2f, 10f, 0.5f, evilTrapperSpawnRate);
+        evilTrapperCooldown = Create(10303, Types.Impostor, "放置陷阱冷却", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
+        evilTrapperKillTimer = Create(10304, Types.Impostor, "掉进陷阱后被陷阱击杀所需时间", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
+        evilTrapperTrapRange = Create(10305, Types.Impostor, "陷阱有效范围", 1f, 0.5f, 5f, 0.125f, evilTrapperSpawnRate);
+        evilTrapperMaxDistance = Create(10306, Types.Impostor, "陷阱击杀声音播放有效范围", 10f, 1f, 60f, 2.5f, evilTrapperSpawnRate);
+        evilTrapperPenaltyTime = Create(10307, Types.Impostor, "设陷者进行通常击杀的追加冷却", 10f, 0f, 30f, 2.5f, evilTrapperSpawnRate);
+        evilTrapperBonusTime = Create(10308, Types.Impostor, "设陷者通常击杀落入陷阱的玩家的缩减冷却", 8f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
+
 
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //

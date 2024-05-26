@@ -204,7 +204,7 @@ public class CustomOption
 
     public virtual string getName()
     {
-        return ModTranslation.getString(name);
+        return getString(name);
     }
 
     // Option changes
