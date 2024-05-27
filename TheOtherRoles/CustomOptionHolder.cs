@@ -579,6 +579,7 @@ public class CustomOptionHolder
     public static CustomOption disableMedbayWalk;
 
     public static CustomOption enableCamoComms;
+    public static CustomOption fungleDisableCamoComms;
 
     public static CustomOption restrictDevices;
 
@@ -767,6 +768,7 @@ public class CustomOptionHolder
         WireTaskNumOption = Create(222, Types.General, "WireTaskNumOption", 3f, 1f, 8f, 1f, WireTaskIsRandomOption);
 
         enableCamoComms = Create(120, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, enableMapOptions, true);
+        fungleDisableCamoComms = Create(211, Types.General, "fungleDisableCamoComms", true, enableCamoComms);
         restrictDevices = Create(121, Types.General, "restrictDevices", ["optionOff".Translate(), "restrictDevices2".Translate(), "restrictDevices3".Translate()], enableMapOptions);
         //restrictAdmin = Create(122, Types.General, "restrictAdmin", 30f, 0f, 600f, 5f, restrictDevices);
         restrictCameras = Create(123, Types.General, "restrictCameras", 30f, 0f, 600f, 5f, restrictDevices);
@@ -796,68 +798,68 @@ public class CustomOptionHolder
         modifierAssassinKillsThroughShield = Create(10007, Types.Impostor, "modifierAssassinKillsThroughShield", false, modifierAssassin);
         modifierAssassinCultist = Create(10008, Types.Impostor, "modifierAssassinCultist", false, modifierAssassin);
 
-        mafiaSpawnRate = Create(10100, Types.Impostor, cs(Janitor.color, "黑手党"), rates, null, true);
+        mafiaSpawnRate = Create(10100, Types.Impostor, cs(Janitor.color, "Mafia"), rates, null, true);
         janitorCooldown = Create(10101, Types.Impostor, "清洁工清理冷却", 25f, 10f, 60f, 2.5f, mafiaSpawnRate);
 
-        morphlingSpawnRate = Create(10110, Types.Impostor, cs(Morphling.color, "化形者"), rates, null, true);
+        morphlingSpawnRate = Create(10110, Types.Impostor, cs(Morphling.color, "Morphling"), rates, null, true);
         morphlingCooldown = Create(10111, Types.Impostor, "化形冷却", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);
         morphlingDuration = Create(10112, Types.Impostor, "化形持续时间", 15f, 1f, 20f, 0.5f, morphlingSpawnRate);
 
-        bomberSpawnRate = Create(10120, Types.Impostor, cs(Bomber.color, "炸弹狂"), rates, null, true);
+        bomberSpawnRate = Create(10120, Types.Impostor, cs(Bomber.color, "Bomber"), rates, null, true);
         bomberBombCooldown = Create(10121, Types.Impostor, "炸弹冷却", 25f, 10f, 60f, 2.5f, bomberSpawnRate);
         bomberDelay = Create(10122, Types.Impostor, "炸弹激活时间", 5f, 0f, 20f, 0.5f, bomberSpawnRate);
         bomberTimer = Create(10123, Types.Impostor, "炸弹爆炸时间", 10f, 5f, 30f, 0.5f, bomberSpawnRate);
         //bomberHotPotatoMode = Create(10124, Types.Impostor, "烫手山芋模式", true, bomberSpawnRate);
 
-        undertakerSpawnRate = Create(10130, Types.Impostor, cs(Undertaker.color, "送葬者"), rates, null, true);
+        undertakerSpawnRate = Create(10130, Types.Impostor, cs(Undertaker.color, "Undertaker"), rates, null, true);
         undertakerDragingDelaiAfterKill = Create(10131, Types.Impostor, "从击杀到恢复拖曳能力所需时间", 0f, 0f, 15, 0.5f, undertakerSpawnRate);
         undertakerDragingAfterVelocity = Create(10132, Types.Impostor, "拖拽过程的行动速度", 0.75f, 0.5f, 1.5f, 0.125f, undertakerSpawnRate);
         undertakerCanDragAndVent = Create(10133, Types.Impostor, "拖曳过程中可使用管道", true, undertakerSpawnRate);
 
-        camouflagerSpawnRate = Create(10140, Types.Impostor, cs(Camouflager.color, "隐蔽者"), rates, null, true);
+        camouflagerSpawnRate = Create(10140, Types.Impostor, cs(Camouflager.color, "Camouflager"), rates, null, true);
         camouflagerCooldown = Create(10141, Types.Impostor, "隐蔽状态冷却", 25f, 10f, 60f, 2.5f, camouflagerSpawnRate);
         camouflagerDuration = Create(10142, Types.Impostor, "隐蔽状态持续时间", 12.5f, 1f, 20f, 0.5f, camouflagerSpawnRate);
 
-        vampireSpawnRate = Create(10150, Types.Impostor, cs(Vampire.color, "吸血鬼"), rates, null, true);
+        vampireSpawnRate = Create(10150, Types.Impostor, cs(Vampire.color, "Vampire"), rates, null, true);
         vampireKillDelay = Create(10151, Types.Impostor, "从吸血到击杀所需时间", 5f, 1f, 20f, 0.5f, vampireSpawnRate);
         vampireCooldown = Create(10152, Types.Impostor, "吸血冷却", 25f, 10f, 60f, 2.5f, vampireSpawnRate);
         vampireGarlicButton = Create(10153, Types.Impostor, "发放大蒜", true, vampireSpawnRate);
         vampireCanKillNearGarlics = Create(10154, Types.Impostor, "可在大蒜附近击杀", true, vampireGarlicButton);
 
-        eraserSpawnRate = Create(10160, Types.Impostor, cs(Eraser.color, "抹除者"), rates, null, true);
+        eraserSpawnRate = Create(10160, Types.Impostor, cs(Eraser.color, "Eraser"), rates, null, true);
         eraserCooldown = Create(10161, Types.Impostor, "抹除冷却", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
         eraserCanEraseAnyone = Create(10162, Types.Impostor, "可抹除任何人", false, eraserSpawnRate);
 
-        mimicSpawnRate = Create(10170, Types.Impostor, cs(Mimic.color, "模仿者"), rates, null, true);
+        mimicSpawnRate = Create(10170, Types.Impostor, cs(Mimic.color, "Mimic"), rates, null, true);
 
-        escapistSpawnRate = Create(10180, Types.Impostor, cs(Escapist.color, "逃逸者"), rates, null, true);
+        escapistSpawnRate = Create(10180, Types.Impostor, cs(Escapist.color, "Escapist"), rates, null, true);
         escapistEscapeTime = Create(10181, Types.Impostor, "标记/逃逸冷却", 15f, 0f, 60f, 2.5f, escapistSpawnRate);
         escapistMaxCharges = Create(10185, Types.Impostor, "可传送次数", 3, 1, 10, 1, escapistSpawnRate);
         escapistResetPlaceAfterMeeting = Create(10183, Types.Impostor, "会议后重置目标地点", false, escapistSpawnRate);
         escapistChargesGainOnMeeting = Create(10184, Types.Impostor, "会议后增加次数", 2, 0, 10, 1, escapistSpawnRate);
 
-        cultistSpawnRate = Create(10190, Types.Impostor, cs(Cultist.color, "传教士"), rates, null, true);
+        cultistSpawnRate = Create(10190, Types.Impostor, cs(Cultist.color, "Cultist"), rates, null, true);
 
-        tricksterSpawnRate = Create(10200, Types.Impostor, cs(Trickster.color, "骗术师"), rates, null, true);
+        tricksterSpawnRate = Create(10200, Types.Impostor, cs(Trickster.color, "Trickster"), rates, null, true);
         tricksterPlaceBoxCooldown = Create(10201, Types.Impostor, "放置惊吓盒冷却", 20f, 2.5f, 30f, 2.5f, tricksterSpawnRate);
         tricksterLightsOutCooldown = Create(10202, Types.Impostor, "熄灯冷却", 25f, 10f, 60f, 2.5f, tricksterSpawnRate);
         tricksterLightsOutDuration = Create(10203, Types.Impostor, "熄灯持续时间", 12.5f, 5f, 60f, 0.5f, tricksterSpawnRate);
 
-        cleanerSpawnRate = Create(10210, Types.Impostor, cs(Cleaner.color, "清理者"), rates, null, true);
+        cleanerSpawnRate = Create(10210, Types.Impostor, cs(Cleaner.color, "Cleaner"), rates, null, true);
         cleanerCooldown = Create(10211, Types.Impostor, "清理冷却", 25f, 10f, 60f, 2.5f, cleanerSpawnRate);
 
-        warlockSpawnRate = Create(10220, Types.Impostor, cs(Cleaner.color, "术士"), rates, null, true);
+        warlockSpawnRate = Create(10220, Types.Impostor, cs(Cleaner.color, "Cleaner"), rates, null, true);
         warlockCooldown = Create(10221, Types.Impostor, "术法冷却", 20f, 10f, 60f, 2.5f, warlockSpawnRate);
         warlockRootTime = Create(10222, Types.Impostor, "使用术法击杀后定身持续时间", 3f, 0f, 15f, 0.25f, warlockSpawnRate);
 
-        bountyHunterSpawnRate = Create(10230, Types.Impostor, cs(BountyHunter.color, "赏金猎人"), rates, null, true);
+        bountyHunterSpawnRate = Create(10230, Types.Impostor, cs(BountyHunter.color, "BountyHunter"), rates, null, true);
         bountyHunterBountyDuration = Create(10231, Types.Impostor, "赏金目标更换间隔", 60f, 10f, 180f, 5f, bountyHunterSpawnRate);
         bountyHunterReducedCooldown = Create(10232, Types.Impostor, "击杀目标后的奖励冷却", 2.5f, 0f, 30f, 2.5f, bountyHunterSpawnRate);
         bountyHunterPunishmentTime = Create(10233, Types.Impostor, "击杀非目标后的惩罚冷却", 10f, 0f, 60f, 2.5f, bountyHunterSpawnRate);
         bountyHunterShowArrow = Create(10234, Types.Impostor, "显示指向悬赏目标的箭头", true, bountyHunterSpawnRate);
         bountyHunterArrowUpdateIntervall = Create(10235, Types.Impostor, "箭头更新间隔", 0.5f, 0f, 15f, 0.5f, bountyHunterShowArrow);
 
-        witchSpawnRate = Create(10240, Types.Impostor, cs(Witch.color, "女巫"), rates, null, true);
+        witchSpawnRate = Create(10240, Types.Impostor, cs(Witch.color, "Witch"), rates, null, true);
         witchCooldown = Create(10241, Types.Impostor, "诅咒冷却", 20f, 10f, 60, 2.5f, witchSpawnRate);
         witchAdditionalCooldown = Create(10242, Types.Impostor, "诅咒冷却递增", 5f, 0f, 60f, 2.5f, witchSpawnRate);
         witchCanSpellAnyone = Create(10243, Types.Impostor, "可诅咒任何人", false, witchSpawnRate);
@@ -865,17 +867,17 @@ public class CustomOptionHolder
         witchTriggerBothCooldowns = Create(10245, Types.Impostor, "诅咒与击杀冷却共用", false, witchSpawnRate);
         witchVoteSavesTargets = Create(10246, Types.Impostor, "驱逐女巫可拯救被诅咒者", true, witchSpawnRate);
 
-        ninjaSpawnRate = Create(10250, Types.Impostor, cs(Ninja.color, "忍者"), rates, null, true);
+        ninjaSpawnRate = Create(10250, Types.Impostor, cs(Ninja.color, "Ninja"), rates, null, true);
         ninjaCooldown = Create(10251, Types.Impostor, "标记冷却", 20f, 10f, 60f, 2.5f, ninjaSpawnRate);
         ninjaKnowsTargetLocation = Create(10252, Types.Impostor, "显示指向忍杀对象的箭头", true, ninjaSpawnRate);
         ninjaTraceTime = Create(10253, Types.Impostor, "忍杀后树叶痕迹持续时间", 6f, 1f, 20f, 0.5f, ninjaSpawnRate);
         ninjaTraceColorTime = Create(10254, Types.Impostor, "忍杀后痕迹褪色所需时间", 3f, 0f, 20f, 0.5f, ninjaSpawnRate);
         ninjaInvisibleDuration = Create(10255, Types.Impostor, "忍杀后隐身持续时间", 10f, 0f, 20f, 0.5f, ninjaSpawnRate);
 
-        blackmailerSpawnRate = Create(10260, Types.Impostor, cs(Blackmailer.color, "勒索者"), rates, null, true);
+        blackmailerSpawnRate = Create(10260, Types.Impostor, cs(Blackmailer.color, "Blackmailer"), rates, null, true);
         blackmailerCooldown = Create(10261, Types.Impostor, "勒索冷却", 15f, 5f, 120f, 2.5f, blackmailerSpawnRate);
 
-        terroristSpawnRate = Create(10270, Types.Impostor, cs(Terrorist.color, "恐怖分子"), rates, null, true);
+        terroristSpawnRate = Create(10270, Types.Impostor, cs(Terrorist.color, "Terrorist"), rates, null, true);
         terroristBombDestructionTime = Create(10271, Types.Impostor, "炸弹引爆时间", 0f, 0f, 120f, 0.5f, terroristSpawnRate);
         terroristBombDestructionRange = Create(10272, Types.Impostor, "炸弹爆炸范围", 30f, 5f, 250f, 5f, terroristSpawnRate);
         terroristBombHearRange = Create(10273, Types.Impostor, "爆炸前预警范围", 60f, 5f, 250f, 5f, terroristSpawnRate);
@@ -883,10 +885,10 @@ public class CustomOptionHolder
         terroristBombCooldown = Create(10275, Types.Impostor, "炸弹放置冷却", 0f, 5f, 60f, 2.5f, terroristSpawnRate);
         terroristBombActiveAfter = Create(10276, Types.Impostor, "炸弹激活时间", 0f, 0f, 15f, 0.5f, terroristSpawnRate);
 
-        minerSpawnRate = Create(10280, Types.Impostor, cs(Miner.color, "管道工"), rates, null, true);
+        minerSpawnRate = Create(10280, Types.Impostor, cs(Miner.color, "Miner"), rates, null, true);
         minerCooldown = Create(10281, Types.Impostor, "制造管道冷却", 20f, 10f, 60f, 2.5f, minerSpawnRate);
 
-        yoyoSpawnRate = Create(10290, Types.Impostor, cs(Yoyo.color, "悠悠球"), rates, null, true);
+        yoyoSpawnRate = Create(10290, Types.Impostor, cs(Yoyo.color, "Yoyo"), rates, null, true);
         yoyoMarkCooldown = Create(10292, Types.Impostor, "标记冷却", 15f, 2.5f, 120f, 2.5f, yoyoSpawnRate);
         yoyoBlinkDuration = Create(10291, Types.Impostor, "两段瞬移间隔时间", 15f, 2.5f, 120f, 2.5f, yoyoSpawnRate);
         yoyoMarkStaysOverMeeting = Create(10293, Types.Impostor, "会议后不重置标记地点", true, yoyoSpawnRate);
@@ -894,8 +896,7 @@ public class CustomOptionHolder
         yoyoAdminTableCooldown = Create(10295, Types.Impostor, "查看地图冷却", 15f, 2.5f, 120f, 2.5f, yoyoHasAdminTable);
         yoyoSilhouetteVisibility = Create(10296, Types.Impostor, "第一段残影透明度", ["0%", "10%", "20%", "30%", "40%", "50%"], yoyoSpawnRate);
 
-
-        evilTrapperSpawnRate = Create(10300, Types.Impostor, cs(EvilTrapper.color, "邪恶的设陷师"), rates, null, true);
+        evilTrapperSpawnRate = Create(10300, Types.Impostor, cs(EvilTrapper.color, "EvilTrapper"), rates, null, true);
         evilTrapperNumTrap = Create(10301, Types.Impostor, "最大可同时放下的陷阱数", 2f, 1f, 10f, 1f, evilTrapperSpawnRate);
         evilTrapperExtensionTime = Create(10302, Types.Impostor, "陷阱激活所需时间", 5f, 2f, 10f, 0.5f, evilTrapperSpawnRate);
         evilTrapperCooldown = Create(10303, Types.Impostor, "放置陷阱冷却", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
@@ -905,24 +906,22 @@ public class CustomOptionHolder
         evilTrapperPenaltyTime = Create(10307, Types.Impostor, "设陷者进行通常击杀的追加冷却", 10f, 0f, 30f, 2.5f, evilTrapperSpawnRate);
         evilTrapperBonusTime = Create(10308, Types.Impostor, "设陷者通常击杀落入陷阱的玩家的缩减冷却", 8f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
 
-
-
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 
-        amnisiacSpawnRate = Create(20110, Types.Neutral, cs(Amnisiac.color, "失忆者"), rates, null, true);
+        amnisiacSpawnRate = Create(20110, Types.Neutral, cs(Amnisiac.color, "Amnisiac"), rates, null, true);
         amnisiacShowArrows = Create(20111, Types.Neutral, "显示指向尸体的箭头", true, amnisiacSpawnRate);
         amnisiacResetRole = Create(20112, Types.Neutral, "回忆后重置该职业技能使用次数", true, amnisiacSpawnRate);
 
-        jesterSpawnRate = Create(20100, Types.Neutral, cs(Jester.color, "小丑"), rates, null, true);
+        jesterSpawnRate = Create(20100, Types.Neutral, cs(Jester.color, "Jester"), rates, null, true);
         jesterCanCallEmergency = Create(20101, Types.Neutral, "小丑可召开会议", true, jesterSpawnRate);
         jesterCanVent = Create(20102, Types.Neutral, "小丑可使用管道", true, jesterSpawnRate);
         jesterHasImpostorVision = Create(20103, Types.Neutral, "拥有内鬼视野", true, jesterSpawnRate);
 
-        arsonistSpawnRate = Create(20120, Types.Neutral, cs(Arsonist.color, "纵火犯"), rates, null, true);
+        arsonistSpawnRate = Create(20120, Types.Neutral, cs(Arsonist.color, "Arsonist"), rates, null, true);
         arsonistCooldown = Create(20121, Types.Neutral, "涂油冷却", 12.5f, 5f, 60f, 2.5f, arsonistSpawnRate);
         arsonistDuration = Create(20122, Types.Neutral, "涂油所需时间", 0.5f, 0f, 10f, 0.25f, arsonistSpawnRate);
 
-        jackalSpawnRate = Create(20130, Types.Neutral, cs(Jackal.color, "豺狼"), rates, null, true);
+        jackalSpawnRate = Create(20130, Types.Neutral, cs(Jackal.color, "Jackal"), rates, null, true);
         jackalKillCooldown = Create(20131, Types.Neutral, "豺狼/跟班击杀冷却", 25f, 10f, 60f, 2.5f, jackalSpawnRate);
         jackalCanUseVents = Create(20132, Types.Neutral, "豺狼可使用管道", true, jackalSpawnRate);
         jackalCanUseSabo = Create(20133, Types.Neutral, "豺狼/跟班可进行破坏", false, jackalSpawnRate);
@@ -937,13 +936,13 @@ public class CustomOptionHolder
         jackalCanCreateSidekickFromImpostor = Create(20142, Types.Neutral, "豺狼可以招募伪装者为跟班", true, jackalCanCreateSidekick);
         jackalKillFakeImpostor = Create(20143, Types.Neutral, "豺狼不可击杀被招募失败的伪装者", true, jackalCanCreateSidekick);
 
-        vultureSpawnRate = Create(20170, Types.Neutral, cs(Vulture.color, "秃鹫"), rates, null, true);
+        vultureSpawnRate = Create(20170, Types.Neutral, cs(Vulture.color, "Vulture"), rates, null, true);
         vultureCooldown = Create(20171, Types.Neutral, "吞噬冷却", 15f, 10f, 60f, 2.5f, vultureSpawnRate);
         vultureNumberToWin = Create(20172, Types.Neutral, "获胜所需吞噬次数", 3f, 1f, 10f, 1f, vultureSpawnRate);
         vultureCanUseVents = Create(20173, Types.Neutral, "可使用管道", true, vultureSpawnRate);
         vultureShowArrows = Create(20174, Types.Neutral, "显示指向尸体的箭头", true, vultureSpawnRate);
 
-        lawyerSpawnRate = Create(20180, Types.Neutral, cs(Lawyer.color, "律师"), rates, null, true);
+        lawyerSpawnRate = Create(20180, Types.Neutral, cs(Lawyer.color, "Lawyer"), rates, null, true);
         lawyerIsProsecutorChance = Create(20181, Types.Neutral, "律师为处刑者的概率", rates, lawyerSpawnRate);
         lawyerTargetKnows = Create(20182, Types.Neutral, "客户知道律师存在", true, lawyerSpawnRate);
         lawyerVision = Create(20183, Types.Neutral, "视野倍率", 1.5f, 0.25f, 3f, 0.25f, lawyerSpawnRate);
@@ -953,23 +952,23 @@ public class CustomOptionHolder
         pursuerCooldown = Create(20187, Types.Neutral, "起诉人空包弹冷却", 20f, 5f, 60f, 2.5f, lawyerSpawnRate);
         pursuerBlanksNumber = Create(20188, Types.Neutral, "起诉人空包弹可用次数", 6f, 1f, 20f, 1f, lawyerSpawnRate);
 
-        swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "隐身人"), rates, null, true);
+        swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
         swooperKillCooldown = Create(20151, Types.Neutral, "击杀冷却", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
         swooperCooldown = Create(20152, Types.Neutral, "隐身冷却", 20f, 10f, 60f, 2.5f, swooperSpawnRate);
         swooperDuration = Create(20153, Types.Neutral, "隐身持续时间", 15f, 1f, 20f, 0.5f, swooperSpawnRate);
         swooperHasImpVision = Create(20154, Types.Neutral, "拥有内鬼视野", true, swooperSpawnRate);
 
-        werewolfSpawnRate = Create(20200, Types.Neutral, cs(Werewolf.color, "月下狼人"), rates, null, true);
+        werewolfSpawnRate = Create(20200, Types.Neutral, cs(Werewolf.color, "Werewolf"), rates, null, true);
         werewolfRampageCooldown = Create(20201, Types.Neutral, "狂暴冷却", 25f, 10f, 60f, 2.5f, werewolfSpawnRate);
         werewolfRampageDuration = Create(20202, Types.Neutral, "狂暴持续时间", 15f, 1f, 20f, 0.5f, werewolfSpawnRate);
         werewolfKillCooldown = Create(20203, Types.Neutral, "击杀冷却", 3f, 1f, 60f, 0.5f, werewolfSpawnRate);
 
-        juggernautSpawnRate = Create(20210, Types.Neutral, cs(Juggernaut.color, "天启"), rates, null, true);
+        juggernautSpawnRate = Create(20210, Types.Neutral, cs(Juggernaut.color, "Juggernaut"), rates, null, true);
         juggernautCooldown = Create(20211, Types.Neutral, "击杀冷却", 25f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
         juggernautHasImpVision = Create(20212, Types.Neutral, "天启拥有伪装者视野", true, juggernautSpawnRate);
         juggernautReducedkillEach = Create(20213, Types.Neutral, "每次击杀后减少的cd", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
 
-        doomsayerSpawnRate = Create(20221, Types.Neutral, cs(Doomsayer.color, "末日预言家"), rates, null, true);
+        doomsayerSpawnRate = Create(20221, Types.Neutral, cs(Doomsayer.color, "Doomsayer"), rates, null, true);
         doomsayerCooldown = Create(20222, Types.Neutral, "技能冷却", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
         doomsayerHasMultipleShotsPerMeeting = Create(20223, Types.Neutral, "猜测成功后可继续猜测", true, doomsayerSpawnRate);
         doomsayerShowInfoInGhostChat = Create(20224, Types.Neutral, "灵魂可见猜测结果", true, doomsayerSpawnRate);
@@ -979,13 +978,13 @@ public class CustomOptionHolder
         doomsayerKillToWin = Create(20228, Types.Neutral, "需要成功猜测几次获胜", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
         doomsayerDormationNum = Create(20229, Types.Neutral, "预言的职业数量", 5f, 1f, 10f, 1f, doomsayerSpawnRate);
 
-        akujoSpawnRate = Create(20231, Types.Neutral, cs(Akujo.color, "魅魔"), rates, null, true);
+        akujoSpawnRate = Create(20231, Types.Neutral, cs(Akujo.color, "Akujo"), rates, null, true);
         akujoTimeLimit = Create(20232, Types.Neutral, "魅魔招募真爱的时间", 600f, 90f, 1200f, 15f, akujoSpawnRate);
         akujoNumKeeps = Create(20233, Types.Neutral, "可招募备胎的数量", 1f, 0f, 10f, 1f, akujoSpawnRate);
         akujoKnowsRoles = Create(20234, Types.Neutral, "魅魔是否知道目标职业", true, akujoSpawnRate);
         akujoHonmeiCannotFollowWin = Create(20235, Types.Neutral, "真爱无法跟随阵营获胜", true, akujoSpawnRate);
 
-        thiefSpawnRate = Create(20240, Types.Neutral, cs(Thief.color, "身份窃贼"), rates, null, true);
+        thiefSpawnRate = Create(20240, Types.Neutral, cs(Thief.color, "Thief"), rates, null, true);
         thiefCooldown = Create(20241, Types.Neutral, "窃取冷却", 25f, 5f, 120f, 2.5f, thiefSpawnRate);
         thiefCanKillSheriff = Create(20242, Types.Neutral, "身份窃贼可以击杀" + cs(Sheriff.color, "警长"), true, thiefSpawnRate);
         thiefCanKillDeputy = Create(20246, Types.Neutral, "身份窃贼可以击杀" + cs(Deputy.color, "捕快"), true, thiefSpawnRate);
@@ -996,13 +995,13 @@ public class CustomOptionHolder
 
         //-------------------------- Crewmate Options 30000-39999 -------------------------- //
 
-        guesserSpawnRate = Create(30100, Types.Crewmate, cs(Guesser.color, "侠客"), rates, null, true);
+        guesserSpawnRate = Create(30100, Types.Crewmate, cs(Guesser.color, "Vigilante"), rates, null, true);
         guesserNumberOfShots = Create(30101, Types.Crewmate, "可猜测次数", 3f, 1f, 15f, 1f, guesserSpawnRate);
         guesserHasMultipleShotsPerMeeting = Create(30102, Types.Crewmate, "同一轮会议可多次猜测", true, guesserSpawnRate);
         guesserShowInfoInGhostChat = Create(30103, Types.Crewmate, "灵魂可见猜测结果", true, guesserSpawnRate);
         guesserKillsThroughShield = Create(30104, Types.Crewmate, "猜测无视法医护盾保护", false, guesserSpawnRate);
 
-        mayorSpawnRate = Create(30110, Types.Crewmate, cs(Mayor.color, "市长"), rates, null, true);
+        mayorSpawnRate = Create(30110, Types.Crewmate, cs(Mayor.color, "Mayor"), rates, null, true);
         mayorCanSeeVoteColors = Create(30111, Types.Crewmate, "拥有窥视能力", true, mayorSpawnRate);
         mayorTasksNeededToSeeVoteColors = Create(30112, Types.Crewmate, "获得窥视能力所需完成的任务数", 5f, 0f, 20f, 1f, mayorCanSeeVoteColors);
         mayorMeetingButton = Create(30113, Types.Crewmate, "可远程召开会议", true, mayorSpawnRate);
@@ -1010,7 +1009,7 @@ public class CustomOptionHolder
         mayorSabotageRemoteMeetings = Create(30115, Types.Crewmate, "可在破坏时使用\n无效设置", false, mayorMeetingButton);
         mayorChooseSingleVote = Create(30116, Types.Crewmate, "市长可选择投单票", ["关闭", "投票前选择", "会议结束前选择"], mayorSpawnRate);
 
-        engineerSpawnRate = Create(30120, Types.Crewmate, cs(Engineer.color, "工程师"), rates, null, true);
+        engineerSpawnRate = Create(30120, Types.Crewmate, cs(Engineer.color, "Engineer"), rates, null, true);
         engineerRemoteFix = Create(30121, Types.Crewmate, "可远程修理破坏", true, engineerSpawnRate);
         engineerResetFixAfterMeeting = Create(30122, Types.Crewmate, "会议后重置修理次数", true, engineerRemoteFix);
         engineerNumberOfFixes = Create(30123, Types.Crewmate, "远程修理可用次数", 1f, 1f, 3f, 1f, engineerRemoteFix);
@@ -1018,10 +1017,10 @@ public class CustomOptionHolder
         engineerHighlightForImpostors = Create(30125, Types.Crewmate, "内鬼可见工程师管道高光", true, engineerSpawnRate);
         engineerHighlightForTeamJackal = Create(30126, Types.Crewmate, "豺狼/跟班可见工程师管道高光 ", true, engineerSpawnRate);
 
-        privateInvestigatorSpawnRate = Create(30130, Types.Crewmate, cs(PrivateInvestigator.color, "观察者"), rates, null, true);
+        privateInvestigatorSpawnRate = Create(30130, Types.Crewmate, cs(PrivateInvestigator.color, "PrivateInvestigator"), rates, null, true);
         privateInvestigatorSeeColor = Create(30131, Types.Crewmate, "可见技能触发时对方具体颜色", true, privateInvestigatorSpawnRate);
 
-        sheriffSpawnRate = Create(30141, Types.Crewmate, cs(Sheriff.color, "警长"), rates, null, true);
+        sheriffSpawnRate = Create(30141, Types.Crewmate, cs(Sheriff.color, "Sheriff"), rates, null, true);
         sheriffCooldown = Create(30142, Types.Crewmate, "执法冷却", 30f, 10f, 60f, 2.5f, sheriffSpawnRate);
         sheriffMisfireKills = Create(30143, Types.Crewmate, "走火时死亡对象", ["警长", "对方", "双方"], sheriffSpawnRate);
         sheriffCanKillNeutrals = Create(30150, Types.Crewmate, "可执法独立阵营", false, sheriffSpawnRate);
@@ -1042,19 +1041,19 @@ public class CustomOptionHolder
         deputyGetsPromoted = Create(30175, Types.Crewmate, "警长死后捕快可晋升", ["否", "立即晋升", "会议后晋升"], deputySpawnRate);
         deputyKeepsHandcuffs = Create(30176, Types.Crewmate, "晋升后保留手铐技能", true, deputyGetsPromoted);
 
-        lighterSpawnRate = Create(30180, Types.Crewmate, cs(Lighter.color, "执灯人"), rates, null, true);
+        lighterSpawnRate = Create(30180, Types.Crewmate, cs(Lighter.color, "Lighter"), rates, null, true);
         lighterModeLightsOnVision = Create(30181, Types.Crewmate, "灯光正常时的视野倍率", 1.5f, 0.25f, 5f, 0.25f, lighterSpawnRate);
         lighterModeLightsOffVision = Create(30182, Types.Crewmate, "熄灯时的视野倍率", 0.5f, 0.25f, 5f, 0.25f, lighterSpawnRate);
         lighterFlashlightWidth = Create(30183, Types.Crewmate, "手电筒范围", 0.3f, 0.1f, 1f, 0.1f, lighterSpawnRate);
 
-        detectiveSpawnRate = Create(30190, Types.Crewmate, cs(Detective.color, "侦探"), rates, null, true);
+        detectiveSpawnRate = Create(30190, Types.Crewmate, cs(Detective.color, "Detective"), rates, null, true);
         detectiveAnonymousFootprints = Create(30191, Types.Crewmate, "匿名脚印", false, detectiveSpawnRate);
         detectiveFootprintIntervall = Create(30192, Types.Crewmate, "脚印更新间隔", 0.25f, 0.25f, 10f, 0.25f, detectiveSpawnRate);
         detectiveFootprintDuration = Create(30193, Types.Crewmate, "脚印持续时间", 12.5f, 0.5f, 30f, 0.5f, detectiveSpawnRate);
         detectiveReportNameDuration = Create(30194, Types.Crewmate, "以下时间内报告可得知凶手职业", 15f, 0f, 60f, 2.5f, detectiveSpawnRate);
         detectiveReportColorDuration = Create(30195, Types.Crewmate, "以下时间内报告可得知凶手颜色类型", 60f, 0f, 120f, 2.5f, detectiveSpawnRate);
 
-        medicSpawnRate = Create(30200, Types.Crewmate, cs(Medic.color, "医生"), rates, null, true);
+        medicSpawnRate = Create(30200, Types.Crewmate, cs(Medic.color, "Medic"), rates, null, true);
         medicShowShielded = Create(30201, Types.Crewmate, "可见医生护盾的玩家", ["所有人", "被保护者+法医", "法医"], medicSpawnRate);
         medicBreakShield = Create(30202, Types.Crewmate, "护盾持续生效", true, medicSpawnRate);
         medicShowAttemptToMedic = Create(30203, Types.Crewmate, "法医可见击杀尝试", true, medicBreakShield);
@@ -1064,28 +1063,28 @@ public class CustomOptionHolder
         medicReportNameDuration = Create(30207, Types.Crewmate, "以下时间内报告可得知凶手名字", 5f, 0f, 60f, 2.5f, medicBreakShield);
         medicReportColorDuration = Create(30208, Types.Crewmate, "以下时间内报告可得知凶手颜色类型", 30f, 0f, 120f, 2.5f, medicBreakShield);
 
-        timeMasterSpawnRate = Create(30210, Types.Crewmate, cs(TimeMaster.color, "时间之主"), rates, null, true);
+        timeMasterSpawnRate = Create(30210, Types.Crewmate, cs(TimeMaster.color, "TimeMaster"), rates, null, true);
         timeMasterCooldown = Create(30211, Types.Crewmate, "时光之盾冷却", 20f, 10f, 60f, 2.5f, timeMasterSpawnRate);
         timeMasterRewindTime = Create(30212, Types.Crewmate, "回溯时间", 6f, 1f, 10f, 1f, timeMasterSpawnRate);
         timeMasterShieldDuration = Create(30213, Types.Crewmate, "时光之盾持续时间", 12.5f, 1f, 20f, 1f, timeMasterSpawnRate);
 
-        veterenSpawnRate = Create(30220, Types.Crewmate, cs(Veteren.color, "老兵"), rates, null, true);
+        veterenSpawnRate = Create(30220, Types.Crewmate, cs(Veteren.color, "Veteren"), rates, null, true);
         veterenCooldown = Create(30221, Types.Crewmate, "警戒冷却", 25f, 10f, 120f, 2.5f, veterenSpawnRate);
         veterenAlertDuration = Create(30222, Types.Crewmate, "警戒持续时间", 15f, 1f, 20f, 1f, veterenSpawnRate);
 
-        swapperSpawnRate = Create(30230, Types.Crewmate, cs(Swapper.color, "换票师"), rates, null, true);
+        swapperSpawnRate = Create(30230, Types.Crewmate, cs(Swapper.color, "Swapper"), rates, null, true);
         swapperCanCallEmergency = Create(30231, Types.Crewmate, "可召开会议", false, swapperSpawnRate);
         swapperCanFixSabotages = Create(30232, Types.Crewmate, "可修理紧急破坏", false, swapperSpawnRate);
         swapperCanOnlySwapOthers = Create(30233, Types.Crewmate, "只可交换他人", false, swapperSpawnRate);
         swapperSwapsNumber = Create(30234, Types.Crewmate, "初始可换票次数", 1f, 0f, 5f, 1f, swapperSpawnRate);
         swapperRechargeTasksNumber = Create(30235, Types.Crewmate, "充能所需任务数", 2f, 1f, 10f, 1f, swapperSpawnRate);
 
-        seerSpawnRate = Create(30240, Types.Crewmate, cs(Seer.color, "灵媒"), rates, null, true);
+        seerSpawnRate = Create(30240, Types.Crewmate, cs(Seer.color, "Seer"), rates, null, true);
         seerMode = Create(30241, Types.Crewmate, "感知模式", ["死亡闪光+可见灵魂", "死亡闪光", "可见灵魂"], seerSpawnRate);
         seerLimitSoulDuration = Create(30242, Types.Crewmate, "限制灵魂可见时间", false, seerSpawnRate);
         seerSoulDuration = Create(30243, Types.Crewmate, "灵魂可见时间", 30f, 0f, 120f, 2.5f, seerLimitSoulDuration);
 
-        hackerSpawnRate = Create(30250, Types.Crewmate, cs(Hacker.color, "黑客"), rates, null, true);
+        hackerSpawnRate = Create(30250, Types.Crewmate, cs(Hacker.color, "Hacker"), rates, null, true);
         hackerCooldown = Create(30251, Types.Crewmate, "黑入冷却", 20f, 5f, 60f, 2.5f, hackerSpawnRate);
         hackerHackeringDuration = Create(30252, Types.Crewmate, "黑入持续时间", 10f, 2.5f, 60f, 2.5f, hackerSpawnRate);
         hackerOnlyColorType = Create(30253, Types.Crewmate, "黑入后只可见颜色类型", false, hackerSpawnRate);
@@ -1093,7 +1092,7 @@ public class CustomOptionHolder
         hackerRechargeTasksNumber = Create(30255, Types.Crewmate, "充能所需任务数", 2f, 1f, 5f, 1f, hackerSpawnRate);
         hackerNoMove = Create(30256, Types.Crewmate, "使用移动设备时不可移动", true, hackerSpawnRate);
 
-        trackerSpawnRate = Create(30260, Types.Crewmate, cs(Tracker.color, "追踪者"), rates, null, true);
+        trackerSpawnRate = Create(30260, Types.Crewmate, cs(Tracker.color, "Tracker"), rates, null, true);
         trackerUpdateIntervall = Create(30261, Types.Crewmate, "箭头更新间隔", 0.5f, 0f, 30f, 0.5f, trackerSpawnRate);
         trackerResetTargetAfterMeeting = Create(30262, Types.Crewmate, "会议后重置跟踪目标 ", false, trackerSpawnRate);
         trackerCanTrackCorpses = Create(30263, Types.Crewmate, "可寻找尸体", true, trackerSpawnRate);
@@ -1101,7 +1100,7 @@ public class CustomOptionHolder
         trackerCorpsesTrackingDuration = Create(30265, Types.Crewmate, "寻找持续时间", 7.5f, 2.5f, 30f, 2.5f, trackerCanTrackCorpses);
         trackerTrackingMethod = Create(30266, Types.Crewmate, "追踪模式", ["仅箭头", "仅检测是否接近", "两者皆有"], trackerSpawnRate);
 
-        prophetSpawnRate = Create(30360, Types.Crewmate, cs(Prophet.color, "预言家"), rates, null, true);
+        prophetSpawnRate = Create(30360, Types.Crewmate, cs(Prophet.color, "Prophet"), rates, null, true);
         prophetCooldown = Create(30361, Types.Crewmate, "冷却时间", 20f, 5f, 60f, 2.5f, prophetSpawnRate);
         prophetNumExamines = Create(30362, Types.Crewmate, "预言总次数", 4f, 1f, 10f, 1f, prophetSpawnRate);
         prophetCanCallEmergency = Create(30363, Types.Crewmate, "可以召开紧急会议", true, prophetSpawnRate);
@@ -1111,27 +1110,27 @@ public class CustomOptionHolder
         prophetBenignNeutralAsRed = Create(30367, Types.Crewmate, "善良型中立显示为红名", false, prophetSpawnRate);
         prophetEvilNeutralAsRed = Create(30368, Types.Crewmate, "邪恶型中立显示为红名", true, prophetSpawnRate);
 
-        snitchSpawnRate = Create(30270, Types.Crewmate, cs(Snitch.color, "告密者"), rates, null, true);
+        snitchSpawnRate = Create(30270, Types.Crewmate, cs(Snitch.color, "Snitch"), rates, null, true);
         snitchLeftTasksForReveal = Create(30271, Types.Crewmate, "剩余多少任务时可被发现", 1f, 0f, 10f, 1f, snitchSpawnRate);
         snitchSeeMeeting = Create(30272, Types.Crewmate, "可在会议中查看信息", true, snitchSpawnRate);
         snitchCanSeeRoles = Create(30273, Types.Crewmate, "可以在会议中查看具体职业", false, snitchSpawnRate);
         snitchIncludeNeutralTeam = Create(30274, Types.Crewmate, "可揭示中立阵营", ["关闭", "仅杀手中立", "所有邪恶中立", "全部中立阵营"], snitchSpawnRate);
         snitchTeamNeutraUseDifferentArrowColor = Create(30275, Types.Crewmate, "为中立阵营使用不同颜色的提醒\n(关闭则看谁都是红色)", true, snitchIncludeNeutralTeam);
 
-        spySpawnRate = Create(30280, Types.Crewmate, cs(Spy.color, "卧底"), rates, null, true);
+        spySpawnRate = Create(30280, Types.Crewmate, cs(Spy.color, "Spy"), rates, null, true);
         spyCanDieToSheriff = Create(30281, Types.Crewmate, "可被警长执法", false, spySpawnRate);
         spyImpostorsCanKillAnyone = Create(30282, Types.Crewmate, "卧底在场时伪装者可击杀队友", true, spySpawnRate);
         spyCanEnterVents = Create(30283, Types.Crewmate, "可使用管道", true, spySpawnRate);
         spyHasImpostorVision = Create(30284, Types.Crewmate, "拥有内鬼视野", true, spySpawnRate);
 
-        portalmakerSpawnRate = Create(30290, Types.Crewmate, cs(Portalmaker.color, "星门缔造者"), rates, null, true);
+        portalmakerSpawnRate = Create(30290, Types.Crewmate, cs(Portalmaker.color, "Portalmaker"), rates, null, true);
         portalmakerCooldown = Create(30291, Types.Crewmate, "构建星门冷却", 15f, 10f, 60f, 2.5f, portalmakerSpawnRate);
         portalmakerUsePortalCooldown = Create(30292, Types.Crewmate, "使用星门冷却", 15f, 10f, 60f, 2.5f, portalmakerSpawnRate);
         portalmakerLogOnlyColorType = Create(30293, Types.Crewmate, "星门日志只显示颜色类型", true, portalmakerSpawnRate);
         portalmakerLogHasTime = Create(30294, Types.Crewmate, "星门日志记录使用时间", true, portalmakerSpawnRate);
         portalmakerCanPortalFromAnywhere = Create(30295, Types.Crewmate, "可从任何地方传送至自己放置的传送门", true, portalmakerSpawnRate);
 
-        securityGuardSpawnRate = Create(30300, Types.Crewmate, cs(SecurityGuard.color, "保安"), rates, null, true);
+        securityGuardSpawnRate = Create(30300, Types.Crewmate, cs(SecurityGuard.color, "SecurityGuard"), rates, null, true);
         securityGuardCooldown = Create(30301, Types.Crewmate, "保安冷却", 15f, 10f, 60f, 2.5f, securityGuardSpawnRate);
         securityGuardTotalScrews = Create(30302, Types.Crewmate, "保安螺丝数", 10f, 1f, 15f, 1f, securityGuardSpawnRate);
         securityGuardCamPrice = Create(30303, Types.Crewmate, "监控所需螺丝数", 3f, 1f, 15f, 1f, securityGuardSpawnRate);
@@ -1141,30 +1140,30 @@ public class CustomOptionHolder
         securityGuardCamRechargeTasksNumber = Create(30307, Types.Crewmate, "充能所需任务数", 3f, 1f, 10f, 1f, securityGuardSpawnRate);
         securityGuardNoMove = Create(30308, Types.Crewmate, "看监控时无法移动", true, securityGuardSpawnRate);
 
-        mediumSpawnRate = Create(30310, Types.Crewmate, cs(Medium.color, "通灵师"), rates, null, true);
+        mediumSpawnRate = Create(30310, Types.Crewmate, cs(Medium.color, "Medium"), rates, null, true);
         mediumCooldown = Create(30311, Types.Crewmate, "通灵冷却", 7.5f, 2.5f, 120f, 2.5f, mediumSpawnRate);
         mediumDuration = Create(30312, Types.Crewmate, "通灵所需时间", 0.5f, 0f, 15f, 0.5f, mediumSpawnRate);
         mediumOneTimeUse = Create(30313, Types.Crewmate, "每个灵魂只能被通灵一次", false, mediumSpawnRate);
         mediumChanceAdditionalInfo = Create(30314, Types.Crewmate, "回答包含其他信息的可能性", rates, mediumSpawnRate);
 
-        jumperSpawnRate = Create(30320, Types.Crewmate, cs(Jumper.color, "传送师"), rates, null, true);
+        jumperSpawnRate = Create(30320, Types.Crewmate, cs(Jumper.color, "Jumper"), rates, null, true);
         jumperJumpTime = Create(30321, Types.Crewmate, "标记/传送冷却", 10f, 0f, 60f, 2.5f, jumperSpawnRate);
         jumperMaxCharges = Create(30325, Types.Crewmate, "可传送次数", 3, 0, 10, 1, jumperSpawnRate);
         jumperResetPlaceAfterMeeting = Create(30323, Types.Crewmate, "会议后重置标记位置", false, jumperSpawnRate);
         jumperChargesGainOnMeeting = Create(30324, Types.Crewmate, "会议后增加传送次数", 2, 0, 10, 1, jumperSpawnRate);
         /*
-        magicianSpawnRate = CustomOption.Create(30330, Types.Crewmate, cs(Magician.color, "魔术师"), rates, null, true);
+        magicianSpawnRate = CustomOption.Create(30330, Types.Crewmate, cs(Magician.color, "Magician"), rates, null, true);
         magicianCooldown = CustomOption.Create(30331, Types.Crewmate, "放置冷却", 15f, 0f, 60f, 2.5f, magicianSpawnRate);
         magicianTeleportTime = CustomOption.Create(30332, Types.Crewmate, "传送冷却", 15f, 0f, 60f, 2.5f, magicianSpawnRate);
         magicianProbabilityBlueCards = CustomOption.Create(30333, Types.Crewmate, "抽到蓝牌的概率", rates, magicianSpawnRate);
         magicianProbabilityRedCards = CustomOption.Create(30334, Types.Crewmate, "抽到红牌的概率", rates, magicianSpawnRate);
         magicianProbabilityPurpleCards = CustomOption.Create(30335, Types.Crewmate, "抽到紫牌的概率", rates, magicianSpawnRate);
         */
-        bodyGuardSpawnRate = Create(30340, Types.Crewmate, cs(BodyGuard.color, "保镖"), rates, null, true);
+        bodyGuardSpawnRate = Create(30340, Types.Crewmate, cs(BodyGuard.color, "BodyGuard"), rates, null, true);
         bodyGuardResetTargetAfterMeeting = Create(30341, Types.Crewmate, "会议后重置保护目标", true, bodyGuardSpawnRate);
         bodyGuardFlash = Create(30342, Types.Crewmate, "死亡闪光", true, bodyGuardSpawnRate);
 
-        trapperSpawnRate = Create(30350, Types.Crewmate, cs(Trapper.color, "设陷师"), rates, null, true);
+        trapperSpawnRate = Create(30350, Types.Crewmate, cs(Trapper.color, "Trapper"), rates, null, true);
         trapperCooldown = Create(30351, Types.Crewmate, "放置冷却", 20f, 5f, 120f, 2.5f, trapperSpawnRate);
         trapperMaxCharges = Create(30352, Types.Crewmate, "最大陷阱数", 4f, 1f, 15f, 1f, trapperSpawnRate);
         trapperRechargeTasksNumber = Create(30353, Types.Crewmate, "充能所需任务数", 2f, 1f, 15f, 1f, trapperSpawnRate);
@@ -1175,93 +1174,93 @@ public class CustomOptionHolder
 
         //-------------------------- Modifier (1000 - 1999) -------------------------- //
 
-        modifiersAreHidden = Create(1000, Types.Modifier, cs(Color.yellow, "隐藏死亡触发的附加职业"), true, null, true);
+        modifiersAreHidden = Create(40000, Types.Modifier, cs(Color.yellow, "隐藏死亡触发的附加职业"), true, null, true);
 
-        modifierDisperser = Create(1001, Types.Modifier, cs(Palette.ImpostorRed, "分散者"), rates, null, true);
+        modifierDisperser = Create(40010, Types.Modifier, cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
         //modifierDisperserRemainingDisperses = CustomOption.Create(1002, Types.Modifier, "分散次数", 1f,1f,5f,1f, modifierDisperser);
-        modifierDisperserDispersesToVent = Create(1003, Types.Modifier, "分散至管道位置", false, modifierDisperser);
+        modifierDisperserDispersesToVent = Create(40011, Types.Modifier, "分散至管道位置", false, modifierDisperser);
 
-        poucherSpawnRate = Create(1230, Types.Modifier, cs(Palette.ImpostorRed, "入殓师"), rates, null, true);
+        poucherSpawnRate = Create(40020, Types.Modifier, cs(Palette.ImpostorRed, "Poucher"), rates, null, true);
 
-        modifierLastImpostor = Create(1240, Types.Modifier, cs(Palette.ImpostorRed, "绝境者"), false, null, true);
-        modifierLastImpostorDeduce = Create(1241, Types.Modifier, "绝境者击杀冷却减少", 5f, 2.5f, 15f, 2.5f, modifierLastImpostor);
+        modifierLastImpostor = Create(40030, Types.Modifier, cs(Palette.ImpostorRed, "LastImpostor"), false, null, true);
+        modifierLastImpostorDeduce = Create(40031, Types.Modifier, "绝境者击杀冷却减少", 5f, 2.5f, 15f, 2.5f, modifierLastImpostor);
 
-        modifierBloody = Create(1010, Types.Modifier, cs(Color.yellow, "溅血者"), rates, null, true);
-        modifierBloodyQuantity = Create(1011, Types.Modifier, cs(Color.yellow, "溅血数量"), ratesModifier, modifierBloody);
-        modifierBloodyDuration = Create(1012, Types.Modifier, "痕迹持续时间", 10f, 3f, 60f, 0.5f, modifierBloody);
+        modifierBloody = Create(40040, Types.Modifier, cs(Color.yellow, "Bloody"), rates, null, true);
+        modifierBloodyQuantity = Create(40041, Types.Modifier, cs(Color.yellow, "溅血数量"), ratesModifier, modifierBloody);
+        modifierBloodyDuration = Create(40042, Types.Modifier, "痕迹持续时间", 10f, 3f, 60f, 0.5f, modifierBloody);
 
-        modifierAntiTeleport = Create(1020, Types.Modifier, cs(Color.yellow, "通讯兵"), rates, null, true);
-        modifierAntiTeleportQuantity = Create(1021, Types.Modifier, cs(Color.yellow, "通讯兵数量"), ratesModifier, modifierAntiTeleport);
+        modifierAntiTeleport = Create(40050, Types.Modifier, cs(Color.yellow, "AntiTeleport"), rates, null, true);
+        modifierAntiTeleportQuantity = Create(40051, Types.Modifier, cs(Color.yellow, "通讯兵数量"), ratesModifier, modifierAntiTeleport);
 
-        modifierTieBreaker = Create(1030, Types.Modifier, cs(Color.yellow, "破平者"), rates, null, true);
+        modifierTieBreaker = Create(40060, Types.Modifier, cs(Color.yellow, "TieBreaker"), rates, null, true);
 
-        modifierBait = Create(1040, Types.Modifier, cs(Color.yellow, "诱饵"), rates, null, true);
-        modifierBaitSwapCrewmate = Create(1041, Types.Modifier, "只分配给船员阵营", false, modifierBait);
-        modifierBaitReportDelayMin = Create(1044, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 0.125f, modifierBait);
-        modifierBaitReportDelayMax = Create(1045, Types.Modifier, "诱饵报告延迟时间(最大)", 0f, 0f, 10f, 0.5f, modifierBait);
-        modifierBaitShowKillFlash = Create(1046, Types.Modifier, "用闪光灯警告杀手", true, modifierBait);
+        modifierBait = Create(40070, Types.Modifier, cs(Color.yellow, "Bait"), rates, null, true);
+        modifierBaitSwapCrewmate = Create(40071, Types.Modifier, "只分配给船员阵营", false, modifierBait);
+        modifierBaitReportDelayMin = Create(40072, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 0.125f, modifierBait);
+        modifierBaitReportDelayMax = Create(40073, Types.Modifier, "诱饵报告延迟时间(最大)", 0f, 0f, 10f, 0.5f, modifierBait);
+        modifierBaitShowKillFlash = Create(40074, Types.Modifier, "用闪光灯警告杀手", true, modifierBait);
 
-        modifierLover = Create(1050, Types.Modifier, cs(Color.yellow, "恋人"), rates, null, true);
-        modifierLoverImpLoverRate = Create(1051, Types.Modifier, "恋人中有内鬼的概率", rates, modifierLover);
-        modifierLoverBothDie = Create(1052, Types.Modifier, "恋人共死", true, modifierLover);
-        modifierLoverEnableChat = Create(1053, Types.Modifier, "启用私密聊天文字频道", true, modifierLover);
+        modifierLover = Create(40080, Types.Modifier, cs(Color.yellow, "Lover"), rates, null, true);
+        modifierLoverImpLoverRate = Create(40081, Types.Modifier, "恋人中有内鬼的概率", rates, modifierLover);
+        modifierLoverBothDie = Create(40082, Types.Modifier, "恋人共死", true, modifierLover);
+        modifierLoverEnableChat = Create(40083, Types.Modifier, "启用私密聊天文字频道", true, modifierLover);
 
-        modifierSunglasses = Create(1060, Types.Modifier, cs(Color.yellow, "太阳镜"), rates, null, true);
-        modifierSunglassesQuantity = Create(1061, Types.Modifier, cs(Color.yellow, "太阳镜数量"), ratesModifier, modifierSunglasses);
-        modifierSunglassesVision = Create(1062, Types.Modifier, "太阳镜的视野倍率", ["-10%", "-20%", "-30%", "-40%", "-50%"], modifierSunglasses);
+        modifierSunglasses = Create(40090, Types.Modifier, cs(Color.yellow, "Sunglasses"), rates, null, true);
+        modifierSunglassesQuantity = Create(40091, Types.Modifier, cs(Color.yellow, "太阳镜数量"), ratesModifier, modifierSunglasses);
+        modifierSunglassesVision = Create(40092, Types.Modifier, "太阳镜的视野倍率", ["-10%", "-20%", "-30%", "-40%", "-50%"], modifierSunglasses);
 
-        modifierTorch = Create(1070, Types.Modifier, cs(Color.yellow, "火炬"), rates, null, true);
-        modifierTorchQuantity = Create(1071, Types.Modifier, cs(Color.yellow, "火炬人数"), ratesModifier, modifierTorch);
-        modifierTorchVision = Create(1072, Types.Modifier, "火炬的视野倍率", 1.5f, 1f, 3f, 0.125f, modifierTorch);
+        modifierTorch = Create(40100, Types.Modifier, cs(Color.yellow, "Torch"), rates, null, true);
+        modifierTorchQuantity = Create(40101, Types.Modifier, cs(Color.yellow, "火炬人数"), ratesModifier, modifierTorch);
+        modifierTorchVision = Create(40102, Types.Modifier, "火炬的视野倍率", 1.5f, 1f, 3f, 0.125f, modifierTorch);
 
-        modifierFlash = Create(1210, Types.Modifier, cs(Color.yellow, "闪电侠"), rates, null, true);
-        modifierFlashQuantity = Create(1211, Types.Modifier, cs(Color.yellow, "闪电侠人数"), ratesModifier, modifierFlash);
-        modifierFlashSpeed = Create(1212, Types.Modifier, "闪电侠的移速倍率", 1.25f, 1f, 3f, 0.125f, modifierFlash);
+        modifierFlash = Create(40110, Types.Modifier, cs(Color.yellow, "Flash"), rates, null, true);
+        modifierFlashQuantity = Create(40111, Types.Modifier, cs(Color.yellow, "闪电侠人数"), ratesModifier, modifierFlash);
+        modifierFlashSpeed = Create(40112, Types.Modifier, "闪电侠的移速倍率", 1.25f, 1f, 3f, 0.125f, modifierFlash);
 
-        modifierMultitasker = Create(1080, Types.Modifier, cs(Color.yellow, "多线程"), rates, null, true);
-        modifierMultitaskerQuantity = Create(1081, Types.Modifier, cs(Color.yellow, "多线程人数"), ratesModifier, modifierMultitasker);
+        modifierMultitasker = Create(40120, Types.Modifier, cs(Color.yellow, "Multitasker"), rates, null, true);
+        modifierMultitaskerQuantity = Create(40121, Types.Modifier, cs(Color.yellow, "多线程人数"), ratesModifier, modifierMultitasker);
 
-        modifierMini = Create(1090, Types.Modifier, cs(Color.yellow, "小孩"), rates, null, true);
-        modifierMiniGrowingUpDuration = Create(1091, Types.Modifier, "小孩长大所需时间", 400f, 100f, 1500f, 25f, modifierMini);
-        modifierMiniGrowingUpInMeeting = Create(1092, Types.Modifier, "小孩会议期间可成长", true, modifierMini);
+        modifierMini = Create(40130, Types.Modifier, cs(Color.yellow, "Mini"), rates, null, true);
+        modifierMiniGrowingUpDuration = Create(40131, Types.Modifier, "小孩长大所需时间", 400f, 100f, 1500f, 25f, modifierMini);
+        modifierMiniGrowingUpInMeeting = Create(40132, Types.Modifier, "小孩会议期间可成长", true, modifierMini);
 
-        modifierGiant = Create(1260, Types.Modifier, cs(Color.yellow, "巨人"), rates, null, true);
-        modifierGiantSpped = Create(1261, Types.Modifier, "巨人的移速倍率", 0.75f, 0.5f, 1.5f, 0.05f, modifierGiant);
+        modifierGiant = Create(40140, Types.Modifier, cs(Color.yellow, "Giant"), rates, null, true);
+        modifierGiantSpped = Create(40141, Types.Modifier, "巨人的移速倍率", 0.75f, 0.5f, 1.5f, 0.05f, modifierGiant);
 
-        modifierIndomitable = Create(1100, Types.Modifier, cs(Color.yellow, "不屈者"), rates, null, true);
+        modifierIndomitable = Create(40150, Types.Modifier, cs(Color.yellow, "Indomitable"), rates, null, true);
 
-        modifierBlind = Create(1110, Types.Modifier, cs(Color.yellow, "胆小鬼"), rates, null, true);
+        modifierBlind = Create(40160, Types.Modifier, cs(Color.yellow, "Blind"), rates, null, true);
 
-        modifierWatcher = Create(1120, Types.Modifier, cs(Color.yellow, "窥视者"), rates, null, true);
+        modifierWatcher = Create(40170, Types.Modifier, cs(Color.yellow, "Watcher"), rates, null, true);
 
-        modifierRadar = Create(1130, Types.Modifier, cs(Color.yellow, "雷达"), rates, null, true);
+        modifierRadar = Create(40180, Types.Modifier, cs(Color.yellow, "Radar"), rates, null, true);
 
-        modifierTunneler = Create(1140, Types.Modifier, cs(Color.yellow, "管道工程师"), rates, null, true);
+        modifierTunneler = Create(40190, Types.Modifier, cs(Color.yellow, "Tunneler"), rates, null, true);
 
-        modifierButtonBarry = Create(1220, Types.Modifier, cs(Color.yellow, "执钮人"), rates, null, true);
-        modifierButtonSabotageRemoteMeetings = Create(1221, Types.Modifier, "可在破坏时使用", false, modifierButtonBarry);
+        modifierButtonBarry = Create(40200, Types.Modifier, cs(Color.yellow, "ButtonBarry"), rates, null, true);
+        modifierButtonSabotageRemoteMeetings = Create(40201, Types.Modifier, "可在破坏时使用", false, modifierButtonBarry);
 
-        modifierSlueth = Create(1150, Types.Modifier, cs(Color.yellow, "掘墓人"), rates, null, true);
+        modifierSlueth = Create(40210, Types.Modifier, cs(Color.yellow, "Slueth"), rates, null, true);
 
-        modifierCursed = Create(1160, Types.Modifier, cs(Color.yellow, "反骨"), rates, null, true);
-        modifierShowCursed = Create(1161, Types.Modifier, "隐藏职业", false, modifierCursed);
+        modifierCursed = Create(40220, Types.Modifier, cs(Color.yellow, "Cursed"), rates, null, true);
+        modifierShowCursed = Create(40221, Types.Modifier, "隐藏职业", false, modifierCursed);
 
-        modifierVip = Create(1170, Types.Modifier, cs(Color.yellow, "VIP"), rates, null, true);
-        modifierVipQuantity = Create(1171, Types.Modifier, cs(Color.yellow, "VIP人数"), ratesModifier, modifierVip);
-        modifierVipShowColor = Create(1172, Types.Modifier, "死亡时全场提示阵营颜色", true, modifierVip);
+        modifierVip = Create(40230, Types.Modifier, cs(Color.yellow, "Vip"), rates, null, true);
+        modifierVipQuantity = Create(40231, Types.Modifier, cs(Color.yellow, "VIP人数"), ratesModifier, modifierVip);
+        modifierVipShowColor = Create(40232, Types.Modifier, "死亡时全场提示阵营颜色", true, modifierVip);
 
-        modifierInvert = Create(1180, Types.Modifier, cs(Color.yellow, "酒鬼"), rates, null, true);
-        modifierInvertQuantity = Create(1181, Types.Modifier, cs(Color.yellow, "酒鬼人数"), ratesModifier, modifierInvert);
-        modifierInvertDuration = Create(1182, Types.Modifier, "醉酒状态持续几轮会议", 2f, 1f, 15f, 1f, modifierInvert);
+        modifierInvert = Create(40240, Types.Modifier, cs(Color.yellow, "Invert"), rates, null, true);
+        modifierInvertQuantity = Create(40241, Types.Modifier, cs(Color.yellow, "酒鬼人数"), ratesModifier, modifierInvert);
+        modifierInvertDuration = Create(40242, Types.Modifier, "醉酒状态持续几轮会议", 2f, 1f, 15f, 1f, modifierInvert);
 
-        modifierChameleon = Create(1190, Types.Modifier, cs(Color.yellow, "变色龙"), rates, null, true);
-        modifierChameleonQuantity = Create(1191, Types.Modifier, cs(Color.yellow, "变色龙数量"), ratesModifier, modifierChameleon);
-        modifierChameleonHoldDuration = Create(1192, Types.Modifier, "从不动到褪色开始的间隔时间", 3f, 1f, 10f, 0.5f, modifierChameleon);
-        modifierChameleonFadeDuration = Create(1193, Types.Modifier, "褪色过程持续时间", 1f, 0.25f, 10f, 0.25f, modifierChameleon);
-        modifierChameleonMinVisibility = Create(1194, Types.Modifier, "最低透明度", ["0%", "10%", "20%", "30%", "40%", "50%"], modifierChameleon);
+        modifierChameleon = Create(40250, Types.Modifier, cs(Color.yellow, "Chameleon"), rates, null, true);
+        modifierChameleonQuantity = Create(40251, Types.Modifier, cs(Color.yellow, "变色龙数量"), ratesModifier, modifierChameleon);
+        modifierChameleonHoldDuration = Create(40252, Types.Modifier, "从不动到褪色开始的间隔时间", 3f, 1f, 10f, 0.5f, modifierChameleon);
+        modifierChameleonFadeDuration = Create(40253, Types.Modifier, "褪色过程持续时间", 1f, 0.25f, 10f, 0.25f, modifierChameleon);
+        modifierChameleonMinVisibility = Create(40254, Types.Modifier, "最低透明度", ["0%", "10%", "20%", "30%", "40%", "50%"], modifierChameleon);
 
-        modifierShifter = Create(1200, Types.Modifier, cs(Color.yellow, "交换师"), rates, null, true);
-        modifierShiftNeutral = Create(1201, Types.Modifier, "可交换部分中立不带刀职业", false, modifierShifter);
+        modifierShifter = Create(40260, Types.Modifier, cs(Color.yellow, "Shifter"), rates, null, true);
+        modifierShiftNeutral = Create(40261, Types.Modifier, "可交换部分中立不带刀职业", false, modifierShifter);
 
 
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //

@@ -177,6 +177,7 @@ public static class Helpers
 
     public static bool isCamoComms()
     {
+        if (isFungle()) return isCommsActive() && MapOptions.camoComms && !MapOptions.fungleDisableCamoComms;
         return isCommsActive() && MapOptions.camoComms;
     }
 

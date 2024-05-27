@@ -42,6 +42,7 @@ internal static class MapOptions
     public static bool disableCamsRoundOne;
     public static bool isRoundOne = true;
     public static bool camoComms;
+    public static bool fungleDisableCamoComms;
     public static bool randomGameStartPosition;
     public static bool allowModGuess;
     public static CustomGamemodes gameMode = CustomGamemodes.Classic;
@@ -80,7 +81,6 @@ internal static class MapOptions
         camerasToAdd = [];
         ventsToSeal = [];
         playerIcons = new Dictionary<byte, PoolablePlayer>();
-        ;
 
         maxNumberOfMeetings = Mathf.RoundToInt(CustomOptionHolder.maxNumberOfMeetings.getSelection());
         blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.getBool();
@@ -92,6 +92,7 @@ internal static class MapOptions
         allowParallelMedBayScans = CustomOptionHolder.allowParallelMedBayScans.getBool();
         disableMedscanWalking = CustomOptionHolder.disableMedbayWalk.getBool();
         camoComms = CustomOptionHolder.enableCamoComms.getBool();
+        fungleDisableCamoComms = CustomOptionHolder.fungleDisableCamoComms.getBool();
         shieldFirstKill = CustomOptionHolder.shieldFirstKill.getBool();
         impostorSeeRoles = CustomOptionHolder.impostorSeeRoles.getBool();
         transparentTasks = CustomOptionHolder.transparentTasks.getBool();

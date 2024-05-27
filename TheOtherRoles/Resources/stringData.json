@@ -4,46 +4,6 @@
         "11": "The Other Roles\u8a2d\u5b9a",
         "13": "The Other Roles \u8bbe\u7f6e"
     },
-    "TouTitle": {
-        "0": "<color=#ff351f>TheOtherUs-Edited</color>",
-        "13": "<color=#ff351f>TheOtherUs-Edited</color>"
-    },
-    "inGameTitle": {
-        "0": "<size=75%>Modified by <color=#FFB793>mxyx.club</color>\nBased on TheOtherUs</size>",
-        "13": "<size=80%><color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> - <color=#FFB793>mxyx.club</color></size>"
-    },
-    "isHideNSeekGM": {
-        "0": "HideNSeek",
-        "13": "\u730e\u6740\u6a21\u5f0f"
-    },
-    "isGuesserGm": {
-        "0": "Guesser",
-        "13": "\u8d4c\u602a\u6a21\u5f0f"
-    },
-    "isPropHuntGM": {
-        "0": "PropHunt",
-        "13": "\u9053\u5177\u8eb2\u732b\u732b"
-    },
-    "Credits": {
-        "0": "TOU Credits",
-        "13": "\u6a21\u7ec4\u8d21\u732e\u8005"
-    },
-    "fullCredentials": {
-        "0": "<size=70%>Modified by <color=#FFB793>mxyx-club</color>\n<size=65%>Based on TheOtherUs</size>",
-        "13": "<size=75%>\u6a21\u7ec4\u4fee\u6539: <color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> \n\u7f8e\u5de5: <color=#00FFFFFF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheOtherUs</size>"
-    },
-    "mainMenuCredentials": {
-        "0": "<size=90%>Modified by <color=#FFB793>mxyx-club</color>\n<size=80%>Based on TheOtherUs</size>",
-        "13": "<size=80%>\u6a21\u7ec4\u4fee\u6539\uff1a<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> \n\u7f8e\u5de5: <color=#00FFFFFF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheOtherUs</size>\n"
-    },
-    "contributorsCredentials": {
-        "0": "<size=80%> <color=#FCCE03FF>Special thanks to Spex and Imp11</color></size>",
-        "13": "<size=80%> <color=#FCCE03FF>\u7279\u522b\u611f\u8c22\uff1aSpex & \u5584\u826f\u7684\u597d\u4eba & \u5929\u5bf8\u68a6\u521d & Imp11</color></size>"
-    },
-    "creditsString1": {
-        "0": "<align=\"center\"><b>TheOtherUs-Edited Team:</b>\nmxyx    Huier-Huang    haoren\nImp2    FangKuaiYa\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles, SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n\n",
-        "13": "<align=\"center\"><b>TheOtherUs-Edited \u5f00\u53d1\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    \u5584\u826f\u7684\u597d\u4eba    Imp11\n\n<b>\u7f8e\u5de5:</b>\n\u65b9\u5757\n\n<b>\u7ffb\u8bd1:</b>\nEN\uff1a\u4e5d\u5934\u86c7\nCN\uff1a\u6cab\u590f\u60a0\u8f69\n\n<b>GitHub\u8d21\u732e\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    Imp11\n\n\u672c\u6a21\u7ec4\u4f7f\u7528\u4e86\u90e8\u5206[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA[]\u7684\u4ee3\u7801\uff0c\u611f\u8c22Imp11\u7684\u652f\u6301\uff01\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
-    },
     "TORMapOptionsButtonText": {
         "0": "Mod Options...",
         "13": "\u6a21\u7ec4\u9009\u9879"
@@ -491,6 +451,9 @@
         "0": "Enable Camouflage Comms",
         "13": "\u901a\u4fe1\u7834\u574f\u5f00\u542f\u5c0f\u9ed1\u4eba"
     },
+    "fungleDisableCamoComms": {
+        "13": "\u5728Fungle\u5730\u56fe\u65f6\u7981\u7528"
+    },
     "restrictDevices": {
         "0": "Restrict Map Information",
         "13": "\u9650\u5236\u4fe1\u606f\u8bbe\u5907\u4f7f\u7528"
@@ -784,25 +747,45 @@
         "0": "Janitor Cooldown",
         "13": "\u6e05\u6d01\u5de5\u6e05\u7406\u51b7\u5374"
     },
-    "oldTouVersion": {
-        "0": "has an older version of The Other Us",
-        "13": "\u5b89\u88c5\u4e86\u65e7\u7248\u672c\u7684TheOtherUs"
+    "TouTitle": {
+        "0": "<color=#ff351f>TheOtherUs-Edited</color>",
+        "13": "<color=#ff351f>TheOtherUs-Edited</color>"
     },
-    "newTouVersion": {
-        "0": "has a newer version of The Other Us",
-        "13": "\u5b89\u88c5\u4e86\u8f83\u65b0\u7248\u672c\u7684TheOtherUs"
+    "inGameTitle": {
+        "0": "<size=75%>Modified by <color=#FFB793>mxyx.club</color>\nBased on TheOtherUs</size>",
+        "13": "<size=80%><color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> - <color=#FFB793>mxyx.club</color></size>"
     },
-    "modifiedTouVersion": {
-        "0": "has a modified version of TOU",
-        "13": "\u5b89\u88c5\u4e86\u4fee\u6539\u8fc7\u7684TheOtherUs"
+    "isHideNSeekGM": {
+        "0": "HideNSeek",
+        "13": "\u730e\u6740\u6a21\u5f0f"
     },
-    "HostNoTou": {
-        "0": "The host has no or a different version of The Other Us\nYou will be kicked in",
-        "13": "\u623f\u4e3b\u6ca1\u6709\u6216\u4e0d\u540c\u7248\u672c\u7684TheOtherUs\n\u5373\u5c06\u88ab\u8e22\u51fa\u623f\u95f4"
+    "isGuesserGm": {
+        "0": "Guesser",
+        "13": "\u8d4c\u602a\u6a21\u5f0f"
     },
-    "DifferentTouVersions": {
-        "0": "Players With Different Versions:",
-        "13": "\u88c5\u4e86\u4e0d\u540c\u7248\u672c\u6a21\u7ec4\u7684\u73a9\u5bb6:"
+    "isPropHuntGM": {
+        "0": "PropHunt",
+        "13": "\u9053\u5177\u8eb2\u732b\u732b"
+    },
+    "Credits": {
+        "0": "TOU Credits",
+        "13": "\u6a21\u7ec4\u8d21\u732e\u8005"
+    },
+    "fullCredentials": {
+        "0": "<size=70%>Modified by <color=#FFB793>mxyx-club</color>\n<size=65%>Based on TheOtherUs</size>",
+        "13": "<size=75%>\u6a21\u7ec4\u4fee\u6539: <color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> \n\u7f8e\u5de5: <color=#00FFFFFF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheOtherUs</size>"
+    },
+    "mainMenuCredentials": {
+        "0": "<size=90%>Modified by <color=#FFB793>mxyx-club</color>\n<size=80%>Based on TheOtherUs</size>",
+        "13": "<size=80%>\u6a21\u7ec4\u4fee\u6539\uff1a<color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> \n\u7f8e\u5de5: <color=#00FFFFFF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheOtherUs</size>\n"
+    },
+    "contributorsCredentials": {
+        "0": "<size=80%> <color=#FCCE03FF>Special thanks to Spex and Imp11</color></size>",
+        "13": "<size=80%> <color=#FCCE03FF>\u7279\u522b\u611f\u8c22\uff1aSpex & \u5584\u826f\u7684\u597d\u4eba & \u5929\u5bf8\u68a6\u521d & Imp11</color></size>"
+    },
+    "creditsString1": {
+        "0": "<align=\"center\"><b>TheOtherUs-Edited Team:</b>\nmxyx    Huier-Huang    haoren\nImp2    FangKuaiYa\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles, SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n\n",
+        "13": "<align=\"center\"><b>TheOtherUs-Edited \u5f00\u53d1\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    \u5584\u826f\u7684\u597d\u4eba    Imp11\n\n<b>\u7f8e\u5de5:</b>\n\u65b9\u5757\n\n<b>\u7ffb\u8bd1:</b>\nEN\uff1a\u4e5d\u5934\u86c7\nCN\uff1a\u6cab\u590f\u60a0\u8f69\n\n<b>GitHub\u8d21\u732e\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    Imp11\n\n\u672c\u6a21\u7ec4\u4f7f\u7528\u4e86\u90e8\u5206[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA[]\u7684\u4ee3\u7801\uff0c\u611f\u8c22Imp11\u7684\u652f\u6301\uff01\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
     },
     "seerShowInfoText": {
         "0": "Seer Info: Someone Died",
@@ -842,6 +825,978 @@
     "BlackmailShhhText": {
         "0": "YOU ARE BLACKMAILED",
         "13": "\u5618\uff01\u4e0d\u8bb8\u8bf4\u8bdd\uff01"
+    },
+    "Impostor": {
+        "0": "Impostor",
+        "13": "\u4f2a\u88c5\u8005"
+    },
+    "ImpostorIntroDesc": {
+        "13": "\u54c8\u54c8\uff01\u767d\u677f\u5185\u9b3c~"
+    },
+    "ImpostorShortDesc": {
+        "13": "\u7834\u574f\u5e76\u51fb\u6740\u6240\u6709\u4eba"
+    },
+    "Assassin": {
+        "0": "Assassin",
+        "13": "\u523a\u5ba2"
+    },
+    "AssassinIntroDesc": {
+        "13": "\u827a\u672f\u5c31\u662f\u523a\u6740\uff01"
+    },
+    "AssassinShortDesc": {
+        "13": "\u751f\u547d\u5c31\u662f\u4e00\u573a\u8c6a\u8d4c\uff01"
+    },
+    "Mafia": {
+        "0": "Mafia",
+        "13": "\u9ed1\u624b\u515a"
+    },
+    "Godfather": {
+        "0": "Godfather",
+        "13": "\u6559\u7236"
+    },
+    "GodfatherIntroDesc": {
+        "13": "\u61c2\u4e0d\u61c2\u4ec0\u4e48\u53eb\u9ed1\u624b\u554a"
+    },
+    "GodfatherShortDesc": {
+        "13": "\u5e72\u6389\u8239\u5458"
+    },
+    "Mafioso": {
+        "0": "Mafioso",
+        "13": "\u5c0f\u5f1f"
+    },
+    "MafiosoIntroDesc": {
+        "13": "\u61c2\u4e0d\u61c2\u4ec0\u4e48\u53eb\u9ed1\u624b\u554a"
+    },
+    "MafiosoShortDesc": {
+        "13": "\u5e2e\u52a9<color=#FF1919FF>\u6559\u7236</color>\u5e72\u6389\u8239\u5458"
+    },
+    "Janitor": {
+        "0": "Janitor",
+        "13": "\u6e05\u6d01\u5de5"
+    },
+    "JanitorIntroDesc": {
+        "13": "\u4f60\u6709\u4e2a\u53cc\u80de\u80ce\u54e5\u54e5\u53eb\u6e05\u7406\u8005"
+    },
+    "JanitorShortDesc": {
+        "13": "\u5e2e\u52a9\u6559\u7236\u6e05\u7406\u6b7b\u5c38"
+    },
+    "Morphling": {
+        "0": "Morphling",
+        "13": "\u5316\u5f62\u8005"
+    },
+    "MorphlingIntroDesc": {
+        "13": "\u53d8\u6362\u4f60\u7684\u5916\u5f62\u4e0d\u88ab\u6293\u5230"
+    },
+    "MorphlingShortDesc": {
+        "13": "\u53d8\u6362\u4f60\u7684\u5916\u5f62"
+    },
+    "Bomber": {
+        "0": "Bomber",
+        "13": "\u70b8\u5f39\u72c2"
+    },
+    "BomberIntroDesc": {
+        "13": "\u7ed9\u5176\u4ed6\u73a9\u5bb6\u9001\u70b8\u5f39"
+    },
+    "BomberShortDesc": {
+        "13": "\u70b8\u6b7b\u6240\u6709\u8239\u5458"
+    },
+    "Mimic": {
+        "0": "Mimic",
+        "13": "\u6a21\u4eff\u8005"
+    },
+    "MimicIntroDesc": {
+        "13": "\u593a\u8d70\u4f60\u7684\u4e00\u5207\uff0c\u6211\u5f88\u62b1\u6b49"
+    },
+    "MimicShortDesc": {
+        "13": "\u593a\u8d70\u7b2c\u4e00\u4e2a\u88ab\u4f60\u51fb\u6740\u8239\u5458\u7684\u804c\u4e1a"
+    },
+    "Camouflager": {
+        "0": "Camouflager",
+        "13": "\u9690\u853d\u8005"
+    },
+    "CamouflagerIntroDesc": {
+        "13": "\u8ba9\u6211\u4eec\u6765\u730e\u6740\u90a3\u4e9b\u9677\u5165\u9ed1\u6697\u4e2d\u7684\u4eba\u5427"
+    },
+    "CamouflagerShortDesc": {
+        "13": "\u9690\u85cf\u5728\u4ed6\u4eba\u4e4b\u4e2d"
+    },
+    "Poucher": {
+        "0": "Poucher",
+        "13": "\u5165\u6b93\u5e08"
+    },
+    "PoucherIntroDesc": {
+        "13": "\u4f60\u7684\u4eba\u751f\u6211\u4ece\u672a\u53c2\u4e0e\uff0c\u4f46\u6211\u9001\u4f60\u6700\u540e\u4e00\u7a0b"
+    },
+    "PoucherShortDesc": {
+        "13": "\u8c03\u67e5\u88ab\u51fb\u6740\u8005\u7684\u804c\u4e1a"
+    },
+    "Miner": {
+        "0": "Miner",
+        "13": "\u7ba1\u9053\u5de5"
+    },
+    "MinerIntroDesc": {
+        "13": "\u5728\u98de\u8239\u4e0a\u6253\u6d1e"
+    },
+    "MinerShortDesc": {
+        "13": "\u5236\u9020\u7ba1\u9053"
+    },
+    "Eraser": {
+        "0": "Eraser",
+        "13": "\u62b9\u9664\u8005"
+    },
+    "EraserIntroDesc": {
+        "13": "\u4f60\u660e\u660e\u62e5\u6709\u4e00\u5207\u7684...."
+    },
+    "EraserShortDesc": {
+        "13": "\u62b9\u53bb\u654c\u4eba\u7684\u804c\u4e1a"
+    },
+    "Vampire": {
+        "0": "Vampire",
+        "13": "\u5438\u8840\u9b3c"
+    },
+    "VampireIntroDesc": {
+        "13": "\u8ba9\u6211\u5438\u4e00\u53e3\uff0c\u5c31\u4ebf\u53e3"
+    },
+    "VampireShortDesc": {
+        "13": "\u6495\u54ac\u654c\u4eba\u5ef6\u8fdf\u51fb\u6740"
+    },
+    "Cleaner": {
+        "0": "Cleaner",
+        "13": "\u6e05\u7406\u8005"
+    },
+    "CleanerIntroDesc": {
+        "13": "\u8981\u7559\u6e05\u767d\u5728\u4eba\u95f4...\u5417"
+    },
+    "CleanerShortDesc": {
+        "13": "\u6e05\u7406\u5c38\u4f53"
+    },
+    "Undertaker": {
+        "0": "Undertaker",
+        "13": "\u9001\u846c\u8005"
+    },
+    "UndertakerIntroDesc": {
+        "13": "\u60a8\u9700\u8981\u593a\u547d\u4e27\u846c\u4e00\u6761\u9f99\u670d\u52a1\u5417"
+    },
+    "UndertakerShortDesc": {
+        "13": "\u62d6\u62fd\u5c38\u4f53\uff0c\u63a9\u57cb\u547d\u6848"
+    },
+    "Escapist": {
+        "0": "Escapist",
+        "13": "\u9003\u9038\u8005"
+    },
+    "EscapistIntroDesc": {
+        "13": "\u62dc\u62dc\u4e86\u60a8\u561e"
+    },
+    "EscapistShortDesc": {
+        "13": "\u653e\u7f6e\u951a\u70b9\u5e76\u4f20\u9001"
+    },
+    "Warlock": {
+        "0": "Warlock",
+        "13": "\u672f\u58eb"
+    },
+    "WarlockIntroDesc": {
+        "13": "\u7ed9\u5176\u4ed6\u73a9\u5bb6\u4e0b\u5492\u51fb\u6740\u7b2c\u4e09\u8005"
+    },
+    "WarlockShortDesc": {
+        "13": "\u4f7f\u7528\u672f\u6cd5\u51fb\u6740\u7b2c\u4e09\u4eba"
+    },
+    "Trickster": {
+        "0": "Trickster",
+        "13": "\u9a97\u672f\u5e08"
+    },
+    "TricksterIntroDesc": {
+        "13": "\u9ed1\u591c\u662f\u54b1\u7684\u4f2a\u88c5"
+    },
+    "TricksterShortDesc": {
+        "13": "\u653e\u7f6e\u60ca\u5413\u76d2\u5e76\u4f7f\u9ed1\u6697\u964d\u4e34"
+    },
+    "BountyHunter": {
+        "0": "BountyHunter",
+        "13": "\u8d4f\u91d1\u730e\u4eba"
+    },
+    "BountyHunterIntroDesc": {
+        "13": "\u8ffd\u6355\u4f60\u7684\u8d4f\u91d1\u76ee\u6807"
+    },
+    "BountyHunterShortDesc": {
+        "13": "\u8ffd\u6355\u4f60\u7684\u8d4f\u91d1\u76ee\u6807"
+    },
+    "Cultist": {
+        "0": "Cultist",
+        "13": "\u4f20\u6559\u58eb"
+    },
+    "CultistIntroDesc": {
+        "13": "\u4e3a\u4e86\u53e4\u795e\u7684\u8bde\u751f"
+    },
+    "CultistShortDesc": {
+        "13": "\u62db\u52df\u4fe1\u5f92\u5e76\u6740\u5bb3\u6240\u6709\u654c\u4eba"
+    },
+    "Follower": {
+        "0": "Follower",
+        "13": "\u65b0\u4fe1\u5f92"
+    },
+    "FollowerIntroDesc": {
+        "13": "\u4e3a\u4e86\u53e4\u795e\u7684\u8bde\u751f"
+    },
+    "FollowerShortDesc": {
+        "13": "\u6740\u6b7b\u6240\u6709\u654c\u4eba"
+    },
+    "Terrorist": {
+        "0": "Terrorist",
+        "13": "\u6050\u6016\u5206\u5b50"
+    },
+    "TerroristIntroDesc": {
+        "13": "\u6211\u4f1a\u7ed9\u4f60\u4eec\u6570\u52303\u7684\u65f6\u95f4\uff0c3!bom!"
+    },
+    "TerroristShortDesc": {
+        "13": "\u70b8\u6b7b\u6240\u6709\u654c\u4eba!"
+    },
+    "Blackmailer": {
+        "0": "Blackmailer",
+        "13": "\u52d2\u7d22\u8005"
+    },
+    "BlackmailerIntroDesc": {
+        "13": "\u5618\u2014\u2014\u7ea2\u6e29\u8b66\u544a"
+    },
+    "BlackmailerShortDesc": {
+        "13": "\u52d2\u7d22\u5176\u4ed6\u73a9\u5bb6\u4f7f\u5176\u65e0\u6cd5\u53d1\u8a00"
+    },
+    "Witch": {
+        "0": "Witch",
+        "13": "\u5973\u5deb"
+    },
+    "WitchIntroDesc": {
+        "13": "\u90a3\u4e48\uff0c\u4ee3\u4ef7\u662f\u4ec0\u4e48\uff1f"
+    },
+    "WitchShortDesc": {
+        "13": "\u5bf9\u654c\u4eba\u4e0b\u5492"
+    },
+    "Ninja": {
+        "0": "Ninja",
+        "13": "\u5fcd\u8005"
+    },
+    "NinjaIntroDesc": {
+        "13": "\u5fcd\u8005\u4e4b\u9053\uff0c\u5728\u4e8e\u9690\u5fcd"
+    },
+    "NinjaShortDesc": {
+        "13": "\u6807\u8bb0\u76ee\u6807\u5e76\u95ea\u73b0\u51fb\u6740"
+    },
+    "Yoyo": {
+        "0": "Yoyo",
+        "13": "\u60a0\u60a0\u7403"
+    },
+    "YoyoIntroDesc": {
+        "13": "\u98de\uff01\u96f7\uff01\u795e\uff01"
+    },
+    "YoyoShortDesc": {
+        "13": "\u6807\u8bb0\u4f4d\u7f6e\u540e\u53ef\u4ee5\u77ac\u79fb\u4e00\u6b21\u540e\u518d\u56de\u5230\u539f\u70b9"
+    },
+    "EvilTrapper": {
+        "0": "EvilTrapper",
+        "13": "\u90aa\u6076\u7684\u8bbe\u9677\u5e08"
+    },
+    "EvilTrapperIntroDesc": {
+        "13": "\u653e\u7f6e\u9677\u9631\u51fb\u6740\u8239\u5458\uff01"
+    },
+    "EvilTrapperShortDesc": {
+        "13": "\u653e\u7f6e\u9677\u9631\u51fb\u6740\u8239\u5458\uff01"
+    },
+    "Amnisiac": {
+        "0": "Amnisiac",
+        "13": "\u5931\u5fc6\u8005"
+    },
+    "AmnisiacIntroDesc": {
+        "13": "\u6211\u662f\u4f60\uff0c\u90a3\u4f60\u662f\u8c01\uff1f"
+    },
+    "AmnisiacShortDesc": {
+        "13": "\u56de\u5fc6\u6b7b\u8005\u7684\u8bb0\u5fc6\u83b7\u53d6\u804c\u4e1a"
+    },
+    "Jester": {
+        "0": "Jester",
+        "13": "\u5c0f\u4e11"
+    },
+    "JesterIntroDesc": {
+        "13": "\u8ba9\u522b\u4eba\u5bf9\u4f60\u7684\u8868\u6f14\u53f9\u4e3a\u89c2\u6b62\u5427"
+    },
+    "JesterShortDesc": {
+        "13": "\u60f3\u529e\u6cd5\u9a71\u9010\u81ea\u5df1"
+    },
+    "Vulture": {
+        "0": "Vulture",
+        "13": "\u79c3\u9e6b"
+    },
+    "VultureIntroDesc": {
+        "13": "\u4eba\u755c\u65e0\u5bb3\uff0c\u53ef\u53ef\u7231\u7231~"
+    },
+    "VultureShortDesc": {
+        "13": "\u5403\u9e21\u817f\u54af~"
+    },
+    "Lawyer": {
+        "0": "Lawyer",
+        "13": "\u5f8b\u5e08"
+    },
+    "LawyerIntroDesc": {
+        "13": "\u542c\u8bf4\u6bcf\u4e2a\u5f8b\u5e08\u90fd\u6709\u4e13\u5c5e\u593a\u547d\u4eba"
+    },
+    "LawyerShortDesc": {
+        "13": "\u4e3a\u5ba2\u6237\u8fa9\u9a73\u5e2e\u52a9\u80dc\u5229"
+    },
+    "Prosecutor": {
+        "0": "Prosecutor",
+        "13": "\u5904\u5211\u8005"
+    },
+    "ProsecutorIntroDesc": {
+        "13": "\u865a\u5047\u7684\u5904\u5211\u4eba\uff0c\u771f\u6b63\u7684\u5b88\u62a4\u5929\u4f7f"
+    },
+    "ProsecutorShortDesc": {
+        "13": "\u6295\u51fa\u4f60\u7684\u653e\u9010\u76ee\u6807"
+    },
+    "Pursuer": {
+        "0": "Pursuer",
+        "13": "\u8d77\u8bc9\u4eba"
+    },
+    "PursuerIntroDesc": {
+        "13": "\u6d3b\u4e0b\u53bb\uff01"
+    },
+    "PursuerShortDesc": {
+        "13": "\u6d3b\u4e0b\u53bb\uff01"
+    },
+    "Jackal": {
+        "0": "Jackal",
+        "13": "\u8c7a\u72fc"
+    },
+    "JackalIntroDesc": {
+        "13": "\u6740\u6b7b\u6240\u6709\u8239\u5458\u548c<color=#FF1919FF>\u5185\u9b3c</color>"
+    },
+    "JackalShortDesc": {
+        "13": "\u6740\u6b7b\u6240\u6709\u4eba"
+    },
+    "Sidekick": {
+        "0": "Sidekick",
+        "13": "\u8ddf\u73ed"
+    },
+    "SidekickIntroDesc": {
+        "13": "\u5e2e\u52a9\u8c7a\u72fc\u83b7\u5f97\u80dc\u5229"
+    },
+    "SidekickShortDesc": {
+        "13": "\u5e2e\u52a9\u8c7a\u72fc\u83b7\u5f97\u80dc\u5229"
+    },
+    "Swooper": {
+        "0": "Swooper",
+        "13": "\u9690\u8eab\u4eba"
+    },
+    "SwooperIntroDesc": {
+        "13": "\u563f\uff01\u4f60\u7684\u5c0f\u53ef\u7231\u7a81\u7136\u51fa\u73b0\u5566"
+    },
+    "SwooperShortDesc": {
+        "13": "\u563f\uff01\u4f60\u7684\u5c0f\u53ef\u7231\u7a81\u7136\u51fa\u73b0\u5566"
+    },
+    "Arsonist": {
+        "0": "Arsonist",
+        "13": "\u7eb5\u706b\u72af"
+    },
+    "ArsonistIntroDesc": {
+        "13": "\u706b\u7130\u554a\u8d50\u4e88\u6211\u529b\u91cf\uff01"
+    },
+    "ArsonistShortDesc": {
+        "13": "\u71c3\u70e7\u5427\uff0c\u90fd\u7ed9\u6211\u5316\u6210\u7070\u70ec"
+    },
+    "Werewolf": {
+        "0": "Werewolf",
+        "13": "\u6708\u4e0b\u72fc\u4eba"
+    },
+    "WerewolfIntroDesc": {
+        "13": "\u72c2\u66b4\u4e4b\u4e0b\uff0c\u4e07\u7269\u51cb\u96f6"
+    },
+    "WerewolfShortDesc": {
+        "13": "\u66b4\u8d70\u5e76\u6740\u6b7b\u5176\u4ed6\u7684\u73a9\u5bb6"
+    },
+    "Thief": {
+        "0": "Thief",
+        "13": "\u8eab\u4efd\u7a83\u8d3c"
+    },
+    "ThiefIntroDesc": {
+        "13": "\u62ff\u6765\u5427\u4f60"
+    },
+    "ThiefShortDesc": {
+        "13": "\u901a\u8fc7\u51fb\u6740\u6216\u731c\u6d4b\u7a83\u53d6\u5bf9\u65b9\u804c\u4e1a"
+    },
+    "Juggernaut": {
+        "0": "Juggernaut",
+        "13": "\u5929\u542f"
+    },
+    "JuggernautIntroDesc": {
+        "13": "\u543e\u5c06\u9001\u6c5d\u7b49\u6551\u8d4e\uff0c\u6c5d\u7b49\u5e94\u5fc3\u6000\u611f\u6fc0"
+    },
+    "JuggernautShortDesc": {
+        "13": "\u51cf\u5c11CD\uff0c\u6740\u5149\u6240\u6709\u4eba"
+    },
+    "Doomsayer": {
+        "0": "Doomsayer",
+        "13": "\u672b\u65e5\u9884\u8a00\u5bb6"
+    },
+    "DoomsayerIntroDesc": {
+        "13": "\u5c06\u4eba\u7c7b\u4ee5\u5584\u6076\u6765\u533a\u5206\u8fd9\u6839\u672c\u5c31\u662f\u611a\u8822\u7684\u60f3\u6cd5"
+    },
+    "DoomsayerShortDesc": {
+        "13": "\u89c2\u5bdf\u5176\u4ed6\u73a9\u5bb6\uff0c\u5e76\u5728\u4f1a\u8bae\u65f6\u523a\u6740\u4ed6\u4eec"
+    },
+    "Akujo": {
+        "0": "Akujo",
+        "13": "\u9b45\u9b54"
+    },
+    "AkujoIntroDesc": {
+        "13": "\u4f60\u4eec\u90fd\u662f\u6211\u7684\u7fc5\u8180\uff01"
+    },
+    "AkujoShortDesc": {
+        "13": "\u62db\u52df\u771f\u7231\u548c\u5907\u80ce\u5e76\u4e14\u6d3b\u4e0b\u53bb\uff01"
+    },
+    "Crewmate": {
+        "0": "Crewmate",
+        "13": "\u8239\u5458"
+    },
+    "CrewmateIntroDesc": {
+        "13": "\u54c8\u54c8\uff01\u767d\u677f\u8239\u5458~"
+    },
+    "CrewmateShortDesc": {
+        "13": "\u53d1\u73b0\u5e76\u9a71\u9010\u4f2a\u88c5\u8005"
+    },
+    "Vigilante": {
+        "0": "Vigilante",
+        "13": "\u4fa0\u5ba2"
+    },
+    "VigilanteIntroDesc": {
+        "13": "\u751f\u547d\u5c31\u662f\u4e00\u573a\u8c6a\u8d4c"
+    },
+    "VigilanteShortDesc": {
+        "13": "\u5728\u4f1a\u8bae\u4e0a\u523a\u6740\u574f\u4eba"
+    },
+    "Mayor": {
+        "0": "Mayor",
+        "13": "\u5e02\u957f"
+    },
+    "MayorIntroDesc": {
+        "13": "\u6211\u6301\u6709\u4e00\u7968\u5426\u51b3\u6743!!!"
+    },
+    "MayorShortDesc": {
+        "13": "\u7528\u4f60\u7684\u6743\u529b\u5e2e\u52a9\u8239\u5458"
+    },
+    "Portalmaker": {
+        "0": "Portalmaker",
+        "13": "\u661f\u95e8\u7f14\u9020\u8005"
+    },
+    "PortalmakerIntroDesc": {
+        "13": "\u4ee5[\u661f]\u4e4b\u94ed"
+    },
+    "PortalmakerShortDesc": {
+        "13": "\u7b51[\u661f]\u4e4b\u95e8"
+    },
+    "Engineer": {
+        "0": "Engineer",
+        "13": "\u5de5\u7a0b\u5e08"
+    },
+    "EngineerIntroDesc": {
+        "13": "\u6ca1\u4eba\u6bd4\u6211\u66f4\u61c2\u5f97\u7a83\u542c"
+    },
+    "EngineerShortDesc": {
+        "13": "\u7ef4\u4fee\u98de\u8239"
+    },
+    "PrivateInvestigator": {
+        "0": "PrivateInvestigator",
+        "13": "\u89c2\u5bdf\u8005"
+    },
+    "PrivateInvestigatorIntroDesc": {
+        "13": "\u67e5\u770b\u8c01\u5728\u4e0e\u4ed6\u4eba\u4e92\u52a8"
+    },
+    "PrivateInvestigatorShortDesc": {
+        "13": "\u67e5\u770b\u8c01\u5728\u4e0e\u4ed6\u4eba\u4e92\u52a8"
+    },
+    "Sheriff": {
+        "0": "Sheriff",
+        "13": "\u8b66\u957f"
+    },
+    "SheriffIntroDesc": {
+        "13": "<color=#FF1919FF>\u4e25\u7981</color>\u5c0f\u8111\u884c\u4e3a\uff01\uff01\uff01"
+    },
+    "SheriffShortDesc": {
+        "13": "\u6bd9\u4e86\u4f2a\u88c5\u8005"
+    },
+    "Deputy": {
+        "0": "Deputy",
+        "13": "\u6355\u5feb"
+    },
+    "DeputyIntroDesc": {
+        "13": "\u902e\u6355<color=#FF1919FF>\u4f2a\u88c5\u8005</color>"
+    },
+    "DeputyShortDesc": {
+        "13": "\u902e\u6355\u4f2a\u88c5\u8005"
+    },
+    "BodyGuard": {
+        "0": "BodyGuard",
+        "13": "\u4fdd\u9556"
+    },
+    "BodyGuardIntroDesc": {
+        "13": "\u7528\u81ea\u5df1\u7684\u751f\u547d\u4fdd\u62a4\u4ed6\u4eba"
+    },
+    "BodyGuardShortDesc": {
+        "13": "\u7528\u81ea\u5df1\u7684\u751f\u547d\u4fdd\u62a4\u4ed6\u4eba"
+    },
+    "Lighter": {
+        "0": "Lighter",
+        "13": "\u6267\u706f\u4eba"
+    },
+    "LighterIntroDesc": {
+        "13": "\u4f60 \u662f \u4e00 \u4e2a \u7535 \u706f \u6ce1a.a"
+    },
+    "LighterShortDesc": {
+        "13": "\u4f60\u7684\u706f\u5149\u6c38\u4e0d\u7184\u706d"
+    },
+    "Jumper": {
+        "0": "Jumper",
+        "13": "\u4f20\u9001\u5e08"
+    },
+    "JumperIntroDesc": {
+        "13": "\u7a7a\uff01\u95f4\uff01\u9519\uff01\u4e71\uff01"
+    },
+    "JumperShortDesc": {
+        "13": "\u653e\u7f6e\u951a\u70b9\u5e76\u4f20\u9001"
+    },
+    "Magician": {
+        "0": "Magician",
+        "13": "\u9b54\u672f\u5e08"
+    },
+    "MagicianIntroDesc": {
+        "13": "\u4f7f\u7528\u9b54\u672f\u5e72\u6270\u4f2a\u88c5\u8005"
+    },
+    "MagicianShortDesc": {
+        "13": "\u4f7f\u7528\u9b54\u672f\u5e72\u6270\u4f2a\u88c5\u8005"
+    },
+    "Detective": {
+        "0": "Detective",
+        "13": "\u4fa6\u63a2"
+    },
+    "DetectiveIntroDesc": {
+        "13": "\u4ece\u811a\u5370\u4e4b\u4e2d\u53d1\u73b0<color=#FF1919FF>\u4f2a\u88c5\u8005</color>"
+    },
+    "DetectiveShortDesc": {
+        "13": "\u68c0\u67e5\u8db3\u8ff9\u5e76\u68c0\u9a8c\u5c38\u4f53"
+    },
+    "TimeMaster": {
+        "0": "TimeMaster",
+        "13": "\u65f6\u95f4\u4e4b\u4e3b"
+    },
+    "TimeMasterIntroDesc": {
+        "13": "\u77e5\u9053\u6211\u521a\u5728\u65f6\u7a7a\u65c5\u884c\u7684\u65f6\u5019\u89c1\u5230\u8c01\u4e86\u4e48?"
+    },
+    "TimeMasterShortDesc": {
+        "13": "\u7528\u4f60\u7684\u62a4\u76fe\u4fdd\u62a4\u4f60\u81ea\u5df1"
+    },
+    "Veteren": {
+        "0": "Veteren",
+        "13": "\u8001\u5175"
+    },
+    "VeterenIntroDesc": {
+        "13": "\u6ca1\u6709\u4eba\u6bd4\u6211\u66f4\u61c2\u4f5c\u6848\u65f6\u673a"
+    },
+    "VeterenShortDesc": {
+        "13": "\u65f6\u523b\u8b66\u60d5\uff0c\u53cd\u5f39\uff01"
+    },
+    "Medic": {
+        "0": "Medic",
+        "13": "\u6cd5\u533b"
+    },
+    "MedicIntroDesc": {
+        "13": "\u5b66\u533b\u6551\u4e0d\u4e86\u592a\u7a7a\u4eba"
+    },
+    "MedicShortDesc": {
+        "13": "\u4fdd\u62a4\u8239\u5458"
+    },
+    "Swapper": {
+        "0": "Swapper",
+        "13": "\u6362\u7968\u5e08"
+    },
+    "SwapperIntroDesc": {
+        "13": "\u4e24\uff01\u6781\uff01\u53cd\uff01\u8f6c\uff01"
+    },
+    "SwapperShortDesc": {
+        "13": "\u4ea4\u6362\u7968\u6570"
+    },
+    "Seer": {
+        "0": "Seer",
+        "13": "\u7075\u5a92"
+    },
+    "SeerIntroDesc": {
+        "13": "\u6211\u77e5\u9053\u8c01\u662f\u8bf1\u9975"
+    },
+    "SeerShortDesc": {
+        "13": "\u611f\u77e5\u6b7b\u4ea1"
+    },
+    "Hacker": {
+        "0": "Hacker",
+        "13": "\u9ed1\u5ba2"
+    },
+    "HackerIntroDesc": {
+        "13": "\u54ea\u6709\u90a3\u4e48\u7b80\u5355\uff1f"
+    },
+    "HackerShortDesc": {
+        "13": "\u9ed1\u5165\u98de\u8239\u63a2\u67e5\u4ed6\u4eba\u8e2a\u8ff9"
+    },
+    "Tracker": {
+        "0": "Tracker",
+        "13": "\u8ffd\u8e2a\u8005"
+    },
+    "TrackerIntroDesc": {
+        "13": "\u4f60\u7684\u4e00\u4e3e\u4e00\u52a8\u5df2\u7ecf\u66b4\u9732"
+    },
+    "TrackerShortDesc": {
+        "13": "\u8ddf\u8e2a\u53ef\u7591\u73a9\u5bb6"
+    },
+    "Snitch": {
+        "0": "Snitch",
+        "13": "\u544a\u5bc6\u8005"
+    },
+    "SnitchIntroDesc": {
+        "13": "\u65e0\u60e7\u751f\u6b7b\uff0c\u79d8\u5bc6\u884c\u52a8"
+    },
+    "SnitchShortDesc": {
+        "13": "\u5b8c\u6210\u4efb\u52a1\u63ed\u793a\u5185\u9b3c"
+    },
+    "Spy": {
+        "0": "Spy",
+        "13": "\u5367\u5e95"
+    },
+    "SpyIntroDesc": {
+        "13": "\u5bf9\u4e0d\u8d77\uff0c\u6211\u662f\u4e00\u4e2a[\u597d]\u4eba"
+    },
+    "SpyShortDesc": {
+        "13": "\u6f5c\u4f0f\u8d77\u6765\uff0c\u627e\u51fa\u5185\u9b3c"
+    },
+    "SecurityGuard": {
+        "0": "SecurityGuard",
+        "13": "\u4fdd\u5b89"
+    },
+    "SecurityGuardIntroDesc": {
+        "13": "\u7ef4\u62a4\u98de\u8239\u79e9\u5e8f"
+    },
+    "SecurityGuardShortDesc": {
+        "13": "\u5c01\u9501\u7ba1\u9053\u5e76\u5b89\u653e\u76d1\u63a7"
+    },
+    "Medium": {
+        "0": "Medium",
+        "13": "\u901a\u7075\u5e08"
+    },
+    "MediumIntroDesc": {
+        "13": "\u8fd9\u4e0d\u662f\u5c01\u5efa\u8ff7\u4fe1\uff01"
+    },
+    "MediumShortDesc": {
+        "13": "\u5bf9\u7075\u9b42\u901a\u7075\u83b7\u53d6\u4fe1\u606f"
+    },
+    "Trapper": {
+        "0": "Trapper",
+        "13": "\u8bbe\u9677\u5e08"
+    },
+    "TrapperIntroDesc": {
+        "13": "\u56f0\u4e8e\u9677\u9631\u4e2d..."
+    },
+    "TrapperShortDesc": {
+        "13": "\u653e\u7f6e\u9677\u9631\u83b7\u53d6\u4fe1\u606f"
+    },
+    "Prophet": {
+        "0": "Prophet",
+        "13": "\u9884\u8a00\u5bb6"
+    },
+    "ProphetIntroDesc": {
+        "13": "\u6211\u770b\u900f\u4e86\u4f60\u7684\u5fc3"
+    },
+    "ProphetShortDesc": {
+        "13": "\u901a\u8fc7\u9884\u8a00\u63ed\u793a\u5bf9\u65b9\u9635\u8425"
+    },
+    "Disperser": {
+        "0": "Disperser",
+        "13": "\u5206\u6563\u8005"
+    },
+    "DisperserIntroDesc": {
+        "13": "\u5927\u4f19\uff01\u8be5\u4e0a\u8def\u4e86\uff01"
+    },
+    "DisperserShortDesc": {
+        "13": "\u5206\u6563\u6240\u6709\u4eba"
+    },
+    "LastImpostor": {
+        "0": "LastImpostor",
+        "13": "\u7edd\u5883\u8005"
+    },
+    "LastImpostorIntroDesc": {
+        "13": "\u4f60\u662f\u72fc\u6751\u6700\u540e\u7684\u5e0c\u671b..."
+    },
+    "LastImpostorShortDesc": {
+        "13": "\u4f60\u7684\u51fb\u6740\u51b7\u5374\u4f1a\u5927\u5e45\u5ea6\u51cf\u5c11"
+    },
+    "Bloody": {
+        "0": "Bloody",
+        "13": "\u6e85\u8840\u8005"
+    },
+    "BloodyIntroDesc": {
+        "13": "\u4ee5\u543e\u4e4b\u8840\u5492\u6c5d\u4e4b\u8eab"
+    },
+    "BloodyShortDesc": {
+        "13": "\u7528\u4f60\u7684\u8840\u7559\u4e0b\u6b7b\u4ea1\u4fe1\u606f"
+    },
+    "AntiTeleport": {
+        "0": "AntiTeleport",
+        "13": "\u901a\u4fe1\u5175"
+    },
+    "AntiTeleportIntroDesc": {
+        "13": "\u4f60\u4e0d\u4f1a\u88ab\u4f20\u9001!"
+    },
+    "AntiTeleportShortDesc": {
+        "13": "\u4f60\u4e0d\u4f1a\u88ab\u4f20\u9001!"
+    },
+    "TieBreaker": {
+        "0": "TieBreaker",
+        "13": "\u7834\u5e73\u8005"
+    },
+    "TieBreakerIntroDesc": {
+        "13": "\u4f60\u8bf4\u5f97\u5bf9...\u4f46\u662f\uff0c\u89c4\u5219\u5c31\u662f\u7528\u6765\u6253\u7834\u7684"
+    },
+    "TieBreakerShortDesc": {
+        "13": "\u6253\u7834\u5e73\u5c40"
+    },
+    "Bait": {
+        "0": "Bait",
+        "13": "\u8bf1\u9975"
+    },
+    "BaitIntroDesc": {
+        "13": "\u5927\u5956\u5c0f\u5956\uff0c\u80fd\u8bb0\u4f4f\u5c31\u662f\u597d\u5956"
+    },
+    "BaitShortDesc": {
+        "13": "\u51fb\u6740\u4f60\u7684\u4eba\u4f1a\u7acb\u5373\u62a5\u8b66"
+    },
+    "Sunglasses": {
+        "0": "Sunglasses",
+        "13": "\u592a\u9633\u955c"
+    },
+    "SunglassesIntroDesc": {
+        "13": "\u8fd9\u771f\u662f\uff0c\u6cf0\u9177\u8fa3"
+    },
+    "SunglassesShortDesc": {
+        "13": "\u4f60\u7684\u89c6\u91ce\u53d8\u5f97\u66f4\u5c0f"
+    },
+    "Torch": {
+        "0": "Torch",
+        "13": "\u706b\u70ac"
+    },
+    "TorchIntroDesc": {
+        "13": "\u5fc3\u4e2d\u6709\u5149\uff0c\u7167\u8000\u56db\u65b9"
+    },
+    "TorchShortDesc": {
+        "13": "\u89c6\u91ce\u589e\u52a0\uff0c\u65e0\u89c6\u7184\u706f"
+    },
+    "Flash": {
+        "0": "Flash",
+        "13": "\u95ea\u7535\u4fa0"
+    },
+    "FlashIntroDesc": {
+        "13": "\u4f60\u62e5\u6709\u66f4\u5feb\u7684\u79fb\u52a8\u901f\u5ea6!"
+    },
+    "FlashShortDesc": {
+        "13": "\u4f60\u62e5\u6709\u66f4\u5feb\u7684\u79fb\u52a8\u901f\u5ea6!"
+    },
+    "Multitasker": {
+        "0": "Multitasker",
+        "13": "\u591a\u7ebf\u7a0b"
+    },
+    "MultitaskerIntroDesc": {
+        "13": "\u867d\u7136\u4eba\u4e0d\u53ef\u4ee5\u4e09\u5fc3\u4e8c\u610f\uff0c\u4f46\u662f\u4f60\u53ef\u4ee5\u4e00\u5fc3\u4e8c\u7528"
+    },
+    "MultitaskerShortDesc": {
+        "13": "\u4ea4\u4e92\u754c\u9762\u900f\u660e"
+    },
+    "Lover": {
+        "0": "Lover",
+        "13": "\u604b\u4eba"
+    },
+    "LoverIntroDesc": {
+        "13": "\u4f60\u5760\u5165\u4e86\u7231\u6cb3"
+    },
+    "LoverShortDesc": {
+        "13": "\u4f60\u5760\u5165\u4e86\u7231\u6cb3"
+    },
+    "Giant": {
+        "0": "Giant",
+        "13": "\u5de8\u4eba"
+    },
+    "GiantIntroDesc": {
+        "13": "\u53c8\u5927\uff0c\u53c8\u6162.avi"
+    },
+    "GiantShortDesc": {
+        "13": "\u4f60\u62e5\u6709\u66f4\u5927\u7684\u4f53\u578b\u548c\u8f83\u6162\u7684\u79fb\u52a8\u901f\u5ea6"
+    },
+    "Mini": {
+        "0": "Mini",
+        "13": "\u5c0f\u5b69"
+    },
+    "MiniIntroDesc": {
+        "13": "\u300a\u672a\u6210\u5e74\u4eba\u4fdd\u62a4\u6cd5\u300b\u7b2c127\u6761[\u4e0d\uff0c\u662f\u7b2c133\u6761]"
+    },
+    "MiniShortDesc": {
+        "13": "\u957f\u5927\u4e4b\u524d\u6ca1\u6709\u4eba\u80fd\u4f24\u5bb3\u4f60"
+    },
+    "Vip": {
+        "0": "VIP",
+        "1": "VIP",
+        "2": "VIP",
+        "3": "VIP",
+        "4": "VIP",
+        "5": "VIP",
+        "6": "VIP",
+        "7": "VIP",
+        "8": "VIP",
+        "9": "VIP",
+        "10": "VIP",
+        "11": "VIP",
+        "12": "VIP",
+        "13": "VIP"
+    },
+    "VipIntroDesc": {
+        "13": "\u6211\u5ba3\u5e03\u4e2a\u4e8b\u513f"
+    },
+    "VipShortDesc": {
+        "13": "\u6240\u6709\u4eba\u90fd\u77e5\u9053\u4f60\u7684\u6b7b\u8baf"
+    },
+    "Indomitable": {
+        "0": "Indomitable",
+        "13": "\u4e0d\u5c48\u8005"
+    },
+    "IndomitableIntroDesc": {
+        "13": "\u65e0\u6240\u754f\u60e7\uff0c\u6108\u6218\u6108\u52c7"
+    },
+    "IndomitableShortDesc": {
+        "13": "\u65e0\u6cd5\u88ab\u731c\u6d4b"
+    },
+    "Slueth": {
+        "0": "Slueth",
+        "13": "\u6398\u5893\u4eba"
+    },
+    "SluethIntroDesc": {
+        "13": "\u6211\u624d\u662f\u6cd5\u533b\uff01"
+    },
+    "SluethShortDesc": {
+        "13": "\u62a5\u544a\u5c38\u4f53\u53ef\u77e5\u6653\u6b7b\u8005\u804c\u4e1a"
+    },
+    "Cursed": {
+        "0": "Cursed",
+        "13": "\u53cd\u9aa8"
+    },
+    "CursedIntroDesc": {
+        "13": "\u4f60\u662f\u8239\u5458....\u81f3\u5c11\u73b0\u5728\u662f"
+    },
+    "CursedShortDesc": {
+        "13": "\u88ab\u5185\u9b3c\u51fb\u6740\u4f1a\u52a0\u5165\u5185\u9b3c\u9635\u8425"
+    },
+    "Invert": {
+        "0": "Invert",
+        "13": "\u9152\u9b3c"
+    },
+    "InvertIntroDesc": {
+        "13": "\u6253\u70ca\u524d\u7684\u6700\u540e\u4e00\u676f"
+    },
+    "InvertShortDesc": {
+        "13": "\u4f60\u7684\u79fb\u52a8\u65b9\u5411\u88ab\u98a0\u5012\u4e86"
+    },
+    "Blind": {
+        "0": "Blind",
+        "13": "\u80c6\u5c0f\u9b3c"
+    },
+    "BlindIntroDesc": {
+        "13": "\u5916\u9762\u7684\u4e16\u754c\u597d\u53ef\u6015\u2026\u2026"
+    },
+    "BlindShortDesc": {
+        "13": "\u65e0\u6cd5\u62a5\u544a\u5c38\u4f53"
+    },
+    "Watcher": {
+        "0": "Watcher",
+        "13": "\u7aa5\u89c6\u8005"
+    },
+    "WatcherIntroDesc": {
+        "13": "\u6211\u770b\u770b\u4f60\u4eec\u600e\u4e48\u6295\u7968\u7684\u554a"
+    },
+    "WatcherShortDesc": {
+        "13": "\u4f60\u53ef\u4ee5\u77e5\u6653\u6240\u6709\u4eba\u7684\u6295\u7968\u60c5\u51b5"
+    },
+    "Radar": {
+        "0": "Radar",
+        "13": "\u96f7\u8fbe"
+    },
+    "RadarIntroDesc": {
+        "13": "\u65f6\u523b\u8b66\u60d5\uff01"
+    },
+    "RadarShortDesc": {
+        "13": "\u5f97\u77e5\u8ddd\u79bb\u6700\u8fd1\u7684\u73a9\u5bb6\u4f4d\u7f6e"
+    },
+    "Tunneler": {
+        "0": "Tunneler",
+        "13": "\u7ba1\u9053\u5de5\u7a0b\u5e08"
+    },
+    "TunnelerIntroDesc": {
+        "13": "\u8ba9\u6211\u770b\u770b\u8fd9\u4e2a\u7ba1\u9053"
+    },
+    "TunnelerShortDesc": {
+        "13": "\u5b8c\u6210\u4efb\u52a1\u53ef\u4f7f\u7528\u7ba1\u9053"
+    },
+    "ButtonBarry": {
+        "0": "ButtonBarry",
+        "13": "\u6267\u94ae\u4eba"
+    },
+    "ButtonBarryIntroDesc": {
+        "13": "\u4f60\u53ef\u4ee5\u968f\u65f6\u53ec\u5f00\u7d27\u6025\u4f1a\u8bae!"
+    },
+    "ButtonBarryShortDesc": {
+        "13": "\u4f60\u53ef\u4ee5\u968f\u65f6\u53ec\u5f00\u7d27\u6025\u4f1a\u8bae!"
+    },
+    "Chameleon": {
+        "0": "Chameleon",
+        "13": "\u53d8\u8272\u9f99"
+    },
+    "ChameleonIntroDesc": {
+        "13": "\u770b\u4e0d\u89c1\u6211~ \u770b\u4e0d\u89c1\u6211~"
+    },
+    "ChameleonShortDesc": {
+        "13": "\u9759\u6b62\u65f6\u53ef\u9690\u8eab"
+    },
+    "Shifter": {
+        "13": "\u4e0e\u4ed6\u4eba\u4ea4\u6362\u804c\u4e1a"
+    },
+    "ShifterIntroDesc": {
+        "13": "\u4f60\u7684\u80fd\u529b\u771f\u597d\u7528\uff01\u9a6c\u4e0a\u5c31\u662f\u6211\u7684\u4e86\uff01"
+    },
+    "Hunter": {
+        "0": "Hunter",
+        "13": "\u730e\u4eba"
+    },
+    "HunterIntroDesc": {
+        "13": "\u627e\u5230\u5e76\u51fb\u6740\u6240\u6709\u730e\u7269"
+    },
+    "HunterShortDesc": {
+        "13": "\u627e\u5230\u5e76\u51fb\u6740\u6240\u6709\u730e\u7269"
+    },
+    "Hunted": {
+        "0": "Hunted",
+        "13": "\u8eb2\u85cf\u8005"
+    },
+    "HuntedIntroDesc": {
+        "13": "\u8eb2\u8d77\u6765"
+    },
+    "HuntedShortDesc": {
+        "13": "\u8eb2\u8d77\u6765"
+    },
+    "Prop": {
+        "0": "Prop",
+        "13": "\u8eb2\u85cf\u8005"
+    },
+    "PropIntroDesc": {
+        "13": "\u4f2a\u88c5\u6210\u7269\u54c1\u5e76\u751f\u5b58"
+    },
+    "PropShortDesc": {
+        "13": "\u4f2a\u88c5\u6210\u7269\u54c1\u5e76\u751f\u5b58"
     },
     "colorSalmon": {
         "0": "Salmon",
