@@ -117,6 +117,7 @@ public class TheOtherRolesPlugin : BasePlugin
         CustomHatManager.LoadHats();
         CustomColors.Load();
         CustomOptionHolder.Load();
+        AssetLoader.LoadAudioAssets();
         if (ToggleCursor.Value) Helpers.enableCursor(true);
 
 
