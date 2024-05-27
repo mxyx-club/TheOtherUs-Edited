@@ -270,7 +270,7 @@ public static class CustomHatManager
 
         return toDownload;
     }
-
+    /*
     public static List<CustomHat> loadHorseHats()
     {
         List<CustomHat> hatdatas = new();
@@ -311,4 +311,5 @@ public static class CustomHatManager
         }
         return hatdatas;
     }
+    */
 }

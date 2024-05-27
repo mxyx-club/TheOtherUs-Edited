@@ -39,7 +39,7 @@ public class TheOtherRolesPlugin : BasePlugin
     public static IRegionInfo[] defaultRegions;
     public Harmony Harmony { get; } = new(Id);
 
-    public static ConfigEntry<bool> DebugMode { get;  set; }
+    public static ConfigEntry<bool> DebugMode { get; set; }
     public static ConfigEntry<bool> GhostsSeeInformation { get; set; }
     public static ConfigEntry<bool> GhostsSeeRoles { get; set; }
     public static ConfigEntry<bool> GhostsSeeModifier { get; set; }
@@ -117,6 +117,7 @@ public class TheOtherRolesPlugin : BasePlugin
         CustomHatManager.LoadHats();
         CustomColors.Load();
         CustomOptionHolder.Load();
+        AssetLoader.LoadAudioAssets();
         if (ToggleCursor.Value) Helpers.enableCursor(true);
 
 

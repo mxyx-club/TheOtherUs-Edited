@@ -81,6 +81,9 @@ internal static class HudManagerStartPatch
 
     public static CustomButton juggernautKillButton;
 
+
+    public static CustomButton evilTrapperSetTrapButton;
+
     //末日预言家
     public static CustomButton doomsayerButton;
     //魅魔
@@ -195,6 +198,7 @@ internal static class HudManagerStartPatch
         swooperSwoopButton.MaxTimer = Swooper.swoopCooldown;
         swooperKillButton.MaxTimer = Swooper.cooldown;
         swooperSwoopButton.EffectDuration = Swooper.duration;
+        evilTrapperSetTrapButton.MaxTimer = EvilTrapper.cooldown;
 
         doomsayerButton.MaxTimer = Doomsayer.cooldown;
         akujoHonmeiButton.MaxTimer = defaultMaxTimer;
@@ -909,6 +913,32 @@ internal static class HudManagerStartPatch
         akujoBackupLeftText.transform.localScale = Vector3.one * 0.5f;
         akujoBackupLeftText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
+        evilTrapperSetTrapButton = new CustomButton(
+            () =>
+            { // ボタンが押された時に実行
+                if (!CachedPlayer.LocalPlayer.PlayerControl.CanMove || KillTrap.hasTrappedPlayer()) return;
+                EvilTrapper.setTrap();
+                evilTrapperSetTrapButton.Timer = evilTrapperSetTrapButton.MaxTimer;
+            },
+            () =>
+            { /*ボタン有効になる条件*/
+                return CachedPlayer.LocalPlayer.PlayerControl == EvilTrapper.evilTrapper && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead;
+            },
+            () =>
+            { /*ボタンが使える条件*/
+                return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !KillTrap.hasTrappedPlayer();
+            },
+            () =>
+            { /*ミーティング終了時*/
+                evilTrapperSetTrapButton.Timer = evilTrapperSetTrapButton.MaxTimer;
+            },
+            EvilTrapper.getTrapButtonSprite(),
+            CustomButton.ButtonPositions.upperRowLeft,
+            __instance,
+            KeyCode.F,
+            buttonText: getString("PlaceTrapText")
+        );
+
         // Shifter shift
         shifterShiftButton = new CustomButton(
             () =>
@@ -975,6 +1005,7 @@ internal static class HudManagerStartPatch
 
                 Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                 Helpers.handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                Helpers.handleTrapperTrapOnBodyReport();
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
 
                 var sabotageActive = false;
@@ -3709,7 +3740,8 @@ internal static class HudManagerStartPatch
 
         // Yoyo button
         yoyoButton = new CustomButton(
-            () => {
+            () =>
+            {
                 var pos = CachedPlayer.LocalPlayer.transform.position;
                 byte[] buff = new byte[sizeof(float) * 2];
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
@@ -3718,7 +3750,7 @@ internal static class HudManagerStartPatch
                 if (Yoyo.markedLocation == null)
                 {
                     Message($"marked location is null in button press");
-                    MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoMarkLocation, Hazel.SendOption.Reliable);
+                    MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoMarkLocation, SendOption.Reliable);
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
                     RPCProcedure.yoyoMarkLocation(buff);
@@ -3738,7 +3770,7 @@ internal static class HudManagerStartPatch
                     {
                         SubmergedCompatibility.ChangeFloor(exit.y > -7);
                     }
-                    MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, Hazel.SendOption.Reliable);
+                    MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
                     writer.Write(byte.MaxValue);
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
@@ -3752,7 +3784,8 @@ internal static class HudManagerStartPatch
             },
             () => { return Yoyo.yoyo != null && Yoyo.yoyo == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
-            () => {
+            () =>
+            {
                 if (Yoyo.markStaysOverMeeting)
                 {
                     yoyoButton.Timer = 10f;
@@ -3771,7 +3804,8 @@ internal static class HudManagerStartPatch
             KeyCode.F,
             false,
             Yoyo.blinkDuration,
-            () => {
+            () =>
+            {
                 if (TransportationToolPatches.isUsingTransportation(Yoyo.yoyo))
                 {
                     yoyoButton.Timer = 0.5f;
@@ -3794,7 +3828,7 @@ internal static class HudManagerStartPatch
                 {
                     SubmergedCompatibility.ChangeFloor(exit.y > -7);
                 }
-                MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, Hazel.SendOption.Reliable);
+                MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
                 writer.Write((byte)0);
                 writer.WriteBytesAndSize(buff);
                 writer.EndMessage();
@@ -3815,7 +3849,8 @@ internal static class HudManagerStartPatch
         );
 
         yoyoAdminTableButton = new CustomButton(
-           () => {
+           () =>
+           {
                if (!MapBehaviour.Instance || !MapBehaviour.Instance.isActiveAndEnabled)
                {
                    HudManager __instance = FastDestroyableSingleton<HudManager>.Instance;
@@ -3824,10 +3859,12 @@ internal static class HudManagerStartPatch
                }
            },
            () => { return Yoyo.yoyo != null && Yoyo.yoyo == CachedPlayer.LocalPlayer.PlayerControl && Yoyo.hasAdminTable && !CachedPlayer.LocalPlayer.Data.IsDead; },
-           () => {
+           () =>
+           {
                return true;
            },
-           () => {
+           () =>
+           {
                yoyoAdminTableButton.Timer = yoyoAdminTableButton.MaxTimer;
                yoyoAdminTableButton.isEffectActive = false;
                yoyoAdminTableButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
@@ -3838,7 +3875,8 @@ internal static class HudManagerStartPatch
            KeyCode.G,
            true,
            0f,
-           () => {
+           () =>
+           {
                yoyoAdminTableButton.Timer = yoyoAdminTableButton.MaxTimer;
                if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
            },
@@ -4108,7 +4146,7 @@ internal static class HudManagerStartPatch
         propSpriteRenderer = propSpriteHolder.AddComponent<SpriteRenderer>();
         propSpriteHolder.transform.SetParent(propDisguiseButton.actionButtonGameObject.transform, false);
         propSpriteHolder.transform.localPosition = new Vector3(0, 0, -2f);
-        
+
         propHuntUnstuckButton = new CustomButton(
             () => { PlayerControl.LocalPlayer.Collider.enabled = false; },
             () =>
