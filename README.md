@@ -15,6 +15,7 @@
 
 | 游戏版本  | 模组版本 | 链接                                                         |
 | --------- | -------- | ------------------------------------------------------------ |
+| 2024.3.5s | v1.0.3.8 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.8/TheOtherUs.zip) |
 | 2024.3.5s | v1.0.3.7 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.7/TheOtherRoles.zip) |
 | 2024.3.5s | v1.0.3.6 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherRoles.zip) |
 | 2024.3.5s | v1.0.3.3 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherRoles.zip) |
@@ -24,6 +25,15 @@
     如在其它渠道获得非以上的公开版本，请删除。如有更多此类现象则会在后续禁止游戏。
 
 ## 更新日志
+
+###  v1.0.3.8:
+
+ - #### 基于TheOtherRoles v4.5.3：
+
+    - 新增伪装者职业：邪恶的设陷师
+    - 告密者：现在告密者和已死亡玩家可以收到告密者的提示文本
+
+
 
 ###  v1.0.3.8:
 
@@ -52,7 +62,11 @@
     - 捕快：在晋升为警长时，如果有失忆者回忆已死去的警长时，该玩家实际得到的职业将变为捕快，并且存活的警长手铐技能会被没收
     - 交换师：为避免bug，暂时将交换师修改为不会原生分配到警长
     
-  ###  v1.0.3.7:
+
+<details>
+  <summary>点我查看更多更新日志</summary>
+
+###  v1.0.3.7:
 
  - #### 新增内容：
 
@@ -63,9 +77,6 @@
 
     - 修复随机出生到管道时，更换地图坐标不重置的问题
     - 末日预言家：修复揭示全随机职业时，职业列表总是以内鬼职业+目标职业的问题
-
-<details>
-  <summary>点我查看更多更新日志</summary>
 
 ###  v1.0.3.4 ~ 1.0.3.6:
 

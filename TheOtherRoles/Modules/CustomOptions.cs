@@ -1221,6 +1221,8 @@ internal class GameOptionsDataPatch
                         if (minNeutral > maxNeutral) minNeutral = maxNeutral;
                         min = crewCount - maxNeutral;
                         max = crewCount - minNeutral;
+                        min += 1;
+                        max += 1;
                         if (min < 0) min = 0;
                         if (max < 0) max = 0;
                         optionValue = "Fill: ";

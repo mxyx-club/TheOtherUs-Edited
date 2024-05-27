@@ -117,8 +117,8 @@ internal class RoleManagerSelectRolesPatch
         // Automatically force everyone to get a role by setting crew Min / Max according to Neutral Settings
         if (CustomOptionHolder.crewmateRolesFill.getBool())
         {
-            crewmateMax = crewmates.Count - neutralMin;
-            crewmateMin = crewmates.Count - neutralMax;
+            crewmateMax = crewmates.Count - neutralMin + 1;
+            crewmateMin = crewmates.Count - neutralMax + 1;
         }
 
         // Get the maximum allowed count of each role type based on the minimum and maximum option
