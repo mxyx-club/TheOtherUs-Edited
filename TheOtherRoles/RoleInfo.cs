@@ -18,7 +18,7 @@ public class RoleInfo
     public static RoleInfo janitor = new("Janitor", Janitor.color, "JanitorIntroDesc", "JanitorShortDesc", RoleId.Janitor);
     public static RoleInfo morphling = new("Morphling", Morphling.color, "MorphlingIntroDesc", "MorphlingShortDesc", RoleId.Morphling);
     public static RoleInfo bomber = new("Bomber", Bomber.color, "BomberIntroDesc", "BomberShortDesc", RoleId.Bomber);
-    public static RoleInfo poucher = new("Poucher", Poucher.color, "PoucherIntroDesc", "PoucherShortDesc", RoleId.Poucher, false, true);
+    public static RoleInfo poucher = new("Poucher", Poucher.color, "PoucherIntroDesc", "PoucherShortDesc", RoleId.Poucher);
     public static RoleInfo mimic = new("Mimic", Mimic.color, "MimicIntroDesc", "MimicShortDesc", RoleId.Mimic);
     public static RoleInfo camouflager = new("Camouflager", Camouflager.color, "CamouflagerIntroDesc", "CamouflagerShortDesc", RoleId.Camouflager);
     public static RoleInfo miner = new("Miner", Miner.color, "MinerIntroDesc", "MinerShortDesc", RoleId.Miner);
@@ -85,6 +85,7 @@ public class RoleInfo
 
     // Modifier
     public static RoleInfo disperser = new("Disperser", Color.red, "DisperserIntroDesc", "DisperserShortDesc", RoleId.Disperser, false, true);
+    public static RoleInfo poucherModifier = new("Poucher", Poucher.color, "PoucherIntroDesc", "PoucherShortDesc", RoleId.PoucherModifier, false, true);
     public static RoleInfo lastImpostor = new("LastImpostor", Palette.ImpostorRed, "LastImpostorIntroDesc", "LastImpostorShortDesc", RoleId.LastImpostor, false, true);
     public static RoleInfo bloody = new("Bloody", Color.yellow, "BloodyIntroDesc", "BloodyShortDesc", RoleId.Bloody, false, true);
     public static RoleInfo antiTeleport = new("AntiTeleport", Color.yellow, "AntiTeleportIntroDesc", "AntiTeleportShortDesc", RoleId.AntiTeleport, false, true);
@@ -123,6 +124,7 @@ public class RoleInfo
         janitor,
         morphling,
         bomber,
+        poucher,
         mimic,
         camouflager,
         miner,
@@ -140,6 +142,7 @@ public class RoleInfo
         witch,
         ninja,
         yoyo,
+        evilTrapper,
 
         amnisiac,
         jester,
@@ -186,8 +189,8 @@ public class RoleInfo
 
         lover,
         assassin,
+        poucherModifier,
         disperser,
-        poucher,
         lastImpostor,
         bloody,
         antiTeleport,
@@ -273,8 +276,8 @@ public class RoleInfo
             if (p == ButtonBarry.buttonBarry) infos.Add(buttonBarry);
             if (p == Slueth.slueth) infos.Add(slueth);
             if (p == Disperser.disperser) infos.Add(disperser);
+            if (p == Poucher.poucher && Poucher.spawnModifier) infos.Add(poucherModifier);
             if (p == Giant.giant) infos.Add(giant);
-            if (p == Poucher.poucher) infos.Add(poucher);
             if (Invert.invert.Any(x => x.PlayerId == p.PlayerId)) infos.Add(invert);
             if (Chameleon.chameleon.Any(x => x.PlayerId == p.PlayerId)) infos.Add(chameleon);
             if (p == Shifter.shifter) infos.Add(shifter);
@@ -298,6 +301,7 @@ public class RoleInfo
         if (p == Miner.miner) infos.Add(miner);
         if (p == Mafioso.mafioso) infos.Add(mafioso);
         if (p == Janitor.janitor) infos.Add(janitor);
+        if (p == Poucher.poucher && !Poucher.spawnModifier) infos.Add(poucher);
         if (p == Morphling.morphling) infos.Add(morphling);
         if (p == Bomber.bomber) infos.Add(bomber);
         if (p == Camouflager.camouflager) infos.Add(camouflager);
@@ -498,7 +502,7 @@ public class RoleInfo
                                     $" - {Helpers.cs(Akujo.color, "精力衰竭")}";
                                 break;
                         }
-                        roleName = roleName + deathReasonString;
+                        roleName += deathReasonString;
                     }
                 }
             }

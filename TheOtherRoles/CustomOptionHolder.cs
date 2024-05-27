@@ -74,6 +74,8 @@ public class CustomOptionHolder
     public static CustomOption vampireCanKillNearGarlics;
 
     public static CustomOption poucherSpawnRate;
+    public static CustomOption poucherSpawnModifier;
+
     public static CustomOption mimicSpawnRate;
 
     public static CustomOption eraserSpawnRate;
@@ -830,6 +832,9 @@ public class CustomOptionHolder
         eraserCooldown = Create(10161, Types.Impostor, "抹除冷却", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
         eraserCanEraseAnyone = Create(10162, Types.Impostor, "可抹除任何人", false, eraserSpawnRate);
 
+        poucherSpawnRate = Create(10320, Types.Impostor, cs(Palette.ImpostorRed, "Poucher"), rates, null, true);
+        poucherSpawnModifier = Create(10321, Types.Impostor, "生成为附加职业", false, poucherSpawnRate);
+
         mimicSpawnRate = Create(10170, Types.Impostor, cs(Mimic.color, "Mimic"), rates, null, true);
 
         escapistSpawnRate = Create(10180, Types.Impostor, cs(Escapist.color, "Escapist"), rates, null, true);
@@ -972,8 +977,8 @@ public class CustomOptionHolder
         doomsayerCooldown = Create(20222, Types.Neutral, "技能冷却", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
         doomsayerHasMultipleShotsPerMeeting = Create(20223, Types.Neutral, "猜测成功后可继续猜测", true, doomsayerSpawnRate);
         doomsayerShowInfoInGhostChat = Create(20224, Types.Neutral, "灵魂可见猜测结果", true, doomsayerSpawnRate);
-        doomsayerCanGuessNeutral = Create(20225, Types.Neutral, "可以猜测中立", true, doomsayerSpawnRate);
-        doomsayerCanGuessImpostor = Create(20226, Types.Neutral, "可以猜测伪装者", true, doomsayerSpawnRate);
+        doomsayerCanGuessImpostor = Create(20226, Types.Neutral, "可以猜测 " + cs(Palette.ImpostorRed, "伪装者"), true, doomsayerSpawnRate);
+        doomsayerCanGuessNeutral = Create(20225, Types.Neutral, "可以猜测" + cs(Color.gray, "中立"), true, doomsayerSpawnRate);
         doomsayerOnlineTarger = Create(20227, Types.Neutral, "是否获取已有职业", false, doomsayerSpawnRate);
         doomsayerKillToWin = Create(20228, Types.Neutral, "需要成功猜测几次获胜", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
         doomsayerDormationNum = Create(20229, Types.Neutral, "预言的职业数量", 5f, 1f, 10f, 1f, doomsayerSpawnRate);
@@ -1179,8 +1184,6 @@ public class CustomOptionHolder
         modifierDisperser = Create(40010, Types.Modifier, cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
         //modifierDisperserRemainingDisperses = CustomOption.Create(1002, Types.Modifier, "分散次数", 1f,1f,5f,1f, modifierDisperser);
         modifierDisperserDispersesToVent = Create(40011, Types.Modifier, "分散至管道位置", false, modifierDisperser);
-
-        poucherSpawnRate = Create(40020, Types.Modifier, cs(Palette.ImpostorRed, "Poucher"), rates, null, true);
 
         modifierLastImpostor = Create(40030, Types.Modifier, cs(Palette.ImpostorRed, "LastImpostor"), false, null, true);
         modifierLastImpostorDeduce = Create(40031, Types.Modifier, "绝境者击杀冷却减少", 5f, 2.5f, 15f, 2.5f, modifierLastImpostor);

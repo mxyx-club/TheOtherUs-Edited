@@ -117,8 +117,10 @@ internal class RoleManagerSelectRolesPatch
         // Automatically force everyone to get a role by setting crew Min / Max according to Neutral Settings
         if (CustomOptionHolder.crewmateRolesFill.getBool())
         {
-            crewmateMax = crewmates.Count - neutralMin + 1;
-            crewmateMin = crewmates.Count - neutralMax + 1;
+            crewmateMax = crewmates.Count - neutralMin;
+            crewmateMin = crewmates.Count - neutralMax;
+            crewmateMax += 1;
+            crewmateMin += 1;
         }
 
         // Get the maximum allowed count of each role type based on the minimum and maximum option
@@ -149,6 +151,8 @@ internal class RoleManagerSelectRolesPatch
         impSettings.Add((byte)RoleId.Witch, CustomOptionHolder.witchSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Escapist, CustomOptionHolder.escapistSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Ninja, CustomOptionHolder.ninjaSpawnRate.getSelection());
+        if (!Poucher.spawnModifier)
+            impSettings.Add((byte)RoleId.Poucher, CustomOptionHolder.poucherSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Mimic, CustomOptionHolder.mimicSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Terrorist, CustomOptionHolder.terroristSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Bomber, CustomOptionHolder.bomberSpawnRate.getSelection());
@@ -191,15 +195,11 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Medium, CustomOptionHolder.mediumSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Prophet, CustomOptionHolder.prophetSpawnRate.getSelection());
         if (isGuesserGamemode == false)
-        {
             crewSettings.Add((byte)RoleId.NiceGuesser, CustomOptionHolder.guesserSpawnRate.getSelection());
-        }
         crewSettings.Add((byte)RoleId.Trapper, CustomOptionHolder.trapperSpawnRate.getSelection());
         if (impostors.Count > 1)
-        {
             // Only add Spy if more than 1 impostor as the spy role is otherwise useless
             crewSettings.Add((byte)RoleId.Spy, CustomOptionHolder.spySpawnRate.getSelection());
-        }
         crewSettings.Add((byte)RoleId.SecurityGuard, CustomOptionHolder.securityGuardSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Jumper, CustomOptionHolder.jumperSpawnRate.getSelection());
 
@@ -606,7 +606,7 @@ internal class RoleManagerSelectRolesPatch
             RoleId.Watcher,
             RoleId.Radar,
             RoleId.Disperser,
-            RoleId.Poucher,
+            RoleId.PoucherModifier,
             RoleId.Cursed,
             RoleId.Chameleon,
             RoleId.Shifter
@@ -836,13 +836,13 @@ internal class RoleManagerSelectRolesPatch
             modifiers.RemoveAll(x => x == RoleId.Disperser);
         }
 
-        if (modifiers.Contains(RoleId.Poucher))
+        if (modifiers.Contains(RoleId.PoucherModifier))
         {
             var impPlayer = new List<PlayerControl>(playerList);
             impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
-            playerId = setModifierToRandomPlayer((byte)RoleId.Poucher, impPlayer);
+            playerId = setModifierToRandomPlayer((byte)RoleId.PoucherModifier, impPlayer);
             playerList.RemoveAll(x => x.PlayerId == playerId);
-            modifiers.RemoveAll(x => x == RoleId.Poucher);
+            modifiers.RemoveAll(x => x == RoleId.PoucherModifier);
         }
 
         if (modifiers.Contains(RoleId.Cursed))
@@ -1004,8 +1004,9 @@ internal class RoleManagerSelectRolesPatch
             case RoleId.Disperser:
                 selection = CustomOptionHolder.modifierDisperser.getSelection();
                 break;
-            case RoleId.Poucher:
-                selection = CustomOptionHolder.poucherSpawnRate.getSelection();
+            case RoleId.PoucherModifier:
+                if (Poucher.spawnModifier)
+                    selection = CustomOptionHolder.poucherSpawnRate.getSelection();
                 break;
             case RoleId.Mini:
                 selection = CustomOptionHolder.modifierMini.getSelection();

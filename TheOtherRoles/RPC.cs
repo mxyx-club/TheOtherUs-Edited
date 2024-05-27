@@ -31,6 +31,7 @@ public enum RoleId
     Janitor,
     Morphling,
     Bomber,
+    Poucher,
     Mimic,
     Camouflager,
     Miner,
@@ -100,7 +101,7 @@ public enum RoleId
     Lover,
     EvilGuesser,
     Disperser,
-    Poucher,
+    PoucherModifier,
     LastImpostor,
     Bloody,
     AntiTeleport,
@@ -389,6 +390,9 @@ public static class RPCProcedure
                     case RoleId.Miner:
                         Miner.miner = player;
                         break;
+                    case RoleId.Poucher:
+                        Poucher.poucher = player;
+                        break;
                     case RoleId.Mayor:
                         Mayor.mayor = player;
                         break;
@@ -625,7 +629,7 @@ public static class RPCProcedure
             case RoleId.Slueth:
                 Slueth.slueth = player;
                 break;
-            case RoleId.Poucher:
+            case RoleId.PoucherModifier:
                 Poucher.poucher = player;
                 break;
             case RoleId.Cursed:
@@ -942,6 +946,12 @@ public static class RPCProcedure
             case RoleId.Godfather:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Godfather.clearAndReload();
+                Amnisiac.clearAndReload();
+                break;
+                
+            case RoleId.Poucher:
+                Helpers.turnToImpostor(Amnisiac.amnisiac);
+                if (Amnisiac.resetRole) Poucher.clearAndReload();
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1767,6 +1777,7 @@ public static class RPCProcedure
         if (player == Bomber.bomber) Bomber.clearAndReload();
         if (player == Camouflager.camouflager) Camouflager.clearAndReload();
         if (player == Godfather.godfather) Godfather.clearAndReload();
+        if (player == Poucher.poucher && !Poucher.spawnModifier) Poucher.clearAndReload();
         if (player == Mafioso.mafioso) Mafioso.clearAndReload();
         if (player == Janitor.janitor) Janitor.clearAndReload();
         if (player == Vampire.vampire) Vampire.clearAndReload();
@@ -1838,7 +1849,7 @@ public static class RPCProcedure
             if (player == Giant.giant) Giant.clearAndReload();
             if (player == Watcher.watcher) Watcher.clearAndReload();
             if (player == Radar.radar) Radar.clearAndReload();
-            if (player == Poucher.poucher) Poucher.clearAndReload();
+            if (player == Poucher.poucher && Poucher.spawnModifier) Poucher.clearAndReload();
             if (player == ButtonBarry.buttonBarry) ButtonBarry.clearAndReload();
             if (player == Disperser.disperser) Disperser.clearAndReload();
             if (player == Indomitable.indomitable) Indomitable.clearAndReload();
@@ -2704,6 +2715,7 @@ public static class RPCProcedure
 
         //if (target == Guesser.evilGuesser) Guesser.evilGuesser = thief;
         if (target == Godfather.godfather) Godfather.godfather = thief;
+        if (target == Poucher.poucher && !Poucher.spawnModifier) Poucher.poucher = thief;
         if (target == Mafioso.mafioso) Mafioso.mafioso = thief;
         if (target == Janitor.janitor) Janitor.janitor = thief;
         if (target == Morphling.morphling) Morphling.morphling = thief;

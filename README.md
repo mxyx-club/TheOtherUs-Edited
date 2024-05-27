@@ -32,6 +32,7 @@
 
     - 新增伪装者职业：邪恶的设陷师（使用了[TheOtherRoles GMIA](https://github.com/dabao40/TheOtherRolesGMIA)的代码）
     - 告密者：现在告密者和已死亡玩家可以收到告密者的提示文本
+    - 入殓师：默认为伪装者主职业，可设置分配为附加职业
 
 
 

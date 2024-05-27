@@ -1967,6 +1967,7 @@ public static class Undertaker
 public static class Poucher
 {
     public static PlayerControl poucher;
+    public static bool spawnModifier;
     public static Color color = Palette.ImpostorRed;
     public static List<PlayerControl> killed = new();
 
@@ -1974,6 +1975,7 @@ public static class Poucher
     public static void clearAndReload(bool clearList = true)
     {
         poucher = null;
+        spawnModifier = CustomOptionHolder.poucherSpawnModifier.getBool();
         if (clearList) killed = new List<PlayerControl>();
     }
 }

@@ -4,6 +4,10 @@ namespace TheOtherRoles.Helper;
 
 public static class RoleHelpers
 {
+    public static void ActiveRoles()
+    {
+
+    }
     public static bool CanMultipleShots(PlayerControl dyingTarget)
     {
         if (dyingTarget == CachedPlayer.LocalPlayer.PlayerControl)
