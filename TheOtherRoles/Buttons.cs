@@ -813,12 +813,13 @@ internal static class HudManagerStartPatch
                 Helpers.checkWatchFlash(Doomsayer.currentTarget);
 
                 doomsayerButton.Timer = doomsayerButton.MaxTimer;
+                /*
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.SetFutureReveal, SendOption.Reliable);
                 writer.Write(Doomsayer.currentTarget.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.setFutureReveal(Doomsayer.currentTarget.PlayerId);
-
+                */
                 SoundEffectsManager.play("knockKnock");
             },
             () =>
@@ -835,7 +836,23 @@ internal static class HudManagerStartPatch
             Doomsayer.getButtonSprite(),
             CustomButton.ButtonPositions.lowerRowRight,
             __instance,
-            KeyCode.F
+            KeyCode.F,
+            true,
+            0f,
+            () =>
+            {
+                doomsayerButton.Timer = doomsayerButton.MaxTimer;
+                var msg = Doomsayer.GetInfo(Doomsayer.currentTarget);
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(CachedPlayer.LocalPlayer.PlayerControl, $"{msg}");
+
+                // Ghost Info
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
+                writer.Write(Doomsayer.currentTarget.PlayerId);
+                writer.Write((byte)RPCProcedure.GhostInfoTypes.MediumInfo);
+                writer.Write(msg);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+            }
         );
 
         // Akujo Honmei
@@ -888,7 +905,7 @@ internal static class HudManagerStartPatch
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.akujoSetKeep(CachedPlayer.LocalPlayer.PlayerControl.PlayerId, Akujo.currentTarget.PlayerId);
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && Akujo.keepsLeft > 0 && Akujo.timeLeft > 0; },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && Akujo.keepsLeft > 0; },
             () =>
             {
                 if (akujoBackupLeftText != null)
@@ -1004,7 +1021,7 @@ internal static class HudManagerStartPatch
                 Mayor.remoteMeetingsLeft--;
 
                 Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                Helpers.handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                Helpers.handleBomberExplodeOnBodyReport();
                 Helpers.handleTrapperTrapOnBodyReport();
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
 

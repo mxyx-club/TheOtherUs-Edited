@@ -768,11 +768,11 @@ public static class RPCProcedure
     {
         Engineer.usedFix = true;
         Engineer.remainingFixes--;
+        /*
         if (Helpers.shouldShowGhostInfo())
         {
             Helpers.showFlash(Engineer.color, 0.5f, "Engineer Fix");
-            ;
-        }
+        }*/
     }
 
     public static void showIndomitableFlash()
@@ -948,7 +948,7 @@ public static class RPCProcedure
                 if (Amnisiac.resetRole) Godfather.clearAndReload();
                 Amnisiac.clearAndReload();
                 break;
-                
+
             case RoleId.Poucher:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Poucher.clearAndReload();
@@ -1872,15 +1872,14 @@ public static class RPCProcedure
             Eraser.futureErased = new List<PlayerControl>();
         if (player != null) Eraser.futureErased.Add(player);
     }
-
+    /*
     public static void setFutureReveal(byte playerId)
     {
         var player = Helpers.playerById(playerId);
-        if (Doomsayer.playerTargetinformation == null)
-            Doomsayer.playerTargetinformation = new List<PlayerControl>();
+        Doomsayer.playerTargetinformation ??= [];
         if (player != null) Doomsayer.playerTargetinformation.Add(player);
     }
-
+    */
     public static void setFutureShifted(byte playerId)
     {
         Shifter.futureShift = Helpers.playerById(playerId);
@@ -2084,7 +2083,6 @@ public static class RPCProcedure
             Chameleon.lastMoved[Yoyo.yoyo.PlayerId] = Time.time;
     }
 
-    //魅魔
     public static void akujoSetHonmei(byte akujoId, byte targetId)
     {
         PlayerControl akujo = Helpers.playerById(akujoId);
@@ -2548,7 +2546,7 @@ public static class RPCProcedure
             var msg = $"{guesser.Data.PlayerName} 赌怪猜测 {guessedTarget.Data.PlayerName} 是 {roleInfo?.name ?? ""}!";
             if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
                 FastDestroyableSingleton<HudManager>.Instance!.Chat.AddChat(guesser, msg);
-            if (msg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
                 FastDestroyableSingleton<UnityTelemetry>.Instance.SendWho();
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using AmongUs.Data;
 using Hazel;
 using Reactor.Utilities.Extensions;
@@ -2282,6 +2283,60 @@ public static class Doomsayer
         killToWin = CustomOptionHolder.doomsayerKillToWin.getFloat();
         onlineTarger = CustomOptionHolder.doomsayerOnlineTarger.getBool();
     }
+
+    public static string GetInfo(PlayerControl target)
+    {
+        var random = new Random();
+        var allRoleInfo = (onlineTarger ? Helpers.onlineRoleInfos() : Helpers.allRoleInfos()).OrderBy(_ => random.Next()).ToList();
+        var OtherRoles = Helpers.allRoleInfos().Where(n => allRoleInfo.All(y => y != n)).OrderBy(_ => random.Next()).ToList();
+        var OtherIndex = -1;
+        var AllMessage = new List<string>();
+        allRoleInfo.Remove(RoleInfo.doomsayer);
+        OtherRoles.Remove(RoleInfo.doomsayer);
+
+        var formation = formationNum;
+        var x = random.Next(1, formation) - 1;
+        var roleInfoTarget = RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault();
+        var message = new StringBuilder();
+        var tempNumList = Enumerable.Range(0, allRoleInfo.Count - 1).ToList();
+        var temp =
+            (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList)
+            .OrderBy(_ => random.Next()).ToList();
+
+        message.AppendLine($"{target.Data.PlayerName} 的职业可能是：\n");
+
+        for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
+        {
+            var info = tempNum > temp.Count - 1
+                ? GetOther()
+                : allRoleInfo[temp[tempNum]];
+
+            if (info == roleInfoTarget)
+            {
+                num--;
+                continue;
+            }
+            message.Append(num == x ? roleInfoTarget.name : info.name);
+            message.Append(num < formation - 1 ? ',' : ';');
+        }
+
+        var writer = AmongUsClient.Instance.StartRpcImmediately(
+                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DoomsayerMeeting,
+                    SendOption.Reliable);
+        writer.WritePacked(AllMessage.Count);
+        AllMessage.Do(writer.Write);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        playerTargetinformation.Clear();
+
+        RoleInfo GetOther()
+        {
+            OtherIndex++;
+            return OtherRoles[OtherIndex];
+        }
+
+        AllMessage.Add(message.ToString());
+        return $"{message}";
+    }
 }
 
 public static class Guesser
@@ -2301,7 +2356,6 @@ public static class Guesser
     public static bool evilGuesserCanGuessSpy = true;
     public static bool guesserCantGuessSnitch;
     public static bool evilGuesserCanGuessCrewmate = true;
-
 
     public static bool isGuesser(byte playerId)
     {

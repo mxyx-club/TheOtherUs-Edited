@@ -977,7 +977,7 @@ public class CustomOptionHolder
         doomsayerCooldown = Create(20222, Types.Neutral, "技能冷却", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
         doomsayerHasMultipleShotsPerMeeting = Create(20223, Types.Neutral, "猜测成功后可继续猜测", true, doomsayerSpawnRate);
         doomsayerShowInfoInGhostChat = Create(20224, Types.Neutral, "灵魂可见猜测结果", true, doomsayerSpawnRate);
-        doomsayerCanGuessImpostor = Create(20226, Types.Neutral, "可以猜测 " + cs(Palette.ImpostorRed, "伪装者"), true, doomsayerSpawnRate);
+        doomsayerCanGuessImpostor = Create(20226, Types.Neutral, "可以猜测" + cs(Palette.ImpostorRed, "伪装者"), true, doomsayerSpawnRate);
         doomsayerCanGuessNeutral = Create(20225, Types.Neutral, "可以猜测" + cs(Color.gray, "中立"), true, doomsayerSpawnRate);
         doomsayerOnlineTarger = Create(20227, Types.Neutral, "是否获取已有职业", false, doomsayerSpawnRate);
         doomsayerKillToWin = Create(20228, Types.Neutral, "需要成功猜测几次获胜", 3f, 1f, 10f, 1f, doomsayerSpawnRate);

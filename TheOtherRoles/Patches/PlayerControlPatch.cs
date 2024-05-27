@@ -1198,21 +1198,21 @@ public static class PlayerControlFixedUpdatePatch
                         {
                             TMPro.TMP_Text text;
                             RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
-                            GameObject gameObject = UnityEngine.Object.Instantiate(roomTracker.gameObject);
-                            UnityEngine.Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
+                            GameObject gameObject = Object.Instantiate(roomTracker.gameObject);
+                            Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                             gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                             gameObject.transform.localPosition = new Vector3(0, -1.8f, gameObject.transform.localPosition.z);
                             gameObject.transform.localScale = Vector3.one * 2f;
                             text = gameObject.GetComponent<TMPro.TMP_Text>();
-                            text.text = string.Format(ModTranslation.getString("trapperGotTrapText"), p.Data.PlayerName);
+                            text.text = string.Format(getString("trapperGotTrapText"), p.Data.PlayerName);
                             FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>((p) =>
                             {
                                 if (p == 1f && text != null && text.gameObject != null)
                                 {
-                                    UnityEngine.Object.Destroy(text.gameObject);
+                                    Object.Destroy(text.gameObject);
                                 }
                             })));
-                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ActivateTrap, Hazel.SendOption.Reliable, -1);
+                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ActivateTrap, SendOption.Reliable, -1);
                             writer.Write(trap.Key);
                             writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
                             writer.Write(p.PlayerId);
@@ -1238,7 +1238,7 @@ public static class PlayerControlFixedUpdatePatch
                         float distance = Vector3.Distance(p1, p2);
                         if (distance < 0.5)
                         {
-                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DisableTrap, Hazel.SendOption.Reliable, -1);
+                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DisableTrap, SendOption.Reliable, -1);
                             writer.Write(trap.Key);
                             AmongUsClient.Instance.FinishRpcImmediately(writer);
                             RPCProcedure.disableTrap(trap.Key);
@@ -2235,7 +2235,7 @@ public static class MurderPlayerPatch
             if (!EvilTrapper.isTrapKill)
             {
                 MessageWriter writer;
-                writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ClearTrap, Hazel.SendOption.Reliable, -1);
+                writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ClearTrap, SendOption.Reliable, -1);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.clearTrap();
             }

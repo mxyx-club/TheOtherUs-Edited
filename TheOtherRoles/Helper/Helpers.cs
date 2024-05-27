@@ -905,6 +905,9 @@ public static class Helpers
         })));
     }
 
+    /// <summary>
+    /// 触发观察者的探测
+    /// </summary>
     public static void checkWatchFlash(PlayerControl target)
     {
         if (CachedPlayer.LocalPlayer.PlayerControl == PrivateInvestigator.watching)
@@ -919,7 +922,7 @@ public static class Helpers
 
     public static void handleTrapperTrapOnBodyReport()
     {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TrapperMeetingFlag, Hazel.SendOption.Reliable, -1);
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TrapperMeetingFlag, SendOption.Reliable, -1);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.trapperMeetingFlag();
     }
@@ -1247,6 +1250,9 @@ public static class Helpers
         return murder;
     }
 
+    /// <summary>
+    /// 触发老兵反弹
+    /// </summary>
     public static bool checkAndDoVetKill(PlayerControl target)
     {
         var shouldVetKill = Veteren.veteren == target && Veteren.alertActive;

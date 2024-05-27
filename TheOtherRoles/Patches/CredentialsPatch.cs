@@ -30,7 +30,7 @@ public static class CredentialsPatch
             DeltaTime += (Time.deltaTime - DeltaTime) * 0.1f;
             var fps = Mathf.Ceil(1f / DeltaTime);
             var PingText = $"<size=80%>Ping: {AmongUsClient.Instance.Ping}ms FPS: {fps}</size>";
-            var host = $"<size=80%>Host: {GameData.Instance?.GetHost()?.PlayerName}</size>";
+            var host = $"<size=80%>{"Host".Translate()}: {GameData.Instance?.GetHost()?.PlayerName}</size>";
 
 
             __instance.text.alignment = TextAlignmentOptions.TopRight;

@@ -636,7 +636,7 @@ internal class MeetingHudPatch
             {
                 PlayerMaterial.SetColors(host.DefaultOutfit.ColorId, __instance.HostIcon);
                 if (Text == null) Text = __instance.ProceedButton.gameObject.GetComponentInChildren<TextMeshPro>();
-                Text.text = $"host: {host.PlayerName}";
+                Text.text = $"{"Host".Translate()}: {host.PlayerName}";
             }
         }
     }
@@ -1034,7 +1034,7 @@ internal class MeetingHudPatch
                     FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, $"{message}");
                 }
             }
-
+            /*
             // 末日
             if (Doomsayer.doomsayer != null && CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && !Doomsayer.doomsayer.Data.IsDead && Doomsayer.playerTargetinformation != null)
             {
@@ -1051,7 +1051,7 @@ internal class MeetingHudPatch
                 {
                     foreach (var roleInfo in allRoleInfo)
                     {
-                        Warn(roleInfo.name.ToString());
+                        Message(roleInfo.name.ToString());
                     }
                 }
 
@@ -1086,7 +1086,7 @@ internal class MeetingHudPatch
                     }
 
                     i++;
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Doomsayer.doomsayer, $"{message}");
+                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(CachedPlayer.LocalPlayer.PlayerControl, $"{message}");
                     AllMessage.Add(message.ToString());
                     continue;
 
@@ -1105,56 +1105,7 @@ internal class MeetingHudPatch
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
 
                 Doomsayer.playerTargetinformation.Clear();
-            }
-
-            /*
-            // Add Snitch info
-            var output = "";
-
-            if (Snitch.snitch != null && Snitch.mode != Snitch.Mode.Map &&
-                (CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch || Helpers.shouldShowGhostInfo()) &&
-                !Snitch.snitch.Data.IsDead)
-            {
-                var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
-                var numberOfTasks = playerTotal - playerCompleted;
-                if (numberOfTasks == 0)
-                {
-                    output = "场上的邪恶玩家: \n \n";
-                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.4f,
-                        new Action<float>(x =>
-                        {
-                            if ((int)x != 1) return;
-                            foreach (PlayerControl p in CachedPlayer.AllPlayers)
-                            {
-                                switch (Snitch.targets)
-                                {
-                                    case Snitch.Targets.Killers when !Helpers.isKiller(p):
-                                    case Snitch.Targets.EvilPlayers when !Helpers.isEvil(p):
-                                        continue;
-                                }
-
-                                if (!Snitch.playerRoomMap.ContainsKey(p.PlayerId)) continue;
-                                if (p.Data.IsDead) continue;
-                                var room = Snitch.playerRoomMap[p.PlayerId];
-                                var roomName = "室外";
-                                if (room != byte.MinValue)
-                                    roomName =
-                                        DestroyableSingleton<TranslationController>.Instance.GetString(
-                                            (SystemTypes)room);
-                                output += "- " + RoleInfo.GetRolesString(p, false, false, true) + ", 最后一次出现在 " +
-                                          roomName + "\n";
-                            }
-
-                            FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Snitch.snitch, $"{output}");
-                        })));
-                }
-            }
-            
-            if (CachedPlayer.LocalPlayer.Data.IsDead && output != "")
-                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(CachedPlayer.LocalPlayer, $"{output}");
-
-            Snitch.playerRoomMap = new Dictionary<byte, byte>();
-            */
+            }*/
 
             Trapper.playersOnMap = new List<PlayerControl>();
 
