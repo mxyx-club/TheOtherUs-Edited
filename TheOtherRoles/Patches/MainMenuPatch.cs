@@ -43,10 +43,12 @@ public class MainMenuPatch
         passiveButtonGitHub.OnClick = new ButtonClickedEvent();
         passiveButtonGitHub.OnClick.AddListener((Action)(() => Application.OpenURL("https://github.com/mxyx-club/TheOtherUs/")));
 
-
         if (Helpers.IsCN())
         {
-            var buttonDiscord = Object.Instantiate(template, null);
+#if SUNDAY
+            return;
+#endif
+            GameObject buttonDiscord = Object.Instantiate(template, null);
             Object.Destroy(buttonDiscord.GetComponent<AspectPosition>());
             buttonDiscord.transform.localPosition = new(-0.459f, -1.5f, 0);
 
@@ -71,8 +73,8 @@ public class MainMenuPatch
             {
                 buttonSpriteDiscord.color = textDiscord.color = discordColor;
             });
-
         }
+
         // TOR credits button
         if (template == null) return;
         var creditsButton = Object.Instantiate(template, template.transform.parent);

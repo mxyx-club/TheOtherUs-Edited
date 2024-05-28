@@ -309,6 +309,7 @@ public class CustomOptionHolder
     public static CustomOption bodyGuardSpawnRate;
     public static CustomOption bodyGuardFlash;
     public static CustomOption bodyGuardResetTargetAfterMeeting;
+    public static CustomOption bodyGuardShowShielded;
 
     public static CustomOption vultureSpawnRate;
     public static CustomOption vultureCooldown;
@@ -383,6 +384,7 @@ public class CustomOptionHolder
 
     public static CustomOption akujoSpawnRate;
     public static CustomOption akujoTimeLimit;
+    public static CustomOption akujoForceKeeps;
     public static CustomOption akujoKnowsRoles;
     public static CustomOption akujoNumKeeps;
     public static CustomOption akujoHonmeiCannotFollowWin;
@@ -896,7 +898,7 @@ public class CustomOptionHolder
         yoyoSpawnRate = Create(10290, Types.Impostor, cs(Yoyo.color, "Yoyo"), rates, null, true);
         yoyoMarkCooldown = Create(10292, Types.Impostor, "标记冷却", 15f, 2.5f, 120f, 2.5f, yoyoSpawnRate);
         yoyoBlinkDuration = Create(10291, Types.Impostor, "两段瞬移间隔时间", 15f, 2.5f, 120f, 2.5f, yoyoSpawnRate);
-        yoyoMarkStaysOverMeeting = Create(10293, Types.Impostor, "会议后不重置标记地点", true, yoyoSpawnRate);
+        yoyoMarkStaysOverMeeting = Create(10293, Types.Impostor, "会议后不重置标记地点", false, yoyoSpawnRate);
         yoyoHasAdminTable = Create(10294, Types.Impostor, "随身管理室地图", true, yoyoSpawnRate);
         yoyoAdminTableCooldown = Create(10295, Types.Impostor, "查看地图冷却", 15f, 2.5f, 120f, 2.5f, yoyoHasAdminTable);
         yoyoSilhouetteVisibility = Create(10296, Types.Impostor, "第一段残影透明度", ["0%", "10%", "20%", "30%", "40%", "50%"], yoyoSpawnRate);
@@ -985,6 +987,7 @@ public class CustomOptionHolder
 
         akujoSpawnRate = Create(20231, Types.Neutral, cs(Akujo.color, "Akujo"), rates, null, true);
         akujoTimeLimit = Create(20232, Types.Neutral, "魅魔招募真爱的时间", 600f, 90f, 1200f, 15f, akujoSpawnRate);
+        akujoForceKeeps = Create(20236, Types.Neutral, "魅魔不招募备胎会自杀", false, akujoSpawnRate);
         akujoNumKeeps = Create(20233, Types.Neutral, "可招募备胎的数量", 1f, 0f, 10f, 1f, akujoSpawnRate);
         akujoKnowsRoles = Create(20234, Types.Neutral, "魅魔是否知道目标职业", true, akujoSpawnRate);
         akujoHonmeiCannotFollowWin = Create(20235, Types.Neutral, "真爱无法跟随阵营获胜", true, akujoSpawnRate);
@@ -996,7 +999,7 @@ public class CustomOptionHolder
         thiefCanKillVeteren = Create(20247, Types.Neutral, "身份窃贼可以击杀" + cs(Veteren.color, "老兵"), true, thiefSpawnRate);
         thiefHasImpVision = Create(20243, Types.Neutral, "身份窃贼拥有伪装者视野", true, thiefSpawnRate);
         thiefCanUseVents = Create(20244, Types.Neutral, "身份窃贼可以使用管道", true, thiefSpawnRate);
-        thiefCanStealWithGuess = Create(20245, Types.Neutral, "身份窃贼可通过猜测窃取身份\n(赌怪模式)", false, thiefSpawnRate);
+        thiefCanStealWithGuess = Create(20245, Types.Neutral, "身份窃贼可通过猜测窃取身份\n(赌怪模式)", true, thiefSpawnRate);
 
         //-------------------------- Crewmate Options 30000-39999 -------------------------- //
 
@@ -1033,7 +1036,7 @@ public class CustomOptionHolder
         sheriffCanKillJester = Create(30151, Types.Crewmate, "可执法 " + cs(Jester.color, "小丑"), true, sheriffCanKillNeutrals);
         sheriffCanKillLawyer = Create(30156, Types.Crewmate, "可执法 " + cs(Lawyer.color, "律师"), true, sheriffCanKillNeutrals);
         sheriffCanKillProsecutor = Create(30152, Types.Crewmate, "可执法 " + cs(Lawyer.color, "处刑者"), true, sheriffCanKillNeutrals);
-        sheriffCanKillPursuer = Create(30158, Types.Crewmate, "可执法 " + cs(Pursuer.color, "起诉人"), false, sheriffCanKillNeutrals);
+        sheriffCanKillPursuer = Create(30158, Types.Crewmate, "可执法 " + cs(Pursuer.color, "起诉人"), true, sheriffCanKillNeutrals);
         sheriffCanKillVulture = Create(30155, Types.Crewmate, "可执法 " + cs(Vulture.color, "秃鹫"), true, sheriffCanKillNeutrals);
         sheriffCanKillThief = Create(30157, Types.Crewmate, "可执法 " + cs(Thief.color, "身份窃贼"), true, sheriffCanKillNeutrals);
         sheriffCanKillDoomsayer = Create(30159, Types.Crewmate, "可执法 " + cs(Doomsayer.color, "末日预言家"), true, sheriffCanKillNeutrals);
@@ -1067,6 +1070,11 @@ public class CustomOptionHolder
         medicSetOrShowShieldAfterMeeting = Create(30206, Types.Crewmate, "护盾生效与可见时机", ["立即生效且可见", "立即生效且会议后可见", "会议后生效且可见"], medicSpawnRate);
         medicReportNameDuration = Create(30207, Types.Crewmate, "以下时间内报告可得知凶手名字", 5f, 0f, 60f, 2.5f, medicBreakShield);
         medicReportColorDuration = Create(30208, Types.Crewmate, "以下时间内报告可得知凶手颜色类型", 30f, 0f, 120f, 2.5f, medicBreakShield);
+
+        bodyGuardSpawnRate = Create(30340, Types.Crewmate, cs(BodyGuard.color, "BodyGuard"), rates, null, true);
+        bodyGuardResetTargetAfterMeeting = Create(30341, Types.Crewmate, "会议后重置保护目标", true, bodyGuardSpawnRate);
+        bodyGuardShowShielded = Create(30343, Types.Crewmate, "保护目标可见护盾的存在", true, medicSpawnRate);
+        bodyGuardFlash = Create(30342, Types.Crewmate, "死亡闪光", true, bodyGuardSpawnRate);
 
         timeMasterSpawnRate = Create(30210, Types.Crewmate, cs(TimeMaster.color, "TimeMaster"), rates, null, true);
         timeMasterCooldown = Create(30211, Types.Crewmate, "时光之盾冷却", 20f, 10f, 60f, 2.5f, timeMasterSpawnRate);
@@ -1164,10 +1172,6 @@ public class CustomOptionHolder
         magicianProbabilityRedCards = CustomOption.Create(30334, Types.Crewmate, "抽到红牌的概率", rates, magicianSpawnRate);
         magicianProbabilityPurpleCards = CustomOption.Create(30335, Types.Crewmate, "抽到紫牌的概率", rates, magicianSpawnRate);
         */
-        bodyGuardSpawnRate = Create(30340, Types.Crewmate, cs(BodyGuard.color, "BodyGuard"), rates, null, true);
-        bodyGuardResetTargetAfterMeeting = Create(30341, Types.Crewmate, "会议后重置保护目标", true, bodyGuardSpawnRate);
-        bodyGuardFlash = Create(30342, Types.Crewmate, "死亡闪光", true, bodyGuardSpawnRate);
-
         trapperSpawnRate = Create(30350, Types.Crewmate, cs(Trapper.color, "Trapper"), rates, null, true);
         trapperCooldown = Create(30351, Types.Crewmate, "放置冷却", 20f, 5f, 120f, 2.5f, trapperSpawnRate);
         trapperMaxCharges = Create(30352, Types.Crewmate, "最大陷阱数", 4f, 1f, 15f, 1f, trapperSpawnRate);

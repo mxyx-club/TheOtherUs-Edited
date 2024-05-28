@@ -167,6 +167,7 @@ public static class TheOtherRoles
         public static bool reset = true;
         public static bool usedGuard;
         public static bool guardFlash;
+        public static bool showShielded;
         private static Sprite guardButtonSprite;
         public static PlayerControl currentTarget;
 
@@ -187,6 +188,7 @@ public static class TheOtherRoles
         public static void clearAndReload()
         {
             bodyguard = null;
+            showShielded = CustomOptionHolder.bodyGuardShowShielded.getBool();
             guardFlash = CustomOptionHolder.bodyGuardFlash.getBool();
             reset = CustomOptionHolder.bodyGuardResetTargetAfterMeeting.getBool();
             guarded = null;
@@ -1717,6 +1719,7 @@ public static class Akujo
     public static bool knowsRoles = true;
     public static bool honmeiCannotFollowWin;
     public static int timeLeft;
+    public static bool forceKeeps;
     public static int keepsLeft;
     public static int numKeeps;
 
@@ -1758,6 +1761,7 @@ public static class Akujo
         currentTarget = null;
         startTime = DateTime.UtcNow;
         timeLimit = CustomOptionHolder.akujoTimeLimit.getFloat();
+        forceKeeps = CustomOptionHolder.akujoForceKeeps.getBool();
         knowsRoles = CustomOptionHolder.akujoKnowsRoles.getBool();
         honmeiCannotFollowWin = CustomOptionHolder.akujoHonmeiCannotFollowWin.getBool();
         timeLeft = (int)Math.Ceiling(timeLimit - (DateTime.UtcNow - startTime).TotalSeconds);
@@ -3520,7 +3524,7 @@ public static class Giant
 {
     public static PlayerControl giant;
     public static float speed = 0.75f;
-    public static float size = 1.05f;
+    public static float size = 1.12f;
 
     public static void clearAndReload()
     {

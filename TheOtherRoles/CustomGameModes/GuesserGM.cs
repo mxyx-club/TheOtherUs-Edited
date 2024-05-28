@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.Intrinsics.Arm;
 using UnityEngine;
 
 namespace TheOtherRoles.CustomGameModes;
@@ -23,6 +24,7 @@ internal class GuesserGM
         var g = guessers.FindLast(x => x.guesser.PlayerId == playerId);
         if (g == null) return 0;
         if (shoot) g.shots--;
+        //if ((Doomsayer.doomsayer == null || (g.guesser.PlayerId != Doomsayer.doomsayer.PlayerId)) && shoot) g.shots--;
         return g.shots;
     }
 

@@ -12,7 +12,6 @@ using UnityEngine;
 using static TheOtherRoles.MapOptions;
 using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
-using Random = System.Random;
 
 namespace TheOtherRoles.Patches;
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using InnerNet;
-using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -11,7 +10,7 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch]
 public static class CredentialsPatch
 {
-    public static string fullCredentialsVersion = $"<size=130%>{getString("TouTitle")}</size> v{TheOtherRolesPlugin.Version + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}";
+    public static string fullCredentialsVersion = $"<size=130%>{getString("TouTitle")}</size> v{Main.Version + (Main.betaDays > 0 ? "-BETA" : "")}";
 
     public static string fullCredentials = getString("fullCredentials");
 
@@ -46,7 +45,7 @@ public static class CredentialsPatch
             if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {
-                __instance.text.text = $"<size=110%>{getString("TouTitle")}</size>  v{TheOtherRolesPlugin.Version + "\n" + getString("inGameTitle")}<size=90%>\n{PingText}\n {gameModeText}</size>";
+                __instance.text.text = $"<size=110%>{getString("TouTitle")}</size>  v{Main.Version + "\n" + getString("inGameTitle")}<size=90%>\n{PingText}\n {gameModeText}</size>";
                 position.DistanceFromEdge = new Vector3(2.25f, 0.11f, 0);
             }
             else
@@ -87,7 +86,7 @@ public static class CredentialsPatch
             var credentialObject = new GameObject("credentialsTOR");
             var credentials = credentialObject.AddComponent<TextMeshPro>();
             credentials.SetText(
-                $"<size=90%>TheOtherUs-Edited v{TheOtherRolesPlugin.Version + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</size>\n<size=30%>\n</size>{mainMenuCredentials}\n<size=30%>\n</size>{contributorsCredentials}");
+                $"<size=90%>TheOtherUs-Edited v{Main.Version + (Main.betaDays > 0 ? "-BETA" : "")}</size>\n<size=30%>\n</size>{mainMenuCredentials}\n<size=30%>\n</size>{contributorsCredentials}");
             credentials.alignment = TextAlignmentOptions.Center;
             credentials.fontSize *= 0.05f;
 

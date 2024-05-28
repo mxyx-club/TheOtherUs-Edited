@@ -77,8 +77,7 @@ public static class PlayerControlFixedUpdatePatch
         {
             if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) continue;
 
-            var isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null &&
-                                     Morphling.morphTimer > 0f;
+            var isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
             var hasVisibleShield = false;
             var color = Medic.shieldedColor;
             if (!Helpers.isCamoComms() && Camouflager.camouflageTimer <= 0f && !Helpers.MushroomSabotageActive() &&
@@ -87,23 +86,23 @@ public static class PlayerControlFixedUpdatePatch
             {
                 hasVisibleShield = Medic.showShielded == 0 || Helpers.shouldShowGhostInfo() // Everyone or Ghost info
                                                            || (Medic.showShielded == 1 &&
-                                                               (CachedPlayer.LocalPlayer.PlayerControl ==
-                                                                Medic.shielded ||
-                                                                CachedPlayer.LocalPlayer.PlayerControl ==
-                                                                Medic.medic)) // Shielded + Medic
+                                                              (CachedPlayer.LocalPlayer.PlayerControl ==
+                                                              Medic.shielded ||
+                                                              CachedPlayer.LocalPlayer.PlayerControl ==
+                                                              Medic.medic)) // Shielded + Medic
                                                            || (Medic.showShielded == 2 &&
-                                                               CachedPlayer.LocalPlayer.PlayerControl ==
-                                                               Medic.medic); // Medic only
+                                                              CachedPlayer.LocalPlayer.PlayerControl ==
+                                                              Medic.medic); // Medic only
                 // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
                 hasVisibleShield = hasVisibleShield && (Medic.meetingAfterShielding || !Medic.showShieldAfterMeeting ||
                                                         CachedPlayer.LocalPlayer.PlayerControl == Medic.medic ||
                                                         Helpers.shouldShowGhostInfo());
             }
 
-            if (CachedPlayer.LocalPlayer.Data.IsDead && BodyGuard.guarded != null && target == BodyGuard.guarded)
+            if ((CachedPlayer.LocalPlayer.Data.IsDead || (BodyGuard.showShielded && target == BodyGuard.guarded)) && BodyGuard.guarded != null && target == BodyGuard.guarded)
             {
                 hasVisibleShield = true;
-                color = BodyGuard.color;
+                color = new Color32(205, 150, 100, byte.MaxValue);
             }
 
             if (!Helpers.isCamoComms() && Camouflager.camouflageTimer <= 0f && !Helpers.MushroomSabotageActive() &&
@@ -1776,7 +1775,7 @@ public static class PlayerControlFixedUpdatePatch
         }
         else if (Akujo.timeLeft <= 0)
         {
-            if (Akujo.honmei == null)
+            if (Akujo.honmei == null || (Akujo.keeps == null && Akujo.forceKeeps))
             {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSuicide, SendOption.Reliable, -1);
                 writer.Write(Akujo.akujo.PlayerId);

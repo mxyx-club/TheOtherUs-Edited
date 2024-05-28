@@ -1136,7 +1136,7 @@ internal class GameOptionsDataPatch
         if (customOption.getSelection() == 0) return "";
         if (quantity.Count == 1) return $" ({quantity[0].getQuantity()})";
         if (customOption == CustomOptionHolder.modifierLover)
-            return $" (1 Evil: {CustomOptionHolder.modifierLoverImpLoverRate.getSelection() * 10}%)";
+            return $" (1 邪恶恋人: {CustomOptionHolder.modifierLoverImpLoverRate.getSelection() * 10}%)";
         return "";
     }
 
@@ -1223,7 +1223,7 @@ internal class GameOptionsDataPatch
                         max = crewCount - minNeutral;
                         if (min < 0) min = 0;
                         if (max < 0) max = 0;
-                        optionValue = "Fill: ";
+                        optionValue = "填充: ";
                     }
 
                     if (min > max) min = max;

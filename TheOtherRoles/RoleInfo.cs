@@ -288,15 +288,10 @@ public class RoleInfo
         var count = infos.Count; // Save count after modifiers are added so that the role count can be checked
 
         // Special roles
+        if (p == Mimic.mimic) infos.Add(mimic);
         if (p == Jester.jester) infos.Add(jester);
         if (p == Swooper.swooper) infos.Add(swooper);
         if (p == Werewolf.werewolf) infos.Add(werewolf);
-        if (p == Mayor.mayor) infos.Add(mayor);
-        if (p == Portalmaker.portalmaker) infos.Add(portalmaker);
-        if (p == Engineer.engineer) infos.Add(engineer);
-        if (p == Sheriff.sheriff || p == Sheriff.formerSheriff) infos.Add(sheriff);
-        if (p == Deputy.deputy) infos.Add(deputy);
-        if (p == Lighter.lighter) infos.Add(lighter);
         if (p == Godfather.godfather) infos.Add(godfather);
         if (p == Miner.miner) infos.Add(miner);
         if (p == Mafioso.mafioso) infos.Add(mafioso);
@@ -311,7 +306,6 @@ public class RoleInfo
         if (p == Cleaner.cleaner) infos.Add(cleaner);
         if (p == Undertaker.undertaker) infos.Add(undertaker);
         if (p == PrivateInvestigator.privateInvestigator) infos.Add(privateInvestigator);
-        if (p == Mimic.mimic) infos.Add(mimic);
         if (p == Warlock.warlock) infos.Add(warlock);
         if (p == Witch.witch) infos.Add(witch);
         if (p == Escapist.escapist) infos.Add(escapist);
@@ -332,16 +326,19 @@ public class RoleInfo
         if (p == Hacker.hacker) infos.Add(hacker);
         if (p == Tracker.tracker) infos.Add(tracker);
         if (p == Snitch.snitch) infos.Add(snitch);
-        if (p == Jackal.jackal ||
-            (Jackal.formerJackals != null && Jackal.formerJackals.Any(x => x.PlayerId == p.PlayerId)))
-            infos.Add(jackal);
+        if (p == Jackal.jackal || (Jackal.formerJackals != null && Jackal.formerJackals.Any(x => x.PlayerId == p.PlayerId))) infos.Add(jackal);
         if (p == Sidekick.sidekick) infos.Add(sidekick);
         if (p == Follower.follower) infos.Add(follower);
         if (p == Spy.spy) infos.Add(spy);
         if (p == SecurityGuard.securityGuard) infos.Add(securityGuard);
         if (p == Arsonist.arsonist) infos.Add(arsonist);
         if (p == Guesser.niceGuesser) infos.Add(goodGuesser);
-        //if (p == Guesser.evilGuesser) infos.Add(badGuesser);
+        if (p == Mayor.mayor) infos.Add(mayor);
+        if (p == Portalmaker.portalmaker) infos.Add(portalmaker);
+        if (p == Engineer.engineer) infos.Add(engineer);
+        if (p == Sheriff.sheriff || p == Sheriff.formerSheriff) infos.Add(sheriff);
+        if (p == Deputy.deputy) infos.Add(deputy);
+        if (p == Lighter.lighter) infos.Add(lighter);
         if (p == BountyHunter.bountyHunter) infos.Add(bountyHunter);
         if (p == Vulture.vulture) infos.Add(vulture);
         if (p == Medium.medium) infos.Add(medium);
@@ -352,7 +349,6 @@ public class RoleInfo
         if (p == Pursuer.pursuer) infos.Add(pursuer);
         if (p == Jumper.jumper) infos.Add(jumper);
         if (p == Thief.thief) infos.Add(thief);
-        //天启
         if (p == Juggernaut.juggernaut) infos.Add(juggernaut);
         if (p == Doomsayer.doomsayer) infos.Add(doomsayer);
         if (p == Akujo.akujo) infos.Add(akujo);

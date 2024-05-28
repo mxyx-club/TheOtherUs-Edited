@@ -997,7 +997,7 @@ internal static class HudManagerStartPatch
                     (byte)CustomRPC.Disperse, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.disperse();
-                //SoundEffectsManager.play("shifterShift");
+                SoundEffectsManager.play("shifterShift");
             },
             () =>
             {
