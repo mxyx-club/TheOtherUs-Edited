@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using TheOtherRoles.Roles.Crewmate;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Objects;
@@ -70,7 +70,7 @@ public class CustomButton
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
 
-        Timer = OtherClear.ButtonCooldown + 8.5f;
+        Timer = MapOptions.ButtonCooldown + 8.5f;
 
         setActive(false);
     }

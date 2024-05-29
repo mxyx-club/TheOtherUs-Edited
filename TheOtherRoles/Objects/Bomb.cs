@@ -1,5 +1,6 @@
 using System;
 using Hazel;
+using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 

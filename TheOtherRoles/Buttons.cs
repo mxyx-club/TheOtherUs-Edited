@@ -5,6 +5,10 @@ using Hazel;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
+using TheOtherRoles.Roles.Crewmate;
+using TheOtherRoles.Roles.Impostor;
+using TheOtherRoles.Roles.Modifier;
+using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -298,8 +302,7 @@ internal static class HudManagerStartPatch
         if (deputyHandcuffedButtons.ContainsKey(CachedPlayer.LocalPlayer.PlayerId))
             deputyHandcuffedButtons[CachedPlayer.LocalPlayer.PlayerId].Add(replacementHandcuffedButton);
         else
-            deputyHandcuffedButtons.Add(CachedPlayer.LocalPlayer.PlayerId,
-                new List<CustomButton> { replacementHandcuffedButton });
+            deputyHandcuffedButtons.Add(CachedPlayer.LocalPlayer.PlayerId, [replacementHandcuffedButton]);
     }
 
     // Disables / Enables all Buttons (except the ones disabled in the Deputy class), and replaces them with new buttons.
@@ -307,7 +310,7 @@ internal static class HudManagerStartPatch
     {
         if (reset)
         {
-            deputyHandcuffedButtons = new Dictionary<byte, List<CustomButton>>();
+            deputyHandcuffedButtons = [];
             return;
         }
 
@@ -1027,9 +1030,9 @@ internal static class HudManagerStartPatch
 
                 var sabotageActive = false;
                 foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
-                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
+                    if (task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
                     task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
-                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)))
+                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
                         sabotageActive = true;
 
                 if (sabotageActive)
@@ -1090,9 +1093,9 @@ internal static class HudManagerStartPatch
 
                 var sabotageActive = false;
                 foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
-                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
+                    if (task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
                     task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
-                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)))
+                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
                         sabotageActive = true;
 
                 if (sabotageActive)
@@ -2013,7 +2016,7 @@ internal static class HudManagerStartPatch
                 RPCProcedure.setSwoop(Swooper.swooper.PlayerId, byte.MinValue);
             },
             () => { /* Can See */ return Swooper.swooper != null && Swooper.swooper == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
-            () => {  /* On Click */ return (CachedPlayer.LocalPlayer.PlayerControl.CanMove); },
+            () => {  /* On Click */ return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () =>
             {  /* On Meeting End */
                 swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer;
@@ -3599,7 +3602,7 @@ internal static class HudManagerStartPatch
 
                 terroristButton.Timer = terroristButton.MaxTimer;
                 Terrorist.isPlanted = true;
-                //在自爆时增加强制自杀
+                // 在自爆时增加强制自杀
                 if (Terrorist.selfExplosion)
                 {
                     var loacl = CachedPlayer.LocalPlayer.PlayerId;
@@ -3613,7 +3616,6 @@ internal static class HudManagerStartPatch
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.uncheckedMurderPlayer(Terrorist.terrorist.Data.PlayerId, loacl, byte.MaxValue);
                 }
-                Error(((int)Terrorist.destructionTime + (int)Terrorist.bombActiveAfter) + Terrorist.selfExplosion.ToString());
             },
             () =>
             {
@@ -3918,47 +3920,10 @@ internal static class HudManagerStartPatch
             new Vector3(0.4f, 2.8f, 0),
             __instance,
             KeyCode.KeypadPlus
-        );
-        zoomOutButton.Timer = 0f;
-        /*
-                    changeChatButton = new CustomButton(delegate
-                {
-                    if (CachedPlayer.LocalPlayer.PlayerControl == Cultist.cultist)
-                    {
-                        Cultist.chatTarget = Helpers.flipBitwise(Cultist.chatTarget);
-                    }
-                    if (CachedPlayer.LocalPlayer.PlayerControl == Follower.follower)
-                    {
-                        Follower.chatTarget = Helpers.flipBitwise(Follower.chatTarget);
-                    }
-                }, () => Helpers.isPlayerLover(CachedPlayer.LocalPlayer.PlayerControl) && Helpers.isTeamCultist(CachedPlayer.LocalPlayer.PlayerControl) && Follower.follower != null, delegate
-                {
-                    if (CachedPlayer.LocalPlayer.PlayerControl == Cultist.cultist)
-                    {
-                        //changeChatButton.Sprite = ((!Cultist.chatTarget) ? Helpers.getTeamCultistChatButtonSprite() : Helpers.getLoversChatButtonSprite());
-
-                    }
-                    if (CachedPlayer.LocalPlayer.PlayerControl == Follower.follower)
-                    {
-                        //changeChatButton.Sprite = ((!Follower.chatTarget) ? Helpers.getTeamCultistChatButtonSprite() : Helpers.getLoversChatButtonSprite());
-
-                        if (Follower.chatTarget) {
-                            changeChatButton.Sprite = Helpers.getTeamCultistChatButtonSprite();
-                            Follower.chatTarget2 = false;
-
-                        }
-                        if (!Follower.chatTarget){
-                            changeChatButton.Sprite = Helpers.getLoversChatButtonSprite();
-                            Follower.chatTarget2 = false;
-
-                        }
-                    }
-                    return true;
-                }, delegate
-                {
-                }, Helpers.loadSpriteFromResources("TheOtherRoles.Resources.LoversChat.png", 150f), new Vector3(0.4f, 3.8f, 0f), __instance, KeyCode.KeypadMinus);
-                changeChatButton.Timer = 0f;
-                */
+        )
+        {
+            Timer = 0f
+        };
 
         hunterLighterButton = new CustomButton(
             () =>

@@ -4,6 +4,7 @@ using System.Linq;
 using Hazel;
 using InnerNet;
 using Reactor.Utilities.Extensions;
+using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
@@ -173,11 +174,11 @@ public class GameStartManagerPatch
                 {
                     __instance.StartButton.color = __instance.startLabelText.color = Palette.DisabledClear;
                     __instance.GameStartText.text = message;
-                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + (Vector3.up * 2);
                 }
                 else
                 {
-                    __instance.StartButton.color = __instance.startLabelText.color = ((__instance.LastPlayerCount >= __instance.MinPlayers) ? Palette.EnabledColor : Palette.DisabledClear);
+                    __instance.StartButton.color = __instance.startLabelText.color = (__instance.LastPlayerCount >= __instance.MinPlayers) ? Palette.EnabledColor : Palette.DisabledClear;
                     __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition;
                 }
 
@@ -217,7 +218,7 @@ public class GameStartManagerPatch
 
                 }
                 if (__instance.startState == GameStartManager.StartingStates.Countdown)
-                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 0.6f;
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + (Vector3.up * 0.6f);
             }
 
             // Client update with handshake infos
@@ -234,12 +235,12 @@ public class GameStartManagerPatch
                     }
 
                     __instance.GameStartText.text = $"<color=#FF0000FF>{"HostNoTou".Translate()} {Math.Round(10 - kickingTimer)}s</color>";
-                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + (Vector3.up * 2);
                 }
                 else if (versionMismatch)
                 {
                     __instance.GameStartText.text = $"<color=#FF0000FF>{"DifferentTouVersions".Translate()}\n</color>" + message;
-                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + (Vector3.up * 2);
                 }
                 else
                 {
@@ -282,7 +283,7 @@ public class GameStartManagerPatch
 
                 }
                 if (__instance.GameStartText.text.Contains(FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameStarting).Replace("{0}", "")) && CustomOptionHolder.anyPlayerCanStopStart.getBool())
-                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 0.6f;
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + (Vector3.up * 0.6f);
             }
 
             // Start Timer

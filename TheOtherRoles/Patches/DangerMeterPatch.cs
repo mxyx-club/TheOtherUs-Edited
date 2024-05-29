@@ -1,3 +1,4 @@
+using TheOtherRoles.Roles.Crewmate;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 

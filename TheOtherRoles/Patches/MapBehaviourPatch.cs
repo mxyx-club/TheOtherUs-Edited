@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.Objects;
+using TheOtherRoles.Roles.Crewmate;
+using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;

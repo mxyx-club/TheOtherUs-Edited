@@ -1,3 +1,4 @@
+using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 
 namespace TheOtherRoles.Helper;

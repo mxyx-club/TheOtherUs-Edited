@@ -1,13 +1,18 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using TheOtherRoles.Roles.Crewmate;
+using TheOtherRoles.Roles.Impostor;
 using UnityEngine;
 
 namespace TheOtherRoles.Objects
 {
     public class FootprintHolder : MonoBehaviour
     {
-        static FootprintHolder() => ClassInjector.RegisterTypeInIl2Cpp<FootprintHolder>();
+        static FootprintHolder()
+        {
+            ClassInjector.RegisterTypeInIl2Cpp<FootprintHolder>();
+        }
 
         public FootprintHolder(IntPtr ptr) : base(ptr) { }
 
@@ -22,8 +27,8 @@ namespace TheOtherRoles.Objects
         private static Sprite _footprintSprite;
         private static Sprite FootprintSprite => _footprintSprite ??= Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Footprint.png", 600f);
 
-        private static bool AnonymousFootprints => TheOtherRoles.Detective.anonymousFootprints;
-        private static float FootprintDuration => TheOtherRoles.Detective.footprintDuration;
+        private static bool AnonymousFootprints => Detective.anonymousFootprints;
+        private static float FootprintDuration => Detective.footprintDuration;
 
         private class Footprint
         {
@@ -62,7 +67,7 @@ namespace TheOtherRoles.Objects
             print.Lifetime = FootprintDuration;
 
             var pos = player.transform.position;
-            pos.z = pos.y / 1000f + 0.001f;
+            pos.z = (pos.y / 1000f) + 0.001f;
             print.Transform.SetPositionAndRotation(pos, Quaternion.EulerRotation(0, 0, UnityEngine.Random.Range(0.0f, 360.0f)));
             print.GameObject.SetActive(true);
             print.Owner = player;

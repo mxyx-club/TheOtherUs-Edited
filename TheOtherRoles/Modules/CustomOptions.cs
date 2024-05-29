@@ -9,12 +9,13 @@ using BepInEx.Unity.IL2CPP;
 using Hazel;
 using Il2CppSystem.Linq;
 using Reactor.Utilities.Extensions;
+using TheOtherRoles.Roles.Crewmate;
+using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static TheOtherRoles.CustomOption;
-using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles;
@@ -1342,7 +1343,7 @@ internal class GameOptionsDataPatch
             }
         }
 
-        if (!hideExtras || counter != 0) hudString += string.Format("pressTabForMore".Translate(), (counter + 1), maxPage);
+        if (!hideExtras || counter != 0) hudString += string.Format("pressTabForMore".Translate(), counter + 1, maxPage);
         return hudString;
     }
 

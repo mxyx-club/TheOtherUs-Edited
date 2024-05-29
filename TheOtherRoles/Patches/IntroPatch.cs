@@ -4,12 +4,16 @@ using Hazel;
 using Il2CppSystem.Collections.Generic;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects.Map;
+using TheOtherRoles.Roles;
+using TheOtherRoles.Roles.Crewmate;
+using TheOtherRoles.Roles.Impostor;
+using TheOtherRoles.Roles.Modifier;
+using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
-using Random = System.Random;
 
 namespace TheOtherRoles.Patches;
 
@@ -42,7 +46,7 @@ internal class IntroCutsceneOnDestroyPatch
                 player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
                 player.cosmetics.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
                 //开局击杀cd
-                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(OtherClear.ButtonCooldown);
+                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(MapOptions.ButtonCooldown);
                 player.cosmetics.nameText.text = data.PlayerName;
                 player.SetFlipX(true);
                 MapOptions.playerIcons[p.PlayerId] = player;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TheOtherRoles.Roles.Crewmate;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -30,6 +31,7 @@ internal static class MapOptions
     public static bool ShowVentsOnMeetingMap;
     public static bool enableDebugLogMode;
     public static bool disableMedscanWalking;
+    public static float ButtonCooldown => CustomOptionHolder.resteButtonCooldown.getFloat();
 
     public static int restrictDevices;
 

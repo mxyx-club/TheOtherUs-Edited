@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Hazel;
 using TheOtherRoles.Patches;
+using TheOtherRoles.Roles.Crewmate;
+using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -209,29 +211,29 @@ public class KillTrap
         }
 
         // 罠を設置
-        this.killtrap = new GameObject("Trap");
+        killtrap = new GameObject("Trap");
         var trapRenderer = killtrap.AddComponent<SpriteRenderer>();
         killtrap.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
         trapRenderer.sprite = trapSprite;
-        Vector3 position = new(pos.x, pos.y, pos.y / 1000 + 0.001f);
-        this.killtrap.transform.position = position;
+        Vector3 position = new(pos.x, pos.y, (pos.y / 1000) + 0.001f);
+        killtrap.transform.position = position;
         // this.trap.transform.localPosition = pos;
-        this.killtrap.SetActive(true);
+        killtrap.SetActive(true);
 
         // 音を鳴らす
-        this.audioSource = killtrap.gameObject.AddComponent<AudioSource>();
-        this.audioSource.priority = 0;
-        this.audioSource.spatialBlend = 1;
-        this.audioSource.clip = place;
-        this.audioSource.loop = false;
-        this.audioSource.playOnAwake = false;
-        this.audioSource.maxDistance = 2 * EvilTrapper.maxDistance / 3;
-        this.audioSource.minDistance = EvilTrapper.minDistance;
-        this.audioSource.rolloffMode = rollOffMode;
-        this.audioSource.PlayOneShot(place);
+        audioSource = killtrap.gameObject.AddComponent<AudioSource>();
+        audioSource.priority = 0;
+        audioSource.spatialBlend = 1;
+        audioSource.clip = place;
+        audioSource.loop = false;
+        audioSource.playOnAwake = false;
+        audioSource.maxDistance = 2 * EvilTrapper.maxDistance / 3;
+        audioSource.minDistance = EvilTrapper.minDistance;
+        audioSource.rolloffMode = rollOffMode;
+        audioSource.PlayOneShot(place);
 
         // 設置時刻を設定
-        this.placedTime = DateTime.UtcNow;
+        placedTime = DateTime.UtcNow;
 
         traps.Add(getAvailableId(), this);
 
@@ -435,7 +437,7 @@ public class KillTrap
                     trap.isActive ||
                     CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor ||
                     CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead ||
-                    CachedPlayer.LocalPlayer.PlayerControl == TheOtherRoles.Lighter.lighter;
+                    CachedPlayer.LocalPlayer.PlayerControl == Lighter.lighter;
                 var opacity = canSee ? 1.0f : 0.0f;
                 if (trap.killtrap != null)
                     trap.killtrap.GetComponent<SpriteRenderer>().material.color = Color.Lerp(Palette.ClearWhite, Palette.White, opacity);

@@ -1,12 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using TheOtherRoles.Roles;
 
 namespace TheOtherRoles.Utilities;
 public class VoteData
 {
     private static Dictionary<byte, PlayerControl> cachedPlayers = new(15);
-    public static PlayerControl GetPlayerById(int playerId) => GetPlayerById((byte)playerId);
+    public static PlayerControl GetPlayerById(int playerId)
+    {
+        return GetPlayerById((byte)playerId);
+    }
+
     public static PlayerControl GetPlayerById(byte playerId)
     {
         if (cachedPlayers.TryGetValue(playerId, out var cachedPlayer) && cachedPlayer != null)
@@ -22,7 +27,10 @@ public class VoteData
     public int NumVotes { get; private set; } = 1;
     public const byte Skip = 253;
     public const byte NoVote = 254;
-    public VoteData(byte voter) => Voter = voter;
+    public VoteData(byte voter)
+    {
+        Voter = voter;
+    }
 
     public void DoVote(byte voteTo, int numVotes)
     {
@@ -43,7 +51,11 @@ public class VoteData
 }
 public static class Data
 {
-    public static string RemoveHtmlTags(this string str) => Regex.Replace(str, "<[^>]*?>", string.Empty);
+    public static string RemoveHtmlTags(this string str)
+    {
+        return Regex.Replace(str, "<[^>]*?>", string.Empty);
+    }
+
     public static string GetAllRoleName(this PlayerControl player)
     {
         if (!player) return null;

@@ -1,3 +1,4 @@
+using TheOtherRoles.Roles.Crewmate;
 using UnityEngine;
 
 namespace TheOtherRoles.Objects;
@@ -79,7 +80,7 @@ public class Arrow
             num = sqrMagnitude;
         }
 
-        dangerLevel1 = Mathf.Clamp01((55 - num) / (55 - 15 * GameOptionsManager.Instance.currentNormalGameOptions.PlayerSpeedMod));
+        dangerLevel1 = Mathf.Clamp01((55 - num) / (55 - (15 * GameOptionsManager.Instance.currentNormalGameOptions.PlayerSpeedMod)));
         dangerLevel2 = Mathf.Clamp01((15 - num) / (15 * GameOptionsManager.Instance.currentNormalGameOptions.PlayerSpeedMod));
 
         Tracker.Meter.SetDangerValue(dangerLevel1, dangerLevel2);

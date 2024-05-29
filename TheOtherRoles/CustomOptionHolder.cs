@@ -1,5 +1,7 @@
 using System.Collections.Generic;
-using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Roles.Crewmate;
+using TheOtherRoles.Roles.Impostor;
+using TheOtherRoles.Roles.Neutral;
 using UnityEngine;
 using static TheOtherRoles.CustomOption;
 using static TheOtherRoles.TheOtherRoles;

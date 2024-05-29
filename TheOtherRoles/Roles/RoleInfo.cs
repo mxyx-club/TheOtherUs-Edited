@@ -3,11 +3,15 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using InnerNet;
+using TheOtherRoles.Roles.Crewmate;
+using TheOtherRoles.Roles.Impostor;
+using TheOtherRoles.Roles.Modifier;
+using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
 
-namespace TheOtherRoles;
+namespace TheOtherRoles.Roles;
 
 public class RoleInfo
 {

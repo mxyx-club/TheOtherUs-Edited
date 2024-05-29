@@ -179,6 +179,10 @@ public static class SubmergedCompatibility
 
 public class MissingSubmergedBehaviour : MonoBehaviour
 {
-    static MissingSubmergedBehaviour() => ClassInjector.RegisterTypeInIl2Cpp<MissingSubmergedBehaviour>();
+    static MissingSubmergedBehaviour()
+    {
+        ClassInjector.RegisterTypeInIl2Cpp<MissingSubmergedBehaviour>();
+    }
+
     public MissingSubmergedBehaviour(IntPtr ptr) : base(ptr) { }
 }

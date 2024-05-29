@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AmongUs.QuickChat;
 using Hazel;
 using Reactor.Utilities;
 using TheOtherRoles.Objects;
+using TheOtherRoles.Roles;
+using TheOtherRoles.Roles.Crewmate;
+using TheOtherRoles.Roles.Impostor;
+using TheOtherRoles.Roles.Modifier;
+using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -540,7 +544,7 @@ internal class MeetingHudPatch
                 if (Witch.futureSpelled.Any(x => x.PlayerId == pva.TargetPlayerId))
                 {
                     var local = CachedPlayer.LocalPlayer.PlayerControl;
-                    SpriteRenderer rend = (new GameObject()).AddComponent<SpriteRenderer>();
+                    SpriteRenderer rend = new GameObject().AddComponent<SpriteRenderer>();
                     rend.transform.SetParent(pva.transform);
                     rend.gameObject.layer = pva.Megaphone.gameObject.layer;
                     rend.transform.localPosition = new Vector3(-0.5f, -0.03f, -1f);
@@ -708,7 +712,7 @@ internal class MeetingHudPatch
                     tb = __instance.playerStates.ToArray()
                         .FirstOrDefault(x => x.TargetPlayerId == Tiebreaker.tiebreaker.PlayerId);
 
-                var isTiebreakerSkip = tb == null || tb.VotedFor == 253 || tb != null && tb.AmDead;
+                var isTiebreakerSkip = tb == null || tb.VotedFor == 253 || (tb != null && tb.AmDead);
 
                 foreach (var pair in self.Where(pair => pair.Value == maxVoteValue && !isTiebreakerSkip))
                 {

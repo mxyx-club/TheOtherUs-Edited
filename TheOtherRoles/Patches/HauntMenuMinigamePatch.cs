@@ -2,6 +2,8 @@
 using System.Linq;
 using AmongUs.GameOptions;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Roles;
+using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 

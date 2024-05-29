@@ -12,6 +12,11 @@ using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Patches;
+using TheOtherRoles.Roles;
+using TheOtherRoles.Roles.Crewmate;
+using TheOtherRoles.Roles.Impostor;
+using TheOtherRoles.Roles.Modifier;
+using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -292,6 +297,7 @@ public static class RPCProcedure
         Bloodytrail.resetSprites();
         Trap.clearTraps();
         Silhouette.clearSilhouettes();
+        ElectricPatch.Reset();
         clearAndReloadMapOptions();
         clearAndReloadRoles();
         clearGameHistory();
@@ -2146,7 +2152,7 @@ public static class RPCProcedure
         ShipStatus.Instance.AllVents = allVents.ToArray();
         Miner.Vents.Add(vent);
         Miner.LastMined = DateTime.UtcNow;
-        
+
         if (SubmergedCompatibility.IsSubmerged)
         {
             vent.gameObject.layer = 12;
@@ -2308,7 +2314,7 @@ public static class RPCProcedure
         if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 2 ||
             GameOptionsManager.Instance.currentNormalGameOptions.MapId == 4)
             camera.transform.localRotation = new Quaternion(0, 0, 1, 1); // Polus and Airship 
-        
+
         if (SubmergedCompatibility.IsSubmerged)
         {
             // remove 2d box collider of console, so that no barrier can be created. (irrelevant for now, but who knows... maybe we need it later)
