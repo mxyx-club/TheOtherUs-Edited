@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text.Json;
 using BepInEx.Unity.IL2CPP.Utils;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 using UnityEngine.Networking;
 using static TheOtherRoles.Modules.CustomHats.CustomHatManager;
@@ -25,7 +24,7 @@ public class HatsLoader : MonoBehaviour
         isRunning = true;
         var www = new UnityWebRequest();
         www.SetMethod(UnityWebRequest.UnityWebRequestMethod.Get);
-        Info($"Download manifest at: {RepositoryUrl}/{ManifestFileName}");
+        Message($"Download manifest at: {RepositoryUrl}/{ManifestFileName}");
         www.SetUrl($"{RepositoryUrl}/{ManifestFileName}");
         www.downloadHandler = new DownloadHandlerBuffer();
         var operation = www.SendWebRequest();
@@ -54,7 +53,7 @@ public class HatsLoader : MonoBehaviour
         var toDownload = GenerateDownloadList(UnregisteredHats);
         //if (EventUtility.isEnabled) UnregisteredHats.AddRange(loadHorseHats());
 
-        Info($"I'll download {toDownload.Count} hat files");
+        Message($"I'll download {toDownload.Count} hat files");
 
         foreach (var fileName in toDownload)
         {
@@ -69,7 +68,7 @@ public class HatsLoader : MonoBehaviour
         var www = new UnityWebRequest();
         www.SetMethod(UnityWebRequest.UnityWebRequestMethod.Get);
         fileName = fileName.Replace(" ", "%20");
-        Info($"downloading hat: {fileName}");
+        Message($"downloading hat: {fileName}");
         www.SetUrl($"{RepositoryUrl}/hats/{fileName}");
         www.downloadHandler = new DownloadHandlerBuffer();
         var operation = www.SendWebRequest();
@@ -81,7 +80,7 @@ public class HatsLoader : MonoBehaviour
 
         if (www.isNetworkError || www.isHttpError)
         {
-            Info(www.error);
+            Error(www.error);
             yield break;
         }
 
@@ -92,7 +91,7 @@ public class HatsLoader : MonoBehaviour
         {
             if (persistTask.Exception != null)
             {
-                Info(persistTask.Exception.Message);
+                Error(persistTask.Exception.Message);
                 break;
             }
 

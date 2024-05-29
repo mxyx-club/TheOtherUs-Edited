@@ -696,8 +696,6 @@ public class CustomOptionHolder
 
         anyPlayerCanStopStart = Create(3, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "anyPlayerCanStopStart"), false, null, false);
 
-        if (Utilities.EventUtility.canBeEnabled) enableEventMode = Create(4, Types.General, cs(Color.green, "enableEventMode"), true, null, true);
-
         // Using new id's for the options to not break compatibilty with older versions
         crewmateRolesCountMin = Create(5, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "crewmateRolesCountMin"), 15f, 0f, 30f, 1f, null, true);
         crewmateRolesCountMax = Create(6, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "crewmateRolesCountMax"), 15f, 0f, 30f, 1f);
@@ -887,7 +885,7 @@ public class CustomOptionHolder
         terroristSpawnRate = Create(10270, Types.Impostor, cs(Terrorist.color, "Terrorist"), rates, null, true);
         terroristBombDestructionTime = Create(10271, Types.Impostor, "炸弹引爆时间", 0f, 0f, 120f, 0.5f, terroristSpawnRate);
         terroristBombDestructionRange = Create(10272, Types.Impostor, "炸弹爆炸范围", 30f, 5f, 250f, 5f, terroristSpawnRate);
-        terroristBombHearRange = Create(10273, Types.Impostor, "爆炸前预警范围", 60f, 5f, 250f, 5f, terroristSpawnRate);
+        terroristBombHearRange = Create(10273, Types.Impostor, "爆炸前预警范围\n声音传播距离", 60f, 5f, 250f, 5f, terroristSpawnRate);
         terroristDefuseDuration = Create(10274, Types.Impostor, "拆除炸弹所需时间", 2f, 0f, 30f, 0.5f, terroristSpawnRate);
         terroristBombCooldown = Create(10275, Types.Impostor, "炸弹放置冷却", 0f, 5f, 60f, 2.5f, terroristSpawnRate);
         terroristBombActiveAfter = Create(10276, Types.Impostor, "炸弹激活时间", 0f, 0f, 15f, 0.5f, terroristSpawnRate);

@@ -8,7 +8,6 @@
         <LangVersion>latest</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-		<AmongUsLatest>F:\AmongUs\v2024.3.5</AmongUsLatest>
 		<Configurations>Debug;Release;Sunday;mxyx-club</Configurations>
     </PropertyGroup>
 
@@ -16,8 +15,15 @@
         <EmbeddedResource Include="Resources\**" />
     </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="AmongUs.GameLibs.Steam" Version="2024.3.5" />
+	<ItemGroup Condition="'$(Configuration)'!='mxyx-club'">
+		<PackageReference Include="AmongUs.GameLibs.Steam" Version="2024.3.5" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)'=='mxyx-club'">
+		<PackageReference Include="AmongUs.GameLibs.Steam" Version="2023.11.28" />
+	</ItemGroup>
+
+	<ItemGroup>
         <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.688" />
         <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="2.1.0-rc.1" />
         <PackageReference Include="Reactor" Version="2.2.0" />

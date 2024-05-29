@@ -300,7 +300,6 @@ public static class RPCProcedure
         Helpers.toggleZoom(true);
         GameStartManagerPatch.GameStartManagerUpdatePatch.startingTimer = 0;
         SurveillanceMinigamePatch.nightVisionOverlays = null;
-        EventUtility.clearAndReload();
         MapBehaviourPatch.clearAndReload();
     }
 
@@ -2147,6 +2146,7 @@ public static class RPCProcedure
         ShipStatus.Instance.AllVents = allVents.ToArray();
         Miner.Vents.Add(vent);
         Miner.LastMined = DateTime.UtcNow;
+        
         if (SubmergedCompatibility.IsSubmerged)
         {
             vent.gameObject.layer = 12;
@@ -2308,7 +2308,7 @@ public static class RPCProcedure
         if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 2 ||
             GameOptionsManager.Instance.currentNormalGameOptions.MapId == 4)
             camera.transform.localRotation = new Quaternion(0, 0, 1, 1); // Polus and Airship 
-
+        
         if (SubmergedCompatibility.IsSubmerged)
         {
             // remove 2d box collider of console, so that no barrier can be created. (irrelevant for now, but who knows... maybe we need it later)
@@ -2358,10 +2358,8 @@ public static class RPCProcedure
 
             animator?.Stop();
             rend.sprite = newSprite;
-            if (SubmergedCompatibility.IsSubmerged && vent.Id == 0)
-                vent.myRend.sprite = SecurityGuard.getSubmergedCentralUpperSealedSprite();
-            if (SubmergedCompatibility.IsSubmerged && vent.Id == 14)
-                vent.myRend.sprite = SecurityGuard.getSubmergedCentralLowerSealedSprite();
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 0) vent.myRend.sprite = SecurityGuard.getSubmergedCentralUpperSealedSprite();
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 14) vent.myRend.sprite = SecurityGuard.getSubmergedCentralLowerSealedSprite();
             rend.color = new Color(1f, 1f, 1f, 0.5f);
             vent.name = "FutureSealedVent_" + vent.name;
         }

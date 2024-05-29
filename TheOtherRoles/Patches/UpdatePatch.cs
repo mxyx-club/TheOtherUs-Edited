@@ -488,8 +488,6 @@ internal class HudManagerUpdatePatch
         if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started ||
             GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
 
-        EventUtility.Update();
-
         CustomButton.HudUpdate();
         resetNameTagsAndColors();
         setNameColors();

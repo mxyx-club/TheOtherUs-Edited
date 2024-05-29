@@ -239,7 +239,7 @@ internal class MeetingHudPatch
                     continue;
             }
 
-            if (CustomOptionHolder.allowModGuess.getBool() && roleInfo.isModifier)
+            if (allowModGuess && roleInfo.isModifier)
             {
                 // Allow Guessing the following mods: Bait, TieBreaker, Bloody, and VIP
                 if (roleInfo.roleId != RoleId.Bait &&
@@ -597,13 +597,6 @@ internal class MeetingHudPatch
                 button.OnClick.AddListener((Action)(() => guesserOnClick(copiedIndex, __instance)));
             }
         }
-    }
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.StartMeeting))]
-    public static void MeetingHudIntroPrefix()
-    {
-        EventUtility.meetingStartsUpdate();
     }
 
     [HarmonyPatch]

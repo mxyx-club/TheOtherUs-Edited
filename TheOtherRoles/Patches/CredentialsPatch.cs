@@ -82,7 +82,7 @@ public static class CredentialsPatch
             instance = __instance;
             loadSprites();
             // renderer.sprite = TORMapOptions.enableHorseMode ? horseBannerSprite : bannerSprite;
-            renderer.sprite = EventUtility.isEnabled ? banner2Sprite : bannerSprite;
+            renderer.sprite = bannerSprite;
             var credentialObject = new GameObject("credentialsTOR");
             var credentials = credentialObject.AddComponent<TextMeshPro>();
             credentials.SetText(

@@ -121,7 +121,6 @@ public class TheOtherRolesPlugin : BasePlugin
         if (ToggleCursor.Value) Helpers.enableCursor(true);
 
 
-        EventUtility.Load();
         SubmergedCompatibility.Initialize();
         MainMenuPatch.addSceneChangeCallbacks();
         _ = RoleInfo.loadReadme();

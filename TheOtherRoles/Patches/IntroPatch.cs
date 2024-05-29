@@ -170,8 +170,6 @@ internal class IntroCutsceneOnDestroyPatch
 
         MapOptions.firstKillName = "";
 
-        EventUtility.gameStartsUpdate();
-
         if (HideNSeek.isHideNSeekGM)
         {
             foreach (PlayerControl player in HideNSeek.getHunters())
@@ -321,17 +319,6 @@ internal class IntroPatch
             var roleInfo = infos.Where(info => !info.isModifier).FirstOrDefault();
             var modifierInfo = infos.Where(info => info.isModifier).FirstOrDefault();
 
-            if (EventUtility.isEnabled)
-            {
-                var roleInfos = RoleInfo.allRoleInfos.Where(x => !x.isModifier).ToList();
-                if (roleInfo.isNeutral) roleInfos.RemoveAll(x => !x.isNeutral);
-                if (roleInfo.color == Palette.ImpostorRed) roleInfos.RemoveAll(x => x.color != Palette.ImpostorRed);
-                if (!roleInfo.isNeutral && roleInfo.color != Palette.ImpostorRed)
-                    roleInfos.RemoveAll(x => x.color == Palette.ImpostorRed || x.isNeutral);
-                var rnd = new Random(seed);
-                roleInfo = roleInfos[rnd.Next(roleInfos.Count)];
-            }
-
             __instance.RoleBlurbText.text = "";
             if (roleInfo != null)
             {
@@ -408,20 +395,3 @@ internal class IntroPatch
     }
 }
 
-/* Horses are broken since 2024.3.5 - keeping this code in case they return.
- * [HarmonyPatch(typeof(AprilFoolsMode), nameof(AprilFoolsMode.ShouldHorseAround))]
-public static class ShouldAlwaysHorseAround {
-    public static bool Prefix(ref bool __result) {
-        __result = EventUtility.isEnabled && !EventUtility.disableEventMode;
-        return false;
-    }
-}*/
-
-[HarmonyPatch(typeof(AprilFoolsMode), nameof(AprilFoolsMode.ShouldShowAprilFoolsToggle))]
-public static class ShouldShowAprilFoolsToggle
-{
-    public static void Postfix(ref bool __result)
-    {
-        __result = __result || EventUtility.isEventDate || EventUtility.canBeEnabled;  // Extend it to a 7 day window instead of just 1st day of the Month
-    }
-}

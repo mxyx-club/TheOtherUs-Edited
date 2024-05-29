@@ -154,10 +154,8 @@ internal class ExileControllerBeginPatch
 
             animator?.Stop();
             rend.sprite = newSprite;
-            if (SubmergedCompatibility.IsSubmerged && vent.Id == 0)
-                vent.myRend.sprite = SecurityGuard.getSubmergedCentralUpperSealedSprite();
-            if (SubmergedCompatibility.IsSubmerged && vent.Id == 14)
-                vent.myRend.sprite = SecurityGuard.getSubmergedCentralLowerSealedSprite();
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 0) vent.myRend.sprite = SecurityGuard.getSubmergedCentralUpperSealedSprite();
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 14) vent.myRend.sprite = SecurityGuard.getSubmergedCentralLowerSealedSprite();
             rend.color = Color.white;
             vent.name = "SealedVent_" + vent.name;
         }
@@ -166,8 +164,6 @@ internal class ExileControllerBeginPatch
         // 1 = reset per turn
         if (MapOptions.restrictDevices == 1)
             MapOptions.resetDeviceTimes();
-
-        EventUtility.meetingEndsUpdate();
     }
 }
 
@@ -187,7 +183,7 @@ internal class ExileControllerWrapUpPatch
         }
 
         // submerged
-        if (!SubmergedCompatibility.IsSubmerged) return;
+        //if (!SubmergedCompatibility.IsSubmerged) return;
         if (obj.name.Contains("ExileCutscene"))
         {
             WrapUpPostfix(ExileControllerBeginPatch.lastExiled);
@@ -240,7 +236,7 @@ internal class ExileControllerWrapUpPatch
                 soul.transform.position = new Vector3(pos.x, pos.y, (pos.y / 1000) - 1f);
                 soul.layer = 5;
                 var rend = soul.AddComponent<SpriteRenderer>();
-                soul.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
+                //soul.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
                 rend.sprite = Seer.getSoulSprite();
 
                 if (Seer.limitSoulDuration)
@@ -320,7 +316,7 @@ internal class ExileControllerWrapUpPatch
                     s.transform.position = new Vector3(ps.x, ps.y, (ps.y / 1000) - 1f);
                     s.layer = 5;
                     var rend = s.AddComponent<SpriteRenderer>();
-                    s.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
+                    //s.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
                     rend.sprite = Medium.getSoulSprite();
                     Medium.souls.Add(rend);
                 }

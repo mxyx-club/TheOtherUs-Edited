@@ -386,7 +386,6 @@ public class OnGameEndPatch
         // Reset Settings
         if (MapOptions.gameMode == CustomGamemodes.HideNSeek) ShipStatusPatch.resetVanillaSettings();
         RPCProcedure.resetVariables();
-        EventUtility.gameEndsUpdate();
     }
 }
 
