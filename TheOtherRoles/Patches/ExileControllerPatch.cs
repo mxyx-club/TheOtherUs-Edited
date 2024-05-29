@@ -94,10 +94,11 @@ internal class ExileControllerBeginPatch
                 if (target != null && !target.Data.IsDead && Helpers.checkMuderAttempt(Witch.witch, target, true) ==
                     MurderAttemptResult.PerformKill)
                 {
+                    /*
                     if (exiled != null && Lawyer.lawyer != null &&
                         (target == Lawyer.lawyer || target == Lovers.otherLover(Lawyer.lawyer)) &&
                         Lawyer.target != null && Lawyer.isProsecutor && Lawyer.target.PlayerId == exiled.PlayerId)
-                        continue;
+                        continue;*/
                     if (target == Lawyer.target && Lawyer.lawyer != null)
                     {
                         var writer2 = AmongUsClient.Instance.StartRpcImmediately(
@@ -105,6 +106,15 @@ internal class ExileControllerBeginPatch
                             SendOption.Reliable);
                         AmongUsClient.Instance.FinishRpcImmediately(writer2);
                         RPCProcedure.lawyerPromotesToPursuer();
+                    }
+                    
+                    if (target == Executioner.target && Executioner.executioner != null)
+                    {
+                        var writer2 = AmongUsClient.Instance.StartRpcImmediately(
+                            CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ExecutionerPromotesRole,
+                            SendOption.Reliable);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer2);
+                        RPCProcedure.executionerPromotesRole();
                     }
 
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
@@ -203,9 +213,9 @@ internal class ExileControllerWrapUpPatch
     private static void WrapUpPostfix(GameData.PlayerInfo exiled)
     {
         // Prosecutor win condition
-        if (exiled != null && Lawyer.lawyer != null && Lawyer.target != null && Lawyer.isProsecutor &&
-            Lawyer.target.PlayerId == exiled.PlayerId && !Lawyer.lawyer.Data.IsDead)
-            Lawyer.triggerProsecutorWin = true;
+        if (exiled != null && Executioner.executioner != null && Executioner.target != null &&
+            Executioner.target.PlayerId == exiled.PlayerId && !Executioner.executioner.Data.IsDead)
+            Executioner.triggerExecutionerWin = true;
 
         // Mini exile lose condition
         else if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() &&

@@ -327,13 +327,18 @@ public class CustomOptionHolder
 
     public static CustomOption lawyerSpawnRate;
     public static CustomOption lawyerTargetKnows;
-    public static CustomOption lawyerIsProsecutorChance;
+    //public static CustomOption lawyerIsProsecutorChance;
     public static CustomOption lawyerTargetCanBeJester;
     public static CustomOption lawyerVision;
     public static CustomOption lawyerKnowsRole;
     public static CustomOption lawyerCanCallEmergency;
     public static CustomOption pursuerCooldown;
     public static CustomOption pursuerBlanksNumber;
+
+    public static CustomOption executionerSpawnRate;
+    public static CustomOption executionerCanCallEmergency;
+    public static CustomOption executionerPromotesToLawyer;
+    public static CustomOption executionerOnTargetDead;
 
     public static CustomOption jumperSpawnRate;
     public static CustomOption jumperJumpTime;
@@ -835,7 +840,7 @@ public class CustomOptionHolder
         eraserCanEraseAnyone = Create(10162, Types.Impostor, "可抹除任何人", false, eraserSpawnRate);
 
         poucherSpawnRate = Create(10320, Types.Impostor, cs(Palette.ImpostorRed, "Poucher"), rates, null, true);
-        poucherSpawnModifier = Create(10321, Types.Impostor, "生成为附加职业", false, poucherSpawnRate);
+        poucherSpawnModifier = Create(10321, Types.Impostor, "生成为附加能力", false, poucherSpawnRate);
 
         mimicSpawnRate = Create(10170, Types.Impostor, cs(Mimic.color, "Mimic"), rates, null, true);
 
@@ -950,14 +955,19 @@ public class CustomOptionHolder
         vultureShowArrows = Create(20174, Types.Neutral, "显示指向尸体的箭头", true, vultureSpawnRate);
 
         lawyerSpawnRate = Create(20180, Types.Neutral, cs(Lawyer.color, "Lawyer"), rates, null, true);
-        lawyerIsProsecutorChance = Create(20181, Types.Neutral, "律师为处刑者的概率", rates, lawyerSpawnRate);
+        //lawyerIsProsecutorChance = Create(20181, Types.Neutral, "律师为处刑者的概率", rates, lawyerSpawnRate);
         lawyerTargetKnows = Create(20182, Types.Neutral, "客户知道律师存在", true, lawyerSpawnRate);
         lawyerVision = Create(20183, Types.Neutral, "视野倍率", 1.5f, 0.25f, 3f, 0.25f, lawyerSpawnRate);
         lawyerKnowsRole = Create(20184, Types.Neutral, "律师可得知目标职业", true, lawyerSpawnRate);
-        lawyerCanCallEmergency = Create(20185, Types.Neutral, "律师/处刑者可召开会议", true, lawyerSpawnRate);
+        lawyerCanCallEmergency = Create(20185, Types.Neutral, "律师可召开会议", true, lawyerSpawnRate);
         lawyerTargetCanBeJester = Create(20186, Types.Neutral, "小丑可以成为律师的客户", false, lawyerSpawnRate);
         pursuerCooldown = Create(20187, Types.Neutral, "起诉人空包弹冷却", 20f, 5f, 60f, 2.5f, lawyerSpawnRate);
         pursuerBlanksNumber = Create(20188, Types.Neutral, "起诉人空包弹可用次数", 6f, 1f, 20f, 1f, lawyerSpawnRate);
+
+        executionerSpawnRate = Create(20190, Types.Neutral, cs(Executioner.color, "Executioner"), rates, null, true);
+        executionerCanCallEmergency = Create(20191, Types.Neutral, "处刑者可召开会议", true, executionerSpawnRate);
+        executionerPromotesToLawyer = Create(20191, Types.Neutral, "目标职业变更时处刑者可以晋升为律师", true, executionerSpawnRate);
+        executionerOnTargetDead = Create(20192, Types.Neutral, "处刑目标死亡后变为", [cs(Pursuer.color, "Pursuer".Translate()), cs(Jester.color, "Jester".Translate()), cs(Amnisiac.color, "Amnisiac".Translate()), "船员"], executionerSpawnRate);
 
         swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
         swooperKillCooldown = Create(20151, Types.Neutral, "击杀冷却", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
@@ -1183,7 +1193,7 @@ public class CustomOptionHolder
 
         //-------------------------- Modifier (1000 - 1999) -------------------------- //
 
-        modifiersAreHidden = Create(40000, Types.Modifier, cs(Color.yellow, "隐藏死亡触发的附加职业"), true, null, true);
+        modifiersAreHidden = Create(40000, Types.Modifier, cs(Color.yellow, "隐藏死亡触发的附加能力"), true, null, true);
 
         modifierDisperser = Create(40100, Types.Modifier, cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
         //modifierDisperserRemainingDisperses = CustomOption.Create(40102, Types.Modifier, "分散次数", 1f,1f,5f,1f, modifierDisperser);
@@ -1278,7 +1288,7 @@ public class CustomOptionHolder
         guesserForceJackalGuesser = Create(2007, Types.Guesser, "强制豺狼成为赌怪", false, null, true);
         guesserGamemodeSidekickIsAlwaysGuesser = Create(2012, Types.Guesser, "强制跟班成为赌怪", false);
         guesserForceThiefGuesser = Create(2011, Types.Guesser, "强制身份窃贼为赌怪", false);
-        guesserGamemodeHaveModifier = Create(2004, Types.Guesser, "赌怪可以拥有附加职业", true, null, true);
+        guesserGamemodeHaveModifier = Create(2004, Types.Guesser, "赌怪可以拥有附加能力", true, null, true);
         guesserGamemodeNumberOfShots = Create(2005, Types.Guesser, "赌怪猜测最大次数", 2f, 1f, 15f, 1f);
         guesserGamemodeHasMultipleShotsPerMeeting = Create(2006, Types.Guesser, "一轮会议可多次猜测", false);
         guesserGamemodeKillsThroughShield = Create(2008, Types.Guesser, "赌怪猜测无视护盾", true);

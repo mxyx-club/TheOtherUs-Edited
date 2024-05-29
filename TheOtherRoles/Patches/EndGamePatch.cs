@@ -23,12 +23,13 @@ internal enum CustomGameOverReason
     ArsonistWin = 14,
     VultureWin = 15,
     LawyerSoloWin = 16,
-    ProsecutorWin = 17,
+    ExecutionerWin = 17,
     SwooperWin = 18,
     WerewolfWin = 19,
     JuggernautWin = 20,
     DoomsayerWin = 21,
-    AkujoWin = 22
+    AkujoWin = 22,
+    ProsecutorWin,
 }
 
 internal enum WinCondition
@@ -47,6 +48,7 @@ internal enum WinCondition
     AdditionalLawyerStolenWin,
     AdditionalAlivePursuerWin,
     ProsecutorWin,
+    ExecutionerWin,
     WerewolfWin,
     JuggernautWin,
     DoomsayerWin,
@@ -178,7 +180,7 @@ public class OnGameEndPatch
                             ((Jackal.jackal != null && !Jackal.jackal.Data.IsDead) ||
                             (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
         var vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
-        var prosecutorWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.ProsecutorWin;
+        var executionerWin = Executioner.executioner != null && gameOverReason == (GameOverReason)CustomGameOverReason.ExecutionerWin;
         var akujoWin = Akujo.akujo != null && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead;
         bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
 
@@ -229,12 +231,12 @@ public class OnGameEndPatch
         }
 
         // Jester win
-        else if (prosecutorWin)
+        else if (executionerWin)
         {
             TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-            var wpd = new WinningPlayerData(Lawyer.lawyer.Data);
+            var wpd = new WinningPlayerData(Executioner.executioner.Data);
             TempData.winners.Add(wpd);
-            AdditionalTempData.winCondition = WinCondition.ProsecutorWin;
+            AdditionalTempData.winCondition = WinCondition.ExecutionerWin;
         }
 
         // Lovers win conditions
@@ -357,8 +359,7 @@ public class OnGameEndPatch
 
         // Possible Additional winner: Lawyer
         if (!lawyerSoloWin && Lawyer.lawyer != null && Lawyer.target != null &&
-            (!Lawyer.target.Data.IsDead || Lawyer.target == Jester.jester) && !Pursuer.notAckedExiled &&
-            !Lawyer.isProsecutor)
+            (!Lawyer.target.Data.IsDead || Lawyer.target == Jester.jester) && !Pursuer.notAckedExiled)
         {
             WinningPlayerData winningClient = null;
             foreach (var winner in TempData.winners.GetFastEnumerator())
@@ -499,9 +500,9 @@ public class EndGameManagerSetUpPatch
                 textRenderer.text = "隐身人获胜!";
                 textRenderer.color = Swooper.color;
                 break;
-            case WinCondition.ProsecutorWin:
+            case WinCondition.ExecutionerWin:
                 textRenderer.text = "小嘴叭叭!";
-                textRenderer.color = Lawyer.color;
+                textRenderer.color = Executioner.color;
                 break;
             case WinCondition.LoversTeamWin:
                 textRenderer.text = "船员和恋人获胜";
@@ -609,7 +610,7 @@ internal class CheckEndCriteriaPatch
         if (CheckAndEndGameForVultureWin(__instance)) return false;
         if (CheckAndEndGameForSabotageWin(__instance)) return false;
         if (CheckAndEndGameForTaskWin(__instance)) return false;
-        if (CheckAndEndGameForProsecutorWin(__instance)) return false;
+        if (CheckAndEndGameForExecutionerWin(__instance)) return false;
         if (CheckAndEndGameForWerewolfWin(__instance, statistics)) return false;
         if (CheckAndEndGameForLoverWin(__instance, statistics)) return false;
         if (CheckAndEndGameForJackalWin(__instance, statistics)) return false;
@@ -729,12 +730,12 @@ internal class CheckEndCriteriaPatch
         return false;
     }
 
-    private static bool CheckAndEndGameForProsecutorWin(ShipStatus __instance)
+    private static bool CheckAndEndGameForExecutionerWin(ShipStatus __instance)
     {
-        if (Lawyer.triggerProsecutorWin)
+        if (Executioner.triggerExecutionerWin)
         {
             //__instance.enabled = false;
-            GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ProsecutorWin, false);
+            GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ExecutionerWin, false);
             return true;
         }
 

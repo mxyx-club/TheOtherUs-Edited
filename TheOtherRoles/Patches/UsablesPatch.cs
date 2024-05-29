@@ -416,12 +416,12 @@ internal class EmergencyMinigameUpdatePatch
         }
 
         // Potentially deactivate emergency button for Lawyer/Prosecutor
-        if (Lawyer.lawyer != null && Lawyer.lawyer == CachedPlayer.LocalPlayer.PlayerControl &&
-            !Lawyer.canCallEmergency)
+        if (Executioner.executioner != null && Executioner.executioner == CachedPlayer.LocalPlayer.PlayerControl &&
+            !Executioner.canCallEmergency)
         {
             roleCanCallEmergency = false;
             statusText = getString("lawyerMeetingButton");
-            if (Lawyer.isProsecutor) statusText = getString("ProsecutorMeetingButton");
+            if (Executioner.executioner) statusText = getString("ExecutionerMeetingButton");
         }
 
         // Potentially deactivate emergency button for Prophet

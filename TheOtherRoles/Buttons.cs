@@ -579,11 +579,10 @@ internal static class HudManagerStartPatch
                           ((Arsonist.arsonist == Sheriff.currentTarget && Sheriff.canKillArsonist) ||
                            (Jester.jester == Sheriff.currentTarget && Sheriff.canKillJester) ||
                            (Vulture.vulture == Sheriff.currentTarget && Sheriff.canKillVulture) ||
-                           (Lawyer.lawyer == Sheriff.currentTarget && Sheriff.canKillLawyer && !Lawyer.isProsecutor) ||
+                           (Executioner.executioner == Sheriff.currentTarget && Sheriff.canKillLawyer) ||
                            (Thief.thief == Sheriff.currentTarget && Sheriff.canKillThief) ||
                            (Amnisiac.amnisiac == Sheriff.currentTarget && Sheriff.canKillAmnesiac) ||
-                           (Lawyer.lawyer == Sheriff.currentTarget && Sheriff.canKillProsecutor &&
-                            Lawyer.isProsecutor) ||
+                           (Lawyer.lawyer == Sheriff.currentTarget && Sheriff.canKillProsecutor) ||
                            (Pursuer.pursuer == Sheriff.currentTarget && Sheriff.canKillPursuer) ||
                             Akujo.akujo == Sheriff.currentTarget ||
                            (Doomsayer.doomsayer == Sheriff.currentTarget && Sheriff.canKillDoomsayer)))))
@@ -3597,7 +3596,7 @@ internal static class HudManagerStartPatch
                     writer.EndMessage();
                     RPCProcedure.placeBomb(buff);
 
-                    SoundEffectsManager.play("trapperTrap");
+                    SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
                 }
 
                 terroristButton.Timer = terroristButton.MaxTimer;

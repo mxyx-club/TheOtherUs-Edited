@@ -837,9 +837,7 @@ public static class PlayerControlFixedUpdatePatch
                     playerInfoText = $"{taskInfo}".Trim();
                     meetingInfoText = playerInfoText;
                 }
-                else if (MapOptions.ghostsSeeRoles || (Lawyer.lawyerKnowsRole && !Lawyer.isProsecutor &&
-                                                          CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer &&
-                                                          p == Lawyer.target))
+                else if (MapOptions.ghostsSeeRoles || (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target))
                 {
                     playerInfoText = $"{roleText}";
                     meetingInfoText = playerInfoText;
@@ -1457,6 +1455,20 @@ public static class PlayerControlFixedUpdatePatch
             RPCProcedure.lawyerPromotesToPursuer();
         }
     }
+    
+    public static void executionerUpdate()
+    {
+        if (Executioner.executioner == null || Executioner.executioner != CachedPlayer.LocalPlayer.PlayerControl) return;
+
+        // Promote to Pursuer
+        if (Executioner.target != null && Executioner.target.Data.Disconnected && !Executioner.executioner.Data.IsDead)
+        {
+            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.executionerPromotesRole();
+        }
+    }
 
     public static void hackerUpdate()
     {
@@ -1913,6 +1925,8 @@ public static class PlayerControlFixedUpdatePatch
             morphlingAndCamouflagerUpdate();
             // Lawyer
             lawyerUpdate();
+            // Executioner
+            executionerUpdate();
             // Pursuer
             pursuerSetTarget();
             // Blackmailer
@@ -2145,12 +2159,21 @@ public static class MurderPlayerPatch
                 (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.lawyerPromotesToPursuer();
-
-            // Undertaker Button Sync
-            if (Undertaker.undertaker != null && CachedPlayer.LocalPlayer.PlayerControl == Undertaker.undertaker &&
-                __instance == Undertaker.undertaker && HudManagerStartPatch.undertakerDragButton != null)
-                HudManagerStartPatch.undertakerDragButton.Timer = Undertaker.dragingDelaiAfterKill;
         }
+
+        // Pursuer promotion trigger on murder (the host sends the call such that everyone recieves the update before a possible game End)
+        if (target == Executioner.target && AmongUsClient.Instance.AmHost && Executioner.executioner != null)
+        {
+            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.executionerPromotesRole();
+        }
+
+        // Undertaker Button Sync
+        if (Undertaker.undertaker != null && CachedPlayer.LocalPlayer.PlayerControl == Undertaker.undertaker &&
+            __instance == Undertaker.undertaker && HudManagerStartPatch.undertakerDragButton != null)
+            HudManagerStartPatch.undertakerDragButton.Timer = Undertaker.dragingDelaiAfterKill;
 
         // Seer show flash and add dead player position
         if (Seer.seer != null &&
@@ -2432,7 +2455,7 @@ public static class ExilePlayerPatch
         {
             var lawyer = Lawyer.lawyer;
             if (AmongUsClient.Instance.AmHost &&
-                ((Lawyer.target != Jester.jester && !Lawyer.isProsecutor) || Lawyer.targetWasGuessed))
+                ((Lawyer.target != Jester.jester) || Lawyer.targetWasGuessed))
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
@@ -2440,7 +2463,7 @@ public static class ExilePlayerPatch
                 RPCProcedure.lawyerPromotesToPursuer();
             }
 
-            if (!Lawyer.targetWasGuessed && !Lawyer.isProsecutor)
+            if (!Lawyer.targetWasGuessed)
             {
                 if (Lawyer.lawyer != null) Lawyer.lawyer.Exiled();
                 if (Pursuer.pursuer != null) Pursuer.pursuer.Exiled();

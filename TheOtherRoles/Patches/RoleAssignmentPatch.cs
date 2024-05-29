@@ -178,8 +178,8 @@ internal class RoleManagerSelectRolesPatch
         neutralSettings.Add((byte)RoleId.Akujo, CustomOptionHolder.akujoSpawnRate.getSelection());
         neutralSettings.Add((byte)RoleId.Vulture, CustomOptionHolder.vultureSpawnRate.getSelection());
         neutralSettings.Add((byte)RoleId.Thief, CustomOptionHolder.thiefSpawnRate.getSelection());
-        if (rnd.Next(1, 101) <= CustomOptionHolder.lawyerIsProsecutorChance.getSelection() * 10) // Lawyer or Prosecutor
-            neutralSettings.Add((byte)RoleId.Prosecutor, CustomOptionHolder.lawyerSpawnRate.getSelection());
+        if (rnd.Next(1, 101) <= CustomOptionHolder.executionerSpawnRate.getSelection() * 10) // Lawyer or Prosecutor
+            neutralSettings.Add((byte)RoleId.Executioner, CustomOptionHolder.executionerSpawnRate.getSelection());
         else
             neutralSettings.Add((byte)RoleId.Lawyer, CustomOptionHolder.lawyerSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Mayor, CustomOptionHolder.mayorSpawnRate.getSelection());
@@ -522,23 +522,12 @@ internal class RoleManagerSelectRolesPatch
         if (Lawyer.lawyer != null)
         {
             var possibleTargets = new List<PlayerControl>();
-            if (!Lawyer.isProsecutor)
-            {
-                // Lawyer
-                foreach (PlayerControl p in CachedPlayer.AllPlayers)
-                    if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
-                        (p.Data.Role.IsImpostor || p == Swooper.swooper || p == Jackal.jackal || p == Juggernaut.juggernaut ||
-                         p == Werewolf.werewolf || (Lawyer.targetCanBeJester && p == Jester.jester)))
-                        possibleTargets.Add(p);
-            }
-            else
-            {
-                // Prosecutor
-                foreach (PlayerControl p in CachedPlayer.AllPlayers)
-                    if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
-                        p != Mini.mini && !p.Data.Role.IsImpostor && !Helpers.isNeutral(p) && p != Swapper.swapper)
-                        possibleTargets.Add(p);
-            }
+            // Lawyer
+            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
+                    (p.Data.Role.IsImpostor || p == Swooper.swooper || p == Jackal.jackal || p == Juggernaut.juggernaut ||
+                     p == Werewolf.werewolf || (Lawyer.targetCanBeJester && p == Jester.jester)))
+                    possibleTargets.Add(p);
 
             if (possibleTargets.Count == 0)
             {
@@ -555,6 +544,34 @@ internal class RoleManagerSelectRolesPatch
                 writer.Write(target.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.lawyerSetTarget(target.PlayerId);
+            }
+        }
+
+        // Executioner
+        if (Executioner.executioner != null)
+        {
+            var possibleTargets = new List<PlayerControl>();
+            // Executioner
+            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
+                    p != Mini.mini && !p.Data.Role.IsImpostor && !Helpers.isNeutral(p) && p != Swapper.swapper)
+                    possibleTargets.Add(p);
+
+            if (possibleTargets.Count == 0)
+            {
+                var w = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(w);
+                RPCProcedure.executionerPromotesRole();
+            }
+            else
+            {
+                var target = possibleTargets[rnd.Next(0, possibleTargets.Count)];
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.ExecutionerSetTarget, SendOption.Reliable);
+                writer.Write(target.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.executionerSetTarget(target.PlayerId);
             }
         }
     }
@@ -906,7 +923,7 @@ internal class RoleManagerSelectRolesPatch
 
             modifiers.RemoveAll(x => x == RoleId.Sunglasses);
         }
-        if (CustomOptionHolder.modifierBaitSwapCrewmate.getBool() && modifiers.Contains(RoleId.Bait))
+        if (Bait.SwapCrewmate && modifiers.Contains(RoleId.Bait))
         {
             playerId = setModifierToRandomPlayer((byte)RoleId.Bait, crewPlayer);
             crewPlayer.RemoveAll(x => x.PlayerId == playerId);

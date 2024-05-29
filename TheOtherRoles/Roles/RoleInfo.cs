@@ -47,7 +47,8 @@ public class RoleInfo
     public static RoleInfo jester = new("Jester", Jester.color, "JesterIntroDesc", "JesterShortDesc", RoleId.Jester, true);
     public static RoleInfo vulture = new("Vulture", Vulture.color, "VultureIntroDesc", "VultureShortDesc", RoleId.Vulture, true);
     public static RoleInfo lawyer = new("Lawyer", Lawyer.color, "LawyerIntroDesc", "LawyerShortDesc", RoleId.Lawyer, true);
-    public static RoleInfo prosecutor = new("Lawyer", Lawyer.color, "LawyerIntroDesc", "LawyerShortDesc", RoleId.Prosecutor, true);
+    public static RoleInfo executioner = new("Executioner", Lawyer.color, "ExecutionerIntroDesc", "ExecutionerShortDesc", RoleId.Executioner, true);
+    //public static RoleInfo prosecutor = new("Prosecutor", Lawyer.color, "ProsecutorIntroDesc", "ProsecutorShortDesc", RoleId.Prosecutor, true);
     public static RoleInfo pursuer = new("Pursuer", Pursuer.color, "PursuerIntroDesc", "PursuerShortDesc", RoleId.Pursuer, true);
     public static RoleInfo jackal = new("Jackal", Jackal.color, "JackalIntroDesc", "JackalShortDesc", RoleId.Jackal, true);
     public static RoleInfo sidekick = new("Sidekick", Sidekick.color, "SidekickIntroDesc", "SidekickShortDesc", RoleId.Sidekick, true);
@@ -152,7 +153,8 @@ public class RoleInfo
         jester,
         vulture,
         lawyer,
-        prosecutor,
+        executioner,
+        //prosecutor,
         pursuer,
         doomsayer,
         arsonist,
@@ -346,8 +348,9 @@ public class RoleInfo
         if (p == BountyHunter.bountyHunter) infos.Add(bountyHunter);
         if (p == Vulture.vulture) infos.Add(vulture);
         if (p == Medium.medium) infos.Add(medium);
-        if (p == Lawyer.lawyer && !Lawyer.isProsecutor) infos.Add(lawyer);
-        if (p == Lawyer.lawyer && Lawyer.isProsecutor) infos.Add(prosecutor);
+        if (p == Lawyer.lawyer) infos.Add(lawyer);
+        //if (p == Lawyer.lawyer && Lawyer.isProsecutor) infos.Add(prosecutor);
+        if (p == Executioner.executioner && Executioner.executioner) infos.Add(executioner);
         if (p == Trapper.trapper) infos.Add(trapper);
         if (p == Prophet.prophet) infos.Add(prophet);
         if (p == Pursuer.pursuer) infos.Add(pursuer);
@@ -380,8 +383,11 @@ public class RoleInfo
         roleName = string.Join(" ",
             getRoleInfoForPlayer(p, showModifier).Select(x => useColors ? Helpers.cs(x.color, x.name) : x.name).ToArray());
         if (Lawyer.target != null && p.PlayerId == Lawyer.target.PlayerId &&
-            CachedPlayer.LocalPlayer.PlayerControl != Lawyer.target)
-            roleName += useColors ? Helpers.cs(Pursuer.color, " §") : " §";
+            CachedPlayer.LocalPlayer.PlayerControl != Lawyer.target) roleName += useColors ? Helpers.cs(Lawyer.color, " §") : " §";
+
+        if (Executioner.target != null && p.PlayerId == Executioner.target.PlayerId &&
+            CachedPlayer.LocalPlayer.PlayerControl != Executioner.target) roleName += useColors ? Helpers.cs(Executioner.color, " §") : " §";
+
         if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId)) roleName += " (赌怪)";
 
         if (!suppressGhostInfo && p != null)

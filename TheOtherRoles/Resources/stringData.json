@@ -74,35 +74,31 @@
     },
     "CrewmateRolesText": {
         "0": "Crewmate Roles",
+        "13": "\u8239\u5458\u804c\u4e1a"
+    },
+    "crewmateRoles": {
+        "0": "Crewmates",
         "13": "\u8239\u5458\u9635\u8425"
     },
     "NeutralRolesText": {
         "0": "Neutral Roles",
+        "13": "\u4e2d\u7acb\u804c\u4e1a"
+    },
+    "neutralRoles": {
+        "0": "Neutrals",
         "13": "\u4e2d\u7acb\u9635\u8425"
     },
     "ImpostorRolesText": {
         "0": "Impostor Roles",
         "13": "\u4f2a\u88c5\u8005\u9635\u8425"
     },
+    "impostorRoles": {
+        "0": "Impostors",
+        "13": "\u4f2a\u88c5\u8005\u804c\u4e1a"
+    },
     "ModifiersText": {
         "0": "Modifiers",
         "13": "\u9644\u52a0\u80fd\u529b"
-    },
-    "impostorRoles": {
-        "0": "Impostors",
-        "13": "\u4f2a\u88c5\u8005\u9635\u8425"
-    },
-    "neutralRoles": {
-        "0": "Neutrals",
-        "13": "\u4e2d\u7acb\u9635\u8425"
-    },
-    "crewmateRoles": {
-        "0": "Crewmates",
-        "13": "\u8239\u5458\u9635\u8425"
-    },
-    "modifiers": {
-        "0": "Modifiers",
-        "13": "\u9644\u52a0\u804c\u4e1a"
     },
     "page1": {
         "0": "Page 1: Vanilla Settings \n\n",
@@ -822,8 +818,8 @@
         "0": "The Prophet can't start an emergency meeting",
         "13": "\u9884\u8a00\u5bb6\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
     },
-    "ProsecutorMeetingButton": {
-        "0": "The Prosecutor can't start an emergency meeting",
+    "ExecutionerMeetingButton": {
+        "0": "The Executioner can't start an emergency meeting",
         "13": "\u5904\u5211\u8005\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
     },
     "BlackmailShhhText": {
@@ -1146,12 +1142,22 @@
     },
     "Prosecutor": {
         "0": "Prosecutor",
-        "13": "\u5904\u5211\u8005"
+        "13": "\u68c0\u5bdf\u5b98"
     },
     "ProsecutorIntroDesc": {
-        "13": "\u865a\u5047\u7684\u5904\u5211\u4eba\uff0c\u771f\u6b63\u7684\u5b88\u62a4\u5929\u4f7f"
+        "13": "\u5c31\u7b97\u5982\u4f55\u7528\u8c0e\u8a00\u6765\u7c89\u9970\uff0c\u4e5f\u662f\u7edd\u5bf9\u9003\u4e0d\u8fc7\u7f6a\u7f5a\u7684\uff01"
     },
     "ProsecutorShortDesc": {
+        "13": "\u5728\u4f1a\u8bae\u9a71\u9010\u4e00\u4e2a\u4f60\u8ba4\u4e3a\u53ef\u7591\u7684\u73a9\u5bb6\uff01"
+    },
+    "Executioner": {
+        "0": "Executioner",
+        "13": "\u5904\u5211\u8005"
+    },
+    "ExecutionerIntroDesc": {
+        "13": "\u865a\u5047\u7684\u5904\u5211\u4eba\uff0c\u771f\u6b63\u7684\u5b88\u62a4\u5929\u4f7f"
+    },
+    "ExecutionerShortDesc": {
         "13": "\u6295\u51fa\u4f60\u7684\u653e\u9010\u76ee\u6807"
     },
     "Pursuer": {

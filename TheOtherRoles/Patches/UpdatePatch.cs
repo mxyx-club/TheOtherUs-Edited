@@ -89,30 +89,15 @@ internal class HudManagerUpdatePatch
         var localRole = RoleInfo.getRoleInfoForPlayer(localPlayer, false).FirstOrDefault();
         setPlayerNameColor(localPlayer, localRole.color);
 
-        /*if (Jester.jester != null && Jester.jester == localPlayer)
-            setPlayerNameColor(Jester.jester, Jester.color);
-        else if (Mayor.mayor != null && Mayor.mayor == localPlayer)
-            setPlayerNameColor(Mayor.mayor, Mayor.color);
-        else if (Engineer.engineer != null && Engineer.engineer == localPlayer)
-            setPlayerNameColor(Engineer.engineer, Engineer.color);
-        else if (Sheriff.sheriff != null && Sheriff.sheriff == localPlayer) {
-            setPlayerNameColor(Sheriff.sheriff, Sheriff.color);
-            if (Deputy.deputy != null && Deputy.knowsSheriff) {
-                setPlayerNameColor(Deputy.deputy, Deputy.color);
-            }
-        } else*/
-
-        if (Deputy.deputy != null && Deputy.deputy == localPlayer)
-        {
-            setPlayerNameColor(Deputy.deputy, Deputy.color);
-            if (Sheriff.sheriff != null && Deputy.knowsSheriff) setPlayerNameColor(Sheriff.sheriff, Sheriff.color);
-        }
-
-        //警长可见捕快
         if (Sheriff.sheriff != null && Sheriff.sheriff == localPlayer)
         {
             setPlayerNameColor(Sheriff.sheriff, Sheriff.color);
             if (Deputy.deputy != null && Deputy.knowsSheriff) setPlayerNameColor(Deputy.deputy, Sheriff.color);
+        }
+        if (Deputy.deputy != null && Deputy.deputy == localPlayer)
+        {
+            setPlayerNameColor(Deputy.deputy, Deputy.color);
+            if (Sheriff.sheriff != null && Deputy.knowsSheriff) setPlayerNameColor(Sheriff.sheriff, Sheriff.color);
         }
 
         if (Prophet.prophet != null && Prophet.prophet == localPlayer)
@@ -126,28 +111,7 @@ internal class HudManagerUpdatePatch
                 }
             }
         }
-        /*else if (Portalmaker.portalmaker != null && Portalmaker.portalmaker == localPlayer)
-            setPlayerNameColor(Portalmaker.portalmaker, Portalmaker.color);
-        else if (Lighter.lighter != null && Lighter.lighter == localPlayer)
-            setPlayerNameColor(Lighter.lighter, Lighter.color);
-        else if (Detective.detective != null && Detective.detective == localPlayer)
-            setPlayerNameColor(Detective.detective, Detective.color);
-        else if (TimeMaster.timeMaster != null && TimeMaster.timeMaster == localPlayer)
-            setPlayerNameColor(TimeMaster.timeMaster, TimeMaster.color);
-        else if (Medic.medic != null && Medic.medic == localPlayer)
-            setPlayerNameColor(Medic.medic, Medic.color);
-        else if (Shifter.shifter != null && Shifter.shifter == localPlayer)
-            setPlayerNameColor(Shifter.shifter, Shifter.color);
-        else if (Swapper.swapper != null && Swapper.swapper == localPlayer)
-            setPlayerNameColor(Swapper.swapper, Swapper.color);
-        else if (Seer.seer != null && Seer.seer == localPlayer)
-            setPlayerNameColor(Seer.seer, Seer.color);
-        else if (Hacker.hacker != null && Hacker.hacker == localPlayer)
-            setPlayerNameColor(Hacker.hacker, Hacker.color);
-        else if (Tracker.tracker != null && Tracker.tracker == localPlayer)
-            setPlayerNameColor(Tracker.tracker, Tracker.color);
-        else if (Snitch.snitch != null && Snitch.snitch == localPlayer)
-            setPlayerNameColor(Snitch.snitch, Snitch.color);*/
+
         else if (Jackal.jackal != null && Jackal.jackal == localPlayer)
         {
             // Jackal can see his sidekick
@@ -155,27 +119,11 @@ internal class HudManagerUpdatePatch
             if (Sidekick.sidekick != null) setPlayerNameColor(Sidekick.sidekick, Jackal.color);
             if (Jackal.fakeSidekick != null) setPlayerNameColor(Jackal.fakeSidekick, Jackal.color);
         }
-        /*else if (Spy.spy != null && Spy.spy == localPlayer) {
-            setPlayerNameColor(Spy.spy, Spy.color);
-        } else if (SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == localPlayer) {
-            setPlayerNameColor(SecurityGuard.securityGuard, SecurityGuard.color);
-        } else if (Arsonist.arsonist != null && Arsonist.arsonist == localPlayer) {
-            setPlayerNameColor(Arsonist.arsonist, Arsonist.color);
-        } else if (Guesser.niceGuesser != null && Guesser.niceGuesser == localPlayer) {
-            setPlayerNameColor(Guesser.niceGuesser, Guesser.color);
-        } else if (Guesser.evilGuesser != null && Guesser.evilGuesser == localPlayer) {
-            setPlayerNameColor(Guesser.evilGuesser, Palette.ImpostorRed);
-        } else if (Vulture.vulture != null && Vulture.vulture == localPlayer) {
-            setPlayerNameColor(Vulture.vulture, Vulture.color);
-        } else if (Medium.medium != null && Medium.medium == localPlayer) {
-            setPlayerNameColor(Medium.medium, Medium.color);
-        } else if (Trapper.trapper != null && Trapper.trapper == localPlayer) {
-            setPlayerNameColor(Trapper.trapper, Trapper.color);
-        } else if (Lawyer.lawyer != null && Lawyer.lawyer == localPlayer) {
-            setPlayerNameColor(Lawyer.lawyer, Lawyer.color);
-        } else if (Pursuer.pursuer != null && Pursuer.pursuer == localPlayer) {
-            setPlayerNameColor(Pursuer.pursuer, Pursuer.color);
-        }*/
+
+        if (Executioner.executioner != null && localPlayer == Executioner.executioner)
+        {
+            setPlayerNameColor(Executioner.target, Executioner.color);
+        }
 
         if (Snitch.snitch != null)
         {
@@ -316,20 +264,28 @@ internal class HudManagerUpdatePatch
             }
         }
         // Lawyer or Prosecutor
-        var localIsLawyer = Lawyer.lawyer != null && Lawyer.target != null &&
-                            Lawyer.lawyer == PlayerControl.LocalPlayer;
-        var localIsKnowingTarget = Lawyer.lawyer != null && !Lawyer.isProsecutor && Lawyer.target != null &&
-                                   Lawyer.targetKnows && Lawyer.target == PlayerControl.LocalPlayer;
+        var localIsLawyer = Lawyer.lawyer != null && Lawyer.target != null && Lawyer.lawyer == PlayerControl.LocalPlayer;
+        var localIsKnowingTarget = Lawyer.lawyer != null && Lawyer.target != null && Lawyer.targetKnows && Lawyer.target == PlayerControl.LocalPlayer;
         if (localIsLawyer || (localIsKnowingTarget && !Lawyer.lawyer.Data.IsDead))
         {
-            //Color color = Lawyer.color;
-            //PlayerControl target = Lawyer.target;
             var suffix = Helpers.cs(Lawyer.color, " §");
             Lawyer.target.cosmetics.nameText.text += suffix;
 
             if (MeetingHud.Instance != null)
                 foreach (var player in MeetingHud.Instance.playerStates)
                     if (player.TargetPlayerId == Lawyer.target.PlayerId)
+                        player.NameText.text += suffix;
+        }
+
+        var localIsExecutioner = Executioner.executioner != null && Executioner.target != null && Executioner.executioner == PlayerControl.LocalPlayer;
+        if (localIsExecutioner && !Executioner.executioner.Data.IsDead)
+        {
+            var suffix = Helpers.cs(Executioner.color, " §");
+            Executioner.target.cosmetics.nameText.text += suffix;
+
+            if (MeetingHud.Instance != null)
+                foreach (var player in MeetingHud.Instance.playerStates)
+                    if (player.TargetPlayerId == Executioner.target.PlayerId)
                         player.NameText.text += suffix;
         }
 

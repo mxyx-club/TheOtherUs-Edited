@@ -61,7 +61,8 @@ public enum RoleId
     Jester,
     Vulture,
     Lawyer,
-    Prosecutor,
+    Executioner,
+    //Prosecutor,
     Pursuer,
     Doomsayer,
     Arsonist,
@@ -219,6 +220,8 @@ public enum CustomRPC
     ArsonistWin,
     GuesserShoot,
     LawyerSetTarget,
+    ExecutionerSetTarget,
+    ExecutionerPromotesRole,
     LawyerPromotesToPursuer,
     BlackmailPlayer,
     UseCameraTime,
@@ -538,12 +541,15 @@ public static class RPCProcedure
                     case RoleId.Lawyer:
                         Lawyer.lawyer = player;
                         break;
-                    case RoleId.Prosecutor:
+                    /*case RoleId.Prosecutor:
                         Lawyer.lawyer = player;
-                        Lawyer.isProsecutor = true;
-                        break;
+                        //Lawyer.isProsecutor = true;
+                        break;*/
                     case RoleId.Pursuer:
                         Pursuer.pursuer = player;
+                        break;
+                    case RoleId.Executioner:
+                        Executioner.executioner = player;
                         break;
                     case RoleId.Witch:
                         Witch.witch = player;
@@ -899,14 +905,14 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 Amnisiac.amnisiac = target;
                 break;
-
+            /*
             case RoleId.Prosecutor:
                 // Never reload Prosecutor
                 Lawyer.lawyer = amnisiac;
                 Amnisiac.clearAndReload();
                 Amnisiac.amnisiac = target;
                 break;
-
+                */
             case RoleId.Mayor:
                 if (Amnisiac.resetRole) Mayor.clearAndReload();
                 Mayor.mayor = amnisiac;
@@ -1232,6 +1238,12 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 Amnisiac.amnisiac = target;
                 break;
+                
+            case RoleId.Executioner:
+                Executioner.executioner = amnisiac;
+                Amnisiac.clearAndReload();
+                Amnisiac.amnisiac = target;
+                break;
 
             case RoleId.Medium:
                 if (Amnisiac.resetRole) Medium.clearAndReload();
@@ -1345,6 +1357,11 @@ public static class RPCProcedure
             case RoleId.Prophet:
                 if (Amnisiac.resetRole) Prophet.clearAndReload();
                 Prophet.prophet = amnisiac;
+                Amnisiac.clearAndReload();
+                break;
+            case RoleId.EvilTrapper:
+                if (Amnisiac.resetRole) EvilTrapper.clearAndReload();
+                EvilTrapper.evilTrapper = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
         }
@@ -1695,9 +1712,11 @@ public static class RPCProcedure
     {
         var player = Helpers.playerById(targetId);
         if (player == null) return;
-        if (Lawyer.target == player && Lawyer.isProsecutor && Lawyer.lawyer != null && !Lawyer.lawyer.Data.IsDead)
-            Lawyer.isProsecutor = false;
-
+        if (Executioner.target == player && Executioner.executioner != null && !Executioner.executioner.Data.IsDead && Lawyer.lawyer == null)
+        {
+            Lawyer.lawyer = Executioner.executioner;
+            Executioner.clearAndReload();
+        }
         if (!Jackal.canCreateSidekickFromImpostor && player.Data.Role.IsImpostor)
         {
             Jackal.fakeSidekick = player;
@@ -1822,6 +1841,7 @@ public static class RPCProcedure
         if (player == Sidekick.sidekick) Sidekick.clearAndReload();
         if (player == BountyHunter.bountyHunter) BountyHunter.clearAndReload();
         if (player == Vulture.vulture) Vulture.clearAndReload();
+        if (player == Executioner.executioner) Executioner.clearAndReload();
         if (player == Lawyer.lawyer) Lawyer.clearAndReload();
         if (player == Pursuer.pursuer) Pursuer.clearAndReload();
         if (player == Thief.thief) Thief.clearAndReload();
@@ -2390,11 +2410,32 @@ public static class RPCProcedure
         Lawyer.target = Helpers.playerById(playerId);
     }
 
+    public static void executionerSetTarget(byte playerId)
+    {
+        Executioner.target = Helpers.playerById(playerId);
+    }
+
     public static void lawyerPromotesToPursuer()
     {
         var player = Lawyer.lawyer;
         var client = Lawyer.target;
         Lawyer.clearAndReload(false);
+
+        Pursuer.pursuer = player;
+
+        if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId && client != null)
+        {
+            var playerInfoTransform = client.cosmetics.nameText.transform.parent.FindChild("Info");
+            var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
+            if (playerInfo != null) playerInfo.text = "";
+        }
+    }
+
+    public static void executionerPromotesRole()
+    {
+        var player = Executioner.executioner;
+        var client = Executioner.target;
+        Executioner.clearAndReload();
 
         Pursuer.pursuer = player;
 
@@ -2444,7 +2485,7 @@ public static class RPCProcedure
         }
 
 
-        if (Lawyer.lawyer != null && !Lawyer.isProsecutor && Lawyer.lawyer.PlayerId == killerId &&
+        if (Lawyer.lawyer != null && Lawyer.lawyer.PlayerId == killerId &&
             Lawyer.target != null && Lawyer.target.PlayerId == dyingTargetId)
         {
             // Lawyer guessed client.
@@ -3306,7 +3347,15 @@ internal class RPCHandlerPatch
             case CustomRPC.LawyerSetTarget:
                 RPCProcedure.lawyerSetTarget(reader.ReadByte());
                 break;
+                
+            case CustomRPC.ExecutionerSetTarget:
+                RPCProcedure.executionerSetTarget(reader.ReadByte());
+                break;
 
+            case CustomRPC.ExecutionerPromotesRole:
+                RPCProcedure.executionerPromotesRole();
+                break;
+                
             case CustomRPC.LawyerPromotesToPursuer:
                 RPCProcedure.lawyerPromotesToPursuer();
                 break;

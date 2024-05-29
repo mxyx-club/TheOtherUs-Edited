@@ -71,6 +71,7 @@ public static partial class TheOtherRoles
         Medium.clearAndReload();
         Bomber.clearAndReload();
         Lawyer.clearAndReload();
+        Executioner.clearAndReload();
         Pursuer.clearAndReload();
         Witch.clearAndReload();
         Jumper.clearAndReload();

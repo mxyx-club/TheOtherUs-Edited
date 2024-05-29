@@ -652,9 +652,7 @@ internal class MeetingHudPatch
                     player.Data.Disconnected) continue;
 
                 var additionalVotes = Mayor.mayor != null &&
-                                      Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId && Mayor.voteTwice
-                    ? 2
-                    : 1; // Mayor vote
+                                      Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId && Mayor.voteTwice ? 2 : 1; // Mayor vote
                 if (dictionary.TryGetValue(playerVoteArea.VotedFor, out var currentVotes))
                     dictionary[playerVoteArea.VotedFor] = currentVotes + additionalVotes;
                 else
@@ -889,16 +887,14 @@ internal class MeetingHudPatch
                                                (Lovers.lover2 != null && Lovers.lover2.PlayerId == exiled.PlayerId);
                 Pursuer.notAckedExiled = (Pursuer.pursuer != null && Pursuer.pursuer.PlayerId == exiled.PlayerId) ||
                                          (Lawyer.lawyer != null && Lawyer.target != null &&
-                                          Lawyer.target.PlayerId == exiled.PlayerId && Lawyer.target != Jester.jester &&
-                                          !Lawyer.isProsecutor);
+                                          Lawyer.target.PlayerId == exiled.PlayerId && Lawyer.target != Jester.jester);
             }
 
             Camouflager.camoComms = false;
 
             // Mini
             if (!Mini.isGrowingUpInMeeting)
-                Mini.timeOfGrowthStart = Mini.timeOfGrowthStart.Add(DateTime.UtcNow.Subtract(Mini.timeOfMeetingStart))
-                    .AddSeconds(10);
+                Mini.timeOfGrowthStart = Mini.timeOfGrowthStart.Add(DateTime.UtcNow.Subtract(Mini.timeOfMeetingStart)).AddSeconds(10);
             /*
             // Snitch
             if (Snitch.snitch != null && !Snitch.needsUpdate && Snitch.snitch.Data.IsDead && Snitch.text != null)
