@@ -1183,89 +1183,89 @@ public class CustomOptionHolder
 
         modifiersAreHidden = Create(40000, Types.Modifier, cs(Color.yellow, "隐藏死亡触发的附加职业"), true, null, true);
 
-        modifierDisperser = Create(40010, Types.Modifier, cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
-        //modifierDisperserRemainingDisperses = CustomOption.Create(1002, Types.Modifier, "分散次数", 1f,1f,5f,1f, modifierDisperser);
-        modifierDisperserDispersesToVent = Create(40011, Types.Modifier, "分散至管道位置", false, modifierDisperser);
+        modifierDisperser = Create(40100, Types.Modifier, cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
+        //modifierDisperserRemainingDisperses = CustomOption.Create(40102, Types.Modifier, "分散次数", 1f,1f,5f,1f, modifierDisperser);
+        modifierDisperserDispersesToVent = Create(40101, Types.Modifier, "分散至管道位置", false, modifierDisperser);
 
-        modifierLastImpostor = Create(40030, Types.Modifier, cs(Palette.ImpostorRed, "LastImpostor"), false, null, true);
-        modifierLastImpostorDeduce = Create(40031, Types.Modifier, "绝境者击杀冷却减少", 5f, 2.5f, 15f, 2.5f, modifierLastImpostor);
+        modifierLastImpostor = Create(40110, Types.Modifier, cs(Palette.ImpostorRed, "LastImpostor"), false, null, true);
+        modifierLastImpostorDeduce = Create(40111, Types.Modifier, "绝境者击杀冷却减少", 5f, 2.5f, 15f, 2.5f, modifierLastImpostor);
 
-        modifierBloody = Create(40040, Types.Modifier, cs(Color.yellow, "Bloody"), rates, null, true);
-        modifierBloodyQuantity = Create(40041, Types.Modifier, cs(Color.yellow, "溅血数量"), ratesModifier, modifierBloody);
-        modifierBloodyDuration = Create(40042, Types.Modifier, "痕迹持续时间", 10f, 3f, 60f, 0.5f, modifierBloody);
+        modifierBloody = Create(40120, Types.Modifier, cs(Color.yellow, "Bloody"), rates, null, true);
+        modifierBloodyQuantity = Create(40121, Types.Modifier, cs(Color.yellow, "溅血数量"), ratesModifier, modifierBloody);
+        modifierBloodyDuration = Create(40122, Types.Modifier, "痕迹持续时间", 10f, 3f, 60f, 0.5f, modifierBloody);
 
-        modifierAntiTeleport = Create(40050, Types.Modifier, cs(Color.yellow, "AntiTeleport"), rates, null, true);
-        modifierAntiTeleportQuantity = Create(40051, Types.Modifier, cs(Color.yellow, "通讯兵数量"), ratesModifier, modifierAntiTeleport);
+        modifierAntiTeleport = Create(40130, Types.Modifier, cs(Color.yellow, "AntiTeleport"), rates, null, true);
+        modifierAntiTeleportQuantity = Create(40131, Types.Modifier, cs(Color.yellow, "通讯兵数量"), ratesModifier, modifierAntiTeleport);
 
-        modifierTieBreaker = Create(40060, Types.Modifier, cs(Color.yellow, "TieBreaker"), rates, null, true);
+        modifierTieBreaker = Create(40140, Types.Modifier, cs(Color.yellow, "TieBreaker"), rates, null, true);
 
-        modifierBait = Create(40070, Types.Modifier, cs(Color.yellow, "Bait"), rates, null, true);
-        modifierBaitSwapCrewmate = Create(40071, Types.Modifier, "只分配给船员阵营", false, modifierBait);
-        modifierBaitReportDelayMin = Create(40072, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 0.125f, modifierBait);
-        modifierBaitReportDelayMax = Create(40073, Types.Modifier, "诱饵报告延迟时间(最大)", 0f, 0f, 10f, 0.5f, modifierBait);
-        modifierBaitShowKillFlash = Create(40074, Types.Modifier, "用闪光灯警告杀手", true, modifierBait);
+        modifierBait = Create(40150, Types.Modifier, cs(Color.yellow, "Bait"), rates, null, true);
+        modifierBaitSwapCrewmate = Create(40151, Types.Modifier, "只分配给船员阵营", false, modifierBait);
+        modifierBaitReportDelayMin = Create(40152, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 0.125f, modifierBait);
+        modifierBaitReportDelayMax = Create(40153, Types.Modifier, "诱饵报告延迟时间(最大)", 0f, 0f, 10f, 0.5f, modifierBait);
+        modifierBaitShowKillFlash = Create(40154, Types.Modifier, "用闪光灯警告杀手", true, modifierBait);
 
-        modifierLover = Create(40080, Types.Modifier, cs(Color.yellow, "Lover"), rates, null, true);
-        modifierLoverImpLoverRate = Create(40081, Types.Modifier, "恋人中有内鬼的概率", rates, modifierLover);
-        modifierLoverBothDie = Create(40082, Types.Modifier, "恋人共死", true, modifierLover);
-        modifierLoverEnableChat = Create(40083, Types.Modifier, "启用私密聊天文字频道", true, modifierLover);
+        modifierLover = Create(40160, Types.Modifier, cs(Color.yellow, "Lover"), rates, null, true);
+        modifierLoverImpLoverRate = Create(40161, Types.Modifier, "恋人中有内鬼的概率", rates, modifierLover);
+        modifierLoverBothDie = Create(40162, Types.Modifier, "恋人共死", true, modifierLover);
+        modifierLoverEnableChat = Create(40163, Types.Modifier, "启用私密聊天文字频道", true, modifierLover);
 
-        modifierSunglasses = Create(40090, Types.Modifier, cs(Color.yellow, "Sunglasses"), rates, null, true);
-        modifierSunglassesQuantity = Create(40091, Types.Modifier, cs(Color.yellow, "太阳镜数量"), ratesModifier, modifierSunglasses);
-        modifierSunglassesVision = Create(40092, Types.Modifier, "太阳镜的视野倍率", ["-10%", "-20%", "-30%", "-40%", "-50%"], modifierSunglasses);
+        modifierSunglasses = Create(40170, Types.Modifier, cs(Color.yellow, "Sunglasses"), rates, null, true);
+        modifierSunglassesQuantity = Create(40171, Types.Modifier, cs(Color.yellow, "太阳镜数量"), ratesModifier, modifierSunglasses);
+        modifierSunglassesVision = Create(40172, Types.Modifier, "太阳镜的视野倍率", ["-10%", "-20%", "-30%", "-40%", "-50%"], modifierSunglasses);
 
-        modifierTorch = Create(40100, Types.Modifier, cs(Color.yellow, "Torch"), rates, null, true);
-        modifierTorchQuantity = Create(40101, Types.Modifier, cs(Color.yellow, "火炬人数"), ratesModifier, modifierTorch);
-        modifierTorchVision = Create(40102, Types.Modifier, "火炬的视野倍率", 1.5f, 1f, 3f, 0.125f, modifierTorch);
+        modifierTorch = Create(40180, Types.Modifier, cs(Color.yellow, "Torch"), rates, null, true);
+        modifierTorchQuantity = Create(40181, Types.Modifier, cs(Color.yellow, "火炬人数"), ratesModifier, modifierTorch);
+        modifierTorchVision = Create(40182, Types.Modifier, "火炬的视野倍率", 1.5f, 1f, 3f, 0.125f, modifierTorch);
 
-        modifierFlash = Create(40110, Types.Modifier, cs(Color.yellow, "Flash"), rates, null, true);
-        modifierFlashQuantity = Create(40111, Types.Modifier, cs(Color.yellow, "闪电侠人数"), ratesModifier, modifierFlash);
-        modifierFlashSpeed = Create(40112, Types.Modifier, "闪电侠的移速倍率", 1.25f, 1f, 3f, 0.125f, modifierFlash);
+        modifierFlash = Create(40190, Types.Modifier, cs(Color.yellow, "Flash"), rates, null, true);
+        modifierFlashQuantity = Create(40191, Types.Modifier, cs(Color.yellow, "闪电侠人数"), ratesModifier, modifierFlash);
+        modifierFlashSpeed = Create(40192, Types.Modifier, "闪电侠的移速倍率", 1.25f, 1f, 3f, 0.125f, modifierFlash);
 
-        modifierMultitasker = Create(40120, Types.Modifier, cs(Color.yellow, "Multitasker"), rates, null, true);
-        modifierMultitaskerQuantity = Create(40121, Types.Modifier, cs(Color.yellow, "多线程人数"), ratesModifier, modifierMultitasker);
+        modifierMultitasker = Create(40200, Types.Modifier, cs(Color.yellow, "Multitasker"), rates, null, true);
+        modifierMultitaskerQuantity = Create(40201, Types.Modifier, cs(Color.yellow, "多线程人数"), ratesModifier, modifierMultitasker);
 
-        modifierMini = Create(40130, Types.Modifier, cs(Color.yellow, "Mini"), rates, null, true);
-        modifierMiniGrowingUpDuration = Create(40131, Types.Modifier, "小孩长大所需时间", 400f, 100f, 1500f, 25f, modifierMini);
-        modifierMiniGrowingUpInMeeting = Create(40132, Types.Modifier, "小孩会议期间可成长", true, modifierMini);
+        modifierMini = Create(40210, Types.Modifier, cs(Color.yellow, "Mini"), rates, null, true);
+        modifierMiniGrowingUpDuration = Create(40211, Types.Modifier, "小孩长大所需时间", 400f, 100f, 1500f, 25f, modifierMini);
+        modifierMiniGrowingUpInMeeting = Create(40212, Types.Modifier, "小孩会议期间可成长", true, modifierMini);
 
-        modifierGiant = Create(40140, Types.Modifier, cs(Color.yellow, "Giant"), rates, null, true);
-        modifierGiantSpped = Create(40141, Types.Modifier, "巨人的移速倍率", 0.75f, 0.5f, 1.5f, 0.05f, modifierGiant);
+        modifierGiant = Create(40220, Types.Modifier, cs(Color.yellow, "Giant"), rates, null, true);
+        modifierGiantSpped = Create(40221, Types.Modifier, "巨人的移速倍率", 0.75f, 0.5f, 1.5f, 0.05f, modifierGiant);
 
-        modifierIndomitable = Create(40150, Types.Modifier, cs(Color.yellow, "Indomitable"), rates, null, true);
+        modifierIndomitable = Create(40230, Types.Modifier, cs(Color.yellow, "Indomitable"), rates, null, true);
 
-        modifierBlind = Create(40160, Types.Modifier, cs(Color.yellow, "Blind"), rates, null, true);
+        modifierBlind = Create(40240, Types.Modifier, cs(Color.yellow, "Blind"), rates, null, true);
 
-        modifierWatcher = Create(40170, Types.Modifier, cs(Color.yellow, "Watcher"), rates, null, true);
+        modifierWatcher = Create(40250, Types.Modifier, cs(Color.yellow, "Watcher"), rates, null, true);
 
-        modifierRadar = Create(40180, Types.Modifier, cs(Color.yellow, "Radar"), rates, null, true);
+        modifierRadar = Create(40260, Types.Modifier, cs(Color.yellow, "Radar"), rates, null, true);
 
-        modifierTunneler = Create(40190, Types.Modifier, cs(Color.yellow, "Tunneler"), rates, null, true);
+        modifierTunneler = Create(40270, Types.Modifier, cs(Color.yellow, "Tunneler"), rates, null, true);
 
-        modifierButtonBarry = Create(40200, Types.Modifier, cs(Color.yellow, "ButtonBarry"), rates, null, true);
-        modifierButtonSabotageRemoteMeetings = Create(40201, Types.Modifier, "可在破坏时使用", false, modifierButtonBarry);
+        modifierButtonBarry = Create(40280, Types.Modifier, cs(Color.yellow, "ButtonBarry"), rates, null, true);
+        modifierButtonSabotageRemoteMeetings = Create(40281, Types.Modifier, "可在破坏时使用", false, modifierButtonBarry);
 
-        modifierSlueth = Create(40210, Types.Modifier, cs(Color.yellow, "Slueth"), rates, null, true);
+        modifierSlueth = Create(40290, Types.Modifier, cs(Color.yellow, "Slueth"), rates, null, true);
 
-        modifierCursed = Create(40220, Types.Modifier, cs(Color.yellow, "Cursed"), rates, null, true);
-        modifierShowCursed = Create(40221, Types.Modifier, "隐藏职业", false, modifierCursed);
+        modifierCursed = Create(40300, Types.Modifier, cs(Color.yellow, "Cursed"), rates, null, true);
+        modifierShowCursed = Create(40301, Types.Modifier, "隐藏职业", false, modifierCursed);
 
-        modifierVip = Create(40230, Types.Modifier, cs(Color.yellow, "Vip"), rates, null, true);
-        modifierVipQuantity = Create(40231, Types.Modifier, cs(Color.yellow, "VIP人数"), ratesModifier, modifierVip);
-        modifierVipShowColor = Create(40232, Types.Modifier, "死亡时全场提示阵营颜色", true, modifierVip);
+        modifierVip = Create(40310, Types.Modifier, cs(Color.yellow, "Vip"), rates, null, true);
+        modifierVipQuantity = Create(40311, Types.Modifier, cs(Color.yellow, "VIP人数"), ratesModifier, modifierVip);
+        modifierVipShowColor = Create(40312, Types.Modifier, "死亡时全场提示阵营颜色", true, modifierVip);
 
-        modifierInvert = Create(40240, Types.Modifier, cs(Color.yellow, "Invert"), rates, null, true);
-        modifierInvertQuantity = Create(40241, Types.Modifier, cs(Color.yellow, "酒鬼人数"), ratesModifier, modifierInvert);
-        modifierInvertDuration = Create(40242, Types.Modifier, "醉酒状态持续几轮会议", 2f, 1f, 15f, 1f, modifierInvert);
+        modifierInvert = Create(40320, Types.Modifier, cs(Color.yellow, "Invert"), rates, null, true);
+        modifierInvertQuantity = Create(40321, Types.Modifier, cs(Color.yellow, "酒鬼人数"), ratesModifier, modifierInvert);
+        modifierInvertDuration = Create(40322, Types.Modifier, "醉酒状态持续几轮会议", 2f, 1f, 15f, 1f, modifierInvert);
 
-        modifierChameleon = Create(40250, Types.Modifier, cs(Color.yellow, "Chameleon"), rates, null, true);
-        modifierChameleonQuantity = Create(40251, Types.Modifier, cs(Color.yellow, "变色龙数量"), ratesModifier, modifierChameleon);
-        modifierChameleonHoldDuration = Create(40252, Types.Modifier, "从不动到褪色开始的间隔时间", 3f, 1f, 10f, 0.5f, modifierChameleon);
-        modifierChameleonFadeDuration = Create(40253, Types.Modifier, "褪色过程持续时间", 1f, 0.25f, 10f, 0.25f, modifierChameleon);
-        modifierChameleonMinVisibility = Create(40254, Types.Modifier, "最低透明度", ["0%", "10%", "20%", "30%", "40%", "50%"], modifierChameleon);
+        modifierChameleon = Create(40330, Types.Modifier, cs(Color.yellow, "Chameleon"), rates, null, true);
+        modifierChameleonQuantity = Create(40331, Types.Modifier, cs(Color.yellow, "变色龙数量"), ratesModifier, modifierChameleon);
+        modifierChameleonHoldDuration = Create(40332, Types.Modifier, "从不动到褪色开始的间隔时间", 3f, 1f, 10f, 0.5f, modifierChameleon);
+        modifierChameleonFadeDuration = Create(40333, Types.Modifier, "褪色过程持续时间", 1f, 0.25f, 10f, 0.25f, modifierChameleon);
+        modifierChameleonMinVisibility = Create(40334, Types.Modifier, "最低透明度", ["0%", "10%", "20%", "30%", "40%", "50%"], modifierChameleon);
 
-        modifierShifter = Create(40260, Types.Modifier, cs(Color.yellow, "Shifter"), rates, null, true);
-        modifierShiftNeutral = Create(40261, Types.Modifier, "可交换部分中立不带刀职业", false, modifierShifter);
+        modifierShifter = Create(40340, Types.Modifier, cs(Color.yellow, "Shifter"), rates, null, true);
+        modifierShiftNeutral = Create(40341, Types.Modifier, "可交换部分中立不带刀职业", false, modifierShifter);
 
 
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
