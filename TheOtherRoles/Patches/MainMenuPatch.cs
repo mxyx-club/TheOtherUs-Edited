@@ -67,7 +67,7 @@ public class MainMenuPatch
             passiveButtonDiscord.OnClick = new ButtonClickedEvent();
             passiveButtonDiscord.OnClick.AddListener((Action)(() => Application.OpenURL("https://qm.qq.com/q/Xr8HijGZK8")));
 
-            Color discordColor = new Color32(88, 101, 242, byte.MaxValue);
+            Color discordColor = Color.cyan;
             buttonSpriteDiscord.color = textDiscord.color = discordColor;
             passiveButtonDiscord.OnMouseOut.AddListener((Action)delegate
             {

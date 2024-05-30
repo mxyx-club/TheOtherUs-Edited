@@ -892,7 +892,7 @@ internal class RoleManagerSelectRolesPatch
         if (modifiers.Contains(RoleId.Watcher))
         {
             var crewPlayerW = new List<PlayerControl>(playerList);
-            crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor);
+            crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor || x == Mayor.mayor);
             playerId = setModifierToRandomPlayer((byte)RoleId.Watcher, crewPlayerW);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Watcher);

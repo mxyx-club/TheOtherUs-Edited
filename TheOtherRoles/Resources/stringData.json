@@ -1866,7 +1866,7 @@
     },
     "colorBlurple": {
         "0": "Blurple",
-        "13": "\u84dd\u7d2b\u8272"
+        "13": "\u84dd\u7d2b"
     },
     "colorSunrise": {
         "0": "Sunrise",
@@ -1911,6 +1911,54 @@
     "colorSundown": {
         "0": "Sundown",
         "13": "\u65e5\u843d\u6a59"
+    },
+    "colorSnow": {
+        "0": "Snow",
+        "13": "\u96ea\u767d"
+    },
+    "colorSkyBlue": {
+        "0": "SkyBlue",
+        "13": "\u5929\u84dd"
+    },
+    "colorAzuki": {
+        "0": "Azuki",
+        "13": "\u7ea2\u8c46"
+    },
+    "colorTokiwaGreen": {
+        "0": "TokiwaGreen",
+        "13": "\u5e38\u9752\u7eff"
+    },
+    "colorPitchwhite": {
+        "0": "Pitch white",
+        "13": "\u7eaf\u767d"
+    },
+    "colorPitchBlack": {
+        "0": "Pitch Black",
+        "13": "\u7eaf\u9ed1"
+    },
+    "colorNega": {
+        "0": "Nega",
+        "13": "\u8d1f\u7247\u6ee4\u955c"
+    },
+    "colorPosi": {
+        "0": "Posi",
+        "13": "\u6b63\u7247\u6ee4\u955c"
+    },
+    "colorEmerald": {
+        "0": "Emerald",
+        "13": "\u7fe1\u7fe0"
+    },
+    "colorGold": {
+        "0": "Gold",
+        "13": "\u91d1\u9ec4"
+    },
+    "colorIntenseblue": {
+        "0": "Intense blue",
+        "13": "\u58a8\u84dd"
+    },
+    "colorXmasRed": {
+        "0": "X'masRed",
+        "13": "\u5723\u8bde\u7ea2"
     },
     "CamoText": {
         "0": "CAMO",
