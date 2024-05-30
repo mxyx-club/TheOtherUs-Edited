@@ -62,7 +62,6 @@ public enum RoleId
     Vulture,
     Lawyer,
     Executioner,
-    //Prosecutor,
     Pursuer,
     Doomsayer,
     Arsonist,
@@ -79,6 +78,7 @@ public enum RoleId
     Crewmate,
     NiceGuesser,
     Mayor,
+    Prosecutor,
     Portalmaker,
     Engineer,
     PrivateInvestigator,
@@ -243,6 +243,7 @@ public enum CustomRPC
     ActivateTrap,
     DisableTrap,
     TrapperMeetingFlag,
+    Prosecute,
 
     // SetSwooper,
     SetInvisible,
@@ -404,6 +405,9 @@ public static class RPCProcedure
                     case RoleId.Mayor:
                         Mayor.mayor = player;
                         break;
+                    case RoleId.Prosecutor:
+                        Prosecutor.prosecutor = player;
+                        break;
                     case RoleId.Portalmaker:
                         Portalmaker.portalmaker = player;
                         break;
@@ -518,11 +522,6 @@ public static class RPCProcedure
                     case RoleId.Arsonist:
                         Arsonist.arsonist = player;
                         break;
-                    /*
-                case RoleId.EvilGuesser:
-                    Guesser.evilGuesser = player;
-                    break;
-                    */
                     case RoleId.NiceGuesser:
                         Guesser.niceGuesser = player;
                         break;
@@ -541,10 +540,6 @@ public static class RPCProcedure
                     case RoleId.Lawyer:
                         Lawyer.lawyer = player;
                         break;
-                    /*case RoleId.Prosecutor:
-                        Lawyer.lawyer = player;
-                        //Lawyer.isProsecutor = true;
-                        break;*/
                     case RoleId.Pursuer:
                         Pursuer.pursuer = player;
                         break;
@@ -905,14 +900,12 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 Amnisiac.amnisiac = target;
                 break;
-            /*
+            
             case RoleId.Prosecutor:
-                // Never reload Prosecutor
-                Lawyer.lawyer = amnisiac;
+                Prosecutor.prosecutor = target;
                 Amnisiac.clearAndReload();
-                Amnisiac.amnisiac = target;
                 break;
-                */
+                
             case RoleId.Mayor:
                 if (Amnisiac.resetRole) Mayor.clearAndReload();
                 Mayor.mayor = amnisiac;
@@ -1389,6 +1382,12 @@ public static class RPCProcedure
 
                 Mimic.hasMimic = true;
                 break;
+                
+            case RoleId.Prosecutor:
+                if (Amnisiac.resetRole) Prosecutor.clearAndReload();
+                Prosecutor.prosecutor = Mimic.mimic;
+                Mimic.hasMimic = true;
+                break;
 
             case RoleId.Trapper:
                 if (Amnisiac.resetRole) Trapper.clearAndReload();
@@ -1712,10 +1711,18 @@ public static class RPCProcedure
     {
         var player = Helpers.playerById(targetId);
         if (player == null) return;
-        if (Executioner.target == player && Executioner.executioner != null && !Executioner.executioner.Data.IsDead && Lawyer.lawyer == null)
+        if (Executioner.target == player && Executioner.executioner != null && !Executioner.executioner.Data.IsDead)
         {
-            Lawyer.lawyer = Executioner.executioner;
-            Executioner.clearAndReload();
+            if (Lawyer.lawyer == null && Executioner.promotesToLawyer)
+            {
+                Lawyer.lawyer = Executioner.executioner;
+                Executioner.clearAndReload();
+            }
+            else if (!Executioner.promotesToLawyer && Pursuer.pursuer == null)
+            {
+                Pursuer.pursuer = Executioner.executioner;
+                Executioner.clearAndReload();
+            }
         }
         if (!Jackal.canCreateSidekickFromImpostor && player.Data.Role.IsImpostor)
         {
@@ -1771,6 +1778,7 @@ public static class RPCProcedure
             Guesser.evilGuesser.RemoveAll(x => x.PlayerId == player.PlayerId);
         if (player == Swooper.swooper) Swooper.clearAndReload();
         if (player == Mayor.mayor) Mayor.clearAndReload();
+        if (player == Prosecutor.prosecutor) Prosecutor.clearAndReload();
         if (player == Portalmaker.portalmaker) Portalmaker.clearAndReload();
         if (player == Engineer.engineer) Engineer.clearAndReload();
         if (player == PrivateInvestigator.privateInvestigator) PrivateInvestigator.clearAndReload();
@@ -2725,7 +2733,7 @@ public static class RPCProcedure
         }
         catch
         {
-            System.Console.WriteLine("Chat Notification Overlay is Detected");
+            Message("Chat Notification Overlay is Detected");
         }
     }
 
@@ -3588,6 +3596,18 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.TrapperMeetingFlag:
                 RPCProcedure.trapperMeetingFlag();
+                break;
+
+            case CustomRPC.Prosecute:
+                var host = reader.ReadBoolean();
+                if (host && AmongUsClient.Instance.AmHost)
+                {
+                    Prosecutor.ProsecuteThisMeeting = true;
+                }
+                else if (!host && !AmongUsClient.Instance.AmHost)
+                {
+                    Prosecutor.ProsecuteThisMeeting = true;
+                }
                 break;
         }
 

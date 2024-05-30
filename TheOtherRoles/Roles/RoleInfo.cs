@@ -48,7 +48,6 @@ public class RoleInfo
     public static RoleInfo vulture = new("Vulture", Vulture.color, "VultureIntroDesc", "VultureShortDesc", RoleId.Vulture, true);
     public static RoleInfo lawyer = new("Lawyer", Lawyer.color, "LawyerIntroDesc", "LawyerShortDesc", RoleId.Lawyer, true);
     public static RoleInfo executioner = new("Executioner", Lawyer.color, "ExecutionerIntroDesc", "ExecutionerShortDesc", RoleId.Executioner, true);
-    //public static RoleInfo prosecutor = new("Prosecutor", Lawyer.color, "ProsecutorIntroDesc", "ProsecutorShortDesc", RoleId.Prosecutor, true);
     public static RoleInfo pursuer = new("Pursuer", Pursuer.color, "PursuerIntroDesc", "PursuerShortDesc", RoleId.Pursuer, true);
     public static RoleInfo jackal = new("Jackal", Jackal.color, "JackalIntroDesc", "JackalShortDesc", RoleId.Jackal, true);
     public static RoleInfo sidekick = new("Sidekick", Sidekick.color, "SidekickIntroDesc", "SidekickShortDesc", RoleId.Sidekick, true);
@@ -63,6 +62,7 @@ public class RoleInfo
     public static RoleInfo crewmate = new("Crewmate", Color.white, "CrewmateIntroDesc", "CrewmateShortDesc", RoleId.Crewmate);
     public static RoleInfo goodGuesser = new("Vigilante", Guesser.color, "VigilanteIntroDesc", "VigilanteShortDesc", RoleId.NiceGuesser);
     public static RoleInfo mayor = new("Mayor", Mayor.color, "MayorIntroDesc", "MayorShortDesc", RoleId.Mayor);
+    public static RoleInfo prosecutor = new("Prosecutor", Prosecutor.color, "ProsecutorIntroDesc", "ProsecutorShortDesc", RoleId.Prosecutor);
     public static RoleInfo portalmaker = new("Portalmaker", Portalmaker.color, "PortalmakerIntroDesc", "PortalmakerShortDesc", RoleId.Portalmaker);
     public static RoleInfo engineer = new("Engineer", Engineer.color, "EngineerIntroDesc", "EngineerShortDesc", RoleId.Engineer);
     public static RoleInfo privateInvestigator = new("PrivateInvestigator",
@@ -154,7 +154,6 @@ public class RoleInfo
         vulture,
         lawyer,
         executioner,
-        //prosecutor,
         pursuer,
         doomsayer,
         arsonist,
@@ -169,6 +168,7 @@ public class RoleInfo
         crewmate,
         goodGuesser,
         mayor,
+        prosecutor,
         portalmaker,
         engineer,
         privateInvestigator,
@@ -349,7 +349,7 @@ public class RoleInfo
         if (p == Vulture.vulture) infos.Add(vulture);
         if (p == Medium.medium) infos.Add(medium);
         if (p == Lawyer.lawyer) infos.Add(lawyer);
-        //if (p == Lawyer.lawyer && Lawyer.isProsecutor) infos.Add(prosecutor);
+        if (p == Prosecutor.prosecutor) infos.Add(prosecutor);
         if (p == Executioner.executioner && Executioner.executioner) infos.Add(executioner);
         if (p == Trapper.trapper) infos.Add(trapper);
         if (p == Prophet.prophet) infos.Add(prophet);

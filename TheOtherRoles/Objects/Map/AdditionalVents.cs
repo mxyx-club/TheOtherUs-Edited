@@ -39,7 +39,7 @@ public class AdditionalVents
         if (flag) return;
         flag = true;
         if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
-        System.Console.WriteLine("AddAdditionalVents");
+        Info("AddAdditionalVents");
 
         switch (GameOptionsManager.Instance.currentNormalGameOptions.MapId)
         {
@@ -81,7 +81,7 @@ public class AdditionalVents
 
     public static void clearAndReload()
     {
-        System.Console.WriteLine("additionalVentsClearAndReload");
+        Info("additionalVentsClearAndReload");
         flag = false;
         AllVents = [];
     }

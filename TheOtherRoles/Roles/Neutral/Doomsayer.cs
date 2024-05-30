@@ -12,7 +12,7 @@ public static class Doomsayer
 {
     public static PlayerControl doomsayer;
 
-    public static Color color = new(0f, 1f, 0.5f, 1f);
+    public static Color color = new Color32(0, 255, 128, byte.MaxValue);
     public static PlayerControl currentTarget;
     public static List<PlayerControl> playerTargetinformation = new();
     public static float cooldown = 30f;

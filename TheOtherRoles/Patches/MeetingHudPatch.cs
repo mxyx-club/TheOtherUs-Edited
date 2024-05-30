@@ -653,10 +653,8 @@ internal class MeetingHudPatch
 
                 var additionalVotes = Mayor.mayor != null &&
                                       Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId && Mayor.voteTwice ? 2 : 1; // Mayor vote
-                if (dictionary.TryGetValue(playerVoteArea.VotedFor, out var currentVotes))
-                    dictionary[playerVoteArea.VotedFor] = currentVotes + additionalVotes;
-                else
-                    dictionary[playerVoteArea.VotedFor] = additionalVotes;
+                if (dictionary.TryGetValue(playerVoteArea.VotedFor, out var currentVotes)) dictionary[playerVoteArea.VotedFor] = currentVotes + additionalVotes;
+                else dictionary[playerVoteArea.VotedFor] = additionalVotes;
             }
 
             // Swapper swap votes
@@ -678,8 +676,6 @@ internal class MeetingHudPatch
                 (dictionary[swapped1.TargetPlayerId], dictionary[swapped2.TargetPlayerId]) = (
                     dictionary[swapped2.TargetPlayerId], dictionary[swapped1.TargetPlayerId]);
             }
-
-
             return dictionary;
         }
 
@@ -954,13 +950,11 @@ internal class MeetingHudPatch
             // Resett Bait list
             Bait.active = new Dictionary<DeadPlayer, float>();
             // Save AntiTeleport position, if the player is able to move (i.e. not on a ladder or a gap thingy)
-            if (CachedPlayer.LocalPlayer.PlayerPhysics.enabled && (CachedPlayer.LocalPlayer.PlayerControl.moveable ||
-                                                                   CachedPlayer.LocalPlayer.PlayerControl.inVent
-                                                                   || HudManagerStartPatch.hackerVitalsButton
-                                                                       .isEffectActive ||
-                                                                   HudManagerStartPatch.hackerAdminTableButton
-                                                                       .isEffectActive || HudManagerStartPatch
-                                                                       .securityGuardCamButton.isEffectActive
+            if (CachedPlayer.LocalPlayer.PlayerPhysics.enabled && (CachedPlayer.LocalPlayer.PlayerControl.moveable
+                                                                   || CachedPlayer.LocalPlayer.PlayerControl.inVent
+                                                                   || HudManagerStartPatch.hackerVitalsButton.isEffectActive
+                                                                   || HudManagerStartPatch.hackerAdminTableButton.isEffectActive
+                                                                   || HudManagerStartPatch.securityGuardCamButton.isEffectActive
                                                                    || (Portal.isTeleporting &&
                                                                        Portal.teleportedPlayers.Last().playerId ==
                                                                        CachedPlayer.LocalPlayer.PlayerId)))

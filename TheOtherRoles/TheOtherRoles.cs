@@ -25,6 +25,7 @@ public static partial class TheOtherRoles
 
         Jester.clearAndReload();
         Mayor.clearAndReload();
+        Prosecutor.clearAndReload();
         Portalmaker.clearAndReload();
         Poucher.clearAndReload();
         Mimic.clearAndReload();

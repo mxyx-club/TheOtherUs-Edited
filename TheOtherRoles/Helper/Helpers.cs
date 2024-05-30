@@ -296,7 +296,7 @@ public static class Helpers
         RoleManager.Instance.SetRole(player, RoleTypes.Impostor);
         player.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown);
 
-        System.Console.WriteLine("PROOF I AM IMP VANILLA ROLE: " + player.Data.Role.IsImpostor);
+        Message("PROOF I AM IMP VANILLA ROLE: " + player.Data.Role.IsImpostor);
 
         foreach (var player2 in PlayerControl.AllPlayerControls)
             if (player2.Data.Role.IsImpostor && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
@@ -354,7 +354,7 @@ public static class Helpers
         }
         catch
         {
-            System.Console.WriteLine("Error loading sprite from path: " + path);
+            Error("Error loading sprite from path: " + path);
         }
 
         return null;
@@ -388,7 +388,7 @@ public static class Helpers
         }
         catch
         {
-            //System.Console.WriteLine("Error loading texture from resources: " + path);
+            Error("Error loading texture from resources: " + path);
         }
 
         return null;

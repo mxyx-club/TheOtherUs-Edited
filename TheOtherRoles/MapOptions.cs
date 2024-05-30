@@ -7,6 +7,8 @@ namespace TheOtherRoles;
 
 internal static class MapOptions
 {
+    public static float ButtonCooldown => CustomOptionHolder.resteButtonCooldown.getFloat();
+
     // Set values
     public static int maxNumberOfMeetings = 10;
     public static bool blockSkippingInEmergencyMeetings;
@@ -31,7 +33,6 @@ internal static class MapOptions
     public static bool ShowVentsOnMeetingMap;
     public static bool enableDebugLogMode;
     public static bool disableMedscanWalking;
-    public static float ButtonCooldown => CustomOptionHolder.resteButtonCooldown.getFloat();
 
     public static int restrictDevices;
 

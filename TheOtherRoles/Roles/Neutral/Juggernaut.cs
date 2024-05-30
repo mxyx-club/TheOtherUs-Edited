@@ -5,7 +5,7 @@ namespace TheOtherRoles.Roles.Neutral;
 public static class Juggernaut
 {
     public static PlayerControl juggernaut;
-    public static Color color = new(0.55f, 0f, 0.3f, byte.MaxValue);
+    public static Color color = new Color32(140, 0, 77, byte.MaxValue);
     public static PlayerControl currentTarget;
 
     public static float cooldown = 30f;

@@ -431,14 +431,18 @@ internal class ExileControllerMessagePatch
                 // Exile role text
                 if (id == StringNames.ExileTextPN || id == StringNames.ExileTextSN || id == StringNames.ExileTextPP ||
                     id == StringNames.ExileTextSP)
-                    __result = player.Data.PlayerName + " was The " + string.Join(" ",
-                        RoleInfo.getRoleInfoForPlayer(player, false).Select(x => x.name).ToArray());
+                    __result = $"{player.Data.PlayerName} 的职业是 {string.Join(" ", RoleInfo.getRoleInfoForPlayer(player, false).Select(x => x.name).ToArray())}";
                 // Hide number of remaining impostors on Jester win
                 if (id == StringNames.ImpostorsRemainP || id == StringNames.ImpostorsRemainS)
                     if (Jester.jester != null && player.PlayerId == Jester.jester.PlayerId)
                         __result = "";
-                if (Tiebreaker.isTiebreak) __result += " (破平)";
-                Tiebreaker.isTiebreak = false;
+                if (Tiebreaker.isTiebreak)
+                {
+                    __result += " (破平)";
+                    Message("破平");
+                    Tiebreaker.isTiebreak = false;
+                }
+                if (Prosecutor.ProsecuteThisMeeting) __result += " (被起诉)";
             }
         }
         catch

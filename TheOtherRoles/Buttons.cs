@@ -327,8 +327,8 @@ internal static class HudManagerStartPatch
                 }
                 catch (NullReferenceException)
                 {
-                    System.Console.WriteLine(
-                        "[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine"); // Note: idk what this is good for, but i copied it from above /gendelo
+                    // Note: idk what this is good for, but i copied it from above /gendelo
+                    Warn("[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine"); 
                 }
 
             // Non Custom (Vanilla) Buttons. The Originals are disabled / hidden in UpdatePatch.cs already, just need to replace them. Can use any button, as we replace onclick etc anyways.

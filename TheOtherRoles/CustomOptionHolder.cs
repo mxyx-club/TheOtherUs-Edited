@@ -170,6 +170,9 @@ public class CustomOptionHolder
     public static CustomOption mayorSabotageRemoteMeetings;
     public static CustomOption mayorChooseSingleVote;
 
+    public static CustomOption prosecutorSpawnRate;
+    public static CustomOption prosecutorDiesOnIncorrectPros;
+
     public static CustomOption portalmakerSpawnRate;
     public static CustomOption portalmakerCooldown;
     public static CustomOption portalmakerUsePortalCooldown;
@@ -967,7 +970,7 @@ public class CustomOptionHolder
         executionerSpawnRate = Create(20190, Types.Neutral, cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(20191, Types.Neutral, "处刑者可召开会议", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(20191, Types.Neutral, "目标职业变更时处刑者可以晋升为律师", true, executionerSpawnRate);
-        executionerOnTargetDead = Create(20192, Types.Neutral, "处刑目标死亡后变为", [cs(Pursuer.color, "Pursuer".Translate()), cs(Jester.color, "Jester".Translate()), cs(Amnisiac.color, "Amnisiac".Translate()), "船员"], executionerSpawnRate);
+        //executionerOnTargetDead = Create(20192, Types.Neutral, "处刑目标死亡后变为", [cs(Pursuer.color, "Pursuer".Translate()), cs(Jester.color, "Jester".Translate()), cs(Amnisiac.color, "Amnisiac".Translate()), "船员"], executionerSpawnRate);
 
         swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
         swooperKillCooldown = Create(20151, Types.Neutral, "击杀冷却", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
@@ -1026,6 +1029,9 @@ public class CustomOptionHolder
         mayorMaxRemoteMeetings = Create(30114, Types.Crewmate, "远程召开会议可用次数", 1f, 1f, 5f, 1f, mayorMeetingButton);
         mayorSabotageRemoteMeetings = Create(30115, Types.Crewmate, "可在破坏时使用\n无效设置", false, mayorMeetingButton);
         mayorChooseSingleVote = Create(30116, Types.Crewmate, "市长可选择投单票", ["关闭", "投票前选择", "会议结束前选择"], mayorSpawnRate);
+
+        prosecutorSpawnRate = Create(30370, Types.Crewmate, cs(Prosecutor.color, "Prosecutor"), rates, null, true);
+        prosecutorDiesOnIncorrectPros = Create(30371, Types.Crewmate, "驱逐船员会自杀", true, prosecutorSpawnRate);
 
         engineerSpawnRate = Create(30120, Types.Crewmate, cs(Engineer.color, "Engineer"), rates, null, true);
         engineerRemoteFix = Create(30121, Types.Crewmate, "可远程修理破坏", true, engineerSpawnRate);
