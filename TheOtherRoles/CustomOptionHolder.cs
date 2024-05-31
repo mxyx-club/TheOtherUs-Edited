@@ -17,7 +17,6 @@ public class CustomOptionHolder
         ["预设 1", "预设 2", "预设 3", "Skeld预设", "Mira预设", "Polus预设", "Airship预设", "Fungle预设", "Submerged预设"];
 
     public static CustomOption presetSelection;
-    public static CustomOption activateRoles;
     public static CustomOption crewmateRolesCountMin;
     public static CustomOption crewmateRolesCountMax;
     public static CustomOption crewmateRolesFill;
@@ -699,7 +698,6 @@ public class CustomOptionHolder
 
         // Role Options
         presetSelection = Create(0, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "presetSelection"), presets, null, true);
-        activateRoles = Create(1, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "activateRoles"), true, null, true);
 
         anyPlayerCanStopStart = Create(3, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "anyPlayerCanStopStart"), false, null, false);
 
@@ -716,7 +714,7 @@ public class CustomOptionHolder
 
         //-------------------------- Other options 1 - 599 -------------------------- //
 
-        resteButtonCooldown = Create(20, Types.General, "resteButtonCooldown", 10f, 2.5f, 30f, 2.5f, null, true);
+        resteButtonCooldown = Create(20, Types.General, "resteButtonCooldown", 20f, 2.5f, 30f, 2.5f, null, true);
         maxNumberOfMeetings = Create(21, Types.General, "maxNumberOfMeetings", 10, 0, 15, 1, null, true);
         blockSkippingInEmergencyMeetings = Create(22, Types.General, "blockSkippingInEmergencyMeetings", false);
         noVoteIsSelfVote = Create(23, Types.General, "noVoteIsSelfVote", false, blockSkippingInEmergencyMeetings);
@@ -1200,7 +1198,7 @@ public class CustomOptionHolder
 
         modifierDisperser = Create(40100, Types.Modifier, cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
         //modifierDisperserRemainingDisperses = CustomOption.Create(40102, Types.Modifier, "分散次数", 1f,1f,5f,1f, modifierDisperser);
-        modifierDisperserDispersesToVent = Create(40101, Types.Modifier, "分散至管道位置", false, modifierDisperser);
+        modifierDisperserDispersesToVent = Create(40101, Types.Modifier, "分散至管道位置", true, modifierDisperser);
 
         modifierLastImpostor = Create(40110, Types.Modifier, cs(Palette.ImpostorRed, "LastImpostor"), false, null, true);
         modifierLastImpostorDeduce = Create(40111, Types.Modifier, "绝境者击杀冷却减少", 5f, 2.5f, 15f, 2.5f, modifierLastImpostor);

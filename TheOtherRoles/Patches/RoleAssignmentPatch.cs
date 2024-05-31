@@ -16,9 +16,7 @@ internal class RoleOptionsDataGetNumPerGamePatch
 {
     public static void Postfix(ref int __result)
     {
-        if (CustomOptionHolder.activateRoles.getBool() &&
-            GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal)
-            __result = 0; // Deactivate Vanilla Roles if the mod roles are active
+        if (GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal) __result = 0; // Deactivate Vanilla Roles if the mod roles are active
     }
 }
 
@@ -73,11 +71,10 @@ internal class RoleManagerSelectRolesPatch
             (byte)CustomRPC.ResetVaribles, SendOption.Reliable);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.resetVariables();
+        // Don't assign Roles in Hide N Seek
         if (MapOptions.gameMode == CustomGamemodes.HideNSeek || MapOptions.gameMode == CustomGamemodes.PropHunt ||
-            GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek)
-            return; // Don't assign Roles in Hide N Seek
-        if (CustomOptionHolder.activateRoles.getBool()) // Don't assign Roles in Tutorial or if deactivated
-            assignRoles();
+            GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
+        assignRoles();
     }
 
     private static void assignRoles()

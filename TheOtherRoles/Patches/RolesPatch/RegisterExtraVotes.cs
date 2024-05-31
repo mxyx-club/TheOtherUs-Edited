@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TheOtherRoles.Utilities;
+using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches.RolesPatch;
 
@@ -8,6 +11,7 @@ public class RegisterExtraVotes
 {
     public static Dictionary<byte, int> CalculateAllVotes(MeetingHud __instance)
     {
+        Message("开始计票");
         var dictionary = new Dictionary<byte, int>();
         for (var i = 0; i < __instance.playerStates.Length; i++)
         {
@@ -78,7 +82,47 @@ public class RegisterExtraVotes
             Message($"是否平票 = {tie}");
         }
     }
-    /*
+
+
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
+    public static class CheckForEndVoting
+    {
+        private static bool CheckVoted(PlayerVoteArea playerVoteArea)
+        {
+            if (playerVoteArea.AmDead || playerVoteArea.DidVote)
+                return true;
+
+            var playerInfo = GameData.Instance.GetPlayerById(playerVoteArea.TargetPlayerId);
+            if (playerInfo == null)
+                return true;
+
+            return true;
+        }
+        public static bool Prefix(MeetingHud __instance)
+        {
+            if (__instance.playerStates.All(ps => ps.AmDead || ps.DidVote && CheckVoted(ps)))
+            {
+
+                var self = CalculateAllVotes(__instance);
+                var array = new Il2CppStructArray<MeetingHud.VoterState>(__instance.playerStates.Length);
+                var maxIdx = self.MaxPair(out var tie);
+                var exiled = GameData.Instance.AllPlayers.ToArray().FirstOrDefault(v => !tie && v.PlayerId == maxIdx.Key);
+                for (var i = 0; i < __instance.playerStates.Length; i++)
+                {
+                    var playerVoteArea = __instance.playerStates[i];
+                    array[i] = new MeetingHud.VoterState
+                    {
+                        VoterId = playerVoteArea.TargetPlayerId,
+                        VotedForId = playerVoteArea.VotedFor
+                    };
+                    __instance.RpcVotingComplete(array, exiled, tie);
+                }
+            }
+            return false;
+        }
+    }
+
+    // 增加投票动画
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.PopulateResults))]
     public static class PopulateResults
     {
@@ -168,5 +212,5 @@ public class RegisterExtraVotes
             }
             return false;
         }
-    }*/
+    }
 }

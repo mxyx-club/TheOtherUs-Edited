@@ -357,7 +357,6 @@ internal class IntroPatch
 
         public static bool Prefix(IntroCutscene __instance)
         {
-            if (!CustomOptionHolder.activateRoles.getBool()) return true;
             seed = rnd.Next(5000);
             FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(1f,
                 new Action<float>(p => { SetRoleTexts(__instance); })));
