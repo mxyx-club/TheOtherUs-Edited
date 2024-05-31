@@ -1,5 +1,4 @@
-﻿using TheOtherRoles.Roles.Neutral;
-using TheOtherRoles.Utilities;
+﻿using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Impostor;

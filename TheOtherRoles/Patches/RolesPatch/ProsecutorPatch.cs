@@ -1,5 +1,4 @@
 ﻿using Hazel;
-using TheOtherRoles.Roles.Crewmate;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;

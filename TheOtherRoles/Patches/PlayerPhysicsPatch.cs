@@ -1,5 +1,4 @@
 using InnerNet;
-using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 

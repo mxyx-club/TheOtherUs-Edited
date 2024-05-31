@@ -1,5 +1,4 @@
-﻿using TheOtherRoles.Roles.Neutral;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace TheOtherRoles.Roles.Modifier;
 

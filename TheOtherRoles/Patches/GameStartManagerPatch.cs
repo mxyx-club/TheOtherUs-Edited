@@ -4,7 +4,6 @@ using System.Linq;
 using Hazel;
 using InnerNet;
 using Reactor.Utilities.Extensions;
-using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
@@ -234,12 +233,12 @@ public class GameStartManagerPatch
                         SceneChanger.ChangeScene("MainMenu");
                     }
 
-                    __instance.GameStartText.text = $"<color=#FF0000FF>{"HostNoTou".Translate()} {Math.Round(10 - kickingTimer)}s</color>";
+                    __instance.GameStartText.text = $"{"HostNoTou".Translate()} {Math.Round(10 - kickingTimer)}s</color>";
                     __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + (Vector3.up * 2);
                 }
                 else if (versionMismatch)
                 {
-                    __instance.GameStartText.text = $"<color=#FF0000FF>{"DifferentTouVersions".Translate()}\n</color>" + message;
+                    __instance.GameStartText.text = $"{"DifferentTouVersions".Translate()}\n</color>" + message;
                     __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + (Vector3.up * 2);
                 }
                 else

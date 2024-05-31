@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 

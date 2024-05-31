@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using TheOtherRoles.Roles.Crewmate;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;

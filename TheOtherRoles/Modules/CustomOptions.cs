@@ -9,8 +9,6 @@ using BepInEx.Unity.IL2CPP;
 using Hazel;
 using Il2CppSystem.Linq;
 using Reactor.Utilities.Extensions;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TheOtherRoles.Roles.Crewmate;
 using TheOtherRoles.Utilities;
 
 namespace TheOtherRoles.Patches.RolesPatch;
@@ -20,6 +19,7 @@ public class RegisterExtraVotes
                 || playerVoteArea.VotedFor == PlayerVoteArea.MissedVote
                 || playerVoteArea.VotedFor == PlayerVoteArea.DeadVote)
             {
+                Message("投票被无效");
                 Prosecutor.ProsecuteThisMeeting = false;
                 continue;
             }

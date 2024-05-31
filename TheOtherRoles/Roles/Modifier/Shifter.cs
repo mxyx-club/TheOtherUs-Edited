@@ -1,6 +1,4 @@
-﻿using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Neutral;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace TheOtherRoles.Roles.Modifier;
 public static class Shifter

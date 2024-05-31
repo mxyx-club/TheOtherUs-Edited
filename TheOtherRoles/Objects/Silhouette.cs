@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Reactor.Utilities.Extensions;
-using TheOtherRoles.Roles.Impostor;
 using UnityEngine;
 
 namespace TheOtherRoles.Objects;

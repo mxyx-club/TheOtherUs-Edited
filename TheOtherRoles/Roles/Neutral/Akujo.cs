@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using TheOtherRoles.Roles.Modifier;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Neutral;

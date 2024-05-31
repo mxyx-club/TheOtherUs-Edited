@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using TheOtherRoles.Roles;
 
 namespace TheOtherRoles.Utilities;
 public class VoteData

@@ -1,12 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using InnerNet;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Modifier;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
@@ -222,6 +219,22 @@ public class RoleInfo
         shifter,
     ];
 
+    private static readonly List<RoleInfo> _AllRoleInfo = [];
+    public static IReadOnlyList<RoleInfo> AllRoleInfo => _AllRoleInfo;
+    public RoleInfo()
+    {
+        _AllRoleInfo.Add(this);
+    }
+    public Color Color { get; set; }
+    public string Name { get; set; }
+    public RoleId RoleId { get; set; }
+    public string Description { get; set; }
+    public string IntroInfo { get; set; }
+    public RoleTeam RoleTeams { get; set; }
+    public CustomRoleType RoleType { get; set; } = CustomRoleType.Main;
+    public Func<RoleBase> GetRole { get; set; }
+    public Func<PlayerControl, RoleControllerBase> CreateRoleController { get; set; }
+    public Type RoleClassType { get; set; }
 
     private static string ReadmePage = "";
     public Color color;
@@ -538,5 +551,21 @@ public class RoleInfo
         var index = ReadmePage.IndexOf($"## {roleInfo.name}");
         var endindex = ReadmePage.Substring(index).IndexOf("### Game Options");
         return ReadmePage.Substring(index, endindex);
+    }
+
+    public enum RoleTeam
+    {
+        Crewmate,
+        Impostor,
+        Neutral,
+        Special,
+    }
+
+    [Flags]
+    public enum CustomRoleType
+    {
+        Main,
+        Modifier,
+        MainAndModifier = Main | Modifier
     }
 }

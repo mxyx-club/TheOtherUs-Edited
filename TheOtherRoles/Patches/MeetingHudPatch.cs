@@ -5,11 +5,6 @@ using AmongUs.QuickChat;
 using Hazel;
 using Reactor.Utilities;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Roles;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Modifier;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -401,7 +396,7 @@ internal class MeetingHudPatch
                         // Reset the GUI
                         __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
                         Object.Destroy(container.gameObject);
-                        if (RoleHelpers.CanMultipleShots(dyingTarget))
+                        if (CanMultipleShots(dyingTarget))
                             __instance.playerStates.ToList().ForEach(x =>
                             {
                                 if (x.TargetPlayerId == dyingTarget.PlayerId &&

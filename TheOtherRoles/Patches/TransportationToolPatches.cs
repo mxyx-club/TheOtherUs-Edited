@@ -1,6 +1,4 @@
 ﻿using System;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Modifier;
 using TheOtherRoles.Utilities;
 
 namespace TheOtherRoles.Patches;

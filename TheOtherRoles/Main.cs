@@ -12,7 +12,6 @@ using Reactor.Networking.Attributes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Modules.CustomHats;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Roles;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
