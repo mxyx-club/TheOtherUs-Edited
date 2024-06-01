@@ -24,7 +24,7 @@ public static class Trapper
     public static Sprite getButtonSprite()
     {
         if (trapButtonSprite) return trapButtonSprite;
-        trapButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Trapper_Place_Button.png", 115f);
+        trapButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Trapper_Place_Button.png", 115f);
         return trapButtonSprite;
     }
 

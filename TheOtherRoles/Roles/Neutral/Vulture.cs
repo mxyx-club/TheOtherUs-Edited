@@ -21,7 +21,7 @@ public static class Vulture
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.VultureButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.VultureButton.png", 115f);
         return buttonSprite;
     }
 

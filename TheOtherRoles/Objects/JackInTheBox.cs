@@ -47,7 +47,7 @@ public class JackInTheBox
         vent.GetComponent<SpriteAnim>()?.Stop();
         vent.Id = MapUtilities.CachedShipStatus.AllVents.Select(x => x.Id).Max() + 1; // Make sure we have a unique id
         ventRenderer = vent.GetComponent<SpriteRenderer>();
-        if (Helpers.isFungle())
+        if (isFungle())
         {
             ventRenderer = vent.transform.GetChild(3).GetComponent<SpriteRenderer>();
             var animator = vent.transform.GetChild(3).GetComponent<SpriteAnim>();
@@ -77,7 +77,7 @@ public class JackInTheBox
         index = Mathf.Clamp(index, 0, boxAnimationSprites.Length - 1);
         if (boxAnimationSprites[index] == null)
             boxAnimationSprites[index] =
-                Helpers.loadSpriteFromResources(
+                loadSpriteFromResources(
                     $"TheOtherRoles.Resources.TricksterAnimation.trickster_box_00{index + 1:00}.png", 175f);
         return boxAnimationSprites[index];
     }

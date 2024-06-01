@@ -52,7 +52,7 @@ namespace TheOtherRoles.Patches
 
             if (!HideNSeek.isHideNSeekGM || (HideNSeek.isHideNSeekGM && !Hunter.lightActive.Contains(player.PlayerId)))
                 // If player is a role which has Impostor vision
-                if (Helpers.hasImpVision(player))
+                if (hasImpVision(player))
                 {
                     //__result = __instance.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.ImpostorLightMod;
                     __result = GetNeutralLightRadius(__instance, true);

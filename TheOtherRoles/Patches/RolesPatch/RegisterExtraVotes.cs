@@ -136,7 +136,7 @@ public class RegisterExtraVotes
             var amountOfSkippedVoters = 0;
 
             var isProsecuting = false;
-            if(Prosecutor.prosecutor == CachedPlayer.LocalPlayer.PlayerControl)
+            if (Prosecutor.prosecutor == CachedPlayer.LocalPlayer.PlayerControl)
             {
                 if (Prosecutor.prosecutor.Data.IsDead || Prosecutor.prosecutor.Data.Disconnected) return false;
                 if (Prosecutor.ProsecuteThisMeeting)

@@ -54,14 +54,14 @@ internal class MeetingHudPatch
             case 1:
                 selections[i] = true;
                 renderer.color = Color.yellow;
-                meetingExtraButtonLabel.text = Helpers.cs(Color.yellow, "确认换票");
+                meetingExtraButtonLabel.text = cs(Color.yellow, "确认换票");
                 break;
             case 2 when !selections[i]:
                 return;
             case 2:
                 renderer.color = Color.red;
                 selections[i] = false;
-                meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认换票");
+                meetingExtraButtonLabel.text = cs(Color.red, "确认换票");
                 break;
         }
     }
@@ -103,7 +103,7 @@ internal class MeetingHudPatch
             AmongUsClient.Instance.FinishRpcImmediately(writer);
 
             RPCProcedure.swapperSwap(firstPlayer.TargetPlayerId, secondPlayer.TargetPlayerId);
-            meetingExtraButtonLabel.text = Helpers.cs(Color.green, "换票成功!");
+            meetingExtraButtonLabel.text = cs(Color.green, "换票成功!");
             Swapper.charges--;
             meetingExtraButtonText.text = $"换票次数: {Swapper.charges}";
         }
@@ -151,7 +151,7 @@ internal class MeetingHudPatch
         }
 
         meetingExtraButtonText.text = $"换票次数: {Swapper.charges}";
-        meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认交换");
+        meetingExtraButtonLabel.text = cs(Color.red, "确认交换");
     }
 
     private static void mayorToggleVoteTwice(MeetingHud __instance)
@@ -176,8 +176,8 @@ internal class MeetingHudPatch
         writer.Write(Mayor.voteTwice);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
 
-        meetingExtraButtonLabel.text = Helpers.cs(Mayor.color,
-            "双倍票数: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "开") : Helpers.cs(Color.red, "关")));
+        meetingExtraButtonLabel.text = cs(Mayor.color,
+            "双倍票数: " + (Mayor.voteTwice ? cs(Color.green, "开") : cs(Color.red, "关")));
     }
 
     private static void guesserOnClick(int buttonTarget, MeetingHud __instance)
@@ -302,7 +302,7 @@ internal class MeetingHudPatch
             int row = i / 5, col = i % 5;
             buttonParent.localPosition = new Vector3(-3.47f + (1.55f * col), 1.5f - (0.35f * row), -5);
             buttonParent.localScale = new Vector3(0.45f, 0.45f, 1f);
-            label.text = Helpers.cs(roleInfo.color, roleInfo.name);
+            label.text = cs(roleInfo.color, roleInfo.name);
             label.alignment = TextAlignmentOptions.Center;
             label.transform.localPosition = new Vector3(0, 0, label.transform.localPosition.z);
             label.transform.localScale *= 1.7f;
@@ -310,7 +310,7 @@ internal class MeetingHudPatch
 
             button.GetComponent<PassiveButton>().OnClick.RemoveAllListeners();
             if (!CachedPlayer.LocalPlayer.Data.IsDead &&
-                !Helpers.playerById(__instance.playerStates[buttonTarget].TargetPlayerId).Data.IsDead)
+                !playerById(__instance.playerStates[buttonTarget].TargetPlayerId).Data.IsDead)
                 button.GetComponent<PassiveButton>().OnClick.AddListener((Action)(() =>
                 {
                     if (selectedButton != button)
@@ -321,7 +321,7 @@ internal class MeetingHudPatch
                     }
                     else
                     {
-                        var focusedTarget = Helpers.playerById(__instance.playerStates[buttonTarget].TargetPlayerId);
+                        var focusedTarget = playerById(__instance.playerStates[buttonTarget].TargetPlayerId);
                         if
                         (
                             __instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)
@@ -358,7 +358,7 @@ internal class MeetingHudPatch
 
                         if (focusedTarget == Indomitable.indomitable)
                         {
-                            Helpers.showFlash(new Color32(255, 197, 97, byte.MinValue));
+                            showFlash(new Color32(255, 197, 97, byte.MinValue));
                             __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
                             Object.Destroy(container.gameObject);
 
@@ -496,7 +496,7 @@ internal class MeetingHudPatch
             if (addSwapperButtons)
             {
                 meetingExtraButtonLabel.transform.localScale *= 1.7f;
-                meetingExtraButtonLabel.text = Helpers.cs(Color.red, "确认交换");
+                meetingExtraButtonLabel.text = cs(Color.red, "确认交换");
             }
             else
             {
@@ -506,8 +506,8 @@ internal class MeetingHudPatch
                     localScale.x * 1.7f,
                     localScale.x * 1.7f);
                 meetingExtraButtonLabel.transform.localScale = localScale;
-                meetingExtraButtonLabel.text = Helpers.cs(Mayor.color,
-                    "双倍票数: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "开") : Helpers.cs(Color.red, "关")));
+                meetingExtraButtonLabel.text = cs(Mayor.color,
+                    "双倍票数: " + (Mayor.voteTwice ? cs(Color.green, "开") : cs(Color.red, "关")));
             }
 
             var passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
@@ -642,7 +642,7 @@ internal class MeetingHudPatch
             {
                 if (playerVoteArea.VotedFor == 252 || playerVoteArea.VotedFor == 255 ||
                     playerVoteArea.VotedFor == 254) continue;
-                var player = Helpers.playerById(playerVoteArea.TargetPlayerId);
+                var player = playerById(playerVoteArea.TargetPlayerId);
                 if (player == null || player.Data == null || player.Data.IsDead ||
                     player.Data.Disconnected) continue;
 
@@ -972,12 +972,12 @@ internal class MeetingHudPatch
             // Blackmail target
             if (Blackmailer.blackmailed != null && Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl)
             {
-                Coroutines.Start(Helpers.BlackmailShhh());
+                Coroutines.Start(BlackmailShhh());
             }
 
             // Add Portal info into Portalmaker Chat:
             if (Portalmaker.portalmaker != null &&
-                (CachedPlayer.LocalPlayer.PlayerControl == Portalmaker.portalmaker || Helpers.shouldShowGhostInfo()) &&
+                (CachedPlayer.LocalPlayer.PlayerControl == Portalmaker.portalmaker || shouldShowGhostInfo()) &&
                 !Portalmaker.portalmaker.Data.IsDead)
                 if (Portal.teleportedPlayers.Count > 0)
                 {
@@ -994,7 +994,7 @@ internal class MeetingHudPatch
 
             // Add trapped Info into Trapper chat
             if (Trapper.trapper != null &&
-                (CachedPlayer.LocalPlayer.PlayerControl == Trapper.trapper || Helpers.shouldShowGhostInfo()) &&
+                (CachedPlayer.LocalPlayer.PlayerControl == Trapper.trapper || shouldShowGhostInfo()) &&
                 !Trapper.trapper.Data.IsDead)
             {
                 if (Trap.traps.Any(x => x.revealed))
@@ -1007,7 +1007,7 @@ internal class MeetingHudPatch
                     message = trap.trappedPlayer.Aggregate(message, (current, p) => current + Trapper.infoType switch
                     {
                         0 => RoleInfo.GetRolesString(p, false, false, true) + "\n",
-                        1 when Helpers.isEvil(p) || p.Data.Role.IsImpostor => "邪恶职业 \n",
+                        1 when isEvil(p) || p.Data.Role.IsImpostor => "邪恶职业 \n",
                         1 => "善良职业 \n",
                         _ => p.Data.PlayerName + "\n"
                     });
@@ -1096,7 +1096,7 @@ internal class MeetingHudPatch
             Terrorist.clearBomb();
 
             // Reset zoomed out ghosts
-            Helpers.toggleZoom(true);
+            toggleZoom(true);
 
             // Stop all playing sounds
             SoundEffectsManager.stopAll();
@@ -1189,7 +1189,7 @@ internal class MeetingHudPatch
             //Nothing here for now. What to do when local player who is blackmailed starts meeting
             //Coroutines.Start(BlackmailShhh());
             if (Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl)
-                Coroutines.Start(Helpers.BlackmailShhh());
+                Coroutines.Start(BlackmailShhh());
         }
     }
 }

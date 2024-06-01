@@ -26,14 +26,14 @@ public static class Witch
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SpellButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.SpellButton.png", 115f);
         return buttonSprite;
     }
 
     public static Sprite getSpelledOverlaySprite()
     {
         if (spelledOverlaySprite) return spelledOverlaySprite;
-        spelledOverlaySprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SpellButtonMeeting.png", 225f);
+        spelledOverlaySprite = loadSpriteFromResources("TheOtherRoles.Resources.SpellButtonMeeting.png", 225f);
         return spelledOverlaySprite;
     }
 

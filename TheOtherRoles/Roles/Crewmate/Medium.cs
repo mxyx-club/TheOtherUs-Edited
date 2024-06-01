@@ -29,14 +29,14 @@ public static class Medium
     public static Sprite getSoulSprite()
     {
         if (soulSprite) return soulSprite;
-        soulSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Soul.png", 500f);
+        soulSprite = loadSpriteFromResources("TheOtherRoles.Resources.Soul.png", 500f);
         return soulSprite;
     }
 
     public static Sprite getQuestionSprite()
     {
         if (question) return question;
-        question = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.MediumButton.png", 115f);
+        question = loadSpriteFromResources("TheOtherRoles.Resources.MediumButton.png", 115f);
         return question;
     }
 
@@ -120,7 +120,7 @@ public static class Medium
         else
         {
             var randomNumber = rnd.Next(4);
-            var typeOfColor = Helpers.isLighterColor(Medium.target.killerIfExisting) ? "浅" : "深";
+            var typeOfColor = isLighterColor(Medium.target.killerIfExisting) ? "浅" : "深";
             var timeSinceDeath = (float)(meetingStartTime - Medium.target.timeOfDeath).TotalMilliseconds;
             var roleString = RoleInfo.GetRolesString(Medium.target.player, false, false, false);
             if (randomNumber == 0)
@@ -148,7 +148,7 @@ public static class Medium
             {
                 case 0:
                     count = alivePlayersList.Where(pc =>
-                        pc.Data.Role.IsImpostor || Helpers.isKiller(pc) ||
+                        pc.Data.Role.IsImpostor || isKiller(pc) ||
                         new List<RoleInfo> { RoleInfo.sheriff, RoleInfo.veteren, RoleInfo.thief }
                             .Contains(RoleInfo.getRoleInfoForPlayer(pc, false).FirstOrDefault())).Count();
                     condition = "个杀手" + (count == 1 ? "" : "");
@@ -158,7 +158,7 @@ public static class Medium
                     condition = "个可以使用管道的玩家" + (count == 1 ? "" : "");
                     break;
                 case 2:
-                    count = alivePlayersList.Where(pc => Helpers.isEvil(pc) || pc == Amnisiac.amnisiac || pc == Pursuer.pursuer).Count();
+                    count = alivePlayersList.Where(pc => isEvil(pc) || pc == Amnisiac.amnisiac || pc == Pursuer.pursuer).Count();
                     condition = "名玩家" + (count == 1 ? "" : "") + "" + (count == 1 ? "是" : "是") + "非击杀型中立";
                     break;
                 case 3:

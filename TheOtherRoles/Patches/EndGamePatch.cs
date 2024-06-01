@@ -92,7 +92,7 @@ public class OnGameEndPatch
         if ((int)endGameResult.GameOverReason >= 10) endGameResult.GameOverReason = GameOverReason.ImpostorByKill;
 
         // Reset zoomed out ghosts
-        Helpers.toggleZoom(true);
+        toggleZoom(true);
     }
 
     public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
@@ -443,7 +443,7 @@ public class EndGameManagerSetUpPatch
             foreach (var roles in from data in AdditionalTempData.playerRoles
                                   where data.PlayerName == winningPlayerData2.PlayerName
                                   select poolablePlayer.cosmetics.nameText.text +=
-                         $"\n{string.Join("\n", data.Roles.Select(x => Helpers.cs(x.color, x.name)))}")
+                         $"\n{string.Join("\n", data.Roles.Select(x => cs(x.color, x.name)))}")
             {
             }
         }
@@ -530,13 +530,13 @@ public class EndGameManagerSetUpPatch
             switch (cond)
             {
                 case WinCondition.AdditionalLawyerStolenWin:
-                    textRenderer.text += $"\n{Helpers.cs(Lawyer.color, "律师代替客户胜利")}";
+                    textRenderer.text += $"\n{cs(Lawyer.color, "律师代替客户胜利")}";
                     break;
                 case WinCondition.AdditionalLawyerBonusWin:
-                    textRenderer.text += $"\n{Helpers.cs(Lawyer.color, "律师和客户胜利")}";
+                    textRenderer.text += $"\n{cs(Lawyer.color, "律师和客户胜利")}";
                     break;
                 case WinCondition.AdditionalAlivePursuerWin:
-                    textRenderer.text += $"\n{Helpers.cs(Pursuer.color, "起诉人存活")}";
+                    textRenderer.text += $"\n{cs(Pursuer.color, "起诉人存活")}";
                     break;
             }
 
@@ -569,7 +569,7 @@ public class EndGameManagerSetUpPatch
                         : "";
                     if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(击杀: {data.Kills})</color>";
                     roleSummaryText.AppendLine(
-                        $"{Helpers.cs(data.IsAlive ? Color.white : new Color(.7f, .7f, .7f), data.PlayerName)} - {roles}{taskInfo}");
+                        $"{cs(data.IsAlive ? Color.white : new Color(.7f, .7f, .7f), data.PlayerName)} - {roles}{taskInfo}");
                 }
 
                 var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
@@ -768,7 +768,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
             !(statistics.TeamJackalHasAliveLover &&
-              statistics.TeamLoversAlive == 2) && !Helpers.killingCrewAlive())
+              statistics.TeamLoversAlive == 2) && !killingCrewAlive())
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.TeamJackalWin, false);
@@ -786,7 +786,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamWerewolfAlive == 0 &&
             !(statistics.TeamSwooperHasAliveLover &&
             statistics.TeamLoversAlive == 2) &&
-            !Helpers.killingCrewAlive())
+            !killingCrewAlive())
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.SwooperWin, false);
@@ -804,7 +804,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamSwooperAlive == 0 &&
             !(statistics.TeamWerewolfHasAliveLover &&
               statistics.TeamLoversAlive == 2) &&
-            !Helpers.killingCrewAlive()
+            !killingCrewAlive()
         )
         {
             //__instance.enabled = false;
@@ -826,7 +826,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamSwooperAlive == 0 &&
             !(statistics.TeamJuggernautHasAliveLover &&
               statistics.TeamLoversAlive == 2) &&
-            !Helpers.killingCrewAlive()
+            !killingCrewAlive()
         )
         {
             //__instance.enabled = false;
@@ -849,7 +849,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamSwooperAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamJuggernautAlive == 0 &&
-            !(statistics.TeamImpostorHasAliveLover && statistics.TeamLoversAlive == 2) && !Helpers.killingCrewAlive())
+            !(statistics.TeamImpostorHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive())
         {
             //__instance.enabled = false;
             GameOverReason endReason;

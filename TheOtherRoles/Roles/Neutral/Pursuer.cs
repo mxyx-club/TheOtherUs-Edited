@@ -19,7 +19,7 @@ public static class Pursuer
     public static Sprite getTargetSprite()
     {
         if (blank) return blank;
-        blank = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.PursuerButton.png", 115f);
+        blank = loadSpriteFromResources("TheOtherRoles.Resources.PursuerButton.png", 115f);
         return blank;
     }
 

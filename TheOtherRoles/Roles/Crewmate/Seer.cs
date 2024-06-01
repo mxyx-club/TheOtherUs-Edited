@@ -18,7 +18,7 @@ public static class Seer
     public static Sprite getSoulSprite()
     {
         if (soulSprite) return soulSprite;
-        soulSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Soul.png", 500f);
+        soulSprite = loadSpriteFromResources("TheOtherRoles.Resources.Soul.png", 500f);
         return soulSprite;
     }
 

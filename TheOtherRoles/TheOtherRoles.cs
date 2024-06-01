@@ -203,7 +203,7 @@ public static partial class TheOtherRoles
         public static Sprite getButtonSprite()
         {
             if (buttonSprite) return buttonSprite;
-            buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CleanButton.png", 115f);
+            buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.CleanButton.png", 115f);
             return buttonSprite;
         }
 

@@ -20,15 +20,14 @@ public static class SoundEffectsManager
         var resourceNames = assembly.GetManifestResourceNames();
         foreach (var resourceName in resourceNames)
             if (resourceName.Contains("TheOtherRoles.Resources.SoundEffects.") && resourceName.Contains(".raw"))
-                soundEffects.Add(resourceName, Helpers.loadAudioClipFromResources(resourceName));
+                soundEffects.Add(resourceName, loadAudioClipFromResources(resourceName));
     }
 
     public static AudioClip get(string path)
     {
         // Convenience: As as SoundEffects are stored in the same folder, allow using just the name as well
         if (!path.Contains(".")) path = "TheOtherRoles.Resources.SoundEffects." + path + ".raw";
-        AudioClip returnValue;
-        return soundEffects.TryGetValue(path, out returnValue) ? returnValue : null;
+        return soundEffects.TryGetValue(path, out AudioClip returnValue) ? returnValue : null;
     }
 
 

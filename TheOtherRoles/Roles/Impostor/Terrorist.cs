@@ -26,7 +26,7 @@ public static class Terrorist
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Bomb_Button_Plant.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Bomb_Button_Plant.png", 115f);
         return buttonSprite;
     }
 

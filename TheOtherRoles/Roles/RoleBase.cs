@@ -31,7 +31,7 @@ public abstract class RoleBase : IDisposable
     //public List<RoleControllerBase> Controllers { get; protected set; } = [];
 
 #nullable enable
-    public Type? PathType { get; protected set; } = null;
+    public Type? PathType { get; protected set; }
 }
 
 public interface Invisable

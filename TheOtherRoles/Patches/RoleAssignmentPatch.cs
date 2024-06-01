@@ -547,7 +547,7 @@ internal class RoleManagerSelectRolesPatch
             // Executioner
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
                 if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
-                    p != Mini.mini && !p.Data.Role.IsImpostor && !Helpers.isNeutral(p) && p != Swapper.swapper)
+                    p != Mini.mini && !p.Data.Role.IsImpostor && !isNeutral(p) && p != Swapper.swapper)
                     possibleTargets.Add(p);
 
             if (possibleTargets.Count == 0)
@@ -726,8 +726,8 @@ internal class RoleManagerSelectRolesPatch
         var neutralPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
         var crewPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
-        neutralPlayer.RemoveAll(x => !Helpers.isNeutral(x));
-        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || Helpers.isNeutral(x));
+        neutralPlayer.RemoveAll(x => !isNeutral(x));
+        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
         assignGuesserGamemodeToPlayers(crewPlayer,
             Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeCrewNumber.getFloat()));
         assignGuesserGamemodeToPlayers(neutralPlayer,

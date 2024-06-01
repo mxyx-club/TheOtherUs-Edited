@@ -20,7 +20,7 @@ public static class Swapper
     public static Sprite getCheckSprite()
     {
         if (spriteCheck) return spriteCheck;
-        spriteCheck = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SwapperCheck.png", 150f);
+        spriteCheck = loadSpriteFromResources("TheOtherRoles.Resources.SwapperCheck.png", 150f);
         return spriteCheck;
     }
 

@@ -25,7 +25,7 @@ public static class Akujo
     public static Sprite getHonmeiSprite()
     {
         if (honmeiSprite) return honmeiSprite;
-        honmeiSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.AkujoHonmeiButton.png", 115f);
+        honmeiSprite = loadSpriteFromResources("TheOtherRoles.Resources.AkujoHonmeiButton.png", 115f);
         return honmeiSprite;
     }
 
@@ -33,7 +33,7 @@ public static class Akujo
     public static Sprite getKeepSprite()
     {
         if (keepSprite) return keepSprite;
-        keepSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.AkujoKeepButton.png", 115f);
+        keepSprite = loadSpriteFromResources("TheOtherRoles.Resources.AkujoKeepButton.png", 115f);
         return keepSprite;
     }
 

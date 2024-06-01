@@ -19,7 +19,7 @@ public static class Swooper
     public static Sprite getSwoopButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Swoop.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Swoop.png", 115f);
         return buttonSprite;
     }
 

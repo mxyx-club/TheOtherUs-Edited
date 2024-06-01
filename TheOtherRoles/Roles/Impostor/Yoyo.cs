@@ -22,7 +22,7 @@ public static class Yoyo
     public static Sprite getMarkButtonSprite()
     {
         if (markButtonSprite) return markButtonSprite;
-        markButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.YoyoMarkButtonSprite.png", 115f);
+        markButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.YoyoMarkButtonSprite.png", 115f);
         return markButtonSprite;
     }
     private static Sprite blinkButtonSprite;
@@ -30,7 +30,7 @@ public static class Yoyo
     public static Sprite getBlinkButtonSprite()
     {
         if (blinkButtonSprite) return blinkButtonSprite;
-        blinkButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.YoyoBlinkButtonSprite.png", 115f);
+        blinkButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.YoyoBlinkButtonSprite.png", 115f);
         return blinkButtonSprite;
     }
 

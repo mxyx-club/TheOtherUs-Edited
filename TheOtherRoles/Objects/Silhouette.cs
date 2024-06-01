@@ -18,7 +18,7 @@ public class Silhouette
     public static Sprite getSilhouetteSprite()
     {
         if (SilhouetteSprite) return SilhouetteSprite;
-        SilhouetteSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Silhouette.png", 225f);
+        SilhouetteSprite = loadSpriteFromResources("TheOtherRoles.Resources.Silhouette.png", 225f);
         return SilhouetteSprite;
     }
 

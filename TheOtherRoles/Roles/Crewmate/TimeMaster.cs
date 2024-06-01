@@ -20,7 +20,7 @@ public static class TimeMaster
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.TimeShieldButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.TimeShieldButton.png", 115f);
         return buttonSprite;
     }
 

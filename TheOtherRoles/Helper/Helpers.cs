@@ -205,9 +205,8 @@ public static class Helpers
     public static bool canUseSabotage()
     {
         var sabSystem = ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
-        ISystemType systemType;
         IActivatable doors = null;
-        if (ShipStatus.Instance.Systems.TryGetValue(SystemTypes.Doors, out systemType))
+        if (ShipStatus.Instance.Systems.TryGetValue(SystemTypes.Doors, out ISystemType systemType))
         {
             doors = systemType.CastFast<IActivatable>();
         }
@@ -616,8 +615,8 @@ public static class Helpers
     public static bool hasFakeTasks(this PlayerControl player)
     {
         return player == Werewolf.werewolf ||
-            player == Doomsayer.doomsayer ||
-            player == Juggernaut.juggernaut ||
+               player == Doomsayer.doomsayer ||
+               player == Juggernaut.juggernaut ||
                player == Jester.jester ||
                player == Arsonist.arsonist ||
                player == Jackal.jackal ||

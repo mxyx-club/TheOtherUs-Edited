@@ -24,7 +24,7 @@ public static class Cultist
     public static Sprite getSidekickButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SidekickButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.SidekickButton.png", 115f);
         return buttonSprite;
     }
 

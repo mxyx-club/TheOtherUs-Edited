@@ -139,9 +139,9 @@ public static class ChatCommands
                 CachedPlayer.LocalPlayer.PlayerControl.isTeamCultist())
             {
                 if (Cultist.cultist == CachedPlayer.LocalPlayer.PlayerControl)
-                    Cultist.chatTarget = Helpers.flipBitwise(Cultist.chatTarget);
+                    Cultist.chatTarget = flipBitwise(Cultist.chatTarget);
                 if (Follower.follower == CachedPlayer.LocalPlayer.PlayerControl)
-                    Follower.chatTarget = Helpers.flipBitwise(Follower.chatTarget);
+                    Follower.chatTarget = flipBitwise(Follower.chatTarget);
                 handled = true;
             }
 

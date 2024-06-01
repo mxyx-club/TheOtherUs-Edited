@@ -34,7 +34,7 @@ internal class NinjaTrace
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(colorDuration, new Action<float>(p =>
         {
             Color c = Palette.PlayerColors[Ninja.ninja.Data.DefaultOutfit.ColorId];
-            if (Helpers.isLighterColor(Ninja.ninja)) c = Color.white;
+            if (isLighterColor(Ninja.ninja)) c = Color.white;
             else c = Palette.PlayerColors[6];
             //if (Camouflager.camouflageTimer > 0) {
             //    c = Palette.PlayerColors[6];
@@ -68,7 +68,7 @@ internal class NinjaTrace
     public static Sprite getTraceSprite()
     {
         if (TraceSprite) return TraceSprite;
-        TraceSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.NinjaTraceW.png", 225f);
+        TraceSprite = loadSpriteFromResources("TheOtherRoles.Resources.NinjaTraceW.png", 225f);
         return TraceSprite;
     }
 

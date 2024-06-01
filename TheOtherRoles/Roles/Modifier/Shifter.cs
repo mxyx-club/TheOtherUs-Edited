@@ -16,7 +16,7 @@ public static class Shifter
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ShiftButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.ShiftButton.png", 115f);
         return buttonSprite;
     }
 

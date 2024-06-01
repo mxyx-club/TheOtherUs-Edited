@@ -20,7 +20,7 @@ public static class Lawyer
     public static Sprite getTargetSprite()
     {
         if (targetSprite) return targetSprite;
-        targetSprite = Helpers.loadSpriteFromResources("", 150f);
+        targetSprite = loadSpriteFromResources("", 150f);
         return targetSprite;
     }
 

@@ -34,7 +34,7 @@ public static class Tracker
     public static Sprite getTrackCorpsesButtonSprite()
     {
         if (trackCorpsesButtonSprite) return trackCorpsesButtonSprite;
-        trackCorpsesButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.PathfindButton.png", 115f);
+        trackCorpsesButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.PathfindButton.png", 115f);
         return trackCorpsesButtonSprite;
     }
 
@@ -42,7 +42,7 @@ public static class Tracker
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.TrackerButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.TrackerButton.png", 115f);
         return buttonSprite;
     }
 

@@ -34,7 +34,7 @@ public static class Doomsayer
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SeerButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.SeerButton.png", 115f);
         return buttonSprite;
     }
 
@@ -58,8 +58,8 @@ public static class Doomsayer
     public static string GetInfo(PlayerControl target)
     {
         var random = new Random();
-        var allRoleInfo = (onlineTarger ? Helpers.onlineRoleInfos() : Helpers.allRoleInfos()).OrderBy(_ => random.Next()).ToList();
-        var OtherRoles = Helpers.allRoleInfos().Where(n => allRoleInfo.All(y => y != n)).OrderBy(_ => random.Next()).ToList();
+        var allRoleInfo = (onlineTarger ? onlineRoleInfos() : allRoleInfos()).OrderBy(_ => random.Next()).ToList();
+        var OtherRoles = allRoleInfos().Where(n => allRoleInfo.All(y => y != n)).OrderBy(_ => random.Next()).ToList();
         var OtherIndex = -1;
         var AllMessage = new List<string>();
         allRoleInfo.Remove(RoleInfo.doomsayer);

@@ -21,7 +21,7 @@ public static class Mayor
     public static Sprite getMeetingSprite()
     {
         if (emergencySprite) return emergencySprite;
-        emergencySprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.EmergencyButton.png", 550f);
+        emergencySprite = loadSpriteFromResources("TheOtherRoles.Resources.EmergencyButton.png", 550f);
         return emergencySprite;
     }
 

@@ -25,14 +25,14 @@ public static class Escapist
     public static Sprite getEscapeMarkButtonSprite()
     {
         if (escapeMarkButtonSprite) return escapeMarkButtonSprite;
-        escapeMarkButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Mark.png", 115f);
+        escapeMarkButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Mark.png", 115f);
         return escapeMarkButtonSprite;
     }
 
     public static Sprite getEscapeButtonSprite()
     {
         if (escapeButtonSprite) return escapeButtonSprite;
-        escapeButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Recall.png", 115f);
+        escapeButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Recall.png", 115f);
         return escapeButtonSprite;
     }
 

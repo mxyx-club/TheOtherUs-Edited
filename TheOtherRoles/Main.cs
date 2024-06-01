@@ -61,8 +61,7 @@ public class TheOtherRolesPlugin : BasePlugin
         var regions = new[]
         {
             new StaticHttpRegionInfo("Custom", StringNames.NoTranslation, Ip.Value,
-                    new Il2CppReferenceArray<ServerInfo>(new ServerInfo[1]
-                        { new("Custom", Ip.Value, Port.Value, false) }))
+                    new Il2CppReferenceArray<ServerInfo>([new("Custom", Ip.Value, Port.Value, false)]))
                 .CastFast<IRegionInfo>()
         };
 
@@ -118,10 +117,10 @@ public class TheOtherRolesPlugin : BasePlugin
         CustomColors.Load();
         CustomOptionHolder.Load();
         AssetLoader.LoadAudioAssets();
-        if (ToggleCursor.Value) Helpers.enableCursor(true);
+        if (ToggleCursor.Value) enableCursor(true);
 
 
-        SubmergedCompatibility.Initialize();
+        //SubmergedCompatibility.Initialize();
         MainMenuPatch.addSceneChangeCallbacks();
         _ = RoleInfo.loadReadme();
         AddToKillDistanceSetting.addKillDistance();
@@ -178,7 +177,7 @@ public static class DebugManager
         }
 
         // Terminate round
-        if (AmongUsClient.Instance.AmHost && Helpers.gameStarted && Input.GetKeyDown(KeyCode.Return) &&
+        if (AmongUsClient.Instance.AmHost && gameStarted && Input.GetKeyDown(KeyCode.Return) &&
             Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.LeftShift))
         {
             var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,

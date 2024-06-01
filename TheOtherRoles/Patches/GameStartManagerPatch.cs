@@ -126,7 +126,7 @@ public class GameStartManagerPatch
                 {
                     HandshakeHelper.againSend(client.Id, HandshakeHelper.ShareMode.Again);
                     versionMismatch = true;
-                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了不同版本的TheOtherUs\n</color>";
+                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} {"differentVersionTou".Translate()}\n</color>";
                 }
                 else
                 {
@@ -194,7 +194,7 @@ public class GameStartManagerPatch
                     // Activate Stop-Button
                     copiedStartButton = UnityEngine.Object.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
                     copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
-                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 200f);
+                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 200f);
                     copiedStartButton.SetActive(true);
                     var startButtonText = copiedStartButton.GetComponentInChildren<TMPro.TextMeshPro>();
                     startButtonText.text = "STOP";
@@ -256,7 +256,7 @@ public class GameStartManagerPatch
                     // Activate Stop-Button
                     copiedStartButton = UnityEngine.Object.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
                     copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
-                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 200f);
+                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 200f);
                     copiedStartButton.SetActive(true);
                     var startButtonText = copiedStartButton.GetComponentInChildren<TMPro.TextMeshPro>();
                     startButtonText.text = "STOP";
@@ -271,7 +271,7 @@ public class GameStartManagerPatch
                         writer.Write(PlayerControl.LocalPlayer.PlayerId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
                         copiedStartButton.Destroy();
-                        __instance.GameStartText.text = String.Empty;
+                        __instance.GameStartText.text = string.Empty;
                         startingTimer = 0;
                     }
                     startButtonPassiveButton.OnClick.AddListener((Action)(() => StopStartFunc()));

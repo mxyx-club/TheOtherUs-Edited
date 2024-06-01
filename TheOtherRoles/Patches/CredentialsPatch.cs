@@ -41,7 +41,7 @@ public static class CredentialsPatch
                 _ => ""
             };
 
-            if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
+            if (gameModeText != "") gameModeText = cs(Color.yellow, gameModeText) + "\n";
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {
                 __instance.text.text = $"<size=110%>{getString("TouTitle")}</size>  v{Main.Version + "\n" + getString("inGameTitle")}<size=90%>\n{PingText}\n {gameModeText}</size>";
@@ -76,7 +76,7 @@ public static class CredentialsPatch
 
             renderer = torLogo.AddComponent<SpriteRenderer>();
             loadSprites();
-            renderer.sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Banner.png", 300f);
+            renderer.sprite = loadSpriteFromResources("TheOtherRoles.Resources.Banner.png", 300f);
 
             instance = __instance;
             loadSprites();
@@ -112,12 +112,12 @@ public static class CredentialsPatch
         public static void loadSprites()
         {
             if (bannerSprite == null)
-                bannerSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Banner.png", 300f);
+                bannerSprite = loadSpriteFromResources("TheOtherRoles.Resources.Banner.png", 300f);
             if (banner2Sprite == null)
-                banner2Sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Banner2.png", 300f);
+                banner2Sprite = loadSpriteFromResources("TheOtherRoles.Resources.Banner2.png", 300f);
             if (horseBannerSprite == null)
                 horseBannerSprite =
-                    Helpers.loadSpriteFromResources("TheOtherRoles.Resources.bannerTheHorseRoles.png", 300f);
+                    loadSpriteFromResources("TheOtherRoles.Resources.bannerTheHorseRoles.png", 300f);
         }
 
         public static void updateSprite()

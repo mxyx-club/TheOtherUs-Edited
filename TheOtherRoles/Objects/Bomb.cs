@@ -64,7 +64,7 @@ public class Bomb
     public static Sprite getBombSprite()
     {
         if (bombSprite) return bombSprite;
-        bombSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Bomb.png", 300f);
+        bombSprite = loadSpriteFromResources("TheOtherRoles.Resources.Bomb.png", 300f);
         return bombSprite;
     }
 
@@ -72,14 +72,14 @@ public class Bomb
     {
         if (backgroundSprite) return backgroundSprite;
         backgroundSprite =
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.hearRange);
+            loadSpriteFromResources("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.hearRange);
         return backgroundSprite;
     }
 
     public static Sprite getDefuseSprite()
     {
         if (defuseSprite) return defuseSprite;
-        defuseSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Bomb_Button_Defuse.png", 115f);
+        defuseSprite = loadSpriteFromResources("TheOtherRoles.Resources.Bomb_Button_Defuse.png", 115f);
         return defuseSprite;
     }
 
@@ -100,7 +100,7 @@ public class Bomb
                     return;
                 };
 
-                Helpers.checkMurderAttemptAndKill(Terrorist.terrorist, CachedPlayer.LocalPlayer.PlayerControl, false, false,
+                checkMurderAttemptAndKill(Terrorist.terrorist, CachedPlayer.LocalPlayer.PlayerControl, false, false,
                     true, true);
 
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,

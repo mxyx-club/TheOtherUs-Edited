@@ -20,14 +20,14 @@ public static class Warlock
     public static Sprite getCurseButtonSprite()
     {
         if (curseButtonSprite) return curseButtonSprite;
-        curseButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CurseButton.png", 115f);
+        curseButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.CurseButton.png", 115f);
         return curseButtonSprite;
     }
 
     public static Sprite getCurseKillButtonSprite()
     {
         if (curseKillButtonSprite) return curseKillButtonSprite;
-        curseKillButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CurseKillButton.png", 115f);
+        curseKillButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.CurseKillButton.png", 115f);
         return curseKillButtonSprite;
     }
 

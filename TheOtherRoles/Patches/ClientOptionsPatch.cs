@@ -204,7 +204,7 @@ public static class ClientOptionsPatch
 
             passiveButton.OnClick.AddListener((Action)(() =>
             {
-                if (info.Title == "Better Cursor") Helpers.enableCursor(false);
+                if (info.Title == "Better Cursor") enableCursor(false);
                 button.onState = info.OnClick();
                 button.Background.color = button.onState ? Color.green : Palette.ImpostorRed;
             }));

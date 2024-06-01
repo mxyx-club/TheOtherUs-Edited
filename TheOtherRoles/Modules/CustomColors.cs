@@ -108,7 +108,7 @@ public class CustomColors
                 shadow = new Color32(116, 229, 16, byte.MaxValue),
                 isLighterColor = true
             },
-            
+
             new() // 30
             {
                 longname = getString("colorSignalOrange"),

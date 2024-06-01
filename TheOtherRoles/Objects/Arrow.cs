@@ -27,7 +27,7 @@ public class Arrow
     private static Sprite getSprite()
     {
         if (sprite) return sprite;
-        sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Arrow.png", 200f);
+        sprite = loadSpriteFromResources("TheOtherRoles.Resources.Arrow.png", 200f);
         return sprite;
     }
 

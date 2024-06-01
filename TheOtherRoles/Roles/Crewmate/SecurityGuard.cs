@@ -46,7 +46,7 @@ public static class SecurityGuard
     public static Sprite getCloseVentButtonSprite()
     {
         if (closeVentButtonSprite) return closeVentButtonSprite;
-        closeVentButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CloseVentButton.png", 115f);
+        closeVentButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.CloseVentButton.png", 115f);
         return closeVentButtonSprite;
     }
 
@@ -54,7 +54,7 @@ public static class SecurityGuard
     {
         if (placeCameraButtonSprite) return placeCameraButtonSprite;
         placeCameraButtonSprite =
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.PlaceCameraButton.png", 115f);
+            loadSpriteFromResources("TheOtherRoles.Resources.PlaceCameraButton.png", 115f);
         return placeCameraButtonSprite;
     }
 
@@ -70,21 +70,21 @@ public static class SecurityGuard
 
         if (animatedVentSealedSprite) return animatedVentSealedSprite;
         animatedVentSealedSprite =
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.AnimatedVentSealed.png", ppu);
+            loadSpriteFromResources("TheOtherRoles.Resources.AnimatedVentSealed.png", ppu);
         return animatedVentSealedSprite;
     }
 
     public static Sprite getStaticVentSealedSprite()
     {
         if (staticVentSealedSprite) return staticVentSealedSprite;
-        staticVentSealedSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StaticVentSealed.png", 160f);
+        staticVentSealedSprite = loadSpriteFromResources("TheOtherRoles.Resources.StaticVentSealed.png", 160f);
         return staticVentSealedSprite;
     }
 
     public static Sprite getFungleVentSealedSprite()
     {
         if (fungleVentSealedSprite) return fungleVentSealedSprite;
-        fungleVentSealedSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.FungleVentSealed.png", 160f);
+        fungleVentSealedSprite = loadSpriteFromResources("TheOtherRoles.Resources.FungleVentSealed.png", 160f);
         return fungleVentSealedSprite;
     }
 
@@ -92,7 +92,7 @@ public static class SecurityGuard
     {
         if (submergedCentralUpperVentSealedSprite) return submergedCentralUpperVentSealedSprite;
         submergedCentralUpperVentSealedSprite =
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CentralUpperBlocked.png", 145f);
+            loadSpriteFromResources("TheOtherRoles.Resources.CentralUpperBlocked.png", 145f);
         return submergedCentralUpperVentSealedSprite;
     }
 
@@ -100,7 +100,7 @@ public static class SecurityGuard
     {
         if (submergedCentralLowerVentSealedSprite) return submergedCentralLowerVentSealedSprite;
         submergedCentralLowerVentSealedSprite =
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CentralLowerBlocked.png", 145f);
+            loadSpriteFromResources("TheOtherRoles.Resources.CentralLowerBlocked.png", 145f);
         return submergedCentralLowerVentSealedSprite;
     }
 

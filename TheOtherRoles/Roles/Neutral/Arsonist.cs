@@ -25,14 +25,14 @@ public static class Arsonist
     public static Sprite getDouseSprite()
     {
         if (douseSprite) return douseSprite;
-        douseSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.DouseButton.png", 115f);
+        douseSprite = loadSpriteFromResources("TheOtherRoles.Resources.DouseButton.png", 115f);
         return douseSprite;
     }
 
     public static Sprite getIgniteSprite()
     {
         if (igniteSprite) return igniteSprite;
-        igniteSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.IgniteButton.png", 115f);
+        igniteSprite = loadSpriteFromResources("TheOtherRoles.Resources.IgniteButton.png", 115f);
         return igniteSprite;
     }
 

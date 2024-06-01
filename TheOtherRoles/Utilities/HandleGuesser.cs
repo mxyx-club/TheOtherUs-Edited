@@ -15,7 +15,7 @@ public static class HandleGuesser
     public static Sprite getTargetSprite()
     {
         if (targetSprite) return targetSprite;
-        targetSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.TargetIcon.png", 150f);
+        targetSprite = loadSpriteFromResources("TheOtherRoles.Resources.TargetIcon.png", 150f);
         return targetSprite;
     }
 

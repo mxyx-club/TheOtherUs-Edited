@@ -15,7 +15,7 @@ internal static class MapBehaviourPatch
 {
     public static Dictionary<PlayerControl, SpriteRenderer> herePoints = new();
 
-    public static Sprite Vent = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Vent.png", 150f);
+    public static Sprite Vent = loadSpriteFromResources("TheOtherRoles.Resources.Vent.png", 150f);
 
     public static List<List<Vent>> VentNetworks = new();
 
@@ -199,7 +199,7 @@ internal static class MapBehaviourPatch
     {
         if (VentNetworks.Count != 0) return;
 
-        if (Helpers.isMira())
+        if (isMira())
         {
             var vents = MapUtilities.CachedShipStatus.AllVents.Where(x => !x.name.Contains("JackInTheBoxVent_"));
             VentNetworks.Add(vents.ToList());

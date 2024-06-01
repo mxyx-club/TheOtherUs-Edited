@@ -13,7 +13,7 @@ public static class Disperser
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Disperse.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Disperse.png", 115f);
         return buttonSprite;
     }
 

@@ -16,7 +16,7 @@ public static class PrivateInvestigator
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Watch.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Watch.png", 115f);
         return buttonSprite;
     }
 

@@ -43,7 +43,7 @@ public class MainMenuPatch
         passiveButtonGitHub.OnClick = new ButtonClickedEvent();
         passiveButtonGitHub.OnClick.AddListener((Action)(() => Application.OpenURL("https://github.com/mxyx-club/TheOtherUs/")));
 
-        if (Helpers.IsCN())
+        if (IsCN())
         {
 #if SUNDAY
             return;

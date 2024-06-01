@@ -18,14 +18,14 @@ public static class Blackmailer
     public static Sprite getBlackmailOverlaySprite()
     {
         if (overlaySprite) return overlaySprite;
-        overlaySprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.BlackmailerOverlay.png", 100f);
+        overlaySprite = loadSpriteFromResources("TheOtherRoles.Resources.BlackmailerOverlay.png", 100f);
         return overlaySprite;
     }
 
     public static Sprite getBlackmailLetterSprite()
     {
         if (overlaySprite) return overlaySprite;
-        overlaySprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.BlackmailerLetter.png", 115f);
+        overlaySprite = loadSpriteFromResources("TheOtherRoles.Resources.BlackmailerLetter.png", 115f);
         return overlaySprite;
     }
 
@@ -33,7 +33,7 @@ public static class Blackmailer
     {
         if (blackmailButtonSprite) return blackmailButtonSprite;
         blackmailButtonSprite =
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.BlackmailerBlackmailButton.png", 115f);
+            loadSpriteFromResources("TheOtherRoles.Resources.BlackmailerBlackmailButton.png", 115f);
         return blackmailButtonSprite;
     }
 

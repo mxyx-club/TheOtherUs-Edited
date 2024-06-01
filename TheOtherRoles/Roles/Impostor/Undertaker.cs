@@ -20,7 +20,7 @@ public static class Undertaker
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.UndertakerDragButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.UndertakerDragButton.png", 115f);
         return buttonSprite;
     }
 

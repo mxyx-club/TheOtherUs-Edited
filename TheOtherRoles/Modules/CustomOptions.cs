@@ -361,7 +361,7 @@ internal class GameOptionsMenuStartPatch
         copyButton.transform.localPosition += Vector3.down * 0.8f;
         var copyButtonPassive = copyButton.GetComponent<PassiveButton>();
         var copyButtonRenderer = copyButton.GetComponent<SpriteRenderer>();
-        copyButtonRenderer.sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CopyButton.png", 175f);
+        copyButtonRenderer.sprite = loadSpriteFromResources("TheOtherRoles.Resources.CopyButton.png", 175f);
         copyButtonPassive.OnClick.RemoveAllListeners();
         copyButtonPassive.OnClick = new Button.ButtonClickedEvent();
         copyButtonPassive.OnClick.AddListener((Action)(() =>
@@ -378,7 +378,7 @@ internal class GameOptionsMenuStartPatch
         pasteButton.transform.localPosition += Vector3.down * 1.6f;
         var pasteButtonPassive = pasteButton.GetComponent<PassiveButton>();
         var pasteButtonRenderer = pasteButton.GetComponent<SpriteRenderer>();
-        pasteButtonRenderer.sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.PasteButton.png", 175f);
+        pasteButtonRenderer.sprite = loadSpriteFromResources("TheOtherRoles.Resources.PasteButton.png", 175f);
         pasteButtonPassive.OnClick.RemoveAllListeners();
         pasteButtonPassive.OnClick = new Button.ButtonClickedEvent();
         pasteButtonPassive.OnClick.AddListener((Action)(() =>
@@ -921,7 +921,7 @@ internal class GameOptionsMenuStartPatch
         var tabHighlight = tab.transform.FindChild("Hat Button").FindChild("Tab Background")
             .GetComponent<SpriteRenderer>();
         tab.transform.FindChild("Hat Button").FindChild("Icon").GetComponent<SpriteRenderer>().sprite =
-            Helpers.loadSpriteFromResources(tabSpritePath, 100f);
+            loadSpriteFromResources(tabSpritePath, 100f);
         tab.name = "tabName";
 
         return tabHighlight;
@@ -1180,13 +1180,13 @@ internal class GameOptionsDataPatch
             {
                 if (option.id == 30170) //Deputy
                     sb.AppendLine(
-                        $"- {Helpers.cs(Deputy.color, "捕快")}: {option.selections[option.selection].ToString()}");
+                        $"- {cs(Deputy.color, "捕快")}: {option.selections[option.selection].ToString()}");
                 else if (option.id == 20135) //Sidekick
                     sb.AppendLine(
-                        $"- {Helpers.cs(Sidekick.color, "跟班")}: {option.selections[option.selection].ToString()}");
+                        $"- {cs(Sidekick.color, "跟班")}: {option.selections[option.selection].ToString()}");
                 else if (option.id == 20181) //Prosecutor
                     sb.AppendLine(
-                        $"- {Helpers.cs(Lawyer.color, "处刑者")}: {option.selections[option.selection].ToString()}");
+                        $"- {cs(Lawyer.color, "处刑者")}: {option.selections[option.selection].ToString()}");
             }
 
         if (headerOnly) return sb.ToString();
@@ -1205,7 +1205,7 @@ internal class GameOptionsDataPatch
 
                 var c = isIrrelevant ? Color.grey : Color.white; // No use for now
                 if (isIrrelevant) continue;
-                sb.AppendLine(Helpers.cs(c, $"{option.name}: {option.selections[option.selection]}"));
+                sb.AppendLine(cs(c, $"{option.name}: {option.selections[option.selection]}"));
             }
             else
             {
@@ -1285,7 +1285,7 @@ internal class GameOptionsDataPatch
                 GameOptionsManager.Instance.CurrentGameOptions.ToHudString(PlayerControl.AllPlayerControls.Count);
         var counter = TheOtherRolesPlugin.optionsPage;
         var hudString = counter != 0 && !hideExtras
-            ? Helpers.cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "useScrollWheel".Translate())
+            ? cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "useScrollWheel".Translate())
             : "";
 
         if (MapOptions.gameMode == CustomGamemodes.HideNSeek)
@@ -1589,7 +1589,7 @@ public class HudManagerUpdate
         for (var i = 0; i < blocks.Length; i++)
         {
             curBlock = blocks[i];
-            if (Helpers.lineCount(curBlock) + Helpers.lineCount(curString) < 43)
+            if (lineCount(curBlock) + lineCount(curString) < 43)
             {
                 curString += curBlock + "\n\n";
             }
@@ -1661,7 +1661,7 @@ public class HudManagerUpdate
                 __instance.MapButton.transform.localPosition + new Vector3(0, -0.66f, -500f);
             var renderer = toggleSettingsButtonObject.GetComponent<SpriteRenderer>();
             renderer.sprite =
-                Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CurrentSettingsButton.png", 180f);
+                loadSpriteFromResources("TheOtherRoles.Resources.CurrentSettingsButton.png", 180f);
             toggleSettingsButton = toggleSettingsButtonObject.GetComponent<PassiveButton>();
             toggleSettingsButton.OnClick.RemoveAllListeners();
             toggleSettingsButton.OnClick.AddListener((Action)(() => ToggleSettings(__instance)));

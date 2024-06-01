@@ -826,6 +826,10 @@
         "0": "YOU ARE BLACKMAILED",
         "13": "\u5618\uff01\u4e0d\u8bb8\u8bf4\u8bdd\uff01"
     },
+    "differentVersionTou": {
+        "0": "has a different or no version of The Other Us",
+        "13": "\u5b89\u88c5\u4e86\u4e0d\u540c\u7248\u672c\u7684TheOtherUs"
+    },
     "oldTouVersion": {
         "0": "has an older version of The Other Us",
         "13": "\u5b89\u88c5\u4e86\u65e7\u7248\u672c\u7684TheOtherUs"

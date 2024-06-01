@@ -20,14 +20,14 @@ public static class Trickster
     {
         if (placeBoxButtonSprite) return placeBoxButtonSprite;
         placeBoxButtonSprite =
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.PlaceJackInTheBoxButton.png", 115f);
+            loadSpriteFromResources("TheOtherRoles.Resources.PlaceJackInTheBoxButton.png", 115f);
         return placeBoxButtonSprite;
     }
 
     public static Sprite getLightsOutButtonSprite()
     {
         if (lightOutButtonSprite) return lightOutButtonSprite;
-        lightOutButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.LightsOutButton.png", 115f);
+        lightOutButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.LightsOutButton.png", 115f);
         return lightOutButtonSprite;
     }
 
@@ -35,7 +35,7 @@ public static class Trickster
     {
         if (tricksterVentButtonSprite) return tricksterVentButtonSprite;
         tricksterVentButtonSprite =
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.TricksterVentButton.png", 115f);
+            loadSpriteFromResources("TheOtherRoles.Resources.TricksterVentButton.png", 115f);
         return tricksterVentButtonSprite;
     }
 

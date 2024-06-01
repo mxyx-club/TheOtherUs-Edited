@@ -53,7 +53,7 @@ public class Trap
     public static Sprite getTrapSprite()
     {
         if (trapSprite) return trapSprite;
-        trapSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Trapper_Trap_Ingame.png", 300f);
+        trapSprite = loadSpriteFromResources("TheOtherRoles.Resources.Trapper_Trap_Ingame.png", 300f);
         return trapSprite;
     }
 
@@ -84,7 +84,7 @@ public class Trap
     public static void triggerTrap(byte playerId, byte trapId)
     {
         var t = traps.FirstOrDefault(x => x.instanceId == trapId);
-        var player = Helpers.playerById(playerId);
+        var player = playerById(playerId);
         if (Trapper.trapper == null || t == null || player == null) return;
         var localIsTrapper = CachedPlayer.LocalPlayer.PlayerId == Trapper.trapper.PlayerId;
         trapPlayerIdMap.TryAdd(playerId, t);
@@ -169,19 +169,19 @@ public class KillTrap
     public static AudioClip countdown;
     public static AudioClip kill;
     public static AudioRolloffMode rollOffMode = AudioRolloffMode.Linear;
-    private static byte maxId = 0;
+    private static byte maxId;
     public AudioSource audioSource;
     public static SortedDictionary<byte, KillTrap> traps = new();
-    public bool isActive = false;
+    public bool isActive;
     public PlayerControl target;
     public DateTime placedTime;
 
     public static void loadSprite()
     {
         if (trapSprite == null)
-            trapSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Trap.png", 300f);
+            trapSprite = loadSpriteFromResources("TheOtherRoles.Resources.Trap.png", 300f);
         if (trapActiveSprite == null)
-            trapActiveSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.TrapActive.png", 300f);
+            trapActiveSprite = loadSpriteFromResources("TheOtherRoles.Resources.TrapActive.png", 300f);
 
     }
 

@@ -177,7 +177,7 @@ public class ExilePros
             if (Prosecutor.ProsecuteThisMeeting)
             {
                 var exiled = __instance.exiled?.Object;
-                if (exiled != null && exiled == (Helpers.isKiller(exiled) || Helpers.isEvil(exiled)) && Prosecutor.diesOnIncorrectPros)
+                if (exiled != null && exiled == (isKiller(exiled) || isEvil(exiled)) && Prosecutor.diesOnIncorrectPros)
                 {                    //ButtonTarget.DontRevive = Prosecutor.prosecutor.PlayerId;
                     Prosecutor.prosecutor.Exiled();
                 }

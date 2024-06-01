@@ -86,7 +86,7 @@ internal class ExileControllerBeginPatch
             if ((witchDiesWithExiledLover || exiledIsWitch) && Witch.witchVoteSavesTargets)
                 Witch.futureSpelled = new List<PlayerControl>();
             foreach (var target in Witch.futureSpelled)
-                if (target != null && !target.Data.IsDead && Helpers.checkMuderAttempt(Witch.witch, target, true) ==
+                if (target != null && !target.Data.IsDead && checkMuderAttempt(Witch.witch, target, true) ==
                     MurderAttemptResult.PerformKill)
                 {
                     /*
@@ -102,7 +102,7 @@ internal class ExileControllerBeginPatch
                         AmongUsClient.Instance.FinishRpcImmediately(writer2);
                         RPCProcedure.lawyerPromotesToPursuer();
                     }
-                    
+
                     if (target == Executioner.target && Executioner.executioner != null)
                     {
                         var writer2 = AmongUsClient.Instance.StartRpcImmediately(
@@ -155,7 +155,7 @@ internal class ExileControllerBeginPatch
                 ? SecurityGuard.getStaticVentSealedSprite()
                 : SecurityGuard.getAnimatedVentSealedSprite();
             var rend = vent.myRend;
-            if (Helpers.isFungle())
+            if (isFungle())
             {
                 newSprite = SecurityGuard.getFungleVentSealedSprite();
                 rend = vent.transform.GetChild(3).GetComponent<SpriteRenderer>();
@@ -421,7 +421,7 @@ internal class ExileControllerMessagePatch
         {
             if (ExileController.Instance != null && ExileController.Instance.exiled != null)
             {
-                var player = Helpers.playerById(ExileController.Instance.exiled.Object.PlayerId);
+                var player = playerById(ExileController.Instance.exiled.Object.PlayerId);
                 if (player == null) return;
                 // Exile role text
                 if (id == StringNames.ExileTextPN || id == StringNames.ExileTextSN || id == StringNames.ExileTextPP ||

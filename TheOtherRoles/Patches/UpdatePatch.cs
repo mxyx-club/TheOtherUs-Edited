@@ -39,7 +39,7 @@ internal class HudManagerUpdatePatch
                     playerName = Morphling.morphTarget.Data.PlayerName;
                 var nameText = player.cosmetics.nameText;
 
-                nameText.text = Helpers.hidePlayerName(localPlayer, player) ? "" : playerName;
+                nameText.text = hidePlayerName(localPlayer, player) ? "" : playerName;
                 nameText.color = color = amImpostor && data.Role.IsImpostor ? Palette.ImpostorRed : Color.white;
                 nameText.color = nameText.color.SetAlpha(Chameleon.visibility(player.PlayerId));
             }
@@ -127,9 +127,9 @@ internal class HudManagerUpdatePatch
             var snitchIsDead = Snitch.snitch.Data.IsDead;
 
             bool forImp = localPlayer.Data.Role.IsImpostor;
-            bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && Helpers.isKiller(localPlayer);
-            bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && Helpers.isEvil(localPlayer);
-            bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && Helpers.isNeutral(localPlayer);
+            bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(localPlayer);
+            bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(localPlayer);
+            bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(localPlayer);
             if (numberOfTasks <= Snitch.taskCountForReveal)
             {
                 foreach (PlayerControl p in CachedPlayer.AllPlayers)
@@ -145,9 +145,9 @@ internal class HudManagerUpdatePatch
                 foreach (PlayerControl p in CachedPlayer.AllPlayers)
                 {
                     bool TargetsImp = p.Data.Role.IsImpostor;
-                    bool TargetsKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && Helpers.isKiller(p);
-                    bool TargetsEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && Helpers.isEvil(p);
-                    bool TargetsNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && Helpers.isNeutral(p);
+                    bool TargetsKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(p);
+                    bool TargetsEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(p);
+                    bool TargetsNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(p);
                     var targetsRole = RoleInfo.getRoleInfoForPlayer(p, false).FirstOrDefault();
                     if (localPlayer == Snitch.snitch && (TargetsImp || TargetsKillerTeam || TargetsEvilTeam || TargetsNeutraTeam))
                     {
@@ -210,7 +210,7 @@ internal class HudManagerUpdatePatch
             (Lovers.lover1 == CachedPlayer.LocalPlayer.PlayerControl ||
              Lovers.lover2 == CachedPlayer.LocalPlayer.PlayerControl))
         {
-            var suffix = Helpers.cs(Lovers.color, " ♥");
+            var suffix = cs(Lovers.color, " ♥");
             Lovers.lover1.cosmetics.nameText.text += suffix;
             Lovers.lover2.cosmetics.nameText.text += suffix;
 
@@ -226,21 +226,21 @@ internal class HudManagerUpdatePatch
             {
                 foreach (PlayerControl p in Akujo.keeps)
                 {
-                    if (CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo) p.cosmetics.nameText.text += Helpers.cs(Color.gray, " ♥");
+                    if (CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo) p.cosmetics.nameText.text += cs(Color.gray, " ♥");
                     if (CachedPlayer.LocalPlayer.PlayerControl == p)
                     {
-                        Akujo.akujo.cosmetics.nameText.text += Helpers.cs(Akujo.color, " ♥");
-                        p.cosmetics.nameText.text += Helpers.cs(Akujo.color, " ♥");
+                        Akujo.akujo.cosmetics.nameText.text += cs(Akujo.color, " ♥");
+                        p.cosmetics.nameText.text += cs(Akujo.color, " ♥");
                     }
                 }
             }
             if (Akujo.honmei != null)
             {
-                if (CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo) Akujo.honmei.cosmetics.nameText.text += Helpers.cs(Akujo.color, " ♥");
+                if (CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo) Akujo.honmei.cosmetics.nameText.text += cs(Akujo.color, " ♥");
                 if (CachedPlayer.LocalPlayer.PlayerControl == Akujo.honmei)
                 {
-                    Akujo.akujo.cosmetics.nameText.text += Helpers.cs(Akujo.color, " ♥");
-                    Akujo.honmei.cosmetics.nameText.text += Helpers.cs(Akujo.color, " ♥");
+                    Akujo.akujo.cosmetics.nameText.text += cs(Akujo.color, " ♥");
+                    Akujo.honmei.cosmetics.nameText.text += cs(Akujo.color, " ♥");
                 }
             }
 
@@ -249,11 +249,11 @@ internal class HudManagerUpdatePatch
                 foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                 {
                     if (player.TargetPlayerId == Akujo.akujo.PlayerId && ((Akujo.honmei != null && Akujo.honmei == CachedPlayer.LocalPlayer.PlayerControl) || (Akujo.keeps != null && Akujo.keeps.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId))))
-                        player.NameText.text += Helpers.cs(Akujo.color, " ♥");
+                        player.NameText.text += cs(Akujo.color, " ♥");
                     if (CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo)
                     {
-                        if (player.TargetPlayerId == Akujo.honmei?.PlayerId) player.NameText.text += Helpers.cs(Akujo.color, " ♥");
-                        if (Akujo.keeps != null && Akujo.keeps.Any(x => x.PlayerId == player.TargetPlayerId)) player.NameText.text += Helpers.cs(Color.gray, " ♥");
+                        if (player.TargetPlayerId == Akujo.honmei?.PlayerId) player.NameText.text += cs(Akujo.color, " ♥");
+                        if (Akujo.keeps != null && Akujo.keeps.Any(x => x.PlayerId == player.TargetPlayerId)) player.NameText.text += cs(Color.gray, " ♥");
                     }
                 }
             }
@@ -263,7 +263,7 @@ internal class HudManagerUpdatePatch
         var localIsKnowingTarget = Lawyer.lawyer != null && Lawyer.target != null && Lawyer.targetKnows && Lawyer.target == PlayerControl.LocalPlayer;
         if (localIsLawyer || (localIsKnowingTarget && !Lawyer.lawyer.Data.IsDead))
         {
-            var suffix = Helpers.cs(Lawyer.color, " §");
+            var suffix = cs(Lawyer.color, " §");
             Lawyer.target.cosmetics.nameText.text += suffix;
 
             if (MeetingHud.Instance != null)
@@ -275,7 +275,7 @@ internal class HudManagerUpdatePatch
         var localIsExecutioner = Executioner.executioner != null && Executioner.target != null && Executioner.executioner == PlayerControl.LocalPlayer;
         if (localIsExecutioner && !Executioner.executioner.Data.IsDead)
         {
-            var suffix = Helpers.cs(Executioner.color, " §");
+            var suffix = cs(Executioner.color, " §");
             Executioner.target.cosmetics.nameText.text += suffix;
 
             if (MeetingHud.Instance != null)
@@ -288,7 +288,7 @@ internal class HudManagerUpdatePatch
         if (Thief.formerThief != null && (Thief.formerThief == CachedPlayer.LocalPlayer.PlayerControl ||
                                           CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead))
         {
-            var suffix = Helpers.cs(Thief.color, " $");
+            var suffix = cs(Thief.color, " $");
             Thief.formerThief.cosmetics.nameText.text += suffix;
             if (MeetingHud.Instance != null)
                 foreach (var player in MeetingHud.Instance.playerStates)
@@ -300,8 +300,8 @@ internal class HudManagerUpdatePatch
         if (CachedPlayer.LocalPlayer != null && MeetingHud.Instance != null && MapOptions.showLighterDarker)
             foreach (var player in MeetingHud.Instance.playerStates)
             {
-                var target = Helpers.playerById(player.TargetPlayerId);
-                if (target != null) player.NameText.text += $" ({(Helpers.isLighterColor(target) ? "浅" : "深")})";
+                var target = playerById(player.TargetPlayerId);
+                if (target != null) player.NameText.text += $" ({(isLighterColor(target) ? "浅" : "深")})";
             }
         // Add medic shield info:
         if (MeetingHud.Instance != null && Medic.medic != null && Medic.shielded != null && Medic.shieldVisible(Medic.shielded))
@@ -309,7 +309,7 @@ internal class HudManagerUpdatePatch
             foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                 if (player.TargetPlayerId == Medic.shielded.PlayerId)
                 {
-                    player.NameText.text = Helpers.cs(Medic.color, "[") + player.NameText.text + Helpers.cs(Medic.color, "]");
+                    player.NameText.text = cs(Medic.color, "[") + player.NameText.text + cs(Medic.color, "]");
                     // player.HighlightedFX.color = Medic.color;
                     // player.HighlightedFX.enabled = true;
                 }
@@ -338,10 +338,10 @@ internal class HudManagerUpdatePatch
 
     public static void miniUpdate()
     {
-        if (Mini.mini == null || Camouflager.camouflageTimer > 0f || Helpers.MushroomSabotageActive() ||
+        if (Mini.mini == null || Camouflager.camouflageTimer > 0f || MushroomSabotageActive() ||
             (Mini.mini == Morphling.morphling && Morphling.morphTimer > 0f) ||
             (Mini.mini == Ninja.ninja && Ninja.isInvisble) || SurveillanceMinigamePatch.nightVisionIsActive ||
-            (Mini.mini == Swooper.swooper && Swooper.isInvisable) || Helpers.isActiveCamoComms()) return;
+            (Mini.mini == Swooper.swooper && Swooper.isInvisable) || isActiveCamoComms()) return;
 
         var growingProgress = Mini.growingProgress();
         var scale = (growingProgress * 0.35f) + 0.35f;

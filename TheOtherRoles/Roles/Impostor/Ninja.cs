@@ -25,14 +25,14 @@ public static class Ninja
     public static Sprite getMarkButtonSprite()
     {
         if (markButtonSprite) return markButtonSprite;
-        markButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.NinjaMarkButton.png", 115f);
+        markButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.NinjaMarkButton.png", 115f);
         return markButtonSprite;
     }
 
     public static Sprite getKillButtonSprite()
     {
         if (killButtonSprite) return killButtonSprite;
-        killButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.NinjaAssassinateButton.png", 115f);
+        killButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.NinjaAssassinateButton.png", 115f);
         return killButtonSprite;
     }
 

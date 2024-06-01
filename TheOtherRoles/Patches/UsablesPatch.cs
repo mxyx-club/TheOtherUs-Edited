@@ -185,12 +185,12 @@ internal class VentButtonVisibilityPatch
 {
     private static void Postfix(PlayerControl __instance)
     {
-        if (__instance.AmOwner && Helpers.ShowButtons)
+        if (__instance.AmOwner && ShowButtons)
         {
             HudManager.Instance.ImpostorVentButton.Hide();
             HudManager.Instance.SabotageButton.Hide();
 
-            if (Helpers.ShowButtons)
+            if (ShowButtons)
             {
                 if (__instance.roleCanUseVents())
                     HudManager.Instance.ImpostorVentButton.Show();
@@ -308,7 +308,7 @@ internal class KillButtonDoClickPatch
             }
 
             // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
-            var res = Helpers.checkMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl,
+            var res = checkMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl,
                 __instance.currentTarget);
             // Handle blank kill
             if (res == MurderAttemptResult.BlankKill)
@@ -620,7 +620,7 @@ internal class AdminPanelPatch
                                     {
                                         var color = Palette.PlayerColors[playerInfo.DefaultOutfit.ColorId];
                                         if (Hacker.onlyColorType)
-                                            color = Helpers.isD(playerInfo.PlayerId)
+                                            color = isD(playerInfo.PlayerId)
                                                 ? Palette.PlayerColors[7]
                                                 : Palette.PlayerColors[6];
                                         roomColors.Add(color);
@@ -642,7 +642,7 @@ internal class AdminPanelPatch
                                             component.cosmetics.currentBodySprite.BodySprite.material.GetColor(
                                                 "_BodyColor");
                                         if (Hacker.onlyColorType)
-                                            color = Helpers.isLighterColor(component)
+                                            color = isLighterColor(component)
                                                 ? Palette.PlayerColors[7]
                                                 : Palette.PlayerColors[6];
                                         roomColors.Add(color);
@@ -724,7 +724,7 @@ internal class SurveillanceMinigamePatch
     public static List<GameObject> nightVisionOverlays;
 
     private static readonly Sprite overlaySprite =
-        Helpers.loadSpriteFromResources("TheOtherRoles.Resources.NightVisionOverlay.png", 350f);
+        loadSpriteFromResources("TheOtherRoles.Resources.NightVisionOverlay.png", 350f);
 
     public static bool nightVisionIsActive;
     private static bool isLightsOut;
@@ -800,7 +800,7 @@ internal class SurveillanceMinigamePatch
             Trickster.lightsOutTimer > 0;
         var ignoreNightVision =
             (CustomOptionHolder.camsNoNightVisionIfImpVision.getBool() &&
-             Helpers.hasImpVision(GameData.Instance.GetPlayerById(CachedPlayer.LocalPlayer.PlayerId))) ||
+             hasImpVision(GameData.Instance.GetPlayerById(CachedPlayer.LocalPlayer.PlayerId))) ||
             CachedPlayer.LocalPlayer.Data.IsDead;
         var nightVisionEnabled = CustomOptionHolder.camsNightVision.getBool();
 
