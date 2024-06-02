@@ -52,7 +52,7 @@ public static class Arsonist
         douseTarget = null;
         triggerArsonistWin = false;
         dousedPlayers = new List<PlayerControl>();
-        foreach (var p in MapOptions.playerIcons.Values)
+        foreach (var p in MapOption.playerIcons.Values)
             if (p != null && p.gameObject != null)
                 p.gameObject.SetActive(false);
         cooldown = CustomOptionHolder.arsonistCooldown.getFloat();

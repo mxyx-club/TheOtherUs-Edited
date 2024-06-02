@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using InnerNet;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles.Roles;
 
@@ -14,9 +14,9 @@ public class RoleInfo
 {
     public static RoleInfo impostor = new("Impostor", Palette.ImpostorRed, "ImpostorIntroDesc", "ImpostorShortDesc", RoleId.Impostor);
     public static RoleInfo assassin = new("Assassin", Palette.ImpostorRed, "AssassinIntroDesc", "AssassinShortDesc", RoleId.EvilGuesser, false, true);
-    public static RoleInfo godfather = new("Godfather", Godfather.color, "GodfatherIntroDesc", "GodfatherShortDesc", RoleId.Godfather);
-    public static RoleInfo mafioso = new("Mafioso", Mafioso.color, "MafiosoIntroDesc", "MafiosoShortDesc", RoleId.Mafioso);
-    public static RoleInfo janitor = new("Janitor", Janitor.color, "JanitorIntroDesc", "JanitorShortDesc", RoleId.Janitor);
+    public static RoleInfo godfather = new("Godfather", Mafia.color, "GodfatherIntroDesc", "GodfatherShortDesc", RoleId.Godfather);
+    public static RoleInfo mafioso = new("Mafioso", Mafia.color, "MafiosoIntroDesc", "MafiosoShortDesc", RoleId.Mafioso);
+    public static RoleInfo janitor = new("Janitor", Mafia.color, "JanitorIntroDesc", "JanitorShortDesc", RoleId.Janitor);
     public static RoleInfo morphling = new("Morphling", Morphling.color, "MorphlingIntroDesc", "MorphlingShortDesc", RoleId.Morphling);
     public static RoleInfo bomber = new("Bomber", Bomber.color, "BomberIntroDesc", "BomberShortDesc", RoleId.Bomber);
     public static RoleInfo poucher = new("Poucher", Poucher.color, "PoucherIntroDesc", "PoucherShortDesc", RoleId.Poucher);
@@ -311,10 +311,10 @@ public class RoleInfo
         if (p == Jester.jester) infos.Add(jester);
         if (p == Swooper.swooper) infos.Add(swooper);
         if (p == Werewolf.werewolf) infos.Add(werewolf);
-        if (p == Godfather.godfather) infos.Add(godfather);
+        if (p == Mafia.godfather) infos.Add(godfather);
+        if (p == Mafia.mafioso) infos.Add(mafioso);
+        if (p == Mafia.janitor) infos.Add(janitor);
         if (p == Miner.miner) infos.Add(miner);
-        if (p == Mafioso.mafioso) infos.Add(mafioso);
-        if (p == Janitor.janitor) infos.Add(janitor);
         if (p == Poucher.poucher && !Poucher.spawnModifier) infos.Add(poucher);
         if (p == Morphling.morphling) infos.Add(morphling);
         if (p == Bomber.bomber) infos.Add(bomber);
@@ -377,13 +377,13 @@ public class RoleInfo
         if (infos.Count == count)
         {
             if (p.Data.Role.IsImpostor)
-                infos.Add(MapOptions.gameMode == CustomGamemodes.HideNSeek ||
-                          MapOptions.gameMode == CustomGamemodes.PropHunt
+                infos.Add(MapOption.gameMode == CustomGamemodes.HideNSeek ||
+                          MapOption.gameMode == CustomGamemodes.PropHunt
                     ? hunter
                     : impostor);
             else
-                infos.Add(MapOptions.gameMode == CustomGamemodes.HideNSeek ? hunted :
-                    MapOptions.gameMode == CustomGamemodes.PropHunt ? prop : crewmate);
+                infos.Add(MapOption.gameMode == CustomGamemodes.HideNSeek ? hunted :
+                    MapOption.gameMode == CustomGamemodes.PropHunt ? prop : crewmate);
         }
 
         return infos;

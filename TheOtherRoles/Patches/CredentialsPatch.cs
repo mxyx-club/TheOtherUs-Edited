@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using InnerNet;
+using TheOtherRoles.Modules;
 using TMPro;
 using UnityEngine;
 
@@ -33,7 +34,7 @@ public static class CredentialsPatch
 
             __instance.text.alignment = TextAlignmentOptions.TopRight;
             var position = __instance.GetComponent<AspectPosition>();
-            var gameModeText = MapOptions.gameMode switch
+            var gameModeText = MapOption.gameMode switch
             {
                 CustomGamemodes.HideNSeek => getString("isHideNSeekGM"),
                 CustomGamemodes.Guesser => getString("isGuesserGm"),
@@ -44,7 +45,7 @@ public static class CredentialsPatch
             if (gameModeText != "") gameModeText = cs(Color.yellow, gameModeText) + "\n";
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {
-                __instance.text.text = $"<size=110%>{getString("TouTitle")}</size>  v{Main.Version + "\n" + getString("inGameTitle")}<size=90%>\n{PingText}\n {gameModeText}</size>";
+                __instance.text.text = $"<size=110%>{getString("TouTitle")}</size>  v{Main.Version + "\n" + getString("inGameTitle")}\n<size=90%>{PingText}\n {gameModeText}</size>";
                 position.DistanceFromEdge = new Vector3(2.25f, 0.11f, 0);
             }
             else
@@ -131,7 +132,7 @@ public static class CredentialsPatch
                     renderer.color = new Color(1, 1, 1, 1 - p);
                     if (p == 1)
                     {
-                        renderer.sprite = MapOptions.enableHorseMode ? horseBannerSprite : bannerSprite;
+                        renderer.sprite = MapOption.enableHorseMode ? horseBannerSprite : bannerSprite;
                         instance.StartCoroutine(Effects.Lerp(fadeDuration,
                             new Action<float>(p => { renderer.color = new Color(1, 1, 1, p); })));
                     }

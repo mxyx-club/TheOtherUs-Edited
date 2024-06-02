@@ -9,8 +9,7 @@ using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
-using static TheOtherRoles.MapOptions;
-using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.MapOption;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -345,10 +344,10 @@ internal class SabotageButtonRefreshPatch
     private static void Postfix()
     {
         // Mafia disable sabotage button for Janitor and sometimes for Mafioso
-        var blockSabotageJanitor = Janitor.janitor != null && Janitor.janitor == CachedPlayer.LocalPlayer.PlayerControl;
-        var blockSabotageMafioso = Mafioso.mafioso != null &&
-                                   Mafioso.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
-                                   Godfather.godfather != null && !Godfather.godfather.Data.IsDead;
+        var blockSabotageJanitor = Mafia.janitor != null && Mafia.janitor == CachedPlayer.LocalPlayer.PlayerControl;
+        var blockSabotageMafioso = Mafia.mafioso != null &&
+                                   Mafia.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
+                                   Mafia.godfather != null && !Mafia.godfather.Data.IsDead;
         if (blockSabotageJanitor || blockSabotageMafioso)
             FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
     }

@@ -7,7 +7,7 @@ internal class MedscanMiniGamePatchWTP
 {
     private static bool Prefix(MedScanMinigame._WalkToPad_d__16 __instance)
     {
-        if (MapOptions.disableMedscanWalking)
+        if (MapOption.disableMedscanWalking)
         {
             var num = __instance.__1__state;
             var medScanMinigame = __instance.__4__this;
@@ -41,7 +41,7 @@ internal class MedscanMiniGamePatchWTO
 {
     private static bool Prefix(MedScanMinigame._WalkToOffset_d__15 __instance)
     {
-        if (MapOptions.disableMedscanWalking)
+        if (MapOption.disableMedscanWalking)
         {
             var num = __instance.__1__state;
             var medScanMinigame = __instance.__4__this;

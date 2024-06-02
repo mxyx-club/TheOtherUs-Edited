@@ -384,7 +384,7 @@ public class OnGameEndPatch
             .TotalMilliseconds / 1000;
 
         // Reset Settings
-        if (MapOptions.gameMode == CustomGamemodes.HideNSeek) ShipStatusPatch.resetVanillaSettings();
+        if (MapOption.gameMode == CustomGamemodes.HideNSeek) ShipStatusPatch.resetVanillaSettings();
         RPCProcedure.resetVariables();
     }
 }
@@ -540,7 +540,7 @@ public class EndGameManagerSetUpPatch
                     break;
             }
 
-        if (MapOptions.showRoleSummary || HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM)
+        if (MapOption.showRoleSummary || HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM)
         {
             if (Camera.main != null)
             {

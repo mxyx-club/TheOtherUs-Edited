@@ -39,7 +39,7 @@ public static class HandleGuesser
     {
         Guesser.clearAndReload();
         GuesserGM.clearAndReload();
-        isGuesserGm = MapOptions.gameMode == CustomGamemodes.Guesser;
+        isGuesserGm = MapOption.gameMode == CustomGamemodes.Guesser;
         if (isGuesserGm)
         {
             guesserCantGuessSnitch = CustomOptionHolder.guesserGamemodeCantGuessSnitchIfTaksDone.getBool();

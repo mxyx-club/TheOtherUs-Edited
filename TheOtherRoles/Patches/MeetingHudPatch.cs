@@ -4,12 +4,12 @@ using System.Linq;
 using AmongUs.QuickChat;
 using Hazel;
 using Reactor.Utilities;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
-using static TheOtherRoles.MapOptions;
-using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.MapOption;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
@@ -122,10 +122,8 @@ internal class MeetingHudPatch
             Swapper.playerId1 = Swapper.playerId2 = byte.MaxValue;
         }
 
-
         // Only for the swapper: Reset all the buttons and charges value to their original state.
         if (CachedPlayer.LocalPlayer.PlayerControl != Swapper.swapper) return;
-
 
         // check if dying player was a selected player (but not confirmed yet)
         for (var i = 0; i < __instance.playerStates.Count; i++)
@@ -638,6 +636,7 @@ internal class MeetingHudPatch
         private static Dictionary<byte, int> CalculateVotes(MeetingHud __instance)
         {
             var dictionary = new Dictionary<byte, int>();
+
             foreach (var playerVoteArea in __instance.playerStates)
             {
                 if (playerVoteArea.VotedFor == 252 || playerVoteArea.VotedFor == 255 ||
@@ -646,8 +645,7 @@ internal class MeetingHudPatch
                 if (player == null || player.Data == null || player.Data.IsDead ||
                     player.Data.Disconnected) continue;
 
-                var additionalVotes = Mayor.mayor != null &&
-                                      Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId && Mayor.voteTwice ? 2 : 1; // Mayor vote
+                var additionalVotes = Mayor.mayor != null && Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId && Mayor.voteTwice ? 2 : 1; // Mayor vote
                 if (dictionary.TryGetValue(playerVoteArea.VotedFor, out var currentVotes)) dictionary[playerVoteArea.VotedFor] = currentVotes + additionalVotes;
                 else dictionary[playerVoteArea.VotedFor] = additionalVotes;
             }
@@ -686,8 +684,7 @@ internal class MeetingHudPatch
 
             var self = CalculateVotes(__instance);
             var max = self.MaxPair(out var tie);
-            var exiled = GameData.Instance.AllPlayers.ToArray()
-                .FirstOrDefault(v => !tie && v.PlayerId == max.Key && !v.IsDead);
+            var exiled = GameData.Instance.AllPlayers.ToArray().FirstOrDefault(v => !tie && v.PlayerId == max.Key && !v.IsDead);
 
             // TieBreaker 
             var potentialExiled = new List<GameData.PlayerInfo>();
@@ -698,16 +695,14 @@ internal class MeetingHudPatch
                 var maxVoteValue = self.Values.Max();
                 PlayerVoteArea tb = null;
                 if (Tiebreaker.tiebreaker != null)
-                    tb = __instance.playerStates.ToArray()
-                        .FirstOrDefault(x => x.TargetPlayerId == Tiebreaker.tiebreaker.PlayerId);
+                    tb = __instance.playerStates.ToArray().FirstOrDefault(x => x.TargetPlayerId == Tiebreaker.tiebreaker.PlayerId);
 
                 var isTiebreakerSkip = tb == null || tb.VotedFor == 253 || (tb != null && tb.AmDead);
 
                 foreach (var pair in self.Where(pair => pair.Value == maxVoteValue && !isTiebreakerSkip))
                 {
                     if (pair.Key != 253)
-                        potentialExiled.Add(GameData.Instance.AllPlayers.ToArray()
-                            .FirstOrDefault(x => x.PlayerId == pair.Key));
+                        potentialExiled.Add(GameData.Instance.AllPlayers.ToArray().FirstOrDefault(x => x.PlayerId == pair.Key));
                     else
                         skipIsTie = true;
                 }
@@ -788,7 +783,6 @@ internal class MeetingHudPatch
         private static bool Prefix(MeetingHud __instance, Il2CppStructArray<MeetingHud.VoterState> states)
         {
             // Swapper swap
-
             PlayerVoteArea swapped1 = null;
             PlayerVoteArea swapped2 = null;
             foreach (var playerVoteArea in __instance.playerStates)
@@ -847,14 +841,13 @@ internal class MeetingHudPatch
                         num2++;
                     }
 
-                    // Major vote, redo this iteration to place a second vote
+                    // Mayor vote, redo this iteration to place a second vote
                     if (Mayor.mayor == null || voterState.VoterId != (sbyte)Mayor.mayor.PlayerId ||
                         mayorFirstVoteDisplayed || !Mayor.voteTwice) continue;
                     mayorFirstVoteDisplayed = true;
                     j--;
                 }
             }
-
             return false;
         }
     }
@@ -932,16 +925,7 @@ internal class MeetingHudPatch
             var roomTracker = FastDestroyableSingleton<HudManager>.Instance.roomTracker;
             var roomId = byte.MinValue;
             if (roomTracker != null && roomTracker.LastRoom != null) roomId = (byte)roomTracker.LastRoom.RoomId;
-            /*
-            if (Snitch.snitch != null && roomTracker != null)
-            {
-                var roomWriter = AmongUsClient.Instance.StartRpcImmediately(
-                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareRoom, SendOption.Reliable);
-                roomWriter.Write(CachedPlayer.LocalPlayer.PlayerId);
-                roomWriter.Write(roomId);
-                AmongUsClient.Instance.FinishRpcImmediately(roomWriter);
-            }
-            */
+
             // Resett Bait list
             Bait.active = new Dictionary<DeadPlayer, float>();
             // Save AntiTeleport position, if the player is able to move (i.e. not on a ladder or a gap thingy)
@@ -1015,78 +999,6 @@ internal class MeetingHudPatch
                     FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, $"{message}");
                 }
             }
-            /*
-            // 末日
-            if (Doomsayer.doomsayer != null && CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && !Doomsayer.doomsayer.Data.IsDead && Doomsayer.playerTargetinformation != null)
-            {
-                var i = 1;
-                var random = new Random();
-                var allRoleInfo = (Doomsayer.onlineTarger ? Helpers.onlineRoleInfos() : Helpers.allRoleInfos()).OrderBy(_ => random.Next()).ToList();
-                var OtherRoles = Helpers.allRoleInfos().Where(n => allRoleInfo.All(y => y != n)).OrderBy(_ => random.Next()).ToList();
-                var OtherIndex = -1;
-                var AllMessage = new List<string>();
-                allRoleInfo.Remove(RoleInfo.doomsayer);
-                OtherRoles.Remove(RoleInfo.doomsayer);
-
-                if (enableDebugLogMode)
-                {
-                    foreach (var roleInfo in allRoleInfo)
-                    {
-                        Message(roleInfo.name.ToString());
-                    }
-                }
-
-                foreach (var predictionTarget in Doomsayer.playerTargetinformation)
-                {
-                    var formation = Doomsayer.formationNum;
-                    var x = random.Next(1, formation) - 1;
-                    var roleInfoTarget = RoleInfo.getRoleInfoForPlayer(predictionTarget, false).FirstOrDefault();
-                    var message = new StringBuilder();
-                    var tempNumList = Enumerable.Range(0, allRoleInfo.Count - 1).ToList();
-                    var temp =
-                        (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList)
-                        .OrderBy(_ => random.Next()).ToList();
-
-                    message.AppendLine($"{i}. {predictionTarget.name} 的职业可能是：\n");
-
-                    for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
-                    {
-                        var info = tempNum > temp.Count - 1
-                            ? GetOther()
-                            : allRoleInfo[temp[tempNum]];
-
-                        if (info == roleInfoTarget)
-                        {
-                            num--;
-                            continue;
-                        }
-
-                        message.Append(num == x ? roleInfoTarget.name : info.name);
-
-                        message.Append(num < formation - 1 ? ',' : ';');
-                    }
-
-                    i++;
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(CachedPlayer.LocalPlayer.PlayerControl, $"{message}");
-                    AllMessage.Add(message.ToString());
-                    continue;
-
-                    RoleInfo GetOther()
-                    {
-                        OtherIndex++;
-                        return OtherRoles[OtherIndex];
-                    }
-                }
-
-                var writer = AmongUsClient.Instance.StartRpcImmediately(
-                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DoomsayerMeeting,
-                    SendOption.Reliable);
-                writer.WritePacked(AllMessage.Count);
-                AllMessage.Do(writer.Write);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-
-                Doomsayer.playerTargetinformation.Clear();
-            }*/
 
             Trapper.playersOnMap = new List<PlayerControl>();
 

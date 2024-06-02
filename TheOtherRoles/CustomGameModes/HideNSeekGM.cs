@@ -49,7 +49,7 @@ public static class HideNSeek
 
     public static void clearAndReload()
     {
-        isHideNSeekGM = MapOptions.gameMode == CustomGamemodes.HideNSeek;
+        isHideNSeekGM = MapOption.gameMode == CustomGamemodes.HideNSeek;
         if (timerText != null) Object.Destroy(timerText);
         timerText = null;
         if (polusVent != null) Object.Destroy(polusVent);

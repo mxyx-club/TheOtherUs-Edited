@@ -164,7 +164,10 @@ class StartMeetingPatch
 [HarmonyPatch(typeof(AirshipExileController), nameof(AirshipExileController.WrapUpAndSpawn))]
 public static class AirshipExileController_WrapUpAndSpawn
 {
-    public static void Postfix(AirshipExileController __instance) => ExilePros.ExileControllerPostfix(__instance);
+    public static void Postfix(AirshipExileController __instance)
+    {
+        ExilePros.ExileControllerPostfix(__instance);
+    }
 }
 
 [HarmonyPatch(typeof(ExileController), nameof(ExileController.WrapUp))]
@@ -178,7 +181,8 @@ public class ExilePros
             {
                 var exiled = __instance.exiled?.Object;
                 if (exiled != null && exiled == (isKiller(exiled) || isEvil(exiled)) && Prosecutor.diesOnIncorrectPros)
-                {                    //ButtonTarget.DontRevive = Prosecutor.prosecutor.PlayerId;
+                {
+                    //ButtonTarget.DontRevive = Prosecutor.prosecutor.PlayerId;
                     Prosecutor.prosecutor.Exiled();
                 }
                 Prosecutor.ProsecuteThisMeeting = false;
@@ -186,7 +190,10 @@ public class ExilePros
         }
     }
 
-    public static void Postfix(ExileController __instance) => ExileControllerPostfix(__instance);
+    public static void Postfix(ExileController __instance)
+    {
+        ExileControllerPostfix(__instance);
+    }
 
     [HarmonyPatch(typeof(Object), nameof(Object.Destroy), [typeof(GameObject)])]
     public static void Prefix(GameObject obj)

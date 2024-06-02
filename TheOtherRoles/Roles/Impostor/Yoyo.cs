@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TheOtherRoles.Modules;
+using UnityEngine;
 
 namespace TheOtherRoles.Roles.Impostor;
 
@@ -17,22 +18,8 @@ public static class Yoyo
 
     public static Vector3? markedLocation;
 
-    private static Sprite markButtonSprite;
-
-    public static Sprite getMarkButtonSprite()
-    {
-        if (markButtonSprite) return markButtonSprite;
-        markButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.YoyoMarkButtonSprite.png", 115f);
-        return markButtonSprite;
-    }
-    private static Sprite blinkButtonSprite;
-
-    public static Sprite getBlinkButtonSprite()
-    {
-        if (blinkButtonSprite) return blinkButtonSprite;
-        blinkButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.YoyoBlinkButtonSprite.png", 115f);
-        return blinkButtonSprite;
-    }
+    public static ResourceSprite markButtonSprite = new("YoyoMarkButtonSprite.png");
+    public static ResourceSprite blinkButtonSprite = new("YoyoBlinkButtonSprite.png");
 
     public static void markLocation(Vector3 position)
     {

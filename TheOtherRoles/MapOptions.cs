@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TheOtherRoles;
 
-internal static class MapOptions
+internal static class MapOption
 {
     public static float ButtonCooldown => CustomOptionHolder.resteButtonCooldown.getFloat();
 
@@ -104,7 +104,10 @@ internal static class MapOptions
         restrictVitalsTime = restrictVitalsTimeMax = CustomOptionHolder.restrictVents.getFloat();
         disableCamsRoundOne = CustomOptionHolder.disableCamsRound1.getBool();
         randomGameStartPosition = CustomOptionHolder.randomGameStartPosition.getBool();
-        allowModGuess = CustomOptionHolder.allowModGuess.getBool();
+        ShowVentsOnMap = CustomOptionHolder.ShowVentsOnMap.getBool();
+        ShowVentsOnMeetingMap = CustomOptionHolder.ShowVentsOnMeetingMap.getBool();
+        allowModGuess = false;
+        //allowModGuess = CustomOptionHolder.allowModGuess.getBool();
         firstKillPlayer = null;
         isRoundOne = true;
     }
@@ -119,8 +122,6 @@ internal static class MapOptions
         toggleCursor = Main.ToggleCursor.Value;
         enableSoundEffects = Main.EnableSoundEffects.Value;
         enableHorseMode = Main.EnableHorseMode.Value;
-        ShowVentsOnMap = CustomOptionHolder.ShowVentsOnMap.getBool();
-        ShowVentsOnMeetingMap = CustomOptionHolder.ShowVentsOnMeetingMap.getBool();
         enableDebugLogMode = Main.enableDebugLogMode.Value;
 
         //Patches.ShouldAlwaysHorseAround.isHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;

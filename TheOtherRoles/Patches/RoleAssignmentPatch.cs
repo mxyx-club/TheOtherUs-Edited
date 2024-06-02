@@ -7,7 +7,6 @@ using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles.Patches;
 
@@ -25,9 +24,9 @@ internal class GameOptionsDataGetAdjustedNumImpostorsPatch
 {
     public static void Postfix(ref int __result)
     {
-        if (MapOptions.gameMode == CustomGamemodes.HideNSeek || MapOptions.gameMode == CustomGamemodes.PropHunt)
+        if (MapOption.gameMode == CustomGamemodes.HideNSeek || MapOption.gameMode == CustomGamemodes.PropHunt)
         {
-            var impCount = MapOptions.gameMode == CustomGamemodes.HideNSeek
+            var impCount = MapOption.gameMode == CustomGamemodes.HideNSeek
                 ? Mathf.RoundToInt(CustomOptionHolder.hideNSeekHunterCount.getFloat())
                 : CustomOptionHolder.propHuntNumberOfHunters.getQuantity();
             __result = impCount;
@@ -46,9 +45,9 @@ internal class GameOptionsDataValidatePatch
 {
     public static void Postfix(GameOptionsData __instance)
     {
-        if (MapOptions.gameMode == CustomGamemodes.HideNSeek ||
+        if (MapOption.gameMode == CustomGamemodes.HideNSeek ||
             GameOptionsManager.Instance.CurrentGameOptions.GameMode != GameModes.Normal) return;
-        if (MapOptions.gameMode == CustomGamemodes.PropHunt)
+        if (MapOption.gameMode == CustomGamemodes.PropHunt)
             __instance.NumImpostors = CustomOptionHolder.propHuntNumberOfHunters.getQuantity();
         __instance.NumImpostors = GameOptionsManager.Instance.CurrentGameOptions.NumImpostors;
     }
@@ -63,7 +62,7 @@ internal class RoleManagerSelectRolesPatch
 
     //private static bool isEvilGuesser;
     private static readonly List<Tuple<byte, byte>> playerRoleMap = new();
-    public static bool isGuesserGamemode => MapOptions.gameMode == CustomGamemodes.Guesser;
+    public static bool isGuesserGamemode => MapOption.gameMode == CustomGamemodes.Guesser;
 
     public static void Postfix()
     {
@@ -72,7 +71,7 @@ internal class RoleManagerSelectRolesPatch
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.resetVariables();
         // Don't assign Roles in Hide N Seek
-        if (MapOptions.gameMode == CustomGamemodes.HideNSeek || MapOptions.gameMode == CustomGamemodes.PropHunt ||
+        if (MapOption.gameMode == CustomGamemodes.HideNSeek || MapOption.gameMode == CustomGamemodes.PropHunt ||
             GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
         assignRoles();
     }

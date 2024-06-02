@@ -4,9 +4,9 @@ using System.Linq;
 using Hazel;
 using InnerNet;
 using Reactor.Utilities.Extensions;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using Object = Il2CppSystem.Object;
 
 namespace TheOtherRoles.Patches;
@@ -27,7 +27,7 @@ public class GameStartManagerPatch
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
                     (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
-                writer.Write((byte)MapOptions.gameMode);
+                writer.Write((byte)MapOption.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
 
@@ -51,7 +51,7 @@ public class GameStartManagerPatch
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
                     (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
-                writer.Write((byte)MapOptions.gameMode);
+                writer.Write((byte)MapOption.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
         }
@@ -306,9 +306,9 @@ public class GameStartManagerPatch
             if (AmongUsClient.Instance.AmHost)
             {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGamemode, SendOption.Reliable, -1);
-                writer.Write((byte)MapOptions.gameMode);
+                writer.Write((byte)MapOption.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.shareGameMode((byte)MapOptions.gameMode);
+                RPCProcedure.shareGameMode((byte)MapOption.gameMode);
             }
         }
     }
@@ -347,11 +347,11 @@ public class GameStartManagerPatch
                 }
 
                 if (continueStart &&
-                    (MapOptions.gameMode == CustomGamemodes.HideNSeek ||
-                     MapOptions.gameMode == CustomGamemodes.PropHunt) &&
+                    (MapOption.gameMode == CustomGamemodes.HideNSeek ||
+                     MapOption.gameMode == CustomGamemodes.PropHunt) &&
                     GameOptionsManager.Instance.CurrentGameOptions.MapId != 6)
                 {
-                    byte mapId = MapOptions.gameMode switch
+                    byte mapId = MapOption.gameMode switch
                     {
                         CustomGamemodes.HideNSeek => (byte)CustomOptionHolder.hideNSeekMap.getSelection(),
                         CustomGamemodes.PropHunt => (byte)CustomOptionHolder.propHuntMap.getSelection(),

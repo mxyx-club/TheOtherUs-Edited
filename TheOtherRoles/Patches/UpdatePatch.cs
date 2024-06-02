@@ -7,7 +7,6 @@ using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles.Patches;
 
@@ -134,7 +133,7 @@ internal class HudManagerUpdatePatch
             {
                 foreach (PlayerControl p in CachedPlayer.AllPlayers)
                 {
-                    if (p == (forImp || forKillerTeam || forEvilTeam || forNeutraTeam))
+                    if (forImp || forKillerTeam || forEvilTeam || forNeutraTeam)
                     {
                         setPlayerNameColor(Snitch.snitch, Snitch.color);
                     }
@@ -189,20 +188,20 @@ internal class HudManagerUpdatePatch
         if (CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor)
         {
             foreach (PlayerControl player in CachedPlayer.AllPlayers)
-                if (Godfather.godfather != null && Godfather.godfather == player)
+                if (Mafia.godfather != null && Mafia.godfather == player)
                     player.cosmetics.nameText.text = player.Data.PlayerName + " (教父)";
-                else if (Mafioso.mafioso != null && Mafioso.mafioso == player)
+                else if (Mafia.mafioso != null && Mafia.mafioso == player)
                     player.cosmetics.nameText.text = player.Data.PlayerName + " (小弟)";
-                else if (Janitor.janitor != null && Janitor.janitor == player)
+                else if (Mafia.janitor != null && Mafia.janitor == player)
                     player.cosmetics.nameText.text = player.Data.PlayerName + " (清洁工)";
             if (MeetingHud.Instance != null)
                 foreach (var player in MeetingHud.Instance.playerStates)
-                    if (Godfather.godfather != null && Godfather.godfather.PlayerId == player.TargetPlayerId)
-                        player.NameText.text = Godfather.godfather.Data.PlayerName + " (教父)";
-                    else if (Mafioso.mafioso != null && Mafioso.mafioso.PlayerId == player.TargetPlayerId)
-                        player.NameText.text = Mafioso.mafioso.Data.PlayerName + " (小弟)";
-                    else if (Janitor.janitor != null && Janitor.janitor.PlayerId == player.TargetPlayerId)
-                        player.NameText.text = Janitor.janitor.Data.PlayerName + " (清洁工)";
+                    if (Mafia.godfather != null && Mafia.godfather.PlayerId == player.TargetPlayerId)
+                        player.NameText.text = Mafia.godfather.Data.PlayerName + " (教父)";
+                    else if (Mafia.mafioso != null && Mafia.mafioso.PlayerId == player.TargetPlayerId)
+                        player.NameText.text = Mafia.mafioso.Data.PlayerName + " (小弟)";
+                    else if (Mafia.janitor != null && Mafia.janitor.PlayerId == player.TargetPlayerId)
+                        player.NameText.text = Mafia.janitor.Data.PlayerName + " (清洁工)";
         }
 
         // Lovers
@@ -297,7 +296,7 @@ internal class HudManagerUpdatePatch
         }
 
         // Display lighter / darker color for all alive players
-        if (CachedPlayer.LocalPlayer != null && MeetingHud.Instance != null && MapOptions.showLighterDarker)
+        if (CachedPlayer.LocalPlayer != null && MeetingHud.Instance != null && MapOption.showLighterDarker)
             foreach (var player in MeetingHud.Instance.playerStates)
             {
                 var target = playerById(player.TargetPlayerId);
@@ -374,10 +373,10 @@ internal class HudManagerUpdatePatch
         var enabled = true;
         if (Vampire.vampire != null && Vampire.vampire == CachedPlayer.LocalPlayer.PlayerControl)
             enabled = false;
-        else if (Mafioso.mafioso != null && Mafioso.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
-                 Godfather.godfather != null && !Godfather.godfather.Data.IsDead)
+        else if (Mafia.mafioso != null && Mafia.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
+                 Mafia.godfather != null && !Mafia.godfather.Data.IsDead)
             enabled = false;
-        else if (Janitor.janitor != null && Janitor.janitor == CachedPlayer.LocalPlayer.PlayerControl)
+        else if (Mafia.janitor != null && Mafia.janitor == CachedPlayer.LocalPlayer.PlayerControl)
             enabled = false;
         else if (Cultist.cultist != null && Cultist.cultist == CachedPlayer.LocalPlayer.PlayerControl &&
                  Cultist.needsFollower) enabled = false;
@@ -415,8 +414,8 @@ internal class HudManagerUpdatePatch
 
     private static void updateSabotageButton(HudManager __instance)
     {
-        if (MeetingHud.Instance || MapOptions.gameMode == CustomGamemodes.HideNSeek ||
-            MapOptions.gameMode == CustomGamemodes.PropHunt) __instance.SabotageButton.Hide();
+        if (MeetingHud.Instance || MapOption.gameMode == CustomGamemodes.HideNSeek ||
+            MapOption.gameMode == CustomGamemodes.PropHunt) __instance.SabotageButton.Hide();
         if (PlayerControl.LocalPlayer.Data.IsDead && CustomOptionHolder.deadImpsBlockSabotage.getBool()) __instance.SabotageButton.Hide();
     }
 

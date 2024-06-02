@@ -7,7 +7,6 @@ using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
@@ -41,10 +40,10 @@ internal class IntroCutsceneOnDestroyPatch
                 player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
                 player.cosmetics.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
                 //开局击杀cd
-                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(MapOptions.ButtonCooldown);
+                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(MapOption.ButtonCooldown);
                 player.cosmetics.nameText.text = data.PlayerName;
                 player.SetFlipX(true);
-                MapOptions.playerIcons[p.PlayerId] = player;
+                MapOption.playerIcons[p.PlayerId] = player;
                 player.gameObject.SetActive(false);
 
                 if (CachedPlayer.LocalPlayer.PlayerControl == Arsonist.arsonist && p != Arsonist.arsonist)
@@ -152,11 +151,11 @@ internal class IntroCutsceneOnDestroyPatch
         }
 
         // First kill
-        if (AmongUsClient.Instance.AmHost && MapOptions.shieldFirstKill && MapOptions.firstKillName != "" &&
+        if (AmongUsClient.Instance.AmHost && MapOption.shieldFirstKill && MapOption.firstKillName != "" &&
             !HideNSeek.isHideNSeekGM && !PropHunt.isPropHuntGM)
         {
             var target = PlayerControl.AllPlayerControls.ToArray().ToList()
-                .FirstOrDefault(x => x.Data.PlayerName.Equals(MapOptions.firstKillName));
+                .FirstOrDefault(x => x.Data.PlayerName.Equals(MapOption.firstKillName));
             if (target != null)
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
@@ -167,7 +166,7 @@ internal class IntroCutsceneOnDestroyPatch
             }
         }
 
-        MapOptions.firstKillName = "";
+        MapOption.firstKillName = "";
 
         if (HideNSeek.isHideNSeekGM)
         {

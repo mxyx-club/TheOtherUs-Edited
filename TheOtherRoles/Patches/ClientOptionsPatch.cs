@@ -15,32 +15,32 @@ public static class ClientOptionsPatch
     private static readonly SelectionBehaviour[] AllOptions =
     [
         new SelectionBehaviour(getString("GhostsSeeInformationText"),
-            () => MapOptions.ghostsSeeInformation = Main.GhostsSeeInformation.Value =
+            () => MapOption.ghostsSeeInformation = Main.GhostsSeeInformation.Value =
                 !Main.GhostsSeeInformation.Value, Main.GhostsSeeInformation.Value),
         new SelectionBehaviour(getString("GhostsSeeVotesText"),
-            () => MapOptions.ghostsSeeVotes =
+            () => MapOption.ghostsSeeVotes =
                 Main.GhostsSeeVotes.Value = !Main.GhostsSeeVotes.Value,
             Main.GhostsSeeVotes.Value),
         new SelectionBehaviour(getString("GhostsSeeRolesText"),
-            () => MapOptions.ghostsSeeRoles =
+            () => MapOption.ghostsSeeRoles =
                 Main.GhostsSeeRoles.Value = !Main.GhostsSeeRoles.Value,
             Main.GhostsSeeRoles.Value),
         new SelectionBehaviour(getString("GhostsSeeModifierText"),
-            () => MapOptions.ghostsSeeModifier = Main.GhostsSeeModifier.Value =
+            () => MapOption.ghostsSeeModifier = Main.GhostsSeeModifier.Value =
                 !Main.GhostsSeeModifier.Value, Main.GhostsSeeModifier.Value),
         new SelectionBehaviour(getString("ShowRoleSummaryText"),
-            () => MapOptions.showRoleSummary =
+            () => MapOption.showRoleSummary =
                 Main.ShowRoleSummary.Value = !Main.ShowRoleSummary.Value,
             Main.ShowRoleSummary.Value),
         new SelectionBehaviour(getString("ToggleCursorText"),
-            () => MapOptions.toggleCursor =
+            () => MapOption.toggleCursor =
                 Main.ToggleCursor.Value = !Main.ToggleCursor.Value,
             Main.ToggleCursor.Value),
         new SelectionBehaviour(getString("EnableSoundEffectsText"),
-            () => MapOptions.enableSoundEffects = Main.EnableSoundEffects.Value =
+            () => MapOption.enableSoundEffects = Main.EnableSoundEffects.Value =
                 !Main.EnableSoundEffects.Value, Main.EnableSoundEffects.Value),
         new SelectionBehaviour(getString("EnableDebugLogModeText"),
-            () => MapOptions.enableDebugLogMode =
+            () => MapOption.enableDebugLogMode =
                 Main.enableDebugLogMode.Value = !Main.enableDebugLogMode.Value,
             Main.enableDebugLogMode.Value)
     ];

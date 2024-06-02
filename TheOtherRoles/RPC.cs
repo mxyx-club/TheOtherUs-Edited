@@ -17,8 +17,8 @@ using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.HudManagerStartPatch;
-using static TheOtherRoles.MapOptions;
-using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.MapOption;
+using static TheOtherRoles.Roles.RoleClass;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles;
@@ -422,13 +422,13 @@ public static class RPCProcedure
                         Lighter.lighter = player;
                         break;
                     case RoleId.Godfather:
-                        Godfather.godfather = player;
+                        Mafia.godfather = player;
                         break;
                     case RoleId.Mafioso:
-                        Mafioso.mafioso = player;
+                        Mafia.mafioso = player;
                         break;
                     case RoleId.Janitor:
-                        Janitor.janitor = player;
+                        Mafia.janitor = player;
                         break;
                     case RoleId.Detective:
                         Detective.detective = player;
@@ -942,12 +942,6 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 break;
 
-            case RoleId.Godfather:
-                Helpers.turnToImpostor(Amnisiac.amnisiac);
-                if (Amnisiac.resetRole) Godfather.clearAndReload();
-                Amnisiac.clearAndReload();
-                break;
-
             case RoleId.Poucher:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Poucher.clearAndReload();
@@ -961,16 +955,18 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 break;
 
+            case RoleId.Godfather:
+                Helpers.turnToImpostor(Amnisiac.amnisiac);
+                Amnisiac.clearAndReload();
+                break;
 
             case RoleId.Mafioso:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
-                if (Amnisiac.resetRole) Mafioso.clearAndReload();
                 Amnisiac.clearAndReload();
                 break;
 
             case RoleId.Janitor:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
-                if (Amnisiac.resetRole) Janitor.clearAndReload();
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1803,10 +1799,8 @@ public static class RPCProcedure
         if (player == Morphling.morphling) Morphling.clearAndReload();
         if (player == Bomber.bomber) Bomber.clearAndReload();
         if (player == Camouflager.camouflager) Camouflager.clearAndReload();
-        if (player == Godfather.godfather) Godfather.clearAndReload();
+        if (player == Mafia.godfather || player == Mafia.mafioso || player == Mafia.janitor) Mafia.clearAndReload();
         if (player == Poucher.poucher && !Poucher.spawnModifier) Poucher.clearAndReload();
-        if (player == Mafioso.mafioso) Mafioso.clearAndReload();
-        if (player == Janitor.janitor) Janitor.clearAndReload();
         if (player == Vampire.vampire) Vampire.clearAndReload();
         if (player == Eraser.eraser) Eraser.clearAndReload();
         if (player == Cultist.cultist) Cultist.clearAndReload();
@@ -2758,10 +2752,10 @@ public static class RPCProcedure
         }
 
         //if (target == Guesser.evilGuesser) Guesser.evilGuesser = thief;
-        if (target == Godfather.godfather) Godfather.godfather = thief;
+        if (target == Mafia.godfather) Mafia.godfather = thief;
         if (target == Poucher.poucher && !Poucher.spawnModifier) Poucher.poucher = thief;
-        if (target == Mafioso.mafioso) Mafioso.mafioso = thief;
-        if (target == Janitor.janitor) Janitor.janitor = thief;
+        if (target == Mafia.mafioso) Mafia.mafioso = thief;
+        if (target == Mafia.janitor) Mafia.janitor = thief;
         if (target == Morphling.morphling) Morphling.morphling = thief;
         if (target == Camouflager.camouflager) Camouflager.camouflager = thief;
         if (target == Vampire.vampire) Vampire.vampire = thief;
@@ -3592,15 +3586,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.Prosecute:
-                var host = reader.ReadBoolean();
-                if (host && AmongUsClient.Instance.AmHost)
-                {
-                    Prosecutor.ProsecuteThisMeeting = true;
-                }
-                else if (!host && !AmongUsClient.Instance.AmHost)
-                {
-                    Prosecutor.ProsecuteThisMeeting = true;
-                }
+                Prosecutor.ProsecuteThisMeeting = true;
                 break;
         }
 

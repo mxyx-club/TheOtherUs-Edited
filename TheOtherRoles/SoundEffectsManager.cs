@@ -33,7 +33,7 @@ public static class SoundEffectsManager
 
     public static void play(string path, float volume = 0.8f, bool loop = false)
     {
-        if (!MapOptions.enableSoundEffects) return;
+        if (!MapOption.enableSoundEffects) return;
         var clipToPlay = get(path);
         stop(path);
         if (Constants.ShouldPlaySfx() && clipToPlay != null)
@@ -46,7 +46,7 @@ public static class SoundEffectsManager
     public static void playAtPosition(string path, Vector2 position, float maxDuration = 15f, float range = 5f,
         bool loop = false)
     {
-        if (!MapOptions.enableSoundEffects || !Constants.ShouldPlaySfx()) return;
+        if (!MapOption.enableSoundEffects || !Constants.ShouldPlaySfx()) return;
         var clipToPlay = get(path);
 
         var source = SoundManager.Instance.PlaySound(clipToPlay, false);

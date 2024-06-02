@@ -16,7 +16,6 @@ public class RegisterExtraVotes
         for (var i = 0; i < __instance.playerStates.Length; i++)
         {
             var playerVoteArea = __instance.playerStates[i];
-            if (Prosecutor.prosecutor != CachedPlayer.LocalPlayer.PlayerControl) continue;
             if (Prosecutor.prosecutor.Data.IsDead || Prosecutor.prosecutor.Data.Disconnected) continue;
             if (!playerVoteArea.DidVote
                 || playerVoteArea.AmDead
@@ -83,7 +82,6 @@ public class RegisterExtraVotes
         }
     }
 
-
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
     public static class CheckForEndVoting
     {
@@ -100,9 +98,9 @@ public class RegisterExtraVotes
         }
         public static bool Prefix(MeetingHud __instance)
         {
-            if (__instance.playerStates.All(ps => ps.AmDead || ps.DidVote && CheckVoted(ps)))
+            if (Prosecutor.prosecutor == null) return false;
+            if (__instance.playerStates.All(ps => ps.AmDead || (ps.DidVote && CheckVoted(ps))))
             {
-
                 var self = CalculateAllVotes(__instance);
                 var array = new Il2CppStructArray<MeetingHud.VoterState>(__instance.playerStates.Length);
                 var maxIdx = self.MaxPair(out var tie);
@@ -122,95 +120,94 @@ public class RegisterExtraVotes
         }
     }
 
-    // 增加投票动画
-    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.PopulateResults))]
-    public static class PopulateResults
+}
+
+// 增加投票动画
+[HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.PopulateResults))]
+public static class PopulateResults
+{
+    public static bool Prefix(MeetingHud __instance, [HarmonyArgument(0)] Il2CppStructArray<MeetingHud.VoterState> states)
     {
-        public static bool Prefix(MeetingHud __instance,
-            [HarmonyArgument(0)] Il2CppStructArray<MeetingHud.VoterState> states)
+        var allNums = new Dictionary<int, int>();
+
+        __instance.TitleText.text = Object.FindObjectOfType<TranslationController>().GetString(StringNames.MeetingVotingResults, Array.Empty<Il2CppSystem.Object>());
+        var amountOfSkippedVoters = 0;
+
+        var isProsecuting = false;
+        if (Prosecutor.prosecutor == null || !Prosecutor.ProsecuteThisMeeting) return false;
+        if (Prosecutor.prosecutor == CachedPlayer.LocalPlayer.PlayerControl)
         {
-            var allNums = new Dictionary<int, int>();
-
-            __instance.TitleText.text = Object.FindObjectOfType<TranslationController>()
-                .GetString(StringNames.MeetingVotingResults, Array.Empty<Il2CppSystem.Object>());
-            var amountOfSkippedVoters = 0;
-
-            var isProsecuting = false;
-            if (Prosecutor.prosecutor == CachedPlayer.LocalPlayer.PlayerControl)
+            if (Prosecutor.prosecutor.Data.IsDead || Prosecutor.prosecutor.Data.Disconnected) return false;
+            if (Prosecutor.ProsecuteThisMeeting)
             {
-                if (Prosecutor.prosecutor.Data.IsDead || Prosecutor.prosecutor.Data.Disconnected) return false;
+                isProsecuting = true;
+            }
+        }
+
+        for (var i = 0; i < __instance.playerStates.Length; i++)
+        {
+            var playerVoteArea = __instance.playerStates[i];
+            playerVoteArea.ClearForResults();
+            allNums.Add(i, 0);
+
+            for (var stateIdx = 0; stateIdx < states.Length; stateIdx++)
+            {
+                var voteState = states[stateIdx];
+                var playerInfo = GameData.Instance.GetPlayerById(voteState.VoterId);
+                if (Prosecutor.prosecutor.Data.IsDead || Prosecutor.prosecutor.Data.Disconnected)
+                {
+                    continue;
+                }
                 if (Prosecutor.ProsecuteThisMeeting)
                 {
-                    isProsecuting = true;
-                }
-            }
-
-            for (var i = 0; i < __instance.playerStates.Length; i++)
-            {
-                var playerVoteArea = __instance.playerStates[i];
-                playerVoteArea.ClearForResults();
-                allNums.Add(i, 0);
-
-                for (var stateIdx = 0; stateIdx < states.Length; stateIdx++)
-                {
-                    var voteState = states[stateIdx];
-                    var playerInfo = GameData.Instance.GetPlayerById(voteState.VoterId);
-                    if (Prosecutor.prosecutor != CachedPlayer.LocalPlayer.PlayerControl)
+                    if (voteState.VoterId == Prosecutor.prosecutor.PlayerId)
                     {
-                        if (Prosecutor.prosecutor.Data.IsDead || Prosecutor.prosecutor.Data.Disconnected) continue;
-                        if (Prosecutor.ProsecuteThisMeeting)
+                        if (playerInfo == null)
                         {
-                            if (voteState.VoterId == Prosecutor.prosecutor.PlayerId)
-                            {
-                                if (playerInfo == null)
-                                {
-                                    Error(string.Format("找不到投票者的玩家信息: {0}", voteState.VoterId));
-                                    Prosecutor.Prosecuted = true;
-                                }
-                                else if (i == 0 && voteState.SkippedVote)
-                                {
-                                    __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
-                                    __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
-                                    __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
-                                    __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
-                                    __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
-                                    amountOfSkippedVoters += 5;
-                                    Prosecutor.Prosecuted = true;
-                                }
-                                else if (voteState.VotedForId == playerVoteArea.TargetPlayerId)
-                                {
-                                    __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
-                                    __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
-                                    __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
-                                    __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
-                                    __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
-                                    allNums[i] += 5;
-                                    Prosecutor.Prosecuted = true;
-                                }
-                            }
+                            Error(string.Format("找不到投票者的玩家信息: {0}", voteState.VoterId));
+                            Prosecutor.Prosecuted = true;
+                        }
+                        else if (i == 0 && voteState.SkippedVote)
+                        {
+                            __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
+                            __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
+                            __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
+                            __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
+                            __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
+                            amountOfSkippedVoters += 5;
+                            Prosecutor.Prosecuted = true;
+                        }
+                        else if (voteState.VotedForId == playerVoteArea.TargetPlayerId)
+                        {
+                            __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
+                            __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
+                            __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
+                            __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
+                            __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
+                            allNums[i] += 5;
+                            Prosecutor.Prosecuted = true;
                         }
                     }
-
-                    if (isProsecuting) continue;
-
-                    if (playerInfo == null)
-                    {
-                        Error(string.Format("找不到投票者的玩家信息: {0}",
-                            voteState.VoterId));
-                    }
-                    else if (i == 0 && voteState.SkippedVote)
-                    {
-                        __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
-                        amountOfSkippedVoters++;
-                    }
-                    else if (voteState.VotedForId == playerVoteArea.TargetPlayerId)
-                    {
-                        __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
-                        allNums[i]++;
-                    }
                 }
+
+                if (isProsecuting) continue;
+                /*
+                if (playerInfo == null)
+                {
+                    Error(string.Format("找不到投票者的玩家信息: {0}", voteState.VoterId));
+                }
+                else if (i == 0 && voteState.SkippedVote)
+                {
+                    __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
+                    amountOfSkippedVoters = 0;
+                }
+                else if (voteState.VotedForId == playerVoteArea.TargetPlayerId)
+                {
+                    __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
+                    allNums[i] = 0;
+                }*/
             }
-            return false;
         }
+        return false;
     }
 }

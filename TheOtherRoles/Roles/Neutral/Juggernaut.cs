@@ -14,7 +14,7 @@ public static class Juggernaut
 
     public static void setkill()
     {
-        cooldown = cooldown - reducedkill;
+        cooldown -= reducedkill;
         if (cooldown <= 0f) cooldown = 0f;
     }
 

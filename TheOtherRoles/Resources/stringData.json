@@ -2293,5 +2293,17 @@
     "TerroristBombText2": {
         "0": "[BLANK]",
         "13": "\u81ea\u7206"
+    },
+    "YoyoMarkText": {
+        "0": "Mark Location",
+        "13": "\u6807\u8bb0\u4f4d\u7f6e"
+    },
+    "ReturningText": {
+        "0": "Returning...",
+        "13": "\u8fd4\u56de"
+    },
+    "BlinkText": {
+        "0": "Blink",
+        "13": "\u95ea\u73b0"
     }
 }

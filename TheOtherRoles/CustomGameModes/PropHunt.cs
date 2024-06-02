@@ -85,7 +85,7 @@ internal class PropHunt
     public static void clearAndReload()
     {
         remainingShots.Clear();
-        isPropHuntGM = MapOptions.gameMode == CustomGamemodes.PropHunt;
+        isPropHuntGM = MapOption.gameMode == CustomGamemodes.PropHunt;
         numberOfHunters = CustomOptionHolder.propHuntNumberOfHunters.getQuantity();
         initialBlackoutTime = CustomOptionHolder.hunterInitialBlackoutTime.getFloat();
         //maxMissesBeforeDeath = CustomOptionHolder.hunterMaxMissesBeforeDeath.getQuantity();
@@ -208,8 +208,8 @@ internal class PropHunt
 
         foreach (var pc in PlayerControl.AllPlayerControls)
         {
-            if (!MapOptions.playerIcons.ContainsKey(pc.PlayerId)) continue;
-            var poolablePlayer = MapOptions.playerIcons[pc.PlayerId];
+            if (!MapOption.playerIcons.ContainsKey(pc.PlayerId)) continue;
+            var poolablePlayer = MapOption.playerIcons[pc.PlayerId];
             if (pc.Data.IsDead)
             {
                 poolablePlayer.setSemiTransparent(true);
@@ -626,14 +626,14 @@ internal class PropHunt
     public static void MapSetPostfix()
     {
         // Make sure the map in the settings is in sync with the map from li
-        if ((MapOptions.gameMode != CustomGamemodes.PropHunt &&
-             MapOptions.gameMode != CustomGamemodes.HideNSeek) || AmongUsClient.Instance.IsGameStarted) return;
+        if ((MapOption.gameMode != CustomGamemodes.PropHunt &&
+             MapOption.gameMode != CustomGamemodes.HideNSeek) || AmongUsClient.Instance.IsGameStarted) return;
         int map = GameOptionsManager.Instance.currentGameOptions.MapId;
         if (map > 3) map--;
-        if (MapOptions.gameMode == CustomGamemodes.HideNSeek)
+        if (MapOption.gameMode == CustomGamemodes.HideNSeek)
             if (CustomOptionHolder.hideNSeekMap.selection != map)
                 CustomOptionHolder.hideNSeekMap.updateSelection(map);
-        if (MapOptions.gameMode == CustomGamemodes.PropHunt)
+        if (MapOption.gameMode == CustomGamemodes.PropHunt)
             if (CustomOptionHolder.propHuntMap.selection != map)
                 CustomOptionHolder.propHuntMap.updateSelection(map);
     }

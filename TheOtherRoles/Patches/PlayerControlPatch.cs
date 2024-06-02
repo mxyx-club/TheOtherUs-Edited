@@ -6,13 +6,13 @@ using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
 using InnerNet;
+using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
-using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
@@ -106,9 +106,9 @@ public static class PlayerControlFixedUpdatePatch
             }
 
             if (!isCamoComms() && Camouflager.camouflageTimer <= 0f && !MushroomSabotageActive() &&
-                MapOptions.firstKillPlayer != null && MapOptions.shieldFirstKill &&
-                ((target == MapOptions.firstKillPlayer && !isMorphedMorphling) ||
-                 (isMorphedMorphling && Morphling.morphTarget == MapOptions.firstKillPlayer)))
+                MapOption.firstKillPlayer != null && MapOption.shieldFirstKill &&
+                ((target == MapOption.firstKillPlayer && !isMorphedMorphling) ||
+                 (isMorphedMorphling && Morphling.morphTarget == MapOption.firstKillPlayer)))
             {
                 hasVisibleShield = true;
                 color = Color.blue;
@@ -743,12 +743,12 @@ public static class PlayerControlFixedUpdatePatch
             {
                 var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
                 int numberOfTasks = playerTotal - playerCompleted;
-                bool completedSnitch = Snitch.seeInMeeting && CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch && numberOfTasks == 0;
+                bool completedSnitch = CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch && numberOfTasks == 0;
                 bool forImpTeam = p.Data.Role.IsImpostor;
                 bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(p);
                 bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(p);
                 bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(p);
-                snitchFlag = completedSnitch && (p == (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam));
+                snitchFlag = completedSnitch && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam);
             }
 
             if (snitchFlag || (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target) ||
@@ -758,7 +758,7 @@ public static class PlayerControlFixedUpdatePatch
                 CachedPlayer.LocalPlayer.Data.IsDead ||
                 (CachedPlayer.LocalPlayer.PlayerControl == Slueth.slueth &&
                  Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) ||
-                (MapOptions.impostorSeeRoles && Spy.spy == null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor &&
+                (MapOption.impostorSeeRoles && Spy.spy == null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor &&
                  !CachedPlayer.LocalPlayer.Data.IsDead && p == (p.Data.Role.IsImpostor && !p.Data.IsDead)) ||
                 (CachedPlayer.LocalPlayer.PlayerControl == Poucher.poucher &&
                  Poucher.killed.Any(x => x.PlayerId == p.PlayerId)))
@@ -797,12 +797,12 @@ public static class PlayerControlFixedUpdatePatch
 
                 var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p.Data);
                 var roleNames = RoleInfo.GetRolesString(p, true, false);
-                var roleText = RoleInfo.GetRolesString(p, true, MapOptions.ghostsSeeModifier);
+                var roleText = RoleInfo.GetRolesString(p, true, MapOption.ghostsSeeModifier);
                 var taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({tasksCompleted}/{tasksTotal})</color>" : "";
 
                 var playerInfoText = "";
                 var meetingInfoText = "";
-                if (p == CachedPlayer.LocalPlayer.PlayerControl || (MapOptions.impostorSeeRoles && Spy.spy == null &&
+                if (p == CachedPlayer.LocalPlayer.PlayerControl || (MapOption.impostorSeeRoles && Spy.spy == null &&
                                                                     CachedPlayer.LocalPlayer.Data.Role.IsImpostor &&
                                                                     !CachedPlayer.LocalPlayer.Data.IsDead &&
                                                                     p == (p.Data.Role.IsImpostor && !p.Data.IsDead)))
@@ -820,17 +820,17 @@ public static class PlayerControlFixedUpdatePatch
 
                     meetingInfoText = $"{roleNames} {taskInfo}".Trim();
                 }
-                else if (MapOptions.ghostsSeeRoles && MapOptions.ghostsSeeInformation)
+                else if (MapOption.ghostsSeeRoles && MapOption.ghostsSeeInformation)
                 {
                     playerInfoText = $"{roleText} {taskInfo}".Trim();
                     meetingInfoText = playerInfoText;
                 }
-                else if (MapOptions.ghostsSeeInformation)
+                else if (MapOption.ghostsSeeInformation)
                 {
                     playerInfoText = $"{taskInfo}".Trim();
                     meetingInfoText = playerInfoText;
                 }
-                else if (MapOptions.ghostsSeeRoles || (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target))
+                else if (MapOption.ghostsSeeRoles || (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target))
                 {
                     playerInfoText = $"{roleText}";
                     meetingInfoText = playerInfoText;
@@ -924,7 +924,6 @@ public static class PlayerControlFixedUpdatePatch
         bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(local);
         bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(local);
         bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(local);
-        if (numberOfTasks <= Snitch.taskCountForReveal) Snitch.isRevealed = true;
 
         if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam))
         {
@@ -970,14 +969,11 @@ public static class PlayerControlFixedUpdatePatch
             }
         }
     }
+
     // Snitch Text
     private static void snitchTextUpdate()
     {
-        if (Snitch.localArrows == null || Snitch.snitch == null)
-        {
-            Snitch.text = null;
-            return;
-        };
+        if (Snitch.snitch == null) return;
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
         int numberOfTasks = playerTotal - playerCompleted;
 
@@ -990,11 +986,9 @@ public static class PlayerControlFixedUpdatePatch
         bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(local);
         bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(local);
 
-        if (numberOfTasks > Snitch.taskCountForReveal) Snitch.text = null;
-
         if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam || isDead))
         {
-            if (Snitch.text == null)
+            if (Snitch.text == null && !snitchIsDead)
             {
                 Snitch.text = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 Snitch.text.enableWordWrapping = false;
@@ -1002,15 +996,13 @@ public static class PlayerControlFixedUpdatePatch
                 Snitch.text.transform.localPosition += new Vector3(0f, 1.8f, -69f);
                 Snitch.text.gameObject.SetActive(true);
             }
-            else if (!snitchIsDead && Snitch.snitch != null)
+            else if (!snitchIsDead)
             {
-                Snitch.text.text = "告密者还活着 " + playerCompleted + "/" + playerTotal;
+                Snitch.text.text = $"告密者还活着: {playerCompleted} / {playerTotal}";
             }
-            else if (snitchIsDead || Snitch.snitch == null)
-            {
-                Snitch.text.text = null;
-            }
+            else Snitch.text?.Destroy();
         }
+        else Snitch.text?.Destroy();
     }
 
     private static void undertakerDragBodyUpdate()
@@ -1037,7 +1029,7 @@ public static class PlayerControlFixedUpdatePatch
                 Object.Destroy(BountyHunter.cooldownText.gameObject);
             BountyHunter.cooldownText = null;
             BountyHunter.bounty = null;
-            foreach (var p in MapOptions.playerIcons.Values)
+            foreach (var p in MapOption.playerIcons.Values)
                 if (p != null && p.gameObject != null)
                     p.gameObject.SetActive(false);
             return;
@@ -1074,17 +1066,17 @@ public static class PlayerControlFixedUpdatePatch
             if (FastDestroyableSingleton<HudManager>.Instance != null &&
                 FastDestroyableSingleton<HudManager>.Instance.UseButton != null)
             {
-                foreach (var pp in MapOptions.playerIcons.Values) pp.gameObject.SetActive(false);
-                if (MapOptions.playerIcons.ContainsKey(BountyHunter.bounty.PlayerId) &&
-                    MapOptions.playerIcons[BountyHunter.bounty.PlayerId].gameObject != null)
-                    MapOptions.playerIcons[BountyHunter.bounty.PlayerId].gameObject.SetActive(true);
+                foreach (var pp in MapOption.playerIcons.Values) pp.gameObject.SetActive(false);
+                if (MapOption.playerIcons.ContainsKey(BountyHunter.bounty.PlayerId) &&
+                    MapOption.playerIcons[BountyHunter.bounty.PlayerId].gameObject != null)
+                    MapOption.playerIcons[BountyHunter.bounty.PlayerId].gameObject.SetActive(true);
             }
         }
 
         // Hide in meeting
-        if (MeetingHud.Instance && MapOptions.playerIcons.ContainsKey(BountyHunter.bounty.PlayerId) &&
-            MapOptions.playerIcons[BountyHunter.bounty.PlayerId].gameObject != null)
-            MapOptions.playerIcons[BountyHunter.bounty.PlayerId].gameObject.SetActive(false);
+        if (MeetingHud.Instance && MapOption.playerIcons.ContainsKey(BountyHunter.bounty.PlayerId) &&
+            MapOption.playerIcons[BountyHunter.bounty.PlayerId].gameObject != null)
+            MapOption.playerIcons[BountyHunter.bounty.PlayerId].gameObject.SetActive(false);
 
         // Update Cooldown Text
         if (BountyHunter.cooldownText != null)
@@ -2120,7 +2112,7 @@ public static class MurderPlayerPatch
             target.clearAllTasks();
 
         // First kill (set before lover suicide)
-        if (MapOptions.firstKillName == "") MapOptions.firstKillName = target.Data.PlayerName;
+        if (MapOption.firstKillName == "") MapOption.firstKillName = target.Data.PlayerName;
 
         // Lover suicide trigger on murder
         if ((Lovers.lover1 != null && target == Lovers.lover1) || (Lovers.lover2 != null && target == Lovers.lover2))
@@ -2307,14 +2299,14 @@ public static class MurderPlayerPatch
             var bottomLeft = IntroCutsceneOnDestroyPatch.bottomLeft + new Vector3(-0.25f, -0.25f, 0);
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
-                if (!MapOptions.playerIcons.ContainsKey(p.PlayerId) || p.Data.Role.IsImpostor) continue;
+                if (!MapOption.playerIcons.ContainsKey(p.PlayerId) || p.Data.Role.IsImpostor) continue;
                 if (p.Data.IsDead || p.Data.Disconnected)
                 {
-                    MapOptions.playerIcons[p.PlayerId].gameObject.SetActive(false);
+                    MapOption.playerIcons[p.PlayerId].gameObject.SetActive(false);
                 }
                 else
                 {
-                    MapOptions.playerIcons[p.PlayerId].transform.localPosition =
+                    MapOption.playerIcons[p.PlayerId].transform.localPosition =
                         bottomLeft + (Vector3.right * visibleCounter * 0.35f);
                     visibleCounter++;
                 }

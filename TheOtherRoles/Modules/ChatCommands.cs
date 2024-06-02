@@ -4,7 +4,6 @@ using Hazel;
 using InnerNet;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles.Modules;
 
@@ -179,7 +178,7 @@ public static class ChatCommands
                 __instance.Chat.SetVisible(true);
 
             if (Multitasker.multitasker.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count > 0 ||
-                MapOptions.transparentTasks)
+                MapOption.transparentTasks)
             {
                 if (PlayerControl.LocalPlayer.Data.IsDead || PlayerControl.LocalPlayer.Data.Disconnected) return;
                 if (!Minigame.Instance) return;

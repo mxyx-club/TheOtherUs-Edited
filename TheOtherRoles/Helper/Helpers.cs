@@ -14,7 +14,6 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Helper;
@@ -177,8 +176,8 @@ public static class Helpers
 
     public static bool isCamoComms()
     {
-        if (isFungle()) return isCommsActive() && MapOptions.camoComms && !MapOptions.fungleDisableCamoComms;
-        return isCommsActive() && MapOptions.camoComms;
+        if (isFungle()) return isCommsActive() && MapOption.camoComms && !MapOption.fungleDisableCamoComms;
+        return isCommsActive() && MapOption.camoComms;
     }
 
     public static bool isActiveCamoComms()
@@ -639,7 +638,7 @@ public static class Helpers
     public static bool shouldShowGhostInfo()
     {
         return (CachedPlayer.LocalPlayer.PlayerControl != null && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead &&
-                MapOptions.ghostsSeeInformation) ||
+                MapOption.ghostsSeeInformation) ||
                AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Ended;
     }
 
@@ -772,7 +771,7 @@ public static class Helpers
         if (SurveillanceMinigamePatch.nightVisionIsActive) return true;
         if (Ninja.isInvisble && Ninja.ninja == target) return true;
         if (Swooper.isInvisable && Swooper.swooper == target) return true;
-        if (MapOptions.hideOutOfSightNametags && gameStarted && !source.Data.IsDead && GameOptionsManager.Instance.currentNormalGameOptions.MapId != 5 &&
+        if (MapOption.hideOutOfSightNametags && gameStarted && !source.Data.IsDead && GameOptionsManager.Instance.currentNormalGameOptions.MapId != 5 &&
             PhysicsHelpers.AnythingBetween(localPlayer.GetTruePosition(), target.GetTruePosition(),
                 Constants.ShadowMask, false)) return true;
         /*
@@ -785,7 +784,7 @@ public static class Helpers
             }
         }
         */
-        if (!MapOptions.hidePlayerNames) return false; // All names are visible
+        if (!MapOption.hidePlayerNames) return false; // All names are visible
         if (source == null || target == null) return true;
         if (source == target) return false; // Player sees his own name
         if (source.Data.Role.IsImpostor && (target.Data.Role.IsImpostor || target == Spy.spy ||
@@ -925,7 +924,11 @@ public static class Helpers
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.trapperMeetingFlag();
     }
-
+    /// <summary>
+    /// 管道技能相关
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
     public static bool roleCanUseVents(this PlayerControl player)
     {
         var roleCouldUse = false;
@@ -965,10 +968,10 @@ public static class Helpers
         }
         else if (player.Data?.Role != null && player.Data.Role.CanVent)
         {
-            if (Janitor.janitor != null && Janitor.janitor == CachedPlayer.LocalPlayer.PlayerControl)
+            if (Mafia.janitor != null && Mafia.janitor == CachedPlayer.LocalPlayer.PlayerControl)
                 roleCouldUse = false;
-            else if (Mafioso.mafioso != null && Mafioso.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
-                     Godfather.godfather != null && !Godfather.godfather.Data.IsDead)
+            else if (Mafia.mafioso != null && Mafia.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
+                     Mafia.godfather != null && !Mafia.godfather.Data.IsDead)
                 roleCouldUse = false;
             else
                 roleCouldUse = true;
@@ -977,7 +980,6 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
-        //天启跳洞添加
         else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player)
         {
             roleCouldUse = true;
@@ -1012,7 +1014,7 @@ public static class Helpers
             return MurderAttemptResult.PerformKill;
 
         // Handle first kill attempt
-        if (MapOptions.shieldFirstKill && MapOptions.firstKillPlayer == target)
+        if (MapOption.shieldFirstKill && MapOption.firstKillPlayer == target)
             return MurderAttemptResult.SuppressKill;
 
         // Handle blank shot
@@ -1299,6 +1301,7 @@ public static class Helpers
         if (isRoleAlive(Veteren.veteren)) powerCrewAlive = true;
         if (isRoleAlive(Mayor.mayor)) powerCrewAlive = true;
         if (isRoleAlive(Swapper.swapper)) powerCrewAlive = true;
+        if (isRoleAlive(Prosecutor.prosecutor)) powerCrewAlive = true;
         if (isRoleAlive(Guesser.niceGuesser)) powerCrewAlive = true;
 
         return powerCrewAlive;

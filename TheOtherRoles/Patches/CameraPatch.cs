@@ -23,7 +23,7 @@ public class CameraPatch
     private static void UseCameraTime()
     {
         // Don't waste network traffic if we're out of time.
-        if (MapOptions.restrictDevices > 0 && MapOptions.restrictCamerasTime > 0f &&
+        if (MapOption.restrictDevices > 0 && MapOption.restrictCamerasTime > 0f &&
             CachedPlayer.LocalPlayer.PlayerControl.isAlive() &&
             CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker &&
             CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard)
@@ -95,7 +95,7 @@ public class CameraPatch
                 if (cameraTimer > 0.1f)
                     UseCameraTime();
 
-                if (MapOptions.restrictDevices > 0)
+                if (MapOption.restrictDevices > 0)
                 {
                     if (TimeRemaining == null)
                     {
@@ -108,13 +108,13 @@ public class CameraPatch
                         TimeRemaining.color = Palette.White;
                     }
 
-                    if (MapOptions.disableCamsRoundOne && MapOptions.isRoundOne)
+                    if (MapOption.disableCamsRoundOne && MapOption.isRoundOne)
                     {
                         __instance.Close();
                         return false;
                     }
 
-                    if (MapOptions.restrictCamerasTime <= 0f &&
+                    if (MapOption.restrictCamerasTime <= 0f &&
                         CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker &&
                         CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard &&
                         !CachedPlayer.LocalPlayer.Data.IsDead)
@@ -123,7 +123,7 @@ public class CameraPatch
                         return false;
                     }
 
-                    var timeString = TimeSpan.FromSeconds(MapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
+                    var timeString = TimeSpan.FromSeconds(MapOption.restrictCamerasTime).ToString(@"mm\:ss\.ff");
                     TimeRemaining.text = $"Remaining: {timeString}";
                     TimeRemaining.gameObject.SetActive(true);
                 }
@@ -220,7 +220,7 @@ public class CameraPatch
                 if (cameraTimer > 0.1f)
                     UseCameraTime();
 
-                if (MapOptions.restrictDevices <= 0) return true;
+                if (MapOption.restrictDevices <= 0) return true;
                 if (TimeRemaining == null)
                 {
                     TimeRemaining =
@@ -232,13 +232,13 @@ public class CameraPatch
                     TimeRemaining.color = Palette.White;
                 }
 
-                if (MapOptions.disableCamsRoundOne && MapOptions.isRoundOne)
+                if (MapOption.disableCamsRoundOne && MapOption.isRoundOne)
                 {
                     __instance.Close();
                     return false;
                 }
 
-                if (MapOptions.restrictCamerasTime <= 0f &&
+                if (MapOption.restrictCamerasTime <= 0f &&
                     CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker &&
                     CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard &&
                     !CachedPlayer.LocalPlayer.Data.IsDead)
@@ -247,7 +247,7 @@ public class CameraPatch
                     return false;
                 }
 
-                var timeString = TimeSpan.FromSeconds(MapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
+                var timeString = TimeSpan.FromSeconds(MapOption.restrictCamerasTime).ToString(@"mm\:ss\.ff");
                 TimeRemaining.text = $"Remaining: {timeString}";
                 TimeRemaining.gameObject.SetActive(true);
 
@@ -299,7 +299,7 @@ public class CameraPatch
                 if (cameraTimer > 0.1f)
                     UseCameraTime();
 
-                if (MapOptions.restrictDevices <= 0) return true;
+                if (MapOption.restrictDevices <= 0) return true;
                 if (TimeRemaining == null)
                 {
                     TimeRemaining =
@@ -311,7 +311,7 @@ public class CameraPatch
                     TimeRemaining.color = Palette.White;
                 }
 
-                if (MapOptions.restrictCamerasTime <= 0f &&
+                if (MapOption.restrictCamerasTime <= 0f &&
                     CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker &&
                     CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard &&
                     !CachedPlayer.LocalPlayer.Data.IsDead)
@@ -320,7 +320,7 @@ public class CameraPatch
                     return false;
                 }
 
-                var timeString = TimeSpan.FromSeconds(MapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
+                var timeString = TimeSpan.FromSeconds(MapOption.restrictCamerasTime).ToString(@"mm\:ss\.ff");
                 TimeRemaining.text = string.Format("Remaining: {0}", timeString);
                 TimeRemaining.gameObject.SetActive(true);
 

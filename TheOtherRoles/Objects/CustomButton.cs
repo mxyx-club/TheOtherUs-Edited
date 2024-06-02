@@ -69,7 +69,7 @@ public class CustomButton
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
 
-        Timer = MapOptions.ButtonCooldown + 8.5f;
+        Timer = MapOption.ButtonCooldown + 8.5f;
 
         setActive(false);
     }

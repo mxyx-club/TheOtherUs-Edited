@@ -13,7 +13,7 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start))]
 public class MainMenuPatch
 {
-    private static bool horseButtonState = MapOptions.enableHorseMode;
+    private static bool horseButtonState = MapOption.enableHorseMode;
 
     //private static Sprite horseModeOffSprite = null;
     //private static Sprite horseModeOnSprite = null;
@@ -162,7 +162,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
         SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>)((scene, _) =>
         {
             if (!scene.name.Equals("MatchMaking", StringComparison.Ordinal)) return;
-            MapOptions.gameMode = CustomGamemodes.Classic;
+            MapOption.gameMode = CustomGamemodes.Classic;
             // Add buttons For Guesser Mode, Hide N Seek in this scene.
             // find "HostLocalGameButton"
             var template = Object.FindObjectOfType<HostLocalGameButton>();
@@ -177,7 +177,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
             guesserButtonPassiveButton.OnClick = new ButtonClickedEvent();
             guesserButtonPassiveButton.OnClick.AddListener((Action)(() =>
             {
-                MapOptions.gameMode = CustomGamemodes.Guesser;
+                MapOption.gameMode = CustomGamemodes.Guesser;
                 template.OnClick();
             }));
 
@@ -189,7 +189,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
             HideNSeekButtonPassiveButton.OnClick = new ButtonClickedEvent();
             HideNSeekButtonPassiveButton.OnClick.AddListener((Action)(() =>
             {
-                MapOptions.gameMode = CustomGamemodes.HideNSeek;
+                MapOption.gameMode = CustomGamemodes.HideNSeek;
                 template.OnClick();
             }));
 
@@ -201,7 +201,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
             PropHuntButtonPassiveButton.OnClick = new ButtonClickedEvent();
             PropHuntButtonPassiveButton.OnClick.AddListener((Action)(() =>
             {
-                MapOptions.gameMode = CustomGamemodes.PropHunt;
+                MapOption.gameMode = CustomGamemodes.PropHunt;
                 template.OnClick();
             }));
 

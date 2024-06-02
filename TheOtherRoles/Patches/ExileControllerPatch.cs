@@ -6,7 +6,6 @@ using PowerTools;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
@@ -138,16 +137,16 @@ internal class ExileControllerBeginPatch
 
         // SecurityGuard vents and cameras
         var allCameras = MapUtilities.CachedShipStatus.AllCameras.ToList();
-        MapOptions.camerasToAdd.ForEach(camera =>
+        MapOption.camerasToAdd.ForEach(camera =>
         {
             camera.gameObject.SetActive(true);
             camera.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
             allCameras.Add(camera);
         });
         MapUtilities.CachedShipStatus.AllCameras = allCameras.ToArray();
-        MapOptions.camerasToAdd = new List<SurvCamera>();
+        MapOption.camerasToAdd = new List<SurvCamera>();
 
-        foreach (var vent in MapOptions.ventsToSeal)
+        foreach (var vent in MapOption.ventsToSeal)
         {
             var animator = vent.GetComponent<SpriteAnim>();
             vent.EnterVentAnim = vent.ExitVentAnim = null;
@@ -170,10 +169,10 @@ internal class ExileControllerBeginPatch
             vent.name = "SealedVent_" + vent.name;
         }
 
-        MapOptions.ventsToSeal = new List<Vent>();
+        MapOption.ventsToSeal = new List<Vent>();
         // 1 = reset per turn
-        if (MapOptions.restrictDevices == 1)
-            MapOptions.resetDeviceTimes();
+        if (MapOption.restrictDevices == 1)
+            MapOption.resetDeviceTimes();
     }
 }
 
@@ -287,14 +286,14 @@ internal class ExileControllerWrapUpPatch
             var BottomLeft = newBottomLeft + new Vector3(-0.25f, -0.25f, 0);
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
-                if (!MapOptions.playerIcons.ContainsKey(p.PlayerId)) continue;
+                if (!MapOption.playerIcons.ContainsKey(p.PlayerId)) continue;
                 if (p.Data.IsDead || p.Data.Disconnected)
                 {
-                    MapOptions.playerIcons[p.PlayerId].gameObject.SetActive(false);
+                    MapOption.playerIcons[p.PlayerId].gameObject.SetActive(false);
                 }
                 else
                 {
-                    MapOptions.playerIcons[p.PlayerId].transform.localPosition =
+                    MapOption.playerIcons[p.PlayerId].transform.localPosition =
                         newBottomLeft + (Vector3.right * visibleCounter * 0.35f);
                     visibleCounter++;
                 }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Hazel;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -143,7 +143,7 @@ internal static class HudManagerStartPatch
         yoyoAdminTableButton.MaxTimer = Yoyo.adminCooldown;
         yoyoAdminTableButton.EffectDuration = 10f;
         engineerRepairButton.MaxTimer = defaultMaxTimer;
-        janitorCleanButton.MaxTimer = Janitor.cooldown;
+        janitorCleanButton.MaxTimer = Mafia.cooldown;
         sheriffKillButton.MaxTimer = Sheriff.cooldown;
         deputyHandcuffButton.MaxTimer = Deputy.handcuffCooldown;
         timeMasterShieldButton.MaxTimer = TimeMaster.cooldown;
@@ -524,9 +524,9 @@ internal static class HudManagerStartPatch
                                     CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CleanBody,
                                     SendOption.Reliable);
                                 writer.Write(playerInfo.PlayerId);
-                                writer.Write(Janitor.janitor.PlayerId);
+                                writer.Write(Mafia.janitor.PlayerId);
                                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                                RPCProcedure.cleanBody(playerInfo.PlayerId, Janitor.janitor.PlayerId);
+                                RPCProcedure.cleanBody(playerInfo.PlayerId, Mafia.janitor.PlayerId);
                                 janitorCleanButton.Timer = janitorCleanButton.MaxTimer;
                                 SoundEffectsManager.play("cleanerClean");
 
@@ -537,7 +537,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Janitor.janitor != null && Janitor.janitor == CachedPlayer.LocalPlayer.PlayerControl &&
+                return Mafia.janitor != null && Mafia.janitor == CachedPlayer.LocalPlayer.PlayerControl &&
                        !CachedPlayer.LocalPlayer.Data.IsDead;
             },
             () =>
@@ -546,7 +546,7 @@ internal static class HudManagerStartPatch
                        CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { janitorCleanButton.Timer = janitorCleanButton.MaxTimer; },
-            Janitor.getButtonSprite(),
+            Mafia.buttonSprite,
             CustomButton.ButtonPositions.upperRowLeft,
             __instance,
             KeyCode.F,
@@ -831,7 +831,7 @@ internal static class HudManagerStartPatch
                 return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Doomsayer.currentTarget != null;
             },
             () => { doomsayerButton.Timer = doomsayerButton.MaxTimer; },
-            Doomsayer.getButtonSprite(),
+            Doomsayer.buttonSprite,
             CustomButton.ButtonPositions.lowerRowRight,
             __instance,
             KeyCode.F,
@@ -2866,8 +2866,8 @@ internal static class HudManagerStartPatch
                 arsonistButton.Timer = Arsonist.dousedEveryoneAlive() ? 0 : arsonistButton.MaxTimer;
 
                 foreach (var p in Arsonist.dousedPlayers)
-                    if (MapOptions.playerIcons.ContainsKey(p.PlayerId))
-                        MapOptions.playerIcons[p.PlayerId].setSemiTransparent(false);
+                    if (MapOption.playerIcons.ContainsKey(p.PlayerId))
+                        MapOption.playerIcons[p.PlayerId].setSemiTransparent(false);
 
                 // Ghost Info
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
@@ -3122,7 +3122,7 @@ internal static class HudManagerStartPatch
                        Pursuer.target != null;
             },
             () => { pursuerButton.Timer = pursuerButton.MaxTimer; },
-            Pursuer.getTargetSprite(),
+            Pursuer.buttonSprite,
             CustomButton.ButtonPositions.lowerRowRight,
             __instance,
             KeyCode.F
@@ -3597,7 +3597,7 @@ internal static class HudManagerStartPatch
 
                 terroristButton.Timer = terroristButton.MaxTimer;
                 Terrorist.isPlanted = true;
-                // 在自爆时增加强制自杀
+
                 if (Terrorist.selfExplosion)
                 {
                     var loacl = CachedPlayer.LocalPlayer.PlayerId;
@@ -3769,10 +3769,10 @@ internal static class HudManagerStartPatch
                     writer.EndMessage();
                     RPCProcedure.yoyoMarkLocation(buff);
                     SoundEffectsManager.play("tricksterPlaceBox");
-                    yoyoButton.Sprite = Yoyo.getBlinkButtonSprite();
+                    yoyoButton.Sprite = Yoyo.blinkButtonSprite;
                     yoyoButton.Timer = 10f;
                     yoyoButton.HasEffect = false;
-                    yoyoButton.buttonText = "Blink";
+                    yoyoButton.buttonText = "BlinkText".Translate();
                 }
                 else
                 {
@@ -3792,7 +3792,7 @@ internal static class HudManagerStartPatch
                     yoyoButton.EffectDuration = Yoyo.blinkDuration;
                     yoyoButton.Timer = 10f;
                     yoyoButton.HasEffect = true;
-                    yoyoButton.buttonText = "Returning...";
+                    yoyoButton.buttonText = "ReturningText".Translate();
                     SoundEffectsManager.play("morphlingMorph");
                 }
             },
@@ -3808,11 +3808,11 @@ internal static class HudManagerStartPatch
                 {
                     Yoyo.markedLocation = null;
                     yoyoButton.Timer = yoyoButton.MaxTimer;
-                    yoyoButton.Sprite = Yoyo.getMarkButtonSprite();
-                    yoyoButton.buttonText = "Mark Location";
+                    yoyoButton.Sprite = Yoyo.markButtonSprite;
+                    yoyoButton.buttonText = "YoyoMarkText".Translate();
                 }
             },
-            Yoyo.getMarkButtonSprite(),
+            Yoyo.markButtonSprite,
             CustomButton.ButtonPositions.upperRowLeft,
             __instance,
             KeyCode.F,
@@ -3851,15 +3851,15 @@ internal static class HudManagerStartPatch
                 yoyoButton.isEffectActive = false;
                 yoyoButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                 yoyoButton.HasEffect = false;
-                yoyoButton.Sprite = Yoyo.getMarkButtonSprite();
-                yoyoButton.buttonText = "Mark Location";
+                yoyoButton.Sprite = Yoyo.markButtonSprite;
+                yoyoButton.buttonText = "YoyoMarkText".Translate();
                 SoundEffectsManager.play("morphlingMorph");
                 if (Minigame.Instance)
                 {
                     Minigame.Instance.Close();
                 }
             },
-            buttonText: "Mark Location"
+            buttonText: "YoyoMarkText".Translate()
         );
 
         yoyoAdminTableButton = new CustomButton(

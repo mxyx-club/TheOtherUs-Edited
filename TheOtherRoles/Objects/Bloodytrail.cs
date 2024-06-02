@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 

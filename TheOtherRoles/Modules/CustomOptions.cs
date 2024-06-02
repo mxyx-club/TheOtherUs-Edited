@@ -9,6 +9,7 @@ using BepInEx.Unity.IL2CPP;
 using Hazel;
 using Il2CppSystem.Linq;
 using Reactor.Utilities.Extensions;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -339,7 +340,7 @@ internal class GameOptionsMenuStartPatch
 {
     public static void Postfix(GameOptionsMenu __instance)
     {
-        switch (MapOptions.gameMode)
+        switch (MapOption.gameMode)
         {
             case CustomGamemodes.Classic:
                 createClassicTabs(__instance);
@@ -1147,24 +1148,24 @@ internal class GameOptionsDataPatch
     {
         var sb = new StringBuilder("\n");
         var options = CustomOption.options.Where(o => o.type == type);
-        if (MapOptions.gameMode == CustomGamemodes.Guesser)
+        if (MapOption.gameMode == CustomGamemodes.Guesser)
         {
             if (type == CustomOptionType.General)
                 options = CustomOption.options.Where(o => o.type == type || o.type == CustomOptionType.Guesser);
             var remove = new List<int> { 7, 10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 30100, 30101, 30102, 30103, 30104 };
             options = options.Where(x => !remove.Contains(x.id));
         }
-        else if (MapOptions.gameMode == CustomGamemodes.Classic)
+        else if (MapOption.gameMode == CustomGamemodes.Classic)
         {
             options = options.Where(x =>
                 !(x.type == CustomOptionType.Guesser || x == CustomOptionHolder.crewmateRolesFill));
         }
-        else if (MapOptions.gameMode == CustomGamemodes.HideNSeek)
+        else if (MapOption.gameMode == CustomGamemodes.HideNSeek)
         {
             options = options.Where(x =>
                 x.type == CustomOptionType.HideNSeekMain || x.type == CustomOptionType.HideNSeekRoles);
         }
-        else if (MapOptions.gameMode == CustomGamemodes.PropHunt)
+        else if (MapOption.gameMode == CustomGamemodes.PropHunt)
         {
             options = options.Where(x => x.type == CustomOptionType.PropHunt);
         }
@@ -1194,9 +1195,9 @@ internal class GameOptionsDataPatch
 
         foreach (var option in options)
         {
-            if (MapOptions.gameMode == CustomGamemodes.HideNSeek && option.type != CustomOptionType.HideNSeekMain &&
+            if (MapOption.gameMode == CustomGamemodes.HideNSeek && option.type != CustomOptionType.HideNSeekMain &&
                 option.type != CustomOptionType.HideNSeekRoles) continue;
-            if (MapOptions.gameMode == CustomGamemodes.PropHunt &&
+            if (MapOption.gameMode == CustomGamemodes.PropHunt &&
                 option.type != CustomOptionType.PropHunt) continue;
             if (option.parent != null)
             {
@@ -1288,7 +1289,7 @@ internal class GameOptionsDataPatch
             ? cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "useScrollWheel".Translate())
             : "";
 
-        if (MapOptions.gameMode == CustomGamemodes.HideNSeek)
+        if (MapOption.gameMode == CustomGamemodes.HideNSeek)
         {
             if (TheOtherRolesPlugin.optionsPage > 1) TheOtherRolesPlugin.optionsPage = 0;
             maxPage = 2;
@@ -1302,7 +1303,7 @@ internal class GameOptionsDataPatch
                     break;
             }
         }
-        else if (MapOptions.gameMode == CustomGamemodes.PropHunt)
+        else if (MapOption.gameMode == CustomGamemodes.PropHunt)
         {
             maxPage = 1;
             switch (counter)

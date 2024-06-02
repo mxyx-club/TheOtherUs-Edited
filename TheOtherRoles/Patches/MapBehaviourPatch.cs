@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Reactor.Utilities.Extensions;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -15,7 +16,7 @@ internal static class MapBehaviourPatch
 {
     public static Dictionary<PlayerControl, SpriteRenderer> herePoints = new();
 
-    public static Sprite Vent = loadSpriteFromResources("TheOtherRoles.Resources.Vent.png", 150f);
+    public static ResourceSprite Vent = new("TheOtherRoles.Resources.Vent.png", 150f);
 
     public static List<List<Vent>> VentNetworks = new();
 
@@ -95,12 +96,12 @@ internal static class MapBehaviourPatch
 
         foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
         {
-            if (MapOptions.ShowVentsOnMeetingMap && MeetingHud.Instance == null) return;
+            if (MapOption.ShowVentsOnMeetingMap && MeetingHud.Instance == null && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead) return;
             if (vent.name.StartsWith("JackInTheBox") && !(PlayerControl.LocalPlayer == Trickster.trickster ||
                                                        PlayerControl.LocalPlayer.Data.IsDead))
                 continue; //for trickster vents
 
-            if (!MapOptions.ShowVentsOnMap)
+            if (!MapOption.ShowVentsOnMap)
             {
                 if (mapIcons.Count > 0)
                 {

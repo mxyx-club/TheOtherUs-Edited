@@ -53,7 +53,7 @@ public static class CachedPlayerPatches
         };
         CachedPlayer.AllPlayers.Add(player);
         CachedPlayer.PlayerPtrs[__instance.Pointer] = player;
-        if (MapOptions.enableDebugLogMode)
+        if (MapOption.enableDebugLogMode)
         {
             foreach (var cachedPlayer in CachedPlayer.AllPlayers)
             {

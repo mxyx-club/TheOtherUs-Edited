@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <Version>1.0.3.9</Version>
+        <Version>1.0.4.0</Version>
 		<AssemblyName>TheOtherUs</AssemblyName>
         <Description>TheOtherUs-Edited</Description>
         <Authors>mxyx-club</Authors>
@@ -9,6 +9,8 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 		<Configurations>Debug;Release;Sunday;mxyx-club</Configurations>
+		<AmongUsLatest Condition="'$(Configuration)'=='mxyx-club'"> F:\AmongUs\v2023.11.28</AmongUsLatest>
+		<AmongUsLatest Condition="'$(Configuration)'!='mxyx-club'"> F:\AmongUs\v2024.3.5</AmongUsLatest>
     </PropertyGroup>
 
     <ItemGroup>

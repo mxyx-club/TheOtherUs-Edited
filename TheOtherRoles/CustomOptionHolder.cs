@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using TheOtherRoles.Modules;
 using UnityEngine;
 using static TheOtherRoles.CustomOption;
-using static TheOtherRoles.TheOtherRoles;
 using Types = TheOtherRoles.CustomOption.CustomOptionType;
 
 namespace TheOtherRoles;
@@ -537,7 +537,7 @@ public class CustomOptionHolder
     public static CustomOption enableMapOptions;
     public static CustomOption randomGameStartPosition;
     public static CustomOption randomGameStartToVents;
-    public static CustomOption allowModGuess;
+    //public static CustomOption allowModGuess;
     public static CustomOption ghostSpeed;
     public static CustomOption finishTasksBeforeHauntingOrZoomingOut;
     public static CustomOption camsNightVision;
@@ -726,7 +726,7 @@ public class CustomOptionHolder
         impostorSeeRoles = Create(30, Types.General, "impostorSeeRoles", false);
         blockGameEnd = Create(29, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "blockGameEnd"), true);
         deadImpsBlockSabotage = Create(32, Types.General, cs(Palette.ImpostorRed, "deadImpsBlockSabotage"), false);
-        allowModGuess = Create(31, Types.General, "allowModGuess", false);
+        //allowModGuess = Create(31, Types.General, "allowModGuess", false);
         //ghostSpeed = Create(33, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
 
         transparentTasks = Create(40, Types.General, "transparentTasks", false, null, true);
@@ -805,7 +805,7 @@ public class CustomOptionHolder
         modifierAssassinKillsThroughShield = Create(10007, Types.Impostor, "modifierAssassinKillsThroughShield", false, modifierAssassin);
         modifierAssassinCultist = Create(10008, Types.Impostor, "modifierAssassinCultist", false, modifierAssassin);
 
-        mafiaSpawnRate = Create(10100, Types.Impostor, cs(Janitor.color, "Mafia"), rates, null, true);
+        mafiaSpawnRate = Create(10100, Types.Impostor, cs(Mafia.color, "Mafia"), rates, null, true);
         janitorCooldown = Create(10101, Types.Impostor, "清洁工清理冷却", 25f, 10f, 60f, 2.5f, mafiaSpawnRate);
 
         morphlingSpawnRate = Create(10110, Types.Impostor, cs(Morphling.color, "Morphling"), rates, null, true);
@@ -911,10 +911,10 @@ public class CustomOptionHolder
         evilTrapperExtensionTime = Create(10302, Types.Impostor, "陷阱激活所需时间", 5f, 2f, 10f, 0.5f, evilTrapperSpawnRate);
         evilTrapperCooldown = Create(10303, Types.Impostor, "放置陷阱冷却", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
         evilTrapperKillTimer = Create(10304, Types.Impostor, "掉进陷阱后被陷阱击杀所需时间", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
-        evilTrapperTrapRange = Create(10305, Types.Impostor, "陷阱有效范围", 1f, 0.5f, 5f, 0.125f, evilTrapperSpawnRate);
+        evilTrapperTrapRange = Create(10305, Types.Impostor, "陷阱有效范围", 1f, 0.5f, 2f, 0.125f, evilTrapperSpawnRate);
         evilTrapperMaxDistance = Create(10306, Types.Impostor, "陷阱击杀声音播放有效范围", 10f, 1f, 60f, 2.5f, evilTrapperSpawnRate);
-        evilTrapperPenaltyTime = Create(10307, Types.Impostor, "设陷者进行通常击杀的追加冷却", 10f, 0f, 30f, 2.5f, evilTrapperSpawnRate);
-        evilTrapperBonusTime = Create(10308, Types.Impostor, "设陷者通常击杀落入陷阱的玩家的缩减冷却", 8f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
+        evilTrapperPenaltyTime = Create(10307, Types.Impostor, "设陷者普通击杀会追加冷却", 10f, 0f, 30f, 2.5f, evilTrapperSpawnRate);
+        evilTrapperBonusTime = Create(10308, Types.Impostor, "设陷者击杀落入陷阱的玩家缩减冷却", 10f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 
