@@ -44,6 +44,10 @@
         "0": "Enable Sound Effects",
         "13": "\u542f\u7528\u6a21\u7ec4\u97f3\u6548"
     },
+    "ShowFPS": {
+        "0": "Show FPS",
+        "13": "\u5728\u6e38\u620f\u5185\u663e\u793a\u5e27\u7387"
+    },
     "EnableDebugLogModeText": {
         "0": "Enable Debug Log Mode",
         "13": "\u6536\u96c6Debug\u65e5\u5fd7"
@@ -781,7 +785,7 @@
     },
     "creditsString1": {
         "0": "<align=\"center\"><b>TheOtherUs-Edited Team:</b>\nmxyx    Huier-Huang    haoren\nImp2    FangKuaiYa\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles, SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n\n",
-        "13": "<align=\"center\"><b>TheOtherUs-Edited \u5f00\u53d1\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    \u5584\u826f\u7684\u597d\u4eba    Imp11\n\n<b>\u7f8e\u5de5:</b>\n\u65b9\u5757\n\n<b>\u7ffb\u8bd1:</b>\nEN\uff1a\u4e5d\u5934\u86c7\nCN\uff1a\u6cab\u590f\u60a0\u8f69\n\n<b>GitHub\u8d21\u732e\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    Imp11\n\n\u672c\u6a21\u7ec4\u4f7f\u7528\u4e86\u90e8\u5206[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA[]\u7684\u4ee3\u7801\uff0c\u611f\u8c22Imp11\u7684\u652f\u6301\uff01\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
+        "13": "<align=\"center\"><b>TheOtherUs-Edited \u5f00\u53d1\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    \u5584\u826f\u7684\u597d\u4eba    Imp11\n\n<b>\u7f8e\u5de5:</b>\n\u65b9\u5757    \u9ece\u6728\n\n<b>\u7ffb\u8bd1:</b>\nEN\uff1a\u4e5d\u5934\u86c7\nCN\uff1a\u6cab\u590f\u60a0\u8f69\n\n<b>GitHub\u8d21\u732e\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    Imp11\n\n\u672c\u6a21\u7ec4\u4f7f\u7528\u4e86\u90e8\u5206[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA[]\u7684\u4ee3\u7801\uff0c\u611f\u8c22Imp11\u7684\u652f\u6301\uff01\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
     },
     "Host": {
         "0": "Host",
@@ -849,6 +853,11 @@
     "DifferentTouVersions": {
         "0": "Players With Different Versions:\n</color>",
         "13": "<color=#FF0000FF>\u88c5\u4e86\u4e0d\u540c\u7248\u672c\u6a21\u7ec4\u7684\u73a9\u5bb6:\n</color>"
+    },
+    "trapperGotTrapText": {
+        "0": "{0} got caught in the trap",
+        "11": "{0}\u304c\u7f60\u306b\u304b\u304b\u3063\u305f",
+        "13": "{0} \u6389\u8fdb\u4e86\u9677\u9631\u91cc\uff01"
     },
     "Impostor": {
         "0": "Impostor",

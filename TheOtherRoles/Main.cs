@@ -49,6 +49,7 @@ public class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> EnableHorseMode { get; set; }
     public static ConfigEntry<bool> ToggleCursor { get; set; }
     public static ConfigEntry<bool> enableDebugLogMode { get; set; }
+    public static ConfigEntry<bool> ShowFPS { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
     public static ConfigEntry<string> ShowPopUpVersion { get; set; }
@@ -101,6 +102,7 @@ public class TheOtherRolesPlugin : BasePlugin
         EnableHorseMode = Config.Bind("Custom", "Enable Horse Mode", false);
         ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
         enableDebugLogMode = Config.Bind("Custom", "Debug Log Mode", false);
+        ShowFPS = Config.Bind("Custom", "Show FPS", true);
 
         DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
 

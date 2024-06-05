@@ -64,29 +64,229 @@ public static class Helpers
 
     public static bool zoomOutStatus;
 
-    /*
-            public static Sprite getTeamCultistChatButtonSprite()
+    //new
+    public static bool gameStarted => AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started; 
+
+    /// <summary>
+    /// 假任务
+    /// </summary>
+    public static bool hasFakeTasks(this PlayerControl player)
+    {
+        return player == Werewolf.werewolf ||
+               player == Doomsayer.doomsayer ||
+               player == Juggernaut.juggernaut ||
+               player == Jester.jester ||
+               player == Arsonist.arsonist ||
+               player == Jackal.jackal ||
+               player == Sidekick.sidekick ||
+               player == Doomsayer.doomsayer ||
+               player == Pursuer.pursuer ||
+               player == Akujo.akujo ||
+               player == Swooper.swooper ||
+               player == Lawyer.lawyer ||
+               player == Vulture.vulture ||
+               Jackal.formerJackals.Any(x => x == player);
+    }
+
+    /// <summary>
+    /// 强力船员判定
+    /// </summary>
+    public static bool killingCrewAlive()
+    {
+        var powerCrewAlive = false;
+        // This functions blocks the game from ending if specified crewmate roles are alive
+        if (!CustomOptionHolder.blockGameEnd.getBool()) return false;
+
+        if (isRoleAlive(Sheriff.sheriff)) powerCrewAlive = true;
+        if (isRoleAlive(Deputy.deputy)) powerCrewAlive = true;
+        if (isRoleAlive(Veteren.veteren)) powerCrewAlive = true;
+        if (isRoleAlive(Mayor.mayor)) powerCrewAlive = true;
+        if (isRoleAlive(Swapper.swapper)) powerCrewAlive = true;
+        if (isRoleAlive(Prosecutor.prosecutor)) powerCrewAlive = true;
+        if (isRoleAlive(Guesser.niceGuesser)) powerCrewAlive = true;
+
+        return powerCrewAlive;
+    }
+
+    /// <summary>
+    /// 红狼视野
+    /// </summary>
+    public static bool hasImpVision(GameData.PlayerInfo player)
+    {
+        return player.Role.IsImpostor
+               || (((Jackal.jackal != null && Jackal.jackal.PlayerId == player.PlayerId) || Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.hasImpostorVision)
+               || (Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == player.PlayerId && Sidekick.hasImpostorVision)
+               || (Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision)
+               || (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == player.PlayerId && Spy.hasImpostorVision)
+               || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
+               || (Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision)
+               || (Swooper.swooper != null && Swooper.swooper.PlayerId == player.PlayerId && Swooper.hasImpVision)
+               || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId && Werewolf.hasImpostorVision);
+    }
+
+    /// <summary>
+    /// 触发观察者的探测
+    /// </summary>
+    public static void checkWatchFlash(PlayerControl target)
+    {
+        if (CachedPlayer.LocalPlayer.PlayerControl == PrivateInvestigator.watching)
         {
-            if (teamCultistChat != null)
-            {
-                return teamCultistChat;
-            }
-            teamCultistChat = loadSpriteFromResources("TheOtherRoles.Resources.TeamJackalChat.png", 115f);
-            return teamCultistChat;
+            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                (byte)CustomRPC.PrivateInvestigatorWatchFlash, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.privateInvestigatorWatchFlash(target.PlayerId);
+        }
+    }
+
+    public static void handleTrapperTrapOnBodyReport()
+    {
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TrapperMeetingFlag, SendOption.Reliable, -1);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        RPCProcedure.trapperMeetingFlag();
+    }
+
+    /// <summary>
+    /// 管道技能相关
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    public static bool roleCanUseVents(this PlayerControl player)
+    {
+        var roleCouldUse = false;
+        if (player.inVent) //test
+            return true;
+        if (Engineer.engineer != null && Engineer.engineer == player)
+        {
+            roleCouldUse = true;
+        }
+        else if (Werewolf.canUseVents && Werewolf.werewolf != null && Werewolf.werewolf == player)
+        {
+            roleCouldUse = true;
+        }
+        else if (Jackal.canUseVents && Jackal.jackal != null && Jackal.jackal == player)
+        {
+            roleCouldUse = true;
+        }
+        else if (Sidekick.canUseVents && Sidekick.sidekick != null && Sidekick.sidekick == player)
+        {
+            roleCouldUse = true;
+        }
+        else if (Spy.canEnterVents && Spy.spy != null && Spy.spy == player)
+        {
+            roleCouldUse = true;
+        }
+        else if (Vulture.canUseVents && Vulture.vulture != null && Vulture.vulture == player)
+        {
+            roleCouldUse = true;
+        }
+        else if (Undertaker.deadBodyDraged != null && !Undertaker.canDragAndVent && Undertaker.undertaker == player)
+        {
+            roleCouldUse = false;
+        }
+        else if (Thief.canUseVents && Thief.thief != null && Thief.thief == player)
+        {
+            roleCouldUse = true;
+        }
+        else if (player.Data?.Role != null && player.Data.Role.CanVent)
+        {
+            if (Mafia.janitor != null && Mafia.janitor == CachedPlayer.LocalPlayer.PlayerControl)
+                roleCouldUse = false;
+            else if (Mafia.mafioso != null && Mafia.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
+                     Mafia.godfather != null && !Mafia.godfather.Data.IsDead)
+                roleCouldUse = false;
+            else
+                roleCouldUse = true;
+        }
+        else if (Jester.jester != null && Jester.jester == player && Jester.canVent)
+        {
+            roleCouldUse = true;
+        }
+        else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player)
+        {
+            roleCouldUse = true;
+        }
+        else if (Swooper.swooper != null && Swooper.swooper == player)
+        {
+            roleCouldUse = true;
+        }
+        if (Tunneler.tunneler != null && Tunneler.tunneler == player)
+        {
+            var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Tunneler.tunneler.Data);
+            var numberOfTasks = playerTotal - playerCompleted;
+            if (numberOfTasks == 0) roleCouldUse = true;
         }
 
-                public static Sprite getLoversChatButtonSprite() {
-            if (teamLoverChat != null)
-            {
-                return teamLoverChat;
-            }
-            teamLoverChat = loadSpriteFromResources("TheOtherRoles.Resources.LoversChat.png", 150f);
-            return teamLoverChat;
-        }
-        */
+        return roleCouldUse;
+    }
 
-    public static bool gameStarted => AmongUsClient.Instance != null &&
-                                      AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started; //new
+    /// <summary>
+    /// 触发老兵反弹
+    /// </summary>
+    public static bool checkAndDoVetKill(PlayerControl target)
+    {
+        var shouldVetKill = Veteren.veteren == target && Veteren.alertActive;
+        if (shouldVetKill)
+        {
+            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                (byte)CustomRPC.VeterenKill, SendOption.Reliable);
+            writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.veterenKill(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+        }
+
+        return shouldVetKill;
+    }
+
+    public static bool isShiftNeutral(PlayerControl player)
+    {
+        if (CustomOptionHolder.modifierShiftNeutral.getBool())
+        {
+            if (player != null)
+                return player == Jackal.jackal ||
+                       player == Sidekick.sidekick ||
+                       player == Werewolf.werewolf ||
+                       player == Akujo.akujo ||
+                       player == Juggernaut.juggernaut ||
+                       player == Swooper.swooper ||
+                       player == Arsonist.arsonist;
+            return false;
+        }
+        else
+        {
+            var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
+            if (roleInfo != null)
+                return roleInfo.isNeutral;
+            return false;
+        }
+
+    }
+
+    public static bool isNeutral(PlayerControl player)
+    {
+        var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
+        if (roleInfo != null)
+            return roleInfo.isNeutral;
+        return false;
+    }
+
+    public static bool isKiller(PlayerControl player)
+    {
+        return isNeutral(player) && (
+                player == Juggernaut.juggernaut ||
+                player == Werewolf.werewolf ||
+                player == Swooper.swooper ||
+                player == Arsonist.arsonist ||
+                player == Jackal.jackal ||
+                player == Sidekick.sidekick);
+    }
+
+    public static bool isEvil(PlayerControl player)
+    {
+        return isNeutral(player) &&
+                player != Amnisiac.amnisiac &&
+                player != Pursuer.pursuer;
+    }
 
     public static bool ShowButtons =>
         !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) &&
@@ -610,25 +810,6 @@ public static class Helpers
         return !isDead(player);
     }
 
-    //假任务
-    public static bool hasFakeTasks(this PlayerControl player)
-    {
-        return player == Werewolf.werewolf ||
-               player == Doomsayer.doomsayer ||
-               player == Juggernaut.juggernaut ||
-               player == Jester.jester ||
-               player == Arsonist.arsonist ||
-               player == Jackal.jackal ||
-               player == Sidekick.sidekick ||
-               player == Doomsayer.doomsayer ||
-               player == Pursuer.pursuer ||
-               player == Akujo.akujo ||
-               player == Swooper.swooper ||
-               player == Lawyer.lawyer ||
-               player == Vulture.vulture ||
-               Jackal.formerJackals.Any(x => x == player);
-    }
-
     public static bool canBeErased(this PlayerControl player)
     {
         return player != Jackal.jackal && player != Juggernaut.juggernaut && player != Swooper.swooper && player != Sidekick.sidekick &&
@@ -903,101 +1084,6 @@ public static class Helpers
         })));
     }
 
-    /// <summary>
-    /// 触发观察者的探测
-    /// </summary>
-    public static void checkWatchFlash(PlayerControl target)
-    {
-        if (CachedPlayer.LocalPlayer.PlayerControl == PrivateInvestigator.watching)
-        {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                (byte)CustomRPC.PrivateInvestigatorWatchFlash, SendOption.Reliable);
-            writer.Write(target.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.privateInvestigatorWatchFlash(target.PlayerId);
-        }
-    }
-
-    public static void handleTrapperTrapOnBodyReport()
-    {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TrapperMeetingFlag, SendOption.Reliable, -1);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.trapperMeetingFlag();
-    }
-    /// <summary>
-    /// 管道技能相关
-    /// </summary>
-    /// <param name="player"></param>
-    /// <returns></returns>
-    public static bool roleCanUseVents(this PlayerControl player)
-    {
-        var roleCouldUse = false;
-        if (player.inVent) //test
-            return true;
-        if (Engineer.engineer != null && Engineer.engineer == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (Werewolf.canUseVents && Werewolf.werewolf != null && Werewolf.werewolf == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (Jackal.canUseVents && Jackal.jackal != null && Jackal.jackal == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (Sidekick.canUseVents && Sidekick.sidekick != null && Sidekick.sidekick == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (Spy.canEnterVents && Spy.spy != null && Spy.spy == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (Vulture.canUseVents && Vulture.vulture != null && Vulture.vulture == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (Undertaker.deadBodyDraged != null && !Undertaker.canDragAndVent && Undertaker.undertaker == player)
-        {
-            roleCouldUse = false;
-        }
-        else if (Thief.canUseVents && Thief.thief != null && Thief.thief == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (player.Data?.Role != null && player.Data.Role.CanVent)
-        {
-            if (Mafia.janitor != null && Mafia.janitor == CachedPlayer.LocalPlayer.PlayerControl)
-                roleCouldUse = false;
-            else if (Mafia.mafioso != null && Mafia.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
-                     Mafia.godfather != null && !Mafia.godfather.Data.IsDead)
-                roleCouldUse = false;
-            else
-                roleCouldUse = true;
-        }
-        else if (Jester.jester != null && Jester.jester == player && Jester.canVent)
-        {
-            roleCouldUse = true;
-        }
-        else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (Swooper.swooper != null && Swooper.swooper == player)
-        {
-            roleCouldUse = true;
-        }
-        if (Tunneler.tunneler != null && Tunneler.tunneler == player)
-        {
-            var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Tunneler.tunneler.Data);
-            var numberOfTasks = playerTotal - playerCompleted;
-            if (numberOfTasks == 0) roleCouldUse = true;
-        }
-
-        return roleCouldUse;
-    }
-
     public static MurderAttemptResult checkMuderAttempt(PlayerControl killer, PlayerControl target,
         bool blockRewind = false, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
     {
@@ -1251,24 +1337,6 @@ public static class Helpers
         return murder;
     }
 
-    /// <summary>
-    /// 触发老兵反弹
-    /// </summary>
-    public static bool checkAndDoVetKill(PlayerControl target)
-    {
-        var shouldVetKill = Veteren.veteren == target && Veteren.alertActive;
-        if (shouldVetKill)
-        {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                (byte)CustomRPC.VeterenKill, SendOption.Reliable);
-            writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.veterenKill(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-        }
-
-        return shouldVetKill;
-    }
-
     public static List<PlayerControl> getKillerTeamMembers(PlayerControl player)
     {
         var team = new List<PlayerControl>();
@@ -1287,24 +1355,6 @@ public static class Helpers
             if (role == Mimic.mimic)
                 return false;
         return role != null && isAlive(role);
-    }
-
-    //强力船员判定
-    public static bool killingCrewAlive()
-    {
-        var powerCrewAlive = false;
-        // This functions blocks the game from ending if specified crewmate roles are alive
-        if (!CustomOptionHolder.blockGameEnd.getBool()) return false;
-
-        if (isRoleAlive(Sheriff.sheriff)) powerCrewAlive = true;
-        if (isRoleAlive(Deputy.deputy)) powerCrewAlive = true;
-        if (isRoleAlive(Veteren.veteren)) powerCrewAlive = true;
-        if (isRoleAlive(Mayor.mayor)) powerCrewAlive = true;
-        if (isRoleAlive(Swapper.swapper)) powerCrewAlive = true;
-        if (isRoleAlive(Prosecutor.prosecutor)) powerCrewAlive = true;
-        if (isRoleAlive(Guesser.niceGuesser)) powerCrewAlive = true;
-
-        return powerCrewAlive;
     }
 
     public static bool isPlayerLover(PlayerControl player)
@@ -1389,56 +1439,6 @@ public static class Helpers
         return null;
     }
 
-    public static bool isShiftNeutral(PlayerControl player)
-    {
-        if (CustomOptionHolder.modifierShiftNeutral.getBool())
-        {
-            if (player != null)
-                return player == Jackal.jackal ||
-                       player == Sidekick.sidekick ||
-                       player == Werewolf.werewolf ||
-                       player == Akujo.akujo ||
-                       player == Juggernaut.juggernaut ||
-                       player == Swooper.swooper ||
-                       player == Arsonist.arsonist;
-            return false;
-        }
-        else
-        {
-            var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
-            if (roleInfo != null)
-                return roleInfo.isNeutral;
-            return false;
-        }
-
-    }
-
-    public static bool isNeutral(PlayerControl player)
-    {
-        var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
-        if (roleInfo != null)
-            return roleInfo.isNeutral;
-        return false;
-    }
-
-    public static bool isKiller(PlayerControl player)
-    {
-        return isNeutral(player) && (
-                player == Juggernaut.juggernaut ||
-                player == Werewolf.werewolf ||
-                player == Swooper.swooper ||
-                player == Arsonist.arsonist ||
-                player == Jackal.jackal ||
-                player == Sidekick.sidekick);
-    }
-
-    public static bool isEvil(PlayerControl player)
-    {
-        return isNeutral(player) &&
-                player != Amnisiac.amnisiac &&
-                player != Pursuer.pursuer;
-    }
-
     public static void toggleZoom(bool reset = false)
     {
         var orthographicSize = reset || zoomOutStatus ? 3f : 12f;
@@ -1475,24 +1475,6 @@ public static class Helpers
         return (long)value;
     }
 
-    //红狼视野
-    public static bool hasImpVision(GameData.PlayerInfo player)
-    {
-        return player.Role.IsImpostor
-               || (((Jackal.jackal != null && Jackal.jackal.PlayerId == player.PlayerId) ||
-                    Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.hasImpostorVision)
-               || (Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == player.PlayerId &&
-                   Sidekick.hasImpostorVision)
-               || (Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision)
-               || (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == player.PlayerId &&
-                   Spy.hasImpostorVision)
-               || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
-               || (Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision)
-               || (Swooper.swooper != null && Swooper.swooper.PlayerId == player.PlayerId && Swooper.hasImpVision)
-               || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId &&
-                   Werewolf.hasImpostorVision);
-    }
-
     public static object TryCast(this Il2CppObjectBase self, Type type)
     {
         return AccessTools.Method(self.GetType(), nameof(Il2CppObjectBase.TryCast)).MakeGenericMethod(type)
@@ -1503,4 +1485,25 @@ public static class Helpers
     {
         throw new NotImplementedException();
     }
+
+    /*
+    public static Sprite getTeamCultistChatButtonSprite()
+    {
+        if (teamCultistChat != null)
+        {
+            return teamCultistChat;
+        }
+        teamCultistChat = loadSpriteFromResources("TheOtherRoles.Resources.TeamJackalChat.png", 115f);
+        return teamCultistChat;
+    }
+
+    public static Sprite getLoversChatButtonSprite()
+    {
+        if (teamLoverChat != null)
+        {
+            return teamLoverChat;
+        }
+        teamLoverChat = loadSpriteFromResources("TheOtherRoles.Resources.LoversChat.png", 150f);
+        return teamLoverChat;
+    }*/
 }

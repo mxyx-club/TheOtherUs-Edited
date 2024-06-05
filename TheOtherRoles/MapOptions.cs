@@ -20,6 +20,7 @@ internal static class MapOption
     public static bool showRoleSummary = true;
     public static bool allowParallelMedBayScans;
     public static bool showLighterDarker = true;
+    public static bool showFPS = true;
     public static bool toggleCursor = true;
     public static bool enableSoundEffects = true;
     public static bool enableHorseMode;
@@ -118,6 +119,7 @@ internal static class MapOption
         ghostsSeeModifier = Main.GhostsSeeModifier.Value;
         ghostsSeeInformation = Main.GhostsSeeInformation.Value;
         ghostsSeeVotes = Main.GhostsSeeVotes.Value;
+        showFPS = Main.ShowFPS.Value;
         showRoleSummary = Main.ShowRoleSummary.Value;
         toggleCursor = Main.ToggleCursor.Value;
         enableSoundEffects = Main.EnableSoundEffects.Value;

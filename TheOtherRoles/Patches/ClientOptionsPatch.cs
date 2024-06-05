@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -15,34 +16,23 @@ public static class ClientOptionsPatch
     private static readonly SelectionBehaviour[] AllOptions =
     [
         new SelectionBehaviour(getString("GhostsSeeInformationText"),
-            () => MapOption.ghostsSeeInformation = Main.GhostsSeeInformation.Value =
-                !Main.GhostsSeeInformation.Value, Main.GhostsSeeInformation.Value),
+            () => MapOption.ghostsSeeInformation = Main.GhostsSeeInformation.Value = !Main.GhostsSeeInformation.Value, Main.GhostsSeeInformation.Value),
         new SelectionBehaviour(getString("GhostsSeeVotesText"),
-            () => MapOption.ghostsSeeVotes =
-                Main.GhostsSeeVotes.Value = !Main.GhostsSeeVotes.Value,
-            Main.GhostsSeeVotes.Value),
+            () => MapOption.ghostsSeeVotes = Main.GhostsSeeVotes.Value = !Main.GhostsSeeVotes.Value, Main.GhostsSeeVotes.Value),
         new SelectionBehaviour(getString("GhostsSeeRolesText"),
-            () => MapOption.ghostsSeeRoles =
-                Main.GhostsSeeRoles.Value = !Main.GhostsSeeRoles.Value,
-            Main.GhostsSeeRoles.Value),
+            () => MapOption.ghostsSeeRoles = Main.GhostsSeeRoles.Value = !Main.GhostsSeeRoles.Value, Main.GhostsSeeRoles.Value),
         new SelectionBehaviour(getString("GhostsSeeModifierText"),
-            () => MapOption.ghostsSeeModifier = Main.GhostsSeeModifier.Value =
-                !Main.GhostsSeeModifier.Value, Main.GhostsSeeModifier.Value),
+            () => MapOption.ghostsSeeModifier = Main.GhostsSeeModifier.Value = !Main.GhostsSeeModifier.Value, Main.GhostsSeeModifier.Value),
         new SelectionBehaviour(getString("ShowRoleSummaryText"),
-            () => MapOption.showRoleSummary =
-                Main.ShowRoleSummary.Value = !Main.ShowRoleSummary.Value,
-            Main.ShowRoleSummary.Value),
+            () => MapOption.showRoleSummary = Main.ShowRoleSummary.Value = !Main.ShowRoleSummary.Value, Main.ShowRoleSummary.Value),
         new SelectionBehaviour(getString("ToggleCursorText"),
-            () => MapOption.toggleCursor =
-                Main.ToggleCursor.Value = !Main.ToggleCursor.Value,
-            Main.ToggleCursor.Value),
+            () => MapOption.toggleCursor = Main.ToggleCursor.Value = !Main.ToggleCursor.Value, Main.ToggleCursor.Value),
         new SelectionBehaviour(getString("EnableSoundEffectsText"),
-            () => MapOption.enableSoundEffects = Main.EnableSoundEffects.Value =
-                !Main.EnableSoundEffects.Value, Main.EnableSoundEffects.Value),
+            () => MapOption.enableSoundEffects = Main.EnableSoundEffects.Value = !Main.EnableSoundEffects.Value, Main.EnableSoundEffects.Value),
+        new SelectionBehaviour(getString("ShowFPS"),
+            () => MapOption.showFPS = Main.ShowFPS.Value = !Main.ShowFPS.Value, Main.ShowFPS.Value),
         new SelectionBehaviour(getString("EnableDebugLogModeText"),
-            () => MapOption.enableDebugLogMode =
-                Main.enableDebugLogMode.Value = !Main.enableDebugLogMode.Value,
-            Main.enableDebugLogMode.Value)
+            () => MapOption.enableDebugLogMode = Main.enableDebugLogMode.Value = !Main.enableDebugLogMode.Value, Main.enableDebugLogMode.Value),
     ];
 
     private static GameObject popUp;

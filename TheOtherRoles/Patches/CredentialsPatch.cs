@@ -28,9 +28,9 @@ public static class CredentialsPatch
 
             DeltaTime += (Time.deltaTime - DeltaTime) * 0.1f;
             var fps = Mathf.Ceil(1f / DeltaTime);
-            var PingText = $"<size=80%>Ping: {AmongUsClient.Instance.Ping}ms FPS: {fps}</size>";
-            var host = $"<size=80%>{"Host".Translate()}: {GameData.Instance?.GetHost()?.PlayerName}</size>";
+            var PingText = $"<size=80%>Ping: {AmongUsClient.Instance.Ping}ms{(MapOption.showFPS ? $"  FPS: {fps}" : "")}</size>";
 
+            var host = $"<size=80%>{"Host".Translate()}: {GameData.Instance?.GetHost()?.PlayerName}</size>";
 
             __instance.text.alignment = TextAlignmentOptions.TopRight;
             var position = __instance.GetComponent<AspectPosition>();
@@ -45,7 +45,7 @@ public static class CredentialsPatch
             if (gameModeText != "") gameModeText = cs(Color.yellow, gameModeText) + "\n";
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {
-                __instance.text.text = $"<size=110%>{getString("TouTitle")}</size>  v{Main.Version + "\n" + getString("inGameTitle")}\n<size=90%>{PingText}\n {gameModeText}</size>";
+                __instance.text.text = $"<size=110%>{getString("TouTitle")}</size>  v{Main.Version + "\n" + getString("inGameTitle")}\n{PingText}\n{gameModeText}";
                 position.DistanceFromEdge = new Vector3(2.25f, 0.11f, 0);
             }
             else

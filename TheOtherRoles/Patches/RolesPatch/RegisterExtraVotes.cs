@@ -67,21 +67,6 @@ public class RegisterExtraVotes
         return dictionary;
     }
 
-    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.VotingComplete))]
-    public static class VotingComplete
-    {
-        public static void Postfix(MeetingHud __instance,
-            [HarmonyArgument(0)] Il2CppStructArray<MeetingHud.VoterState> states,
-            [HarmonyArgument(1)] GameData.PlayerInfo exiled,
-            [HarmonyArgument(2)] bool tie)
-        {
-            __instance.exiledPlayer = __instance.wasTie ? null : __instance.exiledPlayer;
-            var exiledString = exiled == null ? "null" : exiled.PlayerName;
-            Message($"被驱逐玩家 = {exiledString}");
-            Message($"是否平票 = {tie}");
-        }
-    }
-
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
     public static class CheckForEndVoting
     {

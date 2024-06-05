@@ -1089,7 +1089,7 @@ public class CustomOptionHolder
 
         timeMasterSpawnRate = Create(30210, Types.Crewmate, cs(TimeMaster.color, "TimeMaster"), rates, null, true);
         timeMasterCooldown = Create(30211, Types.Crewmate, "时光之盾冷却", 20f, 10f, 60f, 2.5f, timeMasterSpawnRate);
-        timeMasterRewindTime = Create(30212, Types.Crewmate, "回溯时间", 6f, 1f, 10f, 1f, timeMasterSpawnRate);
+        timeMasterRewindTime = Create(30212, Types.Crewmate, "回溯时间", 8f, 1f, 10f, 1f, timeMasterSpawnRate);
         timeMasterShieldDuration = Create(30213, Types.Crewmate, "时光之盾持续时间", 12.5f, 1f, 20f, 1f, timeMasterSpawnRate);
 
         veterenSpawnRate = Create(30220, Types.Crewmate, cs(Veteren.color, "Veteren"), rates, null, true);
