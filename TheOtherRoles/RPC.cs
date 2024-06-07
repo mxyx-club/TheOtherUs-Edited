@@ -1774,7 +1774,7 @@ public static class RPCProcedure
         if (player == Engineer.engineer) Engineer.clearAndReload();
         if (player == PrivateInvestigator.privateInvestigator) PrivateInvestigator.clearAndReload();
         if (player == Sheriff.sheriff) Sheriff.clearAndReload();
-        if (player == Deputy.deputy) Deputy.clearAndReload();
+        if (player == Deputy.deputy) Deputy.clearAndReload(false);
         if (player == Lighter.lighter) Lighter.clearAndReload();
         if (player == Detective.detective) Detective.clearAndReload();
         if (player == TimeMaster.timeMaster) TimeMaster.clearAndReload();

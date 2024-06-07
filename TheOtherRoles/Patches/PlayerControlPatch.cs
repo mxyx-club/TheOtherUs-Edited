@@ -2129,10 +2129,10 @@ public static class MurderPlayerPatch
         {
             LastImpostor.promoteToLastImpostor();
         }
-
-        // Deputy
+        /*
+        // Deputy ???
         if (Deputy.deputy != null && target == Deputy.deputy) HudManagerStartPatch.setAllButtonsHandcuffedStatus(false, true);
-
+        */
         // Sidekick promotion trigger on murder
         if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead &&
             target == Jackal.jackal && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl)
