@@ -25,14 +25,14 @@ public static class Jumper
     public static Sprite getJumpMarkButtonSprite()
     {
         if (jumpMarkButtonSprite) return jumpMarkButtonSprite;
-        jumpMarkButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.JumperButton.png", 115f);
+        jumpMarkButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.JumperButton.png", 115f);
         return jumpMarkButtonSprite;
     }
 
     public static Sprite getJumpButtonSprite()
     {
         if (jumpButtonSprite) return jumpButtonSprite;
-        jumpButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.JumperJumpButton.png", 115f);
+        jumpButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.JumperJumpButton.png", 115f);
         return jumpButtonSprite;
     }
 

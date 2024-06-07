@@ -8,6 +8,7 @@ using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles;
+
 public static class SubmergedCompatibility
 {
     public static class Classes
@@ -177,12 +178,10 @@ public static class SubmergedCompatibility
     }
 }
 
-public class MissingSubmergedBehaviour : MonoBehaviour
+public class MissingSubmergedBehaviour(IntPtr ptr) : MonoBehaviour(ptr)
 {
     static MissingSubmergedBehaviour()
     {
         ClassInjector.RegisterTypeInIl2Cpp<MissingSubmergedBehaviour>();
     }
-
-    public MissingSubmergedBehaviour(IntPtr ptr) : base(ptr) { }
 }

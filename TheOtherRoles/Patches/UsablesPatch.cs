@@ -5,16 +5,11 @@ using AmongUs.GameOptions;
 using PowerTools;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Modifier;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
-using static TheOtherRoles.MapOptions;
-using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.MapOption;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -189,12 +184,12 @@ internal class VentButtonVisibilityPatch
 {
     private static void Postfix(PlayerControl __instance)
     {
-        if (__instance.AmOwner && Helpers.ShowButtons)
+        if (__instance.AmOwner && ShowButtons)
         {
             HudManager.Instance.ImpostorVentButton.Hide();
             HudManager.Instance.SabotageButton.Hide();
 
-            if (Helpers.ShowButtons)
+            if (ShowButtons)
             {
                 if (__instance.roleCanUseVents())
                     HudManager.Instance.ImpostorVentButton.Show();
@@ -312,7 +307,7 @@ internal class KillButtonDoClickPatch
             }
 
             // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
-            var res = Helpers.checkMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl,
+            var res = checkMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl,
                 __instance.currentTarget);
             // Handle blank kill
             if (res == MurderAttemptResult.BlankKill)
@@ -349,10 +344,10 @@ internal class SabotageButtonRefreshPatch
     private static void Postfix()
     {
         // Mafia disable sabotage button for Janitor and sometimes for Mafioso
-        var blockSabotageJanitor = Janitor.janitor != null && Janitor.janitor == CachedPlayer.LocalPlayer.PlayerControl;
-        var blockSabotageMafioso = Mafioso.mafioso != null &&
-                                   Mafioso.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
-                                   Godfather.godfather != null && !Godfather.godfather.Data.IsDead;
+        var blockSabotageJanitor = Mafia.janitor != null && Mafia.janitor == CachedPlayer.LocalPlayer.PlayerControl;
+        var blockSabotageMafioso = Mafia.mafioso != null &&
+                                   Mafia.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
+                                   Mafia.godfather != null && !Mafia.godfather.Data.IsDead;
         if (blockSabotageJanitor || blockSabotageMafioso)
             FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
     }
@@ -624,7 +619,7 @@ internal class AdminPanelPatch
                                     {
                                         var color = Palette.PlayerColors[playerInfo.DefaultOutfit.ColorId];
                                         if (Hacker.onlyColorType)
-                                            color = Helpers.isD(playerInfo.PlayerId)
+                                            color = isD(playerInfo.PlayerId)
                                                 ? Palette.PlayerColors[7]
                                                 : Palette.PlayerColors[6];
                                         roomColors.Add(color);
@@ -646,7 +641,7 @@ internal class AdminPanelPatch
                                             component.cosmetics.currentBodySprite.BodySprite.material.GetColor(
                                                 "_BodyColor");
                                         if (Hacker.onlyColorType)
-                                            color = Helpers.isLighterColor(component)
+                                            color = isLighterColor(component)
                                                 ? Palette.PlayerColors[7]
                                                 : Palette.PlayerColors[6];
                                         roomColors.Add(color);
@@ -728,7 +723,7 @@ internal class SurveillanceMinigamePatch
     public static List<GameObject> nightVisionOverlays;
 
     private static readonly Sprite overlaySprite =
-        Helpers.loadSpriteFromResources("TheOtherRoles.Resources.NightVisionOverlay.png", 350f);
+        loadSpriteFromResources("TheOtherRoles.Resources.NightVisionOverlay.png", 350f);
 
     public static bool nightVisionIsActive;
     private static bool isLightsOut;
@@ -804,7 +799,7 @@ internal class SurveillanceMinigamePatch
             Trickster.lightsOutTimer > 0;
         var ignoreNightVision =
             (CustomOptionHolder.camsNoNightVisionIfImpVision.getBool() &&
-             Helpers.hasImpVision(GameData.Instance.GetPlayerById(CachedPlayer.LocalPlayer.PlayerId))) ||
+             hasImpVision(GameData.Instance.GetPlayerById(CachedPlayer.LocalPlayer.PlayerId))) ||
             CachedPlayer.LocalPlayer.Data.IsDead;
         var nightVisionEnabled = CustomOptionHolder.camsNightVision.getBool();
 

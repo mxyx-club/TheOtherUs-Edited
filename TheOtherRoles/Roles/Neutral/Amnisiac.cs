@@ -20,7 +20,7 @@ public static class Amnisiac
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Remember.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Remember.png", 115f);
         return buttonSprite;
     }
 

@@ -24,7 +24,7 @@ public static class BodyGuard
     public static Sprite getGuardButtonSprite()
     {
         if (guardButtonSprite) return guardButtonSprite;
-        guardButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Shield.png", 115f);
+        guardButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Shield.png", 115f);
         return guardButtonSprite;
     }
 

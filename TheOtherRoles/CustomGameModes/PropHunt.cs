@@ -85,7 +85,7 @@ internal class PropHunt
     public static void clearAndReload()
     {
         remainingShots.Clear();
-        isPropHuntGM = MapOptions.gameMode == CustomGamemodes.PropHunt;
+        isPropHuntGM = MapOption.gameMode == CustomGamemodes.PropHunt;
         numberOfHunters = CustomOptionHolder.propHuntNumberOfHunters.getQuantity();
         initialBlackoutTime = CustomOptionHolder.hunterInitialBlackoutTime.getFloat();
         //maxMissesBeforeDeath = CustomOptionHolder.hunterMaxMissesBeforeDeath.getQuantity();
@@ -127,13 +127,13 @@ internal class PropHunt
 
     public static Sprite getIntroSprite(int index)
     {
-        return Helpers.loadSpriteFromResources($"TheOtherRoles.Resources.IntroAnimation.intro_{index + 1000}.png", 150f,
+        return loadSpriteFromResources($"TheOtherRoles.Resources.IntroAnimation.intro_{index + 1000}.png", 150f,
             false);
     }
 
     public static void updateWhitelistedObjects()
     {
-        var allNames = Helpers.readTextFromResources("TheOtherRoles.Resources.Txt.Props.txt");
+        var allNames = readTextFromResources("TheOtherRoles.Resources.Txt.Props.txt");
         Message("after debug");
         whitelistedObjects = allNames.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
         Message("after split");
@@ -172,7 +172,7 @@ internal class PropHunt
                 var minutes = (int)relevantTimer / 60;
                 var seconds = (int)relevantTimer % 60;
                 var suffix = $" {minutes:00}:{seconds:00}";
-                timerText.text = Helpers.cs(timerRunning ? Color.blue : Color.red, suffix);
+                timerText.text = cs(timerRunning ? Color.blue : Color.red, suffix);
                 timerText.outlineColor = Color.white;
                 timerText.outlineWidth = 0.1f;
                 timerText.color = timerRunning ? Color.blue : Color.red;
@@ -192,7 +192,7 @@ internal class PropHunt
             poolablesBackground.AddComponent<SpriteRenderer>();
             if (poolablesBackgroundSprite == null)
                 poolablesBackgroundSprite =
-                    Helpers.loadSpriteFromResources("TheOtherRoles.Resources.poolablesBackground.jpg", 200f);
+                    loadSpriteFromResources("TheOtherRoles.Resources.poolablesBackground.jpg", 200f);
         }
 
         poolablesBackground.transform.SetParent(HudManager.Instance.transform);
@@ -208,17 +208,17 @@ internal class PropHunt
 
         foreach (var pc in PlayerControl.AllPlayerControls)
         {
-            if (!MapOptions.playerIcons.ContainsKey(pc.PlayerId)) continue;
-            var poolablePlayer = MapOptions.playerIcons[pc.PlayerId];
+            if (!MapOption.playerIcons.ContainsKey(pc.PlayerId)) continue;
+            var poolablePlayer = MapOption.playerIcons[pc.PlayerId];
             if (pc.Data.IsDead)
             {
                 poolablePlayer.setSemiTransparent(true);
-                poolablePlayer.cosmetics.nameText.text = Helpers.cs(Palette.DisabledGrey, pc.Data.PlayerName);
+                poolablePlayer.cosmetics.nameText.text = cs(Palette.DisabledGrey, pc.Data.PlayerName);
                 ;
             }
             else if (pc.Data.Role.IsImpostor)
             {
-                poolablePlayer.cosmetics.nameText.text = Helpers.cs(Palette.ImpostorRed, pc.Data.PlayerName);
+                poolablePlayer.cosmetics.nameText.text = cs(Palette.ImpostorRed, pc.Data.PlayerName);
                 poolablePlayer.cosmetics.currentBodySprite.BodySprite.material.SetFloat("_Outline", 2f);
                 poolablePlayer.cosmetics.currentBodySprite.BodySprite.material.SetColor("_OutlineColor",
                     Palette.ImpostorRed);
@@ -227,7 +227,7 @@ internal class PropHunt
             else
             {
                 // Display Prop
-                poolablePlayer.cosmetics.nameText.text = Helpers.cs(Palette.CrewmateBlue, pc.Data.PlayerName);
+                poolablePlayer.cosmetics.nameText.text = cs(Palette.CrewmateBlue, pc.Data.PlayerName);
                 ;
                 if (isCurrentlyRevealed.ContainsKey(pc.PlayerId))
                 {
@@ -277,7 +277,7 @@ internal class PropHunt
     {
         foreach (var playerId in invisPlayers.Keys)
         {
-            var pc = Helpers.playerById(playerId);
+            var pc = playerById(playerId);
             if (pc == null || pc.Data.IsDead) continue;
             var timeLeft = invisPlayers[playerId] - Time.deltaTime;
             invisPlayers[playerId] = timeLeft;
@@ -395,42 +395,42 @@ internal class PropHunt
     public static Sprite getDisguiseButtonSprite()
     {
         if (disguiseButtonSprite) return disguiseButtonSprite;
-        disguiseButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.DisguiseButton.png", 115f);
+        disguiseButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.DisguiseButton.png", 115f);
         return disguiseButtonSprite;
     }
 
     public static Sprite getUnstuckButtonSprite()
     {
         if (unstuckButtonSprite) return unstuckButtonSprite;
-        unstuckButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.UnStuck.png", 115f);
+        unstuckButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.UnStuck.png", 115f);
         return unstuckButtonSprite;
     }
 
     public static Sprite getRevealButtonSprite()
     {
         if (revealButtonSprite) return revealButtonSprite;
-        revealButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Reveal.png", 115f);
+        revealButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Reveal.png", 115f);
         return revealButtonSprite;
     }
 
     public static Sprite getInvisButtonSprite()
     {
         if (invisButtonSprite) return invisButtonSprite;
-        invisButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.InvisButton.png", 115f);
+        invisButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.InvisButton.png", 115f);
         return invisButtonSprite;
     }
 
     public static Sprite getFindButtonSprite()
     {
         if (findButtonSprite) return findButtonSprite;
-        findButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.FindButton.png", 115f);
+        findButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.FindButton.png", 115f);
         return findButtonSprite;
     }
 
     public static Sprite getSpeedboostButtonSprite()
     {
         if (speedboostButtonSprite) return speedboostButtonSprite;
-        speedboostButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SpeedboostButton.png", 115f);
+        speedboostButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.SpeedboostButton.png", 115f);
         return speedboostButtonSprite;
     }
 
@@ -626,14 +626,14 @@ internal class PropHunt
     public static void MapSetPostfix()
     {
         // Make sure the map in the settings is in sync with the map from li
-        if ((MapOptions.gameMode != CustomGamemodes.PropHunt &&
-             MapOptions.gameMode != CustomGamemodes.HideNSeek) || AmongUsClient.Instance.IsGameStarted) return;
+        if ((MapOption.gameMode != CustomGamemodes.PropHunt &&
+             MapOption.gameMode != CustomGamemodes.HideNSeek) || AmongUsClient.Instance.IsGameStarted) return;
         int map = GameOptionsManager.Instance.currentGameOptions.MapId;
         if (map > 3) map--;
-        if (MapOptions.gameMode == CustomGamemodes.HideNSeek)
+        if (MapOption.gameMode == CustomGamemodes.HideNSeek)
             if (CustomOptionHolder.hideNSeekMap.selection != map)
                 CustomOptionHolder.hideNSeekMap.updateSelection(map);
-        if (MapOptions.gameMode == CustomGamemodes.PropHunt)
+        if (MapOption.gameMode == CustomGamemodes.PropHunt)
             if (CustomOptionHolder.propHuntMap.selection != map)
                 CustomOptionHolder.propHuntMap.updateSelection(map);
     }
@@ -716,7 +716,7 @@ internal class PropHunt
         else
         {
             // There is a target, execute kill!
-            var res = Helpers.checkMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl,
+            var res = checkMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl,
                 __instance.currentTarget);
             __instance.SetTarget(null);
             PlayerControl.LocalPlayer.SetKillTimer(killCooldownHit);

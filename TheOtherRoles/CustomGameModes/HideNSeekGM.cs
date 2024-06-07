@@ -49,7 +49,7 @@ public static class HideNSeek
 
     public static void clearAndReload()
     {
-        isHideNSeekGM = MapOptions.gameMode == CustomGamemodes.HideNSeek;
+        isHideNSeekGM = MapOption.gameMode == CustomGamemodes.HideNSeek;
         if (timerText != null) Object.Destroy(timerText);
         timerText = null;
         if (polusVent != null) Object.Destroy(polusVent);
@@ -100,14 +100,14 @@ public static class Hunter
     public static Sprite getArrowSprite()
     {
         if (buttonSpriteArrow) return buttonSpriteArrow;
-        buttonSpriteArrow = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.HideNSeekArrowButton.png", 115f);
+        buttonSpriteArrow = loadSpriteFromResources("TheOtherRoles.Resources.HideNSeekArrowButton.png", 115f);
         return buttonSpriteArrow;
     }
 
     public static Sprite getLightSprite()
     {
         if (buttonSpriteLight) return buttonSpriteLight;
-        buttonSpriteLight = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.LighterButton.png", 115f);
+        buttonSpriteLight = loadSpriteFromResources("TheOtherRoles.Resources.LighterButton.png", 115f);
         return buttonSpriteLight;
     }
 

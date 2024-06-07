@@ -17,7 +17,7 @@ public static class Veteren
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Alert.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Alert.png", 115f);
         return buttonSprite;
     }
 

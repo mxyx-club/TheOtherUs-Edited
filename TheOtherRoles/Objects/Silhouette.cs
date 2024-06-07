@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Reactor.Utilities.Extensions;
-using TheOtherRoles.Roles.Impostor;
 using UnityEngine;
 
 namespace TheOtherRoles.Objects;
@@ -19,7 +18,7 @@ public class Silhouette
     public static Sprite getSilhouetteSprite()
     {
         if (SilhouetteSprite) return SilhouetteSprite;
-        SilhouetteSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Silhouette.png", 225f);
+        SilhouetteSprite = loadSpriteFromResources("TheOtherRoles.Resources.Silhouette.png", 225f);
         return SilhouetteSprite;
     }
 

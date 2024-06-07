@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -62,7 +60,7 @@ public class Portal
         index = Mathf.Clamp(index, 0, portalFgAnimationSprites.Length - 1);
         if (portalFgAnimationSprites[index] == null)
             portalFgAnimationSprites[index] =
-                Helpers.loadSpriteFromResources($"TheOtherRoles.Resources.PortalAnimation.portal_{index:000}.png",
+                loadSpriteFromResources($"TheOtherRoles.Resources.PortalAnimation.portal_{index:000}.png",
                     115f);
         return portalFgAnimationSprites[index];
     }
@@ -73,7 +71,7 @@ public class Portal
         isTeleporting = true;
 
         // Generate log info
-        var playerControl = Helpers.playerById(playerId);
+        var playerControl = playerById(playerId);
         var flip = playerControl.cosmetics.currentBodySprite.BodySprite
             .flipX; // use the original player control here, not the morhpTarget.
         firstPortal.animationFgRenderer.flipX = flip;
@@ -81,10 +79,10 @@ public class Portal
         if (Morphling.morphling != null && Morphling.morphTimer > 0)
             playerControl = Morphling.morphTarget; // Will output info of morph-target instead
         var playerNameDisplay = Portalmaker.logOnlyHasColors
-            ? "一名玩家 (" + (Helpers.isLighterColor(playerControl) ? "浅" : "深") + ")"
+            ? "一名玩家 (" + (isLighterColor(playerControl) ? "浅" : "深") + ")"
             : playerControl.Data.PlayerName;
 
-        if (Camouflager.camouflageTimer > 0 || Helpers.MushroomSabotageActive())
+        if (Camouflager.camouflageTimer > 0 || MushroomSabotageActive())
         {
             playerNameDisplay = "A camouflaged player";
         }
@@ -158,7 +156,7 @@ public class Portal
     private static void preloadSprites()
     {
         for (var i = 0; i < portalFgAnimationSprites.Length; i++) getFgAnimationSprite(i);
-        portalSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.PortalAnimation.plattform.png", 115f);
+        portalSprite = loadSpriteFromResources("TheOtherRoles.Resources.PortalAnimation.plattform.png", 115f);
     }
 
     public static void clearPortals()

@@ -8,7 +8,6 @@ public static class Lawyer
     public static PlayerControl target;
     public static Color color = new Color32(134, 153, 25, byte.MaxValue);
     public static Sprite targetSprite;
-    //public static bool isProsecutor;
     public static bool canCallEmergency = true;
     public static bool targetKnows;
 
@@ -20,7 +19,7 @@ public static class Lawyer
     public static Sprite getTargetSprite()
     {
         if (targetSprite) return targetSprite;
-        targetSprite = Helpers.loadSpriteFromResources("", 150f);
+        targetSprite = loadSpriteFromResources("", 150f);
         return targetSprite;
     }
 
@@ -33,7 +32,6 @@ public static class Lawyer
             targetWasGuessed = false;
         }
 
-        //isProsecutor = false;
         vision = CustomOptionHolder.lawyerVision.getFloat();
         targetKnows = CustomOptionHolder.lawyerTargetKnows.getBool();
         lawyerKnowsRole = CustomOptionHolder.lawyerKnowsRole.getBool();

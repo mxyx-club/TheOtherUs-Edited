@@ -1,15 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using InnerNet;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Modifier;
-using TheOtherRoles.Roles.Neutral;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles.Roles;
 
@@ -17,9 +14,9 @@ public class RoleInfo
 {
     public static RoleInfo impostor = new("Impostor", Palette.ImpostorRed, "ImpostorIntroDesc", "ImpostorShortDesc", RoleId.Impostor);
     public static RoleInfo assassin = new("Assassin", Palette.ImpostorRed, "AssassinIntroDesc", "AssassinShortDesc", RoleId.EvilGuesser, false, true);
-    public static RoleInfo godfather = new("Godfather", Godfather.color, "GodfatherIntroDesc", "GodfatherShortDesc", RoleId.Godfather);
-    public static RoleInfo mafioso = new("Mafioso", Mafioso.color, "MafiosoIntroDesc", "MafiosoShortDesc", RoleId.Mafioso);
-    public static RoleInfo janitor = new("Janitor", Janitor.color, "JanitorIntroDesc", "JanitorShortDesc", RoleId.Janitor);
+    public static RoleInfo godfather = new("Godfather", Mafia.color, "GodfatherIntroDesc", "GodfatherShortDesc", RoleId.Godfather);
+    public static RoleInfo mafioso = new("Mafioso", Mafia.color, "MafiosoIntroDesc", "MafiosoShortDesc", RoleId.Mafioso);
+    public static RoleInfo janitor = new("Janitor", Mafia.color, "JanitorIntroDesc", "JanitorShortDesc", RoleId.Janitor);
     public static RoleInfo morphling = new("Morphling", Morphling.color, "MorphlingIntroDesc", "MorphlingShortDesc", RoleId.Morphling);
     public static RoleInfo bomber = new("Bomber", Bomber.color, "BomberIntroDesc", "BomberShortDesc", RoleId.Bomber);
     public static RoleInfo poucher = new("Poucher", Poucher.color, "PoucherIntroDesc", "PoucherShortDesc", RoleId.Poucher);
@@ -48,7 +45,6 @@ public class RoleInfo
     public static RoleInfo vulture = new("Vulture", Vulture.color, "VultureIntroDesc", "VultureShortDesc", RoleId.Vulture, true);
     public static RoleInfo lawyer = new("Lawyer", Lawyer.color, "LawyerIntroDesc", "LawyerShortDesc", RoleId.Lawyer, true);
     public static RoleInfo executioner = new("Executioner", Lawyer.color, "ExecutionerIntroDesc", "ExecutionerShortDesc", RoleId.Executioner, true);
-    //public static RoleInfo prosecutor = new("Prosecutor", Lawyer.color, "ProsecutorIntroDesc", "ProsecutorShortDesc", RoleId.Prosecutor, true);
     public static RoleInfo pursuer = new("Pursuer", Pursuer.color, "PursuerIntroDesc", "PursuerShortDesc", RoleId.Pursuer, true);
     public static RoleInfo jackal = new("Jackal", Jackal.color, "JackalIntroDesc", "JackalShortDesc", RoleId.Jackal, true);
     public static RoleInfo sidekick = new("Sidekick", Sidekick.color, "SidekickIntroDesc", "SidekickShortDesc", RoleId.Sidekick, true);
@@ -63,6 +59,7 @@ public class RoleInfo
     public static RoleInfo crewmate = new("Crewmate", Color.white, "CrewmateIntroDesc", "CrewmateShortDesc", RoleId.Crewmate);
     public static RoleInfo goodGuesser = new("Vigilante", Guesser.color, "VigilanteIntroDesc", "VigilanteShortDesc", RoleId.NiceGuesser);
     public static RoleInfo mayor = new("Mayor", Mayor.color, "MayorIntroDesc", "MayorShortDesc", RoleId.Mayor);
+    public static RoleInfo prosecutor = new("Prosecutor", Prosecutor.color, "ProsecutorIntroDesc", "ProsecutorShortDesc", RoleId.Prosecutor);
     public static RoleInfo portalmaker = new("Portalmaker", Portalmaker.color, "PortalmakerIntroDesc", "PortalmakerShortDesc", RoleId.Portalmaker);
     public static RoleInfo engineer = new("Engineer", Engineer.color, "EngineerIntroDesc", "EngineerShortDesc", RoleId.Engineer);
     public static RoleInfo privateInvestigator = new("PrivateInvestigator",
@@ -89,6 +86,7 @@ public class RoleInfo
     public static RoleInfo prophet = new("Prophet", Prophet.color, "ProphetIntroDesc", "ProphetShortDesc", RoleId.Prophet);
 
     // Modifier
+    public static RoleInfo lover = new("Lover", Lovers.color, "LoverIntroDesc", "LoverShortDesc", RoleId.Lover, false, true);
     public static RoleInfo disperser = new("Disperser", Color.red, "DisperserIntroDesc", "DisperserShortDesc", RoleId.Disperser, false, true);
     public static RoleInfo poucherModifier = new("Poucher", Poucher.color, "PoucherIntroDesc", "PoucherShortDesc", RoleId.PoucherModifier, false, true);
     public static RoleInfo lastImpostor = new("LastImpostor", Palette.ImpostorRed, "LastImpostorIntroDesc", "LastImpostorShortDesc", RoleId.LastImpostor, false, true);
@@ -100,7 +98,6 @@ public class RoleInfo
     public static RoleInfo torch = new("Torch", Color.yellow, "TorchIntroDesc", "TorchShortDesc", RoleId.Torch, false, true);
     public static RoleInfo flash = new("Flash", Color.yellow, "FlashIntroDesc", "FlashShortDesc", RoleId.Flash, false, true);
     public static RoleInfo multitasker = new("Multitasker", Color.yellow, "MultitaskerIntroDesc", "MultitaskerShortDesc", RoleId.Multitasker, false, true);
-    public static RoleInfo lover = new("Lover", Lovers.color, "LoverIntroDesc", "LoverShortDesc", RoleId.Lover, false, true);
     public static RoleInfo giant = new("Giant", Color.yellow, "GiantIntroDesc", "GiantShortDesc", RoleId.Giant, false, true);
     public static RoleInfo mini = new("Mini", Color.yellow, "MiniIntroDesc", "MiniShortDesc", RoleId.Mini, false, true);
     public static RoleInfo vip = new("Vip", Color.yellow, "VipIntroDesc", "VipShortDesc", RoleId.Vip, false, true);
@@ -154,7 +151,6 @@ public class RoleInfo
         vulture,
         lawyer,
         executioner,
-        //prosecutor,
         pursuer,
         doomsayer,
         arsonist,
@@ -169,6 +165,7 @@ public class RoleInfo
         crewmate,
         goodGuesser,
         mayor,
+        prosecutor,
         portalmaker,
         engineer,
         privateInvestigator,
@@ -222,6 +219,22 @@ public class RoleInfo
         shifter,
     ];
 
+    private static readonly List<RoleInfo> _AllRoleInfo = [];
+    public static IReadOnlyList<RoleInfo> AllRoleInfo => _AllRoleInfo;
+    public RoleInfo()
+    {
+        _AllRoleInfo.Add(this);
+    }
+    public Color Color { get; set; }
+    public string Name { get; set; }
+    public RoleId RoleId { get; set; }
+    public string Description { get; set; }
+    public string IntroInfo { get; set; }
+    public RoleTeam RoleTeams { get; set; }
+    public CustomRoleType RoleType { get; set; } = CustomRoleType.Main;
+    public Func<RoleBase> GetRole { get; set; }
+    public Func<PlayerControl, RoleControllerBase> CreateRoleController { get; set; }
+    public Type RoleClassType { get; set; }
 
     private static string ReadmePage = "";
     public Color color;
@@ -298,10 +311,10 @@ public class RoleInfo
         if (p == Jester.jester) infos.Add(jester);
         if (p == Swooper.swooper) infos.Add(swooper);
         if (p == Werewolf.werewolf) infos.Add(werewolf);
-        if (p == Godfather.godfather) infos.Add(godfather);
+        if (p == Mafia.godfather) infos.Add(godfather);
+        if (p == Mafia.mafioso) infos.Add(mafioso);
+        if (p == Mafia.janitor) infos.Add(janitor);
         if (p == Miner.miner) infos.Add(miner);
-        if (p == Mafioso.mafioso) infos.Add(mafioso);
-        if (p == Janitor.janitor) infos.Add(janitor);
         if (p == Poucher.poucher && !Poucher.spawnModifier) infos.Add(poucher);
         if (p == Morphling.morphling) infos.Add(morphling);
         if (p == Bomber.bomber) infos.Add(bomber);
@@ -349,7 +362,7 @@ public class RoleInfo
         if (p == Vulture.vulture) infos.Add(vulture);
         if (p == Medium.medium) infos.Add(medium);
         if (p == Lawyer.lawyer) infos.Add(lawyer);
-        //if (p == Lawyer.lawyer && Lawyer.isProsecutor) infos.Add(prosecutor);
+        if (p == Prosecutor.prosecutor) infos.Add(prosecutor);
         if (p == Executioner.executioner && Executioner.executioner) infos.Add(executioner);
         if (p == Trapper.trapper) infos.Add(trapper);
         if (p == Prophet.prophet) infos.Add(prophet);
@@ -364,13 +377,13 @@ public class RoleInfo
         if (infos.Count == count)
         {
             if (p.Data.Role.IsImpostor)
-                infos.Add(MapOptions.gameMode == CustomGamemodes.HideNSeek ||
-                          MapOptions.gameMode == CustomGamemodes.PropHunt
+                infos.Add(MapOption.gameMode == CustomGamemodes.HideNSeek ||
+                          MapOption.gameMode == CustomGamemodes.PropHunt
                     ? hunter
                     : impostor);
             else
-                infos.Add(MapOptions.gameMode == CustomGamemodes.HideNSeek ? hunted :
-                    MapOptions.gameMode == CustomGamemodes.PropHunt ? prop : crewmate);
+                infos.Add(MapOption.gameMode == CustomGamemodes.HideNSeek ? hunted :
+                    MapOption.gameMode == CustomGamemodes.PropHunt ? prop : crewmate);
         }
 
         return infos;
@@ -381,55 +394,55 @@ public class RoleInfo
     {
         string roleName;
         roleName = string.Join(" ",
-            getRoleInfoForPlayer(p, showModifier).Select(x => useColors ? Helpers.cs(x.color, x.name) : x.name).ToArray());
+            getRoleInfoForPlayer(p, showModifier).Select(x => useColors ? cs(x.color, x.name) : x.name).ToArray());
         if (Lawyer.target != null && p.PlayerId == Lawyer.target.PlayerId &&
-            CachedPlayer.LocalPlayer.PlayerControl != Lawyer.target) roleName += useColors ? Helpers.cs(Lawyer.color, " §") : " §";
+            CachedPlayer.LocalPlayer.PlayerControl != Lawyer.target) roleName += useColors ? cs(Lawyer.color, " §") : " §";
 
         if (Executioner.target != null && p.PlayerId == Executioner.target.PlayerId &&
-            CachedPlayer.LocalPlayer.PlayerControl != Executioner.target) roleName += useColors ? Helpers.cs(Executioner.color, " §") : " §";
+            CachedPlayer.LocalPlayer.PlayerControl != Executioner.target) roleName += useColors ? cs(Executioner.color, " §") : " §";
 
         if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId)) roleName += " (赌怪)";
 
         if (!suppressGhostInfo && p != null)
         {
             if (p == Shifter.shifter &&
-                (CachedPlayer.LocalPlayer.PlayerControl == Shifter.shifter || Helpers.shouldShowGhostInfo()) &&
+                (CachedPlayer.LocalPlayer.PlayerControl == Shifter.shifter || shouldShowGhostInfo()) &&
                 Shifter.futureShift != null)
-                roleName += Helpers.cs(Color.yellow, " ← " + Shifter.futureShift.Data.PlayerName);
-            if (p == Vulture.vulture && (CachedPlayer.LocalPlayer.PlayerControl == Vulture.vulture || Helpers.shouldShowGhostInfo()))
-                roleName += Helpers.cs(Vulture.color, $" (剩余 {Vulture.vultureNumberToWin - Vulture.eatenBodies} )");
-            if (Helpers.shouldShowGhostInfo())
+                roleName += cs(Color.yellow, " ← " + Shifter.futureShift.Data.PlayerName);
+            if (p == Vulture.vulture && (CachedPlayer.LocalPlayer.PlayerControl == Vulture.vulture || shouldShowGhostInfo()))
+                roleName += cs(Vulture.color, $" (剩余 {Vulture.vultureNumberToWin - Vulture.eatenBodies} )");
+            if (shouldShowGhostInfo())
             {
                 if (Eraser.futureErased.Contains(p))
-                    roleName = Helpers.cs(Color.gray, "(被抹除) ") + roleName;
+                    roleName = cs(Color.gray, "(被抹除) ") + roleName;
                 if (Vampire.vampire != null && !Vampire.vampire.Data.IsDead && Vampire.bitten == p && !p.Data.IsDead)
-                    roleName = Helpers.cs(Vampire.color,
+                    roleName = cs(Vampire.color,
                         $"(被吸血 {(int)HudManagerStartPatch.vampireKillButton.Timer + 1}) ") + roleName;
                 if (Deputy.handcuffedPlayers.Contains(p.PlayerId))
-                    roleName = Helpers.cs(Color.gray, "(被上拷) ") + roleName;
+                    roleName = cs(Color.gray, "(被上拷) ") + roleName;
                 if (Deputy.handcuffedKnows.ContainsKey(p.PlayerId)) // Active cuff
-                    roleName = Helpers.cs(Deputy.color, "(被上拷) ") + roleName;
+                    roleName = cs(Deputy.color, "(被上拷) ") + roleName;
                 if (p == Warlock.curseVictim)
-                    roleName = Helpers.cs(Warlock.color, "(被下咒) ") + roleName;
+                    roleName = cs(Warlock.color, "(被下咒) ") + roleName;
                 if (p == Ninja.ninjaMarked)
-                    roleName = Helpers.cs(Ninja.color, "(被标记) ") + roleName;
+                    roleName = cs(Ninja.color, "(被标记) ") + roleName;
                 if (Pursuer.blankedList.Contains(p) && !p.Data.IsDead)
-                    roleName = Helpers.cs(Pursuer.color, "(被塞空包弹) ") + roleName;
+                    roleName = cs(Pursuer.color, "(被塞空包弹) ") + roleName;
                 if (Witch.futureSpelled.Contains(p) && !MeetingHud.Instance) // This is already displayed in meetings!
-                    roleName = Helpers.cs(Witch.color, "☆ ") + roleName;
+                    roleName = cs(Witch.color, "☆ ") + roleName;
                 if (BountyHunter.bounty == p)
-                    roleName = Helpers.cs(BountyHunter.color, "(被悬赏) ") + roleName;
+                    roleName = cs(BountyHunter.color, "(被悬赏) ") + roleName;
                 if (Arsonist.dousedPlayers.Contains(p))
-                    roleName = Helpers.cs(Arsonist.color, "♨ ") + roleName;
+                    roleName = cs(Arsonist.color, "♨ ") + roleName;
                 if (p == Arsonist.arsonist)
-                    roleName += Helpers.cs(Arsonist.color,
+                    roleName += cs(Arsonist.color,
                         $" (剩余 {CachedPlayer.AllPlayers.Count(x => { return x.PlayerControl != Arsonist.arsonist && !x.Data.IsDead && !x.Data.Disconnected && !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); })} )");
                 if (p == Jackal.fakeSidekick)
-                    roleName = Helpers.cs(Sidekick.color, " (假跟班) ") + roleName;
+                    roleName = cs(Sidekick.color, " (假跟班) ") + roleName;
                 if (Akujo.keeps.Contains(p))
-                    roleName = Helpers.cs(Color.gray, "(备胎) ") + roleName;
+                    roleName = cs(Color.gray, "(备胎) ") + roleName;
                 if (p == Akujo.honmei)
-                    roleName = Helpers.cs(Akujo.color, "(真爱) ") + roleName;
+                    roleName = cs(Akujo.color, "(真爱) ") + roleName;
 
                 // Death Reason on Ghosts
                 if (p.Data.IsDead)
@@ -449,13 +462,13 @@ public class RoleInfo
                                 deathReasonString = " - 断开连接";
                                 break;
                             case DeadPlayer.CustomDeathReason.SheriffKill:
-                                deathReasonString = $" - 出警 {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
+                                deathReasonString = $" - 出警 {cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
                                 break;
                             case DeadPlayer.CustomDeathReason.SheriffMisfire:
                                 deathReasonString = " - 走火";
                                 break;
                             case DeadPlayer.CustomDeathReason.SheriffMisadventure:
-                                deathReasonString = $" - 被误杀于 {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
+                                deathReasonString = $" - 被误杀于 {cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
                                 break;
                             case DeadPlayer.CustomDeathReason.Suicide:
                                 deathReasonString = " - 自杀";
@@ -468,44 +481,44 @@ public class RoleInfo
                                 break;
                             case DeadPlayer.CustomDeathReason.Kill:
                                 deathReasonString =
-                                    $" - 被击杀于 {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
+                                    $" - 被击杀于 {cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
                                 break;
                             case DeadPlayer.CustomDeathReason.Guess:
                                 if (deadPlayer.killerIfExisting.Data.PlayerName == p.Data.PlayerName)
                                     deathReasonString = " - 猜测错误";
                                 else
                                     deathReasonString =
-                                        $" - 被赌杀于 {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
+                                        $" - 被赌杀于 {cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
                                 break;
                             case DeadPlayer.CustomDeathReason.Shift:
                                 deathReasonString =
-                                    $" - {Helpers.cs(Color.yellow, "交换")} {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)} 失败";
+                                    $" - {cs(Color.yellow, "交换")} {cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)} 失败";
                                 break;
                             case DeadPlayer.CustomDeathReason.WitchExile:
                                 deathReasonString =
-                                    $" - {Helpers.cs(Witch.color, "被咒杀于")} {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
+                                    $" - {cs(Witch.color, "被咒杀于")} {cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
                                 break;
                             case DeadPlayer.CustomDeathReason.LoverSuicide:
-                                deathReasonString = $" - {Helpers.cs(Lovers.color, "殉情")}";
+                                deathReasonString = $" - {cs(Lovers.color, "殉情")}";
                                 break;
                             case DeadPlayer.CustomDeathReason.LawyerSuicide:
-                                deathReasonString = $" - {Helpers.cs(Lawyer.color, "邪恶律师")}";
+                                deathReasonString = $" - {cs(Lawyer.color, "邪恶律师")}";
                                 break;
                             case DeadPlayer.CustomDeathReason.Bomb:
                                 deathReasonString =
-                                    $" - 被恐袭于 {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
+                                    $" - 被恐袭于 {cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
                                 break;
                             case DeadPlayer.CustomDeathReason.Arson:
                                 deathReasonString =
-                                    $" - 被烧死于 {Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
+                                    $" - 被烧死于 {cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName)}";
                                 break;
                             case DeadPlayer.CustomDeathReason.LoveStolen:
                                 deathReasonString =
-                                    $" - {Helpers.cs(Lovers.color, "爱人被夺")}";
+                                    $" - {cs(Lovers.color, "爱人被夺")}";
                                 break;
                             case DeadPlayer.CustomDeathReason.Loneliness:
                                 deathReasonString =
-                                    $" - {Helpers.cs(Akujo.color, "精力衰竭")}";
+                                    $" - {cs(Akujo.color, "精力衰竭")}";
                                 break;
                         }
                         roleName += deathReasonString;
@@ -538,5 +551,21 @@ public class RoleInfo
         var index = ReadmePage.IndexOf($"## {roleInfo.name}");
         var endindex = ReadmePage.Substring(index).IndexOf("### Game Options");
         return ReadmePage.Substring(index, endindex);
+    }
+
+    public enum RoleTeam
+    {
+        Crewmate,
+        Impostor,
+        Neutral,
+        Special,
+    }
+
+    [Flags]
+    public enum CustomRoleType
+    {
+        Main,
+        Modifier,
+        MainAndModifier = Main | Modifier
     }
 }

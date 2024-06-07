@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 
-namespace TheOtherRoles;
+namespace TheOtherRoles.Modules;
 public class ModTranslation
 {
     public static int defaultLanguage = (int)SupportedLangs.English;
@@ -60,17 +60,13 @@ public class ModTranslation
 
         def ??= key;
         if (!stringData.ContainsKey(keyClean))
-        {
             return def;
-        }
 
         var data = stringData[keyClean];
         int lang = (int)AmongUs.Data.DataManager.Settings.Language.CurrentLanguage;
 
         if (data.ContainsKey(lang))
-        {
             return key.Replace(keyClean, data[lang]);
-        }
         else if (data.ContainsKey(defaultLanguage))
         {
             return key.Replace(keyClean, data[defaultLanguage]);

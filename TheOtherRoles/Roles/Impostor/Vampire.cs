@@ -25,14 +25,14 @@ public static class Vampire
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.VampireButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.VampireButton.png", 115f);
         return buttonSprite;
     }
 
     public static Sprite getGarlicButtonSprite()
     {
         if (garlicButtonSprite) return garlicButtonSprite;
-        garlicButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.GarlicButton.png", 115f);
+        garlicButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.GarlicButton.png", 115f);
         return garlicButtonSprite;
     }
 

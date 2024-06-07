@@ -4,14 +4,8 @@ using System.Linq;
 using Hazel;
 using PowerTools;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Roles;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Modifier;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
@@ -91,7 +85,7 @@ internal class ExileControllerBeginPatch
             if ((witchDiesWithExiledLover || exiledIsWitch) && Witch.witchVoteSavesTargets)
                 Witch.futureSpelled = new List<PlayerControl>();
             foreach (var target in Witch.futureSpelled)
-                if (target != null && !target.Data.IsDead && Helpers.checkMuderAttempt(Witch.witch, target, true) ==
+                if (target != null && !target.Data.IsDead && checkMuderAttempt(Witch.witch, target, true) ==
                     MurderAttemptResult.PerformKill)
                 {
                     /*
@@ -107,7 +101,7 @@ internal class ExileControllerBeginPatch
                         AmongUsClient.Instance.FinishRpcImmediately(writer2);
                         RPCProcedure.lawyerPromotesToPursuer();
                     }
-                    
+
                     if (target == Executioner.target && Executioner.executioner != null)
                     {
                         var writer2 = AmongUsClient.Instance.StartRpcImmediately(
@@ -143,16 +137,16 @@ internal class ExileControllerBeginPatch
 
         // SecurityGuard vents and cameras
         var allCameras = MapUtilities.CachedShipStatus.AllCameras.ToList();
-        MapOptions.camerasToAdd.ForEach(camera =>
+        MapOption.camerasToAdd.ForEach(camera =>
         {
             camera.gameObject.SetActive(true);
             camera.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
             allCameras.Add(camera);
         });
         MapUtilities.CachedShipStatus.AllCameras = allCameras.ToArray();
-        MapOptions.camerasToAdd = new List<SurvCamera>();
+        MapOption.camerasToAdd = new List<SurvCamera>();
 
-        foreach (var vent in MapOptions.ventsToSeal)
+        foreach (var vent in MapOption.ventsToSeal)
         {
             var animator = vent.GetComponent<SpriteAnim>();
             vent.EnterVentAnim = vent.ExitVentAnim = null;
@@ -160,7 +154,7 @@ internal class ExileControllerBeginPatch
                 ? SecurityGuard.getStaticVentSealedSprite()
                 : SecurityGuard.getAnimatedVentSealedSprite();
             var rend = vent.myRend;
-            if (Helpers.isFungle())
+            if (isFungle())
             {
                 newSprite = SecurityGuard.getFungleVentSealedSprite();
                 rend = vent.transform.GetChild(3).GetComponent<SpriteRenderer>();
@@ -175,10 +169,10 @@ internal class ExileControllerBeginPatch
             vent.name = "SealedVent_" + vent.name;
         }
 
-        MapOptions.ventsToSeal = new List<Vent>();
+        MapOption.ventsToSeal = new List<Vent>();
         // 1 = reset per turn
-        if (MapOptions.restrictDevices == 1)
-            MapOptions.resetDeviceTimes();
+        if (MapOption.restrictDevices == 1)
+            MapOption.resetDeviceTimes();
     }
 }
 
@@ -292,14 +286,14 @@ internal class ExileControllerWrapUpPatch
             var BottomLeft = newBottomLeft + new Vector3(-0.25f, -0.25f, 0);
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
-                if (!MapOptions.playerIcons.ContainsKey(p.PlayerId)) continue;
+                if (!MapOption.playerIcons.ContainsKey(p.PlayerId)) continue;
                 if (p.Data.IsDead || p.Data.Disconnected)
                 {
-                    MapOptions.playerIcons[p.PlayerId].gameObject.SetActive(false);
+                    MapOption.playerIcons[p.PlayerId].gameObject.SetActive(false);
                 }
                 else
                 {
-                    MapOptions.playerIcons[p.PlayerId].transform.localPosition =
+                    MapOption.playerIcons[p.PlayerId].transform.localPosition =
                         newBottomLeft + (Vector3.right * visibleCounter * 0.35f);
                     visibleCounter++;
                 }
@@ -426,19 +420,22 @@ internal class ExileControllerMessagePatch
         {
             if (ExileController.Instance != null && ExileController.Instance.exiled != null)
             {
-                var player = Helpers.playerById(ExileController.Instance.exiled.Object.PlayerId);
+                var player = playerById(ExileController.Instance.exiled.Object.PlayerId);
                 if (player == null) return;
                 // Exile role text
                 if (id == StringNames.ExileTextPN || id == StringNames.ExileTextSN || id == StringNames.ExileTextPP ||
                     id == StringNames.ExileTextSP)
-                    __result = player.Data.PlayerName + " was The " + string.Join(" ",
-                        RoleInfo.getRoleInfoForPlayer(player, false).Select(x => x.name).ToArray());
+                    __result = $"{player.Data.PlayerName} 的职业是 {string.Join(" ", RoleInfo.getRoleInfoForPlayer(player, false).Select(x => x.name).ToArray())}";
                 // Hide number of remaining impostors on Jester win
                 if (id == StringNames.ImpostorsRemainP || id == StringNames.ImpostorsRemainS)
                     if (Jester.jester != null && player.PlayerId == Jester.jester.PlayerId)
                         __result = "";
-                if (Tiebreaker.isTiebreak) __result += " (破平)";
-                Tiebreaker.isTiebreak = false;
+                if (Prosecutor.ProsecuteThisMeeting) __result += " (被起诉)";
+                else if (Tiebreaker.isTiebreak)
+                {
+                    __result += " (破平)";
+                    Tiebreaker.isTiebreak = false;
+                }
             }
         }
         catch

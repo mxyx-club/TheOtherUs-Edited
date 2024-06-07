@@ -40,14 +40,14 @@ public static class Morphling
     public static Sprite getSampleSprite()
     {
         if (sampleSprite) return sampleSprite;
-        sampleSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SampleButton.png", 115f);
+        sampleSprite = loadSpriteFromResources("TheOtherRoles.Resources.SampleButton.png", 115f);
         return sampleSprite;
     }
 
     public static Sprite getMorphSprite()
     {
         if (morphSprite) return morphSprite;
-        morphSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.MorphButton.png", 115f);
+        morphSprite = loadSpriteFromResources("TheOtherRoles.Resources.MorphButton.png", 115f);
         return morphSprite;
     }
 }

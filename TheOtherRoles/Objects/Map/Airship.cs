@@ -42,7 +42,7 @@ internal class OptimizeMapPatch
             Collider.points = new Vector2[] { new Vector2(1.5f, -0.2f), new Vector2(-1.5f, -0.2f), new Vector2(-1.5f, 1.5f) };
             Collider.enabled = true;
             renderer = fance.AddComponent<SpriteRenderer>();
-            renderer.sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.AirshipFence.png", 100f);
+            renderer.sprite = loadSpriteFromResources("TheOtherRoles.Resources.AirshipFence.png", 100f);
 
             var panel = obj.transform.FindChild("panel_data");
             panel.localPosition = new Vector3(4.52f, -3.95f, 0.1f);
@@ -71,7 +71,7 @@ internal class OptimizeMapPatch
                     id++;
                 }
                 newLadder.transform.position = new Vector3(15.442f, 12.18f, 0.1f);
-                if (!ladderSprite) ladderSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ladder.png", 100f);
+                if (!ladderSprite) ladderSprite = loadSpriteFromResources("TheOtherRoles.Resources.ladder.png", 100f);
                 newLadder.GetComponentInChildren<SpriteRenderer>().sprite = ladderSprite;
 
                 // 梯子の周りの影を消す
@@ -97,7 +97,7 @@ internal class OptimizeMapPatch
                 // 梯子の背景を変更
                 SpriteRenderer side = meetingRoom.GetComponentsInChildren<SpriteRenderer>().Where(x => x.name == "meeting_side").FirstOrDefault();
                 SpriteRenderer bg = UnityEngine.Object.Instantiate(side, side.transform.parent);
-                if (!ladderBgSprite) ladderBgSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ladder_bg.png", 100f);
+                if (!ladderBgSprite) ladderBgSprite = loadSpriteFromResources("TheOtherRoles.Resources.ladder_bg.png", 100f);
                 bg.sprite = ladderBgSprite;
                 bg.transform.localPosition = new Vector3(9.57f, -3.355f, 4.9f);
             }

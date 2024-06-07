@@ -30,20 +30,20 @@ public static class Prophet
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SeerButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.SeerButton.png", 115f);
         return buttonSprite;
     }
 
     public static bool IsKiller(PlayerControl p)
     {
-        return Helpers.isKiller(p)
+        return isKiller(p)
             || p.Data.Role.IsImpostor
             || ((p == Sheriff.sheriff
             || p == Deputy.deputy
             || p == Veteren.veteren)
             && killCrewAsRed)
-            || (Helpers.isEvil(p) && evilNeutralAsRed)
-            || (!Helpers.isEvil(p) && benignNeutralAsRed)
+            || (isEvil(p) && evilNeutralAsRed)
+            || (!isEvil(p) && benignNeutralAsRed)
         ;
     }
 

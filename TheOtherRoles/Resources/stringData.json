@@ -44,6 +44,10 @@
         "0": "Enable Sound Effects",
         "13": "\u542f\u7528\u6a21\u7ec4\u97f3\u6548"
     },
+    "ShowFPS": {
+        "0": "Show FPS",
+        "13": "\u5728\u6e38\u620f\u5185\u663e\u793a\u5e27\u7387"
+    },
     "EnableDebugLogModeText": {
         "0": "Enable Debug Log Mode",
         "13": "\u6536\u96c6Debug\u65e5\u5fd7"
@@ -74,31 +78,31 @@
     },
     "CrewmateRolesText": {
         "0": "Crewmate Roles",
-        "13": "\u8239\u5458\u804c\u4e1a"
-    },
-    "crewmateRoles": {
-        "0": "Crewmates",
         "13": "\u8239\u5458\u9635\u8425"
     },
     "NeutralRolesText": {
         "0": "Neutral Roles",
-        "13": "\u4e2d\u7acb\u804c\u4e1a"
-    },
-    "neutralRoles": {
-        "0": "Neutrals",
         "13": "\u4e2d\u7acb\u9635\u8425"
     },
     "ImpostorRolesText": {
         "0": "Impostor Roles",
         "13": "\u4f2a\u88c5\u8005\u9635\u8425"
     },
-    "impostorRoles": {
-        "0": "Impostors",
-        "13": "\u4f2a\u88c5\u8005\u804c\u4e1a"
-    },
     "ModifiersText": {
         "0": "Modifiers",
         "13": "\u9644\u52a0\u80fd\u529b"
+    },
+    "FillCrewmate": {
+        "0": "Fill:",
+        "13": "\u586b\u5145: "
+    },
+    "EvilLove": {
+        "0": "Evil",
+        "13": "\u90aa\u6076\u604b\u4eba"
+    },
+    "Evil": {
+        "0": "Evil",
+        "13": "\u90aa\u6076"
     },
     "page1": {
         "0": "Page 1: Vanilla Settings \n\n",
@@ -157,7 +161,7 @@
         "13": "\u8239\u5458\u804c\u4e1a\u8bbe\u7f6e"
     },
     "modifierSettings": {
-        "13": "\u9644\u52a0\u804c\u4e1a\u8bbe\u7f6e"
+        "13": "\u9644\u52a0\u80fd\u529b\u8bbe\u7f6e"
     },
     "meetingCount": {
         "0": "{0} and the ship has {1}",
@@ -735,13 +739,63 @@
         "0": "Cultist Follower Gets Ability",
         "13": "\u65b0\u4fe1\u5f92\u53ef\u6210\u4e3a\u523a\u5ba2"
     },
-    "mafiaSpawnRate": {
-        "0": "Mafia",
-        "13": "\u9ed1\u624b\u515a"
-    },
     "janitorCooldown": {
         "0": "Janitor Cooldown",
         "13": "\u6e05\u6d01\u5de5\u6e05\u7406\u51b7\u5374"
+    },
+    "morphlingCooldown": {
+        "13": "\u5316\u5f62\u51b7\u5374"
+    },
+    "morphlingDuration": {
+        "13": "\u5316\u5f62\u6301\u7eed\u65f6\u95f4"
+    },
+    "bomberBombCooldown": {
+        "13": "\u70b8\u5f39\u51b7\u5374"
+    },
+    "bomberDelay": {
+        "13": "\u70b8\u5f39\u6fc0\u6d3b\u65f6\u95f4"
+    },
+    "bomberTimer": {
+        "13": "\u70b8\u5f39\u7206\u70b8\u65f6\u95f4"
+    },
+    "bomberHotPotatoMode": {
+        "13": "\u70eb\u624b\u5c71\u828b\u6a21\u5f0f"
+    },
+    "undertakerDragingDelaiAfterKill": {
+        "13": "\u4ece\u51fb\u6740\u5230\u6062\u590d\u62d6\u66f3\u80fd\u529b\u6240\u9700\u65f6\u95f4"
+    },
+    "undertakerDragingAfterVelocity": {
+        "13": "\u62d6\u62fd\u8fc7\u7a0b\u7684\u884c\u52a8\u901f\u5ea6"
+    },
+    "undertakerCanDragAndVent": {
+        "13": "\u62d6\u66f3\u8fc7\u7a0b\u4e2d\u53ef\u4f7f\u7528\u7ba1\u9053"
+    },
+    "camouflagerCooldown": {
+        "13": "\u9690\u853d\u72b6\u6001\u51b7\u5374"
+    },
+    "camouflagerDuration": {
+        "13": "\u9690\u853d\u72b6\u6001\u6301\u7eed\u65f6\u95f4"
+    },
+    "vampireKillDelay": {
+        "13": "\u4ece\u5438\u8840\u5230\u51fb\u6740\u6240\u9700\u65f6\u95f4"
+    },
+    "vampireCooldown": {
+        "13": "\u5438\u8840\u51b7\u5374"
+    },
+    "vampireGarlicButton": {
+        "13": "\u53d1\u653e\u5927\u849c"
+    },
+    "vampireCanKillNearGarlics": {
+        "13": "\u53ef\u5728\u5927\u849c\u9644\u8fd1\u51fb\u6740"
+    },
+    "eraserCooldown": {
+        "13": "\u62b9\u9664\u51b7\u5374"
+    },
+    "eraserCanEraseAnyone": {
+        "13": "\u53ef\u62b9\u9664\u4efb\u4f55\u4eba"
+    },
+    "poucherSpawnModifier": {
+        "13": "\u751f\u6210\u4e3a\u9644\u52a0\u80fd\u529b"
     },
     "TouTitle": {
         "0": "<color=#ff351f>TheOtherUs-Edited</color>",
@@ -781,7 +835,7 @@
     },
     "creditsString1": {
         "0": "<align=\"center\"><b>TheOtherUs-Edited Team:</b>\nmxyx    Huier-Huang    haoren\nImp2    FangKuaiYa\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles, SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n\n",
-        "13": "<align=\"center\"><b>TheOtherUs-Edited \u5f00\u53d1\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    \u5584\u826f\u7684\u597d\u4eba    Imp11\n\n<b>\u7f8e\u5de5:</b>\n\u65b9\u5757\n\n<b>\u7ffb\u8bd1:</b>\nEN\uff1a\u4e5d\u5934\u86c7\nCN\uff1a\u6cab\u590f\u60a0\u8f69\n\n<b>GitHub\u8d21\u732e\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    Imp11\n\n\u672c\u6a21\u7ec4\u4f7f\u7528\u4e86\u90e8\u5206[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA[]\u7684\u4ee3\u7801\uff0c\u611f\u8c22Imp11\u7684\u652f\u6301\uff01\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
+        "13": "<align=\"center\"><b>TheOtherUs-Edited \u5f00\u53d1\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    \u5584\u826f\u7684\u597d\u4eba    Imp11\n\n<b>\u7f8e\u5de5:</b>\n\u65b9\u5757    \u9ece\u6728\n\n<b>\u7ffb\u8bd1:</b>\nEN\uff1a\u4e5d\u5934\u86c7\nCN\uff1a\u6cab\u590f\u60a0\u8f69\n\n<b>GitHub\u8d21\u732e\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    Imp11\n\n\u672c\u6a21\u7ec4\u4f7f\u7528\u4e86\u90e8\u5206[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA[]\u7684\u4ee3\u7801\uff0c\u611f\u8c22Imp11\u7684\u652f\u6301\uff01\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
     },
     "Host": {
         "0": "Host",
@@ -825,6 +879,35 @@
     "BlackmailShhhText": {
         "0": "YOU ARE BLACKMAILED",
         "13": "\u5618\uff01\u4e0d\u8bb8\u8bf4\u8bdd\uff01"
+    },
+    "differentVersionTou": {
+        "0": "has a different or no version of The Other Us",
+        "13": "\u5b89\u88c5\u4e86\u4e0d\u540c\u7248\u672c\u7684TheOtherUs"
+    },
+    "oldTouVersion": {
+        "0": "has an older version of The Other Us",
+        "13": "\u5b89\u88c5\u4e86\u65e7\u7248\u672c\u7684TheOtherUs"
+    },
+    "newTouVersion": {
+        "0": "has a newer version of The Other Us",
+        "13": "\u5b89\u88c5\u4e86\u8f83\u65b0\u7248\u672c\u7684TheOtherUs"
+    },
+    "modifiedTouVersion": {
+        "0": "has a modified version of TOU",
+        "13": "\u5b89\u88c5\u4e86\u4fee\u6539\u8fc7\u7684TheOtherUs"
+    },
+    "HostNoTou": {
+        "0": "The host has no or a different version of The Other Us\nYou will be kicked in",
+        "13": "<color=#FF0000FF>\u623f\u4e3b\u6ca1\u6709\u6216\u4e0d\u540c\u7248\u672c\u7684TheOtherUs\n\u5373\u5c06\u88ab\u8e22\u51fa\u623f\u95f4"
+    },
+    "DifferentTouVersions": {
+        "0": "Players With Different Versions:\n</color>",
+        "13": "<color=#FF0000FF>\u88c5\u4e86\u4e0d\u540c\u7248\u672c\u6a21\u7ec4\u7684\u73a9\u5bb6:\n</color>"
+    },
+    "trapperGotTrapText": {
+        "0": "{0} got caught in the trap",
+        "11": "{0}\u304c\u7f60\u306b\u304b\u304b\u3063\u305f",
+        "13": "{0} \u6389\u8fdb\u4e86\u9677\u9631\u91cc\uff01"
     },
     "Impostor": {
         "0": "Impostor",
@@ -1818,7 +1901,7 @@
     },
     "colorOlive": {
         "0": "Olive",
-        "13": "\u6a44\u6984\u8272"
+        "13": "\u6a44\u6984"
     },
     "colorTurquoise": {
         "0": "Turquoise",
@@ -1834,7 +1917,7 @@
     },
     "colorNougat": {
         "0": "Nougat",
-        "13": "\u68d5\u8910\u8272"
+        "13": "\u68d5\u8910"
     },
     "colorPeach": {
         "0": "Peach",
@@ -1846,7 +1929,7 @@
     },
     "colorHotPink": {
         "0": "Hot Pink",
-        "13": "\u70ed\u7c89\u8272"
+        "13": "\u70ed\u7c89"
     },
     "colorPetrol": {
         "0": "Petrol Blue",
@@ -1862,11 +1945,11 @@
     },
     "colorTeal": {
         "0": "Teal",
-        "13": "\u84dd\u7eff\u8272"
+        "13": "\u84dd\u7eff"
     },
     "colorBlurple": {
         "0": "Blurple",
-        "13": "\u84dd\u7d2b\u8272"
+        "13": "\u84dd\u7d2b"
     },
     "colorSunrise": {
         "0": "Sunrise",
@@ -1874,11 +1957,11 @@
     },
     "colorIce": {
         "0": "Ice",
-        "13": "\u51b0\u84dd\u8272"
+        "13": "\u51b0\u84dd"
     },
     "colorArmy": {
         "0": "Army",
-        "13": "\u519b\u7eff\u8272"
+        "13": "\u519b\u7eff"
     },
     "colorTamarind": {
         "0": "Tamarind",
@@ -1886,7 +1969,7 @@
     },
     "colorFuchsia": {
         "0": "Fuchsia",
-        "13": "\u7d2b\u7ea2\u8272"
+        "13": "\u7d2b\u7ea2"
     },
     "colorSlime": {
         "0": "Slime",
@@ -1902,7 +1985,7 @@
     },
     "colorDarkness": {
         "0": "Darkness",
-        "13": "\u6df1\u9ed1\u8272"
+        "13": "\u6df1\u9ed1"
     },
     "colorOcean": {
         "0": "Ocean",
@@ -1911,6 +1994,54 @@
     "colorSundown": {
         "0": "Sundown",
         "13": "\u65e5\u843d\u6a59"
+    },
+    "colorSnow": {
+        "0": "Snow",
+        "13": "\u96ea\u767d"
+    },
+    "colorSkyBlue": {
+        "0": "SkyBlue",
+        "13": "\u5929\u84dd"
+    },
+    "colorAzuki": {
+        "0": "Azuki",
+        "13": "\u7ea2\u8c46"
+    },
+    "colorTokiwaGreen": {
+        "0": "TokiwaGreen",
+        "13": "\u5e38\u9752\u7eff"
+    },
+    "colorPitchwhite": {
+        "0": "Pitch white",
+        "13": "\u7eaf\u767d"
+    },
+    "colorPitchBlack": {
+        "0": "Pitch Black",
+        "13": "\u7eaf\u9ed1"
+    },
+    "colorNega": {
+        "0": "Nega",
+        "13": "\u8d1f\u7247\u6ee4\u955c"
+    },
+    "colorPosi": {
+        "0": "Posi",
+        "13": "\u6b63\u7247\u6ee4\u955c"
+    },
+    "colorEmerald": {
+        "0": "Emerald",
+        "13": "\u7fe1\u7fe0"
+    },
+    "colorGold": {
+        "0": "Gold",
+        "13": "\u91d1\u9ec4"
+    },
+    "colorIntenseblue": {
+        "0": "Intense blue",
+        "13": "\u58a8\u84dd"
+    },
+    "colorXmasRed": {
+        "0": "X'masRed",
+        "13": "\u5723\u8bde\u7ea2"
     },
     "CamoText": {
         "0": "CAMO",
@@ -2221,5 +2352,17 @@
     "TerroristBombText2": {
         "0": "[BLANK]",
         "13": "\u81ea\u7206"
+    },
+    "YoyoMarkText": {
+        "0": "Mark Location",
+        "13": "\u6807\u8bb0\u4f4d\u7f6e"
+    },
+    "ReturningText": {
+        "0": "Returning...",
+        "13": "\u8fd4\u56de"
+    },
+    "BlinkText": {
+        "0": "Blink",
+        "13": "\u95ea\u73b0"
     }
 }

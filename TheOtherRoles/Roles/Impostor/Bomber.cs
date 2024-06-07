@@ -27,7 +27,7 @@ public static class Bomber
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Bomber2.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Bomber2.png", 115f);
         return buttonSprite;
     }
 

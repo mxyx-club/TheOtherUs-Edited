@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using AmongUs.Data;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Neutral;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Modifier;

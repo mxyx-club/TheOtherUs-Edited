@@ -21,7 +21,7 @@ public static class Engineer
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.RepairButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.RepairButton.png", 115f);
         return buttonSprite;
     }
 

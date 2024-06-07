@@ -1,5 +1,4 @@
-﻿using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Utilities;
+﻿using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Crewmate;
@@ -38,7 +37,7 @@ public static class Medic
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ShieldButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.ShieldButton.png", 115f);
         return buttonSprite;
     }
     public static bool shieldVisible(PlayerControl target)
@@ -48,7 +47,7 @@ public static class Medic
         bool isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
         if (shielded != null && ((target == shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == shielded)))
         {   // Everyone or Ghost info
-            hasVisibleShield = showShielded == 0 || Helpers.shouldShowGhostInfo()
+            hasVisibleShield = showShielded == 0 || shouldShowGhostInfo()
                 || (showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == shielded
                 || CachedPlayer.LocalPlayer.PlayerControl == medic)) // Shielded + Medic
                 || (showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl == medic); // Medic only
@@ -56,7 +55,7 @@ public static class Medic
             hasVisibleShield = hasVisibleShield && (meetingAfterShielding
                 || !showShieldAfterMeeting
                 || CachedPlayer.LocalPlayer.PlayerControl == medic
-                || Helpers.shouldShowGhostInfo());
+                || shouldShowGhostInfo());
         }
         return hasVisibleShield;
     }

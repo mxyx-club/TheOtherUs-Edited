@@ -23,7 +23,7 @@ public static class Werewolf
     public static Sprite getRampageButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Rampage.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Rampage.png", 115f);
         return buttonSprite;
     }
 

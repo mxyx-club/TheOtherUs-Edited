@@ -11,7 +11,7 @@ public static class EvilTrapper
     public static PlayerControl evilTrapper;
     public static Color color = Palette.ImpostorRed;
 
-    public static float minDistance = 0f;
+    public static float minDistance;
     public static float maxDistance;
     public static int numTrap;
     public static float extensionTime;
@@ -20,7 +20,7 @@ public static class EvilTrapper
     public static float trapRange;
     public static float penaltyTime;
     public static float bonusTime;
-    public static bool isTrapKill = false;
+    public static bool isTrapKill;
     public static bool meetingFlag;
 
     public static Sprite trapButtonSprite;
@@ -29,7 +29,7 @@ public static class EvilTrapper
     public static Sprite getTrapButtonSprite()
     {
         if (trapButtonSprite) return trapButtonSprite;
-        trapButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.TrapperButton.png", 115f);
+        trapButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.TrapperButton.png", 115f);
         return trapButtonSprite;
     }
 

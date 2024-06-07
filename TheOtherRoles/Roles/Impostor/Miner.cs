@@ -27,7 +27,7 @@ public class Miner
     public static Sprite getMineButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Mine.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Mine.png", 115f);
         return buttonSprite;
     }
 }

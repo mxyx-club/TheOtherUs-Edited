@@ -13,7 +13,7 @@ public static class ButtonBarry
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.EmergencyButton.png", 550f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.EmergencyButton.png", 550f);
         return buttonSprite;
     }
     public static void clearAndReload()

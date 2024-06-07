@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using Hazel;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using Random = System.Random;
@@ -12,7 +13,7 @@ public static class Doomsayer
 {
     public static PlayerControl doomsayer;
 
-    public static Color color = new(0f, 1f, 0.5f, 1f);
+    public static Color color = new Color32(0, 255, 128, byte.MaxValue);
     public static PlayerControl currentTarget;
     public static List<PlayerControl> playerTargetinformation = new();
     public static float cooldown = 30f;
@@ -28,38 +29,13 @@ public static class Doomsayer
     public static float killedToWin;
     public static bool CanShoot = true;
 
-
-    private static Sprite buttonSprite;
-
-    public static Sprite getButtonSprite()
-    {
-        if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SeerButton.png", 115f);
-        return buttonSprite;
-    }
-
-    public static void clearAndReload()
-    {
-        doomsayer = null;
-        currentTarget = null;
-        killedToWin = 0;
-        canGuess = true;
-        triggerDoomsayerrWin = false;
-        cooldown = CustomOptionHolder.doomsayerCooldown.getFloat();
-        hasMultipleShotsPerMeeting = CustomOptionHolder.doomsayerHasMultipleShotsPerMeeting.getBool();
-        showInfoInGhostChat = CustomOptionHolder.doomsayerShowInfoInGhostChat.getBool();
-        canGuessNeutral = CustomOptionHolder.doomsayerCanGuessNeutral.getBool();
-        canGuessImpostor = CustomOptionHolder.doomsayerCanGuessImpostor.getBool();
-        formationNum = CustomOptionHolder.doomsayerDormationNum.GetInt();
-        killToWin = CustomOptionHolder.doomsayerKillToWin.getFloat();
-        onlineTarger = CustomOptionHolder.doomsayerOnlineTarger.getBool();
-    }
+    public static ResourceSprite buttonSprite = new("SeerButton.png");
 
     public static string GetInfo(PlayerControl target)
     {
         var random = new Random();
-        var allRoleInfo = (onlineTarger ? Helpers.onlineRoleInfos() : Helpers.allRoleInfos()).OrderBy(_ => random.Next()).ToList();
-        var OtherRoles = Helpers.allRoleInfos().Where(n => allRoleInfo.All(y => y != n)).OrderBy(_ => random.Next()).ToList();
+        var allRoleInfo = (onlineTarger ? onlineRoleInfos() : allRoleInfos()).OrderBy(_ => random.Next()).ToList();
+        var OtherRoles = allRoleInfos().Where(n => allRoleInfo.All(y => y != n)).OrderBy(_ => random.Next()).ToList();
         var OtherIndex = -1;
         var AllMessage = new List<string>();
         allRoleInfo.Remove(RoleInfo.doomsayer);
@@ -107,5 +83,22 @@ public static class Doomsayer
 
         AllMessage.Add(message.ToString());
         return $"{message}";
+    }
+
+    public static void clearAndReload()
+    {
+        doomsayer = null;
+        currentTarget = null;
+        killedToWin = 0;
+        canGuess = true;
+        triggerDoomsayerrWin = false;
+        cooldown = CustomOptionHolder.doomsayerCooldown.getFloat();
+        hasMultipleShotsPerMeeting = CustomOptionHolder.doomsayerHasMultipleShotsPerMeeting.getBool();
+        showInfoInGhostChat = CustomOptionHolder.doomsayerShowInfoInGhostChat.getBool();
+        canGuessNeutral = CustomOptionHolder.doomsayerCanGuessNeutral.getBool();
+        canGuessImpostor = CustomOptionHolder.doomsayerCanGuessImpostor.getBool();
+        formationNum = CustomOptionHolder.doomsayerDormationNum.GetInt();
+        killToWin = CustomOptionHolder.doomsayerKillToWin.getFloat();
+        onlineTarger = CustomOptionHolder.doomsayerOnlineTarger.getBool();
     }
 }

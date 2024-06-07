@@ -1,9 +1,5 @@
 using AmongUs.GameOptions;
 using TheOtherRoles.CustomGameModes;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Modifier;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -56,7 +52,7 @@ namespace TheOtherRoles.Patches
 
             if (!HideNSeek.isHideNSeekGM || (HideNSeek.isHideNSeekGM && !Hunter.lightActive.Contains(player.PlayerId)))
                 // If player is a role which has Impostor vision
-                if (Helpers.hasImpVision(player))
+                if (hasImpVision(player))
                 {
                     //__result = __instance.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.ImpostorLightMod;
                     __result = GetNeutralLightRadius(__instance, true);
@@ -165,13 +161,13 @@ namespace TheOtherRoles.Patches
             originalNumShortTasksOption = GameOptionsManager.Instance.currentNormalGameOptions.NumShortTasks;
             originalNumLongTasksOption = GameOptionsManager.Instance.currentNormalGameOptions.NumLongTasks;
 
-            if (MapOptions.gameMode != CustomGamemodes.HideNSeek)
+            if (MapOption.gameMode != CustomGamemodes.HideNSeek)
             {
                 var commonTaskCount = __instance.CommonTasks.Count;
                 var normalTaskCount = __instance.ShortTasks.Count;
                 var longTaskCount = __instance.LongTasks.Count;
 
-                if (MapOptions.gameMode == CustomGamemodes.PropHunt)
+                if (MapOption.gameMode == CustomGamemodes.PropHunt)
                     commonTaskCount = normalTaskCount = longTaskCount = 0;
 
 

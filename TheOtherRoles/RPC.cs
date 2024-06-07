@@ -12,18 +12,13 @@ using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Roles;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Modifier;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.HudManagerStartPatch;
-using static TheOtherRoles.MapOptions;
-using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.MapOption;
+using static TheOtherRoles.Roles.RoleClass;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles;
@@ -62,7 +57,6 @@ public enum RoleId
     Vulture,
     Lawyer,
     Executioner,
-    //Prosecutor,
     Pursuer,
     Doomsayer,
     Arsonist,
@@ -79,6 +73,7 @@ public enum RoleId
     Crewmate,
     NiceGuesser,
     Mayor,
+    Prosecutor,
     Portalmaker,
     Engineer,
     PrivateInvestigator,
@@ -243,6 +238,7 @@ public enum CustomRPC
     ActivateTrap,
     DisableTrap,
     TrapperMeetingFlag,
+    Prosecute,
 
     // SetSwooper,
     SetInvisible,
@@ -306,7 +302,7 @@ public static class RPCProcedure
         clearGameHistory();
         setCustomButtonCooldowns();
         reloadPluginOptions();
-        Helpers.toggleZoom(true);
+        toggleZoom(true);
         GameStartManagerPatch.GameStartManagerUpdatePatch.startingTimer = 0;
         SurveillanceMinigamePatch.nightVisionOverlays = null;
         MapBehaviourPatch.clearAndReload();
@@ -355,7 +351,7 @@ public static class RPCProcedure
         if (AmongUsClient.Instance.AmHost && CustomOptionHolder.anyPlayerCanStopStart.getBool())
         {
             GameStartManager.Instance.ResetStartState();
-            PlayerControl.LocalPlayer.RpcSendChat($"{Helpers.playerById(playerId).Data.PlayerName} 阻止游戏开始");
+            PlayerControl.LocalPlayer.RpcSendChat($"{playerById(playerId).Data.PlayerName} 阻止游戏开始");
         }
     }
     public static void workaroundSetRoles(byte numberOfRoles, MessageReader reader)
@@ -404,6 +400,9 @@ public static class RPCProcedure
                     case RoleId.Mayor:
                         Mayor.mayor = player;
                         break;
+                    case RoleId.Prosecutor:
+                        Prosecutor.prosecutor = player;
+                        break;
                     case RoleId.Portalmaker:
                         Portalmaker.portalmaker = player;
                         break;
@@ -423,13 +422,13 @@ public static class RPCProcedure
                         Lighter.lighter = player;
                         break;
                     case RoleId.Godfather:
-                        Godfather.godfather = player;
+                        Mafia.godfather = player;
                         break;
                     case RoleId.Mafioso:
-                        Mafioso.mafioso = player;
+                        Mafia.mafioso = player;
                         break;
                     case RoleId.Janitor:
-                        Janitor.janitor = player;
+                        Mafia.janitor = player;
                         break;
                     case RoleId.Detective:
                         Detective.detective = player;
@@ -518,11 +517,6 @@ public static class RPCProcedure
                     case RoleId.Arsonist:
                         Arsonist.arsonist = player;
                         break;
-                    /*
-                case RoleId.EvilGuesser:
-                    Guesser.evilGuesser = player;
-                    break;
-                    */
                     case RoleId.NiceGuesser:
                         Guesser.niceGuesser = player;
                         break;
@@ -541,10 +535,6 @@ public static class RPCProcedure
                     case RoleId.Lawyer:
                         Lawyer.lawyer = player;
                         break;
-                    /*case RoleId.Prosecutor:
-                        Lawyer.lawyer = player;
-                        //Lawyer.isProsecutor = true;
-                        break;*/
                     case RoleId.Pursuer:
                         Pursuer.pursuer = player;
                         break;
@@ -606,7 +596,7 @@ public static class RPCProcedure
 
     public static void setModifier(byte modifierId, byte playerId, byte flag)
     {
-        var player = Helpers.playerById(playerId);
+        var player = playerById(playerId);
         switch ((RoleId)modifierId)
         {
             case RoleId.EvilGuesser:
@@ -693,7 +683,7 @@ public static class RPCProcedure
 
     public static void useUncheckedVent(int ventId, byte playerId, byte isEnter)
     {
-        var player = Helpers.playerById(playerId);
+        var player = playerById(playerId);
         if (player == null) return;
         // Fill dummy MessageReader and call MyPhysics.HandleRpc as the corountines cannot be accessed
         var reader = new MessageReader();
@@ -710,8 +700,8 @@ public static class RPCProcedure
     public static void uncheckedMurderPlayer(byte sourceId, byte targetId, byte showAnimation)
     {
         if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
-        var source = Helpers.playerById(sourceId);
-        var target = Helpers.playerById(targetId);
+        var source = playerById(sourceId);
+        var target = playerById(targetId);
         if (source != null && target != null)
         {
             if (showAnimation == 0) KillAnimationCoPerformKillPatch.hideNextAnimation = true;
@@ -721,14 +711,14 @@ public static class RPCProcedure
 
     public static void uncheckedCmdReportDeadBody(byte sourceId, byte targetId)
     {
-        var source = Helpers.playerById(sourceId);
-        var t = targetId == byte.MaxValue ? null : Helpers.playerById(targetId).Data;
+        var source = playerById(sourceId);
+        var t = targetId == byte.MaxValue ? null : playerById(targetId).Data;
         if (source != null) source.ReportDeadBody(t);
     }
 
     public static void uncheckedExilePlayer(byte targetId)
     {
-        var target = Helpers.playerById(targetId);
+        var target = playerById(targetId);
         if (target != null) target.Exiled();
     }
 
@@ -746,7 +736,7 @@ public static class RPCProcedure
 
     public static void turnToCrewmate(byte targetId)
     {
-        var player = Helpers.playerById(targetId);
+        var player = playerById(targetId);
         if (player == null) return;
         player.Data.Role.TeamType = RoleTeamTypes.Crewmate;
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
@@ -788,7 +778,7 @@ public static class RPCProcedure
 
     public static void showIndomitableFlash()
     {
-        if (Indomitable.indomitable == CachedPlayer.LocalPlayer.PlayerControl) Helpers.showFlash(Indomitable.color);
+        if (Indomitable.indomitable == CachedPlayer.LocalPlayer.PlayerControl) showFlash(Indomitable.color);
     }
 
     public static void cleanBody(byte playerId, byte cleaningPlayerId)
@@ -866,17 +856,17 @@ public static class RPCProcedure
 
     public static void impostorPromotesToLastImpostor(byte targetId)
     {
-        PlayerControl player = Helpers.playerById(targetId);
+        PlayerControl player = playerById(targetId);
         LastImpostor.lastImpostor = player;
     }
 
     public static void amnisiacTakeRole(byte targetId)
     {
-        var target = Helpers.playerById(targetId);
+        var target = playerById(targetId);
         var amnisiac = Amnisiac.amnisiac;
         if (target == null || amnisiac == null) return;
         var targetInfo = RoleInfo.getRoleInfoForPlayer(target);
-        var roleInfo = targetInfo.Where(info => !info.isModifier).FirstOrDefault();
+        var roleInfo = targetInfo.FirstOrDefault(info => !info.isModifier);
         switch (roleInfo!.roleId)
         {
             case RoleId.Crewmate:
@@ -905,14 +895,12 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 Amnisiac.amnisiac = target;
                 break;
-            /*
+
             case RoleId.Prosecutor:
-                // Never reload Prosecutor
-                Lawyer.lawyer = amnisiac;
+                Prosecutor.prosecutor = target;
                 Amnisiac.clearAndReload();
-                Amnisiac.amnisiac = target;
                 break;
-                */
+
             case RoleId.Mayor:
                 if (Amnisiac.resetRole) Mayor.clearAndReload();
                 Mayor.mayor = amnisiac;
@@ -954,12 +942,6 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 break;
 
-            case RoleId.Godfather:
-                Helpers.turnToImpostor(Amnisiac.amnisiac);
-                if (Amnisiac.resetRole) Godfather.clearAndReload();
-                Amnisiac.clearAndReload();
-                break;
-
             case RoleId.Poucher:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Poucher.clearAndReload();
@@ -973,16 +955,18 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 break;
 
+            case RoleId.Godfather:
+                Helpers.turnToImpostor(Amnisiac.amnisiac);
+                Amnisiac.clearAndReload();
+                break;
 
             case RoleId.Mafioso:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
-                if (Amnisiac.resetRole) Mafioso.clearAndReload();
                 Amnisiac.clearAndReload();
                 break;
 
             case RoleId.Janitor:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
-                if (Amnisiac.resetRole) Janitor.clearAndReload();
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1238,7 +1222,7 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 Amnisiac.amnisiac = target;
                 break;
-                
+
             case RoleId.Executioner:
                 Executioner.executioner = amnisiac;
                 Amnisiac.clearAndReload();
@@ -1369,7 +1353,7 @@ public static class RPCProcedure
 
     public static void mimicMimicRole(byte targetId)
     {
-        var target = Helpers.playerById(targetId);
+        var target = playerById(targetId);
         if (target == null || Mimic.mimic == null) return;
         var targetInfo = RoleInfo.getRoleInfoForPlayer(target);
         var roleInfo = targetInfo.FirstOrDefault(info => !info.isModifier);
@@ -1387,6 +1371,12 @@ public static class RPCProcedure
                 Mayor.mayor = Mimic.mimic;
                 mayorMeetingButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
 
+                Mimic.hasMimic = true;
+                break;
+
+            case RoleId.Prosecutor:
+                if (Amnisiac.resetRole) Prosecutor.clearAndReload();
+                Prosecutor.prosecutor = Mimic.mimic;
                 Mimic.hasMimic = true;
                 break;
 
@@ -1505,7 +1495,7 @@ public static class RPCProcedure
 
     public static void cultistCreateImposter(byte targetId)
     {
-        var player = Helpers.playerById(targetId);
+        var player = playerById(targetId);
         if (player == null) return;
 
         if (player == Sidekick.sidekick || player == Jackal.jackal) Jackal.fakeSidekick = player;
@@ -1522,7 +1512,7 @@ public static class RPCProcedure
 
     public static void turnToImpostor(byte targetId)
     {
-        var player = Helpers.playerById(targetId);
+        var player = playerById(targetId);
         erasePlayerRoles(player.PlayerId);
         Helpers.turnToImpostor(player);
     }
@@ -1541,15 +1531,15 @@ public static class RPCProcedure
     {
         if (CachedPlayer.LocalPlayer.PlayerControl == Veteren.veteren)
         {
-            var player = Helpers.playerById(targetId);
-            Helpers.checkMuderAttemptAndKill(Veteren.veteren, player);
+            var player = playerById(targetId);
+            checkMuderAttemptAndKill(Veteren.veteren, player);
         }
     }
 
     public static void medicSetShielded(byte shieldedId)
     {
         Medic.usedShield = true;
-        Medic.shielded = Helpers.playerById(shieldedId);
+        Medic.shielded = playerById(shieldedId);
         Medic.futureShielded = null;
     }
 
@@ -1570,21 +1560,21 @@ public static class RPCProcedure
              !Medic.showShieldAfterMeeting); // Dont show attempt, if shield is not shown yet
         var isMedicAndShow = Medic.medic == CachedPlayer.LocalPlayer.PlayerControl && Medic.showAttemptToMedic;
 
-        if (isShieldedAndShow || isMedicAndShow || Helpers.shouldShowGhostInfo())
-            Helpers.showFlash(Palette.ImpostorRed, 1.5f, getString("medicShowAttemptText"));
+        if (isShieldedAndShow || isMedicAndShow || shouldShowGhostInfo())
+            showFlash(Palette.ImpostorRed, 1.5f, getString("medicShowAttemptText"));
     }
 
     public static void shifterShift(byte targetId)
     {
         var oldShifter = Shifter.shifter;
-        var player = Helpers.playerById(targetId);
+        var player = playerById(targetId);
         if (player == null || oldShifter == null) return;
 
         Shifter.futureShift = null;
         Shifter.clearAndReload();
 
         // Suicide (exile) when impostor or impostor variants
-        if ((player.Data.Role.IsImpostor || Helpers.isShiftNeutral(player)) && !oldShifter.Data.IsDead)
+        if ((player.Data.Role.IsImpostor || isShiftNeutral(player)) && !oldShifter.Data.IsDead)
         {
             oldShifter.Exiled();
             overrideDeathReasonAndKiller(oldShifter, DeadPlayer.CustomDeathReason.Shift, player);
@@ -1617,7 +1607,7 @@ public static class RPCProcedure
 
     public static void morphlingMorph(byte playerId)
     {
-        var target = Helpers.playerById(playerId);
+        var target = playerById(playerId);
         if (Morphling.morphling == null || target == null) return;
 
         Morphling.morphTimer = Morphling.duration;
@@ -1630,11 +1620,11 @@ public static class RPCProcedure
 
     public static void camouflagerCamouflage(byte setTimer)
     {
-        if (Helpers.isActiveCamoComms() && setTimer != 2) return;
-        if (Helpers.isCamoComms()) Camouflager.camoComms = true;
+        if (isActiveCamoComms() && setTimer != 2) return;
+        if (isCamoComms()) Camouflager.camoComms = true;
         if (Camouflager.camouflager == null && !Camouflager.camoComms) return;
         if (setTimer == 1) Camouflager.camouflageTimer = Camouflager.duration;
-        if (Helpers.MushroomSabotageActive()) return; // Dont overwrite the fungle "camo"
+        if (MushroomSabotageActive()) return; // Dont overwrite the fungle "camo"
         foreach (PlayerControl player in CachedPlayer.AllPlayers)
             player.setLook("", 6, "", "", "", "");
     }
@@ -1666,7 +1656,7 @@ public static class RPCProcedure
 
     public static void prophetExamine(byte targetId)
     {
-        var target = Helpers.playerById(targetId);
+        var target = playerById(targetId);
         if (target == null) return;
         if (Prophet.examined.ContainsKey(target)) Prophet.examined.Remove(target);
         Prophet.examined.Add(target, Prophet.IsKiller(target));
@@ -1710,12 +1700,20 @@ public static class RPCProcedure
 
     public static void jackalCreatesSidekick(byte targetId)
     {
-        var player = Helpers.playerById(targetId);
+        var player = playerById(targetId);
         if (player == null) return;
-        if (Executioner.target == player && Executioner.executioner != null && !Executioner.executioner.Data.IsDead && Lawyer.lawyer == null)
+        if (Executioner.target == player && Executioner.executioner != null && !Executioner.executioner.Data.IsDead)
         {
-            Lawyer.lawyer = Executioner.executioner;
-            Executioner.clearAndReload();
+            if (Lawyer.lawyer == null && Executioner.promotesToLawyer)
+            {
+                Lawyer.lawyer = Executioner.executioner;
+                Executioner.clearAndReload();
+            }
+            else if (!Executioner.promotesToLawyer && Pursuer.pursuer == null)
+            {
+                Pursuer.pursuer = Executioner.executioner;
+                Executioner.clearAndReload();
+            }
         }
         if (!Jackal.canCreateSidekickFromImpostor && player.Data.Role.IsImpostor)
         {
@@ -1762,7 +1760,7 @@ public static class RPCProcedure
 
     public static void erasePlayerRoles(byte playerId, bool ignoreModifier = true)
     {
-        var player = Helpers.playerById(playerId);
+        var player = playerById(playerId);
         if (player == null) return;
         //if (player == null) return;
 
@@ -1771,6 +1769,7 @@ public static class RPCProcedure
             Guesser.evilGuesser.RemoveAll(x => x.PlayerId == player.PlayerId);
         if (player == Swooper.swooper) Swooper.clearAndReload();
         if (player == Mayor.mayor) Mayor.clearAndReload();
+        if (player == Prosecutor.prosecutor) Prosecutor.clearAndReload();
         if (player == Portalmaker.portalmaker) Portalmaker.clearAndReload();
         if (player == Engineer.engineer) Engineer.clearAndReload();
         if (player == PrivateInvestigator.privateInvestigator) PrivateInvestigator.clearAndReload();
@@ -1800,10 +1799,8 @@ public static class RPCProcedure
         if (player == Morphling.morphling) Morphling.clearAndReload();
         if (player == Bomber.bomber) Bomber.clearAndReload();
         if (player == Camouflager.camouflager) Camouflager.clearAndReload();
-        if (player == Godfather.godfather) Godfather.clearAndReload();
+        if (player == Mafia.godfather || player == Mafia.mafioso || player == Mafia.janitor) Mafia.clearAndReload();
         if (player == Poucher.poucher && !Poucher.spawnModifier) Poucher.clearAndReload();
-        if (player == Mafioso.mafioso) Mafioso.clearAndReload();
-        if (player == Janitor.janitor) Janitor.clearAndReload();
         if (player == Vampire.vampire) Vampire.clearAndReload();
         if (player == Eraser.eraser) Eraser.clearAndReload();
         if (player == Cultist.cultist) Cultist.clearAndReload();
@@ -1892,9 +1889,8 @@ public static class RPCProcedure
 
     public static void setFutureErased(byte playerId)
     {
-        var player = Helpers.playerById(playerId);
-        if (Eraser.futureErased == null)
-            Eraser.futureErased = new List<PlayerControl>();
+        var player = playerById(playerId);
+        Eraser.futureErased ??= new List<PlayerControl>();
         if (player != null) Eraser.futureErased.Add(player);
     }
     /*
@@ -1907,7 +1903,7 @@ public static class RPCProcedure
     */
     public static void setFutureShifted(byte playerId)
     {
-        Shifter.futureShift = Helpers.playerById(playerId);
+        Shifter.futureShift = playerById(playerId);
     }
 
     public static void disperse()
@@ -1915,7 +1911,7 @@ public static class RPCProcedure
         // AntiTeleport set position
         AntiTeleport.setPosition();
 
-        Helpers.showFlash(Palette.ImpostorRed);
+        showFlash(Palette.ImpostorRed);
 
         if (AntiTeleport.antiTeleport.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId).Count == 0 && !CachedPlayer.LocalPlayer.Data.IsDead)
         {
@@ -1958,7 +1954,7 @@ public static class RPCProcedure
 
     public static void setFutureShielded(byte playerId)
     {
-        Medic.futureShielded = Helpers.playerById(playerId);
+        Medic.futureShielded = playerById(playerId);
         Medic.usedShield = true;
     }
 
@@ -1974,7 +1970,7 @@ public static class RPCProcedure
             return;
         }
 
-        Bomber.hasBomb = Helpers.playerById(playerId);
+        Bomber.hasBomb = playerById(playerId);
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombDelay,
             new Action<float>(p =>
             {
@@ -1988,7 +1984,7 @@ public static class RPCProcedure
                 if (p == 1f && Bomber.bombActive)
                 {
                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                    Helpers.checkMuderAttemptAndKill(Bomber.hasBomb, Bomber.hasBomb);
+                    checkMuderAttemptAndKill(Bomber.hasBomb, Bomber.hasBomb);
                     Bomber.hasBomb = null;
                     Bomber.bombActive = false;
                     Bomber.hasAlerted = false;
@@ -2011,7 +2007,7 @@ public static class RPCProcedure
                         {
                             if (!Bomber.hasAlerted)
                             {
-                                Helpers.showFlash(Bomber.alertColor);
+                                showFlash(Bomber.alertColor);
                                 Bomber.hasAlerted = true;
                             }
                         }
@@ -2026,9 +2022,8 @@ public static class RPCProcedure
 
     public static void setFutureSpelled(byte playerId)
     {
-        var player = Helpers.playerById(playerId);
-        if (Witch.futureSpelled == null)
-            Witch.futureSpelled = new List<PlayerControl>();
+        var player = playerById(playerId);
+        Witch.futureSpelled ??= new List<PlayerControl>();
         if (player != null) Witch.futureSpelled.Add(player);
     }
 
@@ -2044,7 +2039,7 @@ public static class RPCProcedure
 
     public static void setInvisible(byte playerId, byte flag)
     {
-        var target = Helpers.playerById(playerId);
+        var target = playerById(playerId);
         if (target == null) return;
         if (flag == byte.MaxValue)
         {
@@ -2052,7 +2047,7 @@ public static class RPCProcedure
             target.cosmetics.colorBlindText.gameObject.SetActive(DataManager.Settings.Accessibility.ColorBlindMode);
             target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(1f);
 
-            if (Camouflager.camouflageTimer <= 0 && !Helpers.MushroomSabotageActive() && !Helpers.isCamoComms())
+            if (Camouflager.camouflageTimer <= 0 && !MushroomSabotageActive() && !isCamoComms())
                 target.setDefaultLook();
             Ninja.isInvisble = false;
             return;
@@ -2110,8 +2105,8 @@ public static class RPCProcedure
 
     public static void akujoSetHonmei(byte akujoId, byte targetId)
     {
-        PlayerControl akujo = Helpers.playerById(akujoId);
-        PlayerControl target = Helpers.playerById(targetId);
+        PlayerControl akujo = playerById(akujoId);
+        PlayerControl target = playerById(targetId);
 
         if (akujo != null && Akujo.honmei == null)
         {
@@ -2122,8 +2117,8 @@ public static class RPCProcedure
 
     public static void akujoSetKeep(byte akujoId, byte targetId)
     {
-        var akujo = Helpers.playerById(akujoId);
-        PlayerControl target = Helpers.playerById(targetId);
+        var akujo = playerById(akujoId);
+        PlayerControl target = playerById(targetId);
 
         if (akujo != null && Akujo.keepsLeft > 0)
         {
@@ -2135,7 +2130,7 @@ public static class RPCProcedure
 
     public static void akujoSuicide(byte akujoId)
     {
-        var akujo = Helpers.playerById(akujoId);
+        var akujo = playerById(akujoId);
         if (akujo != null)
         {
             akujo.MurderPlayer(akujo, MurderResultFlags.Succeeded);
@@ -2195,14 +2190,14 @@ public static class RPCProcedure
 
     public static void setSwoop(byte playerId, byte flag)
     {
-        var target = Helpers.playerById(playerId);
+        var target = playerById(playerId);
         if (target == null) return;
         if (flag == byte.MaxValue)
         {
             target.cosmetics.currentBodySprite.BodySprite.color = Color.white;
             target.cosmetics.colorBlindText.gameObject.SetActive(DataManager.Settings.Accessibility.ColorBlindMode);
             target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(1f);
-            if (Camouflager.camouflageTimer <= 0 && !Helpers.MushroomSabotageActive() & !Helpers.isCamoComms())
+            if (Camouflager.camouflageTimer <= 0 && !MushroomSabotageActive() & !isCamoComms())
                 target.setDefaultLook();
             Swooper.isInvisable = false;
             return;
@@ -2229,8 +2224,8 @@ public static class RPCProcedure
 
     public static void trapperKill(byte trapId, byte trapperId, byte playerId)
     {
-        var trapper = Helpers.playerById(trapperId);
-        var target = Helpers.playerById(playerId);
+        var trapper = playerById(trapperId);
+        var target = playerById(playerId);
         KillTrap.trapKill(trapId, trapper, target);
     }
 
@@ -2249,8 +2244,8 @@ public static class RPCProcedure
 
     public static void activateTrap(byte trapId, byte trapperId, byte playerId)
     {
-        var trapper = Helpers.playerById(trapperId);
-        var player = Helpers.playerById(playerId);
+        var trapper = playerById(trapperId);
+        var player = playerById(playerId);
         KillTrap.activateTrap(trapId, trapper, player);
     }
 
@@ -2266,14 +2261,14 @@ public static class RPCProcedure
 
     public static void setInvisibleGen(byte playerId, byte flag)
     {
-        var target = Helpers.playerById(playerId);
+        var target = playerById(playerId);
         if (target == null) return;
         if (flag == byte.MaxValue)
         {
             target.cosmetics.currentBodySprite.BodySprite.color = Color.white;
             target.cosmetics.colorBlindText.gameObject.SetActive(DataManager.Settings.Accessibility.ColorBlindMode);
             target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(1f);
-            if (Camouflager.camouflageTimer <= 0 && !Helpers.MushroomSabotageActive())
+            if (Camouflager.camouflageTimer <= 0 && !MushroomSabotageActive())
                 target.setDefaultLook(); // testing
             return;
         }
@@ -2311,7 +2306,7 @@ public static class RPCProcedure
     {
         Trickster.lightsOutTimer = Trickster.lightsOutDuration;
         // If the local player is impostor indicate lights out
-        if (Helpers.hasImpVision(GameData.Instance.GetPlayerById(CachedPlayer.LocalPlayer.PlayerId)))
+        if (hasImpVision(GameData.Instance.GetPlayerById(CachedPlayer.LocalPlayer.PlayerId)))
             new CustomMessage("Lights are out", Trickster.lightsOutDuration);
     }
 
@@ -2375,7 +2370,7 @@ public static class RPCProcedure
                 ? SecurityGuard.getStaticVentSealedSprite()
                 : SecurityGuard.getAnimatedVentSealedSprite();
             var rend = vent.myRend;
-            if (Helpers.isFungle())
+            if (isFungle())
             {
                 newSprite = SecurityGuard.getFungleVentSealedSprite();
                 rend = vent.transform.GetChild(3).GetComponent<SpriteRenderer>();
@@ -2407,12 +2402,12 @@ public static class RPCProcedure
 
     public static void lawyerSetTarget(byte playerId)
     {
-        Lawyer.target = Helpers.playerById(playerId);
+        Lawyer.target = playerById(playerId);
     }
 
     public static void executionerSetTarget(byte playerId)
     {
-        Executioner.target = Helpers.playerById(playerId);
+        Executioner.target = playerById(playerId);
     }
 
     public static void lawyerPromotesToPursuer()
@@ -2449,7 +2444,7 @@ public static class RPCProcedure
 
     public static void guesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleId)
     {
-        var dyingTarget = Helpers.playerById(dyingTargetId);
+        var dyingTarget = playerById(dyingTargetId);
         PlayerControl? dyingAkujoPartner;
         if (dyingTarget == null) return;
         if (Lawyer.target != null && dyingTarget == Lawyer.target)
@@ -2458,7 +2453,7 @@ public static class RPCProcedure
         if (Lawyer.target != null && dyingLoverPartner == Lawyer.target)
             Lawyer.targetWasGuessed = true; // Lawyer shouldn't be exiled with the client for guesses
 
-        var guesser = Helpers.playerById(killerId);
+        var guesser = playerById(killerId);
         if (Thief.thief != null && Thief.thief.PlayerId == killerId && Thief.canStealWithGuess)
         {
             var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
@@ -2522,7 +2517,7 @@ public static class RPCProcedure
                 //Give players back their vote if target is shot dead
                 if (pva.VotedFor != dyingTargetId || pva.VotedFor != partnerId) continue;
                 pva.UnsetVote();
-                var voteAreaPlayer = Helpers.playerById(pva.TargetPlayerId);
+                var voteAreaPlayer = playerById(pva.TargetPlayerId);
                 if (!voteAreaPlayer.AmOwner) continue;
                 MeetingHud.Instance.ClearVote();
             }
@@ -2584,7 +2579,7 @@ public static class RPCProcedure
         }
 
 
-        var guessedTarget = Helpers.playerById(guessedTargetId);
+        var guessedTarget = playerById(guessedTargetId);
         if (CachedPlayer.LocalPlayer.Data.IsDead && guessedTarget != null && guesser != null)
         {
             var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
@@ -2609,50 +2604,50 @@ public static class RPCProcedure
 
     public static void blackmailPlayer(byte playerId)
     {
-        var target = Helpers.playerById(playerId);
+        var target = playerById(playerId);
         Blackmailer.blackmailed = target;
     }
 
     public static void showBodyGuardFlash()
     {
-        if (CustomOptionHolder.bodyGuardFlash.getBool()) Helpers.showFlash(BodyGuard.color);
+        if (CustomOptionHolder.bodyGuardFlash.getBool()) showFlash(BodyGuard.color);
     }
 
     public static void showCultistFlash()
     {
         if (Follower.follower == CachedPlayer.LocalPlayer.PlayerControl)
-            Helpers.showFlash(new Color(32f / 51f, 0.007843138f, 74f / 85f));
+            showFlash(new Color(32f / 51f, 0.007843138f, 74f / 85f));
     }
 
     public static void showFollowerFlash()
     {
         if (Cultist.cultist == CachedPlayer.LocalPlayer.PlayerControl)
-            Helpers.showFlash(new Color(32f / 51f, 0.007843138f, 74f / 85f));
+            showFlash(new Color(32f / 51f, 0.007843138f, 74f / 85f));
     }
 
     public static void bodyGuardGuardPlayer(byte targetId)
     {
-        var target = Helpers.playerById(targetId);
+        var target = playerById(targetId);
         BodyGuard.usedGuard = true;
         BodyGuard.guarded = target;
     }
 
     public static void privateInvestigatorWatchPlayer(byte targetId)
     {
-        var target = Helpers.playerById(targetId);
+        var target = playerById(targetId);
         PrivateInvestigator.watching = target;
     }
 
     public static void privateInvestigatorWatchFlash(byte targetId)
     {
-        var target = Helpers.playerById(targetId);
+        var target = playerById(targetId);
         // GetDefaultOutfit().ColorId
         if (CachedPlayer.LocalPlayer.PlayerControl == PrivateInvestigator.privateInvestigator)
         {
             if (PrivateInvestigator.seeFlashColor)
-                Helpers.showFlash(Palette.PlayerColors[target.Data.DefaultOutfit.ColorId]);
+                showFlash(Palette.PlayerColors[target.Data.DefaultOutfit.ColorId]);
             else
-                Helpers.showFlash(PrivateInvestigator.color);
+                showFlash(PrivateInvestigator.color);
         }
     }
 
@@ -2664,7 +2659,7 @@ public static class RPCProcedure
 
     public static void setBlanked(byte playerId, byte value)
     {
-        var target = Helpers.playerById(playerId);
+        var target = playerById(playerId);
         if (target == null) return;
         Pursuer.blankedList.RemoveAll(x => x.PlayerId == playerId);
         if (value > 0) Pursuer.blankedList.Add(target);
@@ -2679,21 +2674,21 @@ public static class RPCProcedure
 
     public static void setPosition(byte playerId, float x, float y)
     {
-        var target = Helpers.playerById(playerId);
+        var target = playerById(playerId);
         target.transform.localPosition = new Vector3(x, y, 0);
         target.transform.position = new Vector3(x, y, 0);
     }
 
     public static void setPositionESC(byte playerId, float x, float y)
     {
-        var target = Helpers.playerById(playerId);
+        var target = playerById(playerId);
         target.transform.localPosition = new Vector3(x, y, 0);
         target.transform.position = new Vector3(x, y, 0);
     }
 
     public static void setFirstKill(byte playerId)
     {
-        var target = Helpers.playerById(playerId);
+        var target = playerById(playerId);
         if (target == null) return;
         firstKillPlayer = target;
     }
@@ -2711,7 +2706,7 @@ public static class RPCProcedure
             rend.transform.SetParent(playerVoteArea.transform);
             rend.gameObject.layer = playerVoteArea.Megaphone.gameObject.layer;
             rend.transform.localPosition = new Vector3(-0.5f, 0.2f, -1f);
-            rend.sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ChatOverlay.png", 130f);
+            rend.sprite = loadSpriteFromResources("TheOtherRoles.Resources.ChatOverlay.png", 130f);
             if (playerControl.PlayerId != localPlayerId) rend.gameObject.SetActive(true);
             FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(2f,
                 (Action<float>)delegate (float p)
@@ -2725,7 +2720,7 @@ public static class RPCProcedure
         }
         catch
         {
-            System.Console.WriteLine("Chat Notification Overlay is Detected");
+            Message("Chat Notification Overlay is Detected");
         }
     }
 
@@ -2736,7 +2731,7 @@ public static class RPCProcedure
 
     public static void thiefStealsRole(byte playerId)
     {
-        var target = Helpers.playerById(playerId);
+        var target = playerById(playerId);
         var thief = Thief.thief;
         if (target == null) return;
         if (target == Sheriff.sheriff) Sheriff.sheriff = thief;
@@ -2757,10 +2752,10 @@ public static class RPCProcedure
         }
 
         //if (target == Guesser.evilGuesser) Guesser.evilGuesser = thief;
-        if (target == Godfather.godfather) Godfather.godfather = thief;
+        if (target == Mafia.godfather) Mafia.godfather = thief;
         if (target == Poucher.poucher && !Poucher.spawnModifier) Poucher.poucher = thief;
-        if (target == Mafioso.mafioso) Mafioso.mafioso = thief;
-        if (target == Janitor.janitor) Janitor.janitor = thief;
+        if (target == Mafia.mafioso) Mafia.mafioso = thief;
+        if (target == Mafia.janitor) Mafia.janitor = thief;
         if (target == Morphling.morphling) Morphling.morphling = thief;
         if (target == Camouflager.camouflager) Camouflager.camouflager = thief;
         if (target == Vampire.vampire) Vampire.vampire = thief;
@@ -2837,7 +2832,7 @@ public static class RPCProcedure
 
     public static void setGuesserGm(byte playerId)
     {
-        var target = Helpers.playerById(playerId);
+        var target = playerById(playerId);
         if (target == null) return;
         new GuesserGM(target);
     }
@@ -2902,7 +2897,7 @@ public static class RPCProcedure
 
     public static void propHuntSetProp(byte playerId, string propName, float posX)
     {
-        var player = Helpers.playerById(playerId);
+        var player = playerById(playerId);
         var prop = PropHunt.FindPropByNameAndPos(propName, posX);
         if (prop == null) return;
         try
@@ -2939,7 +2934,7 @@ public static class RPCProcedure
 
     public static void receiveGhostInfo(byte senderId, MessageReader reader)
     {
-        var sender = Helpers.playerById(senderId);
+        var sender = playerById(senderId);
 
         var infoType = (GhostInfoTypes)reader.ReadByte();
         switch (infoType)
@@ -2951,25 +2946,25 @@ public static class RPCProcedure
                 _ = Deputy.handcuffedKnows.Remove(senderId);
                 break;
             case GhostInfoTypes.ArsonistDouse:
-                Arsonist.dousedPlayers.Add(Helpers.playerById(reader.ReadByte()));
+                Arsonist.dousedPlayers.Add(playerById(reader.ReadByte()));
                 break;
             case GhostInfoTypes.BountyTarget:
-                BountyHunter.bounty = Helpers.playerById(reader.ReadByte());
+                BountyHunter.bounty = playerById(reader.ReadByte());
                 break;
             case GhostInfoTypes.NinjaMarked:
-                Ninja.ninjaMarked = Helpers.playerById(reader.ReadByte());
+                Ninja.ninjaMarked = playerById(reader.ReadByte());
                 break;
             case GhostInfoTypes.WarlockTarget:
-                Warlock.curseVictim = Helpers.playerById(reader.ReadByte());
+                Warlock.curseVictim = playerById(reader.ReadByte());
                 break;
             case GhostInfoTypes.MediumInfo:
                 var mediumInfo = reader.ReadString();
-                if (Helpers.shouldShowGhostInfo())
+                if (shouldShowGhostInfo())
                     FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(sender, mediumInfo);
                 break;
             case GhostInfoTypes.DetectiveOrMedicInfo:
                 var detectiveInfo = reader.ReadString();
-                if (Helpers.shouldShowGhostInfo())
+                if (shouldShowGhostInfo())
                     FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(sender, detectiveInfo);
                 break;
             case GhostInfoTypes.BlankUsed:
@@ -2979,8 +2974,8 @@ public static class RPCProcedure
                 vampireKillButton.Timer = reader.ReadByte();
                 break;
             case GhostInfoTypes.DeathReasonAndKiller:
-                overrideDeathReasonAndKiller(Helpers.playerById(reader.ReadByte()),
-                    (DeadPlayer.CustomDeathReason)reader.ReadByte(), Helpers.playerById(reader.ReadByte()));
+                overrideDeathReasonAndKiller(playerById(reader.ReadByte()),
+                    (DeadPlayer.CustomDeathReason)reader.ReadByte(), playerById(reader.ReadByte()));
                 break;
         }
     }
@@ -3230,7 +3225,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.DoomsayerMeeting:
-                if (!Helpers.shouldShowGhostInfo()) break;
+                if (!shouldShowGhostInfo()) break;
                 var index = reader.ReadPackedInt32();
                 for (var i = 1; i < index; i++)
                 {
@@ -3347,7 +3342,7 @@ internal class RPCHandlerPatch
             case CustomRPC.LawyerSetTarget:
                 RPCProcedure.lawyerSetTarget(reader.ReadByte());
                 break;
-                
+
             case CustomRPC.ExecutionerSetTarget:
                 RPCProcedure.executionerSetTarget(reader.ReadByte());
                 break;
@@ -3355,7 +3350,7 @@ internal class RPCHandlerPatch
             case CustomRPC.ExecutionerPromotesRole:
                 RPCProcedure.executionerPromotesRole();
                 break;
-                
+
             case CustomRPC.LawyerPromotesToPursuer:
                 RPCProcedure.lawyerPromotesToPursuer();
                 break;
@@ -3427,7 +3422,7 @@ internal class RPCHandlerPatch
 
             case CustomRPC.Mine:
                 var newVentId = reader.ReadInt32();
-                var role = Helpers.playerById(reader.ReadByte());
+                var role = playerById(reader.ReadByte());
                 var pos = reader.ReadBytesAndSize();
                 var zAxis = reader.ReadSingle();
                 RPCProcedure.Mine(newVentId, role, pos, zAxis);
@@ -3588,6 +3583,10 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.TrapperMeetingFlag:
                 RPCProcedure.trapperMeetingFlag();
+                break;
+
+            case CustomRPC.Prosecute:
+                Prosecutor.ProsecuteThisMeeting = true;
                 break;
         }
 

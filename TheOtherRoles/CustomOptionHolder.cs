@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Neutral;
+using TheOtherRoles.Modules;
 using UnityEngine;
 using static TheOtherRoles.CustomOption;
-using static TheOtherRoles.TheOtherRoles;
 using Types = TheOtherRoles.CustomOption.CustomOptionType;
 
 namespace TheOtherRoles;
@@ -20,7 +17,6 @@ public class CustomOptionHolder
         ["预设 1", "预设 2", "预设 3", "Skeld预设", "Mira预设", "Polus预设", "Airship预设", "Fungle预设", "Submerged预设"];
 
     public static CustomOption presetSelection;
-    public static CustomOption activateRoles;
     public static CustomOption crewmateRolesCountMin;
     public static CustomOption crewmateRolesCountMax;
     public static CustomOption crewmateRolesFill;
@@ -169,6 +165,9 @@ public class CustomOptionHolder
     public static CustomOption mayorMaxRemoteMeetings;
     public static CustomOption mayorSabotageRemoteMeetings;
     public static CustomOption mayorChooseSingleVote;
+
+    public static CustomOption prosecutorSpawnRate;
+    public static CustomOption prosecutorDiesOnIncorrectPros;
 
     public static CustomOption portalmakerSpawnRate;
     public static CustomOption portalmakerCooldown;
@@ -538,7 +537,7 @@ public class CustomOptionHolder
     public static CustomOption enableMapOptions;
     public static CustomOption randomGameStartPosition;
     public static CustomOption randomGameStartToVents;
-    public static CustomOption allowModGuess;
+    //public static CustomOption allowModGuess;
     public static CustomOption ghostSpeed;
     public static CustomOption finishTasksBeforeHauntingOrZoomingOut;
     public static CustomOption camsNightVision;
@@ -699,7 +698,6 @@ public class CustomOptionHolder
 
         // Role Options
         presetSelection = Create(0, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "presetSelection"), presets, null, true);
-        activateRoles = Create(1, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "activateRoles"), true, null, true);
 
         anyPlayerCanStopStart = Create(3, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "anyPlayerCanStopStart"), false, null, false);
 
@@ -716,7 +714,7 @@ public class CustomOptionHolder
 
         //-------------------------- Other options 1 - 599 -------------------------- //
 
-        resteButtonCooldown = Create(20, Types.General, "resteButtonCooldown", 10f, 2.5f, 30f, 2.5f, null, true);
+        resteButtonCooldown = Create(20, Types.General, "resteButtonCooldown", 20f, 2.5f, 30f, 2.5f, null, true);
         maxNumberOfMeetings = Create(21, Types.General, "maxNumberOfMeetings", 10, 0, 15, 1, null, true);
         blockSkippingInEmergencyMeetings = Create(22, Types.General, "blockSkippingInEmergencyMeetings", false);
         noVoteIsSelfVote = Create(23, Types.General, "noVoteIsSelfVote", false, blockSkippingInEmergencyMeetings);
@@ -728,7 +726,7 @@ public class CustomOptionHolder
         impostorSeeRoles = Create(30, Types.General, "impostorSeeRoles", false);
         blockGameEnd = Create(29, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "blockGameEnd"), true);
         deadImpsBlockSabotage = Create(32, Types.General, cs(Palette.ImpostorRed, "deadImpsBlockSabotage"), false);
-        allowModGuess = Create(31, Types.General, "allowModGuess", false);
+        //allowModGuess = Create(31, Types.General, "allowModGuess", false);
         //ghostSpeed = Create(33, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
 
         transparentTasks = Create(40, Types.General, "transparentTasks", false, null, true);
@@ -807,40 +805,40 @@ public class CustomOptionHolder
         modifierAssassinKillsThroughShield = Create(10007, Types.Impostor, "modifierAssassinKillsThroughShield", false, modifierAssassin);
         modifierAssassinCultist = Create(10008, Types.Impostor, "modifierAssassinCultist", false, modifierAssassin);
 
-        mafiaSpawnRate = Create(10100, Types.Impostor, cs(Janitor.color, "Mafia"), rates, null, true);
-        janitorCooldown = Create(10101, Types.Impostor, "清洁工清理冷却", 25f, 10f, 60f, 2.5f, mafiaSpawnRate);
+        mafiaSpawnRate = Create(10100, Types.Impostor, cs(Mafia.color, "Mafia"), rates, null, true);
+        janitorCooldown = Create(10101, Types.Impostor, "janitorCooldown", 25f, 10f, 60f, 2.5f, mafiaSpawnRate);
 
         morphlingSpawnRate = Create(10110, Types.Impostor, cs(Morphling.color, "Morphling"), rates, null, true);
-        morphlingCooldown = Create(10111, Types.Impostor, "化形冷却", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);
-        morphlingDuration = Create(10112, Types.Impostor, "化形持续时间", 15f, 1f, 20f, 0.5f, morphlingSpawnRate);
+        morphlingCooldown = Create(10111, Types.Impostor, "morphlingCooldown", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);
+        morphlingDuration = Create(10112, Types.Impostor, "morphlingDuration", 15f, 1f, 20f, 0.5f, morphlingSpawnRate);
 
         bomberSpawnRate = Create(10120, Types.Impostor, cs(Bomber.color, "Bomber"), rates, null, true);
-        bomberBombCooldown = Create(10121, Types.Impostor, "炸弹冷却", 25f, 10f, 60f, 2.5f, bomberSpawnRate);
-        bomberDelay = Create(10122, Types.Impostor, "炸弹激活时间", 5f, 0f, 20f, 0.5f, bomberSpawnRate);
-        bomberTimer = Create(10123, Types.Impostor, "炸弹爆炸时间", 10f, 5f, 30f, 0.5f, bomberSpawnRate);
-        //bomberHotPotatoMode = Create(10124, Types.Impostor, "烫手山芋模式", true, bomberSpawnRate);
+        bomberBombCooldown = Create(10121, Types.Impostor, "bomberBombCooldown", 25f, 10f, 60f, 2.5f, bomberSpawnRate);
+        bomberDelay = Create(10122, Types.Impostor, "bomberDelay", 5f, 0f, 20f, 0.5f, bomberSpawnRate);
+        bomberTimer = Create(10123, Types.Impostor, "bomberTimer", 10f, 5f, 30f, 0.5f, bomberSpawnRate);
+        //bomberHotPotatoMode = Create(10124, Types.Impostor, "bomberHotPotatoMode", true, bomberSpawnRate);
 
         undertakerSpawnRate = Create(10130, Types.Impostor, cs(Undertaker.color, "Undertaker"), rates, null, true);
-        undertakerDragingDelaiAfterKill = Create(10131, Types.Impostor, "从击杀到恢复拖曳能力所需时间", 0f, 0f, 15, 0.5f, undertakerSpawnRate);
-        undertakerDragingAfterVelocity = Create(10132, Types.Impostor, "拖拽过程的行动速度", 0.75f, 0.5f, 1.5f, 0.125f, undertakerSpawnRate);
-        undertakerCanDragAndVent = Create(10133, Types.Impostor, "拖曳过程中可使用管道", true, undertakerSpawnRate);
+        undertakerDragingDelaiAfterKill = Create(10131, Types.Impostor, "undertakerDragingDelaiAfterKill", 0f, 0f, 15, 0.5f, undertakerSpawnRate);
+        undertakerDragingAfterVelocity = Create(10132, Types.Impostor, "undertakerDragingAfterVelocity", 0.75f, 0.5f, 1.5f, 0.125f, undertakerSpawnRate);
+        undertakerCanDragAndVent = Create(10133, Types.Impostor, "undertakerCanDragAndVent", true, undertakerSpawnRate);
 
         camouflagerSpawnRate = Create(10140, Types.Impostor, cs(Camouflager.color, "Camouflager"), rates, null, true);
-        camouflagerCooldown = Create(10141, Types.Impostor, "隐蔽状态冷却", 25f, 10f, 60f, 2.5f, camouflagerSpawnRate);
-        camouflagerDuration = Create(10142, Types.Impostor, "隐蔽状态持续时间", 12.5f, 1f, 20f, 0.5f, camouflagerSpawnRate);
+        camouflagerCooldown = Create(10141, Types.Impostor, "camouflagerCooldown", 25f, 10f, 60f, 2.5f, camouflagerSpawnRate);
+        camouflagerDuration = Create(10142, Types.Impostor, "camouflagerDuration", 12.5f, 1f, 20f, 0.5f, camouflagerSpawnRate);
 
         vampireSpawnRate = Create(10150, Types.Impostor, cs(Vampire.color, "Vampire"), rates, null, true);
-        vampireKillDelay = Create(10151, Types.Impostor, "从吸血到击杀所需时间", 5f, 1f, 20f, 0.5f, vampireSpawnRate);
-        vampireCooldown = Create(10152, Types.Impostor, "吸血冷却", 25f, 10f, 60f, 2.5f, vampireSpawnRate);
-        vampireGarlicButton = Create(10153, Types.Impostor, "发放大蒜", true, vampireSpawnRate);
-        vampireCanKillNearGarlics = Create(10154, Types.Impostor, "可在大蒜附近击杀", true, vampireGarlicButton);
+        vampireKillDelay = Create(10151, Types.Impostor, "vampireKillDelay", 5f, 1f, 20f, 0.5f, vampireSpawnRate);
+        vampireCooldown = Create(10152, Types.Impostor, "vampireCooldown", 25f, 10f, 60f, 2.5f, vampireSpawnRate);
+        vampireGarlicButton = Create(10153, Types.Impostor, "vampireGarlicButton", true, vampireSpawnRate);
+        vampireCanKillNearGarlics = Create(10154, Types.Impostor, "vampireCanKillNearGarlics", true, vampireGarlicButton);
 
         eraserSpawnRate = Create(10160, Types.Impostor, cs(Eraser.color, "Eraser"), rates, null, true);
-        eraserCooldown = Create(10161, Types.Impostor, "抹除冷却", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
-        eraserCanEraseAnyone = Create(10162, Types.Impostor, "可抹除任何人", false, eraserSpawnRate);
+        eraserCooldown = Create(10161, Types.Impostor, "eraserCooldown", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
+        eraserCanEraseAnyone = Create(10162, Types.Impostor, "eraserCanEraseAnyone", false, eraserSpawnRate);
 
         poucherSpawnRate = Create(10320, Types.Impostor, cs(Palette.ImpostorRed, "Poucher"), rates, null, true);
-        poucherSpawnModifier = Create(10321, Types.Impostor, "生成为附加能力", false, poucherSpawnRate);
+        poucherSpawnModifier = Create(10321, Types.Impostor, "poucherSpawnModifier", false, poucherSpawnRate);
 
         mimicSpawnRate = Create(10170, Types.Impostor, cs(Mimic.color, "Mimic"), rates, null, true);
 
@@ -913,10 +911,10 @@ public class CustomOptionHolder
         evilTrapperExtensionTime = Create(10302, Types.Impostor, "陷阱激活所需时间", 5f, 2f, 10f, 0.5f, evilTrapperSpawnRate);
         evilTrapperCooldown = Create(10303, Types.Impostor, "放置陷阱冷却", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
         evilTrapperKillTimer = Create(10304, Types.Impostor, "掉进陷阱后被陷阱击杀所需时间", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
-        evilTrapperTrapRange = Create(10305, Types.Impostor, "陷阱有效范围", 1f, 0.5f, 5f, 0.125f, evilTrapperSpawnRate);
+        evilTrapperTrapRange = Create(10305, Types.Impostor, "陷阱有效范围", 1f, 0.5f, 2f, 0.125f, evilTrapperSpawnRate);
         evilTrapperMaxDistance = Create(10306, Types.Impostor, "陷阱击杀声音播放有效范围", 10f, 1f, 60f, 2.5f, evilTrapperSpawnRate);
-        evilTrapperPenaltyTime = Create(10307, Types.Impostor, "设陷者进行通常击杀的追加冷却", 10f, 0f, 30f, 2.5f, evilTrapperSpawnRate);
-        evilTrapperBonusTime = Create(10308, Types.Impostor, "设陷者通常击杀落入陷阱的玩家的缩减冷却", 8f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
+        evilTrapperPenaltyTime = Create(10307, Types.Impostor, "设陷者普通击杀会追加冷却", 10f, 0f, 30f, 2.5f, evilTrapperSpawnRate);
+        evilTrapperBonusTime = Create(10308, Types.Impostor, "设陷者击杀落入陷阱的玩家缩减冷却", 10f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 
@@ -967,7 +965,7 @@ public class CustomOptionHolder
         executionerSpawnRate = Create(20190, Types.Neutral, cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(20191, Types.Neutral, "处刑者可召开会议", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(20191, Types.Neutral, "目标职业变更时处刑者可以晋升为律师", true, executionerSpawnRate);
-        executionerOnTargetDead = Create(20192, Types.Neutral, "处刑目标死亡后变为", [cs(Pursuer.color, "Pursuer".Translate()), cs(Jester.color, "Jester".Translate()), cs(Amnisiac.color, "Amnisiac".Translate()), "船员"], executionerSpawnRate);
+        //executionerOnTargetDead = Create(20192, Types.Neutral, "处刑目标死亡后变为", [cs(Pursuer.color, "Pursuer".Translate()), cs(Jester.color, "Jester".Translate()), cs(Amnisiac.color, "Amnisiac".Translate()), "船员"], executionerSpawnRate);
 
         swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
         swooperKillCooldown = Create(20151, Types.Neutral, "击杀冷却", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
@@ -1026,6 +1024,9 @@ public class CustomOptionHolder
         mayorMaxRemoteMeetings = Create(30114, Types.Crewmate, "远程召开会议可用次数", 1f, 1f, 5f, 1f, mayorMeetingButton);
         mayorSabotageRemoteMeetings = Create(30115, Types.Crewmate, "可在破坏时使用\n无效设置", false, mayorMeetingButton);
         mayorChooseSingleVote = Create(30116, Types.Crewmate, "市长可选择投单票", ["关闭", "投票前选择", "会议结束前选择"], mayorSpawnRate);
+
+        prosecutorSpawnRate = Create(30370, Types.Crewmate, cs(Prosecutor.color, "Prosecutor"), rates, null, true);
+        prosecutorDiesOnIncorrectPros = Create(30371, Types.Crewmate, "驱逐船员会自杀", true, prosecutorSpawnRate);
 
         engineerSpawnRate = Create(30120, Types.Crewmate, cs(Engineer.color, "Engineer"), rates, null, true);
         engineerRemoteFix = Create(30121, Types.Crewmate, "可远程修理破坏", true, engineerSpawnRate);
@@ -1088,7 +1089,7 @@ public class CustomOptionHolder
 
         timeMasterSpawnRate = Create(30210, Types.Crewmate, cs(TimeMaster.color, "TimeMaster"), rates, null, true);
         timeMasterCooldown = Create(30211, Types.Crewmate, "时光之盾冷却", 20f, 10f, 60f, 2.5f, timeMasterSpawnRate);
-        timeMasterRewindTime = Create(30212, Types.Crewmate, "回溯时间", 6f, 1f, 10f, 1f, timeMasterSpawnRate);
+        timeMasterRewindTime = Create(30212, Types.Crewmate, "回溯时间", 8f, 1f, 10f, 1f, timeMasterSpawnRate);
         timeMasterShieldDuration = Create(30213, Types.Crewmate, "时光之盾持续时间", 12.5f, 1f, 20f, 1f, timeMasterSpawnRate);
 
         veterenSpawnRate = Create(30220, Types.Crewmate, cs(Veteren.color, "Veteren"), rates, null, true);
@@ -1193,11 +1194,16 @@ public class CustomOptionHolder
 
         //-------------------------- Modifier (1000 - 1999) -------------------------- //
 
-        modifiersAreHidden = Create(40000, Types.Modifier, cs(Color.yellow, "隐藏死亡触发的附加能力"), true, null, true);
+        modifiersAreHidden = Create(40000, Types.Modifier, cs(Color.yellow, "隐藏死亡触发的附加能力"), false, null, true);
+
+        modifierLover = Create(40160, Types.Modifier, cs(Lovers.color, "Lover"), rates, null, true);
+        modifierLoverImpLoverRate = Create(40161, Types.Modifier, "恋人中有内鬼的概率", rates, modifierLover);
+        modifierLoverBothDie = Create(40162, Types.Modifier, "恋人共死", true, modifierLover);
+        modifierLoverEnableChat = Create(40163, Types.Modifier, "启用私密聊天文字频道", true, modifierLover);
 
         modifierDisperser = Create(40100, Types.Modifier, cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
         //modifierDisperserRemainingDisperses = CustomOption.Create(40102, Types.Modifier, "分散次数", 1f,1f,5f,1f, modifierDisperser);
-        modifierDisperserDispersesToVent = Create(40101, Types.Modifier, "分散至管道位置", false, modifierDisperser);
+        modifierDisperserDispersesToVent = Create(40101, Types.Modifier, "分散至管道位置", true, modifierDisperser);
 
         modifierLastImpostor = Create(40110, Types.Modifier, cs(Palette.ImpostorRed, "LastImpostor"), false, null, true);
         modifierLastImpostorDeduce = Create(40111, Types.Modifier, "绝境者击杀冷却减少", 5f, 2.5f, 15f, 2.5f, modifierLastImpostor);
@@ -1216,11 +1222,6 @@ public class CustomOptionHolder
         modifierBaitReportDelayMin = Create(40152, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 0.125f, modifierBait);
         modifierBaitReportDelayMax = Create(40153, Types.Modifier, "诱饵报告延迟时间(最大)", 0f, 0f, 10f, 0.5f, modifierBait);
         modifierBaitShowKillFlash = Create(40154, Types.Modifier, "用闪光灯警告杀手", true, modifierBait);
-
-        modifierLover = Create(40160, Types.Modifier, cs(Color.yellow, "Lover"), rates, null, true);
-        modifierLoverImpLoverRate = Create(40161, Types.Modifier, "恋人中有内鬼的概率", rates, modifierLover);
-        modifierLoverBothDie = Create(40162, Types.Modifier, "恋人共死", true, modifierLover);
-        modifierLoverEnableChat = Create(40163, Types.Modifier, "启用私密聊天文字频道", true, modifierLover);
 
         modifierSunglasses = Create(40170, Types.Modifier, cs(Color.yellow, "Sunglasses"), rates, null, true);
         modifierSunglassesQuantity = Create(40171, Types.Modifier, cs(Color.yellow, "太阳镜数量"), ratesModifier, modifierSunglasses);

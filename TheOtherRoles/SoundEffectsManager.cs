@@ -20,21 +20,20 @@ public static class SoundEffectsManager
         var resourceNames = assembly.GetManifestResourceNames();
         foreach (var resourceName in resourceNames)
             if (resourceName.Contains("TheOtherRoles.Resources.SoundEffects.") && resourceName.Contains(".raw"))
-                soundEffects.Add(resourceName, Helpers.loadAudioClipFromResources(resourceName));
+                soundEffects.Add(resourceName, loadAudioClipFromResources(resourceName));
     }
 
     public static AudioClip get(string path)
     {
         // Convenience: As as SoundEffects are stored in the same folder, allow using just the name as well
         if (!path.Contains(".")) path = "TheOtherRoles.Resources.SoundEffects." + path + ".raw";
-        AudioClip returnValue;
-        return soundEffects.TryGetValue(path, out returnValue) ? returnValue : null;
+        return soundEffects.TryGetValue(path, out AudioClip returnValue) ? returnValue : null;
     }
 
 
     public static void play(string path, float volume = 0.8f, bool loop = false)
     {
-        if (!MapOptions.enableSoundEffects) return;
+        if (!MapOption.enableSoundEffects) return;
         var clipToPlay = get(path);
         stop(path);
         if (Constants.ShouldPlaySfx() && clipToPlay != null)
@@ -47,7 +46,7 @@ public static class SoundEffectsManager
     public static void playAtPosition(string path, Vector2 position, float maxDuration = 15f, float range = 5f,
         bool loop = false)
     {
-        if (!MapOptions.enableSoundEffects || !Constants.ShouldPlaySfx()) return;
+        if (!MapOption.enableSoundEffects || !Constants.ShouldPlaySfx()) return;
         var clipToPlay = get(path);
 
         var source = SoundManager.Instance.PlaySound(clipToPlay, false);

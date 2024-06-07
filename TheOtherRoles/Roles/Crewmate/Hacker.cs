@@ -29,7 +29,7 @@ public static class Hacker
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.HackerButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.HackerButton.png", 115f);
         return buttonSprite;
     }
 
@@ -55,16 +55,16 @@ public static class Hacker
         var button =
             FastDestroyableSingleton<HudManager>.Instance.UseButton
                 .fastUseSettings[ImageNames.PolusAdminButton]; // Polus
-        if (Helpers.isSkeld() || mapId == 3)
+        if (isSkeld() || mapId == 3)
             button = FastDestroyableSingleton<HudManager>.Instance.UseButton
                 .fastUseSettings[ImageNames.AdminMapButton]; // Skeld || Dleks
-        else if (Helpers.isMira())
+        else if (isMira())
             button = FastDestroyableSingleton<HudManager>.Instance.UseButton
                 .fastUseSettings[ImageNames.MIRAAdminButton]; // Mira HQ
-        else if (Helpers.isAirship())
+        else if (isAirship())
             button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[
                 ImageNames.AirshipAdminButton]; // Airship
-        else if (Helpers.isFungle())
+        else if (isFungle())
             button = FastDestroyableSingleton<HudManager>.Instance.UseButton
                 .fastUseSettings[ImageNames.AdminMapButton]; // Hacker can Access the Admin panel on Fungle
         adminSprite = button.Image;

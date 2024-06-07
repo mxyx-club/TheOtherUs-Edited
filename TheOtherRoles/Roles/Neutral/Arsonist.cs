@@ -25,14 +25,14 @@ public static class Arsonist
     public static Sprite getDouseSprite()
     {
         if (douseSprite) return douseSprite;
-        douseSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.DouseButton.png", 115f);
+        douseSprite = loadSpriteFromResources("TheOtherRoles.Resources.DouseButton.png", 115f);
         return douseSprite;
     }
 
     public static Sprite getIgniteSprite()
     {
         if (igniteSprite) return igniteSprite;
-        igniteSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.IgniteButton.png", 115f);
+        igniteSprite = loadSpriteFromResources("TheOtherRoles.Resources.IgniteButton.png", 115f);
         return igniteSprite;
     }
 
@@ -52,7 +52,7 @@ public static class Arsonist
         douseTarget = null;
         triggerArsonistWin = false;
         dousedPlayers = new List<PlayerControl>();
-        foreach (var p in MapOptions.playerIcons.Values)
+        foreach (var p in MapOption.playerIcons.Values)
             if (p != null && p.gameObject != null)
                 p.gameObject.SetActive(false);
         cooldown = CustomOptionHolder.arsonistCooldown.getFloat();

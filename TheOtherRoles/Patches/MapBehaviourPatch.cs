@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Reactor.Utilities.Extensions;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -17,7 +16,7 @@ internal static class MapBehaviourPatch
 {
     public static Dictionary<PlayerControl, SpriteRenderer> herePoints = new();
 
-    public static Sprite Vent = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Vent.png", 150f);
+    public static ResourceSprite Vent = new("TheOtherRoles.Resources.Vent.png", 150f);
 
     public static List<List<Vent>> VentNetworks = new();
 
@@ -97,12 +96,12 @@ internal static class MapBehaviourPatch
 
         foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
         {
-            if (MapOptions.ShowVentsOnMeetingMap && MeetingHud.Instance == null) return;
+            if (MapOption.ShowVentsOnMeetingMap && MeetingHud.Instance == null && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead) return;
             if (vent.name.StartsWith("JackInTheBox") && !(PlayerControl.LocalPlayer == Trickster.trickster ||
                                                        PlayerControl.LocalPlayer.Data.IsDead))
                 continue; //for trickster vents
 
-            if (!MapOptions.ShowVentsOnMap)
+            if (!MapOption.ShowVentsOnMap)
             {
                 if (mapIcons.Count > 0)
                 {
@@ -201,7 +200,7 @@ internal static class MapBehaviourPatch
     {
         if (VentNetworks.Count != 0) return;
 
-        if (Helpers.isMira())
+        if (isMira())
         {
             var vents = MapUtilities.CachedShipStatus.AllVents.Where(x => !x.name.Contains("JackInTheBoxVent_"));
             VentNetworks.Add(vents.ToList());

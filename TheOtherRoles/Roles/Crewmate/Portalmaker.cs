@@ -24,7 +24,7 @@ public static class Portalmaker
     {
         if (placePortalButtonSprite) return placePortalButtonSprite;
         placePortalButtonSprite =
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.PlacePortalButton.png", 115f);
+            loadSpriteFromResources("TheOtherRoles.Resources.PlacePortalButton.png", 115f);
         return placePortalButtonSprite;
     }
 
@@ -32,7 +32,7 @@ public static class Portalmaker
     {
         if (usePortalButtonSprite) return usePortalButtonSprite;
         usePortalButtonSprite =
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.UsePortalButton.png", 115f);
+            loadSpriteFromResources("TheOtherRoles.Resources.UsePortalButton.png", 115f);
         return usePortalButtonSprite;
     }
 
@@ -42,13 +42,13 @@ public static class Portalmaker
         {
             if (usePortalSpecialButtonSprite1) return usePortalSpecialButtonSprite1;
             usePortalSpecialButtonSprite1 =
-                Helpers.loadSpriteFromResources("TheOtherRoles.Resources.UsePortalSpecialButton1.png", 115f);
+                loadSpriteFromResources("TheOtherRoles.Resources.UsePortalSpecialButton1.png", 115f);
             return usePortalSpecialButtonSprite1;
         }
 
         if (usePortalSpecialButtonSprite2) return usePortalSpecialButtonSprite2;
         usePortalSpecialButtonSprite2 =
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.UsePortalSpecialButton2.png", 115f);
+            loadSpriteFromResources("TheOtherRoles.Resources.UsePortalSpecialButton2.png", 115f);
         return usePortalSpecialButtonSprite2;
     }
 

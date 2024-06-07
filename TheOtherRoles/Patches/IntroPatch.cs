@@ -4,15 +4,9 @@ using Hazel;
 using Il2CppSystem.Collections.Generic;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects.Map;
-using TheOtherRoles.Roles;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Modifier;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
@@ -46,10 +40,10 @@ internal class IntroCutsceneOnDestroyPatch
                 player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
                 player.cosmetics.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
                 //开局击杀cd
-                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(MapOptions.ButtonCooldown);
+                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(MapOption.ButtonCooldown);
                 player.cosmetics.nameText.text = data.PlayerName;
                 player.SetFlipX(true);
-                MapOptions.playerIcons[p.PlayerId] = player;
+                MapOption.playerIcons[p.PlayerId] = player;
                 player.gameObject.SetActive(false);
 
                 if (CachedPlayer.LocalPlayer.PlayerControl == Arsonist.arsonist && p != Arsonist.arsonist)
@@ -67,7 +61,7 @@ internal class IntroCutsceneOnDestroyPatch
                         player.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0.4f, 0) +
                                                          (Vector3.right * playerCounter++ * 0.6f);
                         player.transform.localScale = Vector3.one * 0.3f;
-                        player.cosmetics.nameText.text += $"{Helpers.cs(Color.red, " (Hunter)")}";
+                        player.cosmetics.nameText.text += $"{cs(Color.red, " (Hunter)")}";
                         player.gameObject.SetActive(true);
                     }
                     else if (!p.Data.Role.IsImpostor)
@@ -157,11 +151,11 @@ internal class IntroCutsceneOnDestroyPatch
         }
 
         // First kill
-        if (AmongUsClient.Instance.AmHost && MapOptions.shieldFirstKill && MapOptions.firstKillName != "" &&
+        if (AmongUsClient.Instance.AmHost && MapOption.shieldFirstKill && MapOption.firstKillName != "" &&
             !HideNSeek.isHideNSeekGM && !PropHunt.isPropHuntGM)
         {
             var target = PlayerControl.AllPlayerControls.ToArray().ToList()
-                .FirstOrDefault(x => x.Data.PlayerName.Equals(MapOptions.firstKillName));
+                .FirstOrDefault(x => x.Data.PlayerName.Equals(MapOption.firstKillName));
             if (target != null)
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
@@ -172,7 +166,7 @@ internal class IntroCutsceneOnDestroyPatch
             }
         }
 
-        MapOptions.firstKillName = "";
+        MapOption.firstKillName = "";
 
         if (HideNSeek.isHideNSeekGM)
         {
@@ -240,7 +234,7 @@ internal class IntroPatch
     public static void setupIntroTeamIcons(IntroCutscene __instance, ref List<PlayerControl> yourTeam)
     {
         // Intro solo teams
-        if (Helpers.isNeutral(CachedPlayer.LocalPlayer.PlayerControl))
+        if (isNeutral(CachedPlayer.LocalPlayer.PlayerControl))
         {
             var soloTeam = new List<PlayerControl>();
             soloTeam.Add(CachedPlayer.LocalPlayer.PlayerControl);
@@ -337,14 +331,14 @@ internal class IntroPatch
                 if (modifierInfo.roleId != RoleId.Lover)
                 {
                     __instance.RoleBlurbText.text +=
-                        Helpers.cs(modifierInfo.color, $"\n{modifierInfo.introDescription}");
+                        cs(modifierInfo.color, $"\n{modifierInfo.introDescription}");
                 }
                 else
                 {
                     var otherLover = CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1
                         ? Lovers.lover2
                         : Lovers.lover1;
-                    __instance.RoleBlurbText.text += Helpers.cs(Lovers.color,
+                    __instance.RoleBlurbText.text += cs(Lovers.color,
                         $"\n♥ 你和 {otherLover?.Data?.PlayerName ?? ""} 坠入了爱河♥");
                 }
             }
@@ -353,16 +347,15 @@ internal class IntroPatch
             {
                 if (infos.Any(info => info.roleId == RoleId.Sheriff))
                     __instance.RoleBlurbText.text +=
-                        Helpers.cs(Sheriff.color, $"\n你的捕快是 {Deputy.deputy?.Data?.PlayerName ?? ""}");
+                        cs(Sheriff.color, $"\n你的捕快是 {Deputy.deputy?.Data?.PlayerName ?? ""}");
                 else if (infos.Any(info => info.roleId == RoleId.Deputy))
-                    __instance.RoleBlurbText.text += Helpers.cs(Sheriff.color,
+                    __instance.RoleBlurbText.text += cs(Sheriff.color,
                         $"\n你的警长是 {Sheriff.sheriff?.Data?.PlayerName ?? ""}");
             }
         }
 
         public static bool Prefix(IntroCutscene __instance)
         {
-            if (!CustomOptionHolder.activateRoles.getBool()) return true;
             seed = rnd.Next(5000);
             FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(1f,
                 new Action<float>(p => { SetRoleTexts(__instance); })));

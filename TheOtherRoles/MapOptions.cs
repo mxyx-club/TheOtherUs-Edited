@@ -1,12 +1,13 @@
 using System.Collections.Generic;
-using TheOtherRoles.Roles.Crewmate;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles;
 
-internal static class MapOptions
+internal static class MapOption
 {
+    public static float ButtonCooldown => CustomOptionHolder.resteButtonCooldown.getFloat();
+
     // Set values
     public static int maxNumberOfMeetings = 10;
     public static bool blockSkippingInEmergencyMeetings;
@@ -19,6 +20,7 @@ internal static class MapOptions
     public static bool showRoleSummary = true;
     public static bool allowParallelMedBayScans;
     public static bool showLighterDarker = true;
+    public static bool showFPS = true;
     public static bool toggleCursor = true;
     public static bool enableSoundEffects = true;
     public static bool enableHorseMode;
@@ -31,7 +33,6 @@ internal static class MapOptions
     public static bool ShowVentsOnMeetingMap;
     public static bool enableDebugLogMode;
     public static bool disableMedscanWalking;
-    public static float ButtonCooldown => CustomOptionHolder.resteButtonCooldown.getFloat();
 
     public static int restrictDevices;
 
@@ -104,7 +105,10 @@ internal static class MapOptions
         restrictVitalsTime = restrictVitalsTimeMax = CustomOptionHolder.restrictVents.getFloat();
         disableCamsRoundOne = CustomOptionHolder.disableCamsRound1.getBool();
         randomGameStartPosition = CustomOptionHolder.randomGameStartPosition.getBool();
-        allowModGuess = CustomOptionHolder.allowModGuess.getBool();
+        ShowVentsOnMap = CustomOptionHolder.ShowVentsOnMap.getBool();
+        ShowVentsOnMeetingMap = CustomOptionHolder.ShowVentsOnMeetingMap.getBool();
+        allowModGuess = false;
+        //allowModGuess = CustomOptionHolder.allowModGuess.getBool();
         firstKillPlayer = null;
         isRoundOne = true;
     }
@@ -115,12 +119,11 @@ internal static class MapOptions
         ghostsSeeModifier = Main.GhostsSeeModifier.Value;
         ghostsSeeInformation = Main.GhostsSeeInformation.Value;
         ghostsSeeVotes = Main.GhostsSeeVotes.Value;
+        showFPS = Main.ShowFPS.Value;
         showRoleSummary = Main.ShowRoleSummary.Value;
         toggleCursor = Main.ToggleCursor.Value;
         enableSoundEffects = Main.EnableSoundEffects.Value;
         enableHorseMode = Main.EnableHorseMode.Value;
-        ShowVentsOnMap = CustomOptionHolder.ShowVentsOnMap.getBool();
-        ShowVentsOnMeetingMap = CustomOptionHolder.ShowVentsOnMeetingMap.getBool();
         enableDebugLogMode = Main.enableDebugLogMode.Value;
 
         //Patches.ShouldAlwaysHorseAround.isHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;

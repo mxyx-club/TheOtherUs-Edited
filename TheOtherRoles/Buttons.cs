@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Hazel;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Modifier;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -147,7 +143,7 @@ internal static class HudManagerStartPatch
         yoyoAdminTableButton.MaxTimer = Yoyo.adminCooldown;
         yoyoAdminTableButton.EffectDuration = 10f;
         engineerRepairButton.MaxTimer = defaultMaxTimer;
-        janitorCleanButton.MaxTimer = Janitor.cooldown;
+        janitorCleanButton.MaxTimer = Mafia.cooldown;
         sheriffKillButton.MaxTimer = Sheriff.cooldown;
         deputyHandcuffButton.MaxTimer = Deputy.handcuffCooldown;
         timeMasterShieldButton.MaxTimer = TimeMaster.cooldown;
@@ -327,8 +323,8 @@ internal static class HudManagerStartPatch
                 }
                 catch (NullReferenceException)
                 {
-                    System.Console.WriteLine(
-                        "[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine"); // Note: idk what this is good for, but i copied it from above /gendelo
+                    // Note: idk what this is good for, but i copied it from above /gendelo
+                    Warn("[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
                 }
 
             // Non Custom (Vanilla) Buttons. The Originals are disabled / hidden in UpdatePatch.cs already, just need to replace them. Can use any button, as we replace onclick etc anyways.
@@ -528,9 +524,9 @@ internal static class HudManagerStartPatch
                                     CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CleanBody,
                                     SendOption.Reliable);
                                 writer.Write(playerInfo.PlayerId);
-                                writer.Write(Janitor.janitor.PlayerId);
+                                writer.Write(Mafia.janitor.PlayerId);
                                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                                RPCProcedure.cleanBody(playerInfo.PlayerId, Janitor.janitor.PlayerId);
+                                RPCProcedure.cleanBody(playerInfo.PlayerId, Mafia.janitor.PlayerId);
                                 janitorCleanButton.Timer = janitorCleanButton.MaxTimer;
                                 SoundEffectsManager.play("cleanerClean");
 
@@ -541,7 +537,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Janitor.janitor != null && Janitor.janitor == CachedPlayer.LocalPlayer.PlayerControl &&
+                return Mafia.janitor != null && Mafia.janitor == CachedPlayer.LocalPlayer.PlayerControl &&
                        !CachedPlayer.LocalPlayer.Data.IsDead;
             },
             () =>
@@ -550,7 +546,7 @@ internal static class HudManagerStartPatch
                        CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { janitorCleanButton.Timer = janitorCleanButton.MaxTimer; },
-            Janitor.getButtonSprite(),
+            Mafia.buttonSprite,
             CustomButton.ButtonPositions.upperRowLeft,
             __instance,
             KeyCode.F,
@@ -561,8 +557,8 @@ internal static class HudManagerStartPatch
         sheriffKillButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Sheriff.currentTarget)) return;
-                var murderAttemptResult = Helpers.checkMuderAttempt(Sheriff.sheriff, Sheriff.currentTarget);
+                if (checkAndDoVetKill(Sheriff.currentTarget)) return;
+                var murderAttemptResult = checkMuderAttempt(Sheriff.sheriff, Sheriff.currentTarget);
                 if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
                 if (murderAttemptResult == MurderAttemptResult.PerformKill)
                 {
@@ -622,7 +618,7 @@ internal static class HudManagerStartPatch
                 }
 
                 if (murderAttemptResult == MurderAttemptResult.BodyGuardKill)
-                    Helpers.checkMuderAttemptAndKill(Sheriff.sheriff, Sheriff.currentTarget);
+                    checkMuderAttemptAndKill(Sheriff.sheriff, Sheriff.currentTarget);
 
                 sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                 Sheriff.currentTarget = null;
@@ -652,9 +648,9 @@ internal static class HudManagerStartPatch
                 var target = Sheriff.sheriff == CachedPlayer.LocalPlayer.PlayerControl
                     ? Sheriff.currentTarget
                     : Deputy.currentTarget; // If the deputy is now the sheriff, sheriffs target, else deputies target
-                Helpers.checkWatchFlash(target);
+                checkWatchFlash(target);
                 targetId = target.PlayerId;
-                if (Helpers.checkAndDoVetKill(target)) return;
+                if (checkAndDoVetKill(target)) return;
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.DeputyUsedHandcuffs, SendOption.Reliable);
                 writer.Write(targetId);
@@ -769,8 +765,8 @@ internal static class HudManagerStartPatch
         medicShieldButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Medic.currentTarget)) return;
-                Helpers.checkWatchFlash(Medic.currentTarget);
+                if (checkAndDoVetKill(Medic.currentTarget)) return;
+                checkWatchFlash(Medic.currentTarget);
 
                 medicShieldButton.Timer = 0f;
 
@@ -811,8 +807,8 @@ internal static class HudManagerStartPatch
         doomsayerButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Doomsayer.currentTarget)) return;
-                Helpers.checkWatchFlash(Doomsayer.currentTarget);
+                if (checkAndDoVetKill(Doomsayer.currentTarget)) return;
+                checkWatchFlash(Doomsayer.currentTarget);
 
                 doomsayerButton.Timer = doomsayerButton.MaxTimer;
                 /*
@@ -835,7 +831,7 @@ internal static class HudManagerStartPatch
                 return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Doomsayer.currentTarget != null;
             },
             () => { doomsayerButton.Timer = doomsayerButton.MaxTimer; },
-            Doomsayer.getButtonSprite(),
+            Doomsayer.buttonSprite,
             CustomButton.ButtonPositions.lowerRowRight,
             __instance,
             KeyCode.F,
@@ -863,7 +859,7 @@ internal static class HudManagerStartPatch
             {
                 if (Veteren.veteren != null && Akujo.currentTarget == Veteren.veteren && Veteren.alertActive)
                 {
-                    Helpers.checkMurderAttemptAndKill(Veteren.veteren, Akujo.akujo);
+                    checkMurderAttemptAndKill(Veteren.veteren, Akujo.akujo);
                     return;
                 }
 
@@ -897,7 +893,7 @@ internal static class HudManagerStartPatch
             {
                 if (Veteren.veteren != null && Akujo.currentTarget == Veteren.veteren && Veteren.alertActive)
                 {
-                    Helpers.checkMurderAttemptAndKill(Veteren.veteren, Akujo.akujo);
+                    checkMurderAttemptAndKill(Veteren.veteren, Akujo.akujo);
                     return;
                 }
 
@@ -962,8 +958,8 @@ internal static class HudManagerStartPatch
         shifterShiftButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Shifter.currentTarget)) return;
-                Helpers.checkWatchFlash(Shifter.currentTarget);
+                if (checkAndDoVetKill(Shifter.currentTarget)) return;
+                checkWatchFlash(Shifter.currentTarget);
 
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.SetFutureShifted, SendOption.Reliable);
@@ -1022,9 +1018,9 @@ internal static class HudManagerStartPatch
                 //CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
                 Mayor.remoteMeetingsLeft--;
 
-                Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                Helpers.handleBomberExplodeOnBodyReport();
-                Helpers.handleTrapperTrapOnBodyReport();
+                handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                handleBomberExplodeOnBodyReport();
+                handleTrapperTrapOnBodyReport();
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
 
                 var sabotageActive = false;
@@ -1086,8 +1082,8 @@ internal static class HudManagerStartPatch
                 //CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
                 ButtonBarry.remoteMeetingsLeft--;
 
-                Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                Helpers.handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
 
                 var sabotageActive = false;
@@ -1145,8 +1141,8 @@ internal static class HudManagerStartPatch
             {
                 if (Morphling.sampledTarget != null)
                 {
-                    if (Helpers.checkAndDoVetKill(Morphling.currentTarget)) return;
-                    Helpers.checkWatchFlash(Morphling.currentTarget);
+                    if (checkAndDoVetKill(Morphling.currentTarget)) return;
+                    checkWatchFlash(Morphling.currentTarget);
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
                         CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.MorphlingMorph,
                         SendOption.Reliable);
@@ -1177,8 +1173,8 @@ internal static class HudManagerStartPatch
             {
                 if (Morphling.sampledTarget == null)
                     showTargetNameOnButton(Morphling.currentTarget, morphlingButton, getString("SampleText"));
-                return (Morphling.currentTarget || Morphling.sampledTarget) && !Helpers.isActiveCamoComms() &&
-                       CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Helpers.MushroomSabotageActive();
+                return (Morphling.currentTarget || Morphling.sampledTarget) && !isActiveCamoComms() &&
+                       CachedPlayer.LocalPlayer.PlayerControl.CanMove && !MushroomSabotageActive();
             },
             () =>
             {
@@ -1226,7 +1222,7 @@ internal static class HudManagerStartPatch
                        Camouflager.camouflager == CachedPlayer.LocalPlayer.PlayerControl &&
                        !CachedPlayer.LocalPlayer.Data.IsDead;
             },
-            () => { return !Helpers.isActiveCamoComms() && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { return !isActiveCamoComms() && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () =>
             {
                 camouflagerButton.Timer = camouflagerButton.MaxTimer;
@@ -1379,8 +1375,8 @@ internal static class HudManagerStartPatch
                 if (hackerVitalsChargesText != null)
                     hackerVitalsChargesText.text = $"{Hacker.chargesVitals} / {Hacker.toolsNumber}";
                 hackerVitalsButton.actionButton.graphic.sprite =
-                    Helpers.isMira() ? Hacker.getLogSprite() : Hacker.getVitalsSprite();
-                hackerVitalsButton.actionButton.OverrideText(Helpers.isMira() ? getString("hackerDoorLogText") : getString("hackerVitalText"));
+                    isMira() ? Hacker.getLogSprite() : Hacker.getVitalsSprite();
+                hackerVitalsButton.actionButton.OverrideText(isMira() ? getString("hackerDoorLogText") : getString("hackerVitalText"));
                 return Hacker.chargesVitals > 0;
             },
             () =>
@@ -1401,12 +1397,12 @@ internal static class HudManagerStartPatch
                 if (!hackerAdminTableButton.isEffectActive) CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
                 if (Minigame.Instance)
                 {
-                    if (Helpers.isMira()) Hacker.doorLog.ForceClose();
+                    if (isMira()) Hacker.doorLog.ForceClose();
                     else Hacker.vitals.ForceClose();
                 }
             },
             false,
-            Helpers.isMira() ? getString("hackerDoorLogText") : getString("hackerVitalText")
+            isMira() ? getString("hackerDoorLogText") : getString("hackerVitalText")
         );
 
         // Hacker Vitals Charges
@@ -1421,8 +1417,8 @@ internal static class HudManagerStartPatch
         trackerTrackPlayerButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Tracker.currentTarget)) return;
-                Helpers.checkWatchFlash(Tracker.currentTarget);
+                if (checkAndDoVetKill(Tracker.currentTarget)) return;
+                checkWatchFlash(Tracker.currentTarget);
 
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.TrackerUsedTracker, SendOption.Reliable);
@@ -1484,8 +1480,8 @@ internal static class HudManagerStartPatch
         bodyGuardGuardButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(BodyGuard.currentTarget)) return;
-                Helpers.checkWatchFlash(BodyGuard.currentTarget);
+                if (checkAndDoVetKill(BodyGuard.currentTarget)) return;
+                checkWatchFlash(BodyGuard.currentTarget);
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.BodyGuardGuardPlayer, SendOption.Reliable);
                 writer.Write(BodyGuard.currentTarget.PlayerId);
@@ -1518,7 +1514,7 @@ internal static class HudManagerStartPatch
         privateInvestigatorWatchButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(PrivateInvestigator.currentTarget)) return;
+                if (checkAndDoVetKill(PrivateInvestigator.currentTarget)) return;
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.PrivateInvestigatorWatchPlayer, SendOption.Reliable);
                 writer.Write(PrivateInvestigator.currentTarget.PlayerId);
@@ -1549,8 +1545,8 @@ internal static class HudManagerStartPatch
         vampireKillButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Vampire.currentTarget)) return;
-                var murder = Helpers.checkMuderAttempt(Vampire.vampire, Vampire.currentTarget);
+                if (checkAndDoVetKill(Vampire.currentTarget)) return;
+                var murder = checkMuderAttempt(Vampire.vampire, Vampire.currentTarget);
                 if (murder == MurderAttemptResult.PerformKill)
                 {
                     if (Vampire.targetNearGarlic)
@@ -1604,7 +1600,7 @@ internal static class HudManagerStartPatch
                                 if (p == 1f)
                                 {
                                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                                    var res = Helpers.checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten,
+                                    var res = checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten,
                                         showAnimation: false);
                                     if (res == MurderAttemptResult.PerformKill)
                                     {
@@ -1630,7 +1626,7 @@ internal static class HudManagerStartPatch
                 }
                 else if (murder == MurderAttemptResult.BodyGuardKill)
                 {
-                    Helpers.checkMuderAttemptAndKill(Vampire.vampire, Vampire.currentTarget);
+                    checkMuderAttemptAndKill(Vampire.vampire, Vampire.currentTarget);
                 }
                 else
                 {
@@ -1715,7 +1711,7 @@ internal static class HudManagerStartPatch
         prophetButton = new CustomButton(
                 () =>
                 {
-                    if (Helpers.checkAndDoVetKill(Prophet.currentTarget)) return;
+                    if (checkAndDoVetKill(Prophet.currentTarget)) return;
                     if (Prophet.currentTarget != null)
                     {
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ProphetExamine, SendOption.Reliable, -1);
@@ -1928,8 +1924,8 @@ internal static class HudManagerStartPatch
         jackalSidekickButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Jackal.currentTarget)) return;
-                Helpers.checkWatchFlash(Jackal.currentTarget);
+                if (checkAndDoVetKill(Jackal.currentTarget)) return;
+                checkWatchFlash(Jackal.currentTarget);
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.JackalCreatesSidekick, SendOption.Reliable);
                 writer.Write(Jackal.currentTarget.PlayerId);
@@ -1959,8 +1955,8 @@ internal static class HudManagerStartPatch
         jackalKillButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Jackal.currentTarget)) return;
-                if (Helpers.checkMuderAttemptAndKill(Jackal.jackal, Jackal.currentTarget) ==
+                if (checkAndDoVetKill(Jackal.currentTarget)) return;
+                if (checkMuderAttemptAndKill(Jackal.jackal, Jackal.currentTarget) ==
                     MurderAttemptResult.SuppressKill) return;
 
                 jackalKillButton.Timer = jackalKillButton.MaxTimer;
@@ -1989,8 +1985,8 @@ internal static class HudManagerStartPatch
         swooperKillButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Swooper.currentTarget)) return;
-                if (Helpers.checkMuderAttemptAndKill(Swooper.swooper, Swooper.currentTarget) == MurderAttemptResult.SuppressKill) return;
+                if (checkAndDoVetKill(Swooper.currentTarget)) return;
+                if (checkMuderAttemptAndKill(Swooper.swooper, Swooper.currentTarget) == MurderAttemptResult.SuppressKill) return;
 
                 swooperKillButton.Timer = swooperKillButton.MaxTimer;
                 Swooper.currentTarget = null;
@@ -2038,8 +2034,8 @@ internal static class HudManagerStartPatch
         sidekickKillButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Sidekick.currentTarget)) return;
-                if (Helpers.checkMuderAttemptAndKill(Sidekick.sidekick, Sidekick.currentTarget) ==
+                if (checkAndDoVetKill(Sidekick.currentTarget)) return;
+                if (checkMuderAttemptAndKill(Sidekick.sidekick, Sidekick.currentTarget) ==
                     MurderAttemptResult.SuppressKill) return;
                 sidekickKillButton.Timer = sidekickKillButton.MaxTimer;
                 Sidekick.currentTarget = null;
@@ -2076,7 +2072,7 @@ internal static class HudManagerStartPatch
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                var id = Helpers.getAvailableId();
+                var id = getAvailableId();
                 writer.Write(id);
                 writer.Write(CachedPlayer.LocalPlayer.PlayerId);
 
@@ -2120,8 +2116,8 @@ internal static class HudManagerStartPatch
             () =>
             {
                 /* On Use */
-                if (Helpers.checkAndDoVetKill(Bomber.currentTarget)) return;
-                Helpers.checkWatchFlash(Bomber.currentTarget);
+                if (checkAndDoVetKill(Bomber.currentTarget)) return;
+                checkWatchFlash(Bomber.currentTarget);
                 var bombWriter = AmongUsClient.Instance.StartRpcImmediately(
                     CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, SendOption.Reliable);
                 bombWriter.Write(Bomber.currentTarget.PlayerId);
@@ -2178,8 +2174,8 @@ internal static class HudManagerStartPatch
                     return;
                 }
 
-                if (Helpers.checkAndDoVetKill(Bomber.currentBombTarget)) return;
-                if (Helpers.checkMuderAttemptAndKill(Bomber.hasBomb, Bomber.currentBombTarget) ==
+                if (checkAndDoVetKill(Bomber.currentBombTarget)) return;
+                if (checkMuderAttemptAndKill(Bomber.hasBomb, Bomber.currentBombTarget) ==
                     MurderAttemptResult.SuppressKill) return;
                 var bombWriter = AmongUsClient.Instance.StartRpcImmediately(
                     CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, SendOption.Reliable);
@@ -2213,8 +2209,8 @@ internal static class HudManagerStartPatch
         werewolfKillButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Werewolf.currentTarget)) return;
-                if (Helpers.checkMuderAttemptAndKill(Werewolf.werewolf, Werewolf.currentTarget) ==
+                if (checkAndDoVetKill(Werewolf.currentTarget)) return;
+                if (checkMuderAttemptAndKill(Werewolf.werewolf, Werewolf.currentTarget) ==
                     MurderAttemptResult.SuppressKill) return;
 
                 werewolfKillButton.Timer = werewolfKillButton.MaxTimer;
@@ -2283,8 +2279,8 @@ internal static class HudManagerStartPatch
         juggernautKillButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Juggernaut.currentTarget)) return;
-                if (Helpers.checkMuderAttemptAndKill(Juggernaut.juggernaut, Juggernaut.currentTarget) ==
+                if (checkAndDoVetKill(Juggernaut.currentTarget)) return;
+                if (checkMuderAttemptAndKill(Juggernaut.juggernaut, Juggernaut.currentTarget) ==
                     MurderAttemptResult.SuppressKill) return;
                 if (juggernautKillButton.MaxTimer >= 0f)
                 {
@@ -2317,8 +2313,8 @@ internal static class HudManagerStartPatch
         eraserButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Eraser.currentTarget)) return;
-                Helpers.checkWatchFlash(Eraser.currentTarget);
+                if (checkAndDoVetKill(Eraser.currentTarget)) return;
+                checkWatchFlash(Eraser.currentTarget);
                 eraserButton.MaxTimer += 10;
                 eraserButton.Timer = eraserButton.MaxTimer;
 
@@ -2563,8 +2559,8 @@ internal static class HudManagerStartPatch
             {
                 if (Warlock.curseVictim == null)
                 {
-                    if (Helpers.checkAndDoVetKill(Warlock.currentTarget)) return;
-                    Helpers.checkWatchFlash(Warlock.currentTarget);
+                    if (checkAndDoVetKill(Warlock.currentTarget)) return;
+                    checkWatchFlash(Warlock.currentTarget);
                     // Apply Curse
                     Warlock.curseVictim = Warlock.currentTarget;
                     warlockCurseButton.Sprite = Warlock.getCurseKillButtonSprite();
@@ -2582,7 +2578,7 @@ internal static class HudManagerStartPatch
                 }
                 else if (Warlock.curseVictim != null && Warlock.curseVictimTarget != null)
                 {
-                    var murder = Helpers.checkMurderAttemptAndKill(Warlock.warlock, Warlock.curseVictimTarget,
+                    var murder = checkMurderAttemptAndKill(Warlock.warlock, Warlock.curseVictimTarget,
                         showAnimation: false);
                     if (murder == MurderAttemptResult.SuppressKill) return;
 
@@ -2657,7 +2653,7 @@ internal static class HudManagerStartPatch
                     RPCProcedure.sealVent(SecurityGuard.ventTarget.Id);
                     SecurityGuard.ventTarget = null;
                 }
-                else if (!Helpers.isMira() && !Helpers.isFungle() && !SubmergedCompatibility.IsSubmerged)
+                else if (!isMira() && !isFungle() && !SubmergedCompatibility.IsSubmerged)
                 {
                     // Place camera if there's no vent and it's not MiraHQ or Submerged
                     var pos = CachedPlayer.LocalPlayer.transform.position;
@@ -2685,7 +2681,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 securityGuardButton.actionButton.graphic.sprite =
-                    SecurityGuard.ventTarget == null && !Helpers.isMira() && !Helpers.isFungle() &&
+                    SecurityGuard.ventTarget == null && !isMira() && !isFungle() &&
                     !SubmergedCompatibility.IsSubmerged
                         ? SecurityGuard.getPlaceCameraButtonSprite()
                         : SecurityGuard.getCloseVentButtonSprite();
@@ -2695,7 +2691,7 @@ internal static class HudManagerStartPatch
                 if (SecurityGuard.ventTarget != null)
                     return SecurityGuard.remainingScrews >= SecurityGuard.ventPrice &&
                            CachedPlayer.LocalPlayer.PlayerControl.CanMove;
-                return !Helpers.isMira() && !Helpers.isFungle() && !SubmergedCompatibility.IsSubmerged &&
+                return !isMira() && !isFungle() && !SubmergedCompatibility.IsSubmerged &&
                        SecurityGuard.remainingScrews >= SecurityGuard.camPrice &&
                        CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
@@ -2717,7 +2713,7 @@ internal static class HudManagerStartPatch
         securityGuardCamButton = new CustomButton(
             () =>
             {
-                if (!Helpers.isMira())
+                if (!isMira())
                 {
                     if (SecurityGuard.minigame == null)
                     {
@@ -2725,10 +2721,10 @@ internal static class HudManagerStartPatch
                         var e = Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x =>
                             x.gameObject.name.Contains("Surv_Panel") || x.name.Contains("Cam") ||
                             x.name.Contains("BinocularsSecurityConsole"));
-                        if (Helpers.isSkeld() || mapId == 3)
+                        if (isSkeld() || mapId == 3)
                             e = Object.FindObjectsOfType<SystemConsole>()
                                 .FirstOrDefault(x => x.gameObject.name.Contains("SurvConsole"));
-                        else if (Helpers.isAirship())
+                        else if (isAirship())
                             e = Object.FindObjectsOfType<SystemConsole>()
                                 .FirstOrDefault(x => x.gameObject.name.Contains("task_cams"));
                         if (e == null || Camera.main == null) return;
@@ -2772,8 +2768,8 @@ internal static class HudManagerStartPatch
                 if (securityGuardChargesText != null)
                     securityGuardChargesText.text = $"{SecurityGuard.charges} / {SecurityGuard.maxCharges}";
                 securityGuardCamButton.actionButton.graphic.sprite =
-                    Helpers.isMira() ? SecurityGuard.getLogSprite() : SecurityGuard.getCamSprite();
-                securityGuardCamButton.actionButton.OverrideText(Helpers.isMira() ?
+                    isMira() ? SecurityGuard.getLogSprite() : SecurityGuard.getCamSprite();
+                securityGuardCamButton.actionButton.OverrideText(isMira() ?
                     getString("hackerDoorLogText") : getString("CamButtonText"));
                 return CachedPlayer.LocalPlayer.PlayerControl.CanMove && SecurityGuard.charges > 0;
             },
@@ -2796,7 +2792,7 @@ internal static class HudManagerStartPatch
                 CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
             },
             false,
-            Helpers.isMira() ? getString("hackerDoorLogText") : getString("CamButtonText")
+            isMira() ? getString("hackerDoorLogText") : getString("CamButtonText")
         );
 
         // Security Guard cam button charges
@@ -2822,8 +2818,8 @@ internal static class HudManagerStartPatch
                 }
                 else if (Arsonist.currentTarget != null)
                 {
-                    if (Helpers.checkAndDoVetKill(Arsonist.currentTarget)) return;
-                    Helpers.checkWatchFlash(Arsonist.currentTarget);
+                    if (checkAndDoVetKill(Arsonist.currentTarget)) return;
+                    checkWatchFlash(Arsonist.currentTarget);
                     Arsonist.douseTarget = Arsonist.currentTarget;
                     arsonistButton.HasEffect = true;
                     SoundEffectsManager.play("arsonistDouse");
@@ -2870,8 +2866,8 @@ internal static class HudManagerStartPatch
                 arsonistButton.Timer = Arsonist.dousedEveryoneAlive() ? 0 : arsonistButton.MaxTimer;
 
                 foreach (var p in Arsonist.dousedPlayers)
-                    if (MapOptions.playerIcons.ContainsKey(p.PlayerId))
-                        MapOptions.playerIcons[p.PlayerId].setSemiTransparent(false);
+                    if (MapOption.playerIcons.ContainsKey(p.PlayerId))
+                        MapOption.playerIcons[p.PlayerId].setSemiTransparent(false);
 
                 // Ghost Info
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
@@ -3095,8 +3091,8 @@ internal static class HudManagerStartPatch
             {
                 if (Pursuer.target != null)
                 {
-                    if (Helpers.checkAndDoVetKill(Pursuer.target)) return;
-                    Helpers.checkWatchFlash(Pursuer.target);
+                    if (checkAndDoVetKill(Pursuer.target)) return;
+                    checkWatchFlash(Pursuer.target);
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
                         CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetBlanked, SendOption.Reliable);
                     writer.Write(Pursuer.target.PlayerId);
@@ -3126,7 +3122,7 @@ internal static class HudManagerStartPatch
                        Pursuer.target != null;
             },
             () => { pursuerButton.Timer = pursuerButton.MaxTimer; },
-            Pursuer.getTargetSprite(),
+            Pursuer.buttonSprite,
             CustomButton.ButtonPositions.lowerRowRight,
             __instance,
             KeyCode.F
@@ -3147,8 +3143,8 @@ internal static class HudManagerStartPatch
             {
                 if (Witch.currentTarget != null)
                 {
-                    if (Helpers.checkAndDoVetKill(Witch.currentTarget)) return;
-                    Helpers.checkWatchFlash(Witch.currentTarget);
+                    if (checkAndDoVetKill(Witch.currentTarget)) return;
+                    checkWatchFlash(Witch.currentTarget);
                     Witch.spellCastingTarget = Witch.currentTarget;
                     SoundEffectsManager.play("witchSpell");
                 }
@@ -3186,7 +3182,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (Witch.spellCastingTarget == null) return;
-                var attempt = Helpers.checkMuderAttempt(Witch.witch, Witch.spellCastingTarget);
+                var attempt = checkMuderAttempt(Witch.witch, Witch.spellCastingTarget);
                 if (attempt == MurderAttemptResult.PerformKill)
                 {
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
@@ -3349,10 +3345,10 @@ internal static class HudManagerStartPatch
                 if (Ninja.ninjaMarked != null)
                 {
                     // Murder attempt with teleport
-                    var attempt = Helpers.checkMuderAttempt(Ninja.ninja, Ninja.ninjaMarked);
+                    var attempt = checkMuderAttempt(Ninja.ninja, Ninja.ninjaMarked);
                     if (attempt == MurderAttemptResult.BodyGuardKill)
                     {
-                        Helpers.checkMuderAttemptAndKill(Ninja.ninja, Ninja.ninjaMarked);
+                        checkMuderAttemptAndKill(Ninja.ninja, Ninja.ninjaMarked);
                         return;
                     }
 
@@ -3377,7 +3373,7 @@ internal static class HudManagerStartPatch
                         invisibleWriter.Write(byte.MinValue);
                         AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
                         RPCProcedure.setInvisible(Ninja.ninja.PlayerId, byte.MinValue);
-                        if (!Helpers.checkAndDoVetKill(Ninja.ninjaMarked))
+                        if (!checkAndDoVetKill(Ninja.ninjaMarked))
                         {
                             // Perform Kill
                             var writer2 = AmongUsClient.Instance.StartRpcImmediately(
@@ -3422,8 +3418,8 @@ internal static class HudManagerStartPatch
 
                 if (Ninja.currentTarget != null)
                 {
-                    if (Helpers.checkAndDoVetKill(Ninja.currentTarget)) return;
-                    Helpers.checkWatchFlash(Witch.currentTarget);
+                    if (checkAndDoVetKill(Ninja.currentTarget)) return;
+                    checkWatchFlash(Witch.currentTarget);
                     Ninja.ninjaMarked = Ninja.currentTarget;
                     ninjaButton.Timer = 5f;
                     SoundEffectsManager.play("warlockCurse");
@@ -3472,8 +3468,8 @@ internal static class HudManagerStartPatch
                 // Action when Pressed
                 if (Blackmailer.currentTarget != null)
                 {
-                    if (Helpers.checkAndDoVetKill(Blackmailer.currentTarget)) return;
-                    Helpers.checkWatchFlash(Blackmailer.currentTarget);
+                    if (checkAndDoVetKill(Blackmailer.currentTarget)) return;
+                    checkWatchFlash(Blackmailer.currentTarget);
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
                         CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.BlackmailPlayer,
                         SendOption.Reliable);
@@ -3514,8 +3510,8 @@ internal static class HudManagerStartPatch
         cultistTurnButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkAndDoVetKill(Cultist.currentTarget)) return;
-                Helpers.checkWatchFlash(Cultist.currentTarget);
+                if (checkAndDoVetKill(Cultist.currentTarget)) return;
+                checkWatchFlash(Cultist.currentTarget);
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.CultistCreateImposter, SendOption.Reliable);
                 writer.Write(Cultist.currentTarget.PlayerId);
@@ -3583,7 +3579,7 @@ internal static class HudManagerStartPatch
         terroristButton = new CustomButton(
             () =>
             {
-                if (Helpers.checkMuderAttempt(Terrorist.terrorist, Terrorist.terrorist) != MurderAttemptResult.BlankKill)
+                if (checkMuderAttempt(Terrorist.terrorist, Terrorist.terrorist) != MurderAttemptResult.BlankKill)
                 {
                     var pos = CachedPlayer.LocalPlayer.transform.position;
                     var buff = new byte[sizeof(float) * 2];
@@ -3601,7 +3597,7 @@ internal static class HudManagerStartPatch
 
                 terroristButton.Timer = terroristButton.MaxTimer;
                 Terrorist.isPlanted = true;
-                // 在自爆时增加强制自杀
+
                 if (Terrorist.selfExplosion)
                 {
                     var loacl = CachedPlayer.LocalPlayer.PlayerId;
@@ -3687,7 +3683,7 @@ internal static class HudManagerStartPatch
             {
                 var thief = Thief.thief;
                 var target = Thief.currentTarget;
-                var result = Helpers.checkMuderAttempt(thief, target);
+                var result = checkMuderAttempt(thief, target);
                 if (result == MurderAttemptResult.BlankKill)
                 {
                     thiefKillButton.Timer = thiefKillButton.MaxTimer;
@@ -3773,10 +3769,10 @@ internal static class HudManagerStartPatch
                     writer.EndMessage();
                     RPCProcedure.yoyoMarkLocation(buff);
                     SoundEffectsManager.play("tricksterPlaceBox");
-                    yoyoButton.Sprite = Yoyo.getBlinkButtonSprite();
+                    yoyoButton.Sprite = Yoyo.blinkButtonSprite;
                     yoyoButton.Timer = 10f;
                     yoyoButton.HasEffect = false;
-                    yoyoButton.buttonText = "Blink";
+                    yoyoButton.buttonText = "BlinkText".Translate();
                 }
                 else
                 {
@@ -3796,7 +3792,7 @@ internal static class HudManagerStartPatch
                     yoyoButton.EffectDuration = Yoyo.blinkDuration;
                     yoyoButton.Timer = 10f;
                     yoyoButton.HasEffect = true;
-                    yoyoButton.buttonText = "Returning...";
+                    yoyoButton.buttonText = "ReturningText".Translate();
                     SoundEffectsManager.play("morphlingMorph");
                 }
             },
@@ -3812,11 +3808,11 @@ internal static class HudManagerStartPatch
                 {
                     Yoyo.markedLocation = null;
                     yoyoButton.Timer = yoyoButton.MaxTimer;
-                    yoyoButton.Sprite = Yoyo.getMarkButtonSprite();
-                    yoyoButton.buttonText = "Mark Location";
+                    yoyoButton.Sprite = Yoyo.markButtonSprite;
+                    yoyoButton.buttonText = "YoyoMarkText".Translate();
                 }
             },
-            Yoyo.getMarkButtonSprite(),
+            Yoyo.markButtonSprite,
             CustomButton.ButtonPositions.upperRowLeft,
             __instance,
             KeyCode.F,
@@ -3855,15 +3851,15 @@ internal static class HudManagerStartPatch
                 yoyoButton.isEffectActive = false;
                 yoyoButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                 yoyoButton.HasEffect = false;
-                yoyoButton.Sprite = Yoyo.getMarkButtonSprite();
-                yoyoButton.buttonText = "Mark Location";
+                yoyoButton.Sprite = Yoyo.markButtonSprite;
+                yoyoButton.buttonText = "YoyoMarkText".Translate();
                 SoundEffectsManager.play("morphlingMorph");
                 if (Minigame.Instance)
                 {
                     Minigame.Instance.Close();
                 }
             },
-            buttonText: "Mark Location"
+            buttonText: "YoyoMarkText".Translate()
         );
 
         yoyoAdminTableButton = new CustomButton(
@@ -3905,7 +3901,7 @@ internal static class HudManagerStartPatch
 
 
         zoomOutButton = new CustomButton(
-            () => { Helpers.toggleZoom(); },
+            () => { toggleZoom(); },
             () =>
             {
                 if (CachedPlayer.LocalPlayer.PlayerControl == null || !CachedPlayer.LocalPlayer.Data.IsDead || (CachedPlayer.LocalPlayer.Data.Role.IsImpostor && !CustomOptionHolder.deadImpsBlockSabotage.getBool())) return false;
@@ -3915,7 +3911,7 @@ internal static class HudManagerStartPatch
             },
             () => { return true; },
             () => { },
-            Helpers.loadSpriteFromResources("TheOtherRoles.Resources.MinusButton.png", 150f), // Invisible button!
+            loadSpriteFromResources("TheOtherRoles.Resources.MinusButton.png", 150f), // Invisible button!
             new Vector3(0.4f, 2.8f, 0),
             __instance,
             KeyCode.KeypadPlus

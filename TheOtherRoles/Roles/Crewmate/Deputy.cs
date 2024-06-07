@@ -26,14 +26,14 @@ public static class Deputy
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.DeputyHandcuffButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.DeputyHandcuffButton.png", 115f);
         return buttonSprite;
     }
 
     public static Sprite getHandcuffedButtonSprite()
     {
         if (handcuffedSprite) return handcuffedSprite;
-        handcuffedSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.DeputyHandcuffed.png", 115f);
+        handcuffedSprite = loadSpriteFromResources("TheOtherRoles.Resources.DeputyHandcuffed.png", 115f);
         return handcuffedSprite;
     }
 

@@ -4,10 +4,9 @@ using System.Linq;
 using Hazel;
 using InnerNet;
 using Reactor.Utilities.Extensions;
-using TheOtherRoles.Roles.Impostor;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using Object = Il2CppSystem.Object;
 
 namespace TheOtherRoles.Patches;
@@ -28,7 +27,7 @@ public class GameStartManagerPatch
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
                     (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
-                writer.Write((byte)MapOptions.gameMode);
+                writer.Write((byte)MapOption.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
 
@@ -52,7 +51,7 @@ public class GameStartManagerPatch
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer!.PlayerControl.NetId,
                     (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
-                writer.Write((byte)MapOptions.gameMode);
+                writer.Write((byte)MapOption.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
         }
@@ -127,7 +126,7 @@ public class GameStartManagerPatch
                 {
                     HandshakeHelper.againSend(client.Id, HandshakeHelper.ShareMode.Again);
                     versionMismatch = true;
-                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} 安装了不同版本的TheOtherUs\n</color>";
+                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} {"differentVersionTou".Translate()}\n</color>";
                 }
                 else
                 {
@@ -195,7 +194,7 @@ public class GameStartManagerPatch
                     // Activate Stop-Button
                     copiedStartButton = UnityEngine.Object.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
                     copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
-                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 200f);
+                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 200f);
                     copiedStartButton.SetActive(true);
                     var startButtonText = copiedStartButton.GetComponentInChildren<TMPro.TextMeshPro>();
                     startButtonText.text = "STOP";
@@ -234,12 +233,12 @@ public class GameStartManagerPatch
                         SceneChanger.ChangeScene("MainMenu");
                     }
 
-                    __instance.GameStartText.text = $"<color=#FF0000FF>{"HostNoTou".Translate()} {Math.Round(10 - kickingTimer)}s</color>";
+                    __instance.GameStartText.text = $"{"HostNoTou".Translate()} {Math.Round(10 - kickingTimer)}s</color>";
                     __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + (Vector3.up * 2);
                 }
                 else if (versionMismatch)
                 {
-                    __instance.GameStartText.text = $"<color=#FF0000FF>{"DifferentTouVersions".Translate()}\n</color>" + message;
+                    __instance.GameStartText.text = $"{"DifferentTouVersions".Translate()}\n</color>" + message;
                     __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + (Vector3.up * 2);
                 }
                 else
@@ -257,7 +256,7 @@ public class GameStartManagerPatch
                     // Activate Stop-Button
                     copiedStartButton = UnityEngine.Object.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
                     copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
-                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 200f);
+                    copiedStartButton.GetComponent<SpriteRenderer>().sprite = loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 200f);
                     copiedStartButton.SetActive(true);
                     var startButtonText = copiedStartButton.GetComponentInChildren<TMPro.TextMeshPro>();
                     startButtonText.text = "STOP";
@@ -272,7 +271,7 @@ public class GameStartManagerPatch
                         writer.Write(PlayerControl.LocalPlayer.PlayerId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
                         copiedStartButton.Destroy();
-                        __instance.GameStartText.text = String.Empty;
+                        __instance.GameStartText.text = string.Empty;
                         startingTimer = 0;
                     }
                     startButtonPassiveButton.OnClick.AddListener((Action)(() => StopStartFunc()));
@@ -307,9 +306,9 @@ public class GameStartManagerPatch
             if (AmongUsClient.Instance.AmHost)
             {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGamemode, SendOption.Reliable, -1);
-                writer.Write((byte)MapOptions.gameMode);
+                writer.Write((byte)MapOption.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.shareGameMode((byte)MapOptions.gameMode);
+                RPCProcedure.shareGameMode((byte)MapOption.gameMode);
             }
         }
     }
@@ -348,11 +347,11 @@ public class GameStartManagerPatch
                 }
 
                 if (continueStart &&
-                    (MapOptions.gameMode == CustomGamemodes.HideNSeek ||
-                     MapOptions.gameMode == CustomGamemodes.PropHunt) &&
+                    (MapOption.gameMode == CustomGamemodes.HideNSeek ||
+                     MapOption.gameMode == CustomGamemodes.PropHunt) &&
                     GameOptionsManager.Instance.CurrentGameOptions.MapId != 6)
                 {
-                    byte mapId = MapOptions.gameMode switch
+                    byte mapId = MapOption.gameMode switch
                     {
                         CustomGamemodes.HideNSeek => (byte)CustomOptionHolder.hideNSeekMap.getSelection(),
                         CustomGamemodes.PropHunt => (byte)CustomOptionHolder.propHuntMap.getSelection(),

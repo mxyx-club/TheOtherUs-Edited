@@ -1,5 +1,4 @@
-﻿using TheOtherRoles.Roles.Neutral;
-using TheOtherRoles.Utilities;
+﻿using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Impostor;
@@ -19,13 +18,13 @@ public static class Camouflager
     public static Sprite getButtonSprite()
     {
         if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CamoButton.png", 115f);
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.CamoButton.png", 115f);
         return buttonSprite;
     }
 
     public static void resetCamouflage()
     {
-        if (Helpers.isCamoComms()) return;
+        if (isCamoComms()) return;
         camouflageTimer = 0f;
         foreach (PlayerControl p in CachedPlayer.AllPlayers)
         {

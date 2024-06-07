@@ -5,14 +5,8 @@ using AmongUs.GameOptions;
 using Hazel;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
-using TheOtherRoles.Roles;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Modifier;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles.Patches;
 
@@ -21,9 +15,7 @@ internal class RoleOptionsDataGetNumPerGamePatch
 {
     public static void Postfix(ref int __result)
     {
-        if (CustomOptionHolder.activateRoles.getBool() &&
-            GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal)
-            __result = 0; // Deactivate Vanilla Roles if the mod roles are active
+        if (GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal) __result = 0; // Deactivate Vanilla Roles if the mod roles are active
     }
 }
 
@@ -32,9 +24,9 @@ internal class GameOptionsDataGetAdjustedNumImpostorsPatch
 {
     public static void Postfix(ref int __result)
     {
-        if (MapOptions.gameMode == CustomGamemodes.HideNSeek || MapOptions.gameMode == CustomGamemodes.PropHunt)
+        if (MapOption.gameMode == CustomGamemodes.HideNSeek || MapOption.gameMode == CustomGamemodes.PropHunt)
         {
-            var impCount = MapOptions.gameMode == CustomGamemodes.HideNSeek
+            var impCount = MapOption.gameMode == CustomGamemodes.HideNSeek
                 ? Mathf.RoundToInt(CustomOptionHolder.hideNSeekHunterCount.getFloat())
                 : CustomOptionHolder.propHuntNumberOfHunters.getQuantity();
             __result = impCount;
@@ -53,9 +45,9 @@ internal class GameOptionsDataValidatePatch
 {
     public static void Postfix(GameOptionsData __instance)
     {
-        if (MapOptions.gameMode == CustomGamemodes.HideNSeek ||
+        if (MapOption.gameMode == CustomGamemodes.HideNSeek ||
             GameOptionsManager.Instance.CurrentGameOptions.GameMode != GameModes.Normal) return;
-        if (MapOptions.gameMode == CustomGamemodes.PropHunt)
+        if (MapOption.gameMode == CustomGamemodes.PropHunt)
             __instance.NumImpostors = CustomOptionHolder.propHuntNumberOfHunters.getQuantity();
         __instance.NumImpostors = GameOptionsManager.Instance.CurrentGameOptions.NumImpostors;
     }
@@ -70,7 +62,7 @@ internal class RoleManagerSelectRolesPatch
 
     //private static bool isEvilGuesser;
     private static readonly List<Tuple<byte, byte>> playerRoleMap = new();
-    public static bool isGuesserGamemode => MapOptions.gameMode == CustomGamemodes.Guesser;
+    public static bool isGuesserGamemode => MapOption.gameMode == CustomGamemodes.Guesser;
 
     public static void Postfix()
     {
@@ -78,11 +70,10 @@ internal class RoleManagerSelectRolesPatch
             (byte)CustomRPC.ResetVaribles, SendOption.Reliable);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.resetVariables();
-        if (MapOptions.gameMode == CustomGamemodes.HideNSeek || MapOptions.gameMode == CustomGamemodes.PropHunt ||
-            GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek)
-            return; // Don't assign Roles in Hide N Seek
-        if (CustomOptionHolder.activateRoles.getBool()) // Don't assign Roles in Tutorial or if deactivated
-            assignRoles();
+        // Don't assign Roles in Hide N Seek
+        if (MapOption.gameMode == CustomGamemodes.HideNSeek || MapOption.gameMode == CustomGamemodes.PropHunt ||
+            GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
+        assignRoles();
     }
 
     private static void assignRoles()
@@ -183,6 +174,7 @@ internal class RoleManagerSelectRolesPatch
         else
             neutralSettings.Add((byte)RoleId.Lawyer, CustomOptionHolder.lawyerSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Mayor, CustomOptionHolder.mayorSpawnRate.getSelection());
+        crewSettings.Add((byte)RoleId.Prosecutor, CustomOptionHolder.prosecutorSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Portalmaker, CustomOptionHolder.portalmakerSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Engineer, CustomOptionHolder.engineerSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.PrivateInvestigator, CustomOptionHolder.privateInvestigatorSpawnRate.getSelection());
@@ -554,7 +546,7 @@ internal class RoleManagerSelectRolesPatch
             // Executioner
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
                 if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
-                    p != Mini.mini && !p.Data.Role.IsImpostor && !Helpers.isNeutral(p) && p != Swapper.swapper)
+                    p != Mini.mini && !p.Data.Role.IsImpostor && !isNeutral(p) && p != Swapper.swapper)
                     possibleTargets.Add(p);
 
             if (possibleTargets.Count == 0)
@@ -733,8 +725,8 @@ internal class RoleManagerSelectRolesPatch
         var neutralPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
         var crewPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
-        neutralPlayer.RemoveAll(x => !Helpers.isNeutral(x));
-        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || Helpers.isNeutral(x));
+        neutralPlayer.RemoveAll(x => !isNeutral(x));
+        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
         assignGuesserGamemodeToPlayers(crewPlayer,
             Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeCrewNumber.getFloat()));
         assignGuesserGamemodeToPlayers(neutralPlayer,
@@ -891,7 +883,7 @@ internal class RoleManagerSelectRolesPatch
         if (modifiers.Contains(RoleId.Watcher))
         {
             var crewPlayerW = new List<PlayerControl>(playerList);
-            crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor);
+            crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor || x == Mayor.mayor);
             playerId = setModifierToRandomPlayer((byte)RoleId.Watcher, crewPlayerW);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Watcher);

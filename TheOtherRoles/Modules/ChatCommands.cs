@@ -2,14 +2,8 @@ using System;
 using System.Linq;
 using Hazel;
 using InnerNet;
-using TheOtherRoles.Roles;
-using TheOtherRoles.Roles.Crewmate;
-using TheOtherRoles.Roles.Impostor;
-using TheOtherRoles.Roles.Modifier;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles.Modules;
 
@@ -144,9 +138,9 @@ public static class ChatCommands
                 CachedPlayer.LocalPlayer.PlayerControl.isTeamCultist())
             {
                 if (Cultist.cultist == CachedPlayer.LocalPlayer.PlayerControl)
-                    Cultist.chatTarget = Helpers.flipBitwise(Cultist.chatTarget);
+                    Cultist.chatTarget = flipBitwise(Cultist.chatTarget);
                 if (Follower.follower == CachedPlayer.LocalPlayer.PlayerControl)
-                    Follower.chatTarget = Helpers.flipBitwise(Follower.chatTarget);
+                    Follower.chatTarget = flipBitwise(Follower.chatTarget);
                 handled = true;
             }
 
@@ -184,7 +178,7 @@ public static class ChatCommands
                 __instance.Chat.SetVisible(true);
 
             if (Multitasker.multitasker.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count > 0 ||
-                MapOptions.transparentTasks)
+                MapOption.transparentTasks)
             {
                 if (PlayerControl.LocalPlayer.Data.IsDead || PlayerControl.LocalPlayer.Data.Disconnected) return;
                 if (!Minigame.Instance) return;
