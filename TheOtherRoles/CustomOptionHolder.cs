@@ -806,39 +806,39 @@ public class CustomOptionHolder
         modifierAssassinCultist = Create(10008, Types.Impostor, "modifierAssassinCultist", false, modifierAssassin);
 
         mafiaSpawnRate = Create(10100, Types.Impostor, cs(Mafia.color, "Mafia"), rates, null, true);
-        janitorCooldown = Create(10101, Types.Impostor, "清洁工清理冷却", 25f, 10f, 60f, 2.5f, mafiaSpawnRate);
+        janitorCooldown = Create(10101, Types.Impostor, "janitorCooldown", 25f, 10f, 60f, 2.5f, mafiaSpawnRate);
 
         morphlingSpawnRate = Create(10110, Types.Impostor, cs(Morphling.color, "Morphling"), rates, null, true);
-        morphlingCooldown = Create(10111, Types.Impostor, "化形冷却", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);
-        morphlingDuration = Create(10112, Types.Impostor, "化形持续时间", 15f, 1f, 20f, 0.5f, morphlingSpawnRate);
+        morphlingCooldown = Create(10111, Types.Impostor, "morphlingCooldown", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);
+        morphlingDuration = Create(10112, Types.Impostor, "morphlingDuration", 15f, 1f, 20f, 0.5f, morphlingSpawnRate);
 
         bomberSpawnRate = Create(10120, Types.Impostor, cs(Bomber.color, "Bomber"), rates, null, true);
-        bomberBombCooldown = Create(10121, Types.Impostor, "炸弹冷却", 25f, 10f, 60f, 2.5f, bomberSpawnRate);
-        bomberDelay = Create(10122, Types.Impostor, "炸弹激活时间", 5f, 0f, 20f, 0.5f, bomberSpawnRate);
-        bomberTimer = Create(10123, Types.Impostor, "炸弹爆炸时间", 10f, 5f, 30f, 0.5f, bomberSpawnRate);
-        //bomberHotPotatoMode = Create(10124, Types.Impostor, "烫手山芋模式", true, bomberSpawnRate);
+        bomberBombCooldown = Create(10121, Types.Impostor, "bomberBombCooldown", 25f, 10f, 60f, 2.5f, bomberSpawnRate);
+        bomberDelay = Create(10122, Types.Impostor, "bomberDelay", 5f, 0f, 20f, 0.5f, bomberSpawnRate);
+        bomberTimer = Create(10123, Types.Impostor, "bomberTimer", 10f, 5f, 30f, 0.5f, bomberSpawnRate);
+        //bomberHotPotatoMode = Create(10124, Types.Impostor, "bomberHotPotatoMode", true, bomberSpawnRate);
 
         undertakerSpawnRate = Create(10130, Types.Impostor, cs(Undertaker.color, "Undertaker"), rates, null, true);
-        undertakerDragingDelaiAfterKill = Create(10131, Types.Impostor, "从击杀到恢复拖曳能力所需时间", 0f, 0f, 15, 0.5f, undertakerSpawnRate);
-        undertakerDragingAfterVelocity = Create(10132, Types.Impostor, "拖拽过程的行动速度", 0.75f, 0.5f, 1.5f, 0.125f, undertakerSpawnRate);
-        undertakerCanDragAndVent = Create(10133, Types.Impostor, "拖曳过程中可使用管道", true, undertakerSpawnRate);
+        undertakerDragingDelaiAfterKill = Create(10131, Types.Impostor, "undertakerDragingDelaiAfterKill", 0f, 0f, 15, 0.5f, undertakerSpawnRate);
+        undertakerDragingAfterVelocity = Create(10132, Types.Impostor, "undertakerDragingAfterVelocity", 0.75f, 0.5f, 1.5f, 0.125f, undertakerSpawnRate);
+        undertakerCanDragAndVent = Create(10133, Types.Impostor, "undertakerCanDragAndVent", true, undertakerSpawnRate);
 
         camouflagerSpawnRate = Create(10140, Types.Impostor, cs(Camouflager.color, "Camouflager"), rates, null, true);
-        camouflagerCooldown = Create(10141, Types.Impostor, "隐蔽状态冷却", 25f, 10f, 60f, 2.5f, camouflagerSpawnRate);
-        camouflagerDuration = Create(10142, Types.Impostor, "隐蔽状态持续时间", 12.5f, 1f, 20f, 0.5f, camouflagerSpawnRate);
+        camouflagerCooldown = Create(10141, Types.Impostor, "camouflagerCooldown", 25f, 10f, 60f, 2.5f, camouflagerSpawnRate);
+        camouflagerDuration = Create(10142, Types.Impostor, "camouflagerDuration", 12.5f, 1f, 20f, 0.5f, camouflagerSpawnRate);
 
         vampireSpawnRate = Create(10150, Types.Impostor, cs(Vampire.color, "Vampire"), rates, null, true);
-        vampireKillDelay = Create(10151, Types.Impostor, "从吸血到击杀所需时间", 5f, 1f, 20f, 0.5f, vampireSpawnRate);
-        vampireCooldown = Create(10152, Types.Impostor, "吸血冷却", 25f, 10f, 60f, 2.5f, vampireSpawnRate);
-        vampireGarlicButton = Create(10153, Types.Impostor, "发放大蒜", true, vampireSpawnRate);
-        vampireCanKillNearGarlics = Create(10154, Types.Impostor, "可在大蒜附近击杀", true, vampireGarlicButton);
+        vampireKillDelay = Create(10151, Types.Impostor, "vampireKillDelay", 5f, 1f, 20f, 0.5f, vampireSpawnRate);
+        vampireCooldown = Create(10152, Types.Impostor, "vampireCooldown", 25f, 10f, 60f, 2.5f, vampireSpawnRate);
+        vampireGarlicButton = Create(10153, Types.Impostor, "vampireGarlicButton", true, vampireSpawnRate);
+        vampireCanKillNearGarlics = Create(10154, Types.Impostor, "vampireCanKillNearGarlics", true, vampireGarlicButton);
 
         eraserSpawnRate = Create(10160, Types.Impostor, cs(Eraser.color, "Eraser"), rates, null, true);
-        eraserCooldown = Create(10161, Types.Impostor, "抹除冷却", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
-        eraserCanEraseAnyone = Create(10162, Types.Impostor, "可抹除任何人", false, eraserSpawnRate);
+        eraserCooldown = Create(10161, Types.Impostor, "eraserCooldown", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
+        eraserCanEraseAnyone = Create(10162, Types.Impostor, "eraserCanEraseAnyone", false, eraserSpawnRate);
 
         poucherSpawnRate = Create(10320, Types.Impostor, cs(Palette.ImpostorRed, "Poucher"), rates, null, true);
-        poucherSpawnModifier = Create(10321, Types.Impostor, "生成为附加能力", false, poucherSpawnRate);
+        poucherSpawnModifier = Create(10321, Types.Impostor, "poucherSpawnModifier", false, poucherSpawnRate);
 
         mimicSpawnRate = Create(10170, Types.Impostor, cs(Mimic.color, "Mimic"), rates, null, true);
 
@@ -1194,7 +1194,12 @@ public class CustomOptionHolder
 
         //-------------------------- Modifier (1000 - 1999) -------------------------- //
 
-        modifiersAreHidden = Create(40000, Types.Modifier, cs(Color.yellow, "隐藏死亡触发的附加能力"), true, null, true);
+        modifiersAreHidden = Create(40000, Types.Modifier, cs(Color.yellow, "隐藏死亡触发的附加能力"), false, null, true);
+
+        modifierLover = Create(40160, Types.Modifier, cs(Lovers.color, "Lover"), rates, null, true);
+        modifierLoverImpLoverRate = Create(40161, Types.Modifier, "恋人中有内鬼的概率", rates, modifierLover);
+        modifierLoverBothDie = Create(40162, Types.Modifier, "恋人共死", true, modifierLover);
+        modifierLoverEnableChat = Create(40163, Types.Modifier, "启用私密聊天文字频道", true, modifierLover);
 
         modifierDisperser = Create(40100, Types.Modifier, cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
         //modifierDisperserRemainingDisperses = CustomOption.Create(40102, Types.Modifier, "分散次数", 1f,1f,5f,1f, modifierDisperser);
@@ -1217,11 +1222,6 @@ public class CustomOptionHolder
         modifierBaitReportDelayMin = Create(40152, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 0.125f, modifierBait);
         modifierBaitReportDelayMax = Create(40153, Types.Modifier, "诱饵报告延迟时间(最大)", 0f, 0f, 10f, 0.5f, modifierBait);
         modifierBaitShowKillFlash = Create(40154, Types.Modifier, "用闪光灯警告杀手", true, modifierBait);
-
-        modifierLover = Create(40160, Types.Modifier, cs(Color.yellow, "Lover"), rates, null, true);
-        modifierLoverImpLoverRate = Create(40161, Types.Modifier, "恋人中有内鬼的概率", rates, modifierLover);
-        modifierLoverBothDie = Create(40162, Types.Modifier, "恋人共死", true, modifierLover);
-        modifierLoverEnableChat = Create(40163, Types.Modifier, "启用私密聊天文字频道", true, modifierLover);
 
         modifierSunglasses = Create(40170, Types.Modifier, cs(Color.yellow, "Sunglasses"), rates, null, true);
         modifierSunglassesQuantity = Create(40171, Types.Modifier, cs(Color.yellow, "太阳镜数量"), ratesModifier, modifierSunglasses);

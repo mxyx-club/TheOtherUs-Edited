@@ -633,6 +633,17 @@ internal class MeetingHudPatch
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
     private class MeetingCalculateVotesPatch
     {
+        public static bool CheckVoted(PlayerVoteArea playerVoteArea)
+        {
+            if (playerVoteArea.AmDead || playerVoteArea.DidVote)
+                return false;
+
+            var playerInfo = GameData.Instance.GetPlayerById(playerVoteArea.TargetPlayerId);
+            if (playerInfo == null)
+                return false;
+
+            return true;
+        }
         private static Dictionary<byte, int> CalculateVotes(MeetingHud __instance)
         {
             var dictionary = new Dictionary<byte, int>();
@@ -645,9 +656,21 @@ internal class MeetingHudPatch
                 if (player == null || player.Data == null || player.Data.IsDead ||
                     player.Data.Disconnected) continue;
 
-                var additionalVotes = Mayor.mayor != null && Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId && Mayor.voteTwice ? 2 : 1; // Mayor vote
-                if (dictionary.TryGetValue(playerVoteArea.VotedFor, out var currentVotes)) dictionary[playerVoteArea.VotedFor] = currentVotes + additionalVotes;
-                else dictionary[playerVoteArea.VotedFor] = additionalVotes;
+                var additionalVotes = 1;
+                if (Prosecutor.prosecutor != null && Prosecutor.prosecutor.PlayerId == playerVoteArea.TargetPlayerId)
+                    additionalVotes = Prosecutor.ProsecuteThisMeeting ? 15 : 1;
+
+                if (Mayor.mayor != null && Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId)
+                    additionalVotes = Mayor.voteTwice ? 2 : 1;
+
+                if (Prosecutor.prosecutor != null && Prosecutor.ProsecuteThisMeeting && Prosecutor.prosecutor.PlayerId != playerVoteArea.TargetPlayerId)
+                    additionalVotes = 0;
+
+                if (dictionary.TryGetValue(playerVoteArea.VotedFor, out var currentVotes))
+                    dictionary[playerVoteArea.VotedFor] = currentVotes + additionalVotes;
+
+                else
+                    dictionary[playerVoteArea.VotedFor] = additionalVotes;
             }
 
             // Swapper swap votes
@@ -689,7 +712,7 @@ internal class MeetingHudPatch
             // TieBreaker 
             var potentialExiled = new List<GameData.PlayerInfo>();
             var skipIsTie = false;
-            if (self.Count > 0)
+            if (self.Count > 0 && !Prosecutor.ProsecuteThisMeeting) // 阻止破平者在检察官会议中生效
             {
                 Tiebreaker.isTiebreak = false;
                 var maxVoteValue = self.Values.Max();
@@ -741,8 +764,8 @@ internal class MeetingHudPatch
             }
 
             // RPCVotingComplete
+            Message($"平票：{tie}{array}");
             __instance.RpcVotingComplete(array, exiled, tie);
-
             return false;
         }
     }
@@ -775,7 +798,7 @@ internal class MeetingHudPatch
                                   TasksHandler.taskInfo(CachedPlayer.LocalPlayer.Data).Item1 >=
                                   Mayor.tasksNeededToSeeVoteColors) ||
                                  (Watcher.watcher != null && CachedPlayer.LocalPlayer.PlayerControl == Watcher.watcher);
-            if (showVoteColors)
+            if (showVoteColors && !Prosecutor.ProsecuteThisMeeting)
                 PlayerMaterial.SetColors(voterPlayer.DefaultOutfit.ColorId, spriteRenderer);
             else
                 PlayerMaterial.SetColors(Palette.DisabledGrey, spriteRenderer);
@@ -818,14 +841,19 @@ internal class MeetingHudPatch
             }
 
 
-            __instance.TitleText.text =
-                FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.MeetingVotingResults,
-                    new Il2CppReferenceArray<Il2CppSystem.Object>(0));
+            __instance.TitleText.text = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.MeetingVotingResults, new Il2CppReferenceArray<Il2CppSystem.Object>(0));
+
+            var allNums = new Dictionary<int, int>();
+            __instance.TitleText.text = Object.FindObjectOfType<TranslationController>().GetString(StringNames.MeetingVotingResults, Array.Empty<Il2CppSystem.Object>());
+            var amountOfSkippedVoters = 0;
+
             var num = 0;
             for (var i = 0; i < __instance.playerStates.Length; i++)
             {
                 var playerVoteArea = __instance.playerStates[i];
                 var targetPlayerId = playerVoteArea.TargetPlayerId;
+                allNums.Add(i, 0);
+
                 playerVoteArea = doSwap switch
                 {
                     // Swapper change playerVoteArea that gets the votes
@@ -839,6 +867,7 @@ internal class MeetingHudPatch
                 var mayorFirstVoteDisplayed = false;
                 for (var j = 0; j < states.Length; j++)
                 {
+                    if (Prosecutor.ProsecuteThisMeeting) continue;
                     var voterState = states[j];
                     var playerById = GameData.Instance.GetPlayerById(voterState.VoterId);
                     if (playerById == null)
@@ -862,7 +891,47 @@ internal class MeetingHudPatch
                     mayorFirstVoteDisplayed = true;
                     j--;
                 }
+
+                for (var stateIdx = 0; stateIdx < states.Length; stateIdx++)
+                {
+                    var voteState = states[stateIdx];
+                    var playerInfo = GameData.Instance.GetPlayerById(voteState.VoterId);
+                    if (Prosecutor.prosecutor.Data.IsDead || Prosecutor.prosecutor.Data.Disconnected) continue;
+                    if (Prosecutor.ProsecuteThisMeeting)
+                    {
+                        if (voteState.VoterId == Prosecutor.prosecutor.PlayerId)
+                        {
+                            if (playerInfo == null)
+                            {
+                                Error(string.Format("找不到投票者的玩家信息: {0}", voteState.VoterId));
+                                Prosecutor.Prosecuted = true;
+                            }
+                            else if (i == 0 && voteState.SkippedVote)
+                            {
+                                __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
+                                __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
+                                __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
+                                __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
+                                __instance.BloopAVoteIcon(playerInfo, amountOfSkippedVoters, __instance.SkippedVoting.transform);
+                                amountOfSkippedVoters += 6;
+                                Prosecutor.Prosecuted = true;
+                            }
+                            else if (voteState.VotedForId == playerVoteArea.TargetPlayerId)
+                            {
+                                __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
+                                __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
+                                __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
+                                __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
+                                __instance.BloopAVoteIcon(playerInfo, allNums[i], playerVoteArea.transform);
+                                allNums[i] += 6;
+                                Prosecutor.Prosecuted = true;
+                            }
+                        }
+                    }
+                }
+
             }
+
             return false;
         }
     }
@@ -894,11 +963,10 @@ internal class MeetingHudPatch
             // Mini
             if (!Mini.isGrowingUpInMeeting)
                 Mini.timeOfGrowthStart = Mini.timeOfGrowthStart.Add(DateTime.UtcNow.Subtract(Mini.timeOfMeetingStart)).AddSeconds(10);
-            /*
+
             // Snitch
-            if (Snitch.snitch != null && !Snitch.needsUpdate && Snitch.snitch.Data.IsDead && Snitch.text != null)
-                Object.Destroy(Snitch.text);
-            */
+            if (Snitch.snitch != null && !Snitch.needsUpdate && Snitch.snitch.Data.IsDead && Snitch.text != null) Object.Destroy(Snitch.text);
+
         }
     }
 

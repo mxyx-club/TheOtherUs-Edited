@@ -1125,10 +1125,10 @@ internal class GameOptionsDataPatch
 
     private static string buildRoleOptions()
     {
-        var impRoles = $"<size=150%><color=#ff1c1c>{"impostorRoles".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Impostor, true)}\n";
-        var neutralRoles = $"<size=150%><color=#50544c>{"neutralRoles".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Neutral, true)}\n";
-        var crewRoles = $"<size=150%><color=#08fcfc>{"crewmateRoles".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Crewmate, true)}\n";
-        var modifiers = $"<size=150%><color=#ffec04>{"modifiers".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Modifier, true)}";
+        var impRoles = $"<size=150%><color=#ff1c1c>{"ImpostorRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Impostor, true)}\n";
+        var neutralRoles = $"<size=150%><color=#50544c>{"NeutralRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Neutral, true)}\n";
+        var crewRoles = $"<size=150%><color=#08fcfc>{"CrewmateRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Crewmate, true)}\n";
+        var modifiers = $"<size=150%><color=#ffec04>{"ModifiersText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Modifier, true)}";
         return impRoles + neutralRoles + crewRoles + modifiers;
     }
 
@@ -1140,7 +1140,7 @@ internal class GameOptionsDataPatch
         if (customOption.getSelection() == 0) return "";
         if (quantity.Count == 1) return $" ({quantity[0].getQuantity()})";
         if (customOption == CustomOptionHolder.modifierLover)
-            return $" (1 邪恶恋人: {CustomOptionHolder.modifierLoverImpLoverRate.getSelection() * 10}%)";
+            return $" (1 {"EvilLove".Translate()}: {CustomOptionHolder.modifierLoverImpLoverRate.getSelection() * 10}%)";
         return "";
     }
 
@@ -1181,13 +1181,13 @@ internal class GameOptionsDataPatch
             {
                 if (option.id == 30170) //Deputy
                     sb.AppendLine(
-                        $"- {cs(Deputy.color, "捕快")}: {option.selections[option.selection].ToString()}");
+                        $"- {cs(Deputy.color, "Deputy".Translate())}: {option.selections[option.selection].ToString()}");
                 else if (option.id == 20135) //Sidekick
                     sb.AppendLine(
-                        $"- {cs(Sidekick.color, "跟班")}: {option.selections[option.selection].ToString()}");
-                else if (option.id == 20181) //Prosecutor
+                        $"- {cs(Sidekick.color, "Sidekick".Translate())}: {option.selections[option.selection].ToString()}");
+                else if (option.id == 10321) //Poucher
                     sb.AppendLine(
-                        $"- {cs(Lawyer.color, "处刑者")}: {option.selections[option.selection].ToString()}");
+                        $"- {cs(Poucher.color, "poucherSpawnModifier".Translate())}: {option.selections[option.selection].ToString()}");
             }
 
         if (headerOnly) return sb.ToString();
@@ -1227,7 +1227,7 @@ internal class GameOptionsDataPatch
                         max = crewCount - minNeutral;
                         if (min < 0) min = 0;
                         if (max < 0) max = 0;
-                        optionValue = "填充: ";
+                        optionValue = "FillCrewmate".Translate();
                     }
 
                     if (min > max) min = max;

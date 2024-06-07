@@ -434,7 +434,6 @@ internal class ExileControllerMessagePatch
                 else if (Tiebreaker.isTiebreak)
                 {
                     __result += " (破平)";
-                    Message("破平");
                     Tiebreaker.isTiebreak = false;
                 }
             }

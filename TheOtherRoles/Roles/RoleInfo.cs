@@ -86,6 +86,7 @@ public class RoleInfo
     public static RoleInfo prophet = new("Prophet", Prophet.color, "ProphetIntroDesc", "ProphetShortDesc", RoleId.Prophet);
 
     // Modifier
+    public static RoleInfo lover = new("Lover", Lovers.color, "LoverIntroDesc", "LoverShortDesc", RoleId.Lover, false, true);
     public static RoleInfo disperser = new("Disperser", Color.red, "DisperserIntroDesc", "DisperserShortDesc", RoleId.Disperser, false, true);
     public static RoleInfo poucherModifier = new("Poucher", Poucher.color, "PoucherIntroDesc", "PoucherShortDesc", RoleId.PoucherModifier, false, true);
     public static RoleInfo lastImpostor = new("LastImpostor", Palette.ImpostorRed, "LastImpostorIntroDesc", "LastImpostorShortDesc", RoleId.LastImpostor, false, true);
@@ -97,7 +98,6 @@ public class RoleInfo
     public static RoleInfo torch = new("Torch", Color.yellow, "TorchIntroDesc", "TorchShortDesc", RoleId.Torch, false, true);
     public static RoleInfo flash = new("Flash", Color.yellow, "FlashIntroDesc", "FlashShortDesc", RoleId.Flash, false, true);
     public static RoleInfo multitasker = new("Multitasker", Color.yellow, "MultitaskerIntroDesc", "MultitaskerShortDesc", RoleId.Multitasker, false, true);
-    public static RoleInfo lover = new("Lover", Lovers.color, "LoverIntroDesc", "LoverShortDesc", RoleId.Lover, false, true);
     public static RoleInfo giant = new("Giant", Color.yellow, "GiantIntroDesc", "GiantShortDesc", RoleId.Giant, false, true);
     public static RoleInfo mini = new("Mini", Color.yellow, "MiniIntroDesc", "MiniShortDesc", RoleId.Mini, false, true);
     public static RoleInfo vip = new("Vip", Color.yellow, "VipIntroDesc", "VipShortDesc", RoleId.Vip, false, true);

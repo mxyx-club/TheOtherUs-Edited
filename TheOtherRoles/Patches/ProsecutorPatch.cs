@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace TheOtherRoles.Patches.RolesPatch;
+namespace TheOtherRoles.Patches;
 
 public class ProsecutorPatch
 {
@@ -154,9 +154,7 @@ class StartMeetingPatch
     public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo meetingTarget)
     {
         if (__instance == null)
-        {
             return;
-        }
         if (Prosecutor.prosecutor != null) Prosecutor.StartProsecute = false;
         return;
     }
@@ -180,11 +178,10 @@ public class ExilePros
             if (Prosecutor.ProsecuteThisMeeting)
             {
                 var exiled = __instance.exiled?.Object;
-                if (exiled != null && exiled == (isKiller(exiled) || isEvil(exiled)) && Prosecutor.diesOnIncorrectPros)
-                {
-                    //ButtonTarget.DontRevive = Prosecutor.prosecutor.PlayerId;
+                if (exiled != null && exiled != (exiled.Data.Role.IsImpostor || isKiller(exiled) || isEvil(exiled)) && Prosecutor.diesOnIncorrectPros)
                     Prosecutor.prosecutor.Exiled();
-                }
+                if (exiled == null)
+                    Prosecutor.Prosecuted = false;
                 Prosecutor.ProsecuteThisMeeting = false;
             }
         }
