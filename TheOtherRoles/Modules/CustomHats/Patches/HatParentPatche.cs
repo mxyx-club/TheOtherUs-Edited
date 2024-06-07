@@ -1,14 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using PowerTools;
-using TheOtherRoles.Modules.CustomHats.Extensions;
-using UnityEngine;
+﻿namespace TheOtherRoles.Modules.CustomHats.Patches;
 
-namespace TheOtherRoles.Modules.CustomHats.Patches;
-
-#if !MXYX_CLUB
-
+#if MXYX_CLUB
 [HarmonyPatch(typeof(HatParent))]
 internal static class HatParentPatches
 {
@@ -25,7 +17,7 @@ internal static class HatParentPatches
     private static bool SetHatPrefix(HatParent __instance, HatData hat, int color)
     {
         if (SetCustomHat(__instance)) return true;
-        __instance.PopulateFromViewData();
+        __instance.PopulateFromHatViewData();
         __instance.SetMaterialColor(color);
         return false;
     }
@@ -35,8 +27,8 @@ internal static class HatParentPatches
     private static bool SetHatPrefix(HatParent __instance, int color)
     {
         if (!__instance.IsCached()) return true;
-        __instance.viewAsset = null;
-        __instance.PopulateFromViewData();
+        __instance.hatDataAsset = null;
+        __instance.PopulateFromHatViewData();
         __instance.SetMaterialColor(color);
         return false;
     }
@@ -46,11 +38,10 @@ internal static class HatParentPatches
     private static bool UpdateMaterialPrefix(HatParent __instance)
     {
         if (!__instance.TryGetCached(out var asset)) return true;
-        var extend = HatDataExtensions.GetHatExtension(__instance.Hat);
-        if (asset && extend != null && extend.Adaptive)
+        if (asset && asset.AltShader)
         {
-            __instance.FrontLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.PlayerMaterial;
-            if (__instance.BackLayer) __instance.BackLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.PlayerMaterial;
+            __instance.FrontLayer.sharedMaterial = asset.AltShader;
+            if (__instance.BackLayer) __instance.BackLayer.sharedMaterial = asset.AltShader;
         }
         else
         {
@@ -63,36 +54,33 @@ internal static class HatParentPatches
         if (__instance.BackLayer) PlayerMaterial.SetColors(colorId, __instance.BackLayer);
 
         __instance.FrontLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
-        if (__instance.BackLayer) __instance.BackLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
+        if (__instance.BackLayer)
+            __instance.BackLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
 
         var maskType = __instance.matProperties.MaskType;
         switch (maskType)
         {
             case PlayerMaterial.MaskType.ScrollingUI:
-                if (__instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
-
-                if (__instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
-
+                if (__instance.FrontLayer)
+                    __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+                if (__instance.BackLayer)
+                    __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
                 break;
             case PlayerMaterial.MaskType.Exile:
-                if (__instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
-
-                if (__instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
-
+                if (__instance.FrontLayer)
+                    __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+                if (__instance.BackLayer)
+                    __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
                 break;
             default:
                 if (__instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.None;
-
                 if (__instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.None;
-
                 break;
         }
-
         if (__instance.matProperties.MaskLayer > 0) return false;
         PlayerMaterial.SetMaskLayerBasedOnLocalPlayer(__instance.FrontLayer, __instance.matProperties.IsLocalPlayer);
         if (!__instance.BackLayer) return false;
         PlayerMaterial.SetMaskLayerBasedOnLocalPlayer(__instance.BackLayer, __instance.matProperties.IsLocalPlayer);
-
         return false;
     }
 
@@ -102,22 +90,17 @@ internal static class HatParentPatches
     {
         if (!__instance.Parent || !__instance.Hat) return false;
         if (!__instance.TryGetCached(out var hatViewData)) return true;
-        if (__instance.FrontLayer.sprite != hatViewData.ClimbImage &&
-            __instance.FrontLayer.sprite != hatViewData.FloorImage)
+        if (__instance.FrontLayer.sprite != hatViewData.ClimbImage && __instance.FrontLayer.sprite != hatViewData.FloorImage)
         {
             if ((__instance.Hat.InFront || hatViewData.BackImage) && hatViewData.LeftMainImage)
-            {
                 __instance.FrontLayer.sprite =
                     __instance.Parent.flipX ? hatViewData.LeftMainImage : hatViewData.MainImage;
-            }
-
             if (hatViewData.BackImage && hatViewData.LeftBackImage)
             {
                 __instance.BackLayer.sprite =
                     __instance.Parent.flipX ? hatViewData.LeftBackImage : hatViewData.BackImage;
                 return false;
             }
-
             if (!hatViewData.BackImage && !__instance.Hat.InFront && hatViewData.LeftMainImage)
             {
                 __instance.BackLayer.sprite =
@@ -131,12 +114,8 @@ internal static class HatParentPatches
             var spriteAnimNodeSync = __instance.SpriteSyncNode != null
                 ? __instance.SpriteSyncNode
                 : __instance.GetComponent<SpriteAnimNodeSync>();
-            if (spriteAnimNodeSync)
-            {
-                spriteAnimNodeSync.NodeId = 0;
-            }
+            if (spriteAnimNodeSync) spriteAnimNodeSync.NodeId = 0;
         }
-
         return false;
     }
 
@@ -157,8 +136,8 @@ internal static class HatParentPatches
     {
         if (!__instance.Hat) return false;
         if (!__instance.IsCached()) return true;
-        __instance.viewAsset = null;
-        __instance.PopulateFromViewData();
+        __instance.hatDataAsset = null;
+        __instance.PopulateFromHatViewData();
         __instance.SetMaterialColor(colorId);
         return false;
     }
@@ -175,7 +154,7 @@ internal static class HatParentPatches
         return false;
     }
 
-    [HarmonyPatch(nameof(HatParent.PopulateFromViewData))]
+    [HarmonyPatch(nameof(HatParent.PopulateFromHatViewData))]
     [HarmonyPrefix]
     private static bool PopulateFromHatViewDataPrefix(HatParent __instance)
     {
@@ -232,7 +211,6 @@ internal static class HatParentPatches
             Warn($"Unable to create test hat \n{err}");
             return true;
         }
-
         return false;
     }
 }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
+using TheOtherRoles.Patches;
 
 namespace TheOtherRoles.Modules;
 public class ModTranslation
@@ -81,5 +82,14 @@ internal static class LanguageExtension
     internal static string Translate(this string key)
     {
         return getString(key);
+    }
+}
+
+[HarmonyPatch(typeof(LanguageSetter), nameof(LanguageSetter.SetLanguage))]
+class SetLanguagePatch
+{
+    static void Postfix()
+    {
+        ClientOptionsPatch.updateTranslations();
     }
 }

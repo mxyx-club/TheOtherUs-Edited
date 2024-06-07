@@ -28,6 +28,7 @@ public static class Yoyo
 
     public static void clearAndReload()
     {
+        yoyo = null;
         blinkDuration = CustomOptionHolder.yoyoBlinkDuration.getFloat();
         markCooldown = CustomOptionHolder.yoyoMarkCooldown.getFloat();
         markStaysOverMeeting = CustomOptionHolder.yoyoMarkStaysOverMeeting.getBool();

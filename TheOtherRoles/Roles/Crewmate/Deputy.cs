@@ -69,11 +69,11 @@ public static class Deputy
     {
         if (resetCuffs)
         {
-            handcuffedPlayers = new List<byte>();
-            handcuffedKnows = new Dictionary<byte, float>();
         }
         deputy = null;
         currentTarget = null;
+        handcuffedPlayers = new List<byte>();
+        handcuffedKnows = new Dictionary<byte, float>();
         HudManagerStartPatch.setAllButtonsHandcuffedStatus(false, true);
         promotesToSheriff = CustomOptionHolder.deputyGetsPromoted.getSelection();
         remainingHandcuffs = CustomOptionHolder.deputyNumberOfHandcuffs.getFloat();

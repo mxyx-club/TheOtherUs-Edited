@@ -96,6 +96,7 @@ internal static class HudManagerStartPatch
     public static CustomButton terroristButton;
     public static CustomButton defuseButton;
     public static CustomButton zoomOutButton;
+    public static CustomButton roleSummaryButton;
     private static CustomButton hunterLighterButton;
     private static CustomButton hunterAdminTableButton;
     private static CustomButton hunterArrowButton;
@@ -398,6 +399,41 @@ internal static class HudManagerStartPatch
         targetDisplay.gameObject.SetActive(true);
     }
 
+    public static void createRoleSummaryButton(HudManager __instance)
+    {
+        roleSummaryButton = new CustomButton(
+        () =>
+        {
+            if (LobbyRoleInfo.RolesSummaryUI == null)
+            {
+                LobbyRoleInfo.RoleSummaryOnClick();
+            }
+            else
+            {
+                Object.Destroy(LobbyRoleInfo.RolesSummaryUI);
+                LobbyRoleInfo.RolesSummaryUI = null;
+            }
+        },
+        () => { return PlayerControl.LocalPlayer != null && LobbyBehaviour.Instance; },
+        () =>
+        {
+            if (PlayerCustomizationMenu.Instance || GameSettingMenu.Instance)
+            {
+                if (LobbyRoleInfo.RolesSummaryUI != null)
+                {
+                    Object.Destroy(LobbyRoleInfo.RolesSummaryUI);
+                }
+            }
+            return true;
+        },
+        () => { },
+        loadSpriteFromResources("TheOtherRoles.Resources.HelpButton.png", 150f),
+        new Vector3(0.4f, 3f, 0),
+        __instance,
+        null
+        );
+    }
+
     public static void Postfix(HudManager __instance)
     {
         initialized = false;
@@ -406,16 +442,14 @@ internal static class HudManagerStartPatch
         {
             createButtonsPostfix(__instance);
         }
-        catch
-        {
-        }
+        catch { }
     }
 
     public static void createButtonsPostfix(HudManager __instance)
     {
         // get map id, or raise error to wait...
         var mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
-
+        createRoleSummaryButton(__instance);
         // Engineer Repair
         engineerRepairButton = new CustomButton(
             () =>

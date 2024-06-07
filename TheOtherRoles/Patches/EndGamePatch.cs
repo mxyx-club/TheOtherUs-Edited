@@ -154,33 +154,33 @@ public class OnGameEndPatch
                 winnersToRemove.Add(winner);
         foreach (var winner in winnersToRemove) TempData.winners.Remove(winner);
 
-        var everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
-        var jesterWin = Jester.jester != null && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
-        var werewolfWin = gameOverReason == (GameOverReason)CustomGameOverReason.WerewolfWin &&
+        bool everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
+        bool jesterWin = Jester.jester != null && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
+        bool werewolfWin = gameOverReason == (GameOverReason)CustomGameOverReason.WerewolfWin &&
                           Werewolf.werewolf != null && !Werewolf.werewolf.Data.IsDead;
-        var juggernautWin = gameOverReason == (GameOverReason)CustomGameOverReason.JuggernautWin &&
+        bool juggernautWin = gameOverReason == (GameOverReason)CustomGameOverReason.JuggernautWin &&
                             Juggernaut.juggernaut != null && !Juggernaut.juggernaut.Data.IsDead;
-        var swooperWin = gameOverReason == (GameOverReason)CustomGameOverReason.SwooperWin &&
+        bool swooperWin = gameOverReason == (GameOverReason)CustomGameOverReason.SwooperWin &&
                             Swooper.swooper != null && !Swooper.swooper.Data.IsDead;
-        var arsonistWin = Arsonist.arsonist != null &&
+        bool arsonistWin = Arsonist.arsonist != null &&
                           gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
-        var miniLose = Mini.mini != null && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
-        var doomsayerWin = Doomsayer.doomsayer != null &&
+        bool miniLose = Mini.mini != null && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
+        bool doomsayerWin = Doomsayer.doomsayer != null &&
                            gameOverReason == (GameOverReason)CustomGameOverReason.DoomsayerWin;
         // Either they win if they are among the last 3 players, or they win if they are both Crewmates and both alive and the Crew wins (Team Imp/Jackal Lovers can only win solo wins)
-        var loversWin = Lovers.existingAndAlive() &&
+        bool loversWin = Lovers.existingAndAlive() &&
                         (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin ||
                          (GameManager.Instance.DidHumansWin(gameOverReason) &&
                           !Lovers.existingWithKiller()));
-        var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin &&
+        bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin &&
                             ((Jackal.jackal != null && !Jackal.jackal.Data.IsDead) ||
                             (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
-        var vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
-        var executionerWin = Executioner.executioner != null && gameOverReason == (GameOverReason)CustomGameOverReason.ExecutionerWin;
-        var akujoWin = Akujo.akujo != null && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead;
+        bool vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
+        bool executionerWin = Executioner.executioner != null && gameOverReason == (GameOverReason)CustomGameOverReason.ExecutionerWin;
+        bool akujoWin = Akujo.akujo != null && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead;
         bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
 
-        var isPursurerLose = jesterWin || arsonistWin || miniLose;
+        bool isPursurerLose = jesterWin || arsonistWin || miniLose;
 
         // Mini lose
         if (miniLose)
@@ -303,7 +303,7 @@ public class OnGameEndPatch
             wpd.IsImpostor = false;
             TempData.winners.Add(wpd);
         }
-        //天启添加
+
         else if (juggernautWin)
         {
             // JuggernautWin wins if nobody except jackal is alive
@@ -313,7 +313,7 @@ public class OnGameEndPatch
             wpd.IsImpostor = false;
             TempData.winners.Add(wpd);
         }
-        //末日预言家
+
         else if (doomsayerWin)
         {
             // DoomsayerWin wins if nobody except jackal is alive
@@ -323,6 +323,7 @@ public class OnGameEndPatch
             TempData.winners.Add(wpd);
             AdditionalTempData.winCondition = WinCondition.DoomsayerWin;
         }
+
         //Swooper
         else if (swooperWin)
         {
@@ -343,12 +344,11 @@ public class OnGameEndPatch
             TempData.winners.Add(new WinningPlayerData(Akujo.honmei.Data));
         }
 
-
         // Lawyer solo win 
         else if (lawyerSoloWin)
         {
             TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-            WinningPlayerData wpd = new WinningPlayerData(Lawyer.lawyer.Data);
+            WinningPlayerData wpd = new(Lawyer.lawyer.Data);
             TempData.winners.Add(wpd);
             AdditionalTempData.winCondition = WinCondition.LawyerSoloWin;
         }
@@ -363,11 +363,20 @@ public class OnGameEndPatch
                     winningClient = winner;
             if (winningClient != null)
             {
-                // The Lawyer wins if the client is winning (and alive, but if he wasn't the Lawyer shouldn't exist anymore)
                 if (!TempData.winners.ToArray().Any(x => x.PlayerName == Lawyer.lawyer.Data.PlayerName))
-                    TempData.winners.Add(new WinningPlayerData(Lawyer.lawyer.Data));
-                AdditionalTempData.additionalWinConditions.Add(WinCondition
-                    .AdditionalLawyerBonusWin); // The Lawyer wins together with the client 
+                {
+                    if (!Lawyer.lawyer.Data.IsDead && Lawyer.stolenWin)
+                    {
+                        TempData.winners.Remove(winningClient);
+                        TempData.winners.Add(new WinningPlayerData(Lawyer.lawyer.Data));
+                        AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalLawyerStolenWin); // The Lawyer replaces the client's victory
+                    }
+                    else
+                    {
+                        TempData.winners.Add(new WinningPlayerData(Lawyer.lawyer.Data));
+                        AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalLawyerBonusWin); // The Lawyer wins with the client
+                    }
+                }
             }
         }
 
@@ -467,38 +476,47 @@ public class EndGameManagerSetUpPatch
             case WinCondition.JesterWin:
                 textRenderer.text = "听我说谢谢你";
                 textRenderer.color = Jester.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Jester.color);
                 break;
             case WinCondition.DoomsayerWin:
                 textRenderer.text = "末日预言家获胜";
                 textRenderer.color = Doomsayer.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Doomsayer.color);
                 break;
             case WinCondition.ArsonistWin:
                 textRenderer.text = "用火焰净化一切";
                 textRenderer.color = Arsonist.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Arsonist.color);
                 break;
             case WinCondition.VultureWin:
                 textRenderer.text = "吃饱饱！";
                 textRenderer.color = Vulture.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Vulture.color);
                 break;
             case WinCondition.LawyerSoloWin:
                 textRenderer.text = "律师获胜";
                 textRenderer.color = Lawyer.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Lawyer.color);
                 break;
             case WinCondition.WerewolfWin:
                 textRenderer.text = "月下狼人获胜！";
                 textRenderer.color = Werewolf.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Werewolf.color);
                 break;
             case WinCondition.JuggernautWin:
                 textRenderer.text = "天启获胜";
                 textRenderer.color = Juggernaut.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Juggernaut.color);
                 break;
             case WinCondition.SwooperWin:
                 textRenderer.text = "隐身人获胜!";
                 textRenderer.color = Swooper.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Swooper.color);
                 break;
             case WinCondition.ExecutionerWin:
                 textRenderer.text = "小嘴叭叭!";
                 textRenderer.color = Executioner.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Executioner.color);
                 break;
             case WinCondition.LoversTeamWin:
                 textRenderer.text = "船员和恋人获胜";
@@ -513,6 +531,7 @@ public class EndGameManagerSetUpPatch
             case WinCondition.JackalWin:
                 textRenderer.text = "豺狼的全家福.jpg";
                 textRenderer.color = Jackal.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Jackal.color);
                 break;
             case WinCondition.AkujoWin:
                 textRenderer.text = "请给我扭曲你人生的权利！";

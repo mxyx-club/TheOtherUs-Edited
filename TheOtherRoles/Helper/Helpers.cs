@@ -65,7 +65,7 @@ public static class Helpers
     public static bool zoomOutStatus;
 
     //new
-    public static bool gameStarted => AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started; 
+    public static bool gameStarted => AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started;
 
     /// <summary>
     /// 假任务
@@ -783,6 +783,38 @@ public static class Helpers
         return CustomColors.lighterColors.Contains(colorId);
     }
 
+    public static TMPro.TextMeshPro getFirst(this TMPro.TextMeshPro[] text)
+    {
+        if (text == null) return null;
+        foreach (var self in text)
+            if (self.text == "") return self;
+        return text[0];
+    }
+
+    public static int totalCounts(this TMPro.TextMeshPro[] text)
+    {
+        if (text == null) return 0;
+        int count = 0;
+        foreach (var self in text)
+            if (self.text != "") count++;
+        return count;
+    }
+
+    private static Sprite roleSummaryBackground;
+    public static Sprite getRoleSummaryBackground()
+    {
+        if (roleSummaryBackground != null) return roleSummaryBackground;
+        roleSummaryBackground = loadSpriteFromResources("TheOtherRoles.Resources.LobbyRoleInfo.TeamScreen.png", 110f);
+        return roleSummaryBackground;
+    }
+
+    private static Sprite menuBackground;
+    public static Sprite getMenuBackground()
+    {
+        if (menuBackground != null) return menuBackground;
+        menuBackground = loadSpriteFromResources("TheOtherRoles.Resources.LobbyRoleInfo.RoleListScreen.png", 110f);
+        return menuBackground;
+    }
     public static bool isCustomServer()
     {
         if (FastDestroyableSingleton<ServerManager>.Instance == null) return false;
@@ -885,7 +917,7 @@ public static class Helpers
         {
             return "https://github.moeyy.xyz/" + url;
         }
-        //Info("Rewrite URL: " + url);
+        Info("Rewrite URL: " + url);
         return url;
     }
 
@@ -1454,7 +1486,7 @@ public static class Helpers
         {
             HudManagerStartPatch.zoomOutButton.Sprite = zoomOutStatus
                 ? loadSpriteFromResources("TheOtherRoles.Resources.PlusButton.png", 75f)
-                : loadSpriteFromResources("TheOtherRoles.Resources.MinusButton.png", 150f);
+                : loadSpriteFromResources("TheOtherRoles.Resources.MinusButton.png", 120f);
             HudManagerStartPatch.zoomOutButton.PositionOffset =
                 zoomOutStatus ? new Vector3(0f, 3f, 0) : new Vector3(0.4f, 2.8f, 0);
         }

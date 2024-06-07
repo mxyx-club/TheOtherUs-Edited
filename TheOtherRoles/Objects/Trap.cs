@@ -348,7 +348,6 @@ public class KillTrap
             trap.Value.audioSource.Stop();
             if (trap.Value.target != null)
             {
-
                 if (CachedPlayer.LocalPlayer.PlayerControl == EvilTrapper.evilTrapper)
                 {
                     if (!trap.Value.target.Data.IsDead)

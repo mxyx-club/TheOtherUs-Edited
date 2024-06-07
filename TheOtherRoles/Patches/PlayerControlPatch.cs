@@ -8,6 +8,7 @@ using Hazel;
 using InnerNet;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -1017,21 +1018,19 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void bountyHunterUpdate()
     {
-        if (BountyHunter.bountyHunter == null ||
-            CachedPlayer.LocalPlayer.PlayerControl != BountyHunter.bountyHunter) return;
+        if (BountyHunter.bountyHunter == null || CachedPlayer.LocalPlayer.PlayerControl != BountyHunter.bountyHunter) return;
 
         if (BountyHunter.bountyHunter.Data.IsDead)
         {
-            if (BountyHunter.arrow != null || BountyHunter.arrow.arrow != null)
-                Object.Destroy(BountyHunter.arrow.arrow);
+            if (BountyHunter.arrow != null) Object.Destroy(BountyHunter.arrow.arrow);
             BountyHunter.arrow = null;
-            if (BountyHunter.cooldownText != null && BountyHunter.cooldownText.gameObject != null)
-                Object.Destroy(BountyHunter.cooldownText.gameObject);
+            if (BountyHunter.cooldownText != null && BountyHunter.cooldownText.gameObject != null) Object.Destroy(BountyHunter.cooldownText.gameObject);
             BountyHunter.cooldownText = null;
             BountyHunter.bounty = null;
-            foreach (var p in MapOption.playerIcons.Values)
-                if (p != null && p.gameObject != null)
-                    p.gameObject.SetActive(false);
+            foreach (PoolablePlayer p in MapOption.playerIcons.Values)
+            {
+                if (p != null && p.gameObject != null) p.gameObject.SetActive(false);
+            }
             return;
         }
 
@@ -2017,16 +2016,17 @@ internal class BodyReportPatch
             {
                 var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.timeOfDeath).TotalMilliseconds;
                 var msg = "";
+                var killer = deadPlayer.killerIfExisting;
 
                 if (isMedicReport)
                 {
                     if (timeSinceDeath < Medic.ReportNameDuration * 1000)
                     {
-                        msg = $"尸检报告: 凶手似乎是 {deadPlayer.killerIfExisting.Data.PlayerName}!\n尸体在 {Math.Round(timeSinceDeath / 1000)} 秒前死亡";
+                        msg = $"尸检报告: 凶手似乎是 {killer.Data.PlayerName}!\n尸体在 {Math.Round(timeSinceDeath / 1000)} 秒前死亡";
                     }
                     else if (timeSinceDeath < Medic.ReportColorDuration * 1000)
                     {
-                        var typeOfColor = isLighterColor(deadPlayer.killerIfExisting) ? "浅" : "深";
+                        var typeOfColor = isLighterColor(killer) ? "浅" : "深";
                         msg = $"尸检报告: 凶手似乎是 {typeOfColor} 色的!\n尸体在{Math.Round(timeSinceDeath / 1000)}秒前死亡";
                     }
                     else
@@ -2038,12 +2038,16 @@ internal class BodyReportPatch
                 {
                     if (timeSinceDeath < Detective.reportNameDuration * 1000)
                     {
-                        msg = $"尸检报告: 凶手的职业似乎是 {RoleInfo.getRoleInfoForPlayer(deadPlayer.killerIfExisting).First(x => !x.isModifier).name} !\n尸体在 {Math.Round(timeSinceDeath / 1000)} 秒前死亡";
+                        msg = $"尸检报告: 凶手的职业似乎是 {RoleInfo.getRoleInfoForPlayer(killer).First(x => !x.isModifier).name} !\n尸体在 {Math.Round(timeSinceDeath / 1000)} 秒前死亡";
                     }
                     else if (timeSinceDeath < Detective.reportColorDuration * 1000)
                     {
-                        var typeOfColor = isLighterColor(deadPlayer.killerIfExisting) ? "浅" : "深";
-                        msg = $"尸检报告: 凶手似乎是 {typeOfColor} 色的!\n尸体在{Math.Round(timeSinceDeath / 1000)}秒前死亡";
+                        var killerTeam = "";
+                        if (isNeutral(killer)) killerTeam = "Neutral".Translate();
+                        if (killer.Data.Role.IsImpostor) killerTeam = "Impostor".Translate();
+                        if (!killer.Data.Role.IsImpostor && !isNeutral(killer)) killerTeam = "Crewmate".Translate();
+
+                        msg = $"尸检报告: 凶手的阵营似乎是 {killerTeam} !\n尸体在{Math.Round(timeSinceDeath / 1000)}秒前死亡";
                     }
                     else
                     {

@@ -58,7 +58,7 @@ public class CustomOption
     {
         this.id = id;
         //this.name = parent == null ? name : " - " + name;
-        this.name = name.Translate();
+        this.name = name;
         this.selections = selections;
         var index = Array.IndexOf(selections, defaultValue);
         defaultSelection = index >= 0 ? index : 0;
@@ -94,7 +94,7 @@ public class CustomOption
     public static CustomOption Create(int id, CustomOptionType type, string name, bool defaultValue,
         CustomOption parent = null, bool isHeader = false, Action onChange = null)
     {
-        return new CustomOption(id, type, name, new[] { "optionOff".Translate(), "optionOn".Translate() }, defaultValue ? "optionOn".Translate() : "optionOff".Translate(), parent, isHeader,
+        return new CustomOption(id, type, name, new[] { "optionOff", "optionOn" }, defaultValue ? "optionOn" : "optionOff", parent, isHeader,
             onChange);
     }
 
@@ -117,7 +117,7 @@ public class CustomOption
             if (option.optionBehaviour != null && option.optionBehaviour is StringOption stringOption)
             {
                 stringOption.oldValue = stringOption.Value = option.selection;
-                stringOption.ValueText.text = option.selections[option.selection].ToString();
+                stringOption.ValueText.text = option.getString();
             }
         }
     }
@@ -206,9 +206,25 @@ public class CustomOption
         return selection + 1;
     }
 
+    public string getString()
+    {
+        string sel = selections[selection].ToString();
+
+        if (sel is "optionOn")
+        {
+            return "<color=#FFFF00FF>" + sel.Translate() + "</color>";
+        }
+        else if (sel == "optionOff")
+        {
+            return "<color=#CCCCCCFF>" + sel.Translate() + "</color>";
+        }
+
+        return sel.Translate();
+    }
+
     public virtual string getName()
     {
-        return getString(name);
+        return name.Translate();
     }
 
     // Option changes
@@ -227,7 +243,7 @@ public class CustomOption
         if (optionBehaviour != null && optionBehaviour is StringOption stringOption)
         {
             stringOption.oldValue = stringOption.Value = selection;
-            stringOption.ValueText.text = selections[selection].ToString();
+            stringOption.ValueText.text = getString();
             if (AmongUsClient.Instance?.AmHost != true || !CachedPlayer.LocalPlayer.PlayerControl) return;
             if (id == 0 && selection != preset)
             {
@@ -514,9 +530,9 @@ internal class GameOptionsMenuStartPatch
                 var stringOption = Object.Instantiate(template, menus[(int)option.type]);
                 optionBehaviours[(int)option.type].Add(stringOption);
                 stringOption.OnValueChanged = new Action<OptionBehaviour>(o => { });
-                stringOption.TitleText.text = option.name;
+                stringOption.TitleText.text = option.getName();
                 stringOption.Value = stringOption.oldValue = option.selection;
-                stringOption.ValueText.text = option.selections[option.selection].ToString();
+                stringOption.ValueText.text = option.getString();
 
                 option.optionBehaviour = stringOption;
             }
@@ -666,9 +682,9 @@ internal class GameOptionsMenuStartPatch
                 var stringOption = Object.Instantiate(template, menus[(int)option.type]);
                 optionBehaviours[(int)option.type].Add(stringOption);
                 stringOption.OnValueChanged = new Action<OptionBehaviour>(o => { });
-                stringOption.TitleText.text = option.name;
+                stringOption.TitleText.text = option.getName();
                 stringOption.Value = stringOption.oldValue = option.selection;
-                stringOption.ValueText.text = option.selections[option.selection].ToString();
+                stringOption.ValueText.text = option.getString();
 
                 option.optionBehaviour = stringOption;
             }
@@ -766,9 +782,9 @@ internal class GameOptionsMenuStartPatch
                 var stringOption = Object.Instantiate(template, menus[index]);
                 optionBehaviours[index].Add(stringOption);
                 stringOption.OnValueChanged = new Action<OptionBehaviour>(o => { });
-                stringOption.TitleText.text = option.name;
+                stringOption.TitleText.text = option.getName();
                 stringOption.Value = stringOption.oldValue = option.selection;
-                stringOption.ValueText.text = option.selections[option.selection].ToString();
+                stringOption.ValueText.text = option.getString();
 
                 option.optionBehaviour = stringOption;
             }
@@ -854,9 +870,9 @@ internal class GameOptionsMenuStartPatch
                 var stringOption = Object.Instantiate(template, menus[index]);
                 optionBehaviours[index].Add(stringOption);
                 stringOption.OnValueChanged = new Action<OptionBehaviour>(o => { });
-                stringOption.TitleText.text = option.name;
+                stringOption.TitleText.text = option.getName();
                 stringOption.Value = stringOption.oldValue = option.selection;
-                stringOption.ValueText.text = option.selections[option.selection].ToString();
+                stringOption.ValueText.text = option.getString();
 
                 option.optionBehaviour = stringOption;
             }
@@ -971,7 +987,7 @@ public class StringOptionEnablePatch
         __instance.OnValueChanged = new Action<OptionBehaviour>(o => { });
         __instance.TitleText.text = option.getName();
         __instance.Value = __instance.oldValue = option.selection;
-        __instance.ValueText.text = option.selections[option.selection].ToString();
+        __instance.ValueText.text = option.getString();
 
         return false;
     }
@@ -1173,7 +1189,7 @@ internal class GameOptionsDataPatch
         foreach (var option in options)
             if (option.parent == null)
             {
-                var line = $"{option.name}: {option.selections[option.selection]}";
+                var line = $"{option.getName()}: {option.getString()}";
                 if (type == CustomOptionType.Modifier) line += buildModifierExtras(option);
                 sb.AppendLine(line);
             }
@@ -1181,13 +1197,13 @@ internal class GameOptionsDataPatch
             {
                 if (option.id == 30170) //Deputy
                     sb.AppendLine(
-                        $"- {cs(Deputy.color, "Deputy".Translate())}: {option.selections[option.selection].ToString()}");
+                        $"- {cs(Deputy.color, "Deputy".Translate())}: {option.getString()}");
                 else if (option.id == 20135) //Sidekick
                     sb.AppendLine(
-                        $"- {cs(Sidekick.color, "Sidekick".Translate())}: {option.selections[option.selection].ToString()}");
+                        $"- {cs(Sidekick.color, "Sidekick".Translate())}: {option.getString()}");
                 else if (option.id == 10321) //Poucher
                     sb.AppendLine(
-                        $"- {cs(Poucher.color, "poucherSpawnModifier".Translate())}: {option.selections[option.selection].ToString()}");
+                        $"- {cs(Poucher.color, "poucherSpawnModifier".Translate())}: {option.getString()}");
             }
 
         if (headerOnly) return sb.ToString();
@@ -1206,7 +1222,7 @@ internal class GameOptionsDataPatch
 
                 var c = isIrrelevant ? Color.grey : Color.white; // No use for now
                 if (isIrrelevant) continue;
-                sb.AppendLine(cs(c, $"{option.name}: {option.selections[option.selection]}"));
+                sb.AppendLine(cs(c, $"{option.getName()}: {option.getString()}"));
             }
             else
             {
@@ -1271,7 +1287,7 @@ internal class GameOptionsDataPatch
                 }
                 else
                 {
-                    sb.AppendLine($"\n{option.name}: {option.selections[option.selection].ToString()}");
+                    sb.AppendLine($"\n{option.getName()}: {option.getString()}");
                 }
             }
         }
@@ -1656,23 +1672,15 @@ public class HudManagerUpdate
         if (!toggleSettingsButton || !toggleSettingsButtonObject)
         {
             // add a special button for settings viewing:
-            toggleSettingsButtonObject =
-                Object.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
-            toggleSettingsButtonObject.transform.localPosition =
-                __instance.MapButton.transform.localPosition + new Vector3(0, -0.66f, -500f);
-            var renderer = toggleSettingsButtonObject.GetComponent<SpriteRenderer>();
-            renderer.sprite =
-                loadSpriteFromResources("TheOtherRoles.Resources.CurrentSettingsButton.png", 180f);
+            toggleSettingsButtonObject = Object.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
+            toggleSettingsButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -0.66f, -500f);
+            SpriteRenderer renderer = toggleSettingsButtonObject.GetComponent<SpriteRenderer>();
+            renderer.sprite = loadSpriteFromResources("TheOtherRoles.Resources.CurrentSettingsButton.png", 180f);
             toggleSettingsButton = toggleSettingsButtonObject.GetComponent<PassiveButton>();
             toggleSettingsButton.OnClick.RemoveAllListeners();
             toggleSettingsButton.OnClick.AddListener((Action)(() => ToggleSettings(__instance)));
         }
-
-        toggleSettingsButtonObject.SetActive(__instance.MapButton.gameObject.active &&
-                                             !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) &&
-                                             GameOptionsManager.Instance.currentGameOptions.GameMode !=
-                                             GameModes.HideNSeek);
-        toggleSettingsButtonObject.transform.localPosition =
-            __instance.MapButton.transform.localPosition + new Vector3(0, -0.66f, -500f);
+        toggleSettingsButtonObject.SetActive(__instance.MapButton.gameObject.active && !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) && GameOptionsManager.Instance.currentGameOptions.GameMode != GameModes.HideNSeek);
+        toggleSettingsButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -0.66f, -500f);
     }
 }

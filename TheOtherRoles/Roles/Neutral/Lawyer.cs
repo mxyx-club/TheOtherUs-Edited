@@ -10,6 +10,7 @@ public static class Lawyer
     public static Sprite targetSprite;
     public static bool canCallEmergency = true;
     public static bool targetKnows;
+    public static bool stolenWin;
 
     public static float vision = 1f;
     public static bool lawyerKnowsRole;
@@ -36,6 +37,7 @@ public static class Lawyer
         targetKnows = CustomOptionHolder.lawyerTargetKnows.getBool();
         lawyerKnowsRole = CustomOptionHolder.lawyerKnowsRole.getBool();
         targetCanBeJester = CustomOptionHolder.lawyerTargetCanBeJester.getBool();
+        stolenWin = CustomOptionHolder.lawyerStolenWin.getBool();
         canCallEmergency = CustomOptionHolder.jesterCanCallEmergency.getBool();
     }
 }

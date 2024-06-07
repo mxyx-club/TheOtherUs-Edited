@@ -4,7 +4,6 @@ using System.Linq;
 using AmongUs.QuickChat;
 using Hazel;
 using Reactor.Utilities;
-using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -27,6 +26,8 @@ internal class MeetingHudPatch
     public static bool shookAlready;
     private static PlayerVoteArea swapped1;
     private static PlayerVoteArea swapped2;
+    static TMPro.TextMeshPro[] meetingInfoText = new TMPro.TextMeshPro[4];
+    static int meetingTextIndex = 0;
 
     public static GameObject guesserUI;
     public static PassiveButton guesserUIExitButton;
@@ -596,6 +597,52 @@ internal class MeetingHudPatch
         }
     }
 
+    public static void updateMeetingText(MeetingHud __instance)
+    {
+        // Uses remaining text for guesser/yasuna etc.
+        if (meetingInfoText[0] == null)
+        {
+            for (int i = 0; i < meetingInfoText.Length; i++)
+            {
+                meetingInfoText[i] = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
+                meetingInfoText[i].alignment = TextAlignmentOptions.BottomLeft;
+                meetingInfoText[i].transform.position = Vector3.zero;
+                meetingInfoText[i].transform.localPosition = new Vector3(-3.07f, 3.33f, -20f);
+                meetingInfoText[i].transform.localScale *= 1.1f;
+                meetingInfoText[i].color = Palette.White;
+                meetingInfoText[i].gameObject.SetActive(false);
+            }
+        }
+
+        for (int i = 0; i < meetingInfoText.Length; i++)
+        {
+            meetingInfoText[i].text = "";
+            meetingInfoText[i].gameObject.SetActive(false);
+        }
+
+        if (MeetingHud.Instance.state is not MeetingHud.VoteStates.Voted and
+            not MeetingHud.VoteStates.NotVoted and
+            not MeetingHud.VoteStates.Discussion)
+            return;
+
+        int numGuesses = HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerControl.PlayerId) ? HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerControl.PlayerId) : 0;
+        if (numGuesses > 0 && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead)
+        {
+            meetingInfoText.getFirst().text = string.Format(getString("guesserGuessesLeft"), numGuesses);
+        }
+
+        if (!CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo && Akujo.timeLeft > 0)
+        {
+            meetingInfoText.getFirst().text = string.Format(getString("akujoTimeRemaining"), $"{TimeSpan.FromSeconds(Akujo.timeLeft):mm\\:ss}");
+        }
+
+
+        meetingInfoText[meetingTextIndex].gameObject.SetActive(true);
+        if (meetingInfoText.totalCounts() == 0) return;
+        if (meetingTextIndex + 1 > meetingInfoText.totalCounts())
+            meetingTextIndex = meetingInfoText.totalCounts() - 1;
+    }
+    /*
     [HarmonyPatch]
     public class ShowHost
     {
@@ -628,7 +675,7 @@ internal class MeetingHudPatch
                 Text.text = $"{"Host".Translate()}: {host.PlayerName}";
             }
         }
-    }
+    }*/
 
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
     private class MeetingCalculateVotesPatch
@@ -946,6 +993,10 @@ internal class MeetingHudPatch
             Swapper.playerId1 = byte.MaxValue;
             Swapper.playerId2 = byte.MaxValue;
 
+            if (meetingInfoText != null)
+                foreach (var text in meetingInfoText)
+                    text.gameObject.SetActive(false);
+
             // Lovers, Lawyer & Pursuer save next to be exiled, because RPC of ending game comes before RPC of exiled
             Lovers.notAckedExiledIsLover = false;
             Pursuer.notAckedExiled = false;
@@ -1028,6 +1079,8 @@ internal class MeetingHudPatch
             // Mini
             Mini.timeOfMeetingStart = DateTime.UtcNow;
             Mini.ageOnMeetingStart = Mathf.FloorToInt(Mini.growingProgress() * 18);
+            // Count meetings
+            if (meetingTarget == null) meetingsCount++;
             // Reset vampire bitten
             Vampire.bitten = null;
             // Count meetings
@@ -1116,6 +1169,8 @@ internal class MeetingHudPatch
             if (__instance.state >= MeetingHud.VoteStates.Discussion)
                 // Remove first kill shield
                 firstKillPlayer = null;
+
+            updateMeetingText(__instance);
 
             if (Blackmailer.blackmailer != null && Blackmailer.blackmailed != null)
             {

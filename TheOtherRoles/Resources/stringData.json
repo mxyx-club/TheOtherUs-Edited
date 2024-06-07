@@ -4,11 +4,11 @@
         "11": "The Other Roles\u8a2d\u5b9a",
         "13": "The Other Roles \u8bbe\u7f6e"
     },
-    "TORMapOptionsButtonText": {
+    "modOptionsTitle": {
         "0": "Mod Options...",
         "13": "\u6a21\u7ec4\u9009\u9879"
     },
-    "TORMapOptionsTitleText": {
+    "modOptionsText": {
         "0": "More Options...",
         "13": "\u6a21\u7ec4\u9009\u9879"
     },
@@ -92,6 +92,22 @@
         "0": "Modifiers",
         "13": "\u9644\u52a0\u80fd\u529b"
     },
+    "Crewmate": {
+        "0": "Crewmate",
+        "13": "\u8239\u5458"
+    },
+    "Neutral": {
+        "0": "Neutral",
+        "13": "\u4e2d\u7acb\u9635\u8425"
+    },
+    "Impostor": {
+        "0": "Impostor",
+        "13": "\u4f2a\u88c5\u8005"
+    },
+    "Modifier": {
+        "0": "Modifier",
+        "13": "\u9644\u52a0\u80fd\u529b"
+    },
     "FillCrewmate": {
         "0": "Fill:",
         "13": "\u586b\u5145: "
@@ -169,12 +185,47 @@
         "13": "{0}\u6b21\uff0c\u5168\u8239\u5269\u4f59{1}\u6b21"
     },
     "optionOff": {
-        "0": "<color=#CCCCCCFF>Off</color>",
-        "13": "<color=#CCCCCCFF>\u5173\u95ed</color>"
+        "0": "Off",
+        "13": "\u5173\u95ed"
     },
     "optionOn": {
-        "0": "<color=#FFFF00FF>On</color>",
-        "13": "<color=#FFFF00FF>\u5f00\u542f</color>"
+        "0": "On",
+        "13": "\u5f00\u542f"
+    },
+    "unitSeconds": {
+        "0": "{0}s",
+        "11": "{0}\u79d2",
+        "13": "{0}\u79d2"
+    },
+    "unitPercent": {
+        "0": "{0}%",
+        "11": "{0}%",
+        "13": "{0}%"
+    },
+    "unitTimes": {
+        "0": "{0}x",
+        "11": "{0}x",
+        "13": "{0}x"
+    },
+    "unitMeters": {
+        "0": "{0}m",
+        "11": "{0}m",
+        "13": "{0}\u7c73"
+    },
+    "unitScrews": {
+        "0": "{0}",
+        "11": "{0}\u672c",
+        "13": "{0}\u4e2a"
+    },
+    "unitShots": {
+        "0": "{0}",
+        "11": "{0}\u767a",
+        "13": "{0}\u6b21"
+    },
+    "unitPlayers": {
+        "0": "{0}",
+        "11": "{0}\u4eba",
+        "13": "{0}\u4eba"
     },
     "presetSelection": {
         "0": "Preset",
@@ -841,6 +892,36 @@
         "0": "Host",
         "13": "\u623f\u4e3b"
     },
+    "lobbyInfoImpostor": {
+        "0": "Impostor",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc",
+        "13": "\u4f2a\u88c5\u8005\u9635\u8425",
+        "14": "\u5167\u9b3c\u9663\u71df"
+    },
+    "lobbyInfoCrewmate": {
+        "0": "Crewmate",
+        "11": "\u30af\u30eb\u30fc\u30e1\u30a4\u30c8",
+        "13": "\u8239\u5458\u9635\u8425",
+        "14": "\u8239\u54e1\u9663\u71df"
+    },
+    "lobbyInfoNeutral": {
+        "0": "Neutral",
+        "11": "\u30cb\u30e5\u30fc\u30c8\u30e9\u30eb",
+        "13": "\u4e2d\u7acb\u9635\u8425",
+        "14": "\u4e2d\u7acb\u9663\u71df"
+    },
+    "lobbyInfoModifier": {
+        "0": "Modifier",
+        "11": "\u5c5e\u6027",
+        "13": "\u9644\u52a0\u80fd\u529b",
+        "14": "\u526f\u8077\u696d"
+    },
+    "lobbyInfoSummary": {
+        "0": "Role Summary",
+        "11": "\u5f79\u8077\u306e\u6982\u8981",
+        "13": "\u89d2\u8272\u89e3\u91ca\u4e00\u89c8",
+        "14": "\u89d2\u8272\u89e3\u91cb\u4e00\u89bd"
+    },
     "seerShowInfoText": {
         "0": "Seer Info: Someone Died",
         "13": "\u7075\u5a92\u4fe1\u606f: \u6709\u4eba\u6b7b\u4ea1"
@@ -909,9 +990,15 @@
         "11": "{0}\u304c\u7f60\u306b\u304b\u304b\u3063\u305f",
         "13": "{0} \u6389\u8fdb\u4e86\u9677\u9631\u91cc\uff01"
     },
-    "Impostor": {
-        "0": "Impostor",
-        "13": "\u4f2a\u88c5\u8005"
+    "guesserGuessesLeft": {
+        "0": "Guesses Left: {0}",
+        "11": "\u6b8b\u308a\u63a8\u6e2c\u53ef\u80fd\u56de\u6570:{0}",
+        "13": "\u5269\u4f59\u731c\u6d4b\u6b21\u6570\uff1a{0}"
+    },
+    "akujoTimeRemaining": {
+        "0": "Time Remaining: {0}",
+        "11": "\u6b8b\u308a\u6642\u9593:{0}",
+        "13": "\u5269\u4f59\u65f6\u95f4\uff1a{0}"
     },
     "ImpostorIntroDesc": {
         "13": "\u54c8\u54c8\uff01\u767d\u677f\u5185\u9b3c~"
@@ -1342,10 +1429,6 @@
     },
     "AkujoShortDesc": {
         "13": "\u62db\u52df\u771f\u7231\u548c\u5907\u80ce\u5e76\u4e14\u6d3b\u4e0b\u53bb\uff01"
-    },
-    "Crewmate": {
-        "0": "Crewmate",
-        "13": "\u8239\u5458"
     },
     "CrewmateIntroDesc": {
         "13": "\u54c8\u54c8\uff01\u767d\u677f\u8239\u5458~"
@@ -1856,10 +1939,14 @@
         "13": "\u9759\u6b62\u65f6\u53ef\u9690\u8eab"
     },
     "Shifter": {
-        "13": "\u4e0e\u4ed6\u4eba\u4ea4\u6362\u804c\u4e1a"
+        "0": "Shifter",
+        "13": "\u4ea4\u6362\u5e08"
     },
     "ShifterIntroDesc": {
         "13": "\u4f60\u7684\u80fd\u529b\u771f\u597d\u7528\uff01\u9a6c\u4e0a\u5c31\u662f\u6211\u7684\u4e86\uff01"
+    },
+    "ShifterShortDesc": {
+        "13": "\u4e0e\u4ed6\u4eba\u4ea4\u6362\u804c\u4e1a"
     },
     "Hunter": {
         "0": "Hunter",

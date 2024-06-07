@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TheOtherRoles.Modules;
 using UnityEngine;
 using static TheOtherRoles.CustomOption;
 using Types = TheOtherRoles.CustomOption.CustomOptionType;
@@ -330,6 +329,7 @@ public class CustomOptionHolder
     public static CustomOption lawyerTargetCanBeJester;
     public static CustomOption lawyerVision;
     public static CustomOption lawyerKnowsRole;
+    public static CustomOption lawyerStolenWin;
     public static CustomOption lawyerCanCallEmergency;
     public static CustomOption pursuerCooldown;
     public static CustomOption pursuerBlanksNumber;
@@ -776,7 +776,7 @@ public class CustomOptionHolder
 
         enableCamoComms = Create(120, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, enableMapOptions, true);
         fungleDisableCamoComms = Create(211, Types.General, "fungleDisableCamoComms", true, enableCamoComms);
-        restrictDevices = Create(121, Types.General, "restrictDevices", ["optionOff".Translate(), "restrictDevices2".Translate(), "restrictDevices3".Translate()], enableMapOptions);
+        restrictDevices = Create(121, Types.General, "restrictDevices", ["optionOff", "restrictDevices2", "restrictDevices3"], enableMapOptions);
         //restrictAdmin = Create(122, Types.General, "restrictAdmin", 30f, 0f, 600f, 5f, restrictDevices);
         restrictCameras = Create(123, Types.General, "restrictCameras", 30f, 0f, 600f, 5f, restrictDevices);
         restrictVents = Create(124, Types.General, "restrictVents", 30f, 0f, 600f, 5f, restrictDevices);
@@ -912,8 +912,8 @@ public class CustomOptionHolder
         evilTrapperCooldown = Create(10303, Types.Impostor, "放置陷阱冷却", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
         evilTrapperKillTimer = Create(10304, Types.Impostor, "掉进陷阱后被陷阱击杀所需时间", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
         evilTrapperTrapRange = Create(10305, Types.Impostor, "陷阱有效范围", 1f, 0.5f, 2f, 0.125f, evilTrapperSpawnRate);
-        evilTrapperMaxDistance = Create(10306, Types.Impostor, "陷阱击杀声音播放有效范围", 10f, 1f, 60f, 2.5f, evilTrapperSpawnRate);
-        evilTrapperPenaltyTime = Create(10307, Types.Impostor, "设陷者普通击杀会追加冷却", 10f, 0f, 30f, 2.5f, evilTrapperSpawnRate);
+        evilTrapperMaxDistance = Create(10306, Types.Impostor, "陷阱击杀声音播放有效范围", 10f, 0f, 60f, 0.25f, evilTrapperSpawnRate);
+        evilTrapperPenaltyTime = Create(10307, Types.Impostor, "设陷者普通击杀会追加冷却", 10f, 0f, 30f, 0.5f, evilTrapperSpawnRate);
         evilTrapperBonusTime = Create(10308, Types.Impostor, "设陷者击杀落入陷阱的玩家缩减冷却", 10f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
@@ -958,14 +958,15 @@ public class CustomOptionHolder
         lawyerVision = Create(20183, Types.Neutral, "视野倍率", 1.5f, 0.25f, 3f, 0.25f, lawyerSpawnRate);
         lawyerKnowsRole = Create(20184, Types.Neutral, "律师可得知目标职业", true, lawyerSpawnRate);
         lawyerCanCallEmergency = Create(20185, Types.Neutral, "律师可召开会议", true, lawyerSpawnRate);
+        lawyerStolenWin = Create(20189, Types.Neutral, "律师存活会取代客户胜利", false, lawyerSpawnRate);
         lawyerTargetCanBeJester = Create(20186, Types.Neutral, "小丑可以成为律师的客户", false, lawyerSpawnRate);
         pursuerCooldown = Create(20187, Types.Neutral, "起诉人空包弹冷却", 20f, 5f, 60f, 2.5f, lawyerSpawnRate);
         pursuerBlanksNumber = Create(20188, Types.Neutral, "起诉人空包弹可用次数", 6f, 1f, 20f, 1f, lawyerSpawnRate);
 
         executionerSpawnRate = Create(20190, Types.Neutral, cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(20191, Types.Neutral, "处刑者可召开会议", true, executionerSpawnRate);
-        executionerPromotesToLawyer = Create(20191, Types.Neutral, "目标职业变更时处刑者可以晋升为律师", true, executionerSpawnRate);
-        //executionerOnTargetDead = Create(20192, Types.Neutral, "处刑目标死亡后变为", [cs(Pursuer.color, "Pursuer".Translate()), cs(Jester.color, "Jester".Translate()), cs(Amnisiac.color, "Amnisiac".Translate()), "船员"], executionerSpawnRate);
+        executionerPromotesToLawyer = Create(20192, Types.Neutral, "目标职业变更时处刑者可以晋升为律师", true, executionerSpawnRate);
+        //executionerOnTargetDead = Create(20193, Types.Neutral, "处刑目标死亡后变为", [cs(Pursuer.color, "Pursuer".Translate()), cs(Jester.color, "Jester".Translate()), cs(Amnisiac.color, "Amnisiac".Translate()), "船员"], executionerSpawnRate);
 
         swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
         swooperKillCooldown = Create(20151, Types.Neutral, "击杀冷却", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
@@ -1069,8 +1070,8 @@ public class CustomOptionHolder
         detectiveAnonymousFootprints = Create(30191, Types.Crewmate, "匿名脚印", false, detectiveSpawnRate);
         detectiveFootprintIntervall = Create(30192, Types.Crewmate, "脚印更新间隔", 0.25f, 0.25f, 10f, 0.25f, detectiveSpawnRate);
         detectiveFootprintDuration = Create(30193, Types.Crewmate, "脚印持续时间", 12.5f, 0.5f, 30f, 0.5f, detectiveSpawnRate);
-        detectiveReportNameDuration = Create(30194, Types.Crewmate, "以下时间内报告可得知凶手职业", 15f, 0f, 60f, 2.5f, detectiveSpawnRate);
-        detectiveReportColorDuration = Create(30195, Types.Crewmate, "以下时间内报告可得知凶手颜色类型", 60f, 0f, 120f, 2.5f, detectiveSpawnRate);
+        detectiveReportNameDuration = Create(30194, Types.Crewmate, "以下时间内报告可得知凶手职业", 5f, 0f, 60f, 2.5f, detectiveSpawnRate);
+        detectiveReportColorDuration = Create(30195, Types.Crewmate, "以下时间内报告可得知凶手阵营", 30f, 0f, 120f, 2.5f, detectiveSpawnRate);
 
         medicSpawnRate = Create(30200, Types.Crewmate, cs(Medic.color, "Medic"), rates, null, true);
         medicShowShielded = Create(30201, Types.Crewmate, "可见医生护盾的玩家", ["所有人", "被保护者+法医", "法医"], medicSpawnRate);

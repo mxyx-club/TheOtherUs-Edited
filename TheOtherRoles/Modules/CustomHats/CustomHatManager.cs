@@ -13,7 +13,16 @@ public static class CustomHatManager
     public const string InnerslothPackageName = "Innersloth Hats";
     public const string DeveloperPackageName = "Developer Hats";
 
-    internal static string RepositoryUrl => $"https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherHats/master".GithubUrl();
+    internal static readonly Tuple<string, string> Repository = new("TheOtherRolesAU", "TheOtherHats");
+    private const string branch = "master";
+    internal static string RepositoryUrl
+    {
+        get
+        {
+            var (owner, repository) = Repository;
+            return $"https://raw.githubusercontent.com/{owner}/{repository}/{branch}".GithubUrl();
+        }
+    }
 
     internal static readonly string ManifestFileName = "CustomHats.json";
 

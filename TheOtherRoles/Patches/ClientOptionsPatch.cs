@@ -15,28 +15,32 @@ public static class ClientOptionsPatch
 {
     private static readonly SelectionBehaviour[] AllOptions =
     [
-        new SelectionBehaviour(getString("GhostsSeeInformationText"),
+        new SelectionBehaviour("GhostsSeeInformationText",
             () => MapOption.ghostsSeeInformation = Main.GhostsSeeInformation.Value = !Main.GhostsSeeInformation.Value, Main.GhostsSeeInformation.Value),
-        new SelectionBehaviour(getString("GhostsSeeVotesText"),
+        new SelectionBehaviour("GhostsSeeVotesText",
             () => MapOption.ghostsSeeVotes = Main.GhostsSeeVotes.Value = !Main.GhostsSeeVotes.Value, Main.GhostsSeeVotes.Value),
-        new SelectionBehaviour(getString("GhostsSeeRolesText"),
+        new SelectionBehaviour("GhostsSeeRolesText",
             () => MapOption.ghostsSeeRoles = Main.GhostsSeeRoles.Value = !Main.GhostsSeeRoles.Value, Main.GhostsSeeRoles.Value),
-        new SelectionBehaviour(getString("GhostsSeeModifierText"),
+        new SelectionBehaviour("GhostsSeeModifierText",
             () => MapOption.ghostsSeeModifier = Main.GhostsSeeModifier.Value = !Main.GhostsSeeModifier.Value, Main.GhostsSeeModifier.Value),
-        new SelectionBehaviour(getString("ShowRoleSummaryText"),
+        new SelectionBehaviour("ShowRoleSummaryText",
             () => MapOption.showRoleSummary = Main.ShowRoleSummary.Value = !Main.ShowRoleSummary.Value, Main.ShowRoleSummary.Value),
-        new SelectionBehaviour(getString("ToggleCursorText"),
+        new SelectionBehaviour("ToggleCursorText",
             () => MapOption.toggleCursor = Main.ToggleCursor.Value = !Main.ToggleCursor.Value, Main.ToggleCursor.Value),
-        new SelectionBehaviour(getString("EnableSoundEffectsText"),
+        new SelectionBehaviour("EnableSoundEffectsText",
             () => MapOption.enableSoundEffects = Main.EnableSoundEffects.Value = !Main.EnableSoundEffects.Value, Main.EnableSoundEffects.Value),
-        new SelectionBehaviour(getString("ShowFPS"),
+        new SelectionBehaviour("ShowFPS",
             () => MapOption.showFPS = Main.ShowFPS.Value = !Main.ShowFPS.Value, Main.ShowFPS.Value),
-        new SelectionBehaviour(getString("EnableDebugLogModeText"),
+        new SelectionBehaviour("EnableDebugLogModeText",
             () => MapOption.enableDebugLogMode = Main.enableDebugLogMode.Value = !Main.enableDebugLogMode.Value, Main.enableDebugLogMode.Value),
     ];
 
     private static GameObject popUp;
     private static TextMeshPro titleText;
+
+    private static ToggleButtonBehaviour moreOptions;
+    private static TextMeshPro titleTextTitle;
+    private static List<ToggleButtonBehaviour> modButtons = new();
 
     private static ToggleButtonBehaviour buttonPrefab;
     private static Vector3? _origin;
@@ -94,34 +98,31 @@ public static class ClientOptionsPatch
 
     private static void InitializeMoreButton(OptionsMenuBehaviour __instance)
     {
-        var moreOptions = Object.Instantiate(buttonPrefab, __instance.CensorChatButton.transform.parent);
+        moreOptions = Object.Instantiate(buttonPrefab, __instance.CensorChatButton.transform.parent);
         var transform = __instance.CensorChatButton.transform;
         __instance.CensorChatButton.Text.transform.localScale = new Vector3(1 / 0.66f, 1, 1);
         _origin ??= transform.localPosition;
 
-        transform.localPosition = _origin.Value + (Vector3.left * 0.45f);
+        transform.localPosition = _origin.Value + Vector3.left * 0.45f;
         transform.localScale = new Vector3(0.66f, 1, 1);
-        var transform1 = __instance.EnableFriendInvitesButton.transform;
-        transform1.localScale = new Vector3(0.66f, 1, 1);
-        transform1.localPosition += Vector3.right * 0.5f;
+        __instance.EnableFriendInvitesButton.transform.localScale = new Vector3(0.66f, 1, 1);
+        __instance.EnableFriendInvitesButton.transform.localPosition += Vector3.right * 0.5f;
         __instance.EnableFriendInvitesButton.Text.transform.localScale = new Vector3(1.2f, 1, 1);
 
-        var transform2 = moreOptions.transform;
-        transform2.localPosition = _origin.Value + (Vector3.right * 4f / 3f);
-        transform2.localScale = new Vector3(0.66f, 1, 1);
+        moreOptions.transform.localPosition = _origin.Value + Vector3.right * 4f / 3f;
+        moreOptions.transform.localScale = new Vector3(0.66f, 1, 1);
 
         moreOptions.gameObject.SetActive(true);
-        moreOptions.Text.text = getString("TORMapOptionsButtonText");
+        moreOptions.Text.text = getString("modOptionsText");
         moreOptions.Text.transform.localScale = new Vector3(1 / 0.66f, 1, 1);
         var moreOptionsButton = moreOptions.GetComponent<PassiveButton>();
         moreOptionsButton.OnClick = new ButtonClickedEvent();
         moreOptionsButton.OnClick.AddListener((Action)(() =>
         {
-            var closeUnderlying = false;
+            bool closeUnderlying = false;
             if (!popUp) return;
 
-            if (__instance.transform.parent &&
-                __instance.transform.parent == FastDestroyableSingleton<HudManager>.Instance.transform)
+            if (__instance.transform.parent && __instance.transform.parent == FastDestroyableSingleton<HudManager>.Instance.transform)
             {
                 popUp.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                 popUp.transform.localPosition = new Vector3(0, 0, -800f);
@@ -151,16 +152,23 @@ public static class ClientOptionsPatch
     {
         if (!popUp || popUp.GetComponentInChildren<TextMeshPro>() || !titleText) return;
 
-        var title = Object.Instantiate(titleText, popUp.transform);
+        var title = titleTextTitle = Object.Instantiate(titleText, popUp.transform);
         title.GetComponent<RectTransform>().localPosition = Vector3.up * 2.3f;
         title.gameObject.SetActive(true);
-        title.text = getString("TORMapOptionsTitleText");
+        title.text = getString("modOptionsTitle");
         title.name = "TitleText";
     }
 
     private static void SetUpOptions()
     {
         if (popUp.transform.GetComponentInChildren<ToggleButtonBehaviour>()) return;
+
+        foreach (var button in modButtons)
+        {
+            if (button != null) Object.Destroy(button.gameObject);
+        }
+
+        modButtons = new List<ToggleButtonBehaviour>();
 
         for (var i = 0; i < AllOptions.Length; i++)
         {
@@ -175,7 +183,7 @@ public static class ClientOptionsPatch
             button.onState = info.DefaultValue;
             button.Background.color = button.onState ? Color.green : Palette.ImpostorRed;
 
-            button.Text.text = info.Title;
+            button.Text.text = info.Title.Translate();
             button.Text.fontSizeMin = button.Text.fontSizeMax = 1.8f;
             button.Text.font = Object.Instantiate(titleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);
@@ -194,7 +202,7 @@ public static class ClientOptionsPatch
 
             passiveButton.OnClick.AddListener((Action)(() =>
             {
-                if (info.Title == "Better Cursor") enableCursor(false);
+                if (info.Title == "ToggleCursorText") enableCursor(false);
                 button.onState = info.OnClick();
                 button.Background.color = button.onState ? Color.green : Palette.ImpostorRed;
             }));
@@ -206,6 +214,8 @@ public static class ClientOptionsPatch
 
             foreach (var spr in button.gameObject.GetComponentsInChildren<SpriteRenderer>())
                 spr.size = new Vector2(2.2f, .7f);
+
+            modButtons.Add(button);
         }
     }
 
@@ -214,10 +224,25 @@ public static class ClientOptionsPatch
         for (var i = 0; i < Go.transform.childCount; i++) yield return Go.transform.GetChild(i).gameObject;
     }
 
+    public static void updateTranslations()
+    {
+        if (titleTextTitle)
+            titleTextTitle.text = getString("moreOptionsText");
+
+        if (moreOptions)
+            moreOptions.Text.text = getString("modOptionsText");
+
+        for (int i = 0; i < AllOptions.Length; i++)
+        {
+            if (i >= modButtons.Count) break;
+            modButtons[i].Text.text = getString(AllOptions[i].Title);
+        }
+    }
     public class SelectionBehaviour(string title, Func<bool> onClick, bool defaultValue)
     {
         public bool DefaultValue = defaultValue;
         public Func<bool> OnClick = onClick;
         public string Title = title;
     }
+
 }
