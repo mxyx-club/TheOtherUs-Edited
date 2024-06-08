@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TheOtherRoles.Modules;
+using UnityEngine;
 
 namespace TheOtherRoles.Roles.Impostor;
 
@@ -18,23 +19,9 @@ public static class Escapist
 
     public static Vector3 escapeLocation;
 
-    private static Sprite escapeMarkButtonSprite;
-    private static Sprite escapeButtonSprite;
+    public static ResourceSprite escapeMarkButtonSprite = new("Mark.png");
+    public static ResourceSprite escapeButtonSprite = new("Recall.png");
     public static bool usedPlace;
-
-    public static Sprite getEscapeMarkButtonSprite()
-    {
-        if (escapeMarkButtonSprite) return escapeMarkButtonSprite;
-        escapeMarkButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Mark.png", 115f);
-        return escapeMarkButtonSprite;
-    }
-
-    public static Sprite getEscapeButtonSprite()
-    {
-        if (escapeButtonSprite) return escapeButtonSprite;
-        escapeButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Recall.png", 115f);
-        return escapeButtonSprite;
-    }
 
     public static void resetPlaces()
     {

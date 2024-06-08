@@ -2300,9 +2300,9 @@
         "0": "[BLANK]",
         "13": "\u505c\u4e0b"
     },
-    "jumperText": {
+    "jumperMarkText": {
         "0": "[BLANK]",
-        "13": "\u6807\u8bb0/\u4f20\u9001"
+        "13": "\u6807\u8bb0"
     },
     "jumperJumpText": {
         "0": "[BLANK]",
@@ -2414,8 +2414,8 @@
         "13": "\u6807\u8bb0\u4f4d\u7f6e"
     },
     "ReturningText": {
-        "0": "Returning...",
-        "13": "\u8fd4\u56de"
+        "0": "Returning\u2026",
+        "13": "\u6b63\u5728\u8fd4\u56de\u2026"
     },
     "BlinkText": {
         "0": "Blink",

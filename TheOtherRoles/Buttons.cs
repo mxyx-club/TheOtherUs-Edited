@@ -3203,8 +3203,9 @@ internal static class HudManagerStartPatch
                 {
                     //set location
                     Jumper.jumpLocation = PlayerControl.LocalPlayer.transform.localPosition;
-                    jumperButton.Sprite = Jumper.getJumpButtonSprite();
+                    jumperButton.Sprite = Jumper.jumpButtonSprite;
                     Jumper.Charges = Jumper.ChargesOnPlace;
+                    jumperButton.buttonText = "jumperJumpText".Translate();
                 }
                 else if (Jumper.Charges >= 1f)
                 {
@@ -3239,20 +3240,23 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (Jumper.resetPlaceAfterMeeting) Jumper.resetPlaces();
+                if (Jumper.resetPlaceAfterMeeting)
                 {
-                    jumperButton.Sprite = Jumper.getJumpMarkButtonSprite();
+                    Jumper.resetPlaces();
+                    jumperButton.Sprite = Jumper.jumpMarkButtonSprite;
+                    jumperButton.buttonText = "jumperMarkText".Translate();
                 }
+                if (Jumper.jumpLocation == Vector3.zero) jumperButton.buttonText = "jumperJumpText".Translate();
                 Jumper.Charges += Jumper.ChargesGainOnMeeting;
                 if (Jumper.Charges > Jumper.MaxCharges) Jumper.Charges = Jumper.MaxCharges;
 
                 if (Jumper.Charges > 0) jumperButton.Timer = jumperButton.MaxTimer;
             },
-            Jumper.getJumpMarkButtonSprite(),
+            Jumper.jumpMarkButtonSprite,
             CustomButton.ButtonPositions.lowerRowRight, //brb
             __instance,
             KeyCode.F,
-            buttonText: getString("jumperText")
+            buttonText: "jumperMarkText".Translate()
         );
 
         // Escapist Escape
@@ -3263,8 +3267,9 @@ internal static class HudManagerStartPatch
                 {
                     //set location
                     Escapist.escapeLocation = PlayerControl.LocalPlayer.transform.localPosition;
-                    escapistButton.Sprite = Escapist.getEscapeButtonSprite();
+                    escapistButton.Sprite = Escapist.escapeMarkButtonSprite;
                     Escapist.Charges = Escapist.ChargesOnPlace;
+                    escapistButton.buttonText = "jumperJumpText".Translate();
                 }
                 else if (Escapist.Charges >= 1f)
                 {
@@ -3298,20 +3303,23 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (Escapist.resetPlaceAfterMeeting) Escapist.resetPlaces();
+                if (Escapist.resetPlaceAfterMeeting)
                 {
-                    escapistButton.Sprite = Escapist.getEscapeMarkButtonSprite();
+                    Escapist.resetPlaces();
+                    escapistButton.Sprite = Escapist.escapeButtonSprite;
+                    escapistButton.buttonText = "jumperMarkText".Translate();
                 }
+                if (Escapist.escapeLocation == Vector3.zero) escapistButton.buttonText = "jumperJumpText".Translate();
                 Escapist.Charges += Escapist.ChargesGainOnMeeting;
                 if (Escapist.Charges > Escapist.MaxCharges) Escapist.Charges = Escapist.MaxCharges;
 
                 if (Escapist.Charges > 0) escapistButton.Timer = escapistButton.MaxTimer;
             },
-            Escapist.getEscapeMarkButtonSprite(),
+            Escapist.escapeButtonSprite,
             CustomButton.ButtonPositions.upperRowLeft, //brb
             __instance,
             KeyCode.F,
-            buttonText: getString("jumperText")
+            buttonText: "jumperMarkText".Translate()
         );
 
         // Ninja mark and assassinate button 

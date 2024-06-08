@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TheOtherRoles.Modules;
+using UnityEngine;
 
 namespace TheOtherRoles.Roles.Crewmate;
 
@@ -18,24 +19,10 @@ public static class Jumper
 
     public static Vector3 jumpLocation;
 
-    private static Sprite jumpMarkButtonSprite;
-    private static Sprite jumpButtonSprite;
+    public static ResourceSprite jumpMarkButtonSprite = new("JumperMarkButton.png");
+    public static ResourceSprite jumpButtonSprite = new("JumperJumpButton.png");
     public static bool usedPlace;
-
-    public static Sprite getJumpMarkButtonSprite()
-    {
-        if (jumpMarkButtonSprite) return jumpMarkButtonSprite;
-        jumpMarkButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.JumperButton.png", 115f);
-        return jumpMarkButtonSprite;
-    }
-
-    public static Sprite getJumpButtonSprite()
-    {
-        if (jumpButtonSprite) return jumpButtonSprite;
-        jumpButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.JumperJumpButton.png", 115f);
-        return jumpButtonSprite;
-    }
-
+    
     public static void resetPlaces()
     {
         Charges = Mathf.RoundToInt(ChargesOnPlace);
