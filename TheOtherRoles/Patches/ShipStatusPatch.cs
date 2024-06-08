@@ -59,15 +59,6 @@ namespace TheOtherRoles.Patches
                     return false;
                 }
 
-            // If player is Lighter with ability active
-            if (Lighter.lighter != null && Lighter.lighter.PlayerId == player.PlayerId)
-            {
-                var unlerped = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius,
-                    GetNeutralLightRadius(__instance, false));
-                __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.lighterModeLightsOffVision,
-                    __instance.MaxLightRadius * Lighter.lighterModeLightsOnVision, unlerped);
-            }
-
             // If Game mode is Hide N Seek and hunter with ability active
             else if (HideNSeek.isHideNSeekGM && Hunter.isLightActive(player.PlayerId))
             {

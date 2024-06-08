@@ -77,7 +77,6 @@ public enum RoleId
     Sheriff,
     Deputy,
     BodyGuard,
-    Lighter,
     Jumper,
     Detective,
     TimeMaster,
@@ -414,9 +413,6 @@ public static class RPCProcedure
                         break;
                     case RoleId.Deputy:
                         Deputy.deputy = player;
-                        break;
-                    case RoleId.Lighter:
-                        Lighter.lighter = player;
                         break;
                     case RoleId.Detective:
                         Detective.detective = player;
@@ -930,12 +926,6 @@ public static class RPCProcedure
             case RoleId.Deputy:
                 if (Amnisiac.resetRole) Deputy.clearAndReload();
                 Deputy.deputy = amnisiac;
-                Amnisiac.clearAndReload();
-                break;
-
-            case RoleId.Lighter:
-                if (Amnisiac.resetRole) Lighter.clearAndReload();
-                Lighter.lighter = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1757,7 +1747,6 @@ public static class RPCProcedure
         if (player == PrivateInvestigator.privateInvestigator) PrivateInvestigator.clearAndReload();
         if (player == Sheriff.sheriff) Sheriff.clearAndReload();
         if (player == Deputy.deputy) Deputy.clearAndReload(false);
-        if (player == Lighter.lighter) Lighter.clearAndReload();
         if (player == Detective.detective) Detective.clearAndReload();
         if (player == TimeMaster.timeMaster) TimeMaster.clearAndReload();
         if (player == Amnisiac.amnisiac) Amnisiac.clearAndReload();

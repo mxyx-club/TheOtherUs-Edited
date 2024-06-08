@@ -20,7 +20,6 @@ public static class RoleClass
         Cursed.clearAndReload();
         Deputy.clearAndReload();
         Amnisiac.clearAndReload();
-        Lighter.clearAndReload();
         Detective.clearAndReload();
         Werewolf.clearAndReload();
         TimeMaster.clearAndReload();

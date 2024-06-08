@@ -206,11 +206,6 @@ public class CustomOptionHolder
     public static CustomOption deputyHandcuffDuration;
     public static CustomOption deputyKnowsSheriff;
 
-    public static CustomOption lighterSpawnRate;
-    public static CustomOption lighterModeLightsOnVision;
-    public static CustomOption lighterModeLightsOffVision;
-    public static CustomOption lighterFlashlightWidth;
-
     public static CustomOption detectiveSpawnRate;
     public static CustomOption detectiveAnonymousFootprints;
     public static CustomOption detectiveFootprintIntervall;
@@ -1055,11 +1050,6 @@ public class CustomOptionHolder
         deputyKnowsSheriff = Create(30174, Types.Crewmate, "警长/捕快可以互相确认 ", true, deputySpawnRate);
         deputyGetsPromoted = Create(30175, Types.Crewmate, "警长死后捕快可晋升", ["否", "立即晋升", "会议后晋升"], deputySpawnRate);
         deputyKeepsHandcuffs = Create(30176, Types.Crewmate, "晋升后保留手铐技能", true, deputyGetsPromoted);
-
-        lighterSpawnRate = Create(30180, Types.Crewmate, cs(Lighter.color, "Lighter"), rates, null, true);
-        lighterModeLightsOnVision = Create(30181, Types.Crewmate, "灯光正常时的视野倍率", 1.5f, 0.25f, 5f, 0.25f, lighterSpawnRate);
-        lighterModeLightsOffVision = Create(30182, Types.Crewmate, "熄灯时的视野倍率", 0.5f, 0.25f, 5f, 0.25f, lighterSpawnRate);
-        lighterFlashlightWidth = Create(30183, Types.Crewmate, "手电筒范围", 0.3f, 0.1f, 1f, 0.1f, lighterSpawnRate);
 
         detectiveSpawnRate = Create(30190, Types.Crewmate, cs(Detective.color, "Detective"), rates, null, true);
         detectiveAnonymousFootprints = Create(30191, Types.Crewmate, "匿名脚印", false, detectiveSpawnRate);

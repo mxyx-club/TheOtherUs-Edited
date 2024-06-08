@@ -433,8 +433,7 @@ public class KillTrap
                 bool canSee =
                     trap.isActive ||
                     CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor ||
-                    CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead ||
-                    CachedPlayer.LocalPlayer.PlayerControl == Lighter.lighter;
+                    CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead;
                 var opacity = canSee ? 1.0f : 0.0f;
                 if (trap.killtrap != null)
                     trap.killtrap.GetComponent<SpriteRenderer>().material.color = Color.Lerp(Palette.ClearWhite, Palette.White, opacity);

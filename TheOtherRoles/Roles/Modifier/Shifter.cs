@@ -64,11 +64,6 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             BodyGuard.bodyguard = player1;
         }
-        else if (Lighter.lighter != null && Lighter.lighter == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Lighter.lighter = player1;
-        }
         else if (Jumper.jumper != null && Jumper.jumper == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
