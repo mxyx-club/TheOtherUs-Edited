@@ -338,21 +338,6 @@ internal class KillButtonDoClickPatch
     }
 }
 
-[HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.Refresh))]
-internal class SabotageButtonRefreshPatch
-{
-    private static void Postfix()
-    {
-        // Mafia disable sabotage button for Janitor and sometimes for Mafioso
-        var blockSabotageJanitor = Mafia.janitor != null && Mafia.janitor == CachedPlayer.LocalPlayer.PlayerControl;
-        var blockSabotageMafioso = Mafia.mafioso != null &&
-                                   Mafia.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
-                                   Mafia.godfather != null && !Mafia.godfather.Data.IsDead;
-        if (blockSabotageJanitor || blockSabotageMafioso)
-            FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
-    }
-}
-
 [HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.DoClick))]
 public static class SabotageButtonDoClickPatch
 {

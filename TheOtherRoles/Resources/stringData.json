@@ -1016,40 +1016,6 @@
     "AssassinShortDesc": {
         "13": "\u751f\u547d\u5c31\u662f\u4e00\u573a\u8c6a\u8d4c\uff01"
     },
-    "Mafia": {
-        "0": "Mafia",
-        "13": "\u9ed1\u624b\u515a"
-    },
-    "Godfather": {
-        "0": "Godfather",
-        "13": "\u6559\u7236"
-    },
-    "GodfatherIntroDesc": {
-        "13": "\u61c2\u4e0d\u61c2\u4ec0\u4e48\u53eb\u9ed1\u624b\u554a"
-    },
-    "GodfatherShortDesc": {
-        "13": "\u5e72\u6389\u8239\u5458"
-    },
-    "Mafioso": {
-        "0": "Mafioso",
-        "13": "\u5c0f\u5f1f"
-    },
-    "MafiosoIntroDesc": {
-        "13": "\u61c2\u4e0d\u61c2\u4ec0\u4e48\u53eb\u9ed1\u624b\u554a"
-    },
-    "MafiosoShortDesc": {
-        "13": "\u5e2e\u52a9<color=#FF1919FF>\u6559\u7236</color>\u5e72\u6389\u8239\u5458"
-    },
-    "Janitor": {
-        "0": "Janitor",
-        "13": "\u6e05\u6d01\u5de5"
-    },
-    "JanitorIntroDesc": {
-        "13": "\u4f60\u6709\u4e2a\u53cc\u80de\u80ce\u54e5\u54e5\u53eb\u6e05\u7406\u8005"
-    },
-    "JanitorShortDesc": {
-        "13": "\u5e2e\u52a9\u6559\u7236\u6e05\u7406\u6b7b\u5c38"
-    },
     "Morphling": {
         "0": "Morphling",
         "13": "\u5316\u5f62\u8005"

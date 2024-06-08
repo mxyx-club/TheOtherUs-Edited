@@ -111,8 +111,9 @@ public class TheOtherRolesPlugin : BasePlugin
         defaultRegions = ServerManager.DefaultRegions;
 
         UpdateRegions();
+#if !SUNDAY
         CrowdedPlayer.Start();
-
+#endif
         Harmony.PatchAll();
 
         CustomHatManager.LoadHats();

@@ -191,6 +191,7 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Snitch, CustomOptionHolder.snitchSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Medium, CustomOptionHolder.mediumSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Prophet, CustomOptionHolder.prophetSpawnRate.getSelection());
+        //crewSettings.Add((byte)RoleId.Magician, CustomOptionHolder.magicianSpawnRate.getSelection());
         if (isGuesserGamemode == false)
             crewSettings.Add((byte)RoleId.NiceGuesser, CustomOptionHolder.guesserSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Trapper, CustomOptionHolder.trapperSpawnRate.getSelection());
@@ -231,16 +232,6 @@ internal class RoleManagerSelectRolesPatch
             //data.impostors.Count = 1;
             data.impostors.Capacity = 1;
             data.maxImpostorRoles = 1;
-        }
-
-        // Assign Mafia
-        if (data.impostors.Count >= 3 && data.maxImpostorRoles >= 3 &&
-            rnd.Next(1, 101) <= CustomOptionHolder.mafiaSpawnRate.getSelection() * 10)
-        {
-            setRoleToRandomPlayer((byte)RoleId.Godfather, data.impostors);
-            setRoleToRandomPlayer((byte)RoleId.Janitor, data.impostors);
-            setRoleToRandomPlayer((byte)RoleId.Mafioso, data.impostors);
-            data.maxImpostorRoles -= 3;
         }
     }
 

@@ -34,8 +34,6 @@ public class CustomOptionHolder
 
     public static CustomOption minerSpawnRate;
     public static CustomOption minerCooldown;
-    public static CustomOption mafiaSpawnRate;
-    public static CustomOption janitorCooldown;
 
     public static CustomOption yoyoSpawnRate;
     public static CustomOption yoyoBlinkDuration;
@@ -804,9 +802,6 @@ public class CustomOptionHolder
         guesserCantGuessSnitchIfTaksDone = Create(10006, Types.Impostor, "guesserCantGuessSnitchIfTaksDone", true, modifierAssassin);
         modifierAssassinKillsThroughShield = Create(10007, Types.Impostor, "modifierAssassinKillsThroughShield", false, modifierAssassin);
         modifierAssassinCultist = Create(10008, Types.Impostor, "modifierAssassinCultist", false, modifierAssassin);
-
-        mafiaSpawnRate = Create(10100, Types.Impostor, cs(Mafia.color, "Mafia"), rates, null, true);
-        janitorCooldown = Create(10101, Types.Impostor, "janitorCooldown", 25f, 10f, 60f, 2.5f, mafiaSpawnRate);
 
         morphlingSpawnRate = Create(10110, Types.Impostor, cs(Morphling.color, "Morphling"), rates, null, true);
         morphlingCooldown = Create(10111, Types.Impostor, "morphlingCooldown", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);

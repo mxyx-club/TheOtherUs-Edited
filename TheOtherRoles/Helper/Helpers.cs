@@ -188,16 +188,6 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
-        else if (player.Data?.Role != null && player.Data.Role.CanVent)
-        {
-            if (Mafia.janitor != null && Mafia.janitor == CachedPlayer.LocalPlayer.PlayerControl)
-                roleCouldUse = false;
-            else if (Mafia.mafioso != null && Mafia.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
-                     Mafia.godfather != null && !Mafia.godfather.Data.IsDead)
-                roleCouldUse = false;
-            else
-                roleCouldUse = true;
-        }
         else if (Jester.jester != null && Jester.jester == player && Jester.canVent)
         {
             roleCouldUse = true;

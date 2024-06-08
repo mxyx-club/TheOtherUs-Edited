@@ -21,7 +21,6 @@ internal static class HudManagerStartPatch
 
     private static float defaultMaxTimer = 0.5f;
     public static CustomButton engineerRepairButton;
-    private static CustomButton janitorCleanButton;
     public static CustomButton sheriffKillButton;
     private static CustomButton deputyHandcuffButton;
     public static CustomButton timeMasterShieldButton;
@@ -144,7 +143,6 @@ internal static class HudManagerStartPatch
         yoyoAdminTableButton.MaxTimer = Yoyo.adminCooldown;
         yoyoAdminTableButton.EffectDuration = 10f;
         engineerRepairButton.MaxTimer = defaultMaxTimer;
-        janitorCleanButton.MaxTimer = Mafia.cooldown;
         sheriffKillButton.MaxTimer = Sheriff.cooldown;
         deputyHandcuffButton.MaxTimer = Deputy.handcuffCooldown;
         timeMasterShieldButton.MaxTimer = TimeMaster.cooldown;
@@ -530,61 +528,6 @@ internal static class HudManagerStartPatch
             __instance,
             KeyCode.F,
             buttonText: getString("RepairText")
-        );
-
-        // Janitor Clean
-        janitorCleanButton = new CustomButton(
-            () =>
-            {
-                foreach (var collider2D in Physics2D.OverlapCircleAll(
-                             CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(),
-                             CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
-                    if (collider2D.tag == "DeadBody")
-                    {
-                        var component = collider2D.GetComponent<DeadBody>();
-                        if (component && !component.Reported)
-                        {
-                            var truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
-                            var truePosition2 = component.TruePosition;
-                            if (Vector2.Distance(truePosition2, truePosition) <=
-                                CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance &&
-                                CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
-                                !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
-                                    Constants.ShipAndObjectsMask, false))
-                            {
-                                var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
-
-                                var writer = AmongUsClient.Instance.StartRpcImmediately(
-                                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CleanBody,
-                                    SendOption.Reliable);
-                                writer.Write(playerInfo.PlayerId);
-                                writer.Write(Mafia.janitor.PlayerId);
-                                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                                RPCProcedure.cleanBody(playerInfo.PlayerId, Mafia.janitor.PlayerId);
-                                janitorCleanButton.Timer = janitorCleanButton.MaxTimer;
-                                SoundEffectsManager.play("cleanerClean");
-
-                                break;
-                            }
-                        }
-                    }
-            },
-            () =>
-            {
-                return Mafia.janitor != null && Mafia.janitor == CachedPlayer.LocalPlayer.PlayerControl &&
-                       !CachedPlayer.LocalPlayer.Data.IsDead;
-            },
-            () =>
-            {
-                return __instance.ReportButton.graphic.color == Palette.EnabledColor &&
-                       CachedPlayer.LocalPlayer.PlayerControl.CanMove;
-            },
-            () => { janitorCleanButton.Timer = janitorCleanButton.MaxTimer; },
-            Mafia.buttonSprite,
-            CustomButton.ButtonPositions.upperRowLeft,
-            __instance,
-            KeyCode.F,
-            buttonText: getString("CleanText")
         );
 
         //Sheriff Kill

@@ -184,26 +184,6 @@ internal class HudManagerUpdatePatch
 
     private static void setNameTags()
     {
-        // Mafia
-        if (CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor)
-        {
-            foreach (PlayerControl player in CachedPlayer.AllPlayers)
-                if (Mafia.godfather != null && Mafia.godfather == player)
-                    player.cosmetics.nameText.text = player.Data.PlayerName + " (教父)";
-                else if (Mafia.mafioso != null && Mafia.mafioso == player)
-                    player.cosmetics.nameText.text = player.Data.PlayerName + " (小弟)";
-                else if (Mafia.janitor != null && Mafia.janitor == player)
-                    player.cosmetics.nameText.text = player.Data.PlayerName + " (清洁工)";
-            if (MeetingHud.Instance != null)
-                foreach (var player in MeetingHud.Instance.playerStates)
-                    if (Mafia.godfather != null && Mafia.godfather.PlayerId == player.TargetPlayerId)
-                        player.NameText.text = Mafia.godfather.Data.PlayerName + " (教父)";
-                    else if (Mafia.mafioso != null && Mafia.mafioso.PlayerId == player.TargetPlayerId)
-                        player.NameText.text = Mafia.mafioso.Data.PlayerName + " (小弟)";
-                    else if (Mafia.janitor != null && Mafia.janitor.PlayerId == player.TargetPlayerId)
-                        player.NameText.text = Mafia.janitor.Data.PlayerName + " (清洁工)";
-        }
-
         // Lovers
         if (Lovers.lover1 != null && Lovers.lover2 != null &&
             (Lovers.lover1 == CachedPlayer.LocalPlayer.PlayerControl ||
@@ -372,11 +352,6 @@ internal class HudManagerUpdatePatch
 
         var enabled = true;
         if (Vampire.vampire != null && Vampire.vampire == CachedPlayer.LocalPlayer.PlayerControl)
-            enabled = false;
-        else if (Mafia.mafioso != null && Mafia.mafioso == CachedPlayer.LocalPlayer.PlayerControl &&
-                 Mafia.godfather != null && !Mafia.godfather.Data.IsDead)
-            enabled = false;
-        else if (Mafia.janitor != null && Mafia.janitor == CachedPlayer.LocalPlayer.PlayerControl)
             enabled = false;
         else if (Cultist.cultist != null && Cultist.cultist == CachedPlayer.LocalPlayer.PlayerControl &&
                  Cultist.needsFollower) enabled = false;

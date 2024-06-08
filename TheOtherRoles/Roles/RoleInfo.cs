@@ -23,7 +23,6 @@ public class RoleInfo
     public bool isGuessable;
     public bool isImpostor;
     private string nameKey;
-
     public RoleInfo(string name, Color color, RoleId roleId, bool isNeutral = false, bool isModifier = false, bool isGuessable = false, bool isImpostor = false)
     {
         nameKey = name;
@@ -36,9 +35,6 @@ public class RoleInfo
     }
     public static RoleInfo impostor = new("Impostor", Palette.ImpostorRed, RoleId.Impostor);
     public static RoleInfo assassin = new("Assassin", Palette.ImpostorRed, RoleId.EvilGuesser, false, true);
-    public static RoleInfo godfather = new("Godfather", Mafia.color, RoleId.Godfather);
-    public static RoleInfo mafioso = new("Mafioso", Mafia.color, RoleId.Mafioso);
-    public static RoleInfo janitor = new("Janitor", Mafia.color, RoleId.Janitor);
     public static RoleInfo morphling = new("Morphling", Morphling.color, RoleId.Morphling);
     public static RoleInfo bomber = new("Bomber", Bomber.color, RoleId.Bomber);
     public static RoleInfo poucher = new("Poucher", Poucher.color, RoleId.Poucher);
@@ -142,9 +138,6 @@ public class RoleInfo
     public static List<RoleInfo> allRoleInfos =
     [
         impostor,
-        godfather,
-        mafioso,
-        janitor,
         morphling,
         bomber,
         poucher,
@@ -301,9 +294,6 @@ public class RoleInfo
         if (p == Jester.jester) infos.Add(jester);
         if (p == Swooper.swooper) infos.Add(swooper);
         if (p == Werewolf.werewolf) infos.Add(werewolf);
-        if (p == Mafia.godfather) infos.Add(godfather);
-        if (p == Mafia.mafioso) infos.Add(mafioso);
-        if (p == Mafia.janitor) infos.Add(janitor);
         if (p == Miner.miner) infos.Add(miner);
         if (p == Poucher.poucher && !Poucher.spawnModifier) infos.Add(poucher);
         if (p == Morphling.morphling) infos.Add(morphling);

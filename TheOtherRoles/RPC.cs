@@ -26,9 +26,6 @@ namespace TheOtherRoles;
 public enum RoleId
 {
     Impostor,
-    Godfather,
-    Mafioso,
-    Janitor,
     Morphling,
     Bomber,
     Poucher,
@@ -96,7 +93,7 @@ public enum RoleId
     Medium,
     Trapper,
     Prophet,
-    //Magician,
+    Magician,
 
     // Modifier ---
     Lover,
@@ -421,17 +418,11 @@ public static class RPCProcedure
                     case RoleId.Lighter:
                         Lighter.lighter = player;
                         break;
-                    case RoleId.Godfather:
-                        Mafia.godfather = player;
-                        break;
-                    case RoleId.Mafioso:
-                        Mafia.mafioso = player;
-                        break;
-                    case RoleId.Janitor:
-                        Mafia.janitor = player;
-                        break;
                     case RoleId.Detective:
                         Detective.detective = player;
+                        break;
+                    case RoleId.Magician:
+                        Magician.magician = player;
                         break;
                     case RoleId.TimeMaster:
                         TimeMaster.timeMaster = player;
@@ -919,6 +910,12 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 break;
 
+            case RoleId.Magician:
+                if (Amnisiac.resetRole) Magician.clearAndReload();
+                Magician.magician = amnisiac;
+                Amnisiac.clearAndReload();
+                break;
+
             case RoleId.Sheriff:
                 // Never reload Sheriff
                 if (Sheriff.formerDeputy != null && Sheriff.formerDeputy == Sheriff.sheriff)
@@ -952,21 +949,6 @@ public static class RPCProcedure
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Cultist.clearAndReload();
                 Cultist.cultist = amnisiac;
-                Amnisiac.clearAndReload();
-                break;
-
-            case RoleId.Godfather:
-                Helpers.turnToImpostor(Amnisiac.amnisiac);
-                Amnisiac.clearAndReload();
-                break;
-
-            case RoleId.Mafioso:
-                Helpers.turnToImpostor(Amnisiac.amnisiac);
-                Amnisiac.clearAndReload();
-                break;
-
-            case RoleId.Janitor:
-                Helpers.turnToImpostor(Amnisiac.amnisiac);
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1031,7 +1013,7 @@ public static class RPCProcedure
                 Yoyo.yoyo = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
-
+                
             case RoleId.Terrorist:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Terrorist.clearAndReload();
@@ -1799,7 +1781,6 @@ public static class RPCProcedure
         if (player == Morphling.morphling) Morphling.clearAndReload();
         if (player == Bomber.bomber) Bomber.clearAndReload();
         if (player == Camouflager.camouflager) Camouflager.clearAndReload();
-        if (player == Mafia.godfather || player == Mafia.mafioso || player == Mafia.janitor) Mafia.clearAndReload();
         if (player == Poucher.poucher && !Poucher.spawnModifier) Poucher.clearAndReload();
         if (player == Vampire.vampire) Vampire.clearAndReload();
         if (player == Eraser.eraser) Eraser.clearAndReload();
@@ -2752,10 +2733,7 @@ public static class RPCProcedure
         }
 
         //if (target == Guesser.evilGuesser) Guesser.evilGuesser = thief;
-        if (target == Mafia.godfather) Mafia.godfather = thief;
         if (target == Poucher.poucher && !Poucher.spawnModifier) Poucher.poucher = thief;
-        if (target == Mafia.mafioso) Mafia.mafioso = thief;
-        if (target == Mafia.janitor) Mafia.janitor = thief;
         if (target == Morphling.morphling) Morphling.morphling = thief;
         if (target == Camouflager.camouflager) Camouflager.camouflager = thief;
         if (target == Vampire.vampire) Vampire.vampire = thief;

@@ -131,32 +131,33 @@ Even more roles are coming soon.
 
 ## Roles
 
-|     Impostor     |  Neutral   |      Crewmate       |   Modifier   |
-| :--------------: | :--------: | :-----------------: | :----------: |
-| Godfather(Mafia) |  Amnisiac  |     NiceGuesser     |   Assassin   |
-|  Mafioso(Mafia)  |   Jester   |        Mayor        |  Disperser   |
-|  Janitor(Mafia)  |  Vulture   |     Portalmaker     |   Poucher    |
-|    Morphling     |   Lawyer   |      Engineer       | lastImpostor |
-|      Bomber      | Prosecutor | PrivateInvestigator |    Torch     |
-|      Mimic       |  Pursuer   |       Sheriff       |  Sunglasses  |
-|   Camouflager    |   Jackal   |       Deputy        |     Bait     |
-|      Miner       |  Sidekick  |      BodyGuard      |    Bloody    |
-|      Eraser      |  Swooper   |       Lighter       | AntiTeleport |
-|     Vampire      |  Arsonist  |       Jumper        |  Tiebreaker  |
-|     Cleaner      |  Werewolf  |      Detective      |    Flash     |
-|    Undertaker    |   Thief    |     TimeMaster      | Multitasker  |
-|     Escapist     | Juggernaut |       Veteren       |     Mini     |
-|     Warlock      | Doomsayer  |        Medic        |     Vip      |
-|    Trickster     |   Akujo    |       Swapper       | Indomitable  |
-|   BountyHunter   |            |        Seer         |    Slueth    |
-|     Cultist      |            |       Hacker        |    Cursed    |
-|    Terrorist     |            |       Tracker       |    Invert    |
-|   Blackmailer    |            |       Snitch        |    Blind     |
-|      Witch       |            |         Spy         |   Watcher    |
-|      Ninja       |            |    SecurityGuard    |    Radar     |
-|                  |            |       Medium        | ButtonBarry  |
-|                  |            |       Trapper       |  Chameleon   |
-|                  |            |       Prophet       |   Shifter    |
+|   Impostor   |  Neutral   |      Crewmate       |   Modifier   |
+| :----------: | :--------: | :-----------------: | :----------: |
+|  Morphling   |  Amnisiac  |      Vigilante      |    Lover     |
+|    Bomber    |   Jester   |        Mayor        |   Assassin   |
+|   Poucher    |  Vulture   |     Prosecutor      |  Disperser   |
+|    Mimic     |   Lawyer   |     Portalmaker     | lastImpostor |
+| Camouflager  | Prosecutor |      Engineer       |    Torch     |
+|    Miner     |  Pursuer   | PrivateInvestigator |  Sunglasses  |
+|    Eraser    |   Jackal   |       Sheriff       |     Bait     |
+|   Vampire    |  Sidekick  |       Deputy        |    Bloody    |
+|   Cleaner    |  Swooper   |      BodyGuard      | AntiTeleport |
+|  Undertaker  |  Arsonist  |       Lighter       |  Tiebreaker  |
+|   Escapist   |  Werewolf  |       Jumper        |    Flash     |
+|   Warlock    |   Thief    |      Detective      | Multitasker  |
+|  Trickster   | Juggernaut |     TimeMaster      |    Giant     |
+| BountyHunter | Doomsayer  |       Veteren       |     Mini     |
+|   Cultist    |   Akujo    |        Medic        |     Vip      |
+|  Terrorist   |            |       Swapper       | Indomitable  |
+| Blackmailer  |            |        Seer         |    Slueth    |
+|    Witch     |            |       Hacker        |    Cursed    |
+|    Ninja     |            |       Tracker       |    Invert    |
+|    Yo-Yo     |            |       Snitch        |    Blind     |
+| EvilTrapper  |            |         Spy         |   Watcher    |
+|              |            |    SecurityGuard    |    Radar     |
+|              |            |       Medium        | ButtonBarry  |
+|              |            |       Trapper       |  Chameleon   |
+|              |            |       Prophet       |   Shifter    |
 
 
 

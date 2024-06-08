@@ -21,7 +21,6 @@ public static class RoleClass
         Deputy.clearAndReload();
         Amnisiac.clearAndReload();
         Lighter.clearAndReload();
-        Mafia.clearAndReload();
         Detective.clearAndReload();
         Werewolf.clearAndReload();
         TimeMaster.clearAndReload();

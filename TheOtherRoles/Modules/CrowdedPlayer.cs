@@ -10,6 +10,7 @@ using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Modules;
 
+#if !SUNDAY
 [Harmony]
 public static class CrowdedPlayer
 {
@@ -440,3 +441,4 @@ public static class CrowdedPlayer
         }
     }
 }
+#endif
