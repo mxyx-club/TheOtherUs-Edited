@@ -200,7 +200,7 @@ public class RoleInfo
         medium,
         trapper,
         prophet,
-        magician,
+        //magician,
 
         lover,
         assassin,

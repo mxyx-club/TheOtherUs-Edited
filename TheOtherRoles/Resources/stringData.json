@@ -678,9 +678,11 @@
         "13": "\u6700\u5c11\u8eb2\u85cf\u65f6\u95f4"
     },
     "propHuntUnstuckCooldown": {
+        "0": "Unstuck Cooldown",
         "13": "\u7a7f\u5899\u51b7\u5374\u65f6\u95f4"
     },
     "propHuntUnstuckDuration": {
+        "0": "Unstuck Duration",
         "13": "\u7a7f\u5899\u6301\u7eed\u65f6\u95f4"
     },
     "propHunterVision": {
@@ -698,6 +700,7 @@
         "13": "\u8eb2\u85cf\u8005\u79fb\u901f\u500d\u7387"
     },
     "propHuntEnableUnstuck": {
+        "0": "Enable Unstuck",
         "13": "\u542f\u7528\u7a7f\u5899\u6280\u80fd"
     },
     "propHuntNumberOfHunters": {

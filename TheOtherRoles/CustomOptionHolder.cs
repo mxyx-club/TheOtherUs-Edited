@@ -1337,9 +1337,9 @@ public class CustomOptionHolder
         propHuntSpeed = Create(4025, Types.PropHunt, cs(Color.yellow, "propHuntSpeed"), 1f, 0.5f, 2f, 0.125f);
         propPropSpeed = Create(4026, Types.PropHunt, cs(Color.yellow, "propPropSpeed"), 1f, 0.5f, 2f, 0.125f);
 
-        propHuntEnableUnstuck = Create(4027, Types.PropHunt, cs(Color.yellow, "启用穿墙技能"), ["关闭", "猎人", "躲藏者", "开启"], null, true);
-        propHuntUnstuckCooldown = Create(4011, Types.PropHunt, cs(Color.yellow, "穿墙冷却时间"), 30f, 2.5f, 60f, 2.5f, propHuntEnableUnstuck);
-        propHuntUnstuckDuration = Create(4012, Types.PropHunt, cs(Color.yellow, "穿墙持续时间"), 2f, 1f, 60f, 1f, propHuntEnableUnstuck);
+        propHuntEnableUnstuck = Create(4027, Types.PropHunt, cs(Color.yellow, "propHuntEnableUnstuck"), ["optionOff", "Hunter", "Prop", "optionOn"], null, true);
+        propHuntUnstuckCooldown = Create(4011, Types.PropHunt, cs(Color.yellow, "propHuntUnstuckCooldown"), 30f, 2.5f, 60f, 2.5f, propHuntEnableUnstuck);
+        propHuntUnstuckDuration = Create(4012, Types.PropHunt, cs(Color.yellow, "propHuntUnstuckDuration"), 3f, 1f, 60f, 1f, propHuntEnableUnstuck);
         // Hunter Options
         propHuntNumberOfHunters = Create(4000, Types.PropHunt, cs(Color.red, "propHuntNumberOfHunters"), 1f, 1f, 5f, 1f, null, true);
         hunterInitialBlackoutTime = Create(4001, Types.PropHunt, cs(Color.red, "hunterInitialBlackoutTime"), 10f, 5f, 20f, 1f);
