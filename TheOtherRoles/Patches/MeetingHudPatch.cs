@@ -16,7 +16,6 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch]
 internal class MeetingHudPatch
 {
-    private const float scale = 0.65f;
     private static bool[] selections;
     private static SpriteRenderer[] renderers;
     private static GameData.PlayerInfo target;
@@ -26,8 +25,8 @@ internal class MeetingHudPatch
     public static bool shookAlready;
     private static PlayerVoteArea swapped1;
     private static PlayerVoteArea swapped2;
-    static TMPro.TextMeshPro[] meetingInfoText = new TMPro.TextMeshPro[4];
-    static int meetingTextIndex = 0;
+    static TextMeshPro[] meetingInfoText = new TextMeshPro[4];
+    static int meetingTextIndex;
 
     public static GameObject guesserUI;
     public static PassiveButton guesserUIExitButton;
@@ -811,7 +810,6 @@ internal class MeetingHudPatch
             }
 
             // RPCVotingComplete
-            Message($"平票：{tie}{array}");
             __instance.RpcVotingComplete(array, exiled, tie);
             return false;
         }
@@ -827,8 +825,8 @@ internal class MeetingHudPatch
         {
             __instance.exiledPlayer = __instance.wasTie ? null : __instance.exiledPlayer;
             var exiledString = exiled == null ? "null" : exiled.PlayerName;
-            Message($"被驱逐玩家 = {exiledString}");
-            Message($"是否平票 = {tie}");
+            Message($"被驱逐玩家: {exiledString}");
+            Message($"是否平票: {tie}");
         }
     }
 
@@ -1233,6 +1231,7 @@ internal class MeetingHudPatch
 
         public static void Postfix(MeetingHud __instance)
         {
+            Message("会议开始");
             shookAlready = false;
             if (Blackmailer.blackmailed == null) return;
             if (Blackmailer.blackmailed.Data.PlayerId != CachedPlayer.LocalPlayer.PlayerId ||

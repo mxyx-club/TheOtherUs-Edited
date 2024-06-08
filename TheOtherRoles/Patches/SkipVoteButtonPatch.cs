@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
 
-public class ProsecutorPatch
+public class SkipVoteButtonPatch
 {
     public static void UpdateButton(PlayerControl p, MeetingHud __instance)
     {
@@ -136,7 +136,7 @@ public class AllowExtraVotes
             {
                 Prosecutor.StartProsecute = true;
                 MeetingHud.Instance.SkipVoteButton.gameObject.SetActive(false);
-                ProsecutorPatch.UpdateButton(Prosecutor.prosecutor, MeetingHud.Instance);
+                SkipVoteButtonPatch.UpdateButton(Prosecutor.prosecutor, MeetingHud.Instance);
                 if (!AmongUsClient.Instance.AmHost)
                 {
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(Prosecutor.prosecutor.NetId, (byte)CustomRPC.Prosecute, SendOption.Reliable, -1);

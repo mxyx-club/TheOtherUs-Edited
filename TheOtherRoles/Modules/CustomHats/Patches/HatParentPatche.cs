@@ -52,7 +52,8 @@ internal static class HatParentPatches
         else
         {
             __instance.FrontLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.DefaultShader;
-            if (__instance.BackLayer) __instance.BackLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.DefaultShader;
+            if (__instance.BackLayer)
+                __instance.BackLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.DefaultShader;
         }
 
         var colorId = __instance.matProperties.ColorId;
@@ -69,18 +70,24 @@ internal static class HatParentPatches
             case PlayerMaterial.MaskType.ScrollingUI:
                 if (__instance.FrontLayer)
                     __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+
                 if (__instance.BackLayer)
                     __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+
                 break;
             case PlayerMaterial.MaskType.Exile:
                 if (__instance.FrontLayer)
                     __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+
                 if (__instance.BackLayer)
                     __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+
                 break;
             default:
                 if (__instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.None;
+
                 if (__instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.None;
+
                 break;
         }
         if (__instance.matProperties.MaskLayer > 0) return false;
@@ -96,17 +103,20 @@ internal static class HatParentPatches
     {
         if (!__instance.Parent || !__instance.Hat) return false;
         if (!__instance.TryGetCached(out var hatViewData)) return true;
-        if (__instance.FrontLayer.sprite != hatViewData.ClimbImage && __instance.FrontLayer.sprite != hatViewData.FloorImage)
+        if (__instance.FrontLayer.sprite != hatViewData.ClimbImage &&
+            __instance.FrontLayer.sprite != hatViewData.FloorImage)
         {
             if ((__instance.Hat.InFront || hatViewData.BackImage) && hatViewData.LeftMainImage)
                 __instance.FrontLayer.sprite =
                     __instance.Parent.flipX ? hatViewData.LeftMainImage : hatViewData.MainImage;
+
             if (hatViewData.BackImage && hatViewData.LeftBackImage)
             {
                 __instance.BackLayer.sprite =
                     __instance.Parent.flipX ? hatViewData.LeftBackImage : hatViewData.BackImage;
                 return false;
             }
+
             if (!hatViewData.BackImage && !__instance.Hat.InFront && hatViewData.LeftMainImage)
             {
                 __instance.BackLayer.sprite =
@@ -122,6 +132,7 @@ internal static class HatParentPatches
                 : __instance.GetComponent<SpriteAnimNodeSync>();
             if (spriteAnimNodeSync) spriteAnimNodeSync.NodeId = 0;
         }
+
         return false;
     }
 
@@ -217,7 +228,9 @@ internal static class HatParentPatches
             Warn($"Unable to create test hat \n{err}");
             return true;
         }
+
         return false;
     }
 }
+
 #endif

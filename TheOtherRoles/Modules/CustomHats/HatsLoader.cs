@@ -51,7 +51,6 @@ public class HatsLoader : MonoBehaviour
 
         UnregisteredHats.AddRange(SanitizeHats(response));
         var toDownload = GenerateDownloadList(UnregisteredHats);
-        //if (EventUtility.isEnabled) UnregisteredHats.AddRange(loadHorseHats());
 
         Message($"I'll download {toDownload.Count} hat files");
 
