@@ -1014,7 +1014,7 @@ public class CustomOptionHolder
         mayorMeetingButton = Create(30113, Types.Crewmate, "可远程召开会议", true, mayorSpawnRate);
         mayorMaxRemoteMeetings = Create(30114, Types.Crewmate, "远程召开会议可用次数", 1f, 1f, 5f, 1f, mayorMeetingButton);
         mayorSabotageRemoteMeetings = Create(30115, Types.Crewmate, "可在破坏时使用\n无效设置", false, mayorMeetingButton);
-        mayorChooseSingleVote = Create(30116, Types.Crewmate, "市长可选择投单票", ["关闭", "投票前选择", "会议结束前选择"], mayorSpawnRate);
+        mayorChooseSingleVote = Create(30116, Types.Crewmate, "市长可选择投单票", ["optionOff", "投票前选择", "会议结束前选择"], mayorSpawnRate);
 
         prosecutorSpawnRate = Create(30370, Types.Crewmate, cs(Prosecutor.color, "Prosecutor"), rates, null, true);
         prosecutorDiesOnIncorrectPros = Create(30371, Types.Crewmate, "驱逐船员会自杀", true, prosecutorSpawnRate);
@@ -1048,7 +1048,7 @@ public class CustomOptionHolder
         deputyHandcuffCooldown = Create(30172, Types.Crewmate, "手铐冷却", 25f, 10f, 60f, 2.5f, deputySpawnRate);
         deputyHandcuffDuration = Create(30173, Types.Crewmate, "手铐持续时间", 12.5f, 5f, 60f, 2.5f, deputySpawnRate);
         deputyKnowsSheriff = Create(30174, Types.Crewmate, "警长/捕快可以互相确认 ", true, deputySpawnRate);
-        deputyGetsPromoted = Create(30175, Types.Crewmate, "警长死后捕快可晋升", ["否", "立即晋升", "会议后晋升"], deputySpawnRate);
+        deputyGetsPromoted = Create(30175, Types.Crewmate, "警长死后捕快可晋升", ["optionOff", "立即晋升", "会议后晋升"], deputySpawnRate);
         deputyKeepsHandcuffs = Create(30176, Types.Crewmate, "晋升后保留手铐技能", true, deputyGetsPromoted);
 
         detectiveSpawnRate = Create(30190, Types.Crewmate, cs(Detective.color, "Detective"), rates, null, true);
@@ -1124,7 +1124,7 @@ public class CustomOptionHolder
         snitchLeftTasksForReveal = Create(30271, Types.Crewmate, "剩余多少任务时可被发现", 1f, 0f, 10f, 1f, snitchSpawnRate);
         snitchSeeMeeting = Create(30272, Types.Crewmate, "可在会议中查看信息", true, snitchSpawnRate);
         snitchCanSeeRoles = Create(30273, Types.Crewmate, "可以在会议中查看具体职业", false, snitchSpawnRate);
-        snitchIncludeNeutralTeam = Create(30274, Types.Crewmate, "可揭示中立阵营", ["关闭", "仅杀手中立", "所有邪恶中立", "全部中立阵营"], snitchSpawnRate);
+        snitchIncludeNeutralTeam = Create(30274, Types.Crewmate, "可揭示中立阵营", ["optionOff", "仅杀手中立", "所有邪恶中立", "全部中立阵营"], snitchSpawnRate);
         snitchTeamNeutraUseDifferentArrowColor = Create(30275, Types.Crewmate, "为中立阵营使用不同颜色的提醒\n(关闭则看谁都是红色)", true, snitchIncludeNeutralTeam);
 
         spySpawnRate = Create(30280, Types.Crewmate, cs(Spy.color, "Spy"), rates, null, true);

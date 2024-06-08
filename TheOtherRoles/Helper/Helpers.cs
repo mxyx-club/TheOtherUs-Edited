@@ -8,6 +8,7 @@ using AmongUs.GameOptions;
 using Hazel;
 using InnerNet;
 using Reactor.Utilities.Extensions;
+using Rewired.Utils.Platforms.Windows;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
@@ -193,6 +194,10 @@ public static class Helpers
             roleCouldUse = true;
         }
         else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player)
+        {
+            roleCouldUse = true;
+        }
+        else if (player.Data?.Role != null && player.Data.Role.CanVent)
         {
             roleCouldUse = true;
         }

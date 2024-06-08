@@ -4,6 +4,7 @@ using System.Linq;
 using AmongUs.GameOptions;
 using PowerTools;
 using Reactor.Utilities.Extensions;
+using Rewired.Utils.Platforms.Windows;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -337,6 +338,7 @@ internal class KillButtonDoClickPatch
         return false;
     }
 }
+
 
 [HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.DoClick))]
 public static class SabotageButtonDoClickPatch

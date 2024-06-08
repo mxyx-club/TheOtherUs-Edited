@@ -88,11 +88,6 @@ internal class ExileControllerBeginPatch
                 if (target != null && !target.Data.IsDead && checkMuderAttempt(Witch.witch, target, true) ==
                     MurderAttemptResult.PerformKill)
                 {
-                    /*
-                    if (exiled != null && Lawyer.lawyer != null &&
-                        (target == Lawyer.lawyer || target == Lovers.otherLover(Lawyer.lawyer)) &&
-                        Lawyer.target != null && Lawyer.isProsecutor && Lawyer.target.PlayerId == exiled.PlayerId)
-                        continue;*/
                     if (target == Lawyer.target && Lawyer.lawyer != null)
                     {
                         var writer2 = AmongUsClient.Instance.StartRpcImmediately(
@@ -192,7 +187,7 @@ internal class ExileControllerWrapUpPatch
         }
 
         // submerged
-        //if (!SubmergedCompatibility.IsSubmerged) return;
+        if (!SubmergedCompatibility.IsSubmerged) return;
         if (obj.name.Contains("ExileCutscene"))
         {
             WrapUpPostfix(ExileControllerBeginPatch.lastExiled);
@@ -245,7 +240,7 @@ internal class ExileControllerWrapUpPatch
                 soul.transform.position = new Vector3(pos.x, pos.y, (pos.y / 1000) - 1f);
                 soul.layer = 5;
                 var rend = soul.AddComponent<SpriteRenderer>();
-                //soul.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
+                soul.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
                 rend.sprite = Seer.getSoulSprite();
 
                 if (Seer.limitSoulDuration)
@@ -325,7 +320,7 @@ internal class ExileControllerWrapUpPatch
                     s.transform.position = new Vector3(ps.x, ps.y, (ps.y / 1000) - 1f);
                     s.layer = 5;
                     var rend = s.AddComponent<SpriteRenderer>();
-                    //s.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
+                    s.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
                     rend.sprite = Medium.getSoulSprite();
                     Medium.souls.Add(rend);
                 }
@@ -434,9 +429,9 @@ internal class ExileControllerMessagePatch
                 else if (Tiebreaker.isTiebreak)
                 {
                     __result += " (破平)";
-                    Tiebreaker.isTiebreak = false;
-                }
+                Tiebreaker.isTiebreak = false;
             }
+        }
         }
         catch
         {

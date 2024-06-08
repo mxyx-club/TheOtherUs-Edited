@@ -1,4 +1,10 @@
-﻿namespace TheOtherRoles.Modules.CustomHats.Patches;
+﻿using System;
+using System.IO;
+using System.Linq;
+using PowerTools;
+using UnityEngine;
+
+namespace TheOtherRoles.Modules.CustomHats.Patches;
 
 #if MXYX_CLUB
 [HarmonyPatch(typeof(HatParent))]

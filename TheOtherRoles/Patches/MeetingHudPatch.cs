@@ -943,6 +943,7 @@ internal class MeetingHudPatch
                 {
                     var voteState = states[stateIdx];
                     var playerInfo = GameData.Instance.GetPlayerById(voteState.VoterId);
+                    if (Prosecutor.prosecutor == null) continue;
                     if (Prosecutor.prosecutor.Data.IsDead || Prosecutor.prosecutor.Data.Disconnected) continue;
                     if (Prosecutor.ProsecuteThisMeeting)
                     {

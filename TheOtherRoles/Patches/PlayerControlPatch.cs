@@ -2182,7 +2182,9 @@ public static class MurderPlayerPatch
 
         // Medium add body
         if (Medium.deadBodies != null)
+        {
             Medium.futureDeadBodies.Add(new Tuple<DeadPlayer, Vector3>(deadPlayer, target.transform.position));
+        }
 
         // LastImpostor cooldown
         if (LastImpostor.lastImpostor != null && __instance == LastImpostor.lastImpostor && CachedPlayer.LocalPlayer.PlayerControl == __instance)
