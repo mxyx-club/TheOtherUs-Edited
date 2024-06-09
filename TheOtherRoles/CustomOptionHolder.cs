@@ -848,7 +848,7 @@ public class CustomOptionHolder
         cleanerSpawnRate = Create(10210, Types.Impostor, cs(Cleaner.color, "Cleaner"), rates, null, true);
         cleanerCooldown = Create(10211, Types.Impostor, "清理冷却", 25f, 10f, 60f, 2.5f, cleanerSpawnRate);
 
-        warlockSpawnRate = Create(10220, Types.Impostor, cs(Cleaner.color, "Cleaner"), rates, null, true);
+        warlockSpawnRate = Create(10220, Types.Impostor, cs(Warlock.color, "Warlock"), rates, null, true);
         warlockCooldown = Create(10221, Types.Impostor, "术法冷却", 20f, 10f, 60f, 2.5f, warlockSpawnRate);
         warlockRootTime = Create(10222, Types.Impostor, "使用术法击杀后定身持续时间", 3f, 0f, 15f, 0.25f, warlockSpawnRate);
 
@@ -955,7 +955,7 @@ public class CustomOptionHolder
 
         executionerSpawnRate = Create(20190, Types.Neutral, cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(20191, Types.Neutral, "处刑者可召开会议", true, executionerSpawnRate);
-        executionerPromotesToLawyer = Create(20192, Types.Neutral, "目标职业变更时处刑者可以晋升为律师", true, executionerSpawnRate);
+        executionerPromotesToLawyer = Create(20192, Types.Neutral, "目标职业变更时可以晋升为律师", true, executionerSpawnRate);
         //executionerOnTargetDead = Create(20193, Types.Neutral, "处刑目标死亡后变为", [cs(Pursuer.color, "Pursuer".Translate()), cs(Jester.color, "Jester".Translate()), cs(Amnisiac.color, "Amnisiac".Translate()), "船员"], executionerSpawnRate);
 
         swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
@@ -1070,7 +1070,7 @@ public class CustomOptionHolder
 
         bodyGuardSpawnRate = Create(30340, Types.Crewmate, cs(BodyGuard.color, "BodyGuard"), rates, null, true);
         bodyGuardResetTargetAfterMeeting = Create(30341, Types.Crewmate, "会议后重置保护目标", true, bodyGuardSpawnRate);
-        bodyGuardShowShielded = Create(30343, Types.Crewmate, "保护目标可见护盾的存在", true, medicSpawnRate);
+        bodyGuardShowShielded = Create(30343, Types.Crewmate, "保护目标可见护盾的存在", true, bodyGuardSpawnRate);
         bodyGuardFlash = Create(30342, Types.Crewmate, "死亡闪光", true, bodyGuardSpawnRate);
 
         timeMasterSpawnRate = Create(30210, Types.Crewmate, cs(TimeMaster.color, "TimeMaster"), rates, null, true);
