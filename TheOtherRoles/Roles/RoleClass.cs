@@ -96,6 +96,7 @@ public static class RoleClass
         Chameleon.clearAndReload();
         ButtonBarry.clearAndReload();
         LastImpostor.clearAndReload();
+        Specoality.clearAndReload();
 
         // Gamemodes
         HandleGuesser.clearAndReload();

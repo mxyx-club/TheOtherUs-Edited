@@ -104,6 +104,7 @@ public class RoleInfo
     // Modifier
     public static RoleInfo lover = new("Lover", Lovers.color, RoleId.Lover, false, true);
     public static RoleInfo disperser = new("Disperser", Color.red, RoleId.Disperser, false, true);
+    public static RoleInfo specoality = new("Specoality", Color.yellow, RoleId.Specoality, false, true);
     public static RoleInfo poucherModifier = new("Poucher", Poucher.color, RoleId.PoucherModifier, false, true);
     public static RoleInfo lastImpostor = new("LastImpostor", Palette.ImpostorRed, RoleId.LastImpostor, false, true);
     public static RoleInfo bloody = new("Bloody", Color.yellow, RoleId.Bloody, false, true);
@@ -206,6 +207,7 @@ public class RoleInfo
         assassin,
         poucherModifier,
         disperser,
+        specoality,
         lastImpostor,
         bloody,
         antiTeleport,
@@ -276,6 +278,7 @@ public class RoleInfo
             if (p == ButtonBarry.buttonBarry) infos.Add(buttonBarry);
             if (p == Slueth.slueth) infos.Add(slueth);
             if (p == Disperser.disperser) infos.Add(disperser);
+            if (p == Specoality.specoality) infos.Add(specoality);
             if (p == Poucher.poucher && Poucher.spawnModifier) infos.Add(poucherModifier);
             if (p == Giant.giant) infos.Add(giant);
             if (Invert.invert.Any(x => x.PlayerId == p.PlayerId)) infos.Add(invert);

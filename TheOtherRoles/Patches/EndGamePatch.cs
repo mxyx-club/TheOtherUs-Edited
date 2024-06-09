@@ -48,8 +48,9 @@ internal enum WinCondition
     WerewolfWin,
     JuggernautWin,
     DoomsayerWin,
-    AkujoWin,
-    EveryoneDied
+    AkujoSoloWin,
+    EveryoneDied,
+    AkujoTeamWin,
 }
 
 internal static class AdditionalTempData
@@ -177,8 +178,20 @@ public class OnGameEndPatch
                             (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
         bool vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
         bool executionerWin = Executioner.executioner != null && gameOverReason == (GameOverReason)CustomGameOverReason.ExecutionerWin;
-        bool akujoWin = Akujo.akujo != null && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead;
         bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
+        bool akujoWin = false;
+        if (Akujo.honmeiOptimizeWin)
+        {
+            akujoWin = Akujo.akujo != null 
+                && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin 
+                    && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead 
+                || (GameManager.Instance.DidHumansWin(gameOverReason)
+                && !Akujo.existingWithKiller() && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead);
+        }
+        else
+        {
+            akujoWin = Akujo.akujo != null && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead;
+        }
 
         bool isPursurerLose = jesterWin || arsonistWin || miniLose;
 
@@ -338,10 +351,42 @@ public class OnGameEndPatch
         // Akujo win
         else if (akujoWin)
         {
-            AdditionalTempData.winCondition = WinCondition.AkujoWin;
-            TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-            TempData.winners.Add(new WinningPlayerData(Akujo.akujo.Data));
-            TempData.winners.Add(new WinningPlayerData(Akujo.honmei.Data));
+            if (Akujo.honmeiOptimizeWin)
+            {
+                if (!Akujo.existingWithKiller())
+                {
+                    AdditionalTempData.winCondition = WinCondition.AkujoTeamWin;
+                    TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                    foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                    {
+                        if (p == null) continue;
+                        if (p == Akujo.akujo && p == Akujo.honmei)
+                            TempData.winners.Add(new WinningPlayerData(p.Data));
+                        else if (p == Pursuer.pursuer && !Pursuer.pursuer.Data.IsDead)
+                            TempData.winners.Add(new WinningPlayerData(p.Data));
+                        else if (p != Jester.jester && p != Jackal.jackal && p != Werewolf.werewolf &&
+                            p != Juggernaut.juggernaut && p != Doomsayer.doomsayer && p != Lawyer.lawyer && p != Pursuer.pursuer &&
+                            p != Sidekick.sidekick && p != Arsonist.arsonist && p != Vulture.vulture && p != Amnisiac.amnisiac && p != Thief.thief &&
+                            !Jackal.formerJackals.Contains(p) && !p.Data.Role.IsImpostor)
+                            TempData.winners.Add(new WinningPlayerData(p.Data));
+
+                    }
+                }
+                else
+                {
+                    AdditionalTempData.winCondition = WinCondition.AkujoSoloWin;
+                    TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                    TempData.winners.Add(new WinningPlayerData(Akujo.akujo.Data));
+                    TempData.winners.Add(new WinningPlayerData(Akujo.honmei.Data));
+                }
+            }
+            else
+            {
+                AdditionalTempData.winCondition = WinCondition.AkujoSoloWin;
+                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                TempData.winners.Add(new WinningPlayerData(Akujo.akujo.Data));
+                TempData.winners.Add(new WinningPlayerData(Akujo.honmei.Data));
+            }
         }
 
         // Lawyer solo win 
@@ -533,12 +578,16 @@ public class EndGameManagerSetUpPatch
                 textRenderer.color = Jackal.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Jackal.color);
                 break;
-            case WinCondition.AkujoWin:
+            case WinCondition.AkujoSoloWin:
                 textRenderer.text = "请给我扭曲你人生的权利！";
                 textRenderer.color = Akujo.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Akujo.color);
                 break;
-
+            case WinCondition.AkujoTeamWin:
+                textRenderer.text = "我只是加入你们不是拆散你们！";
+                textRenderer.color = Akujo.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Akujo.color);
+                break;
             case WinCondition.MiniLose:
                 textRenderer.text = "他就只是个孩子啊！";
                 textRenderer.color = Mini.color;
@@ -909,12 +958,19 @@ internal class CheckEndCriteriaPatch
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
-            statistics.TeamJuggernautAlive == 0 &&
-            statistics.TeamAkujoAlive <= 1)
+            statistics.TeamJuggernautAlive == 0
+            )
         {
-            //__instance.enabled = false;
-            GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
-            return true;
+            if (Akujo.honmeiOptimizeWin)
+            {
+                GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
+                return true;
+            }
+            else if (statistics.TeamAkujoAlive <= 1)
+            {
+                GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
+                return true;
+            }
         }
         return false;
     }

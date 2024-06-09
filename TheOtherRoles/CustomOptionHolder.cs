@@ -387,6 +387,7 @@ public class CustomOptionHolder
     public static CustomOption akujoKnowsRoles;
     public static CustomOption akujoNumKeeps;
     public static CustomOption akujoHonmeiCannotFollowWin;
+    public static CustomOption akujoHonmeiOptimizeWin;
 
     public static CustomOption trapperSpawnRate;
     public static CustomOption trapperCooldown;
@@ -506,6 +507,9 @@ public class CustomOptionHolder
 
     public static CustomOption modifierShifter;
     public static CustomOption modifierShiftNeutral;
+    public static CustomOption modifierShiftALLNeutral;
+
+    public static CustomOption modifierSpecoality;
 
     public static CustomOption modifierLastImpostor;
     public static CustomOption modifierLastImpostorDeduce;
@@ -902,7 +906,7 @@ public class CustomOptionHolder
         evilTrapperCooldown = Create(10303, Types.Impostor, "放置陷阱冷却", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
         evilTrapperKillTimer = Create(10304, Types.Impostor, "掉进陷阱后被陷阱击杀所需时间", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
         evilTrapperTrapRange = Create(10305, Types.Impostor, "陷阱有效范围", 1f, 0.5f, 2f, 0.125f, evilTrapperSpawnRate);
-        evilTrapperMaxDistance = Create(10306, Types.Impostor, "陷阱击杀声音播放有效范围", 10f, 0f, 60f, 0.25f, evilTrapperSpawnRate);
+        evilTrapperMaxDistance = Create(10306, Types.Impostor, "陷阱击杀声音播放有效范围", 1f, 0f, 60f, 0.25f, evilTrapperSpawnRate);
         evilTrapperPenaltyTime = Create(10307, Types.Impostor, "设陷者普通击杀会追加冷却", 10f, 0f, 30f, 0.5f, evilTrapperSpawnRate);
         evilTrapperBonusTime = Create(10308, Types.Impostor, "设陷者击杀落入陷阱的玩家缩减冷却", 10f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
 
@@ -990,6 +994,7 @@ public class CustomOptionHolder
         akujoNumKeeps = Create(20233, Types.Neutral, "可招募备胎的数量", 1f, 0f, 10f, 1f, akujoSpawnRate);
         akujoKnowsRoles = Create(20234, Types.Neutral, "魅魔是否知道目标职业", true, akujoSpawnRate);
         akujoHonmeiCannotFollowWin = Create(20235, Types.Neutral, "真爱无法跟随阵营获胜", true, akujoSpawnRate);
+        akujoHonmeiOptimizeWin = Create(20236, Types.Neutral, "魅魔胜利条件优化", true, akujoSpawnRate);
 
         thiefSpawnRate = Create(20240, Types.Neutral, cs(Thief.color, "Thief"), rates, null, true);
         thiefCooldown = Create(20241, Types.Neutral, "窃取冷却", 25f, 5f, 120f, 2.5f, thiefSpawnRate);
@@ -1194,6 +1199,8 @@ public class CustomOptionHolder
         modifierLastImpostor = Create(40110, Types.Modifier, cs(Palette.ImpostorRed, "LastImpostor"), false, null, true);
         modifierLastImpostorDeduce = Create(40111, Types.Modifier, "绝境者击杀冷却减少", 5f, 2.5f, 15f, 2.5f, modifierLastImpostor);
 
+        modifierSpecoality = Create(40350, Types.Modifier, cs(Palette.ImpostorRed, "Specoality"), rates, null, true);
+
         modifierBloody = Create(40120, Types.Modifier, cs(Color.yellow, "Bloody"), rates, null, true);
         modifierBloodyQuantity = Create(40121, Types.Modifier, cs(Color.yellow, "溅血数量"), ratesModifier, modifierBloody);
         modifierBloodyDuration = Create(40122, Types.Modifier, "痕迹持续时间", 10f, 3f, 60f, 0.5f, modifierBloody);
@@ -1265,6 +1272,7 @@ public class CustomOptionHolder
 
         modifierShifter = Create(40340, Types.Modifier, cs(Color.yellow, "Shifter"), rates, null, true);
         modifierShiftNeutral = Create(40341, Types.Modifier, "可交换部分中立不带刀职业", false, modifierShifter);
+        modifierShiftALLNeutral = Create(40342, Types.Modifier, "可交换除豺狼阵营中立", false, modifierShifter);
 
 
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //

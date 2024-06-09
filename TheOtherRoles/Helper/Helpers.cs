@@ -64,7 +64,6 @@ public static class Helpers
     public static Sprite teamLoverChat;
 
     public static bool zoomOutStatus;
-
     //new
     public static bool gameStarted => AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started;
 
@@ -235,16 +234,23 @@ public static class Helpers
 
     public static bool isShiftNeutral(PlayerControl player)
     {
-        if (CustomOptionHolder.modifierShiftNeutral.getBool())
+        if (CustomOptionHolder.modifierShiftALLNeutral.getBool())
+        {
+            if (player != null)
+                return player == Jackal.jackal ||
+                       player == Sidekick.sidekick ||
+                       player == Lawyer.lawyer;
+            return false;
+        }
+        else if (CustomOptionHolder.modifierShiftNeutral.getBool())
         {
             if (player != null)
                 return player == Jackal.jackal ||
                        player == Sidekick.sidekick ||
                        player == Werewolf.werewolf ||
-                       player == Akujo.akujo ||
+                       player == Lawyer.lawyer ||
                        player == Juggernaut.juggernaut ||
-                       player == Swooper.swooper ||
-                       player == Arsonist.arsonist;
+                       player == Swooper.swooper;
             return false;
         }
         else

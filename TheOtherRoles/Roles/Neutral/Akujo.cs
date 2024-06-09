@@ -16,6 +16,7 @@ public static class Akujo
     public static float timeLimit = 1300f;
     public static bool knowsRoles = true;
     public static bool honmeiCannotFollowWin;
+    public static bool honmeiOptimizeWin;
     public static int timeLeft;
     public static bool forceKeeps;
     public static int keepsLeft;
@@ -36,7 +37,25 @@ public static class Akujo
         keepSprite = loadSpriteFromResources("TheOtherRoles.Resources.AkujoKeepButton.png", 115f);
         return keepSprite;
     }
+    public static bool existing()
+    {
+        return honmei != null && !honmei.Data.Disconnected;
+    }
 
+    public static bool existingWithKiller()
+    {
+        return existing() && (honmei == Jackal.jackal
+                           || honmei == Sidekick.sidekick
+                           || honmei == Werewolf.werewolf
+                           || honmei == Juggernaut.juggernaut
+                           || honmei == Arsonist.arsonist
+                           || honmei == Vulture.vulture
+                           || honmei == Lawyer.lawyer
+                           || honmei == Jester.jester
+                           || honmei == Thief.thief
+                           || honmei == Doomsayer.doomsayer
+                           || honmei.Data.Role.IsImpostor);
+    }
     public static void breakLovers(PlayerControl lover)
     {
         if ((Lovers.lover1 != null && lover == Lovers.lover1) || (Lovers.lover2 != null && lover == Lovers.lover2))
@@ -62,6 +81,7 @@ public static class Akujo
         forceKeeps = CustomOptionHolder.akujoForceKeeps.getBool();
         knowsRoles = CustomOptionHolder.akujoKnowsRoles.getBool();
         honmeiCannotFollowWin = CustomOptionHolder.akujoHonmeiCannotFollowWin.getBool();
+        honmeiOptimizeWin = CustomOptionHolder.akujoHonmeiOptimizeWin.getBool();
         timeLeft = (int)Math.Ceiling(timeLimit - (DateTime.UtcNow - startTime).TotalSeconds);
         numKeeps = Math.Min((int)CustomOptionHolder.akujoNumKeeps.getFloat(), PlayerControl.AllPlayerControls.Count - 2);
         keepsLeft = numKeeps;

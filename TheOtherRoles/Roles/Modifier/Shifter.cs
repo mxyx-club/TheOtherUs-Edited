@@ -10,6 +10,7 @@ public static class Shifter
     public static PlayerControl InvertDuration;
 
     public static bool modifierShiftNeutral;
+    public static bool modifierShiftALLNeutra;
 
     private static Sprite buttonSprite;
 
@@ -159,6 +160,11 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Lawyer.lawyer = player1;
         }
+        else if (Executioner.executioner != null && Executioner.executioner == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Executioner.executioner = player1;
+        }
         else if (Pursuer.pursuer != null && Pursuer.pursuer == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
@@ -179,6 +185,26 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Doomsayer.doomsayer = player1;
         }
+        else if (Werewolf.werewolf != null && Werewolf.werewolf == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Werewolf.werewolf = player1;
+        }
+        else if (Swooper.swooper != null && Swooper.swooper == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Swooper.swooper = player1;
+        }
+        else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Juggernaut.juggernaut = player1;
+        }
+        else if (Akujo.akujo != null && Akujo.akujo == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Akujo.akujo = player1;
+        }
     }
 
     public static void clearAndReload()
@@ -187,5 +213,6 @@ public static class Shifter
         currentTarget = null;
         futureShift = null;
         modifierShiftNeutral = CustomOptionHolder.modifierShiftNeutral.getBool();
+        modifierShiftALLNeutra = CustomOptionHolder.modifierShiftALLNeutral.getBool();
     }
 }

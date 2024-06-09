@@ -610,10 +610,11 @@ internal class RoleManagerSelectRolesPatch
             RoleId.Watcher,
             RoleId.Radar,
             RoleId.Disperser,
+            RoleId.Specoality,
             RoleId.PoucherModifier,
             RoleId.Cursed,
             RoleId.Chameleon,
-            RoleId.Shifter
+            RoleId.Shifter,
         });
 
         impModifiers.AddRange(new List<RoleId>
@@ -840,6 +841,16 @@ internal class RoleManagerSelectRolesPatch
             modifiers.RemoveAll(x => x == RoleId.Disperser);
         }
 
+        if (modifiers.Contains(RoleId.Specoality))
+        {
+            var impPlayer = new List<PlayerControl>(playerList); //testing
+            impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
+            playerId = setModifierToRandomPlayer((byte)RoleId.Specoality, impPlayer);
+            //crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+            playerList.RemoveAll(x => x.PlayerId == playerId);
+            modifiers.RemoveAll(x => x == RoleId.Specoality);
+        }
+
         if (modifiers.Contains(RoleId.PoucherModifier))
         {
             var impPlayer = new List<PlayerControl>(playerList);
@@ -1007,6 +1018,9 @@ internal class RoleManagerSelectRolesPatch
                 break;
             case RoleId.Disperser:
                 selection = CustomOptionHolder.modifierDisperser.getSelection();
+                break;
+            case RoleId.Specoality:
+                selection = CustomOptionHolder.modifierSpecoality.getSelection();
                 break;
             case RoleId.PoucherModifier:
                 if (Poucher.spawnModifier)

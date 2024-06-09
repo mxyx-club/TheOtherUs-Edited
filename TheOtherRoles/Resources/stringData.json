@@ -877,7 +877,7 @@
     },
     "fullCredentials": {
         "0": "<size=70%>Modified by <color=#FFB793>mxyx-club</color>\n<size=65%>Based on TheOtherUs</size>",
-        "13": "<size=75%>\u6a21\u7ec4\u4fee\u6539: <color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> \n\u7f8e\u5de5: <color=#00FFFFFF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheOtherUs</size>"
+        "13": "<size=75%>\u6a21\u7ec4\u4fee\u6539: <color=#FFB793>\u6cab\u590f\u60a0\u8f69  \u5584\u826f\u7684\u597d\u4eba</color> \n\u7f8e\u5de5: <color=#00FFFFFF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheOtherUs</size>"
     },
     "mainMenuCredentials": {
         "0": "<size=90%>Modified by <color=#FFB793>mxyx-club</color>\n<size=80%>Based on TheOtherUs</size>",
@@ -1034,7 +1034,7 @@
         "13": "\u70b8\u5f39\u72c2"
     },
     "BomberIntroDesc": {
-        "13": "\u7ed9\u5176\u4ed6\u73a9\u5bb6\u9001\u70b8\u5f39"
+        "13": "\u90fd\u7ed9\u6211\u70b8\u6210\u788e\u7247\uff01"
     },
     "BomberShortDesc": {
         "13": "\u70b8\u6b7b\u6240\u6709\u8239\u5458"
@@ -1074,7 +1074,7 @@
         "13": "\u7ba1\u9053\u5de5"
     },
     "MinerIntroDesc": {
-        "13": "\u5728\u98de\u8239\u4e0a\u6253\u6d1e"
+        "13": "\u6761\u6761\u7ba1\u9053\u901a\u7f57\u9a6c"
     },
     "MinerShortDesc": {
         "13": "\u5236\u9020\u7ba1\u9053"
@@ -1420,7 +1420,7 @@
         "13": "\u5e02\u957f"
     },
     "MayorIntroDesc": {
-        "13": "\u6211\u6301\u6709\u4e00\u7968\u5426\u51b3\u6743!!!"
+        "13": "\u5b89\u9759\uff01\u90fd\u542c\u6211\u8bf4\uff0c\u6211\u7684\u6743\u529b\u5f88\u5927"
     },
     "MayorShortDesc": {
         "13": "\u7528\u4f60\u7684\u6743\u529b\u5e2e\u52a9\u8239\u5458"
@@ -1630,7 +1630,7 @@
         "13": "\u901a\u7075\u5e08"
     },
     "MediumIntroDesc": {
-        "13": "\u8fd9\u4e0d\u662f\u5c01\u5efa\u8ff7\u4fe1\uff01"
+        "13": "\u5929\u6e05\u5730\u7075,\u4f17\u9b3c\u542c\u4ee4\uff01"
     },
     "MediumShortDesc": {
         "13": "\u5bf9\u7075\u9b42\u901a\u7075\u83b7\u53d6\u4fe1\u606f"
@@ -1650,7 +1650,7 @@
         "13": "\u9884\u8a00\u5bb6"
     },
     "ProphetIntroDesc": {
-        "13": "\u6211\u770b\u900f\u4e86\u4f60\u7684\u5fc3"
+        "13": "\u6216\u8bb8\u6211\u4ece\u6765\u6ca1\u770b\u900f\u4e86\u4f60\u7684\u5fc3"
     },
     "ProphetShortDesc": {
         "13": "\u901a\u8fc7\u9884\u8a00\u63ed\u793a\u5bf9\u65b9\u9635\u8425"
@@ -1674,6 +1674,15 @@
     },
     "LastImpostorShortDesc": {
         "13": "\u4f60\u7684\u51fb\u6740\u51b7\u5374\u4f1a\u5927\u5e45\u5ea6\u51cf\u5c11"
+    },
+    "Specoality": {
+        "0": "Specoality"
+    },
+    "SpecoalityIntroDesc": {
+        "13": "\u4eba\u53ef\u4ee5\u6709\u201c\u4e00\u6b21\u201d\uff01"
+    },
+    "SpecoalityShortDesc": {
+        "13": "\u53ef\u4ee5\u5931\u8bef\u4e00\u6b21"
     },
     "Bloody": {
         "0": "Bloody",

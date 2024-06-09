@@ -122,6 +122,7 @@ public enum RoleId
     ButtonBarry,
     Chameleon,
     Shifter,
+    Specoality,
 }
 
 public enum CustomRPC
@@ -643,6 +644,9 @@ public static class RPCProcedure
                 break;
             case RoleId.Disperser:
                 Disperser.disperser = player;
+                break;
+            case RoleId.Specoality:
+                Specoality.specoality = player;
                 break;
             case RoleId.Mini:
                 Mini.mini = player;
@@ -1844,6 +1848,7 @@ public static class RPCProcedure
             if (player == Poucher.poucher && Poucher.spawnModifier) Poucher.clearAndReload();
             if (player == ButtonBarry.buttonBarry) ButtonBarry.clearAndReload();
             if (player == Disperser.disperser) Disperser.clearAndReload();
+            if (player == Specoality.specoality) Specoality.clearAndReload();
             if (player == Indomitable.indomitable) Indomitable.clearAndReload();
             if (player == Tunneler.tunneler) Tunneler.clearAndReload();
             if (player == Slueth.slueth) Slueth.clearAndReload();
@@ -2449,6 +2454,24 @@ public static class RPCProcedure
             }
         }
 
+        if (Specoality.specoality != null && Specoality.specoality == guesser && Specoality.linearfunction > 0)
+        {
+            var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
+            if (!Specoality.specoality.Data.IsDead && guessedTargetId == dyingTargetId)
+            {
+
+                if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+            }
+            else
+            {
+                if (Specoality.linearfunction != 0)
+                {
+                    Specoality.linearfunction--;
+                }
+
+                return;
+            }
+        }
 
         if (Lawyer.lawyer != null && Lawyer.lawyer.PlayerId == killerId &&
             Lawyer.target != null && Lawyer.target.PlayerId == dyingTargetId)
