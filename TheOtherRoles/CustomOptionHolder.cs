@@ -989,7 +989,7 @@ public class CustomOptionHolder
         doomsayerCanGuessNeutral = Create(20225, Types.Neutral, "可以猜测" + cs(Color.gray, "中立"), true, doomsayerSpawnRate);
         doomsayerOnlineTarger = Create(20227, Types.Neutral, "是否获取已有职业", false, doomsayerSpawnRate);
         doomsayerKillToWin = Create(20228, Types.Neutral, "需要成功猜测几次获胜", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
-        doomsayerDormationNum = Create(20229, Types.Neutral, "预言的职业数量", 5f, 1f, 10f, 1f, doomsayerSpawnRate);
+        doomsayerDormationNum = Create(20229, Types.Neutral, "揭示的职业数量", 5f, 1f, 10f, 1f, doomsayerSpawnRate);
 
         akujoSpawnRate = Create(20231, Types.Neutral, cs(Akujo.color, "Akujo"), rates, null, true);
         akujoTimeLimit = Create(20232, Types.Neutral, "魅魔招募真爱的时间", 600f, 90f, 1200f, 15f, akujoSpawnRate);
@@ -997,7 +997,7 @@ public class CustomOptionHolder
         akujoNumKeeps = Create(20233, Types.Neutral, "可招募备胎的数量", 1f, 0f, 10f, 1f, akujoSpawnRate);
         akujoKnowsRoles = Create(20234, Types.Neutral, "魅魔是否知道目标职业", true, akujoSpawnRate);
         akujoHonmeiCannotFollowWin = Create(20235, Types.Neutral, "真爱无法跟随阵营获胜", true, akujoSpawnRate);
-        akujoHonmeiOptimizeWin = Create(20236, Types.Neutral, "魅魔胜利条件优化", true, akujoSpawnRate);
+        akujoHonmeiOptimizeWin = Create(20237, Types.Neutral, "真爱为船员时允许跟随胜利", true, akujoSpawnRate);
 
         thiefSpawnRate = Create(20240, Types.Neutral, cs(Thief.color, "Thief"), rates, null, true);
         thiefCooldown = Create(20241, Types.Neutral, "窃取冷却", 25f, 5f, 120f, 2.5f, thiefSpawnRate);
