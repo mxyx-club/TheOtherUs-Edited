@@ -41,6 +41,9 @@ public static class Thief
         return killer == thief && !target.Data.Role.IsImpostor && !new List<RoleInfo>
         {   RoleInfo.jackal,
             RoleInfo.sidekick,
+            RoleInfo.werewolf,
+            RoleInfo.juggernaut,
+            RoleInfo.swooper,
             canKillSheriff ? RoleInfo.sheriff : null,
             canKillDeputy ? RoleInfo.deputy : null,
             canKillVeteren ? RoleInfo.veteren : null

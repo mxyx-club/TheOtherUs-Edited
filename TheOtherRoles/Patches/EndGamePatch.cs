@@ -140,9 +140,9 @@ public class OnGameEndPatch
         if (Vulture.vulture != null) notWinners.Add(Vulture.vulture);
         if (Werewolf.werewolf != null) notWinners.Add(Werewolf.werewolf);
         if (Lawyer.lawyer != null) notWinners.Add(Lawyer.lawyer);
+        if (Executioner.executioner != null) notWinners.Add(Executioner.executioner);
         if (Pursuer.pursuer != null) notWinners.Add(Pursuer.pursuer);
         if (Thief.thief != null) notWinners.Add(Thief.thief);
-        //天启添加
         if (Juggernaut.juggernaut != null) notWinners.Add(Juggernaut.juggernaut);
         if (Doomsayer.doomsayer != null) notWinners.Add(Doomsayer.doomsayer);
         if (Akujo.akujo != null) notWinners.Add(Akujo.akujo);

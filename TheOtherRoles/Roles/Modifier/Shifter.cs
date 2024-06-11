@@ -9,8 +9,8 @@ public static class Shifter
     public static PlayerControl currentTarget;
     public static PlayerControl InvertDuration;
 
-    public static bool modifierShiftNeutral;
-    public static bool modifierShiftALLNeutra;
+    public static bool shiftNeutral;
+    public static bool shiftALLNeutra;
 
     private static Sprite buttonSprite;
 
@@ -212,7 +212,7 @@ public static class Shifter
         shifter = null;
         currentTarget = null;
         futureShift = null;
-        modifierShiftNeutral = CustomOptionHolder.modifierShiftNeutral.getBool();
-        modifierShiftALLNeutra = CustomOptionHolder.modifierShiftALLNeutral.getBool();
+        shiftNeutral = CustomOptionHolder.modifierShiftNeutral.getBool();
+        shiftALLNeutra = CustomOptionHolder.modifierShiftALLNeutral.getBool();
     }
 }

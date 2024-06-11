@@ -9,12 +9,13 @@ namespace TheOtherRoles.Roles.Crewmate;
 public static class Prophet
 {
     public static PlayerControl prophet;
-    public static Color32 color = new Color32(255, 204, 127, byte.MaxValue);
+    public static Color32 color = new(255, 204, 127, byte.MaxValue);
 
     public static float cooldown = 25f;
     public static bool killCrewAsRed;
     public static bool benignNeutralAsRed;
-    public static bool evilNeutralAsRed = true;
+    public static bool evilNeutralAsRed;
+    public static bool killNeutralAsRed;
     public static bool canCallEmergency;
     public static int examineNum = 3;
     public static int examinesToBeRevealed = 1;
@@ -33,18 +34,27 @@ public static class Prophet
         buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.SeerButton.png", 115f);
         return buttonSprite;
     }
-
     public static bool IsKiller(PlayerControl p)
     {
-        return isKiller(p)
-            || p.Data.Role.IsImpostor
-            || ((p == Sheriff.sheriff
-            || p == Deputy.deputy
-            || p == Veteren.veteren)
-            && killCrewAsRed)
-            || (isEvil(p) && evilNeutralAsRed)
-            || (!isEvil(p) && benignNeutralAsRed)
-        ;
+        if (p.Data.Role.IsImpostor || isKiller(p))
+        {
+            return true;
+        }
+        if (killCrewAsRed)
+        {
+            if (p == Sheriff.sheriff || p == Deputy.deputy || p == Veteren.veteren)
+            {
+                return true;
+            }
+        }
+        if (benignNeutralAsRed)
+        {
+            if (isNeutral(p) && (p == Amnisiac.amnisiac || p == Pursuer.pursuer))
+            {
+                return true;
+            }
+        }
+        return evilNeutralAsRed && isEvil(p);
     }
 
     public static void clearAndReload()
@@ -59,6 +69,7 @@ public static class Prophet
         killCrewAsRed = CustomOptionHolder.prophetKillCrewAsRed.getBool();
         benignNeutralAsRed = CustomOptionHolder.prophetBenignNeutralAsRed.getBool();
         evilNeutralAsRed = CustomOptionHolder.prophetEvilNeutralAsRed.getBool();
+        killNeutralAsRed = CustomOptionHolder.prophetKillNeutralAsRed.getBool();
         canCallEmergency = CustomOptionHolder.prophetCanCallEmergency.getBool();
         examinesToBeRevealed = Math.Min(examineNum, Mathf.RoundToInt(CustomOptionHolder.prophetExaminesToBeRevealed.getFloat()));
         examinesLeft = examineNum;

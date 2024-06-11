@@ -99,6 +99,7 @@ public enum RoleId
     EvilGuesser,
     Disperser,
     PoucherModifier,
+    Specoality,
     LastImpostor,
     Bloody,
     AntiTeleport,
@@ -122,7 +123,6 @@ public enum RoleId
     ButtonBarry,
     Chameleon,
     Shifter,
-    Specoality,
 }
 
 public enum CustomRPC
@@ -1353,6 +1353,7 @@ public static class RPCProcedure
             case RoleId.Prosecutor:
                 if (Amnisiac.resetRole) Prosecutor.clearAndReload();
                 Prosecutor.prosecutor = Mimic.mimic;
+                Prosecutor.diesOnIncorrectPros = false;
                 Mimic.hasMimic = true;
                 break;
 
@@ -1402,7 +1403,7 @@ public static class RPCProcedure
                 timeMasterShieldButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 Mimic.hasMimic = true;
                 break;
-
+                
             case RoleId.Veteren:
                 if (Amnisiac.resetRole) Veteren.clearAndReload();
                 Veteren.veteren = Mimic.mimic;

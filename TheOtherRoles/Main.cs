@@ -123,11 +123,12 @@ public class TheOtherRolesPlugin : BasePlugin
         if (ToggleCursor.Value) enableCursor(true);
 
 
-        //SubmergedCompatibility.Initialize();
+        SubmergedCompatibility.Initialize();
         MainMenuPatch.addSceneChangeCallbacks();
         _ = RoleInfo.loadReadme();
         AddToKillDistanceSetting.addKillDistance();
-        Info("Loading TOR completed!");
+        Info($"Loading TOU completed!");
+        Info($"TheOtherUs-Edited v{VersionString}");
     }
 }
 

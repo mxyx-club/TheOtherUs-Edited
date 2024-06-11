@@ -76,6 +76,7 @@ public class CustomOptionHolder
     public static CustomOption eraserSpawnRate;
     public static CustomOption eraserCooldown;
     public static CustomOption eraserCanEraseAnyone;
+    public static CustomOption erasercanEraseGuess;
 
     public static CustomOption guesserSpawnRate;
     public static CustomOption guesserNumberOfShots;
@@ -404,6 +405,7 @@ public class CustomOptionHolder
     public static CustomOption prophetKillCrewAsRed;
     public static CustomOption prophetBenignNeutralAsRed;
     public static CustomOption prophetEvilNeutralAsRed;
+    public static CustomOption prophetKillNeutralAsRed;
     public static CustomOption prophetCanCallEmergency;
     public static CustomOption prophetIsRevealed;
     public static CustomOption prophetExaminesToBeRevealed;
@@ -830,6 +832,7 @@ public class CustomOptionHolder
         eraserSpawnRate = Create(10160, Types.Impostor, cs(Eraser.color, "Eraser"), rates, null, true);
         eraserCooldown = Create(10161, Types.Impostor, "eraserCooldown", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
         eraserCanEraseAnyone = Create(10162, Types.Impostor, "eraserCanEraseAnyone", false, eraserSpawnRate);
+        erasercanEraseGuess = Create(10163, Types.Impostor, "可以猜测被抹除的玩家", false, eraserSpawnRate);
 
         poucherSpawnRate = Create(10320, Types.Impostor, cs(Palette.ImpostorRed, "Poucher"), rates, null, true);
         poucherSpawnModifier = Create(10321, Types.Impostor, "poucherSpawnModifier", false, poucherSpawnRate);
@@ -1124,6 +1127,7 @@ public class CustomOptionHolder
         prophetKillCrewAsRed = Create(30366, Types.Crewmate, "击杀型船员显示为红名", false, prophetSpawnRate);
         prophetBenignNeutralAsRed = Create(30367, Types.Crewmate, "善良型中立显示为红名", false, prophetSpawnRate);
         prophetEvilNeutralAsRed = Create(30368, Types.Crewmate, "邪恶型中立显示为红名", true, prophetSpawnRate);
+        prophetKillNeutralAsRed = Create(30369, Types.Crewmate, "邪恶型中立显示为红名", true, prophetSpawnRate);
 
         snitchSpawnRate = Create(30270, Types.Crewmate, cs(Snitch.color, "Snitch"), rates, null, true);
         snitchLeftTasksForReveal = Create(30271, Types.Crewmate, "剩余多少任务时可被发现", 1f, 0f, 10f, 1f, snitchSpawnRate);
@@ -1249,7 +1253,7 @@ public class CustomOptionHolder
         modifierTunneler = Create(40270, Types.Modifier, cs(Color.yellow, "Tunneler"), rates, null, true);
 
         modifierButtonBarry = Create(40280, Types.Modifier, cs(Color.yellow, "ButtonBarry"), rates, null, true);
-        modifierButtonSabotageRemoteMeetings = Create(40281, Types.Modifier, "可在破坏时使用", false, modifierButtonBarry);
+        modifierButtonSabotageRemoteMeetings = Create(40281, Types.Modifier, "可在破坏时使用\n无效设置", false, modifierButtonBarry);
 
         modifierSlueth = Create(40290, Types.Modifier, cs(Color.yellow, "Slueth"), rates, null, true);
 
@@ -1272,7 +1276,7 @@ public class CustomOptionHolder
 
         modifierShifter = Create(40340, Types.Modifier, cs(Color.yellow, "Shifter"), rates, null, true);
         modifierShiftNeutral = Create(40341, Types.Modifier, "可交换部分中立不带刀职业", false, modifierShifter);
-        modifierShiftALLNeutral = Create(40342, Types.Modifier, "可交换除豺狼阵营中立", false, modifierShifter);
+        modifierShiftALLNeutral = Create(40342, Types.Modifier, "可交换除豺狼阵营中立\n中立阵营可以成为交换师", false, modifierShiftNeutral);
 
 
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //

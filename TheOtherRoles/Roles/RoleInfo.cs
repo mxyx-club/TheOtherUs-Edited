@@ -16,6 +16,7 @@ public class RoleInfo
     public string introDescription { get { return getString(nameKey + "IntroDesc"); } }
     public string shortDescription { get { return getString(nameKey + "ShortDesc"); } }
     public string fullDescription { get { return getString(nameKey + "FullDesc"); } }
+
     public Color color;
     public RoleId roleId;
     public bool isNeutral;
@@ -103,10 +104,10 @@ public class RoleInfo
 
     // Modifier
     public static RoleInfo lover = new("Lover", Lovers.color, RoleId.Lover, false, true);
-    public static RoleInfo disperser = new("Disperser", Color.red, RoleId.Disperser, false, true);
-    public static RoleInfo specoality = new("Specoality", Color.yellow, RoleId.Specoality, false, true);
+    public static RoleInfo disperser = new("Disperser", Disperser.color, RoleId.Disperser, false, true);
+    public static RoleInfo specoality = new("Specoality", Specoality.color, RoleId.Specoality, false, true);
     public static RoleInfo poucherModifier = new("Poucher", Poucher.color, RoleId.PoucherModifier, false, true);
-    public static RoleInfo lastImpostor = new("LastImpostor", Palette.ImpostorRed, RoleId.LastImpostor, false, true);
+    public static RoleInfo lastImpostor = new("LastImpostor", LastImpostor.color, RoleId.LastImpostor, false, true);
     public static RoleInfo bloody = new("Bloody", Color.yellow, RoleId.Bloody, false, true);
     public static RoleInfo antiTeleport = new("AntiTeleport", Color.yellow, RoleId.AntiTeleport, false, true);
     public static RoleInfo tiebreaker = new("TieBreaker", Color.yellow, RoleId.Tiebreaker, false, true);

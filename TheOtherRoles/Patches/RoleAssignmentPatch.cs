@@ -892,13 +892,14 @@ internal class RoleManagerSelectRolesPatch
 
         //交换师
         var crewPlayer = new List<PlayerControl>(playerList);
-        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
+        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
+
         if (modifiers.Contains(RoleId.Shifter))
         {
-            var crewPlayerShifter = new List<PlayerControl>(crewPlayer);
-            crewPlayerShifter.RemoveAll(x => x == Spy.spy || x == Sheriff.sheriff);
+            var crewPlayerShifter = new List<PlayerControl>(playerList);
+            crewPlayerShifter.RemoveAll(x => x == Spy.spy || x.Data.Role.IsImpostor || (!Shifter.shiftALLNeutra && isShiftNeutral(x)));
             playerId = setModifierToRandomPlayer((byte)RoleId.Shifter, crewPlayerShifter);
-            crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+            crewPlayerShifter.RemoveAll(x => x.PlayerId == playerId);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Shifter);
         }

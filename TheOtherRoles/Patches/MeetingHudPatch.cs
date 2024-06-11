@@ -577,10 +577,13 @@ internal class MeetingHudPatch
             for (var i = 0; i < __instance.playerStates.Length; i++)
             {
                 var playerVoteArea = __instance.playerStates[i];
+
                 if (playerVoteArea.AmDead ||
                     playerVoteArea.TargetPlayerId == CachedPlayer.LocalPlayer.PlayerId) continue;
-                if (CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.PlayerControl == Eraser.eraser &&
-                    Eraser.alreadyErased.Contains(playerVoteArea.TargetPlayerId)) continue;
+
+                if (!Eraser.canEraseGuess && CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.PlayerControl == Eraser.eraser &&
+                    Eraser.alreadyErased.Contains(playerVoteArea.TargetPlayerId))
+                    continue;
 
                 var template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
                 var targetBox = Object.Instantiate(template, playerVoteArea.transform);

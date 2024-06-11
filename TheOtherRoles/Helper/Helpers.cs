@@ -236,29 +236,25 @@ public static class Helpers
     {
         if (CustomOptionHolder.modifierShiftALLNeutral.getBool())
         {
-            if (player != null)
-                return player == Jackal.jackal ||
+            return player != null && (
+                       player == Jackal.jackal ||
                        player == Sidekick.sidekick ||
-                       player == Lawyer.lawyer;
-            return false;
+                       player == Lawyer.lawyer);
         }
         else if (CustomOptionHolder.modifierShiftNeutral.getBool())
         {
-            if (player != null)
-                return player == Jackal.jackal ||
+            return player != null && (
+                       player == Jackal.jackal ||
                        player == Sidekick.sidekick ||
                        player == Werewolf.werewolf ||
                        player == Lawyer.lawyer ||
                        player == Juggernaut.juggernaut ||
-                       player == Swooper.swooper;
-            return false;
+                       player == Swooper.swooper);
         }
         else
         {
             var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
-            if (roleInfo != null)
-                return roleInfo.isNeutral;
-            return false;
+            return roleInfo != null && roleInfo.isNeutral;
         }
 
     }
@@ -582,7 +578,7 @@ public static class Helpers
         }
         catch
         {
-            Error("Error loading texture from resources: " + path);
+            //Error("Error loading texture from resources: " + path);
         }
 
         return null;
@@ -1193,7 +1189,7 @@ public static class Helpers
             Medic.shielded = null;
             return MurderAttemptResult.BlankKill;
         }
-
+        //法医盾被击中
         if (Medic.shielded != null && Medic.shielded == target)
         {
             var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.ShieldedMurderAttempt,
@@ -1202,7 +1198,7 @@ public static class Helpers
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
             SoundEffectsManager.play("fail");
-            killer.SetKillTimer(25f);
+            killer.SetKillTimer(GameManager.Instance.LogicOptions.GetKillCooldown());
 
             return MurderAttemptResult.SuppressKill;
         }

@@ -13,18 +13,32 @@
 
 ## 模组下载
 
-| 游戏版本  | 模组版本 | 链接                                                         |
-| --------- | -------- | ------------------------------------------------------------ |
-| 2024.3.5s | v1.0.3.8 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.8/TheOtherUs.zip) |
-| 2024.3.5s | v1.0.3.7 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.7/TheOtherRoles.zip) |
-| 2024.3.5s | v1.0.3.6 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherRoles.zip) |
-| 2024.3.5s | v1.0.3.3 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherRoles.zip) |
-| 2024.3.5s | v1.0.3.1 | [下载](https://github.com/mxyx-club/TheOtherUs/releases/download/v1.0.3.1/TheOtherUs.zip) |
+| 游戏版本  | 模组版本 | 发布日期   | 链接                                                         |
+| --------- | -------- | ---------- | ------------------------------------------------------------ |
+| 2024.3.5s | v1.0.3.8 | 2024.05.24 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.8/TheOtherUs.zip) |
+| 2024.3.5s | v1.0.3.7 | 2024.05.10 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.7/TheOtherRoles.zip) |
+| 2024.3.5s | v1.0.3.6 | 2024.05.08 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherRoles.zip) |
+| 2024.3.5s | v1.0.3.3 | 2024.04.11 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherRoles.zip) |
 
-注：本模组只发布经过测试后的文件，其余仅为内测版本。
-    如在其它渠道获得非以上的公开版本，请删除。如有更多此类现象则会在后续禁止游戏。
+<p align="center">注：本模组只发布经过测试后的文件，其余仅为内测版本。</p>
 
 ## 更新日志
+
+###  v1.0.4.2:
+
+ - #### 新增内容：
+
+    - 新增伪装者专属附加能力：专业刺客
+    - 交换师：新增选项 “可以交换除豺狼外的中立阵营”（开启此选项的同时允许中立阵营可以成为交换师）
+    - 抹除者：新增选项 “可以猜测被抹除的玩家”
+    - 魅魔：新增选项 “优化魅魔胜利条件”（即真爱为船员时允许共同获胜）
+    - 模仿者：模仿检察官起诉船员时不会导致自杀
+    
+ - #### Bug修复：
+
+    - 预言家：修正击杀型船员的揭示结果
+    - 处刑者：修正能跟随船员获胜的bug
+    - 身份窃贼：修复无法抢夺天启、月下狼人、隐身人
 
 ###  v1.0.4.1:
 

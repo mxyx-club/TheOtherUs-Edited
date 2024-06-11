@@ -14,6 +14,7 @@ public static class Eraser
     public static PlayerControl currentTarget;
     public static float cooldown = 30f;
     public static bool canEraseAnyone;
+    public static bool canEraseGuess;
 
     private static Sprite buttonSprite;
 
@@ -31,6 +32,7 @@ public static class Eraser
         currentTarget = null;
         cooldown = CustomOptionHolder.eraserCooldown.getFloat();
         canEraseAnyone = CustomOptionHolder.eraserCanEraseAnyone.getBool();
+        canEraseGuess = CustomOptionHolder.erasercanEraseGuess.getBool();
         alreadyErased = new List<byte>();
     }
 }

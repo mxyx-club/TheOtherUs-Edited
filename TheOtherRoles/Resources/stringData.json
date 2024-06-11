@@ -1279,16 +1279,6 @@
     "LawyerShortDesc": {
         "13": "\u4e3a\u5ba2\u6237\u8fa9\u9a73\u5e2e\u52a9\u80dc\u5229"
     },
-    "Prosecutor": {
-        "0": "Prosecutor",
-        "13": "\u68c0\u5bdf\u5b98"
-    },
-    "ProsecutorIntroDesc": {
-        "13": "\u5c31\u7b97\u5982\u4f55\u7528\u8c0e\u8a00\u6765\u7c89\u9970\uff0c\u4e5f\u662f\u7edd\u5bf9\u9003\u4e0d\u8fc7\u7f6a\u7f5a\u7684\uff01"
-    },
-    "ProsecutorShortDesc": {
-        "13": "\u5728\u4f1a\u8bae\u9a71\u9010\u4e00\u4e2a\u4f60\u8ba4\u4e3a\u53ef\u7591\u7684\u73a9\u5bb6\uff01"
-    },
     "Executioner": {
         "0": "Executioner",
         "13": "\u5904\u5211\u8005"
@@ -1425,6 +1415,16 @@
     "MayorShortDesc": {
         "13": "\u7528\u4f60\u7684\u6743\u529b\u5e2e\u52a9\u8239\u5458"
     },
+    "Prosecutor": {
+        "0": "Prosecutor",
+        "13": "\u68c0\u5bdf\u5b98"
+    },
+    "ProsecutorIntroDesc": {
+        "13": "\u6211\u4e0d\u5728\u4e4e\u4f60\u8bf4\u7684\u771f\u5047\uff0c\u6211\u53ea\u60f3\u8981\u4f60\u6b7b"
+    },
+    "ProsecutorShortDesc": {
+        "13": "\u5728\u4f1a\u8bae\u9a71\u9010\u4e00\u4e2a\u4f60\u8ba4\u4e3a\u53ef\u7591\u7684\u73a9\u5bb6\uff01"
+    },
     "Portalmaker": {
         "0": "Portalmaker",
         "13": "\u661f\u95e8\u7f14\u9020\u8005"
@@ -1484,16 +1484,6 @@
     },
     "BodyGuardShortDesc": {
         "13": "\u7528\u81ea\u5df1\u7684\u751f\u547d\u4fdd\u62a4\u4ed6\u4eba"
-    },
-    "Lighter": {
-        "0": "Lighter",
-        "13": "\u6267\u706f\u4eba"
-    },
-    "LighterIntroDesc": {
-        "13": "\u4f60 \u662f \u4e00 \u4e2a \u7535 \u706f \u6ce1a.a"
-    },
-    "LighterShortDesc": {
-        "13": "\u4f60\u7684\u706f\u5149\u6c38\u4e0d\u7184\u706d"
     },
     "Jumper": {
         "0": "Jumper",
@@ -1676,7 +1666,8 @@
         "13": "\u4f60\u7684\u51fb\u6740\u51b7\u5374\u4f1a\u5927\u5e45\u5ea6\u51cf\u5c11"
     },
     "Specoality": {
-        "0": "Specoality"
+        "0": "Specoality",
+        "13": "\u4e13\u4e1a\u523a\u5ba2"
     },
     "SpecoalityIntroDesc": {
         "13": "\u4eba\u53ef\u4ee5\u6709\u201c\u4e00\u6b21\u201d\uff01"
@@ -1749,7 +1740,7 @@
         "13": "\u95ea\u7535\u4fa0"
     },
     "FlashIntroDesc": {
-        "13": "\u4f60\u62e5\u6709\u66f4\u5feb\u7684\u79fb\u52a8\u901f\u5ea6!"
+        "13": "\u901f\u5ea6!\u901f\u5ea6!\u901f\u5ea6!"
     },
     "FlashShortDesc": {
         "13": "\u4f60\u62e5\u6709\u66f4\u5feb\u7684\u79fb\u52a8\u901f\u5ea6!"

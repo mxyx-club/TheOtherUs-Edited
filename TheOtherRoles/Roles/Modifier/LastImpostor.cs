@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Hazel;
+using UnityEngine;
 using TheOtherRoles.Utilities;
 
 namespace TheOtherRoles.Roles.Modifier;
@@ -7,6 +8,8 @@ namespace TheOtherRoles.Roles.Modifier;
 public static class LastImpostor
 {
     public static PlayerControl lastImpostor;
+    public static Color color = Palette.ImpostorRed;
+
     public static float deduce = 2.5f;
     public static bool isEnable;
 

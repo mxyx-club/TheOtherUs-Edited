@@ -7,7 +7,7 @@ namespace TheOtherRoles.Roles.Modifier;
 public static class Specoality
 {
     public static PlayerControl specoality;
-    public static Color color = new Color32(48, 21, 89, byte.MaxValue);
+    public static Color color = Palette.ImpostorRed;
     public static int linearfunction = 1;
 
     public static void clearAndReload()
