@@ -182,9 +182,9 @@ public class OnGameEndPatch
         bool akujoWin = false;
         if (Akujo.honmeiOptimizeWin)
         {
-            akujoWin = Akujo.akujo != null 
-                && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin 
-                    && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead 
+            akujoWin = Akujo.akujo != null
+                && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin
+                    && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead
                 || (GameManager.Instance.DidHumansWin(gameOverReason)
                 && !Akujo.existingWithKiller() && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead);
         }

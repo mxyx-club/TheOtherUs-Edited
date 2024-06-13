@@ -5,7 +5,7 @@ namespace TheOtherRoles.Roles.Modifier;
 public static class Disperser
 {
     public static PlayerControl disperser;
-    public static Color color = new Color32(48, 21, 89, byte.MaxValue);
+    public static Color color = Palette.ImpostorRed;
     public static int remainingDisperses = 1;
     public static bool DispersesToVent;
     private static Sprite buttonSprite;

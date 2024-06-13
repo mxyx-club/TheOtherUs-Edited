@@ -80,10 +80,11 @@ public static class Helpers
                player == Jackal.jackal ||
                player == Sidekick.sidekick ||
                player == Doomsayer.doomsayer ||
-               player == Pursuer.pursuer ||
                player == Akujo.akujo ||
                player == Swooper.swooper ||
                player == Lawyer.lawyer ||
+               player == Executioner.executioner ||
+               player == Pursuer.pursuer ||
                player == Vulture.vulture ||
                Jackal.formerJackals.Any(x => x == player);
     }

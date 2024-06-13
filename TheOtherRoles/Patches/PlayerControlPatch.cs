@@ -2451,8 +2451,7 @@ public static class ExilePlayerPatch
         if (Lawyer.lawyer != null && __instance == Lawyer.target)
         {
             var lawyer = Lawyer.lawyer;
-            if (AmongUsClient.Instance.AmHost &&
-                ((Lawyer.target != Jester.jester) || Lawyer.targetWasGuessed))
+            if (AmongUsClient.Instance.AmHost && ((Lawyer.target != Jester.jester) || Lawyer.targetWasGuessed))
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
@@ -2465,8 +2464,7 @@ public static class ExilePlayerPatch
                 if (Lawyer.lawyer != null) Lawyer.lawyer.Exiled();
                 if (Pursuer.pursuer != null) Pursuer.pursuer.Exiled();
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                    (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
                 writer.Write(CachedPlayer.LocalPlayer.PlayerId);
                 writer.Write((byte)RPCProcedure.GhostInfoTypes.DeathReasonAndKiller);
                 writer.Write(lawyer.PlayerId);
@@ -2477,6 +2475,17 @@ public static class ExilePlayerPatch
                     lawyer); // TODO: only executed on host?!
             }
         }
+        if (Executioner.executioner != null && __instance == Executioner.target)
+        {
+            if (AmongUsClient.Instance.AmHost && Executioner.targetWasGuessed)
+            {
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.executionerPromotesRole();
+            }
+        }
+
         // Akujo Partner suicide
         if ((Akujo.akujo != null && Akujo.akujo == __instance) || (Akujo.honmei != null && Akujo.honmei == __instance))
         {

@@ -1007,7 +1007,7 @@ public static class RPCProcedure
                 Yoyo.yoyo = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
-                
+
             case RoleId.Terrorist:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Terrorist.clearAndReload();
@@ -1403,7 +1403,7 @@ public static class RPCProcedure
                 timeMasterShieldButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 Mimic.hasMimic = true;
                 break;
-                
+
             case RoleId.Veteren:
                 if (Amnisiac.resetRole) Veteren.clearAndReload();
                 Veteren.veteren = Mimic.mimic;
@@ -1562,7 +1562,14 @@ public static class RPCProcedure
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 lawyerPromotesToPursuer();
             }
+            else if (oldShifter == Executioner.target && AmongUsClient.Instance.AmHost && Executioner.executioner != null)
+            {
 
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                executionerPromotesRole();
+            }
             return;
         }
 
@@ -1686,7 +1693,7 @@ public static class RPCProcedure
                 Lawyer.lawyer = Executioner.executioner;
                 Executioner.clearAndReload();
             }
-            else if (!Executioner.promotesToLawyer && Pursuer.pursuer == null)
+            else if (!Executioner.promotesToLawyer)
             {
                 Pursuer.pursuer = Executioner.executioner;
                 Executioner.clearAndReload();
@@ -1942,7 +1949,6 @@ public static class RPCProcedure
             Bomber.bombActive = false;
             Bomber.hasAlerted = false;
             Bomber.timeLeft = 0;
-
             return;
         }
 
@@ -2406,9 +2412,9 @@ public static class RPCProcedure
     {
         var player = Executioner.executioner;
         var client = Executioner.target;
-        Executioner.clearAndReload();
 
         Pursuer.pursuer = player;
+        Executioner.clearAndReload(false);
 
         if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId && client != null)
         {
@@ -2421,13 +2427,16 @@ public static class RPCProcedure
     public static void guesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleId)
     {
         var dyingTarget = playerById(dyingTargetId);
-        PlayerControl? dyingAkujoPartner;
-        if (dyingTarget == null) return;
-        if (Lawyer.target != null && dyingTarget == Lawyer.target)
-            Lawyer.targetWasGuessed = true; // Lawyer shouldn't be exiled with the client for guesses
         var dyingLoverPartner = Lovers.bothDie ? dyingTarget.getPartner() : null; // Lover check
-        if (Lawyer.target != null && dyingLoverPartner == Lawyer.target)
-            Lawyer.targetWasGuessed = true; // Lawyer shouldn't be exiled with the client for guesses
+        PlayerControl? dyingAkujoPartner;
+
+        // Lawyer shouldn't be exiled with the client for guesses
+        if (dyingTarget == null) return;
+        if (Lawyer.target != null && (dyingTarget == Lawyer.target || dyingLoverPartner == Lawyer.target))
+            Lawyer.targetWasGuessed = true;
+
+        if (Executioner.target != null && (dyingTarget == Executioner.target || dyingLoverPartner == Executioner.target))
+            Executioner.targetWasGuessed = true;
 
         var guesser = playerById(killerId);
         if (Thief.thief != null && Thief.thief.PlayerId == killerId && Thief.canStealWithGuess)
@@ -2474,20 +2483,17 @@ public static class RPCProcedure
             }
         }
 
-        if (Lawyer.lawyer != null && Lawyer.lawyer.PlayerId == killerId &&
-            Lawyer.target != null && Lawyer.target.PlayerId == dyingTargetId)
+        if (Lawyer.lawyer != null && Lawyer.lawyer.PlayerId == killerId && Lawyer.target != null && Lawyer.target.PlayerId == dyingTargetId)
         {
             // Lawyer guessed client.
             if (CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer)
             {
-                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(Lawyer.lawyer.Data,
-                    Lawyer.lawyer.Data);
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(Lawyer.lawyer.Data, Lawyer.lawyer.Data);
                 if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
             }
 
             Lawyer.lawyer.Exiled();
         }
-
 
         var partnerId = dyingLoverPartner != null ? dyingLoverPartner.PlayerId : dyingTargetId;
 
@@ -3334,16 +3340,16 @@ internal class RPCHandlerPatch
                 RPCProcedure.lawyerSetTarget(reader.ReadByte());
                 break;
 
+            case CustomRPC.LawyerPromotesToPursuer:
+                RPCProcedure.lawyerPromotesToPursuer();
+                break;
+
             case CustomRPC.ExecutionerSetTarget:
                 RPCProcedure.executionerSetTarget(reader.ReadByte());
                 break;
 
             case CustomRPC.ExecutionerPromotesRole:
                 RPCProcedure.executionerPromotesRole();
-                break;
-
-            case CustomRPC.LawyerPromotesToPursuer:
-                RPCProcedure.lawyerPromotesToPursuer();
                 break;
 
             case CustomRPC.SetBlanked:

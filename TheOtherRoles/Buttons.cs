@@ -552,10 +552,10 @@ internal static class HudManagerStartPatch
                           ((Arsonist.arsonist == Sheriff.currentTarget && Sheriff.canKillArsonist) ||
                            (Jester.jester == Sheriff.currentTarget && Sheriff.canKillJester) ||
                            (Vulture.vulture == Sheriff.currentTarget && Sheriff.canKillVulture) ||
-                           (Executioner.executioner == Sheriff.currentTarget && Sheriff.canKillLawyer) ||
                            (Thief.thief == Sheriff.currentTarget && Sheriff.canKillThief) ||
                            (Amnisiac.amnisiac == Sheriff.currentTarget && Sheriff.canKillAmnesiac) ||
-                           (Lawyer.lawyer == Sheriff.currentTarget && Sheriff.canKillProsecutor) ||
+                           (Lawyer.lawyer == Sheriff.currentTarget && Sheriff.canKillLawyer) ||
+                           (Executioner.executioner == Sheriff.currentTarget && Sheriff.canKillExecutioner) ||
                            (Pursuer.pursuer == Sheriff.currentTarget && Sheriff.canKillPursuer) ||
                             Akujo.akujo == Sheriff.currentTarget ||
                            (Doomsayer.doomsayer == Sheriff.currentTarget && Sheriff.canKillDoomsayer)))))

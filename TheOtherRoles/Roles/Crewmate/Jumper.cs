@@ -22,7 +22,7 @@ public static class Jumper
     public static ResourceSprite jumpMarkButtonSprite = new("JumperMarkButton.png");
     public static ResourceSprite jumpButtonSprite = new("JumperJumpButton.png");
     public static bool usedPlace;
-    
+
     public static void resetPlaces()
     {
         Charges = Mathf.RoundToInt(ChargesOnPlace);

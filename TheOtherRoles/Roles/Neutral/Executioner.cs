@@ -10,6 +10,7 @@ public static class Executioner
     public static bool canCallEmergency;
     public static bool triggerExecutionerWin;
     public static bool promotesToLawyer;
+    public static bool targetWasGuessed;
     /*
     public enum targetDeadBecame
     {
@@ -20,10 +21,14 @@ public static class Executioner
     };
     public static targetDeadBecame role;
     */
-    public static void clearAndReload()
+    public static void clearAndReload(bool clearTarget = true)
     {
+        if (clearTarget)
+        {
+            target = null;
+            targetWasGuessed = false;
+        }
         executioner = null;
-        target = null;
         triggerExecutionerWin = false;
         promotesToLawyer = CustomOptionHolder.executionerPromotesToLawyer.getBool();
         canCallEmergency = CustomOptionHolder.executionerCanCallEmergency.getBool();

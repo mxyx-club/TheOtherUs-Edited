@@ -17,7 +17,6 @@ public class CachedPlayer
     public PlayerControl PlayerControl;
     public byte PlayerId;
     public PlayerPhysics PlayerPhysics;
-
     public Transform transform;
 
     public static implicit operator bool(CachedPlayer player)

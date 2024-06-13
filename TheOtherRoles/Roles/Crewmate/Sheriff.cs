@@ -16,7 +16,7 @@ public static class Sheriff
     public static bool canKillVulture;
     public static bool canKillThief;
     public static bool canKillAmnesiac;
-    public static bool canKillProsecutor;
+    public static bool canKillExecutioner;
     public static bool canKillDoomsayer;
     public static bool spyCanDieToSheriff;
     public static int misfireKills; // Self: 0, Target: 1, Both: 2
@@ -50,7 +50,7 @@ public static class Sheriff
         canKillVulture = CustomOptionHolder.sheriffCanKillVulture.getBool();
         canKillThief = CustomOptionHolder.sheriffCanKillThief.getBool();
         canKillAmnesiac = CustomOptionHolder.sheriffCanKillAmnesiac.getBool();
-        canKillProsecutor = CustomOptionHolder.sheriffCanKillProsecutor.getBool();
+        canKillExecutioner = CustomOptionHolder.sheriffCanKillExecutioner.getBool();
         spyCanDieToSheriff = CustomOptionHolder.spyCanDieToSheriff.getBool();
         canKillDoomsayer = CustomOptionHolder.spyCanDieToSheriff.getBool();
     }

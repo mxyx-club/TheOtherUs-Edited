@@ -191,7 +191,7 @@ public class CustomOptionHolder
     public static CustomOption sheriffCanKillNeutrals;
     public static CustomOption sheriffCanKillArsonist;
     public static CustomOption sheriffCanKillLawyer;
-    public static CustomOption sheriffCanKillProsecutor;
+    public static CustomOption sheriffCanKillExecutioner;
     public static CustomOption sheriffCanKillJester;
     public static CustomOption sheriffCanKillVulture;
     public static CustomOption sheriffCanKillThief;
@@ -1045,7 +1045,7 @@ public class CustomOptionHolder
         sheriffCanKillAmnesiac = Create(30153, Types.Crewmate, "可执法 " + cs(Amnisiac.color, "失忆者"), false, sheriffCanKillNeutrals);
         sheriffCanKillJester = Create(30151, Types.Crewmate, "可执法 " + cs(Jester.color, "小丑"), true, sheriffCanKillNeutrals);
         sheriffCanKillLawyer = Create(30156, Types.Crewmate, "可执法 " + cs(Lawyer.color, "律师"), true, sheriffCanKillNeutrals);
-        sheriffCanKillProsecutor = Create(30152, Types.Crewmate, "可执法 " + cs(Lawyer.color, "处刑者"), true, sheriffCanKillNeutrals);
+        sheriffCanKillExecutioner = Create(30152, Types.Crewmate, "可执法 " + cs(Lawyer.color, "处刑者"), true, sheriffCanKillNeutrals);
         sheriffCanKillPursuer = Create(30158, Types.Crewmate, "可执法 " + cs(Pursuer.color, "起诉人"), true, sheriffCanKillNeutrals);
         sheriffCanKillVulture = Create(30155, Types.Crewmate, "可执法 " + cs(Vulture.color, "秃鹫"), true, sheriffCanKillNeutrals);
         sheriffCanKillThief = Create(30157, Types.Crewmate, "可执法 " + cs(Thief.color, "身份窃贼"), true, sheriffCanKillNeutrals);

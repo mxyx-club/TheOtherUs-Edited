@@ -59,40 +59,40 @@ namespace TheOtherRoles.Patches
                     return false;
                 }
 
-            // If Game mode is Hide N Seek and hunter with ability active
-            else if (HideNSeek.isHideNSeekGM && Hunter.isLightActive(player.PlayerId))
-            {
-                var unlerped = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius,
-                    GetNeutralLightRadius(__instance, false));
-                __result = Mathf.Lerp(__instance.MaxLightRadius * Hunter.lightVision,
-                    __instance.MaxLightRadius * Hunter.lightVision, unlerped);
-                return false;
-            }
+                // If Game mode is Hide N Seek and hunter with ability active
+                else if (HideNSeek.isHideNSeekGM && Hunter.isLightActive(player.PlayerId))
+                {
+                    var unlerped = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius,
+                        GetNeutralLightRadius(__instance, false));
+                    __result = Mathf.Lerp(__instance.MaxLightRadius * Hunter.lightVision,
+                        __instance.MaxLightRadius * Hunter.lightVision, unlerped);
+                    return false;
+                }
 
-            // If there is a Trickster with their ability active
-            else if (Trickster.trickster != null && Trickster.lightsOutTimer > 0f)
-            {
-                var lerpValue = 1f;
-                if (Trickster.lightsOutDuration - Trickster.lightsOutTimer < 0.5f)
-                    lerpValue = Mathf.Clamp01((Trickster.lightsOutDuration - Trickster.lightsOutTimer) * 2);
-                else if (Trickster.lightsOutTimer < 0.5) lerpValue = Mathf.Clamp01(Trickster.lightsOutTimer * 2);
+                // If there is a Trickster with their ability active
+                else if (Trickster.trickster != null && Trickster.lightsOutTimer > 0f)
+                {
+                    var lerpValue = 1f;
+                    if (Trickster.lightsOutDuration - Trickster.lightsOutTimer < 0.5f)
+                        lerpValue = Mathf.Clamp01((Trickster.lightsOutDuration - Trickster.lightsOutTimer) * 2);
+                    else if (Trickster.lightsOutTimer < 0.5) lerpValue = Mathf.Clamp01(Trickster.lightsOutTimer * 2);
 
-                __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
-            }
+                    __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
+                }
 
-            // If player is Lawyer, apply Lawyer vision modifier
-            else if (Lawyer.lawyer != null && Lawyer.lawyer.PlayerId == player.PlayerId)
-            {
-                var unlerped = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, false));
-                __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius * Lawyer.vision, unlerped);
-                return false;
-            }
+                // If player is Lawyer, apply Lawyer vision modifier
+                else if (Lawyer.lawyer != null && Lawyer.lawyer.PlayerId == player.PlayerId)
+                {
+                    var unlerped = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, false));
+                    __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius * Lawyer.vision, unlerped);
+                    return false;
+                }
 
-            // Default light radius
-            else
-            {
-                __result = GetNeutralLightRadius(__instance, false);
-            }
+                // Default light radius
+                else
+                {
+                    __result = GetNeutralLightRadius(__instance, false);
+                }
             /*
             // Additional code
             //var switchSystem = GameOptionsManager.Instance.currentNormalGameOptions.MapId == 5 ? null : __instance.Systems[SystemTypes.Electrical]?.TryCast<SwitchSystem>();

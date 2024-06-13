@@ -36,66 +36,68 @@ public static class ChatCommands
             var handled = false;
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
             {
-                if (text.ToLower().StartsWith("/kick "))
+                try
                 {
-                    var playerName = text.Substring(6);
-                    PlayerControl target =
-                        CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
-                    if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
+
+                    if (text.ToLower().StartsWith("/kick "))
                     {
-                        var client = AmongUsClient.Instance.GetClient(target.OwnerId);
-                        if (client != null)
+                        var playerName = text.Substring(6);
+                        PlayerControl target =
+                            CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
+                        if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
                         {
-                            AmongUsClient.Instance.KickPlayer(client.Id, false);
-                            handled = true;
+                            var client = AmongUsClient.Instance.GetClient(target.OwnerId);
+                            if (client != null)
+                            {
+                                AmongUsClient.Instance.KickPlayer(client.Id, false);
+                                handled = true;
+                            }
                         }
                     }
-                }
-                else if (text.ToLower().StartsWith("/ban "))
-                {
-                    var playerName = text.Substring(5);
-                    PlayerControl target =
-                        CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
-                    if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
+                    else if (text.ToLower().StartsWith("/ban "))
                     {
-                        var client = AmongUsClient.Instance.GetClient(target.OwnerId);
-                        if (client != null)
+                        var playerName = text.Substring(5);
+                        PlayerControl target =
+                            CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
+                        if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
                         {
-                            AmongUsClient.Instance.KickPlayer(client.Id, true);
-                            handled = true;
+                            var client = AmongUsClient.Instance.GetClient(target.OwnerId);
+                            if (client != null)
+                            {
+                                AmongUsClient.Instance.KickPlayer(client.Id, true);
+                                handled = true;
+                            }
                         }
                     }
+                    else if (text.ToLower().StartsWith("/gm"))
+                    {
+                        var gm = text[4..].ToLower();
+                        var gameMode = CustomGamemodes.Classic;
+                        if (gm.StartsWith("prop") || gm.StartsWith("ph")) gameMode = CustomGamemodes.PropHunt;
+                        if (gm.StartsWith("guess") || gm.StartsWith("gm")) gameMode = CustomGamemodes.Guesser;
+                        if (gm.StartsWith("hide") || gm.StartsWith("hn")) gameMode = CustomGamemodes.HideNSeek;
+
+                        if (AmongUsClient.Instance.AmHost)
+                        {
+                            var writer = AmongUsClient.Instance.StartRpcImmediately(
+                                CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGamemode,
+                                SendOption.Reliable);
+                            writer.Write((byte)gameMode);
+                            AmongUsClient.Instance.FinishRpcImmediately(writer);
+                            RPCProcedure.shareGameMode((byte)gameMode);
+                        }
+                        else
+                        {
+                            __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl,
+                                "Nice try, but you have to be the host to use this feature 这是房主至高无上的权利");
+                        }
+
+                        handled = true;
+                    }
                 }
-                else if (text.ToLower().StartsWith("/gm"))
+                catch
                 {
-                    var gm = text[4..].ToLower();
-                    var gameMode = CustomGamemodes.Classic;
-
-                    if (gm.StartsWith("prop") || gm.StartsWith("ph"))
-                        gameMode = CustomGamemodes.PropHunt;
-
-                    if (gm.StartsWith("guess") || gm.StartsWith("gm"))
-                        gameMode = CustomGamemodes.Guesser;
-
-                    if (gm.StartsWith("hide") || gm.StartsWith("hn"))
-                        gameMode = CustomGamemodes.HideNSeek;
-
-                    if (AmongUsClient.Instance.AmHost)
-                    {
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(
-                            CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGamemode,
-                            SendOption.Reliable);
-                        writer.Write((byte)gameMode);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.shareGameMode((byte)gameMode);
-                    }
-                    else
-                    {
-                        __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl,
-                            "Nice try, but you have to be the host to use this feature 这是房主至高无上的权利");
-                    }
-
-                    handled = true;
+                    __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "指令错误");
                 }
             }
 

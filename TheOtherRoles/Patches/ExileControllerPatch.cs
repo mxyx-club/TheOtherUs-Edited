@@ -204,8 +204,9 @@ internal class ExileControllerWrapUpPatch
         // Prosecutor win condition
         if (exiled != null && Executioner.executioner != null && Executioner.target != null &&
             Executioner.target.PlayerId == exiled.PlayerId && !Executioner.executioner.Data.IsDead)
+        {
             Executioner.triggerExecutionerWin = true;
-
+        }
         // Mini exile lose condition
         else if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() &&
                  !Mini.mini.Data.Role.IsImpostor && !RoleInfo.getRoleInfoForPlayer(Mini.mini).Any(x => x.isNeutral))
@@ -429,9 +430,9 @@ internal class ExileControllerMessagePatch
                 else if (Tiebreaker.isTiebreak)
                 {
                     __result += " (破平)";
-                Tiebreaker.isTiebreak = false;
+                    Tiebreaker.isTiebreak = false;
+                }
             }
-        }
         }
         catch
         {

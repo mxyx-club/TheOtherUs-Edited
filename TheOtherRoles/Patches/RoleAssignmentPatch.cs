@@ -896,10 +896,18 @@ internal class RoleManagerSelectRolesPatch
 
         if (modifiers.Contains(RoleId.Shifter))
         {
-            var crewPlayerShifter = new List<PlayerControl>(playerList);
-            crewPlayerShifter.RemoveAll(x => x == Spy.spy || x.Data.Role.IsImpostor || (!Shifter.shiftALLNeutra && isShiftNeutral(x)));
-            playerId = setModifierToRandomPlayer((byte)RoleId.Shifter, crewPlayerShifter);
-            crewPlayerShifter.RemoveAll(x => x.PlayerId == playerId);
+            List<PlayerControl> crewPlayerS = new List<PlayerControl>(playerList);
+            if (Shifter.shiftALLNeutra)
+            {
+                crewPlayerS.RemoveAll(x => x.Data.Role.IsImpostor || x == Jackal.jackal || x == Sidekick.sidekick || x == Lawyer.lawyer);
+            }
+            else
+            {
+                crewPlayerS.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
+            }
+
+
+            playerId = setModifierToRandomPlayer((byte)RoleId.Shifter, crewPlayerS);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Shifter);
         }

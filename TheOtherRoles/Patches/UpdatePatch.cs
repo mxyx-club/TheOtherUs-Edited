@@ -116,7 +116,7 @@ internal class HudManagerUpdatePatch
 
         if (Executioner.executioner != null && localPlayer == Executioner.executioner)
         {
-            setPlayerNameColor(Executioner.target, Executioner.color);
+            setPlayerNameColor(Executioner.target, Color.grey);
         }
 
         if (Snitch.snitch != null)
