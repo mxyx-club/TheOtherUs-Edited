@@ -2476,6 +2476,7 @@ public static class RPCProcedure
             {
                 if (Specoality.linearfunction != 0)
                 {
+                    if(CachedPlayer.LocalPlayer.PlayerControl == Specoality.specoality) showFlash(Color.red, 1f, "");
                     Specoality.linearfunction--;
                 }
 

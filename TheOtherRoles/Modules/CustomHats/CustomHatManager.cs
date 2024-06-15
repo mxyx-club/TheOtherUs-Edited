@@ -13,7 +13,7 @@ public static class CustomHatManager
     public const string InnerslothPackageName = "Innersloth Hats";
     public const string DeveloperPackageName = "Developer Hats";
 
-    internal static readonly Tuple<string, string> Repository = new("TheOtherRolesAU", "TheOtherHats");
+    internal static readonly Tuple<string, string> Repository = new("mxyx-club", "TheOtherHats");
     private const string branch = "master";
     internal static string RepositoryUrl
     {
