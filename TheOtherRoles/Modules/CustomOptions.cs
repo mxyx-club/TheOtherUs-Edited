@@ -86,16 +86,14 @@ public class CustomOption
         float max, float step, CustomOption parent = null, bool isHeader = false, Action onChange = null)
     {
         List<object> selections = new();
-        for (var s = min; s <= max; s += step)
-            selections.Add(s);
+        for (var s = min; s <= max; s += step) selections.Add(s);
         return new CustomOption(id, type, name, selections.ToArray(), defaultValue, parent, isHeader, onChange);
     }
 
     public static CustomOption Create(int id, CustomOptionType type, string name, bool defaultValue,
         CustomOption parent = null, bool isHeader = false, Action onChange = null)
     {
-        return new CustomOption(id, type, name, new[] { "optionOff", "optionOn" }, defaultValue ? "optionOn" : "optionOff", parent, isHeader,
-            onChange);
+        return new CustomOption(id, type, name, ["optionOff", "optionOn"], defaultValue ? "optionOn" : "optionOff", parent, isHeader, onChange);
     }
 
     // Static behaviour
@@ -1481,8 +1479,7 @@ public static class GameOptionsNextPagePatch
         if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5)) TheOtherRolesPlugin.optionsPage = 4;
         if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6)) TheOtherRolesPlugin.optionsPage = 5;
         if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7)) TheOtherRolesPlugin.optionsPage = 6;
-        if (Input.GetKeyDown(KeyCode.F1))
-            HudManagerUpdate.ToggleSettings(HudManager.Instance);
+        if (Input.GetKeyDown(KeyCode.F1)) HudManagerUpdate.ToggleSettings(HudManager.Instance);
         if (TheOtherRolesPlugin.optionsPage >= GameOptionsDataPatch.maxPage) TheOtherRolesPlugin.optionsPage = 0;
 
         if (page != TheOtherRolesPlugin.optionsPage)

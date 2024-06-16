@@ -46,9 +46,7 @@ public static class Doomsayer
         var roleInfoTarget = RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault();
         var message = new StringBuilder();
         var tempNumList = Enumerable.Range(0, allRoleInfo.Count - 1).ToList();
-        var temp =
-            (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList)
-            .OrderBy(_ => random.Next()).ToList();
+        var temp = (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList).OrderBy(_ => random.Next()).ToList();
 
         message.AppendLine($"{target.Data.PlayerName} 的职业可能是：\n");
 

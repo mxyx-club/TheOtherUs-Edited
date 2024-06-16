@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AmongUs.Data;
 using AmongUs.GameOptions;
+using AsmResolver.PE.File.Headers;
 using Assets.CoreScripts;
 using Hazel;
 using InnerNet;
@@ -2479,7 +2480,7 @@ public static class RPCProcedure
                     if(CachedPlayer.LocalPlayer.PlayerControl == Specoality.specoality) showFlash(Color.red, 1f, "");
                     Specoality.linearfunction--;
                 }
-
+                if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
                 return;
             }
         }
@@ -2527,9 +2528,13 @@ public static class RPCProcedure
                 MeetingHud.Instance.CheckForEndVoting();
         }
 
-
-        HandleGuesser.remainingShots(killerId, true);
-
+        if (Doomsayer.doomsayer != null && Doomsayer.doomsayer == guesser)
+        {
+        }
+        else
+        {
+            HandleGuesser.remainingShots(killerId, true);
+        }
 
         if (FastDestroyableSingleton<HudManager>.Instance != null && guesser != null)
         {

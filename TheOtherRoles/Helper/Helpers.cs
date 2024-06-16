@@ -371,10 +371,8 @@ public static class Helpers
         return getActiveSabo() == SabatageTypes.Comms;
     }
 
-
     public static bool isCamoComms()
     {
-        if (isFungle()) return isCommsActive() && MapOption.camoComms && !MapOption.fungleDisableCamoComms;
         return isCommsActive() && MapOption.camoComms;
     }
 

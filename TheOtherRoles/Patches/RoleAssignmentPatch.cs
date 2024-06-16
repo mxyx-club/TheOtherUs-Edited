@@ -191,7 +191,7 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Medium, CustomOptionHolder.mediumSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Prophet, CustomOptionHolder.prophetSpawnRate.getSelection());
         //crewSettings.Add((byte)RoleId.Magician, CustomOptionHolder.magicianSpawnRate.getSelection());
-        if (isGuesserGamemode == false)
+        if (!isGuesserGamemode)
             crewSettings.Add((byte)RoleId.NiceGuesser, CustomOptionHolder.guesserSpawnRate.getSelection());
         crewSettings.Add((byte)RoleId.Trapper, CustomOptionHolder.trapperSpawnRate.getSelection());
         if (impostors.Count > 1)
@@ -739,7 +739,6 @@ internal class RoleManagerSelectRolesPatch
         if (Thief.thief != null && forceThief)
             IndexList.Enqueue(Thief.thief);
 
-
         if (Jackal.jackal != null && forceJackal)
             IndexList.Enqueue(Jackal.jackal);
 
@@ -843,10 +842,26 @@ internal class RoleManagerSelectRolesPatch
 
         if (modifiers.Contains(RoleId.Specoality))
         {
-            var impPlayer = new List<PlayerControl>(playerList); //testing
-            impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
+            var impPlayer = new List<PlayerControl>();
+
+            if (isGuesserGamemode)
+            {
+                for (int i = 0; i < GuesserGM.guessers.Count; i++)
+                {
+                    impPlayer.Add(GuesserGM.guessers[i].guesser);
+                    impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Guesser.evilGuesser.Count; i++)
+                {
+                    impPlayer.Add(Guesser.evilGuesser[i]);
+                }
+
+            }
+
             playerId = setModifierToRandomPlayer((byte)RoleId.Specoality, impPlayer);
-            //crewPlayer.RemoveAll(x => x.PlayerId == playerId);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Specoality);
         }
@@ -863,8 +878,7 @@ internal class RoleManagerSelectRolesPatch
         if (modifiers.Contains(RoleId.Cursed))
         {
             var crewPlayerC = new List<PlayerControl>(playerList);
-            crewPlayerC.RemoveAll(x =>
-                x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
+            crewPlayerC.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
             playerId = setModifierToRandomPlayer((byte)RoleId.Cursed, crewPlayerC);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Cursed);
@@ -1090,7 +1104,7 @@ internal class RoleManagerSelectRolesPatch
                 selection = CustomOptionHolder.modifierShifter.getSelection();
                 break;
             case RoleId.EvilGuesser:
-                if (isGuesserGamemode == false)
+                if (!isGuesserGamemode)
                 {
                     selection = CustomOptionHolder.modifierAssassin.getSelection();
                     if (!Cultist.isCultistGame)

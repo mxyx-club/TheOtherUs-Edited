@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace TheOtherRoles.CustomGameModes;
@@ -20,21 +21,20 @@ internal class GuesserGM
 
     public static int remainingShots(byte playerId, bool shoot = false)
     {
-        var g = guessers.FindLast(x => x.guesser.PlayerId == playerId);
+        var g = guessers.FirstOrDefault(x => x.guesser.PlayerId == playerId);
         if (g == null) return 0;
         if (shoot) g.shots--;
-        //if ((Doomsayer.doomsayer == null || (g.guesser.PlayerId != Doomsayer.doomsayer.PlayerId)) && shoot) g.shots--;
         return g.shots;
     }
 
     public static void clear(byte playerId)
     {
-        var g = guessers.FindLast(x => x.guesser.PlayerId == playerId);
-        if (g == null) return;
-        g.guesser = null;
-        g.shots = Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeNumberOfShots.getFloat());
-
-        guessers.Remove(g);
+        var g = guessers.FirstOrDefault(x => x.guesser.PlayerId == playerId);
+        if (g != null)
+        {
+            g.shots = Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeNumberOfShots.getFloat());
+            guessers.Remove(g);
+        }
     }
 
     public static void clearAndReload()
@@ -44,6 +44,6 @@ internal class GuesserGM
 
     public static bool isGuesser(byte playerId)
     {
-        return guessers.FindAll(x => x.guesser.PlayerId == playerId).Count > 0;
+        return guessers.Any(x => x.guesser.PlayerId == playerId);
     }
 }

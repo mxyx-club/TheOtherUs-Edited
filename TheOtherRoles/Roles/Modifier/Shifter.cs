@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Il2CppSystem.Collections.Generic;
+using UnityEngine;
 
 namespace TheOtherRoles.Roles.Modifier;
 public static class Shifter
@@ -139,6 +141,11 @@ public static class Shifter
         {
             if (repeat) shiftRole(player2, player1, false);
             Prophet.prophet = player1;
+        }
+        else if (Prosecutor.prosecutor != null && Prosecutor.prosecutor == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Prosecutor.prosecutor = player1;
         }
         else if (Amnisiac.amnisiac != null && Amnisiac.amnisiac == player2)
         {

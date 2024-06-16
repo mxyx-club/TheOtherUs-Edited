@@ -774,7 +774,7 @@ public class CustomOptionHolder
         WireTaskNumOption = Create(222, Types.General, "WireTaskNumOption", 3f, 1f, 8f, 1f, WireTaskIsRandomOption);
 
         enableCamoComms = Create(120, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, enableMapOptions, true);
-        fungleDisableCamoComms = Create(211, Types.General, "fungleDisableCamoComms", true, enableCamoComms);
+        //fungleDisableCamoComms = Create(211, Types.General, "fungleDisableCamoComms", true, enableCamoComms);
         restrictDevices = Create(121, Types.General, "restrictDevices", ["optionOff", "restrictDevices2", "restrictDevices3"], enableMapOptions);
         //restrictAdmin = Create(122, Types.General, "restrictAdmin", 30f, 0f, 600f, 5f, restrictDevices);
         restrictCameras = Create(123, Types.General, "restrictCameras", 30f, 0f, 600f, 5f, restrictDevices);
@@ -908,8 +908,8 @@ public class CustomOptionHolder
         evilTrapperExtensionTime = Create(10302, Types.Impostor, "陷阱激活所需时间", 5f, 2f, 10f, 0.5f, evilTrapperSpawnRate);
         evilTrapperCooldown = Create(10303, Types.Impostor, "放置陷阱冷却", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
         evilTrapperKillTimer = Create(10304, Types.Impostor, "掉进陷阱后被陷阱击杀所需时间", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
-        evilTrapperTrapRange = Create(10305, Types.Impostor, "陷阱有效范围", 1f, 0.5f, 2f, 0.125f, evilTrapperSpawnRate);
-        evilTrapperMaxDistance = Create(10306, Types.Impostor, "陷阱击杀声音播放有效范围", 1f, 0f, 60f, 0.25f, evilTrapperSpawnRate);
+        evilTrapperTrapRange = Create(10305, Types.Impostor, "陷阱有效范围", 1f, 0.25f, 2f, 0.125f, evilTrapperSpawnRate);
+        evilTrapperMaxDistance = Create(10306, Types.Impostor, "陷阱击杀声音播放有效范围", 1f, 0f, 60f, 0.5f, evilTrapperSpawnRate);
         evilTrapperPenaltyTime = Create(10307, Types.Impostor, "设陷者普通击杀会追加冷却", 10f, 0f, 30f, 0.5f, evilTrapperSpawnRate);
         evilTrapperBonusTime = Create(10308, Types.Impostor, "设陷者击杀落入陷阱的玩家缩减冷却", 10f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
 
@@ -963,7 +963,7 @@ public class CustomOptionHolder
         executionerSpawnRate = Create(20190, Types.Neutral, cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(20191, Types.Neutral, "处刑者可召开会议", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(20192, Types.Neutral, "目标职业变更时可以晋升为律师", true, executionerSpawnRate);
-        //executionerOnTargetDead = Create(20193, Types.Neutral, "处刑目标死亡后变为", [cs(Pursuer.color, "Pursuer".Translate()), cs(Jester.color, "Jester".Translate()), cs(Amnisiac.color, "Amnisiac".Translate()), "船员"], executionerSpawnRate);
+        //executionerOnTargetDead = Create(20193, Types.Neutral, "处刑目标死亡后变为", [cs(Pursuer.color, "Pursuer"), cs(Jester.color, "Jester"), cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
 
         swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
         swooperKillCooldown = Create(20151, Types.Neutral, "击杀冷却", 25f, 10f, 60f, 2.5f, swooperSpawnRate);

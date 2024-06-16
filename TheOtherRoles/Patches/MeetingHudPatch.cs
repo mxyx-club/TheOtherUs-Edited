@@ -239,18 +239,19 @@ internal class MeetingHudPatch
             if (allowModGuess && roleInfo.isModifier)
             {
                 // Allow Guessing the following mods: Bait, TieBreaker, Bloody, and VIP
-                if (roleInfo.roleId != RoleId.Bait &&
-                    roleInfo.roleId != RoleId.Tiebreaker &&
-                    roleInfo.roleId != RoleId.Bloody &&
-                    roleInfo.roleId != RoleId.Cursed &&
-                    roleInfo.roleId != RoleId.Torch &&
-                    roleInfo.roleId != RoleId.Slueth &&
-                    roleInfo.roleId != RoleId.Watcher &&
-                    roleInfo.roleId != RoleId.Radar &&
-                    roleInfo.roleId != RoleId.Tunneler &&
-                    roleInfo.roleId != RoleId.Multitasker &&
-                    roleInfo.roleId != RoleId.Lover &&
-                    roleInfo.roleId != RoleId.Vip) continue;
+                if (roleInfo.roleId is
+                    not RoleId.Bait and
+                    not RoleId.Tiebreaker and
+                    not RoleId.Bloody and
+                    not RoleId.Cursed and
+                    not RoleId.Torch and
+                    not RoleId.Slueth and
+                    not RoleId.Watcher and
+                    not RoleId.Radar and
+                    not RoleId.Tunneler and
+                    not RoleId.Multitasker and
+                    not RoleId.Lover and
+                    not RoleId.Vip) continue;
             }
             else if (roleInfo.isModifier)
             {
@@ -276,7 +277,7 @@ internal class MeetingHudPatch
             var roleData = RoleManagerSelectRolesPatch.getRoleAssignmentData();
             switch (roleInfo.roleId)
             {
-                case RoleId.Pursuer when CustomOptionHolder.lawyerSpawnRate.getSelection() == 0:
+                case RoleId.Pursuer when CustomOptionHolder.lawyerSpawnRate.getSelection() == 0 && CustomOptionHolder.executionerSpawnRate.getSelection() == 0:
                 case RoleId.Spy when roleData.impostors.Count <= 1:
                     continue;
             }
@@ -423,7 +424,7 @@ internal class MeetingHudPatch
                                 !Swapper.swapper.Data.IsDead;
         var addDoomsayerButtons = Doomsayer.doomsayer != null &&
                                   CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer &&
-                                  !Doomsayer.doomsayer.Data.IsDead;
+                                  !Doomsayer.doomsayer.Data.IsDead && gameMode != CustomGamemodes.Guesser;
         var addMayorButton = Mayor.mayor != null && CachedPlayer.LocalPlayer.PlayerControl == Mayor.mayor &&
                              !Mayor.mayor.Data.IsDead && Mayor.mayorChooseSingleVote > 0;
         if (addSwapperButtons)
@@ -541,8 +542,7 @@ internal class MeetingHudPatch
                     rend.transform.SetParent(pva.transform);
                     rend.gameObject.layer = pva.Megaphone.gameObject.layer;
                     rend.transform.localPosition = new Vector3(-0.5f, -0.03f, -1f);
-                    if ((local == Swapper.swapper && isGuesser) || (local == Mimic.mimic && local == Swapper.swapper))
-                        rend.transform.localPosition = new Vector3(-0.725f, -0.15f, -1f);
+                    if (local == Swapper.swapper && (isGuesser || local == Mimic.mimic)) rend.transform.localPosition = new Vector3(-0.725f, -0.15f, -1f);
                     rend.sprite = Witch.getSpelledOverlaySprite();
                 }
             }

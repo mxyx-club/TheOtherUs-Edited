@@ -4,6 +4,7 @@ using System.Linq;
 using AmongUs.GameOptions;
 using Reactor.Utilities.Attributes;
 using Reactor.Utilities.Extensions;
+using TheOtherRoles.Patches;
 using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -255,12 +256,15 @@ public static class CrowdedPlayer
 
         public virtual void Update()
         {
+            if (Input.GetAxis("Mouse ScrollWheel") != 0 && MeetingHudPatch.guesserUI != null) return;
+
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) ||
                 Input.mouseScrollDelta.y > 0f)
                 Cycle(false);
             else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow) ||
                      Input.mouseScrollDelta.y < 0f)
                 Cycle(true);
+
         }
 
         public virtual void OnPageChanged()

@@ -53,6 +53,7 @@ public static class EvilTrapper
         extensionTime = CustomOptionHolder.evilTrapperExtensionTime.getFloat();
         killTimer = CustomOptionHolder.evilTrapperKillTimer.getFloat();
         cooldown = CustomOptionHolder.evilTrapperCooldown.getFloat();
+        maxDistance = CustomOptionHolder.evilTrapperMaxDistance.getFloat();
         trapRange = CustomOptionHolder.evilTrapperTrapRange.getFloat();
         penaltyTime = CustomOptionHolder.evilTrapperPenaltyTime.getFloat();
         bonusTime = CustomOptionHolder.evilTrapperBonusTime.getFloat();
