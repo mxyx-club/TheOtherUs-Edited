@@ -15,6 +15,7 @@
 
 | 游戏版本  | 模组版本 | 发布日期   | 链接                                                         |
 | --------- | -------- | ---------- | ------------------------------------------------------------ |
+| 2024.6.4s | v1.0.4.2 | 2024.06.16 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.2/TheOtherUs.zip) |
 | 2024.3.5s | v1.0.3.8 | 2024.05.24 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.8/TheOtherUs.zip) |
 | 2024.3.5s | v1.0.3.7 | 2024.05.10 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.7/TheOtherRoles.zip) |
 | 2024.3.5s | v1.0.3.6 | 2024.05.08 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherRoles.zip) |
@@ -48,18 +49,19 @@
 
     - 新增船员职业：检察官（参考[Town Of Us-R](https://github.com/eDonnes124/Town-Of-Us-R)）
     - 新增伪装者职业：邪恶的设陷师（使用了[TheOtherRoles GMIA](https://github.com/dabao40/TheOtherRolesGMIA)的代码）
-    - 删除伪装者职业：黑手党团体（教父、小弟、清洁工）
     - 删除船员职业：执灯人
+    - 删除伪装者职业：黑手党团体（教父、小弟、清洁工）
     - 增加更多的自定义颜色
-    - 告密者：现在告密者和已死亡玩家可以收到告密者的提示文本
+    - 在会议左上角会显示赌怪剩余次数或职业相关的时间类信息
     - 入殓师：默认为伪装者主职业，可设置分配为附加能力
     - 魅魔：新增选项 “不招募备胎会自杀”
-    - 保镖：新增选项 “保护目标可见护盾的存在”
-    - 律师：新增选项 “律师存活会取代客户胜利”
-    - 侦探：将尸检报告中的凶手颜色改为凶手阵营
     - 天启：修正游戏开始时背景颜色错误
+    - 律师：新增选项 “律师存活会取代客户胜利”
     - 处刑者：职业重做，从律师中独立为单一职业（但处刑者和律师依然不会同时出现）
     - 末日预言家：更改信息发送方式，现在鬼魂可以直接查看揭示信息，并增强揭示结果随机性
+    - 保镖：新增选项 “保护目标可见护盾的存在”
+    - 侦探：将尸检报告中的凶手颜色改为凶手阵营
+    - 告密者：现在告密者和已死亡玩家可以收到告密者的提示文本
 
  - #### Bug修复：
 
