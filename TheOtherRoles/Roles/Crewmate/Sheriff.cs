@@ -52,6 +52,6 @@ public static class Sheriff
         canKillAmnesiac = CustomOptionHolder.sheriffCanKillAmnesiac.getBool();
         canKillExecutioner = CustomOptionHolder.sheriffCanKillExecutioner.getBool();
         spyCanDieToSheriff = CustomOptionHolder.spyCanDieToSheriff.getBool();
-        canKillDoomsayer = CustomOptionHolder.spyCanDieToSheriff.getBool();
+        canKillDoomsayer = CustomOptionHolder.sheriffCanKillDoomsayer.getBool();
     }
 }

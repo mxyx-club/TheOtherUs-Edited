@@ -120,8 +120,8 @@
 
  - #### 新增内容：
 
-    - 新增 “调整紧急破坏持续时间” 的选项  （来自[SuperNewRoles](https://github.com/SuperNewRoles/SuperNewRoles)的部分代码）
-    - 新增 “随机分配修复配线的任务地点” 并且可以修改修复配线的任务总数  （来自[SuperNewRoles](https://github.com/SuperNewRoles/SuperNewRoles)的部分代码）
+    - 新增 “调整紧急破坏持续时间” 的选项  （参考：[SuperNewRoles](https://github.com/SuperNewRoles/SuperNewRoles)）
+    - 新增 “随机分配修复配线的任务地点” 并且可以修改修复配线的任务总数  （参考：[SuperNewRoles](https://github.com/SuperNewRoles/SuperNewRoles)）
     - 将模组设置中“在地图上显示管道”选项移动到游戏内预设中，但目前仍然不可用
     - 优化随机出生，现在分散不会有延迟了
     - 为中国玩家在连接GitHub时自动替换链接为国内镜像源
