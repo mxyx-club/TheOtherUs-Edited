@@ -21,6 +21,8 @@ public static class HandleGuesser
 
     public static bool isGuesser(byte playerId)
     {
+        if (Doomsayer.doomsayer != null && Doomsayer.doomsayer.PlayerId == playerId) return true;
+
         return isGuesserGm ? GuesserGM.isGuesser(playerId) : Guesser.isGuesser(playerId);
     }
 
@@ -32,6 +34,8 @@ public static class HandleGuesser
 
     public static int remainingShots(byte playerId, bool shoot = false)
     {
+        if (Doomsayer.doomsayer != null && Doomsayer.doomsayer.PlayerId == playerId) return 15;
+
         return isGuesserGm ? GuesserGM.remainingShots(playerId, shoot) : Guesser.remainingShots(playerId, shoot);
     }
 

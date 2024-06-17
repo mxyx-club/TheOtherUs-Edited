@@ -4,6 +4,7 @@ using System.Linq;
 using AmongUs.QuickChat;
 using Hazel;
 using Reactor.Utilities;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -25,8 +26,6 @@ internal class MeetingHudPatch
     public static bool shookAlready;
     private static PlayerVoteArea swapped1;
     private static PlayerVoteArea swapped2;
-    static TextMeshPro[] meetingInfoText = new TextMeshPro[4];
-    static int meetingTextIndex;
 
     public static GameObject guesserUI;
     public static PassiveButton guesserUIExitButton;
@@ -398,8 +397,7 @@ internal class MeetingHudPatch
                         if (CanMultipleShots(dyingTarget))
                             __instance.playerStates.ToList().ForEach(x =>
                             {
-                                if (x.TargetPlayerId == dyingTarget.PlayerId &&
-                                    x.transform.FindChild("ShootButton") != null)
+                                if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null)
                                     Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
                             });
                         else
@@ -547,7 +545,7 @@ internal class MeetingHudPatch
                 }
             }
         }
-
+        /*
         //!!!添加末日预言家赌
         if (addDoomsayerButtons)
         {
@@ -568,7 +566,7 @@ internal class MeetingHudPatch
                 var copiedIndex = i;
                 button.OnClick.AddListener((Action)(() => guesserOnClick(copiedIndex, __instance)));
             }
-        }
+        }*/
 
         // Add Guesser Buttons
         var GuesserRemainingShots = HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId);
@@ -599,52 +597,39 @@ internal class MeetingHudPatch
         }
     }
 
+
     public static void updateMeetingText(MeetingHud __instance)
     {
-        // Uses remaining text for guesser/yasuna etc.
-        if (meetingInfoText[0] == null)
-        {
-            for (int i = 0; i < meetingInfoText.Length; i++)
-            {
-                meetingInfoText[i] = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
-                meetingInfoText[i].alignment = TextAlignmentOptions.BottomLeft;
-                meetingInfoText[i].transform.position = Vector3.zero;
-                meetingInfoText[i].transform.localPosition = new Vector3(-3.07f, 3.33f, -20f);
-                meetingInfoText[i].transform.localScale *= 1.1f;
-                meetingInfoText[i].color = Palette.White;
-                meetingInfoText[i].gameObject.SetActive(false);
-            }
-        }
+        if (PlayerControl.LocalPlayer.Data.IsDead) return;
 
-        for (int i = 0; i < meetingInfoText.Length; i++)
-        {
-            meetingInfoText[i].text = "";
-            meetingInfoText[i].gameObject.SetActive(false);
-        }
-
-        if (MeetingHud.Instance.state is not MeetingHud.VoteStates.Voted and
+        if (MeetingHud.Instance.state is
+            not MeetingHud.VoteStates.Voted and
             not MeetingHud.VoteStates.NotVoted and
-            not MeetingHud.VoteStates.Discussion)
-            return;
-
-        int numGuesses = HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerControl.PlayerId) ? HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerControl.PlayerId) : 0;
-        if (numGuesses > 0 && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead)
+            not MeetingHud.VoteStates.Discussion) return;
+        var meetingInfoText = "";
+        int numGuesses = HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerControl.PlayerId)
+            && CachedPlayer.LocalPlayer.PlayerControl != Doomsayer.doomsayer
+            ? HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerControl.PlayerId) : 0;
+        if (numGuesses > 0)
         {
-            meetingInfoText.getFirst().text = string.Format(getString("guesserGuessesLeft"), numGuesses);
+            meetingInfoText = string.Format(getString("guesserGuessesLeft"), numGuesses);
         }
 
-        if (!CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo && Akujo.timeLeft > 0)
+        if (CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo && Akujo.timeLeft > 0)
         {
-            meetingInfoText.getFirst().text = string.Format(getString("akujoTimeRemaining"), $"{TimeSpan.FromSeconds(Akujo.timeLeft):mm\\:ss}");
+            meetingInfoText = string.Format(getString("akujoTimeRemaining"), $"{TimeSpan.FromSeconds(Akujo.timeLeft):mm\\:ss}");
         }
 
+        if (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer)
+        {
+            meetingInfoText = string.Format(getString("DoomsayerKilledToWin"), Doomsayer.killToWin - Doomsayer.killedToWin);
+        }
 
-        meetingInfoText[meetingTextIndex].gameObject.SetActive(true);
-        if (meetingInfoText.totalCounts() == 0) return;
-        if (meetingTextIndex + 1 > meetingInfoText.totalCounts())
-            meetingTextIndex = meetingInfoText.totalCounts() - 1;
+        if (meetingInfoText == "") return;
+
+        __instance.TimerText.text = $"{meetingInfoText}\n" + __instance.TimerText.text;
     }
-    /*
+
     [HarmonyPatch]
     public class ShowHost
     {
@@ -677,7 +662,7 @@ internal class MeetingHudPatch
                 Text.text = $"{"Host".Translate()}: {host.PlayerName}";
             }
         }
-    }*/
+    }
 
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
     private class MeetingCalculateVotesPatch
@@ -920,7 +905,7 @@ internal class MeetingHudPatch
                     var playerById = GameData.Instance.GetPlayerById(voterState.VoterId);
                     if (playerById == null)
                     {
-                        Warn($"Couldn't find player info for voter: {voterState.VoterId}");
+                        Warn($"找不到投票者的玩家信息: {voterState.VoterId}");
                     }
                     else if (i == 0 && voterState.SkippedVote && !playerById.IsDead)
                     {
@@ -994,10 +979,6 @@ internal class MeetingHudPatch
             // Reset swapper values
             Swapper.playerId1 = byte.MaxValue;
             Swapper.playerId2 = byte.MaxValue;
-
-            if (meetingInfoText != null)
-                foreach (var text in meetingInfoText)
-                    text.gameObject.SetActive(false);
 
             // Lovers, Lawyer & Pursuer save next to be exiled, because RPC of ending game comes before RPC of exiled
             Lovers.notAckedExiledIsLover = false;

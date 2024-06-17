@@ -1001,7 +1001,484 @@
     "akujoTimeRemaining": {
         "0": "Time Remaining: {0}",
         "11": "\u6b8b\u308a\u6642\u9593:{0}",
-        "13": "\u5269\u4f59\u65f6\u95f4\uff1a{0}"
+        "13": "\u62db\u52df\u5269\u4f59\u65f6\u95f4\uff1a{0}"
+    },
+    "DoomsayerKilledToWin": {
+        "13": "\u8fd8\u9700\u8981\u731c\u6d4b {0} \u6b21\u80dc\u5229"
+    },
+    "colorSalmon": {
+        "0": "Salmon",
+        "13": "\u9c91\u9c7c\u7ea2"
+    },
+    "colorBordeaux": {
+        "0": "Bordeaux",
+        "13": "\u67a3\u7ea2"
+    },
+    "colorOlive": {
+        "0": "Olive",
+        "13": "\u6a44\u6984"
+    },
+    "colorTurquoise": {
+        "0": "Turquoise",
+        "13": "\u7eff\u677e\u77f3\u8272"
+    },
+    "colorMint": {
+        "0": "Mint",
+        "13": "\u8584\u8377\u7eff"
+    },
+    "colorLavender": {
+        "0": "Lavender",
+        "13": "\u85b0\u8863\u7d2b"
+    },
+    "colorNougat": {
+        "0": "Nougat",
+        "13": "\u68d5\u8910"
+    },
+    "colorPeach": {
+        "0": "Peach",
+        "13": "\u6843\u7ea2"
+    },
+    "colorWasabi": {
+        "0": "Wasabi",
+        "13": "\u82a5\u672b\u7eff"
+    },
+    "colorHotPink": {
+        "0": "Hot Pink",
+        "13": "\u70ed\u7c89"
+    },
+    "colorPetrol": {
+        "0": "Petrol Blue",
+        "13": "\u6cb9\u753b\u84dd"
+    },
+    "colorLemon": {
+        "0": "Lemon",
+        "13": "\u67e0\u6aac\u9ec4"
+    },
+    "colorSignalOrange": {
+        "0": "Signal Orange",
+        "13": "\u4fe1\u53f7\u6a59"
+    },
+    "colorTeal": {
+        "0": "Teal",
+        "13": "\u84dd\u7eff"
+    },
+    "colorBlurple": {
+        "0": "Blurple",
+        "13": "\u84dd\u7d2b"
+    },
+    "colorSunrise": {
+        "0": "Sunrise",
+        "13": "\u65e5\u51fa\u7ea2"
+    },
+    "colorIce": {
+        "0": "Ice",
+        "13": "\u51b0\u84dd"
+    },
+    "colorArmy": {
+        "0": "Army",
+        "13": "\u519b\u7eff"
+    },
+    "colorTamarind": {
+        "0": "Tamarind",
+        "13": "\u7f57\u671b\u5b50"
+    },
+    "colorFuchsia": {
+        "0": "Fuchsia",
+        "13": "\u7d2b\u7ea2"
+    },
+    "colorSlime": {
+        "0": "Slime",
+        "13": "\u9ecf\u6db2\u7eff"
+    },
+    "colorRoyalGreen": {
+        "0": "Royal Green",
+        "13": "\u7687\u5bb6\u7eff"
+    },
+    "colorNavy": {
+        "0": "Navy",
+        "13": "\u6d77\u519b\u84dd"
+    },
+    "colorDarkness": {
+        "0": "Darkness",
+        "13": "\u6df1\u9ed1"
+    },
+    "colorOcean": {
+        "0": "Ocean",
+        "13": "\u6d77\u6d0b\u84dd"
+    },
+    "colorSundown": {
+        "0": "Sundown",
+        "13": "\u65e5\u843d\u6a59"
+    },
+    "colorSnow": {
+        "0": "Snow",
+        "13": "\u96ea\u767d"
+    },
+    "colorSkyBlue": {
+        "0": "SkyBlue",
+        "13": "\u5929\u84dd"
+    },
+    "colorAzuki": {
+        "0": "Azuki",
+        "13": "\u7ea2\u8c46"
+    },
+    "colorTokiwaGreen": {
+        "0": "TokiwaGreen",
+        "13": "\u5e38\u9752\u7eff"
+    },
+    "colorPitchwhite": {
+        "0": "Pitch white",
+        "13": "\u7eaf\u767d"
+    },
+    "colorPitchBlack": {
+        "0": "Pitch Black",
+        "13": "\u7eaf\u9ed1"
+    },
+    "colorNega": {
+        "0": "Nega",
+        "13": "\u8d1f\u7247\u6ee4\u955c"
+    },
+    "colorPosi": {
+        "0": "Posi",
+        "13": "\u6b63\u7247\u6ee4\u955c"
+    },
+    "colorEmerald": {
+        "0": "Emerald",
+        "13": "\u7fe1\u7fe0"
+    },
+    "colorGold": {
+        "0": "Gold",
+        "13": "\u91d1\u9ec4"
+    },
+    "colorIntenseblue": {
+        "0": "Intense blue",
+        "13": "\u58a8\u84dd"
+    },
+    "colorXmasRed": {
+        "0": "X'masRed",
+        "13": "\u5723\u8bde\u7ea2"
+    },
+    "CamoText": {
+        "0": "CAMO",
+        "13": "\u9690\u853d"
+    },
+    "CleanText": {
+        "0": "CLEAN",
+        "13": "\u6e05\u7406"
+    },
+    "CloseVentText": {
+        "0": "SEAL",
+        "13": "\u5c01\u9501"
+    },
+    "CurseText": {
+        "0": "CURSE",
+        "13": "\u4e0b\u5492 "
+    },
+    "CurseKillText": {
+        "0": "KILL",
+        "13": "\u5492\u6740"
+    },
+    "DouseText": {
+        "0": "DOUSE",
+        "13": "\u6d47\u6cb9"
+    },
+    "EraserText": {
+        "0": "EARSE",
+        "13": "\u62b9\u9664"
+    },
+    "GarlicText": {
+        "0": "[BLANK]",
+        "13": "\u653e\u7f6e\u5927\u849c"
+    },
+    "HackerText": {
+        "0": "HARK",
+        "13": "\u9ed1\u5165"
+    },
+    "IgniteText": {
+        "0": "LGNITE",
+        "13": "\u7eb5\u706b"
+    },
+    "LighterText": {
+        "0": "LIGET",
+        "13": "\u70b9\u706f",
+        "15": " "
+    },
+    "LightsOutText": {
+        "0": "LIGET",
+        "13": "\u5173\u706f"
+    },
+    "MorphText": {
+        "0": "MORPH",
+        "13": "\u5316\u5f62"
+    },
+    "PlaceCameraText": {
+        "0": "CAM",
+        "13": "\u5b89\u88c5"
+    },
+    "PlacePortalText": {
+        "0": "[BLANK]",
+        "13": "\u8bbe\u7f6e"
+    },
+    "RepairText": {
+        "0": "REPAIR",
+        "13": "\u4fee\u7406"
+    },
+    "RewindText": {
+        "0": "REWIND",
+        "13": "\u56de\u6eaf"
+    },
+    "SampleText": {
+        "0": "SAMPLE",
+        "13": "\u53d6\u6837"
+    },
+    "SeerText": {
+        "0": "REVEAL",
+        "13": "\u63ed\u793a"
+    },
+    "ShieldText": {
+        "0": "SHIELD",
+        "13": "\u62a4\u76fe"
+    },
+    "ShiftText": {
+        "0": "SHIFT",
+        "13": "\u4ea4\u6362"
+    },
+    "SidekickText": {
+        "0": "SIDEKICK",
+        "13": "\u62db\u52df"
+    },
+    "TimeShieldText": {
+        "0": "TIMESHIELD",
+        "13": "\u65f6\u95f4\u4e4b\u76fe"
+    },
+    "TrackerText": {
+        "0": "TRACK",
+        "13": "\u8ffd\u8e2a"
+    },
+    "TrackerCorpsesText": {
+        "0": "FIND",
+        "13": "\u5bfb\u627e\u5c38\u4f53"
+    },
+    "TricksterVentText": {
+        "0": "VENT",
+        "13": "\u9a97\u672f\u76d2\u5b50"
+    },
+    "VampireText": {
+        "0": "BITE",
+        "13": "\u5438\u8840"
+    },
+    "VultureText": {
+        "0": "EAT",
+        "13": "\u541e\u566c"
+    },
+    "MediumText": {
+        "0": "ASK",
+        "13": "\u901a\u7075"
+    },
+    "PursuerText": {
+        "0": "BLANK",
+        "13": "\u7a7a\u5305\u5f39"
+    },
+    "WitchText": {
+        "0": "SPELL",
+        "13": "\u8bc5\u5492"
+    },
+    "NinjaText": {
+        "0": "[BLANK]",
+        "13": "\u523a\u6740"
+    },
+    "NinjaUnstealthText": {
+        "0": "[BLANK]",
+        "13": "\u89e3\u9664"
+    },
+    "HandcuffText": {
+        "0": "[BLANK]",
+        "13": "\u4e0a\u94d0"
+    },
+    "PortalTeleportText": {
+        "0": "[BLANK]",
+        "13": "\u4f20\u9001"
+    },
+    "DrugText": {
+        "0": "[BLANK]",
+        "13": "\u79d8\u836f"
+    },
+    "InfectText": {
+        "0": "[BLANK]",
+        "13": "\u611f\u67d3"
+    },
+    "MadmateText": {
+        "0": "[BLANK]",
+        "13": "\u53db\u5f92"
+    },
+    "PlaceTrapText": {
+        "0": "[BLANK]",
+        "13": "\u5e03\u4e0b\u9677\u9631"
+    },
+    "ConvertText": {
+        "0": "[BLANK]",
+        "13": "\u6d17\u8111"
+    },
+    "AlertText": {
+        "0": "[BLANK]",
+        "13": "\u8b66\u6212"
+    },
+    "PlantBombText": {
+        "0": "[BLANK]",
+        "13": "\u653e\u7f6e\u70b8\u5f39"
+    },
+    "ReleaseBombText": {
+        "0": "[BLANK]",
+        "13": "\u5f15\u7206"
+    },
+    "DragBodyText": {
+        "0": "[BLANK]",
+        "13": "\u62d6\u62fd"
+    },
+    "DropBodyText": {
+        "0": "[BLANK]",
+        "13": "\u653e\u4e0b"
+    },
+    "InvestigateText": {
+        "0": "[BLANK]",
+        "13": "\u8c03\u67e5"
+    },
+    "AkujoHonmeiText": {
+        "0": "[BLANK]",
+        "13": "\u9009\u4e3a\u771f\u7231"
+    },
+    "AkujoBackupText": {
+        "0": "[BLANK]",
+        "13": "\u9009\u4e3a\u5907\u80ce"
+    },
+    "SprintText": {
+        "0": "[BLANK]",
+        "13": "\u51b2\u523a"
+    },
+    "SprinterStopText": {
+        "0": "[BLANK]",
+        "13": "\u505c\u4e0b"
+    },
+    "jumperMarkText": {
+        "0": "[BLANK]",
+        "13": "\u6807\u8bb0"
+    },
+    "jumperJumpText": {
+        "0": "[BLANK]",
+        "13": "\u4f20\u9001"
+    },
+    "BlackmailerText": {
+        "0": "[BLANK]",
+        "13": "\u52d2\u7d22"
+    },
+    "ProphetText": {
+        "0": "[BLANK]",
+        "13": "\u63ed\u793a"
+    },
+    "minerText": {
+        "0": "[BLANK]",
+        "13": "\u6316\u6d1e"
+    },
+    "jackalSidekickText": {
+        "0": "[BLANK]",
+        "13": "\u62db\u52df"
+    },
+    "killButtonText": {
+        "0": "[BLANK]",
+        "13": "\u51fb\u6740"
+    },
+    "doomsayerText": {
+        "0": "[BLANK]",
+        "13": "\u63ed\u793a"
+    },
+    "hackerVitalText": {
+        "0": "[BLANK]",
+        "13": "\u751f\u547d\u68c0\u6d4b\u4eea"
+    },
+    "hackerDoorLogText": {
+        "0": "[BLANK]",
+        "13": "\u65e5\u5fd7"
+    },
+    "bodyGuardText": {
+        "0": "[BLANK]",
+        "13": "\u4fdd\u62a4"
+    },
+    "PrivateInvestigatorWatchText": {
+        "0": "[BLANK]",
+        "13": "\u89c2\u5bdf"
+    },
+    "usePortalText": {
+        "0": "[BLANK]",
+        "13": "\u4f7f\u7528"
+    },
+    "SwoopText": {
+        "0": "[BLANK]",
+        "13": "\u9690\u8eab"
+    },
+    "RememberText": {
+        "0": "[BLANK]",
+        "13": "\u56de\u5fc6"
+    },
+    "CamButtonText": {
+        "0": "[BLANK]",
+        "13": "\u76d1\u63a7"
+    },
+    "MayorButtonText": {
+        "0": "[BLANK]",
+        "13": "\u7d27\u6025\u4f1a\u8bae"
+    },
+    "trapperTrapText": {
+        "0": "[BLANK]",
+        "13": "\u653e\u7f6e\u9677\u9631"
+    },
+    "TerroristBombText": {
+        "0": "[BLANK]",
+        "13": "\u653e\u7f6e\u70b8\u5f39"
+    },
+    "AdminMapText": {
+        "0": "[BLANK]",
+        "13": "\u7ba1\u7406\u5730\u56fe",
+        "15": " "
+    },
+    "hackerButtonText": {
+        "0": "[BLANK]",
+        "13": "\u9ed1\u5165"
+    },
+    "defuseBombText": {
+        "0": "[BLANK]",
+        "13": "\u62c6\u5f39"
+    },
+    "buttonBarryText": {
+        "0": "[BLANK]",
+        "13": "\u7d27\u6025\u4f1a\u8bae"
+    },
+    "DisperseText": {
+        "0": "[BLANK]",
+        "13": "\u5206\u6563"
+    },
+    "TricksterPlaceText": {
+        "0": "[BLANK]",
+        "13": "\u653e\u7f6e"
+    },
+    "TerroristBombText1": {
+        "0": "[BLANK]",
+        "13": "\u653e\u7f6e"
+    },
+    "TerroristBombText2": {
+        "0": "[BLANK]",
+        "13": "\u81ea\u7206"
+    },
+    "YoyoMarkText": {
+        "0": "Mark Location",
+        "13": "\u6807\u8bb0\u4f4d\u7f6e"
+    },
+    "ReturningText": {
+        "0": "Returning\u2026",
+        "13": "\u6b63\u5728\u8fd4\u56de\u2026"
+    },
+    "BlinkText": {
+        "0": "Blink",
+        "13": "\u95ea\u73b0"
     },
     "ImpostorIntroDesc": {
         "13": "\u54c8\u54c8\uff01\u767d\u677f\u5185\u9b3c~"
@@ -1947,478 +2424,142 @@
     "PropShortDesc": {
         "13": "\u4f2a\u88c5\u6210\u7269\u54c1\u5e76\u751f\u5b58"
     },
-    "colorSalmon": {
-        "0": "Salmon",
-        "13": "\u9c91\u9c7c\u7ea2"
-    },
-    "colorBordeaux": {
-        "0": "Bordeaux",
-        "13": "\u67a3\u7ea2"
-    },
-    "colorOlive": {
-        "0": "Olive",
-        "13": "\u6a44\u6984"
-    },
-    "colorTurquoise": {
-        "0": "Turquoise",
-        "13": "\u7eff\u677e\u77f3\u8272"
-    },
-    "colorMint": {
-        "0": "Mint",
-        "13": "\u8584\u8377\u7eff"
-    },
-    "colorLavender": {
-        "0": "Lavender",
-        "13": "\u85b0\u8863\u7d2b"
-    },
-    "colorNougat": {
-        "0": "Nougat",
-        "13": "\u68d5\u8910"
-    },
-    "colorPeach": {
-        "0": "Peach",
-        "13": "\u6843\u7ea2"
-    },
-    "colorWasabi": {
-        "0": "Wasabi",
-        "13": "\u82a5\u672b\u7eff"
-    },
-    "colorHotPink": {
-        "0": "Hot Pink",
-        "13": "\u70ed\u7c89"
-    },
-    "colorPetrol": {
-        "0": "Petrol Blue",
-        "13": "\u6cb9\u753b\u84dd"
-    },
-    "colorLemon": {
-        "0": "Lemon",
-        "13": "\u67e0\u6aac\u9ec4"
-    },
-    "colorSignalOrange": {
-        "0": "Signal Orange",
-        "13": "\u4fe1\u53f7\u6a59"
-    },
-    "colorTeal": {
-        "0": "Teal",
-        "13": "\u84dd\u7eff"
-    },
-    "colorBlurple": {
-        "0": "Blurple",
-        "13": "\u84dd\u7d2b"
-    },
-    "colorSunrise": {
-        "0": "Sunrise",
-        "13": "\u65e5\u51fa\u7ea2"
-    },
-    "colorIce": {
-        "0": "Ice",
-        "13": "\u51b0\u84dd"
-    },
-    "colorArmy": {
-        "0": "Army",
-        "13": "\u519b\u7eff"
-    },
-    "colorTamarind": {
-        "0": "Tamarind",
-        "13": "\u7f57\u671b\u5b50"
-    },
-    "colorFuchsia": {
-        "0": "Fuchsia",
-        "13": "\u7d2b\u7ea2"
-    },
-    "colorSlime": {
-        "0": "Slime",
-        "13": "\u9ecf\u6db2\u7eff"
-    },
-    "colorRoyalGreen": {
-        "0": "Royal Green",
-        "13": "\u7687\u5bb6\u7eff"
-    },
-    "colorNavy": {
-        "0": "Navy",
-        "13": "\u6d77\u519b\u84dd"
-    },
-    "colorDarkness": {
-        "0": "Darkness",
-        "13": "\u6df1\u9ed1"
-    },
-    "colorOcean": {
-        "0": "Ocean",
-        "13": "\u6d77\u6d0b\u84dd"
-    },
-    "colorSundown": {
-        "0": "Sundown",
-        "13": "\u65e5\u843d\u6a59"
-    },
-    "colorSnow": {
-        "0": "Snow",
-        "13": "\u96ea\u767d"
-    },
-    "colorSkyBlue": {
-        "0": "SkyBlue",
-        "13": "\u5929\u84dd"
-    },
-    "colorAzuki": {
-        "0": "Azuki",
-        "13": "\u7ea2\u8c46"
-    },
-    "colorTokiwaGreen": {
-        "0": "TokiwaGreen",
-        "13": "\u5e38\u9752\u7eff"
-    },
-    "colorPitchwhite": {
-        "0": "Pitch white",
-        "13": "\u7eaf\u767d"
-    },
-    "colorPitchBlack": {
-        "0": "Pitch Black",
-        "13": "\u7eaf\u9ed1"
-    },
-    "colorNega": {
-        "0": "Nega",
-        "13": "\u8d1f\u7247\u6ee4\u955c"
-    },
-    "colorPosi": {
-        "0": "Posi",
-        "13": "\u6b63\u7247\u6ee4\u955c"
-    },
-    "colorEmerald": {
-        "0": "Emerald",
-        "13": "\u7fe1\u7fe0"
-    },
-    "colorGold": {
-        "0": "Gold",
-        "13": "\u91d1\u9ec4"
-    },
-    "colorIntenseblue": {
-        "0": "Intense blue",
-        "13": "\u58a8\u84dd"
-    },
-    "colorXmasRed": {
-        "0": "X'masRed",
-        "13": "\u5723\u8bde\u7ea2"
-    },
-    "CamoText": {
-        "0": "CAMO",
-        "13": "\u9690\u853d"
-    },
-    "CleanText": {
-        "0": "CLEAN",
-        "13": "\u6e05\u7406"
-    },
-    "CloseVentText": {
-        "0": "SEAL",
-        "13": "\u5c01\u9501"
-    },
-    "CurseText": {
-        "0": "CURSE",
-        "13": "\u4e0b\u5492 "
-    },
-    "CurseKillText": {
-        "0": "KILL",
-        "13": "\u5492\u6740"
-    },
-    "DouseText": {
-        "0": "DOUSE",
-        "13": "\u6d47\u6cb9"
-    },
-    "EraserText": {
-        "0": "EARSE",
-        "13": "\u62b9\u9664"
-    },
-    "GarlicText": {
-        "0": "[BLANK]",
-        "13": "\u653e\u7f6e\u5927\u849c"
-    },
-    "HackerText": {
-        "0": "HARK",
-        "13": "\u9ed1\u5165"
-    },
-    "IgniteText": {
-        "0": "LGNITE",
-        "13": "\u7eb5\u706b"
-    },
-    "LighterText": {
-        "0": "LIGET",
-        "13": "\u70b9\u706f",
-        "15": " "
-    },
-    "LightsOutText": {
-        "0": "LIGET",
-        "13": "\u5173\u706f"
-    },
-    "MorphText": {
-        "0": "MORPH",
-        "13": "\u5316\u5f62"
-    },
-    "PlaceCameraText": {
-        "0": "CAM",
-        "13": "\u5b89\u88c5"
-    },
-    "PlacePortalText": {
-        "0": "[BLANK]",
-        "13": "\u8bbe\u7f6e"
-    },
-    "RepairText": {
-        "0": "REPAIR",
-        "13": "\u4fee\u7406"
-    },
-    "RewindText": {
-        "0": "REWIND",
-        "13": "\u56de\u6eaf"
-    },
-    "SampleText": {
-        "0": "SAMPLE",
-        "13": "\u53d6\u6837"
-    },
-    "SeerText": {
-        "0": "REVEAL",
-        "13": "\u63ed\u793a"
-    },
-    "ShieldText": {
-        "0": "SHIELD",
-        "13": "\u62a4\u76fe"
-    },
-    "ShiftText": {
-        "0": "SHIFT",
-        "13": "\u4ea4\u6362"
-    },
-    "SidekickText": {
-        "0": "SIDEKICK",
-        "13": "\u62db\u52df"
-    },
-    "TimeShieldText": {
-        "0": "TIMESHIELD",
-        "13": "\u65f6\u95f4\u4e4b\u76fe"
-    },
-    "TrackerText": {
-        "0": "TRACK",
-        "13": "\u8ffd\u8e2a"
-    },
-    "TrackerCorpsesText": {
-        "0": "FIND",
-        "13": "\u5bfb\u627e\u5c38\u4f53"
-    },
-    "TricksterVentText": {
-        "0": "VENT",
-        "13": "\u9a97\u672f\u76d2\u5b50"
-    },
-    "VampireText": {
-        "0": "BITE",
-        "13": "\u5438\u8840"
-    },
-    "VultureText": {
-        "0": "EAT",
-        "13": "\u541e\u566c"
-    },
-    "MediumText": {
-        "0": "ASK",
-        "13": "\u901a\u7075"
-    },
-    "PursuerText": {
-        "0": "BLANK",
-        "13": "\u7a7a\u5305\u5f39"
-    },
-    "WitchText": {
-        "0": "SPELL",
-        "13": "\u8bc5\u5492"
-    },
-    "NinjaText": {
-        "0": "[BLANK]",
-        "13": "\u523a\u6740"
-    },
-    "NinjaUnstealthText": {
-        "0": "[BLANK]",
-        "13": "\u89e3\u9664"
-    },
-    "HandcuffText": {
-        "0": "[BLANK]",
-        "13": "\u4e0a\u94d0"
-    },
-    "PortalTeleportText": {
-        "0": "[BLANK]",
-        "13": "\u4f20\u9001"
-    },
-    "DrugText": {
-        "0": "[BLANK]",
-        "13": "\u79d8\u836f"
-    },
-    "InfectText": {
-        "0": "[BLANK]",
-        "13": "\u611f\u67d3"
-    },
-    "MadmateText": {
-        "0": "[BLANK]",
-        "13": "\u53db\u5f92"
-    },
-    "PlaceTrapText": {
-        "0": "[BLANK]",
-        "13": "\u5e03\u4e0b\u9677\u9631"
-    },
-    "ConvertText": {
-        "0": "[BLANK]",
-        "13": "\u6d17\u8111"
-    },
-    "AlertText": {
-        "0": "[BLANK]",
-        "13": "\u8b66\u6212"
-    },
-    "PlantBombText": {
-        "0": "[BLANK]",
-        "13": "\u653e\u7f6e\u70b8\u5f39"
-    },
-    "ReleaseBombText": {
-        "0": "[BLANK]",
-        "13": "\u5f15\u7206"
-    },
-    "DragBodyText": {
-        "0": "[BLANK]",
-        "13": "\u62d6\u62fd"
-    },
-    "DropBodyText": {
-        "0": "[BLANK]",
-        "13": "\u653e\u4e0b"
-    },
-    "InvestigateText": {
-        "0": "[BLANK]",
-        "13": "\u8c03\u67e5"
-    },
-    "AkujoHonmeiText": {
-        "0": "[BLANK]",
-        "13": "\u9009\u4e3a\u771f\u7231"
-    },
-    "AkujoBackupText": {
-        "0": "[BLANK]",
-        "13": "\u9009\u4e3a\u5907\u80ce"
-    },
-    "SprintText": {
-        "0": "[BLANK]",
-        "13": "\u51b2\u523a"
-    },
-    "SprinterStopText": {
-        "0": "[BLANK]",
-        "13": "\u505c\u4e0b"
-    },
-    "jumperMarkText": {
-        "0": "[BLANK]",
-        "13": "\u6807\u8bb0"
-    },
-    "jumperJumpText": {
-        "0": "[BLANK]",
-        "13": "\u4f20\u9001"
-    },
-    "BlackmailerText": {
-        "0": "[BLANK]",
-        "13": "\u52d2\u7d22"
-    },
-    "ProphetText": {
-        "0": "[BLANK]",
-        "13": "\u63ed\u793a"
-    },
-    "minerText": {
-        "0": "[BLANK]",
-        "13": "\u6316\u6d1e"
-    },
-    "jackalSidekickText": {
-        "0": "[BLANK]",
-        "13": "\u62db\u52df"
-    },
-    "killButtonText": {
-        "0": "[BLANK]",
-        "13": "\u51fb\u6740"
-    },
-    "doomsayerText": {
-        "0": "[BLANK]",
-        "13": "\u63ed\u793a"
-    },
-    "hackerVitalText": {
-        "0": "[BLANK]",
-        "13": "\u751f\u547d\u68c0\u6d4b\u4eea"
-    },
-    "hackerDoorLogText": {
-        "0": "[BLANK]",
-        "13": "\u65e5\u5fd7"
-    },
-    "bodyGuardText": {
-        "0": "[BLANK]",
-        "13": "\u4fdd\u62a4"
-    },
-    "PrivateInvestigatorWatchText": {
-        "0": "[BLANK]",
-        "13": "\u89c2\u5bdf"
-    },
-    "usePortalText": {
-        "0": "[BLANK]",
-        "13": "\u4f7f\u7528"
-    },
-    "SwoopText": {
-        "0": "[BLANK]",
-        "13": "\u9690\u8eab"
-    },
-    "RememberText": {
-        "0": "[BLANK]",
-        "13": "\u56de\u5fc6"
-    },
-    "CamButtonText": {
-        "0": "[BLANK]",
-        "13": "\u76d1\u63a7"
-    },
-    "MayorButtonText": {
-        "0": "[BLANK]",
-        "13": "\u7d27\u6025\u4f1a\u8bae"
-    },
-    "trapperTrapText": {
-        "0": "[BLANK]",
-        "13": "\u653e\u7f6e\u9677\u9631"
-    },
-    "TerroristBombText": {
-        "0": "[BLANK]",
-        "13": "\u653e\u7f6e\u70b8\u5f39"
-    },
-    "AdminMapText": {
-        "0": "[BLANK]",
-        "13": "\u7ba1\u7406\u5730\u56fe",
-        "15": " "
-    },
-    "hackerButtonText": {
-        "0": "[BLANK]",
-        "13": "\u9ed1\u5165"
-    },
-    "defuseBombText": {
-        "0": "[BLANK]",
-        "13": "\u62c6\u5f39"
-    },
-    "buttonBarryText": {
-        "0": "[BLANK]",
-        "13": "\u7d27\u6025\u4f1a\u8bae"
-    },
-    "DisperseText": {
-        "0": "[BLANK]",
-        "13": "\u5206\u6563"
-    },
-    "TricksterPlaceText": {
-        "0": "[BLANK]",
-        "13": "\u653e\u7f6e"
-    },
-    "TerroristBombText1": {
-        "0": "[BLANK]",
-        "13": "\u653e\u7f6e"
-    },
-    "TerroristBombText2": {
-        "0": "[BLANK]",
-        "13": "\u81ea\u7206"
-    },
-    "YoyoMarkText": {
-        "0": "Mark Location",
-        "13": "\u6807\u8bb0\u4f4d\u7f6e"
-    },
-    "ReturningText": {
-        "0": "Returning\u2026",
-        "13": "\u6b63\u5728\u8fd4\u56de\u2026"
-    },
-    "BlinkText": {
-        "0": "Blink",
-        "13": "\u95ea\u73b0"
+    "ImpostorFullDesc": {
+        "13": "\u8b66\u957f\u662f\u8239\u5458\u9635\u8425\u552f\u4e00\u53ef\u4ee5\u4e3b\u52a8\u5200\u4eba\u7684\u804c\u4e1a\u3002\u4ed6\u7684\u5de5\u4f5c\u662f\u6740\u6b7b\u7ea2\u72fc\uff0c\u5e72\u7ffb\u8c7a\u72fc\u7b49\u4e2d\u7acb\u574f\u86cb\u3002\u4f46\u662f\u8b66\u957f\u51fa\u5200\u9700\u8c28\u614e\uff0c\u56e0\u4e3a\u8bd5\u56fe\u51fb\u6740\u8239\u5458\u7684\u8bdd\uff0c\u4f1a\u4f7f\u81ea\u5df1\u6b7b\u4ea1\u3002\u6ce8\u610f\uff1a\u8b66\u957f\u6267\u6cd5\u5931\u5fc6\u8005\u3001\u8d77\u8bc9\u4eba\uff08\u4e24\u4e2a\u90fd\u662f\u4e2d\u7acb\uff09\u4e5f\u4f1a\u4f7f\u81ea\u5df1\u6b7b\u4ea1\u3002"
+    },
+    "AssassinFullDesc": {
+        "13": "\u523a\u5ba2\u4f7f\u7ea2\u72fc\u5177\u6709\u4f1a\u8bae\u4e0a\u8d4c\u4eba\u7684\u80fd\u529b\u3002\u523a\u5ba2\u62e5\u6709\u4e09\u6b21\u731c\u4eba\u7684\u6b21\u6570\uff0c\u6bcf\u4e2a\u7ea2\u72fc\u90fd\u80fd\u8d4c\uff0c\u4f46\u6b21\u6570\u5171\u4eab\u3002"
+    },
+    "MorphlingFullDesc": {
+        "13": "\u91c7\u6837\u540e\u53ef\u4ee5\u4f2a\u88c5\u6210\u5176\u4ed6\u4eba\u3002"
+    },
+    "BomberFullDesc": {
+        "13": "\u7ed9\u5176\u4ed6\u4eba\u4e00\u4e2a\u70b8\u5f39\u3002\u76ee\u6807\u5728\u51e0\u79d2\u540e\u53d7\u5230\u63d0\u793a\uff0c\u9700\u8981\u5728\u4e00\u5b9a\u65f6\u95f4\u5185\u4e14\u8fdb\u4f1a\u8bae\u524d\u5c06\u70b8\u5f39\u7ed9\u5176\u4ed6\u4eba\uff08\u7ed9\u8c01\u8c01\u5c31\u76f4\u63a5\u6b7b\uff09\uff0c\u5426\u5219\u81ea\u5df1\u6b7b\u4ea1\u3002\u73a9\u5bb6\u8eab\u4e0a\u88ab\u4f20\u70b8\u5f39\u540e\u4e0d\u80fd\u4f20\u56de\u7ed9\u7206\u7834\u624b\uff0c\u5426\u5219\u81ea\u5df1\u6b7b\u4ea1\u3002\u53e6\u5916\u7206\u7834\u624b\u7684\u70b8\u5f39\u53ef\u4ee5\u51fb\u6740\u961f\u53cb\u3002"
+    },
+    "PoucherFullDesc": {
+        "13": "\u53ef\u4ee5\u5f97\u77e5\u88ab\u4f60\u51fb\u6740\u7684\u73a9\u5bb6\u8eab\u4efd\u3002"
+    },
+    "MimicFullDesc": {
+        "13": "\u51fb\u6740\u90e8\u5206\u8239\u5458\u65f6\u53ef\u4ee5\u7a83\u53d6\u4ed6\u4eec\u7684\u8eab\u4efd\uff0c\u83b7\u5f97\u4ed6\u4eec\u7684\u80fd\u529b\u3002"
+    },
+    "CamouflagerFullDesc": {
+        "13": "\u5f00\u542f\u6280\u80fd\u540e\u6240\u6709\u4eba\u8fdb\u5165\u5c0f\u9ed1\u4eba\u72b6\u6001\u3002"
+    },
+    "MinerFullDesc": {
+        "13": "\u53ef\u4ee5\u6316\u6398\u7ba1\u9053"
+    },
+    "EraserFullDesc": {
+        "13": "\u5177\u6709\u548c\u4f20\u9001\u5e08\u4e00\u6837\u7684\u80fd\u529b\u3002"
+    },
+    "VampireFullDesc": {
+        "13": "\u88ab\u5438\u8840\u7684\u73a9\u5bb6\u5728\u51e0\u79d2\u540e\u66b4\u6bd9\u3002\n\n\u5438\u8840\u9b3c\u51fa\u73b0\u6982\u7387\u4e0d\u4e3a0%\u65f6\u4f1a\u4e3a\u6240\u6709\u73a9\u5bb6\u53d1\u653e\u5927\u849c\uff0c\u5f00\u5c40\u6bcf\u4eba\u83b7\u5f97\u4e00\u4e2a\u5927\u849c\uff0c\u5728\u5927\u849c\u8303\u56f4\u5185\uff0c\u5438\u8840\u9b3c\u53ea\u80fd\u76f4\u63a5\u51fa\u5200\u800c\u4e0d\u80fd\u5438\u8840\uff08\u5ef6\u8fdf\u5200\uff09\u3002"
+    },
+    "CleanerFullDesc": {
+        "13": "\u53ef\u4ee5\u6e05\u7406\u5c38\u4f53\u3002"
+    },
+    "UndertakerFullDesc": {
+        "13": "\u53ef\u4ee5\u5bf9\u5c38\u4f53\u8fdb\u884c\u79fb\u52a8\u3002"
+    },
+    "EscapistFullDesc": {
+        "13": "\u53ef\u4ee5\u62b9\u53bb\u76ee\u6807\u804c\u4e1a\u3002\u4f7f\u5176\u53d8\u6210\u767d\u677f\u8239\u5458\uff0c\u4f7f\u7528\u6280\u80fd\u540e\u9700\u8fc7\u4e00\u8f6e\u4f1a\u8bae\u751f\u6548\u3002"
+    },
+    "WarlockFullDesc": {
+        "13": "\u672f\u58eb\u5bf9\u76ee\u6807\u4e0b\u5492\u540e\uff0c\u53ef\u4ee5\u901a\u8fc7\u8be5\u76ee\u6807\u5bf9\u76ee\u6807\u8eab\u8fb9\u7684\u4eba\u8fdb\u884c\u8fdc\u7a0b\u51fb\u6740\uff0c\u4f7f\u7528\u672f\u58eb\u6280\u80fd\u51fb\u6740\u540e\u4e00\u6bb5\u65f6\u95f4\u5185\u65e0\u6cd5\u79fb\u52a8\u3002\u672f\u58eb\u51fb\u6740\uff0c\u6b7b\u8005\u8868\u73b0\u4e3a\u81ea\u7206\u3002"
+    },
+    "TricksterFullDesc": {
+        "13": "\u53ef\u4ee5\u5728\u5730\u56fe\u4e0a\u653e\u7f6e\u9a97\u672f\u76d2\uff0c\u8fc7\u4e00\u8f6e\u4f1a\u8bae\u540e\u751f\u6548\u3002\u653e\u6ee1\u4e09\u4e2a\u76d2\u5b50\u540e\u53ef\u4ee5\u7184\u706f\u4e00\u6bb5\u65f6\u95f4\uff0c\u6b64\u5173\u706f\u72b6\u6001\u4e0d\u5c5e\u4e8e\u7d27\u6025\u4efb\u52a1\uff0c\u65e0\u6cd5\u88ab\u4fee\u590d\u3002\n\u9a97\u672f\u76d2\u53ef\u4ee5\u5f53\u505a\u7ba1\u9053\u4f7f\u7528\u3002"
+    },
+    "BountyHunterFullDesc": {
+        "13": "\u8d4f\u91d1\u730e\u4eba\u901a\u8fc7\u51fb\u6740\u7279\u5b9a\u76ee\u6807\u53ef\u4ee5\u83b7\u5f97\u5956\u52b1\uff0c\u5237\u65b0\u51fb\u6740CD\u3002\u51fb\u6740\u7279\u5b9a\u76ee\u6807\u540eCD\u5237\u65b0\u4e3a3\u79d2\u3002\n\u65e0\u6cd5\u88ab\u7edd\u5883\u8005\u52a0\u6210"
+    },
+    "TerroristFullDesc": {
+        "13": "\u7206\u7834\u624b\u5728\u5730\u4e0a\u653e\u7f6e\u5927\u578b\u70b8\u5f39\uff0cx\u79d2\u540e\u6fc0\u6d3b\uff0c\u6fc0\u6d3b\u540e\u4f1a\u8fdb\u5165\u8f83\u957f\u65f6\u95f4\u7684\u7206\u70b8\u5012\u8ba1\u65f6\uff0c\n\u5012\u8ba1\u65f6\u671f\u95f4\u73a9\u5bb6\u53ef\u4ee5\u5728\u70b8\u5f39\u9644\u8fd1\u8fdb\u884c\u62c6\u5f39\uff0c\u62c6\u5f39\u65f6\u9700\u8981\u4e00\u6bb5\u65f6\u95f4\uff0c\n\u5982\u679c\u5012\u8ba1\u65f6\u7ed3\u675f\u5219\u5c06\u8303\u56f4\u5185\u6240\u6709\u73a9\u5bb6\u51fb\u6740\uff08\u4e0d\u5206\u654c\u6211\uff0c\u5305\u62ec\u7206\u7834\u624b\u81ea\u5df1\uff09\u3002\n\u70b8\u5f39\u6fc0\u6d3b\u540e\u70b8\u5f39\u7206\u70b8\u8303\u56f4\u5185\u7684\u5730\u9762\u4f1a\u51fa\u73b0\u8303\u56f4\u63d0\u793a\uff0c\u521d\u59cb\u72b6\u6001\u4e3a\u767d\u8272\uff0c\u4f1a\u9010\u6e10\u53d8\u4e3a\u7ea2\u8272\u76f4\u5230\u7206\u70b8\u3002"
+    },
+    "BlackmailerFullDesc": {
+        "13": "\u4f1a\u8bae\u5916\u53ef\u4ee5\u52d2\u7d22\u4e00\u540d\u73a9\u5bb6\uff0c\u4f7f\u5176\u4f1a\u8bae\u65f6\u65e0\u6cd5\u53d1\u8a00\u3002"
+    },
+    "WitchFullDesc": {
+        "13": "\u62e5\u6709\u8bc5\u5492\u80fd\u529b\uff0c\u88ab\u8bc5\u5492\u7684\u4eba\u4f1a\u8bae\u4e0a\u4f1a\u663e\u793a\u5973\u5deb\u6807\u8bb0\uff0c\u4f1a\u8bae\u7ed3\u675f\u540e\u6b7b\u4ea1\uff08\u9664\u975e\u5973\u5deb\u88ab\u6295\u6216\u8005\u6b7b\u4ea1\uff09"
+    },
+    "NinjaFullDesc": {
+        "13": "\u5fcd\u8005\u53ef\u4ee5\u6807\u8bb0\u76ee\u6807\uff0c\u5e76\u5728\u8fd9\u4e4b\u540e\u53ef\u4ee5\u968f\u65f6\u9690\u8eab\u77ac\u79fb\u5230\u76ee\u6807\u65c1\u8fb9\u51fb\u6740\u76ee\u6807\u3002\u5e76\u4e14\u539f\u5730\u548c\u88ab\u51fb\u6740\u7684\u4f4d\u7f6e\u90fd\u4f1a\u7559\u4e0b\u4e00\u5708\u7eff\u8272\u7684\u53f6\u5b50\uff0c\u4e00\u6bb5\u65f6\u95f4\u540e\u53f6\u5b50\u6d88\u5931\u3002"
+    },
+    "YoyoFullDesc": {
+        "13": "\u53ef\u4ee5\u6807\u8bb0\u4e00\u4e2a\u4f4d\u7f6e\uff0c\u4f7f\u7528\u6280\u80fd\u540e\u4f1a\u77ac\u79fb\u5230\u6807\u8bb0\u70b9\uff0c\u6280\u80fd\u6709\u6301\u7eed\u65f6\u95f4\uff0c\u6301\u7eed\u65f6\u95f4\u7ed3\u675f\u540e\u5c06\u518d\u77ac\u79fb\u56de\u4f20\u9001\u524d\u7684\u4f4d\u7f6e\u3002\n\n\u62e5\u6709\u968f\u8eab\u7ba1\u7406\u5730\u56fe\u3002"
+    },
+    "EvilTrapperFullDesc": {
+        "13": "\u80fd\u591f\u653e\u7f6e\u591a\u4e2a\u9677\u9631\uff0c\u653e\u7f6e\u540e\uff0c\u9677\u9631\u5c06\u5728\u7279\u5b9a\u7684\u65f6\u95f4\u540e\u6fc0\u6d3b\u3002\n\n\u5982\u679c\u73a9\u5bb6\u79bb\u9677\u9631\u592a\u8fd1\uff0c\u73a9\u5bb6\u5c31\u4f1a\u88ab\u9677\u9631\u5361\u4f4f\u3002\n\n\u5728\u4e00\u6bb5\u65f6\u95f4\u540e\uff0c\u5982\u679c\u6ca1\u6709\u4eba\u6765\u8425\u6551\u88ab\u56f0\u73a9\u5bb6\uff0c\u4ed6\u5c31\u4f1a\u6b7b\u4ea1\u3002\n\n\u7279\u5b9a\u8303\u56f4\u5185\u7684\u6bcf\u4e2a\u4eba\u90fd\u4f1a\u542c\u5230\u88ab\u56f0\u73a9\u5bb6\u88ab\u9677\u9631\u51fb\u6740\u7684\u58f0\u97f3\u3002"
+    },
+    "AmnisiacFullDesc": {
+        "13": "\u5931\u5fc6\u8005\u80fd\u77e5\u6653\u5c38\u4f53\u7684\u4f4d\u7f6e\uff0c\u901a\u8fc7\u627e\u5230\u5c38\u4f53\u5e76\u56de\u5fc6\u83b7\u5f97\u5c38\u4f53\u7684\u804c\u4e1a\u3002"
+    },
+    "JesterFullDesc": {
+        "13": "\u5728\u4f1a\u8bae\u4e2d\u88ab\u9a71\u9010\u5373\u53ef\u80dc\u5229"
+    },
+    "VultureFullDesc": {
+        "13": "\u79c3\u9e6b\u77e5\u6653\u5c38\u4f53\u4f4d\u7f6e\uff0c\u901a\u8fc7\u541e\u566c\u4e00\u5b9a\u6570\u91cf\u5c38\u4f53\u540e\u83b7\u5f97\u80dc\u5229\u3002"
+    },
+    "LawyerFullDesc": {
+        "13": "\u5f8b\u5e08\u7684\u4efb\u52a1\u662f\u5e2e\u52a9\u5ba2\u6237\u8d62\u5f97\u80dc\u5229\u3002\u4f1a\u8bae\u4e0a\uff0c\u5ba2\u6237\u88ab\u6295\u65f6\u5f8b\u5e08\u4e5f\u4f1a\u6b7b\u4ea1\u3002\u5176\u4ed6\u60c5\u51b5\u4e0b\u5ba2\u6237\u6b7b\u4ea1\uff0c\u5f8b\u5e08\u4f1a\u53d8\u6210\u8d77\u8bc9\u4eba\u3002"
+    },
+    "ExecutionerFullDesc": {
+        "13": "\u5904\u5211\u5bf9\u8c61\u5728\u4f1a\u8bae\u4e2d\u88ab\u6295\u51fa\u5373\u53ef\u80dc\u5229\u3002\u5904\u5211\u5bf9\u8c61\u6b7b\u4ea1\uff0c\u5904\u5211\u8005\u53d8\u4e3a\u8d77\u8bc9\u4eba\uff08\u5e78\u5b58\u8005\uff09\u3002"
+    },
+    "PursuerFullDesc": {
+        "13": "\u8d77\u8bc9\u4eba\u7684\u4efb\u52a1\u662f\u6d3b\u4e0b\u53bb\u5c31\u7b97\u8d62\uff0c\u8d77\u8bc9\u4eba\u53ef\u4ee5\u7ed9\u5176\u4ed6\u73a9\u5bb6\u585e\u7a7a\u5305\u5f39\uff0c\u7a7a\u5305\u5f39\u53ef\u4ee5\u7ed9\u5e26\u5200\u804c\u4e1a\u7684\u4e0b\u4e00\u5200\u51fb\u6740\u65e0\u6548\u3002"
+    },
+    "JackalFullDesc": {
+        "13": "\u8c7a\u72fc\u5177\u6709\u51fb\u6740\u80fd\u529b\uff0c\u800c\u4e14\u53ef\u4ee5\u62db\u52df\u573a\u4e0a\u4efb\u4f55\u4e00\u4e2a\u73a9\u5bb6\uff0c\u4f7f\u5176\u53d8\u4e3a\u8ddf\u73ed\u3002\n\n\u53ef\u8bbe\u7f6e\u4e3a\u4f20\u706b\u8c7a\u72fc"
+    },
+    "SwooperFullDesc": {
+        "13": "\u62e5\u6709\u9690\u5f62\u548c\u51fb\u6740\u7684\u80fd\u529b\u3002"
+    },
+    "ArsonistFullDesc": {
+        "13": "\u53ef\u4ee5\u7ed9\u73a9\u5bb6\u6d82\u6cb9\uff0c\u5f53\u573a\u4e0a\u6240\u6709\u6d3b\u4eba\u90fd\u88ab\u6d82\u6cb9\u540e\u83b7\u5f97\u70b9\u706b\u6280\u80fd\uff0c\u70b9\u706b\u5c31\u80fd\u8d62\u3002"
+    },
+    "WerewolfFullDesc": {
+        "13": "\u6708\u4e0b\u72fc\u4eba\u53ef\u4ee5\u4f7f\u7528\u6280\u80fd\u8fdb\u5165\u4e00\u6bb5\u65f6\u95f4\u7684\u72c2\u66b4\u72b6\u6001\u3002\u72c2\u66b4\u72b6\u6001\u4e0b\uff0c\u51fb\u6740CD\u4e3a3\u79d2\u3002"
+    },
+    "ThiefFullDesc": {
+        "13": "\u8eab\u4efd\u7a83\u8d3c\u53ef\u4ee5\u51fb\u6740\u4efb\u4f55\u5e26\u5200\u804c\u4e1a\uff0c\u5e76\u593a\u53d6\u4ed6\u4eec\u7684\u804c\u4e1a\u3002\u8ddf\u73ed\u4e5f\u53ef\u88ab\u7a83\u53d6\u3002"
+    },
+    "JuggernautFullDesc": {
+        "13": "\u6bcf\u6b21\u51fb\u6740\u4f1a\u8ba9\u81ea\u5df1\u7684\u51fb\u6740cd\u51cf\u5c115\u79d2\uff0c\u76f4\u5230\u6700\u540e\u51fb\u6740cd\u4f1a\u51cf\u5c11\u81f30"
+    },
+    "DoomsayerFullDesc": {
+        "13": "\u884c\u52a8\u9636\u6bb5\u53ef\u4ee5\u63ed\u793a\u5176\u4ed6\u73a9\u5bb6\uff0c\u8fdb\u5165\u4f1a\u8bae\u540e\u53ef\u4ee5\u5728\u804a\u5929\u680f\u67e5\u770b\u63ed\u793a\u7ed3\u679c\n\u672b\u65e5\u9884\u8a00\u5bb6\u9700\u8981\u4ece\u63ed\u793a\u7684\u804c\u4e1a\u4e2d\u627e\u51fa\u8be5\u73a9\u5bb6\u7684\u6b63\u786e\u804c\u4e1a\uff0c\u5e76\u5728\u4f1a\u8bae\u4e2d\u523a\u6740\u3002\n\u523a\u6740\u5931\u8d25\u4e0d\u4f1a\u5bfc\u81f4\u81ea\u5df1\u6b7b\u4ea1\uff0c\u4f46\u672c\u6b21\u4f1a\u8bae\u65e0\u6cd5\u518d\u6b21\u523a\u6740\u3002\n\u523a\u6740\u6210\u529f\u53ef\u4ee5\u5237\u65b0\u80fd\u529b\uff0c\u53ef\u4ee5\u7ee7\u7eed\u5728\u672c\u8f6e\u4f1a\u8bae\u4e2d\u523a\u6740\u4e0b\u4e00\u4f4d\u73a9\u5bb6\u3002\n\n\u672b\u65e5\u9884\u8a00\u5bb6\u7684\u63ed\u793a\u6280\u80fd\u6709\u4e24\u79cd\u6a21\u5f0f\uff08\u96be\u5ea6\uff09\uff0c\u53ef\u7531\u623f\u4e3b\u8bbe\u7f6e\uff1a\n\n\u4ece\u6a21\u7ec4\u5168\u90e8\u804c\u4e1a\u6c60\u4e2d\u968f\u673a\u804c\u4e1a+\u76ee\u6807\u804c\u4e1a\uff08\u56f0\u96be\uff09\n\u4ece\u573a\u4e0a\u5df2\u6709\u7684\u804c\u4e1a\u6c60\u4e2d\u968f\u673a\u804c\u4e1a+\u76ee\u6807\u804c\u4e1a\uff08\u7b80\u5355\uff09\n\n\u672b\u65e5\u9884\u8a00\u5bb6\u523a\u6740\u6210\u529f3\u6b21\uff08\u53ef\u8bbe\u7f6e\uff09\u540e\u5c06\u76f4\u63a5\u83b7\u80dc\u3002"
+    },
+    "AkujoFullDesc": {
+        "13": "\u9700\u8981\u5728\u9650\u5b9a\u65f6\u95f4\u5185\u62db\u52df\u771f\u7231\u4e0e\u5907\u80ce\uff0c\u5426\u5219\u4f1a\u81ea\u6740\u3002\n\n\u9b45\u9b54\u5982\u679c\u62db\u52df\u4e86\u604b\u4eba\uff08\u65e0\u8bba\u771f\u7231\u6216\u5907\u80ce\uff09\u90fd\u4f1a\u6539\u53d8\u604b\u4eba\u5173\u7cfb\uff0c\u800c\u604b\u4eba\u7684\u53e6\u4e00\u65b9\u4f1a\u56e0\u4e3a\u604b\u4eba\u88ab\u593a\u800c\u81ea\u6740\u3002\n\n\u9b45\u9b54\u7684\u80dc\u5229\u6761\u4ef6\u4e0e\u604b\u4eba\u4e00\u81f4\uff0c\u771f\u7231\u53ef\u8bbe\u7f6e\u4e3a\u4e0d\u8ddf\u968f\u539f\u6709\u9635\u8425\u83b7\u80dc\uff0c\u6216\u53ef\u8bbe\u7f6e\u4e3a\u771f\u7231\u4e3a\u8239\u5458\u65f6\u53ef\u8ddf\u968f\u8239\u5458\u80dc\u5229\n\n\u6ce8\uff1a\u9b45\u9b54\u5728\u573a\u65f6\u65e0\u6cd5\u7ed3\u675f\u6e38\u620f\uff08\u9664\u975e\u4efb\u52a1\u80dc\u5229\uff09"
+    },
+    "CrewmateFullDesc": {
+        "13": "\u54c8\u54c8~\u767d\u677f\u8239\u5458\uff01"
+    },
+    "VigilanteFullDesc": {
+        "13": "\u5f3a\u529b\u8239\u5458\uff1a\n\u53ef\u4ee5\u5728\u4f1a\u8bae\u4e0a\u731c\u6d4b\u5176\u4ed6\u4eba\u7684\u804c\u4e1a\uff0c\u5982\u679c\u731c\u5bf9\u4e86\uff0c\u5bf9\u65b9\u5c31\u4f1a\u6b7b\u4ea1\uff1b\u731c\u9519\u4e86\uff0c\u8d4c\u602a\u81ea\u5df1\u6b7b\u4ea1\u3002\n"
+    },
+    "MayorFullDesc": {
+        "13": "\u5f3a\u529b\u8239\u5458\uff1a\n\u5e02\u957f\u5728\u6295\u7968\u9636\u6bb5\u62e5\u6709\u4e24\u7968\uff08\u53ef\u9009\u62e9\u62951\u7968\u62162\u7968\uff09\uff0c\u5177\u6709\u8fdc\u7a0b\u53ec\u5f00\u4f1a\u8bae\u7684\u80fd\u529b\u3002\u5e02\u957f\u5728\u5b8c\u6210\u4e00\u5b9a\u4efb\u52a1\u6570\u540e\uff0c\u83b7\u5f97\u7aa5\u89c6\u80fd\u529b\uff0c\u4f1a\u8bae\u7ed3\u675f\u65f6\u80fd\u591f\u83b7\u6089\u6bcf\u4e2a\u4eba\u7684\u6295\u7968\u60c5\u51b5\u3002"
+    },
+    "ProsecutorFullDesc": {
+        "13": "\u5f3a\u529b\u8239\u5458\uff1a\n\u68c0\u5bdf\u5b98\u53ef\u4ee5\u5f3a\u5236\u9a71\u9010\u4e00\u540d\u73a9\u5bb6\uff0c\u6bcf\u5c40\u6e38\u620f\u53ea\u80fd\u4f7f\u7528\u4e00\u6b21\u3002\n\u5728\u4f1a\u8bae\u4e2d\u5de6\u4e0b\u89d2\u4e2d\u65b0\u589e \u201c\u8d77\u8bc9\u201d \u6309\u94ae\uff0c\u6309\u4e0b\u6309\u94ae\u540e\u672c\u6b21\u4f1a\u8bae\u4e3a\u68c0\u5bdf\u5b98\u7684\u4f1a\u8bae\uff0c\u5176\u4ed6\u73a9\u5bb6\u7684\u6240\u6709\u6295\u7968\u88ab\u65e0\u6548\n\u5e76\u4e14\u5f3a\u5236\u533f\u540d\u6295\u7968\uff0c\u65e0\u6cd5\u88ab\u7aa5\u89c6\u3002\n\n\u6309\u623f\u95f4\u8bbe\u7f6e\uff1a\u5982\u679c\u9a71\u9010\u4e86\u8239\u5458\u5219\u68c0\u5bdf\u5b98\u4f1a\u81ea\u6740\u3002\n\n\uff08\u6ce8\uff1a\u5728\u68c0\u5bdf\u5b98\u7684\u4f1a\u8bae\u4e2d: \u68c0\u5bdf\u5b98\u65e0\u6cd5\u8df3\u8fc7\uff0c\u5982\u679c\u4f1a\u8bae\u7ed3\u675f\u65f6\u4ecd\u7136\u4e0d\u6295\u7968\u5219\u672c\u6b21\u4f1a\u8bae\u65e0\u6548\uff0c\u201c\u8d77\u8bc9\u201d \u6280\u80fd\u4fdd\u7559\uff09"
+    },
+    "PortalmakerFullDesc": {
+        "13": "\u661f\u95e8\u7f14\u9020\u8005\u53ef\u4ee5\u5728\u5730\u56fe\u4e0a\u653e\u7f6e\u4e24\u9053\u4f20\u9001\u88c5\u7f6e\uff0c\u4f20\u9001\u88c5\u7f6e\u5b8c\u6210\u540e\uff0c\u6240\u6709\u4eba\u90fd\u53ef\u4ee5\u901a\u8fc7\u4f20\u9001\u88c5\u7f6e\u8fdb\u884c\u4f20\u9001\u3002\n\n\u4f1a\u8bae\u4e2d\u53ef\u5728\u804a\u5929\u6846\u67e5\u770b\u661f\u95e8\u65e5\u5fd7"
+    },
+    "EngineerFullDesc": {
+        "13": "\u5de5\u7a0b\u5e08\u62e5\u6709\u4f7f\u7528\u901a\u98ce\u7ba1\u9053\u7684\u80fd\u529b\uff0c\u4e5f\u80fd\u8fdc\u7a0b\u4e00\u952e\u4fee\u590d\u7834\u574f\u3002"
+    },
+    "PrivateInvestigatorFullDesc": {
+        "13": "\u884c\u52a8\u9636\u6bb5\u53ef\u4ee5\u5bf9\u4e00\u4e2a\u76ee\u6807\u89c2\u5bdf\uff0c\u5982\u679c\u5bf9\u65b9\u88ab\u5176\u4ed6\u73a9\u5bb6\u4ea4\u4e92\uff0c\u5219\u89c2\u5bdf\u8005\u4f1a\u6536\u5230\u95ea\u5149\u63d0\u793a"
+    },
+    "SheriffFullDesc": {
+        "13": "\u8b66\u957f\u662f\u8239\u5458\u9635\u8425\u552f\u4e00\u53ef\u4ee5\u4e3b\u52a8\u5200\u4eba\u7684\u804c\u4e1a\u3002\u4ed6\u7684\u5de5\u4f5c\u662f\u6740\u6b7b\u7ea2\u72fc\uff0c\u5e72\u7ffb\u8c7a\u72fc\u7b49\u4e2d\u7acb\u574f\u86cb\u3002\u4f46\u662f\u8b66\u957f\u51fa\u5200\u9700\u8c28\u614e\uff0c\u56e0\u4e3a\u8bd5\u56fe\u51fb\u6740\u8239\u5458\u7684\u8bdd\uff0c\u4f1a\u4f7f\u81ea\u5df1\u6b7b\u4ea1\u3002\u6ce8\u610f\uff1a\u8b66\u957f\u6267\u6cd5\u5931\u5fc6\u8005\u3001\u8d77\u8bc9\u4eba\uff08\u4e24\u4e2a\u90fd\u662f\u4e2d\u7acb\uff09\u4e5f\u4f1a\u4f7f\u81ea\u5df1\u6b7b\u4ea1\u3002"
+    },
+    "DeputyFullDesc": {
+        "13": "\u6355\u5feb\u662f\u8b66\u957f\u7684\u4e0b\u5c5e\uff0c\u5728\u672a\u6210\u4e3a\u8b66\u957f\u524d\u62e5\u6709\u624b\u94d0\u6280\u80fd\u3002\u6355\u5feb\u53ef\u4ee5\u5bf9\u76ee\u6807\u4e0a\u62f7\uff0c\u4f7f\u88ab\u62f7\u4eba\u7684\u6280\u80fd\u3001\u51fb\u6740\u3001\u62a5\u8b66\u6309\u94ae\u5728\u88ab\u70b9\u51fb\u7684\u65f6\u5019\u5c01\u9501\u51e0\u79d2\u3002\u8b66\u957f\u6b7b\u4ea1\u540e\uff0c\u6355\u5feb\u53ef\u4ee5\u664b\u5347\u4e3a\u8b66\u957f"
+    },
+    "SwapperFullDesc": {
+        "13": "\u5f3a\u529b\u8239\u5458\uff1a\n\u6362\u7968\u5e08\u53ef\u4ee5\u5728\u4f1a\u8bae\u671f\u95f4\u4ea4\u6362\u4e24\u540d\u73a9\u5bb6\u8eab\u4e0a\u7684\u7968\u6570\u3002\u6ce8\u610f\uff1a\u6295\u7968\u540e\u65e0\u6cd5\u4ea4\u6362\u3002"
     }
 }

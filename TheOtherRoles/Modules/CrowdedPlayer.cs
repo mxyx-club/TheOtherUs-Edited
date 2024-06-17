@@ -256,7 +256,7 @@ public static class CrowdedPlayer
 
         public virtual void Update()
         {
-            if (Input.GetAxis("Mouse ScrollWheel") != 0 && MeetingHudPatch.guesserUI != null) return;
+            if (MeetingHudPatch.guesserUI != null) return;
 
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) ||
                 Input.mouseScrollDelta.y > 0f)
@@ -303,7 +303,8 @@ public static class CrowdedPlayer
 
             if (meetingHud.state is MeetingHud.VoteStates.Animating or MeetingHud.VoteStates.Proceeding ||
                 meetingHud.TimerText.text.Contains($" ({PageIndex + 1}/{MaxPageIndex + 1})"))
-                return; // TimerText does not update there                                                 ^ Sometimes the timer text is spammed with the page counter for some weird reason so this is just a band-aid fix for it
+                return;
+            // TimerText does not update there Sometimes the timer text is spammed with the page counter for some weird reason so this is just a band-aid fix for it
 
             meetingHud.TimerText.text += $" ({PageIndex + 1}/{MaxPageIndex + 1})";
         }

@@ -95,7 +95,7 @@ internal static class MapOption
         allowParallelMedBayScans = CustomOptionHolder.allowParallelMedBayScans.getBool();
         disableMedscanWalking = CustomOptionHolder.disableMedbayWalk.getBool();
         camoComms = CustomOptionHolder.enableCamoComms.getBool();
-        //fungleDisableCamoComms = CustomOptionHolder.fungleDisableCamoComms.getBool();
+        fungleDisableCamoComms = false;
         shieldFirstKill = CustomOptionHolder.shieldFirstKill.getBool();
         impostorSeeRoles = CustomOptionHolder.impostorSeeRoles.getBool();
         transparentTasks = CustomOptionHolder.transparentTasks.getBool();

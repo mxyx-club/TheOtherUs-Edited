@@ -716,25 +716,22 @@ internal class RoleManagerSelectRolesPatch
         var neutralPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
         var crewPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
-        neutralPlayer.RemoveAll(x => !isNeutral(x));
+        neutralPlayer.RemoveAll(x => !isNeutral(x) || x == Doomsayer.doomsayer);
         crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
         assignGuesserGamemodeToPlayers(crewPlayer,
             Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeCrewNumber.getFloat()));
         assignGuesserGamemodeToPlayers(neutralPlayer,
             Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeNeutralNumber.getFloat()),
             CustomOptionHolder.guesserForceJackalGuesser.getBool(),
-            CustomOptionHolder.guesserForceThiefGuesser.getBool(), true);
+            CustomOptionHolder.guesserForceThiefGuesser.getBool());
         assignGuesserGamemodeToPlayers(impPlayer,
             Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeImpNumber.getFloat()));
     }
 
     private static void assignGuesserGamemodeToPlayers(List<PlayerControl> playerList, int count,
-        bool forceJackal = false, bool forceThief = false, bool forceDoomsayer = false)
+        bool forceJackal = false, bool forceThief = false)
     {
         var IndexList = new Queue<PlayerControl>();
-
-        if (Doomsayer.doomsayer != null && forceDoomsayer)
-            IndexList.Enqueue(Doomsayer.doomsayer);
 
         if (Thief.thief != null && forceThief)
             IndexList.Enqueue(Thief.thief);

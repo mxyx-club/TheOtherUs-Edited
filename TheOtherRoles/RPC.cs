@@ -2477,7 +2477,7 @@ public static class RPCProcedure
             {
                 if (Specoality.linearfunction != 0)
                 {
-                    if(CachedPlayer.LocalPlayer.PlayerControl == Specoality.specoality) showFlash(Color.red, 1f, "");
+                    if (CachedPlayer.LocalPlayer.PlayerControl == Specoality.specoality) showFlash(Color.red, 1f, "");
                     Specoality.linearfunction--;
                 }
                 if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
@@ -2528,10 +2528,7 @@ public static class RPCProcedure
                 MeetingHud.Instance.CheckForEndVoting();
         }
 
-        if (Doomsayer.doomsayer != null && Doomsayer.doomsayer == guesser)
-        {
-        }
-        else
+        if (Doomsayer.doomsayer == null || Doomsayer.doomsayer != guesser)
         {
             HandleGuesser.remainingShots(killerId, true);
         }

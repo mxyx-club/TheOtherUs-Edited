@@ -152,7 +152,7 @@ namespace TheOtherRoles.Patches
             {
                 if (roleInfo.isModifier && teamId != Team.Modifier) continue;
                 else if (roleInfo.isNeutral && teamId != Team.Neutral) continue;
-                else if (roleInfo.color == Palette.ImpostorRed && roleInfo != RoleInfo.spy && teamId != Team.Impostor) continue;
+                else if (roleInfo.color == Palette.ImpostorRed && !roleInfo.isModifier && roleInfo != RoleInfo.spy && teamId != Team.Impostor) continue;
                 else if ((roleInfo.color != Palette.ImpostorRed || roleInfo == RoleInfo.spy) && !roleInfo.isModifier && !roleInfo.isNeutral && teamId != Team.Crewmate) continue;
 
                 Transform buttonTransform = Object.Instantiate(buttonTemplate, container.transform);
