@@ -166,6 +166,7 @@ public class CustomOptionHolder
 
     public static CustomOption prosecutorSpawnRate;
     public static CustomOption prosecutorDiesOnIncorrectPros;
+    public static CustomOption prosecutorCanCallEmergency;
 
     public static CustomOption portalmakerSpawnRate;
     public static CustomOption portalmakerCooldown;
@@ -953,17 +954,17 @@ public class CustomOptionHolder
         //lawyerIsProsecutorChance = Create(20181, Types.Neutral, "律师为处刑者的概率", rates, lawyerSpawnRate);
         lawyerTargetKnows = Create(20182, Types.Neutral, "客户知道律师存在", true, lawyerSpawnRate);
         lawyerVision = Create(20183, Types.Neutral, "视野倍率", 1.5f, 0.25f, 3f, 0.25f, lawyerSpawnRate);
-        lawyerKnowsRole = Create(20184, Types.Neutral, "律师可得知目标职业", true, lawyerSpawnRate);
-        lawyerCanCallEmergency = Create(20185, Types.Neutral, "律师可召开会议", true, lawyerSpawnRate);
-        lawyerStolenWin = Create(20189, Types.Neutral, "律师存活会取代客户胜利", false, lawyerSpawnRate);
+        lawyerKnowsRole = Create(20184, Types.Neutral, "可得知目标职业", true, lawyerSpawnRate);
+        lawyerCanCallEmergency = Create(20185, Types.Neutral, "可以发起紧急会议", true, lawyerSpawnRate);
+        lawyerStolenWin = Create(20189, Types.Neutral, "存活会取代客户胜利", false, lawyerSpawnRate);
         lawyerTargetCanBeJester = Create(20186, Types.Neutral, "小丑可以成为律师的客户", false, lawyerSpawnRate);
         pursuerCooldown = Create(20187, Types.Neutral, "起诉人空包弹冷却", 20f, 5f, 60f, 2.5f, lawyerSpawnRate);
         pursuerBlanksNumber = Create(20188, Types.Neutral, "起诉人空包弹可用次数", 6f, 1f, 20f, 1f, lawyerSpawnRate);
 
         executionerSpawnRate = Create(20190, Types.Neutral, cs(Executioner.color, "Executioner"), rates, null, true);
-        executionerCanCallEmergency = Create(20191, Types.Neutral, "处刑者可召开会议", true, executionerSpawnRate);
+        executionerCanCallEmergency = Create(20191, Types.Neutral, "可以发起紧急会议", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(20192, Types.Neutral, "目标职业变更时可以晋升为律师", true, executionerSpawnRate);
-        //executionerOnTargetDead = Create(20193, Types.Neutral, "处刑目标死亡后变为", [cs(Pursuer.color, "Pursuer"), cs(Jester.color, "Jester"), cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
+        //executionerOnTargetDead = Create(20193, Types.Neutral, "目标死亡后变为", [cs(Pursuer.color, "Pursuer"), cs(Jester.color, "Jester"), cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
 
         swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
         swooperKillCooldown = Create(20151, Types.Neutral, "击杀冷却", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
@@ -1026,6 +1027,7 @@ public class CustomOptionHolder
 
         prosecutorSpawnRate = Create(30370, Types.Crewmate, cs(Prosecutor.color, "Prosecutor"), rates, null, true);
         prosecutorDiesOnIncorrectPros = Create(30371, Types.Crewmate, "驱逐船员会自杀", true, prosecutorSpawnRate);
+        prosecutorCanCallEmergency = Create(30371, Types.Crewmate, "可以发起紧急会议", true, prosecutorSpawnRate);
 
         engineerSpawnRate = Create(30120, Types.Crewmate, cs(Engineer.color, "Engineer"), rates, null, true);
         engineerRemoteFix = Create(30121, Types.Crewmate, "可远程修理破坏", true, engineerSpawnRate);
@@ -1091,8 +1093,8 @@ public class CustomOptionHolder
         veterenAlertDuration = Create(30222, Types.Crewmate, "警戒持续时间", 15f, 1f, 20f, 1f, veterenSpawnRate);
 
         swapperSpawnRate = Create(30230, Types.Crewmate, cs(Swapper.color, "Swapper"), rates, null, true);
-        swapperCanCallEmergency = Create(30231, Types.Crewmate, "可召开会议", false, swapperSpawnRate);
-        swapperCanFixSabotages = Create(30232, Types.Crewmate, "可修理紧急破坏", false, swapperSpawnRate);
+        swapperCanCallEmergency = Create(30231, Types.Crewmate, "可以发起紧急会议", true, swapperSpawnRate);
+        swapperCanFixSabotages = Create(30232, Types.Crewmate, "可修理紧急破坏", true, swapperSpawnRate);
         swapperCanOnlySwapOthers = Create(30233, Types.Crewmate, "只可交换他人", false, swapperSpawnRate);
         swapperSwapsNumber = Create(30234, Types.Crewmate, "初始可换票次数", 1f, 0f, 5f, 1f, swapperSpawnRate);
         swapperRechargeTasksNumber = Create(30235, Types.Crewmate, "充能所需任务数", 2f, 1f, 10f, 1f, swapperSpawnRate);
