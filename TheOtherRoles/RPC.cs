@@ -259,6 +259,7 @@ public enum CustomRPC
     PropHuntStartTimer,
     PropHuntSetInvis,
     PropHuntSetSpeedboost,
+    HostEndGame,
 
     // Other functionality
     ShareTimer,
@@ -1910,6 +1911,7 @@ public static class RPCProcedure
                     PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
                     PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
                 };
+
                 if (Disperser.DispersesToVent)
                 {
                     CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo
@@ -1917,19 +1919,8 @@ public static class RPCProcedure
                 }
                 else
                 {
-                    var SpawnPositions =
-                        GameOptionsManager.Instance.currentNormalGameOptions.MapId switch
-                        {
-                            0 => MapData.SkeldSpawnPosition,
-                            1 => MapData.MiraSpawnPosition,
-                            2 => MapData.PolusSpawnPosition,
-                            3 => MapData.DleksSpawnPosition,
-                            4 => MapData.AirshipSpawnPosition,
-                            5 => MapData.FungleSpawnPosition,
-                            _ => MapData.FindVentSpawnPositions()
-                        };
                     CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo
-                        (SpawnPositions[rnd.Next(SpawnPositions.Count)]);
+                    (MapData.MapSpawnPosition()[rnd.Next(MapData.MapSpawnPosition().Count)]);
                 }
             }
             Disperser.remainingDisperses--;
@@ -3587,6 +3578,9 @@ internal class RPCHandlerPatch
 
             case CustomRPC.Prosecute:
                 Prosecutor.ProsecuteThisMeeting = true;
+                break;
+            case CustomRPC.HostEndGame:
+                isCanceled = true;
                 break;
         }
 

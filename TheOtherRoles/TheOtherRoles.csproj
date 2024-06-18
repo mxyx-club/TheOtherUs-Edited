@@ -3,7 +3,6 @@
         <TargetFramework>net6.0</TargetFramework>
         <Version>1.0.4.2</Version>
 		<AssemblyName>TheOtherUs</AssemblyName>
-        <Description>TheOtherUs-Edited</Description>
         <Authors>mxyx-club</Authors>
         <LangVersion>latest</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -18,7 +17,7 @@
     </ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)'!='mxyx-club'">
-		<PackageReference Include="AmongUs.GameLibs.Steam" Version="2024.3.5" />
+		<PackageReference Include="AmongUs.GameLibs.Steam" Version="2024.6.4" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)'=='mxyx-club'">

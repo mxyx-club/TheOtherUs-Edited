@@ -3174,8 +3174,7 @@ internal static class HudManagerStartPatch
                 {
                     Witch.currentCooldownAddition += Witch.cooldownAddition;
                     witchSpellButton.MaxTimer = Witch.cooldown + Witch.currentCooldownAddition;
-                    PlayerControlFixedUpdatePatch
-                        .miniCooldownUpdate(); // Modifies the MaxTimer if the witch is the mini
+                    PlayerControlFixedUpdatePatch.miniCooldownUpdate(); // Modifies the MaxTimer if the witch is the mini
                     witchSpellButton.Timer = witchSpellButton.MaxTimer;
                     if (Witch.triggerBothCooldowns)
                     {

@@ -956,11 +956,11 @@
         "0": "The Prophet can't start an emergency meeting",
         "13": "\u9884\u8a00\u5bb6\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
     },
-    "ExecutionerMeetingButton": {
+    "executionerMeetingButton": {
         "0": "The Executioner can't start an emergency meeting",
         "13": "\u5904\u5211\u8005\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
     },
-    "ProsecutorMeetingButton": {
+    "prosecutorMeetingButton": {
         "0": "The Prosecutor can't start an emergency meeting",
         "13": "\u68c0\u5bdf\u5b98\u4e0d\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
     },
@@ -991,6 +991,15 @@
     "DifferentTouVersions": {
         "0": "Players With Different Versions:\n</color>",
         "13": "<color=#FF0000FF>\u88c5\u4e86\u4e0d\u540c\u7248\u672c\u6a21\u7ec4\u7684\u73a9\u5bb6:\n</color>"
+    },
+    "SendTargets.Default": {
+        "13": "\u53d1\u9001\u7ed9\uff1a\u9ed8\u8ba4"
+    },
+    "SendTargets.All": {
+        "13": "\u53d1\u9001\u7ed9\uff1a\u6240\u6709\u4eba"
+    },
+    "SendTargets.Dead": {
+        "13": "\u53d1\u9001\u7ed9\uff1a\u6b7b\u4ea1\u73a9\u5bb6"
     },
     "trapperGotTrapText": {
         "0": "{0} got caught in the trap",

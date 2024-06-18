@@ -3,6 +3,7 @@ using System.Linq;
 using Hazel;
 using Il2CppSystem.Collections.Generic;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Objects;
 using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -39,12 +40,14 @@ internal class IntroCutsceneOnDestroyPatch
                 p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
                 player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
                 player.cosmetics.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
-                //开局击杀cd
-                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(MapOption.ButtonCooldown);
                 player.cosmetics.nameText.text = data.PlayerName;
                 player.SetFlipX(true);
                 MapOption.playerIcons[p.PlayerId] = player;
                 player.gameObject.SetActive(false);
+
+                //游戏开始时重置cd
+                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(MapOption.ButtonCooldown);
+                CustomButton.GameStartResetAllCooldowns(MapOption.ButtonCooldown + 0.5f);
 
                 if (CachedPlayer.LocalPlayer.PlayerControl == Arsonist.arsonist && p != Arsonist.arsonist)
                 {
@@ -124,31 +127,7 @@ internal class IntroCutsceneOnDestroyPatch
             }
         }
 
-        if (CustomOptionHolder.randomGameStartPosition.getBool())
-        {
-            // Random spawn on game start
-            if (CustomOptionHolder.randomGameStartToVents.getBool())
-            {
-                CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo
-                    (MapData.FindVentSpawnPositions()[rnd.Next(MapData.FindVentSpawnPositions().Count)]);
-            }
-            else
-            {
-                var SpawnPositions =
-                    GameOptionsManager.Instance.currentNormalGameOptions.MapId switch
-                    {
-                        0 => MapData.SkeldSpawnPosition,
-                        1 => MapData.MiraSpawnPosition,
-                        2 => MapData.PolusSpawnPosition,
-                        3 => MapData.DleksSpawnPosition,
-                        4 => MapData.AirshipSpawnPosition,
-                        5 => MapData.FungleSpawnPosition,
-                        _ => MapData.FindVentSpawnPositions()
-                    };
-                CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo
-                    (SpawnPositions[rnd.Next(SpawnPositions.Count)]);
-            }
-        }
+        if (CustomOptionHolder.randomGameStartPosition.getBool()) MapData.RandomSpawnPlayers();
 
         // First kill
         if (AmongUsClient.Instance.AmHost && MapOption.shieldFirstKill && MapOption.firstKillName != "" &&

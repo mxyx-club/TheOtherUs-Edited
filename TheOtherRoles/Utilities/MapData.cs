@@ -199,6 +199,20 @@ public class MapData
         new Vector3(-20.8897f, 2.7606f, 0.002f)
     ];
 
+    public static List<Vector3> MapSpawnPosition()
+    {
+        return GameOptionsManager.Instance.currentNormalGameOptions.MapId switch
+        {
+            0 => SkeldSpawnPosition,
+            1 => MiraSpawnPosition,
+            2 => PolusSpawnPosition,
+            3 => DleksSpawnPosition,
+            4 => AirshipSpawnPosition,
+            5 => FungleSpawnPosition,
+            _ => FindVentSpawnPositions()
+        };
+    }
+
     public static List<Vector3> FindVentSpawnPositions()
     {
         var poss = new List<Vector3>();
@@ -211,4 +225,13 @@ public class MapData
 
         return poss;
     }
+
+    public static void RandomSpawnPlayers()
+    {
+        if (CustomOptionHolder.randomGameStartToVents.getBool())
+            CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(FindVentSpawnPositions()[rnd.Next(FindVentSpawnPositions().Count)]);
+        else
+            CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(MapSpawnPosition()[rnd.Next(MapSpawnPosition().Count)]);
+    }
+
 }

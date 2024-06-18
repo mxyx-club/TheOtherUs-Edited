@@ -404,7 +404,7 @@ internal class EmergencyMinigameUpdatePatch
             roleCanCallEmergency = false;
             statusText = getString("prosecutorMeetingButton");
         }
-        
+
         // Potentially deactivate emergency button for Jester
         if (Lawyer.lawyer != null && Lawyer.lawyer == CachedPlayer.LocalPlayer.PlayerControl &&
             !Lawyer.canCallEmergency)
@@ -418,7 +418,7 @@ internal class EmergencyMinigameUpdatePatch
             !Executioner.canCallEmergency)
         {
             roleCanCallEmergency = false;
-            if (Executioner.executioner) statusText = getString("ExecutionerMeetingButton");
+            if (Executioner.executioner) statusText = getString("executionerMeetingButton");
         }
 
         // Potentially deactivate emergency button for Prophet

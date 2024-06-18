@@ -33,6 +33,7 @@ internal static class MapOption
     public static bool ShowVentsOnMeetingMap;
     public static bool enableDebugLogMode;
     public static bool disableMedscanWalking;
+    public static bool isCanceled;
 
     public static int restrictDevices;
 
@@ -111,6 +112,7 @@ internal static class MapOption
         //allowModGuess = CustomOptionHolder.allowModGuess.getBool();
         firstKillPlayer = null;
         isRoundOne = true;
+        isCanceled = false;
     }
 
     public static void reloadPluginOptions()

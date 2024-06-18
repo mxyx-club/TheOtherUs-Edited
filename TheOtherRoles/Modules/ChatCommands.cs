@@ -98,7 +98,15 @@ public static class ChatCommands
                 catch
                 {
                     __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "指令错误");
+                    handled = true;
                 }
+            }
+
+
+            if (text.ToLower().StartsWith("/end") && AmongUsClient.Instance.AmHost)
+            {
+                MapOption.isCanceled = true;
+                handled = true;
             }
 
             if (AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay)

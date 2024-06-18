@@ -12,24 +12,26 @@ namespace TheOtherRoles.Patches;
 
 internal enum CustomGameOverReason
 {
-    LoversWin = 10,
-    TeamJackalWin = 11,
-    MiniLose = 12,
-    JesterWin = 13,
-    ArsonistWin = 14,
-    VultureWin = 15,
-    LawyerSoloWin = 16,
-    ExecutionerWin = 17,
-    SwooperWin = 18,
-    WerewolfWin = 19,
-    JuggernautWin = 20,
-    DoomsayerWin = 21,
-    AkujoWin = 22,
+    Draw = 10,
+    LoversWin,
+    TeamJackalWin,
+    MiniLose,
+    JesterWin,
+    ArsonistWin,
+    VultureWin,
+    LawyerSoloWin,
+    ExecutionerWin,
+    SwooperWin,
+    WerewolfWin,
+    JuggernautWin,
+    DoomsayerWin,
+    AkujoWin,
     ProsecutorWin,
 }
 
 internal enum WinCondition
 {
+    Draw = -1,
     Default,
     LoversTeamWin,
     LoversSoloWin,
@@ -104,12 +106,9 @@ public class OnGameEndPatch
         {
             var roles = RoleInfo.getRoleInfoForPlayer(playerControl);
             var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(playerControl.Data);
-            //末日预言家赌的功能
             var isGuesser = HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(playerControl.PlayerId);
-            int? killCount = GameHistory.deadPlayers.FindAll(x =>
-                x.killerIfExisting != null && x.killerIfExisting.PlayerId == playerControl.PlayerId).Count;
-            if (killCount == 0 &&
-                !(new List<RoleInfo>
+            int? killCount = GameHistory.deadPlayers.FindAll(x => x.killerIfExisting != null && x.killerIfExisting.PlayerId == playerControl.PlayerId).Count;
+            if (killCount == 0 && !(new List<RoleInfo>
                           { RoleInfo.sheriff, RoleInfo.jackal, RoleInfo.sidekick, RoleInfo.thief, RoleInfo.juggernaut }
                       .Contains(RoleInfo.getRoleInfoForPlayer(playerControl, false).FirstOrDefault()) ||
                   playerControl.Data.Role.IsImpostor)) killCount = null;
@@ -154,7 +153,7 @@ public class OnGameEndPatch
             if (notWinners.Any(x => x.Data.PlayerName == winner.PlayerName))
                 winnersToRemove.Add(winner);
         foreach (var winner in winnersToRemove) TempData.winners.Remove(winner);
-
+        bool isCanceled = gameOverReason == (GameOverReason)CustomGameOverReason.Draw;
         bool everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
         bool jesterWin = Jester.jester != null && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
         bool werewolfWin = gameOverReason == (GameOverReason)CustomGameOverReason.WerewolfWin &&
@@ -203,6 +202,12 @@ public class OnGameEndPatch
             wpd.IsYou = false; // If "no one is the Mini", it will display the Mini, but also show defeat to everyone
             TempData.winners.Add(wpd);
             AdditionalTempData.winCondition = WinCondition.MiniLose;
+        }
+
+        else if (isCanceled)
+        {
+            TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+            AdditionalTempData.winCondition = WinCondition.Draw;
         }
 
         // Jester win
@@ -513,6 +518,11 @@ public class EndGameManagerSetUpPatch
 
         switch (AdditionalTempData.winCondition)
         {
+            case WinCondition.Draw:
+                textRenderer.text = "房主强制结束游戏";
+                textRenderer.color = Color.gray;
+                __instance.BackgroundBar.material.SetColor("_Color", Color.gray);
+                break;
             case WinCondition.EveryoneDied:
                 textRenderer.text = "无人生还";
                 textRenderer.color = Palette.DisabledGrey;
@@ -667,6 +677,7 @@ internal class CheckEndCriteriaPatch
             .InstanceExists) // InstanceExists | Don't check Custom Criteria when in Tutorial
             return true;
         var statistics = new PlayerStatistics(__instance);
+        if (CheckAndEndGameForHost(__instance)) return false;
         if (CheckAndEndGameForMiniLose(__instance)) return false;
         if (CheckAndEndGameForJesterWin(__instance)) return false;
         if (CheckAndEndGameForDoomsayerWin(__instance)) return false;
@@ -686,13 +697,22 @@ internal class CheckEndCriteriaPatch
         return false;
     }
 
+    private static bool CheckAndEndGameForHost(ShipStatus __instance)
+    {
+        if (MapOption.isCanceled)
+        {
+            GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.Draw, false);
+            return true;
+        }
+        return false;
+    }
+
     private static bool CheckAndEndGameForMiniLose(ShipStatus __instance)
     {
         if (!Mini.triggerMiniLose) return false;
         //__instance.enabled = false;
         GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.MiniLose, false);
         return true;
-
     }
 
     private static bool CheckAndEndGameForJesterWin(ShipStatus __instance)
@@ -703,7 +723,6 @@ internal class CheckEndCriteriaPatch
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.JesterWin, false);
             return true;
         }
-
         return false;
     }
 
@@ -715,7 +734,6 @@ internal class CheckEndCriteriaPatch
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.DoomsayerWin, false);
             return true;
         }
-
         return false;
     }
 
@@ -727,7 +745,6 @@ internal class CheckEndCriteriaPatch
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ArsonistWin, false);
             return true;
         }
-
         return false;
     }
 
@@ -739,7 +756,6 @@ internal class CheckEndCriteriaPatch
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.VultureWin, false);
             return true;
         }
-
         return false;
     }
 
@@ -1024,7 +1040,6 @@ internal class PlayerStatistics
         var jackalLover = false;
         var numWerewolfAlive = 0;
         var werewolfLover = false;
-        //天启添加
         var numJuggernautAlive = 0;
         var juggernautLover = false;
         var numAkujoAlive = 0;

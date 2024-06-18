@@ -1603,7 +1603,7 @@ public static class PlayerControlFixedUpdatePatch
                 (Witch.cooldown + Witch.currentCooldownAddition) * multiplier;
             HudManagerStartPatch.ninjaButton.MaxTimer = Ninja.cooldown * multiplier;
             HudManagerStartPatch.thiefKillButton.MaxTimer = Thief.cooldown * multiplier;
-            //!!!
+            HudManagerStartPatch.swooperKillButton.MaxTimer = Swooper.cooldown * multiplier;
             HudManagerStartPatch.werewolfRampageButton.MaxTimer = Thief.cooldown * multiplier;
             HudManagerStartPatch.juggernautKillButton.MaxTimer = Thief.cooldown * multiplier;
         }

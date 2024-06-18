@@ -66,6 +66,7 @@ public static class Helpers
     public static bool zoomOutStatus;
     //new
     public static bool gameStarted => AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started;
+    public static bool IsCountDown => GameStartManager.InstanceExists && GameStartManager.Instance.startState == GameStartManager.StartingStates.Countdown;
 
     /// <summary>
     /// 假任务
