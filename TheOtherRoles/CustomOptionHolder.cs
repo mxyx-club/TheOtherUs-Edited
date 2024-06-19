@@ -102,8 +102,10 @@ public class CustomOptionHolder
 
     public static CustomOption jackalSpawnRate;
     public static CustomOption jackalKillCooldown;
+    public static CustomOption jackalChanceSwoop;
+    public static CustomOption jackalSwooperCooldown;
+    public static CustomOption jackalSwooperDuration;
     public static CustomOption jackalCreateSidekickCooldown;
-    public static CustomOption jackalKillFakeImpostor;
     public static CustomOption jackalCanUseVents;
     public static CustomOption jackalCanUseSabo;
     public static CustomOption jackalCanCreateSidekick;
@@ -112,7 +114,6 @@ public class CustomOptionHolder
     public static CustomOption sidekickCanKill;
     public static CustomOption sidekickCanUseVents;
     public static CustomOption jackalPromotedFromSidekickCanCreateSidekick;
-    public static CustomOption jackalCanCreateSidekickFromImpostor;
     public static CustomOption jackalAndSidekickHaveImpostorVision;
 
     public static CustomOption evilTrapperSpawnRate;
@@ -930,7 +931,10 @@ public class CustomOptionHolder
         arsonistDuration = Create(20122, Types.Neutral, "涂油所需时间", 0.5f, 0f, 10f, 0.25f, arsonistSpawnRate);
 
         jackalSpawnRate = Create(20130, Types.Neutral, cs(Jackal.color, "Jackal"), rates, null, true);
+        jackalChanceSwoop = Create(20142, Types.Neutral, cs(Swooper.color, "豺狼获得隐身能力的概率"), rates, jackalSpawnRate);
         jackalKillCooldown = Create(20131, Types.Neutral, "豺狼/跟班击杀冷却", 25f, 10f, 60f, 2.5f, jackalSpawnRate);
+        jackalSwooperCooldown = Create(20143, Types.Neutral, "隐身冷却", 30f, 10f, 60f, 2.5f, jackalChanceSwoop);
+        jackalSwooperDuration = Create(20144, Types.Neutral, "隐身持续时间", 10f, 1f, 20f, 0.5f, jackalChanceSwoop);
         jackalCanUseVents = Create(20132, Types.Neutral, "豺狼可使用管道", true, jackalSpawnRate);
         jackalCanUseSabo = Create(20133, Types.Neutral, "豺狼/跟班可进行破坏", false, jackalSpawnRate);
         jackalAndSidekickHaveImpostorVision = Create(20134, Types.Neutral, "豺狼/跟班拥有内鬼视野", false, jackalSpawnRate);
@@ -941,8 +945,22 @@ public class CustomOptionHolder
         sidekickCanUseVents = Create(20139, Types.Neutral, "跟班可使用管道", true, jackalCanCreateSidekick);
         sidekickPromotesToJackal = Create(20140, Types.Neutral, "豺狼死后跟班可晋升", false, jackalCanCreateSidekick);
         jackalPromotedFromSidekickCanCreateSidekick = Create(20141, Types.Neutral, "晋升后的豺狼可以招募跟班", true, sidekickPromotesToJackal);
-        jackalCanCreateSidekickFromImpostor = Create(20142, Types.Neutral, "豺狼可以招募伪装者为跟班", true, jackalCanCreateSidekick);
-        jackalKillFakeImpostor = Create(20143, Types.Neutral, "豺狼不可击杀被招募失败的伪装者", true, jackalCanCreateSidekick);
+
+        swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
+        swooperKillCooldown = Create(20151, Types.Neutral, "击杀冷却", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
+        swooperCooldown = Create(20152, Types.Neutral, "隐身冷却", 20f, 10f, 60f, 2.5f, swooperSpawnRate);
+        swooperDuration = Create(20153, Types.Neutral, "隐身持续时间", 15f, 1f, 20f, 0.5f, swooperSpawnRate);
+        swooperHasImpVision = Create(20154, Types.Neutral, "拥有内鬼视野", true, swooperSpawnRate);
+
+        werewolfSpawnRate = Create(20200, Types.Neutral, cs(Werewolf.color, "Werewolf"), rates, null, true);
+        werewolfRampageCooldown = Create(20201, Types.Neutral, "狂暴冷却", 25f, 10f, 60f, 2.5f, werewolfSpawnRate);
+        werewolfRampageDuration = Create(20202, Types.Neutral, "狂暴持续时间", 15f, 1f, 20f, 0.5f, werewolfSpawnRate);
+        werewolfKillCooldown = Create(20203, Types.Neutral, "击杀冷却", 3f, 1f, 60f, 0.5f, werewolfSpawnRate);
+
+        juggernautSpawnRate = Create(20210, Types.Neutral, cs(Juggernaut.color, "Juggernaut"), rates, null, true);
+        juggernautCooldown = Create(20211, Types.Neutral, "击杀冷却", 25f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
+        juggernautHasImpVision = Create(20212, Types.Neutral, "天启拥有伪装者视野", true, juggernautSpawnRate);
+        juggernautReducedkillEach = Create(20213, Types.Neutral, "每次击杀后减少的cd", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
 
         vultureSpawnRate = Create(20170, Types.Neutral, cs(Vulture.color, "Vulture"), rates, null, true);
         vultureCooldown = Create(20171, Types.Neutral, "吞噬冷却", 15f, 10f, 60f, 2.5f, vultureSpawnRate);
@@ -965,22 +983,6 @@ public class CustomOptionHolder
         executionerCanCallEmergency = Create(20191, Types.Neutral, "可以发起紧急会议", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(20192, Types.Neutral, "目标职业变更时可以晋升为律师", true, executionerSpawnRate);
         //executionerOnTargetDead = Create(20193, Types.Neutral, "目标死亡后变为", [cs(Pursuer.color, "Pursuer"), cs(Jester.color, "Jester"), cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
-
-        swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
-        swooperKillCooldown = Create(20151, Types.Neutral, "击杀冷却", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
-        swooperCooldown = Create(20152, Types.Neutral, "隐身冷却", 20f, 10f, 60f, 2.5f, swooperSpawnRate);
-        swooperDuration = Create(20153, Types.Neutral, "隐身持续时间", 15f, 1f, 20f, 0.5f, swooperSpawnRate);
-        swooperHasImpVision = Create(20154, Types.Neutral, "拥有内鬼视野", true, swooperSpawnRate);
-
-        werewolfSpawnRate = Create(20200, Types.Neutral, cs(Werewolf.color, "Werewolf"), rates, null, true);
-        werewolfRampageCooldown = Create(20201, Types.Neutral, "狂暴冷却", 25f, 10f, 60f, 2.5f, werewolfSpawnRate);
-        werewolfRampageDuration = Create(20202, Types.Neutral, "狂暴持续时间", 15f, 1f, 20f, 0.5f, werewolfSpawnRate);
-        werewolfKillCooldown = Create(20203, Types.Neutral, "击杀冷却", 3f, 1f, 60f, 0.5f, werewolfSpawnRate);
-
-        juggernautSpawnRate = Create(20210, Types.Neutral, cs(Juggernaut.color, "Juggernaut"), rates, null, true);
-        juggernautCooldown = Create(20211, Types.Neutral, "击杀冷却", 25f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
-        juggernautHasImpVision = Create(20212, Types.Neutral, "天启拥有伪装者视野", true, juggernautSpawnRate);
-        juggernautReducedkillEach = Create(20213, Types.Neutral, "每次击杀后减少的cd", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
 
         doomsayerSpawnRate = Create(20221, Types.Neutral, cs(Doomsayer.color, "Doomsayer"), rates, null, true);
         doomsayerCooldown = Create(20222, Types.Neutral, "技能冷却", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);

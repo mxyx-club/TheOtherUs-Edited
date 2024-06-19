@@ -498,15 +498,17 @@ public static class Helpers
         if (CustomOptionHolder.showButtonTarget.getBool())
         {
             // Should the button show the target name option
-            var text = "";
-            if (Camouflager.camouflageTimer >= 0.1f || isCamoComms())
-                text = defaultText; // set text to default if camo is on
-            else if (isLightsActive()) text = defaultText; // set to default if lights are out
-            else if (Trickster.trickster != null && Trickster.lightsOutTimer > 0f)
-                text = defaultText; // set to default if trickster ability is active
-            else if (Morphling.morphling != null && Morphling.morphTarget != null && target == Morphling.morphling &&
-                     Morphling.morphTimer > 0) text = Morphling.morphTarget.Data.PlayerName; // set to morphed player
+            string text;
+            // set text to default if camo is on
+            if (Camouflager.camouflageTimer >= 0.1f || isCamoComms()) text = defaultText;
+            // set to default if lights are out
+            else if (isLightsActive()) text = defaultText;
+            // set to default if trickster ability is active
+            else if (Trickster.trickster != null && Trickster.lightsOutTimer > 0f) text = defaultText;
+            // set to morphed player
+            else if (Morphling.morphling != null && Morphling.morphTarget != null && target == Morphling.morphling && Morphling.morphTimer > 0) text = Morphling.morphTarget.Data.PlayerName;
             else if (target == Swooper.swooper && Swooper.isInvisable) text = defaultText;
+            else if (target == Jackal.jackal && Jackal.isInvisable) text = defaultText;
             //else if (target == PhantomRole.phantomRole) text = defaultText;
             else if (target == null) text = defaultText; // Set text to defaultText if no target
             else text = target.Data.PlayerName; // Set text to playername
@@ -980,6 +982,7 @@ public static class Helpers
             return true; // No names are visible
         if (SurveillanceMinigamePatch.nightVisionIsActive) return true;
         if (Ninja.isInvisble && Ninja.ninja == target) return true;
+        if (Jackal.isInvisable && Jackal.jackal == target) return true;
         if (Swooper.isInvisable && Swooper.swooper == target) return true;
         if (MapOption.hideOutOfSightNametags && gameStarted && !source.Data.IsDead && GameOptionsManager.Instance.currentNormalGameOptions.MapId != 5 &&
             PhysicsHelpers.AnythingBetween(localPlayer.GetTruePosition(), target.GetTruePosition(),
@@ -1004,9 +1007,8 @@ public static class Helpers
         if ((source == Lovers.lover1 || source == Lovers.lover2) &&
             (target == Lovers.lover1 || target == Lovers.lover2))
             return false; // Members of team Lovers see the names of each other
-        if ((source == Jackal.jackal || source == Sidekick.sidekick) && (target == Jackal.jackal ||
-                                                                         target == Sidekick.sidekick ||
-                                                                         target == Jackal.fakeSidekick))
+        if ((source == Jackal.jackal || source == Sidekick.sidekick) 
+            && (target == Jackal.jackal || target == Sidekick.sidekick))
             return false; // Members of team Jackal see the names of each other
         if (Deputy.knowsSheriff && (source == Sheriff.sheriff || source == Deputy.deputy) &&
             (target == Sheriff.sheriff || target == Deputy.deputy))

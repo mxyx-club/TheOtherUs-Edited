@@ -46,7 +46,8 @@ public static class Chameleon
         foreach (var chameleonPlayer in chameleon)
         {
             if ((chameleonPlayer == Ninja.ninja && Ninja.isInvisble) ||
-                (chameleonPlayer == Swooper.swooper && Swooper.isInvisable)) continue; // Dont make Ninja visible...
+                (chameleonPlayer == Swooper.swooper && Swooper.isInvisable) ||
+                (chameleonPlayer == Jackal.jackal && Jackal.isInvisable)) continue; // Dont make Ninja visible...
             // check movement by animation
             var playerPhysics = chameleonPlayer.MyPhysics;
             var currentPhysicsAnim = playerPhysics.Animations.Animator.GetCurrentAnimation();

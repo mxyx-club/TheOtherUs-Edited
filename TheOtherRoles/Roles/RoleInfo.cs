@@ -419,8 +419,6 @@ public class RoleInfo
                 if (p == Arsonist.arsonist)
                     roleName += cs(Arsonist.color,
                         $" (剩余 {CachedPlayer.AllPlayers.Count(x => { return x.PlayerControl != Arsonist.arsonist && !x.Data.IsDead && !x.Data.Disconnected && !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); })} )");
-                if (p == Jackal.fakeSidekick)
-                    roleName = cs(Sidekick.color, " (假跟班) ") + roleName;
                 if (Akujo.keeps.Contains(p))
                     roleName = cs(Color.gray, "(备胎) ") + roleName;
                 if (p == Akujo.honmei)

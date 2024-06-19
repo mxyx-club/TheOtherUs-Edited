@@ -111,7 +111,6 @@ internal class HudManagerUpdatePatch
             // Jackal can see his sidekick
             setPlayerNameColor(Jackal.jackal, Jackal.color);
             if (Sidekick.sidekick != null) setPlayerNameColor(Sidekick.sidekick, Jackal.color);
-            if (Jackal.fakeSidekick != null) setPlayerNameColor(Jackal.fakeSidekick, Jackal.color);
         }
 
         if (Executioner.executioner != null && localPlayer == Executioner.executioner)
@@ -309,6 +308,7 @@ internal class HudManagerUpdatePatch
         Trickster.lightsOutTimer -= dt;
         Tracker.corpsesTrackingTimer -= dt;
         Ninja.invisibleTimer -= dt;
+        Jackal.swoopTimer -= dt;
         Swooper.swoopTimer -= dt;
         HideNSeek.timer -= dt;
         foreach (var key in Deputy.handcuffedKnows.Keys)
@@ -320,7 +320,8 @@ internal class HudManagerUpdatePatch
         if (Mini.mini == null || Camouflager.camouflageTimer > 0f || MushroomSabotageActive() ||
             (Mini.mini == Morphling.morphling && Morphling.morphTimer > 0f) ||
             (Mini.mini == Ninja.ninja && Ninja.isInvisble) || SurveillanceMinigamePatch.nightVisionIsActive ||
-            (Mini.mini == Swooper.swooper && Swooper.isInvisable) || isActiveCamoComms()) return;
+            (Mini.mini == Swooper.swooper && Swooper.isInvisable) ||
+            (Mini.mini == Jackal.jackal && Jackal.isInvisable) || isActiveCamoComms()) return;
 
         var growingProgress = Mini.growingProgress();
         var scale = (growingProgress * 0.35f) + 0.35f;

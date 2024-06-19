@@ -961,7 +961,7 @@ internal class RoleManagerSelectRolesPatch
         if (modifiers.Contains(RoleId.ButtonBarry))
         {
             var buttonPlayer = new List<PlayerControl>(playerList);
-            buttonPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x == Mayor.mayor);
+            buttonPlayer.RemoveAll(x => x == Mayor.mayor);
 
             playerId = setModifierToRandomPlayer((byte)RoleId.ButtonBarry, buttonPlayer);
             buttonPlayer.RemoveAll(x => x.PlayerId == playerId);
@@ -986,14 +986,14 @@ internal class RoleManagerSelectRolesPatch
         if (modifiers.Contains(RoleId.Chameleon))
         {
             var chameleonPlayer = new List<PlayerControl>(playerList);
-            chameleonPlayer.RemoveAll(x => x == Swooper.swooper || x == Ninja.ninja);
+            chameleonPlayer.RemoveAll(x => x == Ninja.ninja);
             int chameleonCount = 0;
             while (chameleonCount < modifiers.FindAll(x => x == RoleId.Chameleon).Count)
             {
                 playerId = setModifierToRandomPlayer((byte)RoleId.Chameleon, chameleonPlayer);
                 crewPlayer.RemoveAll(x => x.PlayerId == playerId);
                 playerList.RemoveAll(x => x.PlayerId == playerId);
-                //chameleonPlayer.RemoveAll(x => x.PlayerId == playerId);
+                chameleonPlayer.RemoveAll(x => x.PlayerId == playerId);
                 chameleonCount++;
             }
             modifiers.RemoveAll(x => x == RoleId.Chameleon);

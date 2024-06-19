@@ -349,12 +349,10 @@ public static class PlayerControlFixedUpdatePatch
     {
         if (Jackal.jackal == null || Jackal.jackal != CachedPlayer.LocalPlayer.PlayerControl) return;
         var untargetablePlayers = new List<PlayerControl>();
-        if (Jackal.canCreateSidekickFromImpostor)
-            // Only exclude sidekick from beeing targeted if the jackal can create sidekicks from impostors
-            if (Sidekick.sidekick != null)
-                untargetablePlayers.Add(Sidekick.sidekick);
-        if (Mini.mini != null && !Mini.isGrownUp())
-            untargetablePlayers.Add(Mini.mini); // Exclude Jackal from targeting the Mini unless it has grown up
+        if (Sidekick.sidekick != null) untargetablePlayers.Add(Sidekick.sidekick);
+        //if (Jackal.jackal != null && Jackal.isInvisable) untargetablePlayers.Add(Jackal.jackal);
+        // Exclude Jackal from targeting the Mini unless it has grown up
+        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
         Jackal.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
         setPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
     }
@@ -517,6 +515,15 @@ public static class PlayerControlFixedUpdatePatch
             invisibleWriter.Write(byte.MaxValue);
             AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
             RPCProcedure.setSwoop(Swooper.swooper.PlayerId, byte.MaxValue);
+        }
+        if (Jackal.isInvisable && Jackal.swoopTimer <= 0 && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl)
+        {
+            var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(
+                CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable);
+            invisibleWriter.Write(Jackal.jackal.PlayerId);
+            invisibleWriter.Write(byte.MaxValue);
+            AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
+            RPCProcedure.setJackalSwoop(Jackal.jackal.PlayerId, byte.MaxValue);
         }
     }
 

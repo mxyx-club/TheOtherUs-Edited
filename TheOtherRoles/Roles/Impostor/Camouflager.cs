@@ -28,7 +28,9 @@ public static class Camouflager
         camouflageTimer = 0f;
         foreach (PlayerControl p in CachedPlayer.AllPlayers)
         {
-            if ((p == Ninja.ninja && Ninja.isInvisble) || (p == Swooper.swooper && Swooper.isInvisable))
+            if ((p == Ninja.ninja && Ninja.isInvisble)
+                || (p == Swooper.swooper && Swooper.isInvisable)
+                || (p == Jackal.jackal && Jackal.isInvisable))
                 continue;
             p.setDefaultLook();
             camoComms = false;

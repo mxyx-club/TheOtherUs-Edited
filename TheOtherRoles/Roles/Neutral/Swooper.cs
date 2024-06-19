@@ -1,4 +1,5 @@
-﻿using TheOtherRoles.Objects;
+﻿using TheOtherRoles.Modules;
+using TheOtherRoles.Objects;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Neutral;
@@ -13,15 +14,9 @@ public static class Swooper
     public static float duration = 5f;
     public static float swoopCooldown = 30f;
     public static float swoopTimer;
-    public static Sprite buttonSprite;
     public static bool hasImpVision;
 
-    public static Sprite getSwoopButtonSprite()
-    {
-        if (buttonSprite) return buttonSprite;
-        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Swoop.png", 115f);
-        return buttonSprite;
-    }
+    public static ResourceSprite SwoopButton = new("Swoop.png");
 
     public static Vector3 getSwooperSwoopVector()
     {

@@ -229,6 +229,7 @@ public enum CustomRPC
     SetTiebreak,
     SetInvisibleGen,
     SetSwoop,
+    SetJackalSwoop,
 
     TrapperKill,
     PlaceTrap,
@@ -1477,8 +1478,6 @@ public static class RPCProcedure
         var player = playerById(targetId);
         if (player == null) return;
 
-        if (player == Sidekick.sidekick || player == Jackal.jackal) Jackal.fakeSidekick = player;
-
         erasePlayerRoles(player.PlayerId);
 
 
@@ -1701,34 +1700,29 @@ public static class RPCProcedure
                 Executioner.clearAndReload();
             }
         }
-        if (!Jackal.canCreateSidekickFromImpostor && player.Data.Role.IsImpostor)
-        {
-            Jackal.fakeSidekick = player;
-        }
-        else
-        {
-            LastImpostor.promoteToLastImpostor();
-            var wasSpy = Spy.spy != null && player == Spy.spy;
-            var wasImpostor = player.Data.Role.IsImpostor; // This can only be reached if impostors can be sidekicked.
-            FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
-            if (player == Lawyer.lawyer && Lawyer.target != null)
-            {
-                var playerInfoTransform = Lawyer.target.cosmetics.nameText.transform.parent.FindChild("Info");
-                var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
-                if (playerInfo != null) playerInfo.text = "";
-            }
 
-            erasePlayerRoles(player.PlayerId);
-            Sidekick.sidekick = player;
-            if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
-                CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
-            if ((wasSpy || wasImpostor) && !Jackal.CanImpostorFindSidekick) Sidekick.wasTeamRed = true;
-            Sidekick.wasSpy = wasSpy;
-            Sidekick.wasImpostor = wasImpostor;
-            if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
-            if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(targetId))
-                setGuesserGm(targetId);
+        LastImpostor.promoteToLastImpostor();
+        var wasSpy = Spy.spy != null && player == Spy.spy;
+        var wasImpostor = player.Data.Role.IsImpostor; // This can only be reached if impostors can be sidekicked.
+        FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
+        if (player == Lawyer.lawyer && Lawyer.target != null)
+        {
+            var playerInfoTransform = Lawyer.target.cosmetics.nameText.transform.parent.FindChild("Info");
+            var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
+            if (playerInfo != null) playerInfo.text = "";
         }
+
+        erasePlayerRoles(player.PlayerId);
+        Sidekick.sidekick = player;
+        if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
+            CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
+        if ((wasSpy || wasImpostor) && !Jackal.CanImpostorFindSidekick) Sidekick.wasTeamRed = true;
+        Sidekick.wasSpy = wasSpy;
+        Sidekick.wasImpostor = wasImpostor;
+        if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
+        if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(targetId))
+            setGuesserGm(targetId);
+
         Jackal.canCreateSidekick = false;
     }
 
@@ -2187,14 +2181,32 @@ public static class RPCProcedure
         Swooper.swoopTimer = Swooper.duration;
         Swooper.isInvisable = true;
     }
-    /*
-            public static void setSwooper(byte playerId) {
-                PlayerControl target = Helpers.playerById(playerId);
-                if (target == null) return;
-                Swooper.swooper = Jackal.jackal;
-            }
-    */
 
+    public static void setJackalSwoop(byte playerId, byte flag)
+    {
+        var target = playerById(playerId);
+        if (target == null) return;
+        if (flag == byte.MaxValue)
+        {
+            target.cosmetics.currentBodySprite.BodySprite.color = Color.white;
+            target.cosmetics.colorBlindText.gameObject.SetActive(DataManager.Settings.Accessibility.ColorBlindMode);
+            target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(1f);
+            if (Camouflager.camouflageTimer <= 0 && !MushroomSabotageActive() & !isCamoComms())
+                target.setDefaultLook();
+            Jackal.isInvisable = false;
+            return;
+        }
+
+        target.setLook("", 6, "", "", "", "");
+        var color = Color.clear;
+        var canSee = Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl || CachedPlayer.LocalPlayer.Data.IsDead;
+        if (canSee) color.a = 0.1f;
+        target.cosmetics.currentBodySprite.BodySprite.color = color;
+        target.cosmetics.colorBlindText.gameObject.SetActive(false);
+        target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(canSee ? 0.1f : 0f);
+        Jackal.swoopTimer = Jackal.duration;
+        Jackal.isInvisable = true;
+    }
 
     public static void trapperKill(byte trapId, byte trapperId, byte playerId)
     {
@@ -3404,11 +3416,17 @@ internal class RPCHandlerPatch
                 var invisibleFlag2 = reader.ReadByte();
                 RPCProcedure.setSwoop(invisiblePlayer2, invisibleFlag2);
                 break;
-
-            case CustomRPC.SetInvisibleGen:
+                
+            case CustomRPC.SetJackalSwoop:
                 var invisiblePlayer3 = reader.ReadByte();
                 var invisibleFlag3 = reader.ReadByte();
-                RPCProcedure.setInvisibleGen(invisiblePlayer3, invisibleFlag3);
+                RPCProcedure.setJackalSwoop(invisiblePlayer3, invisibleFlag3);
+                break;
+
+            case CustomRPC.SetInvisibleGen:
+                var invisiblePlayer4 = reader.ReadByte();
+                var invisibleFlag4 = reader.ReadByte();
+                RPCProcedure.setInvisibleGen(invisiblePlayer4, invisibleFlag4);
                 break;
 
             case CustomRPC.Mine:
