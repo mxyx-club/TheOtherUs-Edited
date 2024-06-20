@@ -385,6 +385,8 @@ public class RoleInfo
 
         if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId)) roleName += " (赌怪)";
 
+        if (p == Jackal.jackal && Jackal.canSwoop) roleName += " (隐身)";
+
         if (!suppressGhostInfo && p != null)
         {
             if (p == Shifter.shifter &&
@@ -524,13 +526,7 @@ public class RoleInfo
 
     public static string GetRoleDescription(RoleInfo roleInfo)
     {
-        while (ReadmePage == "")
-        {
-        }
-
-        var index = ReadmePage.IndexOf($"## {roleInfo.name}");
-        var endindex = ReadmePage.Substring(index).IndexOf("### Game Options");
-        return ReadmePage.Substring(index, endindex);
+        return roleInfo.fullDescription;
     }
 
     public enum RoleTeam

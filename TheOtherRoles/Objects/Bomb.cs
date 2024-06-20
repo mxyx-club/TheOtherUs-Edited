@@ -100,8 +100,7 @@ public class Bomb
                     return;
                 };
 
-                checkMurderAttemptAndKill(Terrorist.terrorist, CachedPlayer.LocalPlayer.PlayerControl, false, false,
-                    true, true);
+                checkMurderAttemptAndKill(Terrorist.terrorist, CachedPlayer.LocalPlayer.PlayerControl, false, false, true, true);
 
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);

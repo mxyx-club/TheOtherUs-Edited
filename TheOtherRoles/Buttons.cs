@@ -30,8 +30,8 @@ internal static class HudManagerStartPatch
     public static CustomButton medicShieldButton;
     private static CustomButton cultistTurnButton;
     private static CustomButton shifterShiftButton;
-    private static CustomButton bomberBombButton;
-    private static CustomButton bomberKillButton;
+    public static CustomButton bomberBombButton;
+    public static CustomButton bomberGiveButton;
     private static CustomButton disperserDisperseButton;
     private static CustomButton buttonBarryButton;
     private static CustomButton morphlingButton;
@@ -183,8 +183,8 @@ internal static class HudManagerStartPatch
         arsonistButton.MaxTimer = Arsonist.cooldown;
         vultureEatButton.MaxTimer = Vulture.cooldown;
         amnisiacRememberButton.MaxTimer = defaultMaxTimer;
-        bomberKillButton.MaxTimer = defaultMaxTimer;
-        bomberKillButton.Timer = defaultMaxTimer;
+        bomberGiveButton.MaxTimer = 0f;
+        bomberGiveButton.Timer = 0f;
         mediumButton.MaxTimer = Medium.cooldown;
         pursuerButton.MaxTimer = Pursuer.cooldown;
         trackerTrackCorpsesButton.MaxTimer = Tracker.corpsesTrackingCooldown;
@@ -318,6 +318,7 @@ internal static class HudManagerStartPatch
         {
             var maxI = buttons.Count;
             for (var i = 0; i < maxI; i++)
+            {
                 try
                 {
                     if (buttons[i].HasButton()) // For each custombutton the player has
@@ -330,6 +331,7 @@ internal static class HudManagerStartPatch
                     // Note: idk what this is good for, but i copied it from above /gendelo
                     Warn("[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
                 }
+            }
 
             // Non Custom (Vanilla) Buttons. The Originals are disabled / hidden in UpdatePatch.cs already, just need to replace them. Can use any button, as we replace onclick etc anyways.
             // Kill Button if enabled for the Role
@@ -600,7 +602,7 @@ internal static class HudManagerStartPatch
                 }
 
                 if (murderAttemptResult == MurderAttemptResult.BodyGuardKill)
-                    checkMuderAttemptAndKill(Sheriff.sheriff, Sheriff.currentTarget);
+                    checkMurderAttemptAndKill(Sheriff.sheriff, Sheriff.currentTarget);
 
                 sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                 Sheriff.currentTarget = null;
@@ -1004,23 +1006,14 @@ internal static class HudManagerStartPatch
                 handleBomberExplodeOnBodyReport();
                 handleTrapperTrapOnBodyReport();
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
-
-                var sabotageActive = false;
-                foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
-                    if (task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
-                    task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
-                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
-                        sabotageActive = true;
-
-                if (sabotageActive)
+                if (AmongUsClient.Instance.AmHost)
                 {
-                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
-                    PlayerControl.LocalPlayer.RpcStartMeeting(null);
+                    Mayor.mayor.NoCheckStartMeeting(null, true);
                 }
                 else
                 {
                     var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                        (byte)CustomRPC.UncheckedCmdReportDeadBody, SendOption.Reliable);
+                        (byte)CustomRPC.MayorMeeting, SendOption.Reliable);
                     writer.Write(CachedPlayer.LocalPlayer.PlayerId);
                     writer.Write(byte.MaxValue);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -1065,25 +1058,17 @@ internal static class HudManagerStartPatch
                 ButtonBarry.remoteMeetingsLeft--;
 
                 handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                handleBomberExplodeOnBodyReport();
+                handleTrapperTrapOnBodyReport();
                 RPCProcedure.uncheckedCmdReportDeadBody(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
-
-                var sabotageActive = false;
-                foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
-                    if (task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
-                    task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
-                        (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
-                        sabotageActive = true;
-
-                if (sabotageActive)
+                if (AmongUsClient.Instance.AmHost)
                 {
-                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
-                    PlayerControl.LocalPlayer.RpcStartMeeting(null);
+                    ButtonBarry.buttonBarry.NoCheckStartMeeting(null, true);
                 }
                 else
                 {
                     var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                        (byte)CustomRPC.UncheckedCmdReportDeadBody, SendOption.Reliable);
+                        (byte)CustomRPC.BarryMeeting, SendOption.Reliable);
                     writer.Write(CachedPlayer.LocalPlayer.PlayerId);
                     writer.Write(byte.MaxValue);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -1608,7 +1593,7 @@ internal static class HudManagerStartPatch
                 }
                 else if (murder == MurderAttemptResult.BodyGuardKill)
                 {
-                    checkMuderAttemptAndKill(Vampire.vampire, Vampire.currentTarget);
+                    checkMurderAttemptAndKill(Vampire.vampire, Vampire.currentTarget);
                 }
                 else
                 {
@@ -1938,7 +1923,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (checkAndDoVetKill(Jackal.currentTarget)) return;
-                if (checkMuderAttemptAndKill(Jackal.jackal, Jackal.currentTarget) ==
+                if (checkMurderAttemptAndKill(Jackal.jackal, Jackal.currentTarget) ==
                     MurderAttemptResult.SuppressKill) return;
 
                 jackalKillButton.Timer = jackalKillButton.MaxTimer;
@@ -1971,12 +1956,12 @@ internal static class HudManagerStartPatch
                 AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
                 RPCProcedure.setJackalSwoop(Jackal.jackal.PlayerId, byte.MinValue);
             },
-            () => 
+            () =>
             {   /* Can See */
-                return Jackal.jackal != null && Jackal.canSwoop && 
+                return Jackal.jackal != null && Jackal.canSwoop &&
                        Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead;
             },
-            () => 
+            () =>
             {   /* On Click */
                 return Jackal.canSwoop && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
@@ -2002,7 +1987,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (checkAndDoVetKill(Sidekick.currentTarget)) return;
-                if (checkMuderAttemptAndKill(Sidekick.sidekick, Sidekick.currentTarget) ==
+                if (checkMurderAttemptAndKill(Sidekick.sidekick, Sidekick.currentTarget) ==
                     MurderAttemptResult.SuppressKill) return;
                 sidekickKillButton.Timer = sidekickKillButton.MaxTimer;
                 Sidekick.currentTarget = null;
@@ -2032,7 +2017,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (checkAndDoVetKill(Swooper.currentTarget)) return;
-                if (checkMuderAttemptAndKill(Swooper.swooper, Swooper.currentTarget) == MurderAttemptResult.SuppressKill) return;
+                if (checkMurderAttemptAndKill(Swooper.swooper, Swooper.currentTarget) == MurderAttemptResult.SuppressKill) return;
 
                 swooperKillButton.Timer = swooperKillButton.MaxTimer;
                 Swooper.currentTarget = null;
@@ -2167,7 +2152,7 @@ internal static class HudManagerStartPatch
             KeyCode.F
         );
 
-        bomberKillButton = new CustomButton(
+        bomberGiveButton = new CustomButton(
             () =>
             {
                 /* On Use */
@@ -2191,7 +2176,7 @@ internal static class HudManagerStartPatch
                 }
 
                 if (checkAndDoVetKill(Bomber.currentBombTarget)) return;
-                if (checkMuderAttemptAndKill(Bomber.hasBomb, Bomber.currentBombTarget) ==
+                if (checkMurderAttemptAndKill(Bomber.hasBomb, Bomber.currentBombTarget) ==
                     MurderAttemptResult.SuppressKill) return;
                 var bombWriter = AmongUsClient.Instance.StartRpcImmediately(
                     CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, SendOption.Reliable);
@@ -2226,7 +2211,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (checkAndDoVetKill(Werewolf.currentTarget)) return;
-                if (checkMuderAttemptAndKill(Werewolf.werewolf, Werewolf.currentTarget) ==
+                if (checkMurderAttemptAndKill(Werewolf.werewolf, Werewolf.currentTarget) ==
                     MurderAttemptResult.SuppressKill) return;
 
                 werewolfKillButton.Timer = werewolfKillButton.MaxTimer;
@@ -2296,7 +2281,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (checkAndDoVetKill(Juggernaut.currentTarget)) return;
-                if (checkMuderAttemptAndKill(Juggernaut.juggernaut, Juggernaut.currentTarget) ==
+                if (checkMurderAttemptAndKill(Juggernaut.juggernaut, Juggernaut.currentTarget) ==
                     MurderAttemptResult.SuppressKill) return;
                 if (juggernautKillButton.MaxTimer >= 0f)
                 {
@@ -3371,7 +3356,7 @@ internal static class HudManagerStartPatch
                     var attempt = checkMuderAttempt(Ninja.ninja, Ninja.ninjaMarked);
                     if (attempt == MurderAttemptResult.BodyGuardKill)
                     {
-                        checkMuderAttemptAndKill(Ninja.ninja, Ninja.ninjaMarked);
+                        checkMurderAttemptAndKill(Ninja.ninja, Ninja.ninjaMarked);
                         return;
                     }
 
@@ -3598,7 +3583,7 @@ internal static class HudManagerStartPatch
             buttonText: getString("trapperTrapText")
         );
 
-        // Bomber button
+        // Terrorist button
         terroristButton = new CustomButton(
             () =>
             {

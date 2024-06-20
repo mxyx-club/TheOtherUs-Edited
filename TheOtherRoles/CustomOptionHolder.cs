@@ -1024,7 +1024,7 @@ public class CustomOptionHolder
         mayorTasksNeededToSeeVoteColors = Create(30112, Types.Crewmate, "获得窥视能力所需完成的任务数", 5f, 0f, 20f, 1f, mayorCanSeeVoteColors);
         mayorMeetingButton = Create(30113, Types.Crewmate, "可远程召开会议", true, mayorSpawnRate);
         mayorMaxRemoteMeetings = Create(30114, Types.Crewmate, "远程召开会议可用次数", 1f, 1f, 5f, 1f, mayorMeetingButton);
-        mayorSabotageRemoteMeetings = Create(30115, Types.Crewmate, "可在破坏时使用\n无效设置", false, mayorMeetingButton);
+        mayorSabotageRemoteMeetings = Create(30115, Types.Crewmate, "可在破坏时使用", false, mayorMeetingButton);
         mayorChooseSingleVote = Create(30116, Types.Crewmate, "市长可选择投单票", ["optionOff", "投票前选择", "会议结束前选择"], mayorSpawnRate);
 
         prosecutorSpawnRate = Create(30370, Types.Crewmate, cs(Prosecutor.color, "Prosecutor"), rates, null, true);
@@ -1257,7 +1257,7 @@ public class CustomOptionHolder
         modifierTunneler = Create(40270, Types.Modifier, cs(Color.yellow, "Tunneler"), rates, null, true);
 
         modifierButtonBarry = Create(40280, Types.Modifier, cs(Color.yellow, "ButtonBarry"), rates, null, true);
-        modifierButtonSabotageRemoteMeetings = Create(40281, Types.Modifier, "可在破坏时使用\n无效设置", false, modifierButtonBarry);
+        modifierButtonSabotageRemoteMeetings = Create(40281, Types.Modifier, "可在破坏时使用", false, modifierButtonBarry);
 
         modifierSlueth = Create(40290, Types.Modifier, cs(Color.yellow, "Slueth"), rates, null, true);
 

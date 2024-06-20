@@ -15,15 +15,16 @@ public static class RoleHelpers
         if (dyingTarget == CachedPlayer.LocalPlayer.PlayerControl)
             return false;
 
-        if (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && Doomsayer.hasMultipleShotsPerMeeting &&
-               Doomsayer.CanShoot) return true;
-
         if (HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId)
-            && HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 1
-            && HandleGuesser.hasMultipleShotsPerMeeting
-            && CachedPlayer.LocalPlayer.PlayerControl != Doomsayer.doomsayer) return true;
+            &&
+            HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 1
+            &&
+            HandleGuesser.hasMultipleShotsPerMeeting
+           )
+            return true;
 
-        return false;
+        return CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && Doomsayer.hasMultipleShotsPerMeeting &&
+               Doomsayer.CanShoot;
     }
     public static readonly Random rnd = new((int)DateTime.Now.Ticks);
     public static readonly CustomRoleManager _RoleManager = CustomRoleManager.Instance;

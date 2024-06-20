@@ -178,8 +178,8 @@ public enum CustomRPC
     AkujoSetHonmei,
     AkujoSetKeep,
     AkujoSuicide,
-    MayorMeetingButton,
-    BarryMeetingButton,
+    MayorMeeting,
+    BarryMeeting,
     ProphetExamine,
     ImpostorPromotesToLastImpostor,
 
@@ -1510,7 +1510,7 @@ public static class RPCProcedure
         if (CachedPlayer.LocalPlayer.PlayerControl == Veteren.veteren)
         {
             var player = playerById(targetId);
-            checkMuderAttemptAndKill(Veteren.veteren, player);
+            checkMurderAttemptAndKill(Veteren.veteren, player);
         }
     }
 
@@ -1952,7 +1952,7 @@ public static class RPCProcedure
                 if (p == 1f && Bomber.bombActive)
                 {
                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                    checkMuderAttemptAndKill(Bomber.hasBomb, Bomber.hasBomb);
+                    checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBomb, false, false, true, true);
                     Bomber.hasBomb = null;
                     Bomber.bombActive = false;
                     Bomber.hasAlerted = false;
@@ -2199,7 +2199,9 @@ public static class RPCProcedure
 
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
-        var canSee = Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl || CachedPlayer.LocalPlayer.Data.IsDead;
+        var canSee = Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl ||
+                     Sidekick.sidekick == CachedPlayer.LocalPlayer.PlayerControl ||
+                     CachedPlayer.LocalPlayer.Data.IsDead;
         if (canSee) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
         target.cosmetics.colorBlindText.gameObject.SetActive(false);
@@ -3416,7 +3418,7 @@ internal class RPCHandlerPatch
                 var invisibleFlag2 = reader.ReadByte();
                 RPCProcedure.setSwoop(invisiblePlayer2, invisibleFlag2);
                 break;
-                
+
             case CustomRPC.SetJackalSwoop:
                 var invisiblePlayer3 = reader.ReadByte();
                 var invisibleFlag3 = reader.ReadByte();
@@ -3540,7 +3542,7 @@ internal class RPCHandlerPatch
                 RPCProcedure.shareRoom(roomPlayer, roomId);
                 break;
             */
-            case CustomRPC.MayorMeetingButton:
+            case CustomRPC.MayorMeeting:
                 if (AmongUsClient.Instance.AmHost)
                 {
                     MeetingRoomManager.Instance.reporter = Mayor.mayor;
@@ -3550,13 +3552,13 @@ internal class RPCHandlerPatch
                     Mayor.mayor.RpcStartMeeting(null);
                 }
                 break;
-            case CustomRPC.BarryMeetingButton:
+            case CustomRPC.BarryMeeting:
                 if (AmongUsClient.Instance.AmHost)
                 {
                     MeetingRoomManager.Instance.reporter = ButtonBarry.buttonBarry;
                     MeetingRoomManager.Instance.target = null;
                     AmongUsClient.Instance.DisconnectHandlers.AddUnique(MeetingRoomManager.Instance.Cast<IDisconnectHandler>());
-                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(ButtonBarry.buttonBarry);
+                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
                     ButtonBarry.buttonBarry.RpcStartMeeting(null);
                 }
                 break;

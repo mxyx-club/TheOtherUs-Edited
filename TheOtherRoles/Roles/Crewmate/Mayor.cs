@@ -37,7 +37,7 @@ public static class Mayor
         mayorChooseSingleVote = CustomOptionHolder.mayorChooseSingleVote.getSelection();
         voteTwice = true;
 
-        SabotageRemoteMeetings = false;
-        //SabotageRemoteMeetings = CustomOptionHolder.mayorSabotageRemoteMeetings.getBool();
+        //SabotageRemoteMeetings = false;
+        SabotageRemoteMeetings = CustomOptionHolder.mayorSabotageRemoteMeetings.getBool();
     }
 }

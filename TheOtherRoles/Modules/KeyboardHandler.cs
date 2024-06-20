@@ -17,63 +17,56 @@ public class CommandHandler
     private static readonly List<PlayerControl> bots = new();
     private static void Postfix(KeyboardJoystick __instance)
     {
-        // Spawn dummys
-        if (AmongUsClient.Instance.AmHost && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.RightShift))
+        // 房主专用键位
+        if (AmongUsClient.Instance && AmongUsClient.Instance.AmHost)
         {
-            var playerControl = UnityEngine.Object.Instantiate(AmongUsClient.Instance.PlayerPrefab);
-            _ = playerControl.PlayerId = (byte)GameData.Instance.GetAvailableId();
+            var host = AmongUsClient.Instance.GetHost();
+            // 生成假人
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F))
+            {
+                var playerControl = UnityEngine.Object.Instantiate(AmongUsClient.Instance.PlayerPrefab);
+                _ = playerControl.PlayerId = (byte)GameData.Instance.GetAvailableId();
 
-            bots.Add(playerControl);
-            GameData.Instance.AddPlayer(playerControl);
-            AmongUsClient.Instance.Spawn(playerControl);
+                bots.Add(playerControl);
+                GameData.Instance.AddPlayer(playerControl);
+                AmongUsClient.Instance.Spawn(playerControl);
 
-            playerControl.transform.position = CachedPlayer.LocalPlayer.transform.position;
-            playerControl.GetComponent<DummyBehaviour>().enabled = true;
-            playerControl.NetTransform.enabled = false;
-            playerControl.SetName(RandomString(10));
-            playerControl.SetColor((byte)random.Next(Palette.PlayerColors.Length));
-            GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
-        }
-
-        // Terminate round
-        if (AmongUsClient.Instance.AmHost && gameStarted && Input.GetKeyDown(KeyCode.Return)
-            && Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.LeftShift))
-        {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                (byte)CustomRPC.ForceEnd, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.forceEnd();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Return) && Input.GetKey(KeyCode.M) && Input.GetKey(KeyCode.LeftShift) && MeetingHud.Instance)
-        {
-            MeetingHud.Instance.RpcClose();
-            foreach (var pc in PlayerControl.AllPlayerControls)
-                if (pc == null || pc.Data.IsDead || pc.Data.Disconnected) continue;
-        }
-
-        if (AmongUsClient.Instance.AmHost && Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.F5) && gameStarted)
-        {
-            AdditionalTempData.winCondition = WinCondition.Draw;
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftShift) && IsCountDown)
-        {
-            GameStartManager.Instance.countDownTimer = 0;
-        }
-
-        if (AmongUsClient.Instance && AmongUsClient.Instance.AmHost && gameStarted)
-        {
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.T) && Input.GetKeyDown(KeyCode.Return))
+                playerControl.transform.position = CachedPlayer.LocalPlayer.transform.position;
+                playerControl.GetComponent<DummyBehaviour>().enabled = true;
+                playerControl.NetTransform.enabled = false;
+                playerControl.SetName(RandomString(10));
+                playerControl.SetColor((byte)random.Next(Palette.PlayerColors.Length));
+                GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
+            }
+            // Terminate round
+            if (InGame && Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Return))
+            {
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.ForceEnd, SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.forceEnd();
+            }
+            // 强制开始会议或结束会议
+            if (Input.GetKey(KeyCode.M) && Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Return))
+            {
+                if (IsMeeting) MeetingHud.Instance.RpcClose();
+                else CachedPlayer.LocalPlayer.PlayerControl.NoCheckStartMeeting(null, true); ;
+            }
+            // 强制结束游戏
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.T) && Input.GetKeyDown(KeyCode.Return) && InGame)
             {
                 MapOption.isCanceled = true;
+            }
+            // 快速开始游戏
+            if (Input.GetKeyDown(KeyCode.LeftShift) && IsCountDown)
+            {
+                GameStartManager.Instance.countDownTimer = 0;
             }
         }
     }
     public static string RandomString(int length)
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        return new string(Enumerable.Repeat(chars, length)
-            .Select(s => s[random.Next(s.Length)]).ToArray());
+        return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
     }
 }

@@ -13,6 +13,7 @@ using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
+using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -65,8 +66,9 @@ public static class Helpers
 
     public static bool zoomOutStatus;
     //new
-    public static bool gameStarted => AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started;
+    public static bool InGame => AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started;
     public static bool IsCountDown => GameStartManager.InstanceExists && GameStartManager.Instance.startState == GameStartManager.StartingStates.Countdown;
+    public static bool IsMeeting => InGame && MeetingHud.Instance;
 
     /// <summary>
     /// 假任务
@@ -303,6 +305,16 @@ public static class Helpers
     {
         if (!bit) return true;
         return false;
+    }
+
+    public static void NoCheckStartMeeting(this PlayerControl reporter, GameData.PlayerInfo target, bool force = false)
+    {
+        if (IsMeeting) return;
+        //if (Options.DisableMeeting.GetBool()) return;
+
+        MeetingRoomManager.Instance.AssignSelf(reporter, target);
+        DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(reporter);
+        reporter.RpcStartMeeting(target);
     }
 
     public static void enableCursor(bool initalSetCursor)
@@ -707,7 +719,7 @@ public static class Helpers
     public static void handleBomberExplodeOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        checkMuderAttemptAndKill(Bomber.bomber, Bomber.hasBomb, true, false);
+        checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBomb, true, false);
         var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
             (byte)CustomRPC.GiveBomb, SendOption.Reliable);
         writer.Write(byte.MaxValue);
@@ -984,7 +996,7 @@ public static class Helpers
         if (Ninja.isInvisble && Ninja.ninja == target) return true;
         if (Jackal.isInvisable && Jackal.jackal == target) return true;
         if (Swooper.isInvisable && Swooper.swooper == target) return true;
-        if (MapOption.hideOutOfSightNametags && gameStarted && !source.Data.IsDead && GameOptionsManager.Instance.currentNormalGameOptions.MapId != 5 &&
+        if (MapOption.hideOutOfSightNametags && InGame && !source.Data.IsDead && GameOptionsManager.Instance.currentNormalGameOptions.MapId != 5 &&
             PhysicsHelpers.AnythingBetween(localPlayer.GetTruePosition(), target.GetTruePosition(),
                 Constants.ShadowMask, false)) return true;
         /*
@@ -1007,7 +1019,7 @@ public static class Helpers
         if ((source == Lovers.lover1 || source == Lovers.lover2) &&
             (target == Lovers.lover1 || target == Lovers.lover2))
             return false; // Members of team Lovers see the names of each other
-        if ((source == Jackal.jackal || source == Sidekick.sidekick) 
+        if ((source == Jackal.jackal || source == Sidekick.sidekick)
             && (target == Jackal.jackal || target == Sidekick.sidekick))
             return false; // Members of team Jackal see the names of each other
         if (Deputy.knowsSheriff && (source == Sheriff.sheriff || source == Deputy.deputy) &&
@@ -1290,12 +1302,6 @@ public static class Helpers
         RPCProcedure.uncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation ? byte.MaxValue : (byte)0);
     }
 
-    public static MurderAttemptResult checkMuderAttemptAndKill(PlayerControl killer, PlayerControl target,
-        bool isMeetingStart = false, bool showAnimation = true)
-    {
-        return checkMurderAttemptAndKill(killer, target, isMeetingStart, showAnimation);
-    }
-
     public static MurderAttemptResult checkMurderAttemptAndKill(PlayerControl killer, PlayerControl target,
         bool isMeetingStart = false, bool showAnimation = true, bool ignoreBlank = false,
         bool ignoreIfKillerIsDead = false)
@@ -1363,7 +1369,7 @@ public static class Helpers
             RPCProcedure.showBodyGuardFlash();
         }
 
-        if (murder == MurderAttemptResult.ReverseKill) checkMuderAttemptAndKill(target, killer, isMeetingStart);
+        if (murder == MurderAttemptResult.ReverseKill) checkMurderAttemptAndKill(target, killer, isMeetingStart);
 
         return murder;
     }

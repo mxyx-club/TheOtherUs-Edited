@@ -69,7 +69,7 @@ public class CustomButton
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
 
-        //Timer = MapOption.ButtonCooldown + 8.5f;
+        Timer = MapOption.ButtonCooldown + 8.5f;
 
         setActive(false);
     }
@@ -129,34 +129,33 @@ public class CustomButton
             }
     }
 
-    public static void ResetAllCooldowns()
+    public static void ResetAllCooldowns(float Time = 0, bool Reset = false)
     {
         foreach (var t in buttons)
+        {
             try
             {
-                t.Timer = t.MaxTimer;
-                t.DeputyTimer = t.MaxTimer;
-                t.Update();
-            }
-            catch (NullReferenceException)
-            {
-                Warn("NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
-            }
-    }
 
-    public static void GameStartResetAllCooldowns(float Time)
-    {
-        foreach (var t in buttons)
-            try
-            {
-                t.Timer = Time;
-                t.DeputyTimer = Time;
-                t.Update();
+                if (t == HudManagerStartPatch.bomberBombButton) continue;
+                if (Reset)
+                {
+                    t.Timer = Time;
+                    t.DeputyTimer = t.MaxTimer;
+                    t.Update();
+                    Reset = false;
+                }
+                else
+                {
+                    t.Timer = t.MaxTimer;
+                    t.DeputyTimer = t.MaxTimer;
+                    t.Update();
+                }
             }
             catch (NullReferenceException)
             {
                 Warn("NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
             }
+        }
     }
 
     public void setActive(bool isActive)

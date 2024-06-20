@@ -420,9 +420,6 @@ internal class MeetingHudPatch
         // Add Swapper Buttons
         var addSwapperButtons = Swapper.swapper != null && CachedPlayer.LocalPlayer.PlayerControl == Swapper.swapper &&
                                 !Swapper.swapper.Data.IsDead;
-        var addDoomsayerButtons = Doomsayer.doomsayer != null &&
-                                  CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer &&
-                                  !Doomsayer.doomsayer.Data.IsDead && gameMode != CustomGamemodes.Guesser;
         var addMayorButton = Mayor.mayor != null && CachedPlayer.LocalPlayer.PlayerControl == Mayor.mayor &&
                              !Mayor.mayor.Data.IsDead && Mayor.mayorChooseSingleVote > 0;
         if (addSwapperButtons)
@@ -545,33 +542,12 @@ internal class MeetingHudPatch
                 }
             }
         }
-        /*
-        //!!!添加末日预言家赌
-        if (addDoomsayerButtons)
-        {
-            Doomsayer.CanShoot = true;
-            for (var i = 0; i < __instance.playerStates.Length; i++)
-            {
-                var playerVoteArea = __instance.playerStates[i];
-                if (playerVoteArea.AmDead ||
-                    playerVoteArea.TargetPlayerId == CachedPlayer.LocalPlayer.PlayerId) continue;
-                var template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-                var targetBox = Object.Instantiate(template, playerVoteArea.transform);
-                targetBox.name = "ShootButton";
-                targetBox.transform.localPosition = new Vector3(-0.95f, 0.03f, -1.3f);
-                var renderer = targetBox.GetComponent<SpriteRenderer>();
-                renderer.sprite = HandleGuesser.getTargetSprite();
-                var button = targetBox.GetComponent<PassiveButton>();
-                button.OnClick.RemoveAllListeners();
-                var copiedIndex = i;
-                button.OnClick.AddListener((Action)(() => guesserOnClick(copiedIndex, __instance)));
-            }
-        }*/
 
         // Add Guesser Buttons
         var GuesserRemainingShots = HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId);
         if (!isGuesser || CachedPlayer.LocalPlayer.Data.IsDead || GuesserRemainingShots <= 0) return;
         {
+            Doomsayer.CanShoot = true;
             for (var i = 0; i < __instance.playerStates.Length; i++)
             {
                 var playerVoteArea = __instance.playerStates[i];
