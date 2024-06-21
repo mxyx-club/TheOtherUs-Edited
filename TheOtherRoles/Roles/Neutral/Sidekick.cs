@@ -2,7 +2,7 @@
 
 namespace TheOtherRoles.Roles.Neutral;
 
-public static class Sidekick
+public class Sidekick
 {
     public static PlayerControl sidekick;
     public static Color color = new Color32(0, 180, 235, byte.MaxValue);

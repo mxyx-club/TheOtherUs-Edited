@@ -60,6 +60,8 @@ public enum RoleId
     Arsonist,
     Jackal,
     Sidekick,
+    Pavlovsowner,
+    Pavlovsdogs,
     Werewolf,
     Swooper,
     Juggernaut,
@@ -191,6 +193,7 @@ public enum CustomRPC
     DeputyUsedHandcuffs,
     DeputyPromotes,
     JackalCreatesSidekick,
+    PavlovsCreateDog,
     SidekickPromotes,
     ErasePlayerRoles,
     SetFutureErased,
@@ -471,6 +474,12 @@ public static class RPCProcedure
                         break;
                     case RoleId.Sidekick:
                         Sidekick.sidekick = player;
+                        break;
+                    case RoleId.Pavlovsowner:
+                        Pavlovsdogs.pavlovsowner = player;
+                        break;
+                    case RoleId.Pavlovsdogs:
+                        Pavlovsdogs.pavlovsdogs.Add(player);
                         break;
                     case RoleId.Swooper:
                         Swooper.swooper = player;
@@ -1067,6 +1076,16 @@ public static class RPCProcedure
                 Jackal.formerJackals.Add(target);
                 if (Amnisiac.resetRole) Sidekick.clearAndReload();
                 Sidekick.sidekick = amnisiac;
+                Amnisiac.clearAndReload();
+                break;
+
+            case RoleId.Pavlovsowner:
+                Pavlovsdogs.pavlovsowner = amnisiac;
+                Amnisiac.clearAndReload();
+                break;
+
+            case RoleId.Pavlovsdogs:
+                Pavlovsdogs.pavlovsdogs.Add(amnisiac);
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1738,11 +1757,51 @@ public static class RPCProcedure
         return;
     }
 
+    public static void pavlovsCreateDog(byte targetId)
+    {
+        var player = playerById(targetId);
+        if (player == null) return;
+        if (Executioner.target == player && Executioner.executioner != null && !Executioner.executioner.Data.IsDead)
+        {
+            if (Lawyer.lawyer == null && Executioner.promotesToLawyer)
+            {
+                Lawyer.lawyer = Executioner.executioner;
+                Executioner.clearAndReload();
+            }
+            else if (!Executioner.promotesToLawyer)
+            {
+                Pursuer.pursuer = Executioner.executioner;
+                Executioner.clearAndReload();
+            }
+        }
+
+        LastImpostor.promoteToLastImpostor();
+        var wasSpy = Spy.spy != null && player == Spy.spy;
+        var wasImpostor = player.Data.Role.IsImpostor; // This can only be reached if impostors can be sidekicked.
+        FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
+        if (player == Lawyer.lawyer && Lawyer.target != null)
+        {
+            var playerInfoTransform = Lawyer.target.cosmetics.nameText.transform.parent.FindChild("Info");
+            var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
+            if (playerInfo != null) playerInfo.text = "";
+        }
+
+        erasePlayerRoles(player.PlayerId);
+        Pavlovsdogs.pavlovsdogs.Add(player);
+        if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
+            CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
+        if ((wasSpy || wasImpostor) && !Jackal.CanImpostorFindSidekick) Sidekick.wasTeamRed = true;
+        Sidekick.wasSpy = wasSpy;
+        Sidekick.wasImpostor = wasImpostor;
+        if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
+        if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(targetId))
+            setGuesserGm(targetId);
+    }
+
     public static void erasePlayerRoles(byte playerId, bool ignoreModifier = true)
     {
         var player = playerById(playerId);
         if (player == null) return;
-        //if (player == null) return;
 
         // Crewmate roles
         if (Guesser.evilGuesser.Any(x => x.PlayerId == player.PlayerId))
@@ -1797,7 +1856,6 @@ public static class RPCProcedure
         if (player == Terrorist.terrorist) Terrorist.clearAndReload();
         if (player == Prophet.prophet) Prophet.clearAndReload();
 
-
         // Other roles
         if (player == Jester.jester) Jester.clearAndReload();
         if (player == Werewolf.werewolf) Werewolf.clearAndReload();
@@ -1812,7 +1870,8 @@ public static class RPCProcedure
             else
                 Jackal.clearAndReload();
         }
-
+        if (player == Pavlovsdogs.pavlovsowner) Pavlovsdogs.pavlovsowner = null;
+        if (player == Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId)) Pavlovsdogs.clear(player.PlayerId);
         if (player == Sidekick.sidekick) Sidekick.clearAndReload();
         if (player == BountyHunter.bountyHunter) BountyHunter.clearAndReload();
         if (player == Vulture.vulture) Vulture.clearAndReload();
@@ -1820,7 +1879,6 @@ public static class RPCProcedure
         if (player == Lawyer.lawyer) Lawyer.clearAndReload();
         if (player == Pursuer.pursuer) Pursuer.clearAndReload();
         if (player == Thief.thief) Thief.clearAndReload();
-        //天启添加
         if (player == Juggernaut.juggernaut) Juggernaut.clearAndReload();
         if (player == Doomsayer.doomsayer) Doomsayer.clearAndReload();
         if (player == Akujo.akujo) Akujo.clearAndReload();
@@ -2758,7 +2816,11 @@ public static class RPCProcedure
             if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(thief.PlayerId))
                 setGuesserGm(thief.PlayerId);
         }
-
+        if (Pavlovsdogs.pavlovsowner) Pavlovsdogs.pavlovsowner = thief;
+        if (Pavlovsdogs.pavlovsdogs.Any())
+        {
+            Pavlovsdogs.pavlovsdogs.Add(thief);
+        }
         //if (target == Guesser.evilGuesser) Guesser.evilGuesser = thief;
         if (target == Poucher.poucher && !Poucher.spawnModifier) Poucher.poucher = thief;
         if (target == Morphling.morphling) Morphling.morphling = thief;
@@ -3278,6 +3340,10 @@ internal class RPCHandlerPatch
                 RPCProcedure.jackalCreatesSidekick(reader.ReadByte());
                 break;
 
+            case CustomRPC.PavlovsCreateDog:
+                RPCProcedure.pavlovsCreateDog(reader.ReadByte());
+                break;
+
             case CustomRPC.SidekickPromotes:
                 RPCProcedure.sidekickPromotes();
                 break;
@@ -3548,7 +3614,7 @@ internal class RPCHandlerPatch
                     MeetingRoomManager.Instance.reporter = Mayor.mayor;
                     MeetingRoomManager.Instance.target = null;
                     AmongUsClient.Instance.DisconnectHandlers.AddUnique(MeetingRoomManager.Instance.Cast<IDisconnectHandler>());
-                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
+                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(Mayor.mayor);
                     Mayor.mayor.RpcStartMeeting(null);
                 }
                 break;
@@ -3558,7 +3624,7 @@ internal class RPCHandlerPatch
                     MeetingRoomManager.Instance.reporter = ButtonBarry.buttonBarry;
                     MeetingRoomManager.Instance.target = null;
                     AmongUsClient.Instance.DisconnectHandlers.AddUnique(MeetingRoomManager.Instance.Cast<IDisconnectHandler>());
-                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(PlayerControl.LocalPlayer);
+                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(ButtonBarry.buttonBarry);
                     ButtonBarry.buttonBarry.RpcStartMeeting(null);
                 }
                 break;

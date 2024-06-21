@@ -40,6 +40,7 @@ public static class RoleClass
         Snitch.clearAndReload();
         Jackal.clearAndReload();
         Sidekick.clearAndReload();
+        Pavlovsdogs.clearAndReload();
         Follower.clearAndReload();
         Eraser.clearAndReload();
         Spy.clearAndReload();

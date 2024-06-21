@@ -877,7 +877,7 @@
     },
     "fullCredentials": {
         "0": "<size=70%>Modified by <color=#FFB793>mxyx-club</color>\n<size=65%>Based on TheOtherUs</size>",
-        "13": "<size=75%>\u6a21\u7ec4\u4fee\u6539: <color=#FFB793>\u6cab\u590f\u60a0\u8f69  \u5584\u826f\u7684\u597d\u4eba</color> \n\u7f8e\u5de5: <color=#00FFFFFF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheOtherUs</size>"
+        "13": "<size=75%>\u6a21\u7ec4\u4fee\u6539: <color=#FFB793>\u6cab\u590f\u60a0\u8f69 & \u5584\u826f\u7684\u597d\u4eba</color> \n\u7f8e\u5de5: <color=#00FFFFFF>\u65b9\u5757</color></size>\n<size=70%>\u57fa\u4e8eTheOtherUs</size>"
     },
     "mainMenuCredentials": {
         "0": "<size=90%>Modified by <color=#FFB793>mxyx-club</color>\n<size=80%>Based on TheOtherUs</size>",
@@ -1018,6 +1018,10 @@
     },
     "DoomsayerKilledToWin": {
         "13": "\u8fd8\u9700\u8981\u731c\u6d4b {0} \u6b21\u80dc\u5229"
+    },
+    "SerialKillerSuicideText": {
+        "0": "{0} seconds to suicide",
+        "13": "{0}\u79d2\u540e\u81ea\u6740"
     },
     "colorSalmon": {
         "0": "Salmon",
@@ -1493,6 +1497,10 @@
         "0": "Blink",
         "13": "\u95ea\u73b0"
     },
+    "pavlovsCreateDogText": {
+        "0": "stenciling",
+        "13": "\u9a6f\u5316"
+    },
     "ImpostorIntroDesc": {
         "13": "\u54c8\u54c8\uff01\u767d\u677f\u5185\u9b3c~"
     },
@@ -1808,6 +1816,26 @@
     },
     "SidekickShortDesc": {
         "13": "\u5e2e\u52a9\u8c7a\u72fc\u83b7\u5f97\u80dc\u5229"
+    },
+    "Pavlovsowner": {
+        "0": "Pavlov's owner",
+        "13": "\u5df4\u752b\u6d1b\u592b"
+    },
+    "PavlovsownerIntroDesc": {
+        "13": "\u6211\u597d\u50cf\u5f97\u4e86\u65af\u5fb7\u54e5\u5c14\u6469\u7efc\u5408\u5f81"
+    },
+    "PavlovsownerShortDesc": {
+        "13": "\u72d7\u4e2d\u6bd2.mp3"
+    },
+    "Pavlovsdogs": {
+        "0": "Pavlov's dogs",
+        "13": "\u5df4\u752b\u6d1b\u592b\u7684\u72d7"
+    },
+    "PavlovsdogsIntroDesc": {
+        "13": "\u4e56\u72d7\u72d7\u5728\u54ea\uff1f\u4e56\u72d7\u72d7\u5728\u8fd9\uff01"
+    },
+    "PavlovsdogsShortDesc": {
+        "13": "\u4e56\u72d7\u72d7\u5728\u54ea\uff1f\u4e56\u72d7\u72d7\u5728\u8fd9\uff01"
     },
     "Swooper": {
         "0": "Swooper",
@@ -2438,7 +2466,7 @@
         "13": "\u4f2a\u88c5\u6210\u7269\u54c1\u5e76\u751f\u5b58"
     },
     "ImpostorFullDesc": {
-        "13": "\u8b66\u957f\u662f\u8239\u5458\u9635\u8425\u552f\u4e00\u53ef\u4ee5\u4e3b\u52a8\u5200\u4eba\u7684\u804c\u4e1a\u3002\u4ed6\u7684\u5de5\u4f5c\u662f\u6740\u6b7b\u7ea2\u72fc\uff0c\u5e72\u7ffb\u8c7a\u72fc\u7b49\u4e2d\u7acb\u574f\u86cb\u3002\u4f46\u662f\u8b66\u957f\u51fa\u5200\u9700\u8c28\u614e\uff0c\u56e0\u4e3a\u8bd5\u56fe\u51fb\u6740\u8239\u5458\u7684\u8bdd\uff0c\u4f1a\u4f7f\u81ea\u5df1\u6b7b\u4ea1\u3002\u6ce8\u610f\uff1a\u8b66\u957f\u6267\u6cd5\u5931\u5fc6\u8005\u3001\u8d77\u8bc9\u4eba\uff08\u4e24\u4e2a\u90fd\u662f\u4e2d\u7acb\uff09\u4e5f\u4f1a\u4f7f\u81ea\u5df1\u6b7b\u4ea1\u3002"
+        "13": "\u8b66\u957f\u662f\u8239\u5458\u9635\u8425\u552f\u4e00\u53ef\u4ee5\u4e3b\u52a8\u5200\u4eba\u7684\u804c\u4e1a\u3002\u4ed6\u7684\u5de5\u4f5c\u662f\u6740\u6b7b\u7ea2\u72fc\uff0c\u5e72\u7ffb\u8c7a\u72fc\u7b49\u4e2d\u7acb\u574f\u86cb\u3002\n\u4f46\u662f\u8b66\u957f\u51fa\u5200\u9700\u8c28\u614e\uff0c\u56e0\u4e3a\u8bd5\u56fe\u51fb\u6740\u8239\u5458\u7684\u8bdd\uff0c\u4f1a\u4f7f\u81ea\u5df1\u6b7b\u4ea1\u3002"
     },
     "AssassinFullDesc": {
         "13": "\u523a\u5ba2\u4f7f\u7ea2\u72fc\u5177\u6709\u4f1a\u8bae\u4e0a\u8d4c\u4eba\u7684\u80fd\u529b\u3002\u523a\u5ba2\u62e5\u6709\u4e09\u6b21\u731c\u4eba\u7684\u6b21\u6570\uff0c\u6bcf\u4e2a\u7ea2\u72fc\u90fd\u80fd\u8d4c\uff0c\u4f46\u6b21\u6570\u5171\u4eab\u3002"

@@ -39,9 +39,7 @@ internal static class HudManagerStartPatch
     public static CustomButton portalmakerPlacePortalButton;
     private static CustomButton usePortalButton;
     private static CustomButton portalmakerMoveToPortalButton;
-
     public static CustomButton hackerButton;
-
     //private static CustomButton changeChatButton;
     public static CustomButton hackerVitalsButton;
     public static CustomButton hackerAdminTableButton;
@@ -79,15 +77,9 @@ internal static class HudManagerStartPatch
     public static CustomButton mayorMeetingButton;
     public static CustomButton blackmailerButton;
     public static CustomButton thiefKillButton;
-
     public static CustomButton juggernautKillButton;
-
-
     public static CustomButton evilTrapperSetTrapButton;
-
-    //末日预言家
     public static CustomButton doomsayerButton;
-    //魅魔
     public static CustomButton akujoHonmeiButton;
     public static CustomButton akujoBackupButton;
     public static CustomButton yoyoButton;
@@ -109,6 +101,8 @@ internal static class HudManagerStartPatch
     private static CustomButton propHuntSpeedboostButton;
     public static CustomButton propHuntAdminButton;
     public static CustomButton propHuntFindButton;
+    public static CustomButton pavlovsdogsKillButton;
+    public static CustomButton pavlovsownerCreateDogButton;
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
@@ -126,6 +120,7 @@ internal static class HudManagerStartPatch
     public static TMP_Text portalmakerButtonText1;
     public static TMP_Text portalmakerButtonText2;
     public static TMP_Text huntedShieldCountText;
+    public static TMP_Text PavlovsdogKillSelfText;
     public static TMP_Text akujoTimeRemainingText;
     public static TMP_Text akujoBackupLeftText;
 
@@ -208,6 +203,9 @@ internal static class HudManagerStartPatch
         akujoHonmeiButton.MaxTimer = defaultMaxTimer;
         akujoBackupButton.MaxTimer = defaultMaxTimer;
 
+        pavlovsdogsKillButton.MaxTimer = Pavlovsdogs.cooldown;
+        pavlovsownerCreateDogButton.MaxTimer = Pavlovsdogs.createDogCooldown;
+
         mayorMeetingButton.MaxTimer = defaultMaxTimer;
         trapperButton.MaxTimer = Trapper.cooldown;
         terroristButton.MaxTimer = Terrorist.bombCooldown;
@@ -257,6 +255,7 @@ internal static class HudManagerStartPatch
         lightsOutButton.Timer = lightsOutButton.MaxTimer;
         zoomOutButton.MaxTimer = 0f;
         //changeChatButton.MaxTimer = 0f;
+
     }
 
     public static void showTargetNameOnButton(PlayerControl target, CustomButton button, string defaultText)
@@ -554,6 +553,8 @@ internal static class HudManagerStartPatch
                          Juggernaut.juggernaut == Sheriff.currentTarget ||
                          Werewolf.werewolf == Sheriff.currentTarget ||
                          Swooper.swooper == Sheriff.currentTarget ||
+                         Pavlovsdogs.pavlovsowner == Sheriff.currentTarget ||
+                         Pavlovsdogs.pavlovsdogs.Any(p => p == Sheriff.currentTarget) ||
                          (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
                          (Sheriff.canKillNeutrals &&
                           ((Arsonist.arsonist == Sheriff.currentTarget && Sheriff.canKillArsonist) ||
@@ -564,8 +565,8 @@ internal static class HudManagerStartPatch
                            (Lawyer.lawyer == Sheriff.currentTarget && Sheriff.canKillLawyer) ||
                            (Executioner.executioner == Sheriff.currentTarget && Sheriff.canKillExecutioner) ||
                            (Pursuer.pursuer == Sheriff.currentTarget && Sheriff.canKillPursuer) ||
-                            Akujo.akujo == Sheriff.currentTarget ||
-                           (Doomsayer.doomsayer == Sheriff.currentTarget && Sheriff.canKillDoomsayer)))))
+                           (Doomsayer.doomsayer == Sheriff.currentTarget && Sheriff.canKillDoomsayer) ||
+                            Akujo.akujo == Sheriff.currentTarget))))
                     {
                         targetId = Sheriff.currentTarget.PlayerId;
                     }
@@ -2058,6 +2059,96 @@ internal static class HudManagerStartPatch
             Swooper.duration,
             () => { swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer; },
             buttonText: getString("SwoopText")
+        );
+
+        pavlovsdogsKillButton = new CustomButton(
+            () =>
+            {
+                if (checkAndDoVetKill(Pavlovsdogs.killTarget)) return;
+                if (checkMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl, Pavlovsdogs.killTarget) == MurderAttemptResult.SuppressKill) return;
+                if (Pavlovsdogs.enableRampage)
+                {
+                    Pavlovsdogs.deathTime = Pavlovsdogs.rampageDeathTime;
+                    pavlovsdogsKillButton.MaxTimer = Pavlovsdogs.ownerIsDead ? Pavlovsdogs.rampageKillCooldown : Pavlovsdogs.cooldown;
+                }
+                pavlovsdogsKillButton.Timer = pavlovsdogsKillButton.MaxTimer;
+                Pavlovsdogs.killTarget = null;
+            },
+            () =>
+            {
+                return Pavlovsdogs.pavlovsdogs != null
+                       && Pavlovsdogs.pavlovsdogs.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl)
+                       && !CachedPlayer.LocalPlayer.Data.IsDead;
+            },
+            () =>
+            {
+                if (Pavlovsdogs.enableRampage && Pavlovsdogs.ownerIsDead && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead)
+                {
+                    Pavlovsdogs.deathTime -= Time.deltaTime;
+                    if (PavlovsdogKillSelfText != null)
+                    {
+                        PavlovsdogKillSelfText.text = string.Format("SerialKillerSuicideText".Translate(), ((int)Pavlovsdogs.deathTime) + 1);
+                    }
+
+                    if (Pavlovsdogs.deathTime <= 0)
+                    {
+                        PlayerControl.LocalPlayer.RpcMurderPlayer(PlayerControl.LocalPlayer, true);
+                    }
+                }
+                showTargetNameOnButton(Pavlovsdogs.killTarget, pavlovsdogsKillButton, getString("killButtonText")); return Pavlovsdogs.killTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+            },
+            () =>
+            {
+                if (Pavlovsdogs.enableRampage && Pavlovsdogs.rampageDeathTimeIsMeetingReset)
+                {
+                    Pavlovsdogs.deathTime = Pavlovsdogs.rampageDeathTime;
+                    pavlovsdogsKillButton.MaxTimer = Pavlovsdogs.ownerIsDead ? Pavlovsdogs.rampageKillCooldown : Pavlovsdogs.cooldown;
+                }
+                pavlovsdogsKillButton.Timer = pavlovsdogsKillButton.MaxTimer;
+            },
+            __instance.KillButton.graphic.sprite,
+            ButtonPositions.upperRowCenter,
+            __instance,
+            KeyCode.Q
+        );
+        PavlovsdogKillSelfText = Object.Instantiate(pavlovsdogsKillButton.actionButton.cooldownTimerText,
+            pavlovsdogsKillButton.actionButton.cooldownTimerText.transform.parent);
+        PavlovsdogKillSelfText.text = "";
+        PavlovsdogKillSelfText.enableWordWrapping = false;
+        PavlovsdogKillSelfText.transform.localScale = Vector3.one * 0.5f;
+        PavlovsdogKillSelfText.transform.localPosition += new Vector3(-0.05f, 0.55f, -1f);
+
+        pavlovsownerCreateDogButton = new CustomButton(
+            () =>
+            {
+                if (checkAndDoVetKill(Pavlovsdogs.currentTarget)) return;
+                checkWatchFlash(Pavlovsdogs.currentTarget);
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.PavlovsCreateDog, SendOption.Reliable);
+                writer.Write(Pavlovsdogs.currentTarget.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.pavlovsCreateDog(Pavlovsdogs.currentTarget.PlayerId);
+                SoundEffectsManager.play("jackalSidekick");
+                pavlovsownerCreateDogButton.Timer = pavlovsownerCreateDogButton.MaxTimer;
+            },
+            () =>
+            {
+                return Pavlovsdogs.pavlovsowner != null
+                    && Pavlovsdogs.pavlovsowner == CachedPlayer.LocalPlayer.PlayerControl
+                    && !CachedPlayer.LocalPlayer.Data.IsDead
+                    && Pavlovsdogs.CanCreateDog;
+            },
+            () =>
+            {
+                showTargetNameOnButton(Pavlovsdogs.currentTarget, pavlovsownerCreateDogButton, getString("pavlovsCreateDogText"));
+                // Show now text since the button already says sidekick
+                return Pavlovsdogs.currentTarget != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+            },
+            () => { pavlovsownerCreateDogButton.Timer = pavlovsownerCreateDogButton.MaxTimer; },
+            Pavlovsdogs.CreateDogButton,
+            ButtonPositions.lowerRowCenter,
+            __instance,
+            KeyCode.F
         );
 
         minerMineButton = new CustomButton(

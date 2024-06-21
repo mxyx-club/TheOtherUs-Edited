@@ -254,7 +254,6 @@ public static class PlayerControlFixedUpdatePatch
         if (Shifter.futureShift == null) setPlayerOutline(Shifter.currentTarget, Color.yellow);
     }
 
-
     private static void morphlingSetTarget()
     {
         if (Morphling.morphling == null || Morphling.morphling != CachedPlayer.LocalPlayer.PlayerControl) return;
@@ -325,7 +324,7 @@ public static class PlayerControlFixedUpdatePatch
     {
         if (Vampire.vampire == null || Vampire.vampire != CachedPlayer.LocalPlayer.PlayerControl) return;
 
-        PlayerControl target = Spy.spy != null || Sidekick.wasSpy || Jackal.wasSpy
+        var target = Spy.spy != null || Sidekick.wasSpy || Jackal.wasSpy
             ? Spy.impostorsCanKillAnyone
                 ? setTarget(false, true)
                 : setTarget(true, true,
@@ -366,6 +365,29 @@ public static class PlayerControlFixedUpdatePatch
             untargetablePlayers.Add(Mini.mini); // Exclude Sidekick from targeting the Mini unless it has grown up
         Sidekick.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
         if (Sidekick.canKill) setPlayerOutline(Sidekick.currentTarget, Palette.ImpostorRed);
+    }
+
+    private static void pavlovsownerTarget()
+    {
+        if (Pavlovsdogs.pavlovsowner == null || Pavlovsdogs.pavlovsowner != CachedPlayer.LocalPlayer.PlayerControl) return;
+        var untargetablePlayers = new List<PlayerControl>();
+        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
+        Pavlovsdogs.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
+        setPlayerOutline(Pavlovsdogs.currentTarget, Palette.ImpostorRed);
+    }
+
+    private static void pavlovsdogsSetTarget()
+    {
+        if (Pavlovsdogs.pavlovsdogs == null || !Pavlovsdogs.pavlovsdogs.Any(p => p == CachedPlayer.LocalPlayer.PlayerControl)) return;
+        var untargetablePlayers = new List<PlayerControl>();
+        foreach (var p in Pavlovsdogs.pavlovsdogs)
+        {
+            untargetablePlayers.Add(p);
+        }
+        if (Pavlovsdogs.pavlovsowner != null) untargetablePlayers.Add(Pavlovsdogs.pavlovsowner);
+        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
+        Pavlovsdogs.killTarget = setTarget(untargetablePlayers: untargetablePlayers);
+        setPlayerOutline(Pavlovsdogs.killTarget, Palette.ImpostorRed);
     }
 
     private static void sidekickCheckPromotion()
@@ -1805,6 +1827,12 @@ public static class PlayerControlFixedUpdatePatch
         Akujo.currentTarget = setTarget(untargetablePlayers: untargetables);
         if (Akujo.honmei == null || Akujo.keepsLeft > 0) setPlayerOutline(Akujo.currentTarget, Akujo.color);
     }
+
+    public static void pavlovsdogsUpdate()
+    {
+        if (Pavlovsdogs.pavlovsdogs == null || !Pavlovsdogs.pavlovsdogs.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl)) return;
+    }
+
     public static void Postfix(PlayerControl __instance)
     {
         if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started ||
@@ -1886,6 +1914,10 @@ public static class PlayerControlFixedUpdatePatch
             jackalSetTarget();
             // Sidekick
             sidekickSetTarget();
+            // Pavlovsdogs
+            pavlovsownerTarget();
+            pavlovsdogsSetTarget();
+            pavlovsdogsUpdate();
             // Impostor
             impostorSetTarget();
             // Warlock

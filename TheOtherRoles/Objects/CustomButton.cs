@@ -135,14 +135,12 @@ public class CustomButton
         {
             try
             {
-
-                if (t == HudManagerStartPatch.bomberBombButton) continue;
+                if (t == HudManagerStartPatch.bomberGiveButton) continue;
                 if (Reset)
                 {
                     t.Timer = Time;
                     t.DeputyTimer = t.MaxTimer;
                     t.Update();
-                    Reset = false;
                 }
                 else
                 {

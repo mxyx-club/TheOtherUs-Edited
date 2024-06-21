@@ -82,14 +82,15 @@ public static class Helpers
                player == Arsonist.arsonist ||
                player == Jackal.jackal ||
                player == Sidekick.sidekick ||
+               player == Pavlovsdogs.pavlovsowner ||
+               player == Pavlovsdogs.pavlovsdogs.Any(p => p == player) ||
                player == Doomsayer.doomsayer ||
                player == Akujo.akujo ||
                player == Swooper.swooper ||
                player == Lawyer.lawyer ||
                player == Executioner.executioner ||
                player == Pursuer.pursuer ||
-               player == Vulture.vulture ||
-               Jackal.formerJackals.Any(x => x == player);
+               player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player);
     }
 
     /// <summary>
@@ -120,6 +121,8 @@ public static class Helpers
         return player.Role.IsImpostor
                || (((Jackal.jackal != null && Jackal.jackal.PlayerId == player.PlayerId) || Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.hasImpostorVision)
                || (Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == player.PlayerId && Sidekick.hasImpostorVision)
+               || (Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner.PlayerId == player.PlayerId && Pavlovsdogs.hasImpostorVision)
+               || (Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p.PlayerId == player.PlayerId) && Pavlovsdogs.hasImpostorVision)
                || (Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision)
                || (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == player.PlayerId && Spy.hasImpostorVision)
                || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
@@ -173,6 +176,14 @@ public static class Helpers
             roleCouldUse = true;
         }
         else if (Sidekick.canUseVents && Sidekick.sidekick != null && Sidekick.sidekick == player)
+        {
+            roleCouldUse = true;
+        }
+        else if ((Pavlovsdogs.canUseVents == 1 || Pavlovsdogs.canUseVents == 2) && Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner == player)
+        {
+            roleCouldUse = true;
+        }
+        else if ((Pavlovsdogs.canUseVents == 0 || Pavlovsdogs.canUseVents == 2) && Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p == player))
         {
             roleCouldUse = true;
         }
@@ -243,6 +254,8 @@ public static class Helpers
             return player != null && (
                        player == Jackal.jackal ||
                        player == Sidekick.sidekick ||
+                       player == Pavlovsdogs.pavlovsowner ||
+                       Pavlovsdogs.pavlovsdogs.Any(p => p == player) ||
                        player == Lawyer.lawyer);
         }
         else if (CustomOptionHolder.modifierShiftNeutral.getBool())
@@ -279,7 +292,10 @@ public static class Helpers
                 player == Swooper.swooper ||
                 player == Arsonist.arsonist ||
                 player == Jackal.jackal ||
-                player == Sidekick.sidekick);
+                player == Sidekick.sidekick ||
+                player == Pavlovsdogs.pavlovsowner ||
+                Pavlovsdogs.pavlovsdogs.Any(p => p == player)
+                );
     }
 
     public static bool isEvil(PlayerControl player)
@@ -855,8 +871,13 @@ public static class Helpers
 
     public static bool canBeErased(this PlayerControl player)
     {
-        return player != Jackal.jackal && player != Juggernaut.juggernaut && player != Swooper.swooper && player != Sidekick.sidekick &&
-               !Jackal.formerJackals.Any(x => x == player) && player != Werewolf.werewolf;
+        return player != Jackal.jackal
+            && player != Juggernaut.juggernaut && player != Swooper.swooper
+            && player != Sidekick.sidekick
+            && !Jackal.formerJackals.Any(x => x == player)
+            && player != Werewolf.werewolf
+            && player != Pavlovsdogs.pavlovsowner
+            && !Pavlovsdogs.pavlovsdogs.Any(x => x == player);
     }
 
     public static bool shouldShowGhostInfo()
@@ -1022,6 +1043,9 @@ public static class Helpers
         if ((source == Jackal.jackal || source == Sidekick.sidekick)
             && (target == Jackal.jackal || target == Sidekick.sidekick))
             return false; // Members of team Jackal see the names of each other
+        if ((source == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(x => x == target))
+            && (target == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(x => x == target)))
+            return false;
         if (Deputy.knowsSheriff && (source == Sheriff.sheriff || source == Deputy.deputy) &&
             (target == Sheriff.sheriff || target == Deputy.deputy))
             return false; // Sheriff & Deputy see the names of each other

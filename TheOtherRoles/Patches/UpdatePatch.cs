@@ -113,6 +113,35 @@ internal class HudManagerUpdatePatch
             if (Sidekick.sidekick != null) setPlayerNameColor(Sidekick.sidekick, Jackal.color);
         }
 
+        // No else if here, as a Lover of team Jackal needs the colors
+        if (Sidekick.sidekick != null && Sidekick.sidekick == localPlayer)
+        {
+            // Sidekick can see the jackal
+            setPlayerNameColor(Sidekick.sidekick, Sidekick.color);
+            if (Jackal.jackal != null) setPlayerNameColor(Jackal.jackal, Jackal.color);
+        }
+
+        if (Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner == localPlayer)
+        {
+            setPlayerNameColor(Pavlovsdogs.pavlovsowner, Pavlovsdogs.color);
+            if (Pavlovsdogs.pavlovsdogs != null)
+            {
+                foreach (var p in Pavlovsdogs.pavlovsdogs)
+                {
+                    setPlayerNameColor(p, Pavlovsdogs.color);
+                }
+            }
+        }
+
+        if (Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p == localPlayer))
+        {
+            foreach (var p in Pavlovsdogs.pavlovsdogs)
+            {
+                setPlayerNameColor(p, Pavlovsdogs.color);
+            }
+            if (Pavlovsdogs.pavlovsowner != null) setPlayerNameColor(Pavlovsdogs.pavlovsowner, Pavlovsdogs.color);
+        }
+
         if (Executioner.executioner != null && localPlayer == Executioner.executioner)
         {
             setPlayerNameColor(Executioner.target, Color.grey);
@@ -160,14 +189,6 @@ internal class HudManagerUpdatePatch
                     }
                 }
             }
-        }
-
-        // No else if here, as a Lover of team Jackal needs the colors
-        if (Sidekick.sidekick != null && Sidekick.sidekick == localPlayer)
-        {
-            // Sidekick can see the jackal
-            setPlayerNameColor(Sidekick.sidekick, Sidekick.color);
-            if (Jackal.jackal != null) setPlayerNameColor(Jackal.jackal, Jackal.color);
         }
 
         // No else if here, as the Impostors need the Spy name to be colored

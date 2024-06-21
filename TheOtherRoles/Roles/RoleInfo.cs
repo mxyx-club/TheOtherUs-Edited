@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using InnerNet;
 using TheOtherRoles.Modules;
+using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -67,6 +68,8 @@ public class RoleInfo
     public static RoleInfo pursuer = new("Pursuer", Pursuer.color, RoleId.Pursuer, true);
     public static RoleInfo jackal = new("Jackal", Jackal.color, RoleId.Jackal, true);
     public static RoleInfo sidekick = new("Sidekick", Sidekick.color, RoleId.Sidekick, true);
+    public static RoleInfo pavlovsowner = new("Pavlovsowner", Pavlovsdogs.color, RoleId.Pavlovsowner, true);
+    public static RoleInfo pavlovsdogs = new("Pavlovsdogs", Pavlovsdogs.color, RoleId.Pavlovsdogs, true);
     public static RoleInfo swooper = new("Swooper", Swooper.color, RoleId.Swooper, true);
     public static RoleInfo arsonist = new("Arsonist", Arsonist.color, RoleId.Arsonist, true);
     public static RoleInfo werewolf = new("Werewolf", Werewolf.color, RoleId.Werewolf, true);
@@ -171,6 +174,8 @@ public class RoleInfo
         arsonist,
         jackal,
         sidekick,
+        pavlovsowner,
+        pavlovsdogs,
         werewolf,
         swooper,
         juggernaut,
@@ -329,6 +334,8 @@ public class RoleInfo
         if (p == Snitch.snitch) infos.Add(snitch);
         if (p == Jackal.jackal || (Jackal.formerJackals != null && Jackal.formerJackals.Any(x => x.PlayerId == p.PlayerId))) infos.Add(jackal);
         if (p == Sidekick.sidekick) infos.Add(sidekick);
+        if (p == Pavlovsdogs.pavlovsowner) infos.Add(pavlovsowner);
+        if (p == Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == p.PlayerId)) infos.Add(pavlovsdogs);
         if (p == Follower.follower) infos.Add(follower);
         if (p == Spy.spy) infos.Add(spy);
         if (p == SecurityGuard.securityGuard) infos.Add(securityGuard);
@@ -383,9 +390,9 @@ public class RoleInfo
         if (Executioner.target != null && p.PlayerId == Executioner.target.PlayerId &&
             CachedPlayer.LocalPlayer.PlayerControl != Executioner.target) roleName += useColors ? cs(Executioner.color, " §") : " §";
 
-        if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId)) roleName += " (赌怪)";
-
         if (p == Jackal.jackal && Jackal.canSwoop) roleName += " (隐身)";
+
+        if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId)) roleName += " (赌怪)";
 
         if (!suppressGhostInfo && p != null)
         {

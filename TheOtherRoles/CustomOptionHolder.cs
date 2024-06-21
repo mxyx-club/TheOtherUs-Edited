@@ -116,6 +116,19 @@ public class CustomOptionHolder
     public static CustomOption jackalPromotedFromSidekickCanCreateSidekick;
     public static CustomOption jackalAndSidekickHaveImpostorVision;
 
+    public static CustomOption pavlovsownerSpawnRate;
+    public static CustomOption pavlovsownerAndJackalAsWell;
+    public static CustomOption pavlovsownerCreateDogCooldown;
+    public static CustomOption pavlovsownerCreateDogNum;
+    public static CustomOption pavlovsownerKillCooldown;
+    public static CustomOption pavlovsownerCanUseSabo;
+    public static CustomOption pavlovsownerHasImpostorVision;
+    public static CustomOption pavlovsownerCanUseVents;
+    public static CustomOption pavlovsownerRampage;
+    public static CustomOption pavlovsownerRampageKillCooldown;
+    public static CustomOption pavlovsownerRampageDeathTime;
+    public static CustomOption pavlovsownerRampageDeathTimeIsMeetingReset;
+
     public static CustomOption evilTrapperSpawnRate;
     public static CustomOption evilTrapperNumTrap;
     public static CustomOption evilTrapperKillTimer;
@@ -751,8 +764,8 @@ public class CustomOptionHolder
         randomGameStartPosition = Create(50, Types.General, "randomGameStartPosition", false, enableMapOptions, true);
         randomGameStartToVents = Create(51, Types.General, "randomGameStartToVents", true, randomGameStartPosition);
 
-        ShowVentsOnMap = Create(211, Types.General, getString("ShowVentsOnMapText"), false, enableMapOptions, true);
-        ShowVentsOnMeetingMap = Create(212, Types.General, getString("ShowVentsOnMeetingMap"), true, ShowVentsOnMap);
+        ShowVentsOnMap = Create(211, Types.General, "ShowVentsOnMapText", false, enableMapOptions, true);
+        ShowVentsOnMeetingMap = Create(212, Types.General, "ShowVentsOnMeetingMap", true, ShowVentsOnMap);
 
         enableMiraModify = Create(70, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Mira"), false, enableMapOptions, true);
         miraVitals = Create(71, Types.General, "miraVitals", false, enableMiraModify);
@@ -937,7 +950,7 @@ public class CustomOptionHolder
         jackalSwooperDuration = Create(20144, Types.Neutral, "隐身持续时间", 10f, 1f, 20f, 0.5f, jackalChanceSwoop);
         jackalCanUseVents = Create(20132, Types.Neutral, "豺狼可使用管道", true, jackalSpawnRate);
         jackalCanUseSabo = Create(20133, Types.Neutral, "豺狼/跟班可进行破坏", false, jackalSpawnRate);
-        jackalAndSidekickHaveImpostorVision = Create(20134, Types.Neutral, "豺狼/跟班拥有内鬼视野", false, jackalSpawnRate);
+        jackalAndSidekickHaveImpostorVision = Create(20134, Types.Neutral, "豺狼/跟班拥有内鬼视野", true, jackalSpawnRate);
         jackalCanCreateSidekick = Create(20135, Types.Neutral, cs(Jackal.color, "豺狼可以招募跟班"), false, jackalSpawnRate);
         jackalCreateSidekickCooldown = Create(20136, Types.Neutral, "豺狼招募冷却", 25f, 10f, 60f, 2.5f, jackalCanCreateSidekick);
         jackalCanImpostorFindSidekick = Create(20137, Types.Neutral, cs(Palette.ImpostorRed, "伪装者可以发现队友变为跟班"), true, jackalCanCreateSidekick);
@@ -945,6 +958,19 @@ public class CustomOptionHolder
         sidekickCanUseVents = Create(20139, Types.Neutral, "跟班可使用管道", true, jackalCanCreateSidekick);
         sidekickPromotesToJackal = Create(20140, Types.Neutral, "豺狼死后跟班可晋升", false, jackalCanCreateSidekick);
         jackalPromotedFromSidekickCanCreateSidekick = Create(20141, Types.Neutral, "晋升后的豺狼可以招募跟班", true, sidekickPromotesToJackal);
+
+        pavlovsownerSpawnRate = Create(20250, Types.Neutral, cs(Pavlovsdogs.color, "Pavlovsowner"), rates, null, true);
+        pavlovsownerAndJackalAsWell = Create(20251, Types.Neutral, "豺狼和巴浦洛夫只会出现一个", true, pavlovsownerSpawnRate);
+        pavlovsownerKillCooldown = Create(20252, Types.Neutral, "击杀冷却", 25f, 10f, 60f, 2.5f, pavlovsownerSpawnRate);
+        pavlovsownerCreateDogCooldown = Create(20253, Types.Neutral, "驯化冷却", 25f, 10f, 60f, 2.5f, pavlovsownerSpawnRate);
+        pavlovsownerCreateDogNum = Create(20254, Types.Neutral, "可以驯化的次数", 3f, 1f, 10f, 1f, pavlovsownerSpawnRate);
+        pavlovsownerCanUseSabo = Create(20255, Types.Neutral, "可以破坏", true, pavlovsownerSpawnRate);
+        pavlovsownerHasImpostorVision = Create(20256, Types.Neutral, "拥有内鬼视野", true, pavlovsownerSpawnRate);
+        pavlovsownerCanUseVents = Create(20257, Types.Neutral, "可以使用管道", ["Pavlovsdogs", "Pavlovsowner", "二者皆可"], pavlovsownerSpawnRate);
+        pavlovsownerRampage = Create(20260, Types.Neutral, "巴浦洛夫死亡后狗会狂化", true, pavlovsownerSpawnRate);
+        pavlovsownerRampageKillCooldown = Create(20261, Types.Neutral, "狂化后击杀冷却", 15f, 5f, 60f, 2.5f, pavlovsownerRampage);
+        pavlovsownerRampageDeathTime = Create(20262, Types.Neutral, "狂化后自杀时限", 60f, 30f, 180f, 2.5f, pavlovsownerRampageKillCooldown);
+        pavlovsownerRampageDeathTimeIsMeetingReset = Create(20263, Types.Neutral, "会议后重置自杀时限", true, pavlovsownerRampageKillCooldown);
 
         swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
         swooperKillCooldown = Create(20151, Types.Neutral, "击杀冷却", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
@@ -995,7 +1021,7 @@ public class CustomOptionHolder
         doomsayerDormationNum = Create(20229, Types.Neutral, "揭示的职业数量", 5f, 1f, 10f, 1f, doomsayerSpawnRate);
 
         akujoSpawnRate = Create(20231, Types.Neutral, cs(Akujo.color, "Akujo"), rates, null, true);
-        akujoTimeLimit = Create(20232, Types.Neutral, "魅魔招募真爱的时间", 600f, 90f, 1200f, 15f, akujoSpawnRate);
+        akujoTimeLimit = Create(20232, Types.Neutral, "魅魔招募的时限", 600f, 90f, 1200f, 15f, akujoSpawnRate);
         akujoForceKeeps = Create(20236, Types.Neutral, "魅魔不招募备胎会自杀", false, akujoSpawnRate);
         akujoNumKeeps = Create(20233, Types.Neutral, "可招募备胎的数量", 1f, 0f, 10f, 1f, akujoSpawnRate);
         akujoKnowsRoles = Create(20234, Types.Neutral, "魅魔是否知道目标职业", true, akujoSpawnRate);
@@ -1019,6 +1045,28 @@ public class CustomOptionHolder
         guesserShowInfoInGhostChat = Create(30103, Types.Crewmate, "灵魂可见猜测结果", true, guesserSpawnRate);
         guesserKillsThroughShield = Create(30104, Types.Crewmate, "猜测无视法医护盾保护", false, guesserSpawnRate);
 
+        sheriffSpawnRate = Create(30141, Types.Crewmate, cs(Sheriff.color, "Sheriff"), rates, null, true);
+        sheriffCooldown = Create(30142, Types.Crewmate, "执法冷却", 30f, 10f, 60f, 2.5f, sheriffSpawnRate);
+        sheriffMisfireKills = Create(30143, Types.Crewmate, "走火时死亡对象", ["警长", "对方", "双方"], sheriffSpawnRate);
+        sheriffCanKillNeutrals = Create(30150, Types.Crewmate, "可执法独立阵营", false, sheriffSpawnRate);
+        sheriffCanKillAmnesiac = Create(30153, Types.Crewmate, "可执法 " + cs(Amnisiac.color, "失忆者"), false, sheriffCanKillNeutrals);
+        sheriffCanKillJester = Create(30151, Types.Crewmate, "可执法 " + cs(Jester.color, "小丑"), true, sheriffCanKillNeutrals);
+        sheriffCanKillLawyer = Create(30156, Types.Crewmate, "可执法 " + cs(Lawyer.color, "律师"), true, sheriffCanKillNeutrals);
+        sheriffCanKillExecutioner = Create(30152, Types.Crewmate, "可执法 " + cs(Lawyer.color, "处刑者"), true, sheriffCanKillNeutrals);
+        sheriffCanKillPursuer = Create(30158, Types.Crewmate, "可执法 " + cs(Pursuer.color, "起诉人"), true, sheriffCanKillNeutrals);
+        sheriffCanKillVulture = Create(30155, Types.Crewmate, "可执法 " + cs(Vulture.color, "秃鹫"), true, sheriffCanKillNeutrals);
+        sheriffCanKillThief = Create(30157, Types.Crewmate, "可执法 " + cs(Thief.color, "身份窃贼"), true, sheriffCanKillNeutrals);
+        sheriffCanKillDoomsayer = Create(30159, Types.Crewmate, "可执法 " + cs(Doomsayer.color, "末日预言家"), true, sheriffCanKillNeutrals);
+        sheriffCanKillArsonist = Create(30154, Types.Crewmate, "可执法 " + cs(Arsonist.color, "纵火犯"), true, sheriffCanKillNeutrals);
+
+        deputySpawnRate = Create(30170, Types.Crewmate, cs(Deputy.color, "可拥有一名捕快"), rates, sheriffSpawnRate);
+        deputyNumberOfHandcuffs = Create(30171, Types.Crewmate, "手铐可用次数", 5f, 1f, 10f, 1f, deputySpawnRate);
+        deputyHandcuffCooldown = Create(30172, Types.Crewmate, "手铐冷却", 25f, 10f, 60f, 2.5f, deputySpawnRate);
+        deputyHandcuffDuration = Create(30173, Types.Crewmate, "手铐持续时间", 12.5f, 5f, 60f, 2.5f, deputySpawnRate);
+        deputyKnowsSheriff = Create(30174, Types.Crewmate, "警长/捕快可以互相确认 ", true, deputySpawnRate);
+        deputyGetsPromoted = Create(30175, Types.Crewmate, "警长死后捕快可晋升", ["optionOff", "立即晋升", "会议后晋升"], deputySpawnRate);
+        deputyKeepsHandcuffs = Create(30176, Types.Crewmate, "晋升后保留手铐技能", true, deputyGetsPromoted);
+
         mayorSpawnRate = Create(30110, Types.Crewmate, cs(Mayor.color, "Mayor"), rates, null, true);
         mayorCanSeeVoteColors = Create(30111, Types.Crewmate, "拥有窥视能力", true, mayorSpawnRate);
         mayorTasksNeededToSeeVoteColors = Create(30112, Types.Crewmate, "获得窥视能力所需完成的任务数", 5f, 0f, 20f, 1f, mayorCanSeeVoteColors);
@@ -1041,27 +1089,6 @@ public class CustomOptionHolder
 
         privateInvestigatorSpawnRate = Create(30130, Types.Crewmate, cs(PrivateInvestigator.color, "PrivateInvestigator"), rates, null, true);
         privateInvestigatorSeeColor = Create(30131, Types.Crewmate, "可见技能触发时对方具体颜色", true, privateInvestigatorSpawnRate);
-
-        sheriffSpawnRate = Create(30141, Types.Crewmate, cs(Sheriff.color, "Sheriff"), rates, null, true);
-        sheriffCooldown = Create(30142, Types.Crewmate, "执法冷却", 30f, 10f, 60f, 2.5f, sheriffSpawnRate);
-        sheriffMisfireKills = Create(30143, Types.Crewmate, "走火时死亡对象", ["警长", "对方", "双方"], sheriffSpawnRate);
-        sheriffCanKillNeutrals = Create(30150, Types.Crewmate, "可执法独立阵营", false, sheriffSpawnRate);
-        sheriffCanKillAmnesiac = Create(30153, Types.Crewmate, "可执法 " + cs(Amnisiac.color, "失忆者"), false, sheriffCanKillNeutrals);
-        sheriffCanKillJester = Create(30151, Types.Crewmate, "可执法 " + cs(Jester.color, "小丑"), true, sheriffCanKillNeutrals);
-        sheriffCanKillLawyer = Create(30156, Types.Crewmate, "可执法 " + cs(Lawyer.color, "律师"), true, sheriffCanKillNeutrals);
-        sheriffCanKillExecutioner = Create(30152, Types.Crewmate, "可执法 " + cs(Lawyer.color, "处刑者"), true, sheriffCanKillNeutrals);
-        sheriffCanKillPursuer = Create(30158, Types.Crewmate, "可执法 " + cs(Pursuer.color, "起诉人"), true, sheriffCanKillNeutrals);
-        sheriffCanKillVulture = Create(30155, Types.Crewmate, "可执法 " + cs(Vulture.color, "秃鹫"), true, sheriffCanKillNeutrals);
-        sheriffCanKillThief = Create(30157, Types.Crewmate, "可执法 " + cs(Thief.color, "身份窃贼"), true, sheriffCanKillNeutrals);
-        sheriffCanKillDoomsayer = Create(30159, Types.Crewmate, "可执法 " + cs(Doomsayer.color, "末日预言家"), true, sheriffCanKillNeutrals);
-        sheriffCanKillArsonist = Create(30154, Types.Crewmate, "可执法 " + cs(Arsonist.color, "纵火犯"), true, sheriffCanKillNeutrals);
-        deputySpawnRate = Create(30170, Types.Crewmate, cs(Deputy.color, "可拥有一名捕快"), rates, sheriffSpawnRate);
-        deputyNumberOfHandcuffs = Create(30171, Types.Crewmate, "手铐可用次数", 5f, 1f, 10f, 1f, deputySpawnRate);
-        deputyHandcuffCooldown = Create(30172, Types.Crewmate, "手铐冷却", 25f, 10f, 60f, 2.5f, deputySpawnRate);
-        deputyHandcuffDuration = Create(30173, Types.Crewmate, "手铐持续时间", 12.5f, 5f, 60f, 2.5f, deputySpawnRate);
-        deputyKnowsSheriff = Create(30174, Types.Crewmate, "警长/捕快可以互相确认 ", true, deputySpawnRate);
-        deputyGetsPromoted = Create(30175, Types.Crewmate, "警长死后捕快可晋升", ["optionOff", "立即晋升", "会议后晋升"], deputySpawnRate);
-        deputyKeepsHandcuffs = Create(30176, Types.Crewmate, "晋升后保留手铐技能", true, deputyGetsPromoted);
 
         detectiveSpawnRate = Create(30190, Types.Crewmate, cs(Detective.color, "Detective"), rates, null, true);
         detectiveAnonymousFootprints = Create(30191, Types.Crewmate, "匿名脚印", false, detectiveSpawnRate);
@@ -1381,8 +1408,17 @@ public class CustomOptionHolder
         blockedRolePairings.Add((byte)RoleId.Witch, [(byte)RoleId.Warlock]);
         blockedRolePairings.Add((byte)RoleId.Warlock, [(byte)RoleId.Vampire]);
 
+        if (Pavlovsdogs.andJackalAsWell)
+        {
+            blockedRolePairings.Add((byte)RoleId.Jackal, [(byte)RoleId.Pavlovsowner]);
+            blockedRolePairings.Add((byte)RoleId.Pavlovsowner, [(byte)RoleId.Jackal]);
+        }
+
         blockedRolePairings.Add((byte)RoleId.Vulture, [(byte)RoleId.Cleaner]);
         blockedRolePairings.Add((byte)RoleId.Cleaner, [(byte)RoleId.Vulture]);
+        
+        blockedRolePairings.Add((byte)RoleId.Executioner, [(byte)RoleId.Lawyer]);
+        blockedRolePairings.Add((byte)RoleId.Lawyer, [(byte)RoleId.Executioner]);
 
         blockedRolePairings.Add((byte)RoleId.Ninja, [(byte)RoleId.Swooper]);
         blockedRolePairings.Add((byte)RoleId.Swooper, [(byte)RoleId.Ninja]);

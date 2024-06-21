@@ -34,8 +34,10 @@ public static class ChatCommands
         {
             var text = __instance.freeChatField.Text;
             var handled = false;
+            // 游戏大厅指令
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
             {
+                // 踢出玩家
                 if (text.ToLower().StartsWith("/kick "))
                 {
                     var playerName = text.Substring(6);
@@ -51,6 +53,7 @@ public static class ChatCommands
                         }
                     }
                 }
+                // 封禁玩家
                 else if (text.ToLower().StartsWith("/ban "))
                 {
                     var playerName = text.Substring(5);
@@ -66,6 +69,7 @@ public static class ChatCommands
                         }
                     }
                 }
+                // 更改游戏模式
                 else if (text.ToLower().StartsWith("/gm"))
                 {
                     var gm = text[4..].ToLower();
@@ -92,23 +96,44 @@ public static class ChatCommands
                     handled = true;
                 }
             }
-
+            // 游戏中房主指令
             if (AmongUsClient.Instance.AmHost && InGame)
             {
+                //  强制结束游戏
                 if (text.ToLower().StartsWith("/end"))
                 {
                     MapOption.isCanceled = true;
                     handled = true;
                 }
+                // 强制紧急会议或结束会议
                 else if (text.ToLower().StartsWith("/meeting") || text.ToLower().StartsWith("/mt"))
                 {
                     CachedPlayer.LocalPlayer.PlayerControl.NoCheckStartMeeting(null, true);
                     handled = true;
                 }
             }
+            // 游戏中玩家指令
+            // 查看自己的职业介绍
+            else if (text.ToLower().StartsWith("/m") && InGame)
+            {
+                var localRole = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
+                var roleInfo = "";
+                for (var i = 0; i < localRole.Count; i++)
+                {
+                    roleInfo += RoleInfo.GetRoleDescription(localRole[i]);
+                    if (i < localRole.Count - 1)
+                    {
+                        roleInfo += "\n\n";
+                    }
+                }
+                __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, roleInfo);
+                handled = true;
+            }
 
+            // 自由模式指令
             if (AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay)
             {
+                // 自杀
                 if (text.ToLower().Equals("/murder"))
                 {
                     CachedPlayer.LocalPlayer.PlayerControl.Exiled();
@@ -116,6 +141,7 @@ public static class ChatCommands
                         CachedPlayer.LocalPlayer.Data, CachedPlayer.LocalPlayer.Data);
                     handled = true;
                 }
+                // 改变玩家颜色，需要0~55的自定义颜色id
                 else if (text.ToLower().StartsWith("/color "))
                 {
                     handled = true;
@@ -126,10 +152,10 @@ public static class ChatCommands
                     col = Math.Clamp(col, 0, Palette.PlayerColors.Length - 1);
                     CachedPlayer.LocalPlayer.PlayerControl.SetColor(col);
                     __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "Changed color succesfully");
-                    ;
                 }
             }
 
+            // 死亡玩家指令
             if (text.ToLower().StartsWith("/tp ") && CachedPlayer.LocalPlayer.Data.IsDead)
             {
                 var playerName = text.Substring(4).ToLower();
@@ -151,19 +177,6 @@ public static class ChatCommands
                     Follower.chatTarget = flipBitwise(Follower.chatTarget);
                 handled = true;
             }
-
-            if (text.ToLower().StartsWith("/role"))
-            {
-                var localRole = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl, false)
-                    .FirstOrDefault();
-                if (localRole != RoleInfo.impostor && localRole != RoleInfo.crewmate)
-                {
-                    var info = RoleInfo.GetRoleDescription(localRole);
-                    __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, info);
-                    handled = true;
-                }
-            }
-
             if (handled)
             {
                 __instance.freeChatField.Clear();

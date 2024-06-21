@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TheOtherRoles.Roles.Neutral;
 
-public static class Jackal
+public class Jackal
 {
     public static PlayerControl jackal;
 

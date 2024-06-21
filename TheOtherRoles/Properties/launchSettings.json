@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "配置文件 1": {
+      "commandName": "Executable",
+      "executablePath": "F:\\AmongUs\\v2024.3.5\\Among Us.exe",
+      "remoteDebugEnabled": false
+    }
+  }
+}
