@@ -8,12 +8,10 @@ using AmongUs.GameOptions;
 using Hazel;
 using InnerNet;
 using Reactor.Utilities.Extensions;
-using Rewired.Utils.Platforms.Windows;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -380,8 +378,7 @@ public static class Helpers
                 return SabatageTypes.Lights;
             else if (task.TaskType == TaskTypes.RestoreOxy)
                 return SabatageTypes.O2;
-            else if (task.TaskType == TaskTypes.ResetReactor || task.TaskType == TaskTypes.StopCharles ||
-                     task.TaskType == TaskTypes.StopCharles)
+            else if (task.TaskType is TaskTypes.ResetReactor or TaskTypes.StopCharles or TaskTypes.StopCharles)
                 return SabatageTypes.Reactor;
             else if (task.TaskType == TaskTypes.FixComms)
                 return SabatageTypes.Comms;
@@ -846,7 +843,7 @@ public static class Helpers
     {
         if (FastDestroyableSingleton<ServerManager>.Instance == null) return false;
         var n = FastDestroyableSingleton<ServerManager>.Instance.CurrentRegion.TranslateName;
-        return n != StringNames.ServerNA && n != StringNames.ServerEU && n != StringNames.ServerAS;
+        return n is not StringNames.ServerNA and not StringNames.ServerEU and not StringNames.ServerAS;
     }
 
     public static bool isDead(this PlayerControl player)

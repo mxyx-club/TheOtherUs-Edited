@@ -204,7 +204,6 @@ public class CustomOptionHolder
     public static CustomOption sheriffMisfireKills;
     public static CustomOption sheriffCooldown;
     public static CustomOption sheriffCanKillNeutrals;
-    public static CustomOption sheriffCanKillArsonist;
     public static CustomOption sheriffCanKillLawyer;
     public static CustomOption sheriffCanKillExecutioner;
     public static CustomOption sheriffCanKillJester;
@@ -617,6 +616,7 @@ public class CustomOptionHolder
     public static CustomOption guesserGamemodeImpNumber;
     public static CustomOption guesserForceJackalGuesser;
     public static CustomOption guesserGamemodeSidekickIsAlwaysGuesser;
+    public static CustomOption guesserForcePavlovsGuesser;
     public static CustomOption guesserForceThiefGuesser;
     public static CustomOption guesserGamemodeHaveModifier;
     public static CustomOption guesserGamemodeNumberOfShots;
@@ -743,16 +743,18 @@ public class CustomOptionHolder
         //allowModGuess = Create(31, Types.General, "allowModGuess", false);
         //ghostSpeed = Create(33, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
 
-        transparentTasks = Create(40, Types.General, "transparentTasks", false, null, true);
+        WireTaskIsRandomOption = Create(221, Types.General, "WireTaskIsRandomOption", false, enableMapOptions, true);
+        WireTaskNumOption = Create(222, Types.General, "WireTaskNumOption", 3f, 1f, 8f, 1f, WireTaskIsRandomOption);
+        transparentTasks = Create(40, Types.General, "transparentTasks", false);
         disableMedbayWalk = Create(41, Types.General, "disableMedbayWalk", false);
         allowParallelMedBayScans = Create(44, Types.General, "allowParallelMedBayScans", false);
         finishTasksBeforeHauntingOrZoomingOut = Create(42, Types.General, "finishTasksBeforeHauntingOrZoomingOut", false);
-        //preventTaskEnd = Create(43, Types.General, "preventTaskEnd", false);
+        preventTaskEnd = Create(43, Types.General, "preventTaskEnd", false);
 
         //Map options
         enableMapOptions = Create(200, Types.General, "enableMapOptions", false, null, true);
 
-        IsReactorDurationSetting = Create(201, Types.General, "IsReactorDurationSetting", false, enableMapOptions, true);
+        IsReactorDurationSetting = Create(201, Types.General, "IsReactorDurationSetting", false, null, true);
         SkeldReactorTimeLimit = Create(202, Types.General, "SkeldReactorTimeLimit", 30f, 15f, 60f, 2.5f, IsReactorDurationSetting);
         SkeldLifeSuppTimeLimit = Create(203, Types.General, "SkeldLifeSuppTimeLimit", 30f, 15f, 60f, 2.5f, IsReactorDurationSetting);
         MiraLifeSuppTimeLimit = Create(204, Types.General, "MiraLifeSuppTimeLimit", 30f, 15f, 60f, 2.5f, IsReactorDurationSetting);
@@ -784,9 +786,6 @@ public class CustomOptionHolder
 
         enableFungleModify = Create(100, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Fungle"), false, enableMapOptions);
         fungleElectrical = Create(101, Types.General, "fungleElectrical", false, enableFungleModify);
-
-        WireTaskIsRandomOption = Create(221, Types.General, "WireTaskIsRandomOption", false, enableMapOptions, true);
-        WireTaskNumOption = Create(222, Types.General, "WireTaskNumOption", 3f, 1f, 8f, 1f, WireTaskIsRandomOption);
 
         enableCamoComms = Create(120, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, enableMapOptions, true);
         //fungleDisableCamoComms = Create(211, Types.General, "fungleDisableCamoComms", true, enableCamoComms);
@@ -1057,7 +1056,6 @@ public class CustomOptionHolder
         sheriffCanKillVulture = Create(30155, Types.Crewmate, "可执法 " + cs(Vulture.color, "秃鹫"), true, sheriffCanKillNeutrals);
         sheriffCanKillThief = Create(30157, Types.Crewmate, "可执法 " + cs(Thief.color, "身份窃贼"), true, sheriffCanKillNeutrals);
         sheriffCanKillDoomsayer = Create(30159, Types.Crewmate, "可执法 " + cs(Doomsayer.color, "末日预言家"), true, sheriffCanKillNeutrals);
-        sheriffCanKillArsonist = Create(30154, Types.Crewmate, "可执法 " + cs(Arsonist.color, "纵火犯"), true, sheriffCanKillNeutrals);
 
         deputySpawnRate = Create(30170, Types.Crewmate, cs(Deputy.color, "可拥有一名捕快"), rates, sheriffSpawnRate);
         deputyNumberOfHandcuffs = Create(30171, Types.Crewmate, "手铐可用次数", 5f, 1f, 10f, 1f, deputySpawnRate);
@@ -1317,6 +1315,7 @@ public class CustomOptionHolder
         guesserGamemodeImpNumber = Create(2003, Types.Guesser, cs(Guesser.color, "伪装者阵营赌怪数"), 3f, 0f, 15f, 1f);
         guesserForceJackalGuesser = Create(2007, Types.Guesser, "强制豺狼成为赌怪", false, null, true);
         guesserGamemodeSidekickIsAlwaysGuesser = Create(2012, Types.Guesser, "强制跟班成为赌怪", false);
+        guesserForcePavlovsGuesser = Create(2013, Types.Guesser, "强制巴甫洛夫为赌怪", false);
         guesserForceThiefGuesser = Create(2011, Types.Guesser, "强制身份窃贼为赌怪", false);
         guesserGamemodeHaveModifier = Create(2004, Types.Guesser, "赌怪可以拥有附加能力", true, null, true);
         guesserGamemodeNumberOfShots = Create(2005, Types.Guesser, "赌怪猜测最大次数", 2f, 1f, 15f, 1f);
@@ -1416,7 +1415,7 @@ public class CustomOptionHolder
 
         blockedRolePairings.Add((byte)RoleId.Vulture, [(byte)RoleId.Cleaner]);
         blockedRolePairings.Add((byte)RoleId.Cleaner, [(byte)RoleId.Vulture]);
-        
+
         blockedRolePairings.Add((byte)RoleId.Executioner, [(byte)RoleId.Lawyer]);
         blockedRolePairings.Add((byte)RoleId.Lawyer, [(byte)RoleId.Executioner]);
 

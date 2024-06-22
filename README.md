@@ -1,6 +1,6 @@
 <p align="center"> <a href="README_EN.md"> English </a> </p>
 
-![mod banner](./Images/TOR_logo.png)
+![mod banner](./Images/TOU_Logo.png)
 
 <p align="center"><a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/latest">
 <img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited"></a>
@@ -29,8 +29,11 @@
 
  - #### 新增内容：
 
+    - 新增中立职业：巴甫洛夫、巴甫洛夫的狗
     - 填充职业介绍文本
     - 将会议中左上角的职业信息显示移动到右下角
+    - 新增选项 “阻止任务完成结束游戏”
+    - 新增赌怪模式选项：“强制巴甫洛夫为赌怪”
     - 新增功能：房主可以在游戏中使用快捷键 "Ctrl+T+Enter" 或在聊天框中输入 "/end" 强制结束游戏
     - 新增功能：房主可以在游戏中使用快捷键 "Ctrl+M+Enter" 或在聊天框中输入 "/mt" 或 "/meeting" 强制开启/关闭会议
     - 豺狼：删除假跟班设定与对应选项
@@ -42,6 +45,7 @@
 
     - 优化游戏开始时重置cd的逻辑
     - 市长 & 执钮人：现在可以在破坏中使用紧急破坏按钮了（房主可设置）
+    - 魅魔：调整胜利条件顺序，现在会优先以恋人身份结束游戏
     - 隐身人：修复隐身人为小孩时击杀冷却不是双倍
     - 炸弹狂：将炸弹爆炸的击杀改为远程击杀而非自杀
     - 末日预言家：适配赌怪能力为原生赌怪，修复在赌怪模式中猜测错误后图标不会消失等其它bug

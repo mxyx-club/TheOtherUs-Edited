@@ -392,7 +392,7 @@
         "13": "\u672a\u5b8c\u6210\u4efb\u52a1\u524d\u4e0d\u80fd\u4f7f\u7528\u8ddf\u968f\u53ca\u5343\u91cc\u773c"
     },
     "preventTaskEnd": {
-        "13": "\u963b\u6b62\u4efb\u52a1\u7ed3\u675f\u6e38\u620f"
+        "13": "\u963b\u6b62\u4efb\u52a1\u5b8c\u6210\u7ed3\u675f\u6e38\u620f"
     },
     "enableMapOptions": {
         "0": "Map Options",
@@ -889,7 +889,7 @@
     },
     "creditsString1": {
         "0": "<align=\"center\"><b>TheOtherUs-Edited Team:</b>\nmxyx    Huier-Huang    haoren\nImp2    FangKuaiYa\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles, SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n\n",
-        "13": "<align=\"center\"><b>TheOtherUs-Edited \u5f00\u53d1\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    \u5584\u826f\u7684\u597d\u4eba    Imp11\n\n<b>\u7f8e\u5de5:</b>\n\u65b9\u5757    \u9ece\u6728\n\n<b>\u7ffb\u8bd1:</b>\nEN\uff1a\u4e5d\u5934\u86c7\nCN\uff1a\u6cab\u590f\u60a0\u8f69\n\n<b>GitHub\u8d21\u732e\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    Imp11\n\n\u672c\u6a21\u7ec4\u4f7f\u7528\u4e86\u90e8\u5206[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA[]\u7684\u4ee3\u7801\uff0c\u611f\u8c22Imp11\u7684\u652f\u6301\uff01\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
+        "13": "<align=\"center\"><b>TheOtherUs-Edited \u5f00\u53d1\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    \u5584\u826f\u7684\u597d\u4eba    Imp11\n\n<b>\u7f8e\u5de5:</b>\n\u65b9\u5757    \u9ece\u6728\n\n<b>\u7ffb\u8bd1:</b>\nEN\uff1a\u4e5d\u5934\u86c7\nCN\uff1a\u6cab\u590f\u60a0\u8f69\n\n<b>GitHub\u8d21\u732e\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    Imp11\n\n\u672c\u6a21\u7ec4\u4f7f\u7528\u4e86\u90e8\u5206[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA]\u7684\u4ee3\u7801\uff0c\u611f\u8c22Imp11\u7684\u652f\u6301\uff01\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
     },
     "Host": {
         "0": "Host",
@@ -991,6 +991,9 @@
     "DifferentTouVersions": {
         "0": "Players With Different Versions:\n</color>",
         "13": "<color=#FF0000FF>\u88c5\u4e86\u4e0d\u540c\u7248\u672c\u6a21\u7ec4\u7684\u73a9\u5bb6:\n</color>"
+    },
+    "welcomeChat": {
+        "13": "\u6b22\u8fce\u6e38\u73a9TheOtherUs\uff01"
     },
     "SendTargets.Default": {
         "13": "\u53d1\u9001\u7ed9\uff1a\u9ed8\u8ba4"

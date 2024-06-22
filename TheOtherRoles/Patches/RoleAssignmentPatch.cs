@@ -707,13 +707,14 @@ internal class RoleManagerSelectRolesPatch
         assignGuesserGamemodeToPlayers(neutralPlayer,
             Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeNeutralNumber.getFloat()),
             CustomOptionHolder.guesserForceJackalGuesser.getBool(),
-            CustomOptionHolder.guesserForceThiefGuesser.getBool());
+            CustomOptionHolder.guesserForceThiefGuesser.getBool(),
+            CustomOptionHolder.guesserForcePavlovsGuesser.getBool());
         assignGuesserGamemodeToPlayers(impPlayer,
             Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeImpNumber.getFloat()));
     }
 
     private static void assignGuesserGamemodeToPlayers(List<PlayerControl> playerList, int count,
-        bool forceJackal = false, bool forceThief = false)
+        bool forceJackal = false, bool forceThief = false, bool forcePavlovsOwner = false)
     {
         var IndexList = new Queue<PlayerControl>();
 
@@ -721,6 +722,9 @@ internal class RoleManagerSelectRolesPatch
             IndexList.Enqueue(Thief.thief);
 
         if (Jackal.jackal != null && forceJackal)
+            IndexList.Enqueue(Jackal.jackal);
+
+        if (Pavlovsdogs.pavlovsowner != null && forcePavlovsOwner)
             IndexList.Enqueue(Jackal.jackal);
 
         for (var i = 0; i < count && playerList.Count > 0; i++)

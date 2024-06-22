@@ -30,6 +30,7 @@ public class Pavlovsdogs
 
     public static bool CanCreateDog => (pavlovsdogs == null || pavlovsdogs.All(player => player.Data.IsDead)) && createDogNum > 0;
     public static bool ownerIsDead => pavlovsowner == null || pavlovsowner.Data.Disconnected || pavlovsowner.Data.IsDead;
+    public static bool loser => pavlovsdogs.All(p => p.Data.IsDead || p.Data.Disconnected) && createDogNum == 0;
 
     public static bool wasTeamRed;
     public static bool wasImpostor;

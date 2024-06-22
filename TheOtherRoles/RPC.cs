@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AmongUs.Data;
 using AmongUs.GameOptions;
-using AsmResolver.PE.File.Headers;
 using Assets.CoreScripts;
 using Hazel;
 using InnerNet;
@@ -2483,7 +2482,7 @@ public static class RPCProcedure
         if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId && client != null)
         {
             var playerInfoTransform = client.cosmetics.nameText.transform.parent.FindChild("Info");
-            var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
+            var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
             if (playerInfo != null) playerInfo.text = "";
         }
     }
@@ -2815,6 +2814,15 @@ public static class RPCProcedure
             Jackal.formerJackals.Add(target);
             if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(thief.PlayerId))
                 setGuesserGm(thief.PlayerId);
+        }
+        if (target == Pavlovsdogs.pavlovsowner)
+        {
+            Pavlovsdogs.pavlovsdogs.Add(target);
+            Pavlovsdogs.pavlovsowner = thief;
+        }
+        if (target == Pavlovsdogs.pavlovsdogs.Any(p => p == target))
+        {
+            Pavlovsdogs.pavlovsdogs.Add(thief);
         }
         if (Pavlovsdogs.pavlovsowner) Pavlovsdogs.pavlovsowner = thief;
         if (Pavlovsdogs.pavlovsdogs.Any())

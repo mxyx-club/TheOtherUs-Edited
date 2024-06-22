@@ -40,7 +40,7 @@ public static class ChatCommands
                 // 踢出玩家
                 if (text.ToLower().StartsWith("/kick "))
                 {
-                    var playerName = text.Substring(6);
+                    var playerName = text[6..];
                     PlayerControl target =
                         CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
                     if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
@@ -56,7 +56,7 @@ public static class ChatCommands
                 // 封禁玩家
                 else if (text.ToLower().StartsWith("/ban "))
                 {
-                    var playerName = text.Substring(5);
+                    var playerName = text[5..];
                     PlayerControl target =
                         CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
                     if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
@@ -145,10 +145,8 @@ public static class ChatCommands
                 else if (text.ToLower().StartsWith("/color "))
                 {
                     handled = true;
-                    int col;
-                    if (!int.TryParse(text.Substring(7), out col))
-                        __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl,
-                            "Unable to parse color id\nUsage: /color {id}");
+                    if (!int.TryParse(text.AsSpan(7), out var col))
+                        __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "Unable to parse color id\nUsage: /color {id}");
                     col = Math.Clamp(col, 0, Palette.PlayerColors.Length - 1);
                     CachedPlayer.LocalPlayer.PlayerControl.SetColor(col);
                     __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "Changed color succesfully");
@@ -158,7 +156,7 @@ public static class ChatCommands
             // 死亡玩家指令
             if (text.ToLower().StartsWith("/tp ") && CachedPlayer.LocalPlayer.Data.IsDead)
             {
-                var playerName = text.Substring(4).ToLower();
+                var playerName = text[4..].ToLower();
                 PlayerControl target =
                     CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.ToLower().Equals(playerName));
                 if (target != null)

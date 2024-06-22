@@ -2,7 +2,7 @@
 
 <p align="center"><a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited">    <img src="https://badgen.net/github/assets-dl/mxyx-club/TheOtherUs-Edited">    <img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></a></p>
 
-![mod banner](./Images/TOR_logo.png)
+![mod banner](./Images/TOU_Logo.png)
 
 
 This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.

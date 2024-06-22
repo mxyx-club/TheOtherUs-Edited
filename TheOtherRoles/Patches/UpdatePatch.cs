@@ -54,10 +54,10 @@ internal class HudManagerUpdatePatch
         if (MeetingHud.Instance != null)
             foreach (var playerVoteArea in MeetingHud.Instance.playerStates)
             {
-                var data = dict[playerVoteArea.TargetPlayerId];
+                var (name, color) = dict[playerVoteArea.TargetPlayerId];
                 var text = playerVoteArea.NameText;
-                text.text = data.name;
-                text.color = data.color;
+                text.text = name;
+                text.color = color;
             }
     }
 

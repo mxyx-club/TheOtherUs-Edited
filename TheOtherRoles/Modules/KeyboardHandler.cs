@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hazel;
-using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using Random = System.Random;
@@ -22,7 +21,7 @@ public class CommandHandler
         {
             var host = AmongUsClient.Instance.GetHost();
             // 生成假人
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.F) && Input.GetKeyDown(KeyCode.Return))
             {
                 var playerControl = UnityEngine.Object.Instantiate(AmongUsClient.Instance.PlayerPrefab);
                 _ = playerControl.PlayerId = (byte)GameData.Instance.GetAvailableId();

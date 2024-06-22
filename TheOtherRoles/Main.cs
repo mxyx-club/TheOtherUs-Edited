@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using AmongUs.Data;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
-using Hazel;
 using InnerNet;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
@@ -13,9 +10,6 @@ using TheOtherRoles.Modules;
 using TheOtherRoles.Modules.CustomHats;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
-using UnityEngine;
-using Object = UnityEngine.Object;
-using Random = System.Random;
 
 namespace TheOtherRoles;
 

@@ -47,7 +47,6 @@ internal enum WinCondition
     AdditionalLawyerBonusWin,
     AdditionalLawyerStolenWin,
     AdditionalAlivePursuerWin,
-    ProsecutorWin,
     ExecutionerWin,
     WerewolfWin,
     JuggernautWin,
@@ -188,9 +187,9 @@ public class OnGameEndPatch
         bool akujoWin = false;
         if (Akujo.honmeiOptimizeWin)
         {
-            akujoWin = Akujo.akujo != null
+            akujoWin = (Akujo.akujo != null
                 && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin
-                    && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead
+                    && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead)
                 || (GameManager.Instance.DidHumansWin(gameOverReason)
                 && !Akujo.existingWithKiller() && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead);
         }
@@ -700,8 +699,8 @@ internal class CheckEndCriteriaPatch
     public static bool Prefix(ShipStatus __instance)
     {
         if (!GameData.Instance) return false;
-        if (DestroyableSingleton<TutorialManager>
-            .InstanceExists) // InstanceExists | Don't check Custom Criteria when in Tutorial
+        // InstanceExists | Don't check Custom Criteria when in Tutorial
+        if (DestroyableSingleton<TutorialManager>.InstanceExists)
             return true;
         var statistics = new PlayerStatistics(__instance);
         if (CheckAndEndGameForHost(__instance)) return false;
@@ -711,17 +710,17 @@ internal class CheckEndCriteriaPatch
         if (CheckAndEndGameForArsonistWin(__instance)) return false;
         if (CheckAndEndGameForVultureWin(__instance)) return false;
         if (CheckAndEndGameForSabotageWin(__instance)) return false;
-        if (CheckAndEndGameForTaskWin(__instance)) return false;
         if (CheckAndEndGameForExecutionerWin(__instance)) return false;
+        if (CheckAndEndGameForAkujoWin(__instance, statistics)) return false;
         if (CheckAndEndGameForWerewolfWin(__instance, statistics)) return false;
         if (CheckAndEndGameForLoverWin(__instance, statistics)) return false;
         if (CheckAndEndGameForJackalWin(__instance, statistics)) return false;
         if (CheckAndEndGameForPavlovsWin(__instance, statistics)) return false;
         if (CheckAndEndGameForSwooperWin(__instance, statistics)) return false;
-        if (CheckAndEndGameForImpostorWin(__instance, statistics)) return false;
-        if (CheckAndEndGameForCrewmateWin(__instance, statistics)) return false;
         if (CheckAndEndGameForJuggernautWin(__instance, statistics)) return false;
-        if (CheckAndEndGameForAkujoWin(__instance, statistics)) return false;
+        if (CheckAndEndGameForImpostorWin(__instance, statistics)) return false;
+        if (CheckAndEndGameForTaskWin(__instance)) return false;
+        if (CheckAndEndGameForCrewmateWin(__instance, statistics)) return false;
         return false;
     }
 
@@ -807,8 +806,7 @@ internal class CheckEndCriteriaPatch
         var systemType2 = MapUtilities.Systems.ContainsKey(SystemTypes.Reactor)
             ? MapUtilities.Systems[SystemTypes.Reactor]
             : null;
-        if (systemType2 == null)
-            systemType2 = MapUtilities.Systems.ContainsKey(SystemTypes.Laboratory)
+        systemType2 ??= MapUtilities.Systems.ContainsKey(SystemTypes.Laboratory)
                 ? MapUtilities.Systems[SystemTypes.Laboratory]
                 : null;
         if (systemType2 != null)
@@ -827,6 +825,7 @@ internal class CheckEndCriteriaPatch
 
     private static bool CheckAndEndGameForTaskWin(ShipStatus __instance)
     {
+        if (MapOption.PreventTaskEnd) return false;
         if ((HideNSeek.isHideNSeekGM && !HideNSeek.taskWinPossible) || PropHunt.isPropHuntGM) return false;
         if (GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks)
         {
@@ -876,6 +875,7 @@ internal class CheckEndCriteriaPatch
         if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive &&
             statistics.TeamImpostorsAlive == 0 &&
             statistics.TeamJuggernautAlive == 0 &&
+            statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
@@ -947,7 +947,6 @@ internal class CheckEndCriteriaPatch
         return false;
     }
 
-    //天启添加
     private static bool CheckAndEndGameForJuggernautWin(ShipStatus __instance, PlayerStatistics statistics)
     {
         if (
@@ -1025,8 +1024,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
-            statistics.TeamJuggernautAlive == 0
-            )
+            statistics.TeamJuggernautAlive == 0)
         {
             if (Akujo.honmeiOptimizeWin)
             {
@@ -1038,6 +1036,7 @@ internal class CheckEndCriteriaPatch
                 GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
                 return true;
             }
+            return true;
         }
         return false;
     }
@@ -1059,6 +1058,8 @@ internal class PlayerStatistics
     public int TeamImpostorsAlive { get; set; }
     public int TeamJackalAlive { get; set; }
     public int TeamPavlovsAlive { get; set; }
+    public int TeamPavlovsdogsAlive { get; set; }
+    public int TeamPavlovsownerAlive { get; set; }
     public int TeamLoversAlive { get; set; }
     public int TotalAlive { get; set; }
     public int TeamSwooperAlive { get; set; }
@@ -1067,15 +1068,12 @@ internal class PlayerStatistics
     public bool TeamPavlovsHasAliveLover { get; set; }
     public int TeamWerewolfAlive { get; set; }
     public int TeamAkujoAlive { get; set; }
-
     public bool TeamSwooperHasAliveLover { get; set; }
     public bool TeamWerewolfHasAliveLover { get; set; }
-
-    //天启添加
     public int TeamJuggernautAlive { get; set; }
     public bool TeamJuggernautHasAliveLover { get; set; }
 
-    private bool isLover(GameData.PlayerInfo p)
+    private static bool isLover(GameData.PlayerInfo p)
     {
         return (Lovers.lover1 != null && Lovers.lover1.PlayerId == p.PlayerId) ||
                (Lovers.lover2 != null && Lovers.lover2.PlayerId == p.PlayerId);
@@ -1084,7 +1082,8 @@ internal class PlayerStatistics
     private void GetPlayerCounts()
     {
         var numJackalAlive = 0;
-        var numPavlovesAlive = 0;
+        var numPavlovsdogsAlive = 0;
+        var numPavlovsownerAlive = 0;
         var numImpostorsAlive = 0;
         var numLoversAlive = 0;
         var numTotalAlive = 0;
@@ -1128,13 +1127,13 @@ internal class PlayerStatistics
 
                     if (Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner.PlayerId == playerInfo.PlayerId)
                     {
-                        numPavlovesAlive++;
+                        numPavlovsdogsAlive++;
                         if (lover) pavlovsLover = true;
                     }
 
                     if (Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p.PlayerId == playerInfo.PlayerId))
                     {
-                        numPavlovesAlive++;
+                        numPavlovsownerAlive++;
                         if (lover) pavlovsLover = true;
                     }
 
@@ -1148,7 +1147,6 @@ internal class PlayerStatistics
                         numSwooperAlive++;
                         if (lover) swooperLover = true;
                     }
-                    //天启添加
                     if (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == playerInfo.PlayerId)
                     {
                         numJuggernautAlive++;
@@ -1167,7 +1165,9 @@ internal class PlayerStatistics
         TeamJackalAlive = numJackalAlive;
         TeamImpostorsAlive = numImpostorsAlive;
         TeamLoversAlive = numLoversAlive;
-        TeamPavlovsAlive = numPavlovesAlive;
+        TeamPavlovsdogsAlive = numPavlovsdogsAlive;
+        TeamPavlovsownerAlive = numPavlovsownerAlive;
+        TeamPavlovsAlive = Pavlovsdogs.loser ? 0 : numPavlovsdogsAlive + numPavlovsownerAlive;
         TotalAlive = numTotalAlive;
         TeamAkujoAlive = numAkujoAlive;
         TeamImpostorHasAliveLover = impLover;
@@ -1177,7 +1177,6 @@ internal class PlayerStatistics
         TeamWerewolfAlive = numWerewolfAlive;
         TeamSwooperHasAliveLover = swooperLover;
         TeamSwooperAlive = numSwooperAlive;
-        //天启添加
         TeamJuggernautAlive = numJuggernautAlive;
         TeamJuggernautHasAliveLover = juggernautLover;
     }

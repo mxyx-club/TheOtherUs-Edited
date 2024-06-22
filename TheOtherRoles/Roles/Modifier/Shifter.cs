@@ -1,6 +1,4 @@
-﻿using System;
-using Il2CppSystem.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace TheOtherRoles.Roles.Modifier;
 public static class Shifter

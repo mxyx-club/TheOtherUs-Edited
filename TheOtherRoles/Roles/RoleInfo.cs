@@ -4,8 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using InnerNet;
-using TheOtherRoles.Modules;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -24,7 +22,7 @@ public class RoleInfo
     public bool isModifier;
     public bool isGuessable;
     public bool isImpostor;
-    private string nameKey;
+    private readonly string nameKey;
     public RoleInfo(string name, Color color, RoleId roleId, bool isNeutral = false, bool isModifier = false, bool isGuessable = false, bool isImpostor = false)
     {
         nameKey = name;

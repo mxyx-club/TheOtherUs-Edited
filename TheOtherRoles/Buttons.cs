@@ -20,7 +20,7 @@ internal static class HudManagerStartPatch
 {
     private static bool initialized;
 
-    private static float defaultMaxTimer = 0.5f;
+    private static readonly float defaultMaxTimer = 0.5f;
     public static CustomButton engineerRepairButton;
     public static CustomButton sheriffKillButton;
     private static CustomButton deputyHandcuffButton;
@@ -291,7 +291,7 @@ internal static class HudManagerStartPatch
         var positionOffsetValue =
             positionOffset ?? button.PositionOffset; // For non custom buttons, we can set these manually.
         positionOffsetValue.z = -0.1f;
-        couldUse = couldUse ?? button.CouldUse;
+        couldUse ??= button.CouldUse;
         var replacementHandcuffedButton = new CustomButton(() => { }, () => { return true; }, couldUse, () => { },
             Deputy.getHandcuffedButtonSprite(), positionOffsetValue, button.hudManager, button.hotkey,
             true, Deputy.handcuffDuration, () => { }, button.mirror);
@@ -543,32 +543,32 @@ internal static class HudManagerStartPatch
                 if (checkAndDoVetKill(Sheriff.currentTarget)) return;
                 var murderAttemptResult = checkMuderAttempt(Sheriff.sheriff, Sheriff.currentTarget);
                 if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
+                var target = Sheriff.currentTarget;
                 if (murderAttemptResult == MurderAttemptResult.PerformKill)
                 {
                     byte targetId = 0;
-                    if ((Sheriff.currentTarget != Mini.mini || Mini.isGrownUp()) &&
-                        (Sheriff.currentTarget.Data.Role.IsImpostor ||
-                         Jackal.jackal == Sheriff.currentTarget ||
-                         Sidekick.sidekick == Sheriff.currentTarget ||
-                         Juggernaut.juggernaut == Sheriff.currentTarget ||
-                         Werewolf.werewolf == Sheriff.currentTarget ||
-                         Swooper.swooper == Sheriff.currentTarget ||
-                         Pavlovsdogs.pavlovsowner == Sheriff.currentTarget ||
-                         Pavlovsdogs.pavlovsdogs.Any(p => p == Sheriff.currentTarget) ||
-                         (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
+                    if ((target != Mini.mini || Mini.isGrownUp()) &&
+                        (target.Data.Role.IsImpostor ||
+                         Jackal.jackal == target ||
+                         Sidekick.sidekick == target ||
+                         Juggernaut.juggernaut == target ||
+                         Werewolf.werewolf == target ||
+                         Swooper.swooper == target ||
+                         Pavlovsdogs.pavlovsowner == target ||
+                         Pavlovsdogs.pavlovsdogs.Any(p => p == target) ||
+                         (Sheriff.spyCanDieToSheriff && Spy.spy == target) ||
                          (Sheriff.canKillNeutrals &&
-                          ((Arsonist.arsonist == Sheriff.currentTarget && Sheriff.canKillArsonist) ||
-                           (Jester.jester == Sheriff.currentTarget && Sheriff.canKillJester) ||
-                           (Vulture.vulture == Sheriff.currentTarget && Sheriff.canKillVulture) ||
-                           (Thief.thief == Sheriff.currentTarget && Sheriff.canKillThief) ||
-                           (Amnisiac.amnisiac == Sheriff.currentTarget && Sheriff.canKillAmnesiac) ||
-                           (Lawyer.lawyer == Sheriff.currentTarget && Sheriff.canKillLawyer) ||
-                           (Executioner.executioner == Sheriff.currentTarget && Sheriff.canKillExecutioner) ||
-                           (Pursuer.pursuer == Sheriff.currentTarget && Sheriff.canKillPursuer) ||
-                           (Doomsayer.doomsayer == Sheriff.currentTarget && Sheriff.canKillDoomsayer) ||
-                            Akujo.akujo == Sheriff.currentTarget))))
+                          (Akujo.akujo == target || isKiller(target) ||
+                          (Jester.jester == target && Sheriff.canKillJester) ||
+                           (Vulture.vulture == target && Sheriff.canKillVulture) ||
+                           (Thief.thief == target && Sheriff.canKillThief) ||
+                           (Amnisiac.amnisiac == target && Sheriff.canKillAmnesiac) ||
+                           (Lawyer.lawyer == target && Sheriff.canKillLawyer) ||
+                           (Executioner.executioner == target && Sheriff.canKillExecutioner) ||
+                           (Pursuer.pursuer == target && Sheriff.canKillPursuer) ||
+                           (Doomsayer.doomsayer == target && Sheriff.canKillDoomsayer)))))
                     {
-                        targetId = Sheriff.currentTarget.PlayerId;
+                        targetId = target.PlayerId;
                     }
                     else if (Sheriff.misfireKills == 0)
                     {
@@ -576,11 +576,11 @@ internal static class HudManagerStartPatch
                     }
                     else if (Sheriff.misfireKills == 1)
                     {
-                        targetId = Sheriff.currentTarget.PlayerId;
+                        targetId = target.PlayerId;
                     }
                     else if (Sheriff.misfireKills == 2)
                     {
-                        targetId = Sheriff.currentTarget.PlayerId;
+                        targetId = target.PlayerId;
                         var killWriter2 = AmongUsClient.Instance.StartRpcImmediately(
                             CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedMurderPlayer,
                             SendOption.Reliable);
@@ -603,7 +603,7 @@ internal static class HudManagerStartPatch
                 }
 
                 if (murderAttemptResult == MurderAttemptResult.BodyGuardKill)
-                    checkMurderAttemptAndKill(Sheriff.sheriff, Sheriff.currentTarget);
+                    checkMurderAttemptAndKill(Sheriff.sheriff, target);
 
                 sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                 Sheriff.currentTarget = null;
@@ -2129,6 +2129,7 @@ internal static class HudManagerStartPatch
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.pavlovsCreateDog(Pavlovsdogs.currentTarget.PlayerId);
                 SoundEffectsManager.play("jackalSidekick");
+                Pavlovsdogs.createDogNum -= 1;
                 pavlovsownerCreateDogButton.Timer = pavlovsownerCreateDogButton.MaxTimer;
             },
             () =>
@@ -3501,7 +3502,7 @@ internal static class HudManagerStartPatch
                         RPCProcedure.placeNinjaTrace(buff);
                     }
 
-                    if (attempt == MurderAttemptResult.BlankKill || attempt == MurderAttemptResult.PerformKill)
+                    if (attempt is MurderAttemptResult.BlankKill or MurderAttemptResult.PerformKill)
                     {
                         ninjaButton.Timer = ninjaButton.MaxTimer;
                         Ninja.ninja.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;

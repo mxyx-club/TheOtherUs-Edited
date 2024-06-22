@@ -8,6 +8,7 @@ internal static class MapOption
 {
     public static float ButtonCooldown => CustomOptionHolder.resteButtonCooldown.getFloat();
     public static float KillCooddown => GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
+    public static bool PreventTaskEnd => CustomOptionHolder.preventTaskEnd.getBool();
 
     // Set values
     public static int maxNumberOfMeetings = 10;
