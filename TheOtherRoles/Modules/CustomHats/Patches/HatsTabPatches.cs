@@ -84,7 +84,7 @@ internal static class HatsTabPatches
             title.transform.localScale = Vector3.one * 1.5f;
             title.fontSize *= 0.5f;
             title.enableAutoSizing = false;
-            hatsTab.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => { title.SetText(ModTranslation.getString(packageName.ToLower().Replace(" ", ""))); })));
+            hatsTab.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => { title.SetText(packageName); })));
             offset -= 0.8f * hatsTab.YOffset;
         }
 
@@ -92,12 +92,13 @@ internal static class HatsTabPatches
         {
             var (hat, ext) = hats[i];
             var xPos = hatsTab.XRange.Lerp(i % hatsTab.NumPerRow / (hatsTab.NumPerRow - 1f));
-            var yPos = offset - i / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset;
+            var yPos = offset - (i / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset);
             var colorChip = Object.Instantiate(hatsTab.ColorTabPrefab, hatsTab.scroller.Inner);
             if (ActiveInputManager.currentControlType == ActiveInputManager.InputType.Keyboard)
             {
                 colorChip.Button.OnMouseOver.AddListener((Action)(() => hatsTab.SelectHat(hat)));
-                colorChip.Button.OnMouseOut.AddListener((Action)(() => hatsTab.SelectHat(DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat))));
+                colorChip.Button.OnMouseOut.AddListener((Action)(() =>
+                    hatsTab.SelectHat(DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat))));
                 colorChip.Button.OnClick.AddListener((Action)hatsTab.ClickEquip);
             }
             else
@@ -128,19 +129,22 @@ internal static class HatsTabPatches
                     description.transform.localPosition = new Vector3(0f, -0.65f, -1f);
                     description.alignment = TextAlignmentOptions.Center;
                     description.transform.localScale = Vector3.one * 0.65f;
-                    hatsTab.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => { description.SetText(string.Format(ModTranslation.getString("hatsAuthor"), hat.name, ext.Author)); })));
+                    hatsTab.StartCoroutine(Effects.Lerp(0.1f,
+                       new Action<float>(p => { description.SetText($"{hat.name}\nby {ext.Author}"); })));
                 }
             }
 
             colorChip.transform.localPosition = new Vector3(xPos, yPos, -1f);
-            colorChip.Inner.SetHat(hat, hatsTab.HasLocalPlayer() ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId : DataManager.Player.Customization.Color);
-            colorChip.Inner.transform.localPosition = hat.ChipOffset;
+            colorChip.Inner.SetHat(hat,
+                hatsTab.HasLocalPlayer()
+                    ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId
+                    : DataManager.Player.Customization.Color); colorChip.Inner.transform.localPosition = hat.ChipOffset;
             colorChip.Tag = hat;
             colorChip.SelectionHighlight.gameObject.SetActive(false);
             hatsTab.ColorChips.Add(colorChip);
         }
 
-        return offset - (hats.Count - 1) / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset -
+        return offset - ((hats.Count - 1) / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset) -
                1.75f;
     }
 }
