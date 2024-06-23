@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace TheOtherRoles;
 
-internal static class MapOption
+internal class MapOption
 {
     public static float ButtonCooldown => CustomOptionHolder.resteButtonCooldown.getFloat();
-    public static float KillCooddown => GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
     public static bool PreventTaskEnd => CustomOptionHolder.preventTaskEnd.getBool();
+    public static float KillCooddown => GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
+    public static float VotingTime => GameOptionsManager.Instance.currentNormalGameOptions.VotingTime;
 
     // Set values
     public static int maxNumberOfMeetings = 10;

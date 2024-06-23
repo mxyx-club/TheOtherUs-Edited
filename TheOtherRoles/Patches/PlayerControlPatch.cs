@@ -367,29 +367,6 @@ public static class PlayerControlFixedUpdatePatch
         if (Sidekick.canKill) setPlayerOutline(Sidekick.currentTarget, Palette.ImpostorRed);
     }
 
-    private static void pavlovsownerTarget()
-    {
-        if (Pavlovsdogs.pavlovsowner == null || Pavlovsdogs.pavlovsowner != CachedPlayer.LocalPlayer.PlayerControl) return;
-        var untargetablePlayers = new List<PlayerControl>();
-        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
-        Pavlovsdogs.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
-        setPlayerOutline(Pavlovsdogs.currentTarget, Palette.ImpostorRed);
-    }
-
-    private static void pavlovsdogsSetTarget()
-    {
-        if (Pavlovsdogs.pavlovsdogs == null || !Pavlovsdogs.pavlovsdogs.Any(p => p == CachedPlayer.LocalPlayer.PlayerControl)) return;
-        var untargetablePlayers = new List<PlayerControl>();
-        foreach (var p in Pavlovsdogs.pavlovsdogs)
-        {
-            untargetablePlayers.Add(p);
-        }
-        if (Pavlovsdogs.pavlovsowner != null) untargetablePlayers.Add(Pavlovsdogs.pavlovsowner);
-        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
-        Pavlovsdogs.killTarget = setTarget(untargetablePlayers: untargetablePlayers);
-        setPlayerOutline(Pavlovsdogs.killTarget, Palette.ImpostorRed);
-    }
-
     private static void sidekickCheckPromotion()
     {
         // If LocalPlayer is Sidekick, the Jackal is disconnected and Sidekick promotion is enabled, then trigger promotion
@@ -638,6 +615,8 @@ public static class PlayerControlFixedUpdatePatch
             {
                 Tracker.timeUntilUpdate -= Time.fixedDeltaTime;
 
+                if (Tracker.tracked.Data.IsDead) Tracker.resetTracked();
+
                 if (Tracker.timeUntilUpdate <= 0f)
                 {
                     bool trackedOnMap = !Tracker.tracked.Data.IsDead;
@@ -690,7 +669,7 @@ public static class PlayerControlFixedUpdatePatch
                     Tracker.localArrows.Add(new Arrow(Tracker.color));
                     Tracker.localArrows[index].arrow.SetActive(true);
                 }
-                if (Tracker.localArrows[index] != null) Tracker.localArrows[index].Update(position);
+                Tracker.localArrows[index]?.Update(position);
                 index++;
             }
         }
@@ -940,20 +919,20 @@ public static class PlayerControlFixedUpdatePatch
     {
         if (Snitch.localArrows == null) return;
 
-        foreach (Arrow arrow in Snitch.localArrows) arrow.arrow.SetActive(false);
+        foreach (var arrow in Snitch.localArrows) arrow.arrow.SetActive(false);
 
         if (Snitch.snitch == null || Snitch.snitch.Data.IsDead) return;
 
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
-        int numberOfTasks = playerTotal - playerCompleted;
+        var numberOfTasks = playerTotal - playerCompleted;
 
         var snitchIsDead = Snitch.snitch.Data.IsDead;
         var local = CachedPlayer.LocalPlayer.PlayerControl;
 
-        bool forImpTeam = local.Data.Role.IsImpostor;
-        bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(local);
-        bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(local);
-        bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(local);
+        var forImpTeam = local.Data.Role.IsImpostor;
+        var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(local);
+        var forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(local);
+        var forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(local);
 
         if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam))
         {
@@ -966,14 +945,14 @@ public static class PlayerControlFixedUpdatePatch
         }
         else if (local == Snitch.snitch && numberOfTasks == 0 && !snitchIsDead)
         {
-            int arrowIndex = 0;
+            var arrowIndex = 0;
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
-                bool arrowForImp = p.Data.Role.IsImpostor;
+                var arrowForImp = p.Data.Role.IsImpostor;
                 if (Mimic.mimic == p) arrowForImp = true;
-                bool arrowForKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(p);
-                bool arrowForEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(p);
-                bool arrowForNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(p);
+                var arrowForKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(p);
+                var arrowForEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(p);
+                var arrowForNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(p);
                 var targetsRole = RoleInfo.getRoleInfoForPlayer(p, false).FirstOrDefault();
 
                 if (!p.Data.IsDead && (arrowForImp || arrowForKillerTeam || arrowForEvilTeam || arrowForNeutraTeam))
@@ -1828,9 +1807,55 @@ public static class PlayerControlFixedUpdatePatch
         if (Akujo.honmei == null || Akujo.keepsLeft > 0) setPlayerOutline(Akujo.currentTarget, Akujo.color);
     }
 
-    public static void pavlovsdogsUpdate()
+    private static void pavlovsownerTarget()
     {
-        if (Pavlovsdogs.pavlovsdogs == null || !Pavlovsdogs.pavlovsdogs.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl)) return;
+        if (Pavlovsdogs.pavlovsowner == null || Pavlovsdogs.pavlovsowner != CachedPlayer.LocalPlayer.PlayerControl) return;
+        var untargetablePlayers = new List<PlayerControl>();
+        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
+        Pavlovsdogs.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
+        setPlayerOutline(Pavlovsdogs.currentTarget, Palette.ImpostorRed);
+    }
+
+    private static void pavlovsdogsSetTarget()
+    {
+        if (Pavlovsdogs.pavlovsdogs == null || !Pavlovsdogs.pavlovsdogs.Any(p => p == CachedPlayer.LocalPlayer.PlayerControl)) return;
+        var untargetablePlayers = new List<PlayerControl>();
+        foreach (var p in Pavlovsdogs.pavlovsdogs)
+        {
+            untargetablePlayers.Add(p);
+        }
+        if (Pavlovsdogs.pavlovsowner != null) untargetablePlayers.Add(Pavlovsdogs.pavlovsowner);
+        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
+        Pavlovsdogs.killTarget = setTarget(untargetablePlayers: untargetablePlayers);
+        setPlayerOutline(Pavlovsdogs.killTarget, Palette.ImpostorRed);
+    }
+
+    private static void pavlovsownerUpdate()
+    {
+        if (Pavlovsdogs.arrow == null) return;
+
+        foreach (var arrow in Pavlovsdogs.arrow) arrow.arrow.SetActive(false);
+
+        if (Pavlovsdogs.pavlovsowner == null || Pavlovsdogs.pavlovsowner.Data.IsDead || CachedPlayer.LocalPlayer.PlayerControl != Pavlovsdogs.pavlovsowner) return;
+
+        var index = 0;
+        foreach (PlayerControl p in CachedPlayer.AllPlayers)
+        {
+            if (!p.Data.IsDead && Pavlovsdogs.pavlovsdogs.Any(x => x == p))
+            {
+                if (index >= Pavlovsdogs.arrow.Count)
+                {
+                    Pavlovsdogs.arrow.Add(new Arrow(Pavlovsdogs.color));
+                }
+                else if (index < Pavlovsdogs.arrow.Count && Pavlovsdogs.arrow[index] != null)
+                {
+                    Pavlovsdogs.arrow[index].arrow.SetActive(true);
+                    Pavlovsdogs.arrow[index].Update(p.transform.position, Pavlovsdogs.color);
+                }
+                index++;
+            }
+        }
+
     }
 
     public static void Postfix(PlayerControl __instance)
@@ -1917,7 +1942,7 @@ public static class PlayerControlFixedUpdatePatch
             // Pavlovsdogs
             pavlovsownerTarget();
             pavlovsdogsSetTarget();
-            pavlovsdogsUpdate();
+            pavlovsownerUpdate();
             // Impostor
             impostorSetTarget();
             // Warlock

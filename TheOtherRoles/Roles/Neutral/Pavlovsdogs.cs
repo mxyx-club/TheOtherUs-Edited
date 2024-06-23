@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TheOtherRoles.Modules;
+using TheOtherRoles.Objects;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Neutral;
 
 public class Pavlovsdogs
 {
+    public static List<Arrow> arrow;
     public static PlayerControl pavlovsowner;
     public static List<PlayerControl> pavlovsdogs = new();
 
@@ -28,18 +29,12 @@ public class Pavlovsdogs
     public static bool canSabotage;
     public static bool hasImpostorVision;
 
-    public static bool CanCreateDog => (pavlovsdogs == null || pavlovsdogs.All(player => player.Data.IsDead)) && createDogNum > 0;
+    public static float deathTime;
+    public static ResourceSprite CreateDogButton = new("SidekickButton.png");
+
+    public static bool CanCreateDog => (pavlovsdogs == null || pavlovsdogs.All(p => p.Data.IsDead || p.Data.Disconnected)) && createDogNum > 0;
     public static bool ownerIsDead => pavlovsowner == null || pavlovsowner.Data.Disconnected || pavlovsowner.Data.IsDead;
     public static bool loser => pavlovsdogs.All(p => p.Data.IsDead || p.Data.Disconnected) && createDogNum == 0;
-
-    public static bool wasTeamRed;
-    public static bool wasImpostor;
-    public static bool wasSpy;
-    public static float deathTime;
-    public static DateTime startTime;
-
-
-    public static ResourceSprite CreateDogButton = new("SidekickButton.png");
 
     public static void clear(byte playerId)
     {
@@ -49,14 +44,19 @@ public class Pavlovsdogs
 
     public static void clearAndReload()
     {
+        if (arrow != null)
+        {
+            foreach (var arrow in arrow)
+                if (arrow?.arrow != null) UnityEngine.Object.Destroy(arrow.arrow);
+        }
+        arrow = [];
+
         pavlovsowner = null;
         pavlovsdogs = [];
-
         currentTarget = null;
         killTarget = null;
-        startTime = DateTime.UtcNow;
-        deathTime = CustomOptionHolder.pavlovsownerRampageDeathTime.GetInt();
 
+        deathTime = CustomOptionHolder.pavlovsownerRampageDeathTime.GetInt();
         andJackalAsWell = CustomOptionHolder.pavlovsownerAndJackalAsWell.getBool();
         cooldown = CustomOptionHolder.pavlovsownerKillCooldown.getFloat();
         createDogCooldown = CustomOptionHolder.pavlovsownerCreateDogCooldown.getFloat();
@@ -68,6 +68,5 @@ public class Pavlovsdogs
         rampageKillCooldown = CustomOptionHolder.pavlovsownerRampageKillCooldown.getFloat();
         rampageDeathTime = CustomOptionHolder.pavlovsownerRampageDeathTime.GetInt();
         rampageDeathTimeIsMeetingReset = CustomOptionHolder.pavlovsownerRampageDeathTimeIsMeetingReset.getBool();
-        wasTeamRed = wasImpostor = wasSpy = false;
     }
 }

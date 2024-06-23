@@ -36,7 +36,7 @@ public class HatsLoader : MonoBehaviour
 
         if (www.isNetworkError || www.isHttpError)
         {
-            Info(www.error);
+            Error(www.error);
             yield break;
         }
 

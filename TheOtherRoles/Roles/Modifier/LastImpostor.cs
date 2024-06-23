@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Hazel;
-using UnityEngine;
 using TheOtherRoles.Utilities;
+using UnityEngine;
 
 namespace TheOtherRoles.Roles.Modifier;
 

@@ -714,7 +714,7 @@ internal class RoleManagerSelectRolesPatch
     }
 
     private static void assignGuesserGamemodeToPlayers(List<PlayerControl> playerList, int count,
-        bool forceJackal = false, bool forceThief = false, bool forcePavlovsOwner = false)
+        bool forceJackal = false, bool forceThief = false, bool forcePavlovsowner = false)
     {
         var IndexList = new Queue<PlayerControl>();
 
@@ -724,8 +724,8 @@ internal class RoleManagerSelectRolesPatch
         if (Jackal.jackal != null && forceJackal)
             IndexList.Enqueue(Jackal.jackal);
 
-        if (Pavlovsdogs.pavlovsowner != null && forcePavlovsOwner)
-            IndexList.Enqueue(Jackal.jackal);
+        if (Pavlovsdogs.pavlovsowner != null && forcePavlovsowner)
+            IndexList.Enqueue(Pavlovsdogs.pavlovsowner);
 
         for (var i = 0; i < count && playerList.Count > 0; i++)
         {

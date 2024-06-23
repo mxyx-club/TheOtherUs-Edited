@@ -195,9 +195,9 @@ internal class HudManagerUpdatePatch
         if (Spy.spy != null && localPlayer.Data.Role.IsImpostor) setPlayerNameColor(Spy.spy, Spy.color);
         if (Sidekick.sidekick != null && Sidekick.wasTeamRed && localPlayer.Data.Role.IsImpostor)
             setPlayerNameColor(Sidekick.sidekick, Spy.color);
+
         if (Jackal.jackal != null && Jackal.wasTeamRed && localPlayer.Data.Role.IsImpostor)
             setPlayerNameColor(Jackal.jackal, Spy.color);
-
         // Crewmate roles with no changes: Mini
         // Impostor roles with no changes: Morphling, Camouflager, Vampire, Godfather, Eraser, Janitor, Cleaner, Warlock, BountyHunter,  Witch and Mafioso
     }

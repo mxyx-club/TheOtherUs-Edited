@@ -50,6 +50,7 @@ internal class ExileControllerBeginPatch
         //末日预言家
         if (Doomsayer.doomsayer != null && AmongUsClient.Instance.AmHost && !Doomsayer.canGuess)
             Doomsayer.canGuess = true;
+        if (Specoality.specoality != null && Specoality.canNoGuess != null) Specoality.canNoGuess = null;
 
         // Eraser erase
         if (Eraser.eraser != null && AmongUsClient.Instance.AmHost && Eraser.futureErased != null)

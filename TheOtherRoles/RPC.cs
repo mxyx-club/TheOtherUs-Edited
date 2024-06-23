@@ -1789,14 +1789,14 @@ public static class RPCProcedure
         Pavlovsdogs.pavlovsdogs.Add(player);
         if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
             CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
-        if ((wasSpy || wasImpostor) && !Jackal.CanImpostorFindSidekick) Sidekick.wasTeamRed = true;
-        Sidekick.wasSpy = wasSpy;
-        Sidekick.wasImpostor = wasImpostor;
         if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
-        if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(targetId))
-            setGuesserGm(targetId);
     }
 
+    /// <summary>
+    /// 抹除目标玩家的职业
+    /// </summary>
+    /// <param name="playerId">玩家ID</param>
+    /// <param name="ignoreModifier">不抹除附加能力</param>
     public static void erasePlayerRoles(byte playerId, bool ignoreModifier = true)
     {
         var player = playerById(playerId);
@@ -2491,6 +2491,7 @@ public static class RPCProcedure
     {
         var dyingTarget = playerById(dyingTargetId);
         var dyingLoverPartner = Lovers.bothDie ? dyingTarget.getPartner() : null; // Lover check
+        var guessedTarget = playerById(guessedTargetId);
         PlayerControl? dyingAkujoPartner;
 
         // Lawyer shouldn't be exiled with the client for guesses
@@ -2509,8 +2510,11 @@ public static class RPCProcedure
                 thiefStealsRole(dyingTarget.PlayerId);
         }
 
-        if ((Akujo.akujo != null && dyingTarget == Akujo.akujo) || (Akujo.honmei != null && dyingTarget == Akujo.honmei)) dyingAkujoPartner = dyingTarget == Akujo.akujo ? Akujo.honmei : Akujo.akujo;
-        else dyingAkujoPartner = null;
+        if ((Akujo.akujo != null && dyingTarget == Akujo.akujo) || (Akujo.honmei != null && dyingTarget == Akujo.honmei))
+            dyingAkujoPartner = dyingTarget == Akujo.akujo ? Akujo.honmei : Akujo.akujo;
+        else
+            dyingAkujoPartner = null;
+
         //末日猜测
         if (Doomsayer.doomsayer != null && Doomsayer.doomsayer == guesser && Doomsayer.canGuess)
         {
@@ -2523,6 +2527,7 @@ public static class RPCProcedure
             }
             else
             {
+                seedGuessChat(guesser, guessedTarget, guessedRoleId);
                 return;
             }
         }
@@ -2532,17 +2537,14 @@ public static class RPCProcedure
             var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
             if (!Specoality.specoality.Data.IsDead && guessedTargetId == dyingTargetId)
             {
-
                 if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
             }
             else
             {
-                if (Specoality.linearfunction != 0)
-                {
-                    if (CachedPlayer.LocalPlayer.PlayerControl == Specoality.specoality) showFlash(Color.red, 1f, "");
-                    Specoality.linearfunction--;
-                }
-                if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+                if (CachedPlayer.LocalPlayer.PlayerControl == Specoality.specoality) showFlash(Color.red, 0.75f, "");
+                Specoality.canNoGuess = dyingTarget;
+                Specoality.linearfunction--;
+                seedGuessChat(guesser, guessedTarget, guessedRoleId);
                 return;
             }
         }
@@ -2560,7 +2562,6 @@ public static class RPCProcedure
         }
 
         var partnerId = dyingLoverPartner != null ? dyingLoverPartner.PlayerId : dyingTargetId;
-
 
         dyingTarget.Exiled();
         overrideDeathReasonAndKiller(dyingTarget, DeadPlayer.CustomDeathReason.Guess, guesser);
@@ -2642,10 +2643,12 @@ public static class RPCProcedure
                     MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
             }
         }
+        if (guesser != null && guessedTarget != null) seedGuessChat(guesser, guessedTarget, guessedRoleId);
+    }
 
-
-        var guessedTarget = playerById(guessedTargetId);
-        if (CachedPlayer.LocalPlayer.Data.IsDead && guessedTarget != null && guesser != null)
+    public static void seedGuessChat(PlayerControl guesser, PlayerControl guessedTarget, byte guessedRoleId)
+    {
+        if (CachedPlayer.LocalPlayer.Data.IsDead)
         {
             var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
             var msg = $"{guesser.Data.PlayerName} 赌怪猜测 {guessedTarget.Data.PlayerName} 是 {roleInfo?.name ?? ""}!";

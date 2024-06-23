@@ -31,7 +31,7 @@ public class CustomButton
     public HudManager hudManager;
     public bool isEffectActive;
     public bool isHandcuffed;
-    public float MaxTimer = float.MaxValue;
+    public float MaxTimer = 0.5f;
     public bool mirror;
     private Action OnClick;
     public Vector3 PositionOffset;
@@ -69,7 +69,7 @@ public class CustomButton
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
 
-        Timer = MapOption.ButtonCooldown + 8.5f;
+        //Timer = MapOption.ButtonCooldown + 8.5f;
 
         setActive(false);
     }

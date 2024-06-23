@@ -298,6 +298,7 @@ internal static class HudManagerStartPatch
         replacementHandcuffedButton.Timer = replacementHandcuffedButton.EffectDuration;
         replacementHandcuffedButton.actionButton.cooldownTimerText.color = new Color(0F, 0.8F, 0F);
         replacementHandcuffedButton.isEffectActive = true;
+        replacementHandcuffedButton.hotkey = KeyCode.V;
         if (deputyHandcuffedButtons.ContainsKey(CachedPlayer.LocalPlayer.PlayerId))
             deputyHandcuffedButtons[CachedPlayer.LocalPlayer.PlayerId].Add(replacementHandcuffedButton);
         else
@@ -3570,9 +3571,8 @@ internal static class HudManagerStartPatch
                 {
                     if (checkAndDoVetKill(Blackmailer.currentTarget)) return;
                     checkWatchFlash(Blackmailer.currentTarget);
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.BlackmailPlayer,
-                        SendOption.Reliable);
+                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        (byte)CustomRPC.BlackmailPlayer, SendOption.Reliable);
                     writer.Write(Blackmailer.currentTarget.PlayerId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.blackmailPlayer(Blackmailer.currentTarget.PlayerId);

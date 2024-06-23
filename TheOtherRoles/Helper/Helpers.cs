@@ -177,11 +177,11 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
-        else if ((Pavlovsdogs.canUseVents == 1 || Pavlovsdogs.canUseVents == 2) && Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner == player)
+        else if ((Pavlovsdogs.canUseVents is 1 or 2) && Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner == player)
         {
             roleCouldUse = true;
         }
-        else if ((Pavlovsdogs.canUseVents == 0 || Pavlovsdogs.canUseVents == 2) && Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p == player))
+        else if ((Pavlovsdogs.canUseVents is 0 or 2) && Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p == player))
         {
             roleCouldUse = true;
         }

@@ -323,21 +323,11 @@ internal class MeetingHudPatch
                         if
                         (
                             __instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)
-                            ||
-                            focusedTarget == null
-                            ||
-                            (
-                                HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) <= 0
-                                &&
-                                HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId)
-                                )
-                            ||
-                            (
-                                CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer
-                                &&
-                                !Doomsayer.CanShoot
-                            )
-                            ) return;
+                            || focusedTarget == null
+                            || (HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) <= 0
+                                && HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId))
+                            || (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && !Doomsayer.CanShoot))
+                            return;
 
                         if (!HandleGuesser.killsThroughShield && focusedTarget == Medic.shielded)
                         {
@@ -388,6 +378,7 @@ internal class MeetingHudPatch
                         writer.Write(focusedTarget.PlayerId);
                         writer.Write((byte)roleInfo.roleId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
+
                         RPCProcedure.guesserShoot(CachedPlayer.LocalPlayer.PlayerId, dyingTarget.PlayerId,
                             focusedTarget.PlayerId, (byte)roleInfo.roleId);
 
@@ -552,12 +543,13 @@ internal class MeetingHudPatch
             {
                 var playerVoteArea = __instance.playerStates[i];
 
-                if (playerVoteArea.AmDead ||
-                    playerVoteArea.TargetPlayerId == CachedPlayer.LocalPlayer.PlayerId) continue;
+                if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == CachedPlayer.LocalPlayer.PlayerId) continue;
 
-                if (!Eraser.canEraseGuess && CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.PlayerControl == Eraser.eraser &&
-                    Eraser.alreadyErased.Contains(playerVoteArea.TargetPlayerId))
-                    continue;
+                if (!Eraser.canEraseGuess && CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.PlayerControl == Eraser.eraser
+                    && Eraser.alreadyErased.Contains(playerVoteArea.TargetPlayerId)) continue;
+
+                if (CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.PlayerControl == Specoality.specoality
+                    && Specoality.canNoGuess != null && Specoality.canNoGuess.PlayerId == playerVoteArea.TargetPlayerId) continue;
 
                 var template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
                 var targetBox = Object.Instantiate(template, playerVoteArea.transform);

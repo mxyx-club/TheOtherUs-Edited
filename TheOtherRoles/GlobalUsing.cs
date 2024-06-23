@@ -15,5 +15,5 @@ global using static TheOtherRoles.Helper.Helpers;
 global using static TheOtherRoles.Helper.LogHelper;
 global using static TheOtherRoles.Modules.ModTranslation;
 global using static TheOtherRoles.Roles.RoleHelpers;
-global using MeansImplicitUse = JetBrains::JetBrains.Annotations.MeansImplicitUseAttribute;
 global using Main = TheOtherRoles.TheOtherRolesPlugin;
+global using MeansImplicitUse = JetBrains::JetBrains.Annotations.MeansImplicitUseAttribute;

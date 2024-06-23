@@ -1061,8 +1061,8 @@ public class CustomOptionHolder
         deputyNumberOfHandcuffs = Create(30171, Types.Crewmate, "手铐可用次数", 5f, 1f, 10f, 1f, deputySpawnRate);
         deputyHandcuffCooldown = Create(30172, Types.Crewmate, "手铐冷却", 25f, 10f, 60f, 2.5f, deputySpawnRate);
         deputyHandcuffDuration = Create(30173, Types.Crewmate, "手铐持续时间", 12.5f, 5f, 60f, 2.5f, deputySpawnRate);
-        deputyKnowsSheriff = Create(30174, Types.Crewmate, "警长/捕快可以互相确认 ", true, deputySpawnRate);
         deputyGetsPromoted = Create(30175, Types.Crewmate, "警长死后捕快可晋升", ["optionOff", "立即晋升", "会议后晋升"], deputySpawnRate);
+        deputyKnowsSheriff = Create(30174, Types.Crewmate, "警长/捕快可以互相确认 ", true, deputySpawnRate);
         deputyKeepsHandcuffs = Create(30176, Types.Crewmate, "晋升后保留手铐技能", true, deputyGetsPromoted);
 
         mayorSpawnRate = Create(30110, Types.Crewmate, cs(Mayor.color, "Mayor"), rates, null, true);

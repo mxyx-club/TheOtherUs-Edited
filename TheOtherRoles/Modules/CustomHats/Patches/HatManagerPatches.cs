@@ -32,7 +32,6 @@ internal static class HatManagerPatches
                 // This means the file has not been downloaded yet, do nothing...
             }
         }
-
         if (CustomHatManager.UnregisteredHats.Count == 0)
             isLoaded = true;
         cache.Clear();
