@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "配置文件 1": {
+    "TheOtherUs": {
       "commandName": "Executable",
-      "executablePath": "F:\\AmongUs\\v2024.3.5\\Among Us.exe",
+      "executablePath": "F:\\AmongUs\\v2024.3.5",
       "remoteDebugEnabled": false
     }
   }

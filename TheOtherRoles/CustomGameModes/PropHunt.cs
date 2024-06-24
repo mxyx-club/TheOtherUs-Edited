@@ -554,7 +554,7 @@ internal class PropHunt
         if (__instance.GetComponent<SpriteRenderer>() != null || __instance.Data.IsDead) return;
 
         __instance.gameObject.AddComponent<SpriteRenderer>();
-        __instance.GetComponent<CircleCollider2D>().radius = 0.00001f;
+        __instance.GetComponent<CircleCollider2D>().radius = 0.001f;
     }
 
 
