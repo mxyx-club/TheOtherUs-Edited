@@ -17,7 +17,7 @@ using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.HudManagerStartPatch;
-using static TheOtherRoles.MapOption;
+using static TheOtherRoles.Options.MapOption;
 using static TheOtherRoles.Roles.RoleClass;
 using Object = UnityEngine.Object;
 

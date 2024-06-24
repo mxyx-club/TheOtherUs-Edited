@@ -2,14 +2,12 @@ using System.Collections.Generic;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
-namespace TheOtherRoles;
+namespace TheOtherRoles.Options;
 
 internal class MapOption
 {
     public static float ButtonCooldown => CustomOptionHolder.resteButtonCooldown.getFloat();
     public static bool PreventTaskEnd => CustomOptionHolder.preventTaskEnd.getBool();
-    public static float KillCooddown => GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
-    public static float VotingTime => GameOptionsManager.Instance.currentNormalGameOptions.VotingTime;
 
     // Set values
     public static int maxNumberOfMeetings = 10;
@@ -26,7 +24,6 @@ internal class MapOption
     public static bool showFPS = true;
     public static bool toggleCursor = true;
     public static bool enableSoundEffects = true;
-    public static bool enableHorseMode;
     public static bool shieldFirstKill;
     public static bool hideVentAnim;
     public static bool impostorSeeRoles;
@@ -128,7 +125,6 @@ internal class MapOption
         showRoleSummary = Main.ShowRoleSummary.Value;
         toggleCursor = Main.ToggleCursor.Value;
         enableSoundEffects = Main.EnableSoundEffects.Value;
-        enableHorseMode = Main.EnableHorseMode.Value;
         enableDebugLogMode = Main.enableDebugLogMode.Value;
 
         //Patches.ShouldAlwaysHorseAround.isHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;

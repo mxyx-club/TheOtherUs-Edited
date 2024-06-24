@@ -132,7 +132,7 @@ public static class CredentialsPatch
                     renderer.color = new Color(1, 1, 1, 1 - p);
                     if (p == 1)
                     {
-                        renderer.sprite = MapOption.enableHorseMode ? horseBannerSprite : bannerSprite;
+                        renderer.sprite = bannerSprite;
                         instance.StartCoroutine(Effects.Lerp(fadeDuration,
                             new Action<float>(p => { renderer.color = new Color(1, 1, 1, p); })));
                     }

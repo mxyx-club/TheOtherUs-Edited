@@ -14,10 +14,10 @@ using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static TheOtherRoles.CustomOption;
+using static TheOtherRoles.Options.CustomOption;
 using Object = UnityEngine.Object;
 
-namespace TheOtherRoles;
+namespace TheOtherRoles.Options;
 
 public class CustomOption
 {
@@ -69,7 +69,7 @@ public class CustomOption
         selection = 0;
         if (id != 0)
         {
-            entry = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", id.ToString(), defaultSelection);
+            entry = Main.Instance.Config.Bind($"Preset{preset}", id.ToString(), defaultSelection);
             selection = Mathf.Clamp(entry.Value, 0, selections.Length - 1);
         }
 
@@ -102,14 +102,14 @@ public class CustomOption
     {
         saveVanillaOptions();
         preset = newPreset;
-        vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", "GameOptions", "");
+        vanillaSettings = Main.Instance.Config.Bind($"Preset{preset}", "GameOptions", "");
         loadVanillaOptions();
         foreach (var option in options)
         {
             if (option.id == 0) continue;
 
             option.entry =
-                TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", option.id.ToString(),
+                Main.Instance.Config.Bind($"Preset{preset}", option.id.ToString(),
                     option.defaultSelection);
             option.selection = Mathf.Clamp(option.entry.Value, 0, option.selections.Length - 1);
             if (option.optionBehaviour != null && option.optionBehaviour is StringOption stringOption)
@@ -157,7 +157,7 @@ public class CustomOption
     public static void ShareOptionSelections()
     {
         if (CachedPlayer.AllPlayers.Count <= 1 ||
-            (AmongUsClient.Instance!.AmHost == false && CachedPlayer.LocalPlayer.PlayerControl == null)) return;
+            AmongUsClient.Instance!.AmHost == false && CachedPlayer.LocalPlayer.PlayerControl == null) return;
         var optionsList = new List<CustomOption>(options);
         while (optionsList.Any())
         {
@@ -206,12 +206,10 @@ public class CustomOption
 
     public string getString()
     {
-        string sel = selections[selection].ToString();
+        var sel = selections[selection].ToString();
 
         if (sel is "optionOn")
-        {
             return "<color=#FFFF00FF>" + sel.Translate() + "</color>";
-        }
         else if (sel == "optionOff")
         {
             return "<color=#CCCCCCFF>" + sel.Translate() + "</color>";
@@ -321,7 +319,7 @@ public class CustomOption
     public static void copyToClipboard()
     {
         GUIUtility.systemCopyBuffer =
-            $"{TheOtherRolesPlugin.VersionString}!{Convert.ToBase64String(serializeOptions())}!{vanillaSettings.Value}";
+            $"{Main.VersionString}!{Convert.ToBase64String(serializeOptions())}!{vanillaSettings.Value}";
     }
 
     public static bool pasteFromClipboard()
@@ -1086,7 +1084,7 @@ internal class GameOptionsMenuUpdatePatch
         var gameSettingMenu = Object.FindObjectsOfType<GameSettingMenu>().FirstOrDefault();
         if (gameSettingMenu.RegularGameSettings.active || gameSettingMenu.RolesSettings.gameObject.active) return;
 
-        __instance.GetComponentInParent<Scroller>().ContentYBounds.max = -0.5F + (__instance.Children.Length * 0.55F);
+        __instance.GetComponentInParent<Scroller>().ContentYBounds.max = -0.5F + __instance.Children.Length * 0.55F;
         timer += Time.deltaTime;
         if (timer < 0.1f) return;
         timer = 0f;
@@ -1216,7 +1214,7 @@ internal class GameOptionsDataPatch
             if (option.parent != null)
             {
                 var isIrrelevant = option.parent.getSelection() == 0 ||
-                                   (option.parent.parent != null && option.parent.parent.getSelection() == 0);
+                                   option.parent.parent != null && option.parent.parent.getSelection() == 0;
 
                 var c = isIrrelevant ? Color.grey : Color.white; // No use for now
                 if (isIrrelevant) continue;
@@ -1298,14 +1296,14 @@ internal class GameOptionsDataPatch
         if (vanillaSettings == "")
             vanillaSettings =
                 GameOptionsManager.Instance.CurrentGameOptions.ToHudString(PlayerControl.AllPlayerControls.Count);
-        var counter = TheOtherRolesPlugin.optionsPage;
+        var counter = Main.optionsPage;
         var hudString = counter != 0 && !hideExtras
             ? cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "useScrollWheel".Translate())
             : "";
 
         if (MapOption.gameMode == CustomGamemodes.HideNSeek)
         {
-            if (TheOtherRolesPlugin.optionsPage > 1) TheOtherRolesPlugin.optionsPage = 0;
+            if (Main.optionsPage > 1) Main.optionsPage = 0;
             maxPage = 2;
             switch (counter)
             {
@@ -1433,9 +1431,7 @@ public class AddToKillDistanceSetting
         {
             int index;
             if (GameOptionsManager.Instance.currentGameMode == GameModes.Normal)
-            {
                 index = GameOptionsManager.Instance.currentNormalGameOptions.KillDistance;
-            }
             else
             {
                 index = GameOptionsManager.Instance.currentHideNSeekGameOptions.KillDistance;
@@ -1470,19 +1466,19 @@ public static class GameOptionsNextPagePatch
 {
     public static void Postfix(KeyboardJoystick __instance)
     {
-        var page = TheOtherRolesPlugin.optionsPage;
-        if (Input.GetKeyDown(KeyCode.Tab)) TheOtherRolesPlugin.optionsPage = (TheOtherRolesPlugin.optionsPage + 1) % 7;
-        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)) TheOtherRolesPlugin.optionsPage = 0;
-        if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)) TheOtherRolesPlugin.optionsPage = 1;
-        if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) TheOtherRolesPlugin.optionsPage = 2;
-        if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4)) TheOtherRolesPlugin.optionsPage = 3;
-        if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5)) TheOtherRolesPlugin.optionsPage = 4;
-        if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6)) TheOtherRolesPlugin.optionsPage = 5;
-        if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7)) TheOtherRolesPlugin.optionsPage = 6;
+        var page = Main.optionsPage;
+        if (Input.GetKeyDown(KeyCode.Tab)) Main.optionsPage = (Main.optionsPage + 1) % 7;
+        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)) Main.optionsPage = 0;
+        if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)) Main.optionsPage = 1;
+        if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) Main.optionsPage = 2;
+        if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4)) Main.optionsPage = 3;
+        if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5)) Main.optionsPage = 4;
+        if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6)) Main.optionsPage = 5;
+        if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7)) Main.optionsPage = 6;
         if (Input.GetKeyDown(KeyCode.F1)) HudManagerUpdate.ToggleSettings(HudManager.Instance);
-        if (TheOtherRolesPlugin.optionsPage >= GameOptionsDataPatch.maxPage) TheOtherRolesPlugin.optionsPage = 0;
+        if (Main.optionsPage >= GameOptionsDataPatch.maxPage) Main.optionsPage = 0;
 
-        if (page != TheOtherRolesPlugin.optionsPage)
+        if (page != Main.optionsPage)
         {
             var position =
                 (Vector3)FastDestroyableSingleton<HudManager>.Instance?.GameSettings?.transform.localPosition;
@@ -1530,7 +1526,7 @@ public class HudManagerUpdate
         var safeArea = Screen.safeArea;
         var aspect = Mathf.Min(Camera.main.aspect, safeArea.width / safeArea.height);
         var safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
-        MinX = 0.1f - (safeOrthographicSize * aspect);
+        MinX = 0.1f - safeOrthographicSize * aspect;
 
         if (!setLastPosition || aspect != lastAspect)
         {
@@ -1548,7 +1544,7 @@ public class HudManagerUpdate
 
         var rows = __instance.GameSettings.text.Count(c => c == '\n');
         var LobbyTextRowHeight = 0.12F;
-        var maxY = Mathf.Max(MinY, (rows * LobbyTextRowHeight) + ((rows - 38) * LobbyTextRowHeight));
+        var maxY = Mathf.Max(MinY, rows * LobbyTextRowHeight + (rows - 38) * LobbyTextRowHeight);
 
         Scroller.ContentYBounds = new FloatRange(MinY, maxY);
 
@@ -1604,9 +1600,7 @@ public class HudManagerUpdate
         {
             curBlock = blocks[i];
             if (lineCount(curBlock) + lineCount(curString) < 43)
-            {
                 curString += curBlock + "\n\n";
-            }
             else
             {
                 settingsTMPs[j].text = curString;
@@ -1623,12 +1617,12 @@ public class HudManagerUpdate
             if (tmp.text != "")
                 blockCount++;
         for (var i = 0; i < blockCount; i++)
-            settingsTMPs[i].transform.localPosition = new Vector3((-blockCount * 1.2f) + (2.7f * i), 2.2f, -500f);
+            settingsTMPs[i].transform.localPosition = new Vector3(-blockCount * 1.2f + 2.7f * i, 2.2f, -500f);
     }
 
     public static void OpenSettings(HudManager __instance)
     {
-        if (__instance.FullScreen == null || (MapBehaviour.Instance && MapBehaviour.Instance.IsOpen)
+        if (__instance.FullScreen == null || MapBehaviour.Instance && MapBehaviour.Instance.IsOpen
                                           /*|| AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started*/
                                           || GameOptionsManager.Instance.currentGameOptions.GameMode ==
                                           GameModes.HideNSeek) return;
@@ -1671,7 +1665,7 @@ public class HudManagerUpdate
             // add a special button for settings viewing:
             toggleSettingsButtonObject = Object.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
             toggleSettingsButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -0.66f, -500f);
-            SpriteRenderer renderer = toggleSettingsButtonObject.GetComponent<SpriteRenderer>();
+            var renderer = toggleSettingsButtonObject.GetComponent<SpriteRenderer>();
             renderer.sprite = loadSpriteFromResources("TheOtherRoles.Resources.CurrentSettingsButton.png", 180f);
             toggleSettingsButton = toggleSettingsButtonObject.GetComponent<PassiveButton>();
             toggleSettingsButton.OnClick.RemoveAllListeners();

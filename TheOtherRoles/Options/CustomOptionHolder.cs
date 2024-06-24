@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static TheOtherRoles.CustomOption;
-using Types = TheOtherRoles.CustomOption.CustomOptionType;
+using static TheOtherRoles.Options.CustomOption;
+using Types = TheOtherRoles.Options.CustomOption.CustomOptionType;
 
-namespace TheOtherRoles;
+namespace TheOtherRoles.Options;
 
 public class CustomOptionHolder
 {

@@ -9,7 +9,7 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
-using static TheOtherRoles.MapOption;
+using static TheOtherRoles.Options.MapOption;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;

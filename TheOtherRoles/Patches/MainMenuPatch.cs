@@ -13,10 +13,6 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start))]
 public class MainMenuPatch
 {
-    private static bool horseButtonState = MapOption.enableHorseMode;
-
-    //private static Sprite horseModeOffSprite = null;
-    //private static Sprite horseModeOnSprite = null;
     private static AnnouncementPopUp popUp;
 
     private static void Prefix(MainMenuManager __instance)

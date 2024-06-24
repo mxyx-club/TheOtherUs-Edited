@@ -40,7 +40,6 @@ public class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> GhostsSeeVotes { get; set; }
     public static ConfigEntry<bool> ShowRoleSummary { get; set; }
     public static ConfigEntry<bool> EnableSoundEffects { get; set; }
-    public static ConfigEntry<bool> EnableHorseMode { get; set; }
     public static ConfigEntry<bool> ToggleCursor { get; set; }
     public static ConfigEntry<bool> enableDebugLogMode { get; set; }
     public static ConfigEntry<bool> ShowFPS { get; set; }
@@ -93,7 +92,6 @@ public class TheOtherRolesPlugin : BasePlugin
         ShowRoleSummary = Config.Bind("Custom", "Show Role Summary", true);
         ToggleCursor = Config.Bind("Custom", "Better Cursor", true);
         EnableSoundEffects = Config.Bind("Custom", "Enable Sound Effects", true);
-        EnableHorseMode = Config.Bind("Custom", "Enable Horse Mode", false);
         ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
         enableDebugLogMode = Config.Bind("Custom", "Debug Log Mode", false);
         ShowFPS = Config.Bind("Custom", "Show FPS", true);
