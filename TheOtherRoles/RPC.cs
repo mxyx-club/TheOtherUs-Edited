@@ -793,8 +793,13 @@ public static class RPCProcedure
 
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)
+        {
             if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId)
+            {
                 Object.Destroy(array[i].gameObject);
+                break;
+            }
+        }
         if (Vulture.vulture != null && cleaningPlayerId == Vulture.vulture.PlayerId)
         {
             Vulture.eatenBodies++;

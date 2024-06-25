@@ -278,6 +278,8 @@ public class OnGameEndPatch
                              p != Juggernaut.juggernaut && p != Doomsayer.doomsayer &&
                              p != Sidekick.sidekick && p != Arsonist.arsonist && p != Vulture.vulture &&
                              p != Swooper.swooper &&
+                             p != Pavlovsdogs.pavlovsowner &&
+                             !Pavlovsdogs.pavlovsdogs.Contains(p) &&
                              p != Akujo.akujo &&
                              !Jackal.formerJackals.Contains(p) && !p.Data.Role.IsImpostor)
                         TempData.winners.Add(new WinningPlayerData(p.Data));
@@ -1058,8 +1060,6 @@ internal class PlayerStatistics
     public int TeamImpostorsAlive { get; set; }
     public int TeamJackalAlive { get; set; }
     public int TeamPavlovsAlive { get; set; }
-    public int TeamPavlovsdogsAlive { get; set; }
-    public int TeamPavlovsownerAlive { get; set; }
     public int TeamLoversAlive { get; set; }
     public int TotalAlive { get; set; }
     public int TeamSwooperAlive { get; set; }
@@ -1082,21 +1082,20 @@ internal class PlayerStatistics
     private void GetPlayerCounts()
     {
         var numJackalAlive = 0;
-        var numPavlovsdogsAlive = 0;
-        var numPavlovsownerAlive = 0;
+        var numPavlovsAlive = 0;
         var numImpostorsAlive = 0;
         var numLoversAlive = 0;
         var numTotalAlive = 0;
         var numSwooperAlive = 0;
-        var swooperLover = false;
+        var numWerewolfAlive = 0;
+        var numJuggernautAlive = 0;
+        var numAkujoAlive = 0;
         var impLover = false;
         var jackalLover = false;
         var pavlovsLover = false;
-        var numWerewolfAlive = 0;
+        var swooperLover = false;
         var werewolfLover = false;
-        var numJuggernautAlive = 0;
         var juggernautLover = false;
-        var numAkujoAlive = 0;
 
         foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
             if (!playerInfo.Disconnected)
@@ -1127,13 +1126,13 @@ internal class PlayerStatistics
 
                     if (Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner.PlayerId == playerInfo.PlayerId)
                     {
-                        numPavlovsdogsAlive++;
+                        numPavlovsAlive++;
                         if (lover) pavlovsLover = true;
                     }
 
                     if (Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p.PlayerId == playerInfo.PlayerId))
                     {
-                        numPavlovsownerAlive++;
+                        numPavlovsAlive++;
                         if (lover) pavlovsLover = true;
                     }
 
@@ -1165,9 +1164,7 @@ internal class PlayerStatistics
         TeamJackalAlive = numJackalAlive;
         TeamImpostorsAlive = numImpostorsAlive;
         TeamLoversAlive = numLoversAlive;
-        TeamPavlovsdogsAlive = numPavlovsdogsAlive;
-        TeamPavlovsownerAlive = numPavlovsownerAlive;
-        TeamPavlovsAlive = Pavlovsdogs.loser ? 0 : numPavlovsdogsAlive + numPavlovsownerAlive;
+        TeamPavlovsAlive = Pavlovsdogs.loser ? 0 : numPavlovsAlive;
         TotalAlive = numTotalAlive;
         TeamAkujoAlive = numAkujoAlive;
         TeamImpostorHasAliveLover = impLover;

@@ -234,7 +234,7 @@ internal class MeetingHudPatch
                 case RoleId.Doomsayer when !Doomsayer.canGuessNeutral && roleInfo.isNeutral:
                     continue;
             }
-
+            if (roleInfo.roleId != RoleId.Poucher && Poucher.spawnModifier) continue;
             if (allowModGuess && roleInfo.isModifier)
             {
                 // Allow Guessing the following mods: Bait, TieBreaker, Bloody, and VIP

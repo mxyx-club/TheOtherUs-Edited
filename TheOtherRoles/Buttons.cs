@@ -2138,7 +2138,7 @@ internal static class HudManagerStartPatch
                 return Pavlovsdogs.pavlovsowner != null
                     && Pavlovsdogs.pavlovsowner == CachedPlayer.LocalPlayer.PlayerControl
                     && !CachedPlayer.LocalPlayer.Data.IsDead
-                    && Pavlovsdogs.CanCreateDog;
+                    && Pavlovsdogs.canCreateDog;
             },
             () =>
             {

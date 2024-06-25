@@ -32,7 +32,7 @@ public class Pavlovsdogs
     public static float deathTime;
     public static ResourceSprite CreateDogButton = new("SidekickButton.png");
 
-    public static bool CanCreateDog => (pavlovsdogs == null || pavlovsdogs.All(p => p.Data.IsDead || p.Data.Disconnected)) && createDogNum > 0;
+    public static bool canCreateDog => (pavlovsdogs == null || pavlovsdogs.All(p => p.Data.IsDead || p.Data.Disconnected)) && createDogNum > 0;
     public static bool ownerIsDead => pavlovsowner == null || pavlovsowner.Data.Disconnected || pavlovsowner.Data.IsDead;
     public static bool loser => pavlovsdogs.All(p => p.Data.IsDead || p.Data.Disconnected) && createDogNum == 0;
 

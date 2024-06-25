@@ -1307,7 +1307,6 @@ public class CustomOptionHolder
         modifierShiftNeutral = Create(40341, Types.Modifier, "可交换部分中立不带刀职业", false, modifierShifter);
         modifierShiftALLNeutral = Create(40342, Types.Modifier, "可交换除豺狼阵营中立\n中立阵营可以成为交换师", false, modifierShiftNeutral);
 
-
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
 
         guesserGamemodeCrewNumber = Create(2001, Types.Guesser, cs(Guesser.color, "船员阵营赌怪数"), 3f, 0f, 15f, 1f, null, true);
