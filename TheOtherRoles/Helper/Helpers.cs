@@ -277,9 +277,7 @@ public static class Helpers
     public static bool isNeutral(PlayerControl player)
     {
         var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
-        if (roleInfo != null)
-            return roleInfo.isNeutral;
-        return false;
+        return roleInfo != null && roleInfo.isNeutral;
     }
 
     public static bool isKiller(PlayerControl player)
@@ -1238,8 +1236,12 @@ public static class Helpers
             return MurderAttemptResult.SuppressKill;
         }
 
-        // Block impostor not fully grown mini kill
+        if (Aftermath.aftermath != null && Aftermath.aftermath == target)
+        {
+            RPCProcedure.aftermathDead(target.PlayerId, killer.PlayerId);
+        }
 
+        // Block impostor not fully grown mini kill
         if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp()) return MurderAttemptResult.SuppressKill;
         // Block Time Master with time shield kill
         if (TimeMaster.shieldActive && TimeMaster.timeMaster != null && TimeMaster.timeMaster == target)

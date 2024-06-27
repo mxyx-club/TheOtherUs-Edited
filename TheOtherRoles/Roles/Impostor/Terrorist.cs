@@ -18,8 +18,7 @@ public static class Terrorist
     public static float defuseDuration = 3f;
     public static float bombCooldown = 15f;
     public static float bombActiveAfter = 3f;
-    public static string bombText = getString("TerroristBombText1");
-    public static bool selfExplosion;
+    public static bool selfExplosion => destructionTime + bombActiveAfter <= 1;
 
     private static Sprite buttonSprite;
 
@@ -46,12 +45,6 @@ public static class Terrorist
 
     public static void clearAndReload()
     {
-        if (destructionTime + bombActiveAfter <= 1)
-        {
-            bombText = getString("TerroristBombText2");
-            selfExplosion = true;
-        };
-
         clearBomb(false);
         terrorist = null;
         bomb = null;

@@ -112,6 +112,7 @@ public class RoleInfo
     public static RoleInfo bloody = new("Bloody", Color.yellow, RoleId.Bloody, false, true);
     public static RoleInfo antiTeleport = new("AntiTeleport", Color.yellow, RoleId.AntiTeleport, false, true);
     public static RoleInfo tiebreaker = new("TieBreaker", Color.yellow, RoleId.Tiebreaker, false, true);
+    public static RoleInfo aftermath = new("Aftermath", Color.yellow, RoleId.Aftermath, false, true);
     public static RoleInfo bait = new("Bait", Color.yellow, RoleId.Bait, false, true);
     public static RoleInfo sunglasses = new("Sunglasses", Color.yellow, RoleId.Sunglasses, false, true);
     public static RoleInfo torch = new("Torch", Color.yellow, RoleId.Torch, false, true);
@@ -216,6 +217,7 @@ public class RoleInfo
         bloody,
         antiTeleport,
         tiebreaker,
+        aftermath,
         bait,
         flash,
         torch,
@@ -265,6 +267,7 @@ public class RoleInfo
                 if (Vip.vip.Any(x => x.PlayerId == p.PlayerId)) infos.Add(vip);
                 if (p == Tiebreaker.tiebreaker) infos.Add(tiebreaker);
                 if (p == Indomitable.indomitable) infos.Add(indomitable);
+                if (p == Aftermath.aftermath) infos.Add(aftermath);
                 if (p == Cursed.cursed && !Cursed.showModifier) infos.Add(cursed);
             }
 

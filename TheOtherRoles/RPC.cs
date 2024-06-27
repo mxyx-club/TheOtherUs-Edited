@@ -1,7 +1,9 @@
 #nullable enable
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
@@ -12,6 +14,7 @@ using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Patches;
+using TheOtherRoles.Roles.Impostor;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -107,6 +110,7 @@ public enum RoleId
     AntiTeleport,
     Tiebreaker,
     Bait,
+    Aftermath,
     Flash,
     Torch,
     Sunglasses,
@@ -604,6 +608,9 @@ public static class RPCProcedure
             case RoleId.Bait:
                 Bait.bait.Add(player);
                 break;
+            case RoleId.Aftermath:
+                Aftermath.aftermath = player;
+                break;
             case RoleId.Lover:
                 if (flag == 0) Lovers.lover1 = player;
                 else Lovers.lover2 = player;
@@ -1084,6 +1091,7 @@ public static class RPCProcedure
                 break;
 
             case RoleId.Pavlovsowner:
+                Pavlovsdogs.pavlovsdogs.Add(Pavlovsdogs.pavlovsowner);
                 Pavlovsdogs.pavlovsowner = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
@@ -1565,6 +1573,142 @@ public static class RPCProcedure
             showFlash(Palette.ImpostorRed, 1.5f, getString("medicShowAttemptText"));
     }
 
+    public static void aftermathDead(byte playerId, byte killerId)
+    {
+        var player = playerById(playerId);
+        var killer = playerById(killerId);
+        //DeadBody? db = null;
+        if (killer == null || killer == player) return;
+
+        if (Blackmailer.blackmailer == killer)
+        {
+            var writer = AmongUsClient.Instance.StartRpcImmediately(killerId,
+                (byte)CustomRPC.BlackmailPlayer, SendOption.Reliable);
+            writer.Write(killerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            blackmailPlayer(killerId);
+            blackmailerButton.Timer = blackmailerButton.MaxTimer;
+        }
+        else if (Bomber.bomber == killer)
+        {
+            var bombWriter = AmongUsClient.Instance.StartRpcImmediately(killerId,
+                (byte)CustomRPC.GiveBomb, SendOption.Reliable);
+            bombWriter.Write(killerId);
+            AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
+            giveBomb(killerId);
+            bomberBombButton.Timer = bomberBombButton.MaxTimer;
+        }
+        else if (Terrorist.terrorist == killer)
+        {
+            if (checkMuderAttempt(Terrorist.terrorist, Terrorist.terrorist) != MurderAttemptResult.BlankKill)
+            {
+                var pos = killer.transform.position;
+                var buff = new byte[sizeof(float) * 2];
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+                var writer = AmongUsClient.Instance.StartRpc(killer.NetId, (byte)CustomRPC.PlaceBomb);
+                writer.WriteBytesAndSize(buff);
+                writer.EndMessage();
+                placeBomb(buff);
+                SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
+            }
+            terroristButton.Timer = terroristButton.MaxTimer;
+        }
+        else if (Morphling.morphling)
+        {
+
+        }
+        else if (Witch.witch == killer)
+        {
+            Witch.spellCastingTarget = killer;
+            SoundEffectsManager.play("witchSpell");
+            witchSpellButton.Timer = witchSpellButton.MaxTimer;
+        }
+        else if (Warlock.warlock == killer)
+        {
+
+        }
+        else if (Miner.miner == killer)
+        {
+
+        }
+        else if (Ninja.ninja == killer)
+        {
+
+        }
+        else if (Escapist.escapist == killer)
+        {
+
+        }
+        else if (Yoyo.yoyo == killer)
+        {
+
+        }
+        else if (EvilTrapper.evilTrapper == killer)
+        {
+
+        }
+        else if (Trickster.trickster == killer)
+        {
+            if (!JackInTheBox.hasJackInTheBoxLimitReached())
+            {
+                var pos = CachedPlayer.LocalPlayer.transform.position;
+                var buff = new byte[sizeof(float) * 2];
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+
+                var writer = AmongUsClient.Instance.StartRpc(killer.NetId,
+                    (byte)CustomRPC.PlaceJackInTheBox);
+                writer.WriteBytesAndSize(buff);
+                writer.EndMessage();
+                placeJackInTheBox(buff);
+                SoundEffectsManager.play("tricksterPlaceBox");
+                placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer;
+            }
+            else
+            {
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.LightsOut, SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                lightsOut();
+                SoundEffectsManager.play("lighterLight");
+                lightsOutButton.Timer = lightsOutButton.MaxTimer;
+            }
+        }
+        else if (Undertaker.undertaker == killer)
+        {
+            undertakerDragButton.Timer = undertakerDragButton.MaxTimer;
+        }
+        else if (Cleaner.cleaner == killer)
+        {
+            cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer;
+        }
+        else if (Eraser.eraser == killer)
+        {
+            eraserButton.Timer = eraserButton.MaxTimer;
+        }
+        else if (Camouflager.camouflager == killer)
+        {
+            camouflagerButton.Timer = camouflagerButton.MaxTimer;
+        }
+        else if (Swooper.swooper == killer)
+        {
+            swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer;
+        }
+        else if (Jackal.jackal == killer && Jackal.canSwoop)
+        {
+            var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable, -1);
+            invisibleWriter.Write(Jackal.jackal.PlayerId);
+            invisibleWriter.Write(byte.MinValue);
+            AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
+            setJackalSwoop(Jackal.jackal.PlayerId, byte.MinValue);
+            jackalSwoopButton.Timer = jackalSwoopButton.MaxTimer;
+        }
+
+
+    }
+
     public static void shifterShift(byte targetId)
     {
         var oldShifter = Shifter.shifter;
@@ -1908,6 +2052,7 @@ public static class RPCProcedure
                 Multitasker.multitasker.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (player == Tiebreaker.tiebreaker) Tiebreaker.clearAndReload();
             if (player == Mini.mini) Mini.clearAndReload();
+            if (player == Aftermath.aftermath) Aftermath.clearAndReload();
             if (player == Giant.giant) Giant.clearAndReload();
             if (player == Watcher.watcher) Watcher.clearAndReload();
             if (player == Radar.radar) Radar.clearAndReload();

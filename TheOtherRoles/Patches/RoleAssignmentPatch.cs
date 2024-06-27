@@ -574,6 +574,7 @@ internal class RoleManagerSelectRolesPatch
         var chanceImpModifiers = new List<RoleId>();
         allModifiers.AddRange(new List<RoleId>
         {
+            RoleId.Aftermath,
             RoleId.Tiebreaker,
             RoleId.Mini,
             RoleId.Giant,
@@ -924,6 +925,15 @@ internal class RoleManagerSelectRolesPatch
 
             modifiers.RemoveAll(x => x == RoleId.Sunglasses);
         }
+        if (modifiers.Contains(RoleId.Aftermath))
+        {
+            var Player = new List<PlayerControl>(playerList);
+            Player.RemoveAll(x => x.Data.Role.IsImpostor);
+            playerId = setModifierToRandomPlayer((byte)RoleId.Aftermath, Player);
+            Player.RemoveAll(x => x.PlayerId == playerId);
+            playerList.RemoveAll(x => x.PlayerId == playerId);
+            modifiers.RemoveAll(x => x == RoleId.Aftermath);
+        }
         if (Bait.SwapCrewmate && modifiers.Contains(RoleId.Bait))
         {
             playerId = setModifierToRandomPlayer((byte)RoleId.Bait, crewPlayer);
@@ -1039,6 +1049,9 @@ internal class RoleManagerSelectRolesPatch
                 break;
             case RoleId.Giant:
                 selection = CustomOptionHolder.modifierGiant.getSelection();
+                break;
+            case RoleId.Aftermath:
+                selection = CustomOptionHolder.modifierAftermath.getSelection();
                 break;
             case RoleId.Bait:
                 selection = CustomOptionHolder.modifierBait.getSelection();

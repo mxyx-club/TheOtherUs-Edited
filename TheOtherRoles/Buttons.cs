@@ -35,7 +35,7 @@ internal static class HudManagerStartPatch
     private static CustomButton disperserDisperseButton;
     private static CustomButton buttonBarryButton;
     private static CustomButton morphlingButton;
-    private static CustomButton camouflagerButton;
+    public static CustomButton camouflagerButton;
     public static CustomButton portalmakerPlacePortalButton;
     private static CustomButton usePortalButton;
     private static CustomButton portalmakerMoveToPortalButton;
@@ -55,9 +55,9 @@ internal static class HudManagerStartPatch
     public static CustomButton swooperSwoopButton;
     public static CustomButton swooperKillButton;
     private static CustomButton jackalSidekickButton;
-    private static CustomButton eraserButton;
-    private static CustomButton placeJackInTheBoxButton;
-    private static CustomButton lightsOutButton;
+    public static CustomButton eraserButton;
+    public static CustomButton placeJackInTheBoxButton;
+    public static CustomButton lightsOutButton;
     public static CustomButton cleanerCleanButton;
     public static CustomButton undertakerDragButton;
     public static CustomButton warlockCurseButton;
@@ -1952,7 +1952,8 @@ internal static class HudManagerStartPatch
         jackalSwoopButton = new CustomButton(
             () =>
             { /* On Use */
-                MessageWriter invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable, -1);
+                var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable, -1);
                 invisibleWriter.Write(Jackal.jackal.PlayerId);
                 invisibleWriter.Write(byte.MinValue);
                 AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
@@ -3590,8 +3591,8 @@ internal static class HudManagerStartPatch
                 // Could Use
                 var text = getString("BlackmailerText");
                 if (Blackmailer.blackmailed != null) text = Blackmailer.blackmailed.Data.PlayerName;
-                showTargetNameOnButtonExplicit(Blackmailer.currentTarget, blackmailerButton,
-                    text); //Show target name under button if setting is true
+                //Show target name under button if setting is true
+                showTargetNameOnButtonExplicit(Blackmailer.currentTarget, blackmailerButton, text); 
                 return Blackmailer.currentTarget != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { blackmailerButton.Timer = blackmailerButton.MaxTimer; },
@@ -3695,9 +3696,6 @@ internal static class HudManagerStartPatch
                     SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
                 }
 
-                terroristButton.Timer = terroristButton.MaxTimer;
-                Terrorist.isPlanted = true;
-
                 if (Terrorist.selfExplosion)
                 {
                     var loacl = CachedPlayer.LocalPlayer.PlayerId;
@@ -3705,12 +3703,14 @@ internal static class HudManagerStartPatch
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
                         CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedMurderPlayer,
                         SendOption.Reliable);
-                    writer.Write(Terrorist.terrorist.Data.PlayerId);
+                    writer.Write(Terrorist.terrorist.PlayerId);
                     writer.Write(loacl);
                     writer.Write(byte.MaxValue);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.uncheckedMurderPlayer(Terrorist.terrorist.Data.PlayerId, loacl, byte.MaxValue);
+                    RPCProcedure.uncheckedMurderPlayer(Terrorist.terrorist.PlayerId, loacl, byte.MaxValue);
                 }
+                terroristButton.Timer = terroristButton.MaxTimer;
+                Terrorist.isPlanted = true;
             },
             () =>
             {
@@ -3734,7 +3734,7 @@ internal static class HudManagerStartPatch
                 terroristButton.isEffectActive = false;
                 terroristButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
-            buttonText: Terrorist.bombText
+            buttonText: Terrorist.selfExplosion ? getString("TerroristBombText2") : getString("TerroristBombText1")
         );
 
         defuseButton = new CustomButton(

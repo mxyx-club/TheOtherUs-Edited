@@ -114,19 +114,17 @@ public static class ChatCommands
             }
             // 游戏中玩家指令
             // 查看自己的职业介绍
-            else if (text.ToLower().StartsWith("/m") && InGame)
+            if (text.ToLower().StartsWith("/m") && InGame)
             {
                 var localRole = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
                 var roleInfo = "";
                 for (var i = 0; i < localRole.Count; i++)
                 {
-                    roleInfo += RoleInfo.GetRoleDescription(localRole[i]);
-                    if (i < localRole.Count - 1)
-                    {
-                        roleInfo += "\n\n";
-                    }
+                    roleInfo = RoleInfo.GetRoleDescription(localRole[i]);
+
+                    __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, $"{localRole[i].name}:\n {roleInfo}\n");
+                    
                 }
-                __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, roleInfo);
                 handled = true;
             }
 

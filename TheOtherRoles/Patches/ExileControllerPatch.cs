@@ -210,7 +210,7 @@ internal class ExileControllerWrapUpPatch
         }
         // Mini exile lose condition
         else if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() &&
-                 !Mini.mini.Data.Role.IsImpostor && !RoleInfo.getRoleInfoForPlayer(Mini.mini).Any(x => x.isNeutral))
+                 !Mini.mini.Data.Role.IsImpostor && !isNeutral(Mini.mini))
             Mini.triggerMiniLose = true;
         // Jester win condition
         else if (exiled != null && Jester.jester != null && Jester.jester.PlayerId == exiled.PlayerId)
