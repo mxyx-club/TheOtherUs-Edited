@@ -327,8 +327,7 @@ public class KillTrap
         {
             if (p == 1f)
             {
-                if (trap.killtrap != null)
-                    trap.killtrap.SetActive(false);
+                trap.killtrap?.SetActive(false);
                 Object.Destroy(trap.killtrap);
                 traps.Remove(trapId);
             }
@@ -401,7 +400,7 @@ public class KillTrap
         audioSource.maxDistance = EvilTrapper.maxDistance;
         audioSource.PlayOneShot(kill);
         if (target == Medic.currentTarget || (target == Veteren.veteren && Veteren.alertActive) || target == BodyGuard.currentTarget
-         || MapOption.shieldFirstKill && MapOption.firstKillPlayer == target || target == Mini.mini)
+         || (MapOption.shieldFirstKill && MapOption.firstKillPlayer == target) || target == Mini.mini)
         {
             clearAllTraps();
             checkMuderAttempt(EvilTrapper.evilTrapper, target);

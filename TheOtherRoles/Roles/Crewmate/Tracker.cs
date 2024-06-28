@@ -52,7 +52,7 @@ public static class Tracker
         usedTracker = false;
         if (arrow?.arrow != null) Object.Destroy(arrow.arrow);
         arrow = new Arrow(Color.blue);
-        if (arrow.arrow != null) arrow.arrow.SetActive(false);
+        arrow.arrow?.SetActive(false);
     }
 
     public static void clearAndReload()

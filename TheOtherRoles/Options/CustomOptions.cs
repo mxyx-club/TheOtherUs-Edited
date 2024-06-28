@@ -157,7 +157,7 @@ public class CustomOption
     public static void ShareOptionSelections()
     {
         if (CachedPlayer.AllPlayers.Count <= 1 ||
-            AmongUsClient.Instance!.AmHost == false && CachedPlayer.LocalPlayer.PlayerControl == null) return;
+            (!AmongUsClient.Instance!.AmHost && CachedPlayer.LocalPlayer.PlayerControl == null)) return;
         var optionsList = new List<CustomOption>(options);
         while (optionsList.Any())
         {
@@ -1084,7 +1084,7 @@ internal class GameOptionsMenuUpdatePatch
         var gameSettingMenu = Object.FindObjectsOfType<GameSettingMenu>().FirstOrDefault();
         if (gameSettingMenu.RegularGameSettings.active || gameSettingMenu.RolesSettings.gameObject.active) return;
 
-        __instance.GetComponentInParent<Scroller>().ContentYBounds.max = -0.5F + __instance.Children.Length * 0.55F;
+        __instance.GetComponentInParent<Scroller>().ContentYBounds.max = -0.5F + (__instance.Children.Length * 0.55F);
         timer += Time.deltaTime;
         if (timer < 0.1f) return;
         timer = 0f;
@@ -1214,7 +1214,7 @@ internal class GameOptionsDataPatch
             if (option.parent != null)
             {
                 var isIrrelevant = option.parent.getSelection() == 0 ||
-                                   option.parent.parent != null && option.parent.parent.getSelection() == 0;
+                                   (option.parent.parent != null && option.parent.parent.getSelection() == 0);
 
                 var c = isIrrelevant ? Color.grey : Color.white; // No use for now
                 if (isIrrelevant) continue;
@@ -1526,7 +1526,7 @@ public class HudManagerUpdate
         var safeArea = Screen.safeArea;
         var aspect = Mathf.Min(Camera.main.aspect, safeArea.width / safeArea.height);
         var safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
-        MinX = 0.1f - safeOrthographicSize * aspect;
+        MinX = 0.1f - (safeOrthographicSize * aspect);
 
         if (!setLastPosition || aspect != lastAspect)
         {
@@ -1544,7 +1544,7 @@ public class HudManagerUpdate
 
         var rows = __instance.GameSettings.text.Count(c => c == '\n');
         var LobbyTextRowHeight = 0.12F;
-        var maxY = Mathf.Max(MinY, rows * LobbyTextRowHeight + (rows - 38) * LobbyTextRowHeight);
+        var maxY = Mathf.Max(MinY, (rows * LobbyTextRowHeight) + ((rows - 38) * LobbyTextRowHeight));
 
         Scroller.ContentYBounds = new FloatRange(MinY, maxY);
 
@@ -1617,12 +1617,12 @@ public class HudManagerUpdate
             if (tmp.text != "")
                 blockCount++;
         for (var i = 0; i < blockCount; i++)
-            settingsTMPs[i].transform.localPosition = new Vector3(-blockCount * 1.2f + 2.7f * i, 2.2f, -500f);
+            settingsTMPs[i].transform.localPosition = new Vector3((-blockCount * 1.2f) + (2.7f * i), 2.2f, -500f);
     }
 
     public static void OpenSettings(HudManager __instance)
     {
-        if (__instance.FullScreen == null || MapBehaviour.Instance && MapBehaviour.Instance.IsOpen
+        if (__instance.FullScreen == null || (MapBehaviour.Instance && MapBehaviour.Instance.IsOpen)
                                           /*|| AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started*/
                                           || GameOptionsManager.Instance.currentGameOptions.GameMode ==
                                           GameModes.HideNSeek) return;

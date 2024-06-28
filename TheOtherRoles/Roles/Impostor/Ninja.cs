@@ -48,6 +48,6 @@ public static class Ninja
         isInvisble = false;
         if (arrow?.arrow != null) Object.Destroy(arrow.arrow);
         arrow = new Arrow(Color.black);
-        if (arrow.arrow != null) arrow.arrow.SetActive(false);
+        arrow.arrow?.SetActive(false);
     }
 }

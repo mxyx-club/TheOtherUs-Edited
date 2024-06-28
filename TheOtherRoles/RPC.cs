@@ -719,13 +719,13 @@ public static class RPCProcedure
     {
         var source = playerById(sourceId);
         var t = targetId == byte.MaxValue ? null : playerById(targetId).Data;
-        if (source != null) source.ReportDeadBody(t);
+        source?.ReportDeadBody(t);
     }
 
     public static void uncheckedExilePlayer(byte targetId)
     {
         var target = playerById(targetId);
-        if (target != null) target.Exiled();
+        target?.Exiled();
     }
 
     public static void dynamicMapOption(byte mapId)
@@ -1791,7 +1791,7 @@ public static class RPCProcedure
         else if (Eraser.eraser == killer)
         {
             var target = killer;
-            if(Eraser.currentTarget != null) target = Eraser.currentTarget;
+            if (Eraser.currentTarget != null) target = Eraser.currentTarget;
             var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.SetFutureErased, SendOption.Reliable);
             writer.Write(target.PlayerId);
@@ -1997,7 +1997,7 @@ public static class RPCProcedure
         if (player == Lawyer.lawyer && Lawyer.target != null)
         {
             var playerInfoTransform = Lawyer.target.cosmetics.nameText.transform.parent.FindChild("Info");
-            var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
+            var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
             if (playerInfo != null) playerInfo.text = "";
         }
 
@@ -2052,7 +2052,7 @@ public static class RPCProcedure
         if (player == Lawyer.lawyer && Lawyer.target != null)
         {
             var playerInfoTransform = Lawyer.target.cosmetics.nameText.transform.parent.FindChild("Info");
-            var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
+            var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
             if (playerInfo != null) playerInfo.text = "";
         }
 
@@ -2201,14 +2201,7 @@ public static class RPCProcedure
         Eraser.futureErased ??= new List<PlayerControl>();
         if (player != null) Eraser.futureErased.Add(player);
     }
-    /*
-    public static void setFutureReveal(byte playerId)
-    {
-        var player = Helpers.playerById(playerId);
-        Doomsayer.playerTargetinformation ??= [];
-        if (player != null) Doomsayer.playerTargetinformation.Add(player);
-    }
-    */
+
     public static void setFutureShifted(byte playerId)
     {
         Shifter.futureShift = playerById(playerId);

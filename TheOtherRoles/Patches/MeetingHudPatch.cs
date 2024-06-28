@@ -89,8 +89,7 @@ internal class MeetingHudPatch
                 renderers[A].color = Color.gray;
             }
 
-            if (swapperButtonList[A] != null)
-                swapperButtonList[A].OnClick.RemoveAllListeners(); // Swap buttons can't be clicked / changed anymore
+            swapperButtonList[A]?.OnClick.RemoveAllListeners(); // Swap buttons can't be clicked / changed anymore
         }
 
         if (firstPlayer != null && secondPlayer != null)
@@ -234,7 +233,7 @@ internal class MeetingHudPatch
                 case RoleId.Doomsayer when !Doomsayer.canGuessNeutral && roleInfo.isNeutral:
                     continue;
             }
-            if (roleInfo.roleId != RoleId.Poucher && Poucher.spawnModifier) continue;
+            if (roleInfo.roleId == RoleId.Poucher && Poucher.spawnModifier) continue;
             if (allowModGuess && roleInfo.isModifier)
             {
                 // Allow Guessing the following mods: Bait, TieBreaker, Bloody, and VIP
@@ -277,7 +276,7 @@ internal class MeetingHudPatch
             var roleData = RoleManagerSelectRolesPatch.getRoleAssignmentData();
             switch (roleInfo.roleId)
             {
-                case RoleId.Pursuer when CustomOptionHolder.lawyerSpawnRate.getSelection() == 0 
+                case RoleId.Pursuer when CustomOptionHolder.lawyerSpawnRate.getSelection() == 0
                                       && CustomOptionHolder.executionerSpawnRate.getSelection() == 0:
                 case RoleId.Spy when roleData.impostors.Count <= 1:
                     continue;
@@ -463,7 +462,7 @@ internal class MeetingHudPatch
             var meetingExtraButton = Object.Instantiate(buttonTemplate, meetingExtraButtonParent);
 
             var infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
-            var meetingInfo = infoTransform != null ? infoTransform.GetComponent<TextMeshPro>() : null;
+            var meetingInfo = infoTransform?.GetComponent<TextMeshPro>();
             meetingExtraButtonText = Object.Instantiate(__instance.playerStates[0].NameText, meetingExtraButtonParent);
             meetingExtraButtonText.text = addSwapperButtons ? $"换票次数: {Swapper.charges}" : "";
             meetingExtraButtonText.enableWordWrapping = false;

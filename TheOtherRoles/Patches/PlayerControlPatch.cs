@@ -773,7 +773,7 @@ public static class PlayerControlFixedUpdatePatch
                  Poucher.killed.Any(x => x.PlayerId == p.PlayerId)))
             {
                 var playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
-                var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
+                var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
                 if (playerInfo == null)
                 {
                     playerInfo = Object.Instantiate(p.cosmetics.nameText, p.cosmetics.nameText.transform.parent);
@@ -783,12 +783,8 @@ public static class PlayerControlFixedUpdatePatch
                     playerInfo.color = playerInfo.color.SetAlpha(1f);
                 }
 
-                var meetingInfoTransform = playerVoteArea != null
-                    ? playerVoteArea.NameText.transform.parent.FindChild("Info")
-                    : null;
-                var meetingInfo = meetingInfoTransform != null
-                    ? meetingInfoTransform.GetComponent<TextMeshPro>()
-                    : null;
+                var meetingInfoTransform = playerVoteArea?.NameText.transform.parent.FindChild("Info");
+                var meetingInfo = meetingInfoTransform?.GetComponent<TextMeshPro>();
                 if (meetingInfo == null && playerVoteArea != null)
                 {
                     meetingInfo = Object.Instantiate(playerVoteArea.NameText, playerVoteArea.NameText.transform.parent);
@@ -1136,7 +1132,7 @@ public static class PlayerControlFixedUpdatePatch
                 Vulture.localArrows[index].arrow.SetActive(true);
             }
 
-            if (Vulture.localArrows[index] != null) Vulture.localArrows[index].Update(db.transform.position);
+            Vulture.localArrows[index]?.Update(db.transform.position);
             index++;
         }
     }
@@ -1170,7 +1166,7 @@ public static class PlayerControlFixedUpdatePatch
                 Amnisiac.localArrows[index].arrow.SetActive(true);
             }
 
-            if (Amnisiac.localArrows[index] != null) Amnisiac.localArrows[index].Update(db.transform.position);
+            Amnisiac.localArrows[index]?.Update(db.transform.position);
             index++;
         }
     }
@@ -1282,8 +1278,7 @@ public static class PlayerControlFixedUpdatePatch
                 Radar.localArrows[index].arrow.SetActive(true);
             }
 
-            if (Radar.localArrows[index] != null)
-                Radar.localArrows[index].Update(Radar.ClosestPlayer.transform.position);
+            Radar.localArrows[index]?.Update(Radar.ClosestPlayer.transform.position);
             index++;
         }
     }
@@ -2240,10 +2235,10 @@ public static class MurderPlayerPatch
             (CachedPlayer.LocalPlayer.PlayerControl == Seer.seer || shouldShowGhostInfo()) &&
             !Seer.seer.Data.IsDead && Seer.seer != target && Seer.mode <= 1)
             showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f), message: getString("seerShowInfoText"));
-        if (Seer.deadBodyPositions != null) Seer.deadBodyPositions.Add(target.transform.position);
+        Seer.deadBodyPositions?.Add(target.transform.position);
 
         // Tracker store body positions
-        if (Tracker.deadBodyPositions != null) Tracker.deadBodyPositions.Add(target.transform.position);
+        Tracker.deadBodyPositions?.Add(target.transform.position);
 
         // Medium add body
         if (Medium.deadBodies != null)
@@ -2526,8 +2521,8 @@ public static class ExilePlayerPatch
 
             if (!Lawyer.targetWasGuessed)
             {
-                if (Lawyer.lawyer != null) Lawyer.lawyer.Exiled();
-                if (Pursuer.pursuer != null) Pursuer.pursuer.Exiled();
+                Lawyer.lawyer?.Exiled();
+                Pursuer.pursuer?.Exiled();
 
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
                 writer.Write(CachedPlayer.LocalPlayer.PlayerId);

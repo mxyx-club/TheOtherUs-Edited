@@ -103,13 +103,13 @@ public static class ClientOptionsPatch
         __instance.CensorChatButton.Text.transform.localScale = new Vector3(1 / 0.66f, 1, 1);
         _origin ??= transform.localPosition;
 
-        transform.localPosition = _origin.Value + Vector3.left * 0.45f;
+        transform.localPosition = _origin.Value + (Vector3.left * 0.45f);
         transform.localScale = new Vector3(0.66f, 1, 1);
         __instance.EnableFriendInvitesButton.transform.localScale = new Vector3(0.66f, 1, 1);
         __instance.EnableFriendInvitesButton.transform.localPosition += Vector3.right * 0.5f;
         __instance.EnableFriendInvitesButton.Text.transform.localScale = new Vector3(1.2f, 1, 1);
 
-        moreOptions.transform.localPosition = _origin.Value + Vector3.right * 4f / 3f;
+        moreOptions.transform.localPosition = _origin.Value + (Vector3.right * 4f / 3f);
         moreOptions.transform.localScale = new Vector3(0.66f, 1, 1);
 
         moreOptions.gameObject.SetActive(true);

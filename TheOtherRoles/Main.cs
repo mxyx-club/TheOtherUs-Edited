@@ -119,8 +119,7 @@ public class TheOtherRolesPlugin : BasePlugin
         MainMenuPatch.addSceneChangeCallbacks();
         _ = RoleInfo.loadReadme();
         AddToKillDistanceSetting.addKillDistance();
-        Info($"Loading TOU completed!");
-        Info($"TheOtherUs-Edited v{VersionString}");
+        Info($"\n Loading TOU completed!\n TheOtherUs-Edited v{VersionString}");
     }
 }
 

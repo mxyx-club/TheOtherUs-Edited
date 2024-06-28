@@ -21,7 +21,7 @@ public static class RoleHelpers
             return true;
 
         return CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && Doomsayer.hasMultipleShotsPerMeeting &&
-               Doomsayer.CanShoot; 
+               Doomsayer.CanShoot;
     }
     public static readonly Random rnd = new((int)DateTime.Now.Ticks);
     public static readonly CustomRoleManager _RoleManager = CustomRoleManager.Instance;

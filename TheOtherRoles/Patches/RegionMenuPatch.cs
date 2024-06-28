@@ -161,7 +161,7 @@ public static class RegionMenuChooseOptionPatch
         foreach (var Button in __instance.ButtonPool.activeChildren)
         {
             var serverListButton = Button.TryCast<ServerListButton>();
-            if (serverListButton != null) serverListButton.SetSelected(serverListButton.Text.text == "Custom");
+            serverListButton?.SetSelected(serverListButton.Text.text == "Custom");
         }
 
         __instance.Open();

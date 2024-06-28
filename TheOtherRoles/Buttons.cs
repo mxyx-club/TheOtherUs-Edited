@@ -3592,7 +3592,7 @@ internal static class HudManagerStartPatch
                 var text = getString("BlackmailerText");
                 if (Blackmailer.blackmailed != null) text = Blackmailer.blackmailed.Data.PlayerName;
                 //Show target name under button if setting is true
-                showTargetNameOnButtonExplicit(Blackmailer.currentTarget, blackmailerButton, text); 
+                showTargetNameOnButtonExplicit(Blackmailer.currentTarget, blackmailerButton, text);
                 return Blackmailer.currentTarget != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { blackmailerButton.Timer = blackmailerButton.MaxTimer; },

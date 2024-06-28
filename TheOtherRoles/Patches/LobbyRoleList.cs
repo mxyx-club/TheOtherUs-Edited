@@ -94,7 +94,7 @@ namespace TheOtherRoles.Patches
                 buttonTransform.GetComponent<BoxCollider2D>().size = new Vector2(2.5f, 0.55f);
                 buttonTransform.GetComponent<SpriteRenderer>().sprite = loadSpriteFromResources("TheOtherRoles.Resources.LobbyRoleInfo.RolePlate.png", 215f);
                 buttons.Add(buttonTransform);
-                buttonTransform.localPosition = new Vector3(0, 2.2f - i * 1f, -5);
+                buttonTransform.localPosition = new Vector3(0, 2.2f - (i * 1f), -5);
                 buttonTransform.localScale = new Vector3(2f, 1.5f, 1f);
 
                 TextMeshPro label = Object.Instantiate(textTemplate, buttonTransform);
@@ -162,7 +162,7 @@ namespace TheOtherRoles.Patches
                 buttonTransform.GetComponent<SpriteRenderer>().sprite = loadSpriteFromResources("TheOtherRoles.Resources.LobbyRoleInfo.RolePlate2.png", 215f);
                 buttons.Add(buttonTransform);
                 int row = count / 3, col = count % 3;
-                buttonTransform.localPosition = new Vector3(-3.205f + col * 3.2f, 2.9f - row * 0.75f, -5);
+                buttonTransform.localPosition = new Vector3(-3.205f + (col * 3.2f), 2.9f - (row * 0.75f), -5);
                 buttonTransform.localScale = new Vector3(1.125f, 1.125f, 1f);
                 label.text = cs(roleInfo.color, roleInfo.name);
                 label.alignment = TextAlignmentOptions.Center;
@@ -228,10 +228,7 @@ namespace TheOtherRoles.Patches
     {
         public static void Prefix(ShipStatus __instance)
         {
-            if (LobbyRoleInfo.RolesSummaryUI != null)
-            {
-                LobbyRoleInfo.RolesSummaryUI.SetActive(false);
-            }
+            LobbyRoleInfo.RolesSummaryUI?.SetActive(false);
         }
     }
 }

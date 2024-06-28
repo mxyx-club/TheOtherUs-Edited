@@ -54,6 +54,7 @@ internal class ExileControllerBeginPatch
 
         // Eraser erase
         if (Eraser.eraser != null && AmongUsClient.Instance.AmHost && Eraser.futureErased != null)
+        {
             // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
             foreach (var target in Eraser.futureErased)
             {
@@ -64,6 +65,7 @@ internal class ExileControllerBeginPatch
                 RPCProcedure.erasePlayerRoles(target.PlayerId);
                 Eraser.alreadyErased.Add(target.PlayerId);
             }
+        }
 
         Eraser.futureErased = new List<PlayerControl>();
 
@@ -86,6 +88,7 @@ internal class ExileControllerBeginPatch
             if ((witchDiesWithExiledLover || exiledIsWitch) && Witch.witchVoteSavesTargets)
                 Witch.futureSpelled = new List<PlayerControl>();
             foreach (var target in Witch.futureSpelled)
+            {
                 if (target != null && !target.Data.IsDead && checkMuderAttempt(Witch.witch, target, true) ==
                     MurderAttemptResult.PerformKill)
                 {
@@ -127,6 +130,7 @@ internal class ExileControllerBeginPatch
                     GameHistory.overrideDeathReasonAndKiller(target, DeadPlayer.CustomDeathReason.WitchExile,
                         Witch.witch);
                 }
+            }
         }
 
         Witch.futureSpelled = new List<PlayerControl>();
@@ -246,6 +250,7 @@ internal class ExileControllerWrapUpPatch
                 rend.sprite = Seer.getSoulSprite();
 
                 if (Seer.limitSoulDuration)
+                {
                     FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Seer.soulDuration,
                         new Action<float>(p =>
                         {
@@ -258,6 +263,7 @@ internal class ExileControllerWrapUpPatch
 
                             if (p == 1f && rend != null && rend.gameObject != null) Object.Destroy(rend.gameObject);
                         })));
+                }
             }
 
             Seer.deadBodyPositions = new List<Vector3>();
@@ -396,11 +402,10 @@ internal class ExileControllerMessagePatch
                 var player = playerById(ExileController.Instance.exiled.Object.PlayerId);
                 if (player == null) return;
                 // Exile role text
-                if (id == StringNames.ExileTextPN || id == StringNames.ExileTextSN || id == StringNames.ExileTextPP ||
-                    id == StringNames.ExileTextSP)
+                if (id is StringNames.ExileTextPN or StringNames.ExileTextSN or StringNames.ExileTextPP or StringNames.ExileTextSP)
                     __result = $"{player.Data.PlayerName} 的职业是 {string.Join(" ", RoleInfo.getRoleInfoForPlayer(player, false).Select(x => x.name).ToArray())}";
                 // Hide number of remaining impostors on Jester win
-                if (id == StringNames.ImpostorsRemainP || id == StringNames.ImpostorsRemainS)
+                if (id is StringNames.ImpostorsRemainP or StringNames.ImpostorsRemainS)
                     if (Jester.jester != null && player.PlayerId == Jester.jester.PlayerId)
                         __result = "";
                 if (Prosecutor.ProsecuteThisMeeting) __result += " (被起诉)";

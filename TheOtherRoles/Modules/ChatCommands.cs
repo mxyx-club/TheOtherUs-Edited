@@ -123,7 +123,7 @@ public static class ChatCommands
                     roleInfo = RoleInfo.GetRoleDescription(localRole[i]);
 
                     __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, $"{localRole[i].name}:\n {roleInfo}\n");
-                    
+
                 }
                 handled = true;
             }

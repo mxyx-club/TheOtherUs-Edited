@@ -1241,7 +1241,7 @@ public static class Helpers
             {
                 RPCProcedure.aftermathDead(target.PlayerId, killer.PlayerId);
 
-            },0.1f);
+            }, 0.1f);
         }
 
         // Block impostor not fully grown mini kill
