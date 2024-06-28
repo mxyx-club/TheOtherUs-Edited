@@ -8,7 +8,7 @@ using TheOtherRoles.Patches;
 namespace TheOtherRoles.Modules;
 public class ModTranslation
 {
-    public static int defaultLanguage = (int)SupportedLangs.English;
+    public static int defaultLanguage = (int)SupportedLangs.SChinese;
     public static Dictionary<string, Dictionary<int, string>> stringData;
     private const string blankText = "[BLANK]";
 
