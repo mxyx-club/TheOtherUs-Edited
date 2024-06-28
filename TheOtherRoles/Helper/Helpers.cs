@@ -271,7 +271,6 @@ public static class Helpers
             var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
             return roleInfo != null && roleInfo.isNeutral;
         }
-
     }
 
     public static bool isNeutral(PlayerControl player)
@@ -1238,7 +1237,11 @@ public static class Helpers
 
         if (Aftermath.aftermath != null && Aftermath.aftermath == target)
         {
-            RPCProcedure.aftermathDead(target.PlayerId, killer.PlayerId);
+            new LateTask(() =>
+            {
+                RPCProcedure.aftermathDead(target.PlayerId, killer.PlayerId);
+
+            },0.1f);
         }
 
         // Block impostor not fully grown mini kill

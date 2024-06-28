@@ -2,10 +2,10 @@
 
 ![mod banner](./Images/TOU_Logo.png)
 
-<p align="center"><a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/latest">
-<img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited"></a>
-<img src="https://badgen.net/github/assets-dl/mxyx-club/TheOtherUs-Edited">
-<img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></p>
+<p align="center">
+<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited"></a>    
+<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/assets-dl/mxyx-club/TheOtherUs-Edited"></a>    
+<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></a></p>
 
 本模组不隶属于 Among Us 或 Innersloth LLC，其包含的内容也未得到 Innersloth LLC 的认可或以其他方式赞助。此处包含的部分材料是Innersloth LLC的财产。
 
@@ -25,23 +25,24 @@
 
 ## 更新日志
 
-###  v1.0.4.5:
+###  v1.0.4.6:
 
  - #### 新增内容：
 
     - 新增中立职业：巴甫洛夫、巴甫洛夫的狗
+    - 新增附加能力：余波
     - 填充职业介绍文本
     - 将会议中左上角的职业信息显示移动到右下角
-    - 给使用管道技能添加按键：V
     - 新增选项 “阻止任务完成结束游戏”
     - 新增赌怪模式选项：“强制巴甫洛夫为赌怪”
     - 新增功能：房主可以在游戏中使用快捷键 "Ctrl+T+Enter" 或在聊天框中输入 "/end" 强制结束游戏
     - 新增功能：房主可以在游戏中使用快捷键 "Ctrl+M+Enter" 或在聊天框中输入 "/mt" 或 "/meeting" 强制开启/关闭会议
+    - 新增功能：所有玩家可以在游戏中聊天框输入 "/m"获取职业介绍
     - 豺狼：删除假跟班设定与对应选项
     - 豺狼：新增选项 “豺狼获得隐身能力的概率”
     - 执钮人：允许伪装者阵营获得执钮人
     - 检察官：新增选项 “检察官不可以发起紧急会议”
-
+    
  - #### Bug修复：
 
     - 优化游戏开始时重置cd的逻辑
@@ -53,6 +54,10 @@
     - 末日预言家：适配赌怪能力为原生赌怪，修复在赌怪模式中猜测错误后图标不会消失等其它bug
 
 
+<details>
+  <summary>点我查看更多更新日志</summary>
+
+
 ###  v1.0.4.2:
 
  - #### 新增内容：
@@ -61,7 +66,7 @@
     - 新增船员职业：检察官（参考：[Town Of Us-R](https://github.com/eDonnes124/Town-Of-Us-R)）
     - 新增伪装者职业：邪恶的设陷师（来自：[TheOtherRoles GMIA](https://github.com/dabao40/TheOtherRolesGMIA)）
     - 删除船员职业：执灯人
-    - 删除伪装者职业：黑手党团体（教父、小弟、清洁工）
+    - 删除伪装者职业：黑手党（教父、小弟、清洁工）
     - 增加更多的自定义颜色
     - 在会议左上角会显示赌怪剩余次数或职业相关的时间类信息
     - 抹除者：新增选项 “可以猜测被抹除的玩家”
@@ -89,10 +94,6 @@
     - 悠悠球：修复悠悠球职业无法被清除的问题（例如被招募）
     - 赏金猎人：修复赏金猎人死亡后报错导致无法刷新其他玩家状态
     - 传送师 & 逃逸者：对按钮文本进行修正
-
-
-<details>
-  <summary>点我查看更多更新日志</summary>
 
 ###  v1.0.3.8:
 
@@ -276,24 +277,25 @@
 |    隐蔽者    |    处刑者    |   工程师   |   绝境者   |
 |    管道工    |    起诉人    |   观察者   |    火炬    |
 |    抹除者    |     豺狼     |    警长    |   太阳镜   |
-|    吸血鬼    |     跟班     |    捕快    |    诱饵    |
-|    清理者    |   巴甫洛夫   |    保镖    |   溅血者   |
-|    送葬者    | 巴甫洛夫的狗 |   执灯人   |   通讯兵   |
-|    逃逸者    |    隐身人    |   传送师   |   破平者   |
-|     术士     |    纵火犯    |    侦探    |   闪电侠   |
-|    骗术师    |   月下狼人   |  时间之主  |   多线程   |
-|   赏金猎人   |   身份窃贼   |    老兵    |    巨人    |
-|    传教师    |     天启     |    医生    |    小孩    |
-|   恐怖分子   |  末日预言家  |   换票师   |    Vip     |
-|    勒索者    |     魅魔     |    黑客    |   不屈者   |
-|     女巫     |              |    灵媒    |    反骨    |
-|     忍者     |              |   追踪者   | 管道工程师 |
-|    悠悠球    |              |   告密者   |    酒鬼    |
-| 邪恶的设陷师 |              |    卧底    |   胆小鬼   |
-|              |              |    保安    |   窥视者   |
-|              |              |   通灵师   |    雷达    |
-|              |              |   设陷师   |   执钮人   |
-|              |              |   预言家   |   变色龙   |
+|    吸血鬼    |     跟班     |    捕快    |    余波    |
+|    清理者    |   巴甫洛夫   |    保镖    |    诱饵    |
+|    送葬者    | 巴甫洛夫的狗 |   执灯人   |   溅血者   |
+|    逃逸者    |    隐身人    |   传送师   |   通讯兵   |
+|     术士     |    纵火犯    |    侦探    |   破平者   |
+|    骗术师    |   月下狼人   |  时间之主  |   闪电侠   |
+|   赏金猎人   |   身份窃贼   |    老兵    |   多线程   |
+|    传教师    |     天启     |    医生    |    巨人    |
+|   恐怖分子   |  末日预言家  |   换票师   |    小孩    |
+|    勒索者    |     魅魔     |    黑客    |    Vip     |
+|     女巫     |              |    灵媒    |   不屈者   |
+|     忍者     |              |   追踪者   |    反骨    |
+|    悠悠球    |              |   告密者   | 管道工程师 |
+| 邪恶的设陷师 |              |    卧底    |    酒鬼    |
+|              |              |    保安    |   胆小鬼   |
+|              |              |   通灵师   |   窥视者   |
+|              |              |   设陷师   |    雷达    |
+|              |              |   预言家   |   执钮人   |
+|              |              |            |   变色龙   |
 |              |              |            |   交换师   |
 
 ## 错误报告

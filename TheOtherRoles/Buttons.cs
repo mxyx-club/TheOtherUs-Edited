@@ -34,7 +34,7 @@ internal static class HudManagerStartPatch
     public static CustomButton bomberGiveButton;
     private static CustomButton disperserDisperseButton;
     private static CustomButton buttonBarryButton;
-    private static CustomButton morphlingButton;
+    public static CustomButton morphlingButton;
     public static CustomButton camouflagerButton;
     public static CustomButton portalmakerPlacePortalButton;
     private static CustomButton usePortalButton;
