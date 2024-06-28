@@ -848,7 +848,6 @@ public class CustomOptionHolder
         eraserSpawnRate = Create(10160, Types.Impostor, cs(Eraser.color, "Eraser"), rates, null, true);
         eraserCooldown = Create(10161, Types.Impostor, "eraserCooldown", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
         eraserCanEraseAnyone = Create(10162, Types.Impostor, "eraserCanEraseAnyone", false, eraserSpawnRate);
-        erasercanEraseGuess = Create(10163, Types.Impostor, "可以猜测被抹除的玩家", false, eraserSpawnRate);
 
         poucherSpawnRate = Create(10320, Types.Impostor, cs(Palette.ImpostorRed, "Poucher"), rates, null, true);
         poucherSpawnModifier = Create(10321, Types.Impostor, "poucherSpawnModifier", false, poucherSpawnRate);
@@ -856,78 +855,78 @@ public class CustomOptionHolder
         mimicSpawnRate = Create(10170, Types.Impostor, cs(Mimic.color, "Mimic"), rates, null, true);
 
         escapistSpawnRate = Create(10180, Types.Impostor, cs(Escapist.color, "Escapist"), rates, null, true);
-        escapistEscapeTime = Create(10181, Types.Impostor, "标记/逃逸冷却", 15f, 0f, 60f, 2.5f, escapistSpawnRate);
-        escapistMaxCharges = Create(10185, Types.Impostor, "可传送次数", 3, 1, 10, 1, escapistSpawnRate);
-        escapistResetPlaceAfterMeeting = Create(10183, Types.Impostor, "会议后重置目标地点", false, escapistSpawnRate);
-        escapistChargesGainOnMeeting = Create(10184, Types.Impostor, "会议后增加次数", 2, 0, 10, 1, escapistSpawnRate);
+        escapistEscapeTime = Create(10181, Types.Impostor, "escapistEscapeTime", 15f, 0f, 60f, 2.5f, escapistSpawnRate);
+        escapistMaxCharges = Create(10185, Types.Impostor, "escapistMaxCharges", 3, 1, 10, 1, escapistSpawnRate);
+        escapistResetPlaceAfterMeeting = Create(10183, Types.Impostor, "escapistResetPlaceAfterMeeting", false, escapistSpawnRate);
+        escapistChargesGainOnMeeting = Create(10184, Types.Impostor, "escapistChargesGainOnMeeting", 2, 0, 10, 1, escapistSpawnRate);
 
         cultistSpawnRate = Create(10190, Types.Impostor, cs(Cultist.color, "Cultist"), rates, null, true);
 
         tricksterSpawnRate = Create(10200, Types.Impostor, cs(Trickster.color, "Trickster"), rates, null, true);
-        tricksterPlaceBoxCooldown = Create(10201, Types.Impostor, "放置惊吓盒冷却", 20f, 2.5f, 30f, 2.5f, tricksterSpawnRate);
-        tricksterLightsOutCooldown = Create(10202, Types.Impostor, "熄灯冷却", 25f, 10f, 60f, 2.5f, tricksterSpawnRate);
-        tricksterLightsOutDuration = Create(10203, Types.Impostor, "熄灯持续时间", 12.5f, 5f, 60f, 0.5f, tricksterSpawnRate);
+        tricksterPlaceBoxCooldown = Create(10201, Types.Impostor, "tricksterPlaceBoxCooldown", 20f, 2.5f, 30f, 2.5f, tricksterSpawnRate);
+        tricksterLightsOutCooldown = Create(10202, Types.Impostor, "tricksterLightsOutCooldown", 25f, 10f, 60f, 2.5f, tricksterSpawnRate);
+        tricksterLightsOutDuration = Create(10203, Types.Impostor, "tricksterLightsOutDuration", 12.5f, 5f, 60f, 0.5f, tricksterSpawnRate);
 
         cleanerSpawnRate = Create(10210, Types.Impostor, cs(Cleaner.color, "Cleaner"), rates, null, true);
-        cleanerCooldown = Create(10211, Types.Impostor, "清理冷却", 25f, 10f, 60f, 2.5f, cleanerSpawnRate);
+        cleanerCooldown = Create(10211, Types.Impostor, "cleanerCooldown", 25f, 10f, 60f, 2.5f, cleanerSpawnRate);
 
         warlockSpawnRate = Create(10220, Types.Impostor, cs(Warlock.color, "Warlock"), rates, null, true);
-        warlockCooldown = Create(10221, Types.Impostor, "术法冷却", 20f, 10f, 60f, 2.5f, warlockSpawnRate);
-        warlockRootTime = Create(10222, Types.Impostor, "使用术法击杀后定身持续时间", 3f, 0f, 15f, 0.25f, warlockSpawnRate);
+        warlockCooldown = Create(10221, Types.Impostor, "warlockCooldown", 20f, 10f, 60f, 2.5f, warlockSpawnRate);
+        warlockRootTime = Create(10222, Types.Impostor, "warlockRootTime", 3f, 0f, 15f, 0.25f, warlockSpawnRate);
 
         bountyHunterSpawnRate = Create(10230, Types.Impostor, cs(BountyHunter.color, "BountyHunter"), rates, null, true);
-        bountyHunterBountyDuration = Create(10231, Types.Impostor, "赏金目标更换间隔", 60f, 10f, 180f, 5f, bountyHunterSpawnRate);
-        bountyHunterReducedCooldown = Create(10232, Types.Impostor, "击杀目标后的奖励冷却", 2.5f, 0f, 30f, 2.5f, bountyHunterSpawnRate);
-        bountyHunterPunishmentTime = Create(10233, Types.Impostor, "击杀非目标后的惩罚冷却", 10f, 0f, 60f, 2.5f, bountyHunterSpawnRate);
-        bountyHunterShowArrow = Create(10234, Types.Impostor, "显示指向悬赏目标的箭头", true, bountyHunterSpawnRate);
-        bountyHunterArrowUpdateIntervall = Create(10235, Types.Impostor, "箭头更新间隔", 0.5f, 0f, 15f, 0.5f, bountyHunterShowArrow);
+        bountyHunterBountyDuration = Create(10231, Types.Impostor, "bountyHunterBountyDuration", 60f, 10f, 180f, 5f, bountyHunterSpawnRate);
+        bountyHunterReducedCooldown = Create(10232, Types.Impostor, "bountyHunterReducedCooldown", 2.5f, 0f, 30f, 2.5f, bountyHunterSpawnRate);
+        bountyHunterPunishmentTime = Create(10233, Types.Impostor, "bountyHunterPunishmentTime", 10f, 0f, 60f, 2.5f, bountyHunterSpawnRate);
+        bountyHunterShowArrow = Create(10234, Types.Impostor, "bountyHunterShowArrow", true, bountyHunterSpawnRate);
+        bountyHunterArrowUpdateIntervall = Create(10235, Types.Impostor, "bountyHunterArrowUpdateIntervall", 0.5f, 0f, 15f, 0.5f, bountyHunterShowArrow);
 
         witchSpawnRate = Create(10240, Types.Impostor, cs(Witch.color, "Witch"), rates, null, true);
-        witchCooldown = Create(10241, Types.Impostor, "诅咒冷却", 20f, 10f, 60, 2.5f, witchSpawnRate);
-        witchAdditionalCooldown = Create(10242, Types.Impostor, "诅咒冷却递增", 5f, 0f, 60f, 2.5f, witchSpawnRate);
-        witchCanSpellAnyone = Create(10243, Types.Impostor, "可诅咒任何人", false, witchSpawnRate);
-        witchSpellCastingDuration = Create(10244, Types.Impostor, "贴身诅咒所需时间", 0.5f, 0f, 10f, 0.25f, witchSpawnRate);
-        witchTriggerBothCooldowns = Create(10245, Types.Impostor, "诅咒与击杀冷却共用", false, witchSpawnRate);
-        witchVoteSavesTargets = Create(10246, Types.Impostor, "驱逐女巫可拯救被诅咒者", true, witchSpawnRate);
+        witchCooldown = Create(10241, Types.Impostor, "witchCooldown", 20f, 10f, 60, 2.5f, witchSpawnRate);
+        witchAdditionalCooldown = Create(10242, Types.Impostor, "witchAdditionalCooldown", 5f, 0f, 60f, 2.5f, witchSpawnRate);
+        witchCanSpellAnyone = Create(10243, Types.Impostor, "witchCanSpellAnyone", false, witchSpawnRate);
+        witchSpellCastingDuration = Create(10244, Types.Impostor, "witchSpellCastingDuration", 0.5f, 0f, 10f, 0.25f, witchSpawnRate);
+        witchTriggerBothCooldowns = Create(10245, Types.Impostor, "witchTriggerBothCooldowns", false, witchSpawnRate);
+        witchVoteSavesTargets = Create(10246, Types.Impostor, "witchVoteSavesTargets", true, witchSpawnRate);
 
         ninjaSpawnRate = Create(10250, Types.Impostor, cs(Ninja.color, "Ninja"), rates, null, true);
-        ninjaCooldown = Create(10251, Types.Impostor, "标记冷却", 20f, 10f, 60f, 2.5f, ninjaSpawnRate);
-        ninjaKnowsTargetLocation = Create(10252, Types.Impostor, "显示指向忍杀对象的箭头", true, ninjaSpawnRate);
-        ninjaTraceTime = Create(10253, Types.Impostor, "忍杀后树叶痕迹持续时间", 6f, 1f, 20f, 0.5f, ninjaSpawnRate);
-        ninjaTraceColorTime = Create(10254, Types.Impostor, "忍杀后痕迹褪色所需时间", 3f, 0f, 20f, 0.5f, ninjaSpawnRate);
-        ninjaInvisibleDuration = Create(10255, Types.Impostor, "忍杀后隐身持续时间", 10f, 0f, 20f, 0.5f, ninjaSpawnRate);
+        ninjaCooldown = Create(10251, Types.Impostor, "ninjaCooldown", 20f, 10f, 60f, 2.5f, ninjaSpawnRate);
+        ninjaKnowsTargetLocation = Create(10252, Types.Impostor, "ninjaKnowsTargetLocation", true, ninjaSpawnRate);
+        ninjaTraceTime = Create(10253, Types.Impostor, "ninjaTraceTime", 6f, 1f, 20f, 0.5f, ninjaSpawnRate);
+        ninjaTraceColorTime = Create(10254, Types.Impostor, "ninjaTraceColorTime", 3f, 0f, 20f, 0.5f, ninjaSpawnRate);
+        ninjaInvisibleDuration = Create(10255, Types.Impostor, "ninjaInvisibleDuration", 10f, 0f, 20f, 0.5f, ninjaSpawnRate);
 
         blackmailerSpawnRate = Create(10260, Types.Impostor, cs(Blackmailer.color, "Blackmailer"), rates, null, true);
-        blackmailerCooldown = Create(10261, Types.Impostor, "勒索冷却", 15f, 5f, 120f, 2.5f, blackmailerSpawnRate);
+        blackmailerCooldown = Create(10261, Types.Impostor, "blackmailerCooldown", 15f, 5f, 120f, 2.5f, blackmailerSpawnRate);
 
         terroristSpawnRate = Create(10270, Types.Impostor, cs(Terrorist.color, "Terrorist"), rates, null, true);
-        terroristBombDestructionTime = Create(10271, Types.Impostor, "炸弹引爆时间", 0f, 0f, 120f, 0.5f, terroristSpawnRate);
-        terroristBombDestructionRange = Create(10272, Types.Impostor, "炸弹爆炸范围", 30f, 5f, 250f, 5f, terroristSpawnRate);
-        terroristBombHearRange = Create(10273, Types.Impostor, "爆炸前预警范围\n声音传播距离", 60f, 5f, 250f, 5f, terroristSpawnRate);
-        terroristDefuseDuration = Create(10274, Types.Impostor, "拆除炸弹所需时间", 2f, 0f, 30f, 0.5f, terroristSpawnRate);
-        terroristBombCooldown = Create(10275, Types.Impostor, "炸弹放置冷却", 0f, 5f, 60f, 2.5f, terroristSpawnRate);
-        terroristBombActiveAfter = Create(10276, Types.Impostor, "炸弹激活时间", 0f, 0f, 15f, 0.5f, terroristSpawnRate);
+        terroristBombDestructionTime = Create(10271, Types.Impostor, "terroristBombDestructionTime", 0f, 0f, 120f, 0.5f, terroristSpawnRate);
+        terroristBombDestructionRange = Create(10272, Types.Impostor, "terroristBombDestructionRange", 30f, 5f, 250f, 5f, terroristSpawnRate);
+        terroristBombHearRange = Create(10273, Types.Impostor, "terroristBombHearRange", 60f, 5f, 250f, 5f, terroristSpawnRate);
+        terroristDefuseDuration = Create(10274, Types.Impostor, "terroristDefuseDuration", 2f, 0f, 30f, 0.5f, terroristSpawnRate);
+        terroristBombCooldown = Create(10275, Types.Impostor, "terroristBombCooldown", 0f, 5f, 60f, 2.5f, terroristSpawnRate);
+        terroristBombActiveAfter = Create(10276, Types.Impostor, "terroristBombActiveAfter", 0f, 0f, 15f, 0.5f, terroristSpawnRate);
 
         minerSpawnRate = Create(10280, Types.Impostor, cs(Miner.color, "Miner"), rates, null, true);
-        minerCooldown = Create(10281, Types.Impostor, "制造管道冷却", 20f, 10f, 60f, 2.5f, minerSpawnRate);
+        minerCooldown = Create(10281, Types.Impostor, "minerCooldown", 20f, 10f, 60f, 2.5f, minerSpawnRate);
 
         yoyoSpawnRate = Create(10290, Types.Impostor, cs(Yoyo.color, "Yoyo"), rates, null, true);
-        yoyoMarkCooldown = Create(10292, Types.Impostor, "标记冷却", 15f, 2.5f, 120f, 2.5f, yoyoSpawnRate);
-        yoyoBlinkDuration = Create(10291, Types.Impostor, "两段瞬移间隔时间", 15f, 2.5f, 120f, 2.5f, yoyoSpawnRate);
-        yoyoMarkStaysOverMeeting = Create(10293, Types.Impostor, "会议后不重置标记地点", false, yoyoSpawnRate);
-        yoyoHasAdminTable = Create(10294, Types.Impostor, "随身管理室地图", true, yoyoSpawnRate);
-        yoyoAdminTableCooldown = Create(10295, Types.Impostor, "查看地图冷却", 15f, 2.5f, 120f, 2.5f, yoyoHasAdminTable);
-        yoyoSilhouetteVisibility = Create(10296, Types.Impostor, "第一段残影透明度", ["0%", "10%", "20%", "30%", "40%", "50%"], yoyoSpawnRate);
+        yoyoMarkCooldown = Create(10292, Types.Impostor, "yoyoMarkCooldown", 15f, 2.5f, 120f, 2.5f, yoyoSpawnRate);
+        yoyoBlinkDuration = Create(10291, Types.Impostor, "yoyoBlinkDuration", 15f, 2.5f, 120f, 2.5f, yoyoSpawnRate);
+        yoyoMarkStaysOverMeeting = Create(10293, Types.Impostor, "yoyoMarkStaysOverMeeting", false, yoyoSpawnRate);
+        yoyoHasAdminTable = Create(10294, Types.Impostor, "yoyoHasAdminTable", true, yoyoSpawnRate);
+        yoyoAdminTableCooldown = Create(10295, Types.Impostor, "yoyoAdminTableCooldown", 15f, 2.5f, 120f, 2.5f, yoyoHasAdminTable);
+        yoyoSilhouetteVisibility = Create(10296, Types.Impostor, "yoyoSilhouetteVisibility", ["0%", "10%", "20%", "30%", "40%", "50%"], yoyoSpawnRate);
 
         evilTrapperSpawnRate = Create(10300, Types.Impostor, cs(EvilTrapper.color, "EvilTrapper"), rates, null, true);
-        evilTrapperNumTrap = Create(10301, Types.Impostor, "最大可同时放下的陷阱数", 2f, 1f, 10f, 1f, evilTrapperSpawnRate);
-        evilTrapperExtensionTime = Create(10302, Types.Impostor, "陷阱激活所需时间", 5f, 2f, 10f, 0.5f, evilTrapperSpawnRate);
-        evilTrapperCooldown = Create(10303, Types.Impostor, "放置陷阱冷却", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
-        evilTrapperKillTimer = Create(10304, Types.Impostor, "掉进陷阱后被陷阱击杀所需时间", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
-        evilTrapperTrapRange = Create(10305, Types.Impostor, "陷阱有效范围", 1f, 0.25f, 2f, 0.125f, evilTrapperSpawnRate);
-        evilTrapperMaxDistance = Create(10306, Types.Impostor, "陷阱击杀声音播放有效范围", 1f, 0f, 60f, 0.5f, evilTrapperSpawnRate);
-        evilTrapperPenaltyTime = Create(10307, Types.Impostor, "设陷者普通击杀会追加冷却", 10f, 0f, 30f, 0.5f, evilTrapperSpawnRate);
-        evilTrapperBonusTime = Create(10308, Types.Impostor, "设陷者击杀落入陷阱的玩家缩减冷却", 10f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
+        evilTrapperNumTrap = Create(10301, Types.Impostor, "evilTrapperNumTrap", 2f, 1f, 10f, 1f, evilTrapperSpawnRate);
+        evilTrapperExtensionTime = Create(10302, Types.Impostor, "evilTrapperExtensionTime", 5f, 2f, 10f, 0.5f, evilTrapperSpawnRate);
+        evilTrapperCooldown = Create(10303, Types.Impostor, "evilTrapperCooldown", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
+        evilTrapperKillTimer = Create(10304, Types.Impostor, "evilTrapperKillTimer", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
+        evilTrapperTrapRange = Create(10305, Types.Impostor, "evilTrapperTrapRange", 1f, 0.25f, 2f, 0.125f, evilTrapperSpawnRate);
+        evilTrapperMaxDistance = Create(10306, Types.Impostor, "evilTrapperMaxDistance", 1f, 0f, 60f, 0.5f, evilTrapperSpawnRate);
+        evilTrapperPenaltyTime = Create(10307, Types.Impostor, "evilTrapperPenaltyTime", 10f, 0f, 30f, 0.5f, evilTrapperSpawnRate);
+        evilTrapperBonusTime = Create(10308, Types.Impostor, "evilTrapperBonusTime", 10f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 

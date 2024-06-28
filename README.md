@@ -46,6 +46,8 @@
  - #### Bug修复：
 
     - 优化游戏开始时重置cd的逻辑
+    - 修复一部分附加能力会分配到已有附加的玩家上的问题
+    - 邪恶的设陷师：现在不会强制击杀小孩、首刀保护等被保护玩家
     - 市长 & 执钮人：现在可以在破坏中使用紧急破坏按钮了（房主可设置）
     - 魅魔：调整胜利条件顺序，现在会优先以恋人身份结束游戏
     - 隐身人：修复隐身人为小孩时击杀冷却不是双倍
@@ -300,7 +302,7 @@
 
 ## 错误报告
 
-如预见游戏性Bug或者有更多的建议可以在仓库[issue](https://github.com/mxyx-club/TheOtherUs-Edited/issues/new/choose)提出，或加QQ群：[961341019](https://qm.qq.com/q/MlhqY3QcYU)
+如预见游戏性Bug或者有更多的建议可以在仓库[issue](https://github.com/mxyx-club/TheOtherUs-Edited/issues/new/choose)提出，或加入模组交流群：[961341019](https://qm.qq.com/q/MlhqY3QcYU)
 
 ## 多语言翻译
 

@@ -192,41 +192,6 @@
         "0": "On",
         "13": "\u5f00\u542f"
     },
-    "unitSeconds": {
-        "0": "{0}s",
-        "11": "{0}\u79d2",
-        "13": "{0}\u79d2"
-    },
-    "unitPercent": {
-        "0": "{0}%",
-        "11": "{0}%",
-        "13": "{0}%"
-    },
-    "unitTimes": {
-        "0": "{0}x",
-        "11": "{0}x",
-        "13": "{0}x"
-    },
-    "unitMeters": {
-        "0": "{0}m",
-        "11": "{0}m",
-        "13": "{0}\u7c73"
-    },
-    "unitScrews": {
-        "0": "{0}",
-        "11": "{0}\u672c",
-        "13": "{0}\u4e2a"
-    },
-    "unitShots": {
-        "0": "{0}",
-        "11": "{0}\u767a",
-        "13": "{0}\u6b21"
-    },
-    "unitPlayers": {
-        "0": "{0}",
-        "11": "{0}\u4eba",
-        "13": "{0}\u4eba"
-    },
     "presetSelection": {
         "0": "Preset",
         "11": "\u30d7\u30ea\u30bb\u30c3\u30c8",
@@ -321,6 +286,7 @@
         "13": "\u6700\u5927\u9644\u52a0\u804c\u4e1a\u6570"
     },
     "resteButtonCooldown": {
+        "0": "Game Start Cooldown",
         "13": "\u6e38\u620f\u5f00\u5c40\u65f6\u91cd\u7f6eCD"
     },
     "maxNumberOfMeetings": {
@@ -586,39 +552,51 @@
         "13": "\u8d4c\u602a\u4e0d\u53ef\u731c\u6d4b\u5df2\u5b8c\u6210\u4efb\u52a1\u7684\u544a\u5bc6\u8005"
     },
     "CustomMap": {
+        "0": "Map",
         "13": "\u5730\u56fe"
     },
     "hideNSeekKillCooldown": {
+        "0": "Kill Cooldown",
         "13": "\u730e\u4eba\u6570\u91cf"
     },
     "hideNSeekHunterCount": {
+        "0": "Number Of Hunters",
         "13": "\u51fb\u6740\u51b7\u5374\u65f6\u95f4"
     },
     "hideNSeekHunterVision": {
+        "0": "Hunter Vision",
         "13": "\u730e\u4eba\u89c6\u91ce"
     },
     "hideNSeekHuntedVision": {
+        "0": "Hunted Vision",
         "13": "\u8eb2\u85cf\u8005\u89c6\u91ce"
     },
     "hideNSeekCommonTasks": {
+        "0": "Common Tasks",
         "13": "\u666e\u901a\u4efb\u52a1\u6570"
     },
     "hideNSeekShortTasks": {
+        "0": "Short Tasks",
         "13": "\u77ed\u4efb\u52a1\u6570"
     },
     "hideNSeekLongTasks": {
+        "0": "Long Tasks",
         "13": "\u957f\u4efb\u52a1\u6570"
     },
     "hideNSeekTimer": {
+        "0": "Timer In Min",
         "13": "\u6700\u5c11\u8eb2\u85cf\u65f6\u95f4"
     },
     "hideNSeekTaskWin": {
+        "0": "Task Win Is Possible",
         "13": "\u8eb2\u85cf\u8005\u53ef\u4ee5\u4efb\u52a1\u83b7\u80dc"
     },
     "hideNSeekTaskPunish": {
+        "0": "Finish Tasks Punish In Sec",
         "13": "\u5b8c\u6210\u4efb\u52a1\u51cf\u5c11\u8eb2\u85cf\u65f6\u95f4"
     },
     "hideNSeekCanSabotage": {
+        "0": "Enable Sabotages",
         "13": "\u542f\u7528\u7834\u574f"
     },
     "hideHuntSpeed": {
@@ -630,51 +608,67 @@
         "13": "\u8eb2\u85cf\u8005\u79fb\u901f\u500d\u7387"
     },
     "hideNSeekHunterWaiting": {
+        "0": "Time The Hunter Needs To Wait",
         "13": "\u730e\u4eba\u7b49\u5f85\u5165\u573a\u65f6\u95f4"
     },
     "hunterLightCooldown": {
+        "0": "Hunter Light Cooldown",
         "13": "\u730e\u4eba\u7167\u660e\u51b7\u5374\u65f6\u95f4"
     },
     "hunterLightDuration": {
+        "0": "Hunter Light Duration",
         "13": "\u730e\u4eba\u7167\u660e\u6301\u7eed\u65f6\u95f4"
     },
     "hunterLightVision": {
+        "0": "Hunter Light Vision",
         "13": "\u730e\u4eba\u7167\u660e\u540e\u7684\u89c6\u91ce\u8303\u56f4"
     },
     "hunterLightPunish": {
+        "0": "Hunter Light Punish In Sec",
         "13": "\u4f7f\u7528\u7167\u660e\u6240\u51cf\u5c11\u7684\u8eb2\u85cf\u65f6\u95f4"
     },
     "hunterAdminCooldown": {
+        "0": "Hunter Admin Cooldown",
         "13": "\u730e\u4eba\u67e5\u770b\u7ba1\u7406\u5730\u56fe\u51b7\u5374\u65f6\u95f4"
     },
     "hunterAdminDuration": {
+        "0": "Hunter Admin Duration",
         "13": "\u730e\u4eba\u67e5\u770b\u7ba1\u7406\u5730\u56fe\u6301\u7eed\u65f6\u95f4"
     },
     "hunterAdminPunish": {
+        "0": "Hunter Admin Punish In Sec",
         "13": "\u7ba1\u7406\u5730\u56fe\u6240\u51cf\u5c11\u7684\u8eb2\u85cf\u65f6\u95f4"
     },
     "hunterArrowCooldown": {
+        "0": "Hunter Arrow Cooldown",
         "13": "\u730e\u4eba\u8ffd\u8e2a\u51b7\u5374\u65f6\u95f4"
     },
     "hunterArrowDuration": {
+        "0": "Hunter Arrow Duration",
         "13": "\u730e\u4eba\u8ffd\u8e2a\u6301\u7eed\u65f6\u95f4"
     },
     "hunterArrowPunish": {
+        "0": "Hunter Arrow Punish In Sec",
         "13": "\u4f7f\u7528\u8ffd\u8e2a\u6240\u51cf\u5c11\u7684\u8eb2\u85cf\u65f6\u95f4"
     },
     "huntedShieldCooldown": {
+        "0": "Hunted Shield Cooldown",
         "13": "\u8eb2\u85cf\u8005\u65f6\u95f4\u4e4b\u76fe\u51b7\u5374\u65f6\u95f4"
     },
     "huntedShieldDuration": {
+        "0": "Hunted Shield Duration",
         "13": "\u8eb2\u85cf\u8005\u65f6\u95f4\u4e4b\u76fe\u6301\u7eed\u65f6\u95f4"
     },
     "huntedShieldRewindTime": {
+        "0": "Hunted Rewind Time",
         "13": "\u65f6\u95f4\u56de\u6eaf\u65f6\u957f"
     },
     "huntedShieldNumber": {
+        "0": "Hunted Shield Number",
         "13": "\u65f6\u95f4\u4e4b\u76fe\u6570\u91cf"
     },
     "propHuntTimer": {
+        "0": "Timer In Min",
         "13": "\u6700\u5c11\u8eb2\u85cf\u65f6\u95f4"
     },
     "propHuntUnstuckCooldown": {
@@ -686,9 +680,11 @@
         "13": "\u7a7f\u5899\u6301\u7eed\u65f6\u95f4"
     },
     "propHunterVision": {
+        "0": "Hunter Vision",
         "13": "\u730e\u4eba\u89c6\u91ce"
     },
     "propVision": {
+        "0": "Prop Vision",
         "13": "\u8eb2\u85cf\u8005\u89c6\u91ce"
     },
     "propHuntSpeed": {
@@ -704,57 +700,75 @@
         "13": "\u542f\u7528\u7a7f\u5899\u6280\u80fd"
     },
     "propHuntNumberOfHunters": {
+        "0": "Number Of Hunters",
         "13": "\u730e\u4eba\u6570\u91cf"
     },
     "hunterInitialBlackoutTime": {
+        "0": "Hunter Initial Blackout Duration",
         "13": "\u730e\u4eba\u7b49\u5f85\u5165\u573a\u65f6\u95f4"
     },
     "hunterMissCooldown": {
+        "0": "Kill Cooldown After Miss",
         "13": "\u9519\u8bef\u51fb\u6740\u540e\u7684\u51b7\u5374"
     },
     "hunterHitCooldown": {
+        "0": "Kill Cooldown After Hit",
         "13": "\u51fb\u6740\u540e\u7684\u51b7\u5374"
     },
     "propHuntRevealCooldown": {
+        "0": "Reveal Prop Cooldown",
         "13": "\u63ed\u793a\u51b7\u5374\u65f6\u95f4"
     },
     "propHuntRevealDuration": {
+        "0": "Reveal Prop Duration",
         "13": "\u63ed\u793a\u6301\u7eed\u65f6\u95f4"
     },
     "propHuntRevealPunish": {
+        "0": "Reveal Time Punish",
         "13": "\u4f7f\u7528\u63ed\u793a\u51cf\u5c11\u8eb2\u85cf\u65f6\u95f4"
     },
     "propHuntAdminCooldown": {
+        "0": "Hunter Admin Cooldown",
         "13": "\u730e\u4eba\u7ba1\u7406\u5730\u56fe\u51b7\u5374\u65f6\u95f4"
     },
     "propHuntFindCooldown": {
+        "0": "Hunter Admin Cooldown",
         "13": "\u8ddd\u79bb\u68c0\u6d4b\u51b7\u5374\u65f6\u95f4"
     },
     "propHuntFindDuration": {
+        "0": "Find Cooldown",
         "13": "\u8ddd\u79bb\u68c0\u6d4b\u6301\u7eed\u65f6\u95f4"
     },
     "propBecomesHunterWhenFound": {
+        "0": "Props Become Hunters When Found",
         "13": "\u8eb2\u85cf\u8005\u88ab\u51fb\u6740\u540e\u8f6c\u5316\u4e3a\u730e\u4eba"
     },
     "propHuntInvisEnabled": {
+        "0": "Invisibility Enabled",
         "13": "\u8eb2\u85cf\u8005\u62e5\u6709\u9690\u8eab\u6280\u80fd"
     },
     "propHuntInvisCooldown": {
+        "0": "Invisibility Cooldown",
         "13": "\u9690\u8eab\u51b7\u5374\u65f6\u95f4"
     },
     "propHuntInvisDuration": {
+        "0": "Invisibility Duration",
         "13": "\u9690\u8eab\u6301\u7eed\u65f6\u95f4"
     },
     "propHuntSpeedboostEnabled": {
+        "0": "Speedboost Enabled",
         "13": "\u8eb2\u85cf\u8005\u62e5\u6709\u75be\u8dd1\u6280\u80fd"
     },
     "propHuntSpeedboostCooldown": {
+        "0": "Speedboost Cooldown",
         "13": "\u75be\u8dd1\u51b7\u5374\u65f6\u95f4"
     },
     "propHuntSpeedboostDuration": {
+        "0": "Speedboost Duration",
         "13": "\u75be\u8dd1\u6301\u7eed\u65f6\u95f4"
     },
     "propHuntSpeedboostSpeed": {
+        "0": "Speedboost Ratio",
         "13": "\u75be\u8dd1\u63d0\u5347\u901f\u5ea6"
     },
     "modifierAssassin": {
@@ -798,58 +812,834 @@
         "13": "\u6e05\u6d01\u5de5\u6e05\u7406\u51b7\u5374"
     },
     "morphlingCooldown": {
+        "0": "Morphling Cooldown",
         "13": "\u5316\u5f62\u51b7\u5374"
     },
     "morphlingDuration": {
+        "0": "Morph Duration",
         "13": "\u5316\u5f62\u6301\u7eed\u65f6\u95f4"
     },
     "bomberBombCooldown": {
+        "0": "Bomber Cooldown",
         "13": "\u70b8\u5f39\u51b7\u5374"
     },
     "bomberDelay": {
+        "0": "Bomb Delay",
         "13": "\u70b8\u5f39\u6fc0\u6d3b\u65f6\u95f4"
     },
     "bomberTimer": {
+        "0": "Bomb Timer",
         "13": "\u70b8\u5f39\u7206\u70b8\u65f6\u95f4"
     },
     "bomberHotPotatoMode": {
+        "0": "Hot Potato Mode",
         "13": "\u70eb\u624b\u5c71\u828b\u6a21\u5f0f"
     },
     "undertakerDragingDelaiAfterKill": {
+        "0": "Draging Delay After Kill",
         "13": "\u4ece\u51fb\u6740\u5230\u6062\u590d\u62d6\u66f3\u80fd\u529b\u6240\u9700\u65f6\u95f4"
     },
     "undertakerDragingAfterVelocity": {
+        "0": "Draging After Velocity",
         "13": "\u62d6\u62fd\u8fc7\u7a0b\u7684\u884c\u52a8\u901f\u5ea6"
     },
     "undertakerCanDragAndVent": {
+        "0": "Can Vent While Dragging",
         "13": "\u62d6\u66f3\u8fc7\u7a0b\u4e2d\u53ef\u4f7f\u7528\u7ba1\u9053"
     },
     "camouflagerCooldown": {
+        "0": "Camouflager Cooldown",
         "13": "\u9690\u853d\u72b6\u6001\u51b7\u5374"
     },
     "camouflagerDuration": {
+        "0": "Camo Duration",
         "13": "\u9690\u853d\u72b6\u6001\u6301\u7eed\u65f6\u95f4"
     },
     "vampireKillDelay": {
+        "0": "Vampire Kill Delay",
         "13": "\u4ece\u5438\u8840\u5230\u51fb\u6740\u6240\u9700\u65f6\u95f4"
     },
     "vampireCooldown": {
+        "0": "Vampire Cooldown",
         "13": "\u5438\u8840\u51b7\u5374"
     },
     "vampireGarlicButton": {
+        "0": "Enable Garlic",
         "13": "\u53d1\u653e\u5927\u849c"
     },
     "vampireCanKillNearGarlics": {
+        "0": "Vampire Can Kill Near Garlics",
         "13": "\u53ef\u5728\u5927\u849c\u9644\u8fd1\u51fb\u6740"
     },
     "eraserCooldown": {
+        "0": "Eraser Cooldown",
         "13": "\u62b9\u9664\u51b7\u5374"
     },
     "eraserCanEraseAnyone": {
+        "0": "Can Erase Anyone",
         "13": "\u53ef\u62b9\u9664\u4efb\u4f55\u4eba"
     },
+    "erasercanEraseGuess": {
+        "0": "Can Guess Erase Player",
+        "13": "\u53ef\u4ee5\u731c\u6d4b\u88ab\u62b9\u9664\u7684\u73a9\u5bb6"
+    },
     "poucherSpawnModifier": {
+        "0": "Is Modifier",
         "13": "\u751f\u6210\u4e3a\u9644\u52a0\u80fd\u529b"
+    },
+    "escapistEscapeTime": {
+        "0": "Mark and Escape Cooldown",
+        "13": "\u6807\u8bb0/\u9003\u9038\u51b7\u5374"
+    },
+    "escapistChargesOnPlace": {
+        "0": "Charges On Place",
+        "13": "\u53ef\u4f20\u9001\u6b21\u6570"
+    },
+    "escapistResetPlaceAfterMeeting": {
+        "0": "Reset Places After Meeting",
+        "13": "\u4f1a\u8bae\u540e\u91cd\u7f6e\u76ee\u6807\u5730\u70b9"
+    },
+    "escapistChargesGainOnMeeting": {
+        "0": "Charges Gained After Meeting",
+        "13": "\u4f1a\u8bae\u540e\u589e\u52a0\u6b21\u6570"
+    },
+    "escapistMaxCharges": {
+        "0": "Maximum Charges"
+    },
+    "tricksterPlaceBoxCooldown": {
+        "0": "Trickster Box Cooldown",
+        "13": "\u653e\u7f6e\u60ca\u5413\u76d2\u51b7\u5374"
+    },
+    "tricksterLightsOutCooldown": {
+        "0": "Trickster Lights Out Cooldown",
+        "13": "\u7184\u706f\u51b7\u5374"
+    },
+    "tricksterLightsOutDuration": {
+        "0": "Trickster Lights Out Duration",
+        "13": "\u7184\u706f\u6301\u7eed\u65f6\u95f4"
+    },
+    "cleanerCooldown": {
+        "0": "Cleaner Cooldown",
+        "13": "\u6e05\u7406\u51b7\u5374"
+    },
+    "warlockCooldown": {
+        "0": "Warlock Cooldown",
+        "13": "\u672f\u6cd5\u51b7\u5374"
+    },
+    "warlockRootTime": {
+        "0": "Warlock Root Time",
+        "13": "\u4f7f\u7528\u672f\u6cd5\u51fb\u6740\u540e\u5b9a\u8eab\u6301\u7eed\u65f6\u95f4"
+    },
+    "bountyHunterBountyDuration": {
+        "0": "Duration After Which Bounty Changes",
+        "13": "\u8d4f\u91d1\u76ee\u6807\u66f4\u6362\u95f4\u9694"
+    },
+    "bountyHunterReducedCooldown": {
+        "0": "Cooldown After Killing Bounty",
+        "13": "\u51fb\u6740\u76ee\u6807\u540e\u7684\u5956\u52b1\u51b7\u5374"
+    },
+    "bountyHunterPunishmentTime": {
+        "0": "Additional Cooldown After Killing Others",
+        "13": "\u51fb\u6740\u975e\u76ee\u6807\u540e\u7684\u60e9\u7f5a\u51b7\u5374"
+    },
+    "bountyHunterShowArrow": {
+        "0": "Show Arrow Pointing Towards The Bounty",
+        "13": "\u663e\u793a\u6307\u5411\u60ac\u8d4f\u76ee\u6807\u7684\u7bad\u5934"
+    },
+    "bountyHunterArrowUpdateIntervall": {
+        "0": "Arrow Update Intervall",
+        "13": "\u7bad\u5934\u66f4\u65b0\u95f4\u9694"
+    },
+    "witchCooldown": {
+        "0": "Witch Spell Casting Cooldown",
+        "13": "\u8bc5\u5492\u51b7\u5374"
+    },
+    "witchAdditionalCooldown": {
+        "0": "Witch Additional Cooldown",
+        "13": "\u8bc5\u5492\u51b7\u5374\u9012\u589e"
+    },
+    "witchCanSpellAnyone": {
+        "0": "Witch Can Spell Anyone",
+        "13": "\u53ef\u8bc5\u5492\u4efb\u4f55\u4eba"
+    },
+    "witchSpellCastingDuration": {
+        "0": "Spell Casting Duration",
+        "13": "\u8d34\u8eab\u8bc5\u5492\u6240\u9700\u65f6\u95f4"
+    },
+    "witchTriggerBothCooldowns": {
+        "0": "Trigger Both Cooldowns",
+        "13": "\u8bc5\u5492\u4e0e\u51fb\u6740\u51b7\u5374\u5171\u7528"
+    },
+    "witchVoteSavesTargets": {
+        "0": "Voting The Witch Saves All The Targets",
+        "13": "\u9a71\u9010\u5973\u5deb\u53ef\u62ef\u6551\u88ab\u8bc5\u5492\u8005"
+    },
+    "ninjaCooldown": {
+        "0": "Ninja Mark Cooldown",
+        "13": "\u6807\u8bb0\u51b7\u5374"
+    },
+    "ninjaKnowsTargetLocation": {
+        "0": "Ninja Knows Location Of Target",
+        "13": "\u663e\u793a\u6307\u5411\u5fcd\u6740\u5bf9\u8c61\u7684\u7bad\u5934"
+    },
+    "ninjaTraceTime": {
+        "0": "Trace Duration",
+        "13": "\u5fcd\u6740\u540e\u6811\u53f6\u75d5\u8ff9\u6301\u7eed\u65f6\u95f4"
+    },
+    "ninjaTraceColorTime": {
+        "0": "Time Till Trace Color Has Faded",
+        "13": "\u5fcd\u6740\u540e\u75d5\u8ff9\u892a\u8272\u6240\u9700\u65f6\u95f4"
+    },
+    "ninjaInvisibleDuration": {
+        "0": "Time The Ninja Is Invisible",
+        "13": "\u5fcd\u6740\u540e\u9690\u8eab\u6301\u7eed\u65f6\u95f4"
+    },
+    "blackmailerCooldown": {
+        "0": "Blackmail Cooldown",
+        "13": "\u52d2\u7d22\u51b7\u5374"
+    },
+    "terroristBombDestructionTime": {
+        "0": "Bomb Destruction Time",
+        "13": "\u70b8\u5f39\u5f15\u7206\u65f6\u95f4"
+    },
+    "terroristBombDestructionRange": {
+        "0": "Bomb Destruction Range",
+        "13": "\u70b8\u5f39\u7206\u70b8\u8303\u56f4"
+    },
+    "terroristBombHearRange": {
+        "0": "Bomb Hear Range",
+        "13": "\u7206\u70b8\u524d\u9884\u8b66\u8303\u56f4\n\u58f0\u97f3\u4f20\u64ad\u8ddd\u79bb"
+    },
+    "terroristDefuseDuration": {
+        "0": "Bomb Defuse Duration",
+        "13": "\u62c6\u9664\u70b8\u5f39\u6240\u9700\u65f6\u95f4"
+    },
+    "terroristBombCooldown": {
+        "0": "Bomb Cooldown",
+        "13": "\u70b8\u5f39\u653e\u7f6e\u51b7\u5374"
+    },
+    "terroristBombActiveAfter": {
+        "0": "Bomb Is Active After",
+        "13": "\u70b8\u5f39\u6fc0\u6d3b\u65f6\u95f4"
+    },
+    "minerCooldown": {
+        "0": "Mine Cooldown",
+        "13": "\u5236\u9020\u7ba1\u9053\u51b7\u5374"
+    },
+    "yoyoMarkCooldown": {
+        "0": "Blink Duration",
+        "13": "\u6807\u8bb0\u51b7\u5374"
+    },
+    "yoyoBlinkDuration": {
+        "0": "Mark Location Cooldown",
+        "13": "\u4e24\u6bb5\u77ac\u79fb\u95f4\u9694\u65f6\u95f4"
+    },
+    "yoyoMarkStaysOverMeeting": {
+        "0": "Marked Location Stays After Meeting",
+        "13": "\u4f1a\u8bae\u540e\u4e0d\u91cd\u7f6e\u6807\u8bb0\u5730\u70b9"
+    },
+    "yoyoHasAdminTable": {
+        "0": "Has Admin Table",
+        "13": "\u968f\u8eab\u7ba1\u7406\u5ba4\u5730\u56fe"
+    },
+    "yoyoAdminTableCooldown": {
+        "0": "Admin Table Cooldown",
+        "13": "\u67e5\u770b\u5730\u56fe\u51b7\u5374"
+    },
+    "yoyoSilhouetteVisibility": {
+        "0": "Silhouette Visibility",
+        "13": "\u7b2c\u4e00\u6bb5\u6b8b\u5f71\u900f\u660e\u5ea6"
+    },
+    "jesterCanCallEmergency": {
+        "0": "Jester Can Call Emergency Meeting"
+    },
+    "jesterCanVent": {
+        "0": "Jester Can Hide In Vent"
+    },
+    "jesterHasImpostorVision": {
+        "0": "Jester Has Impostor Vision"
+    },
+    "amnisiacShowArrows": {
+        "0": "Show Arrows To Dead Bodies"
+    },
+    "amnisiacResetRole": {
+        "0": "Reset Role When Taken"
+    },
+    "arsonistCooldown": {
+        "0": "Arsonist Cooldown"
+    },
+    "arsonistDuration": {
+        "0": "Arsonist Douse Duration"
+    },
+    "jackalKillCooldown": {
+        "0": "Jackal/Sidekick Kill Cooldown"
+    },
+    "jackalChanceSwoop": {
+        "0": "Chance That Jackal Can Swoop"
+    },
+    "jackalCanUseVents": {
+        "0": "Jackal Can Use Vents"
+    },
+    "jackalCanUseSabo": {
+        "0": "Jackal Team Can Sabotage"
+    },
+    "jackalAndSidekickHaveImpostorVision": {
+        "0": "Jackal And Sidekick Have Impostor Vision"
+    },
+    "jackalCanCreateSidekick": {
+        "0": "Jackal Can Create A Sidekick"
+    },
+    "jackalCreateSidekickCooldown": {
+        "0": "Jackal Create Sidekick Cooldown"
+    },
+    "jackalImpostorCanFindSidekick": {
+        "0": "Impostors can see teammates turned Sidekick"
+    },
+    "sidekickCanKill": {
+        "0": "Sidekick Can Kill"
+    },
+    "sidekickCanUseVents": {
+        "0": "Sidekick Can Use Vents"
+    },
+    "sidekickPromotesToJackal": {
+        "0": "Sidekick Gets Promoted To Jackal On Jackal Death"
+    },
+    "jackalPromotedFromSidekickCanCreateSidekick": {
+        "0": "Jackals Promoted From Sidekick Can Create A Sidekick"
+    },
+    "vultureCooldown": {
+        "0": "Vulture Cooldown"
+    },
+    "vultureNumberToWin": {
+        "0": "Number Of Corpses Needed To Be Eaten"
+    },
+    "vultureCanUseVents": {
+        "0": "Vulture Can Use Vents"
+    },
+    "vultureShowArrows": {
+        "0": "Show Arrows Pointing Towards The Corpses"
+    },
+    "lawyerVision": {
+        "0": "Vision"
+    },
+    "lawyerKnowsRole": {
+        "0": "Lawyer Knows Target Role"
+    },
+    "lawyerCanCallEmergency": {
+        "0": "Lawyer Can Call Emergency Meeting"
+    },
+    "lawyerTargetCanBeJester": {
+        "0": "Lawyer Target Can Be The Jester"
+    },
+    "pursuerCooldown": {
+        "0": "Pursuer Blank Cooldown"
+    },
+    "pursuerBlanksNumber": {
+        "0": "Pursuer Number Of Blanks"
+    },
+    "prosecutorCanCallEmergency": {
+        "0": "Prosecutor Can Call Emergency Meeting"
+    },
+    "werewolfRampageCooldown": {
+        "0": "Rampage Cooldown"
+    },
+    "werewolfRampageDuration": {
+        "0": "Rampage Duration"
+    },
+    "werewolfKillCooldown": {
+        "0": "Kill Cooldown"
+    },
+    "thiefCooldown": {
+        "0": "Thief Cooldown"
+    },
+    "thiefCanKillSheriff": {
+        "0": "Thief Can Kill Sheriff"
+    },
+    "thiefHasImpVision": {
+        "0": "Thief Has Impostor Vision"
+    },
+    "thiefCanUseVents": {
+        "0": "Thief Can Use Vents"
+    },
+    "thiefCanStealWithGuess": {
+        "0": "Thief Can Guess To Steal A Role (If Guesser)"
+    },
+    "guesserNumberOfShots": {
+        "0": "Vigilante Number Of Shots"
+    },
+    "guesserHasMultipleShotsPerMeeting": {
+        "0": "Vigilante Can Shoot Multiple Times Per Meeting"
+    },
+    "guesserShowInfoInGhostChat": {
+        "0": "Guesses Visible In Ghost Chat"
+    },
+    "guesserKillsThroughShield": {
+        "0": "Guesses Ignore The Medic Shield"
+    },
+    "mayorCanSeeVoteColors": {
+        "0": "Mayor Can See Vote Colors"
+    },
+    "mayorTasksNeededToSeeVoteColors": {
+        "0": "Completed Tasks Needed To See Vote Colors"
+    },
+    "mayorMeetingButton": {
+        "0": "Mobile Emergency Button"
+    },
+    "mayorMaxRemoteMeetings": {
+        "0": "Number Of Remote Meetings"
+    },
+    "mayorChooseSingleVote": {
+        "0": "Mayor Can Choose Single Vote"
+    },
+    "mayorChooseSingleVote2": {
+        "0": "On (Before Voting)"
+    },
+    "mayorChooseSingleVote3": {
+        "0": "On (Until Meeting Ends)"
+    },
+    "engineerRemoteFix": {
+        "0": "Enable Remote Fix"
+    },
+    "engineerResetFixAfterMeeting": {
+        "0": "Reset Fixes After Meeting"
+    },
+    "engineerNumberOfFixes": {
+        "0": "Number Of Sabotage Fixes"
+    },
+    "engineerExpertRepairs": {
+        "0": "Advanced Sabotage Repair"
+    },
+    "engineerHighlightForImpostors": {
+        "0": "Impostors See Vents Highlighted"
+    },
+    "engineerHighlightForTeamJackal": {
+        "0": "Jackal and Sidekick See Vents Highlighted"
+    },
+    "privateInvestigatorSeeColor": {
+        "0": "Can See Target Player Color"
+    },
+    "sheriffCooldown": {
+        "0": "Sheriff Cooldown"
+    },
+    "sheriffMisfireKills": {
+        "0": "Misfire Kills"
+    },
+    "sheriffMisfireKills1": {
+        "0": "Self"
+    },
+    "sheriffMisfireKills2": {
+        "0": "Target"
+    },
+    "sheriffMisfireKills3": {
+        "0": "Both"
+    },
+    "sheriffCanKillNeutrals": {
+        "0": "ninjaKnowsTargetLocation"
+    },
+    "sheriffCanKill": {
+        "0": "Sheriff Can Kill {0}"
+    },
+    "deputySpawnRate": {
+        "0": "Sheriff Has A Deputy"
+    },
+    "deputyNumberOfHandcuffs": {
+        "0": "Deputy Number Of Handcuffs"
+    },
+    "deputyHandcuffCooldown": {
+        "0": "Handcuff Cooldown"
+    },
+    "deputyHandcuffDuration": {
+        "0": "Handcuff Duration"
+    },
+    "deputyKnowsSheriff": {
+        "0": "Sheriff And Deputy Know Each Other"
+    },
+    "deputyGetsPromoted": {
+        "0": "Deputy Gets Promoted To Sheriff"
+    },
+    "deputyGetsPromoted2": {
+        "0": "On (Immediately)"
+    },
+    "deputyGetsPromoted3": {
+        "0": "On (After Meeting)"
+    },
+    "deputyKeepsHandcuffs": {
+        "0": "Deputy Keeps Handcuffs When Promoted"
+    },
+    "detectiveAnonymousFootprints": {
+        "0": "Anonymous Footprints"
+    },
+    "detectiveFootprintIntervall": {
+        "0": "Footprint Intervall"
+    },
+    "detectiveFootprintDuration": {
+        "0": "Footprint Duration"
+    },
+    "detectiveReportNameDuration": {
+        "0": "Time Where Investigator Reports Will Have Name"
+    },
+    "detectiveReportColorDuration": {
+        "0": "Time Where Investigator Reports Will Have Color Type"
+    },
+    "medicShowShielded": {
+        "0": "Show Shielded Player"
+    },
+    "medicShowShielded1": {
+        "0": "Everyone"
+    },
+    "medicShowShielded2": {
+        "0": "Shielded + Medic"
+    },
+    "medicShowShielded3": {
+        "0": "Medic"
+    },
+    "medicBreakShield": {
+        "0": "Shield Is Unbreakable"
+    },
+    "medicShowAttemptToShielded": {
+        "0": "Shielded Player Sees Murder Attempt"
+    },
+    "medicResetTargetAfterMeeting": {
+        "0": "Reset Target After Meeting"
+    },
+    "medicSetOrShowShieldAfterMeeting": {
+        "0": "Shield Will Be Activated"
+    },
+    "medicSetOrShowShieldAfterMeeting1": {
+        "0": "Instantly"
+    },
+    "medicSetOrShowShieldAfterMeeting2": {
+        "0": "Instantly, Visible\nAfter Meeting"
+    },
+    "medicSetOrShowShieldAfterMeeting3": {
+        "0": "After Meeting"
+    },
+    "medicShowAttemptToMedic": {
+        "0": "Medic Sees Murder Attempt On Shielded Player"
+    },
+    "timeMasterCooldown": {
+        "0": "Time Master Cooldown"
+    },
+    "timeMasterRewindTime": {
+        "0": "Rewind Time"
+    },
+    "timeMasterShieldDuration": {
+        "0": "Time Master Shield Duration"
+    },
+    "veterenCooldown": {
+        "0": "Alert Cooldown"
+    },
+    "veterenAlertDuration": {
+        "0": "Alert Duration"
+    },
+    "swapperCanCallEmergency": {
+        "0": "Swapper Can Call Emergency Meeting"
+    },
+    "swapperCanFixSabotages": {
+        "0": "Swapper Can Fix Sabotages"
+    },
+    "swapperCanOnlySwapOthers": {
+        "0": "Swapper Can Only Swap Others"
+    },
+    "swapperSwapsNumber": {
+        "0": "Initial Swap Charges"
+    },
+    "swapperRechargeTasksNumber": {
+        "0": "Number Of Tasks Needed For Recharging"
+    },
+    "seerMode": {
+        "0": "Seer Mode"
+    },
+    "seerMode1": {
+        "0": "Show Death Flash + Souls"
+    },
+    "seerMode2": {
+        "0": "Show Death Flash"
+    },
+    "seerMode3": {
+        "0": "Show Souls"
+    },
+    "seerLimitSoulDuration": {
+        "0": "Seer Limit Soul Duration"
+    },
+    "seerSoulDuration": {
+        "0": "Seer Soul Duration"
+    },
+    "hackerCooldown": {
+        "0": "Hacker Cooldown"
+    },
+    "hackerHackeringDuration": {
+        "0": "Hacker Duration"
+    },
+    "hackerOnlyColorType": {
+        "0": "Hacker Only Sees Color Type"
+    },
+    "hackerToolsNumber": {
+        "0": "Max Mobile Gadget Charges"
+    },
+    "hackerRechargeTasksNumber": {
+        "0": "Number Of Tasks Needed For Recharging"
+    },
+    "hackerNoMove": {
+        "0": "Cant Move During Mobile Gadget Duration"
+    },
+    "trackerUpdateIntervall": {
+        "0": "Tracker Update Intervall"
+    },
+    "trackerResetTargetAfterMeeting": {
+        "0": "Tracker Reset Target After Meeting"
+    },
+    "trackerCanTrackCorpses": {
+        "0": "Tracker Can Track Corpses"
+    },
+    "trackerCorpsesTrackingCooldown": {
+        "0": "Corpses Tracking Cooldown"
+    },
+    "trackerCorpsesTrackingDuration": {
+        "0": "Corpses Tracking Duration"
+    },
+    "trackerTrackingMethod": {
+        "0": "How Tracker Gets Target Location"
+    },
+    "trackerTrackingMethod1": {
+        "0": "Arrow Only"
+    },
+    "trackerTrackingMethod2": {
+        "0": "Proximity Dectector Only"
+    },
+    "trackerTrackingMethod3": {
+        "0": "Arrow + Proximity"
+    },
+    "snitchLeftTasksForReveal": {
+        "0": "Task Count Where The Snitch Will Be Revealed"
+    },
+    "snitchSeeMeeting": {
+        "0": "Show Roles Color"
+    },
+    "snitchCanSeeRoles": {
+        "0": "Can See Roles Info"
+    },
+    "snitchIncludeNeutralTeam": {
+        "0": "Include Team Neutral"
+    },
+    "snitchIncludeNeutralTeam2": {
+        "0": "Killer"
+    },
+    "snitchIncludeNeutralTeam3": {
+        "0": "Evil"
+    },
+    "snitchIncludeNeutralTeam4": {
+        "0": "All"
+    },
+    "snitchTeamNeutraUseDifferentArrowColor": {
+        "0": "Use Different Color For Neutra Team"
+    },
+    "spyCanDieToSheriff": {
+        "0": "Spy Can Die To Sheriff"
+    },
+    "spyImpostorsCanKillAnyone": {
+        "0": "Impostors Can Kill Anyone If There Is A Spy"
+    },
+    "spyCanEnterVents": {
+        "0": "Spy Can Enter Vents"
+    },
+    "spyHasImpostorVision": {
+        "0": "Spy Has Impostor Vision"
+    },
+    "portalmakerCooldown": {
+        "0": "Portalmaker Cooldown"
+    },
+    "portalmakerUsePortalCooldown": {
+        "0": "Use Portal Cooldown"
+    },
+    "portalmakerLogOnlyColorType": {
+        "0": "Portalmaker Log Only Shows Color Type"
+    },
+    "portalmakerLogHasTime": {
+        "0": "Log Shows Time"
+    },
+    "portalmakerCanPortalFromAnywhere": {
+        "0": "Can Port To Portal From Everywhere"
+    },
+    "securityGuardCooldown": {
+        "0": "Security Guard Cooldown"
+    },
+    "securityGuardTotalScrews": {
+        "0": "Security Guard Number Of Screws"
+    },
+    "securityGuardCamPrice": {
+        "0": "Number Of Screws Per Cam"
+    },
+    "securityGuardVentPrice": {
+        "0": "Number Of Screws Per Vent"
+    },
+    "securityGuardCamDuration": {
+        "0": "Security Guard Duration"
+    },
+    "securityGuardCamMaxCharges": {
+        "0": "Gadget Max Charges"
+    },
+    "securityGuardCamRechargeTasksNumber": {
+        "0": "Number Of Tasks Needed For Recharging"
+    },
+    "securityGuardNoMove": {
+        "0": "Cant Move During Cam Duration"
+    },
+    "mediumCooldown": {
+        "0": "Medium Questioning Cooldown"
+    },
+    "mediumDuration": {
+        "0": "Medium Questioning Duration"
+    },
+    "mediumOneTimeUse": {
+        "0": "Each Soul Can Only Be Questioned Once"
+    },
+    "mediumChanceAdditionalInfo": {
+        "0": "Chance That The Answer Contains \n    Additional Information"
+    },
+    "jumperJumpTime": {
+        "0": "Jump Cooldown"
+    },
+    "jumperChargesOnPlace": {
+        "0": "Charges On Place"
+    },
+    "jumperResetPlaceAfterMeeting": {
+        "0": "Reset Places After Meeting"
+    },
+    "jumperChargesGainOnMeeting": {
+        "0": "Charges Gained After Meeting"
+    },
+    "jumperMaxCharges": {
+        "0": "Maximum Charges"
+    },
+    "bodyGuardResetTargetAfterMeeting": {
+        "0": "Reset Target After Meeting"
+    },
+    "bodyGuardFlash": {
+        "0": "Show Flash On Death"
+    },
+    "trapperCooldown": {
+        "0": "Trapper Cooldown"
+    },
+    "trapperMaxCharges": {
+        "0": "Max Traps Charges"
+    },
+    "trapperRechargeTasksNumber": {
+        "0": "Number Of Tasks Needed For Recharging"
+    },
+    "trapperTrapNeededTriggerToReveal": {
+        "0": "Trap Needed Trigger To Reveal"
+    },
+    "trapperAnonymousMap": {
+        "0": "Show Anonymous Map"
+    },
+    "trapperInfoType": {
+        "0": "Trap Information Type"
+    },
+    "trapperInfoType1": {
+        "0": "Role"
+    },
+    "trapperInfoType2": {
+        "0": "Good/Evil Role"
+    },
+    "trapperInfoType3": {
+        "0": "Name"
+    },
+    "trapperTrapDuration": {
+        "0": "Trap Duration"
+    },
+    "modifiersAreHidden": {
+        "0": "Hide After Death Modifiers"
+    },
+    "modifierDisperserCooldown": {
+        "0": "Disperser Cooldown"
+    },
+    "modifierDisperserNumberOfUses": {
+        "0": "Number Of Uses"
+    },
+    "modifierDisperserDispersesToVent": {
+        "0": "disperse To Vent"
+    },
+    "modifierBloodyQuantity": {
+        "0": "Bloody Quantity"
+    },
+    "modifierBloodyDuration": {
+        "0": "Trail Duration"
+    },
+    "modifierAntiTeleportQuantity": {
+        "0": "Anti Teleport Quantity"
+    },
+    "modifierBaitQuantity": {
+        "0": "Bait Quantity"
+    },
+    "modifierBaitReportDelayMin": {
+        "0": "Bait Report Delay Min"
+    },
+    "modifierBaitReportDelayMax": {
+        "0": "Bait Report Delay Max"
+    },
+    "modifierBaitShowKillFlash": {
+        "0": "Warn The Killer With A Flash"
+    },
+    "modifierLoverImpLoverRate": {
+        "0": "Chance That One Lover Is Impostor"
+    },
+    "modifierLoverBothDie": {
+        "0": "Both Lovers Die"
+    },
+    "modifierLoverEnableChat": {
+        "0": "Enable Lover Chat"
+    },
+    "modifierSunglassesQuantity": {
+        "0": "Sunglasses Quantity"
+    },
+    "modifierSunglassesVision": {
+        "0": "Vision With Sunglasses"
+    },
+    "modifierTorchQuantity": {
+        "0": "Torch Quantity"
+    },
+    "modifierTorchVision": {
+        "0": "Vision With Torch"
+    },
+    "modifierFlashQuantity": {
+        "0": "Flash Quantity"
+    },
+    "modifierFlashSpeed": {
+        "0": "Flash Speed"
+    },
+    "modifierMultitaskerQuantity": {
+        "0": "Multitasker Quantity"
+    },
+    "modifierMiniGrowingUpDuration": {
+        "0": "Mini Growing Up Duration"
+    },
+    "modifierMiniGrowingUpInMeeting": {
+        "0": "Mini Grows Up In Meeting"
+    },
+    "modifierVipQuantity": {
+        "0": "VIP Quantity"
+    },
+    "modifierVipShowColor": {
+        "0": "Show Team Color"
+    },
+    "modifierInvertQuantity": {
+        "0": "Modifier Quantity"
+    },
+    "modifierInvertDuration": {
+        "0": "Number Of Meetings Inverted"
+    },
+    "modifierChameleonQuantity": {
+        "0": "Chameleon Quantity"
+    },
+    "modifierChameleonHoldDuration": {
+        "0": "Time Until Fading Starts"
+    },
+    "modifierChameleonFadeDuration": {
+        "0": "Fade Duration"
+    },
+    "modifierChameleonMinVisibility": {
+        "0": "Minimum Visibility"
     },
     "TouTitle": {
         "0": "<color=#ff351f>TheOtherUs-Edited</color>",
@@ -2027,7 +2817,7 @@
         "13": "\u4f7f\u7528\u9b54\u672f\u5e72\u6270\u4f2a\u88c5\u8005"
     },
     "Detective": {
-        "0": "Detective",
+        "0": "Investigator",
         "13": "\u4fa6\u63a2"
     },
     "DetectiveIntroDesc": {
@@ -2037,7 +2827,7 @@
         "13": "\u68c0\u67e5\u8db3\u8ff9\u5e76\u68c0\u9a8c\u5c38\u4f53"
     },
     "TimeMaster": {
-        "0": "TimeMaster",
+        "0": "Time Master",
         "13": "\u65f6\u95f4\u4e4b\u4e3b"
     },
     "TimeMasterIntroDesc": {
