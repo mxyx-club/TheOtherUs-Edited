@@ -13,13 +13,14 @@
 
 ## 模组下载
 
-| 游戏版本  | 模组版本 | 发布日期   | 链接                                                         |
-| --------- | -------- | ---------- | ------------------------------------------------------------ |
-| 2024.6.4s | v1.0.4.2 | 2024.06.16 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.2/TheOtherUs.zip) |
-| 2024.3.5s | v1.0.3.8 | 2024.05.24 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.8/TheOtherUs.zip) |
-| 2024.3.5s | v1.0.3.7 | 2024.05.10 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.7/TheOtherRoles.zip) |
-| 2024.3.5s | v1.0.3.6 | 2024.05.08 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherRoles.zip) |
-| 2024.3.5s | v1.0.3.3 | 2024.04.11 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherRoles.zip) |
+| 游戏版本            | 模组版本 | 发布日期   | 链接                                                         |
+| ------------------- | -------- | ---------- | ------------------------------------------------------------ |
+| 2024.3.5 ~ 2024.6.4 | v1.0.4.6 | 2024.06.29 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.6/TheOtherUs.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.4.2 | 2024.06.16 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.2/TheOtherUs.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.3.8 | 2024.05.24 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.8/TheOtherUs.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.3.7 | 2024.05.10 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.7/TheOtherRoles.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.3.6 | 2024.05.08 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherRoles.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.3.3 | 2024.04.11 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherRoles.zip) |
 
 <p align="center">注：本模组只发布经过测试后的文件，其余仅为内测版本。</p>
 
