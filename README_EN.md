@@ -1,6 +1,10 @@
 <p align="center"> <a href="README_ZH-CN.md"> 简体中文 </a> </p>
 
-<p align="center"><a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited">    <img src="https://badgen.net/github/assets-dl/mxyx-club/TheOtherUs-Edited">    <img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></a></p>
+<p align="center">
+<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited"></a>    
+<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/assets-dl/mxyx-club/TheOtherUs-Edited"></a>    
+<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></a></p>
+
 
 ![mod banner](./Images/TOU_Logo.png)
 
@@ -136,28 +140,30 @@ Even more roles are coming soon.
 |  Morphling   |  Amnisiac  |      Vigilante      |    Lover     |
 |    Bomber    |   Jester   |        Mayor        |   Assassin   |
 |   Poucher    |  Vulture   |     Prosecutor      |  Disperser   |
-|    Mimic     |   Lawyer   |     Portalmaker     | lastImpostor |
-| Camouflager  | Prosecutor |      Engineer       |    Torch     |
-|    Miner     |  Pursuer   | PrivateInvestigator |  Sunglasses  |
-|    Eraser    |   Jackal   |       Sheriff       |     Bait     |
-|   Vampire    |  Sidekick  |       Deputy        |    Bloody    |
-|   Cleaner    |  Swooper   |      BodyGuard      | AntiTeleport |
-|  Undertaker  |  Arsonist  |       Lighter       |  Tiebreaker  |
-|   Escapist   |  Werewolf  |       Jumper        |    Flash     |
-|   Warlock    |   Thief    |      Detective      | Multitasker  |
-|  Trickster   | Juggernaut |     TimeMaster      |    Giant     |
-| BountyHunter | Doomsayer  |       Veteren       |     Mini     |
-|   Cultist    |   Akujo    |        Medic        |     Vip      |
-|  Terrorist   |            |       Swapper       | Indomitable  |
-| Blackmailer  |            |        Seer         |    Slueth    |
-|    Witch     |            |       Hacker        |    Cursed    |
-|    Ninja     |            |       Tracker       |    Invert    |
-|    Yo-Yo     |            |       Snitch        |    Blind     |
-| EvilTrapper  |            |         Spy         |   Watcher    |
-|              |            |    SecurityGuard    |    Radar     |
-|              |            |       Medium        | ButtonBarry  |
-|              |            |       Trapper       |  Chameleon   |
-|              |            |       Prophet       |   Shifter    |
+|    Mimic     |   Lawyer   |     Portalmaker     |  Specoality  |
+| Camouflager  | Prosecutor |      Engineer       | lastImpostor |
+|    Miner     |  Pursuer   | PrivateInvestigator |    Torch     |
+|    Eraser    |   Jackal   |       Sheriff       |  Sunglasses  |
+|   Vampire    |  Sidekick  |       Deputy        |     Bait     |
+|   Cleaner    |  Swooper   |      BodyGuard      |  Aftermath   |
+|  Undertaker  |  Arsonist  |       Lighter       |    Bloody    |
+|   Escapist   |  Werewolf  |       Jumper        | AntiTeleport |
+|   Warlock    |   Thief    |      Detective      |  Tiebreaker  |
+|  Trickster   | Juggernaut |     TimeMaster      |    Flash     |
+| BountyHunter | Doomsayer  |       Veteren       | Multitasker  |
+|   Cultist    |   Akujo    |        Medic        |    Giant     |
+|  Terrorist   |            |       Swapper       |     Mini     |
+| Blackmailer  |            |        Seer         |     Vip      |
+|    Witch     |            |       Hacker        | Indomitable  |
+|    Ninja     |            |       Tracker       |    Slueth    |
+|    Yo-Yo     |            |       Snitch        |    Cursed    |
+| EvilTrapper  |            |         Spy         |    Invert    |
+|              |            |    SecurityGuard    |    Blind     |
+|              |            |       Medium        |   Watcher    |
+|              |            |       Trapper       |    Radar     |
+|              |            |       Prophet       | ButtonBarry  |
+|              |            |                     |  Chameleon   |
+|              |            |                     |   Shifter    |
 
 
 
@@ -165,10 +171,11 @@ Even more roles are coming soon.
 <p align="center">
 
 ### Team:
-mxyx    Huier-Huang    haoren    Imp11    FangKuaiYa
+mxyx    TianMengLucky    haoren    Imp11    FangKuaiYa
 
 ### Former TheOtherUs Team Members:
-SpexGH    Xer    FangKuaiYa    mxyx    Huier-Huang
+
+SpexGH    Xer    FangKuaiYa    mxyx    TianMengLucky
 
 
 Thanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles!

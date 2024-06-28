@@ -107,6 +107,7 @@ public enum RoleId
     AntiTeleport,
     Tiebreaker,
     Bait,
+    Aftermath,
     Flash,
     Torch,
     Sunglasses,
@@ -604,6 +605,9 @@ public static class RPCProcedure
             case RoleId.Bait:
                 Bait.bait.Add(player);
                 break;
+            case RoleId.Aftermath:
+                Aftermath.aftermath = player;
+                break;
             case RoleId.Lover:
                 if (flag == 0) Lovers.lover1 = player;
                 else Lovers.lover2 = player;
@@ -1084,6 +1088,7 @@ public static class RPCProcedure
                 break;
 
             case RoleId.Pavlovsowner:
+                Pavlovsdogs.pavlovsdogs.Add(Pavlovsdogs.pavlovsowner);
                 Pavlovsdogs.pavlovsowner = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
@@ -1565,6 +1570,267 @@ public static class RPCProcedure
             showFlash(Palette.ImpostorRed, 1.5f, getString("medicShowAttemptText"));
     }
 
+    public static void aftermathDead(byte playerId, byte killerId)
+    {
+        var player = playerById(playerId);
+        var killer = playerById(killerId);
+        if (killer == null || killer == player) return;
+
+        if (Blackmailer.blackmailer == killer)
+        {
+            var writer = AmongUsClient.Instance.StartRpcImmediately(killerId,
+                (byte)CustomRPC.BlackmailPlayer, SendOption.Reliable);
+            writer.Write(killerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            blackmailPlayer(killerId);
+            blackmailerButton.Timer = blackmailerButton.MaxTimer;
+        }
+        else if (Bomber.bomber == killer)
+        {
+            var bombWriter = AmongUsClient.Instance.StartRpcImmediately(killerId,
+                (byte)CustomRPC.GiveBomb, SendOption.Reliable);
+            bombWriter.Write(killerId);
+            AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
+            giveBomb(killerId);
+            bomberBombButton.Timer = bomberBombButton.MaxTimer;
+        }
+        else if (Terrorist.terrorist == killer)
+        {
+            if (checkMuderAttempt(Terrorist.terrorist, Terrorist.terrorist) != MurderAttemptResult.BlankKill)
+            {
+                var pos = killer.transform.position;
+                var buff = new byte[sizeof(float) * 2];
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+                var writer = AmongUsClient.Instance.StartRpc(killer.NetId, (byte)CustomRPC.PlaceBomb);
+                writer.WriteBytesAndSize(buff);
+                writer.EndMessage();
+                placeBomb(buff);
+                SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
+            }
+            terroristButton.Timer = terroristButton.MaxTimer;
+        }
+        else if (Morphling.morphling)
+        {
+            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
+                (byte)CustomRPC.MorphlingMorph, SendOption.Reliable);
+            writer.Write(player.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            morphlingMorph(player.PlayerId);
+            Morphling.sampledTarget = null;
+            morphlingButton.Timer = morphlingButton.MaxTimer + Morphling.duration;
+            SoundEffectsManager.play("morphlingMorph");
+        }
+        else if (Witch.witch == killer)
+        {
+            var target = killer;
+            if (Witch.currentTarget != null) target = Witch.currentTarget;
+            Witch.spellCastingTarget = target;
+            SoundEffectsManager.play("witchSpell");
+            witchSpellButton.Timer = witchSpellButton.MaxTimer;
+        }/*
+        else if (Warlock.warlock == killer)
+        {
+
+        }*/
+        else if (Miner.miner == killer)
+        {
+            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
+                (byte)CustomRPC.Mine, SendOption.Reliable);
+            var pos = killer.transform.position;
+            var buff = new byte[sizeof(float) * 2];
+            Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+            Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+            var id = getAvailableId();
+            writer.Write(id);
+            writer.Write(killer.PlayerId);
+            writer.WriteBytesAndSize(buff);
+            writer.Write(0.01f);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            Mine(id, Miner.miner, buff, 0.01f);
+            minerMineButton.Timer = minerMineButton.MaxTimer;
+        }
+        else if (Escapist.escapist == killer)
+        {
+            if (Escapist.escapeLocation != Vector3.zero)
+            {
+                var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
+                    (byte)CustomRPC.SetPositionESC, SendOption.Reliable);
+                writer.Write(killer.PlayerId);
+                writer.Write(Escapist.escapeLocation.x);
+                writer.Write(Escapist.escapeLocation.y);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                killer.NetTransform.RpcSnapTo(Escapist.escapeLocation);
+            }
+            else
+            {
+                Escapist.escapeLocation = PlayerControl.LocalPlayer.transform.localPosition;
+            }
+            escapistButton.Timer = escapistButton.MaxTimer;
+        }/*
+        else if (Yoyo.yoyo == killer)
+        {
+        }*/
+        else if (EvilTrapper.evilTrapper == killer)
+        {
+            //if (!CachedPlayer.LocalPlayer.PlayerControl.CanMove || KillTrap.hasTrappedPlayer()) return;
+            EvilTrapper.setTrap();
+            evilTrapperSetTrapButton.Timer = evilTrapperSetTrapButton.MaxTimer;
+        }
+        else if (Trickster.trickster == killer)
+        {
+            if (!JackInTheBox.hasJackInTheBoxLimitReached())
+            {
+                var pos = CachedPlayer.LocalPlayer.transform.position;
+                var buff = new byte[sizeof(float) * 2];
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+
+                var writer = AmongUsClient.Instance.StartRpc(killer.NetId,
+                    (byte)CustomRPC.PlaceJackInTheBox);
+                writer.WriteBytesAndSize(buff);
+                writer.EndMessage();
+                placeJackInTheBox(buff);
+                SoundEffectsManager.play("tricksterPlaceBox");
+                placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer;
+            }
+            else
+            {
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.LightsOut, SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                lightsOut();
+                SoundEffectsManager.play("lighterLight");
+                lightsOutButton.Timer = lightsOutButton.MaxTimer;
+            }
+        }
+        else if (Undertaker.undertaker == killer)
+        {
+            if (Undertaker.deadBodyDraged == null)
+            {
+                foreach (var collider2D in Physics2D.OverlapCircleAll(
+                             CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(),
+                             CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
+                {
+                    if (collider2D.tag == "DeadBody")
+                    {
+                        var deadBody = collider2D.GetComponent<DeadBody>();
+                        if (deadBody && !deadBody.Reported)
+                        {
+                            var playerPosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+                            var deadBodyPosition = deadBody.TruePosition;
+                            if (Vector2.Distance(deadBodyPosition, playerPosition) <=
+                                CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance &&
+                                CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
+                                !PhysicsHelpers.AnythingBetween(playerPosition, deadBodyPosition,
+                                    Constants.ShipAndObjectsMask, false) && !Undertaker.isDraging)
+                            {
+                                var playerInfo = GameData.Instance.GetPlayerById(deadBody.ParentId);
+                                var writer = AmongUsClient.Instance.StartRpcImmediately(
+                                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DragBody,
+                                    SendOption.Reliable);
+                                writer.Write(playerInfo.PlayerId);
+                                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                                dragBody(playerInfo.PlayerId);
+                                Undertaker.deadBodyDraged = deadBody;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                var writer = AmongUsClient.Instance.StartRpcImmediately(
+                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DropBody, SendOption.Reliable);
+                writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                Undertaker.deadBodyDraged = null;
+            }
+            undertakerDragButton.Timer = 2.5f;
+        }
+        else if (Cleaner.cleaner == killer)
+        {
+            foreach (var collider2D in Physics2D.OverlapCircleAll(
+                CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(),
+                CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
+            {
+                if (collider2D.tag == "DeadBody")
+                {
+                    var component = collider2D.GetComponent<DeadBody>();
+                    if (component && !component.Reported)
+                    {
+                        var truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+                        var truePosition2 = component.TruePosition;
+                        if (Vector2.Distance(truePosition2, truePosition) <=
+                            CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance &&
+                            CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
+                            !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
+                                Constants.ShipAndObjectsMask, false))
+                        {
+                            var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+
+                            var writer = AmongUsClient.Instance.StartRpcImmediately(
+                                CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CleanBody,
+                                SendOption.Reliable);
+                            writer.Write(playerInfo.PlayerId);
+                            writer.Write(Cleaner.cleaner.PlayerId);
+                            AmongUsClient.Instance.FinishRpcImmediately(writer);
+                            cleanBody(playerInfo.PlayerId, Cleaner.cleaner.PlayerId);
+
+                            Cleaner.cleaner.killTimer = cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer;
+                            SoundEffectsManager.play("cleanerClean");
+                            break;
+                        }
+                    }
+                }
+            }
+
+            cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer;
+        }
+        else if (Eraser.eraser == killer)
+        {
+            var target = killer;
+            if(Eraser.currentTarget != null) target = Eraser.currentTarget;
+            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
+                (byte)CustomRPC.SetFutureErased, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            setFutureErased(target.PlayerId);
+            SoundEffectsManager.play("eraserErase");
+            eraserButton.Timer = eraserButton.MaxTimer;
+        }
+        else if (Camouflager.camouflager == killer)
+        {
+            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                (byte)CustomRPC.CamouflagerCamouflage, SendOption.Reliable);
+            writer.Write(1);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            camouflagerCamouflage(1);
+            SoundEffectsManager.play("morphlingMorph");
+            camouflagerButton.Timer = camouflagerButton.MaxTimer;
+        }
+        else if (Swooper.swooper == killer)
+        {
+            var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetSwoop, SendOption.Reliable, -1);
+            invisibleWriter.Write(Swooper.swooper.PlayerId);
+            invisibleWriter.Write(byte.MinValue);
+            AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
+            setSwoop(Swooper.swooper.PlayerId, byte.MinValue);
+            swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer + Swooper.duration;
+        }
+        else if (Jackal.jackal == killer && Jackal.canSwoop)
+        {
+            var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable, -1);
+            invisibleWriter.Write(Jackal.jackal.PlayerId);
+            invisibleWriter.Write(byte.MinValue);
+            AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
+            setJackalSwoop(Jackal.jackal.PlayerId, byte.MinValue);
+            jackalSwoopButton.Timer = jackalSwoopButton.MaxTimer + Jackal.duration;
+        }
+    }
+
     public static void shifterShift(byte targetId)
     {
         var oldShifter = Shifter.shifter;
@@ -1908,6 +2174,7 @@ public static class RPCProcedure
                 Multitasker.multitasker.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (player == Tiebreaker.tiebreaker) Tiebreaker.clearAndReload();
             if (player == Mini.mini) Mini.clearAndReload();
+            if (player == Aftermath.aftermath) Aftermath.clearAndReload();
             if (player == Giant.giant) Giant.clearAndReload();
             if (player == Watcher.watcher) Watcher.clearAndReload();
             if (player == Radar.radar) Radar.clearAndReload();
@@ -2281,7 +2548,7 @@ public static class RPCProcedure
 
     public static void placeTrap(byte[] buff)
     {
-        Vector3 pos = Vector3.zero;
+        var pos = Vector3.zero;
         pos.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
         pos.y = BitConverter.ToSingle(buff, 1 * sizeof(float)) - 0.2f;
         KillTrap trap = new(pos);

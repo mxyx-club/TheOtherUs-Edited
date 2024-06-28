@@ -449,6 +449,8 @@ public class CustomOptionHolder
     //public static CustomOption modifierBaitSwapNeutral;
     //public static CustomOption modifierBaitSwapImpostor;
 
+    public static CustomOption modifierAftermath;
+
     public static CustomOption modifierLover;
     public static CustomOption modifierLoverImpLoverRate;
     public static CustomOption modifierLoverBothDie;
@@ -1248,6 +1250,8 @@ public class CustomOptionHolder
         modifierBaitReportDelayMin = Create(40152, Types.Modifier, "诱饵报告延迟时间(最小)", 0f, 0f, 10f, 0.125f, modifierBait);
         modifierBaitReportDelayMax = Create(40153, Types.Modifier, "诱饵报告延迟时间(最大)", 0f, 0f, 10f, 0.5f, modifierBait);
         modifierBaitShowKillFlash = Create(40154, Types.Modifier, "用闪光灯警告杀手", true, modifierBait);
+
+        modifierAftermath = Create(40360, Types.Modifier, cs(Color.yellow, "Aftermath"), rates, null, true);
 
         modifierSunglasses = Create(40170, Types.Modifier, cs(Color.yellow, "Sunglasses"), rates, null, true);
         modifierSunglassesQuantity = Create(40171, Types.Modifier, cs(Color.yellow, "太阳镜数量"), ratesModifier, modifierSunglasses);

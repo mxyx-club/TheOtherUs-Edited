@@ -239,6 +239,7 @@ internal class MeetingHudPatch
             {
                 // Allow Guessing the following mods: Bait, TieBreaker, Bloody, and VIP
                 if (roleInfo.roleId is
+                    not RoleId.Aftermath and
                     not RoleId.Bait and
                     not RoleId.Tiebreaker and
                     not RoleId.Bloody and
@@ -276,7 +277,8 @@ internal class MeetingHudPatch
             var roleData = RoleManagerSelectRolesPatch.getRoleAssignmentData();
             switch (roleInfo.roleId)
             {
-                case RoleId.Pursuer when CustomOptionHolder.lawyerSpawnRate.getSelection() == 0 && CustomOptionHolder.executionerSpawnRate.getSelection() == 0:
+                case RoleId.Pursuer when CustomOptionHolder.lawyerSpawnRate.getSelection() == 0 
+                                      && CustomOptionHolder.executionerSpawnRate.getSelection() == 0:
                 case RoleId.Spy when roleData.impostors.Count <= 1:
                     continue;
             }

@@ -60,6 +60,13 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Deputy.deputy = player1;
         }
+        else if (Sheriff.formerSheriff != null && Sheriff.formerSheriff == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Sheriff.formerSheriff = null;
+            Sheriff.formerDeputy = null;
+            Deputy.deputy = player1;
+        }
         else if (BodyGuard.bodyguard != null && BodyGuard.bodyguard == player2)
         {
             if (repeat) shiftRole(player2, player1, false);

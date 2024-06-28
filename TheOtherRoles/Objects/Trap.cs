@@ -289,11 +289,12 @@ public class KillTrap
                     return;
                 }
                 else if ((p == 1f) && !target.Data.IsDead)
-                { // 正常にキルが発生する場合の処理
+                {
+                    // 正常にキルが発生する場合の処理
                     target.moveable = true;
                     if (CachedPlayer.LocalPlayer.PlayerControl == EvilTrapper.evilTrapper)
                     {
-                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TrapperKill, SendOption.Reliable, -1);
+                        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TrapperKill, SendOption.Reliable, -1);
                         writer.Write(trapId);
                         writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
                         writer.Write(target.PlayerId);
@@ -399,6 +400,12 @@ public class KillTrap
         audioSource.Stop();
         audioSource.maxDistance = EvilTrapper.maxDistance;
         audioSource.PlayOneShot(kill);
+        if (target == Medic.currentTarget || (target == Veteren.veteren && Veteren.alertActive) || target == BodyGuard.currentTarget
+         || MapOption.shieldFirstKill && MapOption.firstKillPlayer == target || target == Mini.mini)
+        {
+            clearAllTraps();
+            checkMuderAttempt(EvilTrapper.evilTrapper, target);
+        }
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(kill.length, new Action<float>((p) =>
         {
             if (p == 1f)

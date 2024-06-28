@@ -9,6 +9,7 @@ public static class RoleClass
 {
     public static void clearAndReloadRoles()
     {
+        Aftermath.clearAndReload();
         Jester.clearAndReload();
         Mayor.clearAndReload();
         Prosecutor.clearAndReload();

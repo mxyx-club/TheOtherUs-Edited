@@ -47,7 +47,7 @@ public class Pavlovsdogs
         if (arrow != null)
         {
             foreach (var arrow in arrow)
-                if (arrow?.arrow != null) UnityEngine.Object.Destroy(arrow.arrow);
+                if (arrow?.arrow != null) Object.Destroy(arrow.arrow);
         }
         arrow = [];
 

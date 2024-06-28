@@ -87,11 +87,13 @@ internal class HudManagerUpdatePatch
         {
             setPlayerNameColor(Sheriff.sheriff, Sheriff.color);
             if (Deputy.deputy != null && Deputy.knowsSheriff) setPlayerNameColor(Deputy.deputy, Sheriff.color);
+            if (Sheriff.formerSheriff != null && Deputy.knowsSheriff) setPlayerNameColor(Sheriff.formerSheriff, Sheriff.color);
         }
         if (Deputy.deputy != null && Deputy.deputy == localPlayer)
         {
             setPlayerNameColor(Deputy.deputy, Deputy.color);
             if (Sheriff.sheriff != null && Deputy.knowsSheriff) setPlayerNameColor(Sheriff.sheriff, Sheriff.color);
+            if (Sheriff.formerSheriff != null && Deputy.knowsSheriff) setPlayerNameColor(Sheriff.formerSheriff, Sheriff.color);
         }
 
         if (Prophet.prophet != null && Prophet.prophet == localPlayer)
