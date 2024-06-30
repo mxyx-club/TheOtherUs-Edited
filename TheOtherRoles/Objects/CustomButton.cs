@@ -69,7 +69,7 @@ public class CustomButton
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
 
-        //Timer = MapOption.ButtonCooldown + 8.5f;
+        Timer = 8.5f;
 
         setActive(false);
     }
@@ -135,12 +135,11 @@ public class CustomButton
         {
             try
             {
-                if (t == HudManagerStartPatch.bomberGiveButton) continue;
+                if (t == HudManagerStartPatch.bomberGiveButton ||
+                    t == HudManagerStartPatch.zoomOutButton) continue;
                 if (Reset)
                 {
                     t.Timer = Time;
-                    t.DeputyTimer = t.MaxTimer;
-                    t.Update();
                 }
                 else
                 {

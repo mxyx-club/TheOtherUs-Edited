@@ -887,13 +887,16 @@
         "0": "Is Modifier",
         "13": "\u751f\u6210\u4e3a\u9644\u52a0\u80fd\u529b"
     },
+    "escapistMaxCharges": {
+        "0": "Maximum Charges",
+        "13": "\u53ef\u4f20\u9001\u6b21\u6570"
+    },
     "escapistEscapeTime": {
         "0": "Mark and Escape Cooldown",
         "13": "\u6807\u8bb0/\u9003\u9038\u51b7\u5374"
     },
     "escapistChargesOnPlace": {
-        "0": "Charges On Place",
-        "13": "\u53ef\u4f20\u9001\u6b21\u6570"
+        "0": "Charges On Place"
     },
     "escapistResetPlaceAfterMeeting": {
         "0": "Reset Places After Meeting",
@@ -902,9 +905,6 @@
     "escapistChargesGainOnMeeting": {
         "0": "Charges Gained After Meeting",
         "13": "\u4f1a\u8bae\u540e\u589e\u52a0\u6b21\u6570"
-    },
-    "escapistMaxCharges": {
-        "0": "Maximum Charges"
     },
     "tricksterPlaceBoxCooldown": {
         "0": "Trickster Box Cooldown",
@@ -1049,6 +1049,38 @@
     "yoyoSilhouetteVisibility": {
         "0": "Silhouette Visibility",
         "13": "\u7b2c\u4e00\u6bb5\u6b8b\u5f71\u900f\u660e\u5ea6"
+    },
+    "evilTrapperNumTrap": {
+        "0": "Number Of Traps",
+        "13": "\u6700\u5927\u53ef\u540c\u65f6\u653e\u4e0b\u7684\u9677\u9631\u6570"
+    },
+    "evilTrapperExtensionTime": {
+        "0": "Time The Trap Will Be Activated",
+        "13": "\u9677\u9631\u6fc0\u6d3b\u6240\u9700\u65f6\u95f4"
+    },
+    "evilTrapperCooldown": {
+        "0": "Place Traps Cooldown",
+        "13": "\u653e\u7f6e\u9677\u9631\u51b7\u5374"
+    },
+    "evilTrapperKillTimer": {
+        "0": "Time Until Death If Caught By Trap",
+        "13": "\u6389\u8fdb\u9677\u9631\u540e\u88ab\u9677\u9631\u51fb\u6740\u6240\u9700\u65f6\u95f4"
+    },
+    "evilTrapperTrapRange": {
+        "0": "Trap Range",
+        "13": "\u9677\u9631\u6709\u6548\u8303\u56f4"
+    },
+    "evilTrapperMaxDistance": {
+        "0": "Trap Hear Range",
+        "13": "\u9677\u9631\u51fb\u6740\u58f0\u97f3\u64ad\u653e\u6709\u6548\u8303\u56f4"
+    },
+    "evilTrapperPenaltyTime": {
+        "0": "Penalty For Normal Kills",
+        "13": "\u666e\u901a\u51fb\u6740\u4f1a\u8ffd\u52a0\u51b7\u5374"
+    },
+    "evilTrapperBonusTime": {
+        "0": "Cooldown Decrease If Trap Player Is Killed",
+        "13": "\u51fb\u6740\u843d\u5165\u9677\u9631\u7684\u73a9\u5bb6\u7f29\u51cf\u51b7\u5374"
     },
     "jesterCanCallEmergency": {
         "0": "Jester Can Call Emergency Meeting"
@@ -2521,7 +2553,7 @@
         "13": "\u6807\u8bb0\u4f4d\u7f6e\u540e\u53ef\u4ee5\u77ac\u79fb\u4e00\u6b21\u540e\u518d\u56de\u5230\u539f\u70b9"
     },
     "EvilTrapper": {
-        "0": "EvilTrapper",
+        "0": "Evil Trapper",
         "13": "\u90aa\u6076\u7684\u8bbe\u9677\u5e08"
     },
     "EvilTrapperIntroDesc": {
