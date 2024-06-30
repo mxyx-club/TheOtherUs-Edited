@@ -9,6 +9,9 @@ dotnet_analyzer_diagnostic.severity = suggestion
 [*.cs]
 #### 命名样式 ####
 
+# IDE0058: 
+dotnet_diagnostic.IDE0058.severity = silent
+
 # 命名规则
 
 dotnet_naming_rule.interface_should_be_begins_with_i.severity = suggestion

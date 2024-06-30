@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using InnerNet;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -391,9 +392,9 @@ public class RoleInfo
         if (Executioner.target != null && p.PlayerId == Executioner.target.PlayerId &&
             CachedPlayer.LocalPlayer.PlayerControl != Executioner.target) roleName += useColors ? cs(Executioner.color, " §") : " §";
 
-        if (p == Jackal.jackal && Jackal.canSwoop) roleName += " (隐身)";
+        if (p == Jackal.jackal && Jackal.canSwoop) roleName += "GuessserGMInfo".Translate();
 
-        if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId)) roleName += " (赌怪)";
+        if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId)) roleName += "JackalIsSwooperInfo".Translate();
 
         if (!suppressGhostInfo && p != null)
         {
@@ -402,7 +403,7 @@ public class RoleInfo
                 Shifter.futureShift != null)
                 roleName += cs(Color.yellow, " ← " + Shifter.futureShift.Data.PlayerName);
             if (p == Vulture.vulture && (CachedPlayer.LocalPlayer.PlayerControl == Vulture.vulture || shouldShowGhostInfo()))
-                roleName += cs(Vulture.color, $" (剩余 {Vulture.vultureNumberToWin - Vulture.eatenBodies} )");
+                roleName += cs(Vulture.color, string.Format("剩余", Vulture.vultureNumberToWin - Vulture.eatenBodies));
             if (shouldShowGhostInfo())
             {
                 if (Eraser.futureErased.Contains(p))

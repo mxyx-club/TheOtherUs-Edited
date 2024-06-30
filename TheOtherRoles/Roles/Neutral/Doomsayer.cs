@@ -65,9 +65,8 @@ public static class Doomsayer
             message.Append(num < formation - 1 ? ',' : ';');
         }
 
-        var writer = AmongUsClient.Instance.StartRpcImmediately(
-                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DoomsayerMeeting,
-                    SendOption.Reliable);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            (byte)CustomRPC.DoomsayerMeeting, SendOption.Reliable);
         writer.WritePacked(AllMessage.Count);
         AllMessage.Do(writer.Write);
         AmongUsClient.Instance.FinishRpcImmediately(writer);

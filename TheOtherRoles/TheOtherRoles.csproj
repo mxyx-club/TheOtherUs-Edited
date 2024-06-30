@@ -8,7 +8,6 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 		<Configurations>Debug;Release;Sunday;mxyx-club</Configurations>
-		<NoWarn>$(NoWarn);IDE0058</NoWarn>
 		<AmongUsLatest Condition="'$(Configuration)'=='mxyx-club'"> F:\AmongUs\v2023.11.28</AmongUsLatest>
 		<AmongUsLatest Condition="'$(Configuration)'!='mxyx-club'"> F:\AmongUs\v2024.3.5</AmongUsLatest>
     </PropertyGroup>

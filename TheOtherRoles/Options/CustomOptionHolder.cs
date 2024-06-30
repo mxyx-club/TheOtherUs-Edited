@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TheOtherRoles.Modules;
 using UnityEngine;
 using static TheOtherRoles.Options.CustomOption;
 using Types = TheOtherRoles.Options.CustomOption.CustomOptionType;
@@ -848,6 +849,7 @@ public class CustomOptionHolder
         eraserSpawnRate = Create(10160, Types.Impostor, cs(Eraser.color, "Eraser"), rates, null, true);
         eraserCooldown = Create(10161, Types.Impostor, "eraserCooldown", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
         eraserCanEraseAnyone = Create(10162, Types.Impostor, "eraserCanEraseAnyone", false, eraserSpawnRate);
+        erasercanEraseGuess = Create(10163, Types.Impostor, "erasercanEraseGuess", false, eraserSpawnRate);
 
         poucherSpawnRate = Create(10320, Types.Impostor, cs(Palette.ImpostorRed, "Poucher"), rates, null, true);
         poucherSpawnModifier = Create(10321, Types.Impostor, "poucherSpawnModifier", false, poucherSpawnRate);
@@ -966,7 +968,7 @@ public class CustomOptionHolder
         pavlovsownerCreateDogNum = Create(20254, Types.Neutral, "pavlovsownerCreateDogNum", 3f, 1f, 10f, 1f, pavlovsownerSpawnRate);
         pavlovsownerCanUseSabo = Create(20255, Types.Neutral, "pavlovsownerCanUseSabo", true, pavlovsownerSpawnRate);
         pavlovsownerHasImpostorVision = Create(20256, Types.Neutral, "pavlovsownerHasImpostorVision", true, pavlovsownerSpawnRate);
-        pavlovsownerCanUseVents = Create(20257, Types.Neutral, "pavlovsownerCanUseVents", ["Pavlovsdogs", "Pavlovsowner", "二者皆可"], pavlovsownerSpawnRate);
+        pavlovsownerCanUseVents = Create(20257, Types.Neutral, "pavlovsownerCanUseVents", ["Pavlovsdogs", "Pavlovsowner", "pavlovsownerCanUseVents3"], pavlovsownerSpawnRate);
         pavlovsownerRampage = Create(20260, Types.Neutral, "pavlovsownerRampage", true, pavlovsownerSpawnRate);
         pavlovsownerRampageKillCooldown = Create(20261, Types.Neutral, "pavlovsownerRampageKillCooldown", 15f, 5f, 60f, 2.5f, pavlovsownerRampage);
         pavlovsownerRampageDeathTime = Create(20262, Types.Neutral, "pavlovsownerRampageDeathTime", 60f, 30f, 180f, 2.5f, pavlovsownerRampageKillCooldown);
@@ -995,7 +997,6 @@ public class CustomOptionHolder
         vultureShowArrows = Create(20174, Types.Neutral, "vultureShowArrows", true, vultureSpawnRate);
 
         lawyerSpawnRate = Create(20180, Types.Neutral, cs(Lawyer.color, "Lawyer"), rates, null, true);
-        //lawyerIsProsecutorChance = Create(20181, Types.Neutral, "律师为处刑者的概率", rates, lawyerSpawnRate);
         lawyerTargetKnows = Create(20182, Types.Neutral, "lawyerTargetKnows", true, lawyerSpawnRate);
         lawyerVision = Create(20183, Types.Neutral, "lawyerVision", 1.5f, 0.25f, 3f, 0.25f, lawyerSpawnRate);
         lawyerKnowsRole = Create(20184, Types.Neutral, "lawyerKnowsRole", true, lawyerSpawnRate);
@@ -1014,8 +1015,10 @@ public class CustomOptionHolder
         doomsayerCooldown = Create(20222, Types.Neutral, "doomsayerCooldown", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
         doomsayerHasMultipleShotsPerMeeting = Create(20223, Types.Neutral, "doomsayerHasMultipleShotsPerMeeting", true, doomsayerSpawnRate);
         doomsayerShowInfoInGhostChat = Create(20224, Types.Neutral, "doomsayerShowInfoInGhostChat", true, doomsayerSpawnRate);
-        doomsayerCanGuessImpostor = Create(20226, Types.Neutral, "doomsayerCanGuessImpostor" + cs(Palette.ImpostorRed, "ImpostorRolesText"), true, doomsayerSpawnRate);
-        doomsayerCanGuessNeutral = Create(20225, Types.Neutral, "doomsayerCanGuessNeutral" + cs(Color.gray, "NeutralRolesText"), true, doomsayerSpawnRate);
+        doomsayerCanGuessImpostor = Create(20226, Types.Neutral,
+            string.Format("doomsayerCanGuessImpostor".Translate(), cs(Palette.ImpostorRed, "ImpostorRolesText".Translate())), true, doomsayerSpawnRate);
+        doomsayerCanGuessNeutral = Create(20225, Types.Neutral,
+            string.Format("doomsayerCanGuessNeutral".Translate(), cs(Color.gray, "NeutralRolesText".Translate())), true, doomsayerSpawnRate);
         doomsayerOnlineTarger = Create(20227, Types.Neutral, "doomsayerOnlineTarger", false, doomsayerSpawnRate);
         doomsayerKillToWin = Create(20228, Types.Neutral, "doomsayerKillToWin", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
         doomsayerDormationNum = Create(20229, Types.Neutral, "doomsayerDormationNum", 5f, 1f, 10f, 1f, doomsayerSpawnRate);
@@ -1030,12 +1033,15 @@ public class CustomOptionHolder
 
         thiefSpawnRate = Create(20240, Types.Neutral, cs(Thief.color, "Thief"), rates, null, true);
         thiefCooldown = Create(20241, Types.Neutral, "thiefCooldown", 25f, 5f, 120f, 2.5f, thiefSpawnRate);
-        thiefCanKillSheriff = Create(20242, Types.Neutral, "thiefCanKill" + cs(Sheriff.color, "Sheriff"), true, thiefSpawnRate);
-        thiefCanKillDeputy = Create(20246, Types.Neutral, "thiefCanKill" + cs(Deputy.color, "Deputy"), true, thiefSpawnRate);
-        thiefCanKillVeteren = Create(20247, Types.Neutral, "thiefCanKill" + cs(Veteren.color, "Veteren"), true, thiefSpawnRate);
+        thiefCanKillSheriff = Create(20242, Types.Neutral,
+            string.Format("thiefCanKill".Translate(), cs(Sheriff.color, "Sheriff".Translate())), true, thiefSpawnRate);
+        thiefCanKillDeputy = Create(20246, Types.Neutral,
+            string.Format("thiefCanKill".Translate(), cs(Deputy.color, "Deputy".Translate())), true, thiefSpawnRate);
+        thiefCanKillVeteren = Create(20247, Types.Neutral,
+            string.Format("thiefCanKill".Translate(), cs(Veteren.color, "Veteren".Translate())), true, thiefSpawnRate);
         thiefHasImpVision = Create(20243, Types.Neutral, "thiefHasImpVision", true, thiefSpawnRate);
         thiefCanUseVents = Create(20244, Types.Neutral, "thiefCanUseVents", true, thiefSpawnRate);
-        thiefCanStealWithGuess = Create(20245, Types.Neutral, "thiefCanStealWithGuess\n(赌怪模式)", true, thiefSpawnRate);
+        thiefCanStealWithGuess = Create(20245, Types.Neutral, "thiefCanStealWithGuess", true, thiefSpawnRate);
 
         //-------------------------- Crewmate Options 30000-39999 -------------------------- //
 
@@ -1049,14 +1055,22 @@ public class CustomOptionHolder
         sheriffCooldown = Create(30142, Types.Crewmate, "sheriffCooldown", 30f, 10f, 60f, 2.5f, sheriffSpawnRate);
         sheriffMisfireKills = Create(30143, Types.Crewmate, "sheriffMisfireKills", ["sheriffMisfireKills1", "sheriffMisfireKills2", "sheriffMisfireKills3"], sheriffSpawnRate);
         sheriffCanKillNeutrals = Create(30150, Types.Crewmate, "sheriffCanKillNeutrals", false, sheriffSpawnRate);
-        sheriffCanKillAmnesiac = Create(30153, Types.Crewmate, "sheriffCanKill" + cs(Amnisiac.color, "Amnisiac"), false, sheriffCanKillNeutrals);
-        sheriffCanKillJester = Create(30151, Types.Crewmate, "sheriffCanKill" + cs(Jester.color, "Jester"), true, sheriffCanKillNeutrals);
-        sheriffCanKillLawyer = Create(30156, Types.Crewmate, "sheriffCanKill" + cs(Lawyer.color, "Lawyer"), true, sheriffCanKillNeutrals);
-        sheriffCanKillExecutioner = Create(30152, Types.Crewmate, "sheriffCanKill"  + cs(Lawyer.color, "Lawyer"), true, sheriffCanKillNeutrals);
-        sheriffCanKillPursuer = Create(30158, Types.Crewmate, "sheriffCanKill" + cs(Pursuer.color, "Pursuer"), true, sheriffCanKillNeutrals);
-        sheriffCanKillVulture = Create(30155, Types.Crewmate, "sheriffCanKill" + cs(Vulture.color, "Vulture"), true, sheriffCanKillNeutrals);
-        sheriffCanKillThief = Create(30157, Types.Crewmate, "sheriffCanKill" + cs(Thief.color, "Thief"), true, sheriffCanKillNeutrals);
-        sheriffCanKillDoomsayer = Create(30159, Types.Crewmate, "sheriffCanKill" + cs(Doomsayer.color, "Doomsayer"), true, sheriffCanKillNeutrals);
+        sheriffCanKillAmnesiac = Create(30153, Types.Crewmate,
+            string.Format("sheriffCanKill".Translate(), cs(Amnisiac.color, "Amnisiac".Translate())), false, sheriffCanKillNeutrals);
+        sheriffCanKillJester = Create(30151, Types.Crewmate,
+            string.Format("sheriffCanKill".Translate(), cs(Jester.color, "Jester".Translate())), true, sheriffCanKillNeutrals);
+        sheriffCanKillLawyer = Create(30156, Types.Crewmate,
+            string.Format("sheriffCanKill".Translate(), cs(Lawyer.color, "Lawyer".Translate())), true, sheriffCanKillNeutrals);
+        sheriffCanKillExecutioner = Create(30152, Types.Crewmate,
+            string.Format("sheriffCanKill".Translate(), cs(Executioner.color, "Executioner".Translate())), true, sheriffCanKillNeutrals);
+        sheriffCanKillPursuer = Create(30158, Types.Crewmate,
+            string.Format("sheriffCanKill".Translate(), cs(Pursuer.color, "Pursuer".Translate())), true, sheriffCanKillNeutrals);
+        sheriffCanKillVulture = Create(30155, Types.Crewmate,
+            string.Format("sheriffCanKill".Translate(), cs(Vulture.color, "Vulture".Translate())), true, sheriffCanKillNeutrals);
+        sheriffCanKillThief = Create(30157, Types.Crewmate,
+            string.Format("sheriffCanKill".Translate(), cs(Thief.color, "Thief".Translate())), true, sheriffCanKillNeutrals);
+        sheriffCanKillDoomsayer = Create(30159, Types.Crewmate,
+            string.Format("sheriffCanKill".Translate(), cs(Doomsayer.color, "Doomsayer".Translate())), true, sheriffCanKillNeutrals);
 
         deputySpawnRate = Create(30170, Types.Crewmate, cs(Deputy.color, "deputySpawnRate"), rates, sheriffSpawnRate);
         deputyNumberOfHandcuffs = Create(30171, Types.Crewmate, "deputyNumberOfHandcuffs", 5f, 1f, 10f, 1f, deputySpawnRate);
@@ -1312,19 +1326,19 @@ public class CustomOptionHolder
 
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
 
-        guesserGamemodeCrewNumber = Create(2001, Types.Guesser, cs(Guesser.color, "船员阵营赌怪数"), 3f, 0f, 15f, 1f, null, true);
-        guesserGamemodeNeutralNumber = Create(2002, Types.Guesser, cs(Guesser.color, "中立阵营赌怪数"), 3f, 0f, 15f, 1f);
-        guesserGamemodeImpNumber = Create(2003, Types.Guesser, cs(Guesser.color, "伪装者阵营赌怪数"), 3f, 0f, 15f, 1f);
-        guesserForceJackalGuesser = Create(2007, Types.Guesser, "强制豺狼成为赌怪", false, null, true);
-        guesserGamemodeSidekickIsAlwaysGuesser = Create(2012, Types.Guesser, "强制跟班成为赌怪", false);
-        guesserForcePavlovsGuesser = Create(2013, Types.Guesser, "强制巴甫洛夫为赌怪", false);
-        guesserForceThiefGuesser = Create(2011, Types.Guesser, "强制身份窃贼为赌怪", false);
-        guesserGamemodeHaveModifier = Create(2004, Types.Guesser, "赌怪可以拥有附加能力", true, null, true);
-        guesserGamemodeNumberOfShots = Create(2005, Types.Guesser, "赌怪猜测最大次数", 2f, 1f, 15f, 1f);
-        guesserGamemodeHasMultipleShotsPerMeeting = Create(2006, Types.Guesser, "一轮会议可多次猜测", false);
-        guesserGamemodeKillsThroughShield = Create(2008, Types.Guesser, "赌怪猜测无视护盾", true);
-        guesserGamemodeEvilCanKillSpy = Create(2009, Types.Guesser, "邪恶的赌怪可猜测卧底", true);
-        guesserGamemodeCantGuessSnitchIfTaksDone = Create(2010, Types.Guesser, "赌怪不可猜测已完成任务的告密者", true);
+        guesserGamemodeCrewNumber = Create(2001, Types.Guesser, cs(Guesser.color, "guesserGamemodeCrewNumber"), 3f, 0f, 15f, 1f, null, true);
+        guesserGamemodeNeutralNumber = Create(2002, Types.Guesser, cs(Guesser.color, "guesserGamemodeNeutralNumber"), 3f, 0f, 15f, 1f);
+        guesserGamemodeImpNumber = Create(2003, Types.Guesser, cs(Guesser.color, "guesserGamemodeImpNumber"), 3f, 0f, 15f, 1f);
+        guesserForceJackalGuesser = Create(2007, Types.Guesser, "guesserForceJackalGuesser", false, null, true);
+        guesserGamemodeSidekickIsAlwaysGuesser = Create(2012, Types.Guesser, "guesserGamemodeSidekickIsAlwaysGuesser", false);
+        guesserForcePavlovsGuesser = Create(2013, Types.Guesser, "guesserForcePavlovsGuesser", false);
+        guesserForceThiefGuesser = Create(2011, Types.Guesser, "guesserForceThiefGuesser", false);
+        guesserGamemodeHaveModifier = Create(2004, Types.Guesser, "guesserGamemodeHaveModifier", true, null, true);
+        guesserGamemodeNumberOfShots = Create(2005, Types.Guesser, "guesserGamemodeNumberOfShots", 2f, 1f, 15f, 1f);
+        guesserGamemodeHasMultipleShotsPerMeeting = Create(2006, Types.Guesser, "guesserGamemodeHasMultipleShotsPerMeeting", false);
+        guesserGamemodeKillsThroughShield = Create(2008, Types.Guesser, "guesserGamemodeKillsThroughShield", true);
+        guesserGamemodeEvilCanKillSpy = Create(2009, Types.Guesser, "guesserGamemodeEvilCanKillSpy", true);
+        guesserGamemodeCantGuessSnitchIfTaksDone = Create(2010, Types.Guesser, "guesserGamemodeCantGuessSnitchIfTaksDone", true);
 
         //-------------------------- Hide N Seek 3000 - 3999 -------------------------- //
 

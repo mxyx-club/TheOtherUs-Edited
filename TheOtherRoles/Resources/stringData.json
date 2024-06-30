@@ -530,6 +530,9 @@
     "guesserGamemodeSidekickIsAlwaysGuesser": {
         "13": "\u5f3a\u5236\u8ddf\u73ed\u6210\u4e3a\u8d4c\u602a"
     },
+    "guesserForcePavlovsGuesser": {
+        "13": "\u5f3a\u5236\u5df4\u752b\u6d1b\u592b\u4e3a\u8d4c\u602a"
+    },
     "guesserForceThiefGuesser": {
         "13": "\u5f3a\u5236\u8eab\u4efd\u7a83\u8d3c\u4e3a\u8d4c\u602a"
     },
@@ -1051,627 +1054,990 @@
         "13": "\u7b2c\u4e00\u6bb5\u6b8b\u5f71\u900f\u660e\u5ea6"
     },
     "evilTrapperNumTrap": {
-        "0": "Number Of Traps",
         "13": "\u6700\u5927\u53ef\u540c\u65f6\u653e\u4e0b\u7684\u9677\u9631\u6570"
     },
     "evilTrapperExtensionTime": {
-        "0": "Time The Trap Will Be Activated",
         "13": "\u9677\u9631\u6fc0\u6d3b\u6240\u9700\u65f6\u95f4"
     },
     "evilTrapperCooldown": {
-        "0": "Place Traps Cooldown",
         "13": "\u653e\u7f6e\u9677\u9631\u51b7\u5374"
     },
     "evilTrapperKillTimer": {
-        "0": "Time Until Death If Caught By Trap",
         "13": "\u6389\u8fdb\u9677\u9631\u540e\u88ab\u9677\u9631\u51fb\u6740\u6240\u9700\u65f6\u95f4"
     },
     "evilTrapperTrapRange": {
-        "0": "Trap Range",
         "13": "\u9677\u9631\u6709\u6548\u8303\u56f4"
     },
     "evilTrapperMaxDistance": {
-        "0": "Trap Hear Range",
         "13": "\u9677\u9631\u51fb\u6740\u58f0\u97f3\u64ad\u653e\u6709\u6548\u8303\u56f4"
     },
     "evilTrapperPenaltyTime": {
-        "0": "Penalty For Normal Kills",
         "13": "\u666e\u901a\u51fb\u6740\u4f1a\u8ffd\u52a0\u51b7\u5374"
     },
     "evilTrapperBonusTime": {
-        "0": "Cooldown Decrease If Trap Player Is Killed",
         "13": "\u51fb\u6740\u843d\u5165\u9677\u9631\u7684\u73a9\u5bb6\u7f29\u51cf\u51b7\u5374"
     },
     "jesterCanCallEmergency": {
-        "0": "Jester Can Call Emergency Meeting"
+        "0": "Jester Can Call Emergency Meeting",
+        "13": "\u5c0f\u4e11\u53ef\u53ec\u5f00\u4f1a\u8bae"
     },
     "jesterCanVent": {
-        "0": "Jester Can Hide In Vent"
+        "0": "Jester Can Hide In Vent",
+        "13": "\u5c0f\u4e11\u53ef\u4f7f\u7528\u7ba1\u9053"
     },
     "jesterHasImpostorVision": {
-        "0": "Jester Has Impostor Vision"
+        "0": "Jester Has Impostor Vision",
+        "13": "\u62e5\u6709\u5185\u9b3c\u89c6\u91ce"
     },
     "amnisiacShowArrows": {
-        "0": "Show Arrows To Dead Bodies"
+        "0": "Show Arrows To Dead Bodies",
+        "13": "\u663e\u793a\u6307\u5411\u5c38\u4f53\u7684\u7bad\u5934"
     },
     "amnisiacResetRole": {
-        "0": "Reset Role When Taken"
+        "0": "Reset Role When Taken",
+        "13": "\u56de\u5fc6\u540e\u91cd\u7f6e\u8be5\u804c\u4e1a\u6280\u80fd\u4f7f\u7528\u6b21\u6570"
     },
     "arsonistCooldown": {
-        "0": "Arsonist Cooldown"
+        "0": "Arsonist Cooldown",
+        "13": "\u6d82\u6cb9\u51b7\u5374"
     },
     "arsonistDuration": {
-        "0": "Arsonist Douse Duration"
+        "0": "Arsonist Douse Duration",
+        "13": "\u6d82\u6cb9\u6240\u9700\u65f6\u95f4"
     },
     "jackalKillCooldown": {
-        "0": "Jackal/Sidekick Kill Cooldown"
+        "0": "Jackal/Sidekick Kill Cooldown",
+        "13": "\u8c7a\u72fc/\u8ddf\u73ed\u51fb\u6740\u51b7\u5374"
     },
     "jackalChanceSwoop": {
-        "0": "Chance That Jackal Can Swoop"
+        "0": "Chance That Jackal Can Swoop",
+        "13": "\u8c7a\u72fc\u83b7\u5f97\u9690\u8eab\u80fd\u529b\u7684\u6982\u7387"
+    },
+    "jackalSwooperCooldown": {
+        "0": "Swoop Cooldown",
+        "13": "\u9690\u8eab\u51b7\u5374\u65f6\u95f4"
+    },
+    "jackalSwooperDuration": {
+        "0": "Swoop Duration",
+        "13": "\u9690\u8eab\u6301\u7eed\u65f6\u95f4"
     },
     "jackalCanUseVents": {
-        "0": "Jackal Can Use Vents"
+        "0": "Jackal Can Use Vents",
+        "13": "\u8c7a\u72fc\u53ef\u4f7f\u7528\u7ba1\u9053"
     },
     "jackalCanUseSabo": {
-        "0": "Jackal Team Can Sabotage"
+        "0": "Jackal Team Can Sabotage",
+        "13": "\u8c7a\u72fc/\u8ddf\u73ed\u53ef\u8fdb\u884c\u7834\u574f"
     },
     "jackalAndSidekickHaveImpostorVision": {
-        "0": "Jackal And Sidekick Have Impostor Vision"
+        "0": "Jackal And Sidekick Have Impostor Vision",
+        "13": "\u8c7a\u72fc/\u8ddf\u73ed\u62e5\u6709\u5185\u9b3c\u89c6\u91ce"
     },
     "jackalCanCreateSidekick": {
-        "0": "Jackal Can Create A Sidekick"
+        "0": "Jackal Can Create A Sidekick",
+        "13": "\u8c7a\u72fc\u53ef\u4ee5\u62db\u52df\u8ddf\u73ed"
     },
     "jackalCreateSidekickCooldown": {
-        "0": "Jackal Create Sidekick Cooldown"
+        "0": "Jackal Create Sidekick Cooldown",
+        "13": "\u8c7a\u72fc\u62db\u52df\u51b7\u5374"
     },
     "jackalImpostorCanFindSidekick": {
-        "0": "Impostors can see teammates turned Sidekick"
+        "0": "Impostors can see teammates turned Sidekick",
+        "13": "\u4f2a\u88c5\u8005\u53ef\u4ee5\u53d1\u73b0\u961f\u53cb\u53d8\u4e3a\u8ddf\u73ed"
     },
     "sidekickCanKill": {
-        "0": "Sidekick Can Kill"
+        "0": "Sidekick Can Kill",
+        "13": "\u8ddf\u73ed\u53ef\u8fdb\u884c\u51fb\u6740"
     },
     "sidekickCanUseVents": {
-        "0": "Sidekick Can Use Vents"
+        "0": "Sidekick Can Use Vents",
+        "13": "\u8ddf\u73ed\u53ef\u4f7f\u7528\u7ba1\u9053"
     },
     "sidekickPromotesToJackal": {
-        "0": "Sidekick Gets Promoted To Jackal On Jackal Death"
+        "0": "Sidekick Gets Promoted To Jackal On Jackal Death",
+        "13": "\u8c7a\u72fc\u6b7b\u540e\u8ddf\u73ed\u53ef\u664b\u5347"
     },
     "jackalPromotedFromSidekickCanCreateSidekick": {
-        "0": "Jackals Promoted From Sidekick Can Create A Sidekick"
+        "0": "Jackals Promoted From Sidekick Can Create A Sidekick",
+        "13": "\u664b\u5347\u540e\u7684\u8c7a\u72fc\u53ef\u4ee5\u62db\u52df\u8ddf\u73ed"
     },
-    "vultureCooldown": {
-        "0": "Vulture Cooldown"
+    "pavlovsownerAndJackalAsWell": {
+        "13": "\u8c7a\u72fc\u548c\u5df4\u6d66\u6d1b\u592b\u53ea\u4f1a\u51fa\u73b0\u4e00\u4e2a"
     },
-    "vultureNumberToWin": {
-        "0": "Number Of Corpses Needed To Be Eaten"
+    "pavlovsownerKillCooldown": {
+        "13": "\u51fb\u6740\u51b7\u5374"
     },
-    "vultureCanUseVents": {
-        "0": "Vulture Can Use Vents"
+    "pavlovsownerCreateDogCooldown": {
+        "13": "\u9a6f\u5316\u51b7\u5374"
     },
-    "vultureShowArrows": {
-        "0": "Show Arrows Pointing Towards The Corpses"
+    "pavlovsownerCreateDogNum": {
+        "13": "\u53ef\u4ee5\u9a6f\u5316\u7684\u6b21\u6570"
     },
-    "lawyerVision": {
-        "0": "Vision"
+    "pavlovsownerCanUseSabo": {
+        "13": "\u53ef\u4ee5\u7834\u574f"
     },
-    "lawyerKnowsRole": {
-        "0": "Lawyer Knows Target Role"
+    "pavlovsownerHasImpostorVision": {
+        "0": "Have Impostor Vision",
+        "13": "\u62e5\u6709\u5185\u9b3c\u89c6\u91ce"
     },
-    "lawyerCanCallEmergency": {
-        "0": "Lawyer Can Call Emergency Meeting"
+    "pavlovsownerCanUseVents": {
+        "13": "\u53ef\u4ee5\u4f7f\u7528\u7ba1\u9053"
     },
-    "lawyerTargetCanBeJester": {
-        "0": "Lawyer Target Can Be The Jester"
+    "pavlovsownerCanUseVents3": {
+        "13": "\u4e8c\u8005\u7686\u53ef"
     },
-    "pursuerCooldown": {
-        "0": "Pursuer Blank Cooldown"
+    "pavlovsownerRampage": {
+        "13": "\u5df4\u6d66\u6d1b\u592b\u6b7b\u4ea1\u540e\u72d7\u4f1a\u72c2\u5316"
     },
-    "pursuerBlanksNumber": {
-        "0": "Pursuer Number Of Blanks"
+    "pavlovsownerRampageKillCooldown": {
+        "13": "\u72c2\u5316\u540e\u51fb\u6740\u51b7\u5374"
     },
-    "prosecutorCanCallEmergency": {
-        "0": "Prosecutor Can Call Emergency Meeting"
+    "pavlovsownerRampageDeathTime": {
+        "13": "\u72c2\u5316\u540e\u81ea\u6740\u65f6\u9650"
+    },
+    "pavlovsownerRampageDeathTimeIsMeetingReset": {
+        "13": "\u4f1a\u8bae\u540e\u91cd\u7f6e\u81ea\u6740\u65f6\u9650"
+    },
+    "swooperKillCooldown": {
+        "0": "Kill Cooldown",
+        "13": "\u51fb\u6740\u51b7\u5374"
+    },
+    "swooperCooldown": {
+        "0": "Swoop Cooldown",
+        "13": "\u9690\u8eab\u51b7\u5374"
+    },
+    "swooperDuration": {
+        "0": "Swoop Duration",
+        "13": "\u9690\u8eab\u6301\u7eed\u65f6\u95f4"
+    },
+    "swooperHasImpVision": {
+        "0": "Have Impostor Vision",
+        "13": "\u62e5\u6709\u5185\u9b3c\u89c6\u91ce"
     },
     "werewolfRampageCooldown": {
-        "0": "Rampage Cooldown"
+        "0": "Rampage Cooldown",
+        "13": "\u72c2\u66b4\u51b7\u5374"
     },
     "werewolfRampageDuration": {
-        "0": "Rampage Duration"
+        "0": "Rampage Duration",
+        "13": "\u72c2\u66b4\u6301\u7eed\u65f6\u95f4"
     },
     "werewolfKillCooldown": {
-        "0": "Kill Cooldown"
+        "0": "Kill Cooldown",
+        "13": "\u51fb\u6740\u51b7\u5374"
+    },
+    "juggernautCooldown": {
+        "13": "\u51fb\u6740\u51b7\u5374"
+    },
+    "juggernautHasImpVision": {
+        "0": "Have Impostor Vision",
+        "13": "\u5929\u542f\u62e5\u6709\u4f2a\u88c5\u8005\u89c6\u91ce"
+    },
+    "juggernautReducedkillEach": {
+        "13": "\u6bcf\u6b21\u51fb\u6740\u540e\u51cf\u5c11\u7684cd"
+    },
+    "vultureCooldown": {
+        "0": "Vulture Cooldown",
+        "13": "\u541e\u566c\u51b7\u5374"
+    },
+    "vultureNumberToWin": {
+        "0": "Number Of Corpses Needed To Be Eaten",
+        "13": "\u83b7\u80dc\u6240\u9700\u541e\u566c\u6b21\u6570"
+    },
+    "vultureCanUseVents": {
+        "0": "Vulture Can Use Vents",
+        "13": "\u53ef\u4f7f\u7528\u7ba1\u9053"
+    },
+    "vultureShowArrows": {
+        "0": "Show Arrows Pointing Towards The Corpses",
+        "13": "\u663e\u793a\u6307\u5411\u5c38\u4f53\u7684\u7bad\u5934"
+    },
+    "lawyerVision": {
+        "0": "Vision",
+        "13": "\u89c6\u91ce\u500d\u7387"
+    },
+    "lawyerKnowsRole": {
+        "0": "Lawyer Knows Target Role",
+        "13": "\u53ef\u5f97\u77e5\u76ee\u6807\u804c\u4e1a"
+    },
+    "lawyerCanCallEmergency": {
+        "0": "Lawyer Can Call Emergency Meeting",
+        "13": "\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    },
+    "lawyerTargetCanBeJester": {
+        "0": "Lawyer Target Can Be The Jester",
+        "13": "\u5c0f\u4e11\u53ef\u4ee5\u6210\u4e3a\u5f8b\u5e08\u7684\u5ba2\u6237"
+    },
+    "pursuerCooldown": {
+        "0": "Pursuer Blank Cooldown",
+        "13": "\u8d77\u8bc9\u4eba\u7a7a\u5305\u5f39\u51b7\u5374"
+    },
+    "pursuerBlanksNumber": {
+        "0": "Pursuer Number Of Blanks",
+        "13": "\u8d77\u8bc9\u4eba\u7a7a\u5305\u5f39\u53ef\u7528\u6b21\u6570"
+    },
+    "lawyerTargetKnows": {
+        "0": "Lawyer Target Knows",
+        "13": "\u5ba2\u6237\u77e5\u9053\u5f8b\u5e08\u5b58\u5728"
+    },
+    "lawyerStolenWin": {
+        "13": "\u5b58\u6d3b\u4f1a\u53d6\u4ee3\u5ba2\u6237\u80dc\u5229"
+    },
+    "executionerCanCallEmergency": {
+        "13": "\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    },
+    "executionerPromotesToLawyer": {
+        "13": "\u76ee\u6807\u804c\u4e1a\u53d8\u66f4\u65f6\u53ef\u4ee5\u664b\u5347\u4e3a\u5f8b\u5e08"
+    },
+    "executionerOnTargetDead": {
+        "13": "\u76ee\u6807\u6b7b\u4ea1\u540e\u53d8\u4e3a"
+    },
+    "doomsayerCooldown": {
+        "13": "\u6280\u80fd\u51b7\u5374"
+    },
+    "doomsayerHasMultipleShotsPerMeeting": {
+        "13": "\u731c\u6d4b\u6210\u529f\u540e\u53ef\u7ee7\u7eed\u731c\u6d4b"
+    },
+    "doomsayerShowInfoInGhostChat": {
+        "13": "\u7075\u9b42\u53ef\u89c1\u731c\u6d4b\u7ed3\u679c"
+    },
+    "doomsayerCanGuess": {
+        "13": "\u53ef\u4ee5\u731c\u6d4b{0}"
+    },
+    "doomsayerOnlineTarger": {
+        "13": "\u662f\u5426\u83b7\u53d6\u5df2\u6709\u804c\u4e1a"
+    },
+    "doomsayerKillToWin": {
+        "13": "\u9700\u8981\u6210\u529f\u731c\u6d4b\u51e0\u6b21\u83b7\u80dc"
+    },
+    "doomsayerDormationNum": {
+        "13": "\u63ed\u793a\u7684\u804c\u4e1a\u6570\u91cf"
+    },
+    "akujoTimeLimit": {
+        "13": "\u9b45\u9b54\u62db\u52df\u7684\u65f6\u9650"
+    },
+    "akujoForceKeeps": {
+        "13": "\u9b45\u9b54\u4e0d\u62db\u52df\u5907\u80ce\u4f1a\u81ea\u6740"
+    },
+    "akujoNumKeeps": {
+        "13": "\u53ef\u62db\u52df\u5907\u80ce\u7684\u6570\u91cf"
+    },
+    "akujoKnowsRoles": {
+        "13": "\u9b45\u9b54\u662f\u5426\u77e5\u9053\u76ee\u6807\u804c\u4e1a"
+    },
+    "akujoHonmeiCannotFollowWin": {
+        "13": "\u771f\u7231\u65e0\u6cd5\u8ddf\u968f\u9635\u8425\u83b7\u80dc"
+    },
+    "akujoHonmeiOptimizeWin": {
+        "13": "\u771f\u7231\u4e3a\u8239\u5458\u65f6\u5141\u8bb8\u8ddf\u968f\u80dc\u5229"
     },
     "thiefCooldown": {
-        "0": "Thief Cooldown"
+        "0": "Thief Cooldown",
+        "13": "\u51fb\u6740\u51b7\u5374"
     },
-    "thiefCanKillSheriff": {
-        "0": "Thief Can Kill Sheriff"
+    "thiefCanKill": {
+        "0": "Thief Can Kill {0}",
+        "13": "\u8eab\u4efd\u7a83\u8d3c\u53ef\u4ee5\u51fb\u6740 {0}"
     },
     "thiefHasImpVision": {
-        "0": "Thief Has Impostor Vision"
+        "0": "Thief Has Impostor Vision",
+        "13": "\u8eab\u4efd\u7a83\u8d3c\u62e5\u6709\u4f2a\u88c5\u8005\u89c6\u91ce"
     },
     "thiefCanUseVents": {
-        "0": "Thief Can Use Vents"
+        "0": "Thief Can Use Vents",
+        "13": "\u8eab\u4efd\u7a83\u8d3c\u53ef\u4ee5\u4f7f\u7528\u7ba1\u9053"
     },
     "thiefCanStealWithGuess": {
-        "0": "Thief Can Guess To Steal A Role (If Guesser)"
+        "0": "Thief Can Guess To Steal A Role (If Guesser)",
+        "13": "\u8eab\u4efd\u7a83\u8d3c\u53ef\u901a\u8fc7\u731c\u6d4b\u7a83\u53d6\u8eab\u4efd\n(\u8d4c\u602a\u6a21\u5f0f)"
     },
     "guesserNumberOfShots": {
-        "0": "Vigilante Number Of Shots"
+        "0": "Vigilante Number Of Shots",
+        "13": "\u53ef\u731c\u6d4b\u6b21\u6570"
     },
     "guesserHasMultipleShotsPerMeeting": {
-        "0": "Vigilante Can Shoot Multiple Times Per Meeting"
+        "0": "Vigilante Can Shoot Multiple Times Per Meeting",
+        "13": "\u540c\u4e00\u8f6e\u4f1a\u8bae\u53ef\u591a\u6b21\u731c\u6d4b"
     },
     "guesserShowInfoInGhostChat": {
-        "0": "Guesses Visible In Ghost Chat"
+        "0": "Guesses Visible In Ghost Chat",
+        "13": "\u7075\u9b42\u53ef\u89c1\u731c\u6d4b\u7ed3\u679c"
     },
     "guesserKillsThroughShield": {
-        "0": "Guesses Ignore The Medic Shield"
+        "0": "Guesses Ignore The Medic Shield",
+        "13": "\u731c\u6d4b\u65e0\u89c6\u6cd5\u533b\u62a4\u76fe\u4fdd\u62a4"
     },
     "mayorCanSeeVoteColors": {
-        "0": "Mayor Can See Vote Colors"
+        "0": "Mayor Can See Vote Colors",
+        "13": "\u62e5\u6709\u7aa5\u89c6\u80fd\u529b"
     },
     "mayorTasksNeededToSeeVoteColors": {
-        "0": "Completed Tasks Needed To See Vote Colors"
+        "0": "Completed Tasks Needed To See Vote Colors",
+        "13": "\u83b7\u5f97\u7aa5\u89c6\u80fd\u529b\u6240\u9700\u5b8c\u6210\u7684\u4efb\u52a1\u6570"
     },
     "mayorMeetingButton": {
-        "0": "Mobile Emergency Button"
+        "0": "Mobile Emergency Button",
+        "13": "\u53ef\u8fdc\u7a0b\u53ec\u5f00\u4f1a\u8bae"
     },
     "mayorMaxRemoteMeetings": {
-        "0": "Number Of Remote Meetings"
+        "0": "Number Of Remote Meetings",
+        "13": "\u8fdc\u7a0b\u53ec\u5f00\u4f1a\u8bae\u53ef\u7528\u6b21\u6570"
     },
     "mayorChooseSingleVote": {
-        "0": "Mayor Can Choose Single Vote"
+        "0": "Mayor Can Choose Single Vote",
+        "13": "\u5e02\u957f\u53ef\u9009\u62e9\u6295\u5355\u7968"
     },
     "mayorChooseSingleVote2": {
-        "0": "On (Before Voting)"
+        "0": "On (Before Voting)",
+        "13": "\u6295\u7968\u524d\u9009\u62e9"
     },
     "mayorChooseSingleVote3": {
-        "0": "On (Until Meeting Ends)"
+        "0": "On (Until Meeting Ends)",
+        "13": "\u4f1a\u8bae\u7ed3\u675f\u524d\u9009\u62e9"
+    },
+    "mayorSabotageRemoteMeetings": {
+        "13": "\u53ef\u5728\u7834\u574f\u65f6\u4f7f\u7528"
+    },
+    "prosecutorDiesOnIncorrectPros": {
+        "13": "\u9a71\u9010\u8239\u5458\u4f1a\u81ea\u6740"
+    },
+    "prosecutorCanCallEmergency": {
+        "13": "\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
     },
     "engineerRemoteFix": {
-        "0": "Enable Remote Fix"
+        "0": "Enable Remote Fix",
+        "13": "\u53ef\u8fdc\u7a0b\u4fee\u7406\u7834\u574f"
     },
     "engineerResetFixAfterMeeting": {
-        "0": "Reset Fixes After Meeting"
+        "0": "Reset Fixes After Meeting",
+        "13": "\u4f1a\u8bae\u540e\u91cd\u7f6e\u4fee\u7406\u6b21\u6570"
     },
     "engineerNumberOfFixes": {
-        "0": "Number Of Sabotage Fixes"
-    },
-    "engineerExpertRepairs": {
-        "0": "Advanced Sabotage Repair"
+        "0": "Number Of Sabotage Fixes",
+        "13": "\u8fdc\u7a0b\u4fee\u7406\u53ef\u7528\u6b21\u6570"
     },
     "engineerHighlightForImpostors": {
-        "0": "Impostors See Vents Highlighted"
+        "0": "Impostors See Vents Highlighted",
+        "13": "\u5185\u9b3c\u53ef\u89c1\u5de5\u7a0b\u5e08\u7ba1\u9053\u9ad8\u5149"
     },
     "engineerHighlightForTeamJackal": {
-        "0": "Jackal and Sidekick See Vents Highlighted"
+        "0": "Jackal and Sidekick See Vents Highlighted",
+        "13": "\u8c7a\u72fc/\u8ddf\u73ed\u53ef\u89c1\u5de5\u7a0b\u5e08\u7ba1\u9053\u9ad8\u5149"
     },
     "privateInvestigatorSeeColor": {
-        "0": "Can See Target Player Color"
+        "0": "Can See Target Player Color",
+        "13": "\u53ef\u89c1\u6280\u80fd\u89e6\u53d1\u65f6\u5bf9\u65b9\u5177\u4f53\u989c\u8272"
     },
     "sheriffCooldown": {
-        "0": "Sheriff Cooldown"
+        "0": "Sheriff Cooldown",
+        "13": "\u6267\u6cd5\u51b7\u5374"
     },
     "sheriffMisfireKills": {
-        "0": "Misfire Kills"
+        "0": "Misfire Kills",
+        "13": "\u8d70\u706b\u65f6\u6b7b\u4ea1\u5bf9\u8c61"
     },
     "sheriffMisfireKills1": {
-        "0": "Self"
+        "0": "Self",
+        "13": "\u81ea\u5df1"
     },
     "sheriffMisfireKills2": {
-        "0": "Target"
+        "0": "Target",
+        "13": "\u76ee\u6807"
     },
     "sheriffMisfireKills3": {
-        "0": "Both"
+        "0": "Both",
+        "13": "\u53cc\u65b9"
     },
     "sheriffCanKillNeutrals": {
-        "0": "ninjaKnowsTargetLocation"
+        "0": "ninjaKnowsTargetLocation",
+        "13": "\u53ef\u6267\u6cd5\u72ec\u7acb\u9635\u8425"
     },
     "sheriffCanKill": {
-        "0": "Sheriff Can Kill {0}"
+        "0": "Sheriff Can Kill {0}",
+        "13": "\u53ef\u6267\u6cd5 {0}"
     },
     "deputySpawnRate": {
-        "0": "Sheriff Has A Deputy"
+        "0": "Sheriff Has A Deputy",
+        "13": "\u53ef\u62e5\u6709\u4e00\u540d\u6355\u5feb"
     },
     "deputyNumberOfHandcuffs": {
-        "0": "Deputy Number Of Handcuffs"
+        "0": "Deputy Number Of Handcuffs",
+        "13": "\u624b\u94d0\u53ef\u7528\u6b21\u6570"
     },
     "deputyHandcuffCooldown": {
-        "0": "Handcuff Cooldown"
+        "0": "Handcuff Cooldown",
+        "13": "\u624b\u94d0\u51b7\u5374"
     },
     "deputyHandcuffDuration": {
-        "0": "Handcuff Duration"
+        "0": "Handcuff Duration",
+        "13": "\u624b\u94d0\u6301\u7eed\u65f6\u95f4"
     },
     "deputyKnowsSheriff": {
-        "0": "Sheriff And Deputy Know Each Other"
+        "0": "Sheriff And Deputy Know Each Other",
+        "13": "\u8b66\u957f/\u6355\u5feb\u53ef\u4ee5\u4e92\u76f8\u786e\u8ba4"
     },
     "deputyGetsPromoted": {
-        "0": "Deputy Gets Promoted To Sheriff"
+        "0": "Deputy Gets Promoted To Sheriff",
+        "13": "\u8b66\u957f\u6b7b\u540e\u6355\u5feb\u53ef\u664b\u5347"
     },
     "deputyGetsPromoted2": {
-        "0": "On (Immediately)"
+        "0": "On (Immediately)",
+        "13": "\u7acb\u5373\u664b\u5347"
     },
     "deputyGetsPromoted3": {
-        "0": "On (After Meeting)"
+        "0": "On (After Meeting)",
+        "13": "\u4f1a\u8bae\u540e\u664b\u5347"
     },
     "deputyKeepsHandcuffs": {
-        "0": "Deputy Keeps Handcuffs When Promoted"
+        "0": "Deputy Keeps Handcuffs When Promoted",
+        "13": "\u664b\u5347\u540e\u4fdd\u7559\u624b\u94d0\u6280\u80fd"
     },
     "detectiveAnonymousFootprints": {
-        "0": "Anonymous Footprints"
+        "0": "Anonymous Footprints",
+        "13": "\u533f\u540d\u811a\u5370"
     },
     "detectiveFootprintIntervall": {
-        "0": "Footprint Intervall"
+        "0": "Footprint Intervall",
+        "13": "\u811a\u5370\u66f4\u65b0\u95f4\u9694"
     },
     "detectiveFootprintDuration": {
-        "0": "Footprint Duration"
+        "0": "Footprint Duration",
+        "13": "\u811a\u5370\u6301\u7eed\u65f6\u95f4"
     },
     "detectiveReportNameDuration": {
-        "0": "Time Where Investigator Reports Will Have Name"
+        "0": "Time Where Investigator Reports Will Have Name",
+        "13": "\u4ee5\u4e0b\u65f6\u95f4\u5185\u62a5\u544a\u53ef\u5f97\u77e5\u51f6\u624b\u804c\u4e1a"
     },
     "detectiveReportColorDuration": {
-        "0": "Time Where Investigator Reports Will Have Color Type"
+        "0": "Time Where Investigator Reports Will Have Color Type",
+        "13": "\u4ee5\u4e0b\u65f6\u95f4\u5185\u62a5\u544a\u53ef\u5f97\u77e5\u51f6\u624b\u9635\u8425"
     },
     "medicShowShielded": {
-        "0": "Show Shielded Player"
+        "0": "Show Shielded Player",
+        "13": "\u53ef\u89c1\u533b\u751f\u62a4\u76fe\u7684\u73a9\u5bb6"
     },
     "medicShowShielded1": {
-        "0": "Everyone"
+        "0": "Everyone",
+        "13": "\u6240\u6709\u4eba"
     },
     "medicShowShielded2": {
-        "0": "Shielded + Medic"
+        "0": "Shielded + Medic",
+        "13": "\u88ab\u4fdd\u62a4\u8005+\u6cd5\u533b"
     },
     "medicShowShielded3": {
-        "0": "Medic"
+        "0": "Medic",
+        "13": "\u6cd5\u533b"
     },
     "medicBreakShield": {
-        "0": "Shield Is Unbreakable"
+        "0": "Shield Is Unbreakable",
+        "13": "\u62a4\u76fe\u6301\u7eed\u751f\u6548"
     },
     "medicShowAttemptToShielded": {
-        "0": "Shielded Player Sees Murder Attempt"
+        "0": "Shielded Player Sees Murder Attempt",
+        "13": "\u6cd5\u533b\u53ef\u89c1\u51fb\u6740\u5c1d\u8bd5"
     },
     "medicResetTargetAfterMeeting": {
-        "0": "Reset Target After Meeting"
+        "0": "Reset Target After Meeting",
+        "13": "\u4f1a\u8bae\u540e\u91cd\u7f6e\u4fdd\u62a4\u76ee\u6807"
     },
     "medicSetOrShowShieldAfterMeeting": {
-        "0": "Shield Will Be Activated"
+        "0": "Shield Will Be Activated",
+        "13": "\u62a4\u76fe\u751f\u6548\u4e0e\u53ef\u89c1\u65f6\u673a"
     },
     "medicSetOrShowShieldAfterMeeting1": {
-        "0": "Instantly"
+        "0": "Instantly",
+        "13": "\u7acb\u5373\u751f\u6548\u4e14\u53ef\u89c1"
     },
     "medicSetOrShowShieldAfterMeeting2": {
-        "0": "Instantly, Visible\nAfter Meeting"
+        "0": "Instantly, Visible\nAfter Meeting",
+        "13": "\u7acb\u5373\u751f\u6548\u4e14\u4f1a\u8bae\u540e\u53ef\u89c1"
     },
     "medicSetOrShowShieldAfterMeeting3": {
-        "0": "After Meeting"
+        "0": "After Meeting",
+        "13": "\u4f1a\u8bae\u540e\u751f\u6548\u4e14\u53ef\u89c1"
     },
     "medicShowAttemptToMedic": {
-        "0": "Medic Sees Murder Attempt On Shielded Player"
+        "0": "Medic Sees Murder Attempt On Shielded Player",
+        "13": "\u6cd5\u533b\u53ef\u89c1\u51fb\u6740\u5c1d\u8bd5"
+    },
+    "medicReportNameDuration": {
+        "13": "\u4ee5\u4e0b\u65f6\u95f4\u5185\u62a5\u544a\u53ef\u5f97\u77e5\u51f6\u624b\u540d\u5b57"
+    },
+    "medicReportColorDuration": {
+        "13": "\u4ee5\u4e0b\u65f6\u95f4\u5185\u62a5\u544a\u53ef\u5f97\u77e5\u51f6\u624b\u989c\u8272\u7c7b\u578b"
+    },
+    "doomsayerCanGuessImpostor": {
+        "13": "\u53ef\u4ee5\u731c\u6d4b"
+    },
+    "doomsayerCanGuessNeutral": {
+        "13": "\u53ef\u4ee5\u731c\u6d4b"
     },
     "timeMasterCooldown": {
-        "0": "Time Master Cooldown"
+        "0": "Time Master Cooldown",
+        "13": "\u65f6\u5149\u4e4b\u76fe\u51b7\u5374"
     },
     "timeMasterRewindTime": {
-        "0": "Rewind Time"
+        "0": "Rewind Time",
+        "13": "\u56de\u6eaf\u65f6\u95f4"
     },
     "timeMasterShieldDuration": {
-        "0": "Time Master Shield Duration"
+        "0": "Time Master Shield Duration",
+        "13": "\u65f6\u5149\u4e4b\u76fe\u6301\u7eed\u65f6\u95f4"
     },
     "veterenCooldown": {
-        "0": "Alert Cooldown"
+        "0": "Alert Cooldown",
+        "13": "\u8b66\u6212\u51b7\u5374"
     },
     "veterenAlertDuration": {
-        "0": "Alert Duration"
+        "0": "Alert Duration",
+        "13": "\u8b66\u6212\u6301\u7eed\u65f6\u95f4"
     },
     "swapperCanCallEmergency": {
-        "0": "Swapper Can Call Emergency Meeting"
+        "0": "Swapper Can Call Emergency Meeting",
+        "13": "\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
     },
     "swapperCanFixSabotages": {
-        "0": "Swapper Can Fix Sabotages"
+        "0": "Swapper Can Fix Sabotages",
+        "13": "\u53ef\u4fee\u7406\u7d27\u6025\u7834\u574f"
     },
     "swapperCanOnlySwapOthers": {
-        "0": "Swapper Can Only Swap Others"
+        "0": "Swapper Can Only Swap Others",
+        "13": "\u53ea\u53ef\u4ea4\u6362\u4ed6\u4eba"
     },
     "swapperSwapsNumber": {
-        "0": "Initial Swap Charges"
+        "0": "Initial Swap Charges",
+        "13": "\u521d\u59cb\u53ef\u6362\u7968\u6b21\u6570"
     },
     "swapperRechargeTasksNumber": {
-        "0": "Number Of Tasks Needed For Recharging"
+        "0": "Number Of Tasks Needed For Recharging",
+        "13": "\u5145\u80fd\u6240\u9700\u4efb\u52a1\u6570"
     },
     "seerMode": {
-        "0": "Seer Mode"
+        "0": "Seer Mode",
+        "13": "\u611f\u77e5\u6a21\u5f0f"
     },
     "seerMode1": {
-        "0": "Show Death Flash + Souls"
+        "0": "Show Death Flash + Souls",
+        "13": "\u6b7b\u4ea1\u95ea\u5149+\u53ef\u89c1\u7075\u9b42"
     },
     "seerMode2": {
-        "0": "Show Death Flash"
+        "0": "Show Death Flash",
+        "13": "\u6b7b\u4ea1\u95ea\u5149"
     },
     "seerMode3": {
-        "0": "Show Souls"
+        "0": "Show Souls",
+        "13": "\u53ef\u89c1\u7075\u9b42"
     },
     "seerLimitSoulDuration": {
-        "0": "Seer Limit Soul Duration"
+        "0": "Seer Limit Soul Duration",
+        "13": "\u9650\u5236\u7075\u9b42\u53ef\u89c1\u65f6\u95f4"
     },
     "seerSoulDuration": {
-        "0": "Seer Soul Duration"
+        "0": "Seer Soul Duration",
+        "13": "\u7075\u9b42\u53ef\u89c1\u65f6\u95f4"
     },
     "hackerCooldown": {
-        "0": "Hacker Cooldown"
+        "0": "Hacker Cooldown",
+        "13": "\u9ed1\u5165\u51b7\u5374"
     },
     "hackerHackeringDuration": {
-        "0": "Hacker Duration"
+        "0": "Hacker Duration",
+        "13": "\u9ed1\u5165\u6301\u7eed\u65f6\u95f4"
     },
     "hackerOnlyColorType": {
-        "0": "Hacker Only Sees Color Type"
+        "0": "Hacker Only Sees Color Type",
+        "13": "\u9ed1\u5165\u540e\u53ea\u53ef\u89c1\u989c\u8272\u7c7b\u578b"
     },
     "hackerToolsNumber": {
-        "0": "Max Mobile Gadget Charges"
+        "0": "Max Mobile Gadget Charges",
+        "13": "\u79fb\u52a8\u8bbe\u5907\u6700\u591a\u4f7f\u7528\u6b21\u6570"
     },
     "hackerRechargeTasksNumber": {
-        "0": "Number Of Tasks Needed For Recharging"
+        "0": "Number Of Tasks Needed For Recharging",
+        "13": "\u5145\u80fd\u6240\u9700\u4efb\u52a1\u6570"
     },
     "hackerNoMove": {
-        "0": "Cant Move During Mobile Gadget Duration"
+        "0": "Cant Move During Mobile Gadget Duration",
+        "13": "\u4f7f\u7528\u79fb\u52a8\u8bbe\u5907\u65f6\u4e0d\u53ef\u79fb\u52a8"
     },
     "trackerUpdateIntervall": {
-        "0": "Tracker Update Intervall"
+        "0": "Tracker Update Intervall",
+        "13": "\u7bad\u5934\u66f4\u65b0\u95f4\u9694"
     },
     "trackerResetTargetAfterMeeting": {
-        "0": "Tracker Reset Target After Meeting"
+        "0": "Tracker Reset Target After Meeting",
+        "13": "\u4f1a\u8bae\u540e\u91cd\u7f6e\u8ddf\u8e2a\u76ee\u6807"
     },
     "trackerCanTrackCorpses": {
-        "0": "Tracker Can Track Corpses"
+        "0": "Tracker Can Track Corpses",
+        "13": "\u53ef\u5bfb\u627e\u5c38\u4f53"
     },
     "trackerCorpsesTrackingCooldown": {
-        "0": "Corpses Tracking Cooldown"
+        "0": "Corpses Tracking Cooldown",
+        "13": "\u5bfb\u627e\u5c38\u4f53\u51b7\u5374"
     },
     "trackerCorpsesTrackingDuration": {
-        "0": "Corpses Tracking Duration"
+        "0": "Corpses Tracking Duration",
+        "13": "\u5bfb\u627e\u6301\u7eed\u65f6\u95f4"
     },
     "trackerTrackingMethod": {
-        "0": "How Tracker Gets Target Location"
+        "0": "How Tracker Gets Target Location",
+        "13": "\u8ffd\u8e2a\u6a21\u5f0f"
     },
     "trackerTrackingMethod1": {
-        "0": "Arrow Only"
+        "0": "Arrow Only",
+        "13": "\u4ec5\u7bad\u5934"
     },
     "trackerTrackingMethod2": {
-        "0": "Proximity Dectector Only"
+        "0": "Proximity Dectector Only",
+        "13": "\u4ec5\u68c0\u6d4b\u662f\u5426\u63a5\u8fd1"
     },
     "trackerTrackingMethod3": {
-        "0": "Arrow + Proximity"
+        "0": "Arrow + Proximity",
+        "13": "\u4e24\u8005\u7686\u6709"
     },
     "snitchLeftTasksForReveal": {
-        "0": "Task Count Where The Snitch Will Be Revealed"
+        "0": "Task Count Where The Snitch Will Be Revealed",
+        "13": "\u5269\u4f59\u591a\u5c11\u4efb\u52a1\u65f6\u53ef\u88ab\u53d1\u73b0"
     },
     "snitchSeeMeeting": {
-        "0": "Show Roles Color"
+        "0": "Show Roles Color",
+        "13": "\u53ef\u5728\u4f1a\u8bae\u4e2d\u67e5\u770b\u4fe1\u606f"
     },
     "snitchCanSeeRoles": {
-        "0": "Can See Roles Info"
+        "0": "Can See Roles Info",
+        "13": "\u53ef\u4ee5\u5728\u4f1a\u8bae\u4e2d\u67e5\u770b\u5177\u4f53\u804c\u4e1a"
     },
     "snitchIncludeNeutralTeam": {
-        "0": "Include Team Neutral"
+        "0": "Include Team Neutral",
+        "13": "\u53ef\u63ed\u793a\u4e2d\u7acb\u9635\u8425"
     },
     "snitchIncludeNeutralTeam2": {
-        "0": "Killer"
+        "0": "Killer",
+        "13": "\u4ec5\u6740\u624b\u4e2d\u7acb"
     },
     "snitchIncludeNeutralTeam3": {
-        "0": "Evil"
+        "0": "Evil",
+        "13": "\u6240\u6709\u90aa\u6076\u4e2d\u7acb"
     },
     "snitchIncludeNeutralTeam4": {
-        "0": "All"
+        "0": "All",
+        "13": "\u5168\u90e8\u4e2d\u7acb\u9635\u8425"
     },
     "snitchTeamNeutraUseDifferentArrowColor": {
-        "0": "Use Different Color For Neutra Team"
+        "0": "Use Different Color For Neutra Team",
+        "13": "\u4e3a\u4e2d\u7acb\u9635\u8425\u4f7f\u7528\u4e0d\u540c\u989c\u8272\u7684\u63d0\u9192"
+    },
+    "prophetCooldown": {
+        "13": "\u51b7\u5374\u65f6\u95f4"
+    },
+    "prophetNumExamines": {
+        "13": "\u9884\u8a00\u603b\u6b21\u6570"
+    },
+    "prophetCanCallEmergency": {
+        "13": "\u53ef\u4ee5\u53ec\u5f00\u7d27\u6025\u4f1a\u8bae"
+    },
+    "prophetIsRevealed": {
+        "13": "\u53ef\u4ee5\u88ab\u6740\u624b\u53d1\u73b0"
+    },
+    "prophetExaminesToBeRevealed": {
+        "13": "\u88ab\u53d1\u73b0\u6240\u9700\u63ed\u793a\u6b21\u6570"
+    },
+    "prophetKillCrewAsRed": {
+        "13": "\u51fb\u6740\u578b\u8239\u5458\u663e\u793a\u4e3a\u7ea2\u540d"
+    },
+    "prophetBenignNeutralAsRed": {
+        "13": "\u5584\u826f\u578b\u4e2d\u7acb\u663e\u793a\u4e3a\u7ea2\u540d"
+    },
+    "prophetEvilNeutralAsRed": {
+        "13": "\u90aa\u6076\u578b\u4e2d\u7acb\u663e\u793a\u4e3a\u7ea2\u540d"
+    },
+    "prophetKillNeutralAsRed": {
+        "13": "\u90aa\u6076\u578b\u4e2d\u7acb\u663e\u793a\u4e3a\u7ea2\u540d"
     },
     "spyCanDieToSheriff": {
-        "0": "Spy Can Die To Sheriff"
+        "0": "Spy Can Die To Sheriff",
+        "13": "\u53ef\u88ab\u8b66\u957f\u6267\u6cd5"
     },
     "spyImpostorsCanKillAnyone": {
-        "0": "Impostors Can Kill Anyone If There Is A Spy"
+        "0": "Impostors Can Kill Anyone If There Is A Spy",
+        "13": "\u5367\u5e95\u5728\u573a\u65f6\u4f2a\u88c5\u8005\u53ef\u51fb\u6740\u961f\u53cb"
     },
     "spyCanEnterVents": {
-        "0": "Spy Can Enter Vents"
+        "0": "Spy Can Enter Vents",
+        "13": "\u53ef\u4f7f\u7528\u7ba1\u9053"
     },
     "spyHasImpostorVision": {
-        "0": "Spy Has Impostor Vision"
+        "0": "Spy Has Impostor Vision",
+        "13": "\u62e5\u6709\u5185\u9b3c\u89c6\u91ce"
     },
     "portalmakerCooldown": {
-        "0": "Portalmaker Cooldown"
+        "0": "Portalmaker Cooldown",
+        "13": "\u6784\u5efa\u661f\u95e8\u51b7\u5374"
     },
     "portalmakerUsePortalCooldown": {
-        "0": "Use Portal Cooldown"
+        "0": "Use Portal Cooldown",
+        "13": "\u4f7f\u7528\u661f\u95e8\u51b7\u5374"
     },
     "portalmakerLogOnlyColorType": {
-        "0": "Portalmaker Log Only Shows Color Type"
+        "0": "Portalmaker Log Only Shows Color Type",
+        "13": "\u661f\u95e8\u65e5\u5fd7\u53ea\u663e\u793a\u989c\u8272\u7c7b\u578b"
     },
     "portalmakerLogHasTime": {
-        "0": "Log Shows Time"
+        "0": "Log Shows Time",
+        "13": "\u661f\u95e8\u65e5\u5fd7\u8bb0\u5f55\u4f7f\u7528\u65f6\u95f4"
     },
     "portalmakerCanPortalFromAnywhere": {
-        "0": "Can Port To Portal From Everywhere"
+        "0": "Can Port To Portal From Everywhere",
+        "13": "\u53ef\u4ece\u4efb\u4f55\u5730\u65b9\u4f20\u9001\u81f3\u81ea\u5df1\u653e\u7f6e\u7684\u4f20\u9001\u95e8"
     },
     "securityGuardCooldown": {
-        "0": "Security Guard Cooldown"
+        "0": "Security Guard Cooldown",
+        "13": "\u4fdd\u5b89\u51b7\u5374"
     },
     "securityGuardTotalScrews": {
-        "0": "Security Guard Number Of Screws"
+        "0": "Security Guard Number Of Screws",
+        "13": "\u4fdd\u5b89\u87ba\u4e1d\u6570"
     },
     "securityGuardCamPrice": {
-        "0": "Number Of Screws Per Cam"
+        "0": "Number Of Screws Per Cam",
+        "13": "\u76d1\u63a7\u6240\u9700\u87ba\u4e1d\u6570"
     },
     "securityGuardVentPrice": {
-        "0": "Number Of Screws Per Vent"
+        "0": "Number Of Screws Per Vent",
+        "13": "\u5c01\u9501\u6240\u9700\u87ba\u4e1d\u6570"
     },
     "securityGuardCamDuration": {
-        "0": "Security Guard Duration"
+        "0": "Security Guard Duration",
+        "13": "\u4fdd\u5b89\u6280\u80fd\u6301\u7eed\u65f6\u95f4"
     },
     "securityGuardCamMaxCharges": {
-        "0": "Gadget Max Charges"
+        "0": "Gadget Max Charges",
+        "13": "\u6700\u5927\u5145\u80fd\u6570"
     },
     "securityGuardCamRechargeTasksNumber": {
-        "0": "Number Of Tasks Needed For Recharging"
+        "0": "Number Of Tasks Needed For Recharging",
+        "13": "\u5145\u80fd\u6240\u9700\u4efb\u52a1\u6570"
     },
     "securityGuardNoMove": {
-        "0": "Cant Move During Cam Duration"
+        "0": "Cant Move During Cam Duration",
+        "13": "\u770b\u76d1\u63a7\u65f6\u65e0\u6cd5\u79fb\u52a8"
     },
     "mediumCooldown": {
-        "0": "Medium Questioning Cooldown"
+        "0": "Medium Questioning Cooldown",
+        "13": "\u901a\u7075\u51b7\u5374"
     },
     "mediumDuration": {
-        "0": "Medium Questioning Duration"
+        "0": "Medium Questioning Duration",
+        "13": "\u901a\u7075\u6240\u9700\u65f6\u95f4"
     },
     "mediumOneTimeUse": {
-        "0": "Each Soul Can Only Be Questioned Once"
+        "0": "Each Soul Can Only Be Questioned Once",
+        "13": "\u6bcf\u4e2a\u7075\u9b42\u53ea\u80fd\u88ab\u901a\u7075\u4e00\u6b21"
     },
     "mediumChanceAdditionalInfo": {
-        "0": "Chance That The Answer Contains \n    Additional Information"
+        "0": "Chance That The Answer Contains \n    Additional Information",
+        "13": "\u56de\u7b54\u5305\u542b\u5176\u4ed6\u4fe1\u606f\u7684\u53ef\u80fd\u6027"
     },
     "jumperJumpTime": {
-        "0": "Jump Cooldown"
-    },
-    "jumperChargesOnPlace": {
-        "0": "Charges On Place"
+        "0": "Jump Cooldown",
+        "13": "\u6807\u8bb0/\u4f20\u9001\u51b7\u5374"
     },
     "jumperResetPlaceAfterMeeting": {
-        "0": "Reset Places After Meeting"
+        "0": "Reset Places After Meeting",
+        "13": "\u4f1a\u8bae\u540e\u91cd\u7f6e\u6807\u8bb0\u4f4d\u7f6e"
     },
     "jumperChargesGainOnMeeting": {
-        "0": "Charges Gained After Meeting"
+        "0": "Charges Gained After Meeting",
+        "13": "\u4f1a\u8bae\u540e\u589e\u52a0\u4f20\u9001\u6b21\u6570"
     },
     "jumperMaxCharges": {
-        "0": "Maximum Charges"
+        "0": "Maximum Charges",
+        "13": "\u53ef\u4f20\u9001\u6b21\u6570"
     },
     "bodyGuardResetTargetAfterMeeting": {
-        "0": "Reset Target After Meeting"
+        "0": "Reset Target After Meeting",
+        "13": "\u4f1a\u8bae\u540e\u91cd\u7f6e\u4fdd\u62a4\u76ee\u6807"
     },
     "bodyGuardFlash": {
-        "0": "Show Flash On Death"
+        "0": "Show Flash On Death",
+        "13": "\u6b7b\u4ea1\u95ea\u5149"
+    },
+    "bodyGuardShowShielded": {
+        "13": "\u4fdd\u62a4\u76ee\u6807\u53ef\u89c1\u62a4\u76fe\u7684\u5b58\u5728"
     },
     "trapperCooldown": {
-        "0": "Trapper Cooldown"
+        "0": "Trapper Cooldown",
+        "13": "\u653e\u7f6e\u51b7\u5374"
     },
     "trapperMaxCharges": {
-        "0": "Max Traps Charges"
+        "0": "Max Traps Charges",
+        "13": "\u6700\u5927\u9677\u9631\u6570"
     },
     "trapperRechargeTasksNumber": {
-        "0": "Number Of Tasks Needed For Recharging"
+        "0": "Number Of Tasks Needed For Recharging",
+        "13": "\u5145\u80fd\u6240\u9700\u4efb\u52a1\u6570"
     },
     "trapperTrapNeededTriggerToReveal": {
-        "0": "Trap Needed Trigger To Reveal"
+        "0": "Trap Needed Trigger To Reveal",
+        "13": "\u9677\u9631\u89e6\u53d1\u63d0\u793a\u6240\u9700\u4eba\u6570"
     },
     "trapperAnonymousMap": {
-        "0": "Show Anonymous Map"
+        "0": "Show Anonymous Map",
+        "13": "\u663e\u793a\u533f\u540d\u5730\u56fe"
     },
     "trapperInfoType": {
-        "0": "Trap Information Type"
+        "0": "Trap Information Type",
+        "13": "\u9677\u9631\u4fe1\u606f\u7c7b\u578b"
     },
     "trapperInfoType1": {
-        "0": "Role"
+        "0": "Role",
+        "13": "\u804c\u4e1a"
     },
     "trapperInfoType2": {
-        "0": "Good/Evil Role"
+        "0": "Good/Evil Role",
+        "13": "\u5584\u826f/\u90aa\u6076"
     },
     "trapperInfoType3": {
-        "0": "Name"
+        "0": "Name",
+        "13": "\u540d\u5b57"
     },
     "trapperTrapDuration": {
-        "0": "Trap Duration"
+        "0": "Trap Duration",
+        "13": "\u9677\u9631\u5b9a\u8eab\u65f6\u95f4"
     },
     "modifiersAreHidden": {
-        "0": "Hide After Death Modifiers"
-    },
-    "modifierDisperserCooldown": {
-        "0": "Disperser Cooldown"
-    },
-    "modifierDisperserNumberOfUses": {
-        "0": "Number Of Uses"
+        "0": "Hide After Death Modifiers",
+        "13": "\u9690\u85cf\u6b7b\u4ea1\u89e6\u53d1\u7684\u9644\u52a0\u80fd\u529b"
     },
     "modifierDisperserDispersesToVent": {
-        "0": "disperse To Vent"
+        "0": "disperse To Vent",
+        "13": "\u5206\u6563\u81f3\u7ba1\u9053\u4f4d\u7f6e"
     },
     "modifierBloodyQuantity": {
-        "0": "Bloody Quantity"
+        "0": "Bloody Quantity",
+        "13": "\u6e85\u8840\u6570\u91cf"
     },
     "modifierBloodyDuration": {
-        "0": "Trail Duration"
+        "0": "Trail Duration",
+        "13": "\u75d5\u8ff9\u6301\u7eed\u65f6\u95f4"
     },
     "modifierAntiTeleportQuantity": {
-        "0": "Anti Teleport Quantity"
+        "0": "Anti Teleport Quantity",
+        "13": "\u901a\u8baf\u5175\u6570\u91cf"
     },
-    "modifierBaitQuantity": {
-        "0": "Bait Quantity"
+    "modifierBaitSwapCrewmate": {
+        "13": "\u53ea\u5206\u914d\u7ed9\u8239\u5458\u9635\u8425"
     },
     "modifierBaitReportDelayMin": {
-        "0": "Bait Report Delay Min"
+        "0": "Bait Report Delay Min",
+        "13": "\u8bf1\u9975\u62a5\u544a\u5ef6\u8fdf\u65f6\u95f4(\u6700\u5c0f)"
     },
     "modifierBaitReportDelayMax": {
-        "0": "Bait Report Delay Max"
+        "0": "Bait Report Delay Max",
+        "13": "\u8bf1\u9975\u62a5\u544a\u5ef6\u8fdf\u65f6\u95f4(\u6700\u5927)"
     },
     "modifierBaitShowKillFlash": {
-        "0": "Warn The Killer With A Flash"
+        "0": "Warn The Killer With A Flash",
+        "13": "\u7528\u95ea\u5149\u706f\u8b66\u544a\u6740\u624b"
     },
     "modifierLoverImpLoverRate": {
-        "0": "Chance That One Lover Is Impostor"
+        "0": "Chance That One Lover Is Impostor",
+        "13": "\u604b\u4eba\u4e2d\u6709\u5185\u9b3c\u7684\u6982\u7387"
     },
     "modifierLoverBothDie": {
-        "0": "Both Lovers Die"
+        "0": "Both Lovers Die",
+        "13": "\u604b\u4eba\u5171\u6b7b"
     },
     "modifierLoverEnableChat": {
-        "0": "Enable Lover Chat"
+        "0": "Enable Lover Chat",
+        "13": "\u542f\u7528\u79c1\u5bc6\u804a\u5929\u6587\u5b57\u9891\u9053"
     },
     "modifierSunglassesQuantity": {
-        "0": "Sunglasses Quantity"
+        "0": "Sunglasses Quantity",
+        "13": "\u592a\u9633\u955c\u6570\u91cf"
     },
     "modifierSunglassesVision": {
-        "0": "Vision With Sunglasses"
+        "0": "Vision With Sunglasses",
+        "13": "\u592a\u9633\u955c\u7684\u89c6\u91ce\u500d\u7387"
     },
     "modifierTorchQuantity": {
-        "0": "Torch Quantity"
+        "0": "Torch Quantity",
+        "13": "\u706b\u70ac\u4eba\u6570"
     },
     "modifierTorchVision": {
-        "0": "Vision With Torch"
+        "0": "Vision With Torch",
+        "13": "\u706b\u70ac\u7684\u89c6\u91ce\u500d\u7387"
+    },
+    "modifierLastImpostorDeduce": {
+        "13": "\u7edd\u5883\u8005\u51fb\u6740\u51b7\u5374\u51cf\u5c11"
     },
     "modifierFlashQuantity": {
-        "0": "Flash Quantity"
+        "0": "Flash Quantity",
+        "13": "\u95ea\u7535\u4fa0\u4eba\u6570"
     },
     "modifierFlashSpeed": {
-        "0": "Flash Speed"
+        "0": "Flash Speed",
+        "13": "\u95ea\u7535\u4fa0\u7684\u79fb\u901f\u500d\u7387"
     },
     "modifierMultitaskerQuantity": {
-        "0": "Multitasker Quantity"
+        "0": "Multitasker Quantity",
+        "13": "\u591a\u7ebf\u7a0b\u4eba\u6570"
     },
     "modifierMiniGrowingUpDuration": {
-        "0": "Mini Growing Up Duration"
+        "0": "Mini Growing Up Duration",
+        "13": "\u5c0f\u5b69\u957f\u5927\u6240\u9700\u65f6\u95f4"
     },
     "modifierMiniGrowingUpInMeeting": {
-        "0": "Mini Grows Up In Meeting"
+        "0": "Mini Grows Up In Meeting",
+        "13": "\u5c0f\u5b69\u4f1a\u8bae\u671f\u95f4\u53ef\u6210\u957f"
+    },
+    "modifierGiantSpped": {
+        "13": "\u5de8\u4eba\u7684\u79fb\u901f\u500d\u7387"
+    },
+    "modifierButtonSabotageRemoteMeetings": {
+        "13": "\u53ef\u5728\u7834\u574f\u65f6\u4f7f\u7528"
+    },
+    "modifierShowCursed": {
+        "13": "\u9690\u85cf\u804c\u4e1a"
     },
     "modifierVipQuantity": {
-        "0": "VIP Quantity"
+        "0": "VIP Quantity",
+        "13": "VIP\u4eba\u6570"
     },
     "modifierVipShowColor": {
-        "0": "Show Team Color"
+        "0": "Show Team Color",
+        "13": "\u6b7b\u4ea1\u65f6\u5168\u573a\u63d0\u793a\u9635\u8425\u989c\u8272"
     },
     "modifierInvertQuantity": {
-        "0": "Modifier Quantity"
+        "0": "Modifier Quantity",
+        "13": "\u9152\u9b3c\u4eba\u6570"
     },
     "modifierInvertDuration": {
-        "0": "Number Of Meetings Inverted"
+        "0": "Number Of Meetings Inverted",
+        "13": "\u9189\u9152\u72b6\u6001\u6301\u7eed\u51e0\u8f6e\u4f1a\u8bae"
     },
     "modifierChameleonQuantity": {
-        "0": "Chameleon Quantity"
+        "0": "Chameleon Quantity",
+        "13": "\u53d8\u8272\u9f99\u6570\u91cf"
     },
     "modifierChameleonHoldDuration": {
-        "0": "Time Until Fading Starts"
+        "0": "Time Until Fading Starts",
+        "13": "\u4ece\u4e0d\u52a8\u5230\u892a\u8272\u5f00\u59cb\u7684\u95f4\u9694\u65f6\u95f4"
     },
     "modifierChameleonFadeDuration": {
-        "0": "Fade Duration"
+        "0": "Fade Duration",
+        "13": "\u892a\u8272\u8fc7\u7a0b\u6301\u7eed\u65f6\u95f4"
     },
     "modifierChameleonMinVisibility": {
-        "0": "Minimum Visibility"
+        "0": "Minimum Visibility",
+        "13": "\u6700\u4f4e\u900f\u660e\u5ea6"
+    },
+    "modifierShiftNeutral": {
+        "13": "\u53ef\u4ea4\u6362\u90e8\u5206\u4e2d\u7acb\u4e0d\u5e26\u5200\u804c\u4e1a"
+    },
+    "modifierShiftALLNeutral": {
+        "13": "\u53ef\u4ea4\u6362\u9664\u8c7a\u72fc\u9635\u8425\u4e2d\u7acb\n\u4e2d\u7acb\u9635\u8425\u53ef\u4ee5\u6210\u4e3a\u4ea4\u6362\u5e08"
     },
     "TouTitle": {
         "0": "<color=#ff351f>TheOtherUs-Edited</color>",
@@ -1817,14 +2183,22 @@
     "welcomeChat": {
         "13": "\u6b22\u8fce\u6e38\u73a9TheOtherUs\uff01"
     },
-    "SendTargets.Default": {
+    "SendTargetsDefault": {
         "13": "\u53d1\u9001\u7ed9\uff1a\u9ed8\u8ba4"
     },
-    "SendTargets.All": {
+    "SendTargetsAll": {
         "13": "\u53d1\u9001\u7ed9\uff1a\u6240\u6709\u4eba"
     },
-    "SendTargets.Dead": {
+    "SendTargetsDead": {
         "13": "\u53d1\u9001\u7ed9\uff1a\u6b7b\u4ea1\u73a9\u5bb6"
+    },
+    "GuessserGMInfo": {
+        "0": " (Guesser)",
+        "13": " (\u8d4c\u602a)"
+    },
+    "JackalIsSwooperInfo": {
+        "0": " (Swooper)",
+        "13": " (\u9690\u8eab)"
     },
     "trapperGotTrapText": {
         "0": "{0} got caught in the trap",
@@ -2553,7 +2927,7 @@
         "13": "\u6807\u8bb0\u4f4d\u7f6e\u540e\u53ef\u4ee5\u77ac\u79fb\u4e00\u6b21\u540e\u518d\u56de\u5230\u539f\u70b9"
     },
     "EvilTrapper": {
-        "0": "Evil Trapper",
+        "0": "EvilTrapper",
         "13": "\u90aa\u6076\u7684\u8bbe\u9677\u5e08"
     },
     "EvilTrapperIntroDesc": {
@@ -2869,7 +3243,7 @@
         "13": "\u7528\u4f60\u7684\u62a4\u76fe\u4fdd\u62a4\u4f60\u81ea\u5df1"
     },
     "Veteren": {
-        "0": "Veteren",
+        "0": "Veteran",
         "13": "\u8001\u5175"
     },
     "VeterenIntroDesc": {

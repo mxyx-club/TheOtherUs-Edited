@@ -9,6 +9,7 @@ using Hazel;
 using InnerNet;
 using PowerTools;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Patches;
@@ -1578,7 +1579,7 @@ public static class RPCProcedure
 
         if (Blackmailer.blackmailer == killer)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(killerId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.BlackmailPlayer, SendOption.Reliable);
             writer.Write(killerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -1587,7 +1588,7 @@ public static class RPCProcedure
         }
         else if (Bomber.bomber == killer)
         {
-            var bombWriter = AmongUsClient.Instance.StartRpcImmediately(killerId,
+            var bombWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.GiveBomb, SendOption.Reliable);
             bombWriter.Write(killerId);
             AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
@@ -1667,13 +1668,51 @@ public static class RPCProcedure
                 Escapist.escapeLocation = PlayerControl.LocalPlayer.transform.localPosition;
             }
             escapistButton.Timer = escapistButton.MaxTimer;
-        }/*
+        }
         else if (Yoyo.yoyo == killer)
         {
-        }*/
+            var pos = CachedPlayer.LocalPlayer.transform.position;
+            byte[] buff = new byte[sizeof(float) * 2];
+            Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+            Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+
+            if (Yoyo.markedLocation == null)
+            {
+                Message($"marked location is null in button press");
+                var writer = AmongUsClient.Instance.StartRpc(killer.NetId, (byte)CustomRPC.YoyoMarkLocation, SendOption.Reliable);
+                writer.WriteBytesAndSize(buff);
+                writer.EndMessage();
+                yoyoMarkLocation(buff);
+                SoundEffectsManager.play("tricksterPlaceBox");
+                yoyoButton.Sprite = Yoyo.blinkButtonSprite;
+                yoyoButton.Timer = 10f;
+                yoyoButton.HasEffect = false;
+                yoyoButton.buttonText = "BlinkText".Translate();
+            }
+            else
+            {
+                Message("in else for some reason");
+                // Jump to location
+                Message($"trying to blink!");
+                var exit = (Vector3)Yoyo.markedLocation;
+                if (SubmergedCompatibility.IsSubmerged)
+                {
+                    SubmergedCompatibility.ChangeFloor(exit.y > -7);
+                }
+                var writer = AmongUsClient.Instance.StartRpc(killer.NetId, (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
+                writer.Write(byte.MaxValue);
+                writer.WriteBytesAndSize(buff);
+                writer.EndMessage();
+                yoyoBlink(true, buff);
+                yoyoButton.EffectDuration = Yoyo.blinkDuration;
+                yoyoButton.Timer = 10f;
+                yoyoButton.HasEffect = true;
+                yoyoButton.buttonText = "ReturningText".Translate();
+                SoundEffectsManager.play("morphlingMorph");
+            }
+        }
         else if (EvilTrapper.evilTrapper == killer)
         {
-            //if (!CachedPlayer.LocalPlayer.PlayerControl.CanMove || KillTrap.hasTrappedPlayer()) return;
             EvilTrapper.setTrap();
             evilTrapperSetTrapButton.Timer = evilTrapperSetTrapButton.MaxTimer;
         }
@@ -1696,7 +1735,7 @@ public static class RPCProcedure
             }
             else
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                     (byte)CustomRPC.LightsOut, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 lightsOut();
@@ -1727,7 +1766,7 @@ public static class RPCProcedure
                             {
                                 var playerInfo = GameData.Instance.GetPlayerById(deadBody.ParentId);
                                 var writer = AmongUsClient.Instance.StartRpcImmediately(
-                                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DragBody,
+                                    killer.NetId, (byte)CustomRPC.DragBody,
                                     SendOption.Reliable);
                                 writer.Write(playerInfo.PlayerId);
                                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -1741,8 +1780,8 @@ public static class RPCProcedure
             }
             else
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(
-                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DropBody, SendOption.Reliable);
+                var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
+                    (byte)CustomRPC.DropBody, SendOption.Reliable);
                 writer.Write(CachedPlayer.LocalPlayer.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 Undertaker.deadBodyDraged = null;
@@ -1771,7 +1810,7 @@ public static class RPCProcedure
                             var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
 
                             var writer = AmongUsClient.Instance.StartRpcImmediately(
-                                CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CleanBody,
+                                killer.NetId, (byte)CustomRPC.CleanBody,
                                 SendOption.Reliable);
                             writer.Write(playerInfo.PlayerId);
                             writer.Write(Cleaner.cleaner.PlayerId);
@@ -1802,7 +1841,7 @@ public static class RPCProcedure
         }
         else if (Camouflager.camouflager == killer)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.CamouflagerCamouflage, SendOption.Reliable);
             writer.Write(1);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -1812,7 +1851,7 @@ public static class RPCProcedure
         }
         else if (Swooper.swooper == killer)
         {
-            var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetSwoop, SendOption.Reliable, -1);
+            var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.SetSwoop, SendOption.Reliable, -1);
             invisibleWriter.Write(Swooper.swooper.PlayerId);
             invisibleWriter.Write(byte.MinValue);
             AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
@@ -1821,7 +1860,7 @@ public static class RPCProcedure
         }
         else if (Jackal.jackal == killer && Jackal.canSwoop)
         {
-            var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable, -1);
             invisibleWriter.Write(Jackal.jackal.PlayerId);
             invisibleWriter.Write(byte.MinValue);

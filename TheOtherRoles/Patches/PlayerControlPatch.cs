@@ -1205,7 +1205,7 @@ public static class PlayerControlFixedUpdatePatch
                                     Object.Destroy(text.gameObject);
                                 }
                             })));
-                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ActivateTrap, SendOption.Reliable, -1);
+                            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ActivateTrap, SendOption.Reliable, -1);
                             writer.Write(trap.Key);
                             writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
                             writer.Write(p.PlayerId);
