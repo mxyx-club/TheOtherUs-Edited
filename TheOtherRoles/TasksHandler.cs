@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using TheOtherRoles.Utilities;
 
 namespace TheOtherRoles;
@@ -39,7 +40,7 @@ public static class TasksHandler
                     // Tasks of the Lawyer do not count
                     || playerInfo.PlayerId == Lawyer.lawyer?.PlayerId
                     // Tasks of the Pursuer only count, if he's alive
-                    || (playerInfo.PlayerId == Pursuer.pursuer?.PlayerId)
+                    || Pursuer.pursuer.Any(p => p.PlayerId == playerInfo.PlayerId)
                     // Tasks of the Swooper do not count
                     || playerInfo.PlayerId == Swooper.swooper?.PlayerId
                     // Thief's tasks only count after joining crew team as sheriff (and then the thief is not the thief anymore)

@@ -6,7 +6,7 @@ namespace TheOtherRoles.Roles.Neutral;
 
 public static class Pursuer
 {
-    public static PlayerControl pursuer;
+    public static List<PlayerControl> pursuer;
     public static PlayerControl target;
     public static Color color = new Color32(145, 164, 30, byte.MaxValue);
     public static List<PlayerControl> blankedList = [];
@@ -21,7 +21,7 @@ public static class Pursuer
 
     public static void clearAndReload()
     {
-        pursuer = null;
+        pursuer = [];
         target = null;
         blankedList = [];
         blanks = 0;

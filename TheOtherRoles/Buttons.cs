@@ -566,7 +566,7 @@ internal static class HudManagerStartPatch
                            (Amnisiac.amnisiac == target && Sheriff.canKillAmnesiac) ||
                            (Lawyer.lawyer == target && Sheriff.canKillLawyer) ||
                            (Executioner.executioner == target && Sheriff.canKillExecutioner) ||
-                           (Pursuer.pursuer == target && Sheriff.canKillPursuer) ||
+                           (Pursuer.pursuer.Contains(target) && Sheriff.canKillPursuer) ||
                            (Doomsayer.doomsayer == target && Sheriff.canKillDoomsayer)))))
                     {
                         targetId = target.PlayerId;
@@ -3204,7 +3204,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Pursuer.pursuer != null && Pursuer.pursuer == CachedPlayer.LocalPlayer.PlayerControl &&
+                return Pursuer.pursuer != null && Pursuer.pursuer.Contains(CachedPlayer.LocalPlayer.PlayerControl) &&
                        !CachedPlayer.LocalPlayer.Data.IsDead && Pursuer.blanks < Pursuer.blanksNumber;
             },
             () =>

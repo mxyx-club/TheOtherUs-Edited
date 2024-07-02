@@ -537,7 +537,7 @@ public static class RPCProcedure
                         Lawyer.lawyer = player;
                         break;
                     case RoleId.Pursuer:
-                        Pursuer.pursuer = player;
+                        Pursuer.pursuer.Add(player);
                         break;
                     case RoleId.Executioner:
                         Executioner.executioner = player;
@@ -1258,7 +1258,7 @@ public static class RPCProcedure
 
             case RoleId.Pursuer:
                 if (Amnisiac.resetRole) Pursuer.clearAndReload();
-                Pursuer.pursuer = amnisiac;
+                Pursuer.pursuer.Add(amnisiac);
                 Amnisiac.clearAndReload();
                 Amnisiac.amnisiac = target;
                 break;
@@ -2024,7 +2024,7 @@ public static class RPCProcedure
             }
             else if (!Executioner.promotesToLawyer)
             {
-                Pursuer.pursuer = Executioner.executioner;
+                Pursuer.pursuer.Add(Executioner.executioner);
                 Executioner.clearAndReload();
             }
         }
@@ -2079,7 +2079,7 @@ public static class RPCProcedure
             }
             else if (!Executioner.promotesToLawyer)
             {
-                Pursuer.pursuer = Executioner.executioner;
+                Pursuer.pursuer.Add(Executioner.executioner);
                 Executioner.clearAndReload();
             }
         }
@@ -2186,7 +2186,7 @@ public static class RPCProcedure
         if (player == Vulture.vulture) Vulture.clearAndReload();
         if (player == Executioner.executioner) Executioner.clearAndReload();
         if (player == Lawyer.lawyer) Lawyer.clearAndReload();
-        if (player == Pursuer.pursuer) Pursuer.clearAndReload();
+        if (Pursuer.pursuer.Contains(player)) Pursuer.clearAndReload();
         if (player == Thief.thief) Thief.clearAndReload();
         if (player == Juggernaut.juggernaut) Juggernaut.clearAndReload();
         if (player == Doomsayer.doomsayer) Doomsayer.clearAndReload();
@@ -2765,7 +2765,7 @@ public static class RPCProcedure
         var client = Lawyer.target;
         Lawyer.clearAndReload(false);
 
-        Pursuer.pursuer = player;
+        Pursuer.pursuer.Add(player);
 
         if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId && client != null)
         {
@@ -2780,7 +2780,7 @@ public static class RPCProcedure
         var player = Executioner.executioner;
         var client = Executioner.target;
 
-        Pursuer.pursuer = player;
+        Pursuer.pursuer.Add(player);
         Executioner.clearAndReload(false);
 
         if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId && client != null)

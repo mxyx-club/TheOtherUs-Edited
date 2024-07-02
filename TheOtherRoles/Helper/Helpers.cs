@@ -12,8 +12,11 @@ using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
+using TheOtherRoles.Roles;
 using TheOtherRoles.Utilities;
+using TMPro;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Helper;
@@ -87,7 +90,7 @@ public static class Helpers
                player == Swooper.swooper ||
                player == Lawyer.lawyer ||
                player == Executioner.executioner ||
-               player == Pursuer.pursuer ||
+               player == Pursuer.pursuer.Any(p => p == player) ||
                player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player);
     }
 
@@ -295,9 +298,12 @@ public static class Helpers
 
     public static bool isEvil(PlayerControl player)
     {
-        return isNeutral(player) &&
+        /*return isNeutral(player) &&
                 player != Amnisiac.amnisiac &&
-                player != Pursuer.pursuer;
+                player != Pursuer.pursuer.Any();*/
+
+        var roleInfo = RoleInfo.getRoleInfoForPlayer(player).FirstOrDefault(info => !info.isModifier);
+        return roleInfo!.roleId is not RoleId.Amnisiac and not RoleId.Pursuer;
     }
 
     public static bool ShowButtons =>

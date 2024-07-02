@@ -147,10 +147,10 @@ public static class Medium
             switch (rnd.Next(3))
             {
                 case 0:
-                    count = alivePlayersList.Where(pc =>
+                    count = alivePlayersList.Count(pc =>
                         pc.Data.Role.IsImpostor || isKiller(pc) ||
                         new List<RoleInfo> { RoleInfo.sheriff, RoleInfo.veteren, RoleInfo.thief }
-                            .Contains(RoleInfo.getRoleInfoForPlayer(pc, false).FirstOrDefault())).Count();
+                            .Contains(RoleInfo.getRoleInfoForPlayer(pc, false).FirstOrDefault()));
                     condition = "个杀手" + (count == 1 ? "" : "");
                     break;
                 case 1:
@@ -158,7 +158,7 @@ public static class Medium
                     condition = "个可以使用管道的玩家" + (count == 1 ? "" : "");
                     break;
                 case 2:
-                    count = alivePlayersList.Where(pc => isEvil(pc) || pc == Amnisiac.amnisiac || pc == Pursuer.pursuer).Count();
+                    count = alivePlayersList.Count(pc => !isKiller(pc));
                     condition = "名玩家" + (count == 1 ? "" : "") + "" + (count == 1 ? "是" : "是") + "非击杀型中立";
                     break;
                 case 3:

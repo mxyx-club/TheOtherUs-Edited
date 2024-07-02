@@ -340,6 +340,8 @@ public class CustomOptionHolder
     public static CustomOption lawyerKnowsRole;
     public static CustomOption lawyerStolenWin;
     public static CustomOption lawyerCanCallEmergency;
+
+    public static CustomOption pursuerSpawnRate;
     public static CustomOption pursuerCooldown;
     public static CustomOption pursuerBlanksNumber;
 
@@ -1003,13 +1005,15 @@ public class CustomOptionHolder
         lawyerCanCallEmergency = Create(20185, Types.Neutral, "lawyerCanCallEmergency", true, lawyerSpawnRate);
         lawyerStolenWin = Create(20189, Types.Neutral, "lawyerStolenWin", false, lawyerSpawnRate);
         lawyerTargetCanBeJester = Create(20186, Types.Neutral, "lawyerTargetCanBeJester", false, lawyerSpawnRate);
-        pursuerCooldown = Create(20187, Types.Neutral, "pursuerCooldown", 20f, 5f, 60f, 2.5f, lawyerSpawnRate);
-        pursuerBlanksNumber = Create(20188, Types.Neutral, "pursuerBlanksNumber", 6f, 1f, 20f, 1f, lawyerSpawnRate);
 
         executionerSpawnRate = Create(20190, Types.Neutral, cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(20191, Types.Neutral, "executionerCanCallEmergency", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(20192, Types.Neutral, "executionerPromotesToLawyer", true, executionerSpawnRate);
         //executionerOnTargetDead = Create(20193, Types.Neutral, "目标死亡后变为", [cs(Pursuer.color, "Pursuer"), cs(Jester.color, "Jester"), cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
+
+        pursuerSpawnRate = Create(20270, Types.Neutral, cs(Pursuer.color, "Pursuer"), rates, null, true);
+        pursuerCooldown = Create(20272, Types.Neutral, "pursuerCooldown", 20f, 5f, 60f, 2.5f, pursuerSpawnRate);
+        pursuerBlanksNumber = Create(20273, Types.Neutral, "pursuerBlanksNumber", 6f, 1f, 20f, 1f, pursuerSpawnRate);
 
         doomsayerSpawnRate = Create(20221, Types.Neutral, cs(Doomsayer.color, "Doomsayer"), rates, null, true);
         doomsayerCooldown = Create(20222, Types.Neutral, "doomsayerCooldown", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
@@ -1431,10 +1435,10 @@ public class CustomOptionHolder
 
         blockedRolePairings.Add((byte)RoleId.Vulture, [(byte)RoleId.Cleaner]);
         blockedRolePairings.Add((byte)RoleId.Cleaner, [(byte)RoleId.Vulture]);
-
+        /*
         blockedRolePairings.Add((byte)RoleId.Executioner, [(byte)RoleId.Lawyer]);
         blockedRolePairings.Add((byte)RoleId.Lawyer, [(byte)RoleId.Executioner]);
-
+        */
         blockedRolePairings.Add((byte)RoleId.Ninja, [(byte)RoleId.Swooper]);
         blockedRolePairings.Add((byte)RoleId.Swooper, [(byte)RoleId.Ninja]);
     }

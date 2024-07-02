@@ -334,10 +334,10 @@ public class RoleInfo
         if (p == Hacker.hacker) infos.Add(hacker);
         if (p == Tracker.tracker) infos.Add(tracker);
         if (p == Snitch.snitch) infos.Add(snitch);
-        if (p == Jackal.jackal || (Jackal.formerJackals != null && Jackal.formerJackals.Any(x => x.PlayerId == p.PlayerId))) infos.Add(jackal);
+        if (p == Jackal.jackal || (Jackal.formerJackals != null && Jackal.formerJackals.Contains(p))) infos.Add(jackal);
         if (p == Sidekick.sidekick) infos.Add(sidekick);
         if (p == Pavlovsdogs.pavlovsowner) infos.Add(pavlovsowner);
-        if (p == Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == p.PlayerId)) infos.Add(pavlovsdogs);
+        if (p == Pavlovsdogs.pavlovsdogs.Contains(p)) infos.Add(pavlovsdogs);
         if (p == Follower.follower) infos.Add(follower);
         if (p == Spy.spy) infos.Add(spy);
         if (p == SecurityGuard.securityGuard) infos.Add(securityGuard);
@@ -357,7 +357,7 @@ public class RoleInfo
         if (p == Executioner.executioner && Executioner.executioner) infos.Add(executioner);
         if (p == Trapper.trapper) infos.Add(trapper);
         if (p == Prophet.prophet) infos.Add(prophet);
-        if (p == Pursuer.pursuer) infos.Add(pursuer);
+        if (Pursuer.pursuer != null && Pursuer.pursuer.Contains(p)) infos.Add(pursuer);
         if (p == Jumper.jumper) infos.Add(jumper);
         if (p == Thief.thief) infos.Add(thief);
         if (p == Juggernaut.juggernaut) infos.Add(juggernaut);
@@ -392,9 +392,9 @@ public class RoleInfo
         if (Executioner.target != null && p.PlayerId == Executioner.target.PlayerId &&
             CachedPlayer.LocalPlayer.PlayerControl != Executioner.target) roleName += useColors ? cs(Executioner.color, " §") : " §";
 
-        if (p == Jackal.jackal && Jackal.canSwoop) roleName += "GuessserGMInfo".Translate();
+        if (p == Jackal.jackal && Jackal.canSwoop) roleName += "JackalIsSwooperInfo".Translate();
 
-        if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId)) roleName += "JackalIsSwooperInfo".Translate();
+        if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId)) roleName += "GuessserGMInfo".Translate();
 
         if (!suppressGhostInfo && p != null)
         {

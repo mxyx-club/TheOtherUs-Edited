@@ -141,7 +141,6 @@ public class OnGameEndPatch
         if (Werewolf.werewolf != null) notWinners.Add(Werewolf.werewolf);
         if (Lawyer.lawyer != null) notWinners.Add(Lawyer.lawyer);
         if (Executioner.executioner != null) notWinners.Add(Executioner.executioner);
-        if (Pursuer.pursuer != null) notWinners.Add(Pursuer.pursuer);
         if (Thief.thief != null) notWinners.Add(Thief.thief);
         if (Juggernaut.juggernaut != null) notWinners.Add(Juggernaut.juggernaut);
         if (Doomsayer.doomsayer != null) notWinners.Add(Doomsayer.doomsayer);
@@ -149,6 +148,7 @@ public class OnGameEndPatch
         if (Pavlovsdogs.pavlovsowner != null) notWinners.Add(Pavlovsdogs.pavlovsowner);
         if (Pavlovsdogs.pavlovsdogs != null) notWinners.AddRange(Pavlovsdogs.pavlovsdogs);
         if (Akujo.honmei != null && Akujo.honmeiCannotFollowWin) notWinners.Add(Akujo.honmei);
+        if (Pursuer.pursuer != null) notWinners.AddRange(Pursuer.pursuer);
         notWinners.AddRange(Jackal.formerJackals);
 
         var winnersToRemove = new List<WinningPlayerData>();
@@ -198,7 +198,7 @@ public class OnGameEndPatch
             akujoWin = Akujo.akujo != null && gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin && Akujo.honmei != null && !Akujo.honmei.Data.IsDead && !Akujo.akujo.Data.IsDead;
         }
 
-        bool isPursurerLose = jesterWin || arsonistWin || miniLose;
+        bool isPursurerLose = jesterWin || arsonistWin || miniLose || isCanceled;
 
         // Mini lose
         if (miniLose)
@@ -272,7 +272,7 @@ public class OnGameEndPatch
                     if (p == null) continue;
                     if (p == Lovers.lover1 || p == Lovers.lover2)
                         TempData.winners.Add(new WinningPlayerData(p.Data));
-                    else if (p == Pursuer.pursuer && !Pursuer.pursuer.Data.IsDead)
+                    else if (Pursuer.pursuer.Any(pc => pc == p) && !Pursuer.pursuer.Any(pc => pc.Data.IsDead))
                         TempData.winners.Add(new WinningPlayerData(p.Data));
                     else if (p != Jester.jester && p != Jackal.jackal && p != Werewolf.werewolf &&
                              p != Juggernaut.juggernaut && p != Doomsayer.doomsayer &&
@@ -390,12 +390,12 @@ public class OnGameEndPatch
                         if (p == null) continue;
                         if (p == Akujo.akujo && p == Akujo.honmei)
                             TempData.winners.Add(new WinningPlayerData(p.Data));
-                        else if (p == Pursuer.pursuer && !Pursuer.pursuer.Data.IsDead)
+                        else if (Pursuer.pursuer.Contains(p) && !p.Data.IsDead)
                             TempData.winners.Add(new WinningPlayerData(p.Data));
                         else if (p != Jester.jester && p != Jackal.jackal && p != Werewolf.werewolf &&
-                            p != Juggernaut.juggernaut && p != Doomsayer.doomsayer && p != Lawyer.lawyer && p != Pursuer.pursuer &&
+                            p != Juggernaut.juggernaut && p != Doomsayer.doomsayer && p != Lawyer.lawyer && !Pursuer.pursuer.Contains(p) &&
                             p != Sidekick.sidekick && p != Arsonist.arsonist && p != Vulture.vulture && p != Amnisiac.amnisiac && p != Thief.thief &&
-                            !Jackal.formerJackals.Contains(p) && !p.Data.Role.IsImpostor)
+                            p != Pavlovsdogs.pavlovsowner && !Pavlovsdogs.pavlovsdogs.Contains(p) && !Jackal.formerJackals.Contains(p) && !p.Data.Role.IsImpostor)
                             TempData.winners.Add(new WinningPlayerData(p.Data));
 
                     }
@@ -454,16 +454,21 @@ public class OnGameEndPatch
         }
 
         // Possible Additional winner: Pursuer
-        if (Pursuer.pursuer != null && !Pursuer.pursuer.Data.IsDead && !Pursuer.notAckedExiled && !isPursurerLose)
+        if (Pursuer.pursuer != null && Pursuer.pursuer.Any(p => !p.Data.IsDead) && !Pursuer.notAckedExiled && !isPursurerLose)
         {
-            if (!TempData.winners.ToArray().Any(x => x.PlayerName == Pursuer.pursuer.Data.PlayerName))
-                TempData.winners.Add(new WinningPlayerData(Pursuer.pursuer.Data));
+            foreach (var pursuer in Pursuer.pursuer.Where(p => !p.Data.IsDead))
+            {
+                if (!TempData.winners.ToArray().Any(x => x.PlayerName == pursuer.Data.PlayerName))
+                    TempData.winners.Add(new WinningPlayerData(pursuer.Data));
+            }
             AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalAlivePursuerWin);
+            /*
+            if (!TempData.winners.ToArray().Any(x => x.PlayerName == Pursuer.pursuer.Data.PlayerName))
+                TempData.winners.Add(new WinningPlayerData(Pursuer.pursuer.Data));*/
         }
 
         AdditionalTempData.timer =
-            (float)(DateTime.UtcNow - (HideNSeek.isHideNSeekGM ? HideNSeek.startTime : PropHunt.startTime))
-            .TotalMilliseconds / 1000;
+            (float)(DateTime.UtcNow - (HideNSeek.isHideNSeekGM ? HideNSeek.startTime : PropHunt.startTime)).TotalMilliseconds / 1000;
 
         // Reset Settings
         if (MapOption.gameMode == CustomGamemodes.HideNSeek) ShipStatusPatch.resetVanillaSettings();
@@ -482,8 +487,7 @@ public class EndGameManagerSetUpPatch
         var num = Mathf.CeilToInt(7.5f);
         var list = TempData.winners.ToArray().ToList().OrderBy(delegate (WinningPlayerData b)
         {
-            if (!b.IsYou) return 0;
-            return -1;
+            return !b.IsYou ? 0 : -1;
         }).ToList();
         for (var i = 0; i < list.Count; i++)
         {

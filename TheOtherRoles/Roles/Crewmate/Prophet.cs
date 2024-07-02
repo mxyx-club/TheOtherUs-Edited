@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TheOtherRoles.Objects;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -49,7 +50,7 @@ public static class Prophet
         }
         if (benignNeutralAsRed)
         {
-            if (isNeutral(p) && (p == Amnisiac.amnisiac || p == Pursuer.pursuer))
+            if (isNeutral(p) && (p == Amnisiac.amnisiac || Pursuer.pursuer.Any(player => player == p)))
             {
                 return true;
             }

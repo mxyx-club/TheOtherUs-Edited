@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace TheOtherRoles.Roles.Modifier;
 public static class Shifter
@@ -177,10 +178,11 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Executioner.executioner = player1;
         }
-        else if (Pursuer.pursuer != null && Pursuer.pursuer == player2)
+        else if (Pursuer.pursuer != null && Pursuer.pursuer.Any(p => p == player2))
         {
             if (repeat) shiftRole(player2, player1, false);
-            Pursuer.pursuer = player1;
+            Pursuer.pursuer.Remove(player2);
+            Pursuer.pursuer.Add(player1);
         }
         else if (Arsonist.arsonist != null && Arsonist.arsonist == player2)
         {

@@ -14,6 +14,7 @@ using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
+using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
@@ -1488,7 +1489,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void pursuerSetTarget()
     {
-        if (Pursuer.pursuer == null || Pursuer.pursuer != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Pursuer.pursuer == null || !Pursuer.pursuer.Contains(CachedPlayer.LocalPlayer.PlayerControl)) return;
         Pursuer.target = setTarget();
         setPlayerOutline(Pursuer.target, Pursuer.color);
     }
@@ -2172,7 +2173,7 @@ public static class MurderPlayerPatch
         if (resetToDead) __instance.Data.IsDead = true;
 
         // Remove fake tasks when player dies
-        if (target.hasFakeTasks() || target == Lawyer.lawyer || target == Pursuer.pursuer || target == Thief.thief)
+        if (target.hasFakeTasks() || target == Lawyer.lawyer || Pursuer.pursuer.Contains(target) || target == Thief.thief)
             target.clearAllTasks();
 
         // First kill (set before lover suicide)
@@ -2476,7 +2477,7 @@ public static class ExilePlayerPatch
 
 
         // Remove fake tasks when player dies
-        if (__instance.hasFakeTasks() || __instance == Lawyer.lawyer || __instance == Pursuer.pursuer ||
+        if (__instance.hasFakeTasks() || __instance == Lawyer.lawyer || __instance == Pursuer.pursuer.Contains(__instance) ||
             __instance == Thief.thief)
             __instance.clearAllTasks();
 
@@ -2522,7 +2523,10 @@ public static class ExilePlayerPatch
             if (!Lawyer.targetWasGuessed)
             {
                 Lawyer.lawyer?.Exiled();
-                Pursuer.pursuer?.Exiled();
+                if (Pursuer.pursuer != null)
+                {
+                    foreach (var pursuer in Pursuer.pursuer) pursuer?.Exiled();
+                }
 
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
                 writer.Write(CachedPlayer.LocalPlayer.PlayerId);
