@@ -172,9 +172,9 @@ public static class PlayerControlFixedUpdatePatch
 
                 localPlayerPositions.RemoveAt(0);
 
+                // Skip every second position to rewinde twice as fast, but never skip the last position
                 if (localPlayerPositions.Count > 1)
-                    localPlayerPositions
-                        .RemoveAt(0); // Skip every second position to rewinde twice as fast, but never skip the last position
+                    localPlayerPositions.RemoveAt(0);
             }
             else
             {
@@ -1500,6 +1500,13 @@ public static class PlayerControlFixedUpdatePatch
         setPlayerOutline(Pursuer.target, Pursuer.color);
     }
 
+    private static void survivorSetTarget()
+    {
+        if (Survivor.survivor == null || !Survivor.survivor.Contains(CachedPlayer.LocalPlayer.PlayerControl)) return;
+        Survivor.target = setTarget();
+        setPlayerOutline(Survivor.target, Survivor.color);
+    }
+
     private static void witchSetTarget()
     {
         if (Witch.witch == null || Witch.witch != CachedPlayer.LocalPlayer.PlayerControl) return;
@@ -1983,6 +1990,8 @@ public static class PlayerControlFixedUpdatePatch
             executionerUpdate();
             // Pursuer
             pursuerSetTarget();
+            // Survivor
+            survivorSetTarget();
             // Blackmailer
             blackMailerSetTarget();
             // Witch

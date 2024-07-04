@@ -91,6 +91,7 @@ public static class Helpers
                player == Executioner.executioner ||
                player == Vulture.vulture ||
                Pursuer.pursuer.Contains(player) ||
+               Survivor.survivor.Contains(player) ||
                Pavlovsdogs.pavlovsdogs.Contains(player) ||
                Jackal.formerJackals.Contains(player);
     }
@@ -150,7 +151,7 @@ public static class Helpers
 
     public static void handleTrapperTrapOnBodyReport()
     {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TrapperMeetingFlag, SendOption.Reliable, -1);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TrapperMeetingFlag, SendOption.Reliable, -1);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.trapperMeetingFlag();
     }
@@ -307,7 +308,7 @@ public static class Helpers
                 player != Pursuer.pursuer.Any();*/
 
         var roleInfo = RoleInfo.getRoleInfoForPlayer(player).FirstOrDefault(info => !info.isModifier);
-        return roleInfo!.roleId is not RoleId.Amnisiac and not RoleId.Pursuer;
+        return roleInfo!.roleId is not RoleId.Amnisiac and not RoleId.Pursuer and not RoleId.Survivor;
     }
 
     public static bool ShowButtons =>
@@ -1178,11 +1179,11 @@ public static class Helpers
         if (!ignoreBlank && Pursuer.blankedList.Any(x => x.PlayerId == killer.PlayerId))
         {
             var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                (byte)CustomRPC.SetBlanked, SendOption.Reliable);
+                (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
             writer.Write(killer.PlayerId);
             writer.Write((byte)0);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.setBlanked(killer.PlayerId, 0);
+            RPCProcedure.pursuerSetBlanked(killer.PlayerId, 0);
 
             return MurderAttemptResult.BlankKill;
         }
@@ -1223,11 +1224,11 @@ public static class Helpers
         if (!Medic.unbreakableShield && Medic.shielded != null && Medic.shielded == target)
         {
             var write = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                (byte)CustomRPC.SetBlanked, SendOption.Reliable);
+                (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
             write.Write(killer.PlayerId);
             write.Write((byte)0);
             AmongUsClient.Instance.FinishRpcImmediately(write);
-            RPCProcedure.setBlanked(killer.PlayerId, 0);
+            RPCProcedure.pursuerSetBlanked(killer.PlayerId, 0);
             Medic.shielded = null;
             return MurderAttemptResult.BlankKill;
         }
@@ -1281,11 +1282,11 @@ public static class Helpers
         if (Cursed.cursed != null && Cursed.cursed == target && killer.Data.Role.IsImpostor)
         {
             var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                (byte)CustomRPC.SetBlanked, SendOption.Reliable);
+                (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
             writer.Write(killer.PlayerId);
             writer.Write((byte)0);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.setBlanked(killer.PlayerId, 0);
+            RPCProcedure.pursuerSetBlanked(killer.PlayerId, 0);
 
             turnToImpostorRPC(target);
 

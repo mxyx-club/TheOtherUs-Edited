@@ -27,7 +27,6 @@ internal enum CustomGameOverReason
     JuggernautWin,
     DoomsayerWin,
     AkujoWin,
-    ProsecutorWin,
 }
 
 internal enum WinCondition
@@ -47,6 +46,7 @@ internal enum WinCondition
     AdditionalLawyerBonusWin,
     AdditionalLawyerStolenWin,
     AdditionalAlivePursuerWin,
+    AdditionalAliveSurvivorWin,
     ExecutionerWin,
     WerewolfWin,
     JuggernautWin,
@@ -149,6 +149,7 @@ public class OnGameEndPatch
         if (Pavlovsdogs.pavlovsdogs != null) notWinners.AddRange(Pavlovsdogs.pavlovsdogs);
         if (Akujo.honmei != null && Akujo.honmeiCannotFollowWin) notWinners.Add(Akujo.honmei);
         if (Pursuer.pursuer != null) notWinners.AddRange(Pursuer.pursuer);
+        if (Survivor.survivor != null) notWinners.AddRange(Survivor.survivor);
         notWinners.AddRange(Jackal.formerJackals);
 
         var winnersToRemove = new List<WinningPlayerData>();
@@ -274,6 +275,8 @@ public class OnGameEndPatch
                         TempData.winners.Add(new WinningPlayerData(p.Data));
                     else if (Pursuer.pursuer.Any(pc => pc == p) && !Pursuer.pursuer.Any(pc => pc.Data.IsDead))
                         TempData.winners.Add(new WinningPlayerData(p.Data));
+                    else if (Survivor.survivor.Any(pc => pc == p) && !Survivor.survivor.Any(pc => pc.Data.IsDead))
+                        TempData.winners.Add(new WinningPlayerData(p.Data));
                     else if (p != Jester.jester && p != Jackal.jackal && p != Werewolf.werewolf &&
                              p != Juggernaut.juggernaut && p != Doomsayer.doomsayer &&
                              p != Sidekick.sidekick && p != Arsonist.arsonist && p != Vulture.vulture &&
@@ -392,6 +395,8 @@ public class OnGameEndPatch
                             TempData.winners.Add(new WinningPlayerData(p.Data));
                         else if (Pursuer.pursuer.Contains(p) && !p.Data.IsDead)
                             TempData.winners.Add(new WinningPlayerData(p.Data));
+                        else if (Survivor.survivor.Contains(p) && !p.Data.IsDead)
+                            TempData.winners.Add(new WinningPlayerData(p.Data));
                         else if (p != Jester.jester && p != Jackal.jackal && p != Werewolf.werewolf &&
                             p != Juggernaut.juggernaut && p != Doomsayer.doomsayer && p != Lawyer.lawyer && !Pursuer.pursuer.Contains(p) &&
                             p != Sidekick.sidekick && p != Arsonist.arsonist && p != Vulture.vulture && p != Amnisiac.amnisiac && p != Thief.thief &&
@@ -428,7 +433,7 @@ public class OnGameEndPatch
 
         // Possible Additional winner: Lawyer
         if (!lawyerSoloWin && Lawyer.lawyer != null && Lawyer.target != null &&
-            (!Lawyer.target.Data.IsDead || Lawyer.target == Jester.jester) && !Pursuer.notAckedExiled)
+            (!Lawyer.target.Data.IsDead || Lawyer.target == Jester.jester) && !Lawyer.notAckedExiled)
         {
             WinningPlayerData winningClient = null;
             foreach (var winner in TempData.winners.GetFastEnumerator())
@@ -454,12 +459,12 @@ public class OnGameEndPatch
         }
 
         // Possible Additional winner: Pursuer
-        if (Pursuer.pursuer != null && Pursuer.pursuer.Any(p => !p.Data.IsDead) && !Pursuer.notAckedExiled && !isPursurerLose)
+        if (Pursuer.pursuer != null && Pursuer.pursuer.Any(p => !p.Data.IsDead) && !Lawyer.notAckedExiled && !isPursurerLose)
         {
-            foreach (var pursuer in Pursuer.pursuer.Where(p => !p.Data.IsDead))
+            foreach (var player in Pursuer.pursuer.Where(p => !p.Data.IsDead))
             {
-                if (!TempData.winners.ToArray().Any(x => x.PlayerName == pursuer.Data.PlayerName))
-                    TempData.winners.Add(new WinningPlayerData(pursuer.Data));
+                if (!TempData.winners.ToArray().Any(x => x.PlayerName == player.Data.PlayerName))
+                    TempData.winners.Add(new WinningPlayerData(player.Data));
             }
             AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalAlivePursuerWin);
             /*
@@ -467,8 +472,22 @@ public class OnGameEndPatch
                 TempData.winners.Add(new WinningPlayerData(Pursuer.pursuer.Data));*/
         }
 
-        AdditionalTempData.timer =
-            (float)(DateTime.UtcNow - (HideNSeek.isHideNSeekGM ? HideNSeek.startTime : PropHunt.startTime)).TotalMilliseconds / 1000;
+        // Possible Additional winner: Survivor
+        if (Survivor.survivor != null && Survivor.survivor.Any(p => !p.Data.IsDead) && !isPursurerLose)
+        {
+            foreach (var player in Survivor.survivor.Where(p => !p.Data.IsDead))
+            {
+                if (!TempData.winners.ToArray().Any(x => x.PlayerName == player.Data.PlayerName))
+                    TempData.winners.Add(new WinningPlayerData(player.Data));
+            }
+            AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalAliveSurvivorWin);
+            /*
+            if (!TempData.winners.ToArray().Any(x => x.PlayerName == Survivor.survivor.Data.PlayerName))
+                TempData.winners.Add(new WinningPlayerData(Survivor.survivor.Data));*/
+        }
+
+        AdditionalTempData.timer = (float)(DateTime.UtcNow - 
+            (HideNSeek.isHideNSeekGM ? HideNSeek.startTime : PropHunt.startTime)).TotalMilliseconds / 1000;
 
         // Reset Settings
         if (MapOption.gameMode == CustomGamemodes.HideNSeek) ShipStatusPatch.resetVanillaSettings();
@@ -636,19 +655,47 @@ public class EndGameManagerSetUpPatch
                 break;
         }
 
+        var winConditionsTexts = new List<string>();
+        var pursuerAlive = false;
+        var survivorAlive = false;
         foreach (var cond in AdditionalTempData.additionalWinConditions)
+        {
             switch (cond)
             {
                 case WinCondition.AdditionalLawyerStolenWin:
-                    textRenderer.text += $"\n{cs(Lawyer.color, "律师代替客户胜利")}";
+                    winConditionsTexts.Add(cs(Lawyer.color, "律师代替客户胜利"));
                     break;
                 case WinCondition.AdditionalLawyerBonusWin:
-                    textRenderer.text += $"\n{cs(Lawyer.color, "律师和客户胜利")}";
+                    winConditionsTexts.Add(cs(Lawyer.color, "律师和客户胜利"));
                     break;
                 case WinCondition.AdditionalAlivePursuerWin:
-                    textRenderer.text += $"\n{cs(Pursuer.color, "起诉人存活")}";
+                    pursuerAlive = true;
+                    break;
+                case WinCondition.AdditionalAliveSurvivorWin:
+                    survivorAlive = true;
                     break;
             }
+        }
+
+        if (pursuerAlive && survivorAlive)
+        {
+            winConditionsTexts.Add($"{cs(Pursuer.color, "起诉人")} & {cs(Survivor.color, "幸存者存活")}");
+        }
+        else
+        {
+            if (pursuerAlive) winConditionsTexts.Add(cs(Pursuer.color, "起诉人存活"));
+            if (survivorAlive) winConditionsTexts.Add(cs(Survivor.color, "幸存者存活"));
+        }
+
+        if (winConditionsTexts.Count == 1)
+        {
+            textRenderer.text += $"\n{winConditionsTexts[0]}";
+        }
+        else if (winConditionsTexts.Count > 1)
+        {
+            var combinedText = string.Join(" & ", winConditionsTexts);
+            textRenderer.text += $"\n{combinedText}";
+        }
 
         if (MapOption.showRoleSummary || HideNSeek.isHideNSeekGM || PropHunt.isPropHuntGM)
         {

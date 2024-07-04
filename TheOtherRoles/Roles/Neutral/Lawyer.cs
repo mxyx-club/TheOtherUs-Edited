@@ -11,6 +11,7 @@ public static class Lawyer
     public static bool canCallEmergency = true;
     public static bool targetKnows;
     public static bool stolenWin;
+    public static bool notAckedExiled;
 
     public static float vision = 1f;
     public static bool lawyerKnowsRole;

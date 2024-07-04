@@ -11,7 +11,6 @@ public static class Pursuer
     public static Color color = new Color32(145, 164, 30, byte.MaxValue);
     public static List<PlayerControl> blankedList = [];
     public static int blanks;
-    public static bool notAckedExiled;
 
     public static float cooldown = 30f;
     public static int blanksNumber = 5;
@@ -25,7 +24,6 @@ public static class Pursuer
         target = null;
         blankedList = [];
         blanks = 0;
-        notAckedExiled = false;
 
         cooldown = CustomOptionHolder.pursuerBlanksCooldown.getFloat();
         blanksNumber = Mathf.RoundToInt(CustomOptionHolder.pursuerBlanksNumber.getFloat());

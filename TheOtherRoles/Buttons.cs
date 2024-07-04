@@ -7,6 +7,7 @@ using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
+using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -85,6 +86,7 @@ internal static class HudManagerStartPatch
     public static CustomButton akujoHonmeiButton;
     public static CustomButton akujoBackupButton;
     public static CustomButton survivorVestButton;
+    public static CustomButton survivorBlanksButton;
     public static CustomButton yoyoButton;
     public static CustomButton yoyoAdminTableButton;
     public static CustomButton trapperButton;
@@ -116,6 +118,8 @@ internal static class HudManagerStartPatch
     public static TMP_Text securityGuardChargesText;
     public static TMP_Text deputyButtonHandcuffsText;
     public static TMP_Text pursuerButtonBlanksText;
+    public static TMP_Text survivorVestButtonText;
+    public static TMP_Text survivorBlanksButtonText;
     public static TMP_Text hackerAdminTableChargesText;
     public static TMP_Text hackerVitalsChargesText;
     public static TMP_Text trapperChargesText;
@@ -148,6 +152,7 @@ internal static class HudManagerStartPatch
         timeMasterShieldButton.MaxTimer = TimeMaster.cooldown;
         veteranAlertButton.MaxTimer = Veteran.cooldown;
         survivorVestButton.MaxTimer = Survivor.vestCooldown;
+        survivorBlanksButton.MaxTimer = Survivor.blanksCooldown;
         medicShieldButton.MaxTimer = defaultMaxTimer;
         shifterShiftButton.MaxTimer = defaultMaxTimer;
         disperserDisperseButton.MaxTimer = defaultMaxTimer;
@@ -919,37 +924,6 @@ internal static class HudManagerStartPatch
         akujoBackupLeftText.enableWordWrapping = false;
         akujoBackupLeftText.transform.localScale = Vector3.one * 0.5f;
         akujoBackupLeftText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
-
-        survivorVestButton = new CustomButton(
-            () =>
-            {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                    (byte)CustomRPC.SurvivorVestActive, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.survivorVestActive();
-                Survivor.vestNumber -= 1;
-            },
-            () =>
-            {
-                return Survivor.survivor != null && Survivor.survivor.Contains(CachedPlayer.LocalPlayer.PlayerControl) &&
-                       !CachedPlayer.LocalPlayer.Data.IsDead && Survivor.vestEnable && Survivor.vestNumber > 0;
-            },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
-            () =>
-            {
-                survivorVestButton.Timer = survivorVestButton.MaxTimer;
-                survivorVestButton.isEffectActive = false;
-                survivorVestButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-            },
-            Survivor.VestButtonSprite,
-            ButtonPositions.upperRowRight,
-            __instance,
-            KeyCode.F,
-            true,
-            Survivor.vestDuration,
-            () => { survivorVestButton.Timer = survivorVestButton.MaxTimer; },
-            buttonText: getString("VestButton")
-        );
 
         evilTrapperSetTrapButton = new CustomButton(
             () =>
@@ -3226,11 +3200,11 @@ internal static class HudManagerStartPatch
                     if (checkAndDoVetKill(Pursuer.target)) return;
                     checkWatchFlash(Pursuer.target);
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetBlanked, SendOption.Reliable);
+                        CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
                     writer.Write(Pursuer.target.PlayerId);
                     writer.Write(byte.MaxValue);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.setBlanked(Pursuer.target.PlayerId, byte.MaxValue);
+                    RPCProcedure.pursuerSetBlanked(Pursuer.target.PlayerId, byte.MaxValue);
 
                     Pursuer.target = null;
 
@@ -3267,6 +3241,100 @@ internal static class HudManagerStartPatch
         pursuerButtonBlanksText.enableWordWrapping = false;
         pursuerButtonBlanksText.transform.localScale = Vector3.one * 0.5f;
         pursuerButtonBlanksText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+
+
+
+        survivorVestButton = new CustomButton(
+            () =>
+            {
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.SurvivorVestActive, SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.survivorVestActive();
+                Survivor.vestUsed++;
+            },
+            () =>
+            {
+                return Survivor.survivor != null && Survivor.survivor.Contains(CachedPlayer.LocalPlayer.PlayerControl) &&
+                       !CachedPlayer.LocalPlayer.Data.IsDead && Survivor.vestEnable && Survivor.remainingVests > 0;
+            },
+            () =>
+            {
+                if (survivorVestButtonText != null) survivorVestButtonText.text = $"{Survivor.remainingVests} / {Survivor.vestNumber}";
+                return CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+            },
+            () =>
+            {
+                survivorVestButton.Timer = survivorVestButton.MaxTimer;
+                survivorVestButton.isEffectActive = false;
+                survivorVestButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+            },
+            Survivor.VestButtonSprite,
+            ButtonPositions.upperRowRight,
+            __instance,
+            KeyCode.F,
+            true,
+            Survivor.vestDuration,
+            () => { survivorVestButton.Timer = survivorVestButton.MaxTimer; },
+            buttonText: getString("VestButton")
+        );
+        // Pursuer button blanks left
+        survivorVestButtonText = Object.Instantiate(survivorVestButton.actionButton.cooldownTimerText,
+            survivorVestButton.actionButton.cooldownTimerText.transform.parent);
+        survivorVestButtonText.text = "";
+        survivorVestButtonText.enableWordWrapping = false;
+        survivorVestButtonText.transform.localScale = Vector3.one * 0.5f;
+        survivorVestButtonText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+
+
+        // Survivor button
+        survivorBlanksButton = new CustomButton(
+            () =>
+            {
+                if (Survivor.target != null)
+                {
+                    if (checkAndDoVetKill(Survivor.target)) return;
+                    checkWatchFlash(Survivor.target);
+                    var writer = AmongUsClient.Instance.StartRpcImmediately(
+                        CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
+                    writer.Write(Survivor.target.PlayerId);
+                    writer.Write(byte.MaxValue);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.pursuerSetBlanked(Survivor.target.PlayerId, byte.MaxValue);
+
+                    Survivor.target = null;
+
+                    Survivor.blanksUsed++;
+                    survivorBlanksButton.Timer = survivorBlanksButton.MaxTimer;
+                    SoundEffectsManager.play("pursuerBlank");
+                }
+            },
+            () =>
+            {
+                return Survivor.survivor != null && Survivor.survivor.Contains(CachedPlayer.LocalPlayer.PlayerControl) &&
+                       !CachedPlayer.LocalPlayer.Data.IsDead && Survivor.blanksEnable && Survivor.remainingBlanks > 0;
+            },
+            () =>
+            {
+                showTargetNameOnButton(Survivor.target, survivorBlanksButton, getString("PursuerText"));
+                if (survivorBlanksButtonText != null) survivorBlanksButtonText.text = $"{Survivor.remainingBlanks} / {Survivor.blanksNumber}";
+
+                return Survivor.blanksNumber > Survivor.blanksUsed && CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
+                       Survivor.target != null;
+            },
+            () => { survivorBlanksButton.Timer = survivorBlanksButton.MaxTimer; },
+            Pursuer.buttonSprite,
+            ButtonPositions.upperRowCenter,
+            __instance,
+            KeyCode.C
+        );
+        // Pursuer button blanks left
+        survivorBlanksButtonText = Object.Instantiate(survivorBlanksButton.actionButton.cooldownTimerText,
+            survivorBlanksButton.actionButton.cooldownTimerText.transform.parent);
+        survivorBlanksButtonText.text = "";
+        survivorBlanksButtonText.enableWordWrapping = false;
+        survivorBlanksButtonText.transform.localScale = Vector3.one * 0.5f;
+        survivorBlanksButtonText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
 
         // Witch Spell button

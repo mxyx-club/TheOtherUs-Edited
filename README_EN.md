@@ -140,35 +140,35 @@ Even more roles are coming soon.
 
 ## Roles
 
-|   Impostor   |    Neutral     |      Crewmate       |   Modifier   |
-| :----------: | :------------: | :-----------------: | :----------: |
-|  Morphling   |    Survivor    |      Vigilante      |    Lover     |
-|    Bomber    |    Amnisiac    |        Mayor        |   Assassin   |
-|   Poucher    |     Jester     |     Prosecutor      |  Disperser   |
-|    Mimic     |    Vulture     |     Portalmaker     |  Specoality  |
-| Camouflager  |     Lawyer     |      Engineer       | lastImpostor |
-|    Miner     |  Executioner   | PrivateInvestigator |    Torch     |
-|    Eraser    |    Pursuer     |       Sheriff       |  Sunglasses  |
-|   Vampire    |     Jackal     |       Deputy        |     Bait     |
-|   Cleaner    |    Sidekick    |      BodyGuard      |  Aftermath   |
-|  Undertaker  | Pavlov's owner |       Lighter       |    Bloody    |
-|   Escapist   | Pavlov's dogs  |       Jumper        | AntiTeleport |
-|   Warlock    |    Swooper     |      Detective      |  Tiebreaker  |
-|  Trickster   |    Arsonist    |     TimeMaster      |    Flash     |
-| BountyHunter |    Werewolf    |       Veteran       | Multitasker  |
-|   Cultist    |     Thief      |        Medic        |    Giant     |
-|  Terrorist   |   Juggernaut   |       Swapper       |     Mini     |
-| Blackmailer  |   Doomsayer    |        Seer         |     Vip      |
-|    Witch     |     Akujo      |       Hacker        | Indomitable  |
-|    Ninja     |                |       Tracker       |    Slueth    |
-|    Yo-Yo     |                |       Snitch        |    Cursed    |
-| EvilTrapper  |                |         Spy         |    Invert    |
-|              |                |    SecurityGuard    |    Blind     |
-|              |                |       Medium        |   Watcher    |
-|              |                |       Trapper       |    Radar     |
-|              |                |       Prophet       | ButtonBarry  |
-|              |                |                     |  Chameleon   |
-|              |                |                     |   Shifter    |
+|   Impostor    |    Neutral     |      Crewmate       |   Modifier    |
+| :-----------: | :------------: | :-----------------: | :-----------: |
+|   Morphling   |    Survivor    |      Vigilante      |     Lover     |
+|    Bomber     |    Amnisiac    |        Mayor        |   Assassin    |
+|    Poucher    |     Jester     |     Prosecutor      |   Disperser   |
+|     Mimic     |    Vulture     |     Portalmaker     |  Specoality   |
+|  Camouflager  |     Lawyer     |      Engineer       | Last Impostor |
+|     Miner     |  Executioner   | PrivateInvestigator |     Torch     |
+|    Eraser     |    Pursuer     |       Sheriff       |  Sunglasses   |
+|    Vampire    |     Jackal     |       Deputy        |     Bait      |
+|    Cleaner    |    Sidekick    |      BodyGuard      |   Aftermath   |
+|  Undertaker   | Pavlov's owner |       Lighter       |    Bloody     |
+|   Escapist    | Pavlov's dogs  |       Jumper        | AntiTeleport  |
+|    Warlock    |    Swooper     |      Detective      |  Tiebreaker   |
+|   Trickster   |    Arsonist    |     Time Master     |     Flash     |
+| Bounty Hunter |    Werewolf    |       Veteran       |  Multitasker  |
+|    Cultist    |     Thief      |        Medic        |     Giant     |
+|   Terrorist   |   Juggernaut   |       Swapper       |     Mini      |
+|  Blackmailer  |   Doomsayer    |        Seer         |      Vip      |
+|     Witch     |     Akujo      |       Hacker        |  Indomitable  |
+|     Ninja     |                |       Tracker       |    Slueth     |
+|     Yo-Yo     |                |       Snitch        |    Cursed     |
+| Evil Trapper  |                |         Spy         |    Invert     |
+|               |                |    SecurityGuard    |     Blind     |
+|               |                |       Medium        |    Watcher    |
+|               |                |       Trapper       |     Radar     |
+|               |                |       Prophet       | Button Barry  |
+|               |                |                     |   Chameleon   |
+|               |                |                     |    Shifter    |
 
 ## Credits & Resources
 <p align="center">

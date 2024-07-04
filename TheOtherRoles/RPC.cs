@@ -226,7 +226,7 @@ public enum CustomRPC
     UseCameraTime,
     UseVitalsTime,
     UnblackmailPlayer,
-    SetBlanked,
+    PursuerSetBlanked,
     Bloody,
     SetFirstKill,
     SetMeetingChatOverlay,
@@ -3048,7 +3048,7 @@ public static class RPCProcedure
         Blackmailer.alreadyShook = false;
     }
 
-    public static void setBlanked(byte playerId, byte value)
+    public static void pursuerSetBlanked(byte playerId, byte value)
     {
         var target = playerById(playerId);
         if (target == null) return;
@@ -3786,12 +3786,12 @@ internal class RPCHandlerPatch
                 RPCProcedure.executionerPromotesRole();
                 break;
 
-            case CustomRPC.SetBlanked:
+            case CustomRPC.PursuerSetBlanked:
                 var pid = reader.ReadByte();
                 var blankedValue = reader.ReadByte();
-                RPCProcedure.setBlanked(pid, blankedValue);
+                RPCProcedure.pursuerSetBlanked(pid, blankedValue);
                 break;
-
+                
             case CustomRPC.GiveBomb:
                 RPCProcedure.giveBomb(reader.ReadByte());
                 break;

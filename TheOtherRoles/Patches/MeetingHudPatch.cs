@@ -951,12 +951,12 @@ internal class MeetingHudPatch
 
             // Lovers, Lawyer & Pursuer save next to be exiled, because RPC of ending game comes before RPC of exiled
             Lovers.notAckedExiledIsLover = false;
-            Pursuer.notAckedExiled = false;
+            Lawyer.notAckedExiled = false;
             if (exiled != null)
             {
                 Lovers.notAckedExiledIsLover = (Lovers.lover1 != null && Lovers.lover1.PlayerId == exiled.PlayerId) ||
                                                (Lovers.lover2 != null && Lovers.lover2.PlayerId == exiled.PlayerId);
-                Pursuer.notAckedExiled = (Pursuer.pursuer != null && Pursuer.pursuer.Any(id => id.PlayerId == exiled.PlayerId)) ||
+                Lawyer.notAckedExiled = (Pursuer.pursuer != null && Pursuer.pursuer.Any(id => id.PlayerId == exiled.PlayerId)) ||
                                          (Lawyer.lawyer != null && Lawyer.target != null &&
                                           Lawyer.target.PlayerId == exiled.PlayerId && Lawyer.target != Jester.jester);
             }
