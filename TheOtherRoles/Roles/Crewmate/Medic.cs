@@ -1,4 +1,5 @@
-﻿using TheOtherRoles.Utilities;
+﻿using TheOtherRoles.Modules;
+using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Crewmate;
@@ -26,7 +27,7 @@ public static class Medic
     public static Color shieldedColor = new Color32(0, 221, 255, byte.MaxValue);
     public static PlayerControl currentTarget;
 
-    private static Sprite buttonSprite;
+    public static ResourceSprite buttonSprite = new("ShieldButton.png");
 
     public static void resetShielded()
     {
@@ -34,12 +35,6 @@ public static class Medic
         usedShield = false;
     }
 
-    public static Sprite getButtonSprite()
-    {
-        if (buttonSprite) return buttonSprite;
-        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.ShieldButton.png", 115f);
-        return buttonSprite;
-    }
     public static bool shieldVisible(PlayerControl target)
     {
         bool hasVisibleShield = false;

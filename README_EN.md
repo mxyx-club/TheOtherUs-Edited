@@ -155,7 +155,7 @@ Even more roles are coming soon.
 |   Escapist   |  Werewolf  |       Jumper        | AntiTeleport |
 |   Warlock    |   Thief    |      Detective      |  Tiebreaker  |
 |  Trickster   | Juggernaut |     TimeMaster      |    Flash     |
-| BountyHunter | Doomsayer  |       Veteren       | Multitasker  |
+| BountyHunter | Doomsayer  |       Veteran       | Multitasker  |
 |   Cultist    |   Akujo    |        Medic        |    Giant     |
 |  Terrorist   |            |       Swapper       |     Mini     |
 | Blackmailer  |            |        Seer         |     Vip      |

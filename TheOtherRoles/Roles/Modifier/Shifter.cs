@@ -88,10 +88,10 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             TimeMaster.timeMaster = player1;
         }
-        else if (Veteren.veteren != null && Veteren.veteren == player2)
+        else if (Veteran.veteran != null && Veteran.veteran == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
-            Veteren.veteren = player1;
+            Veteran.veteran = player1;
         }
         else if (Medic.medic != null && Medic.medic == player2)
         {
@@ -213,6 +213,12 @@ public static class Shifter
         {
             if (repeat) shiftRole(player2, player1, false);
             Juggernaut.juggernaut = player1;
+        }
+        else if (Survivor.survivor != null && Survivor.survivor.Contains(player2))
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Survivor.survivor.Remove(player2);
+            Survivor.survivor.Add(player1);
         }
         else if (Akujo.akujo != null && Akujo.akujo == player2)
         {

@@ -59,6 +59,7 @@ public class RoleInfo
     public static RoleInfo yoyo = new("Yoyo", Yoyo.color, RoleId.Yoyo);
     public static RoleInfo evilTrapper = new("EvilTrapper", EvilTrapper.color, RoleId.EvilTrapper);
 
+    public static RoleInfo survivor = new("Survivor", Survivor.color, RoleId.Survivor, true);
     public static RoleInfo amnisiac = new("Amnisiac", Amnisiac.color, RoleId.Amnisiac, true);
     public static RoleInfo jester = new("Jester", Jester.color, RoleId.Jester, true);
     public static RoleInfo vulture = new("Vulture", Vulture.color, RoleId.Vulture, true);
@@ -91,7 +92,7 @@ public class RoleInfo
     public static RoleInfo magician = new("Magician", Magician.color, RoleId.Magician);
     public static RoleInfo detective = new("Detective", Detective.color, RoleId.Detective);
     public static RoleInfo timeMaster = new("TimeMaster", TimeMaster.color, RoleId.TimeMaster);
-    public static RoleInfo veteren = new("Veteren", Veteren.color, RoleId.Veteren);
+    public static RoleInfo veteran = new("Veteran", Veteran.color, RoleId.Veteran);
     public static RoleInfo medic = new("Medic", Medic.color, RoleId.Medic);
     public static RoleInfo swapper = new("Swapper", Swapper.color, RoleId.Swapper);
     public static RoleInfo seer = new("Seer", Seer.color, RoleId.Seer);
@@ -164,6 +165,7 @@ public class RoleInfo
         yoyo,
         evilTrapper,
 
+        survivor,
         amnisiac,
         jester,
         vulture,
@@ -195,7 +197,7 @@ public class RoleInfo
         jumper,
         detective,
         timeMaster,
-        veteren,
+        veteran,
         medic,
         swapper,
         seer,
@@ -325,8 +327,9 @@ public class RoleInfo
         if (p == Detective.detective) infos.Add(detective);
         if (p == TimeMaster.timeMaster) infos.Add(timeMaster);
         if (p == Cultist.cultist) infos.Add(cultist);
+        if (Survivor.survivor.Contains(p)) infos.Add(survivor);
         if (p == Amnisiac.amnisiac) infos.Add(amnisiac);
-        if (p == Veteren.veteren) infos.Add(veteren);
+        if (p == Veteran.veteran) infos.Add(veteran);
         if (p == Medic.medic) infos.Add(medic);
         if (p == Swapper.swapper) infos.Add(swapper);
         if (p == BodyGuard.bodyguard) infos.Add(bodyguard);

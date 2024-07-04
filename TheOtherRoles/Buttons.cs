@@ -28,7 +28,7 @@ internal static class HudManagerStartPatch
     private static CustomButton deputyHandcuffButton;
     public static CustomButton timeMasterShieldButton;
     private static CustomButton amnisiacRememberButton;
-    public static CustomButton veterenAlertButton;
+    public static CustomButton veteranAlertButton;
     public static CustomButton medicShieldButton;
     private static CustomButton cultistTurnButton;
     private static CustomButton shifterShiftButton;
@@ -84,6 +84,7 @@ internal static class HudManagerStartPatch
     public static CustomButton doomsayerButton;
     public static CustomButton akujoHonmeiButton;
     public static CustomButton akujoBackupButton;
+    public static CustomButton survivorVestButton;
     public static CustomButton yoyoButton;
     public static CustomButton yoyoAdminTableButton;
     public static CustomButton trapperButton;
@@ -145,7 +146,8 @@ internal static class HudManagerStartPatch
         sheriffKillButton.MaxTimer = Sheriff.cooldown;
         deputyHandcuffButton.MaxTimer = Deputy.handcuffCooldown;
         timeMasterShieldButton.MaxTimer = TimeMaster.cooldown;
-        veterenAlertButton.MaxTimer = Veteren.cooldown;
+        veteranAlertButton.MaxTimer = Veteran.cooldown;
+        survivorVestButton.MaxTimer = Survivor.vestCooldown;
         medicShieldButton.MaxTimer = defaultMaxTimer;
         shifterShiftButton.MaxTimer = defaultMaxTimer;
         disperserDisperseButton.MaxTimer = defaultMaxTimer;
@@ -226,7 +228,8 @@ internal static class HudManagerStartPatch
         propHuntFindButton.MaxTimer = PropHunt.findCooldown;
 
         timeMasterShieldButton.EffectDuration = TimeMaster.shieldDuration;
-        veterenAlertButton.EffectDuration = Veteren.alertDuration;
+        veteranAlertButton.EffectDuration = Veteran.alertDuration;
+        survivorVestButton.EffectDuration = Survivor.vestDuration;
         hackerButton.EffectDuration = Hacker.duration;
         hackerVitalsButton.EffectDuration = Hacker.duration;
         hackerAdminTableButton.EffectDuration = Hacker.duration;
@@ -718,34 +721,34 @@ internal static class HudManagerStartPatch
             buttonText: getString("TimeShieldText")
         );
 
-        // Veteren Alert
-        veterenAlertButton = new CustomButton(
+        // Veteran Alert
+        veteranAlertButton = new CustomButton(
             () =>
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                    (byte)CustomRPC.VeterenAlert, SendOption.Reliable);
+                    (byte)CustomRPC.VeteranAlert, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.veterenAlert();
+                RPCProcedure.veteranAlert();
             },
             () =>
             {
-                return Veteren.veteren != null && Veteren.veteren == CachedPlayer.LocalPlayer.PlayerControl &&
+                return Veteran.veteran != null && Veteran.veteran == CachedPlayer.LocalPlayer.PlayerControl &&
                        !CachedPlayer.LocalPlayer.Data.IsDead;
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () =>
             {
-                veterenAlertButton.Timer = veterenAlertButton.MaxTimer;
-                veterenAlertButton.isEffectActive = false;
-                veterenAlertButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+                veteranAlertButton.Timer = veteranAlertButton.MaxTimer;
+                veteranAlertButton.isEffectActive = false;
+                veteranAlertButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
-            Veteren.getButtonSprite(),
+            Veteran.buttonSprite,
             ButtonPositions.lowerRowRight, //brb
             __instance,
             KeyCode.F,
             true,
-            Veteren.alertDuration,
-            () => { veterenAlertButton.Timer = veterenAlertButton.MaxTimer; },
+            Veteran.alertDuration,
+            () => { veteranAlertButton.Timer = veteranAlertButton.MaxTimer; },
             buttonText: getString("AlertText")
         );
 
@@ -785,7 +788,7 @@ internal static class HudManagerStartPatch
             {
                 if (Medic.reset) Medic.resetShielded();
             },
-            Medic.getButtonSprite(),
+            Medic.buttonSprite,
             ButtonPositions.lowerRowRight,
             __instance,
             KeyCode.F
@@ -845,9 +848,9 @@ internal static class HudManagerStartPatch
         akujoHonmeiButton = new CustomButton(
             () =>
             {
-                if (Veteren.veteren != null && Akujo.currentTarget == Veteren.veteren && Veteren.alertActive)
+                if (Veteran.veteran != null && Akujo.currentTarget == Veteran.veteran && Veteran.alertActive)
                 {
-                    checkMurderAttemptAndKill(Veteren.veteren, Akujo.akujo);
+                    checkMurderAttemptAndKill(Veteran.veteran, Akujo.akujo);
                     return;
                 }
 
@@ -879,13 +882,14 @@ internal static class HudManagerStartPatch
         akujoBackupButton = new CustomButton(
             () =>
             {
-                if (Veteren.veteren != null && Akujo.currentTarget == Veteren.veteren && Veteren.alertActive)
+                if (Veteran.veteran != null && Akujo.currentTarget == Veteran.veteran && Veteran.alertActive)
                 {
-                    checkMurderAttemptAndKill(Veteren.veteren, Akujo.akujo);
+                    checkMurderAttemptAndKill(Veteran.veteran, Akujo.akujo);
                     return;
                 }
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSetKeep, SendOption.Reliable, -1);
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, 
+                    (byte)CustomRPC.AkujoSetKeep, SendOption.Reliable, -1);
                 writer.Write(Akujo.akujo.PlayerId);
                 writer.Write(Akujo.currentTarget.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -915,6 +919,37 @@ internal static class HudManagerStartPatch
         akujoBackupLeftText.enableWordWrapping = false;
         akujoBackupLeftText.transform.localScale = Vector3.one * 0.5f;
         akujoBackupLeftText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+
+        survivorVestButton = new CustomButton(
+            () =>
+            {
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.SurvivorVestActive, SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.survivorVestActive();
+                Survivor.vestNumber -= 1;
+            },
+            () =>
+            {
+                return Survivor.survivor != null && Survivor.survivor.Contains(CachedPlayer.LocalPlayer.PlayerControl) &&
+                       !CachedPlayer.LocalPlayer.Data.IsDead && Survivor.vestEnable && Survivor.vestNumber > 0;
+            },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () =>
+            {
+                survivorVestButton.Timer = survivorVestButton.MaxTimer;
+                survivorVestButton.isEffectActive = false;
+                survivorVestButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+            },
+            Survivor.VestButtonSprite,
+            ButtonPositions.upperRowRight,
+            __instance,
+            KeyCode.F,
+            true,
+            Survivor.vestDuration,
+            () => { survivorVestButton.Timer = survivorVestButton.MaxTimer; },
+            buttonText: getString("VestButton")
+        );
 
         evilTrapperSetTrapButton = new CustomButton(
             () =>
@@ -1705,7 +1740,7 @@ internal static class HudManagerStartPatch
                     return Prophet.currentTarget != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
                 },
                 () => { prophetButton.Timer = prophetButton.MaxTimer; },
-                Prophet.getButtonSprite(),
+                Prophet.buttonSprite,
                 ButtonPositions.lowerRowRight,
                 __instance,
                 KeyCode.F,
@@ -3698,19 +3733,6 @@ internal static class HudManagerStartPatch
                     SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
                 }
 
-                if (Terrorist.selfExplosion)
-                {
-                    var loacl = CachedPlayer.LocalPlayer.PlayerId;
-
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedMurderPlayer,
-                        SendOption.Reliable);
-                    writer.Write(Terrorist.terrorist.PlayerId);
-                    writer.Write(loacl);
-                    writer.Write(byte.MaxValue);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.uncheckedMurderPlayer(Terrorist.terrorist.PlayerId, loacl, byte.MaxValue);
-                }
                 terroristButton.Timer = terroristButton.MaxTimer;
                 Terrorist.isPlanted = true;
             },

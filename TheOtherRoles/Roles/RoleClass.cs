@@ -25,7 +25,7 @@ public static class RoleClass
         Werewolf.clearAndReload();
         TimeMaster.clearAndReload();
         BodyGuard.clearAndReload();
-        Veteren.clearAndReload();
+        Veteran.clearAndReload();
         Medic.clearAndReload();
         PrivateInvestigator.clearAndReload();
         Shifter.clearAndReload();
@@ -74,6 +74,7 @@ public static class RoleClass
         Akujo.clearAndReload();
         Yoyo.clearAndReload();
         EvilTrapper.clearAndReload();
+        Survivor.clearAndReload();
 
         // Modifier
         Bait.clearAndReload();

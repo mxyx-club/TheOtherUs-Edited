@@ -51,6 +51,7 @@ public enum RoleId
     EvilTrapper,
     Follower,
 
+    Survivor,
     Amnisiac,
     Jester,
     Vulture,
@@ -84,7 +85,7 @@ public enum RoleId
     Jumper,
     Detective,
     TimeMaster,
-    Veteren,
+    Veteran,
     Medic,
     Swapper,
     Seer,
@@ -172,8 +173,8 @@ public enum CustomRPC
     BodyGuardGuardPlayer,
     PrivateInvestigatorWatchPlayer,
     PrivateInvestigatorWatchFlash,
-    VeterenAlert,
-    VeterenKill,
+    VeteranAlert,
+    VeteranKill,
     ShifterShift,
     SwapperSwap,
     MorphlingMorph,
@@ -243,6 +244,7 @@ public enum CustomRPC
     DisableTrap,
     TrapperMeetingFlag,
     Prosecute,
+    SurvivorVestActive,
 
     // SetSwooper,
     SetInvisible,
@@ -435,8 +437,8 @@ public static class RPCProcedure
                     case RoleId.Amnisiac:
                         Amnisiac.amnisiac = player;
                         break;
-                    case RoleId.Veteren:
-                        Veteren.veteren = player;
+                    case RoleId.Veteran:
+                        Veteran.veteran = player;
                         break;
                     case RoleId.Medic:
                         Medic.medic = player;
@@ -539,6 +541,9 @@ public static class RPCProcedure
                         break;
                     case RoleId.Pursuer:
                         Pursuer.pursuer.Add(player);
+                        break;
+                    case RoleId.Survivor:
+                        Survivor.survivor.Add(player);
                         break;
                     case RoleId.Executioner:
                         Executioner.executioner = player;
@@ -973,16 +978,16 @@ public static class RPCProcedure
                 Detective.detective = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
-
+                
             case RoleId.TimeMaster:
                 if (Amnisiac.resetRole) TimeMaster.clearAndReload();
                 TimeMaster.timeMaster = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
 
-            case RoleId.Veteren:
-                if (Amnisiac.resetRole) Veteren.clearAndReload();
-                Veteren.veteren = amnisiac;
+            case RoleId.Veteran:
+                if (Amnisiac.resetRole) Veteran.clearAndReload();
+                Veteran.veteran = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1144,6 +1149,11 @@ public static class RPCProcedure
             case RoleId.SecurityGuard:
                 if (Amnisiac.resetRole) SecurityGuard.clearAndReload();
                 SecurityGuard.securityGuard = amnisiac;
+                Amnisiac.clearAndReload();
+                break;
+
+            case RoleId.Survivor:
+                Survivor.survivor.Add(amnisiac);
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1437,10 +1447,10 @@ public static class RPCProcedure
                 Mimic.hasMimic = true;
                 break;
 
-            case RoleId.Veteren:
-                if (Amnisiac.resetRole) Veteren.clearAndReload();
-                Veteren.veteren = Mimic.mimic;
-                veterenAlertButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
+            case RoleId.Veteran:
+                if (Amnisiac.resetRole) Veteran.clearAndReload();
+                Veteran.veteran = Mimic.mimic;
+                veteranAlertButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 Mimic.hasMimic = true;
                 break;
 
@@ -1525,22 +1535,32 @@ public static class RPCProcedure
         Helpers.turnToImpostor(player);
     }
 
-    public static void veterenAlert()
+    public static void veteranAlert()
     {
-        Veteren.alertActive = true;
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Veteren.alertDuration,
+        Veteran.alertActive = true;
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Veteran.alertDuration,
             new Action<float>(p =>
             {
-                if (p == 1f) Veteren.alertActive = false;
+                if (p == 1f) Veteran.alertActive = false;
             })));
     }
 
-    public static void veterenKill(byte targetId)
+    public static void survivorVestActive()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl == Veteren.veteren)
+        Survivor.vestActive = true;
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Survivor.vestDuration,
+            new Action<float>(p =>
+            {
+                if (p == 1f) Survivor.vestActive = false;
+            })));
+    }
+
+    public static void veteranKill(byte targetId)
+    {
+        if (CachedPlayer.LocalPlayer.PlayerControl == Veteran.veteran)
         {
             var player = playerById(targetId);
-            checkMurderAttemptAndKill(Veteren.veteren, player);
+            checkMurderAttemptAndKill(Veteran.veteran, player);
         }
     }
 
@@ -2125,7 +2145,7 @@ public static class RPCProcedure
         if (player == Detective.detective) Detective.clearAndReload();
         if (player == TimeMaster.timeMaster) TimeMaster.clearAndReload();
         if (player == Amnisiac.amnisiac) Amnisiac.clearAndReload();
-        if (player == Veteren.veteren) Veteren.clearAndReload();
+        if (player == Veteran.veteran) Veteran.clearAndReload();
         if (player == Medic.medic) Medic.clearAndReload();
         if (player == Shifter.shifter) Shifter.clearAndReload();
         if (player == Seer.seer) Seer.clearAndReload();
@@ -3107,7 +3127,7 @@ public static class RPCProcedure
         if (target == null) return;
         if (target == Sheriff.sheriff) Sheriff.sheriff = thief;
         if (target == Deputy.deputy) Deputy.deputy = thief;
-        if (target == Veteren.veteren) Veteren.veteren = thief;
+        if (target == Veteran.veteran) Veteran.veteran = thief;
         if (target == Jackal.jackal)
         {
             Jackal.jackal = thief;
@@ -3185,7 +3205,7 @@ public static class RPCProcedure
         if (target == Swooper.swooper) Swooper.swooper = thief;
 
         if (target == Deputy.deputy) Deputy.deputy = thief;
-        if (target == Veteren.veteren) Veteren.veteren = thief;
+        if (target == Veteran.veteran) Veteran.veteran = thief;
         if (target == Blackmailer.blackmailer) Blackmailer.blackmailer = thief;
         if (target == EvilTrapper.evilTrapper) EvilTrapper.evilTrapper = thief;
 
@@ -3368,6 +3388,21 @@ public static class RPCProcedure
         position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
         position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
         new Bomb(position);
+
+
+        if (Terrorist.selfExplosion)
+        {
+            var loacl = Terrorist.terrorist.PlayerId;
+
+            var writer = AmongUsClient.Instance.StartRpcImmediately(
+                Terrorist.terrorist.NetId, (byte)CustomRPC.UncheckedMurderPlayer,
+                SendOption.Reliable);
+            writer.Write(Terrorist.terrorist.PlayerId);
+            writer.Write(loacl);
+            writer.Write(byte.MaxValue);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            uncheckedMurderPlayer(Terrorist.terrorist.PlayerId, loacl, byte.MaxValue);
+        }
     }
 
     public static void defuseBomb()
@@ -3577,12 +3612,12 @@ internal class RPCHandlerPatch
                 RPCProcedure.showIndomitableFlash();
                 break;
 
-            case CustomRPC.VeterenAlert:
-                RPCProcedure.veterenAlert();
+            case CustomRPC.VeteranAlert:
+                RPCProcedure.veteranAlert();
                 break;
 
-            case CustomRPC.VeterenKill:
-                RPCProcedure.veterenKill(reader.ReadByte());
+            case CustomRPC.VeteranKill:
+                RPCProcedure.veteranKill(reader.ReadByte());
                 break;
 
             case CustomRPC.MedicSetShielded:
@@ -3986,10 +4021,14 @@ internal class RPCHandlerPatch
             case CustomRPC.TrapperMeetingFlag:
                 RPCProcedure.trapperMeetingFlag();
                 break;
-
             case CustomRPC.Prosecute:
                 Prosecutor.ProsecuteThisMeeting = true;
                 break;
+
+            case CustomRPC.SurvivorVestActive:
+                RPCProcedure.survivorVestActive();
+                break;
+
             case CustomRPC.HostEndGame:
                 isCanceled = true;
                 break;

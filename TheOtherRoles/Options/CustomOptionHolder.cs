@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TheOtherRoles.Modules;
+using TheOtherRoles.Roles.Neutral;
 using UnityEngine;
 using static TheOtherRoles.Options.CustomOption;
 using Types = TheOtherRoles.Options.CustomOption.CustomOptionType;
@@ -92,6 +93,16 @@ public class CustomOptionHolder
     public static CustomOption jesterCanCallEmergency;
     public static CustomOption jesterCanVent;
     public static CustomOption jesterHasImpostorVision;
+
+    public static CustomOption survivorSpawnRate;
+    public static CustomOption survivorVestEnable;
+    public static CustomOption survivorVestNumber;
+    public static CustomOption survivorVestCooldown;
+    public static CustomOption survivorVestDuration;
+    public static CustomOption survivorVestResetCooldown;
+    public static CustomOption survivorBlanksEnable;
+    public static CustomOption survivorBlanksCooldown;
+    public static CustomOption survivorBlanksNumber;
 
     public static CustomOption amnisiacSpawnRate;
     public static CustomOption amnisiacShowArrows;
@@ -236,9 +247,9 @@ public class CustomOptionHolder
     public static CustomOption timeMasterRewindTime;
     public static CustomOption timeMasterShieldDuration;
 
-    public static CustomOption veterenSpawnRate;
-    public static CustomOption veterenCooldown;
-    public static CustomOption veterenAlertDuration;
+    public static CustomOption veteranSpawnRate;
+    public static CustomOption veteranCooldown;
+    public static CustomOption veteranAlertDuration;
 
     public static CustomOption medicSpawnRate;
     public static CustomOption medicShowShielded;
@@ -341,7 +352,7 @@ public class CustomOptionHolder
     public static CustomOption lawyerStolenWin;
     public static CustomOption lawyerCanCallEmergency;
 
-    public static CustomOption pursuerSpawnRate;
+    //public static CustomOption pursuerSpawnRate;
     public static CustomOption pursuerBlanksCooldown;
     public static CustomOption pursuerBlanksNumber;
 
@@ -380,7 +391,7 @@ public class CustomOptionHolder
     public static CustomOption thiefCanUseVents;
     public static CustomOption thiefCanKillSheriff;
     public static CustomOption thiefCanKillDeputy;
-    public static CustomOption thiefCanKillVeteren;
+    public static CustomOption thiefCanKillVeteran;
     public static CustomOption thiefCanStealWithGuess;
 
     public static CustomOption juggernautSpawnRate;
@@ -934,6 +945,16 @@ public class CustomOptionHolder
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 
+        survivorSpawnRate = Create(20280, Types.Neutral, cs(Survivor.color, "Survivor"), rates, null, true);
+        survivorVestEnable = Create(20281, Types.Neutral, "survivorVestEnable", true, survivorSpawnRate);
+        survivorVestNumber = Create(20282, Types.Neutral, "survivorVestNumber", 5f, 1f, 20f, 1f, survivorVestEnable);
+        survivorVestCooldown = Create(20283, Types.Neutral, "survivorVestCooldown", 20f, 2.5f, 60f, 2.5f, survivorVestEnable);
+        survivorVestDuration = Create(20284, Types.Neutral, "survivorVestDuration", 10f, 2.5f, 60f, 2.5f, survivorVestEnable);
+        survivorVestResetCooldown = Create(20285, Types.Neutral, "survivorVestResetCooldown", 5f, 2.5f, 60f, 2.5f, survivorVestEnable);
+        survivorBlanksEnable = Create(20286, Types.Neutral, "survivorBlanksEnable", false, survivorSpawnRate);
+        survivorBlanksCooldown = Create(20287, Types.Neutral, "survivorBlanksCooldown", 20f, 5f, 60f, 2.5f, survivorBlanksEnable);
+        survivorBlanksNumber = Create(20288, Types.Neutral, "survivorBlanksNumber", 6f, 1f, 20f, 1f, survivorBlanksEnable);
+
         amnisiacSpawnRate = Create(20110, Types.Neutral, cs(Amnisiac.color, "Amnisiac"), rates, null, true);
         amnisiacShowArrows = Create(20111, Types.Neutral, "amnisiacShowArrows", true, amnisiacSpawnRate);
         amnisiacResetRole = Create(20112, Types.Neutral, "amnisiacResetRole", true, amnisiacSpawnRate);
@@ -970,7 +991,8 @@ public class CustomOptionHolder
         pavlovsownerCreateDogNum = Create(20254, Types.Neutral, "pavlovsownerCreateDogNum", 3f, 1f, 10f, 1f, pavlovsownerSpawnRate);
         pavlovsownerCanUseSabo = Create(20255, Types.Neutral, "pavlovsownerCanUseSabo", true, pavlovsownerSpawnRate);
         pavlovsownerHasImpostorVision = Create(20256, Types.Neutral, "pavlovsownerHasImpostorVision", true, pavlovsownerSpawnRate);
-        pavlovsownerCanUseVents = Create(20257, Types.Neutral, "pavlovsownerCanUseVents", ["Pavlovsdogs", "Pavlovsowner", "pavlovsownerCanUseVents3"], pavlovsownerSpawnRate);
+        pavlovsownerCanUseVents = Create(20257, Types.Neutral, "pavlovsownerCanUseVents",
+            ["Pavlovsdogs", "Pavlovsowner", "pavlovsownerCanUseVents3"], pavlovsownerSpawnRate);
         pavlovsownerRampage = Create(20260, Types.Neutral, "pavlovsownerRampage", true, pavlovsownerSpawnRate);
         pavlovsownerRampageKillCooldown = Create(20261, Types.Neutral, "pavlovsownerRampageKillCooldown", 15f, 5f, 60f, 2.5f, pavlovsownerRampage);
         pavlovsownerRampageDeathTime = Create(20262, Types.Neutral, "pavlovsownerRampageDeathTime", 60f, 30f, 180f, 2.5f, pavlovsownerRampageKillCooldown);
@@ -1006,14 +1028,15 @@ public class CustomOptionHolder
         lawyerStolenWin = Create(20189, Types.Neutral, "lawyerStolenWin", false, lawyerSpawnRate);
         lawyerTargetCanBeJester = Create(20186, Types.Neutral, "lawyerTargetCanBeJester", false, lawyerSpawnRate);
 
+        //pursuerSpawnRate = Create(20270, Types.Neutral, cs(Pursuer.color, "Pursuer"), rates, null, true);
+        pursuerBlanksCooldown = Create(20272, Types.Neutral, "pursuerBlanksCooldown", 20f, 5f, 60f, 2.5f);
+        pursuerBlanksNumber = Create(20273, Types.Neutral, "pursuerBlanksNumber", 6f, 1f, 20f, 1f);
+
         executionerSpawnRate = Create(20190, Types.Neutral, cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(20191, Types.Neutral, "executionerCanCallEmergency", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(20192, Types.Neutral, "executionerPromotesToLawyer", true, executionerSpawnRate);
         //executionerOnTargetDead = Create(20193, Types.Neutral, "目标死亡后变为", [cs(Pursuer.color, "Pursuer"), cs(Jester.color, "Jester"), cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
 
-        pursuerSpawnRate = Create(20270, Types.Neutral, cs(Pursuer.color, "Pursuer"), rates, null, true);
-        pursuerBlanksCooldown = Create(20272, Types.Neutral, "pursuerBlanksCooldown", 20f, 5f, 60f, 2.5f, pursuerSpawnRate);
-        pursuerBlanksNumber = Create(20273, Types.Neutral, "pursuerBlanksNumber", 6f, 1f, 20f, 1f, pursuerSpawnRate);
 
         doomsayerSpawnRate = Create(20221, Types.Neutral, cs(Doomsayer.color, "Doomsayer"), rates, null, true);
         doomsayerCooldown = Create(20222, Types.Neutral, "doomsayerCooldown", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
@@ -1041,8 +1064,8 @@ public class CustomOptionHolder
             string.Format("thiefCanKill".Translate(), cs(Sheriff.color, "Sheriff".Translate())), true, thiefSpawnRate);
         thiefCanKillDeputy = Create(20246, Types.Neutral,
             string.Format("thiefCanKill".Translate(), cs(Deputy.color, "Deputy".Translate())), true, thiefSpawnRate);
-        thiefCanKillVeteren = Create(20247, Types.Neutral,
-            string.Format("thiefCanKill".Translate(), cs(Veteren.color, "Veteren".Translate())), true, thiefSpawnRate);
+        thiefCanKillVeteran = Create(20247, Types.Neutral,
+            string.Format("thiefCanKill".Translate(), cs(Veteran.color, "Veteran".Translate())), true, thiefSpawnRate);
         thiefHasImpVision = Create(20243, Types.Neutral, "thiefHasImpVision", true, thiefSpawnRate);
         thiefCanUseVents = Create(20244, Types.Neutral, "thiefCanUseVents", true, thiefSpawnRate);
         thiefCanStealWithGuess = Create(20245, Types.Neutral, "thiefCanStealWithGuess", true, thiefSpawnRate);
@@ -1134,9 +1157,9 @@ public class CustomOptionHolder
         timeMasterRewindTime = Create(30212, Types.Crewmate, "timeMasterRewindTime", 8f, 1f, 10f, 1f, timeMasterSpawnRate);
         timeMasterShieldDuration = Create(30213, Types.Crewmate, "timeMasterShieldDuration", 12.5f, 1f, 20f, 1f, timeMasterSpawnRate);
 
-        veterenSpawnRate = Create(30220, Types.Crewmate, cs(Veteren.color, "Veteren"), rates, null, true);
-        veterenCooldown = Create(30221, Types.Crewmate, "veterenCooldown", 25f, 10f, 120f, 2.5f, veterenSpawnRate);
-        veterenAlertDuration = Create(30222, Types.Crewmate, "veterenAlertDuration", 15f, 1f, 20f, 1f, veterenSpawnRate);
+        veteranSpawnRate = Create(30220, Types.Crewmate, cs(Veteran.color, "Veteran"), rates, null, true);
+        veteranCooldown = Create(30221, Types.Crewmate, "veteranCooldown", 25f, 10f, 120f, 2.5f, veteranSpawnRate);
+        veteranAlertDuration = Create(30222, Types.Crewmate, "veteranAlertDuration", 15f, 1f, 20f, 1f, veteranSpawnRate);
 
         swapperSpawnRate = Create(30230, Types.Crewmate, cs(Swapper.color, "Swapper"), rates, null, true);
         swapperCanCallEmergency = Create(30231, Types.Crewmate, "swapperCanCallEmergency", true, swapperSpawnRate);

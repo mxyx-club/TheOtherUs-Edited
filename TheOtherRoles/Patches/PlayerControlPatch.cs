@@ -785,8 +785,12 @@ public static class PlayerControlFixedUpdatePatch
                     playerInfo.color = playerInfo.color.SetAlpha(1f);
                 }
 
-                var meetingInfoTransform = playerVoteArea?.NameText.transform.parent.FindChild("Info");
-                var meetingInfo = meetingInfoTransform?.GetComponent<TextMeshPro>();
+                var meetingInfoTransform = playerVoteArea != null
+                    ? playerVoteArea.NameText.transform.parent.FindChild("Info")
+                    : null;
+                var meetingInfo = meetingInfoTransform != null
+                    ? meetingInfoTransform.GetComponent<TextMeshPro>()
+                    : null;
 
                 if (meetingInfo == null && playerVoteArea != null)
                 {

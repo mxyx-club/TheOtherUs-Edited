@@ -400,7 +400,7 @@ public class KillTrap
         audioSource.Stop();
         audioSource.maxDistance = EvilTrapper.maxDistance;
         audioSource.PlayOneShot(kill);
-        if (target == Medic.currentTarget || target == Veteren.veteren && Veteren.alertActive || target == BodyGuard.currentTarget
+        if (target == Medic.currentTarget || target == Veteran.veteran && Veteran.alertActive || target == BodyGuard.currentTarget
          || MapOption.shieldFirstKill && MapOption.firstKillPlayer == target || target == Mini.mini)
         {
             clearAllTraps();

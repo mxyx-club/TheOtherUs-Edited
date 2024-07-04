@@ -106,7 +106,7 @@ public static class Helpers
 
         if (isRoleAlive(Sheriff.sheriff)) powerCrewAlive = true;
         if (isRoleAlive(Deputy.deputy)) powerCrewAlive = true;
-        if (isRoleAlive(Veteren.veteren)) powerCrewAlive = true;
+        if (isRoleAlive(Veteran.veteran)) powerCrewAlive = true;
         if (isRoleAlive(Mayor.mayor)) powerCrewAlive = true;
         if (isRoleAlive(Swapper.swapper)) powerCrewAlive = true;
         if (isRoleAlive(Prosecutor.prosecutor)) powerCrewAlive = true;
@@ -236,14 +236,14 @@ public static class Helpers
     /// </summary>
     public static bool checkAndDoVetKill(PlayerControl target)
     {
-        var shouldVetKill = Veteren.veteren == target && Veteren.alertActive;
+        var shouldVetKill = Veteran.veteran == target && Veteran.alertActive;
         if (shouldVetKill)
         {
             var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                (byte)CustomRPC.VeterenKill, SendOption.Reliable);
+                (byte)CustomRPC.VeteranKill, SendOption.Reliable);
             writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.veterenKill(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+            RPCProcedure.veteranKill(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
         }
 
         return shouldVetKill;
@@ -257,7 +257,7 @@ public static class Helpers
                        player == Jackal.jackal ||
                        player == Sidekick.sidekick ||
                        player == Pavlovsdogs.pavlovsowner ||
-                       Pavlovsdogs.pavlovsdogs.Any(p => p == player) ||
+                       Pavlovsdogs.pavlovsdogs.Contains(player) ||
                        player == Lawyer.lawyer);
         }
         else if (CustomOptionHolder.modifierShiftNeutral.getBool())
@@ -268,6 +268,9 @@ public static class Helpers
                        player == Werewolf.werewolf ||
                        player == Lawyer.lawyer ||
                        player == Juggernaut.juggernaut ||
+                       player == Akujo.akujo ||
+                       player == Pavlovsdogs.pavlovsowner ||
+                       Pavlovsdogs.pavlovsdogs.Contains(player) ||
                        player == Swooper.swooper);
         }
         else
@@ -1184,9 +1187,9 @@ public static class Helpers
             return MurderAttemptResult.BlankKill;
         }
 
-        // Kill the killer if the Veteren is on alert
+        // Kill the killer if the Veteran is on alert
 
-        if (Veteren.veteren != null && target == Veteren.veteren && Veteren.alertActive)
+        if (Veteran.veteran != null && target == Veteran.veteran && Veteran.alertActive)
         {
             if (Medic.shielded != null && Medic.shielded == target)
             {
@@ -1198,7 +1201,7 @@ public static class Helpers
             }
 
             return MurderAttemptResult.ReverseKill;
-        } // Kill the killer if the Veteren is on alert
+        } // Kill the killer if the Veteran is on alert
 
         // Kill the Body Guard and the killer if the target is guarded
 
@@ -1228,7 +1231,7 @@ public static class Helpers
             Medic.shielded = null;
             return MurderAttemptResult.BlankKill;
         }
-        //法医盾被击中
+
         if (Medic.shielded != null && Medic.shielded == target)
         {
             var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.ShieldedMurderAttempt,
@@ -1261,9 +1264,17 @@ public static class Helpers
                 var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                     (byte)CustomRPC.TimeMasterRewindTime, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
+                CustomButton.resetKillButton(killer);
                 RPCProcedure.timeMasterRewindTime();
             }
 
+            return MurderAttemptResult.SuppressKill;
+        }
+
+        if (Survivor.survivor != null && Survivor.survivor.Contains(target) && Survivor.vestActive)
+        {
+            CustomButton.resetKillButton(killer, Survivor.vestResetCooldown);
+            SoundEffectsManager.play("fail");
             return MurderAttemptResult.SuppressKill;
         }
 

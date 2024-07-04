@@ -18,7 +18,7 @@ public static class Thief
     public static bool canUseVents;
     public static bool canKillSheriff;
     public static bool canKillDeputy;
-    public static bool canKillVeteren;
+    public static bool canKillVeteran;
     public static bool canStealWithGuess;
 
     public static void clearAndReload()
@@ -32,7 +32,7 @@ public static class Thief
         canUseVents = CustomOptionHolder.thiefCanUseVents.getBool();
         canKillSheriff = CustomOptionHolder.thiefCanKillSheriff.getBool();
         canKillDeputy = CustomOptionHolder.thiefCanKillDeputy.getBool();
-        canKillVeteren = CustomOptionHolder.thiefCanKillVeteren.getBool();
+        canKillVeteran = CustomOptionHolder.thiefCanKillVeteran.getBool();
         canStealWithGuess = CustomOptionHolder.thiefCanStealWithGuess.getBool();
     }
 
@@ -46,7 +46,7 @@ public static class Thief
             RoleInfo.swooper,
             canKillSheriff ? RoleInfo.sheriff : null,
             canKillDeputy ? RoleInfo.deputy : null,
-            canKillVeteren ? RoleInfo.veteren : null
+            canKillVeteran ? RoleInfo.veteran : null
         }.Contains(targetRole);
     }
 }

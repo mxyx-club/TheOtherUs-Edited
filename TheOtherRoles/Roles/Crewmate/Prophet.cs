@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -28,13 +29,7 @@ public static class Prophet
     public static Dictionary<PlayerControl, bool> examined = new Dictionary<PlayerControl, bool>();
     public static PlayerControl currentTarget;
 
-    private static Sprite buttonSprite;
-    public static Sprite getButtonSprite()
-    {
-        if (buttonSprite) return buttonSprite;
-        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.SeerButton.png", 115f);
-        return buttonSprite;
-    }
+    public static ResourceSprite buttonSprite = new("SeerButton.png");
     public static bool IsKiller(PlayerControl p)
     {
         if (p.Data.Role.IsImpostor || isKiller(p))
@@ -43,7 +38,7 @@ public static class Prophet
         }
         if (killCrewAsRed)
         {
-            if (p == Sheriff.sheriff || p == Deputy.deputy || p == Veteren.veteren)
+            if (p == Sheriff.sheriff || p == Deputy.deputy || p == Veteran.veteran)
             {
                 return true;
             }

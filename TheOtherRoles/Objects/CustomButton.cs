@@ -160,17 +160,15 @@ public class CustomButton
             return;
         }
 
-        var killerbutton = new Dictionary<PlayerControl, CustomButton>
-        {
-            { Vampire.vampire, HudManagerStartPatch.vampireKillButton },
-            { Sheriff.sheriff, HudManagerStartPatch.sheriffKillButton },
-            { Jackal.jackal, HudManagerStartPatch.jackalKillButton },
-            { Sidekick.sidekick, HudManagerStartPatch.sidekickKillButton },
-            { Swooper.swooper, HudManagerStartPatch.swooperKillButton },
-            { Werewolf.werewolf, HudManagerStartPatch.werewolfKillButton },
-            { Juggernaut.juggernaut, HudManagerStartPatch.juggernautKillButton },
-            { Thief.thief, HudManagerStartPatch.thiefKillButton },
-        };
+        var killerbutton = new Dictionary<PlayerControl, CustomButton>();
+        if (Vampire.vampire != null) killerbutton.Add(Vampire.vampire, HudManagerStartPatch.vampireKillButton);
+        if (Sheriff.sheriff != null) killerbutton.Add(Sheriff.sheriff, HudManagerStartPatch.sheriffKillButton);
+        if (Jackal.jackal != null) killerbutton.Add(Jackal.jackal, HudManagerStartPatch.jackalKillButton);
+        if (Sidekick.sidekick != null) killerbutton.Add(Sidekick.sidekick, HudManagerStartPatch.sidekickKillButton);
+        if (Swooper.swooper != null) killerbutton.Add(Swooper.swooper, HudManagerStartPatch.swooperKillButton);
+        if (Werewolf.werewolf != null) killerbutton.Add(Werewolf.werewolf, HudManagerStartPatch.werewolfKillButton);
+        if (Juggernaut.juggernaut != null) killerbutton.Add(Juggernaut.juggernaut, HudManagerStartPatch.juggernautKillButton);
+        if (Thief.thief != null) killerbutton.Add(Thief.thief, HudManagerStartPatch.thiefKillButton);
 
         if (killerbutton.TryGetValue(p, out var button))
         {
