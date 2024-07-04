@@ -140,35 +140,35 @@ Even more roles are coming soon.
 
 ## Roles
 
-|   Impostor   |  Neutral   |      Crewmate       |   Modifier   |
-| :----------: | :--------: | :-----------------: | :----------: |
-|  Morphling   |  Amnisiac  |      Vigilante      |    Lover     |
-|    Bomber    |   Jester   |        Mayor        |   Assassin   |
-|   Poucher    |  Vulture   |     Prosecutor      |  Disperser   |
-|    Mimic     |   Lawyer   |     Portalmaker     |  Specoality  |
-| Camouflager  | Prosecutor |      Engineer       | lastImpostor |
-|    Miner     |  Pursuer   | PrivateInvestigator |    Torch     |
-|    Eraser    |   Jackal   |       Sheriff       |  Sunglasses  |
-|   Vampire    |  Sidekick  |       Deputy        |     Bait     |
-|   Cleaner    |  Swooper   |      BodyGuard      |  Aftermath   |
-|  Undertaker  |  Arsonist  |       Lighter       |    Bloody    |
-|   Escapist   |  Werewolf  |       Jumper        | AntiTeleport |
-|   Warlock    |   Thief    |      Detective      |  Tiebreaker  |
-|  Trickster   | Juggernaut |     TimeMaster      |    Flash     |
-| BountyHunter | Doomsayer  |       Veteran       | Multitasker  |
-|   Cultist    |   Akujo    |        Medic        |    Giant     |
-|  Terrorist   |            |       Swapper       |     Mini     |
-| Blackmailer  |            |        Seer         |     Vip      |
-|    Witch     |            |       Hacker        | Indomitable  |
-|    Ninja     |            |       Tracker       |    Slueth    |
-|    Yo-Yo     |            |       Snitch        |    Cursed    |
-| EvilTrapper  |            |         Spy         |    Invert    |
-|              |            |    SecurityGuard    |    Blind     |
-|              |            |       Medium        |   Watcher    |
-|              |            |       Trapper       |    Radar     |
-|              |            |       Prophet       | ButtonBarry  |
-|              |            |                     |  Chameleon   |
-|              |            |                     |   Shifter    |
+|   Impostor   |    Neutral     |      Crewmate       |   Modifier   |
+| :----------: | :------------: | :-----------------: | :----------: |
+|  Morphling   |    Survivor    |      Vigilante      |    Lover     |
+|    Bomber    |    Amnisiac    |        Mayor        |   Assassin   |
+|   Poucher    |     Jester     |     Prosecutor      |  Disperser   |
+|    Mimic     |    Vulture     |     Portalmaker     |  Specoality  |
+| Camouflager  |     Lawyer     |      Engineer       | lastImpostor |
+|    Miner     |  Executioner   | PrivateInvestigator |    Torch     |
+|    Eraser    |    Pursuer     |       Sheriff       |  Sunglasses  |
+|   Vampire    |     Jackal     |       Deputy        |     Bait     |
+|   Cleaner    |    Sidekick    |      BodyGuard      |  Aftermath   |
+|  Undertaker  | Pavlov's owner |       Lighter       |    Bloody    |
+|   Escapist   | Pavlov's dogs  |       Jumper        | AntiTeleport |
+|   Warlock    |    Swooper     |      Detective      |  Tiebreaker  |
+|  Trickster   |    Arsonist    |     TimeMaster      |    Flash     |
+| BountyHunter |    Werewolf    |       Veteran       | Multitasker  |
+|   Cultist    |     Thief      |        Medic        |    Giant     |
+|  Terrorist   |   Juggernaut   |       Swapper       |     Mini     |
+| Blackmailer  |   Doomsayer    |        Seer         |     Vip      |
+|    Witch     |     Akujo      |       Hacker        | Indomitable  |
+|    Ninja     |                |       Tracker       |    Slueth    |
+|    Yo-Yo     |                |       Snitch        |    Cursed    |
+| EvilTrapper  |                |         Spy         |    Invert    |
+|              |                |    SecurityGuard    |    Blind     |
+|              |                |       Medium        |   Watcher    |
+|              |                |       Trapper       |    Radar     |
+|              |                |       Prophet       | ButtonBarry  |
+|              |                |                     |  Chameleon   |
+|              |                |                     |   Shifter    |
 
 ## Credits & Resources
 <p align="center">
