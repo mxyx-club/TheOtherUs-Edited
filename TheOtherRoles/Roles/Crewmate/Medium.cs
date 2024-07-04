@@ -161,9 +161,6 @@ public static class Medium
                     count = alivePlayersList.Count(pc => !isKiller(pc));
                     condition = "名玩家" + (count == 1 ? "" : "") + "" + (count == 1 ? "是" : "是") + "非击杀型中立";
                     break;
-                case 3:
-                    //count = alivePlayersList.Where(pc =>
-                    break;
             }
 
             msg += $"\n你问我的时候,有{count} " + condition + (count == 1 ? "" : "") + " 还活着";

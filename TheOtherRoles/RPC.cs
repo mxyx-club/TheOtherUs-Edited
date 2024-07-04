@@ -7,6 +7,7 @@ using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
 using InnerNet;
+using MS.Internal.Xml.XPath;
 using PowerTools;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
@@ -1619,7 +1620,7 @@ public static class RPCProcedure
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             morphlingMorph(player.PlayerId);
             Morphling.sampledTarget = null;
-            morphlingButton.Timer = morphlingButton.MaxTimer + Morphling.duration;
+            morphlingButton.Timer = Morphling.duration;
             SoundEffectsManager.play("morphlingMorph");
         }
         else if (Witch.witch == killer)
@@ -2105,8 +2106,6 @@ public static class RPCProcedure
     /// <summary>
     /// 抹除目标玩家的职业
     /// </summary>
-    /// <param name="playerId">玩家ID</param>
-    /// <param name="ignoreModifier">不抹除附加能力</param>
     public static void erasePlayerRoles(byte playerId, bool ignoreModifier = true)
     {
         var player = playerById(playerId);
@@ -2180,13 +2179,13 @@ public static class RPCProcedure
                 Jackal.clearAndReload();
         }
         if (player == Pavlovsdogs.pavlovsowner) Pavlovsdogs.pavlovsowner = null;
-        if (player == Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId)) Pavlovsdogs.clear(player.PlayerId);
+        if (Pavlovsdogs.pavlovsdogs.Contains(player)) Pavlovsdogs.pavlovsdogs.Remove(player);
         if (player == Sidekick.sidekick) Sidekick.clearAndReload();
         if (player == BountyHunter.bountyHunter) BountyHunter.clearAndReload();
         if (player == Vulture.vulture) Vulture.clearAndReload();
         if (player == Executioner.executioner) Executioner.clearAndReload();
         if (player == Lawyer.lawyer) Lawyer.clearAndReload();
-        if (Pursuer.pursuer.Contains(player)) Pursuer.clearAndReload();
+        if (Pursuer.pursuer.Contains(player)) Pursuer.pursuer.Remove(player);
         if (player == Thief.thief) Thief.clearAndReload();
         if (player == Juggernaut.juggernaut) Juggernaut.clearAndReload();
         if (player == Doomsayer.doomsayer) Doomsayer.clearAndReload();
@@ -3454,15 +3453,26 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.VersionHandshake:
-                var versionOwnerId = reader.ReadPackedInt32();
-                var major = reader.ReadInt32();
-                var minor = reader.ReadInt32();
-                var patch = reader.ReadInt32();
-                var timer = reader.ReadSingle();
+                byte major = reader.ReadByte();
+                byte minor = reader.ReadByte();
+                byte patch = reader.ReadByte();
+                float timer = reader.ReadSingle();
                 if (!AmongUsClient.Instance.AmHost && timer >= 0f) GameStartManagerPatch.timer = timer;
-                var revision = reader.ReadByte();
-                ;
-                HandshakeHelper.versionHandshake(major, minor, patch, revision == 0xFF ? -1 : revision, versionOwnerId);
+                int versionOwnerId = reader.ReadPackedInt32();
+                byte revision = 0xFF;
+                Guid guid;
+                if (reader.Length - reader.Position >= 17)
+                { // enough bytes left to read
+                    revision = reader.ReadByte();
+                    // GUID
+                    byte[] gbytes = reader.ReadBytes(16);
+                    guid = new Guid(gbytes);
+                }
+                else
+                {
+                    guid = new Guid(new byte[16]);
+                }
+                HandshakeHelper.versionHandshake(major, minor, patch, revision == 0xFF ? -1 : revision, guid, versionOwnerId);
                 break;
 
             case CustomRPC.UseUncheckedVent:
@@ -3500,7 +3510,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.VersionHandshakeEx:
-                HandshakeHelper.VersionHandshakeEx(reader);
+                //HandshakeHelper.VersionHandshakeEx(reader);
                 break;
 
             // Role functionality

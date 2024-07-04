@@ -342,7 +342,7 @@ public class CustomOptionHolder
     public static CustomOption lawyerCanCallEmergency;
 
     public static CustomOption pursuerSpawnRate;
-    public static CustomOption pursuerCooldown;
+    public static CustomOption pursuerBlanksCooldown;
     public static CustomOption pursuerBlanksNumber;
 
     public static CustomOption executionerSpawnRate;
@@ -1012,7 +1012,7 @@ public class CustomOptionHolder
         //executionerOnTargetDead = Create(20193, Types.Neutral, "目标死亡后变为", [cs(Pursuer.color, "Pursuer"), cs(Jester.color, "Jester"), cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
 
         pursuerSpawnRate = Create(20270, Types.Neutral, cs(Pursuer.color, "Pursuer"), rates, null, true);
-        pursuerCooldown = Create(20272, Types.Neutral, "pursuerCooldown", 20f, 5f, 60f, 2.5f, pursuerSpawnRate);
+        pursuerBlanksCooldown = Create(20272, Types.Neutral, "pursuerBlanksCooldown", 20f, 5f, 60f, 2.5f, pursuerSpawnRate);
         pursuerBlanksNumber = Create(20273, Types.Neutral, "pursuerBlanksNumber", 6f, 1f, 20f, 1f, pursuerSpawnRate);
 
         doomsayerSpawnRate = Create(20221, Types.Neutral, cs(Doomsayer.color, "Doomsayer"), rates, null, true);

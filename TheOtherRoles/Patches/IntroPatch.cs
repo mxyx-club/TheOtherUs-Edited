@@ -47,7 +47,6 @@ internal class IntroCutsceneOnDestroyPatch
 
                 //游戏开始时重置cd
                 CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(MapOption.ButtonCooldown);
-                CustomButton.ResetAllCooldowns(MapOption.ButtonCooldown + 0.5f, true);
 
                 if (CachedPlayer.LocalPlayer.PlayerControl == Arsonist.arsonist && p != Arsonist.arsonist)
                 {

@@ -6,7 +6,7 @@ namespace TheOtherRoles.Roles.Neutral;
 
 public static class Pursuer
 {
-    public static List<PlayerControl> pursuer;
+    public static List<PlayerControl> pursuer = new();
     public static PlayerControl target;
     public static Color color = new Color32(145, 164, 30, byte.MaxValue);
     public static List<PlayerControl> blankedList = [];
@@ -27,7 +27,7 @@ public static class Pursuer
         blanks = 0;
         notAckedExiled = false;
 
-        cooldown = CustomOptionHolder.pursuerCooldown.getFloat();
+        cooldown = CustomOptionHolder.pursuerBlanksCooldown.getFloat();
         blanksNumber = Mathf.RoundToInt(CustomOptionHolder.pursuerBlanksNumber.getFloat());
     }
 }

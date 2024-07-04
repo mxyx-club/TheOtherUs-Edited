@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -69,7 +70,7 @@ public class CustomButton
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
 
-        Timer = 8.5f;
+        Timer = MapOption.ButtonCooldown + 8.5f;
 
         setActive(false);
     }
@@ -129,24 +130,15 @@ public class CustomButton
             }
     }
 
-    public static void ResetAllCooldowns(float Time = 0, bool Reset = false)
+    public static void ResetAllCooldowns(float Time = 0)
     {
         foreach (var t in buttons)
         {
             try
             {
-                if (t == HudManagerStartPatch.bomberGiveButton ||
-                    t == HudManagerStartPatch.zoomOutButton) continue;
-                if (Reset)
-                {
-                    t.Timer = Time;
-                }
-                else
-                {
-                    t.Timer = t.MaxTimer;
-                    t.DeputyTimer = t.MaxTimer;
-                    t.Update();
-                }
+                t.Timer = t.MaxTimer;
+                t.DeputyTimer = t.MaxTimer;
+                t.Update();
             }
             catch (NullReferenceException)
             {
@@ -154,6 +146,45 @@ public class CustomButton
             }
         }
     }
+
+    /// <summary>
+    /// ÷ÿ÷√ÕÊº“ª˜…±∞¥≈•cd
+    /// </summary>
+    public static void resetKillButton(PlayerControl p, float time = 0f)
+    {
+        if (p == null) return;
+        if (p.Data.Role.IsImpostor && p != Vampire.vampire)
+        {
+            if (time == 0f) time = MapOption.KillCooddown;
+            p.SetKillTimer(time);
+            return;
+        }
+
+        var killerbutton = new Dictionary<PlayerControl, CustomButton>
+        {
+            { Vampire.vampire, HudManagerStartPatch.vampireKillButton },
+            { Sheriff.sheriff, HudManagerStartPatch.sheriffKillButton },
+            { Jackal.jackal, HudManagerStartPatch.jackalKillButton },
+            { Sidekick.sidekick, HudManagerStartPatch.sidekickKillButton },
+            { Swooper.swooper, HudManagerStartPatch.swooperKillButton },
+            { Werewolf.werewolf, HudManagerStartPatch.werewolfKillButton },
+            { Juggernaut.juggernaut, HudManagerStartPatch.juggernautKillButton },
+            { Thief.thief, HudManagerStartPatch.thiefKillButton },
+        };
+
+        if (killerbutton.TryGetValue(p, out var button))
+        {
+            if (time == 0f) time = button.MaxTimer;
+            button.Timer = time;
+        }
+        else if (Pavlovsdogs.pavlovsdogs.Contains(p))
+        {
+            button = HudManagerStartPatch.pavlovsdogsKillButton;
+            if (time == 0f) time = button.MaxTimer;
+            button.Timer = time;
+        }
+    }
+
 
     public void setActive(bool isActive)
     {

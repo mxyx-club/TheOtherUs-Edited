@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Hazel;
 using TheOtherRoles.CustomGameModes;
@@ -10,6 +11,7 @@ using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.Objects.CustomButton;
+using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -4011,7 +4013,7 @@ internal static class HudManagerStartPatch
             },
             () => { return true; },
             () => { },
-            loadSpriteFromResources("TheOtherRoles.Resources.MinusButton.png", 150f), // Invisible button!
+            loadSpriteFromResources("TheOtherRoles.Resources.MinusButton.png", 180f), // Invisible button!
             new Vector3(0.4f, 2.8f, 0),
             __instance,
             KeyCode.KeypadPlus

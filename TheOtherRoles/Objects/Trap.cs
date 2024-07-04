@@ -187,7 +187,7 @@ public class KillTrap
 
     private static byte getAvailableId()
     {
-        byte ret = maxId;
+        var ret = maxId;
         maxId++;
         return ret;
     }
@@ -273,7 +273,7 @@ public class KillTrap
         // ターゲットを動けなくする
         target.NetTransform.Halt();
 
-        bool moveableFlag = false;
+        var moveableFlag = false;
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(EvilTrapper.killTimer, new Action<float>((p) =>
         {
             try
@@ -396,11 +396,12 @@ public class KillTrap
     {
         var trap = traps[trapId];
         var audioSource = trap.audioSource;
+
         audioSource.Stop();
         audioSource.maxDistance = EvilTrapper.maxDistance;
         audioSource.PlayOneShot(kill);
-        if (target == Medic.currentTarget || (target == Veteren.veteren && Veteren.alertActive) || target == BodyGuard.currentTarget
-         || (MapOption.shieldFirstKill && MapOption.firstKillPlayer == target) || target == Mini.mini)
+        if (target == Medic.currentTarget || target == Veteren.veteren && Veteren.alertActive || target == BodyGuard.currentTarget
+         || MapOption.shieldFirstKill && MapOption.firstKillPlayer == target || target == Mini.mini)
         {
             clearAllTraps();
             checkMuderAttempt(EvilTrapper.evilTrapper, target);

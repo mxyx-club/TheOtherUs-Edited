@@ -36,12 +36,6 @@ public class Pavlovsdogs
     public static bool ownerIsDead => pavlovsowner == null || pavlovsowner.Data.Disconnected || pavlovsowner.Data.IsDead;
     public static bool loser => pavlovsdogs.All(p => p.Data.IsDead || p.Data.Disconnected) && createDogNum == 0;
 
-    public static void clear(byte playerId)
-    {
-        foreach (var item in pavlovsdogs.Where(item => item.PlayerId == playerId && pavlovsdogs != null))
-            pavlovsdogs = null;
-    }
-
     public static void clearAndReload()
     {
         if (arrow != null)

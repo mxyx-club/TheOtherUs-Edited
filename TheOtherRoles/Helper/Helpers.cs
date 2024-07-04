@@ -66,7 +66,7 @@ public static class Helpers
     public static Sprite teamLoverChat;
 
     public static bool zoomOutStatus;
-    //new
+
     public static bool InGame => AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started;
     public static bool IsCountDown => GameStartManager.InstanceExists && GameStartManager.Instance.startState == GameStartManager.StartingStates.Countdown;
     public static bool IsMeeting => InGame && MeetingHud.Instance;
@@ -84,14 +84,15 @@ public static class Helpers
                player == Jackal.jackal ||
                player == Sidekick.sidekick ||
                player == Pavlovsdogs.pavlovsowner ||
-               player == Pavlovsdogs.pavlovsdogs.Any(p => p == player) ||
                player == Doomsayer.doomsayer ||
                player == Akujo.akujo ||
                player == Swooper.swooper ||
                player == Lawyer.lawyer ||
                player == Executioner.executioner ||
-               player == Pursuer.pursuer.Any(p => p == player) ||
-               player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player);
+               player == Vulture.vulture ||
+               Pursuer.pursuer.Contains(player) ||
+               Pavlovsdogs.pavlovsdogs.Contains(player) ||
+               Jackal.formerJackals.Contains(player);
     }
 
     /// <summary>
@@ -1236,14 +1237,13 @@ public static class Helpers
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
             SoundEffectsManager.play("fail");
-            killer.SetKillTimer(GameManager.Instance.LogicOptions.GetKillCooldown());
-
+            CustomButton.resetKillButton(killer);
             return MurderAttemptResult.SuppressKill;
         }
 
         if (Aftermath.aftermath != null && Aftermath.aftermath == target)
         {
-            new LateTask(() =>
+            _ = new LateTask(() =>
             {
                 RPCProcedure.aftermathDead(target.PlayerId, killer.PlayerId);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !MXYX_CLUB
+using System;
 using System.IO;
 using System.Linq;
 using PowerTools;
@@ -7,7 +8,6 @@ using UnityEngine;
 
 namespace TheOtherRoles.Modules.CustomHats.Patches;
 
-#if !MXYX_CLUB
 
 [HarmonyPatch(typeof(HatParent))]
 internal static class HatParentPatches

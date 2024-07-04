@@ -724,6 +724,7 @@ public static class PlayerControlFixedUpdatePatch
             collider.radius *= 0.85f;
         }
     }
+
     public static void updatePlayerInfo()
     {
         var colorBlindTextMeetingInitialLocalPos = new Vector3(0.3384f, -0.16666f, -0.01f);
@@ -744,20 +745,20 @@ public static class PlayerControlFixedUpdatePatch
                 p.cosmetics.colorBlindText.gameObject.active)
                 p.cosmetics.colorBlindText.transform.localPosition = new Vector3(0, -1f, 0f);
 
-            p.cosmetics.nameText.transform.parent
-                .SetLocalZ(-0.0001f); // This moves both the name AND the colorblindtext behind objects (if the player is behind the object), like the rock on polus
+            // This moves both the name AND the colorblindtext behind objects (if the player is behind the object), like the rock on polus
+            p.cosmetics.nameText.transform.parent.SetLocalZ(-0.0001f);
 
             //Snitch See Roles
             bool snitchFlag = false;
             if (Snitch.snitch != null && Snitch.seeInMeeting && Snitch.canSeeRoles && !Snitch.snitch.Data.IsDead)
             {
                 var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
-                int numberOfTasks = playerTotal - playerCompleted;
-                bool completedSnitch = CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch && numberOfTasks == 0;
-                bool forImpTeam = p.Data.Role.IsImpostor;
-                bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(p);
-                bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(p);
-                bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(p);
+                var numberOfTasks = playerTotal - playerCompleted;
+                var completedSnitch = CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch && numberOfTasks == 0;
+                var forImpTeam = p.Data.Role.IsImpostor;
+                var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(p);
+                var forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(p);
+                var forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(p);
                 snitchFlag = completedSnitch && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam);
             }
 
@@ -774,7 +775,7 @@ public static class PlayerControlFixedUpdatePatch
                  Poucher.killed.Any(x => x.PlayerId == p.PlayerId)))
             {
                 var playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
-                var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
+                var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
                 if (playerInfo == null)
                 {
                     playerInfo = Object.Instantiate(p.cosmetics.nameText, p.cosmetics.nameText.transform.parent);
@@ -786,6 +787,7 @@ public static class PlayerControlFixedUpdatePatch
 
                 var meetingInfoTransform = playerVoteArea?.NameText.transform.parent.FindChild("Info");
                 var meetingInfo = meetingInfoTransform?.GetComponent<TextMeshPro>();
+
                 if (meetingInfo == null && playerVoteArea != null)
                 {
                     meetingInfo = Object.Instantiate(playerVoteArea.NameText, playerVoteArea.NameText.transform.parent);
@@ -1133,7 +1135,7 @@ public static class PlayerControlFixedUpdatePatch
                 Vulture.localArrows[index].arrow.SetActive(true);
             }
 
-            Vulture.localArrows[index]?.Update(db.transform.position);
+            if (Vulture.localArrows[index] != null) Vulture.localArrows[index].Update(db.transform.position);
             index++;
         }
     }

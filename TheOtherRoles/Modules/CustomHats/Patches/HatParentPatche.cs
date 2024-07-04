@@ -1,6 +1,12 @@
-﻿namespace TheOtherRoles.Modules.CustomHats.Patches;
+﻿#if MXYX_CLUB
+using System;
+using System.IO;
+using System.Linq;
+using PowerTools;
+using UnityEngine;
 
-#if MXYX_CLUB
+namespace TheOtherRoles.Modules.CustomHats.Patches;
+
 [HarmonyPatch(typeof(HatParent))]
 internal static class HatParentPatches
 {
