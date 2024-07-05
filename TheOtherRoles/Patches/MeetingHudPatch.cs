@@ -224,8 +224,8 @@ internal class MeetingHudPatch
             var guesserRole = Guesser.niceGuesser != null && CachedPlayer.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId
                     ? RoleId.NiceGuesser
                     : RoleId.EvilGuesser;
-            if (Doomsayer.doomsayer != null && CachedPlayer.LocalPlayer.PlayerId == Doomsayer.doomsayer.PlayerId) guesserRole = RoleId.Doomsayer;
 
+            if (Doomsayer.doomsayer != null && CachedPlayer.LocalPlayer.PlayerId == Doomsayer.doomsayer.PlayerId) guesserRole = RoleId.Doomsayer;
 
             switch (guesserRole)
             {
@@ -233,7 +233,9 @@ internal class MeetingHudPatch
                 case RoleId.Doomsayer when !Doomsayer.canGuessNeutral && roleInfo.isNeutral:
                     continue;
             }
+
             if (roleInfo.roleId == RoleId.Poucher && Poucher.spawnModifier) continue;
+
             if (allowModGuess && roleInfo.isModifier)
             {
                 // Allow Guessing the following mods: Bait, TieBreaker, Bloody, and VIP
@@ -262,7 +264,6 @@ internal class MeetingHudPatch
                  roleInfo.roleId == RoleId.Spy && !HandleGuesser.isGuesserGm) ||
                 (!Guesser.evilGuesserCanGuessCrewmate && guesserRole == RoleId.EvilGuesser &&
                  roleInfo.roleId == RoleId.Crewmate)) continue; // Not guessable roles & modifier
-
 
             switch (HandleGuesser.isGuesserGm)
             {

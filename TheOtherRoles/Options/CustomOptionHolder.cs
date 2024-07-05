@@ -1029,8 +1029,8 @@ public class CustomOptionHolder
         lawyerTargetCanBeJester = Create(20186, Types.Neutral, "lawyerTargetCanBeJester", false, lawyerSpawnRate);
 
         //pursuerSpawnRate = Create(20270, Types.Neutral, cs(Pursuer.color, "Pursuer"), rates, null, true);
-        pursuerBlanksCooldown = Create(20272, Types.Neutral, "pursuerBlanksCooldown", 20f, 5f, 60f, 2.5f);
-        pursuerBlanksNumber = Create(20273, Types.Neutral, "pursuerBlanksNumber", 6f, 1f, 20f, 1f);
+        pursuerBlanksCooldown = Create(20272, Types.Neutral, "pursuerBlanksCooldown", 20f, 5f, 60f, 2.5f, lawyerSpawnRate);
+        pursuerBlanksNumber = Create(20273, Types.Neutral, "pursuerBlanksNumber", 6f, 1f, 20f, 1f, lawyerSpawnRate);
 
         executionerSpawnRate = Create(20190, Types.Neutral, cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(20191, Types.Neutral, "executionerCanCallEmergency", true, executionerSpawnRate);
@@ -1080,7 +1080,8 @@ public class CustomOptionHolder
 
         sheriffSpawnRate = Create(30141, Types.Crewmate, cs(Sheriff.color, "Sheriff"), rates, null, true);
         sheriffCooldown = Create(30142, Types.Crewmate, "sheriffCooldown", 30f, 10f, 60f, 2.5f, sheriffSpawnRate);
-        sheriffMisfireKills = Create(30143, Types.Crewmate, "sheriffMisfireKills", ["sheriffMisfireKills1", "sheriffMisfireKills2", "sheriffMisfireKills3"], sheriffSpawnRate);
+        sheriffMisfireKills = Create(30143, Types.Crewmate, "sheriffMisfireKills",
+            ["sheriffMisfireKills1", "sheriffMisfireKills2", "sheriffMisfireKills3"], sheriffSpawnRate);
         sheriffCanKillNeutrals = Create(30150, Types.Crewmate, "sheriffCanKillNeutrals", false, sheriffSpawnRate);
         sheriffCanKillAmnesiac = Create(30153, Types.Crewmate,
             string.Format("sheriffCanKill".Translate(), cs(Amnisiac.color, "Amnisiac".Translate())), false, sheriffCanKillNeutrals);
@@ -1103,7 +1104,8 @@ public class CustomOptionHolder
         deputyNumberOfHandcuffs = Create(30171, Types.Crewmate, "deputyNumberOfHandcuffs", 5f, 1f, 10f, 1f, deputySpawnRate);
         deputyHandcuffCooldown = Create(30172, Types.Crewmate, "deputyHandcuffCooldown", 25f, 10f, 60f, 2.5f, deputySpawnRate);
         deputyHandcuffDuration = Create(30173, Types.Crewmate, "deputyHandcuffDuration", 12.5f, 5f, 60f, 2.5f, deputySpawnRate);
-        deputyGetsPromoted = Create(30175, Types.Crewmate, "deputyGetsPromoted", ["optionOff", "deputyGetsPromoted2", "deputyGetsPromoted3"], deputySpawnRate);
+        deputyGetsPromoted = Create(30175, Types.Crewmate, "deputyGetsPromoted",
+            ["optionOff", "deputyGetsPromoted2", "deputyGetsPromoted3"], deputySpawnRate);
         deputyKnowsSheriff = Create(30174, Types.Crewmate, "deputyKnowsSheriff", true, deputySpawnRate);
         deputyKeepsHandcuffs = Create(30176, Types.Crewmate, "deputyKeepsHandcuffs", true, deputyGetsPromoted);
 
@@ -1113,7 +1115,8 @@ public class CustomOptionHolder
         mayorMeetingButton = Create(30113, Types.Crewmate, "mayorMeetingButton", true, mayorSpawnRate);
         mayorMaxRemoteMeetings = Create(30114, Types.Crewmate, "mayorMaxRemoteMeetings", 1f, 1f, 5f, 1f, mayorMeetingButton);
         mayorSabotageRemoteMeetings = Create(30115, Types.Crewmate, "mayorSabotageRemoteMeetings", false, mayorMeetingButton);
-        mayorChooseSingleVote = Create(30116, Types.Crewmate, "mayorChooseSingleVote", ["optionOff", "mayorChooseSingleVote2", "mayorChooseSingleVote3"], mayorSpawnRate);
+        mayorChooseSingleVote = Create(30116, Types.Crewmate, "mayorChooseSingleVote",
+            ["optionOff", "mayorChooseSingleVote2", "mayorChooseSingleVote3"], mayorSpawnRate);
 
         prosecutorSpawnRate = Create(30370, Types.Crewmate, cs(Prosecutor.color, "Prosecutor"), rates, null, true);
         prosecutorDiesOnIncorrectPros = Create(30371, Types.Crewmate, "prosecutorDiesOnIncorrectPros", true, prosecutorSpawnRate);

@@ -236,6 +236,7 @@ public enum CustomRPC
     SetInvisibleGen,
     SetSwoop,
     SetJackalSwoop,
+    JackalCanSwooper,
 
     TrapperKill,
     PlaceTrap,
@@ -2085,6 +2086,11 @@ public static class RPCProcedure
         Jackal.wasImpostor = Sidekick.wasImpostor;
         Sidekick.clearAndReload();
         return;
+    }
+
+    public static void jackalCanSwooper(bool chance)
+    {
+        Jackal.canSwoop = chance;
     }
 
     public static void pavlovsCreateDog(byte targetId)
@@ -4027,6 +4033,10 @@ internal class RPCHandlerPatch
 
             case CustomRPC.SurvivorVestActive:
                 RPCProcedure.survivorVestActive();
+                break;
+                
+            case CustomRPC.JackalCanSwooper:
+                RPCProcedure.jackalCanSwooper(reader.ReadByte() == byte.MaxValue);
                 break;
 
             case CustomRPC.HostEndGame:

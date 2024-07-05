@@ -61,6 +61,5 @@ public class Jackal
         hasImpostorVision = CustomOptionHolder.jackalAndSidekickHaveImpostorVision.getBool();
         wasTeamRed = wasImpostor = wasSpy = false;
         chanceSwoop = CustomOptionHolder.jackalChanceSwoop.getSelection() / 10f;
-        canSwoop = rnd.NextDouble() < chanceSwoop;
     }
 }

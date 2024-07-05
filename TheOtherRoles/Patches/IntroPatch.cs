@@ -8,6 +8,7 @@ using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
@@ -127,6 +128,16 @@ internal class IntroCutsceneOnDestroyPatch
         }
 
         if (CustomOptionHolder.randomGameStartPosition.getBool()) MapData.RandomSpawnPlayers();
+
+        if (AmongUsClient.Instance.AmHost)
+        {
+            var chance = Jackal.canSwoop = rnd.NextDouble() < Jackal.chanceSwoop;
+            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        (byte)CustomRPC.JackalCanSwooper, SendOption.Reliable);
+            writer.Write(chance ? byte.MaxValue : 0);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.jackalCanSwooper(chance);
+        }
 
         // First kill
         if (AmongUsClient.Instance.AmHost && MapOption.shieldFirstKill && MapOption.firstKillName != "" &&

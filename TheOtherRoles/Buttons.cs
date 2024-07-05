@@ -332,8 +332,8 @@ internal static class HudManagerStartPatch
                 try
                 {
                     if (buttons[i].HasButton()) // For each custombutton the player has
-                        addReplacementHandcuffedButton(
-                            buttons[i]); // The new buttons are the only non-handcuffed buttons now!
+                        addReplacementHandcuffedButton(buttons[i]);
+                    // The new buttons are the only non-handcuffed buttons now!
                     buttons[i].isHandcuffed = true;
                 }
                 catch (NullReferenceException)
@@ -3956,7 +3956,7 @@ internal static class HudManagerStartPatch
                 if (Yoyo.markedLocation == null)
                 {
                     Message($"marked location is null in button press");
-                    MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoMarkLocation, SendOption.Reliable);
+                    var writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoMarkLocation, SendOption.Reliable);
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
                     RPCProcedure.yoyoMarkLocation(buff);
@@ -3976,7 +3976,7 @@ internal static class HudManagerStartPatch
                     {
                         SubmergedCompatibility.ChangeFloor(exit.y > -7);
                     }
-                    MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
+                    var writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
                     writer.Write(byte.MaxValue);
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
@@ -4034,7 +4034,8 @@ internal static class HudManagerStartPatch
                 {
                     SubmergedCompatibility.ChangeFloor(exit.y > -7);
                 }
-                MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
+                var writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, 
+                    (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
                 writer.Write((byte)0);
                 writer.WriteBytesAndSize(buff);
                 writer.EndMessage();
