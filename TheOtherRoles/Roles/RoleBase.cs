@@ -3,15 +3,11 @@ using System;
 namespace TheOtherRoles.Roles;
 
 
-public abstract class RoleBase : IDisposable
+public abstract class RoleBase
 {
     public virtual bool CanAssign()
     {
         return true;
-    }
-
-    public virtual void Dispose()
-    {
     }
 
     public virtual void ClearAndReload()
@@ -25,16 +21,4 @@ public abstract class RoleBase : IDisposable
     public virtual void ResetCustomButton()
     {
     }
-
-    public abstract RoleInfo RoleInfo { get; protected set; }
-    public abstract Type RoleType { get; protected set; }
-    //public List<RoleControllerBase> Controllers { get; protected set; } = [];
-
-#nullable enable
-    public Type? PathType { get; protected set; }
-}
-
-public interface Invisable
-{
-    public bool isInvisable { get; set; }
 }

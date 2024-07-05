@@ -248,7 +248,6 @@ public class RoleInfo
     public RoleTeam RoleTeams { get; set; }
     public CustomRoleType RoleType { get; set; } = CustomRoleType.Main;
     public Func<RoleBase> GetRole { get; set; }
-    public Func<PlayerControl, RoleControllerBase> CreateRoleController { get; set; }
     public Type RoleClassType { get; set; }
 
     private static string ReadmePage = "";

@@ -1458,13 +1458,15 @@ public class CustomOptionHolder
             blockedRolePairings.Add((byte)RoleId.Jackal, [(byte)RoleId.Pavlovsowner]);
             blockedRolePairings.Add((byte)RoleId.Pavlovsowner, [(byte)RoleId.Jackal]);
         }
+        if (Executioner.promotesToLawyer)
+        {
+            blockedRolePairings.Add((byte)RoleId.Executioner, [(byte)RoleId.Lawyer]);
+            blockedRolePairings.Add((byte)RoleId.Lawyer, [(byte)RoleId.Executioner]);
+        }
 
         blockedRolePairings.Add((byte)RoleId.Vulture, [(byte)RoleId.Cleaner]);
         blockedRolePairings.Add((byte)RoleId.Cleaner, [(byte)RoleId.Vulture]);
-        /*
-        blockedRolePairings.Add((byte)RoleId.Executioner, [(byte)RoleId.Lawyer]);
-        blockedRolePairings.Add((byte)RoleId.Lawyer, [(byte)RoleId.Executioner]);
-        */
+
         blockedRolePairings.Add((byte)RoleId.Ninja, [(byte)RoleId.Swooper]);
         blockedRolePairings.Add((byte)RoleId.Swooper, [(byte)RoleId.Ninja]);
     }

@@ -2042,6 +2042,7 @@ public static class RPCProcedure
             if (Lawyer.lawyer == null && Executioner.promotesToLawyer)
             {
                 Lawyer.lawyer = Executioner.executioner;
+                Lawyer.target = Executioner.target;
                 Executioner.clearAndReload();
             }
             else if (!Executioner.promotesToLawyer)
@@ -2102,6 +2103,7 @@ public static class RPCProcedure
             if (Lawyer.lawyer == null && Executioner.promotesToLawyer)
             {
                 Lawyer.lawyer = Executioner.executioner;
+                Lawyer.target = Executioner.target;
                 Executioner.clearAndReload();
             }
             else if (!Executioner.promotesToLawyer)

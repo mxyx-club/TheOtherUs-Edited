@@ -297,18 +297,16 @@ public static class Helpers
                 player == Jackal.jackal ||
                 player == Sidekick.sidekick ||
                 player == Pavlovsdogs.pavlovsowner ||
-                Pavlovsdogs.pavlovsdogs.Any(p => p == player)
+                Pavlovsdogs.pavlovsdogs.Contains(player)
                 );
     }
 
     public static bool isEvil(PlayerControl player)
     {
-        /*return isNeutral(player) &&
+        return isNeutral(player) &&
                 player != Amnisiac.amnisiac &&
-                player != Pursuer.pursuer.Any();*/
-
-        var roleInfo = RoleInfo.getRoleInfoForPlayer(player).FirstOrDefault(info => !info.isModifier);
-        return roleInfo!.roleId is not RoleId.Amnisiac and not RoleId.Pursuer and not RoleId.Survivor;
+                Pursuer.pursuer.Contains(player) &&
+                Survivor.survivor.Contains(player);
     }
 
     public static bool ShowButtons =>
@@ -395,30 +393,15 @@ public static class Helpers
         return SabatageTypes.None;
     }
 
-    public static bool isLightsActive()
-    {
-        return getActiveSabo() == SabatageTypes.Lights;
-    }
+    public static bool isLightsActive() => getActiveSabo() == SabatageTypes.Lights;
 
-    public static bool isCommsActive()
-    {
-        return getActiveSabo() == SabatageTypes.Comms;
-    }
+    public static bool isCommsActive() => getActiveSabo() == SabatageTypes.Comms;
 
-    public static bool isCamoComms()
-    {
-        return isCommsActive() && MapOption.camoComms;
-    }
+    public static bool isCamoComms() => isCommsActive() && MapOption.camoComms;
 
-    public static bool isActiveCamoComms()
-    {
-        return isCamoComms() && Camouflager.camoComms;
-    }
+    public static bool isActiveCamoComms() => isCamoComms() && Camouflager.camoComms;
 
-    public static bool wasActiveCamoComms()
-    {
-        return !isCamoComms() && Camouflager.camoComms;
-    }
+    public static bool wasActiveCamoComms() => !isCamoComms() && Camouflager.camoComms;
 
     public static bool sabotageActive()
     {
