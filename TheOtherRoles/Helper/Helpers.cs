@@ -305,8 +305,8 @@ public static class Helpers
     {
         return isNeutral(player) &&
                 player != Amnisiac.amnisiac &&
-                Pursuer.pursuer.Contains(player) &&
-                Survivor.survivor.Contains(player);
+                !Pursuer.pursuer.Contains(player) &&
+                !Survivor.survivor.Contains(player);
     }
 
     public static bool ShowButtons =>

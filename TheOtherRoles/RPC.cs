@@ -1994,7 +1994,7 @@ public static class RPCProcedure
         var target = playerById(targetId);
         if (target == null) return;
         if (Prophet.examined.ContainsKey(target)) Prophet.examined.Remove(target);
-        Prophet.examined.Add(target, Prophet.IsKiller(target));
+        Prophet.examined.Add(target, Prophet.IsRed(target));
         Prophet.examinesLeft--;
         if ((Prophet.examineNum - Prophet.examinesLeft >= Prophet.examinesToBeRevealed) && Prophet.revealProphet) Prophet.isRevealed = true;
     }

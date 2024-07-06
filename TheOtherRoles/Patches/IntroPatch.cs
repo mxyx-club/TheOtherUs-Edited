@@ -341,6 +341,20 @@ internal class IntroPatch
                     __instance.RoleBlurbText.text += cs(Sheriff.color,
                         $"\n你的警长是 {Sheriff.sheriff?.Data?.PlayerName ?? ""}");
             }
+            else if (Executioner.executioner != null && Executioner.target != null)
+            {
+                if (infos.Any(info => info.roleId == RoleId.Executioner))
+                    __instance.RoleBlurbText.text +=
+                        cs(Executioner.color, $"\n把 {Executioner.target?.Data?.PlayerName ?? ""} 投出去!");
+
+            }
+            else if (Lawyer.lawyer != null && Lawyer.target != null)
+            {
+                if (infos.Any(info => info.roleId == RoleId.Executioner))
+                    __instance.RoleBlurbText.text +=
+                        cs(Lawyer.color, $"\n你的辩护目标是 {Lawyer.target?.Data?.PlayerName ?? ""}");
+
+            }
         }
 
         public static bool Prefix(IntroCutscene __instance)

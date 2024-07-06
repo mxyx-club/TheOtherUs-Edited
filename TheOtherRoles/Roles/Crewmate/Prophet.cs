@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using UnityEngine;
@@ -30,26 +31,14 @@ public static class Prophet
     public static PlayerControl currentTarget;
 
     public static ResourceSprite buttonSprite = new("SeerButton.png");
-    public static bool IsKiller(PlayerControl p)
+    public static bool IsRed(PlayerControl p)
     {
-        if (p.Data.Role.IsImpostor || isKiller(p))
-        {
-            return true;
-        }
-        if (killCrewAsRed)
-        {
-            if (p == Sheriff.sheriff || p == Deputy.deputy || p == Veteran.veteran)
-            {
-                return true;
-            }
-        }
-        if (benignNeutralAsRed)
-        {
-            if (isNeutral(p) && (p == Amnisiac.amnisiac || Pursuer.pursuer.Any(player => player == p)))
-            {
-                return true;
-            }
-        }
+        if (p.Data.Role.IsImpostor || isKiller(p)) return true;
+
+        if (killCrewAsRed && (p == Sheriff.sheriff || p == Deputy.deputy || p == Veteran.veteran)) return true;
+
+        if (benignNeutralAsRed && isNeutral(p) && (p == Amnisiac.amnisiac || Pursuer.pursuer.Contains(p) || Survivor.survivor.Contains(p))) return true;
+
         return evilNeutralAsRed && isEvil(p);
     }
 

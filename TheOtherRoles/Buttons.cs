@@ -303,7 +303,7 @@ internal static class HudManagerStartPatch
         positionOffsetValue.z = -0.1f;
         couldUse ??= button.CouldUse;
         var replacementHandcuffedButton = new CustomButton(() => { }, () => { return true; }, couldUse, () => { },
-            Deputy.getHandcuffedButtonSprite(), positionOffsetValue, button.hudManager, button.hotkey,
+            Deputy.handcuffedSprite, positionOffsetValue, button.hudManager, button.hotkey,
             true, Deputy.handcuffDuration, () => { }, button.mirror);
         replacementHandcuffedButton.Timer = replacementHandcuffedButton.EffectDuration;
         replacementHandcuffedButton.actionButton.cooldownTimerText.color = new Color(0F, 0.8F, 0F);
@@ -676,7 +676,7 @@ internal static class HudManagerStartPatch
                        CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { deputyHandcuffButton.Timer = deputyHandcuffButton.MaxTimer; },
-            Deputy.getButtonSprite(),
+            Deputy.buttonSprite,
             ButtonPositions.lowerRowRight,
             __instance,
             KeyCode.F

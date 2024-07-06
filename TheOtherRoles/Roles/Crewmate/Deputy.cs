@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Hazel;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -20,22 +21,8 @@ public static class Deputy
     public static bool knowsSheriff;
     public static Dictionary<byte, float> handcuffedKnows = [];
 
-    private static Sprite buttonSprite;
-    private static Sprite handcuffedSprite;
-
-    public static Sprite getButtonSprite()
-    {
-        if (buttonSprite) return buttonSprite;
-        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.DeputyHandcuffButton.png", 115f);
-        return buttonSprite;
-    }
-
-    public static Sprite getHandcuffedButtonSprite()
-    {
-        if (handcuffedSprite) return handcuffedSprite;
-        handcuffedSprite = loadSpriteFromResources("TheOtherRoles.Resources.DeputyHandcuffed.png", 115f);
-        return handcuffedSprite;
-    }
+    public static ResourceSprite buttonSprite = new("DeputyHandcuffButton.png");
+    public static ResourceSprite handcuffedSprite = new("DeputyHandcuffed.png");
 
     // Can be used to enable / disable the handcuff effect on the target's buttons
     public static void setHandcuffedKnows(bool active = true, byte playerId = byte.MaxValue)

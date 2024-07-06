@@ -241,14 +241,6 @@ public class RoleInfo
         chameleon,
         shifter,
     ];
-    private static readonly List<RoleInfo> _AllRoleInfo = [];
-    public static IReadOnlyList<RoleInfo> AllRoleInfo => _AllRoleInfo;
-    public Color Color { get; set; }
-    public RoleId RoleId { get; set; }
-    public RoleTeam RoleTeams { get; set; }
-    public CustomRoleType RoleType { get; set; } = CustomRoleType.Main;
-    public Func<RoleBase> GetRole { get; set; }
-    public Type RoleClassType { get; set; }
 
     private static string ReadmePage = "";
 

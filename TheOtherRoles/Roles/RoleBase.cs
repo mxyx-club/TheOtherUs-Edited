@@ -1,24 +1,84 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using TheOtherRoles.Utilities;
 
 namespace TheOtherRoles.Roles;
 
-
-public abstract class RoleBase
+public abstract class Role
 {
-    public virtual bool CanAssign()
+    public static List<Role> allRoles = new();
+    public PlayerControl player;
+    public RoleId roleId;
+
+    public abstract void OnMeetingStart();
+    public abstract void OnMeetingEnd();
+    public abstract void FixedUpdate();
+    public abstract void OnKill(PlayerControl target);
+    public abstract void OnDeath(PlayerControl killer = null);
+    public abstract void OnFinishShipStatusBegin();
+    public abstract void HandleDisconnect(PlayerControl player, DisconnectReasons reason);
+    public virtual void ResetRole() { }
+    public virtual void PostInit() { }
+    public virtual string modifyNameText(string nameText) { return nameText; }
+    public virtual string meetingInfoText() { return ""; }
+
+    public static void ClearAll()
     {
-        return true;
+        allRoles = new List<Role>();
+    }
+}
+
+
+[HarmonyPatch]
+public abstract class RoleBase<T> : Role where T : RoleBase<T>, new()
+{
+    public static List<T> players = new();
+    public static RoleId RoleType;
+    public static T local => players.FirstOrDefault(x => x.player == CachedPlayer.LocalPlayer.PlayerControl);
+    public static List<PlayerControl> allPlayers => players.Select(x => x.player).ToList();
+    public static List<PlayerControl> livingPlayers => players.Select(x => x.player).Where(x => x.isAlive()).ToList();
+    public static List<PlayerControl> deadPlayers => players.Select(x => x.player).Where(x => !x.isAlive()).ToList();
+    //public static bool exists => Helpers.RolesEnabled && players.Count > 0;
+
+
+    public void Init(PlayerControl player)
+    {
+        this.player = player;
+        players.Add((T)this);
+        allRoles.Add(this);
     }
 
-    public virtual void ClearAndReload()
+    public static T getRole(PlayerControl player = null)
     {
+        player ??= CachedPlayer.LocalPlayer.PlayerControl;
+        return players.FirstOrDefault(x => x.player == player);
     }
 
-    public virtual void ButtonCreate(HudManager _hudManager)
+    public static bool isRole(PlayerControl player) => players.Any(x => x.player == player);
+
+    public static void setRole(PlayerControl player)
     {
+        if (!isRole(player))
+        {
+            T role = new();
+            role.Init(player);
+        }
     }
 
-    public virtual void ResetCustomButton()
+    public static void eraseRole(PlayerControl player)
     {
+        players.DoIf(x => x.player == player, x => x.ResetRole());
+        players.RemoveAll(x => x.player == player && x.roleId == RoleType);
+        allRoles.RemoveAll(x => x.player == player && x.roleId == RoleType);
+    }
+
+    public static void swapRole(PlayerControl p1, PlayerControl p2)
+    {
+        var index = players.FindIndex(x => x.player == p1);
+        if (index >= 0)
+        {
+            players[index].player = p2;
+        }
     }
 }
