@@ -10,6 +10,7 @@ public static class Sheriff
     public static float cooldown = 30f;
     public static bool canKillNeutrals;
     public static bool canKillLawyer;
+    public static bool canKillSurvivor;
     public static bool canKillJester;
     public static bool canKillPursuer;
     public static bool canKillVulture;
@@ -42,6 +43,7 @@ public static class Sheriff
         misfireKills = CustomOptionHolder.sheriffMisfireKills.getSelection();
         cooldown = CustomOptionHolder.sheriffCooldown.getFloat();
         canKillNeutrals = CustomOptionHolder.sheriffCanKillNeutrals.getBool();
+        canKillSurvivor = CustomOptionHolder.sheriffCanKillSurvivor.getBool();
         canKillLawyer = CustomOptionHolder.sheriffCanKillLawyer.getBool();
         canKillJester = CustomOptionHolder.sheriffCanKillJester.getBool();
         canKillPursuer = CustomOptionHolder.sheriffCanKillPursuer.getBool();

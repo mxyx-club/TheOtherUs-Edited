@@ -44,6 +44,8 @@ public static class Thief
             RoleInfo.werewolf,
             RoleInfo.juggernaut,
             RoleInfo.swooper,
+            RoleInfo.pavlovsdogs,
+            RoleInfo.pavlovsowner,
             canKillSheriff ? RoleInfo.sheriff : null,
             canKillDeputy ? RoleInfo.deputy : null,
             canKillVeteran ? RoleInfo.veteran : null

@@ -569,8 +569,9 @@ internal static class HudManagerStartPatch
                          Pavlovsdogs.pavlovsdogs.Any(p => p == target) ||
                          (Sheriff.spyCanDieToSheriff && Spy.spy == target) ||
                          (Sheriff.canKillNeutrals &&
-                          (Akujo.akujo == target || isKiller(target) ||
-                          (Jester.jester == target && Sheriff.canKillJester) ||
+                         (Akujo.akujo == target || isKiller(target) ||
+                           (Survivor.survivor.Contains(target) && Sheriff.canKillSurvivor) ||
+                           (Jester.jester == target && Sheriff.canKillJester) ||
                            (Vulture.vulture == target && Sheriff.canKillVulture) ||
                            (Thief.thief == target && Sheriff.canKillThief) ||
                            (Amnisiac.amnisiac == target && Sheriff.canKillAmnesiac) ||
@@ -1052,7 +1053,7 @@ internal static class HudManagerStartPatch
                        Mayor.remoteMeetingsLeft > 0;
             },
             () => { mayorMeetingButton.Timer = mayorMeetingButton.MaxTimer; },
-            Mayor.getMeetingSprite(),
+            Mayor.emergencySprite,
             ButtonPositions.lowerRowRight,
             __instance,
             KeyCode.F,
@@ -1912,6 +1913,8 @@ internal static class HudManagerStartPatch
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.jackalCreatesSidekick(Jackal.currentTarget.PlayerId);
                 SoundEffectsManager.play("jackalSidekick");
+
+                _ = new LateTask(LastImpostor.promoteToLastImpostor, 0.5f);
             },
             () =>
             {
@@ -2143,6 +2146,9 @@ internal static class HudManagerStartPatch
                 RPCProcedure.pavlovsCreateDog(Pavlovsdogs.currentTarget.PlayerId);
                 SoundEffectsManager.play("jackalSidekick");
                 Pavlovsdogs.createDogNum -= 1;
+
+                _ = new LateTask(LastImpostor.promoteToLastImpostor, 0.5f);
+
                 pavlovsownerCreateDogButton.Timer = pavlovsownerCreateDogButton.MaxTimer;
             },
             () =>
@@ -3085,7 +3091,7 @@ internal static class HudManagerStartPatch
                        CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { amnisiacRememberButton.Timer = 0f; },
-            Amnisiac.getButtonSprite(),
+            Amnisiac.buttonSprite,
             ButtonPositions.lowerRowRight, //brb
             __instance,
             KeyCode.F,
@@ -3797,6 +3803,18 @@ internal static class HudManagerStartPatch
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
                     RPCProcedure.placeBomb(buff);
+
+                    if (Terrorist.selfExplosion)
+                    {
+                        var loacl = Terrorist.terrorist.PlayerId;
+                        var writer1 = AmongUsClient.Instance.StartRpcImmediately(Terrorist.terrorist.NetId,
+                            (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
+                        writer1.Write(loacl);
+                        writer1.Write(loacl);
+                        writer1.Write(byte.MaxValue);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer1);
+                        RPCProcedure.uncheckedMurderPlayer(loacl, loacl, byte.MaxValue);
+                    }
 
                     SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
                 }

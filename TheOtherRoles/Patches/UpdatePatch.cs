@@ -108,7 +108,12 @@ internal class HudManagerUpdatePatch
             }
         }
 
-        else if (Jackal.jackal != null && Jackal.jackal == localPlayer)
+        if (Mayor.mayor != null && Mayor.Revealed && !localPlayer.Data.IsDead)
+        {
+            setPlayerNameColor(Mayor.mayor, Mayor.color);
+        }
+
+        if (Jackal.jackal != null && Jackal.jackal == localPlayer)
         {
             // Jackal can see his sidekick
             setPlayerNameColor(Jackal.jackal, Jackal.color);
@@ -142,11 +147,6 @@ internal class HudManagerUpdatePatch
                 setPlayerNameColor(p, Pavlovsdogs.color);
             }
             if (Pavlovsdogs.pavlovsowner != null) setPlayerNameColor(Pavlovsdogs.pavlovsowner, Pavlovsdogs.color);
-        }
-
-        if (Executioner.executioner != null && localPlayer == Executioner.executioner)
-        {
-            setPlayerNameColor(Executioner.target, Color.grey);
         }
 
         if (Snitch.snitch != null)

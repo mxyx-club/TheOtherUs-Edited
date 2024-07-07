@@ -886,7 +886,7 @@ internal class RoleManagerSelectRolesPatch
         if (modifiers.Contains(RoleId.Watcher))
         {
             var crewPlayerW = new List<PlayerControl>(playerList);
-            crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor || x == Mayor.mayor);
+            crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor || x == Prosecutor.prosecutor);
             playerId = setModifierToRandomPlayer((byte)RoleId.Watcher, crewPlayerW);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Watcher);
@@ -917,6 +917,7 @@ internal class RoleManagerSelectRolesPatch
             var sunglassesCount = 0;
             while (sunglassesCount < modifiers.FindAll(x => x == RoleId.Sunglasses).Count)
             {
+                crewPlayer.RemoveAll(x => x == Mayor.mayor);
                 playerId = setModifierToRandomPlayer((byte)RoleId.Sunglasses, crewPlayer);
                 crewPlayer.RemoveAll(x => x.PlayerId == playerId);
                 playerList.RemoveAll(x => x.PlayerId == playerId);

@@ -23,9 +23,6 @@ namespace TheOtherRoles.Patches
         {
             if (!__instance.Systems.ContainsKey(SystemTypes.Electrical) ||
                 GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return true;
-            var switchSystem = GameOptionsManager.Instance.currentNormalGameOptions.MapId == 5
-                ? null
-                : __instance.Systems[SystemTypes.Electrical]?.TryCast<SwitchSystem>();
 
             // If Game Mode is PropHunt:
             if (PropHunt.isPropHuntGM)
@@ -111,6 +108,11 @@ namespace TheOtherRoles.Patches
             if (Torch.torch.FindAll(x => x.PlayerId == player.PlayerId).Count > 0) // Torch
             {
                 __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1) * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod * Torch.vision;
+            }
+
+            if (Mayor.mayor != null && Mayor.mayor.PlayerId == player.PlayerId && Mayor.Revealed) // Mayor Vision
+            {
+                __result *= 1f - 0.16f;
             }
 
             return false;

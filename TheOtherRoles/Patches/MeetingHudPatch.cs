@@ -4,6 +4,7 @@ using System.Linq;
 using AmongUs.QuickChat;
 using Hazel;
 using Reactor.Utilities;
+using Reactor.Utilities.Extensions;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
@@ -23,6 +24,7 @@ internal class MeetingHudPatch
     private static TextMeshPro meetingExtraButtonText;
     private static PassiveButton[] swapperButtonList;
     private static TextMeshPro meetingExtraButtonLabel;
+    public static GameObject MeetingExtraButton;
     public static bool shookAlready;
     private static PlayerVoteArea swapped1;
     private static PlayerVoteArea swapped2;
@@ -154,26 +156,23 @@ internal class MeetingHudPatch
     {
         __instance.playerStates[0].Cancel(); // This will stop the underlying buttons of the template from showing up
         if (__instance.state == MeetingHud.VoteStates.Results || Mayor.mayor.Data.IsDead) return;
-        if (Mayor.mayorChooseSingleVote == 1)
-        {
-            // Only accept changes until the mayor voted
-            var mayorPVA = __instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == Mayor.mayor.PlayerId);
-            if (mayorPVA != null && mayorPVA.DidVote)
-            {
-                SoundEffectsManager.play("fail");
-                return;
-            }
-        }
 
-        Mayor.voteTwice = !Mayor.voteTwice;
+        // Only accept changes until the mayor voted
+        var mayorPVA = __instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == Mayor.mayor.PlayerId);
+        if (Mayor.Revealed && mayorPVA != null && mayorPVA.DidVote)
+        {
+            SoundEffectsManager.play("fail");
+            return;
+        }
+        Mayor.Revealed = !Mayor.Revealed;
 
         var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-            (byte)CustomRPC.MayorSetVoteTwice, SendOption.Reliable);
-        writer.Write(Mayor.voteTwice);
+            (byte)CustomRPC.MayorRevealed, SendOption.Reliable);
+        writer.Write(Mayor.Revealed);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
+        meetingExtraButtonLabel.text = cs(Mayor.color, "揭示");
+        Object.Destroy(MeetingExtraButton);
 
-        meetingExtraButtonLabel.text = cs(Mayor.color,
-            "双倍票数: " + (Mayor.voteTwice ? cs(Color.green, "开") : cs(Color.red, "关")));
     }
 
     private static void guesserOnClick(int buttonTarget, MeetingHud __instance)
@@ -235,6 +234,7 @@ internal class MeetingHudPatch
             }
 
             if (roleInfo.roleId == RoleId.Poucher && Poucher.spawnModifier) continue;
+            if (Mayor.mayor != null && Mayor.Revealed && Mayor.Revealed && roleInfo.roleId == RoleId.Mayor) continue;
 
             if (allowModGuess && roleInfo.isModifier)
             {
@@ -414,7 +414,7 @@ internal class MeetingHudPatch
         var addSwapperButtons = Swapper.swapper != null && CachedPlayer.LocalPlayer.PlayerControl == Swapper.swapper &&
                                 !Swapper.swapper.Data.IsDead;
         var addMayorButton = Mayor.mayor != null && CachedPlayer.LocalPlayer.PlayerControl == Mayor.mayor &&
-                             !Mayor.mayor.Data.IsDead && Mayor.mayorChooseSingleVote > 0;
+                             !Mayor.mayor.Data.IsDead && !Mayor.Revealed;
         if (addSwapperButtons)
         {
             selections = new bool[__instance.playerStates.Length];
@@ -461,6 +461,7 @@ internal class MeetingHudPatch
             var meetingExtraButtonParent = new GameObject().transform;
             meetingExtraButtonParent.SetParent(meetingUI);
             var meetingExtraButton = Object.Instantiate(buttonTemplate, meetingExtraButtonParent);
+            MeetingExtraButton = meetingExtraButton.gameObject;
 
             var infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
             var meetingInfo = infoTransform?.GetComponent<TextMeshPro>();
@@ -493,8 +494,7 @@ internal class MeetingHudPatch
                     localScale.x * 1.7f,
                     localScale.x * 1.7f);
                 meetingExtraButtonLabel.transform.localScale = localScale;
-                meetingExtraButtonLabel.text = cs(Mayor.color,
-                    "双倍票数: " + (Mayor.voteTwice ? cs(Color.green, "开") : cs(Color.red, "关")));
+                meetingExtraButtonLabel.text = cs(Mayor.color, "揭示");
             }
 
             var passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
@@ -526,7 +526,7 @@ internal class MeetingHudPatch
                 if (Witch.futureSpelled.Any(x => x.PlayerId == pva.TargetPlayerId))
                 {
                     var local = CachedPlayer.LocalPlayer.PlayerControl;
-                    SpriteRenderer rend = new GameObject().AddComponent<SpriteRenderer>();
+                    var rend = new GameObject().AddComponent<SpriteRenderer>();
                     rend.transform.SetParent(pva.transform);
                     rend.gameObject.layer = pva.Megaphone.gameObject.layer;
                     rend.transform.localPosition = new Vector3(-0.5f, -0.03f, -1f);
@@ -549,6 +549,8 @@ internal class MeetingHudPatch
 
                 if (!Eraser.canEraseGuess && CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.PlayerControl == Eraser.eraser
                     && Eraser.alreadyErased.Contains(playerVoteArea.TargetPlayerId)) continue;
+
+                if (Mayor.mayor != null && Mayor.Revealed) continue;
 
                 if (CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.PlayerControl == Specoality.specoality
                     && Specoality.canNoGuess != null && Specoality.canNoGuess.PlayerId == playerVoteArea.TargetPlayerId) continue;
@@ -665,7 +667,7 @@ internal class MeetingHudPatch
                     additionalVotes = Prosecutor.ProsecuteThisMeeting ? 15 : 1;
 
                 if (Mayor.mayor != null && Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId)
-                    additionalVotes = Mayor.voteTwice ? 2 : 1;
+                    additionalVotes = Mayor.Revealed ? 3 : 1;
 
                 if (Prosecutor.prosecutor != null && Prosecutor.ProsecuteThisMeeting && Prosecutor.prosecutor.PlayerId != playerVoteArea.TargetPlayerId)
                     additionalVotes = 0;
@@ -796,10 +798,10 @@ internal class MeetingHudPatch
             var spriteRenderer = Object.Instantiate(__instance.PlayerVotePrefab);
             var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes() ||
                                  (CachedPlayer.LocalPlayer.Data.IsDead && ghostsSeeVotes) ||
-                                 (Mayor.mayor != null && Mayor.mayor == CachedPlayer.LocalPlayer.PlayerControl &&
-                                  Mayor.canSeeVoteColors &&
+                                 (Prosecutor.prosecutor != null && Prosecutor.prosecutor == CachedPlayer.LocalPlayer.PlayerControl &&
+                                  Prosecutor.canSeeVoteColors &&
                                   TasksHandler.taskInfo(CachedPlayer.LocalPlayer.Data).Item1 >=
-                                  Mayor.tasksNeededToSeeVoteColors) ||
+                                  Prosecutor.tasksNeededToSeeVoteColors) ||
                                  (Watcher.watcher != null && CachedPlayer.LocalPlayer.PlayerControl == Watcher.watcher);
             if (showVoteColors && !Prosecutor.ProsecuteThisMeeting)
                 PlayerMaterial.SetColors(voterPlayer.DefaultOutfit.ColorId, spriteRenderer);
@@ -847,9 +849,9 @@ internal class MeetingHudPatch
             __instance.TitleText.text = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.MeetingVotingResults, new Il2CppReferenceArray<Il2CppSystem.Object>(0));
 
             var allNums = new Dictionary<int, int>();
-            __instance.TitleText.text = Object.FindObjectOfType<TranslationController>().GetString(StringNames.MeetingVotingResults, Array.Empty<Il2CppSystem.Object>());
-            var amountOfSkippedVoters = 0;
+            __instance.TitleText.text = Object.FindObjectOfType<TranslationController>().GetString(StringNames.MeetingVotingResults, []);
 
+            var amountOfSkippedVoters = 0;
             var num = 0;
             for (var i = 0; i < __instance.playerStates.Length; i++)
             {
@@ -867,7 +869,7 @@ internal class MeetingHudPatch
 
                 playerVoteArea.ClearForResults();
                 var num2 = 0;
-                var mayorFirstVoteDisplayed = false;
+                var mayorVotesDisplayed = 0;
                 for (var j = 0; j < states.Length; j++)
                 {
                     if (Prosecutor.ProsecuteThisMeeting) continue;
@@ -889,9 +891,13 @@ internal class MeetingHudPatch
                     }
 
                     // Mayor vote, redo this iteration to place a second vote
-                    if (Mayor.mayor == null || voterState.VoterId != (sbyte)Mayor.mayor.PlayerId ||
-                        mayorFirstVoteDisplayed || !Mayor.voteTwice) continue;
-                    mayorFirstVoteDisplayed = true;
+                    if (Mayor.mayor == null || voterState.VoterId != (sbyte)Mayor.mayor.PlayerId
+                        || mayorVotesDisplayed >= 2 || !Mayor.Revealed)
+                    {
+                        mayorVotesDisplayed = 0;
+                        continue;
+                    };
+                    mayorVotesDisplayed++;
                     j--;
                 }
 
@@ -1192,8 +1198,7 @@ internal class MeetingHudPatch
                 Blackmailer.blackmailed.Data.IsDead) return;
             //Nothing here for now. What to do when local player who is blackmailed starts meeting
             //Coroutines.Start(BlackmailShhh());
-            if (Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl)
-                Coroutines.Start(BlackmailShhh());
+            if (Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl) Coroutines.Start(BlackmailShhh());
         }
     }
 }

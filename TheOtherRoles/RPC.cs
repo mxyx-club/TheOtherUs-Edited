@@ -245,6 +245,7 @@ public enum CustomRPC
     DisableTrap,
     TrapperMeetingFlag,
     Prosecute,
+    MayorRevealed,
     SurvivorVestActive,
 
     // SetSwooper,
@@ -252,7 +253,6 @@ public enum CustomRPC
     ThiefStealsRole,
     SetTrap,
     TriggerTrap,
-    MayorSetVoteTwice,
     PlaceBomb,
     DefuseBomb,
     //ShareRoom,
@@ -1630,6 +1630,18 @@ public static class RPCProcedure
                 writer.EndMessage();
                 placeBomb(buff);
                 SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
+
+                if (Terrorist.selfExplosion)
+                {
+                    var loacl = Terrorist.terrorist.PlayerId;
+                    var writer1 = AmongUsClient.Instance.StartRpcImmediately(Terrorist.terrorist.NetId,
+                        (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
+                    writer1.Write(loacl);
+                    writer1.Write(loacl);
+                    writer1.Write(byte.MaxValue);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer1);
+                    uncheckedMurderPlayer(loacl, loacl, byte.MaxValue);
+                }
             }
             terroristButton.Timer = terroristButton.MaxTimer;
         }
@@ -2052,7 +2064,6 @@ public static class RPCProcedure
             }
         }
 
-        LastImpostor.promoteToLastImpostor();
         var wasSpy = Spy.spy != null && player == Spy.spy;
         var wasImpostor = player.Data.Role.IsImpostor; // This can only be reached if impostors can be sidekicked.
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
@@ -2113,7 +2124,6 @@ public static class RPCProcedure
             }
         }
 
-        LastImpostor.promoteToLastImpostor();
         var wasSpy = Spy.spy != null && player == Spy.spy;
         var wasImpostor = player.Data.Role.IsImpostor; // This can only be reached if impostors can be sidekicked.
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
@@ -3154,7 +3164,7 @@ public static class RPCProcedure
             Pavlovsdogs.pavlovsdogs.Add(target);
             Pavlovsdogs.pavlovsowner = thief;
         }
-        if (target == Pavlovsdogs.pavlovsdogs.Any(p => p == target))
+        if (target == Pavlovsdogs.pavlovsdogs.Contains(target))
         {
             Pavlovsdogs.pavlovsdogs.Add(thief);
         }
@@ -3396,21 +3406,6 @@ public static class RPCProcedure
         position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
         position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
         new Bomb(position);
-
-
-        if (Terrorist.selfExplosion)
-        {
-            var loacl = Terrorist.terrorist.PlayerId;
-
-            var writer = AmongUsClient.Instance.StartRpcImmediately(
-                Terrorist.terrorist.NetId, (byte)CustomRPC.UncheckedMurderPlayer,
-                SendOption.Reliable);
-            writer.Write(Terrorist.terrorist.PlayerId);
-            writer.Write(loacl);
-            writer.Write(byte.MaxValue);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            uncheckedMurderPlayer(Terrorist.terrorist.PlayerId, loacl, byte.MaxValue);
-        }
     }
 
     public static void defuseBomb()
@@ -3644,10 +3639,6 @@ internal class RPCHandlerPatch
                 var playerId1 = reader.ReadByte();
                 var playerId2 = reader.ReadByte();
                 RPCProcedure.swapperSwap(playerId1, playerId2);
-                break;
-
-            case CustomRPC.MayorSetVoteTwice:
-                Mayor.voteTwice = reader.ReadBoolean();
                 break;
 
             case CustomRPC.MorphlingMorph:
@@ -4031,6 +4022,10 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.Prosecute:
                 Prosecutor.ProsecuteThisMeeting = true;
+                break;
+                
+            case CustomRPC.MayorRevealed:
+                Mayor.Revealed = true;
                 break;
 
             case CustomRPC.SurvivorVestActive:

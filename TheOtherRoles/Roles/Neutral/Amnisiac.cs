@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Roles.Neutral;
 
-public static class Amnisiac
+public class Amnisiac
 {
     public static PlayerControl amnisiac;
     public static List<Arrow> localArrows = new();
@@ -15,14 +16,7 @@ public static class Amnisiac
     public static bool showArrows = true;
     public static bool resetRole;
 
-    private static Sprite buttonSprite;
-
-    public static Sprite getButtonSprite()
-    {
-        if (buttonSprite) return buttonSprite;
-        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.Remember.png", 115f);
-        return buttonSprite;
-    }
+    public static ResourceSprite buttonSprite = new("Remember.png");
 
     public static void clearAndReload()
     {

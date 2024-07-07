@@ -16,6 +16,7 @@ public static class LastImpostor
     public static void promoteToLastImpostor()
     {
         if (!isEnable) return;
+        if (MapOption.NumImpostors == 1) return;
 
         var impList = new List<PlayerControl>();
         foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
@@ -24,7 +25,7 @@ public static class LastImpostor
         }
         if (impList.Count == 1)
         {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ImpostorPromotesToLastImpostor, SendOption.Reliable, -1);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ImpostorPromotesToLastImpostor, SendOption.Reliable, -1);
             writer.Write(impList[0].PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.impostorPromotesToLastImpostor(impList[0].PlayerId);

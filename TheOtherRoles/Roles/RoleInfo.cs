@@ -397,7 +397,7 @@ public class RoleInfo
                 Shifter.futureShift != null)
                 roleName += cs(Color.yellow, " ← " + Shifter.futureShift.Data.PlayerName);
             if (p == Vulture.vulture && (CachedPlayer.LocalPlayer.PlayerControl == Vulture.vulture || shouldShowGhostInfo()))
-                roleName += cs(Vulture.color, string.Format("剩余", Vulture.vultureNumberToWin - Vulture.eatenBodies));
+                roleName += cs(Vulture.color, string.Format("roleInfoRemaining".Translate(), Vulture.vultureNumberToWin - Vulture.eatenBodies));
             if (shouldShowGhostInfo())
             {
                 if (Eraser.futureErased.Contains(p))

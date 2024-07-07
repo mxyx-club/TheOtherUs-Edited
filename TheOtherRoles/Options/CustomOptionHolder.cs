@@ -183,14 +183,13 @@ public class CustomOptionHolder
     public static CustomOption blackmailerCooldown;
 
     public static CustomOption mayorSpawnRate;
-    public static CustomOption mayorCanSeeVoteColors;
-    public static CustomOption mayorTasksNeededToSeeVoteColors;
     public static CustomOption mayorMeetingButton;
     public static CustomOption mayorMaxRemoteMeetings;
     public static CustomOption mayorSabotageRemoteMeetings;
-    public static CustomOption mayorChooseSingleVote;
 
     public static CustomOption prosecutorSpawnRate;
+    public static CustomOption prosecutorCanSeeVoteColors;
+    public static CustomOption prosecutorTasksNeededToSeeVoteColors;
     public static CustomOption prosecutorDiesOnIncorrectPros;
     public static CustomOption prosecutorCanCallEmergency;
 
@@ -217,6 +216,7 @@ public class CustomOptionHolder
     public static CustomOption sheriffCooldown;
     public static CustomOption sheriffCanKillNeutrals;
     public static CustomOption sheriffCanKillLawyer;
+    public static CustomOption sheriffCanKillSurvivor;
     public static CustomOption sheriffCanKillExecutioner;
     public static CustomOption sheriffCanKillJester;
     public static CustomOption sheriffCanKillVulture;
@@ -1083,16 +1083,18 @@ public class CustomOptionHolder
         sheriffMisfireKills = Create(30143, Types.Crewmate, "sheriffMisfireKills",
             ["sheriffMisfireKills1", "sheriffMisfireKills2", "sheriffMisfireKills3"], sheriffSpawnRate);
         sheriffCanKillNeutrals = Create(30150, Types.Crewmate, "sheriffCanKillNeutrals", false, sheriffSpawnRate);
+        sheriffCanKillSurvivor = Create(30160, Types.Crewmate,
+            string.Format("sheriffCanKill".Translate(), cs(Survivor.color, "Survivor".Translate())), false, sheriffCanKillNeutrals);
         sheriffCanKillAmnesiac = Create(30153, Types.Crewmate,
             string.Format("sheriffCanKill".Translate(), cs(Amnisiac.color, "Amnisiac".Translate())), false, sheriffCanKillNeutrals);
+        sheriffCanKillPursuer = Create(30158, Types.Crewmate,
+            string.Format("sheriffCanKill".Translate(), cs(Pursuer.color, "Pursuer".Translate())), true, sheriffCanKillNeutrals);
         sheriffCanKillJester = Create(30151, Types.Crewmate,
             string.Format("sheriffCanKill".Translate(), cs(Jester.color, "Jester".Translate())), true, sheriffCanKillNeutrals);
         sheriffCanKillLawyer = Create(30156, Types.Crewmate,
             string.Format("sheriffCanKill".Translate(), cs(Lawyer.color, "Lawyer".Translate())), true, sheriffCanKillNeutrals);
         sheriffCanKillExecutioner = Create(30152, Types.Crewmate,
             string.Format("sheriffCanKill".Translate(), cs(Executioner.color, "Executioner".Translate())), true, sheriffCanKillNeutrals);
-        sheriffCanKillPursuer = Create(30158, Types.Crewmate,
-            string.Format("sheriffCanKill".Translate(), cs(Pursuer.color, "Pursuer".Translate())), true, sheriffCanKillNeutrals);
         sheriffCanKillVulture = Create(30155, Types.Crewmate,
             string.Format("sheriffCanKill".Translate(), cs(Vulture.color, "Vulture".Translate())), true, sheriffCanKillNeutrals);
         sheriffCanKillThief = Create(30157, Types.Crewmate,
@@ -1110,15 +1112,13 @@ public class CustomOptionHolder
         deputyKeepsHandcuffs = Create(30176, Types.Crewmate, "deputyKeepsHandcuffs", true, deputyGetsPromoted);
 
         mayorSpawnRate = Create(30110, Types.Crewmate, cs(Mayor.color, "Mayor"), rates, null, true);
-        mayorCanSeeVoteColors = Create(30111, Types.Crewmate, "mayorCanSeeVoteColors", true, mayorSpawnRate);
-        mayorTasksNeededToSeeVoteColors = Create(30112, Types.Crewmate, "mayorTasksNeededToSeeVoteColors", 5f, 0f, 20f, 1f, mayorCanSeeVoteColors);
         mayorMeetingButton = Create(30113, Types.Crewmate, "mayorMeetingButton", true, mayorSpawnRate);
         mayorMaxRemoteMeetings = Create(30114, Types.Crewmate, "mayorMaxRemoteMeetings", 1f, 1f, 5f, 1f, mayorMeetingButton);
         mayorSabotageRemoteMeetings = Create(30115, Types.Crewmate, "mayorSabotageRemoteMeetings", false, mayorMeetingButton);
-        mayorChooseSingleVote = Create(30116, Types.Crewmate, "mayorChooseSingleVote",
-            ["optionOff", "mayorChooseSingleVote2", "mayorChooseSingleVote3"], mayorSpawnRate);
 
         prosecutorSpawnRate = Create(30370, Types.Crewmate, cs(Prosecutor.color, "Prosecutor"), rates, null, true);
+        prosecutorCanSeeVoteColors = Create(30111, Types.Crewmate, "mayorCanSeeVoteColors", true, prosecutorSpawnRate);
+        prosecutorTasksNeededToSeeVoteColors = Create(30112, Types.Crewmate, "mayorTasksNeededToSeeVoteColors", 5f, 0f, 20f, 1f, prosecutorCanSeeVoteColors);
         prosecutorDiesOnIncorrectPros = Create(30371, Types.Crewmate, "prosecutorDiesOnIncorrectPros", true, prosecutorSpawnRate);
         prosecutorCanCallEmergency = Create(30371, Types.Crewmate, "prosecutorCanCallEmergency", true, prosecutorSpawnRate);
 

@@ -32,14 +32,20 @@
  - #### 新增内容：
 
     - 新增中立职业：幸存者
+    - 市长：重做职业，现在市长可以在会议中揭示自己的身份来获得3票，但去除了原有的窥视功能
+    - 检察官：新增窥视功能，可以在会议中查看投票颜色
     - 法医：保护目标被击杀时会重置杀手的击杀冷却
     - 时间之主：在开启时间之盾时被击杀会重置杀手的击杀冷却
+    - 绝境者：在房间设置只有1名伪装者时，不会出现绝境者
     
  - #### Bug修复：
 
     - 修复会议结束后必定触发的文本恶性bug
+    - 修正一部分游戏文本
     - 还原开局重置cd的逻辑
+    - 绝境者：修复在队友被招募时不会出现绝境者的问题
     - 豺狼：现在开始游戏时会同步一次豺狼隐身能力
+    - 处刑者：修复处刑目标被招募后处刑者变为律师时没有辩护目标的问题
     - 余波：修复恐怖分子在自爆的情况下击杀余波会爆炸但并不会自杀的问题
     - 交换师：修复交换师在交换巴甫洛夫阵营时会出现的bug
 
@@ -360,7 +366,7 @@
 [Goose-Goose-Duck](https://store.steampowered.com/app/1568590/Goose_Goose_Duck) - Idea for the Vulture role came from **Slushiegoose**\
 [TheEpicRoles](https://github.com/LaicosVK/TheEpicRoles) - Idea for the first kill shield (partly) and the tabbed option menu (fully + some code), by **LaicosVK** **DasMonschta** **Nova**\
 [Ninja](#ninja), [Thief](#thief), [Lawyer](#lawyer) / [Pursuer](#pursuer), [Deputy](#deputy), [Portalmaker](#portalmaker), [Guesser Modifier](#guesser-modifier) - Idea: [K3ndo](https://github.com/K3ndoo) ; Developed by [Gendelo](https://github.com/gendelo3) & [Mallöris](https://github.com/Mallaris) \
-[PropHunt](https://github.com/ugackMiner53/PropHunt) - Idea and core code for the Prop Hunt game mode
+[ugackMiner53](https://github.com/ugackMiner53/PropHunt) - Idea and core code for the Prop Hunt game mode
 
 ## 许可
 
