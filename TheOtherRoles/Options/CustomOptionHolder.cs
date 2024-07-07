@@ -566,7 +566,7 @@ public class CustomOptionHolder
     public static CustomOption enableMapOptions;
     public static CustomOption randomGameStartPosition;
     public static CustomOption randomGameStartToVents;
-    //public static CustomOption allowModGuess;
+    public static CustomOption allowModGuess;
     public static CustomOption ghostSpeed;
     public static CustomOption finishTasksBeforeHauntingOrZoomingOut;
     public static CustomOption camsNightVision;
@@ -756,7 +756,7 @@ public class CustomOptionHolder
         impostorSeeRoles = Create(30, Types.General, "impostorSeeRoles", false);
         blockGameEnd = Create(29, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "blockGameEnd"), true);
         deadImpsBlockSabotage = Create(32, Types.General, cs(Palette.ImpostorRed, "deadImpsBlockSabotage"), false);
-        //allowModGuess = Create(31, Types.General, "allowModGuess", false);
+        allowModGuess = Create(31, Types.General, "allowModGuess", false);
         //ghostSpeed = Create(33, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
 
         WireTaskIsRandomOption = Create(221, Types.General, "WireTaskIsRandomOption", false, enableMapOptions, true);

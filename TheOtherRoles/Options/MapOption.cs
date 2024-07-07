@@ -110,8 +110,7 @@ internal class MapOption
         randomGameStartPosition = CustomOptionHolder.randomGameStartPosition.getBool();
         ShowVentsOnMap = CustomOptionHolder.ShowVentsOnMap.getBool();
         ShowVentsOnMeetingMap = CustomOptionHolder.ShowVentsOnMeetingMap.getBool();
-        allowModGuess = false;
-        //allowModGuess = CustomOptionHolder.allowModGuess.getBool();
+        allowModGuess = CustomOptionHolder.allowModGuess.getBool();
         firstKillPlayer = null;
         isRoundOne = true;
         isCanceled = false;

@@ -361,12 +361,20 @@ internal class MeetingHudPatch
                             return;
                         }
 
-                        var mainRoleInfo = RoleInfo.getRoleInfoForPlayer(focusedTarget, false).FirstOrDefault();
+                        var dyingTarget = CachedPlayer.LocalPlayer.PlayerControl;
+
+                        var mainRoleInfo = RoleInfo.getRoleInfoForPlayer(focusedTarget, true);
+
                         if (mainRoleInfo == null) return;
 
-                        var dyingTarget = mainRoleInfo == roleInfo
-                            ? focusedTarget
-                            : CachedPlayer.LocalPlayer.PlayerControl;
+                        foreach (var role in mainRoleInfo)
+                        {
+                            if (role.roleId == roleInfo.roleId)
+                            {
+                                dyingTarget = focusedTarget;
+                                continue;
+                            }
+                        }
 
                         if (dyingTarget == CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer)
                             Doomsayer.CanShoot = false;
