@@ -24,12 +24,13 @@ Even more roles are coming soon.
 
 | Among Us - Version  | Mod Version | Updated Date | Link                                                         |
 | ------------------- | ----------- | ------------ | ------------------------------------------------------------ |
-| 2024.3.5 ~ 2024.6.4 | v1.0.4.6    | 2024.06.29   | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.6/TheOtherUs.zip) |
-| 2024.3.5 ~ 2024.6.4 | v1.0.4.2    | 2024.06.16   | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.2/TheOtherUs.zip) |
-| 2024.3.5 ~ 2024.6.4 | v1.0.3.8    | 2024.05.24   | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.8/TheOtherUs.zip) |
-| 2024.3.5 ~ 2024.6.4 | v1.0.3.7    | 2024.05.10   | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.7/TheOtherRoles.zip) |
-| 2024.3.5 ~ 2024.6.4 | v1.0.3.6    | 2024.05.08   | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherRoles.zip) |
-| 2024.3.5 ~ 2024.6.4 | v1.0.3.3    | 2024.04.11   | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherRoles.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.5.3    | 2024.7.8     | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.5.3/TheOtherUs.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.4.6    | 2024.6.29    | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.6/TheOtherUs.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.4.2    | 2024.6.16    | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.2/TheOtherUs.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.3.8    | 2024.5.24    | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.8/TheOtherUs.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.3.7    | 2024.5.10    | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.7/TheOtherRoles.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.3.6    | 2024.5.8     | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherRoles.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.3.3    | 2024.4.11    | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherRoles.zip) |
 
 
 
@@ -51,7 +52,7 @@ Even more roles are coming soon.
     - ButtonBarry: Won't be given to the Mayor
     - Snitch: Can't be guessed during the meeting after being exposed, and now given an option of expose the range of Neutral
     - Jumper & Escapist: Given option that can increase numbers of teleportation, to avoid the problem of only teleport once a round
-    - Snitch：目前可以在会议中查看邪恶玩家（还无法查看具体职业）
+    - Snitch：
 
  - #### Bug fixed:
 
