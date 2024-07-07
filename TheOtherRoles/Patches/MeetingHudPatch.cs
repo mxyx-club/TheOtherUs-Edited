@@ -550,7 +550,7 @@ internal class MeetingHudPatch
                 if (!Eraser.canEraseGuess && CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.PlayerControl == Eraser.eraser
                     && Eraser.alreadyErased.Contains(playerVoteArea.TargetPlayerId)) continue;
 
-                if (Mayor.mayor != null && Mayor.Revealed) continue;
+                if (Mayor.mayor != null && Mayor.Revealed && playerVoteArea.TargetPlayerId == Mayor.mayor.PlayerId) continue;
 
                 if (CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.PlayerControl == Specoality.specoality
                     && Specoality.canNoGuess != null && Specoality.canNoGuess.PlayerId == playerVoteArea.TargetPlayerId) continue;
