@@ -68,6 +68,26 @@
         "0": "The Other Us Settings",
         "13": "\u6a21\u7ec4\u8bbe\u7f6e"
     },
+    "impostorRolesSettings": {
+        "0": "Impostor Roles Settings",
+        "13": "\u4f2a\u88c5\u8005\u804c\u4e1a\u8bbe\u7f6e"
+    },
+    "neutralRolesSettings": {
+        "0": "Neutral Roles Settings",
+        "13": "\u4e2d\u7acb\u804c\u4e1a\u8bbe\u7f6e"
+    },
+    "crewmateRolesSettings": {
+        "0": "Crewmate Roles Settings",
+        "13": "\u8239\u5458\u804c\u4e1a\u8bbe\u7f6e"
+    },
+    "modifierSettings": {
+        "0": "Modifier Settings",
+        "13": "\u9644\u52a0\u80fd\u529b\u8bbe\u7f6e"
+    },
+    "guesserSettings": {
+        "0": "Guesser Mode Settings",
+        "13": "\u8d4c\u602a\u6a21\u5f0f\u8bbe\u7f6e"
+    },
     "hideNSeekSettings": {
         "0": "Hide 'N Seek Settings",
         "13": "\u8eb2\u732b\u732b\u6a21\u5f0f\u8bbe\u7f6e"
@@ -160,24 +180,6 @@
     "PropHuntPage": {
         "0": "Page 1: Prop Hunt Settings \n\n",
         "13": "\u7b2c1\u9875: \u9053\u5177\u8eb2\u732b\u732b\u6a21\u5f0f\u8bbe\u7f6e \n\n"
-    },
-    "theOtherUsSettings": {
-        "13": "\u6a21\u7ec4\u8bbe\u7f6e"
-    },
-    "guesserSettings": {
-        "13": "\u8d4c\u602a\u6a21\u5f0f\u8bbe\u7f6e"
-    },
-    "impostorRolesSettings": {
-        "13": "\u4f2a\u88c5\u8005\u804c\u4e1a\u8bbe\u7f6e"
-    },
-    "neutralRolesSettings": {
-        "13": "\u4e2d\u7acb\u804c\u4e1a\u8bbe\u7f6e"
-    },
-    "crewmateRolesSettings": {
-        "13": "\u8239\u5458\u804c\u4e1a\u8bbe\u7f6e"
-    },
-    "modifierSettings": {
-        "13": "\u9644\u52a0\u80fd\u529b\u8bbe\u7f6e"
     },
     "meetingCount": {
         "0": "{0} and the ship has {1}",
@@ -381,27 +383,35 @@
         "13": "\u53ea\u5728\u4f1a\u8bae\u4e2d\u663e\u793a\u7ba1\u9053\u4f4d\u7f6e"
     },
     "IsReactorDurationSetting": {
+        "0": "Reactor Duration Time",
         "13": "\u8c03\u6574\u7d27\u6025\u7834\u574f\u6301\u7eed\u65f6\u95f4"
     },
     "SkeldLifeSuppTimeLimit": {
-        "13": "The Skeld \u6838\u53cd\u5e94\u5806\u7834\u574f\u6301\u7eed\u65f6\u95f4"
-    },
-    "SkeldReactorTimeLimit": {
+        "0": "The Skeld : Oxygen Depleted Duration Time",
         "13": "The Skeld \u6c27\u6c14\u7834\u574f\u6301\u7eed\u65f6\u95f4"
     },
+    "SkeldReactorTimeLimit": {
+        "0": "The Skeld : Reactor Duration Time",
+        "13": "The Skeld \u6838\u53cd\u5e94\u5806\u7834\u574f\u6301\u7eed\u65f6\u95f4"
+    },
     "MiraLifeSuppTimeLimit": {
+        "0": "MiraHQ : Oxygen Depleted Duration Time",
         "13": "Mira \u6838\u53cd\u5e94\u5806\u7834\u574f\u6301\u7eed\u65f6\u95f4"
     },
     "MiraReactorTimeLimit": {
+        "0": "MiraHQ : Reactor Duration Time",
         "13": "Mira \u6c27\u6c14\u7834\u574f\u6301\u7eed\u65f6\u95f4"
     },
     "PolusReactorTimeLimit": {
+        "0": "Polus : Reset Stabilizers Duration Time",
         "13": "Polus \u6297\u9707\u5668\u7834\u574f\u6301\u7eed\u65f6\u95f4"
     },
     "AirshipReactorTimeLimit": {
+        "0": "Airship : Avert Cresh Course Duration Time",
         "13": "AirShip \u649e\u6bc1\u8def\u7ebf\u7834\u574f\u6301\u7eed\u65f6\u95f4"
     },
     "FungleReactorTimeLimit": {
+        "0": "The Fungle : Reactor Duration Time",
         "13": "The Fungle \u6838\u53cd\u5e94\u5806\u7834\u574f\u6301\u7eed\u65f6\u95f4"
     },
     "enableMiraModify": {
@@ -421,7 +431,7 @@
         "13": "\u6539\u53d8\u7ba1\u9053\u5e03\u5c40"
     },
     "addPolusVents": {
-        "0": "Add New Vents",
+        "0": "Additional Vents",
         "13": "\u6dfb\u52a0\u65b0\u7ba1\u9053\n (\u6837\u672c\u5ba4-\u529e\u516c\u5ba4-\u8fd0\u8f93\u8239)"
     },
     "movePolusVitals": {
@@ -441,12 +451,15 @@
         "13": "AirShip"
     },
     "airshipOptimize": {
+        "0": "Optimize Map",
         "13": "\u4f18\u5316\u5730\u56fe"
     },
     "addAirShipVents": {
+        "0": "Additional Vents",
         "13": "\u6dfb\u52a0\u65b0\u7ba1\u9053\n (\u4f1a\u8bae\u5ba4-\u914d\u7535\u5ba4)"
     },
     "airshipLadder": {
+        "0": "Additional Ladder",
         "13": "\u589e\u52a0\u989d\u5916\u68af\u5b50\n (\u4f1a\u8bae\u5ba4-\u95f4\u9699\u5ba4)"
     },
     "enableFungleModify": {
@@ -454,6 +467,7 @@
         "13": "Fungle"
     },
     "fungleElectrical": {
+        "0": "Additional Electrical",
         "13": "\u6dfb\u52a0\u7535\u529b\u7cfb\u7edf\n (\u98df\u5802-\u5b9e\u9a8c\u5ba4-\u4e0a\u5f15\u64ce)"
     },
     "WireTaskIsRandomOption": {
@@ -467,9 +481,6 @@
     "enableCamoComms": {
         "0": "Enable Camouflage Comms",
         "13": "\u901a\u4fe1\u7834\u574f\u5f00\u542f\u5c0f\u9ed1\u4eba"
-    },
-    "fungleDisableCamoComms": {
-        "13": "\u5728Fungle\u5730\u56fe\u65f6\u7981\u7528"
     },
     "restrictDevices": {
         "0": "Restrict Map Information",
@@ -505,7 +516,7 @@
     },
     "camsNoNightVisionIfImpVision": {
         "0": "Impostor Vision Ignores Night Vision Cams",
-        "13": "\u5185\u9b3c\u65e0\u89c6\u76d1\u63a7\u7684\u591c\u89c6\u6a21\u5f0f"
+        "13": "\u4f2a\u88c5\u8005\u65e0\u89c6\u76d1\u63a7\u7684\u591c\u89c6\u6a21\u5f0f"
     },
     "dynamicMap": {
         "0": "Play On A Random Map",
@@ -516,42 +527,55 @@
         "13": "\u4f7f\u7528\u968f\u673a\u5730\u56fe\u8bbe\u7f6e\u9884\u8bbe"
     },
     "guesserGamemodeCrewNumber": {
+        "0": "Number of Crew Guessers",
         "13": "\u8239\u5458\u9635\u8425\u8d4c\u602a\u6570"
     },
     "guesserGamemodeNeutralNumber": {
+        "0": "Number of Neutral Guessers",
         "13": "\u4e2d\u7acb\u9635\u8425\u8d4c\u602a\u6570"
     },
     "guesserGamemodeImpNumber": {
+        "0": "Number of Impostor Guessers",
         "13": "\u4f2a\u88c5\u8005\u9635\u8425\u8d4c\u602a\u6570"
     },
     "guesserForceJackalGuesser": {
+        "0": "Force Jackal Guesser",
         "13": "\u5f3a\u5236\u8c7a\u72fc\u6210\u4e3a\u8d4c\u602a"
     },
     "guesserGamemodeSidekickIsAlwaysGuesser": {
+        "0": "Sidekick Is Always Guesser",
         "13": "\u5f3a\u5236\u8ddf\u73ed\u6210\u4e3a\u8d4c\u602a"
     },
     "guesserForcePavlovsGuesser": {
+        "0": "Force Pavlov's owner Guesser",
         "13": "\u5f3a\u5236\u5df4\u752b\u6d1b\u592b\u4e3a\u8d4c\u602a"
     },
     "guesserForceThiefGuesser": {
+        "0": "Force Thief Guesser",
         "13": "\u5f3a\u5236\u8eab\u4efd\u7a83\u8d3c\u4e3a\u8d4c\u602a"
     },
     "guesserGamemodeHaveModifier": {
+        "0": "Guessers Can Have A Modifier",
         "13": "\u8d4c\u602a\u53ef\u4ee5\u62e5\u6709\u9644\u52a0\u804c\u4e1a"
     },
     "guesserGamemodeNumberOfShots": {
+        "0": "Guesser Number Of Shots",
         "13": "\u8d4c\u602a\u731c\u6d4b\u6700\u5927\u6b21\u6570"
     },
     "guesserGamemodeHasMultipleShotsPerMeeting": {
+        "0": "Guesser Can Shoot Multiple Times Per Meeting",
         "13": "\u4e00\u8f6e\u4f1a\u8bae\u53ef\u591a\u6b21\u731c\u6d4b"
     },
     "guesserGamemodeKillsThroughShield": {
+        "0": "Guesses Ignore The Medic Shield",
         "13": "\u8d4c\u602a\u731c\u6d4b\u65e0\u89c6\u62a4\u76fe"
     },
     "guesserGamemodeEvilCanKillSpy": {
+        "0": "Evil Guesser Can Guess The Spy",
         "13": "\u90aa\u6076\u7684\u8d4c\u602a\u53ef\u731c\u6d4b\u5367\u5e95"
     },
     "guesserGamemodeCantGuessSnitchIfTaksDone": {
+        "0": "Guesser Can't Guess Snitch When Tasks Completed",
         "13": "\u8d4c\u602a\u4e0d\u53ef\u731c\u6d4b\u5df2\u5b8c\u6210\u4efb\u52a1\u7684\u544a\u5bc6\u8005"
     },
     "CustomMap": {
@@ -1054,27 +1078,35 @@
         "13": "\u7b2c\u4e00\u6bb5\u6b8b\u5f71\u900f\u660e\u5ea6"
     },
     "evilTrapperNumTrap": {
+        "0": "Number Of Traps",
         "13": "\u6700\u5927\u53ef\u540c\u65f6\u653e\u4e0b\u7684\u9677\u9631\u6570"
     },
     "evilTrapperExtensionTime": {
+        "0": "Time The Trap Will Be Activated",
         "13": "\u9677\u9631\u6fc0\u6d3b\u6240\u9700\u65f6\u95f4"
     },
     "evilTrapperCooldown": {
+        "0": "Place Traps Cooldown",
         "13": "\u653e\u7f6e\u9677\u9631\u51b7\u5374"
     },
     "evilTrapperKillTimer": {
+        "0": "Time Until Death If Caught By Trap",
         "13": "\u6389\u8fdb\u9677\u9631\u540e\u88ab\u9677\u9631\u51fb\u6740\u6240\u9700\u65f6\u95f4"
     },
     "evilTrapperTrapRange": {
+        "0": "Trap Range",
         "13": "\u9677\u9631\u6709\u6548\u8303\u56f4"
     },
     "evilTrapperMaxDistance": {
+        "0": "Trap Hear Range",
         "13": "\u9677\u9631\u51fb\u6740\u58f0\u97f3\u64ad\u653e\u6709\u6548\u8303\u56f4"
     },
     "evilTrapperPenaltyTime": {
+        "0": "Penalty For Normal Kills",
         "13": "\u666e\u901a\u51fb\u6740\u4f1a\u8ffd\u52a0\u51b7\u5374"
     },
     "evilTrapperBonusTime": {
+        "0": "Cooldown Decrease If Trap Player Is Killed",
         "13": "\u51fb\u6740\u843d\u5165\u9677\u9631\u7684\u73a9\u5bb6\u7f29\u51cf\u51b7\u5374"
     },
     "jesterCanCallEmergency": {
@@ -1087,7 +1119,7 @@
     },
     "jesterHasImpostorVision": {
         "0": "Jester Has Impostor Vision",
-        "13": "\u62e5\u6709\u5185\u9b3c\u89c6\u91ce"
+        "13": "\u62e5\u6709\u4f2a\u88c5\u8005\u89c6\u91ce"
     },
     "survivorVestEnable": {
         "13": "\u5e78\u5b58\u8005\u53ef\u4ee5\u4f7f\u7528\u9632\u5f39\u8863"
@@ -1161,7 +1193,7 @@
     },
     "jackalAndSidekickHaveImpostorVision": {
         "0": "Jackal And Sidekick Have Impostor Vision",
-        "13": "\u8c7a\u72fc/\u8ddf\u73ed\u62e5\u6709\u5185\u9b3c\u89c6\u91ce"
+        "13": "\u8c7a\u72fc/\u8ddf\u73ed\u62e5\u6709\u4f2a\u88c5\u8005\u89c6\u91ce"
     },
     "jackalCanCreateSidekick": {
         "0": "Jackal Can Create A Sidekick",
@@ -1208,7 +1240,7 @@
     },
     "pavlovsownerHasImpostorVision": {
         "0": "Have Impostor Vision",
-        "13": "\u62e5\u6709\u5185\u9b3c\u89c6\u91ce"
+        "13": "\u62e5\u6709\u4f2a\u88c5\u8005\u89c6\u91ce"
     },
     "pavlovsownerCanUseVents": {
         "13": "\u53ef\u4ee5\u4f7f\u7528\u7ba1\u9053"
@@ -1242,7 +1274,7 @@
     },
     "swooperHasImpVision": {
         "0": "Have Impostor Vision",
-        "13": "\u62e5\u6709\u5185\u9b3c\u89c6\u91ce"
+        "13": "\u62e5\u6709\u4f2a\u88c5\u8005\u89c6\u91ce"
     },
     "werewolfRampageCooldown": {
         "0": "Rampage Cooldown",
@@ -1261,7 +1293,7 @@
     },
     "juggernautHasImpVision": {
         "0": "Have Impostor Vision",
-        "13": "\u5929\u542f\u62e5\u6709\u4f2a\u88c5\u8005\u89c6\u91ce"
+        "13": "\u62e5\u6709\u4f2a\u88c5\u8005\u89c6\u91ce"
     },
     "juggernautReducedkillEach": {
         "13": "\u6bcf\u6b21\u51fb\u6740\u540e\u51cf\u5c11\u7684cd"
@@ -1346,7 +1378,7 @@
         "13": "\u9632\u5f39\u8863\u53ef\u7528\u6b21\u6570"
     },
     "doomsayerCooldown": {
-        "13": "\u6280\u80fd\u51b7\u5374"
+        "13": "\u63ed\u793a\u51b7\u5374"
     },
     "doomsayerHasMultipleShotsPerMeeting": {
         "13": "\u731c\u6d4b\u6210\u529f\u540e\u53ef\u7ee7\u7eed\u731c\u6d4b"
@@ -1568,7 +1600,7 @@
         "13": "\u4ee5\u4e0b\u65f6\u95f4\u5185\u62a5\u544a\u53ef\u5f97\u77e5\u51f6\u624b\u804c\u4e1a"
     },
     "detectiveReportColorDuration": {
-        "0": "Time Where Investigator Reports Will Have Color Type",
+        "0": "Time Where Investigator Reports Will Have Role Type",
         "13": "\u4ee5\u4e0b\u65f6\u95f4\u5185\u62a5\u544a\u53ef\u5f97\u77e5\u51f6\u624b\u9635\u8425"
     },
     "medicShowShielded": {
@@ -1788,30 +1820,39 @@
         "13": "\u4e3a\u4e2d\u7acb\u9635\u8425\u4f7f\u7528\u4e0d\u540c\u989c\u8272\u7684\u63d0\u9192"
     },
     "prophetCooldown": {
+        "0": "Examination Cooldown",
         "13": "\u51b7\u5374\u65f6\u95f4"
     },
     "prophetNumExamines": {
+        "0": "Number Of Examinations",
         "13": "\u9884\u8a00\u603b\u6b21\u6570"
     },
     "prophetCanCallEmergency": {
+        "0": "Prophet Can Call Emergency Meeting",
         "13": "\u53ef\u4ee5\u53ec\u5f00\u7d27\u6025\u4f1a\u8bae"
     },
     "prophetIsRevealed": {
+        "0": "Prophet Is Revealed To The Killers",
         "13": "\u53ef\u4ee5\u88ab\u6740\u624b\u53d1\u73b0"
     },
     "prophetExaminesToBeRevealed": {
+        "0": "Number Of Examinations Required To Be Revealed",
         "13": "\u88ab\u53d1\u73b0\u6240\u9700\u63ed\u793a\u6b21\u6570"
     },
     "prophetKillCrewAsRed": {
+        "0": "Killer Crew Shown As Red",
         "13": "\u6740\u624b\u8239\u5458\u663e\u793a\u4e3a\u7ea2\u540d"
     },
     "prophetBenignNeutralAsRed": {
+        "0": "Benign Neutral Shown As Red",
         "13": "\u5584\u826f\u4e2d\u7acb\u663e\u793a\u4e3a\u7ea2\u540d"
     },
     "prophetEvilNeutralAsRed": {
+        "0": "Evil Neutral Shown As Red",
         "13": "\u90aa\u6076\u4e2d\u7acb\u663e\u793a\u4e3a\u7ea2\u540d"
     },
     "prophetKillNeutralAsRed": {
+        "0": "Killer Neutral Shown As Red",
         "13": "\u6740\u624b\u4e2d\u7acb\u663e\u793a\u4e3a\u7ea2\u540d"
     },
     "spyCanDieToSheriff": {
@@ -1828,7 +1869,7 @@
     },
     "spyHasImpostorVision": {
         "0": "Spy Has Impostor Vision",
-        "13": "\u62e5\u6709\u5185\u9b3c\u89c6\u91ce"
+        "13": "\u62e5\u6709\u4f2a\u88c5\u8005\u89c6\u91ce"
     },
     "portalmakerCooldown": {
         "0": "Portalmaker Cooldown",
@@ -2052,12 +2093,14 @@
         "13": "\u5c0f\u5b69\u4f1a\u8bae\u671f\u95f4\u53ef\u6210\u957f"
     },
     "modifierGiantSpped": {
+        "0": "Giant Speed",
         "13": "\u5de8\u4eba\u7684\u79fb\u901f\u500d\u7387"
     },
     "modifierButtonSabotageRemoteMeetings": {
         "13": "\u53ef\u5728\u7834\u574f\u65f6\u4f7f\u7528"
     },
     "modifierShowCursed": {
+        "0": "Hide Modifiers",
         "13": "\u9690\u85cf\u804c\u4e1a"
     },
     "modifierVipQuantity": {

@@ -412,7 +412,7 @@ internal class GameOptionsMenuStartPatch
         var isReturn = setNames(
             new Dictionary<string, string>
             {
-                ["TORSettings"] = "theOtherUsSettings".Translate(),
+                ["TORSettings"] = "theOtherRolesSettings".Translate(),
                 ["ImpostorSettings"] = "impostorRolesSettings".Translate(),
                 ["NeutralSettings"] = "neutralRolesSettings".Translate(),
                 ["CrewmateSettings"] = "crewmateRolesSettings".Translate(),
@@ -551,7 +551,7 @@ internal class GameOptionsMenuStartPatch
         var isReturn = setNames(
             new Dictionary<string, string>
             {
-                ["TORSettings"] = "theOtherUsSettings".Translate(),
+                ["TORSettings"] = "theOtherRolesSettings".Translate(),
                 ["GuesserSettings"] = "guesserSettings".Translate(),
                 ["ImpostorSettings"] = "impostorRolesSettings".Translate(),
                 ["NeutralSettings"] = "neutralRolesSettings".Translate(),

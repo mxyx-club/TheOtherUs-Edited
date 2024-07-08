@@ -2103,7 +2103,7 @@ internal class BodyReportPatch
                     else if (timeSinceDeath < Medic.ReportColorDuration * 1000)
                     {
                         var typeOfColor = isLighterColor(killer) ? "浅" : "深";
-                        msg = $"尸检报告: 凶手似乎是 {typeOfColor} 色的!\n尸体在{Math.Round(timeSinceDeath / 1000)}秒前死亡";
+                        msg = $"尸检报告: 凶手的颜色似乎是 {typeOfColor} 色的!\n尸体在{Math.Round(timeSinceDeath / 1000)}秒前死亡";
                     }
                     else
                     {
@@ -2119,9 +2119,9 @@ internal class BodyReportPatch
                     else if (timeSinceDeath < Detective.reportColorDuration * 1000)
                     {
                         var killerTeam = "";
-                        if (isNeutral(killer)) killerTeam = "Neutral".Translate();
-                        if (killer.Data.Role.IsImpostor) killerTeam = "Impostor".Translate();
-                        if (!killer.Data.Role.IsImpostor && !isNeutral(killer)) killerTeam = "Crewmate".Translate();
+                        if (isNeutral(killer)) killerTeam = "NeutralRolesText".Translate();
+                        else if (killer.Data.Role.IsImpostor) killerTeam = "ImpostorRolesText".Translate();
+                        else if (!killer.Data.Role.IsImpostor && !isNeutral(killer)) killerTeam = "CrewmateRolesText".Translate();
 
                         msg = $"尸检报告: 凶手的阵营似乎是 {killerTeam} !\n尸体在{Math.Round(timeSinceDeath / 1000)}秒前死亡";
                     }
