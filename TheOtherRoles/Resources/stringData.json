@@ -1587,6 +1587,9 @@
         "0": "Anonymous Footprints",
         "13": "\u533f\u540d\u811a\u5370"
     },
+    "detectiveAnonymousFootprints1": {
+        "13": "\u5728\u7279\u6b8a\u7834\u574f\u671f\u95f4\u533f\u540d"
+    },
     "detectiveFootprintIntervall": {
         "0": "Footprint Intervall",
         "13": "\u811a\u5370\u66f4\u65b0\u95f4\u9694"

@@ -154,12 +154,12 @@ public static class Medium
                     condition = "个杀手" + (count == 1 ? "" : "");
                     break;
                 case 1:
-                    count = alivePlayersList.Where(Helpers.roleCanUseVents).Count();
+                    count = alivePlayersList.Count(Helpers.roleCanUseVents);
                     condition = "个可以使用管道的玩家" + (count == 1 ? "" : "");
                     break;
                 case 2:
-                    count = alivePlayersList.Count(pc => !isKiller(pc));
-                    condition = "名玩家" + (count == 1 ? "" : "") + "" + (count == 1 ? "是" : "是") + "非击杀型中立";
+                    count = alivePlayersList.Count(pc => isNeutral(pc) && !isKiller(pc));
+                    condition = $"名玩家{(count == 1 ? "" : "")}{(count == 1 ? "是" : "是")}非击杀型中立";
                     break;
             }
 

@@ -352,9 +352,9 @@ public static class SabotageButtonDoClickPatch
         //MapOptionsTor.Mode = MapOptionsTor.Modes.Sabotage;
         //DestroyableSingleton<HudManager>.Instance.ToggleMapVisible(DestroyableSingleton<MapOptions>.Instance.Modes.Sabotage);
 
-        DestroyableSingleton<HudManager>.Instance.ToggleMapVisible(new global::MapOptions
+        DestroyableSingleton<HudManager>.Instance.ToggleMapVisible(new MapOptions
         {
-            Mode = global::MapOptions.Modes.Sabotage
+            Mode = MapOptions.Modes.Sabotage
         });
 
         return false;

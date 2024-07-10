@@ -330,6 +330,10 @@ public static class Helpers
     public static void NoCheckStartMeeting(this PlayerControl reporter, GameData.PlayerInfo target, bool force = false)
     {
         if (IsMeeting) return;
+
+        handleVampireBiteOnBodyReport();
+        handleBomberExplodeOnBodyReport();
+        handleTrapperTrapOnBodyReport();
         //if (Options.DisableMeeting.GetBool()) return;
 
         MeetingRoomManager.Instance.AssignSelf(reporter, target);
@@ -798,15 +802,52 @@ public static class Helpers
         return CustomColors.lighterColors.Contains(colorId);
     }
 
-    public static TMPro.TextMeshPro getFirst(this TMPro.TextMeshPro[] text)
+    public static TextMeshPro getFirst(this TextMeshPro[] text)
     {
         if (text == null) return null;
         foreach (var self in text)
             if (self.text == "") return self;
         return text[0];
     }
+    /*
+    public static async Task checkBeta()
+    {
+        if (Main.betaDays > 0)
+        {
+            Message($"Beta check");
+            var ticks = GetBuiltInTicks();
+            var compileTime = new DateTime(ticks, DateTimeKind.Utc);  // This may show as an error, but it is not, compilation will work!
+            Message($"Compiled at {compileTime.ToString(CultureInfo.InvariantCulture)}");
+            DateTime? now;
+            // Get time from the internet, so no-one can cheat it (so easily).
+            try
+            {
+                var client = new System.Net.Http.HttpClient();
+                using var response = await client.GetAsync("http://www.google.com/");
+                if (response.IsSuccessStatusCode)
+                    now = response.Headers.Date?.UtcDateTime;
+                else
+                {
+                    Message($"Could not get time from server: {response.StatusCode}");
+                    now = DateTime.UtcNow; //In case something goes wrong. 
+                }
+            }
+            catch (System.Net.Http.HttpRequestException)
+            {
+                now = DateTime.UtcNow;
+            }
+            if ((now - compileTime)?.TotalDays > Main.betaDays)
+            {
+                Message($"Beta expired!");
+                BepInExUpdater.MessageBoxTimeout(BepInExUpdater.GetForegroundWindow(), "BETA is expired. You cannot play this version anymore.", "The Other Us Beta", 0, 0, 10000);
+                Application.Quit();
 
-    public static int totalCounts(this TMPro.TextMeshPro[] text)
+            }
+            else Message($"Beta will remain runnable for {Main.betaDays - (now - compileTime)?.TotalDays} days!");
+        }
+    }
+    */
+    public static int totalCounts(this TextMeshPro[] text)
     {
         if (text == null) return 0;
         int count = 0;

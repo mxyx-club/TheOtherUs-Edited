@@ -37,40 +37,8 @@ public static class ChatCommands
             // 游戏大厅指令
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
             {
-                // 踢出玩家
-                if (text.ToLower().StartsWith("/kick "))
-                {
-                    var playerName = text[6..];
-                    PlayerControl target =
-                        CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
-                    if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
-                    {
-                        var client = AmongUsClient.Instance.GetClient(target.OwnerId);
-                        if (client != null)
-                        {
-                            AmongUsClient.Instance.KickPlayer(client.Id, false);
-                            handled = true;
-                        }
-                    }
-                }
-                // 封禁玩家
-                else if (text.ToLower().StartsWith("/ban "))
-                {
-                    var playerName = text[5..];
-                    PlayerControl target =
-                        CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
-                    if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
-                    {
-                        var client = AmongUsClient.Instance.GetClient(target.OwnerId);
-                        if (client != null)
-                        {
-                            AmongUsClient.Instance.KickPlayer(client.Id, true);
-                            handled = true;
-                        }
-                    }
-                }
                 // 更改游戏模式
-                else if (text.ToLower().StartsWith("/gm"))
+                if (text.ToLower().StartsWith("/gm"))
                 {
                     var gm = text[4..].ToLower();
                     var gameMode = CustomGamemodes.Classic;
@@ -108,8 +76,41 @@ public static class ChatCommands
                 // 强制紧急会议或结束会议
                 else if (text.ToLower().StartsWith("/meeting") || text.ToLower().StartsWith("/mt"))
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.NoCheckStartMeeting(null, true);
+                    if (IsMeeting) MeetingHud.Instance.RpcClose();
+                    else CachedPlayer.LocalPlayer.PlayerControl.NoCheckStartMeeting(null, true);
                     handled = true;
+                }
+                // 踢出玩家
+                else if (text.ToLower().StartsWith("/kick "))
+                {
+                    var playerName = text[6..];
+                    PlayerControl target =
+                        CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
+                    if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
+                    {
+                        var client = AmongUsClient.Instance.GetClient(target.OwnerId);
+                        if (client != null)
+                        {
+                            AmongUsClient.Instance.KickPlayer(client.Id, false);
+                            handled = true;
+                        }
+                    }
+                }
+                // 封禁玩家
+                else if (text.ToLower().StartsWith("/ban "))
+                {
+                    var playerName = text[5..];
+                    PlayerControl target =
+                        CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
+                    if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
+                    {
+                        var client = AmongUsClient.Instance.GetClient(target.OwnerId);
+                        if (client != null)
+                        {
+                            AmongUsClient.Instance.KickPlayer(client.Id, true);
+                            handled = true;
+                        }
+                    }
                 }
             }
             // 游戏中玩家指令

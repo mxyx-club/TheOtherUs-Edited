@@ -400,12 +400,6 @@ public class KillTrap
         audioSource.Stop();
         audioSource.maxDistance = EvilTrapper.maxDistance;
         audioSource.PlayOneShot(kill);
-        if (target == Medic.currentTarget || target == Veteran.veteran && Veteran.alertActive || target == BodyGuard.currentTarget
-         || MapOption.shieldFirstKill && MapOption.firstKillPlayer == target || target == Mini.mini)
-        {
-            clearAllTraps();
-            checkMuderAttempt(EvilTrapper.evilTrapper, target);
-        }
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(kill.length, new Action<float>((p) =>
         {
             if (p == 1f)
@@ -415,7 +409,18 @@ public class KillTrap
         })));
         EvilTrapper.isTrapKill = true;
         KillAnimationCoPerformKillPatch.hideNextAnimation = true;
-        trapper.MurderPlayer(target, MurderResultFlags.Succeeded);
+        //trapper.MurderPlayer(target, MurderResultFlags.Succeeded);
+        var shouldVetKill = Veteran.veteran == target && Veteran.alertActive;
+        if (shouldVetKill)
+        {
+            RPCProcedure.veteranKill(trapper.PlayerId);
+            return;
+        }
+        var murder = checkMuderAttempt(trapper, target);
+        if (murder == MurderAttemptResult.PerformKill)
+        {
+            trapper.MurderPlayer(target, MurderResultFlags.Succeeded);
+        }
     }
 
     public static void clearAllTraps()

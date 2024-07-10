@@ -727,10 +727,10 @@ internal class PropHunt
 
     [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.Show))]
     [HarmonyPrefix]
-    public static void MapBehaviourShowPatch(MapBehaviour __instance, ref global::MapOptions opts)
+    public static void MapBehaviourShowPatch(MapBehaviour __instance, ref MapOptions opts)
     {
         if (!isPropHuntGM) return;
-        if (opts.Mode == global::MapOptions.Modes.Sabotage) opts.Mode = global::MapOptions.Modes.Normal;
+        if (opts.Mode == MapOptions.Modes.Sabotage) opts.Mode = MapOptions.Modes.Normal;
     }
 
 

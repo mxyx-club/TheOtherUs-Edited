@@ -1134,19 +1134,22 @@ public class CustomOptionHolder
         privateInvestigatorSeeColor = Create(30131, Types.Crewmate, "privateInvestigatorSeeColor", true, privateInvestigatorSpawnRate);
 
         detectiveSpawnRate = Create(30190, Types.Crewmate, cs(Detective.color, "Detective"), rates, null, true);
-        detectiveAnonymousFootprints = Create(30191, Types.Crewmate, "detectiveAnonymousFootprints", false, detectiveSpawnRate);
+        detectiveAnonymousFootprints = Create(30191, Types.Crewmate, "detectiveAnonymousFootprints",
+            ["optionOff", "detectiveAnonymousFootprints1", "optionOn"], detectiveSpawnRate);
         detectiveFootprintIntervall = Create(30192, Types.Crewmate, "detectiveFootprintIntervall", 0.25f, 0.25f, 10f, 0.25f, detectiveSpawnRate);
         detectiveFootprintDuration = Create(30193, Types.Crewmate, "detectiveFootprintDuration", 12.5f, 0.5f, 30f, 0.5f, detectiveSpawnRate);
         detectiveReportNameDuration = Create(30194, Types.Crewmate, "detectiveReportNameDuration", 5f, 0f, 60f, 2.5f, detectiveSpawnRate);
         detectiveReportColorDuration = Create(30195, Types.Crewmate, "detectiveReportColorDuration", 30f, 0f, 120f, 2.5f, detectiveSpawnRate);
 
         medicSpawnRate = Create(30200, Types.Crewmate, cs(Medic.color, "Medic"), rates, null, true);
-        medicShowShielded = Create(30201, Types.Crewmate, "medicShowShielded", ["medicShowShielded1", "medicShowShielded2", "medicShowShielded3"], medicSpawnRate);
+        medicShowShielded = Create(30201, Types.Crewmate, "medicShowShielded",
+            ["medicShowShielded1", "medicShowShielded2", "medicShowShielded3"], medicSpawnRate);
         medicBreakShield = Create(30202, Types.Crewmate, "medicBreakShield", true, medicSpawnRate);
         medicShowAttemptToMedic = Create(30203, Types.Crewmate, "medicShowAttemptToMedic", true, medicBreakShield);
         medicShowAttemptToShielded = Create(30204, Types.Crewmate, "medicShowAttemptToShielded", false, medicBreakShield);
         medicResetTargetAfterMeeting = Create(30205, Types.Crewmate, "medicResetTargetAfterMeeting", false, medicSpawnRate);
-        medicSetOrShowShieldAfterMeeting = Create(30206, Types.Crewmate, "medicSetOrShowShieldAfterMeeting", ["medicSetOrShowShieldAfterMeeting1", "medicSetOrShowShieldAfterMeeting2", "medicSetOrShowShieldAfterMeeting3"], medicSpawnRate);
+        medicSetOrShowShieldAfterMeeting = Create(30206, Types.Crewmate, "medicSetOrShowShieldAfterMeeting",
+            ["medicSetOrShowShieldAfterMeeting1", "medicSetOrShowShieldAfterMeeting2", "medicSetOrShowShieldAfterMeeting3"], medicSpawnRate);
         medicReportNameDuration = Create(30207, Types.Crewmate, "medicReportNameDuration", 5f, 0f, 60f, 2.5f, medicBreakShield);
         medicReportColorDuration = Create(30208, Types.Crewmate, "medicReportColorDuration", 30f, 0f, 120f, 2.5f, medicBreakShield);
 
@@ -1190,7 +1193,8 @@ public class CustomOptionHolder
         trackerCanTrackCorpses = Create(30263, Types.Crewmate, "trackerCanTrackCorpses", true, trackerSpawnRate);
         trackerCorpsesTrackingCooldown = Create(30264, Types.Crewmate, "trackerCorpsesTrackingCooldown", 17.5f, 5f, 60f, 2.5f, trackerCanTrackCorpses);
         trackerCorpsesTrackingDuration = Create(30265, Types.Crewmate, "trackerCorpsesTrackingDuration", 7.5f, 2.5f, 30f, 2.5f, trackerCanTrackCorpses);
-        trackerTrackingMethod = Create(30266, Types.Crewmate, "trackerTrackingMethod", ["trackerTrackingMethod1", "trackerTrackingMethod2", "trackerTrackingMethod3"], trackerSpawnRate);
+        trackerTrackingMethod = Create(30266, Types.Crewmate, "trackerTrackingMethod",
+            ["trackerTrackingMethod1", "trackerTrackingMethod2", "trackerTrackingMethod3"], trackerSpawnRate);
 
         prophetSpawnRate = Create(30360, Types.Crewmate, cs(Prophet.color, "Prophet"), rates, null, true);
         prophetCooldown = Create(30361, Types.Crewmate, "prophetCooldown", 20f, 5f, 60f, 2.5f, prophetSpawnRate);

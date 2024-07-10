@@ -1,23 +1,22 @@
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
-namespace TheOtherRoles.Patches
+namespace TheOtherRoles.Patches;
+
+
+[HarmonyPatch]
+
+public class DangerMeterPatch
 {
 
-    [HarmonyPatch]
+    [HarmonyPatch(typeof(DangerMeter), nameof(DangerMeter.SetFirstNBarColors))]
+    [HarmonyPrefix]
 
-    public class DangerMeterPatch
+    public static void Prefix(DangerMeter __instance, ref Color color)
     {
+        if (CachedPlayer.LocalPlayer.PlayerControl != Tracker.tracker) return;
+        if (__instance == HudManager.Instance.DangerMeter) return;
 
-        [HarmonyPatch(typeof(DangerMeter), nameof(DangerMeter.SetFirstNBarColors))]
-        [HarmonyPrefix]
-
-        public static void Prefix(DangerMeter __instance, ref Color color)
-        {
-            if (CachedPlayer.LocalPlayer.PlayerControl != Tracker.tracker) return;
-            if (__instance == HudManager.Instance.DangerMeter) return;
-
-            color = color.SetAlpha(0.5f);
-        }
+        color = color.SetAlpha(0.5f);
     }
 }

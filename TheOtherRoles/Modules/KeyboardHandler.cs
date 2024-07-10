@@ -48,14 +48,8 @@ public class CommandHandler
             // 强制开始会议或结束会议
             if (Input.GetKey(KeyCode.M) && Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Return))
             {
-                if (IsMeeting)
-                {
-                    handleVampireBiteOnBodyReport();
-                    handleBomberExplodeOnBodyReport();
-                    handleTrapperTrapOnBodyReport();
-                    MeetingHud.Instance.RpcClose();
-                }
-                else CachedPlayer.LocalPlayer.PlayerControl.NoCheckStartMeeting(null, true); ;
+                if (IsMeeting) MeetingHud.Instance.RpcClose();
+                else CachedPlayer.LocalPlayer.PlayerControl.NoCheckStartMeeting(null, true);
             }
             // 强制结束游戏
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.T) && Input.GetKeyDown(KeyCode.Return) && InGame)
