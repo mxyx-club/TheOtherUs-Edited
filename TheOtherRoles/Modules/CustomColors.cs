@@ -13,16 +13,6 @@ public class CustomColors
     public static List<int> lighterColors = [3, 4, 5, 7, 10, 11, 13, 14, 17];
     public static uint pickableColors = (uint)Palette.ColorNames.Length;
 
-    /* private static readonly List<int> ORDER = [
-        0, 1, 2, 3, 4, 5, 6, 7,
-        8, 9, 10, 11, 12, 13, 14, 15,
-        16, 17, 37, 33, 41, 25, 30, 35,
-        27, 23, 32, 38, 21, 40, 31, 34,
-        22, 28, 36, 26, 29, 20, 19, 18,
-        24, 39, 42, 43, 44, 45, 46, 47,
-        48, 49, 50, 51, 52, 53, 54, 55,
-    ];*/
-
     private enum ColorType
     {
         Tamarind = 18,
@@ -127,18 +117,9 @@ public class CustomColors
                 lighterColors.Add(colorlist.Count - 1);
             id++;
         }
-
         Palette.ColorNames = longlist.ToArray();
         Palette.PlayerColors = colorlist.ToArray();
         Palette.ShadowColors = shadowlist.ToArray();
-    }
-
-    protected internal struct CustomColor
-    {
-        public string longname;
-        public Color32 color;
-        public Color32 shadow;
-        public bool isLighterColor;
     }
 
     [HarmonyPatch]
@@ -175,13 +156,21 @@ public class CustomColors
                 // TODO: Design an algorithm to dynamically position chips to optimally fill space
                 var cols = 8;
 
-                for (var i = 0; i < chips.Length; i++)
+                for (var i = 0; i < chips.Count; i++)
                 {
                     var chip = chips[i];
-                    int row = i / cols, col = i % cols;
-                    chip.transform.localPosition = new Vector3(-0.975f + (col * 0.5f), 1.475f - (row * 0.5f),
-                        chip.transform.localPosition.z);
+                    int row = i / cols, col = i % cols; // Dynamically do the positioningS
+                    chip.transform.localPosition = new Vector3(-0.975f + (col * 0.5f), 1.475f - (row * 0.5f), chip.transform.localPosition.z);
                     chip.transform.localScale *= 0.76f;
+                }
+                for (var j = chips.Count; j < chips.Length; j++)
+                {
+                    // If number isn't in order, hide it
+                    var chip = chips[j];
+                    chip.transform.localScale *= 0f;
+                    chip.enabled = false;
+                    chip.Button.enabled = false;
+                    chip.Button.OnClick.RemoveAllListeners();
                 }
             }
         }

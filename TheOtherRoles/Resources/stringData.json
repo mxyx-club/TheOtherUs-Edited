@@ -2443,7 +2443,7 @@
         "13": "\u7ea2\u8c46"
     },
     "colorTokiwaGreen": {
-        "0": "TokiwaGreen",
+        "0": "Tokiwa Green",
         "13": "\u5e38\u9752\u7eff"
     },
     "colorPitchwhite": {
@@ -2477,6 +2477,14 @@
     "colorXmasRed": {
         "0": "X'masRed",
         "13": "\u5723\u8bde\u7ea2"
+    },
+    "colorCrasyublue": {
+        "0": "Crasyu Blue",
+        "13": "\u6df1\u6d77\u84dd"
+    },
+    "colorMildpurple": {
+        "0": "Mild purple",
+        "13": "\u6de1\u7d2b"
     },
     "CamoText": {
         "0": "CAMO",

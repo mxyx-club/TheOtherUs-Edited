@@ -866,7 +866,7 @@ internal class RoleManagerSelectRolesPatch
         if (modifiers.Contains(RoleId.Cursed))
         {
             var crewPlayerC = new List<PlayerControl>(playerList);
-            crewPlayerC.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
+            crewPlayerC.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
             playerId = setModifierToRandomPlayer((byte)RoleId.Cursed, crewPlayerC);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Cursed);
@@ -875,9 +875,7 @@ internal class RoleManagerSelectRolesPatch
         if (modifiers.Contains(RoleId.Tunneler))
         {
             var crewPlayerT = new List<PlayerControl>(playerList);
-            crewPlayerT.RemoveAll(x =>
-                x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral) ||
-                RoleInfo.getRoleInfoForPlayer(x).Any(r => r.roleId == RoleId.Engineer));
+            crewPlayerT.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x) || x == Engineer.engineer);
             playerId = setModifierToRandomPlayer((byte)RoleId.Tunneler, crewPlayerT);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Tunneler);

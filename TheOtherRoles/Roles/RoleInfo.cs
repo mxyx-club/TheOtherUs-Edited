@@ -351,7 +351,7 @@ public class RoleInfo
         if (p == Executioner.executioner && Executioner.executioner) infos.Add(executioner);
         if (p == Trapper.trapper) infos.Add(trapper);
         if (p == Prophet.prophet) infos.Add(prophet);
-        if (Pursuer.pursuer != null && Pursuer.pursuer.Contains(p)) infos.Add(pursuer);
+        if (Pursuer.pursuer.Contains(p)) infos.Add(pursuer);
         if (p == Jumper.jumper) infos.Add(jumper);
         if (p == Thief.thief) infos.Add(thief);
         if (p == Juggernaut.juggernaut) infos.Add(juggernaut);
