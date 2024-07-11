@@ -15,6 +15,7 @@
 
 | 游戏版本            | 模组版本 | 发布日期  | 链接                                                         |
 | ------------------- | -------- | --------- | ------------------------------------------------------------ |
+| 2024.3.5 ~ 2024.6.4 | v1.0.5.4 | 2024.7.12  | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.5.4/TheOtherUs.zip) |
 | 2024.3.5 ~ 2024.6.4 | v1.0.5.3 | 2024.7.8  | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.5.3/TheOtherUs.zip) |
 | 2024.3.5 ~ 2024.6.4 | v1.0.4.6 | 2024.6.29 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.6/TheOtherUs.zip) |
 | 2024.3.5 ~ 2024.6.4 | v1.0.4.2 | 2024.6.16 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.2/TheOtherUs.zip) |
@@ -31,7 +32,7 @@
 
  - #### 新增内容：
 
-    - 新增选项："随机设定玩家深浅色" ，游戏默认开启，关闭时玩家深浅色会由玩家颜色为准。
+    - 新增选项："随机设定玩家深浅色" ，游戏默认开启，关闭时玩家深浅色会由玩家颜色为准
 
  - #### Bug修复：
 
