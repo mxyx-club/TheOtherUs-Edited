@@ -3168,11 +3168,6 @@ public static class RPCProcedure
         {
             Pavlovsdogs.pavlovsdogs.Add(thief);
         }
-        if (Pavlovsdogs.pavlovsowner) Pavlovsdogs.pavlovsowner = thief;
-        if (Pavlovsdogs.pavlovsdogs.Any())
-        {
-            Pavlovsdogs.pavlovsdogs.Add(thief);
-        }
         //if (target == Guesser.evilGuesser) Guesser.evilGuesser = thief;
         if (target == Poucher.poucher && !Poucher.spawnModifier) Poucher.poucher = thief;
         if (target == Morphling.morphling) Morphling.morphling = thief;
