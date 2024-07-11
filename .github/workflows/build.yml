@@ -29,38 +29,39 @@ jobs:
         with:
           dotnet-version: 6.x
 
-      - name: install wget
-        run: sudo apt install wget
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install wget unzip -y
 
-      - name: download BepInEx
-        run: wget https://builds.bepinex.dev/projects/bepinex_be/688/BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.688%2B4901521.zip
+      - name: Download and Unzip BepInEx
+        run: |
+          wget https://builds.bepinex.dev/projects/bepinex_be/688/BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.688%2B4901521.zip -O BepInEx.zip
+          unzip BepInEx.zip -d ./Release/
+          sudo chmod -R 777 ./Release
 
-      - name: unzip BepInEx
-        run: unzip BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.688+4901521.zip -d ./Release/
+      - name: Download and Unzip ExtraData
+        run: |
+          wget https://raw.githubusercontent.com/mxyx-club/ExtraData/main/ExtraData.zip -O ExtraData.zip
+          unzip ExtraData.zip -d ./Release/
 
-      - name: path
-        run: sudo chmod -R 777 ./Release
-
-      - name: download ExtraData
-        run: wget https://raw.githubusercontent.com/mxyx-club/ExtraData/main/ExtraData.zip
-
-      - name: unzip ExtraData
-        run: unzip ExtraData.zip -d ./Release/
-
-      - name: download Reactor
+      - name: Download Reactor
         run: wget https://github.com/NuclearPowered/Reactor/releases/download/2.2.0/Reactor.dll -P ./Release/BepInEx/plugins
         
       - name: Build
         run: dotnet build TheOtherRoles/TheOtherRoles.csproj --configuration Release --output ./Release/BepInEx/plugins
 
+      - name: Cleanup
+        run: |
+          rm -rf ./Release/BepInEx/plugins/TheOtherUs.deps.json
+          rm -rf ./Release/BepInEx/plugins/TheOtherUs.pdb
+          rm -rf ./Release/changelog.txt
+          
       - name: Upload TheOtherUsDll
         uses: actions/upload-artifact@v4.3.1
         with:
           name: TheOtherUs.dll
           path: ./Release/BepInEx/plugins/TheOtherUs.dll
-          
-      - name: Del Other Files
-        run: rm -rf ./Release/BepInEx/plugins/TheOtherUs.deps.json ./Release/BepInEx/plugins/TheOtherUs.pdb ./Release/changelog.txt
           
       - name: Upload TheOtherUs
         uses: actions/upload-artifact@v4.3.1
