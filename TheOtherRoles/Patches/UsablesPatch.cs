@@ -619,8 +619,9 @@ internal class AdminPanelPatch
                                     if (playerInfo != null)
                                     {
                                         var color = Palette.PlayerColors[playerInfo.DefaultOutfit.ColorId];
+                                        
                                         if (Hacker.onlyColorType)
-                                            color = isD(playerInfo.PlayerId)
+                                            color = isLighterColor(playerById(playerInfo.PlayerId))
                                                 ? Palette.PlayerColors[7]
                                                 : Palette.PlayerColors[6];
                                         roomColors.Add(color);

@@ -33,6 +33,7 @@ internal class MapOption
     public static bool hideOutOfSightNametags;
     public static bool ShowVentsOnMap;
     public static bool ShowVentsOnMeetingMap;
+    public static bool randomLigherPlayer;
     public static bool enableDebugLogMode;
     public static bool disableMedscanWalking;
     public static bool isCanceled;
@@ -110,6 +111,7 @@ internal class MapOption
         randomGameStartPosition = CustomOptionHolder.randomGameStartPosition.getBool();
         ShowVentsOnMap = CustomOptionHolder.ShowVentsOnMap.getBool();
         ShowVentsOnMeetingMap = CustomOptionHolder.ShowVentsOnMeetingMap.getBool();
+        randomLigherPlayer = CustomOptionHolder.randomLigherPlayer.getBool();
         allowModGuess = CustomOptionHolder.allowModGuess.getBool();
         firstKillPlayer = null;
         isRoundOne = true;

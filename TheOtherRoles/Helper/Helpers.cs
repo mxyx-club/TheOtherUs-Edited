@@ -787,20 +787,18 @@ public static class Helpers
         return cs(roleInfo.color, $"{roleInfo.name}: {roleInfo.shortDescription}");
     }
 
-    public static bool isD(byte playerId)
+
+    public static bool isDark(byte playerId)
     {
         return playerId % 2 == 0;
     }
 
     public static bool isLighterColor(PlayerControl target)
     {
-        return isD(target.PlayerId);
+        if (!MapOption.randomLigherPlayer) return CustomColors.lighterColors.Contains(target.Data.DefaultOutfit.ColorId);
+        return isDark(target.PlayerId);
     }
 
-    public static bool isLighterColor2(int colorId)
-    {
-        return CustomColors.lighterColors.Contains(colorId);
-    }
 
     public static TextMeshPro getFirst(this TextMeshPro[] text)
     {

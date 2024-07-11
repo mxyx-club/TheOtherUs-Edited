@@ -335,6 +335,9 @@
         "0": "Block Dead Impostor From Sabotaging",
         "13": "\u4f2a\u88c5\u8005\u6b7b\u4ea1\u540e\u4e0d\u80fd\u7834\u574f"
     },
+    "randomLigherPlayer": {
+        "13": "\u968f\u673a\u8bbe\u5b9a\u73a9\u5bb6\u6df1\u6d45\u8272"
+    },
     "allowModGuess": {
         "0": "Allow Guessing Some Modifiers",
         "13": "\u5141\u8bb8\u731c\u6d4b\u90e8\u5206\u9644\u52a0\u804c\u4e1a"
