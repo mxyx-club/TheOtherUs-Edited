@@ -711,6 +711,7 @@ public static class PlayerControlFixedUpdatePatch
             collider.radius = correctedColliderRadius;
         }
     }
+
     public static void GiantSizeUpdate(PlayerControl p)
     {
 
@@ -727,6 +728,8 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void updatePlayerInfo()
     {
+
+        var local = CachedPlayer.LocalPlayer.PlayerControl;
         var colorBlindTextMeetingInitialLocalPos = new Vector3(0.3384f, -0.16666f, -0.01f);
         var colorBlindTextMeetingInitialLocalScale = new Vector3(0.9f, 1f, 1f);
         foreach (PlayerControl p in CachedPlayer.AllPlayers)
@@ -754,7 +757,7 @@ public static class PlayerControlFixedUpdatePatch
             {
                 var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
                 var numberOfTasks = playerTotal - playerCompleted;
-                var completedSnitch = CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch && numberOfTasks == 0;
+                var completedSnitch = local == Snitch.snitch && numberOfTasks == 0;
                 var forImpTeam = p.Data.Role.IsImpostor;
                 var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(p);
                 var forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(p);
@@ -762,17 +765,13 @@ public static class PlayerControlFixedUpdatePatch
                 snitchFlag = completedSnitch && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam);
             }
 
-            if (snitchFlag || (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target) ||
-                   (Akujo.knowsRoles && CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo &&
-                   (p == Akujo.honmei || Akujo.keeps.Any(x => x.PlayerId == p.PlayerId))) ||
-                   p == CachedPlayer.LocalPlayer.PlayerControl ||
-                CachedPlayer.LocalPlayer.Data.IsDead ||
-                (CachedPlayer.LocalPlayer.PlayerControl == Slueth.slueth &&
-                 Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) ||
+            if (snitchFlag || (Lawyer.lawyerKnowsRole && local == Lawyer.lawyer && p == Lawyer.target) ||
+                   (Akujo.knowsRoles && local == Akujo.akujo && (p == Akujo.honmei || Akujo.keeps.Any(x => x.PlayerId == p.PlayerId))) ||
+                   p == local || CachedPlayer.LocalPlayer.Data.IsDead ||
+                (local == Slueth.slueth && Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) ||
                 (MapOption.impostorSeeRoles && Spy.spy == null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor &&
                  !CachedPlayer.LocalPlayer.Data.IsDead && p == (p.Data.Role.IsImpostor && !p.Data.IsDead)) ||
-                (CachedPlayer.LocalPlayer.PlayerControl == Poucher.poucher &&
-                 Poucher.killed.Any(x => x.PlayerId == p.PlayerId)))
+                (local == Poucher.poucher && Poucher.killed.Any(x => x.PlayerId == p.PlayerId)))
             {
                 var playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
                 var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
@@ -814,7 +813,7 @@ public static class PlayerControlFixedUpdatePatch
 
                 var playerInfoText = "";
                 var meetingInfoText = "";
-                if (p == CachedPlayer.LocalPlayer.PlayerControl || (MapOption.impostorSeeRoles && Spy.spy == null &&
+                if (p == local || (MapOption.impostorSeeRoles && Spy.spy == null &&
                                                                     CachedPlayer.LocalPlayer.Data.Role.IsImpostor &&
                                                                     !CachedPlayer.LocalPlayer.Data.IsDead &&
                                                                     p == (p.Data.Role.IsImpostor && !p.Data.IsDead)))
@@ -842,7 +841,7 @@ public static class PlayerControlFixedUpdatePatch
                     playerInfoText = $"{taskInfo}".Trim();
                     meetingInfoText = playerInfoText;
                 }
-                else if (MapOption.ghostsSeeRoles || (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target))
+                else if (MapOption.ghostsSeeRoles || (Lawyer.lawyerKnowsRole && local == Lawyer.lawyer && p == Lawyer.target))
                 {
                     playerInfoText = $"{roleText}";
                     meetingInfoText = playerInfoText;

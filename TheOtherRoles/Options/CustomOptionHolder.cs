@@ -398,6 +398,7 @@ public class CustomOptionHolder
     public static CustomOption juggernautSpawnRate;
     public static CustomOption juggernautCooldown;
     public static CustomOption juggernautHasImpVision;
+    public static CustomOption juggernautCanVent;
     public static CustomOption juggernautReducedkillEach;
 
     public static CustomOption doomsayerSpawnRate;
@@ -1014,7 +1015,8 @@ public class CustomOptionHolder
         juggernautSpawnRate = Create(20210, Types.Neutral, cs(Juggernaut.color, "Juggernaut"), rates, null, true);
         juggernautCooldown = Create(20211, Types.Neutral, "juggernautCooldown", 25f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
         juggernautHasImpVision = Create(20212, Types.Neutral, "juggernautHasImpVision", true, juggernautSpawnRate);
-        juggernautReducedkillEach = Create(20213, Types.Neutral, "juggernautReducedkillEach", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
+        juggernautCanVent = Create(20113, Types.Neutral, "Can Use Vents", true, juggernautSpawnRate);
+        juggernautReducedkillEach = Create(20114, Types.Neutral, "juggernautReducedkillEach", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
 
         vultureSpawnRate = Create(20170, Types.Neutral, cs(Vulture.color, "Vulture"), rates, null, true);
         vultureCooldown = Create(20171, Types.Neutral, "vultureCooldown", 15f, 10f, 60f, 2.5f, vultureSpawnRate);

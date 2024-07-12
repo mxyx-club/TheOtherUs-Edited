@@ -33,12 +33,13 @@ public static class ChatCommands
         private static bool Prefix(ChatController __instance)
         {
             var text = __instance.freeChatField.Text;
+            var chat = text.ToLower();
             var handled = false;
             // 游戏大厅指令
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
             {
                 // 更改游戏模式
-                if (text.ToLower().StartsWith("/gm"))
+                if (chat.StartsWith("/gm"))
                 {
                     var gm = text[4..].ToLower();
                     var gameMode = CustomGamemodes.Classic;
@@ -57,65 +58,88 @@ public static class ChatCommands
                     }
                     else
                     {
-                        __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl,
-                            "Nice try, but you have to be the host to use this feature 这是房主至高无上的权利");
+                        __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "Nice try, but you have to be the host to use this feature 这是房主至高无上的权利");
                     }
 
                     handled = true;
                 }
             }
+
+            // 踢出玩家
+            if (chat.StartsWith("/kick ") && AmongUsClient.Instance.AmHost)
+            {
+                var playerName = text[6..];
+                PlayerControl target =
+                    CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
+                if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
+                {
+                    var client = AmongUsClient.Instance.GetClient(target.OwnerId);
+                    if (client != null)
+                    {
+                        AmongUsClient.Instance.KickPlayer(client.Id, false);
+                        handled = true;
+                    }
+                }
+            }
+            // 封禁玩家
+            else if (chat.StartsWith("/ban ") && AmongUsClient.Instance.AmHost)
+            {
+                var playerName = text[5..];
+                PlayerControl target = CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
+                if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
+                {
+                    var client = AmongUsClient.Instance.GetClient(target.OwnerId);
+                    if (client != null)
+                    {
+                        AmongUsClient.Instance.KickPlayer(client.Id, true);
+                        handled = true;
+                    }
+                }
+            }
+
             // 游戏中房主指令
             if (AmongUsClient.Instance.AmHost && InGame)
             {
                 //  强制结束游戏
-                if (text.ToLower().StartsWith("/end"))
+                if (chat.StartsWith("/end"))
                 {
                     MapOption.isCanceled = true;
                     handled = true;
                 }
                 // 强制紧急会议或结束会议
-                else if (text.ToLower().StartsWith("/meeting") || text.ToLower().StartsWith("/mt"))
+                else if (chat.StartsWith("/meeting") || chat.StartsWith("/mt"))
                 {
                     if (IsMeeting) MeetingHud.Instance.RpcClose();
                     else CachedPlayer.LocalPlayer.PlayerControl.NoCheckStartMeeting(null, true);
                     handled = true;
                 }
-                // 踢出玩家
-                else if (text.ToLower().StartsWith("/kick "))
+                else if (chat.StartsWith("/kill "))
                 {
+
                     var playerName = text[6..];
-                    PlayerControl target =
-                        CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
-                    if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
+                    PlayerControl target = CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
+                    if (target != null)
                     {
-                        var client = AmongUsClient.Instance.GetClient(target.OwnerId);
-                        if (client != null)
-                        {
-                            AmongUsClient.Instance.KickPlayer(client.Id, false);
-                            handled = true;
-                        }
+                        target.Exiled();
+                        MurderPlayer(target, target, true);
+                        handled = true;
                     }
                 }
-                // 封禁玩家
-                else if (text.ToLower().StartsWith("/ban "))
+                else if(chat.StartsWith("/revive "))
                 {
-                    var playerName = text[5..];
-                    PlayerControl target =
-                        CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
-                    if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
+                    var playerName = text[8..];
+                    PlayerControl target = CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
+                    if (target != null)
                     {
-                        var client = AmongUsClient.Instance.GetClient(target.OwnerId);
-                        if (client != null)
-                        {
-                            AmongUsClient.Instance.KickPlayer(client.Id, true);
-                            handled = true;
-                        }
+                        target.Revive();
+                        handled = true;
                     }
                 }
             }
+
             // 游戏中玩家指令
             // 查看自己的职业介绍
-            if (text.ToLower().StartsWith("/m") && InGame)
+            if (chat.StartsWith("/m") && InGame)
             {
                 var localRole = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
                 var roleInfo = "";
@@ -136,12 +160,11 @@ public static class ChatCommands
                 if (text.ToLower().Equals("/murder"))
                 {
                     CachedPlayer.LocalPlayer.PlayerControl.Exiled();
-                    FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(
-                        CachedPlayer.LocalPlayer.Data, CachedPlayer.LocalPlayer.Data);
+                    FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(CachedPlayer.LocalPlayer.Data, CachedPlayer.LocalPlayer.Data);
                     handled = true;
                 }
                 // 改变玩家颜色，需要0~55的自定义颜色id
-                else if (text.ToLower().StartsWith("/color "))
+                else if (chat.StartsWith("/color "))
                 {
                     handled = true;
                     if (!int.TryParse(text.AsSpan(7), out var col))
@@ -153,7 +176,7 @@ public static class ChatCommands
             }
 
             // 死亡玩家指令
-            if (text.ToLower().StartsWith("/tp ") && CachedPlayer.LocalPlayer.Data.IsDead)
+            if (chat.StartsWith("/tp ") && CachedPlayer.LocalPlayer.Data.IsDead)
             {
                 var playerName = text[4..].ToLower();
                 PlayerControl target =
@@ -165,8 +188,7 @@ public static class ChatCommands
                 }
             }
 
-            if (text.ToLower().StartsWith("/team") && CachedPlayer.LocalPlayer.PlayerControl.isLover() &&
-                CachedPlayer.LocalPlayer.PlayerControl.isTeamCultist())
+            if (chat.StartsWith("/team") && CachedPlayer.LocalPlayer.PlayerControl.isLover() && CachedPlayer.LocalPlayer.PlayerControl.isTeamCultist())
             {
                 if (Cultist.cultist == CachedPlayer.LocalPlayer.PlayerControl)
                     Cultist.chatTarget = flipBitwise(Cultist.chatTarget);
@@ -174,6 +196,7 @@ public static class ChatCommands
                     Follower.chatTarget = flipBitwise(Follower.chatTarget);
                 handled = true;
             }
+
             if (handled)
             {
                 __instance.freeChatField.Clear();

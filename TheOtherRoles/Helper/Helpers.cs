@@ -127,7 +127,7 @@ public static class Helpers
                || (Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner.PlayerId == player.PlayerId && Pavlovsdogs.hasImpostorVision)
                || (Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p.PlayerId == player.PlayerId) && Pavlovsdogs.hasImpostorVision)
                || (Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision)
-               || (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == player.PlayerId && Spy.hasImpostorVision)
+               || (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == player.PlayerId && Juggernaut.hasImpostorVision)
                || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
                || (Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision)
                || (Swooper.swooper != null && Swooper.swooper.PlayerId == player.PlayerId && Swooper.hasImpVision)
@@ -210,7 +210,7 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
-        else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player)
+        else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player && Juggernaut.canVent)
         {
             roleCouldUse = true;
         }
@@ -899,7 +899,8 @@ public static class Helpers
     public static bool canBeErased(this PlayerControl player)
     {
         return player != Jackal.jackal
-            && player != Juggernaut.juggernaut && player != Swooper.swooper
+            && player != Juggernaut.juggernaut
+            && player != Swooper.swooper
             && player != Sidekick.sidekick
             && !Jackal.formerJackals.Any(x => x == player)
             && player != Werewolf.werewolf

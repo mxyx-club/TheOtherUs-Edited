@@ -19,7 +19,6 @@ public class CommandHandler
         // 房主专用键位
         if (AmongUsClient.Instance && AmongUsClient.Instance.AmHost)
         {
-            var host = AmongUsClient.Instance.GetHost();
             // 生成假人
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.F) && Input.GetKeyDown(KeyCode.Return))
             {
@@ -33,11 +32,11 @@ public class CommandHandler
                 playerControl.transform.position = CachedPlayer.LocalPlayer.transform.position;
                 playerControl.GetComponent<DummyBehaviour>().enabled = true;
                 playerControl.NetTransform.enabled = false;
-                playerControl.SetName(RandomString(10));
+                playerControl.SetName(RandomString(6));
                 playerControl.SetColor((byte)random.Next(Palette.PlayerColors.Length));
-                GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
+                GameData.Instance.RpcSetTasks(playerControl.PlayerId, Array.Empty<byte>());
             }
-            // Terminate round
+            // 结束游戏
             if (InGame && Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Return))
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
