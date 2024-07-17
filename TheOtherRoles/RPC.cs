@@ -14,6 +14,7 @@ using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Patches;
+using TheOtherRoles.Roles;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -269,6 +270,7 @@ public enum CustomRPC
     PropHuntSetInvis,
     PropHuntSetSpeedboost,
     HostEndGame,
+    HostRevive,
 
     // Other functionality
     ShareTimer,
@@ -979,7 +981,7 @@ public static class RPCProcedure
                 Detective.detective = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
-                
+
             case RoleId.TimeMaster:
                 if (Amnisiac.resetRole) TimeMaster.clearAndReload();
                 TimeMaster.timeMaster = amnisiac;
@@ -1904,6 +1906,22 @@ public static class RPCProcedure
         }
     }
 
+    public static void hostRevive(byte targetId)
+    {
+        var target = playerById(targetId);
+        target.Revive();
+        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        foreach (var body in array)
+        {
+            if (body.ParentId != targetId) continue;
+
+            Object.Destroy(body.gameObject);
+            target.Data.IsDead = false;
+            break;
+        }
+    }
+
+
     public static void shifterShift(byte targetId)
     {
         var oldShifter = Shifter.shifter;
@@ -2224,6 +2242,7 @@ public static class RPCProcedure
         if (player == Executioner.executioner) Executioner.clearAndReload();
         if (player == Lawyer.lawyer) Lawyer.clearAndReload();
         if (Pursuer.pursuer.Contains(player)) Pursuer.pursuer.Remove(player);
+        if (Survivor.survivor.Contains(player)) Survivor.survivor.Remove(player);
         if (player == Thief.thief) Thief.clearAndReload();
         if (player == Juggernaut.juggernaut) Juggernaut.clearAndReload();
         if (player == Doomsayer.doomsayer) Doomsayer.clearAndReload();
@@ -3785,7 +3804,7 @@ internal class RPCHandlerPatch
                 var blankedValue = reader.ReadByte();
                 RPCProcedure.pursuerSetBlanked(pid, blankedValue);
                 break;
-                
+
             case CustomRPC.GiveBomb:
                 RPCProcedure.giveBomb(reader.ReadByte());
                 break;
@@ -4018,7 +4037,7 @@ internal class RPCHandlerPatch
             case CustomRPC.Prosecute:
                 Prosecutor.ProsecuteThisMeeting = true;
                 break;
-                
+
             case CustomRPC.MayorRevealed:
                 Mayor.Revealed = true;
                 break;
@@ -4026,13 +4045,17 @@ internal class RPCHandlerPatch
             case CustomRPC.SurvivorVestActive:
                 RPCProcedure.survivorVestActive();
                 break;
-                
+
             case CustomRPC.JackalCanSwooper:
                 RPCProcedure.jackalCanSwooper(reader.ReadByte() == byte.MaxValue);
                 break;
 
             case CustomRPC.HostEndGame:
                 isCanceled = true;
+                break;
+
+            case CustomRPC.HostRevive:
+                RPCProcedure.hostRevive(reader.ReadByte());
                 break;
         }
 

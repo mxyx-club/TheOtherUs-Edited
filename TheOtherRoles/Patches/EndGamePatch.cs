@@ -486,7 +486,7 @@ public class OnGameEndPatch
                 TempData.winners.Add(new WinningPlayerData(Survivor.survivor.Data));*/
         }
 
-        AdditionalTempData.timer = (float)(DateTime.UtcNow - 
+        AdditionalTempData.timer = (float)(DateTime.UtcNow -
             (HideNSeek.isHideNSeekGM ? HideNSeek.startTime : PropHunt.startTime)).TotalMilliseconds / 1000;
 
         // Reset Settings
@@ -757,6 +757,7 @@ internal class CheckEndCriteriaPatch
             return true;
         var statistics = new PlayerStatistics(__instance);
         if (CheckAndEndGameForHost(__instance)) return false;
+        if (MapOption.DebugMode) return false;
         if (CheckAndEndGameForMiniLose(__instance)) return false;
         if (CheckAndEndGameForJesterWin(__instance)) return false;
         if (CheckAndEndGameForDoomsayerWin(__instance)) return false;

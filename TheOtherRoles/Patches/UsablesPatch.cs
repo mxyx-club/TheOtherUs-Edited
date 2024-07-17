@@ -444,7 +444,7 @@ internal class EmergencyMinigameUpdatePatch
             var teamRemaining = Mathf.Max(0, maxNumberOfMeetings - meetingsCount);
             var remaining = Mathf.Min(localRemaining,
                 Mayor.mayor != null && Mayor.mayor == CachedPlayer.LocalPlayer.PlayerControl ? 1 : teamRemaining);
-            __instance.NumberText.text = String.Format(getString("meetingCount"), localRemaining.ToString(), teamRemaining.ToString());
+            __instance.NumberText.text = string.Format(getString("meetingCount"), localRemaining.ToString(), teamRemaining.ToString());
             __instance.ButtonActive = remaining > 0;
             __instance.ClosedLid.gameObject.SetActive(!__instance.ButtonActive);
             __instance.OpenLid.gameObject.SetActive(__instance.ButtonActive);
@@ -619,7 +619,7 @@ internal class AdminPanelPatch
                                     if (playerInfo != null)
                                     {
                                         var color = Palette.PlayerColors[playerInfo.DefaultOutfit.ColorId];
-                                        
+
                                         if (Hacker.onlyColorType)
                                             color = isLighterColor(playerById(playerInfo.PlayerId))
                                                 ? Palette.PlayerColors[7]

@@ -11,15 +11,16 @@ public static class Guesser
     public static List<PlayerControl> evilGuesser = new();
     public static Color color = new Color32(255, 255, 0, byte.MaxValue);
 
-    public static int remainingShotsEvilGuesser = 2;
-    public static int remainingShotsNiceGuesser = 2;
-    public static bool hasMultipleShotsPerMeeting;
-    public static bool assassinMultipleShotsPerMeeting;
+    public static bool guesserCantGuessSnitch;
     public static bool showInfoInGhostChat = true;
     public static bool killsThroughShield = true;
+    public static int remainingShotsNiceGuesser = 2;
+    public static bool hasMultipleShotsPerMeeting;
+
+    public static int remainingShotsEvilGuesser = 2;
+    public static bool assassinMultipleShotsPerMeeting;
     public static bool assassinKillsThroughShield = true;
     public static bool evilGuesserCanGuessSpy = true;
-    public static bool guesserCantGuessSnitch;
     public static bool evilGuesserCanGuessCrewmate = true;
 
     public static bool isGuesser(byte playerId)
@@ -57,12 +58,13 @@ public static class Guesser
         evilGuesser = new List<PlayerControl>();
 
         guesserCantGuessSnitch = CustomOptionHolder.guesserCantGuessSnitchIfTaksDone.getBool();
-        remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.modifierAssassinNumberOfShots.getFloat());
-        remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
-        hasMultipleShotsPerMeeting = CustomOptionHolder.guesserHasMultipleShotsPerMeeting.getBool();
-        assassinMultipleShotsPerMeeting = CustomOptionHolder.modifierAssassinMultipleShotsPerMeeting.getBool();
         showInfoInGhostChat = CustomOptionHolder.guesserShowInfoInGhostChat.getBool();
         killsThroughShield = CustomOptionHolder.guesserKillsThroughShield.getBool();
+        remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
+        hasMultipleShotsPerMeeting = CustomOptionHolder.guesserHasMultipleShotsPerMeeting.getBool();
+
+        remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.modifierAssassinNumberOfShots.getFloat());
+        assassinMultipleShotsPerMeeting = CustomOptionHolder.modifierAssassinMultipleShotsPerMeeting.getBool();
         assassinKillsThroughShield = CustomOptionHolder.modifierAssassinKillsThroughShield.getBool();
         evilGuesserCanGuessSpy = CustomOptionHolder.guesserEvilCanKillSpy.getBool();
         evilGuesserCanGuessCrewmate = CustomOptionHolder.guesserEvilCanKillCrewmate.getBool();

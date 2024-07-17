@@ -57,8 +57,7 @@ internal static class GameHistory
         deadPlayers = new List<DeadPlayer>();
     }
 
-    public static void overrideDeathReasonAndKiller(PlayerControl player, DeadPlayer.CustomDeathReason deathReason,
-        PlayerControl killer = null)
+    public static void overrideDeathReasonAndKiller(PlayerControl player, DeadPlayer.CustomDeathReason deathReason, PlayerControl killer = null)
     {
         var target = deadPlayers.FirstOrDefault(x => x.player.PlayerId == player.PlayerId);
         if (target != null)

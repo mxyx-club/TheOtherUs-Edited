@@ -19,7 +19,6 @@ public static class Doomsayer
     public static float cooldown = 30f;
     public static int formationNum = 1;
     public static bool hasMultipleShotsPerMeeting;
-    public static bool showInfoInGhostChat = true;
     public static bool canGuessNeutral;
     public static bool canGuessImpostor;
     public static bool triggerDoomsayerrWin;
@@ -33,53 +32,47 @@ public static class Doomsayer
 
     public static string GetInfo(PlayerControl target)
     {
-        var random = new Random();
-        var allRoleInfo = (onlineTarger ? onlineRoleInfos() : allRoleInfos()).OrderBy(_ => random.Next()).ToList();
-        var OtherRoles = allRoleInfos().Where(n => allRoleInfo.All(y => y != n)).OrderBy(_ => random.Next()).ToList();
-        var OtherIndex = -1;
-        var AllMessage = new List<string>();
-        allRoleInfo.Remove(RoleInfo.doomsayer);
-        OtherRoles.Remove(RoleInfo.doomsayer);
-
-        var formation = formationNum;
-        var x = random.Next(1, formation) - 1;
-        var roleInfoTarget = RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault();
-        var message = new StringBuilder();
-        var tempNumList = Enumerable.Range(0, allRoleInfo.Count - 1).ToList();
-        var temp = (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList).OrderBy(_ => random.Next()).ToList();
-
-        message.AppendLine($"{target.Data.PlayerName} 的职业可能是：\n");
-
-        for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
+        try
         {
-            var info = tempNum > temp.Count - 1
-                ? GetOther()
-                : allRoleInfo[temp[tempNum]];
+            var random = new Random();
+            var allRoleInfo = (onlineTarger ? onlineRoleInfos() : allRoleInfos()).OrderBy(_ => random.Next()).ToList();
+            var roleInfoTarget = RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault();
+            var AllMessage = new List<string>();
+            allRoleInfo.Remove(RoleInfo.doomsayer);
+            allRoleInfo.Remove(roleInfoTarget);
 
-            if (info == roleInfoTarget)
+            if (allRoleInfo.Count < formationNum + 2) return $"There are fewer than {formationNum + 2} players.\n玩家人数不足 {formationNum + 2} 无法揭示。";
+
+            var formation = formationNum;
+            var x = random.Next(0, formation);
+            var message = new StringBuilder();
+            var tempNumList = Enumerable.Range(0, allRoleInfo.Count).ToList();
+            var temp = (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList).OrderBy(_ => random.Next()).ToList();
+
+            message.AppendLine($"{target.Data.PlayerName} 的职业可能是：\n");
+
+            for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
             {
-                num--;
-                continue;
+                var info = allRoleInfo[temp[tempNum]];
+
+                message.Append(num == x ? roleInfoTarget.name : info.name);
+                message.Append(num < formation - 1 ? ", " : ';');
             }
-            message.Append(num == x ? roleInfoTarget.name : info.name);
-            message.Append(num < formation - 1 ? ',' : ';');
+
+            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                (byte)CustomRPC.DoomsayerMeeting, SendOption.Reliable);
+            writer.WritePacked(AllMessage.Count);
+            AllMessage.Do(writer.Write);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            playerTargetinformation.Clear();
+
+            AllMessage.Add(message.ToString());
+            return $"{message}";
         }
-
-        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-            (byte)CustomRPC.DoomsayerMeeting, SendOption.Reliable);
-        writer.WritePacked(AllMessage.Count);
-        AllMessage.Do(writer.Write);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-        playerTargetinformation.Clear();
-
-        RoleInfo GetOther()
+        catch
         {
-            OtherIndex++;
-            return OtherRoles[OtherIndex];
+            return "Doomsayer Error\n末日预言家揭示出错";
         }
-
-        AllMessage.Add(message.ToString());
-        return $"{message}";
     }
 
     public static void clearAndReload()
@@ -91,7 +84,6 @@ public static class Doomsayer
         triggerDoomsayerrWin = false;
         cooldown = CustomOptionHolder.doomsayerCooldown.getFloat();
         hasMultipleShotsPerMeeting = CustomOptionHolder.doomsayerHasMultipleShotsPerMeeting.getBool();
-        showInfoInGhostChat = CustomOptionHolder.doomsayerShowInfoInGhostChat.getBool();
         canGuessNeutral = CustomOptionHolder.doomsayerCanGuessNeutral.getBool();
         canGuessImpostor = CustomOptionHolder.doomsayerCanGuessImpostor.getBool();
         formationNum = CustomOptionHolder.doomsayerDormationNum.GetInt();

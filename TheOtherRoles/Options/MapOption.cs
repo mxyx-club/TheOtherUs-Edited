@@ -10,6 +10,7 @@ internal class MapOption
     public static bool PreventTaskEnd => CustomOptionHolder.preventTaskEnd.getBool();
     public static float KillCooddown => GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
     public static int NumImpostors => GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors;
+    public static bool DebugMode => CustomOptionHolder.debugMode.getBool();
 
     // Set values
     public static int maxNumberOfMeetings = 10;

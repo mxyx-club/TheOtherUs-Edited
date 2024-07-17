@@ -821,7 +821,6 @@ internal class RoleManagerSelectRolesPatch
             var impPlayer = new List<PlayerControl>(playerList); //testing
             impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
             playerId = setModifierToRandomPlayer((byte)RoleId.Disperser, impPlayer);
-            impPlayer.RemoveAll(x => x.PlayerId == playerId);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Disperser);
         }
@@ -848,7 +847,6 @@ internal class RoleManagerSelectRolesPatch
             }
 
             playerId = setModifierToRandomPlayer((byte)RoleId.Specoality, GuesserList);
-            GuesserList.RemoveAll(x => x.PlayerId == playerId);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Specoality);
         }
@@ -858,7 +856,6 @@ internal class RoleManagerSelectRolesPatch
             var impPlayer = new List<PlayerControl>(playerList);
             impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
             playerId = setModifierToRandomPlayer((byte)RoleId.PoucherModifier, impPlayer);
-            impPlayer.RemoveAll(x => x.PlayerId == playerId);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.PoucherModifier);
         }
@@ -962,7 +959,6 @@ internal class RoleManagerSelectRolesPatch
 
             playerId = setModifierToRandomPlayer((byte)RoleId.ButtonBarry, buttonPlayer);
             buttonPlayer.RemoveAll(x => x.PlayerId == playerId);
-            playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.ButtonBarry);
         }
 

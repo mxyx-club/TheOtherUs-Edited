@@ -38,7 +38,6 @@ public static class ChatCommands
             // 游戏大厅指令
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
             {
-                // 更改游戏模式
                 if (chat.StartsWith("/gm"))
                 {
                     var gm = text[4..].ToLower();
@@ -49,9 +48,8 @@ public static class ChatCommands
 
                     if (AmongUsClient.Instance.AmHost)
                     {
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(
-                            CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGamemode,
-                            SendOption.Reliable);
+                        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                            (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
                         writer.Write((byte)gameMode);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
                         RPCProcedure.shareGameMode((byte)gameMode);
@@ -60,28 +58,24 @@ public static class ChatCommands
                     {
                         __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "Nice try, but you have to be the host to use this feature 这是房主至高无上的权利");
                     }
-
                     handled = true;
                 }
             }
 
-            // 踢出玩家
             if (chat.StartsWith("/kick ") && AmongUsClient.Instance.AmHost)
             {
                 var playerName = text[6..];
-                PlayerControl target =
-                    CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
+                PlayerControl target = CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
                 if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
                 {
                     var client = AmongUsClient.Instance.GetClient(target.OwnerId);
                     if (client != null)
                     {
                         AmongUsClient.Instance.KickPlayer(client.Id, false);
-                        handled = true;
                     }
                 }
+                handled = true;
             }
-            // 封禁玩家
             else if (chat.StartsWith("/ban ") && AmongUsClient.Instance.AmHost)
             {
                 var playerName = text[5..];
@@ -92,8 +86,8 @@ public static class ChatCommands
                     if (client != null)
                     {
                         AmongUsClient.Instance.KickPlayer(client.Id, true);
-                        handled = true;
                     }
+                    handled = true;
                 }
             }
 
@@ -117,28 +111,35 @@ public static class ChatCommands
                 {
 
                     var playerName = text[6..];
-                    PlayerControl target = CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
+                    var target = playerName is not null and "me"
+                        ? CachedPlayer.LocalPlayer.PlayerControl
+                        : (PlayerControl)CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
                     if (target != null)
                     {
                         target.Exiled();
-                        MurderPlayer(target, target, true);
-                        handled = true;
+                        target.RpcMurderPlayer(target, true);
                     }
+                    handled = true;
                 }
-                else if(chat.StartsWith("/revive "))
+                else if (chat.StartsWith("/revive "))
                 {
                     var playerName = text[8..];
-                    PlayerControl target = CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
+                    var target = playerName is not null and "me"
+                        ? CachedPlayer.LocalPlayer.PlayerControl
+                        : (PlayerControl)CachedPlayer.AllPlayers.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
                     if (target != null)
                     {
-                        target.Revive();
-                        handled = true;
+                        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                            (byte)CustomRPC.HostRevive, SendOption.Reliable);
+                        writer.Write(target.PlayerId);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        RPCProcedure.hostRevive(target.PlayerId);
                     }
+                    handled = true;
                 }
             }
 
             // 游戏中玩家指令
-            // 查看自己的职业介绍
             if (chat.StartsWith("/m") && InGame)
             {
                 var localRole = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
@@ -152,18 +153,24 @@ public static class ChatCommands
                 }
                 handled = true;
             }
+            if (chat.StartsWith("/r "))
+            {
+
+                var role = text[3..];
+                var roleText = RoleInfo.getRoleDescription(role);
+                if (roleText != null) __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, roleText);
+                handled = true;
+            }
 
             // 自由模式指令
             if (AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay)
             {
-                // 自杀
                 if (text.ToLower().Equals("/murder"))
                 {
                     CachedPlayer.LocalPlayer.PlayerControl.Exiled();
                     FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(CachedPlayer.LocalPlayer.Data, CachedPlayer.LocalPlayer.Data);
                     handled = true;
                 }
-                // 改变玩家颜色，需要0~55的自定义颜色id
                 else if (chat.StartsWith("/color "))
                 {
                     handled = true;
@@ -212,7 +219,7 @@ public static class ChatCommands
     {
         public static void Postfix(HudManager __instance)
         {
-            if (!__instance.Chat.isActiveAndEnabled && (AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay ||
+            if (!__instance.Chat.isActiveAndEnabled && (AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay || MapOption.DebugMode ||
                                                         (CachedPlayer.LocalPlayer.PlayerControl.isLover() &&
                                                          Lovers.enableChat) ||
                                                         CachedPlayer.LocalPlayer.PlayerControl.isTeamCultist()))
@@ -265,18 +272,12 @@ public static class ChatCommands
                        sourcePlayer.PlayerId == CachedPlayer.LocalPlayer.PlayerId;
             if (__instance != FastDestroyableSingleton<HudManager>.Instance.Chat) return true;
             if (playerControl == null) return true;
-            /* brb
-            if (playerControl == Detective.detective)
-            {
-                return flag;
-            }
-            */
+            if (MapOption.DebugMode) return flag;
             if (!playerControl.isTeamCultist() && !playerControl.isLover()) return flag;
             if ((playerControl.isTeamCultist() && Follower.chatTarget) ||
                 (playerControl.isLover() && Lovers.enableChat) ||
                 (playerControl.isTeamCultistAndLover() && !Follower.chatTarget))
-                return sourcePlayer.getChatPartner() == playerControl ||
-                       playerControl.getChatPartner() == playerControl == (bool)sourcePlayer || flag;
+                return sourcePlayer.getChatPartner() == playerControl || playerControl.getChatPartner() == playerControl == (bool)sourcePlayer || flag;
             return flag;
         }
     }

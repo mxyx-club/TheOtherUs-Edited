@@ -515,6 +515,15 @@ public class RoleInfo
         return roleName;
     }
 
+    public static string getRoleDescription(string name)
+    {
+        foreach (var roleInfo in allRoleInfos)
+        {
+            if (roleInfo.name == name) return $"{name}: \n{$"{roleInfo.nameKey}FullDesc".Translate()}";
+        }
+        return null;
+    }
+
     public static async Task loadReadme()
     {
         if (ReadmePage == "")

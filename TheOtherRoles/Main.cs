@@ -33,7 +33,6 @@ public class TheOtherRolesPlugin : BasePlugin
     public static IRegionInfo[] defaultRegions;
     public Harmony Harmony { get; } = new(Id);
 
-    public static ConfigEntry<bool> DebugMode { get; set; }
     public static ConfigEntry<bool> GhostsSeeInformation { get; set; }
     public static ConfigEntry<bool> GhostsSeeRoles { get; set; }
     public static ConfigEntry<bool> GhostsSeeModifier { get; set; }
@@ -95,8 +94,6 @@ public class TheOtherRolesPlugin : BasePlugin
         ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
         enableDebugLogMode = Config.Bind("Custom", "Debug Log Mode", false);
         ShowFPS = Config.Bind("Custom", "Show FPS", true);
-
-        DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);

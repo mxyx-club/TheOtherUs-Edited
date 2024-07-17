@@ -529,6 +529,10 @@
         "0": "Use Random Map Setting Presets",
         "13": "\u4f7f\u7528\u968f\u673a\u5730\u56fe\u8bbe\u7f6e\u9884\u8bbe"
     },
+    "debugMode": {
+        "0": "Enable Debug Mode",
+        "13": "\u5f00\u542f Debug \u6a21\u5f0f"
+    },
     "guesserGamemodeCrewNumber": {
         "0": "Number of Crew Guessers",
         "13": "\u8239\u5458\u9635\u8425\u8d4c\u602a\u6570"
@@ -1348,6 +1352,7 @@
         "13": "\u76ee\u6807\u804c\u4e1a\u53d8\u66f4\u65f6\u53ef\u4ee5\u664b\u5347\u4e3a\u5f8b\u5e08"
     },
     "executionerOnTargetDead": {
+        "0": "Executioner Becomes On Target Dead",
         "13": "\u76ee\u6807\u6b7b\u4ea1\u540e\u53d8\u4e3a"
     },
     "pursuerEnableBlanks": {
@@ -1386,11 +1391,8 @@
     "doomsayerHasMultipleShotsPerMeeting": {
         "13": "\u731c\u6d4b\u6210\u529f\u540e\u53ef\u7ee7\u7eed\u731c\u6d4b"
     },
-    "doomsayerShowInfoInGhostChat": {
-        "13": "\u7075\u9b42\u53ef\u89c1\u731c\u6d4b\u7ed3\u679c"
-    },
     "doomsayerCanGuess": {
-        "13": "\u53ef\u4ee5\u731c\u6d4b{0}"
+        "13": "\u53ef\u4ee5\u731c\u6d4b"
     },
     "doomsayerOnlineTarger": {
         "13": "\u662f\u5426\u83b7\u53d6\u5df2\u6709\u804c\u4e1a"
@@ -1424,8 +1426,8 @@
         "13": "\u51fb\u6740\u51b7\u5374"
     },
     "thiefCanKill": {
-        "0": "Thief Can Kill {0}",
-        "13": "\u8eab\u4efd\u7a83\u8d3c\u53ef\u4ee5\u51fb\u6740 {0}"
+        "0": "Thief Can Kill ",
+        "13": "\u8eab\u4efd\u7a83\u8d3c\u53ef\u4ee5\u51fb\u6740 "
     },
     "thiefHasImpVision": {
         "0": "Thief Has Impostor Vision",
@@ -1547,8 +1549,8 @@
         "13": "\u53ef\u6267\u6cd5\u72ec\u7acb\u9635\u8425"
     },
     "sheriffCanKill": {
-        "0": "Sheriff Can Kill {0}",
-        "13": "\u53ef\u6267\u6cd5 {0}"
+        "0": "Sheriff Can Kill ",
+        "13": "\u53ef\u6267\u6cd5 "
     },
     "deputySpawnRate": {
         "0": "Sheriff Has A Deputy",
@@ -1663,11 +1665,8 @@
     "medicReportColorDuration": {
         "13": "\u4ee5\u4e0b\u65f6\u95f4\u5185\u62a5\u544a\u53ef\u5f97\u77e5\u51f6\u624b\u989c\u8272\u7c7b\u578b"
     },
-    "doomsayerCanGuessImpostor": {
-        "13": "\u53ef\u4ee5\u731c\u6d4b"
-    },
-    "doomsayerCanGuessNeutral": {
-        "13": "\u53ef\u4ee5\u731c\u6d4b"
+    "doomsayerShowInfoInGhostChat": {
+        "13": "\u7075\u9b42\u53ef\u89c1\u731c\u6d4b\u7ed3\u679c"
     },
     "timeMasterCooldown": {
         "0": "Time Master Cooldown",

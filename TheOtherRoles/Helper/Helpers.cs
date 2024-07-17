@@ -276,8 +276,7 @@ public static class Helpers
         }
         else
         {
-            var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
-            return roleInfo != null && roleInfo.isNeutral;
+            return isNeutral(player);
         }
     }
 
@@ -620,7 +619,7 @@ public static class Helpers
         }
         catch
         {
-            Error("Error loading texture from disk: " + path);
+            //Error("Error loading texture from disk: " + path);
         }
 
         return null;
@@ -681,19 +680,20 @@ public static class Helpers
     public static List<RoleInfo> allRoleInfos()
     {
         var allRoleInfo = new List<RoleInfo>();
-        foreach (var player in RoleInfo.allRoleInfos)
+        foreach (var role in RoleInfo.allRoleInfos)
         {
-            if (player.isModifier) continue;
-            allRoleInfo.Add(player);
+            if (role.isModifier) continue;
+            allRoleInfo.Add(role);
         }
         return allRoleInfo;
     }
 
     public static List<RoleInfo> onlineRoleInfos()
     {
-        var roleInfos = new List<RoleInfo>();
-        roleInfos.AddRange(CachedPlayer.AllPlayers.Select(n => RoleInfo.getRoleInfoForPlayer(n, false)).SelectMany(n => n));
-        return roleInfos;
+        //if (CachedPlayer.AllPlayers.Count < Doomsayer.formationNum + 2) return allRoleInfos();
+        var role = new List<RoleInfo>();
+        role.AddRange(CachedPlayer.AllPlayers.Select(n => RoleInfo.getRoleInfoForPlayer(n, false)).SelectMany(n => n));
+        return role;
     }
 
     public static PlayerControl playerById(byte id)
@@ -965,7 +965,6 @@ public static class Helpers
         return GameOptionsManager.Instance.CurrentGameOptions.MapId == 5;
     }
 
-
     public static bool IsCN()
     {
         return (int)AmongUs.Data.DataManager.Settings.Language.CurrentLanguage == 13;
@@ -973,12 +972,7 @@ public static class Helpers
 
     public static string GithubUrl(this string url)
     {
-        if (IsCN() && !url.Contains("github.moeyy.xyz"))
-        {
-            return "https://github.moeyy.xyz/" + url;
-        }
-        Info("Rewrite URL: " + url);
-        return url;
+        return IsCN() && !url.Contains("github.moeyy.xyz") ? "https://mirror.ghproxy.com/" + url : url;
     }
 
     public static bool MushroomSabotageActive()
@@ -1177,6 +1171,31 @@ public static class Helpers
             if (p == 1f && renderer != null) renderer.enabled = false;
             if (p == 1f) messageText.gameObject.Destroy();
         })));
+    }
+
+    // From TownOfUs
+    public static IEnumerator FlashCoroutine(Color color, float waitfor = 1f, float alpha = 0.3f)
+    {
+        color.a = alpha;
+        if (HudManager.InstanceExists && HudManager.Instance.FullScreen)
+        {
+            var fullscreen = DestroyableSingleton<HudManager>.Instance.FullScreen;
+            fullscreen.enabled = true;
+            fullscreen.gameObject.active = true;
+            fullscreen.color = color;
+        }
+
+        yield return new WaitForSeconds(waitfor);
+
+        if (HudManager.InstanceExists && HudManager.Instance.FullScreen)
+        {
+            var fullscreen = DestroyableSingleton<HudManager>.Instance.FullScreen;
+            if (fullscreen.color.Equals(color))
+            {
+                fullscreen.color = new Color(1f, 0f, 0f, 0.37254903f);
+                fullscreen.enabled = false;
+            }
+        }
     }
 
     public static MurderAttemptResult checkMuderAttempt(PlayerControl killer, PlayerControl target,

@@ -404,7 +404,6 @@ public class CustomOptionHolder
     public static CustomOption doomsayerSpawnRate;
     public static CustomOption doomsayerCooldown;
     public static CustomOption doomsayerHasMultipleShotsPerMeeting;
-    public static CustomOption doomsayerShowInfoInGhostChat;
     public static CustomOption doomsayerCanGuessNeutral;
     public static CustomOption doomsayerCanGuessImpostor;
     public static CustomOption doomsayerOnlineTarger;
@@ -583,6 +582,8 @@ public class CustomOptionHolder
     public static CustomOption dynamicMapEnableFungle;
     public static CustomOption dynamicMapEnableSubmerged;
     public static CustomOption dynamicMapSeparateSettings;
+
+    public static CustomOption debugMode;
 
     public static CustomOption enableBetterPolus;
 
@@ -825,6 +826,8 @@ public class CustomOptionHolder
         dynamicMapEnableSubmerged = Create(136, Types.General, "Submerged", rates, dynamicMap);
         dynamicMapSeparateSettings = Create(137, Types.General, "dynamicMapSeparateSettings", false, dynamicMap);
 
+        debugMode = Create(999, Types.General, "debugMode", false, null, true);
+
         //-------------------------- Impostor Options 10000-19999 -------------------------- //
 
         modifierAssassin = Create(10000, Types.Impostor, cs(Palette.ImpostorRed, "modifierAssassin"), rates, null, true);
@@ -1041,15 +1044,11 @@ public class CustomOptionHolder
         executionerPromotesToLawyer = Create(20192, Types.Neutral, "executionerPromotesToLawyer", true, executionerSpawnRate);
         //executionerOnTargetDead = Create(20193, Types.Neutral, "目标死亡后变为", [cs(Pursuer.color, "Pursuer"), cs(Jester.color, "Jester"), cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
 
-
         doomsayerSpawnRate = Create(20221, Types.Neutral, cs(Doomsayer.color, "Doomsayer"), rates, null, true);
         doomsayerCooldown = Create(20222, Types.Neutral, "doomsayerCooldown", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
         doomsayerHasMultipleShotsPerMeeting = Create(20223, Types.Neutral, "doomsayerHasMultipleShotsPerMeeting", true, doomsayerSpawnRate);
-        doomsayerShowInfoInGhostChat = Create(20224, Types.Neutral, "doomsayerShowInfoInGhostChat", true, doomsayerSpawnRate);
-        doomsayerCanGuessImpostor = Create(20226, Types.Neutral,
-            string.Format("doomsayerCanGuessImpostor".Translate(), cs(Palette.ImpostorRed, "ImpostorRolesText".Translate())), true, doomsayerSpawnRate);
-        doomsayerCanGuessNeutral = Create(20225, Types.Neutral,
-            string.Format("doomsayerCanGuessNeutral".Translate(), cs(Color.gray, "NeutralRolesText".Translate())), true, doomsayerSpawnRate);
+        doomsayerCanGuessImpostor = Create(20226, Types.Neutral, $"{"doomsayerCanGuess".Translate()} {cs(Palette.ImpostorRed, "ImpostorRolesText".Translate())}", true, doomsayerSpawnRate);
+        doomsayerCanGuessNeutral = Create(20225, Types.Neutral, $"{"doomsayerCanGuess".Translate()} {cs(Color.gray, "NeutralRolesText".Translate())}", true, doomsayerSpawnRate);
         doomsayerOnlineTarger = Create(20227, Types.Neutral, "doomsayerOnlineTarger", false, doomsayerSpawnRate);
         doomsayerKillToWin = Create(20228, Types.Neutral, "doomsayerKillToWin", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
         doomsayerDormationNum = Create(20229, Types.Neutral, "doomsayerDormationNum", 5f, 1f, 10f, 1f, doomsayerSpawnRate);
@@ -1064,12 +1063,9 @@ public class CustomOptionHolder
 
         thiefSpawnRate = Create(20240, Types.Neutral, cs(Thief.color, "Thief"), rates, null, true);
         thiefCooldown = Create(20241, Types.Neutral, "thiefCooldown", 25f, 5f, 120f, 2.5f, thiefSpawnRate);
-        thiefCanKillSheriff = Create(20242, Types.Neutral,
-            string.Format("thiefCanKill".Translate(), cs(Sheriff.color, "Sheriff".Translate())), true, thiefSpawnRate);
-        thiefCanKillDeputy = Create(20246, Types.Neutral,
-            string.Format("thiefCanKill".Translate(), cs(Deputy.color, "Deputy".Translate())), true, thiefSpawnRate);
-        thiefCanKillVeteran = Create(20247, Types.Neutral,
-            string.Format("thiefCanKill".Translate(), cs(Veteran.color, "Veteran".Translate())), true, thiefSpawnRate);
+        thiefCanKillSheriff = Create(20242, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Sheriff.color, "Sheriff".Translate())}", true, thiefSpawnRate);
+        thiefCanKillDeputy = Create(20246, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Deputy.color, "Deputy".Translate())}", true, thiefSpawnRate);
+        thiefCanKillVeteran = Create(20247, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Veteran.color, "Veteran".Translate())}", true, thiefSpawnRate);
         thiefHasImpVision = Create(20243, Types.Neutral, "thiefHasImpVision", true, thiefSpawnRate);
         thiefCanUseVents = Create(20244, Types.Neutral, "thiefCanUseVents", true, thiefSpawnRate);
         thiefCanStealWithGuess = Create(20245, Types.Neutral, "thiefCanStealWithGuess", true, thiefSpawnRate);
@@ -1087,24 +1083,15 @@ public class CustomOptionHolder
         sheriffMisfireKills = Create(30143, Types.Crewmate, "sheriffMisfireKills",
             ["sheriffMisfireKills1", "sheriffMisfireKills2", "sheriffMisfireKills3"], sheriffSpawnRate);
         sheriffCanKillNeutrals = Create(30150, Types.Crewmate, "sheriffCanKillNeutrals", false, sheriffSpawnRate);
-        sheriffCanKillSurvivor = Create(30160, Types.Crewmate,
-            string.Format("sheriffCanKill".Translate(), cs(Survivor.color, "Survivor".Translate())), false, sheriffCanKillNeutrals);
-        sheriffCanKillAmnesiac = Create(30153, Types.Crewmate,
-            string.Format("sheriffCanKill".Translate(), cs(Amnisiac.color, "Amnisiac".Translate())), false, sheriffCanKillNeutrals);
-        sheriffCanKillPursuer = Create(30158, Types.Crewmate,
-            string.Format("sheriffCanKill".Translate(), cs(Pursuer.color, "Pursuer".Translate())), true, sheriffCanKillNeutrals);
-        sheriffCanKillJester = Create(30151, Types.Crewmate,
-            string.Format("sheriffCanKill".Translate(), cs(Jester.color, "Jester".Translate())), true, sheriffCanKillNeutrals);
-        sheriffCanKillLawyer = Create(30156, Types.Crewmate,
-            string.Format("sheriffCanKill".Translate(), cs(Lawyer.color, "Lawyer".Translate())), true, sheriffCanKillNeutrals);
-        sheriffCanKillExecutioner = Create(30152, Types.Crewmate,
-            string.Format("sheriffCanKill".Translate(), cs(Executioner.color, "Executioner".Translate())), true, sheriffCanKillNeutrals);
-        sheriffCanKillVulture = Create(30155, Types.Crewmate,
-            string.Format("sheriffCanKill".Translate(), cs(Vulture.color, "Vulture".Translate())), true, sheriffCanKillNeutrals);
-        sheriffCanKillThief = Create(30157, Types.Crewmate,
-            string.Format("sheriffCanKill".Translate(), cs(Thief.color, "Thief".Translate())), true, sheriffCanKillNeutrals);
-        sheriffCanKillDoomsayer = Create(30159, Types.Crewmate,
-            string.Format("sheriffCanKill".Translate(), cs(Doomsayer.color, "Doomsayer".Translate())), true, sheriffCanKillNeutrals);
+        sheriffCanKillSurvivor = Create(30160, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Survivor.color, "Survivor".Translate())}", false, sheriffCanKillNeutrals);
+        sheriffCanKillAmnesiac = Create(30153, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Amnisiac.color, "Amnisiac".Translate())}", false, sheriffCanKillNeutrals);
+        sheriffCanKillPursuer = Create(30158, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Pursuer.color, "Pursuer".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillJester = Create(30151, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Jester.color, "Jester".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillLawyer = Create(30156, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Lawyer.color, "Lawyer".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillExecutioner = Create(30152, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Executioner.color, "Executioner".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillVulture = Create(30155, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Vulture.color, "Vulture".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillThief = Create(30157, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Thief.color, "Thief".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillDoomsayer = Create(30159, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Doomsayer.color, "Doomsayer".Translate())}", true, sheriffCanKillNeutrals);
 
         deputySpawnRate = Create(30170, Types.Crewmate, cs(Deputy.color, "deputySpawnRate"), rates, sheriffSpawnRate);
         deputyNumberOfHandcuffs = Create(30171, Types.Crewmate, "deputyNumberOfHandcuffs", 5f, 1f, 10f, 1f, deputySpawnRate);

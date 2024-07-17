@@ -894,7 +894,7 @@ internal static class HudManagerStartPatch
                     return;
                 }
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, 
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.AkujoSetKeep, SendOption.Reliable, -1);
                 writer.Write(Akujo.akujo.PlayerId);
                 writer.Write(Akujo.currentTarget.PlayerId);
@@ -1568,8 +1568,7 @@ internal static class HudManagerStartPatch
                                     if (timer != lastTimer)
                                     {
                                         lastTimer = timer;
-                                        var writer = AmongUsClient.Instance.StartRpcImmediately(
-                                            CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                                        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                                             (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
                                         writer.Write(CachedPlayer.LocalPlayer.PlayerId);
                                         writer.Write((byte)RPCProcedure.GhostInfoTypes.VampireTimer);
@@ -4052,7 +4051,7 @@ internal static class HudManagerStartPatch
                 {
                     SubmergedCompatibility.ChangeFloor(exit.y > -7);
                 }
-                var writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, 
+                var writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
                 writer.Write((byte)0);
                 writer.WriteBytesAndSize(buff);
