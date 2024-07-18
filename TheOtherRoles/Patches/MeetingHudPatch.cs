@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.QuickChat;
@@ -1191,34 +1192,20 @@ internal class MeetingHudPatch
         }
     }
 
-    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))] //test
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
     public class MeetingHudStart
     {
         public static Sprite Letter => Blackmailer.getBlackmailOverlaySprite();
-
 
         public static void Postfix(MeetingHud __instance)
         {
             Message("会议开始");
             shookAlready = false;
             if (Blackmailer.blackmailed == null) return;
-            if (Blackmailer.blackmailed.Data.PlayerId != CachedPlayer.LocalPlayer.PlayerId ||
-                Blackmailer.blackmailed.Data.IsDead) return;
+            if (Blackmailer.blackmailed.Data.PlayerId != CachedPlayer.LocalPlayer.PlayerId || Blackmailer.blackmailed.Data.IsDead) return;
             //Nothing here for now. What to do when local player who is blackmailed starts meeting
             //Coroutines.Start(BlackmailShhh());
             if (Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl) Coroutines.Start(BlackmailShhh());
-            if (Butcher.butcher != null && Butcher.canDissection && Butcher.dissected != null)
-            {
-                var player = Butcher.dissected;
-                DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
-                for (var i = 1; i < array.Length; i++)
-                {
-                    if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == Butcher.dissected.PlayerId)
-                    {
-                        Object.Destroy(array[i].gameObject);
-                    }
-                }
-            }
         }
     }
 }

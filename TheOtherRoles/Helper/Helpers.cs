@@ -972,7 +972,7 @@ public static class Helpers
 
     public static string GithubUrl(this string url)
     {
-        return IsCN() && !url.Contains("github.moeyy.xyz") ? "https://mirror.ghproxy.com/" + url : url;
+        return IsCN() && !url.Contains("mirror.ghproxy.com") ? "https://mirror.ghproxy.com/" + url : url;
     }
 
     public static bool MushroomSabotageActive()

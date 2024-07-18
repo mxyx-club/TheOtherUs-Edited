@@ -16,7 +16,7 @@ public class Butcher
 
     public static bool canDissection;
 
-    public static ResourceSprite ButtonSprite = new("CleanButton.png");
+    public static ResourceSprite ButtonSprite = new("DissectedButton.png");
 
     public static void clearAndReload()
     {

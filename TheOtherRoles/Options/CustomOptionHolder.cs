@@ -881,7 +881,7 @@ public class CustomOptionHolder
         butcherSpawnRate = Create(10310, Types.Impostor, cs(Palette.ImpostorRed, "Butcher"), rates, null, true);
         butcherDissectionCooldown = Create(10312, Types.Impostor, "butcherDissectionCooldown", 25f, 10f, 60f, 2.5f, butcherSpawnRate);
         butcherDissectionDuration = Create(10313, Types.Impostor, "butcherDissectionDuration", 1f, 0f, 10f, 0.25f, butcherSpawnRate);
-        butcherDissectedBodyCount = Create(10314, Types.Impostor, "butcherDissectedBodyCount", 5, 3, 20, 1, butcherSpawnRate);
+        butcherDissectedBodyCount = Create(10314, Types.Impostor, "butcherDissectedBodyCount", 5, 3, 15, 1, butcherSpawnRate);
 
         mimicSpawnRate = Create(10170, Types.Impostor, cs(Mimic.color, "Mimic"), rates, null, true);
 

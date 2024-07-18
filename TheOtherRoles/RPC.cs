@@ -9,6 +9,7 @@ using Hazel;
 using InnerNet;
 using MS.Internal.Xml.XPath;
 using PowerTools;
+using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
@@ -22,6 +23,7 @@ using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.HudManagerStartPatch;
 using static TheOtherRoles.Options.MapOption;
 using static TheOtherRoles.Roles.RoleClass;
+using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles;
@@ -161,6 +163,7 @@ public enum CustomRPC
     EngineerUsedRepair,
     CleanBody,
     DissectionBody,
+    RandomBody,
     Mine,
     ShowIndomitableFlash,
     DragBody,
@@ -835,15 +838,18 @@ public static class RPCProcedure
             player.MyPhysics.StartCoroutine(player.KillAnimations.First().CoPerformKill(killer, player));
         }
         Butcher.dissected = player;
+
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
-        for (var i = 0; i < array.Length; i++)
+        for (var i = 1; i < array.Length && GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId; i++)
         {
-            if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId)
-            {
-                Vector3 randomPosition = MapData.MapSpawnPosition()[rnd.Next(MapData.MapSpawnPosition().Count)];
-                array[i].transform.position = randomPosition;
-            }
+            var randomPosition = MapData.MapSpawnPosition().Random();
+            array[i].transform.position = randomPosition;
         }
+    }
+
+    public static void randomBody(byte playerId)
+    {
+
     }
 
     public static void dragBody(byte playerId)
@@ -997,7 +1003,7 @@ public static class RPCProcedure
                     Amnisiac.clearAndReload();
                 }
                 break;
-                
+
             case RoleId.Butcher:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 Butcher.butcher = amnisiac;
@@ -1639,7 +1645,7 @@ public static class RPCProcedure
         if (Blackmailer.blackmailer == killer)
         {
             var target = killer;
-            if (Witch.currentTarget != null) target = Witch.currentTarget;
+            if (Blackmailer.currentTarget != null) target = Blackmailer.currentTarget;
             var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.BlackmailPlayer, SendOption.Reliable);
             writer.Write(target.PlayerId);
@@ -1649,11 +1655,13 @@ public static class RPCProcedure
         }
         else if (Bomber.bomber == killer)
         {
+            var target = killer;
+            if (Bomber.currentTarget != null) target = Bomber.currentTarget;
             var bombWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.GiveBomb, SendOption.Reliable);
-            bombWriter.Write(killerId);
+            bombWriter.Write(target.PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
-            giveBomb(killerId);
+            giveBomb(target.PlayerId);
             bomberBombButton.Timer = bomberBombButton.MaxTimer;
         }
         else if (Terrorist.terrorist == killer)
@@ -2354,11 +2362,8 @@ public static class RPCProcedure
                     MapBehaviour.Instance.Close();
                 if (Minigame.Instance)
                     Minigame.Instance.ForceClose();
-                if (PlayerControl.LocalPlayer.inVent)
-                {
-                    PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
-                    PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
-                };
+
+                MapData.AllPlayerExitVent();
 
                 if (Disperser.DispersesToVent)
                 {
@@ -3626,9 +3631,13 @@ internal class RPCHandlerPatch
             case CustomRPC.CleanBody:
                 RPCProcedure.cleanBody(reader.ReadByte(), reader.ReadByte());
                 break;
-                
+
             case CustomRPC.DissectionBody:
                 RPCProcedure.dissectionBody(reader.ReadByte(), reader.ReadByte());
+                break;
+
+            case CustomRPC.RandomBody:
+                RPCProcedure.randomBody(reader.ReadByte());
                 break;
 
             case CustomRPC.BlackmailPlayer:
