@@ -228,10 +228,18 @@ public class MapData
 
     public static void RandomSpawnPlayers()
     {
+        Vector3 newPosition;
         if (CustomOptionHolder.randomGameStartToVents.getBool())
+        {
+            newPosition = FindVentSpawnPositions()[rnd.Next(FindVentSpawnPositions().Count)];
             CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(FindVentSpawnPositions()[rnd.Next(FindVentSpawnPositions().Count)]);
+        }
         else
+        {
+            newPosition = MapSpawnPosition()[rnd.Next(MapSpawnPosition().Count)];
             CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(MapSpawnPosition()[rnd.Next(MapSpawnPosition().Count)]);
-    }
+        }
+        Debug($"Span to Vector3: {newPosition}");
 
+    }
 }

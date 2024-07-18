@@ -142,6 +142,7 @@ internal class RoleManagerSelectRolesPatch
         impSettings.Add((byte)RoleId.Cleaner, CustomOptionHolder.cleanerSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Undertaker, CustomOptionHolder.undertakerSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Miner, CustomOptionHolder.minerSpawnRate.getSelection());
+        impSettings.Add((byte)RoleId.Butcher, CustomOptionHolder.butcherSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Warlock, CustomOptionHolder.warlockSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.BountyHunter, CustomOptionHolder.bountyHunterSpawnRate.getSelection());
         impSettings.Add((byte)RoleId.Witch, CustomOptionHolder.witchSpawnRate.getSelection());
@@ -721,14 +722,14 @@ internal class RoleManagerSelectRolesPatch
     {
         var IndexList = new Queue<PlayerControl>();
 
-        if (Thief.thief != null && forceThief)
-            IndexList.Enqueue(Thief.thief);
-
         if (Jackal.jackal != null && forceJackal)
             IndexList.Enqueue(Jackal.jackal);
 
         if (Pavlovsdogs.pavlovsowner != null && forcePavlovsowner)
             IndexList.Enqueue(Pavlovsdogs.pavlovsowner);
+
+        if (Thief.thief != null && forceThief)
+            IndexList.Enqueue(Thief.thief);
 
         for (var i = 0; i < count && playerList.Count > 0; i++)
         {

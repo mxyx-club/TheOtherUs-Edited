@@ -52,6 +52,11 @@ internal class ExileControllerBeginPatch
             Doomsayer.canGuess = true;
         if (Specoality.specoality != null && Specoality.canNoGuess != null) Specoality.canNoGuess = null;
 
+        if (Butcher.butcher != null)
+        {
+            Butcher.dissected = null;
+            Butcher.canDissection = true;
+        }
         // Eraser erase
         if (Eraser.eraser != null && AmongUsClient.Instance.AmHost && Eraser.futureErased != null)
         {

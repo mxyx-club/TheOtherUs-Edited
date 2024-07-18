@@ -1207,6 +1207,18 @@ internal class MeetingHudPatch
             //Nothing here for now. What to do when local player who is blackmailed starts meeting
             //Coroutines.Start(BlackmailShhh());
             if (Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl) Coroutines.Start(BlackmailShhh());
+            if (Butcher.butcher != null && Butcher.canDissection && Butcher.dissected != null)
+            {
+                var player = Butcher.dissected;
+                DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+                for (var i = 1; i < array.Length; i++)
+                {
+                    if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == Butcher.dissected.PlayerId)
+                    {
+                        Object.Destroy(array[i].gameObject);
+                    }
+                }
+            }
         }
     }
 }

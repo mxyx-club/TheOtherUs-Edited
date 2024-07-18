@@ -32,6 +32,7 @@ public enum RoleId
     Morphling,
     Bomber,
     Poucher,
+    Butcher,
     Mimic,
     Camouflager,
     Miner,
@@ -159,6 +160,7 @@ public enum CustomRPC
     EngineerFixSubmergedOxygen,
     EngineerUsedRepair,
     CleanBody,
+    DissectionBody,
     Mine,
     ShowIndomitableFlash,
     DragBody,
@@ -463,6 +465,9 @@ public static class RPCProcedure
                         break;
                     case RoleId.Camouflager:
                         Camouflager.camouflager = player;
+                        break;
+                    case RoleId.Butcher:
+                        Butcher.butcher = player;
                         break;
                     case RoleId.Hacker:
                         Hacker.hacker = player;
@@ -821,6 +826,26 @@ public static class RPCProcedure
         }
     }
 
+    public static void dissectionBody(byte playerId, byte killerId)
+    {
+        var player = playerById(playerId);
+        var killer = playerById(killerId);
+        for (var num = 0; num < Butcher.dissectedBodyCount; num++)
+        {
+            player.MyPhysics.StartCoroutine(player.KillAnimations.First().CoPerformKill(killer, player));
+        }
+        Butcher.dissected = player;
+        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        for (var i = 0; i < array.Length; i++)
+        {
+            if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId)
+            {
+                Vector3 randomPosition = MapData.MapSpawnPosition()[rnd.Next(MapData.MapSpawnPosition().Count)];
+                array[i].transform.position = randomPosition;
+            }
+        }
+    }
+
     public static void dragBody(byte playerId)
     {
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
@@ -964,8 +989,18 @@ public static class RPCProcedure
                 break;
 
             case RoleId.Poucher:
+                if (!Poucher.spawnModifier)
+                {
+                    Helpers.turnToImpostor(Amnisiac.amnisiac);
+                    if (Amnisiac.resetRole) Poucher.clearAndReload();
+                    Poucher.poucher = amnisiac;
+                    Amnisiac.clearAndReload();
+                }
+                break;
+                
+            case RoleId.Butcher:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
-                if (Amnisiac.resetRole) Poucher.clearAndReload();
+                Butcher.butcher = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1603,11 +1638,13 @@ public static class RPCProcedure
 
         if (Blackmailer.blackmailer == killer)
         {
+            var target = killer;
+            if (Witch.currentTarget != null) target = Witch.currentTarget;
             var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.BlackmailPlayer, SendOption.Reliable);
-            writer.Write(killerId);
+            writer.Write(target.PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            blackmailPlayer(killerId);
+            blackmailPlayer(target.PlayerId);
             blackmailerButton.Timer = blackmailerButton.MaxTimer;
         }
         else if (Bomber.bomber == killer)
@@ -1888,7 +1925,7 @@ public static class RPCProcedure
         else if (Swooper.swooper == killer)
         {
             var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.SetSwoop, SendOption.Reliable, -1);
-            invisibleWriter.Write(Swooper.swooper.PlayerId);
+            invisibleWriter.Write(killer.PlayerId);
             invisibleWriter.Write(byte.MinValue);
             AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
             setSwoop(Swooper.swooper.PlayerId, byte.MinValue);
@@ -1898,7 +1935,7 @@ public static class RPCProcedure
         {
             var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable, -1);
-            invisibleWriter.Write(Jackal.jackal.PlayerId);
+            invisibleWriter.Write(killer.PlayerId);
             invisibleWriter.Write(byte.MinValue);
             AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
             setJackalSwoop(Jackal.jackal.PlayerId, byte.MinValue);
@@ -1920,7 +1957,6 @@ public static class RPCProcedure
             break;
         }
     }
-
 
     public static void shifterShift(byte targetId)
     {
@@ -2210,6 +2246,7 @@ public static class RPCProcedure
         if (player == Undertaker.undertaker) Undertaker.clearAndReload();
         if (player == Mimic.mimic) Mimic.clearAndReload();
         if (player == Warlock.warlock) Warlock.clearAndReload();
+        if (player == Butcher.butcher) Butcher.clearAndReload();
         if (player == Witch.witch) Witch.clearAndReload();
         if (player == Escapist.escapist) Escapist.clearAndReload();
         if (player == Ninja.ninja) Ninja.clearAndReload();
@@ -3189,6 +3226,7 @@ public static class RPCProcedure
         }
         //if (target == Guesser.evilGuesser) Guesser.evilGuesser = thief;
         if (target == Poucher.poucher && !Poucher.spawnModifier) Poucher.poucher = thief;
+        if (target == Butcher.butcher) Butcher.butcher = thief;
         if (target == Morphling.morphling) Morphling.morphling = thief;
         if (target == Camouflager.camouflager) Camouflager.camouflager = thief;
         if (target == Vampire.vampire) Vampire.vampire = thief;
@@ -3587,6 +3625,10 @@ internal class RPCHandlerPatch
 
             case CustomRPC.CleanBody:
                 RPCProcedure.cleanBody(reader.ReadByte(), reader.ReadByte());
+                break;
+                
+            case CustomRPC.DissectionBody:
+                RPCProcedure.dissectionBody(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.BlackmailPlayer:

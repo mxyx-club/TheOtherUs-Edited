@@ -38,6 +38,7 @@ internal static class HudManagerStartPatch
     private static CustomButton disperserDisperseButton;
     private static CustomButton buttonBarryButton;
     public static CustomButton morphlingButton;
+    public static CustomButton butcherDissectionButton;
     public static CustomButton camouflagerButton;
     public static CustomButton portalmakerPlacePortalButton;
     private static CustomButton usePortalButton;
@@ -158,6 +159,7 @@ internal static class HudManagerStartPatch
         disperserDisperseButton.MaxTimer = defaultMaxTimer;
         buttonBarryButton.MaxTimer = defaultMaxTimer;
         morphlingButton.MaxTimer = Morphling.cooldown;
+        butcherDissectionButton.MaxTimer = Butcher.dissectionCooldown;
         bomberBombButton.MaxTimer = Bomber.cooldown;
         camouflagerButton.MaxTimer = Camouflager.cooldown;
         portalmakerPlacePortalButton.MaxTimer = Portalmaker.cooldown;
@@ -232,6 +234,7 @@ internal static class HudManagerStartPatch
         propHuntAdminButton.MaxTimer = PropHunt.adminCooldown;
         propHuntFindButton.MaxTimer = PropHunt.findCooldown;
 
+        butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         timeMasterShieldButton.EffectDuration = TimeMaster.shieldDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
         survivorVestButton.EffectDuration = Survivor.vestDuration;
@@ -2582,7 +2585,64 @@ internal static class HudManagerStartPatch
             buttonText: getString("CleanText")
         );
 
-        // Cleaner Clean
+        // Butcher Dissection
+        butcherDissectionButton = new CustomButton(
+            () => { },
+            () =>
+            {
+                return Butcher.butcher != null && Butcher.butcher == CachedPlayer.LocalPlayer.PlayerControl &&
+                       !CachedPlayer.LocalPlayer.Data.IsDead && Butcher.canDissection;
+            },
+            () =>
+            {
+                return __instance.ReportButton.graphic.color == Palette.EnabledColor &&
+                       CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+            },
+            () => { butcherDissectionButton.Timer = butcherDissectionButton.MaxTimer; },
+            Butcher.ButtonSprite,
+            ButtonPositions.upperRowLeft,
+            __instance,
+            KeyCode.F,
+            true,
+            Butcher.dissectionDuration,
+            () =>
+            {
+                foreach (var collider2D in Physics2D.OverlapCircleAll(
+                             CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(),
+                             CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
+                    if (collider2D.tag == "DeadBody")
+                    {
+                        var component = collider2D.GetComponent<DeadBody>();
+                        if (component && !component.Reported)
+                        {
+                            var truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+                            var truePosition2 = component.TruePosition;
+                            if (Vector2.Distance(truePosition2, truePosition) <=
+                                CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance &&
+                                CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
+                                !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
+                                    Constants.ShipAndObjectsMask, false))
+                            {
+                                var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+
+                                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                                    (byte)CustomRPC.DissectionBody, SendOption.Reliable);
+                                writer.Write(playerInfo.PlayerId);
+                                writer.Write(Butcher.butcher.PlayerId);
+                                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                                RPCProcedure.dissectionBody(playerInfo.PlayerId, Butcher.butcher.PlayerId);
+
+                                Butcher.canDissection = false;
+                                SoundEffectsManager.play("cleanerClean");
+                                break;
+                            }
+                        }
+                    }
+            },
+            buttonText: getString("DissectionText")
+        );
+
+        // Undertaker Button
         undertakerDragButton = new CustomButton(
             () =>
             {

@@ -551,7 +551,7 @@
     },
     "guesserGamemodeSidekickIsAlwaysGuesser": {
         "0": "Sidekick Is Always Guesser",
-        "13": "\u5f3a\u5236\u8ddf\u73ed\u6210\u4e3a\u8d4c\u602a"
+        "13": "\u88ab\u62db\u52df\u7684\u8ddf\u73ed\u4f1a\u6210\u4e3a\u8d4c\u602a"
     },
     "guesserForcePavlovsGuesser": {
         "0": "Force Pavlov's owner Guesser",
@@ -841,10 +841,6 @@
         "0": "Cultist Follower Gets Ability",
         "13": "\u65b0\u4fe1\u5f92\u53ef\u6210\u4e3a\u523a\u5ba2"
     },
-    "janitorCooldown": {
-        "0": "Janitor Cooldown",
-        "13": "\u6e05\u6d01\u5de5\u6e05\u7406\u51b7\u5374"
-    },
     "morphlingCooldown": {
         "0": "Morphling Cooldown",
         "13": "\u5316\u5f62\u51b7\u5374"
@@ -920,6 +916,18 @@
     "poucherSpawnModifier": {
         "0": "Is Modifier",
         "13": "\u751f\u6210\u4e3a\u9644\u52a0\u80fd\u529b"
+    },
+    "butcherDissectionCooldown": {
+        "0": "Dissection Cooldown",
+        "13": "\u80a2\u89e3\u51b7\u5374\u65f6\u95f4"
+    },
+    "butcherDissectionDuration": {
+        "0": "Dissection Duration",
+        "13": "\u80a2\u89e3\u6240\u9700\u65f6\u95f4"
+    },
+    "butcherDissectedBodyCount": {
+        "0": "Dissected Body Count",
+        "13": "\u65b0\u589e\u7684\u5c38\u4f53\u6570\u91cf"
     },
     "escapistMaxCharges": {
         "0": "Maximum Charges",
@@ -2815,6 +2823,10 @@
         "0": "Vest",
         "13": "\u9632\u5f39\u8863"
     },
+    "DissectionText": {
+        "0": "Dissection",
+        "13": "\u80a2\u89e3"
+    },
     "GuessserGMInfo": {
         "0": " (Guesser)",
         "13": " (\u8d4c\u602a)"
@@ -2888,6 +2900,16 @@
     },
     "PoucherShortDesc": {
         "13": "\u8c03\u67e5\u88ab\u51fb\u6740\u8005\u7684\u804c\u4e1a"
+    },
+    "Butcher": {
+        "0": "Butcher",
+        "13": "\u80a2\u89e3\u8005"
+    },
+    "ButcherIntroDesc": {
+        "13": "\u5c06\u5c38\u4f53\u5206\u89e3\u540e\u5206\u6563\u5230\u5176\u5b83\u5730\u65b9"
+    },
+    "ButcherShortDesc": {
+        "13": "\u5c06\u5c38\u4f53\u5206\u89e3\u540e\u5206\u6563\u5230\u5176\u5b83\u5730\u65b9"
     },
     "Miner": {
         "0": "Miner",
@@ -3817,13 +3839,16 @@
         "13": "\u91c7\u6837\u540e\u53ef\u4ee5\u4f2a\u88c5\u6210\u5176\u4ed6\u4eba\u3002"
     },
     "BomberFullDesc": {
-        "13": "\u7ed9\u5176\u4ed6\u4eba\u4e00\u4e2a\u70b8\u5f39\u3002\u76ee\u6807\u5728\u51e0\u79d2\u540e\u53d7\u5230\u63d0\u793a\u3002\n\u62ff\u5230\u70b8\u5f39\u7684\u73a9\u5bb6\u9700\u8981\u5728\u4e00\u5b9a\u65f6\u95f4\u5185\u4e14\u8fdb\u4f1a\u8bae\u524d\u5c06\u70b8\u5f39\u4f20\u9012\u7ed9\u4ed6\u4eba\uff0c\n\u5426\u5219\u81ea\u5df1\u6b7b\u4ea1\u3002\n\u73a9\u5bb6\u8eab\u4e0a\u88ab\u4f20\u70b8\u5f39\u540e\u4e0d\u80fd\u4f20\u56de\u7ed9\u70b8\u5f39\u72c2\uff0c\n\u5426\u5219\u81ea\u5df1\u6b7b\u4ea1\u3002\u53e6\u5916\u70b8\u5f39\u72c2\u7684\u70b8\u5f39\u53ef\u4ee5\u51fb\u6740\u961f\u53cb\u3002"
+        "13": "\u7ed9\u5176\u4ed6\u4eba\u4e00\u4e2a\u70b8\u5f39\u3002\u76ee\u6807\u5728\u51e0\u79d2\u540e\u53d7\u5230\u63d0\u793a\u3002\n\u62ff\u5230\u70b8\u5f39\u7684\u73a9\u5bb6\u9700\u8981\u5728\u4e00\u5b9a\u65f6\u95f4\u5185\u4e14\u8fdb\u4f1a\u8bae\u524d\u5c06\u70b8\u5f39\u4f20\u9012\u7ed9\u4ed6\u4eba\uff0c\n\u5426\u5219\u81ea\u5df1\u6b7b\u4ea1\u3002\n\u53e6\u5916\uff0c\u624b\u4e0a\u6709\u70b8\u5f39\u7684\u73a9\u5bb6\u4e0d\u80fd\u5c06\u70b8\u5f39\u4f20\u56de\u7ed9\u70b8\u5f39\u72c2\uff0c\n\u5426\u5219\u8be5\u73a9\u5bb6\u6b7b\u4ea1\u3002\u53e6\u5916\u70b8\u5f39\u72c2\u7684\u70b8\u5f39\u53ef\u4ee5\u51fb\u6740\u961f\u53cb\u3002"
     },
     "PoucherFullDesc": {
         "13": "\u53ef\u4ee5\u5f97\u77e5\u88ab\u4f60\u51fb\u6740\u7684\u73a9\u5bb6\u8eab\u4efd\u3002"
     },
+    "ButcherFullDesc": {
+        "13": "\u51fb\u6740\u5176\u4ed6\u73a9\u5bb6\u540e\u53ef\u4ee5\u4f7f\u7528\u80a2\u89e3\u6280\u80fd\u3002\n\u80a2\u89e3\u540e\u4f1a\u5728\u5176\u5b83\u4f4d\u7f6e\u51fa\u73b0\u6570\u4e2a\u8be5\u73a9\u5bb6\u7684\u5c38\u4f53\u3002"
+    },
     "MimicFullDesc": {
-        "13": "\u51fb\u6740\u90e8\u5206\u8239\u5458\u65f6\u53ef\u4ee5\u7a83\u53d6\u4ed6\u4eec\u7684\u8eab\u4efd\uff0c\u83b7\u5f97\u4ed6\u4eec\u7684\u80fd\u529b\u3002"
+        "13": "\u51fb\u6740\u5176\u4ed6\u73a9\u5bb6\u540e\u53ef\u4ee5\u4f7f\u7528\u80a2\u89e3\u6280\u80fd\u3002"
     },
     "CamouflagerFullDesc": {
         "13": "\u5f00\u542f\u6280\u80fd\u540e\u6240\u6709\u4eba\u8fdb\u5165\u5c0f\u9ed1\u4eba\u72b6\u6001\u3002"
