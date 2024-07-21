@@ -36,12 +36,12 @@ public static class CredentialsPatch
             var position = __instance.GetComponent<AspectPosition>();
             var gameModeText = MapOption.gameMode switch
             {
-                CustomGamemodes.HideNSeek => $"{getString("isHideNSeekGM")}\n",
-                CustomGamemodes.Guesser => $"{getString("isGuesserGm")}\n",
-                CustomGamemodes.PropHunt => $"{getString("isPropHuntGM")}\n",
+                CustomGamemodes.HideNSeek => getString("isHideNSeekGM"),
+                CustomGamemodes.Guesser => getString("isGuesserGm"),
+                CustomGamemodes.PropHunt => getString("isPropHuntGM"),
                 _ => ""
             };
-            if (MapOption.DebugMode) gameModeText = gameModeText == "" ? "Debug Mode" : "\nDebug Mode";
+            if (MapOption.DebugMode) gameModeText += "(Debug Mode)";
             if (gameModeText != "") gameModeText = cs(Color.yellow, gameModeText) + "\n";
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {
