@@ -228,10 +228,38 @@ public class MapData
 
     public static void RandomSpawnPlayers()
     {
+        Vector3 newPosition;
         if (CustomOptionHolder.randomGameStartToVents.getBool())
+        {
+            newPosition = FindVentSpawnPositions()[rnd.Next(FindVentSpawnPositions().Count)];
             CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(FindVentSpawnPositions()[rnd.Next(FindVentSpawnPositions().Count)]);
+        }
         else
+        {
+            newPosition = MapSpawnPosition()[rnd.Next(MapSpawnPosition().Count)];
             CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(MapSpawnPosition()[rnd.Next(MapSpawnPosition().Count)]);
+        }
+        Debug($"Span to Vector3: {newPosition}");
     }
 
+    public static readonly Dictionary<PlayerControl, Vent> PlayerVentDic = new();
+
+    [HarmonyPatch(typeof(Vent), nameof(Vent.EnterVent))]
+    [HarmonyPostfix]
+    public static void OnEnterVent(PlayerControl pc, Vent __instance)
+    {
+        PlayerVentDic[pc] = __instance;
+    }
+
+    [HarmonyPatch(typeof(Vent._ExitVent_d__40), nameof(Vent._ExitVent_d__40.MoveNext))]
+    [HarmonyPostfix]
+    public static void OnExitVent(Vent._ExitVent_d__40 __instance)
+    {
+        if (PlayerVentDic.ContainsKey(__instance.pc)) PlayerVentDic.Remove(__instance.pc);
+    }
+
+    public static void AllPlayerExitVent()
+    {
+        foreach (var (player, vent) in PlayerVentDic) player.MyPhysics.RpcExitVent(vent.Id);
+    }
 }

@@ -41,7 +41,7 @@ public static class CredentialsPatch
                 CustomGamemodes.PropHunt => getString("isPropHuntGM"),
                 _ => ""
             };
-
+            if (MapOption.DebugMode) gameModeText += "(Debug Mode)";
             if (gameModeText != "") gameModeText = cs(Color.yellow, gameModeText) + "\n";
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {

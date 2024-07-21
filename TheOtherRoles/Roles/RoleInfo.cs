@@ -39,6 +39,7 @@ public class RoleInfo
     public static RoleInfo morphling = new("Morphling", Morphling.color, RoleId.Morphling);
     public static RoleInfo bomber = new("Bomber", Bomber.color, RoleId.Bomber);
     public static RoleInfo poucher = new("Poucher", Poucher.color, RoleId.Poucher);
+    public static RoleInfo butcher = new("Butcher", Eraser.color, RoleId.Butcher);
     public static RoleInfo mimic = new("Mimic", Mimic.color, RoleId.Mimic);
     public static RoleInfo camouflager = new("Camouflager", Camouflager.color, RoleId.Camouflager);
     public static RoleInfo miner = new("Miner", Miner.color, RoleId.Miner);
@@ -146,6 +147,7 @@ public class RoleInfo
         morphling,
         bomber,
         poucher,
+        butcher,
         mimic,
         camouflager,
         miner,
@@ -298,6 +300,7 @@ public class RoleInfo
         if (p == Werewolf.werewolf) infos.Add(werewolf);
         if (p == Miner.miner) infos.Add(miner);
         if (p == Poucher.poucher && !Poucher.spawnModifier) infos.Add(poucher);
+        if (p == Butcher.butcher) infos.Add(butcher);
         if (p == Morphling.morphling) infos.Add(morphling);
         if (p == Bomber.bomber) infos.Add(bomber);
         if (p == Camouflager.camouflager) infos.Add(camouflager);
@@ -362,13 +365,9 @@ public class RoleInfo
         if (infos.Count == count)
         {
             if (p.Data.Role.IsImpostor)
-                infos.Add(MapOption.gameMode == CustomGamemodes.HideNSeek ||
-                          MapOption.gameMode == CustomGamemodes.PropHunt
-                    ? hunter
-                    : impostor);
+                infos.Add(MapOption.gameMode is CustomGamemodes.HideNSeek or CustomGamemodes.PropHunt ? hunter : impostor);
             else
-                infos.Add(MapOption.gameMode == CustomGamemodes.HideNSeek ? hunted :
-                    MapOption.gameMode == CustomGamemodes.PropHunt ? prop : crewmate);
+                infos.Add(MapOption.gameMode == CustomGamemodes.HideNSeek ? hunted : MapOption.gameMode == CustomGamemodes.PropHunt ? prop : crewmate);
         }
 
         return infos;

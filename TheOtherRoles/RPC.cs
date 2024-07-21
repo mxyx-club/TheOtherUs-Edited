@@ -9,6 +9,7 @@ using Hazel;
 using InnerNet;
 using MS.Internal.Xml.XPath;
 using PowerTools;
+using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
@@ -22,6 +23,7 @@ using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.HudManagerStartPatch;
 using static TheOtherRoles.Options.MapOption;
 using static TheOtherRoles.Roles.RoleClass;
+using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles;
@@ -32,6 +34,7 @@ public enum RoleId
     Morphling,
     Bomber,
     Poucher,
+    Butcher,
     Mimic,
     Camouflager,
     Miner,
@@ -159,6 +162,8 @@ public enum CustomRPC
     EngineerFixSubmergedOxygen,
     EngineerUsedRepair,
     CleanBody,
+    DissectionBody,
+    RandomBody,
     Mine,
     ShowIndomitableFlash,
     DragBody,
@@ -463,6 +468,9 @@ public static class RPCProcedure
                         break;
                     case RoleId.Camouflager:
                         Camouflager.camouflager = player;
+                        break;
+                    case RoleId.Butcher:
+                        Butcher.butcher = player;
                         break;
                     case RoleId.Hacker:
                         Hacker.hacker = player;
@@ -821,6 +829,29 @@ public static class RPCProcedure
         }
     }
 
+    public static void dissectionBody(byte playerId, byte killerId)
+    {
+        var player = playerById(playerId);
+        var killer = playerById(killerId);
+        for (var num = 0; num < Butcher.dissectedBodyCount; num++)
+        {
+            player.MyPhysics.StartCoroutine(player.KillAnimations.First().CoPerformKill(killer, player));
+        }
+        Butcher.dissected = player;
+
+        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        for (var i = 1; i < array.Length && GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId; i++)
+        {
+            var randomPosition = MapData.MapSpawnPosition().Random();
+            array[i].transform.position = randomPosition;
+        }
+    }
+
+    public static void randomBody(byte playerId)
+    {
+
+    }
+
     public static void dragBody(byte playerId)
     {
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
@@ -964,8 +995,18 @@ public static class RPCProcedure
                 break;
 
             case RoleId.Poucher:
+                if (!Poucher.spawnModifier)
+                {
+                    Helpers.turnToImpostor(Amnisiac.amnisiac);
+                    if (Amnisiac.resetRole) Poucher.clearAndReload();
+                    Poucher.poucher = amnisiac;
+                    Amnisiac.clearAndReload();
+                }
+                break;
+
+            case RoleId.Butcher:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
-                if (Amnisiac.resetRole) Poucher.clearAndReload();
+                Butcher.butcher = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
 
@@ -1603,20 +1644,24 @@ public static class RPCProcedure
 
         if (Blackmailer.blackmailer == killer)
         {
+            var target = killer;
+            if (Blackmailer.currentTarget != null) target = Blackmailer.currentTarget;
             var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.BlackmailPlayer, SendOption.Reliable);
-            writer.Write(killerId);
+            writer.Write(target.PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            blackmailPlayer(killerId);
+            blackmailPlayer(target.PlayerId);
             blackmailerButton.Timer = blackmailerButton.MaxTimer;
         }
         else if (Bomber.bomber == killer)
         {
+            var target = killer;
+            if (Bomber.currentTarget != null) target = Bomber.currentTarget;
             var bombWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.GiveBomb, SendOption.Reliable);
-            bombWriter.Write(killerId);
+            bombWriter.Write(target.PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
-            giveBomb(killerId);
+            giveBomb(target.PlayerId);
             bomberBombButton.Timer = bomberBombButton.MaxTimer;
         }
         else if (Terrorist.terrorist == killer)
@@ -1888,7 +1933,7 @@ public static class RPCProcedure
         else if (Swooper.swooper == killer)
         {
             var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.SetSwoop, SendOption.Reliable, -1);
-            invisibleWriter.Write(Swooper.swooper.PlayerId);
+            invisibleWriter.Write(killer.PlayerId);
             invisibleWriter.Write(byte.MinValue);
             AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
             setSwoop(Swooper.swooper.PlayerId, byte.MinValue);
@@ -1898,7 +1943,7 @@ public static class RPCProcedure
         {
             var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable, -1);
-            invisibleWriter.Write(Jackal.jackal.PlayerId);
+            invisibleWriter.Write(killer.PlayerId);
             invisibleWriter.Write(byte.MinValue);
             AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
             setJackalSwoop(Jackal.jackal.PlayerId, byte.MinValue);
@@ -1920,7 +1965,6 @@ public static class RPCProcedure
             break;
         }
     }
-
 
     public static void shifterShift(byte targetId)
     {
@@ -2210,6 +2254,7 @@ public static class RPCProcedure
         if (player == Undertaker.undertaker) Undertaker.clearAndReload();
         if (player == Mimic.mimic) Mimic.clearAndReload();
         if (player == Warlock.warlock) Warlock.clearAndReload();
+        if (player == Butcher.butcher) Butcher.clearAndReload();
         if (player == Witch.witch) Witch.clearAndReload();
         if (player == Escapist.escapist) Escapist.clearAndReload();
         if (player == Ninja.ninja) Ninja.clearAndReload();
@@ -2317,11 +2362,8 @@ public static class RPCProcedure
                     MapBehaviour.Instance.Close();
                 if (Minigame.Instance)
                     Minigame.Instance.ForceClose();
-                if (PlayerControl.LocalPlayer.inVent)
-                {
-                    PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
-                    PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
-                };
+
+                MapData.AllPlayerExitVent();
 
                 if (Disperser.DispersesToVent)
                 {
@@ -3189,6 +3231,7 @@ public static class RPCProcedure
         }
         //if (target == Guesser.evilGuesser) Guesser.evilGuesser = thief;
         if (target == Poucher.poucher && !Poucher.spawnModifier) Poucher.poucher = thief;
+        if (target == Butcher.butcher) Butcher.butcher = thief;
         if (target == Morphling.morphling) Morphling.morphling = thief;
         if (target == Camouflager.camouflager) Camouflager.camouflager = thief;
         if (target == Vampire.vampire) Vampire.vampire = thief;
@@ -3587,6 +3630,14 @@ internal class RPCHandlerPatch
 
             case CustomRPC.CleanBody:
                 RPCProcedure.cleanBody(reader.ReadByte(), reader.ReadByte());
+                break;
+
+            case CustomRPC.DissectionBody:
+                RPCProcedure.dissectionBody(reader.ReadByte(), reader.ReadByte());
+                break;
+
+            case CustomRPC.RandomBody:
+                RPCProcedure.randomBody(reader.ReadByte());
                 break;
 
             case CustomRPC.BlackmailPlayer:
