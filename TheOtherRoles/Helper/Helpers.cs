@@ -12,11 +12,9 @@ using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Roles;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Helper;
@@ -308,6 +306,14 @@ public static class Helpers
                 !Survivor.survivor.Contains(player);
     }
 
+    public static string teamString(PlayerControl player)
+    {
+        var killerTeam = "";
+        if (isNeutral(player)) killerTeam = "NeutralRolesText".Translate();
+        else if (player.Data.Role.IsImpostor) killerTeam = "ImpostorRolesText".Translate();
+        else if (!player.Data.Role.IsImpostor && !isNeutral(player)) killerTeam = "CrewmateRolesText".Translate();
+        return killerTeam;
+    }
     public static bool ShowButtons =>
         !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) &&
         !MeetingHud.Instance &&

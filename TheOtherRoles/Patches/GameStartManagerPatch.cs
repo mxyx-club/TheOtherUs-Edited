@@ -1,6 +1,4 @@
-using HarmonyLib;
 using UnityEngine;
-using System.Reflection;
 using System.Collections.Generic;
 using Hazel;
 using System;
@@ -105,7 +103,7 @@ public class GameStartManagerPatch
                     int diff = TheOtherRolesPlugin.Version.CompareTo(PV.version);
                     if (diff > 0)
                     {
-                        message += $"<color=#FF0000FF>{string.Format(getString("oldTouVersion"), $"{client.Character.Data.PlayerName}")} (v{playerVersions[client.Id].version.ToString()})\n</color>";
+                        message += $"{client.Character.Data.PlayerName} <color=#FF0000FF>{getString("oldTouVersion")}, (v{playerVersions[client.Id].version.ToString()})\n</color>";
                         versionMismatch = true;
                     }
                     else if (diff < 0)

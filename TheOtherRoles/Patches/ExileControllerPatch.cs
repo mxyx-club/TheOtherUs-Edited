@@ -47,9 +47,9 @@ internal class ExileControllerBeginPatch
         }
 
         Shifter.futureShift = null;
-        //末日预言家
-        if (Doomsayer.doomsayer != null && AmongUsClient.Instance.AmHost && !Doomsayer.canGuess)
-            Doomsayer.canGuess = true;
+
+        if (Doomsayer.doomsayer != null && AmongUsClient.Instance.AmHost && !Doomsayer.canGuess) Doomsayer.canGuess = true;
+
         if (Specoality.specoality != null && Specoality.canNoGuess != null) Specoality.canNoGuess = null;
 
         if (Butcher.butcher != null)
@@ -71,7 +71,6 @@ internal class ExileControllerBeginPatch
                 Eraser.alreadyErased.Add(target.PlayerId);
             }
         }
-
         Eraser.futureErased = new List<PlayerControl>();
 
         // Trickster boxes

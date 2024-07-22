@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using TheOtherRoles.Utilities;
-using UnityEngine;
-using static TheOtherRoles.Roles.RoleInfo;
 using Random = System.Random;
 
 namespace TheOtherRoles.Roles;

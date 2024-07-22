@@ -1197,9 +1197,6 @@ internal class GameOptionsDataPatch
                 else if (option.id == 20135) //Sidekick
                     sb.AppendLine(
                         $"- {cs(Sidekick.color, "Sidekick".Translate())}: {option.getString()}");
-                else if (option.id == 10321) //Poucher
-                    sb.AppendLine(
-                        $"- {cs(Poucher.color, "poucherSpawnModifier".Translate())}: {option.getString()}");
             }
 
         if (headerOnly) return sb.ToString();

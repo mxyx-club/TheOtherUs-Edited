@@ -1,18 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Hazel;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.Objects.CustomButton;
-using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 

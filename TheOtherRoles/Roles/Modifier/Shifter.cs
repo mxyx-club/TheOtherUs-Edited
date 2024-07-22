@@ -73,6 +73,11 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             BodyGuard.bodyguard = player1;
         }
+        else if (InfoSleuth.infoSleuth != null && InfoSleuth.infoSleuth == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            InfoSleuth.infoSleuth = player1;
+        }
         else if (Jumper.jumper != null && Jumper.jumper == player2)
         {
             if (repeat) shiftRole(player2, player1, false);

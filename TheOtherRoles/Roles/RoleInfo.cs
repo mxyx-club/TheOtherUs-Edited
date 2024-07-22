@@ -100,11 +100,12 @@ public class RoleInfo
     public static RoleInfo hacker = new("Hacker", Hacker.color, RoleId.Hacker);
     public static RoleInfo tracker = new("Tracker", Tracker.color, RoleId.Tracker);
     public static RoleInfo snitch = new("Snitch", Snitch.color, RoleId.Snitch);
+    public static RoleInfo prophet = new("Prophet", Prophet.color, RoleId.Prophet);
+    public static RoleInfo infoSleuth = new("InfoSleuth", InfoSleuth.color, RoleId.InfoSleuth);
     public static RoleInfo spy = new("Spy", Spy.color, RoleId.Spy);
     public static RoleInfo securityGuard = new("SecurityGuard", SecurityGuard.color, RoleId.SecurityGuard);
     public static RoleInfo medium = new("Medium", Medium.color, RoleId.Medium);
     public static RoleInfo trapper = new("Trapper", Trapper.color, RoleId.Trapper);
-    public static RoleInfo prophet = new("Prophet", Prophet.color, RoleId.Prophet);
 
     // Modifier
     public static RoleInfo lover = new("Lover", Lovers.color, RoleId.Lover, false, true);
@@ -201,12 +202,13 @@ public class RoleInfo
         medic,
         timeMaster,
         veteran,
-        prophet,
         swapper,
         seer,
         hacker,
         tracker,
         snitch,
+        prophet,
+        infoSleuth,
         spy,
         securityGuard,
         medium,
@@ -354,6 +356,7 @@ public class RoleInfo
         if (p == Executioner.executioner && Executioner.executioner) infos.Add(executioner);
         if (p == Trapper.trapper) infos.Add(trapper);
         if (p == Prophet.prophet) infos.Add(prophet);
+        if (p == InfoSleuth.infoSleuth) infos.Add(infoSleuth);
         if (Pursuer.pursuer.Contains(p)) infos.Add(pursuer);
         if (p == Jumper.jumper) infos.Add(jumper);
         if (p == Thief.thief) infos.Add(thief);

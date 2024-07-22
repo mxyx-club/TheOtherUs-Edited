@@ -1,7 +1,4 @@
-﻿using Hazel;
-using TheOtherRoles.Modules;
-using TheOtherRoles.Utilities;
-using TMPro;
+﻿using TheOtherRoles.Modules;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Crewmate;

@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.QuickChat;
 using Hazel;
 using Reactor.Utilities;
-using Reactor.Utilities.Extensions;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
@@ -539,7 +537,7 @@ internal class MeetingHudPatch
                     rend.transform.SetParent(pva.transform);
                     rend.gameObject.layer = pva.Megaphone.gameObject.layer;
                     rend.transform.localPosition = new Vector3(-0.5f, -0.03f, -1f);
-                    if (local == Swapper.swapper && (isGuesser || local == Mimic.mimic)) rend.transform.localPosition = new Vector3(-0.725f, -0.15f, -1f);
+                    if (local == Swapper.swapper && (isGuesser || Swapper.swapper.PlayerId == Mimic.mimic.PlayerId)) rend.transform.localPosition = new Vector3(-0.725f, -0.15f, -1f);
                     rend.sprite = Witch.getSpelledOverlaySprite();
                 }
             }
@@ -665,11 +663,20 @@ internal class MeetingHudPatch
 
             foreach (var playerVoteArea in __instance.playerStates)
             {
-                if (playerVoteArea.VotedFor == 252 || playerVoteArea.VotedFor == 255 ||
-                    playerVoteArea.VotedFor == 254) continue;
+                if (playerVoteArea.VotedFor is 252 or 255 or 254) continue;
                 var player = playerById(playerVoteArea.TargetPlayerId);
                 if (player == null || player.Data == null || player.Data.IsDead ||
                     player.Data.Disconnected) continue;
+
+                if (playerVoteArea.TargetPlayerId == InfoSleuth.infoSleuth.PlayerId)
+                {
+                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        (byte)CustomRPC.InfoSleuthTarget, SendOption.Reliable);
+                    writer.Write(playerVoteArea.VotedFor);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.infoSleuthTarget(playerVoteArea.VotedFor);
+                    break;
+                }
 
                 var additionalVotes = 1;
                 if (Prosecutor.prosecutor != null && Prosecutor.prosecutor.PlayerId == playerVoteArea.TargetPlayerId)
@@ -1201,11 +1208,44 @@ internal class MeetingHudPatch
         {
             Message("会议开始");
             shookAlready = false;
-            if (Blackmailer.blackmailed == null) return;
-            if (Blackmailer.blackmailed.Data.PlayerId != CachedPlayer.LocalPlayer.PlayerId || Blackmailer.blackmailed.Data.IsDead) return;
-            //Nothing here for now. What to do when local player who is blackmailed starts meeting
-            //Coroutines.Start(BlackmailShhh());
-            if (Blackmailer.blackmailed == CachedPlayer.LocalPlayer.PlayerControl) Coroutines.Start(BlackmailShhh());
+            if (Blackmailer.blackmailed != null
+                && Blackmailer.blackmailed.Data.PlayerId == CachedPlayer.LocalPlayer.PlayerId
+                && !Blackmailer.blackmailed.Data.IsDead)
+            {
+                //Nothing here for now. What to do when local player who is blackmailed starts meeting
+                //Coroutines.Start(BlackmailShhh());
+                Coroutines.Start(BlackmailShhh());
+            }
+
+            if (InfoSleuth.infoSleuth != null && InfoSleuth.target != null && InfoSleuth.infoSleuth == CachedPlayer.LocalPlayer.PlayerControl)
+            {
+                Message("情报官进入会议");
+                string msg;
+                var random = rnd.Next(0, 1);
+                var info = InfoSleuth.infoType switch
+                {
+                    0 => isNeutral(InfoSleuth.target) || InfoSleuth.target.Data.Role.IsImpostor ? "不是船员" : "是船员",
+                    1 => "的阵营是 " + teamString(InfoSleuth.target),
+                    _ => random == 0 ? isNeutral(InfoSleuth.target) || InfoSleuth.target.Data.Role.IsImpostor ? "不是船员" : "是船员" : teamString(InfoSleuth.target),
+                };
+
+                msg = $"{InfoSleuth.target.Data.PlayerName} {info}";
+
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(CachedPlayer.LocalPlayer.PlayerControl, $"{msg}");
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
+                writer.Write(InfoSleuth.target.PlayerId);
+                writer.Write((byte)RPCProcedure.GhostInfoTypes.MediumInfo);
+                writer.Write(msg);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+
+
+                var writer1 = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.InfoSleuthNoTarget, SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(writer1);
+                RPCProcedure.infoSleuthNoTarget();
+            }
+
         }
     }
 }

@@ -18,6 +18,7 @@ public static class RoleClass
         Mimic.clearAndReload();
         Engineer.clearAndReload();
         Sheriff.clearAndReload();
+        InfoSleuth.clearAndReload();
         Cursed.clearAndReload();
         Butcher.clearAndReload();
         Deputy.clearAndReload();

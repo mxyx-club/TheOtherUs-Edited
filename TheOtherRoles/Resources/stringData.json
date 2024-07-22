@@ -1868,6 +1868,22 @@
         "0": "Killer Neutral Shown As Red",
         "13": "\u6740\u624b\u4e2d\u7acb\u663e\u793a\u4e3a\u7ea2\u540d"
     },
+    "infoSleuthInfoType": {
+        "0": "Information Type",
+        "13": "\u67e5\u9a8c\u7684\u4fe1\u606f\u7c7b\u578b"
+    },
+    "infoSleuthInfoType1": {
+        "0": "Is Crew",
+        "13": "\u662f\u5426\u4e3a\u8239\u5458"
+    },
+    "infoSleuthInfoType2": {
+        "0": "Team Info",
+        "13": "\u9635\u8425\u4fe1\u606f"
+    },
+    "infoSleuthInfoType3": {
+        "0": "Random",
+        "13": "\u968f\u673a"
+    },
     "spyCanDieToSheriff": {
         "0": "Spy Can Die To Sheriff",
         "13": "\u53ef\u88ab\u8b66\u957f\u6267\u6cd5"
@@ -3516,6 +3532,16 @@
     },
     "ProphetShortDesc": {
         "13": "\u901a\u8fc7\u9884\u8a00\u63ed\u793a\u5bf9\u65b9\u9635\u8425"
+    },
+    "InfoSleuth": {
+        "0": "infoSleuth",
+        "13": "\u60c5\u62a5\u5e08"
+    },
+    "InfoSleuthIntroDesc": {
+        "13": "\u5728\u4f1a\u8bae\u91cc\u83b7\u53d6\u73a9\u5bb6\u4fe1\u606f"
+    },
+    "InfoSleuthShortDesc": {
+        "13": "\u5728\u4f1a\u8bae\u4e0a\u901a\u8fc7\u6295\u7968\u83b7\u53d6\u5bf9\u65b9\u7684\u4fe1\u606f"
     },
     "Disperser": {
         "0": "Disperser",

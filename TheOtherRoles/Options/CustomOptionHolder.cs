@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using TheOtherRoles.Modules;
-using TheOtherRoles.Roles.Neutral;
 using UnityEngine;
 using static TheOtherRoles.Options.CustomOption;
 using Types = TheOtherRoles.Options.CustomOption.CustomOptionType;
@@ -443,6 +442,9 @@ public class CustomOptionHolder
     public static CustomOption prophetCanCallEmergency;
     public static CustomOption prophetIsRevealed;
     public static CustomOption prophetExaminesToBeRevealed;
+
+    public static CustomOption infoSleuthSpawnRate;
+    public static CustomOption infoSleuthInfoType;
 
     public static CustomOption terroristSpawnRate;
     public static CustomOption terroristBombDestructionTime;
@@ -1197,6 +1199,14 @@ public class CustomOptionHolder
         trackerTrackingMethod = Create(30266, Types.Crewmate, "trackerTrackingMethod",
             ["trackerTrackingMethod1", "trackerTrackingMethod2", "trackerTrackingMethod3"], trackerSpawnRate);
 
+        snitchSpawnRate = Create(30270, Types.Crewmate, cs(Snitch.color, "Snitch"), rates, null, true);
+        snitchLeftTasksForReveal = Create(30271, Types.Crewmate, "snitchLeftTasksForReveal", 1f, 0f, 10f, 1f, snitchSpawnRate);
+        snitchSeeMeeting = Create(30272, Types.Crewmate, "snitchSeeMeeting", true, snitchSpawnRate);
+        snitchCanSeeRoles = Create(30273, Types.Crewmate, "snitchCanSeeRoles", false, snitchSpawnRate);
+        snitchIncludeNeutralTeam = Create(30274, Types.Crewmate, "snitchIncludeNeutralTeam",
+            ["optionOff", "snitchIncludeNeutralTeam2", "snitchIncludeNeutralTeam3", "snitchIncludeNeutralTeam4"], snitchSpawnRate);
+        snitchTeamNeutraUseDifferentArrowColor = Create(30275, Types.Crewmate, "snitchTeamNeutraUseDifferentArrowColor", true, snitchIncludeNeutralTeam);
+
         prophetSpawnRate = Create(30360, Types.Crewmate, cs(Prophet.color, "Prophet"), rates, null, true);
         prophetCooldown = Create(30361, Types.Crewmate, "prophetCooldown", 20f, 5f, 60f, 2.5f, prophetSpawnRate);
         prophetNumExamines = Create(30362, Types.Crewmate, "prophetNumExamines", 4f, 1f, 10f, 1f, prophetSpawnRate);
@@ -1208,12 +1218,10 @@ public class CustomOptionHolder
         prophetEvilNeutralAsRed = Create(30368, Types.Crewmate, "prophetEvilNeutralAsRed", true, prophetSpawnRate);
         prophetKillNeutralAsRed = Create(30369, Types.Crewmate, "prophetKillNeutralAsRed", true, prophetSpawnRate);
 
-        snitchSpawnRate = Create(30270, Types.Crewmate, cs(Snitch.color, "Snitch"), rates, null, true);
-        snitchLeftTasksForReveal = Create(30271, Types.Crewmate, "snitchLeftTasksForReveal", 1f, 0f, 10f, 1f, snitchSpawnRate);
-        snitchSeeMeeting = Create(30272, Types.Crewmate, "snitchSeeMeeting", true, snitchSpawnRate);
-        snitchCanSeeRoles = Create(30273, Types.Crewmate, "snitchCanSeeRoles", false, snitchSpawnRate);
-        snitchIncludeNeutralTeam = Create(30274, Types.Crewmate, "snitchIncludeNeutralTeam", ["optionOff", "snitchIncludeNeutralTeam2", "snitchIncludeNeutralTeam3", "snitchIncludeNeutralTeam4"], snitchSpawnRate);
-        snitchTeamNeutraUseDifferentArrowColor = Create(30275, Types.Crewmate, "snitchTeamNeutraUseDifferentArrowColor", true, snitchIncludeNeutralTeam);
+        infoSleuthSpawnRate = Create(30380, Types.Crewmate, cs(InfoSleuth.color, "InfoSleuth"), rates, null, true);
+        infoSleuthInfoType = Create(30381, Types.Crewmate, "infoSleuthInfoType",
+            ["infoSleuthInfoType1", "infoSleuthInfoType2", "infoSleuthInfoType3"], infoSleuthSpawnRate);
+
 
         spySpawnRate = Create(30280, Types.Crewmate, cs(Spy.color, "Spy"), rates, null, true);
         spyCanDieToSheriff = Create(30281, Types.Crewmate, "spyCanDieToSheriff", false, spySpawnRate);

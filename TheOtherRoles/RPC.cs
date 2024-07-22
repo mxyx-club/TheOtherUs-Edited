@@ -7,7 +7,6 @@ using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
 using InnerNet;
-using MS.Internal.Xml.XPath;
 using PowerTools;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
@@ -15,7 +14,6 @@ using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Roles;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -23,7 +21,6 @@ using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.HudManagerStartPatch;
 using static TheOtherRoles.Options.MapOption;
 using static TheOtherRoles.Roles.RoleClass;
-using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles;
@@ -96,11 +93,12 @@ public enum RoleId
     Hacker,
     Tracker,
     Snitch,
+    Prophet,
+    InfoSleuth,
     Spy,
     SecurityGuard,
     Medium,
     Trapper,
-    Prophet,
     Magician,
 
     // Modifier ---
@@ -243,6 +241,8 @@ public enum CustomRPC
     SetSwoop,
     SetJackalSwoop,
     JackalCanSwooper,
+    InfoSleuthTarget,
+    InfoSleuthNoTarget,
 
     TrapperKill,
     PlaceTrap,
@@ -438,6 +438,9 @@ public static class RPCProcedure
                         break;
                     case RoleId.Magician:
                         Magician.magician = player;
+                        break;
+                    case RoleId.InfoSleuth:
+                        InfoSleuth.infoSleuth = player;
                         break;
                     case RoleId.TimeMaster:
                         TimeMaster.timeMaster = player;
@@ -1023,6 +1026,11 @@ public static class RPCProcedure
                 Amnisiac.clearAndReload();
                 break;
 
+            case RoleId.InfoSleuth:
+                InfoSleuth.infoSleuth = amnisiac;
+                Amnisiac.clearAndReload();
+                break;
+
             case RoleId.TimeMaster:
                 if (Amnisiac.resetRole) TimeMaster.clearAndReload();
                 TimeMaster.timeMaster = amnisiac;
@@ -1441,6 +1449,11 @@ public static class RPCProcedure
                 if (Amnisiac.resetRole) Prosecutor.clearAndReload();
                 Prosecutor.prosecutor = Mimic.mimic;
                 Prosecutor.diesOnIncorrectPros = false;
+                Mimic.hasMimic = true;
+                break;
+
+            case RoleId.InfoSleuth:
+                InfoSleuth.infoSleuth = Mimic.mimic;
                 Mimic.hasMimic = true;
                 break;
 
@@ -2167,6 +2180,19 @@ public static class RPCProcedure
         Jackal.canSwoop = chance;
     }
 
+    public static void infoSleuthTarget(byte playerId)
+    {
+        Message("尝试添加目标");
+        var player = playerById(playerId);
+        if (player != null) InfoSleuth.target = player;
+    }
+
+    public static void infoSleuthNoTarget()
+    {
+        Message("删除目标");
+        InfoSleuth.target = null;
+    }
+
     public static void pavlovsCreateDog(byte targetId)
     {
         var player = playerById(targetId);
@@ -2237,6 +2263,7 @@ public static class RPCProcedure
         if (player == Spy.spy) Spy.clearAndReload();
         if (player == SecurityGuard.securityGuard) SecurityGuard.clearAndReload();
         if (player == Medium.medium) Medium.clearAndReload();
+        if (player == InfoSleuth.infoSleuth) InfoSleuth.clearAndReload();
         if (player == Jumper.jumper) Jumper.clearAndReload();
         if (player == Trapper.trapper) Trapper.clearAndReload();
         if (player == Prophet.prophet) Prophet.clearAndReload();
@@ -4099,6 +4126,14 @@ internal class RPCHandlerPatch
 
             case CustomRPC.JackalCanSwooper:
                 RPCProcedure.jackalCanSwooper(reader.ReadByte() == byte.MaxValue);
+                break;
+
+            case CustomRPC.InfoSleuthTarget:
+                RPCProcedure.infoSleuthTarget(reader.ReadByte());
+                break;
+
+            case CustomRPC.InfoSleuthNoTarget:
+                RPCProcedure.infoSleuthNoTarget();
                 break;
 
             case CustomRPC.HostEndGame:

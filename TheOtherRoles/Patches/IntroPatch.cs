@@ -3,12 +3,10 @@ using System.Linq;
 using Hazel;
 using Il2CppSystem.Collections.Generic;
 using TheOtherRoles.CustomGameModes;
-using TheOtherRoles.Objects;
 using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
