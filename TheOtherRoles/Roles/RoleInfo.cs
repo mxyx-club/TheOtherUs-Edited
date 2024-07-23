@@ -59,6 +59,7 @@ public class RoleInfo
     public static RoleInfo ninja = new("Ninja", Ninja.color, RoleId.Ninja);
     public static RoleInfo yoyo = new("Yoyo", Yoyo.color, RoleId.Yoyo);
     public static RoleInfo evilTrapper = new("EvilTrapper", EvilTrapper.color, RoleId.EvilTrapper);
+    public static RoleInfo gambler = new("Gambler", Gambler.color, RoleId.Gambler);
 
     public static RoleInfo survivor = new("Survivor", Survivor.color, RoleId.Survivor, true);
     public static RoleInfo amnisiac = new("Amnisiac", Amnisiac.color, RoleId.Amnisiac, true);
@@ -167,6 +168,7 @@ public class RoleInfo
         ninja,
         yoyo,
         evilTrapper,
+        gambler,
 
         survivor,
         amnisiac,
@@ -315,6 +317,7 @@ public class RoleInfo
         if (p == Warlock.warlock) infos.Add(warlock);
         if (p == Witch.witch) infos.Add(witch);
         if (p == Escapist.escapist) infos.Add(escapist);
+        if (p == Gambler.gambler) infos.Add(gambler);
         if (p == Ninja.ninja) infos.Add(ninja);
         if (p == Yoyo.yoyo) infos.Add(yoyo);
         if (p == EvilTrapper.evilTrapper) infos.Add(evilTrapper);

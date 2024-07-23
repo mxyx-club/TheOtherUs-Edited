@@ -50,6 +50,7 @@ public enum RoleId
     Ninja,
     Yoyo,
     EvilTrapper,
+    Gambler,
     Follower,
 
     Survivor,
@@ -604,6 +605,9 @@ public static class RPCProcedure
                         break;
                     case RoleId.EvilTrapper:
                         EvilTrapper.evilTrapper = player;
+                        break;
+                    case RoleId.Gambler:
+                        Gambler.gambler = player;
                         break;
                 }
             }
@@ -1417,6 +1421,10 @@ public static class RPCProcedure
             case RoleId.EvilTrapper:
                 if (Amnisiac.resetRole) EvilTrapper.clearAndReload();
                 EvilTrapper.evilTrapper = amnisiac;
+                Amnisiac.clearAndReload();
+                break;
+            case RoleId.Gambler:
+                Gambler.gambler = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
         }
@@ -2290,7 +2298,7 @@ public static class RPCProcedure
         if (player == Blackmailer.blackmailer) Blackmailer.clearAndReload();
         if (player == Follower.follower) Follower.clearAndReload();
         if (player == Terrorist.terrorist) Terrorist.clearAndReload();
-        if (player == Prophet.prophet) Prophet.clearAndReload();
+        if (player == Gambler.gambler) Gambler.clearAndReload();
 
         // Other roles
         if (player == Jester.jester) Jester.clearAndReload();
@@ -3264,6 +3272,7 @@ public static class RPCProcedure
         if (target == Vampire.vampire) Vampire.vampire = thief;
         if (target == Eraser.eraser) Eraser.eraser = thief;
         if (target == Trickster.trickster) Trickster.trickster = thief;
+        if (target == Gambler.gambler) Gambler.gambler = thief;
         if (target == Cleaner.cleaner) Cleaner.cleaner = thief;
         if (target == Warlock.warlock) Warlock.warlock = thief;
         if (target == BountyHunter.bountyHunter) BountyHunter.bountyHunter = thief;

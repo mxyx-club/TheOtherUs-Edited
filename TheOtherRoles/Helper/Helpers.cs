@@ -1478,6 +1478,14 @@ public static class Helpers
         return team;
     }
 
+    public static void SetKillTimerUnchecked(this PlayerControl player, float time, float max = float.NegativeInfinity)
+    {
+        if (max == float.NegativeInfinity) max = time;
+
+        player.killTimer = time;
+        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(time, max);
+    }
+
     public static bool isRoleAlive(PlayerControl role)
     {
         if (Mimic.mimic != null)

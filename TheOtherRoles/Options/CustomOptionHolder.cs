@@ -156,6 +156,11 @@ public class CustomOptionHolder
     public static CustomOption evilTrapperPenaltyTime;
     public static CustomOption evilTrapperBonusTime;
 
+    public static CustomOption gamblerSpawnRate;
+    public static CustomOption gamblerMinCooldown;
+    public static CustomOption gamblerMaxCooldown;
+    public static CustomOption gamblerSuccessRate;
+
     public static CustomOption swooperSpawnRate;
     public static CustomOption swooperKillCooldown;
     public static CustomOption swooperCooldown;
@@ -960,6 +965,11 @@ public class CustomOptionHolder
         evilTrapperMaxDistance = Create(10306, Types.Impostor, "evilTrapperMaxDistance", 1f, 0f, 60f, 0.5f, evilTrapperSpawnRate);
         evilTrapperPenaltyTime = Create(10307, Types.Impostor, "evilTrapperPenaltyTime", 10f, 0f, 30f, 0.5f, evilTrapperSpawnRate);
         evilTrapperBonusTime = Create(10308, Types.Impostor, "evilTrapperBonusTime", 10f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
+
+        gamblerSpawnRate = Create(10320, Types.Impostor, cs(Gambler.color, "Gambler"), rates, null, true);
+        gamblerMinCooldown = Create(10321, Types.Impostor, "gamblerMinCooldown", 2.5f, 0f, 45f, 0.5f, gamblerSpawnRate);
+        gamblerMaxCooldown = Create(10322, Types.Impostor, "gamblerMaxCooldown", 40f, 10f, 90f, 2.5f, gamblerSpawnRate);
+        gamblerSuccessRate = Create(10323, Types.Impostor, "gamblerSuccessRate", rates, gamblerSpawnRate);
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 

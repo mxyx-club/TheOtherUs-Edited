@@ -750,6 +750,7 @@ public static class PlayerControlFixedUpdatePatch
             p.cosmetics.nameText.transform.parent.SetLocalZ(-0.0001f);
 
             //Snitch See Roles
+            /*
             bool snitchFlag = false;
             if (Snitch.snitch != null && Snitch.seeInMeeting && Snitch.canSeeRoles && !Snitch.snitch.Data.IsDead)
             {
@@ -762,8 +763,9 @@ public static class PlayerControlFixedUpdatePatch
                 var forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(p);
                 snitchFlag = completedSnitch && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam);
             }
+            */
 
-            if (snitchFlag || (Lawyer.lawyerKnowsRole && local == Lawyer.lawyer && p == Lawyer.target) ||
+            if ((Lawyer.lawyerKnowsRole && local == Lawyer.lawyer && p == Lawyer.target) ||
                    (Akujo.knowsRoles && local == Akujo.akujo && (p == Akujo.honmei || Akujo.keeps.Any(x => x.PlayerId == p.PlayerId))) ||
                    p == local || CachedPlayer.LocalPlayer.Data.IsDead ||
                 (local == Slueth.slueth && Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) ||
@@ -982,18 +984,18 @@ public static class PlayerControlFixedUpdatePatch
     // Snitch Text
     private static void snitchTextUpdate()
     {
-        if (Snitch.snitch == null) return;
+        if (Snitch.snitch == null || !Snitch.needsUpdate) return;
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
-        int numberOfTasks = playerTotal - playerCompleted;
+        var numberOfTasks = playerTotal - playerCompleted;
 
         var snitchIsDead = Snitch.snitch.Data.IsDead;
         var local = CachedPlayer.LocalPlayer.PlayerControl;
 
         var isDead = local == Snitch.snitch || local.Data.IsDead;
-        bool forImpTeam = local.Data.Role.IsImpostor;
-        bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(local);
-        bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(local);
-        bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(local);
+        var forImpTeam = local.Data.Role.IsImpostor;
+        var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(local);
+        var forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(local);
+        var forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(local);
 
         if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam || isDead))
         {
@@ -1009,9 +1011,12 @@ public static class PlayerControlFixedUpdatePatch
             {
                 Snitch.text.text = $"告密者还活着: {playerCompleted} / {playerTotal}";
             }
-            else Snitch.text?.Destroy();
+            else
+            {
+                if (MeetingHud.Instance == null) Snitch.needsUpdate = false;
+                Snitch.text?.Destroy();
+            }
         }
-        else Snitch.text?.Destroy();
     }
 
     private static void undertakerDragBodyUpdate()
@@ -2257,7 +2262,13 @@ public static class MurderPlayerPatch
         // LastImpostor cooldown
         if (LastImpostor.lastImpostor != null && __instance == LastImpostor.lastImpostor && CachedPlayer.LocalPlayer.PlayerControl == __instance)
         {
-            LastImpostor.lastImpostor.SetKillTimer(Mathf.Max(1f, GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - LastImpostor.deduce));
+            LastImpostor.lastImpostor.SetKillTimer(Mathf.Max(1f, MapOption.KillCooddown - LastImpostor.deduce));
+        }
+
+        if (__instance == Gambler.gambler)
+        {
+            var cooldown = Gambler.GetSuc() ? Gambler.minCooldown : Gambler.maxCooldown;
+            Gambler.gambler.SetKillTimerUnchecked(cooldown, cooldown);
         }
 
         // Set bountyHunter cooldown
@@ -2608,6 +2619,7 @@ public static class PlayerPhysicsFixedUpdate
         {
             if (Flash.flash != null && Flash.flash.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId)) __instance.body.velocity *= Flash.speed;
             if (Giant.giant != null && Giant.giant == CachedPlayer.LocalPlayer.PlayerControl) __instance.body.velocity *= Giant.speed;
+            if (Swooper.swooper != null && Swooper.swooper == CachedPlayer.LocalPlayer.PlayerControl && Swooper.isInvisable) __instance.body.velocity *= Swooper.swoopSpeed;
         }
     }
 }

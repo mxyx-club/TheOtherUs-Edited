@@ -19,6 +19,7 @@ public static class RoleClass
         Engineer.clearAndReload();
         Sheriff.clearAndReload();
         InfoSleuth.clearAndReload();
+        Gambler.clearAndReload();
         Cursed.clearAndReload();
         Butcher.clearAndReload();
         Deputy.clearAndReload();
