@@ -14,7 +14,7 @@ public static class Snitch
     public static List<Arrow> localArrows = new List<Arrow>();
     public static int taskCountForReveal = 1;
     public static bool seeInMeeting;
-    public static bool canSeeRoles;
+    //public static bool canSeeRoles;
     public static bool teamNeutraUseDifferentArrowColor = true;
     public static bool needsUpdate = true;
 
@@ -28,8 +28,6 @@ public static class Snitch
 
     public static includeNeutralTeam Team = includeNeutralTeam.KillNeutral;
     public static TextMeshPro text;
-    public static bool isRevealed;
-
 
     public static void clearAndReload()
     {
@@ -42,12 +40,11 @@ public static class Snitch
         localArrows = new List<Arrow>();
         taskCountForReveal = Mathf.RoundToInt(CustomOptionHolder.snitchLeftTasksForReveal.getFloat());
         seeInMeeting = CustomOptionHolder.snitchSeeMeeting.getBool();
-        isRevealed = false;
         if (text != null) Object.Destroy(text);
         text = null;
         needsUpdate = true;
 
-        canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();
+        //canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();
         Team = (includeNeutralTeam)CustomOptionHolder.snitchIncludeNeutralTeam.getSelection();
         teamNeutraUseDifferentArrowColor = CustomOptionHolder.snitchTeamNeutraUseDifferentArrowColor.getBool();
         snitch = null;

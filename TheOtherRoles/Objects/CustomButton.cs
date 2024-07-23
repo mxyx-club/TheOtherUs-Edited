@@ -182,7 +182,6 @@ public class CustomButton
         }
     }
 
-
     public void setActive(bool isActive)
     {
         if (isActive)

@@ -15,6 +15,7 @@ public static class Mayor
     public static bool meetingButton = true;
     public static int remoteMeetingsLeft = 1;
     public static bool SabotageRemoteMeetings = true;
+    public static int vision = 5;
 
     public static void clearAndReload()
     {
@@ -24,5 +25,6 @@ public static class Mayor
         meetingButton = CustomOptionHolder.mayorMeetingButton.getBool();
         remoteMeetingsLeft = Mathf.RoundToInt(CustomOptionHolder.mayorMaxRemoteMeetings.getFloat());
         SabotageRemoteMeetings = CustomOptionHolder.mayorSabotageRemoteMeetings.getBool();
+        vision = CustomOptionHolder.mayorRevealVision.getSelection() + 2;
     }
 }

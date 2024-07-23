@@ -1595,9 +1595,9 @@ public class HudManagerUpdate
         var j = 0;
         for (var i = 0; i < blocks.Length; i++)
         {
+            if (IsCN()) blocks[i] = $"<line-height=110%>{blocks[i]}</line-height>";
             curBlock = blocks[i];
-            if (lineCount(curBlock) + lineCount(curString) < 43)
-                curString += curBlock + "\n\n";
+            if (lineCount(curBlock) + lineCount(curString) < (IsCN() ? 40 : 43)) curString += curBlock + "\n\n";
             else
             {
                 settingsTMPs[j].text = curString;
@@ -1614,7 +1614,7 @@ public class HudManagerUpdate
             if (tmp.text != "")
                 blockCount++;
         for (var i = 0; i < blockCount; i++)
-            settingsTMPs[i].transform.localPosition = new Vector3((-blockCount * 1.2f) + (2.7f * i), 2.2f, -500f);
+            settingsTMPs[i].transform.localPosition = new Vector3(-blockCount * 1.2f + 2.7f * i, 2.2f, -500f);
     }
 
     public static void OpenSettings(HudManager __instance)

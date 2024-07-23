@@ -204,11 +204,11 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
-        else if (Jester.jester != null && Jester.jester == player && Jester.canVent)
+        else if (Jester.jester != null && Jester.jester == player && Jester.canUseVents)
         {
             roleCouldUse = true;
         }
-        else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player && Juggernaut.canVent)
+        else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player && Juggernaut.canUseVents)
         {
             roleCouldUse = true;
         }
@@ -216,7 +216,7 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
-        else if (Swooper.swooper != null && Swooper.swooper == player)
+        else if (Swooper.swooper != null && Swooper.swooper == player && Swooper.canUseVents)
         {
             roleCouldUse = true;
         }

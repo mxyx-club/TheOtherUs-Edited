@@ -273,7 +273,6 @@ internal static class HudManagerStartPatch
         Helpers.showTargetNameOnButton(target, button, defaultText);
     }
 
-
     public static void showTargetNameOnButtonExplicit(PlayerControl target, CustomButton button, string defaultText)
     {
         Helpers.showTargetNameOnButtonExplicit(target, button, defaultText);
@@ -978,7 +977,7 @@ internal static class HudManagerStartPatch
                        CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { },
-            Shifter.getButtonSprite(),
+            Shifter.buttonSprite,
             new Vector3(0, 1f, 0),
             __instance,
             null,
@@ -2383,7 +2382,8 @@ internal static class HudManagerStartPatch
                 werewolfRampageButton.Timer = werewolfRampageButton.MaxTimer;
                 Werewolf.canKill = false;
                 Werewolf.hasImpostorVision = false;
-            }
+            },
+            buttonText: "WerewolfRampage".Translate()
         );
 
         // 天启击杀 Kill

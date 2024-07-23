@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using UnityEngine;
+using TheOtherRoles.Modules;
 
 namespace TheOtherRoles.Roles.Modifier;
 public static class Shifter
@@ -13,14 +13,7 @@ public static class Shifter
     public static bool shiftNeutral;
     public static bool shiftALLNeutra;
 
-    private static Sprite buttonSprite;
-
-    public static Sprite getButtonSprite()
-    {
-        if (buttonSprite) return buttonSprite;
-        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.ShiftButton.png", 115f);
-        return buttonSprite;
-    }
+    public static ResourceSprite buttonSprite = new("ShiftButton.png");
 
     public static void shiftRole(PlayerControl player1, PlayerControl player2, bool repeat = true)
     {
@@ -186,7 +179,7 @@ public static class Shifter
         else if (Pursuer.pursuer != null && Pursuer.pursuer.Any(p => p == player2))
         {
             if (repeat) shiftRole(player2, player1, false);
-            Pursuer.pursuer.Remove(player2);
+            Survivor.survivor.RemoveAll(p => p.PlayerId == player2.PlayerId);
             Pursuer.pursuer.Add(player1);
         }
         else if (Arsonist.arsonist != null && Arsonist.arsonist == player2)
@@ -222,7 +215,7 @@ public static class Shifter
         else if (Survivor.survivor != null && Survivor.survivor.Contains(player2))
         {
             if (repeat) shiftRole(player2, player1, false);
-            Survivor.survivor.Remove(player2);
+            Survivor.survivor.RemoveAll(p => p.PlayerId == player2.PlayerId);
             Survivor.survivor.Add(player1);
         }
         else if (Akujo.akujo != null && Akujo.akujo == player2)

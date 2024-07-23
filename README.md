@@ -11,11 +11,13 @@
 
 # The Other Us - Edited
 
+<p align="center">若在游玩过程中发现了bug或有一些建议，欢迎提出ISSUE、PR或加入模组交流群：<a href="https://qm.qq.com/q/MlhqY3QcYU">961341019</a></p>
+
 ## 模组下载
 
 | 游戏版本            | 模组版本 | 发布日期  | 链接                                                         |
 | ------------------- | -------- | --------- | ------------------------------------------------------------ |
-| 2024.3.5 ~ 2024.6.4 | v1.0.5.4 | 2024.7.12  | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.5.4/TheOtherUs.zip) |
+| 2024.3.5 ~ 2024.6.4 | v1.0.6.0 | 2024.7.24 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.5.4/TheOtherUs.zip) |
 | 2024.3.5 ~ 2024.6.4 | v1.0.5.3 | 2024.7.8  | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.5.3/TheOtherUs.zip) |
 | 2024.3.5 ~ 2024.6.4 | v1.0.4.6 | 2024.6.29 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.6/TheOtherUs.zip) |
 | 2024.3.5 ~ 2024.6.4 | v1.0.4.2 | 2024.6.16 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.2/TheOtherUs.zip) |
@@ -28,18 +30,26 @@
 
 ## 更新日志
 
-###  v1.0.5.4:
+###  v1.0.6.0:
 
  - #### 新增内容：
 
+    - 新增船员职业：情报师（可以在会议通过投票获得目标的职业信息）
+    - 新增伪装者职业：肢解者[Beta]（可以手动分解尸体并且分散到地图的随机位置）
+    - 新增伪装者职业：赌徒（击杀时随机变化下一次的击杀冷却）
     - 新增选项："随机设定玩家深浅色" ，游戏默认开启，关闭时玩家深浅色会由玩家颜色为准
+    - 市长：新增选项 “市长揭示后视野变化”
+    - 隐身人：隐身时可以获得加速效果
 
  - #### Bug修复：
 
+    - 修正一部分文本问题
     - 通灵师：修复通灵文本错误
+    - 告密者：删除选项 “可以在会议中查看具体职业”
     - 邪恶的设陷师：现在无法击杀被保护玩家
     - 身份窃贼：修复身份窃贼击杀成功时会同时抢夺巴甫洛夫阵营职业的问题
     - 末日预言家：修复揭示时有概率报错的问题，并且删除在职业数不够时自动获取其它不在场职业的功能。
+    - 幸存者：修复职业无法被删除的问题
 
 <details>
   <summary>点我查看更多更新日志</summary>
@@ -329,26 +339,26 @@
 |     忍者     |              |   追踪者   |    反骨    |
 |    悠悠球    |              |   告密者   | 管道工程师 |
 | 邪恶的设陷师 |              |    卧底    |    酒鬼    |
-|              |              |    保安    |   胆小鬼   |
-|              |              |   通灵师   |   窥视者   |
+|    肢解者    |              |    保安    |   胆小鬼   |
+|     赌徒     |              |   通灵师   |   窥视者   |
 |              |              |   设陷师   |    雷达    |
 |              |              |   预言家   |   执钮人   |
-|              |              |            |   变色龙   |
+|              |              |   情报师   |   变色龙   |
 |              |              |            |   交换师   |
 
 ## 错误报告
 
 如预见游戏性Bug或者有更多的建议可以在仓库[issue](https://github.com/mxyx-club/TheOtherUs-Edited/issues/new/choose)提出，或加入模组交流群：[961341019](https://qm.qq.com/q/MlhqY3QcYU)
 
-## 多语言翻译
-
-翻译文件并未完成。如果您有兴趣帮助翻译，可以在[issue](https://github.com/mxyx-club/TheOtherUs-Edited/issues/new/choose)提出
-
 ## 模组贡献者
 
 ### 主要开发者：
 
-沫夏悠轩、善良的好人、天寸梦初、Imp11
+[沫夏悠轩](https://github.com/mxyx0412)、善良的好人、[天寸梦初](https://github.com/TianMengLucky)
+
+### Github贡献者：
+
+[Imp11](https://github.com/dabao40)、[方块](https://github.com/FangkuaiYa)
 
 ### 美工：
 

@@ -116,9 +116,7 @@ public static class JesterEnterVent
 {
     public static bool Prefix(Vent __instance)
     {
-        if (Jester.jester == CachedPlayer.LocalPlayer.PlayerControl && Jester.canVent)
-            return false;
-        return true;
+        return Jester.jester != CachedPlayer.LocalPlayer.PlayerControl || !Jester.canUseVents;
     }
 }
 

@@ -1,5 +1,4 @@
 ﻿using TheOtherRoles.Modules;
-using TheOtherRoles.Objects;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Neutral;
@@ -14,14 +13,11 @@ public static class Swooper
     public static float duration = 5f;
     public static float swoopCooldown = 30f;
     public static float swoopTimer;
+    public static float swoopSpeed;
     public static bool hasImpVision;
+    public static bool canUseVents;
 
     public static ResourceSprite SwoopButton = new("Swoop.png");
-
-    public static Vector3 getSwooperSwoopVector()
-    {
-        return CustomButton.ButtonPositions.upperRowLeft; //brb
-    }
 
     public static void clearAndReload()
     {
@@ -31,5 +27,7 @@ public static class Swooper
         swoopCooldown = CustomOptionHolder.swooperCooldown.getFloat();
         duration = CustomOptionHolder.swooperDuration.getFloat();
         hasImpVision = CustomOptionHolder.swooperHasImpVision.getBool();
+        swoopSpeed = CustomOptionHolder.swooperSpeed.getFloat();
+        canUseVents = CustomOptionHolder.swooperCanUseVents.getBool();
     }
 }

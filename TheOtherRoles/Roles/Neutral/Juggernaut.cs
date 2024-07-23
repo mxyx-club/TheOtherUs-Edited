@@ -11,7 +11,7 @@ public static class Juggernaut
     public static float cooldown = 30f;
     public static float reducedkill = 5f;
     public static bool hasImpostorVision;
-    public static bool canVent;
+    public static bool canUseVents;
 
     public static void setkill()
     {
@@ -24,7 +24,7 @@ public static class Juggernaut
         juggernaut = null;
         currentTarget = null;
         hasImpostorVision = CustomOptionHolder.juggernautHasImpVision.getBool();
-        canVent = CustomOptionHolder.juggernautCanVent.getBool();
+        canUseVents = CustomOptionHolder.juggernautCanUseVents.getBool();
         cooldown = CustomOptionHolder.juggernautCooldown.getFloat();
         reducedkill = CustomOptionHolder.juggernautReducedkillEach.getFloat();
     }

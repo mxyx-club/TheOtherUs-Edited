@@ -9,7 +9,7 @@ public static class Jester
 
     public static bool triggerJesterWin;
     public static bool canCallEmergency = true;
-    public static bool canVent;
+    public static bool canUseVents;
     public static bool hasImpostorVision;
 
     public static void clearAndReload()
@@ -17,7 +17,7 @@ public static class Jester
         jester = null;
         triggerJesterWin = false;
         canCallEmergency = CustomOptionHolder.jesterCanCallEmergency.getBool();
-        canVent = CustomOptionHolder.jesterCanVent.getBool();
+        canUseVents = CustomOptionHolder.jesterCanVent.getBool();
         hasImpostorVision = CustomOptionHolder.jesterHasImpostorVision.getBool();
     }
 }

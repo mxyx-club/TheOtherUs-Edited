@@ -165,6 +165,8 @@ public class CustomOptionHolder
     public static CustomOption swooperKillCooldown;
     public static CustomOption swooperCooldown;
     public static CustomOption swooperDuration;
+    public static CustomOption swooperSpeed;
+    public static CustomOption swooperCanUseVents;
     public static CustomOption swooperHasImpVision;
 
     public static CustomOption bountyHunterSpawnRate;
@@ -196,6 +198,7 @@ public class CustomOptionHolder
     public static CustomOption mayorMeetingButton;
     public static CustomOption mayorMaxRemoteMeetings;
     public static CustomOption mayorSabotageRemoteMeetings;
+    public static CustomOption mayorRevealVision;
 
     public static CustomOption prosecutorSpawnRate;
     public static CustomOption prosecutorCanSeeVoteColors;
@@ -302,7 +305,6 @@ public class CustomOptionHolder
     public static CustomOption snitchSpawnRate;
     public static CustomOption snitchLeftTasksForReveal;
     public static CustomOption snitchSeeMeeting;
-    public static CustomOption snitchCanSeeRoles;
     public static CustomOption snitchIncludeNeutralTeam;
     public static CustomOption snitchTeamNeutraUseDifferentArrowColor;
     //public static CustomOption snitchMode;
@@ -407,7 +409,7 @@ public class CustomOptionHolder
     public static CustomOption juggernautSpawnRate;
     public static CustomOption juggernautCooldown;
     public static CustomOption juggernautHasImpVision;
-    public static CustomOption juggernautCanVent;
+    public static CustomOption juggernautCanUseVents;
     public static CustomOption juggernautReducedkillEach;
 
     public static CustomOption doomsayerSpawnRate;
@@ -1030,7 +1032,9 @@ public class CustomOptionHolder
         swooperKillCooldown = Create(20151, Types.Neutral, "swooperKillCooldown", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
         swooperCooldown = Create(20152, Types.Neutral, "swooperCooldown", 20f, 10f, 60f, 2.5f, swooperSpawnRate);
         swooperDuration = Create(20153, Types.Neutral, "swooperDuration", 15f, 1f, 20f, 0.5f, swooperSpawnRate);
-        swooperHasImpVision = Create(20154, Types.Neutral, "swooperHasImpVision", true, swooperSpawnRate);
+        swooperSpeed = Create(20154, Types.Neutral, "swooperSpeed", 1.5f, 1f, 3f, 0.125f, swooperSpawnRate);
+        swooperCanUseVents = Create(20155, Types.Neutral, "canUseVents", true, swooperSpawnRate);
+        swooperHasImpVision = Create(20156, Types.Neutral, "swooperHasImpVision", true, swooperSpawnRate);
 
         werewolfSpawnRate = Create(20200, Types.Neutral, cs(Werewolf.color, "Werewolf"), rates, null, true);
         werewolfRampageCooldown = Create(20201, Types.Neutral, "werewolfRampageCooldown", 25f, 10f, 60f, 2.5f, werewolfSpawnRate);
@@ -1040,13 +1044,13 @@ public class CustomOptionHolder
         juggernautSpawnRate = Create(20210, Types.Neutral, cs(Juggernaut.color, "Juggernaut"), rates, null, true);
         juggernautCooldown = Create(20211, Types.Neutral, "juggernautCooldown", 25f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
         juggernautHasImpVision = Create(20212, Types.Neutral, "juggernautHasImpVision", true, juggernautSpawnRate);
-        juggernautCanVent = Create(20113, Types.Neutral, "Can Use Vents", true, juggernautSpawnRate);
+        juggernautCanUseVents = Create(20113, Types.Neutral, "canUseVents", true, juggernautSpawnRate);
         juggernautReducedkillEach = Create(20114, Types.Neutral, "juggernautReducedkillEach", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
 
         vultureSpawnRate = Create(20170, Types.Neutral, cs(Vulture.color, "Vulture"), rates, null, true);
         vultureCooldown = Create(20171, Types.Neutral, "vultureCooldown", 15f, 10f, 60f, 2.5f, vultureSpawnRate);
         vultureNumberToWin = Create(20172, Types.Neutral, "vultureNumberToWin", 3f, 1f, 10f, 1f, vultureSpawnRate);
-        vultureCanUseVents = Create(20173, Types.Neutral, "vultureCanUseVents", true, vultureSpawnRate);
+        vultureCanUseVents = Create(20173, Types.Neutral, "canUseVents", true, vultureSpawnRate);
         vultureShowArrows = Create(20174, Types.Neutral, "vultureShowArrows", true, vultureSpawnRate);
 
         lawyerSpawnRate = Create(20180, Types.Neutral, cs(Lawyer.color, "Lawyer"), rates, null, true);
@@ -1128,6 +1132,7 @@ public class CustomOptionHolder
         mayorMeetingButton = Create(30113, Types.Crewmate, "mayorMeetingButton", true, mayorSpawnRate);
         mayorMaxRemoteMeetings = Create(30114, Types.Crewmate, "mayorMaxRemoteMeetings", 1f, 1f, 5f, 1f, mayorMeetingButton);
         mayorSabotageRemoteMeetings = Create(30115, Types.Crewmate, "mayorSabotageRemoteMeetings", false, mayorMeetingButton);
+        mayorRevealVision = Create(30116, Types.Crewmate, "mayorRevealVision", ["-20%", "-30%", "-40%", "-50%"], mayorMeetingButton);
 
         prosecutorSpawnRate = Create(30370, Types.Crewmate, cs(Prosecutor.color, "Prosecutor"), rates, null, true);
         prosecutorCanSeeVoteColors = Create(30111, Types.Crewmate, "mayorCanSeeVoteColors", true, prosecutorSpawnRate);
@@ -1212,7 +1217,6 @@ public class CustomOptionHolder
         snitchSpawnRate = Create(30270, Types.Crewmate, cs(Snitch.color, "Snitch"), rates, null, true);
         snitchLeftTasksForReveal = Create(30271, Types.Crewmate, "snitchLeftTasksForReveal", 1f, 0f, 10f, 1f, snitchSpawnRate);
         snitchSeeMeeting = Create(30272, Types.Crewmate, "snitchSeeMeeting", true, snitchSpawnRate);
-        snitchCanSeeRoles = Create(30273, Types.Crewmate, "snitchCanSeeRoles", false, snitchSpawnRate);
         snitchIncludeNeutralTeam = Create(30274, Types.Crewmate, "snitchIncludeNeutralTeam",
             ["optionOff", "snitchIncludeNeutralTeam2", "snitchIncludeNeutralTeam3", "snitchIncludeNeutralTeam4"], snitchSpawnRate);
         snitchTeamNeutraUseDifferentArrowColor = Create(30275, Types.Crewmate, "snitchTeamNeutraUseDifferentArrowColor", true, snitchIncludeNeutralTeam);

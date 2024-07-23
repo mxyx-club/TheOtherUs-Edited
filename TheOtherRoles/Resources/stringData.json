@@ -1124,6 +1124,10 @@
         "0": "Cooldown Decrease If Trap Player Is Killed",
         "13": "\u51fb\u6740\u843d\u5165\u9677\u9631\u7684\u73a9\u5bb6\u7f29\u51cf\u51b7\u5374"
     },
+    "canUseVents": {
+        "0": "Vulture Can Use Vents",
+        "13": "\u53ef\u4f7f\u7528\u7ba1\u9053"
+    },
     "jesterCanCallEmergency": {
         "0": "Jester Can Call Emergency Meeting",
         "13": "\u5c0f\u4e11\u53ef\u53ec\u5f00\u4f1a\u8bae"
@@ -1287,6 +1291,10 @@
         "0": "Swoop Duration",
         "13": "\u9690\u8eab\u6301\u7eed\u65f6\u95f4"
     },
+    "swooperSpeed": {
+        "0": "Swoop Speed",
+        "13": "\u9690\u8eab\u65f6\u79fb\u901f\u589e\u52a0"
+    },
     "swooperHasImpVision": {
         "0": "Have Impostor Vision",
         "13": "\u62e5\u6709\u4f2a\u88c5\u8005\u89c6\u91ce"
@@ -1320,10 +1328,6 @@
     "vultureNumberToWin": {
         "0": "Number Of Corpses Needed To Be Eaten",
         "13": "\u83b7\u80dc\u6240\u9700\u541e\u566c\u6b21\u6570"
-    },
-    "vultureCanUseVents": {
-        "0": "Vulture Can Use Vents",
-        "13": "\u53ef\u4f7f\u7528\u7ba1\u9053"
     },
     "vultureShowArrows": {
         "0": "Show Arrows Pointing Towards The Corpses",
@@ -1469,10 +1473,6 @@
         "0": "Mayor Can See Vote Colors",
         "13": "\u62e5\u6709\u7aa5\u89c6\u80fd\u529b"
     },
-    "mayorTasksNeededToSeeVoteColors": {
-        "0": "Completed Tasks Needed To See Vote Colors",
-        "13": "\u83b7\u5f97\u7aa5\u89c6\u80fd\u529b\u6240\u9700\u5b8c\u6210\u7684\u4efb\u52a1\u6570"
-    },
     "mayorMeetingButton": {
         "0": "Mobile Emergency Button",
         "13": "\u53ef\u8fdc\u7a0b\u53ec\u5f00\u4f1a\u8bae"
@@ -1481,20 +1481,11 @@
         "0": "Number Of Remote Meetings",
         "13": "\u8fdc\u7a0b\u53ec\u5f00\u4f1a\u8bae\u53ef\u7528\u6b21\u6570"
     },
-    "mayorChooseSingleVote": {
-        "0": "Mayor Can Choose Single Vote",
-        "13": "\u5e02\u957f\u53ef\u9009\u62e9\u6295\u5355\u7968"
-    },
-    "mayorChooseSingleVote2": {
-        "0": "On (Before Voting)",
-        "13": "\u6295\u7968\u524d\u9009\u62e9"
-    },
-    "mayorChooseSingleVote3": {
-        "0": "On (Until Meeting Ends)",
-        "13": "\u4f1a\u8bae\u7ed3\u675f\u524d\u9009\u62e9"
-    },
     "mayorSabotageRemoteMeetings": {
         "13": "\u53ef\u5728\u7834\u574f\u65f6\u4f7f\u7528"
+    },
+    "mayorRevealVision": {
+        "13": "\u5e02\u957f\u63ed\u793a\u540e\u89c6\u91ce\u53d8\u5316"
     },
     "prosecutorDiesOnIncorrectPros": {
         "0": "Prosecutor Dies When They Exile A Crewmate",
@@ -1503,6 +1494,10 @@
     "prosecutorCanCallEmergency": {
         "0": "Prosecutor Can Call Emergency Meeting",
         "13": "\u53ef\u4ee5\u53d1\u8d77\u7d27\u6025\u4f1a\u8bae"
+    },
+    "mayorTasksNeededToSeeVoteColors": {
+        "0": "Completed Tasks Needed To See Vote Colors",
+        "13": "\u83b7\u5f97\u7aa5\u89c6\u80fd\u529b\u6240\u9700\u5b8c\u6210\u7684\u4efb\u52a1\u6570"
     },
     "engineerRemoteFix": {
         "0": "Enable Remote Fix",
@@ -1639,9 +1634,13 @@
         "0": "Shield Is Unbreakable",
         "13": "\u62a4\u76fe\u6301\u7eed\u751f\u6548"
     },
+    "medicShowAttemptToMedic": {
+        "0": "Medic Sees Murder Attempt On Shielded Player",
+        "13": "\u6cd5\u533b\u53ef\u89c1\u51fb\u6740\u5c1d\u8bd5"
+    },
     "medicShowAttemptToShielded": {
         "0": "Shielded Player Sees Murder Attempt",
-        "13": "\u6cd5\u533b\u53ef\u89c1\u51fb\u6740\u5c1d\u8bd5"
+        "13": "\u88ab\u4fdd\u62a4\u76ee\u6807\u53ef\u89c1\u51fb\u6740\u5c1d\u8bd5"
     },
     "medicResetTargetAfterMeeting": {
         "0": "Reset Target After Meeting",
@@ -1656,21 +1655,19 @@
         "13": "\u7acb\u5373\u751f\u6548\u4e14\u53ef\u89c1"
     },
     "medicSetOrShowShieldAfterMeeting2": {
-        "0": "Instantly, Visible\nAfter Meeting",
+        "0": "Instantly, Visible",
         "13": "\u7acb\u5373\u751f\u6548\u4e14\u4f1a\u8bae\u540e\u53ef\u89c1"
     },
     "medicSetOrShowShieldAfterMeeting3": {
         "0": "After Meeting",
         "13": "\u4f1a\u8bae\u540e\u751f\u6548\u4e14\u53ef\u89c1"
     },
-    "medicShowAttemptToMedic": {
-        "0": "Medic Sees Murder Attempt On Shielded Player",
-        "13": "\u6cd5\u533b\u53ef\u89c1\u51fb\u6740\u5c1d\u8bd5"
-    },
     "medicReportNameDuration": {
+        "0": "Time Where Investigator Reports Will Have Name",
         "13": "\u4ee5\u4e0b\u65f6\u95f4\u5185\u62a5\u544a\u53ef\u5f97\u77e5\u51f6\u624b\u540d\u5b57"
     },
     "medicReportColorDuration": {
+        "0": "Time Where Investigator Reports Will Have Color Type",
         "13": "\u4ee5\u4e0b\u65f6\u95f4\u5185\u62a5\u544a\u53ef\u5f97\u77e5\u51f6\u624b\u989c\u8272\u7c7b\u578b"
     },
     "doomsayerShowInfoInGhostChat": {
@@ -2843,6 +2840,10 @@
         "0": "Dissection",
         "13": "\u80a2\u89e3"
     },
+    "WerewolfRampage": {
+        "0": "Rampage",
+        "13": "\u72c2\u66b4"
+    },
     "GuessserGMInfo": {
         "0": " (Guesser)",
         "13": " (\u8d4c\u602a)"
@@ -3096,6 +3097,16 @@
     },
     "EvilTrapperShortDesc": {
         "13": "\u653e\u7f6e\u9677\u9631\u51fb\u6740\u8239\u5458\uff01"
+    },
+    "Gambler": {
+        "0": "Gambler",
+        "13": "\u8d4c\u5f92"
+    },
+    "GamblerIntroDesc": {
+        "13": "\u640f\u4e00\u640f\uff0c\u5760\u673a\u4e86\uff01"
+    },
+    "GamblerShortDesc": {
+        "13": "\u51fb\u6740\u51b7\u5374\u4f1a\u6839\u636e\u4f60\u7684\u6bcf\u6b21\u51fb\u6740\u53d8\u5316"
     },
     "Survivor": {
         "0": "Survivor",
@@ -3924,6 +3935,9 @@
     "EvilTrapperFullDesc": {
         "13": "\u80fd\u591f\u653e\u7f6e\u591a\u4e2a\u9677\u9631\uff0c\u653e\u7f6e\u540e\uff0c\u9677\u9631\u5c06\u5728\u7279\u5b9a\u7684\u65f6\u95f4\u540e\u6fc0\u6d3b\u3002\n\u5982\u679c\u73a9\u5bb6\u79bb\u9677\u9631\u592a\u8fd1\uff0c\u73a9\u5bb6\u5c31\u4f1a\u88ab\u9677\u9631\u5361\u4f4f\u3002\n\u5728\u4e00\u6bb5\u65f6\u95f4\u540e\uff0c\u5982\u679c\u6ca1\u6709\u4eba\u6765\u8425\u6551\u88ab\u56f0\u73a9\u5bb6\uff0c\u4ed6\u5c31\u4f1a\u6b7b\u4ea1\u3002\n\u7279\u5b9a\u8303\u56f4\u5185\u7684\u6bcf\u4e2a\u4eba\u90fd\u4f1a\u542c\u5230\u88ab\u56f0\u73a9\u5bb6\u88ab\u9677\u9631\u51fb\u6740\u7684\u58f0\u97f3\u3002"
     },
+    "GamblerFullDesc": {
+        "13": "\u6bcf\u6b21\u51fb\u6740\uff0c\u4e0b\u4e00\u6b21\u51fb\u6740\u51b7\u5374\u4f1a\u968f\u673a\u53d8\u5316\u3002"
+    },
     "SurvivorFullDesc": {
         "13": "\u5b58\u6d3b\u5230\u6e38\u620f\u7ed3\u675f\u5373\u53ef\u8ddf\u968f\u5176\u5b83\u9635\u8425\u80dc\u5229\n\u4ee5\u623f\u95f4\u8bbe\u7f6e\u4e3a\u51c6\uff0c\u5e78\u5b58\u8005\u53ef\u80fd\u62e5\u6709\u9632\u5f39\u8863\u548c\u7a7a\u5305\u5f39\u6280\u80fd\u3002\n\u9632\u5f39\u8863\u5728\u5f00\u542f\u671f\u95f4\uff0c\u65e0\u6cd5\u88ab\u51fb\u6740\uff0c\u6740\u624b\u51fb\u6740\u65f6\u4f1a\u8fdb\u5165\u8f83\u77ed\u7684\u51b7\u5374\u3002\n\u7a7a\u5305\u5f39\u53ef\u4ee5\u7ed9\u5e26\u5200\u804c\u4e1a\u7684\u4e0b\u4e00\u5200\u51fb\u6740\u65e0\u6548\u3002"
     },
@@ -4052,6 +4066,9 @@
     },
     "ProphetFullDesc": {
         "13": "\u53ef\u4ee5\u5728\u884c\u52a8\u9636\u6bb5\u63ed\u793a\u73a9\u5bb6\u7684\u9635\u8425\uff0c\u7eff\u540d\u5219\u4ee3\u8868\u5584\u826f\uff0c\u7ea2\u540d\u5219\u4ee3\u8868\u90aa\u6076\u6216\u8005\u4e3a\u5e26\u5200\u8239\u5458\uff08\u53ef\u8bbe\u7f6e\uff09\u3002\n\u623f\u4e3b\u53ef\u8c03\u6574 \u51fb\u6740\u578b\u8239\u5458\u3001\u5584\u826f\u4e2d\u7acb\u3001\u90aa\u6076\u4e2d\u7acb\u3001\u6740\u624b\u4e2d\u7acb \u662f\u5426\u4e3a\u7ea2\u540d\u3002"
+    },
+    "InfoSleuthFullDesc": {
+        "13": "\u5728\u4f1a\u8bae\u4e2d\u6295\u7968\u7ed9\u67e5\u9a8c\u76ee\u6807\uff0c\n\u4e0b\u4e00\u8f6e\u4f1a\u8bae\u5f00\u59cb\u65f6\u5373\u53ef\u83b7\u5f97\u6295\u7968\u76ee\u6807\u7684\u8eab\u4efd\u4fe1\u606f\u3002"
     },
     "LoverFullDesc": {
         "13": "\u6267\u5b50\u4e4b\u624b\uff0c\u4e0e\u5b50\u5171\u751f\u3002\n\u604b\u4eba\u5982\u679c\u6709\u4efb\u4f55\u4e00\u65b9\u88ab\u51fb\u6740\uff0c\u53e6\u4e00\u65b9\u4e5f\u4f1a\u4e00\u8d77\u6b7b\u4ea1\u3002\n\u5f53\u604b\u4eba\u4e2d\u6709\u4e00\u65b9\u5e76\u975e\u8239\u5458\u65f6\u5e76\u4e14\u604b\u4eba\u5b58\u6d3b\uff0c\n\u5219\u4e0d\u4f1a\u8ba1\u7b97\u8be5\u73a9\u5bb6\u7684\u4efb\u52a1\u8fdb\u5ea6\u3002\n\n\u5269\u4f593\u540d\u73a9\u5bb6\u65f6\u5e76\u4e14\u4e24\u540d\u73a9\u5bb6\u4e3a\u604b\u4eba\u65f6\uff0c\n\u604b\u4eba\u5c06\u72ec\u81ea\u83b7\u80dc\u3002"

@@ -2190,14 +2190,12 @@ public static class RPCProcedure
 
     public static void infoSleuthTarget(byte playerId)
     {
-        Message("尝试添加目标");
         var player = playerById(playerId);
         if (player != null) InfoSleuth.target = player;
     }
 
     public static void infoSleuthNoTarget()
     {
-        Message("删除目标");
         InfoSleuth.target = null;
     }
 
@@ -2315,14 +2313,14 @@ public static class RPCProcedure
                 Jackal.clearAndReload();
         }
         if (player == Pavlovsdogs.pavlovsowner) Pavlovsdogs.pavlovsowner = null;
-        if (Pavlovsdogs.pavlovsdogs.Contains(player)) Pavlovsdogs.pavlovsdogs.Remove(player);
+        if (Pavlovsdogs.pavlovsdogs.Contains(player)) Pavlovsdogs.pavlovsdogs.RemoveAll(x => x.PlayerId == player.PlayerId);
         if (player == Sidekick.sidekick) Sidekick.clearAndReload();
         if (player == BountyHunter.bountyHunter) BountyHunter.clearAndReload();
         if (player == Vulture.vulture) Vulture.clearAndReload();
         if (player == Executioner.executioner) Executioner.clearAndReload();
         if (player == Lawyer.lawyer) Lawyer.clearAndReload();
-        if (Pursuer.pursuer.Contains(player)) Pursuer.pursuer.Remove(player);
-        if (Survivor.survivor.Contains(player)) Survivor.survivor.Remove(player);
+        if (Pursuer.pursuer.Contains(player)) Pursuer.pursuer.RemoveAll(x => x.PlayerId == player.PlayerId);
+        if (Survivor.survivor.Contains(player)) Survivor.survivor.RemoveAll(x => x.PlayerId == player.PlayerId);
         if (player == Thief.thief) Thief.clearAndReload();
         if (player == Juggernaut.juggernaut) Juggernaut.clearAndReload();
         if (player == Doomsayer.doomsayer) Doomsayer.clearAndReload();

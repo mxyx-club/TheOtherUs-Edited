@@ -90,13 +90,13 @@ public class ShipStatusPatch
             {
                 __result = GetNeutralLightRadius(__instance, false);
             }
-        /*
+        
         // Additional code
-        //var switchSystem = GameOptionsManager.Instance.currentNormalGameOptions.MapId == 5 ? null : __instance.Systems[SystemTypes.Electrical]?.TryCast<SwitchSystem>();
+        var switchSystem = __instance.Systems[SystemTypes.Electrical]?.TryCast<SwitchSystem>();
         var t = switchSystem != null ? switchSystem.Value / 255f : 1;
+        /*
         if (Torch.torch.FindAll(x => x.PlayerId == player.PlayerId).Count > 0) t = 1;
         __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, t) * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod * (1f + (Torch.vision * 0.1f));
-        ;
         //__result *= 1f - Torch.vision / 0.1f;
         */
 
@@ -112,7 +112,8 @@ public class ShipStatusPatch
 
         if (Mayor.mayor != null && Mayor.mayor.PlayerId == player.PlayerId && Mayor.Revealed) // Mayor Vision
         {
-            __result *= 1f - 0.16f;
+            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius *= Mayor.vision * 0.1f, t) *
+                GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
         }
 
         return false;
