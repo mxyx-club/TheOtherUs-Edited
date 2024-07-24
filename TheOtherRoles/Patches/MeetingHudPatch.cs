@@ -1219,14 +1219,15 @@ internal class MeetingHudPatch
 
             if (InfoSleuth.infoSleuth != null && InfoSleuth.target != null && InfoSleuth.infoSleuth == CachedPlayer.LocalPlayer.PlayerControl)
             {
-                Message("情报官进入会议");
                 string msg;
-                var random = rnd.Next(0, 1);
+                var random = rnd.Next(2);
+                var isNotCrew = isNeutral(InfoSleuth.target) || InfoSleuth.target.Data.Role.IsImpostor;
+                var team = "的阵营是 " + teamString(InfoSleuth.target);
                 var info = InfoSleuth.infoType switch
                 {
-                    0 => isNeutral(InfoSleuth.target) || InfoSleuth.target.Data.Role.IsImpostor ? "不是船员" : "是船员",
-                    1 => "的阵营是 " + teamString(InfoSleuth.target),
-                    _ => random == 0 ? isNeutral(InfoSleuth.target) || InfoSleuth.target.Data.Role.IsImpostor ? "不是船员" : "是船员" : teamString(InfoSleuth.target),
+                    0 => isNotCrew ? "不是船员" : "是船员",
+                    1 => team,
+                    _ => random == 0 ? isNotCrew ? "不是船员" : "是船员" : team,
                 };
 
                 msg = $"{InfoSleuth.target.Data.PlayerName} {info}";

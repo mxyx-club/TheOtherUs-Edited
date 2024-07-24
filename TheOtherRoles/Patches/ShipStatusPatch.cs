@@ -107,12 +107,13 @@ public class ShipStatusPatch
 
         if (Torch.torch.FindAll(x => x.PlayerId == player.PlayerId).Count > 0) // Torch
         {
-            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1) * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod * Torch.vision;
+            __result = __instance.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod * Torch.vision;
         }
 
         if (Mayor.mayor != null && Mayor.mayor.PlayerId == player.PlayerId && Mayor.Revealed) // Mayor Vision
         {
-            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius *= Mayor.vision * 0.1f, t) *
+            //__result *= 1f - (Mayor.vision * 0.1f);
+            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius * (1f - (Mayor.vision * 0.1f)), t) *
                 GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
         }
 
