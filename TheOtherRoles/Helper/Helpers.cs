@@ -75,7 +75,6 @@ public static class Helpers
     public static bool hasFakeTasks(this PlayerControl player)
     {
         return player == Werewolf.werewolf ||
-               player == Doomsayer.doomsayer ||
                player == Juggernaut.juggernaut ||
                player == Jester.jester ||
                player == Arsonist.arsonist ||
