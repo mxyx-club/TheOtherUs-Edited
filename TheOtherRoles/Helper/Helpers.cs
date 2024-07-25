@@ -82,7 +82,6 @@ public static class Helpers
                player == Jackal.jackal ||
                player == Sidekick.sidekick ||
                player == Pavlovsdogs.pavlovsowner ||
-               player == Doomsayer.doomsayer ||
                player == Akujo.akujo ||
                player == Swooper.swooper ||
                player == Lawyer.lawyer ||

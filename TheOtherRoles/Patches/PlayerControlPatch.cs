@@ -984,7 +984,7 @@ public static class PlayerControlFixedUpdatePatch
     // Snitch Text
     private static void snitchTextUpdate()
     {
-        if (Snitch.snitch == null || !Snitch.needsUpdate) return;
+        if (Snitch.snitch == null) return;
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
         var numberOfTasks = playerTotal - playerCompleted;
 
@@ -1017,6 +1017,7 @@ public static class PlayerControlFixedUpdatePatch
                 Snitch.text?.Destroy();
             }
         }
+        else if (Snitch.text != null) Snitch.text.Destroy();
     }
 
     private static void undertakerDragBodyUpdate()
@@ -2259,6 +2260,12 @@ public static class MurderPlayerPatch
             Medium.futureDeadBodies.Add(new Tuple<DeadPlayer, Vector3>(deadPlayer, target.transform.position));
         }
 
+        if (Gambler.gambler != null && __instance == Gambler.gambler)
+        {
+            var cooldown = Gambler.GetSuc() ? Gambler.minCooldown : Gambler.maxCooldown;
+            Gambler.gambler.SetKillTimer(cooldown);
+        }
+
         // LastImpostor cooldown
         if (LastImpostor.lastImpostor != null && __instance == LastImpostor.lastImpostor && CachedPlayer.LocalPlayer.PlayerControl == __instance)
         {
@@ -2266,12 +2273,6 @@ public static class MurderPlayerPatch
 
             if (Vampire.vampire.PlayerId == LastImpostor.lastImpostor.PlayerId)
                 HudManagerStartPatch.vampireKillButton.MaxTimer = Vampire.cooldown - LastImpostor.deduce;
-        }
-
-        if (__instance == Gambler.gambler)
-        {
-            var cooldown = Gambler.GetSuc() ? Gambler.minCooldown : Gambler.maxCooldown;
-            Gambler.gambler.SetKillTimerUnchecked(cooldown, cooldown);
         }
 
         // Set bountyHunter cooldown

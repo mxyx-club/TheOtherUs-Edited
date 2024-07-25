@@ -554,12 +554,4 @@ public class RoleInfo
         Neutral,
         Special,
     }
-
-    [Flags]
-    public enum CustomRoleType
-    {
-        Main,
-        Modifier,
-        MainAndModifier = Main | Modifier
-    }
 }

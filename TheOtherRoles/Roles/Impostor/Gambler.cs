@@ -14,7 +14,7 @@ public class Gambler
     {
         var rate = rnd.Next(0, 100);
         Message($"Gambler rate {rate} : {successRate}");
-        return rate > successRate;
+        return rate < successRate;
     }
 
     public static void clearAndReload()

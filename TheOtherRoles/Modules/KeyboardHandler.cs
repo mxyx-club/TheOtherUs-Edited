@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hazel;
+using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using Random = System.Random;
@@ -53,6 +54,10 @@ public class CommandHandler
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.T) && Input.GetKeyDown(KeyCode.Return) && InGame)
             {
                 MapOption.isCanceled = true;
+            }
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.V) && Input.GetKeyDown(KeyCode.Return) && InGame)
+            {
+                CustomButton.resetKillButton(CachedPlayer.LocalPlayer.PlayerControl, 0.5f);
             }
             // 快速开始游戏
             if (Input.GetKeyDown(KeyCode.LeftShift) && IsCountDown)

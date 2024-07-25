@@ -3,6 +3,7 @@ using System.Linq;
 using Hazel;
 using Il2CppSystem.Collections.Generic;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -103,6 +104,11 @@ internal class IntroCutsceneOnDestroyPatch
 
         // Force Reload of SoundEffectHolder
         SoundEffectsManager.Load();
+
+        if (AmongUsClient.Instance.AmHost)
+        {
+            LastImpostor.promoteToLastImpostor();
+        }
 
         // Force Bounty Hunter to load a new Bounty when the Intro is over
         if (BountyHunter.bounty != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter)
@@ -236,7 +242,7 @@ internal class IntroPatch
         {
             var neutralColor = new Color32(76, 84, 78, 255);
             __instance.BackgroundBar.material.color = roleInfo.color;
-            __instance.TeamTitle.text = "中立阵营";
+            __instance.TeamTitle.text = "NeutralTeam".Translate();
             __instance.TeamTitle.color = neutralColor;
         }
         else
@@ -246,13 +252,13 @@ internal class IntroPatch
             if (isCrew)
             {
                 __instance.BackgroundBar.material.color = roleInfo.color;
-                __instance.TeamTitle.text = "船员阵营";
+                __instance.TeamTitle.text = "CrewmateTeam".Translate();
                 __instance.TeamTitle.color = Color.cyan;
             }
             else
             {
                 __instance.BackgroundBar.material.color = roleInfo.color;
-                __instance.TeamTitle.text = "伪装者阵营";
+                __instance.TeamTitle.text = "ImpostorTeam".Translate();
                 __instance.TeamTitle.color = Palette.ImpostorRed;
             }
         }

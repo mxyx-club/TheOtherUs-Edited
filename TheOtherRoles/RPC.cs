@@ -915,8 +915,9 @@ public static class RPCProcedure
 
     public static void impostorPromotesToLastImpostor(byte targetId)
     {
-        PlayerControl player = playerById(targetId);
-        LastImpostor.lastImpostor = player;
+        var target = playerById(targetId);
+        if (target == null || targetId == Gambler.gambler.PlayerId) return;
+        LastImpostor.lastImpostor = target;
     }
 
     public static void amnisiacTakeRole(byte targetId)
