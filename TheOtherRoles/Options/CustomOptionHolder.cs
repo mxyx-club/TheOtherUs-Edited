@@ -649,6 +649,7 @@ public class CustomOptionHolder
     public static CustomOption guesserGamemodeImpNumber;
     public static CustomOption guesserForceJackalGuesser;
     public static CustomOption guesserGamemodeSidekickIsAlwaysGuesser;
+    public static CustomOption guesserGamemodePavlovsdogIsAlwaysGuesser;
     public static CustomOption guesserForcePavlovsGuesser;
     public static CustomOption guesserForceThiefGuesser;
     public static CustomOption guesserGamemodeHaveModifier;
@@ -1236,7 +1237,6 @@ public class CustomOptionHolder
         infoSleuthInfoType = Create(30381, Types.Crewmate, "infoSleuthInfoType",
             ["infoSleuthInfoType1", "infoSleuthInfoType2", "infoSleuthInfoType3"], infoSleuthSpawnRate);
 
-
         spySpawnRate = Create(30280, Types.Crewmate, cs(Spy.color, "Spy"), rates, null, true);
         spyCanDieToSheriff = Create(30281, Types.Crewmate, "spyCanDieToSheriff", false, spySpawnRate);
         spyImpostorsCanKillAnyone = Create(30282, Types.Crewmate, "spyImpostorsCanKillAnyone", true, spySpawnRate);
@@ -1389,6 +1389,7 @@ public class CustomOptionHolder
         guesserForceJackalGuesser = Create(2007, Types.Guesser, "guesserForceJackalGuesser", false, null, true);
         guesserGamemodeSidekickIsAlwaysGuesser = Create(2012, Types.Guesser, "guesserGamemodeSidekickIsAlwaysGuesser", false);
         guesserForcePavlovsGuesser = Create(2013, Types.Guesser, "guesserForcePavlovsGuesser", false);
+        guesserGamemodePavlovsdogIsAlwaysGuesser = Create(2015, Types.Guesser, "guesserGamemodePavlovsdogIsAlwaysGuesser", false);
         guesserForceThiefGuesser = Create(2011, Types.Guesser, "guesserForceThiefGuesser", false);
         guesserGamemodeHaveModifier = Create(2004, Types.Guesser, "guesserGamemodeHaveModifier", true, null, true);
         guesserGamemodeNumberOfShots = Create(2005, Types.Guesser, "guesserGamemodeNumberOfShots", 2f, 1f, 15f, 1f);
@@ -1406,7 +1407,7 @@ public class CustomOptionHolder
                 if (map >= 3) map++;
                 GameOptionsManager.Instance.currentNormalGameOptions.MapId = (byte)map;
             });
-        hideNSeekHunterCount = Create(3000, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekHunterCount"), 1f, 1f, 3f, 1f);
+        hideNSeekHunterCount = Create(3000, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekHunterCount"), 1f, 1f, 15f, 1f);
         hideNSeekKillCooldown = Create(3021, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekKillCooldown"), 10f, 2.5f, 60f, 2.5f);
         hideNSeekHunterVision = Create(3001, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekHunterVision"), 0.5f, 0.25f, 2f, 0.25f);
         hideNSeekHuntedVision = Create(3002, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekHuntedVision"), 2f, 0.25f, 5f, 0.25f);
@@ -1456,7 +1457,7 @@ public class CustomOptionHolder
         propHuntUnstuckCooldown = Create(4011, Types.PropHunt, cs(Color.yellow, "propHuntUnstuckCooldown"), 30f, 2.5f, 60f, 2.5f, propHuntEnableUnstuck);
         propHuntUnstuckDuration = Create(4012, Types.PropHunt, cs(Color.yellow, "propHuntUnstuckDuration"), 3f, 1f, 60f, 1f, propHuntEnableUnstuck);
         // Hunter Options
-        propHuntNumberOfHunters = Create(4000, Types.PropHunt, cs(Color.red, "propHuntNumberOfHunters"), 1f, 1f, 5f, 1f, null, true);
+        propHuntNumberOfHunters = Create(4000, Types.PropHunt, cs(Color.red, "propHuntNumberOfHunters"), 1f, 1f, 15f, 1f, null, true);
         hunterInitialBlackoutTime = Create(4001, Types.PropHunt, cs(Color.red, "hunterInitialBlackoutTime"), 10f, 5f, 20f, 1f);
         hunterMissCooldown = Create(4004, Types.PropHunt, cs(Color.red, "hunterMissCooldown"), 10f, 2.5f, 60f, 2.5f);
         hunterHitCooldown = Create(4005, Types.PropHunt, cs(Color.red, "hunterHitCooldown"), 10f, 2.5f, 60f, 2.5f);

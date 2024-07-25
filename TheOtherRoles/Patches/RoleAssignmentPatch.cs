@@ -88,6 +88,7 @@ internal class RoleManagerSelectRolesPatch
         if (isGuesserGamemode) assignGuesserGamemode();
         assignModifiers(); // Assign modifier
         setRolesAgain(); //brb
+        if(Jackal.jackal != null) Jackal.setSwoop();
     }
 
     public static RoleAssignmentData getRoleAssignmentData()
@@ -896,10 +897,15 @@ internal class RoleManagerSelectRolesPatch
 
         if (modifiers.Contains(RoleId.Shifter))
         {
-            List<PlayerControl> crewPlayerS = new List<PlayerControl>(playerList);
+            var crewPlayerS = new List<PlayerControl>(playerList);
             if (Shifter.shiftALLNeutra)
             {
-                crewPlayerS.RemoveAll(x => x.Data.Role.IsImpostor || x == Jackal.jackal || x == Sidekick.sidekick || x == Lawyer.lawyer);
+                crewPlayerS.RemoveAll(x => x.Data.Role.IsImpostor
+                                           || x == Jackal.jackal
+                                           || x == Sidekick.sidekick
+                                           || x == Lawyer.lawyer
+                                           || Pavlovsdogs.pavlovsowner
+                                           || Pavlovsdogs.pavlovsdogs.Any(p => p.PlayerId == x.PlayerId));
             }
             else
             {
@@ -933,6 +939,7 @@ internal class RoleManagerSelectRolesPatch
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Aftermath);
         }
+
         if (Bait.SwapCrewmate && modifiers.Contains(RoleId.Bait))
         {
             playerId = setModifierToRandomPlayer((byte)RoleId.Bait, crewPlayer);
@@ -962,6 +969,7 @@ internal class RoleManagerSelectRolesPatch
 
             playerId = setModifierToRandomPlayer((byte)RoleId.ButtonBarry, buttonPlayer);
             buttonPlayer.RemoveAll(x => x.PlayerId == playerId);
+            playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.ButtonBarry);
         }
 

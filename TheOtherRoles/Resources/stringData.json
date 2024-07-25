@@ -557,6 +557,10 @@
         "0": "Force Pavlov's owner Guesser",
         "13": "\u5f3a\u5236\u5df4\u752b\u6d1b\u592b\u4e3a\u8d4c\u602a"
     },
+    "guesserGamemodePavlovsdogIsAlwaysGuesser": {
+        "0": "Pavlov's dogs Is Always Guesser",
+        "13": "\u88ab\u62db\u52df\u7684\u5df4\u752b\u6d1b\u592b\u7684\u72d7\u4f1a\u6210\u4e3a\u8d4c\u602a"
+    },
     "guesserForceThiefGuesser": {
         "0": "Force Thief Guesser",
         "13": "\u5f3a\u5236\u8eab\u4efd\u7a83\u8d3c\u4e3a\u8d4c\u602a"
@@ -591,11 +595,11 @@
     },
     "hideNSeekKillCooldown": {
         "0": "Kill Cooldown",
-        "13": "\u730e\u4eba\u6570\u91cf"
+        "13": "\u51fb\u6740\u51b7\u5374\u65f6\u95f4"
     },
     "hideNSeekHunterCount": {
         "0": "Number Of Hunters",
-        "13": "\u51fb\u6740\u51b7\u5374\u65f6\u95f4"
+        "13": "\u730e\u4eba\u6570\u91cf"
     },
     "hideNSeekHunterVision": {
         "0": "Hunter Vision",
@@ -1123,6 +1127,18 @@
     "evilTrapperBonusTime": {
         "0": "Cooldown Decrease If Trap Player Is Killed",
         "13": "\u51fb\u6740\u843d\u5165\u9677\u9631\u7684\u73a9\u5bb6\u7f29\u51cf\u51b7\u5374"
+    },
+    "gamblerMinCooldown": {
+        "0": "Kill Cooldown on success",
+        "13": "\u8d4c\u535a\u6210\u529f\u7684\u51fb\u6740\u51b7\u5374"
+    },
+    "gamblerMaxCooldown": {
+        "0": "Kill Cooldown on Failure",
+        "13": "\u8d4c\u535a\u5931\u8d25\u7684\u51fb\u6740\u51b7\u5374"
+    },
+    "gamblerSuccessRate": {
+        "0": "Success probability",
+        "13": "\u8d4c\u5f92\u8d4c\u535a\u6210\u529f\u7684\u6982\u7387"
     },
     "canUseVents": {
         "0": "Vulture Can Use Vents",

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Hazel;
 using TheOtherRoles.Modules;
+using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Neutral;
@@ -41,6 +43,16 @@ public class Jackal
         currentTarget = null;
         cooldown = CustomOptionHolder.jackalKillCooldown.getFloat();
         createSidekickCooldown = CustomOptionHolder.jackalCreateSidekickCooldown.getFloat();
+    }
+
+    public static void setSwoop()
+    {
+        var chance = canSwoop = rnd.NextDouble() < chanceSwoop;
+        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.JackalCanSwooper, SendOption.Reliable);
+        writer.Write(chance ? byte.MaxValue : 0);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        RPCProcedure.jackalCanSwooper(chance);
     }
 
     public static void clearAndReload()

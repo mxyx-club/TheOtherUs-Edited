@@ -326,7 +326,6 @@ public class RoleInfo
         if (p == Detective.detective) infos.Add(detective);
         if (p == TimeMaster.timeMaster) infos.Add(timeMaster);
         if (p == Cultist.cultist) infos.Add(cultist);
-        if (Survivor.survivor.Contains(p)) infos.Add(survivor);
         if (p == Amnisiac.amnisiac) infos.Add(amnisiac);
         if (p == Veteran.veteran) infos.Add(veteran);
         if (p == Medic.medic) infos.Add(medic);
@@ -336,10 +335,9 @@ public class RoleInfo
         if (p == Hacker.hacker) infos.Add(hacker);
         if (p == Tracker.tracker) infos.Add(tracker);
         if (p == Snitch.snitch) infos.Add(snitch);
-        if (p == Jackal.jackal || (Jackal.formerJackals != null && Jackal.formerJackals.Contains(p))) infos.Add(jackal);
+        if (p == Jackal.jackal || (Jackal.formerJackals != null
+            && Jackal.formerJackals.Any(x => x.PlayerId == p.PlayerId))) infos.Add(jackal);
         if (p == Sidekick.sidekick) infos.Add(sidekick);
-        if (p == Pavlovsdogs.pavlovsowner) infos.Add(pavlovsowner);
-        if (p == Pavlovsdogs.pavlovsdogs.Contains(p)) infos.Add(pavlovsdogs);
         if (p == Follower.follower) infos.Add(follower);
         if (p == Spy.spy) infos.Add(spy);
         if (p == SecurityGuard.securityGuard) infos.Add(securityGuard);
@@ -356,16 +354,19 @@ public class RoleInfo
         if (p == Medium.medium) infos.Add(medium);
         if (p == Lawyer.lawyer) infos.Add(lawyer);
         if (p == Prosecutor.prosecutor) infos.Add(prosecutor);
-        if (p == Executioner.executioner && Executioner.executioner) infos.Add(executioner);
+        if (p == Executioner.executioner) infos.Add(executioner);
         if (p == Trapper.trapper) infos.Add(trapper);
         if (p == Prophet.prophet) infos.Add(prophet);
         if (p == InfoSleuth.infoSleuth) infos.Add(infoSleuth);
-        if (Pursuer.pursuer.Contains(p)) infos.Add(pursuer);
         if (p == Jumper.jumper) infos.Add(jumper);
         if (p == Thief.thief) infos.Add(thief);
         if (p == Juggernaut.juggernaut) infos.Add(juggernaut);
         if (p == Doomsayer.doomsayer) infos.Add(doomsayer);
         if (p == Akujo.akujo) infos.Add(akujo);
+        if (p == Pavlovsdogs.pavlovsowner) infos.Add(pavlovsowner);
+        if (p == Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == p.PlayerId)) infos.Add(pavlovsdogs);
+        if (Pursuer.pursuer.Any(x => x.PlayerId == p.PlayerId)) infos.Add(pursuer);
+        if (Survivor.survivor.Any(x => x.PlayerId == p.PlayerId)) infos.Add(survivor);
 
         // Default roles (just impostor, just crewmate, or hunter / hunted for hide n seek, prop hunt prop ...
         if (infos.Count == count)

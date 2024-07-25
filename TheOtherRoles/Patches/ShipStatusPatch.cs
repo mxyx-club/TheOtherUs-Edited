@@ -90,7 +90,7 @@ public class ShipStatusPatch
             {
                 __result = GetNeutralLightRadius(__instance, false);
             }
-        
+
         // Additional code
         var switchSystem = __instance.Systems[SystemTypes.Electrical]?.TryCast<SwitchSystem>();
         var t = switchSystem != null ? switchSystem.Value / 255f : 1;

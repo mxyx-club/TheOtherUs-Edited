@@ -16,8 +16,7 @@ public class CommandHandler
     private static readonly List<PlayerControl> bots = new();
     private static void Postfix(KeyboardJoystick __instance)
     {
-        // 房主专用键位
-        if (AmongUsClient.Instance && AmongUsClient.Instance.AmHost)
+        if (AmongUsClient.Instance && (AmongUsClient.Instance.AmHost || MapOption.DebugMode))
         {
             // 生成假人
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.F) && Input.GetKeyDown(KeyCode.Return))

@@ -2263,6 +2263,9 @@ public static class MurderPlayerPatch
         if (LastImpostor.lastImpostor != null && __instance == LastImpostor.lastImpostor && CachedPlayer.LocalPlayer.PlayerControl == __instance)
         {
             LastImpostor.lastImpostor.SetKillTimer(Mathf.Max(1f, MapOption.KillCooddown - LastImpostor.deduce));
+
+            if (Vampire.vampire.PlayerId == LastImpostor.lastImpostor.PlayerId)
+                HudManagerStartPatch.vampireKillButton.MaxTimer = Vampire.cooldown - LastImpostor.deduce;
         }
 
         if (__instance == Gambler.gambler)
@@ -2435,10 +2438,10 @@ internal class PlayerControlSetCoolDownPatch
         var addition = 0f;
         if (Mini.mini != null && CachedPlayer.LocalPlayer.PlayerControl == Mini.mini)
             multiplier = Mini.isGrownUp() ? 0.66f : 2f;
-        if (LastImpostor.lastImpostor != null && CachedPlayer.LocalPlayer.PlayerControl == LastImpostor.lastImpostor)
-            addition = -LastImpostor.deduce;
         if (BountyHunter.bountyHunter != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter)
             addition = BountyHunter.punishmentTime;
+        if (LastImpostor.lastImpostor != null && CachedPlayer.LocalPlayer.PlayerControl == LastImpostor.lastImpostor)
+            addition = -LastImpostor.deduce;
 
         __instance.killTimer = Mathf.Clamp(time, 0f,
             (GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * multiplier) + addition);

@@ -2161,9 +2161,12 @@ public static class RPCProcedure
         Sidekick.sidekick = player;
         if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
             CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
-        if ((wasSpy || wasImpostor) && !Jackal.CanImpostorFindSidekick) Sidekick.wasTeamRed = true;
-        Sidekick.wasSpy = wasSpy;
-        Sidekick.wasImpostor = wasImpostor;
+        if ((wasSpy || wasImpostor) && !Jackal.CanImpostorFindSidekick)
+        {
+            Sidekick.wasTeamRed = true;
+            Sidekick.wasSpy = wasSpy;
+            Sidekick.wasImpostor = wasImpostor;
+        }
         if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
         if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(targetId))
             setGuesserGm(targetId);
@@ -2188,17 +2191,6 @@ public static class RPCProcedure
         Jackal.canSwoop = chance;
     }
 
-    public static void infoSleuthTarget(byte playerId)
-    {
-        var player = playerById(playerId);
-        if (player != null) InfoSleuth.target = player;
-    }
-
-    public static void infoSleuthNoTarget()
-    {
-        InfoSleuth.target = null;
-    }
-
     public static void pavlovsCreateDog(byte targetId)
     {
         var player = playerById(targetId);
@@ -2218,8 +2210,6 @@ public static class RPCProcedure
             }
         }
 
-        var wasSpy = Spy.spy != null && player == Spy.spy;
-        var wasImpostor = player.Data.Role.IsImpostor; // This can only be reached if impostors can be sidekicked.
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
         if (player == Lawyer.lawyer && Lawyer.target != null)
         {
@@ -2233,6 +2223,8 @@ public static class RPCProcedure
         if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
             CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
         if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
+        if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodePavlovsdogIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(targetId))
+            setGuesserGm(targetId);
     }
 
     /// <summary>
@@ -2366,6 +2358,17 @@ public static class RPCProcedure
             if (Chameleon.chameleon.Any(x => x.PlayerId == player.PlayerId))
                 Chameleon.chameleon.RemoveAll(x => x.PlayerId == player.PlayerId);
         }
+    }
+
+    public static void infoSleuthTarget(byte playerId)
+    {
+        var player = playerById(playerId);
+        if (player != null) InfoSleuth.target = player;
+    }
+
+    public static void infoSleuthNoTarget()
+    {
+        InfoSleuth.target = null;
     }
 
     public static void setFutureErased(byte playerId)

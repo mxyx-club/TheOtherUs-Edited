@@ -668,14 +668,13 @@ internal class MeetingHudPatch
                 if (player == null || player.Data == null || player.Data.IsDead ||
                     player.Data.Disconnected) continue;
 
-                if (playerVoteArea.TargetPlayerId == InfoSleuth.infoSleuth.PlayerId)
+                if (InfoSleuth.infoSleuth != null && playerVoteArea.TargetPlayerId == InfoSleuth.infoSleuth.PlayerId)
                 {
                     var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                         (byte)CustomRPC.InfoSleuthTarget, SendOption.Reliable);
                     writer.Write(playerVoteArea.VotedFor);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.infoSleuthTarget(playerVoteArea.VotedFor);
-                    break;
                 }
 
                 var additionalVotes = 1;
@@ -1207,6 +1206,7 @@ internal class MeetingHudPatch
         public static void Postfix(MeetingHud __instance)
         {
             Message("会议开始");
+            if (isNeutral(PlayerControl.LocalPlayer)) Message("PlayerIsNeutral");
             shookAlready = false;
             if (Blackmailer.blackmailed != null
                 && Blackmailer.blackmailed.Data.PlayerId == CachedPlayer.LocalPlayer.PlayerId

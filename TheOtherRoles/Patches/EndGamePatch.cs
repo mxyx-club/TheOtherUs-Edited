@@ -753,11 +753,11 @@ internal class CheckEndCriteriaPatch
     {
         if (!GameData.Instance) return false;
         // InstanceExists | Don't check Custom Criteria when in Tutorial
-        if (DestroyableSingleton<TutorialManager>.InstanceExists)
-            return true;
+        if (DestroyableSingleton<TutorialManager>.InstanceExists) return true;
         var statistics = new PlayerStatistics(__instance);
         if (CheckAndEndGameForHost(__instance)) return false;
         if (MapOption.DebugMode) return false;
+        if (CheckAndEndGameForTaskWin(__instance)) return false;
         if (CheckAndEndGameForMiniLose(__instance)) return false;
         if (CheckAndEndGameForJesterWin(__instance)) return false;
         if (CheckAndEndGameForDoomsayerWin(__instance)) return false;
@@ -773,7 +773,6 @@ internal class CheckEndCriteriaPatch
         if (CheckAndEndGameForSwooperWin(__instance, statistics)) return false;
         if (CheckAndEndGameForJuggernautWin(__instance, statistics)) return false;
         if (CheckAndEndGameForImpostorWin(__instance, statistics)) return false;
-        if (CheckAndEndGameForTaskWin(__instance)) return false;
         if (CheckAndEndGameForCrewmateWin(__instance, statistics)) return false;
         return false;
     }
@@ -879,8 +878,7 @@ internal class CheckEndCriteriaPatch
 
     private static bool CheckAndEndGameForTaskWin(ShipStatus __instance)
     {
-        if (MapOption.PreventTaskEnd) return false;
-        if ((HideNSeek.isHideNSeekGM && !HideNSeek.taskWinPossible) || PropHunt.isPropHuntGM) return false;
+        if (MapOption.PreventTaskEnd || (HideNSeek.isHideNSeekGM && !HideNSeek.taskWinPossible) || PropHunt.isPropHuntGM) return false;
         if (GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks)
         {
             //__instance.enabled = false;
