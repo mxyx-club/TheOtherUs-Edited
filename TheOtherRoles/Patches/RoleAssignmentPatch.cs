@@ -286,8 +286,8 @@ internal class RoleManagerSelectRolesPatch
             setRoleToRandomPlayer(rolesToAssign[roleType][index], players);
             rolesToAssign[roleType].RemoveAt(index);
 
-            if (CustomOptionHolder.blockedRolePairings.ContainsKey(roleId))
-                foreach (var blockedRoleId in CustomOptionHolder.blockedRolePairings[roleId])
+            if (RoleClass.blockedRolePairings.ContainsKey(roleId))
+                foreach (var blockedRoleId in RoleClass.blockedRolePairings[roleId])
                 {
                     // Set chance for the blocked roles to 0 for chances less than 100%
                     if (data.impSettings.ContainsKey(blockedRoleId)) data.impSettings[blockedRoleId] = 0;
@@ -463,8 +463,8 @@ internal class RoleManagerSelectRolesPatch
             setRoleToRandomPlayer(roleId, players);
             rolesToAssign[roleType].RemoveAll(x => x == roleId);
 
-            if (CustomOptionHolder.blockedRolePairings.ContainsKey(roleId))
-                foreach (var blockedRoleId in CustomOptionHolder.blockedRolePairings[roleId])
+            if (RoleClass.blockedRolePairings.ContainsKey(roleId))
+                foreach (var blockedRoleId in RoleClass.blockedRolePairings[roleId])
                 {
                     // Remove tickets of blocked roles from all pools
                     crewmateTickets.RemoveAll(x => x == blockedRoleId);

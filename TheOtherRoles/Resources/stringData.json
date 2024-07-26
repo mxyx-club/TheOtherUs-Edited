@@ -2230,32 +2230,26 @@
     "lobbyInfoImpostor": {
         "0": "Impostor",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc",
-        "13": "\u4f2a\u88c5\u8005\u9635\u8425",
-        "14": "\u5167\u9b3c\u9663\u71df"
+        "13": "\u4f2a\u88c5\u8005\u9635\u8425"
     },
     "lobbyInfoCrewmate": {
         "0": "Crewmate",
         "11": "\u30af\u30eb\u30fc\u30e1\u30a4\u30c8",
-        "13": "\u8239\u5458\u9635\u8425",
-        "14": "\u8239\u54e1\u9663\u71df"
+        "13": "\u8239\u5458\u9635\u8425"
     },
     "lobbyInfoNeutral": {
         "0": "Neutral",
         "11": "\u30cb\u30e5\u30fc\u30c8\u30e9\u30eb",
-        "13": "\u4e2d\u7acb\u9635\u8425",
-        "14": "\u4e2d\u7acb\u9663\u71df"
+        "13": "\u4e2d\u7acb\u9635\u8425"
     },
     "lobbyInfoModifier": {
         "0": "Modifier",
         "11": "\u5c5e\u6027",
-        "13": "\u9644\u52a0\u80fd\u529b",
-        "14": "\u526f\u8077\u696d"
+        "13": "\u9644\u52a0\u80fd\u529b"
     },
     "lobbyInfoSummary": {
         "0": "Role Summary",
-        "11": "\u5f79\u8077\u306e\u6982\u8981",
-        "13": "\u804c\u4e1a\u89e3\u91ca\u4e00\u89c8",
-        "14": "\u89d2\u8272\u89e3\u91cb\u4e00\u89bd"
+        "11": "\u5f79\u8077\u306e\u6982\u8981"
     },
     "seerShowInfoText": {
         "0": "Seer Info: Someone Died",
@@ -3906,7 +3900,7 @@
         "13": "\u53ef\u4ee5\u5f97\u77e5\u88ab\u4f60\u51fb\u6740\u7684\u73a9\u5bb6\u8eab\u4efd\u3002"
     },
     "ButcherFullDesc": {
-        "13": "\u51fb\u6740\u5176\u4ed6\u73a9\u5bb6\u540e\u53ef\u4ee5\u4f7f\u7528\u80a2\u89e3\u6280\u80fd\u3002\n\u80a2\u89e3\u540e\u4f1a\u5728\u5176\u5b83\u4f4d\u7f6e\u51fa\u73b0\u6570\u4e2a\u8be5\u73a9\u5bb6\u7684\u5c38\u4f53\u3002"
+        "13": "\u51fb\u6740\u5176\u4ed6\u73a9\u5bb6\u540e\u53ef\u4ee5\u4f7f\u7528\u80a2\u89e3\u6280\u80fd\u3002\n\u80a2\u89e3\u540e\u4f1a\u5728\u5176\u5b83\u4f4d\u7f6e\u51fa\u73b0\u6570\u4e2a\u8be5\u73a9\u5bb6\u7684\u5c38\u4f53\u3002\n\n\u6ce8\uff1a\u8be5\u6280\u80fd\u6bcf\u56de\u5408\u53ea\u80fd\u4f7f\u7528\u4e00\u6b21\u3002"
     },
     "MimicFullDesc": {
         "13": "\u51fb\u6740\u5176\u4ed6\u73a9\u5bb6\u540e\u53ef\u4ee5\u4f7f\u7528\u80a2\u89e3\u6280\u80fd\u3002"

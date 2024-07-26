@@ -916,7 +916,7 @@ public static class RPCProcedure
     public static void impostorPromotesToLastImpostor(byte targetId)
     {
         var target = playerById(targetId);
-        if (target == null || targetId == Gambler.gambler.PlayerId) return;
+        if (target == null || (Gambler.gambler != null && targetId == Gambler.gambler.PlayerId)) return;
         LastImpostor.lastImpostor = target;
     }
 
@@ -1725,6 +1725,43 @@ public static class RPCProcedure
             morphlingButton.Timer = Morphling.duration;
             SoundEffectsManager.play("morphlingMorph");
         }
+        else if (Butcher.butcher == killer)
+        {
+
+            foreach (var collider2D in Physics2D.OverlapCircleAll(
+                         CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(),
+                         CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
+            {
+                if (collider2D.tag == "DeadBody")
+                {
+                    var component = collider2D.GetComponent<DeadBody>();
+                    if (component && !component.Reported)
+                    {
+                        var truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+                        var truePosition2 = component.TruePosition;
+                        if (Vector2.Distance(truePosition2, truePosition) <=
+                            CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance &&
+                            CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
+                            !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
+                                Constants.ShipAndObjectsMask, false))
+                        {
+                            var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+
+                            var writer = AmongUsClient.Instance.StartRpcImmediately(Butcher.butcher.NetId,
+                                (byte)CustomRPC.DissectionBody, SendOption.Reliable);
+                            writer.Write(playerInfo.PlayerId);
+                            writer.Write(Butcher.butcher.PlayerId);
+                            AmongUsClient.Instance.FinishRpcImmediately(writer);
+                            dissectionBody(playerInfo.PlayerId, Butcher.butcher.PlayerId);
+
+                            Butcher.canDissection = false;
+                            SoundEffectsManager.play("cleanerClean");
+                            break;
+                        }
+                    }
+                }
+            }
+        }
         else if (Witch.witch == killer)
         {
             var target = killer;
@@ -1912,9 +1949,8 @@ public static class RPCProcedure
                         {
                             var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
 
-                            var writer = AmongUsClient.Instance.StartRpcImmediately(
-                                killer.NetId, (byte)CustomRPC.CleanBody,
-                                SendOption.Reliable);
+                            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
+                                (byte)CustomRPC.CleanBody, SendOption.Reliable);
                             writer.Write(playerInfo.PlayerId);
                             writer.Write(Cleaner.cleaner.PlayerId);
                             AmongUsClient.Instance.FinishRpcImmediately(writer);

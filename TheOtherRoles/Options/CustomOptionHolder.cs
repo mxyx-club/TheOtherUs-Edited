@@ -722,8 +722,6 @@ public class CustomOptionHolder
     public static CustomOption propHuntFindCooldown;
     public static CustomOption propHuntFindDuration;
 
-    internal static readonly Dictionary<byte, byte[]> blockedRolePairings = [];
-
     public static string cs(Color c, string s)
     {
         return $"<color=#{ToByte(c.r):X2}{ToByte(c.g):X2}{ToByte(c.b):X2}{ToByte(c.a):X2}>{s}</color>";
@@ -1476,26 +1474,5 @@ public class CustomOptionHolder
         propHuntSpeedboostCooldown = Create(4017, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostCooldown"), 45f, 2.5f, 120f, 2.5f, propHuntSpeedboostEnabled);
         propHuntSpeedboostDuration = Create(4018, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostDuration"), 10f, 2.5f, 30f, 2.5f, propHuntSpeedboostEnabled);
         propHuntSpeedboostSpeed = Create(4019, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostSpeed"), 2f, 1.25f, 5f, 0.25f, propHuntSpeedboostEnabled);
-
-        blockedRolePairings.Add((byte)RoleId.Vampire, [(byte)RoleId.Warlock]);
-        blockedRolePairings.Add((byte)RoleId.Witch, [(byte)RoleId.Warlock]);
-        blockedRolePairings.Add((byte)RoleId.Warlock, [(byte)RoleId.Vampire]);
-
-        if (Pavlovsdogs.andJackalAsWell)
-        {
-            blockedRolePairings.Add((byte)RoleId.Jackal, [(byte)RoleId.Pavlovsowner]);
-            blockedRolePairings.Add((byte)RoleId.Pavlovsowner, [(byte)RoleId.Jackal]);
-        }
-        if (Executioner.promotesToLawyer)
-        {
-            blockedRolePairings.Add((byte)RoleId.Executioner, [(byte)RoleId.Lawyer]);
-            blockedRolePairings.Add((byte)RoleId.Lawyer, [(byte)RoleId.Executioner]);
-        }
-
-        blockedRolePairings.Add((byte)RoleId.Vulture, [(byte)RoleId.Cleaner]);
-        blockedRolePairings.Add((byte)RoleId.Cleaner, [(byte)RoleId.Vulture]);
-
-        blockedRolePairings.Add((byte)RoleId.Ninja, [(byte)RoleId.Swooper]);
-        blockedRolePairings.Add((byte)RoleId.Swooper, [(byte)RoleId.Ninja]);
     }
 }
