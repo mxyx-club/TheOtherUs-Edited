@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -110,7 +111,31 @@ public static class RoleClass
         HideNSeek.clearAndReload();
         PropHunt.clearAndReload();
 
-        blockedRole();
+        blockRole();
+    }
+
+    public static void FixedUpdate(PlayerControl player)
+    {
+        Role.allRoles.DoIf(x => x.player == player, x => x.FixedUpdate());
+    }
+
+    public static void OnMeetingStart()
+    {
+        Role.allRoles.Do(x => x.OnMeetingStart());
+
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>((p) =>
+        {
+            if (p == 1)
+            {
+                Camouflager.resetCamouflage();
+                Morphling.resetMorph();
+            }
+        })));
+    }
+
+    public static void OnMeetingEnd()
+    {
+        Role.allRoles.Do(x => x.OnMeetingEnd());
     }
 
     public static class Crew
@@ -126,7 +151,7 @@ public static class RoleClass
 
     internal static Dictionary<byte, byte[]> blockedRolePairings = [];
 
-    public static void blockedRole()
+    public static void blockRole()
     {
         blockedRolePairings = [];
 

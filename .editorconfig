@@ -1,7 +1,7 @@
 ﻿[*.cs]
-
-# IDE1006: 命名样式
 dotnet_diagnostic.IDE1006.severity = silent
+dotnet_diagnostic.IDE0007.severity = silent
+dotnet_diagnostic.CA1720.severity = none
 
 # Default severity for all analyzer diagnostics
 dotnet_analyzer_diagnostic.severity = suggestion
@@ -108,87 +108,15 @@ csharp_indent_labels = one_less_than_current
 [*.vb]
 #### 命名样式 ####
 
-# 命名规则
-
-dotnet_naming_rule.interface_should_be_以_i_开始.severity = suggestion
-dotnet_naming_rule.interface_should_be_以_i_开始.symbols = interface
-dotnet_naming_rule.interface_should_be_以_i_开始.style = 以_i_开始
-
-dotnet_naming_rule.类型_should_be_帕斯卡拼写法.severity = suggestion
-dotnet_naming_rule.类型_should_be_帕斯卡拼写法.symbols = 类型
-dotnet_naming_rule.类型_should_be_帕斯卡拼写法.style = 帕斯卡拼写法
-
-dotnet_naming_rule.非字段成员_should_be_帕斯卡拼写法.severity = suggestion
-dotnet_naming_rule.非字段成员_should_be_帕斯卡拼写法.symbols = 非字段成员
-dotnet_naming_rule.非字段成员_should_be_帕斯卡拼写法.style = 帕斯卡拼写法
-
 # 符号规范
 
 dotnet_naming_symbols.interface.applicable_kinds = interface
 dotnet_naming_symbols.interface.applicable_accessibilities = public, friend, private, protected, protected_friend, private_protected
 dotnet_naming_symbols.interface.required_modifiers = 
 
-dotnet_naming_symbols.类型.applicable_kinds = class, struct, interface, enum
-dotnet_naming_symbols.类型.applicable_accessibilities = public, friend, private, protected, protected_friend, private_protected
-dotnet_naming_symbols.类型.required_modifiers = 
-
-dotnet_naming_symbols.非字段成员.applicable_kinds = property, event, method
-dotnet_naming_symbols.非字段成员.applicable_accessibilities = public, friend, private, protected, protected_friend, private_protected
-dotnet_naming_symbols.非字段成员.required_modifiers = 
-
-# 命名样式
-
-dotnet_naming_style.以_i_开始.required_prefix = I
-dotnet_naming_style.以_i_开始.required_suffix = 
-dotnet_naming_style.以_i_开始.word_separator = 
-dotnet_naming_style.以_i_开始.capitalization = pascal_case
-
-dotnet_naming_style.帕斯卡拼写法.required_prefix = 
-dotnet_naming_style.帕斯卡拼写法.required_suffix = 
-dotnet_naming_style.帕斯卡拼写法.word_separator = 
-dotnet_naming_style.帕斯卡拼写法.capitalization = pascal_case
-
-dotnet_naming_style.帕斯卡拼写法.required_prefix = 
-dotnet_naming_style.帕斯卡拼写法.required_suffix = 
-dotnet_naming_style.帕斯卡拼写法.word_separator = 
-dotnet_naming_style.帕斯卡拼写法.capitalization = pascal_case
-
 [*.{cs,vb}]
-dotnet_style_qualification_for_field = false:silent
-dotnet_style_qualification_for_property = false:silent
-dotnet_style_qualification_for_method = false:silent
-dotnet_style_qualification_for_event = false:silent
-end_of_line = crlf
-dotnet_style_require_accessibility_modifiers = for_non_interface_members:silent
-dotnet_code_quality_unused_parameters = all:silent
-dotnet_style_readonly_field = true:suggestion
-dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
-dotnet_style_allow_multiple_blank_lines_experimental = true:silent
-dotnet_style_allow_statement_immediately_after_block_experimental = true:silent
-dotnet_style_coalesce_expression = true:suggestion
-dotnet_style_null_propagation = true:suggestion
-dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
-dotnet_style_prefer_auto_properties = true:silent
-dotnet_style_object_initializer = true:suggestion
-dotnet_style_collection_initializer = true:suggestion
-dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
-dotnet_style_prefer_conditional_expression_over_assignment = true:silent
-dotnet_style_prefer_conditional_expression_over_return = true:silent
-dotnet_style_explicit_tuple_names = true:suggestion
-dotnet_style_prefer_inferred_tuple_names = true:suggestion
-dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
-dotnet_style_prefer_compound_assignment = true:suggestion
-dotnet_style_prefer_simplified_interpolation = true:suggestion
-dotnet_style_prefer_collection_expression = when_types_loosely_match:suggestion
-dotnet_style_namespace_match_folder = true:suggestion
-dotnet_style_predefined_type_for_locals_parameters_members = true:silent
-dotnet_style_predefined_type_for_member_access = true:silent
 tab_width = 4
 indent_size = 4
-dotnet_style_operator_placement_when_wrapping = beginning_of_line
 dotnet_diagnostic.CA2211.severity = silent
 dotnet_diagnostic.CA1707.severity = silent
 dotnet_diagnostic.CA1305.severity = silent

@@ -653,7 +653,7 @@ public static class PlayerControlFixedUpdatePatch
         // Handle corpses tracking
         if (Tracker.tracker != null && Tracker.tracker == CachedPlayer.LocalPlayer.PlayerControl && Tracker.corpsesTrackingTimer >= 0f && !Tracker.tracker.Data.IsDead)
         {
-            bool arrowsCountChanged = Tracker.localArrows.Count != Tracker.deadBodyPositions.Count();
+            bool arrowsCountChanged = Tracker.localArrows.Count != Tracker.deadBodyPositions.Count;
             int index = 0;
 
             if (arrowsCountChanged)
@@ -1903,6 +1903,8 @@ public static class PlayerControlFixedUpdatePatch
             //Update pet visibility
             setPetVisibility();
 
+            //RoleClass.FixedUpdate(__instance);
+
             // EvilTrapper
             evilTrapperUpdate();
             // Time Master
@@ -1917,9 +1919,9 @@ public static class PlayerControlFixedUpdatePatch
             bomberSetTarget();
             // Set Werewolf Target
             werewolfSetTarget();
-            //天启
+            // Juggernaut
             juggernautSetTarget();
-            //末日预言家
+            // Doomsayer
             doomsayerSetTarget();
             // Swooper
             swooperSetTarget();
@@ -1936,8 +1938,6 @@ public static class PlayerControlFixedUpdatePatch
             deputyUpdate();
             // Detective
             detectiveUpdateFootPrints();
-            // Tracker
-            trackerSetTarget();
             // Vampire
             vampireSetTarget();
             Garlic.UpdateAll();
@@ -1947,6 +1947,7 @@ public static class PlayerControlFixedUpdatePatch
             // Engineer
             engineerUpdate();
             // Tracker
+            trackerSetTarget();
             trackerUpdate();
             // Jackal
             jackalSetTarget();
@@ -2207,10 +2208,7 @@ public static class MurderPlayerPatch
         {
             LastImpostor.promoteToLastImpostor();
         }
-        /*
-        // Deputy ???
-        if (Deputy.deputy != null && target == Deputy.deputy) HudManagerStartPatch.setAllButtonsHandcuffedStatus(false, true);
-        */
+
         // Sidekick promotion trigger on murder
         if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead &&
             target == Jackal.jackal && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl)

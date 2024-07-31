@@ -152,7 +152,6 @@ public enum CustomRPC
     DynamicMapOption,
     SetGameStarting,
     ShareGamemode,
-    VersionHandshakeEx,
     StopStart,
 
     // Role functionality
@@ -710,6 +709,12 @@ public static class RPCProcedure
                 Shifter.shifter = player;
                 break;
         }
+    }
+
+    public static void versionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId)
+    {
+        var ver = revision < 0 ? new Version(major, minor, build) : new Version(major, minor, build, revision);
+        GameStartManagerPatch.playerVersions[clientId] = new GameStartManagerPatch.PlayerVersion(ver, guid);
     }
 
     public static void useUncheckedVent(int ventId, byte playerId, byte isEnter)
@@ -2213,7 +2218,7 @@ public static class RPCProcedure
 
     public static void sidekickPromotes()
     {
-        Jackal.removeCurrentJackal();
+        removeCurrentJackal();
         Jackal.jackal = Sidekick.sidekick;
         Jackal.canCreateSidekick = Jackal.jackalPromotedFromSidekickCanCreateSidekick;
         Jackal.wasTeamRed = Sidekick.wasTeamRed;
@@ -2221,6 +2226,16 @@ public static class RPCProcedure
         Jackal.wasImpostor = Sidekick.wasImpostor;
         Sidekick.clearAndReload();
         return;
+    }
+
+    public static void removeCurrentJackal()
+    {
+        if (Jackal.jackal != null && !Jackal.formerJackals.Any(x => x.PlayerId == Jackal.jackal.PlayerId))
+            Jackal.formerJackals.Add(Jackal.jackal);
+        Jackal.jackal = null;
+        Jackal.currentTarget = null;
+        Jackal.cooldown = CustomOptionHolder.jackalKillCooldown.getFloat();
+        Jackal.createSidekickCooldown = CustomOptionHolder.jackalCreateSidekickCooldown.getFloat();
     }
 
     public static void jackalCanSwooper(bool chance)
@@ -2281,14 +2296,15 @@ public static class RPCProcedure
         if (player == Portalmaker.portalmaker) Portalmaker.clearAndReload();
         if (player == Engineer.engineer) Engineer.clearAndReload();
         if (player == PrivateInvestigator.privateInvestigator) PrivateInvestigator.clearAndReload();
-        if (player == Sheriff.sheriff) Sheriff.clearAndReload();
-        if (player == Deputy.deputy) Deputy.clearAndReload(false);
+        //if (player == Sheriff.sheriff) Sheriff.clearAndReload();
+        if (player == Sheriff.sheriff) Sheriff.sheriff = null;
+        //if (player == Deputy.deputy) Deputy.clearAndReload();
+        if (player == Deputy.deputy) Deputy.deputy = null;
         if (player == Detective.detective) Detective.clearAndReload();
         if (player == TimeMaster.timeMaster) TimeMaster.clearAndReload();
         if (player == Amnisiac.amnisiac) Amnisiac.clearAndReload();
         if (player == Veteran.veteran) Veteran.clearAndReload();
         if (player == Medic.medic) Medic.clearAndReload();
-        if (player == Shifter.shifter) Shifter.clearAndReload();
         if (player == Seer.seer) Seer.clearAndReload();
         if (player == Hacker.hacker) Hacker.clearAndReload();
         if (player == BodyGuard.bodyguard) BodyGuard.clearAndReload();
@@ -2335,12 +2351,10 @@ public static class RPCProcedure
         if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
         if (player == Jackal.jackal)
         {
-            // Promote Sidekick and hence override the the Jackal or erase Jackal
-            if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead)
-                sidekickPromotes();
-            else
-                Jackal.clearAndReload();
+            Jackal.jackal = null;
+            sidekickPromotes();
         }
+
         if (player == Pavlovsdogs.pavlovsowner) Pavlovsdogs.pavlovsowner = null;
         if (Pavlovsdogs.pavlovsdogs.Contains(player)) Pavlovsdogs.pavlovsdogs.RemoveAll(x => x.PlayerId == player.PlayerId);
         if (player == Sidekick.sidekick) Sidekick.clearAndReload();
@@ -2374,6 +2388,7 @@ public static class RPCProcedure
                 Flash.flash.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (Multitasker.multitasker.Any(x => x.PlayerId == player.PlayerId))
                 Multitasker.multitasker.RemoveAll(x => x.PlayerId == player.PlayerId);
+            if (player == Shifter.shifter) Shifter.clearAndReload();
             if (player == Tiebreaker.tiebreaker) Tiebreaker.clearAndReload();
             if (player == Mini.mini) Mini.clearAndReload();
             if (player == Aftermath.aftermath) Aftermath.clearAndReload();
@@ -3641,7 +3656,7 @@ internal class RPCHandlerPatch
                 {
                     guid = new Guid(new byte[16]);
                 }
-                HandshakeHelper.versionHandshake(major, minor, patch, revision == 0xFF ? -1 : revision, guid, versionOwnerId);
+                RPCProcedure.versionHandshake(major, minor, patch, revision == 0xFF ? -1 : revision, guid, versionOwnerId);
                 break;
 
             case CustomRPC.UseUncheckedVent:
@@ -3676,10 +3691,6 @@ internal class RPCHandlerPatch
 
             case CustomRPC.SetGameStarting:
                 RPCProcedure.setGameStarting();
-                break;
-
-            case CustomRPC.VersionHandshakeEx:
-                //HandshakeHelper.VersionHandshakeEx(reader);
                 break;
 
             // Role functionality

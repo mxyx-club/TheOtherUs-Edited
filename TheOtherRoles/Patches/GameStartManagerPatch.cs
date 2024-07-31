@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Reflection;
 using System.Collections.Generic;
 using Hazel;
 using System;
@@ -6,25 +7,15 @@ using TheOtherRoles.Utilities;
 using System.Linq;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.Modules;
-using static TheOtherRoles.Helper.HandshakeHelper;
 
 namespace TheOtherRoles.Patches;
-
-[HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
-public static class GameStartManagerUpdatePatch
-{
-    public static void Prefix(GameStartManager __instance)
-    {
-        __instance.MinPlayers = 1;
-    }
-}
 
 public class GameStartManagerPatch
 {
     public static Dictionary<int, PlayerVersion> playerVersions = new Dictionary<int, PlayerVersion>();
     public static float timer = 600f;
-    private static float kickingTimer;
-    private static bool versionSent;
+    private static float kickingTimer = 0f;
+    private static bool versionSent = false;
     private static string lobbyCodeText = "";
 
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerJoined))]
@@ -69,6 +60,7 @@ public class GameStartManagerPatch
         public static void Prefix(GameStartManager __instance)
         {
             if (!GameData.Instance) return; // No instance
+            __instance.MinPlayers = 1;
             update = GameData.Instance.PlayerCount != __instance.LastPlayerCount;
         }
 
@@ -85,9 +77,9 @@ public class GameStartManagerPatch
 #endif
             // Check version handshake infos
 
-            var versionMismatch = false;
-            var message = "";
-            foreach (var client in AmongUsClient.Instance.allClients.ToArray())
+            bool versionMismatch = false;
+            string message = "";
+            foreach (InnerNet.ClientData client in AmongUsClient.Instance.allClients.ToArray())
             {
                 if (client.Character == null) continue;
                 var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
@@ -103,20 +95,18 @@ public class GameStartManagerPatch
                     int diff = TheOtherRolesPlugin.Version.CompareTo(PV.version);
                     if (diff > 0)
                     {
-                        message += $"{client.Character.Data.PlayerName} <color=#FF0000FF>{getString("oldTouVersion")}, (v{playerVersions[client.Id].version.ToString()})\n</color>";
+                        message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} {"oldTouVersion".Translate()} (v{playerVersions[client.Id].version})\n</color>";
                         versionMismatch = true;
                     }
                     else if (diff < 0)
                     {
-                        message +=
-                            $"<color=#FF0000FF>{client.Character.Data.PlayerName} {"newTouVersion".Translate()} (v{playerVersions[client.Id].version})\n</color>";
+                        message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} {"newTouVersion".Translate()} (v{playerVersions[client.Id].version})\n</color>";
                         versionMismatch = true;
                     }
                     else if (!PV.GuidMatches())
                     {
                         // version presumably matches, check if Guid matches
-                        message +=
-                            $"<color=#FF0000FF>{client.Character.Data.PlayerName} {"modifiedTouVersion".Translate()} (v{playerVersions[client.Id].version})\n</color>";
+                        message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} {"modifiedTouVersion".Translate()} v{playerVersions[client.Id].version.ToString()} <size=30%>({PV.guid.ToString()})</size>\n</color>";
                         versionMismatch = true;
                     }
                 }
@@ -188,13 +178,13 @@ public class GameStartManagerPatch
                         SceneChanger.ChangeScene("MainMenu");
                     }
 
-                    __instance.GameStartText.text = $"{"HostNoTou".Translate()} {Math.Round(10 - kickingTimer)}s</color>";
-                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + (Vector3.up * 2);
+                    __instance.GameStartText.text = $"<color=#FF0000FF>{"HostNoTou".Translate()} {Math.Round(10 - kickingTimer)}s</color>";
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
                 }
                 else if (versionMismatch)
                 {
-                    __instance.GameStartText.text = $"{"DifferentTouVersions".Translate()}\n</color>" + message;
-                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + (Vector3.up * 2);
+                    __instance.GameStartText.text = $"<color=#FF0000FF>{"DifferentTouVersions".Translate()}\n</color>" + message;
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 2;
                 }
                 else
                 {
@@ -262,7 +252,7 @@ public class GameStartManagerPatch
 
             if (AmongUsClient.Instance.AmHost)
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, 
                     (byte)CustomRPC.ShareGamemode, SendOption.Reliable, -1);
                 writer.Write((byte)MapOption.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -280,11 +270,11 @@ public class GameStartManagerPatch
                 return true;
 #endif
             // Block game start if not everyone has the same mod version
-            var continueStart = true;
+            bool continueStart = true;
 
             if (AmongUsClient.Instance.AmHost)
             {
-                foreach (var client in AmongUsClient.Instance.allClients.GetFastEnumerator())
+                foreach (InnerNet.ClientData client in AmongUsClient.Instance.allClients.GetFastEnumerator())
                 {
                     if (client.Character == null) continue;
                     var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
@@ -297,15 +287,19 @@ public class GameStartManagerPatch
                         break;
                     }
 
-                    var PV = playerVersions[client.Id];
-                    var diff = Main.Version.CompareTo(PV.version);
-                    if (diff == 0 && PV.GuidMatches()) continue;
-                    continueStart = false;
-                    break;
+                    PlayerVersion PV = playerVersions[client.Id];
+                    int diff = Main.Version.CompareTo(PV.version);
+                    if (diff != 0 || !PV.GuidMatches())
+                    {
+                        continueStart = false;
+                        break;
+                    }
                 }
-                if (continueStart && MapOption.gameMode == CustomGamemodes.HideNSeek)
+                if (continueStart && (MapOption.gameMode == CustomGamemodes.HideNSeek || MapOption.gameMode == CustomGamemodes.PropHunt) && GameOptionsManager.Instance.CurrentGameOptions.MapId != 6)
                 {
-                    byte mapId = (byte)CustomOptionHolder.hideNSeekMap.getSelection();
+                    byte mapId = 0;
+                    if (MapOption.gameMode == CustomGamemodes.HideNSeek) mapId = (byte)CustomOptionHolder.hideNSeekMap.getSelection();
+                    else if (MapOption.gameMode == CustomGamemodes.PropHunt) mapId = (byte)CustomOptionHolder.propHuntMap.getSelection();
                     if (mapId >= 3) mapId++;
                     var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                         (byte)CustomRPC.DynamicMapOption, SendOption.Reliable, -1);
@@ -313,6 +307,24 @@ public class GameStartManagerPatch
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.dynamicMapOption(mapId);
                 }
+
+                if (Cultist.isCultistGame)
+                {
+                    GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors = 2;
+                    Cultist.isCultistGame = false;
+                }
+                bool cultistCheck = CustomOptionHolder.cultistSpawnRate.getSelection() != 0 && (rnd.Next(1, 101) <= CustomOptionHolder.cultistSpawnRate.getSelection() * 10);
+                if (cultistCheck)
+                {
+                    // We should have Custist (Cultist is only supported on 2 Impostors)
+                    Cultist.isCultistGame = true;
+                    GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors = 1;
+                }
+                else if (cultistCheck)
+                {
+                    Cultist.isCultistGame = false;
+                }
+
                 else if (CustomOptionHolder.dynamicMap.getBool() && continueStart)
                 {
                     // 0 = Skeld
@@ -323,35 +335,41 @@ public class GameStartManagerPatch
                     // 5 = Fungle
                     // 6 = Submerged
                     byte chosenMapId = 0;
-                    var probabilities = new List<float>
-                    {
+                    List<float> probabilities =
+                    [
                         CustomOptionHolder.dynamicMapEnableSkeld.getSelection() / 10f,
                         CustomOptionHolder.dynamicMapEnableMira.getSelection() / 10f,
                         CustomOptionHolder.dynamicMapEnablePolus.getSelection() / 10f,
                         CustomOptionHolder.dynamicMapEnableAirShip.getSelection() / 10f,
                         CustomOptionHolder.dynamicMapEnableFungle.getSelection() / 10f,
-                        CustomOptionHolder.dynamicMapEnableSubmerged.getSelection() / 10f
-                    };
+                        CustomOptionHolder.dynamicMapEnableSubmerged.getSelection() / 10f,
+                    ];
 
                     // if any map is at 100%, remove all maps that are not!
                     if (probabilities.Contains(1.0f))
-                        for (var i = 0; i < probabilities.Count; i++)
-                            if ((int)probabilities[i] != 1)
-                                probabilities[i] = 0;
+                    {
+                        for (int i = 0; i < probabilities.Count; i++)
+                        {
+                            if (probabilities[i] != 1.0) probabilities[i] = 0;
+                        }
+                    }
 
-                    var sum = probabilities.Sum();
-                    if (sum == 0) return continueStart; // All maps set to 0, why are you doing this???
-                    for (var i = 0; i < probabilities.Count; i++)
-                        // Normalize to [0,1]
-                        probabilities[i] /= sum;
-                    var selection = (float)rnd.NextDouble();
+                    float sum = probabilities.Sum();
+                    // All maps set to 0, why are you doing this???
+                    if (sum == 0) return continueStart;
+                    // Normalize to [0,1]
+                    for (int i = 0; i < probabilities.Count; i++) probabilities[i] /= sum;
+
+                    float selection = (float)rnd.NextDouble();
                     float cumsum = 0;
                     for (byte i = 0; i < probabilities.Count; i++)
                     {
                         cumsum += probabilities[i];
-                        if (!(cumsum > selection)) continue;
-                        chosenMapId = i;
-                        break;
+                        if (cumsum > selection)
+                        {
+                            chosenMapId = i;
+                            break;
+                        }
                     }
 
                     // Translate chosen map to presets page and use that maps random map preset page
@@ -370,4 +388,14 @@ public class GameStartManagerPatch
         }
     }
 
+    public class PlayerVersion(Version version, Guid guid)
+    {
+        public readonly Version version = version;
+        public readonly Guid guid = guid;
+
+        public bool GuidMatches()
+        {
+            return Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.Equals(this.guid);
+        }
+    }
 }

@@ -12,7 +12,7 @@ public static class ChatCommands
 {
     public static bool isLover(this PlayerControl player)
     {
-        return !(player == null) && (player == Lovers.lover1 || player == Lovers.lover2);
+        return player != null && (player == Lovers.lover1 || player == Lovers.lover2);
     }
 
     public static bool isTeamCultist(this PlayerControl player)
@@ -220,13 +220,11 @@ public static class ChatCommands
         public static void Postfix(HudManager __instance)
         {
             if (!__instance.Chat.isActiveAndEnabled && (AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay || MapOption.DebugMode ||
-                                                        (CachedPlayer.LocalPlayer.PlayerControl.isLover() &&
-                                                         Lovers.enableChat) ||
+                                                        (CachedPlayer.LocalPlayer.PlayerControl.isLover() && Lovers.enableChat) ||
                                                         CachedPlayer.LocalPlayer.PlayerControl.isTeamCultist()))
                 __instance.Chat.SetVisible(true);
 
-            if (Multitasker.multitasker.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count > 0 ||
-                MapOption.transparentTasks)
+            if (Multitasker.multitasker.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count > 0 || MapOption.transparentTasks)
             {
                 if (PlayerControl.LocalPlayer.Data.IsDead || PlayerControl.LocalPlayer.Data.Disconnected) return;
                 if (!Minigame.Instance) return;
@@ -268,8 +266,10 @@ public static class ChatCommands
         public static bool Prefix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer)
         {
             var playerControl = CachedPlayer.LocalPlayer.PlayerControl;
-            var flag = MeetingHud.Instance != null || LobbyBehaviour.Instance != null || playerControl.Data.IsDead ||
-                       sourcePlayer.PlayerId == CachedPlayer.LocalPlayer.PlayerId;
+            var flag = MeetingHud.Instance != null
+                       || LobbyBehaviour.Instance != null
+                       || playerControl.Data.IsDead
+                       || sourcePlayer.PlayerId == CachedPlayer.LocalPlayer.PlayerId;
             if (__instance != FastDestroyableSingleton<HudManager>.Instance.Chat) return true;
             if (playerControl == null) return true;
             if (MapOption.DebugMode) return flag;

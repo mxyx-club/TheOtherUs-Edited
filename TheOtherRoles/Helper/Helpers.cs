@@ -935,6 +935,20 @@ public static class Helpers
             player.Data.Tasks.Clear();
     }
 
+    public static void shareGameVersion()
+    {
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.VersionHandshake, SendOption.Reliable, -1);
+        writer.Write((byte)TheOtherRolesPlugin.Version.Major);
+        writer.Write((byte)TheOtherRolesPlugin.Version.Minor);
+        writer.Write((byte)TheOtherRolesPlugin.Version.Build);
+        writer.Write(AmongUsClient.Instance.AmHost ? GameStartManagerPatch.timer : -1f);
+        writer.WritePacked(AmongUsClient.Instance.ClientId);
+        writer.Write((byte)(TheOtherRolesPlugin.Version.Revision < 0 ? 0xFF : TheOtherRolesPlugin.Version.Revision));
+        writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        RPCProcedure.versionHandshake(TheOtherRolesPlugin.Version.Major, TheOtherRolesPlugin.Version.Minor, TheOtherRolesPlugin.Version.Build, TheOtherRolesPlugin.Version.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
+    }
+
     public static void MurderPlayer(this PlayerControl player, PlayerControl target)
     {
         player.MurderPlayer(target, MurderResultFlags.Succeeded);
@@ -1505,28 +1519,32 @@ public static class Helpers
 
     public static PlayerControl getChatPartner(this PlayerControl player)
     {
-        //     if (!Jackal.hasChat || Sidekick.sidekick == null) return Lovers.getPartner(player);
+        /*
+        if (!Jackal.hasChat || Sidekick.sidekick == null) return Lovers.getPartner(player);
 
-        //     if (isPlayerLover(player) && !isTeamJackal(player))
-        //         return Lovers.getPartner(player);
-        //     if (isTeamJackal(player) && !isPlayerLover(player)) {
-        //       if (Jackal.jackal == player) return Sidekick.sidekick;
-        //       if (Sidekick.sidekick == player) return Jackal.jackal;
-        //     }
-        //     if (isPlayerLover(player) && isTeamJackal(player)) {
-        //       if (Jackal.jackal == player) {
-        //         if (Jackal.chatTarget == 1) return Sidekick.sidekick;
-        //         else return Lovers.getPartner(player);
-        //       }
+        if (isPlayerLover(player) && !isTeamJackal(player))
+            return Lovers.getPartner(player);
+        if (isTeamJackal(player) && !isPlayerLover(player))
+        {
+            if (Jackal.jackal == player) return Sidekick.sidekick;
+            if (Sidekick.sidekick == player) return Jackal.jackal;
+        }
+        if (isPlayerLover(player) && isTeamJackal(player))
+        {
+            if (Jackal.jackal == player)
+            {
+                if (Jackal.chatTarget == 1) return Sidekick.sidekick;
+                else return Lovers.getPartner(player);
+            }
 
-        //       if (Sidekick.sidekick == player) {
-        //         if (Sidekick.chatTarget == 1) return Jackal.jackal;
-        //         else return Lovers.getPartner(player);
-        //       }
-        //     } 
-        //     return null;
-        // }
-
+            if (Sidekick.sidekick == player)
+            {
+                if (Sidekick.chatTarget == 1) return Jackal.jackal;
+                else return Lovers.getPartner(player);
+            }
+        }
+        return null;
+        */
         if (!player.isLover()) return player.getCultistPartner();
         if (!player.isTeamCultist()) return player.getPartner();
         if (player == Cultist.cultist)
@@ -1540,37 +1558,6 @@ public static class Helpers
             if (Follower.chatTarget2) return Cultist.cultist;
             if (!Follower.chatTarget2) return player.getPartner();
         }
-
-        return null;
-    }
-
-    public static PlayerControl getChatPartnerSwitch(this PlayerControl player)
-    {
-        //     if (!Jackal.hasChat || Sidekick.sidekick == null) return Lovers.getPartner(player);
-
-        //     if (isPlayerLover(player) && !isTeamJackal(player))
-        //         return Lovers.getPartner(player);
-        //     if (isTeamJackal(player) && !isPlayerLover(player)) {
-        //       if (Jackal.jackal == player) return Sidekick.sidekick;
-        //       if (Sidekick.sidekick == player) return Jackal.jackal;
-        //     }
-        //     if (isPlayerLover(player) && isTeamJackal(player)) {
-        //       if (Jackal.jackal == player) {
-        //         if (Jackal.chatTarget == 1) return Sidekick.sidekick;
-        //         else return Lovers.getPartner(player);
-        //       }
-
-        //       if (Sidekick.sidekick == player) {
-        //         if (Sidekick.chatTarget == 1) return Jackal.jackal;
-        //         else return Lovers.getPartner(player);
-        //       }
-        //     } 
-        //     return null;
-        // }
-
-
-        if (Follower.chatTarget2) return Cultist.cultist;
-        if (!Follower.chatTarget2) return player.getPartner();
 
         return null;
     }
@@ -1589,8 +1576,8 @@ public static class Helpers
         if (HudManagerStartPatch.zoomOutButton != null)
         {
             HudManagerStartPatch.zoomOutButton.Sprite = zoomOutStatus
-                ? loadSpriteFromResources("TheOtherRoles.Resources.PlusButton.png", 75f)
-                : loadSpriteFromResources("TheOtherRoles.Resources.MinusButton.png", 120f);
+                ? loadSpriteFromResources("TheOtherRoles.Resources.PlusButton.png", 60f)
+                : loadSpriteFromResources("TheOtherRoles.Resources.MinusButton.png", 150f);
             HudManagerStartPatch.zoomOutButton.PositionOffset =
                 zoomOutStatus ? new Vector3(0f, 3f, 0) : new Vector3(0.4f, 2.8f, 0);
         }

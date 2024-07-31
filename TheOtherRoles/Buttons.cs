@@ -1414,10 +1414,8 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (!Tracker.usedTracker)
-                    showTargetNameOnButton(Tracker.currentTarget, trackerTrackPlayerButton, getString("TrackerText"));
-                return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Tracker.currentTarget != null &&
-                       !Tracker.usedTracker;
+                if (!Tracker.usedTracker) showTargetNameOnButton(Tracker.currentTarget, trackerTrackPlayerButton, getString("TrackerText"));
+                return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Tracker.currentTarget != null && !Tracker.usedTracker;
             },
             () =>
             {

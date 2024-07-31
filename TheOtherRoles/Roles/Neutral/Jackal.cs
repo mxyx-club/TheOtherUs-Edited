@@ -22,8 +22,8 @@ public class Jackal
     public static bool jackalPromotedFromSidekickCanCreateSidekick = true;
     public static bool hasImpostorVision;
     public static bool CanImpostorFindSidekick;
-    public static bool wasTeamRed;
     public static bool canSabotage;
+    public static bool wasTeamRed;
     public static bool wasImpostor;
     public static bool wasSpy;
 
@@ -35,15 +35,6 @@ public class Jackal
     public static bool isInvisable;
 
     public static ResourceSprite SidekickButton = new("SidekickButton.png");
-
-    public static void removeCurrentJackal()
-    {
-        if (!formerJackals.Any(x => x.PlayerId == jackal.PlayerId)) formerJackals.Add(jackal);
-        jackal = null;
-        currentTarget = null;
-        cooldown = CustomOptionHolder.jackalKillCooldown.getFloat();
-        createSidekickCooldown = CustomOptionHolder.jackalCreateSidekickCooldown.getFloat();
-    }
 
     public static void setSwoop()
     {
@@ -58,6 +49,7 @@ public class Jackal
     public static void clearAndReload()
     {
         jackal = null;
+        formerJackals.Clear();
         currentTarget = null;
         isInvisable = false;
         cooldown = CustomOptionHolder.jackalKillCooldown.getFloat();
@@ -69,7 +61,6 @@ public class Jackal
         CanImpostorFindSidekick = CustomOptionHolder.jackalCanImpostorFindSidekick.getBool();
         canCreateSidekick = CustomOptionHolder.jackalCanCreateSidekick.getBool();
         jackalPromotedFromSidekickCanCreateSidekick = CustomOptionHolder.jackalPromotedFromSidekickCanCreateSidekick.getBool();
-        formerJackals.Clear();
         hasImpostorVision = CustomOptionHolder.jackalAndSidekickHaveImpostorVision.getBool();
         wasTeamRed = wasImpostor = wasSpy = false;
         chanceSwoop = CustomOptionHolder.jackalChanceSwoop.getSelection() / 10f;
