@@ -454,7 +454,7 @@ internal class RoleManagerSelectRolesPatch
             // Randomly select a pool of role tickets to assign a role from next (Crewmate role, Neutral role or Impostor role) 
             // then select one of the roles from the selected pool to a player 
             // and remove all tickets of this role (and any potentially blocked role pairings) from the pool(s)
-            var roleType = rolesToAssign.Keys.ElementAt(rnd.Next(0, rolesToAssign.Keys.Count()));
+            var roleType = rolesToAssign.Keys.ElementAt(rnd.Next(0, rolesToAssign.Keys.Count));
             var players = roleType == RoleType.Crewmate || roleType == RoleType.Neutral
                 ? data.crewmates
                 : data.impostors;

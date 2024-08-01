@@ -354,7 +354,7 @@ public static class Helpers
             return;
         }
 
-        if (TheOtherRolesPlugin.ToggleCursor.Value)
+        if (Main.ToggleCursor.Value)
         {
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         }
@@ -938,15 +938,15 @@ public static class Helpers
     public static void shareGameVersion()
     {
         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.VersionHandshake, SendOption.Reliable, -1);
-        writer.Write((byte)TheOtherRolesPlugin.Version.Major);
-        writer.Write((byte)TheOtherRolesPlugin.Version.Minor);
-        writer.Write((byte)TheOtherRolesPlugin.Version.Build);
+        writer.Write((byte)Main.Version.Major);
+        writer.Write((byte)Main.Version.Minor);
+        writer.Write((byte)Main.Version.Build);
         writer.Write(AmongUsClient.Instance.AmHost ? GameStartManagerPatch.timer : -1f);
         writer.WritePacked(AmongUsClient.Instance.ClientId);
-        writer.Write((byte)(TheOtherRolesPlugin.Version.Revision < 0 ? 0xFF : TheOtherRolesPlugin.Version.Revision));
+        writer.Write((byte)(Main.Version.Revision < 0 ? 0xFF : Main.Version.Revision));
         writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
         AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.versionHandshake(TheOtherRolesPlugin.Version.Major, TheOtherRolesPlugin.Version.Minor, TheOtherRolesPlugin.Version.Build, TheOtherRolesPlugin.Version.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
+        RPCProcedure.versionHandshake(Main.Version.Major, Main.Version.Minor, Main.Version.Build, Main.Version.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
     }
 
     public static void MurderPlayer(this PlayerControl player, PlayerControl target)
