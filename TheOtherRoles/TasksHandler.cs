@@ -6,7 +6,7 @@ namespace TheOtherRoles;
 [HarmonyPatch]
 public static class TasksHandler
 {
-    public static Tuple<int, int> taskInfo(GameData.PlayerInfo playerInfo)
+    public static Tuple<int, int> taskInfo(NetworkedPlayerInfo playerInfo)
     {
         var TotalTasks = 0;
         var CompletedTasks = 0;
@@ -27,7 +27,7 @@ public static class TasksHandler
     [HarmonyPatch(typeof(GameData), nameof(GameData.RecomputeTaskCounts))]
     private static class GameDataRecomputeTaskCountsPatch
     {
-        private static bool ShouldCountTasks(GameData.PlayerInfo playerInfo)
+        private static bool ShouldCountTasks(NetworkedPlayerInfo playerInfo)
         {
             return !(playerInfo.Object && playerInfo.Object.hasAliveKillingLover())
                 && playerInfo.PlayerId != Thief.thief?.PlayerId

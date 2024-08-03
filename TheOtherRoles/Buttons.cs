@@ -92,7 +92,6 @@ internal static class HudManagerStartPatch
     public static CustomButton terroristButton;
     public static CustomButton defuseButton;
     public static CustomButton zoomOutButton;
-    public static CustomButton roleSummaryButton;
     private static CustomButton hunterLighterButton;
     private static CustomButton hunterAdminTableButton;
     private static CustomButton hunterArrowButton;
@@ -128,6 +127,8 @@ internal static class HudManagerStartPatch
     public static TMP_Text PavlovsdogKillSelfText;
     public static TMP_Text akujoTimeRemainingText;
     public static TMP_Text akujoBackupLeftText;
+
+    //public static CustomButton roleSummaryButton;
 
     public static void setCustomButtonCooldowns()
     {
@@ -412,7 +413,7 @@ internal static class HudManagerStartPatch
         targetDisplay.setSemiTransparent(false);
         targetDisplay.gameObject.SetActive(true);
     }
-
+    /*
     public static void createRoleSummaryButton(HudManager __instance)
     {
         roleSummaryButton = new CustomButton(
@@ -447,7 +448,7 @@ internal static class HudManagerStartPatch
         null
         );
     }
-
+    */
     public static void Postfix(HudManager __instance)
     {
         initialized = false;
@@ -463,7 +464,7 @@ internal static class HudManagerStartPatch
     {
         // get map id, or raise error to wait...
         var mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
-        createRoleSummaryButton(__instance);
+        //createRoleSummaryButton(__instance);
         // Engineer Repair
         engineerRepairButton = new CustomButton(
             () =>
@@ -3845,7 +3846,7 @@ internal static class HudManagerStartPatch
         terroristButton = new CustomButton(
             () =>
             {
-                if (checkMuderAttempt(Terrorist.terrorist, Terrorist.terrorist) != MurderAttemptResult.BlankKill)
+                if (checkMuderAttempt(Terrorist.terrorist, Terrorist.terrorist, ignoreMedic: true) != MurderAttemptResult.BlankKill)
                 {
                     var pos = CachedPlayer.LocalPlayer.transform.position;
                     var buff = new byte[sizeof(float) * 2];
@@ -4175,12 +4176,12 @@ internal static class HudManagerStartPatch
                 return numberOfLeftTasks <= 0 || !CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.getBool();
             },
             () => { return true; },
-            () => { },
-            loadSpriteFromResources("TheOtherRoles.Resources.MinusButton.png", 180f), // Invisible button!
+            () => { return; },
+            null,
             new Vector3(0.4f, 2.8f, 0),
             __instance,
             KeyCode.KeypadPlus
-        )
+                )
         {
             Timer = 0f
         };

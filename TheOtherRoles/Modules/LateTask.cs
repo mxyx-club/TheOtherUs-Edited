@@ -56,6 +56,5 @@ class ModManagerLateUpdatePatch
     {
         __instance.ShowModStamp();
         LateTask.Update(Time.fixedDeltaTime / 2);
-
     }
 }

@@ -146,6 +146,41 @@ public class CustomColors
             }
         }
 
+        [HarmonyPatch(typeof(ChatNotification), nameof(ChatNotification.SetUp))]
+        private class ChatNotificationColorsPatch
+        {
+            public static bool Prefix(ChatNotification __instance, PlayerControl sender, string text)
+            {
+                if (ShipStatus.Instance && !Main.ShowChatNotifications.Value)
+                {
+                    return false;
+                }
+                __instance.timeOnScreen = 5f;
+                __instance.gameObject.SetActive(true);
+                __instance.SetCosmetics(sender.Data);
+                string str;
+                Color color;
+                try
+                {
+                    str = ColorUtility.ToHtmlStringRGB(Palette.TextColors[__instance.player.ColorId]);
+                    color = Palette.TextOutlineColors[__instance.player.ColorId];
+                }
+                catch
+                {
+                    Color32 c = Palette.PlayerColors[__instance.player.ColorId];
+                    str = ColorUtility.ToHtmlStringRGB(c);
+
+                    color = c.r + c.g + c.b > 180 ? Palette.Black : Palette.White;
+                    Message($"{c.r}, {c.g}, {c.b}");
+                }
+                __instance.playerColorText.text = __instance.player.ColorBlindName;
+                __instance.playerNameText.text = "<color=#" + str + ">" + (string.IsNullOrEmpty(sender.Data.PlayerName) ? "..." : sender.Data.PlayerName);
+                __instance.playerNameText.outlineColor = color;
+                __instance.chatText.text = text;
+                return false;
+            }
+        }
+
         [HarmonyPatch(typeof(PlayerTab), nameof(PlayerTab.OnEnable))]
         private static class PlayerTabEnablePatch
         {

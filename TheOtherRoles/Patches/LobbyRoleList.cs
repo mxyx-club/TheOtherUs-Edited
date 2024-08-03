@@ -15,7 +15,7 @@ public enum Team
     Modifier,
     Null
 }
-
+/*
 public static class LobbyRoleInfo
 {
     public static GameObject RolesSummaryUI { get; set; }
@@ -230,4 +230,4 @@ class GameStartPatch
     {
         LobbyRoleInfo.RolesSummaryUI?.SetActive(false);
     }
-}
+}*/

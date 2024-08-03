@@ -12,21 +12,26 @@ internal class MapOption
     public static int NumImpostors => GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors;
     public static bool DebugMode => CustomOptionHolder.debugMode.getBool();
 
-    // Set values
-    public static int maxNumberOfMeetings = 10;
-    public static bool blockSkippingInEmergencyMeetings;
-    public static bool noVoteIsSelfVote;
-    public static bool hidePlayerNames;
+
+    // ModOption
     public static bool ghostsSeeRoles = true;
     public static bool ghostsSeeModifier = true;
     public static bool ghostsSeeInformation = true;
     public static bool ghostsSeeVotes = true;
     public static bool showRoleSummary = true;
-    public static bool allowParallelMedBayScans;
     public static bool showLighterDarker = true;
-    public static bool showFPS = true;
     public static bool toggleCursor = true;
     public static bool enableSoundEffects = true;
+    public static bool showChatNotifications = true;
+    public static bool showFPS = true;
+    public static bool muteLobbyBGM = true;
+
+    // Set values
+    public static int maxNumberOfMeetings = 10;
+    public static bool blockSkippingInEmergencyMeetings;
+    public static bool noVoteIsSelfVote;
+    public static bool hidePlayerNames;
+    public static bool allowParallelMedBayScans;
     public static bool shieldFirstKill;
     public static bool hideVentAnim;
     public static bool impostorSeeRoles;
@@ -35,7 +40,6 @@ internal class MapOption
     public static bool ShowVentsOnMap;
     public static bool ShowVentsOnMeetingMap;
     public static bool randomLigherPlayer;
-    public static bool enableDebugLogMode;
     public static bool disableMedscanWalking;
     public static bool isCanceled;
 
@@ -124,12 +128,11 @@ internal class MapOption
         ghostsSeeRoles = Main.GhostsSeeRoles.Value;
         ghostsSeeModifier = Main.GhostsSeeModifier.Value;
         ghostsSeeInformation = Main.GhostsSeeInformation.Value;
-        ghostsSeeVotes = Main.GhostsSeeVotes.Value;
         showFPS = Main.ShowFPS.Value;
         showRoleSummary = Main.ShowRoleSummary.Value;
         toggleCursor = Main.ToggleCursor.Value;
         enableSoundEffects = Main.EnableSoundEffects.Value;
-        enableDebugLogMode = Main.enableDebugLogMode.Value;
+        showChatNotifications = Main.ShowChatNotifications.Value;
 
         //Patches.ShouldAlwaysHorseAround.isHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
     }

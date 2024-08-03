@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using InnerNet;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -163,10 +164,11 @@ public static class HideSpeedFix
     {
         if (__instance != null
             && __instance.AmOwner
-            && GameData.Instance
+            && AmongUsClient.Instance != null
+            && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started
+            && HideNSeek.isHideNSeekGM
             && !CachedPlayer.LocalPlayer.Data.IsDead
-            && __instance.myPlayer.CanMove
-            && HideNSeek.isHideNSeekGM)
+            && __instance.myPlayer.CanMove)
         {
             var players = CachedPlayer.LocalPlayer.PlayerControl;
             if (players.Data.Role.IsImpostor) __instance.body.velocity *= HideNSeek.hunterSpeed;

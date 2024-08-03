@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TheOtherRoles.Modules;
 using UnityEngine;
 using static TheOtherRoles.Options.CustomOption;
@@ -748,15 +747,15 @@ public class CustomOptionHolder
         anyPlayerCanStopStart = Create(3, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "anyPlayerCanStopStart"), false, null, false);
 
         // Using new id's for the options to not break compatibilty with older versions
-        crewmateRolesCountMin = Create(5, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "crewmateRolesCountMin"), 15f, 0f, 30f, 1f, null, true);
+        crewmateRolesCountMin = Create(5, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "crewmateRolesCountMin"), 15f, 0f, 30f, 1f, null, true, heading: "Min/Max Roles");
         crewmateRolesCountMax = Create(6, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "crewmateRolesCountMax"), 15f, 0f, 30f, 1f);
-        crewmateRolesFill = Create(7, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "crewmateRolesFill"), false);
         neutralRolesCountMin = Create(8, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "neutralRolesCountMin"), 2f, 0f, 15f, 1f);
         neutralRolesCountMax = Create(9, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "neutralRolesCountMax"), 2f, 0f, 15f, 1f);
         impostorRolesCountMin = Create(10, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "impostorRolesCountMin"), 15f, 0f, 15f, 1f);
         impostorRolesCountMax = Create(11, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "impostorRolesCountMax"), 15f, 0f, 15f, 1f);
         modifiersCountMin = Create(12, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "modifiersCountMin"), 15f, 0f, 30f, 1f);
         modifiersCountMax = Create(13, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "modifiersCountMax"), 15f, 0f, 30f, 1f);
+        crewmateRolesFill = Create(7, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "crewmateRolesFill"), false);
 
         //-------------------------- Other options 1 - 599 -------------------------- //
 
@@ -799,10 +798,10 @@ public class CustomOptionHolder
         randomGameStartPosition = Create(50, Types.General, "randomGameStartPosition", false, enableMapOptions, true);
         randomGameStartToVents = Create(51, Types.General, "randomGameStartToVents", true, randomGameStartPosition);
 
-        ShowVentsOnMap = Create(211, Types.General, "ShowVentsOnMapText", false, enableMapOptions, true);
+        ShowVentsOnMap = Create(211, Types.General, "ShowVentsOnMapText", false, enableMapOptions, true, heading: "Map Options");
         ShowVentsOnMeetingMap = Create(212, Types.General, "ShowVentsOnMeetingMap", true, ShowVentsOnMap);
 
-        enableMiraModify = Create(70, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Mira"), false, enableMapOptions, true);
+        enableMiraModify = Create(70, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Mira"), false, enableMapOptions);
         miraVitals = Create(71, Types.General, "miraVitals", false, enableMiraModify);
 
         enableBetterPolus = Create(80, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Polus"), false, enableMapOptions);
@@ -820,7 +819,7 @@ public class CustomOptionHolder
         enableFungleModify = Create(100, Types.General, cs(new Color(200f / 200f, 200f / 200f, 0, 1f), "Fungle"), false, enableMapOptions);
         fungleElectrical = Create(101, Types.General, "fungleElectrical", false, enableFungleModify);
 
-        enableCamoComms = Create(120, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, enableMapOptions, true);
+        enableCamoComms = Create(120, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, enableMapOptions, true, heading: "Task Settings");
         //fungleDisableCamoComms = Create(211, Types.General, "fungleDisableCamoComms", true, enableCamoComms);
         restrictDevices = Create(121, Types.General, "restrictDevices", ["optionOff", "restrictDevices2", "restrictDevices3"], enableMapOptions);
         //restrictAdmin = Create(122, Types.General, "restrictAdmin", 30f, 0f, 600f, 5f, restrictDevices);
@@ -830,7 +829,7 @@ public class CustomOptionHolder
         camsNightVision = Create(126, Types.General, "camsNightVision", false, enableMapOptions);
         camsNoNightVisionIfImpVision = Create(127, Types.General, "camsNoNightVisionIfImpVision", false, camsNightVision);
 
-        dynamicMap = Create(130, Types.General, "dynamicMap", false, enableMapOptions, true);
+        dynamicMap = Create(130, Types.General, "dynamicMap", false, enableMapOptions, true, heading: "Random Maps");
         dynamicMapEnableSkeld = Create(131, Types.General, "Skeld", rates, dynamicMap);
         dynamicMapEnableMira = Create(132, Types.General, "Mira", rates, dynamicMap);
         dynamicMapEnablePolus = Create(133, Types.General, "Polus", rates, dynamicMap);
@@ -1288,7 +1287,7 @@ public class CustomOptionHolder
 
         //-------------------------- Modifier (1000 - 1999) -------------------------- //
 
-        modifiersAreHidden = Create(40000, Types.Modifier, cs(Color.yellow, "modifiersAreHidden"), false, null, true);
+        modifiersAreHidden = Create(40000, Types.Modifier, cs(Color.yellow, "modifiersAreHidden"), false, null, true, heading: cs(Color.yellow, "modifierSettings"));
 
         modifierLover = Create(40160, Types.Modifier, cs(Lovers.color, "Lover"), rates, null, true);
         modifierLoverImpLoverRate = Create(40161, Types.Modifier, "modifierLoverImpLoverRate", rates, modifierLover);
@@ -1437,7 +1436,7 @@ public class CustomOptionHolder
         huntedShieldNumber = Create(3026, Types.HideNSeekRoles, cs(Color.grey, "huntedShieldNumber"), 3f, 1f, 15f, 1f);
 
         //-------------------------- Prop Hunt General Options 4000 - 4999 -------------------------- //
-
+        /*
         propHuntMap = Create(4020, Types.PropHunt, cs(Color.yellow, "CustomMap"),
             ["Skeld", "Mira", "Polus", "Airship", "Fungle", "Submerged", "LevelImpostor"], null, true, () =>
             {
@@ -1474,5 +1473,6 @@ public class CustomOptionHolder
         propHuntSpeedboostCooldown = Create(4017, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostCooldown"), 45f, 2.5f, 120f, 2.5f, propHuntSpeedboostEnabled);
         propHuntSpeedboostDuration = Create(4018, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostDuration"), 10f, 2.5f, 30f, 2.5f, propHuntSpeedboostEnabled);
         propHuntSpeedboostSpeed = Create(4019, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostSpeed"), 2f, 1.25f, 5f, 0.25f, propHuntSpeedboostEnabled);
+    */
     }
 }

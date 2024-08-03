@@ -17,8 +17,6 @@ public static class ClientOptionsPatch
     [
         new SelectionBehaviour("GhostsSeeInformationText",
             () => MapOption.ghostsSeeInformation = Main.GhostsSeeInformation.Value = !Main.GhostsSeeInformation.Value, Main.GhostsSeeInformation.Value),
-        new SelectionBehaviour("GhostsSeeVotesText",
-            () => MapOption.ghostsSeeVotes = Main.GhostsSeeVotes.Value = !Main.GhostsSeeVotes.Value, Main.GhostsSeeVotes.Value),
         new SelectionBehaviour("GhostsSeeRolesText",
             () => MapOption.ghostsSeeRoles = Main.GhostsSeeRoles.Value = !Main.GhostsSeeRoles.Value, Main.GhostsSeeRoles.Value),
         new SelectionBehaviour("GhostsSeeModifierText",
@@ -31,8 +29,10 @@ public static class ClientOptionsPatch
             () => MapOption.enableSoundEffects = Main.EnableSoundEffects.Value = !Main.EnableSoundEffects.Value, Main.EnableSoundEffects.Value),
         new SelectionBehaviour("ShowFPS",
             () => MapOption.showFPS = Main.ShowFPS.Value = !Main.ShowFPS.Value, Main.ShowFPS.Value),
-        new SelectionBehaviour("EnableDebugLogModeText",
-            () => MapOption.enableDebugLogMode = Main.enableDebugLogMode.Value = !Main.enableDebugLogMode.Value, Main.enableDebugLogMode.Value),
+        new SelectionBehaviour("ShowChatNotificationsText",
+            () => MapOption.showChatNotifications = Main.ShowChatNotifications.Value = !Main.ShowChatNotifications.Value, Main.ShowChatNotifications.Value),
+        new SelectionBehaviour("MuteLobbyBGMText",
+            () => MapOption.muteLobbyBGM = Main.MuteLobbyBGM.Value = !Main.MuteLobbyBGM.Value, Main.MuteLobbyBGM.Value),
     ];
 
     private static GameObject popUp;
