@@ -553,6 +553,9 @@
         "0": "Enable Debug Mode",
         "13": "\u5f00\u542f Debug \u6a21\u5f0f"
     },
+    "debugModeSeeRoles": {
+        "13": "\u6240\u6709\u4eba\u53ef\u4ee5\u67e5\u770b\u804c\u4e1a"
+    },
     "guesserGamemodeCrewNumber": {
         "0": "Number of Crew Guessers",
         "13": "\u8239\u5458\u9635\u8425\u8d4c\u602a\u6570"
@@ -1164,6 +1167,10 @@
         "0": "Vulture Can Use Vents",
         "13": "\u53ef\u4f7f\u7528\u7ba1\u9053"
     },
+    "killCooldown": {
+        "0": "Kill Cooldown",
+        "13": "\u51fb\u6740\u51b7\u5374"
+    },
     "jesterCanCallEmergency": {
         "0": "Jester Can Call Emergency Meeting",
         "13": "\u5c0f\u4e11\u53ef\u53ec\u5f00\u4f1a\u8bae"
@@ -1282,6 +1289,7 @@
         "13": "\u8c7a\u72fc\u548c\u5df4\u6d66\u6d1b\u592b\u53ea\u4f1a\u51fa\u73b0\u4e00\u4e2a"
     },
     "pavlovsownerKillCooldown": {
+        "0": "Kill Cooldown",
         "13": "\u51fb\u6740\u51b7\u5374"
     },
     "pavlovsownerCreateDogCooldown": {
@@ -1291,6 +1299,7 @@
         "13": "\u53ef\u4ee5\u9a6f\u5316\u7684\u6b21\u6570"
     },
     "pavlovsownerCanUseSabo": {
+        "0": "Pavlovs Team Can Sabotage",
         "13": "\u53ef\u4ee5\u7834\u574f"
     },
     "pavlovsownerHasImpostorVision": {
@@ -1298,6 +1307,7 @@
         "13": "\u62e5\u6709\u4f2a\u88c5\u8005\u89c6\u91ce"
     },
     "pavlovsownerCanUseVents": {
+        "0": "Can Use Vents",
         "13": "\u53ef\u4ee5\u4f7f\u7528\u7ba1\u9053"
     },
     "pavlovsownerCanUseVents3": {
@@ -1314,10 +1324,6 @@
     },
     "pavlovsownerRampageDeathTimeIsMeetingReset": {
         "13": "\u4f1a\u8bae\u540e\u91cd\u7f6e\u81ea\u6740\u65f6\u9650"
-    },
-    "swooperKillCooldown": {
-        "0": "Kill Cooldown",
-        "13": "\u51fb\u6740\u51b7\u5374"
     },
     "swooperCooldown": {
         "0": "Swoop Cooldown",
@@ -1345,9 +1351,6 @@
     },
     "werewolfKillCooldown": {
         "0": "Kill Cooldown",
-        "13": "\u51fb\u6740\u51b7\u5374"
-    },
-    "juggernautCooldown": {
         "13": "\u51fb\u6740\u51b7\u5374"
     },
     "juggernautHasImpVision": {
@@ -2209,7 +2212,7 @@
     },
     "inGameTitle": {
         "0": "<size=75%>Modified by <color=#FFB792>mxyx.club</color>\nBased on TheOtherUs</size>",
-        "13": "<size=80%><color=#FFB793>\u6cab\u590f\u60a0\u8f69 & \u5584\u826f\u7684\u597d\u4eba</color> </size>"
+        "13": "<size=90%>\u6a21\u7ec4\u4fee\u6539: <color=#FFB793>\u6cab\u590f\u60a0\u8f69 & \u5584\u826f\u7684\u597d\u4eba</color> </size>"
     },
     "inGameTitle2": {
         "0": "<size=75%>Modified by <color=#FFB792>mxyx.club</color>\nBased on TheOtherUs</size>",
@@ -2223,7 +2226,7 @@
         "0": "Classic",
         "13": "\u7ecf\u5178\u6a21\u5f0f"
     },
-    "isVan.HideNSeekGM": {
+    "isVanHideNSeekGM": {
         "0": "Van. HideNSeek",
         "13": "\u539f\u7248\u8eb2\u732b\u732b"
     },
@@ -2285,7 +2288,7 @@
     },
     "lobbyInfoSummary": {
         "0": "Role Summary",
-        "11": "\u5f79\u8077\u306e\u6982\u8981"
+        "13": "\u804c\u4e1a\u89e3\u91ca\u4e00\u89c8"
     },
     "seerShowInfoText": {
         "0": "Seer Info: Someone Died",

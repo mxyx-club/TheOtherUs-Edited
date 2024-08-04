@@ -560,7 +560,7 @@ public class EndGameManagerSetUpPatch
         bonusText.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
         var textRenderer = bonusText.GetComponent<TMP_Text>();
         textRenderer.text = "";
-
+        Message("游戏结束");
         switch (AdditionalTempData.winCondition)
         {
             case WinCondition.Draw:

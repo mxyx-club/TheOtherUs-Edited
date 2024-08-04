@@ -409,9 +409,9 @@ internal class ExileControllerMessagePatch
                 if (id is StringNames.ExileTextPN or StringNames.ExileTextSN or StringNames.ExileTextPP or StringNames.ExileTextSP)
                     __result = $"{player.Data.PlayerName} 的职业是 {string.Join(" ", RoleInfo.getRoleInfoForPlayer(player, false).Select(x => x.name).ToArray())}";
                 // Hide number of remaining impostors on Jester win
-                if (id is StringNames.ImpostorsRemainP or StringNames.ImpostorsRemainS)
-                    if (Jester.jester != null && player.PlayerId == Jester.jester.PlayerId)
-                        __result = "";
+                if (Jester.jester != null && player.PlayerId == Jester.jester.PlayerId)
+                    if (id is StringNames.ImpostorsRemainP or StringNames.ImpostorsRemainS) __result = "";
+
                 if (Prosecutor.ProsecuteThisMeeting) __result += " (被起诉)";
                 else if (Tiebreaker.isTiebreak)
                 {

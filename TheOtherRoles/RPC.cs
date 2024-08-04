@@ -496,6 +496,7 @@ public static class RPCProcedure
                         break;
                     case RoleId.Jackal:
                         Jackal.jackal = player;
+                        Jackal.setSwoop();
                         break;
                     case RoleId.Sidekick:
                         Sidekick.sidekick = player;
@@ -1726,7 +1727,7 @@ public static class RPCProcedure
             }
             terroristButton.Timer = terroristButton.MaxTimer;
         }
-        else if (Morphling.morphling)
+        else if (Morphling.morphling == killer)
         {
             var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.MorphlingMorph, SendOption.Reliable);

@@ -11,6 +11,7 @@ internal class MapOption
     public static float KillCooddown => GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
     public static int NumImpostors => GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors;
     public static bool DebugMode => CustomOptionHolder.debugMode.getBool();
+    public static bool DebugModeSeeRoles => CustomOptionHolder.debugModeSeeRoles.getBool();
 
 
     // ModOption

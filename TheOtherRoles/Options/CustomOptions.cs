@@ -1372,7 +1372,7 @@ public static class GameOptionsNextPagePatch
 [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
 public class HudManagerUpdate
 {
-    private static GameObject GameSettingsObject;
+    //private static GameObject GameSettingsObject;
     private static TextMeshPro GameSettings;
     public static float
         MinX,/*-5.3F*/

@@ -9,6 +9,7 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using static TheOtherRoles.Options.MapOption;
 using Object = UnityEngine.Object;
 
@@ -20,7 +21,6 @@ internal class MeetingHudPatch
     private static bool[] selections;
     private static SpriteRenderer[] renderers;
     private static NetworkedPlayerInfo target;
-    private static TextMeshPro meetingExtraButtonText;
     private static PassiveButton[] swapperButtonList;
     private static TextMeshPro meetingExtraButtonLabel;
     public static GameObject MeetingExtraButton;
@@ -104,7 +104,6 @@ internal class MeetingHudPatch
             RPCProcedure.swapperSwap(firstPlayer.TargetPlayerId, secondPlayer.TargetPlayerId);
             meetingExtraButtonLabel.text = cs(Color.green, "换票成功!");
             Swapper.charges--;
-            meetingExtraButtonText.text = $"换票次数: {Swapper.charges}";
         }
     }
 
@@ -133,13 +132,11 @@ internal class MeetingHudPatch
 
         if (!reset) return;
 
-
         for (var i = 0; i < selections.Length; i++)
         {
             selections[i] = false;
             var playerVoteArea = __instance.playerStates[i];
-            if (playerVoteArea.AmDead ||
-                (playerVoteArea.TargetPlayerId == Swapper.swapper.PlayerId && Swapper.canOnlySwapOthers)) continue;
+            if (playerVoteArea.AmDead || (playerVoteArea.TargetPlayerId == Swapper.swapper.PlayerId && Swapper.canOnlySwapOthers)) continue;
             renderers[i].color = Color.red;
             Swapper.charges++;
             var copyI = i;
@@ -147,7 +144,6 @@ internal class MeetingHudPatch
             swapperButtonList[i].OnClick.AddListener((Action)(() => swapperOnClick(copyI, __instance)));
         }
 
-        meetingExtraButtonText.text = $"换票次数: {Swapper.charges}";
         meetingExtraButtonLabel.text = cs(Color.red, "确认交换");
     }
 
@@ -470,14 +466,6 @@ internal class MeetingHudPatch
             var meetingExtraButton = Object.Instantiate(buttonTemplate, meetingExtraButtonParent);
             MeetingExtraButton = meetingExtraButton.gameObject;
 
-            var infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
-            var meetingInfo = infoTransform?.GetComponent<TextMeshPro>();
-            meetingExtraButtonText = Object.Instantiate(__instance.playerStates[0].NameText, meetingExtraButtonParent);
-            meetingExtraButtonText.text = addSwapperButtons ? $"换票次数: {Swapper.charges}" : "";
-            meetingExtraButtonText.enableWordWrapping = false;
-            meetingExtraButtonText.transform.localScale = Vector3.one * 1.7f;
-            meetingExtraButtonText.transform.localPosition = new Vector3(-2.5f, 0f, 0f);
-
             var meetingExtraButtonMask = Object.Instantiate(maskTemplate, meetingExtraButtonParent);
             meetingExtraButtonLabel = Object.Instantiate(textTemplate, meetingExtraButton);
             meetingExtraButton.GetComponent<SpriteRenderer>().sprite =
@@ -522,7 +510,6 @@ internal class MeetingHudPatch
             })));
         }
 
-
         var isGuesser = HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId);
 
         // Add overlay for spelled players
@@ -537,7 +524,10 @@ internal class MeetingHudPatch
                     rend.transform.SetParent(pva.transform);
                     rend.gameObject.layer = pva.Megaphone.gameObject.layer;
                     rend.transform.localPosition = new Vector3(-0.5f, -0.03f, -1f);
-                    if (local == Swapper.swapper && (isGuesser || Swapper.swapper.PlayerId == Mimic.mimic.PlayerId)) rend.transform.localPosition = new Vector3(-0.725f, -0.15f, -1f);
+                    if (local == Swapper.swapper && (isGuesser || local.PlayerId == Mimic.mimic.PlayerId))
+                    {
+                        rend.transform.localPosition = new Vector3(-0.725f, -0.15f, -1f);
+                    }
                     rend.sprite = Witch.getSpelledOverlaySprite();
                 }
             }
@@ -576,7 +566,6 @@ internal class MeetingHudPatch
         }
     }
 
-
     public static void updateMeetingText(MeetingHud __instance)
     {
         if (PlayerControl.LocalPlayer.Data.IsDead) return;
@@ -589,24 +578,24 @@ internal class MeetingHudPatch
         int numGuesses = HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerControl.PlayerId)
             && CachedPlayer.LocalPlayer.PlayerControl != Doomsayer.doomsayer
             ? HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerControl.PlayerId) : 0;
+        var local = CachedPlayer.LocalPlayer.PlayerControl;
         if (numGuesses > 0)
         {
             meetingInfoText = string.Format(getString("guesserGuessesLeft"), numGuesses);
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl == Akujo.akujo && Akujo.timeLeft > 0)
-        {
+        if (local == Akujo.akujo && Akujo.timeLeft > 0)
             meetingInfoText = string.Format(getString("akujoTimeRemaining"), $"{TimeSpan.FromSeconds(Akujo.timeLeft):mm\\:ss}");
-        }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer)
-        {
+        if (local == Doomsayer.doomsayer)
             meetingInfoText = string.Format(getString("DoomsayerKilledToWin"), Doomsayer.killToWin - Doomsayer.killedToWin);
-        }
+
+        if (local == Swapper.swapper)
+            meetingInfoText = $"换票次数: {Swapper.charges}";
 
         if (meetingInfoText == "") return;
 
-        __instance.TimerText.text = $"{meetingInfoText}\n" + __instance.TimerText.text;
+        __instance.TimerText.text = $"{meetingInfoText}\n{__instance.TimerText.text}";
     }
 
     [HarmonyPatch]
@@ -689,7 +678,6 @@ internal class MeetingHudPatch
 
                 if (dictionary.TryGetValue(playerVoteArea.VotedFor, out var currentVotes))
                     dictionary[playerVoteArea.VotedFor] = currentVotes + additionalVotes;
-
                 else
                     dictionary[playerVoteArea.VotedFor] = additionalVotes;
             }

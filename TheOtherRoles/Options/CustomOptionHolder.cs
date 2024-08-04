@@ -597,6 +597,7 @@ public class CustomOptionHolder
     public static CustomOption dynamicMapSeparateSettings;
 
     public static CustomOption debugMode;
+    public static CustomOption debugModeSeeRoles;
 
     public static CustomOption enableBetterPolus;
 
@@ -838,7 +839,8 @@ public class CustomOptionHolder
         dynamicMapEnableSubmerged = Create(136, Types.General, "Submerged", rates, dynamicMap);
         dynamicMapSeparateSettings = Create(137, Types.General, "dynamicMapSeparateSettings", false, dynamicMap);
 
-        debugMode = Create(999, Types.General, "debugMode", false, null, true);
+        debugMode = Create(990, Types.General, "debugMode", false, null, true);
+        debugModeSeeRoles = Create(991, Types.General, "debugModeSeeRoles", false);
 
         //-------------------------- Impostor Options 10000-19999 -------------------------- //
 
@@ -1027,7 +1029,7 @@ public class CustomOptionHolder
         pavlovsownerRampageDeathTimeIsMeetingReset = Create(20263, Types.Neutral, "pavlovsownerRampageDeathTimeIsMeetingReset", true, pavlovsownerRampageKillCooldown);
 
         swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
-        swooperKillCooldown = Create(20151, Types.Neutral, "swooperKillCooldown", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
+        swooperKillCooldown = Create(20151, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
         swooperCooldown = Create(20152, Types.Neutral, "swooperCooldown", 20f, 10f, 60f, 2.5f, swooperSpawnRate);
         swooperDuration = Create(20153, Types.Neutral, "swooperDuration", 15f, 1f, 20f, 0.5f, swooperSpawnRate);
         swooperSpeed = Create(20154, Types.Neutral, "swooperSpeed", 1.5f, 1f, 3f, 0.125f, swooperSpawnRate);
@@ -1040,7 +1042,7 @@ public class CustomOptionHolder
         werewolfKillCooldown = Create(20203, Types.Neutral, "werewolfKillCooldown", 3f, 1f, 60f, 0.5f, werewolfSpawnRate);
 
         juggernautSpawnRate = Create(20210, Types.Neutral, cs(Juggernaut.color, "Juggernaut"), rates, null, true);
-        juggernautCooldown = Create(20211, Types.Neutral, "juggernautCooldown", 25f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
+        juggernautCooldown = Create(20211, Types.Neutral, "killCooldown", 25f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
         juggernautHasImpVision = Create(20212, Types.Neutral, "juggernautHasImpVision", true, juggernautSpawnRate);
         juggernautCanUseVents = Create(20113, Types.Neutral, "canUseVents", true, juggernautSpawnRate);
         juggernautReducedkillEach = Create(20114, Types.Neutral, "juggernautReducedkillEach", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
@@ -1436,7 +1438,7 @@ public class CustomOptionHolder
         huntedShieldNumber = Create(3026, Types.HideNSeekRoles, cs(Color.grey, "huntedShieldNumber"), 3f, 1f, 15f, 1f);
 
         //-------------------------- Prop Hunt General Options 4000 - 4999 -------------------------- //
-        /*
+        
         propHuntMap = Create(4020, Types.PropHunt, cs(Color.yellow, "CustomMap"),
             ["Skeld", "Mira", "Polus", "Airship", "Fungle", "Submerged", "LevelImpostor"], null, true, () =>
             {
@@ -1473,6 +1475,5 @@ public class CustomOptionHolder
         propHuntSpeedboostCooldown = Create(4017, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostCooldown"), 45f, 2.5f, 120f, 2.5f, propHuntSpeedboostEnabled);
         propHuntSpeedboostDuration = Create(4018, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostDuration"), 10f, 2.5f, 30f, 2.5f, propHuntSpeedboostEnabled);
         propHuntSpeedboostSpeed = Create(4019, Types.PropHunt, cs(Palette.CrewmateBlue, "propHuntSpeedboostSpeed"), 2f, 1.25f, 5f, 0.25f, propHuntSpeedboostEnabled);
-    */
     }
 }

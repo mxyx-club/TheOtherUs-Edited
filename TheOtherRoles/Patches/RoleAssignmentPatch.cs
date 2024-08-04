@@ -89,7 +89,6 @@ internal class RoleManagerSelectRolesPatch
         if (isGuesserGamemode) assignGuesserGamemode();
         assignModifiers(); // Assign modifier
         setRolesAgain(); //brb
-        if (Jackal.jackal != null) Jackal.setSwoop();
     }
 
     public static RoleAssignmentData getRoleAssignmentData()

@@ -443,7 +443,7 @@ internal class PropHunt
             float bestDist = 9999;
             if (whitelistedObjects == null || whitelistedObjects.Count == 0 || verbose)
             {
-                updateWhitelistedObjects(true);
+                updateWhitelistedObjects(MapOption.DebugMode);
             }
             foreach (var collider in Physics2D.OverlapCircleAll(origin.transform.position, radius))
             {
