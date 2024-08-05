@@ -36,7 +36,7 @@ jobs:
 
       - name: Download and Unzip BepInEx
         run: |
-          wget https://builds.bepinex.dev/projects/bepinex_be/688/BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.688%2B4901521.zip -O BepInEx.zip
+          wget https://builds.bepinex.dev/projects/bepinex_be/692/BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.692%2B851521c.zip -O BepInEx.zip
           unzip BepInEx.zip -d ./Release/
           sudo chmod -R 777 ./Release
 
