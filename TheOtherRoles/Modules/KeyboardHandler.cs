@@ -19,6 +19,7 @@ public class CommandHandler
     {
         if (AmongUsClient.Instance && (AmongUsClient.Instance.AmHost || MapOption.DebugMode))
         {
+            /*
             // 生成假人
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.F) && Input.GetKeyDown(KeyCode.Return))
             {
@@ -26,7 +27,7 @@ public class CommandHandler
                 _ = playerControl.PlayerId = (byte)GameData.Instance.GetAvailableId();
 
                 bots.Add(playerControl);
-                GameData.Instance.AddPlayer(playerControl);
+                GameData.Instance.AddPlayer(playerControl, new InnerNet.ClientData(0));
                 AmongUsClient.Instance.Spawn(playerControl);
 
                 playerControl.transform.position = CachedPlayer.LocalPlayer.transform.position;
@@ -34,8 +35,8 @@ public class CommandHandler
                 playerControl.NetTransform.enabled = false;
                 playerControl.SetName(RandomString(6));
                 playerControl.SetColor((byte)random.Next(Palette.PlayerColors.Length));
-                GameData.Instance.RpcSetTasks(playerControl.PlayerId, Array.Empty<byte>());
-            }
+                playerControl.Data.RpcSetTasks(Array.Empty<byte>());
+            }*/
             // 结束游戏
             if (InGame && Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Return))
             {

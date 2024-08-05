@@ -69,6 +69,9 @@ public static class Helpers
     public static bool IsCountDown => GameStartManager.InstanceExists && GameStartManager.Instance.startState == GameStartManager.StartingStates.Countdown;
     public static bool IsMeeting => InGame && MeetingHud.Instance;
 
+    public static List<T> ToList<T>(this Il2CppSystem.Collections.Generic.List<T> list) => [.. list];
+    public static T Find<T>(this Il2CppSystem.Collections.Generic.List<T> data, Predicate<T> match) => data.ToList().Find(match);
+
     /// <summary>
     /// 假任务
     /// </summary>
@@ -116,7 +119,7 @@ public static class Helpers
     /// <summary>
     /// 红狼视野
     /// </summary>
-    public static bool hasImpVision(GameData.PlayerInfo player)
+    public static bool hasImpVision(NetworkedPlayerInfo player)
     {
         return player.Role.IsImpostor
                || (((Jackal.jackal != null && Jackal.jackal.PlayerId == player.PlayerId) || Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.hasImpostorVision)
@@ -331,7 +334,7 @@ public static class Helpers
         return false;
     }
 
-    public static void NoCheckStartMeeting(this PlayerControl reporter, GameData.PlayerInfo target, bool force = false)
+    public static void NoCheckStartMeeting(this PlayerControl reporter, NetworkedPlayerInfo target, bool force = false)
     {
         if (IsMeeting) return;
 
@@ -1020,9 +1023,22 @@ public static class Helpers
             ToByte(c.a), s);
     }
 
+    public static Color HexToColor(string hex)
+    {
+        Color color = new();
+        ColorUtility.TryParseHtmlString("#" + hex, out color);
+        return color;
+    }
+
     public static int lineCount(string text)
     {
         return text.Count(c => c == '\n');
+    }
+
+    public static void AddModSettingsChangeMessage(this NotificationPopper popper, StringNames key, string value, string option, bool playSound = true)
+    {
+        string str = DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.LobbyChangeSettingNotification, "<font=\"Barlow-Black SDF\" material=\"Barlow-Black Outline\">" + option + "</font>", "<font=\"Barlow-Black SDF\" material=\"Barlow-Black Outline\">" + value + "</font>");
+        popper.SettingsChangeMessageLogic(key, str, playSound);
     }
 
     private static byte ToByte(float f)
@@ -1218,7 +1234,7 @@ public static class Helpers
     }
 
     public static MurderAttemptResult checkMuderAttempt(PlayerControl killer, PlayerControl target,
-        bool blockRewind = false, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
+        bool blockRewind = false, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false, bool ignoreMedic = false)
     {
         var targetRole = RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault();
 
@@ -1282,7 +1298,7 @@ public static class Helpers
         }
 
         // Block impostor shielded kill
-        if (!Medic.unbreakableShield && Medic.shielded != null && Medic.shielded == target)
+        if (!ignoreMedic && !Medic.unbreakableShield && Medic.shielded != null && Medic.shielded == target)
         {
             var write = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                 (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
@@ -1573,13 +1589,14 @@ public static class Helpers
                 cam.orthographicSize =
                     orthographicSize; // The UI is scaled too, else we cant click the buttons. Downside: map is super small.
 
-        if (HudManagerStartPatch.zoomOutButton != null)
+        var tzGO = GameObject.Find("TOGGLEZOOMBUTTON");
+        if (tzGO != null)
         {
-            HudManagerStartPatch.zoomOutButton.Sprite = zoomOutStatus
-                ? loadSpriteFromResources("TheOtherRoles.Resources.PlusButton.png", 60f)
-                : loadSpriteFromResources("TheOtherRoles.Resources.MinusButton.png", 150f);
-            HudManagerStartPatch.zoomOutButton.PositionOffset =
-                zoomOutStatus ? new Vector3(0f, 3f, 0) : new Vector3(0.4f, 2.8f, 0);
+            var rend = tzGO.transform.Find("Inactive").GetComponent<SpriteRenderer>();
+            var rendActive = tzGO.transform.Find("Active").GetComponent<SpriteRenderer>();
+            rend.sprite = zoomOutStatus ? loadSpriteFromResources("TheOtherRoles.Resources.Plus_Button.png", 100f) : loadSpriteFromResources("TheOtherRoles.Resources.Minus_Button.png", 100f);
+            rendActive.sprite = zoomOutStatus ? loadSpriteFromResources("TheOtherRoles.Resources.Plus_ButtonActive.png", 100f) : loadSpriteFromResources("TheOtherRoles.Resources.Minus_ButtonActive.png", 100f);
+            tzGO.transform.localScale = new Vector3(1.2f, 1.2f, 1f) * (zoomOutStatus ? 4 : 1);
         }
 
         ResolutionManager.ResolutionChanged.Invoke((float)Screen.width / Screen.height, Screen.width, Screen.height,

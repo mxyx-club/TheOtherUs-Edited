@@ -36,12 +36,12 @@ public class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> GhostsSeeInformation { get; set; }
     public static ConfigEntry<bool> GhostsSeeRoles { get; set; }
     public static ConfigEntry<bool> GhostsSeeModifier { get; set; }
-    public static ConfigEntry<bool> GhostsSeeVotes { get; set; }
     public static ConfigEntry<bool> ShowRoleSummary { get; set; }
     public static ConfigEntry<bool> EnableSoundEffects { get; set; }
     public static ConfigEntry<bool> ToggleCursor { get; set; }
-    public static ConfigEntry<bool> enableDebugLogMode { get; set; }
     public static ConfigEntry<bool> ShowFPS { get; set; }
+    public static ConfigEntry<bool> ShowChatNotifications { get; set; }
+    public static ConfigEntry<bool> MuteLobbyBGM { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
     public static ConfigEntry<string> ShowPopUpVersion { get; set; }
@@ -87,17 +87,21 @@ public class TheOtherRolesPlugin : BasePlugin
         GhostsSeeInformation = Config.Bind("Custom", "Ghosts See Remaining Tasks", true);
         GhostsSeeRoles = Config.Bind("Custom", "Ghosts See Roles", true);
         GhostsSeeModifier = Config.Bind("Custom", "Ghosts See Modifier", true);
-        GhostsSeeVotes = Config.Bind("Custom", "Ghosts See Votes", true);
         ShowRoleSummary = Config.Bind("Custom", "Show Role Summary", true);
         ToggleCursor = Config.Bind("Custom", "Better Cursor", true);
         EnableSoundEffects = Config.Bind("Custom", "Enable Sound Effects", true);
-        ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
-        enableDebugLogMode = Config.Bind("Custom", "Debug Log Mode", false);
         ShowFPS = Config.Bind("Custom", "Show FPS", true);
+        ShowChatNotifications = Config.Bind("Custom", "Show Chat Notifications", true);
+        MuteLobbyBGM = Config.Bind("Custom", "Mute Lobby BGM", true);
+
+        ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
         defaultRegions = ServerManager.DefaultRegions;
+
+        // Removes vanilla Servers
+        ServerManager.DefaultRegions = new Il2CppReferenceArray<IRegionInfo>(new IRegionInfo[0]);
 
         UpdateRegions();
 #if !SUNDAY

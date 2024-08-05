@@ -4,6 +4,7 @@ using System.Linq;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using Hazel;
+using InnerNet;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
@@ -131,14 +132,15 @@ internal class PropHunt
             false);
     }
 
-    public static void updateWhitelistedObjects()
+    public static void updateWhitelistedObjects(bool debug = false)
     {
-        var allNames = readTextFromResources("TheOtherRoles.Resources.Txt.Props.txt");
-        Message("after debug");
-        whitelistedObjects = allNames.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
-        Message("after split");
+        string allNames = readTextFromResources("TheOtherRoles.Resources.Txt.Props.txt");
+        if (debug)
+        {
+            allNames = readTextFromFile(System.IO.Directory.GetCurrentDirectory() + "\\Props.txt");
+        }
 
-        Message($"Last element: {whitelistedObjects.Last()}");
+        whitelistedObjects = allNames.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
     }
 
 
@@ -190,9 +192,8 @@ internal class PropHunt
         {
             poolablesBackground = new GameObject("poolablesBackground");
             poolablesBackground.AddComponent<SpriteRenderer>();
-            if (poolablesBackgroundSprite == null)
-                poolablesBackgroundSprite =
-                    loadSpriteFromResources("TheOtherRoles.Resources.poolablesBackground.jpg", 200f);
+            poolablesBackground.layer = LayerMask.NameToLayer("UI");
+            if (poolablesBackgroundSprite == null) poolablesBackgroundSprite = loadSpriteFromResources("TheOtherRoles.Resources.poolablesBackground.jpg", 200f);
         }
 
         poolablesBackground.transform.SetParent(HudManager.Instance.transform);
@@ -228,10 +229,6 @@ internal class PropHunt
             {
                 // Display Prop
                 poolablePlayer.cosmetics.nameText.text = cs(Palette.CrewmateBlue, pc.Data.PlayerName);
-                ;
-                if (isCurrentlyRevealed.ContainsKey(pc.PlayerId))
-                {
-                }
             }
 
             // update currently revealed:
@@ -240,6 +237,7 @@ internal class PropHunt
                 if (!revealRenderer.ContainsKey(pc.PlayerId))
                 {
                     var go = new GameObject($"reveal_renderer_{pc.PlayerId}");
+                    go.layer = LayerMask.NameToLayer("UI");
                     go.AddComponent<SpriteRenderer>();
                     go.transform.SetParent(poolablePlayer.transform.parent, false);
                     go.SetActive(true);
@@ -312,6 +310,7 @@ internal class PropHunt
 
     public static void dangerMeterUpdate()
     {
+        if (!HudManager.Instance || !HudManager.Instance.DangerMeter) return;
         if (HudManager.Instance.DangerMeter.gameObject.active)
         {
             var dist = 55f;
@@ -442,7 +441,10 @@ internal class PropHunt
         {
             Collider2D bestCollider = null;
             float bestDist = 9999;
-            if (whitelistedObjects == null || whitelistedObjects.Count == 0 || verbose) updateWhitelistedObjects();
+            if (whitelistedObjects == null || whitelistedObjects.Count == 0 || verbose)
+            {
+                updateWhitelistedObjects(MapOption.DebugMode);
+            }
             foreach (var collider in Physics2D.OverlapCircleAll(origin.transform.position, radius))
             {
                 if (verbose) Message($"Nearby Object: {collider.gameObject.name}");
@@ -641,7 +643,7 @@ internal class PropHunt
 
     [HarmonyPatch(typeof(MapConsole), nameof(MapConsole.CanUse))]
     [HarmonyPostfix]
-    public static void AdminCanUsePostfix(MapConsole __instance, GameData.PlayerInfo pc, ref bool canUse,
+    public static void AdminCanUsePostfix(MapConsole __instance, NetworkedPlayerInfo pc, ref bool canUse,
         ref bool couldUse, ref float __result)
     {
         if (!isPropHuntGM || !PlayerControl.LocalPlayer.Data.Role.IsImpostor) return;
@@ -703,25 +705,20 @@ internal class PropHunt
     [HarmonyPrefix]
     public static bool KillButtonClickPatch(KillButton __instance)
     {
-        if (!isPropHuntGM || __instance.isCoolingDown || PlayerControl.LocalPlayer.Data.IsDead ||
-            PlayerControl.LocalPlayer.inVent) return false;
-
-        __instance.SetTarget(PlayerControl.LocalPlayer.Data.Role
-            .GetPlayersInAbilityRangeSorted(RoleBehaviour.GetTempPlayerList(), true).ToArray().FirstOrDefault());
+        if (!isPropHuntGM || __instance.isCoolingDown || PlayerControl.LocalPlayer.Data.IsDead || PlayerControl.LocalPlayer.inVent) return false;
+        var targets = PlayerControl.LocalPlayer.Data.Role.GetPlayersInAbilityRangeSorted(RoleBehaviour.GetTempPlayerList(), true).ToArray();
+        __instance.SetTarget(PlayerControl.LocalPlayer.Data.Role.GetPlayersInAbilityRangeSorted(RoleBehaviour.GetTempPlayerList(), true).ToArray().FirstOrDefault());
 
         if (__instance.currentTarget == null)
         {
             PlayerControl.LocalPlayer.SetKillTimer(killCooldownMiss);
         }
         else
-        {
-            // There is a target, execute kill!
-            var res = checkMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl,
-                __instance.currentTarget);
+        {  // There is a target, execute kill!
+            MurderAttemptResult res = checkMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl, __instance.currentTarget);
             __instance.SetTarget(null);
             PlayerControl.LocalPlayer.SetKillTimer(killCooldownHit);
         }
-
         return false;
     }
 
@@ -733,6 +730,14 @@ internal class PropHunt
         if (opts.Mode == MapOptions.Modes.Sabotage) opts.Mode = MapOptions.Modes.Normal;
     }
 
+    [HarmonyPatch(typeof(RoleBehaviour), nameof(RoleBehaviour.IsValidTarget))]
+    [HarmonyPrefix]
+    public static bool IsValidTarget(RoleBehaviour __instance, NetworkedPlayerInfo target, ref bool __result)
+    {
+        if (!isPropHuntGM) return true;
+        __result = !(target == null) && !target.Disconnected && !target.IsDead && target.PlayerId != __instance.Player.PlayerId && !(target.Role == null) && !(target.Object == null) && !target.Object.inVent && !target.Object.inMovingPlat;
+        return false;
+    }
 
     // Disable a lot of stuff
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
@@ -752,10 +757,11 @@ public static class PropSpeedFix
     {
         if (__instance != null
             && __instance.AmOwner
-            && GameData.Instance
+            && AmongUsClient.Instance != null
+            && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started
+            && PropHunt.isPropHuntGM
             && !CachedPlayer.LocalPlayer.Data.IsDead
-            && __instance.myPlayer.CanMove
-            && PropHunt.isPropHuntGM)
+            && __instance.myPlayer.CanMove)
         {
             var players = CachedPlayer.LocalPlayer.PlayerControl;
             if (players.Data.Role.IsImpostor) __instance.body.velocity *= PropHunt.hunterSpeed;

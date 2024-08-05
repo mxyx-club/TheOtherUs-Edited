@@ -10,12 +10,13 @@ using UnityEngine;
 
 namespace TheOtherRoles.Patches;
 
-[HarmonyPatch(typeof(RoleOptionsCollectionV07), nameof(RoleOptionsCollectionV07.GetNumPerGame))]
+[HarmonyPatch(typeof(RoleOptionsCollectionV08), nameof(RoleOptionsCollectionV08.GetNumPerGame))]
 internal class RoleOptionsDataGetNumPerGamePatch
 {
     public static void Postfix(ref int __result)
     {
-        if (GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal) __result = 0; // Deactivate Vanilla Roles if the mod roles are active
+        // Deactivate Vanilla Roles if the mod roles are active
+        if (GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal) __result = 0;
     }
 }
 
@@ -88,7 +89,6 @@ internal class RoleManagerSelectRolesPatch
         if (isGuesserGamemode) assignGuesserGamemode();
         assignModifiers(); // Assign modifier
         setRolesAgain(); //brb
-        if (Jackal.jackal != null) Jackal.setSwoop();
     }
 
     public static RoleAssignmentData getRoleAssignmentData()
@@ -767,7 +767,7 @@ internal class RoleManagerSelectRolesPatch
 
         playerRoleMap.Add(new Tuple<byte, byte>(playerId, roleId));
 
-        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
             (byte)CustomRPC.SetRole, SendOption.Reliable);
         writer.Write(roleId);
         writer.Write(playerId);

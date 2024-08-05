@@ -52,13 +52,21 @@
         "0": "Enable Debug Log Mode",
         "13": "\u6536\u96c6Debug\u65e5\u5fd7"
     },
+    "ShowChatNotificationsText": {
+        "0": "Show Chat Notifications",
+        "13": "\u663e\u793a\u804a\u5929\u6c14\u6ce1"
+    },
+    "MuteLobbyBGMText": {
+        "0": "Mute Lobby BGM",
+        "13": "\u9759\u97f3\u5927\u5385BGM"
+    },
     "pressTabForMore": {
         "0": "\n Press TAB or Page Number for more... ({0}/{1})",
         "13": "\n \u6309Tab\u952e\u67e5\u770b\u66f4\u591a... ({0}/{1})"
     },
     "useScrollWheel": {
-        "0": "(Use scroll wheel if necessary)\n\n",
-        "13": "(\u5982\u6709\u5fc5\u8981\uff0c\u8bf7\u4f7f\u7528\u6eda\u8f6e)\n\n"
+        "0": "(Use scroll wheel if necessary)",
+        "13": "(\u5982\u6709\u5fc5\u8981\uff0c\u8bf7\u4f7f\u7528\u6eda\u8f6e)"
     },
     "KillDistancesVeryShort": {
         "0": "Very Short",
@@ -68,32 +76,40 @@
         "0": "The Other Us Settings",
         "13": "\u6a21\u7ec4\u8bbe\u7f6e"
     },
+    "roleOverview": {
+        "0": "Role Overview",
+        "13": "\u804c\u4e1a\u4e00\u89c8"
+    },
     "impostorRolesSettings": {
-        "0": "Impostor Roles Settings",
+        "0": "Impostor Roles",
         "13": "\u4f2a\u88c5\u8005\u804c\u4e1a\u8bbe\u7f6e"
     },
     "neutralRolesSettings": {
-        "0": "Neutral Roles Settings",
+        "0": "Neutral Roles",
         "13": "\u4e2d\u7acb\u804c\u4e1a\u8bbe\u7f6e"
     },
     "crewmateRolesSettings": {
-        "0": "Crewmate Roles Settings",
+        "0": "Crewmate Roles",
         "13": "\u8239\u5458\u804c\u4e1a\u8bbe\u7f6e"
     },
     "modifierSettings": {
-        "0": "Modifier Settings",
+        "0": "Modifiers",
         "13": "\u9644\u52a0\u80fd\u529b\u8bbe\u7f6e"
     },
     "guesserSettings": {
-        "0": "Guesser Mode Settings",
+        "0": "Guesser Mode",
         "13": "\u8d4c\u602a\u6a21\u5f0f\u8bbe\u7f6e"
     },
     "hideNSeekSettings": {
-        "0": "Hide 'N Seek Settings",
+        "0": "Hide 'N Seek",
         "13": "\u8eb2\u732b\u732b\u6a21\u5f0f\u8bbe\u7f6e"
     },
+    "hideNSeekRoleSettings": {
+        "0": "Hide 'N' Seek Roles",
+        "13": "\u8eb2\u732b\u732b\u804c\u4e1a\u8bbe\u7f6e"
+    },
     "PropHuntSettings": {
-        "0": "Prop Hunt Settings",
+        "0": "Prop Hunt",
         "13": "\u9053\u5177\u8eb2\u732b\u732b\u6a21\u5f0f\u8bbe\u7f6e"
     },
     "CrewmateRolesText": {
@@ -133,8 +149,8 @@
         "13": "\u586b\u5145: "
     },
     "EvilLove": {
-        "0": "Evil",
-        "13": "\u90aa\u6076\u604b\u4eba"
+        "0": "1 Evil :",
+        "13": "\u90aa\u6076\u604b\u4eba :"
     },
     "Evil": {
         "0": "Evil",
@@ -177,7 +193,7 @@
         "0": "Page 2: Hide N Seek Role Settings \n\n",
         "13": "\u7b2c2\u9875\uff1a\u8eb2\u732b\u732b\u804c\u4e1a\u8bbe\u7f6e \n\n"
     },
-    "PropHuntPage": {
+    "propHuntPage": {
         "0": "Page 1: Prop Hunt Settings \n\n",
         "13": "\u7b2c1\u9875: \u9053\u5177\u8eb2\u732b\u732b\u6a21\u5f0f\u8bbe\u7f6e \n\n"
     },
@@ -185,6 +201,10 @@
         "0": "{0} and the ship has {1}",
         "11": "{0}\u3068\u8239\u306b{1}\u304c\u3044\u307e\u3059",
         "13": "{0}\u6b21\uff0c\u5168\u8239\u5269\u4f59{1}\u6b21"
+    },
+    "optionSpawnChance": {
+        "0": "Spawn Chance",
+        "13": "\u51e0\u7387 %"
     },
     "optionOff": {
         "0": "Off",
@@ -532,6 +552,9 @@
     "debugMode": {
         "0": "Enable Debug Mode",
         "13": "\u5f00\u542f Debug \u6a21\u5f0f"
+    },
+    "debugModeSeeRoles": {
+        "13": "\u6240\u6709\u4eba\u53ef\u4ee5\u67e5\u770b\u804c\u4e1a"
     },
     "guesserGamemodeCrewNumber": {
         "0": "Number of Crew Guessers",
@@ -1144,6 +1167,10 @@
         "0": "Vulture Can Use Vents",
         "13": "\u53ef\u4f7f\u7528\u7ba1\u9053"
     },
+    "killCooldown": {
+        "0": "Kill Cooldown",
+        "13": "\u51fb\u6740\u51b7\u5374"
+    },
     "jesterCanCallEmergency": {
         "0": "Jester Can Call Emergency Meeting",
         "13": "\u5c0f\u4e11\u53ef\u53ec\u5f00\u4f1a\u8bae"
@@ -1262,6 +1289,7 @@
         "13": "\u8c7a\u72fc\u548c\u5df4\u6d66\u6d1b\u592b\u53ea\u4f1a\u51fa\u73b0\u4e00\u4e2a"
     },
     "pavlovsownerKillCooldown": {
+        "0": "Kill Cooldown",
         "13": "\u51fb\u6740\u51b7\u5374"
     },
     "pavlovsownerCreateDogCooldown": {
@@ -1271,6 +1299,7 @@
         "13": "\u53ef\u4ee5\u9a6f\u5316\u7684\u6b21\u6570"
     },
     "pavlovsownerCanUseSabo": {
+        "0": "Pavlovs Team Can Sabotage",
         "13": "\u53ef\u4ee5\u7834\u574f"
     },
     "pavlovsownerHasImpostorVision": {
@@ -1278,6 +1307,7 @@
         "13": "\u62e5\u6709\u4f2a\u88c5\u8005\u89c6\u91ce"
     },
     "pavlovsownerCanUseVents": {
+        "0": "Can Use Vents",
         "13": "\u53ef\u4ee5\u4f7f\u7528\u7ba1\u9053"
     },
     "pavlovsownerCanUseVents3": {
@@ -1294,10 +1324,6 @@
     },
     "pavlovsownerRampageDeathTimeIsMeetingReset": {
         "13": "\u4f1a\u8bae\u540e\u91cd\u7f6e\u81ea\u6740\u65f6\u9650"
-    },
-    "swooperKillCooldown": {
-        "0": "Kill Cooldown",
-        "13": "\u51fb\u6740\u51b7\u5374"
     },
     "swooperCooldown": {
         "0": "Swoop Cooldown",
@@ -1325,9 +1351,6 @@
     },
     "werewolfKillCooldown": {
         "0": "Kill Cooldown",
-        "13": "\u51fb\u6740\u51b7\u5374"
-    },
-    "juggernautCooldown": {
         "13": "\u51fb\u6740\u51b7\u5374"
     },
     "juggernautHasImpVision": {
@@ -2188,19 +2211,35 @@
         "13": "<color=#ff351f>TheOtherUs-Edited</color>"
     },
     "inGameTitle": {
-        "0": "<size=75%>Modified by <color=#FFB793>mxyx.club</color>\nBased on TheOtherUs</size>",
-        "13": "<size=80%><color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> - <color=#FFB793>mxyx.club</color></size>"
+        "0": "<size=75%>Modified by <color=#FFB792>mxyx.club</color>\nBased on TheOtherUs</size>",
+        "13": "<size=90%>\u6a21\u7ec4\u4fee\u6539: <color=#FFB793>\u6cab\u590f\u60a0\u8f69 & \u5584\u826f\u7684\u597d\u4eba</color> </size>"
+    },
+    "inGameTitle2": {
+        "0": "<size=75%>Modified by <color=#FFB792>mxyx.club</color>\nBased on TheOtherUs</size>",
+        "13": "<size=80%><color=#FFB793>\u6cab\u590f\u60a0\u8f69</color> - <color=#FFB792>mxyx.club</color></size>"
+    },
+    "GameMode": {
+        "0": "Game Mode",
+        "13": "\u6e38\u620f\u6a21\u5f0f"
+    },
+    "isClassicGM": {
+        "0": "Classic",
+        "13": "\u7ecf\u5178\u6a21\u5f0f"
+    },
+    "isVanHideNSeekGM": {
+        "0": "Van. HideNSeek",
+        "13": "\u539f\u7248\u8eb2\u732b\u732b"
     },
     "isHideNSeekGM": {
-        "0": "HideNSeek",
+        "0": "TOU Hide N Seek",
         "13": "\u730e\u6740\u6a21\u5f0f"
     },
     "isGuesserGm": {
-        "0": "Guesser",
+        "0": "TOU Guesser",
         "13": "\u8d4c\u602a\u6a21\u5f0f"
     },
     "isPropHuntGM": {
-        "0": "PropHunt",
+        "0": "TOU Prop Hunt",
         "13": "\u9053\u5177\u8eb2\u732b\u732b"
     },
     "Credits": {
@@ -2220,7 +2259,7 @@
         "13": "<size=80%> <color=#FCCE03FF>\u7279\u522b\u611f\u8c22\uff1aSpex & \u5584\u826f\u7684\u597d\u4eba & \u5929\u5bf8\u68a6\u521d & Imp11</color></size>"
     },
     "creditsString1": {
-        "0": "<align=\"center\"><b>TheOtherUs-Edited Team:</b>\nmxyx    Huier-Huang    haoren\nImp2    FangKuaiYa\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles, SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n\n",
+        "0": "<align=\"center\"><b>TheOtherUs-Edited Dev Team:</b>\nmxyx0412    TianMengLucky    haoren\nImp11    FangKuaiYa\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles, SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n\n",
         "13": "<align=\"center\"><b>TheOtherUs-Edited \u5f00\u53d1\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    \u5584\u826f\u7684\u597d\u4eba    Imp11\n\n<b>\u7f8e\u5de5:</b>\n\u65b9\u5757    \u9ece\u6728\n\n<b>\u7ffb\u8bd1:</b>\nEN\uff1a\u4e5d\u5934\u86c7\nCN\uff1a\u6cab\u590f\u60a0\u8f69\n\n<b>GitHub\u8d21\u732e\u8005:</b>\n\u6cab\u590f\u60a0\u8f69    \u5929\u5bf8\u68a6\u521d    Imp11\n\n\u672c\u6a21\u7ec4\u4f7f\u7528\u4e86\u90e8\u5206[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA]\u7684\u4ee3\u7801\uff0c\u611f\u8c22Imp11\u7684\u652f\u6301\uff01\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
     },
     "Host": {
@@ -2249,7 +2288,7 @@
     },
     "lobbyInfoSummary": {
         "0": "Role Summary",
-        "11": "\u5f79\u8077\u306e\u6982\u8981"
+        "13": "\u804c\u4e1a\u89e3\u91ca\u4e00\u89c8"
     },
     "seerShowInfoText": {
         "0": "Seer Info: Someone Died",

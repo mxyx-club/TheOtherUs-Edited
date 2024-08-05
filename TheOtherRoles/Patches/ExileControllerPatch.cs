@@ -14,9 +14,9 @@ namespace TheOtherRoles.Patches;
 [HarmonyPriority(Priority.First)]
 internal class ExileControllerBeginPatch
 {
-    public static GameData.PlayerInfo lastExiled;
+    public static NetworkedPlayerInfo lastExiled;
 
-    public static void Prefix(ExileController __instance, [HarmonyArgument(0)] ref GameData.PlayerInfo exiled,
+    public static void Prefix(ExileController __instance, [HarmonyArgument(0)] ref NetworkedPlayerInfo exiled,
         [HarmonyArgument(1)] bool tie)
     {
         lastExiled = exiled;
@@ -208,7 +208,7 @@ internal class ExileControllerWrapUpPatch
         }
     }
 
-    private static void WrapUpPostfix(GameData.PlayerInfo exiled)
+    private static void WrapUpPostfix(NetworkedPlayerInfo exiled)
     {
         // Prosecutor win condition
         if (exiled != null && Executioner.executioner != null && Executioner.target != null &&
@@ -409,9 +409,9 @@ internal class ExileControllerMessagePatch
                 if (id is StringNames.ExileTextPN or StringNames.ExileTextSN or StringNames.ExileTextPP or StringNames.ExileTextSP)
                     __result = $"{player.Data.PlayerName} 的职业是 {string.Join(" ", RoleInfo.getRoleInfoForPlayer(player, false).Select(x => x.name).ToArray())}";
                 // Hide number of remaining impostors on Jester win
-                if (id is StringNames.ImpostorsRemainP or StringNames.ImpostorsRemainS)
-                    if (Jester.jester != null && player.PlayerId == Jester.jester.PlayerId)
-                        __result = "";
+                if (Jester.jester != null && player.PlayerId == Jester.jester.PlayerId)
+                    if (id is StringNames.ImpostorsRemainP or StringNames.ImpostorsRemainS) __result = "";
+
                 if (Prosecutor.ProsecuteThisMeeting) __result += " (被起诉)";
                 else if (Tiebreaker.isTiebreak)
                 {

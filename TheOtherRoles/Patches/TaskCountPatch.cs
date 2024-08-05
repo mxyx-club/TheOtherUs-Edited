@@ -54,7 +54,7 @@ class TaskCount
                 __instance.Arrows?.DoIf(x => x != null && x.isActiveAndEnabled, x => x.gameObject?.SetActive(false));
         }
     }
-    public static Tuple<int, int> TaskDateNoClearCheck(GameData.PlayerInfo playerInfo)
+    public static Tuple<int, int> TaskDateNoClearCheck(NetworkedPlayerInfo playerInfo)
     {
         int TotalTasks = 0;
         int CompletedTasks = 0;
@@ -69,7 +69,7 @@ class TaskCount
         }
         return Tuple.Create(CompletedTasks, TotalTasks);
     }
-    public static Tuple<int, int> TaskDate(GameData.PlayerInfo playerInfo)
+    public static Tuple<int, int> TaskDate(NetworkedPlayerInfo playerInfo)
     {
         int TotalTasks = 0;
         int CompletedTasks = 0;

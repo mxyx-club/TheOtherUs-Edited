@@ -151,7 +151,7 @@ public enum CustomRPC
     UncheckedExilePlayer,
     DynamicMapOption,
     SetGameStarting,
-    ShareGamemode,
+    ShareGameMode,
     StopStart,
 
     // Role functionality
@@ -332,7 +332,7 @@ public static class RPCProcedure
                 var optionId = reader.ReadPackedUInt32();
                 var selection = reader.ReadPackedUInt32();
                 var option = CustomOption.options.First(option => option.id == (int)optionId);
-                option.updateSelection((int)selection);
+                option.updateSelection((int)selection, i == numberOfOptions - 1);
             }
         }
         catch (Exception e)
@@ -350,7 +350,7 @@ public static class RPCProcedure
                 GameData.Instance
                     .GetPlayerById(player
                         .PlayerId); // player.RemoveInfected(); (was removed in 2022.12.08, no idea if we ever need that part again, replaced by these 2 lines.) 
-                player.SetRole(RoleTypes.Crewmate);
+                player.CoSetRole(RoleTypes.Crewmate, true);
 
                 player.MurderPlayer(player);
                 player.Data.IsDead = true;
@@ -360,6 +360,13 @@ public static class RPCProcedure
     public static void shareGameMode(byte gm)
     {
         gameMode = (CustomGamemodes)gm;
+        try
+        {
+            LobbyViewSettingsPatch.currentButtons?.ForEach(x => x.gameObject?.Destroy());
+            LobbyViewSettingsPatch.currentButtons?.Clear();
+            LobbyViewSettingsPatch.currentButtonTypes?.Clear();
+        }
+        catch { }
     }
     public static void stopStart(byte playerId)
     {
@@ -489,6 +496,7 @@ public static class RPCProcedure
                         break;
                     case RoleId.Jackal:
                         Jackal.jackal = player;
+                        Jackal.setSwoop();
                         break;
                     case RoleId.Sidekick:
                         Sidekick.sidekick = player;
@@ -613,7 +621,7 @@ public static class RPCProcedure
             if (AmongUsClient.Instance.AmHost && Helpers.roleCanUseVents(player) && !player.Data.Role.IsImpostor)
             {
                 player.RpcSetRole(RoleTypes.Engineer);
-                player.SetRole(RoleTypes.Engineer);
+                player.CoSetRole(RoleTypes.Engineer, true);
             }
         }
     }
@@ -1719,7 +1727,7 @@ public static class RPCProcedure
             }
             terroristButton.Timer = terroristButton.MaxTimer;
         }
-        else if (Morphling.morphling)
+        else if (Morphling.morphling == killer)
         {
             var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.MorphlingMorph, SendOption.Reliable);
@@ -3038,7 +3046,8 @@ public static class RPCProcedure
                 return;
             }
         }
-
+#nullable disable
+        bool lawyerDiedAdditionally = false;
         if (Lawyer.lawyer != null && Lawyer.lawyer.PlayerId == killerId && Lawyer.target != null && Lawyer.target.PlayerId == dyingTargetId)
         {
             // Lawyer guessed client.
@@ -3049,6 +3058,8 @@ public static class RPCProcedure
             }
 
             Lawyer.lawyer.Exiled();
+            lawyerDiedAdditionally = true;
+            overrideDeathReasonAndKiller(Lawyer.lawyer, DeadPlayer.CustomDeathReason.LawyerSuicide, guesser);
         }
 
         var partnerId = dyingLoverPartner != null ? dyingLoverPartner.PlayerId : dyingTargetId;
@@ -3058,34 +3069,34 @@ public static class RPCProcedure
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
         byte akujoPartnerId = dyingAkujoPartner != null ? dyingAkujoPartner.PlayerId : byte.MaxValue;
 
+        // 末日预言家为赌怪时不会减少猜测次数
+        if (Doomsayer.doomsayer == null || Doomsayer.doomsayer != guesser) HandleGuesser.remainingShots(killerId, true);
+        if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
+
         if (MeetingHud.Instance)
         {
-            MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, dyingTargetId);
-            foreach (var pva in MeetingHud.Instance.playerStates)
+            foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates)
             {
-                if (pva.TargetPlayerId == dyingTargetId || pva.TargetPlayerId == partnerId || pva.TargetPlayerId == akujoPartnerId)
+                if (pva.TargetPlayerId == dyingTargetId || pva.TargetPlayerId == partnerId || lawyerDiedAdditionally && Lawyer.lawyer.PlayerId == pva.TargetPlayerId)
                 {
                     pva.SetDead(pva.DidReport, true);
                     pva.Overlay.gameObject.SetActive(true);
+                    MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, pva.TargetPlayerId);
                 }
 
                 //Give players back their vote if target is shot dead
-                if (pva.VotedFor != dyingTargetId || pva.VotedFor != partnerId) continue;
+                if (pva.VotedFor != dyingTargetId && pva.VotedFor != partnerId && (!lawyerDiedAdditionally || Lawyer.lawyer.PlayerId != pva.VotedFor)) continue;
                 pva.UnsetVote();
                 var voteAreaPlayer = playerById(pva.TargetPlayerId);
                 if (!voteAreaPlayer.AmOwner) continue;
                 MeetingHud.Instance.ClearVote();
-            }
 
+            }
             if (AmongUsClient.Instance.AmHost)
                 MeetingHud.Instance.CheckForEndVoting();
         }
 
-        if (Doomsayer.doomsayer == null || Doomsayer.doomsayer != guesser)
-        {
-            HandleGuesser.remainingShots(killerId, true);
-        }
-
+#nullable enable
         if (FastDestroyableSingleton<HudManager>.Instance != null && guesser != null)
         {
             if (CachedPlayer.LocalPlayer.PlayerControl == dyingTarget)
@@ -3148,7 +3159,6 @@ public static class RPCProcedure
                 FastDestroyableSingleton<UnityTelemetry>.Instance.SendWho();
         }
     }
-
 
     public static void useCameraTime(float time)
     {
@@ -3595,7 +3605,7 @@ internal class RPCHandlerPatch
     {
         var packetId = (CustomRPC)callId;
         if (RpcNames!.ContainsKey(packetId)) return;
-        if (enableDebugLogMode) Info($"接收 PlayerControl 原版Rpc RpcId{callId} Message Size {reader.Length}");
+        if (DebugMode) Info($"接收 PlayerControl 原版Rpc RpcId{callId} Message Size {reader.Length}");
     }
 
     private static bool Prefix([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
@@ -3607,7 +3617,7 @@ internal class RPCHandlerPatch
         if (!RpcNames!.ContainsKey(packetId))
             return true;
 
-        if (enableDebugLogMode) Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc Name{RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
+        if (DebugMode) Info($"接收 PlayerControl CustomRpc RpcId {callId} Rpc Name {RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
         switch (packetId)
         {
             // Main Controls
@@ -4049,7 +4059,7 @@ internal class RPCHandlerPatch
                 RPCProcedure.defuseBomb();
                 break;
 
-            case CustomRPC.ShareGamemode:
+            case CustomRPC.ShareGameMode:
                 var gm = reader.ReadByte();
                 RPCProcedure.shareGameMode(gm);
                 break;

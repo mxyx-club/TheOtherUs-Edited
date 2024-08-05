@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AmongUs.GameOptions;
 using InnerNet;
 using TheOtherRoles.Modules;
 using TMPro;
@@ -25,14 +26,11 @@ public static class CredentialsPatch
 
         private static void Postfix(PingTracker __instance)
         {
-
             DeltaTime += (Time.deltaTime - DeltaTime) * 0.1f;
             var fps = Mathf.Ceil(1f / DeltaTime);
-            var PingText = $"<size=80%>Ping: {AmongUsClient.Instance.Ping}ms{(MapOption.showFPS ? $"  FPS: {fps}" : "")}</size>";
-
+            var pingText = $"<size=80%>Ping: {AmongUsClient.Instance.Ping}ms{(MapOption.showFPS ? $"  FPS: {fps}" : "")}</size>";
             var host = $"<size=80%>{"Host".Translate()}: {GameData.Instance?.GetHost()?.PlayerName}</size>";
-
-            __instance.text.alignment = TextAlignmentOptions.TopRight;
+            __instance.text.SetOutlineThickness(0.01f);
             var position = __instance.GetComponent<AspectPosition>();
             var gameModeText = MapOption.gameMode switch
             {
@@ -42,18 +40,38 @@ public static class CredentialsPatch
                 _ => ""
             };
             if (MapOption.DebugMode) gameModeText += "(Debug Mode)";
-            if (gameModeText != "") gameModeText = cs(Color.yellow, gameModeText) + "\n";
+
+            if (!string.IsNullOrEmpty(gameModeText)) gameModeText = cs(Color.yellow, gameModeText) + "\n";
+
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {
-                __instance.text.text = $"<size=110%>{getString("TouTitle")}</size>  v{Main.Version + "\n" + getString("inGameTitle")}\n{PingText}\n{gameModeText}";
-                position.DistanceFromEdge = new Vector3(2.25f, 0.11f, 0);
+                __instance.text.alignment = TextAlignmentOptions.TopRight;
+                position.Alignment = AspectPosition.EdgeAlignments.RightTop;
+                __instance.text.text = $"<size=110%>{getString("TouTitle")}</size>  v{Main.Version}\n{getString("inGameTitle")}\n{gameModeText}{pingText}";
+                position.DistanceFromEdge = new Vector3(2.7f, 0.1f, 0);
             }
             else
             {
-                __instance.text.text = $"{fullCredentialsVersion}\n {PingText}\n  {gameModeText + fullCredentials}\n {host}";
-                position.DistanceFromEdge = new Vector3(3.5f, 0.1f, 0);
+                __instance.text.alignment = TextAlignmentOptions.TopLeft;
+                position.Alignment = AspectPosition.EdgeAlignments.LeftTop;
+                __instance.text.text = $"{fullCredentialsVersion}\n{pingText}\n{gameModeText}{fullCredentials}\n{host}";
+                position.DistanceFromEdge = new(0.4f, 0.06f);
+                try
+                {
+                    UpdateGameModeText(gameModeText);
+                }
+                catch { }
             }
             position.AdjustPosition();
+        }
+
+        private static void UpdateGameModeText(string gameModeText)
+        {
+            var GameModeText = GameObject.Find("GameModeText")?.GetComponent<TextMeshPro>();
+            GameModeText.text = string.IsNullOrEmpty(gameModeText) ? (GameOptionsManager.Instance.currentGameOptions.GameMode
+                == GameModes.HideNSeek ? "isVanHideNSeekGM".Translate() : "isClassicGM".Translate()) : gameModeText;
+            var modeLabel = GameObject.Find("ModeLabel")?.GetComponentInChildren<TextMeshPro>();
+            modeLabel.text = "GameMode".Translate();
         }
     }
 
@@ -112,32 +130,7 @@ public static class CredentialsPatch
 
         public static void loadSprites()
         {
-            if (bannerSprite == null)
-                bannerSprite = loadSpriteFromResources("TheOtherRoles.Resources.Banner.png", 300f);
-            if (banner2Sprite == null)
-                banner2Sprite = loadSpriteFromResources("TheOtherRoles.Resources.Banner2.png", 300f);
-            if (horseBannerSprite == null)
-                horseBannerSprite =
-                    loadSpriteFromResources("TheOtherRoles.Resources.bannerTheHorseRoles.png", 300f);
-        }
-
-        public static void updateSprite()
-        {
-            loadSprites();
-            if (renderer != null)
-            {
-                var fadeDuration = 1f;
-                instance.StartCoroutine(Effects.Lerp(fadeDuration, new Action<float>(p =>
-                {
-                    renderer.color = new Color(1, 1, 1, 1 - p);
-                    if (p == 1)
-                    {
-                        renderer.sprite = bannerSprite;
-                        instance.StartCoroutine(Effects.Lerp(fadeDuration,
-                            new Action<float>(p => { renderer.color = new Color(1, 1, 1, p); })));
-                    }
-                })));
-            }
+            if (bannerSprite == null) bannerSprite = loadSpriteFromResources("TheOtherRoles.Resources.Banner.png", 300f);
         }
     }
 

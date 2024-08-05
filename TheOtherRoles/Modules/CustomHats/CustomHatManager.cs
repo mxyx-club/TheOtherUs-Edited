@@ -100,12 +100,6 @@ public static class CustomHatManager
         hat.NoBounce = !ch.Bounce;
         hat.ChipOffset = new Vector2(0f, 0.2f);
         hat.Free = true;
-#if MXYX_CLUB
-        if (ch.Adaptive && cachedShader != null)
-        {
-            viewData.AltShader = cachedShader;
-        }
-#endif
         var extend = new HatExtension
         {
             Author = ch.Author ?? "Unknown",

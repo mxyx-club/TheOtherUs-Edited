@@ -2079,7 +2079,7 @@ internal class PlayerControlCmdReportDeadBodyPatch
 [HarmonyPatch(typeof(PlayerControl), nameof(CachedPlayer.LocalPlayer.PlayerControl.CmdReportDeadBody))]
 internal class BodyReportPatch
 {
-    private static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
+    private static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] NetworkedPlayerInfo target)
     {
         // Medic or Detective report
         var isMedicReport = Medic.medic != null && Medic.medic == CachedPlayer.LocalPlayer.PlayerControl &&
@@ -2604,20 +2604,19 @@ public static class PlayerPhysicsFixedUpdate
     public static void Postfix(PlayerPhysics __instance)
     {
         bool shouldInvert = Invert.invert.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count > 0 && Invert.meetings > 0;
-        if (__instance.AmOwner &&
-            AmongUsClient.Instance &&
-            AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
-            !CachedPlayer.LocalPlayer.Data.IsDead &&
-            shouldInvert &&
-            GameData.Instance &&
-            __instance.myPlayer.CanMove) __instance.body.velocity *= -1;
+        if (__instance.AmOwner
+            && InGame
+            && !CachedPlayer.LocalPlayer.Data.IsDead
+            && shouldInvert
+            && GameData.Instance
+            && __instance.myPlayer.CanMove) __instance.body.velocity *= -1;
 
-        if (__instance.AmOwner &&
-                AmongUsClient.Instance &&
-                AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
-                !CachedPlayer.LocalPlayer.Data.IsDead &&
-                GameData.Instance &&
-                __instance.myPlayer.CanMove)
+        if (__instance.AmOwner
+            && AmongUsClient.Instance
+            && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started
+            && !CachedPlayer.LocalPlayer.Data.IsDead
+            && GameData.Instance
+            && __instance.myPlayer.CanMove)
         {
             if (Flash.flash != null && Flash.flash.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId)) __instance.body.velocity *= Flash.speed;
             if (Giant.giant != null && Giant.giant == CachedPlayer.LocalPlayer.PlayerControl) __instance.body.velocity *= Giant.speed;

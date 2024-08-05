@@ -9,14 +9,15 @@ using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Modules.CustomHats.Patches;
 
-[HarmonyPatch(typeof(HatsTab))]
+[HarmonyPatch]
 internal static class HatsTabPatches
 {
     private static TextMeshPro textTemplate;
 
-    [HarmonyPatch(nameof(HatsTab.OnEnable))]
-    [HarmonyPostfix]
-    private static void OnEnablePostfix(HatsTab __instance)
+
+    [HarmonyPatch(typeof(HatsTab), nameof(HatsTab.OnEnable))]
+    [HarmonyPrefix]
+    private static bool OnEnablePrefix(HatsTab __instance)
     {
         for (var i = 0; i < __instance.scroller.Inner.childCount; i++)
         {
@@ -65,6 +66,7 @@ internal static class HatsTabPatches
         }
 
         __instance.scroller.ContentYBounds.max = -(yOffset + 4.1f);
+        return false;
     }
 
     private static float CreateHatPackage(List<Tuple<HatData, HatExtension>> hats, string packageName, float yStart,
@@ -92,13 +94,12 @@ internal static class HatsTabPatches
         {
             var (hat, ext) = hats[i];
             var xPos = hatsTab.XRange.Lerp(i % hatsTab.NumPerRow / (hatsTab.NumPerRow - 1f));
-            var yPos = offset - (i / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset);
+            var yPos = offset - i / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset;
             var colorChip = Object.Instantiate(hatsTab.ColorTabPrefab, hatsTab.scroller.Inner);
             if (ActiveInputManager.currentControlType == ActiveInputManager.InputType.Keyboard)
             {
                 colorChip.Button.OnMouseOver.AddListener((Action)(() => hatsTab.SelectHat(hat)));
-                colorChip.Button.OnMouseOut.AddListener((Action)(() =>
-                    hatsTab.SelectHat(DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat))));
+                colorChip.Button.OnMouseOut.AddListener((Action)(() => hatsTab.SelectHat(DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat))));
                 colorChip.Button.OnClick.AddListener((Action)hatsTab.ClickEquip);
             }
             else
@@ -106,7 +107,7 @@ internal static class HatsTabPatches
                 colorChip.Button.OnClick.AddListener((Action)(() => hatsTab.SelectHat(hat)));
             }
             colorChip.Button.ClickMask = hatsTab.scroller.Hitbox;
-            colorChip.Inner.SetMaskType(PlayerMaterial.MaskType.ScrollingUI);
+            colorChip.Inner.SetMaskType(PlayerMaterial.MaskType.SimpleUI);
             hatsTab.UpdateMaterials(colorChip.Inner.FrontLayer, hat);
             var background = colorChip.transform.FindChild("Background");
             var foreground = colorChip.transform.FindChild("ForeGround");
@@ -130,21 +131,20 @@ internal static class HatsTabPatches
                     description.alignment = TextAlignmentOptions.Center;
                     description.transform.localScale = Vector3.one * 0.65f;
                     hatsTab.StartCoroutine(Effects.Lerp(0.1f,
-                       new Action<float>(p => { description.SetText($"{hat.name}\nby {ext.Author}"); })));
+                        new Action<float>(p => { description.SetText($"{hat.name}\nby {ext.Author}"); })));
                 }
             }
 
             colorChip.transform.localPosition = new Vector3(xPos, yPos, -1f);
-            colorChip.Inner.SetHat(hat,
-                hatsTab.HasLocalPlayer()
-                    ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId
-                    : DataManager.Player.Customization.Color); colorChip.Inner.transform.localPosition = hat.ChipOffset;
+            colorChip.Inner.SetHat(hat, hatsTab.HasLocalPlayer()
+                ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId
+                : DataManager.Player.Customization.Color);
+            colorChip.Inner.transform.localPosition = hat.ChipOffset;
             colorChip.Tag = hat;
             colorChip.SelectionHighlight.gameObject.SetActive(false);
             hatsTab.ColorChips.Add(colorChip);
         }
 
-        return offset - ((hats.Count - 1) / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset) -
-               1.75f;
+        return offset - (hats.Count - 1) / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset - 1.75f;
     }
 }

@@ -1,5 +1,4 @@
-﻿#if !MXYX_CLUB
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using PowerTools;
@@ -269,4 +268,3 @@ internal static class HatParentPatches
         return false;
     }
 }
-#endif

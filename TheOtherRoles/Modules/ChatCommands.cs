@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using AmongUs.Data;
 using Hazel;
 using InnerNet;
 using TheOtherRoles.Utilities;
@@ -49,10 +50,11 @@ public static class ChatCommands
                     if (AmongUsClient.Instance.AmHost)
                     {
                         var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                            (byte)CustomRPC.ShareGamemode, SendOption.Reliable);
+                            (byte)CustomRPC.ShareGameMode, SendOption.Reliable);
                         writer.Write((byte)gameMode);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
                         RPCProcedure.shareGameMode((byte)gameMode);
+                        RPCProcedure.shareGameMode((byte)MapOption.gameMode);
                     }
                     else
                     {
@@ -214,6 +216,30 @@ public static class ChatCommands
         }
     }
 
+    [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
+    public static class ChatControllerAwakePatch
+    {
+        public static void Prefix()
+        {
+            DataManager.Settings.Multiplayer.ChatMode = QuickChatModes.FreeChatOrQuickChat;
+        }
+
+        public static void Postfix(ChatController __instance)
+        {
+            DataManager.Settings.Multiplayer.ChatMode = QuickChatModes.FreeChatOrQuickChat;
+
+            if (Input.GetKeyDown(KeyCode.F2))
+            {
+                if (!__instance.isActiveAndEnabled) return;
+                __instance.Toggle();
+            }
+            if (__instance.IsOpenOrOpening)
+            {
+                __instance.banButton.MenuButton.enabled = !__instance.IsAnimating;
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static class EnableChat
     {
@@ -250,7 +276,7 @@ public static class ChatCommands
             var sourcePlayer = PlayerControl.AllPlayerControls.ToArray().ToList()
                 .FirstOrDefault(x => x.Data != null && x.Data.PlayerName.Equals(playerName, StringComparison.Ordinal));
 
-            if (CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor && __instance != null
+            if (sourcePlayer != null && __instance != null && CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.Data?.Role?.IsImpostor == true
                  && ((Spy.spy != null && sourcePlayer.PlayerId == Spy.spy.PlayerId)
                  || (Sidekick.sidekick != null && Sidekick.wasTeamRed && sourcePlayer.PlayerId == Sidekick.sidekick.PlayerId)
                  || (Jackal.jackal != null && Jackal.wasTeamRed && sourcePlayer.PlayerId == Jackal.jackal.PlayerId)))
