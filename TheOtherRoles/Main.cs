@@ -104,9 +104,7 @@ public class TheOtherRolesPlugin : BasePlugin
         ServerManager.DefaultRegions = new Il2CppReferenceArray<IRegionInfo>(new IRegionInfo[0]);
 
         UpdateRegions();
-#if !SUNDAY
         CrowdedPlayer.Start();
-#endif
         Harmony.PatchAll();
 
         CustomHatManager.LoadHats();

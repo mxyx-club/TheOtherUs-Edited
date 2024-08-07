@@ -10,7 +10,6 @@ using UnityEngine;
 
 namespace TheOtherRoles.Modules;
 
-#if !SUNDAY
 [Harmony]
 public static class CrowdedPlayer
 {
@@ -24,8 +23,8 @@ public static class CrowdedPlayer
     public static void Start()
     {
         if (!Enable) return;
-        NormalGameOptionsV08.RecommendedImpostors = NormalGameOptionsV08.MaxImpostors = Enumerable.Repeat(127, 127).ToArray();
-        NormalGameOptionsV08.MinPlayers = Enumerable.Repeat(4, 127).ToArray();
+        NormalGameOptionsV08.RecommendedImpostors = NormalGameOptionsV08.MaxImpostors = Enumerable.Repeat(MaxPlayer, MaxPlayer).ToArray();
+        NormalGameOptionsV08.MinPlayers = Enumerable.Repeat(4, MaxPlayer).ToArray();
     }
 
 
@@ -448,4 +447,3 @@ public static class CrowdedPlayer
         }
     }
 }
-#endif
