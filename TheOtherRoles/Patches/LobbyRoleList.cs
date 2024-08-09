@@ -150,10 +150,10 @@ public static class LobbyRoleInfo
         bool gameStarted = AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started;
         foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
         {
-            if (roleInfo.isModifier && teamId != Team.Modifier) continue;
-            else if (roleInfo.isNeutral && teamId != Team.Neutral) continue;
-            else if (roleInfo.color == Palette.ImpostorRed && !roleInfo.isModifier && roleInfo != RoleInfo.spy && teamId != Team.Impostor) continue;
-            else if ((roleInfo.color != Palette.ImpostorRed || roleInfo == RoleInfo.spy) && !roleInfo.isModifier && !roleInfo.isNeutral && teamId != Team.Crewmate) continue;
+            if (roleInfo.roleTeam == RoleTeam.Modifier && teamId != Team.Modifier) continue;
+            else if (roleInfo.roleTeam == RoleTeam.Neutral && teamId != Team.Neutral) continue;
+            else if (roleInfo.roleTeam == RoleTeam.Impostor && teamId != Team.Impostor) continue;
+            else if (roleInfo.roleTeam == RoleTeam.Crewmate && teamId != Team.Crewmate) continue;
 
             Transform buttonTransform = Object.Instantiate(buttonTemplate, container.transform);
             buttonTransform.name = cs(roleInfo.color, roleInfo.name) + " Button";

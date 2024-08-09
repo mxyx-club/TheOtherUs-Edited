@@ -108,7 +108,7 @@
         "0": "Impostor Roles",
         "13": "\u4f2a\u88c5\u8005\u9635\u8425"
     },
-    "ModifiersText": {
+    "ModifierRolesText": {
         "0": "Modifiers",
         "13": "\u9644\u52a0\u80fd\u529b"
     },
@@ -1237,6 +1237,10 @@
     "jackalCreateSidekickCooldown": {
         "0": "Jackal Create Sidekick Cooldown",
         "13": "\u8c7a\u72fc\u62db\u52df\u51b7\u5374"
+    },
+    "jackalkillFakeImpostor": {
+        "0": "Jackal Kills A Failed Sidekick Attempt",
+        "13": "\u62db\u52df\u4f2a\u88c5\u8005\u65f6\u4f1a\u51fb\u6740\u76ee\u6807"
     },
     "jackalCanImpostorFindSidekick": {
         "0": "Impostors can see teammates turned Sidekick",

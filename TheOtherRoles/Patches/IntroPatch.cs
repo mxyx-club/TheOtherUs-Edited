@@ -236,9 +236,9 @@ internal class IntroPatch
     public static void setupIntroTeam(IntroCutscene __instance, ref List<PlayerControl> yourTeam)
     {
         var infos = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
-        var roleInfo = infos.Where(info => !info.isModifier).FirstOrDefault();
+        var roleInfo = infos.FirstOrDefault(info => info.roleTeam != RoleTeam.Modifier);
         if (roleInfo == null) return;
-        if (roleInfo.isNeutral)
+        if (roleInfo.roleTeam == RoleTeam.Neutral)
         {
             var neutralColor = new Color32(76, 84, 78, 255);
             __instance.BackgroundBar.material.color = roleInfo.color;
@@ -292,8 +292,8 @@ internal class IntroPatch
         {
             // Don't override the intro of the vanilla roles
             var infos = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
-            var roleInfo = infos.Where(info => !info.isModifier).FirstOrDefault();
-            var modifierInfo = infos.Where(info => info.isModifier).FirstOrDefault();
+            var roleInfo = infos.FirstOrDefault(info => info.roleTeam != RoleTeam.Modifier);
+            var modifierInfo = infos.FirstOrDefault(info => info.isModifier);
 
             __instance.RoleBlurbText.text = "";
             if (roleInfo != null)

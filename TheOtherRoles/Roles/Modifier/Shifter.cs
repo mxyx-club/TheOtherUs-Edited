@@ -179,7 +179,7 @@ public static class Shifter
         else if (Pursuer.pursuer != null && Pursuer.pursuer.Any(p => p == player2))
         {
             if (repeat) shiftRole(player2, player1, false);
-            Survivor.survivor.RemoveAll(p => p.PlayerId == player2.PlayerId);
+            Pursuer.pursuer.RemoveAll(p => p.PlayerId == player2.PlayerId);
             Pursuer.pursuer.Add(player1);
         }
         else if (Arsonist.arsonist != null && Arsonist.arsonist == player2)
@@ -212,7 +212,7 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Juggernaut.juggernaut = player1;
         }
-        else if (Survivor.survivor != null && Survivor.survivor.Contains(player2))
+        else if (Survivor.survivor != null && Survivor.survivor.Any(p => p == player2))
         {
             if (repeat) shiftRole(player2, player1, false);
             Survivor.survivor.RemoveAll(p => p.PlayerId == player2.PlayerId);

@@ -2376,7 +2376,7 @@ public static class MurderPlayerPatch
             {
                 color = Color.white;
                 if (target.Data.Role.IsImpostor) color = Color.red;
-                else if (RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault().isNeutral) color = Color.blue;
+                else if (RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault().roleTeam == RoleTeam.Neutral) color = Color.blue;
             }
 
             showFlash(color, 1.75f);

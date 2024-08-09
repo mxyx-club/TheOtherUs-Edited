@@ -21,6 +21,7 @@ public class DeadPlayer
         LoveStolen,
         Loneliness,
         Arson,
+        FakeSK,
         SheriffKill,
         SheriffMisfire,
         SheriffMisadventure,
