@@ -39,6 +39,15 @@ public enum SabatageTypes
     None
 }
 
+public enum RoleTeam
+{
+    Crewmate,
+    Impostor,
+    Neutral,
+    Modifier,
+    Special,
+}
+
 public enum CustomGamemodes
 {
     Classic,
@@ -280,7 +289,7 @@ public static class Helpers
     public static bool isNeutral(PlayerControl player)
     {
         var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
-        return roleInfo != null && roleInfo.isNeutral;
+        return roleInfo != null && roleInfo.roleTeam == RoleTeam.Neutral;
     }
 
     public static bool isKiller(PlayerControl player)
@@ -587,6 +596,10 @@ public static class Helpers
         var indexData = UnityEngine.Random.Range(0, list.Count);
         return indexData;
     }
+    public static void ForEach<T>(this Il2CppArrayBase<T> list, Action<T> func)
+    {
+        foreach (T obj in list) func(obj);
+    }
 
     public static unsafe Texture2D loadTextureFromResources(string path)
     {
@@ -850,6 +863,19 @@ public static class Helpers
         }
     }
     */
+    public static Color getTeamColor(RoleTeam team)
+    {
+        return team switch
+        {
+            RoleTeam.Crewmate => Color.white,
+            RoleTeam.Impostor => Palette.ImpostorRed,
+            RoleTeam.Neutral => Color.gray,
+            RoleTeam.Modifier => Color.yellow,
+            RoleTeam.Special => Palette.Purple,
+            _ => Palette.White
+        };
+    }
+
     public static int totalCounts(this TextMeshPro[] text)
     {
         if (text == null) return 0;

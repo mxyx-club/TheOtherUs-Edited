@@ -2,6 +2,7 @@
 using System.Linq;
 using AmongUs.GameOptions;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Roles;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -37,7 +38,7 @@ public static class HauntMenuMinigamePatch
         if (__instance.filterMode == HauntMenuMinigame.HauntFilters.Impostor)
         {
             var info = RoleInfo.getRoleInfoForPlayer(pc, false);
-            __result = (pc.Data.Role.IsImpostor || info.Any(x => x.isNeutral)) && !pc.Data.IsDead;
+            __result = (pc.Data.Role.IsImpostor || info.Any(x => x.roleTeam == RoleTeam.Neutral)) && !pc.Data.IsDead;
         }
     }
 

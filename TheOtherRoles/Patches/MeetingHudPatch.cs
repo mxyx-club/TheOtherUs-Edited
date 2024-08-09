@@ -28,9 +28,7 @@ internal class MeetingHudPatch
     private static PlayerVoteArea swapped1;
     private static PlayerVoteArea swapped2;
 
-    public static GameObject guesserUI;
-    public static PassiveButton guesserUIExitButton;
-    public static byte guesserCurrentTarget;
+
 
 
     private static void swapperOnClick(int i, MeetingHud __instance)
@@ -172,247 +170,6 @@ internal class MeetingHudPatch
         meetingExtraButtonLabel.text = cs(Mayor.color, "揭示");
         Object.Destroy(MeetingExtraButton);
 
-    }
-
-    private static void guesserOnClick(int buttonTarget, MeetingHud __instance)
-    {
-        if (guesserUI != null || __instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)) return;
-        __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(false));
-
-        var PhoneUI = Object.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
-        var container = Object.Instantiate(PhoneUI, __instance.transform);
-        container.transform.localPosition = new Vector3(0, 0, -5f);
-        guesserUI = container.gameObject;
-
-        var i = 0;
-        var buttonTemplate = __instance.playerStates[0].transform.FindChild("votePlayerBase");
-        var maskTemplate = __instance.playerStates[0].transform.FindChild("MaskArea");
-        var smallButtonTemplate = __instance.playerStates[0].Buttons.transform.Find("CancelButton");
-        var textTemplate = __instance.playerStates[0].NameText;
-
-        guesserCurrentTarget = __instance.playerStates[buttonTarget].TargetPlayerId;
-
-        var exitButtonParent = new GameObject().transform;
-        exitButtonParent.SetParent(container);
-        var exitButton = Object.Instantiate(buttonTemplate.transform, exitButtonParent);
-        var exitButtonMask = Object.Instantiate(maskTemplate, exitButtonParent);
-        exitButton.gameObject.GetComponent<SpriteRenderer>().sprite =
-            smallButtonTemplate.GetComponent<SpriteRenderer>().sprite;
-        var transform = exitButtonParent.transform;
-        transform.localPosition = new Vector3(2.725f, 2.1f, -5);
-        transform.localScale = new Vector3(0.217f, 0.9f, 1);
-        guesserUIExitButton = exitButton.GetComponent<PassiveButton>();
-        guesserUIExitButton.OnClick.RemoveAllListeners();
-        guesserUIExitButton.OnClick.AddListener((Action)(() =>
-        {
-            __instance.playerStates.ToList().ForEach(x =>
-            {
-                x.gameObject.SetActive(true);
-                if (CachedPlayer.LocalPlayer.Data.IsDead && x.transform.FindChild("ShootButton") != null)
-                    Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
-            });
-            Object.Destroy(container.gameObject);
-        }));
-
-        var buttons = new List<Transform>();
-        Transform selectedButton = null;
-
-        foreach (var roleInfo in RoleInfo.allRoleInfos)
-        {
-            var guesserRole = Guesser.niceGuesser != null && CachedPlayer.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId
-                    ? RoleId.NiceGuesser
-                    : RoleId.EvilGuesser;
-
-            if (Doomsayer.doomsayer != null && CachedPlayer.LocalPlayer.PlayerId == Doomsayer.doomsayer.PlayerId) guesserRole = RoleId.Doomsayer;
-
-            switch (guesserRole)
-            {
-                case RoleId.Doomsayer when !Doomsayer.canGuessImpostor && roleInfo.isImpostor:
-                case RoleId.Doomsayer when !Doomsayer.canGuessNeutral && roleInfo.isNeutral:
-                    continue;
-            }
-
-            if (roleInfo.roleId == RoleId.Poucher && Poucher.spawnModifier) continue;
-            if (Mayor.mayor != null && Mayor.Revealed && Mayor.Revealed && roleInfo.roleId == RoleId.Mayor) continue;
-
-            if (allowModGuess && roleInfo.isModifier)
-            {
-                // Allow Guessing the following mods: Bait, TieBreaker, Bloody, and VIP
-                if (roleInfo.roleId is
-                    not RoleId.Aftermath and
-                    not RoleId.Bait and
-                    not RoleId.Tiebreaker and
-                    not RoleId.Bloody and
-                    not RoleId.Cursed and
-                    not RoleId.Torch and
-                    not RoleId.Slueth and
-                    not RoleId.Watcher and
-                    not RoleId.Radar and
-                    not RoleId.Tunneler and
-                    not RoleId.Multitasker and
-                    not RoleId.Lover and
-                    not RoleId.Vip) continue;
-            }
-            else if (roleInfo.isModifier)
-            {
-                continue;
-            }
-
-            if (roleInfo.roleId == guesserRole ||
-                (!HandleGuesser.evilGuesserCanGuessSpy && guesserRole == RoleId.EvilGuesser &&
-                 roleInfo.roleId == RoleId.Spy && !HandleGuesser.isGuesserGm) ||
-                (!Guesser.evilGuesserCanGuessCrewmate && guesserRole == RoleId.EvilGuesser &&
-                 roleInfo.roleId == RoleId.Crewmate)) continue; // Not guessable roles & modifier
-
-            switch (HandleGuesser.isGuesserGm)
-            {
-                case true when roleInfo.roleId is RoleId.NiceGuesser or RoleId.EvilGuesser:
-                case true when CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor &&
-                               !HandleGuesser.evilGuesserCanGuessSpy && roleInfo.roleId == RoleId.Spy:
-                    continue; // remove Guesser for guesser game mode
-            }
-
-            // remove all roles that cannot spawn due to the settings from the ui.
-            var roleData = RoleManagerSelectRolesPatch.getRoleAssignmentData();
-            switch (roleInfo.roleId)
-            {
-                case RoleId.Pursuer when CustomOptionHolder.lawyerSpawnRate.getSelection() == 0
-                                      && CustomOptionHolder.executionerSpawnRate.getSelection() == 0:
-                case RoleId.Spy when roleData.impostors.Count <= 1:
-                    continue;
-            }
-
-            if (Snitch.snitch != null && HandleGuesser.guesserCantGuessSnitch)
-            {
-                var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
-                var numberOfLeftTasks = playerTotal - playerCompleted;
-                if (numberOfLeftTasks <= Snitch.taskCountForReveal && roleInfo.roleId == RoleId.Snitch) continue;
-            }
-
-
-            var buttonParent = new GameObject().transform;
-            buttonParent.SetParent(container);
-            var button = Object.Instantiate(buttonTemplate, buttonParent);
-            var buttonMask = Object.Instantiate(maskTemplate, buttonParent);
-            var label = Object.Instantiate(textTemplate, button);
-            button.GetComponent<SpriteRenderer>().sprite =
-                ShipStatus.Instance.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
-            buttons.Add(button);
-            int row = i / 5, col = i % 5;
-            buttonParent.localPosition = new Vector3(-3.47f + (1.55f * col), 1.5f - (0.35f * row), -5);
-            buttonParent.localScale = new Vector3(0.45f, 0.45f, 1f);
-            label.text = cs(roleInfo.color, roleInfo.name);
-            label.alignment = TextAlignmentOptions.Center;
-            label.transform.localPosition = new Vector3(0, 0, label.transform.localPosition.z);
-            label.transform.localScale *= 1.7f;
-            var copiedIndex = i;
-
-            button.GetComponent<PassiveButton>().OnClick.RemoveAllListeners();
-            if (!CachedPlayer.LocalPlayer.Data.IsDead &&
-                !playerById(__instance.playerStates[buttonTarget].TargetPlayerId).Data.IsDead)
-                button.GetComponent<PassiveButton>().OnClick.AddListener((Action)(() =>
-                {
-                    if (selectedButton != button)
-                    {
-                        selectedButton = button;
-                        buttons.ForEach(x =>
-                            x.GetComponent<SpriteRenderer>().color = x == selectedButton ? Color.red : Color.white);
-                    }
-                    else
-                    {
-                        var focusedTarget = playerById(__instance.playerStates[buttonTarget].TargetPlayerId);
-                        if
-                        (
-                            __instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)
-                            || focusedTarget == null
-                            || (HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) <= 0
-                                && HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId))
-                            || (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && !Doomsayer.CanShoot))
-                            return;
-
-                        if (!HandleGuesser.killsThroughShield && focusedTarget == Medic.shielded)
-                        {
-                            // Depending on the options, shooting the shielded player will not allow the guess, notifiy everyone about the kill attempt and close the window
-                            __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
-                            Object.Destroy(container.gameObject);
-
-                            var murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(
-                                CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShieldedMurderAttempt,
-                                SendOption.Reliable);
-                            AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
-                            RPCProcedure.shieldedMurderAttempt(0);
-                            SoundEffectsManager.play("fail");
-                            return;
-                        }
-
-                        if (focusedTarget == Indomitable.indomitable)
-                        {
-                            showFlash(new Color32(255, 197, 97, byte.MinValue));
-                            __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
-                            Object.Destroy(container.gameObject);
-
-                            var murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(
-                                CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShieldedMurderAttempt,
-                                SendOption.Reliable);
-                            AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
-                            RPCProcedure.shieldedMurderAttempt(0);
-                            SoundEffectsManager.play("fail");
-                            return;
-                        }
-
-                        var dyingTarget = CachedPlayer.LocalPlayer.PlayerControl;
-
-                        var mainRoleInfo = RoleInfo.getRoleInfoForPlayer(focusedTarget, true);
-
-                        if (mainRoleInfo == null) return;
-
-                        foreach (var role in mainRoleInfo)
-                        {
-                            if (role.roleId == roleInfo.roleId)
-                            {
-                                dyingTarget = focusedTarget;
-                                continue;
-                            }
-                        }
-
-                        if (dyingTarget == CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer)
-                            Doomsayer.CanShoot = false;
-
-                        // Shoot player and send chat info if activated
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(
-                            CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GuesserShoot,
-                            SendOption.Reliable);
-                        writer.Write(CachedPlayer.LocalPlayer.PlayerId);
-                        writer.Write(dyingTarget.PlayerId);
-                        writer.Write(focusedTarget.PlayerId);
-                        writer.Write((byte)roleInfo.roleId);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
-
-                        RPCProcedure.guesserShoot(CachedPlayer.LocalPlayer.PlayerId, dyingTarget.PlayerId,
-                            focusedTarget.PlayerId, (byte)roleInfo.roleId);
-
-                        // Reset the GUI
-                        __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
-                        Object.Destroy(container.gameObject);
-                        if (CanMultipleShots(dyingTarget))
-                            __instance.playerStates.ToList().ForEach(x =>
-                            {
-                                if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null)
-                                    Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
-                            });
-                        else
-                            __instance.playerStates.ToList().ForEach(x =>
-                            {
-                                if (x.transform.FindChild("ShootButton") != null)
-                                    Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
-                            });
-                    }
-                }));
-
-            i++;
-        }
-
-        container.transform.localScale *= 0.75f;
     }
 
     private static void populateButtonsPostfix(MeetingHud __instance)
@@ -571,7 +328,7 @@ internal class MeetingHudPatch
                 var button = targetBox.GetComponent<PassiveButton>();
                 button.OnClick.RemoveAllListeners();
                 var copiedIndex = i;
-                button.OnClick.AddListener((Action)(() => guesserOnClick(copiedIndex, __instance)));
+                button.OnClick.AddListener((Action)(() => Guesser.guesserOnClick(copiedIndex, __instance)));
             }
         }
     }
@@ -1001,7 +758,7 @@ internal class MeetingHudPatch
         private static bool Prefix(MeetingHud __instance)
         {
             return !(CachedPlayer.LocalPlayer != null && HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId) &&
-                     guesserUI != null);
+                     Guesser.guesserUI != null);
         }
     }
 
@@ -1206,7 +963,6 @@ internal class MeetingHudPatch
         public static void Postfix(MeetingHud __instance)
         {
             Message("会议开始");
-            if (isNeutral(PlayerControl.LocalPlayer)) Message("PlayerIsNeutral");
             shookAlready = false;
             if (Blackmailer.blackmailed != null
                 && Blackmailer.blackmailed.Data.PlayerId == CachedPlayer.LocalPlayer.PlayerId

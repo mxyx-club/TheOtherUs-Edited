@@ -2189,6 +2189,13 @@ public static class RPCProcedure
             }
         }
 
+        if (Jackal.killFakeImpostor && player.Data.Role.IsImpostor)
+        {
+            uncheckedMurderPlayer(Jackal.jackal.PlayerId, player.PlayerId, 1);
+            overrideDeathReasonAndKiller(player, DeadPlayer.CustomDeathReason.FakeSK, Jackal.jackal);
+            return;
+        }
+
         var wasSpy = Spy.spy != null && player == Spy.spy;
         var wasImpostor = player.Data.Role.IsImpostor; // This can only be reached if impostors can be sidekicked.
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
@@ -2355,19 +2362,24 @@ public static class RPCProcedure
             sidekickPromotes();
         }
 
+        if (player == Shifter.shifter) Shifter.clearAndReload();
         if (player == Pavlovsdogs.pavlovsowner) Pavlovsdogs.pavlovsowner = null;
-        if (Pavlovsdogs.pavlovsdogs.Contains(player)) Pavlovsdogs.pavlovsdogs.RemoveAll(x => x.PlayerId == player.PlayerId);
         if (player == Sidekick.sidekick) Sidekick.clearAndReload();
         if (player == BountyHunter.bountyHunter) BountyHunter.clearAndReload();
         if (player == Vulture.vulture) Vulture.clearAndReload();
         if (player == Executioner.executioner) Executioner.clearAndReload();
         if (player == Lawyer.lawyer) Lawyer.clearAndReload();
-        if (Pursuer.pursuer.Contains(player)) Pursuer.pursuer.RemoveAll(x => x.PlayerId == player.PlayerId);
-        if (Survivor.survivor.Contains(player)) Survivor.survivor.RemoveAll(x => x.PlayerId == player.PlayerId);
         if (player == Thief.thief) Thief.clearAndReload();
         if (player == Juggernaut.juggernaut) Juggernaut.clearAndReload();
         if (player == Doomsayer.doomsayer) Doomsayer.clearAndReload();
         if (player == Akujo.akujo) Akujo.clearAndReload();
+
+        if (Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId))
+            Pavlovsdogs.pavlovsdogs.RemoveAll(x => x.PlayerId == player.PlayerId);
+        if (Pursuer.pursuer.Any(x => x.PlayerId == player.PlayerId))
+            Pursuer.pursuer.RemoveAll(x => x.PlayerId == player.PlayerId);
+        if (Survivor.survivor.Any(x => x.PlayerId == player.PlayerId))
+            Survivor.survivor.RemoveAll(x => x.PlayerId == player.PlayerId);
 
         // Modifier
         if (!ignoreModifier)
@@ -2388,7 +2400,6 @@ public static class RPCProcedure
                 Flash.flash.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (Multitasker.multitasker.Any(x => x.PlayerId == player.PlayerId))
                 Multitasker.multitasker.RemoveAll(x => x.PlayerId == player.PlayerId);
-            if (player == Shifter.shifter) Shifter.clearAndReload();
             if (player == Tiebreaker.tiebreaker) Tiebreaker.clearAndReload();
             if (player == Mini.mini) Mini.clearAndReload();
             if (player == Aftermath.aftermath) Aftermath.clearAndReload();
@@ -2928,7 +2939,7 @@ public static class RPCProcedure
         Arsonist.triggerArsonistWin = true;
         foreach (PlayerControl p in CachedPlayer.AllPlayers)
             //if (p != Arsonist.arsonist && !p.Data.IsDead)
-            if (p != Arsonist.arsonist)
+            if (p != Arsonist.arsonist && Arsonist.dousedPlayers.Any(x => x == p && !p.Data.IsDead))
             {
                 p.Exiled();
                 overrideDeathReasonAndKiller(p, DeadPlayer.CustomDeathReason.Arson, Arsonist.arsonist);
@@ -3013,7 +3024,7 @@ public static class RPCProcedure
             {
                 Doomsayer.killedToWin++;
                 if (Doomsayer.killedToWin >= Doomsayer.killToWin) Doomsayer.triggerDoomsayerrWin = true;
-                if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+                if (Guesser.guesserUI != null) Guesser.guesserUIExitButton.OnClick.Invoke();
             }
             else
             {
@@ -3027,7 +3038,7 @@ public static class RPCProcedure
             var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
             if (!Specoality.specoality.Data.IsDead && guessedTargetId == dyingTargetId)
             {
-                if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+                if (Guesser.guesserUI != null) Guesser.guesserUIExitButton.OnClick.Invoke();
             }
             else
             {
@@ -3045,7 +3056,7 @@ public static class RPCProcedure
             if (CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer)
             {
                 FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(Lawyer.lawyer.Data, Lawyer.lawyer.Data);
-                if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+                if (Guesser.guesserUI != null) Guesser.guesserUIExitButton.OnClick.Invoke();
             }
 
             Lawyer.lawyer.Exiled();
@@ -3092,18 +3103,18 @@ public static class RPCProcedure
             {
                 FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(guesser.Data,
                     dyingTarget.Data);
-                if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+                if (Guesser.guesserUI != null) Guesser.guesserUIExitButton.OnClick.Invoke();
             }
             else if (dyingLoverPartner != null && CachedPlayer.LocalPlayer.PlayerControl == dyingLoverPartner)
             {
                 FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data,
                     dyingLoverPartner.Data);
-                if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+                if (Guesser.guesserUI != null) Guesser.guesserUIExitButton.OnClick.Invoke();
             }
             else if (dyingAkujoPartner != null && CachedPlayer.LocalPlayer.PlayerControl == dyingAkujoPartner)
             {
                 FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingAkujoPartner.Data, dyingAkujoPartner.Data);
-                if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+                if (Guesser.guesserUI != null) Guesser.guesserUIExitButton.OnClick.Invoke();
             }
         }
 
@@ -3124,13 +3135,13 @@ public static class RPCProcedure
                         Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
                 });
 
-            if (MeetingHudPatch.guesserUI != null && MeetingHudPatch.guesserUIExitButton != null)
+            if (Guesser.guesserUI != null && Guesser.guesserUIExitButton != null)
             {
-                if (MeetingHudPatch.guesserCurrentTarget == dyingTarget.PlayerId)
-                    MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+                if (Guesser.guesserCurrentTarget == dyingTarget.PlayerId)
+                    Guesser.guesserUIExitButton.OnClick.Invoke();
                 else if (dyingLoverPartner != null &&
-                         MeetingHudPatch.guesserCurrentTarget == dyingLoverPartner.PlayerId)
-                    MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+                         Guesser.guesserCurrentTarget == dyingLoverPartner.PlayerId)
+                    Guesser.guesserUIExitButton.OnClick.Invoke();
             }
         }
         if (guesser != null && guessedTarget != null) seedGuessChat(guesser, guessedTarget, guessedRoleId);

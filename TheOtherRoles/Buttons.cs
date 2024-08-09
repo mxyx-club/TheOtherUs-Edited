@@ -1909,8 +1909,8 @@ internal static class HudManagerStartPatch
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.jackalCreatesSidekick(Jackal.currentTarget.PlayerId);
                 SoundEffectsManager.play("jackalSidekick");
-
                 _ = new LateTask(LastImpostor.promoteToLastImpostor, 0.5f);
+                jackalSidekickButton.Timer = jackalSidekickButton.MaxTimer;
             },
             () =>
             {

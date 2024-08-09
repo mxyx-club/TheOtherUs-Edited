@@ -132,6 +132,7 @@ public class CustomOptionHolder
     public static CustomOption sidekickCanUseVents;
     public static CustomOption jackalPromotedFromSidekickCanCreateSidekick;
     public static CustomOption jackalAndSidekickHaveImpostorVision;
+    public static CustomOption jackalkillFakeImpostor;
 
     public static CustomOption pavlovsownerSpawnRate;
     public static CustomOption pavlovsownerAndJackalAsWell;
@@ -1007,6 +1008,7 @@ public class CustomOptionHolder
         jackalAndSidekickHaveImpostorVision = Create(20134, Types.Neutral, "jackalAndSidekickHaveImpostorVision", true, jackalSpawnRate);
         jackalCanCreateSidekick = Create(20135, Types.Neutral, cs(Jackal.color, "jackalCanCreateSidekick"), false, jackalSpawnRate);
         jackalCreateSidekickCooldown = Create(20136, Types.Neutral, "jackalCreateSidekickCooldown", 25f, 10f, 60f, 2.5f, jackalCanCreateSidekick);
+        jackalkillFakeImpostor = Create(20145, Types.Neutral, cs(Palette.ImpostorRed, "jackalkillFakeImpostor"), false, jackalCanCreateSidekick);
         jackalCanImpostorFindSidekick = Create(20137, Types.Neutral, cs(Palette.ImpostorRed, "jackalCanImpostorFindSidekick"), true, jackalCanCreateSidekick);
         sidekickCanKill = Create(20138, Types.Neutral, "sidekickCanKill", true, jackalCanCreateSidekick);
         sidekickCanUseVents = Create(20139, Types.Neutral, "sidekickCanUseVents", true, jackalCanCreateSidekick);

@@ -1140,7 +1140,7 @@ internal class GameOptionsDataPatch
         var impRoles = $"<size=150%><color=#ff1c1c>{"ImpostorRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Impostor, true)}\n";
         var neutralRoles = $"<size=150%><color=#50544c>{"NeutralRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Neutral, true)}\n";
         var crewRoles = $"<size=150%><color=#08fcfc>{"CrewmateRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Crewmate, true)}\n";
-        var modifiers = $"<size=150%><color=#ffec04>{"ModifiersText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Modifier, true)}";
+        var modifiers = $"<size=150%><color=#ffec04>{"ModifierRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Modifier, true)}";
         return impRoles + neutralRoles + crewRoles + modifiers;
     }
 
@@ -1265,7 +1265,7 @@ internal class GameOptionsDataPatch
                 }
                 else if (option == CustomOptionHolder.modifiersCountMin)
                 {
-                    var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "ModifiersText".Translate());
+                    var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "ModifierRolesText".Translate());
                     var min = CustomOptionHolder.modifiersCountMin.getSelection();
                     var max = CustomOptionHolder.modifiersCountMax.getSelection();
                     if (min > max) min = max;

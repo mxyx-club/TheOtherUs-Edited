@@ -11,7 +11,6 @@ using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Modules;
 
-#if !SUNDAY
 [Harmony]
 public static class CrowdedPlayer
 {
@@ -25,8 +24,8 @@ public static class CrowdedPlayer
     public static void Start()
     {
         if (!Enable) return;
-        NormalGameOptionsV07.RecommendedImpostors = NormalGameOptionsV07.MaxImpostors = Enumerable.Repeat(120, 120).ToArray();
-        NormalGameOptionsV07.MinPlayers = Enumerable.Repeat(4, 120).ToArray();
+        NormalGameOptionsV07.RecommendedImpostors = NormalGameOptionsV07.MaxImpostors = Enumerable.Repeat(MaxPlayer, MaxPlayer).ToArray();
+        NormalGameOptionsV07.MinPlayers = Enumerable.Repeat(4, MaxPlayer).ToArray();
     }
 
 
@@ -256,7 +255,7 @@ public static class CrowdedPlayer
 
         public virtual void Update()
         {
-            if (MeetingHudPatch.guesserUI != null) return;
+            if (Guesser.guesserUI != null) return;
 
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) ||
                 Input.mouseScrollDelta.y > 0f)
@@ -446,4 +445,3 @@ public static class CrowdedPlayer
         }
     }
 }
-#endif

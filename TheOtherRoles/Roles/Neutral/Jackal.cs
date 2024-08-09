@@ -23,6 +23,7 @@ public class Jackal
     public static bool hasImpostorVision;
     public static bool CanImpostorFindSidekick;
     public static bool canSabotage;
+    public static bool killFakeImpostor;
     public static bool wasTeamRed;
     public static bool wasImpostor;
     public static bool wasSpy;
@@ -62,6 +63,7 @@ public class Jackal
         canCreateSidekick = CustomOptionHolder.jackalCanCreateSidekick.getBool();
         jackalPromotedFromSidekickCanCreateSidekick = CustomOptionHolder.jackalPromotedFromSidekickCanCreateSidekick.getBool();
         hasImpostorVision = CustomOptionHolder.jackalAndSidekickHaveImpostorVision.getBool();
+        killFakeImpostor = CustomOptionHolder.jackalkillFakeImpostor.getBool();
         wasTeamRed = wasImpostor = wasSpy = false;
         chanceSwoop = CustomOptionHolder.jackalChanceSwoop.getSelection() / 10f;
     }
