@@ -18,7 +18,6 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Beta|Any CPU = Beta|Any CPU
 		Debug|Any CPU = Debug|Any CPU
-		mxyx-club|Any CPU = mxyx-club|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
@@ -26,8 +25,6 @@ Global
 		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.Beta|Any CPU.Build.0 = Beta|Any CPU
 		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.Debug|Any CPU.ActiveCfg = Release|Any CPU
 		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.Debug|Any CPU.Build.0 = Release|Any CPU
-		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.mxyx-club|Any CPU.ActiveCfg = mxyx-club|Any CPU
-		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.mxyx-club|Any CPU.Build.0 = mxyx-club|Any CPU
 		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

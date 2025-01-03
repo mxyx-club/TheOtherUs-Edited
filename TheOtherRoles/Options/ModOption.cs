@@ -12,7 +12,7 @@ internal class ModOption
     public static int NumImpostors => GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors;
     public static bool DebugMode => CustomOptionHolder.debugMode.GetBool();
     public static bool DisableGameEnd => DebugMode && CustomOptionHolder.disableGameEnd.GetBool();
-    public static NormalGameOptionsV07 NormalOptions => GameOptionsManager.Instance.currentNormalGameOptions;
+    public static NormalGameOptionsV08 NormalOptions => GameOptionsManager.Instance.currentNormalGameOptions;
 
     // Set values
     public static int maxNumberOfMeetings = 10;
@@ -34,6 +34,8 @@ internal class ModOption
     public static bool randomLigherPlayer;
     public static bool disableMedscanWalking;
     public static bool isCanceled;
+    public static bool ShowChatNotifications = true;
+    public static bool MuteLobbyBGM;
 
     public static int restrictDevices;
 
@@ -122,6 +124,8 @@ internal class ModOption
         enableSoundEffects = Main.EnableSoundEffects.Value;
         showKeyReminder = Main.ShowKeyReminder.Value;
         localHats = Main.LocalHats.Value;
+        ShowChatNotifications = Main.ShowChatNotifications.Value;
+        MuteLobbyBGM = Main.MuteLobbyBGM.Value;
     }
 
     public static void resetDeviceTimes()

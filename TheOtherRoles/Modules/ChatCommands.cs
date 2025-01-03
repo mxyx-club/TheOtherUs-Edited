@@ -260,8 +260,8 @@ public static class ChatCommands
             var sourcePlayer = PlayerControl.AllPlayerControls.ToList()
                 .FirstOrDefault(x => x.Data != null && x.Data.PlayerName.Equals(playerName, StringComparison.Ordinal));
 
-            if (CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor && __instance != null
-                 && (Spy.spy != null && sourcePlayer.PlayerId == Spy.spy.PlayerId))
+            if (sourcePlayer != null && CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.Data?.Role?.IsImpostor == true
+                 && Spy.spy != null && sourcePlayer.PlayerId == Spy.spy.PlayerId)
             {
                 __instance.NameText.color = Palette.ImpostorRed;
             }

@@ -1,4 +1,3 @@
-﻿#if !MXYX_CLUB
 using System;
 using System.IO;
 using System.Linq;
@@ -6,7 +5,6 @@ using PowerTools;
 using UnityEngine;
 
 namespace TheOtherRoles.CustomCosmetics.CustomHats.Patches;
-
 
 [HarmonyPatch(typeof(HatParent))]
 internal static class HatParentPatches
@@ -162,7 +160,7 @@ internal static class HatParentPatches
     [HarmonyPrefix]
     private static bool SetIdleAnimPrefix(HatParent __instance, int colorId)
     {
-        if (!__instance.Hat) return false;
+        if (__instance.Hat == null || !__instance.Hat.ProductId.StartsWith("MOD_")) return true;
         if (!__instance.IsCached()) return true;
         __instance.viewAsset = null;
         __instance.PopulateFromViewData();
@@ -174,11 +172,13 @@ internal static class HatParentPatches
     [HarmonyPrefix]
     private static bool SetClimbAnimPrefix(HatParent __instance)
     {
-        if (!__instance.TryGetCached(out var hatViewData)) return true;
-        if (!__instance.options.ShowForClimb) return false;
-        __instance.BackLayer.enabled = false;
-        __instance.FrontLayer.enabled = true;
-        __instance.FrontLayer.sprite = hatViewData.ClimbImage;
+        if (__instance.Hat == null || !__instance.Hat.ProductId.StartsWith("MOD_")) return true;
+        if (__instance.TryGetCached(out var hatViewData) && __instance.options.ShowForClimb)
+        {
+            __instance.BackLayer.enabled = false;
+            __instance.FrontLayer.enabled = true;
+            __instance.FrontLayer.sprite = hatViewData.ClimbImage;
+        }
         return false;
     }
 
@@ -216,7 +216,7 @@ internal static class HatParentPatches
             __instance.BackLayer.sprite = asset.MainImage;
         }
 
-        if (!__instance.options.Initialized || !__instance.HideHat()) return false;
+        if (/*!__instance.options.Initialized ||*/ !__instance.HideHat()) return false;
         __instance.FrontLayer.enabled = false;
         __instance.BackLayer.enabled = false;
         return false;
@@ -244,4 +244,3 @@ internal static class HatParentPatches
         return false;
     }
 }
-#endif

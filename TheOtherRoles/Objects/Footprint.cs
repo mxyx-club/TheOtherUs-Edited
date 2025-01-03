@@ -35,7 +35,7 @@ public class FootprintHolder : MonoBehaviour
         public Transform Transform;
         public SpriteRenderer Renderer;
         public PlayerControl Owner;
-        public GameData.PlayerInfo Data;
+        public NetworkedPlayerInfo Data;
         public float Lifetime;
 
         public Footprint()

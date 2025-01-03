@@ -1962,7 +1962,7 @@ internal class BodyReportPatch
         return true;
     }
 
-    private static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
+    private static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] NetworkedPlayerInfo target)
     {
         Message($"报告玩家 {__instance.Data.PlayerName} 被报告尸体 {target?.PlayerName}", "CmdReportDeadBody");
         // Medic or Detective report
@@ -1984,8 +1984,8 @@ internal class BodyReportPatch
                 float timer = (float)Math.Round(timeSinceDeath / 1000);
                 if (Vortox.Reversal)
                 {
-                    timer += rnd.Next(-2, 3);
-                    if (timer < 0) timer = 1;
+                    timer += rnd.Next(-3, 4);
+                    timer = Math.Max(0, timer);
                 }
                 if (isMedicReport)
                 {

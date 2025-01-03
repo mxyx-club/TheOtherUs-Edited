@@ -141,7 +141,7 @@ public enum RoleId
 public enum CustomRPC
 {
     // Main Controls
-    ResetVaribles = 80,
+    ResetVaribles = 100,
     ShareOptions,
     WorkaroundSetRoles,
     SetRole,
@@ -155,10 +155,10 @@ public enum CustomRPC
     DynamicMapOption,
     SetGameStarting,
     StopStart,
-    ShareGameMode = 95,
+    ShareGameMode = 120,
 
     // Role functionality
-    FixLights = 100,
+    FixLights = 121,
     FixSubmergedOxygen,
     CleanBody,
     DissectionBody,
@@ -321,7 +321,7 @@ public static class RPCProcedure
                 var optionId = reader.ReadPackedUInt32();
                 var selection = reader.ReadPackedUInt32();
                 var option = CustomOption.options.First(option => option.id == (int)optionId);
-                option.updateSelection((int)selection);
+                option.updateSelection((int)selection, i == numberOfOptions - 1);
             }
         }
         catch (Exception e)
@@ -333,6 +333,13 @@ public static class RPCProcedure
     public static void shareGameMode(byte gm)
     {
         gameMode = (CustomGamemodes)gm;
+        try
+        {
+            LobbyViewSettingsPatch.currentButtons?.ForEach(x => x.gameObject?.Destroy());
+            LobbyViewSettingsPatch.currentButtons?.Clear();
+            LobbyViewSettingsPatch.currentButtonTypes?.Clear();
+        }
+        catch { }
     }
 
     public static void stopStart(byte playerId)
@@ -584,7 +591,7 @@ public static class RPCProcedure
             if (AmongUsClient.Instance.AmHost && Helpers.roleCanUseVents(player) && !player.Data.Role.IsImpostor)
             {
                 player.RpcSetRole(RoleTypes.Engineer);
-                player.SetRole(RoleTypes.Engineer);
+                player.CoSetRole(RoleTypes.Engineer, true);
             }
         }
     }
@@ -2129,7 +2136,7 @@ internal class RPCHandlerPatch
         if (!RpcNames!.ContainsKey(packetId))
             return true;
 
-        if (DebugMode && callId != 95) Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc {RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
+        if (DebugMode && callId != 120) Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc {RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
         switch (packetId)
         {
             // Main Controls

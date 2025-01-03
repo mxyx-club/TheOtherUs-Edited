@@ -37,7 +37,7 @@ jobs:
 
       - name: Download and Unzip BepInEx
         run: |
-          wget https://builds.bepinex.dev/projects/bepinex_be/697/BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.697%2B5362580.zip -O BepInEx.zip
+          wget https://builds.bepinex.dev/projects/bepinex_be/725/BepInEx-Unity.IL2CPP-win-x86-6.0.0-be.725%2Be1974e2.zip -O BepInEx.zip
           unzip BepInEx.zip -d ./Release/
           sudo chmod -R 777 ./Release
 
@@ -47,7 +47,7 @@ jobs:
           unzip ExtraData.zip -d ./Release/
 
       - name: Download Reactor
-        run: wget https://github.com/NuclearPowered/Reactor/releases/download/2.2.0/Reactor.dll -P ./Release/BepInEx/plugins
+        run: wget https://github.com/NuclearPowered/Reactor/releases/download/2.3.1/Reactor.dll -P ./Release/BepInEx/plugins
         
       - name: Set Build Configuration
         id: set-config

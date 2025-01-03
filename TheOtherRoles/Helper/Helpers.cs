@@ -123,7 +123,7 @@ public static class Helpers
     /// <summary>
     /// 红狼视野
     /// </summary>
-    public static bool hasImpVision(GameData.PlayerInfo player)
+    public static bool hasImpVision(NetworkedPlayerInfo player)
     {
         return player.Role.IsImpostor
                || (Jackal.jackal.Any(p => p.PlayerId == player.PlayerId) && Jackal.hasImpostorVision)
@@ -297,7 +297,7 @@ public static class Helpers
         !MeetingHud.Instance &&
         !ExileController.Instance;
 
-    public static void NoCheckStartMeeting(this PlayerControl reporter, GameData.PlayerInfo target, bool force = false)
+    public static void NoCheckStartMeeting(this PlayerControl reporter, NetworkedPlayerInfo target, bool force = false)
     {
         if (InMeeting) return;
 
@@ -596,6 +596,39 @@ public static class Helpers
     public static bool Contains<T, TKey>(this IEnumerable<T> list, T item, Func<T, TKey> keySelector)
     {
         return list.Any(x => keySelector(x).Equals(keySelector(item)));
+    }
+
+    public static int Count<T>(this Il2CppSystem.Collections.Generic.List<T> list, Func<T, bool> func = null)
+    {
+        int count = 0;
+        foreach (T obj in list)
+            if (func == null || func(obj))
+                count++;
+        return count;
+    }
+
+    public static Color HexToColor(string hex)
+    {
+        ColorUtility.TryParseHtmlString("#" + hex, out var color);
+        return color;
+    }
+
+    public static ExileController.InitProperties GenerateExileInitProperties(NetworkedPlayerInfo player, bool voteTie)
+    {
+        ExileController.InitProperties initProperties = new();
+        if (player != null)
+        {
+            initProperties.outfit = player.Outfits[PlayerOutfitType.Default];
+            initProperties.networkedPlayer = player;
+            initProperties.isImpostor = player.Role.IsImpostor;
+        }
+        initProperties.voteTie = voteTie;
+        initProperties.confirmImpostor = GameManager.Instance.LogicOptions.GetConfirmImpostor();
+        initProperties.totalImpostorCount = GameData.Instance.AllPlayers.Count((NetworkedPlayerInfo p) => p.Role.IsImpostor);
+        initProperties.remainingImpostorCount = GameData.Instance.AllPlayers.Count((NetworkedPlayerInfo p) => p.Role.IsImpostor && !p.IsDead && !p.Disconnected);
+        if (player != null && player.Role.IsImpostor && !player.Disconnected)
+            initProperties.remainingImpostorCount--;
+        return initProperties;
     }
 
     public static string readTextFromResources(string path)
@@ -1056,10 +1089,10 @@ public static class Helpers
     {
         Il2CppSystem.Collections.Generic.List<PlayerControl> playerControlList = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
         float lightRadius = radius * ShipStatus.Instance.MaxLightRadius;
-        Il2CppSystem.Collections.Generic.List<GameData.PlayerInfo> allPlayers = GameData.Instance.AllPlayers;
+        Il2CppSystem.Collections.Generic.List<NetworkedPlayerInfo> allPlayers = GameData.Instance.AllPlayers;
         for (int index = 0; index < allPlayers.Count; ++index)
         {
-            GameData.PlayerInfo playerInfo = allPlayers[index];
+            NetworkedPlayerInfo playerInfo = allPlayers[index];
             if (!playerInfo.Disconnected && (!playerInfo.Object.Data.IsDead || includeDead))
             {
                 Vector2 vector2 = new Vector2(playerInfo.Object.GetTruePosition().x - truePosition.x, playerInfo.Object.GetTruePosition().y - truePosition.y);
@@ -1343,12 +1376,14 @@ public static class Helpers
                 cam.orthographicSize = orthographicSize;
         // The UI is scaled too, else we cant click the buttons. Downside: map is super small.
 
-        if (HudManagerStartPatch.zoomOutButton != null)
+        var tzGO = GameObject.Find("TOGGLEZOOMBUTTON");
+        if (tzGO != null)
         {
-            HudManagerStartPatch.zoomOutButton.Sprite = zoomOutStatus
-                ? new ResourceSprite("TheOtherRoles.Resources.ZoomIn.png", 21f)
-                : new ResourceSprite("TheOtherRoles.Resources.ZoomOut.png", 85f);
-            HudManagerStartPatch.zoomOutButton.PositionOffset = zoomOutStatus ? new Vector3(-0.82f, 11.5f, 0) : new(0.4f, 2.35f, 0f);
+            var rend = tzGO.transform.Find("Inactive").GetComponent<SpriteRenderer>();
+            var rendActive = tzGO.transform.Find("Active").GetComponent<SpriteRenderer>();
+            rend.sprite = zoomOutStatus ? UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.Plus_Button.png", 100f) : UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.Minus_Button.png", 100f);
+            rendActive.sprite = zoomOutStatus ? UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.Plus_ButtonActive.png", 100f) : UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.Minus_ButtonActive.png", 100f);
+            tzGO.transform.localScale = new Vector3(1.2f, 1.2f, 1f) * (zoomOutStatus ? 4 : 1);
         }
 
         // This will move button positions to the correct position.

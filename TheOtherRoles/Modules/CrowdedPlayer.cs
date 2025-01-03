@@ -6,7 +6,6 @@ using Reactor.Utilities.Attributes;
 using Reactor.Utilities.Extensions;
 using TMPro;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Modules;
 
@@ -22,8 +21,8 @@ public static class CrowdedPlayer
     public static void Start()
     {
         if (!Enable) return;
-        NormalGameOptionsV07.RecommendedImpostors = NormalGameOptionsV07.MaxImpostors = Enumerable.Repeat(MaxPlayer, MaxPlayer).ToArray();
-        NormalGameOptionsV07.MinPlayers = Enumerable.Repeat(4, MaxPlayer).ToArray();
+        NormalGameOptionsV08.RecommendedImpostors = NormalGameOptionsV08.MaxImpostors = Enumerable.Repeat(MaxPlayer, MaxPlayer).ToArray();
+        NormalGameOptionsV08.MinPlayers = Enumerable.Repeat(4, MaxPlayer).ToArray();
     }
 
     [HarmonyPatch(typeof(SecurityLogger), nameof(SecurityLogger.Awake))]
@@ -34,13 +33,18 @@ public static class CrowdedPlayer
         __instance.Timers = new float[MaxPlayer];
     }
 
-    [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.Start))]
+    [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.Initialize))]
     [HarmonyPostfix]
-    public static void GameOptionsMenu_Start_Postfix(ref GameOptionsMenu __instance)
+    public static void GameOptionsMenu_Initialize_Postfix(GameOptionsMenu __instance)
     {
         if (!Enable) return;
-        var options = Object.FindObjectsOfType<NumberOption>().FirstOrDefault(o => o.Title == StringNames.GameNumImpostors);
-        if (options != null) options.ValidRange = new FloatRange(0, MaxImpostor);
+        var numberOptions = __instance.GetComponentsInChildren<NumberOption>();
+
+        var impostorsOption = numberOptions.FirstOrDefault(o => o.Title == StringNames.GameNumImpostors);
+        if (impostorsOption != null)
+        {
+            impostorsOption.ValidRange = new FloatRange(0, MaxImpostor);
+        }
     }
 
     [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.AreInvalid))]

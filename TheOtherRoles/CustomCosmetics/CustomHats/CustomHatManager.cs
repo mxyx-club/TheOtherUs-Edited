@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -78,15 +78,12 @@ public static class CustomHatManager
 
         hat.name = ch.Name;
         hat.displayOrder = 99;
-        hat.ProductId = "hat_" + ch.Name.Replace(' ', '_');
+        hat.ProductId = "Mod_" + ch.Name.Replace(' ', '_');
         hat.InFront = !ch.Behind;
         hat.NoBounce = !ch.Bounce;
         hat.ChipOffset = new Vector2(0f, 0.2f);
         hat.Free = true;
-#if MXYX_CLUB
-        if (ch.Adaptive && cachedShader != null)
-            viewData.AltShader = cachedShader;
-#endif
+
         var extend = new HatExtension
         {
             Author = ch.Author ?? "Unknown",

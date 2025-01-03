@@ -97,7 +97,6 @@ internal static class HudManagerStartPatch
     public static CustomButton terroristButton;
     public static CustomButton defuseButton;
     public static CustomButton zoomOutButton;
-    public static CustomButton roleSummaryButton;
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
@@ -390,47 +389,18 @@ internal static class HudManagerStartPatch
         // get map id, or raise error to wait...
         var mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
 
-        roleSummaryButton = new CustomButton(
-        () =>
-        {
-            if (LobbyRoleInfo.RolesSummaryUI == null)
-                LobbyRoleInfo.RoleSummaryOnClick();
-            else
-            {
-                Object.Destroy(LobbyRoleInfo.RolesSummaryUI);
-                LobbyRoleInfo.RolesSummaryUI = null;
-            }
-        },
-        () => { return PlayerControl.LocalPlayer != null && LobbyBehaviour.Instance; },
-        () =>
-        {
-            if (PlayerCustomizationMenu.Instance || GameSettingMenu.Instance)
-            {
-                if (LobbyRoleInfo.RolesSummaryUI != null)
-                    Object.Destroy(LobbyRoleInfo.RolesSummaryUI);
-            }
-            return true;
-        },
-        () => { },
-        new ResourceSprite("TheOtherRoles.Resources.HelpButton.png", 85f),
-        new Vector3(0.4f, 3f, 0),
-        __instance,
-        null
-        );
-
         zoomOutButton = new CustomButton(
             () => { toggleZoom(); },
             () =>
             {
-                if (!CanSeeRoleInfo) return false;
-                if (PlayerControl.LocalPlayer.IsAlive()) return false;
+                if (!shouldShowGhostInfo() || InMeeting) return false;
                 var (playerCompleted, playerTotal) = TasksHandler.taskInfo(CachedPlayer.LocalPlayer.Data);
                 var numberOfLeftTasks = playerTotal - playerCompleted;
                 return numberOfLeftTasks <= 0 || !CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.GetBool();
             },
             () => { return true; },
             () => { },
-            UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.ZoomOut.png", 85f), // Invisible button!
+            null,
             new Vector3(0.4f, 2.35f, 0f),
             __instance,
             KeyCode.KeypadPlus

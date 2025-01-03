@@ -828,7 +828,7 @@ public class CustomOptionHolder
         eraserCanEraseAnyone = Create(10162, Types.Impostor, "eraserCanEraseAnyone", false, eraserSpawnRate);
         erasercanEraseGuess = Create(10163, Types.Impostor, "erasercanEraseGuess", false, eraserSpawnRate);
 
-        poucherSpawnRate = Create(10320, Types.Impostor, cs(Palette.ImpostorRed, "Poucher"), rates, null, true, () =>
+        poucherSpawnRate = Create(10320, Types.Impostor, cs(Palette.ImpostorRed, "Poucher"), rates, null, true, false, () =>
         {
             if (modifierPoucher.selection > 0) poucherSpawnRate.selection = 0;
         });
@@ -1272,7 +1272,7 @@ public class CustomOptionHolder
         modifierDisperser = Create(40100, Types.Modifier, cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
         modifierDisperserDispersesToVent = Create(40101, Types.Modifier, "modifierDisperserDispersesToVent", true, modifierDisperser);
 
-        modifierPoucher = Create(40370, Types.Modifier, cs(Palette.ImpostorRed, "Poucher"), rates, null, true, () =>
+        modifierPoucher = Create(40370, Types.Modifier, cs(Palette.ImpostorRed, "Poucher"), rates, null, true, false, () =>
         {
             poucherSpawnRate.selection = 0;
         });

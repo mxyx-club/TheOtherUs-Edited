@@ -39,12 +39,7 @@ public static class DynamicLobbies
                                 GameOptionsManager.Instance.currentNormalGameOptions.MaxPlayers = LobbyLimit;
                                 FastDestroyableSingleton<GameStartManager>.Instance.LastPlayerCount = LobbyLimit;
                                 CachedPlayer.LocalPlayer.PlayerControl.RpcSyncSettings(
-#if MXYX_CLUB
-                                    // TODO Maybe simpler?? 
-                                    GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameOptionsManager.Instance.currentGameOptions));
-#else
                                     GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameOptionsManager.Instance.currentGameOptions, false));
-#endif
                                 __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl,
                                     $"Lobby Size changed to {LobbyLimit} players");
                             }

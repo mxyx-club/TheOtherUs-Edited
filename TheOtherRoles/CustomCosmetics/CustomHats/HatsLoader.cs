@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using BepInEx.Unity.IL2CPP.Utils;
@@ -124,9 +125,14 @@ public class HatsLoader : MonoBehaviour
 
         Message($"准备下载 {toDownload.Count} 项帽子文件");
 
+        this.StartCoroutine(CoDownloadHats(toDownload));
+    }
+
+    private static IEnumerator CoDownloadHats(List<string> toDownload)
+    {
         foreach (var fileName in toDownload)
         {
-            this.StartCoroutine(CoDownloadHatAsset(fileName));
+            yield return CoDownloadHatAsset(fileName);
         }
     }
 
@@ -146,7 +152,7 @@ public class HatsLoader : MonoBehaviour
 
         if (www.isNetworkError || www.isHttpError)
         {
-            Error(www.error);
+            Error($"{www.error} {fileName}");
             yield break;
         }
 

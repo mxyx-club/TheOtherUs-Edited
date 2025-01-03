@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AmongUs.Data;
 using BepInEx;
 using BepInEx.Configuration;
@@ -35,6 +35,9 @@ public class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> ToggleCursor { get; set; }
     public static ConfigEntry<bool> ShowFPS { get; set; }
     public static ConfigEntry<bool> LocalHats { get; set; }
+    public static ConfigEntry<bool> MuteLobbyBGM { get; set; }
+    public static ConfigEntry<bool> ShowChatNotifications { get; set; }
+    public static ConfigEntry<bool> ForceUsePlus25Protocol { get; set; }
     public static ConfigEntry<bool> ShowKeyReminder { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
@@ -84,12 +87,17 @@ public class TheOtherRolesPlugin : BasePlugin
         ShowFPS = Config.Bind("Custom", "Show FPS", true);
         ShowKeyReminder = Config.Bind("Custom", "ShowKeyReminder", true);
         LocalHats = Config.Bind("Custom", "Load Local Hats", false);
+        MuteLobbyBGM = Config.Bind("Custom", "Mute Lobby BGM", true);
+        ShowChatNotifications = Config.Bind("Custom", "Show Chat Notifications", true);
+        ForceUsePlus25Protocol = Config.Bind("Custom", "Force Use Plus 25 Protocol", false);
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
         defaultRegions = ServerManager.DefaultRegions;
 
         UpdateRegions();
+        // Removes vanilla Servers
+        ServerManager.DefaultRegions = new Il2CppReferenceArray<IRegionInfo>(new IRegionInfo[0]);
         CrowdedPlayer.Start();
         Harmony.PatchAll();
         ModOption.reloadPluginOptions();
@@ -101,7 +109,6 @@ public class TheOtherRolesPlugin : BasePlugin
 
         SubmergedCompatibility.Initialize();
         MainMenuPatch.addSceneChangeCallbacks();
-        AddToKillDistanceSetting.addKillDistance();
         Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{VersionString}-Lite\n---------------");
     }
 }

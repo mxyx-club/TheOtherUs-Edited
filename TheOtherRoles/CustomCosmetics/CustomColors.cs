@@ -104,7 +104,7 @@ public class CustomColors
         var colorlist = Palette.PlayerColors.ToList();
         var shadowlist = Palette.ShadowColors.ToList();
 
-        var id = 50000;
+        var id = 60000;
         foreach (var entry in CustomColorData.OrderBy(entry => (int)entry.Key))
         {
             var colorType = entry.Key;
@@ -133,13 +133,16 @@ public class CustomColors
             [HarmonyPriority(Priority.Last)]
             public static bool Prefix(ref string __result, [HarmonyArgument(0)] StringNames name)
             {
-                if ((int)name >= 50000)
+                if ((int)name >= 60000)
                 {
-                    var text = ColorStrings[(int)name];
-                    if (text != null)
+                    if (ColorStrings.TryGetValue((int)name, out var text))
                     {
                         __result = $"color{text}".Translate();
                         return false;
+                    }
+                    else
+                    {
+                        Error($"Key '{(int)name}' not found in ColorStrings.");
                     }
                 }
 
@@ -147,6 +150,39 @@ public class CustomColors
             }
         }
 
+        [HarmonyPatch(typeof(ChatNotification), nameof(ChatNotification.SetUp))]
+        private class ChatNotificationColorsPatch
+        {
+            public static bool Prefix(ChatNotification __instance, PlayerControl sender, string text)
+            {
+                if (ShipStatus.Instance && !ModOption.ShowChatNotifications)
+                {
+                    return false;
+                }
+                __instance.timeOnScreen = 5f;
+                __instance.gameObject.SetActive(true);
+                __instance.SetCosmetics(sender.Data);
+                string str;
+                Color color;
+                try
+                {
+                    str = ColorUtility.ToHtmlStringRGB(Palette.TextColors[__instance.player.ColorId]);
+                    color = Palette.TextOutlineColors[__instance.player.ColorId];
+                }
+                catch
+                {
+                    Color32 c = Palette.PlayerColors[__instance.player.ColorId];
+                    str = ColorUtility.ToHtmlStringRGB(c);
+                    color = c.r + c.g + c.b > 180 ? Palette.Black : Palette.White;
+                    //Message($"{c.r}, {c.g}, {c.b}");
+                }
+                __instance.playerColorText.text = __instance.player.ColorBlindName;
+                __instance.playerNameText.text = "<color=#" + str + ">" + (string.IsNullOrEmpty(sender.Data.PlayerName) ? "..." : sender.Data.PlayerName);
+                __instance.playerNameText.outlineColor = color;
+                __instance.chatText.text = text;
+                return false;
+            }
+        }
         [HarmonyPatch(typeof(PlayerTab), nameof(PlayerTab.OnEnable))]
         private static class PlayerTabEnablePatch
         {

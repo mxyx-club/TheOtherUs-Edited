@@ -1,19 +1,15 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using TheOtherRoles.Buttons;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using Random = System.Random;
 
 namespace TheOtherRoles.Modules;
 
 [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
 public class KeyboardHandler
 {
-    //private static readonly string passwordHash = "d1f51dfdfd8d38027fd2ca9dfeb299399b5bdee58e6c0b3b5e9a45cd4e502848";
-    private static readonly Random random = new((int)DateTime.Now.Ticks);
     private static readonly List<PlayerControl> bots = new();
 
     private static void Postfix(KeyboardJoystick __instance)
@@ -21,7 +17,7 @@ public class KeyboardHandler
         if (AmongUsClient.Instance && (AmongUsClient.Instance.AmHost || ModOption.DebugMode))
         {
             // 生成假人
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.F) && Input.GetKeyDown(KeyCode.Return)
+            /*if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.F) && Input.GetKeyDown(KeyCode.Return)
                 && AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame && InGame)
             {
                 var playerControl = UnityEngine.Object.Instantiate(AmongUsClient.Instance.PlayerPrefab);
@@ -37,7 +33,7 @@ public class KeyboardHandler
                 playerControl.SetName(RandomString(6));
                 playerControl.SetColor((byte)random.Next(Palette.PlayerColors.Length));
                 GameData.Instance.RpcSetTasks(playerControl.PlayerId, Array.Empty<byte>());
-            }
+            }*/
             // 强制开始会议或结束会议
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKeyDown(ModInputManager.meetingInput.keyCode) && InGame)
             {
@@ -59,11 +55,21 @@ public class KeyboardHandler
                 GameStartManager.Instance.countDownTimer = 0;
             }
         }
+
+        if (Input.GetKeyDown(ModInputManager.helpInput.keyCode))
+        {
+            if (LobbyRoleInfo.RolesSummaryUI == null) LobbyRoleInfo.RoleSummaryOnClick();
+            else
+            {
+                Object.Destroy(LobbyRoleInfo.RolesSummaryUI);
+                LobbyRoleInfo.RolesSummaryUI = null;
+            }
+        }
     }
     public static string RandomString(int length)
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        return new string(Enumerable.Repeat(chars, length).Select(s => s[rnd.Next(s.Length)]).ToArray());
     }
 }
 

@@ -36,6 +36,18 @@
         "0": "Enable Debug Log Mode",
         "13": "收集Debug日志"
     },
+    "ShowChatNotificationsText": {
+        "0": "Show Chat Notifications",
+        "13": "游戏内显示聊天气泡"
+    },
+    "MuteLobbyBGM": {
+        "0": "Mute Lobby BGM",
+        "13": "静音大厅BGM"
+    },
+    "ForceUsePlus25Protocol": {
+        "0": "Force Use Plus 25 Protocol",
+        "13": "强制使用+25协议"
+    },
     "keyBinding": {
         "0": "Key Bindings",
         "13": "键位更改"
@@ -249,6 +261,14 @@
     "RolesCount": {
         "0": "Roles Count",
         "13": "职业数量"
+    },
+    "optionSpawnChance": {
+        "0": "Spawn Chance",
+        "13": "几率 %"
+    },
+    "optionEnable": {
+        "0": "Enable",
+        "13": "启用"
     },
     "optionOff": {
         "0": "Off",
@@ -2354,8 +2374,20 @@
         "0": "<size=75%>Modified by <color=#FFB793>mxyx.club</color>\nBased on TheOtherUs</size>",
         "13": "<size=80%>模组修改：<color=#FFB793>沫夏悠轩</color> </size>"
     },
+    "GameMode": {
+        "0": "Game Mode",
+        "13": "游戏模式"
+    },
+    "isClassicGM": {
+        "0": "Classic",
+        "13": "经典模式"
+    },
+    "isVanHideNSeekGM": {
+        "0": "Van. HideNSeek",
+        "13": "原版躲猫猫"
+    },
     "isHideNSeekGM": {
-        "0": "HideNSeek",
+        "0": "TOU Hide N Seek",
         "13": "猎杀模式"
     },
     "isGuesserGm": {

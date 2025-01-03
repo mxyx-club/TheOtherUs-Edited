@@ -1,4 +1,4 @@
-﻿using Hazel;
+using Hazel;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -173,7 +173,7 @@ public static class Prosecutor
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.StartMeeting))]
     public class StartMeetingPatch
     {
-        private static void Prefix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo meetingTarget)
+        private static void Prefix(PlayerControl __instance, [HarmonyArgument(0)] NetworkedPlayerInfo meetingTarget)
         {
             if (__instance == null) return;
             if (prosecutor != null) StartProsecute = false;
@@ -201,7 +201,7 @@ public static class Prosecutor
         {
             if (prosecutor != null && ProsecuteThisMeeting)
             {
-                var exiled = __instance.exiled?.Object;
+                var exiled = __instance.initData.networkedPlayer?.Object;
                 if (exiled != null && exiled == exiled.isCrew() && diesOnIncorrectPros)
                 {
                     prosecutor.Exiled();

@@ -16,7 +16,6 @@ public static class RoleHelpers
         {
             if (PlayerControl.LocalPlayer == Specter.Player) _CanSeeRoleInfo = false;
             else if (Specter.Player.isLover() && Lovers.otherLover(Specter.Player) == PlayerControl.LocalPlayer) _CanSeeRoleInfo = false;
-            else if (Akujo.isAkujoTeam(Specter.Player) && Akujo.otherLover(Specter.Player) == PlayerControl.LocalPlayer) _CanSeeRoleInfo = false;
             else _CanSeeRoleInfo = value;
         }
     }

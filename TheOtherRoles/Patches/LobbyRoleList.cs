@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using TheOtherRoles.Buttons;
 using TMPro;
@@ -13,22 +13,6 @@ public static class LobbyRoleInfo
     public static GameObject RolesSummaryUI { get; set; }
     private static TextMeshPro infoButtonText;
     private static TextMeshPro infoTitleText;
-
-    [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
-    public static class RoleSummaryButtonHudUpdate
-    {
-        public static void Postfix(HudManager __instance)
-        {
-            if (!LobbyBehaviour.Instance || AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started) return;
-            try
-            {
-                //if (HudManagerStartPatch.roleSummaryButton == null) HudManagerStartPatch.createRoleSummaryButton(__instance);
-                if (HudManagerStartPatch.roleSummaryButton.Timer > 0f) HudManagerStartPatch.roleSummaryButton.Timer = 0f;
-                HudManagerStartPatch.roleSummaryButton.Update();
-            }
-            catch { }
-        }
-    }
 
     public static void RoleSummaryOnClick()
     {

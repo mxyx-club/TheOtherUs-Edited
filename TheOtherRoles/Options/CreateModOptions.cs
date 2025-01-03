@@ -9,7 +9,7 @@ using UnityEngine.Events;
 using static UnityEngine.UI.Button;
 using Object = UnityEngine.Object;
 
-namespace TheOtherRoles.Patches;
+namespace TheOtherRoles.Options;
 
 [HarmonyPatch(typeof(OptionsMenuBehaviour), nameof(OptionsMenuBehaviour.Start))]
 public static class StartOptionMenuPatch
@@ -19,50 +19,42 @@ public static class StartOptionMenuPatch
         button.onState = false;
         button.Background.color = color;
         if (text != null)
-        {
             button.Text.text = text;
-        }
 
         if (button.Rollover)
-        {
             button.Rollover.ChangeOutColor(color);
-        }
     }
 
     public static void UpdateToggleText(this ToggleButtonBehaviour button, bool on, string text)
     {
         button.onState = on;
-        Color color = on ? new Color(0f, 1f, 0.16470589f, 1f) : Color.white;
+        var color = on ? new Color(0f, 1f, 0.16470589f, 1f) : Color.white;
         button.Background.color = color;
         button.Text.text = text + ": " + DestroyableSingleton<TranslationController>.Instance.GetString(button.onState
             ? StringNames.SettingsOn : StringNames.SettingsOff, new Il2CppReferenceArray<Il2CppSystem.Object>(0));
         if (button.Rollover)
-        {
             button.Rollover.ChangeOutColor(color);
-        }
     }
 
     public static void UpdateButtonText(this ToggleButtonBehaviour button, string text, string state)
     {
         button.onState = false;
-        Color color = Color.white;
+        var color = Color.white;
         button.Background.color = color;
         button.Text.text = text + ": " + state;
         if (button.Rollover)
-        {
             button.Rollover.ChangeOutColor(color);
-        }
     }
 
-    private static ToggleButtonBehaviour AddButton(Vector2 pos, string name, Action onClicked, GameObject nebulaTab, GameObject toggleButtonTemplate)
+    private static ToggleButtonBehaviour AddButton(int index, string name, Action onClicked, GameObject nebulaTab, GameObject toggleButtonTemplate)
     {
-        GameObject button = Object.Instantiate(toggleButtonTemplate, null);
+        var button = Object.Instantiate(toggleButtonTemplate, null);
         button.transform.SetParent(nebulaTab.transform);
         button.transform.localScale = new Vector3(1f, 1f, 1f);
-        button.transform.localPosition = new Vector3(1.3f * ((pos.x * 2f) - 1f), 1.6f - (0.5f * pos.y), 0f);
+        button.transform.localPosition = new Vector3(1.3f * (index % 2 * 2 - 1), 1.6f - 0.5f * (index / 2), 0f);
         button.name = name;
-        ToggleButtonBehaviour result = button.GetComponent<ToggleButtonBehaviour>();
-        PassiveButton passiveButton = button.GetComponent<PassiveButton>();
+        var result = button.GetComponent<ToggleButtonBehaviour>();
+        var passiveButton = button.GetComponent<PassiveButton>();
         passiveButton.OnClick = new ButtonClickedEvent();
         passiveButton.OnClick.AddListener((UnityAction)onClicked);
         return result;
@@ -73,6 +65,9 @@ public static class StartOptionMenuPatch
     private static ToggleButtonBehaviour showKeyReminder;
     private static ToggleButtonBehaviour showFPS;
     private static ToggleButtonBehaviour localHats;
+    private static ToggleButtonBehaviour showChatNotifications;
+    private static ToggleButtonBehaviour muteLobbyBGM;
+    private static ToggleButtonBehaviour forceUsePlus25Protocol;
 
     public static void Postfix(OptionsMenuBehaviour __instance)
     {
@@ -80,7 +75,7 @@ public static class StartOptionMenuPatch
 
         PassiveButton passiveButton;
 
-        //‘O∂®Ìóƒø§Ú◊∑º”§π§Î
+        //Ë®≠ÂÆöÈ†ÖÁõÆ„ÇíËøΩÂä†„Åô„Çã
 
         GameObject nebulaTab = new("NebulaTab");
         nebulaTab.transform.SetParent(__instance.transform);
@@ -92,18 +87,20 @@ public static class StartOptionMenuPatch
         keyBindingTab.transform.localScale = new Vector3(1f, 1f, 1f);
         keyBindingTab.SetActive(false);
 
-        GameObject applyButtonTemplate = tabs[1].Content.transform.GetChild(0).FindChild("ApplyButton").gameObject;
-        GameObject toggleButtonTemplate = tabs[0].Content.transform.FindChild("MiscGroup").FindChild("StreamerModeButton").gameObject;
+        var applyButtonTemplate = tabs[1].Content.transform.GetChild(0).FindChild("ApplyButton").gameObject;
+        var toggleButtonTemplate = tabs[0].Content.transform.FindChild("MiscGroup").FindChild("StreamerModeButton").gameObject;
+
+        var buttonIndex = 0;
 
         //EnableSoundEffects
-        enableSoundEffects = AddButton(new Vector2(0, 0), "EnableSoundEffects", () =>
+        enableSoundEffects = AddButton(buttonIndex++, "EnableSoundEffects", () =>
         {
             enableSoundEffects.UpdateToggleText(!enableSoundEffects.onState, GetString("EnableSoundEffectsText"));
             ModOption.enableSoundEffects = Main.EnableSoundEffects.Value = enableSoundEffects.onState;
         }, nebulaTab, toggleButtonTemplate);
 
         //ToggleCursor
-        toggleCursor = AddButton(new Vector2(0, 1), "ToggleCursor", () =>
+        toggleCursor = AddButton(buttonIndex++, "ToggleCursor", () =>
         {
             enableCursor(false);
             toggleCursor.UpdateToggleText(!toggleCursor.onState, GetString("ToggleCursorText"));
@@ -112,33 +109,54 @@ public static class StartOptionMenuPatch
         }, nebulaTab, toggleButtonTemplate);
 
         //ShowFPS
-        showKeyReminder = AddButton(new Vector2(1, 0), "ShowKeyReminder", () =>
-        {
-            showKeyReminder.UpdateToggleText(!showKeyReminder.onState, GetString("ShowKeyReminder"));
-            ModOption.showKeyReminder = Main.ShowKeyReminder.Value = showKeyReminder.onState;
-        }, nebulaTab, toggleButtonTemplate);
-
-        //ShowFPS
-        showFPS = AddButton(new Vector2(1, 1), "ShowFPS", () =>
+        showFPS = AddButton(buttonIndex++, "ShowFPS", () =>
         {
             showFPS.UpdateToggleText(!showFPS.onState, GetString("ShowFPS"));
             ModOption.showFPS = Main.ShowFPS.Value = showFPS.onState;
         }, nebulaTab, toggleButtonTemplate);
 
+        //ShowKeyReminder
+        showKeyReminder = AddButton(buttonIndex++, "ShowKeyReminder", () =>
+        {
+            showKeyReminder.UpdateToggleText(!showKeyReminder.onState, GetString("ShowKeyReminder"));
+            ModOption.showKeyReminder = Main.ShowKeyReminder.Value = showKeyReminder.onState;
+        }, nebulaTab, toggleButtonTemplate);
+
+        //Mute Lobby BGM
+        muteLobbyBGM = AddButton(buttonIndex++, "MuteLobbyBGM", () =>
+        {
+            muteLobbyBGM.UpdateToggleText(!muteLobbyBGM.onState, GetString("MuteLobbyBGM"));
+            ModOption.MuteLobbyBGM = Main.MuteLobbyBGM.Value = muteLobbyBGM.onState;
+        }, nebulaTab, toggleButtonTemplate);
+
+        //Show Chat Notifications
+        showChatNotifications = AddButton(buttonIndex++, "ShowChatNotificationsText", () =>
+        {
+            showChatNotifications.UpdateToggleText(!showChatNotifications.onState, GetString("ShowChatNotificationsText"));
+            ModOption.ShowChatNotifications = Main.ShowChatNotifications.Value = showChatNotifications.onState;
+        }, nebulaTab, toggleButtonTemplate);
+
         //LocalHats
-        localHats = AddButton(new Vector2(0, 2), "LocalHats", () =>
+        localHats = AddButton(buttonIndex++, "LocalHats", () =>
         {
             localHats.UpdateToggleText(!localHats.onState, GetString("LocalHatsText"));
             ModOption.localHats = Main.LocalHats.Value = localHats.onState;
         }, nebulaTab, toggleButtonTemplate);
 
-        //•≠©`∏Ó§Íµ±§∆•‹•ø•Û
+        //Force Use Plus 25 Protocol
+        forceUsePlus25Protocol = AddButton(buttonIndex++, "ForceUsePlus25Protocol", () =>
+        {
+            forceUsePlus25Protocol.UpdateToggleText(!forceUsePlus25Protocol.onState, GetString("ForceUsePlus25Protocol"));
+            Main.ForceUsePlus25Protocol.Value = forceUsePlus25Protocol.onState;
+        }, nebulaTab, toggleButtonTemplate);
+
+        //„Ç≠„ÉºÂâ≤„ÇäÂΩì„Å¶„Éú„Çø„É≥
         GameObject TextObject;
 
         List<ToggleButtonBehaviour> allKeyBindingButtons = new();
-        int selectedKeyBinding = -1;
+        var selectedKeyBinding = -1;
 
-        GameObject defaultButton = Object.Instantiate(applyButtonTemplate, null);
+        var defaultButton = Object.Instantiate(applyButtonTemplate, null);
         defaultButton.transform.SetParent(keyBindingTab.transform);
         defaultButton.transform.localScale = new Vector3(1f, 1f, 1f);
         defaultButton.transform.localPosition = new Vector3(0f, -2.5f, 0f);
@@ -155,9 +173,9 @@ public static class StartOptionMenuPatch
             selectedKeyBinding = -1;
             //_ = SoundManager.Instance.PlaySound(Module.MetaScreen.getSelectClip(), false, 0.8f);
 
-            for (int i = 0; i < ModInputManager.allInputs.Count; i++)
+            for (var i = 0; i < ModInputManager.allInputs.Count; i++)
             {
-                ModInputManager.ModInput input = ModInputManager.allInputs[i];
+                var input = ModInputManager.allInputs[i];
                 input.resetToDefault();
                 allKeyBindingButtons[i].UpdateCustomText(Color.white, GetString("keyBinding." + input.identifier) + ": " + ModInputManager.allKeyCodes[input.keyCode].displayKey);
             }
@@ -166,14 +184,14 @@ public static class StartOptionMenuPatch
 
         foreach (var input in ModInputManager.allInputs)
         {
-            int index = allKeyBindingButtons.Count;
+            var index = allKeyBindingButtons.Count;
 
-            GameObject inputButton = Object.Instantiate(toggleButtonTemplate, null);
+            var inputButton = Object.Instantiate(toggleButtonTemplate, null);
             inputButton.transform.SetParent(keyBindingTab.transform);
             inputButton.transform.localScale = new Vector3(1f, 1f, 1f);
-            inputButton.transform.localPosition = new Vector3(1.3f * ((index % 2 * 2) - 1), 1.5f - (0.5f * (index / 2)), 0f);
+            inputButton.transform.localPosition = new Vector3(1.3f * (index % 2 * 2 - 1), 1.5f - 0.5f * (index / 2), 0f);
             inputButton.name = input.identifier;
-            ToggleButtonBehaviour inputToggleButton = inputButton.GetComponent<ToggleButtonBehaviour>();
+            var inputToggleButton = inputButton.GetComponent<ToggleButtonBehaviour>();
             inputToggleButton.BaseText = 0;
             inputToggleButton.Text.text = GetString("keyBinding." + input.identifier) + ": " + ModInputManager.allKeyCodes[input.keyCode].displayKey;
             passiveButton = inputButton.GetComponent<PassiveButton>();
@@ -197,7 +215,7 @@ public static class StartOptionMenuPatch
             allKeyBindingButtons.Add(inputToggleButton);
         }
 
-        GameObject keyBindingButton = Object.Instantiate(applyButtonTemplate, null);
+        var keyBindingButton = Object.Instantiate(applyButtonTemplate, null);
         keyBindingButton.transform.SetParent(nebulaTab.transform);
         keyBindingButton.transform.localScale = new Vector3(1f, 1f, 1f);
         keyBindingButton.transform.localPosition = new Vector3(0f, -1.5f, 0f);
@@ -228,14 +246,12 @@ public static class StartOptionMenuPatch
 
                 if (keyBindingTab.gameObject.active && Input.anyKeyDown && selectedKeyBinding != -1)
                 {
-                    foreach (KeyValuePair<KeyCode, ModInputManager.KeyCodeData> entry in ModInputManager.allKeyCodes)
+                    foreach (var entry in ModInputManager.allKeyCodes)
                     {
                         if (!Input.GetKeyDown(entry.Key))
-                        {
                             continue;
-                        }
 
-                        ModInputManager.ModInput input = ModInputManager.allInputs[selectedKeyBinding];
+                        var input = ModInputManager.allInputs[selectedKeyBinding];
                         input.changeKeyCode(entry.Key);
                         allKeyBindingButtons[selectedKeyBinding].UpdateCustomText(Color.white, GetString("keyBinding." + input.identifier) + ": " + ModInputManager.allKeyCodes[input.keyCode].displayKey);
                         selectedKeyBinding = -1;
@@ -256,20 +272,20 @@ public static class StartOptionMenuPatch
             : __instance.StartCoroutine(getEnumerator().WrapToIl2Cpp());
 
 
-        //•ø•÷§Ú◊∑º”§π§Î
+        //„Çø„Éñ„ÇíËøΩÂä†„Åô„Çã
 
         tabs[^1] = Object.Instantiate(tabs[1], null);
-        TabGroup nebulaButton = tabs[^1];
+        var nebulaButton = tabs[^1];
         nebulaButton.gameObject.name = "NebulaButton";
         nebulaButton.transform.SetParent(tabs[0].transform.parent);
         nebulaButton.transform.localScale = new Vector3(1f, 1f, 1f);
         nebulaButton.Content = nebulaTab;
-        GameObject textObj = nebulaButton.transform.FindChild("Text_TMP").gameObject;
+        var textObj = nebulaButton.transform.FindChild("Text_TMP").gameObject;
         textObj.GetComponent<TextTranslatorTMP>().enabled = false;
         textObj.GetComponent<TMP_Text>().text = "modOptionsTitle".Translate();
 
         tabs.Add(Object.Instantiate(tabs[1], null));
-        TabGroup keyBindingTabButton = tabs[^1];
+        var keyBindingTabButton = tabs[^1];
         keyBindingTabButton.gameObject.name = "KeyBindingButton";
         keyBindingTabButton.transform.SetParent(tabs[0].transform.parent);
         keyBindingTabButton.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -286,7 +302,10 @@ public static class StartOptionMenuPatch
             enableSoundEffects.UpdateToggleText(Main.EnableSoundEffects.Value, GetString("EnableSoundEffectsText"));
             showKeyReminder.UpdateToggleText(Main.ShowKeyReminder.Value, GetString("ShowKeyReminder"));
             toggleCursor.UpdateToggleText(Main.ToggleCursor.Value, GetString("ToggleCursorText"));
+            showChatNotifications.UpdateToggleText(Main.ShowChatNotifications.Value, GetString("ShowChatNotificationsText"));
+            muteLobbyBGM.UpdateToggleText(Main.MuteLobbyBGM.Value, GetString("MuteLobbyBGM"));
             localHats.UpdateToggleText(Main.LocalHats.Value, GetString("LocalHatsText"));
+            forceUsePlus25Protocol.UpdateToggleText(Main.ForceUsePlus25Protocol.Value, GetString("ForceUsePlus25Protocol"));
 
             passiveButton.OnMouseOver.Invoke();
         }
@@ -295,14 +314,14 @@ public static class StartOptionMenuPatch
         float y = tabs[0].transform.localPosition.y, z = tabs[0].transform.localPosition.z;
         if (tabs.Count == 4)
         {
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 3; i++)
             {
                 tabs[i].transform.localPosition = new Vector3(1.7f * (i - 1), y, z);
             }
         }
         else if (tabs.Count == 5)
         {
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 tabs[i].transform.localPosition = new Vector3(1.62f * (i - 1.5f), y, z);
             }

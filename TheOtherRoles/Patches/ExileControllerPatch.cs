@@ -18,27 +18,28 @@ namespace TheOtherRoles.Patches;
 [HarmonyPriority(Priority.First)]
 internal class ExileControllerBeginPatch
 {
-    public static GameData.PlayerInfo lastExiled;
+    public static NetworkedPlayerInfo lastExiled;
     public static TextMeshPro confirmImpostorSecondText;
     private static bool IsSec;
-    public static bool Prefix(ExileController __instance, [HarmonyArgument(0)] ref GameData.PlayerInfo exiled, [HarmonyArgument(1)] bool tie)
+    public static bool Prefix(ExileController __instance, [HarmonyArgument(0)] ref ExileController.InitProperties init)
     {
-        lastExiled = exiled;
-        Message($"开始放逐: {exiled?.PlayerName ?? "null"}");
+        lastExiled = init?.networkedPlayer;
+        var exiled = init?.networkedPlayer;
+        Message($"开始放逐: {init?.networkedPlayer?.PlayerName ?? "null"}");
         if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && !IsSec)
         {
             IsSec = true;
-            __instance.exiled = null;
+            __instance.initData.networkedPlayer = null;
             ExileController controller = Object.Instantiate(__instance, __instance.transform.parent);
-            controller.exiled = Balancer.targetplayerright.Data;
-            controller.Begin(controller.exiled, false);
+            controller.initData.networkedPlayer = Balancer.targetplayerright.Data;
+            controller.Begin(controller.initData);
             IsSec = false;
             controller.completeString = string.Empty;
 
             controller.Text.gameObject.SetActive(false);
-            controller.Player.UpdateFromEitherPlayerDataOrCache(controller.exiled, PlayerOutfitType.Default, PlayerMaterial.MaskType.Exile, includePet: false);
+            controller.Player.UpdateFromEitherPlayerDataOrCache(controller.initData.networkedPlayer, PlayerOutfitType.Default, PlayerMaterial.MaskType.Exile, includePet: false);
             controller.Player.ToggleName(active: false);
-            SkinViewData skin = ShipStatus.Instance.CosmeticsCache.GetSkin(controller.exiled.Outfits[PlayerOutfitType.Default].SkinId);
+            SkinViewData skin = ShipStatus.Instance.CosmeticsCache.GetSkin(controller.initData.networkedPlayer.Outfits[PlayerOutfitType.Default].SkinId);
             controller.Player.FixSkinSprite(skin.EjectFrame);
             AudioClip sound = null;
             if (controller.EjectSound != null)
@@ -56,9 +57,10 @@ internal class ExileControllerBeginPatch
                 createlate(i);
             }
             _ = new LateTask(() => { controller.StopAllCoroutines(); controller.EjectSound = sound; controller.StartCoroutine(controller.Animate()); }, 0.6f);
+
             ExileController.Instance = __instance;
-            __instance.exiled = Balancer.targetplayerleft.Data;
-            exiled = __instance.exiled;
+            init = GenerateExileInitProperties(Balancer.targetplayerleft.Data, false);
+
             if (isFungle)
             {
                 Helpers.SetActiveAllObject(controller.gameObject.GetChildren(), "RaftAnimation", false);
@@ -168,7 +170,7 @@ internal class ExileControllerBeginPatch
         confirmImpostorSecondText.text = changeStringBuilder.ToString();
         confirmImpostorSecondText.gameObject.SetActive(true);
 
-        if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && __instance.exiled?.PlayerId == Balancer.targetplayerleft.PlayerId)
+        if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && __instance?.initData?.networkedPlayer?.PlayerId == Balancer.targetplayerleft?.PlayerId)
         {
             __instance.completeString = GetString("二者一同放逐");
         }
@@ -212,7 +214,7 @@ internal class ExileControllerWrapUpPatch
         }
     }
 
-    private static void WrapUpPostfix(GameData.PlayerInfo exiled)
+    private static void WrapUpPostfix(NetworkedPlayerInfo exiled)
     {
         Message("WrapUp");
         if (CachedPlayer.LocalPlayer.IsDead) CanSeeRoleInfo = true;
@@ -262,7 +264,7 @@ internal class ExileControllerWrapUpPatch
         }
         Witness.target = Witness.killerTarget = null;
 
-        if (Vortox.Player.IsAlive())
+        if (Vortox.Player.IsAlive() && exiled == null)
         {
             Vortox.skipCount++;
             if (Vortox.skipCount == Vortox.skipMeetingNum) Vortox.triggerImpWin = true;
@@ -515,7 +517,7 @@ internal class ExileControllerWrapUpPatch
         public static void Postfix(ExileController __instance)
         {
             Message("ExileController.WrapUp", "WrapUpPostfix");
-            WrapUpPostfix(__instance.exiled);
+            WrapUpPostfix(__instance.initData?.networkedPlayer);
         }
     }
 
@@ -525,7 +527,7 @@ internal class ExileControllerWrapUpPatch
         public static void Postfix(AirshipExileController __instance)
         {
             Message("AirshipExileController.WrapUpAndSpawn", "WrapUpPostfix");
-            WrapUpPostfix(__instance.exiled);
+            WrapUpPostfix(__instance.initData?.networkedPlayer);
         }
 
         public static bool Prefix(AirshipExileController __instance)
@@ -533,14 +535,14 @@ internal class ExileControllerWrapUpPatch
 
             if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && __instance != ExileController.Instance)
             {
-                if (__instance.exiled != null)
+                if (__instance.initData?.networkedPlayer != null)
                 {
-                    PlayerControl @object = __instance.exiled.Object;
+                    PlayerControl @object = __instance.initData?.networkedPlayer.Object;
                     if (@object)
                     {
                         @object.Exiled();
                     }
-                    __instance.exiled.IsDead = true;
+                    __instance.initData.networkedPlayer.IsDead = true;
                 }
                 Object.Destroy(__instance.gameObject);
             }
@@ -568,9 +570,9 @@ internal class ExileControllerMessagePatch
     {
         try
         {
-            if (ExileController.Instance != null && ExileController.Instance.exiled != null)
+            if (ExileController.Instance != null && ExileController.Instance.initData.networkedPlayer != null)
             {
-                var player = playerById(ExileController.Instance.exiled.Object.PlayerId);
+                var player = playerById(ExileController.Instance.initData.networkedPlayer.Object.PlayerId);
                 if (player == null) return;
                 // Exile role text
                 if (id is StringNames.ExileTextPN or StringNames.ExileTextSN or StringNames.ExileTextPP or StringNames.ExileTextSP)
