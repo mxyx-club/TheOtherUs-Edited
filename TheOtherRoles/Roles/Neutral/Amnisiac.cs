@@ -263,6 +263,11 @@ public class Amnisiac
                 Juggernaut.juggernaut = local;
                 Player.Add(target);
                 break;
+            case RoleId.Pelican:
+                if (resetRole) Pelican.clearAndReload();
+                Pelican.Player = local;
+                Player.Add(target);
+                break;
             case RoleId.Akujo:
                 Akujo.akujo = local;
                 Player.Add(target);

@@ -11,6 +11,7 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
+using static Il2CppSystem.Globalization.CultureInfo;
 using static TheOtherRoles.GameHistory;
 using Object = UnityEngine.Object;
 
@@ -743,18 +744,17 @@ public static class PlayerControlFixedUpdatePatch
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
         var numberOfTasks = playerTotal - playerCompleted;
 
-        var snitchIsDead = Snitch.snitch.Data.IsDead;
         var local = CachedPlayer.LocalPlayer.PlayerControl;
 
         var isDead = local == Snitch.snitch || local.Data.IsDead;
-        var forImpTeam = local.Data.Role.IsImpostor;
+        var forImpTeam = local.isImpostor();
         var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(local);
         var forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(local);
         var forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(local);
 
         if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam || isDead))
         {
-            if (Snitch.text == null && !snitchIsDead)
+            if (Snitch.text == null && !Snitch.snitch.IsDead())
             {
                 Snitch.text = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 Snitch.text.enableWordWrapping = false;
@@ -762,7 +762,7 @@ public static class PlayerControlFixedUpdatePatch
                 Snitch.text.transform.localPosition += new Vector3(0f, 1.8f, -69f);
                 Snitch.text.gameObject.SetActive(true);
             }
-            else if (!snitchIsDead)
+            else if (!Snitch.snitch.IsDead())
             {
                 Snitch.text.text = $"告密者还活着: {playerCompleted} / {playerTotal}";
             }
@@ -834,9 +834,8 @@ public static class PlayerControlFixedUpdatePatch
             BountyHunter.arrowUpdateTimer = 0f; // Force arrow to update
             BountyHunter.bountyUpdateTimer = BountyHunter.bountyDuration;
             var possibleTargets = new List<PlayerControl>();
-            foreach (PlayerControl p in CachedPlayer.AllPlayers)
-                if (!p.Data.IsDead && !p.Data.Disconnected && p != p.Data.Role.IsImpostor && p != Spy.spy &&
-                    (p != Mini.mini || Mini.isGrownUp()) && (Lovers.otherLover(BountyHunter.bountyHunter) == null || p != Lovers.otherLover(BountyHunter.bountyHunter)))
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls.ToArray().Where(x => x.IsAlive()))
+                if (p.IsAlive() && p != p.isImpostor(true) && (p != Mini.mini || Mini.isGrownUp()) && p != Lovers.otherLover(BountyHunter.bountyHunter))
                     possibleTargets.Add(p);
             if (possibleTargets.Count == 0) return;
             BountyHunter.bounty = possibleTargets[rnd.Next(0, possibleTargets.Count)];
@@ -875,7 +874,7 @@ public static class PlayerControlFixedUpdatePatch
         }
 
         // Update Arrow
-        if (BountyHunter.showArrow && BountyHunter.bounty != null)
+        if (BountyHunter.showArrow && BountyHunter.bounty.IsAlive())
         {
             BountyHunter.arrow ??= new Arrow(Color.red);
             if (BountyHunter.arrowUpdateTimer <= 0f)
@@ -1283,6 +1282,26 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
+    public static void PelicanUpdate()
+    {
+        if (Pelican.Player == null) return;
+        if (Pelican.Player.IsAlive() && Pelican.eatenPlayers.Any(x => x == PlayerControl.LocalPlayer) && !InMeeting)
+        {
+            HudManager.Instance.PlayerCam.Target = Pelican.Player;
+            PlayerControl.LocalPlayer.transform.position = new(-10f, 10f, 0f);
+        }
+
+        if (InMeeting || Pelican.Player == null)
+        {
+            if (Pelican.eatenPlayers.Any(x => x == PlayerControl.LocalPlayer))
+            {
+            HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
+            PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Pelican.Player.transform.position);
+            }
+            Pelican.eatenPlayers = new();
+        }
+    }
+
     public static void trapperUpdate()
     {
         if (Trapper.trapper == null || CachedPlayer.LocalPlayer.PlayerControl != Trapper.trapper ||
@@ -1435,6 +1454,7 @@ public static class PlayerControlFixedUpdatePatch
             partTimerUpdate();
             //Balancer
             Balancer.FixedUpdate();
+            PelicanUpdate();
 
             hackerUpdate();
             swapperUpdate();
@@ -1484,6 +1504,7 @@ public static class PlayerControlFixedUpdatePatch
         thiefSetTarget();
         partTimerSetTarget();
         akujoSetTarget();
+        PelicanSetTarget();
 
         securityGuardSetTarget();
         bodyGuardSetTarget();
@@ -1619,6 +1640,15 @@ public static class PlayerControlFixedUpdatePatch
         if (Akujo.keeps != null) untargetables.AddRange(Akujo.keeps);
         Akujo.currentTarget = setTarget(untargetablePlayers: untargetables);
         if (Akujo.honmei == null || Akujo.keepsLeft > 0) setPlayerOutline(Akujo.currentTarget, Akujo.color);
+    }
+
+    private static void PelicanSetTarget()
+    {
+        if (Pelican.Player == null || Pelican.Player != CachedPlayer.LocalPlayer.PlayerControl) return;
+        var untargetablePlayers = new List<PlayerControl>();
+        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini); // Exclude Jackal from targeting the Mini unless it has grown up
+        Pelican.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
+        setPlayerOutline(Pelican.currentTarget, Palette.ImpostorRed);
     }
 
     private static void swooperSetTarget()
@@ -1956,6 +1986,7 @@ internal class BodyReportPatch
 {
     public static bool Prefix(PlayerControl __instance)
     {
+        if (ModOption.DisableMeeting) return false;
         handleVampireBiteOnBodyReport();
         handleBomberExplodeOnBodyReport();
         handleTrapperTrapOnBodyReport();
@@ -2055,6 +2086,20 @@ internal class BodyReportPatch
     }
 }
 
+[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Die))]
+public static class PlayerDiePatch
+{
+    public static void Postfix(PlayerControl __instance)
+    {
+        if (!InGame || PlayerControl.LocalPlayer != __instance) return;
+        if (ModOption.gameMode is CustomGamemodes.Classic or CustomGamemodes.Guesser) return;
+        _ = new LateTask(() =>
+        {
+            CanSeeRoleInfo = true;
+        }, 1f, "CanSeeRoleInfo");
+    }
+}
+
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
 public static class MurderPlayerPatch
 {
@@ -2145,6 +2190,23 @@ public static class MurderPlayerPatch
                 (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             Executioner.PromotesRole();
+        }
+
+        if (target.PlayerId == Pelican.Player?.PlayerId && Pelican.eatenPlayers?.Count > 0)
+        {
+            foreach (var player in Pelican.eatenPlayers.ToArray().Where(p => p != null && p.Data.IsDead))
+            {
+                player.Revive();
+
+                DeadPlayers.RemoveAll(x => x.Player.PlayerId == player.PlayerId);
+                if (PlayerControl.LocalPlayer == player)
+                {
+                    HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
+                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Pelican.Player.transform.position);
+                }
+                continue;
+            }
+            Pelican.eatenPlayers = new();
         }
 
         // Undertaker Button Sync
@@ -2301,7 +2363,6 @@ public static class MurderPlayerPatch
                 OverrideDeathReasonAndKiller(akujoPartner, CustomDeathReason.LoverSuicide);
             }
         }
-
     }
 }
 
@@ -2387,7 +2448,7 @@ public static class ExilePlayerPatch
             }
         }
 
-        _ = new LateTask(() => { if (__instance == PlayerControl.LocalPlayer) CanSeeRoleInfo = true; }, 1f);
+        _ = new LateTask(() => { if (__instance == PlayerControl.LocalPlayer) CanSeeRoleInfo = true; }, 0.5f, "CanSeeRoleInfo");
 
         // Remove fake tasks when player dies
         if (__instance.hasFakeTasks() || __instance == Pursuer.Player.Contains(__instance) || __instance == Thief.thief)

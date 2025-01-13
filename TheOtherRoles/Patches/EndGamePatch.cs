@@ -21,6 +21,7 @@ internal enum CustomGameOverReason
     JesterWin,
     WitnessWin,
     ArsonistWin,
+    PelicanWin,
     VultureWin,
     LawyerSoloWin,
     ExecutionerWin,
@@ -45,6 +46,7 @@ internal enum WinCondition
     WitnessWin,
     PavlovsWin,
     SwooperWin,
+    PelicanWin,
     ArsonistWin,
     VultureWin,
     LawyerSoloWin,
@@ -158,6 +160,7 @@ public class OnGameEndPatch
             Witness.Player,
             Specter.Player,
             Thief.thief,
+            Pelican.Player,
             Juggernaut.juggernaut,
             Doomsayer.doomsayer,
             PartTimer.partTimer,
@@ -188,6 +191,7 @@ public class OnGameEndPatch
         var werewolfWin = gameOverReason == (GameOverReason)CustomGameOverReason.WerewolfWin && Werewolf.werewolf.IsAlive();
         var juggernautWin = gameOverReason == (GameOverReason)CustomGameOverReason.JuggernautWin && Juggernaut.juggernaut.IsAlive();
         var swooperWin = gameOverReason == (GameOverReason)CustomGameOverReason.SwooperWin && Swooper.swooper.IsAlive();
+        var pelicanWin = gameOverReason == (GameOverReason)CustomGameOverReason.PelicanWin && Pelican.Player.IsAlive();
         var arsonistWin = Arsonist.arsonist != null && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
         var doomsayerWin = Doomsayer.doomsayer != null && gameOverReason == (GameOverReason)CustomGameOverReason.DoomsayerWin;
         var loversWin = Lovers.existingAndAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin ||
@@ -356,6 +360,15 @@ public class OnGameEndPatch
             AdditionalTempData.winCondition = WinCondition.JuggernautWin;
             TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
             var wpd = new WinningPlayerData(Juggernaut.juggernaut.Data);
+            wpd.IsImpostor = false;
+            TempData.winners.Add(wpd);
+        }
+
+        else if (pelicanWin)
+        {
+            AdditionalTempData.winCondition = WinCondition.PelicanWin;
+            TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+            var wpd = new WinningPlayerData(Pelican.Player.Data);
             wpd.IsImpostor = false;
             TempData.winners.Add(wpd);
         }
@@ -551,6 +564,7 @@ public class EndGameManagerSetUpPatch
             { WinCondition.JesterWin, (Jester.color, "JesterWin") },
             { WinCondition.DoomsayerWin, (Doomsayer.color, "DoomsayerWin") },
             { WinCondition.ArsonistWin, (Arsonist.color, "ArsonistWin") },
+            { WinCondition.PelicanWin, (Arsonist.color, "鹈鹕胜利！") },
             { WinCondition.VultureWin, (Vulture.color, "VultureWin") },
             { WinCondition.LawyerSoloWin, (Lawyer.color, "LawyerSoloWin") },
             { WinCondition.WerewolfWin, (Werewolf.color, "WerewolfWin") },
@@ -677,6 +691,7 @@ internal class CheckEndCriteriaPatch
         if (CheckAndEndGameForJackalWin(__instance, statistics)) return false;
         if (CheckAndEndGameForPavlovsWin(__instance, statistics)) return false;
         if (CheckAndEndGameForSwooperWin(__instance, statistics)) return false;
+        if (CheckAndEndGameForPelicanWin(__instance, statistics)) return false;
         if (CheckAndEndGameForJuggernautWin(__instance, statistics)) return false;
         if (CheckAndEndGameForImpostorWin(__instance, statistics)) return false;
         if (CheckAndEndGameForCrewmateWin(__instance, statistics)) return false;
@@ -817,6 +832,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
+            statistics.TeamPelicanAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
             !(statistics.TeamArsonisHasAliveLover && statistics.TeamLoversAlive == 2)
@@ -837,6 +853,7 @@ internal class CheckEndCriteriaPatch
                 statistics.TeamArsonistAlive == 0 &&
                 statistics.TeamJuggernautAlive == 0 &&
                 statistics.TeamPavlovsAlive == 0 &&
+                statistics.TeamPelicanAlive == 0 &&
                 statistics.TeamWerewolfAlive == 0 &&
                 statistics.TeamJackalAlive == 0 &&
                 statistics.TeamSwooperAlive == 0 &&
@@ -855,6 +872,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
+            statistics.TeamPelicanAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
@@ -876,6 +894,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
+            statistics.TeamPelicanAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
             !(statistics.TeamPavlovsHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive())
@@ -895,6 +914,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
+            statistics.TeamPelicanAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
             !(statistics.TeamSwooperHasAliveLover &&
             statistics.TeamLoversAlive == 2) &&
@@ -902,6 +922,26 @@ internal class CheckEndCriteriaPatch
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.SwooperWin, false);
+            return true;
+        }
+        return false;
+    }
+    private static bool CheckAndEndGameForPelicanWin(ShipStatus __instance, PlayerStatistics statistics)
+    {
+        if (statistics.TeamPelicanAlive >= statistics.TotalAlive - statistics.TeamPelicanAlive &&
+            statistics.TeamImpostorsAlive == 0 &&
+            statistics.TeamJuggernautAlive == 0 &&
+            statistics.TeamJackalAlive == 0 &&
+            statistics.TeamPavlovsAlive == 0 &&
+            statistics.TeamWerewolfAlive == 0 &&
+            statistics.TeamSwooperAlive == 0 &&
+            statistics.TeamArsonistAlive == 0 &&
+            !(statistics.TeamPelicanHasAliveLover &&
+            statistics.TeamLoversAlive == 2) &&
+            !killingCrewAlive())
+        {
+            //__instance.enabled = false;
+            GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.PelicanWin, false);
             return true;
         }
         return false;
@@ -915,6 +955,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
+            statistics.TeamPelicanAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
             !(statistics.TeamWerewolfHasAliveLover &&
               statistics.TeamLoversAlive == 2) &&
@@ -937,6 +978,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
+            statistics.TeamPelicanAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
             !(statistics.TeamJuggernautHasAliveLover &&
@@ -960,6 +1002,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
+            statistics.TeamPelicanAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamJuggernautAlive == 0 &&
             !(statistics.TeamImpostorHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive()))
@@ -993,6 +1036,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
+            statistics.TeamPelicanAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
             statistics.TeamJuggernautAlive == 0)
         {
@@ -1034,6 +1078,7 @@ internal class PlayerStatistics
     public int TeamLoversAlive { get; set; }
     public int TotalAlive { get; set; }
     public int TeamSwooperAlive { get; set; }
+    public int TeamPelicanAlive { get; set; }
     public bool TeamImpostorHasAliveLover { get; set; }
     public bool TeamJackalHasAliveLover { get; set; }
     public bool TeamPavlovsHasAliveLover { get; set; }
@@ -1043,6 +1088,7 @@ internal class PlayerStatistics
     public bool TeamSwooperHasAliveLover { get; set; }
     public bool TeamWerewolfHasAliveLover { get; set; }
     public bool TeamArsonisHasAliveLover { get; set; }
+    public bool TeamPelicanHasAliveLover { get; set; }
     public int TeamJuggernautAlive { get; set; }
     public bool TeamJuggernautHasAliveLover { get; set; }
 
@@ -1060,6 +1106,7 @@ internal class PlayerStatistics
         var numLoversAlive = 0;
         var numTotalAlive = 0;
         var numSwooperAlive = 0;
+        var numPelicanAlive = 0;
         var numArsonistAlive = 0;
         var numWerewolfAlive = 0;
         var numJuggernautAlive = 0;
@@ -1069,6 +1116,7 @@ internal class PlayerStatistics
         var pavlovsLover = false;
         var arsonistLover = false;
         var swooperLover = false;
+        var pelicanLover = false;
         var werewolfLover = false;
         var juggernautLover = false;
 
@@ -1132,6 +1180,11 @@ internal class PlayerStatistics
                         numJuggernautAlive++;
                         if (lover) juggernautLover = true;
                     }
+                    if (Pelican.Player != null && Pelican.Player.PlayerId == playerInfo.PlayerId)
+                    {
+                        numPelicanAlive++;
+                        if (lover) pelicanLover = true;
+                    }
                     if (Akujo.akujo != null && Akujo.akujo.PlayerId == playerInfo.PlayerId)
                     {
                         numAkujoAlive++;
@@ -1150,6 +1203,7 @@ internal class PlayerStatistics
         TeamAkujoAlive = numAkujoAlive;
         TeamImpostorHasAliveLover = impLover;
         TeamJackalHasAliveLover = jackalLover;
+        TeamPelicanHasAliveLover = pelicanLover;
         TeamPavlovsHasAliveLover = pavlovsLover;
         TeamWerewolfHasAliveLover = werewolfLover;
         TeamWerewolfAlive = numWerewolfAlive;
@@ -1157,6 +1211,7 @@ internal class PlayerStatistics
         TeamSwooperHasAliveLover = swooperLover;
         TeamSwooperAlive = numSwooperAlive;
         TeamJuggernautAlive = numJuggernautAlive;
+        TeamPelicanAlive = numPelicanAlive;
         TeamArsonisHasAliveLover = arsonistLover;
         TeamJuggernautHasAliveLover = juggernautLover;
     }

@@ -66,6 +66,7 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
     public static RoleInfo juggernaut = new("Juggernaut", Juggernaut.color, RoleId.Juggernaut, RoleType.Neutral);
     public static RoleInfo doomsayer = new("Doomsayer", Doomsayer.color, RoleId.Doomsayer, RoleType.Neutral);
     public static RoleInfo akujo = new("Akujo", Akujo.color, RoleId.Akujo, RoleType.Neutral);
+    public static RoleInfo pelican = new("Pelican", Pelican.color, RoleId.Pelican, RoleType.Neutral);
 
     public static RoleInfo crewmate = new("Crewmate", Color.white, RoleId.Crewmate, RoleType.Crewmate);
     public static RoleInfo vigilante = new("Vigilante", Vigilante.color, RoleId.Vigilante, RoleType.Crewmate);
@@ -174,6 +175,7 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
         pavlovsdogs,
         werewolf,
         swooper,
+        pelican,
         juggernaut,
         akujo,
         thief,
@@ -337,6 +339,7 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
         if (p == Vulture.vulture) infos.Add(vulture);
         if (p == Medium.medium) infos.Add(medium);
         if (p == Lawyer.lawyer) infos.Add(lawyer);
+        if (p == Pelican.Player) infos.Add(pelican);
         if (p == PartTimer.partTimer) infos.Add(partTimer);
         if (p == Prosecutor.prosecutor) infos.Add(prosecutor);
         if (p == Balancer.balancer) infos.Add(balancer);

@@ -161,6 +161,7 @@ public class CustomButton
             p.killTimer = time;
         }
 
+        pelicanKillButton.Timer = time == -1 ? pelicanKillButton.MaxTimer : time;
         warlockCurseButton.Timer = time == -1 ? warlockCurseButton.MaxTimer : time;
         ninjaButton.Timer = time == -1 ? ninjaButton.MaxTimer : time;
         vampireKillButton.Timer = time == -1 ? vampireKillButton.MaxTimer : time;

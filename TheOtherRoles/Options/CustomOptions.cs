@@ -108,14 +108,12 @@ public class CustomOption
         {
             if (option.id == 0) continue;
 
-            option.entry =
-                Main.Instance.Config.Bind($"Preset{preset}", option.id.ToString(),
-                    option.defaultSelection);
+            option.entry = Main.Instance.Config.Bind($"Preset{preset}", option.id.ToString(), option.defaultSelection);
             option.selection = Mathf.Clamp(option.entry.Value, 0, option.selections.Length - 1);
-            if (option.optionBehaviour != null && option.optionBehaviour is StringOption stringOption)
+            if (option.optionBehaviour is not null and StringOption stringOption)
             {
                 stringOption.oldValue = stringOption.Value = option.selection;
-                stringOption.ValueText.text = option.getString();
+                stringOption.ValueText.text = option.GetString();
             }
         }
     }
@@ -204,21 +202,19 @@ public class CustomOption
         return selection + 1;
     }
 
-    public string getString()
+    public string GetString()
     {
         var sel = selections[selection].ToString();
 
-        if (sel is "optionOn")
-            return "<color=#FFFF00FF>" + sel.Translate() + "</color>";
-        else if (sel == "optionOff")
+        return sel switch
         {
-            return "<color=#CCCCCCFF>" + sel.Translate() + "</color>";
-        }
-
-        return sel.Translate();
+            "optionOn" => "<color=#FFFF00FF>" + sel.Translate() + "</color>",
+            "optionOff" => "<color=#CCCCCCFF>" + sel.Translate() + "</color>",
+            _ => sel.Translate(),
+        };
     }
 
-    public virtual string getName()
+    public string GetName()
     {
         return name.Translate();
     }
@@ -239,7 +235,7 @@ public class CustomOption
         if (optionBehaviour != null && optionBehaviour is StringOption stringOption)
         {
             stringOption.oldValue = stringOption.Value = selection;
-            stringOption.ValueText.text = getString();
+            stringOption.ValueText.text = GetString();
             if (AmongUsClient.Instance?.AmHost != true || !CachedPlayer.LocalPlayer.PlayerControl) return;
             if (id == 0 && selection != preset)
             {
@@ -546,9 +542,9 @@ internal class GameOptionsMenuStartPatch
                 var stringOption = Object.Instantiate(template, menus[(int)option.type]);
                 optionBehaviours[(int)option.type].Add(stringOption);
                 stringOption.OnValueChanged = new Action<OptionBehaviour>(o => { });
-                stringOption.TitleText.text = option.getName();
+                stringOption.TitleText.text = option.GetName();
                 stringOption.Value = stringOption.oldValue = option.selection;
-                stringOption.ValueText.text = option.getString();
+                stringOption.ValueText.text = option.GetString();
 
                 option.optionBehaviour = stringOption;
             }
@@ -701,9 +697,9 @@ internal class GameOptionsMenuStartPatch
                 var stringOption = Object.Instantiate(template, menus[(int)option.type]);
                 optionBehaviours[(int)option.type].Add(stringOption);
                 stringOption.OnValueChanged = new Action<OptionBehaviour>(o => { });
-                stringOption.TitleText.text = option.getName();
+                stringOption.TitleText.text = option.GetName();
                 stringOption.Value = stringOption.oldValue = option.selection;
-                stringOption.ValueText.text = option.getString();
+                stringOption.ValueText.text = option.GetString();
 
                 option.optionBehaviour = stringOption;
             }
@@ -815,9 +811,9 @@ public class StringOptionEnablePatch
         if (option == null) return true;
 
         __instance.OnValueChanged = new Action<OptionBehaviour>(o => { });
-        __instance.TitleText.text = option.getName();
+        __instance.TitleText.text = option.GetName();
         __instance.Value = __instance.oldValue = option.selection;
-        __instance.ValueText.text = option.getString();
+        __instance.ValueText.text = option.GetString();
 
         return false;
     }
@@ -898,14 +894,13 @@ internal class GameOptionsMenuUpdatePatch
     public static bool update;
     public static void Postfix(GameOptionsMenu __instance)
     {
+        if (!update) return;
+
         // Return Menu Update if in normal among us settings 
         var gameSettingMenu = Object.FindObjectsOfType<GameSettingMenu>().FirstOrDefault();
         if (gameSettingMenu.RegularGameSettings.active || gameSettingMenu.RolesSettings.gameObject.active) return;
 
         __instance.GetComponentInParent<Scroller>().ContentYBounds.max = -0.5F + (__instance.Children.Length * 0.55F);
-        //timer += Time.deltaTime;
-        if (/*timer < 0.2f || */!update) return;
-        //timer = 0f;
 
         var offset = 2.75f;
         foreach (var option in options)
@@ -922,14 +917,7 @@ internal class GameOptionsMenuUpdatePatch
                 continue;
             if (option?.optionBehaviour != null && option.optionBehaviour.gameObject != null)
             {
-                var enabled = true;
-                var parent = option.parent;
-                while (parent != null && enabled)
-                {
-                    enabled = parent.selection != 0;
-                    parent = parent.parent;
-                }
-
+                var enabled = option.IsEnbaled();
                 option.optionBehaviour.gameObject.SetActive(enabled);
                 if (enabled)
                 {
@@ -989,18 +977,18 @@ internal class GameOptionsDataPatch
         foreach (var option in options)
             if (option.parent == null)
             {
-                var line = $"{option.getName()}: {option.getString()}";
+                var line = $"{option.GetName()}: {option.GetString()}";
                 if (type == CustomOptionType.Modifier) line += buildModifierExtras(option);
                 sb.AppendLine(line);
             }
             else if (option.parent.GetSelection() > 0)
             {
                 if (option.id == 30170) //Deputy
-                    sb.AppendLine($"- {cs(Deputy.color, "Deputy".Translate())}: {option.getString()}");
+                    sb.AppendLine($"- {cs(Deputy.color, "Deputy".Translate())}: {option.GetString()}");
                 else if (option.id == 20142)
-                    sb.AppendLine($"- {cs(Jackal.color, "jackalSwoopChance".Translate())}: {option.getString()}");
+                    sb.AppendLine($"- {cs(Jackal.color, "jackalSwoopChance".Translate())}: {option.GetString()}");
                 else if (option.id == 20135) //Sidekick
-                    sb.AppendLine($"- {cs(Jackal.color, "Sidekick".Translate())}: {option.getString()}");
+                    sb.AppendLine($"- {cs(Jackal.color, "Sidekick".Translate())}: {option.GetString()}");
             }
 
         if (headerOnly) return sb.ToString();
@@ -1015,7 +1003,7 @@ internal class GameOptionsDataPatch
 
                 var c = isIrrelevant ? Color.grey : Color.white; // No use for now
                 if (isIrrelevant) continue;
-                sb.AppendLine(cs(c, $"{option.getName()}: {option.getString()}"));
+                sb.AppendLine(cs(c, $"{option.GetName()}: {option.GetString()}"));
             }
             else
             {
@@ -1068,7 +1056,7 @@ internal class GameOptionsDataPatch
                 }
                 else
                 {
-                    sb.AppendLine($"\n{option.getName()}: {option.getString()}");
+                    sb.AppendLine($"\n{option.GetName()}: {option.GetString()}");
                 }
             }
         }

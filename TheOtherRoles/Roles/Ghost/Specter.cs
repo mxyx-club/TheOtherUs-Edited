@@ -8,6 +8,7 @@ public class Specter
     public static PlayerControl Player;
     public static Color color = new Color32(154, 147, 80, byte.MaxValue);
     public static bool remember;
+    public static float duration;
 
     public static bool resetRole;
 
@@ -16,6 +17,7 @@ public class Specter
         Player = null;
         remember = !CustomOptionHolder.specterAfterMeeting.GetBool();
         resetRole = CustomOptionHolder.specterResetRole.GetBool();
+        duration = CustomOptionHolder.specterDuration.GetFloat();
     }
 
     public static void TakeRole(byte targetId)
@@ -203,6 +205,11 @@ public class Specter
                     break;
                 case RoleId.Juggernaut:
                     Juggernaut.juggernaut = local;
+                    Amnisiac.Player.Add(target);
+                    break;
+                case RoleId.Pelican:
+                    Pelican.clearAndReload();
+                    Pelican.Player = local;
                     Amnisiac.Player.Add(target);
                     break;
                 case RoleId.Akujo:

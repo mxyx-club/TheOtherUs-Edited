@@ -6,6 +6,121 @@ using TheOtherRoles.Utilities;
 
 namespace TheOtherRoles.Roles;
 
+public enum RoleId
+{
+    Default,
+
+    Impostor,
+    Morphling,
+    WolfLord,
+    Bomber,
+    Poucher,
+    Butcher,
+    Mimic,
+    Camouflager,
+    Miner,
+    Eraser,
+    Vampire,
+    Undertaker,
+    Escapist,
+    Warlock,
+    Trickster,
+    BountyHunter,
+    Cleaner,
+    Terrorist,
+    Blackmailer,
+    Witch,
+    Ninja,
+    Yoyo,
+    EvilTrapper,
+    Gambler,
+    Grenadier,
+
+    Survivor,
+    Amnisiac,
+    Jester,
+    Vulture,
+    Lawyer,
+    Executioner,
+    Pursuer,
+    PartTimer,
+    Witness,
+    Doomsayer,
+    Arsonist,
+    Jackal,
+    Sidekick,
+    Pavlovsowner,
+    Pavlovsdogs,
+    Werewolf,
+    Swooper,
+    Juggernaut,
+    Pelican,
+    Akujo,
+    Thief,
+
+    Crewmate,
+    Vigilante,
+    Mayor,
+    Prosecutor,
+    Portalmaker,
+    Engineer,
+    Sheriff,
+    Deputy,
+    BodyGuard,
+    Jumper,
+    Detective,
+    TimeMaster,
+    Veteran,
+    Medic,
+    Swapper,
+    Seer,
+    Hacker,
+    Tracker,
+    Snitch,
+    Prophet,
+    InfoSleuth,
+    Spy,
+    SecurityGuard,
+    Medium,
+    Trapper,
+    Balancer,
+
+    // Modifier ---
+    Lover,
+    Assassin,
+    Disperser,
+    PoucherModifier,
+    Vortox,
+    Specoality,
+    LastImpostor,
+    Bloody,
+    AntiTeleport,
+    Tiebreaker,
+    Bait,
+    Aftermath,
+    Flash,
+    Torch,
+    Sunglasses,
+    Multitasker,
+    Mini,
+    Giant,
+    Vip,
+    Indomitable,
+    Slueth,
+    Cursed,
+    Invert,
+    Blind,
+    Watcher,
+    Radar,
+    Tunneler,
+    ButtonBarry,
+    Chameleon,
+    Shifter,
+
+    GhostEngineer = 200,
+    Specter,
+}
+
 public static class RoleHelpers
 {
     private static bool _CanSeeRoleInfo;
@@ -14,33 +129,11 @@ public static class RoleHelpers
         get => _CanSeeRoleInfo;
         set
         {
-            if (PlayerControl.LocalPlayer == Specter.Player) _CanSeeRoleInfo = false;
+            if (PlayerControl.LocalPlayer.IsAlive()) _CanSeeRoleInfo = false;
+            else if (PlayerControl.LocalPlayer == Specter.Player) _CanSeeRoleInfo = false;
             else if (Specter.Player.isLover() && Lovers.otherLover(Specter.Player) == PlayerControl.LocalPlayer) _CanSeeRoleInfo = false;
             else _CanSeeRoleInfo = value;
         }
-    }
-
-    public static bool CanMultipleShots(PlayerControl dyingTarget)
-    {
-        if (dyingTarget == CachedPlayer.LocalPlayer.PlayerControl)
-            return false;
-
-        if (ModOption.gameMode != CustomGamemodes.Guesser)
-        {
-            if (PlayerControl.LocalPlayer == Vigilante.vigilante
-                && HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 0
-                && Vigilante.hasMultipleShotsPerMeeting) return true;
-            else if (Assassin.assassin.Any(x => x == PlayerControl.LocalPlayer)
-                && HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 0
-                && Assassin.assassinMultipleShotsPerMeeting) return true;
-        }
-
-        else if (HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId)
-            && HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 0
-            && HandleGuesser.hasMultipleShotsPerMeeting) return true;
-
-        return CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && Doomsayer.hasMultipleShotsPerMeeting &&
-               Doomsayer.CanShoot;
     }
 
     public static Dictionary<byte, byte[]> blockedRolePairings = new();
@@ -140,6 +233,7 @@ public static class RoleHelpers
             { RoleId.Sidekick, CustomOptionHolder.jackalSpawnRate.GetSelection() },
             { RoleId.Jester, CustomOptionHolder.jesterSpawnRate.GetSelection() },
             { RoleId.Juggernaut, CustomOptionHolder.juggernautSpawnRate.GetSelection() },
+            { RoleId.Pelican, CustomOptionHolder.pelicanSpawnRate.GetSelection() },
             { RoleId.Lawyer, CustomOptionHolder.lawyerSpawnRate.GetSelection() },
             { RoleId.PartTimer, CustomOptionHolder.partTimerSpawnRate.GetSelection() },
             { RoleId.Pavlovsowner, CustomOptionHolder.pavlovsownerSpawnRate.GetSelection() },
@@ -266,6 +360,7 @@ public static class RoleHelpers
         Grenadier.clearAndReload();
         Witness.ClearAndReload();
         WolfLord.ClearAndReload();
+        Pelican.clearAndReload();
 
         // Modifier
         Assassin.clearAndReload();
@@ -316,16 +411,6 @@ public static class RoleHelpers
             return true;
         }
 
-        public static bool otherNeutral(PlayerControl player)
-        {
-            if (isNeutral(player) && player != Lawyer.lawyer &&
-               !Jackal.jackal.Contains(player) && player != Jackal.sidekick &&
-               player != Pavlovsdogs.pavlovsowner && !Pavlovsdogs.pavlovsdogs.Contains(player))
-                return true;
-            if (PartTimer.partTimer == player && PartTimer.target == null) return true;
-            return false;
-        }
-
         public static void Postfix([HarmonyArgument(0)] PlayerControl player)
         {
             if (GhostPlayer.Contains(player)) return;
@@ -333,6 +418,17 @@ public static class RoleHelpers
             if (player.isCrew()) AssignRole(player, AssignType.Crewmate);
 
             if (otherNeutral(player)) AssignRole(player, AssignType.otherNeutral);
+        }
+
+        public static bool otherNeutral(PlayerControl player)
+        {
+            if (isNeutral(player) && !Jackal.jackal.Contains(player) && player != Jackal.sidekick &&
+                player != Pavlovsdogs.pavlovsowner && !Pavlovsdogs.pavlovsdogs.Contains(player))
+                return true;
+            if (Pelican.Player) return true;
+            if (PartTimer.partTimer == player && PartTimer.target == null) return true;
+            if (Lawyer.lawyer == player && Lawyer.target.IsDead()) return true;
+            return false;
         }
 
         private static void AssignRole(PlayerControl player, AssignType assignType)

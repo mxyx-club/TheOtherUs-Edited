@@ -903,6 +903,8 @@ internal class MeetingHudPatch
                 Balancer.Balancer_Patch.MeetingHudStartPostfix(__instance);
             }
 
+            if (Pelican.Player != null) Pelican.eatenPlayers = new();
+
             foreach (var playerState in Instance?.playerStates ?? Enumerable.Empty<PlayerVoteArea>())
             {
                 var meetingInfoTransform = playerState.NameText.transform.parent.Find("WitnessInfo");

@@ -84,6 +84,7 @@ internal static class HudManagerStartPatch
     public static CustomButton blackmailerButton;
     public static CustomButton thiefKillButton;
     public static CustomButton juggernautKillButton;
+    public static CustomButton pelicanKillButton;
     public static CustomButton evilTrapperSetTrapButton;
     public static CustomButton doomsayerButton;
     public static CustomButton akujoHonmeiButton;
@@ -197,6 +198,7 @@ internal static class HudManagerStartPatch
         jackalSwoopButton.EffectDuration = Jackal.duration;
         minerMineButton.MaxTimer = Miner.cooldown;
         blackmailerButton.MaxTimer = Blackmailer.cooldown;
+        pelicanKillButton.MaxTimer = Pelican.cooldown;
         thiefKillButton.MaxTimer = Thief.cooldown;
         juggernautKillButton.MaxTimer = Juggernaut.cooldown;
         swooperKillButton.MaxTimer = Swooper.cooldown;
@@ -2448,6 +2450,48 @@ internal static class HudManagerStartPatch
             modKillInput.keyCode
         );
 
+        // 鹈鹕击杀 Kill
+        pelicanKillButton = new CustomButton(
+            () =>
+            {
+                if (checkAndDoVetKill(Pelican.currentTarget)) return;
+                var murderAttemptResult = checkMuderAttempt(Pelican.Player, Pelican.currentTarget);
+                if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
+
+                if (murderAttemptResult == MurderAttemptResult.PerformKill)
+                {
+                    var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.PelicanKill);
+                    writer.Write(Pelican.currentTarget.PlayerId);
+                    writer.EndRPC();
+                    Pelican.PelicanKill(Pelican.currentTarget.PlayerId);
+                }
+                if (murderAttemptResult == MurderAttemptResult.BodyGuardKill)
+                    checkMurderAttemptAndKill(Pelican.Player, Pelican.currentTarget);
+
+                pelicanKillButton.Timer = Pelican.reduceCooldown;
+                Pelican.currentTarget = null;
+            },
+            () =>
+            {
+                return Pelican.Player != null && Pelican.Player == CachedPlayer.LocalPlayer.PlayerControl &&
+                       !CachedPlayer.LocalPlayer.Data.IsDead;
+            },
+            () =>
+            {
+                showTargetNameOnButton(Pelican.currentTarget, pelicanKillButton, GetString("VultureText"));
+                return Pelican.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+            },
+            () =>
+            {
+                //pelicanKillButton.MaxTimer = Pelican.cooldown;
+                pelicanKillButton.Timer = pelicanKillButton.MaxTimer;
+            },
+            __instance.KillButton.graphic.sprite,
+            ButtonPositions.upperRowRight,
+            __instance,
+            modKillInput.keyCode
+        );
+
         // Eraser erase button
         eraserButton = new CustomButton(
             () =>
@@ -3260,7 +3304,7 @@ internal static class HudManagerStartPatch
             __instance,
             secondaryAbilityInput.keyCode,
             true,
-            1.5f,
+            Specter.duration,
             () =>
             {
                 foreach (var collider2D in Physics2D.OverlapCircleAll(CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(),

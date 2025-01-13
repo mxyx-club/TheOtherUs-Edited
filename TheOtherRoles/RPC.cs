@@ -24,120 +24,6 @@ using Object = UnityEngine.Object;
 
 namespace TheOtherRoles;
 
-public enum RoleId
-{
-    Default,
-
-    Impostor,
-    Morphling,
-    WolfLord,
-    Bomber,
-    Poucher,
-    Butcher,
-    Mimic,
-    Camouflager,
-    Miner,
-    Eraser,
-    Vampire,
-    Undertaker,
-    Escapist,
-    Warlock,
-    Trickster,
-    BountyHunter,
-    Cleaner,
-    Terrorist,
-    Blackmailer,
-    Witch,
-    Ninja,
-    Yoyo,
-    EvilTrapper,
-    Gambler,
-    Grenadier,
-
-    Survivor,
-    Amnisiac,
-    Jester,
-    Vulture,
-    Lawyer,
-    Executioner,
-    Pursuer,
-    PartTimer,
-    Witness,
-    Doomsayer,
-    Arsonist,
-    Jackal,
-    Sidekick,
-    Pavlovsowner,
-    Pavlovsdogs,
-    Werewolf,
-    Swooper,
-    Juggernaut,
-    Akujo,
-    Thief,
-
-    Crewmate,
-    Vigilante,
-    Mayor,
-    Prosecutor,
-    Portalmaker,
-    Engineer,
-    Sheriff,
-    Deputy,
-    BodyGuard,
-    Jumper,
-    Detective,
-    TimeMaster,
-    Veteran,
-    Medic,
-    Swapper,
-    Seer,
-    Hacker,
-    Tracker,
-    Snitch,
-    Prophet,
-    InfoSleuth,
-    Spy,
-    SecurityGuard,
-    Medium,
-    Trapper,
-    Balancer,
-
-    // Modifier ---
-    Lover,
-    Assassin,
-    Disperser,
-    PoucherModifier,
-    Vortox,
-    Specoality,
-    LastImpostor,
-    Bloody,
-    AntiTeleport,
-    Tiebreaker,
-    Bait,
-    Aftermath,
-    Flash,
-    Torch,
-    Sunglasses,
-    Multitasker,
-    Mini,
-    Giant,
-    Vip,
-    Indomitable,
-    Slueth,
-    Cursed,
-    Invert,
-    Blind,
-    Watcher,
-    Radar,
-    Tunneler,
-    ButtonBarry,
-    Chameleon,
-    Shifter,
-
-    GhostEngineer = 200,
-    Specter,
-}
-
 public enum CustomRPC
 {
     // Main Controls
@@ -239,6 +125,7 @@ public enum CustomRPC
     WitnessReport,
     WitnessSetTarget,
     WolfLordkilled,
+    PelicanKill,
 
     TrapperKill,
     PlaceTrap,
@@ -524,6 +411,9 @@ public static class RPCProcedure
                         break;
                     case RoleId.Trapper:
                         Trapper.trapper = player;
+                        break;
+                    case RoleId.Pelican:
+                        Pelican.Player = player;
                         break;
                     case RoleId.Lawyer:
                         Lawyer.lawyer = player;
@@ -1293,6 +1183,7 @@ public static class RPCProcedure
         if (player == Jester.jester) Jester.clearAndReload();
         if (player == Werewolf.werewolf) Werewolf.clearAndReload();
         if (player == Miner.miner) Miner.clearAndReload();
+        if (player == Pelican.Player) Pelican.clearAndReload(false);
         if (player == Arsonist.arsonist) Arsonist.clearAndReload();
         if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
 
@@ -2598,6 +2489,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.WolfLordkilled:
                 WolfLord.WolfLordkilled(reader.ReadByte());
+                break;
+            case CustomRPC.PelicanKill:
+                Pelican.PelicanKill(reader.ReadByte());
                 break;
             case CustomRPC.YoyoBlink:
                 RPCProcedure.yoyoBlink(reader.ReadByte() == byte.MaxValue, reader.ReadBytesAndSize());

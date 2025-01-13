@@ -258,7 +258,7 @@ internal class ExileControllerWrapUpPatch
             if (Witness.exiledCount == Witness.exileToWin)
             {
                 Witness.triggerWitnessWin = true;
-            } 
+            }
         }
         Witness.target = Witness.killerTarget = null;
 

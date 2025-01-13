@@ -87,6 +87,7 @@ public static class Helpers
                player == Witness.Player ||
                player == PartTimer.partTimer ||
                player == Akujo.akujo ||
+               player == Pelican.Player ||
                player == Specter.Player ||
                player == Swooper.swooper ||
                player == Lawyer.lawyer ||
@@ -253,6 +254,7 @@ public static class Helpers
                 player == Werewolf.werewolf ||
                 player == Swooper.swooper ||
                 player == Arsonist.arsonist ||
+                player == Pelican.Player ||
                 player == Jackal.sidekick ||
                 player == Pavlovsdogs.pavlovsowner ||
                 Jackal.jackal.Contains(player) ||

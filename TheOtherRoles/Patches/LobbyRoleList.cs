@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using TheOtherRoles.Buttons;
 using TMPro;
@@ -59,8 +59,8 @@ public static class LobbyRoleInfo
         exitButtonTransform.name = "RolesSummaryUIExit";
         exitButtonTransform.GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
         exitButtonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("ExitButton.png", 135f);
-        exitButtonTransform.localPosition = new Vector3(4.4f, 1.3f, -5); // 退出按钮的位置
-        exitButtonTransform.localScale = new Vector3(1f, 1.05f, 1f); // 退出按钮的缩放
+        exitButtonTransform.localPosition = new Vector3(4.4f, 1.3f, -5);
+        exitButtonTransform.localScale = new Vector3(1f, 1.05f, 1f);
 
         PassiveButton exitButton = exitButtonTransform.GetComponent<PassiveButton>();
         Button.ButtonClickedEvent exitOnClick = exitButton.OnClick = new Button.ButtonClickedEvent();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
@@ -155,6 +155,7 @@ internal class RoleManagerSelectRolesPatch
         neutralSettings.Add((byte)RoleId.Thief, CustomOptionHolder.thiefSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Jackal, CustomOptionHolder.jackalSpawnRate.GetSelection());
+        killerNeutralSettings.Add((byte)RoleId.Pelican, CustomOptionHolder.pelicanSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Pavlovsowner, CustomOptionHolder.pavlovsownerSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Werewolf, CustomOptionHolder.werewolfSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Juggernaut, CustomOptionHolder.juggernautSpawnRate.GetSelection());
