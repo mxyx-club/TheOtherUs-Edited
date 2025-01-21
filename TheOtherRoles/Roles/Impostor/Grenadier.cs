@@ -16,7 +16,7 @@ public class Grenadier
     public static float cooldown;
     public static float duration;
     public static float radius;
-    public static int indicatorsMode;
+    public static bool indicatorsMode;
 
     public static ResourceSprite ButtonSprite = new("FlashButton.png");
 
@@ -83,6 +83,6 @@ public class Grenadier
         cooldown = CustomOptionHolder.grenadierCooldown.GetFloat();
         duration = CustomOptionHolder.grenadierDuration.GetFloat() + 0.5f;
         radius = CustomOptionHolder.grenadierFlashRadius.GetFloat();
-        indicatorsMode = CustomOptionHolder.grenadierTeamIndicators.GetSelection();
+        indicatorsMode = CustomOptionHolder.grenadierTeamIndicators.GetBool();
     }
 }

@@ -386,10 +386,10 @@ internal class MeetingHudPatch
                 if (InfoSleuth.infoSleuth != null && playerVoteArea.TargetPlayerId == InfoSleuth.infoSleuth.PlayerId)
                 {
                     var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                        (byte)CustomRPC.InfoSleuthTarget, SendOption.Reliable);
+                        (byte)CustomRPC.InfoSleuthSetTarget, SendOption.Reliable);
                     writer.Write(playerVoteArea.VotedFor);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.infoSleuthTarget(playerVoteArea.VotedFor);
+                    RPCProcedure.infoSleuthSetTarget(playerVoteArea.VotedFor);
                 }
 
                 float additionalVotes = 1;

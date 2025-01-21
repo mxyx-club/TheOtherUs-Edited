@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Hazel;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
@@ -18,7 +18,7 @@ public class Aftermath
         aftermath = null;
     }
 
-    public static void aftermathTrigger(byte playerId, byte killerId)
+    public static void afterTrigger(byte playerId, byte killerId)
     {
         var player = playerById(playerId);
         var killer = playerById(killerId);
@@ -354,8 +354,7 @@ public class Aftermath
                 (byte)CustomRPC.GrenadierFlash, SendOption.Reliable);
             writer.Write(false);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            grenadierFlash(false);
-            //grenadierFlashButton.onClickEvent();
+            grenadierFlash();
             grenadierFlashButton.Timer = grenadierFlashButton.MaxTimer + Grenadier.duration;
         }
         else if (Swooper.swooper == killer)

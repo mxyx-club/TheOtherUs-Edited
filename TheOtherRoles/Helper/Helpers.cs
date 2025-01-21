@@ -845,12 +845,12 @@ public static class Helpers
 
     public static void shareGameVersion()
     {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-            (byte)CustomRPC.VersionHandshake, SendOption.Reliable, -1);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionHandshake, 
+            SendOption.Reliable, -1);
         writer.Write((byte)Main.Version.Major);
         writer.Write((byte)Main.Version.Minor);
         writer.Write((byte)Main.Version.Build);
-        writer.Write(AmongUsClient.Instance.AmHost ? GameStartManagerPatch.timer : -1f);
+        writer.Write(AmongUsClient.Instance.AmHost ? Patches.GameStartManagerPatch.timer : -1f);
         writer.WritePacked(AmongUsClient.Instance.ClientId);
         writer.Write((byte)(Main.Version.Revision < 0 ? 0xFF : Main.Version.Revision));
         writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
@@ -1189,15 +1189,6 @@ public static class Helpers
             RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
             SoundEffectsManager.play("fail");
             return MurderAttemptResult.BlankKill;
-        }
-
-        if (Aftermath.aftermath != null && Aftermath.aftermath == target)
-        {
-            _ = new LateTask(() =>
-            {
-                Aftermath.aftermathTrigger(target.PlayerId, killer.PlayerId);
-
-            }, 0.1f);
         }
 
         // Block impostor not fully grown mini kill

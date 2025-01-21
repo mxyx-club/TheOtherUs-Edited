@@ -926,8 +926,7 @@ public class CustomOptionHolder
         grenadierCooldown = Create(10341, Types.Impostor, "grenadierCooldown", 20f, 0f, 45f, 2.5f, grenadierSpawnRate);
         grenadierDuration = Create(10342, Types.Impostor, "grenadierDuration", 8f, 4f, 10f, 0.5f, grenadierSpawnRate);
         grenadierFlashRadius = Create(10343, Types.Impostor, "grenadierFlashRadius", 1f, 0.25f, 5f, 0.125f, grenadierSpawnRate);
-        grenadierTeamIndicators = Create(10344, Types.Impostor, "grenadierTeamIndicators",
-            ["optionOff", "grenadierIndicators2", "grenadierIndicators3"], grenadierSpawnRate);
+        grenadierTeamIndicators = Create(10344, Types.Impostor, "grenadierTeamIndicators", true, grenadierSpawnRate);
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 

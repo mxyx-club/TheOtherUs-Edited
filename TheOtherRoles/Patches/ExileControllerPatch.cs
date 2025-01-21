@@ -476,9 +476,10 @@ internal class ExileControllerWrapUpPatch
             writer.Write(msg);
             writer.EndRPC();
 
-            var writer1 = StartRPC(PlayerControl.LocalPlayer, CustomRPC.InfoSleuthNoTarget);
+            var writer1 = StartRPC(PlayerControl.LocalPlayer, CustomRPC.InfoSleuthSetTarget);
+            writer1.Write(byte.MaxValue);
             writer1.EndRPC();
-            RPCProcedure.infoSleuthNoTarget();
+            RPCProcedure.infoSleuthSetTarget(byte.MaxValue);
 
             static string getTeam(PlayerControl player)
             {

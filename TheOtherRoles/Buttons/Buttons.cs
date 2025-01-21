@@ -2262,7 +2262,7 @@ internal static class HudManagerStartPatch
                     (byte)CustomRPC.GrenadierFlash, SendOption.Reliable);
                 writer.Write(false);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.grenadierFlash(false);
+                RPCProcedure.grenadierFlash();
             },
             () =>
             {

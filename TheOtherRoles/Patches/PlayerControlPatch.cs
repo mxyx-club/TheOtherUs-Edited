@@ -2113,9 +2113,8 @@ public static class MurderPlayerPatch
     {
         // Collect dead player info
         var deadPlayer = new DeadPlayer(target, DateTime.UtcNow, CustomDeathReason.Kill, __instance);
-        if (__instance == target && DeadPlayers.Any(x => x.Player == target)) 
-            deadPlayer = new DeadPlayer(target, DateTime.UtcNow, CustomDeathReason.Suicide, __instance);
-        DeadPlayers.Add(deadPlayer);
+        if (__instance == target) deadPlayer = new DeadPlayer(target, DateTime.UtcNow, CustomDeathReason.Suicide, __instance);
+        if (DeadPlayers.Any(x => x.Player != target)) DeadPlayers.Add(deadPlayer);
 
         // Reset killer to crewmate if resetToCrewmate
         if (resetToCrewmate) __instance.Data.Role.TeamType = RoleTeamTypes.Crewmate;
@@ -2147,6 +2146,15 @@ public static class MurderPlayerPatch
 
             if (Bait.showKillFlash && __instance == CachedPlayer.LocalPlayer.PlayerControl)
                 showFlash(new Color(204f / 255f, 102f / 255f, 0f / 255f));
+        }
+
+        if (Aftermath.aftermath != null && Aftermath.aftermath == target && PlayerControl.LocalPlayer == __instance)
+        {
+            _ = new LateTask(() =>
+            {
+                Aftermath.afterTrigger(target.PlayerId, __instance.PlayerId);
+
+            }, 0.2f, "Aftermath Is Die");
         }
 
         if (target.Data.Role.IsImpostor && AmongUsClient.Instance.AmHost)
@@ -2200,11 +2208,7 @@ public static class MurderPlayerPatch
 
             if (Pelican.Player == PlayerControl.LocalPlayer)
             {
-                _ = new LateTask(() =>
-                {
-                    HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
-                    PlayerControl.LocalPlayer.moveable = true;
-                }, 0.5f);
+                _ = new LateTask(Pelican.PelicanDie, 0.5f);
             }
         }
 
@@ -2476,6 +2480,8 @@ public static class ExilePlayerPatch
                 continue;
             }
             Pelican.eatenPlayers = new();
+
+            Pelican.PelicanDie();
         }
 
         if (AmongUsClient.Instance.AmHost)
