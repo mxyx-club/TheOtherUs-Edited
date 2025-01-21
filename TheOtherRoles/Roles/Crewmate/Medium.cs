@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -48,8 +48,7 @@ public static class Medium
         // suicides:
         if (killer == target)
         {
-            if (target == Sheriff.sheriff || target == Sheriff.formerSheriff)
-                infos.Add(SpecialMediumInfo.SheriffSuicide);
+            if (Sheriff.Player.Any(x => x == target)) infos.Add(SpecialMediumInfo.SheriffSuicide);
             if (target == Lovers.lover1 || target == Lovers.lover2) infos.Add(SpecialMediumInfo.PassiveLoverSuicide);
             if (target == Thief.thief) infos.Add(SpecialMediumInfo.ThiefSuicide);
             if (target == Warlock.warlock) infos.Add(SpecialMediumInfo.WarlockSuicide);
@@ -61,7 +60,7 @@ public static class Medium
                 infos.Add(SpecialMediumInfo.ImpostorTeamkill);
         }
 
-        if (target == Jackal.sidekick && Jackal.jackal.Any(x => x.PlayerId == killer.PlayerId))
+        if (target == Jackal.Sidekick && Jackal.jackal.Any(x => x.PlayerId == killer.PlayerId))
             infos.Add(SpecialMediumInfo.JackalKillsSidekick);
         if (target == Lawyer.lawyer && killer == Lawyer.target) infos.Add(SpecialMediumInfo.LawyerKilledByClient);
         if (Medium.target.wasCleaned) infos.Add(SpecialMediumInfo.BodyCleaned);

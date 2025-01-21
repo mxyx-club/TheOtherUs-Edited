@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,7 +27,7 @@ public static class Akujo
 
     public static bool existingWithKiller()
     {
-        return honmei != null && !honmei.Data.Disconnected && honmei.isKiller();
+        return honmei.IsAlive() && honmei.isKiller();
     }
 
     public static bool isAkujoTeam(PlayerControl player)

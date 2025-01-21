@@ -239,7 +239,7 @@ public class Amnisiac
                 break;
             case RoleId.Sidekick:
                 Jackal.jackal.Add(target);
-                Jackal.sidekick = local;
+                Jackal.Sidekick = local;
                 break;
             case RoleId.Pavlovsowner:
                 Pavlovsdogs.pavlovsdogs.Add(Pavlovsdogs.pavlovsowner);
@@ -264,7 +264,7 @@ public class Amnisiac
                 Player.Add(target);
                 break;
             case RoleId.Pelican:
-                if (resetRole) Pelican.clearAndReload();
+                if (resetRole) Pelican.clearAndReload(false);
                 Pelican.Player = local;
                 Player.Add(target);
                 break;
@@ -301,16 +301,12 @@ public class Amnisiac
                 Engineer.engineer = local;
                 break;
             case RoleId.Sheriff:
-                if (Sheriff.formerDeputy != null && Sheriff.formerDeputy == Sheriff.sheriff)
-                {
-                    Sheriff.formerDeputy = null;
-                    Deputy.deputy = local;
-                }
-                else Sheriff.sheriff = local;
+                Sheriff.Player.Add(local);
+                if (Sheriff.formerDeputy == target) Sheriff.formerDeputy = local;
                 break;
             case RoleId.Deputy:
-                if (resetRole) Deputy.clearAndReload(false);
-                Deputy.deputy = local;
+                if (resetRole) Sheriff.Reload();
+                Sheriff.Deputy = local;
                 break;
             case RoleId.BodyGuard:
                 if (resetRole) BodyGuard.clearAndReload();

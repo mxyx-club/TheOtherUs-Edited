@@ -185,7 +185,7 @@ public class Specter
                     Jackal.jackal.Add(local);
                     break;
                 case RoleId.Sidekick:
-                    Jackal.sidekick = local;
+                    Jackal.Sidekick = local;
                     Jackal.jackal.Add(target);
                     break;
                 case RoleId.Pavlovsowner:
@@ -208,7 +208,7 @@ public class Specter
                     Amnisiac.Player.Add(target);
                     break;
                 case RoleId.Pelican:
-                    Pelican.clearAndReload();
+                    Pelican.clearAndReload(false);
                     Pelican.Player = local;
                     Amnisiac.Player.Add(target);
                     break;
@@ -243,16 +243,12 @@ public class Specter
                     Engineer.engineer = local;
                     break;
                 case RoleId.Sheriff:
-                    if (Sheriff.formerDeputy != null && Sheriff.formerDeputy == Sheriff.sheriff)
-                    {
-                        Sheriff.formerDeputy = null;
-                        Deputy.deputy = local;
-                    }
-                    else Sheriff.sheriff = local;
+                    Sheriff.Player.Add(local);
+                    if (Sheriff.formerDeputy == target) Sheriff.formerDeputy = local;
                     break;
                 case RoleId.Deputy:
-                    if (Amnisiac.resetRole) Deputy.clearAndReload(false);
-                    Deputy.deputy = local;
+                    if (Amnisiac.resetRole) Sheriff.Reload();
+                    Sheriff.Deputy = local;
                     break;
                 case RoleId.BodyGuard:
                     if (Amnisiac.resetRole) BodyGuard.clearAndReload();

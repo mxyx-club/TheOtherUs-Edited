@@ -25,7 +25,7 @@ internal static class LogHelper
     public static void SendLog(string text, string tag = "", LogLevel logLevel = LogLevel.Info)
     {
         string time = DateTime.Now.ToString("HH:mm:ss");
-        if (!string.IsNullOrWhiteSpace(tag)) text = $"[{time}][{tag}] {text}";
+        if (!string.IsNullOrWhiteSpace(tag)) text = $"[{time}] [{tag}] {text}";
         else text = $"[{time}] {text}";
 
         switch (logLevel)

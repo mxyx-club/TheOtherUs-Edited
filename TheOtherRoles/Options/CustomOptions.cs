@@ -984,7 +984,7 @@ internal class GameOptionsDataPatch
             else if (option.parent.GetSelection() > 0)
             {
                 if (option.id == 30170) //Deputy
-                    sb.AppendLine($"- {cs(Deputy.color, "Deputy".Translate())}: {option.GetString()}");
+                    sb.AppendLine($"- {cs(Sheriff.color, "Deputy".Translate())}: {option.GetString()}");
                 else if (option.id == 20142)
                     sb.AppendLine($"- {cs(Jackal.color, "jackalSwoopChance".Translate())}: {option.GetString()}");
                 else if (option.id == 20135) //Sidekick

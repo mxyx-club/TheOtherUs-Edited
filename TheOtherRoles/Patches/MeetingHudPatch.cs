@@ -459,7 +459,9 @@ internal class MeetingHudPatch
                 //バランサー処理
                 if (Balancer.currentAbilityUser != null)
                 {
-                    if (playerVoteArea.VotedFor != Balancer.targetplayerright.PlayerId && playerVoteArea.VotedFor != Balancer.targetplayerleft.PlayerId)
+                    if (playerById(playerVoteArea.TargetPlayerId) != null &&
+                        playerVoteArea.VotedFor != Balancer.targetplayerright.PlayerId &&
+                        playerVoteArea.VotedFor != Balancer.targetplayerleft.PlayerId)
                     {
                         playerVoteArea.VotedFor = Helpers.GetRandom((byte[])([Balancer.targetplayerright.PlayerId, Balancer.targetplayerleft.PlayerId]));
                     }
@@ -500,6 +502,16 @@ internal class MeetingHudPatch
             // RPCVotingComplete
             __instance.RpcVotingComplete(states, exiled, tie);
             return false;
+        }
+    }
+
+
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.RpcVotingComplete))]
+    public static class MeetingHudRpcVotingCompletePatch
+    {
+        public static void Prefix(MeetingHud __instance, Il2CppStructArray<VoterState> states, GameData.PlayerInfo exiled, bool tie)
+        {
+            Info($"exiled: {exiled?.PlayerName}, states: {states?.Count(x => x.VotedForId == exiled?.PlayerId)}, tie: {tie}", "RpcVotingComplete");
         }
     }
 
@@ -846,19 +858,17 @@ internal class MeetingHudPatch
         private static void Postfix(MeetingHud __instance)
         {
             var chat = FastDestroyableSingleton<HudManager>.Instance.Chat;
-            var playerControl = CachedPlayer.LocalPlayer.PlayerControl;
+            var local = CachedPlayer.LocalPlayer.PlayerControl;
             var num = (int)chat.timeSinceLastMessage;
-            foreach (var allPlayer in CachedPlayer.AllPlayers)
+            foreach (var p in PlayerControl.AllPlayerControls)
             {
-                PlayerControl playerControl2 = allPlayer;
-                if (playerControl2 != playerControl || playerControl2.Data.IsDead || num != 0) continue;
-                var writer = AmongUsClient.Instance.StartRpcImmediately(
-                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetMeetingChatOverlay,
-                    SendOption.Reliable);
-                writer.Write(playerControl2.PlayerId);
-                writer.Write(playerControl.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.setChatNotificationOverlay(playerControl.PlayerId, playerControl2.PlayerId);
+                var player = p;
+                if (player != local || player.Data.IsDead || num != 0) continue;
+                var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetMeetingChatOverlay);
+                writer.Write(player.PlayerId);
+                writer.Write(local.PlayerId);
+                writer.EndRPC();
+                RPCProcedure.setChatNotificationOverlay(local.PlayerId, player.PlayerId);
                 break;
             }
         }
@@ -887,12 +897,12 @@ internal class MeetingHudPatch
             Message("会议开始");
             shookAlready = false;
             if (CachedPlayer.LocalPlayer.IsDead) CanSeeRoleInfo = true;
+
             // Remove first kill shield
-            firstKillPlayer = null;
+            if (!CachedPlayer.AllPlayers.All(x => x.IsAlive)) firstKillPlayer = null;
 
             //Nothing here for now. What to do when local player who is blackmailed starts meeting
-            if (Blackmailer.blackmailed != null
-                && Blackmailer.blackmailed.Data.PlayerId == CachedPlayer.LocalPlayer.PlayerId
+            if (Blackmailer.blackmailed != null && Blackmailer.blackmailed.Data.PlayerId == CachedPlayer.LocalPlayer.PlayerId
                 && Blackmailer.blackmailed.IsAlive())
                 Coroutines.Start(BlackmailShhh());
 
@@ -903,7 +913,15 @@ internal class MeetingHudPatch
                 Balancer.Balancer_Patch.MeetingHudStartPostfix(__instance);
             }
 
-            if (Pelican.Player != null) Pelican.eatenPlayers = new();
+            if (Pelican.Player != null)
+            {
+                if (Pelican.eatenPlayers.Any(x => x == PlayerControl.LocalPlayer))
+                {
+                    HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
+                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Pelican.Player.transform.position);
+                }
+                Pelican.eatenPlayers = new();
+            }
 
             foreach (var playerState in Instance?.playerStates ?? Enumerable.Empty<PlayerVoteArea>())
             {

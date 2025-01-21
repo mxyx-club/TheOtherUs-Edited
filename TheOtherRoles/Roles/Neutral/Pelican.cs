@@ -24,11 +24,30 @@ public class Pelican
         eatenPlayers.Add(target);
     }
 
-    public static void clearAndReload()
+    public static void PelicanDie()
+    {
+        if (Player == null)
+        {
+            if (eatenPlayers.Any(x => x == PlayerControl.LocalPlayer))
+            {
+                HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
+                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Player.transform.position);
+            }
+            eatenPlayers = new();
+        }
+
+        if (Player?.Data.IsDead == true)
+        {
+            HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
+            PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Player.transform.position);
+        };
+    }
+
+    public static void clearAndReload(bool clear = true)
     {
         Player = null;
         currentTarget = null;
-        eatenPlayers = new();
+        if (clear) eatenPlayers = new();
         cooldown = CustomOptionHolder.pelicanCooldown.GetFloat();
         reduceCooldown = CustomOptionHolder.pelicanReduceCooldown.GetFloat();
     }

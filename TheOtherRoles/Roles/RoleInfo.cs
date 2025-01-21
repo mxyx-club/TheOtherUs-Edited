@@ -75,7 +75,7 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
     public static RoleInfo portalmaker = new("Portalmaker", Portalmaker.color, RoleId.Portalmaker, RoleType.Crewmate);
     public static RoleInfo engineer = new("Engineer", Engineer.color, RoleId.Engineer, RoleType.Crewmate);
     public static RoleInfo sheriff = new("Sheriff", Sheriff.color, RoleId.Sheriff, RoleType.Crewmate);
-    public static RoleInfo deputy = new("Deputy", Deputy.color, RoleId.Deputy, RoleType.Crewmate);
+    public static RoleInfo deputy = new("Deputy", Sheriff.color, RoleId.Deputy, RoleType.Crewmate);
     public static RoleInfo bodyguard = new("BodyGuard", BodyGuard.color, RoleId.BodyGuard, RoleType.Crewmate);
     public static RoleInfo jumper = new("Jumper", Jumper.color, RoleId.Jumper, RoleType.Crewmate);
     public static RoleInfo detective = new("Detective", Detective.color, RoleId.Detective, RoleType.Crewmate);
@@ -333,8 +333,8 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
         if (p == Mayor.mayor) infos.Add(mayor);
         if (p == Portalmaker.portalmaker) infos.Add(portalmaker);
         if (p == Engineer.engineer) infos.Add(engineer);
-        if (p == Sheriff.sheriff || p == Sheriff.formerSheriff) infos.Add(sheriff);
-        if (p == Deputy.deputy) infos.Add(deputy);
+        if (Sheriff.Player.Any(x => x == p)) infos.Add(sheriff);
+        if (p == Sheriff.Deputy) infos.Add(deputy);
         if (p == BountyHunter.bountyHunter) infos.Add(bountyHunter);
         if (p == Vulture.vulture) infos.Add(vulture);
         if (p == Medium.medium) infos.Add(medium);
@@ -353,7 +353,7 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
         if (p == Juggernaut.juggernaut) infos.Add(juggernaut);
         if (p == Doomsayer.doomsayer) infos.Add(doomsayer);
         if (p == Akujo.akujo) infos.Add(akujo);
-        if (p == Jackal.sidekick) infos.Add(sidekick);
+        if (p == Jackal.Sidekick) infos.Add(sidekick);
         if (p == Pavlovsdogs.pavlovsowner) infos.Add(pavlovsowner);
         if (Jackal.jackal.Any(x => x != null && x.PlayerId == p.PlayerId)) infos.Add(jackal);
         if (Amnisiac.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(amnisiac);
@@ -420,10 +420,10 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
                 if (Vampire.vampire != null && !Vampire.vampire.Data.IsDead && Vampire.bitten == p && !p.Data.IsDead)
                     roleName = cs(Vampire.color,
                         $"(被吸血 {(int)HudManagerStartPatch.vampireKillButton.Timer + 1}) ") + roleName;
-                if (Deputy.handcuffedPlayers.Contains(p.PlayerId))
+                if (Sheriff.handcuffedPlayers.Contains(p.PlayerId))
                     roleName = cs(Color.gray, "(被上拷) ") + roleName;
-                if (Deputy.handcuffedKnows.ContainsKey(p.PlayerId)) // Active cuff
-                    roleName = cs(Deputy.color, "(被上拷) ") + roleName;
+                if (Sheriff.handcuffedKnows.ContainsKey(p.PlayerId)) // Active cuff
+                    roleName = cs(Sheriff.color, "(被上拷) ") + roleName;
                 if (p == Warlock.curseVictim)
                     roleName = cs(Warlock.color, "(被下咒) ") + roleName;
                 if (p == Ninja.ninjaMarked)

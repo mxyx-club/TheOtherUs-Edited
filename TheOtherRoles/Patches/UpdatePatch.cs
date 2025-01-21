@@ -88,17 +88,15 @@ internal class HudManagerUpdatePatch
         var localRole = RoleInfo.getRoleInfoForPlayer(localPlayer, false).FirstOrDefault();
         setPlayerNameColor(localPlayer, localRole.color);
 
-        if (Sheriff.sheriff != null && Sheriff.sheriff == localPlayer)
+        if (Sheriff.Player != null && Sheriff.Player.Any(x => x == localPlayer))
         {
-            setPlayerNameColor(Sheriff.sheriff, Sheriff.color);
-            if (Deputy.deputy != null && Deputy.knowsSheriff) setPlayerNameColor(Deputy.deputy, Sheriff.color);
-            if (Sheriff.formerSheriff != null && Deputy.knowsSheriff) setPlayerNameColor(Sheriff.formerSheriff, Sheriff.color);
+            foreach (var p in Sheriff.Player) setPlayerNameColor(p, Sheriff.color);
+            if (Sheriff.Deputy != null && Sheriff.knowsSheriff) setPlayerNameColor(Sheriff.Deputy, Sheriff.color);
         }
-        if (Deputy.deputy != null && Deputy.deputy == localPlayer)
+        if (Sheriff.Deputy != null && Sheriff.Deputy == localPlayer)
         {
-            setPlayerNameColor(Deputy.deputy, Deputy.color);
-            if (Sheriff.sheriff != null && Deputy.knowsSheriff) setPlayerNameColor(Sheriff.sheriff, Sheriff.color);
-            if (Sheriff.formerSheriff != null && Deputy.knowsSheriff) setPlayerNameColor(Sheriff.formerSheriff, Sheriff.color);
+            setPlayerNameColor(Sheriff.Deputy, Sheriff.color);
+            foreach (var p in Sheriff.Player) setPlayerNameColor(p, Sheriff.color);
         }
 
         if (Prophet.prophet != null && Prophet.prophet == localPlayer)
@@ -134,7 +132,7 @@ internal class HudManagerUpdatePatch
         }
 
         if (Grenadier.grenadier != null && ((localPlayer.isImpostor() && Grenadier.indicatorsMode > 1)
-            || localPlayer == Grenadier.grenadier || localPlayer.IsDead()))
+            || localPlayer == Grenadier.grenadier || shouldShowGhostInfo()))
         {
             foreach (var p in Grenadier.controls)
             {
@@ -146,14 +144,14 @@ internal class HudManagerUpdatePatch
         {
             // Jackal can see his sidekick
             foreach (var p in Jackal.jackal) setPlayerNameColor(p, Jackal.color);
-            if (Jackal.sidekick != null) setPlayerNameColor(Jackal.sidekick, Jackal.color);
+            if (Jackal.Sidekick != null) setPlayerNameColor(Jackal.Sidekick, Jackal.color);
         }
 
         // No else if here, as a Lover of team Jackal needs the colors
-        if (Jackal.sidekick != null && Jackal.sidekick == localPlayer)
+        if (Jackal.Sidekick != null && Jackal.Sidekick == localPlayer)
         {
             // Sidekick can see the jackal
-            setPlayerNameColor(Jackal.sidekick, Jackal.color);
+            setPlayerNameColor(Jackal.Sidekick, Jackal.color);
             foreach (var p in Jackal.jackal) setPlayerNameColor(p, Jackal.color);
         }
 
@@ -275,7 +273,7 @@ internal class HudManagerUpdatePatch
         }
 
         // Parttimer
-        if (PartTimer.partTimer != null && PartTimer.target != null && (local == PartTimer.partTimer || local == PartTimer.target || local.IsDead()))
+        if (PartTimer.partTimer != null && PartTimer.target != null && (local == PartTimer.partTimer || local == PartTimer.target || shouldShowGhostInfo()))
         {
             var suffix = cs(PartTimer.color, " ★");
             PartTimer.partTimer.cosmetics.nameText.text += suffix;
@@ -288,7 +286,7 @@ internal class HudManagerUpdatePatch
         }
 
         var localIsArsonist = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && Arsonist.arsonist == local;
-        var localIsDead = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && local.Data.IsDead;
+        var localIsDead = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && shouldShowGhostInfo();
         if (localIsArsonist || localIsDead)
         {
             var suffix = cs(Arsonist.color, " ♨");
@@ -307,7 +305,7 @@ internal class HudManagerUpdatePatch
         // Lawyer or Prosecutor
         var localIsLawyer = Lawyer.lawyer != null && Lawyer.target != null && Lawyer.lawyer == local;
         var localIsKnowingTarget = Lawyer.lawyer != null && Lawyer.target != null && Lawyer.targetKnows && Lawyer.target == local;
-        if (localIsLawyer || (localIsKnowingTarget && !Lawyer.lawyer.Data.IsDead))
+        if (localIsLawyer || (localIsKnowingTarget && Lawyer.lawyer.IsAlive()))
         {
             var suffix = cs(Lawyer.color, " §");
             Lawyer.target.cosmetics.nameText.text += suffix;
@@ -319,7 +317,7 @@ internal class HudManagerUpdatePatch
         }
 
         var localIsExecutioner = Executioner.executioner != null && Executioner.target != null && Executioner.executioner == local;
-        if (localIsExecutioner && !Executioner.executioner.Data.IsDead)
+        if (localIsExecutioner && Executioner.executioner.IsAlive())
         {
             var suffix = cs(Executioner.color, " §");
             Executioner.target.cosmetics.nameText.text += suffix;
@@ -369,8 +367,8 @@ internal class HudManagerUpdatePatch
         Ninja.invisibleTimer -= dt;
         Jackal.swoopTimer -= dt;
         Swooper.swoopTimer -= dt;
-        foreach (var key in Deputy.handcuffedKnows.Keys)
-            Deputy.handcuffedKnows[key] -= dt;
+        foreach (var key in Sheriff.handcuffedKnows.Keys)
+            Sheriff.handcuffedKnows[key] -= dt;
     }
 
     public static void miniUpdate()
@@ -416,15 +414,15 @@ internal class HudManagerUpdatePatch
         if (enabled) __instance.KillButton.Show();
         else __instance.KillButton.Hide();
 
-        if (Deputy.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
-            Deputy.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0) __instance.KillButton.Hide();
+        if (Sheriff.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
+            Sheriff.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0) __instance.KillButton.Hide();
     }
 
     private static void updateReportButton(HudManager __instance)
     {
         if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
-        if ((Deputy.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
-             Deputy.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0) ||
+        if ((Sheriff.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
+             Sheriff.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0) ||
             MeetingHud.Instance) __instance.ReportButton.Hide();
         else if (!__instance.ReportButton.isActiveAndEnabled) __instance.ReportButton.Show();
     }
@@ -432,8 +430,8 @@ internal class HudManagerUpdatePatch
     private static void updateVentButton(HudManager __instance)
     {
         if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
-        if ((Deputy.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
-             Deputy.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0) ||
+        if ((Sheriff.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
+             Sheriff.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0) ||
             MeetingHud.Instance) __instance.ImpostorVentButton.Hide();
         else if (CachedPlayer.LocalPlayer.PlayerControl.roleCanUseVents() &&
                  !__instance.ImpostorVentButton.isActiveAndEnabled) __instance.ImpostorVentButton.Show();

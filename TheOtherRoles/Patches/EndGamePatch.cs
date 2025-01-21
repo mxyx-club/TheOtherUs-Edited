@@ -150,7 +150,7 @@ public class OnGameEndPatch
         notWinners.AddRange(new[]
         {
             Jester.jester,
-            Jackal.sidekick,
+            Jackal.Sidekick,
             Arsonist.arsonist,
             Swooper.swooper,
             Vulture.vulture,
@@ -197,18 +197,18 @@ public class OnGameEndPatch
         var loversWin = Lovers.existingAndAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin ||
                          (GameManager.Instance.DidHumansWin(gameOverReason) && !Lovers.existingWithKiller()));
         var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin &&
-                            (Jackal.jackal.Any(x => x.IsAlive()) || Jackal.sidekick.IsAlive());
+                            (Jackal.jackal.Any(x => x.IsAlive()) || Jackal.Sidekick.IsAlive());
         var teamPavlovsWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamPavlovsWin &&
                             (Pavlovsdogs.pavlovsowner.IsAlive() || Pavlovsdogs.pavlovsdogs.Any(p => p.IsAlive()));
+        var crewmateWin = GameManager.Instance.DidHumansWin(gameOverReason) ||
+                          (gameOverReason is GameOverReason.HumansByVote or GameOverReason.HumansByTask);
         var vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
         var executionerWin = Executioner.executioner != null && gameOverReason == (GameOverReason)CustomGameOverReason.ExecutionerWin;
         var lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
-        var akujoWin = Akujo.akujo.IsAlive() && Akujo.honmei.IsAlive() &&
-            (Akujo.honmeiOptimizeWin
-                ? !Akujo.existingWithKiller() &&
-                  (gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin || GameManager.Instance.DidHumansWin(gameOverReason))
-                : gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin);
-        bool isPursurerLose = jesterWin || arsonistWin || miniLose || isCanceled || executionerWin;
+        var akujoWin = Akujo.akujo.IsAlive() && Akujo.honmei.IsAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin ||
+                       (GameManager.Instance.DidHumansWin(gameOverReason) && Akujo.honmeiOptimizeWin && !Akujo.existingWithKiller()));
+
+        bool isPursurerLose = jesterWin || witnessWin || arsonistWin || miniLose || isCanceled || executionerWin;
 
         // Mini lose
         if (miniLose)
@@ -321,9 +321,9 @@ public class OnGameEndPatch
                 TempData.winners.Add(wpdFormerJackal);
             }
             // If there is a sidekick. The sidekick also wins
-            if (Jackal.sidekick != null)
+            if (Jackal.Sidekick != null)
             {
-                var wpdSidekick = new WinningPlayerData(Jackal.sidekick.Data);
+                var wpdSidekick = new WinningPlayerData(Jackal.Sidekick.Data);
                 wpdSidekick.IsImpostor = false;
                 TempData.winners.Add(wpdSidekick);
             }
@@ -402,8 +402,7 @@ public class OnGameEndPatch
             // Swooper wins if nobody except jackal is alive
             AdditionalTempData.winCondition = WinCondition.SwooperWin;
             TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-            var wpd = new WinningPlayerData(Swooper.swooper.Data);
-            wpd.IsImpostor = false;
+            var wpd = new WinningPlayerData(Swooper.swooper.Data) { IsImpostor = false };
             TempData.winners.Add(wpd);
         }
 
@@ -494,7 +493,8 @@ public class OnGameEndPatch
             AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalAliveSurvivorWin);
         }
 
-        if (PartTimer.partTimer != null && PartTimer.target != null && TempData.winners.ToArray().Any(x => x.PlayerName == PartTimer.target.Data.PlayerName))
+        if (PartTimer.partTimer != null && PartTimer.target != null &&
+            TempData.winners.ToArray().Any(x => x.PlayerName == PartTimer.target.Data.PlayerName))
         {
             TempData.winners.Add(new WinningPlayerData(PartTimer.partTimer.Data));
             AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalPartTimerWin);
@@ -564,7 +564,7 @@ public class EndGameManagerSetUpPatch
             { WinCondition.JesterWin, (Jester.color, "JesterWin") },
             { WinCondition.DoomsayerWin, (Doomsayer.color, "DoomsayerWin") },
             { WinCondition.ArsonistWin, (Arsonist.color, "ArsonistWin") },
-            { WinCondition.PelicanWin, (Arsonist.color, "鹈鹕胜利！") },
+            { WinCondition.PelicanWin, (Pelican.color, "PelicanWin") },
             { WinCondition.VultureWin, (Vulture.color, "VultureWin") },
             { WinCondition.LawyerSoloWin, (Lawyer.color, "LawyerSoloWin") },
             { WinCondition.WerewolfWin, (Werewolf.color, "WerewolfWin") },
@@ -1141,7 +1141,7 @@ internal class PlayerStatistics
                         if (lover) jackalLover = true;
                     }
 
-                    if (Jackal.sidekick != null && Jackal.sidekick.PlayerId == playerInfo.PlayerId)
+                    if (Jackal.Sidekick != null && Jackal.Sidekick.PlayerId == playerInfo.PlayerId)
                     {
                         numJackalAlive++;
                         if (lover) jackalLover = true;

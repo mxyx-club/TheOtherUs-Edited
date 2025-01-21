@@ -287,13 +287,13 @@ public static class RPCProcedure
                         Engineer.engineer = player;
                         break;
                     case RoleId.Sheriff:
-                        Sheriff.sheriff = player;
+                        Sheriff.Player.Add(player);
+                        break;
+                    case RoleId.Deputy:
+                        Sheriff.Deputy = player;
                         break;
                     case RoleId.BodyGuard:
                         BodyGuard.bodyguard = player;
-                        break;
-                    case RoleId.Deputy:
-                        Deputy.deputy = player;
                         break;
                     case RoleId.Detective:
                         Detective.detective = player;
@@ -359,7 +359,7 @@ public static class RPCProcedure
                         Jackal.jackal.Add(player);
                         break;
                     case RoleId.Sidekick:
-                        Jackal.sidekick = player;
+                        Jackal.Sidekick = player;
                         break;
                     case RoleId.Pavlovsowner:
                         Pavlovsdogs.pavlovsowner = player;
@@ -1018,20 +1018,8 @@ public static class RPCProcedure
 
     public static void deputyUsedHandcuffs(byte targetId)
     {
-        Deputy.remainingHandcuffs--;
-        Deputy.handcuffedPlayers.Add(targetId);
-    }
-
-    public static void deputyPromotes()
-    {
-        if (Deputy.deputy != null)
-        {
-            // Deputy should never be null here, but there appeared to be a race condition during testing, which was removed.
-            Sheriff.replaceCurrentSheriff(Deputy.deputy);
-            Sheriff.formerDeputy = Deputy.deputy;
-            Deputy.deputy = null;
-            // No clear and reload, as we need to keep the number of handcuffs left etc
-        }
+        Sheriff.remainingHandcuffs--;
+        Sheriff.handcuffedPlayers.Add(targetId);
     }
 
     public static void jackalCreatesSidekick(byte targetId)
@@ -1056,7 +1044,7 @@ public static class RPCProcedure
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
 
         erasePlayerRoles(target.PlayerId);
-        Jackal.sidekick = target;
+        Jackal.Sidekick = target;
 
         if (target == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
         if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
@@ -1069,10 +1057,10 @@ public static class RPCProcedure
     {
         var player = playerById(playerId);
         if (player == null) return;
-        if (Jackal.jackal.All(x => x.PlayerId != playerId && x.IsDead()) && Jackal.promotesToJackal && Jackal.sidekick.IsAlive())
+        if (Jackal.jackal.All(x => x.PlayerId != playerId && x.IsDead()) && Jackal.promotesToJackal && Jackal.Sidekick.IsAlive())
         {
             Jackal.jackal.Add(player);
-            Jackal.sidekick = null;
+            Jackal.Sidekick = null;
             Jackal.canCreateSidekick = Jackal.jackalPromotedFromSidekickCanCreateSidekick;
         }
     }
@@ -1133,8 +1121,8 @@ public static class RPCProcedure
         if (player == Prosecutor.prosecutor) Prosecutor.clearAndReload();
         if (player == Portalmaker.portalmaker) Portalmaker.clearAndReload();
         if (player == Engineer.engineer) Engineer.clearAndReload();
-        if (player == Sheriff.sheriff) Sheriff.sheriff = null;
-        if (player == Deputy.deputy) Deputy.deputy = null;
+        Sheriff.Player.RemoveAll(x => x.PlayerId == player.PlayerId);
+        if (player == Sheriff.Deputy) Sheriff.Deputy = null;
         if (player == Detective.detective) Detective.clearAndReload();
         if (player == TimeMaster.timeMaster) TimeMaster.clearAndReload();
         if (player == Veteran.veteran) Veteran.clearAndReload();
@@ -1190,7 +1178,7 @@ public static class RPCProcedure
         if (Jackal.jackal.Any(x => x == player))
         {
             Jackal.jackal.RemoveAll(x => x == player);
-            sidekickPromotes(Jackal.sidekick?.PlayerId ?? byte.MaxValue);
+            sidekickPromotes(Jackal.Sidekick?.PlayerId ?? byte.MaxValue);
         }
 
         if (player == Pavlovsdogs.pavlovsowner)
@@ -1198,7 +1186,7 @@ public static class RPCProcedure
             Pavlovsdogs.createDogNum = CustomOptionHolder.pavlovsownerCreateDogNum.GetInt();
             Pavlovsdogs.pavlovsowner = null;
         }
-        if (player == Jackal.sidekick) Jackal.sidekick = null;
+        if (player == Jackal.Sidekick) Jackal.Sidekick = null;
         if (player == BountyHunter.bountyHunter) BountyHunter.clearAndReload();
         if (player == Vulture.vulture) Vulture.clearAndReload();
         if (player == Executioner.executioner) Executioner.clearAndReload();
@@ -1630,7 +1618,7 @@ public static class RPCProcedure
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
         var canSee = Jackal.jackal.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl) ||
-                     Jackal.sidekick == CachedPlayer.LocalPlayer.PlayerControl ||
+                     Jackal.Sidekick == CachedPlayer.LocalPlayer.PlayerControl ||
                      CachedPlayer.LocalPlayer.Data.IsDead;
         if (canSee) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
@@ -1878,8 +1866,7 @@ public static class RPCProcedure
         {
             var playerControl = CachedPlayer.LocalPlayer.PlayerControl;
             if (MeetingHud.Instance.playerStates == null) return;
-            var playerVoteArea =
-                MeetingHud.Instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == targetPlayerId);
+            var playerVoteArea = MeetingHud.Instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == targetPlayerId);
             if (playerVoteArea == null) return;
             var rend = new GameObject().AddComponent<SpriteRenderer>();
             rend.transform.SetParent(playerVoteArea.transform);
@@ -1932,10 +1919,10 @@ public static class RPCProcedure
         switch (infoType)
         {
             case GhostInfoTypes.HandcuffNoticed:
-                Deputy.setHandcuffedKnows(true, senderId);
+                Sheriff.setHandcuffedKnows(true, senderId);
                 break;
             case GhostInfoTypes.HandcuffOver:
-                _ = Deputy.handcuffedKnows.Remove(senderId);
+                _ = Sheriff.handcuffedKnows.Remove(senderId);
                 break;
             case GhostInfoTypes.ArsonistDouse:
                 Arsonist.dousedPlayers.Add(playerById(reader.ReadByte()));
@@ -2239,7 +2226,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.DeputyPromotes:
-                RPCProcedure.deputyPromotes();
+                Sheriff.replaceCurrentSheriff();
                 break;
 
             case CustomRPC.JackalCreatesSidekick:

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
 using TheOtherRoles.Buttons;
@@ -44,14 +44,14 @@ public static class Thief
     {
         return killer == thief && (target.Data.Role.IsImpostor ||
             Jackal.jackal.Any(x => x == target) ||
-            target == Jackal.sidekick ||
+            target == Jackal.Sidekick ||
             target == Werewolf.werewolf ||
             target == Juggernaut.juggernaut ||
             target == Swooper.swooper ||
             Pavlovsdogs.pavlovsdogs.Any(p => p == target) ||
             target == Pavlovsdogs.pavlovsowner ||
-            (canKillSheriff && target == Sheriff.sheriff) ||
-            (canKillDeputy && target == Deputy.deputy) ||
+            (canKillSheriff && Sheriff.Player.Any(x => x == target)) ||
+            (canKillDeputy && target == Sheriff.Deputy) ||
             (canKillVeteran && target == Veteran.veteran));
     }
 
@@ -60,17 +60,18 @@ public static class Thief
         var target = playerById(playerId);
         var thief = Thief.thief;
         if (target == null) return;
-        if (target == Sheriff.sheriff) Sheriff.sheriff = thief;
-        if (target == Deputy.deputy) Deputy.deputy = thief;
+        if (Sheriff.Player.Any(x => x == target)) Sheriff.Player.Add(thief);
+        if (Sheriff.formerDeputy == target) Sheriff.formerDeputy = thief;
+        if (target == Sheriff.Deputy) Sheriff.Deputy = thief;
         if (target == Veteran.veteran) Veteran.veteran = thief;
         if (Jackal.jackal.Any(x => x == target))
         {
             Jackal.jackal.Add(thief);
         }
 
-        if (target == Jackal.sidekick)
+        if (target == Jackal.Sidekick)
         {
-            Jackal.sidekick = thief;
+            Jackal.Sidekick = thief;
             Jackal.jackal.Add(target);
             if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(thief.PlayerId))
                 RPCProcedure.setGuesserGm(thief.PlayerId);
@@ -153,7 +154,7 @@ public static class Thief
             Swooper.swooper = thief;
         }
 
-        if (target == Deputy.deputy) Deputy.deputy = thief;
+        if (target == Sheriff.Deputy) Sheriff.Deputy = thief;
         if (target == Veteran.veteran) Veteran.veteran = thief;
         if (target == Blackmailer.blackmailer) Blackmailer.blackmailer = thief;
         if (target == EvilTrapper.evilTrapper) EvilTrapper.evilTrapper = thief;

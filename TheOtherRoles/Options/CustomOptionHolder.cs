@@ -1066,7 +1066,7 @@ public class CustomOptionHolder
         thiefSpawnRate = Create(20240, Types.Neutral, cs(Thief.color, "Thief"), rates, null, true);
         thiefCooldown = Create(20241, Types.Neutral, "thiefCooldown", 25f, 5f, 120f, 2.5f, thiefSpawnRate);
         thiefCanKillSheriff = Create(20242, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Sheriff.color, "Sheriff".Translate())}", true, thiefSpawnRate);
-        thiefCanKillDeputy = Create(20246, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Deputy.color, "Deputy".Translate())}", true, thiefSpawnRate);
+        thiefCanKillDeputy = Create(20246, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Sheriff.color, "Deputy".Translate())}", true, thiefSpawnRate);
         thiefCanKillVeteran = Create(20247, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Veteran.color, "Veteran".Translate())}", true, thiefSpawnRate);
         thiefHasImpVision = Create(20243, Types.Neutral, "thiefHasImpVision", true, thiefSpawnRate);
         thiefCanUseVents = Create(20244, Types.Neutral, "thiefCanUseVents", true, thiefSpawnRate);
@@ -1098,7 +1098,7 @@ public class CustomOptionHolder
         sheriffCanKillDoomsayer = Create(30159, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Doomsayer.color, "Doomsayer".Translate())}", true, sheriffCanKillNeutrals);
         sheriffCanKillThief = Create(30157, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Thief.color, "Thief".Translate())}", true, sheriffCanKillNeutrals);
 
-        deputySpawnRate = Create(30170, Types.Crewmate, cs(Deputy.color, "deputySpawnRate"), rates, sheriffSpawnRate);
+        deputySpawnRate = Create(30170, Types.Crewmate, cs(Sheriff.color, "deputySpawnRate"), rates, sheriffSpawnRate);
         deputyNumberOfHandcuffs = Create(30171, Types.Crewmate, "deputyNumberOfHandcuffs", 5f, 1f, 15f, 1f, deputySpawnRate);
         deputyHandcuffCooldown = Create(30172, Types.Crewmate, "deputyHandcuffCooldown", 20f, 10f, 60f, 2.5f, deputySpawnRate);
         deputyHandcuffDuration = Create(30173, Types.Crewmate, "deputyHandcuffDuration", 10f, 5f, 60f, 2.5f, deputySpawnRate);

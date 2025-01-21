@@ -303,7 +303,6 @@ public static class RoleHelpers
         InfoSleuth.clearAndReload();
         Gambler.clearAndReload();
         Butcher.clearAndReload();
-        Deputy.clearAndReload();
         Amnisiac.clearAndReload();
         Detective.clearAndReload();
         Werewolf.clearAndReload();
@@ -422,10 +421,10 @@ public static class RoleHelpers
 
         public static bool otherNeutral(PlayerControl player)
         {
-            if (isNeutral(player) && !Jackal.jackal.Contains(player) && player != Jackal.sidekick &&
+            if (isNeutral(player) && !Jackal.jackal.Contains(player) && player != Jackal.Sidekick &&
                 player != Pavlovsdogs.pavlovsowner && !Pavlovsdogs.pavlovsdogs.Contains(player))
                 return true;
-            if (Pelican.Player) return true;
+            if (Pelican.Player == player) return true;
             if (PartTimer.partTimer == player && PartTimer.target == null) return true;
             if (Lawyer.lawyer == player && Lawyer.target.IsDead()) return true;
             return false;

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Hazel;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -8,11 +8,10 @@ namespace TheOtherRoles.Roles.Neutral;
 public class Jackal
 {
     public static List<PlayerControl> jackal = new();
-    public static PlayerControl sidekick;
+    public static PlayerControl Sidekick;
 
     public static Color color = new Color32(0, 180, 235, byte.MaxValue);
     public static PlayerControl currentTarget;
-    public static PlayerControl currentTarget2;
 
     public static float cooldown = 30f;
     public static float createSidekickCooldown = 30f;
@@ -49,9 +48,8 @@ public class Jackal
     public static void clearAndReload()
     {
         jackal.Clear();
-        sidekick = null;
+        Sidekick = null;
         currentTarget = null;
-        currentTarget2 = null;
         isInvisable = false;
         cooldown = CustomOptionHolder.jackalKillCooldown.GetFloat();
         swoopCooldown = CustomOptionHolder.jackalSwooperCooldown.GetFloat();

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 
 namespace TheOtherRoles.Roles.Modifier;
 public static class Shifter
@@ -18,7 +18,7 @@ public static class Shifter
         if (shiftNeutral && shiftALLNeutra)
         {
             return player != null && (
-                       player == Jackal.sidekick ||
+                       player == Jackal.Sidekick ||
                        player == Pavlovsdogs.pavlovsowner ||
                        Jackal.jackal.Any(x => x == player) ||
                        Pavlovsdogs.pavlovsdogs.Any(x => x == player) ||
@@ -28,7 +28,7 @@ public static class Shifter
         else if (shiftNeutral)
         {
             return player != null && (
-                       player == Jackal.sidekick ||
+                       player == Jackal.Sidekick ||
                        player == Werewolf.werewolf ||
                        player == Lawyer.lawyer ||
                        player == Juggernaut.juggernaut ||
@@ -63,24 +63,17 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Engineer.engineer = player1;
         }
-        else if (Sheriff.sheriff != null && Sheriff.sheriff == player2)
+        else if (Sheriff.Player != null && Sheriff.Player.Any(x => x == player2))
         {
             if (repeat) shiftRole(player2, player1, false);
-            if (Sheriff.formerDeputy != null && Sheriff.formerDeputy == Sheriff.sheriff)
-                Sheriff.formerDeputy = player1; // Shifter also shifts info on promoted deputy (to get handcuffs)
-            Sheriff.sheriff = player1;
+            if (Sheriff.formerDeputy == player2) Sheriff.formerDeputy = player1;
+            Sheriff.Player.Add(player1);
+            Sheriff.Player.RemoveAll(x => x == player1);
         }
-        else if (Deputy.deputy != null && Deputy.deputy == player2)
+        else if (Sheriff.Deputy != null && Sheriff.Deputy == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
-            Deputy.deputy = player1;
-        }
-        else if (Sheriff.formerSheriff != null && Sheriff.formerSheriff == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Sheriff.formerSheriff = null;
-            Sheriff.formerDeputy = null;
-            Deputy.deputy = player1;
+            Sheriff.Deputy = player1;
         }
         else if (BodyGuard.bodyguard != null && BodyGuard.bodyguard == player2)
         {

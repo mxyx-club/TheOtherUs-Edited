@@ -105,7 +105,7 @@ internal class VentButtonDoClickPatch
     private static bool Prefix(VentButton __instance)
     {
         // Manually modifying the VentButton to use Vent.Use again in order to trigger the Vent.Use prefix patch
-        if (__instance.currentTarget != null && !Deputy.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId))
+        if (__instance.currentTarget != null && !Sheriff.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId))
             __instance.currentTarget.Use();
         return false;
     }
@@ -136,9 +136,9 @@ public static class VentUsePatch
     {
         if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return true;
         // Deputy handcuff disables the vents
-        if (Deputy.handcuffedPlayers.Contains(CachedPlayer.LocalPlayer.PlayerId))
+        if (Sheriff.handcuffedPlayers.Contains(CachedPlayer.LocalPlayer.PlayerId))
         {
-            Deputy.setHandcuffedKnows();
+            Sheriff.setHandcuffedKnows();
             return false;
         }
 
@@ -297,9 +297,9 @@ internal class KillButtonDoClickPatch
             !CachedPlayer.LocalPlayer.Data.IsDead && CachedPlayer.LocalPlayer.PlayerControl.CanMove)
         {
             // Deputy handcuff update.
-            if (Deputy.handcuffedPlayers.Contains(CachedPlayer.LocalPlayer.PlayerId))
+            if (Sheriff.handcuffedPlayers.Contains(CachedPlayer.LocalPlayer.PlayerId))
             {
-                Deputy.setHandcuffedKnows();
+                Sheriff.setHandcuffedKnows();
                 return false;
             }
 
@@ -363,9 +363,9 @@ internal class ReportButtonDoClickPatch
 {
     public static bool Prefix(ReportButton __instance)
     {
-        if (__instance.isActiveAndEnabled && Deputy.handcuffedPlayers.Contains(CachedPlayer.LocalPlayer.PlayerId) &&
-            __instance.graphic.color == Palette.EnabledColor) Deputy.setHandcuffedKnows();
-        return !Deputy.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId);
+        if (__instance.isActiveAndEnabled && Sheriff.handcuffedPlayers.Contains(CachedPlayer.LocalPlayer.PlayerId) &&
+            __instance.graphic.color == Palette.EnabledColor) Sheriff.setHandcuffedKnows();
+        return !Sheriff.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId);
     }
 }
 

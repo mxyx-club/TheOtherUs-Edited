@@ -335,7 +335,7 @@ internal class RoleManagerSelectRolesPatch
         }
 
         // --- Assign Main Roles if they won the lottery ---
-        if (isSheriff && Sheriff.sheriff == null && data.crewmates.Count > 0 && data.maxCrewmateRoles > 0 &&
+        if (isSheriff && Sheriff.Player == null && data.crewmates.Count > 0 && data.maxCrewmateRoles > 0 &&
             sheriffFlag)
         {
             // Set Sheriff cause he won the lottery
@@ -345,7 +345,7 @@ internal class RoleManagerSelectRolesPatch
         }
 
         // --- Assign Dependent Roles if main role exists ---
-        if (Sheriff.sheriff != null)
+        if (Sheriff.Player != null)
         {
             // Deputy
             if (CustomOptionHolder.deputySpawnRate.GetSelection() == 10 && data.crewmates.Count > 0 &&
@@ -842,7 +842,7 @@ internal class RoleManagerSelectRolesPatch
             {
                 shifterCrewPlayer.RemoveAll(x => x.Data.Role.IsImpostor
                     || Jackal.jackal.Any(p => p == x)
-                    || x == Jackal.sidekick
+                    || x == Jackal.Sidekick
                     || x == Lawyer.lawyer
                     || x == Pavlovsdogs.pavlovsowner);
             }
