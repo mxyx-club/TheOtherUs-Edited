@@ -611,7 +611,11 @@ public static class PlayerControlFixedUpdatePatch
              (p == Morphling.morphling && Giant.giant == Morphling.morphTarget && Morphling.morphTimer > 0f) ||
              Giant.giant == p))
         {
+            var collider = p.Collider.CastFast<CircleCollider2D>();
+            collider.offset = 0.3636057f * Vector2.down;
+
             p.transform.localScale = new Vector3(Giant.size, Giant.size, 1f);
+            collider.radius = 0.2233912f * 0.85f;
         }
         else if (p != Mini.mini)
         {

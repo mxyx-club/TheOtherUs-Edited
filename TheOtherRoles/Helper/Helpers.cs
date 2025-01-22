@@ -811,6 +811,28 @@ public static class Helpers
         }
     }
 
+    public static Vector3 GetCloseSpawnPosition(this PlayerControl player)
+    {
+        var list = new List<Vector3>();
+        list.AddRange(MapData.MapSpawnPosition(false));
+        list.AddRange(MapData.FindVentSpawnPositions(false));
+
+        var closePos = list[0];
+        float closeDistance = Vector3.Distance(player.transform.position, closePos);
+
+        foreach (var pos in list)
+        {
+            float distance = Vector3.Distance(player.transform.position, pos);
+            if (distance < closeDistance)
+            {
+                closePos = pos;
+                closeDistance = distance;
+            }
+        }
+        Message($"Revive Player{player.Data.PlayerName} To Vector3 {closePos}");
+        return closePos;
+    }
+
     public static GameObject[] GetChildren(this GameObject ParentObject)
     {
         GameObject[] ChildObject = new GameObject[ParentObject.transform.childCount];

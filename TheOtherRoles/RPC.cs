@@ -583,6 +583,10 @@ public static class RPCProcedure
                 break;
             case RoleId.Specter:
                 Specter.Player = player;
+                if (PlayerControl.LocalPlayer == player)
+                {
+                    DestroyableSingleton<HudManager>.Instance.ShadowQuad.gameObject.SetActive(true);
+                }
                 break;
         }
     }
