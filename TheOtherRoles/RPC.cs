@@ -583,6 +583,10 @@ public static class RPCProcedure
                 break;
             case RoleId.Specter:
                 Specter.Player = player;
+                if (PlayerControl.LocalPlayer == player)
+                {
+                    DestroyableSingleton<HudManager>.Instance.ShadowQuad.gameObject.SetActive(true);
+                }
                 break;
         }
     }
@@ -872,28 +876,28 @@ public static class RPCProcedure
 
     public static void shifterShift(byte targetId)
     {
-        var oldShifter = Shifter.shifter;
-        var player = playerById(targetId);
-        if (player == null || oldShifter == null) return;
+        var player = Shifter.shifter;
+        var target = playerById(targetId);
+        if (target == null || player == null) return;
 
         Shifter.futureShift = null;
         Shifter.clearAndReload();
 
         // Suicide (exile) when impostor or impostor variants
-        if ((player.Data.Role.IsImpostor || Shifter.isShiftNeutral(player)) && oldShifter.IsAlive())
+        if ((target.isImpostor() || Shifter.isShiftNeutral(target)) && player.IsAlive())
         {
-            oldShifter.Exiled();
-            OverrideDeathReasonAndKiller(oldShifter, CustomDeathReason.Shift, player);
-            if (oldShifter == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null)
+            Message($"Target Is Neutral: {Shifter.isShiftNeutral(target)}", "Shifter");
+            player.Exiled();
+            OverrideDeathReasonAndKiller(player, CustomDeathReason.Shift, target);
+            if (player == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null)
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 Lawyer.PromotesToPursuer();
             }
-            else if (oldShifter == Executioner.target && AmongUsClient.Instance.AmHost && Executioner.executioner != null)
+            else if (player == Executioner.target && AmongUsClient.Instance.AmHost && Executioner.executioner != null)
             {
-
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -902,10 +906,10 @@ public static class RPCProcedure
             return;
         }
 
-        Shifter.shiftRole(oldShifter, player);
+        Shifter.shiftRole(player, target);
 
         // Set cooldowns to max for both players
-        if (CachedPlayer.LocalPlayer.PlayerControl == oldShifter || CachedPlayer.LocalPlayer.PlayerControl == player)
+        if (CachedPlayer.LocalPlayer.PlayerControl == player || CachedPlayer.LocalPlayer.PlayerControl == target)
             CustomButton.ResetAllCooldowns();
     }
 

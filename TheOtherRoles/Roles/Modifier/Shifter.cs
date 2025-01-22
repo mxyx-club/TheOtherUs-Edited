@@ -15,20 +15,22 @@ public static class Shifter
 
     public static bool isShiftNeutral(PlayerControl player)
     {
-        if (shiftNeutral && shiftALLNeutra)
+        if (player == null) return false;
+
+        if (shiftNeutral)
         {
-            return player != null && (
-                       player == Jackal.Sidekick ||
+            if (shiftALLNeutra)
+            {
+                return player == Jackal.Sidekick ||
                        player == Pavlovsdogs.pavlovsowner ||
                        Jackal.jackal.Any(x => x == player) ||
                        Pavlovsdogs.pavlovsdogs.Any(x => x == player) ||
                        player == Akujo.akujo ||
-                       player == Lawyer.lawyer);
-        }
-        else if (shiftNeutral)
-        {
-            return player != null && (
-                       player == Jackal.Sidekick ||
+                       player == Lawyer.lawyer;
+            }
+            else
+            {
+                return player == Jackal.Sidekick ||
                        player == Werewolf.werewolf ||
                        player == Lawyer.lawyer ||
                        player == Juggernaut.juggernaut ||
@@ -36,9 +38,11 @@ public static class Shifter
                        player == Swooper.swooper ||
                        player == Pavlovsdogs.pavlovsowner ||
                        Jackal.jackal.Any(x => x == player) ||
-                       Pavlovsdogs.pavlovsdogs.Any(x => x == player));
+                       Pavlovsdogs.pavlovsdogs.Any(x => x == player);
+            }
         }
-        return player != null && isNeutral(player);
+
+        return isNeutral(player);
     }
 
     public static void shiftRole(PlayerControl player1, PlayerControl player2, bool repeat = true)

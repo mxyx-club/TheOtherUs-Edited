@@ -3279,7 +3279,7 @@ internal static class HudManagerStartPatch
                                     Constants.ShipAndObjectsMask, false) && component.ParentId != PlayerControl.LocalPlayer.PlayerId)
                             {
                                 var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
-                                PlayerControl.LocalPlayer.transform.position = component.transform.position;
+                                PlayerControl.LocalPlayer.transform.position = PlayerControl.LocalPlayer.GetCloseSpawnPosition();
                                 var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.SpecterTakeRole);
                                 writer.Write(playerInfo.PlayerId);
                                 writer.EndRPC();

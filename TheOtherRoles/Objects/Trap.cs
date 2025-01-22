@@ -230,6 +230,7 @@ public class KillTrap
         audioSource = killtrap.gameObject.AddComponent<AudioSource>();
         audioSource.priority = 0;
         audioSource.spatialBlend = 1;
+        audioSource.volume = 0.75f;
         audioSource.clip = place;
         audioSource.loop = false;
         audioSource.playOnAwake = false;
