@@ -24,120 +24,6 @@ using Object = UnityEngine.Object;
 
 namespace TheOtherRoles;
 
-public enum RoleId
-{
-    Default,
-
-    Impostor,
-    Morphling,
-    WolfLord,
-    Bomber,
-    Poucher,
-    Butcher,
-    Mimic,
-    Camouflager,
-    Miner,
-    Eraser,
-    Vampire,
-    Undertaker,
-    Escapist,
-    Warlock,
-    Trickster,
-    BountyHunter,
-    Cleaner,
-    Terrorist,
-    Blackmailer,
-    Witch,
-    Ninja,
-    Yoyo,
-    EvilTrapper,
-    Gambler,
-    Grenadier,
-
-    Survivor,
-    Amnisiac,
-    Jester,
-    Vulture,
-    Lawyer,
-    Executioner,
-    Pursuer,
-    PartTimer,
-    Witness,
-    Doomsayer,
-    Arsonist,
-    Jackal,
-    Sidekick,
-    Pavlovsowner,
-    Pavlovsdogs,
-    Werewolf,
-    Swooper,
-    Juggernaut,
-    Akujo,
-    Thief,
-
-    Crewmate,
-    Vigilante,
-    Mayor,
-    Prosecutor,
-    Portalmaker,
-    Engineer,
-    Sheriff,
-    Deputy,
-    BodyGuard,
-    Jumper,
-    Detective,
-    TimeMaster,
-    Veteran,
-    Medic,
-    Swapper,
-    Seer,
-    Hacker,
-    Tracker,
-    Snitch,
-    Prophet,
-    InfoSleuth,
-    Spy,
-    SecurityGuard,
-    Medium,
-    Trapper,
-    Balancer,
-
-    // Modifier ---
-    Lover,
-    Assassin,
-    Disperser,
-    PoucherModifier,
-    Vortox,
-    Specoality,
-    LastImpostor,
-    Bloody,
-    AntiTeleport,
-    Tiebreaker,
-    Bait,
-    Aftermath,
-    Flash,
-    Torch,
-    Sunglasses,
-    Multitasker,
-    Mini,
-    Giant,
-    Vip,
-    Indomitable,
-    Slueth,
-    Cursed,
-    Invert,
-    Blind,
-    Watcher,
-    Radar,
-    Tunneler,
-    ButtonBarry,
-    Chameleon,
-    Shifter,
-
-    GhostEngineer = 200,
-    Specter,
-}
-
 public enum CustomRPC
 {
     // Main Controls
@@ -233,12 +119,12 @@ public enum CustomRPC
     SetSwoop,
     SetJackalSwoop,
     JackalCanSwooper,
-    InfoSleuthTarget,
-    InfoSleuthNoTarget,
+    InfoSleuthSetTarget,
     GrenadierFlash,
     WitnessReport,
     WitnessSetTarget,
     WolfLordkilled,
+    PelicanKill,
 
     TrapperKill,
     PlaceTrap,
@@ -264,7 +150,6 @@ public enum CustomRPC
     // Gamemode
     SetGuesserGm,
     SetRevealed,
-    HostEndGame,
     HostKill,
     HostRevive,
 
@@ -407,13 +292,13 @@ public static class RPCProcedure
                         Engineer.engineer = player;
                         break;
                     case RoleId.Sheriff:
-                        Sheriff.sheriff = player;
+                        Sheriff.Player.Add(player);
+                        break;
+                    case RoleId.Deputy:
+                        Sheriff.Deputy = player;
                         break;
                     case RoleId.BodyGuard:
                         BodyGuard.bodyguard = player;
-                        break;
-                    case RoleId.Deputy:
-                        Deputy.deputy = player;
                         break;
                     case RoleId.Detective:
                         Detective.detective = player;
@@ -479,7 +364,7 @@ public static class RPCProcedure
                         Jackal.jackal.Add(player);
                         break;
                     case RoleId.Sidekick:
-                        Jackal.sidekick = player;
+                        Jackal.Sidekick = player;
                         break;
                     case RoleId.Pavlovsowner:
                         Pavlovsdogs.pavlovsowner = player;
@@ -531,6 +416,9 @@ public static class RPCProcedure
                         break;
                     case RoleId.Trapper:
                         Trapper.trapper = player;
+                        break;
+                    case RoleId.Pelican:
+                        Pelican.Player = player;
                         break;
                     case RoleId.Lawyer:
                         Lawyer.lawyer = player;
@@ -702,13 +590,19 @@ public static class RPCProcedure
                 break;
             case RoleId.Specter:
                 Specter.Player = player;
+                if (PlayerControl.LocalPlayer == player)
+                {
+                    DestroyableSingleton<HudManager>.Instance.ShadowQuad.gameObject.SetActive(true);
+                }
                 break;
         }
     }
 
     public static void versionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId)
     {
-        var ver = revision < 0 ? new Version(major, minor, build) : new Version(major, minor, build, revision);
+        Version ver;
+        if (revision < 0) ver = new Version(major, minor, build);
+        else ver = new Version(major, minor, build, revision);
         GameStartManagerPatch.playerVersions[clientId] = new GameStartManagerPatch.PlayerVersion(ver, guid);
     }
 
@@ -989,28 +883,28 @@ public static class RPCProcedure
 
     public static void shifterShift(byte targetId)
     {
-        var oldShifter = Shifter.shifter;
-        var player = playerById(targetId);
-        if (player == null || oldShifter == null) return;
+        var player = Shifter.shifter;
+        var target = playerById(targetId);
+        if (target == null || player == null) return;
 
         Shifter.futureShift = null;
         Shifter.clearAndReload();
 
         // Suicide (exile) when impostor or impostor variants
-        if ((player.Data.Role.IsImpostor || Shifter.isShiftNeutral(player)) && oldShifter.IsAlive())
+        if ((target.isImpostor() || Shifter.isShiftNeutral(target)) && player.IsAlive())
         {
-            oldShifter.Exiled();
-            OverrideDeathReasonAndKiller(oldShifter, CustomDeathReason.Shift, player);
-            if (oldShifter == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null)
+            Message($"Target Is Neutral: {Shifter.isShiftNeutral(target)}", "Shifter");
+            player.Exiled();
+            OverrideDeathReasonAndKiller(player, CustomDeathReason.Shift, target);
+            if (player == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null)
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 Lawyer.PromotesToPursuer();
             }
-            else if (oldShifter == Executioner.target && AmongUsClient.Instance.AmHost && Executioner.executioner != null)
+            else if (player == Executioner.target && AmongUsClient.Instance.AmHost && Executioner.executioner != null)
             {
-
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -1019,10 +913,10 @@ public static class RPCProcedure
             return;
         }
 
-        Shifter.shiftRole(oldShifter, player);
+        Shifter.shiftRole(player, target);
 
         // Set cooldowns to max for both players
-        if (CachedPlayer.LocalPlayer.PlayerControl == oldShifter || CachedPlayer.LocalPlayer.PlayerControl == player)
+        if (CachedPlayer.LocalPlayer.PlayerControl == player || CachedPlayer.LocalPlayer.PlayerControl == target)
             CustomButton.ResetAllCooldowns();
     }
 
@@ -1035,22 +929,17 @@ public static class RPCProcedure
         }
     }
 
-    public static void grenadierFlash(bool clear = false)
+    public static void grenadierFlash()
     {
-        if (clear)
-        {
-            Grenadier.controls.Clear();
-            return;
-        }
         var closestPlayers = GetClosestPlayers(Grenadier.grenadier.GetTruePosition(), Grenadier.radius, true);
         Grenadier.controls = closestPlayers;
         foreach (var player in closestPlayers)
         {
             if (CachedPlayer.LocalId == player.PlayerId)
             {
-                if (player.isImpostor() && !player.IsDead() && Grenadier.indicatorsMode > 0 && !MeetingHud.Instance)
+                if (player.isImpostor() && !player.IsDead() && !MeetingHud.Instance)
                 {
-                    Grenadier.showFlash(Grenadier.flash, Grenadier.duration, 0.2f);
+                    Grenadier.showFlash(Grenadier.flash, Grenadier.duration, 0.24f);
                 }
                 else if (!player.isImpostor() && !player.IsDead() && !MeetingHud.Instance)
                 {
@@ -1135,20 +1024,8 @@ public static class RPCProcedure
 
     public static void deputyUsedHandcuffs(byte targetId)
     {
-        Deputy.remainingHandcuffs--;
-        Deputy.handcuffedPlayers.Add(targetId);
-    }
-
-    public static void deputyPromotes()
-    {
-        if (Deputy.deputy != null)
-        {
-            // Deputy should never be null here, but there appeared to be a race condition during testing, which was removed.
-            Sheriff.replaceCurrentSheriff(Deputy.deputy);
-            Sheriff.formerDeputy = Deputy.deputy;
-            Deputy.deputy = null;
-            // No clear and reload, as we need to keep the number of handcuffs left etc
-        }
+        Sheriff.remainingHandcuffs--;
+        Sheriff.handcuffedPlayers.Add(targetId);
     }
 
     public static void jackalCreatesSidekick(byte targetId)
@@ -1173,7 +1050,7 @@ public static class RPCProcedure
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
 
         erasePlayerRoles(target.PlayerId);
-        Jackal.sidekick = target;
+        Jackal.Sidekick = target;
 
         if (target == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
         if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
@@ -1186,10 +1063,10 @@ public static class RPCProcedure
     {
         var player = playerById(playerId);
         if (player == null) return;
-        if (Jackal.jackal.All(x => x.PlayerId != playerId && x.IsDead()) && Jackal.promotesToJackal && Jackal.sidekick.IsAlive())
+        if (Jackal.jackal.All(x => x.PlayerId != playerId && x.IsDead()) && Jackal.promotesToJackal && Jackal.Sidekick.IsAlive())
         {
             Jackal.jackal.Add(player);
-            Jackal.sidekick = null;
+            Jackal.Sidekick = null;
             Jackal.canCreateSidekick = Jackal.jackalPromotedFromSidekickCanCreateSidekick;
         }
     }
@@ -1250,8 +1127,8 @@ public static class RPCProcedure
         if (player == Prosecutor.prosecutor) Prosecutor.clearAndReload();
         if (player == Portalmaker.portalmaker) Portalmaker.clearAndReload();
         if (player == Engineer.engineer) Engineer.clearAndReload();
-        if (player == Sheriff.sheriff) Sheriff.sheriff = null;
-        if (player == Deputy.deputy) Deputy.deputy = null;
+        Sheriff.Player.RemoveAll(x => x.PlayerId == player.PlayerId);
+        if (player == Sheriff.Deputy) Sheriff.Deputy = null;
         if (player == Detective.detective) Detective.clearAndReload();
         if (player == TimeMaster.timeMaster) TimeMaster.clearAndReload();
         if (player == Veteran.veteran) Veteran.clearAndReload();
@@ -1300,13 +1177,18 @@ public static class RPCProcedure
         if (player == Jester.jester) Jester.clearAndReload();
         if (player == Werewolf.werewolf) Werewolf.clearAndReload();
         if (player == Miner.miner) Miner.clearAndReload();
+        if (player == Pelican.Player)
+        {
+            Pelican.Player = null;
+            Pelican.PelicanDie();
+        }
         if (player == Arsonist.arsonist) Arsonist.clearAndReload();
         if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
 
         if (Jackal.jackal.Any(x => x == player))
         {
             Jackal.jackal.RemoveAll(x => x == player);
-            sidekickPromotes(Jackal.sidekick?.PlayerId ?? byte.MaxValue);
+            sidekickPromotes(Jackal.Sidekick?.PlayerId ?? byte.MaxValue);
         }
 
         if (player == Pavlovsdogs.pavlovsowner)
@@ -1314,7 +1196,7 @@ public static class RPCProcedure
             Pavlovsdogs.createDogNum = CustomOptionHolder.pavlovsownerCreateDogNum.GetInt();
             Pavlovsdogs.pavlovsowner = null;
         }
-        if (player == Jackal.sidekick) Jackal.sidekick = null;
+        if (player == Jackal.Sidekick) Jackal.Sidekick = null;
         if (player == BountyHunter.bountyHunter) BountyHunter.clearAndReload();
         if (player == Vulture.vulture) Vulture.clearAndReload();
         if (player == Executioner.executioner) Executioner.clearAndReload();
@@ -1375,17 +1257,16 @@ public static class RPCProcedure
         if (player == Specter.Player) Specter.ClearAndReload();
     }
 
-    public static void infoSleuthTarget(byte playerId)
+    public static void infoSleuthSetTarget(byte playerId)
     {
         var player = playerById(playerId);
-        if (player != null) InfoSleuth.target = player;
+        if (player == null)
+        {
+            InfoSleuth.target = null;
+            return;
+        }
+        InfoSleuth.target = player;
     }
-
-    public static void infoSleuthNoTarget()
-    {
-        InfoSleuth.target = null;
-    }
-
 
     public static void balancerBalance(byte sourceId, byte player1Id, byte player2Id)
     {
@@ -1746,7 +1627,7 @@ public static class RPCProcedure
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
         var canSee = Jackal.jackal.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl) ||
-                     Jackal.sidekick == CachedPlayer.LocalPlayer.PlayerControl ||
+                     Jackal.Sidekick == CachedPlayer.LocalPlayer.PlayerControl ||
                      CachedPlayer.LocalPlayer.Data.IsDead;
         if (canSee) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
@@ -1977,8 +1858,8 @@ public static class RPCProcedure
     public static void bloody(byte killerPlayerId, byte bloodyPlayerId)
     {
         if (Bloody.active.ContainsKey(killerPlayerId)) return;
-        Bloody.active.Add(killerPlayerId, Bloody.duration);
-        Bloody.bloodyKillerMap.Add(killerPlayerId, bloodyPlayerId);
+        Bloody.active.TryAdd(killerPlayerId, Bloody.duration);
+        Bloody.bloodyKillerMap.TryAdd(killerPlayerId, bloodyPlayerId);
     }
 
     public static void setFirstKill(byte playerId)
@@ -1994,8 +1875,7 @@ public static class RPCProcedure
         {
             var playerControl = CachedPlayer.LocalPlayer.PlayerControl;
             if (MeetingHud.Instance.playerStates == null) return;
-            var playerVoteArea =
-                MeetingHud.Instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == targetPlayerId);
+            var playerVoteArea = MeetingHud.Instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == targetPlayerId);
             if (playerVoteArea == null) return;
             var rend = new GameObject().AddComponent<SpriteRenderer>();
             rend.transform.SetParent(playerVoteArea.transform);
@@ -2048,10 +1928,10 @@ public static class RPCProcedure
         switch (infoType)
         {
             case GhostInfoTypes.HandcuffNoticed:
-                Deputy.setHandcuffedKnows(true, senderId);
+                Sheriff.setHandcuffedKnows(true, senderId);
                 break;
             case GhostInfoTypes.HandcuffOver:
-                _ = Deputy.handcuffedKnows.Remove(senderId);
+                _ = Sheriff.handcuffedKnows.Remove(senderId);
                 break;
             case GhostInfoTypes.ArsonistDouse:
                 Arsonist.dousedPlayers.Add(playerById(reader.ReadByte()));
@@ -2185,28 +2065,19 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.UseUncheckedVent:
-                var ventId = reader.ReadPackedInt32();
-                var ventingPlayer = reader.ReadByte();
-                var isEnter = reader.ReadByte();
-                RPCProcedure.useUncheckedVent(ventId, ventingPlayer, isEnter);
+                RPCProcedure.useUncheckedVent(reader.ReadPackedInt32(), reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.UncheckedMurderPlayer:
-                var source = reader.ReadByte();
-                var target = reader.ReadByte();
-                var showAnimation = reader.ReadByte();
-                RPCProcedure.uncheckedMurderPlayer(source, target, showAnimation);
+                RPCProcedure.uncheckedMurderPlayer(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.UncheckedExilePlayer:
-                var exileTarget = reader.ReadByte();
-                RPCProcedure.uncheckedExilePlayer(exileTarget);
+                RPCProcedure.uncheckedExilePlayer(reader.ReadByte());
                 break;
 
             case CustomRPC.UncheckedCmdReportDeadBody:
-                var reportSource = reader.ReadByte();
-                var reportTarget = reader.ReadByte();
-                RPCProcedure.uncheckedCmdReportDeadBody(reportSource, reportTarget);
+                RPCProcedure.uncheckedCmdReportDeadBody(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.DynamicMapOption:
@@ -2307,9 +2178,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.SwapperSwap:
-                var playerId1 = reader.ReadByte();
-                var playerId2 = reader.ReadByte();
-                RPCProcedure.swapperSwap(playerId1, playerId2);
+                RPCProcedure.swapperSwap(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.MorphlingMorph:
@@ -2317,25 +2186,11 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.CamouflagerCamouflage:
-                var setTimer = reader.ReadByte();
-                RPCProcedure.camouflagerCamouflage(setTimer);
+                RPCProcedure.camouflagerCamouflage(reader.ReadByte());
                 break;
 
-            /*case CustomRPC.DoomsayerMeeting:
-                if (!shouldShowGhostInfo()) break;
-                var index = reader.ReadPackedInt32();
-                for (var i = 1; i < index; i++)
-                {
-                    var message = reader.ReadString();
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Doomsayer.doomsayer, message);
-                }
-
-                break;*/
-
             case CustomRPC.VampireSetBitten:
-                var bittenId = reader.ReadByte();
-                var reset = reader.ReadByte();
-                RPCProcedure.vampireSetBitten(bittenId, reset);
+                RPCProcedure.vampireSetBitten(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.PlaceGarlic:
@@ -2355,7 +2210,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.DeputyPromotes:
-                RPCProcedure.deputyPromotes();
+                Sheriff.replaceCurrentSheriff();
                 break;
 
             case CustomRPC.JackalCreatesSidekick:
@@ -2371,9 +2226,8 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.ErasePlayerRoles:
-                var eraseTarget = reader.ReadByte();
-                RPCProcedure.erasePlayerRoles(eraseTarget);
-                Eraser.alreadyErased.Add(eraseTarget);
+                RPCProcedure.erasePlayerRoles(reader.ReadByte());
+                Eraser.alreadyErased.Add(reader.ReadByte());
                 break;
 
             case CustomRPC.ClearGhostRoles:
@@ -2449,9 +2303,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.PursuerSetBlanked:
-                var pid = reader.ReadByte();
-                var blankedValue = reader.ReadByte();
-                RPCProcedure.pursuerSetBlanked(pid, blankedValue);
+                RPCProcedure.pursuerSetBlanked(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.GiveBomb:
@@ -2469,14 +2321,11 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.SetFirstKill:
-                var firstKill = reader.ReadByte();
-                RPCProcedure.setFirstKill(firstKill);
+                RPCProcedure.setFirstKill(reader.ReadByte());
                 break;
 
             case CustomRPC.SetMeetingChatOverlay:
-                var targetPlayerId = reader.ReadByte();
-                var localPlayerId = reader.ReadByte();
-                RPCProcedure.setChatNotificationOverlay(localPlayerId, targetPlayerId);
+                RPCProcedure.setChatNotificationOverlay(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.ShowBodyGuardFlash:
@@ -2484,34 +2333,23 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.SetInvisible:
-                var invisiblePlayer = reader.ReadByte();
-                var invisibleFlag = reader.ReadByte();
-                RPCProcedure.setInvisible(invisiblePlayer, invisibleFlag);
+                RPCProcedure.setInvisible(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.SetSwoop:
-                var invisiblePlayer2 = reader.ReadByte();
-                var invisibleFlag2 = reader.ReadByte();
-                RPCProcedure.setSwoop(invisiblePlayer2, invisibleFlag2);
+                RPCProcedure.setSwoop(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.SetJackalSwoop:
-                var invisiblePlayer3 = reader.ReadByte();
-                var invisibleFlag3 = reader.ReadByte();
-                RPCProcedure.setJackalSwoop(invisiblePlayer3, invisibleFlag3);
+                RPCProcedure.setJackalSwoop(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.SetInvisibleGen:
-                var invisiblePlayer4 = reader.ReadByte();
-                var invisibleFlag4 = reader.ReadByte();
-                RPCProcedure.setInvisibleGen(invisiblePlayer4, invisibleFlag4);
+                RPCProcedure.setInvisibleGen(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.Mine:
-                var newVentId = reader.ReadInt32();
-                var pos = reader.ReadBytesAndSize();
-                var zAxis = reader.ReadSingle();
-                RPCProcedure.Mine(newVentId, pos, zAxis);
+                RPCProcedure.Mine(reader.ReadInt32(), reader.ReadBytesAndSize(), (float)reader.ReadSingle());
                 break;
 
             case CustomRPC.TurnToImpostor:
@@ -2519,8 +2357,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.ThiefStealsRole:
-                var thiefTargetId = reader.ReadByte();
-                Thief.StealsRole(thiefTargetId);
+                Thief.StealsRole(reader.ReadByte());
                 break;
 
             case CustomRPC.SetTrap:
@@ -2528,9 +2365,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.TriggerTrap:
-                var trappedPlayer = reader.ReadByte();
-                var trapId = reader.ReadByte();
-                RPCProcedure.triggerTrap(trappedPlayer, trapId);
+                RPCProcedure.triggerTrap(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.PlaceBomb:
@@ -2542,8 +2377,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.ShareGameMode:
-                var gm = reader.ReadByte();
-                RPCProcedure.shareGameMode(gm);
+                RPCProcedure.shareGameMode(reader.ReadByte());
                 break;
             case CustomRPC.AkujoSetHonmei:
                 RPCProcedure.akujoSetHonmei(reader.ReadByte(), reader.ReadByte());
@@ -2562,8 +2396,7 @@ internal class RPCHandlerPatch
 
             // Game mode
             case CustomRPC.SetGuesserGm:
-                var guesserGm = reader.ReadByte();
-                RPCProcedure.setGuesserGm(guesserGm);
+                RPCProcedure.setGuesserGm(reader.ReadByte());
                 break;
             case CustomRPC.ShareGhostInfo:
                 RPCProcedure.receiveGhostInfo(reader.ReadByte(), reader);
@@ -2595,7 +2428,7 @@ internal class RPCHandlerPatch
                 RPCProcedure.yoyoMarkLocation(reader.ReadBytesAndSize());
                 break;
             case CustomRPC.GrenadierFlash:
-                RPCProcedure.grenadierFlash(reader.ReadBoolean());
+                RPCProcedure.grenadierFlash();
                 break;
             case CustomRPC.WitnessReport:
                 Witness.WitnessReport(reader.ReadByte());
@@ -2605,6 +2438,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.WolfLordkilled:
                 WolfLord.WolfLordkilled(reader.ReadByte());
+                break;
+            case CustomRPC.PelicanKill:
+                Pelican.PelicanKill(reader.ReadByte());
                 break;
             case CustomRPC.YoyoBlink:
                 RPCProcedure.yoyoBlink(reader.ReadByte() == byte.MaxValue, reader.ReadBytesAndSize());
@@ -2646,20 +2482,12 @@ internal class RPCHandlerPatch
                 RPCProcedure.jackalCanSwooper(reader.ReadByte() == byte.MaxValue);
                 break;
 
-            case CustomRPC.InfoSleuthTarget:
-                RPCProcedure.infoSleuthTarget(reader.ReadByte());
-                break;
-
-            case CustomRPC.InfoSleuthNoTarget:
-                RPCProcedure.infoSleuthNoTarget();
+            case CustomRPC.InfoSleuthSetTarget:
+                RPCProcedure.infoSleuthSetTarget(reader.ReadByte());
                 break;
 
             case CustomRPC.BalancerBalance:
                 RPCProcedure.balancerBalance(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
-                break;
-
-            case CustomRPC.HostEndGame:
-                isCanceled = true;
                 break;
 
             case CustomRPC.HostRevive:

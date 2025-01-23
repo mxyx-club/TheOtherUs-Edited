@@ -274,12 +274,12 @@ internal class IntroPatch
                 __instance.RoleBlurbText.color = roleInfo.color;
             }
 
-            if (Deputy.knowsSheriff && Deputy.deputy != null && Sheriff.sheriff != null)
+            if (Sheriff.knowsSheriff && Sheriff.Deputy != null && Sheriff.Player != null)
             {
                 if (infos.Any(info => info.roleId == RoleId.Sheriff))
-                    __instance.RoleBlurbText.text = cs(Sheriff.color, $"\n你的捕快是 {Deputy.deputy?.Data?.PlayerName ?? ""}");
+                    __instance.RoleBlurbText.text = cs(Sheriff.color, $"\n你的捕快是 {Sheriff.Deputy?.Data?.PlayerName ?? ""}");
                 else if (infos.Any(info => info.roleId == RoleId.Deputy))
-                    __instance.RoleBlurbText.text = cs(Sheriff.color, $"\n你的警长是 {Sheriff.sheriff?.Data?.PlayerName ?? ""}");
+                    __instance.RoleBlurbText.text = cs(Sheriff.color, $"\n你的警长是 {Sheriff.Player?.FirstOrDefault().Data?.PlayerName ?? ""}");
             }
 
             if (Executioner.executioner != null && infos.Any(info => info.roleId == RoleId.Executioner))

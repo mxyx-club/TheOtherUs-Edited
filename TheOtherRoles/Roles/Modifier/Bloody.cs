@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace TheOtherRoles.Roles.Modifier;
 
@@ -13,8 +13,8 @@ public static class Bloody
     public static void clearAndReload()
     {
         bloody.Clear();
-        active.Clear();
-        bloodyKillerMap.Clear();
+        active = new();
+        bloodyKillerMap = new();
         duration = CustomOptionHolder.modifierBloodyDuration.GetFloat();
     }
 }

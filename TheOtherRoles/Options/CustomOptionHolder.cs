@@ -235,6 +235,7 @@ public class CustomOptionHolder
 
     public static CustomOption specterSpawnRate;
     public static CustomOption specterResetRole;
+    public static CustomOption specterDuration;
     public static CustomOption specterAfterMeeting;
 
     public static CustomOption sheriffSpawnRate;
@@ -432,6 +433,10 @@ public class CustomOptionHolder
     public static CustomOption juggernautCanUseVents;
     public static CustomOption juggernautReducedkillEach;
 
+    public static CustomOption pelicanSpawnRate;
+    public static CustomOption pelicanCooldown;
+    public static CustomOption pelicanReduceCooldown;
+
     public static CustomOption doomsayerSpawnRate;
     public static CustomOption doomsayerCooldown;
     public static CustomOption doomsayerHasMultipleShotsPerMeeting;
@@ -583,6 +588,7 @@ public class CustomOptionHolder
     public static CustomOption maxNumberOfMeetings;
     public static CustomOption blockSkippingInEmergencyMeetings;
     public static CustomOption noVoteIsSelfVote;
+    public static CustomOption disableMeeting;
     public static CustomOption hidePlayerNames;
     public static CustomOption showButtonTarget;
     public static CustomOption blockGameEnd;
@@ -713,6 +719,7 @@ public class CustomOptionHolder
         maxNumberOfMeetings = Create(21, Types.General, "maxNumberOfMeetings", 10, 0, 15, 1, null, true);
         blockSkippingInEmergencyMeetings = Create(22, Types.General, "blockSkippingInEmergencyMeetings", false);
         noVoteIsSelfVote = Create(23, Types.General, "noVoteIsSelfVote", false, blockSkippingInEmergencyMeetings);
+        disableMeeting = Create(36, Types.General, "disableMeeting", false);
         shieldFirstKill = Create(24, Types.General, "shieldFirstKill", false);
         hidePlayerNames = Create(25, Types.General, "hidePlayerNames", false);
         hideOutOfSightNametags = Create(26, Types.General, "hideOutOfSightNametags", true);
@@ -733,7 +740,7 @@ public class CustomOptionHolder
         WireTaskNumOption = Create(45, Types.General, "WireTaskNumOption", 3f, 1f, 8f, 1f, WireTaskIsRandomOption);
         transparentTasks = Create(40, Types.General, "transparentTasks", false);
         disableMedbayWalk = Create(41, Types.General, "disableMedbayWalk", false);
-        allowParallelMedBayScans = Create(44, Types.General, "allowParallelMedBayScans", false);
+        allowParallelMedBayScans = Create(46, Types.General, "allowParallelMedBayScans", false);
         finishTasksBeforeHauntingOrZoomingOut = Create(42, Types.General, "finishTasksBeforeHauntingOrZoomingOut", false);
         disableTaskGameEnd = Create(43, Types.General, "disableTaskGameEnd", false);
 
@@ -919,14 +926,14 @@ public class CustomOptionHolder
         grenadierCooldown = Create(10341, Types.Impostor, "grenadierCooldown", 20f, 0f, 45f, 2.5f, grenadierSpawnRate);
         grenadierDuration = Create(10342, Types.Impostor, "grenadierDuration", 8f, 4f, 10f, 0.5f, grenadierSpawnRate);
         grenadierFlashRadius = Create(10343, Types.Impostor, "grenadierFlashRadius", 1f, 0.25f, 5f, 0.125f, grenadierSpawnRate);
-        grenadierTeamIndicators = Create(10344, Types.Impostor, "grenadierTeamIndicators",
-            ["optionOff", "grenadierIndicators2", "grenadierIndicators3"], grenadierSpawnRate);
+        grenadierTeamIndicators = Create(10344, Types.Impostor, "grenadierTeamIndicators", true, grenadierSpawnRate);
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 
         specterSpawnRate = Create(50020, Types.Neutral, cs(Specter.color, "SpecterOptions"), rates, null, true);
         specterResetRole = Create(50021, Types.Neutral, "amnisiacResetRole", true, specterSpawnRate);
-        specterAfterMeeting = Create(50022, Types.Neutral, "specterAfterMeeting", false, specterSpawnRate);
+        specterDuration = Create(50022, Types.Neutral, "specterDuration", 1.5f, 0.25f, 5f, 0.25f, specterSpawnRate);
+        specterAfterMeeting = Create(50023, Types.Neutral, "specterAfterMeeting", false, specterSpawnRate);
 
         survivorSpawnRate = Create(20280, Types.Neutral, cs(Survivor.color, "Survivor"), rates, null, true);
         survivorVestEnable = Create(20281, Types.Neutral, "survivorVestEnable", true, survivorSpawnRate);
@@ -952,11 +959,11 @@ public class CustomOptionHolder
         partTimerDeathTurn = Create(20292, Types.Neutral, "partTimerDeathTurn", 2, 1, 6, 1, partTimerSpawnRate);
         partTimerKnowsRole = Create(20293, Types.Neutral, "partTimerIsCheckTargetRole", true, partTimerSpawnRate);
 
-        witnessSpawnRate = Create(20301, Types.Neutral, cs(Witness.color, "Witness"), rates, null, true);
-        witnessMarkTimer = Create(20302, Types.Neutral, "witnessMarkTimer", 30, 20, 90, 5, witnessSpawnRate);
-        witnessWinCount = Create(20303, Types.Neutral, "witnessWinCount", 2, 1, 6, 1, witnessSpawnRate);
-        witnessMeetingDie = Create(20304, Types.Neutral, "witnessMeetingDie", true, witnessSpawnRate);
-        witnessSkipMeeting = Create(20305, Types.Neutral, "witnessSkipMeeting", true, witnessSpawnRate);
+        witnessSpawnRate = Create(20300, Types.Neutral, cs(Witness.color, "Witness"), rates, null, true);
+        witnessMarkTimer = Create(20301, Types.Neutral, "witnessMarkTimer", 30, 20, 90, 5, witnessSpawnRate);
+        witnessWinCount = Create(20302, Types.Neutral, "witnessWinCount", 2, 1, 6, 1, witnessSpawnRate);
+        witnessMeetingDie = Create(20303, Types.Neutral, "witnessMeetingDie", true, witnessSpawnRate);
+        witnessSkipMeeting = Create(20304, Types.Neutral, "witnessSkipMeeting", true, witnessSpawnRate);
 
         jackalSpawnRate = Create(20130, Types.Neutral, cs(Jackal.color, "Jackal"), rates, null, true);
         jackalChanceSwoop = Create(20142, Types.Neutral, cs(Swooper.color, "jackalChanceSwoop"), rates, jackalSpawnRate);
@@ -991,6 +998,10 @@ public class CustomOptionHolder
         arsonistCooldown = Create(20121, Types.Neutral, "arsonistCooldown", 12.5f, 5f, 60f, 2.5f, arsonistSpawnRate);
         arsonistDuration = Create(20122, Types.Neutral, "arsonistDuration", 0.25f, 0f, 10f, 0.125f, arsonistSpawnRate);
         arsonistIgniteCdRemoved = Create(20123, Types.Neutral, "arsonistIgniteCdRemoved", false, arsonistSpawnRate);
+
+        pelicanSpawnRate = Create(20310, Types.Neutral, cs(Pelican.color, "Pelican"), rates, null, true);
+        pelicanCooldown = Create(20311, Types.Neutral, "pelicanCooldown", 25f, 2.5f, 60f, 2.5f, pelicanSpawnRate);
+        pelicanReduceCooldown = Create(20312, Types.Neutral, "pelicanReduceCooldown", 20f, 2.5f, 60f, 2.5f, pelicanSpawnRate);
 
         swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
         swooperKillCooldown = Create(20151, Types.Neutral, "swooperKillCooldown", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
@@ -1054,7 +1065,7 @@ public class CustomOptionHolder
         thiefSpawnRate = Create(20240, Types.Neutral, cs(Thief.color, "Thief"), rates, null, true);
         thiefCooldown = Create(20241, Types.Neutral, "thiefCooldown", 25f, 5f, 120f, 2.5f, thiefSpawnRate);
         thiefCanKillSheriff = Create(20242, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Sheriff.color, "Sheriff".Translate())}", true, thiefSpawnRate);
-        thiefCanKillDeputy = Create(20246, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Deputy.color, "Deputy".Translate())}", true, thiefSpawnRate);
+        thiefCanKillDeputy = Create(20246, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Sheriff.color, "Deputy".Translate())}", true, thiefSpawnRate);
         thiefCanKillVeteran = Create(20247, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Veteran.color, "Veteran".Translate())}", true, thiefSpawnRate);
         thiefHasImpVision = Create(20243, Types.Neutral, "thiefHasImpVision", true, thiefSpawnRate);
         thiefCanUseVents = Create(20244, Types.Neutral, "thiefCanUseVents", true, thiefSpawnRate);
@@ -1086,7 +1097,7 @@ public class CustomOptionHolder
         sheriffCanKillDoomsayer = Create(30159, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Doomsayer.color, "Doomsayer".Translate())}", true, sheriffCanKillNeutrals);
         sheriffCanKillThief = Create(30157, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Thief.color, "Thief".Translate())}", true, sheriffCanKillNeutrals);
 
-        deputySpawnRate = Create(30170, Types.Crewmate, cs(Deputy.color, "deputySpawnRate"), rates, sheriffSpawnRate);
+        deputySpawnRate = Create(30170, Types.Crewmate, cs(Sheriff.color, "deputySpawnRate"), rates, sheriffSpawnRate);
         deputyNumberOfHandcuffs = Create(30171, Types.Crewmate, "deputyNumberOfHandcuffs", 5f, 1f, 15f, 1f, deputySpawnRate);
         deputyHandcuffCooldown = Create(30172, Types.Crewmate, "deputyHandcuffCooldown", 20f, 10f, 60f, 2.5f, deputySpawnRate);
         deputyHandcuffDuration = Create(30173, Types.Crewmate, "deputyHandcuffDuration", 10f, 5f, 60f, 2.5f, deputySpawnRate);
@@ -1106,7 +1117,7 @@ public class CustomOptionHolder
         prosecutorCanSeeVoteColors = Create(30111, Types.Crewmate, "mayorCanSeeVoteColors", true, prosecutorSpawnRate);
         prosecutorTasksNeededToSeeVoteColors = Create(30112, Types.Crewmate, "mayorTasksNeededToSeeVoteColors", 5f, 0f, 20f, 1f, prosecutorCanSeeVoteColors);
         prosecutorDiesOnIncorrectPros = Create(30371, Types.Crewmate, "prosecutorDiesOnIncorrectPros", true, prosecutorSpawnRate);
-        prosecutorCanCallEmergency = Create(30371, Types.Crewmate, "prosecutorCanCallEmergency", true, prosecutorSpawnRate);
+        prosecutorCanCallEmergency = Create(30372, Types.Crewmate, "prosecutorCanCallEmergency", true, prosecutorSpawnRate);
 
         engineerSpawnRate = Create(30120, Types.Crewmate, cs(Engineer.color, "Engineer"), rates, null, true);
         engineerRemoteFix = Create(30121, Types.Crewmate, "engineerRemoteFix", true, engineerSpawnRate);

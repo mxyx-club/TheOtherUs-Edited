@@ -101,10 +101,10 @@ public class CustomOption
 
             option.entry = Main.Instance.Config.Bind($"Preset{preset}", option.id.ToString(), option.defaultSelection);
             option.selection = Mathf.Clamp(option.entry.Value, 0, option.selections.Length - 1);
-            if (option.optionBehaviour != null && option.optionBehaviour is StringOption stringOption)
+            if (option.optionBehaviour is not null and StringOption stringOption)
             {
                 stringOption.oldValue = stringOption.Value = option.selection;
-                stringOption.ValueText.text = option.getString();
+                stringOption.ValueText.text = option.GetString();
             }
         }
     }
@@ -189,21 +189,19 @@ public class CustomOption
         return selection + 1;
     }
 
-    public string getString()
+    public string GetString()
     {
         string sel = selections[selection].ToString();
 
-        if (sel is "optionOn")
-            return "<color=#FFFF00FF>" + sel.Translate() + "</color>";
-        else if (sel == "optionOff")
+        return sel switch
         {
-            return "<color=#CCCCCCFF>" + sel.Translate() + "</color>";
-        }
-
-        return sel.Translate();
+            "optionOn" => "<color=#FFFF00FF>" + sel.Translate() + "</color>",
+            "optionOff" => "<color=#CCCCCCFF>" + sel.Translate() + "</color>",
+            _ => sel.Translate(),
+        };
     }
 
-    public virtual string getName()
+    public string GetName()
     {
         return name.Translate();
     }
@@ -222,7 +220,7 @@ public class CustomOption
         bool doNeedNotifier = AmongUsClient.Instance?.AmClient == true && notifyUsers && selection != newSelection;
         if (doNeedNotifier)
         {
-            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(id + 6000), getString(), false);
+            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(id + 6000), GetString(), false);
             try
             {
                 if (GameStartManager.Instance != null && GameStartManager.Instance.LobbyInfoPane != null && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane != null && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.gameObject.activeSelf)
@@ -235,7 +233,7 @@ public class CustomOption
         if (doNeedNotifier)
         {
             DestroyableSingleton<HudManager>.Instance.Notifier
-                .AddModSettingsChangeMessage((StringNames)(id + 6000), getString(), getName().Replace("- ", ""), false);
+                .AddModSettingsChangeMessage((StringNames)(id + 6000), GetString(), GetName().Replace("- ", ""), false);
         }
 
         try
@@ -247,7 +245,7 @@ public class CustomOption
         if (optionBehaviour is not null and StringOption stringOption)
         {
             stringOption.oldValue = stringOption.Value = selection;
-            stringOption.ValueText.text = getString();
+            stringOption.ValueText.text = GetString();
             if (AmongUsClient.Instance?.AmHost == true && CachedPlayer.LocalPlayer.PlayerControl)
             {
                 if (id == 0 && selection != preset)
@@ -334,7 +332,7 @@ public class CustomOption
                 if (option.optionBehaviour != null && option.optionBehaviour is StringOption stringOption)
                 {
                     stringOption.oldValue = stringOption.Value = option.selection;
-                    stringOption.ValueText.text = option.getString();
+                    stringOption.ValueText.text = option.GetString();
                 }
                 somethingApplied = true;
             }
@@ -606,7 +604,7 @@ internal class LobbyViewSettingsPatch
                 headers++; // for header
                 var categoryHeaderMasked = UnityEngine.Object.Instantiate(__instance.categoryHeaderOrigin);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
-                var titleText = option.heading != "" ? option.getHeading() : option.getName();
+                var titleText = option.heading != "" ? option.getHeading() : option.GetName();
                 categoryHeaderMasked.Title.text = titleText;
                 var color = titleText.Contains("<color=") && optionType != 00 ? HexToColor(titleText.Substring(8, 6)) : Color.white;
                 if ((int)optionType == 99)
@@ -642,13 +640,13 @@ internal class LobbyViewSettingsPatch
             }
             viewSettingsInfoPanel.transform.localPosition = new Vector3(num2, num, -2f);
             var value = option.GetSelection();
-            viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, option.getString(), 61);
-            viewSettingsInfoPanel.titleText.text = option.getName();
+            viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, option.GetString(), 61);
+            viewSettingsInfoPanel.titleText.text = option.GetName();
             if (option.isHeader && (int)optionType != 99 && option.heading == "" && (option.type == CustomOptionType.Neutral || option.type == CustomOptionType.Crewmate || option.type == CustomOptionType.Impostor || option.type == CustomOptionType.Modifier))
                 viewSettingsInfoPanel.titleText.text = "optionSpawnChance".Translate();
             if ((int)optionType == 99)
             {
-                var color = option.getName().Contains("<color=") && optionType != 00 ? HexToColor(option.getName().Substring(8, 6)) : Color.white;
+                var color = option.GetName().Contains("<color=") && optionType != 00 ? HexToColor(option.GetName().Substring(8, 6)) : Color.white;
                 viewSettingsInfoPanel.titleText.outlineColor = color;
                 viewSettingsInfoPanel.titleText.outlineWidth = 0.2f;
                 if (option.type == CustomOptionType.Modifier)
@@ -869,7 +867,7 @@ internal class GameOptionsMenuStartPatch
                 var categoryHeaderMasked = UnityEngine.Object.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
 
-                var titleText = option.heading != "" ? option.getHeading() : option.getName();
+                var titleText = option.heading != "" ? option.getHeading() : option.GetName();
                 var color = titleText.Contains("<color=") ? HexToColor(titleText.Substring(8, 6)) : Color.white;
                 categoryHeaderMasked.Title.text = titleText;
                 categoryHeaderMasked.Title.outlineColor = color;
@@ -896,7 +894,7 @@ internal class GameOptionsMenuStartPatch
 
             var stringOption = optionBehaviour as StringOption;
             stringOption.OnValueChanged = new Action<OptionBehaviour>((o) => { });
-            stringOption.TitleText.text = option.getName();
+            stringOption.TitleText.text = option.GetName();
             if (option.isHeader && option.heading == "" && (option.type == CustomOptionType.Neutral || option.type == CustomOptionType.Crewmate || option.type == CustomOptionType.Impostor || option.type == CustomOptionType.Modifier))
                 stringOption.TitleText.text = "optionSpawnChance".Translate();
             if (stringOption.TitleText.text.Length > 25)
@@ -904,7 +902,7 @@ internal class GameOptionsMenuStartPatch
             if (stringOption.TitleText.text.Length > 40)
                 stringOption.TitleText.fontSize = 2f;
             stringOption.Value = stringOption.oldValue = option.selection;
-            stringOption.ValueText.text = option.getString();
+            stringOption.ValueText.text = option.GetString();
             option.optionBehaviour = stringOption;
 
             menu.Children.Add(optionBehaviour);
@@ -932,7 +930,7 @@ public class StringOptionEnablePatch
         __instance.OnValueChanged = new Action<OptionBehaviour>((o) => { });
         //__instance.TitleText.text = option.getName();
         __instance.Value = __instance.oldValue = option.selection;
-        __instance.ValueText.text = option.getString();
+        __instance.ValueText.text = option.GetString();
 
         return false;
     }
@@ -987,12 +985,12 @@ public class StringOptionFixedUpdate
         if (GameOptionsManager.Instance.CurrentGameOptions.MapId == 6)
             if (option.optionBehaviour != null && option.optionBehaviour is StringOption stringOption)
             {
-                stringOption.ValueText.text = option.getString();
+                stringOption.ValueText.text = option.GetString();
             }
             else if (option.optionBehaviour != null && option.optionBehaviour is StringOption stringOptionToo)
             {
                 stringOptionToo.oldValue = stringOptionToo.Value = option.selection;
-                stringOptionToo.ValueText.text = option.getString();
+                stringOptionToo.ValueText.text = option.GetString();
             }
     }
 }
@@ -1063,18 +1061,18 @@ internal class GameOptionsDataPatch
         {
             if (option.parent == null)
             {
-                var line = $"{option.getName()}: {option.getString()}";
+                var line = $"{option.GetName()}: {option.GetString()}";
                 if (type == CustomOptionType.Modifier) line += buildModifierExtras(option);
                 sb.AppendLine(line);
             }
             else if (option.parent.GetSelection() > 0)
             {
                 if (option.id == 30170) //Deputy
-                    sb.AppendLine($"- {cs(Deputy.color, "Deputy".Translate())}: {option.getString()}");
+                    sb.AppendLine($"- {cs(Sheriff.color, "Deputy".Translate())}: {option.GetString()}");
                 else if (option.id == 20142)
-                    sb.AppendLine($"- {cs(Jackal.color, "jackalSwoopChance".Translate())}: {option.getString()}");
+                    sb.AppendLine($"- {cs(Jackal.color, "jackalSwoopChance".Translate())}: {option.GetString()}");
                 else if (option.id == 20135) //Sidekick
-                    sb.AppendLine($"- {cs(Jackal.color, "Sidekick".Translate())}: {option.getString()}");
+                    sb.AppendLine($"- {cs(Jackal.color, "Sidekick".Translate())}: {option.GetString()}");
             }
         }
         if (headerOnly) return sb.ToString();
@@ -1089,7 +1087,7 @@ internal class GameOptionsDataPatch
 
                 var c = isIrrelevant ? Color.grey : Color.white; // No use for now
                 if (isIrrelevant) continue;
-                sb.AppendLine(cs(c, $"{option.getName()}: {option.getString()}"));
+                sb.AppendLine(cs(c, $"{option.GetName()}: {option.GetString()}"));
             }
             else
             {
@@ -1142,7 +1140,7 @@ internal class GameOptionsDataPatch
                 }
                 else
                 {
-                    sb.AppendLine($"\n{option.getName()}: {option.getString()}");
+                    sb.AppendLine($"\n{option.GetName()}: {option.GetString()}");
                 }
             }
         }

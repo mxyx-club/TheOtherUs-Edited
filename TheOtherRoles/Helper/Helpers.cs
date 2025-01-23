@@ -87,12 +87,13 @@ public static class Helpers
                player == Witness.Player ||
                player == PartTimer.partTimer ||
                player == Akujo.akujo ||
+               player == Pelican.Player ||
                player == Specter.Player ||
                player == Swooper.swooper ||
                player == Lawyer.lawyer ||
                player == Executioner.executioner ||
                player == Vulture.vulture ||
-               player == Jackal.sidekick ||
+               player == Jackal.Sidekick ||
                player == Pavlovsdogs.pavlovsowner ||
                Jackal.jackal.Any(x => x == player) ||
                Pursuer.Player.Any(x => x == player) ||
@@ -109,8 +110,8 @@ public static class Helpers
         // This functions blocks the game from ending if specified crewmate roles are alive
         if (!CustomOptionHolder.blockGameEnd.GetBool()) return false;
 
-        if (isRoleAlive(Sheriff.sheriff)) powerCrewAlive = true;
-        if (isRoleAlive(Deputy.deputy)) powerCrewAlive = true;
+        if (Sheriff.Player.Any(x => x.IsAlive())) powerCrewAlive = true;
+        if (isRoleAlive(Sheriff.Deputy)) powerCrewAlive = true;
         if (isRoleAlive(Veteran.veteran)) powerCrewAlive = true;
         if (isRoleAlive(Mayor.mayor)) powerCrewAlive = true;
         if (isRoleAlive(Swapper.swapper)) powerCrewAlive = true;
@@ -127,7 +128,7 @@ public static class Helpers
     {
         return player.Role.IsImpostor
                || (Jackal.jackal.Any(p => p.PlayerId == player.PlayerId) && Jackal.hasImpostorVision)
-               || (Jackal.sidekick != null && Jackal.sidekick.PlayerId == player.PlayerId && Jackal.hasImpostorVision)
+               || (Jackal.Sidekick != null && Jackal.Sidekick.PlayerId == player.PlayerId && Jackal.hasImpostorVision)
                || (Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner.PlayerId == player.PlayerId && Pavlovsdogs.hasImpostorVision)
                || (Pavlovsdogs.pavlovsdogs.Any(p => p.PlayerId == player.PlayerId) && Pavlovsdogs.hasImpostorVision)
                || (Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision)
@@ -168,7 +169,7 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
-        else if (Jackal.canUseVents && Jackal.sidekick != null && Jackal.sidekick == player)
+        else if (Jackal.canUseVents && Jackal.Sidekick != null && Jackal.Sidekick == player)
         {
             roleCouldUse = true;
         }
@@ -253,7 +254,8 @@ public static class Helpers
                 player == Werewolf.werewolf ||
                 player == Swooper.swooper ||
                 player == Arsonist.arsonist ||
-                player == Jackal.sidekick ||
+                player == Pelican.Player ||
+                player == Jackal.Sidekick ||
                 player == Pavlovsdogs.pavlovsowner ||
                 Jackal.jackal.Contains(player) ||
                 Pavlovsdogs.pavlovsdogs.Contains(player));
@@ -270,7 +272,7 @@ public static class Helpers
 
     public static bool isKiller(this PlayerControl player)
     {
-        return player != null && (player.Data.Role.IsImpostor || isKillerNeutral(player));
+        return player != null && (player.isImpostor() || isKillerNeutral(player));
     }
 
     public static bool isCrew(this PlayerControl player)
@@ -278,8 +280,9 @@ public static class Helpers
         return player != null && !player.Data.Role.IsImpostor && !isNeutral(player);
     }
 
-    public static bool isImpostor(this PlayerControl player)
+    public static bool isImpostor(this PlayerControl player, bool Spy = false)
     {
+        if (Spy && Roles.Crewmate.Spy.spy != null && Roles.Crewmate.Spy.spy == player) return true;
         return player != null && player.Data.Role.IsImpostor;
     }
 
@@ -335,7 +338,7 @@ public static class Helpers
     {
         var roleCouldUse = false;
         if (ModOption.disableSabotage) return false;
-        if (Jackal.canSabotage && (Jackal.jackal.Contains(player) || player == Jackal.sidekick) && !ModOption.disableSabotage)
+        if (Jackal.canSabotage && (Jackal.jackal.Contains(player) || player == Jackal.Sidekick) && !ModOption.disableSabotage)
             roleCouldUse = true;
         if (Pavlovsdogs.canSabotage && (player == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(p => p == player)) && !ModOption.disableSabotage)
             roleCouldUse = true;
@@ -581,6 +584,17 @@ public static class Helpers
         return false;
     }
 
+    public static bool TryAdd<T>(this IEnumerable<T> list, T item)
+    {
+        if (list == null || item == null) return false;
+        try
+        {
+            list.AddItem(item);
+            return true;
+        }
+        catch { return false; }
+    }
+
     public static TKey GetKeyByValue<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TValue value, TKey defaultvalue = default)
     {
         foreach (var pair in dictionary)
@@ -664,8 +678,9 @@ public static class Helpers
         return role;
     }
 
-    public static PlayerControl playerById(byte id)
+    public static PlayerControl playerById(byte? id)
     {
+        if (id == null) return null;
         foreach (PlayerControl player in CachedPlayer.AllPlayers)
             if (player.PlayerId == id)
                 return player;
@@ -815,6 +830,28 @@ public static class Helpers
         }
     }
 
+    public static Vector3 GetCloseSpawnPosition(this PlayerControl player)
+    {
+        var list = new List<Vector3>();
+        list.AddRange(MapData.MapSpawnPosition(false));
+        list.AddRange(MapData.FindVentSpawnPositions(false));
+
+        var closePos = list[0];
+        float closeDistance = Vector3.Distance(player.transform.position, closePos);
+
+        foreach (var pos in list)
+        {
+            float distance = Vector3.Distance(player.transform.position, pos);
+            if (distance < closeDistance)
+            {
+                closePos = pos;
+                closeDistance = distance;
+            }
+        }
+        Message($"Revive Player{player.Data.PlayerName} To Vector3 {closePos}");
+        return closePos;
+    }
+
     public static GameObject[] GetChildren(this GameObject ParentObject)
     {
         GameObject[] ChildObject = new GameObject[ParentObject.transform.childCount];
@@ -849,12 +886,12 @@ public static class Helpers
 
     public static void shareGameVersion()
     {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-            (byte)CustomRPC.VersionHandshake, SendOption.Reliable, -1);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionHandshake, 
+            SendOption.Reliable, -1);
         writer.Write((byte)Main.Version.Major);
         writer.Write((byte)Main.Version.Minor);
         writer.Write((byte)Main.Version.Build);
-        writer.Write(AmongUsClient.Instance.AmHost ? GameStartManagerPatch.timer : -1f);
+        writer.Write(AmongUsClient.Instance.AmHost ? Patches.GameStartManagerPatch.timer : -1f);
         writer.WritePacked(AmongUsClient.Instance.ClientId);
         writer.Write((byte)(Main.Version.Revision < 0 ? 0xFF : Main.Version.Revision));
         writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
@@ -952,14 +989,14 @@ public static class Helpers
         if ((source == Lovers.lover1 || source == Lovers.lover2) &&
             (target == Lovers.lover1 || target == Lovers.lover2))
             return false; // Members of team Lovers see the names of each other
-        if ((Jackal.jackal.Any(p => p == source) || source == Jackal.sidekick)
-            && (Jackal.jackal.Any(p => p == target) || target == Jackal.sidekick))
+        if ((Jackal.jackal.Any(p => p == source) || source == Jackal.Sidekick)
+            && (Jackal.jackal.Any(p => p == target) || target == Jackal.Sidekick))
             return false; // Members of team Jackal see the names of each other
         if ((source == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(x => x == target))
             && (target == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(x => x == target)))
             return false;
-        if (Deputy.knowsSheriff && (source == Sheriff.sheriff || source == Deputy.deputy) &&
-            (target == Sheriff.sheriff || target == Deputy.deputy))
+        if (Sheriff.knowsSheriff && (Sheriff.Player.Any(x => x == source) || source == Sheriff.Deputy) &&
+            (Sheriff.Player.Any(x => x == target) || target == Sheriff.Deputy))
             return false; // Sheriff & Deputy see the names of each other
         return true;
     }
@@ -1032,6 +1069,7 @@ public static class Helpers
     {
         if (FastDestroyableSingleton<HudManager>.Instance == null ||
             FastDestroyableSingleton<HudManager>.Instance.FullScreen == null) return;
+        if (Grenadier.controls.ToList().Any(x => x == PlayerControl.LocalPlayer)) return;
         FastDestroyableSingleton<HudManager>.Instance.FullScreen.gameObject.SetActive(true);
         FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = true;
         // Message Text
@@ -1060,9 +1098,9 @@ public static class Helpers
         })));
     }
 
-    // From TownOfUs-R
     public static IEnumerator showFlashCoroutine(Color color, float waitfor = 1f, float alpha = 0.3f)
     {
+        if (Grenadier.controls.ToList().Any(x => x == PlayerControl.LocalPlayer)) yield return null;
         color.a = alpha;
         if (HudManager.InstanceExists && HudManager.Instance.FullScreen)
         {
@@ -1085,11 +1123,11 @@ public static class Helpers
         }
     }
 
-    public static Il2CppSystem.Collections.Generic.List<PlayerControl> GetClosestPlayers(Vector2 truePosition, float radius, bool includeDead)
+    public static List<PlayerControl> GetClosestPlayers(Vector2 truePosition, float radius, bool includeDead)
     {
-        Il2CppSystem.Collections.Generic.List<PlayerControl> playerControlList = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
+        List<PlayerControl> playerControlList = new List<PlayerControl>();
         float lightRadius = radius * ShipStatus.Instance.MaxLightRadius;
-        Il2CppSystem.Collections.Generic.List<NetworkedPlayerInfo> allPlayers = GameData.Instance.AllPlayers;
+        List<NetworkedPlayerInfo> allPlayers = GameData.Instance.AllPlayers.ToList();
         for (int index = 0; index < allPlayers.Count; ++index)
         {
             NetworkedPlayerInfo playerInfo = allPlayers[index];
@@ -1193,15 +1231,6 @@ public static class Helpers
             SoundEffectsManager.play("fail");
             CustomButton.resetKillButton(killer);
             return MurderAttemptResult.SuppressKill;
-        }
-
-        if (Aftermath.aftermath != null && Aftermath.aftermath == target)
-        {
-            _ = new LateTask(() =>
-            {
-                Aftermath.aftermathTrigger(target.PlayerId, killer.PlayerId);
-
-            }, 0.1f);
         }
 
         // Block impostor not fully grown mini kill

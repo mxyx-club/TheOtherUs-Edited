@@ -77,7 +77,11 @@ public class Bomb
 
     public static void explode(Bomb b)
     {
-        if (b == null) return;
+        if (b?.bomb == null)
+        {
+            Error("Bomb or bomb GameObject is null.");
+            return;
+        }
         if (Terrorist.terrorist != null)
         {
             var position = b.bomb.transform.position;

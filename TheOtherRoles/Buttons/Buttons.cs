@@ -49,7 +49,6 @@ internal static class HudManagerStartPatch
     public static CustomButton vampireKillButton;
     public static CustomButton garlicButton;
     public static CustomButton jackalKillButton;
-    public static CustomButton sidekickKillButton;
     public static CustomButton jackalSwoopButton;
     public static CustomButton swooperSwoopButton;
     public static CustomButton swooperKillButton;
@@ -84,6 +83,7 @@ internal static class HudManagerStartPatch
     public static CustomButton blackmailerButton;
     public static CustomButton thiefKillButton;
     public static CustomButton juggernautKillButton;
+    public static CustomButton pelicanKillButton;
     public static CustomButton evilTrapperSetTrapButton;
     public static CustomButton doomsayerButton;
     public static CustomButton akujoHonmeiButton;
@@ -137,7 +137,7 @@ internal static class HudManagerStartPatch
         ghostEngineerButton.Timer = ghostEngineerButton.MaxTimer = 0f;
         specterRememberButton.MaxTimer = 15f;
         sheriffKillButton.MaxTimer = Sheriff.cooldown;
-        deputyHandcuffButton.MaxTimer = Deputy.handcuffCooldown;
+        deputyHandcuffButton.MaxTimer = Sheriff.handcuffCooldown;
         timeMasterShieldButton.MaxTimer = TimeMaster.cooldown;
         veteranAlertButton.MaxTimer = Veteran.cooldown;
         survivorVestButton.MaxTimer = Survivor.vestCooldown;
@@ -166,7 +166,6 @@ internal static class HudManagerStartPatch
         garlicButton.MaxTimer = 0f;
         jackalKillButton.MaxTimer = Jackal.cooldown;
         werewolfKillButton.MaxTimer = Werewolf.killCooldown;
-        sidekickKillButton.MaxTimer = Jackal.cooldown;
         jackalSidekickButton.MaxTimer = Jackal.createSidekickCooldown;
         eraserButton.MaxTimer = Eraser.cooldown;
         placeJackInTheBoxButton.MaxTimer = Trickster.placeBoxCooldown;
@@ -196,6 +195,7 @@ internal static class HudManagerStartPatch
         jackalSwoopButton.EffectDuration = Jackal.duration;
         minerMineButton.MaxTimer = Miner.cooldown;
         blackmailerButton.MaxTimer = Blackmailer.cooldown;
+        pelicanKillButton.MaxTimer = Pelican.cooldown;
         thiefKillButton.MaxTimer = Thief.cooldown;
         juggernautKillButton.MaxTimer = Juggernaut.cooldown;
         swooperKillButton.MaxTimer = Swooper.cooldown;
@@ -263,8 +263,8 @@ internal static class HudManagerStartPatch
         positionOffsetValue.z = -0.1f;
         couldUse ??= button.CouldUse;
         var replacementHandcuffedButton = new CustomButton(() => { }, () => { return true; }, couldUse, () => { },
-            Deputy.handcuffedSprite, positionOffsetValue, button.hudManager, button.hotkey,
-            true, Deputy.handcuffDuration, () => { }, button.mirror);
+            Sheriff.handcuffedSprite, positionOffsetValue, button.hudManager, button.hotkey,
+            true, Sheriff.handcuffDuration, () => { }, button.mirror);
         replacementHandcuffedButton.Timer = replacementHandcuffedButton.EffectDuration;
         replacementHandcuffedButton.actionButton.cooldownTimerText.color = new Color(0F, 0.8F, 0F);
         replacementHandcuffedButton.isEffectActive = true;
@@ -537,8 +537,9 @@ internal static class HudManagerStartPatch
         sheriffKillButton = new CustomButton(
             () =>
             {
+                if (Sheriff.currentTarget == null) return;
                 if (checkAndDoVetKill(Sheriff.currentTarget)) return;
-                var murderAttemptResult = checkMuderAttempt(Sheriff.sheriff, Sheriff.currentTarget);
+                var murderAttemptResult = checkMuderAttempt(PlayerControl.LocalPlayer, Sheriff.currentTarget);
                 if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
                 var target = Sheriff.currentTarget;
                 if (murderAttemptResult == MurderAttemptResult.PerformKill)
@@ -548,7 +549,7 @@ internal static class HudManagerStartPatch
                     if (Sheriff.sheriffCanKillNeutral(target))
                     {
                         targetId = target.PlayerId;
-                        GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.SheriffKill, Sheriff.sheriff);
+                        GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.SheriffKill, PlayerControl.LocalPlayer);
                     }
                     else
                     {
@@ -556,43 +557,42 @@ internal static class HudManagerStartPatch
                         {
                             case 0:
                                 targetId = CachedPlayer.LocalPlayer.PlayerId;
-                                GameHistory.RpcOverrideDeathReasonAndKiller(Sheriff.sheriff, CustomDeathReason.SheriffMisfire, Sheriff.sheriff);
+                                GameHistory.RpcOverrideDeathReasonAndKiller(PlayerControl.LocalPlayer, CustomDeathReason.SheriffMisfire, PlayerControl.LocalPlayer);
                                 break;
                             case 1:
                                 targetId = target.PlayerId;
-                                GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.SheriffMisadventure, Sheriff.sheriff);
+                                GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.SheriffMisadventure, PlayerControl.LocalPlayer);
                                 break;
                             case 2:
                                 targetId = target.PlayerId;
                                 var killWriter2 = StartRPC(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedMurderPlayer);
-                                killWriter2.Write(Sheriff.sheriff.Data.PlayerId);
+                                killWriter2.Write(PlayerControl.LocalPlayer.PlayerId);
                                 killWriter2.Write(CachedPlayer.LocalPlayer.PlayerId);
                                 killWriter2.Write(byte.MaxValue);
                                 killWriter2.EndRPC();
-                                RPCProcedure.uncheckedMurderPlayer(Sheriff.sheriff.Data.PlayerId, CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
-                                GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.SheriffMisadventure, Sheriff.sheriff);
-                                GameHistory.RpcOverrideDeathReasonAndKiller(Sheriff.sheriff, CustomDeathReason.SheriffMisfire, Sheriff.sheriff);
+                                RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
+                                GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.SheriffMisadventure, PlayerControl.LocalPlayer);
+                                GameHistory.RpcOverrideDeathReasonAndKiller(PlayerControl.LocalPlayer, CustomDeathReason.SheriffMisfire, PlayerControl.LocalPlayer);
                                 break;
                         }
                     }
 
-                    var killWriter = StartRPC(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedMurderPlayer);
-                    killWriter.Write(Sheriff.sheriff.Data.PlayerId);
+                    var killWriter = StartRPC(PlayerControl.LocalPlayer, CustomRPC.UncheckedMurderPlayer);
+                    killWriter.Write(PlayerControl.LocalPlayer.PlayerId);
                     killWriter.Write(targetId);
                     killWriter.Write(byte.MaxValue);
                     killWriter.EndRPC();
-                    RPCProcedure.uncheckedMurderPlayer(Sheriff.sheriff.Data.PlayerId, targetId, byte.MaxValue);
+                    RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, targetId, byte.MaxValue);
                 }
 
-                if (murderAttemptResult == MurderAttemptResult.BodyGuardKill) checkMurderAttemptAndKill(Sheriff.sheriff, target);
+                if (murderAttemptResult == MurderAttemptResult.BodyGuardKill) checkMurderAttemptAndKill(PlayerControl.LocalPlayer, target);
 
                 sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                 Sheriff.currentTarget = null;
             },
             () =>
             {
-                return Sheriff.sheriff != null && Sheriff.sheriff == CachedPlayer.LocalPlayer.PlayerControl &&
-                       !CachedPlayer.LocalPlayer.Data.IsDead;
+                return Sheriff.Player != null && Sheriff.Player.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl && x.IsAlive());
             },
             () =>
             {
@@ -610,42 +610,30 @@ internal static class HudManagerStartPatch
         deputyHandcuffButton = new CustomButton(
             () =>
             {
-                byte targetId = 0;
-                var target = Sheriff.sheriff == CachedPlayer.LocalPlayer.PlayerControl
-                    ? Sheriff.currentTarget
-                    : Deputy.currentTarget; // If the deputy is now the sheriff, sheriffs target, else deputies target
-                targetId = target.PlayerId;
-                if (checkAndDoVetKill(target)) return;
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                    (byte)CustomRPC.DeputyUsedHandcuffs, SendOption.Reliable);
-                writer.Write(targetId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.deputyUsedHandcuffs(targetId);
-                Deputy.currentTarget = null;
+                if (Sheriff.currentTarget == null) return;
+                if (checkAndDoVetKill(Sheriff.currentTarget)) return;
+                var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.DeputyUsedHandcuffs);
+                writer.Write(Sheriff.currentTarget.PlayerId);
+                writer.EndRPC();
+                RPCProcedure.deputyUsedHandcuffs(Sheriff.currentTarget.PlayerId);
+                Sheriff.currentTarget = null;
                 deputyHandcuffButton.Timer = deputyHandcuffButton.MaxTimer;
 
                 SoundEffectsManager.play("deputyHandcuff");
             },
             () =>
             {
-                return (Deputy.deputy != null && Deputy.deputy == CachedPlayer.LocalPlayer.PlayerControl ||
-                        Sheriff.sheriff != null && Sheriff.sheriff == CachedPlayer.LocalPlayer.PlayerControl &&
-                         Sheriff.sheriff == Sheriff.formerDeputy && Deputy.keepsHandcuffsOnPromotion) &&
-                       !CachedPlayer.LocalPlayer.Data.IsDead;
+                return (Sheriff.Deputy.IsAlive() && PlayerControl.LocalPlayer == Sheriff.Deputy)
+                       || Sheriff.Player.Any(x => x.IsAlive() && x == Sheriff.formerDeputy && x == PlayerControl.LocalPlayer);
             },
             () =>
             {
-                showTargetNameOnButton(Deputy.currentTarget, deputyHandcuffButton, GetString("HandcuffText"));
-                if (deputyButtonHandcuffsText != null) deputyButtonHandcuffsText.text = $"{Deputy.remainingHandcuffs}";
-                return (Deputy.deputy != null && Deputy.deputy == CachedPlayer.LocalPlayer.PlayerControl &&
-                         Deputy.currentTarget ||
-                        Sheriff.sheriff != null && Sheriff.sheriff == CachedPlayer.LocalPlayer.PlayerControl &&
-                         Sheriff.sheriff == Sheriff.formerDeputy && Sheriff.currentTarget) &&
-                       Deputy.remainingHandcuffs > 0 &&
-                       CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                showTargetNameOnButton(Sheriff.currentTarget, deputyHandcuffButton, GetString("HandcuffText"));
+                if (deputyButtonHandcuffsText != null) deputyButtonHandcuffsText.text = $"{Sheriff.remainingHandcuffs}";
+                return Sheriff.remainingHandcuffs > 0 && Sheriff.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { deputyHandcuffButton.Timer = deputyHandcuffButton.MaxTimer; },
-            Deputy.buttonSprite,
+            Sheriff.handcuffSprite,
             ButtonPositions.upperRowCenter,
             __instance,
             abilityInput.keyCode
@@ -1834,6 +1822,33 @@ internal static class HudManagerStartPatch
         portalmakerButtonText2.transform.localScale = Vector3.one * 0.5f;
         portalmakerButtonText2.transform.localPosition += new Vector3(-0.05f, 0.55f, -1f);
 
+        // Jackal Kill
+        jackalKillButton = new CustomButton(
+            () =>
+            {
+                if (checkAndDoVetKill(Jackal.currentTarget)) return;
+                if (checkMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl, Jackal.currentTarget) ==
+                    MurderAttemptResult.SuppressKill) return;
+
+                jackalKillButton.Timer = jackalKillButton.MaxTimer;
+            },
+            () =>
+            {
+                return (Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer) ||
+                        (Jackal.Sidekick == PlayerControl.LocalPlayer && Jackal.sidekickCanKill)) &&
+                        PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                showTargetNameOnButton(Jackal.currentTarget, jackalKillButton, GetString("killButtonText"));
+                return Jackal.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+            },
+            () => { jackalKillButton.Timer = jackalKillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPositions.upperRowCenter,
+            __instance,
+            modKillInput.keyCode
+        );
 
         // Jackal Sidekick Button
         jackalSidekickButton = new CustomButton(
@@ -1878,34 +1893,6 @@ internal static class HudManagerStartPatch
             abilityInput.keyCode
         );
 
-        // Jackal Kill
-        jackalKillButton = new CustomButton(
-            () =>
-            {
-                if (checkAndDoVetKill(Jackal.currentTarget)) return;
-                if (checkMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl, Jackal.currentTarget) ==
-                    MurderAttemptResult.SuppressKill) return;
-
-                jackalKillButton.Timer = jackalKillButton.MaxTimer;
-            },
-            () =>
-            {
-                return Jackal.jackal != null && Jackal.jackal.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl) &&
-                       !CachedPlayer.LocalPlayer.Data.IsDead;
-            },
-            () =>
-            {
-                showTargetNameOnButton(Jackal.currentTarget, jackalKillButton, GetString("killButtonText"));
-                return Jackal.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
-            },
-            () => { jackalKillButton.Timer = jackalKillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            //CustomButton.ButtonPositions.upperRowRight,
-            ButtonPositions.upperRowCenter,
-            __instance,
-            modKillInput.keyCode
-        );
-
         jackalSwoopButton = new CustomButton(
             () =>
             { /* On Use */
@@ -1940,35 +1927,6 @@ internal static class HudManagerStartPatch
             Jackal.duration,
             () => { jackalSwoopButton.Timer = jackalSwoopButton.MaxTimer; },
             buttonText: GetString("SwoopText")
-        );
-
-        // Sidekick Kill
-        sidekickKillButton = new CustomButton(
-            () =>
-            {
-                if (checkAndDoVetKill(Jackal.currentTarget2)) return;
-                if (checkMurderAttemptAndKill(Jackal.sidekick, Jackal.currentTarget2) ==
-                    MurderAttemptResult.SuppressKill) return;
-                sidekickKillButton.Timer = sidekickKillButton.MaxTimer;
-                Jackal.currentTarget2 = null;
-            },
-            () =>
-            {
-                return Jackal.sidekickCanKill && Jackal.sidekick != null &&
-                       Jackal.sidekick == CachedPlayer.LocalPlayer.PlayerControl &&
-                       !CachedPlayer.LocalPlayer.Data.IsDead;
-            },
-            () =>
-            {
-                showTargetNameOnButton(Jackal.currentTarget2, sidekickKillButton, GetString("killButtonText"));
-                return Jackal.currentTarget2 && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
-            },
-            () => { sidekickKillButton.Timer = sidekickKillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            //CustomButton.ButtonPositions.upperRowRight,
-            ButtonPositions.upperRowCenter,
-            __instance,
-            modKillInput.keyCode
         );
 
         // Swooper Kill
@@ -2289,7 +2247,7 @@ internal static class HudManagerStartPatch
                     (byte)CustomRPC.GrenadierFlash, SendOption.Reliable);
                 writer.Write(false);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.grenadierFlash(false);
+                RPCProcedure.grenadierFlash();
             },
             () =>
             {
@@ -2426,6 +2384,48 @@ internal static class HudManagerStartPatch
             () => { juggernautKillButton.Timer = juggernautKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
             new Vector3(0, 1f, 0),
+            __instance,
+            modKillInput.keyCode
+        );
+
+        // 鹈鹕击杀 Kill
+        pelicanKillButton = new CustomButton(
+            () =>
+            {
+                if (checkAndDoVetKill(Pelican.currentTarget)) return;
+                var murderAttemptResult = checkMuderAttempt(Pelican.Player, Pelican.currentTarget);
+                if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
+
+                if (murderAttemptResult == MurderAttemptResult.PerformKill)
+                {
+                    var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.PelicanKill);
+                    writer.Write(Pelican.currentTarget.PlayerId);
+                    writer.EndRPC();
+                    Pelican.PelicanKill(Pelican.currentTarget.PlayerId);
+                }
+                if (murderAttemptResult == MurderAttemptResult.BodyGuardKill)
+                    checkMurderAttemptAndKill(Pelican.Player, Pelican.currentTarget);
+
+                pelicanKillButton.Timer = Pelican.reduceCooldown;
+                Pelican.currentTarget = null;
+            },
+            () =>
+            {
+                return Pelican.Player != null && Pelican.Player == CachedPlayer.LocalPlayer.PlayerControl &&
+                       !CachedPlayer.LocalPlayer.Data.IsDead;
+            },
+            () =>
+            {
+                showTargetNameOnButton(Pelican.currentTarget, pelicanKillButton, GetString("VultureText"));
+                return Pelican.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+            },
+            () =>
+            {
+                //pelicanKillButton.MaxTimer = Pelican.cooldown;
+                pelicanKillButton.Timer = pelicanKillButton.MaxTimer;
+            },
+            __instance.KillButton.graphic.sprite,
+            ButtonPositions.upperRowRight,
             __instance,
             modKillInput.keyCode
         );
@@ -3243,7 +3243,7 @@ internal static class HudManagerStartPatch
             __instance,
             secondaryAbilityInput.keyCode,
             true,
-            1.5f,
+            Specter.duration,
             () =>
             {
                 foreach (var collider2D in Physics2D.OverlapCircleAll(CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(),
@@ -3259,10 +3259,10 @@ internal static class HudManagerStartPatch
                                 CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance &&
                                 CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
                                 !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
-                                    Constants.ShipAndObjectsMask, false))
+                                    Constants.ShipAndObjectsMask, false) && component.ParentId != PlayerControl.LocalPlayer.PlayerId)
                             {
                                 var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
-                                PlayerControl.LocalPlayer.transform.position = component.transform.position;
+                                PlayerControl.LocalPlayer.transform.position = PlayerControl.LocalPlayer.GetCloseSpawnPosition();
                                 var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.SpecterTakeRole);
                                 writer.Write(playerInfo.PlayerId);
                                 writer.EndRPC();

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -91,12 +91,6 @@ public class Amnisiac
                 Player.Add(target);
                 break;
 
-            case RoleId.Akujo:
-                Player.RemoveAll(x => x.PlayerId == local.PlayerId);
-                Akujo.akujo = local;
-                Player.Add(target);
-                break;
-
             case RoleId.Pursuer:
                 Player.RemoveAll(x => x.PlayerId == local.PlayerId);
                 if (resetRole) Pursuer.clearAndReload();
@@ -112,19 +106,12 @@ public class Amnisiac
             case RoleId.Sidekick:
                 Player.RemoveAll(x => x.PlayerId == local.PlayerId);
                 Jackal.jackal.Add(target);
-                Jackal.sidekick = local;
+                Jackal.Sidekick = local;
                 break;
 
             case RoleId.Survivor:
                 Player.RemoveAll(x => x.PlayerId == local.PlayerId);
                 Survivor.Player.Add(local);
-                break;
-
-            case RoleId.Thief:
-                Player.RemoveAll(x => x.PlayerId == local.PlayerId);
-                if (resetRole) Thief.clearAndReload();
-                Thief.thief = local;
-                Player.Add(target);
                 break;
 
             case RoleId.Pavlovsowner:
@@ -189,17 +176,24 @@ public class Amnisiac
                 if (resetRole) Mimic.clearAndReload(false);
                 Mimic.mimic = local;
                 break;
-
-            case RoleId.BodyGuard:
-                Player.RemoveAll(x => x.PlayerId == local.PlayerId);
-                if (resetRole) BodyGuard.clearAndReload();
-                BodyGuard.bodyguard = local;
-                break;
-
             case RoleId.Prosecutor:
                 Player.RemoveAll(x => x.PlayerId == local.PlayerId);
                 if (resetRole) Prosecutor.clearAndReload();
                 Prosecutor.prosecutor = target;
+                break;
+            case RoleId.Pelican:
+                if (resetRole) Pelican.clearAndReload(false);
+                Pelican.Player = local;
+                Player.Add(target);
+                break;
+            case RoleId.Akujo:
+                Akujo.akujo = local;
+                Player.Add(target);
+                break;
+            case RoleId.Thief:
+                if (resetRole) Thief.clearAndReload();
+                Thief.thief = local;
+                Player.Add(target);
                 break;
 
             case RoleId.Mayor:
@@ -221,19 +215,13 @@ public class Amnisiac
                 break;
 
             case RoleId.Sheriff:
-                Player.RemoveAll(x => x.PlayerId == local.PlayerId);
-                if (Sheriff.formerDeputy != null && Sheriff.formerDeputy == Sheriff.sheriff)
-                {
-                    Sheriff.formerDeputy = null;
-                    Deputy.deputy = local;
-                }
-                else Sheriff.sheriff = local;
+                Sheriff.Player.Add(local);
+                if (Sheriff.formerDeputy == target) Sheriff.formerDeputy = local;
                 break;
 
             case RoleId.Deputy:
-                Player.RemoveAll(x => x.PlayerId == local.PlayerId);
-                if (resetRole) Deputy.clearAndReload(false);
-                Deputy.deputy = local;
+                if (resetRole) Sheriff.Reload();
+                Sheriff.Deputy = local;
                 break;
 
             case RoleId.Butcher:

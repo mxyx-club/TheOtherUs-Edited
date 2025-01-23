@@ -33,6 +33,7 @@ internal class ModOption
     public static bool hideOutOfSightNametags;
     public static bool randomLigherPlayer;
     public static bool disableMedscanWalking;
+    public static bool DisableMeeting;
     public static bool isCanceled;
     public static bool ShowChatNotifications = true;
     public static bool MuteLobbyBGM;
@@ -104,6 +105,7 @@ internal class ModOption
         impostorSeeRoles = CustomOptionHolder.impostorSeeRoles.GetBool();
         transparentTasks = CustomOptionHolder.transparentTasks.GetBool();
         restrictDevices = CustomOptionHolder.restrictDevices.GetSelection();
+        DisableMeeting = CustomOptionHolder.disableMeeting.GetBool();
         //restrictAdminTime = restrictAdminTimeMax = CustomOptionHolder.restrictAdmin.getFloat();
         restrictCamerasTime = restrictCamerasTimeMax = CustomOptionHolder.restrictCameras.GetFloat();
         restrictVitalsTime = restrictVitalsTimeMax = CustomOptionHolder.restrictVents.GetFloat();

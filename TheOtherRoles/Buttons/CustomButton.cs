@@ -90,8 +90,8 @@ public class CustomButton
         OnClick();
 
         // Deputy skip onClickEvent if handcuffed
-        if (Deputy.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
-            Deputy.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0f) return;
+        if (Sheriff.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
+            Sheriff.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0f) return;
 
         if (!HasEffect || isEffectActive) return;
         DeputyTimer = EffectDuration;
@@ -135,7 +135,7 @@ public class CustomButton
     public static void ResetAllCooldowns(float Time = -1)
     {
         var time = Time == -1 ? ModOption.KillCooddown : Time;
-        CachedPlayer.LocalPlayer.PlayerControl.killTimer = time;
+        CachedPlayer.LocalPlayer.PlayerControl.killTimer = time - 0.6f;
         foreach (var t in buttons)
         {
             var maxTime = Time == -1 ? t.MaxTimer : Time;
@@ -161,12 +161,12 @@ public class CustomButton
             p.killTimer = time;
         }
 
+        pelicanKillButton.Timer = time == -1 ? pelicanKillButton.MaxTimer : time;
         warlockCurseButton.Timer = time == -1 ? warlockCurseButton.MaxTimer : time;
         ninjaButton.Timer = time == -1 ? ninjaButton.MaxTimer : time;
         vampireKillButton.Timer = time == -1 ? vampireKillButton.MaxTimer : time;
         sheriffKillButton.Timer = time == -1 ? sheriffKillButton.MaxTimer : time;
         jackalKillButton.Timer = time == -1 ? jackalKillButton.MaxTimer : time;
-        sidekickKillButton.Timer = time == -1 ? sidekickKillButton.MaxTimer : time;
         swooperKillButton.Timer = time == -1 ? swooperKillButton.MaxTimer : time;
         werewolfKillButton.Timer = time == -1 ? werewolfKillButton.MaxTimer : time;
         juggernautKillButton.Timer = time == -1 ? juggernautKillButton.MaxTimer : time;
@@ -277,8 +277,8 @@ public class CustomButton
         if (hotkey.HasValue && Input.GetKeyDown(hotkey.Value)) onClickEvent();
 
         // Deputy disable the button and display Handcuffs instead...
-        if (Deputy.handcuffedPlayers.Contains(localPlayer.PlayerId))
-            OnClick = () => { Deputy.setHandcuffedKnows(); };
+        if (Sheriff.handcuffedPlayers.Contains(localPlayer.PlayerId))
+            OnClick = () => { Sheriff.setHandcuffedKnows(); };
         else // Reset.
             OnClick = InitialOnClick;
     }

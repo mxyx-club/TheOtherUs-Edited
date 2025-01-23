@@ -1,6 +1,6 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using Hazel;
-using Il2CppSystem.Collections.Generic;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -10,16 +10,15 @@ public class Grenadier
 {
     public static PlayerControl grenadier;
     public static Color color = Palette.ImpostorRed;
-    public static Color flash = new Color32(153, 153, 153, byte.MaxValue);
+    public static Color flash = new Color32(150, 150, 150, byte.MaxValue);
     public static List<PlayerControl> controls = new();
 
     public static float cooldown;
     public static float duration;
     public static float radius;
-    public static int indicatorsMode;
+    public static bool indicatorsMode;
 
     public static ResourceSprite ButtonSprite = new("FlashButton.png");
-
 
     public static void showFlash(Color color, float duration = 10f, float alpha = 1f)
     {
@@ -84,6 +83,6 @@ public class Grenadier
         cooldown = CustomOptionHolder.grenadierCooldown.GetFloat();
         duration = CustomOptionHolder.grenadierDuration.GetFloat() + 0.5f;
         radius = CustomOptionHolder.grenadierFlashRadius.GetFloat();
-        indicatorsMode = CustomOptionHolder.grenadierTeamIndicators.GetSelection();
+        indicatorsMode = CustomOptionHolder.grenadierTeamIndicators.GetBool();
     }
 }

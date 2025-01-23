@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using TheOtherRoles.Objects;
 using UnityEngine;
@@ -32,7 +32,7 @@ public static class Prophet
     {
         if (p.Data.Role.IsImpostor || isKillerNeutral(p)) return true;
 
-        if (killCrewAsRed && (p == Sheriff.sheriff || p == Deputy.deputy || p == Veteran.veteran)) return true;
+        if (killCrewAsRed && (Sheriff.Player.Any(x => x == p) || p == Sheriff.Deputy || p == Veteran.veteran)) return true;
 
         if (benignNeutralAsRed && isNeutral(p) && (Amnisiac.Player.Contains(p) || Pursuer.Player.Contains(p) || Survivor.Player.Contains(p))) return true;
 

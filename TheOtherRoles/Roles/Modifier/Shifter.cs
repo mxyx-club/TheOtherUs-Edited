@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 
 namespace TheOtherRoles.Roles.Modifier;
 public static class Shifter
@@ -15,20 +15,22 @@ public static class Shifter
 
     public static bool isShiftNeutral(PlayerControl player)
     {
-        if (shiftNeutral && shiftALLNeutra)
+        if (player == null) return false;
+
+        if (shiftNeutral)
         {
-            return player != null && (
-                       player == Jackal.sidekick ||
+            if (shiftALLNeutra)
+            {
+                return player == Jackal.Sidekick ||
                        player == Pavlovsdogs.pavlovsowner ||
                        Jackal.jackal.Any(x => x == player) ||
                        Pavlovsdogs.pavlovsdogs.Any(x => x == player) ||
                        player == Akujo.akujo ||
-                       player == Lawyer.lawyer);
-        }
-        else if (shiftNeutral)
-        {
-            return player != null && (
-                       player == Jackal.sidekick ||
+                       player == Lawyer.lawyer;
+            }
+            else
+            {
+                return player == Jackal.Sidekick ||
                        player == Werewolf.werewolf ||
                        player == Lawyer.lawyer ||
                        player == Juggernaut.juggernaut ||
@@ -36,9 +38,11 @@ public static class Shifter
                        player == Swooper.swooper ||
                        player == Pavlovsdogs.pavlovsowner ||
                        Jackal.jackal.Any(x => x == player) ||
-                       Pavlovsdogs.pavlovsdogs.Any(x => x == player));
+                       Pavlovsdogs.pavlovsdogs.Any(x => x == player);
+            }
         }
-        return player != null && isNeutral(player);
+
+        return isNeutral(player);
     }
 
     public static void shiftRole(PlayerControl player1, PlayerControl player2, bool repeat = true)
@@ -63,24 +67,17 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Engineer.engineer = player1;
         }
-        else if (Sheriff.sheriff != null && Sheriff.sheriff == player2)
+        else if (Sheriff.Player != null && Sheriff.Player.Any(x => x == player2))
         {
             if (repeat) shiftRole(player2, player1, false);
-            if (Sheriff.formerDeputy != null && Sheriff.formerDeputy == Sheriff.sheriff)
-                Sheriff.formerDeputy = player1; // Shifter also shifts info on promoted deputy (to get handcuffs)
-            Sheriff.sheriff = player1;
+            if (Sheriff.formerDeputy == player2) Sheriff.formerDeputy = player1;
+            Sheriff.Player.Add(player1);
+            Sheriff.Player.RemoveAll(x => x == player1);
         }
-        else if (Deputy.deputy != null && Deputy.deputy == player2)
+        else if (Sheriff.Deputy != null && Sheriff.Deputy == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
-            Deputy.deputy = player1;
-        }
-        else if (Sheriff.formerSheriff != null && Sheriff.formerSheriff == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            Sheriff.formerSheriff = null;
-            Sheriff.formerDeputy = null;
-            Deputy.deputy = player1;
+            Sheriff.Deputy = player1;
         }
         else if (BodyGuard.bodyguard != null && BodyGuard.bodyguard == player2)
         {

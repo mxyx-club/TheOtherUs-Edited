@@ -202,9 +202,9 @@ public class MapData
         new Vector3(-20.8897f, 2.7606f, 0.002f)
     ];
 
-    public static List<Vector3> MapSpawnPosition()
+    public static List<Vector3> MapSpawnPosition(bool cached = false)
     {
-        if (PositionCached?.Count > 1) return PositionCached;
+        if (PositionCached?.Count > 1 && !cached) return PositionCached;
         var pos = GameOptionsManager.Instance.currentNormalGameOptions.MapId switch
         {
             0 => SkeldSpawnPosition,
@@ -215,14 +215,13 @@ public class MapData
             5 => FungleSpawnPosition,
             _ => FindVentSpawnPositions()
         };
-        PositionCached = pos;
-        Message("缓存出生点", "MapPos");
+        if (!cached) PositionCached = pos;
         return pos;
     }
 
-    public static List<Vector3> FindVentSpawnPositions()
+    public static List<Vector3> FindVentSpawnPositions(bool cached = false)
     {
-        if (VentCached?.Count > 1) return VentCached;
+        if (VentCached?.Count > 1 && !cached) return VentCached;
         var pos = new List<Vector3>();
         foreach (var vent in DestroyableSingleton<ShipStatus>.Instance.AllVents)
         {
@@ -231,8 +230,7 @@ public class MapData
             pos.Add(new Vector3(position.x, position.y + 0.3f, position.z = 0.0f));
         }
 
-        VentCached = pos;
-        Message("缓存出生点", "VentPos");
+        if (!cached) VentCached = pos;
         return pos;
     }
 
