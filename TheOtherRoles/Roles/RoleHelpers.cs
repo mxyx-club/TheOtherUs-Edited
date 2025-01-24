@@ -108,7 +108,6 @@ public enum RoleId
     Indomitable,
     Slueth,
     Cursed,
-    Invert,
     Blind,
     Watcher,
     Radar,
@@ -260,7 +259,6 @@ public static class RoleHelpers
             { RoleId.Flash, CustomOptionHolder.modifierFlash.GetSelection() },
             { RoleId.Giant, CustomOptionHolder.modifierGiant.GetSelection() },
             { RoleId.Indomitable, CustomOptionHolder.modifierIndomitable.GetSelection() },
-            { RoleId.Invert, CustomOptionHolder.modifierInvert.GetSelection() },
             { RoleId.LastImpostor, CustomOptionHolder.modifierLastImpostor.GetSelection() },
             { RoleId.Mini, CustomOptionHolder.modifierMini.GetSelection() },
             { RoleId.Multitasker, CustomOptionHolder.modifierMultitasker.GetSelection() },
@@ -383,7 +381,6 @@ public static class RoleHelpers
         Slueth.clearAndReload();
         Cursed.clearAndReload();
         Vip.clearAndReload();
-        Invert.clearAndReload();
         Chameleon.clearAndReload();
         ButtonBarry.clearAndReload();
         LastImpostor.clearAndReload();

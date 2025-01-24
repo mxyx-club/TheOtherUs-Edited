@@ -1466,7 +1466,7 @@ public static class PlayerControlFixedUpdatePatch
             Bomb.update();
         }
     }
-
+    #region SetTarget
     public static void UpdateSetTarget()
     {
         if (InMeeting) return;
@@ -1507,7 +1507,6 @@ public static class PlayerControlFixedUpdatePatch
 
         shifterSetTarget();
     }
-
 
     private static void medicSetTarget()
     {
@@ -1794,7 +1793,6 @@ public static class PlayerControlFixedUpdatePatch
         Juggernaut.currentTarget = setTarget();
     }
 
-
     private static void doomsayerSetTarget()
     {
         if (Doomsayer.doomsayer == null || Doomsayer.doomsayer != CachedPlayer.LocalPlayer.PlayerControl) return;
@@ -1916,6 +1914,8 @@ public static class PlayerControlFixedUpdatePatch
     }
 
 }
+
+#endregion
 
 [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.WalkPlayerTo))]
 internal class PlayerPhysicsWalkPlayerToPatch
@@ -2116,10 +2116,9 @@ public static class MurderPlayerPatch
     public static void HandleMurderPostfix(PlayerControl __instance, PlayerControl target)
     {
         // Collect dead player info
-
-        var deadPlayer = new DeadPlayer(target, DateTime.UtcNow, CustomDeathReason.Kill, __instance);
-        if (__instance == target) deadPlayer = new DeadPlayer(target, DateTime.UtcNow, CustomDeathReason.Suicide, __instance);
-        if (DeadPlayers.Any(x => x.Player != target)) DeadPlayers.Add(deadPlayer);
+        var deathReason = __instance == target ? CustomDeathReason.Suicide : CustomDeathReason.Kill;
+        var deadPlayer = new DeadPlayer(target, DateTime.UtcNow, deathReason, __instance);
+        DeadPlayers.Add(deadPlayer);
 
         // Reset killer to crewmate if resetToCrewmate
         if (resetToCrewmate) __instance.Data.Role.TeamType = RoleTeamTypes.Crewmate;

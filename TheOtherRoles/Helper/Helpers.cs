@@ -277,7 +277,7 @@ public static class Helpers
 
     public static bool isCrew(this PlayerControl player)
     {
-        return player != null && !player.Data.Role.IsImpostor && !isNeutral(player);
+        return player != null && !player.isImpostor() && !isNeutral(player);
     }
 
     public static bool isImpostor(this PlayerControl player, bool Spy = false)
@@ -584,12 +584,12 @@ public static class Helpers
         return false;
     }
 
-    public static bool TryAdd<T>(this IEnumerable<T> list, T item)
+    public static bool TryAdd<T>(this List<T> list, T item)
     {
         if (list == null || item == null) return false;
         try
         {
-            list.AddItem(item);
+            list.Add(item);
             return true;
         }
         catch { return false; }
@@ -761,9 +761,6 @@ public static class Helpers
 
     internal static string getRoleString(RoleInfo roleInfo)
     {
-        if (roleInfo.roleId == RoleId.Invert)
-            return cs(roleInfo.color, $"{roleInfo.Name}: {roleInfo.ShortDescription} \n(还有 {Invert.meetings} 次会议醒酒)");
-
         return cs(roleInfo.color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
     }
 
@@ -891,7 +888,7 @@ public static class Helpers
         writer.Write((byte)Main.Version.Major);
         writer.Write((byte)Main.Version.Minor);
         writer.Write((byte)Main.Version.Build);
-        writer.Write(AmongUsClient.Instance.AmHost ? Patches.GameStartManagerPatch.timer : -1f);
+        writer.Write(AmongUsClient.Instance.AmHost ? GameStartManagerPatch.timer : -1f);
         writer.WritePacked(AmongUsClient.Instance.ClientId);
         writer.Write((byte)(Main.Version.Revision < 0 ? 0xFF : Main.Version.Revision));
         writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());

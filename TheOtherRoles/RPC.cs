@@ -103,6 +103,7 @@ public enum CustomRPC
     SealVent,
     PartTimerSet,
     GuesserShoot,
+    SendGuessChat,
     LawyerSetTarget,
     ExecutionerSetTarget,
     ExecutionerPromotesRole,
@@ -114,7 +115,6 @@ public enum CustomRPC
     PursuerSetBlanked,
     Bloody,
     SetFirstKill,
-    SetMeetingChatOverlay,
     SetInvisibleGen,
     SetSwoop,
     SetJackalSwoop,
@@ -316,7 +316,7 @@ public static class RPCProcedure
                         PartTimer.partTimer = player;
                         break;
                     case RoleId.Grenadier:
-                        Grenadier.grenadier = player;
+                        Grenadier.Player = player;
                         break;
                     case RoleId.Veteran:
                         Veteran.veteran = player;
@@ -564,9 +564,6 @@ public static class RPCProcedure
                 break;
             case RoleId.Vip:
                 Vip.vip.Add(player);
-                break;
-            case RoleId.Invert:
-                Invert.invert.Add(player);
                 break;
             case RoleId.Indomitable:
                 Indomitable.indomitable = player;
@@ -929,13 +926,19 @@ public static class RPCProcedure
         }
     }
 
-    public static void grenadierFlash()
+    public static void grenadierFlash(bool clear = false)
     {
-        var closestPlayers = GetClosestPlayers(Grenadier.grenadier.GetTruePosition(), Grenadier.radius, true);
+        if (clear)
+        {
+            Grenadier.controls.Clear();
+            return;
+        }
+
+        var closestPlayers = GetClosestPlayers(Grenadier.Player.GetTruePosition(), Grenadier.radius, true);
         Grenadier.controls = closestPlayers;
         foreach (var player in closestPlayers)
         {
-            if (CachedPlayer.LocalId == player.PlayerId)
+            if (PlayerControl.LocalPlayer.PlayerId == player?.PlayerId)
             {
                 if (player.isImpostor() && !player.IsDead() && !MeetingHud.Instance)
                 {
@@ -1171,7 +1174,7 @@ public static class RPCProcedure
         if (player == Blackmailer.blackmailer) Blackmailer.clearAndReload();
         if (player == Terrorist.terrorist) Terrorist.clearAndReload();
         if (player == Gambler.gambler) Gambler.clearAndReload();
-        if (player == Grenadier.grenadier) Grenadier.clearAndReload();
+        if (player == Grenadier.Player) Grenadier.clearAndReload();
 
         // Other roles
         if (player == Jester.jester) Jester.clearAndReload();
@@ -1229,7 +1232,6 @@ public static class RPCProcedure
             Flash.flash.RemoveAll(x => x.PlayerId == player.PlayerId);
             Multitasker.multitasker.RemoveAll(x => x.PlayerId == player.PlayerId);
             Vip.vip.RemoveAll(x => x.PlayerId == player.PlayerId);
-            Invert.invert.RemoveAll(x => x.PlayerId == player.PlayerId);
             Chameleon.chameleon.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (player == Lovers.lover1 || player == Lovers.lover2) Lovers.clearAndReload(); // The whole Lover couple is being erased
             if (player == Specoality.specoality) Specoality.clearAndReload();
@@ -1869,35 +1871,6 @@ public static class RPCProcedure
         firstKillPlayer = target;
     }
 
-    public static void setChatNotificationOverlay(byte localPlayerId, byte targetPlayerId)
-    {
-        try
-        {
-            var playerControl = CachedPlayer.LocalPlayer.PlayerControl;
-            if (MeetingHud.Instance.playerStates == null) return;
-            var playerVoteArea = MeetingHud.Instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == targetPlayerId);
-            if (playerVoteArea == null) return;
-            var rend = new GameObject().AddComponent<SpriteRenderer>();
-            rend.transform.SetParent(playerVoteArea.transform);
-            rend.gameObject.layer = playerVoteArea.Megaphone.gameObject.layer;
-            rend.transform.localPosition = new Vector3(-0.5f, 0.2f, -1f);
-            rend.sprite = new ResourceSprite("TheOtherRoles.Resources.ChatOverlay.png", 130f);
-            if (playerControl.PlayerId != localPlayerId) rend.gameObject.SetActive(true);
-            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(2f, (Action<float>)delegate (float p)
-                {
-                    if (p == 1f)
-                    {
-                        rend?.gameObject?.SetActive(false);
-                        Object.Destroy(rend?.gameObject);
-                    }
-                }));
-        }
-        catch
-        {
-            Message("Chat Notification Overlay is Detected");
-        }
-    }
-
     public static void setTrap(byte[] buff)
     {
         if (Trapper.trapper == null) return;
@@ -1977,9 +1950,7 @@ public static class RPCProcedure
             SoundEffectsManager.playAtPosition("bombDefused", Terrorist.bomb.bomb.transform.position,
                 range: Terrorist.hearRange);
         }
-        catch
-        {
-        }
+        catch { }
 
         Terrorist.clearBomb();
         terroristButton.Timer = terroristButton.MaxTimer;
@@ -2016,7 +1987,8 @@ internal class RPCHandlerPatch
         if (!RpcNames!.ContainsKey(packetId))
             return true;
 
-        if (DebugMode && callId != 120) Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc {RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
+        Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc {RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
+
         switch (packetId)
         {
             // Main Controls
@@ -2285,6 +2257,10 @@ internal class RPCHandlerPatch
             case CustomRPC.GuesserShoot:
                 Guesser.guesserShoot(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
                 break;
+                
+            case CustomRPC.SendGuessChat:
+                Guesser.sendGuessChat(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+                break;
 
             case CustomRPC.LawyerSetTarget:
                 RPCProcedure.lawyerSetTarget(reader.ReadByte());
@@ -2322,10 +2298,6 @@ internal class RPCHandlerPatch
 
             case CustomRPC.SetFirstKill:
                 RPCProcedure.setFirstKill(reader.ReadByte());
-                break;
-
-            case CustomRPC.SetMeetingChatOverlay:
-                RPCProcedure.setChatNotificationOverlay(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.ShowBodyGuardFlash:
@@ -2428,7 +2400,7 @@ internal class RPCHandlerPatch
                 RPCProcedure.yoyoMarkLocation(reader.ReadBytesAndSize());
                 break;
             case CustomRPC.GrenadierFlash:
-                RPCProcedure.grenadierFlash();
+                RPCProcedure.grenadierFlash(reader.ReadBoolean());
                 break;
             case CustomRPC.WitnessReport:
                 Witness.WitnessReport(reader.ReadByte());

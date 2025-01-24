@@ -682,6 +682,7 @@ public class CustomOptionHolder
     public static CustomOption guesserGamemodeHaveModifier;
     public static CustomOption guesserGamemodeNumberOfShots;
     public static CustomOption guesserGamemodeHasMultipleShotsPerMeeting;
+    public static CustomOption guesserGamemodeCrewGuesserNumberOfTasks;
     public static CustomOption guesserGamemodeKillsThroughShield;
     public static CustomOption guesserGamemodeEvilCanKillSpy;
     public static CustomOption guesserGamemodeCantGuessSnitchIfTaksDone;
@@ -1383,6 +1384,7 @@ public class CustomOptionHolder
         guesserGamemodeHaveModifier = Create(2004, Types.Guesser, "guesserGamemodeHaveModifier", true, null, true);
         guesserGamemodeNumberOfShots = Create(2005, Types.Guesser, "guesserGamemodeNumberOfShots", 3f, 1f, 15f, 1f);
         guesserGamemodeHasMultipleShotsPerMeeting = Create(2006, Types.Guesser, "guesserGamemodeHasMultipleShotsPerMeeting", true);
+        guesserGamemodeCrewGuesserNumberOfTasks = Create(2014, Types.Guesser, "guesserGamemodeCrewGuesserNumberOfTasks", 0, 0, 6, 1, null);
         guesserGamemodeKillsThroughShield = Create(2008, Types.Guesser, "guesserGamemodeKillsThroughShield", true);
         guesserGamemodeEvilCanKillSpy = Create(2009, Types.Guesser, "guesserGamemodeEvilCanKillSpy", true);
         guesserGamemodeCantGuessSnitchIfTaksDone = Create(2010, Types.Guesser, "guesserGamemodeCantGuessSnitchIfTaksDone", true);

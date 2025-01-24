@@ -92,6 +92,7 @@ internal class MeetingHudPatch
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.swapperSwap(firstPlayer, secondPlayer);
     }
+
     public static void swapperCheckAndReturnSwap(MeetingHud __instance, byte dyingPlayerId)
     {
         // someone was guessed or dced in the meeting, check if this affects the swapper.
@@ -107,6 +108,8 @@ internal class MeetingHudPatch
 
         // Only for the swapper: Reset all the buttons and charges value to their original state.
         if (CachedPlayer.LocalPlayer.PlayerControl != Swapper.swapper) return;
+
+        if (swapperButtonList == null) return;
 
         // check if dying player was a selected player (but not confirmed yet)
         for (var i = 0; i < __instance.playerStates.Count; i++)
@@ -254,6 +257,7 @@ internal class MeetingHudPatch
 
         // Add Guesser Buttons
         var GuesserRemainingShots = HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId);
+        var (playerCompleted, playerTotal) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
         if (!isGuesser || CachedPlayer.LocalPlayer.IsDead || GuesserRemainingShots <= 0 ||
             (PlayerControl.LocalPlayer == WolfLord.Player && WolfLord.Revealed)) return;
         {
@@ -266,6 +270,9 @@ internal class MeetingHudPatch
 
                 if (!Eraser.canEraseGuess && CachedPlayer.LocalPlayer != null && CachedPlayer.LocalPlayer.PlayerControl == Eraser.eraser
                     && Eraser.alreadyErased.Contains(playerVoteArea.TargetPlayerId)) continue;
+
+                if (PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer.isCrew() && playerCompleted < HandleGuesser.tasksToUnlock)
+                    continue;
 
                 var template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
                 var targetBox = Object.Instantiate(template, playerVoteArea.transform);
@@ -848,28 +855,6 @@ internal class MeetingHudPatch
                     Blackmailer.alreadyShook = true;
                     __instance.StartCoroutine(Effects.SwayX(playerState.transform));
                 }
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
-    private class MeetingChatNotification
-    {
-        private static void Postfix(MeetingHud __instance)
-        {
-            var chat = FastDestroyableSingleton<HudManager>.Instance.Chat;
-            var local = CachedPlayer.LocalPlayer.PlayerControl;
-            var num = (int)chat.timeSinceLastMessage;
-            foreach (var p in PlayerControl.AllPlayerControls)
-            {
-                var player = p;
-                if (player != local || player.Data.IsDead || num != 0) continue;
-                var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetMeetingChatOverlay);
-                writer.Write(player.PlayerId);
-                writer.Write(local.PlayerId);
-                writer.EndRPC();
-                RPCProcedure.setChatNotificationOverlay(local.PlayerId, player.PlayerId);
-                break;
             }
         }
     }

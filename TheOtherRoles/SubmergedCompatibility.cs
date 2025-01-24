@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles;
@@ -89,7 +88,7 @@ public static class SubmergedCompatibility
         }
         catch (Exception e)
         {
-            Error(e.ToString());
+            Error(e);
         }
         return false;
     }
@@ -153,7 +152,7 @@ public static class SubmergedCompatibility
     public static void ChangeFloor(bool toUpper)
     {
         if (!Loaded) return;
-        MonoBehaviour _floorHandler = ((Component)GetFloorHandlerMethod.Invoke(null, new object[] { CachedPlayer.LocalPlayer.PlayerControl })).TryCast(FloorHandlerType) as MonoBehaviour;
+        MonoBehaviour _floorHandler = ((Component)GetFloorHandlerMethod.Invoke(null, new object[] { PlayerControl.LocalPlayer })).TryCast(FloorHandlerType) as MonoBehaviour;
         RpcRequestChangeFloorMethod.Invoke(_floorHandler, new object[] { toUpper });
     }
 
@@ -169,7 +168,7 @@ public static class SubmergedCompatibility
         try
         {
             ShipStatus.Instance.RpcRepairSystem((SystemTypes)130, 64);
-            RepairDamageMethod.Invoke(SubmarineOxygenSystemInstanceField.Invoke(null, Array.Empty<object>()), new object[] { CachedPlayer.LocalPlayer.PlayerControl, 64 });
+            RepairDamageMethod.Invoke(SubmarineOxygenSystemInstanceField.Invoke(null, Array.Empty<object>()), new object[] { PlayerControl.LocalPlayer, 64 });
         }
         catch (NullReferenceException)
         {

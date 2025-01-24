@@ -205,7 +205,7 @@ internal class ExileControllerWrapUpPatch
         if (obj.name.Contains("ExileCutscene"))
         {
             Message("Object.Destroy", "WrapUpPostfix");
-            WrapUpPostfix(ExileControllerBeginPatch.lastExiled);
+            WrapUpPostfix(ExileControllerBeginPatch.lastExiled ?? null);
         }
         else if (obj.name.Contains("SpawnInMinigame"))
         {
@@ -493,9 +493,6 @@ internal class ExileControllerWrapUpPatch
                     : "CrewmateRolesText".Translate();
             }
         }
-
-        // Invert add meeting
-        if (Invert.meetings > 0) Invert.meetings--;
 
         Chameleon.lastMoved.Clear();
 

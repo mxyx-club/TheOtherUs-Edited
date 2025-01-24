@@ -368,6 +368,7 @@ public static class Guesser
 
                     if (!HandleGuesser.killsThroughShield && focusedTarget == Medic.shielded)
                     {
+                        Message("阻止猜测法医保护目标");
                         // Depending on the options, shooting the shielded player will not allow the guess, notifiy everyone about the kill attempt and close the window
                         __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
                         Object.Destroy(container.gameObject);
@@ -377,20 +378,18 @@ public static class Guesser
                         AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
                         RPCProcedure.shieldedMurderAttempt(0);
                         SoundEffectsManager.play("fail");
+                        sendGuessChat(PlayerControl.LocalPlayer.PlayerId, focusedTarget?.PlayerId ?? byte.MaxValue, (byte)roleInfo.roleId, true);
                         return;
                     }
+
                     if (focusedTarget == Indomitable.indomitable)
                     {
                         showFlash(new Color32(255, 197, 97, byte.MinValue));
                         __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
                         Object.Destroy(container.gameObject);
 
-                        var murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                            (byte)CustomRPC.ShieldedMurderAttempt, SendOption.Reliable);
-                        AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
-                        RPCProcedure.shieldedMurderAttempt(0);
                         SoundEffectsManager.play("fail");
-                        seedGuessChat(CachedPlayer.LocalPlayer.PlayerControl, dyingTarget, (byte)roleInfo.roleId);
+                        sendGuessChat(PlayerControl.LocalPlayer.PlayerId, focusedTarget?.PlayerId ?? byte.MaxValue, (byte)roleInfo.roleId, true);
                         return;
                     }
 
@@ -501,7 +500,7 @@ public static class Guesser
             }
             else
             {
-                seedGuessChat(guesser, guessedTarget, guessedRoleId);
+                sendGuessChat(killerId, guessedTargetId, guessedRoleId);
                 return;
             }
         }
@@ -593,20 +592,30 @@ public static class Guesser
         }
 
         if (guesserUI != null && guesserUIExitButton != null) guesserUIExitButton.OnClick.Invoke();
-        if (guesser != null && guessedTarget != null) seedGuessChat(guesser, guessedTarget, guessedRoleId);
+        if (guesser != null && guessedTarget != null) sendGuessChat(guesser.PlayerId, guessedTarget.PlayerId, guessedRoleId);
         if (WolfLord.Player == guesser && !WolfLord.Revealed && PlayerControl.LocalPlayer == guesser) WolfLord.WolfLord_Patch.ClearButton();
     }
 
-    public static void seedGuessChat(PlayerControl guesser, PlayerControl guessedTarget, byte guessedRoleId)
+    public static void sendGuessChat(byte playerId, byte targetId, byte guessedRoleId, bool RPC = false)
     {
+        var player = playerById(playerId);
+        var target = playerById(targetId);
         if (PlayerControl.LocalPlayer.IsDead() && PlayerControl.LocalPlayer != Specter.Player)
         {
             var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
-            var msg = $"{guesser.Data.PlayerName} 赌怪猜测 {guessedTarget.Data.PlayerName} 是 {roleInfo?.Name ?? ""}!";
+            var msg = $"{player.Data.PlayerName} 赌怪猜测 {target.Data.PlayerName} 是 {roleInfo?.Name ?? ""}!";
             if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
             {
-                _ = new LateTask(() => { FastDestroyableSingleton<HudManager>.Instance!.Chat.AddChat(guesser, msg); }, 0.1f, "Guess Chat");
+                _ = new LateTask(() => { FastDestroyableSingleton<HudManager>.Instance!.Chat.AddChat(player, msg); }, 0.1f, "Guess Chat");
             }
+        }
+        if (RPC)
+        {
+            var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.SendGuessChat);
+            writer.Write(playerId);
+            writer.Write(targetId);
+            writer.Write(guessedRoleId);
+            writer.EndRPC();
         }
     }
 }

@@ -537,7 +537,6 @@ internal class RoleManagerSelectRolesPatch
             RoleId.Multitasker,
             RoleId.ButtonBarry,
             RoleId.Vip,
-            RoleId.Invert,
             RoleId.Indomitable,
             RoleId.Tunneler,
             RoleId.Slueth,
@@ -1043,10 +1042,6 @@ internal class RoleManagerSelectRolesPatch
             case RoleId.Vip:
                 selection = CustomOptionHolder.modifierVip.GetSelection();
                 if (multiplyQuantity) selection *= CustomOptionHolder.modifierVipQuantity.GetQuantity();
-                break;
-            case RoleId.Invert:
-                selection = CustomOptionHolder.modifierInvert.GetSelection();
-                if (multiplyQuantity) selection *= CustomOptionHolder.modifierInvertQuantity.GetQuantity();
                 break;
             case RoleId.Chameleon:
                 selection = CustomOptionHolder.modifierChameleon.GetSelection();

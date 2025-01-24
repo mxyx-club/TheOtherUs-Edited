@@ -10,7 +10,7 @@ public static class TasksHandler
     {
         var TotalTasks = 0;
         var CompletedTasks = 0;
-        if (!playerInfo.Disconnected && playerInfo.Tasks != null &&
+        if (playerInfo != null && !playerInfo.Disconnected && playerInfo.Tasks != null &&
             playerInfo.Object && playerInfo.Role && playerInfo.Role.TasksCountTowardProgress &&
             !playerInfo.Object.hasFakeTasks() && !playerInfo.Role.IsImpostor)
             foreach (var playerInfoTask in playerInfo.Tasks.GetFastEnumerator())

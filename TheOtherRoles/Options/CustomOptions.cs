@@ -206,10 +206,10 @@ public class CustomOption
         return name.Translate();
     }
 
-    public virtual string getHeading()
+    public string getHeading()
     {
         if (heading == "") return "";
-        return heading.Translate();
+        return $"<font=\"Barlow-Black SDF\" material=\"Barlow-Black Outline\">{heading.Translate()}</font>";
     }
 
     // Option changes
@@ -218,29 +218,24 @@ public class CustomOption
         newSelection = Mathf.Clamp((newSelection + selections.Length) % selections.Length, 0, selections.Length - 1);
 
         bool doNeedNotifier = AmongUsClient.Instance?.AmClient == true && notifyUsers && selection != newSelection;
+
+        selection = newSelection;
+
         if (doNeedNotifier)
         {
-            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(id + 6000), GetString(), false);
+            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(id + 6000), GetString(), true);
             try
             {
-                if (GameStartManager.Instance != null && GameStartManager.Instance.LobbyInfoPane != null && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane != null && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.gameObject.activeSelf)
+                if (GameStartManager.Instance?.LobbyInfoPane?.LobbyViewSettingsPane?.gameObject?.activeSelf == true)
                     LobbyViewSettingsPaneChangeTabPatch.Postfix(GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane, GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.currentTab);
             }
             catch { }
-        }
 
-        selection = newSelection;
-        if (doNeedNotifier)
-        {
             DestroyableSingleton<HudManager>.Instance.Notifier
                 .AddModSettingsChangeMessage((StringNames)(id + 6000), GetString(), GetName().Replace("- ", ""), false);
         }
 
-        try
-        {
-            onChange?.Invoke();
-        }
-        catch { }
+        try { onChange?.Invoke(); } catch { }
 
         if (optionBehaviour is not null and StringOption stringOption)
         {
@@ -265,8 +260,17 @@ public class CustomOption
             switchPreset(selection);
             ShareOptionSelections();// Share all selections
         }
-        // test
-        if (AmongUsClient.Instance?.AmClient == true)
+
+        if (AmongUsClient.Instance?.AmHost == true)
+        {
+            var currentTab = GameOptionsMenuStartPatch.currentTabs.FirstOrDefault(x => x.active).GetComponent<GameOptionsMenu>();
+            if (currentTab != null)
+            {
+                var optionType = options.First(x => x.optionBehaviour == currentTab.Children[0]).type;
+                GameOptionsMenuStartPatch.updateGameOptionsMenu(optionType, currentTab);
+            }
+        }
+        else if (AmongUsClient.Instance?.AmClient == true)
         {
             try
             {
@@ -281,25 +285,21 @@ public class CustomOption
 
     public static byte[] serializeOptions()
     {
-        using (var memoryStream = new MemoryStream())
+        using var memoryStream = new MemoryStream();
+        using var binaryWriter = new BinaryWriter(memoryStream);
+        var lastId = -1;
+        foreach (var option in options.OrderBy(x => x.id))
         {
-            using (var binaryWriter = new BinaryWriter(memoryStream))
-            {
-                var lastId = -1;
-                foreach (var option in options.OrderBy(x => x.id))
-                {
-                    if (option.id == 0) continue;
-                    var consecutive = lastId + 1 == option.id;
-                    lastId = option.id;
+            if (option.id == 0) continue;
+            var consecutive = lastId + 1 == option.id;
+            lastId = option.id;
 
-                    binaryWriter.Write((byte)(option.selection + (consecutive ? 128 : 0)));
-                    if (!consecutive) binaryWriter.Write((ushort)option.id);
-                }
-                binaryWriter.Flush();
-                memoryStream.Position = 0L;
-                return memoryStream.ToArray();
-            }
+            binaryWriter.Write((byte)(option.selection + (consecutive ? 128 : 0)));
+            if (!consecutive) binaryWriter.Write((ushort)option.id);
         }
+        binaryWriter.Flush();
+        memoryStream.Position = 0L;
+        return memoryStream.ToArray();
     }
 
     public static int deserializeOptions(byte[] inputValues)
@@ -391,7 +391,9 @@ public static class CustomOptionsExtensions
 {
     public static void AddModSettingsChangeMessage(this NotificationPopper popper, StringNames key, string value, string option, bool playSound = true)
     {
-        string str = DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.LobbyChangeSettingNotification, "<font=\"Barlow-Black SDF\" material=\"Barlow-Black Outline\">" + option + "</font>", "<font=\"Barlow-Black SDF\" material=\"Barlow-Black Outline\">" + value + "</font>");
+        string str = DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.LobbyChangeSettingNotification,
+            "<font=\"Barlow-Black SDF\" material=\"Barlow-Black Outline\">" + option + "</font>",
+            "<font=\"Barlow-Black SDF\" material=\"Barlow-Black Outline\">" + value + "</font>");
         popper.SettingsChangeMessageLogic(key, str, playSound);
     }
 
@@ -642,6 +644,7 @@ internal class LobbyViewSettingsPatch
             var value = option.GetSelection();
             viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, option.GetString(), 61);
             viewSettingsInfoPanel.titleText.text = option.GetName();
+
             if (option.isHeader && (int)optionType != 99 && option.heading == "" && (option.type == CustomOptionType.Neutral || option.type == CustomOptionType.Crewmate || option.type == CustomOptionType.Impostor || option.type == CustomOptionType.Modifier))
                 viewSettingsInfoPanel.titleText.text = "optionSpawnChance".Translate();
             if ((int)optionType == 99)
@@ -841,6 +844,13 @@ internal class GameOptionsMenuStartPatch
         torSettingsTab.name = settingName;
 
         var torSettingsGOM = torSettingsTab.GetComponent<GameOptionsMenu>();
+        updateGameOptionsMenu(optionType, torSettingsGOM);
+        currentTabs.Add(torSettingsTab);
+        torSettingsTab.SetActive(false);
+    }
+
+    public static void updateGameOptionsMenu(CustomOptionType optionType, GameOptionsMenu torSettingsGOM)
+    {
         foreach (var child in torSettingsGOM.Children)
         {
             child.Destroy();
@@ -853,8 +863,8 @@ internal class GameOptionsMenuStartPatch
             { 10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 30100, 30101, 30102, 30103, 30104 }.Contains(x.id)).ToList();
         createSettings(torSettingsGOM, relevantOptions);
 
-        currentTabs.Add(torSettingsTab);
-        torSettingsTab.SetActive(false);
+        //currentTabs.Add(torSettingsTab);
+        //torSettingsTab.SetActive(false);
     }
 
     public static void createSettings(GameOptionsMenu menu, List<CustomOption> options)
@@ -870,12 +880,14 @@ internal class GameOptionsMenuStartPatch
                 var titleText = option.heading != "" ? option.getHeading() : option.GetName();
                 var color = titleText.Contains("<color=") ? HexToColor(titleText.Substring(8, 6)) : Color.white;
                 categoryHeaderMasked.Title.text = titleText;
-                categoryHeaderMasked.Title.outlineColor = color;
-                categoryHeaderMasked.Title.outlineWidth = 0.2f;
+                categoryHeaderMasked.Title.outlineColor = Color.white;
+                categoryHeaderMasked.Title.outlineWidth = 0.05f;
                 categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
                 categoryHeaderMasked.transform.localPosition = new Vector3(-0.903f, num, -2f);
                 num -= 0.63f;
             }
+            else if (!option.IsEnbaled()) continue;
+            // Hides options, for which the parent is disabled!
             OptionBehaviour optionBehaviour = UnityEngine.Object.Instantiate(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
             optionBehaviour.transform.localPosition = new Vector3(0.952f, num, -2f);
             optionBehaviour.SetClickMask(menu.ButtonClickMask);

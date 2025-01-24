@@ -10,8 +10,6 @@ public static class PlayerPhysicsUpdatePatch
     {
         if (InGame && __instance && __instance.AmOwner && PlayerControl.LocalPlayer.IsAlive() && __instance.myPlayer.CanMove)
         {
-            if (Invert.invert.Any(x => x.PlayerId == CachedPlayer.LocalId) && Invert.meetings > 0)
-                __instance.body.velocity *= -1;
             if (Flash.flash != null && Flash.flash.Any(x => x.PlayerId == CachedPlayer.LocalId))
                 __instance.body.velocity *= Flash.speed;
             if (Giant.giant != null && Giant.giant == PlayerControl.LocalPlayer && !MushroomSabotageActive && !isCamoComms && Camouflager.camouflageTimer <= 0f)

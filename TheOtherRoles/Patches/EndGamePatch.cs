@@ -292,7 +292,7 @@ public class OnGameEndPatch
             foreach (var player in CachedPlayer.AllPlayers)
             {
                 if (player == null) continue;
-                if (!player.Data.Role.IsImpostor && !notWinners.Contains(player))
+                if (!player.PlayerControl.isImpostor() && !notWinners.Contains(player))
                     winners.Add(player.Data);
             }
         }

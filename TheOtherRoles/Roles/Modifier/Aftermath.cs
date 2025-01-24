@@ -348,13 +348,12 @@ public class Aftermath
             SoundEffectsManager.play("morphlingMorph");
             camouflagerButton.Timer = camouflagerButton.MaxTimer;
         }
-        else if (Grenadier.grenadier == killer)
+        else if (Grenadier.Player == killer)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                (byte)CustomRPC.GrenadierFlash, SendOption.Reliable);
+            var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.GrenadierFlash);
             writer.Write(false);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            grenadierFlash();
+            writer.EndRPC();
+            grenadierFlash(false);
             grenadierFlashButton.Timer = grenadierFlashButton.MaxTimer + Grenadier.duration;
         }
         else if (Swooper.swooper == killer)

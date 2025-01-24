@@ -1,4 +1,4 @@
-﻿using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.CustomGameModes;
 
 namespace TheOtherRoles.Utilities;
 
@@ -9,6 +9,7 @@ public static class HandleGuesser
     public static bool killsThroughShield = true;
     public static bool evilGuesserCanGuessSpy = true;
     public static bool guesserCantGuessSnitch;
+    public static int tasksToUnlock;
 
     public static ResourceSprite targetSprite = new("TargetIcon.png", 150f);
 
@@ -42,6 +43,7 @@ public static class HandleGuesser
             hasMultipleShotsPerMeeting = CustomOptionHolder.guesserGamemodeHasMultipleShotsPerMeeting.GetBool();
             killsThroughShield = CustomOptionHolder.guesserGamemodeKillsThroughShield.GetBool();
             evilGuesserCanGuessSpy = CustomOptionHolder.guesserGamemodeEvilCanKillSpy.GetBool();
+            tasksToUnlock = CustomOptionHolder.guesserGamemodeCrewGuesserNumberOfTasks.GetInt();
         }
         else
         {

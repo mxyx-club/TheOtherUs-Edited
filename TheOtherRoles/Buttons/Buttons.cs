@@ -399,15 +399,13 @@ internal static class HudManagerStartPatch
                 return numberOfLeftTasks <= 0 || !CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.GetBool();
             },
             () => { return true; },
-            () => { },
+            () => { zoomOutButton.Timer = 0f; },
             null,
             new Vector3(0.4f, 2.35f, 0f),
             __instance,
             KeyCode.KeypadPlus
         )
-        {
-            Timer = 0f
-        };
+        { Timer = 0f };
 
         // Engineer Repair
         engineerRepairButton = new CustomButton(
@@ -2243,16 +2241,15 @@ internal static class HudManagerStartPatch
             () =>
             {
                 /* On Use */
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                    (byte)CustomRPC.GrenadierFlash, SendOption.Reliable);
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.GrenadierFlash);
                 writer.Write(false);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.grenadierFlash();
+                writer.EndRPC();
+                RPCProcedure.grenadierFlash(false);
             },
             () =>
             {
                 /* Can See */
-                return Grenadier.grenadier != null && Grenadier.grenadier == CachedPlayer.LocalPlayer.PlayerControl
+                return Grenadier.Player != null && Grenadier.Player == CachedPlayer.LocalPlayer.PlayerControl
                        && !CachedPlayer.LocalPlayer.Data.IsDead;
             },
             () =>

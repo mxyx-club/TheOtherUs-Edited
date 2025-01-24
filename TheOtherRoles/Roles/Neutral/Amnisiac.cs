@@ -374,7 +374,7 @@ public class Amnisiac
             case RoleId.Grenadier:
                 Player.RemoveAll(x => x.PlayerId == local.PlayerId);
                 if (resetRole) Grenadier.clearAndReload();
-                Grenadier.grenadier = local;
+                Grenadier.Player = local;
                 break;
 
             case RoleId.SecurityGuard:

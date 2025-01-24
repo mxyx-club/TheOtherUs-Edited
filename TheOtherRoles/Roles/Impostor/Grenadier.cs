@@ -8,7 +8,7 @@ namespace TheOtherRoles.Roles.Impostor;
 
 public class Grenadier
 {
-    public static PlayerControl grenadier;
+    public static PlayerControl Player;
     public static Color color = Palette.ImpostorRed;
     public static Color flash = new Color32(150, 150, 150, byte.MaxValue);
     public static List<PlayerControl> controls = new();
@@ -37,12 +37,12 @@ public class Grenadier
             if (InMeeting)
             {
                 renderer.enabled = false;
-                if (CachedPlayer.LocalId == grenadier.PlayerId && controls.Count > 0)
+                if (CachedPlayer.LocalId == Player.PlayerId && controls.Count > 0)
                 {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                        (byte)CustomRPC.GrenadierFlash, SendOption.Reliable);
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.GrenadierFlash);
                     writer.Write(true);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
+                    RPCProcedure.grenadierFlash(true);
                     controls.Clear();
                 }
                 return;
@@ -58,12 +58,12 @@ public class Grenadier
                 var fadeOutProgress = (p - (1 - fadeFraction)) / fadeFraction;
                 if (renderer != null) renderer.color = new Color(color.r, color.g, color.b, Mathf.Clamp01((1 - fadeOutProgress) * alpha));
 
-                if (CachedPlayer.LocalId == grenadier.PlayerId && controls.Count > 0)
+                if (PlayerControl.LocalPlayer.PlayerId == Player?.PlayerId && controls?.Count > 0)
                 {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-                        (byte)CustomRPC.GrenadierFlash, SendOption.Reliable);
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.GrenadierFlash);
                     writer.Write(true);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                     controls.Clear();
                 }
             }
@@ -78,7 +78,7 @@ public class Grenadier
 
     public static void clearAndReload()
     {
-        grenadier = null;
+        Player = null;
         controls.Clear();
         cooldown = CustomOptionHolder.grenadierCooldown.GetFloat();
         duration = CustomOptionHolder.grenadierDuration.GetFloat() + 0.5f;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using InnerNet;
@@ -118,7 +119,6 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
     public static RoleInfo indomitable = new("Indomitable", Color.yellow, RoleId.Indomitable, RoleType.Modifier);
     public static RoleInfo slueth = new("Slueth", Color.yellow, RoleId.Slueth, RoleType.Modifier, true);
     public static RoleInfo cursed = new("Cursed", Color.yellow, RoleId.Cursed, RoleType.Modifier, true);
-    public static RoleInfo invert = new("Invert", Color.yellow, RoleId.Invert, RoleType.Modifier);
     public static RoleInfo blind = new("Blind", Color.yellow, RoleId.Blind, RoleType.Modifier);
     public static RoleInfo watcher = new("Watcher", Color.yellow, RoleId.Watcher, RoleType.Modifier, true);
     public static RoleInfo radar = new("Radar", Color.yellow, RoleId.Radar, RoleType.Modifier, true);
@@ -229,7 +229,6 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
         indomitable,
         slueth,
         cursed,
-        invert,
         blind,
         watcher,
         radar,
@@ -281,7 +280,6 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
             if (p == Poucher.poucher && Poucher.spawnModifier) infos.Add(poucherModifier);
             if (p == Giant.giant) infos.Add(giant);
             if (p == Vortox.Player) infos.Add(vortox);
-            if (Invert.invert.Any(x => x.PlayerId == p.PlayerId)) infos.Add(invert);
             if (Chameleon.chameleon.Any(x => x.PlayerId == p.PlayerId)) infos.Add(chameleon);
             if (p == Shifter.shifter) infos.Add(shifter);
             if (p == LastImpostor.lastImpostor) infos.Add(lastImpostor);
@@ -318,7 +316,7 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
         if (p == Detective.detective) infos.Add(detective);
         if (p == TimeMaster.timeMaster) infos.Add(timeMaster);
         if (p == Veteran.veteran) infos.Add(veteran);
-        if (p == Grenadier.grenadier) infos.Add(grenadier);
+        if (p == Grenadier.Player) infos.Add(grenadier);
         if (p == Medic.medic) infos.Add(medic);
         if (p == Swapper.swapper) infos.Add(swapper);
         if (p == BodyGuard.bodyguard) infos.Add(bodyguard);
@@ -402,7 +400,12 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
             roleName += "JackalIsSwooperInfo".Translate();
 
         if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId) && p != Doomsayer.doomsayer)
-            roleName += "GuessserGMInfo".Translate();
+        {
+            int remainingShots = HandleGuesser.remainingShots(p.PlayerId);
+            var (playerCompleted, playerTotal) = TasksHandler.taskInfo(p.Data);
+            var state = (PlayerControl.LocalPlayer.isCrew() && playerCompleted < HandleGuesser.tasksToUnlock) || remainingShots == 0;
+            roleName += cs(state ? Color.gray : Color.white, "GuessserGMInfo".Translate());
+        }
 
         if (showGhostInfo && p != null)
         {
