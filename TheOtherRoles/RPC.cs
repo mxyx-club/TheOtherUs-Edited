@@ -309,7 +309,7 @@ public static class RPCProcedure
                         PartTimer.partTimer = player;
                         break;
                     case RoleId.Grenadier:
-                        Grenadier.grenadier = player;
+                        Grenadier.Player = player;
                         break;
                     case RoleId.Veteran:
                         Veteran.veteran = player;
@@ -922,13 +922,13 @@ public static class RPCProcedure
         }
     }
 
-    public static void grenadierFlash()
+    public static void grenadierFlash(bool clear = false)
     {
-        var closestPlayers = GetClosestPlayers(Grenadier.grenadier.GetTruePosition(), Grenadier.radius, true);
+        var closestPlayers = GetClosestPlayers(Grenadier.Player.GetTruePosition(), Grenadier.radius, true);
         Grenadier.controls = closestPlayers;
         foreach (var player in closestPlayers)
         {
-            if (CachedPlayer.LocalId == player.PlayerId)
+            if (PlayerControl.LocalPlayer.PlayerId == player.PlayerId)
             {
                 if (player.isImpostor() && !player.IsDead() && !MeetingHud.Instance)
                 {
@@ -1164,7 +1164,7 @@ public static class RPCProcedure
         if (player == Blackmailer.blackmailer) Blackmailer.clearAndReload();
         if (player == Terrorist.terrorist) Terrorist.clearAndReload();
         if (player == Gambler.gambler) Gambler.clearAndReload();
-        if (player == Grenadier.grenadier) Grenadier.clearAndReload();
+        if (player == Grenadier.Player) Grenadier.clearAndReload();
 
         // Other roles
         if (player == Jester.jester) Jester.clearAndReload();
@@ -2421,7 +2421,7 @@ internal class RPCHandlerPatch
                 RPCProcedure.yoyoMarkLocation(reader.ReadBytesAndSize());
                 break;
             case CustomRPC.GrenadierFlash:
-                RPCProcedure.grenadierFlash();
+                RPCProcedure.grenadierFlash(reader.ReadBoolean());
                 break;
             case CustomRPC.WitnessReport:
                 Witness.WitnessReport(reader.ReadByte());

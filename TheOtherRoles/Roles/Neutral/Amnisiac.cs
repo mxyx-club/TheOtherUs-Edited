@@ -161,7 +161,7 @@ public class Amnisiac
                 break;
             case RoleId.Grenadier:
                 if (resetRole) Grenadier.clearAndReload();
-                Grenadier.grenadier = local;
+                Grenadier.Player = local;
                 break;
 
             case RoleId.Survivor:

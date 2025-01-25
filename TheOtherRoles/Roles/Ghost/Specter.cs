@@ -141,7 +141,7 @@ public class Specter
                     break;
                 case RoleId.Grenadier:
                     if (resetRole) Grenadier.clearAndReload();
-                    Grenadier.grenadier = local;
+                    Grenadier.Player = local;
                     break;
                 case RoleId.Survivor:
                     Survivor.Player.Add(local);

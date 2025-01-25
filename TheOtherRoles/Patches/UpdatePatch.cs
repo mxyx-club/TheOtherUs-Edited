@@ -131,8 +131,8 @@ internal class HudManagerUpdatePatch
             setPlayerNameColor(WolfLord.Player, WolfLord.color);
         }
 
-        if (Grenadier.grenadier != null && ((localPlayer.isImpostor() && Grenadier.indicatorsMode)
-            || localPlayer == Grenadier.grenadier || shouldShowGhostInfo()))
+        if (Grenadier.Player != null && ((localPlayer.isImpostor() && Grenadier.indicatorsMode)
+            || localPlayer == Grenadier.Player || shouldShowGhostInfo()))
         {
             foreach (var p in Grenadier.controls)
             {

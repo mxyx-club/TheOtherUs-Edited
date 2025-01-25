@@ -318,7 +318,7 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
         if (p == Detective.detective) infos.Add(detective);
         if (p == TimeMaster.timeMaster) infos.Add(timeMaster);
         if (p == Veteran.veteran) infos.Add(veteran);
-        if (p == Grenadier.grenadier) infos.Add(grenadier);
+        if (p == Grenadier.Player) infos.Add(grenadier);
         if (p == Medic.medic) infos.Add(medic);
         if (p == Swapper.swapper) infos.Add(swapper);
         if (p == BodyGuard.bodyguard) infos.Add(bodyguard);

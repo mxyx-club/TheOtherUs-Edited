@@ -348,32 +348,32 @@ public class Aftermath
             SoundEffectsManager.play("morphlingMorph");
             camouflagerButton.Timer = camouflagerButton.MaxTimer;
         }
-        else if (Grenadier.grenadier == killer)
+        else if (Grenadier.Player == killer)
         {
             var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.GrenadierFlash, SendOption.Reliable);
             writer.Write(false);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            grenadierFlash();
+            grenadierFlash(false);
             grenadierFlashButton.Timer = grenadierFlashButton.MaxTimer + Grenadier.duration;
         }
         else if (Swooper.swooper == killer)
         {
-            var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.SetSwoop, SendOption.Reliable);
-            invisibleWriter.Write(killer.PlayerId);
-            invisibleWriter.Write(byte.MinValue);
-            AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
+            writer.Write(killer.PlayerId);
+            writer.Write(byte.MinValue);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
             setSwoop(Swooper.swooper.PlayerId, byte.MinValue);
             swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer + Swooper.duration;
         }
         else if (Jackal.jackal.Any(x => x == killer) && Jackal.canSwoop)
         {
-            var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable);
-            invisibleWriter.Write(killer.PlayerId);
-            invisibleWriter.Write(byte.MinValue);
-            AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
+            writer.Write(killer.PlayerId);
+            writer.Write(byte.MinValue);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
             setJackalSwoop(killer.PlayerId, byte.MinValue);
             jackalSwoopButton.Timer = jackalSwoopButton.MaxTimer + Jackal.duration;
         }
