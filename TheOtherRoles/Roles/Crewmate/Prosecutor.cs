@@ -1,5 +1,4 @@
 using Hazel;
-using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 
@@ -51,7 +50,7 @@ public static class Prosecutor
         {
             public static void Postfix(MeetingHud __instance)
             {
-                if (prosecutor != CachedPlayer.LocalPlayer.PlayerControl) return;
+                if (prosecutor != PlayerControl.LocalPlayer) return;
 
                 var skip = __instance.SkipVoteButton;
                 Prosecute = Object.Instantiate(skip, skip.transform.parent);
@@ -67,7 +66,7 @@ public static class Prosecutor
             {
                 public static void Postfix(MeetingHud __instance)
                 {
-                    if (CachedPlayer.LocalPlayer.PlayerControl == prosecutor)
+                    if (PlayerControl.LocalPlayer == prosecutor)
                         UpdateButton(prosecutor, __instance);
                 }
             }
@@ -77,7 +76,7 @@ public static class Prosecutor
             {
                 public static void Postfix(MeetingHud __instance)
                 {
-                    if (CachedPlayer.LocalPlayer.PlayerControl == prosecutor)
+                    if (PlayerControl.LocalPlayer == prosecutor)
                     {
                         Prosecute.ClearButtons();
                         UpdateButton(prosecutor, __instance);
@@ -90,7 +89,7 @@ public static class Prosecutor
             {
                 public static void Postfix(MeetingHud __instance, int __0)
                 {
-                    if (CachedPlayer.LocalPlayer.PlayerControl == prosecutor)
+                    if (PlayerControl.LocalPlayer == prosecutor)
                     {
                         Prosecute.ClearButtons();
                         UpdateButton(prosecutor, __instance);
@@ -105,7 +104,7 @@ public static class Prosecutor
             {
                 public static void Postfix(MeetingHud __instance)
                 {
-                    if (CachedPlayer.LocalPlayer.PlayerControl == prosecutor)
+                    if (PlayerControl.LocalPlayer == prosecutor)
                         UpdateButton(prosecutor, __instance);
                 }
             }
@@ -115,7 +114,7 @@ public static class Prosecutor
             {
                 public static void Postfix(MeetingHud __instance)
                 {
-                    if (CachedPlayer.LocalPlayer.PlayerControl != prosecutor) return;
+                    if (PlayerControl.LocalPlayer != prosecutor) return;
                     switch (__instance.state)
                     {
                         case MeetingHud.VoteStates.Discussion:
@@ -137,7 +136,7 @@ public static class Prosecutor
         {
             public static bool Prefix(PlayerVoteArea __instance)
             {
-                if (prosecutor != CachedPlayer.LocalPlayer.PlayerControl) return true;
+                if (prosecutor != PlayerControl.LocalPlayer) return true;
                 if (__instance.Parent.state is MeetingHud.VoteStates.Proceeding or MeetingHud.VoteStates.Results)
                     return false;
 

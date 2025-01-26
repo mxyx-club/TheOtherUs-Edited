@@ -1,6 +1,5 @@
 using System;
 using Hazel;
-using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -38,7 +37,7 @@ internal class GameModePatches
             {
                 ModOption.gameMode = (CustomGamemodes)((int)(ModOption.gameMode + 1) % Enum.GetNames(typeof(CustomGamemodes)).Length);
                 __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => { pButton.buttonText.text = cs(Color.yellow, GameModeText.GetComponent<TextMeshPro>().text); })));
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.ShareGameMode, SendOption.Reliable, -1);
                 writer.Write((byte)ModOption.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);

@@ -28,7 +28,7 @@ public static class PlayerControlFixedUpdatePatch
         PlayerControl result = null;
         var num = GameOptionsData.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentNormalGameOptions.KillDistance, 0, 3)];
         if (!MapUtilities.CachedShipStatus) return result;
-        if (targetingPlayer == null) targetingPlayer = CachedPlayer.LocalPlayer.PlayerControl;
+        if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
         if (targetingPlayer.Data.IsDead) return result;
         if (PlayerControl.LocalPlayer == Arsonist.arsonist) num += 0.5f;
 
@@ -72,8 +72,8 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void setBasePlayerOutlines()
     {
-        var local = CachedPlayer.LocalPlayer.PlayerControl;
-        foreach (PlayerControl target in CachedPlayer.AllPlayers)
+        var local = PlayerControl.LocalPlayer;
+        foreach (PlayerControl target in PlayerControl.AllPlayerControls)
         {
             if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) continue;
 
@@ -123,8 +123,8 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void updatePlayerInfo()
     {
-        var local = CachedPlayer.LocalPlayer.PlayerControl;
-        foreach (PlayerControl p in CachedPlayer.AllPlayers)
+        var local = PlayerControl.LocalPlayer;
+        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
         {
             var playerVoteArea = MeetingHud.Instance?.playerStates?.FirstOrDefault(x => x.TargetPlayerId == p.PlayerId);
             if (playerVoteArea != null && playerVoteArea.ColorBlindName.gameObject.active)
@@ -244,11 +244,11 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void setPetVisibility()
     {
-        var localalive = !CachedPlayer.LocalPlayer.Data.IsDead;
-        foreach (var player in CachedPlayer.AllPlayers)
+        var localalive = !PlayerControl.LocalPlayer.Data.IsDead;
+        foreach (var player in PlayerControl.AllPlayerControls)
         {
             var playeralive = !player.Data.IsDead;
-            player.PlayerControl.cosmetics.SetPetVisible((localalive && playeralive) || !localalive);
+            player.cosmetics.SetPetVisible((localalive && playeralive) || !localalive);
         }
     }
 
@@ -263,23 +263,23 @@ public static class PlayerControlFixedUpdatePatch
                 if (next.Item2)
                 {
                     // Exit current vent if necessary
-                    if (CachedPlayer.LocalPlayer.PlayerControl.inVent)
+                    if (PlayerControl.LocalPlayer.inVent)
                         foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
                         {
-                            vent.CanUse(CachedPlayer.LocalPlayer.Data, out bool canUse, out bool couldUse);
+                            vent.CanUse(PlayerControl.LocalPlayer.Data, out bool canUse, out bool couldUse);
                             if (canUse)
                             {
-                                CachedPlayer.LocalPlayer.PlayerPhysics.RpcExitVent(vent.Id);
+                                PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(vent.Id);
                                 vent.SetButtons(false);
                             }
                         }
 
                     // Set position
-                    CachedPlayer.LocalPlayer.transform.position = next.Item1;
+                    PlayerControl.LocalPlayer.transform.position = next.Item1;
                 }
                 else if (localPlayerPositions.Any(x => x.Item2))
                 {
-                    CachedPlayer.LocalPlayer.transform.position = next.Item1;
+                    PlayerControl.LocalPlayer.transform.position = next.Item1;
                 }
 
                 if (SubmergedCompatibility.IsSubmerged) SubmergedCompatibility.ChangeFloor(next.Item1.y > -7);
@@ -293,7 +293,7 @@ public static class PlayerControlFixedUpdatePatch
             else
             {
                 TimeMaster.isRewinding = false;
-                CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
+                PlayerControl.LocalPlayer.moveable = true;
             }
         }
         else
@@ -301,8 +301,8 @@ public static class PlayerControlFixedUpdatePatch
             while (localPlayerPositions.Count >= Mathf.Round(TimeMaster.rewindTime / Time.fixedDeltaTime))
                 localPlayerPositions.RemoveAt(localPlayerPositions.Count - 1);
             localPlayerPositions.Insert(0,
-                new Tuple<Vector3, bool>(CachedPlayer.LocalPlayer.transform.position,
-                    CachedPlayer.LocalPlayer.PlayerControl.CanMove)); // CanMove = CanMove
+                new Tuple<Vector3, bool>(PlayerControl.LocalPlayer.transform.position,
+                    PlayerControl.LocalPlayer.CanMove)); // CanMove = CanMove
         }
     }
 
@@ -310,11 +310,11 @@ public static class PlayerControlFixedUpdatePatch
     public static void deputyCheckPromotion(bool isMeeting = false)
     {
         // If LocalPlayer is Deputy, the Sheriff is disconnected and Deputy promotion is enabled, then trigger promotion
-        if (Sheriff.Deputy == null || Sheriff.Deputy != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Sheriff.Deputy == null || Sheriff.Deputy != PlayerControl.LocalPlayer) return;
         if (Sheriff.promotesToSheriff == 0 || Sheriff.Deputy.IsDead() || (Sheriff.promotesToSheriff == 2 && !isMeeting)) return;
         if (Sheriff.Player == null || Sheriff.Player.All(x => x.IsDead()))
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.DeputyPromotes, SendOption.Reliable);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             Sheriff.replaceCurrentSheriff();
@@ -324,7 +324,7 @@ public static class PlayerControlFixedUpdatePatch
     private static void detectiveUpdateFootPrints()
     {
         if (Detective.detective == null
-            || Detective.detective != CachedPlayer.LocalPlayer.PlayerControl
+            || Detective.detective != PlayerControl.LocalPlayer
             || InMeeting
             || Detective.detective.IsDead()) return;
 
@@ -332,8 +332,8 @@ public static class PlayerControlFixedUpdatePatch
         if (Detective.timer <= 0f)
         {
             Detective.timer = Detective.footprintIntervall;
-            foreach (PlayerControl player in CachedPlayer.AllPlayers)
-                if (player != null && player != CachedPlayer.LocalPlayer.PlayerControl && !player.Data.IsDead && !player.inVent)
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent)
                     FootprintHolder.Instance.MakeFootprint(player);
         }
     }
@@ -341,8 +341,8 @@ public static class PlayerControlFixedUpdatePatch
     private static void sidekickCheckPromotion()
     {
         // If LocalPlayer is Sidekick, the Jackal is disconnected and Sidekick promotion is enabled, then trigger promotion
-        if (Jackal.Sidekick.IsDead() || !Jackal.promotesToJackal || Jackal.Sidekick != CachedPlayer.LocalPlayer.PlayerControl) return;
-        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+        if (Jackal.Sidekick.IsDead() || !Jackal.promotesToJackal || Jackal.Sidekick != PlayerControl.LocalPlayer) return;
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
             (byte)CustomRPC.SidekickPromotes, SendOption.Reliable);
         writer.Write(Jackal.Sidekick.PlayerId);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -351,19 +351,19 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void deputyUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl == null ||
-            !Sheriff.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId)) return;
+        if (PlayerControl.LocalPlayer == null ||
+            !Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId)) return;
 
-        if (Sheriff.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] <= 0)
+        if (Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] <= 0)
         {
-            Sheriff.handcuffedKnows.Remove(CachedPlayer.LocalPlayer.PlayerId);
+            Sheriff.handcuffedKnows.Remove(PlayerControl.LocalPlayer.PlayerId);
             // Resets the buttons
             Sheriff.setHandcuffedKnows(false);
 
             // Ghost info
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
-            writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+            writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write((byte)RPCProcedure.GhostInfoTypes.HandcuffOver);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
@@ -372,9 +372,9 @@ public static class PlayerControlFixedUpdatePatch
     private static void engineerUpdate()
     {
         var jackalHighlight = Engineer.highlightForTeamJackal &&
-                              (Jackal.jackal.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl) ||
-                               CachedPlayer.LocalPlayer.PlayerControl == Jackal.Sidekick);
-        var impostorHighlight = Engineer.highlightForImpostors && CachedPlayer.LocalPlayer.Data.Role.IsImpostor;
+                              (Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer) ||
+                               PlayerControl.LocalPlayer == Jackal.Sidekick);
+        var impostorHighlight = Engineer.highlightForImpostors && PlayerControl.LocalPlayer.Data.Role.IsImpostor;
         if ((jackalHighlight || impostorHighlight) && MapUtilities.CachedShipStatus?.AllVents != null)
             foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
                 try
@@ -399,32 +399,32 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void swooperUpdate()
     {
-        if (Swooper.isInvisable && Swooper.swoopTimer <= 0 && Swooper.swooper == CachedPlayer.LocalPlayer.PlayerControl)
+        if (Swooper.isInvisable && Swooper.swoopTimer <= 0 && Swooper.swooper == PlayerControl.LocalPlayer)
         {
             var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(
-                CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetSwoop, SendOption.Reliable);
+                PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetSwoop, SendOption.Reliable);
             invisibleWriter.Write(Swooper.swooper.PlayerId);
             invisibleWriter.Write(byte.MaxValue);
             AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
             RPCProcedure.setSwoop(Swooper.swooper.PlayerId, byte.MaxValue);
         }
-        if (Jackal.isInvisable && Jackal.swoopTimer <= 0 && Jackal.jackal.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl))
+        if (Jackal.isInvisable && Jackal.swoopTimer <= 0 && Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer))
         {
             var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(
-                CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable);
-            invisibleWriter.Write(CachedPlayer.LocalPlayer.PlayerId);
+                PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable);
+            invisibleWriter.Write(PlayerControl.LocalPlayer.PlayerId);
             invisibleWriter.Write(byte.MaxValue);
             AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
-            RPCProcedure.setJackalSwoop(CachedPlayer.LocalPlayer.PlayerId, byte.MaxValue);
+            RPCProcedure.setJackalSwoop(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
         }
     }
 
     private static void ninjaUpdate()
     {
-        if (Ninja.isInvisable && Ninja.invisibleTimer <= 0 && Ninja.ninja == CachedPlayer.LocalPlayer.PlayerControl)
+        if (Ninja.isInvisable && Ninja.invisibleTimer <= 0 && Ninja.ninja == PlayerControl.LocalPlayer)
         {
             var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(
-                CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetInvisible, SendOption.Reliable);
+                PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetInvisible, SendOption.Reliable);
             invisibleWriter.Write(Ninja.ninja.PlayerId);
             invisibleWriter.Write(byte.MaxValue);
             AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
@@ -433,14 +433,14 @@ public static class PlayerControlFixedUpdatePatch
 
         if (Ninja.arrow?.arrow != null)
         {
-            if (Ninja.ninja == null || Ninja.ninja != CachedPlayer.LocalPlayer.PlayerControl ||
+            if (Ninja.ninja == null || Ninja.ninja != PlayerControl.LocalPlayer ||
                 !Ninja.knowsTargetLocation)
             {
                 Ninja.arrow.arrow.SetActive(false);
                 return;
             }
 
-            if (Ninja.ninjaMarked != null && !CachedPlayer.LocalPlayer.Data.IsDead)
+            if (Ninja.ninjaMarked != null && !PlayerControl.LocalPlayer.Data.IsDead)
             {
                 var trackedOnMap = !Ninja.ninjaMarked.Data.IsDead;
                 var position = Ninja.ninjaMarked.transform.position;
@@ -474,7 +474,7 @@ public static class PlayerControlFixedUpdatePatch
 
         if (Prophet.prophet == null || Prophet.prophet.Data.IsDead) return;
 
-        var local = CachedPlayer.LocalPlayer.PlayerControl;
+        var local = PlayerControl.LocalPlayer;
 
         if (Prophet.isRevealed && (local.Data.Role.IsImpostor || isKillerNeutral(local)))
         {
@@ -492,7 +492,7 @@ public static class PlayerControlFixedUpdatePatch
         // Handle player tracking
         if (Tracker.arrow?.arrow != null)
         {
-            if (Tracker.tracker == null || CachedPlayer.LocalPlayer.PlayerControl != Tracker.tracker)
+            if (Tracker.tracker == null || PlayerControl.LocalPlayer != Tracker.tracker)
             {
                 Tracker.arrow.arrow.SetActive(false);
                 if (Tracker.DangerMeterParent) Tracker.DangerMeterParent.SetActive(false);
@@ -541,7 +541,7 @@ public static class PlayerControlFixedUpdatePatch
         }
 
         // Handle corpses tracking
-        if (Tracker.tracker != null && Tracker.tracker == CachedPlayer.LocalPlayer.PlayerControl && Tracker.corpsesTrackingTimer >= 0f && !Tracker.tracker.Data.IsDead)
+        if (Tracker.tracker != null && Tracker.tracker == PlayerControl.LocalPlayer && Tracker.corpsesTrackingTimer >= 0f && !Tracker.tracker.Data.IsDead)
         {
             bool arrowsCountChanged = Tracker.localArrows.Count != Tracker.deadBodyPositions.Count;
             int index = 0;
@@ -665,7 +665,7 @@ public static class PlayerControlFixedUpdatePatch
     public static void securityGuardUpdate()
     {
         if (SecurityGuard.securityGuard == null ||
-            CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard ||
+            PlayerControl.LocalPlayer != SecurityGuard.securityGuard ||
             SecurityGuard.securityGuard.Data.IsDead) return;
         var (playerCompleted, _) = TasksHandler.taskInfo(SecurityGuard.securityGuard.Data);
         if (playerCompleted == SecurityGuard.rechargedTasks)
@@ -687,7 +687,7 @@ public static class PlayerControlFixedUpdatePatch
         var numberOfTasks = playerTotal - playerCompleted;
 
         var snitchIsDead = Snitch.snitch.Data.IsDead;
-        var local = CachedPlayer.LocalPlayer.PlayerControl;
+        var local = PlayerControl.LocalPlayer;
 
         var forImpTeam = local.Data.Role.IsImpostor;
         var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(local);
@@ -706,7 +706,7 @@ public static class PlayerControlFixedUpdatePatch
         else if (local == Snitch.snitch && numberOfTasks == 0 && !snitchIsDead)
         {
             var arrowIndex = 0;
-            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
                 var arrowForImp = p.Data.Role.IsImpostor;
                 if (Mimic.mimic == p) arrowForImp = true;
@@ -746,7 +746,7 @@ public static class PlayerControlFixedUpdatePatch
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
         var numberOfTasks = playerTotal - playerCompleted;
 
-        var local = CachedPlayer.LocalPlayer.PlayerControl;
+        var local = PlayerControl.LocalPlayer;
 
         var isDead = local == Snitch.snitch || local.Data.IsDead;
         var forImpTeam = local.isImpostor();
@@ -780,7 +780,7 @@ public static class PlayerControlFixedUpdatePatch
     private static void partTimerUpdate()
     {
         if (PartTimer.partTimer == null
-            || CachedPlayer.LocalPlayer.PlayerControl != PartTimer.partTimer
+            || PlayerControl.LocalPlayer != PartTimer.partTimer
             || PartTimer.partTimer.IsDead()) return;
 
         if (PartTimer.target != null && PartTimer.target.IsDead())
@@ -789,7 +789,7 @@ public static class PlayerControlFixedUpdatePatch
             var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
             if (playerInfo != null) playerInfo.text = "";
 
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.PartTimerSet, SendOption.Reliable);
             writer.Write(byte.MaxValue);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -810,7 +810,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void bountyHunterUpdate()
     {
-        if (BountyHunter.bountyHunter == null || CachedPlayer.LocalPlayer.PlayerControl != BountyHunter.bountyHunter) return;
+        if (BountyHunter.bountyHunter == null || PlayerControl.LocalPlayer != BountyHunter.bountyHunter) return;
 
         if (BountyHunter.bountyHunter.Data.IsDead)
         {
@@ -844,9 +844,9 @@ public static class PlayerControlFixedUpdatePatch
             if (BountyHunter.bounty == null) return;
 
             // Ghost Info
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
-            writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+            writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write((byte)RPCProcedure.GhostInfoTypes.BountyTarget);
             writer.Write(BountyHunter.bounty.PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -891,7 +891,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void vultureUpdate()
     {
-        if (Vulture.vulture == null || CachedPlayer.LocalPlayer.PlayerControl != Vulture.vulture ||
+        if (Vulture.vulture == null || PlayerControl.LocalPlayer != Vulture.vulture ||
             Vulture.localArrows == null || !Vulture.showArrows) return;
         if (Vulture.vulture.Data.IsDead)
         {
@@ -936,7 +936,7 @@ public static class PlayerControlFixedUpdatePatch
                 Amnisiac.localArrows.Clear();
             }
         }
-        if (Amnisiac.Player.Any(x => x.PlayerId == CachedPlayer.LocalId && x.IsAlive()))
+        if (Amnisiac.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId && x.IsAlive()))
         {
             DeadBody[] deadBodies = Object.FindObjectsOfType<DeadBody>();
             bool arrowUpdate = Amnisiac.localArrows.Count != deadBodies.Length;
@@ -968,7 +968,7 @@ public static class PlayerControlFixedUpdatePatch
     {
         try
         {
-            if (CachedPlayer.LocalPlayer.PlayerControl == EvilTrapper.evilTrapper && KillTrap.traps.Count != 0 && !KillTrap.hasTrappedPlayer() && !EvilTrapper.meetingFlag)
+            if (PlayerControl.LocalPlayer == EvilTrapper.evilTrapper && KillTrap.traps.Count != 0 && !KillTrap.hasTrappedPlayer() && !EvilTrapper.meetingFlag)
             {
                 foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
@@ -998,9 +998,9 @@ public static class PlayerControlFixedUpdatePatch
                                     Object.Destroy(text.gameObject);
                                 }
                             })));
-                            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ActivateTrap, SendOption.Reliable, -1);
+                            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ActivateTrap, SendOption.Reliable, -1);
                             writer.Write(trap.Key);
-                            writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                            writer.Write(PlayerControl.LocalPlayer.PlayerId);
                             writer.Write(p.PlayerId);
                             AmongUsClient.Instance.FinishRpcImmediately(writer);
                             RPCProcedure.activateTrap(trap.Key, EvilTrapper.evilTrapper.PlayerId, p.PlayerId);
@@ -1010,7 +1010,7 @@ public static class PlayerControlFixedUpdatePatch
                 }
             }
 
-            if (CachedPlayer.LocalPlayer.PlayerControl == EvilTrapper.evilTrapper && KillTrap.hasTrappedPlayer() && !EvilTrapper.meetingFlag)
+            if (PlayerControl.LocalPlayer == EvilTrapper.evilTrapper && KillTrap.hasTrappedPlayer() && !EvilTrapper.meetingFlag)
             {
                 // トラップにかかっているプレイヤーを救出する
                 foreach (var trap in KillTrap.traps)
@@ -1024,7 +1024,7 @@ public static class PlayerControlFixedUpdatePatch
                         float distance = Vector3.Distance(p1, p2);
                         if (distance < 0.5)
                         {
-                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DisableTrap, SendOption.Reliable, -1);
+                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DisableTrap, SendOption.Reliable, -1);
                             writer.Write(trap.Key);
                             AmongUsClient.Instance.FinishRpcImmediately(writer);
                             RPCProcedure.disableTrap(trap.Key);
@@ -1042,7 +1042,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void radarUpdate()
     {
-        if (Radar.radar == null || CachedPlayer.LocalPlayer.PlayerControl != Radar.radar || Radar.localArrows == null || InMeeting) return;
+        if (Radar.radar == null || PlayerControl.LocalPlayer != Radar.radar || Radar.localArrows == null || InMeeting) return;
         if (Radar.radar.Data.IsDead)
         {
             foreach (var arrow in Radar.localArrows) Object.Destroy(arrow.arrow);
@@ -1053,7 +1053,7 @@ public static class PlayerControlFixedUpdatePatch
         var arrowUpdate = true;
         var index = 0;
 
-        if (arrowUpdate && !CachedPlayer.LocalPlayer.Data.IsDead)
+        if (arrowUpdate && !PlayerControl.LocalPlayer.Data.IsDead)
         {
             foreach (var arrow in Radar.localArrows) Object.Destroy(arrow.arrow);
             Radar.ClosestPlayer = GetClosestPlayer(PlayerControl.LocalPlayer,
@@ -1062,9 +1062,9 @@ public static class PlayerControlFixedUpdatePatch
         }
 
 
-        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
         {
-            if (arrowUpdate && !CachedPlayer.LocalPlayer.Data.IsDead)
+            if (arrowUpdate && !PlayerControl.LocalPlayer.Data.IsDead)
             {
                 Radar.localArrows.Add(new Arrow(Radar.color));
                 Radar.localArrows[index].arrow.SetActive(true);
@@ -1104,7 +1104,7 @@ public static class PlayerControlFixedUpdatePatch
 
         if (isCamoComms && !isActiveCamoComms)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.CamouflagerCamouflage, SendOption.Reliable);
             writer.Write(0);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -1146,7 +1146,7 @@ public static class PlayerControlFixedUpdatePatch
             }
 
             if (Camouflager.camouflageTimer > 0)
-                foreach (PlayerControl player in CachedPlayer.AllPlayers)
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                     player.setLook("", 6, "", "", "", "");
         }
 
@@ -1159,12 +1159,12 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void lawyerUpdate()
     {
-        if (Lawyer.lawyer == null || Lawyer.lawyer != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Lawyer.lawyer == null || Lawyer.lawyer != PlayerControl.LocalPlayer) return;
 
         // Promote to Pursuer
         if (Lawyer.target != null && Lawyer.target.Data.Disconnected && !Lawyer.lawyer.Data.IsDead)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             Lawyer.PromotesToPursuer();
@@ -1173,12 +1173,12 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void executionerUpdate()
     {
-        if (Executioner.executioner == null || Executioner.executioner != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Executioner.executioner == null || Executioner.executioner != PlayerControl.LocalPlayer) return;
 
         // Promote to Pursuer
         if (Executioner.target != null && Executioner.target.Data.Disconnected && !Executioner.executioner.Data.IsDead)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             Executioner.PromotesRole();
@@ -1187,7 +1187,7 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void hackerUpdate()
     {
-        if (Hacker.hacker == null || CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker ||
+        if (Hacker.hacker == null || PlayerControl.LocalPlayer != Hacker.hacker ||
             Hacker.hacker.Data.IsDead) return;
         var (playerCompleted, _) = TasksHandler.taskInfo(Hacker.hacker.Data);
         if (playerCompleted == Hacker.rechargedTasks)
@@ -1201,9 +1201,9 @@ public static class PlayerControlFixedUpdatePatch
     // For swapper swap charges        
     public static void swapperUpdate()
     {
-        if (Swapper.swapper == null || CachedPlayer.LocalPlayer.PlayerControl != Swapper.swapper ||
-            CachedPlayer.LocalPlayer.Data.IsDead) return;
-        var (playerCompleted, _) = TasksHandler.taskInfo(CachedPlayer.LocalPlayer.Data);
+        if (Swapper.swapper == null || PlayerControl.LocalPlayer != Swapper.swapper ||
+            PlayerControl.LocalPlayer.Data.IsDead) return;
+        var (playerCompleted, _) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
         if (playerCompleted == Swapper.rechargedTasks)
         {
             Swapper.rechargedTasks += Swapper.rechargeTasksNumber;
@@ -1224,7 +1224,7 @@ public static class PlayerControlFixedUpdatePatch
             {
                 Bait.active.Remove(entry.Key);
                 if (entry.Key.KillerIfExisting != null &&
-                    entry.Key.KillerIfExisting.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
+                    entry.Key.KillerIfExisting.PlayerId == PlayerControl.LocalPlayer.PlayerId)
                 {
 
                     handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
@@ -1234,7 +1234,7 @@ public static class PlayerControlFixedUpdatePatch
                         entry.Key.Player.PlayerId);
 
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedCmdReportDeadBody,
+                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedCmdReportDeadBody,
                         SendOption.Reliable);
                     writer.Write(entry.Key.KillerIfExisting.PlayerId);
                     writer.Write(entry.Key.Player.PlayerId);
@@ -1266,7 +1266,7 @@ public static class PlayerControlFixedUpdatePatch
     // Mini set adapted button cooldown for Vampire, Sheriff, Jackal, Sidekick, Warlock, Cleaner
     public static void miniCooldownUpdate()
     {
-        if (Mini.mini != null && CachedPlayer.LocalPlayer.PlayerControl == Mini.mini)
+        if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini)
         {
             var multiplier = Mini.isGrownUp() ? 0.66f : 2f;
             HudManagerStartPatch.sheriffKillButton.MaxTimer = Sheriff.cooldown * multiplier;
@@ -1295,7 +1295,7 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void trapperUpdate()
     {
-        if (Trapper.trapper == null || CachedPlayer.LocalPlayer.PlayerControl != Trapper.trapper ||
+        if (Trapper.trapper == null || PlayerControl.LocalPlayer != Trapper.trapper ||
             Trapper.trapper.Data.IsDead) return;
         var (playerCompleted, _) = TasksHandler.taskInfo(Trapper.trapper.Data);
         if (playerCompleted == Trapper.rechargedTasks)
@@ -1307,7 +1307,7 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void akujoUpdate()
     {
-        if (Akujo.akujo == null || Akujo.akujo.Data.IsDead || CachedPlayer.LocalPlayer.PlayerControl != Akujo.akujo) return;
+        if (Akujo.akujo == null || Akujo.akujo.Data.IsDead || PlayerControl.LocalPlayer != Akujo.akujo) return;
         Akujo.timeLeft = (int)Math.Ceiling(Akujo.timeLimit - (DateTime.UtcNow - Akujo.startTime).TotalSeconds);
         if (Akujo.timeLeft > 0)
         {
@@ -1327,7 +1327,7 @@ public static class PlayerControlFixedUpdatePatch
         {
             if (Akujo.honmei == null || (Akujo.keeps?.Count < 1 && Akujo.forceKeeps))
             {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AkujoSuicide, SendOption.Reliable, -1);
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.AkujoSuicide, SendOption.Reliable, -1);
                 writer.Write(Akujo.akujo.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.akujoSuicide(Akujo.akujo.PlayerId);
@@ -1341,10 +1341,10 @@ public static class PlayerControlFixedUpdatePatch
 
         foreach (var arrow in Pavlovsdogs.arrow) arrow.arrow.SetActive(false);
 
-        if (Pavlovsdogs.pavlovsowner == null || Pavlovsdogs.pavlovsowner.Data.IsDead || CachedPlayer.LocalPlayer.PlayerControl != Pavlovsdogs.pavlovsowner) return;
+        if (Pavlovsdogs.pavlovsowner == null || Pavlovsdogs.pavlovsowner.Data.IsDead || PlayerControl.LocalPlayer != Pavlovsdogs.pavlovsowner) return;
 
         var index = 0;
-        foreach (PlayerControl p in CachedPlayer.AllPlayers)
+        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
         {
             if (!p.Data.IsDead && Pavlovsdogs.pavlovsdogs.Any(x => x == p))
             {
@@ -1372,7 +1372,7 @@ public static class PlayerControlFixedUpdatePatch
         MiniSizeUpdate(__instance);
         GiantSizeUpdate(__instance);
 
-        if (CachedPlayer.LocalPlayer.PlayerControl == __instance)
+        if (PlayerControl.LocalPlayer == __instance)
         {
             // Update player outlines
             setBasePlayerOutlines();
@@ -1510,21 +1510,21 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void medicSetTarget()
     {
-        if (Medic.medic == null || Medic.medic != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Medic.medic == null || Medic.medic != PlayerControl.LocalPlayer) return;
         Medic.currentTarget = setTarget();
         if (!Medic.usedShield) setPlayerOutline(Medic.currentTarget, Medic.shieldedColor);
     }
 
     private static void prophetSetTarget()
     {
-        if (Prophet.prophet == null || CachedPlayer.LocalPlayer.PlayerControl != Prophet.prophet) return;
+        if (Prophet.prophet == null || PlayerControl.LocalPlayer != Prophet.prophet) return;
         Prophet.currentTarget = setTarget();
         if (Prophet.examinesLeft > 0) setPlayerOutline(Prophet.currentTarget, Prophet.color);
     }
 
     private static void partTimerSetTarget()
     {
-        if (PartTimer.partTimer == null || PartTimer.partTimer != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (PartTimer.partTimer == null || PartTimer.partTimer != PlayerControl.LocalPlayer) return;
         PartTimer.currentTarget = setTarget();
         if (PartTimer.target != null) setPlayerOutline(PartTimer.currentTarget, PartTimer.color);
     }
@@ -1532,21 +1532,21 @@ public static class PlayerControlFixedUpdatePatch
     private static void bomberSetTarget()
     {
         setBomberBombTarget();
-        if (Bomber.bomber == null || Bomber.bomber != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Bomber.bomber == null || Bomber.bomber != PlayerControl.LocalPlayer) return;
         Bomber.currentTarget = setTarget();
         if (Bomber.hasBombPlayer == null) setPlayerOutline(Bomber.currentTarget, Bomber.color);
     }
 
     private static void trackerSetTarget()
     {
-        if (Tracker.tracker == null || Tracker.tracker != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Tracker.tracker == null || Tracker.tracker != PlayerControl.LocalPlayer) return;
         Tracker.currentTarget = setTarget();
         if (!Tracker.usedTracker) setPlayerOutline(Tracker.currentTarget, Tracker.color);
     }
 
     private static void vampireSetTarget()
     {
-        if (Vampire.vampire == null || Vampire.vampire != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Vampire.vampire == null || Vampire.vampire != PlayerControl.LocalPlayer) return;
 
         PlayerControl target = null;
 
@@ -1580,7 +1580,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void jackalSetTarget()
     {
-        if (Jackal.jackal.Any(x => x.IsAlive() && x.PlayerId == CachedPlayer.LocalId))
+        if (Jackal.jackal.Any(x => x.IsAlive() && x.PlayerId == PlayerControl.LocalPlayer.PlayerId))
         {
             var untargetablePlayers = new List<PlayerControl>();
             foreach (var p in Jackal.jackal)
@@ -1596,7 +1596,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void sidekickSetTarget()
     {
-        if (Jackal.Sidekick == null || Jackal.Sidekick != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Jackal.Sidekick == null || Jackal.Sidekick != PlayerControl.LocalPlayer) return;
         var untargetablePlayers = new List<PlayerControl>();
         foreach (var p in Jackal.jackal)
         {
@@ -1610,21 +1610,21 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void setBomberBombTarget()
     {
-        if (Bomber.bomber == null || Bomber.hasBombPlayer != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Bomber.bomber == null || Bomber.hasBombPlayer != PlayerControl.LocalPlayer) return;
         Bomber.currentBombTarget = setTarget();
         //if (Bomber.hasBomb != null) setPlayerOutline(Bomber.currentBombTarget, Bomber.color);
     }
 
     private static void bodyGuardSetTarget()
     {
-        if (BodyGuard.bodyguard == null || BodyGuard.bodyguard != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (BodyGuard.bodyguard == null || BodyGuard.bodyguard != PlayerControl.LocalPlayer) return;
         BodyGuard.currentTarget = setTarget();
         if (!BodyGuard.usedGuard) setPlayerOutline(Medic.currentTarget, Medic.shieldedColor);
     }
 
     public static void akujoSetTarget()
     {
-        if (Akujo.akujo == null || Akujo.akujo.Data.IsDead || CachedPlayer.LocalPlayer.PlayerControl != Akujo.akujo) return;
+        if (Akujo.akujo == null || Akujo.akujo.Data.IsDead || PlayerControl.LocalPlayer != Akujo.akujo) return;
         var untargetables = new List<PlayerControl>();
         if (Akujo.honmei != null) untargetables.Add(Akujo.honmei);
         if (Akujo.keeps != null) untargetables.AddRange(Akujo.keeps);
@@ -1634,7 +1634,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void PelicanSetTarget()
     {
-        if (Pelican.Player == null || Pelican.Player != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Pelican.Player == null || Pelican.Player != PlayerControl.LocalPlayer) return;
         var untargetablePlayers = new List<PlayerControl>();
         if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini); // Exclude Jackal from targeting the Mini unless it has grown up
         Pelican.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
@@ -1643,7 +1643,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void swooperSetTarget()
     {
-        if (Swooper.swooper == null || Swooper.swooper != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Swooper.swooper == null || Swooper.swooper != PlayerControl.LocalPlayer) return;
         var untargetablePlayers = new List<PlayerControl>();
         if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini); // Exclude Jackal from targeting the Mini unless it has grown up
         Swooper.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
@@ -1652,7 +1652,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void eraserSetTarget()
     {
-        if (Eraser.eraser == null || Eraser.eraser != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Eraser.eraser == null || Eraser.eraser != PlayerControl.LocalPlayer) return;
 
         var untargetables = new List<PlayerControl>();
         if (Spy.spy != null) untargetables.Add(Spy.spy);
@@ -1663,8 +1663,8 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void impostorSetTarget()
     {
-        if (!CachedPlayer.LocalPlayer.Data.Role.IsImpostor || !CachedPlayer.LocalPlayer.PlayerControl.CanMove ||
-            CachedPlayer.LocalPlayer.Data.IsDead)
+        if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor || !PlayerControl.LocalPlayer.CanMove ||
+            PlayerControl.LocalPlayer.Data.IsDead)
         {
             // !isImpostor || !canMove || isDead
             FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(null);
@@ -1693,7 +1693,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void warlockSetTarget()
     {
-        if (Warlock.warlock == null || Warlock.warlock != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Warlock.warlock == null || Warlock.warlock != PlayerControl.LocalPlayer) return;
         if (Warlock.curseVictim != null && (Warlock.curseVictim.Data.Disconnected || Warlock.curseVictim.Data.IsDead))
             // If the cursed victim is disconnected or dead reset the curse so a new curse can be applied
             Warlock.resetCurse();
@@ -1711,11 +1711,11 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void securityGuardSetTarget()
     {
-        if (SecurityGuard.securityGuard == null || SecurityGuard.securityGuard != CachedPlayer.LocalPlayer.PlayerControl ||
+        if (SecurityGuard.securityGuard == null || SecurityGuard.securityGuard != PlayerControl.LocalPlayer ||
             MapUtilities.CachedShipStatus == null || MapUtilities.CachedShipStatus.AllVents == null) return;
 
         Vent target = null;
-        var truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+        var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
         var closestDistance = float.MaxValue;
         for (var i = 0; i < MapUtilities.CachedShipStatus.AllVents.Length; i++)
         {
@@ -1737,7 +1737,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void pavlovsownerSetTarget()
     {
-        if (Pavlovsdogs.pavlovsowner == null || Pavlovsdogs.pavlovsowner != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Pavlovsdogs.pavlovsowner == null || Pavlovsdogs.pavlovsowner != PlayerControl.LocalPlayer) return;
         var untargetablePlayers = new List<PlayerControl>();
         if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
         Pavlovsdogs.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
@@ -1746,12 +1746,12 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void mediumSetTarget()
     {
-        if (Medium.medium == null || Medium.medium != CachedPlayer.LocalPlayer.PlayerControl ||
+        if (Medium.medium == null || Medium.medium != PlayerControl.LocalPlayer ||
             Medium.medium.Data.IsDead || Medium.deadBodies == null ||
             MapUtilities.CachedShipStatus?.AllVents == null) return;
 
         DeadPlayer target = null;
-        var truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+        var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
         var closestDistance = float.MaxValue;
         var usableDistance = MapUtilities.CachedShipStatus.AllVents.FirstOrDefault().UsableDistance;
         foreach (var (dp, ps) in Medium.deadBodies)
@@ -1769,7 +1769,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void pavlovsdogsSetTarget()
     {
-        if (Pavlovsdogs.pavlovsdogs == null || !Pavlovsdogs.pavlovsdogs.Any(p => p == CachedPlayer.LocalPlayer.PlayerControl)) return;
+        if (Pavlovsdogs.pavlovsdogs == null || !Pavlovsdogs.pavlovsdogs.Any(p => p == PlayerControl.LocalPlayer)) return;
         var untargetablePlayers = new List<PlayerControl>();
         foreach (var p in Pavlovsdogs.pavlovsdogs)
         {
@@ -1783,47 +1783,47 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void werewolfSetTarget()
     {
-        if (Werewolf.werewolf == null || Werewolf.werewolf != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Werewolf.werewolf == null || Werewolf.werewolf != PlayerControl.LocalPlayer) return;
         Werewolf.currentTarget = setTarget();
     }
 
     private static void juggernautSetTarget()
     {
-        if (Juggernaut.juggernaut == null || Juggernaut.juggernaut != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Juggernaut.juggernaut == null || Juggernaut.juggernaut != PlayerControl.LocalPlayer) return;
         Juggernaut.currentTarget = setTarget();
     }
 
     private static void doomsayerSetTarget()
     {
-        if (Doomsayer.doomsayer == null || Doomsayer.doomsayer != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Doomsayer.doomsayer == null || Doomsayer.doomsayer != PlayerControl.LocalPlayer) return;
         Doomsayer.currentTarget = setTarget();
     }
 
     private static void blackMailerSetTarget()
     {
         if (Blackmailer.blackmailer == null ||
-            Blackmailer.blackmailer != CachedPlayer.LocalPlayer.PlayerControl) return;
+            Blackmailer.blackmailer != PlayerControl.LocalPlayer) return;
         Blackmailer.currentTarget = setTarget();
         setPlayerOutline(Medic.currentTarget, Blackmailer.blackmailedColor);
     }
 
     private static void pursuerSetTarget()
     {
-        if (Pursuer.Player == null || !Pursuer.Player.Contains(CachedPlayer.LocalPlayer.PlayerControl)) return;
+        if (Pursuer.Player == null || !Pursuer.Player.Contains(PlayerControl.LocalPlayer)) return;
         Pursuer.target = setTarget();
         setPlayerOutline(Pursuer.target, Pursuer.color);
     }
 
     private static void survivorSetTarget()
     {
-        if (Survivor.Player == null || !Survivor.Player.Contains(CachedPlayer.LocalPlayer.PlayerControl)) return;
+        if (Survivor.Player == null || !Survivor.Player.Contains(PlayerControl.LocalPlayer)) return;
         Survivor.target = setTarget();
         setPlayerOutline(Survivor.target, Survivor.color);
     }
 
     private static void witchSetTarget()
     {
-        if (Witch.witch == null || Witch.witch != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Witch.witch == null || Witch.witch != PlayerControl.LocalPlayer) return;
         List<PlayerControl> untargetables;
         if (Witch.spellCastingTarget != null)
         {
@@ -1843,7 +1843,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void ninjaSetTarget()
     {
-        if (Ninja.ninja == null || Ninja.ninja != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Ninja.ninja == null || Ninja.ninja != PlayerControl.LocalPlayer) return;
         var untargetables = new List<PlayerControl>();
         if (Spy.spy != null && !Spy.impostorsCanKillAnyone) untargetables.Add(Spy.spy);
         if (Mini.mini != null && !Mini.isGrownUp()) untargetables.Add(Mini.mini);
@@ -1854,7 +1854,7 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void thiefSetTarget()
     {
-        if (Thief.thief == null || Thief.thief != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Thief.thief == null || Thief.thief != PlayerControl.LocalPlayer) return;
         var untargetables = new List<PlayerControl>();
         if (Mini.mini != null && !Mini.isGrownUp()) untargetables.Add(Mini.mini);
         Thief.currentTarget = setTarget(untargetablePlayers: untargetables);
@@ -1863,14 +1863,14 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void shifterSetTarget()
     {
-        if (Shifter.shifter == null || Shifter.shifter != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Shifter.shifter == null || Shifter.shifter != PlayerControl.LocalPlayer) return;
         Shifter.currentTarget = setTarget();
         if (Shifter.futureShift == null) setPlayerOutline(Shifter.currentTarget, Color.yellow);
     }
 
     private static void morphlingSetTarget()
     {
-        if (Morphling.morphling == null || Morphling.morphling != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Morphling.morphling == null || Morphling.morphling != PlayerControl.LocalPlayer) return;
         Morphling.currentTarget = setTarget();
         setPlayerOutline(Morphling.currentTarget, Morphling.color);
     }
@@ -1892,12 +1892,12 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void arsonistSetTarget()
     {
-        if (Arsonist.arsonist == null || Arsonist.arsonist != CachedPlayer.LocalPlayer.PlayerControl) return;
+        if (Arsonist.arsonist == null || Arsonist.arsonist != PlayerControl.LocalPlayer) return;
         List<PlayerControl> untargetables;
         if (Arsonist.douseTarget != null)
         {
             untargetables = new();
-            foreach (var cachedPlayer in CachedPlayer.AllPlayers)
+            foreach (var cachedPlayer in PlayerControl.AllPlayerControls)
                 if (cachedPlayer.PlayerId != Arsonist.douseTarget.PlayerId)
                     untargetables.Add(cachedPlayer);
         }
@@ -1990,12 +1990,12 @@ internal class BodyReportPatch
         Message($"报告玩家 {__instance.Data.PlayerName} 被报告尸体 {target?.PlayerName ?? "null"}", "CmdReportDeadBody");
 
         // Medic or Detective report
-        var isMedicReport = Medic.medic != null && Medic.medic == CachedPlayer.LocalPlayer.PlayerControl &&
+        var isMedicReport = Medic.medic != null && Medic.medic == PlayerControl.LocalPlayer &&
                             __instance.PlayerId == Medic.medic.PlayerId;
         var isDetectiveReport = Detective.detective != null &&
-                                Detective.detective == CachedPlayer.LocalPlayer.PlayerControl &&
+                                Detective.detective == PlayerControl.LocalPlayer &&
                                 __instance.PlayerId == Detective.detective.PlayerId;
-        var isSluethReport = Slueth.slueth != null && Slueth.slueth == CachedPlayer.LocalPlayer.PlayerControl &&
+        var isSluethReport = Slueth.slueth != null && Slueth.slueth == PlayerControl.LocalPlayer &&
                              __instance.PlayerId == Slueth.slueth.PlayerId;
         if (isMedicReport || isDetectiveReport)
         {
@@ -2047,11 +2047,11 @@ internal class BodyReportPatch
                 {
                     if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
                     {
-                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(CachedPlayer.LocalPlayer.PlayerControl, msg);
+                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msg);
 
                         // Ghost Info
-                        var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.ShareGhostInfo);
-                        writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.ShareGhostInfo);
+                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
                         writer.Write((byte)RPCProcedure.GhostInfoTypes.GhostChat);
                         writer.Write(msg);
                         writer.EndRPC();
@@ -2065,7 +2065,7 @@ internal class BodyReportPatch
 
         if (Witness.Player.IsAlive())
         {
-            var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.WitnessReport);
+            var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WitnessReport);
             writer.Write(target?.PlayerId ?? byte.MaxValue);
             writer.EndRPC();
             Witness.WitnessReport(target?.PlayerId ?? byte.MaxValue);
@@ -2148,7 +2148,7 @@ public static class MurderPlayerPatch
             float reportDelay = rnd.Next((int)Bait.reportDelayMin, (int)Bait.reportDelayMax + 1);
             Bait.active.Add(deadPlayer, reportDelay);
 
-            if (Bait.showKillFlash && __instance == CachedPlayer.LocalPlayer.PlayerControl)
+            if (Bait.showKillFlash && __instance == PlayerControl.LocalPlayer)
                 showFlash(new Color(204f / 255f, 102f / 255f, 0f / 255f));
         }
 
@@ -2170,7 +2170,7 @@ public static class MurderPlayerPatch
         if (Jackal.promotesToJackal && Jackal.Sidekick.IsAlive() &&
             Jackal.jackal.Any(x => x == __instance && x == PlayerControl.LocalPlayer))
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.SidekickPromotes, SendOption.Reliable);
             writer.Write(Jackal.Sidekick.PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -2180,7 +2180,7 @@ public static class MurderPlayerPatch
         // Pursuer promotion trigger on murder (the host sends the call such that everyone recieves the update before a possible game End)
         if (target == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             Lawyer.PromotesToPursuer();
@@ -2188,7 +2188,7 @@ public static class MurderPlayerPatch
 
         if (target == Executioner.target && AmongUsClient.Instance.AmHost && Executioner.executioner != null)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             Executioner.PromotesRole();
@@ -2217,13 +2217,13 @@ public static class MurderPlayerPatch
         }
 
         // Undertaker Button Sync
-        if (Undertaker.undertaker != null && CachedPlayer.LocalPlayer.PlayerControl == Undertaker.undertaker &&
+        if (Undertaker.undertaker != null && PlayerControl.LocalPlayer == Undertaker.undertaker &&
             __instance == Undertaker.undertaker && HudManagerStartPatch.undertakerDragButton != null)
             HudManagerStartPatch.undertakerDragButton.Timer = Undertaker.dragingDelaiAfterKill;
 
         // Seer show flash and add dead player position
         if (Seer.seer != null &&
-            (CachedPlayer.LocalPlayer.PlayerControl == Seer.seer || shouldShowGhostInfo()) &&
+            (PlayerControl.LocalPlayer == Seer.seer || shouldShowGhostInfo()) &&
             !Seer.seer.Data.IsDead && Seer.seer != target && Seer.mode <= 1)
             showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f), message: GetString("seerShowInfoText"));
         Seer.deadBodyPositions?.Add(target.transform.position);
@@ -2238,7 +2238,7 @@ public static class MurderPlayerPatch
         }
 
         // LastImpostor cooldown
-        if (LastImpostor.lastImpostor != null && __instance == LastImpostor.lastImpostor && CachedPlayer.LocalPlayer.PlayerControl == __instance)
+        if (LastImpostor.lastImpostor != null && __instance == LastImpostor.lastImpostor && PlayerControl.LocalPlayer == __instance)
         {
             LastImpostor.lastImpostor.SetKillTimer(Mathf.Max(0f, ModOption.KillCooddown - LastImpostor.deduce));
 
@@ -2247,14 +2247,14 @@ public static class MurderPlayerPatch
         }
 
         // Set Gambler cooldown
-        if (Gambler.gambler != null && __instance == Gambler.gambler && CachedPlayer.LocalPlayer.PlayerControl == __instance)
+        if (Gambler.gambler != null && __instance == Gambler.gambler && PlayerControl.LocalPlayer == __instance)
         {
             var cooldown = Gambler.GetSuc() ? Gambler.minCooldown : Gambler.maxCooldown;
             Gambler.gambler.SetKillTimer(cooldown);
         }
 
         // Set bountyHunter cooldown
-        if (BountyHunter.bountyHunter != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter &&
+        if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter &&
             __instance == BountyHunter.bountyHunter)
         {
             if (target == BountyHunter.bounty)
@@ -2269,43 +2269,43 @@ public static class MurderPlayerPatch
         }
 
         // Mini Set Impostor Mini kill timer (Due to mini being a modifier, all "SetKillTimers" must have happened before this!)
-        if (Mini.mini != null && __instance == Mini.mini && __instance == CachedPlayer.LocalPlayer.PlayerControl)
+        if (Mini.mini != null && __instance == Mini.mini && __instance == PlayerControl.LocalPlayer)
         {
             var multiplier = 1f;
-            if (Mini.mini != null && CachedPlayer.LocalPlayer.PlayerControl == Mini.mini)
+            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini)
                 multiplier = Mini.isGrownUp() ? 0.66f : 2f;
             Mini.mini.SetKillTimer(__instance.killTimer * multiplier);
         }
 
         // Cleaner Button Sync
-        if (Cleaner.cleaner != null && CachedPlayer.LocalPlayer.PlayerControl == Cleaner.cleaner &&
+        if (Cleaner.cleaner != null && PlayerControl.LocalPlayer == Cleaner.cleaner &&
             __instance == Cleaner.cleaner && HudManagerStartPatch.cleanerCleanButton != null)
             HudManagerStartPatch.cleanerCleanButton.Timer = Cleaner.cleaner.killTimer;
 
         // Witch Button Sync
         if (Witch.triggerBothCooldowns && Witch.witch != null &&
-            CachedPlayer.LocalPlayer.PlayerControl == Witch.witch && __instance == Witch.witch &&
+            PlayerControl.LocalPlayer == Witch.witch && __instance == Witch.witch &&
             HudManagerStartPatch.witchSpellButton != null)
             HudManagerStartPatch.witchSpellButton.Timer = HudManagerStartPatch.witchSpellButton.MaxTimer;
 
         // Bomber Button Sync
         if (Bomber.triggerBothCooldowns && Bomber.bomber != null &&
-            CachedPlayer.LocalPlayer.PlayerControl == Bomber.bomber && __instance == Bomber.bomber &&
+            PlayerControl.LocalPlayer == Bomber.bomber && __instance == Bomber.bomber &&
             HudManagerStartPatch.bomberBombButton != null)
             HudManagerStartPatch.bomberBombButton.Timer = HudManagerStartPatch.bomberBombButton.MaxTimer;
 
         // Warlock Button Sync
-        if (Warlock.warlock != null && CachedPlayer.LocalPlayer.PlayerControl == Warlock.warlock &&
+        if (Warlock.warlock != null && PlayerControl.LocalPlayer == Warlock.warlock &&
             __instance == Warlock.warlock && HudManagerStartPatch.warlockCurseButton != null)
             if (Warlock.warlock.killTimer > HudManagerStartPatch.warlockCurseButton.Timer)
                 HudManagerStartPatch.warlockCurseButton.Timer = Warlock.warlock.killTimer;
         // Ninja Button Sync
-        if (Ninja.ninja != null && CachedPlayer.LocalPlayer.PlayerControl == Ninja.ninja && __instance == Ninja.ninja &&
+        if (Ninja.ninja != null && PlayerControl.LocalPlayer == Ninja.ninja && __instance == Ninja.ninja &&
             HudManagerStartPatch.ninjaButton != null)
             HudManagerStartPatch.ninjaButton.Timer = HudManagerStartPatch.ninjaButton.MaxTimer;
 
         // EvilTrapper peforms normal kills
-        if (EvilTrapper.evilTrapper != null && CachedPlayer.LocalPlayer.PlayerControl == EvilTrapper.evilTrapper && __instance == EvilTrapper.evilTrapper)
+        if (EvilTrapper.evilTrapper != null && PlayerControl.LocalPlayer == EvilTrapper.evilTrapper && __instance == EvilTrapper.evilTrapper)
         {
             if (KillTrap.isTrapped(target) && !EvilTrapper.isTrapKill)  // トラップにかかっている対象をキルした場合のボーナス
             {
@@ -2325,7 +2325,7 @@ public static class MurderPlayerPatch
             if (!EvilTrapper.isTrapKill)
             {
                 MessageWriter writer;
-                writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.ClearTrap, SendOption.Reliable, -1);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.clearTrap();
@@ -2336,7 +2336,7 @@ public static class MurderPlayerPatch
         // Add Bloody Modifier
         if (Bloody.bloody.FindAll(x => x.PlayerId == target.PlayerId).Count > 0)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.Bloody, SendOption.Reliable);
             writer.Write(__instance.PlayerId);
             writer.Write(target.PlayerId);
@@ -2382,13 +2382,13 @@ internal class PlayerControlSetCoolDownPatch
         if (GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown <= 0f) return false;
         var multiplier = 1f;
         var addition = 0f;
-        if (Mini.mini != null && CachedPlayer.LocalPlayer.PlayerControl == Mini.mini)
+        if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini)
             multiplier = Mini.isGrownUp() ? 0.66f : 2f;
-        if (BountyHunter.bountyHunter != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter)
+        if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter)
             addition = BountyHunter.punishmentTime;
-        if (Gambler.gambler != null && CachedPlayer.LocalPlayer.PlayerControl == Gambler.gambler)
+        if (Gambler.gambler != null && PlayerControl.LocalPlayer == Gambler.gambler)
             addition = Gambler.maxCooldown - GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
-        if (LastImpostor.lastImpostor != null && CachedPlayer.LocalPlayer.PlayerControl == LastImpostor.lastImpostor)
+        if (LastImpostor.lastImpostor != null && PlayerControl.LocalPlayer == LastImpostor.lastImpostor)
             addition -= LastImpostor.deduce;
 
         __instance.killTimer = Mathf.Clamp(time, 0f, (ModOption.KillCooddown * multiplier) + addition);
@@ -2497,7 +2497,7 @@ public static class ExilePlayerPatch
         if (Jackal.promotesToJackal && Jackal.Sidekick.IsAlive() &&
             Jackal.jackal.Any(x => x == __instance && x == PlayerControl.LocalPlayer))
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.SidekickPromotes, SendOption.Reliable);
             writer.Write(Jackal.Sidekick.PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -2507,7 +2507,7 @@ public static class ExilePlayerPatch
         {
             if (AmongUsClient.Instance.AmHost && ((Lawyer.target != Jester.jester) || Lawyer.targetWasGuessed))
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 Lawyer.PromotesToPursuer();
@@ -2517,7 +2517,7 @@ public static class ExilePlayerPatch
         {
             if (AmongUsClient.Instance.AmHost && Executioner.targetWasGuessed)
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 Executioner.PromotesRole();

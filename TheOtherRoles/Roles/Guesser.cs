@@ -45,24 +45,24 @@ public static class Guesser
 
     public static bool CanMultipleShots(PlayerControl dyingTarget)
     {
-        if (dyingTarget == CachedPlayer.LocalPlayer.PlayerControl)
+        if (dyingTarget == PlayerControl.LocalPlayer)
             return false;
 
         if (ModOption.gameMode != CustomGamemodes.Guesser)
         {
             if (PlayerControl.LocalPlayer == Vigilante.vigilante
-                && HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 0
+                && HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) > 0
                 && Vigilante.hasMultipleShotsPerMeeting) return true;
             else if (Assassin.assassin.Any(x => x == PlayerControl.LocalPlayer)
-                && HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 0
+                && HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) > 0
                 && Assassin.assassinMultipleShotsPerMeeting) return true;
         }
 
-        else if (HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId)
-            && HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 0
+        else if (HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId)
+            && HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) > 0
             && HandleGuesser.hasMultipleShotsPerMeeting) return true;
 
-        return CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && Doomsayer.hasMultipleShotsPerMeeting &&
+        return PlayerControl.LocalPlayer == Doomsayer.doomsayer && Doomsayer.hasMultipleShotsPerMeeting &&
                Doomsayer.CanShoot;
     }
 
@@ -142,7 +142,7 @@ public static class Guesser
             __instance.playerStates.ForEach(x =>
             {
                 x.gameObject.SetActive(true);
-                if (CachedPlayer.LocalPlayer.Data.IsDead && x.transform.FindChild("ShootButton") != null)
+                if (PlayerControl.LocalPlayer.Data.IsDead && x.transform.FindChild("ShootButton") != null)
                     Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
             });
             Object.Destroy(container.gameObject);
@@ -261,9 +261,9 @@ public static class Guesser
                 continue;
             }
 
-            var guesserRole = CachedPlayer.LocalId == Vigilante.vigilante?.PlayerId ? RoleId.Vigilante : RoleId.Assassin;
+            var guesserRole = PlayerControl.LocalPlayer.PlayerId == Vigilante.vigilante?.PlayerId ? RoleId.Vigilante : RoleId.Assassin;
 
-            if (CachedPlayer.LocalId == Doomsayer.doomsayer?.PlayerId)
+            if (PlayerControl.LocalPlayer.PlayerId == Doomsayer.doomsayer?.PlayerId)
             {
                 if (!Doomsayer.canGuessImpostor && roleInfo.roleType == RoleType.Impostor)
                     continue;
@@ -292,13 +292,13 @@ public static class Guesser
                     continue;
                 case RoleId.WolfLord when WolfLord.Revealed:
                     continue;
-                case RoleId.Vigilante when HandleGuesser.isGuesserGm || CachedPlayer.LocalPlayer.PlayerId == Vigilante.vigilante?.PlayerId:
+                case RoleId.Vigilante when HandleGuesser.isGuesserGm || PlayerControl.LocalPlayer.PlayerId == Vigilante.vigilante?.PlayerId:
                     continue;
                 case RoleId.Sidekick when !CustomOptionHolder.jackalCanCreateSidekick.GetBool():
                     continue;
                 case RoleId.Deputy when CustomOptionHolder.sheriffSpawnRate.GetSelection() == 0:
                     continue;
-                case RoleId.Doomsayer when CachedPlayer.LocalPlayer.PlayerId == Doomsayer.doomsayer?.PlayerId:
+                case RoleId.Doomsayer when PlayerControl.LocalPlayer.PlayerId == Doomsayer.doomsayer?.PlayerId:
                     continue;
             }
 
@@ -355,15 +355,15 @@ public static class Guesser
                 }
                 else
                 {
-                    var dyingTarget = CachedPlayer.LocalPlayer.PlayerControl;
+                    var dyingTarget = PlayerControl.LocalPlayer;
                     var focusedTarget = playerById(__instance.playerStates[buttonTarget].TargetPlayerId);
                     var mainRoleInfo = RoleInfo.getRoleInfoForPlayer(focusedTarget, true);
 
                     if (__instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)
                         || focusedTarget == null
-                        || (HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) <= 0
-                            && HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId))
-                        || (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && !Doomsayer.CanShoot))
+                        || (HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) <= 0
+                            && HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId))
+                        || (PlayerControl.LocalPlayer == Doomsayer.doomsayer && !Doomsayer.CanShoot))
                         return;
 
                     if (!HandleGuesser.killsThroughShield && focusedTarget == Medic.shielded)
@@ -373,7 +373,7 @@ public static class Guesser
                         __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
                         Object.Destroy(container.gameObject);
 
-                        var murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        var murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                             (byte)CustomRPC.ShieldedMurderAttempt, SendOption.Reliable);
                         AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
                         RPCProcedure.shieldedMurderAttempt(0);
@@ -404,7 +404,7 @@ public static class Guesser
                         }
                     }
 
-                    if (Specoality.specoality != null && CachedPlayer.LocalPlayer.PlayerControl == Specoality.specoality && Specoality.linearfunction > 0)
+                    if (Specoality.specoality != null && PlayerControl.LocalPlayer == Specoality.specoality && Specoality.linearfunction > 0)
                     {
                         if (Specoality.specoality.IsAlive() && focusedTarget != dyingTarget)
                         {
@@ -413,7 +413,7 @@ public static class Guesser
                             Coroutines.Start(showFlashCoroutine(Color.red, 1f, 0.3f));
                             Specoality.linearfunction--;
                             SoundEffectsManager.play("fail");
-                            //RPCProcedure.seedGuessChat(CachedPlayer.LocalPlayer.PlayerControl, dyingTarget, (byte)roleInfo.roleId);
+                            //RPCProcedure.seedGuessChat(PlayerControl.LocalPlayer, dyingTarget, (byte)roleInfo.roleId);
                             __instance.playerStates.ForEach(x =>
                             {
                                 if (x.TargetPlayerId == focusedTarget.PlayerId && x.transform.FindChild("ShootButton") != null)
@@ -426,14 +426,14 @@ public static class Guesser
                     }
 
                     // Shoot player and send chat info if activated
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                         (byte)CustomRPC.GuesserShoot, SendOption.Reliable);
-                    writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
                     writer.Write(dyingTarget.PlayerId);
                     writer.Write(focusedTarget.PlayerId);
                     writer.Write((byte)roleInfo.roleId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    guesserShoot(CachedPlayer.LocalPlayer.PlayerId, dyingTarget.PlayerId, focusedTarget.PlayerId, (byte)roleInfo.roleId);
+                    guesserShoot(PlayerControl.LocalPlayer.PlayerId, dyingTarget.PlayerId, focusedTarget.PlayerId, (byte)roleInfo.roleId);
 
                     // Reset the GUI
                     __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
@@ -509,7 +509,7 @@ public static class Guesser
         if (Lawyer.lawyer != null && Lawyer.lawyer.PlayerId == killerId && Lawyer.target != null && Lawyer.target.PlayerId == dyingTargetId)
         {
             // Lawyer guessed client.
-            if (CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer)
+            if (PlayerControl.LocalPlayer == Lawyer.lawyer)
             {
                 FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(Lawyer.lawyer.Data, Lawyer.lawyer.Data);
             }
@@ -552,11 +552,11 @@ public static class Guesser
 
         if (FastDestroyableSingleton<HudManager>.Instance != null && guesser != null)
         {
-            if (CachedPlayer.LocalPlayer.PlayerControl == dyingTarget)
+            if (PlayerControl.LocalPlayer == dyingTarget)
             {
                 FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(guesser.Data, dyingTarget.Data);
             }
-            else if (dyingPartner != null && CachedPlayer.LocalPlayer.PlayerControl == dyingPartner)
+            else if (dyingPartner != null && PlayerControl.LocalPlayer == dyingPartner)
             {
                 FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingPartner.Data, dyingPartner.Data);
             }

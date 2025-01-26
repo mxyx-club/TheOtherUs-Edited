@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -72,7 +71,7 @@ public class Witness
             if (Player == null) return;
             var Target = playerById(pva.TargetPlayerId);
 
-            var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.WitnessSetTarget);
+            var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WitnessSetTarget);
             writer.Write(Target.PlayerId);
             writer.EndRPC();
             target = Target;

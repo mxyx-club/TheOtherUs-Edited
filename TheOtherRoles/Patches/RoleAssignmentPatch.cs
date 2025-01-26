@@ -6,7 +6,6 @@ using Hazel;
 using MonoMod.Utils;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Patches;
@@ -440,7 +439,7 @@ internal class RoleManagerSelectRolesPatch
         {
             var possibleTargets = new List<PlayerControl>();
             // Lawyer
-            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
                     (p.Data.Role.IsImpostor || p == Swooper.swooper || Jackal.jackal.Any(x => x == p) || p == Juggernaut.juggernaut ||
                      p == Werewolf.werewolf || (Lawyer.targetCanBeJester && p == Jester.jester)))
@@ -469,7 +468,7 @@ internal class RoleManagerSelectRolesPatch
         {
             var possibleTargets = new List<PlayerControl>();
             // Executioner
-            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
                     p != Mini.mini && !p.Data.Role.IsImpostor && !isNeutral(p) && p != Swapper.swapper)
                     possibleTargets.Add(p);

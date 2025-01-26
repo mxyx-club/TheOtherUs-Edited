@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Hazel;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -37,13 +36,12 @@ public class Grenadier
             if (InMeeting)
             {
                 renderer.enabled = false;
-                if (CachedPlayer.LocalId == Player.PlayerId && controls.Count > 0)
+                if (PlayerControl.LocalPlayer.PlayerId == Player.PlayerId && controls.Count > 0)
                 {
                     var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.GrenadierFlash);
                     writer.Write(true);
                     writer.EndRPC();
                     RPCProcedure.grenadierFlash(true);
-                    controls.Clear();
                 }
                 return;
             }
@@ -62,9 +60,8 @@ public class Grenadier
                 {
                     var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.GrenadierFlash);
                     writer.Write(true);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
                     writer.EndRPC();
-                    controls.Clear();
+                    RPCProcedure.grenadierFlash(true);
                 }
             }
             else

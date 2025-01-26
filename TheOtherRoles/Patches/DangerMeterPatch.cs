@@ -1,4 +1,3 @@
-using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Patches;
@@ -14,7 +13,7 @@ public class DangerMeterPatch
 
     public static void Prefix(DangerMeter __instance, ref Color color)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl != Tracker.tracker) return;
+        if (PlayerControl.LocalPlayer != Tracker.tracker) return;
         if (__instance == HudManager.Instance.DangerMeter) return;
 
         color = color.SetAlpha(0.5f);

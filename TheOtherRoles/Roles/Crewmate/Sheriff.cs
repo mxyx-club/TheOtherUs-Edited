@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Hazel;
 using TheOtherRoles.Buttons;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Crewmate;
@@ -48,13 +47,13 @@ public static class Sheriff
     public static void setHandcuffedKnows(bool active = true, byte playerId = byte.MaxValue)
     {
         if (playerId == byte.MaxValue)
-            playerId = CachedPlayer.LocalPlayer.PlayerId;
+            playerId = PlayerControl.LocalPlayer.PlayerId;
 
-        if (active && playerId == CachedPlayer.LocalPlayer.PlayerId)
+        if (active && playerId == PlayerControl.LocalPlayer.PlayerId)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
-            writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+            writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write((byte)RPCProcedure.GhostInfoTypes.HandcuffNoticed);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
@@ -65,7 +64,7 @@ public static class Sheriff
             handcuffedPlayers.RemoveAll(x => x == playerId);
         }
 
-        if (playerId == CachedPlayer.LocalPlayer.PlayerId)
+        if (playerId == PlayerControl.LocalPlayer.PlayerId)
         {
             HudManagerStartPatch.setAllButtonsHandcuffedStatus(active);
             SoundEffectsManager.play("deputyHandcuff");

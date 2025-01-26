@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -26,7 +26,7 @@ internal class OptimizeMapPatch
             //昇降機右に影を追加
             OneWayShadows oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
             oneWayShadow.enabled = false;
-            if (CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor) oneWayShadow.gameObject.SetActive(false);
+            if (PlayerControl.LocalPlayer.Data.Role.IsImpostor) oneWayShadow.gameObject.SetActive(false);
 
             SpriteRenderer renderer;
 

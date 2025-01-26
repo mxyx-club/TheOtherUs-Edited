@@ -37,7 +37,7 @@ public class Trap
         var trapRenderer = trap.AddComponent<SpriteRenderer>();
         trapRenderer.sprite = trapSprite;
         trap.SetActive(false);
-        if (CachedPlayer.LocalPlayer.PlayerId == Trapper.trapper.PlayerId) trap.SetActive(true);
+        if (PlayerControl.LocalPlayer.PlayerId == Trapper.trapper.PlayerId) trap.SetActive(true);
         trapRenderer.color = Color.white * new Vector4(1, 1, 1, 0.5f);
         instanceId = ++instanceCounter;
         traps.Add(this);
@@ -82,11 +82,11 @@ public class Trap
         var t = traps.FirstOrDefault(x => x.instanceId == trapId);
         var player = playerById(playerId);
         if (Trapper.trapper == null || t == null || player == null) return;
-        var localIsTrapper = CachedPlayer.LocalPlayer.PlayerId == Trapper.trapper.PlayerId;
+        var localIsTrapper = PlayerControl.LocalPlayer.PlayerId == Trapper.trapper.PlayerId;
         trapPlayerIdMap.TryAdd(playerId, t);
         t.usedCount++;
         t.triggerable = false;
-        if (playerId == CachedPlayer.LocalPlayer.PlayerId || playerId == Trapper.trapper.PlayerId)
+        if (playerId == PlayerControl.LocalPlayer.PlayerId || playerId == Trapper.trapper.PlayerId)
         {
             t.trap.SetActive(true);
             SoundEffectsManager.play("trapperTrap");
@@ -114,7 +114,7 @@ public class Trap
         t.triggerable = true;
 
         // Add trapped Info into Trapper chat
-        if (Trapper.trapper.IsAlive() && (CachedPlayer.LocalPlayer.PlayerControl == Trapper.trapper || shouldShowGhostInfo()))
+        if (Trapper.trapper.IsAlive() && (PlayerControl.LocalPlayer == Trapper.trapper || shouldShowGhostInfo()))
         {
             foreach (var trap in traps)
             {
@@ -138,7 +138,7 @@ public class Trap
     public static void Update()
     {
         if (Trapper.trapper == null) return;
-        var player = CachedPlayer.LocalPlayer;
+        var player = PlayerControl.LocalPlayer;
         var vent = MapUtilities.CachedShipStatus.AllVents[0];
         var closestDistance = float.MaxValue;
 
@@ -148,9 +148,9 @@ public class Trap
         foreach (var trap in traps)
         {
             if (trap.arrow.arrow.active) trap.arrow.Update();
-            if (trap.revealed || !trap.triggerable || trap.trappedPlayer.Contains(player.PlayerControl)) continue;
-            if (player.PlayerControl.inVent || !player.PlayerControl.CanMove) continue;
-            var distance = Vector2.Distance(trap.trap.transform.position, player.PlayerControl.GetTruePosition());
+            if (trap.revealed || !trap.triggerable || trap.trappedPlayer.Contains(player)) continue;
+            if (player.inVent || !player.CanMove) continue;
+            var distance = Vector2.Distance(trap.trap.transform.position, player.GetTruePosition());
             if (distance <= ud && distance < closestDistance)
             {
                 closestDistance = distance;
@@ -159,7 +159,7 @@ public class Trap
         }
         if (target != null && player.PlayerId != Trapper.trapper.PlayerId && !player.Data.IsDead)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.TriggerTrap, SendOption.Reliable, -1);
             writer.Write(player.PlayerId);
             writer.Write(target.instanceId);
@@ -301,14 +301,14 @@ public class KillTrap
                 {
                     // 正常にキルが発生する場合の処理
                     target.moveable = true;
-                    if (CachedPlayer.LocalPlayer.PlayerControl == EvilTrapper.evilTrapper)
+                    if (PlayerControl.LocalPlayer == EvilTrapper.evilTrapper)
                     {
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TrapperKill, SendOption.Reliable, -1);
+                        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.TrapperKill, SendOption.Reliable, -1);
                         writer.Write(trapId);
-                        writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
                         writer.Write(target.PlayerId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.trapperKill(trapId, CachedPlayer.LocalPlayer.PlayerControl.PlayerId, target.PlayerId);
+                        RPCProcedure.trapperKill(trapId, PlayerControl.LocalPlayer.PlayerId, target.PlayerId);
                     }
                 }
                 else
@@ -342,9 +342,9 @@ public class KillTrap
             }
         })));
 
-        if (CachedPlayer.LocalPlayer.PlayerControl == EvilTrapper.evilTrapper)
+        if (PlayerControl.LocalPlayer == EvilTrapper.evilTrapper)
         {
-            CachedPlayer.LocalPlayer.PlayerControl.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + EvilTrapper.penaltyTime;
+            PlayerControl.LocalPlayer.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + EvilTrapper.penaltyTime;
             HudManagerStartPatch.evilTrapperSetTrapButton.Timer = EvilTrapper.cooldown + EvilTrapper.penaltyTime;
         }
     }
@@ -357,16 +357,16 @@ public class KillTrap
             trap.Value.audioSource.Stop();
             if (trap.Value.target != null)
             {
-                if (CachedPlayer.LocalPlayer.PlayerControl == EvilTrapper.evilTrapper)
+                if (PlayerControl.LocalPlayer == EvilTrapper.evilTrapper)
                 {
                     if (!trap.Value.target.Data.IsDead)
                     {
-                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TrapperKill, SendOption.Reliable, -1);
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.TrapperKill, SendOption.Reliable, -1);
                         writer.Write(trap.Key);
-                        writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
                         writer.Write(trap.Value.target.PlayerId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.trapperKill(trap.Key, CachedPlayer.LocalPlayer.PlayerControl.PlayerId, trap.Value.target.PlayerId);
+                        RPCProcedure.trapperKill(trap.Key, PlayerControl.LocalPlayer.PlayerId, trap.Value.target.PlayerId);
                     }
                 }
 
@@ -441,8 +441,8 @@ public class KillTrap
             {
                 bool canSee =
                     trap.isActive ||
-                    CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor ||
-                    CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead;
+                    PlayerControl.LocalPlayer.Data.Role.IsImpostor ||
+                    PlayerControl.LocalPlayer.Data.IsDead;
                 var opacity = canSee ? 1.0f : 0.0f;
                 if (trap.killtrap != null)
                     trap.killtrap.GetComponent<SpriteRenderer>().material.color = Color.Lerp(Palette.ClearWhite, Palette.White, opacity);

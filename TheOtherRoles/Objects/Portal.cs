@@ -27,7 +27,7 @@ public class Portal
     public Portal(Vector2 p)
     {
         portalGameObject = new GameObject("Portal") { layer = 11 };
-        //Vector3 position = new Vector3(p.x, p.y, CachedPlayer.LocalPlayer.transform.position.z + 1f);
+        //Vector3 position = new Vector3(p.x, p.y, PlayerControl.LocalPlayer.transform.position.z + 1f);
         var position = new Vector3(p.x, p.y, (p.y / 1000f) + 0.01f);
 
         // Create the portal            
@@ -45,7 +45,7 @@ public class Portal
         animationFgRenderer.material = FastDestroyableSingleton<HatManager>.Instance.PlayerMaterial;
 
         // Only render the inactive portals for the Portalmaker
-        var playerIsPortalmaker = CachedPlayer.LocalPlayer.PlayerControl == Portalmaker.portalmaker;
+        var playerIsPortalmaker = PlayerControl.LocalPlayer == Portalmaker.portalmaker;
         portalGameObject.SetActive(playerIsPortalmaker);
         portalFgAnimationGameObject.SetActive(true);
 

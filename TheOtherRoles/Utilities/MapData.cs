@@ -241,12 +241,12 @@ public class MapData
         if (CustomOptionHolder.randomGameStartToVents.GetBool())
         {
             newPosition = FindVentSpawnPositions()[rnd.Next(FindVentSpawnPositions().Count)];
-            CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(FindVentSpawnPositions()[rnd.Next(FindVentSpawnPositions().Count)]);
+            PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(FindVentSpawnPositions()[rnd.Next(FindVentSpawnPositions().Count)]);
         }
         else
         {
             newPosition = MapSpawnPosition()[rnd.Next(MapSpawnPosition().Count)];
-            CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(MapSpawnPosition()[rnd.Next(MapSpawnPosition().Count)]);
+            PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(MapSpawnPosition()[rnd.Next(MapSpawnPosition().Count)]);
         }
         Message($"Span to Vector3: {newPosition.x}, {newPosition.y}, {newPosition.z}");
     }

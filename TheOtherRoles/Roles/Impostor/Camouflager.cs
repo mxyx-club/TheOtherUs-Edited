@@ -1,4 +1,3 @@
-﻿using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Impostor;
@@ -19,7 +18,7 @@ public static class Camouflager
     {
         if (isCamoComms) return;
         camouflageTimer = 0f;
-        foreach (PlayerControl p in CachedPlayer.AllPlayers)
+        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
         {
             if ((p == Ninja.ninja && Ninja.isInvisable)
                 || (p == Swooper.swooper && Swooper.isInvisable)

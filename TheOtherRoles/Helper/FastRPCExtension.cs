@@ -1,8 +1,6 @@
 using System;
-using System.Linq;
 using Hazel;
 using InnerNet;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Helper;
@@ -29,7 +27,7 @@ public static class FastRPCExtension
     public static PlayerControl ReadPlayer(this MessageReader reader)
     {
         var id = reader.ReadByte();
-        return CachedPlayer.AllPlayers.FirstOrDefault(n => n.PlayerId == id);
+        return PlayerControl.AllPlayerControls.FirstOrDefault(n => n.PlayerId == id);
     }
 
     public static Il2CppStructArray<byte> ReadBytesFormLength(this MessageReader reader)

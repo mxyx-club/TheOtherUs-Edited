@@ -1,4 +1,3 @@
-using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Patches;
@@ -10,7 +9,7 @@ public static class PlayerPhysicsUpdatePatch
     {
         if (InGame && __instance && __instance.AmOwner && PlayerControl.LocalPlayer.IsAlive() && __instance.myPlayer.CanMove)
         {
-            if (Flash.flash != null && Flash.flash.Any(x => x.PlayerId == CachedPlayer.LocalId))
+            if (Flash.flash != null && Flash.flash.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId))
                 __instance.body.velocity *= Flash.speed;
             if (Giant.giant != null && Giant.giant == PlayerControl.LocalPlayer && !MushroomSabotageActive && !isCamoComms && Camouflager.camouflageTimer <= 0f)
                 __instance.body.velocity *= Giant.speed;

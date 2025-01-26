@@ -61,7 +61,7 @@ public class AdditionalVents
             // AirShip管道追加
             case 4 when CustomOptionHolder.enableAirShipModify.GetBool() && CustomOptionHolder.addAirShipVents.GetBool():
             {
-                var transform = CachedPlayer.LocalPlayer.PlayerControl.transform;
+                var transform = PlayerControl.LocalPlayer.transform;
                 var position = transform.position;
                 var vents1 = new AdditionalVents(new Vector3(17.086f, 15.24f, position.z + 1f)); // 会议室
                 var vents2 = new AdditionalVents(new Vector3(19.137f, -11.32f, position.z + 1f)); // 电力

@@ -1,5 +1,4 @@
-﻿using TheOtherRoles.Utilities;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace TheOtherRoles.Roles.Crewmate;
 
@@ -43,14 +42,14 @@ public static class Medic
         {
             // Everyone or Ghost info
             hasVisibleShield = showShielded == 0 || shouldShowGhostInfo()
-                || (showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == shielded
-                || CachedPlayer.LocalPlayer.PlayerControl == medic)) // Shielded + Medic
-                || (showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl == medic);
+                || (showShielded == 1 && (PlayerControl.LocalPlayer == shielded
+                || PlayerControl.LocalPlayer == medic)) // Shielded + Medic
+                || (showShielded == 2 && PlayerControl.LocalPlayer == medic);
             // Medic only                                                                  
             // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
             hasVisibleShield = hasVisibleShield && (meetingAfterShielding
                 || !showShieldAfterMeeting
-                || CachedPlayer.LocalPlayer.PlayerControl == medic
+                || PlayerControl.LocalPlayer == medic
                 || shouldShowGhostInfo());
         }
         return hasVisibleShield;

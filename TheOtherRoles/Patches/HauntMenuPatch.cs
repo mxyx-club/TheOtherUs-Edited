@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using AmongUs.GameOptions;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Patches;
@@ -78,7 +77,7 @@ public static class HauntMenuPatch
     public static void UpdatePostfix(HauntMenuMinigame __instance)
     {
         if (GameOptionsManager.Instance.currentGameOptions.GameMode != GameModes.Normal) return;
-        if (CachedPlayer.LocalPlayer.Data.Role.IsImpostor && Vampire.vampire != CachedPlayer.LocalPlayer.PlayerControl)
+        if (PlayerControl.LocalPlayer.isImpostor() && Vampire.vampire != PlayerControl.LocalPlayer)
             __instance.gameObject.transform.localPosition =
                 new Vector3(-6f, -1.1f, __instance.gameObject.transform.localPosition.z);
     }
@@ -92,7 +91,7 @@ public static class HauntMenuPatch
         if (isHideNSeek) HudManager.Instance.AbilityButton.gameObject.SetActive(PlayerControl.LocalPlayer.IsDead());
 
         // player has haunt button.
-        var (playerCompleted, playerTotal) = TasksHandler.taskInfo(CachedPlayer.LocalPlayer.Data);
+        var (playerCompleted, playerTotal) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
         var numberOfLeftTasks = playerTotal - playerCompleted;
 
         if (!InGame || InMeeting || !CanSeeRoleInfo)

@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Neutral;
@@ -25,9 +24,9 @@ public static class Arsonist
 
     public static bool dousedEveryoneAlive()
     {
-        return CachedPlayer.AllPlayers.All(x =>
+        return PlayerControl.AllPlayerControls.ToList().All(x =>
         {
-            return x.PlayerControl == arsonist || x.Data.IsDead || x.Data.Disconnected ||
+            return x == arsonist || x.Data.IsDead || x.Data.Disconnected ||
                    dousedPlayers.Any(y => y.PlayerId == x.PlayerId);
         });
     }

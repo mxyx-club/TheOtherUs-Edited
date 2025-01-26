@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hazel;
-using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
@@ -31,9 +30,9 @@ public class VitalsPatch
     {
         // Don't waste network traffic if we're out of time.
         if (ModOption.restrictDevices > 0 && ModOption.restrictVitalsTime > 0f &&
-            CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker)
+            PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer != Hacker.hacker)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.UseVitalsTime, SendOption.Reliable);
             writer.Write(vitalsTimer);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -50,7 +49,7 @@ public class VitalsPatch
         {
             vitalsTimer = 0f;
 
-            if (Hacker.hacker != null && CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker)
+            if (Hacker.hacker != null && PlayerControl.LocalPlayer == Hacker.hacker)
             {
                 hackerTexts = new List<TextMeshPro>();
                 foreach (var panel in __instance.vitals)
@@ -87,8 +86,8 @@ public class VitalsPatch
                     TimeRemaining.color = Palette.White;
                 }
 
-                if (ModOption.restrictVitalsTime <= 0f && CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker &&
-                    !CachedPlayer.LocalPlayer.Data.IsDead)
+                if (ModOption.restrictVitalsTime <= 0f && PlayerControl.LocalPlayer != Hacker.hacker &&
+                    !PlayerControl.LocalPlayer.Data.IsDead)
                 {
                     __instance.Close();
                     return false;
@@ -105,7 +104,7 @@ public class VitalsPatch
         private static void Postfix(VitalsMinigame __instance)
         {
             // Hacker show time since death
-            if (Hacker.hacker != null && Hacker.hacker == CachedPlayer.LocalPlayer.PlayerControl &&
+            if (Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer &&
                 Hacker.hackerTimer > 0)
                 for (var k = 0; k < __instance.vitals.Length; k++)
                 {

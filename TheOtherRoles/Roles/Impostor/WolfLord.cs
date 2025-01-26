@@ -36,7 +36,7 @@ public class WolfLord
         GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.Kill, Player);
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(target.KillSfx, false, 0.8f);
 
-        if (CachedPlayer.LocalPlayer.PlayerControl == target)
+        if (PlayerControl.LocalPlayer == target)
             FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(Player.Data, target.Data);
     }
 
@@ -103,7 +103,7 @@ public class WolfLord
             __instance.playerStates[0].Cancel(); // This will stop the underlying buttons of the template from showing up
             if (__instance.state == VoteStates.Results || Player.IsDead()) return;
 
-            var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.WolfLordkilled);
+            var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WolfLordkilled);
             writer.Write(byte.MaxValue);
             writer.EndRPC();
             WolfLordkilled(byte.MaxValue);
@@ -146,7 +146,7 @@ public class WolfLord
             var target = playerById(pva.TargetPlayerId);
             if (Player == null || !Revealed || Killed || target == null) return;
             if (__instance.state is not (VoteStates.Voted or VoteStates.NotVoted)) return;
-            var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.WolfLordkilled);
+            var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WolfLordkilled);
             writer.Write(target.PlayerId);
             writer.EndRPC();
             WolfLordkilled(target.PlayerId);

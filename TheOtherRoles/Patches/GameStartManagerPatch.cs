@@ -77,14 +77,14 @@ public class GameStartManagerPatch
 
         public static void Postfix(GameStartManager __instance)
         {
-            // Send version as soon as CachedPlayer.LocalPlayer.PlayerControl exists
+            // Send version as soon as PlayerControl.LocalPlayer exists
             if (PlayerControl.LocalPlayer != null && !versionSent)
             {
                 versionSent = true;
                 shareGameVersion();
             }
 #if DEBUG
-                return;
+            return;
 #endif
             // Check version handshake infos
 
@@ -282,7 +282,7 @@ public class GameStartManagerPatch
         public static bool Prefix(GameStartManager __instance)
         {
 #if DEBUG
-                return true;
+            return true;
 #endif
             // Block game start if not everyone has the same mod version
             bool continueStart = true;

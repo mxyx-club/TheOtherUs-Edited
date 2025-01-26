@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles;
@@ -83,7 +82,7 @@ internal static class GameHistory
     public static void RpcOverrideDeathReasonAndKiller(PlayerControl player, CustomDeathReason deathReason, PlayerControl killer)
     {
         if (player == null) return;
-        var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ShareGhostInfo);
+        var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareGhostInfo);
         writer.Write(player.PlayerId);
         writer.Write((byte)RPCProcedure.GhostInfoTypes.DeathReasonAndKiller);
         writer.Write(player.PlayerId);
