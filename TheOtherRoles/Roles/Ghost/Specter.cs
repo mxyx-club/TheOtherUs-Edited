@@ -7,27 +7,32 @@ public class Specter
 {
     public static PlayerControl Player;
     public static Color color = new Color32(154, 147, 80, byte.MaxValue);
-    public static bool remember;
-    public static float duration;
 
+    public static float duration;
     public static bool resetRole;
+    public static bool afterMeetingRevived;
+
+    public static bool revive;
+    public static bool remember;
 
     public static void ClearAndReload()
     {
         Player = null;
-        remember = !CustomOptionHolder.specterAfterMeeting.GetBool();
+        revive = false;
+        remember = !CustomOptionHolder.specterAfterMeetingTakeRole.GetBool();
+        afterMeetingRevived = CustomOptionHolder.specterAfterMeetingRevived.GetBool();
         resetRole = CustomOptionHolder.specterResetRole.GetBool();
         duration = CustomOptionHolder.specterDuration.GetFloat();
     }
 
     public static void TakeRole(byte targetId)
     {
-        var target = playerById(targetId);
-        if (Player == null || target == null) return;
         var local = Player;
+        var target = playerById(targetId);
+        if (local == null || target == null) return;
+
         RPCProcedure.erasePlayerRoles(local.PlayerId);
-        var targetInfo = RoleInfo.getRoleInfoForPlayer(target);
-        var roleInfo = targetInfo.FirstOrDefault(info => info.roleType is not RoleType.Modifier and not RoleType.Ghost);
+        var roleInfo = RoleInfo.getRoleInfoForPlayer(target).FirstOrDefault(x => x.roleType is not RoleType.Modifier and not RoleType.Ghost);
         if (target.isImpostor()) turnToImpostor(local);
 
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
@@ -40,7 +45,9 @@ public class Specter
             }
         }
 
-        if (roleInfo != null) switch (roleInfo.roleId)
+        if (roleInfo != null)
+        {
+            switch (roleInfo.roleId)
             {
                 case RoleId.Amnisiac:
                     Amnisiac.Player.Add(local);
@@ -64,6 +71,7 @@ public class Specter
                     Butcher.butcher = local;
                     break;
                 case RoleId.Mimic:
+                    if (Mimic.mimic != null) RPCProcedure.erasePlayerRoles(Mimic.mimic.PlayerId);
                     if (resetRole) Mimic.clearAndReload();
                     Mimic.mimic = local;
                     break;
@@ -327,8 +335,13 @@ public class Specter
                     Balancer.balancer = local;
                     break;
             }
-        AntiTeleport.antiTeleport.RemoveAll(x => x.PlayerId == local.PlayerId);
-        RPCProcedure.clearGhostRoles(local.PlayerId);
+        }
+
+        if (afterMeetingRevived)
+        {
+            revive = true;
+            return;
+        }
         local.Revive();
     }
 }

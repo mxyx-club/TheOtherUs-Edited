@@ -391,6 +391,10 @@
         "0": "Block Skipping In Emergency Meetings",
         "13": "紧急会议禁止跳过"
     },
+    "disableMeeting": {
+        "0": "Disable Meeting",
+        "13": "禁止进入会议"
+    },
     "noVoteIsSelfVote": {
         "0": "No Vote Is Self Vote",
         "13": "不投票默认投自己"
@@ -1285,11 +1289,14 @@
         "0": "Specter (Ghost)",
         "13": "怨灵 (幽灵职业)"
     },
-    "specterAfterMeeting": {
-        "13": "下一轮会议结束才可复活"
-    },
     "specterDuration": {
         "13": "复活前摇"
+    },
+    "specterAfterMeetingTakeRole": {
+        "13": "本轮会议结束后才可拾取尸体"
+    },
+    "specterAfterMeetingRevived": {
+        "13": "拾取尸体后本轮会议结束才可复活"
     },
     "jesterCanCallEmergency": {
         "0": "Jester Can Call Emergency Meeting",
@@ -2387,7 +2394,7 @@
     },
     "TouTitle": {
         "0": "<color=#ff351f>TheOtherUs-Edited</color>",
-        "13": "<color=#ff351f>TheOtherUs-Edited</color>"
+        "13": "<color=#ff351f>我们的超多职业</color>"
     },
     "inGameTitle": {
         "0": "<size=75%>Modified by <color=#FFB793>mxyx.club</color>\nBased on TheOtherUs</size>",
@@ -2610,6 +2617,9 @@
     "LawyerSoloWin": {
         "13": "律师单独获胜!"
     },
+    "PelicanWin": {
+        "13": "鹈鹕胜利！"
+    },
     "WerewolfWin": {
         "13": "月下狼人获胜!"
     },
@@ -2618,9 +2628,6 @@
     },
     "JuggernautWin": {
         "13": "天启获胜!"
-    },
-    "PelicanWin": {
-        "13": "鹈鹕胜利！"
     },
     "SwooperWin": {
         "13": "隐身人获胜!"

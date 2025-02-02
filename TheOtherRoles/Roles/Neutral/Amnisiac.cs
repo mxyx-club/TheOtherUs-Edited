@@ -13,7 +13,6 @@ public class Amnisiac
     public static List<PlayerControl> Player = new();
     public static List<Arrow> localArrows = new();
     public static Color color = new(0.5f, 0.7f, 1f, 1f);
-    public static List<PoolablePlayer> poolIcons = new();
 
     public static bool showArrows = true;
     public static bool resetRole;
@@ -37,8 +36,7 @@ public class Amnisiac
         var target = playerById(targetId);
         var local = playerById(playerId);
         if (target == null || local == null) return;
-        var targetInfo = RoleInfo.getRoleInfoForPlayer(target, false, false);
-        var roleInfo = targetInfo.FirstOrDefault();
+        var roleInfo = RoleInfo.getRoleInfoForPlayer(target, false, false).FirstOrDefault();
         if (target.isImpostor()) turnToImpostor(local);
         switch (roleInfo!.roleId)
         {
@@ -496,6 +494,10 @@ public class Amnisiac
                 Poucher.poucher = local;
                 break;
         }
+        Player.RemoveAll(x => x.PlayerId == local.PlayerId);
+        foreach (var arrow in localArrows)
+            Object.Destroy(arrow.arrow);
+        localArrows.Clear();
     }
 
 }

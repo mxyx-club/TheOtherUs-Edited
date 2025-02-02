@@ -27,7 +27,7 @@ namespace TheOtherRoles;
 public enum CustomRPC
 {
     // Main Controls
-    ResetVaribles = 100,
+    ResetVaribles = 80,
     ShareOptions,
     WorkaroundSetRoles,
     SetRole,
@@ -35,16 +35,19 @@ public enum CustomRPC
     SetGhostRole,
     VersionHandshake,
     UseUncheckedVent,
-    UncheckedMurderPlayer,
-    UncheckedCmdReportDeadBody,
-    UncheckedExilePlayer,
     DynamicMapOption,
     SetGameStarting,
     StopStart,
-    ShareGameMode = 120,
+    ShareGameMode = 95,
+
+    UncheckedMurderPlayer,
+    UncheckedCmdReportDeadBody,
+    UncheckedExilePlayer,
+    RevivePlayer,
+    HostKill,
 
     // Role functionality
-    FixLights = 121,
+    FixLights = 110,
     FixSubmergedOxygen,
     CleanBody,
     DissectionBody,
@@ -65,7 +68,6 @@ public enum CustomRPC
     SwapperSwap,
     MorphlingMorph,
     CamouflagerCamouflage,
-    //DoomsayerMeeting,
     AkujoSetHonmei,
     AkujoSetKeep,
     AkujoSuicide,
@@ -149,9 +151,6 @@ public enum CustomRPC
 
     // Gamemode
     SetGuesserGm,
-    SetRevealed,
-    HostKill,
-    HostRevive,
 
     // Other functionality
     ShareGhostInfo,
@@ -587,10 +586,6 @@ public static class RPCProcedure
                 break;
             case RoleId.Specter:
                 Specter.Player = player;
-                if (PlayerControl.LocalPlayer == player)
-                {
-                    DestroyableSingleton<HudManager>.Instance.ShadowQuad.gameObject.SetActive(true);
-                }
                 break;
         }
     }
@@ -863,19 +858,10 @@ public static class RPCProcedure
         }
     }
 
-    public static void hostRevive(byte targetId)
+    public static void RevivePlayer(byte targetId)
     {
         var target = playerById(targetId);
-        target.Revive();
-        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
-        foreach (var body in array)
-        {
-            if (body.ParentId != targetId) continue;
-
-            Object.Destroy(body.gameObject);
-            target.Data.IsDead = false;
-            break;
-        }
+        target?.Revive();
     }
 
     public static void shifterShift(byte targetId)
@@ -2451,7 +2437,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.JackalCanSwooper:
-                RPCProcedure.jackalCanSwooper(reader.ReadByte() == byte.MaxValue);
+                RPCProcedure.jackalCanSwooper(reader.ReadBoolean());
                 break;
 
             case CustomRPC.InfoSleuthSetTarget:
@@ -2462,8 +2448,8 @@ internal class RPCHandlerPatch
                 RPCProcedure.balancerBalance(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
                 break;
 
-            case CustomRPC.HostRevive:
-                RPCProcedure.hostRevive(reader.ReadByte());
+            case CustomRPC.RevivePlayer:
+                RPCProcedure.RevivePlayer(reader.ReadByte());
                 break;
             case CustomRPC.HostKill:
                 RPCProcedure.hostKill(reader.ReadByte());

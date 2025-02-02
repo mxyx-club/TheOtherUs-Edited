@@ -418,12 +418,12 @@ public static class RoleHelpers
 
         public static bool otherNeutral(PlayerControl player)
         {
+            if (Pelican.Player == player) return false;
+            if (PartTimer.partTimer == player && PartTimer.target == null) return true;
+            if (Lawyer.lawyer == player && Lawyer.target.IsDead()) return true;
             if (isNeutral(player) && !Jackal.jackal.Contains(player) && player != Jackal.Sidekick &&
                 player != Pavlovsdogs.pavlovsowner && !Pavlovsdogs.pavlovsdogs.Contains(player))
                 return true;
-            if (Pelican.Player == player) return true;
-            if (PartTimer.partTimer == player && PartTimer.target == null) return true;
-            if (Lawyer.lawyer == player && Lawyer.target.IsDead()) return true;
             return false;
         }
 

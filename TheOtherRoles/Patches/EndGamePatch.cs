@@ -202,7 +202,7 @@ public class OnGameEndPatch
         var executionerWin = Executioner.executioner != null && gameOverReason == (GameOverReason)CustomGameOverReason.ExecutionerWin;
         var lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
         var akujoWin = Akujo.akujo.IsAlive() && Akujo.honmei.IsAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin ||
-                       (GameManager.Instance.DidHumansWin(gameOverReason) && Akujo.honmeiOptimizeWin && !Akujo.existingWithKiller()));
+                       GameManager.Instance.DidHumansWin(gameOverReason));
 
         bool isPursurerLose = jesterWin || witnessWin || arsonistWin || miniLose || isCanceled || executionerWin;
 

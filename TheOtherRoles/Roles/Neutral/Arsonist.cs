@@ -22,15 +22,6 @@ public static class Arsonist
 
     public static ResourceSprite igniteSprite = new("IgniteButton.png");
 
-    public static bool dousedEveryoneAlive()
-    {
-        return PlayerControl.AllPlayerControls.ToList().All(x =>
-        {
-            return x == arsonist || x.Data.IsDead || x.Data.Disconnected ||
-                   dousedPlayers.Any(y => y.PlayerId == x.PlayerId);
-        });
-    }
-
     public static void clearAndReload()
     {
         arsonist = null;

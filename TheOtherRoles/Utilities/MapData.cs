@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TheOtherRoles.Utilities;
 
-public class MapData
+public static class MapData
 {
     public static List<Vector3> PositionCached = new();
     public static List<Vector3> VentCached = new();
@@ -249,6 +249,28 @@ public class MapData
             PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(MapSpawnPosition()[rnd.Next(MapSpawnPosition().Count)]);
         }
         Message($"Span to Vector3: {newPosition.x}, {newPosition.y}, {newPosition.z}");
+    }
+
+    public static Vector3 GetCloseSpawnPosition(this PlayerControl player)
+    {
+        var list = new List<Vector3>();
+        list.AddRange(MapSpawnPosition(false));
+        list.AddRange(FindVentSpawnPositions(false));
+
+        var closePos = list[0];
+        float closeDistance = Vector3.Distance(player.transform.position, closePos);
+
+        foreach (var pos in list)
+        {
+            float distance = Vector3.Distance(player.transform.position, pos);
+            if (distance < closeDistance)
+            {
+                closePos = pos;
+                closeDistance = distance;
+            }
+        }
+        Message($"Revive Player {player.Data.PlayerName} To Vector3 {closePos}");
+        return closePos;
     }
 
     public static void Clear()

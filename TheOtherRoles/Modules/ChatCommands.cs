@@ -116,10 +116,10 @@ public static class ChatCommands
                     if (target != null)
                     {
                         var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                            (byte)CustomRPC.HostRevive, SendOption.Reliable);
+                            (byte)CustomRPC.RevivePlayer, SendOption.Reliable);
                         writer.Write(target.PlayerId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.hostRevive(target.PlayerId);
+                        RPCProcedure.RevivePlayer(target.PlayerId);
                     }
                     handled = true;
                 }
