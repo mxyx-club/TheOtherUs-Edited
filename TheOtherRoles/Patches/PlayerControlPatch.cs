@@ -22,15 +22,15 @@ public static class PlayerControlFixedUpdatePatch
     private static bool mushroomSaboWasActive;
     // Helpers
 
-    private static PlayerControl setTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false,
-        List<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null)
+    public static PlayerControl SetTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false,
+        IEnumerable<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, float KillDistances = 0f)
     {
         PlayerControl result = null;
         var num = GameOptionsData.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentNormalGameOptions.KillDistance, 0, 3)];
         if (!MapUtilities.CachedShipStatus) return result;
         if (targetingPlayer == null) targetingPlayer = CachedPlayer.LocalPlayer.PlayerControl;
         if (targetingPlayer.Data.IsDead) return result;
-        if (PlayerControl.LocalPlayer == Arsonist.arsonist) num += 0.5f;
+        num += KillDistances;
 
         var truePosition = targetingPlayer.GetTruePosition();
         foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
@@ -58,7 +58,7 @@ public static class PlayerControlFixedUpdatePatch
         return result;
     }
 
-    private static void setPlayerOutline(PlayerControl target, Color color)
+    public static void SetPlayerOutline(PlayerControl target, Color color)
     {
         if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) return;
 
@@ -1388,7 +1388,10 @@ public static class PlayerControlFixedUpdatePatch
 
             if (!InGame) return;
 
-            UpdateSetTarget();
+            impostorSetTarget();
+            jackalSetTarget();
+            akujoSetTarget();
+
             // EvilTrapper
             evilTrapperUpdate();
             // Time Master
@@ -1467,160 +1470,17 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
-    public static void UpdateSetTarget()
-    {
-        if (InMeeting) return;
-
-        impostorSetTarget();
-        morphlingSetTarget();
-        vampireSetTarget();
-        eraserSetTarget();
-        blackMailerSetTarget();
-        ninjaSetTarget();
-        witchSetTarget();
-        warlockSetTarget();
-        bomberSetTarget();
-
-        jackalSetTarget();
-        sidekickSetTarget();
-        pavlovsownerSetTarget();
-        pavlovsdogsSetTarget();
-        arsonistSetTarget();
-        werewolfSetTarget();
-        juggernautSetTarget();
-        doomsayerSetTarget();
-        swooperSetTarget();
-        pursuerSetTarget();
-        survivorSetTarget();
-        thiefSetTarget();
-        partTimerSetTarget();
-        akujoSetTarget();
-        PelicanSetTarget();
-
-        securityGuardSetTarget();
-        bodyGuardSetTarget();
-        mediumSetTarget();
-        trackerSetTarget();
-        sheriffSetTarget();
-        prophetSetTarget();
-        medicSetTarget();
-
-        shifterSetTarget();
-    }
-
-
-    private static void medicSetTarget()
-    {
-        if (Medic.medic == null || Medic.medic != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Medic.currentTarget = setTarget();
-        if (!Medic.usedShield) setPlayerOutline(Medic.currentTarget, Medic.shieldedColor);
-    }
-
-    private static void prophetSetTarget()
-    {
-        if (Prophet.prophet == null || CachedPlayer.LocalPlayer.PlayerControl != Prophet.prophet) return;
-        Prophet.currentTarget = setTarget();
-        if (Prophet.examinesLeft > 0) setPlayerOutline(Prophet.currentTarget, Prophet.color);
-    }
-
-    private static void partTimerSetTarget()
-    {
-        if (PartTimer.partTimer == null || PartTimer.partTimer != CachedPlayer.LocalPlayer.PlayerControl) return;
-        PartTimer.currentTarget = setTarget();
-        if (PartTimer.target != null) setPlayerOutline(PartTimer.currentTarget, PartTimer.color);
-    }
-
-    private static void bomberSetTarget()
-    {
-        setBomberBombTarget();
-        if (Bomber.bomber == null || Bomber.bomber != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Bomber.currentTarget = setTarget();
-        if (Bomber.hasBombPlayer == null) setPlayerOutline(Bomber.currentTarget, Bomber.color);
-    }
-
-    private static void trackerSetTarget()
-    {
-        if (Tracker.tracker == null || Tracker.tracker != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Tracker.currentTarget = setTarget();
-        if (!Tracker.usedTracker) setPlayerOutline(Tracker.currentTarget, Tracker.color);
-    }
-
-    private static void vampireSetTarget()
-    {
-        if (Vampire.vampire == null || Vampire.vampire != CachedPlayer.LocalPlayer.PlayerControl) return;
-
-        PlayerControl target = null;
-
-        var untargetablePlayers = new List<PlayerControl>();
-
-        if (Spy.spy != null)
-        {
-            if (Spy.impostorsCanKillAnyone)
-            {
-                target = setTarget(false, true);
-            }
-            else
-            {
-                target = setTarget(true, true);
-            }
-        }
-        else
-        {
-            target = setTarget(true, true);
-        }
-
-        bool targetNearGarlic = false;
-        if (target != null)
-            foreach (var garlic in Garlic.garlics)
-                if (Vector2.Distance(garlic.garlic.transform.position, target.transform.position) <= 1.91f)
-                    targetNearGarlic = true;
-        Vampire.targetNearGarlic = targetNearGarlic;
-        Vampire.currentTarget = target;
-        setPlayerOutline(Vampire.currentTarget, Vampire.color);
-    }
-
     private static void jackalSetTarget()
     {
         if (Jackal.jackal.Any(x => x.IsAlive() && x.PlayerId == CachedPlayer.LocalId))
         {
             var untargetablePlayers = new List<PlayerControl>();
-            foreach (var p in Jackal.jackal)
-            {
-                untargetablePlayers.Add(p);
-            }
+            untargetablePlayers.AddRange(Jackal.jackal);
             if (Jackal.Sidekick != null) untargetablePlayers.Add(Jackal.Sidekick);
             if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
-            Jackal.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
-            setPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
+            Jackal.currentTarget = SetTarget(untargetablePlayers: untargetablePlayers);
+            SetPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
         }
-    }
-
-    private static void sidekickSetTarget()
-    {
-        if (Jackal.Sidekick == null || Jackal.Sidekick != CachedPlayer.LocalPlayer.PlayerControl) return;
-        var untargetablePlayers = new List<PlayerControl>();
-        foreach (var p in Jackal.jackal)
-        {
-            untargetablePlayers.Add(p);
-        }
-        if (Jackal.Sidekick != null) untargetablePlayers.Add(Jackal.Sidekick);
-        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
-        Jackal.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
-        setPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
-    }
-
-    private static void setBomberBombTarget()
-    {
-        if (Bomber.bomber == null || Bomber.hasBombPlayer != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Bomber.currentBombTarget = setTarget();
-        //if (Bomber.hasBomb != null) setPlayerOutline(Bomber.currentBombTarget, Bomber.color);
-    }
-
-    private static void bodyGuardSetTarget()
-    {
-        if (BodyGuard.bodyguard == null || BodyGuard.bodyguard != CachedPlayer.LocalPlayer.PlayerControl) return;
-        BodyGuard.currentTarget = setTarget();
-        if (!BodyGuard.usedGuard) setPlayerOutline(Medic.currentTarget, Medic.shieldedColor);
     }
 
     public static void akujoSetTarget()
@@ -1629,37 +1489,8 @@ public static class PlayerControlFixedUpdatePatch
         var untargetables = new List<PlayerControl>();
         if (Akujo.honmei != null) untargetables.Add(Akujo.honmei);
         if (Akujo.keeps != null) untargetables.AddRange(Akujo.keeps);
-        Akujo.currentTarget = setTarget(untargetablePlayers: untargetables);
-        if (Akujo.honmei == null || Akujo.keepsLeft > 0) setPlayerOutline(Akujo.currentTarget, Akujo.color);
-    }
-
-    private static void PelicanSetTarget()
-    {
-        if (Pelican.Player == null || Pelican.Player != CachedPlayer.LocalPlayer.PlayerControl) return;
-        var untargetablePlayers = new List<PlayerControl>();
-        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini); // Exclude Jackal from targeting the Mini unless it has grown up
-        Pelican.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
-        setPlayerOutline(Pelican.currentTarget, Palette.ImpostorRed);
-    }
-
-    private static void swooperSetTarget()
-    {
-        if (Swooper.swooper == null || Swooper.swooper != CachedPlayer.LocalPlayer.PlayerControl) return;
-        var untargetablePlayers = new List<PlayerControl>();
-        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini); // Exclude Jackal from targeting the Mini unless it has grown up
-        Swooper.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
-        setPlayerOutline(Swooper.currentTarget, Palette.ImpostorRed);
-    }
-
-    private static void eraserSetTarget()
-    {
-        if (Eraser.eraser == null || Eraser.eraser != CachedPlayer.LocalPlayer.PlayerControl) return;
-
-        var untargetables = new List<PlayerControl>();
-        if (Spy.spy != null) untargetables.Add(Spy.spy);
-        Eraser.currentTarget = setTarget(!Eraser.canEraseAnyone,
-            untargetablePlayers: Eraser.canEraseAnyone ? [] : untargetables);
-        setPlayerOutline(Eraser.currentTarget, Eraser.color);
+        Akujo.currentTarget = SetTarget(untargetablePlayers: untargetables);
+        if (Akujo.honmei == null || Akujo.keepsLeft > 0) SetPlayerOutline(Akujo.currentTarget, Akujo.color);
     }
 
     private static void impostorSetTarget()
@@ -1667,7 +1498,6 @@ public static class PlayerControlFixedUpdatePatch
         if (!CachedPlayer.LocalPlayer.Data.Role.IsImpostor || !CachedPlayer.LocalPlayer.PlayerControl.CanMove ||
             CachedPlayer.LocalPlayer.Data.IsDead)
         {
-            // !isImpostor || !canMove || isDead
             FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(null);
             return;
         }
@@ -1677,244 +1507,20 @@ public static class PlayerControlFixedUpdatePatch
         {
             if (Spy.impostorsCanKillAnyone)
             {
-                target = setTarget(false, true);
+                target = SetTarget(false, true);
             }
             else
             {
-                target = setTarget(true, true, [Spy.spy]);
+                target = SetTarget(true, true, [Spy.spy]);
             }
         }
         else
         {
-            target = setTarget(true, true);
+            target = SetTarget(true, true);
         }
 
         FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(target); // Includes setPlayerOutline(target, Palette.ImpstorRed);
     }
-
-    private static void warlockSetTarget()
-    {
-        if (Warlock.warlock == null || Warlock.warlock != CachedPlayer.LocalPlayer.PlayerControl) return;
-        if (Warlock.curseVictim != null && (Warlock.curseVictim.Data.Disconnected || Warlock.curseVictim.Data.IsDead))
-            // If the cursed victim is disconnected or dead reset the curse so a new curse can be applied
-            Warlock.resetCurse();
-        if (Warlock.curseVictim == null)
-        {
-            Warlock.currentTarget = setTarget();
-            setPlayerOutline(Warlock.currentTarget, Warlock.color);
-        }
-        else
-        {
-            Warlock.curseVictimTarget = setTarget(targetingPlayer: Warlock.curseVictim);
-            setPlayerOutline(Warlock.curseVictimTarget, Warlock.color);
-        }
-    }
-
-    public static void securityGuardSetTarget()
-    {
-        if (SecurityGuard.securityGuard == null || SecurityGuard.securityGuard != CachedPlayer.LocalPlayer.PlayerControl ||
-            MapUtilities.CachedShipStatus == null || MapUtilities.CachedShipStatus.AllVents == null) return;
-
-        Vent target = null;
-        var truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
-        var closestDistance = float.MaxValue;
-        for (var i = 0; i < MapUtilities.CachedShipStatus.AllVents.Length; i++)
-        {
-            var vent = MapUtilities.CachedShipStatus.AllVents[i];
-            if (vent.gameObject.name.StartsWith("JackInTheBoxVent_") ||
-                vent.gameObject.name.StartsWith("SealedVent_") ||
-                vent.gameObject.name.StartsWith("FutureSealedVent_")) continue;
-            if (SubmergedCompatibility.IsSubmerged && vent.Id == 9) continue; // cannot seal submergeds exit only vent!
-            var distance = Vector2.Distance(vent.transform.position, truePosition);
-            if (distance <= vent.UsableDistance && distance < closestDistance)
-            {
-                closestDistance = distance;
-                target = vent;
-            }
-        }
-
-        SecurityGuard.ventTarget = target;
-    }
-
-    private static void pavlovsownerSetTarget()
-    {
-        if (Pavlovsdogs.pavlovsowner == null || Pavlovsdogs.pavlovsowner != CachedPlayer.LocalPlayer.PlayerControl) return;
-        var untargetablePlayers = new List<PlayerControl>();
-        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
-        Pavlovsdogs.currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
-        setPlayerOutline(Pavlovsdogs.currentTarget, Palette.ImpostorRed);
-    }
-
-    public static void mediumSetTarget()
-    {
-        if (Medium.medium == null || Medium.medium != CachedPlayer.LocalPlayer.PlayerControl ||
-            Medium.medium.Data.IsDead || Medium.deadBodies == null ||
-            MapUtilities.CachedShipStatus?.AllVents == null) return;
-
-        DeadPlayer target = null;
-        var truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
-        var closestDistance = float.MaxValue;
-        var usableDistance = MapUtilities.CachedShipStatus.AllVents.FirstOrDefault().UsableDistance;
-        foreach (var (dp, ps) in Medium.deadBodies)
-        {
-            var distance = Vector2.Distance(ps, truePosition);
-            if (distance <= usableDistance && distance < closestDistance)
-            {
-                closestDistance = distance;
-                target = dp;
-            }
-        }
-
-        Medium.target = target;
-    }
-
-    private static void pavlovsdogsSetTarget()
-    {
-        if (Pavlovsdogs.pavlovsdogs == null || !Pavlovsdogs.pavlovsdogs.Any(p => p == CachedPlayer.LocalPlayer.PlayerControl)) return;
-        var untargetablePlayers = new List<PlayerControl>();
-        foreach (var p in Pavlovsdogs.pavlovsdogs)
-        {
-            untargetablePlayers.Add(p);
-        }
-        if (Pavlovsdogs.pavlovsowner != null) untargetablePlayers.Add(Pavlovsdogs.pavlovsowner);
-        if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
-        Pavlovsdogs.killTarget = setTarget(untargetablePlayers: untargetablePlayers);
-        setPlayerOutline(Pavlovsdogs.killTarget, Palette.ImpostorRed);
-    }
-
-    private static void werewolfSetTarget()
-    {
-        if (Werewolf.werewolf == null || Werewolf.werewolf != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Werewolf.currentTarget = setTarget();
-    }
-
-    private static void juggernautSetTarget()
-    {
-        if (Juggernaut.juggernaut == null || Juggernaut.juggernaut != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Juggernaut.currentTarget = setTarget();
-    }
-
-
-    private static void doomsayerSetTarget()
-    {
-        if (Doomsayer.doomsayer == null || Doomsayer.doomsayer != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Doomsayer.currentTarget = setTarget();
-    }
-
-    private static void blackMailerSetTarget()
-    {
-        if (Blackmailer.blackmailer == null ||
-            Blackmailer.blackmailer != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Blackmailer.currentTarget = setTarget();
-        setPlayerOutline(Medic.currentTarget, Blackmailer.blackmailedColor);
-    }
-
-    private static void pursuerSetTarget()
-    {
-        if (Pursuer.Player == null || !Pursuer.Player.Contains(CachedPlayer.LocalPlayer.PlayerControl)) return;
-        Pursuer.target = setTarget();
-        setPlayerOutline(Pursuer.target, Pursuer.color);
-    }
-
-    private static void survivorSetTarget()
-    {
-        if (Survivor.Player == null || !Survivor.Player.Contains(CachedPlayer.LocalPlayer.PlayerControl)) return;
-        Survivor.target = setTarget();
-        setPlayerOutline(Survivor.target, Survivor.color);
-    }
-
-    private static void witchSetTarget()
-    {
-        if (Witch.witch == null || Witch.witch != CachedPlayer.LocalPlayer.PlayerControl) return;
-        List<PlayerControl> untargetables;
-        if (Witch.spellCastingTarget != null)
-        {
-            // Don't switch the target from the the one you're currently casting a spell on
-            untargetables = PlayerControl.AllPlayerControls.ToArray().Where(x => x.PlayerId != Witch.spellCastingTarget.PlayerId).ToList();
-        }
-        else
-        {
-            // Also target players that have already been spelled, to hide spells that were blanks/blocked by shields
-            untargetables = new();
-            if (Spy.spy != null && !Witch.canSpellAnyone) untargetables.Add(Spy.spy);
-        }
-
-        Witch.currentTarget = setTarget(!Witch.canSpellAnyone, untargetablePlayers: untargetables);
-        setPlayerOutline(Witch.currentTarget, Witch.color);
-    }
-
-    private static void ninjaSetTarget()
-    {
-        if (Ninja.ninja == null || Ninja.ninja != CachedPlayer.LocalPlayer.PlayerControl) return;
-        var untargetables = new List<PlayerControl>();
-        if (Spy.spy != null && !Spy.impostorsCanKillAnyone) untargetables.Add(Spy.spy);
-        if (Mini.mini != null && !Mini.isGrownUp()) untargetables.Add(Mini.mini);
-        Ninja.currentTarget =
-            setTarget(Spy.spy == null || !Spy.impostorsCanKillAnyone, untargetablePlayers: untargetables);
-        setPlayerOutline(Ninja.currentTarget, Ninja.color);
-    }
-
-    private static void thiefSetTarget()
-    {
-        if (Thief.thief == null || Thief.thief != CachedPlayer.LocalPlayer.PlayerControl) return;
-        var untargetables = new List<PlayerControl>();
-        if (Mini.mini != null && !Mini.isGrownUp()) untargetables.Add(Mini.mini);
-        Thief.currentTarget = setTarget(untargetablePlayers: untargetables);
-        setPlayerOutline(Thief.currentTarget, Thief.color);
-    }
-
-    private static void shifterSetTarget()
-    {
-        if (Shifter.shifter == null || Shifter.shifter != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Shifter.currentTarget = setTarget();
-        if (Shifter.futureShift == null) setPlayerOutline(Shifter.currentTarget, Color.yellow);
-    }
-
-    private static void morphlingSetTarget()
-    {
-        if (Morphling.morphling == null || Morphling.morphling != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Morphling.currentTarget = setTarget();
-        setPlayerOutline(Morphling.currentTarget, Morphling.color);
-    }
-
-    private static void sheriffSetTarget()
-    {
-        if (Sheriff.Player?.Any(x => x.IsAlive() && x == PlayerControl.LocalPlayer) == true)
-        {
-            Sheriff.currentTarget = setTarget();
-            setPlayerOutline(Sheriff.currentTarget, Sheriff.color);
-        }
-
-        if (Sheriff.Deputy != null && Sheriff.Deputy == PlayerControl.LocalPlayer)
-        {
-            Sheriff.currentTarget = setTarget();
-            setPlayerOutline(Sheriff.currentTarget, Sheriff.color);
-        }
-    }
-
-    public static void arsonistSetTarget()
-    {
-        if (Arsonist.arsonist == null || Arsonist.arsonist != CachedPlayer.LocalPlayer.PlayerControl) return;
-        List<PlayerControl> untargetables;
-        if (Arsonist.douseTarget != null)
-        {
-            untargetables = new();
-            foreach (var cachedPlayer in CachedPlayer.AllPlayers)
-                if (cachedPlayer.PlayerId != Arsonist.douseTarget.PlayerId)
-                    untargetables.Add(cachedPlayer);
-        }
-        else
-        {
-            untargetables = Arsonist.dousedPlayers;
-        }
-
-        Arsonist.currentTarget = setTarget(untargetablePlayers: untargetables);
-        if (Arsonist.currentTarget != null) setPlayerOutline(Arsonist.currentTarget, Arsonist.color);
-
-        Arsonist.currentTarget2 = setTarget(false, true);
-        if (Arsonist.currentTarget2 != null) setPlayerOutline(Arsonist.currentTarget2, Arsonist.color);
-    }
-
 }
 
 [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.WalkPlayerTo))]

@@ -62,15 +62,15 @@ public class ShipStatusPatch
             __result = __instance.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod * Torch.vision;
         }
 
-        if (Specter.Player?.PlayerId == player.PlayerId)
-        {
-            __result = __instance.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
-        }
-
-        if (Mayor.mayor != null && Mayor.mayor.PlayerId == player.PlayerId && Mayor.Revealed) // Mayor Vision
+        if (Mayor.mayor.IsAlive() && Mayor.mayor.PlayerId == player.PlayerId && Mayor.Revealed) // Mayor Vision
         {
             __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius * (1f - (Mayor.vision * 0.1f)), t) *
                 GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
+        }
+
+        if (Specter.Player?.PlayerId == player.PlayerId)
+        {
+            __result = __instance.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
         }
 
         return false;

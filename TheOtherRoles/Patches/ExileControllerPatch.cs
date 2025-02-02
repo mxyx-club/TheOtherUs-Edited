@@ -5,6 +5,7 @@ using System.Text;
 using AmongUs.GameOptions;
 using Hazel;
 using PowerTools;
+using Sentry.Protocol;
 using TheOtherRoles.Buttons;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
@@ -359,69 +360,79 @@ internal class ExileControllerWrapUpPatch
         if (BountyHunter.bountyHunter != null && BountyHunter.bountyHunter == CachedPlayer.LocalPlayer.PlayerControl)
             BountyHunter.bountyUpdateTimer = 0f;
 
-        // Eraser erase
-        if (Eraser.eraser != null && AmongUsClient.Instance.AmHost && Eraser.futureErased != null)
+        if (AmongUsClient.Instance.AmHost)
         {
-            var rasePlayerList = new List<PlayerControl>(Eraser.futureErased);
-            foreach (var target in rasePlayerList)
+            LastImpostor.promoteToLastImpostor();
+
+            // Eraser erase
+            if (Eraser.eraser != null && Eraser.futureErased != null)
             {
-                var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ErasePlayerRoles);
-                writer.Write(target.PlayerId);
+                var rasePlayerList = new List<PlayerControl>(Eraser.futureErased);
+                foreach (var target in rasePlayerList)
+                {
+                    var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ErasePlayerRoles);
+                    writer.Write(target.PlayerId);
+                    writer.EndRPC();
+                    RPCProcedure.erasePlayerRoles(target.PlayerId);
+                    Eraser.alreadyErased.Add(target.PlayerId);
+                }
+            }
+
+            // Shifter shift
+            if (Shifter.shifter != null && Shifter.futureShift != null)
+            {
+                var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.ShifterShift);
+                writer.Write(Shifter.futureShift.PlayerId);
                 writer.EndRPC();
-                RPCProcedure.erasePlayerRoles(target.PlayerId);
-                Eraser.alreadyErased.Add(target.PlayerId);
+                RPCProcedure.shifterShift(Shifter.futureShift.PlayerId);
+            }
+
+            // Witch execute casted spells
+            if (Witch.witch != null && Witch.futureSpelled != null)
+            {
+                var partner = exiled?.Object?.getPartner();
+
+                var exiledIsWitch = exiled?.PlayerId == Witch.witch.PlayerId;
+                var witchDiesWithExiledLover = partner?.PlayerId == Witch.witch.PlayerId || exiled?.PlayerId == Witch.witch.PlayerId;
+
+                if (((witchDiesWithExiledLover || exiledIsWitch) && Witch.witchVoteSavesTargets) || Witch.witchWasGuessed)
+                    Witch.futureSpelled = new List<PlayerControl>();
+
+                foreach (var target in Witch.futureSpelled.Where(x => x.IsAlive()))
+                {
+                    if (Lawyer.lawyer != null && target == Lawyer.target)
+                    {
+                        var writer2 = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.LawyerPromotesToPursuer);
+                        writer2.EndRPC();
+                        Lawyer.PromotesToPursuer();
+                    }
+
+                    if (Executioner.executioner.IsAlive() && target == Executioner.target)
+                    {
+                        var writer2 = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.ExecutionerPromotesRole);
+                        writer2.EndRPC();
+                        Executioner.PromotesRole();
+                    }
+
+                    var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.UncheckedExilePlayer);
+                    writer.Write(target.PlayerId);
+                    writer.EndRPC();
+                    RPCProcedure.uncheckedExilePlayer(target.PlayerId);
+
+                    GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.WitchExile, Witch.witch);
+                }
             }
         }
+
         Eraser.futureErased = new List<PlayerControl>();
-
-        // Shifter shift
-        if (Shifter.shifter != null && AmongUsClient.Instance.AmHost && Shifter.futureShift != null)
-        {
-            var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.ShifterShift);
-            writer.Write(Shifter.futureShift.PlayerId);
-            writer.EndRPC();
-            RPCProcedure.shifterShift(Shifter.futureShift.PlayerId);
-        }
-
         Shifter.futureShift = null;
-
-        // Witch execute casted spells
-        if (Witch.witch != null && Witch.futureSpelled != null && AmongUsClient.Instance.AmHost)
-        {
-            var partner = exiled?.Object?.getPartner();
-
-            var exiledIsWitch = exiled?.PlayerId == Witch.witch.PlayerId;
-            var witchDiesWithExiledLover = partner?.PlayerId == Witch.witch.PlayerId || exiled?.PlayerId == Witch.witch.PlayerId;
-
-            if (((witchDiesWithExiledLover || exiledIsWitch) && Witch.witchVoteSavesTargets) || Witch.witchWasGuessed)
-                Witch.futureSpelled = new List<PlayerControl>();
-
-            foreach (var target in Witch.futureSpelled.Where(x => x.IsAlive()))
-            {
-                if (Lawyer.lawyer != null && target == Lawyer.target)
-                {
-                    var writer2 = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.LawyerPromotesToPursuer);
-                    writer2.EndRPC();
-                    Lawyer.PromotesToPursuer();
-                }
-
-                if (Executioner.executioner.IsAlive() && target == Executioner.target)
-                {
-                    var writer2 = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.ExecutionerPromotesRole);
-                    writer2.EndRPC();
-                    Executioner.PromotesRole();
-                }
-
-                var writer = StartRPC(CachedPlayer.LocalPlayer.PlayerControl, CustomRPC.UncheckedExilePlayer);
-                writer.Write(target.PlayerId);
-                writer.EndRPC();
-                RPCProcedure.uncheckedExilePlayer(target.PlayerId);
-
-                GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.WitchExile, Witch.witch);
-            }
-        }
-
         Witch.futureSpelled = new List<PlayerControl>();
+
+        if (Specter.Player != null && Specter.Player?.Data?.IsDead == true && Specter.revive)
+        {
+            Specter.Player.Revive();
+            Specter.revive = false;
+        }
 
         // Medium spawn souls
         if (Medium.medium != null && CachedPlayer.LocalPlayer.PlayerControl == Medium.medium)
@@ -450,11 +461,6 @@ internal class ExileControllerWrapUpPatch
                 Medium.futureDeadBodies = new List<Tuple<DeadPlayer, Vector3>>();
             }
         }
-
-        // AntiTeleport set position
-        AntiTeleport.setPosition();
-
-        if (CustomOptionHolder.randomGameStartPosition.GetBool()) MapData.RandomSpawnPlayers();
 
         if (InfoSleuth.infoSleuth != null && InfoSleuth.target != null && InfoSleuth.infoSleuth == PlayerControl.LocalPlayer)
         {
@@ -507,10 +513,11 @@ internal class ExileControllerWrapUpPatch
 
         if (!Yoyo.markStaysOverMeeting) Silhouette.clearSilhouettes();
 
-        if (AmongUsClient.Instance.AmHost)
-        {
-            LastImpostor.promoteToLastImpostor();
-        }
+        // AntiTeleport set position
+        AntiTeleport.setPosition();
+
+        if (CustomOptionHolder.randomGameStartPosition.GetBool()) MapData.RandomSpawnPlayers();
+
     }
 
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.WrapUp))]

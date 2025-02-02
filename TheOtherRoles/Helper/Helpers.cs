@@ -584,15 +584,20 @@ public static class Helpers
         return false;
     }
 
-    public static bool TryAdd<T>(this IEnumerable<T> list, T item)
+    public static bool TryAdd<T>(this List<T> list, T item)
     {
         if (list == null || item == null) return false;
         try
         {
-            list.AddItem(item);
+            list.Add(item);
+            Message("complete", "TryAdd");
             return true;
         }
-        catch { return false; }
+        catch (Exception e)
+        {
+            Message(e, "TryAdd");
+            return false;
+        }
     }
 
     public static TKey GetKeyByValue<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TValue value, TKey defaultvalue = default)
@@ -811,28 +816,6 @@ public static class Helpers
         }
     }
 
-    public static Vector3 GetCloseSpawnPosition(this PlayerControl player)
-    {
-        var list = new List<Vector3>();
-        list.AddRange(MapData.MapSpawnPosition(false));
-        list.AddRange(MapData.FindVentSpawnPositions(false));
-
-        var closePos = list[0];
-        float closeDistance = Vector3.Distance(player.transform.position, closePos);
-
-        foreach (var pos in list)
-        {
-            float distance = Vector3.Distance(player.transform.position, pos);
-            if (distance < closeDistance)
-            {
-                closePos = pos;
-                closeDistance = distance;
-            }
-        }
-        Message($"Revive Player{player.Data.PlayerName} To Vector3 {closePos}");
-        return closePos;
-    }
-
     public static GameObject[] GetChildren(this GameObject ParentObject)
     {
         GameObject[] ChildObject = new GameObject[ParentObject.transform.childCount];
@@ -867,7 +850,7 @@ public static class Helpers
 
     public static void shareGameVersion()
     {
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionHandshake, 
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionHandshake,
             SendOption.Reliable, -1);
         writer.Write((byte)Main.Version.Major);
         writer.Write((byte)Main.Version.Minor);

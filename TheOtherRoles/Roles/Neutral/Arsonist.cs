@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -22,15 +22,6 @@ public static class Arsonist
     public static ResourceSprite douseSprite = new("DouseButton.png");
 
     public static ResourceSprite igniteSprite = new("IgniteButton.png");
-
-    public static bool dousedEveryoneAlive()
-    {
-        return CachedPlayer.AllPlayers.All(x =>
-        {
-            return x.PlayerControl == arsonist || x.Data.IsDead || x.Data.Disconnected ||
-                   dousedPlayers.Any(y => y.PlayerId == x.PlayerId);
-        });
-    }
 
     public static void clearAndReload()
     {

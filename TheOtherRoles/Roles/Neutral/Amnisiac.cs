@@ -13,7 +13,6 @@ public class Amnisiac
     public static List<PlayerControl> Player = new();
     public static List<Arrow> localArrows = new();
     public static Color color = new(0.5f, 0.7f, 1f, 1f);
-    public static List<PoolablePlayer> poolIcons = new();
 
     public static bool showArrows = true;
     public static bool resetRole;
@@ -380,8 +379,10 @@ public class Amnisiac
                 Balancer.balancer = local;
                 break;
         }
-
         Player.RemoveAll(x => x.PlayerId == local.PlayerId);
+        foreach (var arrow in localArrows)
+            Object.Destroy(arrow.arrow);
+        localArrows.Clear();
     }
 
 }

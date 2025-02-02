@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Hazel;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -43,7 +42,6 @@ public class Grenadier
                     writer.Write(true);
                     writer.EndRPC();
                     RPCProcedure.grenadierFlash(true);
-                    controls.Clear();
                 }
                 return;
             }
@@ -64,7 +62,6 @@ public class Grenadier
                     writer.Write(true);
                     writer.EndRPC();
                     RPCProcedure.grenadierFlash(true);
-                    controls.Clear();
                 }
             }
             else

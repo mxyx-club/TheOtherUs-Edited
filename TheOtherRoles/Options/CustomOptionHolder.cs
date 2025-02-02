@@ -236,7 +236,8 @@ public class CustomOptionHolder
     public static CustomOption specterSpawnRate;
     public static CustomOption specterResetRole;
     public static CustomOption specterDuration;
-    public static CustomOption specterAfterMeeting;
+    public static CustomOption specterAfterMeetingTakeRole;
+    public static CustomOption specterAfterMeetingRevived;
 
     public static CustomOption sheriffSpawnRate;
     public static CustomOption sheriffMisfireKills;
@@ -933,7 +934,8 @@ public class CustomOptionHolder
         specterSpawnRate = Create(50020, Types.Neutral, cs(Specter.color, "SpecterOptions"), rates, null, true);
         specterResetRole = Create(50021, Types.Neutral, "amnisiacResetRole", true, specterSpawnRate);
         specterDuration = Create(50022, Types.Neutral, "specterDuration", 1.5f, 0.25f, 5f, 0.25f, specterSpawnRate);
-        specterAfterMeeting = Create(50023, Types.Neutral, "specterAfterMeeting", false, specterSpawnRate);
+        specterAfterMeetingTakeRole = Create(50023, Types.Neutral, "specterAfterMeetingTakeRole", false, specterSpawnRate);
+        specterAfterMeetingRevived = Create(50024, Types.Neutral, "specterAfterMeetingRevived", false, specterSpawnRate);
 
         survivorSpawnRate = Create(20280, Types.Neutral, cs(Survivor.color, "Survivor"), rates, null, true);
         survivorVestEnable = Create(20281, Types.Neutral, "survivorVestEnable", true, survivorSpawnRate);
@@ -1153,12 +1155,12 @@ public class CustomOptionHolder
         bodyGuardFlash = Create(30342, Types.Crewmate, "bodyGuardFlash", true, bodyGuardSpawnRate);
 
         timeMasterSpawnRate = Create(30210, Types.Crewmate, cs(TimeMaster.color, "TimeMaster"), rates, null, true);
-        timeMasterCooldown = Create(30211, Types.Crewmate, "timeMasterCooldown", 20f, 10f, 60f, 2.5f, timeMasterSpawnRate);
+        timeMasterCooldown = Create(30211, Types.Crewmate, "timeMasterCooldown", 20f, 5f, 60f, 2.5f, timeMasterSpawnRate);
         timeMasterShieldDuration = Create(30213, Types.Crewmate, "timeMasterShieldDuration", 15f, 2.5f, 20f, 0.5f, timeMasterSpawnRate);
         timeMasterRewindTime = Create(30212, Types.Crewmate, "timeMasterRewindTime", 9f, 1f, 10f, 1f, timeMasterSpawnRate);
 
         veteranSpawnRate = Create(30220, Types.Crewmate, cs(Veteran.color, "Veteran"), rates, null, true);
-        veteranCooldown = Create(30221, Types.Crewmate, "veteranCooldown", 25f, 10f, 60f, 2.5f, veteranSpawnRate);
+        veteranCooldown = Create(30221, Types.Crewmate, "veteranCooldown", 25f, 5f, 60f, 2.5f, veteranSpawnRate);
         veteranAlertDuration = Create(30222, Types.Crewmate, "veteranAlertDuration", 12.5f, 2.5f, 20f, 0.5f, veteranSpawnRate);
 
         swapperSpawnRate = Create(30230, Types.Crewmate, cs(Swapper.color, "Swapper"), rates, null, true);

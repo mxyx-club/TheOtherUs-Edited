@@ -40,7 +40,7 @@ public class Jackal
         var chance = canSwoop = rnd.NextDouble() < chanceSwoop;
         var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.JackalCanSwooper, SendOption.Reliable);
-        writer.Write(chance ? byte.MaxValue : 0);
+        writer.Write(chance);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.jackalCanSwooper(chance);
     }

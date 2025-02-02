@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AmongUs.Data;
 using BepInEx;
 using BepInEx.Configuration;
@@ -102,6 +102,7 @@ public class TheOtherRolesPlugin : BasePlugin
         SubmergedCompatibility.Initialize();
         MainMenuPatch.addSceneChangeCallbacks();
         AddToKillDistanceSetting.addKillDistance();
+
         Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{VersionString}-Lite\n---------------");
     }
 }
