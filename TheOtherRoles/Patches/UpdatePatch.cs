@@ -17,8 +17,8 @@ internal class HudManagerUpdatePatch
 
     private static void resetNameTagsAndColors()
     {
-        var localPlayer = CachedPlayer.LocalPlayer.PlayerControl;
-        var myData = CachedPlayer.LocalPlayer.Data;
+        var localPlayer = PlayerControl.LocalPlayer;
+        var myData = PlayerControl.LocalPlayer.Data;
         var amImpostor = myData.Role.IsImpostor;
         var morphTimerNotUp = Morphling.morphTimer > 0f;
         var morphTargetNotNull = Morphling.morphTarget != null;
@@ -77,14 +77,14 @@ internal class HudManagerUpdatePatch
 
     private static void updateBlindReport()
     {
-        if (Blind.blind != null && CachedPlayer.LocalPlayer.PlayerControl == Blind.blind)
+        if (Blind.blind != null && PlayerControl.LocalPlayer == Blind.blind)
             DestroyableSingleton<HudManager>.Instance.ReportButton.SetActive(false);
         // Sadly the report button cannot be hidden due to preventing R to report
     }
 
     private static void setNameColors()
     {
-        var localPlayer = CachedPlayer.LocalPlayer.PlayerControl;
+        var localPlayer = PlayerControl.LocalPlayer;
         var localRole = RoleInfo.getRoleInfoForPlayer(localPlayer, false).FirstOrDefault();
         setPlayerNameColor(localPlayer, localRole.color);
 
@@ -179,7 +179,7 @@ internal class HudManagerUpdatePatch
 
             if (numberOfTasks <= Snitch.taskCountForReveal && Snitch.snitch.IsAlive())
             {
-                foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (forImp || forKillerTeam || forEvilTeam || forNeutraTeam)
                     {
@@ -190,7 +190,7 @@ internal class HudManagerUpdatePatch
 
             if (numberOfTasks == 0 && Snitch.seeInMeeting && Snitch.snitch.IsAlive())
             {
-                foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     bool TargetsImp = p.Data.Role.IsImpostor;
                     bool TargetsKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(p);
@@ -218,7 +218,7 @@ internal class HudManagerUpdatePatch
 
     private static void setNameTags()
     {
-        var local = CachedPlayer.LocalPlayer.PlayerControl;
+        var local = PlayerControl.LocalPlayer;
         // Lovers
         if (Lovers.lover1 != null && Lovers.lover2 != null &&
             (Lovers.lover1 == local || Lovers.lover2 == local))
@@ -329,7 +329,7 @@ internal class HudManagerUpdatePatch
         }
 
         // Display lighter / darker color for all alive players
-        if (CachedPlayer.LocalPlayer != null && MeetingHud.Instance != null && ModOption.showLighterDarker)
+        if (PlayerControl.LocalPlayer != null && MeetingHud.Instance != null && ModOption.showLighterDarker)
         {
             foreach (var player in MeetingHud.Instance.playerStates)
             {
@@ -400,7 +400,7 @@ internal class HudManagerUpdatePatch
 
     private static void updateImpostorKillButton(HudManager __instance)
     {
-        if (!CachedPlayer.LocalPlayer.Data.Role.IsImpostor) return;
+        if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor) return;
         if (MeetingHud.Instance)
         {
             __instance.KillButton.Hide();
@@ -408,21 +408,21 @@ internal class HudManagerUpdatePatch
         }
 
         var enabled = true;
-        if (Vampire.vampire != null && Vampire.vampire == CachedPlayer.LocalPlayer.PlayerControl)
+        if (Vampire.vampire != null && Vampire.vampire == PlayerControl.LocalPlayer)
             enabled = false;
 
         if (enabled) __instance.KillButton.Show();
         else __instance.KillButton.Hide();
 
-        if (Sheriff.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
-            Sheriff.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0) __instance.KillButton.Hide();
+        if (Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) &&
+            Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0) __instance.KillButton.Hide();
     }
 
     private static void updateReportButton(HudManager __instance)
     {
         if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
-        if ((Sheriff.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
-             Sheriff.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0) ||
+        if ((Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) &&
+             Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0) ||
             MeetingHud.Instance) __instance.ReportButton.Hide();
         else if (!__instance.ReportButton.isActiveAndEnabled) __instance.ReportButton.Show();
     }
@@ -430,10 +430,10 @@ internal class HudManagerUpdatePatch
     private static void updateVentButton(HudManager __instance)
     {
         if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
-        if ((Sheriff.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
-             Sheriff.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0) ||
+        if ((Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) &&
+             Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0) ||
             MeetingHud.Instance) __instance.ImpostorVentButton.Hide();
-        else if (CachedPlayer.LocalPlayer.PlayerControl.roleCanUseVents() &&
+        else if (PlayerControl.LocalPlayer.roleCanUseVents() &&
                  !__instance.ImpostorVentButton.isActiveAndEnabled) __instance.ImpostorVentButton.Show();
     }
 
@@ -449,7 +449,7 @@ internal class HudManagerUpdatePatch
 
     private static void updateMapButton(HudManager __instance)
     {
-        if (Trapper.trapper == null || !(CachedPlayer.LocalPlayer.PlayerId == Trapper.trapper.PlayerId) ||
+        if (Trapper.trapper == null || !(PlayerControl.LocalPlayer.PlayerId == Trapper.trapper.PlayerId) ||
             __instance == null || __instance.MapButton.HeldButtonSprite == null) return;
         __instance.MapButton.HeldButtonSprite.color = Trapper.playersOnMap.Any() ? Trapper.color : Color.white;
     }
@@ -515,7 +515,7 @@ internal class HudManagerUpdatePatch
         }
 
         // Fix dead player's pets being visible by just always updating whether the pet should be visible at all.
-        foreach (PlayerControl target in CachedPlayer.AllPlayers)
+        foreach (PlayerControl target in PlayerControl.AllPlayerControls)
         {
             var pet = target.GetPet();
             if (pet != null)

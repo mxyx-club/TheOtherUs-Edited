@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Hazel;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -396,7 +395,7 @@ public class Balancer
                 return;
             }
             if (balancer.IsDead() || IsAbilityUsed <= 0) return;
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.BalancerBalance, SendOption.Reliable);
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write(currentTarget.PlayerId);

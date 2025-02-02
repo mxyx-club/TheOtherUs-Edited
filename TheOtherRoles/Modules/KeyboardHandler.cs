@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TheOtherRoles.Buttons;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Modules;
@@ -28,7 +27,7 @@ public class KeyboardHandler
                 GameData.Instance.AddPlayer(playerControl);
                 AmongUsClient.Instance.Spawn(playerControl);
 
-                playerControl.transform.position = CachedPlayer.LocalPlayer.transform.position;
+                playerControl.transform.position = PlayerControl.LocalPlayer.transform.position;
                 playerControl.GetComponent<DummyBehaviour>().enabled = true;
                 playerControl.NetTransform.enabled = false;
                 playerControl.SetName(RandomString(6));
@@ -39,7 +38,7 @@ public class KeyboardHandler
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKeyDown(ModInputManager.meetingInput.keyCode) && InGame)
             {
                 if (InMeeting) MeetingHud.Instance.RpcClose();
-                else CachedPlayer.LocalPlayer.PlayerControl.NoCheckStartMeeting(null, true);
+                else PlayerControl.LocalPlayer.NoCheckStartMeeting(null, true);
             }
             // 强制结束游戏
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKeyDown(ModInputManager.endGameInput.keyCode) && InGame)

@@ -247,7 +247,7 @@ public static class RPCProcedure
 
     public static void setRole(byte roleId, byte playerId)
     {
-        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
         {
             if (player.PlayerId == playerId)
             {
@@ -643,8 +643,8 @@ public static class RPCProcedure
     public static void setCrewmate(PlayerControl player)
     {
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
-        if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
-            CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
+        if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+            PlayerControl.LocalPlayer.moveable = true;
     }
 
 
@@ -668,7 +668,7 @@ public static class RPCProcedure
 
     public static void showIndomitableFlash()
     {
-        if (Indomitable.indomitable == CachedPlayer.LocalPlayer.PlayerControl) showFlash(Indomitable.color);
+        if (Indomitable.indomitable == PlayerControl.LocalPlayer) showFlash(Indomitable.color);
     }
 
     public static void cleanBody(byte playerId, byte cleaningPlayerId)
@@ -735,7 +735,7 @@ public static class RPCProcedure
     {
         TimeMaster.shieldActive = false; // Shield is no longer active when rewinding
         SoundEffectsManager.stop("timemasterShield"); // Shield sound stopped when rewinding
-        if (TimeMaster.timeMaster != null && TimeMaster.timeMaster == CachedPlayer.LocalPlayer.PlayerControl)
+        if (TimeMaster.timeMaster != null && TimeMaster.timeMaster == PlayerControl.LocalPlayer)
             resetTimeMasterButton();
         FastDestroyableSingleton<HudManager>.Instance.FullScreen.color = new Color(0f, 0.5f, 0.8f, 0.3f);
         FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = true;
@@ -746,7 +746,7 @@ public static class RPCProcedure
                 if (p == 1f) FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = false;
             })));
 
-        if (TimeMaster.timeMaster == null || CachedPlayer.LocalPlayer.PlayerControl == TimeMaster.timeMaster)
+        if (TimeMaster.timeMaster == null || PlayerControl.LocalPlayer == TimeMaster.timeMaster)
             return; // Time Master himself does not rewind
 
         TimeMaster.isRewinding = true;
@@ -755,7 +755,7 @@ public static class RPCProcedure
             MapBehaviour.Instance.Close();
         if (Minigame.Instance)
             Minigame.Instance.ForceClose();
-        CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
+        PlayerControl.LocalPlayer.moveable = false;
     }
 
     public static void timeMasterShield()
@@ -804,7 +804,7 @@ public static class RPCProcedure
 
     public static void veteranKill(byte targetId)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl == Veteran.veteran)
+        if (PlayerControl.LocalPlayer == Veteran.veteran)
         {
             var player = playerById(targetId);
             checkMurderAttemptAndKill(Veteran.veteran, player);
@@ -828,12 +828,12 @@ public static class RPCProcedure
 
         if (Medic.shielded == null || Medic.medic == null) return;
 
-        var isShieldedAndShow = Medic.shielded == CachedPlayer.LocalPlayer.PlayerControl && Medic.showAttemptToShielded;
+        var isShieldedAndShow = Medic.shielded == PlayerControl.LocalPlayer && Medic.showAttemptToShielded;
         isShieldedAndShow =
             isShieldedAndShow &&
             (Medic.meetingAfterShielding ||
              !Medic.showShieldAfterMeeting); // Dont show attempt, if shield is not shown yet
-        var isMedicAndShow = Medic.medic == CachedPlayer.LocalPlayer.PlayerControl && Medic.showAttemptToMedic;
+        var isMedicAndShow = Medic.medic == PlayerControl.LocalPlayer && Medic.showAttemptToMedic;
 
         if (isShieldedAndShow || isMedicAndShow || shouldShowGhostInfo())
             showFlash(Palette.ImpostorRed, 1.5f, GetString("medicShowAttemptText"));
@@ -877,14 +877,14 @@ public static class RPCProcedure
             OverrideDeathReasonAndKiller(player, CustomDeathReason.Shift, target);
             if (player == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null)
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 Lawyer.PromotesToPursuer();
             }
             else if (player == Executioner.target && AmongUsClient.Instance.AmHost && Executioner.executioner != null)
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 Executioner.PromotesRole();
@@ -895,7 +895,7 @@ public static class RPCProcedure
         Shifter.shiftRole(player, target);
 
         // Set cooldowns to max for both players
-        if (CachedPlayer.LocalPlayer.PlayerControl == player || CachedPlayer.LocalPlayer.PlayerControl == target)
+        if (PlayerControl.LocalPlayer == player || PlayerControl.LocalPlayer == target)
             CustomButton.ResetAllCooldowns();
     }
 
@@ -954,7 +954,7 @@ public static class RPCProcedure
         if (Camouflager.camouflager == null && !Camouflager.camoComms) return;
         if (setTimer == 1) Camouflager.camouflageTimer = Camouflager.duration;
         if (MushroomSabotageActive) return; // Dont overwrite the fungle "camo"
-        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             player.setLook("", 6, "", "", "", "");
     }
 
@@ -967,7 +967,7 @@ public static class RPCProcedure
         }
 
         if (Vampire.vampire == null) return;
-        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             if (player.PlayerId == targetId && !player.Data.IsDead)
                 Vampire.bitten = player;
     }
@@ -1002,7 +1002,7 @@ public static class RPCProcedure
     public static void trackerUsedTracker(byte targetId)
     {
         Tracker.usedTracker = true;
-        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             if (player.PlayerId == targetId)
                 Tracker.tracked = player;
     }
@@ -1037,7 +1037,7 @@ public static class RPCProcedure
         erasePlayerRoles(target.PlayerId);
         Jackal.Sidekick = target;
 
-        if (target == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
+        if (target == PlayerControl.LocalPlayer) SoundEffectsManager.play("jackalSidekick");
         if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
             setGuesserGm(targetId);
 
@@ -1090,9 +1090,9 @@ public static class RPCProcedure
 
         erasePlayerRoles(player.PlayerId);
         Pavlovsdogs.pavlovsdogs.Add(player);
-        if (player.PlayerId == CachedPlayer.LocalPlayer.PlayerId)
-            CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
-        if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
+        if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+            PlayerControl.LocalPlayer.moveable = true;
+        if (player == PlayerControl.LocalPlayer) SoundEffectsManager.play("jackalSidekick");
         if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodePavlovsdogIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
             setGuesserGm(targetId);
         Pavlovsdogs.createDogNum -= 1;
@@ -1293,9 +1293,9 @@ public static class RPCProcedure
     {
         Coroutines.Start(showFlashCoroutine(Palette.ImpostorRed, 1f, 0.36f));
 
-        if (!AntiTeleport.antiTeleport.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId) && CachedPlayer.LocalPlayer.IsAlive)
+        if (!AntiTeleport.antiTeleport.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.IsAlive())
         {
-            foreach (var player in CachedPlayer.AllPlayers)
+            foreach (var player in PlayerControl.AllPlayerControls)
             {
                 if (Minigame.Instance) Minigame.Instance.ForceClose();
                 if (MapBehaviour.Instance) MapBehaviour.Instance.Close();
@@ -1308,12 +1308,12 @@ public static class RPCProcedure
 
                 if (Disperser.DispersesToVent)
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo
+                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo
                     (MapData.FindVentSpawnPositions()[rnd.Next(MapData.FindVentSpawnPositions().Count)]);
                 }
                 else
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo
+                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo
                     (MapData.MapSpawnPosition()[rnd.Next(MapData.MapSpawnPosition().Count)]);
                 }
             }
@@ -1359,7 +1359,7 @@ public static class RPCProcedure
                 if (p == 1f && Bomber.bombActive)
                 {
                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                    if (Bomber.bomber.IsAlive() && CachedPlayer.LocalPlayer.PlayerControl == Bomber.bomber)
+                    if (Bomber.bomber.IsAlive() && PlayerControl.LocalPlayer == Bomber.bomber)
                         checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBombPlayer, false, false, true, true);
                     Bomber.hasBombPlayer = null;
                     Bomber.bombActive = false;
@@ -1367,7 +1367,7 @@ public static class RPCProcedure
                     Bomber.timeLeft = 0;
                 }
 
-                if (CachedPlayer.LocalPlayer.PlayerControl == Bomber.hasBombPlayer)
+                if (PlayerControl.LocalPlayer == Bomber.hasBombPlayer)
                 {
                     var totalTime = (int)(Bomber.bombDelay + Bomber.bombTimer);
                     var timeLeft = (int)(totalTime - (totalTime * p));
@@ -1409,7 +1409,7 @@ public static class RPCProcedure
         position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
         position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
         new NinjaTrace(position, Ninja.traceTime);
-        if (CachedPlayer.LocalPlayer.PlayerControl != Ninja.ninja)
+        if (PlayerControl.LocalPlayer != Ninja.ninja)
             Ninja.ninjaMarked = null;
     }
 
@@ -1431,7 +1431,7 @@ public static class RPCProcedure
 
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
-        var canSee = CachedPlayer.LocalPlayer.Data.Role.IsImpostor || CachedPlayer.LocalPlayer.Data.IsDead;
+        var canSee = PlayerControl.LocalPlayer.Data.Role.IsImpostor || PlayerControl.LocalPlayer.Data.IsDead;
         if (canSee) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
         target.cosmetics.colorBlindText.gameObject.SetActive(false);
@@ -1585,7 +1585,7 @@ public static class RPCProcedure
 
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
-        var canSee = Swooper.swooper == CachedPlayer.LocalPlayer.PlayerControl || CachedPlayer.LocalPlayer.Data.IsDead;
+        var canSee = Swooper.swooper == PlayerControl.LocalPlayer || PlayerControl.LocalPlayer.Data.IsDead;
         if (canSee) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
         target.cosmetics.colorBlindText.gameObject.SetActive(false);
@@ -1611,9 +1611,9 @@ public static class RPCProcedure
 
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
-        var canSee = Jackal.jackal.Any(x => x == CachedPlayer.LocalPlayer.PlayerControl) ||
-                     Jackal.Sidekick == CachedPlayer.LocalPlayer.PlayerControl ||
-                     CachedPlayer.LocalPlayer.Data.IsDead;
+        var canSee = Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer) ||
+                     Jackal.Sidekick == PlayerControl.LocalPlayer ||
+                     PlayerControl.LocalPlayer.Data.IsDead;
         if (canSee) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
         target.cosmetics.colorBlindText.gameObject.SetActive(false);
@@ -1675,7 +1675,7 @@ public static class RPCProcedure
 
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
-        if (CachedPlayer.LocalPlayer.Data.IsDead) color.a = 0.1f;
+        if (PlayerControl.LocalPlayer.Data.IsDead) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
         target.cosmetics.colorBlindText.gameObject.SetActive(false);
         //target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(canSee ? 0.1f : 0f);
@@ -1706,7 +1706,7 @@ public static class RPCProcedure
     {
         Trickster.lightsOutTimer = Trickster.lightsOutDuration;
         // If the local player is impostor indicate lights out
-        if (hasImpVision(GameData.Instance.GetPlayerById(CachedPlayer.LocalPlayer.PlayerId)))
+        if (hasImpVision(GameData.Instance.GetPlayerById(PlayerControl.LocalPlayer.PlayerId)))
             _ = new CustomMessage("TricksterLightsOut".Translate(), Trickster.lightsOutDuration);
     }
 
@@ -1742,7 +1742,7 @@ public static class RPCProcedure
         }
 
 
-        if (CachedPlayer.LocalPlayer.PlayerControl == SecurityGuard.securityGuard)
+        if (PlayerControl.LocalPlayer == SecurityGuard.securityGuard)
         {
             camera.gameObject.SetActive(true);
             camera.gameObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.5f);
@@ -1761,7 +1761,7 @@ public static class RPCProcedure
         if (vent == null) return;
 
         SecurityGuard.remainingScrews -= SecurityGuard.ventPrice;
-        if (CachedPlayer.LocalPlayer.PlayerControl == SecurityGuard.securityGuard)
+        if (PlayerControl.LocalPlayer == SecurityGuard.securityGuard)
         {
             var animator = vent.GetComponent<SpriteAnim>();
 
@@ -1858,7 +1858,7 @@ public static class RPCProcedure
     {
         try
         {
-            var playerControl = CachedPlayer.LocalPlayer.PlayerControl;
+            var playerControl = PlayerControl.LocalPlayer;
             if (MeetingHud.Instance.playerStates == null) return;
             var playerVoteArea = MeetingHud.Instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == targetPlayerId);
             if (playerVoteArea == null) return;

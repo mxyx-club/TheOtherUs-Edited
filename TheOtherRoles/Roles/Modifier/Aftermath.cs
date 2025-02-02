@@ -1,7 +1,6 @@
 using System;
 using Hazel;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.Buttons.HudManagerStartPatch;
 using static TheOtherRoles.RPCProcedure;
@@ -90,19 +89,19 @@ public class Aftermath
         {
 
             foreach (var collider2D in Physics2D.OverlapCircleAll(
-                         CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(),
-                         CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
+                         PlayerControl.LocalPlayer.GetTruePosition(),
+                         PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
             {
                 if (collider2D.tag == "DeadBody")
                 {
                     var component = collider2D.GetComponent<DeadBody>();
                     if (component && !component.Reported)
                     {
-                        var truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+                        var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
                         var truePosition2 = component.TruePosition;
                         if (Vector2.Distance(truePosition2, truePosition) <=
-                            CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance &&
-                            CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
+                            PlayerControl.LocalPlayer.MaxReportDistance &&
+                            PlayerControl.LocalPlayer.CanMove &&
                             !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
                                 Constants.ShipAndObjectsMask, false))
                         {
@@ -127,7 +126,7 @@ public class Aftermath
         {
             var target = killer;
             if (Witch.currentTarget != null) target = Witch.currentTarget;
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.SetFutureSpelled, SendOption.Reliable);
             writer.Write(target.PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -171,7 +170,7 @@ public class Aftermath
         }
         else if (Yoyo.yoyo == killer)
         {
-            var pos = CachedPlayer.LocalPlayer.transform.position;
+            var pos = PlayerControl.LocalPlayer.transform.position;
             byte[] buff = new byte[sizeof(float) * 2];
             Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
             Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
@@ -220,7 +219,7 @@ public class Aftermath
         {
             if (!JackInTheBox.hasJackInTheBoxLimitReached())
             {
-                var pos = CachedPlayer.LocalPlayer.transform.position;
+                var pos = PlayerControl.LocalPlayer.transform.position;
                 var buff = new byte[sizeof(float) * 2];
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
@@ -248,19 +247,19 @@ public class Aftermath
             if (Undertaker.deadBodyDraged == null)
             {
                 foreach (var collider2D in Physics2D.OverlapCircleAll(
-                             CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(),
-                             CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
+                             PlayerControl.LocalPlayer.GetTruePosition(),
+                             PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
                 {
                     if (collider2D.tag == "DeadBody")
                     {
                         var deadBody = collider2D.GetComponent<DeadBody>();
                         if (deadBody && !deadBody.Reported)
                         {
-                            var playerPosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+                            var playerPosition = PlayerControl.LocalPlayer.GetTruePosition();
                             var deadBodyPosition = deadBody.TruePosition;
                             if (Vector2.Distance(deadBodyPosition, playerPosition) <=
-                                CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance &&
-                                CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
+                                PlayerControl.LocalPlayer.MaxReportDistance &&
+                                PlayerControl.LocalPlayer.CanMove &&
                                 !PhysicsHelpers.AnythingBetween(playerPosition, deadBodyPosition,
                                     Constants.ShipAndObjectsMask, false) && !Undertaker.isDraging)
                             {
@@ -282,7 +281,7 @@ public class Aftermath
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                     (byte)CustomRPC.DropBody, SendOption.Reliable);
-                writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 Undertaker.deadBodyDraged = null;
             }
@@ -291,19 +290,19 @@ public class Aftermath
         else if (Cleaner.cleaner == killer)
         {
             foreach (var collider2D in Physics2D.OverlapCircleAll(
-                CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(),
-                CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
+                PlayerControl.LocalPlayer.GetTruePosition(),
+                PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
             {
                 if (collider2D.tag == "DeadBody")
                 {
                     var component = collider2D.GetComponent<DeadBody>();
                     if (component && !component.Reported)
                     {
-                        var truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+                        var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
                         var truePosition2 = component.TruePosition;
                         if (Vector2.Distance(truePosition2, truePosition) <=
-                            CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance &&
-                            CachedPlayer.LocalPlayer.PlayerControl.CanMove &&
+                            PlayerControl.LocalPlayer.MaxReportDistance &&
+                            PlayerControl.LocalPlayer.CanMove &&
                             !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
                                 Constants.ShipAndObjectsMask, false))
                         {

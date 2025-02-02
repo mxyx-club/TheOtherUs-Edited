@@ -103,7 +103,7 @@ public class Amnisiac
                 BountyHunter.bountyHunter = local;
 
                 BountyHunter.bountyUpdateTimer = 0f;
-                if (CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter)
+                if (PlayerControl.LocalPlayer == BountyHunter.bountyHunter)
                 {
                     var bottomLeft =
                         new Vector3(-FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.x,
@@ -117,7 +117,7 @@ public class Amnisiac
                     BountyHunter.cooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -1f, -1f);
                     BountyHunter.cooldownText.gameObject.SetActive(true);
 
-                    foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                    foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                         if (playerIcons.ContainsKey(p.PlayerId))
                         {
                             playerIcons[p.PlayerId].setSemiTransparent(false);
@@ -209,14 +209,14 @@ public class Amnisiac
                 Arsonist.arsonist = local;
                 Player.Add(target);
 
-                if (CachedPlayer.LocalPlayer.PlayerControl == Arsonist.arsonist)
+                if (PlayerControl.LocalPlayer == Arsonist.arsonist)
                 {
                     var playerCounter = 0;
                     var bottomLeft = new Vector3(
                         -FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.x,
                         FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.y,
                         FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.z);
-                    foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                    foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                         if (playerIcons.ContainsKey(p.PlayerId) && p != Arsonist.arsonist)
                         {
                             //Arsonist.poolIcons.Add(p);

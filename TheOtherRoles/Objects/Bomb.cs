@@ -33,7 +33,7 @@ public class Bomb
 
         bomb.SetActive(false);
         background.SetActive(false);
-        if (CachedPlayer.LocalPlayer.PlayerControl == Terrorist.terrorist) bomb.SetActive(true);
+        if (PlayerControl.LocalPlayer == Terrorist.terrorist) bomb.SetActive(true);
         Terrorist.bomb = this;
         var c = Color.white;
         var g = Color.red;
@@ -86,27 +86,27 @@ public class Bomb
         {
             var position = b.bomb.transform.position;
             // every player only checks that for their own client (desynct with positions sucks)
-            var distance = Vector2.Distance(position, CachedPlayer.LocalPlayer.transform.position);
+            var distance = Vector2.Distance(position, PlayerControl.LocalPlayer.transform.position);
 
-            if (distance <= Terrorist.destructionRange && !CachedPlayer.LocalPlayer.Data.IsDead)
+            if (distance <= Terrorist.destructionRange && !PlayerControl.LocalPlayer.Data.IsDead)
             {
-                if (Terrorist.selfExplosion && CachedPlayer.LocalPlayer.PlayerControl == Terrorist.terrorist)
+                if (Terrorist.selfExplosion && PlayerControl.LocalPlayer == Terrorist.terrorist)
                 {
                     Terrorist.clearBomb();
                     return;
                 };
 
-                checkMurderAttemptAndKill(Terrorist.terrorist, CachedPlayer.LocalPlayer.PlayerControl, false, false, true, true);
+                checkMurderAttemptAndKill(Terrorist.terrorist, PlayerControl.LocalPlayer, false, false, true, true);
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
-                writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 writer.Write((byte)RPCProcedure.GhostInfoTypes.DeathReasonAndKiller);
-                writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 writer.Write((byte)CustomDeathReason.Bomb);
                 writer.Write(Terrorist.terrorist.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                GameHistory.OverrideDeathReasonAndKiller(CachedPlayer.LocalPlayer, CustomDeathReason.Bomb,
+                GameHistory.OverrideDeathReasonAndKiller(PlayerControl.LocalPlayer, CustomDeathReason.Bomb,
                     Terrorist.terrorist);
             }
             SoundEffectsManager.playAtPosition("bombExplosion", position, range: Terrorist.hearRange);
@@ -129,7 +129,7 @@ public class Bomb
 
         if (MeetingHud.Instance && Terrorist.bomb != null) Terrorist.clearBomb();
 
-        if (Vector2.Distance(CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(),
+        if (Vector2.Distance(PlayerControl.LocalPlayer.GetTruePosition(),
                 Terrorist.bomb.bomb.transform.position) > 1f) canDefuse = false;
         else canDefuse = true;
     }

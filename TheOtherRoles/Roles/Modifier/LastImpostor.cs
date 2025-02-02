@@ -23,7 +23,7 @@ public static class LastImpostor
         }
         if (impList.Count == 1)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ImpostorPromotesToLastImpostor, SendOption.Reliable, -1);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ImpostorPromotesToLastImpostor, SendOption.Reliable, -1);
             writer.Write(impList[0].PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.impostorPromotesToLastImpostor(impList[0].PlayerId);

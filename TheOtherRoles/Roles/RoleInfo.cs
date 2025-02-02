@@ -251,7 +251,7 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
         if (showModifier)
         {
             // after dead modifier
-            if (!CustomOptionHolder.modifiersAreHidden.GetBool() || CachedPlayer.LocalPlayer.IsDead ||
+            if (!CustomOptionHolder.modifiersAreHidden.GetBool() || PlayerControl.LocalPlayer.IsDead() ||
                 AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Ended)
             {
                 if (Bait.bait.Any(x => x.PlayerId == p.PlayerId)) infos.Add(bait);
@@ -406,11 +406,11 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
 
         if (showGhostInfo && p != null)
         {
-            if (p == Shifter.shifter && (CachedPlayer.LocalPlayer.PlayerControl == Shifter.shifter || shouldShowGhostInfo()) && Shifter.futureShift != null)
+            if (p == Shifter.shifter && (PlayerControl.LocalPlayer == Shifter.shifter || shouldShowGhostInfo()) && Shifter.futureShift != null)
                 roleName += cs(Color.yellow, " ← " + Shifter.futureShift.Data.PlayerName);
-            if (p == Vulture.vulture && (CachedPlayer.LocalPlayer.PlayerControl == Vulture.vulture || shouldShowGhostInfo()))
+            if (p == Vulture.vulture && (PlayerControl.LocalPlayer == Vulture.vulture || shouldShowGhostInfo()))
                 roleName += cs(Vulture.color, string.Format("roleInfoRemaining".Translate(), Vulture.vultureNumberToWin - Vulture.eatenBodies));
-            if (p == Witness.Player && (CachedPlayer.LocalPlayer.PlayerControl == Witness.Player || shouldShowGhostInfo()))
+            if (p == Witness.Player && (PlayerControl.LocalPlayer == Witness.Player || shouldShowGhostInfo()))
                 roleName += cs(Witness.color, string.Format("roleInfoRemaining".Translate(), Witness.exileToWin - Witness.exiledCount));
 
             if (shouldShowGhostInfo())
@@ -438,7 +438,7 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
                     roleName = cs(BountyHunter.color, "(被悬赏) ") + roleName;
                 if (p == Arsonist.arsonist)
                     roleName += cs(Arsonist.color,
-                        $" (剩余 {CachedPlayer.AllPlayers.Count(x => { return x.PlayerControl != Arsonist.arsonist && x.PlayerControl.IsAlive() && !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); })} )");
+                        $" (剩余 {PlayerControl.AllPlayerControls.Count(x => { return x != Arsonist.arsonist && x.IsAlive() && !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); })} )");
                 if (Akujo.keeps.Contains(p))
                     roleName = cs(Color.gray, "(备胎) ") + roleName;
                 if (p == Akujo.honmei)

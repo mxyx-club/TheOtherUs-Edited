@@ -141,7 +141,7 @@ public static class Helpers
 
     public static void handleTrapperTrapOnBodyReport()
     {
-        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
             (byte)CustomRPC.TrapperMeetingFlag, SendOption.Reliable, -1);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.trapperMeetingFlag();
@@ -231,11 +231,11 @@ public static class Helpers
         var shouldVetKill = Veteran.veteran == target && Veteran.alertActive;
         if (shouldVetKill)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.VeteranKill, SendOption.Reliable);
-            writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+            writer.Write(PlayerControl.LocalPlayer.PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.veteranKill(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+            RPCProcedure.veteranKill(PlayerControl.LocalPlayer.PlayerId);
         }
 
         return shouldVetKill;
@@ -349,7 +349,7 @@ public static class Helpers
 
     public static SabatageTypes GetActiveSabo()
     {
-        foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
+        foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
             if (task.TaskType == TaskTypes.FixLights)
                 return SabatageTypes.Lights;
             else if (task.TaskType == TaskTypes.RestoreOxy)
@@ -435,7 +435,7 @@ public static class Helpers
 
     public static void turnToImpostorRPC(PlayerControl player)
     {
-        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
             (byte)CustomRPC.TurnToImpostor, SendOption.Reliable);
         writer.Write(player.PlayerId);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -451,7 +451,7 @@ public static class Helpers
         Message("PROOF I AM IMP VANILLA ROLE: " + player.Data.Role.IsImpostor);
 
         foreach (var player2 in PlayerControl.AllPlayerControls)
-            if (player2.Data.Role.IsImpostor && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
+            if (player2.Data.Role.IsImpostor && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
                 player.cosmetics.nameText.color = Palette.ImpostorRed;
     }
 
@@ -660,14 +660,15 @@ public static class Helpers
     public static List<RoleInfo> onlineRoleInfos()
     {
         var role = new List<RoleInfo>();
-        role.AddRange(CachedPlayer.AllPlayers.Select(n => RoleInfo.getRoleInfoForPlayer(n, false, false)).SelectMany(x => x));
+        role.AddRange(PlayerControl.AllPlayerControls.ToList()
+            .Select(n => RoleInfo.getRoleInfoForPlayer(n, false, false)).SelectMany(x => x));
         return role;
     }
 
     public static PlayerControl playerById(byte? id)
     {
         if (id == null) return null;
-        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls.ToList())
             if (player.PlayerId == id)
                 return player;
         return null;
@@ -675,7 +676,7 @@ public static class Helpers
 
     public static bool isSabotageActive()
     {
-        foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
+        foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
             if (task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy ||
                 task.TaskType == TaskTypes.ResetReactor || task.TaskType == TaskTypes.ResetSeismic ||
                 task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles
@@ -688,7 +689,7 @@ public static class Helpers
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
         checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, true, false);
-        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
             (byte)CustomRPC.VampireSetBitten, SendOption.Reliable);
         writer.Write(byte.MaxValue);
         writer.Write(byte.MaxValue);
@@ -700,7 +701,7 @@ public static class Helpers
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
         checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBombPlayer, true, false);
-        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
             (byte)CustomRPC.GiveBomb, SendOption.Reliable);
         writer.Write(byte.MaxValue);
         writer.Write(false);
@@ -797,7 +798,7 @@ public static class Helpers
 
     public static void setInvisable(PlayerControl player)
     {
-        var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+        var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
             (byte)CustomRPC.SetInvisibleGen, SendOption.Reliable);
         invisibleWriter.Write(player.PlayerId);
         invisibleWriter.Write(byte.MinValue);
@@ -829,8 +830,16 @@ public static class Helpers
 
     public static bool shouldShowGhostInfo()
     {
-        return (PlayerControl.LocalPlayer.IsDead() && CanSeeRoleInfo) ||
+        return (PlayerControl.LocalPlayer.Data.IsDead && CanSeeRoleInfo) ||
                AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Ended;
+    }
+
+    public static bool ZoomButtonActive()
+    {
+        if (!shouldShowGhostInfo() || InMeeting) return false;
+        var (playerCompleted, playerTotal) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
+        var numberOfLeftTasks = playerTotal - playerCompleted;
+        return numberOfLeftTasks <= 0 || !CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.GetBool();
     }
 
     public static void clearAllTasks(this PlayerControl player)
@@ -988,7 +997,7 @@ public static class Helpers
         target.RawSetColor(colorId);
         target.RawSetVisor(visorId, colorId);
         target.RawSetHat(hatId, colorId);
-        target.RawSetName(hidePlayerName(CachedPlayer.LocalPlayer.PlayerControl, target) ? "" : playerName);
+        target.RawSetName(hidePlayerName(PlayerControl.LocalPlayer, target) ? "" : playerName);
 
 
         SkinViewData nextSkin = null;
@@ -1130,7 +1139,7 @@ public static class Helpers
         // Handle blank shot
         if (!ignoreBlank && Pursuer.blankedList.Any(x => x.PlayerId == killer.PlayerId))
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
             writer.Write(killer.PlayerId);
             writer.Write((byte)0);
@@ -1175,7 +1184,7 @@ public static class Helpers
         // Block impostor shielded kill
         if (!Medic.unbreakableShield && Medic.shielded != null && Medic.shielded == target)
         {
-            var write = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var write = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
             write.Write(killer.PlayerId);
             write.Write((byte)0);
@@ -1222,7 +1231,7 @@ public static class Helpers
 
         if (Cursed.cursed != null && Cursed.cursed == target && killer.Data.Role.IsImpostor)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
             writer.Write(killer.PlayerId);
             writer.Write((byte)0);
@@ -1251,7 +1260,7 @@ public static class Helpers
 
     public static void MurderPlayer(PlayerControl killer, PlayerControl target, bool showAnimation)
     {
-        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
             (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
         writer.Write(killer.PlayerId);
         writer.Write(target.PlayerId);
@@ -1274,7 +1283,7 @@ public static class Helpers
             if (Mimic.mimic != null && killer == Mimic.mimic && !Mimic.hasMimic)
             {
                 var writerMimic = AmongUsClient.Instance.StartRpcImmediately(
-                    CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.MimicMimicRole, SendOption.Reliable);
+                    PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.MimicMimicRole, SendOption.Reliable);
                 writerMimic.Write(target.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writerMimic);
                 Mimic.MimicRole(target.PlayerId);
@@ -1288,7 +1297,7 @@ public static class Helpers
             {
                 if (!target.isUsingTransportation() && Vampire.bitten != null)
                 {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                         (byte)CustomRPC.VampireSetBitten, SendOption.Reliable);
                     writer.Write(byte.MaxValue);
                     writer.Write(byte.MaxValue);
@@ -1302,7 +1311,7 @@ public static class Helpers
         if (murder == MurderAttemptResult.BodyGuardKill)
         {
             // Kill the Killer
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
             writer.Write(BodyGuard.bodyguard.PlayerId);
             writer.Write(killer.PlayerId);
@@ -1311,7 +1320,7 @@ public static class Helpers
             RPCProcedure.uncheckedMurderPlayer(BodyGuard.bodyguard.PlayerId, killer.PlayerId, 0);
 
             // Kill the BodyGuard
-            var writer2 = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer2 = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
             writer2.Write(killer.PlayerId);
             writer2.Write(BodyGuard.bodyguard.PlayerId);
@@ -1319,7 +1328,7 @@ public static class Helpers
             AmongUsClient.Instance.FinishRpcImmediately(writer2);
             RPCProcedure.uncheckedMurderPlayer(BodyGuard.bodyguard.PlayerId, BodyGuard.bodyguard.PlayerId, 0);
 
-            var writer3 = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer3 = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.ShowBodyGuardFlash, SendOption.Reliable);
             AmongUsClient.Instance.FinishRpcImmediately(writer3);
             RPCProcedure.showBodyGuardFlash();

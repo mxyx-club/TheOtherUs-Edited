@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Hazel;
-using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -24,11 +23,11 @@ public class CameraPatch
     {
         // Don't waste network traffic if we're out of time.
         if (ModOption.restrictDevices > 0 && ModOption.restrictCamerasTime > 0f &&
-            CachedPlayer.LocalPlayer.PlayerControl.IsAlive() &&
-            CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker &&
-            CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard)
+            PlayerControl.LocalPlayer.IsAlive() &&
+            PlayerControl.LocalPlayer != Hacker.hacker &&
+            PlayerControl.LocalPlayer != SecurityGuard.securityGuard)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.UseCameraTime, SendOption.Reliable);
             writer.Write(cameraTimer);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -115,9 +114,9 @@ public class CameraPatch
                     }
 
                     if (ModOption.restrictCamerasTime <= 0f &&
-                        CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker &&
-                        CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard &&
-                        !CachedPlayer.LocalPlayer.Data.IsDead)
+                        PlayerControl.LocalPlayer != Hacker.hacker &&
+                        PlayerControl.LocalPlayer != SecurityGuard.securityGuard &&
+                        !PlayerControl.LocalPlayer.Data.IsDead)
                     {
                         __instance.Close();
                         return false;
@@ -146,7 +145,7 @@ public class CameraPatch
                 switch (__instance.isStatic)
                 {
                     case true or true when
-                        !PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(CachedPlayer.LocalPlayer.PlayerControl):
+                        !PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer):
                     {
                         __instance.isStatic = false;
                         for (var i = 0; i < __instance.ViewPorts.Length; i++)
@@ -163,7 +162,7 @@ public class CameraPatch
                         break;
                     }
                     case false when
-                        PlayerTask.PlayerHasTaskOfType<HudOverrideTask>(CachedPlayer.LocalPlayer.PlayerControl):
+                        PlayerTask.PlayerHasTaskOfType<HudOverrideTask>(PlayerControl.LocalPlayer):
                     {
                         __instance.isStatic = true;
                         for (var j = 0; j < __instance.ViewPorts.Length; j++)
@@ -239,9 +238,9 @@ public class CameraPatch
                 }
 
                 if (ModOption.restrictCamerasTime <= 0f &&
-                    CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker &&
-                    CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard &&
-                    !CachedPlayer.LocalPlayer.Data.IsDead)
+                    PlayerControl.LocalPlayer != Hacker.hacker &&
+                    PlayerControl.LocalPlayer != SecurityGuard.securityGuard &&
+                    !PlayerControl.LocalPlayer.Data.IsDead)
                 {
                     __instance.Close();
                     return false;
@@ -312,9 +311,9 @@ public class CameraPatch
                 }
 
                 if (ModOption.restrictCamerasTime <= 0f &&
-                    CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker &&
-                    CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard &&
-                    !CachedPlayer.LocalPlayer.Data.IsDead)
+                    PlayerControl.LocalPlayer != Hacker.hacker &&
+                    PlayerControl.LocalPlayer != SecurityGuard.securityGuard &&
+                    !PlayerControl.LocalPlayer.Data.IsDead)
                 {
                     __instance.Close();
                     return false;

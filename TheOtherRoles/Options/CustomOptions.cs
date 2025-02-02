@@ -144,7 +144,7 @@ public class CustomOption
     {
         var option = options.FirstOrDefault(x => x.id == optionId);
         if (option == null) return;
-        var writer = AmongUsClient.Instance!.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+        var writer = AmongUsClient.Instance!.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
             (byte)CustomRPC.ShareOptions, SendOption.Reliable);
         writer.Write((byte)1);
         writer.WritePacked((uint)option.id);
@@ -154,13 +154,13 @@ public class CustomOption
 
     public static void ShareOptionSelections()
     {
-        if (CachedPlayer.AllPlayers.Count <= 1 ||
-            (!AmongUsClient.Instance!.AmHost && CachedPlayer.LocalPlayer.PlayerControl == null)) return;
+        if (PlayerControl.AllPlayerControls.ToList().Count <= 1 ||
+            (!AmongUsClient.Instance!.AmHost && PlayerControl.LocalPlayer == null)) return;
         var optionsList = new List<CustomOption>(options);
         while (optionsList.Any())
         {
             var amount = (byte)Math.Min(optionsList.Count, 200); // takes less than 3 bytes per option on average
-            var writer = AmongUsClient.Instance!.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance!.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.ShareOptions, SendOption.Reliable);
             writer.Write(amount);
             for (var i = 0; i < amount; i++)
@@ -236,7 +236,7 @@ public class CustomOption
         {
             stringOption.oldValue = stringOption.Value = selection;
             stringOption.ValueText.text = GetString();
-            if (AmongUsClient.Instance?.AmHost != true || !CachedPlayer.LocalPlayer.PlayerControl) return;
+            if (AmongUsClient.Instance?.AmHost != true || !PlayerControl.LocalPlayer) return;
             if (id == 0 && selection != preset)
             {
                 switchPreset(selection); // Switch presets
@@ -308,7 +308,7 @@ public class CustomOption
             }
             catch (Exception e)
             {
-                Warn($"{e}: 试图粘贴无效设置！");
+                Warn($"{e}: ��ͼճ����Ч���ã�");
             }
     }
 
@@ -336,7 +336,7 @@ public class CustomOption
         }
         catch (Exception e)
         {
-            Warn($"{e}: 尝试粘贴无效设置！");
+            Warn($"{e}: ����ճ����Ч���ã�");
             SoundEffectsManager.Load();
             SoundEffectsManager.play("fail");
             return false;
@@ -1303,7 +1303,7 @@ public class HudManagerUpdate
         Scroller.ContentYBounds = new FloatRange(MinY, maxY);
 
         // Prevent scrolling when the player is interacting with a menu
-        if (CachedPlayer.LocalPlayer?.PlayerControl.CanMove != true)
+        if (PlayerControl.LocalPlayer?.CanMove != true)
         {
             __instance.GameSettings.transform.localPosition = LastPosition;
 

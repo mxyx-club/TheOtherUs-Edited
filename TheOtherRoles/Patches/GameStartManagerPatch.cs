@@ -21,7 +21,7 @@ public class GameStartManagerPatch
     {
         public static void Postfix(AmongUsClient __instance)
         {
-            if (CachedPlayer.LocalPlayer != null)
+            if (PlayerControl.LocalPlayer != null)
             {
                 shareGameVersion();
             }
@@ -74,14 +74,14 @@ public class GameStartManagerPatch
 
         public static void Postfix(GameStartManager __instance)
         {
-            // Send version as soon as CachedPlayer.LocalPlayer.PlayerControl exists
+            // Send version as soon as PlayerControl.LocalPlayer exists
             if (PlayerControl.LocalPlayer != null && !versionSent)
             {
                 versionSent = true;
                 shareGameVersion();
             }
 #if DEBUG
-                return;
+            return;
 #endif
             // Check version handshake infos
 
@@ -140,7 +140,7 @@ public class GameStartManagerPatch
                 // Make starting info available to clients:
                 if (startingTimer <= 0 && __instance.startState == GameStartManager.StartingStates.Countdown)
                 {
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetGameStarting, SendOption.Reliable, -1);
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetGameStarting, SendOption.Reliable, -1);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.setGameStarting();
 
@@ -221,7 +221,7 @@ public class GameStartManagerPatch
 
                     void StopStartFunc()
                     {
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                             (byte)CustomRPC.StopStart, SendOption.Reliable, AmongUsClient.Instance.HostId);
                         writer.Write(PlayerControl.LocalPlayer.PlayerId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -260,7 +260,7 @@ public class GameStartManagerPatch
 
             if (AmongUsClient.Instance.AmHost)
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.ShareGameMode, SendOption.Reliable, -1);
                 writer.Write((byte)ModOption.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -275,7 +275,7 @@ public class GameStartManagerPatch
         public static bool Prefix(GameStartManager __instance)
         {
 #if DEBUG
-                return true;
+            return true;
 #endif
             // Block game start if not everyone has the same mod version
             bool continueStart = true;
@@ -355,7 +355,7 @@ public class GameStartManagerPatch
                         CustomOptionHolder.presetSelection.updateSelection(chosenMapId + 3);
                     if (chosenMapId >= 3) chosenMapId++; // Skip dlekS
 
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                         (byte)CustomRPC.DynamicMapOption, SendOption.Reliable, -1);
                     writer.Write(chosenMapId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);

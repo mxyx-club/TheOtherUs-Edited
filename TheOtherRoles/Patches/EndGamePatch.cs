@@ -121,7 +121,7 @@ public class OnGameEndPatch
             RoleInfo.pavlovsdogs
         ];
 
-        foreach (var playerControl in CachedPlayer.AllPlayers)
+        foreach (var playerControl in PlayerControl.AllPlayerControls)
         {
             var roles = RoleInfo.getRoleInfoForPlayer(playerControl);
             var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(playerControl.Data);
@@ -133,14 +133,14 @@ public class OnGameEndPatch
             var roleString = RoleInfo.GetRolesString(playerControl, true, true, true, false);
             AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo
             {
-                PlayerName = playerControl.PlayerName,
+                PlayerName = playerControl.Data.PlayerName,
                 Roles = roles,
                 RoleNames = roleString,
                 TasksTotal = tasksTotal,
                 TasksCompleted = tasksCompleted,
                 IsGuesser = isGuesser,
                 Kills = killCount,
-                IsAlive = playerControl.IsAlive
+                IsAlive = playerControl.IsAlive()
             });
         }
 
@@ -285,7 +285,7 @@ public class OnGameEndPatch
             {
                 AdditionalTempData.winCondition = WinCondition.LoversTeamWin;
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (p == null) continue;
                     if (p == Lovers.lover1 || p == Lovers.lover2)
@@ -413,7 +413,7 @@ public class OnGameEndPatch
             {
                 AdditionalTempData.winCondition = WinCondition.AkujoTeamWin;
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (p == null) continue;
                     if (p == Akujo.akujo || p == Akujo.honmei)

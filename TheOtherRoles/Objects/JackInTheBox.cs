@@ -25,7 +25,7 @@ public class JackInTheBox
         gameObject = new GameObject("JackInTheBox") { layer = 11 };
         gameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
         var position = new Vector3(p.x, p.y, (p.y / 1000f) + 0.01f);
-        position += (Vector3)CachedPlayer.LocalPlayer.PlayerControl.Collider
+        position += (Vector3)PlayerControl.LocalPlayer.Collider
             .offset; // Add collider offset that DoMove moves the player up at a valid position
         // Create the marker
         gameObject.transform.position = position;
@@ -64,7 +64,7 @@ public class JackInTheBox
         vent.name = "JackInTheBoxVent_" + vent.Id;
 
         // Only render the box for the Trickster and for Ghosts
-        var showBoxToLocalPlayer = CachedPlayer.LocalPlayer.PlayerControl == Trickster.trickster ||
+        var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster ||
                                    PlayerControl.LocalPlayer.Data.IsDead;
         gameObject.SetActive(showBoxToLocalPlayer);
 
@@ -99,7 +99,7 @@ public class JackInTheBox
         if (boxesConvertedToVents) return;
         foreach (var box in AllJackInTheBoxes)
         {
-            var showBoxToLocalPlayer = CachedPlayer.LocalPlayer.PlayerControl == Trickster.trickster ||
+            var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster ||
                                        PlayerControl.LocalPlayer.Data.IsDead;
             box.gameObject?.SetActive(showBoxToLocalPlayer);
         }

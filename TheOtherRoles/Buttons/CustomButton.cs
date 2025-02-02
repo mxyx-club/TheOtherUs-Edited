@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -90,8 +89,8 @@ public class CustomButton
         OnClick();
 
         // Deputy skip onClickEvent if handcuffed
-        if (Sheriff.handcuffedKnows.ContainsKey(CachedPlayer.LocalPlayer.PlayerId) &&
-            Sheriff.handcuffedKnows[CachedPlayer.LocalPlayer.PlayerId] > 0f) return;
+        if (Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) &&
+            Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0f) return;
 
         if (!HasEffect || isEffectActive) return;
         DeputyTimer = EffectDuration;
@@ -135,7 +134,7 @@ public class CustomButton
     public static void ResetAllCooldowns(float Time = -1)
     {
         var time = Time == -1 ? ModOption.KillCooddown : Time;
-        CachedPlayer.LocalPlayer.PlayerControl.killTimer = time - 0.6f;
+        PlayerControl.LocalPlayer.killTimer = time - 0.6f;
         foreach (var t in buttons)
         {
             var maxTime = Time == -1 ? t.MaxTimer : Time;
@@ -196,7 +195,7 @@ public class CustomButton
 
     public void Update()
     {
-        var localPlayer = CachedPlayer.LocalPlayer;
+        var localPlayer = PlayerControl.LocalPlayer;
 
         if (localPlayer.Data == null || MeetingHud.Instance || ExileController.Instance || !HasButton())
         {
@@ -211,7 +210,7 @@ public class CustomButton
             // This had to be reordered, so that the handcuffs do not stop the underlying timers from running
             if (HasEffect && isEffectActive)
                 DeputyTimer -= Time.deltaTime;
-            else if (!localPlayer.PlayerControl.inVent)
+            else if (!localPlayer.inVent)
                 DeputyTimer -= Time.deltaTime;
         }
 
@@ -260,7 +259,7 @@ public class CustomButton
         {
             if (HasEffect && isEffectActive)
                 Timer -= Time.deltaTime;
-            else if (!localPlayer.PlayerControl.inVent)
+            else if (!localPlayer.inVent)
                 Timer -= Time.deltaTime;
         }
 

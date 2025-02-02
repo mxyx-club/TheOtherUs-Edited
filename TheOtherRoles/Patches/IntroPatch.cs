@@ -22,7 +22,7 @@ internal class IntroCutsceneOnDestroyPatch
         Message("游戏开始");
         // Generate and initialize player icons
         var playerCounter = 0;
-        if (CachedPlayer.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null)
+        if (PlayerControl.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null)
         {
             var aspect = Camera.main.aspect;
             var safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
@@ -30,7 +30,7 @@ internal class IntroCutsceneOnDestroyPatch
             var ypos = 0.15f - (safeOrthographicSize * 1.7f);
             bottomLeft = new Vector3(xpos / 2, ypos / 2, -61f);
 
-            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
                 var data = p.Data;
                 var player = Object.Instantiate(__instance.PlayerPrefab,
@@ -47,7 +47,7 @@ internal class IntroCutsceneOnDestroyPatch
                 //游戏开始时重置cd
                 CustomButton.ResetAllCooldowns(ModOption.ButtonCooldown);
 
-                if (CachedPlayer.LocalPlayer.PlayerControl == Arsonist.arsonist && p != Arsonist.arsonist)
+                if (PlayerControl.LocalPlayer == Arsonist.arsonist && p != Arsonist.arsonist)
                 {
                     player.transform.localPosition = bottomLeft + new Vector3(-0.25f, -0.25f, 0) +
                                                      (Vector3.right * playerCounter++ * 0.35f);
@@ -107,7 +107,7 @@ internal class IntroCutsceneOnDestroyPatch
         }
 
         // Force Bounty Hunter to load a new Bounty when the Intro is over
-        if (BountyHunter.bounty != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter)
+        if (BountyHunter.bounty != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter)
         {
             BountyHunter.bountyUpdateTimer = 0f;
             if (FastDestroyableSingleton<HudManager>.Instance != null)
@@ -184,22 +184,22 @@ internal class IntroPatch
     public static void setupIntroTeamIcons(IntroCutscene __instance, ref List<PlayerControl> yourTeam)
     {
         // Intro solo teams
-        if (isNeutral(CachedPlayer.LocalPlayer.PlayerControl))
+        if (isNeutral(PlayerControl.LocalPlayer))
         {
             var soloTeam = new List<PlayerControl>();
-            soloTeam.Add(CachedPlayer.LocalPlayer.PlayerControl);
+            soloTeam.Add(PlayerControl.LocalPlayer);
             yourTeam = soloTeam;
         }
 
         // Add the Spy to the Impostor team (for the Impostors)
-        if (Spy.spy != null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor)
+        if (Spy.spy != null && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
         {
             var players = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
             var fakeImpostorTeam =
                 new List<PlayerControl>(); // The local player always has to be the first one in the list (to be displayed in the center)
-            fakeImpostorTeam.Add(CachedPlayer.LocalPlayer.PlayerControl);
+            fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
             foreach (var p in players)
-                if (CachedPlayer.LocalPlayer.PlayerControl != p && (p == Spy.spy || p.Data.Role.IsImpostor))
+                if (PlayerControl.LocalPlayer != p && (p == Spy.spy || p.Data.Role.IsImpostor))
                     fakeImpostorTeam.Add(p);
             yourTeam = fakeImpostorTeam;
         }
@@ -207,7 +207,7 @@ internal class IntroPatch
 
     public static void setupIntroTeam(IntroCutscene __instance, ref List<PlayerControl> yourTeam)
     {
-        var infos = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
+        var infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
         var roleInfo = infos.FirstOrDefault(info => info.roleType != RoleType.Modifier);
         if (roleInfo == null) return;
         if (roleInfo.roleType == RoleType.Neutral)
@@ -261,7 +261,7 @@ internal class IntroPatch
         public static void SetRoleTexts(IntroCutscene __instance)
         {
             // Don't override the intro of the vanilla roles
-            var infos = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
+            var infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
             var roleInfo = infos.FirstOrDefault(info => info.roleType != RoleType.Modifier);
             var modifierInfo = infos.FirstOrDefault(info => info.roleType == RoleType.Modifier && info.roleId != RoleId.Assassin);
 
@@ -297,7 +297,7 @@ internal class IntroPatch
                 }
                 else
                 {
-                    var otherLover = CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1
+                    var otherLover = PlayerControl.LocalPlayer == Lovers.lover1
                         ? Lovers.lover2
                         : Lovers.lover1;
                     __instance.RoleBlurbText.text +=
