@@ -470,7 +470,7 @@ internal class RoleManagerSelectRolesPatch
             // Executioner
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
-                    p != Mini.mini && !p.Data.Role.IsImpostor && !isNeutral(p) && p != Swapper.swapper)
+                    p != Mini.mini && !p.Data.Role.IsImpostor && !p.isNeutral() && p != Swapper.swapper)
                     possibleTargets.Add(p);
 
             if (possibleTargets.Count == 0)
@@ -508,7 +508,7 @@ internal class RoleManagerSelectRolesPatch
         var crewPlayer = new List<PlayerControl>(players);
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
         impPlayerL.RemoveAll(x => !x.Data.Role.IsImpostor);
-        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
+        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.isNeutral());
 
         var modifierCount = Mathf.Min(players.Count + addMaxNum, modifierCountSettings);
 
@@ -632,8 +632,8 @@ internal class RoleManagerSelectRolesPatch
         var neutralPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
         var crewPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
-        neutralPlayer.RemoveAll(x => !isNeutral(x) || x == Doomsayer.doomsayer);
-        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
+        neutralPlayer.RemoveAll(x => !x.isNeutral() || x == Doomsayer.doomsayer);
+        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.isNeutral());
         assignGuesserGamemodeToPlayers(crewPlayer,
             CustomOptionHolder.guesserGamemodeCrewNumber.GetInt());
         assignGuesserGamemodeToPlayers(neutralPlayer,
@@ -736,7 +736,7 @@ internal class RoleManagerSelectRolesPatch
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
 
         var crewPlayer = new List<PlayerControl>(playerList);
-        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
+        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.isNeutral());
 
         if (modifiers.Contains(RoleId.Assassin))
         {
@@ -847,7 +847,7 @@ internal class RoleManagerSelectRolesPatch
             }
             else
             {
-                shifterCrewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
+                shifterCrewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.isNeutral());
             }
             playerId = setModifierToRandomPlayer((byte)RoleId.Shifter, shifterCrewPlayer);
             crewPlayer.RemoveAll(x => x.PlayerId == playerId);

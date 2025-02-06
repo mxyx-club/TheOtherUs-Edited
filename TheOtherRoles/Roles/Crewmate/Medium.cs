@@ -142,7 +142,7 @@ public static class Medium
                     condition = "个可以使用管道的玩家" + (count == 1 ? "" : "");
                     break;
                 case 2:
-                    count = alivePlayersList.Count(pc => isNeutral(pc) && !isKillerNeutral(pc));
+                    count = alivePlayersList.Count(pc => pc.isNeutral() && !isKillerNeutral(pc));
                     condition = $"名玩家{(count == 1 ? "" : "")}{(count == 1 ? "是" : "是")}非击杀型中立";
                     break;
             }

@@ -196,6 +196,17 @@
         "0": "Swooper",
         "13": "隐身豺狼"
     },
+    "Role": {
+        "0": "Role",
+        "13": "职业"
+    },
+    "Team": {
+        "13": "阵营"
+    },
+    "Name": {
+        "0": "Name",
+        "13": "名字"
+    },
     "page1": {
         "0": "Page 1: Vanilla Settings \n\n",
         "11": "Page 1: バニラの設定 ￤バニラの設定",
@@ -257,6 +268,12 @@
     "optionOn": {
         "0": "On",
         "13": "开启"
+    },
+    "ExpandOptions": {
+        "13": "展开"
+    },
+    "CollapseOptions": {
+        "13": "收起"
     },
     "presetSelection": {
         "0": "Preset",
@@ -358,6 +375,21 @@
     "modifiersCountMax": {
         "0": "Maximum Modifiers",
         "13": "最大附加职业数"
+    },
+    "MeetingOptions": {
+        "13": "会议设置"
+    },
+    "SaboOptions": {
+        "13": "破坏设置"
+    },
+    "TaskOptions": {
+        "13": "任务设置"
+    },
+    "MapOptions": {
+        "13": "地图设置"
+    },
+    "DevicesOption": {
+        "13": "信息终端设置"
     },
     "resteButtonCooldown": {
         "0": "Game Start Cooldown",
@@ -618,6 +650,15 @@
     "dynamicMapSeparateSettings": {
         "0": "Use Random Map Setting Presets",
         "13": "使用随机地图设置预设"
+    },
+    "exileController": {
+        "13": "驱逐显示"
+    },
+    "exiledReviveRole": {
+        "13": "驱逐后显示玩家信息"
+    },
+    "exiledShowTeamNum": {
+        "13": "驱逐后显示各阵营人数"
     },
     "debugMode": {
         "0": "Enable Debug Mode",
@@ -1261,6 +1302,14 @@
         "0": "Vulture Can Use Vents",
         "13": "可使用管道"
     },
+    "hasImpVision": {
+        "0": "Have Impostor Vision",
+        "13": "拥有伪装者视野"
+    },
+    "canCallEmergency": {
+        "0": "Executioner Can Call Emergency Meeting",
+        "13": "可以发起紧急会议"
+    },
     "SpecterOptions": {
         "0": "Specter (Ghost)",
         "13": "怨灵 (幽灵职业)"
@@ -1273,10 +1322,6 @@
     },
     "specterAfterMeetingRevived": {
         "13": "拾取尸体后本轮会议结束才可复活"
-    },
-    "jesterCanCallEmergency": {
-        "0": "Jester Can Call Emergency Meeting",
-        "13": "小丑可召开会议"
     },
     "jesterCanVent": {
         "0": "Jester Can Hide In Vent",
@@ -1410,10 +1455,6 @@
     "pavlovsownerCanUseSabo": {
         "13": "可以破坏"
     },
-    "pavlovsownerHasImpostorVision": {
-        "0": "Have Impostor Vision",
-        "13": "拥有伪装者视野"
-    },
     "pavlovsownerCanUseVents": {
         "13": "可以使用管道"
     },
@@ -1445,10 +1486,6 @@
         "0": "Swoop Speed",
         "13": "隐身时移速增加"
     },
-    "swooperHasImpVision": {
-        "0": "Have Impostor Vision",
-        "13": "拥有伪装者视野"
-    },
     "werewolfRampageCooldown": {
         "0": "Rampage Cooldown",
         "13": "狂暴冷却"
@@ -1463,10 +1500,6 @@
     },
     "juggernautCooldown": {
         "13": "击杀冷却"
-    },
-    "juggernautHasImpVision": {
-        "0": "Have Impostor Vision",
-        "13": "拥有伪装者视野"
     },
     "juggernautReducedkillEach": {
         "13": "每次击杀后减少的cd"
@@ -1497,10 +1530,6 @@
         "0": "Lawyer Knows Target Role",
         "13": "可得知目标职业"
     },
-    "lawyerCanCallEmergency": {
-        "0": "Lawyer Can Call Emergency Meeting",
-        "13": "可以发起紧急会议"
-    },
     "lawyerTargetCanBeJester": {
         "0": "Lawyer Target Can Be The Jester",
         "13": "小丑可以成为律师的客户"
@@ -1511,10 +1540,6 @@
     },
     "lawyerStolenWin": {
         "13": "存活会取代客户胜利"
-    },
-    "executionerCanCallEmergency": {
-        "0": "Executioner Can Call Emergency Meeting",
-        "13": "可以发起紧急会议"
     },
     "executionerPromotesToLawyer": {
         "13": "目标职业变更时可以晋升为律师"
@@ -1623,10 +1648,6 @@
         "0": "Thief Can Kill ",
         "13": "身份窃贼可以击杀 "
     },
-    "thiefHasImpVision": {
-        "0": "Thief Has Impostor Vision",
-        "13": "身份窃贼拥有伪装者视野"
-    },
     "thiefCanUseVents": {
         "0": "Thief Can Use Vents",
         "13": "身份窃贼可以使用管道"
@@ -1679,10 +1700,6 @@
     "prosecutorDiesOnIncorrectPros": {
         "0": "Prosecutor Dies When They Exile A Crewmate",
         "13": "驱逐船员会自杀"
-    },
-    "prosecutorCanCallEmergency": {
-        "0": "Prosecutor Can Call Emergency Meeting",
-        "13": "可以发起紧急会议"
     },
     "mayorTasksNeededToSeeVoteColors": {
         "0": "Completed Tasks Needed To See Vote Colors",
@@ -1879,10 +1896,6 @@
         "0": "Alert Duration",
         "13": "警戒持续时间"
     },
-    "swapperCanCallEmergency": {
-        "0": "Swapper Can Call Emergency Meeting",
-        "13": "可以发起紧急会议"
-    },
     "swapperCanFixSabotages": {
         "0": "Swapper Can Fix Sabotages",
         "13": "可修理紧急破坏"
@@ -2023,10 +2036,6 @@
         "0": "Number Of Examinations",
         "13": "预言总次数"
     },
-    "prophetCanCallEmergency": {
-        "0": "Prophet Can Call Emergency Meeting",
-        "13": "可以召开紧急会议"
-    },
     "prophetIsRevealed": {
         "0": "Prophet Is Revealed To The Killers",
         "13": "可以被杀手发现"
@@ -2069,19 +2078,11 @@
     },
     "spyCanDieToSheriff": {
         "0": "Spy Can Die To Sheriff",
-        "13": "可被警长执法"
+        "13": "卧底可被警长执法"
     },
     "spyImpostorsCanKillAnyone": {
         "0": "Impostors Can Kill Anyone If There Is A Spy",
         "13": "卧底在场时伪装者可击杀队友"
-    },
-    "spyCanEnterVents": {
-        "0": "Spy Can Enter Vents",
-        "13": "可使用管道"
-    },
-    "spyHasImpostorVision": {
-        "0": "Spy Has Impostor Vision",
-        "13": "拥有伪装者视野"
     },
     "portalmakerCooldown": {
         "0": "Portalmaker Cooldown",
@@ -2208,17 +2209,9 @@
         "0": "Trap Information Type",
         "13": "陷阱信息类型"
     },
-    "trapperInfoType1": {
-        "0": "Role",
-        "13": "职业"
-    },
     "trapperInfoType2": {
         "0": "Good/Evil Role",
         "13": "善良/邪恶"
-    },
-    "trapperInfoType3": {
-        "0": "Name",
-        "13": "名字"
     },
     "trapperTrapDuration": {
         "0": "Trap Duration",

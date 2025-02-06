@@ -157,7 +157,7 @@ public class Trap
                 target = trap;
             }
         }
-        if (target != null && player.PlayerId != Trapper.trapper.PlayerId && !player.Data.IsDead)
+        if (target?.revealed == false && player.PlayerId != Trapper.trapper.PlayerId && player.IsAlive())
         {
             var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.TriggerTrap, SendOption.Reliable, -1);
@@ -166,7 +166,6 @@ public class Trap
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.triggerTrap(player.PlayerId, (byte)target.instanceId);
         }
-
 
         if (!player.Data.IsDead || player.PlayerId == Trapper.trapper.PlayerId) return;
         foreach (var trap in traps.Where(trap => !trap.trap.active))

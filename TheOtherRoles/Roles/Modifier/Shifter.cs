@@ -42,7 +42,7 @@ public static class Shifter
             }
         }
 
-        return isNeutral(player);
+        return player.isNeutral();
     }
 
     public static void shiftRole(PlayerControl player1, PlayerControl player2, bool repeat = true)

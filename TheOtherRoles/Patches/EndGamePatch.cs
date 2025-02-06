@@ -158,7 +158,7 @@ public class OnGameEndPatch
             Lawyer.lawyer,
             Executioner.executioner,
             Witness.Player,
-            Specter.Player,
+            //Specter.Player,
             Thief.thief,
             Pelican.Player,
             Juggernaut.juggernaut,
@@ -194,8 +194,8 @@ public class OnGameEndPatch
         var pelicanWin = gameOverReason == (GameOverReason)CustomGameOverReason.PelicanWin && Pelican.Player.IsAlive();
         var arsonistWin = Arsonist.arsonist != null && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
         var doomsayerWin = Doomsayer.doomsayer != null && gameOverReason == (GameOverReason)CustomGameOverReason.DoomsayerWin;
-        var loversWin = Lovers.existingAndAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin ||
-                         (GameManager.Instance.DidHumansWin(gameOverReason) && !Lovers.existingWithKiller()));
+        var loversWin = Lovers.IsAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin ||
+                         (GameManager.Instance.DidHumansWin(gameOverReason) && !Lovers.isKillerLover()));
         var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin &&
                             (Jackal.jackal.Any(x => x.IsAlive()) || Jackal.Sidekick.IsAlive());
         var teamPavlovsWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamPavlovsWin &&
@@ -281,7 +281,7 @@ public class OnGameEndPatch
         else if (loversWin)
         {
             // Double win for lovers, crewmates also win
-            if (!Lovers.existingWithKiller())
+            if (!Lovers.isKillerLover())
             {
                 AdditionalTempData.winCondition = WinCondition.LoversTeamWin;
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
@@ -314,7 +314,7 @@ public class OnGameEndPatch
             // Jackal wins if nobody except jackal is alive
             AdditionalTempData.winCondition = WinCondition.JackalWin;
             TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-            foreach (var player in Jackal.jackal)
+            foreach (var player in Jackal.jackal.GroupBy(x => x.PlayerId).Select(g => g.First()))
             {
                 var wpdFormerJackal = new WinningPlayerData(player.Data);
                 wpdFormerJackal.IsImpostor = false;
@@ -857,7 +857,7 @@ internal class CheckEndCriteriaPatch
                 statistics.TeamWerewolfAlive == 0 &&
                 statistics.TeamJackalAlive == 0 &&
                 statistics.TeamSwooperAlive == 0 &&
-                !(statistics.TeamLoversAlive != 0 && Lovers.existingWithKiller())))
+                !(statistics.TeamLoversAlive != 0 && Lovers.isKillerLover())))
         {
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.AkujoWin, false);
             return true;
@@ -916,9 +916,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamPelicanAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
-            !(statistics.TeamSwooperHasAliveLover &&
-            statistics.TeamLoversAlive == 2) &&
-            !killingCrewAlive())
+            !(statistics.TeamSwooperHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive())
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.SwooperWin, false);
@@ -936,9 +934,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
-            !(statistics.TeamPelicanHasAliveLover &&
-            statistics.TeamLoversAlive == 2) &&
-            !killingCrewAlive())
+            !(statistics.TeamPelicanHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive())
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.PelicanWin, false);
@@ -957,9 +953,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamArsonistAlive == 0 &&
             statistics.TeamPelicanAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
-            !(statistics.TeamWerewolfHasAliveLover &&
-              statistics.TeamLoversAlive == 2) &&
-            !killingCrewAlive()
+            !(statistics.TeamWerewolfHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive()
         )
         {
             //__instance.enabled = false;
@@ -981,9 +975,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamPelicanAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
-            !(statistics.TeamJuggernautHasAliveLover &&
-              statistics.TeamLoversAlive == 2) &&
-            !killingCrewAlive()
+            !(statistics.TeamJuggernautHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive()
         )
         {
             //__instance.enabled = false;
@@ -1121,79 +1113,78 @@ internal class PlayerStatistics
         var juggernautLover = false;
 
         foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
-            if (!playerInfo.Disconnected)
-                if (!playerInfo.IsDead)
+            if (!playerInfo.Disconnected && !playerInfo.IsDead)
+            {
+                numTotalAlive++;
+
+                var lover = isLover(playerInfo);
+                if (lover) numLoversAlive++;
+
+                if (playerInfo.Role.IsImpostor)
                 {
-                    numTotalAlive++;
-
-                    var lover = isLover(playerInfo);
-                    if (lover) numLoversAlive++;
-
-                    if (playerInfo.Role.IsImpostor)
-                    {
-                        numImpostorsAlive++;
-                        if (lover) impLover = true;
-                    }
-
-                    if (Jackal.jackal != null && Jackal.jackal.Any(x => x.PlayerId == playerInfo.PlayerId))
-                    {
-                        numJackalAlive++;
-                        if (lover) jackalLover = true;
-                    }
-
-                    if (Jackal.Sidekick != null && Jackal.Sidekick.PlayerId == playerInfo.PlayerId)
-                    {
-                        numJackalAlive++;
-                        if (lover) jackalLover = true;
-                    }
-
-                    if (Arsonist.arsonist != null && Arsonist.arsonist.PlayerId == playerInfo.PlayerId)
-                    {
-                        numArsonistAlive++;
-                        if (lover) arsonistLover = true;
-                    }
-
-                    if (Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner.PlayerId == playerInfo.PlayerId)
-                    {
-                        numPavlovsAlive++;
-                        if (lover) pavlovsLover = true;
-                    }
-
-                    if (Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p.PlayerId == playerInfo.PlayerId))
-                    {
-                        numPavlovsAlive++;
-                        if (lover) pavlovsLover = true;
-                    }
-
-                    if (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == playerInfo.PlayerId)
-                    {
-                        numWerewolfAlive++;
-                        if (lover) werewolfLover = true;
-                    }
-                    if (Swooper.swooper != null && Swooper.swooper.PlayerId == playerInfo.PlayerId)
-                    {
-                        numSwooperAlive++;
-                        if (lover) swooperLover = true;
-                    }
-                    if (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == playerInfo.PlayerId)
-                    {
-                        numJuggernautAlive++;
-                        if (lover) juggernautLover = true;
-                    }
-                    if (Pelican.Player != null && Pelican.Player.PlayerId == playerInfo.PlayerId)
-                    {
-                        numPelicanAlive++;
-                        if (lover) pelicanLover = true;
-                    }
-                    if (Akujo.akujo != null && Akujo.akujo.PlayerId == playerInfo.PlayerId)
-                    {
-                        numAkujoAlive++;
-                    }
-                    if (Akujo.honmei != null && Akujo.honmei.PlayerId == playerInfo.PlayerId)
-                    {
-                        numAkujoAlive++;
-                    }
+                    numImpostorsAlive++;
+                    if (lover) impLover = true;
                 }
+
+                if (Jackal.jackal != null && Jackal.jackal.Any(x => x.PlayerId == playerInfo.PlayerId))
+                {
+                    numJackalAlive++;
+                    if (lover) jackalLover = true;
+                }
+
+                if (Jackal.Sidekick != null && Jackal.Sidekick.PlayerId == playerInfo.PlayerId)
+                {
+                    numJackalAlive++;
+                    if (lover) jackalLover = true;
+                }
+
+                if (Arsonist.arsonist != null && Arsonist.arsonist.PlayerId == playerInfo.PlayerId)
+                {
+                    numArsonistAlive++;
+                    if (lover) arsonistLover = true;
+                }
+
+                if (Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner.PlayerId == playerInfo.PlayerId)
+                {
+                    numPavlovsAlive++;
+                    if (lover) pavlovsLover = true;
+                }
+
+                if (Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p.PlayerId == playerInfo.PlayerId))
+                {
+                    numPavlovsAlive++;
+                    if (lover) pavlovsLover = true;
+                }
+
+                if (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == playerInfo.PlayerId)
+                {
+                    numWerewolfAlive++;
+                    if (lover) werewolfLover = true;
+                }
+                if (Swooper.swooper != null && Swooper.swooper.PlayerId == playerInfo.PlayerId)
+                {
+                    numSwooperAlive++;
+                    if (lover) swooperLover = true;
+                }
+                if (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == playerInfo.PlayerId)
+                {
+                    numJuggernautAlive++;
+                    if (lover) juggernautLover = true;
+                }
+                if (Pelican.Player != null && Pelican.Player.PlayerId == playerInfo.PlayerId)
+                {
+                    numPelicanAlive++;
+                    if (lover) pelicanLover = true;
+                }
+                if (Akujo.akujo != null && Akujo.akujo.PlayerId == playerInfo.PlayerId)
+                {
+                    numAkujoAlive++;
+                }
+                if (Akujo.honmei != null && Akujo.honmei.PlayerId == playerInfo.PlayerId)
+                {
+                    numAkujoAlive++;
+                }
+            }
 
         TeamJackalAlive = numJackalAlive;
         TeamImpostorsAlive = numImpostorsAlive;

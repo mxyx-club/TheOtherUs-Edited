@@ -1,4 +1,4 @@
-﻿using static TheOtherRoles.Options.ModOption;
+using static TheOtherRoles.Options.ModOption;
 
 namespace TheOtherRoles.Modules;
 
@@ -34,5 +34,4 @@ public class Debugger
             __instance.NextGame();
         }
     }
-
 }

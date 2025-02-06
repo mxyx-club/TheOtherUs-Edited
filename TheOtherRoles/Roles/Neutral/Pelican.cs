@@ -24,23 +24,17 @@ public class Pelican
         eatenPlayers.Add(target);
     }
 
-    public static void PelicanDie()
+    public static void PelicanDie(bool clear = false)
     {
-        if (Player == null)
+        if (clear || Player?.Data.IsDead == true)
         {
             if (eatenPlayers.Any(x => x == PlayerControl.LocalPlayer))
             {
                 HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
                 PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Player.transform.position);
             }
-            eatenPlayers = new();
+            clearAndReload(clear);
         }
-
-        if (Player?.Data.IsDead == true)
-        {
-            HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
-            PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Player.transform.position);
-        };
     }
 
     public static void clearAndReload(bool clear = true)

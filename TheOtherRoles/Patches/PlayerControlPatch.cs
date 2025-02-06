@@ -23,7 +23,7 @@ public static class PlayerControlFixedUpdatePatch
     // Helpers
 
     public static PlayerControl SetTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false,
-        IEnumerable<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, float KillDistances = 0f)
+        List<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, float KillDistances = 0f)
     {
         PlayerControl result = null;
         var num = GameOptionsData.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentNormalGameOptions.KillDistance, 0, 3)];
@@ -123,6 +123,7 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void updatePlayerInfo()
     {
+        if (!InGame) return;
         var local = PlayerControl.LocalPlayer;
         foreach (PlayerControl p in PlayerControl.AllPlayerControls)
         {
@@ -692,7 +693,7 @@ public static class PlayerControlFixedUpdatePatch
         var forImpTeam = local.Data.Role.IsImpostor;
         var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(local);
         var forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(local);
-        var forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(local);
+        var forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && local.isNeutral();
 
         if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam))
         {
@@ -712,7 +713,7 @@ public static class PlayerControlFixedUpdatePatch
                 if (Mimic.mimic == p) arrowForImp = true;
                 var arrowForKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(p);
                 var arrowForEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(p);
-                var arrowForNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(p);
+                var arrowForNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && p.isNeutral();
                 var targetsRole = RoleInfo.getRoleInfoForPlayer(p, false).FirstOrDefault();
 
                 if (!p.Data.IsDead && (arrowForImp || arrowForKillerTeam || arrowForEvilTeam || arrowForNeutraTeam))
@@ -752,7 +753,7 @@ public static class PlayerControlFixedUpdatePatch
         var forImpTeam = local.isImpostor();
         var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(local);
         var forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(local);
-        var forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(local);
+        var forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && local.isNeutral();
 
         if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam || isDead))
         {
@@ -1818,7 +1819,7 @@ public static class MurderPlayerPatch
 
             if (Pelican.Player == PlayerControl.LocalPlayer)
             {
-                _ = new LateTask(Pelican.PelicanDie, 0.5f);
+                _ = new LateTask(() => { Pelican.PelicanDie(); }, 0.5f);
             }
         }
 
@@ -2080,7 +2081,7 @@ public static class ExilePlayerPatch
 
         if (__instance.PlayerId == Pelican.Player?.PlayerId && Pelican.eatenPlayers?.Count > 0)
         {
-            foreach (var player in Pelican.eatenPlayers.ToArray().Where(p => p != null && p.Data.IsDead))
+            foreach (var player in Pelican.eatenPlayers.Where(p => p != null && p.Data.IsDead))
             {
                 if (PlayerControl.LocalPlayer == player)
                 {
@@ -2155,5 +2156,39 @@ public static class ExilePlayerPatch
                     MeetingHud.Instance.CheckForEndVoting();
             }
         }
+    }
+}
+
+[HarmonyPatch]
+public static class DisconnectPatch
+{
+    [HarmonyPatch(typeof(GameData), nameof(GameData.HandleDisconnect), [typeof(PlayerControl), typeof(DisconnectReasons)]), HarmonyPostfix]
+    public static void DisconnectPostfix(PlayerControl player, DisconnectReasons reason)
+    {
+        Message($"玩家 {player?.Data?.PlayerName ?? "null"} 断开连接 {reason}", "HandleDisconnect");
+        if (InGame)
+        {
+            if (player.isLover())
+            {
+                Lovers.clearAndReload();
+            }
+
+            if (Lawyer.lawyer != null && Lawyer.target == player)
+            {
+                Lawyer.PromotesToPursuer();
+            }
+
+            if (Executioner.executioner != null && Executioner.target == player)
+            {
+                Executioner.PromotesRole();
+            }
+        }
+    }
+
+
+    [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.DisconnectInternal)), HarmonyPrefix]
+    public static void InnerNetPrefix(InnerNetClient __instance, DisconnectReasons reason, string stringReason)
+    {
+        Info($"断开连接 {reason}:{stringReason}, Ping:{__instance.Ping}", "InnerNet");
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using AmongUs.Data;
 using Assets.InnerNet;
-using Il2CppSystem.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,7 +13,6 @@ namespace TheOtherRoles.Patches;
 public class MainMenuPatch
 {
     private static AnnouncementPopUp popUp;
-
     private static void Prefix(MainMenuManager __instance)
     {
         var template = GameObject.Find("ExitGameButton");
@@ -137,7 +135,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
                 if (p == 1)
                 {
                     var backup = DataManager.Player.Announcements.allAnnouncements;
-                    DataManager.Player.Announcements.allAnnouncements = new List<Announcement>();
+                    DataManager.Player.Announcements.allAnnouncements = new Il2CppSystem.Collections.Generic.List<Announcement>();
                     popUp.Init(false);
                     DataManager.Player.Announcements.SetAnnouncements(new[] { creditsAnnouncement });
                     popUp.CreateAnnouncementList();
@@ -188,21 +186,3 @@ public static class VersionShower_Start
         __instance.text.text = $"Among Us v{Application.version} - <color=#ff351f>The Other Us Edited</color> <color=#FCCE03FF>v{Main.Version}{"-Lite"}</color>";
     }
 }
-/*
-[HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start)), HarmonyPriority(Priority.First)]
-internal class TitleLogoPatch
-{
-    public static GameObject Sizer;
-    public static GameObject AULogo;
-    public static GameObject BottomButtonBounds;
-    private static void Postfix(MainMenuManager __instance)
-    {
-        if (!(Sizer = GameObject.Find("Sizer"))) return;
-        if (!(AULogo = GameObject.Find("LOGO-AU"))) return;
-        Sizer.transform.localPosition += new Vector3(0f, 0.12f, 0f);
-        AULogo.transform.localScale = new Vector3(0.66f, 0.67f, 1f);
-        AULogo.transform.position -= new Vector3(0f, 0.1f, 0f);
-        var logoRenderer = AULogo.GetComponent<SpriteRenderer>();
-        logoRenderer.sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.mxyx-Logo.png", 60f);
-    }
-}*/

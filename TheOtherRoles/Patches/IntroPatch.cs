@@ -184,7 +184,7 @@ internal class IntroPatch
     public static void setupIntroTeamIcons(IntroCutscene __instance, ref List<PlayerControl> yourTeam)
     {
         // Intro solo teams
-        if (isNeutral(PlayerControl.LocalPlayer))
+        if (PlayerControl.LocalPlayer.isNeutral())
         {
             var soloTeam = new List<PlayerControl>();
             soloTeam.Add(PlayerControl.LocalPlayer);

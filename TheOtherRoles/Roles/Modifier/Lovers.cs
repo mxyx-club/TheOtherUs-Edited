@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace TheOtherRoles.Roles.Modifier;
 
@@ -20,35 +20,28 @@ public static class Lovers
         return player != null && (player == lover1 || player == lover2);
     }
 
-    public static bool existing()
+    public static bool IsAlive()
     {
-        return lover1 != null && lover2 != null && !lover1.Data.Disconnected && !lover2.Data.Disconnected;
+        // ADD NOT ACKED IS LOVER
+        return lover1.IsAlive() && lover2.IsAlive() && !notAckedExiledIsLover;
     }
 
-    public static bool existingAndAlive()
+    public static bool isKillerLover()
     {
-        return existing() && !lover1.Data.IsDead && !lover2.Data.IsDead &&
-               !notAckedExiledIsLover; // ADD NOT ACKED IS LOVER
+        return lover1.isKiller() || lover2.isKiller();
     }
 
     public static PlayerControl otherLover(PlayerControl player)
     {
-        if (!existing() || player == null) return null;
+        if (player == null) return null;
         if (player == lover1) return lover2;
         if (player == lover2) return lover1;
         return null;
     }
 
-    public static bool existingWithKiller()
-    {
-        return existing() && (lover1.isKiller() || lover2.isKiller());
-    }
-
     public static bool hasAliveKillingLover(this PlayerControl player)
     {
-        if (!existingAndAlive() || !existingWithKiller())
-            return false;
-        return player != null && (player == lover1 || player == lover2);
+        return player.isLover() && IsAlive() && isKillerLover();
     }
 
     public static void clearAndReload()

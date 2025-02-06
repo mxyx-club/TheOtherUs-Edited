@@ -241,7 +241,7 @@ public static class Helpers
         return shouldVetKill;
     }
 
-    public static bool isNeutral(PlayerControl player)
+    public static bool isNeutral(this PlayerControl player)
     {
         var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
         return roleInfo != null && roleInfo.roleType == RoleType.Neutral;
@@ -257,8 +257,8 @@ public static class Helpers
                 player == Pelican.Player ||
                 player == Jackal.Sidekick ||
                 player == Pavlovsdogs.pavlovsowner ||
-                Jackal.jackal.Contains(player) ||
-                Pavlovsdogs.pavlovsdogs.Contains(player));
+                Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) ||
+                Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId));
     }
 
     public static bool isEvilNeutral(PlayerControl player)

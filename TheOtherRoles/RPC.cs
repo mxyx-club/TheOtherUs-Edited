@@ -707,10 +707,13 @@ public static class RPCProcedure
 
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
 
+        var list = new List<Vector3>();
+        list.AddRange(MapData.MapSpawnPosition(false));
+        list.AddRange(MapData.FindVentSpawnPositions(false));
+
         for (var i = 1; i < array.Length && array[i].ParentId == playerId; i++)
         {
-            var randomPosition = MapData.MapSpawnPosition().Random();
-            array[i].transform.position = randomPosition;
+            array[i].transform.position = list.Random();
         }
     }
 
@@ -1162,11 +1165,7 @@ public static class RPCProcedure
         if (player == Jester.jester) Jester.clearAndReload();
         if (player == Werewolf.werewolf) Werewolf.clearAndReload();
         if (player == Miner.miner) Miner.clearAndReload();
-        if (player == Pelican.Player)
-        {
-            Pelican.Player = null;
-            Pelican.PelicanDie();
-        }
+        if (player == Pelican.Player) Pelican.PelicanDie(true);
         if (player == Arsonist.arsonist) Arsonist.clearAndReload();
         if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
 

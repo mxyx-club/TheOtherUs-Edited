@@ -55,6 +55,13 @@ public class KeyboardHandler
                 GameStartManager.Instance.countDownTimer = 0;
             }
         }
+        if (PlayerControl.LocalPlayer.IsAlive() && !PlayerControl.LocalPlayer.isImpostor())
+        {
+            if (KeyboardJoystick.player.GetButtonDown(50))
+            {
+                DestroyableSingleton<HudManager>.Instance.ImpostorVentButton.DoClick();
+            }
+        }
     }
     public static string RandomString(int length)
     {

@@ -257,7 +257,7 @@ internal static class HudManagerStartPatch
         SoundEffectsManager.stop("timemasterShield");
     }
 
-    public static PlayerControl SetTarget(IEnumerable<PlayerControl> untarget = null, bool onlyCrewmates = false,
+    public static PlayerControl SetTarget(List<PlayerControl> untarget = null, bool onlyCrewmates = false,
         bool targetInVents = false, float distances = 0f, PlayerControl targetingPlayer = null)
     {
         return PlayerControlFixedUpdatePatch.SetTarget(onlyCrewmates, targetInVents, untarget, KillDistances: distances, targetingPlayer: targetingPlayer);
@@ -586,11 +586,10 @@ internal static class HudManagerStartPatch
                 if (murderAttemptResult == MurderAttemptResult.PerformKill)
                 {
                     byte targetId = 0;
-
+                    var DeathReason = CustomDeathReason.SheriffKill;
                     if (Sheriff.sheriffCanKillNeutral(target))
                     {
                         targetId = target.PlayerId;
-                        GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.SheriffKill, PlayerControl.LocalPlayer);
                     }
                     else
                     {
@@ -598,21 +597,22 @@ internal static class HudManagerStartPatch
                         {
                             case 0:
                                 targetId = PlayerControl.LocalPlayer.PlayerId;
-                                GameHistory.RpcOverrideDeathReasonAndKiller(PlayerControl.LocalPlayer, CustomDeathReason.SheriffMisfire, PlayerControl.LocalPlayer);
+                                DeathReason = CustomDeathReason.SheriffMisfire;
                                 break;
                             case 1:
                                 targetId = target.PlayerId;
-                                GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.SheriffMisadventure, PlayerControl.LocalPlayer);
+                                DeathReason = CustomDeathReason.SheriffMisadventure;
                                 break;
                             case 2:
                                 targetId = target.PlayerId;
+                                DeathReason = CustomDeathReason.SheriffMisadventure;
+
                                 var killWriter2 = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
                                 killWriter2.Write(PlayerControl.LocalPlayer.PlayerId);
                                 killWriter2.Write(PlayerControl.LocalPlayer.PlayerId);
                                 killWriter2.Write(byte.MaxValue);
                                 killWriter2.EndRPC();
                                 RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
-                                GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.SheriffMisadventure, PlayerControl.LocalPlayer);
                                 GameHistory.RpcOverrideDeathReasonAndKiller(PlayerControl.LocalPlayer, CustomDeathReason.SheriffMisfire, PlayerControl.LocalPlayer);
                                 break;
                         }
@@ -624,6 +624,7 @@ internal static class HudManagerStartPatch
                     killWriter.Write(byte.MaxValue);
                     killWriter.EndRPC();
                     RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, targetId, byte.MaxValue);
+                    GameHistory.RpcOverrideDeathReasonAndKiller(target, DeathReason, PlayerControl.LocalPlayer);
                 }
 
                 if (murderAttemptResult == MurderAttemptResult.BodyGuardKill) checkMurderAttemptAndKill(PlayerControl.LocalPlayer, target);
@@ -2264,7 +2265,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 /* On Click */
-                Bomber.currentBombTarget = SetTarget();
+                Bomber.currentTarget = SetTarget();
                 if (Bomber.hasBombPlayer == null) SetPlayerOutline(Bomber.currentTarget, Bomber.color);
                 return Bomber.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },

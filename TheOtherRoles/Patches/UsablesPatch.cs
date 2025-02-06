@@ -184,25 +184,25 @@ public static class MoveToVentPatch
     }
 }
 
-[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
+[HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
 internal class VentButtonVisibilityPatch
 {
-    private static void Postfix(PlayerControl __instance)
+    private static void Postfix(HudManager __instance)
     {
-        if (__instance.AmOwner && ShowButtons)
+        if (PlayerControl.LocalPlayer.AmOwner && ShowButtons)
         {
-            HudManager.Instance.ImpostorVentButton.Hide();
-            HudManager.Instance.SabotageButton.Hide();
+            __instance.ImpostorVentButton.Hide();
+            __instance.SabotageButton.Hide();
 
             if (ShowButtons)
             {
-                if (__instance.roleCanUseVents())
-                    HudManager.Instance.ImpostorVentButton.Show();
+                if (PlayerControl.LocalPlayer.roleCanUseVents())
+                    __instance.ImpostorVentButton.Show();
 
-                if (__instance.roleCanSabotage())
+                if (PlayerControl.LocalPlayer.roleCanSabotage())
                 {
-                    HudManager.Instance.SabotageButton.Show();
-                    HudManager.Instance.SabotageButton.gameObject.SetActive(true);
+                    __instance.SabotageButton.Show();
+                    __instance.SabotageButton.gameObject.SetActive(true);
                 }
             }
         }

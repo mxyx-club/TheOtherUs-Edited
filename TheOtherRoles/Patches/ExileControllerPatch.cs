@@ -5,7 +5,6 @@ using System.Text;
 using AmongUs.GameOptions;
 using Hazel;
 using PowerTools;
-using Sentry.Protocol;
 using TheOtherRoles.Buttons;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
@@ -157,8 +156,9 @@ internal class ExileControllerBeginPatch
         return true;
     }
 
-    public static void Postfix(ExileController __instance)
+    public static void Postfix(ExileController __instance, [HarmonyArgument(0)] ref GameData.PlayerInfo exiled)
     {
+        var player = exiled?.Object ?? null;
         confirmImpostorSecondText = Object.Instantiate(__instance.ImpostorText, __instance.Text.transform);
         StringBuilder changeStringBuilder = new();
 
@@ -172,7 +172,41 @@ internal class ExileControllerBeginPatch
         if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && __instance.exiled?.PlayerId == Balancer.targetplayerleft.PlayerId)
         {
             __instance.completeString = GetString("二者一同放逐");
+            return;
         }
+
+        if (CustomOptionHolder.exiledController.GetBool())
+        {
+            if (player != null)
+            {
+                switch (CustomOptionHolder.exiledReviveRole.GetQuantity())
+                {
+                    case 1:
+                        __instance.completeString = TranslationController.Instance.GetString(StringNames.ExileTextNonConfirm, player?.Data.PlayerName);
+                        break;
+                    case 2:
+                        __instance.completeString = $"{player.Data.PlayerName} 的职业是 {string.Join(" ", RoleInfo
+                            .getRoleInfoForPlayer(player, false, false).Select(x => x.Name))}";
+                        break;
+                    case 3:
+                        __instance.completeString = $"{player.Data.PlayerName} 是 {teamString(player)}";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (CustomOptionHolder.exiledShowTeamNum.GetBool() && player?.PlayerId != Jester.jester?.PlayerId)
+            {
+                var Impostors = PlayerControl.AllPlayerControls.ToArray().Count(x => x.isImpostor() && x.IsAlive() && x.PlayerId != player.PlayerId);
+                var Neutrals = PlayerControl.AllPlayerControls.ToArray().Count(x => x.isNeutral() && x.IsAlive() && x.PlayerId != player.PlayerId);
+                __instance.ImpostorText.text =
+                    $"\n{cs(getTeamColor(RoleType.Impostor), "伪装者阵营剩余 " + Impostors)}" +
+                    $" | {cs(getTeamColor(RoleType.Neutral), "中立阵营剩余 " + Neutrals)}";
+
+            }
+        }
+
+        if (Prosecutor.ProsecuteThisMeeting && player != null) __instance.completeString += " (被起诉)";
     }
 
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.ReEnableGameplay))]
@@ -226,7 +260,7 @@ internal class ExileControllerWrapUpPatch
         }
         // Mini exile lose condition
         else if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() &&
-                 !Mini.mini.Data.Role.IsImpostor && !isNeutral(Mini.mini))
+                 !Mini.mini.Data.Role.IsImpostor && !Mini.mini.isNeutral())
         {
             Mini.triggerMiniLose = true;
             return;
@@ -244,7 +278,7 @@ internal class ExileControllerWrapUpPatch
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             Executioner.PromotesRole();
         }
-        if (Witness.target != null && Witness.killerTarget != null)
+        if (Witness.target != null)
         {
             bool skip = exiled == null && Witness.skipMeeting;
             bool targetIsKillerAndNotExiled = Witness.target == Witness.killerTarget && (exiled?.Object == null || Witness.target != exiled?.Object);
@@ -266,7 +300,6 @@ internal class ExileControllerWrapUpPatch
         if (Vortox.Player.IsAlive() && exiled == null)
         {
             Vortox.skipCount++;
-            Message($"迷乱旋涡胜利计数{Vortox.skipCount}");
             if (Vortox.skipCount == Vortox.skipMeetingNum) Vortox.triggerImpWin = true;
         }
 
@@ -464,7 +497,7 @@ internal class ExileControllerWrapUpPatch
 
         if (InfoSleuth.infoSleuth != null && InfoSleuth.target != null && InfoSleuth.infoSleuth == PlayerControl.LocalPlayer)
         {
-            var isNotCrew = (isNeutral(InfoSleuth.target) || InfoSleuth.target.isImpostor()) ^ Vortox.Reversal;
+            var isNotCrew = (InfoSleuth.target.isNeutral() || InfoSleuth.target.isImpostor()) ^ Vortox.Reversal;
             var team = "的阵营是 " + getTeam(InfoSleuth.target);
             var info = InfoSleuth.infoType switch
             {
@@ -492,10 +525,10 @@ internal class ExileControllerWrapUpPatch
                 if (Vortox.Player.IsAlive())
                 {
                     if (player.isCrew()) return rnd.Next(2) == 0 ? "NeutralRolesText".Translate() : "ImpostorRolesText".Translate();
-                    if (isNeutral(player) || player.isImpostor()) return "CrewmateRolesText".Translate();
+                    if (player.isNeutral() || player.isImpostor()) return "CrewmateRolesText".Translate();
                 }
 
-                return isNeutral(player) ? "NeutralRolesText".Translate()
+                return player.isNeutral() ? "NeutralRolesText".Translate()
                     : player.isImpostor() ? "ImpostorRolesText".Translate()
                     : "CrewmateRolesText".Translate();
             }
@@ -568,34 +601,5 @@ internal class AirshipSpawnInPatch
     {
         AntiTeleport.setPosition();
         Chameleon.lastMoved.Clear();
-    }
-}
-
-[HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames),
-    typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
-internal class ExileControllerMessagePatch
-{
-    private static void Postfix(ref string __result, [HarmonyArgument(0)] StringNames id)
-    {
-        try
-        {
-            if (ExileController.Instance != null && ExileController.Instance.exiled != null)
-            {
-                var player = playerById(ExileController.Instance.exiled.Object.PlayerId);
-                if (player == null) return;
-                // Exile role text
-                if (id is StringNames.ExileTextPN or StringNames.ExileTextSN or StringNames.ExileTextPP or StringNames.ExileTextSP)
-                    __result = $"{player.Data.PlayerName} 的职业是 {string.Join(" ", RoleInfo.getRoleInfoForPlayer(player, false).Select(x => x.Name).ToArray())}";
-                // Hide number of remaining impostors on Jester win
-                if (id is StringNames.ImpostorsRemainP or StringNames.ImpostorsRemainS)
-                    if (Jester.jester != null && player.PlayerId == Jester.jester.PlayerId)
-                        __result = "";
-                if (Prosecutor.ProsecuteThisMeeting) __result += " (被起诉)";
-            }
-        }
-        catch
-        {
-            // pass - Hopefully prevent leaving while exiling to softlock game
-        }
     }
 }

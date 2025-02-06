@@ -93,7 +93,9 @@ public class CustomOption
     public static CustomOption Create(int id, CustomOptionType type, string name, bool defaultValue,
         CustomOption parent = null, bool isHeader = false, bool isHidden = false, Action onChange = null)
     {
-        return new CustomOption(id, type, name, ["optionOff", "optionOn"], defaultValue ? "optionOn" : "optionOff", parent, isHeader, isHidden, onChange);
+        var selections = name.Contains("Options") ? new[] { "ExpandOptions", "CollapseOptions" } : new[] { "optionOff", "optionOn" };
+        var defaultSelection = defaultValue ? selections[1] : selections[0];
+        return new CustomOption(id, type, name, selections, defaultSelection, parent, isHeader, isHidden, onChange);
     }
 
     // Static behaviour
@@ -210,6 +212,8 @@ public class CustomOption
         {
             "optionOn" => "<color=#FFFF00FF>" + sel.Translate() + "</color>",
             "optionOff" => "<color=#CCCCCCFF>" + sel.Translate() + "</color>",
+            "ExpandOptions" => "<color=#CCCCCCFF>" + sel.Translate() + "</color>",
+            "CollapseOptions" => "<color=#CCCCCCFF>" + sel.Translate() + "</color>",
             _ => sel.Translate(),
         };
     }

@@ -87,6 +87,7 @@ internal class ModOption
         ventsToSeal = new();
         playerIcons = new Dictionary<byte, PoolablePlayer>();
 
+        NormalOptions.ConfirmImpostor = CustomOptionHolder.exiledController.GetBool() && CustomOptionHolder.exiledShowTeamNum.GetBool();
         maxNumberOfMeetings = CustomOptionHolder.maxNumberOfMeetings.GetInt();
         blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.GetBool();
         blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.GetBool();

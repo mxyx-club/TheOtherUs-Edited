@@ -34,7 +34,7 @@ public static class Prophet
 
         if (killCrewAsRed && (Sheriff.Player.Any(x => x == p) || p == Sheriff.Deputy || p == Veteran.veteran)) return true;
 
-        if (benignNeutralAsRed && isNeutral(p) && (Amnisiac.Player.Contains(p) || Pursuer.Player.Contains(p) || Survivor.Player.Contains(p))) return true;
+        if (benignNeutralAsRed && p.isNeutral() && (Amnisiac.Player.Contains(p) || Pursuer.Player.Contains(p) || Survivor.Player.Contains(p))) return true;
 
         return evilNeutralAsRed && isEvilNeutral(p);
     }

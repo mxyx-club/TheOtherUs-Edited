@@ -175,7 +175,7 @@ internal class HudManagerUpdatePatch
             bool forImp = localPlayer.Data.Role.IsImpostor;
             bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(localPlayer);
             bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(localPlayer);
-            bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(localPlayer);
+            bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && localPlayer.isNeutral();
 
             if (numberOfTasks <= Snitch.taskCountForReveal && Snitch.snitch.IsAlive())
             {
@@ -195,7 +195,7 @@ internal class HudManagerUpdatePatch
                     bool TargetsImp = p.Data.Role.IsImpostor;
                     bool TargetsKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(p);
                     bool TargetsEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(p);
-                    bool TargetsNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(p);
+                    bool TargetsNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && p.isNeutral();
                     var targetsRole = RoleInfo.getRoleInfoForPlayer(p, false).FirstOrDefault();
                     if (localPlayer == Snitch.snitch && (TargetsImp || TargetsKillerTeam || TargetsEvilTeam || TargetsNeutraTeam))
                     {

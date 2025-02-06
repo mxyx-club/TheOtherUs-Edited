@@ -16,6 +16,8 @@ public class CustomOptionHolder
     public static string[] presets =
         ["预设 1", "预设 2", "预设 3", "Skeld预设", "Mira预设", "Polus预设", "Airship预设", "Fungle预设", "Submerged预设"];
 
+    public static string[] mapOptions = ["ExpandOptions", "CollapseOptions"];
+
     public static CustomOption presetSelection;
     public static CustomOption neutralRolesCountMin;
     public static CustomOption neutralRolesCountMax;
@@ -23,6 +25,12 @@ public class CustomOptionHolder
     public static CustomOption killerNeutralRolesCountMax;
     public static CustomOption modifiersCountMin;
     public static CustomOption modifiersCountMax;
+
+    public static CustomOption MeetingOptions;
+    public static CustomOption SaboOptions;
+    public static CustomOption TaskOptions;
+    public static CustomOption MapOptions;
+    public static CustomOption DevicesOption;
 
     public static CustomOption anyPlayerCanStopStart;
     public static CustomOption enableEventMode;
@@ -624,6 +632,10 @@ public class CustomOptionHolder
     public static CustomOption debugMode;
     public static CustomOption disableGameEnd;
 
+    public static CustomOption exiledController;
+    public static CustomOption exiledReviveRole;
+    public static CustomOption exiledShowTeamNum;
+
     public static CustomOption enableBetterPolus;
 
     public static CustomOption movePolusVents;
@@ -700,12 +712,12 @@ public class CustomOptionHolder
 
     public static void Load()
     {
-        vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind("Preset0", "VanillaOptions", "");
+        vanillaSettings = Main.Instance.Config.Bind("Preset0", "VanillaOptions", "");
 
         // Role Options
         presetSelection = Create(0, Types.General, cs(new Color32(204, 204, 0, 255), "presetSelection"), presets, null, true);
 
-        anyPlayerCanStopStart = Create(3, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0), "anyPlayerCanStopStart"), false, null, false);
+        anyPlayerCanStopStart = Create(3, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0), "anyPlayerCanStopStart"), false);
 
         neutralRolesCountMin = Create(8, Types.General, cs(new Color32(204, 204, 0, 255), "neutralRolesCountMin"), 2f, 0f, 15f, 1f, null, true);
         neutralRolesCountMax = Create(9, Types.General, cs(new Color32(204, 204, 0, 255), "neutralRolesCountMax"), 2f, 0f, 15f, 1f);
@@ -716,86 +728,96 @@ public class CustomOptionHolder
 
         //-------------------------- Other options 1 - 599 -------------------------- //
 
+        //Global options
         resteButtonCooldown = Create(20, Types.General, "resteButtonCooldown", 20f, 2.5f, 30f, 2.5f, null, true);
-        maxNumberOfMeetings = Create(21, Types.General, "maxNumberOfMeetings", 10, 0, 15, 1, null, true);
-        blockSkippingInEmergencyMeetings = Create(22, Types.General, "blockSkippingInEmergencyMeetings", false);
-        noVoteIsSelfVote = Create(23, Types.General, "noVoteIsSelfVote", false, blockSkippingInEmergencyMeetings);
-        disableMeeting = Create(36, Types.General, "disableMeeting", false);
-        shieldFirstKill = Create(24, Types.General, "shieldFirstKill", false);
-        hidePlayerNames = Create(25, Types.General, "hidePlayerNames", false);
-        hideOutOfSightNametags = Create(26, Types.General, "hideOutOfSightNametags", true);
-        hideVentAnimOnShadows = Create(27, Types.General, "hideVentAnimOnShadows", false);
-        showButtonTarget = Create(28, Types.General, "showButtonTarget", true);
-        impostorSeeRoles = Create(30, Types.General, cs(Palette.ImpostorRed, "impostorSeeRoles"), false);
-        blockGameEnd = Create(29, Types.General, cs(Color.yellow, "blockGameEnd"), true);
-        deadImpsBlockSabotage = Create(32, Types.General, cs(Palette.ImpostorRed, "deadImpsBlockSabotage"), false);
-        randomLigherPlayer = Create(34, Types.General, "randomLigherPlayer", true);
-        disableSabotage = Create(35, Types.General, cs(Palette.ImpostorRed, "disableSabotage"), false, null);
-        allowModGuess = Create(31, Types.General, "allowModGuess", false);
-        //ghostSpeed = Create(33, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
+        shieldFirstKill = Create(21, Types.General, "shieldFirstKill", false);
+        hidePlayerNames = Create(22, Types.General, "hidePlayerNames", false);
+        hideOutOfSightNametags = Create(23, Types.General, "hideOutOfSightNametags", true);
+        hideVentAnimOnShadows = Create(24, Types.General, "hideVentAnimOnShadows", false);
+        showButtonTarget = Create(25, Types.General, "showButtonTarget", true);
+        impostorSeeRoles = Create(26, Types.General, cs(Palette.ImpostorRed, "impostorSeeRoles"), false);
+        blockGameEnd = Create(27, Types.General, cs(Color.yellow, "blockGameEnd"), true);
+        randomLigherPlayer = Create(28, Types.General, "randomLigherPlayer", true);
+        allowModGuess = Create(29, Types.General, "allowModGuess", false);
+        randomGameStartPosition = Create(30, Types.General, "randomGameStartPosition", false);
+        randomGameStartToVents = Create(31, Types.General, "randomGameStartToVents", true, randomGameStartPosition);
+        //ghostSpeed = Create(32, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
 
-        guessReVote = Create(221, Types.General, "guessReVote", false, null, true);
-        guessExtendmeetingTime = Create(222, Types.General, "guessExtendmeetingTime", 15f, 0f, 60f, 5f);
+        //Meeting options
+        MeetingOptions = Create(100, Types.General, cs(new Color32(255, 85, 234, byte.MaxValue), "MeetingOptions"), false, null, true);
+        disableMeeting = Create(101, Types.General, "disableMeeting", false, MeetingOptions);
+        maxNumberOfMeetings = Create(102, Types.General, "maxNumberOfMeetings", 10, 0, 15, 1, MeetingOptions);
+        blockSkippingInEmergencyMeetings = Create(103, Types.General, "blockSkippingInEmergencyMeetings", false, MeetingOptions);
+        noVoteIsSelfVote = Create(104, Types.General, "noVoteIsSelfVote", false, blockSkippingInEmergencyMeetings);
+        guessReVote = Create(105, Types.General, "guessReVote", false, MeetingOptions);
+        guessExtendmeetingTime = Create(106, Types.General, "guessExtendmeetingTime", 15f, 0f, 60f, 5f, guessReVote);
+        exiledController = Create(107, Types.General, "exileController", false, MeetingOptions);
+        exiledReviveRole = Create(108, Types.General, "exiledReviveRole", ["optionOff", "Role", "Team"], exiledController);
+        exiledShowTeamNum = Create(109, Types.General, "exiledShowTeamNum", false, exiledController);
 
-        WireTaskIsRandomOption = Create(44, Types.General, "WireTaskIsRandomOption", false, null, true);
-        WireTaskNumOption = Create(45, Types.General, "WireTaskNumOption", 3f, 1f, 8f, 1f, WireTaskIsRandomOption);
-        transparentTasks = Create(40, Types.General, "transparentTasks", false);
-        disableMedbayWalk = Create(41, Types.General, "disableMedbayWalk", false);
-        allowParallelMedBayScans = Create(46, Types.General, "allowParallelMedBayScans", false);
-        finishTasksBeforeHauntingOrZoomingOut = Create(42, Types.General, "finishTasksBeforeHauntingOrZoomingOut", false);
-        disableTaskGameEnd = Create(43, Types.General, "disableTaskGameEnd", false);
+        //Task options
+        TaskOptions = Create(200, Types.General, cs(Palette.CrewmateBlue, "TaskOptions"), false, null, true);
+        WireTaskIsRandomOption = Create(201, Types.General, "WireTaskIsRandomOption", false, TaskOptions);
+        WireTaskNumOption = Create(202, Types.General, "WireTaskNumOption", 3f, 1f, 8f, 1f, WireTaskIsRandomOption);
+        transparentTasks = Create(203, Types.General, "transparentTasks", false, TaskOptions);
+        disableMedbayWalk = Create(204, Types.General, "disableMedbayWalk", false, TaskOptions);
+        allowParallelMedBayScans = Create(205, Types.General, "allowParallelMedBayScans", false, TaskOptions);
+        finishTasksBeforeHauntingOrZoomingOut = Create(206, Types.General, "finishTasksBeforeHauntingOrZoomingOut", false, TaskOptions);
+        disableTaskGameEnd = Create(207, Types.General, "disableTaskGameEnd", false, TaskOptions);
+
+        //Sabotage options
+        SaboOptions = Create(300, Types.General, cs(Palette.ImpostorRed, "SaboOptions"), false, null, true);
+        disableSabotage = Create(301, Types.General, cs(Palette.ImpostorRed, "disableSabotage"), false, SaboOptions);
+        deadImpsBlockSabotage = Create(302, Types.General, cs(Palette.ImpostorRed, "deadImpsBlockSabotage"), false, SaboOptions);
+        enableCamoComms = Create(303, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, SaboOptions, true);
+        IsReactorDurationSetting = Create(310, Types.General, "IsReactorDurationSetting", false, SaboOptions, true);
+        SkeldReactorTimeLimit = Create(311, Types.General, "SkeldReactorTimeLimit", 30f, 0f, 30f, 2.5f, IsReactorDurationSetting);
+        SkeldLifeSuppTimeLimit = Create(312, Types.General, "SkeldLifeSuppTimeLimit", 30f, 0f, 30f, 2.5f, IsReactorDurationSetting);
+        MiraLifeSuppTimeLimit = Create(313, Types.General, "MiraLifeSuppTimeLimit", 30f, 0f, 45f, 2.5f, IsReactorDurationSetting);
+        MiraReactorTimeLimit = Create(314, Types.General, "MiraReactorTimeLimit", 30f, 0f, 45f, 2.5f, IsReactorDurationSetting);
+        PolusReactorTimeLimit = Create(315, Types.General, "PolusReactorTimeLimit", 60f, 0f, 60f, 2.5f, IsReactorDurationSetting);
+        AirshipReactorTimeLimit = Create(316, Types.General, "AirshipReactorTimeLimit", 75f, 0f, 90f, 2.5f, IsReactorDurationSetting);
+        FungleReactorTimeLimit = Create(317, Types.General, "FungleReactorTimeLimit", 45f, 0f, 60f, 2.5f, IsReactorDurationSetting);
 
         //Map options
-        //enableMapOptions = Create(200, Types.General, "enableMapOptions", false, null, true);
+        MapOptions = Create(400, Types.General, cs(new Color32(223, 157, 192, byte.MaxValue), "MapOptions"), false, null, true);
+        //Mira
+        enableMiraModify = Create(420, Types.General, cs(Color.yellow, "Mira"), false, MapOptions);
+        miraVitals = Create(421, Types.General, "miraVitals", false, enableMiraModify);
+        //Polus
+        enableBetterPolus = Create(430, Types.General, cs(Color.yellow, "Polus"), false, MapOptions);
+        movePolusVents = Create(431, Types.General, "movePolusVents", false, enableBetterPolus);
+        addPolusVents = Create(432, Types.General, "addPolusVents", false, enableBetterPolus);
+        movePolusVitals = Create(433, Types.General, "movePolusVitals", false, enableBetterPolus);
+        swapNavWifi = Create(434, Types.General, "swapNavWifi", false, enableBetterPolus);
+        moveColdTemp = Create(435, Types.General, "moveColdTemp", false, enableBetterPolus);
+        //AirShip
+        enableAirShipModify = Create(440, Types.General, cs(Color.yellow, "AirShip"), false, MapOptions);
+        airshipOptimize = Create(441, Types.General, "airshipOptimize", false, enableAirShipModify);
+        addAirShipVents = Create(442, Types.General, "addAirShipVents", false, enableAirShipModify);
+        airshipLadder = Create(443, Types.General, "airshipLadder", false, enableAirShipModify);
+        //Fungle
+        enableFungleModify = Create(450, Types.General, cs(Color.yellow, "Fungle"), false, MapOptions);
+        fungleElectrical = Create(451, Types.General, "fungleElectrical", false, enableFungleModify);
+        //dynamicMap options
+        dynamicMap = Create(470, Types.General, "dynamicMap", false, MapOptions, true);
+        dynamicMapEnableSkeld = Create(471, Types.General, "Skeld", rates, dynamicMap);
+        dynamicMapEnableMira = Create(472, Types.General, "Mira", rates, dynamicMap);
+        dynamicMapEnablePolus = Create(473, Types.General, "Polus", rates, dynamicMap);
+        dynamicMapEnableAirShip = Create(474, Types.General, "Airship", rates, dynamicMap);
+        dynamicMapEnableFungle = Create(475, Types.General, "Fungle", rates, dynamicMap);
+        dynamicMapEnableSubmerged = Create(476, Types.General, "Submerged", rates, dynamicMap);
+        dynamicMapSeparateSettings = Create(477, Types.General, "dynamicMapSeparateSettings", false, dynamicMap);
 
-        IsReactorDurationSetting = Create(201, Types.General, "IsReactorDurationSetting", false, null, true);
-        SkeldReactorTimeLimit = Create(202, Types.General, "SkeldReactorTimeLimit", 30f, 0f, 30f, 2.5f, IsReactorDurationSetting);
-        SkeldLifeSuppTimeLimit = Create(203, Types.General, "SkeldLifeSuppTimeLimit", 30f, 0f, 30f, 2.5f, IsReactorDurationSetting);
-        MiraLifeSuppTimeLimit = Create(204, Types.General, "MiraLifeSuppTimeLimit", 30f, 0f, 45f, 2.5f, IsReactorDurationSetting);
-        MiraReactorTimeLimit = Create(205, Types.General, "MiraReactorTimeLimit", 30f, 0f, 45f, 2.5f, IsReactorDurationSetting);
-        PolusReactorTimeLimit = Create(206, Types.General, "PolusReactorTimeLimit", 60f, 0f, 60f, 2.5f, IsReactorDurationSetting);
-        AirshipReactorTimeLimit = Create(207, Types.General, "AirshipReactorTimeLimit", 75f, 0f, 90f, 2.5f, IsReactorDurationSetting);
-        FungleReactorTimeLimit = Create(208, Types.General, "FungleReactorTimeLimit", 45f, 0f, 60f, 2.5f, IsReactorDurationSetting);
-
-        randomGameStartPosition = Create(50, Types.General, "randomGameStartPosition", false, null, true);
-        randomGameStartToVents = Create(51, Types.General, "randomGameStartToVents", true, randomGameStartPosition);
-
-        enableMiraModify = Create(70, Types.General, cs(Color.yellow, "Mira"), false, null, true);
-        miraVitals = Create(71, Types.General, "miraVitals", false, enableMiraModify);
-
-        enableBetterPolus = Create(80, Types.General, cs(Color.yellow, "Polus"), false, null);
-        movePolusVents = Create(81, Types.General, "movePolusVents", false, enableBetterPolus);
-        addPolusVents = Create(82, Types.General, "addPolusVents", false, enableBetterPolus);
-        movePolusVitals = Create(83, Types.General, "movePolusVitals", false, enableBetterPolus);
-        swapNavWifi = Create(84, Types.General, "swapNavWifi", false, enableBetterPolus);
-        moveColdTemp = Create(85, Types.General, "moveColdTemp", false, enableBetterPolus);
-
-        enableAirShipModify = Create(90, Types.General, cs(Color.yellow, "AirShip"), false, null);
-        airshipOptimize = Create(91, Types.General, "airshipOptimize", false, enableAirShipModify);
-        addAirShipVents = Create(92, Types.General, "addAirShipVents", false, enableAirShipModify);
-        airshipLadder = Create(93, Types.General, "airshipLadder", false, enableAirShipModify);
-
-        enableFungleModify = Create(100, Types.General, cs(Color.yellow, "Fungle"), false, null);
-        fungleElectrical = Create(101, Types.General, "fungleElectrical", false, enableFungleModify);
-
-        enableCamoComms = Create(120, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, null, true);
-        //fungleDisableCamoComms = Create(211, Types.General, "fungleDisableCamoComms", true, enableCamoComms);
-        restrictDevices = Create(121, Types.General, "restrictDevices", ["optionOff", "restrictDevices2", "restrictDevices3"], null);
-        //restrictAdmin = Create(122, Types.General, "restrictAdmin", 30f, 0f, 600f, 5f, restrictDevices);
-        restrictCameras = Create(123, Types.General, "restrictCameras", 30f, 0f, 600f, 5f, restrictDevices);
-        restrictVents = Create(124, Types.General, "restrictVents", 30f, 0f, 600f, 5f, restrictDevices);
-        disableCamsRound1 = Create(125, Types.General, "disableCamsRound1", false, null);
-        camsNightVision = Create(126, Types.General, "camsNightVision", false, null);
-        camsNoNightVisionIfImpVision = Create(127, Types.General, "camsNoNightVisionIfImpVision", false, camsNightVision);
-
-        dynamicMap = Create(130, Types.General, "dynamicMap", false, null, true);
-        dynamicMapEnableSkeld = Create(131, Types.General, "Skeld", rates, dynamicMap);
-        dynamicMapEnableMira = Create(132, Types.General, "Mira", rates, dynamicMap);
-        dynamicMapEnablePolus = Create(133, Types.General, "Polus", rates, dynamicMap);
-        dynamicMapEnableAirShip = Create(134, Types.General, "Airship", rates, dynamicMap);
-        dynamicMapEnableFungle = Create(135, Types.General, "Fungle", rates, dynamicMap);
-        dynamicMapEnableSubmerged = Create(136, Types.General, "Submerged", rates, dynamicMap);
-        dynamicMapSeparateSettings = Create(137, Types.General, "dynamicMapSeparateSettings", false, dynamicMap);
+        //Devices Option
+        DevicesOption = Create(500, Types.General, cs(new Color32(255, 50, 0, byte.MaxValue), "DevicesOption"), false, null, true);
+        restrictDevices = Create(501, Types.General, "restrictDevices", ["optionOff", "restrictDevices2", "restrictDevices3"], DevicesOption);
+        //restrictAdmin = Create(502, Types.General, "restrictAdmin", 30f, 0f, 600f, 5f, restrictDevices);
+        restrictCameras = Create(503, Types.General, "restrictCameras", 30f, 0f, 600f, 5f, restrictDevices);
+        restrictVents = Create(504, Types.General, "restrictVents", 30f, 0f, 600f, 5f, restrictDevices);
+        disableCamsRound1 = Create(505, Types.General, "disableCamsRound1", false, DevicesOption);
+        camsNightVision = Create(506, Types.General, "camsNightVision", false, DevicesOption);
+        camsNoNightVisionIfImpVision = Create(507, Types.General, "camsNoNightVisionIfImpVision", false, camsNightVision);
 
         debugMode = Create(900, Types.General, "debugMode", false, null, true);
         disableGameEnd = Create(901, Types.General, "DisableGameEnd", false, debugMode);
@@ -952,9 +974,9 @@ public class CustomOptionHolder
         amnisiacResetRole = Create(20112, Types.Neutral, "amnisiacResetRole", true, amnisiacSpawnRate);
 
         jesterSpawnRate = Create(20100, Types.Neutral, cs(Jester.color, "Jester"), rates, null, true);
-        jesterCanCallEmergency = Create(20101, Types.Neutral, "jesterCanCallEmergency", true, jesterSpawnRate);
+        jesterCanCallEmergency = Create(20101, Types.Neutral, "canCallEmergency", true, jesterSpawnRate);
         jesterCanVent = Create(20102, Types.Neutral, "jesterCanVent", true, jesterSpawnRate);
-        jesterHasImpostorVision = Create(20103, Types.Neutral, "jesterHasImpostorVision", true, jesterSpawnRate);
+        jesterHasImpostorVision = Create(20103, Types.Neutral, "hasImpVision", true, jesterSpawnRate);
 
         partTimerSpawnRate = Create(20290, Types.Neutral, cs(PartTimer.color, "PartTimer"), rates, null, true);
         partTimerCooldown = Create(20291, Types.Neutral, "partTimerCooldown", 20f, 2.5f, 60f, 2.5f, partTimerSpawnRate);
@@ -989,7 +1011,7 @@ public class CustomOptionHolder
         pavlovsownerCreateDogCooldown = Create(20253, Types.Neutral, "pavlovsownerCreateDogCooldown", 25f, 10f, 60f, 2.5f, pavlovsownerSpawnRate);
         pavlovsownerCreateDogNum = Create(20254, Types.Neutral, "pavlovsownerCreateDogNum", 3f, 1f, 15f, 1f, pavlovsownerSpawnRate);
         pavlovsownerCanUseSabo = Create(20255, Types.Neutral, "pavlovsownerCanUseSabo", true, pavlovsownerSpawnRate);
-        pavlovsownerHasImpostorVision = Create(20256, Types.Neutral, "pavlovsownerHasImpostorVision", true, pavlovsownerSpawnRate);
+        pavlovsownerHasImpostorVision = Create(20256, Types.Neutral, "hasImpVision", true, pavlovsownerSpawnRate);
         pavlovsownerCanUseVents = Create(20257, Types.Neutral, "pavlovsownerCanUseVents",
             ["Pavlovsdogs", "Pavlovsowner", "pavlovsownerCanUseVents3"], pavlovsownerSpawnRate);
         pavlovsownerRampage = Create(20260, Types.Neutral, "pavlovsownerRampage", true, pavlovsownerSpawnRate);
@@ -1011,7 +1033,7 @@ public class CustomOptionHolder
         swooperDuration = Create(20153, Types.Neutral, "swooperDuration", 15f, 1f, 20f, 0.5f, swooperSpawnRate);
         swooperSpeed = Create(20154, Types.Neutral, "swooperSpeed", 1.5f, 1f, 3f, 0.125f, swooperSpawnRate);
         swooperCanUseVents = Create(20155, Types.Neutral, "canUseVents", true, swooperSpawnRate);
-        swooperHasImpVision = Create(20156, Types.Neutral, "swooperHasImpVision", true, swooperSpawnRate);
+        swooperHasImpVision = Create(20156, Types.Neutral, "hasImpVision", true, swooperSpawnRate);
 
         werewolfSpawnRate = Create(20200, Types.Neutral, cs(Werewolf.color, "Werewolf"), rates, null, true);
         werewolfRampageCooldown = Create(20201, Types.Neutral, "werewolfRampageCooldown", 25f, 10f, 60f, 2.5f, werewolfSpawnRate);
@@ -1020,7 +1042,7 @@ public class CustomOptionHolder
 
         juggernautSpawnRate = Create(20210, Types.Neutral, cs(Juggernaut.color, "Juggernaut"), rates, null, true);
         juggernautCooldown = Create(20211, Types.Neutral, "juggernautCooldown", 25f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
-        juggernautHasImpVision = Create(20212, Types.Neutral, "juggernautHasImpVision", true, juggernautSpawnRate);
+        juggernautHasImpVision = Create(20212, Types.Neutral, "hasImpVision", true, juggernautSpawnRate);
         juggernautCanUseVents = Create(20113, Types.Neutral, "canUseVents", true, juggernautSpawnRate);
         juggernautReducedkillEach = Create(20114, Types.Neutral, "juggernautReducedkillEach", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
 
@@ -1034,7 +1056,7 @@ public class CustomOptionHolder
         lawyerTargetKnows = Create(20182, Types.Neutral, "lawyerTargetKnows", true, lawyerSpawnRate);
         lawyerVision = Create(20183, Types.Neutral, "lawyerVision", 1.5f, 0.25f, 3f, 0.25f, lawyerSpawnRate);
         lawyerKnowsRole = Create(20184, Types.Neutral, "lawyerKnowsRole", true, lawyerSpawnRate);
-        lawyerCanCallEmergency = Create(20185, Types.Neutral, "lawyerCanCallEmergency", true, lawyerSpawnRate);
+        lawyerCanCallEmergency = Create(20185, Types.Neutral, "canCallEmergency", true, lawyerSpawnRate);
         lawyerStolenWin = Create(20189, Types.Neutral, "lawyerStolenWin", false, lawyerSpawnRate);
         lawyerTargetCanBeJester = Create(20186, Types.Neutral, "lawyerTargetCanBeJester", false, lawyerSpawnRate);
 
@@ -1043,7 +1065,7 @@ public class CustomOptionHolder
         pursuerBlanksNumber = Create(20273, Types.Neutral, "pursuerBlanksNumber", 6f, 1f, 20f, 1f, lawyerSpawnRate);
 
         executionerSpawnRate = Create(20190, Types.Neutral, cs(Executioner.color, "Executioner"), rates, null, true);
-        executionerCanCallEmergency = Create(20191, Types.Neutral, "executionerCanCallEmergency", true, executionerSpawnRate);
+        executionerCanCallEmergency = Create(20191, Types.Neutral, "canCallEmergency", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(20192, Types.Neutral, "executionerPromotesToLawyer", true, executionerSpawnRate);
         //executionerOnTargetDead = Create(20193, Types.Neutral, "目标死亡后变为", [cs(Pursuer.color, "Pursuer"), cs(Jester.color, "Jester"), cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
 
@@ -1069,8 +1091,8 @@ public class CustomOptionHolder
         thiefCanKillSheriff = Create(20242, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Sheriff.color, "Sheriff".Translate())}", true, thiefSpawnRate);
         thiefCanKillDeputy = Create(20246, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Sheriff.color, "Deputy".Translate())}", true, thiefSpawnRate);
         thiefCanKillVeteran = Create(20247, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Veteran.color, "Veteran".Translate())}", true, thiefSpawnRate);
-        thiefHasImpVision = Create(20243, Types.Neutral, "thiefHasImpVision", true, thiefSpawnRate);
-        thiefCanUseVents = Create(20244, Types.Neutral, "thiefCanUseVents", true, thiefSpawnRate);
+        thiefHasImpVision = Create(20243, Types.Neutral, "hasImpVision", true, thiefSpawnRate);
+        thiefCanUseVents = Create(20244, Types.Neutral, "canUseVents", true, thiefSpawnRate);
         thiefCanStealWithGuess = Create(20245, Types.Neutral, "thiefCanStealWithGuess", true, thiefSpawnRate);
 
         //-------------------------- Crewmate Options 30000-39999 -------------------------- //
@@ -1119,7 +1141,7 @@ public class CustomOptionHolder
         prosecutorCanSeeVoteColors = Create(30111, Types.Crewmate, "mayorCanSeeVoteColors", true, prosecutorSpawnRate);
         prosecutorTasksNeededToSeeVoteColors = Create(30112, Types.Crewmate, "mayorTasksNeededToSeeVoteColors", 5f, 0f, 20f, 1f, prosecutorCanSeeVoteColors);
         prosecutorDiesOnIncorrectPros = Create(30371, Types.Crewmate, "prosecutorDiesOnIncorrectPros", true, prosecutorSpawnRate);
-        prosecutorCanCallEmergency = Create(30372, Types.Crewmate, "prosecutorCanCallEmergency", true, prosecutorSpawnRate);
+        prosecutorCanCallEmergency = Create(30372, Types.Crewmate, "canCallEmergency", true, prosecutorSpawnRate);
 
         engineerSpawnRate = Create(30120, Types.Crewmate, cs(Engineer.color, "Engineer"), rates, null, true);
         engineerRemoteFix = Create(30121, Types.Crewmate, "engineerRemoteFix", true, engineerSpawnRate);
@@ -1164,7 +1186,7 @@ public class CustomOptionHolder
         veteranAlertDuration = Create(30222, Types.Crewmate, "veteranAlertDuration", 12.5f, 2.5f, 20f, 0.5f, veteranSpawnRate);
 
         swapperSpawnRate = Create(30230, Types.Crewmate, cs(Swapper.color, "Swapper"), rates, null, true);
-        swapperCanCallEmergency = Create(30231, Types.Crewmate, "swapperCanCallEmergency", true, swapperSpawnRate);
+        swapperCanCallEmergency = Create(30231, Types.Crewmate, "canCallEmergency", true, swapperSpawnRate);
         swapperCanFixSabotages = Create(30232, Types.Crewmate, "swapperCanFixSabotages", true, swapperSpawnRate);
         swapperCanOnlySwapOthers = Create(30233, Types.Crewmate, "swapperCanOnlySwapOthers", false, swapperSpawnRate);
         swapperSwapsNumber = Create(30234, Types.Crewmate, "swapperSwapsNumber", 1f, 0f, 5f, 1f, swapperSpawnRate);
@@ -1202,7 +1224,7 @@ public class CustomOptionHolder
         prophetSpawnRate = Create(30360, Types.Crewmate, cs(Prophet.color, "Prophet"), rates, null, true);
         prophetCooldown = Create(30361, Types.Crewmate, "prophetCooldown", 20f, 5f, 60f, 2.5f, prophetSpawnRate);
         prophetNumExamines = Create(30362, Types.Crewmate, "prophetNumExamines", 4, 1, 10, 1, prophetSpawnRate);
-        prophetCanCallEmergency = Create(30363, Types.Crewmate, "prophetCanCallEmergency", true, prophetSpawnRate);
+        prophetCanCallEmergency = Create(30363, Types.Crewmate, "canCallEmergency", true, prophetSpawnRate);
         prophetIsRevealed = Create(30364, Types.Crewmate, "prophetIsRevealed", false, prophetSpawnRate);
         prophetExaminesToBeRevealed = Create(30365, Types.Crewmate, "prophetExaminesToBeRevealed", 3, 1, 10, 1, prophetIsRevealed);
         prophetKillCrewAsRed = Create(30366, Types.Crewmate, "prophetKillCrewAsRed", false, prophetSpawnRate);
@@ -1217,8 +1239,8 @@ public class CustomOptionHolder
         spySpawnRate = Create(30280, Types.Crewmate, cs(Spy.color, "Spy"), rates, null, true);
         spyCanDieToSheriff = Create(30281, Types.Crewmate, "spyCanDieToSheriff", false, spySpawnRate);
         spyImpostorsCanKillAnyone = Create(30282, Types.Crewmate, "spyImpostorsCanKillAnyone", true, spySpawnRate);
-        spyCanEnterVents = Create(30283, Types.Crewmate, "spyCanEnterVents", true, spySpawnRate);
-        spyHasImpostorVision = Create(30284, Types.Crewmate, "spyHasImpostorVision", true, spySpawnRate);
+        spyCanEnterVents = Create(30283, Types.Crewmate, "canUseVents", true, spySpawnRate);
+        spyHasImpostorVision = Create(30284, Types.Crewmate, "hasImpVision", true, spySpawnRate);
 
         portalmakerSpawnRate = Create(30290, Types.Crewmate, cs(Portalmaker.color, "Portalmaker"), rates, null, true);
         portalmakerCooldown = Create(30291, Types.Crewmate, "portalmakerCooldown", 15f, 10f, 60f, 2.5f, portalmakerSpawnRate);
@@ -1258,7 +1280,7 @@ public class CustomOptionHolder
         trapperMaxCharges = Create(30352, Types.Crewmate, "trapperMaxCharges", 5f, 1f, 15f, 1f, trapperSpawnRate);
         trapperRechargeTasksNumber = Create(30353, Types.Crewmate, "trapperRechargeTasksNumber", 2f, 1f, 15f, 1f, trapperSpawnRate);
         trapperTrapNeededTriggerToReveal = Create(30354, Types.Crewmate, "trapperTrapNeededTriggerToReveal", 2f, 1f, 10f, 1f, trapperSpawnRate);
-        trapperInfoType = Create(30356, Types.Crewmate, "trapperInfoType", ["trapperInfoType1", "trapperInfoType2", "trapperInfoType3"], trapperSpawnRate);
+        trapperInfoType = Create(30356, Types.Crewmate, "trapperInfoType", ["Role", "trapperInfoType2", "Name"], trapperSpawnRate);
         trapperTrapDuration = Create(30357, Types.Crewmate, "trapperTrapDuration", 5f, 1f, 15f, 0.5f, trapperSpawnRate);
 
         //-------------------------- Modifier (40000 - 49999) -------------------------- //

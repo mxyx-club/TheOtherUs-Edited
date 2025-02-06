@@ -421,13 +421,18 @@ public static class RoleHelpers
 
         public static bool otherNeutral(PlayerControl player)
         {
-            if (Pelican.Player == player) return false;
-            if (PartTimer.partTimer == player && PartTimer.target == null) return true;
-            if (Lawyer.lawyer == player && Lawyer.target.IsDead()) return true;
-            if (isNeutral(player) && !Jackal.jackal.Contains(player) && player != Jackal.Sidekick &&
-                player != Pavlovsdogs.pavlovsowner && !Pavlovsdogs.pavlovsdogs.Contains(player))
-                return true;
-            return false;
+            if (Pelican.Player == player ||
+                (PartTimer.partTimer == player && PartTimer.target != null) ||
+                (Lawyer.lawyer == player && Lawyer.target.IsAlive()) ||
+                player == Jackal.Sidekick ||
+                player == Pavlovsdogs.pavlovsowner ||
+                Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) ||
+                Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId))
+            {
+                return false;
+            }
+
+            return player.isNeutral();
         }
 
         private static void AssignRole(PlayerControl player, AssignType assignType)
