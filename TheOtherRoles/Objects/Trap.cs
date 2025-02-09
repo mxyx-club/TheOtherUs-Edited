@@ -16,7 +16,7 @@ public class Trap
 
     private static int instanceCounter;
 
-    private static ResourceSprite trapSprite = new("Trapper_Trap_Ingame.png", 300);
+    private static Sprite trapSprite = new ResourceSprite("Trapper_Trap_Ingame.png", 300);
     private Arrow arrow = new(Color.blue);
     private int neededCount = Trapper.trapCountToReveal;
     public int instanceId;

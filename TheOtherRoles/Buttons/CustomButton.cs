@@ -131,10 +131,10 @@ public class CustomButton
             }
     }
 
-    public static void ResetAllCooldowns(float Time = -1)
+    public static void ResetAllCooldowns(float Time = -1, PlayerControl target = null)
     {
+        var player = target ?? PlayerControl.LocalPlayer;
         var time = Time == -1 ? ModOption.KillCooddown : Time;
-        PlayerControl.LocalPlayer.killTimer = time - 0.6f;
         foreach (var t in buttons)
         {
             var maxTime = Time == -1 ? t.MaxTimer : Time;
@@ -149,6 +149,7 @@ public class CustomButton
                 Error($"NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine\n{e}", "CustomButton");
             }
         }
+        player.killTimer = time;
     }
 
     public static void resetKillButton(PlayerControl p, float time = -1)

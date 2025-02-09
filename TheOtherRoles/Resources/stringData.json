@@ -1542,7 +1542,7 @@
         "13": "存活会取代客户胜利"
     },
     "executionerPromotesToLawyer": {
-        "13": "目标职业变更时可以晋升为律师"
+        "13": "目标被招募时可以晋升为律师"
     },
     "executionerOnTargetDead": {
         "0": "Executioner Becomes On Target Dead",

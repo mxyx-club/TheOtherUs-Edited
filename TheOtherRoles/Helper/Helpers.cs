@@ -60,6 +60,8 @@ public static class Helpers
     public static bool InGame => AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started;
     public static bool IsCountDown => GameStartManager.InstanceExists && GameStartManager.Instance.startState == GameStartManager.StartingStates.Countdown;
     public static bool InMeeting => InGame && MeetingHud.Instance;
+
+    public static bool ShowButtons => !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) && !MeetingHud.Instance && !ExileController.Instance;
     public static bool IsHideNSeek => GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek;
     public static bool isSkeld => GameOptionsManager.Instance.CurrentGameOptions.MapId == 0;
     public static bool isMira => GameOptionsManager.Instance.CurrentGameOptions.MapId == 1;
@@ -70,7 +72,6 @@ public static class Helpers
 
     public static System.Random rnd => new(Guid.NewGuid().GetHashCode());
 
-    public static PlayerControl HostPlayer => GameData.Instance.GetHost().Object;
     public static bool isUsingTransportation(this PlayerControl pc) => pc.inMovingPlat || pc.onLadder;
 
 
@@ -294,11 +295,6 @@ public static class Helpers
         else if (player.isCrew()) killerTeam = "CrewmateRolesText".Translate();
         return killerTeam;
     }
-
-    public static bool ShowButtons =>
-        !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) &&
-        !MeetingHud.Instance &&
-        !ExileController.Instance;
 
     public static void NoCheckStartMeeting(this PlayerControl reporter, GameData.PlayerInfo target, bool force = false)
     {
@@ -864,7 +860,7 @@ public static class Helpers
         writer.Write((byte)Main.Version.Major);
         writer.Write((byte)Main.Version.Minor);
         writer.Write((byte)Main.Version.Build);
-        writer.Write(AmongUsClient.Instance.AmHost ? Patches.GameStartManagerPatch.timer : -1f);
+        writer.Write(AmongUsClient.Instance.AmHost ? GameStartManagerPatch.timer : -1f);
         writer.WritePacked(AmongUsClient.Instance.ClientId);
         writer.Write((byte)(Main.Version.Revision < 0 ? 0xFF : Main.Version.Revision));
         writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
@@ -1224,7 +1220,7 @@ public static class Helpers
 
         if (Survivor.Player != null && Survivor.Player.Contains(target) && Survivor.vestActive)
         {
-            CustomButton.resetKillButton(killer, Survivor.vestResetCooldown);
+            CustomButton.ResetAllCooldowns(Survivor.vestResetCooldown, killer);
             SoundEffectsManager.play("fail");
             return MurderAttemptResult.SuppressKill;
         }

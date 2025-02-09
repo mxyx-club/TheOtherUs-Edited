@@ -4,10 +4,10 @@ using System.Linq;
 using AmongUs.GameOptions;
 using PowerTools;
 using Reactor.Utilities.Extensions;
-using TheOtherRoles.Buttons;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
+using static TheOtherRoles.Buttons.HudManagerStartPatch;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.Options.ModOption;
 using Object = UnityEngine.Object;
@@ -189,7 +189,7 @@ internal class VentButtonVisibilityPatch
 {
     private static void Postfix(HudManager __instance)
     {
-        if (PlayerControl.LocalPlayer.AmOwner && ShowButtons)
+        if (PlayerControl.LocalPlayer?.AmOwner == true && ShowButtons)
         {
             __instance.ImpostorVentButton.Hide();
             __instance.SabotageButton.Hide();
@@ -309,23 +309,17 @@ internal class KillButtonDoClickPatch
             // Handle blank kill
             if (res == MurderAttemptResult.BlankKill)
             {
-                PlayerControl.LocalPlayer.killTimer =
-                    GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
+                PlayerControl.LocalPlayer.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
                 if (PlayerControl.LocalPlayer == Cleaner.cleaner)
-                    Cleaner.cleaner.killTimer = HudManagerStartPatch.cleanerCleanButton.Timer =
-                        HudManagerStartPatch.cleanerCleanButton.MaxTimer;
+                    Cleaner.cleaner.killTimer = cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer;
                 else if (PlayerControl.LocalPlayer == Warlock.warlock)
-                    Warlock.warlock.killTimer = HudManagerStartPatch.warlockCurseButton.Timer =
-                        HudManagerStartPatch.warlockCurseButton.MaxTimer;
+                    Warlock.warlock.killTimer = warlockCurseButton.Timer = warlockCurseButton.MaxTimer;
                 else if (PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor)
-                    Mini.mini.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown *
-                                           (Mini.isGrownUp() ? 0.66f : 2f));
+                    Mini.mini.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * (Mini.isGrownUp() ? 0.66f : 2f));
                 else if (PlayerControl.LocalPlayer == Witch.witch)
-                    Witch.witch.killTimer = HudManagerStartPatch.witchSpellButton.Timer =
-                        HudManagerStartPatch.witchSpellButton.MaxTimer;
+                    Witch.witch.killTimer = witchSpellButton.Timer = witchSpellButton.MaxTimer;
                 else if (PlayerControl.LocalPlayer == Ninja.ninja)
-                    Ninja.ninja.killTimer = HudManagerStartPatch.ninjaButton.Timer =
-                        HudManagerStartPatch.ninjaButton.MaxTimer;
+                    Ninja.ninja.killTimer = ninjaButton.Timer = ninjaButton.MaxTimer;
             }
 
             __instance.SetTarget(null);
@@ -374,78 +368,72 @@ internal class EmergencyMinigameUpdatePatch
 {
     private static void Postfix(EmergencyMinigame __instance)
     {
-        var roleCanCallEmergency = true;
-        var statusText = "";
-
-        // Deactivate emergency button for Swapper
-        if (Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer &&
-            !Swapper.canCallEmergency)
+        if (!CanCallEmergency(out var statusText))
         {
-            roleCanCallEmergency = false;
-            statusText = GetString("swapperMeetingButton");
-        }
-
-        // Potentially deactivate emergency button for Jester
-        if (Jester.jester != null && Jester.jester == PlayerControl.LocalPlayer &&
-            !Jester.canCallEmergency)
-        {
-            roleCanCallEmergency = false;
-            statusText = GetString("jesterMeetingButton");
-        }
-
-        // Potentially deactivate emergency button for Jester
-        if (Prosecutor.prosecutor != null && Prosecutor.prosecutor == PlayerControl.LocalPlayer &&
-            !Prosecutor.canCallEmergency)
-        {
-            roleCanCallEmergency = false;
-            statusText = GetString("prosecutorMeetingButton");
-        }
-
-        // Potentially deactivate emergency button for Jester
-        if (Lawyer.lawyer != null && Lawyer.lawyer == PlayerControl.LocalPlayer &&
-            !Lawyer.canCallEmergency)
-        {
-            roleCanCallEmergency = false;
-            statusText = GetString("lawyerMeetingButton");
-        }
-
-        // Potentially deactivate emergency button for Lawyer/Prosecutor
-        if (Executioner.executioner != null && Executioner.executioner == PlayerControl.LocalPlayer &&
-            !Executioner.canCallEmergency)
-        {
-            roleCanCallEmergency = false;
-            if (Executioner.executioner) statusText = GetString("executionerMeetingButton");
-        }
-
-        // Potentially deactivate emergency button for Prophet
-        if (Prophet.prophet != null && Prophet.prophet == PlayerControl.LocalPlayer && !Prophet.canCallEmergency)
-        {
-            roleCanCallEmergency = false;
-            statusText = GetString("prophetMeetingButton");
-        }
-
-        if (!roleCanCallEmergency)
-        {
-            __instance.StatusText.text = statusText;
-            __instance.NumberText.text = string.Empty;
-            __instance.ClosedLid.gameObject.SetActive(true);
-            __instance.OpenLid.gameObject.SetActive(false);
-            __instance.ButtonActive = false;
+            UpdateEmergencyButton(__instance, statusText, false);
             return;
         }
 
-        // Handle max number of meetings
         if (__instance.state == 1)
         {
             var localRemaining = PlayerControl.LocalPlayer.RemainingEmergencies;
             var teamRemaining = Mathf.Max(0, maxNumberOfMeetings - meetingsCount);
-            var remaining = Mathf.Min(localRemaining,
-                Mayor.mayor != null && Mayor.mayor == PlayerControl.LocalPlayer ? 1 : teamRemaining);
+            var remaining = Mathf.Min(localRemaining, Mayor.mayor != null && Mayor.mayor == PlayerControl.LocalPlayer ? 1 : teamRemaining);
             __instance.NumberText.text = string.Format(GetString("meetingCount"), localRemaining.ToString(), teamRemaining.ToString());
-            __instance.ButtonActive = remaining > 0;
-            __instance.ClosedLid.gameObject.SetActive(!__instance.ButtonActive);
-            __instance.OpenLid.gameObject.SetActive(__instance.ButtonActive);
+            UpdateEmergencyButton(__instance, string.Empty, remaining > 0);
         }
+    }
+
+    private static bool CanCallEmergency(out string statusText)
+    {
+        statusText = string.Empty;
+
+        if (Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer && !Swapper.canCallEmergency)
+        {
+            statusText = GetString("swapperMeetingButton");
+            return false;
+        }
+
+        if (Jester.jester != null && Jester.jester == PlayerControl.LocalPlayer && !Jester.canCallEmergency)
+        {
+            statusText = GetString("jesterMeetingButton");
+            return false;
+        }
+
+        if (Prosecutor.prosecutor != null && Prosecutor.prosecutor == PlayerControl.LocalPlayer && !Prosecutor.canCallEmergency)
+        {
+            statusText = GetString("prosecutorMeetingButton");
+            return false;
+        }
+
+        if (Lawyer.lawyer != null && Lawyer.lawyer == PlayerControl.LocalPlayer && !Lawyer.canCallEmergency)
+        {
+            statusText = GetString("lawyerMeetingButton");
+            return false;
+        }
+
+        if (Executioner.executioner != null && Executioner.executioner == PlayerControl.LocalPlayer && !Executioner.canCallEmergency)
+        {
+            statusText = GetString("executionerMeetingButton");
+            return false;
+        }
+
+        if (Prophet.prophet != null && Prophet.prophet == PlayerControl.LocalPlayer && !Prophet.canCallEmergency)
+        {
+            statusText = GetString("prophetMeetingButton");
+            return false;
+        }
+
+        return true;
+    }
+
+    private static void UpdateEmergencyButton(EmergencyMinigame instance, string statusText, bool isActive)
+    {
+        instance.StatusText.text = statusText;
+        instance.NumberText.text = string.Empty;
+        instance.ClosedLid.gameObject.SetActive(!isActive);
+        instance.OpenLid.gameObject.SetActive(isActive);
+        instance.ButtonActive = isActive;
     }
 }
 

@@ -846,7 +846,7 @@ public static class RPCProcedure
     {
         var target = playerById(targetId);
         target.Exiled();
-        OverrideDeathReasonAndKiller(target, CustomDeathReason.HostCmdKill, HostPlayer);
+        OverrideDeathReasonAndKiller(target, CustomDeathReason.HostCmdKill, GameData.Instance.GetHost()?.Object);
 
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
         foreach (var body in array)

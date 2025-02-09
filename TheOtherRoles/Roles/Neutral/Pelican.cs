@@ -33,7 +33,8 @@ public class Pelican
                 HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
                 PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Player.transform.position);
             }
-            clearAndReload(clear);
+            Message($"Pelican Player {Player?.Data.PlayerName ?? "null"}", "Pelican");
+            if (clear) clearAndReload(true);
         }
     }
 

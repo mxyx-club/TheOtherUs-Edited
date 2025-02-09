@@ -195,13 +195,14 @@ internal class ExileControllerBeginPatch
                         break;
                 }
             }
-            if (CustomOptionHolder.exiledShowTeamNum.GetBool() && player?.PlayerId != Jester.jester?.PlayerId)
+
+            if (CustomOptionHolder.exiledShowTeamNum.GetBool())
             {
                 var Impostors = PlayerControl.AllPlayerControls.ToArray().Count(x => x.isImpostor() && x.IsAlive() && x.PlayerId != player.PlayerId);
                 var Neutrals = PlayerControl.AllPlayerControls.ToArray().Count(x => x.isNeutral() && x.IsAlive() && x.PlayerId != player.PlayerId);
                 __instance.ImpostorText.text =
-                    $"\n{cs(getTeamColor(RoleType.Impostor), "伪装者阵营剩余 " + Impostors)}" +
-                    $" | {cs(getTeamColor(RoleType.Neutral), "中立阵营剩余 " + Neutrals)}";
+                    $"\n{cs(getTeamColor(RoleType.Impostor), "伪装者阵营剩余 ") + Impostors}" +
+                    $" | {cs(getTeamColor(RoleType.Neutral), "中立阵营剩余 ") + Neutrals}";
 
             }
         }

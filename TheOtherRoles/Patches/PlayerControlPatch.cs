@@ -1568,6 +1568,8 @@ internal class PlayerControlRevivePatch
             Akujo.otherLover(__instance)?.Revive();
         }
 
+        CustomButton.ResetAllCooldowns(-1, __instance);
+
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)
         {
