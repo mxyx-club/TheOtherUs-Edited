@@ -123,7 +123,6 @@ internal class IntroCutsceneOnDestroyPatch
         }
 
         ModOption.firstKillName = "";
-
     }
 
     public static void Postfix(IntroCutscene __instance)

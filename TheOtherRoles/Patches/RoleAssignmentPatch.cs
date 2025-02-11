@@ -191,6 +191,7 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Snitch, CustomOptionHolder.snitchSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Medium, CustomOptionHolder.mediumSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Prophet, CustomOptionHolder.prophetSpawnRate.GetSelection());
+        crewSettings.Add((byte)RoleId.Redemptor, CustomOptionHolder.redemptorSpawnRate.GetSelection());
         if (!isGuesserGamemode)
             crewSettings.Add((byte)RoleId.Vigilante, CustomOptionHolder.guesserSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Trapper, CustomOptionHolder.trapperSpawnRate.GetSelection());
@@ -536,7 +537,6 @@ internal class RoleManagerSelectRolesPatch
             RoleId.Multitasker,
             RoleId.ButtonBarry,
             RoleId.Vip,
-            RoleId.Invert,
             RoleId.Indomitable,
             RoleId.Tunneler,
             RoleId.Slueth,
@@ -1042,10 +1042,6 @@ internal class RoleManagerSelectRolesPatch
             case RoleId.Vip:
                 selection = CustomOptionHolder.modifierVip.GetSelection();
                 if (multiplyQuantity) selection *= CustomOptionHolder.modifierVipQuantity.GetQuantity();
-                break;
-            case RoleId.Invert:
-                selection = CustomOptionHolder.modifierInvert.GetSelection();
-                if (multiplyQuantity) selection *= CustomOptionHolder.modifierInvertQuantity.GetQuantity();
                 break;
             case RoleId.Chameleon:
                 selection = CustomOptionHolder.modifierChameleon.GetSelection();

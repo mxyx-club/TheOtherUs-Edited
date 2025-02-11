@@ -255,55 +255,55 @@ public class Specter
                     if (Sheriff.formerDeputy == target) Sheriff.formerDeputy = local;
                     break;
                 case RoleId.Deputy:
-                    if (Amnisiac.resetRole) Sheriff.Reload();
+                    if (resetRole) Sheriff.Reload();
                     Sheriff.Deputy = local;
                     break;
                 case RoleId.BodyGuard:
-                    if (Amnisiac.resetRole) BodyGuard.clearAndReload();
+                    if (resetRole) BodyGuard.clearAndReload();
                     BodyGuard.bodyguard = local;
                     break;
                 case RoleId.Jumper:
-                    if (Amnisiac.resetRole) Jumper.clearAndReload();
+                    if (resetRole) Jumper.clearAndReload();
                     Jumper.jumper = local;
                     break;
                 case RoleId.Detective:
-                    if (Amnisiac.resetRole) Detective.clearAndReload();
+                    if (resetRole) Detective.clearAndReload();
                     Detective.detective = local;
                     break;
                 case RoleId.TimeMaster:
-                    if (Amnisiac.resetRole) TimeMaster.clearAndReload();
+                    if (resetRole) TimeMaster.clearAndReload();
                     TimeMaster.timeMaster = local;
                     break;
                 case RoleId.Veteran:
-                    if (Amnisiac.resetRole) Veteran.clearAndReload();
+                    if (resetRole) Veteran.clearAndReload();
                     Veteran.veteran = local;
                     break;
                 case RoleId.Medic:
-                    if (Amnisiac.resetRole) Medic.clearAndReload();
+                    if (resetRole) Medic.clearAndReload();
                     Medic.medic = local;
                     break;
                 case RoleId.Swapper:
-                    if (Amnisiac.resetRole) Swapper.clearAndReload();
+                    if (resetRole) Swapper.clearAndReload();
                     Swapper.swapper = local;
                     break;
                 case RoleId.Seer:
-                    if (Amnisiac.resetRole) Seer.clearAndReload();
+                    if (resetRole) Seer.clearAndReload();
                     Seer.seer = local;
                     break;
                 case RoleId.Hacker:
-                    if (Amnisiac.resetRole) Hacker.clearAndReload();
+                    if (resetRole) Hacker.clearAndReload();
                     Hacker.hacker = local;
                     break;
                 case RoleId.Tracker:
-                    if (Amnisiac.resetRole) Tracker.clearAndReload();
+                    if (resetRole) Tracker.clearAndReload();
                     Tracker.tracker = local;
                     break;
                 case RoleId.Snitch:
-                    if (Amnisiac.resetRole) Snitch.clearAndReload();
+                    if (resetRole) Snitch.clearAndReload();
                     Snitch.snitch = local;
                     break;
                 case RoleId.Prophet:
-                    if (Amnisiac.resetRole) Prophet.clearAndReload();
+                    if (resetRole) Prophet.clearAndReload();
                     Prophet.prophet = local;
                     break;
                 case RoleId.InfoSleuth:
@@ -311,24 +311,28 @@ public class Specter
                     InfoSleuth.infoSleuth = local;
                     break;
                 case RoleId.Spy:
-                    if (Amnisiac.resetRole) Spy.clearAndReload();
+                    if (resetRole) Spy.clearAndReload();
                     Spy.spy = local;
                     break;
                 case RoleId.SecurityGuard:
-                    if (Amnisiac.resetRole) SecurityGuard.clearAndReload();
+                    if (resetRole) SecurityGuard.clearAndReload();
                     SecurityGuard.securityGuard = local;
                     break;
                 case RoleId.Medium:
-                    if (Amnisiac.resetRole) Medium.clearAndReload();
+                    if (resetRole) Medium.clearAndReload();
                     Medium.medium = local;
                     break;
                 case RoleId.Trapper:
-                    if (Amnisiac.resetRole) Trapper.clearAndReload();
+                    if (resetRole) Trapper.clearAndReload();
                     Trapper.trapper = local;
                     break;
                 case RoleId.Balancer:
-                    if (Amnisiac.resetRole) Balancer.clearAndReload();
+                    if (resetRole) Balancer.clearAndReload();
                     Balancer.balancer = local;
+                    break;
+                case RoleId.Redemptor:
+                    if (resetRole) Redemptor.ClearAndReload();
+                    Redemptor.Player = local;
                     break;
             }
         }

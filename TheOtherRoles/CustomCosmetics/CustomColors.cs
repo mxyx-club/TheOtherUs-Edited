@@ -126,8 +126,7 @@ public class CustomColors
     [HarmonyPatch]
     public static class CustomColorPatches
     {
-        [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames),
-            typeof(Il2CppReferenceArray<Object>))]
+        [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames), typeof(Il2CppReferenceArray<Object>))]
         private class ColorStringPatch
         {
             [HarmonyPriority(Priority.Last)]

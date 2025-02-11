@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using InnerNet;
 using MonoMod.Utils;
 using TheOtherRoles.Utilities;
 
@@ -84,6 +85,7 @@ public enum RoleId
     Medium,
     Trapper,
     Balancer,
+    Redemptor,
 
     // Modifier ---
     Lover,
@@ -108,7 +110,6 @@ public enum RoleId
     Indomitable,
     Slueth,
     Cursed,
-    Invert,
     Blind,
     Watcher,
     Radar,
@@ -135,6 +136,9 @@ public static class RoleHelpers
             else _CanSeeRoleInfo = value;
         }
     }
+
+    public static bool ShowGhostInfo =>
+        (PlayerControl.LocalPlayer.Data.IsDead && CanSeeRoleInfo) || AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Ended;
 
     public static Dictionary<byte, byte[]> blockedRolePairings = new();
     public static Dictionary<AssignType, List<Assignment>> GhostRoles = new();
@@ -198,6 +202,7 @@ public static class RoleHelpers
             { RoleId.Trapper, CustomOptionHolder.trapperSpawnRate.GetSelection() },
             { RoleId.Veteran, CustomOptionHolder.veteranSpawnRate.GetSelection() },
             { RoleId.Vigilante, CustomOptionHolder.guesserSpawnRate.GetSelection() },
+            { RoleId.Redemptor, CustomOptionHolder.redemptorSpawnRate.GetSelection() },
 
             { RoleId.WolfLord, CustomOptionHolder.wolfLordSpawnRate.GetSelection() },
             { RoleId.Blackmailer, CustomOptionHolder.blackmailerSpawnRate.GetSelection() },
@@ -260,7 +265,6 @@ public static class RoleHelpers
             { RoleId.Flash, CustomOptionHolder.modifierFlash.GetSelection() },
             { RoleId.Giant, CustomOptionHolder.modifierGiant.GetSelection() },
             { RoleId.Indomitable, CustomOptionHolder.modifierIndomitable.GetSelection() },
-            { RoleId.Invert, CustomOptionHolder.modifierInvert.GetSelection() },
             { RoleId.LastImpostor, CustomOptionHolder.modifierLastImpostor.GetSelection() },
             { RoleId.Mini, CustomOptionHolder.modifierMini.GetSelection() },
             { RoleId.Multitasker, CustomOptionHolder.modifierMultitasker.GetSelection() },
@@ -360,6 +364,7 @@ public static class RoleHelpers
         Witness.ClearAndReload();
         WolfLord.ClearAndReload();
         Pelican.clearAndReload();
+        Redemptor.ClearAndReload();
 
         // Modifier
         Assassin.clearAndReload();
@@ -383,7 +388,6 @@ public static class RoleHelpers
         Slueth.clearAndReload();
         Cursed.clearAndReload();
         Vip.clearAndReload();
-        Invert.clearAndReload();
         Chameleon.clearAndReload();
         ButtonBarry.clearAndReload();
         LastImpostor.clearAndReload();
@@ -404,9 +408,9 @@ public static class RoleHelpers
     [HarmonyPatch(typeof(RoleManager), nameof(RoleManager.AssignRoleOnDeath))]
     public static class AssignRoleOnDeathPatch
     {
-        public static bool Prefix([HarmonyArgument(0)] PlayerControl player)
+        public static bool Prefix([HarmonyArgument(0)] PlayerControl player, [HarmonyArgument(1)] bool specialRolesAllowed)
         {
-            if (player.IsAlive() || player == null) return false;
+            if (player.IsAlive() || player == null || !specialRolesAllowed) return false;
             return true;
         }
 

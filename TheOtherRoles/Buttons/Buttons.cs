@@ -98,6 +98,9 @@ internal static class HudManagerStartPatch
     public static CustomButton defuseButton;
     public static CustomButton zoomOutButton;
     public static CustomButton roleSummaryButton;
+    public static CustomButton redemptorReviveButton;
+    public static CustomButton redemptorRevelationButton;
+    public static CustomButton redemptorPrayerButton;
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
@@ -201,7 +204,9 @@ internal static class HudManagerStartPatch
         juggernautKillButton.MaxTimer = Juggernaut.cooldown;
         swooperKillButton.MaxTimer = Swooper.cooldown;
         evilTrapperSetTrapButton.MaxTimer = EvilTrapper.cooldown;
-
+        redemptorReviveButton.MaxTimer = 10f;
+        redemptorRevelationButton.MaxTimer = Redemptor.revelationCooldown;
+        redemptorPrayerButton.MaxTimer = Redemptor.prayerCooldown;
         doomsayerButton.MaxTimer = Doomsayer.cooldown;
         akujoHonmeiButton.MaxTimer = 0f;
         akujoBackupButton.MaxTimer = 0f;
@@ -236,17 +241,15 @@ internal static class HudManagerStartPatch
         securityGuardCamButton.EffectDuration = SecurityGuard.duration;
         defuseButton.EffectDuration = Terrorist.defuseDuration;
         terroristButton.EffectDuration = Terrorist.destructionTime + Terrorist.bombActiveAfter;
+        redemptorRevelationButton.EffectDuration = Redemptor.revelationDuration;
+        //redemptorPrayerButton.EffectDuration = Redemptor.prayerDuration;
+
         zoomOutButton.MaxTimer = zoomOutButton.Timer = 0f;
     }
 
     public static void showTargetNameOnButton(PlayerControl target, CustomButton button, string defaultText)
     {
         Helpers.showTargetNameOnButton(target, button, defaultText);
-    }
-
-    public static void showTargetNameOnButtonExplicit(PlayerControl target, CustomButton button, string defaultText)
-    {
-        Helpers.showTargetNameOnButtonExplicit(target, button, defaultText);
     }
 
     public static void resetTimeMasterButton()
@@ -3454,7 +3457,7 @@ internal static class HudManagerStartPatch
                         }
                     }
             },
-            buttonText: GetString("SpecterButton")
+            buttonText: GetString("ReviveButton")
         );
 
         // Medium button
@@ -4085,12 +4088,12 @@ internal static class HudManagerStartPatch
             {
                 // Could Use
                 Blackmailer.currentTarget = SetTarget();
-                SetPlayerOutline(Medic.currentTarget, Blackmailer.blackmailedColor);
+                SetPlayerOutline(Blackmailer.currentTarget, Blackmailer.blackmailedColor);
 
-                var text = GetString("BlackmailerText");
-                if (Blackmailer.blackmailed != null) text = Blackmailer.blackmailed.Data.PlayerName;
-                //Show target name under button if setting is true
-                showTargetNameOnButtonExplicit(Blackmailer.currentTarget, blackmailerButton, GetString("BlackmailerText"));
+                if (Blackmailer.blackmailed == null)
+                {
+                    showTargetNameOnButton(Blackmailer.currentTarget, blackmailerButton, GetString("BlackmailerText"));
+                }
                 return Blackmailer.currentTarget != null && PlayerControl.LocalPlayer.CanMove;
             },
             () => { blackmailerButton.Timer = blackmailerButton.MaxTimer; },
@@ -4318,8 +4321,6 @@ internal static class HudManagerStartPatch
         trapperChargesText.transform.localScale = Vector3.one * 0.5f;
         trapperChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
-
-
         // Yoyo button
         yoyoButton = new CustomButton(
             () =>
@@ -4458,6 +4459,140 @@ internal static class HudManagerStartPatch
            GameOptionsManager.Instance.currentNormalGameOptions.MapId == 3,
            "AdminMapText".Translate()
        );
+
+        redemptorRevelationButton = new CustomButton(
+            () =>
+            {
+                Redemptor.Revelating = true;
+            },
+            () =>
+            {
+                return Redemptor.revelation && Redemptor.Player.IsAlive() && Redemptor.Player == PlayerControl.LocalPlayer;
+            },
+            () =>
+            {
+                redemptorRevelationButton.PositionOffset = Redemptor.prayer ? ButtonPositions.upperRowLeft : ButtonPositions.upperRowCenter;
+                return PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                Redemptor.Revelating = false;
+                redemptorRevelationButton.Timer = redemptorRevelationButton.MaxTimer;
+                redemptorRevelationButton.isEffectActive = false;
+                redemptorRevelationButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+            },
+            Tracker.trackCorpsesButtonSprite,
+            ButtonPositions.upperRowCenter,
+            __instance,
+            secondaryAbilityInput.keyCode,
+            true,
+            Redemptor.revelationDuration,
+            () =>
+            {
+                Redemptor.Revelating = false;
+                redemptorRevelationButton.Timer = redemptorRevelationButton.MaxTimer;
+            },
+            buttonText: GetString("RedemptorRevelation")
+        );
+
+        redemptorPrayerButton = new CustomButton(
+            () =>
+            {
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RedemptorPrayer);
+                writer.Write(byte.MaxValue);
+                writer.EndRPC();
+                Redemptor.RedemptorPrayer(byte.MaxValue);
+            },
+            () =>
+            {
+                return Redemptor.prayer && Redemptor.Player.IsAlive() &&
+                Redemptor.Player == PlayerControl.LocalPlayer && Redemptor.RevivedPlayer == null;
+            },
+            () =>
+            {
+                return Redemptor.target && PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                redemptorPrayerButton.Timer = redemptorPrayerButton.MaxTimer;
+                redemptorPrayerButton.isEffectActive = false;
+                redemptorPrayerButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+            },
+            Redemptor.reviveButton,
+            ButtonPositions.upperRowCenter,
+            __instance,
+            modKillInput.keyCode,
+            true,
+            Redemptor.prayerDuration,
+            () =>
+            {
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RedemptorPrayer);
+                writer.Write((byte)0);
+                writer.EndRPC();
+                Redemptor.RedemptorPrayer(0);
+
+                if (Redemptor.target != null)
+                {
+                    var writer2 = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RedemptorRevive);
+                    writer2.Write(Redemptor.target.PlayerId);
+                    writer2.EndRPC();
+                    Redemptor.RevivePlayer(Redemptor.target.PlayerId);
+
+                    redemptorPrayerButton.Timer = redemptorPrayerButton.MaxTimer;
+                }
+            },
+            buttonText: GetString("RedemptorPrayer")
+        );
+
+        redemptorReviveButton = new CustomButton(
+            () =>
+            {
+                if (Redemptor.target == null) return;
+
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.UncheckedMurderPlayer);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(byte.MaxValue);
+                writer.EndRPC();
+                RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
+
+                _ = new LateTask(() =>
+                {
+                    if (InMeeting) { Message("复活失败", "ReviveTask"); return; }
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RedemptorRevive);
+                    writer.Write(Redemptor.target.PlayerId);
+                    writer.EndRPC();
+                    Redemptor.RevivePlayer(Redemptor.target.PlayerId);
+                }, Redemptor.reviveDuration, "RedemptorRevive");
+            },
+            () =>
+            {
+                return Redemptor.Player.IsAlive() && Redemptor.Player == PlayerControl.LocalPlayer;
+            },
+            () =>
+            {
+                var pos = PlayerControl.LocalPlayer.GetTruePosition();
+                var maxDistance = PlayerControl.LocalPlayer.MaxReportDistance * 0.24f;
+
+                var deadBody = Physics2D.OverlapCircleAll(pos, maxDistance, Constants.PlayersOnlyMask)
+                    .Where(collider => collider.CompareTag("DeadBody"))
+                    .Select(collider => collider.GetComponent<DeadBody>())
+                    .FirstOrDefault(db => db != null && playerById(db.ParentId)?.Data?.IsDead == true &&
+                                          !(playerById(db.ParentId)?.Data?.Disconnected == true));
+
+                Redemptor.target = playerById(deadBody?.ParentId);
+                return Redemptor.target && PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                redemptorReviveButton.Timer = 10f;
+            },
+            Redemptor.reviveButton,
+            ButtonPositions.upperRowRight,
+            __instance,
+            abilityInput.keyCode,
+            buttonText: GetString("ReviveButton")
+        );
 
         // Set the default (or settings from the previous game) timers / durations when spawning the buttons
         initialized = true;

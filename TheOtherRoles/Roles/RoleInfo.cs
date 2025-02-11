@@ -94,6 +94,7 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
     public static RoleInfo medium = new("Medium", Medium.color, RoleId.Medium, RoleType.Crewmate);
     public static RoleInfo trapper = new("Trapper", Trapper.color, RoleId.Trapper, RoleType.Crewmate);
     public static RoleInfo balancer = new("Balancer", Balancer.color, RoleId.Balancer, RoleType.Crewmate);
+    public static RoleInfo redemptor = new("Redemptor", Redemptor.color, RoleId.Redemptor, RoleType.Crewmate);
 
     // Modifier
     public static RoleInfo assassin = new("Assassin", Assassin.color, RoleId.Assassin, RoleType.Modifier);
@@ -118,7 +119,6 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
     public static RoleInfo indomitable = new("Indomitable", Color.yellow, RoleId.Indomitable, RoleType.Modifier);
     public static RoleInfo slueth = new("Slueth", Color.yellow, RoleId.Slueth, RoleType.Modifier, true);
     public static RoleInfo cursed = new("Cursed", Color.yellow, RoleId.Cursed, RoleType.Modifier, true);
-    public static RoleInfo invert = new("Invert", Color.yellow, RoleId.Invert, RoleType.Modifier);
     public static RoleInfo blind = new("Blind", Color.yellow, RoleId.Blind, RoleType.Modifier);
     public static RoleInfo watcher = new("Watcher", Color.yellow, RoleId.Watcher, RoleType.Modifier, true);
     public static RoleInfo radar = new("Radar", Color.yellow, RoleId.Radar, RoleType.Modifier, true);
@@ -206,6 +206,7 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
         medium,
         trapper,
         balancer,
+        redemptor,
 
         lover,
         assassin,
@@ -229,7 +230,6 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
         indomitable,
         slueth,
         cursed,
-        invert,
         blind,
         watcher,
         radar,
@@ -281,7 +281,6 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
             if (p == Poucher.poucher && Poucher.spawnModifier) infos.Add(poucherModifier);
             if (p == Giant.giant) infos.Add(giant);
             if (p == Vortox.Player) infos.Add(vortox);
-            if (Invert.invert.Any(x => x.PlayerId == p.PlayerId)) infos.Add(invert);
             if (Chameleon.chameleon.Any(x => x.PlayerId == p.PlayerId)) infos.Add(chameleon);
             if (p == Shifter.shifter) infos.Add(shifter);
             if (p == LastImpostor.lastImpostor) infos.Add(lastImpostor);
@@ -355,6 +354,7 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
         if (p == Akujo.akujo) infos.Add(akujo);
         if (p == Jackal.Sidekick) infos.Add(sidekick);
         if (p == Pavlovsdogs.pavlovsowner) infos.Add(pavlovsowner);
+        if (p == Redemptor.Player) infos.Add(redemptor);
         if (Jackal.jackal.Any(x => x != null && x.PlayerId == p.PlayerId)) infos.Add(jackal);
         if (Amnisiac.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(amnisiac);
         if (Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == p.PlayerId)) infos.Add(pavlovsdogs);
@@ -406,14 +406,14 @@ public class RoleInfo(string name, Color color, RoleId roleId, RoleType roleType
 
         if (showGhostInfo && p != null)
         {
-            if (p == Shifter.shifter && (PlayerControl.LocalPlayer == Shifter.shifter || shouldShowGhostInfo()) && Shifter.futureShift != null)
+            if (p == Shifter.shifter && (PlayerControl.LocalPlayer == Shifter.shifter || ShowGhostInfo) && Shifter.futureShift != null)
                 roleName += cs(Color.yellow, " ← " + Shifter.futureShift.Data.PlayerName);
-            if (p == Vulture.vulture && (PlayerControl.LocalPlayer == Vulture.vulture || shouldShowGhostInfo()))
+            if (p == Vulture.vulture && (PlayerControl.LocalPlayer == Vulture.vulture || ShowGhostInfo))
                 roleName += cs(Vulture.color, string.Format("roleInfoRemaining".Translate(), Vulture.vultureNumberToWin - Vulture.eatenBodies));
-            if (p == Witness.Player && (PlayerControl.LocalPlayer == Witness.Player || shouldShowGhostInfo()))
+            if (p == Witness.Player && (PlayerControl.LocalPlayer == Witness.Player || ShowGhostInfo))
                 roleName += cs(Witness.color, string.Format("roleInfoRemaining".Translate(), Witness.exileToWin - Witness.exiledCount));
 
-            if (shouldShowGhostInfo())
+            if (ShowGhostInfo)
             {
                 if (Eraser.futureErased.Contains(p))
                     roleName = cs(Color.gray, "(被抹除) ") + roleName;

@@ -114,7 +114,7 @@ public class Trap
         t.triggerable = true;
 
         // Add trapped Info into Trapper chat
-        if (Trapper.trapper.IsAlive() && (PlayerControl.LocalPlayer == Trapper.trapper || shouldShowGhostInfo()))
+        if (Trapper.trapper.IsAlive() && (PlayerControl.LocalPlayer == Trapper.trapper || ShowGhostInfo))
         {
             foreach (var trap in traps)
             {

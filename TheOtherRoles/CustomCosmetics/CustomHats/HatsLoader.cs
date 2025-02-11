@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.IO;
 using System.Text.Json;
@@ -76,6 +76,7 @@ public class HatsLoader : MonoBehaviour
         {
             Error($"下载帽子配置文件时出错: {www.error}");
             isSuccessful = false;
+            LoadLocalHats();
             yield break;
         }
 
@@ -101,6 +102,7 @@ public class HatsLoader : MonoBehaviour
         {
             isSuccessful = false;
             Error($"未能保存或加载帽子配置文件: {ex.Message}");
+            LoadLocalHats();
         }
         finally
         {

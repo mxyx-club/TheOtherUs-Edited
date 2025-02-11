@@ -131,9 +131,8 @@ public class CustomButton
             }
     }
 
-    public static void ResetAllCooldowns(float Time = -1, PlayerControl target = null)
+    public static void ResetAllCooldowns(float Time = -1)
     {
-        var player = target ?? PlayerControl.LocalPlayer;
         var time = Time == -1 ? ModOption.KillCooddown : Time;
         foreach (var t in buttons)
         {
@@ -146,10 +145,10 @@ public class CustomButton
             }
             catch (Exception e)
             {
-                Error($"NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine\n{e}", "CustomButton");
+                Error($"NullReferenceException from ResetAllCooldowns(), if theres only one warning its fine\n{e}", "CustomButton");
             }
         }
-        player.killTimer = time;
+        PlayerControl.LocalPlayer.killTimer = time;
     }
 
     public static void resetKillButton(PlayerControl p, float time = -1)
@@ -173,7 +172,6 @@ public class CustomButton
         thiefKillButton.Timer = time == -1 ? thiefKillButton.MaxTimer : time;
         pavlovsdogsKillButton.Timer = time == -1 ? pavlovsdogsKillButton.MaxTimer : time;
     }
-
     public void setActive(bool isActive)
     {
         if (isActive)

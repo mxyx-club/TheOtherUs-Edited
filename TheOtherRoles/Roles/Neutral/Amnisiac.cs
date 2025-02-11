@@ -378,6 +378,10 @@ public class Amnisiac
                 if (resetRole) Balancer.clearAndReload();
                 Balancer.balancer = local;
                 break;
+            case RoleId.Redemptor:
+                if (resetRole) Redemptor.ClearAndReload();
+                Redemptor.Player = local;
+                break;
         }
         Player.RemoveAll(x => x.PlayerId == local.PlayerId);
         foreach (var arrow in localArrows)

@@ -450,40 +450,27 @@ public static class Helpers
             if (player2.Data.Role.IsImpostor && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
                 player.cosmetics.nameText.color = Palette.ImpostorRed;
     }
-
-    public static void showTargetNameOnButton(PlayerControl target, CustomButton button, string defaultText)
+#nullable enable
+    public static void showTargetNameOnButton(PlayerControl? target, CustomButton button, string defaultText)
     {
         if (CustomOptionHolder.showButtonTarget.GetBool())
         {
-            // Should the button show the target name option
             string text;
-            // set text to default if camo is on
             if (Camouflager.camouflageTimer >= 0.1f || isCamoComms) text = defaultText;
-            // set to default if lights are out
             else if (isLightsActive) text = defaultText;
-            // set to default if trickster ability is active
             else if (Trickster.trickster != null && Trickster.lightsOutTimer > 0f) text = defaultText;
-            // set to morphed player
             else if (Morphling.morphling != null && Morphling.morphTarget != null && target == Morphling.morphling && Morphling.morphTimer > 0)
                 text = Morphling.morphTarget.Data.PlayerName;
             else if (target == Ninja.ninja && Ninja.isInvisable) text = defaultText;
             else if (target == Swooper.swooper && Swooper.isInvisable) text = defaultText;
             else if (Jackal.jackal.Any(p => p == target) && Jackal.isInvisable) text = defaultText;
-            //else if (target == PhantomRole.phantomRole) text = defaultText;
-            else if (target == null) text = defaultText; // Set text to defaultText if no target
-            else text = target.Data.PlayerName; // Set text to playername
-            showTargetNameOnButtonExplicit(null, button, text);
+            else text = target == null ? defaultText : target.Data.PlayerName;
+
+            button.actionButton.OverrideText(text);
+            button.showButtonText = true;
         }
     }
-
-    public static void showTargetNameOnButtonExplicit(PlayerControl target, CustomButton button, string defaultText)
-    {
-        var text = defaultText;
-        if (target == null) text = defaultText; // Set text to defaultText if no target
-        else text = target.Data.PlayerName; // Set text to playername
-        button.actionButton.OverrideText(text);
-        button.showButtonText = true;
-    }
+#nullable disable
 
     public static void AddUnique<T>(this Il2CppSystem.Collections.Generic.List<T> self, T item) where T : IDisconnectHandler
     {
@@ -742,11 +729,13 @@ public static class Helpers
         }
     }
 
+    public static void ModRevive(this PlayerControl target)
+    {
+        target?.Revive();
+    }
+
     internal static string getRoleString(RoleInfo roleInfo)
     {
-        if (roleInfo.roleId == RoleId.Invert)
-            return cs(roleInfo.color, $"{roleInfo.Name}: {roleInfo.ShortDescription} \n(还有 {Invert.meetings} 次会议醒酒)");
-
         return cs(roleInfo.color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
     }
 
@@ -824,15 +813,9 @@ public static class Helpers
         return ChildObject;
     }
 
-    public static bool shouldShowGhostInfo()
-    {
-        return (PlayerControl.LocalPlayer.Data.IsDead && CanSeeRoleInfo) ||
-               AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Ended;
-    }
-
     public static bool ZoomButtonActive()
     {
-        if (!shouldShowGhostInfo() || InMeeting) return false;
+        if (!ShowGhostInfo || InMeeting) return false;
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
         var numberOfLeftTasks = playerTotal - playerCompleted;
         return numberOfLeftTasks <= 0 || !CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.GetBool();
@@ -885,7 +868,7 @@ public static class Helpers
 
     public static string GithubUrl(this string url)
     {
-        return IsCN() && !url.Contains("ghp.ci") ? "https://ghp.ci/" + url : url;
+        return IsCN() && !url.Contains("ghfast.top") ? "https://ghfast.top/" + url : url;
     }
 
     public static void setSemiTransparent(this PoolablePlayer player, bool value, float alpha = 0.25f)
@@ -1220,7 +1203,7 @@ public static class Helpers
 
         if (Survivor.Player != null && Survivor.Player.Contains(target) && Survivor.vestActive)
         {
-            CustomButton.ResetAllCooldowns(Survivor.vestResetCooldown, killer);
+            CustomButton.resetKillButton(killer, Survivor.vestResetCooldown);
             SoundEffectsManager.play("fail");
             return MurderAttemptResult.SuppressKill;
         }

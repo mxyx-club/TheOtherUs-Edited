@@ -535,9 +535,6 @@ internal class ExileControllerWrapUpPatch
             }
         }
 
-        // Invert add meeting
-        if (Invert.meetings > 0) Invert.meetings--;
-
         Chameleon.lastMoved.Clear();
 
         foreach (var trap in Trap.traps) trap.triggerable = false;
@@ -594,8 +591,8 @@ internal class ExileControllerWrapUpPatch
     }
 }
 
-[HarmonyPatch(typeof(SpawnInMinigame),
-    nameof(SpawnInMinigame.Close))] // Set position of AntiTp players AFTER they have selected a spawn.
+// Set position of AntiTp players AFTER they have selected a spawn.
+[HarmonyPatch(typeof(SpawnInMinigame), nameof(SpawnInMinigame.Close))]
 internal class AirshipSpawnInPatch
 {
     private static void Postfix()

@@ -159,18 +159,17 @@ Even more roles are coming soon.
 |    Warlock     |    Swooper     |  Time Master  |  Tiebreaker   |
 |   Trickster    |    Arsonist    |    Swapper    |     Flash     |
 | Bounty Hunter  |    Werewolf    |    Hacker     |  Multitasker  |
-|   Terrorist    |     Thief      |     Seer      |     Giant     |
+|   Terrorist    |    Pelican     |     Seer      |     Giant     |
 |  Blackmailer   |   Juggernaut   |    Jumper     |     Mini      |
 |     Witch      |   Doomsayer    |    Tracker    |      Vip      |
 |     Ninja      |     Akujo      |    Snitch     |  Indomitable  |
 |     Yo-Yo      |   PartTimer    |      Spy      |    Slueth     |
-|  Evil Trapper  |                | SecurityGuard |    Cursed     |
-| Butcher [Beta] |                |    Medium     |    Invert     |
-|    Gambler     |                |    Trapper    |     Blind     |
-|   Grenadier    |                |    Prophet    |    Watcher    |
-|                |                |  Info Sleuth  |     Radar     |
-|                |                |               | Button Barry  |
-|                |                |               |   Chameleon   |
+|  Evil Trapper  |     Thief      | SecurityGuard |    Cursed     |
+| Butcher [Beta] |                |    Medium     |     Blind     |
+|    Gambler     |                |    Trapper    |    Watcher    |
+|   Grenadier    |                |    Prophet    |     Radar     |
+|    WolfLord    |                |  Info Sleuth  | Button Barry  |
+|                |                |   Redemptor   |   Chameleon   |
 |                |                |               |    Shifter    |
 
 ## Credits & Resources

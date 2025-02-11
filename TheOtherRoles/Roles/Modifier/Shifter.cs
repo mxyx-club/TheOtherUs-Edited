@@ -169,6 +169,11 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Prosecutor.prosecutor = player1;
         }
+        else if (Redemptor.Player != null && Redemptor.Player == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Redemptor.Player = player1;
+        }
         else if (Amnisiac.Player != null && Amnisiac.Player.Any(x => x.PlayerId == player2.PlayerId))
         {
             if (repeat) shiftRole(player2, player1, false);

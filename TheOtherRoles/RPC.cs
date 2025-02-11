@@ -127,6 +127,8 @@ public enum CustomRPC
     WitnessSetTarget,
     WolfLordkilled,
     PelicanKill,
+    RedemptorRevive,
+    RedemptorPrayer,
 
     TrapperKill,
     PlaceTrap,
@@ -466,6 +468,9 @@ public static class RPCProcedure
                     case RoleId.Gambler:
                         Gambler.gambler = player;
                         break;
+                    case RoleId.Redemptor:
+                        Redemptor.Player = player;
+                        break;
                 }
             }
             if (AmongUsClient.Instance.AmHost && Helpers.roleCanUseVents(player) && !player.Data.Role.IsImpostor)
@@ -556,9 +561,6 @@ public static class RPCProcedure
                 break;
             case RoleId.Vip:
                 Vip.vip.Add(player);
-                break;
-            case RoleId.Invert:
-                Invert.invert.Add(player);
                 break;
             case RoleId.Indomitable:
                 Indomitable.indomitable = player;
@@ -838,7 +840,7 @@ public static class RPCProcedure
              !Medic.showShieldAfterMeeting); // Dont show attempt, if shield is not shown yet
         var isMedicAndShow = Medic.medic == PlayerControl.LocalPlayer && Medic.showAttemptToMedic;
 
-        if (isShieldedAndShow || isMedicAndShow || shouldShowGhostInfo())
+        if (isShieldedAndShow || isMedicAndShow || ShowGhostInfo)
             showFlash(Palette.ImpostorRed, 1.5f, GetString("medicShowAttemptText"));
     }
 
@@ -1125,6 +1127,7 @@ public static class RPCProcedure
         if (player == Hacker.hacker) Hacker.clearAndReload();
         if (player == BodyGuard.bodyguard) BodyGuard.clearAndReload();
         if (player == Balancer.balancer) Balancer.clearAndReload();
+        if (player == Redemptor.Player) Redemptor.ClearAndReload();
         if (player == Tracker.tracker) Tracker.clearAndReload();
         if (player == Snitch.snitch) Snitch.clearAndReload();
         if (player == Swapper.swapper) Swapper.clearAndReload();
@@ -1213,7 +1216,6 @@ public static class RPCProcedure
             Flash.flash.RemoveAll(x => x.PlayerId == player.PlayerId);
             Multitasker.multitasker.RemoveAll(x => x.PlayerId == player.PlayerId);
             Vip.vip.RemoveAll(x => x.PlayerId == player.PlayerId);
-            Invert.invert.RemoveAll(x => x.PlayerId == player.PlayerId);
             Chameleon.chameleon.RemoveAll(x => x.PlayerId == player.PlayerId);
             if (player == Lovers.lover1 || player == Lovers.lover2) Lovers.clearAndReload(); // The whole Lover couple is being erased
             if (player == Specoality.specoality) Specoality.clearAndReload();
@@ -1931,7 +1933,7 @@ public static class RPCProcedure
                 break;
             case GhostInfoTypes.GhostChat:
                 string chat = reader.ReadString();
-                if (shouldShowGhostInfo()) FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(sender, chat);
+                if (ShowGhostInfo) FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(sender, chat);
                 break;
             case GhostInfoTypes.BlankUsed:
                 Pursuer.blankedList.Remove(sender);
@@ -2472,6 +2474,14 @@ internal class RPCHandlerPatch
 
             case CustomRPC.BalancerBalance:
                 RPCProcedure.balancerBalance(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+                break;
+
+            case CustomRPC.RedemptorRevive:
+                Redemptor.RevivePlayer(reader.ReadByte());
+                break;
+
+            case CustomRPC.RedemptorPrayer:
+                Redemptor.RedemptorPrayer(reader.ReadByte());
                 break;
 
             case CustomRPC.RevivePlayer:

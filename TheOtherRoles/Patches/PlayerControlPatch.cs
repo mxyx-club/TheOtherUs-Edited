@@ -84,17 +84,17 @@ public static class PlayerControlFixedUpdatePatch
                 Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) ||
                 (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
             {
-                hasVisibleShield = Medic.showShielded == 0 || shouldShowGhostInfo() // Everyone or Ghost info
+                hasVisibleShield = Medic.showShielded == 0 || ShowGhostInfo // Everyone or Ghost info
                     || (Medic.showShielded == 1 && (local == Medic.shielded || local == Medic.medic)) // Shielded + Medic
                     || (Medic.showShielded == 2 && local == Medic.medic); // Medic only
 
                 // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
                 hasVisibleShield = hasVisibleShield && (Medic.meetingAfterShielding || !Medic.showShieldAfterMeeting ||
-                    local == Medic.medic || shouldShowGhostInfo());
+                    local == Medic.medic || ShowGhostInfo);
             }
 
             if (BodyGuard.guarded.IsAlive() && target == BodyGuard.guarded &&
-                (shouldShowGhostInfo() || local == BodyGuard.bodyguard || (local == BodyGuard.guarded && BodyGuard.showShielded)))
+                (ShowGhostInfo || local == BodyGuard.bodyguard || (local == BodyGuard.guarded && BodyGuard.showShielded)))
             {
                 hasVisibleShield = true;
                 color = new Color32(205, 150, 100, byte.MaxValue);
@@ -500,7 +500,7 @@ public static class PlayerControlFixedUpdatePatch
                 return;
             }
 
-            if (Tracker.tracked != null && !Tracker.tracker.Data.IsDead)
+            if (Tracker.tracked != null && Tracker.tracker.IsAlive())
             {
                 Tracker.timeUntilUpdate -= Time.fixedDeltaTime;
 
@@ -568,6 +568,77 @@ public static class PlayerControlFixedUpdatePatch
             foreach (Arrow arrow in Tracker.localArrows) Object.Destroy(arrow.arrow);
             Tracker.localArrows = new();
         }
+    }
+
+    private static void redemptorUpdate()
+    {
+        if ((Redemptor.Player == null && Redemptor.RevivedPlayer == null) || Redemptor.arrow == null) return;
+
+        Redemptor.arrow.arrow?.SetActive(false);
+        var local = PlayerControl.LocalPlayer;
+        if (Redemptor.Player.IsAlive() && Redemptor.Reviving && local.IsAlive() && local.isKiller())
+        {
+            Redemptor.arrow ??= new Arrow(Redemptor.color);
+            if (Redemptor.arrow != null)
+            {
+                Redemptor.arrow.arrow.SetActive(true);
+                Redemptor.arrow.Update(Redemptor.Player.transform.position);
+            }
+        }
+        else if (Redemptor.RevivedPlayer.IsAlive() && local.IsAlive() && local.isKiller())
+        {
+            Redemptor.arrow ??= new Arrow(Redemptor.color);
+            if (Redemptor.arrow != null)
+            {
+                Redemptor.arrow.arrow.SetActive(true);
+                Redemptor.arrow.Update(Redemptor.RevivedPlayer.transform.position);
+            }
+        }
+        else if (local == Redemptor.Player && Redemptor.Revelating)
+        {
+            var array = Object.FindObjectsOfType<DeadBody>()?.FirstOrDefault(x => !(playerById(x.ParentId)?.Data?.Disconnected == true));
+            if (array != null)
+            {
+                Redemptor.arrow ??= new Arrow(Redemptor.color);
+                Redemptor.arrow.arrow.SetActive(true);
+                Redemptor.arrow.Update(array.transform.position);
+            }
+        }
+        else
+        {
+            Redemptor.arrow.arrow?.Destroy();
+        }
+    }
+
+    private static void redemptorTextUpdate()
+    {
+        if (Redemptor.Player == null && Redemptor.RevivedPlayer == null) return;
+        var local = PlayerControl.LocalPlayer;
+        var enable = (Redemptor.RevivedPlayer.IsAlive() || Redemptor.Reviving) && ((local.IsAlive() && local.isKiller()) || ShowGhostInfo);
+        if (enable)
+        {
+            if (Redemptor.text == null)
+            {
+                Redemptor.text = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                Redemptor.text.enableWordWrapping = false;
+                Redemptor.text.transform.localScale = Vector3.one * 0.75f;
+                Redemptor.text.transform.localPosition += new Vector3(0f, 1.8f, -69f);
+                Redemptor.text.gameObject.SetActive(true);
+            }
+            else if (Redemptor.Reviving && Redemptor.Player.IsAlive())
+            {
+                Redemptor.text.text = $"牧师正在祈祷！";
+            }
+            else if (Redemptor.RevivedPlayer.IsAlive())
+            {
+                Redemptor.text.text = $"有玩家已被复活！";
+            }
+            else
+            {
+                Redemptor.text?.Destroy();
+            }
+        }
+        else if (Redemptor.text != null) Redemptor.text.Destroy();
     }
 
     private static void MiniSizeUpdate(PlayerControl p)
@@ -1412,6 +1483,9 @@ public static class PlayerControlFixedUpdatePatch
             engineerUpdate();
             // Tracker
             trackerUpdate();
+            // Redemptor
+            redemptorUpdate();
+            redemptorTextUpdate();
             // Pavlovsdogs
             pavlovsownerUpdate();
             // Check for deputy promotion on Sheriff disconnect
@@ -1551,7 +1625,11 @@ internal class PlayerControlRevivePatch
 {
     public static void Postfix(PlayerControl __instance)
     {
-        if (PlayerControl.LocalPlayer == __instance) CanSeeRoleInfo = false;
+        if (PlayerControl.LocalPlayer == __instance)
+        {
+            CustomButton.ResetAllCooldowns(-1);
+            CanSeeRoleInfo = false;
+        }
 
         if (__instance == Specter.Player) Specter.Player.clearAllTasks();
 
@@ -1568,13 +1646,12 @@ internal class PlayerControlRevivePatch
             Akujo.otherLover(__instance)?.Revive();
         }
 
-        CustomButton.ResetAllCooldowns(-1, __instance);
-
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)
         {
             if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == __instance.PlayerId)
             {
+                __instance.NetTransform.RpcSnapTo(array[i].transform.position);
                 Object.Destroy(array[i].gameObject);
                 break;
             }
@@ -1832,7 +1909,7 @@ public static class MurderPlayerPatch
 
         // Seer show flash and add dead player position
         if (Seer.seer != null &&
-            (PlayerControl.LocalPlayer == Seer.seer || shouldShowGhostInfo()) &&
+            (PlayerControl.LocalPlayer == Seer.seer || ShowGhostInfo) &&
             !Seer.seer.Data.IsDead && Seer.seer != target && Seer.mode <= 1)
             showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f), message: GetString("seerShowInfoText"));
         Seer.deadBodyPositions?.Add(target.transform.position);

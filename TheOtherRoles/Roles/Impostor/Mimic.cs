@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using TheOtherRoles.Buttons;
 using UnityEngine;
@@ -171,6 +171,13 @@ public static class Mimic
                 if (Amnisiac.resetRole) Prophet.clearAndReload();
                 Prophet.prophet = mimic;
                 prophetButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
+                hasMimic = true;
+                break;
+            case RoleId.Redemptor:
+                if (Amnisiac.resetRole) Redemptor.ClearAndReload();
+                Redemptor.Player = mimic;
+                redemptorReviveButton.PositionOffset = CustomButton.ButtonPositions.lowerRowFarLeft;
+                redemptorPrayerButton.PositionOffset = CustomButton.ButtonPositions.upperRowFarLeft;
                 hasMimic = true;
                 break;
         }

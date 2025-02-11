@@ -521,7 +521,7 @@ internal class MeetingHudPatch
         public static bool Prefix(MeetingHud __instance, GameData.PlayerInfo voterPlayer, int index, Transform parent)
         {
             var spriteRenderer = Object.Instantiate(__instance.PlayerVotePrefab);
-            var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes() || shouldShowGhostInfo() ||
+            var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes() || ShowGhostInfo ||
                                  (Prosecutor.prosecutor != null && Prosecutor.prosecutor == PlayerControl.LocalPlayer &&
                                   Prosecutor.canSeeVoteColors && TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data).Item1 >=
                                   Prosecutor.tasksNeededToSeeVoteColors) ||
@@ -793,7 +793,7 @@ internal class MeetingHudPatch
 
             // Add Portal info into Portalmaker Chat:
             if (Portalmaker.portalmaker != null &&
-                (PlayerControl.LocalPlayer == Portalmaker.portalmaker || shouldShowGhostInfo()) &&
+                (PlayerControl.LocalPlayer == Portalmaker.portalmaker || ShowGhostInfo) &&
                 !Portalmaker.portalmaker.Data.IsDead)
                 if (Portal.teleportedPlayers.Count > 0)
                 {

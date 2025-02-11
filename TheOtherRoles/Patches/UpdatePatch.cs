@@ -132,7 +132,7 @@ internal class HudManagerUpdatePatch
         }
 
         if (Grenadier.Player != null && ((localPlayer.isImpostor() && Grenadier.indicatorsMode)
-            || localPlayer == Grenadier.Player || shouldShowGhostInfo()))
+            || localPlayer == Grenadier.Player || ShowGhostInfo))
         {
             foreach (var p in Grenadier.controls)
             {
@@ -273,7 +273,7 @@ internal class HudManagerUpdatePatch
         }
 
         // Parttimer
-        if (PartTimer.partTimer != null && PartTimer.target != null && (local == PartTimer.partTimer || local == PartTimer.target || shouldShowGhostInfo()))
+        if (PartTimer.partTimer != null && PartTimer.target != null && (local == PartTimer.partTimer || local == PartTimer.target || ShowGhostInfo))
         {
             var suffix = cs(PartTimer.color, " ★");
             PartTimer.partTimer.cosmetics.nameText.text += suffix;
@@ -286,7 +286,7 @@ internal class HudManagerUpdatePatch
         }
 
         var localIsArsonist = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && Arsonist.arsonist == local;
-        var localIsDead = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && shouldShowGhostInfo();
+        var localIsDead = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && ShowGhostInfo;
         if (localIsArsonist || localIsDead)
         {
             var suffix = cs(Arsonist.color, " ♨");
