@@ -246,7 +246,8 @@ internal class MeetingHudPatch
                     rend.transform.SetParent(pva.transform);
                     rend.gameObject.layer = pva.Megaphone.gameObject.layer;
                     rend.transform.localPosition = new Vector3(-0.5f, -0.03f, -1f);
-                    if (local == Swapper.swapper && (isGuesser || Swapper.swapper.PlayerId == Mimic.mimic.PlayerId)) rend.transform.localPosition = new Vector3(-0.725f, -0.15f, -1f);
+                    if (local == Swapper.swapper && (isGuesser || local.PlayerId == Mimic.mimic?.PlayerId))
+                        rend.transform.localPosition = new Vector3(-0.725f, -0.15f, -1f);
                     rend.sprite = Witch.spelledOverlaySprite;
                 }
             }

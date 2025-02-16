@@ -28,7 +28,7 @@ public class Redemptor
     public static void RevivePlayer(byte targetId)
     {
         var player = playerById(targetId);
-        player?.Revive();
+        player?.ModRevive();
         RevivedPlayer = player;
         target = null;
     }
@@ -39,14 +39,13 @@ public class Redemptor
     public static void RedemptorPrayer(byte status)
     {
         Reviving = status != 0;
-        Message($"{Reviving}");
     }
 
-    public static void ClearAndReload()
+    public static void ClearAndReload(bool clear = true)
     {
         Player = null;
         target = null;
-        RevivedPlayer = null;
+        if (clear) RevivedPlayer = null;
         arrow?.arrow?.Destroy();
         Reviving = false;
         Revelating = false;
@@ -67,7 +66,6 @@ public class Redemptor
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start)), HarmonyPostfix]
         public static void MeetingStartPatch()
         {
-            if (Player == null) return;
             if (Reviving)
             {
                 Reviving = false;

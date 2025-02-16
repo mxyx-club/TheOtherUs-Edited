@@ -1,5 +1,6 @@
 ﻿[*.cs]
 charset = utf-8
+encoding = utf-8 
 dotnet_diagnostic.IDE0007.severity = silent
 dotnet_diagnostic.IDE0022.severity = silent
 dotnet_diagnostic.IDE0023.severity = silent
@@ -12,6 +13,7 @@ dotnet_diagnostic.IDE0305.severity = silent
 dotnet_diagnostic.IDE1006.severity = silent
 dotnet_diagnostic.CA1051.severity = silent
 dotnet_diagnostic.CA1720.severity = none
+dotnet_diagnostic.CA1711.severity = none
 
 # Default severity for all analyzer diagnostics
 dotnet_analyzer_diagnostic.severity = suggestion

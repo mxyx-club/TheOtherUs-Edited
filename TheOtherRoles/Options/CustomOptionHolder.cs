@@ -17,8 +17,8 @@ public class CustomOptionHolder
         ["预设 1", "预设 2", "预设 3", "Skeld预设", "Mira预设", "Polus预设", "Airship预设", "Fungle预设", "Submerged预设"];
 
     public static string[] mapOptions = ["ExpandOptions", "CollapseOptions"];
-
     public static CustomOption presetSelection;
+    public static CustomOption anyPlayerCanStopStart;
     public static CustomOption neutralRolesCountMin;
     public static CustomOption neutralRolesCountMax;
     public static CustomOption killerNeutralRolesCountMin;
@@ -26,27 +26,87 @@ public class CustomOptionHolder
     public static CustomOption modifiersCountMin;
     public static CustomOption modifiersCountMax;
 
-    public static CustomOption MeetingOptions;
-    public static CustomOption SaboOptions;
-    public static CustomOption TaskOptions;
-    public static CustomOption MapOptions;
-    public static CustomOption DevicesOption;
-
-    public static CustomOption anyPlayerCanStopStart;
-    public static CustomOption enableEventMode;
-    public static CustomOption deadImpsBlockSabotage;
+    public static CustomOption resteButtonCooldown;
+    public static CustomOption shieldFirstKill;
+    public static CustomOption hidePlayerNames;
+    public static CustomOption hideOutOfSightNametags;
+    public static CustomOption hideVentAnimOnShadows;
+    public static CustomOption showButtonTarget;
+    public static CustomOption impostorSeeRoles;
+    public static CustomOption blockGameEnd;
     public static CustomOption randomLigherPlayer;
+    public static CustomOption allowModGuess;
+    public static CustomOption randomGameStartPosition;
+    public static CustomOption randomGameStartToVents;
+    public static CustomOption ghostSpeed;
 
-    public static CustomOption minerSpawnRate;
-    public static CustomOption minerCooldown;
+    public static CustomOption MeetingOptions;
+    public static CustomOption disableMeeting;
+    public static CustomOption maxNumberOfMeetings;
+    public static CustomOption blockSkippingInEmergencyMeetings;
+    public static CustomOption noVoteIsSelfVote;
+    public static CustomOption guessReVote;
+    public static CustomOption guessExtendmeetingTime;
+    public static CustomOption exiledController;
+    public static CustomOption exiledReviveRole;
+    public static CustomOption exiledShowTeamNum;
 
-    public static CustomOption yoyoSpawnRate;
-    public static CustomOption yoyoBlinkDuration;
-    public static CustomOption yoyoMarkCooldown;
-    public static CustomOption yoyoMarkStaysOverMeeting;
-    public static CustomOption yoyoHasAdminTable;
-    public static CustomOption yoyoAdminTableCooldown;
-    public static CustomOption yoyoSilhouetteVisibility;
+    public static CustomOption TaskOptions;
+    public static CustomOption WireTaskIsRandomOption;
+    public static CustomOption WireTaskNumOption;
+    public static CustomOption transparentTasks;
+    public static CustomOption disableMedbayWalk;
+    public static CustomOption allowParallelMedBayScans;
+    public static CustomOption finishTasksBeforeHauntingOrZoomingOut;
+    public static CustomOption disableTaskGameEnd;
+
+    public static CustomOption SaboOptions;
+    public static CustomOption disableSabotage;
+    public static CustomOption deadImpsBlockSabotage;
+    public static CustomOption enableCamoComms;
+    public static CustomOption IsReactorDurationSetting;
+    public static CustomOption SkeldReactorTimeLimit;
+    public static CustomOption SkeldLifeSuppTimeLimit;
+    public static CustomOption MiraLifeSuppTimeLimit;
+    public static CustomOption MiraReactorTimeLimit;
+    public static CustomOption PolusReactorTimeLimit;
+    public static CustomOption AirshipReactorTimeLimit;
+    public static CustomOption FungleReactorTimeLimit;
+
+    public static CustomOption MapOptions;
+    public static CustomOption enableMiraModify;
+    public static CustomOption miraVitals;
+    public static CustomOption enableBetterPolus;
+    public static CustomOption movePolusVents;
+    public static CustomOption addPolusVents;
+    public static CustomOption movePolusVitals;
+    public static CustomOption swapNavWifi;
+    public static CustomOption moveColdTemp;
+    public static CustomOption enableAirShipModify;
+    public static CustomOption airshipOptimize;
+    public static CustomOption addAirShipVents;
+    public static CustomOption airshipLadder;
+    public static CustomOption enableFungleModify;
+    public static CustomOption fungleElectrical;
+    public static CustomOption dynamicMap;
+    public static CustomOption dynamicMapEnableSkeld;
+    public static CustomOption dynamicMapEnableMira;
+    public static CustomOption dynamicMapEnablePolus;
+    public static CustomOption dynamicMapEnableAirShip;
+    public static CustomOption dynamicMapEnableFungle;
+    public static CustomOption dynamicMapEnableSubmerged;
+    public static CustomOption dynamicMapSeparateSettings;
+
+    public static CustomOption DevicesOption;
+    public static CustomOption restrictDevices;
+    public static CustomOption restrictCameras;
+    public static CustomOption restrictVents;
+    public static CustomOption disableCamsRound1;
+    public static CustomOption camsNightVision;
+    public static CustomOption camsNoNightVisionIfImpVision;
+
+    public static CustomOption debugMode;
+    public static CustomOption disableGameEnd;
 
     public static CustomOption wolfLordSpawnRate;
 
@@ -77,12 +137,12 @@ public class CustomOptionHolder
     public static CustomOption vampireGarlicButton;
     public static CustomOption vampireCanKillNearGarlics;
 
-    public static CustomOption poucherSpawnRate;
-    public static CustomOption modifierPoucher;
+    public static CustomOption eraserSpawnRate;
+    public static CustomOption eraserCooldown;
+    public static CustomOption eraserCanEraseAnyone;
+    public static CustomOption erasercanEraseGuess;
 
-    public static CustomOption modifierVortox;
-    public static CustomOption modifierVortoxSkipMeeting;
-    public static CustomOption modifierVortoxSkipNum;
+    public static CustomOption poucherSpawnRate;
 
     public static CustomOption butcherSpawnRate;
     public static CustomOption butcherDissectionCooldown;
@@ -91,100 +151,21 @@ public class CustomOptionHolder
 
     public static CustomOption mimicSpawnRate;
 
-    public static CustomOption eraserSpawnRate;
-    public static CustomOption eraserCooldown;
-    public static CustomOption eraserCanEraseAnyone;
-    public static CustomOption erasercanEraseGuess;
+    public static CustomOption escapistSpawnRate;
+    public static CustomOption escapistEscapeTime;
+    public static CustomOption escapistResetPlaceAfterMeeting;
 
-    public static CustomOption guesserSpawnRate;
-    public static CustomOption guesserNumberOfShots;
-    public static CustomOption guesserHasMultipleShotsPerMeeting;
-    public static CustomOption guesserShowInfoInGhostChat;
-    public static CustomOption guesserKillsThroughShield;
-    public static CustomOption guesserEvilCanKillSpy;
-    public static CustomOption guesserEvilCanKillCrewmate;
-    public static CustomOption guesserCantGuessSnitchIfTaksDone;
+    public static CustomOption tricksterSpawnRate;
+    public static CustomOption tricksterPlaceBoxCooldown;
+    public static CustomOption tricksterLightsOutCooldown;
+    public static CustomOption tricksterLightsOutDuration;
 
-    public static CustomOption jesterSpawnRate;
-    public static CustomOption jesterCanCallEmergency;
-    public static CustomOption jesterCanVent;
-    public static CustomOption jesterHasImpostorVision;
+    public static CustomOption cleanerSpawnRate;
+    public static CustomOption cleanerCooldown;
 
-    public static CustomOption survivorSpawnRate;
-    public static CustomOption survivorVestEnable;
-    public static CustomOption survivorVestNumber;
-    public static CustomOption survivorVestCooldown;
-    public static CustomOption survivorVestDuration;
-    public static CustomOption survivorVestResetCooldown;
-    public static CustomOption survivorBlanksEnable;
-    public static CustomOption survivorBlanksCooldown;
-    public static CustomOption survivorBlanksNumber;
-
-    public static CustomOption amnisiacSpawnRate;
-    public static CustomOption amnisiacShowArrows;
-    public static CustomOption amnisiacResetRole;
-
-    public static CustomOption arsonistSpawnRate;
-    public static CustomOption arsonistCooldown;
-    public static CustomOption arsonistDuration;
-    public static CustomOption arsonistIgniteCdRemoved;
-
-    public static CustomOption jackalSpawnRate;
-    public static CustomOption jackalKillCooldown;
-    public static CustomOption jackalChanceSwoop;
-    public static CustomOption jackalSwooperCooldown;
-    public static CustomOption jackalSwooperDuration;
-    public static CustomOption jackalCreateSidekickCooldown;
-    public static CustomOption jackalCanUseVents;
-    public static CustomOption jackalCanUseSabo;
-    public static CustomOption jackalCanCreateSidekick;
-    public static CustomOption sidekickPromotesToJackal;
-    public static CustomOption sidekickCanKill;
-    public static CustomOption sidekickCanUseVents;
-    public static CustomOption jackalPromotedFromSidekickCanCreateSidekick;
-    public static CustomOption jackalAndSidekickHaveImpostorVision;
-    public static CustomOption jackalkillFakeImpostor;
-
-    public static CustomOption pavlovsownerSpawnRate;
-    public static CustomOption pavlovsownerAndJackalAsWell;
-    public static CustomOption pavlovsownerCreateDogCooldown;
-    public static CustomOption pavlovsownerCreateDogNum;
-    public static CustomOption pavlovsownerKillCooldown;
-    public static CustomOption pavlovsownerCanUseSabo;
-    public static CustomOption pavlovsownerHasImpostorVision;
-    public static CustomOption pavlovsownerCanUseVents;
-    public static CustomOption pavlovsownerRampage;
-    public static CustomOption pavlovsownerRampageKillCooldown;
-    public static CustomOption pavlovsownerRampageDeathTime;
-
-    public static CustomOption evilTrapperSpawnRate;
-    public static CustomOption evilTrapperNumTrap;
-    public static CustomOption evilTrapperKillTimer;
-    public static CustomOption evilTrapperCooldown;
-    public static CustomOption evilTrapperMaxDistance;
-    public static CustomOption evilTrapperTrapRange;
-    public static CustomOption evilTrapperExtensionTime;
-    public static CustomOption evilTrapperPenaltyTime;
-    public static CustomOption evilTrapperBonusTime;
-
-    public static CustomOption gamblerSpawnRate;
-    public static CustomOption gamblerMinCooldown;
-    public static CustomOption gamblerMaxCooldown;
-    public static CustomOption gamblerSuccessRate;
-
-    public static CustomOption grenadierSpawnRate;
-    public static CustomOption grenadierCooldown;
-    public static CustomOption grenadierDuration;
-    public static CustomOption grenadierFlashRadius;
-    public static CustomOption grenadierTeamIndicators;
-
-    public static CustomOption swooperSpawnRate;
-    public static CustomOption swooperKillCooldown;
-    public static CustomOption swooperCooldown;
-    public static CustomOption swooperDuration;
-    public static CustomOption swooperSpeed;
-    public static CustomOption swooperCanUseVents;
-    public static CustomOption swooperHasImpVision;
+    public static CustomOption warlockSpawnRate;
+    public static CustomOption warlockCooldown;
+    public static CustomOption warlockRootTime;
 
     public static CustomOption bountyHunterSpawnRate;
     public static CustomOption bountyHunterBountyDuration;
@@ -211,6 +192,218 @@ public class CustomOptionHolder
     public static CustomOption blackmailerSpawnRate;
     public static CustomOption blackmailerCooldown;
 
+    public static CustomOption terroristSpawnRate;
+    public static CustomOption terroristBombDestructionTime;
+    public static CustomOption terroristBombDestructionRange;
+    public static CustomOption terroristBombHearRange;
+    public static CustomOption terroristDefuseDuration;
+    public static CustomOption terroristBombCooldown;
+    public static CustomOption terroristBombActiveAfter;
+
+    public static CustomOption minerSpawnRate;
+    public static CustomOption minerCooldown;
+
+    public static CustomOption yoyoSpawnRate;
+    public static CustomOption yoyoMarkCooldown;
+    public static CustomOption yoyoBlinkDuration;
+    public static CustomOption yoyoMarkStaysOverMeeting;
+    public static CustomOption yoyoHasAdminTable;
+    public static CustomOption yoyoAdminTableCooldown;
+    public static CustomOption yoyoSilhouetteVisibility;
+
+    public static CustomOption evilTrapperSpawnRate;
+    public static CustomOption evilTrapperNumTrap;
+    public static CustomOption evilTrapperExtensionTime;
+    public static CustomOption evilTrapperCooldown;
+    public static CustomOption evilTrapperKillTimer;
+    public static CustomOption evilTrapperTrapRange;
+    public static CustomOption evilTrapperMaxDistance;
+    public static CustomOption evilTrapperPenaltyTime;
+    public static CustomOption evilTrapperBonusTime;
+
+    public static CustomOption gamblerSpawnRate;
+    public static CustomOption gamblerMinCooldown;
+    public static CustomOption gamblerMaxCooldown;
+    public static CustomOption gamblerSuccessRate;
+
+    public static CustomOption grenadierSpawnRate;
+    public static CustomOption grenadierCooldown;
+    public static CustomOption grenadierDuration;
+    public static CustomOption grenadierFlashRadius;
+    public static CustomOption grenadierTeamIndicators;
+
+    public static CustomOption specterSpawnRate;
+    public static CustomOption specterResetRole;
+    public static CustomOption specterDuration;
+    public static CustomOption specterAfterMeetingTakeRole;
+    public static CustomOption specterAfterMeetingRevived;
+
+    public static CustomOption survivorSpawnRate;
+    public static CustomOption survivorVestEnable;
+    public static CustomOption survivorVestNumber;
+    public static CustomOption survivorVestCooldown;
+    public static CustomOption survivorVestDuration;
+    public static CustomOption survivorVestResetCooldown;
+    public static CustomOption survivorBlanksEnable;
+    public static CustomOption survivorBlanksCooldown;
+    public static CustomOption survivorBlanksNumber;
+
+    public static CustomOption amnisiacSpawnRate;
+    public static CustomOption amnisiacShowArrows;
+    public static CustomOption amnisiacResetRole;
+
+    public static CustomOption jesterSpawnRate;
+    public static CustomOption jesterCanCallEmergency;
+    public static CustomOption jesterCanVent;
+    public static CustomOption jesterHasImpostorVision;
+
+    public static CustomOption partTimerSpawnRate;
+    public static CustomOption partTimerCooldown;
+    public static CustomOption partTimerDeathTurn;
+    public static CustomOption partTimerKnowsRole;
+
+    public static CustomOption witnessSpawnRate;
+    public static CustomOption witnessMarkTimer;
+    public static CustomOption witnessWinCount;
+    public static CustomOption witnessMeetingDie;
+    public static CustomOption witnessSkipMeeting;
+
+    public static CustomOption jackalSpawnRate;
+    public static CustomOption jackalChanceSwoop;
+    public static CustomOption jackalKillCooldown;
+    public static CustomOption jackalSwooperCooldown;
+    public static CustomOption jackalSwooperDuration;
+    public static CustomOption jackalCanUseVents;
+    public static CustomOption jackalCanUseSabo;
+    public static CustomOption jackalAndSidekickHaveImpostorVision;
+    public static CustomOption jackalCanCreateSidekick;
+    public static CustomOption jackalCreateSidekickCooldown;
+    public static CustomOption jackalkillFakeImpostor;
+    public static CustomOption sidekickCanKill;
+    public static CustomOption sidekickCanUseVents;
+    public static CustomOption sidekickPromotesToJackal;
+    public static CustomOption jackalPromotedFromSidekickCanCreateSidekick;
+
+    public static CustomOption pavlovsownerSpawnRate;
+    public static CustomOption pavlovsownerAndJackalAsWell;
+    public static CustomOption pavlovsownerKillCooldown;
+    public static CustomOption pavlovsownerCreateDogCooldown;
+    public static CustomOption pavlovsownerCreateDogNum;
+    public static CustomOption pavlovsownerCanUseSabo;
+    public static CustomOption pavlovsownerHasImpostorVision;
+    public static CustomOption pavlovsownerCanUseVents;
+    public static CustomOption pavlovsownerRampage;
+    public static CustomOption pavlovsownerRampageKillCooldown;
+    public static CustomOption pavlovsownerRampageDeathTime;
+
+    public static CustomOption arsonistSpawnRate;
+    public static CustomOption arsonistCooldown;
+    public static CustomOption arsonistDuration;
+    public static CustomOption arsonistIgniteCdRemoved;
+
+    public static CustomOption pelicanSpawnRate;
+    public static CustomOption pelicanCooldown;
+    public static CustomOption pelicanReduceCooldown;
+
+    public static CustomOption swooperSpawnRate;
+    public static CustomOption swooperKillCooldown;
+    public static CustomOption swooperCooldown;
+    public static CustomOption swooperDuration;
+    public static CustomOption swooperSpeed;
+    public static CustomOption swooperCanUseVents;
+    public static CustomOption swooperHasImpVision;
+
+    public static CustomOption werewolfSpawnRate;
+    public static CustomOption werewolfRampageCooldown;
+    public static CustomOption werewolfRampageDuration;
+    public static CustomOption werewolfKillCooldown;
+
+    public static CustomOption juggernautSpawnRate;
+    public static CustomOption juggernautCooldown;
+    public static CustomOption juggernautHasImpVision;
+    public static CustomOption juggernautCanUseVents;
+    public static CustomOption juggernautReducedkillEach;
+
+    public static CustomOption vultureSpawnRate;
+    public static CustomOption vultureCooldown;
+    public static CustomOption vultureNumberToWin;
+    public static CustomOption vultureCanUseVents;
+    public static CustomOption vultureShowArrows;
+
+    public static CustomOption lawyerSpawnRate;
+    public static CustomOption lawyerTargetKnows;
+    public static CustomOption lawyerVision;
+    public static CustomOption lawyerKnowsRole;
+    public static CustomOption lawyerCanCallEmergency;
+    public static CustomOption lawyerStolenWin;
+    public static CustomOption lawyerTargetCanBeJester;
+
+    //public static CustomOption pursuerSpawnRate;
+    public static CustomOption pursuerBlanksCooldown;
+    public static CustomOption pursuerBlanksNumber;
+
+    public static CustomOption executionerSpawnRate;
+    public static CustomOption executionerCanCallEmergency;
+    public static CustomOption executionerPromotesToLawyer;
+    //public static CustomOption executionerOnTargetDead;
+
+    public static CustomOption doomsayerSpawnRate;
+    public static CustomOption doomsayerCooldown;
+    public static CustomOption doomsayerHasMultipleShotsPerMeeting;
+    public static CustomOption doomsayerOnlineTarger;
+    public static CustomOption doomsayerDormationNum;
+    public static CustomOption doomsayerCanGuessImpostor;
+    public static CustomOption doomsayerCanGuessNeutral;
+    public static CustomOption doomsayerKillToWin;
+
+    public static CustomOption akujoSpawnRate;
+    public static CustomOption akujoTimeLimit;
+    public static CustomOption akujoForceKeeps;
+    public static CustomOption akujoNumKeeps;
+    public static CustomOption akujoKnowsRoles;
+    public static CustomOption akujoHonmeiCannotFollowWin;
+    public static CustomOption akujoHonmeiOptimizeWin;
+
+    public static CustomOption thiefSpawnRate;
+    public static CustomOption thiefCooldown;
+    public static CustomOption thiefCanKillSheriff;
+    public static CustomOption thiefCanKillDeputy;
+    public static CustomOption thiefCanKillVeteran;
+    public static CustomOption thiefHasImpVision;
+    public static CustomOption thiefCanUseVents;
+    public static CustomOption thiefCanStealWithGuess;
+
+    public static CustomOption ghostEngineerSpawnRate;
+
+    public static CustomOption guesserSpawnRate;
+    public static CustomOption guesserNumberOfShots;
+    public static CustomOption guesserHasMultipleShotsPerMeeting;
+    public static CustomOption guesserShowInfoInGhostChat;
+    public static CustomOption guesserKillsThroughShield;
+
+    public static CustomOption sheriffSpawnRate;
+    public static CustomOption sheriffCooldown;
+    public static CustomOption sheriffMisfireKills;
+    public static CustomOption sheriffCanKillNeutrals;
+    public static CustomOption sheriffCanKillSurvivor;
+    public static CustomOption sheriffCanKillAmnesiac;
+    public static CustomOption sheriffCanKillPursuer;
+    public static CustomOption sheriffCanKillPartTimer;
+    public static CustomOption sheriffCanKillJester;
+    public static CustomOption sheriffCanKillLawyer;
+    public static CustomOption sheriffCanKillExecutioner;
+    public static CustomOption sheriffCanKillVulture;
+    public static CustomOption sheriffCanKillDoomsayer;
+    public static CustomOption sheriffCanKillThief;
+
+    public static CustomOption deputySpawnRate;
+    public static CustomOption deputyNumberOfHandcuffs;
+    public static CustomOption deputyHandcuffCooldown;
+    public static CustomOption deputyHandcuffDuration;
+    public static CustomOption deputyGetsPromoted;
+    public static CustomOption deputyKnowsSheriff;
+    public static CustomOption deputyKeepsHandcuffs;
+
     public static CustomOption mayorSpawnRate;
     public static CustomOption mayorMeetingButton;
     public static CustomOption mayorMaxRemoteMeetings;
@@ -224,51 +417,37 @@ public class CustomOptionHolder
     public static CustomOption prosecutorDiesOnIncorrectPros;
     public static CustomOption prosecutorCanCallEmergency;
 
-    public static CustomOption portalmakerSpawnRate;
-    public static CustomOption portalmakerCooldown;
-    public static CustomOption portalmakerUsePortalCooldown;
-    public static CustomOption portalmakerLogOnlyColorType;
-    public static CustomOption portalmakerLogHasTime;
-    public static CustomOption portalmakerCanPortalFromAnywhere;
+    public static CustomOption veteranSpawnRate;
+    public static CustomOption veteranCooldown;
+    public static CustomOption veteranAlertDuration;
 
     public static CustomOption engineerSpawnRate;
     public static CustomOption engineerRemoteFix;
-    //public static CustomOption engineerExpertRepairs;
     public static CustomOption engineerResetFixAfterMeeting;
     public static CustomOption engineerNumberOfFixes;
     public static CustomOption engineerHighlightForImpostors;
     public static CustomOption engineerHighlightForTeamJackal;
 
-    public static CustomOption ghostEngineerSpawnRate;
+    public static CustomOption swapperSpawnRate;
+    public static CustomOption swapperCanCallEmergency;
+    public static CustomOption swapperCanFixSabotages;
+    public static CustomOption swapperCanOnlySwapOthers;
+    public static CustomOption swapperSwapsNumber;
+    public static CustomOption swapperRechargeTasksNumber;
 
-    public static CustomOption specterSpawnRate;
-    public static CustomOption specterResetRole;
-    public static CustomOption specterDuration;
-    public static CustomOption specterAfterMeetingTakeRole;
-    public static CustomOption specterAfterMeetingRevived;
+    public static CustomOption balancerSpawnRate;
+    public static CustomOption balancerCount;
+    public static CustomOption balancerVoteTime;
 
-    public static CustomOption sheriffSpawnRate;
-    public static CustomOption sheriffMisfireKills;
-    public static CustomOption sheriffCooldown;
-    public static CustomOption sheriffCanKillNeutrals;
-    public static CustomOption sheriffCanKillLawyer;
-    public static CustomOption sheriffCanKillSurvivor;
-    public static CustomOption sheriffCanKillExecutioner;
-    public static CustomOption sheriffCanKillJester;
-    public static CustomOption sheriffCanKillVulture;
-    public static CustomOption sheriffCanKillThief;
-    public static CustomOption sheriffCanKillAmnesiac;
-    public static CustomOption sheriffCanKillPursuer;
-    public static CustomOption sheriffCanKillPartTimer;
-    public static CustomOption sheriffCanKillDoomsayer;
-    public static CustomOption deputySpawnRate;
-
-    public static CustomOption deputyNumberOfHandcuffs;
-    public static CustomOption deputyHandcuffCooldown;
-    public static CustomOption deputyGetsPromoted;
-    public static CustomOption deputyKeepsHandcuffs;
-    public static CustomOption deputyHandcuffDuration;
-    public static CustomOption deputyKnowsSheriff;
+    public static CustomOption medicSpawnRate;
+    public static CustomOption medicShowShielded;
+    public static CustomOption medicBreakShield;
+    public static CustomOption medicShowAttemptToMedic;
+    public static CustomOption medicShowAttemptToShielded;
+    public static CustomOption medicResetTargetAfterMeeting;
+    public static CustomOption medicSetOrShowShieldAfterMeeting;
+    public static CustomOption medicReportNameDuration;
+    public static CustomOption medicReportColorDuration;
 
     public static CustomOption detectiveSpawnRate;
     public static CustomOption detectiveAnonymousFootprints;
@@ -276,8 +455,6 @@ public class CustomOptionHolder
     public static CustomOption detectiveFootprintDuration;
     public static CustomOption detectiveReportNameDuration;
     public static CustomOption detectiveReportColorDuration;
-    //public static CustomOption detectiveReportRoleDuration;
-    //public static CustomOption detectiveReportInfoDuration;
 
     public static CustomOption redemptorSpawnRate;
     public static CustomOption redemptorRevelation;
@@ -288,37 +465,20 @@ public class CustomOptionHolder
     public static CustomOption redemptorPrayerDuration;
     public static CustomOption redemptorReviveDuration;
 
+    public static CustomOption bodyGuardSpawnRate;
+    public static CustomOption bodyGuardResetTargetAfterMeeting;
+    public static CustomOption bodyGuardShowShielded;
+    public static CustomOption bodyGuardFlash;
 
     public static CustomOption timeMasterSpawnRate;
     public static CustomOption timeMasterCooldown;
-    public static CustomOption timeMasterRewindTime;
     public static CustomOption timeMasterShieldDuration;
-
-    public static CustomOption veteranSpawnRate;
-    public static CustomOption veteranCooldown;
-    public static CustomOption veteranAlertDuration;
-
-    public static CustomOption medicSpawnRate;
-    public static CustomOption medicShowShielded;
-    public static CustomOption medicShowAttemptToShielded;
-    public static CustomOption medicSetOrShowShieldAfterMeeting;
-    public static CustomOption medicShowAttemptToMedic;
-    public static CustomOption medicBreakShield;
-    public static CustomOption medicResetTargetAfterMeeting;
-    public static CustomOption medicReportNameDuration;
-    public static CustomOption medicReportColorDuration;
-
-    public static CustomOption swapperSpawnRate;
-    public static CustomOption swapperCanCallEmergency;
-    public static CustomOption swapperCanFixSabotages;
-    public static CustomOption swapperCanOnlySwapOthers;
-    public static CustomOption swapperSwapsNumber;
-    public static CustomOption swapperRechargeTasksNumber;
+    public static CustomOption timeMasterRewindTime;
 
     public static CustomOption seerSpawnRate;
     public static CustomOption seerMode;
-    public static CustomOption seerSoulDuration;
     public static CustomOption seerLimitSoulDuration;
+    public static CustomOption seerSoulDuration;
 
     public static CustomOption hackerSpawnRate;
     public static CustomOption hackerCooldown;
@@ -341,26 +501,43 @@ public class CustomOptionHolder
     public static CustomOption snitchSeeMeeting;
     public static CustomOption snitchIncludeNeutralTeam;
     public static CustomOption snitchTeamNeutraUseDifferentArrowColor;
-    //public static CustomOption snitchMode;
-    //public static CustomOption snitchTargets;
+
+    public static CustomOption prophetSpawnRate;
+    public static CustomOption prophetCooldown;
+    public static CustomOption prophetNumExamines;
+    public static CustomOption prophetCanCallEmergency;
+    public static CustomOption prophetIsRevealed;
+    public static CustomOption prophetExaminesToBeRevealed;
+    public static CustomOption prophetKillCrewAsRed;
+    public static CustomOption prophetBenignNeutralAsRed;
+    public static CustomOption prophetEvilNeutralAsRed;
+    public static CustomOption prophetKillNeutralAsRed;
+
+    public static CustomOption infoSleuthSpawnRate;
+    public static CustomOption infoSleuthInfoType;
+
+    public static CustomOption mediumSpawnRate;
+    public static CustomOption mediumCooldown;
+    public static CustomOption mediumDuration;
+    public static CustomOption mediumOneTimeUse;
+    public static CustomOption mediumChanceAdditionalInfo;
+
+    public static CustomOption guesserEvilCanKillSpy;
+    public static CustomOption guesserEvilCanKillCrewmate;
+    public static CustomOption guesserCantGuessSnitchIfTaksDone;
+
+    public static CustomOption portalmakerSpawnRate;
+    public static CustomOption portalmakerCooldown;
+    public static CustomOption portalmakerUsePortalCooldown;
+    public static CustomOption portalmakerLogOnlyColorType;
+    public static CustomOption portalmakerLogHasTime;
+    public static CustomOption portalmakerCanPortalFromAnywhere;
 
     public static CustomOption spySpawnRate;
     public static CustomOption spyCanDieToSheriff;
     public static CustomOption spyImpostorsCanKillAnyone;
     public static CustomOption spyCanEnterVents;
     public static CustomOption spyHasImpostorVision;
-
-    public static CustomOption tricksterSpawnRate;
-    public static CustomOption tricksterPlaceBoxCooldown;
-    public static CustomOption tricksterLightsOutCooldown;
-    public static CustomOption tricksterLightsOutDuration;
-
-    public static CustomOption cleanerSpawnRate;
-    public static CustomOption cleanerCooldown;
-
-    public static CustomOption warlockSpawnRate;
-    public static CustomOption warlockCooldown;
-    public static CustomOption warlockRootTime;
 
     public static CustomOption securityGuardSpawnRate;
     public static CustomOption securityGuardCooldown;
@@ -372,107 +549,11 @@ public class CustomOptionHolder
     public static CustomOption securityGuardCamRechargeTasksNumber;
     public static CustomOption securityGuardNoMove;
 
-    public static CustomOption bodyGuardSpawnRate;
-    public static CustomOption bodyGuardFlash;
-    public static CustomOption bodyGuardResetTargetAfterMeeting;
-    public static CustomOption bodyGuardShowShielded;
-
-    public static CustomOption vultureSpawnRate;
-    public static CustomOption vultureCooldown;
-    public static CustomOption vultureNumberToWin;
-    public static CustomOption vultureCanUseVents;
-    public static CustomOption vultureShowArrows;
-
-    public static CustomOption mediumSpawnRate;
-    public static CustomOption mediumCooldown;
-    public static CustomOption mediumDuration;
-    public static CustomOption mediumOneTimeUse;
-    public static CustomOption mediumChanceAdditionalInfo;
-
-    public static CustomOption lawyerSpawnRate;
-    public static CustomOption lawyerTargetKnows;
-    //public static CustomOption lawyerIsProsecutorChance;
-    public static CustomOption lawyerTargetCanBeJester;
-    public static CustomOption lawyerVision;
-    public static CustomOption lawyerKnowsRole;
-    public static CustomOption lawyerStolenWin;
-    public static CustomOption lawyerCanCallEmergency;
-
-    //public static CustomOption pursuerSpawnRate;
-    public static CustomOption pursuerBlanksCooldown;
-    public static CustomOption pursuerBlanksNumber;
-
-    public static CustomOption partTimerSpawnRate;
-    public static CustomOption partTimerCooldown;
-    public static CustomOption partTimerDeathTurn;
-    public static CustomOption partTimerKnowsRole;
-
-    public static CustomOption executionerSpawnRate;
-    public static CustomOption executionerCanCallEmergency;
-    public static CustomOption executionerPromotesToLawyer;
-    public static CustomOption executionerOnTargetDead;
-
-    public static CustomOption witnessSpawnRate;
-    public static CustomOption witnessMarkTimer;
-    public static CustomOption witnessWinCount;
-    public static CustomOption witnessMeetingDie;
-    public static CustomOption witnessSkipMeeting;
-
-    public static CustomOption balancerSpawnRate;
-    public static CustomOption balancerCount;
-    public static CustomOption balancerVoteTime;
-
     public static CustomOption jumperSpawnRate;
     public static CustomOption jumperJumpTime;
     public static CustomOption jumperResetPlaceAfterMeeting;
     public static CustomOption jumperChargesGainOnMeeting;
     public static CustomOption jumperMaxCharges;
-
-    public static CustomOption escapistSpawnRate;
-    public static CustomOption escapistEscapeTime;
-    public static CustomOption escapistResetPlaceAfterMeeting;
-
-    public static CustomOption werewolfSpawnRate;
-    public static CustomOption werewolfRampageCooldown;
-    public static CustomOption werewolfRampageDuration;
-    public static CustomOption werewolfKillCooldown;
-
-    public static CustomOption thiefSpawnRate;
-    public static CustomOption thiefCooldown;
-    public static CustomOption thiefHasImpVision;
-    public static CustomOption thiefCanUseVents;
-    public static CustomOption thiefCanKillSheriff;
-    public static CustomOption thiefCanKillDeputy;
-    public static CustomOption thiefCanKillVeteran;
-    public static CustomOption thiefCanStealWithGuess;
-
-    public static CustomOption juggernautSpawnRate;
-    public static CustomOption juggernautCooldown;
-    public static CustomOption juggernautHasImpVision;
-    public static CustomOption juggernautCanUseVents;
-    public static CustomOption juggernautReducedkillEach;
-
-    public static CustomOption pelicanSpawnRate;
-    public static CustomOption pelicanCooldown;
-    public static CustomOption pelicanReduceCooldown;
-
-    public static CustomOption doomsayerSpawnRate;
-    public static CustomOption doomsayerCooldown;
-    public static CustomOption doomsayerHasMultipleShotsPerMeeting;
-    public static CustomOption doomsayerCanGuessNeutral;
-    public static CustomOption doomsayerCanGuessImpostor;
-    public static CustomOption doomsayerOnlineTarger;
-    public static CustomOption doomsayerGuesserCantGuessSnitch;
-    public static CustomOption doomsayerKillToWin;
-    public static CustomOption doomsayerDormationNum;
-
-    public static CustomOption akujoSpawnRate;
-    public static CustomOption akujoTimeLimit;
-    public static CustomOption akujoForceKeeps;
-    public static CustomOption akujoKnowsRoles;
-    public static CustomOption akujoNumKeeps;
-    public static CustomOption akujoHonmeiCannotFollowWin;
-    public static CustomOption akujoHonmeiOptimizeWin;
 
     public static CustomOption trapperSpawnRate;
     public static CustomOption trapperCooldown;
@@ -482,28 +563,6 @@ public class CustomOptionHolder
     public static CustomOption trapperInfoType;
     public static CustomOption trapperTrapDuration;
 
-    public static CustomOption prophetSpawnRate;
-    public static CustomOption prophetCooldown;
-    public static CustomOption prophetNumExamines;
-    public static CustomOption prophetKillCrewAsRed;
-    public static CustomOption prophetBenignNeutralAsRed;
-    public static CustomOption prophetEvilNeutralAsRed;
-    public static CustomOption prophetKillNeutralAsRed;
-    public static CustomOption prophetCanCallEmergency;
-    public static CustomOption prophetIsRevealed;
-    public static CustomOption prophetExaminesToBeRevealed;
-
-    public static CustomOption infoSleuthSpawnRate;
-    public static CustomOption infoSleuthInfoType;
-
-    public static CustomOption terroristSpawnRate;
-    public static CustomOption terroristBombDestructionTime;
-    public static CustomOption terroristBombDestructionRange;
-    public static CustomOption terroristBombHearRange;
-    public static CustomOption terroristDefuseDuration;
-    public static CustomOption terroristBombCooldown;
-    public static CustomOption terroristBombActiveAfter;
-
     public static CustomOption modifiersAreHidden;
 
     public static CustomOption modifierAssassin;
@@ -512,13 +571,23 @@ public class CustomOptionHolder
     public static CustomOption modifierAssassinMultipleShotsPerMeeting;
     public static CustomOption modifierAssassinKillsThroughShield;
 
+    public static CustomOption modifierSpecoality;
+    public static CustomOption modifierSpecoalityIsGlobal;
+
+    public static CustomOption modifierVortox;
+    public static CustomOption modifierVortoxSkipMeeting;
+    public static CustomOption modifierVortoxSkipNum;
+
+    public static CustomOption modifierPoucher;
+
+    public static CustomOption modifierLastImpostor;
+    public static CustomOption modifierLastImpostorDeduce;
+
     public static CustomOption modifierBait;
     public static CustomOption modifierBaitReportDelayMin;
     public static CustomOption modifierBaitReportDelayMax;
     public static CustomOption modifierBaitShowKillFlash;
     public static CustomOption modifierBaitSwapCrewmate;
-    //public static CustomOption modifierBaitSwapNeutral;
-    //public static CustomOption modifierBaitSwapImpostor;
 
     public static CustomOption modifierAftermath;
 
@@ -593,103 +662,7 @@ public class CustomOptionHolder
     public static CustomOption modifierShiftNeutral;
     public static CustomOption modifierShiftALLNeutral;
 
-    public static CustomOption modifierSpecoality;
-    public static CustomOption modifierSpecoalityIsGlobal;
-
-    public static CustomOption modifierLastImpostor;
-    public static CustomOption modifierLastImpostorDeduce;
-
-    public static CustomOption resteButtonCooldown;
-    public static CustomOption maxNumberOfMeetings;
-    public static CustomOption blockSkippingInEmergencyMeetings;
-    public static CustomOption noVoteIsSelfVote;
-    public static CustomOption disableMeeting;
-    public static CustomOption hidePlayerNames;
-    public static CustomOption showButtonTarget;
-    public static CustomOption blockGameEnd;
-    public static CustomOption allowParallelMedBayScans;
-    public static CustomOption shieldFirstKill;
-    public static CustomOption hideVentAnimOnShadows;
-    public static CustomOption disableCamsRound1;
-    public static CustomOption hideOutOfSightNametags;
-    public static CustomOption impostorSeeRoles;
-    public static CustomOption transparentTasks;
-
-    //public static CustomOption enableMapOptions;
-    public static CustomOption randomGameStartPosition;
-    public static CustomOption randomGameStartToVents;
-    public static CustomOption allowModGuess;
-    public static CustomOption ghostSpeed;
-    public static CustomOption finishTasksBeforeHauntingOrZoomingOut;
-    public static CustomOption disableSabotage;
-    public static CustomOption camsNightVision;
-    public static CustomOption camsNoNightVisionIfImpVision;
-
-    public static CustomOption disableTaskGameEnd;
-    public static CustomOption dynamicMap;
-    public static CustomOption dynamicMapEnableSkeld;
-    public static CustomOption dynamicMapEnableMira;
-    public static CustomOption dynamicMapEnablePolus;
-    public static CustomOption dynamicMapEnableAirShip;
-    public static CustomOption dynamicMapEnableFungle;
-    public static CustomOption dynamicMapEnableSubmerged;
-    public static CustomOption dynamicMapSeparateSettings;
-
-    public static CustomOption debugMode;
-    public static CustomOption disableGameEnd;
-
-    public static CustomOption exiledController;
-    public static CustomOption exiledReviveRole;
-    public static CustomOption exiledShowTeamNum;
-
-    public static CustomOption enableBetterPolus;
-
-    public static CustomOption movePolusVents;
-
-    public static CustomOption guessReVote;
-    public static CustomOption guessExtendmeetingTime;
-
-    public static CustomOption IsReactorDurationSetting;
-    public static CustomOption SkeldLifeSuppTimeLimit;
-    public static CustomOption SkeldReactorTimeLimit;
-    public static CustomOption MiraLifeSuppTimeLimit;
-    public static CustomOption MiraReactorTimeLimit;
-    public static CustomOption PolusReactorTimeLimit;
-    public static CustomOption AirshipReactorTimeLimit;
-    public static CustomOption FungleReactorTimeLimit;
-    //添加新管道
-    public static CustomOption addPolusVents;
-    public static CustomOption swapNavWifi;
-    public static CustomOption movePolusVitals;
-    public static CustomOption moveColdTemp;
-
-    public static CustomOption enableMiraModify;
-    public static CustomOption miraVitals;
-
-    public static CustomOption enableAirShipModify;
-    public static CustomOption airshipOptimize;
-    public static CustomOption airshipLadder;
-    public static CustomOption addAirShipVents;
-
-    public static CustomOption enableFungleModify;
-    public static CustomOption fungleElectrical;
-
-    public static CustomOption WireTaskIsRandomOption;
-    public static CustomOption WireTaskNumOption;
-
-
-    public static CustomOption disableMedbayWalk;
-
-    public static CustomOption enableCamoComms;
-    public static CustomOption fungleDisableCamoComms;
-
-    public static CustomOption restrictDevices;
-
-    //public static CustomOption restrictAdmin;
-    public static CustomOption restrictCameras;
-    public static CustomOption restrictVents;
-
-    //Guesser Gamemode
+    // Guesser Gamemode 
     public static CustomOption guesserGamemodeCrewNumber;
     public static CustomOption guesserGamemodeNeutralNumber;
     public static CustomOption guesserGamemodeImpNumber;
@@ -747,7 +720,7 @@ public class CustomOptionHolder
         allowModGuess = Create(29, Types.General, "allowModGuess", false);
         randomGameStartPosition = Create(30, Types.General, "randomGameStartPosition", false);
         randomGameStartToVents = Create(31, Types.General, "randomGameStartToVents", true, randomGameStartPosition);
-        //ghostSpeed = Create(32, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
+        ghostSpeed = Create(32, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
 
         //Meeting options
         MeetingOptions = Create(100, Types.General, cs(new Color32(255, 85, 234, byte.MaxValue), "MeetingOptions"), false, null, true);
@@ -959,7 +932,7 @@ public class CustomOptionHolder
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 
-        specterSpawnRate = Create(50020, Types.Neutral, cs(Specter.color, "SpecterOptions"), rates, null, true);
+        specterSpawnRate = Create(50020, Types.Neutral, cs(Specter.color, "SpecterOption"), rates, null, true);
         specterResetRole = Create(50021, Types.Neutral, "amnisiacResetRole", true, specterSpawnRate);
         specterDuration = Create(50022, Types.Neutral, "specterDuration", 1.5f, 0.25f, 5f, 0.25f, specterSpawnRate);
         specterAfterMeetingTakeRole = Create(50023, Types.Neutral, "specterAfterMeetingTakeRole", false, specterSpawnRate);
@@ -1115,7 +1088,7 @@ public class CustomOptionHolder
         sheriffCooldown = Create(30142, Types.Crewmate, "sheriffCooldown", 25f, 10f, 60f, 2.5f, sheriffSpawnRate);
         sheriffMisfireKills = Create(30143, Types.Crewmate, "sheriffMisfireKills",
             ["sheriffMisfireKills1", "sheriffMisfireKills2", "sheriffMisfireKills3"], sheriffSpawnRate);
-        sheriffCanKillNeutrals = Create(30150, Types.Crewmate, "sheriffCanKillNeutrals", false, sheriffSpawnRate);
+        sheriffCanKillNeutrals = Create(30150, Types.Crewmate, "sheriffCanKillNeutrals", true, sheriffSpawnRate);
         sheriffCanKillSurvivor = Create(30160, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Survivor.color, "Survivor".Translate())}", false, sheriffCanKillNeutrals);
         sheriffCanKillAmnesiac = Create(30153, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Amnisiac.color, "Amnisiac".Translate())}", false, sheriffCanKillNeutrals);
         sheriffCanKillPursuer = Create(30158, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Pursuer.color, "Pursuer".Translate())}", true, sheriffCanKillNeutrals);

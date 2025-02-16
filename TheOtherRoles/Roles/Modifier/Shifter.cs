@@ -72,7 +72,7 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             if (Sheriff.formerDeputy == player2) Sheriff.formerDeputy = player1;
             Sheriff.Player.Add(player1);
-            Sheriff.Player.RemoveAll(x => x == player1);
+            Sheriff.Player.RemoveAll(x => x == player2);
         }
         else if (Sheriff.Deputy != null && Sheriff.Deputy == player2)
         {

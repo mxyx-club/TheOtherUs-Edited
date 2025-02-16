@@ -362,3 +362,5 @@ TheOtherRoles/Properties/
 .idea/
 .vs/
 .vscode/
+packages.lock.json
+/TheOtherRoles/CustomCosmetics/CosmeticsManager.cs

@@ -25,6 +25,7 @@ public static class LobbyRoleInfo
                 //if (HudManagerStartPatch.roleSummaryButton == null) HudManagerStartPatch.createRoleSummaryButton(__instance);
                 if (HudManagerStartPatch.roleSummaryButton.Timer > 0f) HudManagerStartPatch.roleSummaryButton.Timer = 0f;
                 HudManagerStartPatch.roleSummaryButton.Update();
+                HudManagerStartPatch.gameModeButton.Update();
             }
             catch { }
         }

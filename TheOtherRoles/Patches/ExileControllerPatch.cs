@@ -198,8 +198,8 @@ internal class ExileControllerBeginPatch
 
             if (CustomOptionHolder.exiledShowTeamNum.GetBool())
             {
-                var Impostors = PlayerControl.AllPlayerControls.ToArray().Count(x => x.isImpostor() && x.IsAlive() && x.PlayerId != player.PlayerId);
-                var Neutrals = PlayerControl.AllPlayerControls.ToArray().Count(x => x.isNeutral() && x.IsAlive() && x.PlayerId != player.PlayerId);
+                var Impostors = PlayerControl.AllPlayerControls.ToArray().Count(x => x.isImpostor() && x.IsAlive() && x.PlayerId != player?.PlayerId);
+                var Neutrals = PlayerControl.AllPlayerControls.ToArray().Count(x => x.isNeutral() && x.IsAlive() && x.PlayerId != player?.PlayerId);
                 __instance.ImpostorText.text =
                     $"\n{cs(getTeamColor(RoleType.Impostor), "伪装者阵营剩余 ") + Impostors}" +
                     $" | {cs(getTeamColor(RoleType.Neutral), "中立阵营剩余 ") + Neutrals}";
@@ -250,7 +250,7 @@ internal class ExileControllerWrapUpPatch
 
     private static void WrapUpPostfix(GameData.PlayerInfo exiled)
     {
-        Message("WrapUp");
+        Message("WrapUp Postfix");
         if (PlayerControl.LocalPlayer.IsDead()) CanSeeRoleInfo = true;
         // Prosecutor win condition
         if (exiled != null && Executioner.executioner != null && Executioner.target != null &&

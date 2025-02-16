@@ -862,7 +862,7 @@ public static class RPCProcedure
     public static void RevivePlayer(byte targetId)
     {
         var target = playerById(targetId);
-        target?.Revive();
+        target?.ModRevive();
     }
 
     public static void shifterShift(byte targetId)
@@ -1127,7 +1127,7 @@ public static class RPCProcedure
         if (player == Hacker.hacker) Hacker.clearAndReload();
         if (player == BodyGuard.bodyguard) BodyGuard.clearAndReload();
         if (player == Balancer.balancer) Balancer.clearAndReload();
-        if (player == Redemptor.Player) Redemptor.ClearAndReload();
+        if (player == Redemptor.Player) Redemptor.ClearAndReload(false);
         if (player == Tracker.tracker) Tracker.clearAndReload();
         if (player == Snitch.snitch) Snitch.clearAndReload();
         if (player == Swapper.swapper) Swapper.clearAndReload();
@@ -2002,7 +2002,7 @@ internal class RPCHandlerPatch
         if (!RpcNames!.ContainsKey(packetId))
             return true;
 
-        if (DebugMode && callId != 95) Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc {RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
+        if (DebugMode) Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc {RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
         switch (packetId)
         {
             // Main Controls

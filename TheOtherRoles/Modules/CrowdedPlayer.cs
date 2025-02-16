@@ -279,7 +279,8 @@ public static class CrowdedPlayer
     {
         internal MeetingHud meetingHud = null!;
 
-        [HideFromIl2Cpp] public IEnumerable<PlayerVoteArea> Targets => meetingHud.playerStates.OrderBy(p => p.AmDead);
+        [HideFromIl2Cpp]
+        public IEnumerable<PlayerVoteArea> Targets => meetingHud.playerStates.OrderBy(p => p.AmDead).ThenBy(p => p.TargetPlayerId);
 
         public override int MaxPageIndex => (Targets.Count() - 1) / MaxPerPage;
 

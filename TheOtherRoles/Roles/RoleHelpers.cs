@@ -7,6 +7,16 @@ using TheOtherRoles.Utilities;
 
 namespace TheOtherRoles.Roles;
 
+public enum RoleType
+{
+    Crewmate,
+    Impostor,
+    Neutral,
+    Modifier,
+    Ghost,
+    Special,
+}
+
 public enum RoleId
 {
     Default,

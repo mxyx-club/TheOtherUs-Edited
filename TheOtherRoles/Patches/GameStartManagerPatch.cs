@@ -25,6 +25,7 @@ public class GameStartManagerPatch
             {
                 shareGameVersion();
             }
+            GameStartManagerUpdatePatch.sendGamemode = true;
         }
     }
 
@@ -64,6 +65,7 @@ public class GameStartManagerPatch
         private static bool update;
         private static string currentText = "";
         private static GameObject copiedStartButton;
+        public static bool sendGamemode = true;
 
         public static void Prefix(GameStartManager __instance)
         {
@@ -258,13 +260,13 @@ public class GameStartManagerPatch
             __instance.PlayerCounter.text = currentText + suffix;
             __instance.PlayerCounter.autoSizeTextContainer = true;
 
-            if (AmongUsClient.Instance.AmHost)
+            if (AmongUsClient.Instance.AmHost && sendGamemode && PlayerControl.LocalPlayer != null)
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.ShareGameMode, SendOption.Reliable, -1);
+                var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareGameMode);
                 writer.Write((byte)ModOption.gameMode);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.shareGameMode((byte)ModOption.gameMode);
+                sendGamemode = false;
             }
         }
     }

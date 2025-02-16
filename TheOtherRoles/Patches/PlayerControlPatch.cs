@@ -572,9 +572,8 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void redemptorUpdate()
     {
-        if ((Redemptor.Player == null && Redemptor.RevivedPlayer == null) || Redemptor.arrow == null) return;
+        if (Redemptor.Player == null && Redemptor.RevivedPlayer == null) return;
 
-        Redemptor.arrow.arrow?.SetActive(false);
         var local = PlayerControl.LocalPlayer;
         if (Redemptor.Player.IsAlive() && Redemptor.Reviving && local.IsAlive() && local.isKiller())
         {
@@ -606,7 +605,7 @@ public static class PlayerControlFixedUpdatePatch
         }
         else
         {
-            Redemptor.arrow.arrow?.Destroy();
+            Redemptor.arrow?.arrow?.Destroy();
         }
     }
 
@@ -614,7 +613,9 @@ public static class PlayerControlFixedUpdatePatch
     {
         if (Redemptor.Player == null && Redemptor.RevivedPlayer == null) return;
         var local = PlayerControl.LocalPlayer;
-        var enable = (Redemptor.RevivedPlayer.IsAlive() || Redemptor.Reviving) && ((local.IsAlive() && local.isKiller()) || ShowGhostInfo);
+        var enable = (Redemptor.RevivedPlayer.IsAlive() || Redemptor.Reviving) &&
+                     ((local.IsAlive() && local.isKiller()) ||
+                     local == Redemptor.Player || ShowGhostInfo);
         if (enable)
         {
             if (Redemptor.text == null)
@@ -1344,6 +1345,7 @@ public static class PlayerControlFixedUpdatePatch
             HudManagerStartPatch.sheriffKillButton.MaxTimer = Sheriff.cooldown * multiplier;
             HudManagerStartPatch.vampireKillButton.MaxTimer = Vampire.cooldown * multiplier;
             HudManagerStartPatch.jackalKillButton.MaxTimer = Jackal.cooldown * multiplier;
+            HudManagerStartPatch.pelicanKillButton.MaxTimer = Pelican.cooldown * multiplier;
             HudManagerStartPatch.warlockCurseButton.MaxTimer = Warlock.cooldown * multiplier;
             HudManagerStartPatch.pavlovsdogsKillButton.MaxTimer = Pavlovsdogs.cooldown * multiplier;
             HudManagerStartPatch.witchSpellButton.MaxTimer = (Witch.cooldown + Witch.currentCooldownAddition) * multiplier;
@@ -1631,31 +1633,20 @@ internal class PlayerControlRevivePatch
             CanSeeRoleInfo = false;
         }
 
-        if (__instance == Specter.Player) Specter.Player.clearAllTasks();
-
-        RPCProcedure.clearGhostRoles(__instance.PlayerId);
-        DeadPlayers.RemoveAll(x => x.Player == __instance);
-
         if (__instance.isLover() && Lovers.otherLover(__instance)?.IsDead() == true)
         {
-            Lovers.otherLover(__instance)?.Revive();
+            Lovers.otherLover(__instance)?.ModRevive();
         }
 
         if (Akujo.isAkujoTeam(__instance) && Akujo.otherLover(__instance)?.IsDead() == true)
         {
-            Akujo.otherLover(__instance)?.Revive();
+            Akujo.otherLover(__instance)?.ModRevive();
         }
 
-        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
-        for (var i = 0; i < array.Length; i++)
-        {
-            if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == __instance.PlayerId)
-            {
-                __instance.NetTransform.RpcSnapTo(array[i].transform.position);
-                Object.Destroy(array[i].gameObject);
-                break;
-            }
-        }
+        if (__instance == Specter.Player) Specter.Player.clearAllTasks();
+
+        RPCProcedure.clearGhostRoles(__instance.PlayerId);
+        DeadPlayers.RemoveAll(x => x.Player == __instance);
     }
 }
 
@@ -1884,7 +1875,7 @@ public static class MurderPlayerPatch
         {
             foreach (var player in Pelican.eatenPlayers.ToArray().Where(p => p != null && p.Data.IsDead))
             {
-                player.Revive();
+                player.ModRevive();
 
                 DeadPlayers.RemoveAll(x => x.Player.PlayerId == player.PlayerId);
                 if (PlayerControl.LocalPlayer == player)

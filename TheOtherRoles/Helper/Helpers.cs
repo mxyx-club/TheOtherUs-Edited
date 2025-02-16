@@ -28,7 +28,7 @@ public enum MurderAttemptResult
     DelayVampireKill
 }
 
-public enum SabatageTypes
+public enum SabotageTypes
 {
     Comms,
     O2,
@@ -36,16 +36,6 @@ public enum SabatageTypes
     OxyMask,
     Lights,
     None
-}
-
-public enum RoleType
-{
-    Crewmate,
-    Impostor,
-    Neutral,
-    Modifier,
-    Ghost,
-    Special,
 }
 
 public enum CustomGamemodes
@@ -343,27 +333,27 @@ public static class Helpers
         return roleCouldUse;
     }
 
-    public static SabatageTypes GetActiveSabo()
+    public static SabotageTypes GetActiveSabo()
     {
         foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
             if (task.TaskType == TaskTypes.FixLights)
-                return SabatageTypes.Lights;
+                return SabotageTypes.Lights;
             else if (task.TaskType == TaskTypes.RestoreOxy)
-                return SabatageTypes.O2;
+                return SabotageTypes.O2;
             else if (task.TaskType is TaskTypes.ResetReactor or TaskTypes.StopCharles or TaskTypes.StopCharles)
-                return SabatageTypes.Reactor;
+                return SabotageTypes.Reactor;
             else if (task.TaskType == TaskTypes.FixComms)
-                return SabatageTypes.Comms;
+                return SabotageTypes.Comms;
             else if (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
-                return SabatageTypes.OxyMask;
-        return SabatageTypes.None;
+                return SabotageTypes.OxyMask;
+        return SabotageTypes.None;
     }
 
-    public static bool isLightsActive => GetActiveSabo() == SabatageTypes.Lights;
+    public static bool isLightsActive => GetActiveSabo() == SabotageTypes.Lights;
 
-    public static bool isCommsActive => GetActiveSabo() == SabatageTypes.Comms;
+    public static bool isCommsActive => GetActiveSabo() == SabotageTypes.Comms;
 
-    public static bool isReactor => GetActiveSabo() is SabatageTypes.Reactor or SabatageTypes.O2;
+    public static bool isReactor => GetActiveSabo() is SabotageTypes.Reactor or SabotageTypes.O2;
 
     public static bool isCamoComms => isCommsActive && ModOption.camoComms;
 
@@ -467,6 +457,11 @@ public static class Helpers
             else text = target == null ? defaultText : target.Data.PlayerName;
 
             button.actionButton.OverrideText(text);
+            button.showButtonText = true;
+        }
+        else
+        {
+            button.actionButton.OverrideText(defaultText);
             button.showButtonText = true;
         }
     }
@@ -729,9 +724,24 @@ public static class Helpers
         }
     }
 
-    public static void ModRevive(this PlayerControl target)
+    public static void ModRevive(this PlayerControl target, bool cleanBody = true, bool reloadPos = true)
     {
         target?.Revive();
+
+        if (target == null) return;
+
+
+
+        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        for (var i = 0; i < array.Length; i++)
+        {
+            if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == target.PlayerId)
+            {
+                if (reloadPos) target.NetTransform.RpcSnapTo(array[i].transform.position);
+                if (cleanBody) Object.Destroy(array[i].gameObject);
+                break;
+            }
+        }
     }
 
     internal static string getRoleString(RoleInfo roleInfo)
@@ -868,7 +878,11 @@ public static class Helpers
 
     public static string GithubUrl(this string url)
     {
-        return IsCN() && !url.Contains("ghfast.top") ? "https://ghfast.top/" + url : url;
+        if (IsCN() && (url.Contains("github.com") || url.Contains("githubusercontent.com")) && !url.Contains("ghfast.top"))
+        {
+            return "https://ghfast.top/" + url;
+        }
+        return url;
     }
 
     public static void setSemiTransparent(this PoolablePlayer player, bool value, float alpha = 0.25f)

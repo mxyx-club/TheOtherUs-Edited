@@ -312,7 +312,8 @@ public class CustomOption
             }
             catch (Exception e)
             {
-                Warn($"{e}: ��ͼճ����Ч���ã�");
+                Warn($"尝试粘贴的设置是无效的 : {e}");
+                FastDestroyableSingleton<HudManager>.Instance?.Chat?.AddChat(PlayerControl.LocalPlayer, "尝试粘贴的设置是无效的");
             }
     }
 
@@ -340,7 +341,8 @@ public class CustomOption
         }
         catch (Exception e)
         {
-            Warn($"{e}: ����ճ����Ч���ã�");
+            Warn($"试图粘贴无效的设置 : {e}");
+            FastDestroyableSingleton<HudManager>.Instance?.Chat?.AddChat(PlayerControl.LocalPlayer, "试图粘贴无效的设置");
             SoundEffectsManager.Load();
             SoundEffectsManager.play("fail");
             return false;
