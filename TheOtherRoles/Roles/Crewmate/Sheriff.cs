@@ -39,6 +39,7 @@ public static class Sheriff
     public static float handcuffCooldown;
     public static bool knowsSheriff;
     public static Dictionary<byte, float> handcuffedKnows = new();
+    public static bool Intro;
 
     public static ResourceSprite handcuffSprite = new("DeputyHandcuffButton.png");
     public static ResourceSprite handcuffedSprite = new("DeputyHandcuffed.png");
@@ -71,12 +72,23 @@ public static class Sheriff
         }
     }
 
+    public static void deputyCheckPromotion(bool isMeeting = false)
+    {
+        // If LocalPlayer is Deputy, the Sheriff is disconnected and Deputy promotion is enabled, then trigger promotion
+        if (Deputy == null || Deputy != PlayerControl.LocalPlayer || IntroCutscene.Instance != null) return;
+        if (promotesToSheriff == 0 || Deputy.IsDead() || (promotesToSheriff == 2 && !isMeeting)) return;
+        if (Player.Count == 0 || Player.All(x => x.IsDead()))
+        {
+            var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.DeputyPromotes);
+            writer.EndRPC();
+            replaceCurrentSheriff();
+        }
+    }
+
     public static void replaceCurrentSheriff()
     {
-        if (Deputy == null) return;
-        Player ??= new();
         formerDeputy = Deputy;
-        Player.Add(Deputy);
+        Player.TryAdd(Deputy);
         Deputy = null;
         currentTarget = null;
         cooldown = CustomOptionHolder.sheriffCooldown.GetFloat();
@@ -122,6 +134,7 @@ public static class Sheriff
 
         Deputy = null;
         currentTarget = null;
+        Intro = false;
         Reload();
     }
 
@@ -148,5 +161,21 @@ public static class Sheriff
         keepsHandcuffsOnPromotion = CustomOptionHolder.deputyKeepsHandcuffs.GetBool();
         handcuffDuration = CustomOptionHolder.deputyHandcuffDuration.GetFloat();
         knowsSheriff = CustomOptionHolder.deputyKnowsSheriff.GetBool();
+    }
+
+    [HarmonyPatch]
+    private static class Sheriff_Patch
+    {
+        [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update)), HarmonyPostfix]
+        private static void HudManagerPostfix()
+        {
+            deputyCheckPromotion();
+        }
+
+        [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.OnDestroy)), HarmonyPostfix]
+        private static void IntroCutsceneOnDestroy()
+        {
+            Intro = true;
+        }
     }
 }

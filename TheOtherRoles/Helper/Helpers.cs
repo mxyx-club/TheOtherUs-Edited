@@ -60,6 +60,7 @@ public static class Helpers
     public static bool isAirship => GameOptionsManager.Instance.CurrentGameOptions.MapId == 4;
     public static bool isFungle => GameOptionsManager.Instance.CurrentGameOptions.MapId == 5;
 
+    public static string previousEndGameSummary = "";
     public static System.Random rnd => new(Guid.NewGuid().GetHashCode());
 
     public static bool isUsingTransportation(this PlayerControl pc) => pc.inMovingPlat || pc.onLadder;
@@ -263,7 +264,7 @@ public static class Helpers
 
     public static bool isKiller(this PlayerControl player)
     {
-        return player != null && (player.isImpostor() || isKillerNeutral(player));
+        return player != null && (player.IsImpostor() || isKillerNeutral(player));
     }
 
     public static bool isCrew(this PlayerControl player)
@@ -271,17 +272,17 @@ public static class Helpers
         return player != null && !player.Data.Role.IsImpostor && !isNeutral(player);
     }
 
-    public static bool isImpostor(this PlayerControl player, bool Spy = false)
+    public static bool IsImpostor(this PlayerControl player, bool AndSpy = false)
     {
-        if (Spy && Roles.Crewmate.Spy.spy != null && Roles.Crewmate.Spy.spy == player) return true;
-        return player != null && player.Data.Role.IsImpostor;
+        if (player == null) return false;
+        return player.Data.Role.IsImpostor || (AndSpy && Spy.spy == player);
     }
 
     public static string teamString(PlayerControl player)
     {
         var killerTeam = "";
         if (isNeutral(player)) killerTeam = "NeutralRolesText".Translate();
-        else if (player.isImpostor()) killerTeam = "ImpostorRolesText".Translate();
+        else if (player.IsImpostor()) killerTeam = "ImpostorRolesText".Translate();
         else if (player.isCrew()) killerTeam = "CrewmateRolesText".Translate();
         return killerTeam;
     }
@@ -564,11 +565,10 @@ public static class Helpers
 
     public static bool TryAdd<T>(this List<T> list, T item)
     {
-        if (list == null || item == null) return false;
+        if (list == null || item == null || list.Contains(item)) return false;
         try
         {
             list.Add(item);
-            Message("complete", "TryAdd");
             return true;
         }
         catch (Exception e)
@@ -599,10 +599,19 @@ public static class Helpers
     {
         int count = 0;
         foreach (T obj in list)
-            if (func == null || func(obj))
-                count++;
+            if (func == null || func(obj)) count++;
         return count;
     }
+
+    public static bool MContains<T>(this IEnumerable<T> source, T item) where T : class
+    {
+        if (source == null || item == null)
+            return false;
+        foreach (var i in source)
+            if (i == item) return true;
+        return false;
+    }
+
     public static Color HexToColor(string hex)
     {
         _ = ColorUtility.TryParseHtmlString("#" + hex, out var color);

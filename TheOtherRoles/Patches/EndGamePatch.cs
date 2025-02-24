@@ -70,9 +70,11 @@ internal static class AdditionalTempData
     public static List<WinCondition> additionalWinConditions = new();
     public static List<PlayerRoleInfo> playerRoles = new();
     public static float timer;
+    public static string GameEndString = "";
 
     public static void clear()
     {
+        GameEndString = "";
         playerRoles.Clear();
         additionalWinConditions.Clear();
         winCondition = WinCondition.Default;
@@ -120,6 +122,31 @@ public class OnGameEndPatch
             RoleInfo.juggernaut,
             RoleInfo.pavlovsdogs
         ];
+
+        var table = new SimpleTable()
+            .AddColumn(alignment: Alignment.Left)
+            .AddColumn(alignment: Alignment.Left)
+            .AddColumn(alignment: Alignment.Left)
+            .AddColumn(alignment: Alignment.Left)
+            .AddRow();
+
+        foreach (var p in PlayerControl.AllPlayerControls.ToList())
+        {
+            var playerName = cs(p.IsAlive() ? Color.white : new Color(.7f, .7f, .7f), p.Data.PlayerName);
+
+            var roles = RoleInfo.GetRolesString(p, true, true, true);
+
+            var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p.Data);
+            var taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({tasksCompleted}/{tasksTotal})</color>" : "";
+            if (p.isKiller()) taskInfo += $" <color=#FF0000FF>击杀:{GameHistory.GetKillCount(p)}</color>";
+
+            var status = p.IsAlive()
+                ? "<color=#00FF00FF>存活</color>"
+                : $"<color=#AAAAAAFF>{RoleInfo.GetDeathReasonString(p)}</color>";
+
+            table.AddRow(playerName, roles, taskInfo, status);
+        }
+        AdditionalTempData.GameEndString = table.ToString();
 
         foreach (var playerControl in PlayerControl.AllPlayerControls)
         {
@@ -277,6 +304,35 @@ public class OnGameEndPatch
             AdditionalTempData.winCondition = WinCondition.ExecutionerWin;
         }
 
+        // Akujo win
+        else if (akujoWin)
+        {
+            if (Akujo.honmeiOptimizeWin && !Akujo.existingWithKiller())
+            {
+                AdditionalTempData.winCondition = WinCondition.AkujoTeamWin;
+                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                {
+                    if (p == null) continue;
+                    if (p == Akujo.akujo || p == Akujo.honmei)
+                        TempData.winners.Add(new WinningPlayerData(p.Data));
+                    else if (Pursuer.Player.MContains(p) && !p.Data.IsDead)
+                        TempData.winners.Add(new WinningPlayerData(p.Data));
+                    else if (Survivor.Player.MContains(p) && !p.Data.IsDead)
+                        TempData.winners.Add(new WinningPlayerData(p.Data));
+                    else if (!notWinners.MContains(p) && !p.IsImpostor())
+                        TempData.winners.Add(new WinningPlayerData(p.Data));
+                }
+            }
+            else
+            {
+                AdditionalTempData.winCondition = WinCondition.AkujoSoloWin;
+                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                TempData.winners.Add(new WinningPlayerData(Akujo.akujo.Data));
+                TempData.winners.Add(new WinningPlayerData(Akujo.honmei.Data));
+            }
+        }
+
         // Lovers win conditions
         else if (loversWin)
         {
@@ -290,11 +346,11 @@ public class OnGameEndPatch
                     if (p == null) continue;
                     if (p == Lovers.lover1 || p == Lovers.lover2)
                         TempData.winners.Add(new WinningPlayerData(p.Data));
-                    else if (Pursuer.Player.Any(pc => pc == p) && Pursuer.Player.Any(pc => pc.IsAlive()))
+                    else if (Pursuer.Player.MContains(p) && Pursuer.Player.Any(pc => pc.IsAlive()))
                         TempData.winners.Add(new WinningPlayerData(p.Data));
-                    else if (Survivor.Player.Any(pc => pc == p) && Survivor.Player.Any(pc => pc.IsAlive()))
+                    else if (Survivor.Player.MContains(p) && Survivor.Player.Any(pc => pc.IsAlive()))
                         TempData.winners.Add(new WinningPlayerData(p.Data));
-                    else if (!notWinners.Contains(p) && !p.Data.Role.IsImpostor)
+                    else if (!notWinners.MContains(p) && !p.IsImpostor())
                         TempData.winners.Add(new WinningPlayerData(p.Data));
                 }
             }
@@ -404,35 +460,6 @@ public class OnGameEndPatch
             TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
             var wpd = new WinningPlayerData(Swooper.swooper.Data) { IsImpostor = false };
             TempData.winners.Add(wpd);
-        }
-
-        // Akujo win
-        else if (akujoWin)
-        {
-            if (Akujo.honmeiOptimizeWin && !Akujo.existingWithKiller())
-            {
-                AdditionalTempData.winCondition = WinCondition.AkujoTeamWin;
-                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
-                {
-                    if (p == null) continue;
-                    if (p == Akujo.akujo || p == Akujo.honmei)
-                        TempData.winners.Add(new WinningPlayerData(p.Data));
-                    else if (Pursuer.Player.Contains(p) && !p.Data.IsDead)
-                        TempData.winners.Add(new WinningPlayerData(p.Data));
-                    else if (Survivor.Player.Contains(p) && !p.Data.IsDead)
-                        TempData.winners.Add(new WinningPlayerData(p.Data));
-                    else if (!notWinners.Contains(p) && !p.Data.Role.IsImpostor)
-                        TempData.winners.Add(new WinningPlayerData(p.Data));
-                }
-            }
-            else
-            {
-                AdditionalTempData.winCondition = WinCondition.AkujoSoloWin;
-                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                TempData.winners.Add(new WinningPlayerData(Akujo.akujo.Data));
-                TempData.winners.Add(new WinningPlayerData(Akujo.honmei.Data));
-            }
         }
 
         // Lawyer solo win 
@@ -622,7 +649,6 @@ public class EndGameManagerSetUpPatch
             var combinedText = string.Join(" & ", winConditionsTexts);
             textRenderer.text += $"<size=50%>\n{combinedText}</size>";
         }
-
         if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.Normal)
         {
             if (Camera.main != null)
@@ -633,21 +659,9 @@ public class EndGameManagerSetUpPatch
                     position.y - 0.1f, -214f);
                 roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
 
-                var roleSummaryText = new StringBuilder();
+                var roleSummaryText = "游戏总结:\n";
 
-                roleSummaryText.AppendLine("游戏总结:");
-                foreach (var data in AdditionalTempData.playerRoles)
-                {
-                    //var roles = string.Join(" ", data.Roles.Select(x => Helpers.cs(x.color, x.name)));
-                    var roles = data.RoleNames;
-                    //if (data.IsGuesser) roles += " (Guesser)";
-                    var taskInfo = data.TasksTotal > 0
-                        ? $" - <color=#FAD934FF>({data.TasksCompleted}/{data.TasksTotal})</color>"
-                        : "";
-                    if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(击杀: {data.Kills})</color>";
-                    roleSummaryText.AppendLine(
-                        $"{cs(data.IsAlive ? Color.white : new Color(.7f, .7f, .7f), data.PlayerName)} - {roles}{taskInfo}");
-                }
+                roleSummaryText += AdditionalTempData.GameEndString;
 
                 var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
                 roleSummaryTextMesh.alignment = TextAlignmentOptions.TopLeft;
@@ -661,7 +675,6 @@ public class EndGameManagerSetUpPatch
                 roleSummaryTextMesh.text = roleSummaryText.ToString();
             }
         }
-
         AdditionalTempData.clear();
     }
 }

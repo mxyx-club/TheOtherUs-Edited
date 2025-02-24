@@ -1661,7 +1661,7 @@ internal static class HudManagerStartPatch
                 vampireKillButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Vampire.buttonSprite,
-            ButtonPositions.upperRowLeft,
+            ButtonPositions.upperRowRight,
             __instance,
             modKillInput.keyCode,
             false,
@@ -1946,7 +1946,7 @@ internal static class HudManagerStartPatch
             },
             () => { jackalKillButton.Timer = jackalKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowCenter,
+            ButtonPositions.upperRowRight,
             __instance,
             modKillInput.keyCode
         );
@@ -1973,7 +1973,6 @@ internal static class HudManagerStartPatch
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.jackalCreatesSidekick(Jackal.currentTarget.PlayerId);
                 SoundEffectsManager.play("jackalSidekick");
-                _ = new LateTask(LastImpostor.promoteToLastImpostor, 0.5f);
                 jackalSidekickButton.Timer = jackalSidekickButton.MaxTimer;
             },
             () =>
@@ -2030,7 +2029,7 @@ internal static class HudManagerStartPatch
                 Jackal.isInvisable = false;
             },
             Swooper.SwoopButtonSprite,
-            ButtonPositions.upperRowLeft,
+            ButtonPositions.upperRowCenter,
             __instance,
             secondaryAbilityInput.keyCode,
             true,
@@ -2053,7 +2052,7 @@ internal static class HudManagerStartPatch
             () => { showTargetNameOnButton(Swooper.currentTarget, swooperKillButton, GetString("killButtonText")); return Swooper.currentTarget && PlayerControl.LocalPlayer.CanMove; },
             () => { swooperKillButton.Timer = swooperKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowCenter,
+            ButtonPositions.upperRowRight,
             //new Vector3(0, 1f, 0),
             __instance,
             modKillInput.keyCode
@@ -2088,7 +2087,7 @@ internal static class HudManagerStartPatch
                 Swooper.isInvisable = false;
             },
             Swooper.SwoopButtonSprite,
-            ButtonPositions.upperRowLeft,
+            ButtonPositions.upperRowCenter,
             __instance,
             abilityInput.keyCode,
             true,
@@ -2147,10 +2146,10 @@ internal static class HudManagerStartPatch
                 pavlovsdogsKillButton.Timer = pavlovsdogsKillButton.MaxTimer;
             },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowCenter,
+            ButtonPositions.upperRowRight,
             __instance,
             modKillInput.keyCode,
-            buttonText: GetString("killButtonText") 
+            buttonText: GetString("killButtonText")
         );
         PavlovsdogKillSelfText = Object.Instantiate(pavlovsdogsKillButton.actionButton.cooldownTimerText,
             pavlovsdogsKillButton.actionButton.cooldownTimerText.transform.parent);
@@ -2169,8 +2168,6 @@ internal static class HudManagerStartPatch
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.pavlovsCreateDog(Pavlovsdogs.currentTarget.PlayerId);
                 SoundEffectsManager.play("jackalSidekick");
-
-                _ = new LateTask(LastImpostor.promoteToLastImpostor, 0.5f);
 
                 pavlovsownerCreateDogButton.Timer = pavlovsownerCreateDogButton.MaxTimer;
             },
@@ -3629,7 +3626,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Pursuer.Player != null && Pursuer.Player.Contains(PlayerControl.LocalPlayer) &&
+                return Pursuer.Player != null && Pursuer.Player.MContains(PlayerControl.LocalPlayer) &&
                        PlayerControl.LocalPlayer.IsAlive()/* && Pursuer.blanks < Pursuer.blanksNumber*/;
             },
             () =>
@@ -3672,7 +3669,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Survivor.Player != null && Survivor.Player.Contains(PlayerControl.LocalPlayer) &&
+                return Survivor.Player != null && Survivor.Player.MContains(PlayerControl.LocalPlayer) &&
                        PlayerControl.LocalPlayer.IsAlive() && Survivor.vestEnable/* && Survivor.remainingVests > 0*/;
             },
             () =>
@@ -3727,7 +3724,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Survivor.Player != null && Survivor.Player.Contains(PlayerControl.LocalPlayer) &&
+                return Survivor.Player != null && Survivor.Player.MContains(PlayerControl.LocalPlayer) &&
                        PlayerControl.LocalPlayer.IsAlive() && Survivor.blanksEnable/* && Survivor.remainingBlanks > 0*/;
             },
             () =>
@@ -4169,7 +4166,7 @@ internal static class HudManagerStartPatch
             },
             () => { trapperButton.Timer = trapperButton.MaxTimer; },
             Trapper.trapButtonSprite,
-            ButtonPositions.lowerRowRight,
+            ButtonPositions.upperRowCenter,
             __instance,
             abilityInput.keyCode,
             buttonText: GetString("trapperTrapText")

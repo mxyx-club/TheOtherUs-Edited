@@ -4,6 +4,7 @@ using System.Linq;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using InnerNet;
+using Rewired;
 using TheOtherRoles.Buttons;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -131,12 +132,12 @@ internal class HudManagerUpdatePatch
             setPlayerNameColor(WolfLord.Player, WolfLord.color);
         }
 
-        if (Grenadier.Player != null && ((localPlayer.isImpostor() && Grenadier.indicatorsMode)
+        if (Grenadier.Player != null && ((localPlayer.IsImpostor() && Grenadier.indicatorsMode)
             || localPlayer == Grenadier.Player || ShowGhostInfo))
         {
             foreach (var p in Grenadier.controls)
             {
-                if (p != localPlayer && !p.isImpostor()) setPlayerNameColor(p, Color.black);
+                if (p != localPlayer && !p.IsImpostor()) setPlayerNameColor(p, Color.black);
             }
         }
 
@@ -433,8 +434,17 @@ internal class HudManagerUpdatePatch
         if ((Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) &&
              Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0) ||
             MeetingHud.Instance) __instance.ImpostorVentButton.Hide();
-        else if (PlayerControl.LocalPlayer.roleCanUseVents() &&
-                 !__instance.ImpostorVentButton.isActiveAndEnabled) __instance.ImpostorVentButton.Show();
+        else if (PlayerControl.LocalPlayer.roleCanUseVents() && !__instance.ImpostorVentButton.isActiveAndEnabled)
+        {
+            __instance.ImpostorVentButton.Show();
+
+        }
+        if (ReInput.players.GetPlayer(0).GetButtonDown(RewiredConsts.Action.UseVent) &&
+            !PlayerControl.LocalPlayer.Data.Role.IsImpostor && PlayerControl.LocalPlayer.roleCanUseVents())
+        {
+            __instance.ImpostorVentButton.DoClick();
+        }
+
     }
 
     private static void updateUseButton(HudManager __instance)

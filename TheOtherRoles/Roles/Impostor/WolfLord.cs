@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -44,11 +44,11 @@ public class WolfLord
     public static class WolfLord_Patch
     {
         private static TextMeshPro meetingExtraButtonLabel;
-        public static GameObject MeetingExtraButton;
+        private static GameObject MeetingExtraButton;
 
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
         [HarmonyPostfix]
-        internal static void MeetingStartPostfix(MeetingHud __instance)
+        private static void MeetingStartPostfix(MeetingHud __instance)
         {
             if (__instance && !Killed && Revealed) { ButtonToggle(__instance); return; }
             if (Player.IsAlive() && PlayerControl.LocalPlayer == Player && !Revealed)
@@ -124,7 +124,7 @@ public class WolfLord
                 foreach (var pva in __instance.playerStates)
                 {
                     var player = playerById(pva.TargetPlayerId);
-                    if (player.IsAlive() && player != Player && !player.isImpostor())
+                    if (player.IsAlive() && player != Player && !player.IsImpostor())
                     {
                         GameObject template = pva.Buttons.transform.Find("CancelButton").gameObject;
                         GameObject targetBox = Object.Instantiate(template, pva.transform);
@@ -141,7 +141,7 @@ public class WolfLord
             }
         }
 
-        public static void WolfLordOnClick(PlayerVoteArea pva, MeetingHud __instance)
+        private static void WolfLordOnClick(PlayerVoteArea pva, MeetingHud __instance)
         {
             var target = playerById(pva.TargetPlayerId);
             if (Player == null || !Revealed || Killed || target == null) return;

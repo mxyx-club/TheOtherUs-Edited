@@ -286,7 +286,7 @@ public static class Guesser
                     continue;
                 case RoleId.Crewmate when !Assassin.evilGuesserCanGuessCrewmate && guesserRole == RoleId.Assassin:
                     continue;
-                case RoleId.Spy when PlayerControl.LocalPlayer.isImpostor() && !HandleGuesser.evilGuesserCanGuessSpy:
+                case RoleId.Spy when PlayerControl.LocalPlayer.IsImpostor() && !HandleGuesser.evilGuesserCanGuessSpy:
                     continue;
                 case RoleId.Mayor when Mayor.Revealed:
                     continue;

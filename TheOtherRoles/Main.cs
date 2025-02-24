@@ -18,7 +18,7 @@ namespace TheOtherRoles;
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
 public class TheOtherRolesPlugin : BasePlugin
 {
-    public const string Id = "TheOtherUs.Options.v2"; // Config files name
+    public const string Id = "TheOtherUs.Options.v3"; // Config files name
     public const string ModName = MyPluginInfo.PLUGIN_NAME;
     public const string VersionString = MyPluginInfo.PLUGIN_VERSION;
 
@@ -74,8 +74,8 @@ public class TheOtherRolesPlugin : BasePlugin
 
     public override void Load()
     {
-        ModTranslation.Load();
         SetLogSource(Log);
+        ModTranslation.Load();
         Instance = this;
 
         ToggleCursor = Config.Bind("Custom", "Better Cursor", true);

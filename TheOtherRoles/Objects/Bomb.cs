@@ -109,7 +109,14 @@ public class Bomb
                 GameHistory.OverrideDeathReasonAndKiller(PlayerControl.LocalPlayer, CustomDeathReason.Bomb,
                     Terrorist.terrorist);
             }
-            SoundEffectsManager.playAtPosition("bombExplosion", position, range: Terrorist.hearRange);
+            try
+            {
+                SoundEffectsManager.playAtPosition("bombExplosion", position, maxDuration: 1.6f, range: Terrorist.hearRange);
+            }
+            catch (Exception e)
+            {
+                Warn($"Exception in Sound Effect for Bomb explosion: {e}");
+            }
         }
 
         Terrorist.clearBomb();

@@ -16,17 +16,17 @@ public static class Cursed
     }
 
     [HarmonyPatch]
-    public static class Cursed_Patch
+    private static class Cursed_Patch
     {
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update)), HarmonyPostfix]
-        public static void Postfix(HudManager __instance)
+        private static void Postfix(HudManager __instance)
         {
             if (cursed.IsDead() || !InGame || cursed != PlayerControl.LocalPlayer) return;
 
             var allPlayers = PlayerControl.AllPlayerControls.ToList();
-            var impostorCount = allPlayers.Count(x => x.isImpostor() && x.IsAlive());
+            var impostorCount = allPlayers.Count(x => x.IsImpostor() && x.IsAlive());
 
-            if (impostorCount >= allPlayers.Count(x => !x.isImpostor() && x.IsAlive()))
+            if (impostorCount >= allPlayers.Count(x => !x.IsImpostor() && x.IsAlive()))
             {
                 turnToImpostorRPC(cursed);
             }

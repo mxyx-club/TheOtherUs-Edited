@@ -8,8 +8,8 @@ public class PlayerData<T>
 {
     private Dictionary<byte, T> _data;
     private Dictionary<PlayerControl, T> _playerdata;
-    private T defaultvalue = default;
-    private bool nonsetinit = false;
+    private T defaultvalue;
+    private bool nonsetinit;
     public T Local
     {
         get => this[PlayerControl.LocalPlayer.PlayerId];

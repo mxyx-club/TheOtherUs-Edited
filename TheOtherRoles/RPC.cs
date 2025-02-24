@@ -38,6 +38,8 @@ public enum CustomRPC
     DynamicMapOption,
     SetGameStarting,
     StopStart,
+    DraftModePickOrder,
+    DraftModePick,
     ShareGameMode = 95,
 
     UncheckedMurderPlayer,
@@ -555,6 +557,7 @@ public static class RPCProcedure
                 break;
             case RoleId.Mini:
                 Mini.mini = player;
+                Mini.timeOfGrowthStart = DateTime.UtcNow;
                 break;
             case RoleId.Giant:
                 Giant.giant = player;
@@ -784,6 +787,7 @@ public static class RPCProcedure
     {
         var player = playerById(targetId);
         erasePlayerRoles(player.PlayerId);
+        if (player == Cursed.cursed) Cursed.clearAndReload();
         Helpers.turnToImpostor(player);
     }
 
@@ -875,7 +879,7 @@ public static class RPCProcedure
         Shifter.clearAndReload();
 
         // Suicide (exile) when impostor or impostor variants
-        if ((target.isImpostor() || Shifter.isShiftNeutral(target)) && player.IsAlive())
+        if ((target.IsImpostor() || Shifter.isShiftNeutral(target)) && player.IsAlive())
         {
             Message($"Target Is Neutral: {Shifter.isShiftNeutral(target)}", "Shifter");
             player.Exiled();
@@ -927,11 +931,11 @@ public static class RPCProcedure
         {
             if (PlayerControl.LocalPlayer.PlayerId == player.PlayerId)
             {
-                if (player.isImpostor() && !player.IsDead() && !MeetingHud.Instance)
+                if (player.IsImpostor() && !player.IsDead() && !MeetingHud.Instance)
                 {
                     Grenadier.showFlash(Grenadier.flash, Grenadier.duration, 0.24f);
                 }
-                else if (!player.isImpostor() && !player.IsDead() && !MeetingHud.Instance)
+                else if (!player.IsImpostor() && !player.IsDead() && !MeetingHud.Instance)
                 {
                     Grenadier.showFlash(Grenadier.flash, Grenadier.duration, 1f);
                 }
@@ -1168,7 +1172,7 @@ public static class RPCProcedure
         if (player == Jester.jester) Jester.clearAndReload();
         if (player == Werewolf.werewolf) Werewolf.clearAndReload();
         if (player == Miner.miner) Miner.clearAndReload();
-        if (player == Pelican.Player) Pelican.PelicanDie(true);
+        if (player == Pelican.Player) { Pelican.PelicanDie(true); }
         if (player == Arsonist.arsonist) Arsonist.clearAndReload();
         if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
 
@@ -1196,7 +1200,6 @@ public static class RPCProcedure
         if (player == PartTimer.partTimer) PartTimer.clearAndReload();
         if (player == Vortox.Player) Vortox.ClearAndReload();
 
-        if (player == Cursed.cursed) Cursed.clearAndReload();
         if (player == Shifter.shifter) Shifter.clearAndReload();
 
         Assassin.assassin.RemoveAll(x => x.PlayerId == player.PlayerId);
@@ -2025,6 +2028,14 @@ internal class RPCHandlerPatch
 
             case CustomRPC.SetGhostRole:
                 RPCProcedure.setGhostRole(reader.ReadByte(), reader.ReadByte());
+                break;
+
+            case CustomRPC.DraftModePickOrder:
+                RoleDraft.receivePickOrder(reader.ReadByte(), reader);
+                break;
+
+            case CustomRPC.DraftModePick:
+                RoleDraft.receivePick(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.VersionHandshake:

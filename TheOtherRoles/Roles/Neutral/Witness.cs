@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -64,9 +64,9 @@ public class Witness
     }
 
     [HarmonyPatch]
-    public class Witness_Patch
+    private class Witness_Patch
     {
-        public static void MeetingOnClick(PlayerVoteArea pva, MeetingHud __instance)
+        private static void MeetingOnClick(PlayerVoteArea pva, MeetingHud __instance)
         {
             if (Player == null) return;
             var Target = playerById(pva.TargetPlayerId);
@@ -85,7 +85,7 @@ public class Witness
 
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
         [HarmonyPostfix]
-        internal static void MeetingHudStartPostfix(MeetingHud __instance)
+        private static void MeetingHudStartPostfix(MeetingHud __instance)
         {
             if (Player.IsAlive() && killerTarget == null) WitnessReport(byte.MaxValue);
 
@@ -115,7 +115,7 @@ public class Witness
 
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
         [HarmonyPostfix]
-        internal static void TimeUpdatePostfix(MeetingHud __instance)
+        private static void TimeUpdatePostfix(MeetingHud __instance)
         {
             if (Player.IsDead() || endTime || target != null) return;
             timeLeft = markTimer - (float)(DateTime.UtcNow - startTime).TotalSeconds;

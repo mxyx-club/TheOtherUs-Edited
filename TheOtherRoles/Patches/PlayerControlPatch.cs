@@ -136,12 +136,10 @@ public static class PlayerControlFixedUpdatePatch
             p.cosmetics.nameText.transform.parent.SetLocalZ(-0.0001f);
 
             bool teamSeeRoles = (Lawyer.lawyerKnowsRole && local == Lawyer.lawyer && p == Lawyer.target) ||
-                (PartTimer.knowsRole && local == PartTimer.partTimer && p == PartTimer.target) ||
-                (local == PartTimer.target && p == PartTimer.partTimer) ||
-                (Akujo.knowsRoles && local == Akujo.akujo &&
-                    (p == Akujo.honmei || Akujo.keeps.Any(x => x.PlayerId == p.PlayerId))) ||
-                (ModOption.impostorSeeRoles && Spy.spy == null && PlayerControl.LocalPlayer.isImpostor() &&
-                    PlayerControl.LocalPlayer.IsAlive() && p.isImpostor() && p.IsAlive());
+                 (PartTimer.knowsRole && local == PartTimer.partTimer && p == PartTimer.target) ||
+                 (local == PartTimer.target && p == PartTimer.partTimer) ||
+                 (Akujo.knowsRoles && local == Akujo.akujo && (p == Akujo.honmei || Akujo.keeps.Any(x => x.PlayerId == p.PlayerId)) ||
+                 (ModOption.impostorSeeRoles && Spy.spy == null && local.IsImpostor() && p.IsImpostor()));
 
             bool reported = ((local == Slueth.slueth && Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) ||
                              (local == Poucher.poucher && Poucher.killed.Any(x => x.PlayerId == p.PlayerId))) && p.IsDead();
@@ -150,9 +148,9 @@ public static class PlayerControlFixedUpdatePatch
 
             if (p == local || local.Data.IsDead || teamSeeRoles || reported || revealed)
             {
-                var roleNames = RoleInfo.GetRolesString(p, true, false, false, false);
                 var mainRole = RoleInfo.GetRolesString(p, true, false, false, false);
                 var allRoleText = RoleInfo.GetRolesString(p, true, true, true, true);
+                allRoleText += $"- {RoleInfo.GetDeathReasonString(p)}";
 
                 var playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
                 var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
@@ -190,8 +188,8 @@ public static class PlayerControlFixedUpdatePatch
                 var meetingInfoText = "";
                 if (p == local)
                 {
-                    if (p.Data.IsDead) roleNames = allRoleText;
-                    playerInfoText = $"{roleNames}";
+                    if (p.Data.IsDead) mainRole = allRoleText;
+                    playerInfoText = $"{mainRole}";
                     if (HudManager.Instance.TaskPanel != null)
                     {
                         var tabText = HudManager.Instance.TaskPanel.tab.transform.FindChild("TabText_TMP").GetComponent<TextMeshPro>();
@@ -207,11 +205,11 @@ public static class PlayerControlFixedUpdatePatch
                 {
                     meetingInfoText = cs(WolfLord.color, "WolfLord".Translate());
                 }
-                else if (teamSeeRoles)
+                else if (teamSeeRoles && local.IsAlive())
                 {
-                    meetingInfoText = playerInfoText = roleNames;
+                    meetingInfoText = playerInfoText = mainRole;
                 }
-                else if (reported)
+                else if (reported && local.IsAlive())
                 {
                     meetingInfoText = playerInfoText = mainRole;
                 }
@@ -307,20 +305,6 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
-
-    public static void deputyCheckPromotion(bool isMeeting = false)
-    {
-        // If LocalPlayer is Deputy, the Sheriff is disconnected and Deputy promotion is enabled, then trigger promotion
-        if (Sheriff.Deputy == null || Sheriff.Deputy != PlayerControl.LocalPlayer) return;
-        if (Sheriff.promotesToSheriff == 0 || Sheriff.Deputy.IsDead() || (Sheriff.promotesToSheriff == 2 && !isMeeting)) return;
-        if (Sheriff.Player == null || Sheriff.Player.All(x => x.IsDead()))
-        {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.DeputyPromotes, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            Sheriff.replaceCurrentSheriff();
-        }
-    }
 
     private static void detectiveUpdateFootPrints()
     {
@@ -822,7 +806,7 @@ public static class PlayerControlFixedUpdatePatch
         var local = PlayerControl.LocalPlayer;
 
         var isDead = local == Snitch.snitch || local.Data.IsDead;
-        var forImpTeam = local.isImpostor();
+        var forImpTeam = local.IsImpostor();
         var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(local);
         var forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(local);
         var forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && local.isNeutral();
@@ -910,7 +894,7 @@ public static class PlayerControlFixedUpdatePatch
             BountyHunter.bountyUpdateTimer = BountyHunter.bountyDuration;
             var possibleTargets = new List<PlayerControl>();
             foreach (PlayerControl p in PlayerControl.AllPlayerControls.ToArray().Where(x => x.IsAlive()))
-                if (p.IsAlive() && p != p.isImpostor(true) && (p != Mini.mini || Mini.isGrownUp()) && p != Lovers.otherLover(BountyHunter.bountyHunter))
+                if (p.IsAlive() && p != p.IsImpostor(true) && (p != Mini.mini || Mini.isGrownUp()) && p != Lovers.otherLover(BountyHunter.bountyHunter))
                     possibleTargets.Add(p);
             if (possibleTargets.Count == 0) return;
             BountyHunter.bounty = possibleTargets[rnd.Next(0, possibleTargets.Count)];
@@ -1490,8 +1474,6 @@ public static class PlayerControlFixedUpdatePatch
             redemptorTextUpdate();
             // Pavlovsdogs
             pavlovsownerUpdate();
-            // Check for deputy promotion on Sheriff disconnect
-            deputyCheckPromotion();
             // Check for sidekick promotion on Jackal disconnect
             sidekickCheckPromotion();
             // Witness
@@ -1838,11 +1820,6 @@ public static class MurderPlayerPatch
             }, 0.2f, "Aftermath Is Die");
         }
 
-        if (target.Data.Role.IsImpostor && AmongUsClient.Instance.AmHost)
-        {
-            LastImpostor.promoteToLastImpostor();
-        }
-
         // Sidekick promotion trigger on exile
         if (Jackal.promotesToJackal && Jackal.Sidekick.IsAlive() &&
             Jackal.jackal.Any(x => x == __instance && x == PlayerControl.LocalPlayer))
@@ -2160,14 +2137,10 @@ public static class ExilePlayerPatch
                 }
                 continue;
             }
+            foreach (var p in Pelican.eatenPlayers) p.Die(DeathReason.Kill, true);
             Pelican.eatenPlayers = new();
 
             Pelican.PelicanDie();
-        }
-
-        if (AmongUsClient.Instance.AmHost)
-        {
-            LastImpostor.promoteToLastImpostor();
         }
 
         // Sidekick promotion trigger on exile
@@ -2232,8 +2205,8 @@ public static class ExilePlayerPatch
 [HarmonyPatch]
 public static class DisconnectPatch
 {
-    [HarmonyPatch(typeof(GameData), nameof(GameData.HandleDisconnect), [typeof(PlayerControl), typeof(DisconnectReasons)]), HarmonyPostfix]
-    public static void DisconnectPostfix(PlayerControl player, DisconnectReasons reason)
+    [HarmonyPatch(typeof(GameData), nameof(GameData.HandleDisconnect), [typeof(PlayerControl), typeof(DisconnectReasons)]), HarmonyPrefix]
+    public static void DisconnectPrefix(PlayerControl player, DisconnectReasons reason)
     {
         Message($"玩家 {player?.Data?.PlayerName ?? "null"} 断开连接 {reason}", "HandleDisconnect");
         if (InGame)
@@ -2252,9 +2225,26 @@ public static class DisconnectPatch
             {
                 Executioner.PromotesRole();
             }
+
+            if (player == Akujo.akujo) Akujo.clearAndReload();
+
+
+            if (player != null && !player.Data.IsDead)
+            {
+                OverrideDeathReasonAndKiller(player, CustomDeathReason.Disconnect, null);
+            }
+        }
+
+        if (RoleDraft.isEnabled && RoleDraft.isRunning)
+        {
+            if (RoleDraft.pickOrder != null && RoleDraft.pickOrder.Count > 0 && player.PlayerId == RoleDraft.pickOrder[0])
+            {
+                RoleDraft.pickOrder.Remove(player.PlayerId);
+                RoleDraft.timer = 0;
+                RoleDraft.picked = true;
+            }
         }
     }
-
 
     [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.DisconnectInternal)), HarmonyPrefix]
     public static void InnerNetPrefix(InnerNetClient __instance, DisconnectReasons reason, string stringReason)

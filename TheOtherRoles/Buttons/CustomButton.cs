@@ -28,6 +28,9 @@ public class CustomButton
     public Func<bool> HasButton;
     public bool HasEffect;
     public KeyCode? hotkey;
+    //public KeyCode? originalHotkey;
+    //public static KeyCode Action2Keycode = KeyCode.G;
+    //public static KeyCode Action3Keycode = KeyCode.H;
     public HudManager hudManager;
     public bool isEffectActive;
     public bool isHandcuffed;
@@ -68,6 +71,7 @@ public class CustomButton
         showButtonText = actionButtonRenderer.sprite == Sprite || buttonText != "";
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
+        //originalHotkey = hotkey;
 
         Timer = 10.5f;
         SetHotKeyGuide();
@@ -148,7 +152,7 @@ public class CustomButton
                 Error($"NullReferenceException from ResetAllCooldowns(), if theres only one warning its fine\n{e}", "CustomButton");
             }
         }
-        PlayerControl.LocalPlayer.killTimer = time;
+        PlayerControl.LocalPlayer.SetKillTimer(time);
     }
 
     public static void resetKillButton(PlayerControl p, float time = -1)
@@ -157,7 +161,7 @@ public class CustomButton
         if (p.Data.Role.IsImpostor)
         {
             if (time == -1) time = ModOption.KillCooddown;
-            p.killTimer = time;
+            p.SetKillTimer(time);
         }
 
         pelicanKillButton.Timer = time == -1 ? pelicanKillButton.MaxTimer : time;
@@ -281,6 +285,37 @@ public class CustomButton
             OnClick = InitialOnClick;
     }
 
+    // Reload the rebound hotkeys from the among us settings.
+    /*public static void ReloadHotkeys()
+    {
+        foreach (var button in buttons)
+        {
+            // Q button is used only for killing! This rebinds every button that would use Q to use the currently set killing button in among us.
+            if (button.originalHotkey == KeyCode.Q)
+            {
+                Player player = ReInput.players.GetPlayer(0);
+                string keycode = player.controllers.maps.GetFirstButtonMapWithAction(8, true).elementIdentifierName;
+                button.hotkey = (KeyCode)Enum.Parse(typeof(KeyCode), keycode);
+            }
+            // F is the default ability button. All buttons that would use F now use the ability button.
+            if (button.originalHotkey == KeyCode.F)
+            {
+                Player player = ReInput.players.GetPlayer(0);
+                string keycode = player.controllers.maps.GetFirstButtonMapWithAction(49, true).elementIdentifierName;
+                button.hotkey = (KeyCode)Enum.Parse(typeof(KeyCode), keycode);
+            }
+
+            if (button.originalHotkey == KeyCode.G)
+            {
+                button.hotkey = Action2Keycode;
+            }
+            if (button.originalHotkey == KeyCode.H)
+            {
+                button.hotkey = Action3Keycode;
+            }
+        }
+    }*/
+
     public static GameObject SetKeyGuide(GameObject button, KeyCode key, Vector2 pos)
     {
         Sprite numSprite = null;
@@ -364,5 +399,6 @@ public class CustomButton
         public static readonly Vector3 upperRowCenter = new(-1f, 1f, 0f); // Not usable for imps beacuse of new button positions!
         public static readonly Vector3 upperRowLeft = new(-2f, 1f, 0f);
         public static readonly Vector3 upperRowFarLeft = new(-3f, 1f, 0f);
+        public static readonly Vector3 highRowRight = new(0f, 2.06f, 0f);
     }
 }

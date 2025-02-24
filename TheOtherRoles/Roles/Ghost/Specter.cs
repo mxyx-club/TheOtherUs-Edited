@@ -33,7 +33,7 @@ public class Specter
 
         RPCProcedure.erasePlayerRoles(local.PlayerId);
         var roleInfo = RoleInfo.getRoleInfoForPlayer(target).FirstOrDefault(x => x.roleType is not RoleType.Modifier and not RoleType.Ghost);
-        if (target.isImpostor()) turnToImpostor(local);
+        if (target.IsImpostor()) turnToImpostor(local);
 
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)

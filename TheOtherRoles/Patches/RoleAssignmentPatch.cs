@@ -49,7 +49,6 @@ internal class RoleManagerSelectRolesPatch
 
     private static int impValues;
 
-    //private static bool isEvilGuesser;
     private static readonly List<Tuple<byte, byte>> playerRoleMap = new();
     public static bool isGuesserGamemode => ModOption.gameMode == CustomGamemodes.Guesser;
 
@@ -60,7 +59,7 @@ internal class RoleManagerSelectRolesPatch
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.resetVariables();
         // Don't assign Roles in Hide N Seek
-        if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
+        if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek || RoleDraft.isEnabled) return;
         assignRoles();
     }
 
@@ -166,6 +165,7 @@ internal class RoleManagerSelectRolesPatch
             // If both are 0, treat all killer neutrals as regular neutrals
             neutralSettings.AddRange(killerNeutralSettings);
             killerNeutralCount = 0;
+            killerNeutralSettings.Clear();
         }
         else
         {
@@ -200,6 +200,22 @@ internal class RoleManagerSelectRolesPatch
             crewSettings.Add((byte)RoleId.Spy, CustomOptionHolder.spySpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.SecurityGuard, CustomOptionHolder.securityGuardSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Jumper, CustomOptionHolder.jumperSpawnRate.GetSelection());
+
+        Message("----------------------------------------------");
+        Message($"impostors {impostors.Count}");
+        Message($"crewmates {crewmates.Count}");
+        Message("----------------------------------------------");
+        Message($"impSettings {impSettings.Count}");
+        Message($"crewSettings {crewSettings.Count}");
+        Message($"neutralSettings {neutralSettings.Count}");
+        Message($"killerNeutralSettings {killerNeutralSettings.Count}");
+        Message("----------------------------------------------");
+        Message($"maxImpostorRoles {maxImpostorRoles}");
+        Message($"maxCrewmateRoles {maxCrewmateRoles}");
+        Message($"maxNeutralRoles {maxNeutralRoles}");
+        Message($"maxKillerNeutralRoles {maxKillerNeutralRoles}");
+        Message("----------------------------------------------");
+
         return new RoleAssignmentData
         {
             crewmates = crewmates,
@@ -433,7 +449,7 @@ internal class RoleManagerSelectRolesPatch
         }
     }
 
-    private static void assignRoleTargets(RoleAssignmentData data)
+    public static void assignRoleTargets(RoleAssignmentData data)
     {
         // Set Lawyer or Prosecutor Target
         if (Lawyer.lawyer != null)
@@ -493,7 +509,7 @@ internal class RoleManagerSelectRolesPatch
         }
     }
 
-    private static void assignModifiers()
+    public static void assignModifiers()
     {
         var addMaxNum = Cursed.hideModifier ? 1 : 0;
         var modifierMin = CustomOptionHolder.modifiersCountMin.GetSelection();
@@ -626,7 +642,7 @@ internal class RoleManagerSelectRolesPatch
         assignModifiersToPlayers(chanceImpModifierToAssign, impPlayer, modifierCount); // Assign chance Imp modifier
     }
 
-    private static void assignGuesserGamemode()
+    public static void assignGuesserGamemode()
     {
         var impPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
         var neutralPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
@@ -767,7 +783,7 @@ internal class RoleManagerSelectRolesPatch
                 foreach (var player in playerList.Where(p => GuesserGM.isGuesser(p.PlayerId)))
                 {
                     GuesserList.Add(player);
-                    if (!Specoality.IsGlobalModifier) GuesserList.RemoveAll(x => !x.isImpostor());
+                    if (!Specoality.IsGlobalModifier) GuesserList.RemoveAll(x => !x.IsImpostor());
                 }
             }
             else
@@ -875,7 +891,7 @@ internal class RoleManagerSelectRolesPatch
         if (modifiers.Contains(RoleId.Aftermath))
         {
             var APlayers = new List<PlayerControl>(playerList);
-            APlayers.RemoveAll(x => x.isImpostor());
+            APlayers.RemoveAll(x => x.IsImpostor());
 
             playerId = setModifierToRandomPlayer((byte)RoleId.Aftermath, APlayers);
             crewPlayer.RemoveAll(x => x.PlayerId == playerId);
@@ -999,6 +1015,7 @@ internal class RoleManagerSelectRolesPatch
                 selection = CustomOptionHolder.modifierMini.GetSelection();
                 break;
             case RoleId.Giant:
+                if (isFungle) break;
                 selection = CustomOptionHolder.modifierGiant.GetSelection();
                 break;
             case RoleId.Aftermath:
@@ -1020,6 +1037,7 @@ internal class RoleManagerSelectRolesPatch
                 selection = CustomOptionHolder.modifierTunneler.GetSelection();
                 break;
             case RoleId.ButtonBarry:
+                if (Mayor.mayor != null && Mayor.meetingButton) // 杜绝双执钮！
                 selection = CustomOptionHolder.modifierButtonBarry.GetSelection();
                 break;
             case RoleId.Sunglasses:

@@ -38,7 +38,7 @@ public class Amnisiac
         if (target == null || local == null) return;
         var targetInfo = RoleInfo.getRoleInfoForPlayer(target, false, false);
         var roleInfo = targetInfo.FirstOrDefault();
-        if (target.isImpostor()) turnToImpostor(local);
+        if (target.IsImpostor()) turnToImpostor(local);
         switch (roleInfo!.roleId)
         {
             case RoleId.Impostor:

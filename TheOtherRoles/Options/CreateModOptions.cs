@@ -94,6 +94,7 @@ public static class StartOptionMenuPatch
         {
             enableSoundEffects.UpdateToggleText(!enableSoundEffects.onState, GetString("EnableSoundEffectsText"));
             ModOption.enableSoundEffects = Main.EnableSoundEffects.Value = enableSoundEffects.onState;
+            if (!ModOption.enableSoundEffects) SoundEffectsManager.stopAll();
         }, nebulaTab, toggleButtonTemplate);
 
         //ToggleCursor

@@ -62,7 +62,7 @@ public class HatsLoader : MonoBehaviour
             downloadHandler = new DownloadHandlerBuffer()
         };
 
-        Message($"正在下载帽子配置文件: {CosmeticsManager.RepositoryUrl}/{ManifestFileName}");
+        Info($"正在下载帽子配置文件: {CosmeticsManager.RepositoryUrl}/{ManifestFileName}");
         www.url = $"{CosmeticsManager.RepositoryUrl}/{ManifestFileName}";
 
         var operation = www.SendWebRequest();

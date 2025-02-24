@@ -36,10 +36,7 @@ public class Redemptor
     ///<summary>
     /// off = 0, on > 0
     /// </summary>
-    public static void RedemptorPrayer(byte status)
-    {
-        Reviving = status != 0;
-    }
+    public static void RedemptorPrayer(byte status) => Reviving = status != 0;
 
     public static void ClearAndReload(bool clear = true)
     {
@@ -61,23 +58,23 @@ public class Redemptor
     }
 
     [HarmonyPatch]
-    public static class Redemptor_Patch
+    private static class Redemptor_Patch
     {
-        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start)), HarmonyPostfix]
-        public static void MeetingStartPatch()
+        [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update)), HarmonyPostfix]
+        private static void HudUpdatePatch()
         {
-            if (Reviving)
+            if (Reviving && (Player.IsDead() || InMeeting))
             {
                 Reviving = false;
                 target = null;
                 RevivedPlayer = null;
             }
-            if (Revelating)
+            if (Revelating && InMeeting)
             {
                 target = null;
                 Revelating = false;
+                RevivedPlayer = null;
             }
-            RevivedPlayer = null;
         }
     }
 }

@@ -158,9 +158,9 @@ public static class RoleHelpers
     {
         blockedRolePairings.Clear();
 
-        blockedRolePairings.Add((byte)RoleId.Vampire, [(byte)RoleId.Warlock]);
-        blockedRolePairings.Add((byte)RoleId.Witch, [(byte)RoleId.Warlock]);
-        blockedRolePairings.Add((byte)RoleId.Warlock, [(byte)RoleId.Vampire]);
+        blockedRolePairings.Add((byte)RoleId.Vampire, [(byte)RoleId.Warlock, (byte)RoleId.Witch]);
+        blockedRolePairings.Add((byte)RoleId.Witch, [(byte)RoleId.Warlock, (byte)RoleId.Vampire]);
+        blockedRolePairings.Add((byte)RoleId.Warlock, [(byte)RoleId.Vampire, (byte)RoleId.Witch]);
 
         if (CustomOptionHolder.pavlovsownerAndJackalAsWell.GetBool())
         {
@@ -173,8 +173,8 @@ public static class RoleHelpers
             blockedRolePairings.Add((byte)RoleId.Lawyer, [(byte)RoleId.Executioner]);
         }
 
-        blockedRolePairings.Add((byte)RoleId.Vulture, [(byte)RoleId.Cleaner]);
-        blockedRolePairings.Add((byte)RoleId.Cleaner, [(byte)RoleId.Vulture]);
+        blockedRolePairings.Add((byte)RoleId.Vulture, [(byte)RoleId.Cleaner, (byte)RoleId.Pelican]);
+        blockedRolePairings.Add((byte)RoleId.Cleaner, [(byte)RoleId.Vulture, (byte)RoleId.Pelican]);
 
         blockedRolePairings.Add((byte)RoleId.Ninja, [(byte)RoleId.Swooper]);
         blockedRolePairings.Add((byte)RoleId.Swooper, [(byte)RoleId.Ninja]);

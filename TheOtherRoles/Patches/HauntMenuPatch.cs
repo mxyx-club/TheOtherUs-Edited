@@ -77,7 +77,7 @@ public static class HauntMenuPatch
     public static void UpdatePostfix(HauntMenuMinigame __instance)
     {
         if (GameOptionsManager.Instance.currentGameOptions.GameMode != GameModes.Normal) return;
-        if (PlayerControl.LocalPlayer.isImpostor() && Vampire.vampire != PlayerControl.LocalPlayer)
+        if (PlayerControl.LocalPlayer.IsImpostor() && Vampire.vampire != PlayerControl.LocalPlayer)
             __instance.gameObject.transform.localPosition =
                 new Vector3(-6f, -1.1f, __instance.gameObject.transform.localPosition.z);
     }

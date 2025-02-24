@@ -10,8 +10,6 @@ internal class NinjaTrace
 {
     public static List<NinjaTrace> traces = new();
 
-    private static Sprite TraceSprite;
-
     private readonly GameObject trace;
     private float timeRemaining;
 
@@ -25,7 +23,7 @@ internal class NinjaTrace
         trace.transform.localPosition = position;
 
         var traceRenderer = trace.AddComponent<SpriteRenderer>();
-        traceRenderer.sprite = getTraceSprite();
+        traceRenderer.sprite = new ResourceSprite("NinjaTraceW.png", 225f);
 
         timeRemaining = duration;
 
@@ -63,12 +61,6 @@ internal class NinjaTrace
 
         trace.SetActive(true);
         traces.Add(this);
-    }
-    public static Sprite getTraceSprite()
-    {
-        if (TraceSprite) return TraceSprite;
-        TraceSprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.NinjaTraceW.png", 225f);
-        return TraceSprite;
     }
 
     public static void clearTraces()

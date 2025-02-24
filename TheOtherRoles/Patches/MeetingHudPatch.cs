@@ -921,6 +921,7 @@ internal class MeetingHudPatch
                     HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
                     PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Pelican.Player.transform.position);
                 }
+                foreach (var p in Pelican.eatenPlayers) p.Die(DeathReason.Kill, true);
                 Pelican.eatenPlayers = new();
             }
 

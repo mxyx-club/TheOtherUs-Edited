@@ -366,24 +366,6 @@ internal class ReportButtonDoClickPatch
 [HarmonyPatch(typeof(EmergencyMinigame), nameof(EmergencyMinigame.Update))]
 internal class EmergencyMinigameUpdatePatch
 {
-    private static void Postfix(EmergencyMinigame __instance)
-    {
-        if (!CanCallEmergency(out var statusText))
-        {
-            UpdateEmergencyButton(__instance, statusText, false);
-            return;
-        }
-
-        if (__instance.state == 1)
-        {
-            var localRemaining = PlayerControl.LocalPlayer.RemainingEmergencies;
-            var teamRemaining = Mathf.Max(0, maxNumberOfMeetings - meetingsCount);
-            var remaining = Mathf.Min(localRemaining, Mayor.mayor != null && Mayor.mayor == PlayerControl.LocalPlayer ? 1 : teamRemaining);
-            __instance.NumberText.text = string.Format(GetString("meetingCount"), localRemaining.ToString(), teamRemaining.ToString());
-            UpdateEmergencyButton(__instance, string.Empty, remaining > 0);
-        }
-    }
-
     private static bool CanCallEmergency(out string statusText)
     {
         statusText = string.Empty;
@@ -430,10 +412,29 @@ internal class EmergencyMinigameUpdatePatch
     private static void UpdateEmergencyButton(EmergencyMinigame instance, string statusText, bool isActive)
     {
         instance.StatusText.text = statusText;
-        instance.NumberText.text = string.Empty;
+        instance.NumberText.text = isActive ? instance.NumberText.text : string.Empty;
         instance.ClosedLid.gameObject.SetActive(!isActive);
         instance.OpenLid.gameObject.SetActive(isActive);
         instance.ButtonActive = isActive;
+    }
+
+    private static void Postfix(EmergencyMinigame __instance)
+    {
+        if (!CanCallEmergency(out var statusText))
+        {
+            UpdateEmergencyButton(__instance, statusText, false);
+            return;
+        }
+
+        if (__instance.state == 1)
+        {
+            var localRemaining = PlayerControl.LocalPlayer.RemainingEmergencies;
+            var teamRemaining = Mathf.Max(0, maxNumberOfMeetings - meetingsCount);
+            var remaining = Mathf.Min(localRemaining, Mayor.mayor != null && Mayor.mayor == PlayerControl.LocalPlayer ? 1 : teamRemaining);
+            var text = string.Format(GetString("meetingCount"), localRemaining.ToString(), teamRemaining.ToString());
+            __instance.NumberText.text = text;
+            UpdateEmergencyButton(__instance, text, remaining > 0);
+        }
     }
 }
 

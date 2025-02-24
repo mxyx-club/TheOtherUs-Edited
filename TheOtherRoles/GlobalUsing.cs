@@ -15,7 +15,7 @@ global using TheOtherRoles.Roles.Modifier;
 global using TheOtherRoles.Roles.Neutral;
 global using static TheOtherRoles.Helper.FastRPCExtension;
 global using static TheOtherRoles.Helper.Helpers;
-global using static TheOtherRoles.Helper.LogHelper;
+global using static TheOtherRoles.Modules.Logger;
 global using static TheOtherRoles.Modules.ModTranslation;
 global using static TheOtherRoles.Roles.RoleHelpers;
 global using Main = TheOtherRoles.TheOtherRolesPlugin;

@@ -1,11 +1,12 @@
 using System;
+using System.Diagnostics;
 using System.Text;
 using BepInEx;
 using BepInEx.Logging;
 
-namespace TheOtherRoles.Helper;
+namespace TheOtherRoles.Modules;
 
-internal static class LogHelper
+internal static class Logger
 {
     private static ManualLogSource logSource { get; set; }
 
@@ -24,9 +25,11 @@ internal static class LogHelper
 
     public static void SendLog(string text, string tag = "", LogLevel logLevel = LogLevel.Info)
     {
-        string time = DateTime.Now.ToString("HH:mm:ss");
-        if (!string.IsNullOrWhiteSpace(tag)) text = $"[{time}] [{tag}] {text}";
-        else text = $"[{time}] {text}";
+        StackFrame stack = new(2);
+        var time = DateTime.Now.ToString("HH:mm:ss");
+        var className = $" [{stack.GetMethod()?.ReflectedType?.Name}]" ?? "";
+        if (!string.IsNullOrWhiteSpace(tag)) text = $"[{time}]{className} [{tag}] {text}";
+        else text = $"[{time}]{className} {text}";
 
         switch (logLevel)
         {

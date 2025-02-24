@@ -248,11 +248,6 @@
         "0": "Page 1: Prop Hunt Settings \n\n",
         "13": "第1页: 道具躲猫猫模式设置 \n\n"
     },
-    "meetingCount": {
-        "0": "{0} and the ship has {1}",
-        "11": "{0}と船に{1}がいます",
-        "13": "{0}次，全船剩余{1}次"
-    },
     "Random": {
         "0": "Random",
         "13": "随机"
@@ -375,6 +370,34 @@
     "modifiersCountMax": {
         "0": "Maximum Modifiers",
         "13": "最大附加职业数"
+    },
+    "isDraftMode": {
+        "0": "isDraftMode",
+        "13": "轮抽选角模式"
+    },
+    "draftModeAmountOfChoices": {
+        "0": "Max Amount Of Roles\nTo Choose From",
+        "13": "最大可选择的职业数量"
+    },
+    "draftModeTimeToChoose": {
+        "0": "Time For Selection",
+        "13": "选择时间"
+    },
+    "draftModeShowRoles": {
+        "0": "Show Picked Roles",
+        "13": "所有人可见选定职业"
+    },
+    "draftModeHideImpRoles": {
+        "0": "Hide Impostor Roles",
+        "13": "隐藏伪装者阵营职业"
+    },
+    "draftModeHideNeutralRoles": {
+        "0": "Hide Neutral Roles",
+        "13": "隐藏中立阵营职业"
+    },
+    "draftModeHideCrewmateRoles": {
+        "0": "Hide Crewmate Roles",
+        "13": "隐藏船员阵营职业"
     },
     "MeetingOptions": {
         "13": "会议设置"
@@ -2246,6 +2269,9 @@
         "0": "disperse To Vent",
         "13": "分散至管道位置"
     },
+    "modifierVortoxReversal": {
+        "13": "存活时查验类信息会被反转"
+    },
     "modifierVortoxSkipMeeting": {
         "13": "会议跳过时可以直接获得胜利"
     },
@@ -2450,6 +2476,11 @@
         "0": "Failed Murder Attempt on Shielded Player",
         "13": "尝试击杀被保护玩家"
     },
+    "meetingCount": {
+        "0": "{0} and the ship has {1}",
+        "11": "{0}と船に{1}がいます",
+        "13": "{0}次，全船剩余{1}次"
+    },
     "swapperMeetingButton": {
         "0": "The Swapper can't start an emergency meeting",
         "13": "换票师不可以发起紧急会议"
@@ -2642,6 +2673,78 @@
     },
     "PartTimerWin": {
         "13": "打工仔跟随胜利"
+    },
+    "RoleDraft.FeedText": {
+        "0": "<size=200%>Player's Picks:</size>\n\n",
+        "13": "<size=200%>已选择的玩家:</size>\n\n"
+    },
+    "RoleDraft.TeamTitle1": {
+        "0": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{0}</size>",
+        "1": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{1}</size>",
+        "2": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{2}</size>",
+        "3": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{3}</size>",
+        "4": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{4}</size>",
+        "5": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{5}</size>",
+        "6": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{6}</size>",
+        "7": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{7}</size>",
+        "8": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{8}</size>",
+        "9": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{9}</size>",
+        "10": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{10}</size>",
+        "11": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{11}</size>",
+        "12": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{12}</size>",
+        "13": "<size=280%>欢迎游玩轮抽模式！</size>\n\n\n<size=200%> 当前正在选择的玩家：</size>\n\n<size=250%>{0}</size>"
+    },
+    "RoleDraft.PlayerText": {
+        "0": "Player {0}",
+        "1": "Anonymous Player {1}",
+        "2": "Anonymous Player {2}",
+        "3": "Anonymous Player {3}",
+        "4": "Anonymous Player {4}",
+        "5": "Anonymous Player {5}",
+        "6": "Anonymous Player {6}",
+        "7": "Anonymous Player {7}",
+        "8": "Anonymous Player {8}",
+        "9": "Anonymous Player {9}",
+        "10": "Anonymous Player {10}",
+        "11": "Anonymous Player {11}",
+        "12": "Anonymous Player {12}",
+        "13": "玩家 {0}"
+    },
+    "RoleDraft.TeamTitle2": {
+        "0": "\n\n({0} rounds until your turn)\n",
+        "13": "\n\n(正在等待 {0} 位玩家选择)"
+    },
+    "RoleDraft.TeamTitle3": {
+        "0": "Random Selection In... {0}",
+        "13": "\n选择中... {0}"
+    },
+    "RoleDraft.UnknownRole": {
+        "0": "Unknown Role",
+        "13": "选择完毕! (隐藏)"
+    },
+    "RoleDraft.You": {
+        "0": "You",
+        "13": "你"
+    },
+    "RoleDraft.ImpostorRole": {
+        "0": "Impostor Role",
+        "13": "红狼阵营"
+    },
+    "RoleDraft.NeutralRole": {
+        "0": "Neutral Role",
+        "13": "中立阵营"
+    },
+    "RoleDraft.CrewmateRole": {
+        "0": "Crewmate Role",
+        "13": "船员阵营"
+    },
+    "RoleDraft.Random": {
+        "0": "Random Role",
+        "13": "随机"
+    },
+    "RoleDraft.Disconnect": {
+        "0": "Disconnect Player",
+        "13": "玩家已断线"
     },
     "colorSalmon": {
         "0": "Salmon",

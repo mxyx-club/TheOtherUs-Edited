@@ -71,11 +71,7 @@ internal class IntroCutsceneOnDestroyPatch
         // Add Electrical
         FungleAdditionalElectrical.CreateElectrical();
 
-        // Force Reload of SoundEffectHolder
-        SoundEffectsManager.Load();
-
         // AntiTeleport set position
-
         AntiTeleport.setPosition();
 
         if (CustomOptionHolder.randomGameStartPosition.GetBool()) MapData.RandomSpawnPlayers();
@@ -87,8 +83,6 @@ internal class IntroCutsceneOnDestroyPatch
                 (byte)CustomRPC.DynamicMapOption, SendOption.Reliable);
             writerS.Write(mapId);
             AmongUsClient.Instance.FinishRpcImmediately(writerS);
-
-            LastImpostor.promoteToLastImpostor();
 
             // First kill
             if (ModOption.shieldFirstKill && ModOption.firstKillName != "")
@@ -202,6 +196,15 @@ internal class IntroPatch
                     fakeImpostorTeam.Add(p);
             yourTeam = fakeImpostorTeam;
         }
+
+        // Role draft: If spy is enabled, don't show the team
+        if (CustomOptionHolder.spySpawnRate.GetSelection() > 0 && PlayerControl.AllPlayerControls.ToArray().ToList().Where(x => x.Data.Role.IsImpostor).Count() > 1)
+        {
+            // The local player always has to be the first one in the list (to be displayed in the center)
+            var fakeImpostorTeam = new List<PlayerControl>();
+            fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
+            yourTeam = fakeImpostorTeam;
+        }
     }
 
     public static void setupIntroTeam(IntroCutscene __instance, ref List<PlayerControl> yourTeam)
@@ -273,12 +276,12 @@ internal class IntroPatch
                 __instance.RoleBlurbText.color = roleInfo.color;
             }
 
-            if (Sheriff.knowsSheriff && Sheriff.Deputy != null && Sheriff.Player != null)
+            if (Sheriff.knowsSheriff && Sheriff.Deputy != null && Sheriff.Player.First() != null)
             {
                 if (infos.Any(info => info.roleId == RoleId.Sheriff))
                     __instance.RoleBlurbText.text = cs(Sheriff.color, $"\n你的捕快是 {Sheriff.Deputy?.Data?.PlayerName ?? ""}");
                 else if (infos.Any(info => info.roleId == RoleId.Deputy))
-                    __instance.RoleBlurbText.text = cs(Sheriff.color, $"\n你的警长是 {Sheriff.Player?.FirstOrDefault().Data?.PlayerName ?? ""}");
+                    __instance.RoleBlurbText.text = cs(Sheriff.color, $"\n你的警长是 {Sheriff.Player?.FirstOrDefault()?.Data?.PlayerName ?? ""}");
             }
 
             if (Executioner.executioner != null && infos.Any(info => info.roleId == RoleId.Executioner))

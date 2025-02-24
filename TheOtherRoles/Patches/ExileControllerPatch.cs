@@ -198,7 +198,7 @@ internal class ExileControllerBeginPatch
 
             if (CustomOptionHolder.exiledShowTeamNum.GetBool())
             {
-                var Impostors = PlayerControl.AllPlayerControls.ToArray().Count(x => x.isImpostor() && x.IsAlive() && x.PlayerId != player?.PlayerId);
+                var Impostors = PlayerControl.AllPlayerControls.ToArray().Count(x => x.IsImpostor() && x.IsAlive() && x.PlayerId != player?.PlayerId);
                 var Neutrals = PlayerControl.AllPlayerControls.ToArray().Count(x => x.isNeutral() && x.IsAlive() && x.PlayerId != player?.PlayerId);
                 __instance.ImpostorText.text =
                     $"\n{cs(getTeamColor(RoleType.Impostor), "伪装者阵营剩余 ") + Impostors}" +
@@ -388,7 +388,7 @@ internal class ExileControllerWrapUpPatch
         }
 
         // Deputy check Promotion, see if the sheriff still exists. The promotion will be after the meeting.
-        if (Sheriff.Deputy != null) PlayerControlFixedUpdatePatch.deputyCheckPromotion(true);
+        if (Sheriff.Deputy != null) Sheriff.deputyCheckPromotion(true);
 
         // Force Bounty Hunter Bounty Update
         if (BountyHunter.bountyHunter != null && BountyHunter.bountyHunter == PlayerControl.LocalPlayer)
@@ -396,8 +396,6 @@ internal class ExileControllerWrapUpPatch
 
         if (AmongUsClient.Instance.AmHost)
         {
-            LastImpostor.promoteToLastImpostor();
-
             // Eraser erase
             if (Eraser.eraser != null && Eraser.futureErased != null)
             {
@@ -498,7 +496,7 @@ internal class ExileControllerWrapUpPatch
 
         if (InfoSleuth.infoSleuth != null && InfoSleuth.target != null && InfoSleuth.infoSleuth == PlayerControl.LocalPlayer)
         {
-            var isNotCrew = (InfoSleuth.target.isNeutral() || InfoSleuth.target.isImpostor()) ^ Vortox.Reversal;
+            var isNotCrew = (InfoSleuth.target.isNeutral() || InfoSleuth.target.IsImpostor()) ^ Vortox.Reversal;
             var team = "的阵营是 " + getTeam(InfoSleuth.target);
             var info = InfoSleuth.infoType switch
             {
@@ -526,11 +524,11 @@ internal class ExileControllerWrapUpPatch
                 if (Vortox.Player.IsAlive())
                 {
                     if (player.isCrew()) return rnd.Next(2) == 0 ? "NeutralRolesText".Translate() : "ImpostorRolesText".Translate();
-                    if (player.isNeutral() || player.isImpostor()) return "CrewmateRolesText".Translate();
+                    if (player.isNeutral() || player.IsImpostor()) return "CrewmateRolesText".Translate();
                 }
 
                 return player.isNeutral() ? "NeutralRolesText".Translate()
-                    : player.isImpostor() ? "ImpostorRolesText".Translate()
+                    : player.IsImpostor() ? "ImpostorRolesText".Translate()
                     : "CrewmateRolesText".Translate();
             }
         }
