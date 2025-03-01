@@ -25,7 +25,7 @@ public static class Akujo
     public static ResourceSprite honmeiSprite = new("AkujoHonmeiButton.png");
     public static ResourceSprite keepSprite = new("AkujoKeepButton.png");
 
-    public static bool existingWithKiller()
+    public static bool IsKillerLover()
     {
         return honmei.IsAlive() && honmei.isKiller();
     }

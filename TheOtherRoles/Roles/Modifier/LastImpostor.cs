@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using Hazel;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Modifier;

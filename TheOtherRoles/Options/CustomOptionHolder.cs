@@ -643,6 +643,7 @@ public class CustomOptionHolder
     public static CustomOption modifierBlind;
 
     public static CustomOption modifierTunneler;
+    public static CustomOption modifierTunnelerNoTask;
 
     public static CustomOption modifierButtonBarry;
     public static CustomOption modifierButtonSabotageRemoteMeetings;
@@ -654,6 +655,7 @@ public class CustomOptionHolder
     public static CustomOption modifierSlueth;
 
     public static CustomOption modifierCursed;
+    public static CustomOption modifierAutoJoin;
     public static CustomOption modifierHideCursed;
 
     public static CustomOption modifierVip;
@@ -1369,6 +1371,7 @@ public class CustomOptionHolder
         modifierRadar = Create(40260, Types.Modifier, cs(Color.yellow, "Radar"), rates, null, true);
 
         modifierTunneler = Create(40270, Types.Modifier, cs(Color.yellow, "Tunneler"), rates, null, true);
+        modifierTunnelerNoTask = Create(40271, Types.Modifier, "modifierTunnelerNoTask", false, modifierTunneler);
 
         modifierButtonBarry = Create(40280, Types.Modifier, cs(Color.yellow, "ButtonBarry"), rates, null, true);
         modifierButtonSabotageRemoteMeetings = Create(40281, Types.Modifier, "modifierButtonSabotageRemoteMeetings", true, modifierButtonBarry);
@@ -1376,6 +1379,7 @@ public class CustomOptionHolder
         modifierSlueth = Create(40290, Types.Modifier, cs(Color.yellow, "Slueth"), rates, null, true);
 
         modifierCursed = Create(40300, Types.Modifier, cs(Color.yellow, "Cursed"), rates, null, true);
+        modifierAutoJoin = Create(40302, Types.Modifier, cs(Color.yellow, "modifierAutoJoin"), true, modifierCursed);
         modifierHideCursed = Create(40301, Types.Modifier, "modifierShowCursed", false, modifierCursed);
 
         modifierVip = Create(40310, Types.Modifier, cs(Color.yellow, "Vip"), rates, null, true);

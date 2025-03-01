@@ -74,8 +74,7 @@ public static class Sheriff
 
     public static void deputyCheckPromotion(bool isMeeting = false)
     {
-        // If LocalPlayer is Deputy, the Sheriff is disconnected and Deputy promotion is enabled, then trigger promotion
-        if (Deputy == null || Deputy != PlayerControl.LocalPlayer || IntroCutscene.Instance != null) return;
+        if (Deputy == null || Deputy != PlayerControl.LocalPlayer) return;
         if (promotesToSheriff == 0 || Deputy.IsDead() || (promotesToSheriff == 2 && !isMeeting)) return;
         if (Player.Count == 0 || Player.All(x => x.IsDead()))
         {
@@ -161,21 +160,5 @@ public static class Sheriff
         keepsHandcuffsOnPromotion = CustomOptionHolder.deputyKeepsHandcuffs.GetBool();
         handcuffDuration = CustomOptionHolder.deputyHandcuffDuration.GetFloat();
         knowsSheriff = CustomOptionHolder.deputyKnowsSheriff.GetBool();
-    }
-
-    [HarmonyPatch]
-    private static class Sheriff_Patch
-    {
-        [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update)), HarmonyPostfix]
-        private static void HudManagerPostfix()
-        {
-            deputyCheckPromotion();
-        }
-
-        [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.OnDestroy)), HarmonyPostfix]
-        private static void IntroCutsceneOnDestroy()
-        {
-            Intro = true;
-        }
     }
 }

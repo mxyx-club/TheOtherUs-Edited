@@ -26,8 +26,8 @@ internal class RoleDraft
     private static Dictionary<byte, string> playerRoles = new();
 
     private static readonly SimpleTable _pickTable = new SimpleTable()
-        .AddColumn(6, minWidth: 4, Alignment.Right)
-        .AddColumn(minWidth: 12);
+        .AddColumn(8, minWidth: 4, Alignment.Right)
+        .AddColumn(minWidth: 9);
 
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.ShowTeam))]
     private class ShowRolePatch
@@ -158,7 +158,7 @@ internal class RoleDraft
                         if (roleInfo.roleId == RoleId.Poucher && Poucher.spawnModifier) continue;
 
                         // 跳过概率为0的职业
-                        if (roleData.neutralSettings.ContainsKey((byte)roleInfo.roleId) && roleData.neutralSettings[(byte)roleInfo.roleId] == 0) 
+                        if (roleData.neutralSettings.ContainsKey((byte)roleInfo.roleId) && roleData.neutralSettings[(byte)roleInfo.roleId] == 0)
                             continue;
                         else if (roleData.killerNeutralSettings.ContainsKey((byte)roleInfo.roleId) && roleData.killerNeutralSettings[(byte)roleInfo.roleId] == 0)
                             continue;
@@ -224,20 +224,18 @@ internal class RoleDraft
                                 continue;
                             }
 
-                            bool skipDueToOverflow = false;
                             if (isNeutral && roleData.neutralSettings.Count(x => x.Value == 10) > neutralsMax)
                             {
-                                skipDueToOverflow = (neutrals100 - neutrals100Picked > 0) && (neutralRate != 10);
+                                if ((neutrals100 - neutrals100Picked > 0) && (neutralRate != 10)) continue;
                             }
                             else if (isKillerNeutral && roleData.killerNeutralSettings.Count(x => x.Value == 10) > killerNeutralsMax)
                             {
-                                skipDueToOverflow = (killerNeutrals100 - killerNeutrals100Picked > 0) && (killerNeutralRate != 10);
+                                if ((killerNeutrals100 - killerNeutrals100Picked > 0) && (killerNeutralRate != 10)) continue;
                             }
                             else if (isCrewmate && roleData.crewSettings.Count(x => x.Value == 10) > crewmateMax)
                             {
-                                skipDueToOverflow = (crew100 - crew100Picked > 0) && (crewRate != 10);
+                                if ((crew100 - crew100Picked > 0) && (crewRate != 10)) continue;
                             }
-                            if (skipDueToOverflow) continue;
 
                             if (isNeutral &&
                                 roleData.neutralSettings.Count(x => x.Value == 10 && !alreadyPicked.Contains(x.Key)) >=

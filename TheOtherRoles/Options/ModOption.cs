@@ -13,6 +13,12 @@ internal class ModOption
     public static bool DisableGameEnd => DebugMode && CustomOptionHolder.disableGameEnd.GetBool();
     public static NormalGameOptionsV07 NormalOptions => GameOptionsManager.Instance.currentNormalGameOptions;
 
+    public static bool showFPS => Main.ShowFPS.Value;
+    public static bool localHats => Main.LocalHats.Value;
+    public static bool toggleCursor => Main.ToggleCursor.Value;
+    public static bool enableSoundEffects => Main.EnableSoundEffects.Value;
+    public static bool showKeyReminder => Main.ShowKeyReminder.Value;
+
     // Set values
     public static int maxNumberOfMeetings = 10;
     public static bool blockSkippingInEmergencyMeetings;
@@ -20,11 +26,6 @@ internal class ModOption
     public static bool hidePlayerNames;
     public static bool allowParallelMedBayScans;
     public static bool showLighterDarker = true;
-    public static bool showFPS = true;
-    public static bool localHats;
-    public static bool toggleCursor = true;
-    public static bool enableSoundEffects = true;
-    public static bool showKeyReminder;
     public static bool shieldFirstKill;
     public static bool hideVentAnim;
     public static bool impostorSeeRoles;
@@ -60,7 +61,7 @@ internal class ModOption
     public static string firstKillName;
     public static PlayerControl firstKillPlayer;
 
-    // public static bool canUseAdmin  { get { return restrictDevices == 0 || restrictAdminTime > 0f || PlayerControl.LocalPlayer == Hacker.hacker || PlayerControl.LocalPlayer.Data.IsDead; }}
+    //public static bool canUseAdmin  { get { return restrictDevices == 0 || restrictAdminTime > 0f || PlayerControl.LocalPlayer == Hacker.hacker || PlayerControl.LocalPlayer.Data.IsDead; }}
 
     //public static bool couldUseAdmin { get { return restrictDevices == 0 || restrictAdminTimeMax > 0f  || PlayerControl.LocalPlayer == Hacker.hacker || PlayerControl.LocalPlayer.Data.IsDead; }}
 
@@ -115,15 +116,6 @@ internal class ModOption
         firstKillPlayer = null;
         isRoundOne = true;
         isCanceled = false;
-    }
-
-    public static void reloadPluginOptions()
-    {
-        showFPS = Main.ShowFPS.Value;
-        toggleCursor = Main.ToggleCursor.Value;
-        enableSoundEffects = Main.EnableSoundEffects.Value;
-        showKeyReminder = Main.ShowKeyReminder.Value;
-        localHats = Main.LocalHats.Value;
     }
 
     public static void resetDeviceTimes()

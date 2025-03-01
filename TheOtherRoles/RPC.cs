@@ -180,7 +180,6 @@ public static class RPCProcedure
 
     public static void resetVariables()
     {
-        reloadPluginOptions();
         clearAndReloadMapOptions();
         clearAndReloadRoles();
         MapData.Clear();
@@ -1065,11 +1064,6 @@ public static class RPCProcedure
         }
     }
 
-    public static void jackalCanSwooper(bool chance)
-    {
-        Jackal.canSwoop = chance;
-    }
-
     public static void pavlovsCreateDog(byte targetId)
     {
         var player = playerById(targetId);
@@ -1236,6 +1230,7 @@ public static class RPCProcedure
             if (player == Slueth.slueth) Slueth.clearAndReload();
             if (player == Blind.blind) Blind.clearAndReload();
         }
+        Sheriff.deputyCheckPromotion();
     }
 
     public static void clearGhostRoles(byte playerId)
@@ -1297,32 +1292,34 @@ public static class RPCProcedure
     {
         Coroutines.Start(showFlashCoroutine(Palette.ImpostorRed, 1f, 0.36f));
 
-        if (!AntiTeleport.antiTeleport.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.IsAlive())
+        if (PlayerControl.LocalPlayer.inVent)
         {
-            foreach (var player in PlayerControl.AllPlayerControls)
-            {
-                if (Minigame.Instance) Minigame.Instance.ForceClose();
-                if (MapBehaviour.Instance) MapBehaviour.Instance.Close();
-
-                if (PlayerControl.LocalPlayer.inVent)
-                {
-                    PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
-                    PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
-                }
-
-                if (Disperser.DispersesToVent)
-                {
-                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo
-                    (MapData.FindVentSpawnPositions()[rnd.Next(MapData.FindVentSpawnPositions().Count)]);
-                }
-                else
-                {
-                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo
-                    (MapData.MapSpawnPosition()[rnd.Next(MapData.MapSpawnPosition().Count)]);
-                }
-            }
-            Disperser.remainingDisperses--;
+            PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
+            PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
         }
+
+        if (Minigame.Instance) Minigame.Instance.ForceClose();
+        if (MapBehaviour.Instance) MapBehaviour.Instance.Close();
+
+        if (PlayerControl.LocalPlayer.inVent)
+        {
+            PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
+            PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
+        }
+        if (PlayerControl.LocalPlayer.IsAlive())
+        {
+            if (Disperser.DispersesToVent)
+            {
+                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo
+                (MapData.FindVentSpawnPositions()[rnd.Next(MapData.FindVentSpawnPositions().Count)]);
+            }
+            else
+            {
+                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo
+                (MapData.MapSpawnPosition()[rnd.Next(MapData.MapSpawnPosition().Count)]);
+            }
+        }
+        Disperser.remainingDisperses--;
     }
 
     public static void setFutureShielded(byte playerId)
@@ -2476,7 +2473,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.JackalCanSwooper:
-                RPCProcedure.jackalCanSwooper(reader.ReadBoolean());
+                Jackal.jackalCanSwooper(reader.ReadBoolean());
                 break;
 
             case CustomRPC.InfoSleuthSetTarget:

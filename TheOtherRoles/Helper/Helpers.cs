@@ -208,8 +208,7 @@ public static class Helpers
         if (Tunneler.tunneler != null && Tunneler.tunneler == player)
         {
             var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Tunneler.tunneler.Data);
-            var numberOfTasks = playerTotal - playerCompleted;
-            if (numberOfTasks == 0) roleCouldUse = true;
+            if (playerTotal - playerCompleted == 0 || Tunneler.NoTask) roleCouldUse = true;
         }
 
         return roleCouldUse;
@@ -603,7 +602,7 @@ public static class Helpers
         return count;
     }
 
-    public static bool MContains<T>(this IEnumerable<T> source, T item) where T : class
+    public static bool MContains<T>(this List<T> source, T item) where T : class
     {
         if (source == null || item == null)
             return false;
@@ -738,8 +737,6 @@ public static class Helpers
         target?.Revive();
 
         if (target == null) return;
-
-
 
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)

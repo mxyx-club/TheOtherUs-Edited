@@ -92,7 +92,6 @@ public class TheOtherRolesPlugin : BasePlugin
         UpdateRegions();
         CrowdedPlayer.Start();
         Harmony.PatchAll();
-        ModOption.reloadPluginOptions();
         CosmeticsManager.Load();
         CustomOptionHolder.Load();
         AssetLoader.LoadAudioAssets();

@@ -27,9 +27,10 @@ internal static class Logger
     {
         StackFrame stack = new(2);
         var time = DateTime.Now.ToString("HH:mm:ss");
-        var className = $" [{stack.GetMethod()?.ReflectedType?.Name}]" ?? "";
-        if (!string.IsNullOrWhiteSpace(tag)) text = $"[{time}]{className} [{tag}] {text}";
-        else text = $"[{time}]{className} {text}";
+        var className = stack.GetMethod()?.ReflectedType?.Name;
+        className = string.IsNullOrWhiteSpace(className) ? "" : $"[{className}]";
+        tag = string.IsNullOrWhiteSpace(tag) ? "" : $"[{tag}]";
+        text = $"[{time}]{className}{tag} {text}";
 
         switch (logLevel)
         {

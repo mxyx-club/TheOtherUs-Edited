@@ -256,7 +256,7 @@ public static class Guesser
         {
             if (roleInfo == null) continue; // Not guessable roles
 
-            if (RoleIsEnable.TryGetValue(roleInfo.roleId, out int isEnabled) && isEnabled == 0)
+            if (RoleRate.TryGetValue(roleInfo.roleId, out int isEnabled) && isEnabled == 0)
             {
                 continue;
             }

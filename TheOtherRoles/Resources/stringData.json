@@ -2363,8 +2363,14 @@
         "0": "Giant Speed",
         "13": "巨人的移速倍率"
     },
+    "modifierTunnelerNoTask": {
+        "13": "未完成任务也可以使用管道"
+    },
     "modifierButtonSabotageRemoteMeetings": {
         "13": "可在破坏时使用"
+    },
+    "modifierAutoJoin": {
+        "13": "在伪装者人数占优时自动加入"
     },
     "modifierShowCursed": {
         "0": "Hide Modifiers",
@@ -4262,7 +4268,7 @@
     },
     "Tunneler": {
         "0": "Tunneler",
-        "13": "管道工程师"
+        "13": "隧道工"
     },
     "TunnelerIntroDesc": {
         "13": "让我看看这个管道"

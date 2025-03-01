@@ -180,12 +180,12 @@ public static class RoleHelpers
         blockedRolePairings.Add((byte)RoleId.Swooper, [(byte)RoleId.Ninja]);
     }
 
-    public static Dictionary<RoleId, int> RoleIsEnable = new();
+    public static Dictionary<RoleId, int> RoleRate = new();
 
     public static void ResetRoleSelection()
     {
-        RoleIsEnable.Clear();
-        RoleIsEnable.AddRange(new()
+        RoleRate.Clear();
+        RoleRate.AddRange(new()
         {
             { RoleId.Sheriff, CustomOptionHolder.sheriffSpawnRate.GetSelection() },
             { RoleId.Deputy, CustomOptionHolder.deputySpawnRate.GetSelection() },

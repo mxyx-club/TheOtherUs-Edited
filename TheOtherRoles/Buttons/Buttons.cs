@@ -1661,7 +1661,7 @@ internal static class HudManagerStartPatch
                 vampireKillButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Vampire.buttonSprite,
-            ButtonPositions.upperRowRight,
+            ButtonPositions.upperRowCenter,
             __instance,
             modKillInput.keyCode,
             false,

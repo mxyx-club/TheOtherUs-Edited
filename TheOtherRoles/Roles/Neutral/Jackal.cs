@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Hazel;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Neutral;
@@ -36,17 +35,25 @@ public class Jackal
 
     public static void setSwoop()
     {
-        var chance = canSwoop = rnd.NextDouble() < chanceSwoop;
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.JackalCanSwooper, SendOption.Reliable);
-        writer.Write(chance);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.jackalCanSwooper(chance);
+        if (AmongUsClient.Instance?.AmHost == true)
+        {
+            var chance = canSwoop = rnd.NextDouble() < chanceSwoop;
+            var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.JackalCanSwooper);
+            writer.Write(chance);
+            writer.EndRPC();
+            jackalCanSwooper(chance);
+        }
+    }
+
+    public static void jackalCanSwooper(bool chance)
+    {
+        canSwoop = chance;
     }
 
     public static void clearAndReload()
     {
         jackal.Clear();
+        setSwoop();
         Sidekick = null;
         currentTarget = null;
         isInvisable = false;

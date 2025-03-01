@@ -411,7 +411,7 @@ public class RoleInfo
         if (Executioner.target != null && p.PlayerId == Executioner.target.PlayerId && PlayerControl.LocalPlayer != Executioner.target)
             roleName += useColors ? cs(Executioner.color, " §") : " §";
 
-        if (Jackal.jackal.Any(x => x == p && x.IsAlive()) && Jackal.canSwoop)
+        if (Jackal.jackal.MContains(p) && Jackal.canSwoop)
             roleName += "JackalIsSwooperInfo".Translate();
 
         if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId) && p != Doomsayer.doomsayer)
@@ -452,7 +452,7 @@ public class RoleInfo
                 if (p == Arsonist.arsonist)
                     roleName += cs(Arsonist.color,
                         $" (剩余 {PlayerControl.AllPlayerControls.Count(x => { return x != Arsonist.arsonist && x.IsAlive() && !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); })} )");
-                if (Akujo.keeps.Contains(p))
+                if (Akujo.keeps.Any(x => x.PlayerId == p.PlayerId))
                     roleName = cs(Color.gray, "(备胎) ") + roleName;
                 if (p == Akujo.honmei)
                     roleName = cs(Akujo.color, "(真爱) ") + roleName;
@@ -464,7 +464,7 @@ public class RoleInfo
 
     public static string GetDeathReasonString(PlayerControl p)
     {
-        if (p.IsAlive()) return "";
+        if (p.IsAlive() || !ShowGhostInfo) return "";
 
         var deadPlayer = GameHistory.DeadPlayers.FirstOrDefault(x => x.Player.PlayerId == p.PlayerId);
         if (deadPlayer == null) return "";

@@ -28,7 +28,7 @@ internal class LateTask
         this.name = name;
         Tasks.Add(this);
 
-        Info("New LateTask \"" + name + "\" is created");
+        Info($"New LateTask  \"{name}\"  Is Created");
     }
 
     public static void Update(float deltaTime)
@@ -60,6 +60,5 @@ internal class ModManagerLateUpdatePatch
     {
         __instance.ShowModStamp();
         LateTask.Update(Time.fixedDeltaTime / 2);
-
     }
 }

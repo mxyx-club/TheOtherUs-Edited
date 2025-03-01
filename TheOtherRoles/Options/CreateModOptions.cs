@@ -93,7 +93,7 @@ public static class StartOptionMenuPatch
         enableSoundEffects = AddButton(buttonIndex++, "EnableSoundEffects", () =>
         {
             enableSoundEffects.UpdateToggleText(!enableSoundEffects.onState, GetString("EnableSoundEffectsText"));
-            ModOption.enableSoundEffects = Main.EnableSoundEffects.Value = enableSoundEffects.onState;
+            Main.EnableSoundEffects.Value = enableSoundEffects.onState;
             if (!ModOption.enableSoundEffects) SoundEffectsManager.stopAll();
         }, nebulaTab, toggleButtonTemplate);
 
@@ -102,7 +102,7 @@ public static class StartOptionMenuPatch
         {
             enableCursor(false);
             toggleCursor.UpdateToggleText(!toggleCursor.onState, GetString("ToggleCursorText"));
-            ModOption.toggleCursor = Main.ToggleCursor.Value = toggleCursor.onState;
+            Main.ToggleCursor.Value = toggleCursor.onState;
             Message($"toggleCursor: {toggleCursor.onState}");
         }, nebulaTab, toggleButtonTemplate);
 
@@ -110,21 +110,21 @@ public static class StartOptionMenuPatch
         showFPS = AddButton(buttonIndex++, "ShowFPS", () =>
         {
             showFPS.UpdateToggleText(!showFPS.onState, GetString("ShowFPS"));
-            ModOption.showFPS = Main.ShowFPS.Value = showFPS.onState;
+            Main.ShowFPS.Value = showFPS.onState;
         }, nebulaTab, toggleButtonTemplate);
 
         //ShowKeyReminder
         showKeyReminder = AddButton(buttonIndex++, "ShowKeyReminder", () =>
         {
             showKeyReminder.UpdateToggleText(!showKeyReminder.onState, GetString("ShowKeyReminder"));
-            ModOption.showKeyReminder = Main.ShowKeyReminder.Value = showKeyReminder.onState;
+            Main.ShowKeyReminder.Value = showKeyReminder.onState;
         }, nebulaTab, toggleButtonTemplate);
 
         //LocalHats
         localHats = AddButton(buttonIndex++, "LocalHats", () =>
         {
             localHats.UpdateToggleText(!localHats.onState, GetString("LocalHatsText"));
-            ModOption.localHats = Main.LocalHats.Value = localHats.onState;
+            Main.LocalHats.Value = localHats.onState;
         }, nebulaTab, toggleButtonTemplate);
 
         //キー割り当てボタン

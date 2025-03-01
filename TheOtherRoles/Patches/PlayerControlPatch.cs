@@ -150,7 +150,7 @@ public static class PlayerControlFixedUpdatePatch
             {
                 var mainRole = RoleInfo.GetRolesString(p, true, false, false, false);
                 var allRoleText = RoleInfo.GetRolesString(p, true, true, true, true);
-                allRoleText += $"- {RoleInfo.GetDeathReasonString(p)}";
+                if (p.IsDead() && CanSeeRoleInfo) allRoleText += $" - {RoleInfo.GetDeathReasonString(p)}";
 
                 var playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
                 var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
@@ -1743,7 +1743,10 @@ public static class PlayerDiePatch
 {
     public static void Postfix(PlayerControl __instance)
     {
+        Sheriff.deputyCheckPromotion();
+
         if (!InGame || PlayerControl.LocalPlayer != __instance) return;
+
         if (ModOption.gameMode is CustomGamemodes.Classic or CustomGamemodes.Guesser) return;
         _ = new LateTask(() =>
         {
@@ -1817,7 +1820,7 @@ public static class MurderPlayerPatch
             {
                 Aftermath.afterTrigger(target.PlayerId, __instance.PlayerId);
 
-            }, 0.2f, "Aftermath Is Die");
+            }, 0.2f, "Aftermath Trigger!");
         }
 
         // Sidekick promotion trigger on exile
@@ -2205,8 +2208,8 @@ public static class ExilePlayerPatch
 [HarmonyPatch]
 public static class DisconnectPatch
 {
-    [HarmonyPatch(typeof(GameData), nameof(GameData.HandleDisconnect), [typeof(PlayerControl), typeof(DisconnectReasons)]), HarmonyPrefix]
-    public static void DisconnectPrefix(PlayerControl player, DisconnectReasons reason)
+    [HarmonyPatch(typeof(GameData), nameof(GameData.HandleDisconnect), [typeof(PlayerControl), typeof(DisconnectReasons)]), HarmonyPostfix]
+    public static void DisconnectPostfix(PlayerControl player, DisconnectReasons reason)
     {
         Message($"玩家 {player?.Data?.PlayerName ?? "null"} 断开连接 {reason}", "HandleDisconnect");
         if (InGame)
@@ -2233,11 +2236,13 @@ public static class DisconnectPatch
             {
                 OverrideDeathReasonAndKiller(player, CustomDeathReason.Disconnect, null);
             }
+
+            Sheriff.deputyCheckPromotion();
         }
 
         if (RoleDraft.isEnabled && RoleDraft.isRunning)
         {
-            if (RoleDraft.pickOrder != null && RoleDraft.pickOrder.Count > 0 && player.PlayerId == RoleDraft.pickOrder[0])
+            if (RoleDraft.pickOrder != null && RoleDraft.pickOrder.Count > 0 && RoleDraft.pickOrder.Any(x => x == player.PlayerId))
             {
                 RoleDraft.pickOrder.Remove(player.PlayerId);
                 RoleDraft.timer = 0;

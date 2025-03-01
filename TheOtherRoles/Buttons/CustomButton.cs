@@ -152,7 +152,7 @@ public class CustomButton
                 Error($"NullReferenceException from ResetAllCooldowns(), if theres only one warning its fine\n{e}", "CustomButton");
             }
         }
-        PlayerControl.LocalPlayer.SetKillTimer(time);
+        PlayerControl.LocalPlayer.killTimer = time;
     }
 
     public static void resetKillButton(PlayerControl p, float time = -1)
@@ -161,7 +161,7 @@ public class CustomButton
         if (p.Data.Role.IsImpostor)
         {
             if (time == -1) time = ModOption.KillCooddown;
-            p.SetKillTimer(time);
+            p.killTimer = time;
         }
 
         pelicanKillButton.Timer = time == -1 ? pelicanKillButton.MaxTimer : time;

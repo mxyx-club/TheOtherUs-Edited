@@ -74,7 +74,6 @@ internal class RoleManagerSelectRolesPatch
         if (isGuesserGamemode) assignGuesserGamemode();
         assignModifiers(); // Assign modifier
         setRolesAgain(); //brb
-        if (Jackal.jackal != null) Jackal.setSwoop();
     }
 
     public static RoleAssignmentData getRoleAssignmentData()
@@ -195,8 +194,8 @@ internal class RoleManagerSelectRolesPatch
         if (!isGuesserGamemode)
             crewSettings.Add((byte)RoleId.Vigilante, CustomOptionHolder.guesserSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Trapper, CustomOptionHolder.trapperSpawnRate.GetSelection());
+        // Only add Spy if more than 1 impostor as the spy role is otherwise useless
         if (impostors.Count > 1)
-            // Only add Spy if more than 1 impostor as the spy role is otherwise useless
             crewSettings.Add((byte)RoleId.Spy, CustomOptionHolder.spySpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.SecurityGuard, CustomOptionHolder.securityGuardSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Jumper, CustomOptionHolder.jumperSpawnRate.GetSelection());
@@ -910,9 +909,11 @@ internal class RoleManagerSelectRolesPatch
         if (modifiers.Contains(RoleId.Torch))
         {
             var torchCount = 0;
+            var TPlayers = new List<PlayerControl>(crewPlayer);
+            TPlayers.RemoveAll(x => x == Mayor.mayor);
             while (torchCount < modifiers.FindAll(x => x == RoleId.Torch).Count)
             {
-                playerId = setModifierToRandomPlayer((byte)RoleId.Torch, crewPlayer);
+                playerId = setModifierToRandomPlayer((byte)RoleId.Torch, TPlayers);
                 crewPlayer.RemoveAll(x => x.PlayerId == playerId);
                 playerList.RemoveAll(x => x.PlayerId == playerId);
                 torchCount++;
@@ -1037,7 +1038,7 @@ internal class RoleManagerSelectRolesPatch
                 selection = CustomOptionHolder.modifierTunneler.GetSelection();
                 break;
             case RoleId.ButtonBarry:
-                if (Mayor.mayor != null && Mayor.meetingButton) // 杜绝双执钮！
+                if (Mayor.mayor != null && Mayor.meetingButton) break; // 杜绝双执钮！
                 selection = CustomOptionHolder.modifierButtonBarry.GetSelection();
                 break;
             case RoleId.Sunglasses:

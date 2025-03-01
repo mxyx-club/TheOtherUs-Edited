@@ -8,11 +8,13 @@ public static class Cursed
     public static PlayerControl cursed;
     public static Color color = new Color32(0, 247, 255, byte.MaxValue);
     public static bool hideModifier;
+    public static bool autoJoin;
 
     public static void clearAndReload()
     {
         cursed = null;
         hideModifier = CustomOptionHolder.modifierHideCursed.GetBool();
+        autoJoin = CustomOptionHolder.modifierAutoJoin.GetBool();
     }
 
     [HarmonyPatch]
@@ -21,7 +23,7 @@ public static class Cursed
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update)), HarmonyPostfix]
         private static void Postfix(HudManager __instance)
         {
-            if (cursed.IsDead() || !InGame || cursed != PlayerControl.LocalPlayer) return;
+            if (cursed.IsDead() || !autoJoin || !InGame || cursed != PlayerControl.LocalPlayer) return;
 
             var allPlayers = PlayerControl.AllPlayerControls.ToList();
             var impostorCount = allPlayers.Count(x => x.IsImpostor() && x.IsAlive());
@@ -29,6 +31,7 @@ public static class Cursed
             if (impostorCount >= allPlayers.Count(x => !x.IsImpostor() && x.IsAlive()))
             {
                 turnToImpostorRPC(cursed);
+                clearAndReload();
             }
         }
     }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AmongUs.GameOptions;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -233,7 +232,7 @@ public class OnGameEndPatch
         var executionerWin = Executioner.executioner != null && gameOverReason == (GameOverReason)CustomGameOverReason.ExecutionerWin;
         var lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
         var akujoWin = Akujo.akujo.IsAlive() && Akujo.honmei.IsAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin ||
-                       GameManager.Instance.DidHumansWin(gameOverReason));
+                       (GameManager.Instance.DidHumansWin(gameOverReason) && Akujo.IsKillerLover()));
 
         bool isPursurerLose = jesterWin || witnessWin || arsonistWin || miniLose || isCanceled || executionerWin;
 
@@ -307,7 +306,7 @@ public class OnGameEndPatch
         // Akujo win
         else if (akujoWin)
         {
-            if (Akujo.honmeiOptimizeWin && !Akujo.existingWithKiller())
+            if (Akujo.honmeiOptimizeWin && !Akujo.IsKillerLover())
             {
                 AdditionalTempData.winCondition = WinCondition.AkujoTeamWin;
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
