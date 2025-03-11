@@ -38,11 +38,10 @@ public class Aftermath
         {
             var target = killer;
             if (Bomber.currentTarget != null) target = Bomber.currentTarget;
-            var bombWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                (byte)CustomRPC.GiveBomb, SendOption.Reliable);
+            var bombWriter = StartRPC(killer.NetId, CustomRPC.GiveBomb);
             bombWriter.Write(target.PlayerId);
             bombWriter.Write(false);
-            AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
+            bombWriter.EndRPC();
             giveBomb(target.PlayerId);
             bomberBombButton.Timer = bomberBombButton.MaxTimer;
         }
@@ -264,12 +263,11 @@ public class Aftermath
                                     Constants.ShipAndObjectsMask, false) && !Undertaker.isDraging)
                             {
                                 var playerInfo = GameData.Instance.GetPlayerById(deadBody.ParentId);
-                                var writer = AmongUsClient.Instance.StartRpcImmediately(
-                                    killer.NetId, (byte)CustomRPC.DragBody,
-                                    SendOption.Reliable);
+                                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.DragBody);
                                 writer.Write(playerInfo.PlayerId);
-                                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                                dragBody(playerInfo.PlayerId);
+                                writer.Write(true);
+                                writer.EndRPC();
+                                dragBody(playerInfo.PlayerId, true);
                                 Undertaker.deadBodyDraged = deadBody;
                                 break;
                             }
@@ -279,10 +277,11 @@ public class Aftermath
             }
             else
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                    (byte)CustomRPC.DropBody, SendOption.Reliable);
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.DragBody);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.Write(false);
+                writer.EndRPC();
+                dragBody(PlayerControl.LocalPlayer.PlayerId, false);
                 Undertaker.deadBodyDraged = null;
             }
             undertakerDragButton.Timer = 2.5f;

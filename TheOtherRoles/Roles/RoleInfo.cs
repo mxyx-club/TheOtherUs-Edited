@@ -32,7 +32,6 @@ public class RoleInfo
         RoleInfoById.TryAdd(roleId, this);
     }
 
-
     public static RoleInfo impostor = new("Impostor", Palette.ImpostorRed, RoleId.Impostor, RoleType.Impostor);
     public static RoleInfo morphling = new("Morphling", Morphling.color, RoleId.Morphling, RoleType.Impostor);
     public static RoleInfo wolfLord = new("WolfLord", WolfLord.color, RoleId.WolfLord, RoleType.Impostor);
@@ -80,8 +79,10 @@ public class RoleInfo
     public static RoleInfo doomsayer = new("Doomsayer", Doomsayer.color, RoleId.Doomsayer, RoleType.Neutral);
     public static RoleInfo akujo = new("Akujo", Akujo.color, RoleId.Akujo, RoleType.Neutral);
     public static RoleInfo pelican = new("Pelican", Pelican.color, RoleId.Pelican, RoleType.Neutral);
+    public static RoleInfo bandLeader = new("BandLeader", BandLeader.color, RoleId.BandLeader, RoleType.Neutral);
+    public static RoleInfo schrodingersCat = new("SchrodingersCat", SchrodingersCat.color, RoleId.SchrodingersCat, RoleType.Neutral);
 
-    public static RoleInfo crewmate = new("Crewmate", Color.white, RoleId.Crewmate, RoleType.Crewmate);
+    public static RoleInfo crewmate = new("Crewmate", Palette.CrewmateBlue, RoleId.Crewmate, RoleType.Crewmate);
     public static RoleInfo vigilante = new("Vigilante", Vigilante.color, RoleId.Vigilante, RoleType.Crewmate);
     public static RoleInfo mayor = new("Mayor", Mayor.color, RoleId.Mayor, RoleType.Crewmate);
     public static RoleInfo prosecutor = new("Prosecutor", Prosecutor.color, RoleId.Prosecutor, RoleType.Crewmate);
@@ -180,6 +181,8 @@ public class RoleInfo
         pursuer,
         partTimer,
         witness,
+        bandLeader,
+        schrodingersCat,
         doomsayer,
         arsonist,
         jackal,
@@ -368,6 +371,8 @@ public class RoleInfo
         if (p == Jackal.Sidekick) infos.Add(sidekick);
         if (p == Pavlovsdogs.pavlovsowner) infos.Add(pavlovsowner);
         if (p == Redemptor.Player) infos.Add(redemptor);
+        if (p == BandLeader.Player) infos.Add(bandLeader);
+        if (p == SchrodingersCat.Player) infos.Add(schrodingersCat);
         if (Jackal.jackal.Any(x => x != null && x.PlayerId == p.PlayerId)) infos.Add(jackal);
         if (Amnisiac.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(amnisiac);
         if (Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == p.PlayerId)) infos.Add(pavlovsdogs);
@@ -390,9 +395,8 @@ public class RoleInfo
 
     public static string GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, bool showGhostInfo = true, bool onlyGhostRole = false)
     {
-        string roleName;
 
-        roleName = string.Join(" ", getRoleInfoForPlayer(p, showModifier, true).Select(x => useColors ? cs(x.color, x.Name) : x.Name).ToArray());
+        string roleName = string.Join(" ", getRoleInfoForPlayer(p, showModifier, true).Select(x => useColors ? cs(x.color, x.Name) : x.Name).ToArray());
 
         if (onlyGhostRole)
         {
@@ -411,7 +415,7 @@ public class RoleInfo
         if (Executioner.target != null && p.PlayerId == Executioner.target.PlayerId && PlayerControl.LocalPlayer != Executioner.target)
             roleName += useColors ? cs(Executioner.color, " §") : " §";
 
-        if (Jackal.jackal.MContains(p) && Jackal.canSwoop)
+        if (Jackal.jackal.Any(x => x == p) && Jackal.canSwoop)
             roleName += "JackalIsSwooperInfo".Translate();
 
         if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId) && p != Doomsayer.doomsayer)
@@ -428,12 +432,11 @@ public class RoleInfo
 
             if (ShowGhostInfo)
             {
-                if (Eraser.futureErased.Contains(p))
+                if (Eraser.futureErased.Any(x => x == p))
                     roleName = cs(Color.gray, "(被抹除) ") + roleName;
                 if (Vampire.vampire != null && !Vampire.vampire.Data.IsDead && Vampire.bitten == p && !p.Data.IsDead)
-                    roleName = cs(Vampire.color,
-                        $"(被吸血 {(int)HudManagerStartPatch.vampireKillButton.Timer + 1}) ") + roleName;
-                if (Sheriff.handcuffedPlayers.Contains(p.PlayerId))
+                    roleName = cs(Vampire.color, $"(被吸血 {(int)HudManagerStartPatch.vampireKillButton.Timer + 1}) ") + roleName;
+                if (Sheriff.handcuffedPlayers.Any(x => x == p.PlayerId))
                     roleName = cs(Color.gray, "(被上拷) ") + roleName;
                 if (Sheriff.handcuffedKnows.ContainsKey(p.PlayerId)) // Active cuff
                     roleName = cs(Sheriff.color, "(被上拷) ") + roleName;
@@ -445,13 +448,14 @@ public class RoleInfo
                     roleName += cs(Thief.color, " (窃)");
                 if (Pursuer.blankedList.Contains(p) && !p.Data.IsDead)
                     roleName = cs(Pursuer.color, "(被塞空包弹) ") + roleName;
-                if (Witch.futureSpelled.Contains(p) && !MeetingHud.Instance) // This is already displayed in meetings!
+                if (Witch.futureSpelled.Any(x => x == p) && !MeetingHud.Instance) // This is already displayed in meetings!
                     roleName = cs(Witch.color, "☆ ") + roleName;
                 if (BountyHunter.bounty == p && BountyHunter.bountyHunter.IsAlive())
                     roleName = cs(BountyHunter.color, "(被悬赏) ") + roleName;
                 if (p == Arsonist.arsonist)
-                    roleName += cs(Arsonist.color,
-                        $" (剩余 {PlayerControl.AllPlayerControls.Count(x => { return x != Arsonist.arsonist && x.IsAlive() && !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); })} )");
+                    roleName += cs(Arsonist.color, $" (剩余 {PlayerControl.AllPlayerControls
+                        .Count(x => x != Arsonist.arsonist && x.IsAlive() &&
+                        !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId))} )");
                 if (Akujo.keeps.Any(x => x.PlayerId == p.PlayerId))
                     roleName = cs(Color.gray, "(备胎) ") + roleName;
                 if (p == Akujo.honmei)

@@ -7,7 +7,9 @@ using InnerNet;
 using Rewired;
 using TheOtherRoles.Buttons;
 using TheOtherRoles.Utilities;
+using TMPro;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
 
@@ -71,9 +73,11 @@ internal class HudManagerUpdatePatch
     {
         p.cosmetics.nameText.color = color.SetAlpha(Chameleon.visibility(p.PlayerId));
         if (MeetingHud.Instance != null)
+        {
             foreach (var player in MeetingHud.Instance.playerStates)
                 if (player.NameText != null && p.PlayerId == player.TargetPlayerId)
                     player.NameText.color = color;
+        }
     }
 
     private static void updateBlindReport()
@@ -83,27 +87,203 @@ internal class HudManagerUpdatePatch
         // Sadly the report button cannot be hidden due to preventing R to report
     }
 
+    public static void updatePlayerInfo()
+    {
+        if (!InGame) return;
+        var local = PlayerControl.LocalPlayer;
+        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+        {
+            var playerVoteArea = MeetingHud.Instance?.playerStates?.FirstOrDefault(x => x.TargetPlayerId == p.PlayerId);
+            if (playerVoteArea != null && playerVoteArea.ColorBlindName.gameObject.active)
+            {
+                playerVoteArea.ColorBlindName.transform.localPosition = new Vector3(-0.93f, -0.2f, -0.1f);
+                playerVoteArea.ColorBlindName.fontSize *= 1.75f;
+            }
+            p.cosmetics.nameText.transform.parent.SetLocalZ(-0.0001f);
+
+            bool teamSeeRoles = (Lawyer.lawyerKnowsRole && local == Lawyer.lawyer && p == Lawyer.target) ||
+                 (PartTimer.knowsRole && local == PartTimer.partTimer && p == PartTimer.target) ||
+                 (local == PartTimer.target && p == PartTimer.partTimer) ||
+                 (Akujo.knowsRoles && local == Akujo.akujo && (p == Akujo.honmei || Akujo.keeps.Any(x => x.PlayerId == p.PlayerId))) ||
+                 (ModOption.impostorSeeRoles && Spy.spy == null && local.IsImpostor() && p.IsImpostor()) ||
+                 (BandLeader.Player == p && BandLeader.Members.Any(x => x.PlayerId == local.PlayerId)) ||
+                 (Jackal.jackal.Any(x => x.PlayerId == local.PlayerId) && p.PlayerId == Jackal.Sidekick?.PlayerId) ||
+                 (Jackal.Sidekick == local && Jackal.jackal.Any(x => x.PlayerId == p.PlayerId)) ||
+                 SchrodingersCat.InTeam(local, out _);
+
+            bool reported = ((local == Slueth.slueth && Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) ||
+                             (local == Poucher.poucher && Poucher.killed.Any(x => x.PlayerId == p.PlayerId))) && p.IsDead();
+
+            bool revealed = (Mayor.mayor == p && Mayor.Revealed) || (WolfLord.Player == p && WolfLord.Revealed);
+
+            if (p == local || local.Data.IsDead || teamSeeRoles || reported || revealed)
+            {
+                var mainRole = RoleInfo.GetRolesString(p, true, false, false, false);
+                var allRoleText = RoleInfo.GetRolesString(p, true, true, true, true);
+                if (p.IsDead() && CanSeeRoleInfo) allRoleText += $" - {RoleInfo.GetDeathReasonString(p)}";
+
+                var playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
+                var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
+                if (playerInfo == null)
+                {
+                    playerInfo = Object.Instantiate(p.cosmetics.nameText, p.cosmetics.nameText.transform.parent);
+                    playerInfo.transform.localPosition += Vector3.up * 0.225f;
+                    playerInfo.fontSize *= 0.8f;
+                    playerInfo.gameObject.name = "Info";
+                    playerInfo.color = playerInfo.color.SetAlpha(1f);
+                }
+
+                var meetingInfoTransform = playerVoteArea != null ? playerVoteArea.NameText.transform.parent.FindChild("Info") : null;
+                var meetingInfo = meetingInfoTransform != null ? meetingInfoTransform.GetComponent<TextMeshPro>() : null;
+
+                if (meetingInfo == null && playerVoteArea != null)
+                {
+                    meetingInfo = Object.Instantiate(playerVoteArea.NameText, playerVoteArea.NameText.transform.parent);
+                    meetingInfo.transform.localPosition += Vector3.down * 0.2f;
+                    meetingInfo.fontSize *= 0.64f;
+                    meetingInfo.gameObject.name = "Info";
+                }
+
+                // Set player name higher to align in middle
+                if (meetingInfo != null && playerVoteArea != null)
+                {
+                    var playerName = playerVoteArea.NameText;
+                    playerName.transform.localPosition = new Vector3(0.3384f, 0.0311f, -0.1f);
+                }
+
+                var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p.Data);
+                var taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({tasksCompleted}/{tasksTotal})</color>" : "";
+
+                var playerInfoText = "";
+                var meetingInfoText = "";
+                if (p == local)
+                {
+                    if (p.Data.IsDead) mainRole = allRoleText;
+                    playerInfoText = $"{mainRole}";
+                    if (HudManager.Instance.TaskPanel != null)
+                    {
+                        var tabText = HudManager.Instance.TaskPanel.tab.transform.FindChild("TabText_TMP").GetComponent<TextMeshPro>();
+                        tabText.SetText(string.Format("tasksNum".Translate(), taskInfo));
+                    }
+                    meetingInfoText = $"{allRoleText} {taskInfo}".Trim();
+                }
+                else if (local.IsAlive() && Mayor.mayor == p && Mayor.Revealed)
+                {
+                    meetingInfoText = cs(Mayor.color, "Mayor".Translate());
+                }
+                else if (local.IsAlive() && WolfLord.Player == p && WolfLord.Revealed)
+                {
+                    meetingInfoText = cs(WolfLord.color, "WolfLord".Translate());
+                }
+                else if (teamSeeRoles && local.IsAlive())
+                {
+                    meetingInfoText = playerInfoText = mainRole;
+                }
+                else if (reported && local.IsAlive())
+                {
+                    meetingInfoText = playerInfoText = mainRole;
+                }
+                else
+                {
+                    if (CanSeeRoleInfo)
+                    {
+                        playerInfoText = $"{allRoleText} {taskInfo}".Trim();
+                        meetingInfoText = playerInfoText;
+                    }
+                }
+
+                playerInfo.text = playerInfoText;
+                playerInfo.gameObject.SetActive(p.Visible);
+                if (meetingInfo != null)
+                {
+                    meetingInfo.text = MeetingHud.Instance.state == MeetingHud.VoteStates.Results ? "" : meetingInfoText;
+                }
+            }
+            else
+            {
+                if (local != p && p != null)
+                {
+                    var playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
+                    var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
+                    if (playerInfo != null) playerInfo.text = "";
+                }
+            }
+        }
+    }
+
+    private static void setBasePlayerOutlines()
+    {
+        var local = PlayerControl.LocalPlayer;
+        foreach (PlayerControl target in PlayerControl.AllPlayerControls)
+        {
+            if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) continue;
+
+            var isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
+            var hasVisibleShield = false;
+            var color = Medic.shieldedColor;
+            if (!isCamoComms && Camouflager.camouflageTimer <= 0f && !MushroomSabotageActive &&
+                Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) ||
+                (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
+            {
+                hasVisibleShield = Medic.showShielded == 0 || ShowGhostInfo // Everyone or Ghost info
+                    || (Medic.showShielded == 1 && (local == Medic.shielded || local == Medic.medic)) // Shielded + Medic
+                    || (Medic.showShielded == 2 && local == Medic.medic); // Medic only
+
+                // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
+                hasVisibleShield = hasVisibleShield && (Medic.meetingAfterShielding || !Medic.showShieldAfterMeeting ||
+                    local == Medic.medic || ShowGhostInfo);
+            }
+
+            if (BodyGuard.guarded.IsAlive() && target == BodyGuard.guarded &&
+                (ShowGhostInfo || local == BodyGuard.bodyguard || (local == BodyGuard.guarded && BodyGuard.showShielded)))
+            {
+                hasVisibleShield = true;
+                color = new Color32(205, 150, 100, byte.MaxValue);
+            }
+
+            if (!isCamoComms && Camouflager.camouflageTimer <= 0f && !MushroomSabotageActive &&
+                ModOption.firstKillPlayer != null && ModOption.shieldFirstKill &&
+                ((target == ModOption.firstKillPlayer && !isMorphedMorphling) ||
+                 (isMorphedMorphling && Morphling.morphTarget == ModOption.firstKillPlayer)))
+            {
+                hasVisibleShield = true;
+                color = Color.blue;
+            }
+
+            if (hasVisibleShield)
+            {
+                target.cosmetics.currentBodySprite.BodySprite.material.SetFloat("_Outline", 1f);
+                target.cosmetics.currentBodySprite.BodySprite.material.SetColor("_OutlineColor", color);
+            }
+            else
+            {
+                target.cosmetics.currentBodySprite.BodySprite.material.SetFloat("_Outline", 0f);
+            }
+        }
+    }
+
     private static void setNameColors()
     {
-        var localPlayer = PlayerControl.LocalPlayer;
-        var localRole = RoleInfo.getRoleInfoForPlayer(localPlayer, false).FirstOrDefault();
-        setPlayerNameColor(localPlayer, localRole.color);
+        var local = PlayerControl.LocalPlayer;
+        var localRole = RoleInfo.getRoleInfoForPlayer(local, false).FirstOrDefault();
+        var allPlayer = PlayerControl.AllPlayerControls;
+        setPlayerNameColor(local, localRole.color);
 
-        if (Sheriff.Player != null && Sheriff.Player.Any(x => x == localPlayer))
+        if (Sheriff.Player != null && Sheriff.Player.Any(x => x == local))
         {
             foreach (var p in Sheriff.Player) setPlayerNameColor(p, Sheriff.color);
             if (Sheriff.Deputy != null && Sheriff.knowsSheriff) setPlayerNameColor(Sheriff.Deputy, Sheriff.color);
         }
-        if (Sheriff.Deputy != null && Sheriff.Deputy == localPlayer)
+        if (Sheriff.Deputy != null && Sheriff.Deputy == local)
         {
             setPlayerNameColor(Sheriff.Deputy, Sheriff.color);
             foreach (var p in Sheriff.Player) setPlayerNameColor(p, Sheriff.color);
         }
 
-        if (Prophet.prophet != null && Prophet.prophet == localPlayer)
+        if (Prophet.prophet != null && Prophet.prophet == local)
         {
             setPlayerNameColor(Prophet.prophet, Prophet.color);
-            if (Prophet.examined != null && !localPlayer.Data.IsDead) // Reset the name tags when Prophet is dead
+            if (Prophet.examined != null && !local.Data.IsDead) // Reset the name tags when Prophet is dead
             {
                 foreach (var p in Prophet.examined)
                 {
@@ -112,12 +292,12 @@ internal class HudManagerUpdatePatch
             }
         }
 
-        if (Executioner.executioner != null && localPlayer == Executioner.executioner && Executioner.target != null)
+        if (Executioner.executioner != null && local == Executioner.executioner && Executioner.target != null)
         {
             setPlayerNameColor(Executioner.target, Executioner.color);
         }
 
-        if (Lawyer.lawyer != null && localPlayer == Lawyer.lawyer && Lawyer.target != null)
+        if (Lawyer.lawyer != null && local == Lawyer.lawyer && Lawyer.target != null)
         {
             setPlayerNameColor(Lawyer.target, RoleInfo.getRoleInfoForPlayer(Lawyer.target, false)?.FirstOrDefault()?.color ?? Color.white);
         }
@@ -132,40 +312,98 @@ internal class HudManagerUpdatePatch
             setPlayerNameColor(WolfLord.Player, WolfLord.color);
         }
 
-        if (Grenadier.Player != null && ((localPlayer.IsImpostor() && Grenadier.indicatorsMode)
-            || localPlayer == Grenadier.Player || ShowGhostInfo))
+        if (Grenadier.Player != null && ((local.IsImpostor() && Grenadier.indicatorsMode)
+            || local == Grenadier.Player || ShowGhostInfo))
         {
             foreach (var p in Grenadier.controls)
             {
-                if (p != localPlayer && !p.IsImpostor()) setPlayerNameColor(p, Color.black);
+                if (p != local && !p.IsImpostor()) setPlayerNameColor(p, Color.black);
             }
         }
 
-        if (Jackal.jackal != null && Jackal.jackal.Any(x => x == localPlayer))
+        if (SchrodingersCat.Player != null && SchrodingersCat.Player == local)
+        {
+            setPlayerNameColor(SchrodingersCat.Player, SchrodingersCat.color);
+            foreach (var p in allPlayer)
+            {
+                if (SchrodingersCat.InTeam(p, out var color))
+                {
+                    setPlayerNameColor(p, color);
+                }
+            }
+        }
+
+        if (Jackal.jackal != null && Jackal.jackal.Any(x => x.PlayerId == local.PlayerId))
         {
             // Jackal can see his sidekick
             foreach (var p in Jackal.jackal) setPlayerNameColor(p, Jackal.color);
             if (Jackal.Sidekick != null) setPlayerNameColor(Jackal.Sidekick, Jackal.color);
+
+            if (SchrodingersCat.State == SchrodingersCat.CatState.Jackal)
+                setPlayerNameColor(SchrodingersCat.Player, Jackal.color);
         }
 
         // No else if here, as a Lover of team Jackal needs the colors
-        if (Jackal.Sidekick != null && Jackal.Sidekick == localPlayer)
+        if (Jackal.Sidekick != null && Jackal.Sidekick == local)
         {
             // Sidekick can see the jackal
             setPlayerNameColor(Jackal.Sidekick, Jackal.color);
             foreach (var p in Jackal.jackal) setPlayerNameColor(p, Jackal.color);
+
+            if (SchrodingersCat.State == SchrodingersCat.CatState.Jackal)
+                setPlayerNameColor(SchrodingersCat.Player, Jackal.color);
         }
 
-        if (Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner == localPlayer)
+        if (Werewolf.canUseVents && Werewolf.werewolf != null && Werewolf.werewolf == local)
+        {
+            if (SchrodingersCat.State == SchrodingersCat.CatState.Werewolf)
+                setPlayerNameColor(SchrodingersCat.Player, Werewolf.color);
+        }
+
+        if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == local)
+        {
+            if (SchrodingersCat.State == SchrodingersCat.CatState.Juggernaut)
+                setPlayerNameColor(SchrodingersCat.Player, Juggernaut.color);
+        }
+
+        if (Pelican.Player != null && Pelican.Player == local)
+        {
+            if (SchrodingersCat.State == SchrodingersCat.CatState.Pelican)
+                setPlayerNameColor(SchrodingersCat.Player, Pelican.color);
+        }
+
+        if (Swooper.swooper != null && Swooper.swooper == local)
+        {
+            if (SchrodingersCat.State == SchrodingersCat.CatState.Swooper)
+                setPlayerNameColor(SchrodingersCat.Player, Swooper.color);
+        }
+
+        if (Arsonist.arsonist != null && Arsonist.arsonist == local)
+        {
+            if (SchrodingersCat.State == SchrodingersCat.CatState.Arsonist)
+                setPlayerNameColor(SchrodingersCat.Player, Arsonist.color);
+        }
+
+        if (SchrodingersCat.Player != null && PlayerControl.LocalPlayer.IsImpostor())
+        {
+            if (SchrodingersCat.State == SchrodingersCat.CatState.Impostor)
+                setPlayerNameColor(SchrodingersCat.Player, Palette.ImpostorRed);
+        }
+
+        if (Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner == local)
         {
             setPlayerNameColor(Pavlovsdogs.pavlovsowner, Pavlovsdogs.color);
             foreach (var p in Pavlovsdogs.pavlovsdogs) setPlayerNameColor(p, Pavlovsdogs.color);
+            if (SchrodingersCat.State == SchrodingersCat.CatState.Pavlovsowner)
+                setPlayerNameColor(SchrodingersCat.Player, Pavlovsdogs.color);
         }
 
-        if (Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p == localPlayer))
+        if (Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p == local))
         {
             foreach (var p in Pavlovsdogs.pavlovsdogs) setPlayerNameColor(p, Pavlovsdogs.color);
             if (Pavlovsdogs.pavlovsowner != null) setPlayerNameColor(Pavlovsdogs.pavlovsowner, Pavlovsdogs.color);
+            if (SchrodingersCat.State == SchrodingersCat.CatState.Pavlovsowner)
+                setPlayerNameColor(SchrodingersCat.Player, Pavlovsdogs.color);
         }
 
         if (Snitch.snitch != null)
@@ -173,14 +411,14 @@ internal class HudManagerUpdatePatch
             var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
             int numberOfTasks = playerTotal - playerCompleted;
 
-            bool forImp = localPlayer.Data.Role.IsImpostor;
-            bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(localPlayer);
-            bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(localPlayer);
-            bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && localPlayer.isNeutral();
+            bool forImp = local.IsImpostor();
+            bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(local);
+            bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(local);
+            bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && local.IsNeutral();
 
             if (numberOfTasks <= Snitch.taskCountForReveal && Snitch.snitch.IsAlive())
             {
-                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                foreach (PlayerControl p in allPlayer)
                 {
                     if (forImp || forKillerTeam || forEvilTeam || forNeutraTeam)
                     {
@@ -191,14 +429,14 @@ internal class HudManagerUpdatePatch
 
             if (numberOfTasks == 0 && Snitch.seeInMeeting && Snitch.snitch.IsAlive())
             {
-                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                foreach (PlayerControl p in allPlayer)
                 {
                     bool TargetsImp = p.Data.Role.IsImpostor;
                     bool TargetsKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(p);
                     bool TargetsEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(p);
-                    bool TargetsNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && p.isNeutral();
-                    var targetsRole = RoleInfo.getRoleInfoForPlayer(p, false).FirstOrDefault();
-                    if (localPlayer == Snitch.snitch && (TargetsImp || TargetsKillerTeam || TargetsEvilTeam || TargetsNeutraTeam))
+                    bool TargetsNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && p.IsNeutral();
+                    var targetsRole = RoleInfo.getRoleInfoForPlayer(p, false, false).FirstOrDefault();
+                    if (local == Snitch.snitch && (TargetsImp || TargetsKillerTeam || TargetsEvilTeam || TargetsNeutraTeam))
                     {
                         if (Snitch.teamNeutraUseDifferentArrowColor)
                         {
@@ -214,12 +452,13 @@ internal class HudManagerUpdatePatch
         }
 
         // No else if here, as the Impostors need the Spy name to be colored
-        if (Spy.spy != null && localPlayer.Data.Role.IsImpostor) setPlayerNameColor(Spy.spy, Spy.color);
+        if (Spy.spy != null && local.Data.Role.IsImpostor) setPlayerNameColor(Spy.spy, Spy.color);
     }
 
     private static void setNameTags()
     {
         var local = PlayerControl.LocalPlayer;
+        var allPlayerStates = MeetingHud.Instance?.playerStates;
         // Lovers
         if (Lovers.lover1 != null && Lovers.lover2 != null &&
             (Lovers.lover1 == local || Lovers.lover2 == local))
@@ -229,11 +468,13 @@ internal class HudManagerUpdatePatch
             Lovers.lover2.cosmetics.nameText.text += suffix;
 
             if (MeetingHud.Instance != null)
-                foreach (var player in MeetingHud.Instance.playerStates)
-                    if (Lovers.lover1.PlayerId == player.TargetPlayerId ||
-                        Lovers.lover2.PlayerId == player.TargetPlayerId)
+            {
+                foreach (var player in allPlayerStates)
+                    if (Lovers.lover1.PlayerId == player.TargetPlayerId || Lovers.lover2.PlayerId == player.TargetPlayerId)
                         player.NameText.text += suffix;
+            }
         }
+
         if (Akujo.akujo != null && (Akujo.keeps != null || Akujo.honmei != null))
         {
             if (Akujo.keeps != null)
@@ -260,7 +501,7 @@ internal class HudManagerUpdatePatch
 
             if (MeetingHud.Instance != null)
             {
-                foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
+                foreach (PlayerVoteArea player in allPlayerStates)
                 {
                     if (player.TargetPlayerId == Akujo.akujo.PlayerId && ((Akujo.honmei != null && Akujo.honmei == local) || (Akujo.keeps != null && Akujo.keeps.Any(x => x.PlayerId == local.PlayerId))))
                         player.NameText.text += cs(Akujo.color, " ♥");
@@ -273,7 +514,6 @@ internal class HudManagerUpdatePatch
             }
         }
 
-        // Parttimer
         if (PartTimer.partTimer != null && PartTimer.target != null && (local == PartTimer.partTimer || local == PartTimer.target || ShowGhostInfo))
         {
             var suffix = cs(PartTimer.color, " ★");
@@ -281,9 +521,35 @@ internal class HudManagerUpdatePatch
             PartTimer.target.cosmetics.nameText.text += suffix;
 
             if (MeetingHud.Instance != null)
-                foreach (var player in MeetingHud.Instance.playerStates)
+                foreach (var player in allPlayerStates)
                     if (PartTimer.partTimer.PlayerId == player.TargetPlayerId || PartTimer.target.PlayerId == player.TargetPlayerId)
                         player.NameText.text += suffix;
+        }
+
+        if (BandLeader.Player != null)
+        {
+            var suffix1 = cs(BandLeader.color, "(K)");
+            var suffix2 = cs(BandLeader.color, "(B)");
+            var suffix3 = cs(BandLeader.color, "(D)");
+            if (local == BandLeader.Player || local.IsDead() || BandLeader.Members.Any(x => x == local))
+            {
+                if (BandLeader.Keyboardist != null) BandLeader.Keyboardist.cosmetics.nameText.text += suffix1;
+                if (BandLeader.Bassist != null) BandLeader.Bassist.cosmetics.nameText.text += suffix2;
+                if (BandLeader.Drummer != null) BandLeader.Drummer.cosmetics.nameText.text += suffix3;
+
+                if (MeetingHud.Instance != null)
+                {
+                    foreach (var player in allPlayerStates)
+                    {
+                        if (BandLeader.Keyboardist?.PlayerId == player.TargetPlayerId)
+                            player.NameText.text += suffix1;
+                        if (BandLeader.Bassist?.PlayerId == player.TargetPlayerId)
+                            player.NameText.text += suffix2;
+                        if (BandLeader.Drummer?.PlayerId == player.TargetPlayerId)
+                            player.NameText.text += suffix3;
+                    }
+                }
+            }
         }
 
         var localIsArsonist = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && Arsonist.arsonist == local;
@@ -297,7 +563,7 @@ internal class HudManagerUpdatePatch
             }
 
             if (MeetingHud.Instance != null)
-                foreach (var target in MeetingHud.Instance.playerStates)
+                foreach (var target in allPlayerStates)
                     if (Arsonist.dousedPlayers.Any(p => p.PlayerId == target.TargetPlayerId))
                         target.NameText.text += suffix;
         }
@@ -312,7 +578,7 @@ internal class HudManagerUpdatePatch
             Lawyer.target.cosmetics.nameText.text += suffix;
 
             if (MeetingHud.Instance != null)
-                foreach (var player in MeetingHud.Instance.playerStates)
+                foreach (var player in allPlayerStates)
                     if (player.TargetPlayerId == Lawyer.target.PlayerId)
                         player.NameText.text += suffix;
         }
@@ -324,7 +590,7 @@ internal class HudManagerUpdatePatch
             Executioner.target.cosmetics.nameText.text += suffix;
 
             if (MeetingHud.Instance != null)
-                foreach (var player in MeetingHud.Instance.playerStates)
+                foreach (var player in allPlayerStates)
                     if (player.TargetPlayerId == Executioner.target.PlayerId)
                         player.NameText.text += suffix;
         }
@@ -332,7 +598,7 @@ internal class HudManagerUpdatePatch
         // Display lighter / darker color for all alive players
         if (PlayerControl.LocalPlayer != null && MeetingHud.Instance != null && ModOption.showLighterDarker)
         {
-            foreach (var player in MeetingHud.Instance.playerStates)
+            foreach (var player in allPlayerStates)
             {
                 var target = playerById(player.TargetPlayerId);
                 if (target != null) player.NameText.text += $" ({(isLighterColor(target) ? "浅" : "深")})";
@@ -342,7 +608,7 @@ internal class HudManagerUpdatePatch
         // Add medic shield info:
         if (MeetingHud.Instance != null && Medic.medic != null && Medic.shielded != null && Medic.shieldVisible(Medic.shielded))
         {
-            foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
+            foreach (PlayerVoteArea player in allPlayerStates)
                 if (player.TargetPlayerId == Medic.shielded.PlayerId)
                 {
                     player.NameText.text = cs(Medic.color, "[") + player.NameText.text + cs(Medic.color, "]");
@@ -507,6 +773,12 @@ internal class HudManagerUpdatePatch
         timerUpdate();
         // Mini
         miniUpdate();
+
+        // Update player outlines
+        setBasePlayerOutlines();
+
+        // Update Player Info
+        updatePlayerInfo();
 
         // Deputy Sabotage, Use and Vent Button Disabling
         updateReportButton(__instance);

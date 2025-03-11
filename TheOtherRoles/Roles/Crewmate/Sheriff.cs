@@ -17,17 +17,6 @@ public static class Sheriff
 
     public static float cooldown = 30f;
     public static bool canKillNeutrals;
-    public static bool canKillLawyer;
-    public static bool canKillSurvivor;
-    public static bool canKillJester;
-    public static bool canKillPursuer;
-    public static bool canKillPartTimer;
-    public static bool canKillVulture;
-    public static bool canKillThief;
-    public static bool canKillAmnesiac;
-    public static bool canKillExecutioner;
-    public static bool canKillDoomsayer;
-    public static bool spyCanDieToSheriff;
     public static int misfireKills; // Self: 0, Target: 1, Both: 2
 
     //Deputy
@@ -39,7 +28,6 @@ public static class Sheriff
     public static float handcuffCooldown;
     public static bool knowsSheriff;
     public static Dictionary<byte, float> handcuffedKnows = new();
-    public static bool Intro;
 
     public static ResourceSprite handcuffSprite = new("DeputyHandcuffButton.png");
     public static ResourceSprite handcuffedSprite = new("DeputyHandcuffed.png");
@@ -96,27 +84,24 @@ public static class Sheriff
     public static bool sheriffCanKillNeutral(PlayerControl target)
     {
         return (target != Mini.mini || Mini.isGrownUp()) &&
-               (target.Data.Role.IsImpostor ||
-                Jackal.jackal.Any(x => x == target) ||
-                Jackal.Sidekick == target ||
-                Juggernaut.juggernaut == target ||
-                Werewolf.werewolf == target ||
-                Swooper.swooper == target ||
-                Pavlovsdogs.pavlovsowner == target ||
-                Pavlovsdogs.pavlovsdogs.Any(p => p == target) ||
-                (spyCanDieToSheriff && Spy.spy == target) ||
+               (target.IsImpostor(CustomOptionHolder.spyCanDieToSheriff.GetBool()) ||
                 (canKillNeutrals &&
-                    (Akujo.akujo == target || isKillerNeutral(target) ||
-                        (Survivor.Player.Any(p => p == target) && canKillSurvivor) ||
-                        (Jester.jester == target && canKillJester) ||
-                        (Vulture.vulture == target && canKillVulture) ||
-                        (Thief.thief == target && canKillThief) || Witness.Player == target ||
-                        (Amnisiac.Player.Any(p => p == target) && canKillAmnesiac) ||
-                        (PartTimer.partTimer == target && canKillPartTimer) ||
-                        (Lawyer.lawyer == target && canKillLawyer) ||
-                        (Executioner.executioner == target && canKillExecutioner) ||
-                        (Pursuer.Player.Any(p => p == target) && canKillPursuer) ||
-                        (Doomsayer.doomsayer == target && canKillDoomsayer))));
+                 (isKillerNeutral(target) ||
+                  Akujo.akujo == target ||
+                  SchrodingersCat.Player == target ||
+                  (BandLeader.Player == target && CustomOptionHolder.sheriffCanKillBandLeader.GetBool()) ||
+                  (Witness.Player == target && CustomOptionHolder.sheriffCanKillWitness.GetBool()) ||
+                  (Amnisiac.Player.Any(p => p == target) && CustomOptionHolder.sheriffCanKillAmnesiac.GetBool()) ||
+                  (Survivor.Player.Any(p => p == target) && CustomOptionHolder.sheriffCanKillSurvivor.GetBool()) ||
+                  (Pursuer.Player.Any(p => p == target) && CustomOptionHolder.sheriffCanKillPursuer.GetBool()) ||
+                  (Jester.jester == target && CustomOptionHolder.sheriffCanKillJester.GetBool()) ||
+                  (Vulture.vulture == target && CustomOptionHolder.sheriffCanKillVulture.GetBool()) ||
+                  (Thief.thief == target && CustomOptionHolder.sheriffCanKillThief.GetBool()) ||
+                  (PartTimer.partTimer == target && CustomOptionHolder.sheriffCanKillPartTimer.GetBool()) ||
+                  (Lawyer.lawyer == target && CustomOptionHolder.sheriffCanKillLawyer.GetBool()) ||
+                  (Executioner.executioner == target && CustomOptionHolder.sheriffCanKillExecutioner.GetBool()) ||
+                  (Doomsayer.doomsayer == target && CustomOptionHolder.sheriffCanKillDoomsayer.GetBool()
+                  ))));
     }
 
     public static void clearAndReload(bool resetCuffs = true)
@@ -132,8 +117,6 @@ public static class Sheriff
         formerDeputy = null;
 
         Deputy = null;
-        currentTarget = null;
-        Intro = false;
         Reload();
     }
 
@@ -142,17 +125,6 @@ public static class Sheriff
         misfireKills = CustomOptionHolder.sheriffMisfireKills.GetSelection();
         cooldown = CustomOptionHolder.sheriffCooldown.GetFloat();
         canKillNeutrals = CustomOptionHolder.sheriffCanKillNeutrals.GetBool();
-        canKillSurvivor = CustomOptionHolder.sheriffCanKillSurvivor.GetBool();
-        canKillLawyer = CustomOptionHolder.sheriffCanKillLawyer.GetBool();
-        canKillJester = CustomOptionHolder.sheriffCanKillJester.GetBool();
-        canKillPursuer = CustomOptionHolder.sheriffCanKillPursuer.GetBool();
-        canKillPartTimer = CustomOptionHolder.sheriffCanKillPartTimer.GetBool();
-        canKillVulture = CustomOptionHolder.sheriffCanKillVulture.GetBool();
-        canKillThief = CustomOptionHolder.sheriffCanKillThief.GetBool();
-        canKillAmnesiac = CustomOptionHolder.sheriffCanKillAmnesiac.GetBool();
-        canKillExecutioner = CustomOptionHolder.sheriffCanKillExecutioner.GetBool();
-        spyCanDieToSheriff = CustomOptionHolder.spyCanDieToSheriff.GetBool();
-        canKillDoomsayer = CustomOptionHolder.sheriffCanKillDoomsayer.GetBool();
 
         promotesToSheriff = CustomOptionHolder.deputyGetsPromoted.GetSelection();
         remainingHandcuffs = CustomOptionHolder.deputyNumberOfHandcuffs.GetFloat();

@@ -18,6 +18,7 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch]
 internal class MeetingHudPatch
 {
+    public static int MeetingCount;
     private static bool[] selections;
     private static SpriteRenderer[] renderers;
     private static GameData.PlayerInfo target;
@@ -92,6 +93,7 @@ internal class MeetingHudPatch
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.swapperSwap(firstPlayer, secondPlayer);
     }
+
     public static void swapperCheckAndReturnSwap(MeetingHud __instance, byte dyingPlayerId)
     {
         // someone was guessed or dced in the meeting, check if this affects the swapper.
@@ -111,7 +113,7 @@ internal class MeetingHudPatch
         // check if dying player was a selected player (but not confirmed yet)
         for (var i = 0; i < __instance.playerStates.Count; i++)
         {
-            reset = reset || (selections[i] && __instance.playerStates[i].TargetPlayerId == dyingPlayerId);
+            reset = reset || (selections[i] && __instance?.playerStates[i]?.TargetPlayerId == dyingPlayerId);
             if (reset) break;
         }
 
@@ -256,20 +258,20 @@ internal class MeetingHudPatch
         // Add Guesser Buttons
         var GuesserRemainingShots = HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId);
         if (!isGuesser || PlayerControl.LocalPlayer.IsDead() || GuesserRemainingShots <= 0 ||
-            (PlayerControl.LocalPlayer == WolfLord.Player && WolfLord.Revealed)) return;
+            (PlayerControl.LocalPlayer == WolfLord.Player && WolfLord.Killed)) return;
         {
             Doomsayer.CanShoot = true;
             for (var i = 0; i < __instance.playerStates.Length; i++)
             {
-                var playerVoteArea = __instance.playerStates[i];
+                var pvae = __instance.playerStates[i];
 
-                if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
+                if (pvae.AmDead || pvae.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
 
                 if (!Eraser.canEraseGuess && PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer == Eraser.eraser
-                    && Eraser.alreadyErased.Contains(playerVoteArea.TargetPlayerId)) continue;
+                    && Eraser.alreadyErased.Any(x => x == pvae?.TargetPlayerId)) continue;
 
-                var template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-                var targetBox = Object.Instantiate(template, playerVoteArea.transform);
+                var template = pvae.Buttons.transform.Find("CancelButton").gameObject;
+                var targetBox = Object.Instantiate(template, pvae.transform);
                 targetBox.name = "ShootButton";
                 targetBox.transform.localPosition = new Vector3(-0.95f, 0.03f, -1.3f);
                 var renderer = targetBox.GetComponent<SpriteRenderer>();
@@ -282,17 +284,16 @@ internal class MeetingHudPatch
         }
     }
 
-
     public static void updateMeetingText(MeetingHud __instance)
     {
         if (PlayerControl.LocalPlayer.Data.IsDead) return;
 
-        if (Instance.state is not VoteStates.Voted and not VoteStates.NotVoted and not VoteStates.Discussion)
-            return;
+        if (Instance.state is not VoteStates.Voted and not VoteStates.NotVoted and not VoteStates.Discussion) return;
 
         var meetingInfoText = "";
         int numGuesses = HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId)
             ? HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) : 0;
+
         if (numGuesses > 0)
         {
             meetingInfoText = string.Format(GetString("guesserGuessesLeft"), numGuesses);
@@ -323,17 +324,21 @@ internal class MeetingHudPatch
             else
                 meetingInfoText = string.Format(GetString("WitnessWinLeft"), $"{Witness.exileToWin - Witness.exiledCount}");
         }
+        else if (PlayerControl.LocalPlayer == BandLeader.Player)
+        {
+            if (BandLeader.Formed) meetingInfoText = string.Format(GetString("BandLeaderFormed"), $"{$"{BandLeader.winnerFlags}Team".Translate()}");
+            else meetingInfoText = GetString("BandLeaderBad");
+        }
 
         if (meetingInfoText == "") return;
-        __instance.TimerText.text = $"{meetingInfoText}\n" + __instance.TimerText.text;
+        __instance.TimerText.text = $"{meetingInfoText}\n{__instance.TimerText.text}";
     }
 
     [HarmonyPatch]
     public class ShowHost
     {
         public static TextMeshPro Text;
-        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
-        [HarmonyPostfix]
+        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start)), HarmonyPostfix]
         public static void Setup(MeetingHud __instance)
         {
             if (AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame || Balancer.currentAbilityUser != null) return;
@@ -344,8 +349,7 @@ internal class MeetingHudPatch
             __instance.ProceedButton.gameObject.SetActive(true);
         }
 
-        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
-        [HarmonyPostfix]
+        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update)), HarmonyPostfix]
         public static void Postfix(MeetingHud __instance)
         {
             if (Balancer.currentAbilityUser != null) return;
@@ -574,7 +578,6 @@ internal class MeetingHudPatch
             var allNums = new Dictionary<int, int>();
             __instance.TitleText.text = Object.FindObjectOfType<TranslationController>().GetString(StringNames.MeetingVotingResults, []);
 
-            var amountOfSkippedVoters = 0;
             var num = 0;
             for (var i = 0; i < __instance.playerStates.Length; i++)
             {
@@ -650,8 +653,6 @@ internal class MeetingHudPatch
                             {
                                 for (var repeat = 0; repeat < 6; repeat++)
                                     __instance.BloopAVoteIcon(playerById, allNums[i], playerVoteArea.transform);
-
-                                amountOfSkippedVoters += 6;
                                 Prosecutor.Prosecuted = true;
                             }
                             else if (voterState.VotedForId == targetId)
@@ -897,6 +898,8 @@ internal class MeetingHudPatch
         {
             Message("会议开始");
             shookAlready = false;
+            MeetingCount++;
+
             if (PlayerControl.LocalPlayer.IsDead()) CanSeeRoleInfo = true;
 
             // Remove first kill shield
@@ -931,6 +934,30 @@ internal class MeetingHudPatch
                 if (meetingInfoTransform != null)
                 {
                     Object.Destroy(meetingInfoTransform.gameObject);
+                }
+            }
+
+            if (BandLeader.Player.IsAlive() && !BandLeader.Formed && PlayerControl.LocalPlayer == BandLeader.Player)
+            {
+                var (allNeutral, allCrew, allImpostor) = (
+                    BandLeader.Members.All(x => x.IsNeutral()),
+                    BandLeader.Members.All(x => x.IsCrew()),
+                    BandLeader.Members.All(x => x.IsImpostor()));
+
+                if (BandLeader.Members.Length == 3 && (allNeutral || allCrew || allImpostor))
+                {
+                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(BandLeader.Player, "BandLeader.formed".Translate());
+                    BandLeader.Formed = true;
+                    if (allCrew) BandLeader.winnerFlags = BandLeader.WinnerFlags.Crewmate;
+                    if (allImpostor) BandLeader.winnerFlags = BandLeader.WinnerFlags.Impostor;
+                    if (allNeutral) BandLeader.winnerFlags = BandLeader.WinnerFlags.Neutral;
+                    var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.BandLeaderFormed);
+                    writer.Write((byte)BandLeader.winnerFlags);
+                    writer.EndRPC();
+                }
+                else
+                {
+                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(BandLeader.Player, "BandLeader.bad".Translate());
                 }
             }
         }

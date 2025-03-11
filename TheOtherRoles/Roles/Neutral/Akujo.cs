@@ -27,7 +27,7 @@ public static class Akujo
 
     public static bool IsKillerLover()
     {
-        return honmei.IsAlive() && honmei.isKiller();
+        return honmei.IsAlive() && honmei.IsKiller();
     }
 
     public static bool isAkujoTeam(PlayerControl player)

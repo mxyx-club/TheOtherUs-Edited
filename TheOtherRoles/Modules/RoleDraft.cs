@@ -5,8 +5,8 @@ using System.Linq;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using Hazel;
 using Reactor.Utilities.Extensions;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using static TheOtherRoles.Patches.RoleManagerSelectRolesPatch;
 
 namespace TheOtherRoles.Modules;
@@ -21,7 +21,7 @@ internal class RoleDraft
     public static bool picked;
     public static float timer;
     private static List<ActionButton> buttons = new();
-    private static TMPro.TextMeshPro feedText;
+    private static TextMeshPro feedText;
     public static List<byte> alreadyPicked = new();
     private static Dictionary<byte, string> playerRoles = new();
 
@@ -62,7 +62,7 @@ internal class RoleDraft
         feedText.transform.localScale = new Vector3(0.6f, 0.6f, 1);
         feedText.transform.position += new Vector3(0f, 0.6f);
         feedText.text = GetString("RoleDraft.FeedText");
-        feedText.alignment = TMPro.TextAlignmentOptions.TopLeft;
+        feedText.alignment = TextAlignmentOptions.TopLeft;
         feedText.autoSizeTextContainer = true;
         feedText.fontSize = 3f;
         feedText.enableAutoSizing = false;
@@ -73,7 +73,7 @@ internal class RoleDraft
         __instance.TeamTitle.autoSizeTextContainer = true;
         __instance.TeamTitle.enableAutoSizing = false;
         __instance.TeamTitle.fontSize = 5;
-        __instance.TeamTitle.alignment = TMPro.TextAlignmentOptions.Top;
+        __instance.TeamTitle.alignment = TextAlignmentOptions.Top;
         __instance.ImpostorText.gameObject.SetActive(false);
         GameObject.Find("BackgroundLayer")?.SetActive(false);
         foreach (var player in UnityEngine.Object.FindObjectsOfType<PoolablePlayer>())
@@ -217,6 +217,8 @@ internal class RoleDraft
                             bool isKillerNeutral = roleData.killerNeutralSettings.TryGetValue((byte)roleInfo.roleId, out var killerNeutralRate);
                             bool isCrewmate = roleData.crewSettings.TryGetValue((byte)roleInfo.roleId, out var crewRate);
 
+                            if (!isNeutral && !isKillerNeutral && !isCrewmate) continue;
+
                             if ((isNeutral && neutralsPicked >= neutralsMax) ||
                                 (isKillerNeutral && killerNeutralsPicked >= killerNeutralsMax) ||
                                 (isCrewmate && crewPicked >= crewmateMax))
@@ -323,9 +325,9 @@ internal class RoleDraft
                             actionButton.transform.localScale = new Vector3(2f, 2f);
                             actionButton.SetCoolDown(0, 0);
                             GameObject textHolder = new GameObject("textHolder");
-                            var text = textHolder.AddComponent<TMPro.TextMeshPro>();
+                            var text = textHolder.AddComponent<TextMeshPro>();
                             text.text = roleInfo.Name.Replace(" ", "\n");
-                            text.horizontalAlignment = TMPro.HorizontalAlignmentOptions.Center;
+                            text.horizontalAlignment = HorizontalAlignmentOptions.Center;
                             text.fontSize = 5;
                             textHolder.layer = actionButton.gameObject.layer;
                             text.outlineWidth = 0.1f;
@@ -338,7 +340,7 @@ internal class RoleDraft
                             Material actionButtonMat = actionButtonRenderer.material;
 
                             PassiveButton button = actionButton.GetComponent<PassiveButton>();
-                            button.OnClick = new Button.ButtonClickedEvent();
+                            button.OnClick = new();
                             button.OnClick.AddListener((Action)(() =>
                             {
                                 sendPick((byte)roleInfo.roleId);
@@ -401,7 +403,7 @@ internal class RoleDraft
         if (!isEnabled) return;
         RPCProcedure.setRole(roleId, playerId);
         alreadyPicked.Add(roleId);
-        var random = flag > 0;
+        var isRandom = flag > 0;
         var reasons = ((SelectFlags)flag).ToString();
 
         try
@@ -411,11 +413,10 @@ internal class RoleDraft
             picked = true;
             var roleInfo = RoleInfo.allRoleInfos?.First(x => (byte)x.roleId == roleId) ?? RoleInfo.crewmate;
             var isLocalPlayer = playerId == PlayerControl.LocalPlayer.PlayerId;
-            var isRandom = flag > 0;
-
-            string roleString = isLocalPlayer
-                ? cs(roleInfo.color, roleInfo.Name)
-                : BuildRoleString(roleInfo, isRandom, ((SelectFlags)flag).ToString());
+            var reasonString = isRandom ? $" ({"RoleDraft.Random".Translate()})" : "";
+            var roleString = isLocalPlayer
+                ? isRandom ? $"{cs(roleInfo.color, roleInfo.Name + reasonString)}" : $"{cs(roleInfo.color, roleInfo.Name)}"
+                : BuildRoleString(roleInfo, isRandom, reasons);
 
             string prefix = playerId == PlayerControl.LocalPlayer.PlayerId ? "RoleDraft.You".Translate() : alreadyPicked.Count.ToString();
 
@@ -461,7 +462,7 @@ internal class RoleDraft
             // destroy all the buttons:
             foreach (var button in buttons)
             {
-                button?.gameObject?.Destroy();
+                if (button?.gameObject != null) button.gameObject?.Destroy();
             }
             buttons.Clear();
         }

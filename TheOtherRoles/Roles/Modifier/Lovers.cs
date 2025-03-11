@@ -28,7 +28,7 @@ public static class Lovers
 
     public static bool isKillerLover()
     {
-        return lover1.isKiller() || lover2.isKiller();
+        return lover1.IsKiller() || lover2.IsKiller();
     }
 
     public static PlayerControl otherLover(PlayerControl player)

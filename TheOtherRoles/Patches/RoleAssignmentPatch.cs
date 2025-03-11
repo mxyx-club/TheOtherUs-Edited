@@ -54,9 +54,8 @@ internal class RoleManagerSelectRolesPatch
 
     public static void Postfix()
     {
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-            (byte)CustomRPC.ResetVaribles, SendOption.Reliable);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.ResetVaribles);
+        writer.EndRPC();
         RPCProcedure.resetVariables();
         // Don't assign Roles in Hide N Seek
         if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek || RoleDraft.isEnabled) return;
@@ -149,7 +148,10 @@ internal class RoleManagerSelectRolesPatch
         neutralSettings.Add((byte)RoleId.Vulture, CustomOptionHolder.vultureSpawnRate.GetSelection());
         neutralSettings.Add((byte)RoleId.Doomsayer, CustomOptionHolder.doomsayerSpawnRate.GetSelection());
         neutralSettings.Add((byte)RoleId.Akujo, CustomOptionHolder.akujoSpawnRate.GetSelection());
+        neutralSettings.Add((byte)RoleId.SchrodingersCat, CustomOptionHolder.schrodingersCatSpawnRate.GetSelection());
         neutralSettings.Add((byte)RoleId.Thief, CustomOptionHolder.thiefSpawnRate.GetSelection());
+        if (ModOption.NumImpostors >= 3 && !ModOption.DebugMode)
+            neutralSettings.Add((byte)RoleId.BandLeader, CustomOptionHolder.bandLeaderSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Jackal, CustomOptionHolder.jackalSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Pelican, CustomOptionHolder.pelicanSpawnRate.GetSelection());
@@ -157,7 +159,6 @@ internal class RoleManagerSelectRolesPatch
         killerNeutralSettings.Add((byte)RoleId.Werewolf, CustomOptionHolder.werewolfSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Juggernaut, CustomOptionHolder.juggernautSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Swooper, CustomOptionHolder.swooperSpawnRate.GetSelection());
-
         // Check if killerNeutralMin and killerNeutralMax are 0
         if (killerNeutralMin + killerNeutralMax == 0)
         {
@@ -486,7 +487,7 @@ internal class RoleManagerSelectRolesPatch
             // Executioner
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
-                    p != Mini.mini && !p.Data.Role.IsImpostor && !p.isNeutral() && p != Swapper.swapper)
+                    p != Mini.mini && !p.Data.Role.IsImpostor && !p.IsNeutral() && p != Swapper.swapper)
                     possibleTargets.Add(p);
 
             if (possibleTargets.Count == 0)
@@ -524,7 +525,7 @@ internal class RoleManagerSelectRolesPatch
         var crewPlayer = new List<PlayerControl>(players);
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
         impPlayerL.RemoveAll(x => !x.Data.Role.IsImpostor);
-        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.isNeutral());
+        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.IsNeutral());
 
         var modifierCount = Mathf.Min(players.Count + addMaxNum, modifierCountSettings);
 
@@ -647,8 +648,8 @@ internal class RoleManagerSelectRolesPatch
         var neutralPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
         var crewPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
-        neutralPlayer.RemoveAll(x => !x.isNeutral() || x == Doomsayer.doomsayer);
-        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.isNeutral());
+        neutralPlayer.RemoveAll(x => !x.IsNeutral() || x == Doomsayer.doomsayer);
+        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.IsNeutral());
         assignGuesserGamemodeToPlayers(crewPlayer,
             CustomOptionHolder.guesserGamemodeCrewNumber.GetInt());
         assignGuesserGamemodeToPlayers(neutralPlayer,
@@ -751,7 +752,7 @@ internal class RoleManagerSelectRolesPatch
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
 
         var crewPlayer = new List<PlayerControl>(playerList);
-        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.isNeutral());
+        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.IsNeutral());
 
         if (modifiers.Contains(RoleId.Assassin))
         {
@@ -817,7 +818,7 @@ internal class RoleManagerSelectRolesPatch
 
         if (modifiers.Contains(RoleId.Cursed))
         {
-            var Cplayers = Cursed.hideModifier ? playerList.Where(x => x.isCrew()).ToList() : crewPlayer;
+            var Cplayers = Cursed.hideModifier ? playerList.Where(x => x.IsCrew()).ToList() : crewPlayer;
 
             playerId = setModifierToRandomPlayer((byte)RoleId.Cursed, Cplayers);
 
@@ -862,7 +863,7 @@ internal class RoleManagerSelectRolesPatch
             }
             else
             {
-                shifterCrewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.isNeutral());
+                shifterCrewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.IsNeutral());
             }
             playerId = setModifierToRandomPlayer((byte)RoleId.Shifter, shifterCrewPlayer);
             crewPlayer.RemoveAll(x => x.PlayerId == playerId);

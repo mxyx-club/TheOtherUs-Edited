@@ -44,9 +44,6 @@ internal class IntroCutsceneOnDestroyPatch
                 ModOption.playerIcons[p.PlayerId] = player;
                 player.gameObject.SetActive(false);
 
-                //游戏开始时重置cd
-                CustomButton.ResetAllCooldowns(ModOption.ButtonCooldown);
-
                 if (PlayerControl.LocalPlayer == Arsonist.arsonist && p != Arsonist.arsonist)
                 {
                     player.transform.localPosition = bottomLeft + new Vector3(-0.25f, -0.25f, 0) +
@@ -57,7 +54,7 @@ internal class IntroCutsceneOnDestroyPatch
                 }
                 else
                 {
-                    //  This can be done for all players not just for the bounty hunter as it was before. Allows the thief to have the correct position and scaling
+                    // This can be done for all players not just for the bounty hunter as it was before. Allows the thief to have the correct position and scaling
                     player.transform.localPosition = bottomLeft;
                     player.transform.localScale = Vector3.one * 0.4f;
                     player.gameObject.SetActive(false);
@@ -73,6 +70,10 @@ internal class IntroCutsceneOnDestroyPatch
 
         // AntiTeleport set position
         AntiTeleport.setPosition();
+        Sheriff.deputyCheckPromotion();
+
+        //游戏开始时重置cd
+        CustomButton.ResetAllCooldowns(ModOption.ButtonCooldown);
 
         if (CustomOptionHolder.randomGameStartPosition.GetBool()) MapData.RandomSpawnPlayers();
 
@@ -97,7 +98,6 @@ internal class IntroCutsceneOnDestroyPatch
                     RPCProcedure.setFirstKill(target.PlayerId);
                 }
             }
-
         }
 
         // Force Bounty Hunter to load a new Bounty when the Intro is over
@@ -121,7 +121,6 @@ internal class IntroCutsceneOnDestroyPatch
 
     public static void Postfix(IntroCutscene __instance)
     {
-
         // 显示按键提示
         Rewired.KeyboardMap keyboardMap = Rewired.ReInput.mapping.GetKeyboardMapInstance(0, 0);
         Il2CppReferenceArray<Rewired.ActionElementMap> actionArray;
@@ -177,7 +176,7 @@ internal class IntroPatch
     public static void setupIntroTeamIcons(IntroCutscene __instance, ref List<PlayerControl> yourTeam)
     {
         // Intro solo teams
-        if (PlayerControl.LocalPlayer.isNeutral())
+        if (PlayerControl.LocalPlayer.IsNeutral())
         {
             var soloTeam = new List<PlayerControl>();
             soloTeam.Add(PlayerControl.LocalPlayer);
@@ -276,7 +275,7 @@ internal class IntroPatch
                 __instance.RoleBlurbText.color = roleInfo.color;
             }
 
-            if (Sheriff.knowsSheriff && Sheriff.Deputy != null && Sheriff.Player.First() != null)
+            if (Sheriff.knowsSheriff && Sheriff.Deputy != null && Sheriff.Player.FirstOrDefault() != null)
             {
                 if (infos.Any(info => info.roleId == RoleId.Sheriff))
                     __instance.RoleBlurbText.text = cs(Sheriff.color, $"\n你的捕快是 {Sheriff.Deputy?.Data?.PlayerName ?? ""}");

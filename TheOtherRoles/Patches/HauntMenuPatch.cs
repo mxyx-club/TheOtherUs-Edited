@@ -99,7 +99,7 @@ public static class HauntMenuPatch
             HudManager.Instance.AbilityButton?.gameObject.SetActive(false);
             return;
         }
-        else if (CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.GetBool() && PlayerControl.LocalPlayer.isCrew() && numberOfLeftTasks > 0)
+        else if (CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.GetBool() && PlayerControl.LocalPlayer.IsCrew() && numberOfLeftTasks > 0)
         {
             HudManager.Instance.AbilityButton.gameObject.SetActive(false);
             return;

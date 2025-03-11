@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Hazel;
 using TheOtherRoles.Objects;
 using UnityEngine;
@@ -31,9 +31,9 @@ public static class EvilTrapper
         byte[] buff = new byte[sizeof(float) * 2];
         Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
         Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlaceTrap, SendOption.Reliable);
+        var writer = StartRPC(CustomRPC.PlaceTrap);
         writer.WriteBytesAndSize(buff);
-        writer.EndMessage();
+        writer.EndRPC();
         RPCProcedure.placeTrap(buff);
         placedTime = DateTime.UtcNow;
     }

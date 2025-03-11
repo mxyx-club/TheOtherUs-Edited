@@ -10,13 +10,14 @@ public static class Shifter
 
     public static bool shiftNeutral;
     public static bool shiftALLNeutra;
+    public static bool reloadRole;
 
     public static ResourceSprite buttonSprite = new("ShiftButton.png");
 
-    public static bool isShiftNeutral(PlayerControl player)
+    public static bool NotShift(PlayerControl player)
     {
         if (player == null) return false;
-
+        if (player.IsImpostor()) return true;
         if (shiftNeutral)
         {
             if (shiftALLNeutra)
@@ -36,13 +37,13 @@ public static class Shifter
                        player == Juggernaut.juggernaut ||
                        player == Akujo.akujo ||
                        player == Swooper.swooper ||
+                       player == SchrodingersCat.Player ||
                        player == Pavlovsdogs.pavlovsowner ||
                        Jackal.jackal.Any(x => x == player) ||
                        Pavlovsdogs.pavlovsdogs.Any(x => x == player);
             }
         }
-
-        return player.isNeutral();
+        return player.IsNeutral();
     }
 
     public static void shiftRole(PlayerControl player1, PlayerControl player2, bool repeat = true)
@@ -261,6 +262,11 @@ public static class Shifter
         {
             if (repeat) shiftRole(player2, player1, false);
             Witness.Player = player1;
+        }
+        else if (BandLeader.Player != null && BandLeader.Player == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            BandLeader.Player = player1;
         }
     }
 

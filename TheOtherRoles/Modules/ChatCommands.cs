@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using AmongUs.Data;
-using Hazel;
 using InnerNet;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -30,10 +29,9 @@ public static class ChatCommands
 
                     if (AmongUsClient.Instance.AmHost)
                     {
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                            (byte)CustomRPC.ShareGameMode, SendOption.Reliable);
+                        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.ShareGameMode);
                         writer.Write((byte)gameMode);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        writer.EndRPC();
                         RPCProcedure.shareGameMode((byte)gameMode);
                     }
                     else
@@ -45,82 +43,61 @@ public static class ChatCommands
                 }
             }
 
-            if (chat.StartsWith("/kick ") && AmongUsClient.Instance.AmHost)
-            {
-                var playerName = text[6..];
-                PlayerControl target = PlayerControl.AllPlayerControls.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
-                if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
-                {
-                    var client = AmongUsClient.Instance.GetClient(target.OwnerId);
-                    if (client != null)
-                    {
-                        AmongUsClient.Instance.KickPlayer(client.Id, false);
-                    }
-                }
-                handled = true;
-            }
-            else if (chat.StartsWith("/ban ") && AmongUsClient.Instance.AmHost)
-            {
-                var playerName = text[5..];
-                PlayerControl target = PlayerControl.AllPlayerControls.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
-                if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
-                {
-                    var client = AmongUsClient.Instance.GetClient(target.OwnerId);
-                    if (client != null)
-                    {
-                        AmongUsClient.Instance.KickPlayer(client.Id, true);
-                    }
-                    handled = true;
-                }
-            }
-
             // 游戏中房主指令
             if (AmongUsClient.Instance.AmHost && InGame)
             {
-                //  强制结束游戏
                 if (chat.StartsWith("/end"))
                 {
                     ModOption.isCanceled = true;
                     handled = true;
                 }
-                // 强制紧急会议或结束会议
+
                 else if (chat.StartsWith("/meeting") || chat.StartsWith("/mt"))
                 {
-                    if (InMeeting) MeetingHud.Instance.RpcClose();
+                    if (InMeeting) MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), null, false);
                     else PlayerControl.LocalPlayer.NoCheckStartMeeting(null, true);
+                    handled = true;
+                }
+                else if (chat.StartsWith("/say "))
+                {
+                    var message = text[5..];
+                    message = $"{cs(Palette.Purple, "★【房主消息】★")}\n{message}";
+                    var writer = StartRPC(CustomRPC.HostSay);
+                    writer.Write(message);
+                    writer.EndRPC();
+                    __instance.AddChat(GetHostPlayer, message);
                     handled = true;
                 }
                 else if (chat.StartsWith("/kill "))
                 {
-
                     var playerName = text[6..];
                     var target = playerName is not null and "me"
                         ? PlayerControl.LocalPlayer
                         : PlayerControl.AllPlayerControls.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
                     if (target != null)
                     {
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                            (byte)CustomRPC.HostKill, SendOption.Reliable);
+                        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostKill);
                         writer.Write(target.PlayerId);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        writer.EndRPC();
                         RPCProcedure.hostKill(target.PlayerId);
                     }
+
                     handled = true;
                 }
                 else if (chat.StartsWith("/revive "))
                 {
                     var playerName = text[8..];
-                    var target = playerName is not null and "me"
-                        ? PlayerControl.LocalPlayer
-                        : PlayerControl.AllPlayerControls.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
+                    var target = playerName is not null and "me" ? PlayerControl.LocalPlayer : PlayerControl.AllPlayerControls.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
                     if (target != null)
                     {
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                            (byte)CustomRPC.RevivePlayer, SendOption.Reliable);
+                        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RevivePlayer);
                         writer.Write(target.PlayerId);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.RevivePlayer(target.PlayerId);
+                        writer.Write(true);
+                        writer.Write(true);
+                        writer.EndRPC();
+                        RPCProcedure.RevivePlayer(target.PlayerId, true, true);
                     }
+
                     handled = true;
                 }
             }

@@ -12,6 +12,8 @@ public class Pelican
     public static Color color = new Color32(240, 120, 200, byte.MaxValue);
     public static float cooldown = 25f;
     public static float reduceCooldown = 25f;
+    public static bool CanUseVent;
+    public static bool hasImpVision;
 
     public static void PelicanKill(byte targetId)
     {
@@ -45,5 +47,7 @@ public class Pelican
         if (clear) eatenPlayers = new();
         cooldown = CustomOptionHolder.pelicanCooldown.GetFloat();
         reduceCooldown = CustomOptionHolder.pelicanReduceCooldown.GetFloat();
+        CanUseVent = CustomOptionHolder.pelicanCanUseVents.GetBool();
+        hasImpVision = CustomOptionHolder.pelicanHasImpVision.GetBool();
     }
 }

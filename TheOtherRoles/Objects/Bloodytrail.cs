@@ -20,10 +20,8 @@ internal class Bloodytrail
 
 
         var blood = new GameObject("Blood" + index);
-        var transform = player.transform;
-        var position1 = transform.position;
-        var position = new Vector3(position1.x, position1.y,
-            (position1.y / 1000) + 0.001f);
+        var pos = player.transform.position;
+        var position = new Vector3(pos.x, pos.y, (pos.y / 1000) + 0.001f);
         blood.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
         blood.transform.position = position;
         blood.transform.localPosition = position;

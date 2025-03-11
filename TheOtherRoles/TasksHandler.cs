@@ -29,10 +29,11 @@ public static class TasksHandler
         private static bool ShouldCountTasks(GameData.PlayerInfo playerInfo)
         {
             return !(playerInfo.Object && playerInfo.Object.hasAliveKillingLover())
-                && playerInfo.PlayerId != Thief.thief?.PlayerId
-                && playerInfo.PlayerId != Specter.Player?.PlayerId
-                && !Amnisiac.Player.Any(x => x.PlayerId == playerInfo.PlayerId)
-                && playerInfo.PlayerId != Akujo.honmei?.PlayerId;
+                 && playerInfo.PlayerId != Thief.thief?.PlayerId
+                 && playerInfo.PlayerId != Specter.Player?.PlayerId
+                 && !playerById(playerInfo.PlayerId).IsNeutral()
+                 && !Amnisiac.Player.Any(x => x.PlayerId == playerInfo.PlayerId)
+                 && playerInfo.PlayerId != Akujo.honmei?.PlayerId;
         }
 
         private static bool Prefix(GameData __instance)

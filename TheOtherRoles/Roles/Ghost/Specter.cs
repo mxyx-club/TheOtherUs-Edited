@@ -228,6 +228,10 @@ public class Specter
                     Thief.thief = local;
                     Amnisiac.Player.Add(target);
                     break;
+                case RoleId.BandLeader:
+                    BandLeader.Player = local;
+                    Amnisiac.Player.Add(target);
+                    break;
                 case RoleId.Crewmate:
                     break;
                 case RoleId.Vigilante:
@@ -333,6 +337,10 @@ public class Specter
                 case RoleId.Redemptor:
                     if (resetRole) Redemptor.ClearAndReload();
                     Redemptor.Player = local;
+                    break;
+                case RoleId.SchrodingersCat:
+                    if (resetRole) SchrodingersCat.ClearAndReload();
+                    SchrodingersCat.Player = local;
                     break;
             }
         }

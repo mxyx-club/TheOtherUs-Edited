@@ -90,13 +90,7 @@ public static class Mimic
                 Detective.detective = mimic;
                 hasMimic = true;
                 break;
-            /*
-        case RoleId.NiceGuesser:
-            if (Amnisiac.resetRole) //Guesser.clearAndReload();
-                Guesser.niceGuesser = Mimic.mimic;
-            Mimic.hasMimic = true;
-            break;
-            */
+
             case RoleId.TimeMaster:
                 if (Amnisiac.resetRole) TimeMaster.clearAndReload();
                 TimeMaster.timeMaster = mimic;

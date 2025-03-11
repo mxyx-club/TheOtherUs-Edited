@@ -1333,6 +1333,10 @@
         "0": "Executioner Can Call Emergency Meeting",
         "13": "可以发起紧急会议"
     },
+    "killCooldown": {
+        "0": "Kill Cooldown",
+        "13": "击杀冷却"
+    },
     "SpecterOption": {
         "0": "Specter (Ghost)",
         "13": "怨灵 (幽灵职业)"
@@ -1403,10 +1407,6 @@
     "arsonistIgniteCdRemoved": {
         "13": "仅剩最后一名杀手时移除点火冷却"
     },
-    "jackalKillCooldown": {
-        "0": "Jackal/Sidekick Kill Cooldown",
-        "13": "豺狼/跟班击杀冷却"
-    },
     "jackalChanceSwoop": {
         "0": "Chance That Jackal Can Swoop",
         "13": "豺狼获得隐身能力的概率"
@@ -1466,9 +1466,6 @@
     "pavlovsownerAndJackalAsWell": {
         "13": "豺狼和巴浦洛夫只会出现一个"
     },
-    "pavlovsownerKillCooldown": {
-        "13": "击杀冷却"
-    },
     "pavlovsownerCreateDogCooldown": {
         "13": "驯化冷却"
     },
@@ -1493,10 +1490,6 @@
     "pavlovsownerRampageDeathTime": {
         "13": "狂化后自杀时限"
     },
-    "swooperKillCooldown": {
-        "0": "Kill Cooldown",
-        "13": "击杀冷却"
-    },
     "swooperCooldown": {
         "0": "Swoop Cooldown",
         "13": "隐身冷却"
@@ -1519,9 +1512,6 @@
     },
     "werewolfKillCooldown": {
         "0": "Kill Cooldown",
-        "13": "击杀冷却"
-    },
-    "juggernautCooldown": {
         "13": "击杀冷却"
     },
     "juggernautReducedkillEach": {
@@ -1613,6 +1603,12 @@
     "witnessSkipMeeting": {
         "13": "跳过会议时不计分"
     },
+    "bandLeaderCreateDistance": {
+        "13": "招募乐手冷却"
+    },
+    "bandLeaderKillCooldown": {
+        "13": "阵营为红狼时获得的击杀冷却"
+    },
     "partTimerCooldown": {
         "13": "打工冷却时间"
     },
@@ -1663,13 +1659,13 @@
     "akujoHonmeiOptimizeWin": {
         "13": "真爱为船员时允许跟随胜利"
     },
-    "thiefCooldown": {
-        "0": "Thief Cooldown",
-        "13": "击杀冷却"
-    },
     "thiefCanKill": {
         "0": "Thief Can Kill ",
         "13": "身份窃贼可以击杀 "
+    },
+    "thiefCooldown": {
+        "0": "Thief Cooldown",
+        "13": "击杀冷却"
     },
     "thiefCanUseVents": {
         "0": "Thief Can Use Vents",
@@ -1678,6 +1674,18 @@
     "thiefCanStealWithGuess": {
         "0": "Thief Can Guess To Steal A Role (If Guesser)",
         "13": "身份窃贼可通过猜测窃取身份\n(赌怪模式)"
+    },
+    "schrodingersCatIsGuessable": {
+        "13": "可以被赌怪猜测而死"
+    },
+    "schrodingersCatCanKill": {
+        "13": "非船员阵营时允许击杀玩家"
+    },
+    "schrodingersCatTeamChanges": {
+        "13": "可以连续变更阵营"
+    },
+    "schrodingersCatMaxChangeCount": {
+        "13": "可以变更阵营的次数"
     },
     "GhostEngineerOptions": {
         "0": "Engineer (Ghost)",
@@ -2452,16 +2460,16 @@
     },
     "creditsString1": {
         "0": "<align=\"center\"><b>TheOtherUs-Edited Team:</b>\nmxyx0412    Huier-Huang    haoren\nImp11    FangKuaiYa\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles, SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n",
-        "13": "<align=\"center\"><b>The Other Us - Edited贡献者:</b>\n<b>开发组:</b>\n沫夏悠轩    善良的好人\n\n<b>美术组:</b>\n方块    Det黎木   阿门的葡萄\n\n<b>翻译:</b>\nEN：九头蛇\nZH：沫夏悠轩\n\n<b>GitHub贡献者:</b>\n天寸梦初    Imp11\n\n本模组使用了部分[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA]的代码，感谢Imp11的支持！\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
+        "13": "<align=\"center\"><b>The Other Us - Edited贡献者:</b>\n<b>开发组:</b>\n沫夏悠轩    善良的好人\n\n<b>美术组:</b>\n方块    Det黎木   阿门的葡萄\n\n<b>翻译:</b>\nEN：九头蛇\nZH：沫夏悠轩\n\n<b>GitHub贡献者:</b>\n天寸梦初    Imp11\n\n本模组使用了部分[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA[]的代码，感谢Imp11的支持！\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
     },
     "WelcomeText": {
-        "13": "欢迎游玩<color=#ff351f><size=120%>我们的超多职业</size></color> ！\n\n游戏指令：\n/r [职业名称] ：获取该职业的介绍\n/m ：游戏内使用，获取自己已有职业的介绍\n\n如需查看其它指令请输入：/cmd"
+        "13": "欢迎游玩<color=#ff351f><size=120%>我们的超多职业</size></color> ！\n\n游戏指令【指令和内容中间需要空格】：\n/r [职业名称] ：获取该职业的介绍\n/m ：游戏内使用，获取自己已有职业的介绍\n\n如需查看其它指令请输入：/cmd"
     },
     "BetaMessage": {
         "13": "当前模组版本为Beta测试版，将在 {0} 天后过期!\n\n版本过期后将无法进入游戏，注意更新！"
     },
     "CommandsInHost": {
-        "13": "大厅指令：\n/gm [模式代码] ：切换游戏模式\n模式代码：gm(赌怪模式)、hn(猎杀模式)、ph(道具躲猫猫)\n\n/kick [玩家名称] ：踢出玩家\n/ban [玩家名称] 封禁玩家\n\n游戏中指令：\n/end ：强制游戏结束\n/meeting (mt) 召集/结束会议\n/kill [玩家名称] ：强制击杀玩家\n/revive [玩家名称] ： 强制复活玩家"
+        "13": "游戏中指令：\n/end ：强制游戏结束\n/mt 召集/结束会议\n/kill [玩家名称] ：强制击杀玩家\n/revive [玩家名称] ： 强制复活玩家\n/say [内容] : 向所有玩家发送房主消息"
     },
     "CommandsInPlayer": {
         "13": "全局指令：\n/r [职业名称] ：获得该职业的职业介绍\n\n游戏中指令：\n/m  ： 获得当前玩家所有职业的职业介绍\n\n死亡玩家或游戏大厅指令：\n/tp [玩家名称] ：将自己传送到该玩家的位置。"
@@ -2599,6 +2607,18 @@
         "0": "Lights are out",
         "13": "黑 暗 时 刻!"
     },
+    "BandLeaderBad": {
+        "13": "乐队不能成立"
+    },
+    "BandLeaderFormed": {
+        "13": "乐队已成立 | 阵营: {0}"
+    },
+    "BandLeader.bad": {
+        "13": "从没觉得玩乐队开心过"
+    },
+    "BandLeader.formed": {
+        "13": "能和我组一辈子乐队吗"
+    },
     "BalancerAbilityUseText": {
         "0": "Ability activated",
         "13": "发动技能"
@@ -2616,6 +2636,12 @@
     },
     "EveryoneDied": {
         "13": "无人生还"
+    },
+    "CrewmateWin": {
+        "13": "船员胜利"
+    },
+    "ImpostorWin": {
+        "13": "伪装者胜利"
     },
     "JesterWin": {
         "13": "听我说谢谢你"
@@ -2679,6 +2705,9 @@
     },
     "PartTimerWin": {
         "13": "打工仔跟随胜利"
+    },
+    "BandLeaderWin": {
+        "13": "好想成为人类啊"
     },
     "RoleDraft.FeedText": {
         "0": "<size=200%>Player's Picks:</size>\n\n",
@@ -3286,6 +3315,9 @@
         "0": " (Swooper)",
         "13": " (隐身)"
     },
+    "BandLeaderInfo": {
+        "13": "(乐队成员)"
+    },
     "Impostor": {
         "0": "Impostor",
         "13": "伪装者"
@@ -3626,6 +3658,16 @@
     "WitnessShortDesc": {
         "13": "让大家猜谁是真凶"
     },
+    "BandLeader": {
+        "0": "BandLeader",
+        "13": "乐队主唱"
+    },
+    "BandLeaderIntroDesc": {
+        "13": "能和我组一辈子乐队吗"
+    },
+    "BandLeaderShortDesc": {
+        "13": "寻找乐队成员获得胜利"
+    },
     "PartTimer": {
         "0": "PartTimer",
         "13": "打工仔"
@@ -3705,6 +3747,16 @@
     },
     "WerewolfShortDesc": {
         "13": "暴走并杀死其他的玩家"
+    },
+    "SchrodingersCat": {
+        "0": "Schrodinger’s Cat",
+        "13": "薛定谔的猫"
+    },
+    "SchrodingersCatIntroDesc": {
+        "13": "寻找主人喵"
+    },
+    "SchrodingersCatShortDesc": {
+        "13": "被击杀时会加入他们！"
     },
     "Thief": {
         "0": "Thief",
@@ -4360,7 +4412,7 @@
         "13": "哈哈~白板红狼!"
     },
     "WolfLordFullDesc": {
-        "13": "在会议中可以揭示身份，获得一次在会议中击杀玩家的机会。且无法被猜测\n狼之主揭示身份后无法再使用赌怪能力，\n同时，如果狼之主使用赌怪能力则本轮会议无法揭示身份。\n（猎杀和赌怪一次会议只能用一个能力）"
+        "13": "在会议中可以揭示身份，获得一次在会议中击杀玩家的机会。且无法被猜测\n狼之主揭示身份后无法再使用赌怪能力，\n同时，如果狼之主使用赌怪能力则本轮会议无法揭示身份。\n（猎杀和赌怪一次会议只能用一个能力）\n职业创意来自：尕丶天堂"
     },
     "MorphlingFullDesc": {
         "13": "采样后可以伪装成其他人。"
@@ -4493,6 +4545,9 @@
     },
     "WitnessFullDesc": {
         "13": "污点证人进入会议时会得知当前报告尸体的凶手\n在会议开始的30秒内(可设置)需要选择向所有玩家标记凶手\n会议结束后会根据以下条件加分，达成一定分数可以独自胜利。\n\n加分条件有以下两种：\n        标记的玩家不是凶手，但是被其他玩家驱逐\n        标记的玩家是凶手，但是没有被驱逐\n另外，根据设置，目标在会议中意外死亡也有可能会加分\n\n职业创意来自：尕丶天堂"
+    },
+    "BandLeaderFullDesc": {
+        "13": "乐队主唱需要寻找三位乐队成员，招募不会影响玩家的职业与阵营。\n每次进入会议时会进行判断是否能成立乐队。成立需要三位成员同属与\n一个类型（三位需同属与船员、红狼或中立）。\n\n在乐队成立之前，乐队主唱可以在会议外踢出成员，且游戏结束时仍然未成立\n乐队则无法胜利。乐队成立后固定胜利条件和成员，无法变更(除非主唱消失)\n\n乐队成立后，乐队的胜利条件变更为：\n船员阵营：船员胜利后乐队主唱跟随船员胜利\n红狼阵营：乐队主唱会获得极短cd的击杀，红狼胜利后乐队主唱跟随胜利\n中立阵营：如果乐队成员中有任何一人胜利，则全队独立获胜。\n\n职业创意来自：尕丶天堂"
     },
     "CrewmateFullDesc": {
         "13": "哈哈~白板船员！"

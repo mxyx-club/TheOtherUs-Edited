@@ -276,6 +276,10 @@ public class Amnisiac
                 Thief.thief = local;
                 Player.Add(target);
                 break;
+            case RoleId.BandLeader:
+                BandLeader.Player = local;
+                Player.Add(target);
+                break;
 
             case RoleId.Crewmate:
                 break;
@@ -382,10 +386,13 @@ public class Amnisiac
                 if (resetRole) Redemptor.ClearAndReload();
                 Redemptor.Player = local;
                 break;
+            case RoleId.SchrodingersCat:
+                if (resetRole) SchrodingersCat.ClearAndReload();
+                SchrodingersCat.Player = local;
+                break;
         }
         Player.RemoveAll(x => x.PlayerId == local.PlayerId);
-        foreach (var arrow in localArrows)
-            Object.Destroy(arrow.arrow);
+        foreach (var arrow in localArrows) Object.Destroy(arrow.arrow);
         localArrows.Clear();
     }
 

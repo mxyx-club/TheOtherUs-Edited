@@ -37,7 +37,7 @@ public class KeyboardHandler
             // 强制开始会议或结束会议
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKeyDown(ModInputManager.meetingInput.keyCode) && InGame)
             {
-                if (InMeeting) MeetingHud.Instance.RpcClose();
+                if (InMeeting) MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), null, false);
                 else PlayerControl.LocalPlayer.NoCheckStartMeeting(null, true);
             }
             // 强制结束游戏

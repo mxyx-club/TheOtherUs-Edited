@@ -68,6 +68,8 @@ public enum RoleId
     Pelican,
     Akujo,
     Thief,
+    BandLeader,
+    SchrodingersCat,
 
     Crewmate,
     Vigilante,
@@ -259,6 +261,8 @@ public static class RoleHelpers
             { RoleId.Vulture, CustomOptionHolder.vultureSpawnRate.GetSelection() },
             { RoleId.Witness, CustomOptionHolder.witnessSpawnRate.GetSelection() },
             { RoleId.Werewolf, CustomOptionHolder.werewolfSpawnRate.GetSelection() },
+            { RoleId.BandLeader, CustomOptionHolder.bandLeaderSpawnRate.GetSelection() },
+            { RoleId.SchrodingersCat, CustomOptionHolder.schrodingersCatSpawnRate.GetSelection() },
             { RoleId.Pursuer, CustomOptionHolder.lawyerSpawnRate.GetSelection() + CustomOptionHolder.executionerSpawnRate.GetSelection() },
 
             { RoleId.Lover, CustomOptionHolder.modifierLover.GetSelection() },
@@ -375,6 +379,8 @@ public static class RoleHelpers
         WolfLord.ClearAndReload();
         Pelican.clearAndReload();
         Redemptor.ClearAndReload();
+        BandLeader.ClearAndReload();
+        SchrodingersCat.ClearAndReload();
 
         // Modifier
         Assassin.clearAndReload();
@@ -428,7 +434,7 @@ public static class RoleHelpers
         {
             if (GhostPlayer.Contains(player)) return;
 
-            if (player.isCrew()) AssignRole(player, AssignType.Crewmate);
+            if (player.IsCrew()) AssignRole(player, AssignType.Crewmate);
 
             if (otherNeutral(player)) AssignRole(player, AssignType.otherNeutral);
         }
@@ -446,7 +452,7 @@ public static class RoleHelpers
                 return false;
             }
 
-            return player.isNeutral();
+            return player.IsNeutral();
         }
 
         private static void AssignRole(PlayerControl player, AssignType assignType)

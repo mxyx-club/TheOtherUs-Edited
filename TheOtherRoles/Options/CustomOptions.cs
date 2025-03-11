@@ -343,7 +343,6 @@ public class CustomOption
         {
             Warn($"试图粘贴无效的设置 : {e}");
             FastDestroyableSingleton<HudManager>.Instance?.Chat?.AddChat(PlayerControl.LocalPlayer, "试图粘贴无效的设置");
-            SoundEffectsManager.Load();
             SoundEffectsManager.play("fail");
             return false;
         }
@@ -386,6 +385,8 @@ internal class GameOptionsMenuStartPatch
                 break;
         }
 
+        GameObject.Find("ResetToDefault")?.Destroy();
+        GameObject.Find("ConfirmEjects")?.Destroy();
         // create copy to clipboard and paste from clipboard buttons.
         var template = GameObject.Find("CloseButton");
         var copyButton = Object.Instantiate(template, template.transform.parent);
@@ -1237,8 +1238,12 @@ public static class GameOptionsNextPagePatch
 
         if (Input.GetKeyDown(ModInputManager.helpInput.keyCode))
         {
+            var info = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer, false, false).FirstOrDefault();
             if (LobbyRoleInfo.RolesSummaryUI == null)
-                LobbyRoleInfo.RoleSummaryOnClick();
+            {
+                if (InGame && info != null) LobbyRoleInfo.AddInfoCard(info);
+                else LobbyRoleInfo.RoleSummaryOnClick();
+            }
             else
             {
                 Object.Destroy(LobbyRoleInfo.RolesSummaryUI);

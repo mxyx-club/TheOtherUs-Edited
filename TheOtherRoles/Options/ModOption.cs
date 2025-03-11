@@ -7,7 +7,7 @@ internal class ModOption
 {
     public static float ButtonCooldown => CustomOptionHolder.resteButtonCooldown.GetFloat();
     public static bool PreventTaskEnd => CustomOptionHolder.disableTaskGameEnd.GetBool();
-    public static float KillCooddown => GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
+    public static float KillCooldown => GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
     public static int NumImpostors => GameOptionsManager.Instance.currentNormalGameOptions.NumImpostors;
     public static bool DebugMode => CustomOptionHolder.debugMode.GetBool();
     public static bool DisableGameEnd => DebugMode && CustomOptionHolder.disableGameEnd.GetBool();

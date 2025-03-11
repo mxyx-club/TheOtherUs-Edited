@@ -17,165 +17,56 @@ This mod is not affiliated with Among Us or Innersloth LLC, and the content cont
 
 # The Other Us - Edited
 
-**The Other Us** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings) and new [Custom Hats](#custom-hats) to the game.
-Even more roles are coming soon.
-
 ## Releases
 
-| Among Us - Version  | Mod Version | Updated Date | Link                                                         |
-| ------------------- | ----------- | ------------ | ------------------------------------------------------------ |
-| 2024.3.5 ~ 2024.6.4 | v1.0.6.1    | 2024.7.26    | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.6.1/TheOtherUs.zip) |
-| 2024.3.5 ~ 2024.6.4 | v1.0.5.3    | 2024.7.8     | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.5.3/TheOtherUs.zip) |
-| 2024.3.5 ~ 2024.6.4 | v1.0.4.6    | 2024.6.29    | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.6/TheOtherUs.zip) |
-| 2024.3.5 ~ 2024.6.4 | v1.0.4.2    | 2024.6.16    | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.4.2/TheOtherUs.zip) |
-| 2024.3.5 ~ 2024.6.4 | v1.0.3.8    | 2024.5.24    | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.8/TheOtherUs.zip) |
-| 2024.3.5 ~ 2024.6.4 | v1.0.3.7    | 2024.5.10    | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.7/TheOtherRoles.zip) |
-| 2024.3.5 ~ 2024.6.4 | v1.0.3.6    | 2024.5.8     | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.6/TheOtherRoles.zip) |
-| 2024.3.5 ~ 2024.6.4 | v1.0.3.3    | 2024.4.11    | [Download](https://github.com/mxyx-club/TheOtherUs-Edited/releases/download/v1.0.3.3/TheOtherRoles.zip) |
-
-
+Please refer to [Github releases](https://github.com/mxyx-club/TheOtherUs-Edited/releases) for details
 
 ## Changelog
 
-<details>
-  <summary>Click to show the Changelog (old)</summary>
-
-
-
-###  v1.0.3.2:
-
- - #### Newly added
-
-    - New Modifier: LastImposter (gain lower kill cooldown when there is only 1 imposter left)
-    - When born may choose to born on random vents
-    - New ending added: And Then There Were None
-    - Akujo: Update with the true love can't win together with the original team
-    - Chameleon: Will not be given to Swooper and Ninja
-    - ButtonBarry: Won't be given to the Mayor
-    - Snitch: Can't be guessed during the meeting after being exposed, and now given an option of expose the range of Neutral
-    - Jumper & Escapist: Given option that can increase numbers of teleportation, to avoid the problem of only teleport once a round
-    - Snitch：
-
- - #### Bug fixed:
-
-    - Jackal: Fix the problem that Jackal can still destroy
-    - Swapper: Fix the problem that Swapper can't fix destructions
-
-
-###  v1.0.3.1:
-
- - #### Newly added
-
-    - New role added: Prophet 
-    - Poucher: changed to be Imposters used only
-    - Snitch: remake, return to old version (Not fully functional)
-    - Flash: Fix the problem of no speed up
-
-### v1.0.3:
-
- - #### Based on TheOtherRoles - v4.5.2 
-
-    - Compatible for v2024.3.5
-    - Add a "Stop" button when game is about to start
-    - Detective: optimize the slow movement when footprints appears
-    - Medic: Is now also displayed in meetings to players who can see it, with brackets around the name
-
- - #### Newly added:
-
-    - New Modifiers added: ButtonBarry and Flash
-    - Detective: Autopsy report now changes to examine the role and color of the murderer
-    - Medic: Autopsy report now add information of role and color of the murderer
-    - Jumper & Escapist: Add an option that after the mmeting the marked spot won't being resetted
-    - Disperser: Add an option to teleport to vents
-
- - #### Newly added:
-
-    - Fix the bug in Guesser Modifier players will be given multiple roles
-    - Torch: Fix the bug of torch's Vision
-
-
-###  v1.0.2:
-
- - #### 新增内容
-
-    - New role added: Akujo
-    - Replace buttons with no text and add button texts in games
-    - Undertaker: add the option of increase speed
-
-
- ###  v1.0.1:
-
- - #### Based on TheOtherUs - v1.3.4
-
- - #### Newly added:
-
-    - New roles added: Juggernaut and Doomsayer
-    - Synchronized cooldown at the start of game
-    - Integrating the "CrowdedMod" feature into the game
-    - Better map options
-    - Added ModTranslation, more convinent for further translation on mods with other languages
-    - Fungle: add with randomly born and more spots for Disperser
-    - Torch: Add an option to increase the rate of Vision
-    - Shifter: Add the option that can switch Neutral Roles
-    - Bait: Newly add the option of only being given to Crewmates
-    - Swooper: Now a Neutral role not an Imposter Role
-    - Jackal: Newly added with a option that Imposters can see if their teammates get turned to Sidekick
-    - Neutral: Their tasks are now fake so their tasks won't impact on Crewmates
-    - Amnisiac: Delete the limitation of fake Tasks (Amnisiac may do Tasks before acquire a role, but won't impact on Crewmates)
-
- - #### Bugs fixed
-
-    - Pursuer: Can't win with other teams except Imposters
-    - Fungle: Fix the Vision problem
-    - Torch: Fix the Vision problem
-    - Sheriff: Fix the problem that can't figure out who is the Deputy in the game
-    - Fix other bugs
-
-</details>
+Please refer to [Github releases](https://github.com/mxyx-club/TheOtherUs-Edited/releases) for details
 
 ## GameMode
 
 - Classic
 - Guesser Modifier
-- Hide 'n' Seek
-- PropHunt
-
+- Role Draft
 
 ## Roles
 
-|    Impostor    |    Neutral     |   Crewmate    |   Modifier    |
-| :------------: | :------------: | :-----------: | :-----------: |
-|   Morphling    |    Survivor    |   Vigilante   |     Lover     |
-|     Bomber     |    Amnisiac    |     Mayor     |   Assassin    |
-|    Poucher     |     Jester     |  Prosecutor   |   Disperser   |
-|     Mimic      |    Vulture     |    Sheriff    |  Specoality   |
-|  Camouflager   |     Lawyer     |    Deputy     | Last Impostor |
-|     Miner      |  Executioner   |   Engineer    |     Torch     |
-|     Eraser     |    Pursuer     |  Portalmaker  |  Sunglasses   |
-|    Vampire     |     Jackal     |   BodyGuard   |     Bait      |
-|    Cleaner     |    Sidekick    |     Medic     |   Aftermath   |
-|   Undertaker   | Pavlov's owner |   Detective   |    Bloody     |
-|    Escapist    | Pavlov's dogs  |    Veteran    | AntiTeleport  |
-|    Warlock     |    Swooper     |  Time Master  |  Tiebreaker   |
-|   Trickster    |    Arsonist    |    Swapper    |     Flash     |
-| Bounty Hunter  |    Werewolf    |    Hacker     |  Multitasker  |
-|   Terrorist    |    Pelican     |     Seer      |     Giant     |
-|  Blackmailer   |   Juggernaut   |    Jumper     |     Mini      |
-|     Witch      |   Doomsayer    |    Tracker    |      Vip      |
-|     Ninja      |     Akujo      |    Snitch     |  Indomitable  |
-|     Yo-Yo      |   PartTimer    |      Spy      |    Slueth     |
-|  Evil Trapper  |     Thief      | SecurityGuard |    Cursed     |
-| Butcher [Beta] |                |    Medium     |     Blind     |
-|    Gambler     |                |    Trapper    |    Watcher    |
-|   Grenadier    |                |    Prophet    |     Radar     |
-|    WolfLord    |                |  Info Sleuth  | Button Barry  |
-|                |                |   Redemptor   |   Chameleon   |
-|                |                |               |    Shifter    |
+|    Impostor    |      Neutral      |   Crewmate    |   Modifier    |   Ghost Role   |
+| :------------: | :---------------: | :-----------: | :-----------: | :------------: |
+|   Morphling    |     Survivor      |   Vigilante   |     Lover     | Ghost Engineer |
+|    WolfLord    |     Amnisiac      |     Mayor     |   Assassin    |    Specter     |
+|    Poucher     |     PartTimer     |  Prosecutor   |   Disperser   |                |
+|     Mimic      |    Band Leader    |    Sheriff    |  Specoality   |                |
+|  Camouflager   |      Jester       |    Deputy     |    Vortox     |                |
+|     Miner      |      Lawyer       |   Engineer    | Last Impostor |                |
+|     Eraser     |    Executioner    |  Portalmaker  |     Torch     |                |
+|    Vampire     |      Pursuer      |   BodyGuard   |  Sunglasses   |                |
+|    Cleaner     |      Vulture      |     Medic     |     Bait      |                |
+|     Bomber     |       Akujo       |   Detective   |   Aftermath   |                |
+|   Undertaker   |     Doomsayer     |   Redemptor   |    Bloody     |                |
+|    Escapist    |       Thief       |    Veteran    | AntiTeleport  |                |
+|    Warlock     |     Arsonist      |  Time Master  |  Tiebreaker   |                |
+|   Trickster    |     Werewolf      |    Swapper    |     Flash     |                |
+| Bounty Hunter  |      Pelican      |    Hacker     |  Multitasker  |                |
+|   Terrorist    |    Juggernaut     |     Seer      |     Giant     |                |
+|  Blackmailer   |      Swooper      |    Jumper     |     Mini      |                |
+|     Witch      |      Jackal       |    Tracker    |      Vip      |                |
+|     Ninja      |     Sidekick      |    Snitch     |  Indomitable  |                |
+|     Yo-Yo      |  Pavlov's owner   |      Spy      |    Slueth     |                |
+|  Evil Trapper  |   Pavlov's dogs   | SecurityGuard |    Cursed     |                |
+| Butcher [Beta] | Schrodinger's Cat |    Medium     |     Blind     |                |
+|    Gambler     |                   |    Trapper    |    Watcher    |                |
+|   Grenadier    |                   |    Prophet    |     Radar     |                |
+|                |                   |  Info Sleuth  | Button Barry  |                |
+|                |                   |   Balancer    |   Chameleon   |                |
+|                |                   |               |    Shifter    |                |
 
 ## Credits & Resources
-<p align="center">
 
 ### Team:
+
 mxyx    TianMengLucky    haoren    Imp11    FangKuaiYa
 
 ### Former TheOtherUs Team Members:
@@ -187,10 +78,7 @@ Thanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us
 
 Thanks to miniduikboot & GD for hosting modded servers (and so much more)
 
-
 ### Other Credits & Resources:
-
-</p>
 
 [OxygenFilter](https://github.com/NuclearPowered/Reactor.OxygenFilter) - For all the versions between v2.3.0 and v2.6.1, we were using the OxygenFilter for automatic deobfuscation\
 [Reactor](https://github.com/NuclearPowered/Reactor) - The framework used for all versions before v2.0.0\
@@ -216,20 +104,6 @@ Thanks to miniduikboot & GD for hosting modded servers (and so much more)
 [PropHunt](https://github.com/ugackMiner53/PropHunt) - Idea and core code from **ugackMiner53**\
 [Cursed Among Us](https://github.com/XiezibanWrite/Cursed-Among-Us-Continued) - Idea by **Kyle Smith**, core code by [XiezibanWrite](https://github.com/XiezibanWrite/Cursed-Among-Us-Continued) and [SuperNewRoles](https://github.com/SuperNewRoles/SuperNewRoles)
 
-## GCERROR
-If the error message "Fatal Error in GC - Collecting from unknown thread" stops you from playing the game, you can now disable the mod-updater, which causes this error.
-In order to do this, create a file called `noupdater.txt` in your modded Among Us folder.
+## License
 
-# License
-TheOtherRolesAU/TheOtherRoles is licensed under the
-
-[GNU General Public License v3.0](https://github.com/TheOtherRolesAU/TheOtherRoles/blob/main/LICENSE)
-
-Permissions of this strong copyleft license are conditioned on making available **complete source code of licensed works and modifications**, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
-
-# Bugs, suggestions and requests
-
-If you found any bugs, have an idea for a new role or any other request, join our [Discord server](https://discord.gg/77RkMJHWsM).
-
-# Copyedit
-Thanks for fixing our typos [jacktose](https://github.com/jacktose) ✌️
+TheOtherRolesAU/TheOtherRoles is licensed under the[GNU General Public License v3.0](https://github.com/TheOtherRolesAU/TheOtherRoles/blob/main/LICENSE)Permissions of this strong copyleft license are conditioned on making available **complete source code of licensed works and modifications**, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.

@@ -209,7 +209,7 @@ public static class LobbyRoleInfo
         }
     }
 
-    private static void AddInfoCard(RoleInfo roleInfo)
+    public static void AddInfoCard(RoleInfo roleInfo)
     {
         string roleSettingDescription = roleInfo.FullDescription != "" ? roleInfo.FullDescription : roleInfo.ShortDescription;
         string coloredHelp = cs(Color.white, roleSettingDescription);

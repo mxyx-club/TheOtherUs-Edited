@@ -360,11 +360,11 @@ public class KillTrap
                 {
                     if (!trap.Value.target.Data.IsDead)
                     {
-                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.TrapperKill, SendOption.Reliable, -1);
+                        MessageWriter writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.TrapperKill);
                         writer.Write(trap.Key);
                         writer.Write(PlayerControl.LocalPlayer.PlayerId);
                         writer.Write(trap.Value.target.PlayerId);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        writer.EndRPC();
                         RPCProcedure.trapperKill(trap.Key, PlayerControl.LocalPlayer.PlayerId, trap.Value.target.PlayerId);
                     }
                 }
@@ -417,7 +417,7 @@ public class KillTrap
             }
         })));
         EvilTrapper.isTrapKill = true;
-        if (PlayerControl.LocalPlayer == EvilTrapper.evilTrapper) checkMurderAttemptAndKill(trapper, target, true, false, true);
+        if (PlayerControl.LocalPlayer == EvilTrapper.evilTrapper) checkMurderAttemptAndKill(trapper, target, false, true);
     }
 
     public static void clearAllTraps()

@@ -1,11 +1,13 @@
+using TheOtherRoles.CustomCosmetics.CustomHats;
 using UnityEngine;
 
 namespace TheOtherRoles.Patches;
 
-[HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.FixedUpdate))]
-public static class PlayerPhysicsUpdatePatch
+[HarmonyPatch]
+public static class PlayerPhysicsPatches
 {
-    public static void Postfix(PlayerPhysics __instance)
+    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.FixedUpdate)), HarmonyPostfix]
+    public static void PlayerPhysicsUpdatePatch(PlayerPhysics __instance)
     {
         if (InGame && __instance && __instance.AmOwner && __instance.myPlayer.CanMove)
         {
@@ -26,15 +28,44 @@ public static class PlayerPhysicsUpdatePatch
             }
         }
     }
-}
 
-[HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.Awake))]
-public static class PlayerPhysiscs_Awake_Patch
-{
-    [HarmonyPostfix]
-    public static void Postfix(PlayerPhysics __instance)
+    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.Awake)), HarmonyPostfix]
+    public static void PlayerPhysicsAwakePatch(PlayerPhysics __instance)
     {
         if (!__instance.body) return;
         __instance.body.interpolation = RigidbodyInterpolation2D.Interpolate;
+    }
+
+    // This patch is for the custom hats
+    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.HandleAnimation)), HarmonyPostfix]
+    private static void HandleAnimationPostfix(PlayerPhysics __instance)
+    {
+        var currentAnimation = __instance.Animations.Animator.GetCurrentAnimation();
+        if (currentAnimation == __instance.Animations.group.ClimbUpAnim) return;
+        if (currentAnimation == __instance.Animations.group.ClimbDownAnim) return;
+        var hatParent = __instance.myPlayer.cosmetics.hat;
+        if (hatParent == null) return;
+        if (!hatParent.TryGetCached(out var viewData)) return;
+        var extend = hatParent.Hat.GetHatExtension();
+        if (extend == null) return;
+        if (extend.FlipImage != null)
+        {
+            if (__instance.FlipX)
+                hatParent.FrontLayer.sprite = extend.FlipImage;
+            else
+            {
+                hatParent.FrontLayer.sprite = viewData.MainImage;
+            }
+        }
+
+        if (extend.BackFlipImage != null)
+        {
+            if (__instance.FlipX)
+                hatParent.BackLayer.sprite = extend.BackFlipImage;
+            else
+            {
+                hatParent.BackLayer.sprite = viewData.BackImage;
+            }
+        }
     }
 }

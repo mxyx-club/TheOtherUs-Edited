@@ -296,7 +296,9 @@ public static class Guesser
                     continue;
                 case RoleId.Sidekick when !CustomOptionHolder.jackalCanCreateSidekick.GetBool():
                     continue;
-                case RoleId.Deputy when CustomOptionHolder.sheriffSpawnRate.GetSelection() == 0:
+                case RoleId.BandLeader:
+                    continue;
+                case RoleId.SchrodingersCat when !SchrodingersCat.IsGuessable:
                     continue;
                 case RoleId.Doomsayer when PlayerControl.LocalPlayer.PlayerId == Doomsayer.doomsayer?.PlayerId:
                     continue;
@@ -372,9 +374,8 @@ public static class Guesser
                         __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
                         Object.Destroy(container.gameObject);
 
-                        var murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                            (byte)CustomRPC.ShieldedMurderAttempt, SendOption.Reliable);
-                        AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
+                        var murderAttemptWriter = StartRPC(CustomRPC.ShieldedMurderAttempt);
+                        murderAttemptWriter.EndRPC();
                         RPCProcedure.shieldedMurderAttempt(0);
                         SoundEffectsManager.play("fail");
                         return;
@@ -385,9 +386,8 @@ public static class Guesser
                         __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
                         Object.Destroy(container.gameObject);
 
-                        var murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                            (byte)CustomRPC.ShieldedMurderAttempt, SendOption.Reliable);
-                        AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
+                        var murderAttemptWriter = StartRPC(CustomRPC.ShieldedMurderAttempt);
+                        murderAttemptWriter.EndRPC();
                         RPCProcedure.shieldedMurderAttempt(0);
                         SoundEffectsManager.play("fail");
                         seedGuessChat(PlayerControl.LocalPlayer, dyingTarget, (byte)roleInfo.roleId);

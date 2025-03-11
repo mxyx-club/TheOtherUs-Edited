@@ -783,10 +783,10 @@ internal class SurveillanceMinigamePatch
         isLightsOut =
             PlayerControl.LocalPlayer.myTasks.ToArray().Any(x => x.name.Contains("FixLightsTask")) ||
             Trickster.lightsOutTimer > 0;
-        var ignoreNightVision =
-            (CustomOptionHolder.camsNoNightVisionIfImpVision.GetBool() &&
-             hasImpVision(GameData.Instance.GetPlayerById(PlayerControl.LocalPlayer.PlayerId))) ||
+
+        var ignoreNightVision = (CustomOptionHolder.camsNoNightVisionIfImpVision.GetBool() && hasImpVision(PlayerControl.LocalPlayer.Data)) ||
             PlayerControl.LocalPlayer.Data.IsDead;
+
         var nightVisionEnabled = CustomOptionHolder.camsNightVision.GetBool();
 
         if (isLightsOut && !nightVisionIsActive && nightVisionEnabled && !ignoreNightVision)

@@ -142,8 +142,8 @@ public class GameStartManagerPatch
                 // Make starting info available to clients:
                 if (startingTimer <= 0 && __instance.startState == GameStartManager.StartingStates.Countdown)
                 {
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetGameStarting, SendOption.Reliable, -1);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    var writer = StartRPC(CustomRPC.SetGameStarting);
+                    writer.EndRPC();
                     RPCProcedure.setGameStarting();
 
                     // Activate Stop-Button
@@ -223,10 +223,9 @@ public class GameStartManagerPatch
 
                     void StopStartFunc()
                     {
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                            (byte)CustomRPC.StopStart, SendOption.Reliable, AmongUsClient.Instance.HostId);
+                        var writer = StartRPC(CustomRPC.StopStart, GetHostPlayer);
                         writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        writer.EndRPC();
                         copiedStartButton.Destroy();
                         __instance.GameStartText.text = string.Empty;
                         startingTimer = 0;

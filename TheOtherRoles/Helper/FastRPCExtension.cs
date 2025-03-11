@@ -85,6 +85,7 @@ public static class FastRPCExtension
         var target = SendTarget != null ? SendTarget.GetClientId() : -1;
         return AmongUsClient.Instance.StartRpcImmediately(NetId, RPCId, SendOption.Reliable, target);
     }
+
     public static void EndRPC(this MessageWriter Writer)
     {
         AmongUsClient.Instance.FinishRpcImmediately(Writer);

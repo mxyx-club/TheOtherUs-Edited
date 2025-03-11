@@ -96,7 +96,7 @@ public class Bomb
                     return;
                 };
 
-                checkMurderAttemptAndKill(Terrorist.terrorist, PlayerControl.LocalPlayer, false, false, true, true);
+                checkMurderAttemptAndKill(Terrorist.terrorist, PlayerControl.LocalPlayer, false, true, true);
 
                 var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);

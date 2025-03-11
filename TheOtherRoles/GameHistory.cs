@@ -14,7 +14,7 @@ public enum CustomDeathReason
     Guess,
     Shift,
     LawyerSuicide,
-    LoverSuicide, // not necessary
+    LoverSuicide,
     WitchExile,
     Bomb,
     LoveStolen,

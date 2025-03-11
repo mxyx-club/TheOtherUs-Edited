@@ -9,10 +9,8 @@ namespace TheOtherRoles;
 // Class to preload all audio/sound effects that are contained in the embedded resources.
 // The effects are made available through the soundEffects Dict / the get and the play methods.
 public static class SoundEffectsManager
-
 {
     private static Dictionary<string, AudioClip> soundEffects = new();
-    //private static List<AudioSource> currentSources = new();
 
     public static void Load()
     {
@@ -43,57 +41,36 @@ public static class SoundEffectsManager
     {
         // Convenience: As as SoundEffects are stored in the same folder, allow using just the name as well
         //if (!path.Contains(".")) path = "TheOtherRoles.Resources.SoundEffects." + path + ".raw";
-        if (!path.Contains("assets")) path = $"assets/audio/{path.ToLower()}.ogg";
+        path = "assets/audio/" + path.ToLower() + ".ogg";
         return soundEffects.TryGetValue(path, out var returnValue) ? returnValue : null;
     }
 
 
-    public static AudioSource play(string path, float volume = 0.7f, bool loop = false, bool musicChannel = false)
+    public static void play(string path, float volume = 0.7f, bool loop = false)
     {
-        if (!ModOption.enableSoundEffects) return null;
+        if (!ModOption.enableSoundEffects) return;
         AudioClip clipToPlay = get(path);
         stop(path);
         if (Constants.ShouldPlaySfx() && clipToPlay != null)
         {
-            AudioSource source = SoundManager.Instance.PlaySound(clipToPlay, false, volume, audioMixer: musicChannel ? SoundManager.Instance.MusicChannel : null);
-            //currentSources.Add(source);
+            AudioSource source = SoundManager.Instance.PlaySound(clipToPlay, false, volume);
             source.loop = loop;
-            return source;
         }
-        return null;
     }
     public static void playAtPosition(string path, Vector2 position, float maxDuration = 15f, float range = 5f, bool loop = false)
     {
         if (!ModOption.enableSoundEffects || !Constants.ShouldPlaySfx()) return;
         AudioClip clipToPlay = get(path);
-        Message("play at  position");
-        if (clipToPlay == null)
-        {
-            Message("clip is null");
-            return;
-        }
 
         AudioSource source = SoundManager.Instance.PlaySound(clipToPlay, false, 1f);
-        if (source == null)
-        {
-            Message("source is null");
-            return;
-        }
-        //currentSources.Add(source);
         source.loop = loop;
         HudManager.Instance.StartCoroutine(Effects.Lerp(maxDuration, new Action<float>((p) =>
         {
             if (source != null)
             {
-                if (p == 1 && source.isPlaying)
+                if (p == 1)
                 {
                     source.Stop();
-                    try
-                    {
-                        //currentSources.Remove(source);
-                        source.Destroy();
-                    }
-                    catch { }
                 }
                 float distance, volume;
                 distance = Vector2.Distance(position, PlayerControl.LocalPlayer.GetTruePosition());
@@ -111,13 +88,7 @@ public static class SoundEffectsManager
     {
         var soundToStop = get(path);
         if (soundToStop != null)
-        {
-            try
-            {
-                SoundManager.Instance?.StopSound(soundToStop);
-            }
-            catch (Exception e) { Warn($"Exception in stop sound: {e}"); }
-        }
+            if (Constants.ShouldPlaySfx()) SoundManager.Instance.StopSound(soundToStop);
     }
 
     public static void stopAll()
@@ -131,13 +102,5 @@ public static class SoundEffectsManager
             }
         }
         catch { }
-
-        /*try {
-            foreach (var source in currentSources) {
-                source?.Stop();
-            }
-            currentSources.Clear();
-        }
-        catch { }*/
     }
 }

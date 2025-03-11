@@ -199,7 +199,7 @@ internal class ExileControllerBeginPatch
             if (CustomOptionHolder.exiledShowTeamNum.GetBool())
             {
                 var Impostors = PlayerControl.AllPlayerControls.ToArray().Count(x => x.IsImpostor() && x.IsAlive() && x.PlayerId != player?.PlayerId);
-                var Neutrals = PlayerControl.AllPlayerControls.ToArray().Count(x => x.isNeutral() && x.IsAlive() && x.PlayerId != player?.PlayerId);
+                var Neutrals = PlayerControl.AllPlayerControls.ToArray().Count(x => x.IsNeutral() && x.IsAlive() && x.PlayerId != player?.PlayerId);
                 __instance.ImpostorText.text =
                     $"\n{cs(getTeamColor(RoleType.Impostor), "伪装者阵营剩余 ") + Impostors}" +
                     $" | {cs(getTeamColor(RoleType.Neutral), "中立阵营剩余 ") + Neutrals}";
@@ -261,7 +261,7 @@ internal class ExileControllerWrapUpPatch
         }
         // Mini exile lose condition
         else if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() &&
-                 !Mini.mini.Data.Role.IsImpostor && !Mini.mini.isNeutral())
+                 !Mini.mini.Data.Role.IsImpostor && !Mini.mini.IsNeutral())
         {
             Mini.triggerMiniLose = true;
             return;
@@ -388,7 +388,7 @@ internal class ExileControllerWrapUpPatch
         }
 
         // Deputy check Promotion, see if the sheriff still exists. The promotion will be after the meeting.
-        if (Sheriff.Deputy != null) Sheriff.deputyCheckPromotion(true);
+        Sheriff.deputyCheckPromotion(true);
 
         // Force Bounty Hunter Bounty Update
         if (BountyHunter.bountyHunter != null && BountyHunter.bountyHunter == PlayerControl.LocalPlayer)
@@ -496,7 +496,7 @@ internal class ExileControllerWrapUpPatch
 
         if (InfoSleuth.infoSleuth != null && InfoSleuth.target != null && InfoSleuth.infoSleuth == PlayerControl.LocalPlayer)
         {
-            var isNotCrew = (InfoSleuth.target.isNeutral() || InfoSleuth.target.IsImpostor()) ^ Vortox.Reversal;
+            var isNotCrew = (InfoSleuth.target.IsNeutral() || InfoSleuth.target.IsImpostor()) ^ Vortox.Reversal;
             var team = "的阵营是 " + getTeam(InfoSleuth.target);
             var info = InfoSleuth.infoType switch
             {
@@ -521,13 +521,13 @@ internal class ExileControllerWrapUpPatch
 
             static string getTeam(PlayerControl player)
             {
-                if (Vortox.Player.IsAlive())
+                if (Vortox.Player.IsAlive() && Vortox.Reversal)
                 {
-                    if (player.isCrew()) return rnd.Next(2) == 0 ? "NeutralRolesText".Translate() : "ImpostorRolesText".Translate();
-                    if (player.isNeutral() || player.IsImpostor()) return "CrewmateRolesText".Translate();
+                    if (player.IsCrew()) return rnd.Next(2) == 0 ? "NeutralRolesText".Translate() : "ImpostorRolesText".Translate();
+                    if (player.IsNeutral() || player.IsImpostor()) return "CrewmateRolesText".Translate();
                 }
 
-                return player.isNeutral() ? "NeutralRolesText".Translate()
+                return player.IsNeutral() ? "NeutralRolesText".Translate()
                     : player.IsImpostor() ? "ImpostorRolesText".Translate()
                     : "CrewmateRolesText".Translate();
             }

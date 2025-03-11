@@ -201,7 +201,7 @@ public static class Prosecutor
             if (prosecutor != null && ProsecuteThisMeeting)
             {
                 var exiled = __instance.exiled?.Object;
-                if (exiled != null && exiled == exiled.isCrew() && diesOnIncorrectPros)
+                if (exiled != null && exiled == exiled.IsCrew() && diesOnIncorrectPros)
                 {
                     prosecutor.Exiled();
                 }

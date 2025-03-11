@@ -113,9 +113,9 @@ public class CustomButton
             {
                 t.Update();
             }
-            catch (NullReferenceException)
+            catch (Exception e)
             {
-                Warn("NullReferenceException from HudUpdate().HasButton(), if theres only one warning its fine");
+                Warn($"NullReferenceException from HudUpdate().HasButton(), if theres only one warning its fine\n{e}");
             }
         }
     }
@@ -137,7 +137,7 @@ public class CustomButton
 
     public static void ResetAllCooldowns(float Time = -1)
     {
-        var time = Time == -1 ? ModOption.KillCooddown : Time;
+        var time = Time == -1 ? ModOption.KillCooldown : Time;
         foreach (var t in buttons)
         {
             var maxTime = Time == -1 ? t.MaxTimer : Time;
@@ -160,7 +160,7 @@ public class CustomButton
         if (p.IsDead()) return;
         if (p.Data.Role.IsImpostor)
         {
-            if (time == -1) time = ModOption.KillCooddown;
+            if (time == -1) time = ModOption.KillCooldown;
             p.killTimer = time;
         }
 

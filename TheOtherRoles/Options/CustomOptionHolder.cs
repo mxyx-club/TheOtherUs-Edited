@@ -275,6 +275,10 @@ public class CustomOptionHolder
     public static CustomOption witnessMeetingDie;
     public static CustomOption witnessSkipMeeting;
 
+    public static CustomOption bandLeaderSpawnRate;
+    public static CustomOption bandLeaderKillCooldown;
+    public static CustomOption bandLeaderCreateCooldown;
+
     public static CustomOption jackalSpawnRate;
     public static CustomOption jackalChanceSwoop;
     public static CustomOption jackalKillCooldown;
@@ -311,6 +315,8 @@ public class CustomOptionHolder
     public static CustomOption pelicanSpawnRate;
     public static CustomOption pelicanCooldown;
     public static CustomOption pelicanReduceCooldown;
+    public static CustomOption pelicanHasImpVision;
+    public static CustomOption pelicanCanUseVents;
 
     public static CustomOption swooperSpawnRate;
     public static CustomOption swooperKillCooldown;
@@ -363,6 +369,14 @@ public class CustomOptionHolder
     public static CustomOption doomsayerCanGuessNeutral;
     public static CustomOption doomsayerKillToWin;
 
+    public static CustomOption schrodingersCatSpawnRate;
+    public static CustomOption schrodingersCatCanKill;
+    public static CustomOption schrodingersCatCooldown;
+    public static CustomOption schrodingersCatHasImpVision;
+    public static CustomOption schrodingersCatTeamChanges;
+    public static CustomOption schrodingersCatMaxChangeCount;
+    public static CustomOption schrodingersCatIsGuessable;
+
     public static CustomOption akujoSpawnRate;
     public static CustomOption akujoTimeLimit;
     public static CustomOption akujoForceKeeps;
@@ -402,6 +416,8 @@ public class CustomOptionHolder
     public static CustomOption sheriffCanKillVulture;
     public static CustomOption sheriffCanKillDoomsayer;
     public static CustomOption sheriffCanKillThief;
+    public static CustomOption sheriffCanKillWitness;
+    public static CustomOption sheriffCanKillBandLeader;
 
     public static CustomOption deputySpawnRate;
     public static CustomOption deputyNumberOfHandcuffs;
@@ -671,6 +687,7 @@ public class CustomOptionHolder
     public static CustomOption modifierShifter;
     public static CustomOption modifierShiftNeutral;
     public static CustomOption modifierShiftALLNeutral;
+    public static CustomOption modifierShiftReload;
 
     // Guesser Gamemode 
     public static CustomOption guesserGamemodeCrewNumber;
@@ -985,9 +1002,13 @@ public class CustomOptionHolder
         witnessMeetingDie = Create(20303, Types.Neutral, "witnessMeetingDie", true, witnessSpawnRate);
         witnessSkipMeeting = Create(20304, Types.Neutral, "witnessSkipMeeting", true, witnessSpawnRate);
 
+        bandLeaderSpawnRate = Create(20320, Types.Neutral, cs(BandLeader.color, "BandLeader"), rates, null, true);
+        bandLeaderCreateCooldown = Create(20321, Types.Neutral, "bandLeaderCreateDistance", 5f, 2.5f, 30f, 0.5f, bandLeaderSpawnRate);
+        bandLeaderKillCooldown = Create(20322, Types.Neutral, "bandLeaderKillCooldown", 20f, 2.5f, 60f, 2.5f, bandLeaderSpawnRate);
+
         jackalSpawnRate = Create(20130, Types.Neutral, cs(Jackal.color, "Jackal"), rates, null, true);
         jackalChanceSwoop = Create(20142, Types.Neutral, cs(Swooper.color, "jackalChanceSwoop"), rates, jackalSpawnRate);
-        jackalKillCooldown = Create(20131, Types.Neutral, "jackalKillCooldown", 25f, 10f, 60f, 2.5f, jackalSpawnRate);
+        jackalKillCooldown = Create(20131, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, jackalSpawnRate);
         jackalSwooperCooldown = Create(20143, Types.Neutral, "jackalSwooperCooldown", 25f, 10f, 60f, 2.5f, jackalChanceSwoop);
         jackalSwooperDuration = Create(20144, Types.Neutral, "jackalSwooperDuration", 12.5f, 1f, 20f, 0.5f, jackalChanceSwoop);
         jackalCanUseVents = Create(20132, Types.Neutral, "jackalCanUseVents", true, jackalSpawnRate);
@@ -1003,7 +1024,7 @@ public class CustomOptionHolder
 
         pavlovsownerSpawnRate = Create(20250, Types.Neutral, cs(Pavlovsdogs.color, "Pavlovsowner"), rates, null, true);
         pavlovsownerAndJackalAsWell = Create(20251, Types.Neutral, "pavlovsownerAndJackalAsWell", true, pavlovsownerSpawnRate);
-        pavlovsownerKillCooldown = Create(20252, Types.Neutral, "pavlovsownerKillCooldown", 25f, 10f, 60f, 2.5f, pavlovsownerSpawnRate);
+        pavlovsownerKillCooldown = Create(20252, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, pavlovsownerSpawnRate);
         pavlovsownerCreateDogCooldown = Create(20253, Types.Neutral, "pavlovsownerCreateDogCooldown", 25f, 10f, 60f, 2.5f, pavlovsownerSpawnRate);
         pavlovsownerCreateDogNum = Create(20254, Types.Neutral, "pavlovsownerCreateDogNum", 3f, 1f, 15f, 1f, pavlovsownerSpawnRate);
         pavlovsownerCanUseSabo = Create(20255, Types.Neutral, "pavlovsownerCanUseSabo", true, pavlovsownerSpawnRate);
@@ -1022,9 +1043,11 @@ public class CustomOptionHolder
         pelicanSpawnRate = Create(20310, Types.Neutral, cs(Pelican.color, "Pelican"), rates, null, true);
         pelicanCooldown = Create(20311, Types.Neutral, "pelicanCooldown", 25f, 2.5f, 60f, 2.5f, pelicanSpawnRate);
         pelicanReduceCooldown = Create(20312, Types.Neutral, "pelicanReduceCooldown", 20f, 2.5f, 60f, 2.5f, pelicanSpawnRate);
+        pelicanCanUseVents = Create(20313, Types.Neutral, "canUseVents", true, pelicanSpawnRate);
+        pelicanHasImpVision = Create(20314, Types.Neutral, "hasImpVision", true, pelicanSpawnRate);
 
         swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
-        swooperKillCooldown = Create(20151, Types.Neutral, "swooperKillCooldown", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
+        swooperKillCooldown = Create(20151, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
         swooperCooldown = Create(20152, Types.Neutral, "swooperCooldown", 20f, 10f, 60f, 2.5f, swooperSpawnRate);
         swooperDuration = Create(20153, Types.Neutral, "swooperDuration", 15f, 1f, 20f, 0.5f, swooperSpawnRate);
         swooperSpeed = Create(20154, Types.Neutral, "swooperSpeed", 1.5f, 1f, 3f, 0.125f, swooperSpawnRate);
@@ -1037,7 +1060,7 @@ public class CustomOptionHolder
         werewolfKillCooldown = Create(20203, Types.Neutral, "werewolfKillCooldown", 3f, 1f, 60f, 0.5f, werewolfSpawnRate);
 
         juggernautSpawnRate = Create(20210, Types.Neutral, cs(Juggernaut.color, "Juggernaut"), rates, null, true);
-        juggernautCooldown = Create(20211, Types.Neutral, "juggernautCooldown", 25f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
+        juggernautCooldown = Create(20211, Types.Neutral, "killCooldown", 25f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
         juggernautHasImpVision = Create(20212, Types.Neutral, "hasImpVision", true, juggernautSpawnRate);
         juggernautCanUseVents = Create(20113, Types.Neutral, "canUseVents", true, juggernautSpawnRate);
         juggernautReducedkillEach = Create(20114, Types.Neutral, "juggernautReducedkillEach", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
@@ -1074,6 +1097,14 @@ public class CustomOptionHolder
         doomsayerCanGuessNeutral = Create(20225, Types.Neutral, $"{"doomsayerCanGuess".Translate()} {cs(Color.gray, "NeutralRolesText".Translate())}", true, doomsayerSpawnRate);
         doomsayerKillToWin = Create(20228, Types.Neutral, "doomsayerKillToWin", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
 
+        schrodingersCatSpawnRate = Create(20330, Types.Neutral, cs(SchrodingersCat.color, "SchrodingersCat"), rates, null, true);
+        schrodingersCatIsGuessable = Create(20331, Types.Neutral, "schrodingersCatIsGuessable", true, schrodingersCatSpawnRate);
+        schrodingersCatCanKill = Create(20332, Types.Neutral, "schrodingersCatCanKill", true, schrodingersCatSpawnRate);
+        schrodingersCatCooldown = Create(20333, Types.Neutral, "killCooldown", 20f, 2.5f, 60f, 2.5f, schrodingersCatCanKill);
+        schrodingersCatHasImpVision = Create(20334, Types.Neutral, "hasImpVision", true, schrodingersCatSpawnRate);
+        schrodingersCatTeamChanges = Create(20335, Types.Neutral, "schrodingersCatTeamChanges", true, schrodingersCatSpawnRate);
+        schrodingersCatMaxChangeCount = Create(20336, Types.Neutral, "schrodingersCatMaxChangeCount", 3, 1, 15, 1, schrodingersCatTeamChanges);
+
         akujoSpawnRate = Create(20231, Types.Neutral, cs(Akujo.color, "Akujo"), rates, null, true);
         akujoTimeLimit = Create(20232, Types.Neutral, "akujoTimeLimit", 450f, 120f, 1200f, 30f, akujoSpawnRate);
         akujoForceKeeps = Create(20236, Types.Neutral, "akujoForceKeeps", false, akujoSpawnRate);
@@ -1083,7 +1114,7 @@ public class CustomOptionHolder
         akujoHonmeiOptimizeWin = Create(20237, Types.Neutral, "akujoHonmeiOptimizeWin", true, akujoSpawnRate);
 
         thiefSpawnRate = Create(20240, Types.Neutral, cs(Thief.color, "Thief"), rates, null, true);
-        thiefCooldown = Create(20241, Types.Neutral, "thiefCooldown", 25f, 5f, 120f, 2.5f, thiefSpawnRate);
+        thiefCooldown = Create(20241, Types.Neutral, "killCooldown", 25f, 5f, 120f, 2.5f, thiefSpawnRate);
         thiefCanKillSheriff = Create(20242, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Sheriff.color, "Sheriff".Translate())}", true, thiefSpawnRate);
         thiefCanKillDeputy = Create(20246, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Sheriff.color, "Deputy".Translate())}", true, thiefSpawnRate);
         thiefCanKillVeteran = Create(20247, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Veteran.color, "Veteran".Translate())}", true, thiefSpawnRate);
@@ -1106,15 +1137,17 @@ public class CustomOptionHolder
         sheriffMisfireKills = Create(30143, Types.Crewmate, "sheriffMisfireKills",
             ["sheriffMisfireKills1", "sheriffMisfireKills2", "sheriffMisfireKills3"], sheriffSpawnRate);
         sheriffCanKillNeutrals = Create(30150, Types.Crewmate, "sheriffCanKillNeutrals", true, sheriffSpawnRate);
-        sheriffCanKillSurvivor = Create(30160, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Survivor.color, "Survivor".Translate())}", false, sheriffCanKillNeutrals);
         sheriffCanKillAmnesiac = Create(30153, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Amnisiac.color, "Amnisiac".Translate())}", false, sheriffCanKillNeutrals);
+        sheriffCanKillSurvivor = Create(30160, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Survivor.color, "Survivor".Translate())}", false, sheriffCanKillNeutrals);
         sheriffCanKillPursuer = Create(30158, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Pursuer.color, "Pursuer".Translate())}", true, sheriffCanKillNeutrals);
         sheriffCanKillPartTimer = Create(30161, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(PartTimer.color, "PartTimer".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillBandLeader = Create(30162, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(BandLeader.color, "BandLeader".Translate())}", true, sheriffCanKillNeutrals);
         sheriffCanKillJester = Create(30151, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Jester.color, "Jester".Translate())}", true, sheriffCanKillNeutrals);
         sheriffCanKillLawyer = Create(30156, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Lawyer.color, "Lawyer".Translate())}", true, sheriffCanKillNeutrals);
         sheriffCanKillExecutioner = Create(30152, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Executioner.color, "Executioner".Translate())}", true, sheriffCanKillNeutrals);
         sheriffCanKillVulture = Create(30155, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Vulture.color, "Vulture".Translate())}", true, sheriffCanKillNeutrals);
         sheriffCanKillDoomsayer = Create(30159, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Doomsayer.color, "Doomsayer".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillWitness = Create(30154, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Witness.color, "Witness".Translate())}", true, sheriffCanKillNeutrals);
         sheriffCanKillThief = Create(30157, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Thief.color, "Thief".Translate())}", true, sheriffCanKillNeutrals);
 
         deputySpawnRate = Create(30170, Types.Crewmate, cs(Sheriff.color, "Deputy"), rates, null);
@@ -1379,7 +1412,7 @@ public class CustomOptionHolder
         modifierSlueth = Create(40290, Types.Modifier, cs(Color.yellow, "Slueth"), rates, null, true);
 
         modifierCursed = Create(40300, Types.Modifier, cs(Color.yellow, "Cursed"), rates, null, true);
-        modifierAutoJoin = Create(40302, Types.Modifier, cs(Color.yellow, "modifierAutoJoin"), true, modifierCursed);
+        modifierAutoJoin = Create(40302, Types.Modifier, "modifierAutoJoin", true, modifierCursed);
         modifierHideCursed = Create(40301, Types.Modifier, "modifierShowCursed", false, modifierCursed);
 
         modifierVip = Create(40310, Types.Modifier, cs(Color.yellow, "Vip"), rates, null, true);
@@ -1395,6 +1428,7 @@ public class CustomOptionHolder
         modifierShifter = Create(40340, Types.Modifier, cs(Color.yellow, "Shifter"), rates, null, true);
         modifierShiftNeutral = Create(40341, Types.Modifier, "modifierShiftNeutral", false, modifierShifter);
         modifierShiftALLNeutral = Create(40342, Types.Modifier, "modifierShiftALLNeutral", false, modifierShiftNeutral);
+        modifierShiftReload = Create(40343, Types.Modifier, "modifierShiftReload", true, modifierShifter);
 
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
 

@@ -1,10 +1,9 @@
-﻿namespace TheOtherRoles.CustomCosmetics.CustomHats.Patches;
+namespace TheOtherRoles.CustomCosmetics.CustomHats.Patches;
 
 [HarmonyPatch(typeof(CosmeticsCache))]
 internal static class CosmeticsCachePatches
 {
-    [HarmonyPatch(nameof(CosmeticsCache.GetHat))]
-    [HarmonyPrefix]
+    [HarmonyPatch(nameof(CosmeticsCache.GetHat)), HarmonyPrefix]
     private static bool GetHatPrefix(string id, ref HatViewData __result)
     {
         Message($"trying to load hat {id} from cosmetics cache");

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using AmongUs.GameOptions;
-using Hazel;
 using InnerNet;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.Buttons;
@@ -61,6 +60,7 @@ public static class Helpers
     public static bool isFungle => GameOptionsManager.Instance.CurrentGameOptions.MapId == 5;
 
     public static string previousEndGameSummary = "";
+    public static PlayerControl GetHostPlayer => GameData.Instance.GetHost().Object;
     public static System.Random rnd => new(Guid.NewGuid().GetHashCode());
 
     public static bool isUsingTransportation(this PlayerControl pc) => pc.inMovingPlat || pc.onLadder;
@@ -81,6 +81,7 @@ public static class Helpers
                player == Akujo.akujo ||
                player == Pelican.Player ||
                player == Specter.Player ||
+               player == BandLeader.Player ||
                player == Swooper.swooper ||
                player == Lawyer.lawyer ||
                player == Executioner.executioner ||
@@ -128,27 +129,26 @@ public static class Helpers
                || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
                || (Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision)
                || (Swooper.swooper != null && Swooper.swooper.PlayerId == player.PlayerId && Swooper.hasImpVision)
+               || (Pelican.Player != null && Pelican.Player.PlayerId == player.PlayerId && Pelican.hasImpVision)
+               || (SchrodingersCat.Player != null && SchrodingersCat.Player.PlayerId == player.PlayerId && SchrodingersCat.hasImpVision)
                || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId && Werewolf.hasImpostorVision);
     }
 
     public static void handleTrapperTrapOnBodyReport()
     {
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-            (byte)CustomRPC.TrapperMeetingFlag, SendOption.Reliable, -1);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.TrapperMeetingFlag);
+        writer.EndRPC();
         RPCProcedure.trapperMeetingFlag();
     }
 
     /// <summary>
     /// 管道技能相关
     /// </summary>
-    /// <param name="player"></param>
-    /// <returns></returns>
     public static bool roleCanUseVents(this PlayerControl player)
     {
         var roleCouldUse = false;
-        if (player.inVent) //test
-            return true;
+        if (player.inVent) return true;
+
         if (Engineer.engineer != null && Engineer.engineer == player)
         {
             roleCouldUse = true;
@@ -197,6 +197,10 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
+        else if (Pelican.Player != null && Juggernaut.juggernaut == player && Juggernaut.canUseVents)
+        {
+            roleCouldUse = true;
+        }
         else if (player.Data?.Role != null && player.Data.Role.CanVent)
         {
             roleCouldUse = true;
@@ -222,25 +226,24 @@ public static class Helpers
         var shouldVetKill = Veteran.veteran == target && Veteran.alertActive;
         if (shouldVetKill)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.VeteranKill, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.VeteranKill);
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             RPCProcedure.veteranKill(PlayerControl.LocalPlayer.PlayerId);
         }
 
         return shouldVetKill;
     }
 
-    public static bool isNeutral(this PlayerControl player)
+    public static bool IsNeutral(this PlayerControl player)
     {
-        var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
+        var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false, false).FirstOrDefault();
         return roleInfo != null && roleInfo.roleType == RoleType.Neutral;
     }
 
     public static bool isKillerNeutral(PlayerControl player)
     {
-        return isNeutral(player) && (
+        return IsNeutral(player) && (
                 player == Juggernaut.juggernaut ||
                 player == Werewolf.werewolf ||
                 player == Swooper.swooper ||
@@ -249,26 +252,33 @@ public static class Helpers
                 player == Jackal.Sidekick ||
                 player == Pavlovsdogs.pavlovsowner ||
                 Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) ||
-                Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId));
+                Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId)
+                );
     }
 
     public static bool isEvilNeutral(PlayerControl player)
     {
-        return isNeutral(player) &&
-                player != PartTimer.partTimer &&
-                !Amnisiac.Player.Contains(player) &&
-                !Pursuer.Player.Contains(player) &&
-                !Survivor.Player.Contains(player);
+        return IsNeutral(player) && (
+                player == Jester.jester ||
+                player == Vulture.vulture ||
+                player == Lawyer.lawyer ||
+                player == Executioner.executioner ||
+                player == Witness.Player ||
+                player == Doomsayer.doomsayer ||
+                player == Akujo.akujo ||
+                player == Thief.thief ||
+                (player == SchrodingersCat.Player && SchrodingersCat.IsEvil)
+                );
     }
 
-    public static bool isKiller(this PlayerControl player)
+    public static bool IsKiller(this PlayerControl player)
     {
         return player != null && (player.IsImpostor() || isKillerNeutral(player));
     }
 
-    public static bool isCrew(this PlayerControl player)
+    public static bool IsCrew(this PlayerControl player)
     {
-        return player != null && !player.Data.Role.IsImpostor && !isNeutral(player);
+        return player != null && !player.Data.Role.IsImpostor && !IsNeutral(player);
     }
 
     public static bool IsImpostor(this PlayerControl player, bool AndSpy = false)
@@ -280,9 +290,9 @@ public static class Helpers
     public static string teamString(PlayerControl player)
     {
         var killerTeam = "";
-        if (isNeutral(player)) killerTeam = "NeutralRolesText".Translate();
+        if (IsNeutral(player)) killerTeam = "NeutralRolesText".Translate();
         else if (player.IsImpostor()) killerTeam = "ImpostorRolesText".Translate();
-        else if (player.isCrew()) killerTeam = "CrewmateRolesText".Translate();
+        else if (player.IsCrew()) killerTeam = "CrewmateRolesText".Translate();
         return killerTeam;
     }
 
@@ -421,10 +431,9 @@ public static class Helpers
 
     public static void turnToImpostorRPC(PlayerControl player)
     {
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-            (byte)CustomRPC.TurnToImpostor, SendOption.Reliable);
+        var writer = StartRPC(CustomRPC.TurnToImpostor);
         writer.Write(player.PlayerId);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        writer.EndRPC();
         RPCProcedure.turnToImpostor(player.PlayerId);
     }
 
@@ -602,15 +611,6 @@ public static class Helpers
         return count;
     }
 
-    public static bool MContains<T>(this List<T> source, T item) where T : class
-    {
-        if (source == null || item == null)
-            return false;
-        foreach (var i in source)
-            if (i == item) return true;
-        return false;
-    }
-
     public static Color HexToColor(string hex)
     {
         _ = ColorUtility.TryParseHtmlString("#" + hex, out var color);
@@ -655,8 +655,7 @@ public static class Helpers
     {
         if (id == null) return null;
         foreach (PlayerControl player in PlayerControl.AllPlayerControls.ToList())
-            if (player.PlayerId == id)
-                return player;
+            if (player.PlayerId == id) return player;
         return null;
     }
 
@@ -674,24 +673,22 @@ public static class Helpers
     public static void handleVampireBiteOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, true, false);
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-            (byte)CustomRPC.VampireSetBitten, SendOption.Reliable);
+        checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, false);
+        var writer = StartRPC(CustomRPC.VampireSetBitten);
         writer.Write(byte.MaxValue);
         writer.Write(byte.MaxValue);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        writer.EndRPC();
         RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
     }
 
     public static void handleBomberExplodeOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBombPlayer, true, false);
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-            (byte)CustomRPC.GiveBomb, SendOption.Reliable);
+        checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBombPlayer, false);
+        var writer = StartRPC(CustomRPC.GiveBomb);
         writer.Write(byte.MaxValue);
         writer.Write(false);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        writer.EndRPC();
         RPCProcedure.giveBomb(byte.MaxValue);
     }
 
@@ -799,11 +796,10 @@ public static class Helpers
 
     public static void setInvisable(PlayerControl player)
     {
-        var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-            (byte)CustomRPC.SetInvisibleGen, SendOption.Reliable);
+        var invisibleWriter = StartRPC(CustomRPC.SetInvisibleGen);
         invisibleWriter.Write(player.PlayerId);
         invisibleWriter.Write(byte.MinValue);
-        AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
+        invisibleWriter.EndRPC();
         RPCProcedure.setInvisibleGen(player.PlayerId, byte.MinValue);
     }
 
@@ -854,8 +850,7 @@ public static class Helpers
 
     public static void shareGameVersion()
     {
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionHandshake,
-            SendOption.Reliable, -1);
+        var writer = StartRPC(CustomRPC.VersionHandshake);
         writer.Write((byte)Main.Version.Major);
         writer.Write((byte)Main.Version.Minor);
         writer.Write((byte)Main.Version.Build);
@@ -863,13 +858,8 @@ public static class Helpers
         writer.WritePacked(AmongUsClient.Instance.ClientId);
         writer.Write((byte)(Main.Version.Revision < 0 ? 0xFF : Main.Version.Revision));
         writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        writer.EndRPC();
         RPCProcedure.versionHandshake(Main.Version.Major, Main.Version.Minor, Main.Version.Build, Main.Version.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
-    }
-
-    public static void MurderPlayer(this PlayerControl player, PlayerControl target)
-    {
-        player.MurderPlayer(target, MurderResultFlags.Succeeded);
     }
 
     public static void RpcRepairSystem(this ShipStatus shipStatus, SystemTypes systemType, byte amount)
@@ -1117,8 +1107,7 @@ public static class Helpers
         return playerControlList;
     }
 
-    public static MurderAttemptResult checkMuderAttempt(PlayerControl killer, PlayerControl target,
-        bool blockRewind = false, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
+    public static MurderAttemptResult checkMuderAttempt(PlayerControl killer, PlayerControl target, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
     {
         var targetRole = RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault();
 
@@ -1138,11 +1127,10 @@ public static class Helpers
         // Handle blank shot
         if (!ignoreBlank && Pursuer.blankedList.Any(x => x.PlayerId == killer.PlayerId))
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.PursuerSetBlanked);
             writer.Write(killer.PlayerId);
             writer.Write((byte)0);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             RPCProcedure.pursuerSetBlanked(killer.PlayerId, 0);
 
             return MurderAttemptResult.BlankKill;
@@ -1154,10 +1142,9 @@ public static class Helpers
         {
             if (Medic.shielded != null && Medic.shielded == target)
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                    (byte)CustomRPC.ShieldedMurderAttempt, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.ShieldedMurderAttempt);
                 writer.Write(target.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
             }
 
@@ -1170,10 +1157,9 @@ public static class Helpers
         {
             if (Medic.shielded != null && Medic.shielded == target)
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                    (byte)CustomRPC.ShieldedMurderAttempt, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.ShieldedMurderAttempt);
                 writer.Write(target.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
             }
 
@@ -1183,11 +1169,10 @@ public static class Helpers
         // Block impostor shielded kill
         if (!Medic.unbreakableShield && Medic.shielded != null && Medic.shielded == target)
         {
-            var write = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
+            var write = StartRPC(CustomRPC.PursuerSetBlanked);
             write.Write(killer.PlayerId);
             write.Write((byte)0);
-            AmongUsClient.Instance.FinishRpcImmediately(write);
+            write.EndRPC();
             RPCProcedure.pursuerSetBlanked(killer.PlayerId, 0);
             Medic.shielded = null;
             return MurderAttemptResult.BlankKill;
@@ -1195,10 +1180,9 @@ public static class Helpers
 
         if (Medic.shielded != null && Medic.shielded == target)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.ShieldedMurderAttempt,
-                SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.ShieldedMurderAttempt);
             writer.Write(killer.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
             SoundEffectsManager.play("fail");
             return MurderAttemptResult.BlankKill;
@@ -1209,12 +1193,11 @@ public static class Helpers
         // Block Time Master with time shield kill
         if (TimeMaster.shieldActive && TimeMaster.timeMaster != null && TimeMaster.timeMaster == target)
         {
-            if (!blockRewind)
+            if (!InMeeting)
             {
                 // Only rewind the attempt was not called because a meeting startet 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                    (byte)CustomRPC.TimeMasterRewindTime, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var writer = StartRPC(CustomRPC.TimeMasterRewindTime);
+                writer.EndRPC();
                 RPCProcedure.timeMasterRewindTime();
             }
 
@@ -1230,11 +1213,10 @@ public static class Helpers
 
         if (Cursed.cursed != null && Cursed.cursed == target && killer.Data.Role.IsImpostor)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.PursuerSetBlanked);
             writer.Write(killer.PlayerId);
             writer.Write((byte)0);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             RPCProcedure.pursuerSetBlanked(killer.PlayerId, 0);
 
             turnToImpostorRPC(target);
@@ -1249,8 +1231,7 @@ public static class Helpers
             return MurderAttemptResult.SuppressKill;
         }
 
-
-        if (target.isUsingTransportation() && !blockRewind && killer == Vampire.vampire)
+        if (target.isUsingTransportation() && !InMeeting && killer == Vampire.vampire)
             return MurderAttemptResult.DelayVampireKill;
         if (target.isUsingTransportation())
             return MurderAttemptResult.SuppressKill;
@@ -1259,32 +1240,29 @@ public static class Helpers
 
     public static void MurderPlayer(PlayerControl killer, PlayerControl target, bool showAnimation)
     {
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-            (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
+        var writer = StartRPC(CustomRPC.UncheckedMurderPlayer);
         writer.Write(killer.PlayerId);
         writer.Write(target.PlayerId);
         writer.Write(showAnimation ? byte.MaxValue : 0);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        writer.EndRPC();
         RPCProcedure.uncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation ? byte.MaxValue : (byte)0);
     }
 
-    public static MurderAttemptResult checkMurderAttemptAndKill(PlayerControl killer, PlayerControl target,
-        bool isMeetingStart = false, bool showAnimation = true, bool ignoreBlank = false,
+    public static MurderAttemptResult checkMurderAttemptAndKill(PlayerControl killer, PlayerControl target, bool showAnimation = true, bool ignoreBlank = false,
         bool ignoreIfKillerIsDead = false)
     {
         // The local player checks for the validity of the kill and performs it afterwards (different to vanilla, where the host performs all the checks)
         // The kill attempt will be shared using a custom RPC, hence combining modded and unmodded versions is impossible
-        var murder = checkMuderAttempt(killer, target, isMeetingStart, ignoreBlank, ignoreIfKillerIsDead);
+        var murder = checkMuderAttempt(killer, target, ignoreBlank, ignoreIfKillerIsDead);
 
         if (murder == MurderAttemptResult.PerformKill)
         {
             if (killer == Poucher.poucher) Poucher.killed.Add(target);
             if (Mimic.mimic != null && killer == Mimic.mimic && !Mimic.hasMimic)
             {
-                var writerMimic = AmongUsClient.Instance.StartRpcImmediately(
-                    PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.MimicMimicRole, SendOption.Reliable);
+                var writerMimic = StartRPC(CustomRPC.MimicMimicRole);
                 writerMimic.Write(target.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writerMimic);
+                writerMimic.EndRPC();
                 Mimic.MimicRole(target.PlayerId);
             }
 
@@ -1296,11 +1274,10 @@ public static class Helpers
             {
                 if (!target.isUsingTransportation() && Vampire.bitten != null)
                 {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.VampireSetBitten, SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.VampireSetBitten);
                     writer.Write(byte.MaxValue);
                     writer.Write(byte.MaxValue);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                     RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
                     MurderPlayer(killer, target, showAnimation);
                 }
@@ -1310,30 +1287,27 @@ public static class Helpers
         if (murder == MurderAttemptResult.BodyGuardKill)
         {
             // Kill the Killer
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.UncheckedMurderPlayer);
             writer.Write(BodyGuard.bodyguard.PlayerId);
             writer.Write(killer.PlayerId);
             writer.Write(showAnimation ? byte.MaxValue : 0);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             RPCProcedure.uncheckedMurderPlayer(BodyGuard.bodyguard.PlayerId, killer.PlayerId, 0);
 
             // Kill the BodyGuard
-            var writer2 = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
+            var writer2 = StartRPC(CustomRPC.UncheckedMurderPlayer);
             writer2.Write(killer.PlayerId);
             writer2.Write(BodyGuard.bodyguard.PlayerId);
             writer2.Write(showAnimation ? byte.MaxValue : 0);
-            AmongUsClient.Instance.FinishRpcImmediately(writer2);
+            writer2.EndRPC();
             RPCProcedure.uncheckedMurderPlayer(BodyGuard.bodyguard.PlayerId, BodyGuard.bodyguard.PlayerId, 0);
 
-            var writer3 = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.ShowBodyGuardFlash, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(writer3);
+            var writer3 = StartRPC(CustomRPC.ShowBodyGuardFlash);
+            writer3.EndRPC();
             RPCProcedure.showBodyGuardFlash();
         }
 
-        if (murder == MurderAttemptResult.ReverseKill) checkMurderAttemptAndKill(target, killer, isMeetingStart);
+        if (murder == MurderAttemptResult.ReverseKill) checkMurderAttemptAndKill(target, killer);
 
         return murder;
     }
@@ -1348,15 +1322,8 @@ public static class Helpers
 
     public static bool isRoleAlive(PlayerControl player)
     {
-        if (Mimic.mimic != null)
-            if (player == Mimic.mimic)
-                return false;
-        return player != null && IsAlive(player);
-    }
-
-    public static bool isPlayerLover(PlayerControl player)
-    {
-        return !(player == null) && (player == Lovers.lover1 || player == Lovers.lover2);
+        if (Mimic.mimic != null && player == Mimic.mimic) return false;
+        return player != null && player.IsAlive();
     }
 
     public static PlayerControl getPartner(this PlayerControl player)
@@ -1400,7 +1367,48 @@ public static class Helpers
 
     public static object TryCast(this Il2CppObjectBase self, Type type)
     {
-        return AccessTools.Method(self.GetType(), nameof(Il2CppObjectBase.TryCast)).MakeGenericMethod(type)
-            .Invoke(self, Array.Empty<object>());
+        return AccessTools.Method(self.GetType(), nameof(Il2CppObjectBase.TryCast)).MakeGenericMethod(type).Invoke(self, Array.Empty<object>());
     }
+
+    /*public static void ModMurderPlayer(this PlayerControl player, PlayerControl target, bool resetKillCd = true)
+    {
+        player.isKilling = false;
+        if (!target) return;
+        Message(string.Format("{0} trying to murder {1}", player.PlayerId, target.PlayerId), null);
+        GameData.PlayerInfo data = target.Data;
+        if (player.AmOwner)
+        {
+            StatsManager.Instance.IncrementStat(StringNames.StatsImpostorKills);
+
+            if (player.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
+            {
+                StatsManager.Instance.IncrementStat(StringNames.StatsShapeshifterShiftedKills);
+            }
+            if (Constants.ShouldPlaySfx())
+            {
+                SoundManager.Instance.PlaySound(player.KillSfx, false, 0.8f, null);
+            }
+            if (resetKillCd) player.SetKillTimer(ModOption.KillCooldown);
+        }
+        DestroyableSingleton<UnityTelemetry>.Instance.WriteMurder();
+        target.gameObject.layer = LayerMask.NameToLayer("Ghost");
+        if (target.AmOwner)
+        {
+            StatsManager.Instance.IncrementStat(StringNames.StatsTimesMurdered);
+            if (Minigame.Instance)
+            {
+                try
+                {
+                    Minigame.Instance.Close();
+                }
+                catch { }
+            }
+            DestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(player.Data, data);
+            target.cosmetics.SetNameMask(false);
+            target.RpcSetScanner(false);
+        }
+
+        player.MyPhysics.StartCoroutine(player.KillAnimations.Random().CoPerformKill(player, target));
+        Message(string.Format("{0} succeeded in murdering {1}", player.PlayerId, target.PlayerId), null);
+    }*/
 }

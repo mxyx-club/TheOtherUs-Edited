@@ -101,6 +101,11 @@ internal static class HudManagerStartPatch
     public static CustomButton redemptorReviveButton;
     public static CustomButton redemptorRevelationButton;
     public static CustomButton redemptorPrayerButton;
+    public static CustomButton bandLeaderKeyboardistButton;
+    public static CustomButton bandLeaderBassistButton;
+    public static CustomButton bandLeaderDrummerButton;
+    public static CustomButton bandLeaderKillButton;
+    public static CustomButton schrodingersCatKillButton;
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
@@ -121,6 +126,9 @@ internal static class HudManagerStartPatch
     public static TMP_Text PavlovsdogCreateNumText;
     public static TMP_Text akujoTimeRemainingText;
     public static TMP_Text akujoBackupLeftText;
+    public static TMP_Text bandLeaderKeyboardistText;
+    public static TMP_Text bandLeaderBassistText;
+    public static TMP_Text bandLeaderDrummerText;
 
     public static void setCustomButtonCooldowns()
     {
@@ -210,14 +218,17 @@ internal static class HudManagerStartPatch
         doomsayerButton.MaxTimer = Doomsayer.cooldown;
         akujoHonmeiButton.MaxTimer = 0f;
         akujoBackupButton.MaxTimer = 0f;
-
         pavlovsdogsKillButton.MaxTimer = Pavlovsdogs.cooldown;
         pavlovsownerCreateDogButton.MaxTimer = Pavlovsdogs.createDogCooldown;
-
         mayorMeetingButton.MaxTimer = 0f;
         trapperButton.MaxTimer = Trapper.cooldown;
         terroristButton.MaxTimer = Terrorist.bombCooldown;
         defuseButton.MaxTimer = defuseButton.Timer = 0f;
+        bandLeaderKeyboardistButton.MaxTimer = 0f;
+        bandLeaderBassistButton.MaxTimer = 0f;
+        bandLeaderDrummerButton.MaxTimer = 0f;
+        bandLeaderKillButton.MaxTimer = BandLeader.killCooldown;
+        schrodingersCatKillButton.MaxTimer = SchrodingersCat.Cooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         timeMasterShieldButton.EffectDuration = TimeMaster.shieldDuration;
@@ -255,7 +266,7 @@ internal static class HudManagerStartPatch
         SoundEffectsManager.stop("timemasterShield");
     }
 
-    public static PlayerControl SetTarget(List<PlayerControl> untarget = null, bool onlyCrewmates = false,
+    public static PlayerControl SetTarget(IEnumerable<PlayerControl> untarget = null, bool onlyCrewmates = false,
         bool targetInVents = false, float distances = 0f, PlayerControl targetingPlayer = null)
     {
         return PlayerControlFixedUpdatePatch.SetTarget(onlyCrewmates, targetInVents, untarget, KillDistances: distances, targetingPlayer: targetingPlayer);
@@ -305,10 +316,10 @@ internal static class HudManagerStartPatch
                     // The new buttons are the only non-handcuffed buttons now!
                     buttons[i].isHandcuffed = true;
                 }
-                catch (NullReferenceException)
+                catch (Exception e)
                 {
                     // Note: idk what this is good for, but i copied it from above /gendelo
-                    Warn("[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
+                    Warn($"NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine\n{e.Message}");
                 }
             }
 
@@ -402,8 +413,7 @@ internal static class HudManagerStartPatch
         roleSummaryButton = new CustomButton(
             () =>
             {
-                if (LobbyRoleInfo.RolesSummaryUI == null)
-                    LobbyRoleInfo.RoleSummaryOnClick();
+                if (LobbyRoleInfo.RolesSummaryUI == null) LobbyRoleInfo.RoleSummaryOnClick();
                 else
                 {
                     Object.Destroy(LobbyRoleInfo.RolesSummaryUI);
@@ -1578,8 +1588,7 @@ internal static class HudManagerStartPatch
                                 if (p == 1f)
                                 {
                                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                                    var res = checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten,
-                                        showAnimation: false);
+                                    var res = checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, showAnimation: false);
                                     if (res == MurderAttemptResult.PerformKill)
                                     {
                                         var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
@@ -2061,10 +2070,10 @@ internal static class HudManagerStartPatch
         swooperSwoopButton = new CustomButton(
             () =>
             { /* On Use */
-                var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetSwoop, SendOption.Reliable, -1);
+                var invisibleWriter = StartRPC(CustomRPC.SetSwoop);
                 invisibleWriter.Write(Swooper.swooper.PlayerId);
                 invisibleWriter.Write(byte.MinValue);
-                AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
+                invisibleWriter.EndRPC();
                 RPCProcedure.setSwoop(Swooper.swooper.PlayerId, byte.MinValue);
             },
             () => { /* Can See */ return Swooper.swooper != null && Swooper.swooper == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
@@ -2312,19 +2321,17 @@ internal static class HudManagerStartPatch
                 /* On Use */
                 if (!Bomber.canGiveToBomber && Bomber.currentBombTarget == Bomber.bomber)
                 {
-                    var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
+                    var killWriter = StartRPC(CustomRPC.UncheckedMurderPlayer);
                     killWriter.Write(Bomber.bomber.Data.PlayerId);
                     killWriter.Write(Bomber.hasBombPlayer.Data.PlayerId);
                     killWriter.Write(0);
-                    AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                    killWriter.EndRPC();
                     RPCProcedure.uncheckedMurderPlayer(Bomber.bomber.Data.PlayerId, Bomber.hasBombPlayer.Data.PlayerId, 0);
 
-                    var clearWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.GiveBomb, SendOption.Reliable);
+                    var clearWriter = StartRPC(CustomRPC.GiveBomb);
                     clearWriter.Write(byte.MaxValue);
                     clearWriter.Write(false);
-                    AmongUsClient.Instance.FinishRpcImmediately(clearWriter);
+                    clearWriter.EndRPC();
                     RPCProcedure.giveBomb(byte.MaxValue);
                     return;
                 }
@@ -2332,21 +2339,19 @@ internal static class HudManagerStartPatch
                 if (checkAndDoVetKill(Bomber.currentBombTarget)) return;
                 if (Bomber.hotPotatoMode)
                 {
-                    var bombWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.GiveBomb, SendOption.Reliable);
+                    var bombWriter = StartRPC(CustomRPC.GiveBomb);
                     bombWriter.Write(Bomber.currentBombTarget.PlayerId);
                     bombWriter.Write(true);
-                    AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
+                    bombWriter.EndRPC();
                     RPCProcedure.giveBomb(Bomber.currentBombTarget.PlayerId, true);
                 }
                 else
                 {
                     if (checkMurderAttemptAndKill(Bomber.hasBombPlayer, Bomber.currentBombTarget) == MurderAttemptResult.SuppressKill) return;
-                    var bombWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.GiveBomb, SendOption.Reliable);
+                    var bombWriter = StartRPC(CustomRPC.GiveBomb);
                     bombWriter.Write(byte.MaxValue);
                     bombWriter.Write(false);
-                    AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
+                    bombWriter.EndRPC();
                     RPCProcedure.giveBomb(byte.MaxValue);
                 }
             },
@@ -2862,12 +2867,11 @@ internal static class HudManagerStartPatch
                                         Constants.ShipAndObjectsMask, false) && !Undertaker.isDraging)
                                 {
                                     var playerInfo = GameData.Instance.GetPlayerById(deadBody.ParentId);
-                                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DragBody,
-                                        SendOption.Reliable);
+                                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.DragBody);
                                     writer.Write(playerInfo.PlayerId);
-                                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                                    RPCProcedure.dragBody(playerInfo.PlayerId);
+                                    writer.Write(true);
+                                    writer.EndRPC();
+                                    RPCProcedure.dragBody(playerInfo.PlayerId, true);
                                     Undertaker.deadBodyDraged = deadBody;
                                     break;
                                 }
@@ -2876,10 +2880,11 @@ internal static class HudManagerStartPatch
                 }
                 else
                 {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DropBody, SendOption.Reliable);
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.DragBody);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.Write(false);
+                    writer.EndRPC();
+                    RPCProcedure.dragBody(PlayerControl.LocalPlayer.PlayerId, false);
                     Undertaker.deadBodyDraged = null;
                 }
             },
@@ -3315,7 +3320,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                var count = PlayerControl.AllPlayerControls.ToList().Count(p => p.IsAlive() && p.isKiller() && p != Arsonist.arsonist);
+                var count = PlayerControl.AllPlayerControls.ToList().Count(p => p.IsAlive() && p.IsKiller() && p != Arsonist.arsonist);
 
                 if (count == 0 && Arsonist.igniteCooldownRemoved) arsonistKillButton.Timer = arsonistKillButton.MaxTimer = 0f;
                 else arsonistKillButton.Timer = arsonistKillButton.MaxTimer = arsonistButton.MaxTimer;
@@ -3626,7 +3631,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Pursuer.Player != null && Pursuer.Player.MContains(PlayerControl.LocalPlayer) &&
+                return Pursuer.Player != null && Pursuer.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) &&
                        PlayerControl.LocalPlayer.IsAlive()/* && Pursuer.blanks < Pursuer.blanksNumber*/;
             },
             () =>
@@ -3669,7 +3674,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Survivor.Player != null && Survivor.Player.MContains(PlayerControl.LocalPlayer) &&
+                return Survivor.Player != null && Survivor.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) &&
                        PlayerControl.LocalPlayer.IsAlive() && Survivor.vestEnable/* && Survivor.remainingVests > 0*/;
             },
             () =>
@@ -3724,7 +3729,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Survivor.Player != null && Survivor.Player.MContains(PlayerControl.LocalPlayer) &&
+                return Survivor.Player != null && Survivor.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) &&
                        PlayerControl.LocalPlayer.IsAlive() && Survivor.blanksEnable/* && Survivor.remainingBlanks > 0*/;
             },
             () =>
@@ -3827,7 +3832,7 @@ internal static class HudManagerStartPatch
                     witchSpellButton.Timer = witchSpellButton.MaxTimer;
                     if (Witch.triggerBothCooldowns)
                     {
-                        Witch.witch.killTimer = ModOption.KillCooddown * multiplier;
+                        Witch.witch.killTimer = ModOption.KillCooldown * multiplier;
                     }
                 }
                 else
@@ -4095,22 +4100,17 @@ internal static class HudManagerStartPatch
             () =>
             {
                 // Action when Pressed
-                if (Blackmailer.currentTarget != null)
-                {
-                    if (checkAndDoVetKill(Blackmailer.currentTarget)) return;
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.BlackmailPlayer, SendOption.Reliable);
-                    writer.Write(Blackmailer.currentTarget.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.blackmailPlayer(Blackmailer.currentTarget.PlayerId);
-                    blackmailerButton.Timer = blackmailerButton.MaxTimer;
-                }
+                var target = Blackmailer.currentTarget;
+                if (checkAndDoVetKill(target)) return;
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.BlackmailPlayer);
+                writer.Write(target.PlayerId);
+                writer.EndRPC();
+                RPCProcedure.blackmailPlayer(target.PlayerId);
+                Blackmailer.currentTarget = null;
             },
             () =>
             {
-                return Blackmailer.blackmailer != null &&
-                       Blackmailer.blackmailer == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
+                return Blackmailer.blackmailer.IsAlive() && Blackmailer.blackmailer == PlayerControl.LocalPlayer;
             },
             () =>
             {
@@ -4600,7 +4600,6 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-
                 return Redemptor.Player.IsAlive() && Redemptor.Player == PlayerControl.LocalPlayer;
             },
             () =>
@@ -4631,6 +4630,264 @@ internal static class HudManagerStartPatch
             abilityInput.keyCode,
             buttonText: GetString("RedemptorRevive")
         );
+
+        bandLeaderKeyboardistButton = new CustomButton(
+            () =>
+            {
+                if (BandLeader.Keyboardist == null)
+                {
+                    var target = BandLeader.currentTarget;
+                    if (target == null || BandLeader.Members.Any(x => x.PlayerId == target?.PlayerId)) return;
+                    if (checkAndDoVetKill(target)) return;
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.CreateBandMember);
+                    writer.Write(target.PlayerId);
+                    writer.Write(1);
+                    writer.EndRPC();
+                    BandLeader.CreateBandMember(target.PlayerId, 1);
+                }
+                else
+                {
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.CreateBandMember);
+                    writer.Write(byte.MaxValue);
+                    writer.Write(1);
+                    writer.EndRPC();
+                    BandLeader.CreateBandMember(byte.MaxValue, 1);
+                }
+
+                bandLeaderKeyboardistButton.Sprite = BandLeader.Keyboardist == null ? BandLeader.keyboardButton : BandLeader.keyboardDel;
+
+                bandLeaderKeyboardistButton.buttonText = BandLeader.Keyboardist == null ? "招募成员" : "踢出乐队";
+
+                bandLeaderKeyboardistButton.Timer = bandLeaderKeyboardistButton.MaxTimer = BandLeader.createCoolDown;
+                bandLeaderBassistButton.Timer = bandLeaderBassistButton.MaxTimer = BandLeader.createCoolDown;
+                bandLeaderDrummerButton.Timer = bandLeaderDrummerButton.MaxTimer = BandLeader.createCoolDown;
+            },
+            () =>
+            {
+                return BandLeader.Player.IsAlive() && BandLeader.Player == PlayerControl.LocalPlayer && !BandLeader.Formed;
+            },
+            () =>
+            {
+                BandLeader.currentTarget = SetTarget(BandLeader.Members);
+                SetPlayerOutline(BandLeader.currentTarget, BandLeader.color);
+
+                if (bandLeaderKeyboardistText != null) bandLeaderKeyboardistText.text = $"{BandLeader.Keyboardist?.Data?.PlayerName ?? ""}";
+                return PlayerControl.LocalPlayer.CanMove && BandLeader.Keyboardist == null
+                    ? BandLeader.currentTarget : true;
+            },
+            () =>
+            {
+                bandLeaderKeyboardistButton.Sprite = BandLeader.Keyboardist == null ? BandLeader.keyboardButton : BandLeader.keyboardDel;
+
+                bandLeaderKeyboardistButton.Timer = bandLeaderKeyboardistButton.MaxTimer = BandLeader.createCoolDown;
+            },
+            BandLeader.keyboardButton,
+            ButtonPositions.upperRowRight,
+            __instance,
+            null,
+            buttonText: "招募乐手"
+        );
+
+        bandLeaderKeyboardistText = Object.Instantiate(bandLeaderKeyboardistButton.actionButton.cooldownTimerText,
+            bandLeaderKeyboardistButton.actionButton.cooldownTimerText.transform.parent);
+        bandLeaderKeyboardistText.text = "";
+        bandLeaderKeyboardistText.enableWordWrapping = false;
+        bandLeaderKeyboardistText.transform.localScale = Vector3.one * 0.5f;
+        bandLeaderKeyboardistText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+
+        bandLeaderBassistButton = new CustomButton(
+            () =>
+            {
+                if (BandLeader.Bassist == null)
+                {
+                    var target = BandLeader.currentTarget;
+                    if (BandLeader.Members.Any(x => x.PlayerId == target?.PlayerId) || target == null) return;
+                    if (checkAndDoVetKill(target)) return;
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.CreateBandMember);
+                    writer.Write(target.PlayerId);
+                    writer.Write(2);
+                    writer.EndRPC();
+                    BandLeader.CreateBandMember(target.PlayerId, 2);
+                }
+                else
+                {
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.CreateBandMember);
+                    writer.Write(byte.MaxValue);
+                    writer.Write(2);
+                    writer.EndRPC();
+                    BandLeader.CreateBandMember(byte.MaxValue, 2);
+                }
+
+                bandLeaderBassistButton.Sprite = BandLeader.Bassist == null ? BandLeader.bassButton : BandLeader.bassDel;
+
+                bandLeaderBassistButton.buttonText = BandLeader.Bassist == null ? "招募成员" : "踢出乐队";
+
+                bandLeaderKeyboardistButton.Timer = bandLeaderKeyboardistButton.MaxTimer = BandLeader.createCoolDown;
+                bandLeaderBassistButton.Timer = bandLeaderBassistButton.MaxTimer = BandLeader.createCoolDown;
+                bandLeaderDrummerButton.Timer = bandLeaderDrummerButton.MaxTimer = BandLeader.createCoolDown;
+            },
+            () =>
+            {
+                return BandLeader.Player.IsAlive() && BandLeader.Player == PlayerControl.LocalPlayer && !BandLeader.Formed;
+            },
+            () =>
+            {
+                if (bandLeaderBassistText != null) bandLeaderBassistText.text = $"{BandLeader.Bassist?.Data?.PlayerName ?? ""}";
+
+                return PlayerControl.LocalPlayer.CanMove && BandLeader.Bassist == null
+                    ? BandLeader.currentTarget : true;
+            },
+            () =>
+            {
+                bandLeaderBassistButton.Sprite = BandLeader.Bassist == null ? BandLeader.bassButton : BandLeader.bassDel;
+
+                bandLeaderBassistButton.Timer = bandLeaderBassistButton.MaxTimer = BandLeader.createCoolDown;
+            },
+            BandLeader.bassButton,
+            ButtonPositions.upperRowCenter,
+            __instance,
+            null,
+            buttonText: "招募乐手"
+        );
+
+        bandLeaderBassistText = Object.Instantiate(bandLeaderBassistButton.actionButton.cooldownTimerText,
+            bandLeaderBassistButton.actionButton.cooldownTimerText.transform.parent);
+        bandLeaderBassistText.text = "";
+        bandLeaderBassistText.enableWordWrapping = false;
+        bandLeaderBassistText.transform.localScale = Vector3.one * 0.5f;
+        bandLeaderBassistText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+
+        bandLeaderDrummerButton = new CustomButton(
+            () =>
+            {
+                if (BandLeader.Drummer == null)
+                {
+                    var target = BandLeader.currentTarget;
+                    if (BandLeader.Members.Any(x => x.PlayerId == target?.PlayerId) || target == null) return;
+                    if (checkAndDoVetKill(target)) return;
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.CreateBandMember);
+                    writer.Write(target.PlayerId);
+                    writer.Write(3);
+                    writer.EndRPC();
+                    BandLeader.CreateBandMember(target.PlayerId, 3);
+                }
+                else
+                {
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.CreateBandMember);
+                    writer.Write(byte.MaxValue);
+                    writer.Write(3);
+                    writer.EndRPC();
+                    BandLeader.CreateBandMember(byte.MaxValue, 3);
+                }
+
+                bandLeaderDrummerButton.Sprite = BandLeader.Drummer == null ? BandLeader.drumButton : BandLeader.drumDel;
+
+                bandLeaderDrummerButton.buttonText = BandLeader.Drummer == null ? "招募成员" : "踢出乐队";
+
+                bandLeaderKeyboardistButton.Timer = bandLeaderKeyboardistButton.MaxTimer = BandLeader.createCoolDown;
+                bandLeaderBassistButton.Timer = bandLeaderBassistButton.MaxTimer = BandLeader.createCoolDown;
+                bandLeaderDrummerButton.Timer = bandLeaderDrummerButton.MaxTimer = BandLeader.createCoolDown;
+            },
+            () =>
+            {
+                return BandLeader.Player.IsAlive() && BandLeader.Player == PlayerControl.LocalPlayer && !BandLeader.Formed;
+            },
+            () =>
+            {
+                if (bandLeaderDrummerText != null) bandLeaderDrummerText.text = $"{BandLeader.Drummer?.Data?.PlayerName ?? ""}";
+
+                return PlayerControl.LocalPlayer.CanMove && BandLeader.Drummer == null
+                    ? BandLeader.currentTarget : true;
+            },
+            () =>
+            {
+                bandLeaderDrummerButton.Sprite = BandLeader.Drummer == null ? BandLeader.drumButton : BandLeader.drumDel;
+
+                bandLeaderDrummerButton.Timer = bandLeaderDrummerButton.MaxTimer = BandLeader.createCoolDown;
+            },
+            BandLeader.drumButton,
+            ButtonPositions.upperRowLeft,
+            __instance,
+            null,
+            buttonText: "招募乐手"
+        );
+
+        bandLeaderDrummerText = Object.Instantiate(bandLeaderDrummerButton.actionButton.cooldownTimerText,
+            bandLeaderDrummerButton.actionButton.cooldownTimerText.transform.parent);
+        bandLeaderDrummerText.text = "";
+        bandLeaderDrummerText.enableWordWrapping = false;
+        bandLeaderDrummerText.transform.localScale = Vector3.one * 0.5f;
+        bandLeaderDrummerText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+
+        bandLeaderKillButton = new CustomButton(
+            () =>
+            {
+                if (checkAndDoVetKill(BandLeader.currentTarget)) return;
+                if (checkMurderAttemptAndKill(BandLeader.Player, BandLeader.currentTarget) ==
+                    MurderAttemptResult.SuppressKill) return;
+
+                bandLeaderKillButton.Timer = bandLeaderKillButton.MaxTimer;
+                BandLeader.currentTarget = null;
+            },
+            () =>
+            {
+                return BandLeader.Player.IsAlive() && BandLeader.Player == PlayerControl.LocalPlayer && BandLeader.Formed
+                       && BandLeader.winnerFlags == BandLeader.WinnerFlags.Impostor;
+            },
+            () =>
+            {
+                BandLeader.currentTarget = SetTarget(BandLeader.Members);
+                SetPlayerOutline(BandLeader.currentTarget, BandLeader.color);
+
+                showTargetNameOnButton(BandLeader.currentTarget, bandLeaderKillButton, GetString("killButtonText"));
+
+                return PlayerControl.LocalPlayer.CanMove && BandLeader.currentTarget != null;
+            },
+            () =>
+            {
+                bandLeaderKillButton.Timer = bandLeaderKillButton.MaxTimer;
+            },
+            __instance.KillButton.graphic.sprite,
+            ButtonPositions.upperRowRight,
+            __instance,
+            modKillInput.keyCode,
+            buttonText: GetString("killButtonText")
+        );
+
+        schrodingersCatKillButton = new CustomButton(
+            () =>
+            {
+                if (checkAndDoVetKill(SchrodingersCat.currentTarget)) return;
+                if (checkMurderAttemptAndKill(SchrodingersCat.Player, SchrodingersCat.currentTarget) ==
+                    MurderAttemptResult.SuppressKill) return;
+
+                schrodingersCatKillButton.Timer = schrodingersCatKillButton.MaxTimer;
+                SchrodingersCat.currentTarget = null;
+            },
+            () =>
+            {
+                return SchrodingersCat.Player.IsAlive() && SchrodingersCat.Player == PlayerControl.LocalPlayer && SchrodingersCat.CanKill &&
+                       SchrodingersCat.State is not SchrodingersCat.CatState.None and not SchrodingersCat.CatState.Crewmate;
+            },
+            () =>
+            {
+                SchrodingersCat.currentTarget = SchrodingersCat.SetTarget();
+                SetPlayerOutline(SchrodingersCat.currentTarget, SchrodingersCat.color);
+
+                showTargetNameOnButton(SchrodingersCat.currentTarget, schrodingersCatKillButton, GetString("killButtonText"));
+                return PlayerControl.LocalPlayer.CanMove && SchrodingersCat.currentTarget != null;
+            },
+            () =>
+            {
+                schrodingersCatKillButton.Timer = schrodingersCatKillButton.MaxTimer;
+            },
+            __instance.KillButton.graphic.sprite,
+            ButtonPositions.upperRowRight,
+            __instance,
+            modKillInput.keyCode,
+            buttonText: GetString("killButtonText")
+        );
+
 
         // Set the default (or settings from the previous game) timers / durations when spawning the buttons
         initialized = true;

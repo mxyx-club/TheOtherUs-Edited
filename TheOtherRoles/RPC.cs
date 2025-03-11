@@ -5,7 +5,6 @@ using System.Linq;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using Hazel;
-using InnerNet;
 using PowerTools;
 using Reactor.Utilities;
 using Reactor.Utilities.Extensions;
@@ -18,7 +17,6 @@ using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.Buttons.HudManagerStartPatch;
-using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.Options.ModOption;
 using Object = UnityEngine.Object;
 
@@ -56,7 +54,6 @@ public enum CustomRPC
     Mine,
     ShowIndomitableFlash,
     DragBody,
-    DropBody,
     MedicSetShielded,
     ShowBodyGuardFlash,
     ShieldedMurderAttempt,
@@ -131,6 +128,9 @@ public enum CustomRPC
     PelicanKill,
     RedemptorRevive,
     RedemptorPrayer,
+    BandLeaderFormed,
+    CreateBandMember,
+    HostSay,
 
     TrapperKill,
     PlaceTrap,
@@ -192,7 +192,7 @@ public static class RPCProcedure
         Trap.clearTraps();
         Silhouette.clearSilhouettes();
         ElectricPatch.Reset();
-        Clear();
+        GameHistory.Clear();
         setCustomButtonCooldowns();
         toggleZoom(true);
         GameStartManagerPatch.GameStartManagerUpdatePatch.startingTimer = 0;
@@ -472,6 +472,12 @@ public static class RPCProcedure
                     case RoleId.Redemptor:
                         Redemptor.Player = player;
                         break;
+                    case RoleId.BandLeader:
+                        BandLeader.Player = player;
+                        break;
+                    case RoleId.SchrodingersCat:
+                        SchrodingersCat.Player = player;
+                        break;
                 }
             }
             if (AmongUsClient.Instance.AmHost && Helpers.roleCanUseVents(player) && !player.Data.Role.IsImpostor)
@@ -616,13 +622,38 @@ public static class RPCProcedure
 
     public static void uncheckedMurderPlayer(byte sourceId, byte targetId, byte showAnimation)
     {
-        if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
+        if (!InGame) return;
         var source = playerById(sourceId);
         var target = playerById(targetId);
         if (source != null && target != null)
         {
+            /*if (target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
+            {
+                if (source.IsCrew()) SchrodingersCat.State = SchrodingersCat.CatState.Crewmate;
+                if (source.IsImpostor()) SchrodingersCat.State = SchrodingersCat.CatState.Impostor;
+                if (Jackal.jackal.Any(x => x == source) || Jackal.Sidekick) SchrodingersCat.State = SchrodingersCat.CatState.Jackal;
+                if (Pavlovsdogs.pavlovsdogs.Any(x => x == source)) SchrodingersCat.State = SchrodingersCat.CatState.Pavlovsowner;
+                if (Werewolf.werewolf == source) SchrodingersCat.State = SchrodingersCat.CatState.Werewolf;
+                if (Juggernaut.juggernaut == source) SchrodingersCat.State = SchrodingersCat.CatState.Juggernaut;
+                if (Swooper.swooper == source) SchrodingersCat.State = SchrodingersCat.CatState.Swooper;
+                if (Arsonist.arsonist == source) SchrodingersCat.State = SchrodingersCat.CatState.Arsonist;
+                if (Pelican.Player == source) SchrodingersCat.State = SchrodingersCat.CatState.Pelican;
+
+                if (PlayerControl.LocalPlayer == source)
+                {
+                    SoundManager.Instance.PlaySound(PlayerControl.LocalPlayer.KillSfx, false, 0.8f, null);
+                    CustomButton.ResetAllCooldowns();
+                }
+                else if (PlayerControl.LocalPlayer == target)
+                {
+                    DestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(source.Data, target.Data);
+                }
+                Message($"SchrodingersCat.State: {SchrodingersCat.State}");
+                return;
+            }*/
+
             if (showAnimation == 0) KillAnimationCoPerformKillPatch.hideNextAnimation = true;
-            source.MurderPlayer(target);
+            source.MurderPlayer(target, MurderResultFlags.Succeeded);
         }
     }
 
@@ -721,25 +752,28 @@ public static class RPCProcedure
         }
     }
 
-    public static void dragBody(byte playerId)
+    public static void dragBody(byte playerId, bool drag)
     {
-        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
-        for (var i = 0; i < array.Length; i++)
-            if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId)
-                Undertaker.deadBodyDraged = array[i];
-    }
-
-    public static void dropBody(byte playerId)
-    {
-        if (Undertaker.undertaker == null || Undertaker.deadBodyDraged == null) return;
-        var deadBody = Undertaker.deadBodyDraged;
-        Undertaker.deadBodyDraged = null;
-        deadBody.transform.position = new Vector3(Undertaker.undertaker.GetTruePosition().x,
-            Undertaker.undertaker.GetTruePosition().y, Undertaker.undertaker.transform.position.z);
+        if (drag)
+        {
+            DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+            for (var i = 0; i < array.Length; i++)
+                if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId)
+                    Undertaker.deadBodyDraged = array[i];
+        }
+        else
+        {
+            if (Undertaker.undertaker == null || Undertaker.deadBodyDraged == null) return;
+            var deadBody = Undertaker.deadBodyDraged;
+            Undertaker.deadBodyDraged = null;
+            deadBody.transform.position = new Vector3(Undertaker.undertaker.GetTruePosition().x,
+                Undertaker.undertaker.GetTruePosition().y, Undertaker.undertaker.transform.position.z);
+        }
     }
 
     public static void timeMasterRewindTime()
     {
+        if (InMeeting) return;
         TimeMaster.shieldActive = false; // Shield is no longer active when rewinding
         SoundEffectsManager.stop("timemasterShield"); // Shield sound stopped when rewinding
         if (TimeMaster.timeMaster != null && TimeMaster.timeMaster == PlayerControl.LocalPlayer)
@@ -767,6 +801,7 @@ public static class RPCProcedure
 
     public static void timeMasterShield()
     {
+        if (InMeeting) return;
         TimeMaster.shieldActive = true;
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(TimeMaster.shieldDuration,
             new Action<float>(p =>
@@ -851,7 +886,7 @@ public static class RPCProcedure
     {
         var target = playerById(targetId);
         target.Exiled();
-        OverrideDeathReasonAndKiller(target, CustomDeathReason.HostCmdKill, GameData.Instance.GetHost()?.Object);
+        GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.HostCmdKill, GameData.Instance.GetHost()?.Object);
 
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
         foreach (var body in array)
@@ -862,10 +897,20 @@ public static class RPCProcedure
         }
     }
 
-    public static void RevivePlayer(byte targetId)
+    public static void hostSay(string message)
+    {
+        if (PlayerControl.LocalPlayer.AmOwner)
+        {
+            Message($"Host Say: {message}");
+            HudManager.Instance.Chat.AddChat(GetHostPlayer, message);
+
+        }
+    }
+
+    public static void RevivePlayer(byte targetId, bool clear, bool setPos)
     {
         var target = playerById(targetId);
-        target?.ModRevive();
+        target?.ModRevive(clear, setPos);
     }
 
     public static void shifterShift(byte targetId)
@@ -878,23 +923,21 @@ public static class RPCProcedure
         Shifter.clearAndReload();
 
         // Suicide (exile) when impostor or impostor variants
-        if ((target.IsImpostor() || Shifter.isShiftNeutral(target)) && player.IsAlive())
+        if (Shifter.NotShift(target) && player.IsAlive())
         {
-            Message($"Target Is Neutral: {Shifter.isShiftNeutral(target)}", "Shifter");
+            Message($"Target Is Neutral: {Shifter.NotShift(target)}", "Shifter");
             player.Exiled();
-            OverrideDeathReasonAndKiller(player, CustomDeathReason.Shift, target);
+            GameHistory.OverrideDeathReasonAndKiller(player, CustomDeathReason.Shift, target);
             if (player == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null)
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
+                writer.EndRPC();
                 Lawyer.PromotesToPursuer();
             }
             else if (player == Executioner.target && AmongUsClient.Instance.AmHost && Executioner.executioner != null)
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var writer = StartRPC(CustomRPC.ExecutionerPromotesRole);
+                writer.EndRPC();
                 Executioner.PromotesRole();
             }
             return;
@@ -1193,6 +1236,8 @@ public static class RPCProcedure
         if (player == Witness.Player) Witness.ClearAndReload();
         if (player == PartTimer.partTimer) PartTimer.clearAndReload();
         if (player == Vortox.Player) Vortox.ClearAndReload();
+        if (player == BandLeader.Player) BandLeader.ClearAndReload();
+        if (player == SchrodingersCat.Player) SchrodingersCat.ClearAndReload();
 
         if (player == Shifter.shifter) Shifter.clearAndReload();
 
@@ -1306,7 +1351,7 @@ public static class RPCProcedure
             PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
             PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
         }
-        if (PlayerControl.LocalPlayer.IsAlive())
+        if (PlayerControl.LocalPlayer.IsAlive() && !AntiTeleport.antiTeleport.Any(x => x == PlayerControl.LocalPlayer))
         {
             if (Disperser.DispersesToVent)
             {
@@ -1361,7 +1406,7 @@ public static class RPCProcedure
                 {
                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
                     if (Bomber.bomber.IsAlive() && PlayerControl.LocalPlayer == Bomber.bomber)
-                        checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBombPlayer, false, false, true, true);
+                        checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBombPlayer, false, true, true);
                     Bomber.hasBombPlayer = null;
                     Bomber.bombActive = false;
                     Bomber.hasAlerted = false;
@@ -1511,7 +1556,7 @@ public static class RPCProcedure
         if (akujo != null)
         {
             akujo.Exiled();
-            OverrideDeathReasonAndKiller(akujo, CustomDeathReason.Loneliness);
+            GameHistory.OverrideDeathReasonAndKiller(akujo, CustomDeathReason.Loneliness);
 
             if (InMeeting && Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(akujo.KillSfx, false, 0.8f);
             if (PlayerControl.LocalPlayer == Akujo.akujo)
@@ -1707,7 +1752,7 @@ public static class RPCProcedure
     {
         Trickster.lightsOutTimer = Trickster.lightsOutDuration;
         // If the local player is impostor indicate lights out
-        if (hasImpVision(GameData.Instance.GetPlayerById(PlayerControl.LocalPlayer.PlayerId)))
+        if (hasImpVision(PlayerControl.LocalPlayer.Data))
             _ = new CustomMessage("TricksterLightsOut".Translate(), Trickster.lightsOutDuration);
     }
 
@@ -1942,7 +1987,7 @@ public static class RPCProcedure
                 vampireKillButton.Timer = reader.ReadByte();
                 break;
             case GhostInfoTypes.DeathReasonAndKiller:
-                OverrideDeathReasonAndKiller(playerById(reader.ReadByte()), (CustomDeathReason)reader.ReadByte(), playerById(reader.ReadByte()));
+                GameHistory.OverrideDeathReasonAndKiller(playerById(reader.ReadByte()), (CustomDeathReason)reader.ReadByte(), playerById(reader.ReadByte()));
                 break;
         }
     }
@@ -2116,11 +2161,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.DragBody:
-                RPCProcedure.dragBody(reader.ReadByte());
-                break;
-
-            case CustomRPC.DropBody:
-                RPCProcedure.dropBody(reader.ReadByte());
+                RPCProcedure.dragBody(reader.ReadByte(), reader.ReadBoolean());
                 break;
 
             case CustomRPC.TimeMasterRewindTime:
@@ -2309,9 +2350,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.Bloody:
-                var bloodyKiller = reader.ReadByte();
-                var bloodyDead = reader.ReadByte();
-                RPCProcedure.bloody(bloodyKiller, bloodyDead);
+                RPCProcedure.bloody(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.SetFirstKill:
@@ -2492,11 +2531,24 @@ internal class RPCHandlerPatch
                 Redemptor.RedemptorPrayer(reader.ReadByte());
                 break;
 
+            case CustomRPC.BandLeaderFormed:
+                BandLeader.Formed = true;
+                BandLeader.winnerFlags = (BandLeader.WinnerFlags)reader.ReadByte();
+                Message($"Band Leader Formed {(BandLeader.WinnerFlags)reader.ReadByte()}");
+                break;
+
+            case CustomRPC.CreateBandMember:
+                BandLeader.CreateBandMember(reader.ReadByte(), reader.ReadInt32());
+                break;
+
             case CustomRPC.RevivePlayer:
-                RPCProcedure.RevivePlayer(reader.ReadByte());
+                RPCProcedure.RevivePlayer(reader.ReadByte(), reader.ReadBoolean(), reader.ReadBoolean());
                 break;
             case CustomRPC.HostKill:
                 RPCProcedure.hostKill(reader.ReadByte());
+                break;
+            case CustomRPC.HostSay:
+                RPCProcedure.hostSay(reader.ReadString());
                 break;
         }
 
