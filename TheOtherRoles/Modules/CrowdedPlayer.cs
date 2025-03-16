@@ -45,15 +45,14 @@ public static class CrowdedPlayer
 
     [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.AreInvalid))]
     [HarmonyPrefix]
-    public static bool InvalidOptionsPatches_Prefix
-        (GameOptionsData __instance, [HarmonyArgument(0)] int maxExpectedPlayers)
+    public static bool InvalidOptionsPatches_Prefix(GameOptionsData __instance, [HarmonyArgument(0)] int maxExpectedPlayers)
     {
         if (!Enable) return true;
-        return __instance.MaxPlayers > maxExpectedPlayers ||
-               __instance.NumImpostors < 1 ||
-               __instance.NumImpostors + 1 > maxExpectedPlayers / 4 ||
-               __instance.KillDistance is < 0 or > 2 ||
-               __instance.PlayerSpeedMod is <= 0f or > 3f;
+        return __instance.MaxPlayers > maxExpectedPlayers
+            || __instance.NumImpostors < 1
+            || __instance.NumImpostors + 1 > maxExpectedPlayers / 4
+            || __instance.KillDistance is < 0 or > 2
+            || __instance.PlayerSpeedMod is <= 0f or > 3f;
     }
 
     [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.Awake))]
@@ -147,7 +146,7 @@ public static class CrowdedPlayer
         {
             var newVal = Mathf.Clamp(
                 byte.Parse(secondButtonText.text) - 1,
-                1,
+                0,
                 __instance.GetTargetOptions().MaxPlayers / 4
             );
 

@@ -15,25 +15,37 @@ public class Pelican
     public static bool CanUseVent;
     public static bool hasImpVision;
 
-    public static void PelicanKill(byte targetId)
+    public static void PelicanKill(byte playerId, byte targetId)
     {
+        var player = playerById(playerId);
         var target = playerById(targetId);
-        if (Player.IsDead() || target == null) return;
-        target.Die(DeathReason.Kill, false);
-        MurderPlayerPatch.HandleMurderPostfix(Player, target);
-        target.NetTransform.RpcSnapTo(new Vector3(-10f, 10f, 0f));
-        GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.Eaten, Player);
-        eatenPlayers.Add(target);
+        if (Player.IsDead() || player != Player || target == null) return;
+        if (SchrodingersCat.Player != null && target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
+        {
+            SchrodingersCat.State = SchrodingersCat.CatState.Pelican;
+            SchrodingersCat.ChangeCount++;
+            Message($"SchrodingersCat.State: {SchrodingersCat.State}");
+        }
+        else
+        {
+            target.Die(DeathReason.Kill, false);
+            MurderPlayerPatch.HandleMurderPostfix(Player, target);
+            GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.Eaten, Player);
+            eatenPlayers.Add(target);
+            target.NetTransform.RpcSnapTo(new Vector2(-10f, 10f));
+        }
     }
 
-    public static void PelicanDie(bool clear = false)
+    public static void PelicanDie(bool clear = false, byte playerId = byte.MaxValue)
     {
-        if (clear || Player?.Data.IsDead == true)
+        var player = playerById(playerId);
+        player ??= Player;
+        if (clear || player?.Data.IsDead == true)
         {
             if (eatenPlayers.Any(x => x == PlayerControl.LocalPlayer))
             {
                 HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
-                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Player.transform.position);
+                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(player.transform.position);
             }
             Message($"Pelican Player {Player?.Data.PlayerName ?? "null"}", "Pelican");
             if (clear) clearAndReload(true);

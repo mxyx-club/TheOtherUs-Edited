@@ -899,8 +899,22 @@ internal class RoleManagerSelectRolesPatch
             modifiers.RemoveAll(x => x == RoleId.Aftermath);
         }
 
+        if (modifiers.Contains(RoleId.Mini))
+        {
+            var catPlayer = new List<PlayerControl>(playerList);
+            catPlayer.RemoveAll(x => x == SchrodingersCat.Player);
+
+            playerId = setModifierToRandomPlayer((byte)RoleId.Mini, catPlayer);
+            crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+            impPlayer.RemoveAll(x => x.PlayerId == playerId);
+            playerList.RemoveAll(x => x.PlayerId == playerId);
+            modifiers.RemoveAll(x => x == RoleId.Mini);
+        }
+
         if (Bait.SwapCrewmate && modifiers.Contains(RoleId.Bait))
         {
+            var CatPlayer = new List<PlayerControl>(crewPlayer);
+            CatPlayer.RemoveAll(x => x == SchrodingersCat.Player);
             playerId = setModifierToRandomPlayer((byte)RoleId.Bait, crewPlayer);
             crewPlayer.RemoveAll(x => x.PlayerId == playerId);
             playerList.RemoveAll(x => x.PlayerId == playerId);

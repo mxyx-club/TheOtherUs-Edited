@@ -12,6 +12,7 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
+using static Il2CppSystem.Globalization.CultureInfo;
 using static TheOtherRoles.GameHistory;
 using Object = UnityEngine.Object;
 
@@ -1106,22 +1107,17 @@ public static class PlayerControlFixedUpdatePatch
             if (entry.Value <= 0)
             {
                 Bait.active.Remove(entry.Key);
-                if (entry.Key.KillerIfExisting != null &&
-                    entry.Key.KillerIfExisting.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+                if (entry.Key.KillerIfExisting != null && entry.Key.KillerIfExisting.PlayerId == PlayerControl.LocalPlayer.PlayerId)
                 {
+                    handleVampireBiteOnBodyReport();
+                    handleBomberExplodeOnBodyReport();
+                    handleTrapperTrapOnBodyReport();
+                    RPCProcedure.uncheckedCmdReportDeadBody(entry.Key.KillerIfExisting.PlayerId, entry.Key.Player.PlayerId);
 
-                    handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-
-                    handleBomberExplodeOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                    RPCProcedure.uncheckedCmdReportDeadBody(entry.Key.KillerIfExisting.PlayerId,
-                        entry.Key.Player.PlayerId);
-
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedCmdReportDeadBody,
-                        SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.UncheckedCmdReportDeadBody);
                     writer.Write(entry.Key.KillerIfExisting.PlayerId);
                     writer.Write(entry.Key.Player.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                 }
             }
         }
@@ -1585,11 +1581,45 @@ public static class MurderPlayerPatch
 
     public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
+        if (SchrodingersCat.Player != null && target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
+        {
+            if (Jackal.jackal.Any(x => x == __instance) || Jackal.Sidekick) SchrodingersCat.State = SchrodingersCat.CatState.Jackal;
+            else if (Pavlovsdogs.pavlovsdogs.Any(x => x == __instance)) SchrodingersCat.State = SchrodingersCat.CatState.Pavlovsowner;
+            else if (Werewolf.werewolf == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Werewolf;
+            else if (Juggernaut.juggernaut == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Juggernaut;
+            else if (Swooper.swooper == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Swooper;
+            else if (Arsonist.arsonist == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Arsonist;
+            else if (Pelican.Player == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Pelican;
+            else if (__instance.IsCrew()) SchrodingersCat.State = SchrodingersCat.CatState.Crewmate;
+            else if (__instance.IsImpostor()) SchrodingersCat.State = SchrodingersCat.CatState.Impostor;
+
+            SchrodingersCat.ChangeCount++;
+
+            if (PlayerControl.LocalPlayer == __instance)
+            {
+                if (Constants.ShouldPlaySfx())
+                {
+                    SoundManager.Instance.PlaySound(__instance.KillSfx, false, 0.8f, null);
+                }
+                __instance.NetTransform.RpcSnapTo(target.transform.position);
+                __instance.SetKillTimer(GameOptionsManager.Instance.CurrentGameOptions.GetFloat(FloatOptionNames.KillCooldown));
+            }
+            else if (PlayerControl.LocalPlayer == target)
+            {
+                //target.SetPlayerMaterialColors(deadBody.bloodSplatter);
+                DestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(__instance.Data, target.Data);
+            }
+
+            Message($"SchrodingersCat.State: {SchrodingersCat.State}");
+            return false;
+        }
+
         // Allow everyone to murder players
-        resetToCrewmate = !__instance.Data.Role.IsImpostor;
-        resetToDead = __instance.Data.IsDead;
-        __instance.Data.Role.TeamType = RoleTeamTypes.Impostor;
-        __instance.Data.IsDead = false;
+        //resetToCrewmate = !__instance.Data.Role.IsImpostor;
+        //resetToDead = __instance.Data.IsDead;
+        //__instance.Data.Role.TeamType = RoleTeamTypes.Impostor;
+        //__instance.Data.IsDead = false;
+
         return true;
     }
 
@@ -1657,34 +1687,6 @@ public static class MurderPlayerPatch
             RPCProcedure.sidekickPromotes(Jackal.Sidekick.PlayerId);
         }
 
-        if (target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
-        {
-            if (__instance.IsCrew()) SchrodingersCat.State = SchrodingersCat.CatState.Crewmate;
-            if (__instance.IsImpostor()) SchrodingersCat.State = SchrodingersCat.CatState.Impostor;
-            if (Jackal.jackal.Any(x => x == __instance) || Jackal.Sidekick) SchrodingersCat.State = SchrodingersCat.CatState.Jackal;
-            if (Pavlovsdogs.pavlovsdogs.Any(x => x == __instance)) SchrodingersCat.State = SchrodingersCat.CatState.Pavlovsowner;
-            if (Werewolf.werewolf == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Werewolf;
-            if (Juggernaut.juggernaut == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Juggernaut;
-            if (Swooper.swooper == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Swooper;
-            if (Arsonist.arsonist == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Arsonist;
-            if (Pelican.Player == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Pelican;
-
-            if (target == PlayerControl.LocalPlayer)
-            {
-                _ = new LateTask(() =>
-                {
-                    var wrirer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RevivePlayer);
-                    wrirer.Write(PlayerControl.LocalPlayer.PlayerId);
-                    wrirer.Write(true);
-                    wrirer.Write(true);
-                    wrirer.EndRPC();
-                    SchrodingersCat.Player.ModRevive(true, true);
-                }, 0.1f, "Revived SchrodingersCat");
-            }
-
-            Message($"SchrodingersCat.State: {SchrodingersCat.State}");
-        }
-
         // Pursuer promotion trigger on murder (the host sends the call such that everyone recieves the update before a possible game End)
         if (target == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null)
         {
@@ -1720,7 +1722,6 @@ public static class MurderPlayerPatch
 
             if (Pelican.Player == PlayerControl.LocalPlayer)
             {
-                _ = new LateTask(() => { Pelican.PelicanDie(); }, 0.2f);
                 _ = new LateTask(() => { Pelican.Player.Die(DeathReason.Kill, true); }, 0.5f);
             }
         }

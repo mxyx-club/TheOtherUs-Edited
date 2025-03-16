@@ -46,6 +46,7 @@ public enum CustomGamemodes
 public static class Helpers
 {
     public static bool zoomOutStatus;
+    public static bool IsHnS => GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.HideNSeek;
     public static bool InGame => AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started;
     public static bool IsCountDown => GameStartManager.InstanceExists && GameStartManager.Instance.startState == GameStartManager.StartingStates.Countdown;
     public static bool InMeeting => InGame && MeetingHud.Instance;
@@ -132,13 +133,6 @@ public static class Helpers
                || (Pelican.Player != null && Pelican.Player.PlayerId == player.PlayerId && Pelican.hasImpVision)
                || (SchrodingersCat.Player != null && SchrodingersCat.Player.PlayerId == player.PlayerId && SchrodingersCat.hasImpVision)
                || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId && Werewolf.hasImpostorVision);
-    }
-
-    public static void handleTrapperTrapOnBodyReport()
-    {
-        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.TrapperMeetingFlag);
-        writer.EndRPC();
-        RPCProcedure.trapperMeetingFlag();
     }
 
     /// <summary>
@@ -692,6 +686,13 @@ public static class Helpers
         RPCProcedure.giveBomb(byte.MaxValue);
     }
 
+    public static void handleTrapperTrapOnBodyReport()
+    {
+        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.TrapperMeetingFlag);
+        writer.EndRPC();
+        RPCProcedure.trapperMeetingFlag();
+    }
+
     public static void refreshRoleDescription(PlayerControl player)
     {
         var infos = RoleInfo.getRoleInfoForPlayer(player);
@@ -729,22 +730,23 @@ public static class Helpers
         }
     }
 
-    public static void ModRevive(this PlayerControl target, bool cleanBody = true, bool reloadPos = true)
+    public static void ModRevive(this PlayerControl target, bool cleanBody = true, bool setPos = true)
     {
-        target?.Revive();
-
         if (target == null) return;
 
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+
         for (var i = 0; i < array.Length; i++)
         {
             if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == target.PlayerId)
             {
-                if (reloadPos) target.NetTransform.RpcSnapTo(array[i].transform.position);
+                if (setPos) target.NetTransform.RpcSnapTo(array[i].transform.position);
                 if (cleanBody) Object.Destroy(array[i].gameObject);
                 break;
             }
         }
+
+        target?.Revive();
     }
 
     internal static string getRoleString(RoleInfo roleInfo)

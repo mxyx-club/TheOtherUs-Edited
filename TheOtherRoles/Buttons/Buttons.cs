@@ -1993,15 +1993,14 @@ internal static class HudManagerStartPatch
                 Jackal.currentTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
 
-                return Jackal.canCreateSidekick && Jackal.jackal.Any(x => x.IsAlive() && x == PlayerControl.LocalPlayer);
+                return Jackal.canCreateSidekick && Jackal.Sidekick == null && Jackal.jackal.Any(x => x.IsAlive() && x == PlayerControl.LocalPlayer);
             },
             () =>
             {
 
                 // Show now text since the button already says sidekick
                 showTargetNameOnButton(Jackal.currentTarget, jackalSidekickButton, GetString("jackalSidekickText"));
-                return Jackal.canCreateSidekick && Jackal.currentTarget != null &&
-                       PlayerControl.LocalPlayer.CanMove;
+                return Jackal.canCreateSidekick && Jackal.currentTarget != null && PlayerControl.LocalPlayer.CanMove;
             },
             () => { jackalSidekickButton.Timer = jackalSidekickButton.MaxTimer; },
             Jackal.SidekickButton,
@@ -2540,6 +2539,7 @@ internal static class HudManagerStartPatch
         pelicanKillButton = new CustomButton(
             () =>
             {
+                if (Pelican.currentTarget == null) return;
                 if (checkAndDoVetKill(Pelican.currentTarget)) return;
                 var murderAttemptResult = checkMuderAttempt(Pelican.Player, Pelican.currentTarget);
                 if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
@@ -2547,9 +2547,10 @@ internal static class HudManagerStartPatch
                 if (murderAttemptResult == MurderAttemptResult.PerformKill)
                 {
                     var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.PelicanKill);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
                     writer.Write(Pelican.currentTarget.PlayerId);
                     writer.EndRPC();
-                    Pelican.PelicanKill(Pelican.currentTarget.PlayerId);
+                    Pelican.PelicanKill(PlayerControl.LocalPlayer.PlayerId, Pelican.currentTarget.PlayerId);
                 }
                 if (murderAttemptResult == MurderAttemptResult.BodyGuardKill)
                     checkMurderAttemptAndKill(Pelican.Player, Pelican.currentTarget);

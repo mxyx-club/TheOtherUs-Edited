@@ -394,6 +394,17 @@ internal class ExileControllerWrapUpPatch
         if (BountyHunter.bountyHunter != null && BountyHunter.bountyHunter == PlayerControl.LocalPlayer)
             BountyHunter.bountyUpdateTimer = 0f;
 
+        if (Prosecutor.prosecutor != null && Prosecutor.ProsecuteThisMeeting)
+        {
+            if (exiled?.Object.IsCrew() == true && Prosecutor.diesOnIncorrectPros)
+            {
+                Prosecutor.prosecutor.Exiled();
+            }
+
+            if (exiled == null) Prosecutor.Prosecuted = false;
+            Prosecutor.ProsecuteThisMeeting = false;
+        }
+
         if (AmongUsClient.Instance.AmHost)
         {
             // Eraser erase

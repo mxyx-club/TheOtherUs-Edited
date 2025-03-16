@@ -109,7 +109,8 @@ internal class HudManagerUpdatePatch
                  (BandLeader.Player == p && BandLeader.Members.Any(x => x.PlayerId == local.PlayerId)) ||
                  (Jackal.jackal.Any(x => x.PlayerId == local.PlayerId) && p.PlayerId == Jackal.Sidekick?.PlayerId) ||
                  (Jackal.Sidekick == local && Jackal.jackal.Any(x => x.PlayerId == p.PlayerId)) ||
-                 SchrodingersCat.InTeam(local, out _);
+                 (SchrodingersCat.InTeam(local, out _) && p == SchrodingersCat.Player) ||
+                 (SchrodingersCat.Player == local && SchrodingersCat.InTeam(p, out _));
 
             bool reported = ((local == Slueth.slueth && Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) ||
                              (local == Poucher.poucher && Poucher.killed.Any(x => x.PlayerId == p.PlayerId))) && p.IsDead();
@@ -321,7 +322,7 @@ internal class HudManagerUpdatePatch
             }
         }
 
-        if (SchrodingersCat.Player != null && SchrodingersCat.Player == local)
+        if (SchrodingersCat.Player != null && (SchrodingersCat.Player == local || ShowGhostInfo))
         {
             setPlayerNameColor(SchrodingersCat.Player, SchrodingersCat.color);
             foreach (var p in allPlayer)

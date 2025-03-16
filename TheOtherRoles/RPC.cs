@@ -1209,7 +1209,7 @@ public static class RPCProcedure
         if (player == Jester.jester) Jester.clearAndReload();
         if (player == Werewolf.werewolf) Werewolf.clearAndReload();
         if (player == Miner.miner) Miner.clearAndReload();
-        if (player == Pelican.Player) { Pelican.PelicanDie(true); }
+        if (player == Pelican.Player) { Pelican.PelicanDie(true, playerId); }
         if (player == Arsonist.arsonist) Arsonist.clearAndReload();
         if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
 
@@ -2473,7 +2473,7 @@ internal class RPCHandlerPatch
                 WolfLord.WolfLordkilled(reader.ReadByte());
                 break;
             case CustomRPC.PelicanKill:
-                Pelican.PelicanKill(reader.ReadByte());
+                Pelican.PelicanKill(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.YoyoBlink:
                 RPCProcedure.yoyoBlink(reader.ReadByte() == byte.MaxValue, reader.ReadBytesAndSize());

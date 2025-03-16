@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using InnerNet;
 using TheOtherRoles.Buttons;
+using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -372,7 +373,7 @@ public class RoleInfo
         if (p == Pavlovsdogs.pavlovsowner) infos.Add(pavlovsowner);
         if (p == Redemptor.Player) infos.Add(redemptor);
         if (p == BandLeader.Player) infos.Add(bandLeader);
-        if (p == SchrodingersCat.Player) infos.Add(schrodingersCat);
+        if (p == SchrodingersCat.Player) { schrodingersCat.color = SchrodingersCat.color; infos.Add(schrodingersCat); }
         if (Jackal.jackal.Any(x => x != null && x.PlayerId == p.PlayerId)) infos.Add(jackal);
         if (Amnisiac.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(amnisiac);
         if (Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == p.PlayerId)) infos.Add(pavlovsdogs);
