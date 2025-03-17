@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Hazel;
 using TheOtherRoles.Patches;
 using TMPro;
@@ -234,7 +234,7 @@ public class Balancer
     private static PlayerVoteArea leftplayerarea;
     private static PlayerVoteArea rightplayerarea;
     public static bool IsDoubleExile;
-    private static PlayerControl currentTarget;
+    public static PlayerControl currentTarget;
 
     public static void WrapUp(PlayerControl exiled)
     {
@@ -384,24 +384,27 @@ public class Balancer
         {
             if (currentAbilityUser != null) return;
             var Target = playerById(__instance.playerStates[Index].TargetPlayerId);
-            if (currentTarget == null)
+
+            if (currentTarget == null && Target.IsAlive())
             {
                 currentTarget = Target;
                 __instance.playerStates.ForEach(x =>
                 {
                     if (x.TargetPlayerId == currentTarget.PlayerId && x.transform.FindChild("BalancerButton") != null)
-                        x.transform.FindChild("BalancerButton").gameObject.SetActive(false);
+                        x.transform.FindChild("BalancerButton")?.gameObject.SetActive(false);
                 });
                 return;
             }
-            if (balancer.IsDead() || IsAbilityUsed <= 0) return;
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.BalancerBalance, SendOption.Reliable);
+
+            if (balancer.IsDead() || Target.IsDead() || IsAbilityUsed <= 0) return;
+
+            var writer = StartRPC(CustomRPC.BalancerBalance);
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write(currentTarget.PlayerId);
             writer.Write(Target.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             RPCProcedure.balancerBalance(PlayerControl.LocalPlayer.PlayerId, currentTarget.PlayerId, Target.PlayerId);
+
             __instance.playerStates.ForEach(x =>
             {
                 if (x.transform.FindChild("BalancerButton") != null) Object.Destroy(x.transform.FindChild("BalancerButton").gameObject);

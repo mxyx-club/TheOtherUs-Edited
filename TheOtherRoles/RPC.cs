@@ -131,6 +131,7 @@ public enum CustomRPC
     BandLeaderFormed,
     CreateBandMember,
     HostSay,
+    SchrodingersCatSetState,
 
     TrapperKill,
     PlaceTrap,
@@ -902,7 +903,7 @@ public static class RPCProcedure
         if (PlayerControl.LocalPlayer.AmOwner)
         {
             Message($"Host Say: {message}");
-            HudManager.Instance.Chat.AddChat(GetHostPlayer, message);
+            HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, message);
 
         }
     }
@@ -2549,6 +2550,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.HostSay:
                 RPCProcedure.hostSay(reader.ReadString());
+                break;
+            case CustomRPC.SchrodingersCatSetState:
+                SchrodingersCat.State = (SchrodingersCat.CatState)reader.ReadByte();
                 break;
         }
 

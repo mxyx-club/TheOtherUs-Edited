@@ -277,5 +277,6 @@ public static class Shifter
         currentTarget = null;
         shiftNeutral = CustomOptionHolder.modifierShiftNeutral.GetBool();
         shiftALLNeutra = CustomOptionHolder.modifierShiftALLNeutral.GetBool();
+        reloadRole = CustomOptionHolder.modifierShiftReload.GetBool();
     }
 }

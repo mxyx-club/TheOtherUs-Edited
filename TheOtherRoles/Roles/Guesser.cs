@@ -524,6 +524,8 @@ public static class Guesser
 
         dyingTarget.Exiled();
         OverrideDeathReasonAndKiller(dyingTarget, CustomDeathReason.Guess, guesser);
+        if (dyingTarget == Balancer.currentTarget) Balancer.currentTarget = null;
+
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
 
         if (MeetingHud.Instance)

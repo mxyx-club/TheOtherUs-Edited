@@ -5,6 +5,7 @@ using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
 using InnerNet;
+using Mono.Cecil.Cil;
 using Reactor.Utilities.Extensions;
 using Steamworks;
 using TheOtherRoles.Buttons;
@@ -1583,15 +1584,25 @@ public static class MurderPlayerPatch
     {
         if (SchrodingersCat.Player != null && target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
         {
-            if (Jackal.jackal.Any(x => x == __instance) || Jackal.Sidekick) SchrodingersCat.State = SchrodingersCat.CatState.Jackal;
-            else if (Pavlovsdogs.pavlovsdogs.Any(x => x == __instance)) SchrodingersCat.State = SchrodingersCat.CatState.Pavlovsowner;
-            else if (Werewolf.werewolf == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Werewolf;
-            else if (Juggernaut.juggernaut == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Juggernaut;
-            else if (Swooper.swooper == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Swooper;
-            else if (Arsonist.arsonist == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Arsonist;
-            else if (Pelican.Player == __instance) SchrodingersCat.State = SchrodingersCat.CatState.Pelican;
-            else if (__instance.IsCrew()) SchrodingersCat.State = SchrodingersCat.CatState.Crewmate;
-            else if (__instance.IsImpostor()) SchrodingersCat.State = SchrodingersCat.CatState.Impostor;
+            var role = RoleInfo.getRoleInfoForPlayer(__instance, false, false).First();
+            var state = SchrodingersCat.CatState.None;
+            if (role != null && PlayerControl.LocalPlayer == SchrodingersCat.Player)
+            {
+                if (role.roleId is RoleId.Jackal or RoleId.Sidekick) state = SchrodingersCat.CatState.Jackal;
+                else if (role.roleId is RoleId.Pavlovsdogs or RoleId.Pavlovsowner) state = SchrodingersCat.CatState.Pavlovsowner;
+                else if (role.roleId == RoleId.Werewolf) state = SchrodingersCat.CatState.Werewolf;
+                else if (role.roleId == RoleId.Juggernaut) state = SchrodingersCat.CatState.Juggernaut;
+                else if (role.roleId == RoleId.Swooper) state = SchrodingersCat.CatState.Swooper;
+                else if (role.roleId == RoleId.Arsonist) state = SchrodingersCat.CatState.Arsonist;
+                else if (role.roleId == RoleId.Pelican) state = SchrodingersCat.CatState.Pelican;
+                else if (role.roleType == RoleType.Impostor) state = SchrodingersCat.CatState.Impostor;
+                else if (role.roleType == RoleType.Crewmate) state = SchrodingersCat.CatState.Crewmate;
+
+                var writer = StartRPC(CustomRPC.SchrodingersCatSetState);
+                writer.Write((byte)state);
+                writer.EndRPC();
+                SchrodingersCat.State = state;
+            }
 
             SchrodingersCat.ChangeCount++;
 
@@ -2065,31 +2076,22 @@ public static class DisconnectPatch
     public static void DisconnectPostfix(PlayerControl player, DisconnectReasons reason)
     {
         Message($"玩家 {player?.Data?.PlayerName ?? "null"} 断开连接 {reason}", "HandleDisconnect");
+
         if (InGame)
         {
-            if (player.isLover())
-            {
-                Lovers.clearAndReload();
-            }
+            if (player.isLover()) Lovers.clearAndReload();
 
-            if (Lawyer.lawyer != null && Lawyer.target == player)
-            {
-                Lawyer.PromotesToPursuer();
-            }
+            if (Lawyer.lawyer != null && Lawyer.target == player) Lawyer.PromotesToPursuer();
 
-            if (Executioner.executioner != null && Executioner.target == player)
-            {
-                Executioner.PromotesRole();
-            }
+            if (Executioner.executioner != null && Executioner.target == player) Executioner.PromotesRole();
+
+            if (player == Balancer.currentTarget) Balancer.currentTarget = null;
 
             if (player == Akujo.akujo) Akujo.clearAndReload();
 
             if (player == BandLeader.Player) BandLeader.ClearAndReload();
 
-            if (player != null && !player.Data.IsDead)
-            {
-                OverrideDeathReasonAndKiller(player, CustomDeathReason.Disconnect, null);
-            }
+            if (player != null && !player.Data.IsDead) OverrideDeathReasonAndKiller(player, CustomDeathReason.Disconnect, null);
 
             Sheriff.deputyCheckPromotion();
         }

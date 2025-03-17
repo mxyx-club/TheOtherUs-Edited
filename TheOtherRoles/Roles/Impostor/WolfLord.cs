@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
+using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
-using static MeetingHud;
 using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Roles.Impostor;
@@ -34,10 +34,34 @@ public class WolfLord
         Killed = true;
         target.Exiled();
         GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.Kill, Player);
+        if (target == Balancer.currentTarget) Balancer.currentTarget = null;
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(target.KillSfx, false, 0.8f);
 
         if (PlayerControl.LocalPlayer == target)
             FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(Player.Data, target.Data);
+
+        if (MeetingHud.Instance)
+        {
+            MeetingHud.Instance.discussionTimer -= CustomOptionHolder.guessExtendmeetingTime.GetFloat();
+            MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, targetId);
+
+            foreach (var pva in MeetingHud.Instance.playerStates)
+            {
+                var dyingPartner = target.getPartner();
+                byte partnerId = dyingPartner != null ? dyingPartner.PlayerId : targetId;
+                bool shouldClearVote = CustomOptionHolder.guessReVote.GetBool() || pva.VotedFor == targetId || pva.VotedFor == partnerId;
+
+                if (shouldClearVote)
+                {
+                    pva.UnsetVote();
+                    var voteAreaPlayer = playerById(pva.TargetPlayerId);
+                    if (voteAreaPlayer?.AmOwner == false) continue;
+                    MeetingHud.Instance.ClearVote();
+                    MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, partnerId);
+                }
+            }
+            if (AmongUsClient.Instance.AmHost) MeetingHud.Instance.CheckForEndVoting();
+        }
     }
 
     [HarmonyPatch]
@@ -101,7 +125,7 @@ public class WolfLord
         private static void ButtonToggle(MeetingHud __instance)
         {
             __instance.playerStates[0].Cancel(); // This will stop the underlying buttons of the template from showing up
-            if (__instance.state == VoteStates.Results || Player.IsDead()) return;
+            if (__instance.state == MeetingHud.VoteStates.Results || Player.IsDead()) return;
 
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WolfLordkilled);
             writer.Write(byte.MaxValue);
@@ -145,7 +169,7 @@ public class WolfLord
         {
             var target = playerById(pva.TargetPlayerId);
             if (Player == null || !Revealed || Killed || target == null) return;
-            if (__instance.state is not (VoteStates.Voted or VoteStates.NotVoted)) return;
+            if (__instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)) return;
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WolfLordkilled);
             writer.Write(target.PlayerId);
             writer.EndRPC();
