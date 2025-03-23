@@ -25,6 +25,7 @@ public class SchrodingersCat
 
     public static int remainingChange => TeamChanges ? MaxChangeCount - ChangeCount : 0;
     public static bool IsEvil => State is not CatState.Crewmate and not CatState.None;
+    public static string Name => $"SchrodingersCatRoles.{State}";
 
     public static int ChangeCount;
     public static CatState State = CatState.None;
@@ -51,38 +52,7 @@ public class SchrodingersCat
 
     public static PlayerControl SetTarget()
     {
-        if (Player == null || State == CatState.None || State == CatState.Crewmate) return null;
-
-        List<PlayerControl> untarget = null;
-
-        foreach (var p in PlayerControl.AllPlayerControls)
-        {
-            switch (State)
-            {
-                case CatState.Jackal when Jackal.Sidekick == p || Jackal.jackal.Contains(p):
-                    untarget.TryAdd(p);
-                    continue;
-                case CatState.Pavlovsowner when Pavlovsdogs.pavlovsowner == p && Pavlovsdogs.pavlovsdogs.Contains(p):
-                    untarget.TryAdd(p);
-                    continue;
-                case CatState.Werewolf when Werewolf.werewolf == p:
-                    untarget.TryAdd(p);
-                    continue;
-                case CatState.Juggernaut when Juggernaut.juggernaut == p:
-                    untarget.TryAdd(p);
-                    continue;
-                case CatState.Pelican when Pelican.Player == p:
-                    untarget.TryAdd(p);
-                    continue;
-                case CatState.Swooper when Swooper.swooper == p:
-                    untarget.TryAdd(p);
-                    continue;
-                case CatState.Arsonist when Arsonist.arsonist == p:
-                    untarget.TryAdd(p);
-                    continue;
-            }
-        }
-        return PlayerControlFixedUpdatePatch.SetTarget(State == CatState.Impostor, untargetablePlayers: untarget);
+        return PlayerControlFixedUpdatePatch.SetTarget(State == CatState.Impostor);
     }
 
     public static bool InTeam(PlayerControl player, out Color color)
@@ -92,8 +62,8 @@ public class SchrodingersCat
         return State switch
         {
             CatState.Impostor => player.IsImpostor(),
-            CatState.Jackal => Jackal.jackal.Contains(player) || Jackal.Sidekick == player,
-            CatState.Pavlovsowner => Pavlovsdogs.pavlovsdogs.Contains(player) || Pavlovsdogs.pavlovsowner == player,
+            CatState.Jackal => Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) || Jackal.Sidekick == player,
+            CatState.Pavlovsowner => Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId) || Pavlovsdogs.pavlovsowner == player,
             CatState.Werewolf => Werewolf.werewolf == player,
             CatState.Juggernaut => Juggernaut.juggernaut == player,
             CatState.Swooper => Swooper.swooper == player,

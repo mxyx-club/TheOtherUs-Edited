@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using TheOtherRoles.Objects;
 using UnityEngine;
@@ -30,7 +30,7 @@ public class Pavlovsdogs
     public static ResourceSprite CreateDogButton = new("SidekickButton.png");
 
     public static bool canCreateDog => (pavlovsdogs == null || pavlovsdogs.All(p => p.Data.IsDead || p.Data.Disconnected)) && createDogNum > 0;
-    public static bool loser => pavlovsdogs.All(p => p.Data.IsDead || p.Data.Disconnected) && createDogNum == 0;
+    public static bool loser => pavlovsdogs.All(p => p.IsDead()) && createDogNum == 0;
 
     public static void clearAndReload()
     {

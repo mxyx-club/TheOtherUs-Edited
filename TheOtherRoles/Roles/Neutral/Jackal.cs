@@ -45,10 +45,7 @@ public class Jackal
         }
     }
 
-    public static void jackalCanSwooper(bool chance)
-    {
-        canSwoop = chance;
-    }
+    public static void jackalCanSwooper(bool chance) => canSwoop = chance;
 
     public static void clearAndReload()
     {

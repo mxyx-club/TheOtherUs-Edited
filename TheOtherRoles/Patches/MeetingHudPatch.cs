@@ -257,8 +257,8 @@ internal class MeetingHudPatch
 
         // Add Guesser Buttons
         var GuesserRemainingShots = HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId);
-        if (!isGuesser || PlayerControl.LocalPlayer.IsDead() || GuesserRemainingShots <= 0 ||
-            (PlayerControl.LocalPlayer == WolfLord.Player && WolfLord.Killed)) return;
+
+        if (!isGuesser || PlayerControl.LocalPlayer.IsDead() || GuesserRemainingShots <= 0 || (PlayerControl.LocalPlayer == WolfLord.Player && !WolfLord.Killed)) return;
         {
             Doomsayer.CanShoot = true;
             for (var i = 0; i < __instance.playerStates.Length; i++)
@@ -267,8 +267,8 @@ internal class MeetingHudPatch
 
                 if (pvae.AmDead || pvae.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
 
-                if (!Eraser.canEraseGuess && PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer == Eraser.eraser
-                    && Eraser.alreadyErased.Any(x => x == pvae?.TargetPlayerId)) continue;
+                if (Eraser.eraser.IsAlive() && PlayerControl.LocalPlayer == Eraser.eraser && !Eraser.canEraseGuess && Eraser.alreadyErased.Any(x => x == pvae?.TargetPlayerId))
+                    continue;
 
                 var template = pvae.Buttons.transform.Find("CancelButton").gameObject;
                 var targetBox = Object.Instantiate(template, pvae.transform);
@@ -902,8 +902,32 @@ internal class MeetingHudPatch
 
             if (PlayerControl.LocalPlayer.IsDead()) CanSeeRoleInfo = true;
 
+            Redemptor.RevivedPlayer = null;
+
             // Remove first kill shield
             if (!PlayerControl.AllPlayerControls.ToList().All(x => x.IsAlive())) firstKillPlayer = null;
+
+            // Add trapped Info into Trapper chat
+            if (Trapper.trapper.IsAlive() && (PlayerControl.LocalPlayer == Trapper.trapper || ShowGhostInfo))
+            {
+                if (Trap.traps.Any(x => x.revealed)) FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, "陷阱日志:");
+                foreach (var trap in Trap.traps)
+                {
+                    if (!trap.revealed) continue;
+                    var message = $"陷阱 {trap.instanceId}: \n";
+                    trap.trappedPlayer = trap.trappedPlayer.OrderBy(x => rnd.Next()).ToList();
+                    message = trap.trappedPlayer.Aggregate(message, (current, p) => current + Trapper.infoType switch
+                    {
+                        0 => RoleInfo.GetRolesString(p, false, false, false) + "\n",
+                        1 when isEvilNeutral(p) || p.Data.Role.IsImpostor => "邪恶职业 \n",
+                        1 => "善良职业 \n",
+                        _ => p.Data.PlayerName + "\n"
+                    });
+                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, $"{message}");
+                }
+            }
+
+            Trapper.playersOnMap = new List<PlayerControl>();
 
             //Nothing here for now. What to do when local player who is blackmailed starts meeting
             if (Blackmailer.blackmailed != null && Blackmailer.blackmailed.Data.PlayerId == PlayerControl.LocalPlayer.PlayerId

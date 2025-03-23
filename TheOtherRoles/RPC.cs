@@ -1100,12 +1100,9 @@ public static class RPCProcedure
     {
         var player = playerById(playerId);
         if (player == null) return;
-        if (Jackal.jackal.All(x => x.PlayerId != playerId && x.IsDead()) && Jackal.promotesToJackal && Jackal.Sidekick.IsAlive())
-        {
-            Jackal.jackal.Add(player);
-            Jackal.Sidekick = null;
-            Jackal.canCreateSidekick = Jackal.jackalPromotedFromSidekickCanCreateSidekick;
-        }
+        Jackal.jackal.Add(player);
+        Jackal.Sidekick = null;
+        Jackal.canCreateSidekick = Jackal.jackalPromotedFromSidekickCanCreateSidekick;
     }
 
     public static void pavlovsCreateDog(byte targetId)
@@ -1217,7 +1214,6 @@ public static class RPCProcedure
         if (Jackal.jackal.Any(x => x == player))
         {
             Jackal.jackal.RemoveAll(x => x == player);
-            sidekickPromotes(Jackal.Sidekick?.PlayerId ?? byte.MaxValue);
         }
 
         if (player == Pavlovsdogs.pavlovsowner)

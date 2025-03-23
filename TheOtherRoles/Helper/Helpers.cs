@@ -87,6 +87,7 @@ public static class Helpers
                player == Lawyer.lawyer ||
                player == Executioner.executioner ||
                player == Vulture.vulture ||
+               player == SchrodingersCat.Player ||
                player == Jackal.Sidekick ||
                player == Pavlovsdogs.pavlovsowner ||
                Jackal.jackal.Any(x => x == player) ||

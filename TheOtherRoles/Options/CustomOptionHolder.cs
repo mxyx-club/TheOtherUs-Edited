@@ -967,8 +967,8 @@ public class CustomOptionHolder
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 
         specterSpawnRate = Create(50020, Types.Neutral, cs(Specter.color, "SpecterOption"), rates, null, true);
-        specterResetRole = Create(50021, Types.Neutral, "amnisiacResetRole", true, specterSpawnRate);
         specterDuration = Create(50022, Types.Neutral, "specterDuration", 1.5f, 0.25f, 5f, 0.25f, specterSpawnRate);
+        specterResetRole = Create(50021, Types.Neutral, "amnisiacResetRole", true, specterSpawnRate);
         specterAfterMeetingTakeRole = Create(50023, Types.Neutral, "specterAfterMeetingTakeRole", false, specterSpawnRate);
         specterAfterMeetingRevived = Create(50024, Types.Neutral, "specterAfterMeetingRevived", false, specterSpawnRate);
 

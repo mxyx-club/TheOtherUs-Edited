@@ -54,7 +54,7 @@ internal static class HudManagerStartPatch
     public static CustomButton jackalSwoopButton;
     public static CustomButton swooperSwoopButton;
     public static CustomButton swooperKillButton;
-    private static CustomButton jackalSidekickButton;
+    private static CustomButton jackalCreateSidekickButton;
     public static CustomButton eraserButton;
     public static CustomButton pavlovsdogsKillButton;
     public static CustomButton pavlovsownerCreateDogButton;
@@ -178,7 +178,7 @@ internal static class HudManagerStartPatch
         garlicButton.MaxTimer = 0f;
         jackalKillButton.MaxTimer = Jackal.cooldown;
         werewolfKillButton.MaxTimer = Werewolf.killCooldown;
-        jackalSidekickButton.MaxTimer = Jackal.createSidekickCooldown;
+        jackalCreateSidekickButton.MaxTimer = Jackal.createSidekickCooldown;
         eraserButton.MaxTimer = Eraser.cooldown;
         placeJackInTheBoxButton.MaxTimer = Trickster.placeBoxCooldown;
         lightsOutButton.MaxTimer = Trickster.lightsOutCooldown;
@@ -1961,28 +1961,27 @@ internal static class HudManagerStartPatch
         );
 
         // Jackal Sidekick Button
-        jackalSidekickButton = new CustomButton(
+        jackalCreateSidekickButton = new CustomButton(
             () =>
             {
                 if (checkAndDoVetKill(Jackal.currentTarget)) return;
                 var target = Jackal.currentTarget;
 
-                if (Jackal.killFakeImpostor && target.Data.Role.IsImpostor)
+                if (Jackal.killFakeImpostor && target.IsImpostor())
                 {
                     //uncheckedMurderPlayer(Jackal.jackal.PlayerId, player.PlayerId, 1);
                     checkMurderAttemptAndKill(PlayerControl.LocalPlayer, target);
                     GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.FakeSK, PlayerControl.LocalPlayer);
-                    jackalSidekickButton.Timer = jackalSidekickButton.MaxTimer;
+                    jackalCreateSidekickButton.Timer = jackalCreateSidekickButton.MaxTimer;
                     return;
                 }
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.JackalCreatesSidekick, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.JackalCreatesSidekick);
                 writer.Write(Jackal.currentTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.jackalCreatesSidekick(Jackal.currentTarget.PlayerId);
                 SoundEffectsManager.play("jackalSidekick");
-                jackalSidekickButton.Timer = jackalSidekickButton.MaxTimer;
+                jackalCreateSidekickButton.Timer = jackalCreateSidekickButton.MaxTimer;
             },
             () =>
             {
@@ -1999,10 +1998,10 @@ internal static class HudManagerStartPatch
             {
 
                 // Show now text since the button already says sidekick
-                showTargetNameOnButton(Jackal.currentTarget, jackalSidekickButton, GetString("jackalSidekickText"));
+                showTargetNameOnButton(Jackal.currentTarget, jackalCreateSidekickButton, GetString("jackalSidekickText"));
                 return Jackal.canCreateSidekick && Jackal.currentTarget != null && PlayerControl.LocalPlayer.CanMove;
             },
-            () => { jackalSidekickButton.Timer = jackalSidekickButton.MaxTimer; },
+            () => { jackalCreateSidekickButton.Timer = jackalCreateSidekickButton.MaxTimer; },
             Jackal.SidekickButton,
             ButtonPositions.lowerRowCenter,
             __instance,
@@ -3442,7 +3441,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 return Specter.Player != null && Specter.Player == PlayerControl.LocalPlayer &&
-                       PlayerControl.LocalPlayer.Data.IsDead & Specter.remember;
+                       PlayerControl.LocalPlayer.Data.IsDead && Specter.remember && !Specter.revived;
             },
             () =>
             {

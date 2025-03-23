@@ -150,7 +150,7 @@ internal class RoleManagerSelectRolesPatch
         neutralSettings.Add((byte)RoleId.Akujo, CustomOptionHolder.akujoSpawnRate.GetSelection());
         neutralSettings.Add((byte)RoleId.SchrodingersCat, CustomOptionHolder.schrodingersCatSpawnRate.GetSelection());
         neutralSettings.Add((byte)RoleId.Thief, CustomOptionHolder.thiefSpawnRate.GetSelection());
-        if (ModOption.NumImpostors >= 3 && !ModOption.DebugMode)
+        if (ModOption.NumImpostors >= 3 || ModOption.DebugMode)
             neutralSettings.Add((byte)RoleId.BandLeader, CustomOptionHolder.bandLeaderSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Jackal, CustomOptionHolder.jackalSpawnRate.GetSelection());
@@ -901,21 +901,22 @@ internal class RoleManagerSelectRolesPatch
 
         if (modifiers.Contains(RoleId.Mini))
         {
-            var catPlayer = new List<PlayerControl>(playerList);
-            catPlayer.RemoveAll(x => x == SchrodingersCat.Player);
+            var miniPlayer = new List<PlayerControl>(playerList);
+            miniPlayer.RemoveAll(x => x == SchrodingersCat.Player);
 
-            playerId = setModifierToRandomPlayer((byte)RoleId.Mini, catPlayer);
+            playerId = setModifierToRandomPlayer((byte)RoleId.Mini, miniPlayer);
             crewPlayer.RemoveAll(x => x.PlayerId == playerId);
             impPlayer.RemoveAll(x => x.PlayerId == playerId);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Mini);
         }
 
-        if (Bait.SwapCrewmate && modifiers.Contains(RoleId.Bait))
+        if (modifiers.Contains(RoleId.Bait))
         {
-            var CatPlayer = new List<PlayerControl>(crewPlayer);
-            CatPlayer.RemoveAll(x => x == SchrodingersCat.Player);
-            playerId = setModifierToRandomPlayer((byte)RoleId.Bait, crewPlayer);
+            var baitPlayer = new List<PlayerControl>(Bait.SwapCrewmate ? crewPlayer : playerList);
+            baitPlayer.RemoveAll(x => x == SchrodingersCat.Player);
+
+            playerId = setModifierToRandomPlayer((byte)RoleId.Bait, baitPlayer);
             crewPlayer.RemoveAll(x => x.PlayerId == playerId);
             playerList.RemoveAll(x => x.PlayerId == playerId);
             modifiers.RemoveAll(x => x == RoleId.Bait);

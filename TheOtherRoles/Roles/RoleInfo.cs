@@ -21,7 +21,7 @@ public class RoleInfo
     public RoleId roleId;
     public RoleType roleType;
     public bool isGuessable;
-    private readonly string nameKey;
+    public string nameKey;
 
     public RoleInfo(string name, Color color, RoleId roleId, RoleType roleType, bool isGuessable = false)
     {
@@ -397,7 +397,7 @@ public class RoleInfo
     public static string GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, bool showGhostInfo = true, bool onlyGhostRole = false)
     {
 
-        string roleName = string.Join(" ", getRoleInfoForPlayer(p, showModifier, true).Select(x => useColors ? cs(x.color, x.Name) : x.Name).ToArray());
+        string roleName = string.Join(" ", getRoleInfoForPlayer(p, showModifier, true).Select(x => useColors ? cs(x.color, x.Name) : x.Name));
 
         if (onlyGhostRole)
         {
@@ -406,7 +406,7 @@ public class RoleInfo
             if (p.Data.IsDead && ghostRoleInfo != null)
             {
                 roleName = string.Join(" ", getRoleInfoForPlayer(p, false, true).Where(x => x.roleType is RoleType.Ghost or RoleType.Modifier)
-                    .Select(x => useColors ? cs(x.color, x.Name) : x.Name).ToArray());
+                    .Select(x => useColors ? cs(x.color, x.Name) : x.Name));
             }
         }
 
@@ -415,7 +415,7 @@ public class RoleInfo
 
         if (Executioner.target != null && p.PlayerId == Executioner.target.PlayerId && PlayerControl.LocalPlayer != Executioner.target)
             roleName += useColors ? cs(Executioner.color, " §") : " §";
-
+        
         if (Jackal.jackal.Any(x => x == p) && Jackal.canSwoop)
             roleName += "JackalIsSwooperInfo".Translate();
 

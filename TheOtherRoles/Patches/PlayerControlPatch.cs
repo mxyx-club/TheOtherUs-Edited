@@ -158,17 +158,18 @@ public static class PlayerControlFixedUpdatePatch
     {
         // If LocalPlayer is Sidekick, the Jackal is disconnected and Sidekick promotion is enabled, then trigger promotion
         if (Jackal.Sidekick.IsDead() || !Jackal.promotesToJackal || Jackal.Sidekick != PlayerControl.LocalPlayer) return;
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-            (byte)CustomRPC.SidekickPromotes, SendOption.Reliable);
-        writer.Write(Jackal.Sidekick.PlayerId);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.sidekickPromotes(Jackal.Sidekick.PlayerId);
+        if (Jackal.jackal.Count == 0 || Jackal.jackal.All(x => x != Jackal.Sidekick && x.IsDead()))
+        {
+            var writer = StartRPC(CustomRPC.SidekickPromotes);
+            writer.Write(Jackal.Sidekick.PlayerId);
+            writer.EndRPC();
+            RPCProcedure.sidekickPromotes(Jackal.Sidekick.PlayerId);
+        }
     }
 
     private static void deputyUpdate()
     {
-        if (PlayerControl.LocalPlayer == null ||
-            !Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId)) return;
+        if (PlayerControl.LocalPlayer == null || !Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId)) return;
 
         if (Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] <= 0)
         {
@@ -177,11 +178,10 @@ public static class PlayerControlFixedUpdatePatch
             Sheriff.setHandcuffedKnows(false);
 
             // Ghost info
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.ShareGhostInfo);
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write((byte)RPCProcedure.GhostInfoTypes.HandcuffOver);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
         }
     }
 
@@ -407,7 +407,7 @@ public static class PlayerControlFixedUpdatePatch
         }
         else if (local == Redemptor.Player && Redemptor.Revelating)
         {
-            var array = Object.FindObjectsOfType<DeadBody>()?.FirstOrDefault(x => !(playerById(x.ParentId)?.Data?.Disconnected == true));
+            var array = Object.FindObjectsOfType<DeadBody>()?.FirstOrDefault();
             if (array != null)
             {
                 Redemptor.arrow ??= new Arrow(Redemptor.color);
@@ -1577,14 +1577,14 @@ public static class PlayerDiePatch
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
 public static class MurderPlayerPatch
 {
-    public static bool resetToCrewmate;
-    public static bool resetToDead;
+    //public static bool resetToCrewmate;
+    //public static bool resetToDead;
 
     public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
         if (SchrodingersCat.Player != null && target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
         {
-            var role = RoleInfo.getRoleInfoForPlayer(__instance, false, false).First();
+            var role = RoleInfo.getRoleInfoForPlayer(__instance, false, false).FirstOrDefault();
             var state = SchrodingersCat.CatState.None;
             if (role != null && PlayerControl.LocalPlayer == SchrodingersCat.Player)
             {
@@ -1604,8 +1604,6 @@ public static class MurderPlayerPatch
                 SchrodingersCat.State = state;
             }
 
-            SchrodingersCat.ChangeCount++;
-
             if (PlayerControl.LocalPlayer == __instance)
             {
                 if (Constants.ShouldPlaySfx())
@@ -1621,7 +1619,6 @@ public static class MurderPlayerPatch
                 DestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(__instance.Data, target.Data);
             }
 
-            Message($"SchrodingersCat.State: {SchrodingersCat.State}");
             return false;
         }
 
@@ -1636,6 +1633,12 @@ public static class MurderPlayerPatch
 
     public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
+        if (SchrodingersCat.Player != null && target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
+        {
+            SchrodingersCat.ChangeCount++;
+            Message($"SchrodingersCat.State: {SchrodingersCat.State}");
+            return;
+        }
         HandleMurderPostfix(__instance, target);
     }
 
@@ -1645,10 +1648,6 @@ public static class MurderPlayerPatch
         var deathReason = __instance == target ? CustomDeathReason.Suicide : CustomDeathReason.Kill;
         var deadPlayer = new DeadPlayer(target, DateTime.UtcNow, deathReason, __instance);
         DeadPlayers.Add(deadPlayer);
-
-        // Reset killer to crewmate if resetToCrewmate
-        if (resetToCrewmate) __instance.Data.Role.TeamType = RoleTeamTypes.Crewmate;
-        if (resetToDead) __instance.Data.IsDead = true;
 
         // Remove fake tasks when player dies
         if (target.hasFakeTasks() || target == Lawyer.lawyer || Pursuer.Player.Contains(target) || target == Thief.thief)
@@ -1685,17 +1684,6 @@ public static class MurderPlayerPatch
                 Aftermath.afterTrigger(target.PlayerId, __instance.PlayerId);
 
             }, 0.2f, "Aftermath Trigger!");
-        }
-
-        // Sidekick promotion trigger on exile
-        if (Jackal.promotesToJackal && Jackal.Sidekick.IsAlive() &&
-            Jackal.jackal.Any(x => x == __instance && x == PlayerControl.LocalPlayer))
-        {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.SidekickPromotes, SendOption.Reliable);
-            writer.Write(Jackal.Sidekick.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.sidekickPromotes(Jackal.Sidekick.PlayerId);
         }
 
         // Pursuer promotion trigger on murder (the host sends the call such that everyone recieves the update before a possible game End)
@@ -1876,7 +1864,7 @@ public static class MurderPlayerPatch
                 else if (RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault().roleType == RoleType.Neutral) color = Color.blue;
             }
 
-            showFlash(color, 1.75f);
+            showFlash(color, 1.25f);
         }
 
         // Snitch
@@ -2010,16 +1998,6 @@ public static class ExilePlayerPatch
             Pelican.PelicanDie();
         }
 
-        // Sidekick promotion trigger on exile
-        if (Jackal.promotesToJackal && Jackal.Sidekick.IsAlive() &&
-            Jackal.jackal.Any(x => x == __instance && x == PlayerControl.LocalPlayer))
-        {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.SidekickPromotes, SendOption.Reliable);
-            writer.Write(Jackal.Sidekick.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.sidekickPromotes(Jackal.Sidekick.PlayerId);
-        }
         if (Lawyer.lawyer != null && __instance == Lawyer.target)
         {
             if (AmongUsClient.Instance.AmHost && ((Lawyer.target != Jester.jester) || Lawyer.targetWasGuessed))

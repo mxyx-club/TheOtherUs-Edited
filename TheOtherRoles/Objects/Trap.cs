@@ -114,7 +114,7 @@ public class Trap
         t.triggerable = true;
 
         // Add trapped Info into Trapper chat
-        if (Trapper.trapper.IsAlive() && (PlayerControl.LocalPlayer == Trapper.trapper || ShowGhostInfo))
+        /*if (Trapper.trapper.IsAlive() && (PlayerControl.LocalPlayer == Trapper.trapper || ShowGhostInfo))
         {
             foreach (var trap in traps)
             {
@@ -132,7 +132,7 @@ public class Trap
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, $"{message}");
             }
         }
-        Trapper.playersOnMap = new List<PlayerControl>();
+        Trapper.playersOnMap = new List<PlayerControl>();*/
     }
 
     public static void Update()

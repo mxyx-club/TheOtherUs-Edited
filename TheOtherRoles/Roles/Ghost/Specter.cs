@@ -13,12 +13,14 @@ public class Specter
     public static bool afterMeetingRevive;
 
     public static bool revive;
+    public static bool revived;
     public static bool remember;
 
     public static void ClearAndReload()
     {
         Player = null;
         revive = false;
+        revived = false;
         remember = !CustomOptionHolder.specterAfterMeetingTakeRole.GetBool();
         afterMeetingRevive = CustomOptionHolder.specterAfterMeetingRevived.GetBool();
         resetRole = CustomOptionHolder.specterResetRole.GetBool();
@@ -34,6 +36,8 @@ public class Specter
         RPCProcedure.erasePlayerRoles(local.PlayerId);
         var roleInfo = RoleInfo.getRoleInfoForPlayer(target).FirstOrDefault(x => x.roleType is not RoleType.Modifier and not RoleType.Ghost);
         if (target.IsImpostor()) turnToImpostor(local);
+
+        revived = true;
 
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)

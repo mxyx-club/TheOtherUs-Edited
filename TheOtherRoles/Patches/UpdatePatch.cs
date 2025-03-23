@@ -109,8 +109,7 @@ internal class HudManagerUpdatePatch
                  (BandLeader.Player == p && BandLeader.Members.Any(x => x.PlayerId == local.PlayerId)) ||
                  (Jackal.jackal.Any(x => x.PlayerId == local.PlayerId) && p.PlayerId == Jackal.Sidekick?.PlayerId) ||
                  (Jackal.Sidekick == local && Jackal.jackal.Any(x => x.PlayerId == p.PlayerId)) ||
-                 (SchrodingersCat.InTeam(local, out _) && p == SchrodingersCat.Player) ||
-                 (SchrodingersCat.Player == local && SchrodingersCat.InTeam(p, out _));
+                 (SchrodingersCat.InTeam(local, out _) && p == SchrodingersCat.Player);
 
             bool reported = ((local == Slueth.slueth && Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) ||
                              (local == Poucher.poucher && Poucher.killed.Any(x => x.PlayerId == p.PlayerId))) && p.IsDead();
@@ -534,9 +533,12 @@ internal class HudManagerUpdatePatch
             var suffix3 = cs(BandLeader.color, "(D)");
             if (local == BandLeader.Player || local.IsDead() || BandLeader.Members.Any(x => x == local))
             {
-                if (BandLeader.Keyboardist != null) BandLeader.Keyboardist.cosmetics.nameText.text += suffix1;
-                if (BandLeader.Bassist != null) BandLeader.Bassist.cosmetics.nameText.text += suffix2;
-                if (BandLeader.Drummer != null) BandLeader.Drummer.cosmetics.nameText.text += suffix3;
+                if (BandLeader.Keyboardist != null)
+                    BandLeader.Keyboardist.cosmetics.nameText.text += suffix1;
+                if (BandLeader.Bassist != null)
+                    BandLeader.Bassist.cosmetics.nameText.text += suffix2;
+                if (BandLeader.Drummer != null)
+                    BandLeader.Drummer.cosmetics.nameText.text += suffix3;
 
                 if (MeetingHud.Instance != null)
                 {

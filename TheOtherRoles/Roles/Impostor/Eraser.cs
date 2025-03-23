@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Impostor;
@@ -22,10 +22,10 @@ public static class Eraser
     {
         eraser = null;
         futureErased.Clear();
+        alreadyErased.Clear();
         currentTarget = null;
         cooldown = CustomOptionHolder.eraserCooldown.GetFloat();
         canEraseAnyone = CustomOptionHolder.eraserCanEraseAnyone.GetBool();
         canEraseGuess = CustomOptionHolder.erasercanEraseGuess.GetBool();
-        alreadyErased.Clear();
     }
 }
