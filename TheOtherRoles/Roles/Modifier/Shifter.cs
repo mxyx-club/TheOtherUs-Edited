@@ -268,6 +268,11 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             BandLeader.Player = player1;
         }
+        else if (Pelican.Player != null && Pelican.Player == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Pelican.Player = player1;
+        }
     }
 
     public static void clearAndReload()

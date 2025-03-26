@@ -471,10 +471,10 @@ internal class ExileControllerWrapUpPatch
         Shifter.futureShift = null;
         Witch.futureSpelled = new List<PlayerControl>();
 
-        if (Specter.Player != null && Specter.Player?.Data?.IsDead == true && Specter.revive)
+        if (Specter.Player != null && Specter.Player?.Data?.IsDead == true && Specter.exiledBeginRevive)
         {
             Specter.Player.Revive();
-            Specter.revive = false;
+            Specter.exiledBeginRevive = false;
         }
 
         // Medium spawn souls

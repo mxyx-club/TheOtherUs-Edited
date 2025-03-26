@@ -11,15 +11,15 @@ public class Specter
     public static float duration;
     public static bool resetRole;
     public static bool afterMeetingRevive;
-
-    public static bool revive;
-    public static bool revived;
     public static bool remember;
+
+    public static bool exiledBeginRevive;
+    public static bool revived;
 
     public static void ClearAndReload()
     {
         Player = null;
-        revive = false;
+        exiledBeginRevive = false;
         revived = false;
         remember = !CustomOptionHolder.specterAfterMeetingTakeRole.GetBool();
         afterMeetingRevive = CustomOptionHolder.specterAfterMeetingRevived.GetBool();
@@ -351,7 +351,7 @@ public class Specter
 
         if (afterMeetingRevive)
         {
-            revive = true;
+            exiledBeginRevive = true;
             return;
         }
         local.Revive();

@@ -462,7 +462,8 @@ internal class RoleDraft
             // destroy all the buttons:
             foreach (var button in buttons)
             {
-                if (button?.gameObject != null) button.gameObject?.Destroy();
+                UnityEngine.Object.Destroy(button?.gameObject);
+                //if (button?.gameObject != null) button.gameObject?.Destroy();
             }
             buttons.Clear();
         }

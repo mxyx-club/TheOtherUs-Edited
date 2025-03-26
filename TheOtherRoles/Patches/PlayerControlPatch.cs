@@ -13,7 +13,6 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
-using static Il2CppSystem.Globalization.CultureInfo;
 using static TheOtherRoles.GameHistory;
 using Object = UnityEngine.Object;
 
@@ -135,7 +134,6 @@ public static class PlayerControlFixedUpdatePatch
                     PlayerControl.LocalPlayer.CanMove)); // CanMove = CanMove
         }
     }
-
 
     private static void detectiveUpdateFootPrints()
     {
@@ -418,6 +416,7 @@ public static class PlayerControlFixedUpdatePatch
         else
         {
             Redemptor.arrow?.arrow?.Destroy();
+            Redemptor.arrow = null;
         }
     }
 
@@ -434,8 +433,8 @@ public static class PlayerControlFixedUpdatePatch
             {
                 Redemptor.text = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 Redemptor.text.enableWordWrapping = false;
-                Redemptor.text.transform.localScale = Vector3.one * 0.75f;
-                Redemptor.text.transform.localPosition += new Vector3(0f, 1.8f, -69f);
+                Redemptor.text.transform.localScale = Vector3.one * 0.7f;
+                Redemptor.text.transform.localPosition += new Vector3(0f, 1.9f, -69f);
                 Redemptor.text.gameObject.SetActive(true);
             }
             else if (Redemptor.Reviving && Redemptor.Player.IsAlive())
@@ -449,9 +448,14 @@ public static class PlayerControlFixedUpdatePatch
             else
             {
                 Redemptor.text?.Destroy();
+                Redemptor.text = null;
             }
         }
-        else if (Redemptor.text != null) Redemptor.text.Destroy();
+        else if (Redemptor.text != null)
+        {
+            Redemptor.text.Destroy();
+            Redemptor.text = null;
+        }
     }
 
     private static void MiniSizeUpdate(PlayerControl p)
@@ -657,9 +661,14 @@ public static class PlayerControlFixedUpdatePatch
             {
                 if (MeetingHud.Instance == null) Snitch.needsUpdate = false;
                 Snitch.text?.Destroy();
+                Snitch.text = null;
             }
         }
-        else if (Snitch.text != null) Snitch.text.Destroy();
+        else if (Snitch.text != null)
+        {
+            Snitch.text.Destroy();
+            Snitch.text = null;
+        }
     }
 
     private static void partTimerUpdate()
