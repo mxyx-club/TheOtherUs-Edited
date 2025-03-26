@@ -36,6 +36,7 @@ public static class Shifter
                        player == Lawyer.lawyer ||
                        player == Juggernaut.juggernaut ||
                        player == Akujo.akujo ||
+                       player == Pelican.Player ||
                        player == Swooper.swooper ||
                        player == SchrodingersCat.Player ||
                        player == Pavlovsdogs.pavlovsowner ||

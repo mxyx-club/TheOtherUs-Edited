@@ -258,18 +258,16 @@ internal class MeetingHudPatch
         // Add Guesser Buttons
         var GuesserRemainingShots = HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId);
 
-        if (!isGuesser || PlayerControl.LocalPlayer.IsDead() || GuesserRemainingShots <= 0 || (PlayerControl.LocalPlayer == WolfLord.Player && !WolfLord.Killed)) return;
+        if (!isGuesser || PlayerControl.LocalPlayer.IsDead() || GuesserRemainingShots <= 0 || (PlayerControl.LocalPlayer == WolfLord.Player && WolfLord.Revealed && !WolfLord.Killed)) return;
         {
             Doomsayer.CanShoot = true;
-            for (var i = 0; i < __instance.playerStates.Length; i++)
+            //int i = 0;
+            foreach (var (pvae, i) in __instance.playerStates.Select((pvae, i) => (pvae, i)))
             {
-                var pvae = __instance.playerStates[i];
-
                 if (pvae.AmDead || pvae.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
 
-                if (Eraser.eraser.IsAlive() && PlayerControl.LocalPlayer == Eraser.eraser && !Eraser.canEraseGuess && Eraser.alreadyErased.Any(x => x == pvae?.TargetPlayerId))
+                if (Eraser.eraser.IsAlive() && PlayerControl.LocalPlayer == Eraser.eraser && !Eraser.canEraseGuess && Eraser.alreadyErased.Any(x => x == pvae.TargetPlayerId))
                     continue;
-
                 var template = pvae.Buttons.transform.Find("CancelButton").gameObject;
                 var targetBox = Object.Instantiate(template, pvae.transform);
                 targetBox.name = "ShootButton";
@@ -280,6 +278,7 @@ internal class MeetingHudPatch
                 button.OnClick.RemoveAllListeners();
                 var copiedIndex = i;
                 button.OnClick.AddListener((Action)(() => Guesser.guesserOnClick(copiedIndex, __instance)));
+                //i++;
             }
         }
     }
@@ -906,26 +905,6 @@ internal class MeetingHudPatch
 
             // Remove first kill shield
             if (!PlayerControl.AllPlayerControls.ToList().All(x => x.IsAlive())) firstKillPlayer = null;
-
-            // Add trapped Info into Trapper chat
-            if (Trapper.trapper.IsAlive() && (PlayerControl.LocalPlayer == Trapper.trapper || ShowGhostInfo))
-            {
-                if (Trap.traps.Any(x => x.revealed)) FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, "陷阱日志:");
-                foreach (var trap in Trap.traps)
-                {
-                    if (!trap.revealed) continue;
-                    var message = $"陷阱 {trap.instanceId}: \n";
-                    trap.trappedPlayer = trap.trappedPlayer.OrderBy(x => rnd.Next()).ToList();
-                    message = trap.trappedPlayer.Aggregate(message, (current, p) => current + Trapper.infoType switch
-                    {
-                        0 => RoleInfo.GetRolesString(p, false, false, false) + "\n",
-                        1 when isEvilNeutral(p) || p.Data.Role.IsImpostor => "邪恶职业 \n",
-                        1 => "善良职业 \n",
-                        _ => p.Data.PlayerName + "\n"
-                    });
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, $"{message}");
-                }
-            }
 
             Trapper.playersOnMap = new List<PlayerControl>();
 

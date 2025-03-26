@@ -446,6 +446,7 @@ public static class RoleHelpers
                 (Lawyer.lawyer == player && Lawyer.target.IsAlive()) ||
                 player == Jackal.Sidekick ||
                 player == Pavlovsdogs.pavlovsowner ||
+                (player == BandLeader.Player && BandLeader.Formed) ||
                 Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) ||
                 Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId))
             {

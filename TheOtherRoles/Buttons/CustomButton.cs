@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Rewired;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -28,9 +29,7 @@ public class CustomButton
     public Func<bool> HasButton;
     public bool HasEffect;
     public KeyCode? hotkey;
-    //public KeyCode? originalHotkey;
-    //public static KeyCode Action2Keycode = KeyCode.G;
-    //public static KeyCode Action3Keycode = KeyCode.H;
+    public KeyCode? originalHotkey;
     public HudManager hudManager;
     public bool isEffectActive;
     public bool isHandcuffed;
@@ -71,8 +70,7 @@ public class CustomButton
         showButtonText = actionButtonRenderer.sprite == Sprite || buttonText != "";
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
-        //originalHotkey = hotkey;
-
+        originalHotkey = GetHotKeys(hotkey);
         Timer = 10.5f;
         SetHotKeyGuide();
         setActive(false);
@@ -276,7 +274,8 @@ public class CustomButton
         actionButton.SetCoolDown(Timer, HasEffect && isEffectActive ? EffectDuration : MaxTimer);
 
         // Trigger OnClickEvent if the hotkey is being pressed down
-        if (hotkey.HasValue && Input.GetKeyDown(hotkey.Value)) onClickEvent();
+        if ((hotkey.HasValue && Input.GetKeyDown(hotkey.Value)) || (originalHotkey.HasValue && Input.GetKeyDown(originalHotkey.Value)))
+            onClickEvent();
 
         // Deputy disable the button and display Handcuffs instead...
         if (Sheriff.handcuffedPlayers.Contains(localPlayer.PlayerId))
@@ -285,36 +284,22 @@ public class CustomButton
             OnClick = InitialOnClick;
     }
 
-    // Reload the rebound hotkeys from the among us settings.
-    /*public static void ReloadHotkeys()
+    public static KeyCode? GetHotKeys(KeyCode? origin)
     {
-        foreach (var button in buttons)
+        Player player = ReInput.players.GetPlayer(0);
+        KeyCode? newKey = null;
+        if (origin == ModInputManager.modKillInput.keyCode)
         {
-            // Q button is used only for killing! This rebinds every button that would use Q to use the currently set killing button in among us.
-            if (button.originalHotkey == KeyCode.Q)
-            {
-                Player player = ReInput.players.GetPlayer(0);
-                string keycode = player.controllers.maps.GetFirstButtonMapWithAction(8, true).elementIdentifierName;
-                button.hotkey = (KeyCode)Enum.Parse(typeof(KeyCode), keycode);
-            }
-            // F is the default ability button. All buttons that would use F now use the ability button.
-            if (button.originalHotkey == KeyCode.F)
-            {
-                Player player = ReInput.players.GetPlayer(0);
-                string keycode = player.controllers.maps.GetFirstButtonMapWithAction(49, true).elementIdentifierName;
-                button.hotkey = (KeyCode)Enum.Parse(typeof(KeyCode), keycode);
-            }
-
-            if (button.originalHotkey == KeyCode.G)
-            {
-                button.hotkey = Action2Keycode;
-            }
-            if (button.originalHotkey == KeyCode.H)
-            {
-                button.hotkey = Action3Keycode;
-            }
+            string keycode = player.controllers.maps.GetFirstButtonMapWithAction(8, true).elementIdentifierName;
+            newKey = (KeyCode)Enum.Parse(typeof(KeyCode), keycode);
         }
-    }*/
+        if (origin == ModInputManager.abilityInput.keyCode)
+        {
+            string keycode = player.controllers.maps.GetFirstButtonMapWithAction(49, true).elementIdentifierName;
+            newKey = (KeyCode)Enum.Parse(typeof(KeyCode), keycode);
+        }
+        return newKey ?? origin;
+    }
 
     public static GameObject SetKeyGuide(GameObject button, KeyCode key, Vector2 pos)
     {

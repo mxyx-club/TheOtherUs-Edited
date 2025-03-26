@@ -9,8 +9,8 @@ public static class Eraser
     public static Color color = Palette.ImpostorRed;
 
     public static List<byte> alreadyErased = new();
-
     public static List<PlayerControl> futureErased = new();
+
     public static PlayerControl currentTarget;
     public static float cooldown = 30f;
     public static bool canEraseAnyone;

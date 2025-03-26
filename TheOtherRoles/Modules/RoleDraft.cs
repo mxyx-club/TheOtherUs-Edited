@@ -23,7 +23,7 @@ internal class RoleDraft
     private static List<ActionButton> buttons = new();
     private static TextMeshPro feedText;
     public static List<byte> alreadyPicked = new();
-    private static Dictionary<byte, string> playerRoles = new();
+    private static Dictionary<byte, byte> playerRoles = new();
 
     private static readonly SimpleTable _pickTable = new SimpleTable()
         .AddColumn(8, minWidth: 4, Alignment.Right)
@@ -403,6 +403,7 @@ internal class RoleDraft
         if (!isEnabled) return;
         RPCProcedure.setRole(roleId, playerId);
         alreadyPicked.Add(roleId);
+        playerRoles.Add(playerId, roleId);
         var isRandom = flag > 0;
         var reasons = ((SelectFlags)flag).ToString();
 
@@ -450,6 +451,7 @@ internal class RoleDraft
 
     public static void sendPick(byte RoleId, SelectFlags flag = SelectFlags.Normal)
     {
+        if (playerRoles.ContainsKey(PlayerControl.LocalPlayer.PlayerId)) { Message($"玩家已选择职业！"); return; }
         SoundEffectsManager.stop("timeMasterShield");
         var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.DraftModePick);
         writer.Write(PlayerControl.LocalPlayer.PlayerId);

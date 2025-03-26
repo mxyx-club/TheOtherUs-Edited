@@ -84,7 +84,6 @@ public enum CustomRPC
     JackalCreatesSidekick,
     PavlovsCreateDog,
     SidekickPromotes,
-    ErasePlayerRoles,
     ClearGhostRoles,
     SetFutureErased,
     SetFutureReveal,
@@ -2255,11 +2254,6 @@ internal class RPCHandlerPatch
 
             case CustomRPC.SidekickPromotes:
                 RPCProcedure.sidekickPromotes(reader.ReadByte());
-                break;
-
-            case CustomRPC.ErasePlayerRoles:
-                RPCProcedure.erasePlayerRoles(reader.ReadByte());
-                Eraser.alreadyErased.Add(reader.ReadByte());
                 break;
 
             case CustomRPC.ClearGhostRoles:

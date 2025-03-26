@@ -405,22 +405,20 @@ internal class ExileControllerWrapUpPatch
             Prosecutor.ProsecuteThisMeeting = false;
         }
 
+        // Eraser erase
+        if (Eraser.eraser != null)
+        {
+            var rasePlayerList = new List<PlayerControl>(Eraser.futureErased);
+            foreach (var target in rasePlayerList)
+            {
+                if (target?.Data == null) continue;
+                RPCProcedure.erasePlayerRoles(target.PlayerId);
+                Eraser.alreadyErased.Add(target.PlayerId);
+            }
+        }
+
         if (AmongUsClient.Instance.AmHost)
         {
-            // Eraser erase
-            if (Eraser.eraser != null && Eraser.futureErased != null)
-            {
-                var rasePlayerList = new List<PlayerControl>(Eraser.futureErased);
-                foreach (var target in rasePlayerList)
-                {
-                    var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.ErasePlayerRoles);
-                    writer.Write(target.PlayerId);
-                    writer.EndRPC();
-                    RPCProcedure.erasePlayerRoles(target.PlayerId);
-                    Eraser.alreadyErased.Add(target.PlayerId);
-                }
-            }
-
             // Shifter shift
             if (Shifter.shifter != null && Shifter.futureShift != null)
             {

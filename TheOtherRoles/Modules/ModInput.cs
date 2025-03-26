@@ -129,10 +129,10 @@ public class ModInputManager
         kit = new KeyInputTexture("TheOtherRoles.Resources.KeyBind.Characters5.png");
         for (int i = 0; i < 10; i++) _ = new KeyCodeData(KeyCode.Alpha0 + i, "0" + (i + 1), kit, i);
 
-        abilityInput = new ModInput("ability", KeyCode.F);
-        secondaryAbilityInput = new ModInput("secondaryAbility", KeyCode.G);
-        modifierAbilityInput = new ModInput("modifierAbility", KeyCode.Z);
         modKillInput = new ModInput("kill", KeyCode.Q);
+        abilityInput = new ModInput("ability", KeyCode.F);
+        modifierAbilityInput = new ModInput("modifierAbility", KeyCode.Z);
+        secondaryAbilityInput = new ModInput("secondaryAbility", KeyCode.G);
         showOptionPageInput = new ModInput("showOptionPage", KeyCode.F1);
         helpInput = new ModInput("help", KeyCode.H);
         toggleChat = new ModInput("toggleChat", KeyCode.F2);

@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Reactor.Utilities.Extensions;
 using TheOtherRoles.Buttons;
 using TheOtherRoles.Patches;
 using UnityEngine;
+using static TheOtherRoles.Patches.GameStartManagerPatch;
 
 namespace TheOtherRoles.Modules;
 

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using AmongUs.Data;
+using Hazel;
 using InnerNet;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -273,7 +274,8 @@ public static class ChatCommands
         }
         public static void Postfix(ChatController __instance)
         {
-            DataManager.Settings.Multiplayer.ChatMode = QuickChatModes.FreeChatOrQuickChat;
+            __instance.freeChatField.textArea.AllowPaste = true;
+            __instance.chatBubblePool.Prefab.Cast<ChatBubble>().TextArea.overrideColorTags = false;
 
             if (Input.GetKeyDown(ModInputManager.toggleChat.keyCode))
             {
