@@ -1619,7 +1619,7 @@ public static class MurderPlayerPatch
                 {
                     SoundManager.Instance.PlaySound(__instance.KillSfx, false, 0.8f, null);
                 }
-                __instance.NetTransform.RpcSnapTo(target.transform.position);
+                if (!KillAnimationCoPerformKillPatch.hideNextAnimation) __instance.NetTransform.RpcSnapTo(target.transform.position);
                 __instance.SetKillTimer(GameOptionsManager.Instance.CurrentGameOptions.GetFloat(FloatOptionNames.KillCooldown));
             }
             else if (PlayerControl.LocalPlayer == target)

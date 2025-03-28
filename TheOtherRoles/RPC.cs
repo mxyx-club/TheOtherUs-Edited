@@ -627,31 +627,6 @@ public static class RPCProcedure
         var target = playerById(targetId);
         if (source != null && target != null)
         {
-            /*if (target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
-            {
-                if (source.IsCrew()) SchrodingersCat.State = SchrodingersCat.CatState.Crewmate;
-                if (source.IsImpostor()) SchrodingersCat.State = SchrodingersCat.CatState.Impostor;
-                if (Jackal.jackal.Any(x => x == source) || Jackal.Sidekick) SchrodingersCat.State = SchrodingersCat.CatState.Jackal;
-                if (Pavlovsdogs.pavlovsdogs.Any(x => x == source)) SchrodingersCat.State = SchrodingersCat.CatState.Pavlovsowner;
-                if (Werewolf.werewolf == source) SchrodingersCat.State = SchrodingersCat.CatState.Werewolf;
-                if (Juggernaut.juggernaut == source) SchrodingersCat.State = SchrodingersCat.CatState.Juggernaut;
-                if (Swooper.swooper == source) SchrodingersCat.State = SchrodingersCat.CatState.Swooper;
-                if (Arsonist.arsonist == source) SchrodingersCat.State = SchrodingersCat.CatState.Arsonist;
-                if (Pelican.Player == source) SchrodingersCat.State = SchrodingersCat.CatState.Pelican;
-
-                if (PlayerControl.LocalPlayer == source)
-                {
-                    SoundManager.Instance.PlaySound(PlayerControl.LocalPlayer.KillSfx, false, 0.8f, null);
-                    CustomButton.ResetAllCooldowns();
-                }
-                else if (PlayerControl.LocalPlayer == target)
-                {
-                    DestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(source.Data, target.Data);
-                }
-                Message($"SchrodingersCat.State: {SchrodingersCat.State}");
-                return;
-            }*/
-
             if (showAnimation == 0) KillAnimationCoPerformKillPatch.hideNextAnimation = true;
             source.MurderPlayer(target, MurderResultFlags.Succeeded);
         }
