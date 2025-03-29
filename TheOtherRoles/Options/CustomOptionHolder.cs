@@ -722,21 +722,22 @@ public class CustomOptionHolder
 
         //-------------------------- Role options 0 - 99 -------------------------- //
         presetSelection = Create(0, Types.General, cs(new Color32(204, 204, 0, 255), "presetSelection"), presets, null, true);
+        anyPlayerCanStopStart = Create(3, Types.General, cs(new Color32(204, 204, 0, 255), "anyPlayerCanStopStart"), false);
 
-        anyPlayerCanStopStart = Create(3, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0), "anyPlayerCanStopStart"), false);
-
-        isDraftMode = Create(900, Types.General, cs(Color.yellow, "isDraftMode"), false, null, true);
+        isDraftMode = Create(900, Types.General, cs(Color.yellow, "isDraftMode"), false, null, true, onChange: () =>
+        {
+            neutralRolesCountMax.isHeader = isDraftMode.GetBool();
+        });
         draftModeAmountOfChoices = Create(901, Types.General, cs(Color.yellow, "draftModeAmountOfChoices"), 3f, 2f, 6f, 1f, isDraftMode, false);
-        draftModeTimeToChoose = Create(902, Types.General, cs(Color.yellow, "draftModeTimeToChoose"), 5f, 3f, 20f, 1f, isDraftMode, false);
+        draftModeTimeToChoose = Create(902, Types.General, cs(Color.yellow, "draftModeTimeToChoose"), 5f, 3f, 20f, 1f, isDraftMode);
         draftModeShowRoles = Create(903, Types.General, cs(Color.yellow, "draftModeShowRoles"), false, isDraftMode, false);
         draftModeHideImpRoles = Create(904, Types.General, cs(Color.yellow, "draftModeHideImpRoles"), false, draftModeShowRoles, false);
         draftModeHideNeutralRoles = Create(905, Types.General, cs(Color.yellow, "draftModeHideNeutralRoles"), false, draftModeShowRoles, false);
         draftModeHideCrewmateRoles = Create(906, Types.General, cs(Color.yellow, "draftModeHideCrewmateRoles"), false, draftModeShowRoles, false);
 
-
-        neutralRolesCountMin = Create(8, Types.General, cs(new Color32(204, 204, 0, 255), "neutralRolesCountMin"), 2f, 0f, 15f, 1f, null, true);
-        neutralRolesCountMax = Create(9, Types.General, cs(new Color32(204, 204, 0, 255), "neutralRolesCountMax"), 2f, 0f, 15f, 1f);
-        killerNeutralRolesCountMin = Create(10, Types.General, cs(new Color32(204, 204, 0, 255), "killerNeutralRolesCountMin"), ratesRandom);
+        neutralRolesCountMin = Create(8, Types.General, cs(new Color32(204, 204, 0, 255), "neutralRolesCountMin"), 2f, 0f, 15f, 1f, null, true, isHidden: () => isDraftMode.GetBool());
+        neutralRolesCountMax = Create(9, Types.General, cs(new Color32(204, 204, 0, 255), "neutralRolesCountMax"), 2f, 0f, 15f, 1f, isHeader: isDraftMode.GetBool());
+        killerNeutralRolesCountMin = Create(10, Types.General, cs(new Color32(204, 204, 0, 255), "killerNeutralRolesCountMin"), ratesRandom, isHidden: () => isDraftMode.GetBool());
         killerNeutralRolesCountMax = Create(11, Types.General, cs(new Color32(204, 204, 0, 255), "killerNeutralRolesCountMax"), ratesRandom);
         modifiersCountMin = Create(12, Types.General, cs(new Color32(204, 204, 0, 255), "modifiersCountMin"), 15f, 0f, 30f, 1f);
         modifiersCountMax = Create(13, Types.General, cs(new Color32(204, 204, 0, 255), "modifiersCountMax"), 15f, 0f, 30f, 1f);
@@ -873,7 +874,7 @@ public class CustomOptionHolder
         eraserCanEraseAnyone = Create(10162, Types.Impostor, "eraserCanEraseAnyone", false, eraserSpawnRate);
         erasercanEraseGuess = Create(10163, Types.Impostor, "erasercanEraseGuess", false, eraserSpawnRate);
 
-        poucherSpawnRate = Create(10320, Types.Impostor, cs(Palette.ImpostorRed, "Poucher"), rates, null, true, false, () =>
+        poucherSpawnRate = Create(10320, Types.Impostor, cs(Palette.ImpostorRed, "Poucher"), rates, null, true, onChange: () =>
             { if (modifierPoucher.selection > 0) poucherSpawnRate.selection = 0; });
 
         butcherSpawnRate = Create(10310, Types.Impostor, cs(Palette.ImpostorRed, "Butcher"), rates, null, true);
@@ -1345,7 +1346,7 @@ public class CustomOptionHolder
         modifierDisperser = Create(40100, Types.Modifier, cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
         modifierDisperserDispersesToVent = Create(40101, Types.Modifier, "modifierDisperserDispersesToVent", true, modifierDisperser);
 
-        modifierPoucher = Create(40370, Types.Modifier, cs(Palette.ImpostorRed, "Poucher"), rates, null, true, false, () =>
+        modifierPoucher = Create(40370, Types.Modifier, cs(Palette.ImpostorRed, "Poucher"), rates, null, true, null, onChange: () =>
             { poucherSpawnRate.selection = 0; });
 
         modifierVortox = Create(40380, Types.Modifier, cs(Vortox.color, "Vortox"), rates, null, true);

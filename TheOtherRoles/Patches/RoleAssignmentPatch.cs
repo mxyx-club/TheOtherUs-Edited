@@ -89,6 +89,12 @@ internal class RoleManagerSelectRolesPatch
         var killerNeutralMax = CustomOptionHolder.killerNeutralRolesCountMax.GetSelection();
         var impostorNum = ModOption.NumImpostors;
 
+        if (RoleDraft.isEnabled)
+        {
+            neutralMin = neutralMax;
+            killerNeutralMin = killerNeutralMax;
+        }
+
         // Make sure min is less or equal to max
         neutralMin = Math.Min(neutralMin, neutralMax);
         killerNeutralMin = Math.Min(killerNeutralMin, killerNeutralMax);

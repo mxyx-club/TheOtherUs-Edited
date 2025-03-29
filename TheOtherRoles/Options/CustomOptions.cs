@@ -48,12 +48,13 @@ public class CustomOption
     public int selection;
     public object[] selections;
     public CustomOptionType type;
-    public bool isHidden;
+    public Func<bool> isHidden;
 
+    public RoleId RoleId;
     // Option creation
 
     public CustomOption(int id, CustomOptionType type, string name, object[] selections, object defaultValue,
-        CustomOption parent, bool isHeader, bool isHidden = false, Action onChange = null)
+        CustomOption parent, bool isHeader, Func<bool> isHidden = null, Action onChange = null)
     {
         this.id = id;
         //this.name = parent == null ? name : " - " + name;
@@ -76,14 +77,17 @@ public class CustomOption
         options.Add(this);
     }
 
+    public static Dictionary<RoleId, CustomOption> CustomRoleCounts = new();
+    public static Dictionary<RoleId, CustomOption> CustomRoleSpawnChances = new();
+
     public static CustomOption Create(int id, CustomOptionType type, string name, string[] selections,
-        CustomOption parent = null, bool isHeader = false, bool isHidden = false, Action onChange = null)
+        CustomOption parent = null, bool isHeader = false, Func<bool> isHidden = null, Action onChange = null)
     {
         return new CustomOption(id, type, name, selections, "", parent, isHeader, isHidden, onChange);
     }
 
     public static CustomOption Create(int id, CustomOptionType type, string name, float defaultValue, float min,
-        float max, float step, CustomOption parent = null, bool isHeader = false, bool isHidden = false, Action onChange = null)
+        float max, float step, CustomOption parent = null, bool isHeader = false, Func<bool> isHidden = null, Action onChange = null)
     {
         List<object> selections = new();
         for (var s = min; s <= max; s += step) selections.Add(s);
@@ -91,7 +95,7 @@ public class CustomOption
     }
 
     public static CustomOption Create(int id, CustomOptionType type, string name, bool defaultValue,
-        CustomOption parent = null, bool isHeader = false, bool isHidden = false, Action onChange = null)
+        CustomOption parent = null, bool isHeader = false, Func<bool> isHidden = null, Action onChange = null)
     {
         var selections = name.Contains("Options") ? new[] { "ExpandOptions", "CollapseOptions" } : new[] { "optionOff", "optionOn" };
         var defaultSelection = defaultValue ? selections[1] : selections[0];
@@ -353,7 +357,7 @@ public static class CustomOptionsExtensions
 {
     public static bool IsHidden(this CustomOption option)
     {
-        return option.isHidden;
+        return option.isHidden != null && option.isHidden.Invoke();
     }
 
     public static bool IsEnbaled(this CustomOption option)
@@ -1016,7 +1020,7 @@ internal class GameOptionsDataPatch
             {
                 if (option == CustomOptionHolder.neutralRolesCountMin)
                 {
-                    var optionName = cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "CrewmateRolesText".Translate());
+                    var optionName = cs(new Color32(204, 204, 0, 255), "CrewmateRolesText".Translate());
                     var neutralMin = CustomOptionHolder.neutralRolesCountMin.GetSelection();
                     var neutralMax = CustomOptionHolder.neutralRolesCountMax.GetSelection();
 
@@ -1027,14 +1031,16 @@ internal class GameOptionsDataPatch
                 }
                 else if (option == CustomOptionHolder.neutralRolesCountMax)
                 {
-                    var optionName = cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "NeutralRolesText".Translate());
+                    var optionName = cs(new Color32(204, 204, 0, 255), "NeutralRolesText".Translate());
                     var min = CustomOptionHolder.neutralRolesCountMin.GetSelection();
                     var max = CustomOptionHolder.neutralRolesCountMax.GetSelection();
+                    if (RoleDraft.isEnabled) min = max;
                     if (min > max) min = max;
                     var optionValue = min == max ? $"{min}" : $"{min} ~ {max}";
 
                     var killerMin = CustomOptionHolder.killerNeutralRolesCountMin.GetSelection();
                     var killerMax = CustomOptionHolder.killerNeutralRolesCountMax.GetSelection();
+                    if (RoleDraft.isEnabled) killerMin = killerMax;
                     var min2 = Mathf.Min(killerMin, min);
                     var max2 = Mathf.Min(killerMax, max);
                     if (min2 > max2) min2 = max2;
@@ -1045,12 +1051,12 @@ internal class GameOptionsDataPatch
                 }
                 else if (option == CustomOptionHolder.killerNeutralRolesCountMax)
                 {
-                    var optionName = cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "ImpostorRolesText".Translate());
+                    var optionName = cs(new Color32(204, 204, 0, 255), "ImpostorRolesText".Translate());
                     sb.AppendLine($"{optionName}: {ModOption.NumImpostors}");
                 }
                 else if (option == CustomOptionHolder.modifiersCountMin)
                 {
-                    var optionName = cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "ModifierRolesText".Translate());
+                    var optionName = cs(new Color32(204, 204, 0, 255), "ModifierRolesText".Translate());
                     var min = CustomOptionHolder.modifiersCountMin.GetSelection();
                     var max = CustomOptionHolder.modifiersCountMax.GetSelection();
                     if (min > max) min = max;

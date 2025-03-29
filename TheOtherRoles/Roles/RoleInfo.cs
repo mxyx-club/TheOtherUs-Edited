@@ -447,7 +447,7 @@ public class RoleInfo
                     roleName = cs(Ninja.color, "(被标记) ") + roleName;
                 if (p == Thief.formerThief)
                     roleName += cs(Thief.color, " (窃)");
-                if (Pursuer.blankedList.Contains(p) && !p.Data.IsDead)
+                if (Pursuer.blankedList.Contains(p))
                     roleName = cs(Pursuer.color, "(被塞空包弹) ") + roleName;
                 if (Witch.futureSpelled.Any(x => x == p) && !MeetingHud.Instance) // This is already displayed in meetings!
                     roleName = cs(Witch.color, "☆ ") + roleName;
