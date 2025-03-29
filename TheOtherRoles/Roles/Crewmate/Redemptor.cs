@@ -11,7 +11,7 @@ public class Redemptor
     public static PlayerControl target;
     public static Arrow arrow;
     public static bool Revelating;
-    public static bool Reviving;
+    public static bool Prayering;
     public static PlayerControl RevivedPlayer;
 
     public static bool revelation;
@@ -36,7 +36,7 @@ public class Redemptor
     ///<summary>
     /// off = 0, on > 0
     /// </summary>
-    public static void RedemptorPrayer(byte status) => Reviving = status != 0;
+    public static void RedemptorPrayer(byte status) => Prayering = status != 0;
 
     public static void ClearAndReload(bool clear = true)
     {
@@ -44,7 +44,7 @@ public class Redemptor
         target = null;
         if (clear) RevivedPlayer = null;
         arrow?.arrow?.Destroy();
-        Reviving = false;
+        Prayering = false;
         Revelating = false;
         if (text != null) Object.Destroy(text);
         text = null;
@@ -63,9 +63,9 @@ public class Redemptor
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update)), HarmonyPostfix]
         private static void HudUpdatePatch()
         {
-            if (Reviving && (Player.IsDead() || InMeeting))
+            if (Prayering && (Player.IsDead() || InMeeting))
             {
-                Reviving = false;
+                Prayering = false;
                 target = null;
                 RevivedPlayer = null;
             }

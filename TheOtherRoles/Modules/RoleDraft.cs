@@ -48,9 +48,6 @@ internal class RoleDraft
     public static IEnumerator CoSelectRoles(IntroCutscene __instance)
     {
         isRunning = true;
-        alreadyPicked.Clear();
-        playerRoles.Clear();
-        _pickTable.ClearRows();
 
         // SoundEffectsManager.play("draft",  volume: 1f, true, true);
         bool playedAlert = false;
@@ -169,8 +166,7 @@ internal class RoleDraft
 
                         // 排除不应该直接分配的职业
                         if (roleInfo.roleId is RoleId.Sidekick or RoleId.Pavlovsdogs or RoleId.Pursuer) continue;
-                        if (roleInfo.roleId is RoleId.Crewmate or RoleId.Impostor) continue;
-                        if (roleInfo.roleId == RoleId.Spy && impostorCount < 2) continue;
+                        if (roleInfo.roleId is RoleId.Crewmate or RoleId.Impostor or RoleId.Spy) continue;
                         if (ModOption.gameMode == CustomGamemodes.Guesser && (roleInfo.roleId == RoleId.Vigilante)) continue;
                         if (alreadyPicked.Contains((byte)roleInfo.roleId)) continue;
 
@@ -451,7 +447,7 @@ internal class RoleDraft
 
     public static void sendPick(byte RoleId, SelectFlags flag = SelectFlags.Normal)
     {
-        if (playerRoles.ContainsKey(PlayerControl.LocalPlayer.PlayerId)) { Message($"玩家已选择职业！"); return; }
+        if (playerRoles.TryGetValue(PlayerControl.LocalPlayer.PlayerId, out _)) return;
         SoundEffectsManager.stop("timeMasterShield");
         var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.DraftModePick);
         writer.Write(PlayerControl.LocalPlayer.PlayerId);
@@ -467,11 +463,10 @@ internal class RoleDraft
                 UnityEngine.Object.Destroy(button?.gameObject);
                 //if (button?.gameObject != null) button.gameObject?.Destroy();
             }
-            buttons.Clear();
+            buttons = new();
         }
         catch (Exception e) { Message(e); }
     }
-
 
     public static void sendPickOrder()
     {
@@ -485,7 +480,6 @@ internal class RoleDraft
         writer.EndRPC();
     }
 
-
     public static void receivePickOrder(int amount, MessageReader reader)
     {
         pickOrder.Clear();
@@ -493,6 +487,17 @@ internal class RoleDraft
         {
             pickOrder.Add(reader.ReadByte());
         }
+    }
+
+    public static void Clear()
+    {
+
+        isRunning = false;
+        alreadyPicked = new();
+        playerRoles = new();
+        buttons = new();
+        _pickTable.ClearRows();
+
     }
 
     private class PatchedEnumerator() : IEnumerable

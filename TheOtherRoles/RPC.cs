@@ -183,6 +183,7 @@ public static class RPCProcedure
         clearAndReloadMapOptions();
         clearAndReloadRoles();
         MapData.Clear();
+        RoleDraft.Clear();
         Garlic.clearGarlics();
         JackInTheBox.clearJackInTheBoxes();
         NinjaTrace.clearTraces();

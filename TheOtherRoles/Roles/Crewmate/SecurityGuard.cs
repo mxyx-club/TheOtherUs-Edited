@@ -1,4 +1,4 @@
-﻿using TheOtherRoles.Utilities;
+using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Roles.Crewmate;

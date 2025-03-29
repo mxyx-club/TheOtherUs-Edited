@@ -4580,7 +4580,8 @@ internal static class HudManagerStartPatch
         redemptorReviveButton = new CustomButton(
             () =>
             {
-                if (Redemptor.target == null) return;
+                var target = Redemptor.target;
+                if (target == null) return;
 
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.UncheckedMurderPlayer);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
@@ -4593,9 +4594,9 @@ internal static class HudManagerStartPatch
                 {
                     if (InMeeting) { Message("复活失败", "ReviveTask"); return; }
                     var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RedemptorRevive);
-                    writer.Write(Redemptor.target.PlayerId);
+                    writer.Write(target.PlayerId);
                     writer.EndRPC();
-                    Redemptor.RevivePlayer(Redemptor.target.PlayerId);
+                    Redemptor.RevivePlayer(target.PlayerId);
                 }, Redemptor.reviveDuration, "RedemptorRevive");
             },
             () =>

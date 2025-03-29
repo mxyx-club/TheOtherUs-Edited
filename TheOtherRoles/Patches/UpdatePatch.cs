@@ -533,22 +533,22 @@ internal class HudManagerUpdatePatch
             var suffix3 = cs(BandLeader.color, "(D)");
             if (local == BandLeader.Player || local.IsDead() || BandLeader.Members.Any(x => x == local))
             {
-                if (BandLeader.Keyboardist != null)
+                if (BandLeader.Keyboardist != null && (local == BandLeader.Player || BandLeader.Keyboardist == local || BandLeader.Formed))
                     BandLeader.Keyboardist.cosmetics.nameText.text += suffix1;
-                if (BandLeader.Bassist != null)
+                if (BandLeader.Bassist != null && (local == BandLeader.Player || BandLeader.Bassist == local || BandLeader.Formed))
                     BandLeader.Bassist.cosmetics.nameText.text += suffix2;
-                if (BandLeader.Drummer != null)
+                if (BandLeader.Drummer != null && (local == BandLeader.Player || BandLeader.Drummer == local || BandLeader.Formed))
                     BandLeader.Drummer.cosmetics.nameText.text += suffix3;
 
                 if (MeetingHud.Instance != null)
                 {
                     foreach (var player in allPlayerStates)
                     {
-                        if (BandLeader.Keyboardist?.PlayerId == player.TargetPlayerId)
+                        if ((local == BandLeader.Player || BandLeader.Keyboardist == local || BandLeader.Formed) && BandLeader.Keyboardist?.PlayerId == player.TargetPlayerId)
                             player.NameText.text += suffix1;
-                        if (BandLeader.Bassist?.PlayerId == player.TargetPlayerId)
+                        if ((local == BandLeader.Player || BandLeader.Bassist == local || BandLeader.Formed) && BandLeader.Bassist?.PlayerId == player.TargetPlayerId)
                             player.NameText.text += suffix2;
-                        if (BandLeader.Drummer?.PlayerId == player.TargetPlayerId)
+                        if ((local == BandLeader.Player || BandLeader.Drummer == local || BandLeader.Formed) && BandLeader.Drummer?.PlayerId == player.TargetPlayerId)
                             player.NameText.text += suffix3;
                     }
                 }

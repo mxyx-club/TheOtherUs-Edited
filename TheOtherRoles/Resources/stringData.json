@@ -176,6 +176,9 @@
         "0": "Modifier",
         "13": "附加能力"
     },
+    "UnknownTeam": {
+        "13": "未知阵营"
+    },
     "FillCrewmate": {
         "0": "Fill:",
         "13": "填充: "

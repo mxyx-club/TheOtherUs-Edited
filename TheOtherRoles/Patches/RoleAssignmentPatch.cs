@@ -202,7 +202,7 @@ internal class RoleManagerSelectRolesPatch
             crewSettings.Add((byte)RoleId.Vigilante, CustomOptionHolder.guesserSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Trapper, CustomOptionHolder.trapperSpawnRate.GetSelection());
         // Only add Spy if more than 1 impostor as the spy role is otherwise useless
-        if (impostors.Count > 1)
+        if (impostors.Count > 1 && !RoleDraft.isEnabled)
             crewSettings.Add((byte)RoleId.Spy, CustomOptionHolder.spySpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.SecurityGuard, CustomOptionHolder.securityGuardSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Jumper, CustomOptionHolder.jumperSpawnRate.GetSelection());

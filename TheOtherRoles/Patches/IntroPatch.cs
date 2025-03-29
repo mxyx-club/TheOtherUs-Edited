@@ -186,7 +186,7 @@ internal class IntroPatch
         // Add the Spy to the Impostor team (for the Impostors)
         if (Spy.spy != null && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
         {
-            var players = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
+            var players = PlayerControl.AllPlayerControls.ToList().OrderBy(x => Guid.NewGuid()).ToList();
             var fakeImpostorTeam =
                 new List<PlayerControl>(); // The local player always has to be the first one in the list (to be displayed in the center)
             fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
@@ -197,7 +197,7 @@ internal class IntroPatch
         }
 
         // Role draft: If spy is enabled, don't show the team
-        if (CustomOptionHolder.spySpawnRate.GetSelection() > 0 && PlayerControl.AllPlayerControls.ToArray().ToList().Where(x => x.Data.Role.IsImpostor).Count() > 1)
+        if (CustomOptionHolder.spySpawnRate.GetSelection() > 0 && PlayerControl.AllPlayerControls.ToArray().Where(x => x.Data.Role.IsImpostor).Count() > 1)
         {
             // The local player always has to be the first one in the list (to be displayed in the center)
             var fakeImpostorTeam = new List<PlayerControl>();
@@ -208,12 +208,19 @@ internal class IntroPatch
 
     public static void setupIntroTeam(IntroCutscene __instance, ref List<PlayerControl> yourTeam)
     {
+        var neutralColor = new Color32(76, 84, 78, 255);
         var infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
         var roleInfo = infos.FirstOrDefault(info => info.roleType != RoleType.Modifier);
         if (roleInfo == null) return;
+        if (RoleDraft.isEnabled && !PlayerControl.LocalPlayer.IsImpostor())
+        {
+            __instance.BackgroundBar.material.color = neutralColor;
+            __instance.TeamTitle.text = "UnknownTeam".Translate();
+            __instance.TeamTitle.color = Palette.CrewmateBlue;
+            return;
+        }
         if (roleInfo.roleType == RoleType.Neutral)
         {
-            var neutralColor = new Color32(76, 84, 78, 255);
             __instance.BackgroundBar.material.color = roleInfo.color;
             __instance.TeamTitle.text = "NeutralTeam".Translate();
             __instance.TeamTitle.color = neutralColor;
@@ -226,7 +233,7 @@ internal class IntroPatch
             {
                 __instance.BackgroundBar.material.color = roleInfo.color;
                 __instance.TeamTitle.text = "CrewmateTeam".Translate();
-                __instance.TeamTitle.color = Color.cyan;
+                __instance.TeamTitle.color = Palette.CrewmateBlue;
             }
             else
             {

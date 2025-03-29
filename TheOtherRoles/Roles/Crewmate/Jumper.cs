@@ -8,7 +8,6 @@ public static class Jumper
     public static Color color = new Color32(204, 155, 20, byte.MaxValue); // mint
 
     public static float JumpTime = 30f;
-    public static int ChargesOnPlace = 1;
 
     public static bool resetPlaceAfterMeeting;
 
@@ -24,7 +23,7 @@ public static class Jumper
 
     public static void resetPlaces()
     {
-        Charges = ChargesOnPlace;
+        Charges = 1;
         jumpLocation = Vector3.zero;
         usedPlace = false;
     }
@@ -37,7 +36,6 @@ public static class Jumper
         resetPlaceAfterMeeting = CustomOptionHolder.jumperResetPlaceAfterMeeting.GetBool();
         Charges = CustomOptionHolder.jumperMaxCharges.GetInt();
         JumpTime = CustomOptionHolder.jumperJumpTime.GetFloat();
-        ChargesOnPlace = 1;
         ChargesGainOnMeeting = CustomOptionHolder.jumperChargesGainOnMeeting.GetInt();
         MaxCharges = CustomOptionHolder.jumperMaxCharges.GetFloat();
         usedPlace = false;

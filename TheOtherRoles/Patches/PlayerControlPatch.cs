@@ -385,7 +385,7 @@ public static class PlayerControlFixedUpdatePatch
         if (Redemptor.Player == null && Redemptor.RevivedPlayer == null) return;
 
         var local = PlayerControl.LocalPlayer;
-        if (Redemptor.Player.IsAlive() && Redemptor.Reviving && local.IsAlive() && local.IsKiller())
+        if (Redemptor.Player.IsAlive() && Redemptor.Prayering && local.IsAlive() && local.IsKiller())
         {
             Redemptor.arrow ??= new Arrow(Redemptor.color);
             if (Redemptor.arrow != null)
@@ -424,7 +424,7 @@ public static class PlayerControlFixedUpdatePatch
     {
         if (Redemptor.Player == null && Redemptor.RevivedPlayer == null) return;
         var local = PlayerControl.LocalPlayer;
-        var enable = (Redemptor.RevivedPlayer.IsAlive() || Redemptor.Reviving) &&
+        var enable = (Redemptor.RevivedPlayer.IsAlive() || Redemptor.Prayering) &&
                      ((local.IsAlive() && local.IsKiller()) ||
                      local == Redemptor.Player || ShowGhostInfo);
         if (enable)
@@ -437,7 +437,7 @@ public static class PlayerControlFixedUpdatePatch
                 Redemptor.text.transform.localPosition += new Vector3(0f, 1.9f, -69f);
                 Redemptor.text.gameObject.SetActive(true);
             }
-            else if (Redemptor.Reviving && Redemptor.Player.IsAlive())
+            else if (Redemptor.Prayering && Redemptor.Player.IsAlive())
             {
                 Redemptor.text.text = $"牧师正在祈祷！";
             }
