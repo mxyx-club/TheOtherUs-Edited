@@ -55,7 +55,7 @@ public static class Sheriff
 
         if (playerId == PlayerControl.LocalPlayer.PlayerId)
         {
-            HudManagerStartPatch.setAllButtonsHandcuffedStatus(active);
+            CustomButton.setAllButtonsHandcuffedStatus(active);
             SoundEffectsManager.play("deputyHandcuff");
         }
     }
@@ -110,7 +110,7 @@ public static class Sheriff
         {
             handcuffedPlayers = new();
             handcuffedKnows = new();
-            HudManagerStartPatch.setAllButtonsHandcuffedStatus(false, true);
+            CustomButton.setAllButtonsHandcuffedStatus(false, true);
         }
         Player = new();
         currentTarget = null;

@@ -531,24 +531,27 @@ internal class HudManagerUpdatePatch
             var suffix1 = cs(BandLeader.color, "(K)");
             var suffix2 = cs(BandLeader.color, "(B)");
             var suffix3 = cs(BandLeader.color, "(D)");
+            var isKeyboardist = local == BandLeader.Player || BandLeader.Keyboardist == local || BandLeader.Formed || ShowGhostInfo;
+            var isBassist = local == BandLeader.Player || BandLeader.Bassist == local || BandLeader.Formed || ShowGhostInfo;
+            var isDrummer = local == BandLeader.Player || BandLeader.Drummer == local || BandLeader.Formed || ShowGhostInfo;
             if (local == BandLeader.Player || local.IsDead() || BandLeader.Members.Any(x => x == local))
             {
-                if (BandLeader.Keyboardist != null && (local == BandLeader.Player || BandLeader.Keyboardist == local || BandLeader.Formed))
+                if (BandLeader.Keyboardist != null && isKeyboardist)
                     BandLeader.Keyboardist.cosmetics.nameText.text += suffix1;
-                if (BandLeader.Bassist != null && (local == BandLeader.Player || BandLeader.Bassist == local || BandLeader.Formed))
+                if (BandLeader.Bassist != null && isBassist)
                     BandLeader.Bassist.cosmetics.nameText.text += suffix2;
-                if (BandLeader.Drummer != null && (local == BandLeader.Player || BandLeader.Drummer == local || BandLeader.Formed))
+                if (BandLeader.Drummer != null && isDrummer)
                     BandLeader.Drummer.cosmetics.nameText.text += suffix3;
 
                 if (MeetingHud.Instance != null)
                 {
                     foreach (var player in allPlayerStates)
                     {
-                        if ((local == BandLeader.Player || BandLeader.Keyboardist == local || BandLeader.Formed) && BandLeader.Keyboardist?.PlayerId == player.TargetPlayerId)
+                        if (isKeyboardist && BandLeader.Keyboardist?.PlayerId == player.TargetPlayerId)
                             player.NameText.text += suffix1;
-                        if ((local == BandLeader.Player || BandLeader.Bassist == local || BandLeader.Formed) && BandLeader.Bassist?.PlayerId == player.TargetPlayerId)
+                        if (isBassist && BandLeader.Bassist?.PlayerId == player.TargetPlayerId)
                             player.NameText.text += suffix2;
-                        if ((local == BandLeader.Player || BandLeader.Drummer == local || BandLeader.Formed) && BandLeader.Drummer?.PlayerId == player.TargetPlayerId)
+                        if (isDrummer && BandLeader.Drummer?.PlayerId == player.TargetPlayerId)
                             player.NameText.text += suffix3;
                     }
                 }

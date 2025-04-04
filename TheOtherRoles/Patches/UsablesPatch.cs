@@ -584,7 +584,7 @@ internal class AdminPanelPatch
 
                 if (!commsActive)
                 {
-                    var plainShipRoom = MapUtilities.CachedShipStatus.FastRooms[counterArea.RoomType];
+                    var plainShipRoom = MapUtilities.CachedShipStatus?.FastRooms[counterArea.RoomType];
 
                     if (plainShipRoom != null && plainShipRoom.roomArea)
                     {

@@ -10,14 +10,17 @@ public class PlayerData<T>
     private Dictionary<PlayerControl, T> _playerdata;
     private T defaultvalue;
     private bool nonsetinit;
+
     public T Local
     {
         get => this[PlayerControl.LocalPlayer.PlayerId];
         set => this[PlayerControl.LocalPlayer.PlayerId] = value;
     }
+
     public int Count => _data != null ? _data.Count : 0;
     public Dictionary<byte, T>.ValueCollection Values => _data.Values;
     private T _result;
+
     public T this[byte key]
     {
         get
@@ -62,12 +65,14 @@ public class PlayerData<T>
             }
         }
     }
+
     public static implicit operator Dictionary<byte, T>(PlayerData<T> obj)
     {
         if (obj == null)
             return new();
         return obj._data ??= new();
     }
+
     public static implicit operator Dictionary<PlayerControl, T>(PlayerData<T> obj)
     {
         if (obj == null)
@@ -138,15 +143,13 @@ public class PlayerData<T>
             return pid == 255 ? null : playerById(pid);
         }
     }
-    public bool ContainsValue(T value)
-    {
-        return _data == null ? false : _data.ContainsValue(value);
-    }
-    public bool Contains(byte player)
-    {
-        return _data == null ? false : _data.ContainsKey(player);
-    }
+
+    public bool ContainsValue(T value) => _data != null && _data.ContainsValue(value);
+
+    public bool Contains(byte player) => _data != null && _data.ContainsKey(player);
+
     public bool Contains(PlayerControl player) => player == null ? false : Contains(player.PlayerId);
+
     public void Remove(PlayerControl player)
     {
         if (_data != null)
@@ -156,6 +159,7 @@ public class PlayerData<T>
                 _playerdata.Remove(player);
         }
     }
+
     public void Remove(byte player)
     {
         if (_data != null)
@@ -166,10 +170,7 @@ public class PlayerData<T>
         }
     }
 
-    public Dictionary<byte, T> GetDicts()
-    {
-        return (Dictionary<byte, T>)this;
-    }
+    public Dictionary<byte, T> GetDicts() => (Dictionary<byte, T>)this;
 
     /// <summary>
     /// プレイヤーの情報を保存できるクラス。

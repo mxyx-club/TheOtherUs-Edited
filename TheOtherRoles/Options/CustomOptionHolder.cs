@@ -81,6 +81,8 @@ public class CustomOptionHolder
     public static CustomOption FungleReactorTimeLimit;
 
     public static CustomOption MapOptions;
+    public static CustomOption enableSkeldModify;
+    public static CustomOption skeldVitals;
     public static CustomOption enableMiraModify;
     public static CustomOption miraVitals;
     public static CustomOption enableBetterPolus;
@@ -797,6 +799,9 @@ public class CustomOptionHolder
 
         //Map options
         MapOptions = Create(500, Types.General, cs(new Color32(223, 157, 192, byte.MaxValue), "MapOptions"), false, null, true);
+        // The Skeld
+        enableSkeldModify = Create(510, Types.General, cs(Color.yellow, "The Skeld"), false, MapOptions);
+        skeldVitals = Create(511, Types.General, "miraVitals", false, enableSkeldModify);
         //Mira
         enableMiraModify = Create(520, Types.General, cs(Color.yellow, "Mira"), false, MapOptions);
         miraVitals = Create(521, Types.General, "miraVitals", false, enableMiraModify);
@@ -816,14 +821,14 @@ public class CustomOptionHolder
         enableFungleModify = Create(550, Types.General, cs(Color.yellow, "Fungle"), false, MapOptions);
         fungleElectrical = Create(551, Types.General, "fungleElectrical", false, enableFungleModify);
         //dynamicMap options
-        dynamicMap = Create(570, Types.General, "dynamicMap", false, MapOptions, true);
-        dynamicMapEnableSkeld = Create(571, Types.General, "Skeld", rates, dynamicMap);
-        dynamicMapEnableMira = Create(572, Types.General, "Mira", rates, dynamicMap);
-        dynamicMapEnablePolus = Create(573, Types.General, "Polus", rates, dynamicMap);
-        dynamicMapEnableAirShip = Create(574, Types.General, "Airship", rates, dynamicMap);
-        dynamicMapEnableFungle = Create(575, Types.General, "Fungle", rates, dynamicMap);
-        dynamicMapEnableSubmerged = Create(576, Types.General, "Submerged", rates, dynamicMap);
-        dynamicMapSeparateSettings = Create(577, Types.General, "dynamicMapSeparateSettings", false, dynamicMap);
+        dynamicMap = Create(580, Types.General, "dynamicMap", false, MapOptions, true);
+        dynamicMapEnableSkeld = Create(581, Types.General, "Skeld", rates, dynamicMap);
+        dynamicMapEnableMira = Create(582, Types.General, "Mira", rates, dynamicMap);
+        dynamicMapEnablePolus = Create(583, Types.General, "Polus", rates, dynamicMap);
+        dynamicMapEnableAirShip = Create(584, Types.General, "Airship", rates, dynamicMap);
+        dynamicMapEnableFungle = Create(585, Types.General, "Fungle", rates, dynamicMap);
+        dynamicMapEnableSubmerged = Create(586, Types.General, "Submerged", rates, dynamicMap);
+        dynamicMapSeparateSettings = Create(587, Types.General, "dynamicMapSeparateSettings", false, dynamicMap);
 
         //Devices Option
         DevicesOption = Create(600, Types.General, cs(new Color32(255, 50, 0, byte.MaxValue), "DevicesOption"), false, null, true);

@@ -1324,6 +1324,12 @@
     "grenadierIndicators3": {
         "13": "玩家名称提示"
     },
+    "gunsmithSetKillCooldown": {
+        "13": "取出子弹时重置的冷却"
+    },
+    "gunsmithMaxChangeCount": {
+        "13": "弹匣中能存下的子弹上限"
+    },
     "canUseVents": {
         "0": "Vulture Can Use Vents",
         "13": "可使用管道"
@@ -3310,6 +3316,12 @@
         "0": "Revive",
         "13": "殉道"
     },
+    "gunsmithAddBullets": {
+        "13": "存储"
+    },
+    "gunsmithGetBullets": {
+        "13": "取出"
+    },
     "GuessserGMInfo": {
         "0": " (Guesser)",
         "13": " (赌怪)"
@@ -3577,6 +3589,16 @@
     },
     "GrenadierShortDesc": {
         "13": "使用技能致盲周围的非队友玩家"
+    },
+    "Gunsmith": {
+        "0": "Gunsmith",
+        "13": "快枪手"
+    },
+    "GunsmithIntroDesc": {
+        "13": "隐忍, 爆发！"
+    },
+    "GunsmithShortDesc": {
+        "13": "存下子弹, 等待时机击杀玩家"
     },
     "Survivor": {
         "0": "Survivor",
@@ -4482,6 +4504,9 @@
     },
     "GrenadierFullDesc": {
         "13": "可以使用技能闪瞎附近的非红狼玩家，被闪到的玩家名称会变黑。\n队友按照房间设置也可以得知哪些玩家被影响。"
+    },
+    "GunsmithFullDesc": {
+        "13": "可以在击杀冷却完毕后手动存下子弹，可以随时取出子弹。\n随时可以取出子弹，取出子弹后会将击杀按钮重置冷却。"
     },
     "SurvivorFullDesc": {
         "13": "存活到游戏结束即可跟随其它阵营胜利\n以房间设置为准，幸存者可能拥有防弹衣和空包弹技能。\n防弹衣在开启期间，无法被击杀，杀手击杀时会进入较短的冷却。\n空包弹可以让目标下一次无法正常击杀。"

@@ -258,14 +258,6 @@ internal static class HudManagerStartPatch
         zoomOutButton.MaxTimer = zoomOutButton.Timer = 0f;
     }
 
-    public static void resetTimeMasterButton()
-    {
-        timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
-        timeMasterShieldButton.isEffectActive = false;
-        timeMasterShieldButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-        SoundEffectsManager.stop("timemasterShield");
-    }
-
     public static PlayerControl SetTarget(IEnumerable<PlayerControl> untarget = null, bool onlyCrewmates = false,
         bool targetInVents = false, float distances = 0f, PlayerControl targetingPlayer = null)
     {
@@ -277,92 +269,9 @@ internal static class HudManagerStartPatch
         PlayerControlFixedUpdatePatch.SetPlayerOutline(target, color);
     }
 
-    private static void addReplacementHandcuffedButton(CustomButton button, Vector3? positionOffset = null, Func<bool> couldUse = null)
-    {
-        // For non custom buttons, we can set these manually.
-        var positionOffsetValue = positionOffset ?? button.PositionOffset;
-        positionOffsetValue.z = -0.1f;
-        couldUse ??= button.CouldUse;
-        var replacementHandcuffedButton = new CustomButton(() => { }, () => { return true; }, couldUse, () => { },
-            Sheriff.handcuffedSprite, positionOffsetValue, button.hudManager, button.hotkey,
-            true, Sheriff.handcuffDuration, () => { }, button.mirror);
-        replacementHandcuffedButton.Timer = replacementHandcuffedButton.EffectDuration;
-        replacementHandcuffedButton.actionButton.cooldownTimerText.color = new Color(0F, 0.8F, 0F);
-        replacementHandcuffedButton.isEffectActive = true;
-        if (deputyHandcuffedButtons.ContainsKey(PlayerControl.LocalPlayer.PlayerId))
-            deputyHandcuffedButtons[PlayerControl.LocalPlayer.PlayerId].Add(replacementHandcuffedButton);
-        else
-            deputyHandcuffedButtons.Add(PlayerControl.LocalPlayer.PlayerId, [replacementHandcuffedButton]);
-    }
-
-    // Disables / Enables all Buttons (except the ones disabled in the Deputy class), and replaces them with new buttons.
-    public static void setAllButtonsHandcuffedStatus(bool handcuffed, bool reset = false)
-    {
-        if (reset)
-        {
-            deputyHandcuffedButtons = [];
-            return;
-        }
-
-        if (handcuffed && !deputyHandcuffedButtons.ContainsKey(PlayerControl.LocalPlayer.PlayerId))
-        {
-            var maxI = buttons.Count;
-            for (var i = 0; i < maxI; i++)
-            {
-                try
-                {
-                    if (buttons[i].HasButton()) // For each custombutton the player has
-                        addReplacementHandcuffedButton(buttons[i]);
-                    // The new buttons are the only non-handcuffed buttons now!
-                    buttons[i].isHandcuffed = true;
-                }
-                catch (Exception e)
-                {
-                    // Note: idk what this is good for, but i copied it from above /gendelo
-                    Warn($"NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine\n{e.Message}");
-                }
-            }
-
-            // Non Custom (Vanilla) Buttons. The Originals are disabled / hidden in UpdatePatch.cs already, just need to replace them. Can use any button, as we replace onclick etc anyways.
-            // Kill Button if enabled for the Role
-            if (FastDestroyableSingleton<HudManager>.Instance.KillButton.isActiveAndEnabled)
-                addReplacementHandcuffedButton(arsonistButton, ButtonPositions.upperRowRight,
-                    () => { return FastDestroyableSingleton<HudManager>.Instance.KillButton.currentTarget != null; });
-            // Vent Button if enabled
-            if (PlayerControl.LocalPlayer.roleCanUseVents())
-                addReplacementHandcuffedButton(arsonistButton, ButtonPositions.upperRowCenter,
-                    () =>
-                    {
-                        return FastDestroyableSingleton<HudManager>.Instance.ImpostorVentButton.currentTarget != null;
-                    });
-            // Report Button
-            addReplacementHandcuffedButton(arsonistButton,
-                !PlayerControl.LocalPlayer.Data.Role.IsImpostor
-                    ? new Vector3(-1f, -0.06f, 0)
-                    : ButtonPositions.lowerRowRight,
-                () =>
-                {
-                    return FastDestroyableSingleton<HudManager>.Instance.ReportButton.graphic.color ==
-                           Palette.EnabledColor;
-                });
-        }
-        else if (!handcuffed &&
-                 deputyHandcuffedButtons.ContainsKey(PlayerControl.LocalPlayer
-                     .PlayerId)) // Reset to original. Disables the replacements, enables the original buttons.
-        {
-            foreach (var replacementButton in deputyHandcuffedButtons[PlayerControl.LocalPlayer.PlayerId])
-            {
-                replacementButton.HasButton = () => { return false; };
-                replacementButton.Update(); // To make it disappear properly.
-                buttons.Remove(replacementButton);
-            }
-
-            deputyHandcuffedButtons.Remove(PlayerControl.LocalPlayer.PlayerId);
-
-            foreach (var button in buttons) button.isHandcuffed = false;
-        }
-    }
-
+    /// <summary>
+    /// 化形按钮显示目标模型
+    /// </summary>
     private static void setButtonTargetDisplay(PlayerControl target, CustomButton button = null, Vector3? offset = null)
     {
         if (target == null || button == null)
@@ -1302,13 +1211,11 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
+                return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead;
             },
             () =>
             {
-                if (hackerAdminTableChargesText != null)
-                    hackerAdminTableChargesText.text = $"{Hacker.chargesAdminTable} / {Hacker.toolsNumber}";
+                if (hackerAdminTableChargesText != null) hackerAdminTableChargesText.text = $"{Hacker.chargesAdminTable} / {Hacker.toolsNumber}";
                 return Hacker.chargesAdminTable > 0;
             },
             () =>
@@ -1323,6 +1230,17 @@ internal static class HudManagerStartPatch
             secondaryAbilityInput.keyCode,
             true,
             0f,
+            () => true,
+            () =>
+            {
+                if (!MapBehaviour.Instance || !MapBehaviour.Instance.isActiveAndEnabled)
+                {
+                    var __instance = FastDestroyableSingleton<HudManager>.Instance;
+                    __instance.InitMap();
+                    MapBehaviour.Instance.ShowCountOverlay(true, true, true);
+                }
+                PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement 
+            },
             () =>
             {
                 hackerAdminTableButton.Timer = hackerAdminTableButton.MaxTimer;
@@ -1406,6 +1324,39 @@ internal static class HudManagerStartPatch
             abilityInput.keyCode,
             true,
             0f,
+            () => true,
+            () =>
+            {
+                if (GameOptionsManager.Instance.currentNormalGameOptions.MapId != 1)
+                {
+                    if (Hacker.vitals == null)
+                    {
+                        var e = Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x =>
+                            x.gameObject.name.Contains("panel_vitals") || x.gameObject.name.Contains("Vitals"));
+                        if (e == null || Camera.main == null) return;
+                        Hacker.vitals = Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                    }
+
+                    Hacker.vitals.transform.SetParent(Camera.main.transform, false);
+                    Hacker.vitals.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
+                    Hacker.vitals.Begin(null);
+                }
+                else
+                {
+                    if (Hacker.doorLog == null)
+                    {
+                        var e = Object.FindObjectsOfType<SystemConsole>()
+                            .FirstOrDefault(x => x.gameObject.name.Contains("SurvLogConsole"));
+                        if (e == null || Camera.main == null) return;
+                        Hacker.doorLog = Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                    }
+
+                    Hacker.doorLog.transform.SetParent(Camera.main.transform, false);
+                    Hacker.doorLog.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
+                    Hacker.doorLog.Begin(null);
+                }
+
+            },
             () =>
             {
                 hackerVitalsButton.Timer = hackerVitalsButton.MaxTimer;
@@ -4480,6 +4431,17 @@ internal static class HudManagerStartPatch
            KeyCode.G,
            true,
            0f,
+           null,
+           () =>
+           {
+
+               if (!MapBehaviour.Instance || !MapBehaviour.Instance.isActiveAndEnabled)
+               {
+                   var __instance = FastDestroyableSingleton<HudManager>.Instance;
+                   __instance.InitMap();
+                   MapBehaviour.Instance.ShowCountOverlay(allowedToMove: true, showLivePlayerPosition: true, includeDeadBodies: true);
+               };
+           },
            () =>
            {
                yoyoAdminTableButton.Timer = yoyoAdminTableButton.MaxTimer;
