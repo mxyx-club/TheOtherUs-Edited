@@ -390,6 +390,10 @@ public class Amnisiac
                 if (resetRole) SchrodingersCat.ClearAndReload();
                 SchrodingersCat.Player = local;
                 break;
+            case RoleId.Gunsmith:
+                if (resetRole) Gunsmith.ClearAndReload();
+                Gunsmith.Player = local;
+                break;
         }
         Player.RemoveAll(x => x.PlayerId == local.PlayerId);
         foreach (var arrow in localArrows) Object.Destroy(arrow.arrow);

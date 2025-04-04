@@ -46,6 +46,7 @@ public enum RoleId
     EvilTrapper,
     Gambler,
     Grenadier,
+    Gunsmith,
 
     Survivor,
     Amnisiac,
@@ -240,6 +241,7 @@ public static class RoleHelpers
             { RoleId.Witch, CustomOptionHolder.witchSpawnRate.GetSelection() },
             { RoleId.Yoyo, CustomOptionHolder.yoyoSpawnRate.GetSelection() },
             { RoleId.Grenadier, CustomOptionHolder.grenadierSpawnRate.GetSelection() },
+            { RoleId.Gunsmith, CustomOptionHolder.gunsmithSpawnRate.GetSelection() },
 
             { RoleId.Akujo, CustomOptionHolder.akujoSpawnRate.GetSelection() },
             { RoleId.Amnisiac, CustomOptionHolder.amnisiacSpawnRate.GetSelection() },
@@ -381,6 +383,7 @@ public static class RoleHelpers
         Redemptor.ClearAndReload();
         BandLeader.ClearAndReload();
         SchrodingersCat.ClearAndReload();
+        Gunsmith.ClearAndReload();
 
         // Modifier
         Assassin.clearAndReload();

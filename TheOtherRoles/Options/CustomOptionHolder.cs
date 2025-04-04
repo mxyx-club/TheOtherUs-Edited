@@ -241,6 +241,11 @@ public class CustomOptionHolder
     public static CustomOption grenadierFlashRadius;
     public static CustomOption grenadierTeamIndicators;
 
+    public static CustomOption gunsmithSpawnRate;
+    public static CustomOption gunsmithKillCooldown;
+    public static CustomOption gunsmithSetKillCooldown;
+    public static CustomOption gunsmithMaxChangeCount;
+
     public static CustomOption specterSpawnRate;
     public static CustomOption specterResetRole;
     public static CustomOption specterDuration;
@@ -969,6 +974,11 @@ public class CustomOptionHolder
         grenadierDuration = Create(10342, Types.Impostor, "grenadierDuration", 8f, 4f, 10f, 0.5f, grenadierSpawnRate);
         grenadierFlashRadius = Create(10343, Types.Impostor, "grenadierFlashRadius", 1f, 0.25f, 5f, 0.125f, grenadierSpawnRate);
         grenadierTeamIndicators = Create(10344, Types.Impostor, "grenadierTeamIndicators", true, grenadierSpawnRate);
+
+        gunsmithSpawnRate = Create(10350, Types.Impostor, cs(Gunsmith.color, "Gunsmith"), rates, null, true);
+        gunsmithKillCooldown = Create(10351, Types.Impostor, "killCooldown", 25f, 10f, 60f, 2.5f, gunsmithSpawnRate);
+        gunsmithSetKillCooldown = Create(10352, Types.Impostor, "gunsmithSetKillCooldown", 0f, 0f, 7.5f, 0.5f, gunsmithSpawnRate);
+        gunsmithMaxChangeCount = Create(10353, Types.Impostor, "gunsmithMaxChangeCount", 5, 1, 15, 1, gunsmithSpawnRate);
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 

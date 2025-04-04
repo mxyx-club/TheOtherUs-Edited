@@ -479,6 +479,9 @@ public static class RPCProcedure
                     case RoleId.SchrodingersCat:
                         SchrodingersCat.Player = player;
                         break;
+                    case RoleId.Gunsmith:
+                        Gunsmith.Player = player;
+                        break;
                 }
             }
             if (AmongUsClient.Instance.AmHost && Helpers.roleCanUseVents(player) && !player.Data.Role.IsImpostor)
@@ -753,7 +756,12 @@ public static class RPCProcedure
         TimeMaster.shieldActive = false; // Shield is no longer active when rewinding
         SoundEffectsManager.stop("timemasterShield"); // Shield sound stopped when rewinding
         if (TimeMaster.timeMaster != null && TimeMaster.timeMaster == PlayerControl.LocalPlayer)
-            resetTimeMasterButton();
+        {
+            timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
+            timeMasterShieldButton.isEffectActive = false;
+            timeMasterShieldButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+            SoundEffectsManager.stop("timemasterShield");
+        }
         FastDestroyableSingleton<HudManager>.Instance.FullScreen.color = new Color(0f, 0.5f, 0.8f, 0.3f);
         FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = true;
         FastDestroyableSingleton<HudManager>.Instance.FullScreen.gameObject.SetActive(true);
@@ -1177,6 +1185,7 @@ public static class RPCProcedure
         if (player == Terrorist.terrorist) Terrorist.clearAndReload();
         if (player == Gambler.gambler) Gambler.clearAndReload();
         if (player == Grenadier.Player) Grenadier.clearAndReload();
+        if (player == Gunsmith.Player) Gunsmith.ClearAndReload();
 
         // Other roles
         if (player == Jester.jester) Jester.clearAndReload();
@@ -1885,7 +1894,7 @@ public static class RPCProcedure
             rend.gameObject.layer = playerVoteArea.Megaphone.gameObject.layer;
             rend.transform.localPosition = new Vector3(-0.5f, 0.2f, -1f);
             rend.sprite = new ResourceSprite("TheOtherRoles.Resources.ChatOverlay.png", 130f);
-            if (playerControl.PlayerId != localPlayerId) rend.gameObject.SetActive(true);
+            if (playerControl.PlayerId != localPlayerId) rend?.gameObject?.SetActive(true);
             FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(2f, (Action<float>)delegate (float p)
                 {
                     if (p == 1f)

@@ -58,6 +58,7 @@ public class RoleInfo
     public static RoleInfo evilTrapper = new("EvilTrapper", EvilTrapper.color, RoleId.EvilTrapper, RoleType.Impostor);
     public static RoleInfo gambler = new("Gambler", Gambler.color, RoleId.Gambler, RoleType.Impostor);
     public static RoleInfo grenadier = new("Grenadier", Grenadier.color, RoleId.Grenadier, RoleType.Impostor);
+    public static RoleInfo gunsmith = new("Gunsmith", Gunsmith.color, RoleId.Gunsmith, RoleType.Impostor);
 
     public static RoleInfo survivor = new("Survivor", Survivor.color, RoleId.Survivor, RoleType.Neutral);
     public static RoleInfo amnisiac = new("Amnisiac", Amnisiac.color, RoleId.Amnisiac, RoleType.Neutral);
@@ -172,6 +173,7 @@ public class RoleInfo
         evilTrapper,
         gambler,
         grenadier,
+        gunsmith,
 
         survivor,
         amnisiac,
@@ -326,6 +328,7 @@ public class RoleInfo
         if (p == Witch.witch) infos.Add(witch);
         if (p == Escapist.escapist) infos.Add(escapist);
         if (p == Gambler.gambler) infos.Add(gambler);
+        if (p == Gunsmith.Player) infos.Add(gunsmith);
         if (p == Ninja.ninja) infos.Add(ninja);
         if (p == Yoyo.yoyo) infos.Add(yoyo);
         if (p == EvilTrapper.evilTrapper) infos.Add(evilTrapper);
@@ -430,6 +433,8 @@ public class RoleInfo
                 roleName += cs(Vulture.color, string.Format("roleInfoRemaining".Translate(), Vulture.vultureNumberToWin - Vulture.eatenBodies));
             if (p == Witness.Player && (PlayerControl.LocalPlayer == Witness.Player || ShowGhostInfo))
                 roleName += cs(Witness.color, string.Format("roleInfoRemaining".Translate(), Witness.exileToWin - Witness.exiledCount));
+            if (p == Gunsmith.Player && (PlayerControl.LocalPlayer == Gunsmith.Player || ShowGhostInfo))
+                roleName += cs(Gunsmith.color, string.Format("roleInfoRemaining".Translate(), Gunsmith.remainingChange));
 
             if (ShowGhostInfo)
             {

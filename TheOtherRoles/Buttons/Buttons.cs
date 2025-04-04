@@ -106,6 +106,8 @@ internal static class HudManagerStartPatch
     public static CustomButton bandLeaderDrummerButton;
     public static CustomButton bandLeaderKillButton;
     public static CustomButton schrodingersCatKillButton;
+    public static CustomButton gunsmithGetBullets;
+    public static CustomButton gunsmithAddBullets;
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
@@ -129,6 +131,7 @@ internal static class HudManagerStartPatch
     public static TMP_Text bandLeaderKeyboardistText;
     public static TMP_Text bandLeaderBassistText;
     public static TMP_Text bandLeaderDrummerText;
+    public static TMP_Text gunsmithGetBulletsText;
 
     public static void setCustomButtonCooldowns()
     {
@@ -229,6 +232,8 @@ internal static class HudManagerStartPatch
         bandLeaderDrummerButton.MaxTimer = 0f;
         bandLeaderKillButton.MaxTimer = BandLeader.killCooldown;
         schrodingersCatKillButton.MaxTimer = SchrodingersCat.Cooldown;
+        gunsmithAddBullets.MaxTimer = 0f;
+        gunsmithGetBullets.MaxTimer = 0f;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         timeMasterShieldButton.EffectDuration = TimeMaster.shieldDuration;
@@ -4849,6 +4854,58 @@ internal static class HudManagerStartPatch
             __instance,
             modKillInput.keyCode,
             buttonText: GetString("killButtonText")
+        );
+
+        gunsmithGetBullets = new CustomButton(
+            () =>
+            {
+                PlayerControl.LocalPlayer.killTimer = Gunsmith.setKillCooldown;
+                Gunsmith.remainingChange--;
+            },
+            () =>
+            {
+                return Gunsmith.Player.IsAlive() && Gunsmith.Player == PlayerControl.LocalPlayer;
+            },
+            () =>
+            {
+                if (gunsmithGetBulletsText != null) gunsmithGetBulletsText.text = $"{Gunsmith.remainingChange} / {Gunsmith.maxChangeCount}";
+                return PlayerControl.LocalPlayer.CanMove && PlayerControl.LocalPlayer.killTimer > Gunsmith.setKillCooldown && Gunsmith.remainingChange > 0;
+            },
+            () => { },
+            Gunsmith.GetButton,
+            ButtonPositions.upperRowLeft,
+            __instance,
+            abilityInput.keyCode,
+            buttonText: GetString("gunsmithGetBullets")
+        );
+
+        gunsmithGetBulletsText = Object.Instantiate(gunsmithGetBullets.actionButton.cooldownTimerText,
+            gunsmithGetBullets.actionButton.cooldownTimerText.transform.parent);
+        gunsmithGetBulletsText.text = "";
+        gunsmithGetBulletsText.enableWordWrapping = false;
+        gunsmithGetBulletsText.transform.localScale = Vector3.one * 0.5f;
+        gunsmithGetBulletsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+
+        gunsmithAddBullets = new CustomButton(
+            () =>
+            {
+                PlayerControl.LocalPlayer.SetKillTimer(ModOption.KillCooldown);
+                Gunsmith.remainingChange++;
+            },
+            () =>
+            {
+                return Gunsmith.Player.IsAlive() && Gunsmith.Player == PlayerControl.LocalPlayer;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove && !FastDestroyableSingleton<HudManager>.Instance.KillButton.isCoolingDown && Gunsmith.remainingChange < Gunsmith.maxChangeCount;
+            },
+            () => { },
+            Gunsmith.AddButton,
+            ButtonPositions.lowerRowCenter,
+            __instance,
+            secondaryAbilityInput.keyCode,
+            buttonText: GetString("gunsmithAddBullets")
         );
 
 

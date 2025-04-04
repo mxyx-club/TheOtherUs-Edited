@@ -346,6 +346,10 @@ public class Specter
                     if (resetRole) SchrodingersCat.ClearAndReload();
                     SchrodingersCat.Player = local;
                     break;
+                case RoleId.Gunsmith:
+                    if (resetRole) Gunsmith.ClearAndReload();
+                    Gunsmith.Player = local;
+                    break;
             }
         }
 

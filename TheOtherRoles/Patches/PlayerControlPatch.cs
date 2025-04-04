@@ -1905,7 +1905,9 @@ internal class PlayerControlSetCoolDownPatch
         if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter)
             addition = BountyHunter.punishmentTime;
         if (Gambler.gambler != null && PlayerControl.LocalPlayer == Gambler.gambler)
-            addition = Gambler.maxCooldown - GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
+            addition = Gambler.maxCooldown - ModOption.KillCooldown;
+        if (Gunsmith.Player != null && PlayerControl.LocalPlayer == Gunsmith.Player)
+            addition = Gunsmith.KillCooldown;
         if (LastImpostor.lastImpostor != null && PlayerControl.LocalPlayer == LastImpostor.lastImpostor)
             addition -= LastImpostor.deduce;
 
