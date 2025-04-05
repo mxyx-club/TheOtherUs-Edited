@@ -482,6 +482,9 @@ public static class RPCProcedure
                     case RoleId.Gunsmith:
                         Gunsmith.Player = player;
                         break;
+                    case RoleId.Berserker:
+                        Berserker.Player = player;
+                        break;
                 }
             }
             if (AmongUsClient.Instance.AmHost && Helpers.roleCanUseVents(player) && !player.Data.Role.IsImpostor)
@@ -1186,6 +1189,7 @@ public static class RPCProcedure
         if (player == Gambler.gambler) Gambler.clearAndReload();
         if (player == Grenadier.Player) Grenadier.clearAndReload();
         if (player == Gunsmith.Player) Gunsmith.ClearAndReload();
+        if (player == Berserker.Player) Berserker.ClearAndReload();
 
         // Other roles
         if (player == Jester.jester) Jester.clearAndReload();

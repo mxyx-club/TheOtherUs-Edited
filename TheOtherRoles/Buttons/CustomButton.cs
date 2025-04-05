@@ -106,6 +106,13 @@ public class CustomButton
         if (!isEffectActive && Timer < 0 && CouldUse())
         {
             OnClick();
+            if (HasEffect && !isEffectActive)
+            {
+                DeputyTimer = EffectDuration;
+                Timer = EffectDuration;
+                actionButton.cooldownTimerText.color = new Color(0f, 0.8f, 0f);
+                isEffectActive = true;
+            }
         }
         else if (!isEffectActive && Timer >= 0)
         {
@@ -120,13 +127,6 @@ public class CustomButton
         if (Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) && Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0f)
             return;
 
-        if (HasEffect && !isEffectActive && OnEffectCouldUse?.Invoke() == true)
-        {
-            DeputyTimer = EffectDuration;
-            Timer = EffectDuration;
-            actionButton.cooldownTimerText.color = new Color(0f, 0.8f, 0f);
-            isEffectActive = true;
-        }
     }
 
     public static void HudUpdate()
@@ -297,7 +297,7 @@ public class CustomButton
         {
             isEffectActive = false;
             actionButton.cooldownTimerText.color = Palette.DisabledClear;
-            //OnEffectEnd();
+            OnEffectEnd();
         }
 
         actionButton.SetCoolDown(Timer, HasEffect && isEffectActive ? EffectDuration : MaxTimer);

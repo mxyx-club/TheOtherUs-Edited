@@ -350,6 +350,10 @@ public class Specter
                     if (resetRole) Gunsmith.ClearAndReload();
                     Gunsmith.Player = local;
                     break;
+                case RoleId.Berserker:
+                    if (resetRole) Berserker.ClearAndReload();
+                    Berserker.Player = local;
+                    break;
             }
         }
 

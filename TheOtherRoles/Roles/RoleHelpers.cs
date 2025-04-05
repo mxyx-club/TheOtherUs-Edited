@@ -47,6 +47,7 @@ public enum RoleId
     Gambler,
     Grenadier,
     Gunsmith,
+    Berserker,
 
     Survivor,
     Amnisiac,
@@ -181,6 +182,12 @@ public static class RoleHelpers
 
         blockedRolePairings.Add((byte)RoleId.Ninja, [(byte)RoleId.Swooper]);
         blockedRolePairings.Add((byte)RoleId.Swooper, [(byte)RoleId.Ninja]);
+
+        blockedRolePairings.Add((byte)RoleId.Gunsmith, [(byte)RoleId.Berserker, (byte)RoleId.BountyHunter, (byte)RoleId.WolfLord]);
+        blockedRolePairings.Add((byte)RoleId.Berserker, [(byte)RoleId.Gunsmith, (byte)RoleId.BountyHunter, (byte)RoleId.WolfLord]);
+        blockedRolePairings.Add((byte)RoleId.WolfLord, [(byte)RoleId.Berserker, (byte)RoleId.Gunsmith, (byte)RoleId.BountyHunter]);
+        blockedRolePairings.Add((byte)RoleId.BountyHunter, [(byte)RoleId.Berserker, (byte)RoleId.Gunsmith, (byte)RoleId.WolfLord]);
+
     }
 
     public static Dictionary<RoleId, int> RoleRate = new();
@@ -242,6 +249,7 @@ public static class RoleHelpers
             { RoleId.Yoyo, CustomOptionHolder.yoyoSpawnRate.GetSelection() },
             { RoleId.Grenadier, CustomOptionHolder.grenadierSpawnRate.GetSelection() },
             { RoleId.Gunsmith, CustomOptionHolder.gunsmithSpawnRate.GetSelection() },
+            { RoleId.Berserker, CustomOptionHolder.berserkerSpawnRate.GetSelection() },
 
             { RoleId.Akujo, CustomOptionHolder.akujoSpawnRate.GetSelection() },
             { RoleId.Amnisiac, CustomOptionHolder.amnisiacSpawnRate.GetSelection() },
@@ -384,6 +392,7 @@ public static class RoleHelpers
         BandLeader.ClearAndReload();
         SchrodingersCat.ClearAndReload();
         Gunsmith.ClearAndReload();
+        Berserker.ClearAndReload();
 
         // Modifier
         Assassin.clearAndReload();

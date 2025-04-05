@@ -101,6 +101,7 @@ public static class Thief
         if (target == WolfLord.Player) WolfLord.Player = thief;
         if (target == BountyHunter.bountyHunter) BountyHunter.bountyHunter = thief;
         if (target == Gunsmith.Player) Gunsmith.Player = thief;
+        if (target == Berserker.Player) Berserker.Player = thief;
         if (target == Witch.witch)
         {
             Witch.witch = thief;

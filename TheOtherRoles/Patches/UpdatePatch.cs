@@ -681,7 +681,9 @@ internal class HudManagerUpdatePatch
         }
 
         var enabled = true;
-        if (Vampire.vampire != null && Vampire.vampire == PlayerControl.LocalPlayer)
+        if (Vampire.vampire.IsAlive() && Vampire.vampire == PlayerControl.LocalPlayer)
+            enabled = false;
+        if (Berserker.Player.IsAlive() && Berserker.Player == PlayerControl.LocalPlayer)
             enabled = false;
 
         if (enabled) __instance.KillButton.Show();

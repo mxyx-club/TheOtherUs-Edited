@@ -1170,6 +1170,7 @@ public static class PlayerControlFixedUpdatePatch
             HudManagerStartPatch.swooperKillButton.MaxTimer = Swooper.cooldown * multiplier;
             HudManagerStartPatch.werewolfRampageButton.MaxTimer = Thief.cooldown * multiplier;
             HudManagerStartPatch.juggernautKillButton.MaxTimer = Thief.cooldown * multiplier;
+            HudManagerStartPatch.berserkerKillButton.MaxTimer = Thief.cooldown * multiplier;
         }
     }
 

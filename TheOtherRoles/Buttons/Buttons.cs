@@ -108,6 +108,7 @@ internal static class HudManagerStartPatch
     public static CustomButton schrodingersCatKillButton;
     public static CustomButton gunsmithGetBullets;
     public static CustomButton gunsmithAddBullets;
+    public static CustomButton berserkerKillButton;
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
@@ -132,6 +133,7 @@ internal static class HudManagerStartPatch
     public static TMP_Text bandLeaderBassistText;
     public static TMP_Text bandLeaderDrummerText;
     public static TMP_Text gunsmithGetBulletsText;
+    public static TMP_Text berserkerKillButtonText;
 
     public static void setCustomButtonCooldowns()
     {
@@ -234,6 +236,7 @@ internal static class HudManagerStartPatch
         schrodingersCatKillButton.MaxTimer = SchrodingersCat.Cooldown;
         gunsmithAddBullets.MaxTimer = 0f;
         gunsmithGetBullets.MaxTimer = 0f;
+        berserkerKillButton.MaxTimer = Berserker.KillCooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         timeMasterShieldButton.EffectDuration = TimeMaster.shieldDuration;
@@ -259,6 +262,7 @@ internal static class HudManagerStartPatch
         terroristButton.EffectDuration = Terrorist.destructionTime + Terrorist.bombActiveAfter;
         redemptorRevelationButton.EffectDuration = Redemptor.revelationDuration;
         redemptorPrayerButton.EffectDuration = Redemptor.prayerDuration;
+        berserkerKillButton.EffectDuration = 0.5f;
 
         zoomOutButton.MaxTimer = zoomOutButton.Timer = 0f;
     }
@@ -4907,6 +4911,73 @@ internal static class HudManagerStartPatch
             secondaryAbilityInput.keyCode,
             buttonText: GetString("gunsmithAddBullets")
         );
+
+        berserkerKillButton = new CustomButton(
+            () =>
+            {
+                var target = Berserker.currentTarget;
+                if (checkAndDoVetKill(target)) return;
+                if (checkMurderAttemptAndKill(Berserker.Player, target) == MurderAttemptResult.SuppressKill) return;
+
+                berserkerKillButton.EffectDuration = Berserker.GetDuration();
+                target = null;
+            },
+            () =>
+            {
+                return Berserker.Player.IsAlive() && Berserker.Player == PlayerControl.LocalPlayer;
+            },
+            () =>
+            {
+                Berserker.currentTarget = SetTarget(null, Spy.spy == null);
+                SetPlayerOutline(Berserker.currentTarget, Berserker.color);
+                showTargetNameOnButton(Berserker.currentTarget, berserkerKillButton, GetString("killButtonText"));
+
+                if (berserkerKillButtonText != null)
+                {
+                    if (!berserkerKillButton.isEffectActive) berserkerKillButtonText.text = $"{(int)(Berserker.GetDurationPercentage() * 100)} % | {Berserker.GetDuration():0.00}s";
+                    else berserkerKillButtonText.text = $"{(int)(berserkerKillButton.Timer / Berserker.GetDuration() * 100)} % | {berserkerKillButton.Timer:0.00}";
+
+                }
+
+                if (berserkerKillButton.Timer <= 0)
+                {
+                    Berserker.UpdateTimer();
+                }
+
+                return PlayerControl.LocalPlayer.CanMove && Berserker.currentTarget != null;
+            },
+            () => { berserkerKillButton.Timer = berserkerKillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPositions.upperRowCenter,
+            __instance,
+            modKillInput.keyCode,
+            true,
+            0.5f,
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove && Berserker.currentTarget;
+            },
+            () =>
+            {
+                var target = Berserker.currentTarget;
+                if (checkAndDoVetKill(target)) return;
+                if (checkMurderAttemptAndKill(Berserker.Player, target) == MurderAttemptResult.SuppressKill) return;
+                target = null;
+            },
+            () =>
+            {
+                berserkerKillButton.Timer = berserkerKillButton.MaxTimer;
+                Berserker.Timer = 0f;
+            },
+            buttonText: GetString("killButtonText")
+        );
+
+        berserkerKillButtonText = Object.Instantiate(berserkerKillButton.actionButton.cooldownTimerText,
+            berserkerKillButton.actionButton.cooldownTimerText.transform.parent);
+        berserkerKillButtonText.text = "";
+        berserkerKillButtonText.enableWordWrapping = false;
+        berserkerKillButtonText.transform.localScale = Vector3.one * 0.5f;
+        berserkerKillButtonText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
 
         // Set the default (or settings from the previous game) timers / durations when spawning the buttons
