@@ -1625,6 +1625,9 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
+                vampireKillButton.MaxTimer = LastImpostor.lastImpostor == PlayerControl.LocalPlayer
+                    ? Vampire.cooldown - LastImpostor.deduce
+                    : Vampire.cooldown;
                 vampireKillButton.Timer = vampireKillButton.MaxTimer;
                 vampireKillButton.isEffectActive = false;
                 vampireKillButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
@@ -4865,6 +4868,9 @@ internal static class HudManagerStartPatch
             {
                 PlayerControl.LocalPlayer.killTimer = Gunsmith.setKillCooldown;
                 Gunsmith.remainingChange--;
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.SyncGunsmithChange);
+                writer.Write(Gunsmith.remainingChange);
+                writer.EndRPC();
             },
             () =>
             {
@@ -4895,6 +4901,9 @@ internal static class HudManagerStartPatch
             {
                 PlayerControl.LocalPlayer.SetKillTimer(ModOption.KillCooldown);
                 Gunsmith.remainingChange++;
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.SyncGunsmithChange);
+                writer.Write(Gunsmith.remainingChange);
+                writer.EndRPC();
             },
             () =>
             {
@@ -4946,7 +4955,13 @@ internal static class HudManagerStartPatch
 
                 return PlayerControl.LocalPlayer.CanMove && Berserker.currentTarget != null;
             },
-            () => { berserkerKillButton.Timer = berserkerKillButton.MaxTimer; },
+            () =>
+            {
+                berserkerKillButton.MaxTimer = LastImpostor.lastImpostor == PlayerControl.LocalPlayer
+                    ? Berserker.KillCooldown - LastImpostor.deduce
+                    : Berserker.KillCooldown;
+                berserkerKillButton.Timer = berserkerKillButton.MaxTimer;
+            },
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowCenter,
             __instance,
@@ -4966,6 +4981,9 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
+                berserkerKillButton.MaxTimer = LastImpostor.lastImpostor == PlayerControl.LocalPlayer
+                    ? Berserker.KillCooldown - LastImpostor.deduce
+                    : Berserker.KillCooldown;
                 berserkerKillButton.Timer = berserkerKillButton.MaxTimer;
                 Berserker.Timer = 0f;
             },

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using Hazel;
-using Reactor.Utilities.Extensions;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.Patches.RoleManagerSelectRolesPatch;
@@ -140,6 +139,17 @@ internal class RoleDraft
                     HudManager.Instance.FullScreen.color = backGroundColor;
                     GameObject.Find("BackgroundLayer")?.SetActive(false);
 
+                    foreach (var role in RoleInfo.allRoleInfos)
+                    {
+                        var blocked = blockedRolePairings.Any(p => alreadyPicked.Contains(p.Key) && p.Value.Contains((byte)role.roleId));
+                        if (blocked)
+                        {
+                            roleData.neutralSettings.Remove((byte)role.roleId);
+                            roleData.crewSettings.Remove((byte)role.roleId);
+                            roleData.impSettings.Remove((byte)role.roleId);
+                        }
+                    }
+
                     // enable pick, wait for pick
                     Color youColor = timer - (int)timer > 0.5 ? Color.red : Color.yellow;
                     playerText = cs(youColor, "RoleDraft.You".Translate());
@@ -256,12 +266,11 @@ internal class RoleDraft
                                 if (crewRate < 10) continue;
                             }
                         }
-                        // 暂时取消冲突职业判断
-                        // Handle role pairings that are blocked, e.g. Vampire Warlock, Cleaner Vulture etc.
-                        /*var blocked = blockedRolePairings
-                            .Any(p => alreadyPicked.Contains(p.Key) && p.Value.Contains((byte)roleInfo.roleId));
 
-                        if (blocked) continue;*/
+                        // Handle role pairings that are blocked, e.g. Vampire Warlock, Cleaner Vulture etc.
+                        var blocked = blockedRolePairings.Any(p => alreadyPicked.Contains(p.Key) && p.Value.Contains((byte)roleInfo.roleId));
+
+                        if (blocked) continue;
 
                         availableRoles.TryAdd(roleInfo);
                     }

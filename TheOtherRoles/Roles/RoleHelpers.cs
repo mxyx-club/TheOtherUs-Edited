@@ -179,6 +179,7 @@ public static class RoleHelpers
 
         blockedRolePairings.Add((byte)RoleId.Vulture, [(byte)RoleId.Cleaner, (byte)RoleId.Pelican]);
         blockedRolePairings.Add((byte)RoleId.Cleaner, [(byte)RoleId.Vulture, (byte)RoleId.Pelican]);
+        blockedRolePairings.Add((byte)RoleId.Pelican, [(byte)RoleId.Vulture, (byte)RoleId.Cleaner]);
 
         blockedRolePairings.Add((byte)RoleId.Ninja, [(byte)RoleId.Swooper]);
         blockedRolePairings.Add((byte)RoleId.Swooper, [(byte)RoleId.Ninja]);

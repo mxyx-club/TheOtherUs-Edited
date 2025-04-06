@@ -394,6 +394,8 @@ public static class Guesser
                         return;
                     }
 
+                    if (focusedTarget.IsDead()) return;
+
                     if (mainRoleInfo == null) return;
 
                     foreach (var role in mainRoleInfo)

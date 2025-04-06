@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using AmongUs.Data;
-using Hazel;
 using InnerNet;
 using TheOtherRoles.Utilities;
 using UnityEngine;

@@ -907,10 +907,10 @@ internal class MeetingHudPatch
             if (!PlayerControl.AllPlayerControls.ToList().All(x => x.IsAlive())) firstKillPlayer = null;
 
             Trapper.playersOnMap = new List<PlayerControl>();
+            if (Witch.witch.IsDead()) Witch.futureSpelled.Clear();
 
             //Nothing here for now. What to do when local player who is blackmailed starts meeting
-            if (Blackmailer.blackmailed != null && Blackmailer.blackmailed.Data.PlayerId == PlayerControl.LocalPlayer.PlayerId
-                && Blackmailer.blackmailed.IsAlive())
+            if (Blackmailer.blackmailed != null && Blackmailer.blackmailed.PlayerId == PlayerControl.LocalPlayer.PlayerId && Blackmailer.blackmailed.IsAlive())
                 Coroutines.Start(BlackmailShhh());
 
             if (PartTimer.partTimer.IsAlive() && PartTimer.target == null) PartTimer.deathTurn--;

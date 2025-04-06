@@ -1023,6 +1023,7 @@ internal class GameOptionsDataPatch
                     var optionName = cs(new Color32(204, 204, 0, 255), "CrewmateRolesText".Translate());
                     var neutralMin = CustomOptionHolder.neutralRolesCountMin.GetSelection();
                     var neutralMax = CustomOptionHolder.neutralRolesCountMax.GetSelection();
+                    if (RoleDraft.isEnabled) neutralMin = neutralMax;
 
                     var min = Math.Max(0, PlayerControl.AllPlayerControls.Count - neutralMax - ModOption.NumImpostors);
                     var max = Math.Max(0, PlayerControl.AllPlayerControls.Count - neutralMin - ModOption.NumImpostors);

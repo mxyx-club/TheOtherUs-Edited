@@ -59,8 +59,8 @@ Please refer to [Github releases](https://github.com/mxyx-club/TheOtherUs-Edited
 | Butcher [Beta] | Schrodinger's Cat |    Medium     |     Blind     |                |
 |    Gambler     |                   |    Trapper    |    Watcher    |                |
 |   Grenadier    |                   |    Prophet    |     Radar     |                |
-|                |                   |  Info Sleuth  | Button Barry  |                |
-|                |                   |   Balancer    |   Chameleon   |                |
+|    Gunsmith    |                   |  Info Sleuth  | Button Barry  |                |
+|   Berserker    |                   |   Balancer    |   Chameleon   |                |
 |                |                   |               |    Shifter    |                |
 
 ## Credits & Resources

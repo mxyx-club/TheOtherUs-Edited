@@ -11,7 +11,6 @@ using TheOtherRoles.Buttons;
 using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
-using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -766,14 +765,6 @@ public static class Helpers
         return !isDark(target.PlayerId);
     }
 
-    public static TextMeshPro getFirst(this TextMeshPro[] text)
-    {
-        if (text == null) return null;
-        foreach (var self in text)
-            if (self.text == "") return self;
-        return text[0];
-    }
-
     public static Color getTeamColor(RoleType team)
     {
         return team switch
@@ -1207,7 +1198,7 @@ public static class Helpers
             return MurderAttemptResult.BlankKill;
         }
 
-        if (Survivor.Player != null && Survivor.Player.Contains(target) && Survivor.vestActive)
+        if (Survivor.Player != null && Survivor.Player.Any(x => x.PlayerId == target.PlayerId) && Survivor.vestActive)
         {
             CustomButton.resetKillButton(killer, Survivor.vestResetCooldown);
             SoundEffectsManager.play("fail");
@@ -1372,46 +1363,4 @@ public static class Helpers
     {
         return AccessTools.Method(self.GetType(), nameof(Il2CppObjectBase.TryCast)).MakeGenericMethod(type).Invoke(self, Array.Empty<object>());
     }
-
-    /*public static void ModMurderPlayer(this PlayerControl player, PlayerControl target, bool resetKillCd = true)
-    {
-        player.isKilling = false;
-        if (!target) return;
-        Message(string.Format("{0} trying to murder {1}", player.PlayerId, target.PlayerId), null);
-        GameData.PlayerInfo data = target.Data;
-        if (player.AmOwner)
-        {
-            StatsManager.Instance.IncrementStat(StringNames.StatsImpostorKills);
-
-            if (player.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
-            {
-                StatsManager.Instance.IncrementStat(StringNames.StatsShapeshifterShiftedKills);
-            }
-            if (Constants.ShouldPlaySfx())
-            {
-                SoundManager.Instance.PlaySound(player.KillSfx, false, 0.8f, null);
-            }
-            if (resetKillCd) player.SetKillTimer(ModOption.KillCooldown);
-        }
-        DestroyableSingleton<UnityTelemetry>.Instance.WriteMurder();
-        target.gameObject.layer = LayerMask.NameToLayer("Ghost");
-        if (target.AmOwner)
-        {
-            StatsManager.Instance.IncrementStat(StringNames.StatsTimesMurdered);
-            if (Minigame.Instance)
-            {
-                try
-                {
-                    Minigame.Instance.Close();
-                }
-                catch { }
-            }
-            DestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(player.Data, data);
-            target.cosmetics.SetNameMask(false);
-            target.RpcSetScanner(false);
-        }
-
-        player.MyPhysics.StartCoroutine(player.KillAnimations.Random().CoPerformKill(player, target));
-        Message(string.Format("{0} succeeded in murdering {1}", player.PlayerId, target.PlayerId), null);
-    }*/
 }

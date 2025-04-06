@@ -47,6 +47,7 @@ public static class Thief
             target == Jackal.Sidekick ||
             target == Werewolf.werewolf ||
             target == Juggernaut.juggernaut ||
+            target == Pelican.Player ||
             target == Swooper.swooper ||
             Pavlovsdogs.pavlovsdogs.Any(p => p == target) ||
             target == Pavlovsdogs.pavlovsowner ||
@@ -78,7 +79,6 @@ public static class Thief
         }
         if (target == Pavlovsdogs.pavlovsowner)
         {
-            Pavlovsdogs.pavlovsdogs.Add(target);
             Pavlovsdogs.pavlovsowner = thief;
             if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodePavlovsdogIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(thief.PlayerId))
                 RPCProcedure.setGuesserGm(thief.PlayerId);

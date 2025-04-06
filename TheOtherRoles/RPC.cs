@@ -131,6 +131,7 @@ public enum CustomRPC
     CreateBandMember,
     HostSay,
     SchrodingersCatSetState,
+    SyncGunsmithChange,
 
     TrapperKill,
     PlaceTrap,
@@ -2532,6 +2533,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.SchrodingersCatSetState:
                 SchrodingersCat.State = (SchrodingersCat.CatState)reader.ReadByte();
+                break;
+            case CustomRPC.SyncGunsmithChange:
+                Gunsmith.remainingChange = reader.ReadInt32();
                 break;
         }
 

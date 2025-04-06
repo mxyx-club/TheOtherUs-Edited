@@ -149,7 +149,7 @@ public class CustomButton
     public static void MeetingEndedUpdate()
     {
         buttons.RemoveAll(item => item.actionButton == null);
-        buttons.Where(x => x.HasButton()).Do(t =>
+        buttons.Do(t =>
         {
             try
             {

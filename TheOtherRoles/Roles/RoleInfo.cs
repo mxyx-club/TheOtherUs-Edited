@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using InnerNet;
 using TheOtherRoles.Buttons;
-using TheOtherRoles.Roles.Neutral;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -421,7 +420,7 @@ public class RoleInfo
 
         if (Executioner.target != null && p.PlayerId == Executioner.target.PlayerId && PlayerControl.LocalPlayer != Executioner.target)
             roleName += useColors ? cs(Executioner.color, " §") : " §";
-        
+
         if (Jackal.jackal.Any(x => x == p) && Jackal.canSwoop)
             roleName += "JackalIsSwooperInfo".Translate();
 
@@ -437,7 +436,7 @@ public class RoleInfo
             if (p == Witness.Player && (PlayerControl.LocalPlayer == Witness.Player || ShowGhostInfo))
                 roleName += cs(Witness.color, string.Format("roleInfoRemaining".Translate(), Witness.exileToWin - Witness.exiledCount));
             if (p == Gunsmith.Player && (PlayerControl.LocalPlayer == Gunsmith.Player || ShowGhostInfo))
-                roleName += cs(Gunsmith.color, string.Format("roleInfoRemaining".Translate(), Gunsmith.remainingChange));
+                roleName += cs(Gunsmith.color, $" {Gunsmith.remainingChange}/{Gunsmith.maxChangeCount}");
 
             if (ShowGhostInfo)
             {

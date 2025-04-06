@@ -5,9 +5,7 @@ using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
 using InnerNet;
-using Mono.Cecil.Cil;
 using Reactor.Utilities.Extensions;
-using Steamworks;
 using TheOtherRoles.Buttons;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
@@ -1761,8 +1759,10 @@ public static class MurderPlayerPatch
         {
             LastImpostor.lastImpostor.SetKillTimer(Mathf.Max(0f, ModOption.KillCooldown - LastImpostor.deduce));
 
-            if (Vampire.vampire != null && Vampire.vampire.PlayerId == LastImpostor.lastImpostor.PlayerId)
+            if (Vampire.vampire.IsAlive() && Vampire.vampire.PlayerId == LastImpostor.lastImpostor.PlayerId)
                 HudManagerStartPatch.vampireKillButton.MaxTimer = Vampire.cooldown - LastImpostor.deduce;
+            if (Berserker.Player.IsAlive() && Berserker.Player.PlayerId == LastImpostor.lastImpostor.PlayerId)
+                HudManagerStartPatch.berserkerKillButton.MaxTimer = Berserker.KillCooldown - LastImpostor.deduce;
         }
 
         // Set Gambler cooldown
