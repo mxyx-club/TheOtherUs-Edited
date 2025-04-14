@@ -139,17 +139,6 @@ internal class RoleDraft
                     HudManager.Instance.FullScreen.color = backGroundColor;
                     GameObject.Find("BackgroundLayer")?.SetActive(false);
 
-                    foreach (var role in RoleInfo.allRoleInfos)
-                    {
-                        var blocked = blockedRolePairings.Any(p => alreadyPicked.Contains(p.Key) && p.Value.Contains((byte)role.roleId));
-                        if (blocked)
-                        {
-                            roleData.neutralSettings.Remove((byte)role.roleId);
-                            roleData.crewSettings.Remove((byte)role.roleId);
-                            roleData.impSettings.Remove((byte)role.roleId);
-                        }
-                    }
-
                     // enable pick, wait for pick
                     Color youColor = timer - (int)timer > 0.5 ? Color.red : Color.yellow;
                     playerText = cs(youColor, "RoleDraft.You".Translate());
@@ -157,6 +146,19 @@ internal class RoleDraft
                     List<RoleInfo> availableRoles = new();
                     foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
                     {
+                        // Handle role pairings that are blocked, e.g. Vampire Warlock, Cleaner Vulture etc.
+                        var blocked = blockedRolePairings.Any(p => alreadyPicked.Contains(p.Key) && p.Value.Contains((byte)roleInfo.roleId));
+
+                        if (blocked)
+                        {
+                            roleData.crewSettings.Remove((byte)roleInfo.roleId);
+                            roleData.impSettings.Remove((byte)roleInfo.roleId);
+                            roleData.neutralSettings.Remove((byte)roleInfo.roleId);
+                            roleData.killerNeutralSettings.Remove((byte)roleInfo.roleId);
+                            //Message($"Blocked role: {roleInfo.Name} ({roleInfo.roleId})");
+                            continue;
+                        }
+
                         if (roleInfo.roleType is RoleType.Modifier or RoleType.Ghost or RoleType.Special) continue;
                         int impostorCount = PlayerControl.AllPlayerControls.ToList().Count(x => x.Data.Role.IsImpostor);
                         // Remove Impostor Roles
@@ -173,6 +175,13 @@ internal class RoleDraft
                             continue;
                         else if (roleData.crewSettings.ContainsKey((byte)roleInfo.roleId) && roleData.crewSettings[(byte)roleInfo.roleId] == 0)
                             continue;
+
+                        bool isNeutral = roleData.neutralSettings.TryGetValue((byte)roleInfo.roleId, out var neutralRate);
+                        bool isKillerNeutral = roleData.killerNeutralSettings.TryGetValue((byte)roleInfo.roleId, out var killerNeutralRate);
+                        bool isCrewmate = roleData.crewSettings.TryGetValue((byte)roleInfo.roleId, out var crewRate);
+                        bool isImpostor = roleData.impSettings.TryGetValue((byte)roleInfo.roleId, out _);
+
+                        if (!isNeutral && !isKillerNeutral && !isCrewmate && !isImpostor) continue;
 
                         // 排除不应该直接分配的职业
                         if (roleInfo.roleId is RoleId.Sidekick or RoleId.Pavlovsdogs or RoleId.Pursuer) continue;
@@ -219,12 +228,6 @@ internal class RoleDraft
                             int killerNeutrals100Picked = alreadyPicked.Count(x => roleData.killerNeutralSettings.TryGetValue(x, out var r) && r == 10);
                             int crew100Picked = alreadyPicked.Count(x => roleData.crewSettings.TryGetValue(x, out var r) && r == 10);
 
-                            bool isNeutral = roleData.neutralSettings.TryGetValue((byte)roleInfo.roleId, out var neutralRate);
-                            bool isKillerNeutral = roleData.killerNeutralSettings.TryGetValue((byte)roleInfo.roleId, out var killerNeutralRate);
-                            bool isCrewmate = roleData.crewSettings.TryGetValue((byte)roleInfo.roleId, out var crewRate);
-
-                            if (!isNeutral && !isKillerNeutral && !isCrewmate) continue;
-
                             if ((isNeutral && neutralsPicked >= neutralsMax) ||
                                 (isKillerNeutral && killerNeutralsPicked >= killerNeutralsMax) ||
                                 (isCrewmate && crewPicked >= crewmateMax))
@@ -266,11 +269,6 @@ internal class RoleDraft
                                 if (crewRate < 10) continue;
                             }
                         }
-
-                        // Handle role pairings that are blocked, e.g. Vampire Warlock, Cleaner Vulture etc.
-                        var blocked = blockedRolePairings.Any(p => alreadyPicked.Contains(p.Key) && p.Value.Contains((byte)roleInfo.roleId));
-
-                        if (blocked) continue;
 
                         availableRoles.TryAdd(roleInfo);
                     }

@@ -4952,6 +4952,10 @@ internal static class HudManagerStartPatch
                 {
                     Berserker.UpdateTimer();
                 }
+                else
+                {
+                    Berserker.Timer = 0;
+                }
 
                 return PlayerControl.LocalPlayer.CanMove && Berserker.currentTarget != null;
             },
@@ -4985,6 +4989,7 @@ internal static class HudManagerStartPatch
                     ? Berserker.KillCooldown - LastImpostor.deduce
                     : Berserker.KillCooldown;
                 berserkerKillButton.Timer = berserkerKillButton.MaxTimer;
+                berserkerKillButton.isEffectActive = false;
                 Berserker.Timer = 0f;
             },
             buttonText: GetString("killButtonText")

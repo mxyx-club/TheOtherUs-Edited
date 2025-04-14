@@ -247,7 +247,7 @@ public class OnGameEndPatch
         bool isPursurerLose = jesterWin || witnessWin || arsonistWin || miniLose || isCanceled || executionerWin;
 
         TempData.winners = new();
-        var winners = new List<PlayerControl>();
+        var winners = new HashSet<PlayerControl>();
 
         // Mini lose
         if (miniLose)
@@ -556,7 +556,7 @@ public class OnGameEndPatch
             }
         }
 
-        TempData.winners = winners.Where(x => x?.Data != null && !x.Data.Disconnected).Select(x => new WinningPlayerData(x.Data)).Distinct().ToIl2CppList();
+        TempData.winners = winners.Where(x => x?.Data != null && !x.Data.Disconnected).Select(x => new WinningPlayerData(x.Data)).ToIl2CppList();
 
         Message($"游戏结束 {AdditionalTempData.winCondition}", "OnGameEnd");
         // Reset Settings

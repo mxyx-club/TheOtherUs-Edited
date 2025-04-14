@@ -110,7 +110,7 @@ public class CustomButton
             {
                 DeputyTimer = EffectDuration;
                 Timer = EffectDuration;
-                actionButton.cooldownTimerText.color = new Color(0f, 0.8f, 0f);
+                actionButton.cooldownTimerText.color = new Color32(0, 204, 0, 255);
                 isEffectActive = true;
             }
         }
@@ -175,6 +175,7 @@ public class CustomButton
             {
                 t.Timer = t.MaxTimer == 0 ? 0 : maxTime;
                 t.DeputyTimer = maxTime;
+                t.isEffectActive = false;
                 t.Update();
             }
             catch (Exception e)
@@ -249,7 +250,7 @@ public class CustomButton
         if (DeputyTimer <= 0 && HasEffect && isEffectActive)
         {
             isEffectActive = false;
-            actionButton.cooldownTimerText.color = Palette.EnabledColor;
+            actionButton.cooldownTimerText.color = new Color(1, 1, 1); // Palette.EnabledColor
             OnEffectEnd?.Invoke();
         }
 
@@ -287,16 +288,13 @@ public class CustomButton
             actionButtonMat.SetFloat(Desat, 1f);
         }
 
-        if (Timer >= 0)
-        {
-            if ((HasEffect && isEffectActive) || !localPlayer.inVent)
-                Timer -= Time.deltaTime;
-        }
+        if (Timer >= 0 && ((HasEffect && isEffectActive) || !localPlayer.inVent))
+            Timer -= Time.deltaTime;
 
         if (Timer <= 0 && HasEffect && isEffectActive)
         {
             isEffectActive = false;
-            actionButton.cooldownTimerText.color = Palette.DisabledClear;
+            actionButton.cooldownTimerText.color = new Color(1, 1, 1, 0.3f); // Palette.DisabledClear
             OnEffectEnd();
         }
 
@@ -308,8 +306,8 @@ public class CustomButton
 
         // Deputy disable the button and display Handcuffs instead...
         if (Sheriff.handcuffedPlayers.Contains(localPlayer.PlayerId))
-            OnClick = () => { Sheriff.setHandcuffedKnows(); };
-        else // Reset.
+            OnClick = () => Sheriff.setHandcuffedKnows();
+        else
             OnClick = InitialOnClick;
     }
 
@@ -393,7 +391,7 @@ public class CustomButton
                 Sheriff.handcuffedSprite, positionOffsetValue, button.hudManager, null,
                 true, Sheriff.handcuffDuration, null, null, null, button.mirror);
             replacementHandcuffedButton.Timer = replacementHandcuffedButton.EffectDuration;
-            replacementHandcuffedButton.actionButton.cooldownTimerText.color = new Color(0F, 0.8F, 0F);
+            replacementHandcuffedButton.actionButton.cooldownTimerText.color = new Color32(0, 204, 0, 255);
             replacementHandcuffedButton.isEffectActive = true;
             if (deputyHandcuffedButtons.ContainsKey(PlayerControl.LocalPlayer.PlayerId))
                 deputyHandcuffedButtons[PlayerControl.LocalPlayer.PlayerId].Add(replacementHandcuffedButton);

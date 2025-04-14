@@ -115,7 +115,7 @@ internal class IntroCutsceneOnDestroyPatch
                 BountyHunter.cooldownText.gameObject.SetActive(true);
             }
         }
-
+        Berserker.Timer = 0;
         ModOption.firstKillName = "";
     }
 

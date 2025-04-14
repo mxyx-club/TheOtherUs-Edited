@@ -7,29 +7,28 @@ public class Berserker
     public static Color color = Palette.ImpostorRed;
     public static PlayerControl currentTarget;
 
-    public static float KillCooldown = 25f;
-    public static float RampageCooldown = 10f;
-    public static float RampageDuration = 3f;
-    private static float defaultTimer = 10f;
+    public static float KillCooldown = 25f; // 角色的击杀冷却时间
+    private static float ChargingTimer = 10f;  // 角色的狂暴蓄力时间（需要在击杀冷却完毕后才会进行蓄力）
+    public static float RampageDuration = 3f; // 狂暴持续时间
 
-    public static float Timer;
-    public static float Duration;
+    public static float Timer; // 计时器
+    public static float Duration; // 效果时长
 
     public static void ClearAndReload()
     {
         Player = null;
         currentTarget = null;
         Timer = 0f;
-        defaultTimer = CustomOptionHolder.berserkerRampageCooldown.GetFloat();
+        KillCooldown = CustomOptionHolder.berserkerKillCooldown.GetFloat(); 
+        ChargingTimer = CustomOptionHolder.berserkerRampageCooldown.GetFloat();
         RampageDuration = CustomOptionHolder.berserkerRampageDuration.GetFloat();
-        KillCooldown = CustomOptionHolder.berserkerKillCooldown.GetFloat();
     }
 
     public static void UpdateTimer()
     {
         if (Timer >= 0)
         {
-            if (Timer <= defaultTimer) Timer += Time.deltaTime;
+            if (Timer <= ChargingTimer) Timer += Time.deltaTime;
         }
         else
         {
@@ -39,7 +38,7 @@ public class Berserker
 
     public static float GetTimerRatio()
     {
-        return Mathf.Clamp01(Timer / defaultTimer);
+        return Mathf.Clamp01(Timer / ChargingTimer);
     }
 
     public static float GetDuration()
