@@ -270,15 +270,19 @@ public static class Helpers
         return player != null && (player.IsImpostor() || isKillerNeutral(player));
     }
 
-    public static bool IsCrew(this PlayerControl player)
-    {
-        return player != null && !player.Data.Role.IsImpostor && !IsNeutral(player);
-    }
-
-    public static bool IsImpostor(this PlayerControl player, bool AndSpy = false)
+    public static bool IsCrew(this PlayerControl player, bool AndCat = false)
     {
         if (player == null) return false;
-        return player.Data.Role.IsImpostor || (AndSpy && Spy.spy == player);
+        return (!player.IsImpostor() && !IsNeutral(player))
+            || (AndCat && SchrodingersCat.Player == player && SchrodingersCat.State == SchrodingersCat.CatState.Crewmate);
+    }
+
+    public static bool IsImpostor(this PlayerControl player, bool AndSpy = false, bool AndCat = false)
+    {
+        if (player == null) return false;
+        return player.Data.Role.IsImpostor
+            || (AndSpy && Spy.spy == player)
+            || (AndCat && SchrodingersCat.Player == player && SchrodingersCat.State == SchrodingersCat.CatState.Impostor);
     }
 
     public static string teamString(PlayerControl player)
@@ -821,7 +825,7 @@ public static class Helpers
 
     public static bool ZoomButtonActive()
     {
-        if (!ShowGhostInfo || InMeeting) return false;
+        if (!CanSeeRoleInfo || InMeeting) return false;
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
         var numberOfLeftTasks = playerTotal - playerCompleted;
         return numberOfLeftTasks <= 0 || !CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.GetBool();

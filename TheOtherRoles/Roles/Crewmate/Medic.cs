@@ -41,7 +41,7 @@ public static class Medic
         if (shielded != null && ((target == shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == shielded)))
         {
             // Everyone or Ghost info
-            hasVisibleShield = showShielded == 0 || ShowGhostInfo
+            hasVisibleShield = showShielded == 0 || CanSeeRoleInfo
                 || (showShielded == 1 && (PlayerControl.LocalPlayer == shielded
                 || PlayerControl.LocalPlayer == medic)) // Shielded + Medic
                 || (showShielded == 2 && PlayerControl.LocalPlayer == medic);
@@ -50,7 +50,7 @@ public static class Medic
             hasVisibleShield = hasVisibleShield && (meetingAfterShielding
                 || !showShieldAfterMeeting
                 || PlayerControl.LocalPlayer == medic
-                || ShowGhostInfo);
+                || CanSeeRoleInfo);
         }
         return hasVisibleShield;
     }

@@ -1585,16 +1585,10 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-
-                PlayerControl target;
-                if (Spy.spy != null)
-                {
-                    target = Spy.impostorsCanKillAnyone ? SetTarget(null, false, true) : SetTarget(null, true, true);
-                }
-                else
-                {
-                    target = SetTarget(null, true, true);
-                }
+                List<PlayerControl> untargetablePlayers = [];
+                if (Spy.spy != null && !Spy.impostorsCanKillAnyone) untargetablePlayers.Add(Spy.spy);
+                if (SchrodingersCat.Player.IsAlive() && SchrodingersCat.State == SchrodingersCat.CatState.Impostor) untargetablePlayers.Add(SchrodingersCat.Player);
+                var target = SetTarget(untargetablePlayers, !(Spy.spy != null && Spy.impostorsCanKillAnyone), true);
 
                 bool targetNearGarlic = false;
                 if (target != null)
@@ -4426,10 +4420,10 @@ internal static class HudManagerStartPatch
                    MapBehaviour.Instance.ShowCountOverlay(allowedToMove: true, showLivePlayerPosition: true, includeDeadBodies: true);
                }
            },
-           () => { return Yoyo.yoyo != null && Yoyo.yoyo == PlayerControl.LocalPlayer && Yoyo.hasAdminTable && !PlayerControl.LocalPlayer.Data.IsDead; },
+           () => { return Yoyo.yoyo.IsAlive() && Yoyo.yoyo == PlayerControl.LocalPlayer && Yoyo.hasAdminTable; },
            () =>
            {
-               return true;
+               return PlayerControl.LocalPlayer.CanMove;
            },
            () =>
            {
@@ -4443,10 +4437,9 @@ internal static class HudManagerStartPatch
            KeyCode.G,
            true,
            0f,
-           null,
+           () => PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer.CanMove,
            () =>
            {
-
                if (!MapBehaviour.Instance || !MapBehaviour.Instance.isActiveAndEnabled)
                {
                    var __instance = FastDestroyableSingleton<HudManager>.Instance;
@@ -4571,6 +4564,16 @@ internal static class HudManagerStartPatch
                     writer.Write(target.PlayerId);
                     writer.EndRPC();
                     Redemptor.RevivePlayer(target.PlayerId);
+
+                    DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+                    for (var i = 0; i < array.Length; i++)
+                    {
+                        if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == PlayerControl.LocalPlayer.PlayerId)
+                        {
+                            Object.Destroy(array[i].gameObject);
+                            break;
+                        }
+                    }
                 }, Redemptor.reviveDuration, "RedemptorRevive");
             },
             () =>
@@ -4846,7 +4849,41 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                SchrodingersCat.currentTarget = SchrodingersCat.SetTarget();
+                List<PlayerControl> untargetablePlayers = [];
+                switch (SchrodingersCat.State)
+                {
+                    case SchrodingersCat.CatState.Impostor:
+                        if (Spy.spy != null && !Spy.impostorsCanKillAnyone) untargetablePlayers.Add(Spy.spy);
+                        break;
+                    case SchrodingersCat.CatState.Jackal:
+                        untargetablePlayers.Add(Jackal.Sidekick);
+                        untargetablePlayers.AddRange(Jackal.jackal);
+                        break;
+                    case SchrodingersCat.CatState.Pavlovsowner:
+                        untargetablePlayers.Add(Pavlovsdogs.pavlovsowner);
+                        untargetablePlayers.AddRange(Pavlovsdogs.pavlovsdogs);
+                        break;
+                    case SchrodingersCat.CatState.Werewolf:
+                        untargetablePlayers.Add(Werewolf.werewolf);
+                        break;
+                    case SchrodingersCat.CatState.Juggernaut:
+                        untargetablePlayers.Add(Juggernaut.juggernaut);
+                        break;
+                    case SchrodingersCat.CatState.Swooper:
+                        untargetablePlayers.Add(Swooper.swooper);
+                        break;
+                    case SchrodingersCat.CatState.Arsonist:
+                        untargetablePlayers.Add(Arsonist.arsonist);
+                        break;
+                    case SchrodingersCat.CatState.Pelican:
+                        untargetablePlayers.Add(Pelican.Player);
+                        break;
+                }
+                untargetablePlayers.RemoveAll(x => x == null);
+                var OnlyCrew = SchrodingersCat.State == SchrodingersCat.CatState.Impostor && (Spy.spy == null || !Spy.impostorsCanKillAnyone);
+                var target = SetTarget(untargetablePlayers, OnlyCrew, true);
+
+                SchrodingersCat.currentTarget = target;
                 SetPlayerOutline(SchrodingersCat.currentTarget, SchrodingersCat.color);
 
                 showTargetNameOnButton(SchrodingersCat.currentTarget, schrodingersCatKillButton, GetString("killButtonText"));
@@ -4937,15 +4974,20 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Berserker.currentTarget = SetTarget(null, Spy.spy == null);
+                List<PlayerControl> untargetablePlayers = [];
+                if (Spy.spy != null && !Spy.impostorsCanKillAnyone) untargetablePlayers.Add(Spy.spy);
+                if (SchrodingersCat.Player.IsAlive() && SchrodingersCat.State == SchrodingersCat.CatState.Impostor) untargetablePlayers.Add(SchrodingersCat.Player);
+                var target = SetTarget(untargetablePlayers, !(Spy.spy != null && Spy.impostorsCanKillAnyone), true);
+
+                Berserker.currentTarget = target;
                 SetPlayerOutline(Berserker.currentTarget, Berserker.color);
                 showTargetNameOnButton(Berserker.currentTarget, berserkerKillButton, GetString("killButtonText"));
 
                 if (berserkerKillButtonText != null)
                 {
-                    if (!berserkerKillButton.isEffectActive) berserkerKillButtonText.text = $"{(int)(Berserker.GetDurationPercentage() * 100)} % | {Berserker.GetDuration():0.00}s";
-                    else berserkerKillButtonText.text = $"{(int)(berserkerKillButton.Timer / Berserker.GetDuration() * 100)} % | {berserkerKillButton.Timer:0.00}";
-
+                    berserkerKillButtonText.text = !berserkerKillButton.isEffectActive
+                        ? $"{(int)(Berserker.GetDurationPercentage() * 100)} % | {Berserker.GetDuration():0.00}s"
+                        : $"{berserkerKillButton.Timer:0.00}";
                 }
 
                 if (berserkerKillButton.Timer <= 0)

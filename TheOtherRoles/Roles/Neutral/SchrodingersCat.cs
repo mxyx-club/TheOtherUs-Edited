@@ -49,18 +49,13 @@ public class SchrodingersCat
         IsGuessable = CustomOptionHolder.schrodingersCatIsGuessable.GetBool();
     }
 
-    public static PlayerControl SetTarget()
-    {
-        return PlayerControlFixedUpdatePatch.SetTarget(State == CatState.Impostor);
-    }
-
     public static bool InTeam(PlayerControl player, out Color color)
     {
         color = SchrodingersCat.color;
 
         return State switch
         {
-            CatState.Impostor => player.IsImpostor(),
+            CatState.Impostor => player.IsImpostor(true),
             CatState.Jackal => Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) || Jackal.Sidekick == player,
             CatState.Pavlovsowner => Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId) || Pavlovsdogs.pavlovsowner == player,
             CatState.Werewolf => Werewolf.werewolf == player,

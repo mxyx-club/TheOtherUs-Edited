@@ -225,17 +225,17 @@ internal class HudManagerUpdatePatch
                 Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) ||
                 (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
             {
-                hasVisibleShield = Medic.showShielded == 0 || ShowGhostInfo // Everyone or Ghost info
+                hasVisibleShield = Medic.showShielded == 0 || CanSeeRoleInfo // Everyone or Ghost info
                     || (Medic.showShielded == 1 && (local == Medic.shielded || local == Medic.medic)) // Shielded + Medic
                     || (Medic.showShielded == 2 && local == Medic.medic); // Medic only
 
                 // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
                 hasVisibleShield = hasVisibleShield && (Medic.meetingAfterShielding || !Medic.showShieldAfterMeeting ||
-                    local == Medic.medic || ShowGhostInfo);
+                    local == Medic.medic || CanSeeRoleInfo);
             }
 
             if (BodyGuard.guarded.IsAlive() && target == BodyGuard.guarded &&
-                (ShowGhostInfo || local == BodyGuard.bodyguard || (local == BodyGuard.guarded && BodyGuard.showShielded)))
+                (CanSeeRoleInfo || local == BodyGuard.bodyguard || (local == BodyGuard.guarded && BodyGuard.showShielded)))
             {
                 hasVisibleShield = true;
                 color = new Color32(205, 150, 100, byte.MaxValue);
@@ -283,7 +283,7 @@ internal class HudManagerUpdatePatch
         if (Prophet.prophet != null && Prophet.prophet == local)
         {
             setPlayerNameColor(Prophet.prophet, Prophet.color);
-            if (Prophet.examined != null && !local.Data.IsDead) // Reset the name tags when Prophet is dead
+            if (Prophet.examined != null && local.IsAlive()) // Reset the name tags when Prophet is dead
             {
                 foreach (var p in Prophet.examined)
                 {
@@ -313,7 +313,7 @@ internal class HudManagerUpdatePatch
         }
 
         if (Grenadier.Player != null && ((local.IsImpostor() && Grenadier.indicatorsMode)
-            || local == Grenadier.Player || ShowGhostInfo))
+            || local == Grenadier.Player || CanSeeRoleInfo))
         {
             foreach (var p in Grenadier.controls)
             {
@@ -321,7 +321,7 @@ internal class HudManagerUpdatePatch
             }
         }
 
-        if (SchrodingersCat.Player != null && (SchrodingersCat.Player == local || ShowGhostInfo))
+        if (SchrodingersCat.Player != null && (SchrodingersCat.Player == local || CanSeeRoleInfo))
         {
             setPlayerNameColor(SchrodingersCat.Player, SchrodingersCat.color);
             foreach (var p in allPlayer)
@@ -514,7 +514,7 @@ internal class HudManagerUpdatePatch
             }
         }
 
-        if (PartTimer.partTimer != null && PartTimer.target != null && (local == PartTimer.partTimer || local == PartTimer.target || ShowGhostInfo))
+        if (PartTimer.partTimer != null && PartTimer.target != null && (local == PartTimer.partTimer || local == PartTimer.target || CanSeeRoleInfo))
         {
             var suffix = cs(PartTimer.color, " ★");
             PartTimer.partTimer.cosmetics.nameText.text += suffix;
@@ -531,9 +531,9 @@ internal class HudManagerUpdatePatch
             var suffix1 = cs(BandLeader.color, "(K)");
             var suffix2 = cs(BandLeader.color, "(B)");
             var suffix3 = cs(BandLeader.color, "(D)");
-            var isKeyboardist = local == BandLeader.Player || BandLeader.Keyboardist == local || BandLeader.Formed || ShowGhostInfo;
-            var isBassist = local == BandLeader.Player || BandLeader.Bassist == local || BandLeader.Formed || ShowGhostInfo;
-            var isDrummer = local == BandLeader.Player || BandLeader.Drummer == local || BandLeader.Formed || ShowGhostInfo;
+            var isKeyboardist = local == BandLeader.Player || BandLeader.Keyboardist == local || BandLeader.Formed || CanSeeRoleInfo;
+            var isBassist = local == BandLeader.Player || BandLeader.Bassist == local || BandLeader.Formed || CanSeeRoleInfo;
+            var isDrummer = local == BandLeader.Player || BandLeader.Drummer == local || BandLeader.Formed || CanSeeRoleInfo;
             if (local == BandLeader.Player || local.IsDead() || BandLeader.Members.Any(x => x == local))
             {
                 if (BandLeader.Keyboardist != null && isKeyboardist)
@@ -559,7 +559,7 @@ internal class HudManagerUpdatePatch
         }
 
         var localIsArsonist = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && Arsonist.arsonist == local;
-        var localIsDead = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && ShowGhostInfo;
+        var localIsDead = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && CanSeeRoleInfo;
         if (localIsArsonist || localIsDead)
         {
             var suffix = cs(Arsonist.color, " ♨");
@@ -628,7 +628,7 @@ internal class HudManagerUpdatePatch
     {
         if (Medic.shielded == null) return;
 
-        if (Medic.shielded.Data.IsDead || Medic.medic == null || Medic.medic.Data.IsDead) Medic.shielded = null;
+        if (Medic.shielded.IsDead() || Medic.medic == null || Medic.medic.IsDead()) Medic.shielded = null;
     }
 
     private static void timerUpdate()
@@ -728,7 +728,7 @@ internal class HudManagerUpdatePatch
 
     private static void updateSabotageButton(HudManager __instance)
     {
-        if (PlayerControl.LocalPlayer.Data.IsDead && CustomOptionHolder.deadImpsBlockSabotage.GetBool()) __instance.SabotageButton.Hide();
+        if (PlayerControl.LocalPlayer.IsDead() && CustomOptionHolder.deadImpsBlockSabotage.GetBool()) __instance.SabotageButton.Hide();
     }
 
     private static void updateMapButton(HudManager __instance)
@@ -741,7 +741,7 @@ internal class HudManagerUpdatePatch
     public static void updateGiantSize(HudManager __instance)
     {
         if (Giant.giant == null) return;
-        DeadBody[] array = UnityEngine.Object.FindObjectsOfType<DeadBody>();
+        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
         foreach (var body in array.Where(x => x.ParentId == Giant.giant.PlayerId))
         {
             try
@@ -809,7 +809,7 @@ internal class HudManagerUpdatePatch
         {
             var pet = target.GetPet();
             if (pet != null)
-                pet.Visible = ((PlayerControl.LocalPlayer.Data.IsDead && target.Data.IsDead) || !target.Data.IsDead) && !target.inVent;
+                pet.Visible = ((PlayerControl.LocalPlayer.IsDead() && target.IsDead()) || target.IsAlive()) && !target.inVent;
         }
     }
 }

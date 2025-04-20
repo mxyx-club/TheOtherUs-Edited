@@ -114,7 +114,7 @@ public class Trap
         t.triggerable = true;
 
         // Add trapped Info into Trapper chat
-        if (Trapper.trapper.IsAlive() && (PlayerControl.LocalPlayer == Trapper.trapper || ShowGhostInfo))
+        if (Trapper.trapper.IsAlive() && (PlayerControl.LocalPlayer == Trapper.trapper || CanSeeRoleInfo))
         {
             foreach (var trap in traps)
             {
@@ -124,7 +124,7 @@ public class Trap
                 message = trap.trappedPlayer.Aggregate(message, (current, p) => current + Trapper.infoType switch
                 {
                     0 => RoleInfo.GetRolesString(p, false, false, false) + "\n",
-                    1 when (isEvilNeutral(p) || p.IsImpostor()) ^ Vortox.Reversal => "邪恶职业 \n",
+                    1 when (isEvilNeutral(p) || isKillerNeutral(p) || p.IsImpostor()) ^ Vortox.Reversal => "邪恶职业 \n",
                     1 => "善良职业 \n",
                     _ => p.Data.PlayerName + "\n"
                 });
@@ -167,7 +167,7 @@ public class Trap
             RPCProcedure.triggerTrap(player.PlayerId, (byte)target.instanceId);
         }
 
-        if (!player.Data.IsDead || player.PlayerId == Trapper.trapper.PlayerId) return;
+        if (!CanSeeRoleInfo || player.PlayerId == Trapper.trapper.PlayerId) return;
         foreach (var trap in traps.Where(trap => !trap.trap.active))
             trap.trap.SetActive(true);
     }
@@ -296,7 +296,7 @@ public class KillTrap
                     }
                     return;
                 }
-                else if ((p == 1f) && !target.Data.IsDead)
+                else if ((p == 1f) && target.IsAlive())
                 {
                     // 正常にキルが発生する場合の処理
                     target.moveable = true;
@@ -358,7 +358,7 @@ public class KillTrap
             {
                 if (PlayerControl.LocalPlayer == EvilTrapper.evilTrapper)
                 {
-                    if (!trap.Value.target.Data.IsDead)
+                    if (!trap.Value.target.IsDead())
                     {
                         MessageWriter writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.TrapperKill);
                         writer.Write(trap.Key);
@@ -438,10 +438,7 @@ public class KillTrap
         {
             foreach (var trap in traps.Values)
             {
-                bool canSee =
-                    trap.isActive ||
-                    PlayerControl.LocalPlayer.Data.Role.IsImpostor ||
-                    PlayerControl.LocalPlayer.Data.IsDead;
+                var canSee = trap.isActive || PlayerControl.LocalPlayer.IsImpostor() || CanSeeRoleInfo;
                 var opacity = canSee ? 1.0f : 0.0f;
                 if (trap.killtrap != null)
                     trap.killtrap.GetComponent<SpriteRenderer>().material.color = Color.Lerp(Palette.ClearWhite, Palette.White, opacity);

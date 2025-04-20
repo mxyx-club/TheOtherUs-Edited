@@ -424,7 +424,7 @@ public static class PlayerControlFixedUpdatePatch
         var local = PlayerControl.LocalPlayer;
         var enable = (Redemptor.RevivedPlayer.IsAlive() || Redemptor.Prayering) &&
                      ((local.IsAlive() && local.IsKiller()) ||
-                     local == Redemptor.Player || ShowGhostInfo);
+                     local == Redemptor.Player || CanSeeRoleInfo);
         if (enable)
         {
             if (Redemptor.text == null)
@@ -736,12 +736,11 @@ public static class PlayerControlFixedUpdatePatch
             if (BountyHunter.bounty == null) return;
 
             // Ghost Info
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.ShareGhostInfo);
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write((byte)RPCProcedure.GhostInfoTypes.BountyTarget);
             writer.Write(BountyHunter.bounty.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
 
             // Show poolable player
             if (FastDestroyableSingleton<HudManager>.Instance != null &&
@@ -1379,31 +1378,19 @@ public static class PlayerControlFixedUpdatePatch
 
     private static void impostorSetTarget()
     {
-        if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor || !PlayerControl.LocalPlayer.CanMove ||
-            PlayerControl.LocalPlayer.Data.IsDead)
+        if (!PlayerControl.LocalPlayer.IsImpostor() || !PlayerControl.LocalPlayer.CanMove || PlayerControl.LocalPlayer.IsDead())
         {
             FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(null);
             return;
         }
 
-        PlayerControl target;
-        if (Spy.spy != null)
-        {
-            if (Spy.impostorsCanKillAnyone)
-            {
-                target = SetTarget(false, true);
-            }
-            else
-            {
-                target = SetTarget(true, true, [Spy.spy]);
-            }
-        }
-        else
-        {
-            target = SetTarget(true, true);
-        }
+        List<PlayerControl> untargetablePlayers = [];
+        if (Spy.spy != null && !Spy.impostorsCanKillAnyone) untargetablePlayers.Add(Spy.spy);
+        if (SchrodingersCat.Player.IsAlive() && SchrodingersCat.State == SchrodingersCat.CatState.Impostor) untargetablePlayers.Add(SchrodingersCat.Player);
+        var target = SetTarget(!(Spy.spy != null && Spy.impostorsCanKillAnyone), true, untargetablePlayers);
 
-        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(target); // Includes setPlayerOutline(target, Palette.ImpstorRed);
+        // Includes setPlayerOutline(target, Palette.ImpstorRed);
+        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(target);
     }
 }
 
@@ -1610,6 +1597,7 @@ public static class MurderPlayerPatch
                 writer.Write((byte)state);
                 writer.EndRPC();
                 SchrodingersCat.State = state;
+                HudManagerStartPatch.schrodingersCatKillButton.Timer = HudManagerStartPatch.schrodingersCatKillButton.MaxTimer;
             }
 
             if (PlayerControl.LocalPlayer == __instance)
@@ -1740,7 +1728,7 @@ public static class MurderPlayerPatch
 
         // Seer show flash and add dead player position
         if (Seer.seer != null &&
-            (PlayerControl.LocalPlayer == Seer.seer || ShowGhostInfo) &&
+            (PlayerControl.LocalPlayer == Seer.seer || CanSeeRoleInfo) &&
             !Seer.seer.Data.IsDead && Seer.seer != target && Seer.mode <= 1)
             showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f), message: GetString("seerShowInfoText"));
         Seer.deadBodyPositions?.Add(target.transform.position);

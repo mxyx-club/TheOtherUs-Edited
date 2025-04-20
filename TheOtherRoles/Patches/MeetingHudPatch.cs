@@ -525,7 +525,7 @@ internal class MeetingHudPatch
         public static bool Prefix(MeetingHud __instance, GameData.PlayerInfo voterPlayer, int index, Transform parent)
         {
             var spriteRenderer = Object.Instantiate(__instance.PlayerVotePrefab);
-            var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes() || ShowGhostInfo ||
+            var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes() || CanSeeRoleInfo ||
                                  (Prosecutor.prosecutor != null && Prosecutor.prosecutor == PlayerControl.LocalPlayer &&
                                   Prosecutor.canSeeVoteColors && TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data).Item1 >=
                                   Prosecutor.tasksNeededToSeeVoteColors) ||
@@ -794,7 +794,7 @@ internal class MeetingHudPatch
 
             // Add Portal info into Portalmaker Chat:
             if (Portalmaker.portalmaker != null &&
-                (PlayerControl.LocalPlayer == Portalmaker.portalmaker || ShowGhostInfo) &&
+                (PlayerControl.LocalPlayer == Portalmaker.portalmaker || CanSeeRoleInfo) &&
                 !Portalmaker.portalmaker.Data.IsDead)
                 if (Portal.teleportedPlayers.Count > 0)
                 {
@@ -943,8 +943,8 @@ internal class MeetingHudPatch
             {
                 var (allNeutral, allCrew, allImpostor) = (
                     BandLeader.Members.All(x => x.IsNeutral()),
-                    BandLeader.Members.All(x => x.IsCrew()),
-                    BandLeader.Members.All(x => x.IsImpostor()));
+                    BandLeader.Members.All(x => x.IsCrew(AndCat: true)),
+                    BandLeader.Members.All(x => x.IsImpostor(AndCat: true)));
 
                 if (BandLeader.Members.Length == 3 && (allNeutral || allCrew || allImpostor))
                 {

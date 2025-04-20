@@ -19,7 +19,7 @@ public class Berserker
         Player = null;
         currentTarget = null;
         Timer = 0f;
-        KillCooldown = CustomOptionHolder.berserkerKillCooldown.GetFloat(); 
+        KillCooldown = CustomOptionHolder.berserkerKillCooldown.GetFloat();
         ChargingTimer = CustomOptionHolder.berserkerRampageCooldown.GetFloat();
         RampageDuration = CustomOptionHolder.berserkerRampageDuration.GetFloat();
     }

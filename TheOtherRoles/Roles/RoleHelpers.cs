@@ -141,7 +141,13 @@ public static class RoleHelpers
     private static bool _CanSeeRoleInfo;
     public static bool CanSeeRoleInfo
     {
-        get => _CanSeeRoleInfo;
+        get
+        {
+            if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Ended) return true;
+            else if (PlayerControl.LocalPlayer.IsAlive()) return false;
+            else if (PlayerControl.LocalPlayer == Specter.Player) return false;
+            else return _CanSeeRoleInfo;
+        }
         set
         {
             if (PlayerControl.LocalPlayer.IsAlive()) _CanSeeRoleInfo = false;
@@ -150,9 +156,6 @@ public static class RoleHelpers
             else _CanSeeRoleInfo = value;
         }
     }
-
-    public static bool ShowGhostInfo =>
-        (PlayerControl.LocalPlayer.Data.IsDead && CanSeeRoleInfo) || AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Ended;
 
     public static Dictionary<byte, byte[]> blockedRolePairings = new();
     public static Dictionary<AssignType, List<Assignment>> GhostRoles = new();

@@ -866,7 +866,7 @@ public static class RPCProcedure
              !Medic.showShieldAfterMeeting); // Dont show attempt, if shield is not shown yet
         var isMedicAndShow = Medic.medic == PlayerControl.LocalPlayer && Medic.showAttemptToMedic;
 
-        if (isShieldedAndShow || isMedicAndShow || ShowGhostInfo)
+        if (isShieldedAndShow || isMedicAndShow || CanSeeRoleInfo)
             showFlash(Palette.ImpostorRed, 1.5f, GetString("medicShowAttemptText"));
     }
 
@@ -1964,7 +1964,7 @@ public static class RPCProcedure
                 break;
             case GhostInfoTypes.GhostChat:
                 string chat = reader.ReadString();
-                if (ShowGhostInfo) FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(sender, chat);
+                if (CanSeeRoleInfo) FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(sender, chat);
                 break;
             case GhostInfoTypes.BlankUsed:
                 Pursuer.blankedList.Remove(sender);

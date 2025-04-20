@@ -340,6 +340,14 @@ public class OnGameEndPatch
                         winners.Add(p);
                     else if (!notWinners.Any(x => x.PlayerId == p.PlayerId) && !p.IsImpostor())
                         winners.Add(p);
+                    if (bandLeaderAddCrewWin)
+                    {
+                        winners.Add(BandLeader.Player);
+                    }
+                    if (SchrodingersCat.Player != null && SchrodingersCat.State == SchrodingersCat.CatState.Crewmate)
+                    {
+                        winners.Add(SchrodingersCat.Player);
+                    }
                 }
                 AdditionalTempData.winCondition = WinCondition.LoversTeamWin;
             }
@@ -1181,8 +1189,6 @@ internal class PlayerStatistics
             {
                 numTotalAlive++;
 
-                if (SchrodingersCat.Player.IsAlive() && playerData.PlayerId == SchrodingersCat.Player?.PlayerId) numTotalAlive--;
-
                 var lover = isLover(playerData);
                 if (lover) numLoversAlive++;
 
@@ -1247,6 +1253,46 @@ internal class PlayerStatistics
                 if (Akujo.honmei != null && Akujo.honmei.PlayerId == playerData.PlayerId)
                 {
                     numAkujoAlive++;
+                }
+                if (SchrodingersCat.Player.IsAlive() && SchrodingersCat.Player.PlayerId == playerData.PlayerId)
+                {
+                    if (SchrodingersCat.CanKill)
+                    {
+                        switch (SchrodingersCat.State)
+                        {
+                            case SchrodingersCat.CatState.Impostor:
+                                numImpostorsAlive++;
+                                break;
+                            case SchrodingersCat.CatState.Jackal:
+                                numJackalAlive++;
+                                break;
+                            case SchrodingersCat.CatState.Pavlovsowner:
+                                numPavlovsAlive++;
+                                break;
+                            case SchrodingersCat.CatState.Werewolf:
+                                numWerewolfAlive++;
+                                break;
+                            case SchrodingersCat.CatState.Juggernaut:
+                                numJuggernautAlive++;
+                                break;
+                            case SchrodingersCat.CatState.Swooper:
+                                numSwooperAlive++;
+                                break;
+                            case SchrodingersCat.CatState.Arsonist:
+                                numArsonistAlive++;
+                                break;
+                            case SchrodingersCat.CatState.Pelican:
+                                numPelicanAlive++;
+                                break;
+                            case SchrodingersCat.CatState.None:
+                                numTotalAlive--;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        numTotalAlive--;
+                    }
                 }
             }
         }

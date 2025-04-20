@@ -429,16 +429,16 @@ public class RoleInfo
 
         if (showGhostInfo && p != null)
         {
-            if (p == Shifter.shifter && (PlayerControl.LocalPlayer == Shifter.shifter || ShowGhostInfo) && Shifter.futureShift != null)
+            if (p == Shifter.shifter && (PlayerControl.LocalPlayer == Shifter.shifter || CanSeeRoleInfo) && Shifter.futureShift != null)
                 roleName += cs(Color.yellow, " ← " + Shifter.futureShift.Data.PlayerName);
-            if (p == Vulture.vulture && (PlayerControl.LocalPlayer == Vulture.vulture || ShowGhostInfo))
+            if (p == Vulture.vulture && (PlayerControl.LocalPlayer == Vulture.vulture || CanSeeRoleInfo))
                 roleName += cs(Vulture.color, string.Format("roleInfoRemaining".Translate(), Vulture.vultureNumberToWin - Vulture.eatenBodies));
-            if (p == Witness.Player && (PlayerControl.LocalPlayer == Witness.Player || ShowGhostInfo))
+            if (p == Witness.Player && (PlayerControl.LocalPlayer == Witness.Player || CanSeeRoleInfo))
                 roleName += cs(Witness.color, string.Format("roleInfoRemaining".Translate(), Witness.exileToWin - Witness.exiledCount));
-            if (p == Gunsmith.Player && (PlayerControl.LocalPlayer == Gunsmith.Player || ShowGhostInfo))
+            if (p == Gunsmith.Player && (PlayerControl.LocalPlayer == Gunsmith.Player || CanSeeRoleInfo))
                 roleName += cs(Gunsmith.color, $" {Gunsmith.remainingChange}/{Gunsmith.maxChangeCount}");
 
-            if (ShowGhostInfo)
+            if (CanSeeRoleInfo)
             {
                 if (Eraser.futureErased.Any(x => x == p))
                     roleName = cs(Color.gray, "(被抹除) ") + roleName;
@@ -476,7 +476,7 @@ public class RoleInfo
 
     public static string GetDeathReasonString(PlayerControl p)
     {
-        if (p.IsAlive() || !ShowGhostInfo) return "";
+        if (p.IsAlive() || !CanSeeRoleInfo) return "";
 
         var deadPlayer = GameHistory.DeadPlayers.FirstOrDefault(x => x.Player.PlayerId == p.PlayerId);
         if (deadPlayer == null) return "";
