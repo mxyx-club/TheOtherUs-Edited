@@ -6,6 +6,7 @@ using AmongUs.GameOptions;
 using InnerNet;
 using Rewired;
 using TheOtherRoles.Buttons;
+using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -752,6 +753,21 @@ internal class HudManagerUpdatePatch
         }
     }
 
+    private static void detectiveUpdateFootPrints()
+    {
+        if (Detective.detective.IsAlive() && Detective.detective == PlayerControl.LocalPlayer && !InMeeting)
+        {
+            Detective.timer -= Time.fixedDeltaTime;
+            if (Detective.timer <= 0f)
+            {
+                Detective.timer = Detective.footprintIntervall;
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                    if (player != null && player != PlayerControl.LocalPlayer && player.IsAlive() && !player.inVent)
+                        FootprintHolder.Instance.MakeFootprint(player);
+            }
+        }
+    }
+
     private static void Postfix(HudManager __instance)
     {
         var player = PlayerControl.LocalPlayer;
@@ -788,6 +804,8 @@ internal class HudManagerUpdatePatch
         // Update Player Info
         updatePlayerInfo();
 
+        // Detective
+        detectiveUpdateFootPrints();
         // Deputy Sabotage, Use and Vent Button Disabling
         updateReportButton(__instance);
         updateVentButton(__instance);

@@ -6,6 +6,7 @@ using AmongUs.Data;
 using AmongUs.GameOptions;
 using Hazel;
 using PowerTools;
+using Reactor.Networking.Extensions;
 using Reactor.Utilities;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.Buttons;
@@ -142,6 +143,7 @@ public enum CustomRPC
     Prosecute,
     MayorRevealed,
     SurvivorVestActive,
+    PoltergeistMove,
 
     //SetSwooper,
     SetInvisible,
@@ -600,6 +602,9 @@ public static class RPCProcedure
                 break;
             case RoleId.Specter:
                 Specter.Player = player;
+                break;
+            case RoleId.Poltergeist:
+                Poltergeist.Player = player;
                 break;
         }
     }
@@ -1268,6 +1273,7 @@ public static class RPCProcedure
     {
         var player = playerById(playerId);
 
+        if (player == Poltergeist.Player) Poltergeist.ClearAndReload();
         if (player == GhostEngineer.Player) GhostEngineer.ClearAndReload();
         if (player == Specter.Player) Specter.ClearAndReload();
     }
@@ -1337,7 +1343,7 @@ public static class RPCProcedure
             PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
             PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
         }
-        if (PlayerControl.LocalPlayer.IsAlive() && !AntiTeleport.antiTeleport.Any(x => x == PlayerControl.LocalPlayer))
+        if (PlayerControl.LocalPlayer.IsAlive() && !AntiTeleport.antiTeleport.Any(x => x == PlayerControl.LocalPlayer) && PlayerControl.LocalPlayer.CanMove)
         {
             if (Disperser.DispersesToVent)
             {
@@ -2536,6 +2542,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.SyncGunsmithChange:
                 Gunsmith.remainingChange = reader.ReadInt32();
+                break;
+            case CustomRPC.PoltergeistMove:
+                Poltergeist.MoveDeadBody(reader.ReadByte(), reader.ReadVector2());
                 break;
         }
 

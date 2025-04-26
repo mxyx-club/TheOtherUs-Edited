@@ -472,6 +472,18 @@ public static class Helpers
             button.showButtonText = true;
         }
     }
+
+    public static IEnumerable<DeadBody> AllDeadBodies()
+    {
+        //Componentで探すよりタグで探す方が相当はやい
+        var bodies = GameObject.FindGameObjectsWithTag("DeadBody");
+        for (int i = 0; i < bodies.Count; i++) yield return bodies[i].GetComponent<DeadBody>();
+    }
+
+    public static DeadBody? GetDeadBody(byte id)
+    {
+        return AllDeadBodies().FirstOrDefault((p) => p.ParentId == id);
+    }
 #nullable disable
 
     public static void AddUnique<T>(this Il2CppSystem.Collections.Generic.List<T> self, T item) where T : IDisconnectHandler

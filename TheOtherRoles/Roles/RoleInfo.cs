@@ -145,6 +145,7 @@ public class RoleInfo
 
     public static RoleInfo ghostEngineer = new("GhostEngineer", GhostEngineer.color, RoleId.GhostEngineer, RoleType.Ghost);
     public static RoleInfo specter = new("Specter", Specter.color, RoleId.Specter, RoleType.Ghost);
+    public static RoleInfo poltergeist = new("Poltergeist", Poltergeist.color, RoleId.Poltergeist, RoleType.Ghost);
 
     public static List<RoleInfo> allRoleInfos =
     [
@@ -260,6 +261,7 @@ public class RoleInfo
 
         ghostEngineer,
         specter,
+        poltergeist,
     ];
 
     public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true, bool showGhost = true)
@@ -389,6 +391,7 @@ public class RoleInfo
         {
             if (p == GhostEngineer.Player) infos.Add(ghostEngineer);
             if (p == Specter.Player) infos.Add(specter);
+            if (p == Poltergeist.Player) infos.Add(poltergeist);
         }
 
         if (infos.Count == count)

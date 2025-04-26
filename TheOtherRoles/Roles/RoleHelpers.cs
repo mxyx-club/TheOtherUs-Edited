@@ -134,6 +134,7 @@ public enum RoleId
 
     GhostEngineer = 200,
     Specter,
+    Poltergeist,
 }
 
 public static class RoleHelpers
@@ -312,6 +313,7 @@ public static class RoleHelpers
         GhostRoles[AssignType.Crewmate] = new List<Assignment>
         {
             new(RoleId.GhostEngineer, CustomOptionHolder.ghostEngineerSpawnRate.GetSelection()),
+            new(RoleId.Poltergeist, CustomOptionHolder.poltergeistSpawnRate.GetSelection())
         };
 
 
@@ -426,6 +428,7 @@ public static class RoleHelpers
         Specoality.clearAndReload();
         Vortox.ClearAndReload();
 
+        Poltergeist.ClearAndReload();
         GhostEngineer.ClearAndReload();
         Specter.ClearAndReload();
 

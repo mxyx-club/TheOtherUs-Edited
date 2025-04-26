@@ -76,7 +76,7 @@ public class CustomButton
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
         originalHotkey = GetHotKeys(hotkey);
-        Timer = 10.5f;
+        Timer = 10f;
         SetHotKeyGuide();
         setActive(false);
         OnEffectClick = onEffectClick;

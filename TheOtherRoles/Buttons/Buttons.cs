@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hazel;
+using Reactor.Networking;
+using Reactor.Networking.Extensions;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
@@ -109,6 +111,7 @@ internal static class HudManagerStartPatch
     public static CustomButton gunsmithGetBullets;
     public static CustomButton gunsmithAddBullets;
     public static CustomButton berserkerKillButton;
+    public static CustomButton poltergeistButton;
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
@@ -237,6 +240,7 @@ internal static class HudManagerStartPatch
         gunsmithAddBullets.MaxTimer = 0f;
         gunsmithGetBullets.MaxTimer = 0f;
         berserkerKillButton.MaxTimer = Berserker.KillCooldown;
+        poltergeistButton.MaxTimer = Poltergeist.cooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         timeMasterShieldButton.EffectDuration = TimeMaster.shieldDuration;
@@ -4936,7 +4940,7 @@ internal static class HudManagerStartPatch
         gunsmithAddBullets = new CustomButton(
             () =>
             {
-                PlayerControl.LocalPlayer.SetKillTimer(ModOption.KillCooldown);
+                PlayerControl.LocalPlayer.SetKillTimer(ModOption.KillCooldown * multiplier);
                 Gunsmith.remainingChange++;
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.SyncGunsmithChange);
                 writer.Write(Gunsmith.remainingChange);
@@ -5044,6 +5048,41 @@ internal static class HudManagerStartPatch
         berserkerKillButtonText.transform.localScale = Vector3.one * 0.5f;
         berserkerKillButtonText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
+        poltergeistButton = new(
+            () =>
+            {
+                var deadBody = Poltergeist.targetBody;
+                if (deadBody == null) return;
+                var writer = StartRPC(CustomRPC.PoltergeistMove);
+                writer.Write(deadBody.ParentId);
+                writer.Write(PlayerControl.LocalPlayer.GetTruePosition());
+                writer.EndRPC();
+                Poltergeist.MoveDeadBody(deadBody.ParentId, PlayerControl.LocalPlayer.GetTruePosition());
+
+                poltergeistButton.Timer = poltergeistButton.MaxTimer;
+            },
+            () =>
+            {
+                return Poltergeist.Player == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.IsDead();
+            },
+            () =>
+            {
+                var array = Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(),
+                      PlayerControl.LocalPlayer.MaxReportDistance * Poltergeist.radius, Constants.PlayersOnlyMask)
+                 .Where(collider => collider.tag == "DeadBody")
+                 .Select(collider => collider.GetComponent<DeadBody>())
+                 .Where(deadBody => deadBody != null);
+
+                Poltergeist.targetBody = array.FirstOrDefault();
+                return Poltergeist.targetBody && PlayerControl.LocalPlayer.CanMove;
+            },
+            () => { poltergeistButton.Timer = poltergeistButton.MaxTimer; },
+            Poltergeist.ButtonSprite,
+            ButtonPositions.upperRowCenter,
+            __instance,
+            secondaryAbilityInput.keyCode,
+            buttonText: GetString("poltergeistButton")
+        );
 
         // Set the default (or settings from the previous game) timers / durations when spawning the buttons
         initialized = true;

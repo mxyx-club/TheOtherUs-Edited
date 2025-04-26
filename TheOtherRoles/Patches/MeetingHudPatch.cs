@@ -901,8 +901,6 @@ internal class MeetingHudPatch
 
             if (PlayerControl.LocalPlayer.IsDead()) CanSeeRoleInfo = true;
 
-            Redemptor.RevivedPlayer = null;
-
             // Remove first kill shield
             if (!PlayerControl.AllPlayerControls.ToList().All(x => x.IsAlive())) firstKillPlayer = null;
 
@@ -919,6 +917,10 @@ internal class MeetingHudPatch
             {
                 Balancer.Balancer_Patch.MeetingHudStartPostfix(__instance);
             }
+
+            Redemptor.RevivedPlayer = null;
+            Undertaker.dragedBody = null;
+            Jester.dragedBody = null;
 
             if (Pelican.Player != null)
             {

@@ -133,23 +133,6 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
-    private static void detectiveUpdateFootPrints()
-    {
-        if (Detective.detective == null
-            || Detective.detective != PlayerControl.LocalPlayer
-            || InMeeting
-            || Detective.detective.IsDead()) return;
-
-        Detective.timer -= Time.fixedDeltaTime;
-        if (Detective.timer <= 0f)
-        {
-            Detective.timer = Detective.footprintIntervall;
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent)
-                    FootprintHolder.Instance.MakeFootprint(player);
-        }
-    }
-
     private static void sidekickCheckPromotion()
     {
         // If LocalPlayer is Sidekick, the Jackal is disconnected and Sidekick promotion is enabled, then trigger promotion
@@ -1166,8 +1149,8 @@ public static class PlayerControlFixedUpdatePatch
             HudManagerStartPatch.thiefKillButton.MaxTimer = Thief.cooldown * multiplier;
             HudManagerStartPatch.swooperKillButton.MaxTimer = Swooper.cooldown * multiplier;
             HudManagerStartPatch.werewolfRampageButton.MaxTimer = Thief.cooldown * multiplier;
-            HudManagerStartPatch.juggernautKillButton.MaxTimer = Thief.cooldown * multiplier;
-            HudManagerStartPatch.berserkerKillButton.MaxTimer = Thief.cooldown * multiplier;
+            HudManagerStartPatch.juggernautKillButton.MaxTimer = Juggernaut.cooldown * multiplier;
+            HudManagerStartPatch.berserkerKillButton.MaxTimer = Berserker.KillCooldown * multiplier;
         }
     }
 
@@ -1284,8 +1267,6 @@ public static class PlayerControlFixedUpdatePatch
             prophetUpdate();
             // Deputy
             deputyUpdate();
-            // Detective
-            detectiveUpdateFootPrints();
             // Vampire
             Garlic.UpdateAll();
             Trap.Update();

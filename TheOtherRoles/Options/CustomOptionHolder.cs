@@ -408,6 +408,10 @@ public class CustomOptionHolder
 
     public static CustomOption ghostEngineerSpawnRate;
 
+    public static CustomOption poltergeistSpawnRate;
+    public static CustomOption poltergeistCooldown;
+    public static CustomOption poltergeistRadius;
+
     public static CustomOption guesserSpawnRate;
     public static CustomOption guesserNumberOfShots;
     public static CustomOption guesserHasMultipleShotsPerMeeting;
@@ -1151,6 +1155,10 @@ public class CustomOptionHolder
         //-------------------------- Crewmate Options 30000-39999 -------------------------- //
 
         ghostEngineerSpawnRate = Create(50010, Types.Crewmate, cs(GhostEngineer.color, "GhostEngineerOptions"), rates, null, true);
+
+        poltergeistSpawnRate = Create(50030, Types.Crewmate, cs(Poltergeist.color, "PoltergeistOptions"), rates, null, true);
+        poltergeistCooldown = Create(50031, Types.Crewmate, "poltergeistCooldown", 5f, 2.5f, 60f, 2.5f, poltergeistSpawnRate);
+        poltergeistRadius = Create(50032, Types.Crewmate, "poltergeistRadius", 0.75f, 0.5f, 2f, 0.125f, poltergeistSpawnRate);
 
         guesserSpawnRate = Create(30100, Types.Crewmate, cs(Vigilante.color, "Vigilante"), rates, null, true);
         guesserNumberOfShots = Create(30101, Types.Crewmate, "guesserNumberOfShots", 3f, 1f, 15f, 1f, guesserSpawnRate);

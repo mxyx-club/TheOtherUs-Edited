@@ -1706,6 +1706,16 @@
         "0": "Engineer (Ghost)",
         "13": "灵魂工程师 (幽灵职业)"
     },
+    "PoltergeistOptions": {
+        "0": "Poltergeist (Ghost)",
+        "13": "捣蛋鬼 (幽灵职业)"
+    },
+    "poltergeistCooldown": {
+        "13": "技能冷却"
+    },
+    "poltergeistRadius": {
+        "13": "技能使用范围"
+    },
     "guesserNumberOfShots": {
         "0": "Vigilante Number Of Shots",
         "13": "可猜测次数"
@@ -3323,10 +3333,16 @@
         "13": "殉道"
     },
     "gunsmithAddBullets": {
+        "0": "[BLANK]",
         "13": "存储"
     },
     "gunsmithGetBullets": {
+        "0": "[BLANK]",
         "13": "取出"
+    },
+    "poltergeistButton": {
+        "0": "[BLANK]",
+        "13": "移动"
     },
     "GuessserGMInfo": {
         "0": " (Guesser)",
@@ -4416,6 +4432,16 @@
     "SpecterShortDesc": {
         "13": "我还不想死"
     },
+    "Poltergeist": {
+        "0": "Poltergeist",
+        "13": "捣蛋鬼"
+    },
+    "PoltergeistIntroDesc": {
+        "13": "尸体会在哪里呢"
+    },
+    "PoltergeistShortDesc": {
+        "13": "尸体会在哪里呢"
+    },
     "Hunter": {
         "0": "Hunter",
         "13": "猎人"
@@ -4450,7 +4476,7 @@
         "13": "哈哈~白板红狼!"
     },
     "WolfLordFullDesc": {
-        "13": "在会议中可以揭示身份，获得一次在会议中击杀玩家的机会。且无法被猜测\n同时，如果狼之主使用赌怪能力则本轮会议无法揭示身份。\n（猎杀和赌怪一次会议只能用一个能力）\n职业创意来自：尕丶天堂"
+        "13": "在会议中可以揭示身份，获得一次在会议中击杀玩家的机会。且无法被猜测\n同时，如果狼之主使用赌怪能力则本轮会议无法揭示身份。\n（猎杀和赌怪一次会议只能用一个能力）"
     },
     "MorphlingFullDesc": {
         "13": "采样后可以伪装成其他人。"
@@ -4772,5 +4798,8 @@
     },
     "SpecterFullDesc": {
         "13": "分配阵营：无阵营中立（豺狼、巴甫洛夫 以及 律师 无法获得）\n\n死亡后的下一回合可以重新寻找尸体复活，获得该玩家的主职业。\n保留自身的附加能力。不能使用自己的的尸体复活\n注：复活时会消耗一具该玩家的尸体。"
+    },
+    "PoltergeistFullDesc": {
+        "13": "捣蛋鬼可以移动附近的某一具尸体到自己脚下。\n默认范围 x 0.75 (1倍为正常报告范围)"
     }
 }
