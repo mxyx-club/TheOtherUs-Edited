@@ -672,14 +672,23 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
-
     private static void undertakerDragBodyUpdate()
     {
-        if (Undertaker.undertaker == null || Undertaker.undertaker.Data.IsDead) return;
-        if (Undertaker.deadBodyDraged != null)
+        if (Undertaker.undertaker.IsDead() || InMeeting) return;
+
+        if (Undertaker.dragedBody != null)
         {
-            var currentPosition = Undertaker.undertaker.transform.position;
-            Undertaker.deadBodyDraged.transform.position = currentPosition;
+            Undertaker.dragedBody.transform.position = Undertaker.undertaker.transform.position;
+        }
+    }
+
+    private static void jesterDragBodyUpdate()
+    {
+        if (Jester.jester.IsDead() || InMeeting) return;
+
+        if (Jester.dragedBody != null)
+        {
+            Jester.dragedBody.transform.position = Jester.jester.transform.position;
         }
     }
 
@@ -835,82 +844,6 @@ public static class PlayerControlFixedUpdatePatch
                 Amnisiac.localArrows[index]?.Update(db.transform.position);
                 index++;
             }
-        }
-    }
-
-    public static void evilTrapperUpdate()
-    {
-        try
-        {
-            if (PlayerControl.LocalPlayer == EvilTrapper.evilTrapper && KillTrap.traps.Count != 0 && !KillTrap.hasTrappedPlayer() && !EvilTrapper.meetingFlag)
-            {
-                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
-                {
-                    foreach (var trap in KillTrap.traps)
-                    {
-                        if (DateTime.UtcNow.Subtract(trap.Value.placedTime).TotalSeconds < EvilTrapper.extensionTime) continue;
-                        if (trap.Value.isActive || p.Data.IsDead || p.inVent || EvilTrapper.meetingFlag) continue;
-                        var p1 = p.transform.localPosition;
-                        Dictionary<GameObject, byte> listActivate = new();
-                        var p2 = trap.Value.killtrap.transform.localPosition;
-                        var distance = Vector3.Distance(p1, p2);
-                        if (distance < EvilTrapper.trapRange)
-                        {
-                            TMP_Text text;
-                            RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
-                            GameObject gameObject = Object.Instantiate(roomTracker.gameObject);
-                            Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
-                            gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
-                            gameObject.transform.localPosition = new Vector3(0, -1.8f, gameObject.transform.localPosition.z);
-                            gameObject.transform.localScale = Vector3.one * 2f;
-                            text = gameObject.GetComponent<TMP_Text>();
-                            text.text = string.Format(GetString("trapperGotTrapText"), p.Data.PlayerName);
-                            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>((p) =>
-                            {
-                                if (p == 1f && text != null && text.gameObject != null)
-                                {
-                                    Object.Destroy(text.gameObject);
-                                }
-                            })));
-                            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ActivateTrap, SendOption.Reliable, -1);
-                            writer.Write(trap.Key);
-                            writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                            writer.Write(p.PlayerId);
-                            AmongUsClient.Instance.FinishRpcImmediately(writer);
-                            RPCProcedure.activateTrap(trap.Key, EvilTrapper.evilTrapper.PlayerId, p.PlayerId);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (PlayerControl.LocalPlayer == EvilTrapper.evilTrapper && KillTrap.hasTrappedPlayer() && !EvilTrapper.meetingFlag)
-            {
-                // トラップにかかっているプレイヤーを救出する
-                foreach (var trap in KillTrap.traps)
-                {
-                    if (trap.Value.killtrap == null || !trap.Value.isActive) return;
-                    Vector3 p1 = trap.Value.killtrap.transform.position;
-                    foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
-                    {
-                        if (player.PlayerId == trap.Value.target.PlayerId || player.Data.IsDead || player.inVent || player == EvilTrapper.evilTrapper) continue;
-                        Vector3 p2 = player.transform.position;
-                        float distance = Vector3.Distance(p1, p2);
-                        if (distance < 0.5)
-                        {
-                            var writer = StartRPC(CustomRPC.DisableTrap);
-                            writer.Write(trap.Key);
-                            writer.EndRPC();
-                            RPCProcedure.disableTrap(trap.Key);
-                        }
-                    }
-
-                }
-            }
-        }
-        catch (NullReferenceException e)
-        {
-            Warn(e.Message);
         }
     }
 
@@ -1257,8 +1190,6 @@ public static class PlayerControlFixedUpdatePatch
             jackalSetTarget();
             akujoSetTarget();
 
-            // EvilTrapper
-            evilTrapperUpdate();
             // Time Master
             bendTimeUpdate();
             // Swooper
@@ -1267,9 +1198,6 @@ public static class PlayerControlFixedUpdatePatch
             prophetUpdate();
             // Deputy
             deputyUpdate();
-            // Vampire
-            Garlic.UpdateAll();
-            Trap.Update();
             // Engineer
             engineerUpdate();
             // Tracker
@@ -1290,6 +1218,8 @@ public static class PlayerControlFixedUpdatePatch
             snitchTextUpdate();
             // undertaker
             undertakerDragBodyUpdate();
+            // Jester
+            jesterDragBodyUpdate();
             // Amnisiac
             amnisiacUpdate();
             // BountyHunter
@@ -1330,7 +1260,6 @@ public static class PlayerControlFixedUpdatePatch
             miniCooldownUpdate();
             // Chameleon (invis stuff, timers)
             Chameleon.update();
-            Bomb.update();
         }
     }
 

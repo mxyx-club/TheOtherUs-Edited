@@ -243,48 +243,20 @@ public class Aftermath
         }
         else if (Undertaker.undertaker == killer)
         {
-            if (Undertaker.deadBodyDraged == null)
+            if (Undertaker.dragedBody != null)
             {
-                foreach (var collider2D in Physics2D.OverlapCircleAll(
-                             PlayerControl.LocalPlayer.GetTruePosition(),
-                             PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
-                {
-                    if (collider2D.tag == "DeadBody")
-                    {
-                        var deadBody = collider2D.GetComponent<DeadBody>();
-                        if (deadBody && !deadBody.Reported)
-                        {
-                            var playerPosition = PlayerControl.LocalPlayer.GetTruePosition();
-                            var deadBodyPosition = deadBody.TruePosition;
-                            if (Vector2.Distance(deadBodyPosition, playerPosition) <=
-                                PlayerControl.LocalPlayer.MaxReportDistance &&
-                                PlayerControl.LocalPlayer.CanMove &&
-                                !PhysicsHelpers.AnythingBetween(playerPosition, deadBodyPosition,
-                                    Constants.ShipAndObjectsMask, false) && !Undertaker.isDraging)
-                            {
-                                var playerInfo = GameData.Instance.GetPlayerById(deadBody.ParentId);
-                                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.DragBody);
-                                writer.Write(playerInfo.PlayerId);
-                                writer.Write(true);
-                                writer.EndRPC();
-                                dragBody(playerInfo.PlayerId, true);
-                                Undertaker.deadBodyDraged = deadBody;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.DragBody);
-                writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                writer.Write(false);
+                var writer = StartRPC(CustomRPC.jesterDragBody);
+                writer.Write(byte.MaxValue);
                 writer.EndRPC();
-                dragBody(PlayerControl.LocalPlayer.PlayerId, false);
-                Undertaker.deadBodyDraged = null;
+                Undertaker.DragBody(byte.MaxValue);
             }
-            undertakerDragButton.Timer = 2.5f;
+            else if (Undertaker.targetBody != null)
+            {
+                var writer = StartRPC(CustomRPC.jesterDragBody);
+                writer.Write(Undertaker.targetBody.ParentId);
+                writer.EndRPC();
+                Undertaker.DragBody(Undertaker.targetBody.ParentId);
+            }
         }
         else if (Cleaner.cleaner == killer)
         {

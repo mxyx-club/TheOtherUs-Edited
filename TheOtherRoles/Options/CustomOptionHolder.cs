@@ -275,6 +275,8 @@ public class CustomOptionHolder
     public static CustomOption jesterCanCallEmergency;
     public static CustomOption jesterCanVent;
     public static CustomOption jesterHasImpostorVision;
+    public static CustomOption jesterCanDragDeadBody;
+    public static CustomOption jesterDragingVelocity;
 
     public static CustomOption partTimerSpawnRate;
     public static CustomOption partTimerCooldown;
@@ -1020,6 +1022,8 @@ public class CustomOptionHolder
         jesterCanCallEmergency = Create(20101, Types.Neutral, "canCallEmergency", true, jesterSpawnRate);
         jesterCanVent = Create(20102, Types.Neutral, "jesterCanVent", true, jesterSpawnRate);
         jesterHasImpostorVision = Create(20103, Types.Neutral, "hasImpVision", true, jesterSpawnRate);
+        jesterCanDragDeadBody = Create(20104, Types.Neutral, "jesterCanDragDeadBody", true, jesterSpawnRate);
+        jesterDragingVelocity = Create(20105, Types.Neutral, "undertakerDragingAfterVelocity", 0.75f, 0.5f, 1.5f, 0.125f, jesterCanDragDeadBody);
 
         partTimerSpawnRate = Create(20290, Types.Neutral, cs(PartTimer.color, "PartTimer"), rates, null, true);
         partTimerCooldown = Create(20291, Types.Neutral, "partTimerCooldown", 20f, 2.5f, 60f, 2.5f, partTimerSpawnRate);

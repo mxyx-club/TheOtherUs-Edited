@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace TheOtherRoles.Roles.Impostor;
 
@@ -10,19 +10,32 @@ public static class Undertaker
     public static float dragingDelaiAfterKill;
 
     public static bool isDraging;
-    public static DeadBody deadBodyDraged;
+    public static DeadBody targetBody;
+    public static DeadBody dragedBody;
     public static bool canDragAndVent;
 
     public static float velocity = 1;
 
     public static ResourceSprite buttonSprite = new("UndertakerDragButton.png");
 
+    public static void DragBody(byte targetId)
+    {
+        if (targetId == byte.MaxValue)
+        {
+            dragedBody = null;
+            return;
+        }
+        dragedBody = GetDeadBody(targetId);
+        Message($"Rpc UndertakerDragBody target: {targetId}, body: {dragedBody?.ParentId.ToString() ?? "NULL"}");
+    }
+
     public static void clearAndReload()
     {
         undertaker = null;
         isDraging = false;
         canDragAndVent = CustomOptionHolder.undertakerCanDragAndVent.GetBool();
-        deadBodyDraged = null;
+        targetBody = null;
+        dragedBody = null;
         velocity = CustomOptionHolder.undertakerDragingAfterVelocity.GetFloat();
         dragingDelaiAfterKill = CustomOptionHolder.undertakerDragingDelaiAfterKill.GetFloat();
     }

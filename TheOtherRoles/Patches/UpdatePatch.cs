@@ -645,6 +645,82 @@ internal class HudManagerUpdatePatch
             Sheriff.handcuffedKnows[key] -= dt;
     }
 
+    public static void evilTrapperUpdate()
+    {
+        try
+        {
+            if (PlayerControl.LocalPlayer == EvilTrapper.evilTrapper && KillTrap.traps.Count != 0 && !KillTrap.hasTrappedPlayer() && !EvilTrapper.meetingFlag)
+            {
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                {
+                    foreach (var trap in KillTrap.traps)
+                    {
+                        if (DateTime.UtcNow.Subtract(trap.Value.placedTime).TotalSeconds < EvilTrapper.extensionTime) continue;
+                        if (trap.Value.isActive || p.Data.IsDead || p.inVent || EvilTrapper.meetingFlag) continue;
+                        var p1 = p.transform.localPosition;
+                        Dictionary<GameObject, byte> listActivate = new();
+                        var p2 = trap.Value.killtrap.transform.localPosition;
+                        var distance = Vector3.Distance(p1, p2);
+                        if (distance < EvilTrapper.trapRange)
+                        {
+                            TMP_Text text;
+                            RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
+                            GameObject gameObject = Object.Instantiate(roomTracker.gameObject);
+                            Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
+                            gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
+                            gameObject.transform.localPosition = new Vector3(0, -1.8f, gameObject.transform.localPosition.z);
+                            gameObject.transform.localScale = Vector3.one * 2f;
+                            text = gameObject.GetComponent<TMP_Text>();
+                            text.text = string.Format(GetString("trapperGotTrapText"), p.Data.PlayerName);
+                            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>((p) =>
+                            {
+                                if (p == 1f && text != null && text.gameObject != null)
+                                {
+                                    Object.Destroy(text.gameObject);
+                                }
+                            })));
+                            var writer = StartRPC(CustomRPC.ActivateTrap);
+                            writer.Write(trap.Key);
+                            writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                            writer.Write(p.PlayerId);
+                            writer.EndRPC();
+                            RPCProcedure.activateTrap(trap.Key, EvilTrapper.evilTrapper.PlayerId, p.PlayerId);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (PlayerControl.LocalPlayer == EvilTrapper.evilTrapper && KillTrap.hasTrappedPlayer() && !EvilTrapper.meetingFlag)
+            {
+                // トラップにかかっているプレイヤーを救出する
+                foreach (var trap in KillTrap.traps)
+                {
+                    if (trap.Value.killtrap == null || !trap.Value.isActive) return;
+                    Vector3 p1 = trap.Value.killtrap.transform.position;
+                    foreach (var player in PlayerControl.AllPlayerControls)
+                    {
+                        if (player.PlayerId == trap.Value.target.PlayerId || player.Data.IsDead || player.inVent || player == EvilTrapper.evilTrapper) continue;
+                        Vector3 p2 = player.transform.position;
+                        float distance = Vector3.Distance(p1, p2);
+                        if (distance < 0.5)
+                        {
+                            var writer = StartRPC(CustomRPC.DisableTrap);
+                            writer.Write(trap.Key);
+                            writer.EndRPC();
+                            RPCProcedure.disableTrap(trap.Key);
+                        }
+                    }
+
+                }
+            }
+        }
+        catch (NullReferenceException e)
+        {
+            Warn(e.Message);
+        }
+    }
+
     public static void miniUpdate()
     {
         if (Mini.mini == null || Camouflager.camouflageTimer > 0f || MushroomSabotageActive ||
@@ -806,6 +882,14 @@ internal class HudManagerUpdatePatch
 
         // Detective
         detectiveUpdateFootPrints();
+        // EvilTrapper
+        evilTrapperUpdate();
+        // Trapper
+        Trap.Update();
+        // Bomber
+        Bomb.update();
+        // Vampire
+        Garlic.UpdateAll();
         // Deputy Sabotage, Use and Vent Button Disabling
         updateReportButton(__instance);
         updateVentButton(__instance);

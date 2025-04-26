@@ -181,6 +181,12 @@ public static class RoleHelpers
             blockedRolePairings.Add((byte)RoleId.Lawyer, [(byte)RoleId.Executioner]);
         }
 
+        if (Jester.canDragDeadBody)
+        {
+            blockedRolePairings.Add((byte)RoleId.Jester, [(byte)RoleId.Undertaker]);
+            blockedRolePairings.Add((byte)RoleId.Undertaker, [(byte)RoleId.Jester]);
+        }
+
         blockedRolePairings.Add((byte)RoleId.Vulture, [(byte)RoleId.Cleaner, (byte)RoleId.Pelican]);
         blockedRolePairings.Add((byte)RoleId.Cleaner, [(byte)RoleId.Vulture, (byte)RoleId.Pelican]);
         blockedRolePairings.Add((byte)RoleId.Pelican, [(byte)RoleId.Vulture, (byte)RoleId.Cleaner]);

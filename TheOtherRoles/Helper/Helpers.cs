@@ -175,7 +175,7 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
-        else if (Undertaker.deadBodyDraged != null && !Undertaker.canDragAndVent && Undertaker.undertaker == player)
+        else if (Undertaker.dragedBody != null && !Undertaker.canDragAndVent && Undertaker.undertaker == player)
         {
             roleCouldUse = false;
         }

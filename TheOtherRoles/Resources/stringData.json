@@ -1373,6 +1373,9 @@
         "0": "Jester Has Impostor Vision",
         "13": "拥有伪装者视野"
     },
+    "jesterCanDragDeadBody": {
+        "13": "小丑可以拖动尸体"
+    },
     "survivorVestEnable": {
         "13": "幸存者可以使用防弹衣"
     },

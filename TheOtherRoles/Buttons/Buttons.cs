@@ -65,6 +65,7 @@ internal static class HudManagerStartPatch
     public static CustomButton lightsOutButton;
     public static CustomButton cleanerCleanButton;
     public static CustomButton undertakerDragButton;
+    public static CustomButton JesterDragButton;
     public static CustomButton warlockCurseButton;
     public static CustomButton securityGuardButton;
     public static CustomButton securityGuardCamButton;
@@ -2809,81 +2810,85 @@ internal static class HudManagerStartPatch
         undertakerDragButton = new CustomButton(
             () =>
             {
-                if (Undertaker.deadBodyDraged == null)
+                if (Undertaker.dragedBody != null)
                 {
-                    foreach (var collider2D in Physics2D.OverlapCircleAll(
-                                 PlayerControl.LocalPlayer.GetTruePosition(),
-                                 PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
-                        if (collider2D.tag == "DeadBody")
-                        {
-                            var deadBody = collider2D.GetComponent<DeadBody>();
-                            if (deadBody && !deadBody.Reported)
-                            {
-                                var playerPosition = PlayerControl.LocalPlayer.GetTruePosition();
-                                var deadBodyPosition = deadBody.TruePosition;
-                                if (Vector2.Distance(deadBodyPosition, playerPosition) <=
-                                    PlayerControl.LocalPlayer.MaxReportDistance &&
-                                    PlayerControl.LocalPlayer.CanMove &&
-                                    !PhysicsHelpers.AnythingBetween(playerPosition, deadBodyPosition,
-                                        Constants.ShipAndObjectsMask, false) && !Undertaker.isDraging)
-                                {
-                                    var playerInfo = GameData.Instance.GetPlayerById(deadBody.ParentId);
-                                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.DragBody);
-                                    writer.Write(playerInfo.PlayerId);
-                                    writer.Write(true);
-                                    writer.EndRPC();
-                                    RPCProcedure.dragBody(playerInfo.PlayerId, true);
-                                    Undertaker.deadBodyDraged = deadBody;
-                                    break;
-                                }
-                            }
-                        }
-                }
-                else
-                {
-                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.DragBody);
-                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                    writer.Write(false);
+                    var writer = StartRPC(CustomRPC.UndertakerDragAction);
+                    writer.Write(byte.MaxValue);
                     writer.EndRPC();
-                    RPCProcedure.dragBody(PlayerControl.LocalPlayer.PlayerId, false);
-                    Undertaker.deadBodyDraged = null;
+                    Undertaker.DragBody(byte.MaxValue);
+                }
+                else if (Undertaker.targetBody != null)
+                {
+                    var writer = StartRPC(CustomRPC.UndertakerDragAction);
+                    writer.Write(Undertaker.targetBody.ParentId);
+                    writer.EndRPC();
+                    Undertaker.DragBody(Undertaker.targetBody.ParentId);
                 }
             },
             () =>
             {
-                return Undertaker.undertaker != null &&
-                       Undertaker.undertaker == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
+                return Undertaker.undertaker.IsAlive() && Undertaker.undertaker == PlayerControl.LocalPlayer;
             },
             () =>
             {
-                if (Undertaker.deadBodyDraged != null) return true;
 
-                foreach (var collider2D in Physics2D.OverlapCircleAll(
-                             PlayerControl.LocalPlayer.GetTruePosition(),
-                             PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
-                    if (collider2D.tag == "DeadBody")
-                    {
-                        var deadBody = collider2D.GetComponent<DeadBody>();
-                        var deadBodyPosition = deadBody.TruePosition;
-                        deadBodyPosition.x -= 0.2f;
-                        deadBodyPosition.y -= 0.2f;
-                        return PlayerControl.LocalPlayer.CanMove &&
-                               Vector2.Distance(PlayerControl.LocalPlayer.GetTruePosition(),
-                                   deadBodyPosition) < 0.80f;
-                    }
+                var array = Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(),
+                      PlayerControl.LocalPlayer.MaxReportDistance * 0.5f, Constants.PlayersOnlyMask)
+                 .Where(collider => collider.tag == "DeadBody")
+                 .Select(collider => collider.GetComponent<DeadBody>())
+                 .Where(deadBody => deadBody != null);
 
-                return false;
+                Undertaker.targetBody = array.FirstOrDefault(db => db.ParentId != PlayerControl.LocalPlayer.PlayerId);
+                return (Undertaker.targetBody || Undertaker.dragedBody) && PlayerControl.LocalPlayer.CanMove;
             },
-            //() => { return ((__instance.ReportButton.renderer.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove) || Undertaker.deadBodyDraged != null); },
             () => { },
             Undertaker.buttonSprite,
-            ButtonPositions.upperRowLeft, //brb
+            ButtonPositions.upperRowLeft,
             __instance,
             abilityInput.keyCode,
-            true,
-            0f,
+            buttonText: GetString("DragBodyText")
+        );
+
+        // Jester Button
+        JesterDragButton = new CustomButton(
+            () =>
+            {
+                if (Jester.dragedBody != null)
+                {
+                    var writer = StartRPC(CustomRPC.jesterDragBody);
+                    writer.Write(byte.MaxValue);
+                    writer.EndRPC();
+                    Jester.DragBody(byte.MaxValue);
+                }
+                else if (Jester.targetBody != null)
+                {
+                    var writer = StartRPC(CustomRPC.jesterDragBody);
+                    writer.Write(Jester.targetBody.ParentId);
+                    writer.EndRPC();
+                    Jester.DragBody(Jester.targetBody.ParentId);
+                }
+            },
+            () =>
+            {
+                return Jester.jester.IsAlive() && Jester.canDragDeadBody && PlayerControl.LocalPlayer == Jester.jester;
+            },
+            () =>
+            {
+                var array = Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(),
+                      PlayerControl.LocalPlayer.MaxReportDistance * 0.5f, Constants.PlayersOnlyMask)
+                 .Where(collider => collider.tag == "DeadBody")
+                 .Select(collider => collider.GetComponent<DeadBody>())
+                 .Where(deadBody => deadBody != null);
+
+                Jester.targetBody = array.FirstOrDefault(db => db.ParentId != PlayerControl.LocalPlayer.PlayerId);
+
+                return (Jester.targetBody || Jester.dragedBody) && PlayerControl.LocalPlayer.CanMove;
+            },
             () => { },
+            Undertaker.buttonSprite,
+            ButtonPositions.upperRowCenter,
+            __instance,
+            abilityInput.keyCode,
             buttonText: GetString("DragBodyText")
         );
 

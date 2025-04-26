@@ -54,7 +54,7 @@ public enum CustomRPC
     DissectionBody,
     Mine,
     ShowIndomitableFlash,
-    DragBody,
+    UndertakerDragAction,
     MedicSetShielded,
     ShowBodyGuardFlash,
     ShieldedMurderAttempt,
@@ -144,6 +144,7 @@ public enum CustomRPC
     MayorRevealed,
     SurvivorVestActive,
     PoltergeistMove,
+    jesterDragBody,
 
     //SetSwooper,
     SetInvisible,
@@ -740,25 +741,6 @@ public static class RPCProcedure
         }
     }
 
-    public static void dragBody(byte playerId, bool drag)
-    {
-        if (drag)
-        {
-            DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
-            for (var i = 0; i < array.Length; i++)
-                if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId)
-                    Undertaker.deadBodyDraged = array[i];
-        }
-        else
-        {
-            if (Undertaker.undertaker == null || Undertaker.deadBodyDraged == null) return;
-            var deadBody = Undertaker.deadBodyDraged;
-            Undertaker.deadBodyDraged = null;
-            deadBody.transform.position = new Vector3(Undertaker.undertaker.GetTruePosition().x,
-                Undertaker.undertaker.GetTruePosition().y, Undertaker.undertaker.transform.position.z);
-        }
-    }
-
     public static void timeMasterRewindTime()
     {
         if (InMeeting) return;
@@ -1343,7 +1325,7 @@ public static class RPCProcedure
             PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
             PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
         }
-        if (PlayerControl.LocalPlayer.IsAlive() && !AntiTeleport.antiTeleport.Any(x => x == PlayerControl.LocalPlayer) && PlayerControl.LocalPlayer.CanMove)
+        if (PlayerControl.LocalPlayer.IsAlive() && !AntiTeleport.antiTeleport.Any(x => x == PlayerControl.LocalPlayer))
         {
             if (Disperser.DispersesToVent)
             {
@@ -1623,7 +1605,7 @@ public static class RPCProcedure
 
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
-        var canSee = Swooper.swooper == PlayerControl.LocalPlayer || PlayerControl.LocalPlayer.Data.IsDead;
+        var canSee = Swooper.swooper == PlayerControl.LocalPlayer || CanSeeRoleInfo;
         if (canSee) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
         target.cosmetics.colorBlindText.gameObject.SetActive(false);
@@ -1650,8 +1632,7 @@ public static class RPCProcedure
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
         var canSee = Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer) ||
-                     Jackal.Sidekick == PlayerControl.LocalPlayer ||
-                     PlayerControl.LocalPlayer.Data.IsDead;
+                     Jackal.Sidekick == PlayerControl.LocalPlayer || CanSeeRoleInfo;
         if (canSee) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
         target.cosmetics.colorBlindText.gameObject.SetActive(false);
@@ -2152,8 +2133,8 @@ internal class RPCHandlerPatch
                 RPCProcedure.unblackmailPlayer();
                 break;
 
-            case CustomRPC.DragBody:
-                RPCProcedure.dragBody(reader.ReadByte(), reader.ReadBoolean());
+            case CustomRPC.UndertakerDragAction:
+                Undertaker.DragBody(reader.ReadByte());
                 break;
 
             case CustomRPC.TimeMasterRewindTime:
@@ -2545,6 +2526,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.PoltergeistMove:
                 Poltergeist.MoveDeadBody(reader.ReadByte(), reader.ReadVector2());
+                break;
+            case CustomRPC.jesterDragBody:
+                Jester.DragBody(reader.ReadByte());
                 break;
         }
 

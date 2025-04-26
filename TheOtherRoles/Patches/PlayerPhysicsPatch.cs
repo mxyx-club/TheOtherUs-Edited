@@ -19,8 +19,10 @@ public static class PlayerPhysicsPatches
                     __instance.body.velocity *= Giant.speed;
                 if (Swooper.swooper != null && Swooper.swooper == PlayerControl.LocalPlayer && Swooper.isInvisable)
                     __instance.body.velocity *= Swooper.swoopSpeed;
-                if (Undertaker.deadBodyDraged != null && Undertaker.undertaker == PlayerControl.LocalPlayer)
+                if (Undertaker.undertaker.IsAlive() && Undertaker.undertaker == PlayerControl.LocalPlayer && Undertaker.dragedBody != null)
                     __instance.body.velocity *= Undertaker.velocity;
+                if (Jester.jester.IsAlive() && Jester.jester == PlayerControl.LocalPlayer && Jester.dragedBody != null)
+                    __instance.body.velocity *= Jester.velocity;
             }
             else if (PlayerControl.LocalPlayer.IsDead())
             {
