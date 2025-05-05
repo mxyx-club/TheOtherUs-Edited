@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace TheOtherRoles.Roles.Impostor;
 
@@ -16,12 +16,10 @@ public static class Escapist
 
     public static ResourceSprite escapeEscapeButtonSprite = new("Mark.png");
     public static ResourceSprite escapeButtonSprite = new("Recall.png");
-    public static bool usedPlace;
 
     public static void resetPlaces()
     {
         escapeLocation = Vector3.zero;
-        usedPlace = false;
     }
 
     public static void clearAndReload()
@@ -31,6 +29,5 @@ public static class Escapist
         escapist = null;
         resetPlaceAfterMeeting = CustomOptionHolder.escapistResetPlaceAfterMeeting.GetBool();
         EscapeTime = CustomOptionHolder.escapistEscapeTime.GetFloat();
-        usedPlace = false;
     }
 }

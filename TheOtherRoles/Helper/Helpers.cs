@@ -298,14 +298,16 @@ public static class Helpers
     {
         if (InMeeting) return;
 
-        handleVampireBiteOnBodyReport();
-        handleBomberExplodeOnBodyReport();
-        handleTrapperTrapOnBodyReport();
-        //if (Options.DisableMeeting.GetBool()) return;
+        if (AmongUsClient.Instance.AmHost)
+        {
+            handleVampireBiteOnBodyReport();
+            handleBomberExplodeOnBodyReport();
+            handleTrapperTrapOnBodyReport();
 
-        MeetingRoomManager.Instance.AssignSelf(reporter, target);
-        DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(reporter);
-        reporter.RpcStartMeeting(target);
+            MeetingRoomManager.Instance.AssignSelf(reporter, target);
+            DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(reporter);
+            reporter.RpcStartMeeting(target);
+        }
     }
 
     public static void enableCursor(bool initalSetCursor)

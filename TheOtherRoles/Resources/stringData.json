@@ -1148,7 +1148,7 @@
     },
     "bountyHunterPunishmentTime": {
         "0": "Additional Cooldown After Killing Others",
-        "13": "击杀非目标后叠加的惩罚冷却"
+        "13": "错误击杀额外增加的冷却"
     },
     "bountyHunterShowArrow": {
         "0": "Show Arrow Pointing Towards The Bounty",
@@ -1157,6 +1157,9 @@
     "bountyHunterArrowUpdateIntervall": {
         "0": "Arrow Update Intervall",
         "13": "箭头更新间隔"
+    },
+    "bountyHunterChangeTargetCooldown": {
+        "13": "更换目标冷却时间"
     },
     "witchCooldown": {
         "0": "Witch Spell Casting Cooldown",
@@ -3346,6 +3349,9 @@
     "poltergeistButton": {
         "0": "[BLANK]",
         "13": "移动"
+    },
+    "ChangeTarget": {
+        "13": "更换目标"
     },
     "GuessserGMInfo": {
         "0": " (Guesser)",

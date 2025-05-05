@@ -36,6 +36,7 @@ internal static class HudManagerStartPatch
     private static CustomButton shifterShiftButton;
     public static CustomButton bomberBombButton;
     public static CustomButton bomberGiveButton;
+    public static CustomButton bountyHunterChangeTarget;
     private static CustomButton disperserDisperseButton;
     private static CustomButton buttonBarryButton;
     public static CustomButton morphlingButton;
@@ -183,6 +184,7 @@ internal static class HudManagerStartPatch
         jumperJumpButton.MaxTimer = Jumper.JumpTime;
         escapistMarkButton.MaxTimer = Escapist.EscapeTime;
         escapistEscapeButton.MaxTimer = Escapist.EscapeTime;
+        bountyHunterChangeTarget.MaxTimer = BountyHunter.changeTargetCooldown;
         bodyGuardGuardButton.MaxTimer = 0f;
         garlicButton.MaxTimer = 0f;
         jackalKillButton.MaxTimer = Jackal.cooldown;
@@ -949,9 +951,8 @@ internal static class HudManagerStartPatch
         disperserDisperseButton = new CustomButton(
             () =>
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.Disperse, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var writer = StartRPC(CustomRPC.Disperse);
+                writer.EndRPC();
                 RPCProcedure.disperse();
                 SoundEffectsManager.play("shifterShift");
             },
@@ -975,20 +976,14 @@ internal static class HudManagerStartPatch
                 //PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement 
                 Mayor.remoteMeetingsLeft--;
 
-                handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                handleBomberExplodeOnBodyReport();
-                handleTrapperTrapOnBodyReport();
-                RPCProcedure.uncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
-                if (AmongUsClient.Instance.AmHost)
-                    Mayor.mayor.NoCheckStartMeeting(null, true);
-                else
-                {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.MayorMeeting, SendOption.Reliable);
-                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                    writer.Write(byte.MaxValue);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                }
+                //RPCProcedure.uncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
+                
+                var writer = StartRPC(CustomRPC.NoCheckStartMeeting);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(byte.MaxValue);
+                writer.Write(true);
+                writer.EndRPC();
+                PlayerControl.LocalPlayer.NoCheckStartMeeting(null, true);
 
                 mayorMeetingButton.Timer = 1f;
             },
@@ -1027,20 +1022,11 @@ internal static class HudManagerStartPatch
                 //PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement 
                 ButtonBarry.remoteMeetingsLeft--;
 
-                handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-                handleBomberExplodeOnBodyReport();
-                handleTrapperTrapOnBodyReport();
-                RPCProcedure.uncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
-                if (AmongUsClient.Instance.AmHost)
-                    ButtonBarry.buttonBarry.NoCheckStartMeeting(null, true);
-                else
-                {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.BarryMeeting, SendOption.Reliable);
-                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                    writer.Write(byte.MaxValue);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                }
+                var writer = StartRPC(CustomRPC.NoCheckStartMeeting);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(byte.MaxValue);
+                writer.Write(true);
+                writer.EndRPC();
 
                 buttonBarryButton.Timer = 1f;
 
@@ -2831,7 +2817,6 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-
                 var array = Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(),
                       PlayerControl.LocalPlayer.MaxReportDistance * 0.5f, Constants.PlayersOnlyMask)
                  .Where(collider => collider.tag == "DeadBody")
@@ -3890,7 +3875,6 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Escapist.usedPlace = true;
                 return PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -3920,7 +3904,6 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Escapist.usedPlace = true;
                 return Escapist.escapeLocation != Vector3.zero && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -3933,6 +3916,28 @@ internal static class HudManagerStartPatch
             abilityInput.keyCode,
             buttonText: "jumperJumpText".Translate()
         );
+
+        bountyHunterChangeTarget = new CustomButton(
+            () =>
+            {
+                BountyHunter.bounty = null;
+                bountyHunterChangeTarget.Timer = bountyHunterChangeTarget.MaxTimer;
+            },
+            () =>
+            {
+                return BountyHunter.bountyHunter.IsAlive() && BountyHunter.bountyHunter == PlayerControl.LocalPlayer;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove;
+            },
+            () => { bountyHunterChangeTarget.Timer = bountyHunterChangeTarget.MaxTimer; },
+            BountyHunter.buttonSprite,
+            ButtonPositions.upperRowLeft,
+            __instance,
+            abilityInput.keyCode,
+            buttonText: GetString("ChangeTarget")
+            );
 
         // Ninja mark and assassinate button 
         ninjaButton = new CustomButton(
@@ -4504,9 +4509,9 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RedemptorPrayer);
-                writer.Write(byte.MaxValue);
+                writer.Write(true);
                 writer.EndRPC();
-                Redemptor.RedemptorPrayer(byte.MaxValue);
+                Redemptor.RedemptorPrayer(true);
             },
             () =>
             {
@@ -4536,9 +4541,9 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RedemptorPrayer);
-                writer.Write((byte)0);
+                writer.Write(false);
                 writer.EndRPC();
-                Redemptor.RedemptorPrayer(0);
+                Redemptor.RedemptorPrayer(false);
 
                 if (Redemptor.target != null)
                 {
@@ -4574,15 +4579,6 @@ internal static class HudManagerStartPatch
                     writer.EndRPC();
                     Redemptor.RevivePlayer(target.PlayerId);
 
-                    DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
-                    for (var i = 0; i < array.Length; i++)
-                    {
-                        if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == PlayerControl.LocalPlayer.PlayerId)
-                        {
-                            Object.Destroy(array[i].gameObject);
-                            break;
-                        }
-                    }
                 }, Redemptor.reviveDuration, "RedemptorRevive");
             },
             () =>

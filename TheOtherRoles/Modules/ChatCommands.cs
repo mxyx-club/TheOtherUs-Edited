@@ -54,8 +54,19 @@ public static class ChatCommands
 
                 else if (chat.StartsWith("/meeting") || chat.StartsWith("/mt"))
                 {
-                    if (InMeeting) MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), null, false);
-                    else PlayerControl.LocalPlayer.NoCheckStartMeeting(null, true);
+                    if (InMeeting)
+                    {
+                        MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), null, false);
+                    }
+                    else
+                    {
+                        var writer = StartRPC(CustomRPC.NoCheckStartMeeting);
+                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                        writer.Write(byte.MaxValue);
+                        writer.Write(true);
+                        writer.EndRPC();
+                        PlayerControl.LocalPlayer.NoCheckStartMeeting(null, true);
+                    }
                     handled = true;
                 }
                 else if (chat.StartsWith("/say "))

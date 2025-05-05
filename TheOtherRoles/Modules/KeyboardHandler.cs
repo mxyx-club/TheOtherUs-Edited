@@ -37,8 +37,19 @@ public class KeyboardHandler
             // 强制开始会议或结束会议
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKeyDown(ModInputManager.meetingInput.keyCode) && InGame)
             {
-                if (InMeeting) MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), null, false);
-                else PlayerControl.LocalPlayer.NoCheckStartMeeting(null, true);
+                if (InMeeting)
+                {
+                    MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), null, false);
+                }
+                else
+                {
+                    var writer = StartRPC(CustomRPC.NoCheckStartMeeting);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                    writer.Write(byte.MaxValue);
+                    writer.Write(true);
+                    writer.EndRPC();
+                    PlayerControl.LocalPlayer.NoCheckStartMeeting(null, true);
+                }
             }
             // 强制结束游戏
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKeyDown(ModInputManager.endGameInput.keyCode) && InGame)

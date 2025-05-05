@@ -844,6 +844,82 @@ internal class HudManagerUpdatePatch
         }
     }
 
+    private static void bountyHunterUpdate()
+    {
+        if (BountyHunter.bountyHunter == null || PlayerControl.LocalPlayer != BountyHunter.bountyHunter) return;
+
+        if (BountyHunter.bountyHunter.Data.IsDead || InMeeting)
+        {
+            if (BountyHunter.arrow != null) Object.Destroy(BountyHunter.arrow.arrow);
+            BountyHunter.arrow = null;
+            if (BountyHunter.cooldownText != null && BountyHunter.cooldownText.gameObject != null) Object.Destroy(BountyHunter.cooldownText.gameObject);
+            BountyHunter.cooldownText = null;
+            BountyHunter.bounty = null;
+            foreach (PoolablePlayer p in ModOption.playerIcons.Values)
+            {
+                if (p != null && p.gameObject != null) p.gameObject.SetActive(false);
+            }
+            return;
+        }
+
+        BountyHunter.arrowUpdateTimer -= Time.fixedDeltaTime;
+        BountyHunter.bountyUpdateTimer -= Time.fixedDeltaTime;
+
+        if ((BountyHunter.bounty == null || BountyHunter.bountyUpdateTimer <= 0f) && !InMeeting)
+        {
+            // Set new bounty
+            BountyHunter.bounty = null;
+            BountyHunter.arrowUpdateTimer = 0f; // Force arrow to update
+            BountyHunter.bountyUpdateTimer = BountyHunter.bountyDuration;
+            var possibleTargets = new List<PlayerControl>();
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls.ToArray().Where(x => x.IsAlive() && !x.IsImpostor(true)))
+                if ((p != Mini.mini || Mini.isGrownUp()) && p != Lovers.otherLover(BountyHunter.bountyHunter))
+                    possibleTargets.Add(p);
+            if (possibleTargets.Count == 0) return;
+            BountyHunter.bounty = possibleTargets[rnd.Next(0, possibleTargets.Count)];
+            if (BountyHunter.bounty == null) return;
+
+            // Ghost Info
+            var writer = StartRPC(CustomRPC.ShareGhostInfo);
+            writer.Write(PlayerControl.LocalPlayer.PlayerId);
+            writer.Write((byte)RPCProcedure.GhostInfoTypes.BountyTarget);
+            writer.Write(BountyHunter.bounty.PlayerId);
+            writer.EndRPC();
+
+            // Show poolable player
+            if (FastDestroyableSingleton<HudManager>.Instance?.UseButton != null)
+            {
+                foreach (var pp in ModOption.playerIcons.Values) pp.gameObject.SetActive(false);
+                if (BountyHunter.bounty != null && !InMeeting
+                    && ModOption.playerIcons.ContainsKey(BountyHunter.bounty.PlayerId)
+                    && ModOption.playerIcons[BountyHunter.bounty.PlayerId]?.gameObject != null)
+                {
+                    ModOption.playerIcons[BountyHunter.bounty.PlayerId].gameObject.SetActive(true);
+                }
+            }
+        }
+
+        // Update Cooldown Text
+        if (BountyHunter.cooldownText != null)
+        {
+            BountyHunter.cooldownText.text = Mathf.CeilToInt(Mathf.Clamp(BountyHunter.bountyUpdateTimer, 0, BountyHunter.bountyDuration)).ToString();
+            BountyHunter.cooldownText.gameObject.SetActive(!MeetingHud.Instance); // Show if not in meeting
+        }
+
+        // Update Arrow
+        if (BountyHunter.showArrow && BountyHunter.bounty.IsAlive())
+        {
+            BountyHunter.arrow ??= new Arrow(Color.red);
+            if (BountyHunter.arrowUpdateTimer <= 0f)
+            {
+                BountyHunter.arrow.Update(BountyHunter.bounty.transform.position);
+                BountyHunter.arrowUpdateTimer = BountyHunter.arrowUpdateIntervall;
+            }
+
+            BountyHunter.arrow.Update();
+        }
+    }
+
     private static void Postfix(HudManager __instance)
     {
         var player = PlayerControl.LocalPlayer;
@@ -880,6 +956,8 @@ internal class HudManagerUpdatePatch
         // Update Player Info
         updatePlayerInfo();
 
+        // BountyHunter
+        bountyHunterUpdate();
         // Detective
         detectiveUpdateFootPrints();
         // EvilTrapper

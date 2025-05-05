@@ -9,7 +9,6 @@ public static class Undertaker
 
     public static float dragingDelaiAfterKill;
 
-    public static bool isDraging;
     public static DeadBody targetBody;
     public static DeadBody dragedBody;
     public static bool canDragAndVent;
@@ -32,10 +31,9 @@ public static class Undertaker
     public static void clearAndReload()
     {
         undertaker = null;
-        isDraging = false;
-        canDragAndVent = CustomOptionHolder.undertakerCanDragAndVent.GetBool();
         targetBody = null;
         dragedBody = null;
+        canDragAndVent = CustomOptionHolder.undertakerCanDragAndVent.GetBool();
         velocity = CustomOptionHolder.undertakerDragingAfterVelocity.GetFloat();
         dragingDelaiAfterKill = CustomOptionHolder.undertakerDragingDelaiAfterKill.GetFloat();
     }

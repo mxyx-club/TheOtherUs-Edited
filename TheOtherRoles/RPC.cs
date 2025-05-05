@@ -71,8 +71,7 @@ public enum CustomRPC
     AkujoSetHonmei,
     AkujoSetKeep,
     AkujoSuicide,
-    MayorMeeting,
-    BarryMeeting,
+    NoCheckStartMeeting,
     ProphetExamine,
     ImpostorPromotesToLastImpostor,
     //CamoComms,
@@ -2402,25 +2401,8 @@ internal class RPCHandlerPatch
             case CustomRPC.ShareGhostInfo:
                 RPCProcedure.receiveGhostInfo(reader.ReadByte(), reader);
                 break;
-            case CustomRPC.MayorMeeting:
-                if (AmongUsClient.Instance.AmHost)
-                {
-                    MeetingRoomManager.Instance.reporter = Mayor.mayor;
-                    MeetingRoomManager.Instance.target = null;
-                    AmongUsClient.Instance.DisconnectHandlers.AddUnique(MeetingRoomManager.Instance.Cast<IDisconnectHandler>());
-                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(Mayor.mayor);
-                    Mayor.mayor.RpcStartMeeting(null);
-                }
-                break;
-            case CustomRPC.BarryMeeting:
-                if (AmongUsClient.Instance.AmHost)
-                {
-                    MeetingRoomManager.Instance.reporter = ButtonBarry.buttonBarry;
-                    MeetingRoomManager.Instance.target = null;
-                    AmongUsClient.Instance.DisconnectHandlers.AddUnique(MeetingRoomManager.Instance.Cast<IDisconnectHandler>());
-                    DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(ButtonBarry.buttonBarry);
-                    ButtonBarry.buttonBarry.RpcStartMeeting(null);
-                }
+            case CustomRPC.NoCheckStartMeeting:
+                Helpers.NoCheckStartMeeting(reader.ReadPlayer(), reader.ReadPlayer()?.Data, reader.ReadBoolean());
                 break;
             case CustomRPC.ProphetExamine:
                 RPCProcedure.prophetExamine(reader.ReadByte());
@@ -2496,7 +2478,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.RedemptorPrayer:
-                Redemptor.RedemptorPrayer(reader.ReadByte());
+                Redemptor.RedemptorPrayer(reader.ReadBoolean());
                 break;
 
             case CustomRPC.BandLeaderFormed:

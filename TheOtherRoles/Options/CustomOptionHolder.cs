@@ -182,6 +182,7 @@ public class CustomOptionHolder
     public static CustomOption bountyHunterPunishmentTime;
     public static CustomOption bountyHunterShowArrow;
     public static CustomOption bountyHunterArrowUpdateIntervall;
+    public static CustomOption bountyHunterChangeTargetCooldown;
 
     public static CustomOption witchSpawnRate;
     public static CustomOption witchCooldown;
@@ -927,6 +928,8 @@ public class CustomOptionHolder
         bountyHunterPunishmentTime = Create(10233, Types.Impostor, "bountyHunterPunishmentTime", 10f, 0f, 60f, 2.5f, bountyHunterSpawnRate);
         bountyHunterShowArrow = Create(10234, Types.Impostor, "bountyHunterShowArrow", true, bountyHunterSpawnRate);
         bountyHunterArrowUpdateIntervall = Create(10235, Types.Impostor, "bountyHunterArrowUpdateIntervall", 0.5f, 0f, 15f, 0.5f, bountyHunterShowArrow);
+        bountyHunterChangeTargetCooldown = Create(10236, Types.Impostor, "bountyHunterChangeTargetCooldown", 30f, 15f, 90f, 2.5f, bountyHunterSpawnRate);
+
 
         witchSpawnRate = Create(10240, Types.Impostor, cs(Witch.color, "Witch"), rates, null, true);
         witchCooldown = Create(10241, Types.Impostor, "witchCooldown", 20f, 10f, 60, 2.5f, witchSpawnRate);

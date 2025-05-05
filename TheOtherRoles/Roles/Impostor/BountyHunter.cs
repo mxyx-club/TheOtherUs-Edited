@@ -1,4 +1,4 @@
-﻿using TheOtherRoles.Objects;
+using TheOtherRoles.Objects;
 using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -16,11 +16,14 @@ public static class BountyHunter
     public static float bountyKillCooldown;
     public static float punishmentTime = 15f;
     public static float arrowUpdateIntervall = 10f;
+    public static float changeTargetCooldown = 30f;
 
     public static float arrowUpdateTimer;
     public static float bountyUpdateTimer;
     public static PlayerControl bounty;
     public static TextMeshPro cooldownText;
+
+    public static Sprite buttonSprite = new ResourceSprite("ChangePlayerButton.png", 150f);
 
     public static void clearAndReload()
     {
@@ -43,5 +46,6 @@ public static class BountyHunter
         punishmentTime = CustomOptionHolder.bountyHunterPunishmentTime.GetFloat();
         showArrow = CustomOptionHolder.bountyHunterShowArrow.GetBool();
         arrowUpdateIntervall = CustomOptionHolder.bountyHunterArrowUpdateIntervall.GetFloat();
+        changeTargetCooldown = CustomOptionHolder.bountyHunterChangeTargetCooldown.GetFloat();
     }
 }

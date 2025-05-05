@@ -31,12 +31,23 @@ public class Redemptor
         player?.ModRevive();
         RevivedPlayer = player;
         target = null;
+
+
+        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        for (var i = 0; i < array.Length; i++)
+        {
+            if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == PlayerControl.LocalPlayer.PlayerId)
+            {
+                Object.Destroy(array[i].gameObject);
+                break;
+            }
+        }
     }
 
     ///<summary>
     /// off = 0, on > 0
     /// </summary>
-    public static void RedemptorPrayer(byte status) => Prayering = status != 0;
+    public static void RedemptorPrayer(bool status) => Prayering = status;
 
     public static void ClearAndReload(bool clear = true)
     {
