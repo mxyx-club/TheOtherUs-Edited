@@ -1,18 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using AmongUs.GameOptions;
-using InnerNet;
-using Reactor.Utilities.Extensions;
-using TheOtherRoles.Buttons;
 using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Utilities;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Helper;
 
@@ -246,7 +235,8 @@ public static class Helpers
                 player == Jackal.Sidekick ||
                 player == Pavlovsdogs.pavlovsowner ||
                 Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) ||
-                Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId)
+                Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId) ||
+                (player == SchrodingersCat.Player && SchrodingersCat.IsKiller)
                 );
     }
 
@@ -488,7 +478,7 @@ public static class Helpers
     }
 #nullable disable
 
-    public static void AddUnique<T>(this Il2CppSystem.Collections.Generic.List<T> self, T item) where T : IDisconnectHandler
+    public static void AddUnique<T>(this ISystem.List<T> self, T item) where T : IDisconnectHandler
     {
         if (!self.Contains(item)) self.Add(item);
     }
@@ -510,7 +500,7 @@ public static class Helpers
         foreach (T obj in list) func(obj);
     }
 
-    public static List<T> ToList<T>(this Il2CppSystem.Collections.Generic.List<T> list)
+    public static List<T> ToList<T>(this ISystem.List<T> list)
     {
         List<T> newList = new(list.Count);
         foreach (T item in list)
@@ -534,7 +524,7 @@ public static class Helpers
         return default;
     }
 
-    public static T FirstOrDefault<T>(this Il2CppSystem.Collections.Generic.List<T> list, Func<T, bool> func)
+    public static T FirstOrDefault<T>(this ISystem.List<T> list, Func<T, bool> func)
     {
         foreach (T obj in list)
             if (func(obj))
@@ -542,9 +532,9 @@ public static class Helpers
         return default;
     }
 
-    public static Il2CppSystem.Collections.Generic.List<T> ToIl2CppList<T>(this IEnumerable<T> list)
+    public static ISystem.List<T> ToIl2CppList<T>(this IEnumerable<T> list)
     {
-        Il2CppSystem.Collections.Generic.List<T> newList = new(list.Count());
+        ISystem.List<T> newList = new(list.Count());
         foreach (T item in list)
         {
             newList.Add(item);
@@ -552,7 +542,7 @@ public static class Helpers
         return newList;
     }
 
-    public static T Find<T>(this Il2CppSystem.Collections.Generic.List<T> data, Predicate<T> match)
+    public static T Find<T>(this ISystem.List<T> data, Predicate<T> match)
     {
         return data.ToList().Find(match);
     }
@@ -615,7 +605,7 @@ public static class Helpers
         return list.Any(x => keySelector(x).Equals(keySelector(item)));
     }
 
-    public static int Count<T>(this Il2CppSystem.Collections.Generic.List<T> list, Func<T, bool> func = null)
+    public static int Count<T>(this ISystem.List<T> list, Func<T, bool> func = null)
     {
         int count = 0;
         foreach (T obj in list)
@@ -735,7 +725,7 @@ public static class Helpers
         {
             t.OnRemove();
             player.myTasks.Remove(t);
-            Object.Destroy(t.gameObject);
+            UObject.Destroy(t.gameObject);
         }
 
         // Add TextTask for remaining RoleInfos
@@ -752,14 +742,14 @@ public static class Helpers
     {
         if (target == null) return;
 
-        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
 
         for (var i = 0; i < array.Length; i++)
         {
             if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == target.PlayerId)
             {
                 if (setPos) target.NetTransform.RpcSnapTo(array[i].transform.position);
-                if (cleanBody) Object.Destroy(array[i].gameObject);
+                if (cleanBody) UObject.Destroy(array[i].gameObject);
                 break;
             }
         }
@@ -851,7 +841,7 @@ public static class Helpers
         foreach (var playerTask in player.myTasks.GetFastEnumerator())
         {
             playerTask.OnRemove();
-            Object.Destroy(playerTask.gameObject);
+            UObject.Destroy(playerTask.gameObject);
         }
 
         player.myTasks.Clear();
@@ -863,15 +853,15 @@ public static class Helpers
     public static void shareGameVersion()
     {
         var writer = StartRPC(CustomRPC.VersionHandshake);
-        writer.Write((byte)Main.Version.Major);
-        writer.Write((byte)Main.Version.Minor);
-        writer.Write((byte)Main.Version.Build);
+        writer.Write((byte)Main.version.Major);
+        writer.Write((byte)Main.version.Minor);
+        writer.Write((byte)Main.version.Build);
         writer.Write(AmongUsClient.Instance.AmHost ? GameStartManagerPatch.timer : -1f);
         writer.WritePacked(AmongUsClient.Instance.ClientId);
-        writer.Write((byte)(Main.Version.Revision < 0 ? 0xFF : Main.Version.Revision));
+        writer.Write((byte)(Main.version.Revision < 0 ? 0xFF : Main.version.Revision));
         writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
         writer.EndRPC();
-        RPCProcedure.versionHandshake(Main.Version.Major, Main.Version.Minor, Main.Version.Build, Main.Version.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
+        RPCProcedure.versionHandshake(Main.version.Major, Main.version.Minor, Main.version.Build, Main.version.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
     }
 
     public static void RpcRepairSystem(this ShipStatus shipStatus, SystemTypes systemType, byte amount)
@@ -1047,7 +1037,7 @@ public static class Helpers
         FastDestroyableSingleton<HudManager>.Instance.FullScreen.gameObject.SetActive(true);
         FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = true;
         // Message Text
-        var messageText = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText,
+        var messageText = UObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText,
             FastDestroyableSingleton<HudManager>.Instance.transform);
         messageText.text = message;
         messageText.enableWordWrapping = false;
@@ -1218,7 +1208,7 @@ public static class Helpers
 
         if (Survivor.Player != null && Survivor.Player.Any(x => x.PlayerId == target.PlayerId) && Survivor.vestActive)
         {
-            CustomButton.resetKillButton(killer, Survivor.vestResetCooldown);
+            if (PlayerControl.LocalPlayer == killer) CustomButton.SetKillTimer(Survivor.vestResetCooldown);
             SoundEffectsManager.play("fail");
             return MurderAttemptResult.SuppressKill;
         }

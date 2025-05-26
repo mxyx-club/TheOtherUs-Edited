@@ -1,6 +1,4 @@
-﻿using TheOtherRoles.Objects;
-using UnityEngine;
-using Object = UnityEngine.Object;
+using TheOtherRoles.Objects;
 
 namespace TheOtherRoles.Roles.Impostor;
 
@@ -32,7 +30,7 @@ public static class Ninja
         invisibleDuration = CustomOptionHolder.ninjaInvisibleDuration.GetFloat();
         invisibleTimer = 0f;
         isInvisable = false;
-        if (arrow?.arrow != null) Object.Destroy(arrow.arrow);
+        if (arrow?.arrow != null) UObject.Destroy(arrow.arrow);
         arrow = new Arrow(Color.black);
         arrow.arrow?.SetActive(false);
     }

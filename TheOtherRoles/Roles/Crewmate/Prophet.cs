@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using TheOtherRoles.Objects;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Roles.Crewmate;
 
@@ -59,7 +55,7 @@ public static class Prophet
         {
             foreach (Arrow arrow in arrows)
                 if (arrow?.arrow != null)
-                    Object.Destroy(arrow.arrow);
+                    UObject.Destroy(arrow.arrow);
         }
         arrows.Clear();
     }

@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using InnerNet;
-using MonoMod.Utils;
-using TheOtherRoles.Utilities;
-
 namespace TheOtherRoles.Roles;
 
 public enum RoleType
@@ -147,13 +140,14 @@ public static class RoleHelpers
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Ended) return true;
             else if (PlayerControl.LocalPlayer.IsAlive()) return false;
             else if (PlayerControl.LocalPlayer == Specter.Player) return false;
+            else if (Specter.Player.getPartner() == PlayerControl.LocalPlayer) return false;
             else return _CanSeeRoleInfo;
         }
         set
         {
             if (PlayerControl.LocalPlayer.IsAlive()) _CanSeeRoleInfo = false;
             else if (PlayerControl.LocalPlayer == Specter.Player) _CanSeeRoleInfo = false;
-            else if (Specter.Player.isLover() && Lovers.otherLover(Specter.Player) == PlayerControl.LocalPlayer) _CanSeeRoleInfo = false;
+            else if (Specter.Player.getPartner() == PlayerControl.LocalPlayer) _CanSeeRoleInfo = false;
             else _CanSeeRoleInfo = value;
         }
     }

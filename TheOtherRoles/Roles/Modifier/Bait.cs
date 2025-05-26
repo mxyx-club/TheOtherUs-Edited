@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-namespace TheOtherRoles.Roles.Modifier;
+﻿namespace TheOtherRoles.Roles.Modifier;
 
 // Modifier
 public static class Bait

@@ -1,11 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using Hazel;
-using TMPro;
-using UnityEngine;
 using static TheOtherRoles.Patches.RoleManagerSelectRolesPatch;
 
 namespace TheOtherRoles.Modules;
@@ -25,8 +18,8 @@ internal class RoleDraft
     private static Dictionary<byte, byte> playerRoles = new();
 
     private static readonly SimpleTable _pickTable = new SimpleTable()
-        .AddColumn(8, minWidth: 4, Alignment.Right)
-        .AddColumn(minWidth: 9);
+        .AddColumn(alignment: SimpleTable.Alignment.Right)
+        .AddColumn(manualWidth: 20);
 
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.ShowTeam))]
     private class ShowRolePatch

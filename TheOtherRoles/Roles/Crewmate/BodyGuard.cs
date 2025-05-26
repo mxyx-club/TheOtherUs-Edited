@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace TheOtherRoles.Roles.Crewmate;
+﻿namespace TheOtherRoles.Roles.Crewmate;
 
 public static class BodyGuard
 {

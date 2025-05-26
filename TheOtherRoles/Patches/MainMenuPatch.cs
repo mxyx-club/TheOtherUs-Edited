@@ -1,11 +1,6 @@
-using System;
-using AmongUs.Data;
 using Assets.InnerNet;
-using TMPro;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 using static UnityEngine.UI.Button;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
 
@@ -31,7 +26,7 @@ public class MainMenuPatch
         template2.transform.FindChild("FontPlacer").transform.localScale = new Vector3(1.8f, 0.9f, 0.9f);
         template2.transform.FindChild("FontPlacer").transform.localPosition = new Vector3(-1.1f, 0f, 0f);
 
-        var buttonGitHub = Object.Instantiate(template, template.transform.parent);
+        var buttonGitHub = UObject.Instantiate(template, template.transform.parent);
         buttonGitHub.transform.localScale = new Vector3(0.42f, 0.84f, 0.84f);
         buttonGitHub.GetComponent<AspectPosition>().anchorPoint = new Vector2(0.542f, 0.5f);
         var textGitHub = buttonGitHub.transform.GetComponentInChildren<TMP_Text>();
@@ -42,8 +37,8 @@ public class MainMenuPatch
 
         if (IsCN())
         {
-            var buttonDiscord = Object.Instantiate(template, null);
-            Object.Destroy(buttonDiscord.GetComponent<AspectPosition>());
+            var buttonDiscord = UObject.Instantiate(template, null);
+            UObject.Destroy(buttonDiscord.GetComponent<AspectPosition>());
             buttonDiscord.transform.localPosition = new(-0.459f, -1.5f, 0);
 
             var textDiscord = buttonDiscord.GetComponentInChildren<TextMeshPro>();
@@ -70,7 +65,7 @@ public class MainMenuPatch
 
         // TOR credits button
         if (template == null) return;
-        var creditsButton = Object.Instantiate(template, template.transform.parent);
+        var creditsButton = UObject.Instantiate(template, template.transform.parent);
 
         creditsButton.transform.localScale = new Vector3(0.42f, 0.84f, 0.84f);
         creditsButton.GetComponent<AspectPosition>().anchorPoint = new Vector2(0.462f, 0.5f);
@@ -85,15 +80,15 @@ public class MainMenuPatch
         passiveCreditsButton.OnClick.AddListener((Action)delegate
         {
             // do stuff
-            if (popUp != null) Object.Destroy(popUp);
-            var popUpTemplate = Object.FindObjectOfType<AnnouncementPopUp>(true);
+            if (popUp != null) UObject.Destroy(popUp);
+            var popUpTemplate = UObject.FindObjectOfType<AnnouncementPopUp>(true);
             if (popUpTemplate == null)
             {
                 Error("couldnt show credits, popUp is null");
                 return;
             }
 
-            popUp = Object.Instantiate(popUpTemplate);
+            popUp = UObject.Instantiate(popUpTemplate);
 
             popUp.gameObject.SetActive(true);
             var creditsString = GetString("creditsString1");
@@ -141,7 +136,7 @@ License: TheOtherRoles is licensed under the [https://github.com/TheOtherRolesAU
                 if (p == 1)
                 {
                     var backup = DataManager.Player.Announcements.allAnnouncements;
-                    DataManager.Player.Announcements.allAnnouncements = new Il2CppSystem.Collections.Generic.List<Announcement>();
+                    DataManager.Player.Announcements.allAnnouncements = new ISystem.List<Announcement>();
                     popUp.Init(false);
                     DataManager.Player.Announcements.SetAnnouncements(new[] { creditsAnnouncement });
                     popUp.CreateAnnouncementList();
@@ -161,11 +156,11 @@ License: TheOtherRoles is licensed under the [https://github.com/TheOtherRolesAU
             ModOption.gameMode = CustomGamemodes.Classic;
             // Add buttons For Guesser Mode, Hide N Seek in this scene.
             // find "HostLocalGameButton"
-            var template = Object.FindObjectOfType<HostLocalGameButton>();
+            var template = UObject.FindObjectOfType<HostLocalGameButton>();
             var gameButton = template.transform.FindChild("CreateGameButton");
             var gameButtonPassiveButton = gameButton.GetComponentInChildren<PassiveButton>();
 
-            var guesserButton = Object.Instantiate(gameButton, gameButton.parent);
+            var guesserButton = UObject.Instantiate(gameButton, gameButton.parent);
             guesserButton.transform.localPosition += new Vector3(0f, -0.5f);
             var guesserButtonText = guesserButton.GetComponentInChildren<TextMeshPro>();
             var guesserButtonPassiveButton = guesserButton.GetComponentInChildren<PassiveButton>();
@@ -184,11 +179,12 @@ License: TheOtherRoles is licensed under the [https://github.com/TheOtherRolesAU
         }));
     }
 }
+
 [HarmonyPatch(typeof(VersionShower), nameof(VersionShower.Start))]
 public static class VersionShower_Start
 {
     public static void Postfix(VersionShower __instance)
     {
-        __instance.text.text = $"Among Us v{Application.version} - <color=#ff351f>The Other Us Edited</color> <color=#FCCE03FF>v{Main.Version}{"-Lite"}</color>";
+        __instance.text.text = $"Among Us v{Application.version} | <color=#ff351f>The Other Us Edited</color> <color=#FCCE03FF>v{Main.Version}{Main.VersionSuffix}</color>";
     }
 }

@@ -1,13 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using TMPro;
-using UnityEngine;
 using UnityEngine.Events;
 using static UnityEngine.UI.Button;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Options;
 
@@ -48,7 +41,7 @@ public static class StartOptionMenuPatch
 
     private static ToggleButtonBehaviour AddButton(int index, string name, Action onClicked, GameObject nebulaTab, GameObject toggleButtonTemplate)
     {
-        var button = Object.Instantiate(toggleButtonTemplate, null);
+        var button = UObject.Instantiate(toggleButtonTemplate, null);
         button.transform.SetParent(nebulaTab.transform);
         button.transform.localScale = new Vector3(1f, 1f, 1f);
         button.transform.localPosition = new Vector3(1.3f * (index % 2 * 2 - 1), 1.6f - 0.5f * (index / 2), 0f);
@@ -133,7 +126,7 @@ public static class StartOptionMenuPatch
         List<ToggleButtonBehaviour> allKeyBindingButtons = new();
         var selectedKeyBinding = -1;
 
-        var defaultButton = Object.Instantiate(applyButtonTemplate, null);
+        var defaultButton = UObject.Instantiate(applyButtonTemplate, null);
         defaultButton.transform.SetParent(keyBindingTab.transform);
         defaultButton.transform.localScale = new Vector3(1f, 1f, 1f);
         defaultButton.transform.localPosition = new Vector3(0f, -2.5f, 0f);
@@ -163,7 +156,7 @@ public static class StartOptionMenuPatch
         {
             var index = allKeyBindingButtons.Count;
 
-            var inputButton = Object.Instantiate(toggleButtonTemplate, null);
+            var inputButton = UObject.Instantiate(toggleButtonTemplate, null);
             inputButton.transform.SetParent(keyBindingTab.transform);
             inputButton.transform.localScale = new Vector3(1f, 1f, 1f);
             inputButton.transform.localPosition = new Vector3(1.3f * (index % 2 * 2 - 1), 1.5f - 0.5f * (index / 2), 0f);
@@ -192,7 +185,7 @@ public static class StartOptionMenuPatch
             allKeyBindingButtons.Add(inputToggleButton);
         }
 
-        var keyBindingButton = Object.Instantiate(applyButtonTemplate, null);
+        var keyBindingButton = UObject.Instantiate(applyButtonTemplate, null);
         keyBindingButton.transform.SetParent(nebulaTab.transform);
         keyBindingButton.transform.localScale = new Vector3(1f, 1f, 1f);
         keyBindingButton.transform.localPosition = new Vector3(0f, -1.5f, 0f);
@@ -251,7 +244,7 @@ public static class StartOptionMenuPatch
 
         //タブを追加する
 
-        tabs[^1] = Object.Instantiate(tabs[1], null);
+        tabs[^1] = UObject.Instantiate(tabs[1], null);
         var nebulaButton = tabs[^1];
         nebulaButton.gameObject.name = "NebulaButton";
         nebulaButton.transform.SetParent(tabs[0].transform.parent);
@@ -261,7 +254,7 @@ public static class StartOptionMenuPatch
         textObj.GetComponent<TextTranslatorTMP>().enabled = false;
         textObj.GetComponent<TMP_Text>().text = "modOptionsTitle".Translate();
 
-        tabs.Add(Object.Instantiate(tabs[1], null));
+        tabs.Add(UObject.Instantiate(tabs[1], null));
         var keyBindingTabButton = tabs[^1];
         keyBindingTabButton.gameObject.name = "KeyBindingButton";
         keyBindingTabButton.transform.SetParent(tabs[0].transform.parent);

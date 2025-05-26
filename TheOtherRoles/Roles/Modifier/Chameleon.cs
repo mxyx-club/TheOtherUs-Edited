@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using AmongUs.Data;
-using UnityEngine;
-
-namespace TheOtherRoles.Roles.Modifier;
+﻿namespace TheOtherRoles.Roles.Modifier;
 
 public static class Chameleon
 {

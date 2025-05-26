@@ -1,6 +1,3 @@
-using System.Linq;
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Modifier;
 
 public static class Cursed

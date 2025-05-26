@@ -1,10 +1,5 @@
-using System.Collections.Generic;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
 using static TheOtherRoles.Options.ModOption;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Roles.Neutral;
 
@@ -27,7 +22,7 @@ public class Amnisiac
         if (localArrows != null)
             foreach (var arrow in localArrows)
                 if (arrow?.arrow != null)
-                    Object.Destroy(arrow.arrow);
+                    UObject.Destroy(arrow.arrow);
         localArrows.Clear();
     }
 
@@ -111,7 +106,7 @@ public class Amnisiac
                             FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.z) +
                         new Vector3(-0.25f, 1f, 0);
                     BountyHunter.cooldownText =
-                        Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText,
+                        UObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText,
                             FastDestroyableSingleton<HudManager>.Instance.transform);
                     BountyHunter.cooldownText.alignment = TextAlignmentOptions.Center;
                     BountyHunter.cooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -1f, -1f);
@@ -400,7 +395,7 @@ public class Amnisiac
                 break;
         }
         Player.RemoveAll(x => x.PlayerId == local.PlayerId);
-        foreach (var arrow in localArrows) Object.Destroy(arrow.arrow);
+        foreach (var arrow in localArrows) UObject.Destroy(arrow.arrow);
         localArrows.Clear();
     }
 

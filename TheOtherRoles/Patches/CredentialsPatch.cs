@@ -1,14 +1,9 @@
-﻿using System.Collections.Generic;
-using InnerNet;
-using TMPro;
-using UnityEngine;
-
 namespace TheOtherRoles.Patches;
 
 [HarmonyPatch]
 public static class CredentialsPatch
 {
-    public static string fullCredentialsVersion = $"<size=130%>{GetString("TouTitle")}</size> v{Main.Version + "-Lite"}";
+    public static string fullCredentialsVersion = $"<size=130%>{GetString("TouTitle")}</size> v{Main.Version}{Main.VersionSuffix}";
 
     public static string fullCredentials = GetString("fullCredentials");
 
@@ -41,7 +36,7 @@ public static class CredentialsPatch
             if (gameModeText != "") gameModeText = cs(Color.yellow, gameModeText) + "\n";
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {
-                __instance.text.text = $"<size=110%>{GetString("TouTitle")}</size>  v{Main.Version + "\n" + GetString("inGameTitle")}\n{PingText}\n{gameModeText}";
+                __instance.text.text = $"<size=110%>{GetString("TouTitle")}</size>  v{Main.Version}{Main.VersionSuffix}\n{GetString("inGameTitle")}\n{PingText}\n{gameModeText}";
                 position.DistanceFromEdge = new Vector3(2.25f, 0.1f, 0);
             }
             else
@@ -74,8 +69,7 @@ public static class CredentialsPatch
             instance = __instance;
             var credentialObject = new GameObject("credentialsTOR");
             var credentials = credentialObject.AddComponent<TextMeshPro>();
-            credentials.SetText(
-                $"<size=90%>TheOtherUs-Edited v{Main.Version + "-Lite"}</size>\n<size=30%>\n</size>{mainMenuCredentials}\n<size=30%>\n</size>{contributorsCredentials}");
+            credentials.SetText($"<size=90%>TheOtherUs-Edited v{Main.Version}{Main.VersionSuffix}</size>\n<size=30%>\n</size>{mainMenuCredentials}\n<size=30%>\n</size>{contributorsCredentials}");
             credentials.alignment = TextAlignmentOptions.Center;
             credentials.fontSize *= 0.05f;
 

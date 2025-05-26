@@ -1,9 +1,3 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using InnerNet;
-using TheOtherRoles.Utilities;
-using UnityEngine;
-
 namespace TheOtherRoles.Objects.Map;
 
 public class AdditionalVents
@@ -15,8 +9,8 @@ public class AdditionalVents
     private AdditionalVents(Vector3 p)
     {
         // Create the vent
-        var referenceVent = Object.FindObjectOfType<Vent>();
-        vent = Object.Instantiate(referenceVent);
+        var referenceVent = UObject.FindObjectOfType<Vent>();
+        vent = UObject.Instantiate(referenceVent);
         vent.transform.position = p;
         vent.Left = null;
         vent.Right = null;

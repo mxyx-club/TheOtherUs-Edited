@@ -1,9 +1,4 @@
-using System;
-using AmongUs.Data;
 using AmongUs.GameOptions;
-using Hazel;
-using InnerNet;
-using TheOtherRoles.Utilities;
 
 namespace TheOtherRoles.Modules;
 

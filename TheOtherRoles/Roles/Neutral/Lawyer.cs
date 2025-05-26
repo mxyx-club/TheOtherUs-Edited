@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace TheOtherRoles.Roles.Neutral;
+﻿namespace TheOtherRoles.Roles.Neutral;
 
 public static class Lawyer
 {

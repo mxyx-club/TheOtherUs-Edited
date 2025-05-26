@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Neutral;
 
 public static class Akujo

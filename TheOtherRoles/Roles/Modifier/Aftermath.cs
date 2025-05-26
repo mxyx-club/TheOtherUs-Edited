@@ -1,7 +1,4 @@
-using System;
-using Hazel;
 using TheOtherRoles.Objects;
-using UnityEngine;
 using static TheOtherRoles.Buttons.HudManagerStartPatch;
 using static TheOtherRoles.RPCProcedure;
 
@@ -53,9 +50,9 @@ public class Aftermath
                 var buff = new byte[sizeof(float) * 2];
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
-                var writer = AmongUsClient.Instance.StartRpc(killer.NetId, (byte)CustomRPC.PlaceBomb);
+                var writer = StartRPC(killer.NetId, CustomRPC.PlaceBomb);
                 writer.WriteBytesAndSize(buff);
-                writer.EndMessage();
+                writer.EndRPC();
                 placeBomb(buff);
                 SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
 
@@ -177,9 +174,9 @@ public class Aftermath
             if (Yoyo.markedLocation == null)
             {
                 Message($"marked location is null in button press");
-                var writer = AmongUsClient.Instance.StartRpc(killer.NetId, (byte)CustomRPC.YoyoMarkLocation, SendOption.Reliable);
+                var writer = StartRPC(killer.NetId, CustomRPC.YoyoMarkLocation);
                 writer.WriteBytesAndSize(buff);
-                writer.EndMessage();
+                writer.EndRPC();
                 yoyoMarkLocation(buff);
                 SoundEffectsManager.play("tricksterPlaceBox");
                 yoyoButton.Sprite = Yoyo.blinkButtonSprite;
@@ -197,10 +194,10 @@ public class Aftermath
                 {
                     SubmergedCompatibility.ChangeFloor(exit.y > -7);
                 }
-                var writer = AmongUsClient.Instance.StartRpc(killer.NetId, (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
+                var writer = StartRPC(killer.NetId, CustomRPC.YoyoBlink);
                 writer.Write(byte.MaxValue);
                 writer.WriteBytesAndSize(buff);
-                writer.EndMessage();
+                writer.EndRPC();
                 yoyoBlink(true, buff);
                 yoyoButton.EffectDuration = Yoyo.blinkDuration;
                 yoyoButton.Timer = 10f;
@@ -223,10 +220,9 @@ public class Aftermath
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                var writer = AmongUsClient.Instance.StartRpc(killer.NetId,
-                    (byte)CustomRPC.PlaceJackInTheBox);
+                var writer = StartRPC(killer.NetId, CustomRPC.PlaceJackInTheBox);
                 writer.WriteBytesAndSize(buff);
-                writer.EndMessage();
+                writer.EndRPC();
                 placeJackInTheBox(buff);
                 SoundEffectsManager.play("tricksterPlaceBox");
                 placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer;

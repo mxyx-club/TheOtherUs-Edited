@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
 using TheOtherRoles.Objects;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Roles.Neutral;
 
@@ -30,7 +27,7 @@ public static class Vulture
         if (localArrows != null)
             foreach (var arrow in localArrows)
                 if (arrow?.arrow != null)
-                    Object.Destroy(arrow.arrow);
+                    UObject.Destroy(arrow.arrow);
         localArrows.Clear();
     }
 }

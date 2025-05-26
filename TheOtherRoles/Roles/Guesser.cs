@@ -1,15 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Hazel;
-using Reactor.Utilities;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
 using static TheOtherRoles.GameHistory;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Roles;
 
@@ -113,8 +104,8 @@ public static class Guesser
 
         __instance.playerStates.ForEach(x => x.gameObject.SetActive(false));
 
-        Transform PhoneUI = Object.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
-        Transform container = Object.Instantiate(PhoneUI, __instance.transform);
+        Transform PhoneUI = UObject.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
+        Transform container = UObject.Instantiate(PhoneUI, __instance.transform);
         container.transform.localPosition = new Vector3(0, 0, -5f);
         guesserUI = container.gameObject;
         container.transform.localScale *= 0.75f;
@@ -129,8 +120,8 @@ public static class Guesser
 
         var exitButtonParent = new GameObject().transform;
         exitButtonParent.SetParent(container);
-        var exitButton = Object.Instantiate(buttonTemplate.transform, exitButtonParent);
-        var exitButtonMask = Object.Instantiate(maskTemplate, exitButtonParent);
+        var exitButton = UObject.Instantiate(buttonTemplate.transform, exitButtonParent);
+        var exitButtonMask = UObject.Instantiate(maskTemplate, exitButtonParent);
         exitButton.gameObject.GetComponent<SpriteRenderer>().sprite = smallButtonTemplate.GetComponent<SpriteRenderer>().sprite;
         var transform = exitButtonParent.transform;
         transform.localPosition = new Vector3(3f, 2.1f, -5);
@@ -143,9 +134,9 @@ public static class Guesser
             {
                 x.gameObject.SetActive(true);
                 if (PlayerControl.LocalPlayer.Data.IsDead && x.transform.FindChild("ShootButton") != null)
-                    Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                    UObject.Destroy(x.transform.FindChild("ShootButton").gameObject);
             });
-            Object.Destroy(container.gameObject);
+            UObject.Destroy(container.gameObject);
         }));
 
         var buttons = new List<Transform>();
@@ -157,10 +148,10 @@ public static class Guesser
         {
             Transform TeambuttonParent = new GameObject().transform;
             TeambuttonParent.SetParent(container);
-            Transform Teambutton = Object.Instantiate(buttonTemplate, TeambuttonParent);
+            Transform Teambutton = UObject.Instantiate(buttonTemplate, TeambuttonParent);
             Teambutton.FindChild("ControllerHighlight").gameObject.SetActive(false);
-            Transform TeambuttonMask = Object.Instantiate(maskTemplate, TeambuttonParent);
-            TextMeshPro Teamlabel = Object.Instantiate(textTemplate, Teambutton);
+            Transform TeambuttonMask = UObject.Instantiate(maskTemplate, TeambuttonParent);
+            TextMeshPro Teamlabel = UObject.Instantiate(textTemplate, Teambutton);
             //Teambutton.GetComponent<SpriteRenderer>().sprite = ShipStatus.Instance.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
             RoleSelectButtons.Add((RoleType)index, Teambutton.GetComponent<SpriteRenderer>());
             TeambuttonParent.localPosition = new(-2.75f + (index * 1.75f), 2.225f, -200);
@@ -220,10 +211,10 @@ public static class Guesser
             var textTemplate = __instance.playerStates[0].NameText;
             Transform PagebuttonParent = new GameObject().transform;
             PagebuttonParent.SetParent(container);
-            Transform Pagebutton = Object.Instantiate(buttonTemplate, PagebuttonParent);
+            Transform Pagebutton = UObject.Instantiate(buttonTemplate, PagebuttonParent);
             Pagebutton.FindChild("ControllerHighlight").gameObject.SetActive(false);
-            Transform PagebuttonMask = Object.Instantiate(maskTemplate, PagebuttonParent);
-            TextMeshPro Pagelabel = Object.Instantiate(textTemplate, Pagebutton);
+            Transform PagebuttonMask = UObject.Instantiate(maskTemplate, PagebuttonParent);
+            TextMeshPro Pagelabel = UObject.Instantiate(textTemplate, Pagebutton);
             //Pagebutton.GetComponent<SpriteRenderer>().sprite = ShipStatus.Instance.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
             PagebuttonParent.localPosition = IsNext ? new(3.535f, -2.2f, -200) : new(-3.475f, -2.2f, -200);
             PagebuttonParent.localScale = new(0.55f, 0.55f, 1f);
@@ -324,10 +315,10 @@ public static class Guesser
 
             var buttonParent = new GameObject().transform;
             buttonParent.SetParent(container);
-            var button = Object.Instantiate(buttonTemplate, buttonParent);
+            var button = UObject.Instantiate(buttonTemplate, buttonParent);
             button.FindChild("ControllerHighlight").gameObject.SetActive(false);
-            var buttonMask = Object.Instantiate(maskTemplate, buttonParent);
-            var label = Object.Instantiate(textTemplate, button);
+            var buttonMask = UObject.Instantiate(maskTemplate, buttonParent);
+            var label = UObject.Instantiate(textTemplate, button);
             button.GetComponent<SpriteRenderer>().sprite = ShipStatus.Instance.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
             //button.GetComponent<SpriteRenderer>().sprite = FastDestroyableSingleton<HatManager>.Instance.GetNamePlateById("nameplate_NoPlate")?.viewData?.viewData?.Image;
             if (!RoleButtons.ContainsKey(team))
@@ -372,7 +363,7 @@ public static class Guesser
                     {
                         // Depending on the options, shooting the shielded player will not allow the guess, notifiy everyone about the kill attempt and close the window
                         __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
-                        Object.Destroy(container.gameObject);
+                        UObject.Destroy(container.gameObject);
 
                         var murderAttemptWriter = StartRPC(CustomRPC.ShieldedMurderAttempt);
                         murderAttemptWriter.EndRPC();
@@ -384,7 +375,7 @@ public static class Guesser
                     {
                         showFlash(new Color32(255, 197, 97, byte.MinValue));
                         __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
-                        Object.Destroy(container.gameObject);
+                        UObject.Destroy(container.gameObject);
 
                         var murderAttemptWriter = StartRPC(CustomRPC.ShieldedMurderAttempt);
                         murderAttemptWriter.EndRPC();
@@ -421,7 +412,7 @@ public static class Guesser
                             {
                                 if (x.TargetPlayerId == focusedTarget.PlayerId && x.transform.FindChild("ShootButton") != null)
                                 {
-                                    Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                                    UObject.Destroy(x.transform.FindChild("ShootButton").gameObject);
                                 }
                             });
                             return;
@@ -440,13 +431,13 @@ public static class Guesser
 
                     // Reset the GUI
                     __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
-                    Object.Destroy(container.gameObject);
+                    UObject.Destroy(container.gameObject);
                     if (CanMultipleShots(dyingTarget))
                     {
                         __instance.playerStates.ForEach(x =>
                         {
                             if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null)
-                                Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                                UObject.Destroy(x.transform.FindChild("ShootButton").gameObject);
                         });
                     }
                     else
@@ -454,7 +445,7 @@ public static class Guesser
                         __instance.playerStates.ForEach(x =>
                         {
                             if (x.transform.FindChild("ShootButton") != null)
-                                Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                                UObject.Destroy(x.transform.FindChild("ShootButton").gameObject);
                         });
                     }
                 }
@@ -574,7 +565,7 @@ public static class Guesser
             MeetingHud.Instance.playerStates.ToList().ForEach(x =>
             {
                 if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null)
-                    Object.Destroy(x.transform.FindChild("ShootButton")?.gameObject);
+                    UObject.Destroy(x.transform.FindChild("ShootButton")?.gameObject);
             });
 
             if (dyingPartner != null)
@@ -582,7 +573,7 @@ public static class Guesser
                 MeetingHud.Instance.playerStates.ToList().ForEach(x =>
                 {
                     if (x.TargetPlayerId == dyingPartner.PlayerId && x.transform.FindChild("ShootButton") != null)
-                        Object.Destroy(x.transform.FindChild("ShootButton")?.gameObject);
+                        UObject.Destroy(x.transform.FindChild("ShootButton")?.gameObject);
                 });
             }
 
@@ -591,7 +582,7 @@ public static class Guesser
                 MeetingHud.Instance.playerStates.ToList().ForEach(x =>
                 {
                     if (x.TargetPlayerId == Lawyer.lawyer?.PlayerId && x.transform.FindChild("ShootButton") != null)
-                        Object.Destroy(x.transform.FindChild("ShootButton")?.gameObject);
+                        UObject.Destroy(x.transform.FindChild("ShootButton")?.gameObject);
                 });
             }
         }

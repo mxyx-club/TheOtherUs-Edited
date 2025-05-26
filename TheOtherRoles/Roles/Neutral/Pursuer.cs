@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-namespace TheOtherRoles.Roles.Neutral;
+﻿namespace TheOtherRoles.Roles.Neutral;
 
 public static class Pursuer
 {

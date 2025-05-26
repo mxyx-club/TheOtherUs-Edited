@@ -1,8 +1,3 @@
-using System;
-using TMPro;
-using UnityEngine;
-using Object = UnityEngine.Object;
-
 namespace TheOtherRoles.Modules;
 
 public class SimpleButton
@@ -29,7 +24,7 @@ public class SimpleButton
         if (baseButton == null)
             throw new InvalidOperationException("baseButtonが未設定");
 
-        Button = Object.Instantiate(baseButton, parent);
+        Button = UObject.Instantiate(baseButton, parent);
         Label = Button.transform.Find("FontPlacer/Text_TMP").GetComponent<TextMeshPro>();
         NormalSprite = Button.inactiveSprites.GetComponent<SpriteRenderer>();
         HoverSprite = Button.activeSprites.GetComponent<SpriteRenderer>();
@@ -37,7 +32,7 @@ public class SimpleButton
 
         // ラベルをセンタリング
         var container = Label.transform.parent;
-        Object.Destroy(Label.GetComponent<AspectPosition>());
+        UObject.Destroy(Label.GetComponent<AspectPosition>());
         container.SetLocalX(0f);
         Label.transform.SetLocalX(0f);
         Label.horizontalAlignment = HorizontalAlignmentOptions.Center;
@@ -74,14 +69,14 @@ public class SimpleButton
         if (baseButton != null || passiveButton == null)
             return;
         // 複製
-        baseButton = Object.Instantiate(passiveButton);
+        baseButton = UObject.Instantiate(passiveButton);
         var label = baseButton.transform.Find("FontPlacer/Text_TMP").GetComponent<TextMeshPro>();
         baseButton.gameObject.SetActive(false);
         // シーン切替時に破棄されないようにする
-        Object.DontDestroyOnLoad(baseButton);
+        UObject.DontDestroyOnLoad(baseButton);
         baseButton.name = "YuET_SimpleButtonBase";
         // 不要なコンポーネントを無効化
-        Object.Destroy(baseButton.GetComponent<AspectPosition>());
+        UObject.Destroy(baseButton.GetComponent<AspectPosition>());
         label.DestroyTranslatorL();
         label.fontSize = label.fontSizeMax = label.fontSizeMin = 3.5f;
         label.enableWordWrapping = false;

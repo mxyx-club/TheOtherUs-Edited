@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace TheOtherRoles.Roles.Modifier;
+﻿namespace TheOtherRoles.Roles.Modifier;
 
 public static class Sunglasses
 {

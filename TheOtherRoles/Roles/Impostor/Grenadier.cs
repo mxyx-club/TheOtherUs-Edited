@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using TheOtherRoles.Utilities;
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Impostor;
 
 public class Grenadier

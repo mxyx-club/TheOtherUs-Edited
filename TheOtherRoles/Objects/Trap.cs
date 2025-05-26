@@ -1,12 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Hazel;
-using TheOtherRoles.Buttons;
-using TheOtherRoles.Utilities;
-using UnityEngine;
-using Object = UnityEngine.Object;
-
 namespace TheOtherRoles.Objects;
 
 public class Trap
@@ -57,8 +48,8 @@ public class Trap
     {
         foreach (var t in traps)
         {
-            Object.Destroy(t.arrow.arrow);
-            Object.Destroy(t.trap);
+            UObject.Destroy(t.arrow.arrow);
+            UObject.Destroy(t.trap);
         }
 
         traps = new();
@@ -73,7 +64,7 @@ public class Trap
         foreach (var t in trapsToClear)
         {
             traps.Remove(t);
-            Object.Destroy(t.trap);
+            UObject.Destroy(t.trap);
         }
     }
 
@@ -159,11 +150,10 @@ public class Trap
         }
         if (target?.revealed == false && player.PlayerId != Trapper.trapper.PlayerId && player.IsAlive())
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.TriggerTrap, SendOption.Reliable, -1);
+            var writer = StartRPC(CustomRPC.TriggerTrap);
             writer.Write(player.PlayerId);
             writer.Write(target.instanceId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             RPCProcedure.triggerTrap(player.PlayerId, (byte)target.instanceId);
         }
 
@@ -209,7 +199,7 @@ public class KillTrap
             {
                 var firstTrap = traps[key];
                 if (firstTrap.killtrap != null)
-                    Object.DestroyObject(firstTrap.killtrap);
+                    UObject.DestroyObject(firstTrap.killtrap);
                 traps.Remove(key);
                 break;
             }
@@ -264,7 +254,7 @@ public class KillTrap
         {
             if (t.killtrap == null || t == trap) continue;
             t.killtrap.SetActive(false);
-            Object.Destroy(t.killtrap);
+            UObject.Destroy(t.killtrap);
         }
         traps = newTraps;
 
@@ -336,7 +326,7 @@ public class KillTrap
             if (p == 1f)
             {
                 trap.killtrap?.SetActive(false);
-                Object.Destroy(trap.killtrap);
+                UObject.Destroy(trap.killtrap);
                 traps.Remove(trapId);
             }
         })));
@@ -412,7 +402,7 @@ public class KillTrap
         {
             if (p == 1f)
             {
-                Object.Destroy(trap.killtrap);
+                UObject.Destroy(trap.killtrap);
                 traps.Remove(trapId);
             }
         })));
@@ -425,7 +415,7 @@ public class KillTrap
         foreach (var trap in traps.Values)
         {
             if (trap.killtrap != null)
-                Object.DestroyObject(trap.killtrap);
+                UObject.DestroyObject(trap.killtrap);
         }
         traps.Clear();
         maxId = 0;

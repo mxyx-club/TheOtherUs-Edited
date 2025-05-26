@@ -1,5 +1,4 @@
 ﻿using TheOtherRoles.Objects;
-using UnityEngine;
 
 namespace TheOtherRoles.Roles.Impostor;
 

@@ -1,8 +1,5 @@
-using System;
-using System.Linq;
 using System.Text;
 using AmongUs.GameOptions;
-using UnityEngine;
 
 namespace TheOtherRoles.Patches;
 

@@ -1,8 +1,3 @@
-using System;
-using System.Linq;
-using UnityEngine;
-using Object = UnityEngine.Object;
-
 namespace TheOtherRoles.Roles.Neutral;
 
 public class Witness
@@ -79,7 +74,7 @@ public class Witness
             foreach (var playerState in __instance.playerStates)
             {
                 var icon = playerState.transform.FindChild("WitnessIcon");
-                if (icon != null) Object.Destroy(icon.gameObject);
+                if (icon != null) UObject.Destroy(icon.gameObject);
             }
         }
 
@@ -97,7 +92,7 @@ public class Witness
                     if (player.IsAlive())
                     {
                         GameObject template = pva.Buttons.transform.Find("CancelButton").gameObject;
-                        GameObject targetBox = Object.Instantiate(template, pva.transform);
+                        GameObject targetBox = UObject.Instantiate(template, pva.transform);
                         targetBox.name = "WitnessIcon";
                         targetBox.transform.localPosition = new Vector3(1f, 0.03f, -1f);
                         SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();
@@ -124,7 +119,7 @@ public class Witness
                 foreach (var playerState in __instance.playerStates)
                 {
                     var icon = playerState.transform.FindChild("WitnessIcon");
-                    if (icon != null) Object.Destroy(icon.gameObject);
+                    if (icon != null) UObject.Destroy(icon.gameObject);
                 }
                 endTime = true;
             }

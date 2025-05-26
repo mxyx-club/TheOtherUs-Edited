@@ -1,13 +1,4 @@
-using System;
-using System.Linq;
-using Hazel;
-using Il2CppSystem.Collections.Generic;
-using TheOtherRoles.Buttons;
 using TheOtherRoles.Objects.Map;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
 
@@ -33,7 +24,7 @@ internal class IntroCutsceneOnDestroyPatch
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
                 var data = p.Data;
-                var player = Object.Instantiate(__instance.PlayerPrefab,
+                var player = UObject.Instantiate(__instance.PlayerPrefab,
                     FastDestroyableSingleton<HudManager>.Instance.transform);
                 playerPrefab = __instance.PlayerPrefab;
                 p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
@@ -107,7 +98,7 @@ internal class IntroCutsceneOnDestroyPatch
             if (FastDestroyableSingleton<HudManager>.Instance != null)
             {
                 BountyHunter.cooldownText =
-                    Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText,
+                    UObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText,
                         FastDestroyableSingleton<HudManager>.Instance.transform);
                 BountyHunter.cooldownText.alignment = TextAlignmentOptions.Center;
                 BountyHunter.cooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -0.35f, -62f);
@@ -173,12 +164,12 @@ internal class IntroCutsceneOnDestroyPatch
 [HarmonyPatch]
 internal class IntroPatch
 {
-    public static void setupIntroTeamIcons(IntroCutscene __instance, ref List<PlayerControl> yourTeam)
+    public static void setupIntroTeamIcons(IntroCutscene __instance, ref ISystem.List<PlayerControl> yourTeam)
     {
         // Intro solo teams
         if (PlayerControl.LocalPlayer.IsNeutral())
         {
-            var soloTeam = new List<PlayerControl>();
+            var soloTeam = new ISystem.List<PlayerControl>();
             soloTeam.Add(PlayerControl.LocalPlayer);
             yourTeam = soloTeam;
         }
@@ -188,7 +179,7 @@ internal class IntroPatch
         {
             var players = PlayerControl.AllPlayerControls.ToList().OrderBy(x => Guid.NewGuid()).ToList();
             var fakeImpostorTeam =
-                new List<PlayerControl>(); // The local player always has to be the first one in the list (to be displayed in the center)
+                new ISystem.List<PlayerControl>(); // The local player always has to be the first one in the list (to be displayed in the center)
             fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
             foreach (var p in players)
                 if (PlayerControl.LocalPlayer != p && (p == Spy.spy || p.Data.Role.IsImpostor))
@@ -200,13 +191,13 @@ internal class IntroPatch
         if (CustomOptionHolder.spySpawnRate.GetSelection() > 0 && PlayerControl.AllPlayerControls.ToArray().Where(x => x.Data.Role.IsImpostor).Count() > 1)
         {
             // The local player always has to be the first one in the list (to be displayed in the center)
-            var fakeImpostorTeam = new List<PlayerControl>();
+            var fakeImpostorTeam = new ISystem.List<PlayerControl>();
             fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
             yourTeam = fakeImpostorTeam;
         }
     }
 
-    public static void setupIntroTeam(IntroCutscene __instance, ref List<PlayerControl> yourTeam)
+    public static void setupIntroTeam(IntroCutscene __instance, ref ISystem.List<PlayerControl> yourTeam)
     {
         var neutralColor = new Color32(76, 84, 78, 255);
         var infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
@@ -244,7 +235,7 @@ internal class IntroPatch
         }
     }
 
-    public static System.Collections.Generic.IEnumerator<WaitForSeconds> EndShowRole(IntroCutscene __instance)
+    public static IEnumerator<WaitForSeconds> EndShowRole(IntroCutscene __instance)
     {
         yield return new WaitForSeconds(5f);
         __instance.YouAreText.gameObject.SetActive(false);
@@ -325,12 +316,12 @@ internal class IntroPatch
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginCrewmate))]
     private class BeginCrewmatePatch
     {
-        public static void Prefix(IntroCutscene __instance, ref List<PlayerControl> teamToDisplay)
+        public static void Prefix(IntroCutscene __instance, ref ISystem.List<PlayerControl> teamToDisplay)
         {
             setupIntroTeamIcons(__instance, ref teamToDisplay);
         }
 
-        public static void Postfix(IntroCutscene __instance, ref List<PlayerControl> teamToDisplay)
+        public static void Postfix(IntroCutscene __instance, ref ISystem.List<PlayerControl> teamToDisplay)
         {
             setupIntroTeam(__instance, ref teamToDisplay);
         }
@@ -339,12 +330,12 @@ internal class IntroPatch
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginImpostor))]
     private class BeginImpostorPatch
     {
-        public static void Prefix(IntroCutscene __instance, ref List<PlayerControl> yourTeam)
+        public static void Prefix(IntroCutscene __instance, ref ISystem.List<PlayerControl> yourTeam)
         {
             setupIntroTeamIcons(__instance, ref yourTeam);
         }
 
-        public static void Postfix(IntroCutscene __instance, ref List<PlayerControl> yourTeam)
+        public static void Postfix(IntroCutscene __instance, ref ISystem.List<PlayerControl> yourTeam)
         {
             setupIntroTeam(__instance, ref yourTeam);
         }

@@ -1,10 +1,3 @@
-using System;
-using System.Linq;
-using AmongUs.Data;
-using InnerNet;
-using TheOtherRoles.Utilities;
-using UnityEngine;
-
 namespace TheOtherRoles.Modules;
 
 [HarmonyPatch]
@@ -264,13 +257,11 @@ public static class ChatCommands
             var local = PlayerControl.LocalPlayer;
             if (local == null) return true;
 
-            var flag = MeetingHud.Instance != null || LobbyBehaviour.Instance != null || CanSeeRoleInfo || sourcePlayer.PlayerId == PlayerControl.LocalPlayer.PlayerId;
+            var flag = MeetingHud.Instance || LobbyBehaviour.Instance || CanSeeRoleInfo || ModOption.DebugMode || sourcePlayer.PlayerId == local.PlayerId;
 
             if (__instance != FastDestroyableSingleton<HudManager>.Instance.Chat) return true;
-            if (ModOption.DebugMode) return true;
-            if (PlayerControl.LocalPlayer == Specter.Player) return MeetingHud.Instance != null || sourcePlayer.PlayerId == PlayerControl.LocalPlayer.PlayerId;
             if (!local.isLover()) return flag;
-            if (local.isLover() && Lovers.enableChat) return sourcePlayer.getPartner() == local || local.getPartner() == local == (bool)sourcePlayer || flag;
+            if (local.isLover() && Lovers.enableChat) return sourcePlayer.getPartner() == local || local.getPartner() == sourcePlayer || flag;
             return flag;
         }
     }

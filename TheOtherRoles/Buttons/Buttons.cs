@@ -1,17 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Hazel;
 using Reactor.Networking;
-using Reactor.Networking.Extensions;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
 using static TheOtherRoles.Buttons.CustomButton;
 using static TheOtherRoles.Modules.ModInputManager;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Buttons;
 
@@ -296,7 +287,7 @@ internal static class HudManagerStartPatch
             {
                 // Reset the poolable player
                 targetDisplay.gameObject.SetActive(false);
-                Object.Destroy(targetDisplay.gameObject);
+                UObject.Destroy(targetDisplay.gameObject);
                 targetDisplay = null;
             }
 
@@ -306,7 +297,7 @@ internal static class HudManagerStartPatch
         // Add poolable player to the button so that the target outfit is shown
         button.actionButton.cooldownTimerText.transform.localPosition =
             new Vector3(0, 0, -1f); // Before the poolable player
-        targetDisplay = Object.Instantiate(IntroCutsceneOnDestroyPatch.playerPrefab, button.actionButton.transform);
+        targetDisplay = UObject.Instantiate(IntroCutsceneOnDestroyPatch.playerPrefab, button.actionButton.transform);
         var data = target.Data;
         target.SetPlayerMaterialColors(targetDisplay.cosmetics.currentBodySprite.BodySprite);
         targetDisplay.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
@@ -341,7 +332,7 @@ internal static class HudManagerStartPatch
                 if (LobbyRoleInfo.RolesSummaryUI == null) LobbyRoleInfo.RoleSummaryOnClick();
                 else
                 {
-                    Object.Destroy(LobbyRoleInfo.RolesSummaryUI);
+                    UObject.Destroy(LobbyRoleInfo.RolesSummaryUI);
                     LobbyRoleInfo.RolesSummaryUI = null;
                 }
             },
@@ -351,7 +342,7 @@ internal static class HudManagerStartPatch
                 if (PlayerCustomizationMenu.Instance || GameSettingMenu.Instance)
                 {
                     if (LobbyRoleInfo.RolesSummaryUI != null)
-                        Object.Destroy(LobbyRoleInfo.RolesSummaryUI);
+                        UObject.Destroy(LobbyRoleInfo.RolesSummaryUI);
                 }
                 return true;
             },
@@ -359,6 +350,7 @@ internal static class HudManagerStartPatch
             new ResourceSprite("TheOtherRoles.Resources.HelpButton.png", 85f),
             new Vector3(0.4f, 3f, 0),
             __instance,
+            __instance.AbilityButton,
             null
         );
 
@@ -377,6 +369,7 @@ internal static class HudManagerStartPatch
             new ResourceSprite("Swap.png", 135f),
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.AbilityButton,
             null,
             buttonText: "更换模式"
         )
@@ -397,6 +390,7 @@ internal static class HudManagerStartPatch
             UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.ZoomOut.png", 85f), // Invisible button!
             new Vector3(0.4f, 2.35f, 0f),
             __instance,
+            __instance.AbilityButton,
             KeyCode.KeypadPlus
         )
         { Timer = 0f };
@@ -461,6 +455,7 @@ internal static class HudManagerStartPatch
             Engineer.buttonSprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("RepairText")
         );
@@ -521,6 +516,7 @@ internal static class HudManagerStartPatch
             Engineer.buttonSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
             buttonText: GetString("RepairText")
         );
@@ -599,6 +595,7 @@ internal static class HudManagerStartPatch
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.KillButton,
             modKillInput.keyCode,
             buttonText: GetString("killButtonText")
         );
@@ -636,11 +633,12 @@ internal static class HudManagerStartPatch
             Sheriff.handcuffSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("HandcuffText")
         );
         // Deputy Handcuff button handcuff counter
-        deputyButtonHandcuffsText = Object.Instantiate(deputyHandcuffButton.actionButton.cooldownTimerText,
+        deputyButtonHandcuffsText = UObject.Instantiate(deputyHandcuffButton.actionButton.cooldownTimerText,
             deputyHandcuffButton.actionButton.cooldownTimerText.transform.parent);
         deputyButtonHandcuffsText.text = "";
         deputyButtonHandcuffsText.enableWordWrapping = false;
@@ -673,6 +671,7 @@ internal static class HudManagerStartPatch
             TimeMaster.buttonSprite,
             ButtonPositions.lowerRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             TimeMaster.shieldDuration,
@@ -708,6 +707,7 @@ internal static class HudManagerStartPatch
             Veteran.buttonSprite,
             ButtonPositions.lowerRowRight, //brb
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             Veteran.alertDuration,
@@ -758,6 +758,7 @@ internal static class HudManagerStartPatch
             Medic.buttonSprite,
             ButtonPositions.lowerRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("ShieldText")
         );
@@ -786,6 +787,7 @@ internal static class HudManagerStartPatch
             Doomsayer.buttonSprite,
             ButtonPositions.lowerRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             0f,
@@ -837,10 +839,11 @@ internal static class HudManagerStartPatch
             Akujo.honmeiSprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("AkujoHonmeiText")
         );
-        akujoTimeRemainingText = Object.Instantiate(akujoHonmeiButton.actionButton.cooldownTimerText, __instance.transform);
+        akujoTimeRemainingText = UObject.Instantiate(akujoHonmeiButton.actionButton.cooldownTimerText, __instance.transform);
         akujoTimeRemainingText.text = "";
         akujoTimeRemainingText.enableWordWrapping = false;
         akujoTimeRemainingText.transform.localScale = Vector3.one * 0.45f;
@@ -875,10 +878,11 @@ internal static class HudManagerStartPatch
             Akujo.keepSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             KeyCode.C,
             buttonText: GetString("AkujoBackupText")
         );
-        akujoBackupLeftText = Object.Instantiate(akujoBackupButton.actionButton.cooldownTimerText, akujoBackupButton.actionButton.cooldownTimerText.transform.parent);
+        akujoBackupLeftText = UObject.Instantiate(akujoBackupButton.actionButton.cooldownTimerText, akujoBackupButton.actionButton.cooldownTimerText.transform.parent);
         akujoBackupLeftText.text = "";
         akujoBackupLeftText.enableWordWrapping = false;
         akujoBackupLeftText.transform.localScale = Vector3.one * 0.5f;
@@ -906,6 +910,7 @@ internal static class HudManagerStartPatch
             EvilTrapper.trapButtonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("PlaceTrapText")
         );
@@ -942,6 +947,7 @@ internal static class HudManagerStartPatch
             Shifter.buttonSprite,
             new Vector3(0, 1f, 0),
             __instance,
+            __instance.AbilityButton,
             modifierAbilityInput.keyCode,
             true,
             buttonText: GetString("ShiftText")
@@ -965,6 +971,7 @@ internal static class HudManagerStartPatch
             Disperser.buttonSprite,
             new Vector3(0, 1f, 0),
             __instance,
+            __instance.AbilityButton,
             modifierAbilityInput.keyCode,
             true,
             buttonText: GetString("DisperseText")
@@ -977,7 +984,7 @@ internal static class HudManagerStartPatch
                 Mayor.remoteMeetingsLeft--;
 
                 //RPCProcedure.uncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
-                
+
                 var writer = StartRPC(CustomRPC.NoCheckStartMeeting);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 writer.Write(byte.MaxValue);
@@ -1007,6 +1014,7 @@ internal static class HudManagerStartPatch
             Mayor.emergencySprite,
             ButtonPositions.lowerRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             0f,
@@ -1027,6 +1035,7 @@ internal static class HudManagerStartPatch
                 writer.Write(byte.MaxValue);
                 writer.Write(true);
                 writer.EndRPC();
+                PlayerControl.LocalPlayer.NoCheckStartMeeting(null, true);
 
                 buttonBarryButton.Timer = 1f;
 
@@ -1051,6 +1060,7 @@ internal static class HudManagerStartPatch
             ButtonBarry.buttonSprite,
             new Vector3(0, 1f, 0),
             __instance,
+            __instance.AbilityButton,
             modifierAbilityInput.keyCode,
             true,
             buttonText: "buttonBarryText".Translate()
@@ -1110,6 +1120,7 @@ internal static class HudManagerStartPatch
             Morphling.sampleSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             Morphling.duration,
@@ -1155,6 +1166,7 @@ internal static class HudManagerStartPatch
             Camouflager.buttonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             Camouflager.duration,
@@ -1188,6 +1200,7 @@ internal static class HudManagerStartPatch
             Hacker.buttonSprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.AbilityButton,
             modKillInput.keyCode,
             true,
             0f,
@@ -1227,6 +1240,7 @@ internal static class HudManagerStartPatch
             Hacker.getAdminSprite(),
             ButtonPositions.lowerRowRight,
             __instance,
+            __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
             true,
             0f,
@@ -1252,7 +1266,7 @@ internal static class HudManagerStartPatch
         );
 
         // Hacker Admin Table Charges
-        hackerAdminTableChargesText = Object.Instantiate(hackerAdminTableButton.actionButton.cooldownTimerText,
+        hackerAdminTableChargesText = UObject.Instantiate(hackerAdminTableButton.actionButton.cooldownTimerText,
             hackerAdminTableButton.actionButton.cooldownTimerText.transform.parent);
         hackerAdminTableChargesText.text = "";
         hackerAdminTableChargesText.enableWordWrapping = false;
@@ -1266,10 +1280,10 @@ internal static class HudManagerStartPatch
                 {
                     if (Hacker.vitals == null)
                     {
-                        var e = Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x =>
+                        var e = UObject.FindObjectsOfType<SystemConsole>().FirstOrDefault(x =>
                             x.gameObject.name.Contains("panel_vitals") || x.gameObject.name.Contains("Vitals"));
                         if (e == null || Camera.main == null) return;
-                        Hacker.vitals = Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                        Hacker.vitals = UObject.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
                     }
 
                     Hacker.vitals.transform.SetParent(Camera.main.transform, false);
@@ -1280,10 +1294,10 @@ internal static class HudManagerStartPatch
                 {
                     if (Hacker.doorLog == null)
                     {
-                        var e = Object.FindObjectsOfType<SystemConsole>()
+                        var e = UObject.FindObjectsOfType<SystemConsole>()
                             .FirstOrDefault(x => x.gameObject.name.Contains("SurvLogConsole"));
                         if (e == null || Camera.main == null) return;
-                        Hacker.doorLog = Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                        Hacker.doorLog = UObject.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
                     }
 
                     Hacker.doorLog.transform.SetParent(Camera.main.transform, false);
@@ -1321,6 +1335,7 @@ internal static class HudManagerStartPatch
             Hacker.getVitalsSprite(),
             ButtonPositions.lowerRowCenter,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             0f,
@@ -1331,10 +1346,10 @@ internal static class HudManagerStartPatch
                 {
                     if (Hacker.vitals == null)
                     {
-                        var e = Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x =>
+                        var e = UObject.FindObjectsOfType<SystemConsole>().FirstOrDefault(x =>
                             x.gameObject.name.Contains("panel_vitals") || x.gameObject.name.Contains("Vitals"));
                         if (e == null || Camera.main == null) return;
-                        Hacker.vitals = Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                        Hacker.vitals = UObject.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
                     }
 
                     Hacker.vitals.transform.SetParent(Camera.main.transform, false);
@@ -1345,10 +1360,10 @@ internal static class HudManagerStartPatch
                 {
                     if (Hacker.doorLog == null)
                     {
-                        var e = Object.FindObjectsOfType<SystemConsole>()
+                        var e = UObject.FindObjectsOfType<SystemConsole>()
                             .FirstOrDefault(x => x.gameObject.name.Contains("SurvLogConsole"));
                         if (e == null || Camera.main == null) return;
-                        Hacker.doorLog = Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                        Hacker.doorLog = UObject.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
                     }
 
                     Hacker.doorLog.transform.SetParent(Camera.main.transform, false);
@@ -1372,7 +1387,7 @@ internal static class HudManagerStartPatch
         );
 
         // Hacker Vitals Charges
-        hackerVitalsChargesText = Object.Instantiate(hackerVitalsButton.actionButton.cooldownTimerText,
+        hackerVitalsChargesText = UObject.Instantiate(hackerVitalsButton.actionButton.cooldownTimerText,
             hackerVitalsButton.actionButton.cooldownTimerText.transform.parent);
         hackerVitalsChargesText.text = "";
         hackerVitalsChargesText.enableWordWrapping = false;
@@ -1415,6 +1430,7 @@ internal static class HudManagerStartPatch
             Tracker.buttonSprite,
             ButtonPositions.lowerRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("TrackerText")
         );
@@ -1443,6 +1459,7 @@ internal static class HudManagerStartPatch
             Tracker.trackCorpsesButtonSprite,
             ButtonPositions.lowerRowCenter,
             __instance,
+            __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
             true,
             Tracker.corpsesTrackingDuration,
@@ -1484,6 +1501,7 @@ internal static class HudManagerStartPatch
             BodyGuard.guardButtonSprite,
             ButtonPositions.lowerRowRight, //brb
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("bodyGuardText")
         );
@@ -1620,6 +1638,7 @@ internal static class HudManagerStartPatch
             Vampire.buttonSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.KillButton,
             modKillInput.keyCode,
             false,
             0f,
@@ -1636,10 +1655,9 @@ internal static class HudManagerStartPatch
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.PlaceGarlic);
+                var writer = StartRPC(CustomRPC.PlaceGarlic);
                 writer.WriteBytesAndSize(buff);
-                writer.EndMessage();
+                writer.EndRPC();
                 RPCProcedure.placeGarlic(buff);
                 SoundEffectsManager.play("garlic");
             },
@@ -1657,6 +1675,7 @@ internal static class HudManagerStartPatch
             Vampire.garlicButtonSprite,
             new Vector3(0, 0f, 0),
             __instance,
+            __instance.AbilityButton,
             null,
             true,
             buttonText: GetString("GarlicText")
@@ -1698,10 +1717,11 @@ internal static class HudManagerStartPatch
                 Prophet.buttonSprite,
                 ButtonPositions.lowerRowRight,
                 __instance,
+            __instance.AbilityButton,
                 abilityInput.keyCode,
                 buttonText: GetString("ProphetText")
             );
-        prophetButtonText = Object.Instantiate(prophetButton.actionButton.cooldownTimerText, prophetButton.actionButton.cooldownTimerText.transform.parent);
+        prophetButtonText = UObject.Instantiate(prophetButton.actionButton.cooldownTimerText, prophetButton.actionButton.cooldownTimerText.transform.parent);
         prophetButtonText.text = "";
         prophetButtonText.enableWordWrapping = false;
         prophetButtonText.transform.localScale = Vector3.one * 0.5f;
@@ -1717,10 +1737,9 @@ internal static class HudManagerStartPatch
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.PlacePortal);
+                var writer = StartRPC(CustomRPC.PlacePortal);
                 writer.WriteBytesAndSize(buff);
-                writer.EndMessage();
+                writer.EndRPC();
                 RPCProcedure.placePortal(buff);
                 SoundEffectsManager.play("tricksterPlaceBox");
             },
@@ -1735,6 +1754,7 @@ internal static class HudManagerStartPatch
             Portalmaker.placePortalButtonSprite,
             ButtonPositions.lowerRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("PlacePortalText")
         );
@@ -1806,6 +1826,7 @@ internal static class HudManagerStartPatch
             Portalmaker.usePortalButtonSprite,
             new Vector3(1f, 0f, 0),
             __instance,
+            __instance.AbilityButton,
             null,
             true,
             buttonText: GetString("usePortalText")
@@ -1861,19 +1882,20 @@ internal static class HudManagerStartPatch
             Portalmaker.usePortalButtonSprite,
             new Vector3(1f, 1f, 0),
             __instance,
+            __instance.AbilityButton,
             null,
             true
         );
 
 
-        portalmakerButtonText1 = Object.Instantiate(usePortalButton.actionButton.cooldownTimerText,
+        portalmakerButtonText1 = UObject.Instantiate(usePortalButton.actionButton.cooldownTimerText,
             usePortalButton.actionButton.cooldownTimerText.transform.parent);
         portalmakerButtonText1.text = "";
         portalmakerButtonText1.enableWordWrapping = false;
         portalmakerButtonText1.transform.localScale = Vector3.one * 0.5f;
         portalmakerButtonText1.transform.localPosition += new Vector3(-0.05f, 0.55f, -1f);
 
-        portalmakerButtonText2 = Object.Instantiate(portalmakerMoveToPortalButton.actionButton.cooldownTimerText,
+        portalmakerButtonText2 = UObject.Instantiate(portalmakerMoveToPortalButton.actionButton.cooldownTimerText,
             portalmakerMoveToPortalButton.actionButton.cooldownTimerText.transform.parent);
         portalmakerButtonText2.text = "";
         portalmakerButtonText2.enableWordWrapping = false;
@@ -1905,6 +1927,7 @@ internal static class HudManagerStartPatch
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.KillButton,
             modKillInput.keyCode
         );
 
@@ -1953,6 +1976,7 @@ internal static class HudManagerStartPatch
             Jackal.SidekickButton,
             ButtonPositions.lowerRowCenter,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("jackalSidekickText")
         );
@@ -1986,6 +2010,7 @@ internal static class HudManagerStartPatch
             Swooper.SwoopButtonSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
             true,
             Jackal.duration,
@@ -2010,6 +2035,7 @@ internal static class HudManagerStartPatch
             ButtonPositions.upperRowRight,
             //new Vector3(0, 1f, 0),
             __instance,
+            __instance.KillButton,
             modKillInput.keyCode
         );
 
@@ -2044,6 +2070,7 @@ internal static class HudManagerStartPatch
             Swooper.SwoopButtonSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             Swooper.duration,
@@ -2103,10 +2130,11 @@ internal static class HudManagerStartPatch
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.KillButton,
             modKillInput.keyCode,
             buttonText: GetString("killButtonText")
         );
-        PavlovsdogKillSelfText = Object.Instantiate(pavlovsdogsKillButton.actionButton.cooldownTimerText,
+        PavlovsdogKillSelfText = UObject.Instantiate(pavlovsdogsKillButton.actionButton.cooldownTimerText,
             pavlovsdogsKillButton.actionButton.cooldownTimerText.transform.parent);
         PavlovsdogKillSelfText.text = "";
         PavlovsdogKillSelfText.enableWordWrapping = false;
@@ -2151,11 +2179,12 @@ internal static class HudManagerStartPatch
             Pavlovsdogs.CreateDogButton,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("pavlovsCreateDogText")
         );
 
-        PavlovsdogCreateNumText = Object.Instantiate(pavlovsownerCreateDogButton.actionButton.cooldownTimerText,
+        PavlovsdogCreateNumText = UObject.Instantiate(pavlovsownerCreateDogButton.actionButton.cooldownTimerText,
             pavlovsownerCreateDogButton.actionButton.cooldownTimerText.transform.parent);
         PavlovsdogCreateNumText.text = "";
         PavlovsdogCreateNumText.enableWordWrapping = false;
@@ -2212,6 +2241,7 @@ internal static class HudManagerStartPatch
             Miner.buttonSprite,
             ButtonPositions.upperRowLeft, //brb
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("minerText")
         );
@@ -2257,6 +2287,7 @@ internal static class HudManagerStartPatch
             Bomber.buttonSprite,
             ButtonPositions.upperRowLeft, //brb
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: "giveBombText".Translate()
         );
@@ -2322,6 +2353,7 @@ internal static class HudManagerStartPatch
             //          0, -0.06f, 0
             new Vector3(-4.5f, 1.5f, 0),
             __instance,
+            __instance.AbilityButton,
             hotkey: null,
             buttonText: "giveBombText".Translate()
         );
@@ -2362,6 +2394,7 @@ internal static class HudManagerStartPatch
             Grenadier.ButtonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             Grenadier.duration,
@@ -2398,6 +2431,7 @@ internal static class HudManagerStartPatch
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.KillButton,
             modKillInput.keyCode,
             buttonText: GetString("killButtonText")
         );
@@ -2435,6 +2469,7 @@ internal static class HudManagerStartPatch
             Werewolf.buttonSprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.AbilityButton,
             modKillInput.keyCode,
             true,
             Werewolf.rampageDuration,
@@ -2478,6 +2513,7 @@ internal static class HudManagerStartPatch
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.KillButton,
             modKillInput.keyCode,
             buttonText: GetString("killButtonText")
         );
@@ -2528,6 +2564,7 @@ internal static class HudManagerStartPatch
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.KillButton,
             modKillInput.keyCode,
             buttonText: GetString("VultureText")
         );
@@ -2566,6 +2603,7 @@ internal static class HudManagerStartPatch
             Eraser.buttonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode
         );
 
@@ -2601,6 +2639,7 @@ internal static class HudManagerStartPatch
             PartTimer.buttonSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("partTimerButton")
         );
@@ -2616,10 +2655,9 @@ internal static class HudManagerStartPatch
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.PlaceJackInTheBox);
+                var writer = StartRPC(CustomRPC.PlaceJackInTheBox);
                 writer.WriteBytesAndSize(buff);
-                writer.EndMessage();
+                writer.EndRPC();
                 RPCProcedure.placeJackInTheBox(buff);
                 SoundEffectsManager.play("tricksterPlaceBox");
             },
@@ -2636,6 +2674,7 @@ internal static class HudManagerStartPatch
             Trickster.placeBoxButtonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("TricksterPlaceText")
         );
@@ -2669,6 +2708,7 @@ internal static class HudManagerStartPatch
             Trickster.lightOutButtonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             Trickster.lightsOutDuration,
@@ -2731,6 +2771,7 @@ internal static class HudManagerStartPatch
             Cleaner.buttonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("CleanText")
         );
@@ -2752,6 +2793,7 @@ internal static class HudManagerStartPatch
             Butcher.ButtonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             Butcher.dissectionDuration,
@@ -2830,6 +2872,7 @@ internal static class HudManagerStartPatch
             Undertaker.buttonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("DragBodyText")
         );
@@ -2873,6 +2916,7 @@ internal static class HudManagerStartPatch
             Undertaker.buttonSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("DragBodyText")
         );
@@ -2974,6 +3018,7 @@ internal static class HudManagerStartPatch
             Warlock.curseButtonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("CurseText")
         );
@@ -2985,10 +3030,9 @@ internal static class HudManagerStartPatch
                 if (SecurityGuard.ventTarget != null)
                 {
                     // Seal vent
-                    var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.SealVent);
+                    var writer = StartRPC(CustomRPC.SealVent);
                     writer.WritePacked(SecurityGuard.ventTarget.Id);
-                    writer.EndMessage();
+                    writer.EndRPC();
                     RPCProcedure.sealVent(SecurityGuard.ventTarget.Id);
                     SecurityGuard.ventTarget = null;
                 }
@@ -3000,10 +3044,9 @@ internal static class HudManagerStartPatch
                     Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                     Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                    var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.PlaceCamera);
+                    var writer = StartRPC(CustomRPC.PlaceCamera);
                     writer.WriteBytesAndSize(buff);
-                    writer.EndMessage();
+                    writer.EndRPC();
                     RPCProcedure.placeCamera(buff);
                 }
 
@@ -3057,11 +3100,12 @@ internal static class HudManagerStartPatch
             SecurityGuard.placeCameraButtonSprite,
             ButtonPositions.lowerRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode
         );
 
         // Security Guard button screws counter
-        securityGuardButtonScrewsText = Object.Instantiate(securityGuardButton.actionButton.cooldownTimerText,
+        securityGuardButtonScrewsText = UObject.Instantiate(securityGuardButton.actionButton.cooldownTimerText,
             securityGuardButton.actionButton.cooldownTimerText.transform.parent);
         securityGuardButtonScrewsText.text = "";
         securityGuardButtonScrewsText.enableWordWrapping = false;
@@ -3076,17 +3120,17 @@ internal static class HudManagerStartPatch
                     if (SecurityGuard.minigame == null)
                     {
                         var mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
-                        var e = Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x =>
+                        var e = UObject.FindObjectsOfType<SystemConsole>().FirstOrDefault(x =>
                             x.gameObject.name.Contains("Surv_Panel") || x.name.Contains("Cam") ||
                             x.name.Contains("BinocularsSecurityConsole"));
                         if (isSkeld || mapId == 3)
-                            e = Object.FindObjectsOfType<SystemConsole>()
+                            e = UObject.FindObjectsOfType<SystemConsole>()
                                 .FirstOrDefault(x => x.gameObject.name.Contains("SurvConsole"));
                         else if (isAirship)
-                            e = Object.FindObjectsOfType<SystemConsole>()
+                            e = UObject.FindObjectsOfType<SystemConsole>()
                                 .FirstOrDefault(x => x.gameObject.name.Contains("task_cams"));
                         if (e == null || Camera.main == null) return;
-                        SecurityGuard.minigame = Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                        SecurityGuard.minigame = UObject.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
                     }
 
                     SecurityGuard.minigame.transform.SetParent(Camera.main.transform, false);
@@ -3097,10 +3141,10 @@ internal static class HudManagerStartPatch
                 {
                     if (SecurityGuard.minigame == null)
                     {
-                        var e = Object.FindObjectsOfType<SystemConsole>()
+                        var e = UObject.FindObjectsOfType<SystemConsole>()
                             .FirstOrDefault(x => x.gameObject.name.Contains("SurvLogConsole"));
                         if (e == null || Camera.main == null) return;
-                        SecurityGuard.minigame = Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                        SecurityGuard.minigame = UObject.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
                     }
 
                     SecurityGuard.minigame.transform.SetParent(Camera.main.transform, false);
@@ -3140,6 +3184,7 @@ internal static class HudManagerStartPatch
             SecurityGuard.getCamSprite(),
             ButtonPositions.lowerRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             0f,
@@ -3154,7 +3199,7 @@ internal static class HudManagerStartPatch
         );
 
         // Security Guard cam button charges
-        securityGuardChargesText = Object.Instantiate(securityGuardCamButton.actionButton.cooldownTimerText,
+        securityGuardChargesText = UObject.Instantiate(securityGuardCamButton.actionButton.cooldownTimerText,
             securityGuardCamButton.actionButton.cooldownTimerText.transform.parent);
         securityGuardChargesText.text = "";
         securityGuardChargesText.enableWordWrapping = false;
@@ -3213,6 +3258,7 @@ internal static class HudManagerStartPatch
             Arsonist.douseSprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             Arsonist.duration,
@@ -3279,6 +3325,7 @@ internal static class HudManagerStartPatch
             Arsonist.igniteSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             modKillInput.keyCode,
             buttonText: GetString("IgniteText")
         );
@@ -3334,6 +3381,7 @@ internal static class HudManagerStartPatch
             Vulture.buttonSprite,
             ButtonPositions.lowerRowCenter,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("VultureText")
         );
@@ -3383,6 +3431,7 @@ internal static class HudManagerStartPatch
             Amnisiac.buttonSprite,
             ButtonPositions.lowerRowRight, //brb
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("RememberText")
         );
@@ -3411,6 +3460,7 @@ internal static class HudManagerStartPatch
             Amnisiac.buttonSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
             true,
             Specter.duration,
@@ -3496,6 +3546,7 @@ internal static class HudManagerStartPatch
             Medium.question,
             ButtonPositions.lowerRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             Medium.duration,
@@ -3548,7 +3599,7 @@ internal static class HudManagerStartPatch
                             target.color = tmp;
                         }
 
-                        if (p == 1f && target != null && target.gameObject != null) Object.Destroy(target.gameObject);
+                        if (p == 1f && target != null && target.gameObject != null) UObject.Destroy(target.gameObject);
                     })));
 
                     Medium.souls.Remove(target);
@@ -3600,12 +3651,13 @@ internal static class HudManagerStartPatch
             Pursuer.buttonSprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("PursuerText")
         );
 
         // Pursuer button blanks left
-        pursuerButtonBlanksText = Object.Instantiate(pursuerButton.actionButton.cooldownTimerText,
+        pursuerButtonBlanksText = UObject.Instantiate(pursuerButton.actionButton.cooldownTimerText,
             pursuerButton.actionButton.cooldownTimerText.transform.parent);
         pursuerButtonBlanksText.text = "";
         pursuerButtonBlanksText.enableWordWrapping = false;
@@ -3642,6 +3694,7 @@ internal static class HudManagerStartPatch
             Survivor.VestButtonSprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             Survivor.vestDuration,
@@ -3649,7 +3702,7 @@ internal static class HudManagerStartPatch
             buttonText: GetString("VestButton")
         );
         // Pursuer button blanks left
-        survivorVestButtonText = Object.Instantiate(survivorVestButton.actionButton.cooldownTimerText,
+        survivorVestButtonText = UObject.Instantiate(survivorVestButton.actionButton.cooldownTimerText,
             survivorVestButton.actionButton.cooldownTimerText.transform.parent);
         survivorVestButtonText.text = "";
         survivorVestButtonText.enableWordWrapping = false;
@@ -3697,11 +3750,12 @@ internal static class HudManagerStartPatch
             Pursuer.buttonSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             KeyCode.C,
             buttonText: GetString("PursuerText")
         );
         // Pursuer button blanks left
-        survivorBlanksButtonText = Object.Instantiate(survivorBlanksButton.actionButton.cooldownTimerText,
+        survivorBlanksButtonText = UObject.Instantiate(survivorBlanksButton.actionButton.cooldownTimerText,
             survivorBlanksButton.actionButton.cooldownTimerText.transform.parent);
         survivorBlanksButtonText.text = "";
         survivorBlanksButtonText.enableWordWrapping = false;
@@ -3759,6 +3813,7 @@ internal static class HudManagerStartPatch
             Witch.buttonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             Witch.spellCastingDuration,
@@ -3824,6 +3879,7 @@ internal static class HudManagerStartPatch
             Jumper.jumpMarkButtonSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
             buttonText: "jumperMarkText".Translate()
         );
@@ -3856,6 +3912,7 @@ internal static class HudManagerStartPatch
             Jumper.jumpJumpButtonSprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: "jumperJumpText".Translate()
         );
@@ -3885,6 +3942,7 @@ internal static class HudManagerStartPatch
             Escapist.escapeEscapeButtonSprite,
             ButtonPositions.lowerRowCenter, //brb
             __instance,
+            __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
             buttonText: "jumperMarkText".Translate()
         );
@@ -3913,6 +3971,7 @@ internal static class HudManagerStartPatch
             Escapist.escapeEscapeButtonSprite,
             ButtonPositions.upperRowLeft, //brb
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: "jumperJumpText".Translate()
         );
@@ -3935,6 +3994,7 @@ internal static class HudManagerStartPatch
             BountyHunter.buttonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("ChangeTarget")
             );
@@ -3962,10 +4022,9 @@ internal static class HudManagerStartPatch
                         Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                         Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                        writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-                            (byte)CustomRPC.PlaceNinjaTrace);
+                        writer = StartRPC(CustomRPC.PlaceNinjaTrace);
                         writer.WriteBytesAndSize(buff);
-                        writer.EndMessage();
+                        writer.EndRPC();
                         RPCProcedure.placeNinjaTrace(buff);
 
                         var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(
@@ -3997,10 +4056,9 @@ internal static class HudManagerStartPatch
                         Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                         Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                        var writer3 = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-                            (byte)CustomRPC.PlaceNinjaTrace);
+                        var writer3 = StartRPC(CustomRPC.PlaceNinjaTrace);
                         writer3.WriteBytesAndSize(buff);
-                        writer3.EndMessage();
+                        writer3.EndRPC();
                         RPCProcedure.placeNinjaTrace(buff);
                     }
 
@@ -4063,6 +4121,7 @@ internal static class HudManagerStartPatch
             Ninja.markButtonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("NinjaText")
         );
@@ -4099,6 +4158,7 @@ internal static class HudManagerStartPatch
             Blackmailer.blackmailButtonSprite,
             ButtonPositions.upperRowLeft, //brb
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             1f,
@@ -4116,10 +4176,9 @@ internal static class HudManagerStartPatch
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.SetTrap);
+                var writer = StartRPC(CustomRPC.SetTrap);
                 writer.WriteBytesAndSize(buff);
-                writer.EndMessage();
+                writer.EndRPC();
                 RPCProcedure.setTrap(buff);
 
                 SoundEffectsManager.play("trapperTrap");
@@ -4139,6 +4198,7 @@ internal static class HudManagerStartPatch
             Trapper.trapButtonSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("trapperTrapText")
         );
@@ -4154,10 +4214,9 @@ internal static class HudManagerStartPatch
                     Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                     Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                    var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.PlaceBomb);
+                    var writer = StartRPC(CustomRPC.PlaceBomb);
                     writer.WriteBytesAndSize(buff);
-                    writer.EndMessage();
+                    writer.EndRPC();
                     RPCProcedure.placeBomb(buff);
 
                     if (Terrorist.selfExplosion)
@@ -4190,6 +4249,7 @@ internal static class HudManagerStartPatch
             Terrorist.buttonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             true,
             Terrorist.destructionTime,
@@ -4226,6 +4286,7 @@ internal static class HudManagerStartPatch
             Bomb.defuseSprite,
             new Vector3(4f, 1f, 0),
             __instance,
+            __instance.AbilityButton,
             hotkey: null,
             true,
             Terrorist.defuseDuration,
@@ -4309,12 +4370,13 @@ internal static class HudManagerStartPatch
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.KillButton,
             modKillInput.keyCode,
             buttonText: GetString("killButtonText")
         );
 
         // Trapper Charges
-        trapperChargesText = Object.Instantiate(trapperButton.actionButton.cooldownTimerText,
+        trapperChargesText = UObject.Instantiate(trapperButton.actionButton.cooldownTimerText,
             trapperButton.actionButton.cooldownTimerText.transform.parent);
         trapperChargesText.text = "";
         trapperChargesText.enableWordWrapping = false;
@@ -4333,9 +4395,9 @@ internal static class HudManagerStartPatch
                 if (Yoyo.markedLocation == null)
                 {
                     Message($"marked location is null in button press");
-                    var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.YoyoMarkLocation, SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.YoyoMarkLocation);
                     writer.WriteBytesAndSize(buff);
-                    writer.EndMessage();
+                    writer.EndRPC();
                     RPCProcedure.yoyoMarkLocation(buff);
                     SoundEffectsManager.play("tricksterPlaceBox");
                     yoyoButton.Sprite = Yoyo.blinkButtonSprite;
@@ -4351,10 +4413,10 @@ internal static class HudManagerStartPatch
                     var exit = (Vector3)Yoyo.markedLocation;
                     if (SubmergedCompatibility.IsSubmerged)
                         SubmergedCompatibility.ChangeFloor(exit.y > -7);
-                    var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.YoyoBlink);
                     writer.Write(byte.MaxValue);
                     writer.WriteBytesAndSize(buff);
-                    writer.EndMessage();
+                    writer.EndRPC();
                     RPCProcedure.yoyoBlink(true, buff);
                     yoyoButton.EffectDuration = Yoyo.blinkDuration;
                     yoyoButton.Timer = 10f;
@@ -4380,6 +4442,7 @@ internal static class HudManagerStartPatch
             Yoyo.markButtonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             false,
             Yoyo.blinkDuration,
@@ -4405,11 +4468,10 @@ internal static class HudManagerStartPatch
                 var exit = (Vector3)Yoyo.markedLocation;
                 if (SubmergedCompatibility.IsSubmerged)
                     SubmergedCompatibility.ChangeFloor(exit.y > -7);
-                var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.YoyoBlink);
                 writer.Write((byte)0);
                 writer.WriteBytesAndSize(buff);
-                writer.EndMessage();
+                writer.EndRPC();
                 RPCProcedure.yoyoBlink(false, buff);
                 yoyoButton.Timer = yoyoButton.MaxTimer;
                 yoyoButton.isEffectActive = false;
@@ -4448,6 +4510,7 @@ internal static class HudManagerStartPatch
            Hacker.getAdminSprite(),
            ButtonPositions.lowerRowCenter,
            __instance,
+            __instance.AbilityButton,
            KeyCode.G,
            true,
            0f,
@@ -4494,6 +4557,7 @@ internal static class HudManagerStartPatch
             Tracker.trackCorpsesButtonSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
             true,
             Redemptor.revelationDuration,
@@ -4535,6 +4599,7 @@ internal static class HudManagerStartPatch
             Redemptor.reviveButton,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             modKillInput.keyCode,
             true,
             Redemptor.prayerDuration,
@@ -4610,6 +4675,7 @@ internal static class HudManagerStartPatch
             Redemptor.reviveButton,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("RedemptorRevive")
         );
@@ -4667,11 +4733,12 @@ internal static class HudManagerStartPatch
             BandLeader.keyboardButton,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.AbilityButton,
             null,
             buttonText: "招募乐手"
         );
 
-        bandLeaderKeyboardistText = Object.Instantiate(bandLeaderKeyboardistButton.actionButton.cooldownTimerText,
+        bandLeaderKeyboardistText = UObject.Instantiate(bandLeaderKeyboardistButton.actionButton.cooldownTimerText,
             bandLeaderKeyboardistButton.actionButton.cooldownTimerText.transform.parent);
         bandLeaderKeyboardistText.text = "";
         bandLeaderKeyboardistText.enableWordWrapping = false;
@@ -4729,11 +4796,12 @@ internal static class HudManagerStartPatch
             BandLeader.bassButton,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             null,
             buttonText: "招募乐手"
         );
 
-        bandLeaderBassistText = Object.Instantiate(bandLeaderBassistButton.actionButton.cooldownTimerText,
+        bandLeaderBassistText = UObject.Instantiate(bandLeaderBassistButton.actionButton.cooldownTimerText,
             bandLeaderBassistButton.actionButton.cooldownTimerText.transform.parent);
         bandLeaderBassistText.text = "";
         bandLeaderBassistText.enableWordWrapping = false;
@@ -4791,11 +4859,12 @@ internal static class HudManagerStartPatch
             BandLeader.drumButton,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             null,
             buttonText: "招募乐手"
         );
 
-        bandLeaderDrummerText = Object.Instantiate(bandLeaderDrummerButton.actionButton.cooldownTimerText,
+        bandLeaderDrummerText = UObject.Instantiate(bandLeaderDrummerButton.actionButton.cooldownTimerText,
             bandLeaderDrummerButton.actionButton.cooldownTimerText.transform.parent);
         bandLeaderDrummerText.text = "";
         bandLeaderDrummerText.enableWordWrapping = false;
@@ -4833,6 +4902,7 @@ internal static class HudManagerStartPatch
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.KillButton,
             modKillInput.keyCode,
             buttonText: GetString("killButtonText")
         );
@@ -4889,7 +4959,7 @@ internal static class HudManagerStartPatch
                 var target = SetTarget(untargetablePlayers, OnlyCrew, true);
 
                 SchrodingersCat.currentTarget = target;
-                SetPlayerOutline(SchrodingersCat.currentTarget, SchrodingersCat.color);
+                SetPlayerOutline(SchrodingersCat.currentTarget, SchrodingersCat.stateColor);
 
                 showTargetNameOnButton(SchrodingersCat.currentTarget, schrodingersCatKillButton, GetString("killButtonText"));
                 return PlayerControl.LocalPlayer.CanMove && SchrodingersCat.currentTarget != null;
@@ -4901,6 +4971,7 @@ internal static class HudManagerStartPatch
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowRight,
             __instance,
+            __instance.KillButton,
             modKillInput.keyCode,
             buttonText: GetString("killButtonText")
         );
@@ -4927,11 +4998,12 @@ internal static class HudManagerStartPatch
             Gunsmith.GetButton,
             ButtonPositions.upperRowLeft,
             __instance,
+            __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("gunsmithGetBullets")
         );
 
-        gunsmithGetBulletsText = Object.Instantiate(gunsmithGetBullets.actionButton.cooldownTimerText,
+        gunsmithGetBulletsText = UObject.Instantiate(gunsmithGetBullets.actionButton.cooldownTimerText,
             gunsmithGetBullets.actionButton.cooldownTimerText.transform.parent);
         gunsmithGetBulletsText.text = "";
         gunsmithGetBulletsText.enableWordWrapping = false;
@@ -4959,6 +5031,7 @@ internal static class HudManagerStartPatch
             Gunsmith.AddButton,
             ButtonPositions.lowerRowCenter,
             __instance,
+            __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
             buttonText: GetString("gunsmithAddBullets")
         );
@@ -5016,6 +5089,7 @@ internal static class HudManagerStartPatch
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.KillButton,
             modKillInput.keyCode,
             true,
             0.5f,
@@ -5042,7 +5116,7 @@ internal static class HudManagerStartPatch
             buttonText: GetString("killButtonText")
         );
 
-        berserkerKillButtonText = Object.Instantiate(berserkerKillButton.actionButton.cooldownTimerText,
+        berserkerKillButtonText = UObject.Instantiate(berserkerKillButton.actionButton.cooldownTimerText,
             berserkerKillButton.actionButton.cooldownTimerText.transform.parent);
         berserkerKillButtonText.text = "";
         berserkerKillButtonText.enableWordWrapping = false;
@@ -5081,6 +5155,7 @@ internal static class HudManagerStartPatch
             Poltergeist.ButtonSprite,
             ButtonPositions.upperRowCenter,
             __instance,
+            __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
             buttonText: GetString("poltergeistButton")
         );

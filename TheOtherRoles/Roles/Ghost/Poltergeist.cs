@@ -1,7 +1,3 @@
-using System.Collections;
-using Reactor.Utilities;
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Ghost;
 public class Poltergeist
 {

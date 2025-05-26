@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using Reactor.Utilities.Extensions;
-using TheOtherRoles.Utilities;
-using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Events;
-using Object = UnityEngine.Object;
 using SStream = System.IO.Stream;
 
 namespace TheOtherRoles.Helper;
@@ -21,7 +14,7 @@ public static class UnityHelper
 
     public static readonly List<Sprite> CacheSprite = new();
 
-    public static T Dont<T>(this T obj) where T : Object
+    public static T Dont<T>(this T obj) where T : UObject
     {
         obj.hideFlags |= HideFlags.HideAndDontSave | HideFlags.DontSaveInEditor;
         return obj;
@@ -53,7 +46,7 @@ public static class UnityHelper
 
     public static AudioClip FindSound(string sound)
     {
-        foreach (var audio in Object.FindObjectsOfTypeIncludingAssets(Il2CppType.Of<AudioClip>()))
+        foreach (var audio in UObject.FindObjectsOfTypeIncludingAssets(Il2CppType.Of<AudioClip>()))
         {
             if (audio.name == sound) return audio.Cast<AudioClip>();
         }
@@ -186,7 +179,7 @@ public static class UnityHelper
     public static GameObject DestroyAllChildren<T>(this GameObject obj) where T : MonoBehaviour
     {
         var list = obj.GetComponentsInChildren<T>();
-        list.Do(Object.Destroy);
+        list.Do(UObject.Destroy);
         return obj;
     }
 

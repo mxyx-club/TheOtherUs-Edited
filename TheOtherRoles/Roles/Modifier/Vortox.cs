@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Modifier;
 
 public class Vortox

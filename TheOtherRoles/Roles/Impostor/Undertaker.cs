@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Impostor;
 
 public static class Undertaker

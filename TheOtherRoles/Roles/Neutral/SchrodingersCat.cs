@@ -1,12 +1,12 @@
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Neutral;
 
 public class SchrodingersCat
 {
     public static PlayerControl Player;
     public static PlayerControl currentTarget;
-    public static Color color => State switch
+    public static Color color = Color.gray;
+
+    public static Color stateColor => State switch
     {
         CatState.None => Color.gray,
         CatState.Crewmate => Palette.CrewmateBlue,
@@ -23,6 +23,7 @@ public class SchrodingersCat
 
     public static int remainingChange => TeamChanges ? MaxChangeCount - ChangeCount : 0;
     public static bool IsEvil => State is not CatState.Crewmate and not CatState.None;
+    public static bool IsKiller => IsEvil && CanKill;
     public static string Name => $"SchrodingersCatRoles.{State}";
 
     public static int ChangeCount;
@@ -50,7 +51,7 @@ public class SchrodingersCat
 
     public static bool InTeam(PlayerControl player, out Color color)
     {
-        color = SchrodingersCat.color;
+        color = stateColor;
 
         return State switch
         {

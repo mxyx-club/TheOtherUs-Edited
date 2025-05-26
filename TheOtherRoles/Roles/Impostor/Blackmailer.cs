@@ -1,5 +1,3 @@
-﻿using UnityEngine;
-
 namespace TheOtherRoles.Roles.Impostor;
 
 public static class Blackmailer
@@ -20,6 +18,7 @@ public static class Blackmailer
         blackmailer = null;
         currentTarget = null;
         blackmailed = null;
+        alreadyShook = false;
         cooldown = CustomOptionHolder.blackmailerCooldown.GetFloat();
     }
 }

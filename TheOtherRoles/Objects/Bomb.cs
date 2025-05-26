@@ -1,8 +1,3 @@
-using System;
-using Hazel;
-using TheOtherRoles.Utilities;
-using UnityEngine;
-
 namespace TheOtherRoles.Objects;
 
 public class Bomb

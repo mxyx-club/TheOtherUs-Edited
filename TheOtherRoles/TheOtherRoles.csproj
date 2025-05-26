@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <Version>1.1.6.8</Version>
+        <Version>1.1.7.0</Version>
         <AssemblyName>TheOtherUs</AssemblyName>
         <Authors>mxyx-club</Authors>
         <LangVersion>latest</LangVersion>
@@ -9,6 +9,7 @@
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <DebugType>embedded</DebugType>
         <Configurations>Debug;Release;mxyx-club;Beta</Configurations>
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -24,10 +25,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="BepInEx.AutoPlugin" Version="1.1.0" />
         <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.697" />
         <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="2.1.0-rc.1" />
         <PackageReference Include="Reactor" Version="2.2.0" />
-        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
     </ItemGroup>
 
     <Target Name="Date" BeforeTargets="BeforeBuild">  <!--Will make the compile time available s.t. we can let betas expire-->

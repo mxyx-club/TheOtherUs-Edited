@@ -16,10 +16,20 @@ public class Debugger
     }
 
 
-    [HarmonyPatch(typeof(LogicGameFlow), nameof(LogicGameFlow.CheckEndCriteria))]
-    [HarmonyPatch(typeof(LogicGameFlowHnS), nameof(LogicGameFlowHnS.CheckEndCriteria))]
-    [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.CheckEndCriteria))]
+    [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.CheckEndCriteria)), HarmonyPrefix]
     public static bool Prefix()
+    {
+        return !DisableGameEnd;
+    }
+
+    [HarmonyPatch(typeof(LogicGameFlowHnS), nameof(LogicGameFlowHnS.CheckEndCriteria)), HarmonyPrefix]
+    public static bool Prefix2()
+    {
+        return !DisableGameEnd;
+    }
+
+    [HarmonyPatch(typeof(LogicGameFlow), nameof(LogicGameFlow.CheckEndCriteria)), HarmonyPrefix]
+    public static bool Prefix3()
     {
         return !DisableGameEnd;
     }

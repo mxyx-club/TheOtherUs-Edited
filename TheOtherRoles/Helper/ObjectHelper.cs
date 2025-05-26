@@ -1,6 +1,3 @@
-using TMPro;
-using UnityEngine;
-
 namespace TheOtherRoles.Helper;
 
 public static class ObjectHelper
@@ -13,7 +10,7 @@ public static class ObjectHelper
         if (obj == null) return;
         obj.ForEachChild((Il2CppSystem.Action<GameObject>)DestroyTranslator);
         TextTranslatorTMP[] translator = obj.GetComponentsInChildren<TextTranslatorTMP>(true);
-        translator?.Do(Object.Destroy);
+        translator?.Do(UObject.Destroy);
     }
     /// <summary>
     /// オブジェクトの<see cref="TextTranslatorTMP"/>コンポーネントを破棄します

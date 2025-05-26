@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using Reactor.Utilities.Extensions;
-using UnityEngine;
-
 namespace TheOtherRoles.Objects;
 public class Silhouette
 {
@@ -69,7 +65,7 @@ public class Silhouette
             {
                 Message($"update: permanent: {current.permanent}, time: {current.timeRemaining}");
                 current.gameObject.SetActive(false);
-                Object.Destroy(current.gameObject);
+                UObject.Destroy(current.gameObject);
                 silhouettes.Remove(current);
             }
         }

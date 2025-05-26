@@ -1,6 +1,3 @@
-using TheOtherRoles.Utilities;
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Crewmate;
 
 public static class SecurityGuard

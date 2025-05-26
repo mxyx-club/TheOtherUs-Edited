@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using TheOtherRoles.Utilities;
-using UnityEngine;
-using Object = UnityEngine.Object;
-using Random = UnityEngine.Random;
-
 namespace TheOtherRoles.Objects;
 
 internal class Bloodytrail
@@ -27,7 +20,7 @@ internal class Bloodytrail
         blood.transform.localPosition = position;
         blood.transform.SetParent(player.transform.parent);
 
-        blood.transform.Rotate(0.0f, 0.0f, Random.Range(0.0f, 360.0f));
+        blood.transform.Rotate(0.0f, 0.0f, URandom.Range(0.0f, 360.0f));
 
         var spriteRenderer = blood.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = sp[index];
@@ -45,7 +38,7 @@ internal class Bloodytrail
             if (spriteRenderer) spriteRenderer.color = new Color(c.r, c.g, c.b, Mathf.Clamp01(1 - p));
 
             if ((int)p != 1 || blood == null) return;
-            Object.Destroy(blood);
+            UObject.Destroy(blood);
             bloodytrail.Remove(this);
         })));
     }

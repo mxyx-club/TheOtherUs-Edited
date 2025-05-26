@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using TheOtherRoles.Buttons;
-using TheOtherRoles.Patches;
-using UnityEngine;
-
 namespace TheOtherRoles.Modules;
 
 [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
@@ -54,7 +47,7 @@ public class KeyboardHandler
             // 强制结束游戏
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKeyDown(ModInputManager.endGameInput.keyCode) && InGame)
             {
-                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.Canceled, false);
+                GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
             }
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKey(KeyCode.C) && Input.GetKeyDown(KeyCode.Return) && ModOption.DebugMode && InGame)
             {

@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Hazel;
-using TMPro;
-using UnityEngine;
 using static TheOtherRoles.GameHistory;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
 
@@ -21,7 +14,7 @@ public class VitalsPatch
         vitalsTimer = 0f;
         if (TimeRemaining != null)
         {
-            Object.Destroy(TimeRemaining);
+            UObject.Destroy(TimeRemaining);
             TimeRemaining = null;
         }
     }
@@ -54,9 +47,9 @@ public class VitalsPatch
                 hackerTexts = new List<TextMeshPro>();
                 foreach (var panel in __instance.vitals)
                 {
-                    var text = Object.Instantiate(__instance.SabText, panel.transform);
+                    var text = UObject.Instantiate(__instance.SabText, panel.transform);
                     hackerTexts.Add(text);
-                    Object.DestroyImmediate(text.GetComponent<AlphaBlink>());
+                    UObject.DestroyImmediate(text.GetComponent<AlphaBlink>());
                     text.gameObject.SetActive(false);
                     text.transform.localScale = Vector3.one * 0.75f;
                     text.transform.localPosition = new Vector3(-0.75f, -0.23f, 0f);
@@ -78,7 +71,7 @@ public class VitalsPatch
             {
                 if (TimeRemaining == null)
                 {
-                    TimeRemaining = Object.Instantiate(HudManager.Instance.TaskPanel.taskText, __instance.transform);
+                    TimeRemaining = UObject.Instantiate(HudManager.Instance.TaskPanel.taskText, __instance.transform);
                     TimeRemaining.alignment = TextAlignmentOptions.BottomRight;
                     TimeRemaining.transform.position = Vector3.zero;
                     TimeRemaining.transform.localPosition = new Vector3(1.7f, 4.45f);

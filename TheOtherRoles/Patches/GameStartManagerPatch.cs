@@ -1,12 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Hazel;
-using Reactor.Utilities.Extensions;
-using TheOtherRoles.Utilities;
-using UnityEngine;
-
 namespace TheOtherRoles.Patches;
 
 public class GameStartManagerPatch
@@ -89,7 +80,7 @@ public class GameStartManagerPatch
 
             bool versionMismatch = false;
             string message = "";
-            foreach (InnerNet.ClientData client in AmongUsClient.Instance.allClients.ToArray())
+            foreach (ClientData client in AmongUsClient.Instance.allClients.ToArray())
             {
                 if (client.Character == null) continue;
                 var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
@@ -102,7 +93,7 @@ public class GameStartManagerPatch
                 else
                 {
                     PlayerVersion PV = playerVersions[client.Id];
-                    int diff = TheOtherRolesPlugin.Version.CompareTo(PV.version);
+                    int diff = Main.version.CompareTo(PV.version);
                     if (diff > 0)
                     {
                         message += $"<color=#FF0000FF>{string.Format(GetString("errorOlderVersion"), $"{client.Character.Data.PlayerName}")} (v{playerVersions[client.Id].version})\n</color>";
@@ -151,7 +142,7 @@ public class GameStartManagerPatch
                     copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
                     copiedStartButton.GetComponent<SpriteRenderer>().sprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 180f);
                     copiedStartButton.SetActive(true);
-                    var startButtonText = copiedStartButton.GetComponentInChildren<TMPro.TextMeshPro>();
+                    var startButtonText = copiedStartButton.GetComponentInChildren<TextMeshPro>();
                     startButtonText.text = GetString("stopGameStartText");
                     startButtonText.fontSize *= 0.62f;
                     startButtonText.fontSizeMax = startButtonText.fontSize;
@@ -177,7 +168,7 @@ public class GameStartManagerPatch
             // Client update with handshake infos
             else
             {
-                if (!playerVersions.ContainsKey(AmongUsClient.Instance.HostId) || TheOtherRolesPlugin.Version.CompareTo(playerVersions[AmongUsClient.Instance.HostId].version) != 0)
+                if (!playerVersions.ContainsKey(AmongUsClient.Instance.HostId) || Main.version.CompareTo(playerVersions[AmongUsClient.Instance.HostId].version) != 0)
                 {
                     kickingTimer += Time.deltaTime;
                     if (kickingTimer > 10)
@@ -214,7 +205,7 @@ public class GameStartManagerPatch
                     copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
                     copiedStartButton.GetComponent<SpriteRenderer>().sprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 180f);
                     copiedStartButton.SetActive(true);
-                    var startButtonText = copiedStartButton.GetComponentInChildren<TMPro.TextMeshPro>();
+                    var startButtonText = copiedStartButton.GetComponentInChildren<TextMeshPro>();
                     startButtonText.text = "STOP";
                     startButtonText.fontSize *= 0.62f;
                     startButtonText.fontSizeMax = startButtonText.fontSize;
@@ -283,7 +274,7 @@ public class GameStartManagerPatch
 
             if (AmongUsClient.Instance.AmHost)
             {
-                foreach (InnerNet.ClientData client in AmongUsClient.Instance.allClients.GetFastEnumerator())
+                foreach (ClientData client in AmongUsClient.Instance.allClients.GetFastEnumerator())
                 {
                     if (client.Character == null) continue;
                     var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
@@ -297,7 +288,7 @@ public class GameStartManagerPatch
                     }
 
                     PlayerVersion PV = playerVersions[client.Id];
-                    int diff = Main.Version.CompareTo(PV.version);
+                    int diff = Main.version.CompareTo(PV.version);
                     if (diff != 0 || !PV.GuidMatches())
                     {
                         continueStart = false;

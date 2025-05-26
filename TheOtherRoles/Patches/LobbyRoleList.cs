@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using TheOtherRoles.Buttons;
-using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
 
@@ -48,7 +42,7 @@ public static class LobbyRoleInfo
         Transform buttonTemplate = HudManager.Instance.SettingsButton.transform;
         TextMeshPro textTemplate = HudManager.Instance.TaskPanel.taskText;
 
-        TextMeshPro newtitle = Object.Instantiate(textTemplate, container.transform);
+        TextMeshPro newtitle = UObject.Instantiate(textTemplate, container.transform);
         newtitle.text = GetString("lobbyInfoSummary");
         newtitle.color = Color.white;
         newtitle.outlineWidth = 0.05f;
@@ -56,7 +50,7 @@ public static class LobbyRoleInfo
         newtitle.transform.localScale = Vector3.one * 2.5f;
 
         // 添加退出按钮
-        Transform exitButtonTransform = Object.Instantiate(buttonTemplate, container.transform);
+        Transform exitButtonTransform = UObject.Instantiate(buttonTemplate, container.transform);
         exitButtonTransform.name = "RolesSummaryUIExit";
         exitButtonTransform.GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
         exitButtonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("ExitButton.png", 135f);
@@ -67,7 +61,7 @@ public static class LobbyRoleInfo
         Button.ButtonClickedEvent exitOnClick = exitButton.OnClick = new Button.ButtonClickedEvent();
         exitOnClick.AddListener((Action)(() =>
         {
-            Object.Destroy(RolesSummaryUI);
+            UObject.Destroy(RolesSummaryUI);
         }));
 
         List<Transform> buttons = new();
@@ -76,7 +70,7 @@ public static class LobbyRoleInfo
         {
             if (teamId == RoleType.Special) continue;
 
-            Transform buttonTransform = Object.Instantiate(buttonTemplate, container.transform);
+            Transform buttonTransform = UObject.Instantiate(buttonTemplate, container.transform);
             buttonTransform.name = teamId.ToString() + "Button";
             buttonTransform.GetComponent<BoxCollider2D>().size = new Vector2(2.5f, 0.55f);
             buttonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("TheOtherRoles.Resources.LobbyRoleInfo.RolePlate.png", 215f);
@@ -84,7 +78,7 @@ public static class LobbyRoleInfo
             buttonTransform.localPosition = new Vector3(0, 2.2f - (buttons.Count - 1) * 1f, -5);
             buttonTransform.localScale = new Vector3(2f, 1.5f, 1f);
 
-            TextMeshPro label = Object.Instantiate(textTemplate, buttonTransform);
+            TextMeshPro label = UObject.Instantiate(textTemplate, buttonTransform);
             label.text = cs(getTeamColor(teamId), GetString(teamId.ToString() + "RolesText"));
             label.alignment = TextAlignmentOptions.Center;
             label.transform.localPosition = new Vector3(0, 0, label.transform.localPosition.z);
@@ -95,7 +89,7 @@ public static class LobbyRoleInfo
             Button.ButtonClickedEvent onClick = button.OnClick = new Button.ButtonClickedEvent();
             onClick.AddListener((Action)(() =>
             {
-                Object.Destroy(container.gameObject);
+                UObject.Destroy(container.gameObject);
                 roleInfosOnclick(teamId);
             }));
 
@@ -126,14 +120,14 @@ public static class LobbyRoleInfo
         Transform buttonTemplate = HudManager.Instance.SettingsButton.transform;
         TextMeshPro textTemplate = HudManager.Instance.TaskPanel.taskText;
 
-        TextMeshPro newtitle = Object.Instantiate(textTemplate, container.transform);
+        TextMeshPro newtitle = UObject.Instantiate(textTemplate, container.transform);
         newtitle.text = GetString(teamId.ToString() + "RolesText");
         newtitle.outlineWidth = 0.01f;
         newtitle.transform.localPosition = new Vector3(0f, 2.8f, -2f);
         newtitle.transform.localScale = Vector3.one * 2.5f;
 
         // 添加退出按钮
-        Transform exitButtonTransform = Object.Instantiate(buttonTemplate, container.transform);
+        Transform exitButtonTransform = UObject.Instantiate(buttonTemplate, container.transform);
         exitButtonTransform.name = "RoleListExit";
         exitButtonTransform.GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
         exitButtonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("ExitButton.png", 135f);
@@ -144,11 +138,11 @@ public static class LobbyRoleInfo
         Button.ButtonClickedEvent exitOnClick = exitButton.OnClick = new Button.ButtonClickedEvent();
         exitOnClick.AddListener((Action)(() =>
         {
-            Object.Destroy(RolesSummaryUI);
+            UObject.Destroy(RolesSummaryUI);
         }));
 
         // 添加返回按钮
-        Transform backButtonTransform = Object.Instantiate(buttonTemplate, container.transform);
+        Transform backButtonTransform = UObject.Instantiate(buttonTemplate, container.transform);
         backButtonTransform.name = "RoleListBack";
         backButtonTransform.GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
         backButtonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("BackButton.png", 135f);
@@ -159,7 +153,7 @@ public static class LobbyRoleInfo
         Button.ButtonClickedEvent backOnClick = backButton.OnClick = new Button.ButtonClickedEvent();
         backOnClick.AddListener((Action)(() =>
         {
-            Object.Destroy(container.gameObject);
+            UObject.Destroy(container.gameObject);
             _ = new LateTask(RoleSummaryOnClick, 0.05f);
         }));
 
@@ -174,10 +168,10 @@ public static class LobbyRoleInfo
             else if (roleInfo.roleType == RoleType.Crewmate && teamId != RoleType.Crewmate) continue;
             else if (roleInfo.roleType == RoleType.Ghost && teamId != RoleType.Ghost) continue;
 
-            Transform buttonTransform = Object.Instantiate(buttonTemplate, container.transform);
+            Transform buttonTransform = UObject.Instantiate(buttonTemplate, container.transform);
             buttonTransform.name = cs(roleInfo.color, roleInfo.Name) + " Button";
             buttonTransform.GetComponent<BoxCollider2D>().size = new Vector2(2.5f, 0.55f);
-            TextMeshPro label = Object.Instantiate(textTemplate, buttonTransform);
+            TextMeshPro label = UObject.Instantiate(textTemplate, buttonTransform);
             buttonTransform.GetComponent<SpriteRenderer>().sprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.LobbyRoleInfo.RolePlate2.png", 215f);
             buttons.Add(buttonTransform);
             int row = count / 3, col = count % 3;
@@ -192,7 +186,7 @@ public static class LobbyRoleInfo
             Button.ButtonClickedEvent onClick = button.OnClick = new Button.ButtonClickedEvent();
             onClick.AddListener((Action)(() =>
             {
-                Object.Destroy(container.gameObject);
+                UObject.Destroy(container.gameObject);
                 AddInfoCard(roleInfo);
             }));
             button.OnMouseOut.RemoveAllListeners();
@@ -215,7 +209,7 @@ public static class LobbyRoleInfo
         string coloredHelp = cs(Color.white, roleSettingDescription);
 
         Transform buttonTemplate = HudManager.Instance.SettingsButton.transform;
-        GameObject roleCard = Object.Instantiate(new GameObject("RoleCard"), HudManager.Instance.transform);
+        GameObject roleCard = UObject.Instantiate(new GameObject("RoleCard"), HudManager.Instance.transform);
         SpriteRenderer roleCardRend = roleCard.AddComponent<SpriteRenderer>();
         roleCard.layer = 5;
         roleCard.transform.localPosition = new Vector3(0f, 0f, -150f);
@@ -223,7 +217,7 @@ public static class LobbyRoleInfo
         RolesSummaryUI = roleCard.gameObject;
 
         // 添加退出按钮
-        Transform exitButtonTransform = Object.Instantiate(buttonTemplate, roleCardRend.transform);
+        Transform exitButtonTransform = UObject.Instantiate(buttonTemplate, roleCardRend.transform);
         exitButtonTransform.name = "RoleCardExit";
         exitButtonTransform.GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
         exitButtonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("ExitButton.png", 135f);
@@ -234,11 +228,11 @@ public static class LobbyRoleInfo
         Button.ButtonClickedEvent exitOnClick = exitButton.OnClick = new Button.ButtonClickedEvent();
         exitOnClick.AddListener((Action)(() =>
         {
-            Object.Destroy(RolesSummaryUI);
+            UObject.Destroy(RolesSummaryUI);
         }));
 
         // 添加返回按钮
-        Transform backButtonTransform = Object.Instantiate(buttonTemplate, roleCardRend.transform);
+        Transform backButtonTransform = UObject.Instantiate(buttonTemplate, roleCardRend.transform);
         backButtonTransform.name = "RoleCardBack";
         backButtonTransform.GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
         backButtonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("BackButton.png", 135f);
@@ -249,13 +243,13 @@ public static class LobbyRoleInfo
         Button.ButtonClickedEvent backOnClick = backButton.OnClick = new Button.ButtonClickedEvent();
         backOnClick.AddListener((Action)(() =>
         {
-            Object.Destroy(roleCardRend.gameObject);
+            UObject.Destroy(roleCardRend.gameObject);
             _ = new LateTask(RoleSummaryOnClick, 0);
         }));
 
         roleCardRend.sprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.LobbyRoleInfo.SummaryScreen.png", 110f);
 
-        infoButtonText = Object.Instantiate(HudManager.Instance.TaskPanel.taskText, roleCard.transform);
+        infoButtonText = UObject.Instantiate(HudManager.Instance.TaskPanel.taskText, roleCard.transform);
         infoButtonText.color = Color.white;
         infoButtonText.text = coloredHelp;
         infoButtonText.enableWordWrapping = false;
@@ -264,7 +258,7 @@ public static class LobbyRoleInfo
         infoButtonText.alignment = TextAlignmentOptions.TopLeft;
         infoButtonText.fontStyle = FontStyles.Bold;
 
-        infoTitleText = Object.Instantiate(HudManager.Instance.TaskPanel.taskText, roleCard.transform);
+        infoTitleText = UObject.Instantiate(HudManager.Instance.TaskPanel.taskText, roleCard.transform);
         infoTitleText.color = Color.white;
         infoTitleText.text = cs(roleInfo.color, roleInfo.Name);
         infoTitleText.enableWordWrapping = false;

@@ -1,10 +1,3 @@
-using System;
-using System.Linq;
-using Hazel;
-using TMPro;
-using UnityEngine;
-using Object = UnityEngine.Object;
-
 namespace TheOtherRoles.Patches;
 
 [Harmony]
@@ -47,7 +40,7 @@ public class CameraPatch
         public static void ResetData()
         {
             if (TimeRemaining == null) return;
-            Object.Destroy(TimeRemaining);
+            UObject.Destroy(TimeRemaining);
             TimeRemaining = null;
         }
 
@@ -70,7 +63,7 @@ public class CameraPatch
                 for (var i = 4; i < ShipStatus.Instance.AllCameras.Length; i++)
                 {
                     var surv = ShipStatus.Instance.AllCameras[i];
-                    var camera = Object.Instantiate(__instance.CameraPrefab);
+                    var camera = UObject.Instantiate(__instance.CameraPrefab);
                     Transform transform;
                     (transform = camera.transform).SetParent(__instance.transform);
                     var transform1 = surv.transform;
@@ -99,7 +92,7 @@ public class CameraPatch
                     if (TimeRemaining == null)
                     {
                         TimeRemaining =
-                            Object.Instantiate(HudManager.Instance.TaskPanel.taskText, __instance.transform);
+                            UObject.Instantiate(HudManager.Instance.TaskPanel.taskText, __instance.transform);
                         TimeRemaining.alignment = TextAlignmentOptions.Center;
                         TimeRemaining.transform.position = Vector3.zero;
                         TimeRemaining.transform.localPosition = new Vector3(0.0f, -1.7f);
@@ -197,7 +190,7 @@ public class CameraPatch
         public static void ResetData()
         {
             if (TimeRemaining == null) return;
-            Object.Destroy(TimeRemaining);
+            UObject.Destroy(TimeRemaining);
             TimeRemaining = null;
         }
 
@@ -223,7 +216,7 @@ public class CameraPatch
                 if (TimeRemaining == null)
                 {
                     TimeRemaining =
-                        Object.Instantiate(HudManager.Instance.TaskPanel.taskText, __instance.transform);
+                        UObject.Instantiate(HudManager.Instance.TaskPanel.taskText, __instance.transform);
                     TimeRemaining.alignment = TextAlignmentOptions.BottomRight;
                     TimeRemaining.transform.position = Vector3.zero;
                     TimeRemaining.transform.localPosition = new Vector3(0.95f, 4.45f);
@@ -274,7 +267,7 @@ public class CameraPatch
         {
             if (TimeRemaining != null)
             {
-                Object.Destroy(TimeRemaining);
+                UObject.Destroy(TimeRemaining);
                 TimeRemaining = null;
             }
         }
@@ -302,7 +295,7 @@ public class CameraPatch
                 if (TimeRemaining == null)
                 {
                     TimeRemaining =
-                        Object.Instantiate(HudManager.Instance.TaskPanel.taskText, __instance.transform);
+                        UObject.Instantiate(HudManager.Instance.TaskPanel.taskText, __instance.transform);
                     TimeRemaining.alignment = TextAlignmentOptions.BottomRight;
                     TimeRemaining.transform.position = Vector3.zero;
                     TimeRemaining.transform.localPosition = new Vector3(1.0f, 4.25f);

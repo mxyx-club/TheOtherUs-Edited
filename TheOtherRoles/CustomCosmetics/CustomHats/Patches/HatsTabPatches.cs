@@ -1,11 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AmongUs.Data;
-using TMPro;
-using UnityEngine;
-using Object = UnityEngine.Object;
-
 namespace TheOtherRoles.CustomCosmetics.CustomHats.Patches;
 
 [HarmonyPatch(typeof(HatsTab))]
@@ -19,10 +11,10 @@ internal static class HatsTabPatches
     {
         for (var i = 0; i < __instance.scroller.Inner.childCount; i++)
         {
-            Object.Destroy(__instance.scroller.Inner.GetChild(i).gameObject);
+            UObject.Destroy(__instance.scroller.Inner.GetChild(i).gameObject);
         }
 
-        __instance.ColorChips = new Il2CppSystem.Collections.Generic.List<ColorChip>();
+        __instance.ColorChips = new ISystem.List<ColorChip>();
         var unlockedHats = DestroyableSingleton<HatManager>.Instance.GetUnlockedHats();
         var packages = new Dictionary<string, List<Tuple<HatData, HatExtension>>>();
 
@@ -72,7 +64,7 @@ internal static class HatsTabPatches
         var offset = yStart;
         if (textTemplate != null)
         {
-            var title = Object.Instantiate(textTemplate, hatsTab.scroller.Inner);
+            var title = UObject.Instantiate(textTemplate, hatsTab.scroller.Inner);
             title.transform.localPosition = new Vector3(2.25f, yStart, -1f);
             title.transform.localScale = Vector3.one * 1.5f;
             title.fontSize *= 0.5f;
@@ -86,7 +78,7 @@ internal static class HatsTabPatches
             var (hat, ext) = hats[i];
             var xPos = hatsTab.XRange.Lerp(i % hatsTab.NumPerRow / (hatsTab.NumPerRow - 1f));
             var yPos = offset - i / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset;
-            var colorChip = Object.Instantiate(hatsTab.ColorTabPrefab, hatsTab.scroller.Inner);
+            var colorChip = UObject.Instantiate(hatsTab.ColorTabPrefab, hatsTab.scroller.Inner);
             if (ActiveInputManager.currentControlType == ActiveInputManager.InputType.Keyboard)
             {
                 colorChip.Button.OnMouseOver.AddListener((Action)(() => hatsTab.SelectHat(hat)));
@@ -116,7 +108,7 @@ internal static class HatsTabPatches
 
                 if (textTemplate != null)
                 {
-                    var description = Object.Instantiate(textTemplate, colorChip.transform);
+                    var description = UObject.Instantiate(textTemplate, colorChip.transform);
                     description.transform.localPosition = new Vector3(0f, -0.65f, -1f);
                     description.alignment = TextAlignmentOptions.Center;
                     description.transform.localScale = Vector3.one * 0.65f;

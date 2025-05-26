@@ -1,9 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using Hazel;
-using TheOtherRoles.Buttons;
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Crewmate;
 
 public static class Sheriff

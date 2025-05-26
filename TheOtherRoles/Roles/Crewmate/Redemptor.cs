@@ -1,7 +1,4 @@
-using Reactor.Utilities.Extensions;
 using TheOtherRoles.Objects;
-using TMPro;
-using UnityEngine;
 
 namespace TheOtherRoles.Roles.Crewmate;
 public class Redemptor
@@ -33,12 +30,12 @@ public class Redemptor
         target = null;
 
 
-        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)
         {
             if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == PlayerControl.LocalPlayer.PlayerId)
             {
-                Object.Destroy(array[i].gameObject);
+                UObject.Destroy(array[i].gameObject);
                 break;
             }
         }
@@ -57,7 +54,7 @@ public class Redemptor
         arrow?.arrow?.Destroy();
         Prayering = false;
         Revelating = false;
-        if (text != null) Object.Destroy(text);
+        if (text != null) UObject.Destroy(text);
         text = null;
         revelation = CustomOptionHolder.redemptorRevelation.GetBool();
         revelationCooldown = CustomOptionHolder.redemptorRevelationCooldown.GetFloat();

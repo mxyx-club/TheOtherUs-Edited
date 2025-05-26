@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace TheOtherRoles.Objects;
 
 public class Arrow
@@ -54,7 +52,7 @@ public class Arrow
 
         if (Tracker.DangerMeterParent == null)
         {
-            Tracker.DangerMeterParent = Object.Instantiate(GameObject.Find("ImpostorDetector"), HudManager.Instance.transform);
+            Tracker.DangerMeterParent = UObject.Instantiate(GameObject.Find("ImpostorDetector"), HudManager.Instance.transform);
             Tracker.Meter = Tracker.DangerMeterParent.transform.GetChild(0).GetComponent<DangerMeter>();
             Tracker.DangerMeterParent.transform.localPosition = new(3.7f, -1.6f, 0);
             var backgroundrend = Tracker.DangerMeterParent.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();

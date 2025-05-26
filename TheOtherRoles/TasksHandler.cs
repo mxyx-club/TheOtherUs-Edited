@@ -1,6 +1,3 @@
-using System;
-using TheOtherRoles.Utilities;
-
 namespace TheOtherRoles;
 
 [HarmonyPatch]

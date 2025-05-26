@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using TheOtherRoles.Utilities;
-using UnityEngine;
-using Object = UnityEngine.Object;
-
 namespace TheOtherRoles.Objects;
 
 internal class NinjaTrace
@@ -75,7 +69,7 @@ internal class NinjaTrace
             traceCurrent.timeRemaining -= Time.fixedDeltaTime;
             if (!(traceCurrent.timeRemaining < 0)) continue;
             traceCurrent.trace.SetActive(false);
-            Object.Destroy(traceCurrent.trace);
+            UObject.Destroy(traceCurrent.trace);
             traces.Remove(traceCurrent);
         }
     }

@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.Text;
 using BepInEx;
@@ -25,36 +24,23 @@ internal static class Logger
 
     public static void SendLog(string text, string tag = "", LogLevel logLevel = LogLevel.Info)
     {
-        StackFrame stack = new(2);
+        if (logSource == null) return;
+
         var time = DateTime.Now.ToString("HH:mm:ss");
-        var className = stack.GetMethod()?.ReflectedType?.Name;
-        className = string.IsNullOrWhiteSpace(className) ? "" : $" [{className}]";
-        tag = string.IsNullOrWhiteSpace(tag) ? "" : $" [{tag}]";
-        text = $"[{time}]{className}{tag} {text}";
+        var prefix = string.IsNullOrEmpty(tag)
+            ? new StackTrace(2, false).GetFrame(0)?.GetMethod()?.Name is string name ? $"[{time}] [{name}]" : $"[{time}]"
+            : $"[{time}] [{tag}]";
+        var logMessage = $"{prefix} {text}";
 
         switch (logLevel)
         {
-            case LogLevel.Message:
-                logSource.LogMessage(text);
-                break;
-            case LogLevel.Error:
-                logSource.LogError(text);
-                break;
-            case LogLevel.Warning:
-                logSource.LogWarning(text);
-                break;
-            case LogLevel.Fatal:
-                logSource.LogFatal(text);
-                break;
-            case LogLevel.Info:
-                logSource.LogInfo(text);
-                break;
-            case LogLevel.Debug:
-                logSource.LogDebug(text);
-                break;
-            default:
-                logSource.LogInfo(text);
-                break;
+            case LogLevel.Message: logSource.LogMessage(logMessage); break;
+            case LogLevel.Error: logSource.LogError(logMessage); break;
+            case LogLevel.Warning: logSource.LogWarning(logMessage); break;
+            case LogLevel.Fatal: logSource.LogFatal(logMessage); break;
+            case LogLevel.Info: logSource.LogInfo(logMessage); break;
+            case LogLevel.Debug: logSource.LogDebug(logMessage); break;
+            default: System.Console.WriteLine($"[Error] {logMessage}"); break;
         }
     }
 
@@ -83,7 +69,8 @@ internal static class Logger
                 Logger.LogDebug(Message);
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(errorLevel), errorLevel, null);
+                System.Console.WriteLine($"[Error] {Message}");
+                break;
         }
     }
 

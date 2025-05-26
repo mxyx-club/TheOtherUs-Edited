@@ -1,14 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Rewired;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using static TheOtherRoles.Buttons.HudManagerStartPatch;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Buttons;
 
@@ -16,7 +9,8 @@ public class CustomButton
 {
     public static List<CustomButton> buttons = new();
     private static readonly int Desat = Shader.PropertyToID("_Desat");
-    public string buttonText;
+
+
     private Action OnClick;
     private readonly Action InitialOnClick;
     public Func<bool> HasButton;
@@ -25,31 +19,72 @@ public class CustomButton
     public Func<bool> OnEffectCouldUse;
     private readonly Action OnEffectClick;
     private readonly Action OnEffectEnd;
+
     public Sprite Sprite;
+    public HudManager hudManager;
     public ActionButton actionButton;
+    public ActionButton textTemplate;
     public GameObject actionButtonGameObject;
     public TextMeshPro actionButtonLabelText;
     public Material actionButtonMat;
     public SpriteRenderer actionButtonRenderer;
+
     public float EffectDuration;
     public bool HasEffect;
-    public KeyCode? hotkey;
-    public KeyCode? originalHotkey;
-    public HudManager hudManager;
     public bool isEffectActive;
     public bool isHandcuffed;
     public Vector3 PositionOffset;
 
-    public float MaxTimer = 0.5f;
+    public KeyCode? hotkey;
+    public KeyCode? originalHotkey;
+    public TMP_Text ButtonTitle;
+    public string buttonText;
     public bool mirror;
     public bool showButtonText;
     public float DeputyTimer;
     public float Timer;
-    public string buttonTextstring = "";
 
-    public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite,
-        Vector3 PositionOffset, HudManager hudManager, KeyCode? hotkey, bool HasEffect, float EffectDuration, Func<bool> onEffectCouldUs, Action onEffectClick,
-        Action OnEffectEnd, bool mirror = false, string buttonText = "")
+    public float _MaxTimer;
+    public float MaxTimer
+    {
+        get
+        {
+            if (!IsKillButton) return _MaxTimer;
+            var time = _MaxTimer;
+            var local = PlayerControl.LocalPlayer;
+            if (IsKillButton)
+            {
+                if (local == Mini.mini) time *= Mini.Multiplier;
+                if (local.IsImpostor() && local == LastImpostor.lastImpostor)
+                    time -= LastImpostor.deduce;
+            }
+            return time;
+        }
+        set => _MaxTimer = value;
+    }
+
+    private int _lastUsesCount = int.MinValue;
+    public int UsesCount = -1;
+    public bool IsKillButton;
+    public bool isCoolingDown => Timer <= 0 && !isEffectActive;
+
+    public CustomButton(
+        Action OnClick,
+        Func<bool> HasButton,
+        Func<bool> CouldUse,
+        Action OnMeetingEnds,
+        Sprite Sprite,
+        Vector3 PositionOffset,
+        HudManager hudManager,
+        ActionButton textTemplate,
+        KeyCode? hotkey,
+        bool HasEffect,
+        float EffectDuration,
+        Func<bool> onEffectCouldUs,
+        Action onEffectClick,
+        Action OnEffectEnd,
+        bool mirror = false,
+        string buttonText = "")
     {
         this.hudManager = hudManager;
         this.OnClick = OnClick;
@@ -65,8 +100,10 @@ public class CustomButton
         this.mirror = mirror;
         this.hotkey = hotkey;
         this.buttonText = buttonText;
-        buttons.Add(this);
-        actionButton = Object.Instantiate(hudManager.KillButton, hudManager.KillButton.transform.parent);
+        this.textTemplate = textTemplate;
+        this.IsKillButton = textTemplate.name == "KillButton(Clone)";
+
+        actionButton = UObject.Instantiate(textTemplate, textTemplate.transform.parent);
         actionButtonGameObject = actionButton.gameObject;
         actionButtonRenderer = actionButton.graphic;
         actionButtonMat = actionButtonRenderer.material;
@@ -76,26 +113,66 @@ public class CustomButton
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
         originalHotkey = GetHotKeys(hotkey);
-        Timer = 10f;
+        Timer = 15f;
         SetHotKeyGuide();
         setActive(false);
         OnEffectClick = onEffectClick;
         OnEffectCouldUse = onEffectCouldUs;
+
+
+        ButtonTitle = UObject.Instantiate(actionButton.cooldownTimerText, actionButton.cooldownTimerText.transform.parent);
+        ButtonTitle.text = "";
+        ButtonTitle.enableWordWrapping = false;
+        ButtonTitle.transform.localScale = Vector3.one * 0.5f;
+        ButtonTitle.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
     }
 
-    public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite,
-        Vector3 PositionOffset, HudManager hudManager, KeyCode? hotkey, bool mirror = false, string buttonText = "")
-        : this(OnClick, HasButton, CouldUse, OnMeetingEnds, Sprite, PositionOffset, hudManager, hotkey, false, 0f,
+    public CustomButton(Action OnClick,
+        Func<bool> HasButton,
+        Func<bool> CouldUse,
+        Action OnMeetingEnds,
+        Sprite Sprite,
+        Vector3 PositionOffset,
+        HudManager hudManager,
+        ActionButton textTemplate,
+        KeyCode? hotkey,
+        bool mirror = false,
+        string buttonText = "")
+        : this(OnClick, HasButton, CouldUse, OnMeetingEnds, Sprite, PositionOffset, hudManager, textTemplate, hotkey, false, 0f,
             null, null, null, mirror, buttonText)
     { }
 
-    public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite,
-        Vector3 PositionOffset, HudManager hudManager, KeyCode? hotkey, bool HasEffect, float EffectDuration,
-        Action OnEffectEnds, bool mirror = false, string buttonText = "")
-        : this(OnClick, HasButton, CouldUse, OnMeetingEnds, Sprite, PositionOffset, hudManager, hotkey, HasEffect, EffectDuration,
+    public CustomButton(Action OnClick,
+        Func<bool> HasButton,
+        Func<bool> CouldUse,
+        Action OnMeetingEnds,
+        Sprite Sprite,
+        Vector3 PositionOffset,
+        HudManager hudManager,
+        ActionButton textTemplate,
+        KeyCode? hotkey,
+        bool HasEffect,
+        float EffectDuration,
+        Action OnEffectEnds,
+        bool mirror = false,
+        string buttonText = "")
+        : this(OnClick, HasButton, CouldUse, OnMeetingEnds, Sprite, PositionOffset, hudManager, textTemplate, hotkey, HasEffect, EffectDuration,
             () => true, null, OnEffectEnds, mirror, buttonText)
     { }
 
+    public void Destroy()
+    {
+        if (actionButton)
+        {
+            if (HudManager.InstanceExists)
+            {
+                _ = GridArrange.currentChildren.Remove(actionButton.transform);
+            }
+            UObject.Destroy(actionButton.gameObject);
+        }
+        actionButton = null;
+        buttons.Remove(this);
+    }
 
     public void onClickEvent()
     {
@@ -183,29 +260,32 @@ public class CustomButton
                 Error($"NullReferenceException from ResetAllCooldowns(), if theres only one warning its fine\n{e}", "CustomButton");
             }
         });
-        PlayerControl.LocalPlayer.killTimer = time;
+
+        PlayerControl.LocalPlayer.SetKillTimer(time);
+        _ = new LateTask(() =>
+        {
+            if (PlayerControl.LocalPlayer.killTimer > ModOption.KillCooldown) PlayerControl.LocalPlayer.killTimer = time - 0.5f;
+        }, 0.5f);
     }
 
-    public static void resetKillButton(PlayerControl p, float time = -1)
+    public static void SetKillTimer(float time = -1f)
     {
-        if (p.IsDead()) return;
-        if (p.Data.Role.IsImpostor)
+        foreach (var t in buttons)
         {
-            if (time == -1) time = ModOption.KillCooldown;
-            p.killTimer = time;
+            if (time == -1f) time = t.MaxTimer;
+            if (t.IsKillButton && !t.isEffectActive)
+            {
+                t.Timer = time;
+                t.isEffectActive = false;
+                t.Update();
+            }
         }
 
-        pelicanKillButton.Timer = time == -1 ? pelicanKillButton.MaxTimer : time;
-        warlockCurseButton.Timer = time == -1 ? warlockCurseButton.MaxTimer : time;
-        ninjaButton.Timer = time == -1 ? ninjaButton.MaxTimer : time;
-        vampireKillButton.Timer = time == -1 ? vampireKillButton.MaxTimer : time;
-        sheriffKillButton.Timer = time == -1 ? sheriffKillButton.MaxTimer : time;
-        jackalKillButton.Timer = time == -1 ? jackalKillButton.MaxTimer : time;
-        swooperKillButton.Timer = time == -1 ? swooperKillButton.MaxTimer : time;
-        werewolfKillButton.Timer = time == -1 ? werewolfKillButton.MaxTimer : time;
-        juggernautKillButton.Timer = time == -1 ? juggernautKillButton.MaxTimer : time;
-        thiefKillButton.Timer = time == -1 ? thiefKillButton.MaxTimer : time;
-        pavlovsdogsKillButton.Timer = time == -1 ? pavlovsdogsKillButton.MaxTimer : time;
+        PlayerControl.LocalPlayer.SetKillTimer(time);
+        _ = new LateTask(() =>
+        {
+            if (PlayerControl.LocalPlayer.killTimer > ModOption.KillCooldown) PlayerControl.LocalPlayer.killTimer = time - 0.5f;
+        }, 0.5f);
     }
 
     public void setActive(bool isActive)
@@ -239,6 +319,25 @@ public class CustomButton
         }
 
         setActive(hudManager.UseButton.isActiveAndEnabled || hudManager.PetButton.isActiveAndEnabled);
+
+        if (_lastUsesCount != UsesCount)
+        {
+            var usesRemainingText = actionButton?.usesRemainingText;
+            var usesRemainingSprite = actionButton?.usesRemainingSprite;
+
+            if (UsesCount == -1)
+            {
+                usesRemainingText?.gameObject?.SetActive(false);
+                usesRemainingSprite?.gameObject?.SetActive(false);
+            }
+            else if (UsesCount >= 0)
+            {
+                usesRemainingText.text = UsesCount.ToString();
+                usesRemainingText?.gameObject?.SetActive(true);
+                usesRemainingSprite?.gameObject?.SetActive(true);
+            }
+            _lastUsesCount = UsesCount;
+        }
 
         if (DeputyTimer >= 0)
         {
@@ -388,7 +487,7 @@ public class CustomButton
             positionOffsetValue.z = -0.1f;
             couldUse ??= button.CouldUse;
             var replacementHandcuffedButton = new CustomButton(() => { }, () => { return true; }, couldUse, () => { },
-                Sheriff.handcuffedSprite, positionOffsetValue, button.hudManager, null,
+                Sheriff.handcuffedSprite, positionOffsetValue, button.hudManager, button.textTemplate, null,
                 true, Sheriff.handcuffDuration, null, null, null, button.mirror);
             replacementHandcuffedButton.Timer = replacementHandcuffedButton.EffectDuration;
             replacementHandcuffedButton.actionButton.cooldownTimerText.color = new Color32(0, 204, 0, 255);

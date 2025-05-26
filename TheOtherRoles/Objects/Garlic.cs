@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
 namespace TheOtherRoles.Objects;
 #nullable enable
 internal class Garlic

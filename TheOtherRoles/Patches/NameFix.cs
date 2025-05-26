@@ -1,4 +1,3 @@
-using AmongUs.Data;
 using AmongUs.Data.Legacy;
 
 namespace TheOtherRoles.Patches;

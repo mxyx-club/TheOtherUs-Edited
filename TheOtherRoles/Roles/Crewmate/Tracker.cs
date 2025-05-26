@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using Reactor.Utilities.Extensions;
 using TheOtherRoles.Objects;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Roles.Crewmate;
 
@@ -38,7 +34,7 @@ public static class Tracker
     {
         currentTarget = tracked = null;
         usedTracker = false;
-        if (arrow?.arrow != null) Object.Destroy(arrow.arrow);
+        if (arrow?.arrow != null) UObject.Destroy(arrow.arrow);
         arrow = new Arrow(Color.blue);
         arrow.arrow?.SetActive(false);
     }
@@ -54,7 +50,7 @@ public static class Tracker
         {
             foreach (Arrow arrow in localArrows)
                 if (arrow?.arrow != null)
-                    Object.Destroy(arrow.arrow);
+                    UObject.Destroy(arrow.arrow);
         }
         deadBodyPositions.Clear();
         corpsesTrackingTimer = 0f;

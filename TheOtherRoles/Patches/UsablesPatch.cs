@@ -1,17 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AmongUs.GameOptions;
 using PowerTools;
-using Reactor.Utilities.Extensions;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
 using static TheOtherRoles.Buttons.HudManagerStartPatch;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.Options.ModOption;
-using Object = UnityEngine.Object;
-using Random = UnityEngine.Random;
 
 namespace TheOtherRoles.Patches;
 
@@ -154,14 +145,12 @@ public static class VentUsePatch
         if (__instance.name.StartsWith("JackInTheBoxVent_"))
         {
             __instance.SetButtons(isEnter && canMoveInVents);
-            var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.UseUncheckedVent);
+            var writer = StartRPC(CustomRPC.UseUncheckedVent);
             writer.WritePacked(__instance.Id);
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write(isEnter ? byte.MaxValue : (byte)0);
-            writer.EndMessage();
-            RPCProcedure.useUncheckedVent(__instance.Id, PlayerControl.LocalPlayer.PlayerId,
-                isEnter ? byte.MaxValue : (byte)0);
+            writer.EndRPC();
+            RPCProcedure.useUncheckedVent(__instance.Id, PlayerControl.LocalPlayer.PlayerId, isEnter ? byte.MaxValue : (byte)0);
             SoundEffectsManager.play("tricksterUseBoxVent");
             return false;
         }
@@ -254,7 +243,7 @@ internal class VisibleVentPatches
             if (pc.AmOwner && Constants.ShouldPlaySfx()) //ShouldPlaySfx
             {
                 SoundManager.Instance.StopSound(ShipStatus.Instance.VentEnterSound);
-                SoundManager.Instance.PlaySound(ShipStatus.Instance.VentEnterSound, false).pitch = Random.Range(0.8f, 1.2f);
+                SoundManager.Instance.PlaySound(ShipStatus.Instance.VentEnterSound, false).pitch = URandom.Range(0.8f, 1.2f);
             }
 
             return false;
@@ -280,7 +269,7 @@ internal class VisibleVentPatches
             if (pc.AmOwner && Constants.ShouldPlaySfx()) //ShouldPlaySfx
             {
                 SoundManager.Instance.StopSound(ShipStatus.Instance.VentEnterSound);
-                SoundManager.Instance.PlaySound(ShipStatus.Instance.VentEnterSound, false).pitch = Random.Range(0.8f, 1.2f);
+                SoundManager.Instance.PlaySound(ShipStatus.Instance.VentEnterSound, false).pitch = URandom.Range(0.8f, 1.2f);
             }
 
             return false;
@@ -304,8 +293,7 @@ internal class KillButtonDoClickPatch
             }
 
             // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
-            var res = checkMurderAttemptAndKill(PlayerControl.LocalPlayer,
-                __instance.currentTarget);
+            var res = checkMurderAttemptAndKill(PlayerControl.LocalPlayer, __instance.currentTarget);
             // Handle blank kill
             if (res == MurderAttemptResult.BlankKill)
             {
@@ -490,9 +478,9 @@ internal class VitalsMinigamePatch
                 hackerTexts = new List<TextMeshPro>();
                 foreach (var panel in __instance.vitals)
                 {
-                    var text = Object.Instantiate(__instance.SabText, panel.transform);
+                    var text = UObject.Instantiate(__instance.SabText, panel.transform);
                     hackerTexts.Add(text);
-                    Object.DestroyImmediate(text.GetComponent<AlphaBlink>());
+                    UObject.DestroyImmediate(text.GetComponent<AlphaBlink>());
                     text.gameObject.SetActive(false);
                     text.transform.localScale = Vector3.one * 0.75f;
                     text.transform.localPosition = new Vector3(-0.75f, -0.23f, 0f);
@@ -677,7 +665,7 @@ internal class AdminPanelPatch
                     if (renderer != null)
                     {
                         if (defaultMat == null) defaultMat = renderer.material;
-                        if (newMat == null) newMat = Object.Instantiate(defaultMat);
+                        if (newMat == null) newMat = UObject.Instantiate(defaultMat);
                         if (showHackerInfo && colors.Count > i)
                         {
                             renderer.material = newMat;
@@ -753,14 +741,14 @@ internal class SurveillanceMinigamePatch
                 float zPosition;
                 if (FungleCamMinigame != null)
                 {
-                    overlayObject = Object.Instantiate(closeButton, renderer.transform);
+                    overlayObject = UObject.Instantiate(closeButton, renderer.transform);
                     overlayObject.layer = renderer.gameObject.layer;
                     zPosition = -0.5f;
                     overlayObject.transform.localPosition = new Vector3(0, 0, zPosition);
                 }
                 else
                 {
-                    overlayObject = Object.Instantiate(closeButton, viewablesTransform);
+                    overlayObject = UObject.Instantiate(closeButton, viewablesTransform);
                     zPosition = overlayObject.transform.position.z;
                     overlayObject.layer = closeButton.layer;
                     overlayObject.transform.position = new Vector3(renderer.transform.position.x,
@@ -775,7 +763,7 @@ internal class SurveillanceMinigamePatch
                 var overlayRenderer = overlayObject.GetComponent<SpriteRenderer>();
                 overlayRenderer.sprite = overlaySprite;
                 overlayObject.SetActive(false);
-                Object.Destroy(overlayObject.GetComponent<CircleCollider2D>());
+                UObject.Destroy(overlayObject.GetComponent<CircleCollider2D>());
                 nightVisionOverlays.Add(overlayObject);
             }
         }
@@ -800,7 +788,7 @@ internal class SurveillanceMinigamePatch
 
             foreach (var overlayObject in nightVisionOverlays) overlayObject.SetActive(true);
             // Dead Bodies
-            foreach (var deadBody in Object.FindObjectsOfType<DeadBody>())
+            foreach (var deadBody in UObject.FindObjectsOfType<DeadBody>())
             {
                 var component = deadBody.bodyRenderers.FirstOrDefault();
                 component.material.SetColor("_BackColor", Palette.ShadowColors[11]);
@@ -846,7 +834,7 @@ internal class SurveillanceMinigamePatch
                 }
 
                 // Dead Bodies
-                foreach (var deadBody in Object.FindObjectsOfType<DeadBody>())
+                foreach (var deadBody in UObject.FindObjectsOfType<DeadBody>())
                 {
                     var colorId = GameData.Instance.GetPlayerById(deadBody.ParentId).Object.Data.DefaultOutfit.ColorId;
                     var component = deadBody.bodyRenderers.FirstOrDefault();
@@ -867,7 +855,7 @@ internal class SurveillanceMinigamePatch
     public static void Postfix(PlayerControl __instance, SpriteRenderer rend)
     {
         if (!nightVisionIsActive) return;
-        foreach (var deadBody in Object.FindObjectsOfType<DeadBody>())
+        foreach (var deadBody in UObject.FindObjectsOfType<DeadBody>())
             foreach (var component in new SpriteRenderer[2]
                          { deadBody.bodyRenderers.FirstOrDefault(), deadBody.bloodSplatter })
             {
@@ -891,7 +879,7 @@ internal class SurveillanceMinigamePatch
                 for (var i = 4; i < MapUtilities.CachedShipStatus.AllCameras.Length; i++)
                 {
                     var surv = MapUtilities.CachedShipStatus.AllCameras[i];
-                    var camera = Object.Instantiate(__instance.CameraPrefab);
+                    var camera = UObject.Instantiate(__instance.CameraPrefab);
                     camera.transform.SetParent(__instance.transform);
                     camera.transform.position = new Vector3(surv.transform.position.x, surv.transform.position.y, 8f);
                     camera.orthographicSize = 2.35f;

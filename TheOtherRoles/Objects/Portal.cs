@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using TheOtherRoles.Buttons;
-using TheOtherRoles.Utilities;
-using UnityEngine;
-
 namespace TheOtherRoles.Objects;
 
 public class Portal

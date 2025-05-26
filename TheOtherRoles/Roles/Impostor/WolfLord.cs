@@ -1,10 +1,4 @@
-using System;
-using System.Linq;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Roles.Impostor;
 
@@ -77,18 +71,18 @@ public class WolfLord
             if (__instance && !Killed && Revealed) { ButtonToggle(__instance); return; }
             if (Player.IsAlive() && PlayerControl.LocalPlayer == Player && !Revealed)
             {
-                var meetingUI = Object.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
+                var meetingUI = UObject.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
 
                 var buttonTemplate = __instance.playerStates[0].transform.FindChild("votePlayerBase");
                 var maskTemplate = __instance.playerStates[0].transform.FindChild("MaskArea");
                 var textTemplate = __instance.playerStates[0].NameText;
                 var meetingExtraButtonParent = new GameObject().transform;
                 meetingExtraButtonParent.SetParent(meetingUI);
-                var meetingExtraButton = Object.Instantiate(buttonTemplate, meetingExtraButtonParent);
+                var meetingExtraButton = UObject.Instantiate(buttonTemplate, meetingExtraButtonParent);
                 MeetingExtraButton = meetingExtraButton.gameObject;
 
-                var meetingExtraButtonMask = Object.Instantiate(maskTemplate, meetingExtraButtonParent);
-                meetingExtraButtonLabel = Object.Instantiate(textTemplate, meetingExtraButton);
+                var meetingExtraButtonMask = UObject.Instantiate(maskTemplate, meetingExtraButtonParent);
+                meetingExtraButtonLabel = UObject.Instantiate(textTemplate, meetingExtraButton);
                 meetingExtraButton.GetComponent<SpriteRenderer>().sprite = ShipStatus.Instance.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
 
                 meetingExtraButtonParent.localPosition = new Vector3(0, -2.225f, -5);
@@ -119,7 +113,7 @@ public class WolfLord
 
         public static void ClearButton()
         {
-            if (MeetingExtraButton != null) Object.Destroy(MeetingExtraButton);
+            if (MeetingExtraButton != null) UObject.Destroy(MeetingExtraButton);
         }
 
         private static void ButtonToggle(MeetingHud __instance)
@@ -132,12 +126,12 @@ public class WolfLord
             writer.EndRPC();
             WolfLordkilled(byte.MaxValue);
 
-            Object.Destroy(MeetingExtraButton);
+            UObject.Destroy(MeetingExtraButton);
 
             foreach (var playerState in __instance.playerStates)
             {
                 var guesser = playerState.transform.FindChild("ShootButton");
-                if (guesser != null) Object.Destroy(guesser.gameObject);
+                if (guesser != null) UObject.Destroy(guesser.gameObject);
             }
 
             if (Guesser.guesserUI != null && Guesser.guesserUIExitButton != null)
@@ -151,7 +145,7 @@ public class WolfLord
                     if (player.IsAlive() && player != Player && !player.IsImpostor())
                     {
                         GameObject template = pva.Buttons.transform.Find("CancelButton").gameObject;
-                        GameObject targetBox = Object.Instantiate(template, pva.transform);
+                        GameObject targetBox = UObject.Instantiate(template, pva.transform);
                         targetBox.name = "WolfLordIcon";
                         targetBox.transform.localPosition = new Vector3(1f, 0.03f, -1f);
                         SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();
@@ -178,10 +172,10 @@ public class WolfLord
             foreach (var playerState in __instance.playerStates)
             {
                 var icon = playerState.transform.FindChild("WolfLordIcon");
-                if (icon != null) Object.Destroy(icon.gameObject);
+                if (icon != null) UObject.Destroy(icon.gameObject);
 
                 var guesser = playerState.transform.FindChild("ShootButton");
-                if (guesser != null) Object.Destroy(guesser.gameObject);
+                if (guesser != null) UObject.Destroy(guesser.gameObject);
             }
 
             if (Guesser.guesserUI != null && Guesser.guesserUIExitButton != null)

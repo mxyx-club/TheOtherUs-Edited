@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using AmongUs.GameOptions;
-using UnityEngine;
+﻿using AmongUs.GameOptions;
 using Object = Il2CppSystem.Object;
 
 namespace TheOtherRoles.Patches;

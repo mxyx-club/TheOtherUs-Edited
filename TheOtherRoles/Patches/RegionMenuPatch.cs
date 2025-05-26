@@ -23,12 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-using System;
-using TheOtherRoles.Utilities;
-using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
 
@@ -54,7 +50,7 @@ public static class RegionMenuOpenPatch
         }
 
         var template = FastDestroyableSingleton<JoinGameButton>.Instance;
-        var joinGameButtons = Object.FindObjectsOfType<JoinGameButton>();
+        var joinGameButtons = UObject.FindObjectsOfType<JoinGameButton>();
         foreach (var t in joinGameButtons)
             // The correct button has a background, the other 2 dont
             if (t.GameIdText != null && t.GameIdText.Background != null)
@@ -67,11 +63,11 @@ public static class RegionMenuOpenPatch
 
         if (ipField == null || ipField.gameObject == null)
         {
-            ipField = Object.Instantiate(template.GameIdText, __instance.transform);
+            ipField = UObject.Instantiate(template.GameIdText, __instance.transform);
             ipField.gameObject.name = "IpTextBox";
             var arrow = ipField.transform.FindChild("arrowEnter");
             if (arrow == null || arrow.gameObject == null) return;
-            Object.DestroyImmediate(arrow.gameObject);
+            UObject.DestroyImmediate(arrow.gameObject);
 
             ipField.transform.localPosition = new Vector3(3.225f, -0.8f, -100f);
             ipField.characterLimit = 30;
@@ -104,11 +100,11 @@ public static class RegionMenuOpenPatch
 
         if (portField == null || portField.gameObject == null)
         {
-            portField = Object.Instantiate(template.GameIdText, __instance.transform);
+            portField = UObject.Instantiate(template.GameIdText, __instance.transform);
             portField.gameObject.name = "PortTextBox";
             var arrow = portField.transform.FindChild("arrowEnter");
             if (arrow == null || arrow.gameObject == null) return;
-            Object.DestroyImmediate(arrow.gameObject);
+            UObject.DestroyImmediate(arrow.gameObject);
 
             portField.transform.localPosition = new Vector3(3.225f, -1.55f, -100f);
             portField.characterLimit = 5;

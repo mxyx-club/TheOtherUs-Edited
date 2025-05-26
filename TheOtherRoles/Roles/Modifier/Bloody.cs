@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace TheOtherRoles.Roles.Modifier;
 
 public static class Bloody

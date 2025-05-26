@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Neutral;
 
 public static class Jester

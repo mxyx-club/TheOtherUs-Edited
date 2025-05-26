@@ -1,6 +1,4 @@
-﻿using TheOtherRoles.Objects;
-using UnityEngine;
-using Object = UnityEngine.Object;
+using TheOtherRoles.Objects;
 
 namespace TheOtherRoles.Roles.Impostor;
 
@@ -26,8 +24,8 @@ public static class Terrorist
     {
         if (bomb != null)
         {
-            Object.Destroy(bomb.bomb);
-            Object.Destroy(bomb.background);
+            UObject.Destroy(bomb.bomb);
+            UObject.Destroy(bomb.background);
             bomb = null;
         }
 

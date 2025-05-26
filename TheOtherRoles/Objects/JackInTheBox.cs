@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using PowerTools;
-using TheOtherRoles.Utilities;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Objects;
 
@@ -34,8 +28,8 @@ public class JackInTheBox
         boxRenderer.color = boxRenderer.color.SetAlpha(0.5f);
 
         // Create the vent
-        var referenceVent = Object.FindObjectOfType<Vent>();
-        vent = Object.Instantiate(referenceVent);
+        var referenceVent = UObject.FindObjectOfType<Vent>();
+        vent = UObject.Instantiate(referenceVent);
         vent.gameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
         vent.transform.position = gameObject.transform.position;
         vent.Left = null;

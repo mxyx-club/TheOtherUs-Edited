@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace TheOtherRoles.Roles.Impostor;
+﻿namespace TheOtherRoles.Roles.Impostor;
 
 public class Miner
 {

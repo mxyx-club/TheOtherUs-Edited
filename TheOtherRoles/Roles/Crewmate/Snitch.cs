@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
 using TheOtherRoles.Objects;
-using TMPro;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Roles.Crewmate;
 
@@ -35,12 +31,12 @@ public static class Snitch
         {
             foreach (Arrow arrow in localArrows)
                 if (arrow?.arrow != null)
-                    Object.Destroy(arrow.arrow);
+                    UObject.Destroy(arrow.arrow);
         }
         localArrows.Clear();
         taskCountForReveal = CustomOptionHolder.snitchLeftTasksForReveal.GetInt();
         seeInMeeting = CustomOptionHolder.snitchSeeMeeting.GetBool();
-        if (text != null) Object.Destroy(text);
+        if (text != null) UObject.Destroy(text);
         text = null;
         needsUpdate = true;
 

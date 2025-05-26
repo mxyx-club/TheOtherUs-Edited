@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AmongUs.GameOptions;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
 
@@ -128,13 +121,13 @@ public class OnGameEndPatch
         ];
 
         var table = new SimpleTable()
-            .AddColumn(alignment: Alignment.Left)
-            .AddColumn(alignment: Alignment.Left)
-            .AddColumn(alignment: Alignment.Left)
-            .AddColumn(alignment: Alignment.Left)
+            .AddColumn(alignment: SimpleTable.Alignment.Left)
+            .AddColumn(alignment: SimpleTable.Alignment.Left)
+            .AddColumn(alignment: SimpleTable.Alignment.Left)
+            .AddColumn(alignment: SimpleTable.Alignment.Left)
             .AddRow();
 
-        var AllPlayers = PlayerControl.AllPlayerControls.ToList();
+        var AllPlayers = PlayerControl.AllPlayerControls.GetFastEnumerator();
 
         foreach (var p in AllPlayers)
         {
@@ -210,6 +203,10 @@ public class OnGameEndPatch
 
         if (SchrodingersCat.Player != null && SchrodingersCat.State != SchrodingersCat.CatState.Crewmate)
             notWinners.Add(SchrodingersCat.Player);
+
+        Message($"HonmeiCannotFollowWin: {Akujo.honmeiCannotFollowWin}");
+        Message($"Honmei: {Akujo.honmei?.Data?.PlayerName ?? "null"}");
+
         if (Akujo.honmeiCannotFollowWin && Akujo.honmei != null)
             notWinners.Add(Akujo.honmei);
 
@@ -472,8 +469,9 @@ public class OnGameEndPatch
 
         else if (crewmateWin)
         {
-            foreach (var player in AllPlayers.Where(x => x.IsCrew() && !notWinners.Contains(x)))
+            foreach (var player in AllPlayers.Where(x => x.IsCrew()))
             {
+                if (notWinners.Any(x => x.PlayerId == player.PlayerId)) continue;
                 winners.Add(player);
             }
             AdditionalTempData.winCondition = WinCondition.CrewmateWin;
@@ -579,7 +577,7 @@ public class EndGameManagerSetUpPatch
     {
         // Delete and readd PoolablePlayers always showing the name and role of the player
         foreach (var pb in __instance.transform.GetComponentsInChildren<PoolablePlayer>())
-            Object.Destroy(pb.gameObject);
+            UObject.Destroy(pb.gameObject);
         var num = Mathf.CeilToInt(7.5f);
         var list = TempData.winners.ToList().OrderBy(delegate (WinningPlayerData b) { return !b.IsYou ? 0 : -1; }).ToList();
         for (var i = 0; i < list.Count; i++)
@@ -590,7 +588,7 @@ public class EndGameManagerSetUpPatch
             var num4 = num3 / (float)num;
             var num5 = Mathf.Lerp(1f, 0.75f, num4);
             float num6 = i == 0 ? -8 : -1;
-            var poolablePlayer = Object.Instantiate(__instance.PlayerPrefab, __instance.transform);
+            var poolablePlayer = UObject.Instantiate(__instance.PlayerPrefab, __instance.transform);
             poolablePlayer.transform.localPosition = new Vector3(1f * num2 * num3 * num5,
                 FloatRange.SpreadToEdges(-1.125f, 0f, num3, num), num6 + (num3 * 0.01f)) * 0.9f;
             var num7 = Mathf.Lerp(1f, 0.65f, num4) * 0.9f;
@@ -661,7 +659,7 @@ public class EndGameManagerSetUpPatch
             { WinCondition.BandLeaderWin, (BandLeader.color, "BandLeaderWin") }
         };
 
-        var bonusText = Object.Instantiate(__instance.WinText.gameObject);
+        var bonusText = UObject.Instantiate(__instance.WinText.gameObject);
         var position1 = __instance.WinText.transform.position;
         bonusText.transform.position = new Vector3(position1.x, position1.y - 0.5f, position1.z);
         bonusText.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
@@ -698,7 +696,7 @@ public class EndGameManagerSetUpPatch
             if (Camera.main != null)
             {
                 var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
-                var roleSummary = Object.Instantiate(__instance.WinText.gameObject);
+                var roleSummary = UObject.Instantiate(__instance.WinText.gameObject);
                 roleSummary.transform.position = new Vector3(__instance.Navigation.ExitButton.transform.position.x + 0.1f,
                     position.y - 0.1f, -214f);
                 roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -1120,6 +1118,12 @@ internal class CheckEndCriteriaPatch
 [HarmonyPatch(typeof(GameManager), nameof(GameManager.RpcEndGame))]
 internal class RPCEndGamePatch
 {
+    public static bool Prefix(GameOverReason endReason)
+    {
+        if (endReason == GameOverReason.HumansByTask && ModOption.DisableGameEnd) return false;
+        return true;
+    }
+
     public static void Postfix(ref GameOverReason endReason)
     {
         Message($"游戏结束 {(CustomGameOverReason)endReason} {endReason}", "RpcEndGame");
@@ -1284,7 +1288,12 @@ internal class PlayerStatistics
                             case SchrodingersCat.CatState.Pelican:
                                 numPelicanAlive++;
                                 break;
+                            case SchrodingersCat.CatState.Crewmate:
+                                break;
                             case SchrodingersCat.CatState.None:
+                                numTotalAlive--;
+                                break;
+                            default:
                                 numTotalAlive--;
                                 break;
                         }

@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
 using TheOtherRoles.Objects;
-using UnityEngine;
 
 namespace TheOtherRoles.Roles.Neutral;
 
@@ -37,7 +34,7 @@ public class Pavlovsdogs
         if (arrow != null)
         {
             foreach (var arrow in arrow)
-                if (arrow?.arrow != null) Object.Destroy(arrow.arrow);
+                if (arrow?.arrow != null) UObject.Destroy(arrow.arrow);
         }
         arrow = new();
 

@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AmongUs.GameOptions;
-using Reactor.Utilities.Attributes;
-using Reactor.Utilities.Extensions;
-using TMPro;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Modules;
 
@@ -39,7 +31,7 @@ public static class CrowdedPlayer
     public static void GameOptionsMenu_Start_Postfix(ref GameOptionsMenu __instance)
     {
         if (!Enable) return;
-        var options = Object.FindObjectsOfType<NumberOption>().FirstOrDefault(o => o.Title == StringNames.GameNumImpostors);
+        var options = UObject.FindObjectsOfType<NumberOption>().FirstOrDefault(o => o.Title == StringNames.GameNumImpostors);
         if (options != null) options.ValidRange = new FloatRange(0, MaxImpostor);
     }
 

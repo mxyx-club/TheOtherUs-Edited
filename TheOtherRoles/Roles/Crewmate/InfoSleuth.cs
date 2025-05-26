@@ -1,5 +1,3 @@
-﻿using UnityEngine;
-
 namespace TheOtherRoles.Roles.Crewmate;
 
 public class InfoSleuth

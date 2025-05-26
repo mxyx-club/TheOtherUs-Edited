@@ -1,6 +1,3 @@
-using System.Linq;
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Ghost;
 
 public class Specter
@@ -39,12 +36,12 @@ public class Specter
 
         revived = true;
 
-        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)
         {
             if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == targetId)
             {
-                Object.Destroy(array[i].gameObject);
+                UObject.Destroy(array[i].gameObject);
                 break;
             }
         }

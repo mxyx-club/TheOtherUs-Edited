@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace TheOtherRoles.Patches;
 
 [HarmonyPatch(typeof(MedScanMinigame._WalkToOffset_d__15), nameof(MedScanMinigame._WalkToPad_d__16.MoveNext))]

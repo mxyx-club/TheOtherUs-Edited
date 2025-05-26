@@ -1,6 +1,3 @@
-using System;
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Modifier;
 
 public static class Mini
@@ -17,6 +14,7 @@ public static class Mini
     public static float ageOnMeetingStart;
     public static bool triggerMiniLose;
 
+    public static readonly float Multiplier = mini != null && PlayerControl.LocalPlayer == mini ? isGrownUp() ? 0.66f : 2f : 1f;
     public static void clearAndReload()
     {
         mini = null;

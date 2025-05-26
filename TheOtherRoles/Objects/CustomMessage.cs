@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
-using Object = UnityEngine.Object;
-
 namespace TheOtherRoles.Objects;
 
 public class CustomMessage
@@ -15,9 +8,9 @@ public class CustomMessage
     {
         var roomTracker = FastDestroyableSingleton<HudManager>.Instance.roomTracker;
         if (roomTracker == null) return;
-        var gameObject = Object.Instantiate(roomTracker.gameObject, FastDestroyableSingleton<HudManager>.Instance.transform, true);
+        var gameObject = UObject.Instantiate(roomTracker.gameObject, FastDestroyableSingleton<HudManager>.Instance.transform, true);
 
-        Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
+        UObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
         var text = gameObject.GetComponent<TMP_Text>();
         text.text = message;
 
@@ -32,7 +25,7 @@ public class CustomMessage
             text.text = prefix + message + "</color>";
             if (text != null) text.color = even ? Color.yellow : Color.red;
             if ((int)p != 1 || text == null || text.gameObject == null) return;
-            Object.Destroy(text.gameObject);
+            UObject.Destroy(text.gameObject);
             customMessages.Remove(this);
         })));
     }

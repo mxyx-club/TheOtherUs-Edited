@@ -1,29 +1,16 @@
 #nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using AmongUs.Data;
 using AmongUs.GameOptions;
-using Hazel;
 using PowerTools;
-using Reactor.Networking.Extensions;
-using Reactor.Utilities;
-using Reactor.Utilities.Extensions;
-using TheOtherRoles.Buttons;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
 using static TheOtherRoles.Buttons.HudManagerStartPatch;
 using static TheOtherRoles.Options.ModOption;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles;
 
-public enum CustomRPC
+public enum CustomRPC : byte
 {
     // Main Controls
     ResetVaribles = 80,
@@ -702,12 +689,12 @@ public static class RPCProcedure
             if (deadBody != null) deadBody.wasCleaned = true;
         }
 
-        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)
         {
             if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId)
             {
-                Object.Destroy(array[i].gameObject);
+                UObject.Destroy(array[i].gameObject);
                 break;
             }
         }
@@ -728,7 +715,7 @@ public static class RPCProcedure
         }
         Butcher.dissected = player;
 
-        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
 
         var list = new List<Vector3>();
         list.AddRange(MapData.MapSpawnPosition(false));
@@ -862,11 +849,11 @@ public static class RPCProcedure
         target.Exiled();
         GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.HostCmdKill, GameData.Instance.GetHost()?.Object);
 
-        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
         foreach (var body in array)
         {
             if (body.ParentId != targetId) continue;
-            Object.Destroy(body.gameObject);
+            UObject.Destroy(body.gameObject);
             break;
         }
     }
@@ -1543,8 +1530,8 @@ public static class RPCProcedure
         position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
         position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
 
-        var ventPrefab = Object.FindObjectOfType<Vent>();
-        var vent = Object.Instantiate(ventPrefab, ventPrefab.transform.parent);
+        var ventPrefab = UObject.FindObjectOfType<Vent>();
+        var vent = UObject.Instantiate(ventPrefab, ventPrefab.transform.parent);
         vent.Id = ventId;
         vent.transform.position = new Vector3(position.x, position.y, zAxis);
 
@@ -1730,7 +1717,7 @@ public static class RPCProcedure
 
     public static void placeCamera(byte[] buff)
     {
-        var referenceCamera = Object.FindObjectOfType<SurvCamera>();
+        var referenceCamera = UObject.FindObjectOfType<SurvCamera>();
         if (referenceCamera == null) return; // Mira HQ
 
         SecurityGuard.remainingScrews -= SecurityGuard.camPrice;
@@ -1740,7 +1727,7 @@ public static class RPCProcedure
         position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
         position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
 
-        var camera = Object.Instantiate(referenceCamera);
+        var camera = UObject.Instantiate(referenceCamera);
         camera.transform.position = new Vector3(position.x, position.y, referenceCamera.transform.position.z - 1f);
         camera.CamName = $"Security Camera {SecurityGuard.placedCameras}";
         camera.Offset = new Vector3(0f, 0f, camera.Offset.z);
@@ -1755,7 +1742,7 @@ public static class RPCProcedure
             if (fixConsole != null)
             {
                 var boxCollider = fixConsole.GetComponent<BoxCollider2D>();
-                if (boxCollider != null) Object.Destroy(boxCollider);
+                if (boxCollider != null) UObject.Destroy(boxCollider);
             }
         }
 
@@ -1891,7 +1878,7 @@ public static class RPCProcedure
                     if (p == 1f)
                     {
                         rend?.gameObject?.SetActive(false);
-                        Object.Destroy(rend?.gameObject);
+                        UObject.Destroy(rend?.gameObject);
                     }
                 }));
         }
@@ -1991,39 +1978,36 @@ public static class RPCProcedure
     }
 }
 
-[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
+
+[HarmonyPatch]
 internal class RPCHandlerPatch
 {
-    private static Dictionary<CustomRPC, string>? RpcNames;
+    private static string RpcName(byte callId) => callId < 80 ? ((RpcCalls)callId).ToString() : ((CustomRPC)callId).ToString();
 
-    private static void GetRpcNames()
+    [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNet.InnerNetClient.StartRpcImmediately)), HarmonyPostfix]
+    private static void LogSentRpc([HarmonyArgument(1)] byte callId)
     {
-        RpcNames ??= new Dictionary<CustomRPC, string>();
-        var values = EnumHelper.GetAllValues<CustomRPC>();
-        foreach (var value in values) RpcNames.Add(value, Enum.GetName(value) ?? string.Empty);
+        if (!CustomOptionHolder.logRpcSend.GetBool()) return;
+
+        string type = callId < 80 ? "Vanilla" : "Custom";
+        Info($"RpcId: {callId} Type: {type} Name: {RpcName(callId)}", "SEND");
     }
 
-    private static void Postfix([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc)), HarmonyPrefix]
+    private static bool HandleRpcPatch([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
     {
         var packetId = (CustomRPC)callId;
-        if (RpcNames!.ContainsKey(packetId)) return;
-        if (DebugMode) Info($"接收 PlayerControl 原版Rpc RpcId{callId} Message Size {reader.Length}");
-    }
+        if (CustomOptionHolder.logRpcSend.GetBool())
+        {
+            string type = callId < 80 ? "Vanilla" : "Custom";
+            Info($"RpcId: {callId} Type: {type} Name: {RpcName(callId)} Size: {reader.Length}", "RECV");
+        }
 
-    private static bool Prefix([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
-    {
-        if (RpcNames == null)
-            GetRpcNames();
+        if (callId < 80) return true;
 
-        var packetId = (CustomRPC)callId;
-        if (!RpcNames!.ContainsKey(packetId))
-            return true;
-
-        if (DebugMode) Info($"接收 PlayerControl CustomRpc RpcId{callId} Rpc {RpcNames?[(CustomRPC)callId] ?? nameof(packetId)} Message Size {reader.Length}");
         switch (packetId)
         {
             // Main Controls
-
             case CustomRPC.ResetVaribles:
                 RPCProcedure.resetVariables();
                 break;

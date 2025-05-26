@@ -1,9 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
 using AmongUs.GameOptions;
-using TheOtherRoles.Buttons;
-using TheOtherRoles.Utilities;
-using UnityEngine;
 
 namespace TheOtherRoles.Roles.Neutral;
 

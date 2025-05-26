@@ -1,7 +1,4 @@
 using TheOtherRoles.Objects;
-using TMPro;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Roles.Impostor;
 
@@ -32,9 +29,9 @@ public static class BountyHunter
         bounty = null;
         arrowUpdateTimer = 0f;
         bountyUpdateTimer = 0f;
-        if (arrow != null && arrow.arrow != null) Object.Destroy(arrow.arrow);
+        if (arrow != null && arrow.arrow != null) UObject.Destroy(arrow.arrow);
         arrow = null;
-        if (cooldownText != null && cooldownText.gameObject != null) Object.Destroy(cooldownText.gameObject);
+        if (cooldownText != null && cooldownText.gameObject != null) UObject.Destroy(cooldownText.gameObject);
         cooldownText = null;
         foreach (var p in ModOption.playerIcons.Values)
             if (p != null && p.gameObject != null)

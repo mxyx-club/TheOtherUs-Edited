@@ -1,7 +1,3 @@
-using Hazel;
-using TMPro;
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Crewmate;
 
 public static class Prosecutor
@@ -53,7 +49,7 @@ public static class Prosecutor
                 if (prosecutor != PlayerControl.LocalPlayer) return;
 
                 var skip = __instance.SkipVoteButton;
-                Prosecute = Object.Instantiate(skip, skip.transform.parent);
+                Prosecute = UObject.Instantiate(skip, skip.transform.parent);
                 Prosecute.Parent = __instance;
                 Prosecute.SetTargetPlayerId(251);
                 Prosecute.transform.localPosition = skip.transform.localPosition + new Vector3(0f, -0.15f, 0f);

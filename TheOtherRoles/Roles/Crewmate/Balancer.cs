@@ -1,7 +1,4 @@
-using System.Collections.Generic;
 using TheOtherRoles.Patches;
-using TMPro;
-using UnityEngine;
 using UnityEngine.Events;
 
 namespace TheOtherRoles.Roles.Crewmate;
@@ -319,7 +316,7 @@ public class Balancer
         int objectnum = 11;
         for (int i = 0; i < objectnum; i++)
         {
-            ChainObjects.Add((createchain(Random.Range(1.8f, -1.7f), Random.Range(-15f, 15f)), 0f, 0));
+            ChainObjects.Add((createchain(URandom.Range(1.8f, -1.7f), URandom.Range(-15f, 15f)), 0f, 0));
         }
         ChainObjects.Add((createchain(0, 0, -12f), 0f, 0));
         textuseability = createtext(new(0, 2.1f, -30), GetString("BalancerAbilityUseText"), 12);
@@ -332,7 +329,7 @@ public class Balancer
 
     private static TextMeshPro createtext(Vector3 pos, string text, float fontsize)
     {
-        TextMeshPro tmp = Object.Instantiate(MeetingHud.Instance.TitleText, MeetingHud.Instance.transform);
+        TextMeshPro tmp = UObject.Instantiate(MeetingHud.Instance.TitleText, MeetingHud.Instance.transform);
         tmp.text = text;
         tmp.gameObject.gameObject.layer = 5;
         tmp.transform.localScale = Vector3.one;
@@ -342,7 +339,7 @@ public class Balancer
         tmp.fontSizeMin = fontsize;
         tmp.enableWordWrapping = false;
         tmp.gameObject.SetActive(true);
-        Object.Destroy(tmp.GetComponent<TextTranslatorTMP>());
+        UObject.Destroy(tmp.GetComponent<TextTranslatorTMP>());
         return tmp;
     }
 
@@ -371,7 +368,7 @@ public class Balancer
                 __instance.playerStates.ForEach(x =>
                 {
                     var icon = x.transform.FindChild("BalancerButton");
-                    if (icon != null) Object.Destroy(icon.gameObject);
+                    if (icon != null) UObject.Destroy(icon.gameObject);
                 });
             }
         }
@@ -406,7 +403,7 @@ public class Balancer
 
             __instance.playerStates.ForEach(x =>
             {
-                if (x.transform.FindChild("BalancerButton") != null) Object.Destroy(x.transform.FindChild("BalancerButton").gameObject);
+                if (x.transform.FindChild("BalancerButton") != null) UObject.Destroy(x.transform.FindChild("BalancerButton").gameObject);
             });
         }
 
@@ -421,7 +418,7 @@ public class Balancer
                     if (player.IsAlive())
                     {
                         GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-                        GameObject targetBox = Object.Instantiate(template, playerVoteArea.transform);
+                        GameObject targetBox = UObject.Instantiate(template, playerVoteArea.transform);
                         targetBox.name = "BalancerButton";
                         targetBox.transform.localPosition = new Vector3(1.1f, 0.03f, -1f);
                         SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();

@@ -1,16 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using AmongUs.Data;
 using AmongUs.GameOptions;
-using InnerNet;
 using Rewired;
-using TheOtherRoles.Buttons;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
 
@@ -127,7 +117,7 @@ internal class HudManagerUpdatePatch
                 var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
                 if (playerInfo == null)
                 {
-                    playerInfo = Object.Instantiate(p.cosmetics.nameText, p.cosmetics.nameText.transform.parent);
+                    playerInfo = UObject.Instantiate(p.cosmetics.nameText, p.cosmetics.nameText.transform.parent);
                     playerInfo.transform.localPosition += Vector3.up * 0.225f;
                     playerInfo.fontSize *= 0.8f;
                     playerInfo.gameObject.name = "Info";
@@ -139,7 +129,7 @@ internal class HudManagerUpdatePatch
 
                 if (meetingInfo == null && playerVoteArea != null)
                 {
-                    meetingInfo = Object.Instantiate(playerVoteArea.NameText, playerVoteArea.NameText.transform.parent);
+                    meetingInfo = UObject.Instantiate(playerVoteArea.NameText, playerVoteArea.NameText.transform.parent);
                     meetingInfo.transform.localPosition += Vector3.down * 0.2f;
                     meetingInfo.fontSize *= 0.64f;
                     meetingInfo.gameObject.name = "Info";
@@ -324,7 +314,7 @@ internal class HudManagerUpdatePatch
 
         if (SchrodingersCat.Player != null && (SchrodingersCat.Player == local || CanSeeRoleInfo))
         {
-            setPlayerNameColor(SchrodingersCat.Player, SchrodingersCat.color);
+            setPlayerNameColor(SchrodingersCat.Player, SchrodingersCat.stateColor);
             foreach (var p in allPlayer)
             {
                 if (SchrodingersCat.InTeam(p, out var color))
@@ -665,8 +655,8 @@ internal class HudManagerUpdatePatch
                         {
                             TMP_Text text;
                             RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
-                            GameObject gameObject = Object.Instantiate(roomTracker.gameObject);
-                            Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
+                            GameObject gameObject = UObject.Instantiate(roomTracker.gameObject);
+                            UObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                             gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                             gameObject.transform.localPosition = new Vector3(0, -1.8f, gameObject.transform.localPosition.z);
                             gameObject.transform.localScale = Vector3.one * 2f;
@@ -676,7 +666,7 @@ internal class HudManagerUpdatePatch
                             {
                                 if (p == 1f && text != null && text.gameObject != null)
                                 {
-                                    Object.Destroy(text.gameObject);
+                                    UObject.Destroy(text.gameObject);
                                 }
                             })));
                             var writer = StartRPC(CustomRPC.ActivateTrap);
@@ -818,7 +808,7 @@ internal class HudManagerUpdatePatch
     public static void updateGiantSize(HudManager __instance)
     {
         if (Giant.giant == null) return;
-        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
         foreach (var body in array.Where(x => x.ParentId == Giant.giant.PlayerId))
         {
             try
@@ -850,9 +840,9 @@ internal class HudManagerUpdatePatch
 
         if (BountyHunter.bountyHunter.Data.IsDead || InMeeting)
         {
-            if (BountyHunter.arrow != null) Object.Destroy(BountyHunter.arrow.arrow);
+            if (BountyHunter.arrow != null) UObject.Destroy(BountyHunter.arrow.arrow);
             BountyHunter.arrow = null;
-            if (BountyHunter.cooldownText != null && BountyHunter.cooldownText.gameObject != null) Object.Destroy(BountyHunter.cooldownText.gameObject);
+            if (BountyHunter.cooldownText != null && BountyHunter.cooldownText.gameObject != null) UObject.Destroy(BountyHunter.cooldownText.gameObject);
             BountyHunter.cooldownText = null;
             BountyHunter.bounty = null;
             foreach (PoolablePlayer p in ModOption.playerIcons.Values)
@@ -934,10 +924,11 @@ internal class HudManagerUpdatePatch
         if (player.Collider.offset.y == 127f)
             if (!Input.GetKey(KeyCode.LeftControl) || AmongUsClient.Instance.IsGameStarted)
                 player.Collider.offset = new Vector2(0f, -0.3636f);
-        if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started ||
-            GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
+
+        if (!InGame || IsHideNSeek) return;
 
         CustomButton.HudUpdate();
+
         resetNameTagsAndColors();
         setNameColors();
         updateShielded();
@@ -956,6 +947,10 @@ internal class HudManagerUpdatePatch
         // Update Player Info
         updatePlayerInfo();
 
+        // Ninja
+        NinjaTrace.UpdateAll();
+        // yoyo
+        Silhouette.UpdateAll();
         // BountyHunter
         bountyHunterUpdate();
         // Detective

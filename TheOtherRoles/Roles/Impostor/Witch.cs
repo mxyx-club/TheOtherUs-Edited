@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-namespace TheOtherRoles.Roles.Impostor;
+﻿namespace TheOtherRoles.Roles.Impostor;
 
 public static class Witch
 {

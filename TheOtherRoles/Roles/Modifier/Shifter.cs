@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace TheOtherRoles.Roles.Modifier;
 public static class Shifter
 {

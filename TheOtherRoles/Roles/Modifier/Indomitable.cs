@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace TheOtherRoles.Roles.Modifier;
+﻿namespace TheOtherRoles.Roles.Modifier;
 
 public static class Indomitable
 {

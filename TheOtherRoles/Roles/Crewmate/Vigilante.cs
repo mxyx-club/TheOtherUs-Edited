@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace TheOtherRoles.Roles.Crewmate;
+﻿namespace TheOtherRoles.Roles.Crewmate;
 public class Vigilante
 {
     public static PlayerControl vigilante;

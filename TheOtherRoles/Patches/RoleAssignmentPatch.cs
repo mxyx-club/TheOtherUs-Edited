@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AmongUs.GameOptions;
-using Hazel;
-using MonoMod.Utils;
-using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
-using UnityEngine;
 
 namespace TheOtherRoles.Patches;
 

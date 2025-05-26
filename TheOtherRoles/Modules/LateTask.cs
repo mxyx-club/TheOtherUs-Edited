@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace TheOtherRoles.Modules;
 
 internal class LateTask
@@ -28,7 +24,7 @@ internal class LateTask
         this.name = name;
         Tasks.Add(this);
 
-        Info($"New LateTask  \"{name}\"  Is Created");
+        Info($"New LateTask  \"{name}\"  Is Created", "LateTask");
     }
 
     public static void Update(float deltaTime)

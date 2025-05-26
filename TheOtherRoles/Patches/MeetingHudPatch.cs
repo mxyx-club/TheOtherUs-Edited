@@ -1,17 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AmongUs.QuickChat;
-using Hazel;
-using Reactor.Utilities;
-using TheOtherRoles.Buttons;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
 using static MeetingHud;
 using static TheOtherRoles.Options.ModOption;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
 
@@ -143,7 +133,7 @@ internal class MeetingHudPatch
         var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
             (byte)CustomRPC.MayorRevealed, SendOption.Reliable);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
-        Object.Destroy(MeetingExtraButton);
+        UObject.Destroy(MeetingExtraButton);
     }
 
     private static void populateButtonsPostfix(MeetingHud __instance)
@@ -166,7 +156,7 @@ internal class MeetingHudPatch
                     continue;
 
                 var template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-                var checkbox = Object.Instantiate(template, playerVoteArea.transform, true);
+                var checkbox = UObject.Instantiate(template, playerVoteArea.transform, true);
                 checkbox.transform.position = template.transform.position;
                 checkbox.transform.localPosition = new Vector3(-0.95f, 0.03f, -1.3f);
                 if ((HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId))
@@ -192,18 +182,18 @@ internal class MeetingHudPatch
         // Add meeting extra button, i.e. Swapper Confirm Button or Mayor Toggle Double Vote Button. Swapper Button uses ExtraButtonText on the Left of the Button. (Future meeting buttons can easily be added here)
         if (addMayorButton)
         {
-            var meetingUI = Object.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
+            var meetingUI = UObject.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
 
             var buttonTemplate = __instance.playerStates[0].transform.FindChild("votePlayerBase");
             var maskTemplate = __instance.playerStates[0].transform.FindChild("MaskArea");
             var textTemplate = __instance.playerStates[0].NameText;
             var meetingExtraButtonParent = new GameObject().transform;
             meetingExtraButtonParent.SetParent(meetingUI);
-            var meetingExtraButton = Object.Instantiate(buttonTemplate, meetingExtraButtonParent);
+            var meetingExtraButton = UObject.Instantiate(buttonTemplate, meetingExtraButtonParent);
             MeetingExtraButton = meetingExtraButton.gameObject;
 
-            var meetingExtraButtonMask = Object.Instantiate(maskTemplate, meetingExtraButtonParent);
-            meetingExtraButtonLabel = Object.Instantiate(textTemplate, meetingExtraButton);
+            var meetingExtraButtonMask = UObject.Instantiate(maskTemplate, meetingExtraButtonParent);
+            meetingExtraButtonLabel = UObject.Instantiate(textTemplate, meetingExtraButton);
             meetingExtraButton.GetComponent<SpriteRenderer>().sprite =
                 ShipStatus.Instance.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
 
@@ -269,7 +259,7 @@ internal class MeetingHudPatch
                 if (Eraser.eraser.IsAlive() && PlayerControl.LocalPlayer == Eraser.eraser && !Eraser.canEraseGuess && Eraser.alreadyErased.Any(x => x == pvae.TargetPlayerId))
                     continue;
                 var template = pvae.Buttons.transform.Find("CancelButton").gameObject;
-                var targetBox = Object.Instantiate(template, pvae.transform);
+                var targetBox = UObject.Instantiate(template, pvae.transform);
                 targetBox.name = "ShootButton";
                 targetBox.transform.localPosition = new Vector3(-0.95f, 0.03f, -1.3f);
                 var renderer = targetBox.GetComponent<SpriteRenderer>();
@@ -312,7 +302,7 @@ internal class MeetingHudPatch
         }
         else if (PlayerControl.LocalPlayer == PartTimer.partTimer && PartTimer.target == null)
         {
-            meetingInfoText = string.Format(GetString("PartTimerMeetingInfo"), Swapper.charges);
+            meetingInfoText = string.Format(GetString("PartTimerMeetingInfo"), PartTimer.deathTurn);
         }
         else if (PlayerControl.LocalPlayer == Witness.Player)
         {
@@ -524,7 +514,7 @@ internal class MeetingHudPatch
     {
         public static bool Prefix(MeetingHud __instance, GameData.PlayerInfo voterPlayer, int index, Transform parent)
         {
-            var spriteRenderer = Object.Instantiate(__instance.PlayerVotePrefab);
+            var spriteRenderer = UObject.Instantiate(__instance.PlayerVotePrefab);
             var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes() || CanSeeRoleInfo ||
                                  (Prosecutor.prosecutor != null && Prosecutor.prosecutor == PlayerControl.LocalPlayer &&
                                   Prosecutor.canSeeVoteColors && TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data).Item1 >=
@@ -575,7 +565,7 @@ internal class MeetingHudPatch
                 .GetString(StringNames.MeetingVotingResults, new Il2CppReferenceArray<Il2CppSystem.Object>(0));
 
             var allNums = new Dictionary<int, int>();
-            __instance.TitleText.text = Object.FindObjectOfType<TranslationController>().GetString(StringNames.MeetingVotingResults, []);
+            __instance.TitleText.text = UObject.FindObjectOfType<TranslationController>().GetString(StringNames.MeetingVotingResults, []);
 
             var num = 0;
             for (var i = 0; i < __instance.playerStates.Length; i++)
@@ -699,7 +689,7 @@ internal class MeetingHudPatch
                 Mini.timeOfGrowthStart = Mini.timeOfGrowthStart.Add(DateTime.UtcNow.Subtract(Mini.timeOfMeetingStart)).AddSeconds(10);
 
             // Snitch
-            if (Snitch.snitch != null && !Snitch.needsUpdate && Snitch.snitch.Data.IsDead && Snitch.text != null) Object.Destroy(Snitch.text);
+            if (Snitch.snitch != null && !Snitch.needsUpdate && Snitch.snitch.Data.IsDead && Snitch.text != null) UObject.Destroy(Snitch.text);
 
             __instance.exiledPlayer = __instance.wasTie ? null : __instance.exiledPlayer;
             var exiledString = exiled == null ? "null" : exiled.PlayerName;
@@ -754,8 +744,6 @@ internal class MeetingHudPatch
         public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo meetingTarget)
         {
             var roomTracker = FastDestroyableSingleton<HudManager>.Instance.roomTracker;
-            var roomId = byte.MinValue;
-            if (roomTracker != null && roomTracker.LastRoom != null) roomId = (byte)roomTracker.LastRoom.RoomId;
 
             // Resett Bait list
             Bait.active = new Dictionary<DeadPlayer, float>();
@@ -825,11 +813,22 @@ internal class MeetingHudPatch
         }
     }
 
+    [HarmonyPatch(typeof(TextBoxTMP), nameof(TextBoxTMP.SetText))]
+    public class BlockChatBlackmailed
+    {
+        public static bool Prefix(QuickChatMenu __instance)
+        {
+            if (Blackmailer.blackmailer != null && Blackmailer.blackmailed != null && Blackmailer.blackmailed == PlayerControl.LocalPlayer)
+            {
+                return false;
+            }
+            return true;
+        }
+    }
+
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
     private class MeetingHudUpdatePatch
     {
-        public static Sprite Overlay => Blackmailer.overlaySprite;
-
         private static void Postfix(MeetingHud __instance)
         {
             // Deactivate skip Button if skipping on emergency meetings is disabled
@@ -843,21 +842,14 @@ internal class MeetingHudPatch
                 // Blackmailer show overlay
                 var playerState = __instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == Blackmailer.blackmailed.PlayerId);
                 playerState.Overlay.gameObject.SetActive(true);
-                playerState.Overlay.sprite = Overlay;
+                playerState.Overlay.sprite = Blackmailer.overlaySprite;
                 if (__instance.state != VoteStates.Animating && !Blackmailer.alreadyShook)
                 {
                     Blackmailer.alreadyShook = true;
                     __instance.StartCoroutine(Effects.SwayX(playerState.transform));
                 }
             }
-        }
-    }
 
-    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
-    private class MeetingChatNotification
-    {
-        private static void Postfix(MeetingHud __instance)
-        {
             var chat = FastDestroyableSingleton<HudManager>.Instance.Chat;
             var local = PlayerControl.LocalPlayer;
             var num = (int)chat.timeSinceLastMessage;
@@ -872,19 +864,6 @@ internal class MeetingHudPatch
                 RPCProcedure.setChatNotificationOverlay(local.PlayerId, player.PlayerId);
                 break;
             }
-        }
-    }
-
-    [HarmonyPatch(typeof(TextBoxTMP), nameof(TextBoxTMP.SetText))]
-    public class BlockChatBlackmailed
-    {
-        public static bool Prefix(QuickChatMenu __instance)
-        {
-            if (Blackmailer.blackmailer != null && Blackmailer.blackmailed != null && Blackmailer.blackmailed == PlayerControl.LocalPlayer)
-            {
-                return false;
-            }
-            return true;
         }
     }
 
@@ -937,7 +916,7 @@ internal class MeetingHudPatch
                 var meetingInfoTransform = playerState.NameText.transform.parent.Find("WitnessInfo");
                 if (meetingInfoTransform != null)
                 {
-                    Object.Destroy(meetingInfoTransform.gameObject);
+                    UObject.Destroy(meetingInfoTransform.gameObject);
                 }
             }
 

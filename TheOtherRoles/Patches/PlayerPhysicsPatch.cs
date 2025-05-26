@@ -1,5 +1,4 @@
 using TheOtherRoles.CustomCosmetics.CustomHats;
-using UnityEngine;
 
 namespace TheOtherRoles.Patches;
 

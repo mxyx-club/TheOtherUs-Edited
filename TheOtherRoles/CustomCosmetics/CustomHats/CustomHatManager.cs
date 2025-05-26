@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text.Json.Serialization;
-using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace TheOtherRoles.CustomCosmetics.CustomHats;

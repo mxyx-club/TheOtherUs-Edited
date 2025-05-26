@@ -1,22 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using AmongUs.GameOptions;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
-using Hazel;
 using Il2CppSystem.Linq;
-using Reactor.Utilities.Extensions;
-using TheOtherRoles.Buttons;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 using static TheOtherRoles.Options.CustomOption;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Options;
 
@@ -324,8 +314,7 @@ public class CustomOption
     // Copy to or paste from clipboard (as string)
     public static void copyToClipboard()
     {
-        GUIUtility.systemCopyBuffer =
-            $"{Main.VersionString}!{Convert.ToBase64String(serializeOptions())}!{vanillaSettings.Value}";
+        GUIUtility.systemCopyBuffer = $"{Main.Version}!{Convert.ToBase64String(serializeOptions())}!{vanillaSettings.Value}";
     }
 
     public static bool pasteFromClipboard()
@@ -393,7 +382,7 @@ internal class GameOptionsMenuStartPatch
         GameObject.Find("ConfirmEjects")?.Destroy();
         // create copy to clipboard and paste from clipboard buttons.
         var template = GameObject.Find("CloseButton");
-        var copyButton = Object.Instantiate(template, template.transform.parent);
+        var copyButton = UObject.Instantiate(template, template.transform.parent);
         copyButton.transform.localPosition += Vector3.down * 0.8f;
         var copyButtonPassive = copyButton.GetComponent<PassiveButton>();
         var copyButtonRenderer = copyButton.GetComponent<SpriteRenderer>();
@@ -410,7 +399,7 @@ internal class GameOptionsMenuStartPatch
                     copyButtonRenderer.color = Color.white;
             })));
         }));
-        var pasteButton = Object.Instantiate(template, template.transform.parent);
+        var pasteButton = UObject.Instantiate(template, template.transform.parent);
         pasteButton.transform.localPosition += Vector3.down * 1.6f;
         var pasteButtonPassive = pasteButton.GetComponent<PassiveButton>();
         var pasteButtonRenderer = pasteButton.GetComponent<SpriteRenderer>();
@@ -445,45 +434,45 @@ internal class GameOptionsMenuStartPatch
         if (isReturn) return;
 
         // Setup TOR tab
-        var template = Object.FindObjectsOfType<StringOption>().FirstOrDefault();
+        var template = UObject.FindObjectsOfType<StringOption>().FirstOrDefault();
         if (template == null) return;
         var gameSettings = GameObject.Find("Game Settings");
-        var gameSettingMenu = Object.FindObjectsOfType<GameSettingMenu>().FirstOrDefault();
+        var gameSettingMenu = UObject.FindObjectsOfType<GameSettingMenu>().FirstOrDefault();
 
-        var torSettings = Object.Instantiate(gameSettings, gameSettings.transform.parent);
+        var torSettings = UObject.Instantiate(gameSettings, gameSettings.transform.parent);
         var torMenu = getMenu(torSettings, "TORSettings");
 
-        var impostorSettings = Object.Instantiate(gameSettings, gameSettings.transform.parent);
+        var impostorSettings = UObject.Instantiate(gameSettings, gameSettings.transform.parent);
         var impostorMenu = getMenu(impostorSettings, "ImpostorSettings");
 
-        var neutralSettings = Object.Instantiate(gameSettings, gameSettings.transform.parent);
+        var neutralSettings = UObject.Instantiate(gameSettings, gameSettings.transform.parent);
         var neutralMenu = getMenu(neutralSettings, "NeutralSettings");
 
-        var crewmateSettings = Object.Instantiate(gameSettings, gameSettings.transform.parent);
+        var crewmateSettings = UObject.Instantiate(gameSettings, gameSettings.transform.parent);
         var crewmateMenu = getMenu(crewmateSettings, "CrewmateSettings");
 
-        var modifierSettings = Object.Instantiate(gameSettings, gameSettings.transform.parent);
+        var modifierSettings = UObject.Instantiate(gameSettings, gameSettings.transform.parent);
         var modifierMenu = getMenu(modifierSettings, "ModifierSettings");
 
         var roleTab = GameObject.Find("RoleTab");
         var gameTab = GameObject.Find("GameTab");
 
-        var torTab = Object.Instantiate(roleTab, roleTab.transform.parent);
+        var torTab = UObject.Instantiate(roleTab, roleTab.transform.parent);
         var torTabHighlight = getTabHighlight(torTab, "TheOtherRolesTab", "TheOtherRoles.Resources.TabIcon.png");
 
-        var impostorTab = Object.Instantiate(roleTab, torTab.transform);
+        var impostorTab = UObject.Instantiate(roleTab, torTab.transform);
         var impostorTabHighlight =
             getTabHighlight(impostorTab, "ImpostorTab", "TheOtherRoles.Resources.TabIconImpostor.png");
 
-        var neutralTab = Object.Instantiate(roleTab, impostorTab.transform);
+        var neutralTab = UObject.Instantiate(roleTab, impostorTab.transform);
         var neutralTabHighlight =
             getTabHighlight(neutralTab, "NeutralTab", "TheOtherRoles.Resources.TabIconNeutral.png");
 
-        var crewmateTab = Object.Instantiate(roleTab, neutralTab.transform);
+        var crewmateTab = UObject.Instantiate(roleTab, neutralTab.transform);
         var crewmateTabHighlight =
             getTabHighlight(crewmateTab, "CrewmateTab", "TheOtherRoles.Resources.TabIconCrewmate.png");
 
-        var modifierTab = Object.Instantiate(roleTab, crewmateTab.transform);
+        var modifierTab = UObject.Instantiate(roleTab, crewmateTab.transform);
         var modifierTabHighlight =
             getTabHighlight(modifierTab, "ModifierTab", "TheOtherRoles.Resources.TabIconModifier.png");
 
@@ -550,7 +539,7 @@ internal class GameOptionsMenuStartPatch
             if ((int)option.type > 4) continue;
             if (option.optionBehaviour == null)
             {
-                var stringOption = Object.Instantiate(template, menus[(int)option.type]);
+                var stringOption = UObject.Instantiate(template, menus[(int)option.type]);
                 optionBehaviours[(int)option.type].Add(stringOption);
                 stringOption.OnValueChanged = new Action<OptionBehaviour>(o => { });
                 stringOption.TitleText.text = option.GetName();
@@ -588,52 +577,52 @@ internal class GameOptionsMenuStartPatch
         if (isReturn) return;
 
         // Setup TOR tab
-        var template = Object.FindObjectsOfType<StringOption>().FirstOrDefault();
+        var template = UObject.FindObjectsOfType<StringOption>().FirstOrDefault();
         if (template == null) return;
         var gameSettings = GameObject.Find("Game Settings");
-        var gameSettingMenu = Object.FindObjectsOfType<GameSettingMenu>().FirstOrDefault();
+        var gameSettingMenu = UObject.FindObjectsOfType<GameSettingMenu>().FirstOrDefault();
 
-        var torSettings = Object.Instantiate(gameSettings, gameSettings.transform.parent);
+        var torSettings = UObject.Instantiate(gameSettings, gameSettings.transform.parent);
         var torMenu = getMenu(torSettings, "TORSettings");
 
-        var guesserSettings = Object.Instantiate(gameSettings, gameSettings.transform.parent);
+        var guesserSettings = UObject.Instantiate(gameSettings, gameSettings.transform.parent);
         var guesserMenu = getMenu(guesserSettings, "GuesserSettings");
 
-        var impostorSettings = Object.Instantiate(gameSettings, gameSettings.transform.parent);
+        var impostorSettings = UObject.Instantiate(gameSettings, gameSettings.transform.parent);
         var impostorMenu = getMenu(impostorSettings, "ImpostorSettings");
 
-        var neutralSettings = Object.Instantiate(gameSettings, gameSettings.transform.parent);
+        var neutralSettings = UObject.Instantiate(gameSettings, gameSettings.transform.parent);
         var neutralMenu = getMenu(neutralSettings, "NeutralSettings");
 
-        var crewmateSettings = Object.Instantiate(gameSettings, gameSettings.transform.parent);
+        var crewmateSettings = UObject.Instantiate(gameSettings, gameSettings.transform.parent);
         var crewmateMenu = getMenu(crewmateSettings, "CrewmateSettings");
 
-        var modifierSettings = Object.Instantiate(gameSettings, gameSettings.transform.parent);
+        var modifierSettings = UObject.Instantiate(gameSettings, gameSettings.transform.parent);
         var modifierMenu = getMenu(modifierSettings, "ModifierSettings");
 
         var roleTab = GameObject.Find("RoleTab");
         var gameTab = GameObject.Find("GameTab");
 
-        var torTab = Object.Instantiate(roleTab, gameTab.transform.parent);
+        var torTab = UObject.Instantiate(roleTab, gameTab.transform.parent);
         var torTabHighlight = getTabHighlight(torTab, "TheOtherRolesTab", "TheOtherRoles.Resources.TabIcon.png");
 
-        var guesserTab = Object.Instantiate(roleTab, torTab.transform);
+        var guesserTab = UObject.Instantiate(roleTab, torTab.transform);
         var guesserTabHighlight =
             getTabHighlight(guesserTab, "GuesserTab", "TheOtherRoles.Resources.TabIconGuesserSettings.png");
 
-        var impostorTab = Object.Instantiate(roleTab, guesserTab.transform);
+        var impostorTab = UObject.Instantiate(roleTab, guesserTab.transform);
         var impostorTabHighlight =
             getTabHighlight(impostorTab, "ImpostorTab", "TheOtherRoles.Resources.TabIconImpostor.png");
 
-        var neutralTab = Object.Instantiate(roleTab, impostorTab.transform);
+        var neutralTab = UObject.Instantiate(roleTab, impostorTab.transform);
         var neutralTabHighlight =
             getTabHighlight(neutralTab, "NeutralTab", "TheOtherRoles.Resources.TabIconNeutral.png");
 
-        var crewmateTab = Object.Instantiate(roleTab, neutralTab.transform);
+        var crewmateTab = UObject.Instantiate(roleTab, neutralTab.transform);
         var crewmateTabHighlight =
             getTabHighlight(crewmateTab, "CrewmateTab", "TheOtherRoles.Resources.TabIconCrewmate.png");
 
-        var modifierTab = Object.Instantiate(roleTab, crewmateTab.transform);
+        var modifierTab = UObject.Instantiate(roleTab, crewmateTab.transform);
         var modifierTabHighlight =
             getTabHighlight(modifierTab, "ModifierTab", "TheOtherRoles.Resources.TabIconModifier.png");
 
@@ -705,7 +694,7 @@ internal class GameOptionsMenuStartPatch
             if ((int)option.type > 5) continue;
             if (option.optionBehaviour == null)
             {
-                var stringOption = Object.Instantiate(template, menus[(int)option.type]);
+                var stringOption = UObject.Instantiate(template, menus[(int)option.type]);
                 optionBehaviours[(int)option.type].Add(stringOption);
                 stringOption.OnValueChanged = new Action<OptionBehaviour>(o => { });
                 stringOption.TitleText.text = option.GetName();
@@ -745,7 +734,7 @@ internal class GameOptionsMenuStartPatch
     {
         foreach (var optionBehaviours in optionBehavioursList)
             foreach (var option in optionBehaviours)
-                Object.Destroy(option.gameObject);
+                UObject.Destroy(option.gameObject);
     }
 
     private static bool setNames(Dictionary<string, string> gameObjectNameDisplayNameMap)
@@ -908,7 +897,7 @@ internal class GameOptionsMenuUpdatePatch
         if (!update) return;
 
         // Return Menu Update if in normal among us settings 
-        var gameSettingMenu = Object.FindObjectsOfType<GameSettingMenu>().FirstOrDefault();
+        var gameSettingMenu = UObject.FindObjectsOfType<GameSettingMenu>().FirstOrDefault();
         if (gameSettingMenu.RegularGameSettings.active || gameSettingMenu.RolesSettings.gameObject.active) return;
 
         __instance.GetComponentInParent<Scroller>().ContentYBounds.max = -0.5F + __instance.Children.Length * 0.55F;
@@ -1253,7 +1242,7 @@ public static class GameOptionsNextPagePatch
             }
             else
             {
-                Object.Destroy(LobbyRoleInfo.RolesSummaryUI);
+                UObject.Destroy(LobbyRoleInfo.RolesSummaryUI);
                 LobbyRoleInfo.RolesSummaryUI = null;
             }
         }
@@ -1397,7 +1386,7 @@ public class HudManagerUpdate
                                           /*|| AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started*/
                                           || GameOptionsManager.Instance.currentGameOptions.GameMode ==
                                           GameModes.HideNSeek) return;
-        settingsBackground = Object.Instantiate(__instance.FullScreen.gameObject, __instance.transform);
+        settingsBackground = UObject.Instantiate(__instance.FullScreen.gameObject, __instance.transform);
         settingsBackground.SetActive(true);
         var renderer = settingsBackground.GetComponent<SpriteRenderer>();
         renderer.color = new Color(0.2f, 0.2f, 0.2f, 0.9f);
@@ -1405,7 +1394,7 @@ public class HudManagerUpdate
 
         for (var i = 0; i < settingsTMPs.Length; i++)
         {
-            settingsTMPs[i] = Object.Instantiate(__instance.KillButton.cooldownTimerText, __instance.transform);
+            settingsTMPs[i] = UObject.Instantiate(__instance.KillButton.cooldownTimerText, __instance.transform);
             settingsTMPs[i].alignment = TextAlignmentOptions.TopLeft;
             settingsTMPs[i].enableWordWrapping = false;
             settingsTMPs[i].transform.localScale = Vector3.one * 0.25f;
@@ -1433,7 +1422,7 @@ public class HudManagerUpdate
         if (!toggleSettingsButton || !toggleSettingsButtonObject)
         {
             // add a special button for settings viewing:
-            toggleSettingsButtonObject = Object.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
+            toggleSettingsButtonObject = UObject.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
             toggleSettingsButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -0.66f, -500f);
             var renderer = toggleSettingsButtonObject.GetComponent<SpriteRenderer>();
             renderer.sprite = new ResourceSprite("TheOtherRoles.Resources.CurrentSettingsButton.png", 180f);
@@ -1456,7 +1445,7 @@ public class HudManagerUpdate
         if (!rolesSummaryButton || !rolesSummaryButtonObject)
         {
             // add a special button for settings viewing:
-            rolesSummaryButtonObject = Object.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
+            rolesSummaryButtonObject = UObject.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
             rolesSummaryButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -1.31f, -500f);
             var renderer = rolesSummaryButtonObject.GetComponent<SpriteRenderer>();
             renderer.sprite = new ResourceSprite("TheOtherRoles.Resources.HelpButton.png", 100f);
@@ -1468,7 +1457,7 @@ public class HudManagerUpdate
                     LobbyRoleInfo.RoleSummaryOnClick();
                 else
                 {
-                    Object.Destroy(LobbyRoleInfo.RolesSummaryUI);
+                    UObject.Destroy(LobbyRoleInfo.RolesSummaryUI);
                     LobbyRoleInfo.RolesSummaryUI = null;
                 }
             }));

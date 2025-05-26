@@ -1,7 +1,4 @@
-﻿using TheOtherRoles.Utilities;
-using UnityEngine;
-
-namespace TheOtherRoles.Roles.Crewmate;
+﻿namespace TheOtherRoles.Roles.Crewmate;
 
 public class Hacker
 {

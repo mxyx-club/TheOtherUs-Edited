@@ -1,18 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
-using Hazel;
-using InnerNet;
-using Reactor.Utilities.Extensions;
-using TheOtherRoles.Buttons;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
 using static TheOtherRoles.GameHistory;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
 
@@ -239,7 +228,7 @@ public static class PlayerControlFixedUpdatePatch
                 if (!trackedOnMap)
                 {
                     // Check for dead body
-                    var body = Object.FindObjectsOfType<DeadBody>()
+                    var body = UObject.FindObjectsOfType<DeadBody>()
                         .FirstOrDefault(b => b.ParentId == Ninja.ninjaMarked.PlayerId);
                     if (body != null)
                     {
@@ -304,7 +293,7 @@ public static class PlayerControlFixedUpdatePatch
                     if (!trackedOnMap)
                     {
                         // Check for dead body
-                        DeadBody body = Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == Tracker.tracked.PlayerId);
+                        DeadBody body = UObject.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == Tracker.tracked.PlayerId);
                         if (body != null)
                         {
                             trackedOnMap = true;
@@ -340,7 +329,7 @@ public static class PlayerControlFixedUpdatePatch
 
             if (arrowsCountChanged)
             {
-                foreach (Arrow arrow in Tracker.localArrows) Object.Destroy(arrow.arrow);
+                foreach (Arrow arrow in Tracker.localArrows) UObject.Destroy(arrow.arrow);
                 Tracker.localArrows = new();
             }
             foreach (Vector3 position in Tracker.deadBodyPositions)
@@ -356,7 +345,7 @@ public static class PlayerControlFixedUpdatePatch
         }
         else if (Tracker.localArrows.Count > 0)
         {
-            foreach (Arrow arrow in Tracker.localArrows) Object.Destroy(arrow.arrow);
+            foreach (Arrow arrow in Tracker.localArrows) UObject.Destroy(arrow.arrow);
             Tracker.localArrows = new();
         }
     }
@@ -386,7 +375,7 @@ public static class PlayerControlFixedUpdatePatch
         }
         else if (local == Redemptor.Player && Redemptor.Revelating)
         {
-            var array = Object.FindObjectsOfType<DeadBody>()?.FirstOrDefault();
+            var array = UObject.FindObjectsOfType<DeadBody>()?.FirstOrDefault();
             if (array != null)
             {
                 Redemptor.arrow ??= new Arrow(Redemptor.color);
@@ -412,7 +401,7 @@ public static class PlayerControlFixedUpdatePatch
         {
             if (Redemptor.text == null)
             {
-                Redemptor.text = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                Redemptor.text = UObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 Redemptor.text.enableWordWrapping = false;
                 Redemptor.text.transform.localScale = Vector3.one * 0.7f;
                 Redemptor.text.transform.localPosition += new Vector3(0f, 1.9f, -69f);
@@ -519,7 +508,7 @@ public static class PlayerControlFixedUpdatePatch
 
             if (meetingInfo == null)
             {
-                meetingInfo = Object.Instantiate(pva.NameText, pva.NameText.transform.parent);
+                meetingInfo = UObject.Instantiate(pva.NameText, pva.NameText.transform.parent);
                 meetingInfo.transform.localPosition += Vector3.up * 0.2f;
                 meetingInfo.fontSize *= 0.72f;
                 meetingInfo.gameObject.name = "WitnessInfo";
@@ -628,7 +617,7 @@ public static class PlayerControlFixedUpdatePatch
         {
             if (Snitch.text == null && !Snitch.snitch.IsDead())
             {
-                Snitch.text = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                Snitch.text = UObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 Snitch.text.enableWordWrapping = false;
                 Snitch.text.transform.localScale = Vector3.one * 0.75f;
                 Snitch.text.transform.localPosition += new Vector3(0f, 1.8f, -69f);
@@ -698,18 +687,18 @@ public static class PlayerControlFixedUpdatePatch
             Vulture.localArrows == null || !Vulture.showArrows) return;
         if (Vulture.vulture.Data.IsDead)
         {
-            foreach (var arrow in Vulture.localArrows) Object.Destroy(arrow.arrow);
+            foreach (var arrow in Vulture.localArrows) UObject.Destroy(arrow.arrow);
             Vulture.localArrows = new();
             return;
         }
 
-        DeadBody[] deadBodies = Object.FindObjectsOfType<DeadBody>();
+        DeadBody[] deadBodies = UObject.FindObjectsOfType<DeadBody>();
         var arrowUpdate = Vulture.localArrows.Count != deadBodies.Length;
         var index = 0;
 
         if (arrowUpdate)
         {
-            foreach (var arrow in Vulture.localArrows) Object.Destroy(arrow.arrow);
+            foreach (var arrow in Vulture.localArrows) UObject.Destroy(arrow.arrow);
             Vulture.localArrows = new();
         }
 
@@ -735,20 +724,20 @@ public static class PlayerControlFixedUpdatePatch
             if (p.Data.IsDead)
             {
                 foreach (var arrow in Amnisiac.localArrows)
-                    Object.Destroy(arrow.arrow);
+                    UObject.Destroy(arrow.arrow);
                 Amnisiac.localArrows.Clear();
             }
         }
         if (Amnisiac.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId && x.IsAlive()))
         {
-            DeadBody[] deadBodies = Object.FindObjectsOfType<DeadBody>();
+            DeadBody[] deadBodies = UObject.FindObjectsOfType<DeadBody>();
             bool arrowUpdate = Amnisiac.localArrows.Count != deadBodies.Length;
             int index = 0;
 
             if (arrowUpdate)
             {
                 foreach (var arrow in Amnisiac.localArrows)
-                    Object.Destroy(arrow.arrow);
+                    UObject.Destroy(arrow.arrow);
 
                 Amnisiac.localArrows.Clear();
             }
@@ -772,7 +761,7 @@ public static class PlayerControlFixedUpdatePatch
         if (Radar.radar == null || PlayerControl.LocalPlayer != Radar.radar || Radar.localArrows == null || InMeeting) return;
         if (Radar.radar.Data.IsDead)
         {
-            foreach (var arrow in Radar.localArrows) Object.Destroy(arrow.arrow);
+            foreach (var arrow in Radar.localArrows) UObject.Destroy(arrow.arrow);
             Radar.localArrows = new();
             return;
         }
@@ -782,7 +771,7 @@ public static class PlayerControlFixedUpdatePatch
 
         if (arrowUpdate && !PlayerControl.LocalPlayer.Data.IsDead)
         {
-            foreach (var arrow in Radar.localArrows) Object.Destroy(arrow.arrow);
+            foreach (var arrow in Radar.localArrows) UObject.Destroy(arrow.arrow);
             Radar.ClosestPlayer = GetClosestPlayer(PlayerControl.LocalPlayer,
                 PlayerControl.AllPlayerControls.ToArray().ToList());
             Radar.localArrows = new();
@@ -1152,10 +1141,7 @@ public static class PlayerControlFixedUpdatePatch
             // Executioner
             executionerUpdate();
             // Ninja
-            NinjaTrace.UpdateAll();
             ninjaUpdate();
-            // yoyo
-            Silhouette.UpdateAll();
             // PartTimer
             partTimerUpdate();
             //Balancer
@@ -1251,7 +1237,6 @@ internal class PlayerControlRevivePatch
     {
         if (PlayerControl.LocalPlayer == __instance)
         {
-            CustomButton.ResetAllCooldowns(-1);
             CanSeeRoleInfo = false;
         }
 
@@ -1269,8 +1254,6 @@ internal class PlayerControlRevivePatch
 
         RPCProcedure.clearGhostRoles(__instance.PlayerId);
         DeadPlayers.RemoveAll(x => x.Player == __instance);
-
-        __instance.SetKillTimer(ModOption.KillCooldown);
     }
 }
 

@@ -1,8 +1,3 @@
-using System;
-using Hazel;
-using InnerNet;
-using UnityEngine;
-
 namespace TheOtherRoles.Helper;
 
 public static class FastRPCExtension

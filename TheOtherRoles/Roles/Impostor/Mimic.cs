@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using TheOtherRoles.Buttons;
-using UnityEngine;
 using static TheOtherRoles.Buttons.HudManagerStartPatch;
 
 namespace TheOtherRoles.Roles.Impostor;

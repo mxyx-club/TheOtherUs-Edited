@@ -1,8 +1,3 @@
-using System;
-using System.Linq;
-using TheOtherRoles.Utilities;
-using UnityEngine;
-
 namespace TheOtherRoles.Objects.Map;
 
 [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
@@ -77,7 +72,7 @@ internal class OptimizeMapPatch
                 // 梯子の周りの影を消す
                 UnityEngine.Object.Destroy(gapRoom.GetComponentsInChildren<EdgeCollider2D>().FirstOrDefault(x => Math.Abs(x.points[0].x + 6.2984f) < 0.1));
                 EdgeCollider2D collider = meetingRoom.GetComponentsInChildren<EdgeCollider2D>().FirstOrDefault(x => x.pointCount == 46);
-                Il2CppSystem.Collections.Generic.List<Vector2> points = new();
+                ISystem.List<Vector2> points = new();
                 EdgeCollider2D newCollider = collider.gameObject.AddComponent<EdgeCollider2D>();
                 EdgeCollider2D newCollider2 = collider.gameObject.AddComponent<EdgeCollider2D>();
                 points.Add(collider.points[45]);

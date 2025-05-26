@@ -1,16 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using AmongUs.GameOptions;
-using Hazel;
 using PowerTools;
-using TheOtherRoles.Buttons;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Utilities;
-using TMPro;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TheOtherRoles.Patches;
 
@@ -29,7 +20,7 @@ internal class ExileControllerBeginPatch
         {
             IsSec = true;
             __instance.exiled = null;
-            ExileController controller = Object.Instantiate(__instance, __instance.transform.parent);
+            ExileController controller = UObject.Instantiate(__instance, __instance.transform.parent);
             controller.exiled = Balancer.targetplayerright.Data;
             controller.Begin(controller.exiled, false);
             IsSec = false;
@@ -159,7 +150,7 @@ internal class ExileControllerBeginPatch
     public static void Postfix(ExileController __instance, [HarmonyArgument(0)] ref GameData.PlayerInfo exiled)
     {
         var player = exiled?.Object ?? null;
-        confirmImpostorSecondText = Object.Instantiate(__instance.ImpostorText, __instance.Text.transform);
+        confirmImpostorSecondText = UObject.Instantiate(__instance.ImpostorText, __instance.Text.transform);
         StringBuilder changeStringBuilder = new();
 
         if (GameManager.Instance.LogicOptions.currentGameOptions.GetBool(BoolOptionNames.ConfirmImpostor))
@@ -224,7 +215,7 @@ internal class ExileControllerBeginPatch
 internal class ExileControllerWrapUpPatch
 {
     // Workaround to add a "postfix" to the destroying of the exile controller (i.e. cutscene) and SpwanInMinigame of submerged
-    [HarmonyPatch(typeof(Object), nameof(Object.Destroy), typeof(GameObject))]
+    [HarmonyPatch(typeof(UObject), nameof(UObject.Destroy), typeof(GameObject))]
     public static void Prefix(GameObject obj)
     {
         // Nightvision:
@@ -346,7 +337,7 @@ internal class ExileControllerWrapUpPatch
                                 rend.color = tmp;
                             }
 
-                            if (p == 1f && rend != null && rend.gameObject != null) Object.Destroy(rend.gameObject);
+                            if (p == 1f && rend != null && rend.gameObject != null) UObject.Destroy(rend.gameObject);
                         })));
                 }
             }
@@ -480,7 +471,7 @@ internal class ExileControllerWrapUpPatch
         {
             if (Medium.souls != null)
             {
-                foreach (var sr in Medium.souls) Object.Destroy(sr.gameObject);
+                foreach (var sr in Medium.souls) UObject.Destroy(sr.gameObject);
                 Medium.souls = new List<SpriteRenderer>();
             }
 
@@ -591,7 +582,7 @@ internal class ExileControllerWrapUpPatch
                     }
                     __instance.exiled.IsDead = true;
                 }
-                Object.Destroy(__instance.gameObject);
+                UObject.Destroy(__instance.gameObject);
             }
             return true;
         }

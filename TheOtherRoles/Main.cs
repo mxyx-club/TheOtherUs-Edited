@@ -1,30 +1,22 @@
-using System;
-using AmongUs.Data;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
-using InnerNet;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
 using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Utilities;
 
 namespace TheOtherRoles;
 
-[BepInPlugin(Id, ModName, VersionString)]
+[BepInAutoPlugin("TheOtherUs.Options.v3")]
 [BepInDependency(SubmergedCompatibility.SUBMERGED_GUID, BepInDependency.DependencyFlags.SoftDependency)]
 [BepInProcess("Among Us.exe")]
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
-public class TheOtherRolesPlugin : BasePlugin
+public partial class TheOtherRolesPlugin : BasePlugin
 {
-    public const string Id = "TheOtherUs.Options.v3"; // Config files name
-    public const string ModName = MyPluginInfo.PLUGIN_NAME;
-    public const string VersionString = MyPluginInfo.PLUGIN_VERSION;
-
-    public static Version Version = Version.Parse(VersionString);
-
     public static TheOtherRolesPlugin Instance;
+    public const string VersionSuffix = " - Lite";
+    public static Version version => System.Version.Parse(Version);
 
     public static int optionsPage = 2;
 
@@ -102,7 +94,7 @@ public class TheOtherRolesPlugin : BasePlugin
         MainMenuPatch.addSceneChangeCallbacks();
         AddToKillDistanceSetting.addKillDistance();
 
-        Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{VersionString}-Lite\n---------------");
+        Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{Version}{VersionSuffix}\n---------------");
     }
 }
 

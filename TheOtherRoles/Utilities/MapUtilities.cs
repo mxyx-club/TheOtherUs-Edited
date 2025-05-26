@@ -1,15 +1,12 @@
-using System.Collections.Generic;
-using Il2CppSystem;
-
 namespace TheOtherRoles.Utilities;
 
 public static class MapUtilities
 {
     public static ShipStatus CachedShipStatus = ShipStatus.Instance;
 
-    private static readonly Dictionary<SystemTypes, Object> _systems = new();
+    private static readonly Dictionary<SystemTypes, UObject> _systems = new();
 
-    public static Dictionary<SystemTypes, Object> Systems
+    public static Dictionary<SystemTypes, UObject> Systems
     {
         get
         {
@@ -34,7 +31,7 @@ public static class MapUtilities
         foreach (var systemTypes in SystemTypeHelpers.AllTypes)
         {
             if (!systems.ContainsKey(systemTypes)) continue;
-            _systems[systemTypes] = systems[systemTypes].TryCast<Object>();
+            _systems[systemTypes] = systems[systemTypes].TryCast<UObject>();
         }
     }
 }

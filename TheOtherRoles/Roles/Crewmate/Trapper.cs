@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace TheOtherRoles.Roles.Crewmate;
 
 public static class Trapper
