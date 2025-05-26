@@ -119,12 +119,13 @@ public class CustomButton
         OnEffectClick = onEffectClick;
         OnEffectCouldUse = onEffectCouldUs;
 
-
         ButtonTitle = UObject.Instantiate(actionButton.cooldownTimerText, actionButton.cooldownTimerText.transform.parent);
         ButtonTitle.text = "";
         ButtonTitle.enableWordWrapping = false;
         ButtonTitle.transform.localScale = Vector3.one * 0.5f;
         ButtonTitle.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+
+        buttons.Add(this);
     }
 
     public CustomButton(Action OnClick,
@@ -320,7 +321,7 @@ public class CustomButton
 
         setActive(hudManager.UseButton.isActiveAndEnabled || hudManager.PetButton.isActiveAndEnabled);
 
-        if (_lastUsesCount != UsesCount)
+        if (!IsKillButton && _lastUsesCount != UsesCount)
         {
             var usesRemainingText = actionButton?.usesRemainingText;
             var usesRemainingSprite = actionButton?.usesRemainingSprite;
@@ -332,9 +333,9 @@ public class CustomButton
             }
             else if (UsesCount >= 0)
             {
-                usesRemainingText.text = UsesCount.ToString();
                 usesRemainingText?.gameObject?.SetActive(true);
                 usesRemainingSprite?.gameObject?.SetActive(true);
+                usesRemainingText.text = UsesCount.ToString();
             }
             _lastUsesCount = UsesCount;
         }

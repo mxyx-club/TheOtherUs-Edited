@@ -33,7 +33,7 @@ public class Redemptor
         DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)
         {
-            if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == PlayerControl.LocalPlayer.PlayerId)
+            if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == Player.PlayerId)
             {
                 UObject.Destroy(array[i].gameObject);
                 break;
@@ -41,9 +41,6 @@ public class Redemptor
         }
     }
 
-    ///<summary>
-    /// off = 0, on > 0
-    /// </summary>
     public static void RedemptorPrayer(bool status) => Prayering = status;
 
     public static void ClearAndReload(bool clear = true)

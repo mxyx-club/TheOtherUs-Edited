@@ -1,10 +1,9 @@
-﻿namespace TheOtherRoles.Roles.Modifier;
+namespace TheOtherRoles.Roles.Modifier;
 
 // Modifier
 public static class Bait
 {
     public static List<PlayerControl> bait = new();
-    public static Dictionary<DeadPlayer, float> active = new();
     public static Color color = new Color32(0, 247, 255, byte.MaxValue);
 
     public static float reportDelayMin;
@@ -17,7 +16,6 @@ public static class Bait
     public static void clearAndReload()
     {
         bait.Clear();
-        active.Clear();
         reportDelayMin = CustomOptionHolder.modifierBaitReportDelayMin.GetFloat();
         reportDelayMax = CustomOptionHolder.modifierBaitReportDelayMax.GetFloat();
         if (reportDelayMin > reportDelayMax) reportDelayMin = reportDelayMax;

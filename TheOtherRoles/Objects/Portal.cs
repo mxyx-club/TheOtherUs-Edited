@@ -139,7 +139,7 @@ public class Portal
             firstPortal.portalGameObject.SetActive(true);
             secondPortal.portalGameObject.SetActive(true);
             bothPlacedAndEnabled = true;
-            HudManagerStartPatch.portalmakerButtonText2.text = "2. " + secondPortal.room;
+            HudManagerStartPatch.portalmakerMoveToPortalButton.ButtonTitle.text = "2. " + secondPortal.room;
         }
 
         // reset teleported players

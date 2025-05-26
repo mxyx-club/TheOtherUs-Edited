@@ -284,6 +284,37 @@ public static class Helpers
         return killerTeam;
     }
 
+    public static PlayerControl SetTarget(IEnumerable<PlayerControl> untarget = null, bool onlyCrewmates = false,
+        bool targetInVents = false, float distances = 0f, PlayerControl targetingPlayer = null)
+    {
+        return PlayerControlFixedUpdatePatch.SetTarget(onlyCrewmates, targetInVents, untarget, KillDistances: distances, targetingPlayer: targetingPlayer);
+    }
+
+    public static void SetPlayerOutline(PlayerControl target, Color color)
+    {
+        PlayerControlFixedUpdatePatch.SetPlayerOutline(target, color);
+    }
+
+    public static PlayerControl ImpostorSetTarget()
+    {
+        PlayerControl target;
+
+        List<PlayerControl> untargetablePlayers = [];
+        if (Spy.spy != null)
+        {
+            target = Spy.impostorsCanKillAnyone ? SetTarget(null, false, true) : SetTarget([Spy.spy], true, true);
+        }
+        else
+        {
+            target = SetTarget(null, true, true);
+        }
+
+        if (SchrodingersCat.Player.IsAlive() && SchrodingersCat.State == SchrodingersCat.CatState.Impostor) untargetablePlayers.Add(SchrodingersCat.Player);
+
+        SetPlayerOutline(target, Palette.ImpostorRed);
+        return target;
+    }
+
     public static void NoCheckStartMeeting(this PlayerControl reporter, GameData.PlayerInfo target, bool force = false)
     {
         if (InMeeting) return;

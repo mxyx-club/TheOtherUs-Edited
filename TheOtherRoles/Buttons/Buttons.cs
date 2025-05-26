@@ -34,7 +34,7 @@ internal static class HudManagerStartPatch
     public static CustomButton camouflagerButton;
     public static CustomButton portalmakerPlacePortalButton;
     private static CustomButton usePortalButton;
-    private static CustomButton portalmakerMoveToPortalButton;
+    public static CustomButton portalmakerMoveToPortalButton;
     public static CustomButton hackerButton;
     public static CustomButton hackerVitalsButton;
     public static CustomButton hackerAdminTableButton;
@@ -108,31 +108,10 @@ internal static class HudManagerStartPatch
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
 
-    public static TMP_Text securityGuardButtonScrewsText;
-    public static TMP_Text securityGuardChargesText;
-    public static TMP_Text deputyButtonHandcuffsText;
-    public static TMP_Text pursuerButtonBlanksText;
-    public static TMP_Text survivorVestButtonText;
-    public static TMP_Text survivorBlanksButtonText;
-    public static TMP_Text hackerAdminTableChargesText;
-    public static TMP_Text hackerVitalsChargesText;
-    public static TMP_Text trapperChargesText;
-    public static TMP_Text prophetButtonText;
-    public static TMP_Text portalmakerButtonText1;
-    public static TMP_Text portalmakerButtonText2;
-    public static TMP_Text PavlovsdogKillSelfText;
-    public static TMP_Text PavlovsdogCreateNumText;
-    public static TMP_Text akujoTimeRemainingText;
-    public static TMP_Text akujoBackupLeftText;
-    public static TMP_Text bandLeaderKeyboardistText;
-    public static TMP_Text bandLeaderBassistText;
-    public static TMP_Text bandLeaderDrummerText;
-    public static TMP_Text gunsmithGetBulletsText;
-    public static TMP_Text berserkerKillButtonText;
-
     public static void setCustomButtonCooldowns()
     {
         if (!initialized)
+        {
             try
             {
                 createButtonsPostfix(HudManager.Instance);
@@ -142,6 +121,8 @@ internal static class HudManagerStartPatch
                 Warn("Button cooldowns not set, either the gamemode does not require them or there's something wrong.");
                 return;
             }
+        }
+
         yoyoButton.MaxTimer = Yoyo.markCooldown;
         yoyoAdminTableButton.MaxTimer = Yoyo.adminCooldown;
         yoyoAdminTableButton.EffectDuration = 10f;
@@ -260,17 +241,6 @@ internal static class HudManagerStartPatch
         berserkerKillButton.EffectDuration = 0.5f;
 
         zoomOutButton.MaxTimer = zoomOutButton.Timer = 0f;
-    }
-
-    public static PlayerControl SetTarget(IEnumerable<PlayerControl> untarget = null, bool onlyCrewmates = false,
-        bool targetInVents = false, float distances = 0f, PlayerControl targetingPlayer = null)
-    {
-        return PlayerControlFixedUpdatePatch.SetTarget(onlyCrewmates, targetInVents, untarget, KillDistances: distances, targetingPlayer: targetingPlayer);
-    }
-
-    public static void SetPlayerOutline(PlayerControl target, Color color)
-    {
-        PlayerControlFixedUpdatePatch.SetPlayerOutline(target, color);
     }
 
     /// <summary>
@@ -623,7 +593,7 @@ internal static class HudManagerStartPatch
                 SetPlayerOutline(Sheriff.currentTarget, Sheriff.color);
 
                 showTargetNameOnButton(Sheriff.currentTarget, deputyHandcuffButton, GetString("HandcuffText"));
-                if (deputyButtonHandcuffsText != null) deputyButtonHandcuffsText.text = $"{Sheriff.remainingHandcuffs}";
+                if (deputyHandcuffButton.ButtonTitle != null) deputyHandcuffButton.ButtonTitle.text = $"{Sheriff.remainingHandcuffs}";
                 return Sheriff.remainingHandcuffs > 0 && Sheriff.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () => { deputyHandcuffButton.Timer = deputyHandcuffButton.MaxTimer; },
@@ -634,13 +604,6 @@ internal static class HudManagerStartPatch
             abilityInput.keyCode,
             buttonText: GetString("HandcuffText")
         );
-        // Deputy Handcuff button handcuff counter
-        deputyButtonHandcuffsText = UObject.Instantiate(deputyHandcuffButton.actionButton.cooldownTimerText,
-            deputyHandcuffButton.actionButton.cooldownTimerText.transform.parent);
-        deputyButtonHandcuffsText.text = "";
-        deputyButtonHandcuffsText.enableWordWrapping = false;
-        deputyButtonHandcuffsText.transform.localScale = Vector3.one * 0.5f;
-        deputyButtonHandcuffsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         // Veteran Alert
         veteranAlertButton = new CustomButton(
@@ -802,11 +765,6 @@ internal static class HudManagerStartPatch
             abilityInput.keyCode,
             buttonText: GetString("AkujoHonmeiText")
         );
-        akujoTimeRemainingText = UObject.Instantiate(akujoHonmeiButton.actionButton.cooldownTimerText, __instance.transform);
-        akujoTimeRemainingText.text = "";
-        akujoTimeRemainingText.enableWordWrapping = false;
-        akujoTimeRemainingText.transform.localScale = Vector3.one * 0.45f;
-        akujoTimeRemainingText.transform.localPosition = akujoHonmeiButton.actionButton.cooldownTimerText.transform.parent.localPosition + new Vector3(-0.1f, 0.35f, 0f);
 
         // Akujo Keep
         akujoBackupButton = new CustomButton(
@@ -824,13 +782,7 @@ internal static class HudManagerStartPatch
             () => { return PlayerControl.LocalPlayer == Akujo.akujo && !PlayerControl.LocalPlayer.Data.IsDead && Akujo.keepsLeft > 0; },
             () =>
             {
-                if (akujoBackupLeftText != null)
-                {
-                    if (Akujo.keepsLeft > 0)
-                        akujoBackupLeftText.text = Akujo.keepsLeft.ToString();
-                    else
-                        akujoBackupLeftText.text = "";
-                }
+                akujoBackupButton.UsesCount = Akujo.keepsLeft;
                 return PlayerControl.LocalPlayer == Akujo.akujo && !PlayerControl.LocalPlayer.Data.IsDead && Akujo.currentTarget != null && Akujo.keepsLeft > 0 && Akujo.timeLeft > 0;
             },
             () => { akujoBackupButton.Timer = akujoBackupButton.MaxTimer; },
@@ -841,11 +793,6 @@ internal static class HudManagerStartPatch
             KeyCode.C,
             buttonText: GetString("AkujoBackupText")
         );
-        akujoBackupLeftText = UObject.Instantiate(akujoBackupButton.actionButton.cooldownTimerText, akujoBackupButton.actionButton.cooldownTimerText.transform.parent);
-        akujoBackupLeftText.text = "";
-        akujoBackupLeftText.enableWordWrapping = false;
-        akujoBackupLeftText.transform.localScale = Vector3.one * 0.5f;
-        akujoBackupLeftText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         evilTrapperSetTrapButton = new CustomButton(
             () =>
@@ -1187,7 +1134,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (hackerAdminTableChargesText != null) hackerAdminTableChargesText.text = $"{Hacker.chargesAdminTable} / {Hacker.toolsNumber}";
+                if (hackerAdminTableButton.ButtonTitle != null) hackerAdminTableButton.ButtonTitle.text = $"{Hacker.chargesAdminTable} / {Hacker.toolsNumber}";
                 return Hacker.chargesAdminTable > 0;
             },
             () =>
@@ -1223,14 +1170,6 @@ internal static class HudManagerStartPatch
             GameOptionsManager.Instance.currentNormalGameOptions.MapId == 3,
             GetString("AdminMapText")
         );
-
-        // Hacker Admin Table Charges
-        hackerAdminTableChargesText = UObject.Instantiate(hackerAdminTableButton.actionButton.cooldownTimerText,
-            hackerAdminTableButton.actionButton.cooldownTimerText.transform.parent);
-        hackerAdminTableChargesText.text = "";
-        hackerAdminTableChargesText.enableWordWrapping = false;
-        hackerAdminTableChargesText.transform.localScale = Vector3.one * 0.5f;
-        hackerAdminTableChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         hackerVitalsButton = new CustomButton(
             () =>
@@ -1278,8 +1217,8 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (hackerVitalsChargesText != null)
-                    hackerVitalsChargesText.text = $"{Hacker.chargesVitals} / {Hacker.toolsNumber}";
+                if (hackerVitalsButton.ButtonTitle != null)
+                    hackerVitalsButton.ButtonTitle.text = $"{Hacker.chargesVitals} / {Hacker.toolsNumber}";
                 hackerVitalsButton.actionButton.graphic.sprite =
                     isMira ? Hacker.getLogSprite() : Hacker.getVitalsSprite();
                 hackerVitalsButton.actionButton.OverrideText(isMira ? GetString("hackerDoorLogText") : GetString("hackerVitalText"));
@@ -1344,14 +1283,6 @@ internal static class HudManagerStartPatch
             false,
             isMira ? GetString("hackerDoorLogText") : GetString("hackerVitalText")
         );
-
-        // Hacker Vitals Charges
-        hackerVitalsChargesText = UObject.Instantiate(hackerVitalsButton.actionButton.cooldownTimerText,
-            hackerVitalsButton.actionButton.cooldownTimerText.transform.parent);
-        hackerVitalsChargesText.text = "";
-        hackerVitalsChargesText.enableWordWrapping = false;
-        hackerVitalsChargesText.transform.localScale = Vector3.one * 0.5f;
-        hackerVitalsChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         // Tracker button
         trackerTrackPlayerButton = new CustomButton(
@@ -1553,19 +1484,17 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                List<PlayerControl> untargetablePlayers = [];
-                if (Spy.spy != null && !Spy.impostorsCanKillAnyone) untargetablePlayers.Add(Spy.spy);
-                if (SchrodingersCat.Player.IsAlive() && SchrodingersCat.State == SchrodingersCat.CatState.Impostor) untargetablePlayers.Add(SchrodingersCat.Player);
-                var target = SetTarget(untargetablePlayers, !(Spy.spy != null && Spy.impostorsCanKillAnyone), true);
+                Vampire.currentTarget = ImpostorSetTarget();
 
                 bool targetNearGarlic = false;
-                if (target != null)
+                if (Vampire.currentTarget != null)
+                {
                     foreach (var garlic in Garlic.garlics)
-                        if (Vector2.Distance(garlic.garlic.transform.position, target.transform.position) <= 1.95f)
+                        if (Vector2.Distance(garlic.garlic.transform.position, Vampire.currentTarget.transform.position) <= 1.95f)
                             targetNearGarlic = true;
+                }
+
                 Vampire.targetNearGarlic = targetNearGarlic;
-                Vampire.currentTarget = target;
-                SetPlayerOutline(Vampire.currentTarget, Vampire.color);
 
                 if (Vampire.targetNearGarlic)
                     showTargetNameOnButton(Vampire.currentTarget, vampireKillButton, GetString("killButtonText"));
@@ -1587,9 +1516,6 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                vampireKillButton.MaxTimer = LastImpostor.lastImpostor == PlayerControl.LocalPlayer
-                    ? Vampire.cooldown - LastImpostor.deduce
-                    : Vampire.cooldown;
                 vampireKillButton.Timer = vampireKillButton.MaxTimer;
                 vampireKillButton.isEffectActive = false;
                 vampireKillButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
@@ -1663,13 +1589,7 @@ internal static class HudManagerStartPatch
                     Prophet.currentTarget = SetTarget();
                     SetPlayerOutline(Prophet.currentTarget, Prophet.color);
 
-                    if (prophetButtonText != null)
-                    {
-                        if (Prophet.examinesLeft > 0)
-                            prophetButtonText.text = $"{Prophet.examinesLeft}";
-                        else
-                            prophetButtonText.text = "";
-                    }
+                    prophetButton.UsesCount = Prophet.examinesLeft;
                     return Prophet.currentTarget != null && PlayerControl.LocalPlayer.CanMove;
                 },
                 () => { prophetButton.Timer = prophetButton.MaxTimer; },
@@ -1680,11 +1600,6 @@ internal static class HudManagerStartPatch
                 abilityInput.keyCode,
                 buttonText: GetString("ProphetText")
             );
-        prophetButtonText = UObject.Instantiate(prophetButton.actionButton.cooldownTimerText, prophetButton.actionButton.cooldownTimerText.transform.parent);
-        prophetButtonText.text = "";
-        prophetButtonText.enableWordWrapping = false;
-        prophetButtonText.transform.localScale = Vector3.one * 0.5f;
-        prophetButtonText.transform.localPosition += new Vector3(-0.05f, 0.55f, -1f);
 
         portalmakerPlacePortalButton = new CustomButton(
             () =>
@@ -1767,7 +1682,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (PlayerControl.LocalPlayer == Portalmaker.portalmaker && Portal.bothPlacedAndEnabled)
-                    portalmakerButtonText1.text =
+                    usePortalButton.ButtonTitle.text =
                         Portal.locationNearEntry(PlayerControl.LocalPlayer.transform.position) ||
                         !Portalmaker.canPortalFromAnywhere
                             ? ""
@@ -1845,21 +1760,6 @@ internal static class HudManagerStartPatch
             null,
             true
         );
-
-
-        portalmakerButtonText1 = UObject.Instantiate(usePortalButton.actionButton.cooldownTimerText,
-            usePortalButton.actionButton.cooldownTimerText.transform.parent);
-        portalmakerButtonText1.text = "";
-        portalmakerButtonText1.enableWordWrapping = false;
-        portalmakerButtonText1.transform.localScale = Vector3.one * 0.5f;
-        portalmakerButtonText1.transform.localPosition += new Vector3(-0.05f, 0.55f, -1f);
-
-        portalmakerButtonText2 = UObject.Instantiate(portalmakerMoveToPortalButton.actionButton.cooldownTimerText,
-            portalmakerMoveToPortalButton.actionButton.cooldownTimerText.transform.parent);
-        portalmakerButtonText2.text = "";
-        portalmakerButtonText2.enableWordWrapping = false;
-        portalmakerButtonText2.transform.localScale = Vector3.one * 0.5f;
-        portalmakerButtonText2.transform.localPosition += new Vector3(-0.05f, 0.55f, -1f);
 
         // Jackal Kill
         jackalKillButton = new CustomButton(
@@ -2061,8 +1961,8 @@ internal static class HudManagerStartPatch
                 if (Pavlovsdogs.enableRampage && Pavlovsdogs.pavlovsowner.IsDead() && !PlayerControl.LocalPlayer.Data.IsDead)
                 {
                     Pavlovsdogs.deathTime -= Time.deltaTime;
-                    if (PavlovsdogKillSelfText != null)
-                        PavlovsdogKillSelfText.text = string.Format("SerialKillerSuicideText".Translate(), (int)Pavlovsdogs.deathTime + 1);
+                    if (pavlovsdogsKillButton.ButtonTitle != null)
+                        pavlovsdogsKillButton.ButtonTitle.text = string.Format("SerialKillerSuicideText".Translate(), (int)Pavlovsdogs.deathTime + 1);
 
                     if (Pavlovsdogs.deathTime <= 0)
                         PlayerControl.LocalPlayer.RpcMurderPlayer(PlayerControl.LocalPlayer, true);
@@ -2093,12 +1993,6 @@ internal static class HudManagerStartPatch
             modKillInput.keyCode,
             buttonText: GetString("killButtonText")
         );
-        PavlovsdogKillSelfText = UObject.Instantiate(pavlovsdogsKillButton.actionButton.cooldownTimerText,
-            pavlovsdogsKillButton.actionButton.cooldownTimerText.transform.parent);
-        PavlovsdogKillSelfText.text = "";
-        PavlovsdogKillSelfText.enableWordWrapping = false;
-        PavlovsdogKillSelfText.transform.localScale = Vector3.one * 0.5f;
-        PavlovsdogKillSelfText.transform.localPosition += new Vector3(-0.05f, 0.55f, -1f);
 
         pavlovsownerCreateDogButton = new CustomButton(
             () =>
@@ -2122,9 +2016,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (PavlovsdogCreateNumText != null)
-                    PavlovsdogCreateNumText.text = $"{Pavlovsdogs.createDogNum}";
-
+                pavlovsownerCreateDogButton.UsesCount = Pavlovsdogs.createDogNum;
                 var untargetablePlayers = new List<PlayerControl>();
                 if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
                 Pavlovsdogs.currentTarget = SetTarget(untarget: untargetablePlayers);
@@ -2142,14 +2034,6 @@ internal static class HudManagerStartPatch
             abilityInput.keyCode,
             buttonText: GetString("pavlovsCreateDogText")
         );
-
-        PavlovsdogCreateNumText = UObject.Instantiate(pavlovsownerCreateDogButton.actionButton.cooldownTimerText,
-            pavlovsownerCreateDogButton.actionButton.cooldownTimerText.transform.parent);
-        PavlovsdogCreateNumText.text = "";
-        PavlovsdogCreateNumText.enableWordWrapping = false;
-        PavlovsdogCreateNumText.transform.localScale = Vector3.one * 0.5f;
-        PavlovsdogCreateNumText.transform.localPosition += new Vector3(-0.05f, 0.55f, -1f);
-
 
         minerMineButton = new CustomButton(
             () =>
@@ -2428,7 +2312,7 @@ internal static class HudManagerStartPatch
             Werewolf.buttonSprite,
             ButtonPositions.upperRowRight,
             __instance,
-            __instance.AbilityButton,
+            __instance.KillButton,
             modKillInput.keyCode,
             true,
             Werewolf.rampageDuration,
@@ -2928,13 +2812,11 @@ internal static class HudManagerStartPatch
                     warlockCurseButton.Sprite = Warlock.curseButtonSprite;
                     Warlock.warlock.killTimer = warlockCurseButton.Timer = warlockCurseButton.MaxTimer;
 
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareGhostInfo,
-                        SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.ShareGhostInfo);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
                     writer.Write((byte)RPCProcedure.GhostInfoTypes.WarlockTarget);
                     writer.Write(byte.MaxValue); // This will set it to null!
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                 }
             },
             () =>
@@ -2977,7 +2859,7 @@ internal static class HudManagerStartPatch
             Warlock.curseButtonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
-            __instance.AbilityButton,
+            __instance.KillButton,
             abilityInput.keyCode,
             buttonText: GetString("CurseText")
         );
@@ -3024,8 +2906,8 @@ internal static class HudManagerStartPatch
                     !SubmergedCompatibility.IsSubmerged
                         ? SecurityGuard.placeCameraButtonSprite
                         : SecurityGuard.closeVentButtonSprite;
-                if (securityGuardButtonScrewsText != null)
-                    securityGuardButtonScrewsText.text = $"{SecurityGuard.remainingScrews}/{SecurityGuard.totalScrews}";
+                if (securityGuardButton.ButtonTitle != null)
+                    securityGuardButton.ButtonTitle.text = $"{SecurityGuard.remainingScrews}/{SecurityGuard.totalScrews}";
 
 
                 Vent target = null;
@@ -3062,14 +2944,6 @@ internal static class HudManagerStartPatch
             __instance.AbilityButton,
             abilityInput.keyCode
         );
-
-        // Security Guard button screws counter
-        securityGuardButtonScrewsText = UObject.Instantiate(securityGuardButton.actionButton.cooldownTimerText,
-            securityGuardButton.actionButton.cooldownTimerText.transform.parent);
-        securityGuardButtonScrewsText.text = "";
-        securityGuardButtonScrewsText.enableWordWrapping = false;
-        securityGuardButtonScrewsText.transform.localScale = Vector3.one * 0.5f;
-        securityGuardButtonScrewsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         securityGuardCamButton = new CustomButton(
             () =>
@@ -3126,8 +3000,8 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (securityGuardChargesText != null)
-                    securityGuardChargesText.text = $"{SecurityGuard.charges} / {SecurityGuard.maxCharges}";
+                if (securityGuardCamButton.ButtonTitle != null)
+                    securityGuardCamButton.ButtonTitle.text = $"{SecurityGuard.charges} / {SecurityGuard.maxCharges}";
                 securityGuardCamButton.actionButton.graphic.sprite =
                     isMira ? SecurityGuard.getLogSprite() : SecurityGuard.getCamSprite();
                 securityGuardCamButton.actionButton.OverrideText(isMira ?
@@ -3156,14 +3030,6 @@ internal static class HudManagerStartPatch
             false,
             isMira ? GetString("hackerDoorLogText") : GetString("CamButtonText")
         );
-
-        // Security Guard cam button charges
-        securityGuardChargesText = UObject.Instantiate(securityGuardCamButton.actionButton.cooldownTimerText,
-            securityGuardCamButton.actionButton.cooldownTimerText.transform.parent);
-        securityGuardChargesText.text = "";
-        securityGuardChargesText.enableWordWrapping = false;
-        securityGuardChargesText.transform.localScale = Vector3.one * 0.5f;
-        securityGuardChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         // Arsonist button (涂油)
         arsonistButton = new CustomButton(
@@ -3597,13 +3463,11 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
+                pursuerButton.UsesCount = Pursuer.blanksNumber - Pursuer.blanks;
                 Pursuer.target = SetTarget();
                 SetPlayerOutline(Pursuer.target, Pursuer.color);
 
                 showTargetNameOnButton(Pursuer.target, pursuerButton, GetString("PursuerText"));
-                if (pursuerButtonBlanksText != null)
-                    pursuerButtonBlanksText.text = $"{Pursuer.blanksNumber - Pursuer.blanks}";
-
                 return Pursuer.blanksNumber > Pursuer.blanks && PlayerControl.LocalPlayer.CanMove && Pursuer.target != null;
             },
             () => { pursuerButton.Timer = pursuerButton.MaxTimer; },
@@ -3614,16 +3478,6 @@ internal static class HudManagerStartPatch
             abilityInput.keyCode,
             buttonText: GetString("PursuerText")
         );
-
-        // Pursuer button blanks left
-        pursuerButtonBlanksText = UObject.Instantiate(pursuerButton.actionButton.cooldownTimerText,
-            pursuerButton.actionButton.cooldownTimerText.transform.parent);
-        pursuerButtonBlanksText.text = "";
-        pursuerButtonBlanksText.enableWordWrapping = false;
-        pursuerButtonBlanksText.transform.localScale = Vector3.one * 0.5f;
-        pursuerButtonBlanksText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
-
-
 
         survivorVestButton = new CustomButton(
             () =>
@@ -3641,7 +3495,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (survivorVestButtonText != null) survivorVestButtonText.text = $"{Survivor.remainingVests} / {Survivor.vestNumber}";
+                if (survivorVestButton.ButtonTitle != null) survivorVestButton.ButtonTitle.text = $"{Survivor.remainingVests} / {Survivor.vestNumber}";
                 return PlayerControl.LocalPlayer.CanMove && Survivor.remainingVests > 0;
             },
             () =>
@@ -3660,14 +3514,6 @@ internal static class HudManagerStartPatch
             () => { survivorVestButton.Timer = survivorVestButton.MaxTimer; },
             buttonText: GetString("VestButton")
         );
-        // Pursuer button blanks left
-        survivorVestButtonText = UObject.Instantiate(survivorVestButton.actionButton.cooldownTimerText,
-            survivorVestButton.actionButton.cooldownTimerText.transform.parent);
-        survivorVestButtonText.text = "";
-        survivorVestButtonText.enableWordWrapping = false;
-        survivorVestButtonText.transform.localScale = Vector3.one * 0.5f;
-        survivorVestButtonText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
-
 
         // Survivor button
         survivorBlanksButton = new CustomButton(
@@ -3701,7 +3547,8 @@ internal static class HudManagerStartPatch
                 SetPlayerOutline(Survivor.target, Survivor.color);
 
                 showTargetNameOnButton(Survivor.target, survivorBlanksButton, GetString("PursuerText"));
-                if (survivorBlanksButtonText != null) survivorBlanksButtonText.text = $"{Survivor.remainingBlanks} / {Survivor.blanksNumber}";
+                if (survivorBlanksButton.ButtonTitle != null)
+                    survivorBlanksButton.ButtonTitle.text = $"{Survivor.remainingBlanks} / {Survivor.blanksNumber}";
 
                 return Survivor.blanksNumber > Survivor.blanksUsed && PlayerControl.LocalPlayer.CanMove && Survivor.target != null;
             },
@@ -3713,14 +3560,6 @@ internal static class HudManagerStartPatch
             KeyCode.C,
             buttonText: GetString("PursuerText")
         );
-        // Pursuer button blanks left
-        survivorBlanksButtonText = UObject.Instantiate(survivorBlanksButton.actionButton.cooldownTimerText,
-            survivorBlanksButton.actionButton.cooldownTimerText.transform.parent);
-        survivorBlanksButtonText.text = "";
-        survivorBlanksButtonText.enableWordWrapping = false;
-        survivorBlanksButtonText.transform.localScale = Vector3.one * 0.5f;
-        survivorBlanksButtonText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
-
 
         // Witch Spell button
         witchSpellButton = new CustomButton(
@@ -3793,7 +3632,6 @@ internal static class HudManagerStartPatch
                 {
                     Witch.currentCooldownAddition += Witch.cooldownAddition;
                     witchSpellButton.MaxTimer = Witch.cooldown + Witch.currentCooldownAddition;
-                    PlayerControlFixedUpdatePatch.miniCooldownUpdate(); // Modifies the MaxTimer if the witch is the mini
                     witchSpellButton.Timer = witchSpellButton.MaxTimer;
                     if (Witch.triggerBothCooldowns)
                     {
@@ -4042,12 +3880,11 @@ internal static class HudManagerStartPatch
                     SoundEffectsManager.play("warlockCurse");
 
                     // Ghost Info
-                    writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
+                    writer = StartRPC(CustomRPC.ShareGhostInfo);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
                     writer.Write((byte)RPCProcedure.GhostInfoTypes.NinjaMarked);
                     writer.Write(Ninja.ninjaMarked.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                 }
             },
             () =>
@@ -4056,13 +3893,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                // CouldUse
-                var untargetables = new List<PlayerControl>();
-                if (Spy.spy != null && !Spy.impostorsCanKillAnyone) untargetables.Add(Spy.spy);
-                if (Mini.mini != null && !Mini.isGrownUp()) untargetables.Add(Mini.mini);
-                Ninja.currentTarget = SetTarget(untargetables, Spy.spy == null || !Spy.impostorsCanKillAnyone);
-                SetPlayerOutline(Ninja.currentTarget, Ninja.color);
-
+                Ninja.currentTarget = ImpostorSetTarget();
                 showTargetNameOnButton(Ninja.currentTarget, ninjaButton, GetString("NinjaText"));
                 ninjaButton.Sprite = Ninja.ninjaMarked != null
                     ? Ninja.killButtonSprite
@@ -4080,7 +3911,7 @@ internal static class HudManagerStartPatch
             Ninja.markButtonSprite,
             ButtonPositions.upperRowLeft,
             __instance,
-            __instance.AbilityButton,
+            __instance.KillButton,
             abilityInput.keyCode,
             buttonText: GetString("NinjaText")
         );
@@ -4150,7 +3981,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (trapperChargesText != null) trapperChargesText.text = $"{Trapper.charges} / {Trapper.maxCharges}";
+                if (trapperButton.ButtonTitle != null) trapperButton.ButtonTitle.text = $"{Trapper.charges} / {Trapper.maxCharges}";
                 return PlayerControl.LocalPlayer.CanMove && Trapper.charges > 0;
             },
             () => { trapperButton.Timer = trapperButton.MaxTimer; },
@@ -4333,14 +4164,6 @@ internal static class HudManagerStartPatch
             modKillInput.keyCode,
             buttonText: GetString("killButtonText")
         );
-
-        // Trapper Charges
-        trapperChargesText = UObject.Instantiate(trapperButton.actionButton.cooldownTimerText,
-            trapperButton.actionButton.cooldownTimerText.transform.parent);
-        trapperChargesText.text = "";
-        trapperChargesText.enableWordWrapping = false;
-        trapperChargesText.transform.localScale = Vector3.one * 0.5f;
-        trapperChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         // Yoyo button
         yoyoButton = new CustomButton(
@@ -4679,7 +4502,7 @@ internal static class HudManagerStartPatch
                 BandLeader.currentTarget = SetTarget(BandLeader.Members);
                 SetPlayerOutline(BandLeader.currentTarget, BandLeader.color);
 
-                if (bandLeaderKeyboardistText != null) bandLeaderKeyboardistText.text = $"{BandLeader.Keyboardist?.Data?.PlayerName ?? ""}";
+                if (bandLeaderKeyboardistButton.ButtonTitle != null) bandLeaderKeyboardistButton.ButtonTitle.text = $"{BandLeader.Keyboardist?.Data?.PlayerName ?? ""}";
                 return PlayerControl.LocalPlayer.CanMove && BandLeader.Keyboardist == null
                     ? BandLeader.currentTarget : true;
             },
@@ -4696,13 +4519,6 @@ internal static class HudManagerStartPatch
             null,
             buttonText: "招募乐手"
         );
-
-        bandLeaderKeyboardistText = UObject.Instantiate(bandLeaderKeyboardistButton.actionButton.cooldownTimerText,
-            bandLeaderKeyboardistButton.actionButton.cooldownTimerText.transform.parent);
-        bandLeaderKeyboardistText.text = "";
-        bandLeaderKeyboardistText.enableWordWrapping = false;
-        bandLeaderKeyboardistText.transform.localScale = Vector3.one * 0.5f;
-        bandLeaderKeyboardistText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         bandLeaderBassistButton = new CustomButton(
             () =>
@@ -4741,7 +4557,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (bandLeaderBassistText != null) bandLeaderBassistText.text = $"{BandLeader.Bassist?.Data?.PlayerName ?? ""}";
+                if (bandLeaderBassistButton.ButtonTitle != null) bandLeaderBassistButton.ButtonTitle.text = $"{BandLeader.Bassist?.Data?.PlayerName ?? ""}";
 
                 return PlayerControl.LocalPlayer.CanMove && BandLeader.Bassist == null
                     ? BandLeader.currentTarget : true;
@@ -4759,13 +4575,6 @@ internal static class HudManagerStartPatch
             null,
             buttonText: "招募乐手"
         );
-
-        bandLeaderBassistText = UObject.Instantiate(bandLeaderBassistButton.actionButton.cooldownTimerText,
-            bandLeaderBassistButton.actionButton.cooldownTimerText.transform.parent);
-        bandLeaderBassistText.text = "";
-        bandLeaderBassistText.enableWordWrapping = false;
-        bandLeaderBassistText.transform.localScale = Vector3.one * 0.5f;
-        bandLeaderBassistText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         bandLeaderDrummerButton = new CustomButton(
             () =>
@@ -4804,7 +4613,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (bandLeaderDrummerText != null) bandLeaderDrummerText.text = $"{BandLeader.Drummer?.Data?.PlayerName ?? ""}";
+                if (bandLeaderDrummerButton.ButtonTitle != null) bandLeaderDrummerButton.ButtonTitle.text = $"{BandLeader.Drummer?.Data?.PlayerName ?? ""}";
 
                 return PlayerControl.LocalPlayer.CanMove && BandLeader.Drummer == null
                     ? BandLeader.currentTarget : true;
@@ -4822,13 +4631,6 @@ internal static class HudManagerStartPatch
             null,
             buttonText: "招募乐手"
         );
-
-        bandLeaderDrummerText = UObject.Instantiate(bandLeaderDrummerButton.actionButton.cooldownTimerText,
-            bandLeaderDrummerButton.actionButton.cooldownTimerText.transform.parent);
-        bandLeaderDrummerText.text = "";
-        bandLeaderDrummerText.enableWordWrapping = false;
-        bandLeaderDrummerText.transform.localScale = Vector3.one * 0.5f;
-        bandLeaderDrummerText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         bandLeaderKillButton = new CustomButton(
             () =>
@@ -4950,7 +4752,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (gunsmithGetBulletsText != null) gunsmithGetBulletsText.text = $"{Gunsmith.remainingChange} / {Gunsmith.maxChangeCount}";
+                if (gunsmithGetBullets.ButtonTitle != null) gunsmithGetBullets.ButtonTitle.text = $"{Gunsmith.remainingChange} / {Gunsmith.maxChangeCount}";
                 return PlayerControl.LocalPlayer.CanMove && PlayerControl.LocalPlayer.killTimer > Gunsmith.setKillCooldown && Gunsmith.remainingChange > 0;
             },
             () => { },
@@ -4961,13 +4763,6 @@ internal static class HudManagerStartPatch
             abilityInput.keyCode,
             buttonText: GetString("gunsmithGetBullets")
         );
-
-        gunsmithGetBulletsText = UObject.Instantiate(gunsmithGetBullets.actionButton.cooldownTimerText,
-            gunsmithGetBullets.actionButton.cooldownTimerText.transform.parent);
-        gunsmithGetBulletsText.text = "";
-        gunsmithGetBulletsText.enableWordWrapping = false;
-        gunsmithGetBulletsText.transform.localScale = Vector3.one * 0.5f;
-        gunsmithGetBulletsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         gunsmithAddBullets = new CustomButton(
             () =>
@@ -5011,18 +4806,12 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                List<PlayerControl> untargetablePlayers = [];
-                if (Spy.spy != null && !Spy.impostorsCanKillAnyone) untargetablePlayers.Add(Spy.spy);
-                if (SchrodingersCat.Player.IsAlive() && SchrodingersCat.State == SchrodingersCat.CatState.Impostor) untargetablePlayers.Add(SchrodingersCat.Player);
-                var target = SetTarget(untargetablePlayers, !(Spy.spy != null && Spy.impostorsCanKillAnyone), true);
-
-                Berserker.currentTarget = target;
-                SetPlayerOutline(Berserker.currentTarget, Berserker.color);
+                Berserker.currentTarget = ImpostorSetTarget();
                 showTargetNameOnButton(Berserker.currentTarget, berserkerKillButton, GetString("killButtonText"));
 
-                if (berserkerKillButtonText != null)
+                if (berserkerKillButton.ButtonTitle != null)
                 {
-                    berserkerKillButtonText.text = !berserkerKillButton.isEffectActive
+                    berserkerKillButton.ButtonTitle.text = !berserkerKillButton.isEffectActive
                         ? $"{(int)(Berserker.GetDurationPercentage() * 100)} % | {Berserker.GetDuration():0.00}s"
                         : $"{berserkerKillButton.Timer:0.00}";
                 }
@@ -5040,9 +4829,6 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                berserkerKillButton.MaxTimer = LastImpostor.lastImpostor == PlayerControl.LocalPlayer
-                    ? Berserker.KillCooldown - LastImpostor.deduce
-                    : Berserker.KillCooldown;
                 berserkerKillButton.Timer = berserkerKillButton.MaxTimer;
             },
             __instance.KillButton.graphic.sprite,
@@ -5065,22 +4851,12 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                berserkerKillButton.MaxTimer = LastImpostor.lastImpostor == PlayerControl.LocalPlayer
-                    ? Berserker.KillCooldown - LastImpostor.deduce
-                    : Berserker.KillCooldown;
                 berserkerKillButton.Timer = berserkerKillButton.MaxTimer;
                 berserkerKillButton.isEffectActive = false;
                 Berserker.Timer = 0f;
             },
             buttonText: GetString("killButtonText")
         );
-
-        berserkerKillButtonText = UObject.Instantiate(berserkerKillButton.actionButton.cooldownTimerText,
-            berserkerKillButton.actionButton.cooldownTimerText.transform.parent);
-        berserkerKillButtonText.text = "";
-        berserkerKillButtonText.enableWordWrapping = false;
-        berserkerKillButtonText.transform.localScale = Vector3.one * 0.5f;
-        berserkerKillButtonText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         poltergeistButton = new(
             () =>
