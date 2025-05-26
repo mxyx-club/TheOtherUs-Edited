@@ -99,11 +99,6 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Detective.detective = player1;
         }
-        else if (TimeMaster.timeMaster != null && TimeMaster.timeMaster == player2)
-        {
-            if (repeat) shiftRole(player2, player1, false);
-            TimeMaster.timeMaster = player1;
-        }
         else if (Veteran.veteran != null && Veteran.veteran == player2)
         {
             if (repeat) shiftRole(player2, player1, false);

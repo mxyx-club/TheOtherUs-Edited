@@ -88,7 +88,6 @@ public class RoleInfo
     public static RoleInfo bodyguard = new("BodyGuard", BodyGuard.color, RoleId.BodyGuard, RoleType.Crewmate);
     public static RoleInfo jumper = new("Jumper", Jumper.color, RoleId.Jumper, RoleType.Crewmate);
     public static RoleInfo detective = new("Detective", Detective.color, RoleId.Detective, RoleType.Crewmate);
-    public static RoleInfo timeMaster = new("TimeMaster", TimeMaster.color, RoleId.TimeMaster, RoleType.Crewmate);
     public static RoleInfo veteran = new("Veteran", Veteran.color, RoleId.Veteran, RoleType.Crewmate);
     public static RoleInfo medic = new("Medic", Medic.color, RoleId.Medic, RoleType.Crewmate);
     public static RoleInfo swapper = new("Swapper", Swapper.color, RoleId.Swapper, RoleType.Crewmate);
@@ -206,7 +205,6 @@ public class RoleInfo
         jumper,
         detective,
         medic,
-        timeMaster,
         veteran,
         swapper,
         seer,
@@ -331,7 +329,6 @@ public class RoleInfo
         if (p == Blackmailer.blackmailer) infos.Add(blackmailer);
         if (p == Terrorist.terrorist) infos.Add(terrorist);
         if (p == Detective.detective) infos.Add(detective);
-        if (p == TimeMaster.timeMaster) infos.Add(timeMaster);
         if (p == Berserker.Player) infos.Add(berserker);
         if (p == Veteran.veteran) infos.Add(veteran);
         if (p == Grenadier.Player) infos.Add(grenadier);

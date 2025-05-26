@@ -275,10 +275,6 @@ public class Specter
                     if (resetRole) Detective.clearAndReload();
                     Detective.detective = local;
                     break;
-                case RoleId.TimeMaster:
-                    if (resetRole) TimeMaster.clearAndReload();
-                    TimeMaster.timeMaster = local;
-                    break;
                 case RoleId.Veteran:
                     if (resetRole) Veteran.clearAndReload();
                     Veteran.veteran = local;

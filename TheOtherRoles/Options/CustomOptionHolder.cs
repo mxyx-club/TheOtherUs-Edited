@@ -512,11 +512,6 @@ public class CustomOptionHolder
     public static CustomOption bodyGuardShowShielded;
     public static CustomOption bodyGuardFlash;
 
-    public static CustomOption timeMasterSpawnRate;
-    public static CustomOption timeMasterCooldown;
-    public static CustomOption timeMasterShieldDuration;
-    public static CustomOption timeMasterRewindTime;
-
     public static CustomOption seerSpawnRate;
     public static CustomOption seerMode;
     public static CustomOption seerLimitSoulDuration;
@@ -1270,11 +1265,6 @@ public class CustomOptionHolder
         bodyGuardResetTargetAfterMeeting = Create(30341, Types.Crewmate, "bodyGuardResetTargetAfterMeeting", true, bodyGuardSpawnRate);
         bodyGuardShowShielded = Create(30343, Types.Crewmate, "bodyGuardShowShielded", true, bodyGuardSpawnRate);
         bodyGuardFlash = Create(30342, Types.Crewmate, "bodyGuardFlash", true, bodyGuardSpawnRate);
-
-        timeMasterSpawnRate = Create(30210, Types.Crewmate, cs(TimeMaster.color, "TimeMaster"), rates, null, true);
-        timeMasterCooldown = Create(30211, Types.Crewmate, "timeMasterCooldown", 20f, 5f, 60f, 2.5f, timeMasterSpawnRate);
-        timeMasterShieldDuration = Create(30213, Types.Crewmate, "timeMasterShieldDuration", 15f, 2.5f, 20f, 0.5f, timeMasterSpawnRate);
-        timeMasterRewindTime = Create(30212, Types.Crewmate, "timeMasterRewindTime", 9f, 1f, 10f, 1f, timeMasterSpawnRate);
 
         seerSpawnRate = Create(30240, Types.Crewmate, cs(Seer.color, "Seer"), rates, null, true);
         seerMode = Create(30241, Types.Crewmate, "seerMode", ["seerMode1", "seerMode2", "seerMode3"], seerSpawnRate);

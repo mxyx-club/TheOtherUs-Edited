@@ -180,7 +180,6 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Engineer, CustomOptionHolder.engineerSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.BodyGuard, CustomOptionHolder.bodyGuardSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Detective, CustomOptionHolder.detectiveSpawnRate.GetSelection());
-        crewSettings.Add((byte)RoleId.TimeMaster, CustomOptionHolder.timeMasterSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Veteran, CustomOptionHolder.veteranSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Medic, CustomOptionHolder.medicSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Swapper, CustomOptionHolder.swapperSpawnRate.GetSelection());

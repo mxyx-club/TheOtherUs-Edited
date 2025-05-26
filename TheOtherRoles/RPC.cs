@@ -45,8 +45,6 @@ public enum CustomRPC : byte
     MedicSetShielded,
     ShowBodyGuardFlash,
     ShieldedMurderAttempt,
-    TimeMasterShield,
-    TimeMasterRewindTime,
     TurnToImpostor,
     BodyGuardGuardPlayer,
     VeteranAlert,
@@ -291,9 +289,6 @@ public static class RPCProcedure
                         break;
                     case RoleId.InfoSleuth:
                         InfoSleuth.infoSleuth = player;
-                        break;
-                    case RoleId.TimeMaster:
-                        TimeMaster.timeMaster = player;
                         break;
                     case RoleId.Amnisiac:
                         Amnisiac.Player.Add(player);
@@ -727,50 +722,6 @@ public static class RPCProcedure
         }
     }
 
-    public static void timeMasterRewindTime()
-    {
-        if (InMeeting) return;
-        TimeMaster.shieldActive = false; // Shield is no longer active when rewinding
-        SoundEffectsManager.stop("timemasterShield"); // Shield sound stopped when rewinding
-        if (TimeMaster.timeMaster != null && TimeMaster.timeMaster == PlayerControl.LocalPlayer)
-        {
-            timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
-            timeMasterShieldButton.isEffectActive = false;
-            timeMasterShieldButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-            SoundEffectsManager.stop("timemasterShield");
-        }
-        FastDestroyableSingleton<HudManager>.Instance.FullScreen.color = new Color(0f, 0.5f, 0.8f, 0.3f);
-        FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = true;
-        FastDestroyableSingleton<HudManager>.Instance.FullScreen.gameObject.SetActive(true);
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(TimeMaster.rewindTime / 2,
-            new Action<float>(p =>
-            {
-                if (p == 1f) FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = false;
-            })));
-
-        if (TimeMaster.timeMaster == null || PlayerControl.LocalPlayer == TimeMaster.timeMaster)
-            return; // Time Master himself does not rewind
-
-        TimeMaster.isRewinding = true;
-
-        if (MapBehaviour.Instance)
-            MapBehaviour.Instance.Close();
-        if (Minigame.Instance)
-            Minigame.Instance.ForceClose();
-        PlayerControl.LocalPlayer.moveable = false;
-    }
-
-    public static void timeMasterShield()
-    {
-        if (InMeeting) return;
-        TimeMaster.shieldActive = true;
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(TimeMaster.shieldDuration,
-            new Action<float>(p =>
-            {
-                if (p == 1f) TimeMaster.shieldActive = false;
-            })));
-    }
-
     public static void impostorPromotesToLastImpostor(byte targetId)
     {
         var target = playerById(targetId);
@@ -1119,7 +1070,6 @@ public static class RPCProcedure
         Sheriff.Player.RemoveAll(x => x.PlayerId == player.PlayerId);
         if (player == Sheriff.Deputy) Sheriff.Deputy = null;
         if (player == Detective.detective) Detective.clearAndReload();
-        if (player == TimeMaster.timeMaster) TimeMaster.clearAndReload();
         if (player == Veteran.veteran) Veteran.clearAndReload();
         if (player == Medic.medic) Medic.clearAndReload();
         if (player == Seer.seer) Seer.clearAndReload();
@@ -2118,14 +2068,6 @@ internal class RPCHandlerPatch
 
             case CustomRPC.UndertakerDragAction:
                 Undertaker.DragBody(reader.ReadByte());
-                break;
-
-            case CustomRPC.TimeMasterRewindTime:
-                RPCProcedure.timeMasterRewindTime();
-                break;
-
-            case CustomRPC.TimeMasterShield:
-                RPCProcedure.timeMasterShield();
                 break;
 
             case CustomRPC.AmnisiacTakeRole:

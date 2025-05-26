@@ -1192,19 +1192,6 @@ public static class Helpers
 
         // Block impostor not fully grown mini kill
         if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp()) return MurderAttemptResult.SuppressKill;
-        // Block Time Master with time shield kill
-        if (TimeMaster.shieldActive && TimeMaster.timeMaster != null && TimeMaster.timeMaster == target)
-        {
-            if (!InMeeting)
-            {
-                // Only rewind the attempt was not called because a meeting startet 
-                var writer = StartRPC(CustomRPC.TimeMasterRewindTime);
-                writer.EndRPC();
-                RPCProcedure.timeMasterRewindTime();
-            }
-
-            return MurderAttemptResult.BlankKill;
-        }
 
         if (Survivor.Player != null && Survivor.Player.Any(x => x.PlayerId == target.PlayerId) && Survivor.vestActive)
         {

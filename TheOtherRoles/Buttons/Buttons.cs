@@ -19,7 +19,6 @@ internal static class HudManagerStartPatch
     public static CustomButton engineerRepairButton;
     public static CustomButton sheriffKillButton;
     private static CustomButton deputyHandcuffButton;
-    public static CustomButton timeMasterShieldButton;
     private static CustomButton amnisiacRememberButton;
     private static CustomButton specterRememberButton;
     public static CustomButton veteranAlertButton;
@@ -151,7 +150,6 @@ internal static class HudManagerStartPatch
         specterRememberButton.MaxTimer = 15f;
         sheriffKillButton.MaxTimer = Sheriff.cooldown;
         deputyHandcuffButton.MaxTimer = Sheriff.handcuffCooldown;
-        timeMasterShieldButton.MaxTimer = TimeMaster.cooldown;
         veteranAlertButton.MaxTimer = Veteran.cooldown;
         survivorVestButton.MaxTimer = Survivor.vestCooldown;
         survivorBlanksButton.MaxTimer = Survivor.blanksCooldown;
@@ -237,7 +235,6 @@ internal static class HudManagerStartPatch
         poltergeistButton.MaxTimer = Poltergeist.cooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
-        timeMasterShieldButton.EffectDuration = TimeMaster.shieldDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
         survivorVestButton.EffectDuration = Survivor.vestDuration;
         hackerButton.EffectDuration = Hacker.duration;
@@ -644,44 +641,6 @@ internal static class HudManagerStartPatch
         deputyButtonHandcuffsText.enableWordWrapping = false;
         deputyButtonHandcuffsText.transform.localScale = Vector3.one * 0.5f;
         deputyButtonHandcuffsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
-
-        // Time Master Rewind Time
-        timeMasterShieldButton = new CustomButton(
-            () =>
-            {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.TimeMasterShield, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.timeMasterShield();
-                SoundEffectsManager.play("timemasterShield");
-            },
-            () =>
-            {
-                return TimeMaster.timeMaster != null &&
-                       TimeMaster.timeMaster == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { return PlayerControl.LocalPlayer.CanMove; },
-            () =>
-            {
-                timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
-                timeMasterShieldButton.isEffectActive = false;
-                timeMasterShieldButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-            },
-            TimeMaster.buttonSprite,
-            ButtonPositions.lowerRowRight,
-            __instance,
-            __instance.AbilityButton,
-            abilityInput.keyCode,
-            true,
-            TimeMaster.shieldDuration,
-            () =>
-            {
-                timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
-                SoundEffectsManager.stop("timemasterShield");
-            },
-            buttonText: GetString("TimeShieldText")
-        );
 
         // Veteran Alert
         veteranAlertButton = new CustomButton(

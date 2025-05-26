@@ -77,7 +77,6 @@ public enum RoleId
     BodyGuard,
     Jumper,
     Detective,
-    TimeMaster,
     Veteran,
     Medic,
     Swapper,
@@ -222,7 +221,6 @@ public static class RoleHelpers
             { RoleId.Snitch, CustomOptionHolder.snitchSpawnRate.GetSelection() },
             { RoleId.Spy, CustomOptionHolder.spySpawnRate.GetSelection() },
             { RoleId.Swapper, CustomOptionHolder.swapperSpawnRate.GetSelection() },
-            { RoleId.TimeMaster, CustomOptionHolder.timeMasterSpawnRate.GetSelection() },
             { RoleId.Tracker, CustomOptionHolder.trackerSpawnRate.GetSelection() },
             { RoleId.Trapper, CustomOptionHolder.trapperSpawnRate.GetSelection() },
             { RoleId.Veteran, CustomOptionHolder.veteranSpawnRate.GetSelection() },
@@ -340,7 +338,6 @@ public static class RoleHelpers
         Amnisiac.clearAndReload();
         Detective.clearAndReload();
         Werewolf.clearAndReload();
-        TimeMaster.clearAndReload();
         BodyGuard.clearAndReload();
         Veteran.clearAndReload();
         Medic.clearAndReload();

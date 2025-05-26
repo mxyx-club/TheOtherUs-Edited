@@ -1,5 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Serialization;
 using BepInEx;
@@ -9,7 +7,7 @@ namespace TheOtherRoles.CustomCosmetics;
 
 public class CosmeticsManager : ManagerBase<CosmeticsManager>
 {
-    internal static string CosmeticDir = Path.Combine(Paths.GameRootPath, Main.ModName);
+    internal static string CosmeticDir = Path.Combine(Paths.GameRootPath, Main.Name);
     internal static string CustomHatsDir => Path.Combine(CosmeticDir, "CustomHats");
     internal static string CustomVisorsDir => Path.Combine(CosmeticDir, "CustomVisors");
     internal static string CustomPlatesDir => Path.Combine(CosmeticDir, "CustomPlates");

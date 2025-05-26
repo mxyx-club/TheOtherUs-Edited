@@ -87,13 +87,6 @@ public static class Mimic
                 hasMimic = true;
                 break;
 
-            case RoleId.TimeMaster:
-                if (Amnisiac.resetRole) TimeMaster.clearAndReload();
-                TimeMaster.timeMaster = mimic;
-                timeMasterShieldButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
-                hasMimic = true;
-                break;
-
             case RoleId.Veteran:
                 if (Amnisiac.resetRole) Veteran.clearAndReload();
                 Veteran.veteran = mimic;
