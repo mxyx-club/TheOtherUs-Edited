@@ -79,13 +79,9 @@ FangkuaiYa, DetLimu, Amen's Grape
 
 ### Translations:
 
-ZH (Chinese): mxyx0412, Conscience
-EN (English): MamoruKun, Hydra
+**ZH (Chinese)**: mxyx0412, Conscience
 
-
-Thanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles!
-
-Thanks to miniduikboot & GD for hosting modded servers (and so much more)
+**EN (English)**: MamoruKun, Hydra
 
 ### Other Credits & Resources:
 
