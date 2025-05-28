@@ -11,10 +11,9 @@ public class Poltergeist
 
     public static Sprite ButtonSprite = new ResourceSprite("PoltergeistButton.png");
 
-#nullable enable
     public static void MoveDeadBody(byte targetId, Vector2 pos) => Coroutines.Start(CoMoveDeadBody(GetDeadBody(targetId), pos));
 
-    public static IEnumerator CoMoveDeadBody(DeadBody? deadBody, Vector2 pos)
+    public static IEnumerator CoMoveDeadBody(DeadBody deadBody, Vector2 pos)
     {
         if (deadBody == null)
         {
@@ -47,7 +46,6 @@ public class Poltergeist
             return result;
         }
     }
-#nullable disable
 
     public static void ClearAndReload()
     {

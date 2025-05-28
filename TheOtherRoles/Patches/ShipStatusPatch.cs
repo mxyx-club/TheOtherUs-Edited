@@ -1,17 +1,12 @@
-using AmongUs.GameOptions;
-
 namespace TheOtherRoles.Patches;
-
 
 [HarmonyPatch(typeof(ShipStatus))]
 public class ShipStatusPatch
 {
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
+    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius)), HarmonyPrefix]
     public static bool Prefix(ref float __result, ShipStatus __instance, [HarmonyArgument(0)] GameData.PlayerInfo player)
     {
-        if (!__instance.Systems.ContainsKey(SystemTypes.Electrical) ||
-            GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return true;
+        if (!__instance.Systems.ContainsKey(SystemTypes.Electrical) || IsHideNSeek) return true;
 
         // If player is a role which has Impostor vision
         if (hasImpVision(player))
@@ -28,7 +23,7 @@ public class ShipStatusPatch
                 lerpValue = Mathf.Clamp01((Trickster.lightsOutDuration - Trickster.lightsOutTimer) * 2);
             else if (Trickster.lightsOutTimer < 0.5) lerpValue = Mathf.Clamp01(Trickster.lightsOutTimer * 2);
 
-            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
+            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * ModOption.NormalOptions.CrewLightMod;
         }
 
         // If player is Lawyer, apply Lawyer vision modifier
@@ -57,18 +52,18 @@ public class ShipStatusPatch
 
         if (Torch.torch.FindAll(x => x.PlayerId == player.PlayerId).Count > 0) // Torch
         {
-            __result = __instance.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod * Torch.vision;
+            __result = __instance.MaxLightRadius * ModOption.NormalOptions.CrewLightMod * Torch.vision;
         }
 
         if (Mayor.mayor.IsAlive() && Mayor.mayor.PlayerId == player.PlayerId && Mayor.Revealed) // Mayor Vision
         {
             __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius * (1f - (Mayor.vision * 0.1f)), t) *
-                GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
+                ModOption.NormalOptions.CrewLightMod;
         }
 
         if (Specter.Player?.PlayerId == player.PlayerId)
         {
-            __result = __instance.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
+            __result = __instance.MaxLightRadius * ModOption.NormalOptions.CrewLightMod;
         }
 
         return false;
@@ -80,23 +75,21 @@ public class ShipStatusPatch
             return SubmergedCompatibility.GetSubmergedNeutralLightRadius(isImpostor);
 
         if (isImpostor)
-            return shipStatus.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.ImpostorLightMod;
+            return shipStatus.MaxLightRadius * ModOption.NormalOptions.ImpostorLightMod;
         var lerpValue = 1.0f;
         try
         {
             var switchSystem = MapUtilities.Systems[SystemTypes.Electrical].CastFast<SwitchSystem>();
             lerpValue = switchSystem.Value / 255f;
         }
-        catch
+        catch (Exception e)
         {
+            Message($"Error getting SwitchSystem value: {e.Message}");
         }
-
-        return Mathf.Lerp(shipStatus.MinLightRadius, shipStatus.MaxLightRadius, lerpValue) *
-               GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
+        return Mathf.Lerp(shipStatus.MinLightRadius, shipStatus.MaxLightRadius, lerpValue) * ModOption.NormalOptions.CrewLightMod;
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.IsGameOverDueToDeath))]
+    [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.IsGameOverDueToDeath)), HarmonyPostfix]
     public static void Postfix2(ShipStatus __instance, ref bool __result)
     {
         __result = false;

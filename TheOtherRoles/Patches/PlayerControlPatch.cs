@@ -42,7 +42,6 @@ public static class PlayerControlFixedUpdatePatch
                     }
                 }
             }
-
         return result;
     }
 

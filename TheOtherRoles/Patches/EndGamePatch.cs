@@ -1,4 +1,5 @@
 using AmongUs.GameOptions;
+using static TheOtherRoles.Modules.SimpleTable;
 
 namespace TheOtherRoles.Patches;
 
@@ -121,13 +122,13 @@ public class OnGameEndPatch
         ];
 
         var table = new SimpleTable()
-            .AddColumn(alignment: SimpleTable.Alignment.Left)
-            .AddColumn(alignment: SimpleTable.Alignment.Left)
-            .AddColumn(alignment: SimpleTable.Alignment.Left)
-            .AddColumn(alignment: SimpleTable.Alignment.Left)
+            .AddColumn(alignment: Alignment.Left)
+            .AddColumn(alignment: Alignment.Left)
+            .AddColumn(alignment: Alignment.Left)
+            .AddColumn(alignment: Alignment.Left)
             .AddRow();
 
-        var AllPlayers = PlayerControl.AllPlayerControls.GetFastEnumerator();
+        var AllPlayers = PlayerControl.AllPlayerControls.ToArray();
 
         foreach (var p in AllPlayers)
         {
@@ -203,14 +204,9 @@ public class OnGameEndPatch
 
         if (SchrodingersCat.Player != null && SchrodingersCat.State != SchrodingersCat.CatState.Crewmate)
             notWinners.Add(SchrodingersCat.Player);
-
-        Message($"HonmeiCannotFollowWin: {Akujo.honmeiCannotFollowWin}");
-        Message($"Honmei: {Akujo.honmei?.Data?.PlayerName ?? "null"}");
-
         if (Akujo.honmeiCannotFollowWin && Akujo.honmei != null)
             notWinners.Add(Akujo.honmei);
 
-        foreach (var p in notWinners) Message($"NotWinner: {p?.Data?.PlayerName ?? "null"}");
         var isCanceled = gameOverReason == (GameOverReason)CustomGameOverReason.Canceled;
         var everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
         var miniLose = Mini.mini != null && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;

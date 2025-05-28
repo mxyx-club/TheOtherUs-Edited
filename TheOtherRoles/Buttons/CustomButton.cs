@@ -10,7 +10,6 @@ public class CustomButton
     public static List<CustomButton> buttons = new();
     private static readonly int Desat = Shader.PropertyToID("_Desat");
 
-
     private Action OnClick;
     private readonly Action InitialOnClick;
     public Func<bool> HasButton;
@@ -54,7 +53,7 @@ public class CustomButton
             var local = PlayerControl.LocalPlayer;
             if (IsKillButton)
             {
-                if (local == Mini.mini) time *= Mini.Multiplier;
+                time *= Mini.Multiplier;
                 if (local.IsImpostor() && local == LastImpostor.lastImpostor)
                     time -= LastImpostor.deduce;
             }
@@ -101,8 +100,8 @@ public class CustomButton
         this.hotkey = hotkey;
         this.buttonText = buttonText;
         this.textTemplate = textTemplate;
-        this.IsKillButton = textTemplate.name == "KillButton(Clone)";
 
+        IsKillButton = textTemplate is KillButton;
         actionButton = UObject.Instantiate(textTemplate, textTemplate.transform.parent);
         actionButtonGameObject = actionButton.gameObject;
         actionButtonRenderer = actionButton.graphic;
@@ -246,7 +245,7 @@ public class CustomButton
     {
         var time = Time == -1 ? ModOption.KillCooldown : Time;
 
-        buttons.Where(x => x.HasButton()).Do(t =>
+        buttons.Where(x => x.HasButton() && x.actionButton != null).Do(t =>
         {
             var maxTime = Time == -1 ? t.MaxTimer : Time;
             try
@@ -603,5 +602,17 @@ public class CustomButton
 
         public static readonly Vector3 LeftOffset = new(1f, 0f, 0f);
         public static readonly Vector3 UpOffset = new(0f, 1.06f, 0f);
+    }
+}
+
+[HarmonyPatch(typeof(AbilityButton), nameof(AbilityButton.Update))]
+public class AbilityUpdate
+{
+    public static void Postfix(AbilityButton __instance)
+    {
+        if (PlayerControl.LocalPlayer.IsAlive() && __instance.commsDown.active)
+        {
+            __instance.commsDown.SetActive(false);
+        }
     }
 }

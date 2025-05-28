@@ -11,7 +11,6 @@ internal static class HudManagerStartPatch
 {
     private static bool initialized;
 
-    private static readonly float multiplier = Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini ? Mini.isGrownUp() ? 0.66f : 2f : 1f;
     public static CustomButton zoomOutButton;
     public static CustomButton roleSummaryButton;
     public static CustomButton gameModeButton;
@@ -1818,7 +1817,6 @@ internal static class HudManagerStartPatch
                 var untargetablePlayers = new List<PlayerControl>();
                 untargetablePlayers.AddRange(Jackal.jackal);
                 if (Jackal.Sidekick != null) untargetablePlayers.Add(Jackal.Sidekick);
-                if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
                 Jackal.currentTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
 
@@ -2102,7 +2100,7 @@ internal static class HudManagerStartPatch
                 RPCProcedure.giveBomb(Bomber.currentTarget.PlayerId);
                 if (Bomber.triggerBothCooldowns)
                 {
-                    Bomber.bomber.killTimer = bomberBombButton.MaxTimer * multiplier;
+                    Bomber.bomber.killTimer = bomberBombButton.MaxTimer * Mini.Multiplier;
                 }
                 bomberBombButton.Timer = bomberBombButton.MaxTimer;
             },
@@ -3635,7 +3633,7 @@ internal static class HudManagerStartPatch
                     witchSpellButton.Timer = witchSpellButton.MaxTimer;
                     if (Witch.triggerBothCooldowns)
                     {
-                        Witch.witch.killTimer = ModOption.KillCooldown * multiplier;
+                        Witch.witch.killTimer = ModOption.KillCooldown * Mini.Multiplier;
                     }
                 }
                 else
@@ -4767,7 +4765,7 @@ internal static class HudManagerStartPatch
         gunsmithAddBullets = new CustomButton(
             () =>
             {
-                PlayerControl.LocalPlayer.SetKillTimer(ModOption.KillCooldown * multiplier);
+                PlayerControl.LocalPlayer.SetKillTimer(ModOption.KillCooldown * Mini.Multiplier);
                 Gunsmith.remainingChange++;
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.SyncGunsmithChange);
                 writer.Write(Gunsmith.remainingChange);

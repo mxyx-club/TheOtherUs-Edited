@@ -36,8 +36,8 @@ Please refer to [Github releases](https://github.com/mxyx-club/TheOtherUs-Edited
 |    Impostor    |      Neutral      |   Crewmate    |   Modifier    |   Ghost Role   |
 | :------------: | :---------------: | :-----------: | :-----------: | :------------: |
 |   Morphling    |     Survivor      |   Vigilante   |     Lover     | Ghost Engineer |
-|    WolfLord    |     Amnisiac      |     Mayor     |   Assassin    |    Specter     |
-|    Poucher     |     PartTimer     |  Prosecutor   |   Disperser   |                |
+|    WolfLord    |     Amnisiac      |     Mayor     |   Assassin    |  Poltergeist   |
+|    Poucher     |     PartTimer     |  Prosecutor   |   Disperser   |    Specter     |
 |     Mimic      |    Band Leader    |    Sheriff    |  Specoality   |                |
 |  Camouflager   |      Jester       |    Deputy     |    Vortox     |                |
 |     Miner      |      Lawyer       |   Engineer    | Last Impostor |                |
@@ -47,31 +47,40 @@ Please refer to [Github releases](https://github.com/mxyx-club/TheOtherUs-Edited
 |     Bomber     |       Akujo       |   Detective   |   Aftermath   |                |
 |   Undertaker   |     Doomsayer     |   Redemptor   |    Bloody     |                |
 |    Escapist    |       Thief       |    Veteran    | AntiTeleport  |                |
-|    Warlock     |     Arsonist      |  Time Master  |  Tiebreaker   |                |
-|   Trickster    |     Werewolf      |    Swapper    |     Flash     |                |
-| Bounty Hunter  |      Pelican      |    Hacker     |  Multitasker  |                |
-|   Terrorist    |    Juggernaut     |     Seer      |     Giant     |                |
-|  Blackmailer   |      Swooper      |    Jumper     |     Mini      |                |
-|     Witch      |      Jackal       |    Tracker    |      Vip      |                |
-|     Ninja      |     Sidekick      |    Snitch     |  Indomitable  |                |
-|     Yo-Yo      |  Pavlov's owner   |      Spy      |    Slueth     |                |
-|  Evil Trapper  |   Pavlov's dogs   | SecurityGuard |    Cursed     |                |
-| Butcher [Beta] | Schrodinger's Cat |    Medium     |     Blind     |                |
-|    Gambler     |                   |    Trapper    |    Watcher    |                |
-|   Grenadier    |                   |    Prophet    |     Radar     |                |
-|    Gunsmith    |                   |  Info Sleuth  | Button Barry  |                |
-|   Berserker    |                   |   Balancer    |   Chameleon   |                |
+|    Warlock     |     Arsonist      |    Swapper    |  Tiebreaker   |                |
+|   Trickster    |     Werewolf      |    Hacker     |     Flash     |                |
+| Bounty Hunter  |      Pelican      |     Seer      |  Multitasker  |                |
+|   Terrorist    |    Juggernaut     |    Jumper     |     Giant     |                |
+|  Blackmailer   |      Phantom      |    Tracker    |     Mini      |                |
+|     Witch      |      Jackal       |    Snitch     |      Vip      |                |
+|     Ninja      |     Sidekick      |      Spy      |  Indomitable  |                |
+|     Yo-Yo      |  Pavlov's owner   | SecurityGuard |    Slueth     |                |
+|  Evil Trapper  |   Pavlov's dogs   |    Medium     |    Cursed     |                |
+| Butcher [Beta] | Schrodinger's Cat |    Trapper    |     Blind     |                |
+|    Gambler     |                   |    Prophet    |    Watcher    |                |
+|   Grenadier    |                   |  Info Sleuth  |     Radar     |                |
+|    Gunsmith    |                   |   Balancer    | Button Barry  |                |
+|   Berserker    |                   |               |   Chameleon   |                |
 |                |                   |               |    Shifter    |                |
 
 ## Credits & Resources
 
-### Team:
+### Main Developers
 
-mxyx    TianMengLucky    haoren    Imp11    FangKuaiYa
+mxyx0412
 
-### Former TheOtherUs Team Members:
+### GitHub Contributors:
 
-SpexGH    Xer    FangKuaiYa    mxyx    TianMengLucky
+TianMengLucky, Imp11, FangkuaiYa
+
+### Art Team:
+
+FangkuaiYa, DetLimu, Amen's Grape
+
+### Translations:
+
+ZH (Chinese): mxyx0412, Conscience
+EN (English): MamoruKun, Hydra
 
 
 Thanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles!
