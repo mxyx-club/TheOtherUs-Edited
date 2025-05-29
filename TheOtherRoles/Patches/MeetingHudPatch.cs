@@ -76,18 +76,17 @@ internal class MeetingHudPatch
                 break;
         }
 
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-            (byte)CustomRPC.SwapperSwap, SendOption.Reliable, -1);
+        var writer = StartRPC(CustomRPC.SwapperSwap);
         writer.Write(firstPlayer);
         writer.Write(secondPlayer);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        writer.EndRPC();
         RPCProcedure.swapperSwap(firstPlayer, secondPlayer);
     }
 
     public static void swapperCheckAndReturnSwap(MeetingHud __instance, byte dyingPlayerId)
     {
         // someone was guessed or dced in the meeting, check if this affects the swapper.
-        if (Swapper.swapper == null || __instance.state == VoteStates.Results) return;
+        if (Swapper.swapper.IsDead() || __instance.state == VoteStates.Results) return;
 
         // reset swap.
         var reset = false;
@@ -114,8 +113,7 @@ internal class MeetingHudPatch
         {
             selections[i] = false;
             var playerVoteArea = __instance.playerStates[i];
-            if (playerVoteArea.AmDead ||
-                (playerVoteArea.TargetPlayerId == Swapper.swapper.PlayerId && Swapper.canOnlySwapOthers)) continue;
+            if (playerVoteArea.AmDead || (playerVoteArea.TargetPlayerId == Swapper.swapper.PlayerId && Swapper.canOnlySwapOthers)) continue;
             renderers[i].color = Color.red;
             var copyI = i;
             swapperButtonList[i].OnClick.RemoveAllListeners();
@@ -379,10 +377,9 @@ internal class MeetingHudPatch
 
                 if (InfoSleuth.infoSleuth != null && playerVoteArea.TargetPlayerId == InfoSleuth.infoSleuth.PlayerId)
                 {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.InfoSleuthSetTarget, SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.InfoSleuthSetTarget);
                     writer.Write(playerVoteArea.VotedFor);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                     RPCProcedure.infoSleuthSetTarget(playerVoteArea.VotedFor);
                 }
 
@@ -407,7 +404,7 @@ internal class MeetingHudPatch
             }
 
             // Swapper swap votes
-            if (Swapper.swapper == null || Swapper.swapper.Data.IsDead) return dictionary;
+            if (Swapper.swapper.IsDead()) return dictionary;
             {
                 swapped1 = null;
                 swapped2 = null;
@@ -422,8 +419,8 @@ internal class MeetingHudPatch
                 dictionary.TryAdd(swapped1.TargetPlayerId, 0);
                 dictionary.TryAdd(swapped2.TargetPlayerId, 0);
 
-                (dictionary[swapped1.TargetPlayerId], dictionary[swapped2.TargetPlayerId]) = (
-                    dictionary[swapped2.TargetPlayerId], dictionary[swapped1.TargetPlayerId]);
+                (dictionary[swapped1.TargetPlayerId], dictionary[swapped2.TargetPlayerId]) =
+                (dictionary[swapped2.TargetPlayerId], dictionary[swapped1.TargetPlayerId]);
             }
             return dictionary;
         }
@@ -500,6 +497,17 @@ internal class MeetingHudPatch
     }
 
 
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.ClearVote))]
+    public static class MeetingHudClearVotePatch
+    {
+        public static void Prefix(MeetingHud __instance)
+        {
+            Info("ClearVote");
+            swapperCheckAndReturnSwap(__instance, byte.MaxValue - 1);
+        }
+    }
+
+
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.RpcVotingComplete))]
     public static class MeetingHudRpcVotingCompletePatch
     {
@@ -552,7 +560,7 @@ internal class MeetingHudPatch
                 if (playerVoteArea.TargetPlayerId == Swapper.playerId2) swapped2 = playerVoteArea;
             }
 
-            var doSwap = swapped1 != null && swapped2 != null && Swapper.swapper != null && Swapper.swapper.IsAlive();
+            var doSwap = swapped1 != null && swapped2 != null && Swapper.swapper.IsAlive();
             if (doSwap)
             {
                 var localPosition = swapped1.transform.localPosition;

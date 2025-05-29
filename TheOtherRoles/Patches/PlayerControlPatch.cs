@@ -1224,7 +1224,6 @@ public static class DisconnectPatch
                 if (pva.TargetPlayerId == player.PlayerId)
                 {
                     pva.Overlay.gameObject.SetActive(true);
-                    MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, pva.TargetPlayerId);
 
                     pva.UnsetVote();
                     var voteAreaPlayer = playerById(pva.TargetPlayerId);

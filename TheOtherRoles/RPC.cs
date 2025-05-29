@@ -1218,7 +1218,6 @@ public static class RPCProcedure
 
         if (MeetingHud.Instance)
         {
-            MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, byte.MaxValue - 1);
             foreach (var pva in MeetingHud.Instance.playerStates)
             {
                 pva.UnsetVote();

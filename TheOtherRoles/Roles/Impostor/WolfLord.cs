@@ -51,7 +51,6 @@ public class WolfLord
                     var voteAreaPlayer = playerById(pva.TargetPlayerId);
                     if (voteAreaPlayer?.AmOwner == false) continue;
                     MeetingHud.Instance.ClearVote();
-                    MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, partnerId);
                 }
             }
             if (AmongUsClient.Instance.AmHost) MeetingHud.Instance.CheckForEndVoting();
