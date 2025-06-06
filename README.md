@@ -13,9 +13,12 @@
 
 <p align="center">若在游玩过程中发现了bug或有一些建议，欢迎提出ISSUE、PR或加入模组交流群 >>> <a href="https://qm.qq.com/q/MlhqY3QcYU">961341019</a></p>
 
-<p align="center">职业相关Wiki请移步至我的个人博客 >>> <a href="https://www.mxyx.club/archives/theotherus">[沫夏悠轩の聚会 - 模组职业介绍]</p>
+<p align="center">职业相关Wiki请移步至我的个人博客 >>> <a href="https://www.mxyx.club/archives/theotherus">[沫夏悠轩の聚会 - 模组职业介绍]</a></p>
 
 <p align="center">给仓库多点点star谢谢喵</p>
+
+<p align="center">由于目前模组并不支持最新版本游戏，另附部分常见版本的<b>游戏本体</b>下载链接：<a href="https://www.123865.com/s/XD6SVv-KlL7v">123云盘</a></p>
+
 
 ## 模组下载
 
