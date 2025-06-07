@@ -79,24 +79,3 @@ internal static class Logger
         FastLog(LogLevel.Error, @object);
     }
 }
-/*
-[HarmonyPatch]
-internal static class LogListener
-{
-    [HarmonyTargetMethods]
-    private static IEnumerable<MethodBase> taregetMethodBases()
-    {
-        return typeof(AmongUsClient).Assembly.GetTypes()
-        .Where(n => n.IsSubclassOf(typeof(InnerNetObject)))
-        .Select(x => x.GetMethod(nameof(InnerNetObject.HandleRpc), AccessTools.allDeclared))
-        .Where(m => m != null);
-    }
-
-    [HarmonyPostfix]
-    internal static void OnRpc(InnerNetObject __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] Hazel.MessageReader reader)
-    {
-        // Debug
-        if (ModOption.DebugMode) Info($"OnRpc: {__instance.name} {callId} {reader.Length} {reader.Tag}");
-    }
-}
-*/

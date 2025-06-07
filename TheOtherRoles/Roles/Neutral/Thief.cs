@@ -1,4 +1,5 @@
 using AmongUs.GameOptions;
+using TheOtherRoles.CustomGameModes;
 
 namespace TheOtherRoles.Roles.Neutral;
 
@@ -69,13 +70,13 @@ public static class Thief
         {
             Jackal.Sidekick = thief;
             Jackal.jackal.Add(target);
-            if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(thief.PlayerId))
+            if (HandleGuesser.isGuesserGm && GuesserGM.guesserGamemodeSidekickIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(thief.PlayerId))
                 RPCProcedure.setGuesserGm(thief.PlayerId);
         }
         if (target == Pavlovsdogs.pavlovsowner)
         {
             Pavlovsdogs.pavlovsowner = thief;
-            if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodePavlovsdogIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(thief.PlayerId))
+            if (HandleGuesser.isGuesserGm && GuesserGM.guesserGamemodePavlovsdogIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(thief.PlayerId))
                 RPCProcedure.setGuesserGm(thief.PlayerId);
         }
         if (Pavlovsdogs.pavlovsdogs.Any(x => x == target))

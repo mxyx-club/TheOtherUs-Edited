@@ -438,8 +438,7 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void trapperUpdate()
     {
-        if (Trapper.trapper == null || PlayerControl.LocalPlayer != Trapper.trapper ||
-            Trapper.trapper.Data.IsDead) return;
+        if (Trapper.trapper.IsDead() || PlayerControl.LocalPlayer != Trapper.trapper) return;
         var (playerCompleted, _) = TasksHandler.taskInfo(Trapper.trapper.Data);
         if (playerCompleted == Trapper.rechargedTasks)
         {
@@ -450,7 +449,7 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void akujoUpdate()
     {
-        if (Akujo.akujo == null || Akujo.akujo.Data.IsDead || PlayerControl.LocalPlayer != Akujo.akujo) return;
+        if (Akujo.akujo.IsDead() || PlayerControl.LocalPlayer != Akujo.akujo) return;
         Akujo.timeLeft = (int)Math.Ceiling(Akujo.timeLimit - (DateTime.UtcNow - Akujo.startTime).TotalSeconds);
         if (Akujo.timeLeft > 0)
         {
@@ -460,9 +459,6 @@ public static class PlayerControlFixedUpdatePatch
                 {
                     HudManagerStartPatch.akujoHonmeiButton.ButtonTitle.text = TimeSpan.FromSeconds(Akujo.timeLeft).ToString(@"mm\:ss");
                 }
-                HudManagerStartPatch.akujoHonmeiButton.ButtonTitle.enabled = !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) &&
-                  !MeetingHud.Instance &&
-                  !ExileController.Instance;
             }
             else HudManagerStartPatch.akujoHonmeiButton.ButtonTitle.enabled = false;
         }
@@ -480,8 +476,7 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void Postfix(PlayerControl __instance)
     {
-        if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started ||
-            GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
+        if (!InGame || IsHideNSeek) return;
 
         // Mini and Morphling shrink
         MiniSizeUpdate(__instance);
@@ -679,6 +674,7 @@ internal class BodyReportPatch
 
         if (Witness.Player.IsAlive())
         {
+            var witnessTarget = Witness.DetermineKillerTarget(target?.Object);
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WitnessReport);
             writer.Write(target?.PlayerId ?? byte.MaxValue);
             writer.EndRPC();
@@ -707,7 +703,7 @@ public static class PlayerDiePatch
             Prosecutor.StartProsecute = false;
             Prosecutor.ProsecuteThisMeeting = false;
         }
-        if (ModOption.gameMode is CustomGamemodes.Classic or CustomGamemodes.Guesser) return;
+        if (ModOption.gameMode is CustomGamemodes.Classic) return;
         _ = new LateTask(() => { CanSeeRoleInfo = true; }, 1f, "CanSeeRoleInfo");
     }
 }
@@ -723,7 +719,7 @@ public static class MurderPlayerPatch
         if (SchrodingersCat.Player != null && target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
         {
             var role = RoleInfo.getRoleInfoForPlayer(__instance, false, false).FirstOrDefault();
-            var state = SchrodingersCat.CatState.None;
+            var state = SchrodingersCat.State;
             if (role != null && PlayerControl.LocalPlayer == SchrodingersCat.Player)
             {
                 if (role.roleId is RoleId.Jackal or RoleId.Sidekick) state = SchrodingersCat.CatState.Jackal;

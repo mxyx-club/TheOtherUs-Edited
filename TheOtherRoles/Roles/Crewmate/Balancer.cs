@@ -357,77 +357,69 @@ public class Balancer
         return obj;
     }
 
-    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.UpdateButtons))]
-    public class Balancer_updatepatch
+    internal static void UpdateButton(MeetingHud __instance)
     {
-        [HarmonyPostfix]
-        internal static void UpdateButtonsPostfix(MeetingHud __instance)
+        if (PlayerControl.LocalPlayer.IsDead() || targetplayerright != null)
         {
-            if (PlayerControl.LocalPlayer.IsDead() || targetplayerright != null)
+            __instance.playerStates.ForEach(x =>
             {
-                __instance.playerStates.ForEach(x =>
-                {
-                    var icon = x.transform.FindChild("BalancerButton");
-                    if (icon != null) UObject.Destroy(icon.gameObject);
-                });
-            }
+                var icon = x.transform.FindChild("BalancerButton");
+                if (icon != null) UObject.Destroy(icon.gameObject);
+            });
         }
     }
 
-    public static class Balancer_Patch
+    private static void BalancerOnClick(int Index, MeetingHud __instance)
     {
-        private static void BalancerOnClick(int Index, MeetingHud __instance)
+        if (currentAbilityUser != null || __instance.state is MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Results) return;
+        var Target = playerById(__instance.playerStates[Index].TargetPlayerId);
+
+        if (currentTarget == null && Target.IsAlive())
         {
-            if (currentAbilityUser != null) return;
-            var Target = playerById(__instance.playerStates[Index].TargetPlayerId);
-
-            if (currentTarget == null && Target.IsAlive())
-            {
-                currentTarget = Target;
-                __instance.playerStates.ForEach(x =>
-                {
-                    if (x.TargetPlayerId == currentTarget.PlayerId && x.transform.FindChild("BalancerButton") != null)
-                        x.transform.FindChild("BalancerButton")?.gameObject.SetActive(false);
-                });
-                return;
-            }
-
-            if (balancer.IsDead() || Target.IsDead() || IsAbilityUsed <= 0) return;
-
-            var writer = StartRPC(CustomRPC.BalancerBalance);
-            writer.Write(PlayerControl.LocalPlayer.PlayerId);
-            writer.Write(currentTarget.PlayerId);
-            writer.Write(Target.PlayerId);
-            writer.EndRPC();
-            RPCProcedure.balancerBalance(PlayerControl.LocalPlayer.PlayerId, currentTarget.PlayerId, Target.PlayerId);
-
+            currentTarget = Target;
             __instance.playerStates.ForEach(x =>
             {
-                if (x.transform.FindChild("BalancerButton") != null) UObject.Destroy(x.transform.FindChild("BalancerButton").gameObject);
+                if (x.TargetPlayerId == currentTarget.PlayerId && x.transform.FindChild("BalancerButton") != null)
+                    x.transform.FindChild("BalancerButton")?.gameObject.SetActive(false);
             });
+            return;
         }
 
-        internal static void MeetingHudStartPostfix(MeetingHud __instance)
+        if (balancer.IsDead() || Target.IsDead() || IsAbilityUsed <= 0) return;
+
+        var writer = StartRPC(CustomRPC.BalancerBalance);
+        writer.Write(PlayerControl.LocalPlayer.PlayerId);
+        writer.Write(currentTarget.PlayerId);
+        writer.Write(Target.PlayerId);
+        writer.EndRPC();
+        RPCProcedure.balancerBalance(PlayerControl.LocalPlayer.PlayerId, currentTarget.PlayerId, Target.PlayerId);
+
+        __instance.playerStates.ForEach(x =>
         {
-            if (PlayerControl.LocalPlayer.IsAlive() && IsAbilityUsed > 0)
+            if (x.transform.FindChild("BalancerButton") != null) UObject.Destroy(x.transform.FindChild("BalancerButton").gameObject);
+        });
+    }
+
+    internal static void MeetingHudStartPostfix(MeetingHud __instance)
+    {
+        if (PlayerControl.LocalPlayer.IsAlive() && IsAbilityUsed > 0)
+        {
+            for (int i = 0; i < __instance.playerStates.Length; i++)
             {
-                for (int i = 0; i < __instance.playerStates.Length; i++)
+                PlayerVoteArea playerVoteArea = __instance.playerStates[i];
+                var player = playerById(__instance.playerStates[i].TargetPlayerId);
+                if (player.IsAlive())
                 {
-                    PlayerVoteArea playerVoteArea = __instance.playerStates[i];
-                    var player = playerById(__instance.playerStates[i].TargetPlayerId);
-                    if (player.IsAlive())
-                    {
-                        GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-                        GameObject targetBox = UObject.Instantiate(template, playerVoteArea.transform);
-                        targetBox.name = "BalancerButton";
-                        targetBox.transform.localPosition = new Vector3(1.1f, 0.03f, -1f);
-                        SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();
-                        renderer.sprite = iconSprite;
-                        PassiveButton button = targetBox.GetComponent<PassiveButton>();
-                        button.OnClick.RemoveAllListeners();
-                        int copiedIndex = i;
-                        button.OnClick.AddListener((UnityAction)(() => BalancerOnClick(copiedIndex, __instance)));
-                    }
+                    GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
+                    GameObject targetBox = UObject.Instantiate(template, playerVoteArea.transform);
+                    targetBox.name = "BalancerButton";
+                    targetBox.transform.localPosition = new Vector3(1.1f, 0.03f, -1f);
+                    SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();
+                    renderer.sprite = iconSprite;
+                    PassiveButton button = targetBox.GetComponent<PassiveButton>();
+                    button.OnClick.RemoveAllListeners();
+                    int copiedIndex = i;
+                    button.OnClick.AddListener((UnityAction)(() => BalancerOnClick(copiedIndex, __instance)));
                 }
             }
         }

@@ -43,7 +43,6 @@ internal class RoleManagerSelectRolesPatch
     private static int impValues;
 
     private static readonly List<Tuple<byte, byte>> playerRoleMap = new();
-    public static bool isGuesserGamemode => ModOption.gameMode == CustomGamemodes.Guesser;
 
     public static void Postfix()
     {
@@ -63,7 +62,7 @@ internal class RoleManagerSelectRolesPatch
         assignDependentRoles(data); // Assign roles that may have a dependent role
         assignChanceRoles(data); // Assign roles that may or may not be in the game last
         assignRoleTargets(data); // Assign targets for Lawyer & Prosecutor
-        if (isGuesserGamemode) assignGuesserGamemode();
+        if (GuesserGM.Enabled) assignGuesserGamemode();
         assignModifiers(); // Assign modifier
         setRolesAgain(); //brb
     }
@@ -192,7 +191,7 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Medium, CustomOptionHolder.mediumSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Prophet, CustomOptionHolder.prophetSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Redemptor, CustomOptionHolder.redemptorSpawnRate.GetSelection());
-        if (!isGuesserGamemode)
+        if (!GuesserGM.Enabled)
             crewSettings.Add((byte)RoleId.Vigilante, CustomOptionHolder.guesserSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Trapper, CustomOptionHolder.trapperSpawnRate.GetSelection());
         // Only add Spy if more than 1 impostor as the spy role is otherwise useless
@@ -234,10 +233,11 @@ internal class RoleManagerSelectRolesPatch
     private static void selectFactionForFactionIndependentRoles(RoleAssignmentData data)
     {
         // Assign Sheriff
-        if ((CustomOptionHolder.deputySpawnRate.GetSelection() > 0 &&
-             CustomOptionHolder.sheriffSpawnRate.GetSelection() == 10) ||
-            CustomOptionHolder.deputySpawnRate.GetSelection() == 0)
+        if ((CustomOptionHolder.deputySpawnRate.GetSelection() > 0 && CustomOptionHolder.sheriffSpawnRate.GetSelection() == 10)
+            || CustomOptionHolder.deputySpawnRate.GetSelection() == 0)
+        {
             data.crewSettings.Add((byte)RoleId.Sheriff, CustomOptionHolder.sheriffSpawnRate.GetSelection());
+        }
 
         crewValues = data.crewSettings.Values.ToList().Sum();
         impValues = data.impSettings.Values.ToList().Sum();
@@ -282,19 +282,25 @@ internal class RoleManagerSelectRolesPatch
             setRoleToRandomPlayer(roleId, players);
             rolesToAssign[roleType].RemoveAt(index);
 
-            if (blockedRolePairings.ContainsKey(roleId))
+            if (blockedRolePairings.Any(pair => pair.Contains((RoleId)roleId)))
             {
-                foreach (var blockedRoleId in blockedRolePairings[roleId])
+                foreach (var blockedRoleId in blockedRolePairings
+                    .Where(pair => pair.Contains((RoleId)roleId))
+                    .SelectMany(x => x)
+                    .Where(x => x != (RoleId)roleId)
+                    .Select(x => (byte)x))
                 {
                     // Set chance for the blocked roles to 0 for chances less than 100%
                     if (data.impSettings.ContainsKey(blockedRoleId)) data.impSettings[blockedRoleId] = 0;
                     if (data.neutralSettings.ContainsKey(blockedRoleId)) data.neutralSettings[blockedRoleId] = 0;
-                    if (data.killerNeutralSettings.ContainsKey(blockedRoleId)) data.killerNeutralSettings[blockedRoleId] = 0;
                     if (data.crewSettings.ContainsKey(blockedRoleId)) data.crewSettings[blockedRoleId] = 0;
+
                     // Remove blocked roles even if the chance was 100%
                     foreach (var ensuredRolesList in rolesToAssign.Values)
+                    {
                         ensuredRolesList.RemoveAll(x => x == blockedRoleId);
                 }
+            }
             }
 
             // Adjust the role limit
@@ -420,15 +426,16 @@ internal class RoleManagerSelectRolesPatch
             setRoleToRandomPlayer(roleId, players);
             rolesToAssign[roleType].RemoveAll(x => x == roleId);
 
-            if (blockedRolePairings.ContainsKey(roleId))
-                foreach (var blockedRoleId in blockedRolePairings[roleId])
+            if (blockedRolePairings.Any(pair => pair.Contains((RoleId)roleId)))
+                {
+                foreach (var blockedRoleId in blockedRolePairings.Where(pair => pair.Contains((RoleId)roleId)).SelectMany(pair => pair))
                 {
                     // Remove tickets of blocked roles from all pools
-                    crewmateTickets.RemoveAll(x => x == blockedRoleId);
-                    neutralTickets.RemoveAll(x => x == blockedRoleId);
-                    killerNeutralTickets.RemoveAll(x => x == blockedRoleId);
-                    impostorTickets.RemoveAll(x => x == blockedRoleId);
+                    crewmateTickets.RemoveAll(x => (RoleId)x == blockedRoleId);
+                    neutralTickets.RemoveAll(x => (RoleId)x == blockedRoleId);
+                    impostorTickets.RemoveAll(x => (RoleId)x == blockedRoleId);
                 }
+            }
 
             // Adjust the role limit
             switch (roleType)
@@ -517,7 +524,7 @@ internal class RoleManagerSelectRolesPatch
         if (modifierMin > modifierMax) modifierMin = modifierMax;
         var modifierCountSettings = rnd.Next(modifierMin, modifierMax);
         var players = PlayerControl.AllPlayerControls.ToArray().ToList();
-        if (isGuesserGamemode && !CustomOptionHolder.guesserGamemodeHaveModifier.GetBool())
+        if (GuesserGM.Enabled && !GuesserGM.guesserGamemodeHaveModifier.GetBool())
             players.RemoveAll(x => GuesserGM.isGuesser(x.PlayerId));
 
         var impPlayer = new List<PlayerControl>(players);
@@ -644,21 +651,21 @@ internal class RoleManagerSelectRolesPatch
 
     public static void assignGuesserGamemode()
     {
-        var impPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
-        var neutralPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
-        var crewPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
+        var impPlayer = PlayerControl.AllPlayerControls.ToArray().OrderBy(x => Guid.NewGuid()).ToList();
+        var neutralPlayer = PlayerControl.AllPlayerControls.ToArray().OrderBy(x => Guid.NewGuid()).ToList();
+        var crewPlayer = PlayerControl.AllPlayerControls.ToArray().OrderBy(x => Guid.NewGuid()).ToList();
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
         neutralPlayer.RemoveAll(x => !x.IsNeutral() || x == Doomsayer.doomsayer);
         crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.IsNeutral());
         assignGuesserGamemodeToPlayers(crewPlayer,
-            CustomOptionHolder.guesserGamemodeCrewNumber.GetInt());
+            GuesserGM.guesserGamemodeCrewNumber.GetInt());
         assignGuesserGamemodeToPlayers(neutralPlayer,
-            CustomOptionHolder.guesserGamemodeNeutralNumber.GetInt(),
-            CustomOptionHolder.guesserForceJackalGuesser.GetBool(),
-            CustomOptionHolder.guesserForceThiefGuesser.GetBool(),
-            CustomOptionHolder.guesserForcePavlovsGuesser.GetBool());
+            GuesserGM.guesserGamemodeNeutralNumber.GetInt(),
+            GuesserGM.guesserForceJackalGuesser.GetBool(),
+            GuesserGM.guesserForceThiefGuesser.GetBool(),
+            GuesserGM.guesserForcePavlovsGuesser.GetBool());
         assignGuesserGamemodeToPlayers(impPlayer,
-            CustomOptionHolder.guesserGamemodeImpNumber.GetInt());
+            GuesserGM.guesserGamemodeImpNumber.GetInt());
     }
 
     private static void assignGuesserGamemodeToPlayers(List<PlayerControl> playerList, int count,
@@ -778,7 +785,7 @@ internal class RoleManagerSelectRolesPatch
         {
             var GuesserList = new List<PlayerControl>();
 
-            if (isGuesserGamemode)
+            if (GuesserGM.Enabled)
             {
                 foreach (var player in playerList.Where(p => GuesserGM.isGuesser(p.PlayerId)))
                 {
@@ -892,6 +899,7 @@ internal class RoleManagerSelectRolesPatch
         {
             var APlayers = new List<PlayerControl>(playerList);
             APlayers.RemoveAll(x => x.IsImpostor());
+            APlayers.RemoveAll(x => x == SchrodingersCat.Player);
 
             playerId = setModifierToRandomPlayer((byte)RoleId.Aftermath, APlayers);
             crewPlayer.RemoveAll(x => x.PlayerId == playerId);
@@ -1086,7 +1094,7 @@ internal class RoleManagerSelectRolesPatch
                 selection = CustomOptionHolder.modifierShifter.GetSelection();
                 break;
             case RoleId.Assassin:
-                if (isGuesserGamemode) break;
+                if (GuesserGM.Enabled) break;
                 selection = CustomOptionHolder.modifierAssassin.GetSelection();
                 if (multiplyQuantity) selection *= CustomOptionHolder.modifierAssassinQuantity.GetQuantity();
                 break;

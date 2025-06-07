@@ -147,37 +147,6 @@ License: TheOtherRoles is licensed under the [https://github.com/TheOtherRolesAU
             })));
         });
     }
-
-    public static void addSceneChangeCallbacks()
-    {
-        SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>)((scene, _) =>
-        {
-            if (!scene.name.Equals("MatchMaking", StringComparison.Ordinal)) return;
-            ModOption.gameMode = CustomGamemodes.Classic;
-            // Add buttons For Guesser Mode, Hide N Seek in this scene.
-            // find "HostLocalGameButton"
-            var template = UObject.FindObjectOfType<HostLocalGameButton>();
-            var gameButton = template.transform.FindChild("CreateGameButton");
-            var gameButtonPassiveButton = gameButton.GetComponentInChildren<PassiveButton>();
-
-            var guesserButton = UObject.Instantiate(gameButton, gameButton.parent);
-            guesserButton.transform.localPosition += new Vector3(0f, -0.5f);
-            var guesserButtonText = guesserButton.GetComponentInChildren<TextMeshPro>();
-            var guesserButtonPassiveButton = guesserButton.GetComponentInChildren<PassiveButton>();
-
-            guesserButtonPassiveButton.OnClick = new ButtonClickedEvent();
-            guesserButtonPassiveButton.OnClick.AddListener((Action)(() =>
-            {
-                ModOption.gameMode = CustomGamemodes.Guesser;
-                template.OnClick();
-            }));
-
-            template.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p =>
-            {
-                guesserButtonText.SetText(GetString("isGuesserGm"));
-            })));
-        }));
-    }
 }
 
 [HarmonyPatch(typeof(VersionShower), nameof(VersionShower.Start))]

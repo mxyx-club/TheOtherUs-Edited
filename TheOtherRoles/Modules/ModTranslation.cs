@@ -61,7 +61,7 @@ public class ModTranslation
             return def;
 
         var data = stringData[keyClean];
-        int lang = (int)AmongUs.Data.DataManager.Settings.Language.CurrentLanguage;
+        int lang = (int)DataManager.Settings.Language.CurrentLanguage;
 
         if (data.ContainsKey(lang))
             return key.Replace(keyClean, data[lang]);

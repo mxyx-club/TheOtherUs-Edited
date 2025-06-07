@@ -42,7 +42,7 @@ public class GameStartManagerPatch
             // Reset kicking timer
             kickingTimer = 0f;
             // Copy lobby code
-            string code = InnerNet.GameCode.IntToGameName(AmongUsClient.Instance.GameId);
+            string code = GameCode.IntToGameName(AmongUsClient.Instance.GameId);
             GUIUtility.systemCopyBuffer = code;
             _ = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoomCode,
                 new Il2CppReferenceArray<Il2CppSystem.Object>(0)) + "\r\n" + code;
@@ -138,7 +138,7 @@ public class GameStartManagerPatch
                     RPCProcedure.setGameStarting();
 
                     // Activate Stop-Button
-                    copiedStartButton = UnityEngine.Object.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
+                    copiedStartButton = UObject.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
                     copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
                     copiedStartButton.GetComponent<SpriteRenderer>().sprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 180f);
                     copiedStartButton.SetActive(true);
@@ -201,7 +201,7 @@ public class GameStartManagerPatch
                 {
 
                     // Activate Stop-Button
-                    copiedStartButton = UnityEngine.Object.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
+                    copiedStartButton = UObject.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
                     copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
                     copiedStartButton.GetComponent<SpriteRenderer>().sprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.StopClean.png", 180f);
                     copiedStartButton.SetActive(true);

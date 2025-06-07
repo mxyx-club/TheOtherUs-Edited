@@ -151,46 +151,49 @@ public static class RoleHelpers
         }
     }
 
-    public static Dictionary<byte, byte[]> blockedRolePairings = new();
-    public static Dictionary<AssignType, List<Assignment>> GhostRoles = new();
-    public static List<PlayerControl> GhostPlayer = new();
+    public static void RpcMurderPlayer(PlayerControl killer, PlayerControl target, bool showAnimation = true, CustomDeathReason deathReason = CustomDeathReason.NULL)
+    {
+        var writer = StartRPC(CustomRPC.UncheckedMurderPlayer);
+        writer.Write(killer.PlayerId);
+        writer.Write(target.PlayerId);
+        writer.Write(showAnimation);
+        writer.EndRPC();
+        RPCProcedure.uncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation);
+
+        if (deathReason == CustomDeathReason.NULL) deathReason = target == killer ? CustomDeathReason.Suicide : CustomDeathReason.Kill;
+        GameHistory.RpcOverrideDeathReasonAndKiller(target, deathReason, killer);
+    }
+
+
+
+
+    public static List<RoleId[]> blockedRolePairings = new();
 
     public static void blockRole()
     {
         blockedRolePairings.Clear();
 
-        blockedRolePairings.Add((byte)RoleId.Vampire, [(byte)RoleId.Warlock, (byte)RoleId.Witch]);
-        blockedRolePairings.Add((byte)RoleId.Witch, [(byte)RoleId.Warlock, (byte)RoleId.Vampire]);
-        blockedRolePairings.Add((byte)RoleId.Warlock, [(byte)RoleId.Vampire, (byte)RoleId.Witch]);
+        blockedRolePairings.Add([RoleId.Vampire, RoleId.Warlock, RoleId.Witch]);
 
         if (CustomOptionHolder.pavlovsownerAndJackalAsWell.GetBool())
         {
-            blockedRolePairings.Add((byte)RoleId.Jackal, [(byte)RoleId.Pavlovsowner]);
-            blockedRolePairings.Add((byte)RoleId.Pavlovsowner, [(byte)RoleId.Jackal]);
+            blockedRolePairings.Add([RoleId.Jackal, RoleId.Pavlovsowner]);
         }
         if (Executioner.promotesToLawyer)
         {
-            blockedRolePairings.Add((byte)RoleId.Executioner, [(byte)RoleId.Lawyer]);
-            blockedRolePairings.Add((byte)RoleId.Lawyer, [(byte)RoleId.Executioner]);
+            blockedRolePairings.Add([RoleId.Executioner, RoleId.Lawyer]);
         }
 
         if (Jester.canDragDeadBody)
         {
-            blockedRolePairings.Add((byte)RoleId.Jester, [(byte)RoleId.Undertaker]);
-            blockedRolePairings.Add((byte)RoleId.Undertaker, [(byte)RoleId.Jester]);
+            blockedRolePairings.Add([RoleId.Jester, RoleId.Undertaker]);
         }
 
-        blockedRolePairings.Add((byte)RoleId.Vulture, [(byte)RoleId.Cleaner, (byte)RoleId.Pelican]);
-        blockedRolePairings.Add((byte)RoleId.Cleaner, [(byte)RoleId.Vulture, (byte)RoleId.Pelican]);
-        blockedRolePairings.Add((byte)RoleId.Pelican, [(byte)RoleId.Vulture, (byte)RoleId.Cleaner]);
+        blockedRolePairings.Add([RoleId.Vulture, RoleId.Cleaner, RoleId.Pelican]);
 
-        blockedRolePairings.Add((byte)RoleId.Ninja, [(byte)RoleId.Swooper]);
-        blockedRolePairings.Add((byte)RoleId.Swooper, [(byte)RoleId.Ninja]);
+        blockedRolePairings.Add([RoleId.Ninja, RoleId.Swooper]);
 
-        blockedRolePairings.Add((byte)RoleId.Gunsmith, [(byte)RoleId.Berserker, (byte)RoleId.BountyHunter, (byte)RoleId.WolfLord]);
-        blockedRolePairings.Add((byte)RoleId.Berserker, [(byte)RoleId.Gunsmith, (byte)RoleId.BountyHunter, (byte)RoleId.WolfLord]);
-        blockedRolePairings.Add((byte)RoleId.WolfLord, [(byte)RoleId.Berserker, (byte)RoleId.Gunsmith, (byte)RoleId.BountyHunter]);
-        blockedRolePairings.Add((byte)RoleId.BountyHunter, [(byte)RoleId.Berserker, (byte)RoleId.Gunsmith, (byte)RoleId.WolfLord]);
+        blockedRolePairings.Add([RoleId.Gunsmith, RoleId.Berserker, RoleId.BountyHunter, RoleId.WolfLord]);
 
     }
 
@@ -305,20 +308,6 @@ public static class RoleHelpers
             { RoleId.Vip, CustomOptionHolder.modifierVip.GetSelection() },
             { RoleId.Watcher, CustomOptionHolder.modifierWatcher.GetSelection()}
         });
-        GhostRoles.Clear();
-        GhostPlayer.Clear();
-
-        GhostRoles[AssignType.Crewmate] = new List<Assignment>
-        {
-            new(RoleId.GhostEngineer, CustomOptionHolder.ghostEngineerSpawnRate.GetSelection()),
-            new(RoleId.Poltergeist, CustomOptionHolder.poltergeistSpawnRate.GetSelection())
-        };
-
-
-        GhostRoles[AssignType.otherNeutral] = new List<Assignment>
-        {
-            new(RoleId.Specter, CustomOptionHolder.specterSpawnRate.GetSelection())
-        };
     }
 
     public static void clearAndReloadRoles()
@@ -437,104 +426,5 @@ public static class RoleHelpers
         CanSeeRoleInfo = false;
     }
 
-    [HarmonyPatch(typeof(RoleManager), nameof(RoleManager.AssignRoleOnDeath))]
-    public static class AssignRoleOnDeathPatch
-    {
-        public static bool Prefix([HarmonyArgument(0)] PlayerControl player, [HarmonyArgument(1)] bool specialRolesAllowed)
-        {
-            if (player.IsAlive() || player == null || !specialRolesAllowed) return false;
-            return true;
-        }
-
-        public static void Postfix([HarmonyArgument(0)] PlayerControl player)
-        {
-            if (GhostPlayer.Contains(player)) return;
-
-            if (player.IsCrew()) AssignRole(player, AssignType.Crewmate);
-
-            if (otherNeutral(player)) AssignRole(player, AssignType.otherNeutral);
-        }
-
-        public static bool otherNeutral(PlayerControl player)
-        {
-            if (Pelican.Player == player ||
-                (PartTimer.partTimer == player && PartTimer.target != null) ||
-                (Lawyer.lawyer == player && Lawyer.target.IsAlive()) ||
-                player == Jackal.Sidekick ||
-                player == Pavlovsdogs.pavlovsowner ||
-                (player == BandLeader.Player && BandLeader.Formed) ||
-                Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) ||
-                Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId))
-            {
-                return false;
-            }
-
-            return player.IsNeutral();
-        }
-
-        private static void AssignRole(PlayerControl player, AssignType assignType)
-        {
-            if (!GhostRoles.TryGetValue(assignType, out var roles) || roles.All(x => x.SpawnRate == 0)) return;
-            roles = roles.OrderBy(x => Guid.NewGuid()).ToList();
-            foreach (var role in roles.Where(x => x.SpawnRate == 10 && !x.Assigned).ToList())
-            {
-                AssignRoleToPlayer(player, role);
-                return;
-            }
-
-            int maxCount = roles.Count;
-            int count = 0;
-            while (count < maxCount)
-            {
-                bool assigned = false;
-                foreach (var role in roles.Where(x => x.SpawnRate is > 0 and < 10 && !x.Assigned).ToList())
-                {
-                    if (rnd.Next(1, 101) <= role.SpawnRate * (10 + count))
-                    {
-                        AssignRoleToPlayer(player, role);
-                        assigned = true;
-                        break;
-                    }
-                }
-                if (assigned) break;
-                count++;
-            }
-        }
-
-        private static void AssignRoleToPlayer(PlayerControl player, Assignment role)
-        {
-            var write = StartRPC(PlayerControl.LocalPlayer, CustomRPC.SetGhostRole);
-            write.Write(player.PlayerId);
-            write.Write((byte)role.RoleId);
-            write.EndRPC();
-
-            RPCProcedure.setGhostRole(player.PlayerId, (byte)role.RoleId);
-            GhostPlayer.Add(player);
-            role.Assigned = true;
-        }
-    }
-
-    public class Assignment
-    {
-        public RoleId RoleId { get; set; }
-        public int SpawnRate { get; set; }
-        public bool Assigned { get; set; }
-
-        public Assignment(RoleId roleId, int Rate)
-        {
-            RoleId = roleId;
-            SpawnRate = Rate;
-        }
-    }
-
-    public enum AssignType
-    {
-        None,
-        Crewmate,
-        Impostor,
-        Neutral,
-        otherNeutral,
-        Custom
-    }
 }
 

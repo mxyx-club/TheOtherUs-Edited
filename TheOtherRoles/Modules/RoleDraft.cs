@@ -1,4 +1,5 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
+using TheOtherRoles.CustomGameModes;
 using static TheOtherRoles.Patches.RoleManagerSelectRolesPatch;
 
 namespace TheOtherRoles.Modules;
@@ -6,7 +7,7 @@ namespace TheOtherRoles.Modules;
 [HarmonyPatch]
 internal class RoleDraft
 {
-    public static bool isEnabled => CustomOptionHolder.isDraftMode.GetBool() && (ModOption.gameMode is CustomGamemodes.Classic or CustomGamemodes.Guesser);
+    public static bool isEnabled => CustomOptionHolder.isDraftMode.GetBool() && (ModOption.gameMode is CustomGamemodes.Classic);
     public static bool isRunning;
 
     public static List<byte> pickOrder = new();
@@ -43,7 +44,7 @@ internal class RoleDraft
 
         // SoundEffectsManager.play("draft",  volume: 1f, true, true);
         bool playedAlert = false;
-        feedText = UnityEngine.Object.Instantiate(__instance.TeamTitle, __instance.transform);
+        feedText = UObject.Instantiate(__instance.TeamTitle, __instance.transform);
         var aspectPosition = feedText.gameObject.AddComponent<AspectPosition>();
         aspectPosition.Alignment = AspectPosition.EdgeAlignments.LeftTop;
         aspectPosition.DistanceFromEdge = new Vector2(1.62f, 1.2f);
@@ -65,7 +66,7 @@ internal class RoleDraft
         __instance.TeamTitle.alignment = TextAlignmentOptions.Top;
         __instance.ImpostorText.gameObject.SetActive(false);
         GameObject.Find("BackgroundLayer")?.SetActive(false);
-        foreach (var player in UnityEngine.Object.FindObjectsOfType<PoolablePlayer>())
+        foreach (var player in UObject.FindObjectsOfType<PoolablePlayer>())
         {
             if (player.name.Contains("Dummy"))
             {
@@ -140,7 +141,10 @@ internal class RoleDraft
                     foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
                     {
                         // Handle role pairings that are blocked, e.g. Vampire Warlock, Cleaner Vulture etc.
-                        var blocked = blockedRolePairings.Any(p => alreadyPicked.Contains(p.Key) && p.Value.Contains((byte)roleInfo.roleId));
+                        var blocked = blockedRolePairings.Any(group =>
+                            group.Contains(roleInfo.roleId) &&
+                            group.Any(rid => alreadyPicked.Contains((byte)rid) && rid != roleInfo.roleId)
+                            );
 
                         if (blocked)
                         {
@@ -179,7 +183,7 @@ internal class RoleDraft
                         // 排除不应该直接分配的职业
                         if (roleInfo.roleId is RoleId.Sidekick or RoleId.Pavlovsdogs or RoleId.Pursuer) continue;
                         if (roleInfo.roleId is RoleId.Crewmate or RoleId.Impostor or RoleId.Spy) continue;
-                        if (ModOption.gameMode == CustomGamemodes.Guesser && (roleInfo.roleId == RoleId.Vigilante)) continue;
+                        if (GuesserGM.Enabled && (roleInfo.roleId == RoleId.Vigilante)) continue;
                         if (alreadyPicked.Contains((byte)roleInfo.roleId)) continue;
 
                         int impsPicked = alreadyPicked.Count(x => RoleInfo.RoleInfoById[(RoleId)x].roleType == RoleType.Impostor);
@@ -314,7 +318,7 @@ internal class RoleDraft
                             // planned rows: maximum of 4, hence the following calculation for rows as well:
                             row += (4 - lastRow - 1) / 2f;
 
-                            ActionButton actionButton = UnityEngine.Object.Instantiate(HudManager.Instance.KillButton, __instance.TeamTitle.transform);
+                            ActionButton actionButton = UObject.Instantiate(HudManager.Instance.KillButton, __instance.TeamTitle.transform);
                             actionButton.gameObject.SetActive(true);
                             actionButton.gameObject.name = "RoleButton";
                             actionButton.transform.localPosition = new Vector3(-8.4f + col * 5.5f, -10 - row * 3f);
@@ -376,7 +380,7 @@ internal class RoleDraft
         if (AmongUsClient.Instance.AmHost)
         {
             assignRoleTargets(null); // Assign targets for Lawyer & Prosecutor
-            if (isGuesserGamemode) assignGuesserGamemode();
+            if (GuesserGM.Enabled) assignGuesserGamemode();
             assignModifiers(); // Assign modifier
         }
 
@@ -460,7 +464,7 @@ internal class RoleDraft
             // destroy all the buttons:
             foreach (var button in buttons)
             {
-                UnityEngine.Object.Destroy(button?.gameObject);
+                UObject.Destroy(button?.gameObject);
                 //if (button?.gameObject != null) button.gameObject?.Destroy();
             }
             buttons = new();

@@ -39,7 +39,7 @@ public static class Guesser
         if (dyingTarget == PlayerControl.LocalPlayer)
             return false;
 
-        if (ModOption.gameMode != CustomGamemodes.Guesser)
+        if (GuesserGM.Enabled)
         {
             if (PlayerControl.LocalPlayer == Vigilante.vigilante
                 && HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) > 0

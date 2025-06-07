@@ -523,9 +523,9 @@ internal static class HudManagerStartPatch
                                 var killWriter2 = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
                                 killWriter2.Write(PlayerControl.LocalPlayer.PlayerId);
                                 killWriter2.Write(PlayerControl.LocalPlayer.PlayerId);
-                                killWriter2.Write(byte.MaxValue);
+                                killWriter2.Write(true);
                                 killWriter2.EndRPC();
-                                RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
+                                RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, true);
                                 GameHistory.RpcOverrideDeathReasonAndKiller(PlayerControl.LocalPlayer, CustomDeathReason.SheriffMisfire, PlayerControl.LocalPlayer);
                                 break;
                         }
@@ -534,9 +534,9 @@ internal static class HudManagerStartPatch
                     var killWriter = StartRPC(PlayerControl.LocalPlayer, CustomRPC.UncheckedMurderPlayer);
                     killWriter.Write(PlayerControl.LocalPlayer.PlayerId);
                     killWriter.Write(targetId);
-                    killWriter.Write(byte.MaxValue);
+                    killWriter.Write(true);
                     killWriter.EndRPC();
-                    RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, targetId, byte.MaxValue);
+                    RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, targetId, true);
                     GameHistory.RpcOverrideDeathReasonAndKiller(target, DeathReason, PlayerControl.LocalPlayer);
                 }
 
@@ -1407,9 +1407,9 @@ internal static class HudManagerStartPatch
                         var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
                         writer.Write(Vampire.vampire.PlayerId);
                         writer.Write(Vampire.currentTarget.PlayerId);
-                        writer.Write(byte.MaxValue);
+                        writer.Write(true);
                         writer.EndRPC();
-                        RPCProcedure.uncheckedMurderPlayer(Vampire.vampire.PlayerId, Vampire.currentTarget.PlayerId, byte.MaxValue);
+                        RPCProcedure.uncheckedMurderPlayer(Vampire.vampire.PlayerId, Vampire.currentTarget.PlayerId, true);
 
                         vampireKillButton.HasEffect = false; // Block effect on this click
                         vampireKillButton.Timer = vampireKillButton.MaxTimer;
@@ -1817,6 +1817,7 @@ internal static class HudManagerStartPatch
                 var untargetablePlayers = new List<PlayerControl>();
                 untargetablePlayers.AddRange(Jackal.jackal);
                 if (Jackal.Sidekick != null) untargetablePlayers.Add(Jackal.Sidekick);
+                if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
                 Jackal.currentTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
 
@@ -2142,9 +2143,9 @@ internal static class HudManagerStartPatch
                     var killWriter = StartRPC(CustomRPC.UncheckedMurderPlayer);
                     killWriter.Write(Bomber.bomber.Data.PlayerId);
                     killWriter.Write(Bomber.hasBombPlayer.Data.PlayerId);
-                    killWriter.Write(0);
+                    killWriter.Write(false);
                     killWriter.EndRPC();
-                    RPCProcedure.uncheckedMurderPlayer(Bomber.bomber.Data.PlayerId, Bomber.hasBombPlayer.Data.PlayerId, 0);
+                    RPCProcedure.uncheckedMurderPlayer(Bomber.bomber.Data.PlayerId, Bomber.hasBombPlayer.Data.PlayerId, false);
 
                     var clearWriter = StartRPC(CustomRPC.GiveBomb);
                     clearWriter.Write(byte.MaxValue);
@@ -3837,12 +3838,12 @@ internal static class HudManagerStartPatch
                                 SendOption.Reliable);
                             writer2.Write(PlayerControl.LocalPlayer.PlayerId);
                             writer2.Write(Ninja.ninjaMarked.PlayerId);
-                            writer2.Write(byte.MaxValue);
+                            writer2.Write(true);
                             AmongUsClient.Instance.FinishRpcImmediately(writer2);
                             if (SubmergedCompatibility.IsSubmerged)
                                 SubmergedCompatibility.ChangeFloor(Ninja.ninjaMarked.transform.localPosition.y > -7);
                             RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId,
-                                Ninja.ninjaMarked.PlayerId, byte.MaxValue);
+                                Ninja.ninjaMarked.PlayerId, true);
                         }
 
                         // Create Second trace after killing
@@ -4013,9 +4014,9 @@ internal static class HudManagerStartPatch
                         var writer1 = StartRPC(Terrorist.terrorist, CustomRPC.UncheckedMurderPlayer);
                         writer1.Write(loacl);
                         writer1.Write(loacl);
-                        writer1.Write(byte.MaxValue);
+                        writer1.Write(true);
                         writer1.EndRPC();
-                        RPCProcedure.uncheckedMurderPlayer(loacl, loacl, byte.MaxValue);
+                        RPCProcedure.uncheckedMurderPlayer(loacl, loacl, true);
                     }
 
                     SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
@@ -4110,9 +4111,9 @@ internal static class HudManagerStartPatch
                     var writer2 = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
                     writer2.Write(thief.PlayerId);
                     writer2.Write(thief.PlayerId);
-                    writer2.Write(0);
+                    writer2.Write(false);
                     writer2.EndRPC();
-                    RPCProcedure.uncheckedMurderPlayer(thief.PlayerId, thief.PlayerId, 0);
+                    RPCProcedure.uncheckedMurderPlayer(thief.PlayerId, thief.PlayerId, false);
                     Thief.thief.clearAllTasks();
                 }
 
@@ -4136,9 +4137,9 @@ internal static class HudManagerStartPatch
                     var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
                     writer.Write(thief.PlayerId);
                     writer.Write(target.PlayerId);
-                    writer.Write(byte.MaxValue);
+                    writer.Write(true);
                     writer.EndRPC();
-                    RPCProcedure.uncheckedMurderPlayer(thief.PlayerId, target.PlayerId, byte.MaxValue);
+                    RPCProcedure.uncheckedMurderPlayer(thief.PlayerId, target.PlayerId, true);
                 }
             },
             () =>
@@ -4412,9 +4413,9 @@ internal static class HudManagerStartPatch
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.UncheckedMurderPlayer);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                writer.Write(byte.MaxValue);
+                writer.Write(true);
                 writer.EndRPC();
-                RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
+                RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, true);
 
                 _ = new LateTask(() =>
                 {

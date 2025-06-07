@@ -27,11 +27,14 @@ public static class CredentialsPatch
 
             __instance.text.alignment = TextAlignmentOptions.TopRight;
             var position = __instance.GetComponent<AspectPosition>();
+
+
             var gameModeText = ModOption.gameMode switch
             {
-                CustomGamemodes.Guesser => GetString("isGuesserGm"),
+                //CustomGamemodes.Guesser => GetString("isGuesserGm"),
                 _ => ""
             };
+
             if (ModOption.DebugMode) gameModeText += "(Debug Mode)";
             if (gameModeText != "") gameModeText = cs(Color.yellow, gameModeText) + "\n";
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)

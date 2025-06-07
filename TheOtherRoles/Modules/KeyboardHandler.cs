@@ -1,3 +1,5 @@
+using TheOtherRoles.Patches;
+
 namespace TheOtherRoles.Modules;
 
 [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
@@ -13,7 +15,7 @@ public class KeyboardHandler
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.F) && Input.GetKeyDown(KeyCode.Return)
                 && AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame && InGame)
             {
-                var playerControl = UnityEngine.Object.Instantiate(AmongUsClient.Instance.PlayerPrefab);
+                var playerControl = UObject.Instantiate(AmongUsClient.Instance.PlayerPrefab);
                 _ = playerControl.PlayerId = (byte)GameData.Instance.GetAvailableId();
 
                 bots.Add(playerControl);
@@ -47,7 +49,7 @@ public class KeyboardHandler
             // 强制结束游戏
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKeyDown(ModInputManager.endGameInput.keyCode) && InGame)
             {
-                GameManager.Instance.RpcEndGame(GameOverReason.HumansByVote, false);
+                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.Canceled, false);
             }
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKey(KeyCode.C) && Input.GetKeyDown(KeyCode.Return) && ModOption.DebugMode && InGame)
             {

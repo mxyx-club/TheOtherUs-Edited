@@ -172,6 +172,7 @@ public static class RPCProcedure
         clearAndReloadRoles();
         MapData.Clear();
         RoleDraft.Clear();
+        GhostRole.ClearAndReload();
         Garlic.clearGarlics();
         JackInTheBox.clearJackInTheBoxes();
         NinjaTrace.clearTraces();
@@ -186,6 +187,7 @@ public static class RPCProcedure
         toggleZoom(true);
         GameStartManagerPatch.GameStartManagerUpdatePatch.startingTimer = 0;
         SurveillanceMinigamePatch.nightVisionOverlays = null;
+        MeetingHudPatch.MeetingCount = 0;
     }
 
     public static void HandleShareOptions(byte numberOfOptions, MessageReader reader)
@@ -615,14 +617,14 @@ public static class RPCProcedure
         player.MyPhysics.HandleRpc(isEnter != 0 ? (byte)19 : (byte)20, reader);
     }
 
-    public static void uncheckedMurderPlayer(byte sourceId, byte targetId, byte showAnimation)
+    public static void uncheckedMurderPlayer(byte sourceId, byte targetId, bool showAnimation = true)
     {
         if (!InGame) return;
         var source = playerById(sourceId);
         var target = playerById(targetId);
         if (source != null && target != null)
         {
-            if (showAnimation == 0) KillAnimationCoPerformKillPatch.hideNextAnimation = true;
+            if (!showAnimation) KillAnimationCoPerformKillPatch.hideNextAnimation = true;
             source.MurderPlayer(target, MurderResultFlags.Succeeded);
         }
     }
@@ -1001,7 +1003,7 @@ public static class RPCProcedure
         Jackal.Sidekick = target;
 
         if (target == PlayerControl.LocalPlayer) SoundEffectsManager.play("jackalSidekick");
-        if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
+        if (HandleGuesser.isGuesserGm && GuesserGM.guesserGamemodeSidekickIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
             setGuesserGm(targetId);
 
         Jackal.canCreateSidekick = false;
@@ -1018,9 +1020,9 @@ public static class RPCProcedure
 
     public static void pavlovsCreateDog(byte targetId)
     {
-        var player = playerById(targetId);
-        if (player == null) return;
-        if (Executioner.target == player && Executioner.executioner != null && !Executioner.executioner.Data.IsDead)
+        var target = playerById(targetId);
+        if (target == null) return;
+        if (Executioner.target == target && Executioner.executioner != null && !Executioner.executioner.Data.IsDead)
         {
             if (Lawyer.lawyer == null && Executioner.promotesToLawyer)
             {
@@ -1035,20 +1037,14 @@ public static class RPCProcedure
             }
         }
 
-        FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
-        if (player == Lawyer.lawyer && Lawyer.target != null)
-        {
-            var playerInfoTransform = Lawyer.target.cosmetics.nameText.transform.parent.FindChild("Info");
-            var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
-            if (playerInfo != null) playerInfo.text = "";
-        }
+        FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
 
-        erasePlayerRoles(player.PlayerId);
-        Pavlovsdogs.pavlovsdogs.Add(player);
-        if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+        erasePlayerRoles(targetId);
+        Pavlovsdogs.pavlovsdogs.Add(target);
+        if (targetId == PlayerControl.LocalPlayer.PlayerId)
             PlayerControl.LocalPlayer.moveable = true;
-        if (player == PlayerControl.LocalPlayer) SoundEffectsManager.play("jackalSidekick");
-        if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodePavlovsdogIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
+        if (target == PlayerControl.LocalPlayer) SoundEffectsManager.play("jackalSidekick");
+        if (HandleGuesser.isGuesserGm && GuesserGM.guesserGamemodePavlovsdogIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
             setGuesserGm(targetId);
         Pavlovsdogs.createDogNum -= 1;
     }
@@ -1462,6 +1458,7 @@ public static class RPCProcedure
     public static void akujoSuicide(byte akujoId)
     {
         var akujo = playerById(akujoId);
+        var partnerId = Akujo.honmei?.PlayerId ?? byte.MaxValue;
         if (akujo != null)
         {
             akujo.Exiled();
@@ -1470,6 +1467,27 @@ public static class RPCProcedure
             if (InMeeting && Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(akujo.KillSfx, false, 0.8f);
             if (PlayerControl.LocalPlayer == Akujo.akujo)
                 FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(akujo.Data, akujo.Data);
+        }
+
+        if (MeetingHud.Instance)
+        {
+            MeetingHud.Instance.discussionTimer -= CustomOptionHolder.guessExtendmeetingTime.GetFloat();
+            MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, akujoId);
+
+            foreach (var pva in MeetingHud.Instance.playerStates)
+            {
+                bool shouldClearVote = CustomOptionHolder.guessReVote.GetBool()
+                    || pva.VotedFor == akujoId || pva.VotedFor == partnerId;
+
+                if (shouldClearVote)
+                {
+                    pva.UnsetVote();
+                    var voteAreaPlayer = playerById(pva.TargetPlayerId);
+                    if (voteAreaPlayer?.AmOwner == false) continue;
+                    MeetingHud.Instance.ClearVote();
+    }
+            }
+            if (AmongUsClient.Instance.AmHost) MeetingHud.Instance.CheckForEndVoting();
         }
     }
 
@@ -1933,7 +1951,7 @@ internal class RPCHandlerPatch
 {
     private static string RpcName(byte callId) => callId < 80 ? ((RpcCalls)callId).ToString() : ((CustomRPC)callId).ToString();
 
-    [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNet.InnerNetClient.StartRpcImmediately)), HarmonyPostfix]
+    [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.StartRpcImmediately)), HarmonyPostfix]
     private static void LogSentRpc([HarmonyArgument(1)] byte callId)
     {
         if (!CustomOptionHolder.logRpcSend.GetBool()) return;
@@ -2013,7 +2031,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.UncheckedMurderPlayer:
-                RPCProcedure.uncheckedMurderPlayer(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+                RPCProcedure.uncheckedMurderPlayer(reader.ReadByte(), reader.ReadByte(), reader.ReadBoolean());
                 break;
 
             case CustomRPC.UncheckedExilePlayer:

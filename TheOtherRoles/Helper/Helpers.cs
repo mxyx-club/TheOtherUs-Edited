@@ -28,7 +28,6 @@ public enum SabotageTypes
 public enum CustomGamemodes
 {
     Classic,
-    Guesser,
 }
 
 public static class Helpers
@@ -300,6 +299,8 @@ public static class Helpers
         PlayerControl target;
 
         List<PlayerControl> untargetablePlayers = [];
+
+        if (SchrodingersCat.Player.IsAlive() && SchrodingersCat.State == SchrodingersCat.CatState.Impostor) untargetablePlayers.Add(SchrodingersCat.Player);
         if (Spy.spy != null)
         {
             target = Spy.impostorsCanKillAnyone ? SetTarget(null, false, true) : SetTarget([Spy.spy], true, true);
@@ -308,8 +309,6 @@ public static class Helpers
         {
             target = SetTarget(null, true, true);
         }
-
-        if (SchrodingersCat.Player.IsAlive() && SchrodingersCat.State == SchrodingersCat.CatState.Impostor) untargetablePlayers.Add(SchrodingersCat.Player);
 
         SetPlayerOutline(target, Palette.ImpostorRed);
         return target;
@@ -516,13 +515,13 @@ public static class Helpers
 
     public static T GetRandom<T>(this T[] list)
     {
-        var indexData = UnityEngine.Random.Range(0, list.Length);
+        var indexData = URandom.Range(0, list.Length);
         return list[indexData];
     }
 
     public static int GetRandom<T>(List<T> list)
     {
-        var indexData = UnityEngine.Random.Range(0, list.Count);
+        var indexData = URandom.Range(0, list.Count);
         return indexData;
     }
 
@@ -902,7 +901,7 @@ public static class Helpers
 
     public static bool IsCN()
     {
-        return (int)AmongUs.Data.DataManager.Settings.Language.CurrentLanguage == 13;
+        return (int)DataManager.Settings.Language.CurrentLanguage == 13;
     }
 
     public static string GithubUrl(this string url)
@@ -1263,9 +1262,9 @@ public static class Helpers
         var writer = StartRPC(CustomRPC.UncheckedMurderPlayer);
         writer.Write(killer.PlayerId);
         writer.Write(target.PlayerId);
-        writer.Write(showAnimation ? byte.MaxValue : 0);
+        writer.Write(showAnimation);
         writer.EndRPC();
-        RPCProcedure.uncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation ? byte.MaxValue : (byte)0);
+        RPCProcedure.uncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation);
     }
 
     public static MurderAttemptResult checkMurderAttemptAndKill(PlayerControl killer, PlayerControl target, bool showAnimation = true, bool ignoreBlank = false,
@@ -1310,17 +1309,17 @@ public static class Helpers
             var writer = StartRPC(CustomRPC.UncheckedMurderPlayer);
             writer.Write(BodyGuard.bodyguard.PlayerId);
             writer.Write(killer.PlayerId);
-            writer.Write(showAnimation ? byte.MaxValue : 0);
+            writer.Write(false);
             writer.EndRPC();
-            RPCProcedure.uncheckedMurderPlayer(BodyGuard.bodyguard.PlayerId, killer.PlayerId, 0);
+            RPCProcedure.uncheckedMurderPlayer(BodyGuard.bodyguard.PlayerId, killer.PlayerId, false);
 
             // Kill the BodyGuard
             var writer2 = StartRPC(CustomRPC.UncheckedMurderPlayer);
             writer2.Write(killer.PlayerId);
             writer2.Write(BodyGuard.bodyguard.PlayerId);
-            writer2.Write(showAnimation ? byte.MaxValue : 0);
+            writer2.Write(false);
             writer2.EndRPC();
-            RPCProcedure.uncheckedMurderPlayer(BodyGuard.bodyguard.PlayerId, BodyGuard.bodyguard.PlayerId, 0);
+            RPCProcedure.uncheckedMurderPlayer(killer.PlayerId, BodyGuard.bodyguard.PlayerId, false);
 
             var writer3 = StartRPC(CustomRPC.ShowBodyGuardFlash);
             writer3.EndRPC();

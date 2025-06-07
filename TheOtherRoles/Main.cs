@@ -91,8 +91,8 @@ public partial class TheOtherRolesPlugin : BasePlugin
         if (ToggleCursor.Value) enableCursor(true);
 
         SubmergedCompatibility.Initialize();
-        MainMenuPatch.addSceneChangeCallbacks();
         AddToKillDistanceSetting.addKillDistance();
+        ChatCommands.Init();
 
         Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{Version}{VersionSuffix}\n---------------");
     }

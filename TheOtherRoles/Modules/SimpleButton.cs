@@ -1,5 +1,6 @@
 namespace TheOtherRoles.Modules;
 
+// Form TOHE
 public class SimpleButton
 {
     /// <summary>新しいボタンを作成する</summary>
@@ -74,13 +75,13 @@ public class SimpleButton
         baseButton.gameObject.SetActive(false);
         // シーン切替時に破棄されないようにする
         UObject.DontDestroyOnLoad(baseButton);
-        baseButton.name = "YuET_SimpleButtonBase";
+        baseButton.name = "SimpleButtonBase";
         // 不要なコンポーネントを無効化
         UObject.Destroy(baseButton.GetComponent<AspectPosition>());
         label.DestroyTranslatorL();
         label.fontSize = label.fontSizeMax = label.fontSizeMin = 3.5f;
         label.enableWordWrapping = false;
-        label.text = "YuET SIMPLE BUTTON BASE";
+        label.text = "SIMPLE BUTTON BASE";
         // 当たり判定がズレてるのを直す
         var buttonCollider = baseButton.GetComponent<BoxCollider2D>();
         buttonCollider.offset = new(0f, 0f);

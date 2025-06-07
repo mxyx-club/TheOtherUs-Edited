@@ -2,6 +2,7 @@ namespace TheOtherRoles;
 
 public enum CustomDeathReason
 {
+    NULL,
     HostCmdKill,
     Exile,
     Kill,
@@ -60,7 +61,7 @@ internal static class GameHistory
     public static void OverrideDeathReasonAndKiller(PlayerControl player, CustomDeathReason deathReason, PlayerControl killer = null)
     {
         if (player.IsAlive()) return;
-        var target = DeadPlayers.FirstOrDefault(x => x.Player.PlayerId == player.PlayerId);
+        var target = DeadPlayers.FirstOrDefault(x => x.Player.PlayerId == player?.PlayerId);
         byte playerId = player.PlayerId;
         if (target != null)
         {

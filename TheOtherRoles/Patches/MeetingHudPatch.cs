@@ -273,7 +273,7 @@ internal class MeetingHudPatch
 
     public static void updateMeetingText(MeetingHud __instance)
     {
-        if (PlayerControl.LocalPlayer.Data.IsDead) return;
+        if (PlayerControl.LocalPlayer.IsDead()) return;
 
         if (Instance.state is not VoteStates.Voted and not VoteStates.NotVoted and not VoteStates.Discussion) return;
 
@@ -839,6 +839,7 @@ internal class MeetingHudPatch
                 __instance.SkipVoteButton.gameObject.SetActive(false);
 
             updateMeetingText(__instance);
+            Balancer.UpdateButton(__instance);
 
             if (Blackmailer.blackmailer != null && Blackmailer.blackmailed != null)
             {
@@ -897,7 +898,7 @@ internal class MeetingHudPatch
 
             if (Balancer.balancer.IsAlive() && PlayerControl.LocalPlayer == Balancer.balancer)
             {
-                Balancer.Balancer_Patch.MeetingHudStartPostfix(__instance);
+                Balancer.MeetingHudStartPostfix(__instance);
             }
 
             Redemptor.RevivedPlayer = null;

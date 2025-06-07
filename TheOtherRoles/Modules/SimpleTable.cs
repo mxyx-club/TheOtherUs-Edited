@@ -58,10 +58,8 @@ public class SimpleTable
         CalculateColumnWidths();
         var sb = new StringBuilder();
 
-        // 输出表头
         AppendRow(sb, _columns.Select(c => c.Header).ToArray());
 
-        // 输出数据行
         foreach (var row in _rows)
         {
             AppendRow(sb, row);

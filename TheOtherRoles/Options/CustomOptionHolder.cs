@@ -1,5 +1,6 @@
+using TheOtherRoles.CustomGameModes;
 using static TheOtherRoles.Options.CustomOption;
-using Types = TheOtherRoles.Options.CustomOption.CustomOptionType;
+using Types = TheOtherRoles.Options.CustomOptionType;
 
 namespace TheOtherRoles.Options;
 
@@ -13,9 +14,8 @@ public class CustomOptionHolder
         ["Random", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"];
 
     public static string[] presets =
-        ["预设 1", "预设 2", "预设 3", "Skeld预设", "Mira预设", "Polus预设", "Airship预设", "Fungle预设", "Submerged预设"];
+        ["preset1", "preset2", "preset3", "PresetSkeld", "PresetMira", "PresetPolus", "PresetAirship", "PresetFungle", "PresetCustomMap"];
 
-    public static string[] mapOptions = ["ExpandOptions", "CollapseOptions"];
     public static CustomOption presetSelection;
     public static CustomOption anyPlayerCanStopStart;
     public static CustomOption isDraftMode;
@@ -703,33 +703,6 @@ public class CustomOptionHolder
     public static CustomOption modifierShiftALLNeutral;
     public static CustomOption modifierShiftReload;
 
-    // Guesser Gamemode 
-    public static CustomOption guesserGamemodeCrewNumber;
-    public static CustomOption guesserGamemodeNeutralNumber;
-    public static CustomOption guesserGamemodeImpNumber;
-    public static CustomOption guesserForceJackalGuesser;
-    public static CustomOption guesserGamemodeSidekickIsAlwaysGuesser;
-    public static CustomOption guesserGamemodePavlovsdogIsAlwaysGuesser;
-    public static CustomOption guesserForcePavlovsGuesser;
-    public static CustomOption guesserForceThiefGuesser;
-    public static CustomOption guesserGamemodeHaveModifier;
-    public static CustomOption guesserGamemodeNumberOfShots;
-    public static CustomOption guesserGamemodeHasMultipleShotsPerMeeting;
-    public static CustomOption guesserGamemodeKillsThroughShield;
-    public static CustomOption guesserGamemodeEvilCanKillSpy;
-    public static CustomOption guesserGamemodeCantGuessSnitchIfTaksDone;
-
-    public static string cs(Color c, string s)
-    {
-        return $"<color=#{ToByte(c.r):X2}{ToByte(c.g):X2}{ToByte(c.b):X2}{ToByte(c.a):X2}>{s}</color>";
-    }
-
-    private static byte ToByte(float f)
-    {
-        f = Mathf.Clamp01(f);
-        return (byte)(f * 255);
-    }
-
     public static void Load()
     {
         vanillaSettings = Main.Instance.Config.Bind("Preset0", "VanillaOptions", "");
@@ -965,7 +938,7 @@ public class CustomOptionHolder
         yoyoSilhouetteVisibility = Create(10296, Types.Impostor, "yoyoSilhouetteVisibility", ["0%", "10%", "20%", "30%", "40%", "50%"], yoyoSpawnRate);
 
         evilTrapperSpawnRate = Create(10300, Types.Impostor, cs(EvilTrapper.color, "EvilTrapper"), rates, null, true);
-        evilTrapperNumTrap = Create(10301, Types.Impostor, "evilTrapperNumTrap", 2f, 1f, 10f, 1f, evilTrapperSpawnRate);
+        evilTrapperNumTrap = Create(10301, Types.Impostor, "evilTrapperNumTrap", 2, 1, 10, 1, evilTrapperSpawnRate);
         evilTrapperExtensionTime = Create(10302, Types.Impostor, "evilTrapperExtensionTime", 5f, 2f, 10f, 0.5f, evilTrapperSpawnRate);
         evilTrapperCooldown = Create(10303, Types.Impostor, "evilTrapperCooldown", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
         evilTrapperKillTimer = Create(10304, Types.Impostor, "evilTrapperKillTimer", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
@@ -997,11 +970,11 @@ public class CustomOptionHolder
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 
-        specterSpawnRate = Create(50020, Types.Neutral, cs(Specter.color, "SpecterOption"), rates, null, true);
-        specterDuration = Create(50022, Types.Neutral, "specterDuration", 1.5f, 0.25f, 5f, 0.25f, specterSpawnRate);
-        specterResetRole = Create(50021, Types.Neutral, "amnisiacResetRole", true, specterSpawnRate);
-        specterAfterMeetingTakeRole = Create(50023, Types.Neutral, "specterAfterMeetingTakeRole", false, specterSpawnRate);
-        specterAfterMeetingRevived = Create(50024, Types.Neutral, "specterAfterMeetingRevived", false, specterSpawnRate);
+        specterSpawnRate = Create(50020, Types.GhostRole, cs(Specter.color, "SpecterOption"), rates, null, true);
+        specterDuration = Create(50022, Types.GhostRole, "specterDuration", 1.5f, 0.25f, 5f, 0.25f, specterSpawnRate);
+        specterResetRole = Create(50021, Types.GhostRole, "amnisiacResetRole", true, specterSpawnRate);
+        specterAfterMeetingTakeRole = Create(50023, Types.GhostRole, "specterAfterMeetingTakeRole", false, specterSpawnRate);
+        specterAfterMeetingRevived = Create(50024, Types.GhostRole, "specterAfterMeetingRevived", false, specterSpawnRate);
 
         survivorSpawnRate = Create(20280, Types.Neutral, cs(Survivor.color, "Survivor"), rates, null, true);
         survivorVestEnable = Create(20281, Types.Neutral, "survivorVestEnable", true, survivorSpawnRate);
@@ -1157,17 +1130,17 @@ public class CustomOptionHolder
 
         //-------------------------- Crewmate Options 30000-39999 -------------------------- //
 
-        ghostEngineerSpawnRate = Create(50010, Types.Crewmate, cs(GhostEngineer.color, "GhostEngineerOptions"), rates, null, true);
+        ghostEngineerSpawnRate = Create(50010, Types.GhostRole, cs(GhostEngineer.color, "GhostEngineerOptions"), rates, null, true);
 
-        poltergeistSpawnRate = Create(50030, Types.Crewmate, cs(Poltergeist.color, "PoltergeistOptions"), rates, null, true);
-        poltergeistCooldown = Create(50031, Types.Crewmate, "poltergeistCooldown", 5f, 2.5f, 60f, 2.5f, poltergeistSpawnRate);
-        poltergeistRadius = Create(50032, Types.Crewmate, "poltergeistRadius", 0.75f, 0.5f, 2f, 0.125f, poltergeistSpawnRate);
+        poltergeistSpawnRate = Create(50030, Types.GhostRole, cs(Poltergeist.color, "PoltergeistOptions"), rates, null, true);
+        poltergeistCooldown = Create(50031, Types.GhostRole, "poltergeistCooldown", 5f, 2.5f, 60f, 2.5f, poltergeistSpawnRate);
+        poltergeistRadius = Create(50032, Types.GhostRole, "poltergeistRadius", 0.75f, 0.5f, 2f, 0.125f, poltergeistSpawnRate);
 
-        guesserSpawnRate = Create(30100, Types.Crewmate, cs(Vigilante.color, "Vigilante"), rates, null, true);
-        guesserNumberOfShots = Create(30101, Types.Crewmate, "guesserNumberOfShots", 3f, 1f, 15f, 1f, guesserSpawnRate);
-        guesserHasMultipleShotsPerMeeting = Create(30102, Types.Crewmate, "guesserHasMultipleShotsPerMeeting", true, guesserSpawnRate);
-        guesserShowInfoInGhostChat = Create(30103, Types.Crewmate, "guesserShowInfoInGhostChat", true, guesserSpawnRate);
-        guesserKillsThroughShield = Create(30104, Types.Crewmate, "guesserKillsThroughShield", false, guesserSpawnRate);
+        guesserSpawnRate = Create(30100, Types.Crewmate, cs(Vigilante.color, "Vigilante"), rates, null, true, isHidden: () => GuesserGM.Enabled);
+        guesserNumberOfShots = Create(30101, Types.Crewmate, "guesserNumberOfShots", 3f, 1f, 15f, 1f, guesserSpawnRate, isHidden: () => GuesserGM.Enabled);
+        guesserHasMultipleShotsPerMeeting = Create(30102, Types.Crewmate, "guesserHasMultipleShotsPerMeeting", true, guesserSpawnRate, isHidden: () => GuesserGM.Enabled);
+        guesserShowInfoInGhostChat = Create(30103, Types.Crewmate, "guesserShowInfoInGhostChat", true, guesserSpawnRate, isHidden: () => GuesserGM.Enabled);
+        guesserKillsThroughShield = Create(30104, Types.Crewmate, "guesserKillsThroughShield", false, guesserSpawnRate, isHidden: () => GuesserGM.Enabled);
 
         sheriffSpawnRate = Create(30141, Types.Crewmate, cs(Sheriff.color, "Sheriff"), rates, null, true);
         sheriffCooldown = Create(30142, Types.Crewmate, "sheriffCooldown", 25f, 10f, 60f, 2.5f, sheriffSpawnRate);
@@ -1362,14 +1335,14 @@ public class CustomOptionHolder
         modifierLoverBothDie = Create(40162, Types.Modifier, "modifierLoverBothDie", true, modifierLover);
         modifierLoverEnableChat = Create(40163, Types.Modifier, "modifierLoverEnableChat", true, modifierLover);
 
-        modifierAssassin = Create(10000, Types.Modifier, cs(Assassin.color, "modifierAssassin"), rates, null, true);
-        modifierAssassinQuantity = Create(10001, Types.Modifier, "modifierAssassinQuantity", ratesCount, modifierAssassin);
-        modifierAssassinNumberOfShots = Create(10002, Types.Modifier, "modifierAssassinNumberOfShots", 3f, 1f, 15f, 1f, modifierAssassin);
-        modifierAssassinMultipleShotsPerMeeting = Create(10003, Types.Modifier, "modifierAssassinMultipleShotsPerMeeting", true, modifierAssassin);
-        guesserEvilCanKillSpy = Create(10004, Types.Modifier, "guesserEvilCanKillSpy", true, modifierAssassin);
-        guesserEvilCanKillCrewmate = Create(10005, Types.Modifier, "guesserEvilCanKillCrewmate", true, modifierAssassin);
-        guesserCantGuessSnitchIfTaksDone = Create(10006, Types.Modifier, "guesserCantGuessSnitchIfTaksDone", true, modifierAssassin);
-        modifierAssassinKillsThroughShield = Create(10007, Types.Modifier, "modifierAssassinKillsThroughShield", false, modifierAssassin);
+        modifierAssassin = Create(10000, Types.Modifier, cs(Assassin.color, "modifierAssassin"), rates, null, true, isHidden: () => GuesserGM.Enabled);
+        modifierAssassinQuantity = Create(10001, Types.Modifier, "modifierAssassinQuantity", ratesCount, modifierAssassin, isHidden: () => GuesserGM.Enabled);
+        modifierAssassinNumberOfShots = Create(10002, Types.Modifier, "modifierAssassinNumberOfShots", 3f, 1f, 15f, 1f, modifierAssassin, isHidden: () => GuesserGM.Enabled);
+        modifierAssassinMultipleShotsPerMeeting = Create(10003, Types.Modifier, "modifierAssassinMultipleShotsPerMeeting", true, modifierAssassin, isHidden: () => GuesserGM.Enabled);
+        guesserEvilCanKillSpy = Create(10004, Types.Modifier, "guesserEvilCanKillSpy", true, modifierAssassin, isHidden: () => GuesserGM.Enabled);
+        guesserEvilCanKillCrewmate = Create(10005, Types.Modifier, "guesserEvilCanKillCrewmate", true, modifierAssassin, isHidden: () => GuesserGM.Enabled);
+        guesserCantGuessSnitchIfTaksDone = Create(10006, Types.Modifier, "guesserCantGuessSnitchIfTaksDone", true, modifierAssassin, isHidden: () => GuesserGM.Enabled);
+        modifierAssassinKillsThroughShield = Create(10007, Types.Modifier, "modifierAssassinKillsThroughShield", false, modifierAssassin, isHidden: () => GuesserGM.Enabled);
 
         modifierSpecoality = Create(40350, Types.Modifier, cs(Palette.ImpostorRed, "Specoality"), rates, null, true);
         modifierSpecoalityIsGlobal = Create(40351, Types.Modifier, "modifierSpecoalityIsGlobal", false, modifierSpecoality);
@@ -1462,21 +1435,7 @@ public class CustomOptionHolder
         modifierShiftALLNeutral = Create(40342, Types.Modifier, "modifierShiftALLNeutral", false, modifierShiftNeutral);
         modifierShiftReload = Create(40343, Types.Modifier, "modifierShiftReload", true, modifierShifter);
 
-        //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
-
-        guesserGamemodeCrewNumber = Create(2001, Types.Guesser, cs(Color.yellow, "guesserGamemodeCrewNumber"), 2f, 0f, 15f, 1f, null, true);
-        guesserGamemodeNeutralNumber = Create(2002, Types.Guesser, cs(Color.yellow, "guesserGamemodeNeutralNumber"), 2f, 0f, 15f, 1f);
-        guesserGamemodeImpNumber = Create(2003, Types.Guesser, cs(Color.yellow, "guesserGamemodeImpNumber"), 2f, 0f, 15f, 1f);
-        guesserForceJackalGuesser = Create(2007, Types.Guesser, "guesserForceJackalGuesser", false, null, true);
-        guesserGamemodeSidekickIsAlwaysGuesser = Create(2012, Types.Guesser, "guesserGamemodeSidekickIsAlwaysGuesser", false);
-        guesserForcePavlovsGuesser = Create(2013, Types.Guesser, "guesserForcePavlovsGuesser", false);
-        guesserGamemodePavlovsdogIsAlwaysGuesser = Create(2015, Types.Guesser, "guesserGamemodePavlovsdogIsAlwaysGuesser", false);
-        guesserForceThiefGuesser = Create(2011, Types.Guesser, "guesserForceThiefGuesser", false);
-        guesserGamemodeHaveModifier = Create(2004, Types.Guesser, "guesserGamemodeHaveModifier", true, null, true);
-        guesserGamemodeNumberOfShots = Create(2005, Types.Guesser, "guesserGamemodeNumberOfShots", 3f, 1f, 15f, 1f);
-        guesserGamemodeHasMultipleShotsPerMeeting = Create(2006, Types.Guesser, "guesserGamemodeHasMultipleShotsPerMeeting", true);
-        guesserGamemodeKillsThroughShield = Create(2008, Types.Guesser, "guesserGamemodeKillsThroughShield", true);
-        guesserGamemodeEvilCanKillSpy = Create(2009, Types.Guesser, "guesserGamemodeEvilCanKillSpy", true);
-        guesserGamemodeCantGuessSnitchIfTaksDone = Create(2010, Types.Guesser, "guesserGamemodeCantGuessSnitchIfTaksDone", true);
+        //GuesserGM
+        GuesserGM.AddOptions();
     }
 }

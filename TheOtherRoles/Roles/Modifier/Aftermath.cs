@@ -63,9 +63,9 @@ public class Aftermath
                         (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
                     writer1.Write(loacl);
                     writer1.Write(loacl);
-                    writer1.Write(byte.MaxValue);
+                    writer1.Write(true);
                     AmongUsClient.Instance.FinishRpcImmediately(writer1);
-                    uncheckedMurderPlayer(loacl, loacl, byte.MaxValue);
+                    uncheckedMurderPlayer(loacl, loacl, true);
                 }
             }
             terroristButton.Timer = terroristButton.MaxTimer;

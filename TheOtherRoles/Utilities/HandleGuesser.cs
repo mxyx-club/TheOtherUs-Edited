@@ -1,10 +1,10 @@
-﻿using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.CustomGameModes;
 
 namespace TheOtherRoles.Utilities;
 
 public static class HandleGuesser
 {
-    public static bool isGuesserGm;
+    public static bool isGuesserGm => GuesserGM.Enabled;
     public static bool hasMultipleShotsPerMeeting;
     public static bool killsThroughShield = true;
     public static bool evilGuesserCanGuessSpy = true;
@@ -35,13 +35,12 @@ public static class HandleGuesser
     public static void clearAndReload()
     {
         GuesserGM.clearAndReload();
-        isGuesserGm = ModOption.gameMode == CustomGamemodes.Guesser;
         if (isGuesserGm)
         {
-            guesserCantGuessSnitch = CustomOptionHolder.guesserGamemodeCantGuessSnitchIfTaksDone.GetBool();
-            hasMultipleShotsPerMeeting = CustomOptionHolder.guesserGamemodeHasMultipleShotsPerMeeting.GetBool();
-            killsThroughShield = CustomOptionHolder.guesserGamemodeKillsThroughShield.GetBool();
-            evilGuesserCanGuessSpy = CustomOptionHolder.guesserGamemodeEvilCanKillSpy.GetBool();
+            guesserCantGuessSnitch = GuesserGM.guesserGamemodeCantGuessSnitchIfTaksDone.GetBool();
+            hasMultipleShotsPerMeeting = GuesserGM.guesserGamemodeHasMultipleShotsPerMeeting.GetBool();
+            killsThroughShield = GuesserGM.guesserGamemodeKillsThroughShield.GetBool();
+            evilGuesserCanGuessSpy = GuesserGM.guesserGamemodeEvilCanKillSpy.GetBool();
         }
         else
         {

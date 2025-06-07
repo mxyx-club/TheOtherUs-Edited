@@ -13,7 +13,7 @@ public static class LobbyRoleInfo
     {
         public static void Postfix(HudManager __instance)
         {
-            if (!LobbyBehaviour.Instance || AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started) return;
+            if (!LobbyBehaviour.Instance || AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started) return;
             try
             {
                 //if (HudManagerStartPatch.roleSummaryButton == null) HudManagerStartPatch.createRoleSummaryButton(__instance);
@@ -159,7 +159,7 @@ public static class LobbyRoleInfo
 
         List<Transform> buttons = new();
         int count = 0;
-        bool gameStarted = AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started;
+        bool gameStarted = AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started;
         foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
         {
             if (roleInfo.roleType == RoleType.Modifier && teamId != RoleType.Modifier) continue;

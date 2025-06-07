@@ -15,9 +15,10 @@
 
 <p align="center">职业相关Wiki请移步至我的个人博客 >>> <a href="https://www.mxyx.club/archives/theotherus">[沫夏悠轩の聚会 - 模组职业介绍]</a></p>
 
-<p align="center">给仓库多点点star谢谢喵</p>
+<p align="center">由于目前模组并不支持最新版本游戏，另附部分常见版本的<b>游戏本体</b>下载链接：<a href="https://www.123865.com/s/XD6SVv-KlL7v">123云盘</a><br />
+如有特殊需求可以联系我</p>
 
-<p align="center">由于目前模组并不支持最新版本游戏，另附部分常见版本的<b>游戏本体</b>下载链接：<a href="https://www.123865.com/s/XD6SVv-KlL7v">123云盘</a></p>
+<p align="center">如果喜欢本模组请给仓库多点点star谢谢喵!</p>
 
 
 ## 模组下载

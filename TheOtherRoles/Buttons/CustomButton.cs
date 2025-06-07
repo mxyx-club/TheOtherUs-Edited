@@ -209,8 +209,7 @@ public class CustomButton
     public static void HudUpdate()
     {
         buttons.RemoveAll(item => item.actionButton == null);
-        var list = buttons.ToArray();
-        foreach (var t in list)
+        foreach (var t in buttons.ToArray())
         {
             try
             {
@@ -262,10 +261,6 @@ public class CustomButton
         });
 
         PlayerControl.LocalPlayer.SetKillTimer(time);
-        _ = new LateTask(() =>
-        {
-            if (PlayerControl.LocalPlayer.killTimer > ModOption.KillCooldown) PlayerControl.LocalPlayer.killTimer = time - 0.5f;
-        }, 0.5f);
     }
 
     public static void SetKillTimer(float time = -1f)
