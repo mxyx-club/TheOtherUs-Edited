@@ -179,15 +179,15 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
-        else if (Pelican.Player != null && Juggernaut.juggernaut == player && Juggernaut.canUseVents)
-        {
-            roleCouldUse = true;
-        }
-        else if (player.Data?.Role != null && player.Data.Role.CanVent)
+        else if (Pelican.Player != null && Pelican.Player == player && Pelican.CanUseVent)
         {
             roleCouldUse = true;
         }
         else if (Swooper.swooper != null && Swooper.swooper == player && Swooper.canUseVents)
+        {
+            roleCouldUse = true;
+        }
+        else if (player.Data?.Role != null && player.Data.Role.CanVent)
         {
             roleCouldUse = true;
         }
@@ -322,7 +322,6 @@ public static class Helpers
         {
             handleVampireBiteOnBodyReport();
             handleBomberExplodeOnBodyReport();
-            handleTrapperTrapOnBodyReport();
 
             MeetingRoomManager.Instance.AssignSelf(reporter, target);
             DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(reporter);
@@ -722,13 +721,6 @@ public static class Helpers
         writer.Write(false);
         writer.EndRPC();
         RPCProcedure.giveBomb(byte.MaxValue);
-    }
-
-    public static void handleTrapperTrapOnBodyReport()
-    {
-        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.TrapperMeetingFlag);
-        writer.EndRPC();
-        RPCProcedure.trapperMeetingFlag();
     }
 
     public static void refreshRoleDescription(PlayerControl player)

@@ -904,6 +904,7 @@ internal class MeetingHudPatch
             Redemptor.RevivedPlayer = null;
             Undertaker.dragedBody = null;
             Jester.dragedBody = null;
+            KillTrap.OnMeetingStart();
 
             if (Pelican.Player != null)
             {

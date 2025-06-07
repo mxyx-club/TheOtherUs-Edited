@@ -514,7 +514,6 @@ public static class PlayerControlFixedUpdatePatch
             Balancer.FixedUpdate();
             PelicanUpdate();
 
-            hackerUpdate();
             swapperUpdate();
             // Hacker
             hackerUpdate();
@@ -590,7 +589,6 @@ internal class BodyReportPatch
         if (ModOption.DisableMeeting) return false;
         handleVampireBiteOnBodyReport();
         handleBomberExplodeOnBodyReport();
-        handleTrapperTrapOnBodyReport();
         return true;
     }
 

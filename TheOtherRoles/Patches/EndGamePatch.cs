@@ -25,6 +25,7 @@ internal enum CustomGameOverReason
     DoomsayerWin,
     AkujoWin,
     BandLeaderWin,
+    BandLeaderTeamWin,
 }
 
 internal enum WinCondition
@@ -209,23 +210,21 @@ public class OnGameEndPatch
 
         var isCanceled = gameOverReason == (GameOverReason)CustomGameOverReason.Canceled;
         var everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
-        var miniLose = Mini.mini != null && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
-        var jesterWin = Jester.jester != null && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
-        var witnessWin = Witness.Player != null && gameOverReason == (GameOverReason)CustomGameOverReason.WitnessWin;
+        var miniLose = gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
+        var jesterWin = gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
+        var witnessWin = gameOverReason == (GameOverReason)CustomGameOverReason.WitnessWin;
         var impostorWin = (gameOverReason is GameOverReason.ImpostorByKill or GameOverReason.ImpostorBySabotage or GameOverReason.ImpostorByVote)
             || Vortox.triggerImpWin;
-        var werewolfWin = gameOverReason == (GameOverReason)CustomGameOverReason.WerewolfWin && Werewolf.werewolf.IsAlive();
-        var juggernautWin = gameOverReason == (GameOverReason)CustomGameOverReason.JuggernautWin && Juggernaut.juggernaut.IsAlive();
-        var swooperWin = gameOverReason == (GameOverReason)CustomGameOverReason.SwooperWin && Swooper.swooper.IsAlive();
-        var pelicanWin = gameOverReason == (GameOverReason)CustomGameOverReason.PelicanWin && Pelican.Player.IsAlive();
+        var werewolfWin = gameOverReason == (GameOverReason)CustomGameOverReason.WerewolfWin && Werewolf.werewolf != null;
+        var juggernautWin = gameOverReason == (GameOverReason)CustomGameOverReason.JuggernautWin && Juggernaut.juggernaut != null;
+        var swooperWin = gameOverReason == (GameOverReason)CustomGameOverReason.SwooperWin && Swooper.swooper != null;
+        var pelicanWin = gameOverReason == (GameOverReason)CustomGameOverReason.PelicanWin && Pelican.Player != null;
         var arsonistWin = Arsonist.arsonist != null && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
         var doomsayerWin = Doomsayer.doomsayer != null && gameOverReason == (GameOverReason)CustomGameOverReason.DoomsayerWin;
         var loversWin = Lovers.IsAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin ||
                          (GameManager.Instance.DidHumansWin(gameOverReason) && !Lovers.isKillerLover()));
-        var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin &&
-                            (Jackal.jackal.Any(x => x.IsAlive()) || Jackal.Sidekick.IsAlive());
-        var teamPavlovsWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamPavlovsWin &&
-                            (Pavlovsdogs.pavlovsowner.IsAlive() || Pavlovsdogs.pavlovsdogs.Any(p => p.IsAlive()));
+        var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin;
+        var teamPavlovsWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamPavlovsWin;
         var crewmateWin = GameManager.Instance.DidHumansWin(gameOverReason) ||
                           (gameOverReason is GameOverReason.HumansByVote or GameOverReason.HumansByTask);
         var vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
@@ -233,6 +232,7 @@ public class OnGameEndPatch
         var lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
         var akujoWin = Akujo.akujo.IsAlive() && Akujo.honmei.IsAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin ||
                        (GameManager.Instance.DidHumansWin(gameOverReason) && !Akujo.IsKillerLover()));
+        var bandLeaderWin = gameOverReason == (GameOverReason)CustomGameOverReason.BandLeaderTeamWin;
 
         var bandLeaderAddCrewWin = BandLeader.Player != null && BandLeader.winnerFlags == BandLeader.WinnerFlags.Crewmate && crewmateWin;
         var bandLeaderAddImpWin = BandLeader.Player != null && BandLeader.winnerFlags == BandLeader.WinnerFlags.Impostor && impostorWin;
@@ -424,6 +424,16 @@ public class OnGameEndPatch
             {
                 winners.Add(SchrodingersCat.Player);
             }
+        }
+
+        else if (bandLeaderWin)
+        {
+            foreach (var player in BandLeader.Members)
+            {
+                winners.Add(player);
+            }
+            winners.Add(BandLeader.Player);
+            AdditionalTempData.winCondition = WinCondition.BandLeaderWin;
         }
 
         else if (doomsayerWin)
@@ -881,7 +891,7 @@ internal class CheckEndCriteriaPatch
         if (statistics.TeamBandLeaderAlive >= statistics.TotalAlive && BandLeader.winnerFlags == BandLeader.WinnerFlags.Neutral && BandLeader.Formed)
         {
             //__instance.enabled = false;
-            GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BandLeaderWin, false);
+            GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BandLeaderTeamWin, false);
             return true;
         }
         return false;

@@ -17,7 +17,6 @@ public static class EvilTrapper
     public static float penaltyTime;
     public static float bonusTime;
     public static bool isTrapKill;
-    public static bool meetingFlag;
 
     public static ResourceSprite trapButtonSprite = new("TrapperButton.png");
     public static DateTime placedTime;
@@ -29,16 +28,18 @@ public static class EvilTrapper
         Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
         Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
         var writer = StartRPC(CustomRPC.PlaceTrap);
+        writer.Write(PlayerControl.LocalPlayer.PlayerId);
         writer.WriteBytesAndSize(buff);
         writer.EndRPC();
-        RPCProcedure.placeTrap(buff);
+        RPCProcedure.placeTrap(PlayerControl.LocalPlayer.PlayerId, buff);
         placedTime = DateTime.UtcNow;
     }
 
     public static void clearAndReload()
     {
+        KillTrap.ClearAllTraps();
         evilTrapper = null;
-        numTrap = (int)CustomOptionHolder.evilTrapperNumTrap.GetFloat();
+        numTrap = CustomOptionHolder.evilTrapperNumTrap.GetInt();
         extensionTime = CustomOptionHolder.evilTrapperExtensionTime.GetFloat();
         killTimer = CustomOptionHolder.evilTrapperKillTimer.GetFloat();
         cooldown = CustomOptionHolder.evilTrapperCooldown.GetFloat();
@@ -46,7 +47,5 @@ public static class EvilTrapper
         trapRange = CustomOptionHolder.evilTrapperTrapRange.GetFloat();
         penaltyTime = CustomOptionHolder.evilTrapperPenaltyTime.GetFloat();
         bonusTime = CustomOptionHolder.evilTrapperBonusTime.GetFloat();
-        meetingFlag = false;
-        KillTrap.clearAllTraps();
     }
 }

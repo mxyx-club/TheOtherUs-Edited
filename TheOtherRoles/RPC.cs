@@ -29,7 +29,6 @@ public enum CustomRPC : byte
     ShareGameMode = 95,
 
     UncheckedMurderPlayer,
-    UncheckedCmdReportDeadBody,
     UncheckedExilePlayer,
     RevivePlayer,
     HostKill,
@@ -123,7 +122,6 @@ public enum CustomRPC : byte
     ClearTrap,
     ActivateTrap,
     DisableTrap,
-    TrapperMeetingFlag,
     Prosecute,
     MayorRevealed,
     SurvivorVestActive,
@@ -627,13 +625,6 @@ public static class RPCProcedure
             if (!showAnimation) KillAnimationCoPerformKillPatch.hideNextAnimation = true;
             source.MurderPlayer(target, MurderResultFlags.Succeeded);
         }
-    }
-
-    public static void uncheckedCmdReportDeadBody(byte sourceId, byte targetId)
-    {
-        var source = playerById(sourceId);
-        var t = targetId == byte.MaxValue ? null : playerById(targetId).Data;
-        source?.ReportDeadBody(t);
     }
 
     public static void uncheckedExilePlayer(byte targetId)
@@ -1594,41 +1585,30 @@ public static class RPCProcedure
         Jackal.isInvisable = true;
     }
 
-    public static void trapperKill(byte trapId, byte trapperId, byte playerId)
+    public static void placeTrap(byte playerId, byte[] buff)
     {
-        var trapper = playerById(trapperId);
-        var target = playerById(playerId);
-        KillTrap.trapKill(trapId, trapper, target);
-    }
-
-    public static void placeTrap(byte[] buff)
-    {
+        var player = playerById(playerId);
         var pos = Vector3.zero;
         pos.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
         pos.y = BitConverter.ToSingle(buff, 1 * sizeof(float)) - 0.2f;
-        _ = new KillTrap(pos);
+        _ = new KillTrap(player, pos);
     }
 
     public static void clearTrap()
     {
-        KillTrap.clearAllTraps();
+        KillTrap.ClearAllTraps();
     }
 
-    public static void activateTrap(byte trapId, byte trapperId, byte playerId)
+    public static void activateTrap(byte trapperId, byte targetId, int trapId)
     {
         var trapper = playerById(trapperId);
-        var player = playerById(playerId);
-        KillTrap.activateTrap(trapId, trapper, player);
+        var target = playerById(targetId);
+        KillTrap.activateTrap(trapper, target, trapId);
     }
 
     public static void disableTrap(byte trapId)
     {
         KillTrap.disableTrap(trapId);
-    }
-
-    public static void trapperMeetingFlag()
-    {
-        KillTrap.onMeeting();
     }
 
     public static void setInvisibleGen(byte playerId, byte flag)
@@ -2038,10 +2018,6 @@ internal class RPCHandlerPatch
                 RPCProcedure.uncheckedExilePlayer(reader.ReadByte());
                 break;
 
-            case CustomRPC.UncheckedCmdReportDeadBody:
-                RPCProcedure.uncheckedCmdReportDeadBody(reader.ReadByte(), reader.ReadByte());
-                break;
-
             case CustomRPC.DynamicMapOption:
                 RPCProcedure.dynamicMapOption(reader.ReadByte());
                 break;
@@ -2374,22 +2350,19 @@ internal class RPCHandlerPatch
             case CustomRPC.SetFutureReveal:
                 break;
             case CustomRPC.TrapperKill:
-                RPCProcedure.trapperKill(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+                KillTrap.trapKill(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadInt32());
                 break;
             case CustomRPC.PlaceTrap:
-                RPCProcedure.placeTrap(reader.ReadBytesAndSize());
+                RPCProcedure.placeTrap(reader.ReadByte(), reader.ReadBytesAndSize());
                 break;
             case CustomRPC.ClearTrap:
                 RPCProcedure.clearTrap();
                 break;
             case CustomRPC.ActivateTrap:
-                RPCProcedure.activateTrap(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+                RPCProcedure.activateTrap(reader.ReadByte(), reader.ReadByte(), reader.ReadInt32());
                 break;
             case CustomRPC.DisableTrap:
                 RPCProcedure.disableTrap(reader.ReadByte());
-                break;
-            case CustomRPC.TrapperMeetingFlag:
-                RPCProcedure.trapperMeetingFlag();
                 break;
             case CustomRPC.Prosecute:
                 Prosecutor.ProsecuteThisMeeting = true;
