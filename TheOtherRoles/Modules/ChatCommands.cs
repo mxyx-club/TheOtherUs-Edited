@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace TheOtherRoles.Modules;
 
 [HarmonyPatch]
@@ -9,176 +11,16 @@ public static class ChatCommands
         private static bool Prefix(ChatController __instance)
         {
             var text = __instance.freeChatField.Text;
-            var chat = text.ToLower();
-            var handled = false;
-            // 游戏大厅指令
-            if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
-            {
-                if (chat.StartsWith("/gm"))
-                {
-                    var gm = text[4..].ToLower();
-                    var gameMode = CustomGamemodes.Classic;
-                    if (gm.StartsWith("guess") || gm.StartsWith("gm")) gameMode = CustomGamemodes.Guesser;
-
-                    if (AmongUsClient.Instance.AmHost)
-                    {
-                        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.ShareGameMode);
-                        writer.Write((byte)gameMode);
-                        writer.EndRPC();
-                        RPCProcedure.shareGameMode((byte)gameMode);
-                    }
-                    else
-                    {
-                        __instance.AddChat(PlayerControl.LocalPlayer,
-                            "Nice try, but you have to be the host to use this feature\n这是房主至高无上的权利");
-                    }
-                    handled = true;
-                }
-            }
-
-            // 游戏中房主指令
-            if (AmongUsClient.Instance.AmHost && InGame)
-            {
-                if (chat.StartsWith("/end"))
-                {
-                    ModOption.isCanceled = true;
-                    handled = true;
-                }
-
-                else if (chat.StartsWith("/meeting") || chat.StartsWith("/mt"))
-                {
-                    if (InMeeting)
-                    {
-                        MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), null, false);
-                    }
-                    else
-                    {
-                        var writer = StartRPC(CustomRPC.NoCheckStartMeeting);
-                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                        writer.Write(byte.MaxValue);
-                        writer.Write(true);
-                        writer.EndRPC();
-                        PlayerControl.LocalPlayer.NoCheckStartMeeting(null, true);
-                    }
-                    handled = true;
-                }
-                else if (chat.StartsWith("/say "))
-                {
-                    var message = text[5..];
-                    message = $"{cs(Palette.Purple, "★【房主消息】★")}\n{message}";
-                    var writer = StartRPC(CustomRPC.HostSay);
-                    writer.Write(message);
-                    writer.EndRPC();
-                    __instance.AddChat(GetHostPlayer, message);
-                    handled = true;
-                }
-                else if (chat.StartsWith("/kill "))
-                {
-                    var playerName = text[6..];
-                    var target = playerName is not null and "me"
-                        ? PlayerControl.LocalPlayer
-                        : PlayerControl.AllPlayerControls.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
-                    if (target != null)
-                    {
-                        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostKill);
-                        writer.Write(target.PlayerId);
-                        writer.EndRPC();
-                        RPCProcedure.hostKill(target.PlayerId);
-                    }
-
-                    handled = true;
-                }
-                else if (chat.StartsWith("/revive "))
-                {
-                    var playerName = text[8..];
-                    var target = playerName is not null and "me" ? PlayerControl.LocalPlayer : PlayerControl.AllPlayerControls.FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
-                    if (target != null)
-                    {
-                        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RevivePlayer);
-                        writer.Write(target.PlayerId);
-                        writer.Write(true);
-                        writer.Write(true);
-                        writer.EndRPC();
-                        RPCProcedure.RevivePlayer(target.PlayerId, true, true);
-                    }
-
-                    handled = true;
-                }
-            }
-
-            // 游戏中玩家指令
-            if (chat.StartsWith("/m") && InGame)
-            {
-                var localRole = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
-                foreach (var roleInfo in localRole)
-                {
-                    if (roleInfo.roleId == RoleId.Cursed) continue;
-                    var roleText = RoleInfo.getRoleDescription(roleInfo.Name);
-                    __instance.AddChat(PlayerControl.LocalPlayer, roleText);
-                }
-                handled = true;
-            }
-            if (chat.StartsWith("/r "))
-            {
-
-                var role = text[3..];
-                var roleText = RoleInfo.getRoleDescription(role);
-                if (roleText != null) __instance.AddChat(PlayerControl.LocalPlayer, roleText);
-                handled = true;
-            }
-
-            // 自由模式指令
-            if (AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay)
-            {
-                if (text.ToLower().Equals("/murder"))
-                {
-                    PlayerControl.LocalPlayer.Exiled();
-                    FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(PlayerControl.LocalPlayer.Data, PlayerControl.LocalPlayer.Data);
-                    handled = true;
-                }
-                else if (chat.StartsWith("/color "))
-                {
-                    handled = true;
-                    if (!int.TryParse(text.AsSpan(7), out var col))
-                        __instance.AddChat(PlayerControl.LocalPlayer, "Unable to parse color id\nUsage: /color {id}");
-                    col = Math.Clamp(col, 0, Palette.PlayerColors.Length - 1);
-                    PlayerControl.LocalPlayer.SetColor(col);
-                    __instance.AddChat(PlayerControl.LocalPlayer, "Changed color succesfully");
-                }
-            }
-
-            // 死亡玩家指令
-            if (chat.StartsWith("/tp ") && (PlayerControl.LocalPlayer.IsDead() || AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started))
-            {
-                var playerName = text[4..].ToLower();
-                PlayerControl target = PlayerControl.AllPlayerControls.FirstOrDefault(x => x.Data.PlayerName.ToLower().Equals(playerName));
-                if (target != null)
-                {
-                    PlayerControl.LocalPlayer.transform.position = target.transform.position;
-                    handled = true;
-                }
-            }
-
-            if (chat.StartsWith("/cmd"))
-            {
-                if (AmongUsClient.Instance.AmHost)
-                {
-                    __instance.AddChat(PlayerControl.LocalPlayer, "CommandsInHost".Translate());
-                }
-                __instance.AddChat(PlayerControl.LocalPlayer, "CommandsInPlayer".Translate());
-                handled = true;
-            }
+            var handled = ChatCommandRegistry.TryHandle(text, PlayerControl.LocalPlayer, __instance);
 
             if (handled)
             {
                 __instance.freeChatField.Clear();
                 __instance.quickChatMenu.Clear();
             }
-
             return !handled;
         }
     }
-
 
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.CoSpawnPlayer))]
     public class AmongUsClientOnPlayerJoinedPatch
@@ -260,6 +102,7 @@ public static class ChatCommands
             var flag = MeetingHud.Instance || LobbyBehaviour.Instance || CanSeeRoleInfo || ModOption.DebugMode || sourcePlayer.PlayerId == local.PlayerId;
 
             if (__instance != FastDestroyableSingleton<HudManager>.Instance.Chat) return true;
+            if (Blackmailer.blackmailed == sourcePlayer) return false;
             if (!local.isLover()) return flag;
             if (local.isLover() && Lovers.enableChat) return sourcePlayer.getPartner() == local || local.getPartner() == sourcePlayer || flag;
             return flag;
@@ -288,5 +131,241 @@ public static class ChatCommands
                 __instance.banButton.MenuButton.enabled = !__instance.IsAnimating;
             }
         }
+    }
+
+    public static void Init()
+    {
+        ChatCommandRegistry.Register("end", (sender, args, chat) =>
+        {
+            if (AmongUsClient.Instance.AmHost && InGame)
+            {
+                ModOption.isCanceled = true;
+                return;
+            }
+        });
+
+        ChatCommandRegistry.Register("say", (sender, args, chat) =>
+        {
+            if (AmongUsClient.Instance.AmHost && InGame && args.Length > 0)
+            {
+                var message = string.Join(' ', args);
+                message = $"{cs(Palette.Purple, "★【房主消息】★")}\n{message}";
+                var writer = StartRPC(CustomRPC.HostSay);
+                writer.Write(message);
+                writer.EndRPC();
+                chat.AddChat(GetHostPlayer, message);
+                return;
+            }
+        });
+
+        ChatCommandRegistry.Register("cmd", (sender, args, chat) =>
+        {
+            if (AmongUsClient.Instance.AmHost)
+            {
+                chat.AddChat(PlayerControl.LocalPlayer, "CommandsInHost".Translate());
+            }
+            chat.AddChat(PlayerControl.LocalPlayer, "CommandsInPlayer".Translate());
+        });
+
+        ChatCommandRegistry.Register("kill", (sender, args, chat) =>
+        {
+            if (AmongUsClient.Instance.AmHost && InGame)
+            {
+                var target = GetPlayer(args);
+                if (target != null)
+                {
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostKill);
+                    writer.Write(target.PlayerId);
+                    writer.EndRPC();
+                    RPCProcedure.hostKill(target.PlayerId);
+                    if (InMeeting)
+                    {
+                        MeetingHud.Instance.CheckForEndVoting();
+                    }
+                    return;
+                }
+            }
+        });
+
+        ChatCommandRegistry.Register("meeting", (sender, args, chat) =>
+        {
+            if (AmongUsClient.Instance.AmHost && InGame)
+            {
+                if (InMeeting)
+                {
+                    MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), null, false);
+                }
+                else
+                {
+                    var writer = StartRPC(CustomRPC.NoCheckStartMeeting);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                    writer.Write(byte.MaxValue);
+                    writer.Write(true);
+                    writer.EndRPC();
+                    PlayerControl.LocalPlayer.NoCheckStartMeeting(null, true);
+                }
+                return;
+            }
+        });
+
+        ChatCommandRegistry.Register("Revive", (sender, args, chat) =>
+        {
+            if (AmongUsClient.Instance.AmHost && InGame && args.Length > 0)
+            {
+                var target = GetPlayer(args);
+                if (target != null)
+                {
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RevivePlayer);
+                    writer.Write(target.PlayerId);
+                    writer.Write(true);
+                    writer.Write(true);
+                    writer.EndRPC();
+                    RPCProcedure.RevivePlayer(target.PlayerId, true, true);
+                }
+
+                return;
+            }
+        });
+
+        ChatCommandRegistry.Register("ls", (sender, args, chat) =>
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("玩家列表：\n");
+            foreach (var player in PlayerControl.AllPlayerControls.ToList().OrderBy(x => x.PlayerId))
+            {
+                if (player.Data == null || player.Data.Disconnected) continue;
+                sb.AppendLine($"{player.PlayerId} - {player.Data.PlayerName}");
+            }
+
+            chat.AddChat(PlayerControl.LocalPlayer, sb.ToString());
+        });
+
+        ChatCommandRegistry.Register("tp", (sender, args, chat) =>
+        {
+            if (PlayerControl.LocalPlayer.IsDead() || AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
+            {
+                var target = GetPlayer(args);
+                if (target != null)
+                {
+                    PlayerControl.LocalPlayer.transform.position = target.transform.position;
+                    return;
+                }
+            }
+        });
+
+        ChatCommandRegistry.Register("r", (sender, args, chat) =>
+        {
+            if (args == null || args.Length == 0)
+            {
+                chat.AddChat(PlayerControl.LocalPlayer, "Usage: /r {role}");
+                return;
+            }
+            foreach (var role in args)
+            {
+                var roleText = RoleInfo.getRoleDescription(role);
+                if (roleText != null) chat.AddChat(PlayerControl.LocalPlayer, roleText);
+            }
+        });
+
+        ChatCommandRegistry.Register("m", (sender, args, chat) =>
+        {
+            if (!InGame || PlayerControl.LocalPlayer == null)
+            {
+                chat.AddChat(PlayerControl.LocalPlayer, "NotInGame".Translate());
+                return;
+            }
+
+            var localRole = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
+            foreach (var roleInfo in localRole)
+            {
+                if (roleInfo.roleId == RoleId.Cursed) continue;
+                var roleText = RoleInfo.getRoleDescription(roleInfo.Name);
+                chat.AddChat(PlayerControl.LocalPlayer, roleText);
+            }
+        });
+
+        ChatCommandRegistry.Register("room", (sender, args, chat) =>
+        {
+            if (!InGame && AmongUsClient.Instance.AmHost && args.Length > 0
+            && AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame)
+            {
+                if (int.TryParse(args[0], out var LobbyLimit))
+                {
+                    LobbyLimit = Math.Clamp(LobbyLimit, 4, CrowdedPlayer.MaxPlayer);
+                    if (LobbyLimit != GameOptionsManager.Instance.currentNormalGameOptions.MaxPlayers)
+                    {
+                        GameOptionsManager.Instance.currentNormalGameOptions.MaxPlayers = LobbyLimit;
+                        FastDestroyableSingleton<GameStartManager>.Instance.LastPlayerCount = LobbyLimit;
+                        // TODO Maybe simpler?? 
+                        PlayerControl.LocalPlayer.RpcSyncSettings(
+#if MXYX_CLUB
+                            GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameOptionsManager.Instance.currentGameOptions));
+#else
+                            GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameOptionsManager.Instance.currentGameOptions, false));
+#endif
+                        chat.AddChat(PlayerControl.LocalPlayer, $"Lobby Size changed to {LobbyLimit} players");
+                    }
+                    else
+                    {
+                        chat.AddChat(PlayerControl.LocalPlayer, $"Lobby Size is already {LobbyLimit}");
+                    }
+                }
+                else
+                {
+                    chat.AddChat(PlayerControl.LocalPlayer, "Invalid Size\nUsage: /room {amount}");
+                }
+            }
+        });
+
+        static PlayerControl GetPlayer(string[] args = null)
+        {
+            if (args == null || args.Length == 0)
+            {
+                return PlayerControl.LocalPlayer;
+            }
+            if (string.IsNullOrEmpty(args[0]))
+            {
+                return PlayerControl.LocalPlayer;
+            }
+
+            var target = PlayerControl.AllPlayerControls.FirstOrDefault(x => x.Data.PlayerName.Equals(args[0]));
+
+            if (target == null && byte.TryParse(args[0], out var result))
+            {
+                target = playerById(result);
+            }
+
+            return target;
+        }
+    }
+}
+
+public delegate void ChatCommandHandler(PlayerControl sender, string[] args, ChatController chat);
+public static class ChatCommandRegistry
+{
+    private static readonly Dictionary<string, ChatCommandHandler> _commands = new(StringComparer.OrdinalIgnoreCase);
+
+    public static void Register(string command, ChatCommandHandler handler)
+    {
+        _commands[command] = handler;
+    }
+
+    public static bool TryHandle(string input, PlayerControl sender, ChatController chat)
+    {
+        if (!input.StartsWith("/")) return false;
+        var parts = input.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0) return false;
+        var cmd = parts[0][1..];
+        var args = parts.Skip(1).ToArray();
+
+        var match = _commands.Keys.FirstOrDefault(k => k.Equals(cmd, StringComparison.OrdinalIgnoreCase))
+                 ?? _commands.Keys.FirstOrDefault(k => k.StartsWith(cmd, StringComparison.OrdinalIgnoreCase));
+        if (match != null)
+        {
+            _commands[match](sender, args, chat);
+            return true;
+        }
+        chat.AddChat(sender, $"Unknown command: {cmd}");
+        return true;
     }
 }
