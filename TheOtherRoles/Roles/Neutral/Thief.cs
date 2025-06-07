@@ -152,6 +152,10 @@ public static class Thief
             Swooper.swooper = thief;
         }
 
+        if (Infected.Player.Any(x => x == target))
+        {
+            Infected.Player.Add(thief);
+        }
         if (target == Sheriff.Deputy) Sheriff.Deputy = thief;
         if (target == Veteran.veteran) Veteran.veteran = thief;
         if (target == Blackmailer.blackmailer) Blackmailer.blackmailer = thief;

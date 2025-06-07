@@ -128,6 +128,10 @@
         "0": "Ghost Roles Settings",
         "13": "幽灵职业设置"
     },
+    "advancedSettings": {
+        "0": "Advanced Settings",
+        "13": "高级设置"
+    },
     "guesserSettings": {
         "0": "Guesser Mode Settings",
         "13": "赌怪模式设置"
@@ -159,6 +163,10 @@
     "GhostRolesText": {
         "0": "Ghost Roles",
         "13": "幽灵职业"
+    },
+    "AdvancedSettingsText": {
+        "0": "Advanced Settings",
+        "13": "高级设置"
     },
     "CrewmateTeam": {
         "0": "Crewmate",
@@ -241,6 +249,10 @@
         "0": "Page 7: Modifiers Settings \n",
         "13": "第7页: 附加能力设置 \n"
     },
+    "page8": {
+        "0": "Page 8: Ghost Role Settings \n",
+        "13": "第8页: 幽灵职业设置 \n"
+    },
     "hideNSeekPage1": {
         "0": "Page 1: Hide N Seek Settings \n\n",
         "13": "第1页：躲猫猫模式设置 \n\n"
@@ -298,29 +310,37 @@
         "0": "Preset 3",
         "13": "预设 3"
     },
-    "RandomPresetSkeld": {
-        "0": "Random Preset Skeld",
-        "13": "Skeld预设"
+    "preset4": {
+        "0": "Preset 4",
+        "13": "预设 4"
     },
-    "RandomPresetMira": {
-        "0": "Random Preset Mira HQ",
-        "13": "Mira预设"
+    "preset5": {
+        "0": "Preset 5",
+        "13": "预设 5"
     },
-    "RandomPresetPolus": {
-        "0": "Random Preset Polus",
-        "13": "Polus预设"
+    "PresetSkeld": {
+        "0": "Skeld Exclusive Preset",
+        "13": "Skeld专属预设"
     },
-    "RandomPresetAirship": {
-        "0": "Random Preset Airship",
-        "13": "Airship预设"
+    "PresetMira": {
+        "0": "Mira HQ Exclusive Preset",
+        "13": "Mira专属预设"
     },
-    "RandomPresetFungle": {
-        "0": "Random Preset Fungle",
-        "13": "Fungle预设"
+    "PresetPolus": {
+        "0": "Polus Exclusive Preset",
+        "13": "Polus专属预设"
     },
-    "RandomPresetSubmerged": {
-        "0": "Random Preset Submerged",
-        "13": "Submerged预设"
+    "PresetAirship": {
+        "0": "Airship Exclusive Preset",
+        "13": "Airship专属预设"
+    },
+    "PresetFungle": {
+        "0": "Fungle Exclusive Preset",
+        "13": "Fungle专属预设"
+    },
+    "PresetCustomMap": {
+        "0": "Submerged Exclusive Preset",
+        "13": "Submerged专属预设"
     },
     "activateRoles": {
         "0": "Enable Mod Roles and Block Vanilla Roles",
@@ -1380,7 +1400,7 @@
     },
     "SpecterOption": {
         "0": "Specter (Ghost Role)",
-        "13": "怨灵 (幽灵职业)"
+        "13": "怨灵 (中立)"
     },
     "specterDuration": {
         "0": "Delay before Revival",
@@ -1776,11 +1796,11 @@
     },
     "GhostEngineerOptions": {
         "0": "Ghost Mechanic (Ghost Role)",
-        "13": "灵魂工程师 (幽灵职业)"
+        "13": "灵魂工程师 (船员)"
     },
     "PoltergeistOptions": {
         "0": "Poltergeist (Ghost Role)",
-        "13": "捣蛋鬼 (幽灵职业)"
+        "13": "捣蛋鬼 (船员)"
     },
     "poltergeistCooldown": {
         "0": "Poltergeist Drag Cooldown",
@@ -2546,6 +2566,30 @@
         "0": "Shifter Can Swap with All Neutral Non-Jackal Roles\nNeutral Roles May Spawn with This Modifier",
         "13": "可交换除豺狼阵营中立\n中立阵营可以成为交换师"
     },
+    "infectedMaxPlayer": {
+        "13": "感染者最大数量"
+    },
+    "infectedActiveLimit": {
+        "13": "同时存在的感染者数量"
+    },
+    "infectedCanUseGuess": {
+        "13": "可以使用赌怪能力"
+    },
+    "infectedGuessCount": {
+        "13": "猜测次数（团队共享）"
+    },
+    "hunterMaxCount": {
+        "13": "技能次数"
+    },
+    "hunterCooldown": {
+        "13": "技能冷却"
+    },
+    "hunterCanStakeRoundOne": {
+        "13": "第一轮可以使用技能"
+    },
+    "hunterCanShootNum": {
+        "13": "在感染者全部死亡后获得的猜测次数"
+    },
     "TouTitle": {
         "0": "<color=#ff351f>TheOtherUs-Edited</color>",
         "13": "<color=#ff351f>我们的超多职业</color>"
@@ -2742,6 +2786,12 @@
     "BandLeaderFormed": {
         "0": "Band formed | Faction: {0}",
         "13": "乐队已成立 | 阵营: {0}"
+    },
+    "HunterGuesserCount": {
+        "13": "所有感染者已死亡 | 剩余猜测次数: {0}"
+    },
+    "InfectedGuesserCount": {
+        "13": "团队剩余猜测次数: {0}"
     },
     "BandLeader.bad": {
         "0": "Never really had fun playing band before\n",
@@ -3534,7 +3584,7 @@
         "13": "变换你的外形不被抓到"
     },
     "MorphlingShortDesc": {
-        "0": "Disguise yourself as another player.",
+        "0": "Change your look to not get caught",
         "13": "变换你的外形"
     },
     "Bomber": {
@@ -4797,41 +4847,25 @@
         "0": "Where're the corps's at?",
         "13": "尸体会在哪里呢"
     },
+    "Infected": {
+        "0": "The Infected",
+        "13": "感染者"
+    },
+    "InfectedIntroDesc": {
+        "13": "生 化 危 机"
+    },
+    "InfectedShortDesc": {
+        "13": "感染并击杀其他玩家获得胜利"
+    },
     "Hunter": {
         "0": "Hunter",
         "13": "猎人"
     },
     "HunterIntroDesc": {
-        "0": "Find and kill all the hiders.",
-        "13": "找到并击杀所有猎物"
+        "13": "正 在 抓 你"
     },
     "HunterShortDesc": {
-        "0": "Find and kill all the hiders.",
-        "13": "找到并击杀所有猎物"
-    },
-    "Hunted": {
-        "0": "Hunted",
-        "13": "躲藏者"
-    },
-    "HuntedIntroDesc": {
-        "0": "Quickly! Hide!",
-        "13": "躲起来"
-    },
-    "HuntedShortDesc": {
-        "0": "Quickly! Hide!",
-        "13": "躲起来"
-    },
-    "Prop": {
-        "0": "Prop",
-        "13": "躲藏者"
-    },
-    "PropIntroDesc": {
-        "0": "Disguise yourself as a prop and survive.",
-        "13": "伪装成物品并生存"
-    },
-    "PropShortDesc": {
-        "0": "Disguise yourself as a prop and survive.",
-        "13": "伪装成物品并生存"
+        "13": "击杀所有的感染者"
     },
     "ImpostorFullDesc": {
         "0": "An ordinary Imposter, deadly but otherwise unassuming.",
@@ -5003,7 +5037,7 @@
     },
     "ThiefFullDesc": {
         "0": "Can kill any killer role and steal that role. Kills themselves instead if the target is not a kiler role.\nSidekicks can also be stolen.\nIn Guesser mode, can also guess players with killer roles to acquire their identity.",
-        "13": "身份窃贼可以击杀任何带刀职业，并夺取他们的职业。\n跟班也可被窃取。\n在赌怪模式中，身份窃贼可以通过猜测带刀的玩家获得身份"
+        "13": "身份窃贼可以击杀任何带刀职业，并夺取他们的职业。包括跟班、巴甫洛夫等。\n如果目标并非带刀职业则会自杀。\n在赌怪模式中，身份窃贼可以通过猜测带刀的玩家获得身份"
     },
     "JuggernautFullDesc": {
         "0": "Each successful kill reduces the kill CD by 5 seconds, eventually reaching zero.",
@@ -5039,7 +5073,7 @@
     },
     "VigilanteFullDesc": {
         "0": "The Vigilante can guess another player's role during meetings. If the guess is correct, the target dies. If incorrect, the Vigilante dies instead.\n\nN.B.: Vigilantes and Assassins will not appear in Guesser Mode (as Guesser roles are assigned separately).",
-        "13": "侠客具有会议上猜测别人职业的能力，猜对方就会死亡；\n猜错了，侠客自己死亡。\n\n注：赌怪模式中不会出现侠客与刺客"
+        "13": "侠客属于强力船员，具有会议上猜测别人职业的能力，猜对则对方死亡，\n猜错了，侠客自己死亡。\n\n注：赌怪模式中不会出现侠客与刺客"
     },
     "MayorFullDesc": {
         "0": "During meetings, the Mayor can reveal their identity by clicking the \"Reveal\" button, which also makes them immune to role guesses.\n\nOnce revealed, the Mayor receives 3 votes per meeting (subject to settings), but their vision is significantly reduced.\n\nDepending on settings, the Mayor may also gain the ability to call meetings remotely.",
@@ -5047,7 +5081,7 @@
     },
     "ProsecutorFullDesc": {
         "0": "The Prosecutor can forcibly exile one player per game.\nA new \"Prosecute\" button appears in the bottom-left corner during meetings.\n\nWhen activated:\nAll other players' votes are voided. The Prosecutor casts the decisive vote.\nVoting becomes anonymous and cannot be viewed by others.\n\nDepending on settings: if a Crewmate (including Neutral benign roles) is exiled in the Prosecutor's trial, the Prosecutor dies.\n\nN.B.: During a Prosecutor's trial, the Prosecutor must vote—skipping is disabled. If no vote is cast by the end of the meeting, the vote is void and the ability is preserved.",
-        "13": "检察官可以强制驱逐一名玩家，每局游戏只能使用一次。\n在会议中左下角中新增 “起诉” 按钮，\n按下按钮后本次会议其他玩家的所有投票被无效，\n并且强制匿名投票，无法被窥视。\n\n按房间设置：如果驱逐了船员（包括善良中立）则检察官会自杀。\n\n（注：在检察官的会议中: 检察官无法跳过，如果会议结束时仍然不投票则本次会议无效，“起诉” 技能保留）"
+        "13": "检察官属于强力船员，可以强制驱逐一名玩家，每局游戏只能使用一次。\n在会议中左下角中新增 “起诉” 按钮，\n按下按钮后本次会议其他玩家的所有投票被无效，\n并且强制匿名投票，无法被窥视。\n\n按房间设置：如果驱逐了船员（包括善良中立）则检察官会自杀。\n\n（注：在检察官的会议中: 检察官无法跳过，如果会议结束时仍然不投票则本次会议无效，“起诉” 技能保留）"
     },
     "PortalmakerFullDesc": {
         "0": "The Portalmaker can place two portals on the map.\nOnce both are set, anyone can use them and teleport between the two.\nThe Portalmaker receives a log of players who used the gates, viewable upon entering a meeting.\n\nDepending on settings, the Portalmaker may also teleport at will using their own gates.\nThe portal log can be viewed in the meeting chat.",
@@ -5063,11 +5097,11 @@
     },
     "SheriffFullDesc": {
         "0": "The Sheriff is the only Crewmate role with the ability to kill actively.\nTheir job is to eliminate Imposters and evil and killing Neutrals like the Jackal.\nHowever, if the Sheriff attempts to kill a Crewmate, they will die instead.",
-        "13": "警长是船员阵营唯一可以主动刀人的职业。\n他的工作是杀死红狼，干翻豺狼等中立坏蛋。\n但是警长出刀需谨慎，因为试图击杀船员的话，会使自己死亡。"
+        "13": "警长属于强力船员，是船员阵营唯一可以主动刀人的职业。\n他的工作是杀死红狼，干翻豺狼等中立坏蛋。\n但是警长出刀需谨慎，因为试图击杀船员的话，会使自己死亡。"
     },
     "DeputyFullDesc": {
         "0": "The Deputy serves under the Sheriff and starts with a handcuff ability.\nBefore being promoted to Sheriff, the Deputy can handcuff a target.\nHandcuffs temporarily disable the target's kill, report and other abilities when they attept to use them.\nIf the Sheriff dies, the Deputy is promoted and becomes the new Sheriff.",
-        "13": "捕快是警长的下属，在未成为警长前拥有手铐技能。\n捕快可以对目标上拷，使被拷人的技能、击杀、\n报警按钮在被点击的时候封锁几秒。\n警长死亡后，捕快可以晋升为警长"
+        "13": "捕快属于强力船员，是警长的下属，在未成为警长前拥有手铐技能。\n捕快可以对目标上拷，使被拷人的技能、击杀、\n报警按钮在被点击的时候封锁几秒。\n警长死亡后，捕快可以晋升为警长"
     },
     "BodyGuardFullDesc": {
         "0": "The Bodyguard can protect one player.\nIf someone attempts to kill the protected player, the Bodyguard will die in their place and also take out the killer.\nDepending on settings, all players may see a brown flash when the protection is triggered.",
@@ -5087,7 +5121,7 @@
     },
     "VeteranFullDesc": {
         "0": "The Veteran can go on alert by activating their ability.\nWhile on alert, any player attempting to interact with them,\nwhether by killing, recruiting, tracking, shielding, handcuffing, igniting, etc.,\nwill be instantly countered and killed instead.",
-        "13": "老兵可以选择使用技能进入警戒状态，\n当他们处于警戒状态时，所有与之交互\n（包括击杀、招募、追踪、套盾、纵火、上拷等交互技能）\n玩家都将被反弹死。"
+        "13": "老兵属于强力船员，可以使用技能进入警戒状态，\n当他们处于警戒状态时，所有与之交互\n（包括击杀、招募、追踪、套盾、纵火、上拷等交互技能）\n玩家都将被反弹死。"
     },
     "MedicFullDesc": {
         "0": "The Medic can place a shield on another player, making them immune to kills.\nWhen reporting a body, the Medic receives an autopsy report:\nIf the body is reported shortly after death, the killer's name is revealed.\nIf reported within a longer time window, the killer's color type (lighter/darker) is revealed.",
@@ -5095,7 +5129,7 @@
     },
     "SwapperFullDesc": {
         "0": "The Swapper can exchange the vote counts of two players during a meeting.\nAdditional swaps can be earned by completing tasks.",
-        "13": "换票师可以在会议期间交换两名玩家身上的票数。\n更多的换票次数可以通过做任务获得。"
+        "13": "换票师属于强力船员，可以在会议期间交换两名玩家身上的票数。\n更多的换票次数可以通过做任务获得。"
     },
     "SeerFullDesc": {
         "0": "The Seer can sense death.\nWhen any player dies, the Seer's screen will flash.\nDepending on settings, the Seer may also be able to see a spirit at the location of death.",
@@ -5131,7 +5165,7 @@
     },
     "ProphetFullDesc": {
         "0": "During the action phase, the Prophet can reveal a player's faction.\nA green name indicates a good role, while a red name signals an evil role or a crewmate killing role, like Sheriff or Veteran (based on settings).\nThe host can configure whether Crewmates killing, Neutral benign, Neutral evil, or Neutral killing roles are considered red.",
-        "13": "可以在行动阶段揭示玩家的阵营，绿名则代表善良，红名则代表邪恶或者为带刀船员（可设置）。\n房主可调整 击杀型船员、善良中立、邪恶中立、杀手中立 是否为红名。"
+        "13": "可以在行动阶段揭示玩家的阵营，绿名则代表善良，\n红名则代表邪恶或者为带刀船员（可设置）。\n房主可调整 击杀型船员、善良中立、邪恶中立、杀手中立 是否为红名。"
     },
     "InfoSleuthFullDesc": {
         "0": "The Informant can select a target by voting for them in a meeting.\nAt the start of the next meeting, they will receive information about that player's faction.",
@@ -5272,5 +5306,11 @@
     "PoltergeistFullDesc": {
         "0": "Crewmate Modifier\n\nCrewmates have a chance to become a Poltergeist after death. Poltergeists can move a nearby corpse to their current location.\nDefault range: 0.75× normal report radius.",
         "13": "分配阵营：船员\n\n死亡后有概率成为捣蛋鬼。捣蛋鬼可以移动附近的某一具尸体到自己脚下。\n默认范围 x 0.75 (1倍为正常报告范围)"
+    },
+    "InfectedFullDesc": {
+        "13": "感染者击杀玩家时，如果对方为击杀相关职业会直接击杀对方，如果对方为\n船员或非击杀相关职业则会将目标变为感染者。\n\n感染者有最大数量和同时存在数量的限制，请注意！\n如果感染者数量达到最大时，使用击杀技能时都会击杀对方。\n\n另外，感染者击杀猎人时会被反杀，请远离猎人！或者在会议上刺杀猎人！"
+    },
+    "HunterFullDesc": {
+        "13": "猎人可以使用技能检查目标是否为感染者，如果对方为感染者则直接击杀。\n如果对方不是感染者则技能无效，无论是否成功击杀都会消耗技能次数。\n\n另外猎人如果被感染者击杀则会反杀感染者，\n如果检测次数用完后没有击杀任何一个感染者则会自杀。"
     }
 }

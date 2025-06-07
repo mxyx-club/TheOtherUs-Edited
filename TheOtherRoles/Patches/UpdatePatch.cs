@@ -324,6 +324,15 @@ internal class HudManagerUpdatePatch
             }
         }
 
+        if (Infected.Player != null && Infected.Player.Any(x => x.PlayerId == local.PlayerId))
+        {
+            // Jackal can see his sidekick
+            foreach (var p in Infected.Player) setPlayerNameColor(p, Infected.color);
+
+            if (SchrodingersCat.State == SchrodingersCat.CatState.Infected)
+                setPlayerNameColor(SchrodingersCat.Player, Infected.color);
+        }
+
         if (Jackal.jackal != null && Jackal.jackal.Any(x => x.PlayerId == local.PlayerId))
         {
             // Jackal can see his sidekick

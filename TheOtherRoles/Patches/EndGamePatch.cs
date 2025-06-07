@@ -10,6 +10,7 @@ internal enum CustomGameOverReason
     ImpostorWin,
     LoversWin,
     TeamJackalWin,
+    TeamInfectedWin,
     TeamPavlovsWin,
     MiniLose,
     JesterWin,
@@ -49,6 +50,7 @@ internal enum WinCondition
     VultureWin,
     LawyerSoloWin,
     BandLeaderWin,
+    InfectedWin,
     AdditionalLawyerBonusWin,
     AdditionalLawyerStolenWin,
     AdditionalAlivePursuerWin,
@@ -202,6 +204,7 @@ public class OnGameEndPatch
         notWinners.AddRange(Jackal.jackal.Where(p => p != null));
         notWinners.AddRange(Pursuer.Player.Where(p => p != null));
         notWinners.AddRange(Survivor.Player.Where(p => p != null));
+        notWinners.AddRange(Infected.Player.Where(p => p != null));
 
         if (SchrodingersCat.Player != null && SchrodingersCat.State != SchrodingersCat.CatState.Crewmate)
             notWinners.Add(SchrodingersCat.Player);
@@ -224,6 +227,7 @@ public class OnGameEndPatch
         var loversWin = Lovers.IsAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin ||
                          (GameManager.Instance.DidHumansWin(gameOverReason) && !Lovers.isKillerLover()));
         var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin;
+        var teamInfectedWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamInfectedWin;
         var teamPavlovsWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamPavlovsWin;
         var crewmateWin = GameManager.Instance.DidHumansWin(gameOverReason) ||
                           (gameOverReason is GameOverReason.HumansByVote or GameOverReason.HumansByTask);
@@ -365,6 +369,18 @@ public class OnGameEndPatch
                 winners.Add(Jackal.Sidekick);
             }
             if (SchrodingersCat.Player != null && SchrodingersCat.State == SchrodingersCat.CatState.Jackal)
+            {
+                winners.Add(SchrodingersCat.Player);
+            }
+        }
+        else if (teamInfectedWin)
+        {
+            AdditionalTempData.winCondition = WinCondition.InfectedWin;
+            foreach (var player in Infected.Player.GroupBy(x => x.PlayerId).Select(g => g.First()))
+            {
+                winners.Add(player);
+            }
+            if (SchrodingersCat.Player != null && SchrodingersCat.State == SchrodingersCat.CatState.Infected)
             {
                 winners.Add(SchrodingersCat.Player);
             }
@@ -751,6 +767,7 @@ internal class CheckEndCriteriaPatch
         if (CheckAndEndGameForWerewolfWin(__instance, statistics)) return false;
         if (CheckAndEndGameForLoverWin(__instance, statistics)) return false;
         if (CheckAndEndGameForJackalWin(__instance, statistics)) return false;
+        if (CheckAndEndGameForInfectedWin(__instance, statistics)) return false;
         if (CheckAndEndGameForPavlovsWin(__instance, statistics)) return false;
         if (CheckAndEndGameForSwooperWin(__instance, statistics)) return false;
         if (CheckAndEndGameForPelicanWin(__instance, statistics)) return false;
@@ -920,17 +937,17 @@ internal class CheckEndCriteriaPatch
 
     private static bool CheckAndEndGameForAkujoWin(ShipStatus __instance, PlayerStatistics statistics)
     {
-        if ((statistics.TeamAkujoAlive == 2 && statistics.TotalAlive <= 3)
-            || (statistics.TeamAkujoAlive == 2 &&
-                statistics.TeamImpostorsAlive == 0 &&
-                statistics.TeamArsonistAlive == 0 &&
-                statistics.TeamJuggernautAlive == 0 &&
-                statistics.TeamPavlovsAlive == 0 &&
-                statistics.TeamPelicanAlive == 0 &&
-                statistics.TeamWerewolfAlive == 0 &&
-                statistics.TeamJackalAlive == 0 &&
-                statistics.TeamSwooperAlive == 0 &&
-                !(statistics.TeamLoversAlive != 0 && Lovers.isKillerLover())))
+        if ((statistics.TeamAkujoAlive == 2 && statistics.TotalAlive <= 3) || (statistics.TeamAkujoAlive == 2 &&
+            statistics.TeamImpostorsAlive == 0 &&
+            statistics.TeamArsonistAlive == 0 &&
+            statistics.TeamJuggernautAlive == 0 &&
+            statistics.TeamInfectedAlive == 0 &&
+            statistics.TeamPavlovsAlive == 0 &&
+            statistics.TeamPelicanAlive == 0 &&
+            statistics.TeamWerewolfAlive == 0 &&
+            statistics.TeamJackalAlive == 0 &&
+            statistics.TeamSwooperAlive == 0 &&
+            !(statistics.TeamLoversAlive != 0 && Lovers.isKillerLover())))
         {
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.AkujoWin, false);
             return true;
@@ -947,10 +964,10 @@ internal class CheckEndCriteriaPatch
             statistics.TeamArsonistAlive == 0 &&
             statistics.TeamPelicanAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
+            statistics.TeamInfectedAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
-            !(statistics.TeamJackalHasAliveLover &&
-              statistics.TeamLoversAlive == 2) && !killingCrewAlive())
+            !(statistics.TeamJackalHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive())
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.TeamJackalWin, false);
@@ -959,6 +976,29 @@ internal class CheckEndCriteriaPatch
 
         return false;
     }
+
+    private static bool CheckAndEndGameForInfectedWin(ShipStatus __instance, PlayerStatistics statistics)
+    {
+        if (statistics.TeamInfectedAlive >= statistics.TotalAlive - statistics.TeamInfectedAlive &&
+            statistics.TeamImpostorsAlive == 0 &&
+            statistics.TeamJuggernautAlive == 0 &&
+            statistics.TeamPavlovsAlive == 0 &&
+            statistics.TeamArsonistAlive == 0 &&
+            statistics.TeamPelicanAlive == 0 &&
+            statistics.TeamWerewolfAlive == 0 &&
+            statistics.TeamJackalAlive == 0 &&
+            statistics.TeamAkujoAlive == 0 &&
+            statistics.TeamSwooperAlive == 0 &&
+            !(statistics.TeamInfectedHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive())
+        {
+            //__instance.enabled = false;
+            GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.TeamInfectedWin, false);
+            return true;
+        }
+
+        return false;
+    }
+
     private static bool CheckAndEndGameForPavlovsWin(ShipStatus __instance, PlayerStatistics statistics)
     {
         if (statistics.TeamPavlovsAlive >= statistics.TotalAlive - statistics.TeamPavlovsAlive &&
@@ -967,6 +1007,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
+            statistics.TeamInfectedAlive == 0 &&
             statistics.TeamPelicanAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
@@ -987,6 +1028,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
+            statistics.TeamInfectedAlive == 0 &&
             statistics.TeamPelicanAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
             !(statistics.TeamSwooperHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive())
@@ -1004,6 +1046,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
+            statistics.TeamInfectedAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
@@ -1022,6 +1065,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamImpostorsAlive == 0 &&
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamJackalAlive == 0 &&
+            statistics.TeamInfectedAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
             statistics.TeamPelicanAlive == 0 &&
@@ -1043,6 +1087,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamJuggernautAlive >= statistics.TotalAlive - statistics.TeamJuggernautAlive &&
             statistics.TeamImpostorsAlive == 0 &&
             statistics.TeamJackalAlive == 0 &&
+            statistics.TeamInfectedAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamPelicanAlive == 0 &&
@@ -1066,6 +1111,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
+            statistics.TeamInfectedAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
             statistics.TeamPelicanAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
@@ -1102,6 +1148,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamArsonistAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamPelicanAlive == 0 &&
+            statistics.TeamInfectedAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
             statistics.TeamJuggernautAlive == 0)
         {
@@ -1126,7 +1173,7 @@ internal class RPCEndGamePatch
 {
     public static bool Prefix(GameOverReason endReason)
     {
-        if (endReason == GameOverReason.HumansByTask && ModOption.DisableGameEnd) return false;
+        if (endReason == GameOverReason.HumansByTask && (ModOption.DisableGameEnd || ModOption.PreventTaskEnd)) return false;
         return true;
     }
 
@@ -1146,6 +1193,7 @@ internal class PlayerStatistics
     public int TeamImpostorsAlive { get; set; }
     public int TeamJackalAlive { get; set; }
     public int TeamPavlovsAlive { get; set; }
+    public int TeamInfectedAlive { get; set; }
     public int TeamLoversAlive { get; set; }
     public int TotalAlive { get; set; }
     public int TeamSwooperAlive { get; set; }
@@ -1163,6 +1211,7 @@ internal class PlayerStatistics
     public bool TeamPelicanHasAliveLover { get; set; }
     public int TeamJuggernautAlive { get; set; }
     public bool TeamJuggernautHasAliveLover { get; set; }
+    public bool TeamInfectedHasAliveLover { get; set; }
 
     private static bool isLover(GameData.PlayerInfo p)
     {
@@ -1180,12 +1229,14 @@ internal class PlayerStatistics
         var numTotalAlive = 0;
         var numSwooperAlive = 0;
         var numPelicanAlive = 0;
+        var numInfectedAlive = 0;
         var numArsonistAlive = 0;
         var numWerewolfAlive = 0;
         var numJuggernautAlive = 0;
         var numAkujoAlive = 0;
         var impLover = false;
         var jackalLover = false;
+        var infectedLover = false;
         var pavlovsLover = false;
         var arsonistLover = false;
         var swooperLover = false;
@@ -1216,6 +1267,11 @@ internal class PlayerStatistics
                 {
                     numJackalAlive++;
                     if (lover) jackalLover = true;
+                }
+                if (Infected.Player != null && Infected.Player.Any(x => x.PlayerId == playerData.PlayerId))
+                {
+                    numInfectedAlive++;
+                    if (lover) infectedLover = true;
                 }
                 if (Arsonist.arsonist != null && Arsonist.arsonist.PlayerId == playerData.PlayerId)
                 {
@@ -1332,5 +1388,7 @@ internal class PlayerStatistics
         TeamPelicanAlive = numPelicanAlive;
         TeamArsonisHasAliveLover = arsonistLover;
         TeamJuggernautHasAliveLover = juggernautLover;
+        TeamInfectedAlive = numInfectedAlive;
+        TeamInfectedHasAliveLover = infectedLover;
     }
 }

@@ -725,6 +725,7 @@ public static class MurderPlayerPatch
                 else if (role.roleId == RoleId.Werewolf) state = SchrodingersCat.CatState.Werewolf;
                 else if (role.roleId == RoleId.Juggernaut) state = SchrodingersCat.CatState.Juggernaut;
                 else if (role.roleId == RoleId.Swooper) state = SchrodingersCat.CatState.Swooper;
+                else if (role.roleId == RoleId.Infected) state = SchrodingersCat.CatState.Infected;
                 else if (role.roleId == RoleId.Arsonist) state = SchrodingersCat.CatState.Arsonist;
                 else if (role.roleId == RoleId.Pelican) state = SchrodingersCat.CatState.Pelican;
                 else if (role.roleType == RoleType.Impostor) state = SchrodingersCat.CatState.Impostor;

@@ -389,6 +389,13 @@ public class Amnisiac
                 if (resetRole) Berserker.ClearAndReload();
                 Berserker.Player = local;
                 break;
+            case RoleId.Hunter:
+                if (resetRole) Hunter.ClearAndReload();
+                Hunter.Player = local;
+                break;
+            case RoleId.Infected:
+                Infected.Player.Add(local);
+                break;
         }
         Player.RemoveAll(x => x.PlayerId == local.PlayerId);
         foreach (var arrow in localArrows) UObject.Destroy(arrow.arrow);

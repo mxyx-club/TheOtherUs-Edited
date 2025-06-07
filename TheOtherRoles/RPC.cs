@@ -116,6 +116,8 @@ public enum CustomRPC : byte
     HostSay,
     SchrodingersCatSetState,
     SyncGunsmithChange,
+    InfectedTarget,
+    HunterCheckTarget,
 
     TrapperKill,
     PlaceTrap,
@@ -469,6 +471,12 @@ public static class RPCProcedure
                         break;
                     case RoleId.Berserker:
                         Berserker.Player = player;
+                        break;
+                    case RoleId.Infected:
+                        Infected.Player.Add(player);
+                        break;
+                    case RoleId.Hunter:
+                        Hunter.Player = player;
                         break;
                 }
             }
@@ -1053,6 +1061,7 @@ public static class RPCProcedure
         if (player == Mayor.mayor) Mayor.clearAndReload();
         if (player == Prosecutor.prosecutor) Prosecutor.clearAndReload();
         if (player == Portalmaker.portalmaker) Portalmaker.clearAndReload();
+        if (player == Hunter.Player) Hunter.ClearAndReload();
         if (player == Engineer.engineer) Engineer.clearAndReload();
         Sheriff.Player.RemoveAll(x => x.PlayerId == player.PlayerId);
         if (player == Sheriff.Deputy) Sheriff.Deputy = null;
@@ -1137,6 +1146,7 @@ public static class RPCProcedure
 
         if (player == Shifter.shifter) Shifter.clearAndReload();
 
+        Infected.Player.RemoveAll(x => x.PlayerId == player.PlayerId);
         Assassin.assassin.RemoveAll(x => x.PlayerId == player.PlayerId);
         Amnisiac.Player.RemoveAll(x => x.PlayerId == playerId);
         Pavlovsdogs.pavlovsdogs.RemoveAll(x => x.PlayerId == player.PlayerId);
@@ -1476,7 +1486,7 @@ public static class RPCProcedure
                     var voteAreaPlayer = playerById(pva.TargetPlayerId);
                     if (voteAreaPlayer?.AmOwner == false) continue;
                     MeetingHud.Instance.ClearVote();
-    }
+                }
             }
             if (AmongUsClient.Instance.AmHost) MeetingHud.Instance.CheckForEndVoting();
         }
@@ -2427,6 +2437,12 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.jesterDragBody:
                 Jester.DragBody(reader.ReadByte());
+                break;
+            case CustomRPC.InfectedTarget:
+                Infected.InfectedTarget(reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.HunterCheckTarget:
+                Hunter.CheckTarget(reader.ReadByte());
                 break;
         }
 

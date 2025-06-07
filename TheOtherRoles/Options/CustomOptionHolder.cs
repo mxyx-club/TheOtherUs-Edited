@@ -322,6 +322,15 @@ public class CustomOptionHolder
     public static CustomOption pavlovsownerRampageKillCooldown;
     public static CustomOption pavlovsownerRampageDeathTime;
 
+    public static CustomOption infectedSpawnRate;
+    public static CustomOption infectedKillCooldown;
+    public static CustomOption infectedMaxPlayer;
+    public static CustomOption infectedActiveLimit;
+    public static CustomOption infectedCanUseVents;
+    public static CustomOption infectedHasImpostorVision;
+    public static CustomOption infectedCanUseGuess;
+    public static CustomOption infectedGuessCount;
+
     public static CustomOption arsonistSpawnRate;
     public static CustomOption arsonistCooldown;
     public static CustomOption arsonistDuration;
@@ -462,6 +471,12 @@ public class CustomOptionHolder
     public static CustomOption veteranSpawnRate;
     public static CustomOption veteranCooldown;
     public static CustomOption veteranAlertDuration;
+
+    public static CustomOption hunterSpawnRate;
+    public static CustomOption hunterMaxCount;
+    public static CustomOption hunterCooldown;
+    public static CustomOption hunterCanStakeRoundOne;
+    public static CustomOption hunterCanShootNum;
 
     public static CustomOption engineerSpawnRate;
     public static CustomOption engineerRemoteFix;
@@ -1041,6 +1056,15 @@ public class CustomOptionHolder
         pavlovsownerRampageKillCooldown = Create(20261, Types.Neutral, "pavlovsownerRampageKillCooldown", 15f, 5f, 60f, 2.5f, pavlovsownerRampage);
         pavlovsownerRampageDeathTime = Create(20262, Types.Neutral, "pavlovsownerRampageDeathTime", 60f, 30f, 180f, 2.5f, pavlovsownerRampageKillCooldown);
 
+        infectedSpawnRate = Create(20160, Types.Neutral, cs(Infected.color, "Infected"), rates, null, true);
+        infectedKillCooldown = Create(20161, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, infectedSpawnRate);
+        infectedMaxPlayer = Create(20162, Types.Neutral, "infectedMaxPlayer", 3, 1, 15, 1, infectedSpawnRate);
+        infectedActiveLimit = Create(20163, Types.Neutral, "infectedActiveLimit", 2, 1, 15, 1, infectedSpawnRate);
+        infectedCanUseVents = Create(20164, Types.Neutral, "canUseVents", true, infectedSpawnRate);
+        infectedHasImpostorVision = Create(20165, Types.Neutral, "hasImpVision", true, infectedSpawnRate);
+        infectedCanUseGuess = Create(20166, Types.Neutral, "infectedCanUseGuess", true, infectedSpawnRate);
+        infectedGuessCount = Create(20167, Types.Neutral, "infectedGuessCount", 3, 1, 15, 1, infectedCanUseGuess);
+
         arsonistSpawnRate = Create(20120, Types.Neutral, cs(Arsonist.color, "Arsonist"), rates, null, true);
         arsonistCooldown = Create(20121, Types.Neutral, "arsonistCooldown", 12.5f, 5f, 60f, 2.5f, arsonistSpawnRate);
         arsonistDuration = Create(20122, Types.Neutral, "arsonistDuration", 0.25f, 0f, 10f, 0.125f, arsonistSpawnRate);
@@ -1168,6 +1192,12 @@ public class CustomOptionHolder
             ["optionOff", "deputyGetsPromoted2", "deputyGetsPromoted3"], deputySpawnRate);
         deputyKnowsSheriff = Create(30174, Types.Crewmate, "deputyKnowsSheriff", true, deputySpawnRate);
         deputyKeepsHandcuffs = Create(30176, Types.Crewmate, "deputyKeepsHandcuffs", true, deputyGetsPromoted);
+
+        hunterSpawnRate = Create(30400, Types.Crewmate, cs(Hunter.color, "Hunter"), rates, null, true);
+        hunterMaxCount = Create(30401, Types.Crewmate, "hunterMaxCount", 5, 1, 15, 1, hunterSpawnRate);
+        hunterCooldown = Create(30402, Types.Crewmate, "hunterCooldown", 25f, 10f, 60f, 2.5f, hunterSpawnRate);
+        hunterCanStakeRoundOne = Create(30403, Types.Crewmate, "hunterCanStakeRoundOne", true, hunterSpawnRate);
+        hunterCanShootNum = Create(30404, Types.Crewmate, "hunterCanShootNum", 3, 1, 15, 1, hunterSpawnRate);
 
         mayorSpawnRate = Create(30110, Types.Crewmate, cs(Mayor.color, "Mayor"), rates, null, true);
         mayorMeetingButton = Create(30113, Types.Crewmate, "mayorMeetingButton", false, mayorSpawnRate);

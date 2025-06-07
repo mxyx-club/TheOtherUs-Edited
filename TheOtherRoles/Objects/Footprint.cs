@@ -64,7 +64,7 @@ public class FootprintHolder : MonoBehaviour
 
         var pos = player.transform.position;
         pos.z = (pos.y / 1000f) + 0.001f;
-        print.Transform.SetPositionAndRotation(pos, Quaternion.EulerRotation(0, 0, UnityEngine.Random.Range(0.0f, 360.0f)));
+        print.Transform.SetPositionAndRotation(pos, Quaternion.EulerRotation(0, 0, URandom.Range(0.0f, 360.0f)));
         print.GameObject.SetActive(true);
         print.Owner = player;
         print.Data = player.Data;

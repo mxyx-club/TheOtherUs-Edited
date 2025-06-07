@@ -57,6 +57,7 @@ public enum RoleId
     Sidekick,
     Pavlovsowner,
     Pavlovsdogs,
+    Infected,
     Werewolf,
     Swooper,
     Juggernaut,
@@ -74,6 +75,7 @@ public enum RoleId
     Engineer,
     Sheriff,
     Deputy,
+    Hunter,
     BodyGuard,
     Jumper,
     Detective,
@@ -317,6 +319,8 @@ public static class RoleHelpers
         Mayor.clearAndReload();
         Prosecutor.clearAndReload();
         Portalmaker.clearAndReload();
+        Hunter.ClearAndReload();
+        Infected.clearAndReload();
         Poucher.clearAndReload();
         Mimic.clearAndReload();
         Engineer.clearAndReload();

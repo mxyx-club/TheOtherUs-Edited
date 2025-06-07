@@ -103,6 +103,8 @@ internal static class HudManagerStartPatch
     public static CustomButton gunsmithAddBullets;
     public static CustomButton berserkerKillButton;
     public static CustomButton poltergeistButton;
+    public static CustomButton InfectedKillButton;
+    public static CustomButton hunterKillButton;
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
@@ -213,6 +215,8 @@ internal static class HudManagerStartPatch
         gunsmithGetBullets.MaxTimer = 0f;
         berserkerKillButton.MaxTimer = Berserker.KillCooldown;
         poltergeistButton.MaxTimer = Poltergeist.cooldown;
+        InfectedKillButton.MaxTimer = Infected.cooldown;
+        hunterKillButton.MaxTimer = Hunter.cooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
@@ -4892,6 +4896,90 @@ internal static class HudManagerStartPatch
             __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
             buttonText: GetString("poltergeistButton")
+        );
+
+        InfectedKillButton = new CustomButton(
+            () =>
+            {
+                var target = Infected.currentTarget;
+                if (checkAndDoVetKill(target)) return;
+                var murderAttemptResult = checkMuderAttempt(PlayerControl.LocalPlayer, Infected.currentTarget);
+
+                if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
+
+                if (murderAttemptResult == MurderAttemptResult.PerformKill)
+                {
+                    Infected.KillPlayer(PlayerControl.LocalPlayer, target);
+                }
+                if (murderAttemptResult == MurderAttemptResult.BodyGuardKill)
+                    checkMurderAttemptAndKill(Pelican.Player, Pelican.currentTarget);
+
+                InfectedKillButton.Timer = InfectedKillButton.MaxTimer;
+                Infected.currentTarget = null;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsAlive() && Infected.Player.Any(x => x == PlayerControl.LocalPlayer);
+            },
+            () =>
+            {
+                Infected.currentTarget = SetTarget(untarget: Infected.Player);
+                SetPlayerOutline(Infected.currentTarget, Infected.color);
+                showTargetNameOnButton(Infected.currentTarget, InfectedKillButton, GetString("killButtonText"));
+
+                return PlayerControl.LocalPlayer.CanMove && Infected.currentTarget != null;
+            },
+            () => { InfectedKillButton.Timer = InfectedKillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPositions.upperRowRight,
+            __instance,
+            __instance.KillButton,
+            modKillInput.keyCode,
+            buttonText: GetString("killButtonText")
+        );
+
+        hunterKillButton = new CustomButton(
+            () =>
+            {
+                var target = Hunter.currentTarget;
+                if (checkAndDoVetKill(target)) return;
+
+                var murderAttemptResult = checkMuderAttempt(PlayerControl.LocalPlayer, target);
+                if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
+                if (murderAttemptResult == MurderAttemptResult.PerformKill)
+                {
+                    var writer = StartRPC(CustomRPC.HunterCheckTarget);
+                    writer.Write(target.PlayerId);
+                    writer.EndRPC();
+                    Hunter.CheckTarget(target.PlayerId);
+                }
+
+                hunterKillButton.Timer = hunterKillButton.MaxTimer;
+                Hunter.currentTarget = null;
+            },
+            () =>
+            {
+                if (MeetingHudPatch.MeetingCount == 0 && !Hunter.CanStakeRoundOne) return false;
+                return Hunter.Player.IsAlive() && Hunter.Player == PlayerControl.LocalPlayer && Hunter.RemainingCount > 0;
+            },
+            () =>
+            {
+                if (hunterKillButton.ButtonTitle != null)
+                {
+                    hunterKillButton.ButtonTitle.text = $"{Hunter.RemainingCount} / {Hunter.MaxCount}";
+                }
+                Hunter.currentTarget = SetTarget();
+                SetPlayerOutline(Hunter.currentTarget, Hunter.color);
+                showTargetNameOnButton(Hunter.currentTarget, hunterKillButton, GetString("killButtonText"));
+                return PlayerControl.LocalPlayer.CanMove && Hunter.currentTarget != null;
+            },
+            () => { hunterKillButton.Timer = hunterKillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPositions.upperRowRight,
+            __instance,
+            __instance.KillButton,
+            modKillInput.keyCode,
+            buttonText: GetString("killButtonText")
         );
 
         // Set the default (or settings from the previous game) timers / durations when spawning the buttons

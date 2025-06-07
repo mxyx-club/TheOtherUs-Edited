@@ -246,7 +246,10 @@ internal class MeetingHudPatch
         // Add Guesser Buttons
         var GuesserRemainingShots = HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId);
 
-        if (!isGuesser || PlayerControl.LocalPlayer.IsDead() || GuesserRemainingShots <= 0 || (PlayerControl.LocalPlayer == WolfLord.Player && WolfLord.Revealed && !WolfLord.Killed)) return;
+        if (isGuesser
+            && PlayerControl.LocalPlayer.IsAlive()
+            && GuesserRemainingShots > 0
+            && (PlayerControl.LocalPlayer != WolfLord.Player || !WolfLord.Revealed || WolfLord.Killed))
         {
             Doomsayer.CanShoot = true;
             //int i = 0;
@@ -273,52 +276,59 @@ internal class MeetingHudPatch
 
     public static void updateMeetingText(MeetingHud __instance)
     {
-        if (PlayerControl.LocalPlayer.IsDead()) return;
+        if (PlayerControl.LocalPlayer.IsAlive() && __instance.state is VoteStates.Voted)
+        {
+            var meetingInfoText = "";
+            int numGuesses = HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId)
+                ? HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) : 0;
 
-        if (Instance.state is not VoteStates.Voted and not VoteStates.NotVoted and not VoteStates.Discussion) return;
+            if (numGuesses > 0)
+            {
+                meetingInfoText = string.Format(GetString("guesserGuessesLeft"), numGuesses);
+            }
 
-        var meetingInfoText = "";
-        int numGuesses = HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId)
-            ? HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) : 0;
+            if (PlayerControl.LocalPlayer == Akujo.akujo && (Akujo.honmei == null || Akujo.keeps.Count < 1) && Akujo.timeLeft > 0)
+            {
+                meetingInfoText = string.Format(GetString("akujoTimeRemaining"), $"{TimeSpan.FromSeconds(Akujo.timeLeft):mm\\:ss}");
+            }
+            else if (PlayerControl.LocalPlayer == Doomsayer.doomsayer)
+            {
+                meetingInfoText = string.Format(GetString("DoomsayerKilledToWin"), Doomsayer.killToWin - Doomsayer.killedToWin);
+            }
+            else if (PlayerControl.LocalPlayer == Swapper.swapper)
+            {
+                meetingInfoText = string.Format(GetString("SwapperCharges"), Swapper.charges);
+            }
+            else if (PlayerControl.LocalPlayer == PartTimer.partTimer && PartTimer.target == null)
+            {
+                meetingInfoText = string.Format(GetString("PartTimerMeetingInfo"), PartTimer.deathTurn);
+            }
+            else if (PlayerControl.LocalPlayer == Witness.Player)
+            {
+                if (Witness.timeLeft > 0 && Witness.killerTarget == null)
+                    meetingInfoText = string.Format(GetString("WitnessTimerLeft2"), $"{TimeSpan.FromSeconds(Witness.timeLeft):mm\\:ss}");
+                else if (Witness.timeLeft > 0 && Witness.target == null)
+                    meetingInfoText = string.Format(GetString("WitnessTimerLeft"), $"{TimeSpan.FromSeconds(Witness.timeLeft):mm\\:ss}");
+                else
+                    meetingInfoText = string.Format(GetString("WitnessWinLeft"), $"{Witness.exileToWin - Witness.exiledCount}");
+            }
+            else if (PlayerControl.LocalPlayer == BandLeader.Player)
+            {
+                if (BandLeader.Formed) meetingInfoText = string.Format(GetString("BandLeaderFormed"), $"{$"{BandLeader.winnerFlags}Team".Translate()}");
+                else meetingInfoText = GetString("BandLeaderBad");
+            }
+            else if (PlayerControl.LocalPlayer == Hunter.Player && Hunter.InfectedDeathFlag)
+            {
+                meetingInfoText = string.Format(GetString("HunterGuesserCount"), Hunter.GuessCount);
+            }
+            else if (Infected.Player.Any(x => x == PlayerControl.LocalPlayer) && Infected.IsGuesser)
+            {
+                meetingInfoText = string.Format(GetString("InfectedGuesserCount"), Infected.GuessCount);
+            }
 
-        if (numGuesses > 0)
-        {
-            meetingInfoText = string.Format(GetString("guesserGuessesLeft"), numGuesses);
+            if (meetingInfoText == "") return;
+            __instance.TimerText.text = $"{meetingInfoText}\n{__instance.TimerText.text}";
         }
-
-        if (PlayerControl.LocalPlayer == Akujo.akujo && (Akujo.honmei == null || Akujo.keeps.Count < 1) && Akujo.timeLeft > 0)
-        {
-            meetingInfoText = string.Format(GetString("akujoTimeRemaining"), $"{TimeSpan.FromSeconds(Akujo.timeLeft):mm\\:ss}");
-        }
-        else if (PlayerControl.LocalPlayer == Doomsayer.doomsayer)
-        {
-            meetingInfoText = string.Format(GetString("DoomsayerKilledToWin"), Doomsayer.killToWin - Doomsayer.killedToWin);
-        }
-        else if (PlayerControl.LocalPlayer == Swapper.swapper)
-        {
-            meetingInfoText = string.Format(GetString("SwapperCharges"), Swapper.charges);
-        }
-        else if (PlayerControl.LocalPlayer == PartTimer.partTimer && PartTimer.target == null)
-        {
-            meetingInfoText = string.Format(GetString("PartTimerMeetingInfo"), PartTimer.deathTurn);
-        }
-        else if (PlayerControl.LocalPlayer == Witness.Player)
-        {
-            if (Witness.timeLeft > 0 && Witness.killerTarget == null)
-                meetingInfoText = string.Format(GetString("WitnessTimerLeft2"), $"{TimeSpan.FromSeconds(Witness.timeLeft):mm\\:ss}");
-            else if (Witness.timeLeft > 0 && Witness.target == null)
-                meetingInfoText = string.Format(GetString("WitnessTimerLeft"), $"{TimeSpan.FromSeconds(Witness.timeLeft):mm\\:ss}");
-            else
-                meetingInfoText = string.Format(GetString("WitnessWinLeft"), $"{Witness.exileToWin - Witness.exiledCount}");
-        }
-        else if (PlayerControl.LocalPlayer == BandLeader.Player)
-        {
-            if (BandLeader.Formed) meetingInfoText = string.Format(GetString("BandLeaderFormed"), $"{$"{BandLeader.winnerFlags}Team".Translate()}");
-            else meetingInfoText = GetString("BandLeaderBad");
-        }
-
-        if (meetingInfoText == "") return;
-        __instance.TimerText.text = $"{meetingInfoText}\n{__instance.TimerText.text}";
     }
 
     [HarmonyPatch]
@@ -905,6 +915,11 @@ internal class MeetingHudPatch
             Undertaker.dragedBody = null;
             Jester.dragedBody = null;
             KillTrap.OnMeetingStart();
+
+            if (Hunter.Player.IsAlive() && !Hunter.InfectedDeathFlag && Infected.Player.All(x => x.IsDead()))
+            {
+                Hunter.InfectedDeathFlag = true;
+            }
 
             if (Pelican.Player != null)
             {

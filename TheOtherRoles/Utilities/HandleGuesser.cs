@@ -16,6 +16,9 @@ public static class HandleGuesser
     {
         if (Doomsayer.doomsayer != null && Doomsayer.doomsayer.PlayerId == playerId) return true;
 
+        if (Hunter.Player.IsAlive() && Hunter.Player.PlayerId == playerId && Hunter.InfectedDeathFlag) return true;
+        if (Infected.Player.Any(x => x.PlayerId == playerId) && Infected.IsGuesser) return true;
+
         return isGuesserGm ? GuesserGM.isGuesser(playerId) : Guesser.isGuesser(playerId);
     }
 
@@ -28,6 +31,18 @@ public static class HandleGuesser
     public static int remainingShots(byte playerId, bool shoot = false)
     {
         if (Doomsayer.doomsayer != null && Doomsayer.doomsayer.PlayerId == playerId) return 15;
+
+        if (Hunter.Player.IsAlive() && Hunter.Player.PlayerId == playerId && Hunter.InfectedDeathFlag)
+        {
+            if (shoot) Hunter.GuessCount--;
+            return Hunter.GuessCount;
+        }
+
+        if (Infected.Player.Any(x => x.PlayerId == playerId) && Infected.IsGuesser)
+        {
+            if (shoot) Infected.GuessCount--;
+            return Infected.GuessCount;
+        }
 
         return isGuesserGm ? GuesserGM.remainingShots(playerId, shoot) : Guesser.remainingShots(playerId, shoot);
     }

@@ -159,6 +159,7 @@ internal class RoleManagerSelectRolesPatch
         killerNeutralSettings.Add((byte)RoleId.Werewolf, CustomOptionHolder.werewolfSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Juggernaut, CustomOptionHolder.juggernautSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Swooper, CustomOptionHolder.swooperSpawnRate.GetSelection());
+        killerNeutralSettings.Add((byte)RoleId.Infected, CustomOptionHolder.infectedSpawnRate.GetSelection());
         // Check if killerNeutralMin and killerNeutralMax are 0
         if (killerNeutralMin + killerNeutralMax == 0)
         {
@@ -191,6 +192,7 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Medium, CustomOptionHolder.mediumSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Prophet, CustomOptionHolder.prophetSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Redemptor, CustomOptionHolder.redemptorSpawnRate.GetSelection());
+        crewSettings.Add((byte)RoleId.Hunter, CustomOptionHolder.hunterSpawnRate.GetSelection());
         if (!GuesserGM.Enabled)
             crewSettings.Add((byte)RoleId.Vigilante, CustomOptionHolder.guesserSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Trapper, CustomOptionHolder.trapperSpawnRate.GetSelection());
@@ -299,8 +301,8 @@ internal class RoleManagerSelectRolesPatch
                     foreach (var ensuredRolesList in rolesToAssign.Values)
                     {
                         ensuredRolesList.RemoveAll(x => x == blockedRoleId);
+                    }
                 }
-            }
             }
 
             // Adjust the role limit
@@ -427,10 +429,10 @@ internal class RoleManagerSelectRolesPatch
             rolesToAssign[roleType].RemoveAll(x => x == roleId);
 
             if (blockedRolePairings.Any(pair => pair.Contains((RoleId)roleId)))
-                {
+            {
                 foreach (var blockedRoleId in blockedRolePairings.Where(pair => pair.Contains((RoleId)roleId)).SelectMany(pair => pair))
                 {
-                    // Remove tickets of blocked roles from all pools
+                    // Remove tickets of blocked roles from all pools 
                     crewmateTickets.RemoveAll(x => (RoleId)x == blockedRoleId);
                     neutralTickets.RemoveAll(x => (RoleId)x == blockedRoleId);
                     impostorTickets.RemoveAll(x => (RoleId)x == blockedRoleId);
@@ -656,7 +658,7 @@ internal class RoleManagerSelectRolesPatch
         var crewPlayer = PlayerControl.AllPlayerControls.ToArray().OrderBy(x => Guid.NewGuid()).ToList();
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
         neutralPlayer.RemoveAll(x => !x.IsNeutral() || x == Doomsayer.doomsayer);
-        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.IsNeutral());
+        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x == Hunter.Player || x.IsNeutral());
         assignGuesserGamemodeToPlayers(crewPlayer,
             GuesserGM.guesserGamemodeCrewNumber.GetInt());
         assignGuesserGamemodeToPlayers(neutralPlayer,
@@ -672,6 +674,12 @@ internal class RoleManagerSelectRolesPatch
         bool forceJackal = false, bool forceThief = false, bool forcePavlovsowner = false)
     {
         var IndexList = new Queue<PlayerControl>();
+
+        if (IndexList.Any(Infected.Player.Contains))
+        {
+            count--;
+            return;
+        }
 
         if (forceJackal)
         {

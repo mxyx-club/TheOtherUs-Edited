@@ -55,7 +55,7 @@ internal class OptimizeMapPatch
             {
                 // 梯子追加
                 GameObject ladder = meetingRoom.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault(x => x.name == "ladder_meeting").gameObject;
-                GameObject newLadder = UnityEngine.Object.Instantiate(ladder, ladder.transform.parent);
+                GameObject newLadder = UObject.Instantiate(ladder, ladder.transform.parent);
                 Il2CppArrayBase<Ladder> ladders = newLadder.GetComponentsInChildren<Ladder>();
                 int id = 100;
                 foreach (var l in ladders)
@@ -70,7 +70,7 @@ internal class OptimizeMapPatch
                 newLadder.GetComponentInChildren<SpriteRenderer>().sprite = ladderSprite;
 
                 // 梯子の周りの影を消す
-                UnityEngine.Object.Destroy(gapRoom.GetComponentsInChildren<EdgeCollider2D>().FirstOrDefault(x => Math.Abs(x.points[0].x + 6.2984f) < 0.1));
+                UObject.Destroy(gapRoom.GetComponentsInChildren<EdgeCollider2D>().FirstOrDefault(x => Math.Abs(x.points[0].x + 6.2984f) < 0.1));
                 EdgeCollider2D collider = meetingRoom.GetComponentsInChildren<EdgeCollider2D>().FirstOrDefault(x => x.pointCount == 46);
                 ISystem.List<Vector2> points = new();
                 EdgeCollider2D newCollider = collider.gameObject.AddComponent<EdgeCollider2D>();
@@ -87,11 +87,11 @@ internal class OptimizeMapPatch
                     points.Add(collider.points[i]);
                 }
                 newCollider2.SetPoints(points);
-                UnityEngine.Object.DestroyObject(collider);
+                UObject.DestroyObject(collider);
 
                 // 梯子の背景を変更
                 SpriteRenderer side = meetingRoom.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault(x => x.name == "meeting_side");
-                SpriteRenderer bg = UnityEngine.Object.Instantiate(side, side.transform.parent);
+                SpriteRenderer bg = UObject.Instantiate(side, side.transform.parent);
                 if (!ladderBgSprite) ladderBgSprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.ladder_bg.png", 100f);
                 bg.sprite = ladderBgSprite;
                 bg.transform.localPosition = new Vector3(9.57f, -3.355f, 4.9f);

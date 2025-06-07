@@ -347,6 +347,13 @@ public class Specter
                     if (resetRole) Berserker.ClearAndReload();
                     Berserker.Player = local;
                     break;
+                case RoleId.Hunter:
+                    if (resetRole) Hunter.ClearAndReload();
+                    Hunter.Player = local;
+                    break;
+                case RoleId.Infected:
+                    Infected.Player.Add(local);
+                    break;
             }
         }
 

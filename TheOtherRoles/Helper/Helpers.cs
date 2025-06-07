@@ -80,6 +80,7 @@ public static class Helpers
                Jackal.jackal.Any(x => x == player) ||
                Pursuer.Player.Any(x => x == player) ||
                Survivor.Player.Any(x => x == player) ||
+               Infected.Player.Any(x => x == player) ||
                Pavlovsdogs.pavlovsdogs.Any(x => x == player);
     }
 
@@ -113,6 +114,7 @@ public static class Helpers
                || (Jackal.Sidekick != null && Jackal.Sidekick.PlayerId == player.PlayerId && Jackal.hasImpostorVision)
                || (Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner.PlayerId == player.PlayerId && Pavlovsdogs.hasImpostorVision)
                || (Pavlovsdogs.pavlovsdogs.Any(p => p.PlayerId == player.PlayerId) && Pavlovsdogs.hasImpostorVision)
+               || (Infected.Player.Any(p => p.PlayerId == player.PlayerId) && Infected.hasImpostorVision)
                || (Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision)
                || (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == player.PlayerId && Juggernaut.hasImpostorVision)
                || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
@@ -187,6 +189,10 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
+        else if (Infected.Player != null && Infected.Player.Any(x => x == player) && Infected.canUseVents)
+        {
+            roleCouldUse = true;
+        }
         else if (player.Data?.Role != null && player.Data.Role.CanVent)
         {
             roleCouldUse = true;
@@ -234,6 +240,7 @@ public static class Helpers
                 player == Jackal.Sidekick ||
                 player == Pavlovsdogs.pavlovsowner ||
                 Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) ||
+                Infected.Player.Any(x => x.PlayerId == player.PlayerId) ||
                 Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId) ||
                 (player == SchrodingersCat.Player && SchrodingersCat.IsKiller)
                 );

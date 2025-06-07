@@ -63,9 +63,10 @@ public class RoleInfo
     public static RoleInfo partTimer = new("PartTimer", PartTimer.color, RoleId.PartTimer, RoleType.Neutral);
     public static RoleInfo jackal = new("Jackal", Jackal.color, RoleId.Jackal, RoleType.Neutral);
     public static RoleInfo sidekick = new("Sidekick", Jackal.color, RoleId.Sidekick, RoleType.Neutral);
-    public static RoleInfo witness = new("Witness", Witness.color, RoleId.Witness, RoleType.Neutral);
     public static RoleInfo pavlovsowner = new("Pavlovsowner", Pavlovsdogs.color, RoleId.Pavlovsowner, RoleType.Neutral);
     public static RoleInfo pavlovsdogs = new("Pavlovsdogs", Pavlovsdogs.color, RoleId.Pavlovsdogs, RoleType.Neutral);
+    public static RoleInfo infected = new("Infected", Infected.color, RoleId.Infected, RoleType.Neutral);
+    public static RoleInfo witness = new("Witness", Witness.color, RoleId.Witness, RoleType.Neutral);
     public static RoleInfo swooper = new("Swooper", Swooper.color, RoleId.Swooper, RoleType.Neutral);
     public static RoleInfo arsonist = new("Arsonist", Arsonist.color, RoleId.Arsonist, RoleType.Neutral);
     public static RoleInfo werewolf = new("Werewolf", Werewolf.color, RoleId.Werewolf, RoleType.Neutral);
@@ -85,6 +86,7 @@ public class RoleInfo
     public static RoleInfo engineer = new("Engineer", Engineer.color, RoleId.Engineer, RoleType.Crewmate);
     public static RoleInfo sheriff = new("Sheriff", Sheriff.color, RoleId.Sheriff, RoleType.Crewmate);
     public static RoleInfo deputy = new("Deputy", Sheriff.color, RoleId.Deputy, RoleType.Crewmate);
+    public static RoleInfo hunter = new("Hunter", Hunter.color, RoleId.Hunter, RoleType.Crewmate);
     public static RoleInfo bodyguard = new("BodyGuard", BodyGuard.color, RoleId.BodyGuard, RoleType.Crewmate);
     public static RoleInfo jumper = new("Jumper", Jumper.color, RoleId.Jumper, RoleType.Crewmate);
     public static RoleInfo detective = new("Detective", Detective.color, RoleId.Detective, RoleType.Crewmate);
@@ -186,6 +188,7 @@ public class RoleInfo
         sidekick,
         pavlovsowner,
         pavlovsdogs,
+        infected,
         werewolf,
         swooper,
         pelican,
@@ -201,6 +204,7 @@ public class RoleInfo
         engineer,
         sheriff,
         deputy,
+        hunter,
         bodyguard,
         jumper,
         detective,
@@ -326,6 +330,7 @@ public class RoleInfo
         if (p == Ninja.ninja) infos.Add(ninja);
         if (p == Yoyo.yoyo) infos.Add(yoyo);
         if (p == EvilTrapper.evilTrapper) infos.Add(evilTrapper);
+        if (p == Hunter.Player) infos.Add(hunter);
         if (p == Blackmailer.blackmailer) infos.Add(blackmailer);
         if (p == Terrorist.terrorist) infos.Add(terrorist);
         if (p == Detective.detective) infos.Add(detective);
@@ -376,6 +381,7 @@ public class RoleInfo
         if (Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == p.PlayerId)) infos.Add(pavlovsdogs);
         if (Pursuer.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(pursuer);
         if (Survivor.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(survivor);
+        if (Infected.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(infected);
 
         if (showGhost)
         {
@@ -394,8 +400,9 @@ public class RoleInfo
 
     public static string GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, bool showGhostInfo = true, bool onlyGhostRole = false)
     {
+        var roleInfo = getRoleInfoForPlayer(p, showModifier, showGhostInfo);
 
-        string roleName = string.Join(" ", getRoleInfoForPlayer(p, showModifier, true).Select(x => useColors ? cs(x.color, x.Name) : x.Name));
+        var roleName = string.Join(" ", roleInfo.Select(x => useColors ? cs(x.color, x.Name) : x.Name));
 
         if (onlyGhostRole)
         {

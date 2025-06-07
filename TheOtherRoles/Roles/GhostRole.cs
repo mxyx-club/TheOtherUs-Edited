@@ -72,6 +72,7 @@ public class GhostRole
                 player == Pavlovsdogs.pavlovsowner ||
                 (player == BandLeader.Player && BandLeader.Formed) ||
                 Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) ||
+                Infected.Player.Any(x => x.PlayerId == player.PlayerId) ||
                 Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId))
             {
                 return false;
