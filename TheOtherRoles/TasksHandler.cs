@@ -9,7 +9,7 @@ public static class TasksHandler
         var CompletedTasks = 0;
         if (!playerInfo.Disconnected && playerInfo.Tasks != null &&
             playerInfo.Object && playerInfo.Role && playerInfo.Role.TasksCountTowardProgress &&
-            !playerInfo.Object.hasFakeTasks() && !playerInfo.Role.IsImpostor)
+            !playerInfo.Object.HasFakeTasks() && !playerInfo.Role.IsImpostor)
             foreach (var playerInfoTask in playerInfo.Tasks.GetFastEnumerator())
             {
                 if (playerInfoTask.Complete) CompletedTasks++;
@@ -28,7 +28,7 @@ public static class TasksHandler
             return !(playerInfo.Object && playerInfo.Object.hasAliveKillingLover())
                  && playerInfo.PlayerId != Thief.thief?.PlayerId
                  && playerInfo.PlayerId != Specter.Player?.PlayerId
-                 && !playerById(playerInfo.PlayerId).IsNeutral()
+                 && !PlayerById(playerInfo.PlayerId).IsNeutral()
                  && !Amnisiac.Player.Any(x => x.PlayerId == playerInfo.PlayerId)
                  && playerInfo.PlayerId != Akujo.honmei?.PlayerId;
         }

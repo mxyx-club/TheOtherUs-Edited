@@ -276,23 +276,23 @@ internal class IntroPatch
             if (Sheriff.knowsSheriff && Sheriff.Deputy != null && Sheriff.Player.FirstOrDefault() != null)
             {
                 if (infos.Any(info => info.roleId == RoleId.Sheriff))
-                    __instance.RoleBlurbText.text = cs(Sheriff.color, $"\n你的捕快是 {Sheriff.Deputy?.Data?.PlayerName ?? ""}");
+                    __instance.RoleBlurbText.text = Cs(Sheriff.color, $"\n你的捕快是 {Sheriff.Deputy?.Data?.PlayerName ?? ""}");
                 else if (infos.Any(info => info.roleId == RoleId.Deputy))
-                    __instance.RoleBlurbText.text = cs(Sheriff.color, $"\n你的警长是 {Sheriff.Player?.FirstOrDefault()?.Data?.PlayerName ?? ""}");
+                    __instance.RoleBlurbText.text = Cs(Sheriff.color, $"\n你的警长是 {Sheriff.Player?.FirstOrDefault()?.Data?.PlayerName ?? ""}");
             }
 
             if (Executioner.executioner != null && infos.Any(info => info.roleId == RoleId.Executioner))
-                __instance.RoleBlurbText.text = cs(Executioner.color, $"\n把 {Executioner.target?.Data?.PlayerName ?? ""} 投出去!");
+                __instance.RoleBlurbText.text = Cs(Executioner.color, $"\n把 {Executioner.target?.Data?.PlayerName ?? ""} 投出去!");
 
             if (Lawyer.lawyer != null && infos.Any(info => info.roleId == RoleId.Lawyer))
-                __instance.RoleBlurbText.text = cs(Lawyer.color, $"\n你的辩护目标是 {Lawyer.target?.Data?.PlayerName ?? ""}");
+                __instance.RoleBlurbText.text = Cs(Lawyer.color, $"\n你的辩护目标是 {Lawyer.target?.Data?.PlayerName ?? ""}");
 
             if (modifierInfo != null)
             {
                 if (modifierInfo.roleId != RoleId.Lover)
                 {
                     __instance.RoleBlurbText.text +=
-                        cs(modifierInfo.color, $"\n{modifierInfo.IntroDescription}");
+                        Cs(modifierInfo.color, $"\n{modifierInfo.IntroDescription}");
                 }
                 else
                 {
@@ -300,7 +300,7 @@ internal class IntroPatch
                         ? Lovers.lover2
                         : Lovers.lover1;
                     __instance.RoleBlurbText.text +=
-                        cs(Lovers.color, $"\n♥ 你和 {otherLover?.Data?.PlayerName ?? ""} 坠入了爱河 ♥");
+                        Cs(Lovers.color, $"\n♥ 你和 {otherLover?.Data?.PlayerName ?? ""} 坠入了爱河 ♥");
                 }
             }
         }

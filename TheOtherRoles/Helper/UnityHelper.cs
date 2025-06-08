@@ -53,6 +53,13 @@ public static class UnityHelper
         return null;
     }
 
+    public static string readTextFromFile(string path)
+    {
+        SStream stream = File.OpenRead(path);
+        var textStreamReader = new StreamReader(stream);
+        return textStreamReader.ReadToEnd();
+    }
+
     public static unsafe Texture2D loadTextureFromResources(string path)
     {
         try

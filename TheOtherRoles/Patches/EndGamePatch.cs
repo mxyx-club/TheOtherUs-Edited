@@ -135,7 +135,7 @@ public class OnGameEndPatch
 
         foreach (var p in AllPlayers)
         {
-            var playerName = cs(p.IsAlive() ? Color.white : new Color(.7f, .7f, .7f), p.Data.PlayerName);
+            var playerName = Cs(p.IsAlive() ? Color.white : new Color(.7f, .7f, .7f), p.Data.PlayerName);
 
             var roles = RoleInfo.GetRolesString(p, true, true, true);
 
@@ -638,7 +638,7 @@ public class EndGameManagerSetUpPatch
             foreach (var roles in from data in AdditionalTempData.playerRoles
                                   where data.PlayerName == winningPlayerData2.PlayerName
                                   select poolablePlayer.cosmetics.nameText.text +=
-                         $"\n{string.Join("\n", data.Roles.Select(x => cs(x.color, x.Name)))}")
+                         $"\n{string.Join("\n", data.Roles.Select(x => Cs(x.color, x.Name)))}")
             {
             }
         }
@@ -700,7 +700,7 @@ public class EndGameManagerSetUpPatch
         {
             if (winConditionMappings.TryGetValue(cond, out var mapping))
             {
-                winConditionsTexts.Add(cs(mapping.Item1, mapping.Item2.Translate()));
+                winConditionsTexts.Add(Cs(mapping.Item1, mapping.Item2.Translate()));
             }
         }
 
@@ -926,7 +926,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
             !(statistics.TeamArsonisHasAliveLover && statistics.TeamLoversAlive == 2)
-            && !killingCrewAlive())
+            && !PoowerCrewAlive())
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ArsonistWin, false);
@@ -967,7 +967,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamInfectedAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
-            !(statistics.TeamJackalHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive())
+            !(statistics.TeamJackalHasAliveLover && statistics.TeamLoversAlive == 2) && !PoowerCrewAlive())
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.TeamJackalWin, false);
@@ -989,7 +989,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
-            !(statistics.TeamInfectedHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive())
+            !(statistics.TeamInfectedHasAliveLover && statistics.TeamLoversAlive == 2) && !PoowerCrewAlive())
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.TeamInfectedWin, false);
@@ -1011,7 +1011,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamPelicanAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
-            !(statistics.TeamPavlovsHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive())
+            !(statistics.TeamPavlovsHasAliveLover && statistics.TeamLoversAlive == 2) && !PoowerCrewAlive())
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.TeamPavlovsWin, false);
@@ -1031,7 +1031,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamInfectedAlive == 0 &&
             statistics.TeamPelicanAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
-            !(statistics.TeamSwooperHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive())
+            !(statistics.TeamSwooperHasAliveLover && statistics.TeamLoversAlive == 2) && !PoowerCrewAlive())
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.SwooperWin, false);
@@ -1050,7 +1050,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
-            !(statistics.TeamPelicanHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive())
+            !(statistics.TeamPelicanHasAliveLover && statistics.TeamLoversAlive == 2) && !PoowerCrewAlive())
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.PelicanWin, false);
@@ -1070,7 +1070,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamArsonistAlive == 0 &&
             statistics.TeamPelicanAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
-            !(statistics.TeamWerewolfHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive()
+            !(statistics.TeamWerewolfHasAliveLover && statistics.TeamLoversAlive == 2) && !PoowerCrewAlive()
         )
         {
             //__instance.enabled = false;
@@ -1093,7 +1093,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamPelicanAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
-            !(statistics.TeamJuggernautHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive()
+            !(statistics.TeamJuggernautHasAliveLover && statistics.TeamLoversAlive == 2) && !PoowerCrewAlive()
         )
         {
             //__instance.enabled = false;
@@ -1116,7 +1116,7 @@ internal class CheckEndCriteriaPatch
             statistics.TeamPelicanAlive == 0 &&
             statistics.TeamAkujoAlive == 0 &&
             statistics.TeamJuggernautAlive == 0 &&
-            !(statistics.TeamImpostorHasAliveLover && statistics.TeamLoversAlive == 2) && !killingCrewAlive()))
+            !(statistics.TeamImpostorHasAliveLover && statistics.TeamLoversAlive == 2) && !PoowerCrewAlive()))
         {
             //__instance.enabled = false;
             GameOverReason endReason;

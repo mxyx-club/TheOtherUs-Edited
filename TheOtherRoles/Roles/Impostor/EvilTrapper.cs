@@ -37,7 +37,6 @@ public static class EvilTrapper
 
     public static void clearAndReload()
     {
-        KillTrap.ClearAllTraps();
         evilTrapper = null;
         numTrap = CustomOptionHolder.evilTrapperNumTrap.GetInt();
         extensionTime = CustomOptionHolder.evilTrapperExtensionTime.GetFloat();

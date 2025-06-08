@@ -160,11 +160,11 @@ internal class HudManagerUpdatePatch
                 }
                 else if (local.IsAlive() && Mayor.mayor == p && Mayor.Revealed)
                 {
-                    meetingInfoText = cs(Mayor.color, "Mayor".Translate());
+                    meetingInfoText = Cs(Mayor.color, "Mayor".Translate());
                 }
                 else if (local.IsAlive() && WolfLord.Player == p && WolfLord.Revealed)
                 {
-                    meetingInfoText = cs(WolfLord.color, "WolfLord".Translate());
+                    meetingInfoText = Cs(WolfLord.color, "WolfLord".Translate());
                 }
                 else if (teamSeeRoles && local.IsAlive())
                 {
@@ -463,7 +463,7 @@ internal class HudManagerUpdatePatch
         if (Lovers.lover1 != null && Lovers.lover2 != null &&
             (Lovers.lover1 == local || Lovers.lover2 == local))
         {
-            var suffix = cs(Lovers.color, " ♥");
+            var suffix = Cs(Lovers.color, " ♥");
             Lovers.lover1.cosmetics.nameText.text += suffix;
             Lovers.lover2.cosmetics.nameText.text += suffix;
 
@@ -481,21 +481,21 @@ internal class HudManagerUpdatePatch
             {
                 foreach (PlayerControl p in Akujo.keeps)
                 {
-                    if (local == Akujo.akujo) p.cosmetics.nameText.text += cs(Color.gray, " ♥");
+                    if (local == Akujo.akujo) p.cosmetics.nameText.text += Cs(Color.gray, " ♥");
                     if (local == p)
                     {
-                        Akujo.akujo.cosmetics.nameText.text += cs(Akujo.color, " ♥");
-                        p.cosmetics.nameText.text += cs(Akujo.color, " ♥");
+                        Akujo.akujo.cosmetics.nameText.text += Cs(Akujo.color, " ♥");
+                        p.cosmetics.nameText.text += Cs(Akujo.color, " ♥");
                     }
                 }
             }
             if (Akujo.honmei != null)
             {
-                if (local == Akujo.akujo) Akujo.honmei.cosmetics.nameText.text += cs(Akujo.color, " ♥");
+                if (local == Akujo.akujo) Akujo.honmei.cosmetics.nameText.text += Cs(Akujo.color, " ♥");
                 if (local == Akujo.honmei)
                 {
-                    Akujo.akujo.cosmetics.nameText.text += cs(Akujo.color, " ♥");
-                    Akujo.honmei.cosmetics.nameText.text += cs(Akujo.color, " ♥");
+                    Akujo.akujo.cosmetics.nameText.text += Cs(Akujo.color, " ♥");
+                    Akujo.honmei.cosmetics.nameText.text += Cs(Akujo.color, " ♥");
                 }
             }
 
@@ -504,11 +504,11 @@ internal class HudManagerUpdatePatch
                 foreach (PlayerVoteArea player in allPlayerStates)
                 {
                     if (player.TargetPlayerId == Akujo.akujo.PlayerId && ((Akujo.honmei != null && Akujo.honmei == local) || (Akujo.keeps != null && Akujo.keeps.Any(x => x.PlayerId == local.PlayerId))))
-                        player.NameText.text += cs(Akujo.color, " ♥");
+                        player.NameText.text += Cs(Akujo.color, " ♥");
                     if (local == Akujo.akujo)
                     {
-                        if (player.TargetPlayerId == Akujo.honmei?.PlayerId) player.NameText.text += cs(Akujo.color, " ♥");
-                        if (Akujo.keeps != null && Akujo.keeps.Any(x => x.PlayerId == player.TargetPlayerId)) player.NameText.text += cs(Color.gray, " ♥");
+                        if (player.TargetPlayerId == Akujo.honmei?.PlayerId) player.NameText.text += Cs(Akujo.color, " ♥");
+                        if (Akujo.keeps != null && Akujo.keeps.Any(x => x.PlayerId == player.TargetPlayerId)) player.NameText.text += Cs(Color.gray, " ♥");
                     }
                 }
             }
@@ -516,7 +516,7 @@ internal class HudManagerUpdatePatch
 
         if (PartTimer.partTimer != null && PartTimer.target != null && (local == PartTimer.partTimer || local == PartTimer.target || CanSeeRoleInfo))
         {
-            var suffix = cs(PartTimer.color, " ★");
+            var suffix = Cs(PartTimer.color, " ★");
             PartTimer.partTimer.cosmetics.nameText.text += suffix;
             PartTimer.target.cosmetics.nameText.text += suffix;
 
@@ -528,9 +528,9 @@ internal class HudManagerUpdatePatch
 
         if (BandLeader.Player != null)
         {
-            var suffix1 = cs(BandLeader.color, "(K)");
-            var suffix2 = cs(BandLeader.color, "(B)");
-            var suffix3 = cs(BandLeader.color, "(D)");
+            var suffix1 = Cs(BandLeader.color, "(K)");
+            var suffix2 = Cs(BandLeader.color, "(B)");
+            var suffix3 = Cs(BandLeader.color, "(D)");
             var isKeyboardist = local == BandLeader.Player || BandLeader.Keyboardist == local || BandLeader.Formed || CanSeeRoleInfo;
             var isBassist = local == BandLeader.Player || BandLeader.Bassist == local || BandLeader.Formed || CanSeeRoleInfo;
             var isDrummer = local == BandLeader.Player || BandLeader.Drummer == local || BandLeader.Formed || CanSeeRoleInfo;
@@ -562,7 +562,7 @@ internal class HudManagerUpdatePatch
         var localIsDead = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && CanSeeRoleInfo;
         if (localIsArsonist || localIsDead)
         {
-            var suffix = cs(Arsonist.color, " ♨");
+            var suffix = Cs(Arsonist.color, " ♨");
             foreach (var target in Arsonist.dousedPlayers)
             {
                 target.cosmetics.nameText.text += suffix;
@@ -580,7 +580,7 @@ internal class HudManagerUpdatePatch
         var localIsKnowingTarget = Lawyer.lawyer != null && Lawyer.target != null && Lawyer.targetKnows && Lawyer.target == local;
         if (localIsLawyer || (localIsKnowingTarget && Lawyer.lawyer.IsAlive()))
         {
-            var suffix = cs(Lawyer.color, " §");
+            var suffix = Cs(Lawyer.color, " §");
             Lawyer.target.cosmetics.nameText.text += suffix;
 
             if (MeetingHud.Instance != null)
@@ -592,7 +592,7 @@ internal class HudManagerUpdatePatch
         var localIsExecutioner = Executioner.executioner != null && Executioner.target != null && Executioner.executioner == local;
         if (localIsExecutioner && Executioner.executioner.IsAlive())
         {
-            var suffix = cs(Executioner.color, " §");
+            var suffix = Cs(Executioner.color, " §");
             Executioner.target.cosmetics.nameText.text += suffix;
 
             if (MeetingHud.Instance != null)
@@ -606,7 +606,7 @@ internal class HudManagerUpdatePatch
         {
             foreach (var player in allPlayerStates)
             {
-                var target = playerById(player.TargetPlayerId);
+                var target = PlayerById(player.TargetPlayerId);
                 if (target != null) player.NameText.text += $" ({(isLighterColor(target) ? "浅" : "深")})";
             }
         }
@@ -617,7 +617,7 @@ internal class HudManagerUpdatePatch
             foreach (PlayerVoteArea player in allPlayerStates)
                 if (player.TargetPlayerId == Medic.shielded.PlayerId)
                 {
-                    player.NameText.text = cs(Medic.color, "[") + player.NameText.text + cs(Medic.color, "]");
+                    player.NameText.text = Cs(Medic.color, "[") + player.NameText.text + Cs(Medic.color, "]");
                     // player.HighlightedFX.color = Medic.color;
                     // player.HighlightedFX.enabled = true;
                 }
@@ -708,13 +708,13 @@ internal class HudManagerUpdatePatch
         if ((Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) &&
              Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0) ||
             MeetingHud.Instance) __instance.ImpostorVentButton.Hide();
-        else if (PlayerControl.LocalPlayer.roleCanUseVents() && !__instance.ImpostorVentButton.isActiveAndEnabled)
+        else if (PlayerControl.LocalPlayer.RoleCanUseVents() && !__instance.ImpostorVentButton.isActiveAndEnabled)
         {
             __instance.ImpostorVentButton.Show();
 
         }
         if (ReInput.players.GetPlayer(0).GetButtonDown(RewiredConsts.Action.UseVent) &&
-            !PlayerControl.LocalPlayer.Data.Role.IsImpostor && PlayerControl.LocalPlayer.roleCanUseVents())
+            !PlayerControl.LocalPlayer.Data.Role.IsImpostor && PlayerControl.LocalPlayer.RoleCanUseVents())
         {
             __instance.ImpostorVentButton.DoClick();
         }
@@ -996,11 +996,11 @@ internal class HudManagerUpdatePatch
         {
             if (Witness.target != null)
             {
-                setInfo(Witness.target.PlayerId, cs(Color.red, $"{Witness.target?.Data?.PlayerName} 疑似为本案的凶手"));
+                setInfo(Witness.target.PlayerId, Cs(Color.red, $"{Witness.target?.Data?.PlayerName} 疑似为本案的凶手"));
             }
             else if ((PlayerControl.LocalPlayer == Witness.Player || ModOption.DebugMode) && Witness.killerTarget != null)
             {
-                setInfo(Witness.killerTarget.PlayerId, cs(Color.red, $"{Witness.killerTarget?.Data?.PlayerName} 为本案的真凶"));
+                setInfo(Witness.killerTarget.PlayerId, Cs(Color.red, $"{Witness.killerTarget?.Data?.PlayerName} 为本案的真凶"));
             }
         }
 

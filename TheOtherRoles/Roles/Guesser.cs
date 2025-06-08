@@ -331,7 +331,7 @@ public static class Guesser
             int col = i[(int)team] % 5;
             buttonParent.localPosition = new Vector3(-3.47f + 1.75f * col, 1.5f - 0.45f * row, -200f);
             buttonParent.localScale = new Vector3(0.55f, 0.55f, 1f);
-            label.text = cs(roleInfo.color, roleInfo.Name);
+            label.text = Cs(roleInfo.color, roleInfo.Name);
             label.alignment = TextAlignmentOptions.Center;
             label.transform.localPosition = new Vector3(0, 0, label.transform.localPosition.z);
             label.transform.localScale *= 1.6f;
@@ -349,7 +349,7 @@ public static class Guesser
                 else
                 {
                     var dyingTarget = PlayerControl.LocalPlayer;
-                    var focusedTarget = playerById(__instance.playerStates[buttonTarget].TargetPlayerId);
+                    var focusedTarget = PlayerById(__instance.playerStates[buttonTarget].TargetPlayerId);
                     var mainRoleInfo = RoleInfo.getRoleInfoForPlayer(focusedTarget, true);
 
                     if (__instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)
@@ -459,9 +459,9 @@ public static class Guesser
 
     public static void guesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleId)
     {
-        var dyingTarget = playerById(dyingTargetId);
-        var guessedTarget = playerById(guessedTargetId);
-        var guesser = playerById(killerId);
+        var dyingTarget = PlayerById(dyingTargetId);
+        var guessedTarget = PlayerById(guessedTargetId);
+        var guesser = PlayerById(killerId);
         if (dyingTarget == null) return;
 
         var dyingPartner = dyingTarget.getPartner();
@@ -535,7 +535,7 @@ public static class Guesser
                 if (shouldClearVote)
                 {
                     pva.UnsetVote();
-                    var voteAreaPlayer = playerById(pva.TargetPlayerId);
+                    var voteAreaPlayer = PlayerById(pva.TargetPlayerId);
                     if (voteAreaPlayer?.AmOwner == false) continue;
                     MeetingHud.Instance.ClearVote();
                 }

@@ -1,5 +1,3 @@
-using static UnityEngine.GraphicsBuffer;
-
 namespace TheOtherRoles.Roles.Neutral;
 
 public class Infected
@@ -49,8 +47,8 @@ public class Infected
 
     public static void InfectedTarget(byte playerId, byte targetId)
     {
-        var player = playerById(playerId);
-        var target = playerById(targetId);
+        var player = PlayerById(playerId);
+        var target = PlayerById(targetId);
 
         if (Executioner.target == target && Executioner.executioner != null && !Executioner.executioner.Data.IsDead)
         {

@@ -29,7 +29,7 @@ public class BandLeader
     public static void CreateBandMember(byte playerId, int role)
     {
         Message($"playerId: {playerId}, role: {role}");
-        var player = playerById(playerId);
+        var player = PlayerById(playerId);
         if (playerId == byte.MaxValue) player = null;
         switch (role)
         {

@@ -21,7 +21,7 @@ public class WolfLord
 
     public static void WolfLordkilled(byte targetId)
     {
-        var target = playerById(targetId);
+        var target = PlayerById(targetId);
         Revealed = true;
         if (target == null) return;
 
@@ -48,7 +48,7 @@ public class WolfLord
                 if (shouldClearVote)
                 {
                     pva.UnsetVote();
-                    var voteAreaPlayer = playerById(pva.TargetPlayerId);
+                    var voteAreaPlayer = PlayerById(pva.TargetPlayerId);
                     if (voteAreaPlayer?.AmOwner == false) continue;
                     MeetingHud.Instance.ClearVote();
                 }
@@ -96,7 +96,7 @@ public class WolfLord
                     localScale.x * 1.7f,
                     localScale.x * 1.7f);
                 meetingExtraButtonLabel.transform.localScale = localScale;
-                meetingExtraButtonLabel.text = cs(color, "猎杀时刻");
+                meetingExtraButtonLabel.text = Cs(color, "猎杀时刻");
 
                 var passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
                 passiveButton.OnClick.RemoveAllListeners();
@@ -118,7 +118,7 @@ public class WolfLord
         private static void ButtonToggle(MeetingHud __instance)
         {
             __instance.playerStates[0].Cancel(); // This will stop the underlying buttons of the template from showing up
-            if (__instance.state is MeetingHud.VoteStates.Results or MeetingHud.VoteStates.NotVoted || Player.IsDead()) return;
+            if (__instance.state is MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Results || Player.IsDead()) return;
 
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WolfLordkilled);
             writer.Write(byte.MaxValue);
@@ -140,7 +140,7 @@ public class WolfLord
             {
                 foreach (var pva in __instance.playerStates)
                 {
-                    var player = playerById(pva.TargetPlayerId);
+                    var player = PlayerById(pva.TargetPlayerId);
                     if (player.IsAlive() && player != Player && !player.IsImpostor())
                     {
                         GameObject template = pva.Buttons.transform.Find("CancelButton").gameObject;
@@ -160,9 +160,9 @@ public class WolfLord
 
         private static void WolfLordOnClick(PlayerVoteArea pva, MeetingHud __instance)
         {
-            var target = playerById(pva.TargetPlayerId);
+            var target = PlayerById(pva.TargetPlayerId);
             if (Player == null || !Revealed || Killed || target == null) return;
-            if (__instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)) return;
+            if (__instance.state is MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Results) return;
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WolfLordkilled);
             writer.Write(target.PlayerId);
             writer.EndRPC();

@@ -9,7 +9,7 @@ public class ShipStatusPatch
         if (!__instance.Systems.ContainsKey(SystemTypes.Electrical) || IsHideNSeek) return true;
 
         // If player is a role which has Impostor vision
-        if (hasImpVision(player))
+        if (HasImpVision(player))
         {
             __result = GetNeutralLightRadius(__instance, true);
             return false;

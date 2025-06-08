@@ -133,7 +133,7 @@ public static class Medium
                     condition = "个杀手" + (count == 1 ? "" : "");
                     break;
                 case 1:
-                    count = alivePlayersList.Count(Helpers.roleCanUseVents);
+                    count = alivePlayersList.Count(Helpers.RoleCanUseVents);
                     condition = "个可以使用管道的玩家" + (count == 1 ? "" : "");
                     break;
                 case 2:

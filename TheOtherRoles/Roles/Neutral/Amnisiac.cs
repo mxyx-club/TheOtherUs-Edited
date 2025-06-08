@@ -28,8 +28,8 @@ public class Amnisiac
 
     public static void TakeRole(byte targetId, byte playerId)
     {
-        var target = playerById(targetId);
-        var local = playerById(playerId);
+        var target = PlayerById(targetId);
+        var local = PlayerById(playerId);
         if (target == null || local == null) return;
         var targetInfo = RoleInfo.getRoleInfoForPlayer(target, false, false);
         var roleInfo = targetInfo.FirstOrDefault();

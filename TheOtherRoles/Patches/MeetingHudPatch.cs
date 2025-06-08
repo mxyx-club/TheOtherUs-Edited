@@ -207,7 +207,7 @@ internal class MeetingHudPatch
                 localScale.x * 1.7f,
                 localScale.x * 1.7f);
             meetingExtraButtonLabel.transform.localScale = localScale;
-            meetingExtraButtonLabel.text = cs(Mayor.color, "揭示身份");
+            meetingExtraButtonLabel.text = Cs(Mayor.color, "揭示身份");
 
             var passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
             passiveButton.OnClick.RemoveAllListeners();
@@ -382,7 +382,7 @@ internal class MeetingHudPatch
             foreach (var playerVoteArea in __instance.playerStates)
             {
                 if (playerVoteArea.VotedFor is 252 or 255 or 254) continue;
-                var player = playerById(playerVoteArea.TargetPlayerId);
+                var player = PlayerById(playerVoteArea.TargetPlayerId);
                 if (player == null || player.Data == null || player.Data.IsDead || player.Data.Disconnected) continue;
 
                 if (InfoSleuth.infoSleuth != null && playerVoteArea.TargetPlayerId == InfoSleuth.infoSleuth.PlayerId)
@@ -460,7 +460,7 @@ internal class MeetingHudPatch
                 //バランサー処理
                 if (Balancer.currentAbilityUser != null)
                 {
-                    if (playerById(playerVoteArea.TargetPlayerId) != null &&
+                    if (PlayerById(playerVoteArea.TargetPlayerId) != null &&
                         playerVoteArea.VotedFor != Balancer.targetplayerright.PlayerId &&
                         playerVoteArea.VotedFor != Balancer.targetplayerleft.PlayerId)
                     {

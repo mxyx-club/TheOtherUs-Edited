@@ -57,7 +57,7 @@ public static class Helpers
     /// <summary>
     /// 假任务
     /// </summary>
-    public static bool hasFakeTasks(this PlayerControl player)
+    public static bool HasFakeTasks(this PlayerControl player)
     {
         return player == Werewolf.werewolf ||
                player == Doomsayer.doomsayer ||
@@ -87,7 +87,7 @@ public static class Helpers
     /// <summary>
     /// 强力船员判定
     /// </summary>
-    public static bool killingCrewAlive()
+    public static bool PoowerCrewAlive()
     {
         var powerCrewAlive = false;
         // This functions blocks the game from ending if specified crewmate roles are alive
@@ -107,7 +107,7 @@ public static class Helpers
     /// <summary>
     /// 红狼视野
     /// </summary>
-    public static bool hasImpVision(GameData.PlayerInfo player)
+    public static bool HasImpVision(GameData.PlayerInfo player)
     {
         return player.Role.IsImpostor
                || (Jackal.jackal.Any(p => p.PlayerId == player.PlayerId) && Jackal.hasImpostorVision)
@@ -128,7 +128,7 @@ public static class Helpers
     /// <summary>
     /// 管道技能相关
     /// </summary>
-    public static bool roleCanUseVents(this PlayerControl player)
+    public static bool RoleCanUseVents(this PlayerControl player)
     {
         var roleCouldUse = false;
         if (player.inVent) return true;
@@ -209,7 +209,7 @@ public static class Helpers
     /// <summary>
     /// 触发老兵反弹
     /// </summary>
-    public static bool checkAndDoVetKill(PlayerControl target)
+    public static bool CheckAndDoVetKill(PlayerControl target)
     {
         var shouldVetKill = Veteran.veteran == target && Veteran.alertActive;
         if (shouldVetKill)
@@ -402,17 +402,6 @@ public static class Helpers
     public static float sabotageTimer => ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>().Timer;
 
     public static bool MushroomSabotageActive => PlayerControl.LocalPlayer.myTasks.ToArray().Any(x => x.TaskType == TaskTypes.MushroomMixupSabotage);
-
-    public static bool canUseSabotage()
-    {
-        var sabSystem = ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
-        IActivatable doors = null;
-        if (ShipStatus.Instance.Systems.TryGetValue(SystemTypes.Doors, out ISystemType systemType))
-        {
-            doors = systemType.CastFast<IActivatable>();
-        }
-        return GameManager.Instance.SabotagesEnabled() && sabSystem.Timer <= 0f && !sabSystem.AnyActive && !(doors != null && doors.IsActive);
-    }
 
     public static void camoReset()
     {
@@ -663,13 +652,6 @@ public static class Helpers
         return textStreamReader.ReadToEnd();
     }
 
-    public static string readTextFromFile(string path)
-    {
-        Stream stream = File.OpenRead(path);
-        var textStreamReader = new StreamReader(stream);
-        return textStreamReader.ReadToEnd();
-    }
-
     public static List<RoleInfo> allRoleInfos()
     {
         var allRoleInfo = new List<RoleInfo>();
@@ -689,10 +671,10 @@ public static class Helpers
         return role;
     }
 
-    public static PlayerControl playerById(byte? id)
+    public static PlayerControl PlayerById(byte? id)
     {
         if (id == null) return null;
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls.ToList())
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             if (player.PlayerId == id) return player;
         return null;
     }
@@ -788,7 +770,7 @@ public static class Helpers
 
     internal static string getRoleString(RoleInfo roleInfo)
     {
-        return cs(roleInfo.color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
+        return Cs(roleInfo.color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
     }
 
     public static bool isDark(byte playerId)
@@ -926,7 +908,7 @@ public static class Helpers
         return t.GetString(key, parts);
     }
 
-    public static string cs(Color c, string s)
+    public static string Cs(Color c, string s)
     {
         return string.Format("<color=#{0:X2}{1:X2}{2:X2}{3:X2}>{4}</color>", ToByte(c.r), ToByte(c.g), ToByte(c.b),
             ToByte(c.a), s);

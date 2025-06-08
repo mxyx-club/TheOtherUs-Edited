@@ -2,7 +2,6 @@ namespace TheOtherRoles.Objects;
 
 public class KillTrap
 {
-    public static Dictionary<byte, List<KillTrap>> Traps = new();
     public static List<KillTrap> AllTraps = new();
 
     public static Sprite trapSprite = new ResourceSprite("Trap.png", 300);
@@ -26,15 +25,11 @@ public class KillTrap
 
     public KillTrap(PlayerControl trapper, Vector3 pos)
     {
-        if (!Traps.ContainsKey(trapper.PlayerId))
-        {
-            Traps[trapper.PlayerId] = new();
-        }
-
+        var traps = AllTraps.Where(x => x.trapper == trapper);
         // 最初の罠を消す
-        if (Traps[trapper.PlayerId].Count >= EvilTrapper.numTrap)
+        if (traps.Count() >= EvilTrapper.numTrap)
         {
-            var oldestTrap = Traps[trapper.PlayerId].OrderBy(t => t.Id).FirstOrDefault();
+            var oldestTrap = traps.OrderBy(t => t.Id).FirstOrDefault();
             oldestTrap?.Destroy();
         }
 
@@ -67,24 +62,15 @@ public class KillTrap
         placedTime = DateTime.UtcNow;
 
         AllTraps.Add(this);
-        Traps[trapper.PlayerId].Add(this);
         Message($"创建陷阱 {Id}");
     }
 
     public void Destroy()
     {
-        if (Traps.TryGetValue(trapper.PlayerId, out var traps))
-        {
-            if (traps != null)
-            {
-                Message($"销毁陷阱 {Id}");
-                UObject.Destroy(killtrap);
-                AllTraps.Remove(this);
-                traps.Remove(this);
-            }
-            if (traps?.Count == 0)
-                Traps.Remove(trapper.PlayerId);
-        }
+        Message($"销毁陷阱 {Id}");
+        audioSource?.Stop();
+        if (killtrap != null) UObject.Destroy(killtrap);
+        AllTraps.Remove(this);
 
     }
 
@@ -95,9 +81,18 @@ public class KillTrap
         {
             t?.Destroy();
         }
-        Traps = new();
         AllTraps = new();
         maxId = 0;
+    }
+
+    public static void ClearAllTraps(PlayerControl trapper)
+    {
+        Message($"清除玩家 {trapper?.Data?.PlayerName ?? "NULL"} 的所有陷阱");
+        foreach (var t in AllTraps.Where(x => x.trapper == trapper))
+        {
+            t?.Destroy();
+        }
+        AllTraps.RemoveAll(t => t.trapper == trapper);
     }
 
     public static void activateTrap(PlayerControl trapper, PlayerControl target, int trapId)
@@ -112,12 +107,7 @@ public class KillTrap
         var spriteRenderer = trap.killtrap.gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = trapActiveSprite;
 
-        foreach (var t in AllTraps.Where(x => x.trapper == trapper))
-        {
-            if (t.Id == trapId) continue;
-            t.Destroy();
-        }
-
+        ClearAllTraps(trapper);
 
         if (PlayerControl.LocalPlayer == trapper)
         {
@@ -205,12 +195,6 @@ public class KillTrap
         trap.audioSource.Stop();
         trap.audioSource.PlayOneShot(disable);
         _ = new LateTask(trap.Destroy, disable.length, "Destroy KillTrap");
-        /*
-        if (PlayerControl.LocalPlayer == trap.trapper)
-        {
-            PlayerControl.LocalPlayer.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + EvilTrapper.penaltyTime;
-            EvilTrapper.evilTrapperSetTrapButton.Timer = EvilTrapper.cooldown + EvilTrapper.penaltyTime;
-        }*/
     }
 
     public static void UpdateTrap()
@@ -323,5 +307,18 @@ public class KillTrap
         if (PlayerControl.LocalPlayer == trapper) checkMurderAttemptAndKill(trapper, target, false);
 
         EvilTrapper.isTrapKill = true;
+    }
+
+
+    private static readonly Assembly dll = Assembly.GetExecutingAssembly();
+    public static void LoadAudioAssets()
+    {
+        var resourceAudioAssetBundleStream = dll.GetManifestResourceStream("TheOtherRoles.Resources.AssetsBundle.audiobundle");
+        var assetBundleBundle = AssetBundle.LoadFromMemory(resourceAudioAssetBundleStream.ReadFully());
+        activate = assetBundleBundle.LoadAsset<AudioClip>("TrapperActivate.mp3").DontUnload();
+        countdown = assetBundleBundle.LoadAsset<AudioClip>("TrapperCountdown.mp3").DontUnload();
+        disable = assetBundleBundle.LoadAsset<AudioClip>("TrapperDisable.mp3").DontUnload();
+        kill = assetBundleBundle.LoadAsset<AudioClip>("TrapperKill.mp3").DontUnload();
+        place = assetBundleBundle.LoadAsset<AudioClip>("TrapperPlace.mp3").DontUnload();
     }
 }

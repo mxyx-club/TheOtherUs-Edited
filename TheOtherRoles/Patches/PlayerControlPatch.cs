@@ -412,8 +412,8 @@ public static class PlayerControlFixedUpdatePatch
         if (!Bloody.active.Any()) return;
         foreach (var entry in new Dictionary<byte, float>(Bloody.active))
         {
-            var player = playerById(entry.Key);
-            var bloodyPlayer = playerById(Bloody.bloodyKillerMap[player.PlayerId]);
+            var player = PlayerById(entry.Key);
+            var bloodyPlayer = PlayerById(Bloody.bloodyKillerMap[player.PlayerId]);
 
             Bloody.active[entry.Key] = entry.Value - Time.fixedDeltaTime;
             if (entry.Value <= 0 || player.Data.IsDead)
@@ -681,7 +681,7 @@ internal class BodyReportPatch
 
         if (isSluethReport)
         {
-            var reported = playerById(target?.PlayerId);
+            var reported = PlayerById(target?.PlayerId);
             Slueth.reported.TryAdd(reported);
         }
     }
@@ -784,7 +784,7 @@ public static class MurderPlayerPatch
         DeadPlayers.Add(deadPlayer);
 
         // Remove fake tasks when player dies
-        if (target.hasFakeTasks() || target == Lawyer.lawyer || Pursuer.Player.Contains(target) || target == Thief.thief)
+        if (target.HasFakeTasks() || target == Lawyer.lawyer || Pursuer.Player.Contains(target) || target == Thief.thief)
             target.clearAllTasks();
 
         // First kill (set before lover suicide)
@@ -1105,7 +1105,7 @@ public static class ExilePlayerPatch
         _ = new LateTask(() => { if (__instance == PlayerControl.LocalPlayer) CanSeeRoleInfo = true; }, 0.5f, "CanSeeRoleInfo");
 
         // Remove fake tasks when player dies
-        if (__instance.hasFakeTasks() || __instance == Pursuer.Player.Contains(__instance) || __instance == Thief.thief)
+        if (__instance.HasFakeTasks() || __instance == Pursuer.Player.Contains(__instance) || __instance == Thief.thief)
             __instance.clearAllTasks();
 
         // Lover suicide trigger on exile
@@ -1173,7 +1173,7 @@ public static class ExilePlayerPatch
                 {
                     if (pva.VotedFor != akujoPartner.PlayerId) continue;
                     pva.UnsetVote();
-                    var voteAreaPlayer = playerById(pva.TargetPlayerId);
+                    var voteAreaPlayer = PlayerById(pva.TargetPlayerId);
                     if (!voteAreaPlayer.AmOwner) continue;
                     MeetingHud.Instance.ClearVote();
                 }
@@ -1221,7 +1221,7 @@ public static class DisconnectPatch
                     pva.Overlay.gameObject.SetActive(true);
 
                     pva.UnsetVote();
-                    var voteAreaPlayer = playerById(pva.TargetPlayerId);
+                    var voteAreaPlayer = PlayerById(pva.TargetPlayerId);
                     if (voteAreaPlayer?.AmOwner == false) continue;
                     MeetingHud.Instance.ClearVote();
                 }

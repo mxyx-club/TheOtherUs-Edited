@@ -4,7 +4,7 @@ using BepInEx.Unity.IL2CPP;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
 using TheOtherRoles.CustomCosmetics;
-using TheOtherRoles.Patches;
+using TheOtherRoles.Objects;
 
 namespace TheOtherRoles;
 
@@ -86,7 +86,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
         Harmony.PatchAll();
         CosmeticsManager.Load();
         CustomOptionHolder.Load();
-        AssetLoader.LoadAudioAssets();
+        KillTrap.LoadAudioAssets();
         ModInputManager.Load();
         if (ToggleCursor.Value) enableCursor(true);
 

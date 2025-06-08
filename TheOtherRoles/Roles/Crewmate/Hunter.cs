@@ -18,7 +18,7 @@ public class Hunter
 
     public static void CheckTarget(byte targetId)
     {
-        var target = playerById(targetId);
+        var target = PlayerById(targetId);
 
         if (Infected.Player.Any(x => x.PlayerId == targetId))
         {

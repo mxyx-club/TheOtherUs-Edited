@@ -36,7 +36,7 @@ public static class CredentialsPatch
             };
 
             if (ModOption.DebugMode) gameModeText += "(Debug Mode)";
-            if (gameModeText != "") gameModeText = cs(Color.yellow, gameModeText) + "\n";
+            if (gameModeText != "") gameModeText = Cs(Color.yellow, gameModeText) + "\n";
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
             {
                 __instance.text.text = $"<size=110%>{GetString("TouTitle")}</size>  v{Main.Version}{Main.VersionSuffix}\n{GetString("inGameTitle")}\n{PingText}\n{gameModeText}";

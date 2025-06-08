@@ -443,7 +443,7 @@ public class CustomButton
                 addReplacementHandcuffedButton(arsonistButton, ButtonPositions.upperRowRight,
                     () => { return FastDestroyableSingleton<HudManager>.Instance.KillButton.currentTarget != null; });
             // Vent Button if enabled
-            if (PlayerControl.LocalPlayer.roleCanUseVents())
+            if (PlayerControl.LocalPlayer.RoleCanUseVents())
                 addReplacementHandcuffedButton(arsonistButton, ButtonPositions.upperRowCenter,
                     () =>
                     {

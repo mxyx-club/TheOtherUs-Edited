@@ -71,7 +71,7 @@ public class Trap
     public static void triggerTrap(byte playerId, byte trapId)
     {
         var t = traps.FirstOrDefault(x => x.instanceId == trapId);
-        var player = playerById(playerId);
+        var player = PlayerById(playerId);
         if (Trapper.trapper == null || t == null || player == null) return;
         var localIsTrapper = PlayerControl.LocalPlayer.PlayerId == Trapper.trapper.PlayerId;
         trapPlayerIdMap.TryAdd(playerId, t);

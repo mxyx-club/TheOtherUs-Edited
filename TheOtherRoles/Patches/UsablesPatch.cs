@@ -16,7 +16,7 @@ public static class VentCanUsePatch
         var num = float.MaxValue;
         var @object = pc.Object;
 
-        var roleCouldUse = @object.roleCanUseVents();
+        var roleCouldUse = @object.RoleCanUseVents();
 
         if (__instance.name.StartsWith("SealedVent_"))
         {
@@ -185,7 +185,7 @@ internal class VentButtonVisibilityPatch
 
             if (ShowButtons)
             {
-                if (PlayerControl.LocalPlayer.roleCanUseVents())
+                if (PlayerControl.LocalPlayer.RoleCanUseVents())
                     __instance.ImpostorVentButton.Show();
 
                 if (PlayerControl.LocalPlayer.roleCanSabotage())
@@ -437,7 +437,7 @@ public static class ConsoleCanUsePatch
             !Swapper.canFixSabotages)
             return !__instance.TaskTypes.Any(x => x == TaskTypes.FixLights || x == TaskTypes.FixComms);
         if (__instance.AllowImpostor) return true;
-        if (!pc.Object.hasFakeTasks()) return true;
+        if (!pc.Object.HasFakeTasks()) return true;
         __result = float.MaxValue;
         return false;
     }
@@ -594,7 +594,7 @@ internal class AdminPanelPatch
                                         var color = Palette.PlayerColors[playerInfo.DefaultOutfit.ColorId];
 
                                         if (Hacker.onlyColorType)
-                                            color = isLighterColor(playerById(playerInfo.PlayerId))
+                                            color = isLighterColor(PlayerById(playerInfo.PlayerId))
                                                 ? Palette.PlayerColors[7]
                                                 : Palette.PlayerColors[6];
                                         roomColors.Add(color);
@@ -772,7 +772,7 @@ internal class SurveillanceMinigamePatch
             PlayerControl.LocalPlayer.myTasks.ToArray().Any(x => x.name.Contains("FixLightsTask")) ||
             Trickster.lightsOutTimer > 0;
 
-        var ignoreNightVision = (CustomOptionHolder.camsNoNightVisionIfImpVision.GetBool() && hasImpVision(PlayerControl.LocalPlayer.Data)) ||
+        var ignoreNightVision = (CustomOptionHolder.camsNoNightVisionIfImpVision.GetBool() && HasImpVision(PlayerControl.LocalPlayer.Data)) ||
             PlayerControl.LocalPlayer.Data.IsDead;
 
         var nightVisionEnabled = CustomOptionHolder.camsNightVision.GetBool();

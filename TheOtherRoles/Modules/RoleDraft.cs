@@ -135,7 +135,7 @@ internal class RoleDraft
 
                     // enable pick, wait for pick
                     Color youColor = timer - (int)timer > 0.5 ? Color.red : Color.yellow;
-                    playerText = cs(youColor, "RoleDraft.You".Translate());
+                    playerText = Cs(youColor, "RoleDraft.You".Translate());
                     // Available Roles:
                     List<RoleInfo> availableRoles = new();
                     foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
@@ -192,7 +192,7 @@ internal class RoleDraft
                         if (PlayerControl.LocalPlayer.IsImpostor())
                         {
                             int impsMax = roleData.maxImpostorRoles;
-                            int impsLeft = pickOrder.Count(x => playerById(x).IsImpostor());
+                            int impsLeft = pickOrder.Count(x => PlayerById(x).IsImpostor());
                             int imps100 = roleData.impSettings.Count(x => x.Value == 10);
                             imps100 = Math.Min(imps100, impsMax);
                             int imps100Picked = alreadyPicked.Count(x => roleData.impSettings.GetValueSafe(x) == 10);
@@ -318,7 +318,7 @@ internal class RoleDraft
                             // planned rows: maximum of 4, hence the following calculation for rows as well:
                             row += (4 - lastRow - 1) / 2f;
 
-                            ActionButton actionButton = UObject.Instantiate(HudManager.Instance.KillButton, __instance.TeamTitle.transform);
+                            ActionButton actionButton = UObject.Instantiate(HudManager.Instance.AbilityButton, __instance.TeamTitle.transform);
                             actionButton.gameObject.SetActive(true);
                             actionButton.gameObject.name = "RoleButton";
                             actionButton.transform.localPosition = new Vector3(-8.4f + col * 5.5f, -10 - row * 3f);
@@ -335,8 +335,11 @@ internal class RoleDraft
                             text.color = roleInfo.color;
                             textHolder.transform.SetParent(actionButton.transform, false);
                             textHolder.transform.localPosition = new Vector3(0, text.text.Contains('\n') ? -1.975f : -2.2f, -1);
-                            GameObject actionButtonGameObject = actionButton.gameObject;
+
+                            actionButton.graphic.sprite = new ResourceSprite("TheOtherRoles.Resources.RoleDraft.Random.png");
                             SpriteRenderer actionButtonRenderer = actionButton.graphic;
+                            actionButtonRenderer.enabled = true;
+                            GameObject actionButtonGameObject = actionButton.gameObject;
                             Material actionButtonMat = actionButtonRenderer.material;
 
                             PassiveButton button = actionButton.GetComponent<PassiveButton>();
@@ -416,7 +419,7 @@ internal class RoleDraft
             var isLocalPlayer = playerId == PlayerControl.LocalPlayer.PlayerId;
             var reasonString = isRandom ? $" ({"RoleDraft.Random".Translate()})" : "";
             var roleString = isLocalPlayer
-                ? isRandom ? $"{cs(roleInfo.color, roleInfo.Name + reasonString)}" : $"{cs(roleInfo.color, roleInfo.Name)}"
+                ? isRandom ? $"{Cs(roleInfo.color, roleInfo.Name + reasonString)}" : $"{Cs(roleInfo.color, roleInfo.Name)}"
                 : BuildRoleString(roleInfo, isRandom, reasons);
 
             string prefix = playerId == PlayerControl.LocalPlayer.PlayerId ? "RoleDraft.You".Translate() : alreadyPicked.Count.ToString();
@@ -431,7 +434,7 @@ internal class RoleDraft
 
         static string BuildRoleString(RoleInfo roleInfo, bool isRandom, string reason)
         {
-            if (isRandom) return cs(Color.green, $"RoleDraft.{reason}".Translate());
+            if (isRandom) return Cs(Color.green, $"RoleDraft.{reason}".Translate());
 
             if (!CustomOptionHolder.draftModeShowRoles.GetBool())
                 return "RoleDraft.UnknownRole".Translate();
@@ -439,12 +442,12 @@ internal class RoleDraft
             return roleInfo.roleType switch
             {
                 RoleType.Impostor when CustomOptionHolder.draftModeHideImpRoles.GetBool() =>
-                    cs(Palette.ImpostorRed, "RoleDraft.ImpostorRole".Translate()),
+                    Cs(Palette.ImpostorRed, "RoleDraft.ImpostorRole".Translate()),
                 RoleType.Neutral when CustomOptionHolder.draftModeHideNeutralRoles.GetBool() =>
-                    cs(Color.white, "RoleDraft.NeutralRole".Translate()),
+                    Cs(Color.white, "RoleDraft.NeutralRole".Translate()),
                 RoleType.Crewmate when CustomOptionHolder.draftModeHideCrewmateRoles.GetBool() =>
-                    cs(Palette.CrewmateBlue, "RoleDraft.CrewmateRole".Translate()),
-                _ => cs(roleInfo.color, roleInfo.Name)
+                    Cs(Palette.CrewmateBlue, "RoleDraft.CrewmateRole".Translate()),
+                _ => Cs(roleInfo.color, roleInfo.Name)
             };
         }
     }
