@@ -584,11 +584,12 @@ internal class PlayerControlRevivePatch
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
 internal class BodyReportPatch
 {
-    public static bool Prefix(PlayerControl __instance)
+    public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
     {
         if (ModOption.DisableMeeting) return false;
         handleVampireBiteOnBodyReport();
         handleBomberExplodeOnBodyReport();
+        if (target?.Object == null || target.Object.IsDead()) return false;
         return true;
     }
 
@@ -672,11 +673,12 @@ internal class BodyReportPatch
 
         if (Witness.Player.IsAlive())
         {
-            var witnessTarget = Witness.DetermineKillerTarget(target?.Object);
+            var killer = DeadPlayers.Find(x => x.Player.PlayerId == target?.PlayerId)?.KillerIfExisting;
+            var witnessTarget = Witness.DetermineKillerTarget(killer);
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WitnessReport);
-            writer.Write(target?.PlayerId ?? byte.MaxValue);
+            writer.Write(witnessTarget?.PlayerId ?? byte.MaxValue);
             writer.EndRPC();
-            Witness.WitnessReport(target?.PlayerId ?? byte.MaxValue);
+            Witness.WitnessReport(witnessTarget?.PlayerId ?? byte.MaxValue);
         }
 
         if (isSluethReport)
@@ -814,13 +816,17 @@ public static class MurderPlayerPatch
         // Bait
         if (Bait.bait.FindAll(x => x.PlayerId == target.PlayerId).Count > 0)
         {
-            float reportDelay = rnd.Next((int)Bait.reportDelayMin, (int)Bait.reportDelayMax + 1);
+            float reportDelay = (float)rnd.NextDouble(Bait.reportDelayMin, Bait.reportDelayMax);
+            reportDelay = Math.Max(reportDelay, 0.25f);
 
-            _ = new LateTask(() =>
+            if (__instance.AmOwner)
             {
-                if (__instance.AmOwner)
+                _ = new LateTask(() =>
+                {
                     __instance?.CmdReportDeadBody(target.Data);
-            }, reportDelay);
+                }, reportDelay, "Bait Activate");
+
+            }
 
             if (Bait.showKillFlash && __instance == PlayerControl.LocalPlayer)
                 showFlash(new Color(204f / 255f, 102f / 255f, 0f / 255f));
@@ -909,8 +915,7 @@ public static class MurderPlayerPatch
         }
 
         // Set bountyHunter cooldown
-        if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter &&
-            __instance == BountyHunter.bountyHunter)
+        if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter && __instance == BountyHunter.bountyHunter)
         {
             if (target == BountyHunter.bounty)
             {

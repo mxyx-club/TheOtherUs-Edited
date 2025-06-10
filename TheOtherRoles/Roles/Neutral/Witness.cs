@@ -42,7 +42,7 @@ public class Witness
 
     public static PlayerControl DetermineKillerTarget(PlayerControl target)
     {
-        if (target == null)
+        if (target.IsDead())
         {
             return GameHistory.GetLastKiller();
         }

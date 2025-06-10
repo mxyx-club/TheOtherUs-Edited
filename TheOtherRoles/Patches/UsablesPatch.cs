@@ -1,6 +1,5 @@
 using AmongUs.GameOptions;
 using PowerTools;
-using static TheOtherRoles.Buttons.HudManagerStartPatch;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.Options.ModOption;
 
@@ -283,7 +282,7 @@ internal class KillButtonDoClickPatch
     public static bool Prefix(KillButton __instance)
     {
         if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown &&
-            !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.LocalPlayer.CanMove)
+            PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer.CanMove)
         {
             // Deputy handcuff update.
             if (Sheriff.handcuffedPlayers.Contains(PlayerControl.LocalPlayer.PlayerId))
@@ -292,23 +291,7 @@ internal class KillButtonDoClickPatch
                 return false;
             }
 
-            // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
-            // Handle blank kill
-            if (RpcCustomMurderPlayer(PlayerControl.LocalPlayer, __instance.currentTarget))
-            {
-                PlayerControl.LocalPlayer.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
-                if (PlayerControl.LocalPlayer == Cleaner.cleaner)
-                    Cleaner.cleaner.killTimer = cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer;
-                else if (PlayerControl.LocalPlayer == Warlock.warlock)
-                    Warlock.warlock.killTimer = warlockCurseButton.Timer = warlockCurseButton.MaxTimer;
-                else if (PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor)
-                    Mini.mini.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * (Mini.isGrownUp() ? 0.66f : 2f));
-                else if (PlayerControl.LocalPlayer == Witch.witch)
-                    Witch.witch.killTimer = witchSpellButton.Timer = witchSpellButton.MaxTimer;
-                else if (PlayerControl.LocalPlayer == Ninja.ninja)
-                    Ninja.ninja.killTimer = ninjaButton.Timer = ninjaButton.MaxTimer;
-            }
-
+            RpcCustomMurderPlayer(PlayerControl.LocalPlayer, __instance.currentTarget);
             __instance.SetTarget(null);
         }
 

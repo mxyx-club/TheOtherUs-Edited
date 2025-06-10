@@ -23,7 +23,6 @@ public enum CustomGamemodes
 public static class Helpers
 {
     public static bool zoomOutStatus;
-    public static bool IsHnS => GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.HideNSeek;
     public static bool InGame => AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started;
     public static bool IsCountDown => GameStartManager.InstanceExists && GameStartManager.Instance.startState == GameStartManager.StartingStates.Countdown;
     public static bool InMeeting => InGame && MeetingHud.Instance;
@@ -451,7 +450,7 @@ public static class Helpers
     {
         player.Data.Role.TeamType = RoleTeamTypes.Impostor;
         RoleManager.Instance.SetRole(player, RoleTypes.Impostor);
-        player.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown);
+        player.SetKillTimer(ModOption.KillCooldown);
 
         Message("PROOF I AM IMP VANILLA ROLE: " + player.Data.Role.IsImpostor);
 
@@ -696,7 +695,7 @@ public static class Helpers
     public static void handleVampireBiteOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        //checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, false);
+        RpcCustomMurderPlayer(Vampire.vampire, Vampire.bitten, false);
         var writer = StartRPC(CustomRPC.VampireSetBitten);
         writer.Write(byte.MaxValue);
         writer.Write(true);
@@ -707,7 +706,7 @@ public static class Helpers
     public static void handleBomberExplodeOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        //checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBombPlayer, false);
+        RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
         var writer = StartRPC(CustomRPC.GiveBomb);
         writer.Write(byte.MaxValue);
         writer.Write(false);

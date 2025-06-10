@@ -73,9 +73,6 @@ public class CustomOption
         options.Add(this);
     }
 
-    public static Dictionary<RoleId, CustomOption> CustomRoleCounts = new();
-    public static Dictionary<RoleId, CustomOption> CustomRoleSpawnChances = new();
-
     public static CustomOption Create(int id, CustomOptionType type, string name, string[] selections,
         CustomOption parent = null, bool isHeader = false, Func<bool> isHidden = null, Action onChange = null)
     {
@@ -201,6 +198,24 @@ public class CustomOption
     public int GetQuantity()
     {
         return selection + 1;
+    }
+
+    public bool IsHidden()
+    {
+        return isHidden != null && isHidden.Invoke();
+    }
+
+    public bool IsEnbaled()
+    {
+        var enabled = true;
+        var parent = this.parent;
+        while (parent != null && enabled)
+        {
+            enabled = parent.selection != 0;
+            parent = parent.parent;
+        }
+
+        return !IsHidden() && enabled;
     }
 
     public string GetString()
@@ -344,27 +359,6 @@ public class CustomOption
             SoundEffectsManager.play("fail");
             return false;
         }
-    }
-}
-
-public static class CustomOptionsExtensions
-{
-    public static bool IsHidden(this CustomOption option)
-    {
-        return option.isHidden != null && option.isHidden.Invoke();
-    }
-
-    public static bool IsEnbaled(this CustomOption option)
-    {
-        var enabled = true;
-        var parent = option.parent;
-        while (parent != null && enabled)
-        {
-            enabled = parent.selection != 0;
-            parent = parent.parent;
-        }
-
-        return !option.IsHidden() && enabled;
     }
 }
 

@@ -94,7 +94,7 @@ public static class Guesser
 
     public static void guesserOnClick(int buttonTarget, MeetingHud __instance)
     {
-        if (guesserUI != null || !(__instance.state is MeetingHud.VoteStates.Results or MeetingHud.VoteStates.Discussion)) return;
+        if (guesserUI != null || __instance.state is MeetingHud.VoteStates.Results or MeetingHud.VoteStates.Discussion) return;
 
         Page = 1;
         RoleButtons = new();

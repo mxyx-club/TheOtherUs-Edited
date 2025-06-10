@@ -190,6 +190,8 @@ public static class RoleHelpers
     public static bool CheckMurderPlayer(PlayerControl killer, PlayerControl target)
     {
         if (killer == target) return true;
+        if (IsHideNSeek)
+            return true;
         // Block impostor not fully grown mini kill
         if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp()) return false;
 

@@ -2752,15 +2752,15 @@ internal static class HudManagerStartPatch
                 }
                 else if (Warlock.curseVictim != null && Warlock.curseVictimTarget != null)
                 {
-                    if (!CheckMurderPlayer(Warlock.warlock, Warlock.curseVictimTarget)) return;
+                    if (!RpcCustomMurderPlayer(Warlock.warlock, Warlock.curseVictimTarget)) return;
 
                     // If blanked or killed
                     if (Warlock.rootTime > 0)
                     {
                         AntiTeleport.position = PlayerControl.LocalPlayer.transform.position;
                         PlayerControl.LocalPlayer.moveable = false;
-                        PlayerControl.LocalPlayer.NetTransform
-                            .Halt(); // Stop current movement so the warlock is not just running straight into the next object
+                        // Stop current movement so the warlock is not just running straight into the next object
+                        PlayerControl.LocalPlayer.NetTransform.Halt();
                         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Warlock.rootTime,
                             new Action<float>(p =>
                             {
@@ -2790,7 +2790,7 @@ internal static class HudManagerStartPatch
             {
 
                 // If the cursed victim is disconnected or dead reset the curse so a new curse can be applied
-                if (Warlock.curseVictim != null && (Warlock.curseVictim.Data.Disconnected || Warlock.curseVictim.Data.IsDead))
+                if (Warlock.curseVictim != null && Warlock.curseVictim.IsDead())
                     Warlock.resetCurse();
                 if (Warlock.curseVictim == null)
                 {

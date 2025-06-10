@@ -186,6 +186,7 @@ public static class RPCProcedure
         GameStartManagerPatch.GameStartManagerUpdatePatch.startingTimer = 0;
         SurveillanceMinigamePatch.nightVisionOverlays = null;
         MeetingHudPatch.MeetingCount = 0;
+        ChatCommands.EnableChat.ForceEnableChat = false;
     }
 
     public static void HandleShareOptions(byte numberOfOptions, MessageReader reader)

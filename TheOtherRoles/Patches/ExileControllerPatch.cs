@@ -243,6 +243,13 @@ internal class ExileControllerWrapUpPatch
     {
         Message("WrapUp Postfix");
         if (PlayerControl.LocalPlayer.IsDead()) CanSeeRoleInfo = true;
+
+        DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
+        for (var i = 0; i < array.Length; i++)
+        {
+            UObject.Destroy(array[i].gameObject);
+        }
+
         // Prosecutor win condition
         if (exiled != null && Executioner.executioner != null && Executioner.target != null &&
             Executioner.target.PlayerId == exiled.PlayerId && !Executioner.executioner.Data.IsDead)

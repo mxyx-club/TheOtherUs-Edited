@@ -265,22 +265,23 @@ public class CustomButton
 
     public static void SetKillTimer(float time = -1f)
     {
-        foreach (var t in buttons)
+        foreach (var t in buttons.Where(x => x.IsKillButton))
         {
-            if (time == -1f) time = t.MaxTimer;
-            if (t.IsKillButton && !t.isEffectActive)
+            var newTimer = time == -1f ? t.MaxTimer : time;
+            if (!t.isEffectActive)
             {
-                t.Timer = time;
-                t.isEffectActive = false;
+                t.Timer = newTimer;
                 t.Update();
             }
         }
 
-        PlayerControl.LocalPlayer.SetKillTimer(time);
+        var killtime = time == -1f ? ModOption.KillCooldown : time;
+        PlayerControl.LocalPlayer.SetKillTimer(killtime);
+        Message($"SetKillTimer {killtime}", "CustomButton");
         _ = new LateTask(() =>
         {
-            if (PlayerControl.LocalPlayer.killTimer > ModOption.KillCooldown) PlayerControl.LocalPlayer.killTimer = time - 0.5f;
-        }, 0.5f);
+            if (PlayerControl.LocalPlayer.killTimer > killtime) PlayerControl.LocalPlayer.killTimer = killtime - 0.25f;
+        }, 0.25f);
     }
 
     public void setActive(bool isActive)
