@@ -4326,15 +4326,15 @@ internal static class HudManagerStartPatch
                 var deadBody = Physics2D.OverlapCircleAll(pos, maxDistance, Constants.PlayersOnlyMask)
                     .Where(collider => collider.CompareTag("DeadBody"))
                     .Select(collider => collider.GetComponent<DeadBody>())
-                    .FirstOrDefault(db => db != null && PlayerById(db.ParentId)?.Data?.IsDead == true &&
-                                          !(PlayerById(db.ParentId)?.Data?.Disconnected == true));
+                    .FirstOrDefault(db => db != null && playerById(db.ParentId)?.Data?.IsDead == true &&
+                                          !(playerById(db.ParentId)?.Data?.Disconnected == true));
 
                 if (Redemptor.target != null)
                 {
                     showTargetNameOnButton(Redemptor.target, redemptorReviveButton, GetString("RedemptorRevive"));
                 }
 
-                Redemptor.target = PlayerById(deadBody?.ParentId);
+                Redemptor.target = playerById(deadBody?.ParentId);
                 return Redemptor.target && PlayerControl.LocalPlayer.CanMove;
             },
             () =>

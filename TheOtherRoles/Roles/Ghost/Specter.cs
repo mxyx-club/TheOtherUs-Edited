@@ -27,7 +27,7 @@ public class Specter
     public static void TakeRole(byte targetId)
     {
         var local = Player;
-        var target = PlayerById(targetId);
+        var target = playerById(targetId);
         if (local == null || target == null) return;
 
         RPCProcedure.erasePlayerRoles(local.PlayerId);

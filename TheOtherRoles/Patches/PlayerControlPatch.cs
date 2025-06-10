@@ -412,8 +412,8 @@ public static class PlayerControlFixedUpdatePatch
         if (!Bloody.active.Any()) return;
         foreach (var entry in new Dictionary<byte, float>(Bloody.active))
         {
-            var player = PlayerById(entry.Key);
-            var bloodyPlayer = PlayerById(Bloody.bloodyKillerMap[player.PlayerId]);
+            var player = playerById(entry.Key);
+            var bloodyPlayer = playerById(Bloody.bloodyKillerMap[player.PlayerId]);
 
             Bloody.active[entry.Key] = entry.Value - Time.fixedDeltaTime;
             if (entry.Value <= 0 || player.Data.IsDead)
@@ -681,7 +681,7 @@ internal class BodyReportPatch
 
         if (isSluethReport)
         {
-            var reported = PlayerById(target?.PlayerId);
+            var reported = playerById(target?.PlayerId);
             Slueth.reported.TryAdd(reported);
         }
     }
@@ -1183,7 +1183,7 @@ public static class ExilePlayerPatch
                 {
                     if (pva.VotedFor != akujoPartner.PlayerId) continue;
                     pva.UnsetVote();
-                    var voteAreaPlayer = PlayerById(pva.TargetPlayerId);
+                    var voteAreaPlayer = playerById(pva.TargetPlayerId);
                     if (!voteAreaPlayer.AmOwner) continue;
                     MeetingHud.Instance.ClearVote();
                 }
@@ -1231,7 +1231,7 @@ public static class DisconnectPatch
                     pva.Overlay.gameObject.SetActive(true);
 
                     pva.UnsetVote();
-                    var voteAreaPlayer = PlayerById(pva.TargetPlayerId);
+                    var voteAreaPlayer = playerById(pva.TargetPlayerId);
                     if (voteAreaPlayer?.AmOwner == false) continue;
                     MeetingHud.Instance.ClearVote();
                 }

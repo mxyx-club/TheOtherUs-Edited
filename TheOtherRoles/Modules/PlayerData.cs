@@ -33,7 +33,7 @@ public class PlayerData<T>
             (_data ??= new(1))[key] = value;
             if (_playerdata != null)
             {
-                PlayerControl player = PlayerById(key);
+                PlayerControl player = playerById(key);
                 if (player != null)
                     _playerdata[player] = value;
             }
@@ -86,7 +86,7 @@ public class PlayerData<T>
                 obj._playerdata = new(obj._data.Count);
                 foreach (var value in obj._data)
                 {
-                    PlayerControl p = PlayerById(value.Key);
+                    PlayerControl p = playerById(value.Key);
                     if (p != null)
                         obj._playerdata[p] = value.Value;
                 }
@@ -136,7 +136,7 @@ public class PlayerData<T>
         else
         {
             byte pid = _data.GetKeyByValue<byte, T>(value, defaultvalue: 255);
-            return pid == 255 ? null : PlayerById(pid);
+            return pid == 255 ? null : playerById(pid);
         }
     }
 
@@ -162,7 +162,7 @@ public class PlayerData<T>
         {
             _data.Remove(player);
             if (_playerdata != null)
-                _playerdata.Remove(PlayerById(player));
+                _playerdata.Remove(playerById(player));
         }
     }
 

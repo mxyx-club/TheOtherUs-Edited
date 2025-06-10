@@ -19,7 +19,7 @@ public static class Mimic
 
     public static void MimicRole(byte targetId)
     {
-        var target = PlayerById(targetId);
+        var target = playerById(targetId);
         if (target == null || mimic == null) return;
         var targetInfo = RoleInfo.getRoleInfoForPlayer(target);
         var roleInfo = targetInfo.FirstOrDefault(info => info.roleType != RoleType.Modifier);

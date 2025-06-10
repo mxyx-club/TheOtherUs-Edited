@@ -6,41 +6,9 @@ public class Hunter
     public static PlayerControl currentTarget;
     public static Color color = new Color32(179, 179, 230, byte.MaxValue);
 
-    public static bool InfectedDeathFlag;
-
-    public static float cooldown = 30f;
-    public static int MaxCount = 5;
-    public static int UsedCount;
-    public static bool CanStakeRoundOne;
-    public static int GuessCount;
-    public static int RemainingCount => MaxCount - UsedCount;
-
-
-    public static void CheckTarget(byte targetId)
-    {
-        var target = PlayerById(targetId);
-
-        if (Infected.Player.Any(x => x.PlayerId == targetId))
-        {
-            RpcCustomMurderPlayer(Player, target, true);
-
-        }
-        else
-        {
-            if (RemainingCount <= 0) RpcCustomMurderPlayer(Player, Player);
-        }
-        UsedCount++;
-    }
-
 
     public static void ClearAndReload()
     {
         Player = null;
-        UsedCount = 0;
-        InfectedDeathFlag = false;
-        cooldown = CustomOptionHolder.hunterCooldown.GetFloat();
-        MaxCount = CustomOptionHolder.hunterMaxCount.GetInt();
-        CanStakeRoundOne = CustomOptionHolder.hunterCanStakeRoundOne.GetBool();
-        GuessCount = CustomOptionHolder.hunterCanShootNum.GetInt();
     }
 }

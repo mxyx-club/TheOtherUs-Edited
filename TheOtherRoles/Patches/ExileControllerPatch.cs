@@ -192,8 +192,8 @@ internal class ExileControllerBeginPatch
                 var Impostors = PlayerControl.AllPlayerControls.ToArray().Count(x => x.IsImpostor() && x.IsAlive() && x.PlayerId != player?.PlayerId);
                 var Neutrals = PlayerControl.AllPlayerControls.ToArray().Count(x => x.IsNeutral() && x.IsAlive() && x.PlayerId != player?.PlayerId);
                 __instance.ImpostorText.text =
-                    $"\n{Cs(getTeamColor(RoleType.Impostor), "伪装者阵营剩余 ") + Impostors}" +
-                    $" | {Cs(getTeamColor(RoleType.Neutral), "中立阵营剩余 ") + Neutrals}";
+                    $"\n{cs(getTeamColor(RoleType.Impostor), "伪装者阵营剩余 ") + Impostors}" +
+                    $" | {cs(getTeamColor(RoleType.Neutral), "中立阵营剩余 ") + Neutrals}";
 
             }
         }

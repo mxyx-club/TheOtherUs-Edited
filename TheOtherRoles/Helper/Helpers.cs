@@ -666,7 +666,7 @@ public static class Helpers
         return role;
     }
 
-    public static PlayerControl PlayerById(byte? id)
+    public static PlayerControl playerById(byte? id)
     {
         if (id == null) return null;
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
@@ -773,7 +773,7 @@ public static class Helpers
 
     internal static string getRoleString(RoleInfo roleInfo)
     {
-        return Cs(roleInfo.color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
+        return cs(roleInfo.color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
     }
 
     public static bool isDark(byte playerId)
@@ -911,7 +911,7 @@ public static class Helpers
         return t.GetString(key, parts);
     }
 
-    public static string Cs(Color c, string s)
+    public static string cs(Color c, string s)
     {
         return string.Format("<color=#{0:X2}{1:X2}{2:X2}{3:X2}>{4}</color>", ToByte(c.r), ToByte(c.g), ToByte(c.b),
             ToByte(c.a), s);

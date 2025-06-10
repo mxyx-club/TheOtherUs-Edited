@@ -36,7 +36,7 @@ public class Witness
 
     internal static void WitnessReport(byte targetId)
     {
-        var target = PlayerById(targetId);
+        var target = playerById(targetId);
         killerTarget = target;
     }
 
@@ -61,7 +61,7 @@ public class Witness
         private static void MeetingOnClick(PlayerVoteArea pva, MeetingHud __instance)
         {
             if (Player == null) return;
-            var Target = PlayerById(pva.TargetPlayerId);
+            var Target = playerById(pva.TargetPlayerId);
 
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WitnessSetTarget);
             writer.Write(Target.PlayerId);
@@ -83,7 +83,7 @@ public class Witness
             {
                 foreach (var pva in __instance.playerStates)
                 {
-                    var player = PlayerById(pva.TargetPlayerId);
+                    var player = playerById(pva.TargetPlayerId);
                     if (player.IsAlive())
                     {
                         GameObject template = pva.Buttons.transform.Find("CancelButton").gameObject;

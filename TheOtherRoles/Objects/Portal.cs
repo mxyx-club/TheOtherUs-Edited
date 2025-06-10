@@ -64,7 +64,7 @@ public class Portal
         isTeleporting = true;
 
         // Generate log info
-        var playerControl = PlayerById(playerId);
+        var playerControl = playerById(playerId);
         var flip = playerControl.cosmetics.currentBodySprite.BodySprite
             .flipX; // use the original player control here, not the morhpTarget.
         firstPortal.animationFgRenderer.flipX = flip;

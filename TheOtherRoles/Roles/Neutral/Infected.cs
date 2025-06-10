@@ -41,8 +41,8 @@ public class Infected
 
     public static void InfectedTarget(byte playerId, byte targetId)
     {
-        var player = PlayerById(playerId);
-        var target = PlayerById(targetId);
+        var player = playerById(playerId);
+        var target = playerById(targetId);
 
         if (Executioner.target == target && Executioner.executioner != null && !Executioner.executioner.Data.IsDead)
         {

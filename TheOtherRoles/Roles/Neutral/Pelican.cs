@@ -15,8 +15,8 @@ public class Pelican
 
     public static void PelicanKill(byte playerId, byte targetId)
     {
-        var player = PlayerById(playerId);
-        var target = PlayerById(targetId);
+        var player = playerById(playerId);
+        var target = playerById(targetId);
         if (Player.IsDead() || player != Player || target == null) return;
         if (SchrodingersCat.Player != null && target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
         {
@@ -36,7 +36,7 @@ public class Pelican
 
     public static void PelicanDie(bool clear = false, byte playerId = byte.MaxValue)
     {
-        var player = PlayerById(playerId);
+        var player = playerById(playerId);
         player ??= Player;
         if (clear || player?.Data.IsDead == true)
         {

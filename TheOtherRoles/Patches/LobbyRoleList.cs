@@ -79,7 +79,7 @@ public static class LobbyRoleInfo
             buttonTransform.localScale = new Vector3(2f, 1.5f, 1f);
 
             TextMeshPro label = UObject.Instantiate(textTemplate, buttonTransform);
-            label.text = Cs(getTeamColor(teamId), GetString(teamId.ToString() + "RolesText"));
+            label.text = cs(getTeamColor(teamId), GetString(teamId.ToString() + "RolesText"));
             label.alignment = TextAlignmentOptions.Center;
             label.transform.localPosition = new Vector3(0, 0, label.transform.localPosition.z);
             label.transform.localScale = new Vector3(1.4f, 2.2f, 1f);
@@ -169,7 +169,7 @@ public static class LobbyRoleInfo
             else if (roleInfo.roleType == RoleType.Ghost && teamId != RoleType.Ghost) continue;
 
             Transform buttonTransform = UObject.Instantiate(buttonTemplate, container.transform);
-            buttonTransform.name = Cs(roleInfo.color, roleInfo.Name) + " Button";
+            buttonTransform.name = cs(roleInfo.color, roleInfo.Name) + " Button";
             buttonTransform.GetComponent<BoxCollider2D>().size = new Vector2(2.5f, 0.55f);
             TextMeshPro label = UObject.Instantiate(textTemplate, buttonTransform);
             buttonTransform.GetComponent<SpriteRenderer>().sprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.LobbyRoleInfo.RolePlate2.png", 215f);
@@ -177,7 +177,7 @@ public static class LobbyRoleInfo
             int row = count / 3, col = count % 3;
             buttonTransform.localPosition = new Vector3(-3.205f + (col * 3.2f), 2.9f - (row * 0.75f), -5);
             buttonTransform.localScale = new Vector3(1.125f, 1.125f, 1f);
-            label.text = Cs(roleInfo.color, roleInfo.Name);
+            label.text = cs(roleInfo.color, roleInfo.Name);
             label.alignment = TextAlignmentOptions.Center;
             label.transform.localPosition = new Vector3(0, 0, label.transform.localPosition.z);
             label.transform.localScale *= 1.5f;
@@ -206,7 +206,7 @@ public static class LobbyRoleInfo
     public static void AddInfoCard(RoleInfo roleInfo)
     {
         string roleSettingDescription = roleInfo.FullDescription != "" ? roleInfo.FullDescription : roleInfo.ShortDescription;
-        string coloredHelp = Cs(Color.white, roleSettingDescription);
+        string coloredHelp = cs(Color.white, roleSettingDescription);
 
         Transform buttonTemplate = HudManager.Instance.SettingsButton.transform;
         GameObject roleCard = UObject.Instantiate(new GameObject("RoleCard"), HudManager.Instance.transform);
@@ -260,7 +260,7 @@ public static class LobbyRoleInfo
 
         infoTitleText = UObject.Instantiate(HudManager.Instance.TaskPanel.taskText, roleCard.transform);
         infoTitleText.color = Color.white;
-        infoTitleText.text = Cs(roleInfo.color, roleInfo.Name);
+        infoTitleText.text = cs(roleInfo.color, roleInfo.Name);
         infoTitleText.enableWordWrapping = false;
         infoTitleText.transform.localScale = Vector3.one * 3f;
         infoTitleText.transform.localPosition = new Vector3(0f, 2.4f, -50f);

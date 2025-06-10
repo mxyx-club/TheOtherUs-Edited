@@ -823,11 +823,11 @@ internal class GameOptionsDataPatch
             else if (option.parent.GetSelection() > 0)
             {
                 if (option.id == 30170) //Deputy
-                    sb.AppendLine($"- {Cs(Sheriff.color, "Deputy".Translate())}: {option.GetString()}");
+                    sb.AppendLine($"- {cs(Sheriff.color, "Deputy".Translate())}: {option.GetString()}");
                 else if (option.id == 20142)
-                    sb.AppendLine($"- {Cs(Jackal.color, "jackalSwoopChance".Translate())}: {option.GetString()}");
+                    sb.AppendLine($"- {cs(Jackal.color, "jackalSwoopChance".Translate())}: {option.GetString()}");
                 else if (option.id == 20135) //Sidekick
-                    sb.AppendLine($"- {Cs(Jackal.color, "Sidekick".Translate())}: {option.GetString()}");
+                    sb.AppendLine($"- {cs(Jackal.color, "Sidekick".Translate())}: {option.GetString()}");
             }
 
         if (headerOnly) return sb.ToString();
@@ -842,13 +842,13 @@ internal class GameOptionsDataPatch
 
                 var c = isIrrelevant ? Color.grey : Color.white; // No use for now
                 if (isIrrelevant) continue;
-                sb.AppendLine(Cs(c, $"{option.GetName()}: {option.GetString()}"));
+                sb.AppendLine(cs(c, $"{option.GetName()}: {option.GetString()}"));
             }
             else
             {
                 if (option == CustomOptionHolder.neutralRolesCountMin)
                 {
-                    var optionName = Cs(new Color32(204, 204, 0, 255), "CrewmateRolesText".Translate());
+                    var optionName = cs(new Color32(204, 204, 0, 255), "CrewmateRolesText".Translate());
                     var neutralMin = CustomOptionHolder.neutralRolesCountMin.GetSelection();
                     var neutralMax = CustomOptionHolder.neutralRolesCountMax.GetSelection();
                     if (RoleDraft.isEnabled) neutralMin = neutralMax;
@@ -860,7 +860,7 @@ internal class GameOptionsDataPatch
                 }
                 else if (option == CustomOptionHolder.neutralRolesCountMax)
                 {
-                    var optionName = Cs(new Color32(204, 204, 0, 255), "NeutralRolesText".Translate());
+                    var optionName = cs(new Color32(204, 204, 0, 255), "NeutralRolesText".Translate());
                     var min = CustomOptionHolder.neutralRolesCountMin.GetSelection();
                     var max = CustomOptionHolder.neutralRolesCountMax.GetSelection();
                     if (RoleDraft.isEnabled) min = max;
@@ -880,12 +880,12 @@ internal class GameOptionsDataPatch
                 }
                 else if (option == CustomOptionHolder.killerNeutralRolesCountMax)
                 {
-                    var optionName = Cs(new Color32(204, 204, 0, 255), "ImpostorRolesText".Translate());
+                    var optionName = cs(new Color32(204, 204, 0, 255), "ImpostorRolesText".Translate());
                     sb.AppendLine($"{optionName}: {ModOption.NumImpostors}");
                 }
                 else if (option == CustomOptionHolder.modifiersCountMin)
                 {
-                    var optionName = Cs(new Color32(204, 204, 0, 255), "ModifierRolesText".Translate());
+                    var optionName = cs(new Color32(204, 204, 0, 255), "ModifierRolesText".Translate());
                     var min = CustomOptionHolder.modifiersCountMin.GetSelection();
                     var max = CustomOptionHolder.modifiersCountMax.GetSelection();
                     if (min > max) min = max;
@@ -912,7 +912,7 @@ internal class GameOptionsDataPatch
             vanillaSettings = GameOptionsManager.Instance.CurrentGameOptions.ToHudString(PlayerControl.AllPlayerControls.Count);
         var counter = Main.optionsPage;
         var hudString = counter != 0 && !hideExtras
-            ? Cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "useScrollWheel".Translate())
+            ? cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "useScrollWheel".Translate())
             : "";
 
         maxPage = 8;

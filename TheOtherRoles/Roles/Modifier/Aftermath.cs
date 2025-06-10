@@ -16,8 +16,8 @@ public class Aftermath
 
     public static void afterTrigger(byte playerId, byte killerId)
     {
-        var player = PlayerById(playerId);
-        var killer = PlayerById(killerId);
+        var player = playerById(playerId);
+        var killer = playerById(killerId);
         if (killer == null || killer == player) return;
 
         if (Blackmailer.blackmailer == killer)

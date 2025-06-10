@@ -24,7 +24,7 @@ public class Redemptor
 
     public static void RevivePlayer(byte targetId)
     {
-        var player = PlayerById(targetId);
+        var player = playerById(targetId);
         player?.ModRevive();
         RevivedPlayer = player;
         target = null;

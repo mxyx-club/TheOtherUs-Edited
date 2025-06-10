@@ -207,7 +207,7 @@ internal class MeetingHudPatch
                 localScale.x * 1.7f,
                 localScale.x * 1.7f);
             meetingExtraButtonLabel.transform.localScale = localScale;
-            meetingExtraButtonLabel.text = Cs(Mayor.color, "揭示身份");
+            meetingExtraButtonLabel.text = cs(Mayor.color, "揭示身份");
 
             var passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
             passiveButton.OnClick.RemoveAllListeners();
@@ -323,10 +323,6 @@ internal class MeetingHudPatch
                 if (BandLeader.Formed) meetingInfoText = string.Format(GetString("BandLeaderFormed"), $"{$"{BandLeader.winnerFlags}Team".Translate()}");
                 else meetingInfoText = GetString("BandLeaderBad");
             }
-            else if (PlayerControl.LocalPlayer == Hunter.Player && Hunter.InfectedDeathFlag)
-            {
-                meetingInfoText = string.Format(GetString("HunterGuesserCount"), Hunter.GuessCount);
-            }
             else if (Infected.Player.Any(x => x == PlayerControl.LocalPlayer) && Infected.IsGuesser)
             {
                 meetingInfoText = string.Format(GetString("InfectedGuesserCount"), Infected.GuessCount);
@@ -388,7 +384,7 @@ internal class MeetingHudPatch
             foreach (var playerVoteArea in __instance.playerStates)
             {
                 if (playerVoteArea.VotedFor is 252 or 255 or 254) continue;
-                var player = PlayerById(playerVoteArea.TargetPlayerId);
+                var player = playerById(playerVoteArea.TargetPlayerId);
                 if (player == null || player.Data == null || player.Data.IsDead || player.Data.Disconnected) continue;
 
                 if (InfoSleuth.infoSleuth != null && playerVoteArea.TargetPlayerId == InfoSleuth.infoSleuth.PlayerId)
@@ -466,7 +462,7 @@ internal class MeetingHudPatch
                 //バランサー処理
                 if (Balancer.currentAbilityUser != null)
                 {
-                    if (PlayerById(playerVoteArea.TargetPlayerId) != null &&
+                    if (playerById(playerVoteArea.TargetPlayerId) != null &&
                         playerVoteArea.VotedFor != Balancer.targetplayerright.PlayerId &&
                         playerVoteArea.VotedFor != Balancer.targetplayerleft.PlayerId)
                     {
@@ -906,11 +902,6 @@ internal class MeetingHudPatch
             Undertaker.dragedBody = null;
             Jester.dragedBody = null;
             KillTrap.OnMeetingStart();
-
-            if (Hunter.Player.IsAlive() && !Hunter.InfectedDeathFlag && Infected.Player.All(x => x.IsDead()))
-            {
-                Hunter.InfectedDeathFlag = true;
-            }
 
             if (Pelican.Player != null)
             {

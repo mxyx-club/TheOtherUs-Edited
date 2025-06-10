@@ -54,7 +54,7 @@ public static class Thief
 
     public static void StealsRole(byte playerId)
     {
-        var target = PlayerById(playerId);
+        var target = playerById(playerId);
         var thief = Thief.thief;
         if (target == null) return;
         if (Sheriff.Player.Any(x => x == target)) Sheriff.Player.Add(thief);
