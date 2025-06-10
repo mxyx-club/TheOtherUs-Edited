@@ -402,7 +402,7 @@ public class RoleInfo
     {
         var roleInfo = getRoleInfoForPlayer(p, showModifier, showGhostInfo);
 
-        var roleName = string.Join(" ", roleInfo.Select(x => useColors ? cs(x.color, x.Name) : x.Name));
+        var roleName = string.Join(" ", roleInfo.Select(x => useColors ? Cs(x.color, x.Name) : x.Name));
 
         if (onlyGhostRole)
         {
@@ -411,15 +411,15 @@ public class RoleInfo
             if (p.Data.IsDead && ghostRoleInfo != null)
             {
                 roleName = string.Join(" ", getRoleInfoForPlayer(p, false, true).Where(x => x.roleType is RoleType.Ghost or RoleType.Modifier)
-                    .Select(x => useColors ? cs(x.color, x.Name) : x.Name));
+                    .Select(x => useColors ? Cs(x.color, x.Name) : x.Name));
             }
         }
 
         if (Lawyer.target != null && p.PlayerId == Lawyer.target.PlayerId && PlayerControl.LocalPlayer != Lawyer.target)
-            roleName += useColors ? cs(Lawyer.color, " §") : " §";
+            roleName += useColors ? Cs(Lawyer.color, " §") : " §";
 
         if (Executioner.target != null && p.PlayerId == Executioner.target.PlayerId && PlayerControl.LocalPlayer != Executioner.target)
-            roleName += useColors ? cs(Executioner.color, " §") : " §";
+            roleName += useColors ? Cs(Executioner.color, " §") : " §";
 
         if (Jackal.jackal.Any(x => x == p) && Jackal.canSwoop)
             roleName += "JackalIsSwooperInfo".Translate();
@@ -430,44 +430,44 @@ public class RoleInfo
         if (showGhostInfo && p != null)
         {
             if (p == Shifter.shifter && (PlayerControl.LocalPlayer == Shifter.shifter || CanSeeRoleInfo) && Shifter.futureShift != null)
-                roleName += cs(Color.yellow, " ← " + Shifter.futureShift.Data.PlayerName);
+                roleName += Cs(Color.yellow, " ← " + Shifter.futureShift.Data.PlayerName);
             if (p == Vulture.vulture && (PlayerControl.LocalPlayer == Vulture.vulture || CanSeeRoleInfo))
-                roleName += cs(Vulture.color, string.Format("roleInfoRemaining".Translate(), Vulture.vultureNumberToWin - Vulture.eatenBodies));
+                roleName += Cs(Vulture.color, string.Format("roleInfoRemaining".Translate(), Vulture.vultureNumberToWin - Vulture.eatenBodies));
             if (p == Witness.Player && (PlayerControl.LocalPlayer == Witness.Player || CanSeeRoleInfo))
-                roleName += cs(Witness.color, string.Format("roleInfoRemaining".Translate(), Witness.exileToWin - Witness.exiledCount));
+                roleName += Cs(Witness.color, string.Format("roleInfoRemaining".Translate(), Witness.exileToWin - Witness.exiledCount));
             if (p == Gunsmith.Player && (PlayerControl.LocalPlayer == Gunsmith.Player || CanSeeRoleInfo))
-                roleName += cs(Gunsmith.color, $" {Gunsmith.remainingChange}/{Gunsmith.maxChangeCount}");
+                roleName += Cs(Gunsmith.color, $" {Gunsmith.remainingChange}/{Gunsmith.maxChangeCount}");
 
             if (CanSeeRoleInfo)
             {
                 if (Eraser.futureErased.Any(x => x == p))
-                    roleName = cs(Color.gray, "(被抹除) ") + roleName;
+                    roleName = Cs(Color.gray, "(被抹除) ") + roleName;
                 if (Vampire.vampire != null && !Vampire.vampire.Data.IsDead && Vampire.bitten == p && !p.Data.IsDead)
-                    roleName = cs(Vampire.color, $"(被吸血 {(int)HudManagerStartPatch.vampireKillButton.Timer + 1}) ") + roleName;
+                    roleName = Cs(Vampire.color, $"(被吸血 {(int)HudManagerStartPatch.vampireKillButton.Timer + 1}) ") + roleName;
                 if (Sheriff.handcuffedPlayers.Any(x => x == p.PlayerId))
-                    roleName = cs(Color.gray, "(被上拷) ") + roleName;
+                    roleName = Cs(Color.gray, "(被上拷) ") + roleName;
                 if (Sheriff.handcuffedKnows.ContainsKey(p.PlayerId)) // Active cuff
-                    roleName = cs(Sheriff.color, "(被上拷) ") + roleName;
+                    roleName = Cs(Sheriff.color, "(被上拷) ") + roleName;
                 if (p == Warlock.curseVictim)
-                    roleName = cs(Warlock.color, "(被下咒) ") + roleName;
+                    roleName = Cs(Warlock.color, "(被下咒) ") + roleName;
                 if (p == Ninja.ninjaMarked)
-                    roleName = cs(Ninja.color, "(被标记) ") + roleName;
+                    roleName = Cs(Ninja.color, "(被标记) ") + roleName;
                 if (p == Thief.formerThief)
-                    roleName += cs(Thief.color, " (窃)");
+                    roleName += Cs(Thief.color, " (窃)");
                 if (Pursuer.blankedList.Contains(p))
-                    roleName = cs(Pursuer.color, "(被塞空包弹) ") + roleName;
+                    roleName = Cs(Pursuer.color, "(被塞空包弹) ") + roleName;
                 if (Witch.futureSpelled.Any(x => x == p) && !MeetingHud.Instance) // This is already displayed in meetings!
-                    roleName = cs(Witch.color, "☆ ") + roleName;
+                    roleName = Cs(Witch.color, "☆ ") + roleName;
                 if (BountyHunter.bounty == p && BountyHunter.bountyHunter.IsAlive())
-                    roleName = cs(BountyHunter.color, "(被悬赏) ") + roleName;
+                    roleName = Cs(BountyHunter.color, "(被悬赏) ") + roleName;
                 if (p == Arsonist.arsonist)
-                    roleName += cs(Arsonist.color, $" (剩余 {PlayerControl.AllPlayerControls
+                    roleName += Cs(Arsonist.color, $" (剩余 {PlayerControl.AllPlayerControls
                         .Count(x => x != Arsonist.arsonist && x.IsAlive() &&
                         !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId))} )");
                 if (Akujo.keeps.Any(x => x.PlayerId == p.PlayerId))
-                    roleName = cs(Color.gray, "(备胎) ") + roleName;
+                    roleName = Cs(Color.gray, "(备胎) ") + roleName;
                 if (p == Akujo.honmei)
-                    roleName = cs(Akujo.color, "(真爱) ") + roleName;
+                    roleName = Cs(Akujo.color, "(真爱) ") + roleName;
             }
         }
 
@@ -492,25 +492,25 @@ public class RoleInfo
         return reason switch
         {
             CustomDeathReason.Disconnect => "断开连接",
-            CustomDeathReason.HostCmdKill => $"被 {cs(killerColor, killerName)} 制裁",
-            CustomDeathReason.Kill => $"被击杀于 {cs(killerColor, killerName)}",
+            CustomDeathReason.HostCmdKill => $"被 {Cs(killerColor, killerName)} 制裁",
+            CustomDeathReason.Kill => $"被击杀于 {Cs(killerColor, killerName)}",
             CustomDeathReason.Exile => "被驱逐",
             CustomDeathReason.Suicide => "自杀",
-            CustomDeathReason.SheriffKill => $"出警 {cs(killerColor, killerName)}",
+            CustomDeathReason.SheriffKill => $"出警 {Cs(killerColor, killerName)}",
             CustomDeathReason.SheriffMisfire => "警长走火",
-            CustomDeathReason.SheriffMisadventure => $"被误杀于 {cs(killerColor, killerName)}",
+            CustomDeathReason.SheriffMisadventure => $"被误杀于 {Cs(killerColor, killerName)}",
             CustomDeathReason.BombVictim => "恐袭",
-            CustomDeathReason.Eaten => $"被吞食于 {cs(killerColor, killerName)}",
-            CustomDeathReason.Guess => p.PlayerId == killer?.PlayerId ? "猜测错误" : $"被赌杀于 {cs(killerColor, killerName)}",
-            CustomDeathReason.Shift => $"{cs(Color.yellow, "交换")} {cs(killerColor, killerName)} 失败",
-            CustomDeathReason.WitchExile => $"{cs(Witch.color, "被咒杀于")} {cs(killerColor, killerName)}",
-            CustomDeathReason.LoverSuicide => $"{cs(Lovers.color, "殉情")}",
-            CustomDeathReason.LawyerSuicide => $"{cs(Lawyer.color, "辩护失败")}",
-            CustomDeathReason.Bomb => $"被恐袭于 {cs(killerColor, killerName)}",
-            CustomDeathReason.Arson => $"被烧死于 {cs(killerColor, killerName)}",
-            CustomDeathReason.LoveStolen => $"{cs(Lovers.color, "爱人被夺")}",
-            CustomDeathReason.Loneliness => $"{cs(Akujo.color, "精力衰竭")}",
-            CustomDeathReason.FakeSK => $"{cs(Jackal.color, "招募失败")} {cs(killerColor, killerName)}",
+            CustomDeathReason.Eaten => $"被吞食于 {Cs(killerColor, killerName)}",
+            CustomDeathReason.Guess => p.PlayerId == killer?.PlayerId ? "猜测错误" : $"被赌杀于 {Cs(killerColor, killerName)}",
+            CustomDeathReason.Shift => $"{Cs(Color.yellow, "交换")} {Cs(killerColor, killerName)} 失败",
+            CustomDeathReason.WitchExile => $"{Cs(Witch.color, "被咒杀于")} {Cs(killerColor, killerName)}",
+            CustomDeathReason.LoverSuicide => $"{Cs(Lovers.color, "殉情")}",
+            CustomDeathReason.LawyerSuicide => $"{Cs(Lawyer.color, "辩护失败")}",
+            CustomDeathReason.Bomb => $"被恐袭于 {Cs(killerColor, killerName)}",
+            CustomDeathReason.Arson => $"被烧死于 {Cs(killerColor, killerName)}",
+            CustomDeathReason.LoveStolen => $"{Cs(Lovers.color, "爱人被夺")}",
+            CustomDeathReason.Loneliness => $"{Cs(Akujo.color, "精力衰竭")}",
+            CustomDeathReason.FakeSK => $"{Cs(Jackal.color, "招募失败")} {Cs(killerColor, killerName)}",
             _ => "未知"
         };
     }

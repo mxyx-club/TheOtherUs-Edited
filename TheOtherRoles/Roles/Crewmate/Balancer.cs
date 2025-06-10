@@ -372,7 +372,7 @@ public class Balancer
     private static void BalancerOnClick(int Index, MeetingHud __instance)
     {
         if (currentAbilityUser != null || __instance.state is MeetingHud.VoteStates.Discussion or MeetingHud.VoteStates.Results) return;
-        var Target = playerById(__instance.playerStates[Index].TargetPlayerId);
+        var Target = PlayerById(__instance.playerStates[Index].TargetPlayerId);
 
         if (currentTarget == null && Target.IsAlive())
         {
@@ -407,7 +407,7 @@ public class Balancer
             for (int i = 0; i < __instance.playerStates.Length; i++)
             {
                 PlayerVoteArea playerVoteArea = __instance.playerStates[i];
-                var player = playerById(__instance.playerStates[i].TargetPlayerId);
+                var player = PlayerById(__instance.playerStates[i].TargetPlayerId);
                 if (player.IsAlive())
                 {
                     GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;

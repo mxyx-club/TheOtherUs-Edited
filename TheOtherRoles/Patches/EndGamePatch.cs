@@ -135,7 +135,7 @@ public class OnGameEndPatch
 
         foreach (var p in AllPlayers)
         {
-            var playerName = cs(p.IsAlive() ? Color.white : new Color(.7f, .7f, .7f), p.Data.PlayerName);
+            var playerName = Cs(p.IsAlive() ? Color.white : new Color(.7f, .7f, .7f), p.Data.PlayerName);
 
             var roles = RoleInfo.GetRolesString(p, true, true, true);
 
@@ -638,7 +638,7 @@ public class EndGameManagerSetUpPatch
             foreach (var roles in from data in AdditionalTempData.playerRoles
                                   where data.PlayerName == winningPlayerData2.PlayerName
                                   select poolablePlayer.cosmetics.nameText.text +=
-                         $"\n{string.Join("\n", data.Roles.Select(x => cs(x.color, x.Name)))}")
+                         $"\n{string.Join("\n", data.Roles.Select(x => Cs(x.color, x.Name)))}")
             {
             }
         }
@@ -700,7 +700,7 @@ public class EndGameManagerSetUpPatch
         {
             if (winConditionMappings.TryGetValue(cond, out var mapping))
             {
-                winConditionsTexts.Add(cs(mapping.Item1, mapping.Item2.Translate()));
+                winConditionsTexts.Add(Cs(mapping.Item1, mapping.Item2.Translate()));
             }
         }
 

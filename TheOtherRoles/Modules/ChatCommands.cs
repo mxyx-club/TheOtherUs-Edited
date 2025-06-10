@@ -179,7 +179,7 @@ public static class ChatCommands
             if (AmongUsClient.Instance.AmHost && InGame && args.Length > 0)
             {
                 var message = string.Join(' ', args);
-                message = $"{cs(Palette.Purple, "★【房主消息】★")}\n{message}";
+                message = $"{Cs(Palette.Purple, "★【房主消息】★")}\n{message}";
                 var writer = StartRPC(CustomRPC.HostSay);
                 writer.Write(message);
                 writer.EndRPC();
@@ -362,7 +362,7 @@ public static class ChatCommands
 
             if (target == null && byte.TryParse(args[0], out var result))
             {
-                target = playerById(result);
+                target = PlayerById(result);
             }
 
             return target;

@@ -719,26 +719,26 @@ public class CustomOptionHolder
         vanillaSettings = Main.Instance.Config.Bind("Preset0", "VanillaOptions", "");
 
         //-------------------------- Role options 0 - 99 -------------------------- //
-        presetSelection = Create(0, Types.General, cs(new Color32(204, 204, 0, 255), "presetSelection"), presets, null, true);
-        anyPlayerCanStopStart = Create(3, Types.General, cs(new Color32(204, 204, 0, 255), "anyPlayerCanStopStart"), false);
+        presetSelection = Create(0, Types.General, Cs(new Color32(204, 204, 0, 255), "presetSelection"), presets, null, true);
+        anyPlayerCanStopStart = Create(3, Types.General, Cs(new Color32(204, 204, 0, 255), "anyPlayerCanStopStart"), false);
 
-        isDraftMode = Create(900, Types.General, cs(Color.yellow, "isDraftMode"), false, null, true, onChange: () =>
+        isDraftMode = Create(900, Types.General, Cs(Color.yellow, "isDraftMode"), false, null, true, onChange: () =>
         {
             neutralRolesCountMax.isHeader = isDraftMode.GetBool();
         });
-        draftModeAmountOfChoices = Create(901, Types.General, cs(Color.yellow, "draftModeAmountOfChoices"), 3f, 2f, 6f, 1f, isDraftMode, false);
-        draftModeTimeToChoose = Create(902, Types.General, cs(Color.yellow, "draftModeTimeToChoose"), 5f, 3f, 20f, 1f, isDraftMode);
-        draftModeShowRoles = Create(903, Types.General, cs(Color.yellow, "draftModeShowRoles"), false, isDraftMode, false);
-        draftModeHideImpRoles = Create(904, Types.General, cs(Color.yellow, "draftModeHideImpRoles"), false, draftModeShowRoles, false);
-        draftModeHideNeutralRoles = Create(905, Types.General, cs(Color.yellow, "draftModeHideNeutralRoles"), false, draftModeShowRoles, false);
-        draftModeHideCrewmateRoles = Create(906, Types.General, cs(Color.yellow, "draftModeHideCrewmateRoles"), false, draftModeShowRoles, false);
+        draftModeAmountOfChoices = Create(901, Types.General, Cs(Color.yellow, "draftModeAmountOfChoices"), 3f, 2f, 6f, 1f, isDraftMode, false);
+        draftModeTimeToChoose = Create(902, Types.General, Cs(Color.yellow, "draftModeTimeToChoose"), 5f, 3f, 20f, 1f, isDraftMode);
+        draftModeShowRoles = Create(903, Types.General, Cs(Color.yellow, "draftModeShowRoles"), false, isDraftMode, false);
+        draftModeHideImpRoles = Create(904, Types.General, Cs(Color.yellow, "draftModeHideImpRoles"), false, draftModeShowRoles, false);
+        draftModeHideNeutralRoles = Create(905, Types.General, Cs(Color.yellow, "draftModeHideNeutralRoles"), false, draftModeShowRoles, false);
+        draftModeHideCrewmateRoles = Create(906, Types.General, Cs(Color.yellow, "draftModeHideCrewmateRoles"), false, draftModeShowRoles, false);
 
-        neutralRolesCountMin = Create(8, Types.General, cs(new Color32(204, 204, 0, 255), "neutralRolesCountMin"), 2f, 0f, 15f, 1f, null, true, isHidden: () => isDraftMode.GetBool());
-        neutralRolesCountMax = Create(9, Types.General, cs(new Color32(204, 204, 0, 255), "neutralRolesCountMax"), 2f, 0f, 15f, 1f, isHeader: isDraftMode.GetBool());
-        killerNeutralRolesCountMin = Create(10, Types.General, cs(new Color32(204, 204, 0, 255), "killerNeutralRolesCountMin"), ratesRandom, isHidden: () => isDraftMode.GetBool());
-        killerNeutralRolesCountMax = Create(11, Types.General, cs(new Color32(204, 204, 0, 255), "killerNeutralRolesCountMax"), ratesRandom);
-        modifiersCountMin = Create(12, Types.General, cs(new Color32(204, 204, 0, 255), "modifiersCountMin"), 15f, 0f, 30f, 1f);
-        modifiersCountMax = Create(13, Types.General, cs(new Color32(204, 204, 0, 255), "modifiersCountMax"), 15f, 0f, 30f, 1f);
+        neutralRolesCountMin = Create(8, Types.General, Cs(new Color32(204, 204, 0, 255), "neutralRolesCountMin"), 2f, 0f, 15f, 1f, null, true, isHidden: () => isDraftMode.GetBool());
+        neutralRolesCountMax = Create(9, Types.General, Cs(new Color32(204, 204, 0, 255), "neutralRolesCountMax"), 2f, 0f, 15f, 1f, isHeader: isDraftMode.GetBool());
+        killerNeutralRolesCountMin = Create(10, Types.General, Cs(new Color32(204, 204, 0, 255), "killerNeutralRolesCountMin"), ratesRandom, isHidden: () => isDraftMode.GetBool());
+        killerNeutralRolesCountMax = Create(11, Types.General, Cs(new Color32(204, 204, 0, 255), "killerNeutralRolesCountMax"), ratesRandom);
+        modifiersCountMin = Create(12, Types.General, Cs(new Color32(204, 204, 0, 255), "modifiersCountMin"), 15f, 0f, 30f, 1f);
+        modifiersCountMax = Create(13, Types.General, Cs(new Color32(204, 204, 0, 255), "modifiersCountMax"), 15f, 0f, 30f, 1f);
 
         //-------------------------- Other options 100 - 999 -------------------------- //
 
@@ -749,8 +749,8 @@ public class CustomOptionHolder
         hideOutOfSightNametags = Create(103, Types.General, "hideOutOfSightNametags", true);
         hideVentAnimOnShadows = Create(104, Types.General, "hideVentAnimOnShadows", false);
         showButtonTarget = Create(105, Types.General, "showButtonTarget", true);
-        impostorSeeRoles = Create(106, Types.General, cs(Palette.ImpostorRed, "impostorSeeRoles"), false);
-        blockGameEnd = Create(107, Types.General, cs(Color.yellow, "blockGameEnd"), true);
+        impostorSeeRoles = Create(106, Types.General, Cs(Palette.ImpostorRed, "impostorSeeRoles"), false);
+        blockGameEnd = Create(107, Types.General, Cs(Color.yellow, "blockGameEnd"), true);
         randomLigherPlayer = Create(108, Types.General, "randomLigherPlayer", true);
         allowModGuess = Create(109, Types.General, "allowModGuess", false);
         randomGameStartPosition = Create(110, Types.General, "randomGameStartPosition", false);
@@ -758,7 +758,7 @@ public class CustomOptionHolder
         ghostSpeed = Create(112, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
 
         //Meeting options
-        MeetingOptions = Create(200, Types.General, cs(new Color32(255, 85, 234, byte.MaxValue), "MeetingOptions"), false, null, true);
+        MeetingOptions = Create(200, Types.General, Cs(new Color32(255, 85, 234, byte.MaxValue), "MeetingOptions"), false, null, true);
         disableMeeting = Create(201, Types.General, "disableMeeting", false, MeetingOptions);
         maxNumberOfMeetings = Create(202, Types.General, "maxNumberOfMeetings", 10, 0, 15, 1, MeetingOptions);
         blockSkippingInEmergencyMeetings = Create(203, Types.General, "blockSkippingInEmergencyMeetings", false, MeetingOptions);
@@ -770,7 +770,7 @@ public class CustomOptionHolder
         exiledShowTeamNum = Create(209, Types.General, "exiledShowTeamNum", false, exiledController);
 
         //Task options
-        TaskOptions = Create(300, Types.General, cs(Palette.CrewmateBlue, "TaskOptions"), false, null, true);
+        TaskOptions = Create(300, Types.General, Cs(Palette.CrewmateBlue, "TaskOptions"), false, null, true);
         WireTaskIsRandomOption = Create(301, Types.General, "WireTaskIsRandomOption", false, TaskOptions);
         WireTaskNumOption = Create(302, Types.General, "WireTaskNumOption", 3f, 1f, 8f, 1f, WireTaskIsRandomOption);
         transparentTasks = Create(303, Types.General, "transparentTasks", false, TaskOptions);
@@ -780,10 +780,10 @@ public class CustomOptionHolder
         disableTaskGameEnd = Create(307, Types.General, "disableTaskGameEnd", false, TaskOptions);
 
         //Sabotage options
-        SaboOptions = Create(400, Types.General, cs(Palette.ImpostorRed, "SaboOptions"), false, null, true);
-        disableSabotage = Create(401, Types.General, cs(Palette.ImpostorRed, "disableSabotage"), false, SaboOptions);
-        deadImpsBlockSabotage = Create(402, Types.General, cs(Palette.ImpostorRed, "deadImpsBlockSabotage"), false, SaboOptions);
-        enableCamoComms = Create(403, Types.General, cs(Palette.ImpostorRed, "enableCamoComms"), false, SaboOptions);
+        SaboOptions = Create(400, Types.General, Cs(Palette.ImpostorRed, "SaboOptions"), false, null, true);
+        disableSabotage = Create(401, Types.General, Cs(Palette.ImpostorRed, "disableSabotage"), false, SaboOptions);
+        deadImpsBlockSabotage = Create(402, Types.General, Cs(Palette.ImpostorRed, "deadImpsBlockSabotage"), false, SaboOptions);
+        enableCamoComms = Create(403, Types.General, Cs(Palette.ImpostorRed, "enableCamoComms"), false, SaboOptions);
         IsReactorDurationSetting = Create(410, Types.General, "IsReactorDurationSetting", false, SaboOptions);
         SkeldReactorTimeLimit = Create(411, Types.General, "SkeldReactorTimeLimit", 30f, 0f, 30f, 2.5f, IsReactorDurationSetting);
         SkeldLifeSuppTimeLimit = Create(412, Types.General, "SkeldLifeSuppTimeLimit", 30f, 0f, 30f, 2.5f, IsReactorDurationSetting);
@@ -794,27 +794,27 @@ public class CustomOptionHolder
         FungleReactorTimeLimit = Create(417, Types.General, "FungleReactorTimeLimit", 45f, 0f, 60f, 2.5f, IsReactorDurationSetting);
 
         //Map options
-        MapOptions = Create(500, Types.General, cs(new Color32(223, 157, 192, byte.MaxValue), "MapOptions"), false, null, true);
+        MapOptions = Create(500, Types.General, Cs(new Color32(223, 157, 192, byte.MaxValue), "MapOptions"), false, null, true);
         // The Skeld
-        enableSkeldModify = Create(510, Types.General, cs(Color.yellow, "The Skeld"), false, MapOptions);
+        enableSkeldModify = Create(510, Types.General, Cs(Color.yellow, "The Skeld"), false, MapOptions);
         skeldVitals = Create(511, Types.General, "miraVitals", false, enableSkeldModify);
         //Mira
-        enableMiraModify = Create(520, Types.General, cs(Color.yellow, "Mira"), false, MapOptions);
+        enableMiraModify = Create(520, Types.General, Cs(Color.yellow, "Mira"), false, MapOptions);
         miraVitals = Create(521, Types.General, "miraVitals", false, enableMiraModify);
         //Polus
-        enableBetterPolus = Create(530, Types.General, cs(Color.yellow, "Polus"), false, MapOptions);
+        enableBetterPolus = Create(530, Types.General, Cs(Color.yellow, "Polus"), false, MapOptions);
         movePolusVents = Create(531, Types.General, "movePolusVents", false, enableBetterPolus);
         addPolusVents = Create(532, Types.General, "addPolusVents", false, enableBetterPolus);
         movePolusVitals = Create(533, Types.General, "movePolusVitals", false, enableBetterPolus);
         swapNavWifi = Create(534, Types.General, "swapNavWifi", false, enableBetterPolus);
         moveColdTemp = Create(535, Types.General, "moveColdTemp", false, enableBetterPolus);
         //AirShip
-        enableAirShipModify = Create(540, Types.General, cs(Color.yellow, "AirShip"), false, MapOptions);
+        enableAirShipModify = Create(540, Types.General, Cs(Color.yellow, "AirShip"), false, MapOptions);
         airshipOptimize = Create(541, Types.General, "airshipOptimize", false, enableAirShipModify);
         addAirShipVents = Create(542, Types.General, "addAirShipVents", false, enableAirShipModify);
         airshipLadder = Create(543, Types.General, "airshipLadder", false, enableAirShipModify);
         //Fungle
-        enableFungleModify = Create(550, Types.General, cs(Color.yellow, "Fungle"), false, MapOptions);
+        enableFungleModify = Create(550, Types.General, Cs(Color.yellow, "Fungle"), false, MapOptions);
         fungleElectrical = Create(551, Types.General, "fungleElectrical", false, enableFungleModify);
         //dynamicMap options
         dynamicMap = Create(580, Types.General, "dynamicMap", false, MapOptions, true);
@@ -827,7 +827,7 @@ public class CustomOptionHolder
         dynamicMapSeparateSettings = Create(587, Types.General, "dynamicMapSeparateSettings", false, dynamicMap);
 
         //Devices Option
-        DevicesOption = Create(600, Types.General, cs(new Color32(255, 50, 0, byte.MaxValue), "DevicesOption"), false, null, true);
+        DevicesOption = Create(600, Types.General, Cs(new Color32(255, 50, 0, byte.MaxValue), "DevicesOption"), false, null, true);
         restrictDevices = Create(601, Types.General, "restrictDevices", ["optionOff", "restrictDevices2", "restrictDevices3"], DevicesOption);
         //restrictAdmin = Create(602, Types.General, "restrictAdmin", 30f, 0f, 600f, 5f, restrictDevices);
         restrictCameras = Create(603, Types.General, "restrictCameras", 30f, 0f, 600f, 5f, restrictDevices);
@@ -842,13 +842,13 @@ public class CustomOptionHolder
 
         //-------------------------- Impostor Options 10000-19999 -------------------------- //
 
-        wolfLordSpawnRate = Create(10100, Types.Impostor, cs(WolfLord.color, "WolfLord"), rates, null, true);
+        wolfLordSpawnRate = Create(10100, Types.Impostor, Cs(WolfLord.color, "WolfLord"), rates, null, true);
 
-        morphlingSpawnRate = Create(10110, Types.Impostor, cs(Morphling.color, "Morphling"), rates, null, true);
+        morphlingSpawnRate = Create(10110, Types.Impostor, Cs(Morphling.color, "Morphling"), rates, null, true);
         morphlingCooldown = Create(10111, Types.Impostor, "morphlingCooldown", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);
         morphlingDuration = Create(10112, Types.Impostor, "morphlingDuration", 15f, 1f, 20f, 0.5f, morphlingSpawnRate);
 
-        bomberSpawnRate = Create(10120, Types.Impostor, cs(Bomber.color, "Bomber"), rates, null, true);
+        bomberSpawnRate = Create(10120, Types.Impostor, Cs(Bomber.color, "Bomber"), rates, null, true);
         bomberBombCooldown = Create(10121, Types.Impostor, "bomberBombCooldown", 25f, 10f, 60f, 2.5f, bomberSpawnRate);
         bomberDelay = Create(10122, Types.Impostor, "bomberDelay", 5f, 0f, 20f, 0.5f, bomberSpawnRate);
         bomberTimer = Create(10123, Types.Impostor, "bomberTimer", 10f, 5f, 30f, 0.5f, bomberSpawnRate);
@@ -856,53 +856,53 @@ public class CustomOptionHolder
         bomberCanGiveToBomber = Create(10126, Types.Impostor, "bomberCanGiveToBomber", false, bomberSpawnRate);
         bomberHotPotatoMode = Create(10124, Types.Impostor, "bomberHotPotatoMode", true, bomberSpawnRate);
 
-        undertakerSpawnRate = Create(10130, Types.Impostor, cs(Undertaker.color, "Undertaker"), rates, null, true);
+        undertakerSpawnRate = Create(10130, Types.Impostor, Cs(Undertaker.color, "Undertaker"), rates, null, true);
         undertakerDragingDelaiAfterKill = Create(10131, Types.Impostor, "undertakerDragingDelaiAfterKill", 0f, 0f, 15, 0.5f, undertakerSpawnRate);
         undertakerDragingAfterVelocity = Create(10132, Types.Impostor, "undertakerDragingAfterVelocity", 0.75f, 0.5f, 1.5f, 0.125f, undertakerSpawnRate);
         undertakerCanDragAndVent = Create(10133, Types.Impostor, "undertakerCanDragAndVent", true, undertakerSpawnRate);
 
-        camouflagerSpawnRate = Create(10140, Types.Impostor, cs(Camouflager.color, "Camouflager"), rates, null, true);
+        camouflagerSpawnRate = Create(10140, Types.Impostor, Cs(Camouflager.color, "Camouflager"), rates, null, true);
         camouflagerCooldown = Create(10141, Types.Impostor, "camouflagerCooldown", 25f, 10f, 60f, 2.5f, camouflagerSpawnRate);
         camouflagerDuration = Create(10142, Types.Impostor, "camouflagerDuration", 12.5f, 1f, 20f, 0.5f, camouflagerSpawnRate);
 
-        vampireSpawnRate = Create(10150, Types.Impostor, cs(Vampire.color, "Vampire"), rates, null, true);
+        vampireSpawnRate = Create(10150, Types.Impostor, Cs(Vampire.color, "Vampire"), rates, null, true);
         vampireKillDelay = Create(10151, Types.Impostor, "vampireKillDelay", 5f, 1f, 10f, 0.5f, vampireSpawnRate);
         vampireCooldown = Create(10152, Types.Impostor, "vampireCooldown", 25f, 10f, 60f, 2.5f, vampireSpawnRate);
         vampireGarlicButton = Create(10153, Types.Impostor, "vampireGarlicButton", true, vampireSpawnRate);
         vampireCanKillNearGarlics = Create(10154, Types.Impostor, "vampireCanKillNearGarlics", true, vampireGarlicButton);
 
-        eraserSpawnRate = Create(10160, Types.Impostor, cs(Eraser.color, "Eraser"), rates, null, true);
+        eraserSpawnRate = Create(10160, Types.Impostor, Cs(Eraser.color, "Eraser"), rates, null, true);
         eraserCooldown = Create(10161, Types.Impostor, "eraserCooldown", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
         eraserCanEraseAnyone = Create(10162, Types.Impostor, "eraserCanEraseAnyone", false, eraserSpawnRate);
         erasercanEraseGuess = Create(10163, Types.Impostor, "erasercanEraseGuess", false, eraserSpawnRate);
 
-        poucherSpawnRate = Create(10320, Types.Impostor, cs(Palette.ImpostorRed, "Poucher"), rates, null, true, onChange: () =>
+        poucherSpawnRate = Create(10320, Types.Impostor, Cs(Palette.ImpostorRed, "Poucher"), rates, null, true, onChange: () =>
             { if (modifierPoucher.selection > 0) poucherSpawnRate.selection = 0; });
 
-        butcherSpawnRate = Create(10310, Types.Impostor, cs(Palette.ImpostorRed, "Butcher"), rates, null, true);
+        butcherSpawnRate = Create(10310, Types.Impostor, Cs(Palette.ImpostorRed, "Butcher"), rates, null, true);
         butcherDissectionCooldown = Create(10312, Types.Impostor, "butcherDissectionCooldown", 25f, 10f, 60f, 2.5f, butcherSpawnRate);
         butcherDissectionDuration = Create(10313, Types.Impostor, "butcherDissectionDuration", 1f, 0f, 10f, 0.25f, butcherSpawnRate);
         butcherDissectedBodyCount = Create(10314, Types.Impostor, "butcherDissectedBodyCount", 5, 3, 15, 1, butcherSpawnRate);
 
-        mimicSpawnRate = Create(10170, Types.Impostor, cs(Mimic.color, "Mimic"), rates, null, true);
+        mimicSpawnRate = Create(10170, Types.Impostor, Cs(Mimic.color, "Mimic"), rates, null, true);
 
-        escapistSpawnRate = Create(10180, Types.Impostor, cs(Escapist.color, "Escapist"), rates, null, true);
+        escapistSpawnRate = Create(10180, Types.Impostor, Cs(Escapist.color, "Escapist"), rates, null, true);
         escapistEscapeTime = Create(10181, Types.Impostor, "escapistEscapeTime", 15f, 0f, 60f, 2.5f, escapistSpawnRate);
         escapistResetPlaceAfterMeeting = Create(10183, Types.Impostor, "escapistResetPlaceAfterMeeting", false, escapistSpawnRate);
 
-        tricksterSpawnRate = Create(10200, Types.Impostor, cs(Trickster.color, "Trickster"), rates, null, true);
+        tricksterSpawnRate = Create(10200, Types.Impostor, Cs(Trickster.color, "Trickster"), rates, null, true);
         tricksterPlaceBoxCooldown = Create(10201, Types.Impostor, "tricksterPlaceBoxCooldown", 20f, 2.5f, 30f, 2.5f, tricksterSpawnRate);
         tricksterLightsOutCooldown = Create(10202, Types.Impostor, "tricksterLightsOutCooldown", 25f, 10f, 60f, 2.5f, tricksterSpawnRate);
         tricksterLightsOutDuration = Create(10203, Types.Impostor, "tricksterLightsOutDuration", 12.5f, 5f, 60f, 0.5f, tricksterSpawnRate);
 
-        cleanerSpawnRate = Create(10210, Types.Impostor, cs(Cleaner.color, "Cleaner"), rates, null, true);
+        cleanerSpawnRate = Create(10210, Types.Impostor, Cs(Cleaner.color, "Cleaner"), rates, null, true);
         cleanerCooldown = Create(10211, Types.Impostor, "cleanerCooldown", 25f, 10f, 60f, 2.5f, cleanerSpawnRate);
 
-        warlockSpawnRate = Create(10220, Types.Impostor, cs(Warlock.color, "Warlock"), rates, null, true);
+        warlockSpawnRate = Create(10220, Types.Impostor, Cs(Warlock.color, "Warlock"), rates, null, true);
         warlockCooldown = Create(10221, Types.Impostor, "warlockCooldown", 20f, 10f, 60f, 2.5f, warlockSpawnRate);
         warlockRootTime = Create(10222, Types.Impostor, "warlockRootTime", 3f, 0f, 15f, 0.25f, warlockSpawnRate);
 
-        bountyHunterSpawnRate = Create(10230, Types.Impostor, cs(BountyHunter.color, "BountyHunter"), rates, null, true);
+        bountyHunterSpawnRate = Create(10230, Types.Impostor, Cs(BountyHunter.color, "BountyHunter"), rates, null, true);
         bountyHunterBountyDuration = Create(10231, Types.Impostor, "bountyHunterBountyDuration", 60f, 10f, 180f, 5f, bountyHunterSpawnRate);
         bountyHunterReducedCooldown = Create(10232, Types.Impostor, "bountyHunterReducedCooldown", 2.5f, 0f, 30f, 0.5f, bountyHunterSpawnRate);
         bountyHunterPunishmentTime = Create(10233, Types.Impostor, "bountyHunterPunishmentTime", 10f, 0f, 60f, 2.5f, bountyHunterSpawnRate);
@@ -911,7 +911,7 @@ public class CustomOptionHolder
         bountyHunterChangeTargetCooldown = Create(10236, Types.Impostor, "bountyHunterChangeTargetCooldown", 30f, 15f, 90f, 2.5f, bountyHunterSpawnRate);
 
 
-        witchSpawnRate = Create(10240, Types.Impostor, cs(Witch.color, "Witch"), rates, null, true);
+        witchSpawnRate = Create(10240, Types.Impostor, Cs(Witch.color, "Witch"), rates, null, true);
         witchCooldown = Create(10241, Types.Impostor, "witchCooldown", 20f, 10f, 60, 2.5f, witchSpawnRate);
         witchAdditionalCooldown = Create(10242, Types.Impostor, "witchAdditionalCooldown", 5f, 0f, 60f, 2.5f, witchSpawnRate);
         witchCanSpellAnyone = Create(10243, Types.Impostor, "witchCanSpellAnyone", false, witchSpawnRate);
@@ -919,17 +919,17 @@ public class CustomOptionHolder
         witchTriggerBothCooldowns = Create(10245, Types.Impostor, "witchTriggerBothCooldowns", false, witchSpawnRate);
         witchVoteSavesTargets = Create(10246, Types.Impostor, "witchVoteSavesTargets", true, witchSpawnRate);
 
-        ninjaSpawnRate = Create(10250, Types.Impostor, cs(Ninja.color, "Ninja"), rates, null, true);
+        ninjaSpawnRate = Create(10250, Types.Impostor, Cs(Ninja.color, "Ninja"), rates, null, true);
         ninjaCooldown = Create(10251, Types.Impostor, "ninjaCooldown", 20f, 10f, 60f, 2.5f, ninjaSpawnRate);
         ninjaKnowsTargetLocation = Create(10252, Types.Impostor, "ninjaKnowsTargetLocation", true, ninjaSpawnRate);
         ninjaTraceTime = Create(10253, Types.Impostor, "ninjaTraceTime", 6f, 1f, 20f, 0.5f, ninjaSpawnRate);
         ninjaTraceColorTime = Create(10254, Types.Impostor, "ninjaTraceColorTime", 3f, 0f, 20f, 0.5f, ninjaSpawnRate);
         ninjaInvisibleDuration = Create(10255, Types.Impostor, "ninjaInvisibleDuration", 10f, 0f, 20f, 0.5f, ninjaSpawnRate);
 
-        blackmailerSpawnRate = Create(10260, Types.Impostor, cs(Blackmailer.color, "Blackmailer"), rates, null, true);
+        blackmailerSpawnRate = Create(10260, Types.Impostor, Cs(Blackmailer.color, "Blackmailer"), rates, null, true);
         blackmailerCooldown = Create(10261, Types.Impostor, "blackmailerCooldown", 15f, 5f, 120f, 2.5f, blackmailerSpawnRate);
 
-        terroristSpawnRate = Create(10270, Types.Impostor, cs(Terrorist.color, "Terrorist"), rates, null, true);
+        terroristSpawnRate = Create(10270, Types.Impostor, Cs(Terrorist.color, "Terrorist"), rates, null, true);
         terroristBombDestructionTime = Create(10271, Types.Impostor, "terroristBombDestructionTime", 0f, 0f, 120f, 0.5f, terroristSpawnRate);
         terroristBombDestructionRange = Create(10272, Types.Impostor, "terroristBombDestructionRange", 30f, 5f, 250f, 5f, terroristSpawnRate);
         terroristBombHearRange = Create(10273, Types.Impostor, "terroristBombHearRange", 60f, 5f, 250f, 5f, terroristSpawnRate);
@@ -937,10 +937,10 @@ public class CustomOptionHolder
         terroristBombCooldown = Create(10275, Types.Impostor, "terroristBombCooldown", 0f, 5f, 60f, 2.5f, terroristSpawnRate);
         terroristBombActiveAfter = Create(10276, Types.Impostor, "terroristBombActiveAfter", 0f, 0f, 15f, 0.5f, terroristSpawnRate);
 
-        minerSpawnRate = Create(10280, Types.Impostor, cs(Miner.color, "Miner"), rates, null, true);
+        minerSpawnRate = Create(10280, Types.Impostor, Cs(Miner.color, "Miner"), rates, null, true);
         minerCooldown = Create(10281, Types.Impostor, "minerCooldown", 20f, 10f, 60f, 2.5f, minerSpawnRate);
 
-        yoyoSpawnRate = Create(10290, Types.Impostor, cs(Yoyo.color, "Yoyo"), rates, null, true);
+        yoyoSpawnRate = Create(10290, Types.Impostor, Cs(Yoyo.color, "Yoyo"), rates, null, true);
         yoyoMarkCooldown = Create(10292, Types.Impostor, "yoyoMarkCooldown", 15f, 2.5f, 120f, 2.5f, yoyoSpawnRate);
         yoyoBlinkDuration = Create(10291, Types.Impostor, "yoyoBlinkDuration", 15f, 2.5f, 120f, 2.5f, yoyoSpawnRate);
         yoyoMarkStaysOverMeeting = Create(10293, Types.Impostor, "yoyoMarkStaysOverMeeting", false, yoyoSpawnRate);
@@ -948,7 +948,7 @@ public class CustomOptionHolder
         yoyoAdminTableCooldown = Create(10295, Types.Impostor, "yoyoAdminTableCooldown", 15f, 2.5f, 120f, 2.5f, yoyoHasAdminTable);
         yoyoSilhouetteVisibility = Create(10296, Types.Impostor, "yoyoSilhouetteVisibility", ["0%", "10%", "20%", "30%", "40%", "50%"], yoyoSpawnRate);
 
-        evilTrapperSpawnRate = Create(10300, Types.Impostor, cs(EvilTrapper.color, "EvilTrapper"), rates, null, true);
+        evilTrapperSpawnRate = Create(10300, Types.Impostor, Cs(EvilTrapper.color, "EvilTrapper"), rates, null, true);
         evilTrapperNumTrap = Create(10301, Types.Impostor, "evilTrapperNumTrap", 2, 1, 10, 1, evilTrapperSpawnRate);
         evilTrapperExtensionTime = Create(10302, Types.Impostor, "evilTrapperExtensionTime", 5f, 2f, 10f, 0.5f, evilTrapperSpawnRate);
         evilTrapperCooldown = Create(10303, Types.Impostor, "evilTrapperCooldown", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
@@ -958,36 +958,36 @@ public class CustomOptionHolder
         evilTrapperPenaltyTime = Create(10307, Types.Impostor, "evilTrapperPenaltyTime", 0f, 0f, 30f, 0.5f, evilTrapperSpawnRate);
         evilTrapperBonusTime = Create(10308, Types.Impostor, "evilTrapperBonusTime", 10f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
 
-        gamblerSpawnRate = Create(10330, Types.Impostor, cs(Gambler.color, "Gambler"), rates, null, true);
+        gamblerSpawnRate = Create(10330, Types.Impostor, Cs(Gambler.color, "Gambler"), rates, null, true);
         gamblerMinCooldown = Create(10331, Types.Impostor, "gamblerMinCooldown", 2.5f, 0f, 45f, 0.5f, gamblerSpawnRate);
         gamblerMaxCooldown = Create(10332, Types.Impostor, "gamblerMaxCooldown", 40f, 10f, 90f, 2.5f, gamblerSpawnRate);
         gamblerSuccessRate = Create(10333, Types.Impostor, "gamblerSuccessRate", rates, gamblerSpawnRate);
 
-        grenadierSpawnRate = Create(10340, Types.Impostor, cs(Grenadier.color, "Grenadier"), rates, null, true);
+        grenadierSpawnRate = Create(10340, Types.Impostor, Cs(Grenadier.color, "Grenadier"), rates, null, true);
         grenadierCooldown = Create(10341, Types.Impostor, "grenadierCooldown", 20f, 0f, 45f, 2.5f, grenadierSpawnRate);
         grenadierDuration = Create(10342, Types.Impostor, "grenadierDuration", 8f, 4f, 10f, 0.5f, grenadierSpawnRate);
         grenadierFlashRadius = Create(10343, Types.Impostor, "grenadierFlashRadius", 1f, 0.25f, 5f, 0.125f, grenadierSpawnRate);
         grenadierTeamIndicators = Create(10344, Types.Impostor, "grenadierTeamIndicators", true, grenadierSpawnRate);
 
-        gunsmithSpawnRate = Create(10350, Types.Impostor, cs(Gunsmith.color, "Gunsmith"), rates, null, true);
+        gunsmithSpawnRate = Create(10350, Types.Impostor, Cs(Gunsmith.color, "Gunsmith"), rates, null, true);
         gunsmithKillCooldown = Create(10351, Types.Impostor, "killCooldown", 25f, 10f, 60f, 2.5f, gunsmithSpawnRate);
         gunsmithSetKillCooldown = Create(10352, Types.Impostor, "gunsmithSetKillCooldown", 0f, 0f, 7.5f, 0.5f, gunsmithSpawnRate);
         gunsmithMaxChangeCount = Create(10353, Types.Impostor, "gunsmithMaxChangeCount", 5, 1, 15, 1, gunsmithSpawnRate);
 
-        berserkerSpawnRate = Create(10360, Types.Impostor, cs(Berserker.color, "Berserker"), rates, null, true);
+        berserkerSpawnRate = Create(10360, Types.Impostor, Cs(Berserker.color, "Berserker"), rates, null, true);
         berserkerKillCooldown = Create(10361, Types.Impostor, "killCooldown", 25f, 10f, 60f, 2.5f, berserkerSpawnRate);
         berserkerRampageCooldown = Create(10363, Types.Impostor, "berserkerRampageCooldown", 10f, 5f, 60f, 0.5f, berserkerSpawnRate);
         berserkerRampageDuration = Create(10362, Types.Impostor, "berserkerKillDuration", 3f, 0.5f, 10f, 0.25f, berserkerSpawnRate);
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
 
-        specterSpawnRate = Create(50020, Types.GhostRole, cs(Specter.color, "SpecterOption"), rates, null, true);
+        specterSpawnRate = Create(50020, Types.GhostRole, Cs(Specter.color, "SpecterOption"), rates, null, true);
         specterDuration = Create(50022, Types.GhostRole, "specterDuration", 1.5f, 0.25f, 5f, 0.25f, specterSpawnRate);
         specterResetRole = Create(50021, Types.GhostRole, "amnisiacResetRole", true, specterSpawnRate);
         specterAfterMeetingTakeRole = Create(50023, Types.GhostRole, "specterAfterMeetingTakeRole", false, specterSpawnRate);
         specterAfterMeetingRevived = Create(50024, Types.GhostRole, "specterAfterMeetingRevived", false, specterSpawnRate);
 
-        survivorSpawnRate = Create(20280, Types.Neutral, cs(Survivor.color, "Survivor"), rates, null, true);
+        survivorSpawnRate = Create(20280, Types.Neutral, Cs(Survivor.color, "Survivor"), rates, null, true);
         survivorVestEnable = Create(20281, Types.Neutral, "survivorVestEnable", true, survivorSpawnRate);
         survivorVestNumber = Create(20282, Types.Neutral, "survivorVestNumber", 5f, 1f, 20f, 1f, survivorVestEnable);
         survivorVestCooldown = Create(20283, Types.Neutral, "survivorVestCooldown", 20f, 2.5f, 60f, 2.5f, survivorVestEnable);
@@ -997,49 +997,49 @@ public class CustomOptionHolder
         survivorBlanksCooldown = Create(20287, Types.Neutral, "survivorBlanksCooldown", 20f, 5f, 60f, 2.5f, survivorBlanksEnable);
         survivorBlanksNumber = Create(20288, Types.Neutral, "survivorBlanksNumber", 6f, 1f, 20f, 1f, survivorBlanksEnable);
 
-        amnisiacSpawnRate = Create(20110, Types.Neutral, cs(Amnisiac.color, "Amnisiac"), rates, null, true);
+        amnisiacSpawnRate = Create(20110, Types.Neutral, Cs(Amnisiac.color, "Amnisiac"), rates, null, true);
         amnisiacShowArrows = Create(20111, Types.Neutral, "amnisiacShowArrows", true, amnisiacSpawnRate);
         amnisiacResetRole = Create(20112, Types.Neutral, "amnisiacResetRole", true, amnisiacSpawnRate);
 
-        jesterSpawnRate = Create(20100, Types.Neutral, cs(Jester.color, "Jester"), rates, null, true);
+        jesterSpawnRate = Create(20100, Types.Neutral, Cs(Jester.color, "Jester"), rates, null, true);
         jesterCanCallEmergency = Create(20101, Types.Neutral, "canCallEmergency", true, jesterSpawnRate);
         jesterCanVent = Create(20102, Types.Neutral, "jesterCanVent", true, jesterSpawnRate);
         jesterHasImpostorVision = Create(20103, Types.Neutral, "hasImpVision", true, jesterSpawnRate);
         jesterCanDragDeadBody = Create(20104, Types.Neutral, "jesterCanDragDeadBody", true, jesterSpawnRate);
         jesterDragingVelocity = Create(20105, Types.Neutral, "undertakerDragingAfterVelocity", 0.75f, 0.5f, 1.5f, 0.125f, jesterCanDragDeadBody);
 
-        partTimerSpawnRate = Create(20290, Types.Neutral, cs(PartTimer.color, "PartTimer"), rates, null, true);
+        partTimerSpawnRate = Create(20290, Types.Neutral, Cs(PartTimer.color, "PartTimer"), rates, null, true);
         partTimerCooldown = Create(20291, Types.Neutral, "partTimerCooldown", 20f, 2.5f, 60f, 2.5f, partTimerSpawnRate);
         partTimerDeathTurn = Create(20292, Types.Neutral, "partTimerDeathTurn", 2, 1, 6, 1, partTimerSpawnRate);
         partTimerKnowsRole = Create(20293, Types.Neutral, "partTimerIsCheckTargetRole", true, partTimerSpawnRate);
 
-        witnessSpawnRate = Create(20300, Types.Neutral, cs(Witness.color, "Witness"), rates, null, true);
+        witnessSpawnRate = Create(20300, Types.Neutral, Cs(Witness.color, "Witness"), rates, null, true);
         witnessMarkTimer = Create(20301, Types.Neutral, "witnessMarkTimer", 30, 20, 90, 5, witnessSpawnRate);
         witnessWinCount = Create(20302, Types.Neutral, "witnessWinCount", 2, 1, 6, 1, witnessSpawnRate);
         witnessMeetingDie = Create(20303, Types.Neutral, "witnessMeetingDie", true, witnessSpawnRate);
         witnessSkipMeeting = Create(20304, Types.Neutral, "witnessSkipMeeting", true, witnessSpawnRate);
 
-        bandLeaderSpawnRate = Create(20320, Types.Neutral, cs(BandLeader.color, "BandLeader"), rates, null, true);
+        bandLeaderSpawnRate = Create(20320, Types.Neutral, Cs(BandLeader.color, "BandLeader"), rates, null, true);
         bandLeaderCreateCooldown = Create(20321, Types.Neutral, "bandLeaderCreateDistance", 5f, 2.5f, 30f, 0.5f, bandLeaderSpawnRate);
         bandLeaderKillCooldown = Create(20322, Types.Neutral, "bandLeaderKillCooldown", 20f, 2.5f, 60f, 2.5f, bandLeaderSpawnRate);
 
-        jackalSpawnRate = Create(20130, Types.Neutral, cs(Jackal.color, "Jackal"), rates, null, true);
-        jackalChanceSwoop = Create(20142, Types.Neutral, cs(Swooper.color, "jackalChanceSwoop"), rates, jackalSpawnRate);
+        jackalSpawnRate = Create(20130, Types.Neutral, Cs(Jackal.color, "Jackal"), rates, null, true);
+        jackalChanceSwoop = Create(20142, Types.Neutral, Cs(Swooper.color, "jackalChanceSwoop"), rates, jackalSpawnRate);
         jackalKillCooldown = Create(20131, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, jackalSpawnRate);
         jackalSwooperCooldown = Create(20143, Types.Neutral, "jackalSwooperCooldown", 25f, 10f, 60f, 2.5f, jackalChanceSwoop);
         jackalSwooperDuration = Create(20144, Types.Neutral, "jackalSwooperDuration", 12.5f, 1f, 20f, 0.5f, jackalChanceSwoop);
         jackalCanUseVents = Create(20132, Types.Neutral, "jackalCanUseVents", true, jackalSpawnRate);
         jackalCanUseSabo = Create(20133, Types.Neutral, "jackalCanUseSabo", false, jackalSpawnRate);
         jackalAndSidekickHaveImpostorVision = Create(20134, Types.Neutral, "jackalAndSidekickHaveImpostorVision", true, jackalSpawnRate);
-        jackalCanCreateSidekick = Create(20135, Types.Neutral, cs(Jackal.color, "jackalCanCreateSidekick"), false, jackalSpawnRate);
+        jackalCanCreateSidekick = Create(20135, Types.Neutral, Cs(Jackal.color, "jackalCanCreateSidekick"), false, jackalSpawnRate);
         jackalCreateSidekickCooldown = Create(20136, Types.Neutral, "jackalCreateSidekickCooldown", 25f, 10f, 60f, 2.5f, jackalCanCreateSidekick);
-        jackalkillFakeImpostor = Create(20145, Types.Neutral, cs(Palette.ImpostorRed, "jackalkillFakeImpostor"), false, jackalCanCreateSidekick);
+        jackalkillFakeImpostor = Create(20145, Types.Neutral, Cs(Palette.ImpostorRed, "jackalkillFakeImpostor"), false, jackalCanCreateSidekick);
         sidekickCanKill = Create(20138, Types.Neutral, "sidekickCanKill", true, jackalCanCreateSidekick);
         sidekickCanUseVents = Create(20139, Types.Neutral, "sidekickCanUseVents", true, jackalCanCreateSidekick);
         sidekickPromotesToJackal = Create(20140, Types.Neutral, "sidekickPromotesToJackal", false, jackalCanCreateSidekick);
         jackalPromotedFromSidekickCanCreateSidekick = Create(20141, Types.Neutral, "jackalPromotedFromSidekickCanCreateSidekick", true, sidekickPromotesToJackal);
 
-        pavlovsownerSpawnRate = Create(20250, Types.Neutral, cs(Pavlovsdogs.color, "Pavlovsowner"), rates, null, true);
+        pavlovsownerSpawnRate = Create(20250, Types.Neutral, Cs(Pavlovsdogs.color, "Pavlovsowner"), rates, null, true);
         pavlovsownerAndJackalAsWell = Create(20251, Types.Neutral, "pavlovsownerAndJackalAsWell", true, pavlovsownerSpawnRate);
         pavlovsownerKillCooldown = Create(20252, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, pavlovsownerSpawnRate);
         pavlovsownerCreateDogCooldown = Create(20253, Types.Neutral, "pavlovsownerCreateDogCooldown", 25f, 10f, 60f, 2.5f, pavlovsownerSpawnRate);
@@ -1052,7 +1052,7 @@ public class CustomOptionHolder
         pavlovsownerRampageKillCooldown = Create(20261, Types.Neutral, "pavlovsownerRampageKillCooldown", 15f, 5f, 60f, 2.5f, pavlovsownerRampage);
         pavlovsownerRampageDeathTime = Create(20262, Types.Neutral, "pavlovsownerRampageDeathTime", 60f, 30f, 180f, 2.5f, pavlovsownerRampageKillCooldown);
 
-        infectedSpawnRate = Create(20160, Types.Neutral, cs(Infected.color, "Infected"), rates, null, true);
+        infectedSpawnRate = Create(20160, Types.Neutral, Cs(Infected.color, "Infected"), rates, null, true);
         infectedKillCooldown = Create(20161, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, infectedSpawnRate);
         infectedMaxPlayer = Create(20162, Types.Neutral, "infectedMaxPlayer", 3, 1, 15, 1, infectedSpawnRate);
         infectedActiveLimit = Create(20163, Types.Neutral, "infectedActiveLimit", 2, 1, 15, 1, infectedSpawnRate);
@@ -1061,18 +1061,18 @@ public class CustomOptionHolder
         infectedCanUseGuess = Create(20166, Types.Neutral, "infectedCanUseGuess", true, infectedSpawnRate);
         infectedGuessCount = Create(20167, Types.Neutral, "infectedGuessCount", 3, 1, 15, 1, infectedCanUseGuess);
 
-        arsonistSpawnRate = Create(20120, Types.Neutral, cs(Arsonist.color, "Arsonist"), rates, null, true);
+        arsonistSpawnRate = Create(20120, Types.Neutral, Cs(Arsonist.color, "Arsonist"), rates, null, true);
         arsonistCooldown = Create(20121, Types.Neutral, "arsonistCooldown", 12.5f, 5f, 60f, 2.5f, arsonistSpawnRate);
         arsonistDuration = Create(20122, Types.Neutral, "arsonistDuration", 0.25f, 0f, 10f, 0.125f, arsonistSpawnRate);
         arsonistIgniteCdRemoved = Create(20123, Types.Neutral, "arsonistIgniteCdRemoved", false, arsonistSpawnRate);
 
-        pelicanSpawnRate = Create(20310, Types.Neutral, cs(Pelican.color, "Pelican"), rates, null, true);
+        pelicanSpawnRate = Create(20310, Types.Neutral, Cs(Pelican.color, "Pelican"), rates, null, true);
         pelicanCooldown = Create(20311, Types.Neutral, "pelicanCooldown", 25f, 2.5f, 60f, 2.5f, pelicanSpawnRate);
         pelicanReduceCooldown = Create(20312, Types.Neutral, "pelicanReduceCooldown", 20f, 2.5f, 60f, 2.5f, pelicanSpawnRate);
         pelicanCanUseVents = Create(20313, Types.Neutral, "canUseVents", true, pelicanSpawnRate);
         pelicanHasImpVision = Create(20314, Types.Neutral, "hasImpVision", true, pelicanSpawnRate);
 
-        swooperSpawnRate = Create(20150, Types.Neutral, cs(Swooper.color, "Swooper"), rates, null, true);
+        swooperSpawnRate = Create(20150, Types.Neutral, Cs(Swooper.color, "Swooper"), rates, null, true);
         swooperKillCooldown = Create(20151, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
         swooperCooldown = Create(20152, Types.Neutral, "swooperCooldown", 20f, 10f, 60f, 2.5f, swooperSpawnRate);
         swooperDuration = Create(20153, Types.Neutral, "swooperDuration", 15f, 1f, 20f, 0.5f, swooperSpawnRate);
@@ -1080,24 +1080,24 @@ public class CustomOptionHolder
         swooperCanUseVents = Create(20155, Types.Neutral, "canUseVents", true, swooperSpawnRate);
         swooperHasImpVision = Create(20156, Types.Neutral, "hasImpVision", true, swooperSpawnRate);
 
-        werewolfSpawnRate = Create(20200, Types.Neutral, cs(Werewolf.color, "Werewolf"), rates, null, true);
+        werewolfSpawnRate = Create(20200, Types.Neutral, Cs(Werewolf.color, "Werewolf"), rates, null, true);
         werewolfRampageCooldown = Create(20201, Types.Neutral, "werewolfRampageCooldown", 25f, 10f, 60f, 2.5f, werewolfSpawnRate);
         werewolfRampageDuration = Create(20202, Types.Neutral, "werewolfRampageDuration", 15f, 0.5f, 20f, 0.5f, werewolfSpawnRate);
         werewolfKillCooldown = Create(20203, Types.Neutral, "werewolfKillCooldown", 3f, 1f, 60f, 0.5f, werewolfSpawnRate);
 
-        juggernautSpawnRate = Create(20210, Types.Neutral, cs(Juggernaut.color, "Juggernaut"), rates, null, true);
+        juggernautSpawnRate = Create(20210, Types.Neutral, Cs(Juggernaut.color, "Juggernaut"), rates, null, true);
         juggernautCooldown = Create(20211, Types.Neutral, "killCooldown", 25f, 2.5f, 60f, 2.5f, juggernautSpawnRate);
         juggernautHasImpVision = Create(20212, Types.Neutral, "hasImpVision", true, juggernautSpawnRate);
         juggernautCanUseVents = Create(20113, Types.Neutral, "canUseVents", true, juggernautSpawnRate);
         juggernautReducedkillEach = Create(20114, Types.Neutral, "juggernautReducedkillEach", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
 
-        vultureSpawnRate = Create(20170, Types.Neutral, cs(Vulture.color, "Vulture"), rates, null, true);
+        vultureSpawnRate = Create(20170, Types.Neutral, Cs(Vulture.color, "Vulture"), rates, null, true);
         vultureCooldown = Create(20171, Types.Neutral, "vultureCooldown", 12.5f, 10f, 60f, 2.5f, vultureSpawnRate);
         vultureNumberToWin = Create(20172, Types.Neutral, "vultureNumberToWin", 3f, 1f, 15f, 1f, vultureSpawnRate);
         vultureCanUseVents = Create(20173, Types.Neutral, "canUseVents", true, vultureSpawnRate);
         vultureShowArrows = Create(20174, Types.Neutral, "vultureShowArrows", true, vultureSpawnRate);
 
-        lawyerSpawnRate = Create(20180, Types.Neutral, cs(Lawyer.color, "Lawyer"), rates, null, true);
+        lawyerSpawnRate = Create(20180, Types.Neutral, Cs(Lawyer.color, "Lawyer"), rates, null, true);
         lawyerTargetKnows = Create(20182, Types.Neutral, "lawyerTargetKnows", true, lawyerSpawnRate);
         lawyerVision = Create(20183, Types.Neutral, "lawyerVision", 1.5f, 0.25f, 3f, 0.25f, lawyerSpawnRate);
         lawyerKnowsRole = Create(20184, Types.Neutral, "lawyerKnowsRole", true, lawyerSpawnRate);
@@ -1109,21 +1109,21 @@ public class CustomOptionHolder
         pursuerBlanksCooldown = Create(20272, Types.Neutral, "pursuerBlanksCooldown", 20f, 5f, 60f, 2.5f, lawyerSpawnRate);
         pursuerBlanksNumber = Create(20273, Types.Neutral, "pursuerBlanksNumber", 6f, 1f, 20f, 1f, lawyerSpawnRate);
 
-        executionerSpawnRate = Create(20190, Types.Neutral, cs(Executioner.color, "Executioner"), rates, null, true);
+        executionerSpawnRate = Create(20190, Types.Neutral, Cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(20191, Types.Neutral, "canCallEmergency", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(20192, Types.Neutral, "executionerPromotesToLawyer", true, executionerSpawnRate);
         //executionerOnTargetDead = Create(20193, Types.Neutral, "目标死亡后变为", [cs(Pursuer.color, "Pursuer"), cs(Jester.color, "Jester"), cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
 
-        doomsayerSpawnRate = Create(20221, Types.Neutral, cs(Doomsayer.color, "Doomsayer"), rates, null, true);
+        doomsayerSpawnRate = Create(20221, Types.Neutral, Cs(Doomsayer.color, "Doomsayer"), rates, null, true);
         doomsayerCooldown = Create(20222, Types.Neutral, "doomsayerCooldown", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
         doomsayerHasMultipleShotsPerMeeting = Create(20223, Types.Neutral, "doomsayerHasMultipleShotsPerMeeting", true, doomsayerSpawnRate);
         doomsayerOnlineTarger = Create(20227, Types.Neutral, "doomsayerOnlineTarger", false, doomsayerSpawnRate);
         doomsayerDormationNum = Create(20229, Types.Neutral, "doomsayerDormationNum", 5f, 2f, 10f, 1f, doomsayerSpawnRate);
-        doomsayerCanGuessImpostor = Create(20226, Types.Neutral, $"{"doomsayerCanGuess".Translate()} {cs(Palette.ImpostorRed, "ImpostorRolesText".Translate())}", true, doomsayerSpawnRate);
-        doomsayerCanGuessNeutral = Create(20225, Types.Neutral, $"{"doomsayerCanGuess".Translate()} {cs(Color.gray, "NeutralRolesText".Translate())}", true, doomsayerSpawnRate);
+        doomsayerCanGuessImpostor = Create(20226, Types.Neutral, $"{"doomsayerCanGuess".Translate()} {Cs(Palette.ImpostorRed, "ImpostorRolesText".Translate())}", true, doomsayerSpawnRate);
+        doomsayerCanGuessNeutral = Create(20225, Types.Neutral, $"{"doomsayerCanGuess".Translate()} {Cs(Color.gray, "NeutralRolesText".Translate())}", true, doomsayerSpawnRate);
         doomsayerKillToWin = Create(20228, Types.Neutral, "doomsayerKillToWin", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
 
-        schrodingersCatSpawnRate = Create(20330, Types.Neutral, cs(SchrodingersCat.color, "SchrodingersCat"), rates, null, true);
+        schrodingersCatSpawnRate = Create(20330, Types.Neutral, Cs(SchrodingersCat.color, "SchrodingersCat"), rates, null, true);
         schrodingersCatIsGuessable = Create(20331, Types.Neutral, "schrodingersCatIsGuessable", true, schrodingersCatSpawnRate);
         schrodingersCatCanKill = Create(20332, Types.Neutral, "schrodingersCatCanKill", true, schrodingersCatSpawnRate);
         schrodingersCatCooldown = Create(20333, Types.Neutral, "killCooldown", 20f, 2.5f, 60f, 2.5f, schrodingersCatCanKill);
@@ -1131,7 +1131,7 @@ public class CustomOptionHolder
         schrodingersCatTeamChanges = Create(20335, Types.Neutral, "schrodingersCatTeamChanges", true, schrodingersCatSpawnRate);
         schrodingersCatMaxChangeCount = Create(20336, Types.Neutral, "schrodingersCatMaxChangeCount", 3, 1, 15, 1, schrodingersCatTeamChanges);
 
-        akujoSpawnRate = Create(20231, Types.Neutral, cs(Akujo.color, "Akujo"), rates, null, true);
+        akujoSpawnRate = Create(20231, Types.Neutral, Cs(Akujo.color, "Akujo"), rates, null, true);
         akujoTimeLimit = Create(20232, Types.Neutral, "akujoTimeLimit", 450f, 120f, 1200f, 30f, akujoSpawnRate);
         akujoForceKeeps = Create(20236, Types.Neutral, "akujoForceKeeps", false, akujoSpawnRate);
         akujoNumKeeps = Create(20233, Types.Neutral, "akujoNumKeeps", 1f, 0f, 5f, 1f, akujoSpawnRate);
@@ -1139,48 +1139,48 @@ public class CustomOptionHolder
         akujoHonmeiCannotFollowWin = Create(20235, Types.Neutral, "akujoHonmeiCannotFollowWin", true, akujoSpawnRate);
         akujoHonmeiOptimizeWin = Create(20237, Types.Neutral, "akujoHonmeiOptimizeWin", true, akujoSpawnRate);
 
-        thiefSpawnRate = Create(20240, Types.Neutral, cs(Thief.color, "Thief"), rates, null, true);
+        thiefSpawnRate = Create(20240, Types.Neutral, Cs(Thief.color, "Thief"), rates, null, true);
         thiefCooldown = Create(20241, Types.Neutral, "killCooldown", 25f, 5f, 120f, 2.5f, thiefSpawnRate);
-        thiefCanKillSheriff = Create(20242, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Sheriff.color, "Sheriff".Translate())}", true, thiefSpawnRate);
-        thiefCanKillDeputy = Create(20246, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Sheriff.color, "Deputy".Translate())}", true, thiefSpawnRate);
-        thiefCanKillVeteran = Create(20247, Types.Neutral, $"{"thiefCanKill".Translate()}{cs(Veteran.color, "Veteran".Translate())}", true, thiefSpawnRate);
+        thiefCanKillSheriff = Create(20242, Types.Neutral, $"{"thiefCanKill".Translate()}{Cs(Sheriff.color, "Sheriff".Translate())}", true, thiefSpawnRate);
+        thiefCanKillDeputy = Create(20246, Types.Neutral, $"{"thiefCanKill".Translate()}{Cs(Sheriff.color, "Deputy".Translate())}", true, thiefSpawnRate);
+        thiefCanKillVeteran = Create(20247, Types.Neutral, $"{"thiefCanKill".Translate()}{Cs(Veteran.color, "Veteran".Translate())}", true, thiefSpawnRate);
         thiefHasImpVision = Create(20243, Types.Neutral, "hasImpVision", true, thiefSpawnRate);
         thiefCanUseVents = Create(20244, Types.Neutral, "canUseVents", true, thiefSpawnRate);
         thiefCanStealWithGuess = Create(20245, Types.Neutral, "thiefCanStealWithGuess", true, thiefSpawnRate);
 
         //-------------------------- Crewmate Options 30000-39999 -------------------------- //
 
-        ghostEngineerSpawnRate = Create(50010, Types.GhostRole, cs(GhostEngineer.color, "GhostEngineerOptions"), rates, null, true);
+        ghostEngineerSpawnRate = Create(50010, Types.GhostRole, Cs(GhostEngineer.color, "GhostEngineerOptions"), rates, null, true);
 
-        poltergeistSpawnRate = Create(50030, Types.GhostRole, cs(Poltergeist.color, "PoltergeistOptions"), rates, null, true);
+        poltergeistSpawnRate = Create(50030, Types.GhostRole, Cs(Poltergeist.color, "PoltergeistOptions"), rates, null, true);
         poltergeistCooldown = Create(50031, Types.GhostRole, "poltergeistCooldown", 5f, 2.5f, 60f, 2.5f, poltergeistSpawnRate);
         poltergeistRadius = Create(50032, Types.GhostRole, "poltergeistRadius", 0.75f, 0.5f, 2f, 0.125f, poltergeistSpawnRate);
 
-        guesserSpawnRate = Create(30100, Types.Crewmate, cs(Vigilante.color, "Vigilante"), rates, null, true, isHidden: () => GuesserGM.Enabled);
+        guesserSpawnRate = Create(30100, Types.Crewmate, Cs(Vigilante.color, "Vigilante"), rates, null, true, isHidden: () => GuesserGM.Enabled);
         guesserNumberOfShots = Create(30101, Types.Crewmate, "guesserNumberOfShots", 3f, 1f, 15f, 1f, guesserSpawnRate, isHidden: () => GuesserGM.Enabled);
         guesserHasMultipleShotsPerMeeting = Create(30102, Types.Crewmate, "guesserHasMultipleShotsPerMeeting", true, guesserSpawnRate, isHidden: () => GuesserGM.Enabled);
         guesserShowInfoInGhostChat = Create(30103, Types.Crewmate, "guesserShowInfoInGhostChat", true, guesserSpawnRate, isHidden: () => GuesserGM.Enabled);
         guesserKillsThroughShield = Create(30104, Types.Crewmate, "guesserKillsThroughShield", false, guesserSpawnRate, isHidden: () => GuesserGM.Enabled);
 
-        sheriffSpawnRate = Create(30141, Types.Crewmate, cs(Sheriff.color, "Sheriff"), rates, null, true);
+        sheriffSpawnRate = Create(30141, Types.Crewmate, Cs(Sheriff.color, "Sheriff"), rates, null, true);
         sheriffCooldown = Create(30142, Types.Crewmate, "sheriffCooldown", 25f, 10f, 60f, 2.5f, sheriffSpawnRate);
         sheriffMisfireKills = Create(30143, Types.Crewmate, "sheriffMisfireKills",
             ["sheriffMisfireKills1", "sheriffMisfireKills2", "sheriffMisfireKills3"], sheriffSpawnRate);
         sheriffCanKillNeutrals = Create(30150, Types.Crewmate, "sheriffCanKillNeutrals", true, sheriffSpawnRate);
-        sheriffCanKillAmnesiac = Create(30153, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Amnisiac.color, "Amnisiac".Translate())}", false, sheriffCanKillNeutrals);
-        sheriffCanKillSurvivor = Create(30160, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Survivor.color, "Survivor".Translate())}", false, sheriffCanKillNeutrals);
-        sheriffCanKillPursuer = Create(30158, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Pursuer.color, "Pursuer".Translate())}", true, sheriffCanKillNeutrals);
-        sheriffCanKillPartTimer = Create(30161, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(PartTimer.color, "PartTimer".Translate())}", true, sheriffCanKillNeutrals);
-        sheriffCanKillBandLeader = Create(30162, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(BandLeader.color, "BandLeader".Translate())}", true, sheriffCanKillNeutrals);
-        sheriffCanKillJester = Create(30151, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Jester.color, "Jester".Translate())}", true, sheriffCanKillNeutrals);
-        sheriffCanKillLawyer = Create(30156, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Lawyer.color, "Lawyer".Translate())}", true, sheriffCanKillNeutrals);
-        sheriffCanKillExecutioner = Create(30152, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Executioner.color, "Executioner".Translate())}", true, sheriffCanKillNeutrals);
-        sheriffCanKillVulture = Create(30155, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Vulture.color, "Vulture".Translate())}", true, sheriffCanKillNeutrals);
-        sheriffCanKillDoomsayer = Create(30159, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Doomsayer.color, "Doomsayer".Translate())}", true, sheriffCanKillNeutrals);
-        sheriffCanKillWitness = Create(30154, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Witness.color, "Witness".Translate())}", true, sheriffCanKillNeutrals);
-        sheriffCanKillThief = Create(30157, Types.Crewmate, $"{"sheriffCanKill".Translate()}{cs(Thief.color, "Thief".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillAmnesiac = Create(30153, Types.Crewmate, $"{"sheriffCanKill".Translate()}{Cs(Amnisiac.color, "Amnisiac".Translate())}", false, sheriffCanKillNeutrals);
+        sheriffCanKillSurvivor = Create(30160, Types.Crewmate, $"{"sheriffCanKill".Translate()}{Cs(Survivor.color, "Survivor".Translate())}", false, sheriffCanKillNeutrals);
+        sheriffCanKillPursuer = Create(30158, Types.Crewmate, $"{"sheriffCanKill".Translate()}{Cs(Pursuer.color, "Pursuer".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillPartTimer = Create(30161, Types.Crewmate, $"{"sheriffCanKill".Translate()}{Cs(PartTimer.color, "PartTimer".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillBandLeader = Create(30162, Types.Crewmate, $"{"sheriffCanKill".Translate()}{Cs(BandLeader.color, "BandLeader".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillJester = Create(30151, Types.Crewmate, $"{"sheriffCanKill".Translate()}{Cs(Jester.color, "Jester".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillLawyer = Create(30156, Types.Crewmate, $"{"sheriffCanKill".Translate()}{Cs(Lawyer.color, "Lawyer".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillExecutioner = Create(30152, Types.Crewmate, $"{"sheriffCanKill".Translate()}{Cs(Executioner.color, "Executioner".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillVulture = Create(30155, Types.Crewmate, $"{"sheriffCanKill".Translate()}{Cs(Vulture.color, "Vulture".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillDoomsayer = Create(30159, Types.Crewmate, $"{"sheriffCanKill".Translate()}{Cs(Doomsayer.color, "Doomsayer".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillWitness = Create(30154, Types.Crewmate, $"{"sheriffCanKill".Translate()}{Cs(Witness.color, "Witness".Translate())}", true, sheriffCanKillNeutrals);
+        sheriffCanKillThief = Create(30157, Types.Crewmate, $"{"sheriffCanKill".Translate()}{Cs(Thief.color, "Thief".Translate())}", true, sheriffCanKillNeutrals);
 
-        deputySpawnRate = Create(30170, Types.Crewmate, cs(Sheriff.color, "Deputy"), rates, null);
+        deputySpawnRate = Create(30170, Types.Crewmate, Cs(Sheriff.color, "Deputy"), rates, null);
         deputyNumberOfHandcuffs = Create(30171, Types.Crewmate, "deputyNumberOfHandcuffs", 5f, 1f, 15f, 1f, deputySpawnRate);
         deputyHandcuffCooldown = Create(30172, Types.Crewmate, "deputyHandcuffCooldown", 20f, 10f, 60f, 2.5f, deputySpawnRate);
         deputyHandcuffDuration = Create(30173, Types.Crewmate, "deputyHandcuffDuration", 10f, 5f, 60f, 2.5f, deputySpawnRate);
@@ -1189,26 +1189,26 @@ public class CustomOptionHolder
         deputyKnowsSheriff = Create(30174, Types.Crewmate, "deputyKnowsSheriff", true, deputySpawnRate);
         deputyKeepsHandcuffs = Create(30176, Types.Crewmate, "deputyKeepsHandcuffs", true, deputyGetsPromoted);
 
-        hunterSpawnRate = Create(30400, Types.Crewmate, cs(Hunter.color, "Hunter"), rates, null, true);
+        hunterSpawnRate = Create(30400, Types.Crewmate, Cs(Hunter.color, "Hunter"), rates, null, true);
 
-        mayorSpawnRate = Create(30110, Types.Crewmate, cs(Mayor.color, "Mayor"), rates, null, true);
+        mayorSpawnRate = Create(30110, Types.Crewmate, Cs(Mayor.color, "Mayor"), rates, null, true);
         mayorMeetingButton = Create(30113, Types.Crewmate, "mayorMeetingButton", false, mayorSpawnRate);
         mayorMaxRemoteMeetings = Create(30114, Types.Crewmate, "mayorMaxRemoteMeetings", 1f, 1f, 5f, 1f, mayorMeetingButton);
         mayorSabotageRemoteMeetings = Create(30115, Types.Crewmate, "mayorSabotageRemoteMeetings", false, mayorMeetingButton);
         mayorVote = Create(30117, Types.Crewmate, "mayorVote", 2, 1, 4, 1, mayorSpawnRate);
         mayorRevealVision = Create(30116, Types.Crewmate, "mayorRevealVision", ["-20%", "-30%", "-40%", "-50%"], mayorSpawnRate);
 
-        prosecutorSpawnRate = Create(30370, Types.Crewmate, cs(Prosecutor.color, "Prosecutor"), rates, null, true);
+        prosecutorSpawnRate = Create(30370, Types.Crewmate, Cs(Prosecutor.color, "Prosecutor"), rates, null, true);
         prosecutorCanSeeVoteColors = Create(30111, Types.Crewmate, "mayorCanSeeVoteColors", true, prosecutorSpawnRate);
         prosecutorTasksNeededToSeeVoteColors = Create(30112, Types.Crewmate, "mayorTasksNeededToSeeVoteColors", 5f, 0f, 20f, 1f, prosecutorCanSeeVoteColors);
         prosecutorDiesOnIncorrectPros = Create(30371, Types.Crewmate, "prosecutorDiesOnIncorrectPros", true, prosecutorSpawnRate);
         prosecutorCanCallEmergency = Create(30372, Types.Crewmate, "canCallEmergency", true, prosecutorSpawnRate);
 
-        veteranSpawnRate = Create(30220, Types.Crewmate, cs(Veteran.color, "Veteran"), rates, null, true);
+        veteranSpawnRate = Create(30220, Types.Crewmate, Cs(Veteran.color, "Veteran"), rates, null, true);
         veteranCooldown = Create(30221, Types.Crewmate, "veteranCooldown", 25f, 5f, 60f, 2.5f, veteranSpawnRate);
         veteranAlertDuration = Create(30222, Types.Crewmate, "veteranAlertDuration", 12.5f, 2.5f, 20f, 0.5f, veteranSpawnRate);
 
-        engineerSpawnRate = Create(30120, Types.Crewmate, cs(Engineer.color, "Engineer"), rates, null, true);
+        engineerSpawnRate = Create(30120, Types.Crewmate, Cs(Engineer.color, "Engineer"), rates, null, true);
         engineerRemoteFix = Create(30121, Types.Crewmate, "engineerRemoteFix", true, engineerSpawnRate);
         engineerResetFixAfterMeeting = Create(30122, Types.Crewmate, "engineerResetFixAfterMeeting", true, engineerRemoteFix);
         engineerNumberOfFixes = Create(30123, Types.Crewmate, "engineerNumberOfFixes", 1f, 1f, 3f, 1f, engineerRemoteFix);
@@ -1216,18 +1216,18 @@ public class CustomOptionHolder
         engineerHighlightForImpostors = Create(30125, Types.Crewmate, "engineerHighlightForImpostors", true, engineerSpawnRate);
         engineerHighlightForTeamJackal = Create(30126, Types.Crewmate, "engineerHighlightForTeamJackal", true, engineerSpawnRate);
 
-        swapperSpawnRate = Create(30230, Types.Crewmate, cs(Swapper.color, "Swapper"), rates, null, true);
+        swapperSpawnRate = Create(30230, Types.Crewmate, Cs(Swapper.color, "Swapper"), rates, null, true);
         swapperCanCallEmergency = Create(30231, Types.Crewmate, "canCallEmergency", true, swapperSpawnRate);
         swapperCanFixSabotages = Create(30232, Types.Crewmate, "swapperCanFixSabotages", true, swapperSpawnRate);
         swapperCanOnlySwapOthers = Create(30233, Types.Crewmate, "swapperCanOnlySwapOthers", false, swapperSpawnRate);
         swapperSwapsNumber = Create(30234, Types.Crewmate, "swapperSwapsNumber", 1f, 0f, 5f, 1f, swapperSpawnRate);
         swapperRechargeTasksNumber = Create(30235, Types.Crewmate, "swapperRechargeTasksNumber", 2f, 1f, 10f, 1f, swapperSpawnRate);
 
-        balancerSpawnRate = Create(30330, Types.Crewmate, cs(Balancer.color, "Balancer"), rates, null, true);
+        balancerSpawnRate = Create(30330, Types.Crewmate, Cs(Balancer.color, "Balancer"), rates, null, true);
         balancerCount = Create(30331, Types.Crewmate, "balancerCount", 1, 1, 3, 1, balancerSpawnRate);
         balancerVoteTime = Create(30332, Types.Crewmate, "balancerVoteTime", 60, 15, 150, 5, balancerSpawnRate);
 
-        medicSpawnRate = Create(30200, Types.Crewmate, cs(Medic.color, "Medic"), rates, null, true);
+        medicSpawnRate = Create(30200, Types.Crewmate, Cs(Medic.color, "Medic"), rates, null, true);
         medicShowShielded = Create(30201, Types.Crewmate, "medicShowShielded",
             ["medicShowShielded1", "medicShowShielded2", "medicShowShielded3"], medicSpawnRate);
         medicBreakShield = Create(30202, Types.Crewmate, "medicBreakShield", true, medicSpawnRate);
@@ -1239,7 +1239,7 @@ public class CustomOptionHolder
         medicReportNameDuration = Create(30207, Types.Crewmate, "medicReportNameDuration", 5f, 0f, 60f, 2.5f, medicBreakShield);
         medicReportColorDuration = Create(30208, Types.Crewmate, "medicReportColorDuration", 30f, 0f, 120f, 2.5f, medicBreakShield);
 
-        detectiveSpawnRate = Create(30190, Types.Crewmate, cs(Detective.color, "Detective"), rates, null, true);
+        detectiveSpawnRate = Create(30190, Types.Crewmate, Cs(Detective.color, "Detective"), rates, null, true);
         detectiveAnonymousFootprints = Create(30191, Types.Crewmate, "detectiveAnonymousFootprints",
             ["optionOff", "detectiveAnonymousFootprints1", "optionOn"], detectiveSpawnRate);
         detectiveFootprintIntervall = Create(30192, Types.Crewmate, "detectiveFootprintIntervall", 0.25f, 0.25f, 10f, 0.25f, detectiveSpawnRate);
@@ -1247,7 +1247,7 @@ public class CustomOptionHolder
         detectiveReportNameDuration = Create(30194, Types.Crewmate, "detectiveReportNameDuration", 10f, 0f, 60f, 2.5f, detectiveSpawnRate);
         detectiveReportColorDuration = Create(30195, Types.Crewmate, "detectiveReportColorDuration", 30f, 0f, 120f, 2.5f, detectiveSpawnRate);
 
-        redemptorSpawnRate = Create(30390, Types.Crewmate, cs(Redemptor.color, "Redemptor"), rates, null, true);
+        redemptorSpawnRate = Create(30390, Types.Crewmate, Cs(Redemptor.color, "Redemptor"), rates, null, true);
         redemptorRevelation = Create(30391, Types.Crewmate, "redemptorRevelation", false, redemptorSpawnRate);
         redemptorRevelationCooldown = Create(30392, Types.Crewmate, "redemptorRevelationCooldown", 25f, 10f, 60f, 2.5f, redemptorRevelation);
         redemptorRevelationDuration = Create(30393, Types.Crewmate, "redemptorRevelationDuration", 5f, 1f, 15f, 0.5f, redemptorRevelation);
@@ -1256,17 +1256,17 @@ public class CustomOptionHolder
         redemptorPrayerDuration = Create(30396, Types.Crewmate, "redemptorPrayerDuration", 5f, 2f, 15f, 0.5f, redemptorPrayer);
         redemptorReviveDuration = Create(30397, Types.Crewmate, "redemptorReviveDuration", 1.5f, 0f, 15f, 0.5f, redemptorSpawnRate);
 
-        bodyGuardSpawnRate = Create(30340, Types.Crewmate, cs(BodyGuard.color, "BodyGuard"), rates, null, true);
+        bodyGuardSpawnRate = Create(30340, Types.Crewmate, Cs(BodyGuard.color, "BodyGuard"), rates, null, true);
         bodyGuardResetTargetAfterMeeting = Create(30341, Types.Crewmate, "bodyGuardResetTargetAfterMeeting", true, bodyGuardSpawnRate);
         bodyGuardShowShielded = Create(30343, Types.Crewmate, "bodyGuardShowShielded", true, bodyGuardSpawnRate);
         bodyGuardFlash = Create(30342, Types.Crewmate, "bodyGuardFlash", true, bodyGuardSpawnRate);
 
-        seerSpawnRate = Create(30240, Types.Crewmate, cs(Seer.color, "Seer"), rates, null, true);
+        seerSpawnRate = Create(30240, Types.Crewmate, Cs(Seer.color, "Seer"), rates, null, true);
         seerMode = Create(30241, Types.Crewmate, "seerMode", ["seerMode1", "seerMode2", "seerMode3"], seerSpawnRate);
         seerLimitSoulDuration = Create(30242, Types.Crewmate, "seerLimitSoulDuration", false, seerSpawnRate);
         seerSoulDuration = Create(30243, Types.Crewmate, "seerSoulDuration", 30f, 0f, 120f, 2.5f, seerLimitSoulDuration);
 
-        hackerSpawnRate = Create(30250, Types.Crewmate, cs(Hacker.color, "Hacker"), rates, null, true);
+        hackerSpawnRate = Create(30250, Types.Crewmate, Cs(Hacker.color, "Hacker"), rates, null, true);
         hackerCooldown = Create(30251, Types.Crewmate, "hackerCooldown", 15f, 5f, 60f, 2.5f, hackerSpawnRate);
         hackerHackeringDuration = Create(30252, Types.Crewmate, "hackerHackeringDuration", 10f, 2.5f, 60f, 2.5f, hackerSpawnRate);
         hackerOnlyColorType = Create(30253, Types.Crewmate, "hackerOnlyColorType", false, hackerSpawnRate);
@@ -1274,7 +1274,7 @@ public class CustomOptionHolder
         hackerRechargeTasksNumber = Create(30255, Types.Crewmate, "hackerRechargeTasksNumber", 2f, 1f, 5f, 1f, hackerSpawnRate);
         hackerNoMove = Create(30256, Types.Crewmate, "hackerNoMove", true, hackerSpawnRate);
 
-        trackerSpawnRate = Create(30260, Types.Crewmate, cs(Tracker.color, "Tracker"), rates, null, true);
+        trackerSpawnRate = Create(30260, Types.Crewmate, Cs(Tracker.color, "Tracker"), rates, null, true);
         trackerUpdateIntervall = Create(30261, Types.Crewmate, "trackerUpdateIntervall", 0.5f, 0f, 30f, 0.5f, trackerSpawnRate);
         trackerResetTargetAfterMeeting = Create(30262, Types.Crewmate, "trackerResetTargetAfterMeeting ", false, trackerSpawnRate);
         trackerCanTrackCorpses = Create(30263, Types.Crewmate, "trackerCanTrackCorpses", true, trackerSpawnRate);
@@ -1283,14 +1283,14 @@ public class CustomOptionHolder
         trackerTrackingMethod = Create(30266, Types.Crewmate, "trackerTrackingMethod",
             ["trackerTrackingMethod1", "trackerTrackingMethod2", "trackerTrackingMethod3"], trackerSpawnRate);
 
-        snitchSpawnRate = Create(30270, Types.Crewmate, cs(Snitch.color, "Snitch"), rates, null, true);
+        snitchSpawnRate = Create(30270, Types.Crewmate, Cs(Snitch.color, "Snitch"), rates, null, true);
         snitchLeftTasksForReveal = Create(30271, Types.Crewmate, "snitchLeftTasksForReveal", 1, 0, 10, 1, snitchSpawnRate);
         snitchSeeMeeting = Create(30272, Types.Crewmate, "snitchSeeMeeting", true, snitchSpawnRate);
         snitchIncludeNeutralTeam = Create(30274, Types.Crewmate, "snitchIncludeNeutralTeam",
             ["optionOff", "snitchIncludeNeutralTeam2", "snitchIncludeNeutralTeam3", "snitchIncludeNeutralTeam4"], snitchSpawnRate);
         snitchTeamNeutraUseDifferentArrowColor = Create(30275, Types.Crewmate, "snitchTeamNeutraUseDifferentArrowColor", true, snitchIncludeNeutralTeam);
 
-        prophetSpawnRate = Create(30360, Types.Crewmate, cs(Prophet.color, "Prophet"), rates, null, true);
+        prophetSpawnRate = Create(30360, Types.Crewmate, Cs(Prophet.color, "Prophet"), rates, null, true);
         prophetCooldown = Create(30361, Types.Crewmate, "prophetCooldown", 20f, 5f, 60f, 2.5f, prophetSpawnRate);
         prophetNumExamines = Create(30362, Types.Crewmate, "prophetNumExamines", 4, 1, 10, 1, prophetSpawnRate);
         prophetCanCallEmergency = Create(30363, Types.Crewmate, "canCallEmergency", true, prophetSpawnRate);
@@ -1301,17 +1301,17 @@ public class CustomOptionHolder
         prophetEvilNeutralAsRed = Create(30368, Types.Crewmate, "prophetEvilNeutralAsRed", true, prophetSpawnRate);
         prophetKillNeutralAsRed = Create(30369, Types.Crewmate, "prophetKillNeutralAsRed", true, prophetSpawnRate);
 
-        infoSleuthSpawnRate = Create(30380, Types.Crewmate, cs(InfoSleuth.color, "InfoSleuth"), rates, null, true);
+        infoSleuthSpawnRate = Create(30380, Types.Crewmate, Cs(InfoSleuth.color, "InfoSleuth"), rates, null, true);
         infoSleuthInfoType = Create(30381, Types.Crewmate, "infoSleuthInfoType",
             ["infoSleuthInfoType1", "infoSleuthInfoType2", "infoSleuthInfoType3"], infoSleuthSpawnRate);
 
-        mediumSpawnRate = Create(30310, Types.Crewmate, cs(Medium.color, "Medium"), rates, null, true);
+        mediumSpawnRate = Create(30310, Types.Crewmate, Cs(Medium.color, "Medium"), rates, null, true);
         mediumCooldown = Create(30311, Types.Crewmate, "mediumCooldown", 7.5f, 2.5f, 120f, 2.5f, mediumSpawnRate);
         mediumDuration = Create(30312, Types.Crewmate, "mediumDuration", 0.5f, 0f, 15f, 0.5f, mediumSpawnRate);
         mediumOneTimeUse = Create(30313, Types.Crewmate, "mediumOneTimeUse", false, mediumSpawnRate);
         mediumChanceAdditionalInfo = Create(30314, Types.Crewmate, "mediumChanceAdditionalInfo", rates, mediumSpawnRate);
 
-        trapperSpawnRate = Create(30350, Types.Crewmate, cs(Trapper.color, "Trapper"), rates, null, true);
+        trapperSpawnRate = Create(30350, Types.Crewmate, Cs(Trapper.color, "Trapper"), rates, null, true);
         trapperCooldown = Create(30351, Types.Crewmate, "trapperCooldown", 20f, 5f, 120f, 2.5f, trapperSpawnRate);
         trapperMaxCharges = Create(30352, Types.Crewmate, "trapperMaxCharges", 5f, 1f, 15f, 1f, trapperSpawnRate);
         trapperRechargeTasksNumber = Create(30353, Types.Crewmate, "trapperRechargeTasksNumber", 2f, 1f, 15f, 1f, trapperSpawnRate);
@@ -1319,20 +1319,20 @@ public class CustomOptionHolder
         trapperInfoType = Create(30356, Types.Crewmate, "trapperInfoType", ["Role", "trapperInfoType2", "Name"], trapperSpawnRate);
         trapperTrapDuration = Create(30357, Types.Crewmate, "trapperTrapDuration", 5f, 1f, 15f, 0.5f, trapperSpawnRate);
 
-        spySpawnRate = Create(30280, Types.Crewmate, cs(Spy.color, "Spy"), rates, null, true);
+        spySpawnRate = Create(30280, Types.Crewmate, Cs(Spy.color, "Spy"), rates, null, true);
         spyCanDieToSheriff = Create(30281, Types.Crewmate, "spyCanDieToSheriff", false, spySpawnRate);
         spyImpostorsCanKillAnyone = Create(30282, Types.Crewmate, "spyImpostorsCanKillAnyone", true, spySpawnRate);
         spyCanEnterVents = Create(30283, Types.Crewmate, "canUseVents", true, spySpawnRate);
         spyHasImpostorVision = Create(30284, Types.Crewmate, "hasImpVision", true, spySpawnRate);
 
-        portalmakerSpawnRate = Create(30290, Types.Crewmate, cs(Portalmaker.color, "Portalmaker"), rates, null, true);
+        portalmakerSpawnRate = Create(30290, Types.Crewmate, Cs(Portalmaker.color, "Portalmaker"), rates, null, true);
         portalmakerCooldown = Create(30291, Types.Crewmate, "portalmakerCooldown", 15f, 10f, 60f, 2.5f, portalmakerSpawnRate);
         portalmakerUsePortalCooldown = Create(30292, Types.Crewmate, "portalmakerUsePortalCooldown", 15f, 10f, 60f, 2.5f, portalmakerSpawnRate);
         portalmakerLogOnlyColorType = Create(30293, Types.Crewmate, "portalmakerLogOnlyColorType", true, portalmakerSpawnRate);
         portalmakerLogHasTime = Create(30294, Types.Crewmate, "portalmakerLogHasTime", true, portalmakerSpawnRate);
         portalmakerCanPortalFromAnywhere = Create(30295, Types.Crewmate, "portalmakerCanPortalFromAnywhere", true, portalmakerSpawnRate);
 
-        securityGuardSpawnRate = Create(30300, Types.Crewmate, cs(SecurityGuard.color, "SecurityGuard"), rates, null, true);
+        securityGuardSpawnRate = Create(30300, Types.Crewmate, Cs(SecurityGuard.color, "SecurityGuard"), rates, null, true);
         securityGuardCooldown = Create(30301, Types.Crewmate, "securityGuardCooldown", 15f, 10f, 60f, 2.5f, securityGuardSpawnRate);
         securityGuardTotalScrews = Create(30302, Types.Crewmate, "securityGuardTotalScrews", 6f, 1f, 15f, 1f, securityGuardSpawnRate);
         securityGuardCamPrice = Create(30303, Types.Crewmate, "securityGuardCamPrice", 2f, 1f, 15f, 1f, securityGuardSpawnRate);
@@ -1342,7 +1342,7 @@ public class CustomOptionHolder
         securityGuardCamRechargeTasksNumber = Create(30307, Types.Crewmate, "securityGuardCamRechargeTasksNumber", 3f, 1f, 10f, 1f, securityGuardSpawnRate);
         securityGuardNoMove = Create(30308, Types.Crewmate, "securityGuardNoMove", true, securityGuardSpawnRate);
 
-        jumperSpawnRate = Create(30320, Types.Crewmate, cs(Jumper.color, "Jumper"), rates, null, true);
+        jumperSpawnRate = Create(30320, Types.Crewmate, Cs(Jumper.color, "Jumper"), rates, null, true);
         jumperJumpTime = Create(30321, Types.Crewmate, "jumperJumpTime", 10f, 0f, 60f, 2.5f, jumperSpawnRate);
         jumperMaxCharges = Create(30325, Types.Crewmate, "jumperMaxCharges", 3, 0, 10, 1, jumperSpawnRate);
         jumperResetPlaceAfterMeeting = Create(30323, Types.Crewmate, "jumperResetPlaceAfterMeeting", false, jumperSpawnRate);
@@ -1350,14 +1350,14 @@ public class CustomOptionHolder
 
         //-------------------------- Modifier (40000 - 49999) -------------------------- //
 
-        modifiersAreHidden = Create(40000, Types.Modifier, cs(Color.yellow, "modifiersAreHidden"), false, null, true);
+        modifiersAreHidden = Create(40000, Types.Modifier, Cs(Color.yellow, "modifiersAreHidden"), false, null, true);
 
-        modifierLover = Create(40160, Types.Modifier, cs(Lovers.color, "Lover"), rates, null, true);
+        modifierLover = Create(40160, Types.Modifier, Cs(Lovers.color, "Lover"), rates, null, true);
         modifierLoverImpLoverRate = Create(40161, Types.Modifier, "modifierLoverImpLoverRate", rates, modifierLover);
         modifierLoverBothDie = Create(40162, Types.Modifier, "modifierLoverBothDie", true, modifierLover);
         modifierLoverEnableChat = Create(40163, Types.Modifier, "modifierLoverEnableChat", true, modifierLover);
 
-        modifierAssassin = Create(10000, Types.Modifier, cs(Assassin.color, "modifierAssassin"), rates, null, true, isHidden: () => GuesserGM.Enabled);
+        modifierAssassin = Create(10000, Types.Modifier, Cs(Assassin.color, "modifierAssassin"), rates, null, true, isHidden: () => GuesserGM.Enabled);
         modifierAssassinQuantity = Create(10001, Types.Modifier, "modifierAssassinQuantity", ratesCount, modifierAssassin, isHidden: () => GuesserGM.Enabled);
         modifierAssassinNumberOfShots = Create(10002, Types.Modifier, "modifierAssassinNumberOfShots", 3f, 1f, 15f, 1f, modifierAssassin, isHidden: () => GuesserGM.Enabled);
         modifierAssassinMultipleShotsPerMeeting = Create(10003, Types.Modifier, "modifierAssassinMultipleShotsPerMeeting", true, modifierAssassin, isHidden: () => GuesserGM.Enabled);
@@ -1366,93 +1366,93 @@ public class CustomOptionHolder
         guesserCantGuessSnitchIfTaksDone = Create(10006, Types.Modifier, "guesserCantGuessSnitchIfTaksDone", true, modifierAssassin, isHidden: () => GuesserGM.Enabled);
         modifierAssassinKillsThroughShield = Create(10007, Types.Modifier, "modifierAssassinKillsThroughShield", false, modifierAssassin, isHidden: () => GuesserGM.Enabled);
 
-        modifierSpecoality = Create(40350, Types.Modifier, cs(Palette.ImpostorRed, "Specoality"), rates, null, true);
+        modifierSpecoality = Create(40350, Types.Modifier, Cs(Palette.ImpostorRed, "Specoality"), rates, null, true);
         modifierSpecoalityIsGlobal = Create(40351, Types.Modifier, "modifierSpecoalityIsGlobal", false, modifierSpecoality);
 
-        modifierDisperser = Create(40100, Types.Modifier, cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
+        modifierDisperser = Create(40100, Types.Modifier, Cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
         modifierDisperserDispersesToVent = Create(40101, Types.Modifier, "modifierDisperserDispersesToVent", true, modifierDisperser);
 
-        modifierPoucher = Create(40370, Types.Modifier, cs(Palette.ImpostorRed, "Poucher"), rates, null, true, null, onChange: () =>
+        modifierPoucher = Create(40370, Types.Modifier, Cs(Palette.ImpostorRed, "Poucher"), rates, null, true, null, onChange: () =>
             { poucherSpawnRate.selection = 0; });
 
-        modifierVortox = Create(40380, Types.Modifier, cs(Vortox.color, "Vortox"), rates, null, true);
+        modifierVortox = Create(40380, Types.Modifier, Cs(Vortox.color, "Vortox"), rates, null, true);
         modifierVortoxReversal = Create(40383, Types.Modifier, "modifierVortoxReversal", true, modifierVortox);
         modifierVortoxSkipMeeting = Create(40381, Types.Modifier, "modifierVortoxSkipMeeting", true, modifierVortox);
         modifierVortoxSkipNum = Create(40382, Types.Modifier, "modifierVortoxSkipNum", 4, 1, 10, 1, modifierVortoxSkipMeeting);
 
-        modifierLastImpostor = Create(40110, Types.Modifier, cs(Palette.ImpostorRed, "LastImpostor"), false, null, true);
+        modifierLastImpostor = Create(40110, Types.Modifier, Cs(Palette.ImpostorRed, "LastImpostor"), false, null, true);
         modifierLastImpostorDeduce = Create(40111, Types.Modifier, "modifierLastImpostorDeduce", 5f, 2.5f, 15f, 2.5f, modifierLastImpostor);
 
-        modifierBloody = Create(40120, Types.Modifier, cs(Color.yellow, "Bloody"), rates, null, true);
-        modifierBloodyQuantity = Create(40121, Types.Modifier, cs(Color.yellow, "modifierBloodyQuantity"), ratesCount, modifierBloody);
+        modifierBloody = Create(40120, Types.Modifier, Cs(Color.yellow, "Bloody"), rates, null, true);
+        modifierBloodyQuantity = Create(40121, Types.Modifier, Cs(Color.yellow, "modifierBloodyQuantity"), ratesCount, modifierBloody);
         modifierBloodyDuration = Create(40122, Types.Modifier, "modifierBloodyDuration", 10f, 3f, 60f, 0.5f, modifierBloody);
 
-        modifierAntiTeleport = Create(40130, Types.Modifier, cs(Color.yellow, "AntiTeleport"), rates, null, true);
-        modifierAntiTeleportQuantity = Create(40131, Types.Modifier, cs(Color.yellow, "modifierAntiTeleportQuantity"), ratesCount, modifierAntiTeleport);
+        modifierAntiTeleport = Create(40130, Types.Modifier, Cs(Color.yellow, "AntiTeleport"), rates, null, true);
+        modifierAntiTeleportQuantity = Create(40131, Types.Modifier, Cs(Color.yellow, "modifierAntiTeleportQuantity"), ratesCount, modifierAntiTeleport);
 
-        modifierTieBreaker = Create(40140, Types.Modifier, cs(Color.yellow, "TieBreaker"), rates, null, true);
+        modifierTieBreaker = Create(40140, Types.Modifier, Cs(Color.yellow, "TieBreaker"), rates, null, true);
 
-        modifierBait = Create(40150, Types.Modifier, cs(Color.yellow, "Bait"), rates, null, true);
+        modifierBait = Create(40150, Types.Modifier, Cs(Color.yellow, "Bait"), rates, null, true);
         modifierBaitSwapCrewmate = Create(40151, Types.Modifier, "modifierBaitSwapCrewmate", false, modifierBait);
         modifierBaitReportDelayMin = Create(40152, Types.Modifier, "modifierBaitReportDelayMin", 0f, 0f, 10f, 0.125f, modifierBait);
         modifierBaitReportDelayMax = Create(40153, Types.Modifier, "modifierBaitReportDelayMax", 0.5f, 0f, 10f, 0.5f, modifierBait);
         modifierBaitShowKillFlash = Create(40154, Types.Modifier, "modifierBaitShowKillFlash", true, modifierBait);
 
-        modifierAftermath = Create(40360, Types.Modifier, cs(Color.yellow, "Aftermath"), rates, null, true);
+        modifierAftermath = Create(40360, Types.Modifier, Cs(Color.yellow, "Aftermath"), rates, null, true);
 
-        modifierSunglasses = Create(40170, Types.Modifier, cs(Color.yellow, "Sunglasses"), rates, null, true);
-        modifierSunglassesQuantity = Create(40171, Types.Modifier, cs(Color.yellow, "modifierSunglassesQuantity"), ratesCount, modifierSunglasses);
+        modifierSunglasses = Create(40170, Types.Modifier, Cs(Color.yellow, "Sunglasses"), rates, null, true);
+        modifierSunglassesQuantity = Create(40171, Types.Modifier, Cs(Color.yellow, "modifierSunglassesQuantity"), ratesCount, modifierSunglasses);
         modifierSunglassesVision = Create(40172, Types.Modifier, "modifierSunglassesVision", ["-10%", "-20%", "-30%", "-40%", "-50%"], modifierSunglasses);
 
-        modifierTorch = Create(40180, Types.Modifier, cs(Color.yellow, "Torch"), rates, null, true);
-        modifierTorchQuantity = Create(40181, Types.Modifier, cs(Color.yellow, "modifierTorchQuantity"), ratesCount, modifierTorch);
+        modifierTorch = Create(40180, Types.Modifier, Cs(Color.yellow, "Torch"), rates, null, true);
+        modifierTorchQuantity = Create(40181, Types.Modifier, Cs(Color.yellow, "modifierTorchQuantity"), ratesCount, modifierTorch);
         modifierTorchVision = Create(40182, Types.Modifier, "modifierTorchVision", 1.5f, 1f, 3f, 0.125f, modifierTorch);
 
-        modifierFlash = Create(40190, Types.Modifier, cs(Color.yellow, "Flash"), rates, null, true);
-        modifierFlashQuantity = Create(40191, Types.Modifier, cs(Color.yellow, "modifierFlashQuantity"), ratesCount, modifierFlash);
+        modifierFlash = Create(40190, Types.Modifier, Cs(Color.yellow, "Flash"), rates, null, true);
+        modifierFlashQuantity = Create(40191, Types.Modifier, Cs(Color.yellow, "modifierFlashQuantity"), ratesCount, modifierFlash);
         modifierFlashSpeed = Create(40192, Types.Modifier, "modifierFlashSpeed", 1.25f, 1f, 3f, 0.125f, modifierFlash);
 
-        modifierMultitasker = Create(40200, Types.Modifier, cs(Color.yellow, "Multitasker"), rates, null, true);
-        modifierMultitaskerQuantity = Create(40201, Types.Modifier, cs(Color.yellow, "modifierMultitaskerQuantity"), ratesCount, modifierMultitasker);
+        modifierMultitasker = Create(40200, Types.Modifier, Cs(Color.yellow, "Multitasker"), rates, null, true);
+        modifierMultitaskerQuantity = Create(40201, Types.Modifier, Cs(Color.yellow, "modifierMultitaskerQuantity"), ratesCount, modifierMultitasker);
 
-        modifierMini = Create(40210, Types.Modifier, cs(Color.yellow, "Mini"), rates, null, true);
+        modifierMini = Create(40210, Types.Modifier, Cs(Color.yellow, "Mini"), rates, null, true);
         modifierMiniGrowingUpDuration = Create(40211, Types.Modifier, "modifierMiniGrowingUpDuration", 400f, 100f, 1500f, 25f, modifierMini);
         modifierMiniGrowingUpInMeeting = Create(40212, Types.Modifier, "modifierMiniGrowingUpInMeeting", true, modifierMini);
 
-        modifierGiant = Create(40220, Types.Modifier, cs(Color.yellow, "Giant"), rates, null, true);
+        modifierGiant = Create(40220, Types.Modifier, Cs(Color.yellow, "Giant"), rates, null, true);
         modifierGiantSpped = Create(40221, Types.Modifier, "modifierGiantSpped", 0.75f, 0.5f, 1.5f, 0.05f, modifierGiant);
 
-        modifierIndomitable = Create(40230, Types.Modifier, cs(Color.yellow, "Indomitable"), rates, null, true);
+        modifierIndomitable = Create(40230, Types.Modifier, Cs(Color.yellow, "Indomitable"), rates, null, true);
 
-        modifierBlind = Create(40240, Types.Modifier, cs(Color.yellow, "Blind"), rates, null, true);
+        modifierBlind = Create(40240, Types.Modifier, Cs(Color.yellow, "Blind"), rates, null, true);
 
-        modifierWatcher = Create(40250, Types.Modifier, cs(Color.yellow, "Watcher"), rates, null, true);
+        modifierWatcher = Create(40250, Types.Modifier, Cs(Color.yellow, "Watcher"), rates, null, true);
 
-        modifierRadar = Create(40260, Types.Modifier, cs(Color.yellow, "Radar"), rates, null, true);
+        modifierRadar = Create(40260, Types.Modifier, Cs(Color.yellow, "Radar"), rates, null, true);
 
-        modifierTunneler = Create(40270, Types.Modifier, cs(Color.yellow, "Tunneler"), rates, null, true);
+        modifierTunneler = Create(40270, Types.Modifier, Cs(Color.yellow, "Tunneler"), rates, null, true);
         modifierTunnelerNoTask = Create(40271, Types.Modifier, "modifierTunnelerNoTask", false, modifierTunneler);
 
-        modifierButtonBarry = Create(40280, Types.Modifier, cs(Color.yellow, "ButtonBarry"), rates, null, true);
+        modifierButtonBarry = Create(40280, Types.Modifier, Cs(Color.yellow, "ButtonBarry"), rates, null, true);
         modifierButtonSabotageRemoteMeetings = Create(40281, Types.Modifier, "modifierButtonSabotageRemoteMeetings", true, modifierButtonBarry);
 
-        modifierSlueth = Create(40290, Types.Modifier, cs(Color.yellow, "Slueth"), rates, null, true);
+        modifierSlueth = Create(40290, Types.Modifier, Cs(Color.yellow, "Slueth"), rates, null, true);
 
-        modifierCursed = Create(40300, Types.Modifier, cs(Color.yellow, "Cursed"), rates, null, true);
+        modifierCursed = Create(40300, Types.Modifier, Cs(Color.yellow, "Cursed"), rates, null, true);
         modifierAutoJoin = Create(40302, Types.Modifier, "modifierAutoJoin", true, modifierCursed);
         modifierHideCursed = Create(40301, Types.Modifier, "modifierShowCursed", false, modifierCursed);
 
-        modifierVip = Create(40310, Types.Modifier, cs(Color.yellow, "Vip"), rates, null, true);
-        modifierVipQuantity = Create(40311, Types.Modifier, cs(Color.yellow, "modifierVipQuantity"), ratesCount, modifierVip);
+        modifierVip = Create(40310, Types.Modifier, Cs(Color.yellow, "Vip"), rates, null, true);
+        modifierVipQuantity = Create(40311, Types.Modifier, Cs(Color.yellow, "modifierVipQuantity"), ratesCount, modifierVip);
         modifierVipShowColor = Create(40312, Types.Modifier, "modifierVipShowColor", true, modifierVip);
 
-        modifierChameleon = Create(40330, Types.Modifier, cs(Color.yellow, "Chameleon"), rates, null, true);
-        modifierChameleonQuantity = Create(40331, Types.Modifier, cs(Color.yellow, "modifierChameleonQuantity"), ratesCount, modifierChameleon);
+        modifierChameleon = Create(40330, Types.Modifier, Cs(Color.yellow, "Chameleon"), rates, null, true);
+        modifierChameleonQuantity = Create(40331, Types.Modifier, Cs(Color.yellow, "modifierChameleonQuantity"), ratesCount, modifierChameleon);
         modifierChameleonHoldDuration = Create(40332, Types.Modifier, "modifierChameleonHoldDuration", 3f, 1f, 10f, 0.5f, modifierChameleon);
         modifierChameleonFadeDuration = Create(40333, Types.Modifier, "modifierChameleonFadeDuration", 1f, 0.25f, 10f, 0.25f, modifierChameleon);
         modifierChameleonMinVisibility = Create(40334, Types.Modifier, "modifierChameleonMinVisibility", ["0%", "10%", "20%", "30%", "40%", "50%"], modifierChameleon);
 
-        modifierShifter = Create(40340, Types.Modifier, cs(Color.yellow, "Shifter"), rates, null, true);
+        modifierShifter = Create(40340, Types.Modifier, Cs(Color.yellow, "Shifter"), rates, null, true);
         modifierShiftNeutral = Create(40341, Types.Modifier, "modifierShiftNeutral", false, modifierShifter);
         modifierShiftALLNeutral = Create(40342, Types.Modifier, "modifierShiftALLNeutral", false, modifierShiftNeutral);
         modifierShiftReload = Create(40343, Types.Modifier, "modifierShiftReload", true, modifierShifter);

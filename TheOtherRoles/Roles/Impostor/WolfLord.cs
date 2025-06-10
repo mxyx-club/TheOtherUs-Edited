@@ -21,7 +21,7 @@ public class WolfLord
 
     public static void WolfLordkilled(byte targetId)
     {
-        var target = playerById(targetId);
+        var target = PlayerById(targetId);
         Revealed = true;
         if (target == null) return;
 
@@ -48,7 +48,7 @@ public class WolfLord
                 if (shouldClearVote)
                 {
                     pva.UnsetVote();
-                    var voteAreaPlayer = playerById(pva.TargetPlayerId);
+                    var voteAreaPlayer = PlayerById(pva.TargetPlayerId);
                     if (voteAreaPlayer?.AmOwner == false) continue;
                     MeetingHud.Instance.ClearVote();
                 }
@@ -96,7 +96,7 @@ public class WolfLord
                     localScale.x * 1.7f,
                     localScale.x * 1.7f);
                 meetingExtraButtonLabel.transform.localScale = localScale;
-                meetingExtraButtonLabel.text = cs(color, "猎杀时刻");
+                meetingExtraButtonLabel.text = Cs(color, "猎杀时刻");
 
                 var passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
                 passiveButton.OnClick.RemoveAllListeners();
@@ -140,7 +140,7 @@ public class WolfLord
             {
                 foreach (var pva in __instance.playerStates)
                 {
-                    var player = playerById(pva.TargetPlayerId);
+                    var player = PlayerById(pva.TargetPlayerId);
                     if (player.IsAlive() && player != Player && !player.IsImpostor())
                     {
                         GameObject template = pva.Buttons.transform.Find("CancelButton").gameObject;
@@ -160,7 +160,7 @@ public class WolfLord
 
         private static void WolfLordOnClick(PlayerVoteArea pva, MeetingHud __instance)
         {
-            var target = playerById(pva.TargetPlayerId);
+            var target = PlayerById(pva.TargetPlayerId);
             if (Player == null || !Revealed || Killed || target == null) return;
             if (__instance.state is MeetingHud.VoteStates.Discussion or MeetingHud.VoteStates.Results) return;
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WolfLordkilled);
