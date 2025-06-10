@@ -1335,19 +1335,6 @@ internal class HudManagerUpdatePatch
         }
     }
 
-    private static void jackalSetTarget()
-    {
-        if (Jackal.jackal.Any(x => x.IsAlive() && x.PlayerId == PlayerControl.LocalPlayer.PlayerId))
-        {
-            var untargetablePlayers = new List<PlayerControl>();
-            untargetablePlayers.AddRange(Jackal.jackal);
-            if (Jackal.Sidekick != null) untargetablePlayers.Add(Jackal.Sidekick);
-            if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
-            Jackal.currentTarget = SetTarget(untarget: untargetablePlayers);
-            SetPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
-        }
-    }
-
     public static void akujoSetTarget()
     {
         if (Akujo.akujo == null || Akujo.akujo.Data.IsDead || PlayerControl.LocalPlayer != Akujo.akujo) return;
@@ -1392,7 +1379,6 @@ internal class HudManagerUpdatePatch
         setNameTags();
 
         impostorSetTarget();
-        jackalSetTarget();
         akujoSetTarget();
 
         // Swooper

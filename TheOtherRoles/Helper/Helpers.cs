@@ -5,16 +5,6 @@ using TheOtherRoles.Patches;
 
 namespace TheOtherRoles.Helper;
 
-public enum MurderAttemptResult
-{
-    ReverseKill,
-    PerformKill,
-    SuppressKill,
-    BlankKill,
-    BodyGuardKill,
-    DelayVampireKill
-}
-
 public enum SabotageTypes
 {
     Comms,
@@ -209,18 +199,15 @@ public static class Helpers
     /// <summary>
     /// 触发老兵反弹
     /// </summary>
-    public static bool CheckAndDoVetKill(PlayerControl target)
+    public static bool CheckUseAbility(PlayerControl killer, PlayerControl target)
     {
-        var shouldVetKill = Veteran.veteran == target && Veteran.alertActive;
-        if (shouldVetKill)
+        if (Veteran.veteran == target && Veteran.alertActive)
         {
-            var writer = StartRPC(CustomRPC.VeteranKill);
-            writer.Write(PlayerControl.LocalPlayer.PlayerId);
-            writer.EndRPC();
-            RPCProcedure.veteranKill(PlayerControl.LocalPlayer.PlayerId);
+            RpcCustomMurderPlayer(target, killer);
+            return true;
         }
 
-        return shouldVetKill;
+        return false;
     }
 
     public static bool IsNeutral(this PlayerControl player)
@@ -310,11 +297,19 @@ public static class Helpers
         if (SchrodingersCat.Player.IsAlive() && SchrodingersCat.State == SchrodingersCat.CatState.Impostor) untargetablePlayers.Add(SchrodingersCat.Player);
         if (Spy.spy != null)
         {
-            target = Spy.impostorsCanKillAnyone ? SetTarget(null, false, true) : SetTarget([Spy.spy], true, true);
+            if (Spy.impostorsCanKillAnyone)
+            {
+                target = SetTarget(untargetablePlayers, false, true);
+            }
+            else
+            {
+                untargetablePlayers.Add(Spy.spy);
+                target = SetTarget(untargetablePlayers, true, true);
+            }
         }
         else
         {
-            target = SetTarget(null, true, true);
+            target = SetTarget(untargetablePlayers, true, true);
         }
 
         SetPlayerOutline(target, Palette.ImpostorRed);
@@ -674,8 +669,16 @@ public static class Helpers
     public static PlayerControl PlayerById(byte? id)
     {
         if (id == null) return null;
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             if (player.PlayerId == id) return player;
+        return null;
+    }
+
+    public static PlayerControl PlayerByName(string name)
+    {
+        if (name.IsNullOrWhiteSpace()) return null;
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            if (player?.Data?.PlayerName == name) return player;
         return null;
     }
 
@@ -693,18 +696,18 @@ public static class Helpers
     public static void handleVampireBiteOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, false);
+        //checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, false);
         var writer = StartRPC(CustomRPC.VampireSetBitten);
         writer.Write(byte.MaxValue);
-        writer.Write(byte.MaxValue);
+        writer.Write(true);
         writer.EndRPC();
-        RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
+        RPCProcedure.vampireSetBitten(byte.MaxValue, true);
     }
 
     public static void handleBomberExplodeOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBombPlayer, false);
+        //checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBombPlayer, false);
         var writer = StartRPC(CustomRPC.GiveBomb);
         writer.Write(byte.MaxValue);
         writer.Write(false);
@@ -1118,198 +1121,6 @@ public static class Helpers
             }
         }
         return playerControlList;
-    }
-
-    public static MurderAttemptResult checkMuderAttempt(PlayerControl killer, PlayerControl target, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
-    {
-        var targetRole = RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault();
-
-        // Modified vanilla checks
-        if (AmongUsClient.Instance.IsGameOver) return MurderAttemptResult.SuppressKill;
-        if (killer == null || killer.Data == null || (killer.Data.IsDead && !ignoreIfKillerIsDead) || killer.Data.Disconnected)
-            return MurderAttemptResult.SuppressKill; // Allow non Impostor kills compared to vanilla code
-        if (target == null || target.Data == null || target.Data.IsDead || target.Data.Disconnected)
-            return MurderAttemptResult.SuppressKill; // Allow killing players in vents compared to vanilla code
-        if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek)
-            return MurderAttemptResult.PerformKill;
-
-        // Handle first kill attempt
-        if (ModOption.shieldFirstKill && ModOption.firstKillPlayer == target)
-            return MurderAttemptResult.SuppressKill;
-
-        // Handle blank shot
-        if (!ignoreBlank && Pursuer.blankedList.Any(x => x.PlayerId == killer.PlayerId))
-        {
-            var writer = StartRPC(CustomRPC.PursuerSetBlanked);
-            writer.Write(killer.PlayerId);
-            writer.Write((byte)0);
-            writer.EndRPC();
-            RPCProcedure.pursuerSetBlanked(killer.PlayerId, 0);
-
-            return MurderAttemptResult.BlankKill;
-        }
-
-        // Kill the killer if the Veteran is on alert
-
-        if (Veteran.veteran != null && target == Veteran.veteran && Veteran.alertActive)
-        {
-            if (Medic.shielded != null && Medic.shielded == target)
-            {
-                var writer = StartRPC(CustomRPC.ShieldedMurderAttempt);
-                writer.Write(target.PlayerId);
-                writer.EndRPC();
-                RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
-            }
-
-            return MurderAttemptResult.ReverseKill;
-        } // Kill the killer if the Veteran is on alert
-
-        // Kill the Body Guard and the killer if the target is guarded
-
-        if (BodyGuard.bodyguard != null && target == BodyGuard.guarded && IsAlive(BodyGuard.bodyguard))
-        {
-            if (Medic.shielded != null && Medic.shielded == target)
-            {
-                var writer = StartRPC(CustomRPC.ShieldedMurderAttempt);
-                writer.Write(target.PlayerId);
-                writer.EndRPC();
-                RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
-            }
-
-            return MurderAttemptResult.BodyGuardKill;
-        }
-
-        // Block impostor shielded kill
-        if (!Medic.unbreakableShield && Medic.shielded != null && Medic.shielded == target)
-        {
-            var write = StartRPC(CustomRPC.PursuerSetBlanked);
-            write.Write(killer.PlayerId);
-            write.Write((byte)0);
-            write.EndRPC();
-            RPCProcedure.pursuerSetBlanked(killer.PlayerId, 0);
-            Medic.shielded = null;
-            return MurderAttemptResult.BlankKill;
-        }
-
-        if (Medic.shielded != null && Medic.shielded == target)
-        {
-            var writer = StartRPC(CustomRPC.ShieldedMurderAttempt);
-            writer.Write(killer.PlayerId);
-            writer.EndRPC();
-            RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
-            SoundEffectsManager.play("fail");
-            return MurderAttemptResult.BlankKill;
-        }
-
-        // Block impostor not fully grown mini kill
-        if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp()) return MurderAttemptResult.SuppressKill;
-
-        if (Survivor.Player != null && Survivor.Player.Any(x => x.PlayerId == target.PlayerId) && Survivor.vestActive)
-        {
-            if (PlayerControl.LocalPlayer == killer) CustomButton.SetKillTimer(Survivor.vestResetCooldown);
-            SoundEffectsManager.play("fail");
-            return MurderAttemptResult.SuppressKill;
-        }
-
-        if (Cursed.cursed != null && Cursed.cursed == target && killer.Data.Role.IsImpostor)
-        {
-            var writer = StartRPC(CustomRPC.PursuerSetBlanked);
-            writer.Write(killer.PlayerId);
-            writer.Write((byte)0);
-            writer.EndRPC();
-            RPCProcedure.pursuerSetBlanked(killer.PlayerId, 0);
-
-            turnToImpostorRPC(target);
-
-            return MurderAttemptResult.BlankKill;
-        }
-
-        // Thief if hit crew only kill if setting says so, but also kill the thief.
-        else if (Thief.thief != null && killer == Thief.thief && !Thief.tiefCanKill(target, killer))
-        {
-            Thief.suicideFlag = true;
-            return MurderAttemptResult.SuppressKill;
-        }
-
-        if (target.isUsingTransportation() && !InMeeting && killer == Vampire.vampire)
-            return MurderAttemptResult.DelayVampireKill;
-        if (target.isUsingTransportation())
-            return MurderAttemptResult.SuppressKill;
-        return MurderAttemptResult.PerformKill;
-    }
-
-    public static void MurderPlayer(PlayerControl killer, PlayerControl target, bool showAnimation)
-    {
-        var writer = StartRPC(CustomRPC.UncheckedMurderPlayer);
-        writer.Write(killer.PlayerId);
-        writer.Write(target.PlayerId);
-        writer.Write(showAnimation);
-        writer.EndRPC();
-        RPCProcedure.uncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation);
-    }
-
-    public static MurderAttemptResult checkMurderAttemptAndKill(PlayerControl killer, PlayerControl target, bool showAnimation = true, bool ignoreBlank = false,
-        bool ignoreIfKillerIsDead = false)
-    {
-        // The local player checks for the validity of the kill and performs it afterwards (different to vanilla, where the host performs all the checks)
-        // The kill attempt will be shared using a custom RPC, hence combining modded and unmodded versions is impossible
-        var murder = checkMuderAttempt(killer, target, ignoreBlank, ignoreIfKillerIsDead);
-
-        if (murder == MurderAttemptResult.PerformKill)
-        {
-            if (killer == Poucher.poucher) Poucher.killed.Add(target);
-            if (Mimic.mimic != null && killer == Mimic.mimic && !Mimic.hasMimic)
-            {
-                var writerMimic = StartRPC(CustomRPC.MimicMimicRole);
-                writerMimic.Write(target.PlayerId);
-                writerMimic.EndRPC();
-                Mimic.MimicRole(target.PlayerId);
-            }
-
-            MurderPlayer(killer, target, showAnimation);
-        }
-        else if (murder == MurderAttemptResult.DelayVampireKill)
-        {
-            HudManager.Instance.StartCoroutine(Effects.Lerp(10f, new Action<float>(p =>
-            {
-                if (!target.isUsingTransportation() && Vampire.bitten != null)
-                {
-                    var writer = StartRPC(CustomRPC.VampireSetBitten);
-                    writer.Write(byte.MaxValue);
-                    writer.Write(byte.MaxValue);
-                    writer.EndRPC();
-                    RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
-                    MurderPlayer(killer, target, showAnimation);
-                }
-            })));
-        }
-
-        if (murder == MurderAttemptResult.BodyGuardKill)
-        {
-            // Kill the Killer
-            var writer = StartRPC(CustomRPC.UncheckedMurderPlayer);
-            writer.Write(BodyGuard.bodyguard.PlayerId);
-            writer.Write(killer.PlayerId);
-            writer.Write(false);
-            writer.EndRPC();
-            RPCProcedure.uncheckedMurderPlayer(BodyGuard.bodyguard.PlayerId, killer.PlayerId, false);
-
-            // Kill the BodyGuard
-            var writer2 = StartRPC(CustomRPC.UncheckedMurderPlayer);
-            writer2.Write(killer.PlayerId);
-            writer2.Write(BodyGuard.bodyguard.PlayerId);
-            writer2.Write(false);
-            writer2.EndRPC();
-            RPCProcedure.uncheckedMurderPlayer(killer.PlayerId, BodyGuard.bodyguard.PlayerId, false);
-
-            var writer3 = StartRPC(CustomRPC.ShowBodyGuardFlash);
-            writer3.EndRPC();
-            RPCProcedure.showBodyGuardFlash();
-        }
-
-        if (murder == MurderAttemptResult.ReverseKill) checkMurderAttemptAndKill(target, killer);
-
-        return murder;
     }
 
     public static void SetKillTimerUnchecked(this PlayerControl player, float time, float max = float.NegativeInfinity)

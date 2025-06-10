@@ -293,9 +293,8 @@ internal class KillButtonDoClickPatch
             }
 
             // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
-            var res = checkMurderAttemptAndKill(PlayerControl.LocalPlayer, __instance.currentTarget);
             // Handle blank kill
-            if (res == MurderAttemptResult.BlankKill)
+            if (RpcCustomMurderPlayer(PlayerControl.LocalPlayer, __instance.currentTarget))
             {
                 PlayerControl.LocalPlayer.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
                 if (PlayerControl.LocalPlayer == Cleaner.cleaner)

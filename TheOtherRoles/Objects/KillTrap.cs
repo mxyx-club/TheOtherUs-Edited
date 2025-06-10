@@ -68,16 +68,17 @@ public class KillTrap
     public void Destroy()
     {
         Message($"销毁陷阱 {Id}");
-        audioSource?.Stop();
+        try { if (audioSource != null) audioSource.Stop(); } catch { }
         if (killtrap != null) UObject.Destroy(killtrap);
         AllTraps.Remove(this);
 
     }
 
-    public static void ClearAllTraps()
+    public static void ClearAndReload()
     {
         Message("清除所有陷阱");
-        foreach (var t in AllTraps.ToArray())
+        var traps = AllTraps.ToArray();
+        foreach (var t in traps)
         {
             t?.Destroy();
         }
@@ -85,14 +86,14 @@ public class KillTrap
         maxId = 0;
     }
 
-    public static void ClearAllTraps(PlayerControl trapper)
+    public static void ClearAllTraps(PlayerControl trapper, bool active)
     {
         Message($"清除玩家 {trapper?.Data?.PlayerName ?? "NULL"} 的所有陷阱");
-        foreach (var t in AllTraps.Where(x => x.trapper == trapper))
+        var traps = AllTraps.Where(x => x.trapper == trapper && (active || !x.isActive)).ToArray();
+        foreach (var t in traps)
         {
             t?.Destroy();
         }
-        AllTraps.RemoveAll(t => t.trapper == trapper);
     }
 
     public static void activateTrap(PlayerControl trapper, PlayerControl target, int trapId)
@@ -107,7 +108,7 @@ public class KillTrap
         var spriteRenderer = trap.killtrap.gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = trapActiveSprite;
 
-        ClearAllTraps(trapper);
+        ClearAllTraps(trapper, false);
 
         if (PlayerControl.LocalPlayer == trapper)
         {
@@ -199,7 +200,7 @@ public class KillTrap
 
     public static void UpdateTrap()
     {
-        foreach (var t in AllTraps)
+        foreach (var t in AllTraps.ToArray())
         {
             t.Update();
             bool canSee = t.isActive || PlayerControl.LocalPlayer.IsImpostor() || CanSeeRoleInfo;
@@ -259,7 +260,7 @@ public class KillTrap
             trap.audioSource.PlayOneShot(kill);
             if (trap.target.IsAlive() && PlayerControl.LocalPlayer == trap.target)
             {
-                checkMurderAttemptAndKill(trap.trapper, trap.target, false);
+                RpcCustomMurderPlayer(trap.trapper, trap.target, false);
             }
             _ = new LateTask(() =>
             {
@@ -304,7 +305,7 @@ public class KillTrap
                 trap?.Destroy();
             }
         })));
-        if (PlayerControl.LocalPlayer == trapper) checkMurderAttemptAndKill(trapper, target, false);
+        if (PlayerControl.LocalPlayer == trapper) RpcCustomMurderPlayer(trapper, target, false);
 
         EvilTrapper.isTrapKill = true;
     }

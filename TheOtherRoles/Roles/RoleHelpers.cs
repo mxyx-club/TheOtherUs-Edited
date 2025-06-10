@@ -1,3 +1,5 @@
+using TheOtherRoles.Patches;
+
 namespace TheOtherRoles.Roles;
 
 public enum RoleType
@@ -153,19 +155,125 @@ public static class RoleHelpers
         }
     }
 
-    public static void RpcMurderPlayer(PlayerControl killer, PlayerControl target, bool showAnimation = true, CustomDeathReason deathReason = CustomDeathReason.NULL)
+    public static void CustomMurderPlayer(
+        PlayerControl killer,
+        PlayerControl target,
+        bool showAnimation = true,
+        CustomDeathReason deathReason = CustomDeathReason.NULL)
     {
-        var writer = StartRPC(CustomRPC.UncheckedMurderPlayer);
+        if (deathReason == CustomDeathReason.NULL) deathReason = target == killer ? CustomDeathReason.Suicide : CustomDeathReason.Kill;
+        KillAnimationCoPerformKillPatch.hideNextAnimation = !showAnimation;
+        killer.MurderPlayer(target, MurderResultFlags.Succeeded);
+        GameHistory.OverrideDeathReasonAndKiller(target, deathReason, killer);
+    }
+
+    public static bool RpcCustomMurderPlayer(
+        PlayerControl killer,
+        PlayerControl target,
+        bool showAnimation = true,
+        bool force = false,
+        CustomDeathReason deathReason = CustomDeathReason.NULL)
+    {
+        if (!force && !CheckMurderPlayer(killer, target))
+            return false;
+
+        var writer = StartRPC(CustomRPC.CustomMurderPlayer);
         writer.Write(killer.PlayerId);
         writer.Write(target.PlayerId);
         writer.Write(showAnimation);
+        writer.Write((byte)deathReason);
         writer.EndRPC();
-        RPCProcedure.uncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation);
-
-        if (deathReason == CustomDeathReason.NULL) deathReason = target == killer ? CustomDeathReason.Suicide : CustomDeathReason.Kill;
-        GameHistory.RpcOverrideDeathReasonAndKiller(target, deathReason, killer);
+        CustomMurderPlayer(killer, target, showAnimation, deathReason);
+        return true;
     }
 
+    public static bool CheckMurderPlayer(PlayerControl killer, PlayerControl target)
+    {
+        if (killer == target) return true;
+        // Block impostor not fully grown mini kill
+        if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp()) return false;
+
+        // Handle first kill attempt
+        if (ModOption.shieldFirstKill && ModOption.firstKillPlayer == target)
+            return false;
+
+        if (CheckUseAbility(killer, target)) return false;
+
+        if (Pursuer.blankedList.Any(x => x.PlayerId == killer.PlayerId))
+        {
+            var writer = StartRPC(CustomRPC.SetBlanked);
+            writer.Write(killer.PlayerId);
+            writer.Write(false);
+            writer.EndRPC();
+            RPCProcedure.SetBlanked(killer.PlayerId, false);
+            CustomButton.SetKillTimer();
+            return false;
+        }
+
+        if (BodyGuard.bodyguard != null && target == BodyGuard.guarded && BodyGuard.bodyguard.IsAlive())
+        {
+            // Kill the Killer
+            var writer = StartRPC(CustomRPC.CustomMurderPlayer);
+            writer.Write(BodyGuard.bodyguard.PlayerId);
+            writer.Write(killer.PlayerId);
+            writer.Write(false);
+            writer.EndRPC();
+            CustomMurderPlayer(BodyGuard.bodyguard, killer, false);
+
+            // Kill the BodyGuard
+            var writer2 = StartRPC(CustomRPC.CustomMurderPlayer);
+            writer2.Write(killer.PlayerId);
+            writer2.Write(BodyGuard.bodyguard.PlayerId);
+            writer2.Write(false);
+            writer2.EndRPC();
+            CustomMurderPlayer(killer, BodyGuard.bodyguard, false);
+
+            var writer3 = StartRPC(CustomRPC.ShowBodyGuardFlash);
+            writer3.EndRPC();
+            RPCProcedure.showBodyGuardFlash();
+            return false;
+        }
+
+        if (Medic.shielded != null && Medic.shielded == target)
+        {
+            var writer = StartRPC(CustomRPC.ShieldedMurderAttempt);
+            writer.Write(killer.PlayerId);
+            writer.EndRPC();
+            RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
+
+            CustomButton.SetKillTimer();
+            SoundEffectsManager.play("fail");
+            return false;
+        }
+
+
+        if (Survivor.Player != null && Survivor.Player.Any(x => x.PlayerId == target.PlayerId) && Survivor.vestActive)
+        {
+            CustomButton.SetKillTimer(Survivor.vestResetCooldown);
+            SoundEffectsManager.play("fail");
+            return false;
+        }
+
+        if (Cursed.cursed != null && Cursed.cursed == target && killer.Data.Role.IsImpostor)
+        {
+            turnToImpostorRPC(target);
+
+            CustomButton.SetKillTimer();
+            return false;
+        }
+
+        // Thief if hit crew only kill if setting says so, but also kill the thief.
+        else if (Thief.thief != null && killer == Thief.thief && !Thief.tiefCanKill(target, killer))
+        {
+            Thief.suicideFlag = true;
+            return false;
+        }
+
+        if (target.isUsingTransportation())
+            return false;
+
+        return true;
+    }
 
 
 

@@ -124,13 +124,13 @@ internal class MeetingHudPatch
     private static void mayorToggleVoteTwice(MeetingHud __instance)
     {
         __instance.playerStates[0].Cancel(); // This will stop the underlying buttons of the template from showing up
-        if (__instance.state == VoteStates.Results || Mayor.mayor.Data.IsDead) return;
+        if (__instance.state is VoteStates.Results or VoteStates.Discussion || Mayor.mayor.IsDead())
+            return;
 
         Mayor.Revealed = true;
 
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-            (byte)CustomRPC.MayorRevealed, SendOption.Reliable);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        var writer = StartRPC(CustomRPC.MayorRevealed);
+        writer.EndRPC();
         UObject.Destroy(MeetingExtraButton);
     }
 
@@ -257,8 +257,14 @@ internal class MeetingHudPatch
             {
                 if (pvae.AmDead || pvae.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
 
-                if (Eraser.eraser.IsAlive() && PlayerControl.LocalPlayer == Eraser.eraser && !Eraser.canEraseGuess && Eraser.alreadyErased.Any(x => x == pvae.TargetPlayerId))
-                    continue;
+                if (Eraser.eraser.IsAlive() && PlayerControl.LocalPlayer == Eraser.eraser)
+                {
+                    if (!Eraser.canEraseGuess && Eraser.alreadyErased.Any(x => x == pvae.TargetPlayerId))
+                    {
+                        continue;
+                    }
+                }
+
                 var template = pvae.Buttons.transform.Find("CancelButton").gameObject;
                 var targetBox = UObject.Instantiate(template, pvae.transform);
                 targetBox.name = "ShootButton";
@@ -862,21 +868,6 @@ internal class MeetingHudPatch
                     Blackmailer.alreadyShook = true;
                     __instance.StartCoroutine(Effects.SwayX(playerState.transform));
                 }
-            }
-
-            var chat = FastDestroyableSingleton<HudManager>.Instance.Chat;
-            var local = PlayerControl.LocalPlayer;
-            var num = (int)chat.timeSinceLastMessage;
-            foreach (var p in PlayerControl.AllPlayerControls)
-            {
-                var player = p;
-                if (player != local || player.Data.IsDead || num != 0) continue;
-                var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.SetMeetingChatOverlay);
-                writer.Write(player.PlayerId);
-                writer.Write(local.PlayerId);
-                writer.EndRPC();
-                RPCProcedure.setChatNotificationOverlay(local.PlayerId, player.PlayerId);
-                break;
             }
         }
     }

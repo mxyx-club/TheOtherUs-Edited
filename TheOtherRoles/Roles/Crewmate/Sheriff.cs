@@ -75,10 +75,10 @@ public static class Sheriff
         cooldown = CustomOptionHolder.sheriffCooldown.GetFloat();
     }
 
-    public static bool sheriffCanKillNeutral(PlayerControl target)
+    public static bool sheriffCanKill(PlayerControl target)
     {
         return (target != Mini.mini || Mini.isGrownUp()) &&
-               (target.IsImpostor(CustomOptionHolder.spyCanDieToSheriff.GetBool()) ||
+               (target.IsImpostor(CustomOptionHolder.spyCanDieToSheriff.GetBool()) || target.IsImpostor(AndCat: true) ||
                 (canKillNeutrals &&
                  (isKillerNeutral(target) ||
                   Akujo.akujo == target ||

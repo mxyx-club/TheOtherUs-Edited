@@ -19,21 +19,15 @@ public class Infected
     {
         if (player == null || target == null) return;
 
-        if (Hunter.Player != null && target == Hunter.Player)
+        if (SchrodingersCat.Player != null && target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
         {
-            RpcMurderPlayer(target, player);
-            return;
-        }
-
-        if (SchrodingersCat.Player != null && target == SchrodingersCat.Player)
-        {
-            RpcMurderPlayer(player, target);
+            RpcCustomMurderPlayer(player, target);
             return;
         }
 
         if (CreatedCount >= MaxPlayer || Player.Count(x => x.IsAlive()) >= ActiveLimit || target.IsKiller())
         {
-            RpcMurderPlayer(player, target);
+            RpcCustomMurderPlayer(player, target);
         }
         else
         {

@@ -7,6 +7,7 @@ public class Jackal
 
     public static Color color = new Color32(0, 180, 235, byte.MaxValue);
     public static PlayerControl currentTarget;
+    public static PlayerControl killTarget;
 
     public static float cooldown = 30f;
     public static float createSidekickCooldown = 30f;
@@ -50,6 +51,7 @@ public class Jackal
         setSwoop();
         Sidekick = null;
         currentTarget = null;
+        killTarget = null;
         isInvisable = false;
         cooldown = CustomOptionHolder.jackalKillCooldown.GetFloat();
         swoopCooldown = CustomOptionHolder.jackalSwooperCooldown.GetFloat();

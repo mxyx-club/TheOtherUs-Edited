@@ -118,7 +118,7 @@ public class WolfLord
         private static void ButtonToggle(MeetingHud __instance)
         {
             __instance.playerStates[0].Cancel(); // This will stop the underlying buttons of the template from showing up
-            if (__instance.state is MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Results || Player.IsDead()) return;
+            if (__instance.state is MeetingHud.VoteStates.Discussion or MeetingHud.VoteStates.Results || Player.IsDead()) return;
 
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WolfLordkilled);
             writer.Write(byte.MaxValue);
@@ -162,7 +162,7 @@ public class WolfLord
         {
             var target = PlayerById(pva.TargetPlayerId);
             if (Player == null || !Revealed || Killed || target == null) return;
-            if (__instance.state is MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Results) return;
+            if (__instance.state is MeetingHud.VoteStates.Discussion or MeetingHud.VoteStates.Results) return;
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WolfLordkilled);
             writer.Write(target.PlayerId);
             writer.EndRPC();

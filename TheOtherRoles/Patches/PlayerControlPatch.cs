@@ -790,6 +790,16 @@ public static class MurderPlayerPatch
         // First kill (set before lover suicide)
         if (ModOption.firstKillName == "") ModOption.firstKillName = target.Data.PlayerName;
 
+        if (__instance == Poucher.poucher) Poucher.killed.Add(target);
+
+        if (PlayerControl.LocalPlayer == __instance && __instance == Mimic.mimic && !Mimic.hasMimic)
+        {
+            var writerMimic = StartRPC(CustomRPC.MimicMimicRole);
+            writerMimic.Write(target.PlayerId);
+            writerMimic.EndRPC();
+            Mimic.MimicRole(target.PlayerId);
+        }
+
         // Lover suicide trigger on murder
         if ((Lovers.lover1 != null && target == Lovers.lover1) || (Lovers.lover2 != null && target == Lovers.lover2))
         {

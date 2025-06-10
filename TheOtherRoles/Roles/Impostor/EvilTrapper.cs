@@ -1,5 +1,3 @@
-using TheOtherRoles.Objects;
-
 namespace TheOtherRoles.Roles.Impostor;
 
 public static class EvilTrapper

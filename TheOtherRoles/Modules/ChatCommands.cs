@@ -1,4 +1,5 @@
 using System.Text;
+using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles.Modules;
 
@@ -59,7 +60,7 @@ public static class ChatCommands
 
             if (ModOption.transparentTasks || Multitasker.multitasker.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId))
             {
-                if (PlayerControl.LocalPlayer.Data.IsDead || PlayerControl.LocalPlayer.Data.Disconnected) return;
+                if (PlayerControl.LocalPlayer.IsDead()) return;
                 if (!Minigame.Instance) return;
 
                 var Base = Minigame.Instance as MonoBehaviour;
@@ -76,15 +77,14 @@ public static class ChatCommands
     }
 
     [HarmonyPatch(typeof(ChatBubble), nameof(ChatBubble.SetName))]
-    public static class SetBubbleName
+    private static class SetBubbleName
     {
-        public static void Postfix(ChatBubble __instance, [HarmonyArgument(0)] string playerName)
+        private static void Postfix(ChatBubble __instance, [HarmonyArgument(0)] string playerName)
         {
-            var sourcePlayer = PlayerControl.AllPlayerControls.ToList()
-                .FirstOrDefault(x => x.Data != null && x.Data.PlayerName.Equals(playerName, StringComparison.Ordinal));
+            var sourcePlayer = PlayerByName(playerName);
 
-            if (PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.Data.Role.IsImpostor && __instance != null
-                 && Spy.spy != null && sourcePlayer.PlayerId == Spy.spy.PlayerId)
+            if (__instance != null && PlayerControl.LocalPlayer.IsImpostor(false, true)
+                 && sourcePlayer.IsImpostor(true, true))
             {
                 __instance.NameText.color = Palette.ImpostorRed;
             }
@@ -92,9 +92,9 @@ public static class ChatCommands
     }
 
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.AddChat))] //test
-    public static class AddChat
+    private static class AddChat
     {
-        public static bool Prefix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer)
+        private static bool Prefix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer)
         {
             var local = PlayerControl.LocalPlayer;
             if (local == null) return true;
@@ -106,6 +106,36 @@ public static class ChatCommands
             if (!local.isLover()) return flag;
             if (local.isLover() && Lovers.enableChat) return sourcePlayer.getPartner() == local || local.getPartner() == sourcePlayer || flag;
             return flag;
+        }
+
+        private static void Postfix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer)
+        {
+            if (sourcePlayer.IsDead() || sourcePlayer == PlayerControl.LocalPlayer || !InMeeting) return;
+
+            try
+            {
+                var local = PlayerControl.LocalPlayer;
+                var targetId = sourcePlayer.PlayerId;
+                if (MeetingHud.Instance.state is MeetingHud.VoteStates.Proceeding) return;
+                var pva = MeetingHud.Instance?.playerStates?.FirstOrDefault(x => x.TargetPlayerId == targetId);
+                if (pva == null) return;
+                var rend = new GameObject().AddComponent<SpriteRenderer>();
+                rend.transform.SetParent(pva.transform);
+                rend.gameObject.layer = pva.Megaphone.gameObject.layer;
+                rend.transform.localPosition = new Vector3(-0.5f, 0.2f, -1f);
+                rend.sprite = new ResourceSprite("TheOtherRoles.Resources.ChatOverlay.png", 130f);
+                rend?.gameObject?.SetActive(true);
+
+                _ = new LateTask(() =>
+                {
+                    rend?.gameObject?.SetActive(false);
+                    rend?.gameObject?.Destroy();
+                }, 3f);
+            }
+            catch
+            {
+                Message("Chat Notification Overlay is Detected");
+            }
         }
     }
 

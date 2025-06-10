@@ -28,7 +28,7 @@ public enum CustomRPC : byte
     DraftModePick,
     ShareGameMode = 95,
 
-    UncheckedMurderPlayer,
+    CustomMurderPlayer,
     UncheckedExilePlayer,
     RevivePlayer,
     HostKill,
@@ -47,7 +47,6 @@ public enum CustomRPC : byte
     TurnToImpostor,
     BodyGuardGuardPlayer,
     VeteranAlert,
-    VeteranKill,
     ShifterShift,
     SwapperSwap,
     MorphlingMorph,
@@ -95,10 +94,9 @@ public enum CustomRPC : byte
     UseCameraTime,
     UseVitalsTime,
     UnblackmailPlayer,
-    PursuerSetBlanked,
+    SetBlanked,
     Bloody,
     SetFirstKill,
-    SetMeetingChatOverlay,
     SetInvisibleGen,
     SetSwoop,
     SetJackalSwoop,
@@ -180,7 +178,7 @@ public static class RPCProcedure
         Portal.clearPortals();
         Bloodytrail.resetSprites();
         Trap.clearTraps();
-        KillTrap.ClearAllTraps();
+        KillTrap.ClearAndReload();
         Silhouette.clearSilhouettes();
         ElectricPatch.Reset();
         GameHistory.Clear();
@@ -624,18 +622,6 @@ public static class RPCProcedure
         player.MyPhysics.HandleRpc(isEnter != 0 ? (byte)19 : (byte)20, reader);
     }
 
-    public static void uncheckedMurderPlayer(byte sourceId, byte targetId, bool showAnimation = true)
-    {
-        if (!InGame) return;
-        var source = PlayerById(sourceId);
-        var target = PlayerById(targetId);
-        if (source != null && target != null)
-        {
-            if (!showAnimation) KillAnimationCoPerformKillPatch.hideNextAnimation = true;
-            source.MurderPlayer(target, MurderResultFlags.Succeeded);
-        }
-    }
-
     public static void uncheckedExilePlayer(byte targetId)
     {
         var target = PlayerById(targetId);
@@ -759,15 +745,6 @@ public static class RPCProcedure
             })));
     }
 
-    public static void veteranKill(byte targetId)
-    {
-        if (PlayerControl.LocalPlayer == Veteran.veteran)
-        {
-            var player = PlayerById(targetId);
-            checkMurderAttemptAndKill(Veteran.veteran, player);
-        }
-    }
-
     public static void medicSetShielded(byte shieldedId)
     {
         Medic.usedShield = true;
@@ -777,12 +754,6 @@ public static class RPCProcedure
 
     public static void shieldedMurderAttempt(byte blank)
     {
-        if (!Medic.unbreakableShield)
-        {
-            Medic.shielded = null;
-            return;
-        }
-
         if (Medic.shielded == null || Medic.medic == null) return;
 
         var isShieldedAndShow = Medic.shielded == PlayerControl.LocalPlayer && Medic.showAttemptToShielded;
@@ -794,6 +765,12 @@ public static class RPCProcedure
 
         if (isShieldedAndShow || isMedicAndShow || CanSeeRoleInfo)
             showFlash(Palette.ImpostorRed, 1.5f, GetString("medicShowAttemptText"));
+
+        if (!Medic.unbreakableShield)
+        {
+            Medic.shielded = null;
+            return;
+        }
     }
 
     public static void hostKill(byte targetId)
@@ -923,18 +900,15 @@ public static class RPCProcedure
             player.setLook("", 6, "", "", "", "");
     }
 
-    public static void vampireSetBitten(byte targetId, byte performReset)
+    public static void vampireSetBitten(byte targetId, bool reset)
     {
-        if (performReset != 0)
+        if (reset)
         {
             Vampire.bitten = null;
             return;
         }
 
-        if (Vampire.vampire == null) return;
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-            if (player.PlayerId == targetId && !player.Data.IsDead)
-                Vampire.bitten = player;
+        Vampire.bitten = PlayerById(targetId);
     }
 
     public static void partTimerSet(byte targetId)
@@ -1243,31 +1217,31 @@ public static class RPCProcedure
     public static void disperse()
     {
         Coroutines.Start(showFlashCoroutine(Palette.ImpostorRed, 1f, 0.36f));
-
-        if (PlayerControl.LocalPlayer.inVent)
+        var local = PlayerControl.LocalPlayer;
+        if (local.inVent)
         {
-            PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
-            PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
+            local.MyPhysics.RpcExitVent(Vent.currentVent.Id);
+            local.MyPhysics.ExitAllVents();
         }
 
         if (Minigame.Instance) Minigame.Instance.ForceClose();
         if (MapBehaviour.Instance) MapBehaviour.Instance.Close();
 
-        if (PlayerControl.LocalPlayer.inVent)
+        if (local.inVent)
         {
-            PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(Vent.currentVent.Id);
-            PlayerControl.LocalPlayer.MyPhysics.ExitAllVents();
+            local.MyPhysics.RpcExitVent(Vent.currentVent.Id);
+            local.MyPhysics.ExitAllVents();
         }
-        if (PlayerControl.LocalPlayer.IsAlive() && !AntiTeleport.antiTeleport.Any(x => x == PlayerControl.LocalPlayer))
+        if (local.IsAlive() && !AntiTeleport.antiTeleport.Any(x => x == local) && !local.isUsingTransportation())
         {
             if (Disperser.DispersesToVent)
             {
-                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo
+                local.NetTransform.RpcSnapTo
                 (MapData.FindVentSpawnPositions()[rnd.Next(MapData.FindVentSpawnPositions().Count)]);
             }
             else
             {
-                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo
+                local.NetTransform.RpcSnapTo
                 (MapData.MapSpawnPosition()[rnd.Next(MapData.MapSpawnPosition().Count)]);
             }
         }
@@ -1313,7 +1287,7 @@ public static class RPCProcedure
                 {
                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
                     if (Bomber.bomber.IsAlive() && PlayerControl.LocalPlayer == Bomber.bomber)
-                        checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBombPlayer, false, true, true);
+                        RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
                     Bomber.hasBombPlayer = null;
                     Bomber.bombActive = false;
                     Bomber.hasAlerted = false;
@@ -1607,7 +1581,7 @@ public static class RPCProcedure
 
     public static void clearTrap()
     {
-        KillTrap.ClearAllTraps();
+        KillTrap.ClearAndReload();
     }
 
     public static void activateTrap(byte trapperId, byte targetId, int trapId)
@@ -1795,12 +1769,12 @@ public static class RPCProcedure
         Blackmailer.alreadyShook = false;
     }
 
-    public static void pursuerSetBlanked(byte playerId, byte value)
+    public static void SetBlanked(byte playerId, bool reset)
     {
         var target = PlayerById(playerId);
         if (target == null) return;
         Pursuer.blankedList.RemoveAll(x => x.PlayerId == playerId);
-        if (value > 0) Pursuer.blankedList.Add(target);
+        if (!reset) Pursuer.blankedList.Add(target);
     }
 
     public static void bloody(byte killerPlayerId, byte bloodyPlayerId)
@@ -1815,35 +1789,6 @@ public static class RPCProcedure
         var target = PlayerById(playerId);
         if (target == null) return;
         firstKillPlayer = target;
-    }
-
-    public static void setChatNotificationOverlay(byte localPlayerId, byte targetPlayerId)
-    {
-        try
-        {
-            var playerControl = PlayerControl.LocalPlayer;
-            if (MeetingHud.Instance.playerStates == null) return;
-            var playerVoteArea = MeetingHud.Instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == targetPlayerId);
-            if (playerVoteArea == null) return;
-            var rend = new GameObject().AddComponent<SpriteRenderer>();
-            rend.transform.SetParent(playerVoteArea.transform);
-            rend.gameObject.layer = playerVoteArea.Megaphone.gameObject.layer;
-            rend.transform.localPosition = new Vector3(-0.5f, 0.2f, -1f);
-            rend.sprite = new ResourceSprite("TheOtherRoles.Resources.ChatOverlay.png", 130f);
-            if (playerControl.PlayerId != localPlayerId) rend?.gameObject?.SetActive(true);
-            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(2f, (Action<float>)delegate (float p)
-                {
-                    if (p == 1f)
-                    {
-                        rend?.gameObject?.SetActive(false);
-                        UObject.Destroy(rend?.gameObject);
-                    }
-                }));
-        }
-        catch
-        {
-            Message("Chat Notification Overlay is Detected");
-        }
     }
 
     public static void setTrap(byte[] buff)
@@ -1901,7 +1846,7 @@ public static class RPCProcedure
                 Pursuer.blankedList.Remove(sender);
                 break;
             case GhostInfoTypes.VampireTimer:
-                vampireKillButton.Timer = reader.ReadByte();
+                vampireKillButton.Timer = reader.ReadInt32();
                 break;
             case GhostInfoTypes.DeathReasonAndKiller:
                 GameHistory.OverrideDeathReasonAndKiller(PlayerById(reader.ReadByte()), (CustomDeathReason)reader.ReadByte(), PlayerById(reader.ReadByte()));
@@ -2021,8 +1966,8 @@ internal class RPCHandlerPatch
                 RPCProcedure.useUncheckedVent(reader.ReadPackedInt32(), reader.ReadByte(), reader.ReadByte());
                 break;
 
-            case CustomRPC.UncheckedMurderPlayer:
-                RPCProcedure.uncheckedMurderPlayer(reader.ReadByte(), reader.ReadByte(), reader.ReadBoolean());
+            case CustomRPC.CustomMurderPlayer:
+                CustomMurderPlayer(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadBoolean(), (CustomDeathReason)reader.ReadByte());
                 break;
 
             case CustomRPC.UncheckedExilePlayer:
@@ -2098,10 +2043,6 @@ internal class RPCHandlerPatch
                 RPCProcedure.veteranAlert();
                 break;
 
-            case CustomRPC.VeteranKill:
-                RPCProcedure.veteranKill(reader.ReadByte());
-                break;
-
             case CustomRPC.MedicSetShielded:
                 RPCProcedure.medicSetShielded(reader.ReadByte());
                 break;
@@ -2127,7 +2068,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.VampireSetBitten:
-                RPCProcedure.vampireSetBitten(reader.ReadByte(), reader.ReadByte());
+                RPCProcedure.vampireSetBitten(reader.ReadByte(), reader.ReadBoolean());
                 break;
 
             case CustomRPC.PlaceGarlic:
@@ -2234,8 +2175,8 @@ internal class RPCHandlerPatch
                 Executioner.PromotesRole();
                 break;
 
-            case CustomRPC.PursuerSetBlanked:
-                RPCProcedure.pursuerSetBlanked(reader.ReadByte(), reader.ReadByte());
+            case CustomRPC.SetBlanked:
+                RPCProcedure.SetBlanked(reader.ReadByte(), reader.ReadBoolean());
                 break;
 
             case CustomRPC.GiveBomb:
@@ -2252,10 +2193,6 @@ internal class RPCHandlerPatch
 
             case CustomRPC.SetFirstKill:
                 RPCProcedure.setFirstKill(reader.ReadByte());
-                break;
-
-            case CustomRPC.SetMeetingChatOverlay:
-                RPCProcedure.setChatNotificationOverlay(reader.ReadByte(), reader.ReadByte());
                 break;
 
             case CustomRPC.ShowBodyGuardFlash:

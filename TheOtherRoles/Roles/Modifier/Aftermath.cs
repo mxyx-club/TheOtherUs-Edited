@@ -44,29 +44,19 @@ public class Aftermath
         }
         else if (Terrorist.terrorist == killer)
         {
-            if (checkMuderAttempt(Terrorist.terrorist, Terrorist.terrorist) != MurderAttemptResult.BlankKill)
-            {
-                var pos = killer.transform.position;
-                var buff = new byte[sizeof(float) * 2];
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
-                var writer = StartRPC(killer.NetId, CustomRPC.PlaceBomb);
-                writer.WriteBytesAndSize(buff);
-                writer.EndRPC();
-                placeBomb(buff);
-                SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
+            var pos = killer.transform.position;
+            var buff = new byte[sizeof(float) * 2];
+            Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+            Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+            var writer = StartRPC(killer.NetId, CustomRPC.PlaceBomb);
+            writer.WriteBytesAndSize(buff);
+            writer.EndRPC();
+            placeBomb(buff);
+            SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
 
-                if (Terrorist.selfExplosion)
-                {
-                    var loacl = Terrorist.terrorist.PlayerId;
-                    var writer1 = AmongUsClient.Instance.StartRpcImmediately(Terrorist.terrorist.NetId,
-                        (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
-                    writer1.Write(loacl);
-                    writer1.Write(loacl);
-                    writer1.Write(true);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer1);
-                    uncheckedMurderPlayer(loacl, loacl, true);
-                }
+            if (Terrorist.selfExplosion)
+            {
+                RpcCustomMurderPlayer(Terrorist.terrorist, Terrorist.terrorist, false);
             }
             terroristButton.Timer = terroristButton.MaxTimer;
         }

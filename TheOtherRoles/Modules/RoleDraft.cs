@@ -318,7 +318,7 @@ internal class RoleDraft
                             // planned rows: maximum of 4, hence the following calculation for rows as well:
                             row += (4 - lastRow - 1) / 2f;
 
-                            ActionButton actionButton = UObject.Instantiate(HudManager.Instance.AbilityButton, __instance.TeamTitle.transform);
+                            ActionButton actionButton = UObject.Instantiate(HudManager.Instance.KillButton, __instance.TeamTitle.transform);
                             actionButton.gameObject.SetActive(true);
                             actionButton.gameObject.name = "RoleButton";
                             actionButton.transform.localPosition = new Vector3(-8.4f + col * 5.5f, -10 - row * 3f);

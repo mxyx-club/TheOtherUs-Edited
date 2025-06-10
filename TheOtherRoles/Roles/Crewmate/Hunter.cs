@@ -22,17 +22,12 @@ public class Hunter
 
         if (Infected.Player.Any(x => x.PlayerId == targetId))
         {
-            var writer = StartRPC(CustomRPC.UncheckedMurderPlayer);
-            writer.Write(Player.PlayerId);
-            writer.Write(target.PlayerId);
-            writer.Write(true);
-            writer.EndRPC();
-            RPCProcedure.uncheckedMurderPlayer(Player.PlayerId, target.PlayerId, true);
+            RpcCustomMurderPlayer(Player, target, true);
 
         }
         else
         {
-            if (RemainingCount <= 0) RpcMurderPlayer(Player, Player);
+            if (RemainingCount <= 0) RpcCustomMurderPlayer(Player, Player);
         }
         UsedCount++;
     }

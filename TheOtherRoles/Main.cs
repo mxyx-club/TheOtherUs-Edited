@@ -30,7 +30,6 @@ public partial class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> ShowKeyReminder { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
-    public static ConfigEntry<string> ShowPopUpVersion { get; set; }
 
     // This is part of the Mini.RegionInstaller, Licensed under GPLv3
     // file="RegionInstallPlugin.cs" company="miniduikboot">
@@ -72,7 +71,6 @@ public partial class TheOtherRolesPlugin : BasePlugin
 
         ToggleCursor = Config.Bind("Custom", "Better Cursor", true);
         EnableSoundEffects = Config.Bind("Custom", "Enable Sound Effects", true);
-        ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
         ShowFPS = Config.Bind("Custom", "Show FPS", true);
         ShowKeyReminder = Config.Bind("Custom", "ShowKeyReminder", true);
         LocalHats = Config.Bind("Custom", "Load Local Hats", false);

@@ -301,7 +301,7 @@ internal class ExileControllerWrapUpPatch
         CustomButton.MeetingEndedUpdate();
 
         // Clear all traps
-        KillTrap.ClearAllTraps();
+        KillTrap.ClearAndReload();
         Balancer.WrapUp(exiled == null ? null : exiled.Object);
         // Mini set adapted cooldown
         if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor)

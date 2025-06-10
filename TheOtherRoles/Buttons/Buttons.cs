@@ -104,7 +104,6 @@ internal static class HudManagerStartPatch
     public static CustomButton berserkerKillButton;
     public static CustomButton poltergeistButton;
     public static CustomButton InfectedKillButton;
-    public static CustomButton hunterKillButton;
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
@@ -216,7 +215,6 @@ internal static class HudManagerStartPatch
         berserkerKillButton.MaxTimer = Berserker.KillCooldown;
         poltergeistButton.MaxTimer = Poltergeist.cooldown;
         InfectedKillButton.MaxTimer = Infected.cooldown;
-        hunterKillButton.MaxTimer = Hunter.cooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
@@ -495,63 +493,40 @@ internal static class HudManagerStartPatch
         sheriffKillButton = new CustomButton(
             () =>
             {
-                if (Sheriff.currentTarget == null) return;
-                if (CheckAndDoVetKill(Sheriff.currentTarget)) return;
-                var murderAttemptResult = checkMuderAttempt(PlayerControl.LocalPlayer, Sheriff.currentTarget);
-                if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
                 var target = Sheriff.currentTarget;
-                if (murderAttemptResult == MurderAttemptResult.PerformKill)
+                if (target != null)
                 {
-                    byte targetId = 0;
-                    var DeathReason = CustomDeathReason.SheriffKill;
-                    if (Sheriff.sheriffCanKillNeutral(target))
+                    if (Sheriff.sheriffCanKill(target))
                     {
-                        targetId = target.PlayerId;
+                        RpcCustomMurderPlayer(PlayerControl.LocalPlayer, target, true, false, CustomDeathReason.SheriffKill);
+
+                        sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
+                        Sheriff.currentTarget = null;
                     }
-                    else
+                    else if (CheckMurderPlayer(PlayerControl.LocalPlayer, target))
                     {
                         switch (Sheriff.misfireKills)
                         {
                             case 0:
-                                targetId = PlayerControl.LocalPlayer.PlayerId;
-                                DeathReason = CustomDeathReason.SheriffMisfire;
+                                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer, true, true, CustomDeathReason.SheriffMisfire);
                                 break;
                             case 1:
-                                targetId = target.PlayerId;
-                                DeathReason = CustomDeathReason.SheriffMisadventure;
+                                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, target, true, true, CustomDeathReason.SheriffMisadventure);
                                 break;
                             case 2:
-                                targetId = target.PlayerId;
-                                DeathReason = CustomDeathReason.SheriffMisadventure;
-
-                                var killWriter2 = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
-                                killWriter2.Write(PlayerControl.LocalPlayer.PlayerId);
-                                killWriter2.Write(PlayerControl.LocalPlayer.PlayerId);
-                                killWriter2.Write(true);
-                                killWriter2.EndRPC();
-                                RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, true);
-                                GameHistory.RpcOverrideDeathReasonAndKiller(PlayerControl.LocalPlayer, CustomDeathReason.SheriffMisfire, PlayerControl.LocalPlayer);
+                                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, target, true, true, CustomDeathReason.SheriffMisadventure);
+                                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer, true, true, CustomDeathReason.SheriffMisfire);
                                 break;
                         }
+
+                        sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
+                        Sheriff.currentTarget = null;
                     }
-
-                    var killWriter = StartRPC(PlayerControl.LocalPlayer, CustomRPC.UncheckedMurderPlayer);
-                    killWriter.Write(PlayerControl.LocalPlayer.PlayerId);
-                    killWriter.Write(targetId);
-                    killWriter.Write(true);
-                    killWriter.EndRPC();
-                    RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, targetId, true);
-                    GameHistory.RpcOverrideDeathReasonAndKiller(target, DeathReason, PlayerControl.LocalPlayer);
                 }
-
-                if (murderAttemptResult == MurderAttemptResult.BodyGuardKill) checkMurderAttemptAndKill(PlayerControl.LocalPlayer, target);
-
-                sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
-                Sheriff.currentTarget = null;
             },
             () =>
             {
-                return Sheriff.Player != null && Sheriff.Player.Any(x => x == PlayerControl.LocalPlayer && x.IsAlive());
+                return PlayerControl.LocalPlayer.IsAlive() && Sheriff.Player.Any(x => x == PlayerControl.LocalPlayer);
             },
             () =>
             {
@@ -575,11 +550,13 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (Sheriff.currentTarget == null) return;
-                if (CheckAndDoVetKill(Sheriff.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Sheriff.currentTarget)) return;
+
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.DeputyUsedHandcuffs);
                 writer.Write(Sheriff.currentTarget.PlayerId);
                 writer.EndRPC();
                 RPCProcedure.deputyUsedHandcuffs(Sheriff.currentTarget.PlayerId);
+
                 Sheriff.currentTarget = null;
                 deputyHandcuffButton.Timer = deputyHandcuffButton.MaxTimer;
 
@@ -587,8 +564,8 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return (Sheriff.Deputy.IsAlive() && PlayerControl.LocalPlayer == Sheriff.Deputy)
-                       || Sheriff.Player.Any(x => x.IsAlive() && x == Sheriff.formerDeputy && x == PlayerControl.LocalPlayer);
+                return PlayerControl.LocalPlayer.IsAlive() && (PlayerControl.LocalPlayer == Sheriff.Deputy
+                       || Sheriff.Player.Any(x => x == PlayerControl.LocalPlayer && x == Sheriff.formerDeputy));
             },
             () =>
             {
@@ -644,7 +621,7 @@ internal static class HudManagerStartPatch
         medicShieldButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Medic.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Medic.currentTarget)) return;
 
                 medicShieldButton.Timer = 0f;
 
@@ -692,7 +669,7 @@ internal static class HudManagerStartPatch
         doomsayerButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Doomsayer.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Doomsayer.currentTarget)) return;
 
                 doomsayerButton.Timer = doomsayerButton.MaxTimer;
                 SoundEffectsManager.play("knockKnock");
@@ -737,7 +714,7 @@ internal static class HudManagerStartPatch
         akujoHonmeiButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Akujo.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Akujo.currentTarget)) return;
 
                 var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.AkujoSetHonmei, SendOption.Reliable, -1);
                 writer.Write(Akujo.akujo.PlayerId);
@@ -773,7 +750,7 @@ internal static class HudManagerStartPatch
         akujoBackupButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Akujo.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Akujo.currentTarget)) return;
 
                 var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.AkujoSetKeep, SendOption.Reliable, -1);
@@ -828,7 +805,7 @@ internal static class HudManagerStartPatch
         shifterShiftButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Shifter.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Shifter.currentTarget)) return;
 
                 var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.SetFutureShifted, SendOption.Reliable);
@@ -981,7 +958,7 @@ internal static class HudManagerStartPatch
             {
                 if (Morphling.sampledTarget != null)
                 {
-                    if (CheckAndDoVetKill(Morphling.currentTarget)) return;
+                    if (CheckUseAbility(PlayerControl.LocalPlayer, Morphling.currentTarget)) return;
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
                         PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.MorphlingMorph,
                         SendOption.Reliable);
@@ -1291,7 +1268,7 @@ internal static class HudManagerStartPatch
         trackerTrackPlayerButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Tracker.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Tracker.currentTarget)) return;
 
                 var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.TrackerUsedTracker, SendOption.Reliable);
@@ -1363,7 +1340,7 @@ internal static class HudManagerStartPatch
         bodyGuardGuardButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(BodyGuard.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, BodyGuard.currentTarget)) return;
                 var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.BodyGuardGuardPlayer, SendOption.Reliable);
                 writer.Write(BodyGuard.currentTarget.PlayerId);
@@ -1402,83 +1379,63 @@ internal static class HudManagerStartPatch
         vampireKillButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Vampire.currentTarget)) return;
-                var murder = checkMuderAttempt(Vampire.vampire, Vampire.currentTarget);
-                if (murder == MurderAttemptResult.PerformKill)
+                var target = Vampire.currentTarget;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
+
+                if (Vampire.targetNearGarlic)
                 {
-                    if (Vampire.targetNearGarlic)
-                    {
-                        var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
-                        writer.Write(Vampire.vampire.PlayerId);
-                        writer.Write(Vampire.currentTarget.PlayerId);
-                        writer.Write(true);
-                        writer.EndRPC();
-                        RPCProcedure.uncheckedMurderPlayer(Vampire.vampire.PlayerId, Vampire.currentTarget.PlayerId, true);
-
-                        vampireKillButton.HasEffect = false; // Block effect on this click
-                        vampireKillButton.Timer = vampireKillButton.MaxTimer;
-                    }
-                    else
-                    {
-                        Vampire.bitten = Vampire.currentTarget;
-                        // Notify players about bitten
-                        var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
-                        writer.Write(Vampire.bitten.PlayerId);
-                        writer.Write((byte)0);
-                        writer.EndRPC();
-                        RPCProcedure.vampireSetBitten(Vampire.bitten.PlayerId, 0);
-
-                        var lastTimer = (byte)Vampire.delay;
-                        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Vampire.delay,
-                            new Action<float>(p =>
-                            {
-                                // Delayed action
-                                if (p <= 1f)
-                                {
-                                    var timer = (byte)vampireKillButton.Timer;
-                                    if (timer != lastTimer)
-                                    {
-                                        lastTimer = timer;
-                                        var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareGhostInfo);
-                                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                                        writer.Write((byte)RPCProcedure.GhostInfoTypes.VampireTimer);
-                                        writer.Write(timer);
-                                        writer.EndRPC();
-                                    }
-                                }
-
-                                if (p == 1f)
-                                {
-                                    // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                                    var res = checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, showAnimation: false);
-                                    if (res == MurderAttemptResult.PerformKill)
-                                    {
-                                        var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
-                                        writer.Write(byte.MaxValue);
-                                        writer.Write(byte.MaxValue);
-                                        writer.EndRPC();
-                                        RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
-                                    }
-                                }
-                            })));
-                        SoundEffectsManager.play("vampireBite");
-
-                        vampireKillButton.HasEffect = true; // Trigger effect on this click
-                    }
-                }
-                else if (murder == MurderAttemptResult.BlankKill)
-                {
+                    RpcCustomMurderPlayer(Vampire.vampire, target);
+                    vampireKillButton.HasEffect = false; // Block effect on this click
                     vampireKillButton.Timer = vampireKillButton.MaxTimer;
-                    vampireKillButton.HasEffect = false;
-                }
-                else if (murder == MurderAttemptResult.BodyGuardKill)
-                {
-                    checkMurderAttemptAndKill(Vampire.vampire, Vampire.currentTarget);
+                    return;
                 }
                 else
                 {
-                    vampireKillButton.HasEffect = false;
+                    Vampire.bitten = target;
+                    // Notify players about bitten
+                    var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
+                    writer.Write(Vampire.bitten.PlayerId);
+                    writer.Write(false);
+                    writer.EndRPC();
+                    RPCProcedure.vampireSetBitten(Vampire.bitten.PlayerId, false);
+
+                    var lastTimer = Vampire.delay;
+                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Vampire.delay,
+                        new Action<float>(p =>
+                        {
+                            // Delayed action
+                            if (p <= 1f)
+                            {
+                                var timer = vampireKillButton.Timer;
+                                if ((int)timer != (int)lastTimer)
+                                {
+                                    lastTimer = timer;
+                                    var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareGhostInfo);
+                                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                                    writer.Write((byte)RPCProcedure.GhostInfoTypes.VampireTimer);
+                                    writer.Write((int)timer);
+                                    writer.EndRPC();
+                                }
+                            }
+
+                            if (p == 1f)
+                            {
+                                RpcCustomMurderPlayer(Vampire.vampire, target, false);
+
+                                var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
+                                writer.Write(byte.MaxValue);
+                                writer.Write(true);
+                                writer.EndRPC();
+                                RPCProcedure.vampireSetBitten(byte.MaxValue, true);
+                            }
+                        })));
+                    SoundEffectsManager.play("vampireBite");
+
+                    vampireKillButton.HasEffect = true; // Trigger effect on this click
                 }
+
+                vampireKillButton.Timer = vampireKillButton.MaxTimer;
+                vampireKillButton.HasEffect = false;
             },
             () =>
             {
@@ -1530,7 +1487,7 @@ internal static class HudManagerStartPatch
             modKillInput.keyCode,
             false,
             0f,
-            () => { vampireKillButton.Timer = vampireKillButton.MaxTimer; },
+            () => { vampireKillButton.Timer = vampireKillButton.MaxTimer - Vampire.delay; },
             buttonText: "VampireText".Translate()
         );
 
@@ -1572,7 +1529,7 @@ internal static class HudManagerStartPatch
         prophetButton = new CustomButton(
                 () =>
                 {
-                    if (CheckAndDoVetKill(Prophet.currentTarget)) return;
+                    if (CheckUseAbility(PlayerControl.LocalPlayer, Prophet.currentTarget)) return;
                     if (Prophet.currentTarget != null)
                     {
                         var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ProphetExamine, SendOption.Reliable, -1);
@@ -1768,9 +1725,7 @@ internal static class HudManagerStartPatch
         jackalKillButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Jackal.currentTarget)) return;
-                if (checkMurderAttemptAndKill(PlayerControl.LocalPlayer, Jackal.currentTarget) ==
-                    MurderAttemptResult.SuppressKill) return;
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Jackal.killTarget)) return;
 
                 jackalKillButton.Timer = jackalKillButton.MaxTimer;
             },
@@ -1782,8 +1737,17 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                showTargetNameOnButton(Jackal.currentTarget, jackalKillButton, GetString("killButtonText"));
-                return Jackal.currentTarget && PlayerControl.LocalPlayer.CanMove;
+                var untargetablePlayers = new List<PlayerControl>();
+                untargetablePlayers.AddRange(Jackal.jackal);
+                if (Jackal.Sidekick != null)
+                    untargetablePlayers.Add(Jackal.Sidekick);
+                if (SchrodingersCat.State == SchrodingersCat.CatState.Jackal && SchrodingersCat.Player.IsAlive())
+                    untargetablePlayers.Add(SchrodingersCat.Player);
+                Jackal.killTarget = SetTarget(untarget: untargetablePlayers);
+                SetPlayerOutline(Jackal.killTarget, Palette.ImpostorRed);
+
+                showTargetNameOnButton(Jackal.killTarget, jackalKillButton, GetString("killButtonText"));
+                return Jackal.killTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () => { jackalKillButton.Timer = jackalKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
@@ -1797,38 +1761,37 @@ internal static class HudManagerStartPatch
         jackalCreateSidekickButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Jackal.currentTarget)) return;
                 var target = Jackal.currentTarget;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
 
                 if (Jackal.killFakeImpostor && target.IsImpostor())
                 {
                     //uncheckedMurderPlayer(Jackal.jackal.PlayerId, player.PlayerId, 1);
-                    checkMurderAttemptAndKill(PlayerControl.LocalPlayer, target);
-                    GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.FakeSK, PlayerControl.LocalPlayer);
+                    RpcCustomMurderPlayer(PlayerControl.LocalPlayer, target, deathReason: CustomDeathReason.FakeSK);
                     jackalCreateSidekickButton.Timer = jackalCreateSidekickButton.MaxTimer;
                     return;
                 }
 
                 var writer = StartRPC(CustomRPC.JackalCreatesSidekick);
-                writer.Write(Jackal.currentTarget.PlayerId);
+                writer.Write(target.PlayerId);
                 writer.EndRPC();
-                RPCProcedure.jackalCreatesSidekick(Jackal.currentTarget.PlayerId);
+                RPCProcedure.jackalCreatesSidekick(target.PlayerId);
                 SoundEffectsManager.play("jackalSidekick");
                 jackalCreateSidekickButton.Timer = jackalCreateSidekickButton.MaxTimer;
             },
             () =>
             {
+                return Jackal.canCreateSidekick && Jackal.Sidekick == null && Jackal.jackal.Any(x => x.IsAlive() && x == PlayerControl.LocalPlayer);
+            },
+            () =>
+            {
+
                 var untargetablePlayers = new List<PlayerControl>();
                 untargetablePlayers.AddRange(Jackal.jackal);
                 if (Jackal.Sidekick != null) untargetablePlayers.Add(Jackal.Sidekick);
                 if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
                 Jackal.currentTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
-
-                return Jackal.canCreateSidekick && Jackal.Sidekick == null && Jackal.jackal.Any(x => x.IsAlive() && x == PlayerControl.LocalPlayer);
-            },
-            () =>
-            {
 
                 // Show now text since the button already says sidekick
                 showTargetNameOnButton(Jackal.currentTarget, jackalCreateSidekickButton, GetString("jackalSidekickText"));
@@ -1846,11 +1809,10 @@ internal static class HudManagerStartPatch
         jackalSwoopButton = new CustomButton(
             () =>
             { /* On Use */
-                var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable, -1);
+                var invisibleWriter = StartRPC(CustomRPC.SetJackalSwoop);
                 invisibleWriter.Write(PlayerControl.LocalPlayer.PlayerId);
                 invisibleWriter.Write(byte.MinValue);
-                AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
+                invisibleWriter.EndRPC();
                 RPCProcedure.setJackalSwoop(PlayerControl.LocalPlayer.PlayerId, byte.MinValue);
             },
             () =>
@@ -1884,14 +1846,24 @@ internal static class HudManagerStartPatch
         swooperKillButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Swooper.currentTarget)) return;
-                if (checkMurderAttemptAndKill(Swooper.swooper, Swooper.currentTarget) == MurderAttemptResult.SuppressKill) return;
-
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Swooper.currentTarget)) return;
                 swooperKillButton.Timer = swooperKillButton.MaxTimer;
                 Swooper.currentTarget = null;
             },
             () => { return Swooper.swooper != null && Swooper.swooper == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
-            () => { showTargetNameOnButton(Swooper.currentTarget, swooperKillButton, GetString("killButtonText")); return Swooper.currentTarget && PlayerControl.LocalPlayer.CanMove; },
+            () =>
+            {
+
+                var untargetablePlayers = new List<PlayerControl>();
+                if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
+                if (SchrodingersCat.State == SchrodingersCat.CatState.Swooper && SchrodingersCat.Player.IsAlive())
+                    untargetablePlayers.Add(SchrodingersCat.Player);
+                Swooper.currentTarget = SetTarget(untarget: untargetablePlayers);
+                SetPlayerOutline(Swooper.currentTarget, Palette.ImpostorRed);
+                showTargetNameOnButton(Swooper.currentTarget, swooperKillButton, GetString("killButtonText"));
+
+                return Swooper.currentTarget && PlayerControl.LocalPlayer.CanMove;
+            },
             () => { swooperKillButton.Timer = swooperKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowRight,
@@ -1914,12 +1886,6 @@ internal static class HudManagerStartPatch
             () =>
             {
                 /* On Click */
-                // Exclude Jackal from targeting the Mini unless it has grown up
-                var untargetablePlayers = new List<PlayerControl>();
-                if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
-                Swooper.currentTarget = SetTarget(untarget: untargetablePlayers);
-                SetPlayerOutline(Swooper.currentTarget, Palette.ImpostorRed);
-
                 return PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -1943,8 +1909,7 @@ internal static class HudManagerStartPatch
         pavlovsdogsKillButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Pavlovsdogs.killTarget)) return;
-                if (checkMurderAttemptAndKill(PlayerControl.LocalPlayer, Pavlovsdogs.killTarget) == MurderAttemptResult.SuppressKill) return;
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Pavlovsdogs.killTarget)) return;
                 if (Pavlovsdogs.enableRampage)
                 {
                     Pavlovsdogs.deathTime = Pavlovsdogs.rampageDeathTime;
@@ -1972,9 +1937,16 @@ internal static class HudManagerStartPatch
                 }
 
                 var untargetablePlayers = new List<PlayerControl>();
+
                 untargetablePlayers.AddRange(Pavlovsdogs.pavlovsdogs);
-                if (Pavlovsdogs.pavlovsowner != null) untargetablePlayers.Add(Pavlovsdogs.pavlovsowner);
-                if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
+                if (Pavlovsdogs.pavlovsowner != null)
+                    untargetablePlayers.Add(Pavlovsdogs.pavlovsowner);
+                if (SchrodingersCat.State == SchrodingersCat.CatState.Pavlovsowner && SchrodingersCat.Player.IsAlive())
+                    untargetablePlayers.Add(SchrodingersCat.Player);
+                if (Mini.mini != null && !Mini.isGrownUp())
+                    untargetablePlayers.Add(Mini.mini);
+
+                untargetablePlayers.AddRange(Pavlovsdogs.pavlovsdogs);
                 Pavlovsdogs.killTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Pavlovsdogs.killTarget, Palette.ImpostorRed);
 
@@ -2000,7 +1972,7 @@ internal static class HudManagerStartPatch
         pavlovsownerCreateDogButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Pavlovsdogs.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Pavlovsdogs.currentTarget)) return;
                 var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.PavlovsCreateDog, SendOption.Reliable);
                 writer.Write(Pavlovsdogs.currentTarget.PlayerId);
@@ -2022,6 +1994,7 @@ internal static class HudManagerStartPatch
                 pavlovsownerCreateDogButton.UsesCount = Pavlovsdogs.createDogNum;
                 var untargetablePlayers = new List<PlayerControl>();
                 if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
+                untargetablePlayers.AddRange(Pavlovsdogs.pavlovsdogs);
                 Pavlovsdogs.currentTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Pavlovsdogs.currentTarget, Palette.ImpostorRed);
 
@@ -2096,7 +2069,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 /* On Use */
-                if (CheckAndDoVetKill(Bomber.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Bomber.currentTarget)) return;
                 var bombWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.GiveBomb, SendOption.Reliable);
                 bombWriter.Write(Bomber.currentTarget.PlayerId);
@@ -2142,14 +2115,12 @@ internal static class HudManagerStartPatch
             () =>
             {
                 /* On Use */
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Bomber.currentBombTarget)) return;
+
                 if (!Bomber.canGiveToBomber && Bomber.currentBombTarget == Bomber.bomber)
                 {
-                    var killWriter = StartRPC(CustomRPC.UncheckedMurderPlayer);
-                    killWriter.Write(Bomber.bomber.Data.PlayerId);
-                    killWriter.Write(Bomber.hasBombPlayer.Data.PlayerId);
-                    killWriter.Write(false);
-                    killWriter.EndRPC();
-                    RPCProcedure.uncheckedMurderPlayer(Bomber.bomber.Data.PlayerId, Bomber.hasBombPlayer.Data.PlayerId, false);
+
+                    RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
 
                     var clearWriter = StartRPC(CustomRPC.GiveBomb);
                     clearWriter.Write(byte.MaxValue);
@@ -2159,7 +2130,6 @@ internal static class HudManagerStartPatch
                     return;
                 }
 
-                if (CheckAndDoVetKill(Bomber.currentBombTarget)) return;
                 if (Bomber.hotPotatoMode)
                 {
                     var bombWriter = StartRPC(CustomRPC.GiveBomb);
@@ -2170,7 +2140,7 @@ internal static class HudManagerStartPatch
                 }
                 else
                 {
-                    if (checkMurderAttemptAndKill(Bomber.hasBombPlayer, Bomber.currentBombTarget) == MurderAttemptResult.SuppressKill) return;
+                    RpcCustomMurderPlayer(Bomber.hasBombPlayer, Bomber.currentBombTarget, false);
                     var bombWriter = StartRPC(CustomRPC.GiveBomb);
                     bombWriter.Write(byte.MaxValue);
                     bombWriter.Write(false);
@@ -2255,9 +2225,7 @@ internal static class HudManagerStartPatch
         werewolfKillButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Werewolf.currentTarget)) return;
-                if (checkMurderAttemptAndKill(Werewolf.werewolf, Werewolf.currentTarget) ==
-                    MurderAttemptResult.SuppressKill) return;
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Werewolf.currentTarget)) return;
 
                 werewolfKillButton.Timer = werewolfKillButton.MaxTimer;
                 Werewolf.currentTarget = null;
@@ -2333,9 +2301,7 @@ internal static class HudManagerStartPatch
         juggernautKillButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Juggernaut.currentTarget)) return;
-                if (checkMurderAttemptAndKill(Juggernaut.juggernaut, Juggernaut.currentTarget) ==
-                    MurderAttemptResult.SuppressKill) return;
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Juggernaut.currentTarget)) return;
 
                 Juggernaut.cooldown = Mathf.Max(0, Juggernaut.cooldown - Juggernaut.reducedkill);
                 juggernautKillButton.MaxTimer = Juggernaut.cooldown;
@@ -2351,7 +2317,11 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Juggernaut.currentTarget = SetTarget();
+                var untargetablePlayers = new List<PlayerControl>();
+                if (SchrodingersCat.State == SchrodingersCat.CatState.Juggernaut && SchrodingersCat.Player.IsAlive())
+                    untargetablePlayers.Add(SchrodingersCat.Player);
+
+                Juggernaut.currentTarget = SetTarget(untarget: untargetablePlayers);
                 showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, GetString("killButtonText"));
                 return Juggernaut.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
@@ -2369,20 +2339,14 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (Pelican.currentTarget == null) return;
-                if (CheckAndDoVetKill(Pelican.currentTarget)) return;
-                var murderAttemptResult = checkMuderAttempt(Pelican.Player, Pelican.currentTarget);
-                if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
 
-                if (murderAttemptResult == MurderAttemptResult.PerformKill)
-                {
-                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.PelicanKill);
-                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                    writer.Write(Pelican.currentTarget.PlayerId);
-                    writer.EndRPC();
-                    Pelican.PelicanKill(PlayerControl.LocalPlayer.PlayerId, Pelican.currentTarget.PlayerId);
-                }
-                if (murderAttemptResult == MurderAttemptResult.BodyGuardKill)
-                    checkMurderAttemptAndKill(Pelican.Player, Pelican.currentTarget);
+                if (!CheckMurderPlayer(PlayerControl.LocalPlayer, Pelican.currentTarget)) return;
+
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.PelicanKill);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(Pelican.currentTarget.PlayerId);
+                writer.EndRPC();
+                Pelican.PelicanKill(PlayerControl.LocalPlayer.PlayerId, Pelican.currentTarget.PlayerId);
 
                 pelicanKillButton.Timer = Pelican.reduceCooldown;
                 Pelican.currentTarget = null;
@@ -2419,7 +2383,7 @@ internal static class HudManagerStartPatch
         eraserButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Eraser.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Eraser.currentTarget)) return;
                 eraserButton.MaxTimer += 10;
                 eraserButton.Timer = eraserButton.MaxTimer;
 
@@ -2457,12 +2421,11 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (PartTimer.currentTarget == null) return;
-                if (CheckAndDoVetKill(PartTimer.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, PartTimer.currentTarget)) return;
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.PartTimerSet, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.PartTimerSet);
                 writer.Write(PartTimer.currentTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.partTimerSet(PartTimer.currentTarget.PlayerId);
                 SoundEffectsManager.play("jackalSidekick");
 
@@ -2773,7 +2736,7 @@ internal static class HudManagerStartPatch
             {
                 if (Warlock.curseVictim == null)
                 {
-                    if (CheckAndDoVetKill(Warlock.currentTarget)) return;
+                    if (CheckUseAbility(PlayerControl.LocalPlayer, Warlock.currentTarget)) return;
                     // Apply Curse
                     Warlock.curseVictim = Warlock.currentTarget;
                     warlockCurseButton.Sprite = Warlock.curseKillButtonSprite;
@@ -2781,19 +2744,15 @@ internal static class HudManagerStartPatch
                     SoundEffectsManager.play("warlockCurse");
 
                     // Ghost Info
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareGhostInfo,
-                        SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.ShareGhostInfo);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
                     writer.Write((byte)RPCProcedure.GhostInfoTypes.WarlockTarget);
                     writer.Write(Warlock.curseVictim.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                 }
                 else if (Warlock.curseVictim != null && Warlock.curseVictimTarget != null)
                 {
-                    var murder = checkMurderAttemptAndKill(Warlock.warlock, Warlock.curseVictimTarget,
-                        showAnimation: false);
-                    if (murder == MurderAttemptResult.SuppressKill) return;
+                    if (!CheckMurderPlayer(Warlock.warlock, Warlock.curseVictimTarget)) return;
 
                     // If blanked or killed
                     if (Warlock.rootTime > 0)
@@ -3038,7 +2997,7 @@ internal static class HudManagerStartPatch
         arsonistButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(Arsonist.currentTarget)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Arsonist.currentTarget)) return;
                 Arsonist.douseTarget = Arsonist.currentTarget;
                 arsonistButton.HasEffect = true;
                 SoundEffectsManager.play("arsonistDouse");
@@ -3119,8 +3078,7 @@ internal static class HudManagerStartPatch
             {
                 foreach (PlayerControl p in Arsonist.dousedPlayers.Where(p => p.IsAlive()))
                 {
-                    MurderPlayer(Arsonist.arsonist, p, false);
-                    GameHistory.RpcOverrideDeathReasonAndKiller(p, CustomDeathReason.Arson, Arsonist.arsonist);
+                    RpcCustomMurderPlayer(Arsonist.arsonist, p, false, true, CustomDeathReason.Arson);
                 }
                 arsonistKillButton.Timer = arsonistKillButton.MaxTimer;
                 arsonistButton.Timer = arsonistButton.MaxTimer;
@@ -3444,13 +3402,13 @@ internal static class HudManagerStartPatch
             {
                 if (Pursuer.target != null)
                 {
-                    if (CheckAndDoVetKill(Pursuer.target)) return;
+                    if (CheckUseAbility(PlayerControl.LocalPlayer, Pursuer.target)) return;
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
+                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetBlanked, SendOption.Reliable);
                     writer.Write(Pursuer.target.PlayerId);
-                    writer.Write(byte.MaxValue);
+                    writer.Write(true);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.pursuerSetBlanked(Pursuer.target.PlayerId, byte.MaxValue);
+                    RPCProcedure.SetBlanked(Pursuer.target.PlayerId, true);
 
                     Pursuer.target = null;
 
@@ -3524,13 +3482,13 @@ internal static class HudManagerStartPatch
             {
                 if (Survivor.target != null)
                 {
-                    if (CheckAndDoVetKill(Survivor.target)) return;
+                    if (CheckUseAbility(PlayerControl.LocalPlayer, Survivor.target)) return;
                     var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PursuerSetBlanked, SendOption.Reliable);
+                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetBlanked, SendOption.Reliable);
                     writer.Write(Survivor.target.PlayerId);
-                    writer.Write(byte.MaxValue);
+                    writer.Write(true);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.pursuerSetBlanked(Survivor.target.PlayerId, byte.MaxValue);
+                    RPCProcedure.SetBlanked(Survivor.target.PlayerId, true);
 
                     Survivor.target = null;
 
@@ -3570,7 +3528,7 @@ internal static class HudManagerStartPatch
             {
                 if (Witch.currentTarget != null)
                 {
-                    if (CheckAndDoVetKill(Witch.currentTarget)) return;
+                    if (CheckUseAbility(PlayerControl.LocalPlayer, Witch.currentTarget)) return;
                     Witch.spellCastingTarget = Witch.currentTarget;
                     SoundEffectsManager.play("witchSpell");
                 }
@@ -3621,29 +3579,19 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (Witch.spellCastingTarget == null) return;
-                var attempt = checkMuderAttempt(Witch.witch, Witch.spellCastingTarget);
-                if (attempt == MurderAttemptResult.PerformKill)
-                {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.SetFutureSpelled, SendOption.Reliable);
-                    writer.Write(Witch.currentTarget.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.setFutureSpelled(Witch.currentTarget.PlayerId);
-                }
 
-                if (attempt is MurderAttemptResult.BlankKill or MurderAttemptResult.PerformKill)
+                var writer = StartRPC(CustomRPC.SetFutureSpelled);
+                writer.Write(Witch.currentTarget.PlayerId);
+                writer.EndRPC();
+                RPCProcedure.setFutureSpelled(Witch.currentTarget.PlayerId);
+
+                Witch.currentCooldownAddition += Witch.cooldownAddition;
+                witchSpellButton.MaxTimer = Witch.cooldown + Witch.currentCooldownAddition;
+                witchSpellButton.Timer = witchSpellButton.MaxTimer;
+
+                if (Witch.triggerBothCooldowns)
                 {
-                    Witch.currentCooldownAddition += Witch.cooldownAddition;
-                    witchSpellButton.MaxTimer = Witch.cooldown + Witch.currentCooldownAddition;
-                    witchSpellButton.Timer = witchSpellButton.MaxTimer;
-                    if (Witch.triggerBothCooldowns)
-                    {
-                        Witch.witch.killTimer = ModOption.KillCooldown * Mini.Multiplier;
-                    }
-                }
-                else
-                {
-                    witchSpellButton.Timer = 0f;
+                    Witch.witch.killTimer = witchSpellButton.Timer;
                 }
 
                 Witch.spellCastingTarget = null;
@@ -3806,70 +3754,40 @@ internal static class HudManagerStartPatch
                 MessageWriter writer;
                 if (Ninja.ninjaMarked != null)
                 {
-                    // Murder attempt with teleport
-                    var attempt = checkMuderAttempt(Ninja.ninja, Ninja.ninjaMarked);
-                    if (attempt == MurderAttemptResult.BodyGuardKill)
-                    {
-                        checkMurderAttemptAndKill(Ninja.ninja, Ninja.ninjaMarked);
-                        return;
-                    }
+                    // Create first trace before killing
+                    var pos = PlayerControl.LocalPlayer.transform.position;
+                    var buff = new byte[sizeof(float) * 2];
+                    Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                    Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                    if (attempt == MurderAttemptResult.PerformKill || attempt == MurderAttemptResult.ReverseKill)
-                    {
-                        // Create first trace before killing
-                        var pos = PlayerControl.LocalPlayer.transform.position;
-                        var buff = new byte[sizeof(float) * 2];
-                        Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                        Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+                    writer = StartRPC(CustomRPC.PlaceNinjaTrace);
+                    writer.WriteBytesAndSize(buff);
+                    writer.EndRPC();
+                    RPCProcedure.placeNinjaTrace(buff);
 
-                        writer = StartRPC(CustomRPC.PlaceNinjaTrace);
-                        writer.WriteBytesAndSize(buff);
-                        writer.EndRPC();
-                        RPCProcedure.placeNinjaTrace(buff);
+                    var invisibleWriter = StartRPC(CustomRPC.SetInvisible);
+                    invisibleWriter.Write(Ninja.ninja.PlayerId);
+                    invisibleWriter.Write(byte.MinValue);
+                    invisibleWriter.EndRPC();
+                    RPCProcedure.setInvisible(Ninja.ninja.PlayerId, byte.MinValue);
 
-                        var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(
-                            PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetInvisible,
-                            SendOption.Reliable);
-                        invisibleWriter.Write(Ninja.ninja.PlayerId);
-                        invisibleWriter.Write(byte.MinValue);
-                        AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
-                        RPCProcedure.setInvisible(Ninja.ninja.PlayerId, byte.MinValue);
-                        if (!CheckAndDoVetKill(Ninja.ninjaMarked))
-                        {
-                            // Perform Kill
-                            var writer2 = AmongUsClient.Instance.StartRpcImmediately(
-                                PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedMurderPlayer,
-                                SendOption.Reliable);
-                            writer2.Write(PlayerControl.LocalPlayer.PlayerId);
-                            writer2.Write(Ninja.ninjaMarked.PlayerId);
-                            writer2.Write(true);
-                            AmongUsClient.Instance.FinishRpcImmediately(writer2);
-                            if (SubmergedCompatibility.IsSubmerged)
-                                SubmergedCompatibility.ChangeFloor(Ninja.ninjaMarked.transform.localPosition.y > -7);
-                            RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId,
-                                Ninja.ninjaMarked.PlayerId, true);
-                        }
+                    if (SubmergedCompatibility.IsSubmerged)
+                        SubmergedCompatibility.ChangeFloor(Ninja.ninjaMarked.transform.localPosition.y > -7);
 
-                        // Create Second trace after killing
-                        pos = Ninja.ninjaMarked.transform.position;
-                        buff = new byte[sizeof(float) * 2];
-                        Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                        Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
-
-                        var writer3 = StartRPC(CustomRPC.PlaceNinjaTrace);
-                        writer3.WriteBytesAndSize(buff);
-                        writer3.EndRPC();
-                        RPCProcedure.placeNinjaTrace(buff);
-                    }
-
-                    if (attempt is MurderAttemptResult.BlankKill or MurderAttemptResult.PerformKill)
-                    {
+                    // Perform Kill
+                    if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Ninja.ninjaMarked, true))
                         Ninja.ninja.killTimer = ninjaButton.Timer = ninjaButton.MaxTimer;
-                    }
-                    else if (attempt == MurderAttemptResult.SuppressKill)
-                    {
-                        ninjaButton.Timer = 0f;
-                    }
+
+                    // Create Second trace after killing
+                    pos = Ninja.ninjaMarked.transform.position;
+                    buff = new byte[sizeof(float) * 2];
+                    Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                    Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+
+                    var writer3 = StartRPC(CustomRPC.PlaceNinjaTrace);
+                    writer3.WriteBytesAndSize(buff);
+                    writer3.EndRPC();
+                    RPCProcedure.placeNinjaTrace(buff);
 
                     Ninja.ninjaMarked = null;
                     return;
@@ -3877,7 +3795,7 @@ internal static class HudManagerStartPatch
 
                 if (Ninja.currentTarget != null)
                 {
-                    if (CheckAndDoVetKill(Ninja.currentTarget)) return;
+                    if (CheckUseAbility(PlayerControl.LocalPlayer, Ninja.currentTarget)) return;
                     Ninja.ninjaMarked = Ninja.currentTarget;
                     ninjaButton.Timer = 5f;
                     SoundEffectsManager.play("warlockCurse");
@@ -3924,7 +3842,8 @@ internal static class HudManagerStartPatch
             {
                 // Action when Pressed
                 var target = Blackmailer.currentTarget;
-                if (CheckAndDoVetKill(target)) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
+
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.BlackmailPlayer);
                 writer.Write(target.PlayerId);
                 writer.EndRPC();
@@ -4000,31 +3919,22 @@ internal static class HudManagerStartPatch
         terroristButton = new CustomButton(
             () =>
             {
-                if (checkMuderAttempt(Terrorist.terrorist, Terrorist.terrorist) != MurderAttemptResult.BlankKill)
+                var pos = PlayerControl.LocalPlayer.transform.position;
+                var buff = new byte[sizeof(float) * 2];
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+
+                var writer = StartRPC(CustomRPC.PlaceBomb);
+                writer.WriteBytesAndSize(buff);
+                writer.EndRPC();
+                RPCProcedure.placeBomb(buff);
+
+                if (Terrorist.selfExplosion)
                 {
-                    var pos = PlayerControl.LocalPlayer.transform.position;
-                    var buff = new byte[sizeof(float) * 2];
-                    Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                    Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
-
-                    var writer = StartRPC(CustomRPC.PlaceBomb);
-                    writer.WriteBytesAndSize(buff);
-                    writer.EndRPC();
-                    RPCProcedure.placeBomb(buff);
-
-                    if (Terrorist.selfExplosion)
-                    {
-                        var loacl = Terrorist.terrorist.PlayerId;
-                        var writer1 = StartRPC(Terrorist.terrorist, CustomRPC.UncheckedMurderPlayer);
-                        writer1.Write(loacl);
-                        writer1.Write(loacl);
-                        writer1.Write(true);
-                        writer1.EndRPC();
-                        RPCProcedure.uncheckedMurderPlayer(loacl, loacl, true);
-                    }
-
-                    SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
+                    RpcCustomMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer, false);
                 }
+
+                SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
 
                 terroristButton.Timer = terroristButton.MaxTimer;
                 Terrorist.isPlanted = true;
@@ -4102,49 +4012,27 @@ internal static class HudManagerStartPatch
             {
                 var thief = Thief.thief;
                 var target = Thief.currentTarget;
-                var result = checkMuderAttempt(thief, target);
-                if (result == MurderAttemptResult.BlankKill)
-                {
-                    thiefKillButton.Timer = thiefKillButton.MaxTimer;
-                    return;
-                }
+
+                if (!CheckMurderPlayer(thief, target)) return;
 
                 if (Thief.suicideFlag)
                 {
                     // Suicide
-                    var writer2 = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
-                    writer2.Write(thief.PlayerId);
-                    writer2.Write(thief.PlayerId);
-                    writer2.Write(false);
-                    writer2.EndRPC();
-                    RPCProcedure.uncheckedMurderPlayer(thief.PlayerId, thief.PlayerId, false);
+                    RpcCustomMurderPlayer(thief, thief, false);
                     Thief.thief.clearAllTasks();
+                    return;
                 }
 
-                if (result is MurderAttemptResult.ReverseKill or MurderAttemptResult.BodyGuardKill)
-                {
-                    checkMurderAttemptAndKill(PlayerControl.LocalPlayer, target);
-                }
+                RpcCustomMurderPlayer(thief, target, true);
 
-                // Steal role if survived.
-                if (!Thief.thief.Data.IsDead && result == MurderAttemptResult.PerformKill)
+                _ = new LateTask(() =>
                 {
+                    if (thief.IsDead()) return;
                     var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.ThiefStealsRole);
                     writer.Write(target.PlayerId);
                     writer.EndRPC();
                     Thief.StealsRole(target.PlayerId);
-                }
-
-                // Kill the victim (after becoming their role - so that no win is triggered for other teams)
-                if (result == MurderAttemptResult.PerformKill)
-                {
-                    var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
-                    writer.Write(thief.PlayerId);
-                    writer.Write(target.PlayerId);
-                    writer.Write(true);
-                    writer.EndRPC();
-                    RPCProcedure.uncheckedMurderPlayer(thief.PlayerId, target.PlayerId, true);
-                }
+                }, 0.5f);
             },
             () =>
             {
@@ -4414,12 +4302,7 @@ internal static class HudManagerStartPatch
                 var target = Redemptor.target;
                 if (target == null) return;
 
-                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.UncheckedMurderPlayer);
-                writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                writer.Write(true);
-                writer.EndRPC();
-                RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, true);
+                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer, false);
 
                 _ = new LateTask(() =>
                 {
@@ -4450,6 +4333,7 @@ internal static class HudManagerStartPatch
                 {
                     showTargetNameOnButton(Redemptor.target, redemptorReviveButton, GetString("RedemptorRevive"));
                 }
+
                 Redemptor.target = PlayerById(deadBody?.ParentId);
                 return Redemptor.target && PlayerControl.LocalPlayer.CanMove;
             },
@@ -4472,7 +4356,8 @@ internal static class HudManagerStartPatch
                 {
                     var target = BandLeader.currentTarget;
                     if (target == null || BandLeader.Members.Any(x => x.PlayerId == target?.PlayerId)) return;
-                    if (CheckAndDoVetKill(target)) return;
+                    if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
+
                     var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.CreateBandMember);
                     writer.Write(target.PlayerId);
                     writer.Write(1);
@@ -4530,7 +4415,7 @@ internal static class HudManagerStartPatch
                 {
                     var target = BandLeader.currentTarget;
                     if (BandLeader.Members.Any(x => x.PlayerId == target?.PlayerId) || target == null) return;
-                    if (CheckAndDoVetKill(target)) return;
+                    if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
                     var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.CreateBandMember);
                     writer.Write(target.PlayerId);
                     writer.Write(2);
@@ -4586,7 +4471,7 @@ internal static class HudManagerStartPatch
                 {
                     var target = BandLeader.currentTarget;
                     if (BandLeader.Members.Any(x => x.PlayerId == target?.PlayerId) || target == null) return;
-                    if (CheckAndDoVetKill(target)) return;
+                    if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
                     var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.CreateBandMember);
                     writer.Write(target.PlayerId);
                     writer.Write(3);
@@ -4638,9 +4523,8 @@ internal static class HudManagerStartPatch
         bandLeaderKillButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(BandLeader.currentTarget)) return;
-                if (checkMurderAttemptAndKill(BandLeader.Player, BandLeader.currentTarget) ==
-                    MurderAttemptResult.SuppressKill) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, BandLeader.currentTarget)) return;
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, BandLeader.currentTarget)) return;
 
                 bandLeaderKillButton.Timer = bandLeaderKillButton.MaxTimer;
                 BandLeader.currentTarget = null;
@@ -4652,7 +4536,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                BandLeader.currentTarget = SetTarget(BandLeader.Members);
+                BandLeader.currentTarget = SetTarget(BandLeader.Members, BandLeader.winnerFlags == BandLeader.WinnerFlags.Impostor);
                 SetPlayerOutline(BandLeader.currentTarget, BandLeader.color);
 
                 showTargetNameOnButton(BandLeader.currentTarget, bandLeaderKillButton, GetString("killButtonText"));
@@ -4674,9 +4558,8 @@ internal static class HudManagerStartPatch
         schrodingersCatKillButton = new CustomButton(
             () =>
             {
-                if (CheckAndDoVetKill(SchrodingersCat.currentTarget)) return;
-                if (checkMurderAttemptAndKill(SchrodingersCat.Player, SchrodingersCat.currentTarget) ==
-                    MurderAttemptResult.SuppressKill) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, SchrodingersCat.currentTarget)) return;
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, SchrodingersCat.currentTarget)) return;
 
                 schrodingersCatKillButton.Timer = schrodingersCatKillButton.MaxTimer;
                 SchrodingersCat.currentTarget = null;
@@ -4716,6 +4599,9 @@ internal static class HudManagerStartPatch
                         break;
                     case SchrodingersCat.CatState.Pelican:
                         untargetablePlayers.Add(Pelican.Player);
+                        break;
+                    case SchrodingersCat.CatState.Infected:
+                        untargetablePlayers.AddRange(Infected.Player);
                         break;
                 }
                 untargetablePlayers.RemoveAll(x => x == null);
@@ -4797,8 +4683,8 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var target = Berserker.currentTarget;
-                if (CheckAndDoVetKill(target)) return;
-                if (checkMurderAttemptAndKill(Berserker.Player, target) == MurderAttemptResult.SuppressKill) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, target)) return;
 
                 berserkerKillButton.EffectDuration = Berserker.GetDuration();
                 target = null;
@@ -4848,8 +4734,8 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var target = Berserker.currentTarget;
-                if (CheckAndDoVetKill(target)) return;
-                if (checkMurderAttemptAndKill(Berserker.Player, target) == MurderAttemptResult.SuppressKill) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, target)) return;
                 target = null;
             },
             () =>
@@ -4902,17 +4788,9 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var target = Infected.currentTarget;
-                if (CheckAndDoVetKill(target)) return;
-                var murderAttemptResult = checkMuderAttempt(PlayerControl.LocalPlayer, Infected.currentTarget);
+                if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
 
-                if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
-
-                if (murderAttemptResult == MurderAttemptResult.PerformKill)
-                {
-                    Infected.KillPlayer(PlayerControl.LocalPlayer, target);
-                }
-                if (murderAttemptResult == MurderAttemptResult.BodyGuardKill)
-                    checkMurderAttemptAndKill(Pelican.Player, Pelican.currentTarget);
+                Infected.KillPlayer(PlayerControl.LocalPlayer, target);
 
                 InfectedKillButton.Timer = InfectedKillButton.MaxTimer;
                 Infected.currentTarget = null;
@@ -4930,50 +4808,6 @@ internal static class HudManagerStartPatch
                 return PlayerControl.LocalPlayer.CanMove && Infected.currentTarget != null;
             },
             () => { InfectedKillButton.Timer = InfectedKillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowRight,
-            __instance,
-            __instance.KillButton,
-            modKillInput.keyCode,
-            buttonText: GetString("killButtonText")
-        );
-
-        hunterKillButton = new CustomButton(
-            () =>
-            {
-                var target = Hunter.currentTarget;
-                if (CheckAndDoVetKill(target)) return;
-
-                var murderAttemptResult = checkMuderAttempt(PlayerControl.LocalPlayer, target);
-                if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
-                if (murderAttemptResult == MurderAttemptResult.PerformKill)
-                {
-                    var writer = StartRPC(CustomRPC.HunterCheckTarget);
-                    writer.Write(target.PlayerId);
-                    writer.EndRPC();
-                    Hunter.CheckTarget(target.PlayerId);
-                }
-
-                hunterKillButton.Timer = hunterKillButton.MaxTimer;
-                Hunter.currentTarget = null;
-            },
-            () =>
-            {
-                if (MeetingHudPatch.MeetingCount == 0 && !Hunter.CanStakeRoundOne) return false;
-                return Hunter.Player.IsAlive() && Hunter.Player == PlayerControl.LocalPlayer && Hunter.RemainingCount > 0;
-            },
-            () =>
-            {
-                if (hunterKillButton.ButtonTitle != null)
-                {
-                    hunterKillButton.ButtonTitle.text = $"{Hunter.RemainingCount} / {Hunter.MaxCount}";
-                }
-                Hunter.currentTarget = SetTarget();
-                SetPlayerOutline(Hunter.currentTarget, Hunter.color);
-                showTargetNameOnButton(Hunter.currentTarget, hunterKillButton, GetString("killButtonText"));
-                return PlayerControl.LocalPlayer.CanMove && Hunter.currentTarget != null;
-            },
-            () => { hunterKillButton.Timer = hunterKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
             ButtonPositions.upperRowRight,
             __instance,

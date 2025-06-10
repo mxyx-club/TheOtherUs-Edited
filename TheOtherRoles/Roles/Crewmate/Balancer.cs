@@ -371,7 +371,7 @@ public class Balancer
 
     private static void BalancerOnClick(int Index, MeetingHud __instance)
     {
-        if (currentAbilityUser != null || __instance.state is MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Results) return;
+        if (currentAbilityUser != null || __instance.state is MeetingHud.VoteStates.Discussion or MeetingHud.VoteStates.Results) return;
         var Target = PlayerById(__instance.playerStates[Index].TargetPlayerId);
 
         if (currentTarget == null && Target.IsAlive())

@@ -94,8 +94,7 @@ public static class Guesser
 
     public static void guesserOnClick(int buttonTarget, MeetingHud __instance)
     {
-        if (guesserUI != null || !(__instance.state is MeetingHud.VoteStates.Voted
-            or MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Discussion)) return;
+        if (guesserUI != null || !(__instance.state is MeetingHud.VoteStates.Results or MeetingHud.VoteStates.Discussion)) return;
 
         Page = 1;
         RoleButtons = new();
@@ -339,7 +338,7 @@ public static class Guesser
             int copiedIndex = i[(int)team];
 
             button.GetComponent<PassiveButton>().OnClick.RemoveAllListeners();
-            if (!PlayerControl.LocalPlayer.Data.IsDead) button.GetComponent<PassiveButton>().OnClick.AddListener((Action)(() =>
+            if (PlayerControl.LocalPlayer.IsAlive()) button.GetComponent<PassiveButton>().OnClick.AddListener((Action)(() =>
             {
                 if (selectedButton != button)
                 {
@@ -352,8 +351,9 @@ public static class Guesser
                     var focusedTarget = PlayerById(__instance.playerStates[buttonTarget].TargetPlayerId);
                     var mainRoleInfo = RoleInfo.getRoleInfoForPlayer(focusedTarget, true);
 
-                    if (__instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)
+                    if (__instance.state is MeetingHud.VoteStates.Discussion or MeetingHud.VoteStates.Results
                         || focusedTarget == null
+                        || PlayerControl.LocalPlayer.IsDead()
                         || (HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) <= 0
                             && HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId))
                         || (PlayerControl.LocalPlayer == Doomsayer.doomsayer && !Doomsayer.CanShoot))
