@@ -137,10 +137,11 @@ internal class MeetingHudPatch
     private static void populateButtonsPostfix(MeetingHud __instance)
     {
         // Add Swapper Buttons
-        var addSwapperButtons = Swapper.swapper != null && PlayerControl.LocalPlayer == Swapper.swapper &&
-                                !Swapper.swapper.Data.IsDead;
-        var addMayorButton = Mayor.mayor != null && PlayerControl.LocalPlayer == Mayor.mayor &&
-                             !Mayor.mayor.Data.IsDead && !Mayor.Revealed;
+        var addSwapperButtons = Swapper.swapper.IsAlive() && PlayerControl.LocalPlayer == Swapper.swapper
+            && PlayerControl.LocalPlayer.CanUseMeetingAbility();
+        var addMayorButton = Mayor.mayor.IsAlive() && PlayerControl.LocalPlayer == Mayor.mayor && !Mayor.Revealed
+            && PlayerControl.LocalPlayer.CanUseMeetingAbility();
+
         if (addSwapperButtons)
         {
             selections = new bool[__instance.playerStates.Length];
@@ -249,6 +250,7 @@ internal class MeetingHudPatch
         if (isGuesser
             && PlayerControl.LocalPlayer.IsAlive()
             && GuesserRemainingShots > 0
+            && PlayerControl.LocalPlayer.CanUseMeetingAbility()
             && (PlayerControl.LocalPlayer != WolfLord.Player || !WolfLord.Revealed || WolfLord.Killed))
         {
             Doomsayer.CanShoot = true;
@@ -440,7 +442,9 @@ internal class MeetingHudPatch
 
         private static bool Prefix(MeetingHud __instance)
         {
-            if (!__instance.playerStates.All(ps => ps.AmDead || ps.DidVote)) return false;
+            if (!__instance.playerStates
+                .Where(x => PlayerById(x.TargetPlayerId).CanUseMeetingAbility())
+                .All(ps => ps.AmDead || ps.DidVote)) return false;
             // If skipping is disabled, replace skipps/no-votes with self vote
             if (target == null && blockSkippingInEmergencyMeetings && noVoteIsSelfVote)
                 foreach (var playerVoteArea in __instance.playerStates)
@@ -449,7 +453,7 @@ internal class MeetingHudPatch
 
             var self = CalculateVotes(__instance);
             //var max = self.MaxPair(out var tie);
-            var exiled = PlayerControl.LocalPlayer.Data;
+            GameData.PlayerInfo exiled = null;
             bool tie = false;
 
             VoterState[] states;
@@ -466,7 +470,7 @@ internal class MeetingHudPatch
                         playerVoteArea.VotedFor != Balancer.targetplayerright.PlayerId &&
                         playerVoteArea.VotedFor != Balancer.targetplayerleft.PlayerId)
                     {
-                        playerVoteArea.VotedFor = Helpers.GetRandom((byte[])([Balancer.targetplayerright.PlayerId, Balancer.targetplayerleft.PlayerId]));
+                        playerVoteArea.VotedFor = Helpers.GetRandom((byte[])[Balancer.targetplayerright.PlayerId, Balancer.targetplayerleft.PlayerId]);
                     }
                 }
 
@@ -516,6 +520,9 @@ internal class MeetingHudPatch
         {
             Info("ClearVote");
             swapperCheckAndReturnSwap(__instance, byte.MaxValue - 1);
+
+            Prosecutor.ProsecuteThisMeeting = false;
+            Prosecutor.StartProsecute = false;
         }
     }
 
@@ -680,6 +687,17 @@ internal class MeetingHudPatch
         }
     }
 
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CastVote))]
+    private class MeetingHudCastVotePatch
+    {
+        private static bool Prefix(MeetingHud __instance, [HarmonyArgument(0)] byte srcPlayerId)
+        {
+            var voter = PlayerById(srcPlayerId);
+            if (!voter.CanUseMeetingAbility()) return false;
+            return true;
+        }
+    }
+
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.VotingComplete))]
     private class MeetingHudVotingCompletedPatch
     {
@@ -833,7 +851,7 @@ internal class MeetingHudPatch
     {
         public static bool Prefix(QuickChatMenu __instance)
         {
-            if (Blackmailer.blackmailer != null && Blackmailer.blackmailed != null && Blackmailer.blackmailed == PlayerControl.LocalPlayer)
+            if (Blackmailer.Player != null && Blackmailer.blackmailed != null && Blackmailer.blackmailed == PlayerControl.LocalPlayer)
             {
                 return false;
             }
@@ -853,7 +871,7 @@ internal class MeetingHudPatch
             updateMeetingText(__instance);
             Balancer.UpdateButton(__instance);
 
-            if (Blackmailer.blackmailer != null && Blackmailer.blackmailed != null)
+            if (Blackmailer.Player != null && Blackmailer.blackmailed != null)
             {
                 // Blackmailer show overlay
                 var playerState = __instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == Blackmailer.blackmailed.PlayerId);
@@ -888,20 +906,23 @@ internal class MeetingHudPatch
             if (Witch.witch.IsDead()) Witch.futureSpelled.Clear();
 
             //Nothing here for now. What to do when local player who is blackmailed starts meeting
-            if (Blackmailer.blackmailed != null && Blackmailer.blackmailed.PlayerId == PlayerControl.LocalPlayer.PlayerId && Blackmailer.blackmailed.IsAlive())
+            if (Blackmailer.blackmailed.IsAlive() && Blackmailer.blackmailed == PlayerControl.LocalPlayer)
                 Coroutines.Start(BlackmailShhh());
+            else if (Blackmailer.Player.IsDead())
+                Blackmailer.blackmailed = null;
 
             if (PartTimer.partTimer.IsAlive() && PartTimer.target == null) PartTimer.deathTurn--;
 
             if (Balancer.balancer.IsAlive() && PlayerControl.LocalPlayer == Balancer.balancer)
             {
-                Balancer.MeetingHudStartPostfix(__instance);
+                if (PlayerControl.LocalPlayer.CanUseMeetingAbility()) Balancer.MeetingStart(__instance);
             }
 
             Redemptor.RevivedPlayer = null;
             Undertaker.dragedBody = null;
             Jester.dragedBody = null;
             KillTrap.OnMeetingStart();
+            Jailor.MeetingStart(__instance);
 
             if (Pelican.Player != null)
             {

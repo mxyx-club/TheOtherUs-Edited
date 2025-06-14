@@ -63,11 +63,15 @@ public class WolfLord
         private static TextMeshPro meetingExtraButtonLabel;
         private static GameObject MeetingExtraButton;
 
-        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
-        [HarmonyPostfix]
+        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start)), HarmonyPostfix]
         private static void MeetingStartPostfix(MeetingHud __instance)
         {
-            if (__instance && !Killed && Revealed) { ButtonToggle(__instance); return; }
+            if (!PlayerControl.LocalPlayer.CanUseMeetingAbility()) return;
+            if (__instance && !Killed && Revealed)
+            {
+                ButtonToggle(__instance);
+                return;
+            }
             if (Player.IsAlive() && PlayerControl.LocalPlayer == Player && !Revealed)
             {
                 var meetingUI = UObject.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
@@ -87,8 +91,7 @@ public class WolfLord
                 meetingExtraButtonParent.localPosition = new Vector3(0, -2.225f, -5);
                 meetingExtraButtonParent.localScale = new Vector3(0.55f, 0.55f, 1f);
                 meetingExtraButtonLabel.alignment = TextAlignmentOptions.Center;
-                meetingExtraButtonLabel.transform.localPosition =
-                    new Vector3(0, 0, meetingExtraButtonLabel.transform.localPosition.z);
+                meetingExtraButtonLabel.transform.localPosition = new Vector3(0, 0, meetingExtraButtonLabel.transform.localPosition.z);
 
                 var localScale = meetingExtraButtonLabel.transform.localScale;
                 localScale = new Vector3(
@@ -163,6 +166,7 @@ public class WolfLord
             var target = PlayerById(pva.TargetPlayerId);
             if (Player == null || !Revealed || Killed || target == null) return;
             if (__instance.state is MeetingHud.VoteStates.Discussion or MeetingHud.VoteStates.Results) return;
+
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WolfLordkilled);
             writer.Write(target.PlayerId);
             writer.EndRPC();

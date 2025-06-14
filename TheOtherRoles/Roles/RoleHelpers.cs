@@ -43,6 +43,7 @@ public enum RoleId
     Grenadier,
     Gunsmith,
     Berserker,
+    Jailor,
 
     Survivor,
     Amnisiac,
@@ -189,9 +190,9 @@ public static class RoleHelpers
 
     public static bool CheckMurderPlayer(PlayerControl killer, PlayerControl target)
     {
+        if (killer == null || target == null) return false;
         if (killer == target) return true;
-        if (IsHideNSeek)
-            return true;
+        if (IsHideNSeek) return true;
         // Block impostor not fully grown mini kill
         if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp()) return false;
 
@@ -261,13 +262,6 @@ public static class RoleHelpers
             turnToImpostorRPC(target);
 
             CustomButton.SetKillTimer();
-            return false;
-        }
-
-        // Thief if hit crew only kill if setting says so, but also kill the thief.
-        else if (Thief.thief != null && killer == Thief.thief && !Thief.tiefCanKill(target, killer))
-        {
-            Thief.suicideFlag = true;
             return false;
         }
 
@@ -341,6 +335,8 @@ public static class RoleHelpers
             { RoleId.Veteran, CustomOptionHolder.veteranSpawnRate.GetSelection() },
             { RoleId.Vigilante, CustomOptionHolder.guesserSpawnRate.GetSelection() },
             { RoleId.Redemptor, CustomOptionHolder.redemptorSpawnRate.GetSelection() },
+            { RoleId.Hunter, CustomOptionHolder.hunterSpawnRate.GetSelection() },
+            { RoleId.Jailor, CustomOptionHolder.jailorSpawnRate.GetSelection() },
 
             { RoleId.WolfLord, CustomOptionHolder.wolfLordSpawnRate.GetSelection() },
             { RoleId.Blackmailer, CustomOptionHolder.blackmailerSpawnRate.GetSelection() },
@@ -392,6 +388,7 @@ public static class RoleHelpers
             { RoleId.BandLeader, CustomOptionHolder.bandLeaderSpawnRate.GetSelection() },
             { RoleId.SchrodingersCat, CustomOptionHolder.schrodingersCatSpawnRate.GetSelection() },
             { RoleId.Pursuer, CustomOptionHolder.lawyerSpawnRate.GetSelection() + CustomOptionHolder.executionerSpawnRate.GetSelection() },
+            { RoleId.Infected, CustomOptionHolder.infectedSpawnRate.GetSelection() },
 
             { RoleId.Lover, CustomOptionHolder.modifierLover.GetSelection() },
             { RoleId.Aftermath, CustomOptionHolder.modifierAftermath.GetSelection() },
@@ -430,6 +427,7 @@ public static class RoleHelpers
         Prosecutor.clearAndReload();
         Portalmaker.clearAndReload();
         Hunter.ClearAndReload();
+        Jailor.ClearAndReload();
         Infected.clearAndReload();
         Poucher.clearAndReload();
         Mimic.clearAndReload();

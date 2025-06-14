@@ -2581,14 +2581,11 @@
     "hunterMaxCount": {
         "13": "技能次数"
     },
-    "hunterCooldown": {
+    "jailorCooldown": {
         "13": "技能冷却"
     },
-    "hunterCanStakeRoundOne": {
-        "13": "第一轮可以使用技能"
-    },
-    "hunterCanShootNum": {
-        "13": "在感染者全部死亡后获得的猜测次数"
+    "jailorUseCount": {
+        "13": "技能最大使用次数"
     },
     "TouTitle": {
         "0": "<color=#ff351f>TheOtherUs-Edited</color>",
@@ -2988,6 +2985,19 @@
     "RoleDraft.Disconnect": {
         "0": "Player Disconnected",
         "13": "玩家已断线"
+    },
+    "Jailor.YouAreJailed": {
+        "0": "YOU ARE JAILED",
+        "13": "你已被监禁"
+    },
+    "Jailor.InJail": {
+        "13": " (被监禁)"
+    },
+    "Jailor.JailedChat": {
+        "13": "你已被监禁，本轮会议发送消息只能与典狱长私聊。其他玩家无法看到。\n\n另外，本轮会议你无法投票，也无法使用任何会议技能。"
+    },
+    "Jailor.JailorChat": {
+        "13": "你可以使用 [/jail text] 指令来与被监禁玩家私聊。\n\n并且对方本轮会议内只能向你发送消息，其它玩家无法看到。"
     },
     "colorSalmon": {
         "0": "Salmon",
@@ -3530,6 +3540,10 @@
     "ChangeTarget": {
         "0": "CHANGE",
         "13": "更换目标"
+    },
+    "jailButtonText": {
+        "0": "JAIL",
+        "13": "监禁"
     },
     "GuessserGMInfo": {
         "0": " (Guesser)",
@@ -4864,6 +4878,16 @@
     "HunterShortDesc": {
         "13": "击杀可疑的玩家"
     },
+    "Jailor": {
+        "0": "Jailor",
+        "13": "典狱长"
+    },
+    "JailorIntroDesc": {
+        "13": "监禁并处决可疑玩家"
+    },
+    "JailorShortDesc": {
+        "13": "囚禁可疑的玩家"
+    },
     "ImpostorFullDesc": {
         "0": "An ordinary Imposter, deadly but otherwise unassuming.",
         "13": "哈哈~白板红狼!"
@@ -5306,5 +5330,8 @@
     },
     "InfectedFullDesc": {
         "13": "感染者击杀玩家时，如果对方为击杀相关职业会直接击杀对方，如果对方为\n船员或非击杀相关职业则会将目标变为感染者。\n\n感染者有最大数量和同时存在数量的限制，请注意！\n如果感染者数量达到最大时，使用击杀技能时都会击杀对方。"
+    },
+    "JailorFullDesc": {
+        "13": "你可以在行动阶段选择一位玩家监禁，进入会议后会将目标玩家监禁。\n\n目标在会议中发送的消息只会被典狱长接收，其他玩家无法看到，\n但典狱长可以使用 [/jail text] 指令与被监禁者私聊。\n\n典狱长可以在会议中处决被监禁玩家，但如果处决了船员，将永久失去技能。"
     }
 }

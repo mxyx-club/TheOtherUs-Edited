@@ -79,6 +79,7 @@ public class Witness
         [HarmonyPostfix]
         private static void MeetingHudStartPostfix(MeetingHud __instance)
         {
+            if (!PlayerControl.LocalPlayer.CanUseMeetingAbility()) return;
             if (PlayerControl.LocalPlayer == Player && PlayerControl.LocalPlayer.IsAlive())
             {
                 foreach (var pva in __instance.playerStates)

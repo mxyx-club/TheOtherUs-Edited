@@ -156,6 +156,15 @@ public static class Mimic
                 prophetButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
+
+            case RoleId.Jailor:
+                if (Amnisiac.resetRole) Jailor.ClearAndReload();
+                Jailor.Player = mimic;
+                Jailor.usesCount = 1;
+                prophetButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
+                hasMimic = true;
+                break;
+
             case RoleId.Redemptor:
                 if (Amnisiac.resetRole) Redemptor.ClearAndReload();
                 Redemptor.Player = mimic;

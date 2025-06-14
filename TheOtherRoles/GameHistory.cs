@@ -23,6 +23,7 @@ public enum CustomDeathReason
     Suicide,
     BombVictim,
     Eaten,
+    Jailed,
 }
 public class DeadPlayer
 {

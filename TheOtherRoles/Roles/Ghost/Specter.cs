@@ -126,7 +126,7 @@ public class Specter
                     break;
                 case RoleId.Blackmailer:
                     if (resetRole) Blackmailer.clearAndReload();
-                    Blackmailer.blackmailer = local;
+                    Blackmailer.Player = local;
                     break;
                 case RoleId.Witch:
                     if (resetRole) Witch.clearAndReload();
@@ -350,6 +350,10 @@ public class Specter
                 case RoleId.Hunter:
                     if (resetRole) Hunter.ClearAndReload();
                     Hunter.Player = local;
+                    break;
+                case RoleId.Jailor:
+                    if (resetRole) Jailor.ClearAndReload();
+                    Jailor.Player = local;
                     break;
                 case RoleId.Infected:
                     Infected.Player.Add(local);

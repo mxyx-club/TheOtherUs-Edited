@@ -283,6 +283,12 @@ internal class HudManagerUpdatePatch
             }
         }
 
+        if (Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive())
+        {
+            if (local == Jailor.Player || InMeeting)
+                setPlayerNameColor(Jailor.Jailed, Jailor.color);
+        }
+
         if (Executioner.executioner != null && local == Executioner.executioner && Executioner.target != null)
         {
             setPlayerNameColor(Executioner.target, Executioner.color);
@@ -303,8 +309,7 @@ internal class HudManagerUpdatePatch
             setPlayerNameColor(WolfLord.Player, WolfLord.color);
         }
 
-        if (Grenadier.Player != null && ((local.IsImpostor() && Grenadier.indicatorsMode)
-            || local == Grenadier.Player || CanSeeRoleInfo))
+        if (Grenadier.Player != null && ((local.IsImpostor() && Grenadier.indicatorsMode) || local == Grenadier.Player || CanSeeRoleInfo))
         {
             foreach (var p in Grenadier.controls)
             {

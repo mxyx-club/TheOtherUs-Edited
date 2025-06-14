@@ -384,7 +384,7 @@ internal class GameOptionsMenuStartPatch
         copyButton.name = "CopyButton";
         var copyButtonPassive = copyButton.GetComponent<PassiveButton>();
         var copyButtonRenderer = copyButton.GetComponent<SpriteRenderer>();
-        copyButtonRenderer.sprite = new ResourceSprite("TheOtherRoles.Resources.CopyButton.png", 175f);
+        copyButtonRenderer.sprite = new ResourceSprite("CopyButton.png", 175f);
         copyButtonPassive.OnClick.RemoveAllListeners();
         copyButtonPassive.OnClick = new Button.ButtonClickedEvent();
         copyButtonPassive.OnClick.AddListener((Action)(() =>
@@ -1193,14 +1193,19 @@ public class HudManagerUpdate
         var curString = "";
         string curBlock;
         var j = 0;
+
         for (var i = 0; i < blocks.Length; i++)
         {
             if (IsCN()) blocks[i] = $"<line-height=120%>{blocks[i]}</line-height>";
             curBlock = blocks[i];
-            if (lineCount(curBlock) + lineCount(curString) < (IsCN() ? 40 : 43)) curString += curBlock + "\n\n";
+            if (lineCount(curBlock) + lineCount(curString) < (IsCN() ? 40 : 43))
+            {
+                curString += curBlock + "\n\n";
+            }
             else
             {
-                settingsTMPs[j].text = curString;
+                if (j < settingsTMPs.Length)
+                    settingsTMPs[j].text = curString;
                 j++;
 
                 curString = "\n" + curBlock + "\n\n";
@@ -1208,7 +1213,8 @@ public class HudManagerUpdate
             }
         }
 
-        if (j < settingsTMPs.Length) settingsTMPs[j].text = curString;
+        if (j < settingsTMPs.Length)
+            settingsTMPs[j].text = curString;
         var blockCount = 0;
         foreach (var tmp in settingsTMPs)
             if (tmp.text != "")

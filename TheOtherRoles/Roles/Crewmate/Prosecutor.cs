@@ -32,7 +32,7 @@ public static class Prosecutor
     {
         public static void UpdateButton(PlayerControl p, MeetingHud __instance)
         {
-            if (p != prosecutor) return;
+            if (p != prosecutor || !prosecutor.CanUseMeetingAbility()) return;
 
             var skip = __instance.SkipVoteButton;
             Prosecute.gameObject.SetActive(skip.gameObject.active && !Prosecuted);
@@ -46,7 +46,7 @@ public static class Prosecutor
         {
             public static void Postfix(MeetingHud __instance)
             {
-                if (prosecutor != PlayerControl.LocalPlayer) return;
+                if (prosecutor != PlayerControl.LocalPlayer || !prosecutor.CanUseMeetingAbility()) return;
 
                 var skip = __instance.SkipVoteButton;
                 Prosecute = UObject.Instantiate(skip, skip.transform.parent);
@@ -72,7 +72,7 @@ public static class Prosecutor
             {
                 public static void Postfix(MeetingHud __instance)
                 {
-                    if (PlayerControl.LocalPlayer == prosecutor)
+                    if (PlayerControl.LocalPlayer == prosecutor && prosecutor.CanUseMeetingAbility())
                     {
                         Prosecute.ClearButtons();
                         UpdateButton(prosecutor, __instance);
@@ -85,7 +85,7 @@ public static class Prosecutor
             {
                 public static void Postfix(MeetingHud __instance, int __0)
                 {
-                    if (PlayerControl.LocalPlayer == prosecutor)
+                    if (PlayerControl.LocalPlayer == prosecutor && prosecutor.CanUseMeetingAbility())
                     {
                         Prosecute.ClearButtons();
                         UpdateButton(prosecutor, __instance);
@@ -100,7 +100,7 @@ public static class Prosecutor
             {
                 public static void Postfix(MeetingHud __instance)
                 {
-                    if (PlayerControl.LocalPlayer == prosecutor)
+                    if (PlayerControl.LocalPlayer == prosecutor && prosecutor.CanUseMeetingAbility())
                         UpdateButton(prosecutor, __instance);
                 }
             }
@@ -110,7 +110,7 @@ public static class Prosecutor
             {
                 public static void Postfix(MeetingHud __instance)
                 {
-                    if (PlayerControl.LocalPlayer != prosecutor) return;
+                    if (PlayerControl.LocalPlayer != prosecutor || !prosecutor.CanUseMeetingAbility()) return;
                     switch (__instance.state)
                     {
                         case MeetingHud.VoteStates.Discussion:
@@ -132,7 +132,8 @@ public static class Prosecutor
         {
             public static bool Prefix(PlayerVoteArea __instance)
             {
-                if (prosecutor != PlayerControl.LocalPlayer) return true;
+                if (prosecutor != PlayerControl.LocalPlayer || !prosecutor.CanUseMeetingAbility()) return true;
+
                 if (__instance.Parent.state is MeetingHud.VoteStates.Proceeding or MeetingHud.VoteStates.Results)
                     return false;
 

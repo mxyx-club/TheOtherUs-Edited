@@ -479,7 +479,7 @@ public static class Guesser
         if (Thief.thief != null && Thief.thief.PlayerId == killerId && Thief.canStealWithGuess)
         {
             var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
-            if (Thief.thief.IsAlive() && Thief.tiefCanKill(dyingTarget, guesser))
+            if (Thief.thief.IsAlive() && Thief.tiefCanKill(guesser, dyingTarget))
                 Thief.StealsRole(dyingTarget.PlayerId);
         }
 
@@ -599,6 +599,7 @@ public static class Guesser
             var msg = $"{guesser.Data.PlayerName} 赌怪猜测 {guessedTarget.Data.PlayerName} 是 {roleInfo?.Name ?? ""}!";
             if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
             {
+                if (!CanSeeRoleInfo) return;
                 _ = new LateTask(() => { FastDestroyableSingleton<HudManager>.Instance!.Chat.AddChat(guesser, msg); }, 0.1f, "Guess Chat");
             }
         }

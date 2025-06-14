@@ -87,6 +87,7 @@ public class RoleInfo
     public static RoleInfo sheriff = new("Sheriff", Sheriff.color, RoleId.Sheriff, RoleType.Crewmate);
     public static RoleInfo deputy = new("Deputy", Sheriff.color, RoleId.Deputy, RoleType.Crewmate);
     public static RoleInfo hunter = new("Hunter", Hunter.color, RoleId.Hunter, RoleType.Crewmate);
+    public static RoleInfo jailor = new("Jailor", Jailor.color, RoleId.Jailor, RoleType.Crewmate);
     public static RoleInfo bodyguard = new("BodyGuard", BodyGuard.color, RoleId.BodyGuard, RoleType.Crewmate);
     public static RoleInfo jumper = new("Jumper", Jumper.color, RoleId.Jumper, RoleType.Crewmate);
     public static RoleInfo detective = new("Detective", Detective.color, RoleId.Detective, RoleType.Crewmate);
@@ -205,6 +206,7 @@ public class RoleInfo
         sheriff,
         deputy,
         hunter,
+        jailor,
         bodyguard,
         jumper,
         detective,
@@ -331,7 +333,7 @@ public class RoleInfo
         if (p == Yoyo.yoyo) infos.Add(yoyo);
         if (p == EvilTrapper.evilTrapper) infos.Add(evilTrapper);
         if (p == Hunter.Player) infos.Add(hunter);
-        if (p == Blackmailer.blackmailer) infos.Add(blackmailer);
+        if (p == Blackmailer.Player) infos.Add(blackmailer);
         if (p == Terrorist.terrorist) infos.Add(terrorist);
         if (p == Detective.detective) infos.Add(detective);
         if (p == Berserker.Player) infos.Add(berserker);
@@ -358,6 +360,7 @@ public class RoleInfo
         if (p == Medium.medium) infos.Add(medium);
         if (p == Lawyer.lawyer) infos.Add(lawyer);
         if (p == Pelican.Player) infos.Add(pelican);
+        if (p == Jailor.Player) infos.Add(jailor);
         if (p == PartTimer.partTimer) infos.Add(partTimer);
         if (p == Prosecutor.prosecutor) infos.Add(prosecutor);
         if (p == Balancer.balancer) infos.Add(balancer);
@@ -491,26 +494,28 @@ public class RoleInfo
 
         return reason switch
         {
+            CustomDeathReason.NULL => "NULL",
             CustomDeathReason.Disconnect => "断开连接",
             CustomDeathReason.HostCmdKill => $"被 {Cs(killerColor, killerName)} 制裁",
             CustomDeathReason.Kill => $"被击杀于 {Cs(killerColor, killerName)}",
             CustomDeathReason.Exile => "被驱逐",
             CustomDeathReason.Suicide => "自杀",
-            CustomDeathReason.SheriffKill => $"出警 {Cs(killerColor, killerName)}",
+            CustomDeathReason.SheriffKill => $"出警 {Cs(Sheriff.color, killerName)}",
             CustomDeathReason.SheriffMisfire => "警长走火",
-            CustomDeathReason.SheriffMisadventure => $"被误杀于 {Cs(killerColor, killerName)}",
+            CustomDeathReason.SheriffMisadventure => $"被误杀于 {Cs(Sheriff.color, killerName)}",
             CustomDeathReason.BombVictim => "恐袭",
-            CustomDeathReason.Eaten => $"被吞食于 {Cs(killerColor, killerName)}",
+            CustomDeathReason.Eaten => $"被吞食于 {Cs(Pelican.color, killerName)}",
             CustomDeathReason.Guess => p.PlayerId == killer?.PlayerId ? "猜测错误" : $"被赌杀于 {Cs(killerColor, killerName)}",
             CustomDeathReason.Shift => $"{Cs(Color.yellow, "交换")} {Cs(killerColor, killerName)} 失败",
             CustomDeathReason.WitchExile => $"{Cs(Witch.color, "被咒杀于")} {Cs(killerColor, killerName)}",
             CustomDeathReason.LoverSuicide => $"{Cs(Lovers.color, "殉情")}",
             CustomDeathReason.LawyerSuicide => $"{Cs(Lawyer.color, "辩护失败")}",
-            CustomDeathReason.Bomb => $"被恐袭于 {Cs(killerColor, killerName)}",
-            CustomDeathReason.Arson => $"被烧死于 {Cs(killerColor, killerName)}",
+            CustomDeathReason.Bomb => $"被恐袭于 {Cs(Palette.ImpostorRed, killerName)}",
+            CustomDeathReason.Arson => $"被烧死于 {Cs(Arsonist.color, killerName)}",
             CustomDeathReason.LoveStolen => $"{Cs(Lovers.color, "爱人被夺")}",
             CustomDeathReason.Loneliness => $"{Cs(Akujo.color, "精力衰竭")}",
             CustomDeathReason.FakeSK => $"{Cs(Jackal.color, "招募失败")} {Cs(killerColor, killerName)}",
+            CustomDeathReason.Jailed => $"被 {Cs(Jailor.color, killerName)} 处决",
             _ => "未知"
         };
     }

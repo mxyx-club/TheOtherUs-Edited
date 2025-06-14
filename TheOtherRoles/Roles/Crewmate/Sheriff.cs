@@ -23,6 +23,7 @@ public static class Sheriff
     public static bool knowsSheriff;
     public static Dictionary<byte, float> handcuffedKnows = new();
 
+    public static ResourceSprite killButtonSprite = new("SheriffKillButton.png");
     public static ResourceSprite handcuffSprite = new("DeputyHandcuffButton.png");
     public static ResourceSprite handcuffedSprite = new("DeputyHandcuffed.png");
 

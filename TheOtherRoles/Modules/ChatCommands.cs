@@ -1,5 +1,4 @@
 using System.Text;
-using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles.Modules;
 
@@ -19,6 +18,7 @@ public static class ChatCommands
                 __instance.freeChatField.Clear();
                 __instance.quickChatMenu.Clear();
             }
+
             return !handled;
         }
     }
@@ -67,7 +67,7 @@ public static class ChatCommands
     }
 
     [HarmonyPatch(typeof(ChatBubble), nameof(ChatBubble.SetName))]
-    private static class SetBubbleName
+    public static class SetBubbleName
     {
         private static void Postfix(ChatBubble __instance, [HarmonyArgument(0)] string playerName)
         {
@@ -78,30 +78,70 @@ public static class ChatCommands
             {
                 __instance.NameText.color = Palette.ImpostorRed;
             }
+
+            if (PlayerControl.LocalPlayer == Jailor.Player && InMeeting)
+            {
+                if (Jailor.Jailed.IsAlive() && Jailor.Jailed == PlayerByName(playerName))
+                {
+                    __instance.NameText.color = Jailor.color;
+                    __instance.NameText.text = playerName + GetString("Jailor.InJail");
+                }
+                else if (Jailor.JailorMessage)
+                {
+                    __instance.NameText.color = Jailor.color;
+                    __instance.NameText.text = GetString("Jailor");
+                    Jailor.JailorMessage = false;
+                }
+            }
+
+            if ((PlayerControl.LocalPlayer == Jailor.Jailed || CanSeeRoleInfo) && Jailor.Jailed.IsAlive() && MeetingHud.Instance)
+            {
+                if (Jailor.JailorMessage)
+                {
+                    __instance.NameText.color = Jailor.color;
+                    __instance.NameText.text = GetString("Jailor");
+                    Jailor.JailorMessage = false;
+                }
+                else if (Jailor.Jailed.IsAlive() && Jailor.Jailed == PlayerByName(playerName) && Jailor.Player.IsAlive())
+                {
+                    __instance.NameText.color = Jailor.color;
+                    __instance.NameText.text = playerName + GetString("Jailor.InJail");
+                }
+            }
         }
     }
 
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.AddChat))] //test
-    private static class AddChat
+    private static class AddChatPatch
     {
-        private static bool Prefix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer)
+        private static bool Prefix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer, ref bool __state)
         {
             var local = PlayerControl.LocalPlayer;
-            if (local == null) return true;
+            if (sourcePlayer == local) return true;
 
-            var flag = MeetingHud.Instance || LobbyBehaviour.Instance || CanSeeRoleInfo || ModOption.DebugMode || sourcePlayer.PlayerId == local.PlayerId;
+            var flag = MeetingHud.Instance
+                    || LobbyBehaviour.Instance
+                    || CanSeeRoleInfo
+                    || ModOption.DebugMode;
 
-            if (__instance != FastDestroyableSingleton<HudManager>.Instance.Chat) return true;
-            if (Blackmailer.blackmailed == sourcePlayer) return false;
-            if (!local.isLover()) return flag;
-            if (local.isLover() && Lovers.enableChat) return sourcePlayer.getPartner() == local || local.getPartner() == sourcePlayer || flag;
+            __state = flag;
+
+            if (__instance != FastDestroyableSingleton<HudManager>.Instance.Chat)
+                return true;
+            if (sourcePlayer == Blackmailer.blackmailed && Blackmailer.Player.IsAlive() && Blackmailer.blackmailed.IsAlive())
+            { __state = false; return false; }
+            if (sourcePlayer == Jailor.Jailed && Jailor.Jailed.IsAlive() && Jailor.Player.IsAlive() && local != Jailor.Player && !CanSeeRoleInfo)
+            { __state = false; return false; }
+            if (local.isLover() && Lovers.enableChat && (local == sourcePlayer.getPartner() || flag))
+            { __state = true; return true; }
+
             return flag;
         }
 
-        private static void Postfix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer)
+        private static void Postfix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer, bool __state)
         {
+            if (!__state) return;
             if (sourcePlayer.IsDead() || sourcePlayer == PlayerControl.LocalPlayer || !InMeeting) return;
-
             try
             {
                 var local = PlayerControl.LocalPlayer;
@@ -113,7 +153,7 @@ public static class ChatCommands
                 rend.transform.SetParent(pva.transform);
                 rend.gameObject.layer = pva.Megaphone.gameObject.layer;
                 rend.transform.localPosition = new Vector3(-0.5f, 0.2f, -1f);
-                rend.sprite = new ResourceSprite("TheOtherRoles.Resources.ChatOverlay.png", 130f);
+                rend.sprite = new ResourceSprite("ChatOverlay.png", 130f);
                 rend?.gameObject?.SetActive(true);
 
                 _ = new LateTask(() =>
@@ -301,6 +341,21 @@ public static class ChatCommands
                 if (roleInfo.roleId == RoleId.Cursed) continue;
                 var roleText = RoleInfo.getRoleDescription(roleInfo.Name);
                 chat.AddChat(PlayerControl.LocalPlayer, roleText);
+            }
+        });
+
+        ChatCommandRegistry.Register("jail", (sender, args, chat) =>
+        {
+            if (sender == Jailor.Player && sender.IsAlive() && Jailor.Jailed != null && InMeeting)
+            {
+                var message = string.Join(' ', args).Trim();
+                var writer = StartRPC(CustomRPC.JailorSendMessage);
+                writer.Write(Jailor.Player.PlayerId);
+                writer.Write(message);
+                writer.EndRPC();
+                Jailor.JailorSendMessage(Jailor.Player, message);
+
+                return;
             }
         });
 

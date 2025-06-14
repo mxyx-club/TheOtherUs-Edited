@@ -400,7 +400,7 @@ public class Balancer
         });
     }
 
-    internal static void MeetingHudStartPostfix(MeetingHud __instance)
+    internal static void MeetingStart(MeetingHud __instance)
     {
         if (PlayerControl.LocalPlayer.IsAlive() && IsAbilityUsed > 0)
         {

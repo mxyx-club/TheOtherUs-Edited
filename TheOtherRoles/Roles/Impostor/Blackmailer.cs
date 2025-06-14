@@ -2,7 +2,7 @@ namespace TheOtherRoles.Roles.Impostor;
 
 public static class Blackmailer
 {
-    public static PlayerControl blackmailer;
+    public static PlayerControl Player;
     public static Color color = Palette.ImpostorRed;
     public static Color blackmailedColor = Palette.White;
 
@@ -15,7 +15,7 @@ public static class Blackmailer
 
     public static void clearAndReload()
     {
-        blackmailer = null;
+        Player = null;
         currentTarget = null;
         blackmailed = null;
         alreadyShook = false;

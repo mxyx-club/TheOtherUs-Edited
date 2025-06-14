@@ -589,7 +589,7 @@ internal class BodyReportPatch
         if (ModOption.DisableMeeting) return false;
         handleVampireBiteOnBodyReport();
         handleBomberExplodeOnBodyReport();
-        if (target?.Object == null || target.Object.IsDead()) return false;
+        //if (__instance.IsDead()) return false;
         return true;
     }
 
@@ -817,7 +817,7 @@ public static class MurderPlayerPatch
         if (Bait.bait.FindAll(x => x.PlayerId == target.PlayerId).Count > 0)
         {
             float reportDelay = (float)rnd.NextDouble(Bait.reportDelayMin, Bait.reportDelayMax);
-            reportDelay = Math.Max(reportDelay, 0.25f);
+            reportDelay = Math.Max(reportDelay, 0.12f);
 
             if (__instance.AmOwner)
             {
@@ -1151,6 +1151,19 @@ public static class ExilePlayerPatch
             Pelican.PelicanDie();
         }
 
+        if (__instance == Jailor.Player && Jailor.Jailed != null && InMeeting)
+        {
+            foreach (var playerState in MeetingHud.Instance.playerStates)
+            {
+                var cell = playerState.transform.FindChild("JailCell");
+                cell?.gameObject?.Destroy();
+
+                var icon = playerState.transform.FindChild("JailTargetIcon");
+                icon?.gameObject?.Destroy();
+            }
+            Jailor.Jailed = null;
+        }
+
         if (Lawyer.lawyer != null && __instance == Lawyer.target)
         {
             if (AmongUsClient.Instance.AmHost && ((Lawyer.target != Jester.jester) || Lawyer.targetWasGuessed))
@@ -1240,6 +1253,15 @@ public static class DisconnectPatch
                     if (voteAreaPlayer?.AmOwner == false) continue;
                     MeetingHud.Instance.ClearVote();
                 }
+            }
+        }
+
+        if (Akujo.honmei != null && Akujo.honmei == player)
+        {
+            if (Akujo.akujo == PlayerControl.LocalPlayer)
+            {
+                Akujo.timeLeft += 30;
+                Akujo.honmei = null;
             }
         }
 

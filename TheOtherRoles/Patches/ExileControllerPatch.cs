@@ -304,6 +304,9 @@ internal class ExileControllerWrapUpPatch
 
         if (Specter.Player == PlayerControl.LocalPlayer) Specter.remember = true;
 
+        // Reset the jailed player
+        Jailor.Jailed = null;
+
         // Reset custom button timers where necessary
         CustomButton.MeetingEndedUpdate();
 
@@ -353,7 +356,7 @@ internal class ExileControllerWrapUpPatch
         // Tracker reset deadBodyPositions
         Tracker.deadBodyPositions = new List<Vector3>();
 
-        if (Blackmailer.blackmailer != null && Blackmailer.blackmailed != null)
+        if (Blackmailer.Player != null && Blackmailer.blackmailed != null)
         {
             // Blackmailer reset blackmailed
             var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
@@ -400,6 +403,7 @@ internal class ExileControllerWrapUpPatch
 
             if (exiled == null) Prosecutor.Prosecuted = false;
             Prosecutor.ProsecuteThisMeeting = false;
+            Prosecutor.StartProsecute = false;
         }
 
         // Eraser erase

@@ -276,6 +276,14 @@ public static class Helpers
         return killerTeam;
     }
 
+    public static bool CanUseMeetingAbility(this PlayerControl player)
+    {
+        if (player.IsDead()) return true;
+        if (Blackmailer.Player.IsAlive() && Blackmailer.blackmailed == player) return false;
+        if (Jailor.Player.IsAlive() && Jailor.Jailed == player) return false;
+        return true;
+    }
+
     public static PlayerControl SetTarget(IEnumerable<PlayerControl> untarget = null, bool onlyCrewmates = false,
         bool targetInVents = false, float distances = 0f, PlayerControl targetingPlayer = null)
     {
@@ -695,23 +703,29 @@ public static class Helpers
     public static void handleVampireBiteOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        RpcCustomMurderPlayer(Vampire.vampire, Vampire.bitten, false);
-        var writer = StartRPC(CustomRPC.VampireSetBitten);
-        writer.Write(byte.MaxValue);
-        writer.Write(true);
-        writer.EndRPC();
-        RPCProcedure.vampireSetBitten(byte.MaxValue, true);
+        if (Vampire.vampire != null && Vampire.bitten != null)
+        {
+            RpcCustomMurderPlayer(Vampire.vampire, Vampire.bitten, false);
+            var writer = StartRPC(CustomRPC.VampireSetBitten);
+            writer.Write(byte.MaxValue);
+            writer.Write(true);
+            writer.EndRPC();
+            RPCProcedure.vampireSetBitten(byte.MaxValue, true);
+        }
     }
 
     public static void handleBomberExplodeOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
-        var writer = StartRPC(CustomRPC.GiveBomb);
-        writer.Write(byte.MaxValue);
-        writer.Write(false);
-        writer.EndRPC();
-        RPCProcedure.giveBomb(byte.MaxValue);
+        if (Bomber.bomber != null && Bomber.hasBombPlayer != null)
+        {
+            RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
+            var writer = StartRPC(CustomRPC.GiveBomb);
+            writer.Write(byte.MaxValue);
+            writer.Write(false);
+            writer.EndRPC();
+            RPCProcedure.giveBomb(byte.MaxValue);
+        }
     }
 
     public static void refreshRoleDescription(PlayerControl player)
@@ -1155,8 +1169,8 @@ public static class Helpers
         if (HudManagerStartPatch.zoomOutButton != null)
         {
             HudManagerStartPatch.zoomOutButton.Sprite = zoomOutStatus
-                ? new ResourceSprite("TheOtherRoles.Resources.ZoomIn.png", 21f)
-                : new ResourceSprite("TheOtherRoles.Resources.ZoomOut.png", 85f);
+                ? new ResourceSprite("ZoomIn.png", 21f)
+                : new ResourceSprite("ZoomOut.png", 85f);
             HudManagerStartPatch.zoomOutButton.PositionOffset = zoomOutStatus ? new Vector3(-0.82f, 11.5f, 0) : new(0.4f, 2.35f, 0f);
         }
 

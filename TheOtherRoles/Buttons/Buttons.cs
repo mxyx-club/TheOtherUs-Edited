@@ -104,6 +104,7 @@ internal static class HudManagerStartPatch
     public static CustomButton berserkerKillButton;
     public static CustomButton poltergeistButton;
     public static CustomButton InfectedKillButton;
+    public static CustomButton jailorButton;
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
@@ -215,6 +216,7 @@ internal static class HudManagerStartPatch
         berserkerKillButton.MaxTimer = Berserker.KillCooldown;
         poltergeistButton.MaxTimer = Poltergeist.cooldown;
         InfectedKillButton.MaxTimer = Infected.cooldown;
+        jailorButton.MaxTimer = Jailor.cooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
@@ -315,7 +317,7 @@ internal static class HudManagerStartPatch
                 return true;
             },
             () => { },
-            new ResourceSprite("TheOtherRoles.Resources.HelpButton.png", 85f),
+            new ResourceSprite("HelpButton.png", 85f),
             new Vector3(0.4f, 3f, 0),
             __instance,
             __instance.AbilityButton,
@@ -537,7 +539,7 @@ internal static class HudManagerStartPatch
                 return Sheriff.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () => { sheriffKillButton.Timer = sheriffKillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
+            Sheriff.killButtonSprite,
             ButtonPositions.upperRowRight,
             __instance,
             __instance.KillButton,
@@ -716,26 +718,22 @@ internal static class HudManagerStartPatch
             {
                 if (CheckUseAbility(PlayerControl.LocalPlayer, Akujo.currentTarget)) return;
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.AkujoSetHonmei, SendOption.Reliable, -1);
+                var writer = StartRPC(CustomRPC.AkujoSetHonmei);
                 writer.Write(Akujo.akujo.PlayerId);
                 writer.Write(Akujo.currentTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.akujoSetHonmei(PlayerControl.LocalPlayer.PlayerId, Akujo.currentTarget.PlayerId);
             },
             () =>
             {
                 return PlayerControl.LocalPlayer == Akujo.akujo
-                       && !PlayerControl.LocalPlayer.Data.IsDead
+                       && PlayerControl.LocalPlayer.IsAlive()
                        && Akujo.honmei == null
                        && Akujo.timeLeft > 0;
             },
             () =>
             {
-                return PlayerControl.LocalPlayer == Akujo.akujo
-                       && !PlayerControl.LocalPlayer.Data.IsDead
-                       && Akujo.currentTarget != null
-                       && Akujo.honmei == null
-                       && Akujo.timeLeft > 0;
+                return Akujo.currentTarget != null;
             },
             () => { akujoHonmeiButton.Timer = akujoHonmeiButton.MaxTimer; },
             Akujo.honmeiSprite,
@@ -759,11 +757,14 @@ internal static class HudManagerStartPatch
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.akujoSetKeep(PlayerControl.LocalPlayer.PlayerId, Akujo.currentTarget.PlayerId);
             },
-            () => { return PlayerControl.LocalPlayer == Akujo.akujo && !PlayerControl.LocalPlayer.Data.IsDead && Akujo.keepsLeft > 0; },
+            () =>
+            {
+                return PlayerControl.LocalPlayer == Akujo.akujo && PlayerControl.LocalPlayer.IsAlive() && Akujo.keepsLeft > 0;
+            },
             () =>
             {
                 akujoBackupButton.UsesCount = Akujo.keepsLeft;
-                return PlayerControl.LocalPlayer == Akujo.akujo && !PlayerControl.LocalPlayer.Data.IsDead && Akujo.currentTarget != null && Akujo.keepsLeft > 0 && Akujo.timeLeft > 0;
+                return Akujo.currentTarget != null && Akujo.keepsLeft > 0 && Akujo.timeLeft > 0;
             },
             () => { akujoBackupButton.Timer = akujoBackupButton.MaxTimer; },
             Akujo.keepSprite,
@@ -3852,7 +3853,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Blackmailer.blackmailer.IsAlive() && Blackmailer.blackmailer == PlayerControl.LocalPlayer;
+                return Blackmailer.Player.IsAlive() && Blackmailer.Player == PlayerControl.LocalPlayer;
             },
             () =>
             {
@@ -4015,7 +4016,7 @@ internal static class HudManagerStartPatch
 
                 if (!CheckMurderPlayer(thief, target)) return;
 
-                if (Thief.suicideFlag)
+                if (!Thief.tiefCanKill(target, PlayerControl.LocalPlayer))
                 {
                     // Suicide
                     RpcCustomMurderPlayer(thief, thief, false);
@@ -4814,6 +4815,46 @@ internal static class HudManagerStartPatch
             __instance.KillButton,
             modKillInput.keyCode,
             buttonText: GetString("killButtonText")
+        );
+
+        jailorButton = new CustomButton(
+            () =>
+            {
+                var target = Jailor.currentTarget;
+                if (target == null) return;
+                if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
+
+                var writer = StartRPC(CustomRPC.JailorJail);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(target.PlayerId);
+                writer.EndRPC();
+                Jailor.JailPlayer(PlayerControl.LocalPlayer, target);
+
+                SoundEffectsManager.play("deputyHandcuff");
+
+                jailorButton.Timer = jailorButton.MaxTimer;
+                Jailor.currentTarget = null;
+            },
+            () =>
+            {
+                return Jailor.Player.IsAlive() && Jailor.Player == PlayerControl.LocalPlayer && Jailor.usesCount > 0;
+            },
+            () =>
+            {
+                jailorButton.UsesCount = Jailor.usesCount;
+                Jailor.currentTarget = SetTarget();
+                SetPlayerOutline(Jailor.currentTarget, Jailor.color);
+                showTargetNameOnButton(Jailor.currentTarget, jailorButton, GetString("jailButtonText"));
+
+                return PlayerControl.LocalPlayer.CanMove && Jailor.currentTarget != null;
+            },
+            () => { jailorButton.Timer = jailorButton.MaxTimer; },
+            Jailor.buttonSpritr,
+            ButtonPositions.upperRowRight,
+            __instance,
+            __instance.AbilityButton,
+            abilityInput.keyCode,
+            buttonText: GetString("jailButtonText")
         );
 
         // Set the default (or settings from the previous game) timers / durations when spawning the buttons

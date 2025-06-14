@@ -12,8 +12,6 @@ public static class Thief
 
     public static float cooldown = 30f;
 
-    public static bool suicideFlag; // Used as a flag for suicide
-
     public static bool hasImpostorVision;
     public static bool canUseVents;
     public static bool canKillSheriff;
@@ -24,7 +22,6 @@ public static class Thief
     public static void clearAndReload()
     {
         thief = null;
-        suicideFlag = false;
         currentTarget = null;
         formerThief = null;
         hasImpostorVision = CustomOptionHolder.thiefHasImpVision.GetBool();
@@ -36,17 +33,17 @@ public static class Thief
         canStealWithGuess = CustomOptionHolder.thiefCanStealWithGuess.GetBool();
     }
 
-    public static bool tiefCanKill(PlayerControl target, PlayerControl killer)
+    public static bool tiefCanKill(PlayerControl killer, PlayerControl target)
     {
-        return killer == thief && (target.Data.Role.IsImpostor ||
+        return killer == thief && (target.IsImpostor() ||
             Jackal.jackal.Any(x => x == target) ||
             target == Jackal.Sidekick ||
             target == Werewolf.werewolf ||
             target == Juggernaut.juggernaut ||
             target == Pelican.Player ||
             target == Swooper.swooper ||
-            Pavlovsdogs.pavlovsdogs.Any(p => p == target) ||
             target == Pavlovsdogs.pavlovsowner ||
+            Pavlovsdogs.pavlovsdogs.Any(p => p == target) ||
             (canKillSheriff && Sheriff.Player.Any(x => x == target)) ||
             (canKillDeputy && target == Sheriff.Deputy) ||
             (canKillVeteran && target == Veteran.veteran));
@@ -158,7 +155,7 @@ public static class Thief
         }
         if (target == Sheriff.Deputy) Sheriff.Deputy = thief;
         if (target == Veteran.veteran) Veteran.veteran = thief;
-        if (target == Blackmailer.blackmailer) Blackmailer.blackmailer = thief;
+        if (target == Blackmailer.Player) Blackmailer.Player = thief;
         if (target == EvilTrapper.evilTrapper) EvilTrapper.evilTrapper = thief;
 
         if (Lawyer.lawyer != null && target == Lawyer.target)

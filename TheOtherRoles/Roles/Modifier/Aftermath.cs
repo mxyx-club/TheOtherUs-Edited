@@ -20,7 +20,7 @@ public class Aftermath
         var killer = PlayerById(killerId);
         if (killer == null || killer == player) return;
 
-        if (Blackmailer.blackmailer == killer)
+        if (Blackmailer.Player == killer)
         {
             var target = killer;
             if (Blackmailer.currentTarget != null) target = Blackmailer.currentTarget;
