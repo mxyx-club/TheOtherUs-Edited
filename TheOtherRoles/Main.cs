@@ -15,7 +15,7 @@ namespace TheOtherRoles;
 public partial class TheOtherRolesPlugin : BasePlugin
 {
     public static TheOtherRolesPlugin Instance;
-    public const string VersionSuffix = " - Lite";
+    public const string VersionSuffix = "";
     public static Version version => System.Version.Parse(Version);
 
     public static int optionsPage = 2;
@@ -23,6 +23,8 @@ public partial class TheOtherRolesPlugin : BasePlugin
     public static IRegionInfo[] defaultRegions;
     public Harmony Harmony { get; } = new(Id);
 
+    public static ConfigEntry<bool> IsCPUProcessorAffinity { get; set; }
+    public static ConfigEntry<ulong> ProcessorAffinityMask { get; set; }
     public static ConfigEntry<bool> EnableSoundEffects { get; set; }
     public static ConfigEntry<bool> ToggleCursor { get; set; }
     public static ConfigEntry<bool> ShowFPS { get; set; }
@@ -69,6 +71,8 @@ public partial class TheOtherRolesPlugin : BasePlugin
         ModTranslation.Load();
         Instance = this;
 
+        IsCPUProcessorAffinity = Config.Bind("Custom", "CPUProcessorAffinity", false);
+        ProcessorAffinityMask = Config.Bind("Custom", "ProcessorAffinityMask", (ulong)3);
         ToggleCursor = Config.Bind("Custom", "Better Cursor", true);
         EnableSoundEffects = Config.Bind("Custom", "Enable Sound Effects", true);
         ShowFPS = Config.Bind("Custom", "Show FPS", true);
@@ -91,8 +95,40 @@ public partial class TheOtherRolesPlugin : BasePlugin
         SubmergedCompatibility.Initialize();
         AddToKillDistanceSetting.addKillDistance();
         ChatCommands.Init();
-
+        UpdateCPUProcessorAffinity();
         Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{Version}{VersionSuffix}\n---------------");
+    }
+
+    // CPUの割当を変更する
+    public static void UpdateCPUProcessorAffinity()
+    {
+        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux()) return;
+
+        if (!IsCPUProcessorAffinity.Value || ProcessorAffinityMask.Value == 0)
+        {
+            try
+            {
+                ulong allCores = (1UL << Environment.ProcessorCount) - 1;
+                System.Diagnostics.Process.GetCurrentProcess().ProcessorAffinity = (IntPtr)allCores;
+                Info("CPU Processor Affinity disabled, using all cores.", "CPUAffinity");
+            }
+            catch (Exception ex)
+            {
+                Error($"Failed to reset CPU affinity: {ex}", "CPUAffinity");
+            }
+            return;
+        }
+
+        ulong affinity = ProcessorAffinityMask.Value;
+        try
+        {
+            System.Diagnostics.Process.GetCurrentProcess().ProcessorAffinity = (IntPtr)affinity;
+            Info($"UpdatedCPUProcessorAffinity To: {affinity}", "CPUAffinity");
+        }
+        catch (Exception ex)
+        {
+            Error($"Failed to set CPU affinity: {ex}", "CPUAffinity");
+        }
     }
 }
 

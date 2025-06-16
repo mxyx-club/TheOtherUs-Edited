@@ -18,25 +18,51 @@ public static class StartOptionMenuPatch
             button.Rollover.ChangeOutColor(color);
     }
 
-    public static void UpdateToggleText(this ToggleButtonBehaviour button, bool on, string text)
+    public static void UpdateToggleText(this ToggleButtonBehaviour button, bool on, string title)
     {
         button.onState = on;
         var color = on ? new Color(0f, 1f, 0.16470589f, 1f) : Color.white;
         button.Background.color = color;
-        button.Text.text = text + ": " + DestroyableSingleton<TranslationController>.Instance.GetString(button.onState
+        button.Text.text = title + ": " + DestroyableSingleton<TranslationController>.Instance.GetString(button.onState
             ? StringNames.SettingsOn : StringNames.SettingsOff, new Il2CppReferenceArray<Il2CppSystem.Object>(0));
         if (button.Rollover)
             button.Rollover.ChangeOutColor(color);
     }
 
-    public static void UpdateButtonText(this ToggleButtonBehaviour button, string text, string state)
+    public static void UpdateButtonText(this ToggleButtonBehaviour button, string text, string title, bool onState = false)
     {
-        button.onState = false;
-        var color = Color.white;
+        button.onState = onState;
+        var color = onState ? new Color(0f, 1f, 0.16470589f, 1f) : Color.white;
         button.Background.color = color;
-        button.Text.text = text + ": " + state;
+        button.Text.text = title + ": " + text;
         if (button.Rollover)
             button.Rollover.ChangeOutColor(color);
+    }
+
+    private static string GetCPUAffinityMaskText()
+    {
+        ulong mask = Main.ProcessorAffinityMask.Value;
+        string showCore;
+        switch (mask)
+        {
+            case 0b1UL:
+                showCore = GetString("ProcessorAffinityMask.1");
+                break;
+            case 0b11UL:
+                showCore = GetString("ProcessorAffinityMask.2");
+                break;
+            case 0b1010UL:
+                showCore = GetString("ProcessorAffinityMask.3");
+                break;
+            case 0b1111UL:
+                showCore = GetString("ProcessorAffinityMask.4");
+                break;
+            case 0UL:
+            default:
+                showCore = GetString("ProcessorAffinityMask.Off");
+                break;
+        }
+        return $"{showCore}";
     }
 
     private static ToggleButtonBehaviour AddButton(int index, string name, Action onClicked, GameObject nebulaTab, GameObject toggleButtonTemplate)
@@ -53,6 +79,7 @@ public static class StartOptionMenuPatch
         return result;
     }
 
+    private static ToggleButtonBehaviour processorAffinityMask;
     private static ToggleButtonBehaviour toggleCursor;
     private static ToggleButtonBehaviour enableSoundEffects;
     private static ToggleButtonBehaviour showKeyReminder;
@@ -81,6 +108,38 @@ public static class StartOptionMenuPatch
         var toggleButtonTemplate = tabs[0].Content.transform.FindChild("MiscGroup").FindChild("StreamerModeButton").gameObject;
 
         var buttonIndex = 0;
+
+        //ProcessorAffinityMask
+        processorAffinityMask = AddButton(buttonIndex++, "ProcessorAffinityMask", () =>
+        {
+            ulong current = Main.ProcessorAffinityMask.Value;
+            ulong next;
+            switch (current)
+            {
+                case 0UL:
+                    Main.IsCPUProcessorAffinity.Value = true;
+                    next = 0b1UL;
+                    break;
+                case 0b1UL:
+                    next = 0b11UL;
+                    break;
+                case 0b11UL:
+                    next = 0b1010UL;
+                    break;
+                case 0b1010UL:
+                    next = 0b1111UL;
+                    break;
+                case 0b1111UL:
+                default:
+                    Main.IsCPUProcessorAffinity.Value = false;
+                    next = 0UL;
+                    break;
+            }
+
+            Main.ProcessorAffinityMask.Value = next;
+            Main.UpdateCPUProcessorAffinity();
+            processorAffinityMask.UpdateButtonText(GetCPUAffinityMaskText(), GetString("ProcessorAffinityMask"), next != 0UL);
+        }, nebulaTab, toggleButtonTemplate);
 
         //EnableSoundEffects
         enableSoundEffects = AddButton(buttonIndex++, "EnableSoundEffects", () =>
@@ -268,6 +327,7 @@ public static class StartOptionMenuPatch
         {
             __instance.OpenTabGroup(tabs.Count - 2);
 
+            processorAffinityMask.UpdateButtonText(GetCPUAffinityMaskText(), GetString("ProcessorAffinityMask"), Main.ProcessorAffinityMask.Value != 0UL);
             showFPS.UpdateToggleText(Main.ShowFPS.Value, GetString("ShowFPS"));
             enableSoundEffects.UpdateToggleText(Main.EnableSoundEffects.Value, GetString("EnableSoundEffectsText"));
             showKeyReminder.UpdateToggleText(Main.ShowKeyReminder.Value, GetString("ShowKeyReminder"));
