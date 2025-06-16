@@ -4,94 +4,6 @@
         "11": "The Other Roles設定",
         "13": "The Other Roles 设置"
     },
-    "modOptionsTitle": {
-        "0": "Mod Options...",
-        "13": "模组选项"
-    },
-    "modOptionsText": {
-        "0": "More Options...",
-        "13": "模组选项"
-    },
-    "ToggleCursorText": {
-        "0": "Better Cursor",
-        "13": "启用模组光标"
-    },
-    "EnableSoundEffectsText": {
-        "0": "Enable Sound Effects",
-        "13": "启用模组音效"
-    },
-    "ShowFPS": {
-        "0": "Show FPS",
-        "13": "在游戏内显示帧率"
-    },
-    "ShowKeyReminder": {
-        "0": "Show Keybinds",
-        "13": "游戏内显示键位提醒"
-    },
-    "LocalHatsText": {
-        "0": "Load Local Hats",
-        "13": "加载离线帽子"
-    },
-    "EnableDebugLogModeText": {
-        "0": "Enable Debug Log Mode",
-        "13": "收集Debug日志"
-    },
-    "keyBinding": {
-        "0": "Key Bindings",
-        "13": "键位更改"
-    },
-    "keyBinding.restoreDefaults": {
-        "0": "Restore Defaults",
-        "13": "恢复默认"
-    },
-    "keyBinding.recording": {
-        "0": "Recording…",
-        "13": "正在录制…"
-    },
-    "keyBinding.ability": {
-        "0": "Ability",
-        "13": "使用技能"
-    },
-    "keyBinding.secondaryAbility": {
-        "0": "Secondary Ability",
-        "13": "使用第二技能"
-    },
-    "keyBinding.modifierAbility": {
-        "0": "Modifier Ability",
-        "13": "附加能力技能"
-    },
-    "keyBinding.kill": {
-        "0": "Kill (Additional)",
-        "13": "击杀 (模组)"
-    },
-    "keyBinding.toggleChat": {
-        "0": "Toggle Chat",
-        "13": "打开聊天栏"
-    },
-    "keyBinding.showOptionPage": {
-        "0": "Show Option Page",
-        "13": "显示预设页面"
-    },
-    "keyBinding.help": {
-        "0": "Show List of Roles",
-        "13": "显示职业介绍"
-    },
-    "keyBinding.screenResolution": {
-        "0": "Change Screen Resolution",
-        "13": "快速修改屏幕分辨率"
-    },
-    "keyBinding.metaControl": {
-        "0": "Meta Control",
-        "13": "控制键"
-    },
-    "keyBinding.endGame": {
-        "0": "End Game (Meta Control)",
-        "13": "控制键: 快速终止游戏"
-    },
-    "keyBinding.meeting": {
-        "0": "Start/End Meeting (Meta Control)",
-        "13": "控制键: 开始/停止会议"
-    },
     "pressTabForMore": {
         "0": "\n Press TAB or Page Number for more... ({0}/{1})",
         "13": "\n 按Tab键查看更多... ({0}/{1})"
@@ -2629,7 +2541,7 @@
     },
     "WelcomeText": {
         "0": "Welcome to <color=#ff351f><size=120%>TheOtherUs-Edited</size></color>!\n\nCommands (a space is required after the command):\n/r [Role Name] : Get a description of the specified role  \n/m : Use in-game to view the description of your current role\n\nTo view other commands, type: /cmd",
-        "13": "欢迎游玩<color=#ff351f><size=120%>我们的超多职业</size></color> ！\n\n游戏指令【指令和内容中间需要空格】：\n/r [职业名称] ：获取该职业的介绍\n/m ：游戏内使用，获取自己已有职业的介绍\n\n如需查看其它指令请输入：/cmd"
+        "13": "欢迎游玩<color=#ff351f><size=120%>我们的超多职业</size></color> ！\n\n游戏指令 :\n/ls : 获取全部玩家的代号（PlayerId）\n/r [职业名称] ：获取该职业的介绍\n/m ：游戏内使用，获取自己已有职业的介绍\n\n如需查看其它指令请输入：/cmd"
     },
     "BetaMessage": {
         "0": "The current Beta mod will expire in {0} days!\n\nYou won't be able to play after that. Please update!",
@@ -2637,15 +2549,123 @@
     },
     "CommandsInHost": {
         "0": "In-Game Commands:\n/end : Force-end the game\n/mt : Call or end a meeting\n/kill [player name] : Force-kill a player\n/revive [player name] : Force-revive a player\n/say [message] : Send a host message to all players",
-        "13": "游戏中指令：\n/end ：强制游戏结束\n/mt 召集/结束会议\n/kill [玩家名称] ：强制击杀玩家\n/revive [玩家名称] ： 强制复活玩家\n/say [内容] : 向所有玩家发送房主消息"
+        "13": "游戏中指令：\n/end ：强制游戏结束\n/mt 召集/结束会议\n/kill [玩家代号] ：强制击杀玩家\n/revive [玩家代号] ： 强制复活玩家\n/say [内容] : 向所有玩家发送房主消息\n/room [数量] : 修改房间最大人数\n/ls : 获取全部玩家的代号"
     },
     "CommandsInPlayer": {
         "0": "Global Commands:\n/r [role name] : Get the description of the specified role\n\nIn-Game Commands:\n/m : Get descriptions of all current roles\n\nDead Players or Lobby Commands:\n/tp [player name] : Teleport to the specified player’s location",
-        "13": "全局指令：\n/r [职业名称] ：获得该职业的职业介绍\n\n游戏中指令：\n/m  ： 获得当前玩家所有职业的职业介绍\n\n死亡玩家或游戏大厅指令：\n/tp [玩家名称] ：将自己传送到该玩家的位置。"
+        "13": "全局指令：\n/ls : 获取全部玩家的代号\n/r [职业名称] ：获得该职业的职业介绍\n\n游戏中指令：\n/m  ： 获得当前玩家所有职业的职业介绍\n\n死亡玩家或游戏大厅指令：\n/tp [玩家代号] ：将自己传送到该玩家的位置。"
     },
     "Host": {
         "0": "Host",
         "13": "房主"
+    },
+    "modOptionsTitle": {
+        "0": "Mod Options...",
+        "13": "模组选项"
+    },
+    "modOptionsText": {
+        "0": "More Options...",
+        "13": "模组选项"
+    },
+    "ProcessorAffinityMask": {
+        "0": "Number of cores used by CPU",
+        "13": "使用的CPU核心数"
+    },
+    "ProcessorAffinityMask.Off": {
+        "0": "OFF",
+        "13": "关闭"
+    },
+    "ProcessorAffinityMask.1": {
+        "13": "单线程"
+    },
+    "ProcessorAffinityMask.2": {
+        "13": "单核"
+    },
+    "ProcessorAffinityMask.3": {
+        "13": "双线程"
+    },
+    "ProcessorAffinityMask.4": {
+        "13": "双核"
+    },
+    "ToggleCursorText": {
+        "0": "Better Cursor",
+        "13": "启用模组光标"
+    },
+    "EnableSoundEffectsText": {
+        "0": "Enable Sound Effects",
+        "13": "启用模组音效"
+    },
+    "ShowFPS": {
+        "0": "Show FPS",
+        "13": "在游戏内显示帧率"
+    },
+    "ShowKeyReminder": {
+        "0": "Show Keybinds",
+        "13": "游戏内显示键位提醒"
+    },
+    "LocalHatsText": {
+        "0": "Load Local Hats",
+        "13": "加载离线帽子"
+    },
+    "EnableDebugLogModeText": {
+        "0": "Enable Debug Log Mode",
+        "13": "收集Debug日志"
+    },
+    "keyBinding": {
+        "0": "Key Bindings",
+        "13": "键位更改"
+    },
+    "keyBinding.restoreDefaults": {
+        "0": "Restore Defaults",
+        "13": "恢复默认"
+    },
+    "keyBinding.recording": {
+        "0": "Recording…",
+        "13": "正在录制…"
+    },
+    "keyBinding.ability": {
+        "0": "Ability",
+        "13": "使用技能"
+    },
+    "keyBinding.secondaryAbility": {
+        "0": "Secondary Ability",
+        "13": "使用第二技能"
+    },
+    "keyBinding.modifierAbility": {
+        "0": "Modifier Ability",
+        "13": "附加能力技能"
+    },
+    "keyBinding.kill": {
+        "0": "Kill (Additional)",
+        "13": "击杀 (模组)"
+    },
+    "keyBinding.toggleChat": {
+        "0": "Toggle Chat",
+        "13": "打开聊天栏"
+    },
+    "keyBinding.showOptionPage": {
+        "0": "Show Option Page",
+        "13": "显示预设页面"
+    },
+    "keyBinding.help": {
+        "0": "Show List of Roles",
+        "13": "显示职业介绍"
+    },
+    "keyBinding.screenResolution": {
+        "0": "Change Screen Resolution",
+        "13": "快速修改屏幕分辨率"
+    },
+    "keyBinding.metaControl": {
+        "0": "Meta Control",
+        "13": "控制键"
+    },
+    "keyBinding.endGame": {
+        "0": "End Game (Meta Control)",
+        "13": "控制键: 快速终止游戏"
+    },
+    "keyBinding.meeting": {
+        "0": "Start/End Meeting (Meta Control)",
+        "13": "控制键: 开始/停止会议"
     },
     "lobbyInfoSummary": {
         "0": "Role Summary",

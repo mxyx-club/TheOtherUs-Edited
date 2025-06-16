@@ -284,7 +284,7 @@ internal class MeetingHudPatch
 
     public static void updateMeetingText(MeetingHud __instance)
     {
-        if (PlayerControl.LocalPlayer.IsAlive() && __instance.state is VoteStates.Voted)
+        if (PlayerControl.LocalPlayer.IsAlive() && __instance.state is not VoteStates.Results)
         {
             var meetingInfoText = "";
             int numGuesses = HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId)

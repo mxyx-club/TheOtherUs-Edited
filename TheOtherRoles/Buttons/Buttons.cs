@@ -4016,7 +4016,7 @@ internal static class HudManagerStartPatch
 
                 if (!CheckMurderPlayer(thief, target)) return;
 
-                if (!Thief.tiefCanKill(target, PlayerControl.LocalPlayer))
+                if (!Thief.tiefCanKill(target))
                 {
                     // Suicide
                     RpcCustomMurderPlayer(thief, thief, false);

@@ -33,9 +33,10 @@ public static class Thief
         canStealWithGuess = CustomOptionHolder.thiefCanStealWithGuess.GetBool();
     }
 
-    public static bool tiefCanKill(PlayerControl killer, PlayerControl target)
+    public static bool tiefCanKill(PlayerControl target)
     {
-        return killer == thief && (target.IsImpostor() ||
+
+        var flag = target.IsImpostor() ||
             Jackal.jackal.Any(x => x == target) ||
             target == Jackal.Sidekick ||
             target == Werewolf.werewolf ||
@@ -46,7 +47,9 @@ public static class Thief
             Pavlovsdogs.pavlovsdogs.Any(p => p == target) ||
             (canKillSheriff && Sheriff.Player.Any(x => x == target)) ||
             (canKillDeputy && target == Sheriff.Deputy) ||
-            (canKillVeteran && target == Veteran.veteran));
+            (canKillVeteran && target == Veteran.veteran);
+        Message($"Thief can kill {target?.Data?.PlayerName ?? "NULL"}: {flag}", "Thief");
+        return flag;
     }
 
     public static void StealsRole(byte playerId)
