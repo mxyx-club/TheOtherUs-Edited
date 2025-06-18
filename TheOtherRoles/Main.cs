@@ -71,8 +71,8 @@ public partial class TheOtherRolesPlugin : BasePlugin
         ModTranslation.Load();
         Instance = this;
 
-        IsCPUProcessorAffinity = Config.Bind("Custom", "CPUProcessorAffinity", false);
-        ProcessorAffinityMask = Config.Bind("Custom", "ProcessorAffinityMask", (ulong)3);
+        IsCPUProcessorAffinity = Config.Bind("Custom", "CPUAffinity", false);
+        ProcessorAffinityMask = Config.Bind("Custom", "CPUAffinityMask", (ulong)0);
         ToggleCursor = Config.Bind("Custom", "Better Cursor", true);
         EnableSoundEffects = Config.Bind("Custom", "Enable Sound Effects", true);
         ShowFPS = Config.Bind("Custom", "Show FPS", true);

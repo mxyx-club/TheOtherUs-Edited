@@ -66,55 +66,59 @@ public static class Medium
             switch (selectedInfo)
             {
                 case SpecialMediumInfo.SheriffSuicide:
-                    msg = "哎呀，枪走火了！[警长自杀].";
+                    msg = GetString("MediumInfo.SheriffSuicide");
                     break;
                 case SpecialMediumInfo.WarlockSuicide:
-                    msg = "啊哦，我好像把自己咒死了耶。[术士死于自杀].";
+                    msg = GetString("MediumInfo.WarlockSuicide");
                     break;
                 case SpecialMediumInfo.ThiefSuicide:
-                    msg = "我试图从他们口袋里偷枪，却把自己害死了。[窃贼自杀].";
+                    msg = GetString("MediumInfo.ThiefSuicide");
                     break;
                 case SpecialMediumInfo.ActiveLoverDies:
-                    msg = "无论如何，我都想摆脱这种有毒的关系。[带着恋人死去].";
+                    msg = GetString("MediumInfo.ActiveLoverDies");
                     break;
                 case SpecialMediumInfo.PassiveLoverSuicide:
-                    msg = "在天愿作比翼鸟,在地愿为连理枝，所爱以逝，吾亦寻之。[被恋人带死].";
+                    msg = GetString("MediumInfo.PassiveLoverSuicide");
                     break;
                 case SpecialMediumInfo.LawyerKilledByClient:
-                    msg = "我的客户杀了我。我还能得到报酬吗？[律师被客户杀害]";
+                    msg = GetString("MediumInfo.LawyerKilledByClient");
                     break;
                 case SpecialMediumInfo.JackalKillsSidekick:
-                    msg = "既已纳我为伍，何必取我性命，算了，至少不用做任务了。[跟班被豺狼杀害]";
+                    msg = GetString("MediumInfo.JackalKillsSidekick");
                     break;
                 case SpecialMediumInfo.ImpostorTeamkill:
-                    msg = "他们肯定是把我当成卧底才杀了我，有没有？[内鬼死于队友]";
+                    msg = GetString("MediumInfo.ImpostorTeamkill");
                     break;
                 case SpecialMediumInfo.BodyCleaned:
-                    msg = "我的尸体现在是某种艺术还是。。。啊，它不见了。[尸体被清理或吃了]";
+                    msg = GetString("MediumInfo.BodyCleaned");
                     break;
             }
         }
         else
         {
             var randomNumber = rnd.Next(4);
-            var typeOfColor = isLighterColor(Medium.target.KillerIfExisting) ? "浅" : "深";
+            var typeOfColor = IsLightColor(Medium.target.KillerIfExisting) ? GetString("Color.Light") : GetString("Color.Dark");
             var timeSinceDeath = (float)(meetingStartTime - Medium.target.TimeOfDeath).TotalMilliseconds;
             var roleString = RoleInfo.GetRolesString(Medium.target.Player, false, false, false, false);
-            if (randomNumber == 0)
+            var seconds = Math.Round((meetingStartTime - Medium.target.TimeOfDeath).TotalSeconds);
+
+            switch (randomNumber)
             {
-                msg = "我的职业是 " + roleString + " .";
-            }
-            else if (randomNumber == 1)
-            {
-                msg = "我不确定，但我想应该是 " + typeOfColor + " 色的凶手杀了我.";
-            }
-            else if (randomNumber == 2)
-            {
-                msg = "如果我数对了，我就在会议前 " + Math.Round(timeSinceDeath / 1000) + " 秒死了.";
-            }
-            else
-            {
-                msg = "我好像是被 " + RoleInfo.GetRolesString(Medium.target.KillerIfExisting, false, false, false) + " 无情的杀害了.";
+                case 0:
+                    msg = string.Format(GetString("MediumInfo.PlayerRole"), RoleInfo.GetRolesString(Medium.target.Player, false, false, false));
+                    break;
+
+                case 1:
+                    msg = string.Format(GetString("MediumInfo.KillerColor"), typeOfColor);
+                    break;
+
+                case 2:
+                    msg = string.Format(GetString("MediumInfo.DeathTime"), seconds);
+                    break;
+
+                default:
+                    msg = string.Format(GetString("MediumInfo.KillerRole"), RoleInfo.GetRolesString(Medium.target.KillerIfExisting, false, false, false));
+                    break;
             }
         }
 

@@ -52,17 +52,13 @@ public static class ChatCommands
         {
             if (!__instance.Chat.isActiveAndEnabled && (ModOption.DebugMode
                     || AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay
+                    || ForceEnableChat
                     || (PlayerControl.LocalPlayer.isLover() && Lovers.enableChat)))
                 __instance.Chat.SetVisible(true);
 
             if (!InMeeting && !ModOption.DebugMode && Specter.Player != null && PlayerControl.LocalPlayer == Specter.Player)
                 __instance.Chat?.SetVisible(false);
 
-            if (ForceEnableChat)
-            {
-                __instance.Chat.enabled = true;
-                __instance.Chat.SetVisible(true);
-            }
         }
     }
 
@@ -84,7 +80,7 @@ public static class ChatCommands
                 if (Jailor.Jailed.IsAlive() && Jailor.Jailed == PlayerByName(playerName))
                 {
                     __instance.NameText.color = Jailor.color;
-                    __instance.NameText.text = playerName + GetString("Jailor.InJail");
+                    __instance.NameText.text = playerName + GetString("Jailor.InJailSuffix");
                 }
                 else if (Jailor.JailorMessage)
                 {
@@ -132,7 +128,7 @@ public static class ChatCommands
             { __state = false; return false; }
             if (sourcePlayer == Jailor.Jailed && Jailor.Jailed.IsAlive() && Jailor.Player.IsAlive() && local != Jailor.Player && !CanSeeRoleInfo)
             { __state = false; return false; }
-            if (local.isLover() && Lovers.enableChat && (local == sourcePlayer.getPartner() || flag))
+            if (local.isLover() && Lovers.enableChat && (local == sourcePlayer.GetPartner() || flag))
             { __state = true; return true; }
 
             return flag;
@@ -210,7 +206,9 @@ public static class ChatCommands
             {
                 var message = string.Join(' ', args);
                 message = $"{Cs(Palette.Purple, "★【房主消息】★")}\n{message}";
-                var writer = StartRPC(CustomRPC.HostSay);
+                var writer = StartRPC(CustomRPC.HostControl);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write((byte)RPCProcedure.HostCommand.HostSay);
                 writer.Write(message);
                 writer.EndRPC();
                 chat.AddChat(GetHostPlayer, message);
@@ -227,17 +225,30 @@ public static class ChatCommands
             chat.AddChat(PlayerControl.LocalPlayer, "CommandsInPlayer".Translate());
         });
 
-        ChatCommandRegistry.Register("kill", (sender, args, chat) =>
+        ChatCommandRegistry.Register(["kill", "kl"], (sender, args, chat) =>
         {
             if (AmongUsClient.Instance.AmHost && InGame)
             {
                 var target = GetPlayer(args);
                 if (target != null)
                 {
-                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostKill);
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostControl);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                    writer.Write((byte)RPCProcedure.HostCommand.HostKill);
                     writer.Write(target.PlayerId);
                     writer.EndRPC();
-                    RPCProcedure.hostKill(target.PlayerId);
+
+                    target.Exiled();
+                    GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.HostCmdKill, PlayerControl.LocalPlayer);
+
+                    DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
+                    foreach (var body in array)
+                    {
+                        if (body.ParentId != target.PlayerId) continue;
+                        UObject.Destroy(body.gameObject);
+                        break;
+                    }
+
                     if (InMeeting)
                     {
                         MeetingHud.Instance.CheckForEndVoting();
@@ -247,7 +258,29 @@ public static class ChatCommands
             }
         });
 
-        ChatCommandRegistry.Register("meeting", (sender, args, chat) =>
+        ChatCommandRegistry.Register(["exile", "ex"], (sender, args, chat) =>
+        {
+            if (AmongUsClient.Instance.AmHost && InGame)
+            {
+                var target = GetPlayer(args);
+                if (target != null)
+                {
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostControl);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                    writer.Write((byte)RPCProcedure.HostCommand.HostExile);
+                    writer.Write(target.PlayerId);
+                    writer.EndRPC();
+
+                    if (InMeeting)
+                    {
+                        MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), target.Data, false);
+                    }
+                }
+                return;
+            }
+        });
+
+        ChatCommandRegistry.Register(["meeting", "mt"], (sender, args, chat) =>
         {
             if (AmongUsClient.Instance.AmHost && InGame)
             {
@@ -268,17 +301,17 @@ public static class ChatCommands
             }
         });
 
-        ChatCommandRegistry.Register("Revive", (sender, args, chat) =>
+        ChatCommandRegistry.Register(["revive", "rv"], (sender, args, chat) =>
         {
             if (AmongUsClient.Instance.AmHost && InGame && args.Length > 0)
             {
                 var target = GetPlayer(args);
                 if (target != null)
                 {
-                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RevivePlayer);
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostControl);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                    writer.Write((byte)RPCProcedure.HostCommand.HostRevive);
                     writer.Write(target.PlayerId);
-                    writer.Write(true);
-                    writer.Write(true);
                     writer.EndRPC();
                     RPCProcedure.RevivePlayer(target.PlayerId, true, true);
                 }
@@ -287,7 +320,7 @@ public static class ChatCommands
             }
         });
 
-        ChatCommandRegistry.Register("ls", (sender, args, chat) =>
+        ChatCommandRegistry.Register(["list", "ls"], (sender, args, chat) =>
         {
             var sb = new StringBuilder();
             sb.AppendLine("玩家列表：\n");
@@ -344,7 +377,7 @@ public static class ChatCommands
             }
         });
 
-        ChatCommandRegistry.Register("jail", (sender, args, chat) =>
+        ChatCommandRegistry.Register(["jail", "jl"], (sender, args, chat) =>
         {
             if (sender == Jailor.Player && sender.IsAlive() && Jailor.Jailed != null && InMeeting)
             {
@@ -392,6 +425,25 @@ public static class ChatCommands
             }
         });
 
+        ChatCommandRegistry.Register(["cleartask", "ct"], (sender, args, chat) =>
+        {
+            if (AmongUsClient.Instance.AmHost && InGame && args.Length > 0)
+            {
+                var target = GetPlayer(args);
+                if (target != null)
+                {
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostControl);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                    writer.Write((byte)RPCProcedure.HostCommand.HostClearTasks);
+                    writer.Write(target.PlayerId);
+                    writer.EndRPC();
+
+                    target.clearAllTasks();
+                    chat.AddChat(PlayerControl.LocalPlayer, $"Cleared {target?.Data?.PlayerName} Tasks");
+                }
+            }
+        });
+
         static PlayerControl GetPlayer(string[] args = null)
         {
             if (args == null || args.Length == 0)
@@ -425,6 +477,14 @@ public static class ChatCommandRegistry
         _commands[command] = handler;
     }
 
+    public static void Register(IEnumerable<string> commands, ChatCommandHandler handler)
+    {
+        foreach (var cmd in commands)
+        {
+            _commands[cmd] = handler;
+        }
+    }
+
     public static bool TryHandle(string input, PlayerControl sender, ChatController chat)
     {
         if (!input.StartsWith("/")) return false;
@@ -433,14 +493,25 @@ public static class ChatCommandRegistry
         var cmd = parts[0][1..];
         var args = parts.Skip(1).ToArray();
 
-        var match = _commands.Keys.FirstOrDefault(k => k.Equals(cmd, StringComparison.OrdinalIgnoreCase))
-                 ?? _commands.Keys.FirstOrDefault(k => k.StartsWith(cmd, StringComparison.OrdinalIgnoreCase));
-        if (match != null)
+        if (_commands.TryGetValue(cmd, out var handler))
         {
-            _commands[match](sender, args, chat);
+            handler(sender, args, chat);
             return true;
         }
-        chat.AddChat(sender, $"Unknown command: {cmd}");
+
+        var matches = _commands.Keys.Where(k => k.StartsWith(cmd, StringComparison.OrdinalIgnoreCase)).ToList();
+        if (matches.Count == 1)
+        {
+            _commands[matches[0]](sender, args, chat);
+            return true;
+        }
+        else if (matches.Count > 1)
+        {
+            chat.AddChat(sender, string.Format(GetString("Command.Ambiguous"), cmd, string.Join(", ", matches)));
+            return true;
+        }
+
+        chat.AddChat(sender, string.Format(GetString("Command.Unknown"), cmd));
         return true;
     }
 }

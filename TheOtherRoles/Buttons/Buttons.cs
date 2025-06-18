@@ -4376,7 +4376,7 @@ internal static class HudManagerStartPatch
 
                 bandLeaderKeyboardistButton.Sprite = BandLeader.Keyboardist == null ? BandLeader.keyboardButton : BandLeader.keyboardDel;
 
-                bandLeaderKeyboardistButton.buttonText = BandLeader.Keyboardist == null ? "招募成员" : "踢出乐队";
+                bandLeaderKeyboardistButton.buttonText = (BandLeader.Keyboardist == null ? "bandJoinButton" : "bandKickButton").Translate();
 
                 bandLeaderKeyboardistButton.Timer = bandLeaderKeyboardistButton.MaxTimer = BandLeader.createCoolDown;
                 bandLeaderBassistButton.Timer = bandLeaderBassistButton.MaxTimer = BandLeader.createCoolDown;
@@ -4406,7 +4406,7 @@ internal static class HudManagerStartPatch
             __instance,
             __instance.AbilityButton,
             null,
-            buttonText: "招募乐手"
+            buttonText: "bandJoinButton".Translate()
         );
 
         bandLeaderBassistButton = new CustomButton(
@@ -4434,7 +4434,7 @@ internal static class HudManagerStartPatch
 
                 bandLeaderBassistButton.Sprite = BandLeader.Bassist == null ? BandLeader.bassButton : BandLeader.bassDel;
 
-                bandLeaderBassistButton.buttonText = BandLeader.Bassist == null ? "招募成员" : "踢出乐队";
+                bandLeaderBassistButton.buttonText = (BandLeader.Keyboardist == null ? "bandJoinButton" : "bandKickButton").Translate();
 
                 bandLeaderKeyboardistButton.Timer = bandLeaderKeyboardistButton.MaxTimer = BandLeader.createCoolDown;
                 bandLeaderBassistButton.Timer = bandLeaderBassistButton.MaxTimer = BandLeader.createCoolDown;
@@ -4462,7 +4462,7 @@ internal static class HudManagerStartPatch
             __instance,
             __instance.AbilityButton,
             null,
-            buttonText: "招募乐手"
+            buttonText: "bandJoinButton".Translate()
         );
 
         bandLeaderDrummerButton = new CustomButton(
@@ -4490,7 +4490,7 @@ internal static class HudManagerStartPatch
 
                 bandLeaderDrummerButton.Sprite = BandLeader.Drummer == null ? BandLeader.drumButton : BandLeader.drumDel;
 
-                bandLeaderDrummerButton.buttonText = BandLeader.Drummer == null ? "招募成员" : "踢出乐队";
+                bandLeaderDrummerButton.buttonText = (BandLeader.Keyboardist == null ? "bandJoinButton" : "bandKickButton").Translate();
 
                 bandLeaderKeyboardistButton.Timer = bandLeaderKeyboardistButton.MaxTimer = BandLeader.createCoolDown;
                 bandLeaderBassistButton.Timer = bandLeaderBassistButton.MaxTimer = BandLeader.createCoolDown;
@@ -4518,7 +4518,7 @@ internal static class HudManagerStartPatch
             __instance,
             __instance.AbilityButton,
             null,
-            buttonText: "招募乐手"
+            buttonText: "bandJoinButton".Translate()
         );
 
         bandLeaderKillButton = new CustomButton(

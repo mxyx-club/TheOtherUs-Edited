@@ -218,7 +218,7 @@ public static class Guesser
             PagebuttonParent.localPosition = IsNext ? new(3.535f, -2.2f, -200) : new(-3.475f, -2.2f, -200);
             PagebuttonParent.localScale = new(0.55f, 0.55f, 1f);
             Pagelabel.color = Color.white;
-            Pagelabel.text = GetString(IsNext ? "下一页" : "上一页");
+            Pagelabel.text = GetString(IsNext ? "GuesserUI.Next" : "GuesserUI.Last");
             Pagelabel.alignment = TextAlignmentOptions.Center;
             Pagelabel.transform.localPosition = new Vector3(0, 0, Pagelabel.transform.localPosition.z);
             Pagelabel.transform.localScale *= 1.6f;
@@ -464,7 +464,7 @@ public static class Guesser
         var guesser = PlayerById(killerId);
         if (dyingTarget == null) return;
 
-        var dyingPartner = dyingTarget.getPartner();
+        var dyingPartner = dyingTarget.GetPartner();
 
         // Lawyer shouldn't be exiled with the client for guesses
         if (Lawyer.target != null && (dyingTarget == Lawyer.target || dyingPartner == Lawyer.target))
@@ -595,14 +595,14 @@ public static class Guesser
     {
         if (PlayerControl.LocalPlayer.IsDead() && PlayerControl.LocalPlayer != Specter.Player)
         {
-            var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
-            var msg = $"{guesser.Data.PlayerName} 赌怪猜测 {guessedTarget.Data.PlayerName} 是 {roleInfo?.Name ?? ""}!";
+            var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => x.roleId == (RoleId)guessedRoleId);
+            var msg = string.Format(GetString("GuesserUI.GuessChat"), guesser.Data.PlayerName, guessedTarget.Data.PlayerName, roleInfo?.Name);
             if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
             {
                 _ = new LateTask(() =>
                 {
                     if (!CanSeeRoleInfo) return;
-                    FastDestroyableSingleton<HudManager>.Instance!.Chat.AddChat(guesser, msg);
+                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(guesser, msg);
                 }, 0.1f, "Guess Chat");
             }
         }

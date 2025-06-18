@@ -1,5 +1,7 @@
+using System.Text;
 using AmongUs.QuickChat;
 using TheOtherRoles.Objects;
+using UnityEngine.UI;
 using static MeetingHud;
 using static TheOtherRoles.Options.ModOption;
 
@@ -284,55 +286,56 @@ internal class MeetingHudPatch
 
     public static void updateMeetingText(MeetingHud __instance)
     {
-        if (PlayerControl.LocalPlayer.IsAlive() && __instance.state is not VoteStates.Results)
+        if (PlayerControl.LocalPlayer.Data.IsDead) return;
+
+        if (__instance.state is not VoteStates.Voted and not VoteStates.NotVoted and not VoteStates.Discussion) return;
+
+        var meetingInfoText = "";
+        int numGuesses = HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId)
+            ? HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) : 0;
+
+        if (numGuesses > 0)
         {
-            var meetingInfoText = "";
-            int numGuesses = HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId)
-                ? HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) : 0;
-
-            if (numGuesses > 0)
-            {
-                meetingInfoText = string.Format(GetString("guesserGuessesLeft"), numGuesses);
-            }
-
-            if (PlayerControl.LocalPlayer == Akujo.akujo && (Akujo.honmei == null || Akujo.keeps.Count < 1) && Akujo.timeLeft > 0)
-            {
-                meetingInfoText = string.Format(GetString("akujoTimeRemaining"), $"{TimeSpan.FromSeconds(Akujo.timeLeft):mm\\:ss}");
-            }
-            else if (PlayerControl.LocalPlayer == Doomsayer.doomsayer)
-            {
-                meetingInfoText = string.Format(GetString("DoomsayerKilledToWin"), Doomsayer.killToWin - Doomsayer.killedToWin);
-            }
-            else if (PlayerControl.LocalPlayer == Swapper.swapper)
-            {
-                meetingInfoText = string.Format(GetString("SwapperCharges"), Swapper.charges);
-            }
-            else if (PlayerControl.LocalPlayer == PartTimer.partTimer && PartTimer.target == null)
-            {
-                meetingInfoText = string.Format(GetString("PartTimerMeetingInfo"), PartTimer.deathTurn);
-            }
-            else if (PlayerControl.LocalPlayer == Witness.Player)
-            {
-                if (Witness.timeLeft > 0 && Witness.killerTarget == null)
-                    meetingInfoText = string.Format(GetString("WitnessTimerLeft2"), $"{TimeSpan.FromSeconds(Witness.timeLeft):mm\\:ss}");
-                else if (Witness.timeLeft > 0 && Witness.target == null)
-                    meetingInfoText = string.Format(GetString("WitnessTimerLeft"), $"{TimeSpan.FromSeconds(Witness.timeLeft):mm\\:ss}");
-                else
-                    meetingInfoText = string.Format(GetString("WitnessWinLeft"), $"{Witness.exileToWin - Witness.exiledCount}");
-            }
-            else if (PlayerControl.LocalPlayer == BandLeader.Player)
-            {
-                if (BandLeader.Formed) meetingInfoText = string.Format(GetString("BandLeaderFormed"), $"{$"{BandLeader.winnerFlags}Team".Translate()}");
-                else meetingInfoText = GetString("BandLeaderBad");
-            }
-            else if (Infected.Player.Any(x => x == PlayerControl.LocalPlayer) && Infected.IsGuesser)
-            {
-                meetingInfoText = string.Format(GetString("InfectedGuesserCount"), Infected.GuessCount);
-            }
-
-            if (meetingInfoText == "") return;
-            __instance.TimerText.text = $"{meetingInfoText}\n{__instance.TimerText.text}";
+            meetingInfoText = string.Format(GetString("guesserGuessesLeft"), numGuesses);
         }
+
+        if (PlayerControl.LocalPlayer == Akujo.akujo && (Akujo.honmei == null || Akujo.keeps.Count < 1) && Akujo.timeLeft > 0)
+        {
+            meetingInfoText = string.Format(GetString("akujoTimeRemaining"), $"{TimeSpan.FromSeconds(Akujo.timeLeft):mm\\:ss}");
+        }
+        else if (PlayerControl.LocalPlayer == Doomsayer.doomsayer)
+        {
+            meetingInfoText = string.Format(GetString("DoomsayerKilledToWin"), Doomsayer.killToWin - Doomsayer.killedToWin);
+        }
+        else if (PlayerControl.LocalPlayer == Swapper.swapper)
+        {
+            meetingInfoText = string.Format(GetString("SwapperCharges"), Swapper.charges);
+        }
+        else if (PlayerControl.LocalPlayer == PartTimer.partTimer && PartTimer.target == null)
+        {
+            meetingInfoText = string.Format(GetString("PartTimerMeetingInfo"), PartTimer.deathTurn);
+        }
+        else if (PlayerControl.LocalPlayer == Witness.Player)
+        {
+            if (Witness.timeLeft > 0 && Witness.killerTarget == null)
+                meetingInfoText = string.Format(GetString("WitnessTimerLeft2"), $"{TimeSpan.FromSeconds(Witness.timeLeft):mm\\:ss}");
+            else if (Witness.timeLeft > 0 && Witness.target == null)
+                meetingInfoText = string.Format(GetString("WitnessTimerLeft"), $"{TimeSpan.FromSeconds(Witness.timeLeft):mm\\:ss}");
+            else
+                meetingInfoText = string.Format(GetString("WitnessWinLeft"), $"{Witness.exileToWin - Witness.exiledCount}");
+        }
+        else if (PlayerControl.LocalPlayer == BandLeader.Player)
+        {
+            if (BandLeader.Formed) meetingInfoText = string.Format(GetString("BandLeaderFormed"), $"{$"{BandLeader.winnerFlags}Team".Translate()}");
+            else meetingInfoText = GetString("BandLeaderBad");
+        }
+        else if (Infected.Player.Any(x => x == PlayerControl.LocalPlayer) && Infected.IsGuesser)
+        {
+            meetingInfoText = string.Format(GetString("InfectedGuesserCount"), Infected.GuessCount);
+        }
+
+        if (meetingInfoText == "") return;
+        __instance.TimerText.text = $"{meetingInfoText}\n{__instance.TimerText.text}";
     }
 
     [HarmonyPatch]
@@ -816,19 +819,29 @@ internal class MeetingHudPatch
             // Add Portal info into Portalmaker Chat:
             if (Portalmaker.portalmaker != null &&
                 (PlayerControl.LocalPlayer == Portalmaker.portalmaker || CanSeeRoleInfo) &&
-                !Portalmaker.portalmaker.Data.IsDead)
-                if (Portal.teleportedPlayers.Count > 0)
-                {
-                    var msg = "星门使用日志:\n";
-                    foreach (var entry in Portal.teleportedPlayers)
-                    {
-                        var timeBeforeMeeting = (float)(DateTime.UtcNow - entry.time).TotalMilliseconds / 1000;
-                        msg += Portalmaker.logShowsTime ? $"{(int)timeBeforeMeeting} 秒前: " : "";
-                        msg += $"{entry.name} 使用了星门\n";
-                    }
+                !Portalmaker.portalmaker.Data.IsDead && Portal.teleportedPlayers.Count > 0)
+            {
+                var msg = new StringBuilder(GetString("Portalmaker.LogHeader"));
 
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Portalmaker.portalmaker, $"{msg}");
+                foreach (var entry in Portal.teleportedPlayers)
+                {
+                    var timeBeforeMeeting = (int)(DateTime.UtcNow - entry.time).TotalSeconds;
+
+                    if (Portalmaker.logShowsTime)
+                    {
+                        msg.AppendFormat(GetString("Portalmaker.LogEntry"),
+                                      timeBeforeMeeting,
+                                      entry.name);
+                    }
+                    else
+                    {
+                        msg.AppendFormat(GetString("Portalmaker.LogEntryNoTime"),
+                                      entry.name);
+                    }
                 }
+
+                HudManager.Instance.Chat.AddChat(Portalmaker.portalmaker, msg.ToString());
+            }
 
             // Remove revealed traps
             Trap.clearRevealedTraps();
@@ -965,6 +978,28 @@ internal class MeetingHudPatch
                 {
                     FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(BandLeader.Player, "BandLeader.bad".Translate());
                 }
+            }
+
+            var LightColorSprite = new ResourceSprite("ColorLight.png", 75);
+            var DarkColorSprite = new ResourceSprite("ColorDark.png", 75);
+
+            foreach (var pva in __instance.playerStates)
+            {
+                var player = PlayerById(pva.TargetPlayerId);
+                if (player == null || player.Data == null) continue;
+                var isLightColor = IsLightColor(player);
+
+                var colorButton = pva.Buttons.transform.GetChild(0).gameObject;
+                var newButton = UObject.Instantiate(colorButton, pva.transform);
+                var renderer = newButton.GetComponent<SpriteRenderer>();
+
+                renderer.sprite = isLightColor ? LightColorSprite : DarkColorSprite;
+
+                newButton.transform.position = colorButton.transform.position - new Vector3(-0.85f, 0.16f, -2f);
+                newButton.layer = 5;
+                newButton.name = "ColorIcon";
+                newButton.transform.parent = colorButton.transform.parent.parent;
+                newButton.GetComponent<PassiveButton>().OnClick = new Button.ButtonClickedEvent();
             }
         }
     }

@@ -78,7 +78,6 @@ public enum RoleId
     Engineer,
     Sheriff,
     Deputy,
-    Hunter,
     BodyGuard,
     Jumper,
     Detective,
@@ -136,7 +135,6 @@ public enum RoleId
 
 public static class RoleHelpers
 {
-    private static bool _CanSeeRoleInfo;
     public static bool CanSeeRoleInfo
     {
         get
@@ -144,15 +142,15 @@ public static class RoleHelpers
             if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Ended) return true;
             else if (PlayerControl.LocalPlayer.IsAlive()) return false;
             else if (PlayerControl.LocalPlayer == Specter.Player) return false;
-            else if (Specter.Player.getPartner() == PlayerControl.LocalPlayer) return false;
-            else return _CanSeeRoleInfo;
+            else if (Specter.Player.GetPartner() == PlayerControl.LocalPlayer) return false;
+            else return field;
         }
         set
         {
-            if (PlayerControl.LocalPlayer.IsAlive()) _CanSeeRoleInfo = false;
-            else if (PlayerControl.LocalPlayer == Specter.Player) _CanSeeRoleInfo = false;
-            else if (Specter.Player.getPartner() == PlayerControl.LocalPlayer) _CanSeeRoleInfo = false;
-            else _CanSeeRoleInfo = value;
+            if (PlayerControl.LocalPlayer.IsAlive()) field = false;
+            else if (PlayerControl.LocalPlayer == Specter.Player) field = false;
+            else if (Specter.Player.GetPartner() == PlayerControl.LocalPlayer) field = false;
+            else field = value;
         }
     }
 
@@ -335,7 +333,6 @@ public static class RoleHelpers
             { RoleId.Veteran, CustomOptionHolder.veteranSpawnRate.GetSelection() },
             { RoleId.Vigilante, CustomOptionHolder.guesserSpawnRate.GetSelection() },
             { RoleId.Redemptor, CustomOptionHolder.redemptorSpawnRate.GetSelection() },
-            { RoleId.Hunter, CustomOptionHolder.hunterSpawnRate.GetSelection() },
             { RoleId.Jailor, CustomOptionHolder.jailorSpawnRate.GetSelection() },
 
             { RoleId.WolfLord, CustomOptionHolder.wolfLordSpawnRate.GetSelection() },
@@ -426,7 +423,6 @@ public static class RoleHelpers
         Mayor.clearAndReload();
         Prosecutor.clearAndReload();
         Portalmaker.clearAndReload();
-        Hunter.ClearAndReload();
         Jailor.ClearAndReload();
         Infected.clearAndReload();
         Poucher.clearAndReload();

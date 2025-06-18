@@ -389,10 +389,6 @@ public class Amnisiac
                 if (resetRole) Berserker.ClearAndReload();
                 Berserker.Player = local;
                 break;
-            case RoleId.Hunter:
-                if (resetRole) Hunter.ClearAndReload();
-                Hunter.Player = local;
-                break;
             case RoleId.Jailor:
                 if (resetRole) Jailor.ClearAndReload();
                 Jailor.Player = local;

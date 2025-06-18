@@ -472,8 +472,6 @@ public class CustomOptionHolder
     public static CustomOption veteranCooldown;
     public static CustomOption veteranAlertDuration;
 
-    public static CustomOption hunterSpawnRate;
-
     public static CustomOption jailorSpawnRate;
     public static CustomOption jailorCooldown;
     public static CustomOption jailorUseCount;
@@ -1200,8 +1198,6 @@ public class CustomOptionHolder
             ["optionOff", "deputyGetsPromoted2", "deputyGetsPromoted3"], deputySpawnRate);
         deputyKnowsSheriff = Create(30174, Types.Crewmate, "deputyKnowsSheriff", true, deputySpawnRate);
         deputyKeepsHandcuffs = Create(30176, Types.Crewmate, "deputyKeepsHandcuffs", true, deputyGetsPromoted);
-
-        hunterSpawnRate = Create(30400, Types.Crewmate, Cs(Hunter.color, "Hunter"), rates, null, true);
 
         jailorSpawnRate = Create(30410, Types.Crewmate, Cs(Jailor.color, "Jailor"), rates, null, true);
         jailorCooldown = Create(30411, Types.Crewmate, "jailorCooldown", 20f, 10f, 60f, 2.5f, jailorSpawnRate);

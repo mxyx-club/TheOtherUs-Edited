@@ -436,7 +436,7 @@ internal class HudManagerUpdatePatch
             {
                 foreach (PlayerControl p in allPlayer)
                 {
-                    bool TargetsImp = p.Data.Role.IsImpostor;
+                    bool TargetsImp = p.IsImpostor();
                     bool TargetsKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(p);
                     bool TargetsEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(p);
                     bool TargetsNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && p.IsNeutral();
@@ -604,16 +604,6 @@ internal class HudManagerUpdatePatch
                 foreach (var player in allPlayerStates)
                     if (player.TargetPlayerId == Executioner.target.PlayerId)
                         player.NameText.text += suffix;
-        }
-
-        // Display lighter / darker color for all alive players
-        if (PlayerControl.LocalPlayer != null && MeetingHud.Instance != null && ModOption.showLighterDarker)
-        {
-            foreach (var player in allPlayerStates)
-            {
-                var target = PlayerById(player.TargetPlayerId);
-                if (target != null) player.NameText.text += $" ({(isLighterColor(target) ? "浅" : "深")})";
-            }
         }
 
         // Add medic shield info:
@@ -1020,11 +1010,15 @@ internal class HudManagerUpdatePatch
         {
             if (Witness.target != null)
             {
-                setInfo(Witness.target.PlayerId, Cs(Color.red, $"{Witness.target?.Data?.PlayerName} 疑似为本案的凶手"));
+                // 疑似凶手消息
+                var suspectMsg = string.Format(GetString("WitnessReport.Suspect"), Witness.target?.Data?.PlayerName);
+                setInfo(Witness.target.PlayerId, Cs(Color.red, suspectMsg));
             }
             else if ((PlayerControl.LocalPlayer == Witness.Player || ModOption.DebugMode) && Witness.killerTarget != null)
             {
-                setInfo(Witness.killerTarget.PlayerId, Cs(Color.red, $"{Witness.killerTarget?.Data?.PlayerName} 为本案的真凶"));
+                // 确认凶手消息
+                var killerMsg = string.Format(GetString("WitnessReport.Killer"), Witness.killerTarget?.Data?.PlayerName);
+                setInfo(Witness.killerTarget.PlayerId, Cs(Color.red, killerMsg));
             }
         }
 
@@ -1155,7 +1149,7 @@ internal class HudManagerUpdatePatch
             }
             else if (!Snitch.snitch.IsDead())
             {
-                Snitch.text.text = $"告密者还活着: {playerCompleted} / {playerTotal}";
+                Snitch.text.text = string.Format(GetString("Snitch.IsAlive"), $"{playerCompleted} / {playerTotal}");
             }
             else
             {
@@ -1340,11 +1334,11 @@ internal class HudManagerUpdatePatch
             }
             else if (Redemptor.Prayering && Redemptor.Player.IsAlive())
             {
-                Redemptor.text.text = $"牧师正在祈祷！";
+                Redemptor.text.text = "Redemptor.Prayering".Translate();
             }
             else if (Redemptor.RevivedPlayer.IsAlive())
             {
-                Redemptor.text.text = $"有玩家已被复活！";
+                Redemptor.text.text = "Redemptor.RevivedPlayer".Translate();
             }
             else
             {

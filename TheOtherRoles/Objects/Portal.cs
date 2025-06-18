@@ -72,7 +72,7 @@ public class Portal
         if (Morphling.morphling != null && Morphling.morphTimer > 0)
             playerControl = Morphling.morphTarget; // Will output info of morph-target instead
         var playerNameDisplay = Portalmaker.logOnlyHasColors
-            ? "一名玩家 (" + (isLighterColor(playerControl) ? "浅" : "深") + ")"
+            ? "一名玩家 (" + (IsLightColor(playerControl) ? "浅" : "深") + ")"
             : playerControl.Data.PlayerName;
 
         if (Camouflager.camouflageTimer > 0 || MushroomSabotageActive)

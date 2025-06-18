@@ -589,7 +589,6 @@ internal class BodyReportPatch
         if (ModOption.DisableMeeting) return false;
         handleVampireBiteOnBodyReport();
         handleBomberExplodeOnBodyReport();
-        //if (__instance.IsDead()) return false;
         return true;
     }
 
@@ -605,6 +604,7 @@ internal class BodyReportPatch
                                 __instance.PlayerId == Detective.detective.PlayerId;
         var isSluethReport = Slueth.slueth != null && Slueth.slueth == PlayerControl.LocalPlayer &&
                              __instance.PlayerId == Slueth.slueth.PlayerId;
+
         if (isMedicReport || isDetectiveReport)
         {
             var deadPlayer = DeadPlayers?.Where(x => x.Player?.PlayerId == target?.PlayerId)?.FirstOrDefault();
@@ -623,31 +623,32 @@ internal class BodyReportPatch
                 {
                     if (timer <= Medic.ReportNameDuration)
                     {
-                        msg = $"尸检报告: 凶手似乎是 {killer.Data.PlayerName}!\n尸体在 {timer} 秒前死亡";
+                        msg = string.Format(GetString("MedicReport.ReportName"), killer.Data.PlayerName, timer);
                     }
                     else if (timer <= Medic.ReportColorDuration)
                     {
-                        var typeOfColor = isLighterColor(killer) ? "浅" : "深";
-                        msg = $"尸检报告: 凶手的颜色似乎是 {typeOfColor} 色的!\n尸体在{timer}秒前死亡";
+                        var colorKey = IsLightColor(killer) ? "Color.Light" : "Color.Dark";
+                        msg = string.Format(GetString("MedicReport.ReportColor"), GetString(colorKey), timer);
                     }
                     else
                     {
-                        msg = $"尸检报告: 死亡时间太久，无法获取信息! \n尸体在{timer}秒前死亡";
+                        msg = string.Format(GetString("MedicReport.ReportExpired"), timer);
                     }
                 }
                 else if (isDetectiveReport)
                 {
                     if (timer <= Detective.reportNameDuration)
                     {
-                        msg = $"尸检报告: 凶手的职业似乎是 {RoleInfo.getRoleInfoForPlayer(killer, false, false).First().Name} !\n尸体在 {timer} 秒前死亡";
+                        var roleName = RoleInfo.getRoleInfoForPlayer(killer, false, false).First().Name;
+                        msg = string.Format(GetString("DetectiveReport.ReportRole"), roleName, timer);
                     }
                     else if (timer <= Detective.reportColorDuration)
                     {
-                        msg = $"尸检报告: 凶手的阵营似乎是 {teamString(killer)} !\n尸体在{timer}秒前死亡";
+                        msg = string.Format(GetString("DetectiveReport.ReportTeam"), teamString(killer), timer);
                     }
                     else
                     {
-                        msg = $"尸检报告: 死亡时间太久，无法获取信息\n尸体在 {timer} 秒前死亡";
+                        msg = string.Format(GetString("DetectiveReport.ReportExpired"), timer);
                     }
                 }
 

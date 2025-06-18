@@ -1,7 +1,6 @@
 using System.IO;
 using UnityEngine.Audio;
 using UnityEngine.Events;
-using SStream = System.IO.Stream;
 
 namespace TheOtherRoles.Helper;
 
@@ -55,7 +54,7 @@ public static class UnityHelper
 
     public static string readTextFromFile(string path)
     {
-        SStream stream = File.OpenRead(path);
+        Stream stream = File.OpenRead(path);
         var textStreamReader = new StreamReader(stream);
         return textStreamReader.ReadToEnd();
     }
@@ -117,7 +116,7 @@ public static class UnityHelper
         return value;
     }
 
-    public static Sprite LoadSprite(this SStream stream, bool DontUnload, Vector2 pivot, float pixelsPerUnit)
+    public static Sprite LoadSprite(this Stream stream, bool DontUnload, Vector2 pivot, float pixelsPerUnit)
     {
         var texture = stream.LoadTexture(DontUnload);
         var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), pivot, pixelsPerUnit);
@@ -126,7 +125,7 @@ public static class UnityHelper
         return sprite;
     }
 
-    public static Texture2D LoadTexture(this SStream stream, bool DontUnload)
+    public static Texture2D LoadTexture(this Stream stream, bool DontUnload)
     {
         var texture = new Texture2D(2, 2, TextureFormat.ARGB32, true);
         var byteTexture = stream.ReadFully();
@@ -136,7 +135,7 @@ public static class UnityHelper
         return texture;
     }
 
-    public static Sprite LoadHatSpriteFormDisk(this SStream stream, string Name)
+    public static Sprite LoadHatSpriteFormDisk(this Stream stream, string Name)
     {
         var texture = stream.LoadTexture(true);
         var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.53f, 0.575f), texture.width * 0.375f);

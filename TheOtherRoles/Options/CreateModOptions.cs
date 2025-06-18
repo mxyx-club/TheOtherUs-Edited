@@ -23,8 +23,7 @@ public static class StartOptionMenuPatch
         button.onState = on;
         var color = on ? new Color(0f, 1f, 0.16470589f, 1f) : Color.white;
         button.Background.color = color;
-        button.Text.text = title + ": " + DestroyableSingleton<TranslationController>.Instance.GetString(button.onState
-            ? StringNames.SettingsOn : StringNames.SettingsOff, new Il2CppReferenceArray<Il2CppSystem.Object>(0));
+        button.Text.text = title + ": " + GetString(button.onState ? "ModOptions.On" : "ModOptions.Off");
         if (button.Rollover)
             button.Rollover.ChangeOutColor(color);
     }
@@ -311,7 +310,7 @@ public static class StartOptionMenuPatch
         nebulaButton.Content = nebulaTab;
         var textObj = nebulaButton.transform.FindChild("Text_TMP").gameObject;
         textObj.GetComponent<TextTranslatorTMP>().enabled = false;
-        textObj.GetComponent<TMP_Text>().text = "modOptionsTitle".Translate();
+        textObj.GetComponent<TMP_Text>().text = "ModOptions.Title".Translate();
 
         tabs.Add(UObject.Instantiate(tabs[1], null));
         var keyBindingTabButton = tabs[^1];

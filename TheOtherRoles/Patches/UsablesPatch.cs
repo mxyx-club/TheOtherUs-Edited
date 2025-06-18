@@ -1,4 +1,5 @@
 using AmongUs.GameOptions;
+using Mono.Cecil;
 using PowerTools;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.Options.ModOption;
@@ -576,7 +577,7 @@ internal class AdminPanelPatch
                                         var color = Palette.PlayerColors[playerInfo.DefaultOutfit.ColorId];
 
                                         if (Hacker.onlyColorType)
-                                            color = isLighterColor(PlayerById(playerInfo.PlayerId))
+                                            color = IsLightColor(PlayerById(playerInfo.PlayerId))
                                                 ? Palette.PlayerColors[7]
                                                 : Palette.PlayerColors[6];
                                         roomColors.Add(color);
@@ -598,7 +599,7 @@ internal class AdminPanelPatch
                                             component.cosmetics.currentBodySprite.BodySprite.material.GetColor(
                                                 "_BodyColor");
                                         if (Hacker.onlyColorType)
-                                            color = isLighterColor(component)
+                                            color = IsLightColor(component)
                                                 ? Palette.PlayerColors[7]
                                                 : Palette.PlayerColors[6];
                                         roomColors.Add(color);
@@ -679,7 +680,7 @@ internal class SurveillanceMinigamePatch
 
     public static List<GameObject> nightVisionOverlays;
 
-    private static readonly ResourceSprite overlaySprite = new("TheOtherRoles.Resources.NightVisionOverlay.png", 350f);
+    private static readonly Sprite overlaySprite = new ResourceSprite("NightVisionOverlay.png", 350f);
 
     public static bool nightVisionIsActive;
     private static bool isLightsOut;

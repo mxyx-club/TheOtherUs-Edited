@@ -1,11 +1,49 @@
-* v1.1.6.6更新日志
+## What's New?
 
-  * 修复轮抽模式下可能会出现白板船员的问题
-  * 进一步限制 **[怨灵]** 获取信息的范围，现在无法接收到会议外的聊天信息，也无法看见陷阱等。
-  * 优化 **[薛定谔的猫]** 存活人数的判断逻辑，在加入对方阵营后，同时也会加入对方的存活人数判断。
-      （仅限猫可击杀其他玩家的情况，否则仍然不会计算存活人数）
-  * 优化 **[乐队主唱]** 对 **[薛定谔的猫]** 的判断逻辑，假如 **[薛定谔的猫]** 加入了 **红狼阵营** ，乐队主唱会将其同时视为 **红狼阵营+中立阵营** 的玩家。船员同上。
-  * 修改 **[牧师]** 的殉道技能：使用殉道自杀复活玩家后，会清除牧师的尸体。
-  * 还修复了一部分小bug
-  
-  
+- **New Crew Role:** Jailor
+- **New Neutral Role:** Infected  
+- **New Mod Option:** CPU Core Limit
+- **Added English Translation** (PR #16 by @Nanami-Houko)
+
+## Changes
+
+- **Removed Crew Role:** Time Master
+- Added Ghost Roles Tab to Options
+- Merged Guesser Mode To Classic Mode
+- Reworked chat commands:
+  - Now supports fuzzy matching
+  - Type `/cmd` to view command list
+  - All messages starting with `/` get intercepted (prevents accidental sends)
+
+## Bug Fixes
+
+- Fixed team color display in Guesser UI for [Schrödinger's Cat]
+- Fixed teamkill issue for [Schrödinger's Cat]
+- Fixed victory calculation for [Band Leader]
+- Miscellaneous minor fixes
+
+———————————————————————————————————————————
+
+### 更新
+
+- 新增船员职业：典狱长
+- 新增中立职业：感染者
+- 新增模组选项：限制CPU核心数
+- 新增英文翻译 RP #16 By @Nanami-Houko 
+
+### 修改
+
+- 删除船员职业：时间之主
+- 选项界面新增幽灵职业栏
+- 合并赌怪模式至经典模式
+- 聊天指令重做
+	- 允许模糊匹配指令
+	- 输入 `/cmd` 可查看指令列表
+	- 在聊天中输入 `/` 指令前缀，无论是否有对应指令都会将消息拦截，避免误发
+
+### 修复
+
+- 修复 [薛定谔的猫] 在赌怪界面能显示当前阵营颜色的问题
+- 修复 [薛定谔的猫] 在己方阵营时还能互相击杀的问题
+- 修复 [乐队主唱] 胜利结算不正常的问题
+- 修复了其它一些小bug

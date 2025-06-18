@@ -61,7 +61,7 @@ public class KeyboardHandler
                 GameStartManager.Instance.countDownTimer = 0;
             }
 
-            if (Input.GetKeyDown(ModInputManager.metaControlInput.keyCode) && Input.GetKeyDown(KeyCode.T) && InGame)
+            if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKeyDown(KeyCode.T) && InGame)
             {
                 ChatCommands.EnableChat.ForceEnableChat = !ChatCommands.EnableChat.ForceEnableChat;
                 Message($"强制设置聊天框状态为: {ChatCommands.EnableChat.ForceEnableChat}");

@@ -12,6 +12,7 @@ internal class ExileControllerBeginPatch
     public static GameData.PlayerInfo lastExiled;
     public static TextMeshPro confirmImpostorSecondText;
     private static bool IsSec;
+    public static bool ForceExile;
     public static bool Prefix(ExileController __instance, [HarmonyArgument(0)] ref GameData.PlayerInfo exiled, [HarmonyArgument(1)] bool tie)
     {
         lastExiled = exiled;
@@ -160,9 +161,15 @@ internal class ExileControllerBeginPatch
         confirmImpostorSecondText.text = changeStringBuilder.ToString();
         confirmImpostorSecondText.gameObject.SetActive(true);
 
+        if (ForceExile)
+        {
+            __instance.completeString = string.Format(GetString("ExileController.ForceExile"), exiled?.PlayerName ?? "NULL");
+            ForceExile = false;
+        }
+
         if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && __instance.exiled?.PlayerId == Balancer.targetplayerleft.PlayerId)
         {
-            __instance.completeString = GetString("二者一同放逐");
+            __instance.completeString = GetString("ExileController.Balancer");
             return;
         }
 
@@ -176,29 +183,30 @@ internal class ExileControllerBeginPatch
                         __instance.completeString = TranslationController.Instance.GetString(StringNames.ExileTextNonConfirm, player?.Data.PlayerName);
                         break;
                     case 2:
-                        __instance.completeString = $"{player.Data.PlayerName} 的职业是 {string.Join(" ", RoleInfo
-                            .getRoleInfoForPlayer(player, false, false).Select(x => x.Name))}";
+                        var roleName = RoleInfo.getRoleInfoForPlayer(player, false, false)
+                            .FirstOrDefault(x => x.roleType is not RoleType.Special).Name;
+                        __instance.completeString = string.Format(GetString("ExileController.PlayerRole"), player.Data.PlayerName, roleName);
                         break;
                     case 3:
-                        __instance.completeString = $"{player.Data.PlayerName} 是 {teamString(player)}";
+                        __instance.completeString = string.Format(GetString("ExileController.PlayerTeam"), player.Data.PlayerName, teamString(player));
                         break;
                     default:
                         break;
                 }
             }
 
+            if (Prosecutor.ProsecuteThisMeeting && player != null) __instance.completeString += $" {GetString("ExileController.Prosecute")}";
+
             if (CustomOptionHolder.exiledShowTeamNum.GetBool())
             {
                 var Impostors = PlayerControl.AllPlayerControls.ToArray().Count(x => x.IsImpostor() && x.IsAlive() && x.PlayerId != player?.PlayerId);
                 var Neutrals = PlayerControl.AllPlayerControls.ToArray().Count(x => x.IsNeutral() && x.IsAlive() && x.PlayerId != player?.PlayerId);
                 __instance.ImpostorText.text =
-                    $"\n{Cs(getTeamColor(RoleType.Impostor), "伪装者阵营剩余 ") + Impostors}" +
-                    $" | {Cs(getTeamColor(RoleType.Neutral), "中立阵营剩余 ") + Neutrals}";
+                    $"\n{Cs(getTeamColor(RoleType.Impostor), GetString("ExileController.ImpNum")) + Impostors}" +
+                    $" | {Cs(getTeamColor(RoleType.Neutral), GetString("ExileController.NeutralNum")) + Neutrals}";
 
             }
         }
-
-        if (Prosecutor.ProsecuteThisMeeting && player != null) __instance.completeString += " (被起诉)";
     }
 
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.ReEnableGameplay))]
@@ -432,7 +440,7 @@ internal class ExileControllerWrapUpPatch
             // Witch execute casted spells
             if (Witch.witch != null && Witch.futureSpelled != null)
             {
-                var partner = exiled?.Object?.getPartner();
+                var partner = exiled?.Object?.GetPartner();
 
                 var exiledIsWitch = exiled?.PlayerId == Witch.witch.PlayerId;
                 var witchDiesWithExiledLover = partner?.PlayerId == Witch.witch.PlayerId || exiled?.PlayerId == Witch.witch.PlayerId;
@@ -507,29 +515,30 @@ internal class ExileControllerWrapUpPatch
         if (InfoSleuth.infoSleuth != null && InfoSleuth.target != null && InfoSleuth.infoSleuth == PlayerControl.LocalPlayer)
         {
             var isNotCrew = (InfoSleuth.target.IsNeutral() || InfoSleuth.target.IsImpostor()) ^ Vortox.Reversal;
-            var team = "的阵营是 " + getTeam(InfoSleuth.target);
-            var info = InfoSleuth.infoType switch
+
+            string info = InfoSleuth.infoType switch
             {
-                0 => isNotCrew ? "不是船员" : "是船员",
-                1 => team,
-                _ => rnd.Next(2) == 0 ? isNotCrew ? "不是船员" : "是船员" : team,
+                0 => GetString(isNotCrew ? "InfoSleuth.NotCrew" : "InfoSleuth.Crew"),
+                1 => string.Format(GetString("InfoSleuth.Team"), GetTeamString(InfoSleuth.target)),
+                _ => rnd.Next(2) == 0 ? GetString(isNotCrew ? "InfoSleuth.NotCrew" : "InfoSleuth.Crew")
+                                      : string.Format(GetString("InfoSleuth.Team"), GetTeamString(InfoSleuth.target))
             };
 
             string msg = $"{InfoSleuth.target.Data.PlayerName} {info}";
 
-            FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"{msg}");
-            var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.ShareGhostInfo);
+            HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msg);
+
+            var writer = StartRPC(CustomRPC.ShareGhostInfo);
             writer.Write(InfoSleuth.infoSleuth.PlayerId);
             writer.Write((byte)RPCProcedure.GhostInfoTypes.GhostChat);
             writer.Write(msg);
             writer.EndRPC();
 
-            var writer1 = StartRPC(PlayerControl.LocalPlayer, CustomRPC.InfoSleuthSetTarget);
+            var writer1 = StartRPC(CustomRPC.InfoSleuthSetTarget);
             writer1.Write(byte.MaxValue);
             writer1.EndRPC();
-            RPCProcedure.infoSleuthSetTarget(byte.MaxValue);
 
-            static string getTeam(PlayerControl player)
+            static string GetTeamString(PlayerControl player)
             {
                 if (Vortox.Player.IsAlive() && Vortox.Reversal)
                 {

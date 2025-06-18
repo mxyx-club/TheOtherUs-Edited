@@ -1,6 +1,4 @@
-using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Roles.Neutral;
 
 namespace TheOtherRoles.Roles.Crewmate;
 public class Jailor
@@ -99,7 +97,7 @@ public class Jailor
             MeetingHud.Instance.discussionTimer -= CustomOptionHolder.guessExtendmeetingTime.GetFloat();
             MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, target.PlayerId);
 
-            var partner = target.getPartner();
+            var partner = target.GetPartner();
             foreach (var pva in MeetingHud.Instance.playerStates)
             {
                 bool shouldClearVote = CustomOptionHolder.guessReVote.GetBool()

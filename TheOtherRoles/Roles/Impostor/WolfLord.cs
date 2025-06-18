@@ -41,7 +41,7 @@ public class WolfLord
 
             foreach (var pva in MeetingHud.Instance.playerStates)
             {
-                var dyingPartner = target.getPartner();
+                var dyingPartner = target.GetPartner();
                 byte partnerId = dyingPartner != null ? dyingPartner.PlayerId : targetId;
                 bool shouldClearVote = CustomOptionHolder.guessReVote.GetBool() || pva.VotedFor == targetId || pva.VotedFor == partnerId;
 
@@ -99,7 +99,7 @@ public class WolfLord
                     localScale.x * 1.7f,
                     localScale.x * 1.7f);
                 meetingExtraButtonLabel.transform.localScale = localScale;
-                meetingExtraButtonLabel.text = Cs(color, "猎杀时刻");
+                meetingExtraButtonLabel.text = Cs(color, "WolfLord.Button".Translate());
 
                 var passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
                 passiveButton.OnClick.RemoveAllListeners();

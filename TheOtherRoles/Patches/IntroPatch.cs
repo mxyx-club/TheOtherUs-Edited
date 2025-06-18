@@ -276,31 +276,40 @@ internal class IntroPatch
             if (Sheriff.knowsSheriff && Sheriff.Deputy != null && Sheriff.Player.FirstOrDefault() != null)
             {
                 if (infos.Any(info => info.roleId == RoleId.Sheriff))
-                    __instance.RoleBlurbText.text = Cs(Sheriff.color, $"\n你的捕快是 {Sheriff.Deputy?.Data?.PlayerName ?? ""}");
+                {
+                    __instance.RoleBlurbText.text = Cs(Sheriff.color,
+                        string.Format(GetString("IntroShowRole.Sheriff"), Sheriff.Deputy?.Data?.PlayerName ?? "NULL"));
+                }
                 else if (infos.Any(info => info.roleId == RoleId.Deputy))
-                    __instance.RoleBlurbText.text = Cs(Sheriff.color, $"\n你的警长是 {Sheriff.Player?.FirstOrDefault()?.Data?.PlayerName ?? ""}");
+                {
+                    __instance.RoleBlurbText.text = Cs(Sheriff.color,
+                        string.Format(GetString("IntroShowRole.Deputy"), Sheriff.Player.FirstOrDefault()?.Data?.PlayerName ?? "NULL"));
+                }
             }
 
             if (Executioner.executioner != null && infos.Any(info => info.roleId == RoleId.Executioner))
-                __instance.RoleBlurbText.text = Cs(Executioner.color, $"\n把 {Executioner.target?.Data?.PlayerName ?? ""} 投出去!");
+            {
+                __instance.RoleBlurbText.text = Cs(Executioner.color,
+                    string.Format(GetString("IntroShowRole.Executioner"), Executioner.target?.Data?.PlayerName ?? "NULL"));
+            }
 
             if (Lawyer.lawyer != null && infos.Any(info => info.roleId == RoleId.Lawyer))
-                __instance.RoleBlurbText.text = Cs(Lawyer.color, $"\n你的辩护目标是 {Lawyer.target?.Data?.PlayerName ?? ""}");
+            {
+                __instance.RoleBlurbText.text = Cs(Lawyer.color,
+                    string.Format(GetString("IntroShowRole.Lawyer"), Lawyer.target?.Data?.PlayerName ?? "NULL"));
+            }
 
             if (modifierInfo != null)
             {
-                if (modifierInfo.roleId != RoleId.Lover)
+                if (modifierInfo.roleId == RoleId.Lover)
                 {
-                    __instance.RoleBlurbText.text +=
-                        Cs(modifierInfo.color, $"\n{modifierInfo.IntroDescription}");
+                    var otherLover = PlayerControl.LocalPlayer.GetPartner();
+                    __instance.RoleBlurbText.text += "\n" + Cs(Lovers.color,
+                        string.Format(GetString("IntroShowRole.Lovers"), otherLover?.Data?.PlayerName ?? "NULL"));
                 }
                 else
                 {
-                    var otherLover = PlayerControl.LocalPlayer == Lovers.lover1
-                        ? Lovers.lover2
-                        : Lovers.lover1;
-                    __instance.RoleBlurbText.text +=
-                        Cs(Lovers.color, $"\n♥ 你和 {otherLover?.Data?.PlayerName ?? ""} 坠入了爱河 ♥");
+                    __instance.RoleBlurbText.text += "\n" + Cs(modifierInfo.color, modifierInfo.IntroDescription);
                 }
             }
         }

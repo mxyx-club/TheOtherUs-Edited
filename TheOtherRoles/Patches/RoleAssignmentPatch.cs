@@ -192,7 +192,6 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Medium, CustomOptionHolder.mediumSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Prophet, CustomOptionHolder.prophetSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Redemptor, CustomOptionHolder.redemptorSpawnRate.GetSelection());
-        crewSettings.Add((byte)RoleId.Hunter, CustomOptionHolder.hunterSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Jailor, CustomOptionHolder.jailorSpawnRate.GetSelection());
         if (!GuesserGM.Enabled)
             crewSettings.Add((byte)RoleId.Vigilante, CustomOptionHolder.guesserSpawnRate.GetSelection());
@@ -659,7 +658,7 @@ internal class RoleManagerSelectRolesPatch
         var crewPlayer = PlayerControl.AllPlayerControls.ToArray().OrderBy(x => Guid.NewGuid()).ToList();
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
         neutralPlayer.RemoveAll(x => !x.IsNeutral() || x == Doomsayer.doomsayer);
-        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x == Hunter.Player || x.IsNeutral());
+        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.IsNeutral());
         assignGuesserGamemodeToPlayers(crewPlayer,
             GuesserGM.guesserGamemodeCrewNumber.GetInt());
         assignGuesserGamemodeToPlayers(neutralPlayer,

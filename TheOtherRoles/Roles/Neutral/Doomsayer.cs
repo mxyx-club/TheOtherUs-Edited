@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 namespace TheOtherRoles.Roles.Neutral;
 
@@ -20,7 +20,7 @@ public static class Doomsayer
     public static float killedToWin;
     public static bool CanShoot = true;
 
-    public static ResourceSprite buttonSprite = new("SeerButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("SeerButton.png");
 
     public static string GetInfo(PlayerControl target)
     {
@@ -41,7 +41,7 @@ public static class Doomsayer
             var tempNumList = Enumerable.Range(0, allRoleInfo.Count).ToList();
             var temp = (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList).OrderBy(_ => rnd.Next()).ToList();
 
-            message.AppendLine($"{target.Data.PlayerName} 的职业可能是：\n");
+            message.AppendLine(GetString("Doomsayer.ObserveInfo"));
 
             for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
             {

@@ -794,10 +794,17 @@ public static class Helpers
         return playerId % 2 == 0;
     }
 
-    public static bool isLighterColor(PlayerControl target)
+    public static bool IsLightColor(PlayerControl target)
     {
         if (!ModOption.randomLigherPlayer) return CustomColors.lighterColors.Contains(target.Data.DefaultOutfit.ColorId);
         return !isDark(target.PlayerId);
+    }
+
+    public static bool IsLightColor(Color color)
+    {
+        var max = Mathf.Max(color.r, color.g, color.b);
+        var sum = color.r + color.g + color.b;
+        return max > 0.8f || sum > 2.1f;
     }
 
     public static Color getTeamColor(RoleType team)
@@ -1150,7 +1157,7 @@ public static class Helpers
         return player != null && player.IsAlive();
     }
 
-    public static PlayerControl getPartner(this PlayerControl player)
+    public static PlayerControl GetPartner(this PlayerControl player)
     {
         return Akujo.otherLover(player) ?? (Lovers.bothDie ? Lovers.otherLover(player) : null);
     }

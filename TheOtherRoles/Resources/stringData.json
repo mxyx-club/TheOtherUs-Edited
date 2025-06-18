@@ -627,11 +627,11 @@
         "13": "驱逐显示"
     },
     "exiledReviveRole": {
-        "0": "Show Player Info After Ejection",
+        "0": "Show Player Info on Ejection",
         "13": "驱逐后显示玩家信息"
     },
     "exiledShowTeamNum": {
-        "0": "Show Faction Info After Ejection",
+        "0": "Show Faction Info on Ejection",
         "13": "驱逐后显示各阵营人数"
     },
     "debugMode": {
@@ -1311,7 +1311,7 @@
         "13": "击杀冷却"
     },
     "SpecterOption": {
-        "0": "Specter (Ghost Role)",
+        "0": "Specter (Neutral)",
         "13": "怨灵 (中立)"
     },
     "specterDuration": {
@@ -1707,11 +1707,11 @@
         "13": "可以变更阵营的次数"
     },
     "GhostEngineerOptions": {
-        "0": "Ghost Mechanic (Ghost Role)",
+        "0": "Ghost Mechanic (Crewmate)",
         "13": "灵魂工程师 (船员)"
     },
     "PoltergeistOptions": {
-        "0": "Poltergeist (Ghost Role)",
+        "0": "Poltergeist (Crewmate)",
         "13": "捣蛋鬼 (船员)"
     },
     "poltergeistCooldown": {
@@ -1763,7 +1763,7 @@
         "13": "市长揭示后视野减少"
     },
     "prosecutorDiesOnIncorrectPros": {
-        "0": "Prosecutor Dies if They Exile a Crewmate",
+        "0": "Prosecutor Dies if They Eject a Crewmate",
         "13": "驱逐船员会自杀"
     },
     "mayorTasksNeededToSeeVoteColors": {
@@ -2323,7 +2323,7 @@
         "13": "分散至管道位置"
     },
     "modifierVortoxReversal": {
-        "0": " Investigative Roles Receive Reversed Results While Vortex Is Alive",
+        "0": "Investigative Roles Receive Reversed Results While Vortex Is Alive",
         "13": "存活时查验类信息会被反转"
     },
     "modifierVortoxSkipMeeting": {
@@ -2479,24 +2479,27 @@
         "13": "可交换除豺狼阵营中立\n中立阵营可以成为交换师"
     },
     "infectedMaxPlayer": {
+        "0": "Max Number of Infecteds",
         "13": "感染者最大数量"
     },
     "infectedActiveLimit": {
+        "0": "Max Number of Infecteds Simultaneously Alive",
         "13": "同时存在的感染者数量"
     },
     "infectedCanUseGuess": {
+        "0": "Infected Can Guess",
         "13": "可以使用赌怪能力"
     },
     "infectedGuessCount": {
+        "0": "Total Number of Infected Guesses (shared)",
         "13": "猜测次数（团队共享）"
     },
-    "hunterMaxCount": {
-        "13": "技能次数"
-    },
     "jailorCooldown": {
+        "0": "Jail Cooldown",
         "13": "技能冷却"
     },
     "jailorUseCount": {
+        "0": "Max Number of Jail Uses",
         "13": "技能最大使用次数"
     },
     "TouTitle": {
@@ -2548,44 +2551,68 @@
         "13": "当前模组版本为Beta测试版，将在 {0} 天后过期!\n\n版本过期后将无法进入游戏，注意更新！"
     },
     "CommandsInHost": {
-        "0": "In-Game Commands:\n/end : Force-end the game\n/mt : Call or end a meeting\n/kill [player name] : Force-kill a player\n/revive [player name] : Force-revive a player\n/say [message] : Send a host message to all players",
-        "13": "游戏中指令：\n/end ：强制游戏结束\n/mt 召集/结束会议\n/kill [玩家代号] ：强制击杀玩家\n/revive [玩家代号] ： 强制复活玩家\n/say [内容] : 向所有玩家发送房主消息\n/room [数量] : 修改房间最大人数\n/ls : 获取全部玩家的代号"
+        "0": "Host Commands:\n\n/end: Force-end the game\n/mt: Call/End an emergency meeting\n/list: Get a list of the playerId of all players\n/kill [player]:  Force-kill the target player\n/revive [player]: Force-revive the target player\n/say [text]: Broadcast message to all players as host\n/room [num]: Change the max number of players of the room\n/ct [player]: Clear the target player's tasks",
+        "13": "游戏中指令：\n\n/end ：强制游戏结束\n/mt: 召集/结束会议\n/list : 获取全部玩家的ID\n/kill [玩家] ：强制击杀玩家\n/revive [玩家] ： 强制复活玩家\n/say [内容] : 向所有玩家发送房主消息\n/room [数量] : 修改房间最大人数\n/ct [玩家] : 清除对方的任务"
     },
     "CommandsInPlayer": {
-        "0": "Global Commands:\n/r [role name] : Get the description of the specified role\n\nIn-Game Commands:\n/m : Get descriptions of all current roles\n\nDead Players or Lobby Commands:\n/tp [player name] : Teleport to the specified player’s location",
-        "13": "全局指令：\n/ls : 获取全部玩家的代号\n/r [职业名称] ：获得该职业的职业介绍\n\n游戏中指令：\n/m  ： 获得当前玩家所有职业的职业介绍\n\n死亡玩家或游戏大厅指令：\n/tp [玩家代号] ：将自己传送到该玩家的位置。"
+        "0": "Players can use either the target's player ID or nickname when using commands.\n\nGlobal Commands:\n/ls Get the nicknames of all players\n/r [role name] Get the role description for the specified role\n\nIn-game Commands:\n/m Get the role descriptions of all roles the current player has\n\nDead Players or Lobby Commands:\n/tp [player] Teleport to the target player",
+        "13": "使用的指令允许使用对方的玩家ID或玩家昵称作为指令目标。\n\n全局指令：\n/ls : 获取全部玩家的代号\n/r [职业名称] ：获得该职业的职业介绍\n\n游戏中指令：\n/m  ： 获得当前玩家所有职业的职业介绍\n\n死亡玩家或游戏大厅指令：\n/tp [玩家] ：将自己传送到该玩家的位置。"
+    },
+    "Command.Ambiguous": {
+        "0": "Ambiguous command: {0}\nmatches multiple commands: {1}",
+        "13": "指令不明确: {0}\n匹配到多个指令: {1}"
+    },
+    "Command.Unknown": {
+        "0": "Unknown command: {0}\nPlease enter [/cmd] for Help",
+        "13": "未知指令: {0}\n如需要帮助请输入: [/cmd]"
     },
     "Host": {
         "0": "Host",
         "13": "房主"
     },
-    "modOptionsTitle": {
+    "Color.Light": {
+        "0": "light",
+        "13": "浅"
+    },
+    "Color.Dark": {
+        "0": "dark",
+        "13": "深"
+    },
+    "ModOptions.Title": {
         "0": "Mod Options...",
         "13": "模组选项"
     },
-    "modOptionsText": {
-        "0": "More Options...",
-        "13": "模组选项"
+    "ModOptions.On": {
+        "0": "On",
+        "13": "开"
+    },
+    "ModOptions.Off": {
+        "0": "Off",
+        "13": "关"
     },
     "ProcessorAffinityMask": {
         "0": "Number of cores used by CPU",
         "13": "使用的CPU核心数"
     },
-    "ProcessorAffinityMask.Off": {
-        "0": "OFF",
-        "13": "关闭"
-    },
     "ProcessorAffinityMask.1": {
+        "0": "Single Threaded",
         "13": "单线程"
     },
     "ProcessorAffinityMask.2": {
+        "0": "Single Core",
         "13": "单核"
     },
     "ProcessorAffinityMask.3": {
+        "0": "Dual Threaded",
         "13": "双线程"
     },
     "ProcessorAffinityMask.4": {
+        "0": "Dual Core",
         "13": "双核"
+    },
+    "ProcessorAffinityMask.Off": {
+        "0": "Off",
+        "13": "无限制"
     },
     "ToggleCursorText": {
         "0": "Better Cursor",
@@ -2749,8 +2776,216 @@
         "13": "破坏 : ({0}/{1})"
     },
     "roleInfoRemaining": {
-        "0": " left {0} ",
+        "0": "{0} left",
         "13": " 剩余 {0} "
+    },
+    "ExileController.ForceExile": {
+        "0": "The Host Forcibly Ejected {0}",
+        "13": "房主强制驱逐了 {0}"
+    },
+    "ExileController.Balancer": {
+        "0": "Both were ejected…",
+        "13": "二者一同放逐…"
+    },
+    "ExileController.Prosecute": {
+        "0": "(prosecuted)",
+        "13": "(被起诉)"
+    },
+    "ExileController.PlayerRole": {
+        "0": "{0}'s role was {}",
+        "13": "{0} 的职业是 {1}"
+    },
+    "ExileController.PlayerTeam": {
+        "0": "{0} was {}",
+        "13": "{0} 是 {1}"
+    },
+    "ExileController.ImpNum": {
+        "0": "Imposter(s) remaining:",
+        "13": "伪装者阵营剩余"
+    },
+    "ExileController.NeutralNum": {
+        "0": "Neutral(s) remaining:",
+        "13": "中立阵营剩余"
+    },
+    "IntroShowRole.Sheriff": {
+        "0": "Your Deputy is {0}",
+        "13": "你的捕快是 {0}"
+    },
+    "IntroShowRole.Deputy": {
+        "0": "Your Sheriff is {0}",
+        "13": "你的警长是 {0}"
+    },
+    "IntroShowRole.Executioner": {
+        "0": "Get {0} ejected!",
+        "13": "把 {0} 投出去! "
+    },
+    "IntroShowRole.Lawyer": {
+        "0": "Your client is {0}",
+        "13": "你的辩护目标是 {0}"
+    },
+    "IntroShowRole.Lovers": {
+        "0": "♥ You have fallen in love with {0} ♥",
+        "13": "♥ 你和 {0} 坠入了爱河 ♥"
+    },
+    "MedicReport.ReportName": {
+        "0": "Autopsy Report: The culprit is {0}!\nThe victim died {1}s ago.",
+        "13": "尸检报告: 凶手似乎是 {0}!\n尸体在 {1} 秒前死亡"
+    },
+    "MedicReport.ReportColor": {
+        "0": "Autopsy Report: The culprit's skin color is {0}!\nThe victim died {1}s ago.",
+        "13": "尸检报告: 凶手的颜色似乎是 {0}色的!\n尸体在{1}秒前死亡"
+    },
+    "MedicReport.ReportExpired": {
+        "0": "Autopsy Report: Time of death too long ago, no info retrieved!\nThe victim died {0}s ago.",
+        "13": "尸检报告: 死亡时间太久，无法获取信息!\n尸体在{0}秒前死亡"
+    },
+    "DetectiveReport.ReportRole": {
+        "0": "Autopsy Report: The culprit's role is {0}!\nThe victim died {1}s ago.",
+        "13": "尸检报告: 凶手的职业似乎是 {0}!\n尸体在 {1} 秒前死亡"
+    },
+    "DetectiveReport.ReportTeam": {
+        "0": "Autopsy Report: The culprit's faction is {0}!\nThe victim died {1}s ago.",
+        "13": "尸检报告: 凶手的阵营似乎是 {0}!\n尸体在{1}秒前死亡"
+    },
+    "DetectiveReport.ReportExpired": {
+        "0": "Autopsy Report: Time of death too long ago, no info retrieved!\nThe victim died {0}s ago.",
+        "13": "尸检报告: 死亡时间太久，无法获取信息\n尸体在 {0} 秒前死亡"
+    },
+    "WitnessReport.Suspect": {
+        "0": "{0} is suspected to be the culprit in this case.",
+        "13": "{0} 疑似为本案的凶手"
+    },
+    "WitnessReport.Killer": {
+        "0": "{0} is the true culprit in this case.",
+        "13": "{0} 为本案的真凶"
+    },
+    "Snitch.IsAlive": {
+        "0": "The Snitch is still alive: ",
+        "13": "告密者还活着: {0}"
+    },
+    "Redemptor.Prayering": {
+        "0": "The Priest is Resurrecting a body!",
+        "13": "牧师正在祈祷!"
+    },
+    "Redemptor.RevivedPlayer": {
+        "0": "A player has been revived!",
+        "13": "有玩家已被复活!"
+    },
+    "Jailor.YouAreJailed": {
+        "0": "YOU ARE JAILED",
+        "13": "你已被监禁"
+    },
+    "Jailor.InJailSuffix": {
+        "0": "(JAILED)",
+        "13": " (被监禁)"
+    },
+    "Jailor.JailedChat": {
+        "0": "You have been jailed for the duration of this meeting. Your messages are visible only to the Jailor and can't be seen by other players.",
+        "13": "你已被监禁，本轮会议发送消息只能与典狱长私聊。其他玩家无法看到。\n\n另外，本轮会议你无法投票，也无法使用任何会议技能。"
+    },
+    "Jailor.JailorChat": {
+        "0": "Use /jail [text] to PM the jailed player.",
+        "13": "你可以使用 /jail [文字]  指令来与被监禁玩家私聊。\n\n并且对方本轮会议内只能向你发送消息，其它玩家无法看到。"
+    },
+    "MediumInfo.SheriffSuicide": {
+        "0": "Oops, misfired!\n[Sheriff Suicide]",
+        "13": "哎呀，枪走火了! \n[警长自杀]"
+    },
+    "MediumInfo.WarlockSuicide": {
+        "0": "Uh-oh… I might have cursed myself to death.\n[Warlock Suicide]",
+        "13": "啊哦，我好像把自己咒死了耶。\n[术士死于自杀]."
+    },
+    "MediumInfo.ThiefSuicide": {
+        "0": "I tried to take over the host but got myself killed.\n[Parasite Suicide]",
+        "13": "我试图从他们口袋里偷枪，却把自己害死了\n[窃贼自杀]."
+    },
+    "MediumInfo.ActiveLoverDies": {
+        "0": "No matter what, I had to rid myself of this toxic relationship.\n[Died with Lover]",
+        "13": "无论如何，我都想摆脱这种有毒的关系。\n[带着恋人死去]."
+    },
+    "MediumInfo.PassiveLoverSuicide": {
+        "0": "Together in life, together in death. My beloved has passed. I'll follow.\n[Suicide due to Lover's Death]",
+        "13": "在天愿作比翼鸟,在地愿为连理枝，所爱以逝，吾亦寻之。\n[被恋人带死]."
+    },
+    "MediumInfo.LawyerKilledByClient": {
+        "0": "My client killed me. Do I still get paid?\n[The Lawyer was killed by their client]",
+        "13": "我的客户杀了我。我还能得到报酬吗？\n[律师被客户杀害]"
+    },
+    "MediumInfo.JackalKillsSidekick": {
+        "0": "You brought me into your pack… only to kill me? Oh well, no more tasks.\n[The Sidekick was killed by the Jackal]",
+        "13": "既已纳我为伍，何必取我性命，算了，至少不用做任务了。\n[跟班被豺狼杀害]"
+    },
+    "MediumInfo.ImpostorTeamkill": {
+        "0": "They must've thought I was a Spy, right?\n[The Imposter was killed by another Imposter]",
+        "13": "他们肯定是把我当成卧底才杀了我，有没有？\n[内鬼死于队友]"
+    },
+    "MediumInfo.BodyCleaned": {
+        "0": "Is my body a work of art now or... wait, where did it go?\n[Body was cleaned up or eaten]",
+        "13": "我的尸体现在是某种艺术还是。。。啊，它不见了。\n[尸体被清理或吃了]"
+    },
+    "MediumInfo.PlayerRole": {
+        "0": "My role was {0}.",
+        "13": "我的职业是 {0}。"
+    },
+    "MediumInfo.KillerColor": {
+        "0": "I'm not sure, but my killer's skin color should be {0}.",
+        "13": "我不确定，但凶手应该是{0}色的。"
+    },
+    "MediumInfo.DeathTime": {
+        "0": "If I'm not mistaken, I died about {0}s before the meeting.",
+        "13": "如果没算错，我是在会议前{0}秒死的。"
+    },
+    "MediumInfo.KillerRole": {
+        "0": "I seemed to have been killed by a(n) {0}.",
+        "13": "我好像是被{0}杀死的。"
+    },
+    "Doomsayer.ObserveInfo": {
+        "0": "{0}'s role might be: \n",
+        "13": "{0} 的职业可能是: \n"
+    },
+    "Portalmaker.LogHeader": {
+        "0": "Portal Usage Logs:\n",
+        "13": "星门使用日志:\n"
+    },
+    "Portalmaker.LogEntry": {
+        "0": "{0}s ago: {1} used the Portal.\n",
+        "13": "{0} 秒前: {1} 使用了星门\n"
+    },
+    "Portalmaker.LogEntryNoTime": {
+        "0": "{0} used the Portal.\n",
+        "13": "{0} 使用了星门\n"
+    },
+    "InfoSleuth.Crew": {
+        "0": "is Crewmate.",
+        "13": "是船员"
+    },
+    "InfoSleuth.NotCrew": {
+        "0": "is not Crewmate.",
+        "13": "不是船员"
+    },
+    "InfoSleuth.Team": {
+        "0": "s faction is {0}.",
+        "13": "的阵营是 {0}"
+    },
+    "Prosecutor.Button": {
+        "0": "Prosecute",
+        "13": "起诉"
+    },
+    "WolfLord.Button": {
+        "0": "Kill Order",
+        "13": "猎杀时刻"
+    },
+    "GuesserUI.Next": {
+        "0": "Next page",
+        "13": "下一页"
+    },
+    "GuesserUI.Last": {
+        "0": "Last page",
+        "13": "上一页"
+    },
+    "GuesserUI.GuessChat": {
+        "0": "The Guesser {0} guessed that {1}'s role is {2}!",
+        "13": "赌怪 {0} 猜测 {1} 的职业是 {2} !"
     },
     "trapperGotTrapText": {
         "0": "{0} has been trapped!",
@@ -2803,9 +3038,6 @@
     "BandLeaderFormed": {
         "0": "Band formed | Faction: {0}",
         "13": "乐队已成立 | 阵营: {0}"
-    },
-    "HunterGuesserCount": {
-        "13": "所有感染者已死亡 | 剩余猜测次数: {0}"
     },
     "InfectedGuesserCount": {
         "13": "团队剩余猜测次数: {0}"
@@ -2940,34 +3172,10 @@
     },
     "RoleDraft.TeamTitle1": {
         "0": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently choosing:</size>\n\n<size=250%>{0}</size>",
-        "1": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{1}</size>",
-        "2": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{2}</size>",
-        "3": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{3}</size>",
-        "4": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{4}</size>",
-        "5": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{5}</size>",
-        "6": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{6}</size>",
-        "7": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{7}</size>",
-        "8": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{8}</size>",
-        "9": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{9}</size>",
-        "10": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{10}</size>",
-        "11": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{11}</size>",
-        "12": "<size=280%>Welcome to the Role Draft!</size>\n\n\n<size=200%> Currently Picking:</size>\n\n<size=250%>{12}</size>",
         "13": "<size=280%>欢迎游玩轮抽模式！</size>\n\n\n<size=200%> 当前正在选择的玩家：</size>\n\n<size=250%>{0}</size>"
     },
     "RoleDraft.PlayerText": {
         "0": "Player {0}",
-        "1": "Anonymous Player {1}",
-        "2": "Anonymous Player {2}",
-        "3": "Anonymous Player {3}",
-        "4": "Anonymous Player {4}",
-        "5": "Anonymous Player {5}",
-        "6": "Anonymous Player {6}",
-        "7": "Anonymous Player {7}",
-        "8": "Anonymous Player {8}",
-        "9": "Anonymous Player {9}",
-        "10": "Anonymous Player {10}",
-        "11": "Anonymous Player {11}",
-        "12": "Anonymous Player {12}",
         "13": "玩家 {0}"
     },
     "RoleDraft.TeamTitle2": {
@@ -3005,19 +3213,6 @@
     "RoleDraft.Disconnect": {
         "0": "Player Disconnected",
         "13": "玩家已断线"
-    },
-    "Jailor.YouAreJailed": {
-        "0": "YOU ARE JAILED",
-        "13": "你已被监禁"
-    },
-    "Jailor.InJail": {
-        "13": " (被监禁)"
-    },
-    "Jailor.JailedChat": {
-        "13": "你已被监禁，本轮会议发送消息只能与典狱长私聊。其他玩家无法看到。\n\n另外，本轮会议你无法投票，也无法使用任何会议技能。"
-    },
-    "Jailor.JailorChat": {
-        "13": "你可以使用 [/jail text] 指令来与被监禁玩家私聊。\n\n并且对方本轮会议内只能向你发送消息，其它玩家无法看到。"
     },
     "colorSalmon": {
         "0": "Salmon",
@@ -3397,7 +3592,7 @@
         "13": "揭示"
     },
     "minerText": {
-        "0": "DIG",
+        "0": "MINE",
         "13": "挖洞"
     },
     "jackalSidekickText": {
@@ -3564,6 +3759,18 @@
     "jailButtonText": {
         "0": "JAIL",
         "13": "监禁"
+    },
+    "gameModeButton": {
+        "0": "TOGGLE MODE",
+        "13": "更换模式"
+    },
+    "bandJoinButton": {
+        "0": "RECRUIT",
+        "13": "招募成员"
+    },
+    "bandKickButton": {
+        "0": "KICK",
+        "13": "踢出乐队"
     },
     "GuessserGMInfo": {
         "0": " (Guesser)",
@@ -4874,11 +5081,11 @@
         "13": "捣蛋鬼"
     },
     "PoltergeistIntroDesc": {
-        "0": "Where're the corps's at?",
+        "0": "Where them corpses at?",
         "13": "尸体会在哪里呢"
     },
     "PoltergeistShortDesc": {
-        "0": "Where're the corps's at?",
+        "0": "Where them corpses at?",
         "13": "尸体会在哪里呢"
     },
     "Infected": {
@@ -4886,26 +5093,23 @@
         "13": "感染者"
     },
     "InfectedIntroDesc": {
+        "0": "Resident Evil",
         "13": "生 化 危 机"
     },
     "InfectedShortDesc": {
+        "0": "Infect, convert and kill the other players to win.",
         "13": "感染并击杀其他玩家获得胜利"
-    },
-    "Hunter": {
-        "0": "Hunter",
-        "13": "巡猎者"
-    },
-    "HunterShortDesc": {
-        "13": "击杀可疑的玩家"
     },
     "Jailor": {
         "0": "Jailor",
         "13": "典狱长"
     },
     "JailorIntroDesc": {
+        "0": "Imprison and execute suspicious players. ",
         "13": "监禁并处决可疑玩家"
     },
     "JailorShortDesc": {
+        "0": "Put suspicious players in jail.",
         "13": "囚禁可疑的玩家"
     },
     "ImpostorFullDesc": {
@@ -5121,7 +5325,7 @@
         "13": "市长在投票阶段可以通过点击揭示按钮揭示自己的身份，无法被猜测。\n\n揭示后会议内拥有3票(具体按房间设置为准)，同时视野大幅缩小。\n\n另外，根据房间设置，市长可以拥有远程开会议的能力。"
     },
     "ProsecutorFullDesc": {
-        "0": "The Prosecutor can forcibly exile one player per game.\nA new \"Prosecute\" button appears in the bottom-left corner during meetings.\n\nWhen activated:\nAll other players' votes are voided. The Prosecutor casts the decisive vote.\nVoting becomes anonymous and cannot be viewed by others.\n\nDepending on settings: if a Crewmate (including Neutral benign roles) is exiled in the Prosecutor's trial, the Prosecutor dies.\n\nN.B.: During a Prosecutor's trial, the Prosecutor must vote—skipping is disabled. If no vote is cast by the end of the meeting, the vote is void and the ability is preserved.",
+        "0": "The Prosecutor can forcibly eject one player per game.\nA new \"Prosecute\" button appears in the bottom-left corner during meetings.\n\nWhen activated:\nAll other players' votes are voided. The Prosecutor casts the decisive vote.\nVoting becomes anonymous and cannot be viewed by others.\n\nDepending on settings: if a Crewmate (including Neutral benign roles) is exiled in the Prosecutor's trial, the Prosecutor dies.\n\nN.B.: During a Prosecutor's trial, the Prosecutor must vote—skipping is disabled. If no vote is cast by the end of the meeting, the vote is void and the ability is preserved.",
         "13": "检察官属于强力船员，可以强制驱逐一名玩家，每局游戏只能使用一次。\n在会议中左下角中新增 “起诉” 按钮，\n按下按钮后本次会议其他玩家的所有投票被无效，\n并且强制匿名投票，无法被窥视。\n\n按房间设置：如果驱逐了船员（包括善良中立）则检察官会自杀。\n\n（注：在检察官的会议中: 检察官无法跳过，如果会议结束时仍然不投票则本次会议无效，“起诉” 技能保留）"
     },
     "PortalmakerFullDesc": {
@@ -5349,9 +5553,11 @@
         "13": "分配阵营：船员\n\n死亡后有概率成为捣蛋鬼。捣蛋鬼可以移动附近的某一具尸体到自己脚下。\n默认范围 x 0.75 (1倍为正常报告范围)"
     },
     "InfectedFullDesc": {
+        "0": "When Infected uses Kill on another player, if said player is a killer role, they will be killed directly; if the target is a Crewmate or a non-killer role, they will be converted into an Infected.\n\nN.B.: There is a limit to the number of Infecteds in total and to the number of Infecteds simultaneously alive.\nIf the number of Infecteds reaches the limit, using Kill will simply kill the target.",
         "13": "感染者击杀玩家时，如果对方为击杀相关职业会直接击杀对方，如果对方为\n船员或非击杀相关职业则会将目标变为感染者。\n\n感染者有最大数量和同时存在数量的限制，请注意！\n如果感染者数量达到最大时，使用击杀技能时都会击杀对方。"
     },
     "JailorFullDesc": {
+        "0": "The Jailor can choose a player to Jail during the action phase, taking effect once the next meeting starts.\n\nMessages sent by the jailed player during the meeting will only be visible to the Jailor; other players cannot see them.\nThe Jailor can PM the jailed player using the [/jail text] command.\n\nThe Jailor can execute the jailed player during the meeting, but if they execute a Crewmate, they will permanently lose their ability.",
         "13": "你可以在行动阶段选择一位玩家监禁，进入会议后会将目标玩家监禁。\n\n目标在会议中发送的消息只会被典狱长接收，其他玩家无法看到，\n但典狱长可以使用 [/jail text] 指令与被监禁者私聊。\n\n典狱长可以在会议中处决被监禁玩家，但如果处决了船员，将永久失去技能。"
     }
 }

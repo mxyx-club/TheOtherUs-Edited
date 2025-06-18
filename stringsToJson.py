@@ -28,9 +28,9 @@ def stringToJson(in_files):
             for row in rows:
                 name = row[0].value
         
-                if not name:
+                if not name or str(name).startswith("#"):
                     continue
-        
+
                 data = {}
         
                 for i, string in enumerate(row[1:]):

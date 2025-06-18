@@ -86,7 +86,6 @@ public class RoleInfo
     public static RoleInfo engineer = new("Engineer", Engineer.color, RoleId.Engineer, RoleType.Crewmate);
     public static RoleInfo sheriff = new("Sheriff", Sheriff.color, RoleId.Sheriff, RoleType.Crewmate);
     public static RoleInfo deputy = new("Deputy", Sheriff.color, RoleId.Deputy, RoleType.Crewmate);
-    public static RoleInfo hunter = new("Hunter", Hunter.color, RoleId.Hunter, RoleType.Crewmate);
     public static RoleInfo jailor = new("Jailor", Jailor.color, RoleId.Jailor, RoleType.Crewmate);
     public static RoleInfo bodyguard = new("BodyGuard", BodyGuard.color, RoleId.BodyGuard, RoleType.Crewmate);
     public static RoleInfo jumper = new("Jumper", Jumper.color, RoleId.Jumper, RoleType.Crewmate);
@@ -205,7 +204,6 @@ public class RoleInfo
         engineer,
         sheriff,
         deputy,
-        hunter,
         jailor,
         bodyguard,
         jumper,
@@ -332,7 +330,6 @@ public class RoleInfo
         if (p == Ninja.ninja) infos.Add(ninja);
         if (p == Yoyo.yoyo) infos.Add(yoyo);
         if (p == EvilTrapper.evilTrapper) infos.Add(evilTrapper);
-        if (p == Hunter.Player) infos.Add(hunter);
         if (p == Blackmailer.Player) infos.Add(blackmailer);
         if (p == Terrorist.terrorist) infos.Add(terrorist);
         if (p == Detective.detective) infos.Add(detective);

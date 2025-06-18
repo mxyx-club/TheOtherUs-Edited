@@ -5,9 +5,9 @@ using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Patches;
-using TheOtherRoles.Roles;
 using static TheOtherRoles.Buttons.HudManagerStartPatch;
 using static TheOtherRoles.Options.ModOption;
+using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles;
 
@@ -32,7 +32,7 @@ public enum CustomRPC : byte
     CustomMurderPlayer,
     UncheckedExilePlayer,
     RevivePlayer,
-    HostKill,
+    HostControl,
 
     // Role functionality
     FixLights = 110,
@@ -112,13 +112,13 @@ public enum CustomRPC : byte
     RedemptorPrayer,
     BandLeaderFormed,
     CreateBandMember,
-    HostSay,
     SchrodingersCatSetState,
     SyncGunsmithChange,
     InfectedTarget,
     JailorSendMessage,
     JailorJail,
     ExiledJailed,
+    HunterStalk,
 
     TrapperKill,
     PlaceTrap,
@@ -163,6 +163,15 @@ public static class RPCProcedure
         BlankUsed,
         VampireTimer,
         DeathReasonAndKiller
+    }
+
+    public enum HostCommand
+    {
+        HostSay,
+        HostKill,
+        HostExile,
+        HostRevive,
+        HostClearTasks,
     }
 
     // Main Controls
@@ -475,9 +484,6 @@ public static class RPCProcedure
             case RoleId.Infected:
                 Infected.Player.Add(player);
                 break;
-            case RoleId.Hunter:
-                Hunter.Player = player;
-                break;
             case RoleId.Jailor:
                 Jailor.Player = player;
                 break;
@@ -603,6 +609,50 @@ public static class RPCProcedure
                 break;
             case RoleId.Poltergeist:
                 Poltergeist.Player = player;
+                break;
+        }
+    }
+
+    public static void HostControl(PlayerControl controller, HostCommand command, MessageReader reader)
+    {
+        switch (command)
+        {
+            case HostCommand.HostSay:
+                HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, reader.ReadString());
+                break;
+            case HostCommand.HostKill:
+            {
+                var target = reader.ReadPlayer();
+                if (target.IsDead()) return;
+
+                target.Exiled();
+                GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.HostCmdKill, controller);
+
+                DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
+                foreach (var body in array)
+                {
+                    if (body.ParentId != target.PlayerId) continue;
+                    UObject.Destroy(body.gameObject);
+                    break;
+                }
+            }
+            break;
+            case HostCommand.HostRevive:
+            {
+                var target = reader.ReadPlayer();
+                target?.ModRevive(true, true);
+            }
+            break;
+            case HostCommand.HostClearTasks:
+            {
+                var target = reader.ReadPlayer();
+                target.clearAllTasks();
+            }
+            break;
+            case HostCommand.HostExile:
+                ExileControllerBeginPatch.ForceExile = true;
+                break;
+            default:
                 break;
         }
     }
@@ -779,31 +829,6 @@ public static class RPCProcedure
         {
             Medic.shielded = null;
             return;
-        }
-    }
-
-    public static void hostKill(byte targetId)
-    {
-        var target = PlayerById(targetId);
-        target.Exiled();
-        GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.HostCmdKill, GameData.Instance.GetHost()?.Object);
-
-        DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
-        foreach (var body in array)
-        {
-            if (body.ParentId != targetId) continue;
-            UObject.Destroy(body.gameObject);
-            break;
-        }
-    }
-
-    public static void hostSay(string message)
-    {
-        if (PlayerControl.LocalPlayer.AmOwner)
-        {
-            Message($"Host Say: {message}");
-            HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, message);
-
         }
     }
 
@@ -1045,7 +1070,6 @@ public static class RPCProcedure
         if (player == Mayor.mayor) Mayor.clearAndReload();
         if (player == Prosecutor.prosecutor) Prosecutor.clearAndReload();
         if (player == Portalmaker.portalmaker) Portalmaker.clearAndReload();
-        if (player == Hunter.Player) Hunter.ClearAndReload();
         if (player == Jailor.Player) Jailor.ClearAndReload();
         if (player == Engineer.engineer) Engineer.clearAndReload();
         if (player == Sheriff.Deputy) Sheriff.Deputy = null;
@@ -2267,6 +2291,9 @@ internal class RPCHandlerPatch
             case CustomRPC.StopStart:
                 RPCProcedure.stopStart(reader.ReadByte());
                 break;
+            case CustomRPC.HostControl:
+                RPCProcedure.HostControl(reader.ReadPlayer(), (RPCProcedure.HostCommand)reader.ReadByte(), reader);
+                break;
 
             // Game mode
             case CustomRPC.SetGuesserGm:
@@ -2364,12 +2391,6 @@ internal class RPCHandlerPatch
 
             case CustomRPC.RevivePlayer:
                 RPCProcedure.RevivePlayer(reader.ReadByte(), reader.ReadBoolean(), reader.ReadBoolean());
-                break;
-            case CustomRPC.HostKill:
-                RPCProcedure.hostKill(reader.ReadByte());
-                break;
-            case CustomRPC.HostSay:
-                RPCProcedure.hostSay(reader.ReadString());
                 break;
             case CustomRPC.SchrodingersCatSetState:
                 SchrodingersCat.State = (SchrodingersCat.CatState)reader.ReadByte();
