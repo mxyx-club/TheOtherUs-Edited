@@ -293,8 +293,8 @@ public class KillTrap
         Message($"陷阱 {trapId} 击杀 {target?.Data?.PlayerName ?? "NULL"}");
         var trap = AllTraps.FirstOrDefault(x => x.Id == trapId);
         var audioSource = trap.audioSource;
-
         audioSource.Stop();
+
         audioSource.maxDistance = EvilTrapper.maxDistance;
         audioSource.PlayOneShot(kill);
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(kill.length, new Action<float>((p) =>

@@ -45,16 +45,6 @@ public static class PlayerControlFixedUpdatePatch
         return result;
     }
 
-    public static void SetPlayerOutline(PlayerControl target, Color color)
-    {
-        if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) return;
-
-        color = color.SetAlpha(Chameleon.visibility(target.PlayerId));
-
-        target.cosmetics.currentBodySprite.BodySprite.material.SetFloat("_Outline", 1f);
-        target.cosmetics.currentBodySprite.BodySprite.material.SetColor("_OutlineColor", color);
-    }
-
     // Update functions
 
     private static void setPetVisibility()
@@ -426,15 +416,6 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
-    public static void PelicanUpdate()
-    {
-        if (Pelican.Player == null) return;
-        if (Pelican.Player.IsAlive() && Pelican.eatenPlayers.Any(x => x == PlayerControl.LocalPlayer) && !InMeeting)
-        {
-            HudManager.Instance.PlayerCam.Target = Pelican.Player;
-            PlayerControl.LocalPlayer.transform.position = new(-10f, 10f, 0f);
-        }
-    }
 
     public static void trapperUpdate()
     {
@@ -512,7 +493,6 @@ public static class PlayerControlFixedUpdatePatch
             partTimerUpdate();
             //Balancer
             Balancer.FixedUpdate();
-            PelicanUpdate();
 
             swapperUpdate();
             // Hacker
@@ -861,24 +841,24 @@ public static class MurderPlayerPatch
 
         if (target.PlayerId == Pelican.Player?.PlayerId && Pelican.eatenPlayers?.Count > 0)
         {
-            foreach (var player in Pelican.eatenPlayers.ToArray().Where(p => p != null && p.Data.IsDead))
+            foreach (var player in Pelican.eatenPlayers.ToArray().Where(p => p != null))
             {
                 player.Revive();
 
                 DeadPlayers.RemoveAll(x => x.Player.PlayerId == player.PlayerId);
                 if (PlayerControl.LocalPlayer == player)
                 {
-                    HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
+                    HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                    _ = new LateTask(() =>
+                    {
+                        HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                        HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
+                    }, 0.25f);
                     PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Pelican.Player.transform.position);
                 }
                 continue;
             }
             Pelican.eatenPlayers = new();
-
-            if (Pelican.Player == PlayerControl.LocalPlayer)
-            {
-                _ = new LateTask(() => { Pelican.Player.Die(DeathReason.Kill, true); }, 0.5f);
-            }
         }
 
         // Undertaker Button Sync
@@ -1102,8 +1082,11 @@ public static class ExilePlayerPatch
     public static void Postfix(PlayerControl __instance)
     {
         // Collect dead player info
-        var deadPlayer = new DeadPlayer(__instance, DateTime.UtcNow, CustomDeathReason.Exile, null);
-        DeadPlayers.Add(deadPlayer);
+        if (!DeadPlayers.Any(x => x.Player.PlayerId == __instance.PlayerId))
+        {
+            var deadPlayer = new DeadPlayer(__instance, DateTime.UtcNow, CustomDeathReason.Exile, null);
+            DeadPlayers.Add(deadPlayer);
+        }
 
         if (MeetingHud.Instance)
         {
@@ -1141,7 +1124,7 @@ public static class ExilePlayerPatch
             {
                 if (PlayerControl.LocalPlayer == player)
                 {
-                    HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
+                    HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
                     PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Pelican.Player.transform.position);
                 }
                 continue;
@@ -1264,6 +1247,30 @@ public static class DisconnectPatch
                 Akujo.timeLeft += 30;
                 Akujo.honmei = null;
             }
+        }
+
+        if (player == Pelican.Player && Pelican.eatenPlayers?.Count > 0)
+        {
+            foreach (var p in Pelican.eatenPlayers.ToArray())
+            {
+                if (p != null && p.Data.IsDead)
+                {
+                    p.Revive();
+                    DeadPlayers.RemoveAll(x => x.Player.PlayerId == p.PlayerId);
+                    if (p.AmOwner)
+                    {
+                        var pos = HudManager.Instance.PlayerCam.transform.position;
+                        HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                        _ = new LateTask(() =>
+                        {
+                            HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                            HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
+                        }, 0.25f);
+                        PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(pos);
+                    }
+                }
+            }
+            Pelican.clearAndReload();
         }
 
         if (RoleDraft.isEnabled && RoleDraft.isRunning)

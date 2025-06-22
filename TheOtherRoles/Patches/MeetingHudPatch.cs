@@ -939,10 +939,14 @@ internal class MeetingHudPatch
 
             if (Pelican.Player != null)
             {
-                if (Pelican.eatenPlayers.Any(x => x == PlayerControl.LocalPlayer))
+                foreach (var player in Pelican.eatenPlayers)
                 {
-                    HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
-                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Pelican.Player.transform.position);
+                    if (player.AmOwner)
+                    {
+                        HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                        PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Pelican.Player.transform.position);
+                    }
+                    player.Die(DeathReason.Kill, true);
                 }
                 Pelican.eatenPlayers = new();
             }

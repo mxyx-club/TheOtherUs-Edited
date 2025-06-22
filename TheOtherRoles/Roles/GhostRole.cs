@@ -65,8 +65,7 @@ public class GhostRole
 
         public static bool otherNeutral(PlayerControl player)
         {
-            if (Pelican.Player == player ||
-                (PartTimer.partTimer == player && PartTimer.target != null) ||
+            if ((PartTimer.partTimer == player && PartTimer.target != null) ||
                 (Lawyer.lawyer == player && Lawyer.target.IsAlive()) ||
                 player == Jackal.Sidekick ||
                 player == Pavlovsdogs.pavlovsowner ||

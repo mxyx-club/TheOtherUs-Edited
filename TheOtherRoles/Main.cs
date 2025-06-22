@@ -5,6 +5,7 @@ using Reactor.Networking;
 using Reactor.Networking.Attributes;
 using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Objects;
+using TheOtherRoles.Patches;
 
 namespace TheOtherRoles;
 
@@ -94,7 +95,8 @@ public partial class TheOtherRolesPlugin : BasePlugin
 
         SubmergedCompatibility.Initialize();
         AddToKillDistanceSetting.addKillDistance();
-        ChatCommands.Init();
+        ChatCommands.Initialize();
+        LightPatch.Initialize();
         UpdateCPUProcessorAffinity();
         Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{Version}{VersionSuffix}\n---------------");
     }

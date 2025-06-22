@@ -535,7 +535,7 @@ internal static class HudManagerStartPatch
                 Sheriff.currentTarget = SetTarget();
                 SetPlayerOutline(Sheriff.currentTarget, Sheriff.color);
 
-                showTargetNameOnButton(Sheriff.currentTarget, sheriffKillButton, GetString("killButtonText"));
+                sheriffKillButton.showTargetNameOnButton(Sheriff.currentTarget);
                 return Sheriff.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () => { sheriffKillButton.Timer = sheriffKillButton.MaxTimer; },
@@ -574,7 +574,7 @@ internal static class HudManagerStartPatch
                 Sheriff.currentTarget = SetTarget();
                 SetPlayerOutline(Sheriff.currentTarget, Sheriff.color);
 
-                showTargetNameOnButton(Sheriff.currentTarget, deputyHandcuffButton, GetString("HandcuffText"));
+                deputyHandcuffButton.showTargetNameOnButton(Sheriff.currentTarget);
                 if (deputyHandcuffButton.ButtonTitle != null) deputyHandcuffButton.ButtonTitle.text = $"{Sheriff.remainingHandcuffs}";
                 return Sheriff.remainingHandcuffs > 0 && Sheriff.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
@@ -647,11 +647,11 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Medic.currentTarget = SetTarget();
                 if (!Medic.usedShield)
                 {
+                    Medic.currentTarget = SetTarget();
                     SetPlayerOutline(Medic.currentTarget, Medic.shieldedColor);
-                    showTargetNameOnButton(Medic.currentTarget, medicShieldButton, GetString("ShieldText"));
+                    medicShieldButton.showTargetNameOnButton(Medic.currentTarget);
                 }
                 return !Medic.usedShield && Medic.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
@@ -684,7 +684,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 Doomsayer.currentTarget = SetTarget();
-                showTargetNameOnButton(Doomsayer.currentTarget, doomsayerButton, GetString("doomsayerText"));
+                doomsayerButton.showTargetNameOnButton(Doomsayer.currentTarget);
                 return PlayerControl.LocalPlayer.CanMove && Doomsayer.currentTarget != null;
             },
             () => { doomsayerButton.Timer = doomsayerButton.MaxTimer; },
@@ -821,11 +821,11 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Shifter.currentTarget = SetTarget();
                 if (Shifter.futureShift == null)
                 {
+                    Shifter.currentTarget = SetTarget();
                     SetPlayerOutline(Shifter.currentTarget, Color.yellow);
-                    showTargetNameOnButton(Shifter.currentTarget, shifterShiftButton, GetString("ShiftText"));
+                    shifterShiftButton.showTargetNameOnButton(Shifter.currentTarget);
                 }
                 return Shifter.currentTarget && Shifter.futureShift == null &&
                        PlayerControl.LocalPlayer.CanMove;
@@ -991,7 +991,8 @@ internal static class HudManagerStartPatch
                 Morphling.currentTarget = SetTarget();
                 SetPlayerOutline(Morphling.currentTarget, Morphling.color);
 
-                if (Morphling.sampledTarget == null) showTargetNameOnButton(Morphling.currentTarget, morphlingButton, GetString("SampleText"));
+                if (Morphling.sampledTarget == null)
+                    morphlingButton.showTargetNameOnButton(Morphling.currentTarget, GetString("SampleText"));
                 return (Morphling.currentTarget || Morphling.sampledTarget) && !isActiveCamoComms &&
                        PlayerControl.LocalPlayer.CanMove && !MushroomSabotageActive;
             },
@@ -1285,11 +1286,11 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Tracker.currentTarget = SetTarget();
                 if (!Tracker.usedTracker)
                 {
+                    Tracker.currentTarget = SetTarget();
                     SetPlayerOutline(Tracker.currentTarget, Tracker.color);
-                    showTargetNameOnButton(Tracker.currentTarget, trackerTrackPlayerButton, GetString("TrackerText"));
+                    trackerTrackPlayerButton.showTargetNameOnButton(Tracker.currentTarget);
                 }
 
                 return PlayerControl.LocalPlayer.CanMove && Tracker.currentTarget != null && !Tracker.usedTracker;
@@ -1356,11 +1357,11 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                BodyGuard.currentTarget = SetTarget();
                 if (!BodyGuard.usedGuard)
                 {
-                    SetPlayerOutline(Medic.currentTarget, Medic.shieldedColor);
-                    showTargetNameOnButton(BodyGuard.currentTarget, bodyGuardGuardButton, GetString("bodyGuardText"));
+                    BodyGuard.currentTarget = SetTarget();
+                    SetPlayerOutline(BodyGuard.currentTarget, BodyGuard.color);
+                    bodyGuardGuardButton.showTargetNameOnButton(BodyGuard.currentTarget);
                 }
                 return PlayerControl.LocalPlayer.CanMove && BodyGuard.currentTarget != null &&
                        !BodyGuard.usedGuard;
@@ -1458,9 +1459,9 @@ internal static class HudManagerStartPatch
                 Vampire.targetNearGarlic = targetNearGarlic;
 
                 if (Vampire.targetNearGarlic)
-                    showTargetNameOnButton(Vampire.currentTarget, vampireKillButton, GetString("killButtonText"));
+                    vampireKillButton.showTargetNameOnButton(Vampire.currentTarget);
                 else
-                    showTargetNameOnButton(Vampire.currentTarget, vampireKillButton, GetString("VampireText"));
+                    vampireKillButton.showTargetNameOnButton(Vampire.currentTarget);
                 if (Vampire.targetNearGarlic && Vampire.canKillNearGarlics)
                 {
                     vampireKillButton.actionButton.graphic.sprite = __instance.KillButton.graphic.sprite;
@@ -1747,7 +1748,7 @@ internal static class HudManagerStartPatch
                 Jackal.killTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Jackal.killTarget, Palette.ImpostorRed);
 
-                showTargetNameOnButton(Jackal.killTarget, jackalKillButton, GetString("killButtonText"));
+                jackalKillButton.showTargetNameOnButton(Jackal.killTarget);
                 return Jackal.killTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () => { jackalKillButton.Timer = jackalKillButton.MaxTimer; },
@@ -1795,7 +1796,7 @@ internal static class HudManagerStartPatch
                 SetPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
 
                 // Show now text since the button already says sidekick
-                showTargetNameOnButton(Jackal.currentTarget, jackalCreateSidekickButton, GetString("jackalSidekickText"));
+                jackalCreateSidekickButton.showTargetNameOnButton(Jackal.currentTarget);
                 return Jackal.canCreateSidekick && Jackal.currentTarget != null && PlayerControl.LocalPlayer.CanMove;
             },
             () => { jackalCreateSidekickButton.Timer = jackalCreateSidekickButton.MaxTimer; },
@@ -1861,7 +1862,7 @@ internal static class HudManagerStartPatch
                     untargetablePlayers.Add(SchrodingersCat.Player);
                 Swooper.currentTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Swooper.currentTarget, Palette.ImpostorRed);
-                showTargetNameOnButton(Swooper.currentTarget, swooperKillButton, GetString("killButtonText"));
+                swooperKillButton.showTargetNameOnButton(Swooper.currentTarget);
 
                 return Swooper.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
@@ -1951,7 +1952,9 @@ internal static class HudManagerStartPatch
                 Pavlovsdogs.killTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Pavlovsdogs.killTarget, Palette.ImpostorRed);
 
-                showTargetNameOnButton(Pavlovsdogs.killTarget, pavlovsdogsKillButton, GetString("killButtonText")); return Pavlovsdogs.killTarget && PlayerControl.LocalPlayer.CanMove;
+                pavlovsdogsKillButton.showTargetNameOnButton(Pavlovsdogs.killTarget);
+
+                return Pavlovsdogs.killTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {
@@ -2000,7 +2003,7 @@ internal static class HudManagerStartPatch
                 SetPlayerOutline(Pavlovsdogs.currentTarget, Palette.ImpostorRed);
 
                 // Show now text since the button already says sidekick
-                showTargetNameOnButton(Pavlovsdogs.currentTarget, pavlovsownerCreateDogButton, GetString("pavlovsCreateDogText"));
+                pavlovsownerCreateDogButton.showTargetNameOnButton(Pavlovsdogs.currentTarget);
                 return Pavlovsdogs.currentTarget != null && PlayerControl.LocalPlayer.CanMove;
             },
             () => { pavlovsownerCreateDogButton.Timer = pavlovsownerCreateDogButton.MaxTimer; },
@@ -2239,7 +2242,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 Werewolf.currentTarget = SetTarget();
-                showTargetNameOnButton(Werewolf.currentTarget, werewolfKillButton, GetString("killButtonText"));
+                werewolfKillButton.showTargetNameOnButton(Werewolf.currentTarget);
                 return Werewolf.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () => { werewolfKillButton.Timer = werewolfKillButton.MaxTimer; },
@@ -2323,7 +2326,7 @@ internal static class HudManagerStartPatch
                     untargetablePlayers.Add(SchrodingersCat.Player);
 
                 Juggernaut.currentTarget = SetTarget(untarget: untargetablePlayers);
-                showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, GetString("killButtonText"));
+                juggernautKillButton.showTargetNameOnButton(Juggernaut.currentTarget);
                 return Juggernaut.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () => { juggernautKillButton.Timer = juggernautKillButton.MaxTimer; },
@@ -2364,7 +2367,7 @@ internal static class HudManagerStartPatch
                 Pelican.currentTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Pelican.currentTarget, Palette.ImpostorRed);
 
-                showTargetNameOnButton(Pelican.currentTarget, pelicanKillButton, GetString("VultureText"));
+                pelicanKillButton.showTargetNameOnButton(Pelican.currentTarget);
                 return Pelican.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -2407,7 +2410,7 @@ internal static class HudManagerStartPatch
                 Eraser.currentTarget = SetTarget(untarget: Eraser.canEraseAnyone ? [] : untargetables, !Eraser.canEraseAnyone);
                 SetPlayerOutline(Eraser.currentTarget, Eraser.color);
 
-                showTargetNameOnButton(Eraser.currentTarget, eraserButton, GetString("EraserText"));
+                eraserButton.showTargetNameOnButton(Eraser.currentTarget);
                 return PlayerControl.LocalPlayer.CanMove && Eraser.currentTarget != null;
             },
             () => { eraserButton.Timer = eraserButton.MaxTimer; },
@@ -2442,7 +2445,7 @@ internal static class HudManagerStartPatch
                 PartTimer.currentTarget = SetTarget();
                 if (PartTimer.target != null) SetPlayerOutline(PartTimer.currentTarget, PartTimer.color);
 
-                showTargetNameOnButton(PartTimer.currentTarget, partTimerButton, GetString("partTimerButton"));
+                partTimerButton.showTargetNameOnButton(PartTimer.currentTarget);
                 return PlayerControl.LocalPlayer.CanMove && PartTimer.currentTarget != null; ;
             },
             () => { partTimerButton.Timer = partTimerButton.MaxTimer; },
@@ -2805,9 +2808,9 @@ internal static class HudManagerStartPatch
                 }
 
                 if (Warlock.curseVictim != null)
-                    showTargetNameOnButton(Warlock.currentTarget, warlockCurseButton, GetString("CurseKillText"));
+                    warlockCurseButton.showTargetNameOnButton(Warlock.currentTarget);
                 else
-                    showTargetNameOnButton(Warlock.currentTarget, warlockCurseButton, GetString("CurseText"));
+                    warlockCurseButton.showTargetNameOnButton(Warlock.currentTarget);
                 return (Warlock.curseVictim == null && Warlock.currentTarget != null ||
                         Warlock.curseVictim != null && Warlock.curseVictimTarget != null) &&
                        PlayerControl.LocalPlayer.CanMove;
@@ -3026,7 +3029,7 @@ internal static class HudManagerStartPatch
                 Arsonist.currentTarget = SetTarget(untarget: untargetables, distances: 0.5f);
                 if (Arsonist.currentTarget != null) SetPlayerOutline(Arsonist.currentTarget, Arsonist.color);
 
-                showTargetNameOnButton(Arsonist.currentTarget, arsonistButton, GetString("DouseText"));
+                arsonistButton.showTargetNameOnButton(Arsonist.currentTarget);
 
                 if (arsonistButton.isEffectActive && Arsonist.douseTarget != Arsonist.currentTarget)
                 {
@@ -3096,7 +3099,7 @@ internal static class HudManagerStartPatch
                 if (Arsonist.currentTarget2 && Arsonist.dousedPlayers.Any(x => x == Arsonist.currentTarget2))
                 {
                     SetPlayerOutline(Arsonist.currentTarget2, Arsonist.color);
-                    showTargetNameOnButton(Arsonist.currentTarget2, arsonistKillButton, GetString("IgniteText"));
+                    arsonistKillButton.showTargetNameOnButton(Arsonist.currentTarget2);
                     cankill = true;
                 }
 
@@ -3429,7 +3432,7 @@ internal static class HudManagerStartPatch
                 Pursuer.target = SetTarget();
                 SetPlayerOutline(Pursuer.target, Pursuer.color);
 
-                showTargetNameOnButton(Pursuer.target, pursuerButton, GetString("PursuerText"));
+                pursuerButton.showTargetNameOnButton(Pursuer.target);
                 return Pursuer.blanksNumber > Pursuer.blanks && PlayerControl.LocalPlayer.CanMove && Pursuer.target != null;
             },
             () => { pursuerButton.Timer = pursuerButton.MaxTimer; },
@@ -3508,7 +3511,7 @@ internal static class HudManagerStartPatch
                 Survivor.target = SetTarget();
                 SetPlayerOutline(Survivor.target, Survivor.color);
 
-                showTargetNameOnButton(Survivor.target, survivorBlanksButton, GetString("PursuerText"));
+                survivorBlanksButton.showTargetNameOnButton(Survivor.target);
                 if (survivorBlanksButton.ButtonTitle != null)
                     survivorBlanksButton.ButtonTitle.text = $"{Survivor.remainingBlanks} / {Survivor.blanksNumber}";
 
@@ -3555,7 +3558,7 @@ internal static class HudManagerStartPatch
                 Witch.currentTarget = SetTarget(untargetables, !Witch.canSpellAnyone);
                 SetPlayerOutline(Witch.currentTarget, Witch.color);
 
-                showTargetNameOnButton(Witch.currentTarget, witchSpellButton, GetString("WitchText"));
+                witchSpellButton.showTargetNameOnButton(Witch.currentTarget);
                 if (witchSpellButton.isEffectActive && Witch.spellCastingTarget != Witch.currentTarget)
                 {
                     Witch.spellCastingTarget = null;
@@ -3816,7 +3819,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 Ninja.currentTarget = ImpostorSetTarget();
-                showTargetNameOnButton(Ninja.currentTarget, ninjaButton, GetString("NinjaText"));
+                ninjaButton.showTargetNameOnButton(Ninja.currentTarget);
                 ninjaButton.Sprite = Ninja.ninjaMarked != null
                     ? Ninja.killButtonSprite
                     : Ninja.markButtonSprite;
@@ -3863,7 +3866,7 @@ internal static class HudManagerStartPatch
 
                 if (Blackmailer.blackmailed == null)
                 {
-                    showTargetNameOnButton(Blackmailer.currentTarget, blackmailerButton, GetString("BlackmailerText"));
+                    blackmailerButton.showTargetNameOnButton(Blackmailer.currentTarget);
                 }
                 return Blackmailer.currentTarget != null && PlayerControl.LocalPlayer.CanMove;
             },
@@ -4196,7 +4199,8 @@ internal static class HudManagerStartPatch
                    var __instance = FastDestroyableSingleton<HudManager>.Instance;
                    __instance.InitMap();
                    MapBehaviour.Instance.ShowCountOverlay(allowedToMove: true, showLivePlayerPosition: true, includeDeadBodies: true);
-               };
+               }
+               ;
            },
            () =>
            {
@@ -4260,7 +4264,7 @@ internal static class HudManagerStartPatch
             {
                 if (Redemptor.target != null)
                 {
-                    showTargetNameOnButton(Redemptor.target, redemptorReviveButton, GetString("ReviveButton"));
+                    redemptorReviveButton.showTargetNameOnButton(Redemptor.target);
                 }
                 return Redemptor.target && PlayerControl.LocalPlayer.CanMove;
             },
@@ -4332,7 +4336,7 @@ internal static class HudManagerStartPatch
 
                 if (Redemptor.target != null)
                 {
-                    showTargetNameOnButton(Redemptor.target, redemptorReviveButton, GetString("RedemptorRevive"));
+                    redemptorReviveButton.showTargetNameOnButton(Redemptor.target);
                 }
 
                 Redemptor.target = PlayerById(deadBody?.ParentId);
@@ -4540,7 +4544,7 @@ internal static class HudManagerStartPatch
                 BandLeader.currentTarget = SetTarget(BandLeader.Members, BandLeader.winnerFlags == BandLeader.WinnerFlags.Impostor);
                 SetPlayerOutline(BandLeader.currentTarget, BandLeader.color);
 
-                showTargetNameOnButton(BandLeader.currentTarget, bandLeaderKillButton, GetString("killButtonText"));
+                bandLeaderKillButton.showTargetNameOnButton(BandLeader.currentTarget);
 
                 return PlayerControl.LocalPlayer.CanMove && BandLeader.currentTarget != null;
             },
@@ -4612,7 +4616,7 @@ internal static class HudManagerStartPatch
                 SchrodingersCat.currentTarget = target;
                 SetPlayerOutline(SchrodingersCat.currentTarget, SchrodingersCat.stateColor);
 
-                showTargetNameOnButton(SchrodingersCat.currentTarget, schrodingersCatKillButton, GetString("killButtonText"));
+                schrodingersCatKillButton.showTargetNameOnButton(SchrodingersCat.currentTarget);
                 return PlayerControl.LocalPlayer.CanMove && SchrodingersCat.currentTarget != null;
             },
             () =>
@@ -4697,7 +4701,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 Berserker.currentTarget = ImpostorSetTarget();
-                showTargetNameOnButton(Berserker.currentTarget, berserkerKillButton, GetString("killButtonText"));
+                berserkerKillButton.showTargetNameOnButton(Berserker.currentTarget);
 
                 if (berserkerKillButton.ButtonTitle != null)
                 {
@@ -4804,7 +4808,7 @@ internal static class HudManagerStartPatch
             {
                 Infected.currentTarget = SetTarget(untarget: Infected.Player);
                 SetPlayerOutline(Infected.currentTarget, Infected.color);
-                showTargetNameOnButton(Infected.currentTarget, InfectedKillButton, GetString("killButtonText"));
+                InfectedKillButton.showTargetNameOnButton(Infected.currentTarget);
 
                 return PlayerControl.LocalPlayer.CanMove && Infected.currentTarget != null;
             },
@@ -4844,7 +4848,7 @@ internal static class HudManagerStartPatch
                 jailorButton.UsesCount = Jailor.usesCount;
                 Jailor.currentTarget = SetTarget();
                 SetPlayerOutline(Jailor.currentTarget, Jailor.color);
-                showTargetNameOnButton(Jailor.currentTarget, jailorButton, GetString("jailButtonText"));
+                jailorButton.showTargetNameOnButton(Jailor.currentTarget);
 
                 return PlayerControl.LocalPlayer.CanMove && Jailor.currentTarget != null;
             },

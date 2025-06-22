@@ -161,6 +161,12 @@ internal class ExileControllerBeginPatch
         confirmImpostorSecondText.text = changeStringBuilder.ToString();
         confirmImpostorSecondText.gameObject.SetActive(true);
 
+        if (Pelican.DieOnExile)
+        {
+            Pelican.Player.Exiled();
+            Pelican.DieOnExile = false;
+        }
+
         if (ForceExile)
         {
             __instance.completeString = string.Format(GetString("ExileController.ForceExile"), exiled?.PlayerName ?? "NULL");

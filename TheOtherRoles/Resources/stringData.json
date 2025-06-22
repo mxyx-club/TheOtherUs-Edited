@@ -2552,7 +2552,7 @@
     },
     "CommandsInHost": {
         "0": "Host Commands:\n\n/end: Force-end the game\n/mt: Call/End an emergency meeting\n/list: Get a list of the playerId of all players\n/kill [player]:  Force-kill the target player\n/revive [player]: Force-revive the target player\n/say [text]: Broadcast message to all players as host\n/room [num]: Change the max number of players of the room\n/ct [player]: Clear the target player's tasks",
-        "13": "游戏中指令：\n\n/end ：强制游戏结束\n/mt: 召集/结束会议\n/list : 获取全部玩家的ID\n/kill [玩家] ：强制击杀玩家\n/revive [玩家] ： 强制复活玩家\n/say [内容] : 向所有玩家发送房主消息\n/room [数量] : 修改房间最大人数\n/ct [玩家] : 清除对方的任务"
+        "13": "指令列表：\n\n/end ：强制游戏结束\n/mt: 召集/结束会议\n/list : 获取全部玩家的ID\n/kill [玩家] ：强制击杀玩家\n/revive [玩家] ： 强制复活玩家\n/say [内容] : 向所有玩家发送房主消息\n/room [数量] : 修改房间最大人数\n/ct [玩家] : 清除对方的任务"
     },
     "CommandsInPlayer": {
         "0": "Players can use either the target's player ID or nickname when using commands.\n\nGlobal Commands:\n/ls Get the nicknames of all players\n/r [role name] Get the role description for the specified role\n\nIn-game Commands:\n/m Get the role descriptions of all roles the current player has\n\nDead Players or Lobby Commands:\n/tp [player] Teleport to the target player",
@@ -2565,6 +2565,14 @@
     "Command.Unknown": {
         "0": "Unknown command: {0}\nPlease enter [/cmd] for Help",
         "13": "未知指令: {0}\n如需要帮助请输入: [/cmd]"
+    },
+    "Command.NotInGame": {
+        "0": "Not In Game.",
+        "13": "当前并未在游戏内。"
+    },
+    "MessageFromTheHost": {
+        "0": "【 ★ Host message ★ 】",
+        "13": "【 ★ 房主消息 ★ 】"
     },
     "Host": {
         "0": "Host",

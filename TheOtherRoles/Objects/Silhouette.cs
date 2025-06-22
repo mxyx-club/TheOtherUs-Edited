@@ -52,7 +52,7 @@ public class Silhouette
         foreach (Silhouette current in new List<Silhouette>(silhouettes))
         {
             current.timeRemaining -= Time.fixedDeltaTime;
-            bool visible = current.visibleForEveryOne || PlayerControl.LocalPlayer == Yoyo.yoyo || PlayerControl.LocalPlayer.Data.IsDead;
+            bool visible = current.visibleForEveryOne || PlayerControl.LocalPlayer == Yoyo.yoyo || CanSeeRoleInfo;
             current.gameObject.SetActive(visible);
 
             if (visible && current.timeRemaining > 0 && current.timeRemaining < 0.5)

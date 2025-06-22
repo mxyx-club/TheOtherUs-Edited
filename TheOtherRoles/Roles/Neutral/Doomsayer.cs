@@ -41,7 +41,7 @@ public static class Doomsayer
             var tempNumList = Enumerable.Range(0, allRoleInfo.Count).ToList();
             var temp = (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList).OrderBy(_ => rnd.Next()).ToList();
 
-            message.AppendLine(GetString("Doomsayer.ObserveInfo"));
+            message.AppendLine(string.Format(GetString("Doomsayer.ObserveInfo"), target?.Data?.PlayerName ?? "NULL"));
 
             for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
             {

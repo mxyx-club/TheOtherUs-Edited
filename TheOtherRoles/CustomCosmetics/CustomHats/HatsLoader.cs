@@ -117,7 +117,7 @@ public class HatsLoader : MonoBehaviour
         {
             Message("在线配置文件无效，取消下载任务。");
             return;
-        };
+        }
 
         var toDownload = GenerateDownloadList(UnregisteredHats);
 

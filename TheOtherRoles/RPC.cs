@@ -7,7 +7,6 @@ using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Patches;
 using static TheOtherRoles.Buttons.HudManagerStartPatch;
 using static TheOtherRoles.Options.ModOption;
-using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles;
 
@@ -178,7 +177,7 @@ public static class RPCProcedure
 
     public static void resetVariables()
     {
-        clearAndReloadMapOptions();
+        clearAndReloadModOptions();
         clearAndReloadRoles();
         MapData.Clear();
         RoleDraft.Clear();

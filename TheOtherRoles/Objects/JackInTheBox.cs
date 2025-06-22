@@ -7,7 +7,7 @@ public class JackInTheBox
     public static List<JackInTheBox> AllJackInTheBoxes = new();
     public static readonly int JackInTheBoxLimit = 3;
     public static bool boxesConvertedToVents;
-    public static readonly Sprite[] boxAnimationSprites = new Sprite[18];
+    public static ResourceSpriteArray boxAnimationSprites;
     private readonly SpriteRenderer boxRenderer;
 
     private readonly GameObject gameObject;
@@ -19,8 +19,8 @@ public class JackInTheBox
         gameObject = new GameObject("JackInTheBox") { layer = 11 };
         gameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
         var position = new Vector3(p.x, p.y, (p.y / 1000f) + 0.01f);
-        position += (Vector3)PlayerControl.LocalPlayer.Collider
-            .offset; // Add collider offset that DoMove moves the player up at a valid position
+        // Add collider offset that DoMove moves the player up at a valid position
+        position += (Vector3)PlayerControl.LocalPlayer.Collider.offset;
         // Create the marker
         gameObject.transform.position = position;
         boxRenderer = gameObject.AddComponent<SpriteRenderer>();
@@ -67,12 +67,17 @@ public class JackInTheBox
 
     public static Sprite getBoxAnimationSprite(int index)
     {
-        if (boxAnimationSprites == null || boxAnimationSprites.Length == 0) return null;
-        index = Mathf.Clamp(index, 0, boxAnimationSprites.Length - 1);
-        if (boxAnimationSprites[index] == null)
-            boxAnimationSprites[index] = UnityHelper.loadSpriteFromResources(
-                $"TheOtherRoles.Resources.TricksterAnimation.trickster_box_00{index + 1:00}.png", 175f);
-        return boxAnimationSprites[index];
+        if (boxAnimationSprites == null) return null;
+        index = Mathf.Clamp(index, 0, boxAnimationSprites.Sprites.Length - 1);
+        return boxAnimationSprites.GetSprite(index);
+    }
+
+    public static void preloadBoxAnimationSprites()
+    {
+        var sprites = new (string, float)[18];
+        for (int i = 0; i < sprites.Length; i++)
+            sprites[i] = ($"TricksterAnimation.trickster_box_00{i + 1:00}.png", 175f);
+        boxAnimationSprites = new ResourceSpriteArray(sprites, true);
     }
 
     public static void startAnimation(int ventId)
@@ -80,10 +85,12 @@ public class JackInTheBox
         var box = AllJackInTheBoxes.FirstOrDefault(x => x?.vent != null && x.vent.Id == ventId);
         if (box == null) return;
 
+        int frameCount = boxAnimationSprites.Sprites.Length;
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.6f, new Action<float>(p =>
         {
             if (box.boxRenderer == null) return;
-            box.boxRenderer.sprite = getBoxAnimationSprite((int)(p * boxAnimationSprites.Length));
+            int frameIndex = (int)(p * frameCount);
+            box.boxRenderer.sprite = getBoxAnimationSprite(frameIndex);
             if ((int)p == 1) box.boxRenderer.sprite = getBoxAnimationSprite(0);
         })));
     }
@@ -93,8 +100,7 @@ public class JackInTheBox
         if (boxesConvertedToVents) return;
         foreach (var box in AllJackInTheBoxes)
         {
-            var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster ||
-                                       PlayerControl.LocalPlayer.Data.IsDead;
+            var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster || CanSeeRoleInfo;
             box.gameObject?.SetActive(showBoxToLocalPlayer);
         }
     }
@@ -138,5 +144,6 @@ public class JackInTheBox
     {
         boxesConvertedToVents = false;
         AllJackInTheBoxes = new();
+        preloadBoxAnimationSprites();
     }
 }

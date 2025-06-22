@@ -7,6 +7,7 @@ public class Pelican
     public static PlayerControl Player;
     public static PlayerControl currentTarget;
     public static List<PlayerControl> eatenPlayers = new();
+    public static bool DieOnExile;
     public static Color color = new Color32(240, 120, 200, byte.MaxValue);
     public static float cooldown = 25f;
     public static float reduceCooldown = 25f;
@@ -28,6 +29,16 @@ public class Pelican
         {
             target.Die(DeathReason.Kill, false);
             MurderPlayerPatch.HandleMurderPostfix(Player, target);
+
+            if (target == PlayerControl.LocalPlayer)
+            {
+                HudManager.Instance.PlayerCam.SetTargetWithLight(Player);
+                _ = new LateTask(() =>
+                {
+                    HudManager.Instance.PlayerCam.SetTargetWithLight(Player);
+                }, 0.25f);
+            }
+
             GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.Eaten, Player);
             eatenPlayers.Add(target);
             target.NetTransform.RpcSnapTo(new Vector2(-10f, 10f));
@@ -42,7 +53,12 @@ public class Pelican
         {
             if (eatenPlayers.Any(x => x == PlayerControl.LocalPlayer))
             {
-                HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
+                HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                _ = new LateTask(() =>
+                {
+                    HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                    HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
+                }, 0.25f);
                 PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(player.transform.position);
             }
             Message($"Pelican Player {Player?.Data.PlayerName ?? "null"}", "Pelican");
@@ -54,10 +70,27 @@ public class Pelican
     {
         Player = null;
         currentTarget = null;
+        DieOnExile = false;
         if (clear) eatenPlayers = new();
         cooldown = CustomOptionHolder.pelicanCooldown.GetFloat();
         reduceCooldown = CustomOptionHolder.pelicanReduceCooldown.GetFloat();
         CanUseVent = CustomOptionHolder.pelicanCanUseVents.GetBool();
         hasImpVision = CustomOptionHolder.pelicanHasImpVision.GetBool();
+    }
+
+    [HarmonyPatch]
+    public class Pelican_Patch
+    {
+
+        [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update)), HarmonyPostfix]
+        public static void HudUpdate()
+        {
+            if (Player == null) return;
+            if (Player.IsAlive() && eatenPlayers.Any(x => x == PlayerControl.LocalPlayer) && !InMeeting)
+            {
+                HudManager.Instance.ShadowQuad?.gameObject?.SetActive(true);
+                PlayerControl.LocalPlayer.transform.position = new(-10f, 10f, 0f);
+            }
+        }
     }
 }

@@ -12,6 +12,7 @@ internal class LateTask
         if (timer <= 0)
         {
             action();
+            Info($"New LateTask  \"{name}\"  Is Created", "LateTask");
             return true;
         }
         return false;
@@ -23,8 +24,6 @@ internal class LateTask
         timer = time;
         this.name = name;
         Tasks.Add(this);
-
-        Info($"New LateTask  \"{name}\"  Is Created", "LateTask");
     }
 
     public static void Update(float deltaTime)

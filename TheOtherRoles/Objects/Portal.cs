@@ -5,7 +5,7 @@ public class Portal
     public static Portal firstPortal;
     public static Portal secondPortal;
     public static bool bothPlacedAndEnabled;
-    public static Sprite[] portalFgAnimationSprites = new Sprite[205];
+    public static ResourceSpriteArray portalFgAnimationSprites;
     public static Sprite portalSprite;
     public static bool isTeleporting;
     public static float teleportDuration = 3.4166666667f;
@@ -51,11 +51,9 @@ public class Portal
 
     public static Sprite getFgAnimationSprite(int index)
     {
-        if (portalFgAnimationSprites == null || portalFgAnimationSprites.Length == 0) return null;
-        index = Mathf.Clamp(index, 0, portalFgAnimationSprites.Length - 1);
-        if (portalFgAnimationSprites[index] == null) portalFgAnimationSprites[index] =
-                UnityHelper.loadSpriteFromResources($"TheOtherRoles.Resources.PortalAnimation.portal_{index:000}.png", 115f);
-        return portalFgAnimationSprites[index];
+        if (portalFgAnimationSprites == null) return null;
+        index = Mathf.Clamp(index, 0, portalFgAnimationSprites.Sprites.Length - 1);
+        return portalFgAnimationSprites.GetSprite(index);
     }
 
     public static void startTeleport(byte playerId, byte exit)
@@ -89,11 +87,9 @@ public class Portal
                 if (firstPortal == null || firstPortal.animationFgRenderer == null || secondPortal == null ||
                     secondPortal.animationFgRenderer == null) return;
                 if (exit is 0 or 1)
-                    firstPortal.animationFgRenderer.sprite =
-                        getFgAnimationSprite((int)(p * portalFgAnimationSprites.Length));
+                    firstPortal.animationFgRenderer.sprite = getFgAnimationSprite((int)(p * portalFgAnimationSprites.Sprites.Length));
                 if (exit is 0 or 2)
-                    secondPortal.animationFgRenderer.sprite =
-                        getFgAnimationSprite((int)(p * portalFgAnimationSprites.Length));
+                    secondPortal.animationFgRenderer.sprite = getFgAnimationSprite((int)(p * portalFgAnimationSprites.Sprites.Length));
                 playerControl.SetPlayerMaterialColors(firstPortal.animationFgRenderer);
                 playerControl.SetPlayerMaterialColors(secondPortal.animationFgRenderer);
                 if ((int)p != 1) return;
@@ -145,10 +141,12 @@ public class Portal
         // reset teleported players
         teleportedPlayers = new List<tpLogEntry>();
     }
-
     private static void preloadSprites()
     {
-        for (var i = 0; i < portalFgAnimationSprites.Length; i++) getFgAnimationSprite(i);
+        var sprites = new (string, float)[205];
+        for (int i = 0; i < sprites.Length; i++) sprites[i] = ($"PortalAnimation.portal_{i:000}.png", 115f);
+
+        portalFgAnimationSprites = new ResourceSpriteArray(sprites, true);
         portalSprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.PortalAnimation.plattform.png", 115f);
     }
 

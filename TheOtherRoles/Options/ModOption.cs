@@ -47,6 +47,8 @@ internal class ModOption
     public static bool isRoundOne = true;
     public static bool camoComms;
     public static bool disableSabotage;
+    //public static bool ShowVentsOnMap;
+    //public static bool ShowVentsOnMeetingMap;
     public static bool fungleDisableCamoComms;
     public static bool randomGameStartPosition;
     public static bool allowModGuess;
@@ -80,7 +82,7 @@ internal class ModOption
                                          PlayerControl.LocalPlayer == Hacker.hacker ||
                                          PlayerControl.LocalPlayer.Data.IsDead;
 
-    public static void clearAndReloadMapOptions()
+    public static void clearAndReloadModOptions()
     {
         meetingsCount = 0;
         camerasToAdd = new();
@@ -112,6 +114,8 @@ internal class ModOption
         randomLigherPlayer = CustomOptionHolder.randomLigherPlayer.GetBool();
         allowModGuess = CustomOptionHolder.allowModGuess.GetBool();
         disableSabotage = CustomOptionHolder.disableSabotage.GetBool();
+        //ShowVentsOnMap = CustomOptionHolder.showVentsOnMap.GetBool();
+        //ShowVentsOnMeetingMap = CustomOptionHolder.showVentsOnMap.GetQuantity() == 2;
         firstKillPlayer = null;
         isRoundOne = true;
         isCanceled = false;

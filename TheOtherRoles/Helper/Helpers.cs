@@ -292,7 +292,12 @@ public static class Helpers
 
     public static void SetPlayerOutline(PlayerControl target, Color color)
     {
-        PlayerControlFixedUpdatePatch.SetPlayerOutline(target, color);
+        if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) return;
+
+        color = color.SetAlpha(Chameleon.visibility(target.PlayerId));
+
+        target.cosmetics.currentBodySprite.BodySprite.material.SetFloat("_Outline", 1f);
+        target.cosmetics.currentBodySprite.BodySprite.material.SetColor("_OutlineColor", color);
     }
 
     public static PlayerControl ImpostorSetTarget()
@@ -336,6 +341,13 @@ public static class Helpers
             DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(reporter);
             reporter.RpcStartMeeting(target);
         }
+    }
+
+    public static void SetTargetWithLight(this FollowerCamera camera, MonoBehaviour target)
+    {
+        camera.Target = target;
+        PlayerControl.LocalPlayer.lightSource?.transform?.SetParent(target.transform, false);
+        if (target != PlayerControl.LocalPlayer) PlayerControl.LocalPlayer.NetTransform.Halt();
     }
 
     public static void enableCursor(bool initalSetCursor)
@@ -467,11 +479,12 @@ public static class Helpers
                 player.cosmetics.nameText.color = Palette.ImpostorRed;
     }
 #nullable enable
-    public static void showTargetNameOnButton(PlayerControl? target, CustomButton button, string defaultText)
+    public static void showTargetNameOnButton(this CustomButton button, PlayerControl? target, string defaultText = "")
     {
         if (CustomOptionHolder.showButtonTarget.GetBool())
         {
-            string text;
+            defaultText = defaultText.IsNullOrWhiteSpace() ? button.buttonText : defaultText;
+            var text = defaultText;
             if (Camouflager.camouflageTimer >= 0.1f || isCamoComms) text = defaultText;
             else if (isLightsActive) text = defaultText;
             else if (Trickster.trickster != null && Trickster.lightsOutTimer > 0f) text = defaultText;
@@ -480,7 +493,7 @@ public static class Helpers
             else if (target == Ninja.ninja && Ninja.isInvisable) text = defaultText;
             else if (target == Swooper.swooper && Swooper.isInvisable) text = defaultText;
             else if (Jackal.jackal.Any(p => p == target) && Jackal.isInvisable) text = defaultText;
-            else text = target == null ? defaultText : target.Data.PlayerName;
+            else text = target == null ? defaultText : target?.Data?.PlayerName ?? "";
 
             button.actionButton.OverrideText(text);
             button.showButtonText = true;
@@ -866,7 +879,7 @@ public static class Helpers
         if (!CanSeeRoleInfo || InMeeting) return false;
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
         var numberOfLeftTasks = playerTotal - playerCompleted;
-        return numberOfLeftTasks <= 0 || !CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.GetBool();
+        return !CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.GetBool() || (numberOfLeftTasks <= 0);
     }
 
     public static void clearAllTasks(this PlayerControl player)

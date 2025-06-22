@@ -267,6 +267,11 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             Pelican.Player = player1;
         }
+        else if (Jailor.Player != null && Jailor.Player == player2)
+        {
+            if (repeat) shiftRole(player2, player1, false);
+            Jailor.Player = player1;
+        }
     }
 
     public static void clearAndReload()

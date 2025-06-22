@@ -41,6 +41,7 @@ public class CustomOptionHolder
     public static CustomOption impostorSeeRoles;
     public static CustomOption blockGameEnd;
     public static CustomOption randomLigherPlayer;
+    //public static CustomOption showVentsOnMap;
     public static CustomOption allowModGuess;
     public static CustomOption randomGameStartPosition;
     public static CustomOption randomGameStartToVents;
@@ -758,6 +759,7 @@ public class CustomOptionHolder
         blockGameEnd = Create(107, Types.General, Cs(Color.yellow, "blockGameEnd"), true);
         randomLigherPlayer = Create(108, Types.General, "randomLigherPlayer", true);
         allowModGuess = Create(109, Types.General, "allowModGuess", false);
+        //showVentsOnMap = Create(115, Types.General, "ShowVentsOnMap", ["optionOff", "ShowVentsOnMeetingMap", "optionOn"]);
         randomGameStartPosition = Create(110, Types.General, "randomGameStartPosition", false);
         randomGameStartToVents = Create(111, Types.General, "randomGameStartToVents", true, randomGameStartPosition);
         ghostSpeed = Create(112, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);

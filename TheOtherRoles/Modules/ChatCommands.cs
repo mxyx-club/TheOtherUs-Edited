@@ -189,7 +189,7 @@ public static class ChatCommands
         }
     }
 
-    public static void Init()
+    public static void Initialize()
     {
         ChatCommandRegistry.Register("end", (sender, args, chat) =>
         {
@@ -205,7 +205,7 @@ public static class ChatCommands
             if (AmongUsClient.Instance.AmHost && InGame && args.Length > 0)
             {
                 var message = string.Join(' ', args);
-                message = $"{Cs(Palette.Purple, "★【房主消息】★")}\n{message}";
+                message = $"{Cs(Palette.Purple, "MessageFromTheHost").Translate()}\n{message}";
                 var writer = StartRPC(CustomRPC.HostControl);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 writer.Write((byte)RPCProcedure.HostCommand.HostSay);
@@ -335,7 +335,7 @@ public static class ChatCommands
 
         ChatCommandRegistry.Register("tp", (sender, args, chat) =>
         {
-            if (PlayerControl.LocalPlayer.IsDead() || AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
+            if (PlayerControl.LocalPlayer.IsDead() || ModOption.DebugMode || AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
             {
                 var target = GetPlayer(args);
                 if (target != null)

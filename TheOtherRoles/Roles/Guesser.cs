@@ -524,6 +524,7 @@ public static class Guesser
         if (MeetingHud.Instance)
         {
             MeetingHud.Instance.discussionTimer -= CustomOptionHolder.guessExtendmeetingTime.GetFloat();
+            MeetingHud.Instance.discussionTimer = Mathf.Max(1, MeetingHud.Instance.discussionTimer);
             MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, dyingTargetId);
 
             foreach (var pva in MeetingHud.Instance.playerStates)
