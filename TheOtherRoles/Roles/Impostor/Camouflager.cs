@@ -10,7 +10,7 @@ public static class Camouflager
     public static float camouflageTimer;
     public static bool camoComms;
 
-    public static ResourceSprite buttonSprite = new("CamoButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("CamoButton.png");
 
     public static void resetCamouflage()
     {

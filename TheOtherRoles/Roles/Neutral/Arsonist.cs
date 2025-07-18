@@ -14,9 +14,8 @@ public static class Arsonist
     public static PlayerControl douseTarget;
     public static List<PlayerControl> dousedPlayers = new();
 
-    public static ResourceSprite douseSprite = new("DouseButton.png");
-
-    public static ResourceSprite igniteSprite = new("IgniteButton.png");
+    public static Sprite douseSprite = new ResourceSprite("DouseButton.png");
+    public static Sprite igniteSprite = new ResourceSprite("IgniteButton.png");
 
     public static void clearAndReload()
     {

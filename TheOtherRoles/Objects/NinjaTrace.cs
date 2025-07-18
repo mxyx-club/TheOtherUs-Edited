@@ -1,3 +1,5 @@
+using TheOtherRoles.Attributes;
+
 namespace TheOtherRoles.Objects;
 
 internal class NinjaTrace
@@ -57,6 +59,7 @@ internal class NinjaTrace
         traces.Add(this);
     }
 
+    [OnGameStart, OnGameEnd]
     public static void clearTraces()
     {
         traces = new();

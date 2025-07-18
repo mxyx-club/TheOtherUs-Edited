@@ -1,3 +1,5 @@
+using TheOtherRoles.Attributes;
+
 namespace TheOtherRoles.Objects;
 #nullable enable
 internal class Garlic
@@ -28,6 +30,7 @@ internal class Garlic
         garlics.Add(this);
     }
 
+    [OnGameStart, OnGameEnd]
     public static void clearGarlics()
     {
         garlics.Clear();

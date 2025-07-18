@@ -1,3 +1,5 @@
+using TheOtherRoles.Attributes;
+
 namespace TheOtherRoles.Objects;
 
 internal class Bloodytrail
@@ -52,6 +54,7 @@ internal class Bloodytrail
         return sprites;
     }
 
+    [OnGameStart, OnGameEnd]
     public static void resetSprites()
     {
         sprites.Clear();

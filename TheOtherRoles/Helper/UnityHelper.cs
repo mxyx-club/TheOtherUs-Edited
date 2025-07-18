@@ -9,7 +9,7 @@ public static class UnityHelper
     public static Dictionary<string, Sprite> CachedSprites = new();
     public static IRegionInfo CurrentServer => FastDestroyableSingleton<ServerManager>.Instance.CurrentRegion;
     public static bool IsCustomServer => CurrentServer.TranslateName
-        is StringNames.NoTranslation || CurrentServer.TranslateName != StringNames.ServerAS && CurrentServer.TranslateName != StringNames.ServerEU && CurrentServer.TranslateName != StringNames.ServerNA;
+        is StringNames.NoTranslation || (CurrentServer.TranslateName != StringNames.ServerAS && CurrentServer.TranslateName != StringNames.ServerEU && CurrentServer.TranslateName != StringNames.ServerNA);
 
     public static readonly List<Sprite> CacheSprite = new();
 
@@ -116,6 +116,42 @@ public static class UnityHelper
         return value;
     }
 
+    public static GameObject CreateObject(string objName, Transform parent, Vector3 localPosition, int? layer = null)
+    {
+        var obj = new GameObject(objName);
+        obj.transform.SetParent(parent);
+        obj.transform.localPosition = localPosition;
+        obj.transform.localScale = new Vector3(1f, 1f, 1f);
+        if (layer.HasValue) obj.layer = layer.Value;
+        else if (parent != null) obj.layer = parent.gameObject.layer;
+        return obj;
+    }
+
+    public static T CreateObject<T>(string objName, Transform parent, Vector3 localPosition, int? layer = null) where T : Component
+    {
+        return CreateObject(objName, parent, localPosition, layer).AddComponent<T>();
+    }
+
+    public static PassiveButton SetUpButton(this GameObject gameObject, SpriteRenderer buttonRenderer = null, Color? defaultColor = null, Color? selectedColor = null)
+        => SetUpButton(gameObject, buttonRenderer != null ? [buttonRenderer] : [], defaultColor, selectedColor);
+
+    public static PassiveButton SetUpButton(this GameObject gameObject, SpriteRenderer[] buttonRenderers, Color? defaultColor = null, Color? selectedColor = null)
+    {
+        var button = gameObject.AddComponent<PassiveButton>();
+        button.OnClick = new UnityEngine.UI.Button.ButtonClickedEvent();
+        button.OnMouseOut = new UnityEvent();
+        button.OnMouseOver = new UnityEvent();
+
+        if (buttonRenderers.Length > 0)
+        {
+            button.OnMouseOut.AddListener(() => { foreach (var r in buttonRenderers) r.color = defaultColor ?? Color.white; });
+            button.OnMouseOver.AddListener(() => { foreach (var r in buttonRenderers) r.color = selectedColor ?? Color.green; });
+        }
+
+        if (buttonRenderers.Length > 0) foreach (var r in buttonRenderers) r.color = defaultColor ?? Color.white;
+
+        return button;
+    }
     public static Sprite LoadSprite(this Stream stream, bool DontUnload, Vector2 pivot, float pixelsPerUnit)
     {
         var texture = stream.LoadTexture(DontUnload);

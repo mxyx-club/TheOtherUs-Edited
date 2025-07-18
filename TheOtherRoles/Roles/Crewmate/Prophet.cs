@@ -23,7 +23,7 @@ public static class Prophet
     public static Dictionary<PlayerControl, bool> examined = new();
     public static PlayerControl currentTarget;
 
-    public static ResourceSprite buttonSprite = new("SeerButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("SeerButton.png");
     public static bool IsRed(PlayerControl p)
     {
         if (p.Data.Role.IsImpostor || isKillerNeutral(p)) return true;

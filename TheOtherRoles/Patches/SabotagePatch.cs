@@ -1,19 +1,23 @@
 // 参考 => https://github.com/Koke1024/Town-Of-Moss/blob/main/TownOfMoss/Patches/MeltDownBoost.cs
 // 来源 => https://github.com/SuperNewRoles/SuperNewRoles/blob/master/SuperNewRoles/MapOption/MapOption.cs
 
+using TheOtherRoles.Attributes;
+
 namespace TheOtherRoles.Patches;
 
 public static class ElectricPatch
 {
     public static bool IsReactorDurationSetting;
+    public static bool onTask;
+    public static bool done;
+    public static DateTime lastUpdate;
+
+    [OnGameStart, OnGameEnd]
     public static void Reset()
     {
         onTask = false;
         IsReactorDurationSetting = CustomOptionHolder.IsReactorDurationSetting.GetBool();
     }
-    public static bool onTask;
-    public static bool done;
-    public static DateTime lastUpdate;
 
     [HarmonyPatch(typeof(SwitchMinigame), nameof(SwitchMinigame.Begin))]
     private class VitalsMinigameStartPatch

@@ -161,7 +161,7 @@ public static class Mimic
                 if (Amnisiac.resetRole) Jailor.ClearAndReload();
                 Jailor.Player = mimic;
                 Jailor.usesCount = 1;
-                prophetButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
+                jailorButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 

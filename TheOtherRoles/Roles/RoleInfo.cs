@@ -429,16 +429,16 @@ public class RoleInfo
 
         if (showGhostInfo && p != null)
         {
-            if (p == Shifter.shifter && (PlayerControl.LocalPlayer == Shifter.shifter || CanSeeRoleInfo) && Shifter.futureShift != null)
+            if (p == Shifter.shifter && (PlayerControl.LocalPlayer == Shifter.shifter || CanSeeGhostInfo) && Shifter.futureShift != null)
                 roleName += Cs(Color.yellow, " ← " + Shifter.futureShift.Data.PlayerName);
-            if (p == Vulture.vulture && (PlayerControl.LocalPlayer == Vulture.vulture || CanSeeRoleInfo))
+            if (p == Vulture.vulture && (PlayerControl.LocalPlayer == Vulture.vulture || CanSeeGhostInfo))
                 roleName += Cs(Vulture.color, string.Format("roleInfoRemaining".Translate(), Vulture.vultureNumberToWin - Vulture.eatenBodies));
-            if (p == Witness.Player && (PlayerControl.LocalPlayer == Witness.Player || CanSeeRoleInfo))
+            if (p == Witness.Player && (PlayerControl.LocalPlayer == Witness.Player || CanSeeGhostInfo))
                 roleName += Cs(Witness.color, string.Format("roleInfoRemaining".Translate(), Witness.exileToWin - Witness.exiledCount));
-            if (p == Gunsmith.Player && (PlayerControl.LocalPlayer == Gunsmith.Player || CanSeeRoleInfo))
+            if (p == Gunsmith.Player && (PlayerControl.LocalPlayer == Gunsmith.Player || CanSeeGhostInfo))
                 roleName += Cs(Gunsmith.color, $" {Gunsmith.remainingChange}/{Gunsmith.maxChangeCount}");
 
-            if (CanSeeRoleInfo)
+            if (CanSeeGhostInfo)
             {
                 if (Eraser.futureErased.Any(x => x == p))
                     roleName = Cs(Color.gray, "(被抹除) ") + roleName;
@@ -476,7 +476,7 @@ public class RoleInfo
 
     public static string GetDeathReasonString(PlayerControl p)
     {
-        if (p.IsAlive() || !CanSeeRoleInfo) return "";
+        if (p.IsAlive() || !CanSeeGhostInfo) return "";
 
         var deadPlayer = GameHistory.DeadPlayers.FirstOrDefault(x => x.Player.PlayerId == p.PlayerId);
         if (deadPlayer == null) return "";
@@ -485,36 +485,12 @@ public class RoleInfo
         var killer = deadPlayer.KillerIfExisting;
         var killerName = deadPlayer.KillerIfExisting?.Data.PlayerName ?? "NULL";
 
-        Color killerColor = new();
+        Color killerColor = Palette.CrewmateBlue;
         if (deadPlayer != null && deadPlayer.KillerIfExisting != null)
             killerColor = getRoleInfoForPlayer(deadPlayer.KillerIfExisting, false).FirstOrDefault().color;
 
-        return reason switch
-        {
-            CustomDeathReason.NULL => "NULL",
-            CustomDeathReason.Disconnect => "断开连接",
-            CustomDeathReason.HostCmdKill => $"被 {Cs(killerColor, killerName)} 制裁",
-            CustomDeathReason.Kill => $"被击杀于 {Cs(killerColor, killerName)}",
-            CustomDeathReason.Exile => "被驱逐",
-            CustomDeathReason.Suicide => "自杀",
-            CustomDeathReason.SheriffKill => $"出警 {Cs(Sheriff.color, killerName)}",
-            CustomDeathReason.SheriffMisfire => "警长走火",
-            CustomDeathReason.SheriffMisadventure => $"被误杀于 {Cs(Sheriff.color, killerName)}",
-            CustomDeathReason.BombVictim => "恐袭",
-            CustomDeathReason.Eaten => $"被吞食于 {Cs(Pelican.color, killerName)}",
-            CustomDeathReason.Guess => p.PlayerId == killer?.PlayerId ? "猜测错误" : $"被赌杀于 {Cs(killerColor, killerName)}",
-            CustomDeathReason.Shift => $"{Cs(Color.yellow, "交换")} {Cs(killerColor, killerName)} 失败",
-            CustomDeathReason.WitchExile => $"{Cs(Witch.color, "被咒杀于")} {Cs(killerColor, killerName)}",
-            CustomDeathReason.LoverSuicide => $"{Cs(Lovers.color, "殉情")}",
-            CustomDeathReason.LawyerSuicide => $"{Cs(Lawyer.color, "辩护失败")}",
-            CustomDeathReason.Bomb => $"被恐袭于 {Cs(Palette.ImpostorRed, killerName)}",
-            CustomDeathReason.Arson => $"被烧死于 {Cs(Arsonist.color, killerName)}",
-            CustomDeathReason.LoveStolen => $"{Cs(Lovers.color, "爱人被夺")}",
-            CustomDeathReason.Loneliness => $"{Cs(Akujo.color, "精力衰竭")}",
-            CustomDeathReason.FakeSK => $"{Cs(Jackal.color, "招募失败")} {Cs(killerColor, killerName)}",
-            CustomDeathReason.Jailed => $"被 {Cs(Jailor.color, killerName)} 处决",
-            _ => "未知"
-        };
+        killerName = Cs(killerColor, killerName);
+        return string.Format(GetString($"DeathReason.{reason}"), killerName);
     }
 
     public static string getRoleDescription(string name)

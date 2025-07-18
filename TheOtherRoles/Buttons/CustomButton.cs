@@ -174,6 +174,12 @@ public class CustomButton
         buttons.Remove(this);
     }
 
+    public void SetButtonText(string text)
+    {
+        actionButton.OverrideText(text);
+        showButtonText = true;
+    }
+
     public void onClickEvent()
     {
         if (!HasButton()) return;
@@ -366,7 +372,7 @@ public class CustomButton
             {
                 var aspect = Camera.main.aspect;
                 var safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
-                var xpos = 0.05f - safeOrthographicSize * aspect * 1.70f;
+                var xpos = 0.05f - (safeOrthographicSize * aspect * 1.70f);
                 pos = new Vector3(xpos, pos.y, pos.z);
             }
             actionButton.transform.localPosition = pos + PositionOffset;

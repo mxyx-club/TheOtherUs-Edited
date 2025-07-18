@@ -1,3 +1,5 @@
+using TheOtherRoles.Attributes;
+
 namespace TheOtherRoles.Objects;
 
 public class Portal
@@ -150,6 +152,7 @@ public class Portal
         portalSprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.PortalAnimation.plattform.png", 115f);
     }
 
+    [OnGameStart, OnGameEnd]
     public static void clearPortals()
     {
         preloadSprites(); // Force preload of sprites to avoid lag

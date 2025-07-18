@@ -1,4 +1,5 @@
 using PowerTools;
+using TheOtherRoles.Attributes;
 
 namespace TheOtherRoles.Objects;
 
@@ -39,7 +40,7 @@ public class JackInTheBox
         vent.ExitVentAnim = null;
         vent.Offset = new Vector3(0f, 0.25f, 0f);
         vent.GetComponent<SpriteAnim>()?.Stop();
-        vent.Id = MapUtilities.CachedShipStatus.AllVents.Select(x => x.Id).Max() + 1; // Make sure we have a unique id
+        vent.Id = MapUtilities.CachedShipStatus.AllVents.Max(x => x.Id) + 1; // Make sure we have a unique id
         ventRenderer = vent.GetComponent<SpriteRenderer>();
         if (isFungle)
         {
@@ -58,8 +59,7 @@ public class JackInTheBox
         vent.name = "JackInTheBoxVent_" + vent.Id;
 
         // Only render the box for the Trickster and for Ghosts
-        var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster ||
-                                   PlayerControl.LocalPlayer.Data.IsDead;
+        var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster || CanSeeGhostInfo;
         gameObject.SetActive(showBoxToLocalPlayer);
 
         AllJackInTheBoxes.Add(this);
@@ -100,7 +100,7 @@ public class JackInTheBox
         if (boxesConvertedToVents) return;
         foreach (var box in AllJackInTheBoxes)
         {
-            var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster || CanSeeRoleInfo;
+            var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster || CanSeeGhostInfo;
             box.gameObject?.SetActive(showBoxToLocalPlayer);
         }
     }
@@ -140,6 +140,7 @@ public class JackInTheBox
         AllJackInTheBoxes.Last().vent.Right = AllJackInTheBoxes.First().vent;
     }
 
+    [OnGameStart, OnGameEnd]
     public static void clearJackInTheBoxes()
     {
         boxesConvertedToVents = false;

@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Neutral;
+namespace TheOtherRoles.Roles.Neutral;
 
 public static class Pursuer
 {
@@ -11,7 +11,7 @@ public static class Pursuer
     public static float cooldown = 30f;
     public static int blanksNumber = 5;
 
-    public static ResourceSprite buttonSprite = new("PursuerButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("PursuerButton.png");
 
 
     public static void clearAndReload()

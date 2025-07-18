@@ -23,7 +23,7 @@ public static class Medic
     public static Color shieldedColor = new Color32(0, 221, 255, byte.MaxValue);
     public static PlayerControl currentTarget;
 
-    public static ResourceSprite buttonSprite = new("ShieldButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("ShieldButton.png");
 
     public static void resetShielded()
     {
@@ -39,7 +39,7 @@ public static class Medic
         if (shielded != null && ((target == shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == shielded)))
         {
             // Everyone or Ghost info
-            hasVisibleShield = showShielded == 0 || CanSeeRoleInfo
+            hasVisibleShield = showShielded == 0 || CanSeeGhostInfo
                 || (showShielded == 1 && (PlayerControl.LocalPlayer == shielded
                 || PlayerControl.LocalPlayer == medic)) // Shielded + Medic
                 || (showShielded == 2 && PlayerControl.LocalPlayer == medic);
@@ -48,7 +48,7 @@ public static class Medic
             hasVisibleShield = hasVisibleShield && (meetingAfterShielding
                 || !showShieldAfterMeeting
                 || PlayerControl.LocalPlayer == medic
-                || CanSeeRoleInfo);
+                || CanSeeGhostInfo);
         }
         return hasVisibleShield;
     }

@@ -1,190 +1,266 @@
+using BepInEx;
+using System.IO;
+using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using TheOtherRoles.Attributes;
+using TheOtherRoles.Patches;
+
 namespace TheOtherRoles.Modules;
 
-public class PlayerData<T>
+public class PlayerData
 {
-    private Dictionary<byte, T> _data;
-    private Dictionary<PlayerControl, T> _playerdata;
-    private T defaultvalue;
-    private bool nonsetinit;
+    private const string ApiUrl = "http://localhost:6997/game-data";
+    private static readonly HttpClient httpClient = new();
+    public static List<PlayerDataInfo> AllPlayerData = new();
 
-    public T Local
+    public static Dictionary<byte, string> AllFriendCode = new();
+
+    public static string HostPlayer;
+    public static DateTime StartTime;
+    public static DateTime EndTime;
+    internal static WinCondition WinCondition { get; set; } = WinCondition.Default;
+    public static string RoomCode { get => field.IsNullOrWhiteSpace() ? "Loacl" : field; set; }
+    public static string HostCode { get; set; }
+    public static int PlayerCount { get; set; }
+
+    public static PlayerDataInfo GetPlayerData(PlayerControl player)
     {
-        get => this[PlayerControl.LocalPlayer.PlayerId];
-        set => this[PlayerControl.LocalPlayer.PlayerId] = value;
+        return AllPlayerData.FirstOrDefault(p => p.Player == player);
     }
 
-    public int Count => _data != null ? _data.Count : 0;
-    public Dictionary<byte, T>.ValueCollection Values => _data.Values;
-    private T _result;
-
-    public T this[byte key]
+    public static string GetPlayerCode(PlayerControl player)
     {
-        get
-        {
-            if (_data == null || !_data.TryGetValue(key, out _result))
-            {
-                if (nonsetinit) this[key] = defaultvalue;
-                return defaultvalue;
-            }
-            return _result;
-        }
-        set
-        {
-            (_data ??= new(1))[key] = value;
-            if (_playerdata != null)
-            {
-                PlayerControl player = PlayerById(key);
-                if (player != null)
-                    _playerdata[player] = value;
-            }
-        }
-    }
-    public T this[PlayerControl key]
-    {
-        get
-        {
-            if (key == null) return defaultvalue;
-            if (_data == null || !_data.TryGetValue(key.PlayerId, out _result))
-            {
-                if (nonsetinit) this[key] = defaultvalue;
-                return defaultvalue;
-            }
-            return _result;
-        }
-        set
-        {
-            if (key != null)
-            {
-                (_data ??= new(1))[key.PlayerId] = value;
-                if (_playerdata != null)
-                    _playerdata[key] = value;
-            }
-        }
+        return AllFriendCode.TryGetValue(player.PlayerId, out var code) ? code : "";
     }
 
-    public static implicit operator Dictionary<byte, T>(PlayerData<T> obj)
+    [OnGameStart]
+    public static void Start()
     {
-        if (obj == null)
-            return new();
-        return obj._data ??= new();
+        AllPlayerData.Clear();
+        AllFriendCode.Clear();
+
+        var code = EOSManager.Instance?.FriendCode ?? "";
+
+        var writer = StartRPC(CustomRPC.ShareFriendCode);
+        writer.Write(PlayerControl.LocalPlayer.PlayerId);
+        writer.Write(code);
+        writer.EndRPC();
+        ShareFriendCode(PlayerControl.LocalPlayer.PlayerId, code);
     }
 
-    public static implicit operator Dictionary<PlayerControl, T>(PlayerData<T> obj)
+    public static void ShareFriendCode(byte playerId, string code)
     {
-        if (obj == null)
-            return new();
-        if (obj._playerdata == null)
+        try
         {
-            Info("needplayerlistが無効なのにも関わらず、PlayerControlをKeyにしたDictionaryが要求されました。needplayerlistを有効に変更してください。");
-            if (obj._data == null)
+            AllFriendCode[playerId] = code;
+            GameData.Instance?.GetPlayerById(playerId)?.FriendCode = code;
+        }
+        catch (Exception e) { Message($"Error reading friend code: {e.Message}", "ShareFriendCode"); }
+
+    }
+
+    public static void Initialize()
+    {
+        try
+        {
+            StartTime = DateTime.UtcNow;
+            WinCondition = WinCondition.Default;
+            EndTime = DateTime.UtcNow;
+            HostCode = GetHostPlayer?.Data?.FriendCode ?? "ERROR";
+            HostPlayer = GetHostPlayer?.Data?.PlayerName ?? "ERROR";
+            PlayerCount = PlayerControl.AllPlayerControls.Count;
+            RoomCode = GameStartManagerPatch.RoomCode;
+            foreach (var player in PlayerControl.AllPlayerControls)
             {
-                obj._data = new();
-                obj._playerdata = new();
+                var playerData = new PlayerDataInfo
+                {
+                    Player = player,
+                    PlayerId = player.PlayerId,
+                    PlayerCode = AllFriendCode[player.PlayerId],
+                    PlayerColor = player.Data.ColorName ?? "Default",
+                    OriginRole = RoleInfo.getRoleInfoForPlayer(player, false, false)
+                                 .FirstOrDefault(x => x.roleType is not RoleType.Modifier)?.roleId ?? RoleId.DefaultRole,
+
+                };
+                AllPlayerData.Add(playerData);
+            }
+        }
+        catch (Exception e)
+        {
+            Error($"initializing Error: {e.Message}\n{e.StackTrace}", "PlayerData");
+        }
+    }
+
+    public static string GetGameId()
+    {
+        var timePart = StartTime.ToString("HH:mm");
+        var rawData = $"{HostCode}:{timePart}";
+
+        using (var sha256 = SHA256.Create())
+        {
+            var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+            var hexHash = BitConverter.ToString(hashBytes, 0, 4)
+                .Replace("-", "")
+                .ToLowerInvariant();
+            return $"{RoomCode}_{hexHash}";
+        }
+    }
+
+    public static void SaveAllPlayerDataToJson()
+    {
+        foreach (var data in AllFriendCode)
+        {
+            Message($"{data.Key}: {data.Value}");
+        }
+
+        var directoryPath = Path.Combine(Paths.GameRootPath, Main.Name, "GameData");
+        var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        var filePath = Path.Combine(directoryPath, $"GameSession_{timestamp}.json");
+        Directory.CreateDirectory(directoryPath);
+
+        var jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            Converters = { new JsonStringEnumConverter() }
+        };
+
+        var gameSession = new
+        {
+            Global = new
+            {
+                ModVersion = $"{Main.Name} - {Main.Version}{Main.VersionSuffix}",
+                GameVersion = Application.version,
+                GameId = GetGameId(),
+                HostPlayer,
+                StartTime = StartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                EndTime = EndTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                Duration = (EndTime - StartTime).ToString(@"hh\:mm\:ss"),
+                WinCondition = WinCondition.ToString(),
+                RoomCode,
+                PlayerCount,
+                HostCode,
+                GameMode = ModOption.gameMode.ToString(),
+                DeBugMode = ModOption.DebugMode,
+                RoleDraftMode = CustomOptionHolder.isDraftMode.GetBool(),
+            },
+
+            Players = AllPlayerData.Select(p => new
+            {
+                p.PlayerId,
+                p.PlayerName,
+                p.PlayerColor,
+                p.PlayerCode,
+                RoleInfo = new
+                {
+                    OriginRole = p.OriginRole.ToString(),
+                    MainRole = p.Role.ToString(),
+                    RoleDetails = p.AllRole.Select(r => r.roleId.ToString()).ToArray(),
+                    RoleType = p.RoleType.ToString(),
+                },
+                GameplayStats = new
+                {
+                    p.IsWinner,
+                    p.IsDead,
+                    p.IsDisconnected,
+                    p.KillCount,
+                    Tasks = p.TaskCount != null ? new
+                    {
+                        Completed = p.TaskCount.Item1,
+                        Total = p.TaskCount.Item2,
+                        Progress = $"{p.TaskCount.Item1 / (double)p.TaskCount.Item2:P0}"
+                    } : null,
+                    p.DeathReason,
+                    p.KilledBy,
+                    DeathTimer = p.DeathTimer.ToString("yyyy-MM-ddTHH:mm:ss"),
+                },
+            }).ToList()
+        };
+
+        var jsonContent = JsonSerializer.Serialize(gameSession, jsonOptions);
+        File.WriteAllText(filePath, jsonContent);
+
+        UploadPlayerDataToApi(jsonContent).ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Error($"Upload failed: {task.Exception?.InnerException?.Message}", "PlayerData");
             }
             else
             {
-                obj._playerdata = new(obj._data.Count);
-                foreach (var value in obj._data)
-                {
-                    PlayerControl p = PlayerById(value.Key);
-                    if (p != null)
-                        obj._playerdata[p] = value.Value;
-                }
+                Info("Data uploaded successfully!", "PlayerData");
+            }
+        });
+    }
+
+    private static async Task UploadPlayerDataToApi(string jsonContent)
+    {
+        try
+        {
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync(ApiUrl, content).ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Error($"API returned {response.StatusCode}: {errorContent}");
             }
         }
-        return obj._playerdata;
-    }
-    public void Reset()
-    {
-        _data = null;
-        if (_playerdata != null)
-            _playerdata = new();
-    }
-    public bool Any(Func<KeyValuePair<byte, T>, bool> func)
-    {
-        if (_data == null)
-            return false;
-        foreach (var obj in _data)
-            if (func(obj)) return true;
-        return false;
-    }
-
-    public bool TryGetValue(PlayerControl key, out T result)
-    {
-        if (_data == null || key == null)
+        catch (Exception ex)
         {
-            result = default;
-            return false;
-        }
-        return TryGetValue(key.PlayerId, out result);
-    }
-
-    public bool TryGetValue(byte key, out T result)
-    {
-        if (_data == null)
-        {
-            result = default;
-            return false;
-        }
-        return _data.TryGetValue(key, out result);
-    }
-
-    public PlayerControl GetPCByValue(T value)
-    {
-        if (_playerdata != null)
-            return _playerdata.GetKeyByValue(value);
-        else
-        {
-            byte pid = _data.GetKeyByValue<byte, T>(value, defaultvalue: 255);
-            return pid == 255 ? null : PlayerById(pid);
+            Error("API upload error: " + ex.Message);
         }
     }
 
-    public bool ContainsValue(T value) => _data != null && _data.ContainsValue(value);
-
-    public bool Contains(byte player) => _data != null && _data.ContainsKey(player);
-
-    public bool Contains(PlayerControl player) => player == null ? false : Contains(player.PlayerId);
-
-    public void Remove(PlayerControl player)
+    public class PlayerDataInfo
     {
-        if (_data != null)
+        public PlayerControl Player { get; set; }
+        public string PlayerName => Player?.Data?.PlayerName ?? "Unknown";
+        public string PlayerCode { get; set; }
+        public string PlayerColor { get; set; }
+        public byte PlayerId { get; set; }
+        public Tuple<int, int> TaskCount { get; set; }
+        public RoleId Role { get; set; } = RoleId.DefaultRole;
+        public RoleId OriginRole { get; set; } = RoleId.DefaultRole;
+        public RoleInfo[] AllRole { get; set; } = [];
+        public RoleType RoleType { get; set; } = RoleType.Special;
+        public bool IsDead => Player.IsDead();
+        public bool IsWinner { get => !IsDisconnected && field; set; }
+        public int KillCount => GameHistory.GetKillCount(Player);
+        public bool IsDisconnected => Player?.Data?.Disconnected ?? true;
+
+        public string DeathReason
         {
-            _data.Remove(player.PlayerId);
-            if (_playerdata != null)
-                _playerdata.Remove(player);
+            get
+            {
+                if (!IsDead || GameHistory.DeadPlayers == null || GameHistory.DeadPlayers.Count == 0) return "Alive";
+                return GameHistory.GetDeadPlayer(PlayerId)?.DeathReason.ToString() ?? "Unknown";
+            }
+        }
+
+        public DateTime DeathTimer
+        {
+            get
+            {
+                if (!IsDead) return DateTime.MinValue;
+                return GameHistory.GetDeadPlayer(PlayerId)?.TimeOfDeath ?? DateTime.MinValue;
+            }
+        }
+
+        public string KilledBy
+        {
+            get
+            {
+                if (!IsDead) return "Unknown";
+                var killer = GameHistory.GetDeadPlayer(PlayerId)?.KillerIfExisting;
+                return killer != null ? killer?.Data?.PlayerName ?? "Error" : "Unknown";
+            }
         }
     }
 
-    public void Remove(byte player)
-    {
-        if (_data != null)
-        {
-            _data.Remove(player);
-            if (_playerdata != null)
-                _playerdata.Remove(PlayerById(player));
-        }
-    }
-
-    public Dictionary<byte, T> GetDicts() => (Dictionary<byte, T>)this;
-
-    /// <summary>
-    /// プレイヤーの情報を保存できるクラス。
-    /// 例(intを保存したい場合)：PlayerData<int>
-    /// </summary>
-    /// <param name="needplayerlist">Dictionary<PlayerControl,T>型が必要かどうか</param>
-    public PlayerData(bool needplayerlist = false, T defaultvalue = default, bool nonsetinit = false)
-    {
-        //使用する際に初期化して、メモリの負担を軽く
-        _data = null;
-        _playerdata = needplayerlist ? new(1) : null;
-        this.defaultvalue = defaultvalue;
-        this.nonsetinit = nonsetinit;
-    }
-    public IEnumerator GetEnumerator()
-    {
-        if (_data == null)
-            _data = new();
-        return _data.GetEnumerator();
-    }
 }

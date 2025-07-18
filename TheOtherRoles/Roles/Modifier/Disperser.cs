@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Modifier;
+namespace TheOtherRoles.Roles.Modifier;
 
 public static class Disperser
 {
@@ -6,7 +6,7 @@ public static class Disperser
     public static Color color = Palette.ImpostorRed;
     public static int remainingDisperses = 1;
     public static bool DispersesToVent;
-    public static ResourceSprite buttonSprite = new("Disperse.png");
+    public static Sprite buttonSprite = new ResourceSprite("Disperse.png");
 
     public static void clearAndReload()
     {

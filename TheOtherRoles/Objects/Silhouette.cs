@@ -1,3 +1,5 @@
+using TheOtherRoles.Attributes;
+
 namespace TheOtherRoles.Objects;
 public class Silhouette
 {
@@ -10,7 +12,7 @@ public class Silhouette
     public static List<Silhouette> silhouettes = new();
 
 
-    private static ResourceSprite SilhouetteSprite = new("Silhouette.png", 225f);
+    private static Sprite SilhouetteSprite = new ResourceSprite("Silhouette.png", 225f);
 
     public Silhouette(Vector3 p, float duration = 1f, bool visibleForEveryOne = true)
     {
@@ -40,6 +42,7 @@ public class Silhouette
         silhouettes.Add(this);
     }
 
+    [OnGameStart, OnGameEnd]
     public static void clearSilhouettes()
     {
         foreach (var sil in silhouettes)
@@ -52,7 +55,7 @@ public class Silhouette
         foreach (Silhouette current in new List<Silhouette>(silhouettes))
         {
             current.timeRemaining -= Time.fixedDeltaTime;
-            bool visible = current.visibleForEveryOne || PlayerControl.LocalPlayer == Yoyo.yoyo || CanSeeRoleInfo;
+            bool visible = current.visibleForEveryOne || PlayerControl.LocalPlayer == Yoyo.yoyo || CanSeeGhostInfo;
             current.gameObject.SetActive(visible);
 
             if (visible && current.timeRemaining > 0 && current.timeRemaining < 0.5)

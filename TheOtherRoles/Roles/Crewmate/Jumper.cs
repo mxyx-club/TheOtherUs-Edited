@@ -15,8 +15,8 @@ public static class Jumper
 
     public static Vector3 jumpLocation;
 
-    public static ResourceSprite jumpMarkButtonSprite = new("JumperMarkButton.png");
-    public static ResourceSprite jumpJumpButtonSprite = new("JumperJumpButton.png");
+    public static Sprite jumpMarkButtonSprite = new ResourceSprite("JumperMarkButton.png");
+    public static Sprite jumpJumpButtonSprite = new ResourceSprite("JumperJumpButton.png");
     public static bool usedPlace;
 
     public static void resetPlaces()

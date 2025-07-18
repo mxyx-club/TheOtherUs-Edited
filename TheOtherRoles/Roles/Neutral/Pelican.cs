@@ -57,7 +57,6 @@ public class Pelican
                 _ = new LateTask(() =>
                 {
                     HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
-                    HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
                 }, 0.25f);
                 PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(player.transform.position);
             }

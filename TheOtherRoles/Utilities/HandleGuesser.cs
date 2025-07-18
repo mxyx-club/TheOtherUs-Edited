@@ -10,7 +10,7 @@ public static class HandleGuesser
     public static bool evilGuesserCanGuessSpy = true;
     public static bool guesserCantGuessSnitch;
 
-    public static ResourceSprite targetSprite = new("TargetIcon.png", 150f);
+    public static Sprite targetSprite = new ResourceSprite("TargetIcon.png", 150f);
 
     public static bool isGuesser(byte playerId)
     {
@@ -38,6 +38,37 @@ public static class HandleGuesser
         }
 
         return isGuesserGm ? GuesserGM.remainingShots(playerId, shoot) : Guesser.remainingShots(playerId, shoot);
+    }
+
+    public static bool CanMultipleShots(PlayerControl dyingTarget)
+    {
+        if (dyingTarget == PlayerControl.LocalPlayer) return false;
+
+        if (PlayerControl.LocalPlayer == Doomsayer.doomsayer)
+        {
+            if (Doomsayer.hasMultipleShotsPerMeeting && Doomsayer.CanShoot)
+            {
+                return true;
+            }
+            return false;
+        }
+        else
+        {
+            if (remainingShots(PlayerControl.LocalPlayer.PlayerId) <= 0) return false;
+
+            if (GuesserGM.Enabled)
+            {
+                if (isGuesser(PlayerControl.LocalPlayer.PlayerId) && hasMultipleShotsPerMeeting) return true;
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer == Vigilante.vigilante && Vigilante.hasMultipleShotsPerMeeting)
+                    return true;
+                else if (Assassin.assassin.Any(x => x == PlayerControl.LocalPlayer) && Assassin.assassinMultipleShotsPerMeeting)
+                    return true;
+            }
+        }
+        return false;
     }
 
     public static void clearAndReload()

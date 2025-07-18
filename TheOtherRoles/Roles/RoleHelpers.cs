@@ -14,7 +14,7 @@ public enum RoleType
 
 public enum RoleId
 {
-    Default,
+    DefaultRole,
 
     Impostor,
     Morphling,
@@ -135,7 +135,7 @@ public enum RoleId
 
 public static class RoleHelpers
 {
-    public static bool CanSeeRoleInfo
+    public static bool CanSeeGhostInfo
     {
         get
         {
@@ -158,9 +158,9 @@ public static class RoleHelpers
         PlayerControl killer,
         PlayerControl target,
         bool showAnimation = true,
-        CustomDeathReason deathReason = CustomDeathReason.NULL)
+        CustomDeathReason deathReason = CustomDeathReason.Null)
     {
-        if (deathReason == CustomDeathReason.NULL) deathReason = target == killer ? CustomDeathReason.Suicide : CustomDeathReason.Kill;
+        if (deathReason == CustomDeathReason.Null) deathReason = target == killer ? CustomDeathReason.Suicide : CustomDeathReason.Kill;
         KillAnimationCoPerformKillPatch.hideNextAnimation = !showAnimation;
         killer.MurderPlayer(target, MurderResultFlags.Succeeded);
         GameHistory.OverrideDeathReasonAndKiller(target, deathReason, killer);
@@ -171,7 +171,7 @@ public static class RoleHelpers
         PlayerControl target,
         bool showAnimation = true,
         bool force = false,
-        CustomDeathReason deathReason = CustomDeathReason.NULL)
+        CustomDeathReason deathReason = CustomDeathReason.Null)
     {
         if (!force && !CheckMurderPlayer(killer, target))
             return false;
@@ -279,9 +279,9 @@ public static class RoleHelpers
 
         blockedRolePairings.Add([RoleId.Vampire, RoleId.Warlock, RoleId.Witch]);
 
-        if (CustomOptionHolder.pavlovsownerAndJackalAsWell.GetBool())
+        if (CustomOptionHolder.onlyOneNeutralTeam.GetBool())
         {
-            blockedRolePairings.Add([RoleId.Jackal, RoleId.Pavlovsowner]);
+            blockedRolePairings.Add([RoleId.Jackal, RoleId.Pavlovsowner, RoleId.Infected]);
         }
         if (Executioner.promotesToLawyer)
         {
@@ -299,6 +299,7 @@ public static class RoleHelpers
 
         blockedRolePairings.Add([RoleId.Gunsmith, RoleId.Berserker, RoleId.BountyHunter, RoleId.WolfLord]);
 
+        blockedRolePairings.Add([RoleId.Mayor, RoleId.Prosecutor]);
     }
 
     public static Dictionary<RoleId, int> RoleRate = new();
@@ -531,7 +532,7 @@ public static class RoleHelpers
 
         blockRole();
         ResetRoleSelection();
-        CanSeeRoleInfo = false;
+        CanSeeGhostInfo = false;
     }
 
 }

@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Neutral;
+namespace TheOtherRoles.Roles.Neutral;
 
 public static class Werewolf
 {
@@ -13,7 +13,7 @@ public static class Werewolf
     public static bool canKill;
     public static bool hasImpostorVision;
 
-    public static ResourceSprite buttonSprite = new("Rampage.png");
+    public static Sprite buttonSprite = new ResourceSprite("Rampage.png");
 
     public static void clearAndReload()
     {

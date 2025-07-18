@@ -1,9 +1,9 @@
-using System.IO;
-using System.Text;
 using AmongUs.GameOptions;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using Il2CppSystem.Linq;
+using System.IO;
+using System.Text;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Patches;
 using UnityEngine.UI;
@@ -285,15 +285,35 @@ public class CustomOption
                 foreach (var option in options.OrderBy(x => x.id))
                 {
                     if (option.id == 0) continue;
-                    var consecutive = lastId + 1 == option.id;
+
+                    // 计算ID增量
+                    int idDelta = option.id - lastId - 1;
                     lastId = option.id;
 
-                    binaryWriter.Write((byte)(option.selection + (consecutive ? 128 : 0)));
-                    if (!consecutive) binaryWriter.Write((ushort)option.id);
+                    // 判断是否使用连续模式
+                    bool consecutive = idDelta == 0;
+
+                    // VarInt编码选择值和ID信息
+                    uint value = (uint)option.selection;
+                    if (!consecutive)
+                    {
+                        // 设置最高位标记非连续ID
+                        value |= 0x80;
+
+                        // 将ID增量添加到value中
+                        value |= (uint)idDelta << 8;
+                    }
+
+                    // 写入VarInt编码的值
+                    while (value > 0x7F)
+                    {
+                        binaryWriter.Write((byte)((value & 0x7F) | 0x80));
+                        value >>= 7;
+                    }
+                    binaryWriter.Write((byte)value);
                 }
 
                 binaryWriter.Flush();
-                memoryStream.Position = 0L;
                 return memoryStream.ToArray();
             }
         }
@@ -301,34 +321,60 @@ public class CustomOption
 
     public static void deserializeOptions(byte[] inputValues)
     {
-        var reader = new BinaryReader(new MemoryStream(inputValues));
-        var lastId = -1;
-        while (reader.BaseStream.Position < inputValues.Length)
-            try
+        try
+        {
+            var reader = new BinaryReader(new MemoryStream(inputValues));
+            int lastId = -1;
+
+            while (reader.BaseStream.Position < inputValues.Length)
             {
-                int selection = reader.ReadByte();
-                var id = -1;
-                var consecutive = selection >= 128;
+                // 读取VarInt编码的值
+                uint value = 0;
+                int shift = 0;
+                byte b;
+                do
+                {
+                    b = reader.ReadByte();
+                    value |= (uint)(b & 0x7F) << shift;
+                    shift += 7;
+                } while ((b & 0x80) != 0);
+
+                // 解析连续标志和选择值
+                bool consecutive = (value & 0x80) == 0;
+                int selection = (int)(value & 0x7F);
+
+                // 计算当前ID
+                int currentId;
                 if (consecutive)
                 {
-                    selection -= 128;
-                    id = lastId + 1;
+                    currentId = lastId + 1;
                 }
                 else
                 {
-                    id = reader.ReadUInt16();
+                    // 提取ID增量
+                    int idDelta = (int)((value >> 8) & 0x7FFFFF);
+                    currentId = lastId + idDelta + 1;
                 }
 
-                if (id == 0) continue;
-                lastId = id;
-                var option = options.First(option => option.id == id);
-                option.updateSelection(selection);
+                lastId = currentId;
+
+                // 查找并更新选项
+                var option = options.FirstOrDefault(x => x.id == currentId);
+                if (option != null)
+                {
+                    option.updateSelection(selection);
+                }
+                else
+                {
+                    Warn($"找不到选项 ID={currentId}");
+                }
             }
-            catch (Exception e)
-            {
-                Warn($"尝试粘贴的设置是无效的 : {e}");
-                FastDestroyableSingleton<HudManager>.Instance?.Chat?.AddChat(PlayerControl.LocalPlayer, "尝试粘贴的设置是无效的");
-            }
+        }
+        catch (Exception e)
+        {
+            Warn($"反序列化失败: {e}");
+            FastDestroyableSingleton<HudManager>.Instance?.Chat?.AddChat(PlayerControl.LocalPlayer, "设置粘贴失败: 无效的格式");
+        }
     }
 
     // Copy to or paste from clipboard (as string)
@@ -397,6 +443,7 @@ internal class GameOptionsMenuStartPatch
                     copyButtonRenderer.color = Color.white;
             })));
         }));
+
         var pasteButton = UObject.Instantiate(template, template.transform.parent);
         pasteButton.transform.localPosition += Vector3.down * 1.6f;
         pasteButton.name = "PasteButton";
@@ -797,7 +844,7 @@ internal class GameOptionsDataPatch
     private static string buildOptionsOfType(CustomOptionType type, bool headerOnly)
     {
         var sb = new StringBuilder("\n");
-        var options = CustomOption.options.Where(o => o.type == type);
+        var options = CustomOption.options.Where(o => o.type == type && o.IsEnbaled());
         if (GuesserGM.Enabled)
         {
             if (type == CustomOptionType.General) options = CustomOption.options.Where(o => o.type == type || o.type == CustomOptionType.Guesser);
@@ -961,11 +1008,11 @@ public class AddToKillDistanceSetting
     {
         //making the killdistances bound check higher since extra short is added
         return __instance.MaxPlayers > maxExpectedPlayers || __instance.NumImpostors < 1
-                                                          || __instance.NumImpostors > 3 || __instance.KillDistance < 0
-                                                          || __instance.KillDistance >=
-                                                          GameOptionsData.KillDistances.Count
-                                                          || __instance.PlayerSpeedMod <= 0f ||
-                                                          __instance.PlayerSpeedMod > 3f;
+                                                          || __instance.NumImpostors > 3
+                                                          || __instance.KillDistance < 0
+                                                          || __instance.KillDistance >= GameOptionsData.KillDistances.Count
+                                                          || __instance.PlayerSpeedMod <= 0f
+                                                          || __instance.PlayerSpeedMod > 3f;
     }
 
     [HarmonyPatch(typeof(NormalGameOptionsV07), nameof(NormalGameOptionsV07.AreInvalid))]
@@ -973,11 +1020,11 @@ public class AddToKillDistanceSetting
     public static bool Prefix(NormalGameOptionsV07 __instance, ref int maxExpectedPlayers)
     {
         return __instance.MaxPlayers > maxExpectedPlayers || __instance.NumImpostors < 1
-                                                          || __instance.NumImpostors > 3 || __instance.KillDistance < 0
-                                                          || __instance.KillDistance >=
-                                                          GameOptionsData.KillDistances.Count
-                                                          || __instance.PlayerSpeedMod <= 0f ||
-                                                          __instance.PlayerSpeedMod > 3f;
+                                                          || __instance.NumImpostors > 3
+                                                          || __instance.KillDistance < 0
+                                                          || __instance.KillDistance >= GameOptionsData.KillDistances.Count
+                                                          || __instance.PlayerSpeedMod <= 0f
+                                                          || __instance.PlayerSpeedMod > 3f;
     }
 
     [HarmonyPatch(typeof(StringOption), nameof(StringOption.OnEnable))]
@@ -1220,7 +1267,7 @@ public class HudManagerUpdate
             if (tmp.text != "")
                 blockCount++;
         for (var i = 0; i < blockCount; i++)
-            settingsTMPs[i].transform.localPosition = new Vector3(-blockCount * 1.2f + 2.7f * i, 2.2f, -500f);
+            settingsTMPs[i].transform.localPosition = new Vector3((-blockCount * 1.2f) + (2.7f * i), 2.2f, -500f);
     }
 
     public static void OpenSettings(HudManager __instance)

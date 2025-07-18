@@ -62,9 +62,13 @@ internal class ModOption
     public static string firstKillName;
     public static PlayerControl firstKillPlayer;
 
-    //public static bool canUseAdmin  { get { return restrictDevices == 0 || restrictAdminTime > 0f || PlayerControl.LocalPlayer == Hacker.hacker || PlayerControl.LocalPlayer.Data.IsDead; }}
+    /*public static bool canUseAdmin => restrictDevices == 0 || restrictAdminTime > 0f ||
+                                      PlayerControl.LocalPlayer == Hacker.hacker ||
+                                      PlayerControl.LocalPlayer.Data.IsDead;
 
-    //public static bool couldUseAdmin { get { return restrictDevices == 0 || restrictAdminTimeMax > 0f  || PlayerControl.LocalPlayer == Hacker.hacker || PlayerControl.LocalPlayer.Data.IsDead; }}
+    public static bool couldUseAdmin => restrictDevices == 0 || restrictAdminTimeMax > 0f ||
+                                        PlayerControl.LocalPlayer == Hacker.hacker ||
+                                        PlayerControl.LocalPlayer.Data.IsDead;*/
 
     public static bool canUseCameras => restrictDevices == 0 || restrictCamerasTime > 0f ||
                                         PlayerControl.LocalPlayer == Hacker.hacker ||
@@ -115,7 +119,7 @@ internal class ModOption
         allowModGuess = CustomOptionHolder.allowModGuess.GetBool();
         disableSabotage = CustomOptionHolder.disableSabotage.GetBool();
         //ShowVentsOnMap = CustomOptionHolder.showVentsOnMap.GetBool();
-        //ShowVentsOnMeetingMap = CustomOptionHolder.showVentsOnMap.GetQuantity() == 2;
+        //ShowVentsOnMeetingMap = CustomOptionHolder.showVentsOnMap.GetQuantity() == 1;
         firstKillPlayer = null;
         isRoundOne = true;
         isCanceled = false;

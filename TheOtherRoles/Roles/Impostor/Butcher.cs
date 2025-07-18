@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Impostor;
+namespace TheOtherRoles.Roles.Impostor;
 
 public class Butcher
 {
@@ -12,7 +12,7 @@ public class Butcher
 
     public static bool canDissection;
 
-    public static ResourceSprite ButtonSprite = new("DissectedButton.png");
+    public static Sprite ButtonSprite = new ResourceSprite("DissectedButton.png");
 
     public static void clearAndReload()
     {

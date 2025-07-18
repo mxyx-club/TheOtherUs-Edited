@@ -22,18 +22,6 @@ public class Debugger
         return !DisableGameEnd;
     }
 
-    [HarmonyPatch(typeof(LogicGameFlowHnS), nameof(LogicGameFlowHnS.CheckEndCriteria)), HarmonyPrefix]
-    public static bool Prefix2()
-    {
-        return !DisableGameEnd;
-    }
-
-    [HarmonyPatch(typeof(LogicGameFlow), nameof(LogicGameFlow.CheckEndCriteria)), HarmonyPrefix]
-    public static bool Prefix3()
-    {
-        return !DisableGameEnd;
-    }
-
     [HarmonyPatch(typeof(EndGameNavigation), nameof(EndGameNavigation.ShowDefaultNavigation))]
     internal static class AutoPlayAgainPatch
     {

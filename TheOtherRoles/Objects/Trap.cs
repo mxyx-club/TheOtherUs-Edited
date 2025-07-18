@@ -1,3 +1,5 @@
+using TheOtherRoles.Attributes;
+
 namespace TheOtherRoles.Objects;
 
 public class Trap
@@ -21,7 +23,7 @@ public class Trap
     {
         trap = new GameObject("Trap") { layer = 11 };
         trap.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-        var position = new Vector3(p.x, p.y, p.y / 1000 + 0.001f); // just behind player
+        var position = new Vector3(p.x, p.y, (p.y / 1000) + 0.001f); // just behind player
         trap.transform.position = position;
         neededCount = Trapper.trapCountToReveal;
 
@@ -44,6 +46,7 @@ public class Trap
         })));
     }
 
+    [OnGameStart, OnGameEnd]
     public static void clearTraps()
     {
         foreach (var t in traps)
@@ -105,7 +108,7 @@ public class Trap
         t.triggerable = true;
 
         // Add trapped Info into Trapper chat
-        if (Trapper.trapper.IsAlive() && (PlayerControl.LocalPlayer == Trapper.trapper || CanSeeRoleInfo))
+        if (Trapper.trapper.IsAlive() && (PlayerControl.LocalPlayer == Trapper.trapper || CanSeeGhostInfo))
         {
             foreach (var trap in traps)
             {
@@ -114,7 +117,7 @@ public class Trap
                 trap.trappedPlayer = trap.trappedPlayer.OrderBy(x => rnd.Next()).ToList();
                 message = trap.trappedPlayer.Aggregate(message, (current, p) => current + Trapper.infoType switch
                 {
-                    0 => RoleInfo.GetRolesString(p, false, false, false) + "\n",
+                    0 => RoleInfo.GetRolesString(p, false, false, false).FirstOrDefault() + "\n",
                     1 when (isEvilNeutral(p) || isKillerNeutral(p) || p.IsImpostor()) ^ Vortox.Reversal => "邪恶职业 \n",
                     1 => "善良职业 \n",
                     _ => p.Data.PlayerName + "\n"
@@ -157,7 +160,7 @@ public class Trap
             RPCProcedure.triggerTrap(player.PlayerId, (byte)target.instanceId);
         }
 
-        if (!CanSeeRoleInfo || player.PlayerId == Trapper.trapper.PlayerId) return;
+        if (!CanSeeGhostInfo || player.PlayerId == Trapper.trapper.PlayerId) return;
         foreach (var trap in traps.Where(trap => !trap.trap.active))
             trap.trap.SetActive(true);
     }

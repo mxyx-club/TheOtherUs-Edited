@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Impostor;
+namespace TheOtherRoles.Roles.Impostor;
 
 public static class Yoyo
 {
@@ -15,8 +15,8 @@ public static class Yoyo
 
     public static Vector3? markedLocation;
 
-    public static ResourceSprite markButtonSprite = new("YoyoMarkButtonSprite.png");
-    public static ResourceSprite blinkButtonSprite = new("YoyoBlinkButtonSprite.png");
+    public static Sprite markButtonSprite = new ResourceSprite("YoyoMarkButtonSprite.png");
+    public static Sprite blinkButtonSprite = new ResourceSprite("YoyoBlinkButtonSprite.png");
 
     public static void markLocation(Vector3 position)
     {

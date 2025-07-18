@@ -219,7 +219,7 @@ public static class MapData
     {
         if (VentCached?.Count > 1 && !cached) return VentCached;
         var pos = new List<Vector3>();
-        foreach (var vent in DestroyableSingleton<ShipStatus>.Instance.AllVents)
+        foreach (var vent in DestroyableSingleton<ShipStatus>.Instance.AllVents.OrderBy(x => x.Id))
         {
             var Transform = vent.transform;
             var position = Transform.position;

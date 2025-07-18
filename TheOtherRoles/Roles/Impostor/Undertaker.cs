@@ -13,7 +13,7 @@ public static class Undertaker
 
     public static float velocity = 1;
 
-    public static ResourceSprite buttonSprite = new("UndertakerDragButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("UndertakerDragButton.png");
 
     public static void DragBody(byte targetId)
     {

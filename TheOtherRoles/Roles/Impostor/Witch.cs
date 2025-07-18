@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Impostor;
+namespace TheOtherRoles.Roles.Impostor;
 
 public static class Witch
 {
@@ -17,9 +17,9 @@ public static class Witch
     public static bool witchVoteSavesTargets = true;
     public static bool witchWasGuessed;
 
-    public static ResourceSprite buttonSprite = new("SpellButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("SpellButton.png");
 
-    public static ResourceSprite spelledOverlaySprite = new("SpellButtonMeeting.png", 225f);
+    public static Sprite spelledOverlaySprite = new ResourceSprite("SpellButtonMeeting.png", 225f);
 
     public static void clearAndReload()
     {

@@ -1,10 +1,10 @@
-﻿namespace TheOtherRoles.Roles.Crewmate;
+namespace TheOtherRoles.Roles.Crewmate;
 
 public class Engineer
 {
     public static PlayerControl engineer;
     public static Color color = new Color32(0, 40, 245, byte.MaxValue);
-    public static ResourceSprite buttonSprite = new("RepairButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("RepairButton.png");
 
     public static bool resetFixAfterMeeting;
 

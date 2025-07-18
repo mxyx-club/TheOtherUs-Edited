@@ -18,8 +18,8 @@ public static class Akujo
     public static int keepsLeft;
     public static int numKeeps;
 
-    public static ResourceSprite honmeiSprite = new("AkujoHonmeiButton.png");
-    public static ResourceSprite keepSprite = new("AkujoKeepButton.png");
+    public static Sprite honmeiSprite = new ResourceSprite("AkujoHonmeiButton.png");
+    public static Sprite keepSprite = new ResourceSprite("AkujoKeepButton.png");
 
     public static bool IsKillerLover()
     {

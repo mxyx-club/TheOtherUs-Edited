@@ -1,4 +1,6 @@
-﻿namespace TheOtherRoles.Roles.Crewmate;
+using TheOtherRoles.Objects;
+
+namespace TheOtherRoles.Roles.Crewmate;
 
 public static class Detective
 {
@@ -10,9 +12,7 @@ public static class Detective
     public static int anonymousFootprints;
     public static float reportNameDuration;
     public static float reportColorDuration = 20f;
-    public static float timer = 6.2f;
-    //public static float reportRoleDuration;
-    //public static float reportInfoDuration = 20f;
+    public static float timer;
 
     public static void clearAndReload()
     {
@@ -22,8 +22,33 @@ public static class Detective
         footprintDuration = CustomOptionHolder.detectiveFootprintDuration.GetFloat();
         reportNameDuration = CustomOptionHolder.detectiveReportNameDuration.GetFloat();
         reportColorDuration = CustomOptionHolder.detectiveReportColorDuration.GetFloat();
-        timer = 6.2f;
-        //reportRoleDuration = CustomOptionHolder.detectiveReportRoleDuration.getFloat();
-        //reportInfoDuration = CustomOptionHolder.detectiveReportInfoDuration.getFloat();
+    }
+
+    [HarmonyPatch]
+    public static class Detective_Patch
+    {
+
+        [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
+        public static void Postfix(HudManager __instance)
+        {
+            detectiveUpdateFootPrints();
+        }
+
+        private static void detectiveUpdateFootPrints()
+        {
+            if (detective.IsAlive() && detective == PlayerControl.LocalPlayer && !InMeeting)
+            {
+                timer -= Time.fixedDeltaTime;
+                if (timer <= 0f)
+                {
+                    timer = footprintIntervall;
+                    foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                    {
+                        if (player.IsAlive() && player != PlayerControl.LocalPlayer && !player.inVent)
+                            FootprintHolder.Instance.MakeFootprint(player);
+                    }
+                }
+            }
+        }
     }
 }

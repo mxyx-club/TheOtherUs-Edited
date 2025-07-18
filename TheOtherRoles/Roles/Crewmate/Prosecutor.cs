@@ -6,7 +6,6 @@ public static class Prosecutor
     public static Color color = new Color32(178, 128, 0, byte.MaxValue);
     public static bool diesOnIncorrectPros;
     public static bool canCallEmergency;
-    public static bool canSeeVoteColors;
     public static int tasksNeededToSeeVoteColors;
 
     public static bool Prosecuted;
@@ -14,6 +13,15 @@ public static class Prosecutor
     public static bool ProsecuteThisMeeting;
     public static PlayerVoteArea Prosecute;
 
+    public static bool CanSeeVoteColors
+    {
+        get
+        {
+            if (!field) return false;
+            return PlayerControl.LocalPlayer == prosecutor && TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data).Item1 >= tasksNeededToSeeVoteColors;
+        }
+        private set;
+    }
 
     public static void clearAndReload()
     {
@@ -21,7 +29,7 @@ public static class Prosecutor
         ProsecuteThisMeeting = false;
         StartProsecute = false;
         Prosecuted = false;
-        canSeeVoteColors = CustomOptionHolder.prosecutorCanSeeVoteColors.GetBool();
+        CanSeeVoteColors = CustomOptionHolder.prosecutorCanSeeVoteColors.GetBool();
         tasksNeededToSeeVoteColors = CustomOptionHolder.prosecutorTasksNeededToSeeVoteColors.GetInt();
         diesOnIncorrectPros = CustomOptionHolder.prosecutorDiesOnIncorrectPros.GetBool();
         canCallEmergency = CustomOptionHolder.prosecutorCanCallEmergency.GetBool();

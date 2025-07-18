@@ -12,7 +12,7 @@ public class Grenadier
     public static float radius;
     public static bool indicatorsMode;
 
-    public static ResourceSprite ButtonSprite = new("FlashButton.png");
+    public static Sprite ButtonSprite = new ResourceSprite("FlashButton.png");
 
     public static void showFlash(Color color, float duration = 10f, float alpha = 1f)
     {

@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Crewmate;
+namespace TheOtherRoles.Roles.Crewmate;
 
 public static class BodyGuard
 {
@@ -9,7 +9,7 @@ public static class BodyGuard
     public static bool usedGuard;
     public static bool guardFlash;
     public static bool showShielded;
-    public static ResourceSprite guardButtonSprite = new("Shield.png");
+    public static Sprite guardButtonSprite = new ResourceSprite("Shield.png");
     public static PlayerControl currentTarget;
 
     public static void resetGuarded()

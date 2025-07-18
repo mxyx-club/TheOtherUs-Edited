@@ -1,4 +1,4 @@
-﻿using TheOtherRoles.Objects;
+using TheOtherRoles.Objects;
 
 namespace TheOtherRoles.Roles.Impostor;
 
@@ -11,9 +11,9 @@ public static class Trickster
     public static float lightsOutDuration = 10f;
     public static float lightsOutTimer;
 
-    public static ResourceSprite placeBoxButtonSprite = new("PlaceJackInTheBoxButton.png");
-    public static ResourceSprite lightOutButtonSprite = new("LightsOutButton.png");
-    public static ResourceSprite tricksterVentButtonSprite = new("TricksterVentButton.png");
+    public static Sprite placeBoxButtonSprite = new ResourceSprite("PlaceJackInTheBoxButton.png");
+    public static Sprite lightOutButtonSprite = new ResourceSprite("LightsOutButton.png");
+    public static Sprite tricksterVentButtonSprite = new ResourceSprite("TricksterVentButton.png");
 
     public static void clearAndReload()
     {

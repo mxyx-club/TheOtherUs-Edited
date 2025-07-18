@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Crewmate;
+namespace TheOtherRoles.Roles.Crewmate;
 
 public class Hacker
 {
@@ -18,7 +18,7 @@ public class Hacker
     public static int chargesAdminTable = 1;
     public static bool cantMove = true;
 
-    public static ResourceSprite buttonSprite = new("HackerButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("HackerButton.png");
     private static Sprite vitalsSprite;
     private static Sprite logSprite;
     private static Sprite adminSprite;

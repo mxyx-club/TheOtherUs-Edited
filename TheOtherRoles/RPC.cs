@@ -1,9 +1,9 @@
 #nullable enable
 using AmongUs.GameOptions;
 using PowerTools;
+using TheOtherRoles.Attributes;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Objects.Map;
 using TheOtherRoles.Patches;
 using static TheOtherRoles.Buttons.HudManagerStartPatch;
 using static TheOtherRoles.Options.ModOption;
@@ -13,8 +13,7 @@ namespace TheOtherRoles;
 public enum CustomRPC : byte
 {
     // Main Controls
-    ResetVaribles = 80,
-    ShareOptions,
+    ShareOptions = 80,
     WorkaroundSetRoles,
     SetRole,
     SetModifier,
@@ -26,7 +25,8 @@ public enum CustomRPC : byte
     StopStart,
     DraftModePickOrder,
     DraftModePick,
-    ShareGameMode = 95,
+    ShareGameMode,
+    ShareFriendCode,
 
     CustomMurderPlayer,
     UncheckedExilePlayer,
@@ -117,7 +117,6 @@ public enum CustomRPC : byte
     JailorSendMessage,
     JailorJail,
     ExiledJailed,
-    HunterStalk,
 
     TrapperKill,
     PlaceTrap,
@@ -126,6 +125,8 @@ public enum CustomRPC : byte
     DisableTrap,
     Prosecute,
     MayorRevealed,
+    MayorMultiVote,
+    MayorSetVoteCount,
     SurvivorVestActive,
     PoltergeistMove,
     jesterDragBody,
@@ -146,6 +147,8 @@ public enum CustomRPC : byte
 
     // Other functionality
     ShareGhostInfo,
+
+    NetworkTransform = 250,
 }
 
 public static class RPCProcedure
@@ -171,34 +174,23 @@ public static class RPCProcedure
         HostExile,
         HostRevive,
         HostClearTasks,
+        HostClearVotes,
     }
 
     // Main Controls
-
+    [OnGameStart, OnGameEnd]
     public static void resetVariables()
     {
         clearAndReloadModOptions();
         clearAndReloadRoles();
         MapData.Clear();
-        RoleDraft.Clear();
         GhostRole.ClearAndReload();
-        Garlic.clearGarlics();
-        JackInTheBox.clearJackInTheBoxes();
-        NinjaTrace.clearTraces();
-        AdditionalVents.clearAndReload();
-        Portal.clearPortals();
-        Bloodytrail.resetSprites();
-        Trap.clearTraps();
-        KillTrap.ClearAndReload();
-        Silhouette.clearSilhouettes();
-        ElectricPatch.Reset();
-        GameHistory.Clear();
-        setCustomButtonCooldowns();
         toggleZoom(true);
         GameStartManagerPatch.GameStartManagerUpdatePatch.startingTimer = 0;
         SurveillanceMinigamePatch.nightVisionOverlays = null;
         MeetingHudPatch.MeetingCount = 0;
         ChatCommands.EnableChat.ForceEnableChat = false;
+        Message($"ClearAndReload", "RPC");
     }
 
     public static void HandleShareOptions(byte numberOfOptions, MessageReader reader)
@@ -620,36 +612,44 @@ public static class RPCProcedure
                 HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, reader.ReadString());
                 break;
             case HostCommand.HostKill:
-            {
-                var target = reader.ReadPlayer();
-                if (target.IsDead()) return;
-
-                target.Exiled();
-                GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.HostCmdKill, controller);
-
-                DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
-                foreach (var body in array)
                 {
-                    if (body.ParentId != target.PlayerId) continue;
-                    UObject.Destroy(body.gameObject);
-                    break;
+                    var target = reader.ReadPlayer();
+                    if (target.IsDead()) return;
+
+                    target.Exiled();
+                    GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.HostKill, controller);
+
+                    DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
+                    foreach (var body in array)
+                    {
+                        if (body.ParentId != target.PlayerId) continue;
+                        UObject.Destroy(body.gameObject);
+                        break;
+                    }
                 }
-            }
-            break;
+                break;
             case HostCommand.HostRevive:
-            {
-                var target = reader.ReadPlayer();
-                target?.ModRevive(true, true);
-            }
-            break;
+                {
+                    var target = reader.ReadPlayer();
+                    target?.ModRevive(true, true);
+                }
+                break;
             case HostCommand.HostClearTasks:
-            {
-                var target = reader.ReadPlayer();
-                target.clearAllTasks();
-            }
-            break;
+                {
+                    var target = reader.ReadPlayer();
+                    target.clearAllTasks();
+                }
+                break;
             case HostCommand.HostExile:
                 ExileControllerBeginPatch.ForceExile = true;
+                break;
+            case HostCommand.HostClearVotes:
+                if (!InMeeting) return;
+                MeetingHud.Instance.playerStates.ForEach((x) =>
+                {
+                    x.UnsetVote();
+                });
+                MeetingHud.Instance.ClearVote();
                 break;
             default:
                 break;
@@ -821,7 +821,7 @@ public static class RPCProcedure
              !Medic.showShieldAfterMeeting); // Dont show attempt, if shield is not shown yet
         var isMedicAndShow = Medic.medic == PlayerControl.LocalPlayer && Medic.showAttemptToMedic;
 
-        if (isShieldedAndShow || isMedicAndShow || CanSeeRoleInfo)
+        if (isShieldedAndShow || isMedicAndShow || CanSeeGhostInfo)
             showFlash(Palette.ImpostorRed, 1.5f, GetString("medicShowAttemptText"));
 
         if (!Medic.unbreakableShield)
@@ -1312,12 +1312,11 @@ public static class RPCProcedure
             new Action<float>(p =>
             {
                 // Delayed action
-                if (Bomber.hasBombPlayer.IsDead()) return;
+                if (Bomber.bomber.IsDead() || Bomber.hasBombPlayer.IsDead()) return;
                 if (p == 1f && Bomber.bombActive)
                 {
                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                    if (Bomber.bomber.IsAlive() && PlayerControl.LocalPlayer == Bomber.bomber)
-                        RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
+                    if (PlayerControl.LocalPlayer == Bomber.bomber) RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
                     Bomber.hasBombPlayer = null;
                     Bomber.bombActive = false;
                     Bomber.hasAlerted = false;
@@ -1477,7 +1476,7 @@ public static class RPCProcedure
 
         if (MeetingHud.Instance)
         {
-            MeetingHud.Instance.discussionTimer -= CustomOptionHolder.guessExtendmeetingTime.GetFloat();
+            ExtendMeetingTime(CustomOptionHolder.guessExtendmeetingTime.GetFloat());
             MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, akujoId);
 
             foreach (var pva in MeetingHud.Instance.playerStates)
@@ -1564,7 +1563,7 @@ public static class RPCProcedure
 
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
-        var canSee = Swooper.swooper == PlayerControl.LocalPlayer || CanSeeRoleInfo;
+        var canSee = Swooper.swooper == PlayerControl.LocalPlayer || CanSeeGhostInfo;
         if (canSee) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
         target.cosmetics.colorBlindText.gameObject.SetActive(false);
@@ -1591,7 +1590,7 @@ public static class RPCProcedure
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
         var canSee = Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer) ||
-                     Jackal.Sidekick == PlayerControl.LocalPlayer || CanSeeRoleInfo;
+                     Jackal.Sidekick == PlayerControl.LocalPlayer || CanSeeGhostInfo;
         if (canSee) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
         target.cosmetics.colorBlindText.gameObject.SetActive(false);
@@ -1870,7 +1869,7 @@ public static class RPCProcedure
                 break;
             case GhostInfoTypes.GhostChat:
                 string chat = reader.ReadString();
-                if (CanSeeRoleInfo) FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(sender, chat);
+                if (CanSeeGhostInfo) FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(sender, chat);
                 break;
             case GhostInfoTypes.BlankUsed:
                 Pursuer.blankedList.Remove(sender);
@@ -1920,17 +1919,18 @@ internal class RPCHandlerPatch
     [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.StartRpcImmediately)), HarmonyPostfix]
     private static void LogSentRpc([HarmonyArgument(1)] byte callId)
     {
-        if (!CustomOptionHolder.logRpcSend.GetBool()) return;
-
-        string type = callId < 80 ? "Vanilla" : "Custom";
-        Info($"RpcId: {callId} Type: {type} Name: {RpcName(callId)}", "SEND");
+        if (callId < 250 && CustomOptionHolder.logRpcSend.GetBool())
+        {
+            string type = callId < 80 ? "Vanilla" : "Custom";
+            Info($"RpcId: {callId} Type: {type} Name: {RpcName(callId)}", "SEND");
+        }
     }
 
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc)), HarmonyPrefix]
     private static bool HandleRpcPatch([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
     {
         var packetId = (CustomRPC)callId;
-        if (CustomOptionHolder.logRpcSend.GetBool())
+        if (callId < 250 && CustomOptionHolder.logRpcSend.GetBool())
         {
             string type = callId < 80 ? "Vanilla" : "Custom";
             Info($"RpcId: {callId} Type: {type} Name: {RpcName(callId)} Size: {reader.Length}", "RECV");
@@ -1941,9 +1941,6 @@ internal class RPCHandlerPatch
         switch (packetId)
         {
             // Main Controls
-            case CustomRPC.ResetVaribles:
-                RPCProcedure.resetVariables();
-                break;
             case CustomRPC.ShareOptions:
                 RPCProcedure.HandleShareOptions(reader.ReadByte(), reader);
                 break;
@@ -2404,7 +2401,7 @@ internal class RPCHandlerPatch
                 Jester.DragBody(reader.ReadByte());
                 break;
             case CustomRPC.InfectedTarget:
-                Infected.InfectedTarget(reader.ReadByte(), reader.ReadByte());
+                Infected.InfectedTarget(reader.ReadByte(), reader.ReadByte(), reader.ReadInt32());
                 break;
             case CustomRPC.JailorSendMessage:
                 Jailor.JailorSendMessage(reader.ReadPlayer(), reader.ReadString());
@@ -2415,6 +2412,20 @@ internal class RPCHandlerPatch
             case CustomRPC.ExiledJailed:
                 Jailor.ExiledJailed(reader.ReadPlayer(), reader.ReadPlayer());
                 break;
+            case CustomRPC.NetworkTransform:
+                ModdedNetworkTransform.ReceivedNetworkTransform(reader);
+                break;
+            case CustomRPC.MayorMultiVote:
+                Mayor.MultiVote = reader.ReadBoolean();
+                break;
+            case CustomRPC.MayorSetVoteCount:
+                Mayor.CurrentVote = reader.ReadInt32();
+                Mayor.MyVotes = reader.ReadSingle();
+                break;
+            case CustomRPC.ShareFriendCode:
+                PlayerData.ShareFriendCode(reader.ReadByte(), reader.ReadString());
+                break;
+
         }
 
         return false;

@@ -88,13 +88,21 @@ public class Jailor
         target.Exiled();
         GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.Jailed, player);
 
-        HudManager.Instance.KillOverlay.ShowKillAnimation(Jailed.Data, Jailed.Data);
+        foreach (var playerState in MeetingHud.Instance.playerStates)
+        {
+            if (playerState.TargetPlayerId != target.PlayerId) continue;
+            playerState.transform.FindChild("JailCell")?.gameObject?.Destroy();
+            playerState.transform.FindChild("JailTargetIcon")?.gameObject?.Destroy();
+        }
+        Jailed = null;
+
+        HudManager.Instance.KillOverlay.ShowKillAnimation(target.Data, target.Data);
 
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(target.KillSfx, false, 0.8f);
 
         if (MeetingHud.Instance)
         {
-            MeetingHud.Instance.discussionTimer -= CustomOptionHolder.guessExtendmeetingTime.GetFloat();
+            ExtendMeetingTime(CustomOptionHolder.guessExtendmeetingTime.GetFloat());
             MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, target.PlayerId);
 
             var partner = target.GetPartner();
@@ -150,7 +158,7 @@ public class Jailor
     {
         JailorMessage = true;
         message = Cs(Color.red, message);
-        if (PlayerControl.LocalPlayer == Jailed || CanSeeRoleInfo)
+        if (PlayerControl.LocalPlayer == Jailed || CanSeeGhostInfo)
         {
             FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Jailed, message);
             Message($"SendMessage: {message}");

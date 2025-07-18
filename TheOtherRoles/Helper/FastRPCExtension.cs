@@ -86,46 +86,15 @@ public static class FastRPCExtension
         AmongUsClient.Instance.FinishRpcImmediately(Writer);
     }
 
-    private static PlayerData<ClientData> PlayerClients;
-    private static PlayerData<int> PlayerClientIds;
-
-    public static void InitClientCache()
-    {
-        PlayerClients = new();
-        PlayerClientIds = new(defaultvalue: -1);
-        foreach (var clientData in AmongUsClient.Instance.allClients)
-        {
-            PlayerClients[clientData.Character] = clientData;
-            PlayerClientIds[clientData.Character] = clientData.Id;
-        }
-    }
-
-    public static void DestoryClientCache()
-    {
-        PlayerClients = null;
-        PlayerClientIds = null;
-    }
-
     public static ClientData GetClient(this PlayerControl player)
     {
         if (AmongUsClient.Instance?.allClients == null)
             return null;
-        if (PlayerClients == null)
-            return AmongUsClient.Instance.allClients.FirstOrDefault(cd => cd.Character != null && cd.Character.PlayerId == player.PlayerId);
-        else
-            return PlayerClients[player];
+        return AmongUsClient.Instance.allClients.FirstOrDefault(cd => cd.Character != null && cd.Character.PlayerId == player.PlayerId);
     }
 
     public static int GetClientId(this PlayerControl player)
     {
-        if (PlayerClientIds == null)
-        {
-            var client = player.GetClient();
-            return client == null ? -1 : client.Id;
-        }
-        else
-        {
-            return PlayerClientIds[player];
-        }
+        return player.GetClient() == null ? -1 : player.GetClient().Id;
     }
 }

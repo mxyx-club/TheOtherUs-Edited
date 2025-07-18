@@ -26,26 +26,26 @@ public static class Doomsayer
     {
         try
         {
-            var allRoleInfo = (onlineTarger ? onlineRoleInfos() : allRoleInfos()).OrderBy(_ => rnd.Next()).ToList();
+            var roleList = (onlineTarger ? onlineRoleInfos() : allRoleInfos()).OrderBy(_ => rnd.Next()).ToList();
             var roleInfoTarget = RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault();
             var AllMessage = new List<string>();
-            allRoleInfo.Remove(RoleInfo.doomsayer);
-            allRoleInfo.Remove(roleInfoTarget);
+            roleList.Remove(RoleInfo.doomsayer);
+            roleList.Remove(roleInfoTarget);
 
-            if (allRoleInfo.Count < formationNum + 2)
-                return $"There are fewer than {formationNum + 2} players.\n玩家人数不足 {formationNum + 2} 无法揭示。";
+            if (roleList.Count < formationNum + 3)
+                return $"There are fewer than {formationNum + 3} players.\n玩家人数不足 {formationNum + 3} 无法揭示。";
 
             var formation = formationNum;
             var x = rnd.Next(0, formation);
             var message = new StringBuilder();
-            var tempNumList = Enumerable.Range(0, allRoleInfo.Count).ToList();
+            var tempNumList = Enumerable.Range(0, roleList.Count).ToList();
             var temp = (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList).OrderBy(_ => rnd.Next()).ToList();
 
             message.AppendLine(string.Format(GetString("Doomsayer.ObserveInfo"), target?.Data?.PlayerName ?? "NULL"));
 
             for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
             {
-                var info = allRoleInfo[temp[tempNum]];
+                var info = roleList[temp[tempNum]];
 
                 message.Append(num == x ? roleInfoTarget.Name : info.Name);
                 message.Append(num < formation - 1 ? ", " : ';');

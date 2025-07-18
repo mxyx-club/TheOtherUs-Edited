@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Impostor;
+namespace TheOtherRoles.Roles.Impostor;
 
 public static class Bomber
 {
@@ -21,7 +21,7 @@ public static class Bomber
     public static PlayerControl hasBombPlayer;
 
 
-    public static ResourceSprite buttonSprite = new("Bomber2.png");
+    public static Sprite buttonSprite = new ResourceSprite("Bomber2.png");
 
     public static void clearAndReload()
     {

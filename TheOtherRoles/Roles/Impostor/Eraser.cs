@@ -13,7 +13,7 @@ public static class Eraser
     public static bool canEraseAnyone;
     public static bool canEraseGuess;
 
-    public static ResourceSprite buttonSprite = new("EraserButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("EraserButton.png");
 
     public static void clearAndReload()
     {

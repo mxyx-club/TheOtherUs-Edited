@@ -16,9 +16,9 @@ public static class Medium
     public static bool oneTimeUse;
     public static float chanceAdditionalInfo;
 
-    public static ResourceSprite soulSprite = new("Soul.png", 500f);
+    public static Sprite soulSprite = new ResourceSprite("Soul.png", 500f);
 
-    public static ResourceSprite question = new("MediumButton.png");
+    public static Sprite question = new ResourceSprite("MediumButton.png");
 
     public static void clearAndReload()
     {

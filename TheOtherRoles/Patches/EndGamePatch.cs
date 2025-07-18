@@ -1,4 +1,5 @@
 using AmongUs.GameOptions;
+using TheOtherRoles.Attributes;
 using static TheOtherRoles.Modules.SimpleTable;
 
 namespace TheOtherRoles.Patches;
@@ -586,9 +587,31 @@ public class OnGameEndPatch
 
         TempData.winners = winners.Where(x => x?.Data != null && !x.Data.Disconnected).Select(x => new WinningPlayerData(x.Data)).ToIl2CppList();
 
+        try
+        {
+            if (!AmongUsClient.Instance.AmHost) return;
+            PlayerData.WinCondition = AdditionalTempData.winCondition;
+            PlayerData.EndTime = DateTime.UtcNow;
+            foreach (var data in PlayerData.AllPlayerData)
+            {
+                if (data?.Player?.Data == null) continue;
+                var info = RoleInfo.getRoleInfoForPlayer(data.Player);
+                data.AllRole = info.ToArray();
+                data.Role = info.FirstOrDefault(x => x.roleType is not RoleType.Modifier and not RoleType.Ghost)?.roleId ?? RoleId.DefaultRole;
+                data.RoleType = info.FirstOrDefault().roleType;
+                data.IsWinner = winners.Any(x => x.PlayerId == data.PlayerId);
+                data.TaskCount = TasksHandler.taskInfo(data.Player.Data);
+            }
+            PlayerData.SaveAllPlayerDataToJson();
+        }
+        catch (Exception e)
+        {
+            Error($"Failed to set PlayerData: {e.Message}");
+        }
+
         Message($"游戏结束 {AdditionalTempData.winCondition}", "OnGameEnd");
         // Reset Settings
-        RPCProcedure.resetVariables();
+        OnGameEndAttribute.Invoke();
     }
 }
 
@@ -739,6 +762,8 @@ public class EndGameManagerSetUpPatch
                 roleSummaryTextMesh.text = roleSummaryText.ToString();
             }
         }
+
+
         AdditionalTempData.clear();
     }
 }

@@ -213,7 +213,7 @@ public class Balancer
                         MeetingHud.Instance.TitleText.text = GetString("BalancerTitleTextYouVoteEither");
                         leftplayerarea.transform.localPosition = leftpos;
                         rightplayerarea.transform.localPosition = rightpos;
-                        MeetingHud.Instance.discussionTimer = GameOptionsManager.Instance.CurrentGameOptions.GetInt(AmongUs.GameOptions.Int32OptionNames.VotingTime) - BalancerVoteTime;
+                        MeetingHud.Instance.discussionTimer = ModOption.NormalOptions.VotingTime - BalancerVoteTime;
                         MeetingHud.Instance.TimerText.gameObject.SetActive(true);
                         MeetingHud.Instance.TimerText.transform.localPosition = new(2.05f, -2, -1);
                         MeetingHud.Instance.ProceedButton.transform.localPosition = new(3.5f, -2, -1.05f);
@@ -248,8 +248,7 @@ public class Balancer
     }
     public static void StartAbility(PlayerControl source, PlayerControl player1, PlayerControl player2)
     {
-        MeetingHud.Instance.discussionTimer = GameOptionsManager.Instance.CurrentGameOptions
-            .GetInt(AmongUs.GameOptions.Int32OptionNames.VotingTime) - BalancerVoteTime - 6.5f;
+        MeetingHud.Instance.discussionTimer = ModOption.NormalOptions.VotingTime - BalancerVoteTime - 6.5f;
         currentAbilityUser = source;
         targetplayerleft = player1;
         targetplayerright = player2;

@@ -46,9 +46,6 @@ internal class RoleManagerSelectRolesPatch
 
     public static void Postfix()
     {
-        var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.ResetVaribles);
-        writer.EndRPC();
-        RPCProcedure.resetVariables();
         // Don't assign Roles in Hide N Seek
         if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek || RoleDraft.isEnabled) return;
         assignRoles();

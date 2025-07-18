@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Crewmate;
+namespace TheOtherRoles.Roles.Crewmate;
 
 public static class Swapper
 {
@@ -14,7 +14,7 @@ public static class Swapper
     public static byte playerId1 = byte.MaxValue;
     public static byte playerId2 = byte.MaxValue;
 
-    public static ResourceSprite spriteCheck = new("SwapperCheck.png", 150f);
+    public static Sprite spriteCheck = new ResourceSprite("SwapperCheck.png", 150f);
 
     public static void clearAndReload()
     {

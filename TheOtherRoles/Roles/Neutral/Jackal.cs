@@ -29,7 +29,7 @@ public class Jackal
     public static float duration = 30f;
     public static bool isInvisable;
 
-    public static ResourceSprite SidekickButton = new("SidekickButton.png");
+    public static Sprite SidekickButton = new ResourceSprite("SidekickButton.png");
 
     public static void setSwoop()
     {

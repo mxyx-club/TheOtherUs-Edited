@@ -16,8 +16,8 @@ public static class Ninja
 
     public static float invisibleTimer;
     public static bool isInvisable;
-    public static ResourceSprite markButtonSprite = new("NinjaMarkButton.png");
-    public static ResourceSprite killButtonSprite = new("NinjaAssassinateButton.png");
+    public static Sprite markButtonSprite = new ResourceSprite("NinjaMarkButton.png");
+    public static Sprite killButtonSprite = new ResourceSprite("NinjaAssassinateButton.png");
     public static Arrow arrow = new(Color.black);
 
     public static void clearAndReload()

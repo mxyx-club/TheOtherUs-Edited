@@ -10,7 +10,7 @@ public static class Shifter
     public static bool shiftALLNeutra;
     public static bool reloadRole;
 
-    public static ResourceSprite buttonSprite = new("ShiftButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("ShiftButton.png");
 
     public static bool NotShift(PlayerControl player)
     {

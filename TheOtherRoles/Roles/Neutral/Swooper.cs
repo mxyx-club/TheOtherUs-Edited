@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Neutral;
+namespace TheOtherRoles.Roles.Neutral;
 
 public static class Swooper
 {
@@ -14,7 +14,7 @@ public static class Swooper
     public static bool hasImpVision;
     public static bool canUseVents;
 
-    public static ResourceSprite SwoopButtonSprite = new("Swoop.png");
+    public static Sprite SwoopButtonSprite = new ResourceSprite("Swoop.png");
 
     public static void clearAndReload()
     {

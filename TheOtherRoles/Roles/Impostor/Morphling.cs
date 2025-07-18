@@ -1,11 +1,11 @@
-﻿namespace TheOtherRoles.Roles.Impostor;
+namespace TheOtherRoles.Roles.Impostor;
 
 public static class Morphling
 {
     public static PlayerControl morphling;
     public static Color color = Palette.ImpostorRed;
-    public static ResourceSprite sampleSprite = new("SampleButton.png");
-    public static ResourceSprite morphSprite = new("MorphButton.png");
+    public static Sprite sampleSprite = new ResourceSprite("SampleButton.png");
+    public static Sprite morphSprite = new ResourceSprite("MorphButton.png");
 
     public static float cooldown = 30f;
     public static float duration = 10f;

@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Impostor;
+namespace TheOtherRoles.Roles.Impostor;
 
 public static class Cleaner
 {
@@ -7,7 +7,7 @@ public static class Cleaner
 
     public static float cooldown = 30f;
 
-    public static ResourceSprite buttonSprite = new("CleanButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("CleanButton.png");
 
     public static void clearAndReload()
     {

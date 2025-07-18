@@ -25,12 +25,12 @@ public static class SecurityGuard
     private static Sprite animatedVentSealedSprite;
     private static Sprite camSprite;
     private static Sprite logSprite;
-    public static ResourceSprite closeVentButtonSprite = new("CloseVentButton.png");
-    public static ResourceSprite placeCameraButtonSprite = new("PlaceCameraButton.png");
-    public static ResourceSprite staticVentSealedSprite = new("StaticVentSealed.png", 160);
-    public static ResourceSprite fungleVentSealedSprite = new("FungleVentSealed.png", 160);
-    public static ResourceSprite submergedCentralUpperVentSealedSprite = new("CentralUpperBlocked.png", 145);
-    public static ResourceSprite submergedCentralLowerVentSealedSprite = new("CentralLowerBlocked.png", 145);
+    public static Sprite closeVentButtonSprite = new ResourceSprite("CloseVentButton.png");
+    public static Sprite placeCameraButtonSprite = new ResourceSprite("PlaceCameraButton.png");
+    public static Sprite staticVentSealedSprite = new ResourceSprite("StaticVentSealed.png", 160);
+    public static Sprite fungleVentSealedSprite = new ResourceSprite("FungleVentSealed.png", 160);
+    public static Sprite submergedCentralUpperVentSealedSprite = new ResourceSprite("CentralUpperBlocked.png", 145);
+    public static Sprite submergedCentralLowerVentSealedSprite = new ResourceSprite("CentralLowerBlocked.png", 145);
 
     public static Sprite getAnimatedVentSealedSprite()
     {

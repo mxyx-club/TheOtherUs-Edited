@@ -34,12 +34,13 @@ public class Infected
             var writer = StartRPC(CustomRPC.InfectedTarget);
             writer.Write(player.PlayerId);
             writer.Write(target.PlayerId);
+            writer.Write(CreatedCount + 1);
             writer.EndRPC();
-            InfectedTarget(player.PlayerId, target.PlayerId);
+            InfectedTarget(player.PlayerId, target.PlayerId, CreatedCount + 1);
         }
     }
 
-    public static void InfectedTarget(byte playerId, byte targetId)
+    public static void InfectedTarget(byte playerId, byte targetId, int count)
     {
         var player = PlayerById(playerId);
         var target = PlayerById(targetId);
@@ -60,7 +61,7 @@ public class Infected
         }
         RPCProcedure.erasePlayerRoles(targetId);
         Player.Add(target);
-        CreatedCount++;
+        CreatedCount = count;
     }
 
 
@@ -68,7 +69,7 @@ public class Infected
     {
         Player = new();
         currentTarget = null;
-        CreatedCount = 0;
+        CreatedCount = 1;
         cooldown = CustomOptionHolder.infectedKillCooldown.GetFloat();
         MaxPlayer = CustomOptionHolder.infectedMaxPlayer.GetInt();
         ActiveLimit = CustomOptionHolder.infectedActiveLimit.GetInt();

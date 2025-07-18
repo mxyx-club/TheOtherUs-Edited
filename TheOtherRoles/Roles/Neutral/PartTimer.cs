@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Neutral;
+namespace TheOtherRoles.Roles.Neutral;
 
 public class PartTimer
 {
@@ -12,7 +12,7 @@ public class PartTimer
     public static int deathTurn;
     public static bool knowsRole;
 
-    public static ResourceSprite buttonSprite = new("PartTimerButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("PartTimerButton.png");
 
     public static void clearAndReload()
     {

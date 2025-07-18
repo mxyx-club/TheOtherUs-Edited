@@ -13,7 +13,7 @@ public static class Vulture
     public static bool triggerVultureWin;
     public static bool canUseVents = true;
     public static bool showArrows = true;
-    public static ResourceSprite buttonSprite = new("VultureButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("VultureButton.png");
 
     public static void clearAndReload()
     {

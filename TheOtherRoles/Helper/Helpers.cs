@@ -1,5 +1,5 @@
-using System.IO;
 using AmongUs.GameOptions;
+using System.IO;
 using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Patches;
 
@@ -40,8 +40,10 @@ public static class Helpers
     public static PlayerControl GetHostPlayer => GameData.Instance.GetHost().Object;
     public static System.Random rnd => new(Guid.NewGuid().GetHashCode());
 
-    public static bool isUsingTransportation(this PlayerControl pc) => pc.inMovingPlat || pc.onLadder;
+    public static Sprite ZoomIn = new ResourceSprite("ZoomIn.png", 21f);
+    public static Sprite ZoomOut = new ResourceSprite("ZoomOut.png", 85f);
 
+    public static bool isUsingTransportation(this PlayerControl pc) => pc.inMovingPlat || pc.onLadder;
 
     /// <summary>
     /// 假任务
@@ -429,23 +431,26 @@ public static class Helpers
         }
     }
 
-    public static IEnumerator BlackmailShhh()
+    public static void ExtendMeetingTime(float time)
     {
-        //Helpers.showFlash(new Color32(49, 28, 69, byte.MinValue), 3f, "Blackmail", false, 0.75f);
-        yield return HudManager.Instance.CoFadeFullScreen(Color.clear, new Color(0f, 0f, 0f, 0.98f));
-        var TempPosition = HudManager.Instance.shhhEmblem.transform.localPosition;
-        var TempDuration = HudManager.Instance.shhhEmblem.HoldDuration;
-        HudManager.Instance.shhhEmblem.transform.localPosition = new Vector3(
-            HudManager.Instance.shhhEmblem.transform.localPosition.x,
-            HudManager.Instance.shhhEmblem.transform.localPosition.y,
-            HudManager.Instance.FullScreen.transform.position.z + 1f);
-        HudManager.Instance.shhhEmblem.TextImage.text = ModTranslation.GetString("BlackmailShhhText");
-        HudManager.Instance.shhhEmblem.HoldDuration = 3f;
-        yield return HudManager.Instance.ShowEmblem(true);
-        HudManager.Instance.shhhEmblem.transform.localPosition = TempPosition;
-        HudManager.Instance.shhhEmblem.HoldDuration = TempDuration;
-        yield return HudManager.Instance.CoFadeFullScreen(new Color(0f, 0f, 0f, 0.98f), Color.clear);
-        yield return null;
+        if (MeetingHud.Instance && MeetingHud.Instance.state is not MeetingHud.VoteStates.Discussion and not MeetingHud.VoteStates.Results)
+        {
+            var currentTime = MeetingHud.Instance.discussionTimer - ModOption.NormalOptions.DiscussionTime;
+            MeetingHud.Instance.discussionTimer = Math.Max(currentTime, MeetingHud.Instance.discussionTimer - time);
+        }
+    }
+
+    public static float GetPenaltyVotingTime()
+    {
+        if (GameOptionsManager.Instance.CurrentGameOptions.GameMode != GameModes.Normal || !CustomOptionHolder.playerDieReducedTime.GetBool())
+        {
+            return 0f;
+        }
+        float total = PlayerControl.AllPlayerControls.Count(static x => x.IsDead()) * CustomOptionHolder.playerDieReducedTime.GetFloat();
+
+        float penalty = Mathf.Min(total, (float)(ModOption.NormalOptions.VotingTime - CustomOptionHolder.minMeetingTime.GetFloat()));
+
+        return penalty;
     }
 
     public static int getAvailableId()
@@ -481,28 +486,30 @@ public static class Helpers
 #nullable enable
     public static void showTargetNameOnButton(this CustomButton button, PlayerControl? target, string defaultText = "")
     {
-        if (CustomOptionHolder.showButtonTarget.GetBool())
-        {
-            defaultText = defaultText.IsNullOrWhiteSpace() ? button.buttonText : defaultText;
-            var text = defaultText;
-            if (Camouflager.camouflageTimer >= 0.1f || isCamoComms) text = defaultText;
-            else if (isLightsActive) text = defaultText;
-            else if (Trickster.trickster != null && Trickster.lightsOutTimer > 0f) text = defaultText;
-            else if (Morphling.morphling != null && Morphling.morphTarget != null && target == Morphling.morphling && Morphling.morphTimer > 0)
-                text = Morphling.morphTarget.Data.PlayerName;
-            else if (target == Ninja.ninja && Ninja.isInvisable) text = defaultText;
-            else if (target == Swooper.swooper && Swooper.isInvisable) text = defaultText;
-            else if (Jackal.jackal.Any(p => p == target) && Jackal.isInvisable) text = defaultText;
-            else text = target == null ? defaultText : target?.Data?.PlayerName ?? "";
+        var displayText = defaultText.IsNullOrWhiteSpace() ? button.buttonText : defaultText;
 
-            button.actionButton.OverrideText(text);
-            button.showButtonText = true;
-        }
-        else
+        if (!CustomOptionHolder.showButtonTarget.GetBool())
         {
-            button.actionButton.OverrideText(defaultText);
-            button.showButtonText = true;
+            button.SetButtonText(displayText);
+            return;
         }
+
+        if (target != null && !(
+            Camouflager.camouflageTimer >= 0.1f || isCamoComms || isLightsActive ||
+            (Trickster.trickster != null && Trickster.lightsOutTimer > 0f) ||
+            (target == Ninja.ninja && Ninja.isInvisable) ||
+            (target == Swooper.swooper && Swooper.isInvisable) ||
+            (Jackal.jackal.Contains(target) && Jackal.isInvisable) ||
+            (Morphling.morphling != null && target == Morphling.morphling && Morphling.morphTimer > 0)))
+        {
+            displayText = target.Data.PlayerName;
+        }
+        else if (Morphling.morphling != null && target == Morphling.morphling && Morphling.morphTimer > 0)
+        {
+            displayText = Morphling.morphTarget?.Data.PlayerName ?? displayText;
+        }
+
+        button.SetButtonText(displayText);
     }
 
     public static IEnumerable<DeadBody> AllDeadBodies()
@@ -623,7 +630,7 @@ public static class Helpers
         }
         catch (Exception e)
         {
-            Message(e, "TryAdd");
+            Message(e);
             return false;
         }
     }
@@ -700,6 +707,17 @@ public static class Helpers
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             if (player?.Data?.PlayerName == name) return player;
         return null;
+    }
+
+    public static CustomGamemodes SetNextGameMode()
+    {
+
+        ModOption.gameMode = (CustomGamemodes)((int)(ModOption.gameMode + 1) % Enum.GetNames(typeof(CustomGamemodes)).Length);
+        MessageWriter writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.ShareGameMode);
+        writer.Write((byte)ModOption.gameMode);
+        writer.EndRPC();
+        RPCProcedure.shareGameMode((byte)ModOption.gameMode);
+        return ModOption.gameMode;
     }
 
     public static bool isSabotageActive()
@@ -876,7 +894,7 @@ public static class Helpers
 
     public static bool ZoomButtonActive()
     {
-        if (!CanSeeRoleInfo || InMeeting) return false;
+        if (!CanSeeGhostInfo || InMeeting) return false;
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
         var numberOfLeftTasks = playerTotal - playerCompleted;
         return !CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.GetBool() || (numberOfLeftTasks <= 0);
@@ -928,6 +946,13 @@ public static class Helpers
             return "https://ghfast.top/" + url;
         }
         return url;
+    }
+
+    public static bool IsCustomServer()
+    {
+        if (FastDestroyableSingleton<ServerManager>.Instance == null) return false;
+        StringNames n = FastDestroyableSingleton<ServerManager>.Instance.CurrentRegion.TranslateName;
+        return n is not StringNames.ServerNA and not StringNames.ServerEU and not StringNames.ServerAS;
     }
 
     public static void setSemiTransparent(this PoolablePlayer player, bool value, float alpha = 0.25f)
@@ -1188,9 +1213,7 @@ public static class Helpers
 
         if (HudManagerStartPatch.zoomOutButton != null)
         {
-            HudManagerStartPatch.zoomOutButton.Sprite = zoomOutStatus
-                ? new ResourceSprite("ZoomIn.png", 21f)
-                : new ResourceSprite("ZoomOut.png", 85f);
+            HudManagerStartPatch.zoomOutButton.Sprite = zoomOutStatus ? ZoomIn : ZoomOut;
             HudManagerStartPatch.zoomOutButton.PositionOffset = zoomOutStatus ? new Vector3(-0.82f, 11.5f, 0) : new(0.4f, 2.35f, 0f);
         }
 

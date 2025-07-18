@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Crewmate;
+namespace TheOtherRoles.Roles.Crewmate;
 
 public static class Portalmaker
 {
@@ -11,8 +11,8 @@ public static class Portalmaker
     public static bool logShowsTime;
     public static bool canPortalFromAnywhere;
 
-    public static ResourceSprite placePortalButtonSprite = new("PlacePortalButton.png");
-    public static ResourceSprite usePortalButtonSprite = new("UsePortalButton.png");
+    public static Sprite placePortalButtonSprite = new ResourceSprite("PlacePortalButton.png");
+    public static Sprite usePortalButtonSprite = new ResourceSprite("UsePortalButton.png");
 
     public static void clearAndReload()
     {

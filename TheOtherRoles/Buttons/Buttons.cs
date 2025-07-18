@@ -1,4 +1,5 @@
 using Reactor.Networking;
+using TheOtherRoles.Attributes;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 using static TheOtherRoles.Buttons.CustomButton;
@@ -17,36 +18,36 @@ internal static class HudManagerStartPatch
     public static CustomButton ghostEngineerButton;
     public static CustomButton engineerRepairButton;
     public static CustomButton sheriffKillButton;
-    private static CustomButton deputyHandcuffButton;
-    private static CustomButton amnisiacRememberButton;
-    private static CustomButton specterRememberButton;
+    public static CustomButton deputyHandcuffButton;
+    public static CustomButton amnisiacRememberButton;
+    public static CustomButton specterRememberButton;
     public static CustomButton veteranAlertButton;
     public static CustomButton medicShieldButton;
-    private static CustomButton shifterShiftButton;
+    public static CustomButton shifterShiftButton;
     public static CustomButton bomberBombButton;
     public static CustomButton bomberGiveButton;
     public static CustomButton bountyHunterChangeTarget;
-    private static CustomButton disperserDisperseButton;
-    private static CustomButton buttonBarryButton;
+    public static CustomButton disperserDisperseButton;
+    public static CustomButton buttonBarryButton;
     public static CustomButton morphlingButton;
     public static CustomButton butcherDissectionButton;
     public static CustomButton camouflagerButton;
     public static CustomButton portalmakerPlacePortalButton;
-    private static CustomButton usePortalButton;
+    public static CustomButton usePortalButton;
     public static CustomButton portalmakerMoveToPortalButton;
     public static CustomButton hackerButton;
     public static CustomButton hackerVitalsButton;
     public static CustomButton hackerAdminTableButton;
     public static CustomButton trackerTrackPlayerButton;
     public static CustomButton bodyGuardGuardButton;
-    private static CustomButton trackerTrackCorpsesButton;
+    public static CustomButton trackerTrackCorpsesButton;
     public static CustomButton vampireKillButton;
     public static CustomButton garlicButton;
     public static CustomButton jackalKillButton;
     public static CustomButton jackalSwoopButton;
     public static CustomButton swooperSwoopButton;
     public static CustomButton swooperKillButton;
-    private static CustomButton jackalCreateSidekickButton;
+    public static CustomButton jackalCreateSidekickButton;
     public static CustomButton eraserButton;
     public static CustomButton pavlovsdogsKillButton;
     public static CustomButton pavlovsownerCreateDogButton;
@@ -109,6 +110,7 @@ internal static class HudManagerStartPatch
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
 
+    [OnGameStart]
     public static void setCustomButtonCooldowns()
     {
         if (!initialized)
@@ -327,11 +329,7 @@ internal static class HudManagerStartPatch
         gameModeButton = new CustomButton(
             () =>
             {
-                ModOption.gameMode = (CustomGamemodes)((int)(ModOption.gameMode + 1) % Enum.GetNames(typeof(CustomGamemodes)).Length);
-                MessageWriter writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.ShareGameMode);
-                writer.Write((byte)ModOption.gameMode);
-                writer.EndRPC();
-                RPCProcedure.shareGameMode((byte)ModOption.gameMode);
+                SetNextGameMode();
             },
             () => { return PlayerControl.LocalPlayer && AmongUsClient.Instance?.AmHost == true && LobbyBehaviour.Instance; },
             () => { return true; },
@@ -341,7 +339,7 @@ internal static class HudManagerStartPatch
             __instance,
             __instance.AbilityButton,
             null,
-            buttonText: "更换模式"
+            buttonText: GetString("gameModeButton")
         )
         { Timer = 0f };
 
@@ -349,7 +347,7 @@ internal static class HudManagerStartPatch
             () => { toggleZoom(); },
             () =>
             {
-                if (!CanSeeRoleInfo) return false;
+                if (!CanSeeGhostInfo) return false;
                 if (PlayerControl.LocalPlayer.IsAlive()) return false;
                 var (playerCompleted, playerTotal) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
                 var numberOfLeftTasks = playerTotal - playerCompleted;
@@ -510,14 +508,14 @@ internal static class HudManagerStartPatch
                         switch (Sheriff.misfireKills)
                         {
                             case 0:
-                                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer, true, true, CustomDeathReason.SheriffMisfire);
+                                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer, true, true, CustomDeathReason.SheriffSuicide);
                                 break;
                             case 1:
-                                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, target, true, true, CustomDeathReason.SheriffMisadventure);
+                                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, target, true, true, CustomDeathReason.SheriffMisfire);
                                 break;
                             case 2:
-                                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, target, true, true, CustomDeathReason.SheriffMisadventure);
-                                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer, true, true, CustomDeathReason.SheriffMisfire);
+                                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, target, true, true, CustomDeathReason.SheriffMisfire);
+                                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer, true, true, CustomDeathReason.SheriffSuicide);
                                 break;
                         }
 
@@ -867,10 +865,8 @@ internal static class HudManagerStartPatch
         mayorMeetingButton = new CustomButton(
             () =>
             {
-                //PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement 
-                Mayor.remoteMeetingsLeft--;
-
-                //RPCProcedure.uncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
+                PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement 
+                Mayor.UsedMeetingButton = true;
 
                 var writer = StartRPC(CustomRPC.NoCheckStartMeeting);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
@@ -883,19 +879,21 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Mayor.mayor.IsAlive() && Mayor.mayor == PlayerControl.LocalPlayer && Mayor.meetingButton;
+                return Mayor.mayor.IsAlive() && Mayor.mayor == PlayerControl.LocalPlayer && Mayor.meetingButton && !Mayor.UsedMeetingButton;
             },
             () =>
             {
-                mayorMeetingButton.actionButton.OverrideText(GetString("MayorButtonText") + "(" + Mayor.remoteMeetingsLeft + ")");
+                mayorMeetingButton.actionButton.OverrideText(GetString("MayorButtonText") + "(" + Mayor.UsedMeetingButton + ")");
                 var sabotageActive = false;
                 foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
-                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
-                    task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
-                        SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask) && !Mayor.SabotageRemoteMeetings)
+                {
+                    if ((task.TaskType is TaskTypes.FixLights or TaskTypes.RestoreOxy or TaskTypes.ResetReactor
+                            or TaskTypes.ResetSeismic or TaskTypes.FixComms or TaskTypes.StopCharles)
+                            || (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
                         sabotageActive = true;
-                return !sabotageActive && PlayerControl.LocalPlayer.CanMove &&
-                       Mayor.remoteMeetingsLeft > 0;
+                }
+
+                return !sabotageActive && PlayerControl.LocalPlayer.CanMove;
             },
             () => { mayorMeetingButton.Timer = mayorMeetingButton.MaxTimer; },
             Mayor.emergencySprite,
@@ -903,10 +901,6 @@ internal static class HudManagerStartPatch
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
-            true,
-            0f,
-            () => { },
-            false,
             buttonText: GetString("MayorButtonText")
         );
 
@@ -914,7 +908,7 @@ internal static class HudManagerStartPatch
         buttonBarryButton = new CustomButton(
             () =>
             {
-                //PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement 
+                PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement 
                 ButtonBarry.remoteMeetingsLeft--;
 
                 var writer = StartRPC(CustomRPC.NoCheckStartMeeting);
@@ -929,19 +923,19 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return ButtonBarry.buttonBarry != null && ButtonBarry.buttonBarry == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
+                return ButtonBarry.buttonBarry.IsAlive() && ButtonBarry.buttonBarry == PlayerControl.LocalPlayer;
             },
             () =>
             {
                 var sabotageActive = false;
                 foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
-                    if ((task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor ||
-                    task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles ||
-                        SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask) && !ButtonBarry.SabotageRemoteMeetings)
+                {
+                    if (((task.TaskType is TaskTypes.FixLights or TaskTypes.RestoreOxy or TaskTypes.ResetReactor
+                            or TaskTypes.ResetSeismic or TaskTypes.FixComms or TaskTypes.StopCharles)
+                            || (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && !ButtonBarry.SabotageRemoteMeetings)
                         sabotageActive = true;
-                return !sabotageActive && PlayerControl.LocalPlayer.CanMove &&
-                       ButtonBarry.remoteMeetingsLeft > 0;
+                }
+                return !sabotageActive && PlayerControl.LocalPlayer.CanMove && ButtonBarry.remoteMeetingsLeft > 0;
             },
             () => { buttonBarryButton.Timer = buttonBarryButton.MaxTimer; },
             ButtonBarry.buttonSprite,
@@ -1422,6 +1416,7 @@ internal static class HudManagerStartPatch
 
                             if (p == 1f)
                             {
+                                if (PlayerControl.LocalPlayer.IsDead()) return;
                                 RpcCustomMurderPlayer(Vampire.vampire, target, false);
 
                                 var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
@@ -1655,8 +1650,8 @@ internal static class HudManagerStartPatch
             {
                 return PlayerControl.LocalPlayer.CanMove &&
                        (Portal.locationNearEntry(PlayerControl.LocalPlayer.transform.position) ||
-                        Portalmaker.canPortalFromAnywhere &&
-                         PlayerControl.LocalPlayer == Portalmaker.portalmaker) && !Portal.isTeleporting;
+                        (Portalmaker.canPortalFromAnywhere &&
+                         PlayerControl.LocalPlayer == Portalmaker.portalmaker)) && !Portal.isTeleporting;
             },
             () => { usePortalButton.Timer = usePortalButton.MaxTimer; },
             Portalmaker.usePortalButtonSprite,
@@ -2241,7 +2236,12 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Werewolf.currentTarget = SetTarget();
+
+                var untargetablePlayers = new List<PlayerControl>();
+                if (SchrodingersCat.State == SchrodingersCat.CatState.Werewolf && SchrodingersCat.Player.IsAlive())
+                    untargetablePlayers.Add(SchrodingersCat.Player);
+
+                Werewolf.currentTarget = SetTarget(untarget: untargetablePlayers);
                 werewolfKillButton.showTargetNameOnButton(Werewolf.currentTarget);
                 return Werewolf.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
@@ -2357,8 +2357,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Pelican.Player != null && Pelican.Player == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
+                return Pelican.Player != null && Pelican.Player == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.IsAlive();
             },
             () =>
             {
@@ -2811,8 +2810,8 @@ internal static class HudManagerStartPatch
                     warlockCurseButton.showTargetNameOnButton(Warlock.currentTarget);
                 else
                     warlockCurseButton.showTargetNameOnButton(Warlock.currentTarget);
-                return (Warlock.curseVictim == null && Warlock.currentTarget != null ||
-                        Warlock.curseVictim != null && Warlock.curseVictimTarget != null) &&
+                return ((Warlock.curseVictim == null && Warlock.currentTarget != null) ||
+                        (Warlock.curseVictim != null && Warlock.curseVictimTarget != null)) &&
                        PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -3823,8 +3822,8 @@ internal static class HudManagerStartPatch
                 ninjaButton.Sprite = Ninja.ninjaMarked != null
                     ? Ninja.killButtonSprite
                     : Ninja.markButtonSprite;
-                return (Ninja.currentTarget != null || Ninja.ninjaMarked != null
-                        && !Ninja.ninjaMarked.isUsingTransportation())
+                return (Ninja.currentTarget != null || (Ninja.ninjaMarked != null
+                        && !Ninja.ninjaMarked.isUsingTransportation()))
                         && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -4794,6 +4793,8 @@ internal static class HudManagerStartPatch
             {
                 var target = Infected.currentTarget;
                 if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
+
+                if (target == Mini.mini && !Mini.isGrownUp()) return;
 
                 Infected.KillPlayer(PlayerControl.LocalPlayer, target);
 

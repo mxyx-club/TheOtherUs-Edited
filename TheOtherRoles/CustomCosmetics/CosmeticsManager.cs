@@ -1,6 +1,6 @@
+using BepInEx;
 using System.IO;
 using System.Text.Json.Serialization;
-using BepInEx;
 using TheOtherRoles.CustomCosmetics.CustomHats;
 
 namespace TheOtherRoles.CustomCosmetics;

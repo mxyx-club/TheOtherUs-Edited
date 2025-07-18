@@ -12,8 +12,8 @@ public static class Escapist
 
     public static Vector3 escapeLocation = Vector3.zero;
 
-    public static ResourceSprite escapeEscapeButtonSprite = new("Mark.png");
-    public static ResourceSprite escapeButtonSprite = new("Recall.png");
+    public static Sprite escapeEscapeButtonSprite = new ResourceSprite("Mark.png");
+    public static Sprite escapeButtonSprite = new ResourceSprite("Recall.png");
 
     public static void resetPlaces()
     {

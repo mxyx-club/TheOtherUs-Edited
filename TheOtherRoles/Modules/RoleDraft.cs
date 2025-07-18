@@ -1,4 +1,5 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
+using TheOtherRoles.Attributes;
 using TheOtherRoles.CustomGameModes;
 using static TheOtherRoles.Patches.RoleManagerSelectRolesPatch;
 
@@ -13,7 +14,7 @@ internal class RoleDraft
     public static List<byte> pickOrder = new();
     public static bool picked;
     public static float timer;
-    private static List<ActionButton> buttons = new();
+    private static List<Component> buttons = new();
     private static TextMeshPro feedText;
     public static List<byte> alreadyPicked = new();
     private static Dictionary<byte, byte> playerRoles = new();
@@ -21,6 +22,11 @@ internal class RoleDraft
     private static readonly SimpleTable _pickTable = new SimpleTable()
         .AddColumn(alignment: SimpleTable.Alignment.Right)
         .AddColumn(manualWidth: 20);
+
+    private static Sprite CrewmatePick = new ResourceSprite("RoleDraft.Crewmate.png");
+    private static Sprite ImpostorPick = new ResourceSprite("RoleDraft.Impostor.png");
+    private static Sprite NeutralPick = new ResourceSprite("RoleDraft.Neutral.png");
+    private static Sprite RandomPick = new ResourceSprite("RoleDraft.Random.png");
 
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.ShowTeam))]
     private class ShowRolePatch
@@ -112,20 +118,20 @@ internal class RoleDraft
                     }
                     // Animate beginning of choice, by changing background color
                     float min = 50 / 255f;
+                    float max = 200 / 255f;
                     Color backGroundColor = new Color(min, min, min, 1);
                     if (timer < 1)
                     {
-                        float max = 230 / 255f;
                         if (timer < 0.5f)
                         { // White flash                              
                             float p = timer / 0.5f;
                             float value = (float)Math.Pow(p, 2f) * max;
-                            backGroundColor = new Color(value, value, value, 1);
+                            backGroundColor = new Color(value, value, value, 1f);
                         }
                         else
                         {
                             float p = (1 - timer) / 0.5f;
-                            float value = (float)Math.Pow(p, 2f) * max + (1 - (float)Math.Pow(p, 2f)) * min;
+                            float value = ((float)Math.Pow(p, 2f) * max) + ((1 - (float)Math.Pow(p, 2f)) * min);
                             backGroundColor = new Color(value, value, value, 1);
                         }
 
@@ -272,7 +278,6 @@ internal class RoleDraft
 
                     availableRoles = availableRoles.OrderBy(_ => Guid.NewGuid()).ToList();
 
-                    //Message($"availableRoles :  {availableRoles.Count}");
                     // Fallback for if all roles are somehow removed. (This is only the case if there is a bug, hence print a warning
                     if (availableRoles.Count == 0)
                     {
@@ -281,7 +286,7 @@ internal class RoleDraft
                             : RoleInfo.crewmate);
                     }
 
-                    List<RoleInfo> originalAvailable = new(availableRoles);
+                    var originalAvailable = availableRoles.ToList();
 
                     // remove some roles, so that you can't always get the same roles:
                     if (availableRoles.Count > CustomOptionHolder.draftModeAmountOfChoices.GetFloat())
@@ -302,58 +307,76 @@ internal class RoleDraft
                     if (GameObject.Find("RoleButton") == null)
                     {
                         SoundEffectsManager.play("timemasterShield");
-                        int i = 0;
-                        int buttonsPerRow = 4;
-                        int lastRow = availableRoles.Count / buttonsPerRow;
-                        int buttonsInLastRow = availableRoles.Count % buttonsPerRow;
 
-                        foreach (RoleInfo roleInfo in availableRoles)
+                        int totalButtons = availableRoles.Count + 1;
+                        int buttonsPerRow = 4;
+                        int lastRow = totalButtons / buttonsPerRow;
+                        int buttonsInLastRow = totalButtons % buttonsPerRow;
+
+                        for (var t = 0; t < totalButtons; t++)
                         {
-                            float row = i / buttonsPerRow;
-                            float col = i % buttonsPerRow;
+                            float row = t / buttonsPerRow;
+                            float col = t % buttonsPerRow;
                             if (buttonsInLastRow != 0 && row == lastRow)
                             {
                                 col += (buttonsPerRow - buttonsInLastRow) / 2f;
                             }
+
                             // planned rows: maximum of 4, hence the following calculation for rows as well:
                             row += (4 - lastRow - 1) / 2f;
 
-                            ActionButton actionButton = UObject.Instantiate(HudManager.Instance.KillButton, __instance.TeamTitle.transform);
-                            actionButton.gameObject.SetActive(true);
-                            actionButton.gameObject.name = "RoleButton";
-                            actionButton.transform.localPosition = new Vector3(-8.4f + col * 5.5f, -10 - row * 3f);
-                            actionButton.transform.localScale = new Vector3(2f, 2f);
-                            actionButton.SetCoolDown(0, 0);
+                            var pos = new Vector2(-8.4f + (col * 5.5f), -6.8f - (row * 5.33f));
+
+                            var renderer = UnityHelper.CreateObject<SpriteRenderer>("RoleButton", __instance.TeamTitle.transform, pos);
+                            renderer.transform.localScale = new Vector3(1.85f, 1.85f);
+                            renderer.gameObject.AddComponent<BoxCollider2D>().size = new Vector2(1.7f, 2.5f);
+
                             GameObject textHolder = new GameObject("textHolder");
                             var text = textHolder.AddComponent<TextMeshPro>();
-                            text.text = roleInfo.Name.Replace(" ", "\n");
                             text.horizontalAlignment = HorizontalAlignmentOptions.Center;
-                            text.fontSize = 5;
-                            textHolder.layer = actionButton.gameObject.layer;
+                            text.fontSize = 3.5f;
+                            text.fontStyle = FontStyles.Bold;
                             text.outlineWidth = 0.1f;
-                            text.outlineColor = Color.white;
-                            text.color = roleInfo.color;
-                            textHolder.transform.SetParent(actionButton.transform, false);
-                            textHolder.transform.localPosition = new Vector3(0, text.text.Contains('\n') ? -1.975f : -2.2f, -1);
+                            text.outlineColor = Color.black;
+                            textHolder.layer = renderer.gameObject.layer;
+                            textHolder.transform.SetParent(renderer.transform, false);
 
-                            actionButton.graphic.sprite = new ResourceSprite("TheOtherRoles.Resources.RoleDraft.Random.png");
-                            SpriteRenderer actionButtonRenderer = actionButton.graphic;
-                            actionButtonRenderer.enabled = true;
-                            GameObject actionButtonGameObject = actionButton.gameObject;
-                            Material actionButtonMat = actionButtonRenderer.material;
+                            if (t == availableRoles.Count)
+                            {
+                                renderer.sprite = RandomPick;
+                                text.text = GetString("RoleDraft.Random");
+                                text.color = Color.green;
+                                textHolder.transform.localPosition = new Vector3(0, text.text.Contains('\n') ? -1.975f : -3.16f, -1);
 
-                            PassiveButton button = actionButton.GetComponent<PassiveButton>();
-                            button.OnClick = new();
-                            button.OnClick.AddListener((Action)(() =>
+                                var button = renderer.gameObject.SetUpButton();
+                                button.OnClick.AddListener(() =>
+                                {
+                                    sendPick((byte)originalAvailable.OrderBy(_ => Guid.NewGuid()).First().roleId, SelectFlags.Random);
+                                });
+
+                            }
+                            else
                             {
-                                sendPick((byte)roleInfo.roleId);
-                            }));
-                            HudManager.Instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>((p) =>
-                            {
-                                actionButton.OverrideText("");
-                            })));
-                            buttons.Add(actionButton);
-                            i++;
+                                var roleInfo = availableRoles[t];
+                                renderer.sprite = roleInfo.roleType switch
+                                {
+                                    RoleType.Crewmate => CrewmatePick,
+                                    RoleType.Impostor => ImpostorPick,
+                                    RoleType.Neutral => NeutralPick,
+                                    _ => RandomPick,
+                                };
+
+                                text.text = roleInfo.Name.Replace(" ", "\n");
+                                text.color = roleInfo.color;
+                                textHolder.transform.localPosition = new Vector3(0, text.text.Contains('\n') ? -1.975f : -3.16f, -1);
+
+                                var button = renderer.gameObject.SetUpButton();
+                                button.OnClick.AddListener(() =>
+                                {
+                                    sendPick((byte)roleInfo.roleId);
+                                });
+                            }
+                            buttons.Add(renderer);
                         }
                     }
                 }
@@ -406,7 +429,7 @@ internal class RoleDraft
         if (!isEnabled) return;
         RPCProcedure.setRole(roleId, playerId);
         alreadyPicked.Add(roleId);
-        playerRoles.Add(playerId, roleId);
+        playerRoles.TryAdd(playerId, roleId);
         var isRandom = flag > 0;
         var reasons = ((SelectFlags)flag).ToString();
 
@@ -462,13 +485,13 @@ internal class RoleDraft
         writer.Write((byte)flag);
         writer.EndRPC();
         receivePick(PlayerControl.LocalPlayer.PlayerId, RoleId, (byte)flag);
+
         try
         {
             // destroy all the buttons:
             foreach (var button in buttons)
             {
-                UObject.Destroy(button?.gameObject);
-                //if (button?.gameObject != null) button.gameObject?.Destroy();
+                button?.gameObject?.Destroy();
             }
             buttons = new();
         }
@@ -496,6 +519,7 @@ internal class RoleDraft
         }
     }
 
+    [OnGameStart]
     public static void Clear()
     {
 

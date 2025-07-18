@@ -14,7 +14,6 @@ public static class Tracker
     public static float corpsesTrackingCooldown = 30f;
     public static float corpsesTrackingDuration = 5f;
     public static float corpsesTrackingTimer;
-    public static int trackingMode;
     public static List<Vector3> deadBodyPositions = new();
 
     public static PlayerControl currentTarget;
@@ -26,9 +25,9 @@ public static class Tracker
     public static GameObject DangerMeterParent;
     public static DangerMeter Meter;
 
-    public static ResourceSprite trackCorpsesButtonSprite = new("PathfindButton.png");
+    public static Sprite trackCorpsesButtonSprite = new ResourceSprite("PathfindButton.png");
 
-    public static ResourceSprite buttonSprite = new("TrackerButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("TrackerButton.png");
 
     public static void resetTracked()
     {
@@ -57,7 +56,6 @@ public static class Tracker
         corpsesTrackingCooldown = CustomOptionHolder.trackerCorpsesTrackingCooldown.GetFloat();
         corpsesTrackingDuration = CustomOptionHolder.trackerCorpsesTrackingDuration.GetFloat();
         canTrackCorpses = CustomOptionHolder.trackerCanTrackCorpses.GetBool();
-        trackingMode = CustomOptionHolder.trackerTrackingMethod.GetSelection();
         if (DangerMeterParent)
         {
             Meter.gameObject.Destroy();

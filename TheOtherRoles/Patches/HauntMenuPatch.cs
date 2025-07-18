@@ -91,7 +91,7 @@ public static class HauntMenuPatch
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
         var numberOfLeftTasks = playerTotal - playerCompleted;
 
-        if (!InGame || InMeeting || !CanSeeRoleInfo)
+        if (!InGame || InMeeting || !CanSeeGhostInfo)
         {
             HudManager.Instance.AbilityButton?.gameObject.SetActive(false);
             return;

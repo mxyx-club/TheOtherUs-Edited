@@ -22,7 +22,7 @@ public class SchrodingersCat
         _ => Color.gray,
     };
 
-    public static int remainingChange => TeamChanges ? MaxChangeCount - ChangeCount : 0;
+    public static int remainingChange => MaxChangeCount - ChangeCount;
     public static bool IsEvil => State is not CatState.Crewmate and not CatState.None;
     public static bool IsKiller => IsEvil && CanKill;
     public static string Name => $"SchrodingersCatRoles.{State}";
@@ -47,6 +47,7 @@ public class SchrodingersCat
         hasImpVision = CustomOptionHolder.schrodingersCatHasImpVision.GetBool();
         TeamChanges = CustomOptionHolder.schrodingersCatTeamChanges.GetBool();
         MaxChangeCount = CustomOptionHolder.schrodingersCatMaxChangeCount.GetInt();
+        MaxChangeCount = TeamChanges ? MaxChangeCount : 1;
         IsGuessable = CustomOptionHolder.schrodingersCatIsGuessable.GetBool();
     }
 

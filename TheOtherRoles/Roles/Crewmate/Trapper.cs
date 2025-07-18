@@ -15,7 +15,7 @@ public static class Trapper
     public static int infoType; // 0 = Role, 1 = Good/Evil, 2 = Name
     public static float trapDuration = 5f;
 
-    public static ResourceSprite trapButtonSprite = new("Trapper_Place_Button.png");
+    public static Sprite trapButtonSprite = new ResourceSprite("Trapper_Place_Button.png");
 
     public static void clearAndReload()
     {

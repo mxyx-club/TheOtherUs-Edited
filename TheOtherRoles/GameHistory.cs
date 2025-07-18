@@ -1,13 +1,16 @@
+using TheOtherRoles.Attributes;
+
 namespace TheOtherRoles;
 
 public enum CustomDeathReason
 {
-    NULL,
-    HostCmdKill,
+    Null,
+    HostKill,
     Exile,
     Kill,
     Disconnect,
-    Guess,
+    GuessSuccess,
+    GuessFail,
     Shift,
     LawyerSuicide,
     LoverSuicide,
@@ -17,9 +20,10 @@ public enum CustomDeathReason
     Loneliness,
     Arson,
     FakeSK,
+    WrongVerdict,
     SheriffKill,
     SheriffMisfire,
-    SheriffMisadventure,
+    SheriffSuicide,
     Suicide,
     BombVictim,
     Eaten,
@@ -48,6 +52,7 @@ internal static class GameHistory
     public static List<Tuple<Vector3, bool>> localPlayerPositions = new();
     public static List<DeadPlayer> DeadPlayers = new();
 
+    [OnGameStart]
     public static void Clear()
     {
         localPlayerPositions.Clear();
@@ -57,6 +62,11 @@ internal static class GameHistory
     public static void ClearDeadPlayer(PlayerControl player)
     {
         DeadPlayers.RemoveAll(x => x.Player.PlayerId == player.PlayerId);
+    }
+
+    public static DeadPlayer GetDeadPlayer(byte playerId)
+    {
+        return DeadPlayers.FirstOrDefault(x => x.Player.PlayerId == playerId);
     }
 
     public static void OverrideDeathReasonAndKiller(PlayerControl player, CustomDeathReason deathReason, PlayerControl killer = null)

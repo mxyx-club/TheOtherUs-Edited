@@ -23,9 +23,9 @@ public static class Sheriff
     public static bool knowsSheriff;
     public static Dictionary<byte, float> handcuffedKnows = new();
 
-    public static ResourceSprite killButtonSprite = new("SheriffKillButton.png");
-    public static ResourceSprite handcuffSprite = new("DeputyHandcuffButton.png");
-    public static ResourceSprite handcuffedSprite = new("DeputyHandcuffed.png");
+    public static Sprite killButtonSprite = new ResourceSprite("SheriffKillButton.png");
+    public static Sprite handcuffSprite = new ResourceSprite("DeputyHandcuffButton.png");
+    public static Sprite handcuffedSprite = new ResourceSprite("DeputyHandcuffed.png");
 
     // Can be used to enable / disable the handcuff effect on the target's buttons
     public static void setHandcuffedKnows(bool active = true, byte playerId = byte.MaxValue)

@@ -1,3 +1,5 @@
+using TheOtherRoles.Attributes;
+
 namespace TheOtherRoles.Objects;
 
 public class KillTrap
@@ -62,33 +64,37 @@ public class KillTrap
         placedTime = DateTime.UtcNow;
 
         AllTraps.Add(this);
-        Message($"创建陷阱 {Id}");
     }
 
     public void Destroy()
     {
-        Message($"销毁陷阱 {Id}");
         try { if (audioSource != null) audioSource.Stop(); } catch { }
         if (killtrap != null) UObject.Destroy(killtrap);
         AllTraps.Remove(this);
 
     }
 
+
+    [OnGameStart, OnGameEnd]
     public static void ClearAndReload()
     {
-        Message("清除所有陷阱");
-        var traps = AllTraps.ToArray();
-        foreach (var t in traps)
+        try
         {
-            t?.Destroy();
+            foreach (var t in AllTraps.ToArray())
+            {
+                t?.Destroy();
+            }
+            AllTraps = new();
+            maxId = 0;
         }
-        AllTraps = new();
-        maxId = 0;
+        catch (Exception e)
+        {
+            Error(e);
+        }
     }
 
     public static void ClearAllTraps(PlayerControl trapper, bool active)
     {
-        Message($"清除玩家 {trapper?.Data?.PlayerName ?? "NULL"} 的所有陷阱");
         var traps = AllTraps.Where(x => x.trapper == trapper && (active || !x.isActive)).ToArray();
         foreach (var t in traps)
         {
@@ -98,7 +104,6 @@ public class KillTrap
 
     public static void activateTrap(PlayerControl trapper, PlayerControl target, int trapId)
     {
-        Message($"激活陷阱 {trapId}，目标: {target.Data.PlayerName}");
         var trap = AllTraps.FirstOrDefault(x => x.Id == trapId);
         if (trap == null || trap.isDisabled) return;
         // 有効にする
@@ -112,7 +117,6 @@ public class KillTrap
 
         if (PlayerControl.LocalPlayer == trapper)
         {
-            Message($"玩家 {target?.Data?.PlayerName ?? "NULL"} 触发陷阱");
             TMP_Text text;
             RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
             GameObject gameObject = UObject.Instantiate(roomTracker.gameObject);
@@ -189,7 +193,6 @@ public class KillTrap
 
     public static void disableTrap(int trapId)
     {
-        Message($"解除陷阱 {trapId}");
         var trap = AllTraps.FirstOrDefault(x => x.Id == trapId);
         trap.isActive = false;
         trap.isDisabled = true;
@@ -203,7 +206,7 @@ public class KillTrap
         foreach (var t in AllTraps.ToArray())
         {
             t.Update();
-            bool canSee = t.isActive || PlayerControl.LocalPlayer.IsImpostor() || CanSeeRoleInfo;
+            bool canSee = t.isActive || PlayerControl.LocalPlayer.IsImpostor() || CanSeeGhostInfo;
             var opacity = canSee ? 1.0f : 0.0f;
 
             if (t.killtrap != null)
@@ -240,7 +243,6 @@ public class KillTrap
                 target = PlayerControl.LocalPlayer;
                 if (PlayerControl.LocalPlayer.AmOwner)
                 {
-                    Message("本地玩家触发陷阱");
                     var writer = StartRPC(CustomRPC.ActivateTrap);
                     writer.Write(trapper.PlayerId);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
@@ -254,25 +256,29 @@ public class KillTrap
 
     public static void OnMeetingStart()
     {
-        Message("会议开始，停止所有陷阱");
-        foreach (var trap in AllTraps)
+        try
         {
-            trap.audioSource.PlayOneShot(kill);
-            if (trap.target.IsAlive() && PlayerControl.LocalPlayer == trap.target)
+            foreach (var trap in AllTraps.ToArray())
             {
-                RpcCustomMurderPlayer(trap.trapper, trap.target, false);
+                if (trap.target.IsAlive() && PlayerControl.LocalPlayer == trap.target)
+                {
+                    RpcCustomMurderPlayer(trap.trapper, trap.target, false);
+                }
+                else
+                {
+                    trap.Destroy();
+                }
             }
-            _ = new LateTask(() =>
-            {
-                trap.audioSource.Stop();
-                trap.Destroy();
-            }, kill.length);
+        }
+        catch (Exception e)
+        {
+            Error(e);
         }
     }
 
     public static bool hasTrappedPlayer()
     {
-        foreach (var trap in AllTraps)
+        foreach (var trap in AllTraps.ToArray())
         {
             if (trap.target != null) return true;
         }
@@ -290,7 +296,6 @@ public class KillTrap
 
     public static void trapKill(PlayerControl trapper, PlayerControl target, int trapId)
     {
-        Message($"陷阱 {trapId} 击杀 {target?.Data?.PlayerName ?? "NULL"}");
         var trap = AllTraps.FirstOrDefault(x => x.Id == trapId);
         var audioSource = trap.audioSource;
         audioSource.Stop();

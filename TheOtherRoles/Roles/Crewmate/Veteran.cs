@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Crewmate;
+namespace TheOtherRoles.Roles.Crewmate;
 
 public static class Veteran
 {
@@ -10,7 +10,7 @@ public static class Veteran
 
     public static bool alertActive;
 
-    public static ResourceSprite buttonSprite = new("Alert.png");
+    public static Sprite buttonSprite = new ResourceSprite("Alert.png");
 
     public static void clearAndReload()
     {

@@ -498,14 +498,6 @@
         "0": "The Fungle: Reactor Meltdown Timer",
         "13": "The Fungle 核反应堆破坏持续时间"
     },
-    "guessReVote": {
-        "0": "Votes Are Returned on Successful Guess",
-        "13": "赌怪猜测时返还所有投票"
-    },
-    "guessExtendmeetingTime": {
-        "0": "Extend Meeting Time on Successful Guess",
-        "13": "赌怪猜测时延长会议时间"
-    },
     "enableMiraModify": {
         "0": "Mira",
         "13": "Mira"
@@ -622,17 +614,70 @@
         "0": "Use Preset Settings for Random Maps",
         "13": "使用随机地图设置预设"
     },
+    "NetworkTransformLowLevel": {
+        "13": "低延迟模式"
+    },
+    "NetworkTransformLowLevel.On": {
+        "13": "开启 (仅限私服)"
+    },
+    "NetworkTransformType": {
+        "13": "低延迟模式等级 (越高越好)"
+    },
+    "NetworkTransformType.Bad": {
+        "13": "最低 (延迟高)"
+    },
+    "NetworkTransformType.SuperLow": {
+        "13": "超低"
+    },
+    "NetworkTransformType.Low": {
+        "13": "低"
+    },
+    "NetworkTransformType.Medium": {
+        "13": "中等 (推荐)"
+    },
+    "NetworkTransformType.High": {
+        "13": "高"
+    },
+    "NetworkTransformType.Max": {
+        "13": "最高 (负载较高)"
+    },
+    "guessReVote": {
+        "0": "Votes Are Returned on Successful Guess",
+        "13": "赌怪猜测时返还所有投票"
+    },
+    "guessExtendmeetingTime": {
+        "0": "Extend Meeting Time on Successful Guess",
+        "13": "赌怪猜测时延长会议时间"
+    },
+    "playerDieReducedTime": {
+        "13": "每当玩家死亡投票时间缩减"
+    },
+    "minMeetingTime": {
+        "13": "会议时长下限"
+    },
     "exileController": {
-        "0": "Reveal Role on Ejection",
+        "0": "Reveal Role On Exiled",
         "13": "驱逐显示"
     },
-    "exiledReviveRole": {
-        "0": "Show Player Info on Ejection",
+    "exiledRevealRole": {
+        "0": "Show Player Info On Exiled",
         "13": "驱逐后显示玩家信息"
     },
     "exiledShowTeamNum": {
-        "0": "Show Faction Info on Ejection",
+        "0": "Show Faction Info On Exiled",
         "13": "驱逐后显示各阵营人数"
+    },
+    "exiledShowTeamSelect": {
+        "13": "显示的阵营"
+    },
+    "ShowTeamSelect0": {
+        "13": "仅显示伪装者阵营"
+    },
+    "ShowTeamSelect1": {
+        "13": "仅显示中立阵营"
+    },
+    "ShowTeamSelect2": {
+        "13": "同时显示两种阵营"
     },
     "debugMode": {
         "0": "Enable Debug Mode",
@@ -641,6 +686,9 @@
     "DisableGameEnd": {
         "0": "Prevent Game End",
         "13": "阻止游戏结束"
+    },
+    "logRpcSend": {
+        "13": "记录RPC请求"
     },
     "guesserGamemodeCrewNumber": {
         "0": "Number of Crewmate Guessers",
@@ -1390,6 +1438,10 @@
         "0": "Remove Ignite Cooldown if Only One Killer Remains",
         "13": "仅剩最后一名杀手时移除点火冷却"
     },
+    "onlyOneNeutralTeam": {
+        "0": "Single Recruitable Team Only",
+        "13": "只允许出现一种可招募职业"
+    },
     "jackalChanceSwoop": {
         "0": "Chance that Jackal Has Invisibility",
         "13": "豺狼获得隐身能力的概率"
@@ -1445,10 +1497,6 @@
     "jackalPromotedFromSidekickCanCreateSidekick": {
         "0": "Promoted Jackals Can Recruit Sidekicks",
         "13": "晋升后的豺狼可以招募跟班"
-    },
-    "pavlovsownerAndJackalAsWell": {
-        "0": "Jackal and Pavlov Do Not Appear Together",
-        "13": "豺狼和巴浦洛夫只会出现一个"
     },
     "pavlovsownerCreateDogCooldown": {
         "0": "Tame Cooldown",
@@ -1738,6 +1786,36 @@
         "0": "Guesses Bypass Medic's Shield",
         "13": "猜测无视法医护盾保护"
     },
+    "mayorMode": {
+        "13": "市长模式"
+    },
+    "mayorMode0": {
+        "13": "固定票数"
+    },
+    "mayorMode1": {
+        "13": "揭示模式"
+    },
+    "mayorMode2": {
+        "13": "存票模式"
+    },
+    "mayorInitialVotes": {
+        "13": "第一轮会议会获得多少票数"
+    },
+    "mayorAddVotes": {
+        "13": "每轮会议会获得的票数"
+    },
+    "mayorMaxVoteCount": {
+        "13": "最大可存储的票数"
+    },
+    "mayorOneUseVotes": {
+        "13": "单次会议最多可投的票数"
+    },
+    "mayorMultiVoting": {
+        "13": "允许切换投票数量"
+    },
+    "mayorAnonymousVote": {
+        "13": "市长的票视为匿名投票"
+    },
     "mayorCanSeeVoteColors": {
         "0": "Mayor Can See Vote Colors",
         "13": "拥有窥视能力"
@@ -1746,17 +1824,9 @@
         "0": "Mayor Can Call Remote Meetings",
         "13": "可远程召开会议"
     },
-    "mayorMaxRemoteMeetings": {
-        "0": "Number Of Remote Meetings",
-        "13": "远程召开会议可用次数"
-    },
     "mayorVote": {
         "0": "Mayor Vote Count",
         "13": "市长票数"
-    },
-    "mayorSabotageRemoteMeetings": {
-        "0": "Can Call Remote Meetings during Sabotages",
-        "13": "可在破坏时使用"
     },
     "mayorRevealVision": {
         "0": "Reduced Vision after Revealing Role",
@@ -2551,12 +2621,12 @@
         "13": "当前模组版本为Beta测试版，将在 {0} 天后过期!\n\n版本过期后将无法进入游戏，注意更新！"
     },
     "CommandsInHost": {
-        "0": "Host Commands:\n\n/end: Force-end the game\n/mt: Call/End an emergency meeting\n/list: Get a list of the playerId of all players\n/kill [player]:  Force-kill the target player\n/revive [player]: Force-revive the target player\n/say [text]: Broadcast message to all players as host\n/room [num]: Change the max number of players of the room\n/ct [player]: Clear the target player's tasks",
-        "13": "指令列表：\n\n/end ：强制游戏结束\n/mt: 召集/结束会议\n/list : 获取全部玩家的ID\n/kill [玩家] ：强制击杀玩家\n/revive [玩家] ： 强制复活玩家\n/say [内容] : 向所有玩家发送房主消息\n/room [数量] : 修改房间最大人数\n/ct [玩家] : 清除对方的任务"
+        "0": "Host Commands:\n\n/end: Force-end the game\n/mt: Call/End an emergency meeting\n/list: Get a list of the playerId of all players\n/kill [player]:  Force-kill the target player\n/exile [player]: End the meeting and exiled target player\n/revive [player]: Force-revive the target player\n/say [text]: Broadcast message to all players as host\n/room [num]: Change the max number of players of the room\n/ct [player]: Clear the target player's tasks\n/cv: Reset the meeting voting Status",
+        "13": "指令列表：\n\n/end ：强制游戏结束\n/mt: 召集/结束会议\n/ls : 获取全部玩家的ID\n/kill [玩家] ：强制击杀玩家\n/exile [玩家] ：结束会议并驱逐目标\n/revive [玩家] ： 强制复活玩家\n/say [内容] : 向所有玩家发送房主消息\n/room [数量] : 修改房间最大人数\n/ct [玩家] : 清除对方的任务\n/cv ：清除当前会议中的投票状态"
     },
     "CommandsInPlayer": {
         "0": "Players can use either the target's player ID or nickname when using commands.\n\nGlobal Commands:\n/ls Get the nicknames of all players\n/r [role name] Get the role description for the specified role\n\nIn-game Commands:\n/m Get the role descriptions of all roles the current player has\n\nDead Players or Lobby Commands:\n/tp [player] Teleport to the target player",
-        "13": "使用的指令允许使用对方的玩家ID或玩家昵称作为指令目标。\n\n全局指令：\n/ls : 获取全部玩家的代号\n/r [职业名称] ：获得该职业的职业介绍\n\n游戏中指令：\n/m  ： 获得当前玩家所有职业的职业介绍\n\n死亡玩家或游戏大厅指令：\n/tp [玩家] ：将自己传送到该玩家的位置。"
+        "13": "使用的指令允许使用对方的玩家ID或玩家昵称作为指令目标。\n\n全局指令：\n/ls : 获取全部玩家的ID\n/r [职业名称] ：获得该职业的职业介绍\n\n游戏中指令：\n/m  ： 获得当前玩家所有职业的职业介绍\n\n死亡玩家或游戏大厅指令：\n/tp [玩家] ：将自己传送到该玩家的位置。"
     },
     "Command.Ambiguous": {
         "0": "Ambiguous command: {0}\nmatches multiple commands: {1}",
@@ -2866,6 +2936,16 @@
     "WitnessReport.Killer": {
         "0": "{0} is the true culprit in this case.",
         "13": "{0} 为本案的真凶"
+    },
+    "Mayor.Revealed": {
+        "0": "Reveal",
+        "13": "揭示身份"
+    },
+    "Mayor.MultiVote.On": {
+        "13": "投 {0} 票"
+    },
+    "Mayor.MultiVote.Off": {
+        "13": "投 1 票"
     },
     "Snitch.IsAlive": {
         "0": "The Snitch is still alive: ",
@@ -3221,6 +3301,81 @@
     "RoleDraft.Disconnect": {
         "0": "Player Disconnected",
         "13": "玩家已断线"
+    },
+    "DeathReason.Null": {
+        "0": "None",
+        "13": "无"
+    },
+    "DeathReason.HostKill": {
+        "13": "被 {0} 制裁"
+    },
+    "DeathReason.Exile": {
+        "13": "被驱逐"
+    },
+    "DeathReason.Kill": {
+        "13": "被击杀于 {0}"
+    },
+    "DeathReason.Disconnect": {
+        "13": "断开连接"
+    },
+    "DeathReason.GuessSuccess": {
+        "13": "被猜测于 {0}"
+    },
+    "DeathReason.GuessFail": {
+        "13": "猜测错误"
+    },
+    "DeathReason.Shift": {
+        "13": "交换 {0} 失败"
+    },
+    "DeathReason.LawyerSuicide": {
+        "13": "辩护失败"
+    },
+    "DeathReason.LoverSuicide": {
+        "13": "殉情"
+    },
+    "DeathReason.WitchExile": {
+        "13": "被咒杀于 {0}"
+    },
+    "DeathReason.Bomb": {
+        "13": "被恐袭于 {0}"
+    },
+    "DeathReason.LoveStolen": {
+        "0": "Love Stolen",
+        "13": "爱人被夺"
+    },
+    "DeathReason.Loneliness": {
+        "0": "Too Lonely",
+        "13": "精力衰竭"
+    },
+    "DeathReason.Arson": {
+        "13": "被烧死于 {0}"
+    },
+    "DeathReason.FakeSK": {
+        "13": "招募失败 {0}"
+    },
+    "DeathReason.WrongVerdict": {
+        "13": "裁决错误"
+    },
+    "DeathReason.SheriffKill": {
+        "13": "出警 {0}"
+    },
+    "DeathReason.SheriffSuicide": {
+        "13": "警长走火"
+    },
+    "DeathReason.SheriffMisfire": {
+        "13": "被误杀于 {0}"
+    },
+    "DeathReason.Suicide": {
+        "13": "自杀"
+    },
+    "DeathReason.BombVictim": {
+        "13": "恐袭"
+    },
+    "DeathReason.Eaten": {
+        "13": "被吞食于 {0}"
+    },
+    "DeathReason.Jailed": {
+        "13": "被处决于 {0}"
     },
     "colorSalmon": {
         "0": "Salmon",
@@ -3787,6 +3942,10 @@
     "JackalIsSwooperInfo": {
         "0": " (Swooper)",
         "13": " (隐身)"
+    },
+    "DefaultRole": {
+        "0": "None",
+        "13": "无"
     },
     "Impostor": {
         "0": "Impostor",
@@ -5330,7 +5489,7 @@
     },
     "MayorFullDesc": {
         "0": "During meetings, the Mayor can reveal their identity by clicking the \"Reveal\" button, which also makes them immune to role guesses.\n\nOnce revealed, the Mayor receives 3 votes per meeting (subject to settings), but their vision is significantly reduced.\n\nDepending on settings, the Mayor may also gain the ability to call meetings remotely.",
-        "13": "市长在投票阶段可以通过点击揭示按钮揭示自己的身份，无法被猜测。\n\n揭示后会议内拥有3票(具体按房间设置为准)，同时视野大幅缩小。\n\n另外，根据房间设置，市长可以拥有远程开会议的能力。"
+        "13": "市长属于强力职业，本模组市长模式由房主设置为准：\n\n固定票数：\n-在会议中固定有x票，\n-如果房主开启了允许切换投票数量，则允许在1票或x票切换。\n\n揭示模式：\n-默认情况下只有1票，可以在会议中揭示(公开)自己的身份，从而获得x票。\n-另外，揭示身份后，视野会大幅缩小。\n\n存票模式：\n-每次会议开始时都会获得一定的票数，可以在投票时投出对应的票。\n-存下的票有上限，会议中可以一次性投出的票也有上限。\n-注：投票后不允许更改自己的票数。\n\n另外，根据房间设置，市长可能拥有远程开会的能力，但破坏期间无法使用。"
     },
     "ProsecutorFullDesc": {
         "0": "The Prosecutor can forcibly eject one player per game.\nA new \"Prosecute\" button appears in the bottom-left corner during meetings.\n\nWhen activated:\nAll other players' votes are voided. The Prosecutor casts the decisive vote.\nVoting becomes anonymous and cannot be viewed by others.\n\nDepending on settings: if a Crewmate (including Neutral benign roles) is exiled in the Prosecutor's trial, the Prosecutor dies.\n\nN.B.: During a Prosecutor's trial, the Prosecutor must vote—skipping is disabled. If no vote is cast by the end of the meeting, the vote is void and the ability is preserved.",
@@ -5513,8 +5672,8 @@
         "13": "分配阵营：全部玩家\n\n报警时可以获取所报尸体的职业信息"
     },
     "CursedFullDesc": {
-        "0": "Crewmate Modifier\n\nConverts into an Impostor without special abilities if the Impostor team gains majority or upon being killed by an Impostor.",
-        "13": "分配阵营：船员\n\n在红狼占优的情况下可能会\n自动加入红狼阵营变为白板伪装者，\n或者被红狼击杀时会立即加入红狼阵营。"
+        "0": "Crewmate Modifier\n\nWhen killed by an Impostor, immediately joins the Impostor faction and loses their original role.",
+        "13": "分配阵营：船员\n\n被红狼击杀时会立即加入红狼阵营，且失去原有的职业。\n\n（在加入红狼阵营之前还是正常船员，请不要乱来口牙！）"
     },
     "InvertFullDesc": {
         "0": "All Faction Modifier\n\nMovement controls are reversed. Effect wears off after a few meetings (sober up).",

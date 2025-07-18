@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Impostor;
+namespace TheOtherRoles.Roles.Impostor;
 
 public static class Warlock
 {
@@ -12,8 +12,8 @@ public static class Warlock
     public static float cooldown = 30f;
     public static float rootTime = 5f;
 
-    public static ResourceSprite curseButtonSprite = new("CurseButton.png");
-    public static ResourceSprite curseKillButtonSprite = new("CurseKillButton.png");
+    public static Sprite curseButtonSprite = new ResourceSprite("CurseButton.png");
+    public static Sprite curseKillButtonSprite = new ResourceSprite("CurseKillButton.png");
 
     public static void clearAndReload()
     {

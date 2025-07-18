@@ -538,7 +538,7 @@ internal class PlayerControlRevivePatch
     {
         if (PlayerControl.LocalPlayer == __instance)
         {
-            CanSeeRoleInfo = false;
+            CanSeeGhostInfo = false;
         }
 
         if (__instance.isLover() && Lovers.otherLover(__instance)?.IsDead() == true)
@@ -685,7 +685,7 @@ public static class PlayerDiePatch
             Prosecutor.ProsecuteThisMeeting = false;
         }
         if (ModOption.gameMode is CustomGamemodes.Classic) return;
-        _ = new LateTask(() => { CanSeeRoleInfo = true; }, 1f, "CanSeeRoleInfo");
+        _ = new LateTask(() => { CanSeeGhostInfo = true; }, 1f, "CanSeeRoleInfo");
     }
 }
 
@@ -852,7 +852,6 @@ public static class MurderPlayerPatch
                     _ = new LateTask(() =>
                     {
                         HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
-                        HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
                     }, 0.25f);
                     PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Pelican.Player.transform.position);
                 }
@@ -868,7 +867,7 @@ public static class MurderPlayerPatch
 
         // Seer show flash and add dead player position
         if (Seer.seer != null &&
-            (PlayerControl.LocalPlayer == Seer.seer || CanSeeRoleInfo) &&
+            (PlayerControl.LocalPlayer == Seer.seer || CanSeeGhostInfo) &&
             !Seer.seer.Data.IsDead && Seer.seer != target && Seer.mode <= 1)
             showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f), message: GetString("seerShowInfoText"));
         Seer.deadBodyPositions?.Add(target.transform.position);
@@ -1101,7 +1100,7 @@ public static class ExilePlayerPatch
             }
         }
 
-        _ = new LateTask(() => { if (__instance == PlayerControl.LocalPlayer) CanSeeRoleInfo = true; }, 0.5f, "CanSeeRoleInfo");
+        _ = new LateTask(() => { if (__instance == PlayerControl.LocalPlayer) CanSeeGhostInfo = true; }, 0.5f, "CanSeeRoleInfo");
 
         // Remove fake tasks when player dies
         if (__instance.HasFakeTasks() || __instance == Pursuer.Player.Contains(__instance) || __instance == Thief.thief)
@@ -1152,9 +1151,8 @@ public static class ExilePlayerPatch
         {
             if (AmongUsClient.Instance.AmHost && ((Lawyer.target != Jester.jester) || Lawyer.targetWasGuessed))
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
+                writer.EndRPC();
                 Lawyer.PromotesToPursuer();
             }
         }
@@ -1162,9 +1160,8 @@ public static class ExilePlayerPatch
         {
             if (AmongUsClient.Instance.AmHost && Executioner.targetWasGuessed)
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var writer = StartRPC(CustomRPC.ExecutionerPromotesRole);
+                writer.EndRPC();
                 Executioner.PromotesRole();
             }
         }
@@ -1264,7 +1261,6 @@ public static class DisconnectPatch
                         _ = new LateTask(() =>
                         {
                             HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
-                            HudManager.Instance.PlayerCam.Target = PlayerControl.LocalPlayer;
                         }, 0.25f);
                         PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(pos);
                     }

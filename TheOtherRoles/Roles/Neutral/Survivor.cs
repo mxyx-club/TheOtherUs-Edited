@@ -5,7 +5,7 @@ public class Survivor
     public static PlayerControl target;
     public static List<PlayerControl> blankedList = new();
     public static Color color = new Color32(255, 230, 77, byte.MaxValue);
-    public static ResourceSprite VestButtonSprite = new("TheOtherRoles.Resources.Vest.png");
+    public static Sprite VestButtonSprite = new ResourceSprite("TheOtherRoles.Resources.Vest.png");
 
     public static bool vestEnable;
     public static int vestNumber;

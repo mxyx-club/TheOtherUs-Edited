@@ -1,6 +1,6 @@
-using System.Text;
 using AmongUs.GameOptions;
 using PowerTools;
+using System.Text;
 using TheOtherRoles.Objects;
 
 namespace TheOtherRoles.Patches;
@@ -40,7 +40,7 @@ internal class ExileControllerBeginPatch
             controller.EjectSound = null;
             void createlate(int index)
             {
-                _ = new LateTask(() => { controller.StopAllCoroutines(); controller.StartCoroutine(controller.Animate()); }, 0.025f + index * 0.025f);
+                _ = new LateTask(() => { controller.StopAllCoroutines(); controller.StartCoroutine(controller.Animate()); }, 0.025f + (index * 0.025f));
             }
             _ = new LateTask(() => controller.StartCoroutine(controller.Animate()), 0f);
             for (int i = 0; i < 23; i++)
@@ -183,7 +183,7 @@ internal class ExileControllerBeginPatch
         {
             if (player != null)
             {
-                switch (CustomOptionHolder.exiledReviveRole.GetQuantity())
+                switch (CustomOptionHolder.exiledRevealRole.GetQuantity())
                 {
                     case 1:
                         __instance.completeString = TranslationController.Instance.GetString(StringNames.ExileTextNonConfirm, player?.Data.PlayerName);
@@ -205,12 +205,15 @@ internal class ExileControllerBeginPatch
 
             if (CustomOptionHolder.exiledShowTeamNum.GetBool())
             {
-                var Impostors = PlayerControl.AllPlayerControls.ToArray().Count(x => x.IsImpostor() && x.IsAlive() && x.PlayerId != player?.PlayerId);
-                var Neutrals = PlayerControl.AllPlayerControls.ToArray().Count(x => x.IsNeutral() && x.IsAlive() && x.PlayerId != player?.PlayerId);
-                __instance.ImpostorText.text =
-                    $"\n{Cs(getTeamColor(RoleType.Impostor), GetString("ExileController.ImpNum")) + Impostors}" +
-                    $" | {Cs(getTeamColor(RoleType.Neutral), GetString("ExileController.NeutralNum")) + Neutrals}";
+                var players = PlayerControl.AllPlayerControls.ToArray().Where(x => x.IsAlive() && x.PlayerId != player?.PlayerId);
 
+                var showMode = CustomOptionHolder.exiledShowTeamSelect.GetSelection();
+
+                string text = "\n";
+                if (showMode != 1) text += $"{Cs(getTeamColor(RoleType.Impostor), GetString("ExileController.ImpNum"))}{players.Count(x => x.IsImpostor())}";
+                if (showMode == 2) text += " | ";
+                if (showMode != 0) text += $"{Cs(getTeamColor(RoleType.Neutral), GetString("ExileController.NeutralNum"))}{players.Count(x => x.IsNeutral())}";
+                __instance.ImpostorText.text = text;
             }
         }
     }
@@ -256,7 +259,7 @@ internal class ExileControllerWrapUpPatch
     private static void WrapUpPostfix(GameData.PlayerInfo exiled)
     {
         Message("WrapUp Postfix");
-        if (PlayerControl.LocalPlayer.IsDead()) CanSeeRoleInfo = true;
+        if (PlayerControl.LocalPlayer.IsDead()) CanSeeGhostInfo = true;
 
         DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)

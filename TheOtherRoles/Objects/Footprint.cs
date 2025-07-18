@@ -32,7 +32,7 @@ public class FootprintHolder : MonoBehaviour
         public Transform Transform;
         public SpriteRenderer Renderer;
         public PlayerControl Owner;
-        public GameData.PlayerInfo Data;
+        public int ColorId = 6;
         public float Lifetime;
 
         public Footprint()
@@ -67,18 +67,18 @@ public class FootprintHolder : MonoBehaviour
         print.Transform.SetPositionAndRotation(pos, Quaternion.EulerRotation(0, 0, URandom.Range(0.0f, 360.0f)));
         print.GameObject.SetActive(true);
         print.Owner = player;
-        print.Data = player.Data;
+        print.ColorId = player.Data.DefaultOutfit.ColorId;
         _activeFootprints.Add(print);
     }
 
     private static float updateDt = 0.10f;
 
-    private void Start()
+    public void Start()
     {
         InvokeRepeating(nameof(FootprintUpdate), updateDt, updateDt);
     }
 
-    private void FootprintUpdate()
+    public void FootprintUpdate()
     {
         var dt = updateDt;
         _toRemove.Clear();
@@ -102,7 +102,7 @@ public class FootprintHolder : MonoBehaviour
             }
             else
             {
-                color = Palette.PlayerColors[activeFootprint.Data.DefaultOutfit.ColorId];
+                color = Palette.PlayerColors[activeFootprint.ColorId];
             }
 
             color.a = Math.Clamp(p, 0f, 1f);
@@ -119,7 +119,7 @@ public class FootprintHolder : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    public void OnDestroy()
     {
         Instance = null;
     }

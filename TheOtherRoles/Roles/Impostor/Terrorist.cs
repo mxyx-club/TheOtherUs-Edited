@@ -18,7 +18,7 @@ public static class Terrorist
     public static float bombActiveAfter = 3f;
     public static bool selfExplosion => destructionTime + bombActiveAfter <= 1;
 
-    public static ResourceSprite buttonSprite = new("Bomb_Button_Plant.png");
+    public static Sprite buttonSprite = new ResourceSprite("Bomb_Button_Plant.png");
 
     public static void clearBomb(bool flag = true)
     {

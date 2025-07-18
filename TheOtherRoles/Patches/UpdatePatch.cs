@@ -111,7 +111,7 @@ internal class HudManagerUpdatePatch
             {
                 var mainRole = RoleInfo.GetRolesString(p, true, false, false, false);
                 var allRoleText = RoleInfo.GetRolesString(p, true, true, true, true);
-                if (p.IsDead() && CanSeeRoleInfo) allRoleText += $" - {RoleInfo.GetDeathReasonString(p)}";
+                if (p.IsDead() && CanSeeGhostInfo) allRoleText += $" - {RoleInfo.GetDeathReasonString(p)}";
 
                 var playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
                 var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
@@ -176,7 +176,7 @@ internal class HudManagerUpdatePatch
                 }
                 else
                 {
-                    if (CanSeeRoleInfo)
+                    if (CanSeeGhostInfo)
                     {
                         playerInfoText = $"{allRoleText} {taskInfo}".Trim();
                         meetingInfoText = playerInfoText;
@@ -216,17 +216,17 @@ internal class HudManagerUpdatePatch
                 Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) ||
                 (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
             {
-                hasVisibleShield = Medic.showShielded == 0 || CanSeeRoleInfo // Everyone or Ghost info
+                hasVisibleShield = Medic.showShielded == 0 || CanSeeGhostInfo // Everyone or Ghost info
                     || (Medic.showShielded == 1 && (local == Medic.shielded || local == Medic.medic)) // Shielded + Medic
                     || (Medic.showShielded == 2 && local == Medic.medic); // Medic only
 
                 // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
                 hasVisibleShield = hasVisibleShield && (Medic.meetingAfterShielding || !Medic.showShieldAfterMeeting ||
-                    local == Medic.medic || CanSeeRoleInfo);
+                    local == Medic.medic || CanSeeGhostInfo);
             }
 
             if (BodyGuard.guarded.IsAlive() && target == BodyGuard.guarded &&
-                (CanSeeRoleInfo || local == BodyGuard.bodyguard || (local == BodyGuard.guarded && BodyGuard.showShielded)))
+                (CanSeeGhostInfo || local == BodyGuard.bodyguard || (local == BodyGuard.guarded && BodyGuard.showShielded)))
             {
                 hasVisibleShield = true;
                 color = new Color32(205, 150, 100, byte.MaxValue);
@@ -309,7 +309,7 @@ internal class HudManagerUpdatePatch
             setPlayerNameColor(WolfLord.Player, WolfLord.color);
         }
 
-        if (Grenadier.Player != null && ((local.IsImpostor() && Grenadier.indicatorsMode) || local == Grenadier.Player || CanSeeRoleInfo))
+        if (Grenadier.Player != null && ((local.IsImpostor() && Grenadier.indicatorsMode) || local == Grenadier.Player || CanSeeGhostInfo))
         {
             foreach (var p in Grenadier.controls)
             {
@@ -317,7 +317,7 @@ internal class HudManagerUpdatePatch
             }
         }
 
-        if (SchrodingersCat.Player != null && (SchrodingersCat.Player == local || CanSeeRoleInfo))
+        if (SchrodingersCat.Player != null && (SchrodingersCat.Player == local || CanSeeGhostInfo))
         {
             setPlayerNameColor(SchrodingersCat.Player, SchrodingersCat.stateColor);
             foreach (var p in allPlayer)
@@ -519,7 +519,7 @@ internal class HudManagerUpdatePatch
             }
         }
 
-        if (PartTimer.partTimer != null && PartTimer.target != null && (local == PartTimer.partTimer || local == PartTimer.target || CanSeeRoleInfo))
+        if (PartTimer.partTimer != null && PartTimer.target != null && (local == PartTimer.partTimer || local == PartTimer.target || CanSeeGhostInfo))
         {
             var suffix = Cs(PartTimer.color, " ★");
             PartTimer.partTimer.cosmetics.nameText.text += suffix;
@@ -536,9 +536,9 @@ internal class HudManagerUpdatePatch
             var suffix1 = Cs(BandLeader.color, "(K)");
             var suffix2 = Cs(BandLeader.color, "(B)");
             var suffix3 = Cs(BandLeader.color, "(D)");
-            var isKeyboardist = local == BandLeader.Player || BandLeader.Keyboardist == local || BandLeader.Formed || CanSeeRoleInfo;
-            var isBassist = local == BandLeader.Player || BandLeader.Bassist == local || BandLeader.Formed || CanSeeRoleInfo;
-            var isDrummer = local == BandLeader.Player || BandLeader.Drummer == local || BandLeader.Formed || CanSeeRoleInfo;
+            var isKeyboardist = local == BandLeader.Player || BandLeader.Keyboardist == local || BandLeader.Formed || CanSeeGhostInfo;
+            var isBassist = local == BandLeader.Player || BandLeader.Bassist == local || BandLeader.Formed || CanSeeGhostInfo;
+            var isDrummer = local == BandLeader.Player || BandLeader.Drummer == local || BandLeader.Formed || CanSeeGhostInfo;
             if (local == BandLeader.Player || local.IsDead() || BandLeader.Members.Any(x => x == local))
             {
                 if (BandLeader.Keyboardist != null && isKeyboardist)
@@ -564,7 +564,7 @@ internal class HudManagerUpdatePatch
         }
 
         var localIsArsonist = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && Arsonist.arsonist == local;
-        var localIsDead = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && CanSeeRoleInfo;
+        var localIsDead = Arsonist.arsonist != null && Arsonist.dousedPlayers != null && CanSeeGhostInfo;
         if (localIsArsonist || localIsDead)
         {
             var suffix = Cs(Arsonist.color, " ♨");
@@ -744,21 +744,6 @@ internal class HudManagerUpdatePatch
                 body.transform.localScale = new Vector3(Giant.size, Giant.size, 1f);
             }
             catch { }
-        }
-    }
-
-    private static void detectiveUpdateFootPrints()
-    {
-        if (Detective.detective.IsAlive() && Detective.detective == PlayerControl.LocalPlayer && !InMeeting)
-        {
-            Detective.timer -= Time.fixedDeltaTime;
-            if (Detective.timer <= 0f)
-            {
-                Detective.timer = Detective.footprintIntervall;
-                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                    if (player != null && player != PlayerControl.LocalPlayer && player.IsAlive() && !player.inVent)
-                        FootprintHolder.Instance.MakeFootprint(player);
-            }
         }
     }
 
@@ -1226,17 +1211,14 @@ internal class HudManagerUpdatePatch
                         }
                     }
 
-                    if (Tracker.trackingMode is 1 or 2) Arrow.UpdateProximity(position);
-                    if (Tracker.trackingMode is 0 or 2)
-                    {
-                        Tracker.arrow.Update(position, Tracker.tracked?.Data.Color);
-                        Tracker.arrow.arrow.SetActive(trackedOnMap);
-                    }
+                    Tracker.arrow.Update(position, Tracker.tracked?.Data.Color);
+                    Tracker.arrow.arrow.SetActive(trackedOnMap);
+
                     Tracker.timeUntilUpdate = Tracker.updateIntervall;
                 }
                 else
                 {
-                    if (Tracker.trackingMode is 0 or 2) Tracker.arrow.Update();
+                    Tracker.arrow.Update();
                 }
             }
             else if (Tracker.tracker.Data.IsDead)
@@ -1321,7 +1303,7 @@ internal class HudManagerUpdatePatch
         var local = PlayerControl.LocalPlayer;
         var enable = (Redemptor.RevivedPlayer.IsAlive() || Redemptor.Prayering) &&
                      ((local.IsAlive() && local.IsKiller()) ||
-                     local == Redemptor.Player || CanSeeRoleInfo);
+                     local == Redemptor.Player || CanSeeGhostInfo);
         if (enable)
         {
             if (Redemptor.text == null)
@@ -1444,8 +1426,6 @@ internal class HudManagerUpdatePatch
         Silhouette.UpdateAll();
         // BountyHunter
         bountyHunterUpdate();
-        // Detective
-        detectiveUpdateFootPrints();
         // EvilTrapper
         KillTrap.UpdateTrap();
         // Trapper

@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Impostor;
+namespace TheOtherRoles.Roles.Impostor;
 
 public static class Vampire
 {
@@ -16,9 +16,9 @@ public static class Vampire
     public static PlayerControl bitten;
     public static bool targetNearGarlic;
 
-    public static ResourceSprite buttonSprite = new("VampireButton.png");
+    public static Sprite buttonSprite = new ResourceSprite("VampireButton.png");
 
-    public static ResourceSprite garlicButtonSprite = new("GarlicButton.png");
+    public static Sprite garlicButtonSprite = new ResourceSprite("GarlicButton.png");
 
     public static void clearAndReload()
     {

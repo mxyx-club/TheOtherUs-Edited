@@ -36,7 +36,7 @@ public class WolfLord
 
         if (MeetingHud.Instance)
         {
-            MeetingHud.Instance.discussionTimer -= CustomOptionHolder.guessExtendmeetingTime.GetFloat();
+            ExtendMeetingTime(CustomOptionHolder.guessExtendmeetingTime.GetFloat());
             MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, targetId);
 
             foreach (var pva in MeetingHud.Instance.playerStates)

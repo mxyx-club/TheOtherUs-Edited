@@ -90,7 +90,7 @@ public static class ChatCommands
                 }
             }
 
-            if ((PlayerControl.LocalPlayer == Jailor.Jailed || CanSeeRoleInfo) && Jailor.Jailed.IsAlive() && MeetingHud.Instance)
+            if ((PlayerControl.LocalPlayer == Jailor.Jailed || CanSeeGhostInfo) && Jailor.Jailed.IsAlive() && MeetingHud.Instance)
             {
                 if (Jailor.JailorMessage)
                 {
@@ -101,7 +101,7 @@ public static class ChatCommands
                 else if (Jailor.Jailed.IsAlive() && Jailor.Jailed == PlayerByName(playerName) && Jailor.Player.IsAlive())
                 {
                     __instance.NameText.color = Jailor.color;
-                    __instance.NameText.text = playerName + GetString("Jailor.InJail");
+                    __instance.NameText.text = playerName + GetString("Jailor.InJailSuffix");
                 }
             }
         }
@@ -117,7 +117,7 @@ public static class ChatCommands
 
             var flag = MeetingHud.Instance
                     || LobbyBehaviour.Instance
-                    || CanSeeRoleInfo
+                    || CanSeeGhostInfo
                     || ModOption.DebugMode;
 
             __state = flag;
@@ -126,7 +126,7 @@ public static class ChatCommands
                 return true;
             if (sourcePlayer == Blackmailer.blackmailed && Blackmailer.Player.IsAlive() && Blackmailer.blackmailed.IsAlive())
             { __state = false; return false; }
-            if (sourcePlayer == Jailor.Jailed && Jailor.Jailed.IsAlive() && Jailor.Player.IsAlive() && local != Jailor.Player && !CanSeeRoleInfo)
+            if (sourcePlayer == Jailor.Jailed && Jailor.Jailed.IsAlive() && Jailor.Player.IsAlive() && local != Jailor.Player && !CanSeeGhostInfo)
             { __state = false; return false; }
             if (local.isLover() && Lovers.enableChat && (local == sourcePlayer.GetPartner() || flag))
             { __state = true; return true; }
@@ -239,7 +239,7 @@ public static class ChatCommands
                     writer.EndRPC();
 
                     target.Exiled();
-                    GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.HostCmdKill, PlayerControl.LocalPlayer);
+                    GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.HostKill, PlayerControl.LocalPlayer);
 
                     DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
                     foreach (var body in array)
@@ -441,6 +441,29 @@ public static class ChatCommands
                     target.clearAllTasks();
                     chat.AddChat(PlayerControl.LocalPlayer, $"Cleared {target?.Data?.PlayerName} Tasks");
                 }
+            }
+        });
+
+        ChatCommandRegistry.Register(["clearvote", "cv"], (sender, args, chat) =>
+        {
+            if (AmongUsClient.Instance.AmHost && InMeeting)
+            {
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostControl);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write((byte)RPCProcedure.HostCommand.HostClearVotes);
+                writer.Write(byte.MaxValue);
+                writer.EndRPC();
+
+                MeetingHud.Instance.playerStates.ForEach((x) =>
+                {
+                    x.UnsetVote();
+                });
+                MeetingHud.Instance.ClearVote();
+                chat.AddChat(PlayerControl.LocalPlayer, $"Cleared  All Votes");
+            }
+            else
+            {
+                chat.AddChat(PlayerControl.LocalPlayer, "You are not the host or not in a meeting.");
             }
         });
 

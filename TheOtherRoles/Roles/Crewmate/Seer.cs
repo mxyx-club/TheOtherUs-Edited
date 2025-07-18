@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Crewmate;
+namespace TheOtherRoles.Roles.Crewmate;
 
 public static class Seer
 {
@@ -10,7 +10,7 @@ public static class Seer
     public static bool limitSoulDuration;
     public static int mode;
 
-    public static ResourceSprite soulSprite = new("Soul.png", 500f);
+    public static Sprite soulSprite = new ResourceSprite("Soul.png", 500f);
 
     public static void clearAndReload()
     {

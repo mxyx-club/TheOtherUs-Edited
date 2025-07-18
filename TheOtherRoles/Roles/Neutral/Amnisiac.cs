@@ -12,7 +12,7 @@ public class Amnisiac
     public static bool showArrows = true;
     public static bool resetRole;
 
-    public static ResourceSprite buttonSprite = new("Remember.png");
+    public static Sprite buttonSprite = new ResourceSprite("Remember.png");
 
     public static void clearAndReload()
     {

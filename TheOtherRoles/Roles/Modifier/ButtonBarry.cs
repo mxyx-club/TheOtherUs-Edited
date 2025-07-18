@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Modifier;
+namespace TheOtherRoles.Roles.Modifier;
 
 public static class ButtonBarry
 {
@@ -6,7 +6,7 @@ public static class ButtonBarry
     public static int remoteMeetingsLeft = 1;
     public static bool SabotageRemoteMeetings;
 
-    public static ResourceSprite buttonSprite = new("EmergencyButton.png", 550);
+    public static Sprite buttonSprite = new ResourceSprite("EmergencyButton.png", 550);
 
     public static void clearAndReload()
     {

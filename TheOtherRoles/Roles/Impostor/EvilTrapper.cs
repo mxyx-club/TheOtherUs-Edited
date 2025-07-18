@@ -16,7 +16,7 @@ public static class EvilTrapper
     public static float bonusTime;
     public static bool isTrapKill;
 
-    public static ResourceSprite trapButtonSprite = new("TrapperButton.png");
+    public static Sprite trapButtonSprite = new ResourceSprite("TrapperButton.png");
     public static DateTime placedTime;
 
     public static void setTrap()

@@ -6,6 +6,7 @@ public class GameStartManagerPatch
     public static float timer = 600f;
     private static float kickingTimer;
     private static bool versionSent;
+    public static string RoomCode;
 
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerJoined))]
     public class AmongUsClientOnPlayerJoinedPatch
@@ -44,8 +45,7 @@ public class GameStartManagerPatch
             // Copy lobby code
             string code = GameCode.IntToGameName(AmongUsClient.Instance.GameId);
             GUIUtility.systemCopyBuffer = code;
-            _ = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoomCode,
-                new Il2CppReferenceArray<Il2CppSystem.Object>(0)) + "\r\n" + code;
+            RoomCode = code;
         }
     }
 

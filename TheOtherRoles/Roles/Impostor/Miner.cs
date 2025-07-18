@@ -1,11 +1,11 @@
-﻿namespace TheOtherRoles.Roles.Impostor;
+namespace TheOtherRoles.Roles.Impostor;
 
 public class Miner
 {
     public static readonly List<Vent> Vents = new();
     public static PlayerControl miner;
     public static DateTime LastMined;
-    public static ResourceSprite buttonSprite = new("Mine.png");
+    public static Sprite buttonSprite = new ResourceSprite("Mine.png");
 
     public static float cooldown = 30f;
     public static Color color = Palette.ImpostorRed;
