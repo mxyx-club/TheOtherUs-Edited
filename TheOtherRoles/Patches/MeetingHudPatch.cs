@@ -922,8 +922,6 @@ internal class MeetingHudPatch
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
     public class MeetingHudStart
     {
-        public static Sprite Letter => Blackmailer.overlaySprite;
-
         [HarmonyPostfix, HarmonyPriority(Priority.First)]
         public static void MeetingStartPatch(MeetingHud __instance)
         {

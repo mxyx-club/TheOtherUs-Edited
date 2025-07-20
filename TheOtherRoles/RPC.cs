@@ -170,6 +170,8 @@ public static class RPCProcedure
     public enum HostCommand
     {
         HostSay,
+        HostSetRole,
+        HostClearRole,
         HostKill,
         HostExile,
         HostRevive,
@@ -650,6 +652,35 @@ public static class RPCProcedure
                     x.UnsetVote();
                 });
                 MeetingHud.Instance.ClearVote();
+                break;
+            case HostCommand.HostSetRole:
+                {
+                    var target = reader.ReadPlayer();
+                    var roleId = (RoleId)reader.ReadByte();
+                    Message("SetRole Role:" + target.Data.PlayerName);
+                    if (target != null && RoleInfo.RoleInfoById.TryGetValue(roleId, out var info))
+                    {
+                        if (info.roleType == RoleType.Impostor)
+                        {
+                            target.Data.Role.TeamType = RoleTeamTypes.Impostor;
+                            SetRoleType(target, RoleTypes.Impostor);
+                        }
+                        else
+                        {
+                            target.Data.Role.TeamType = RoleTeamTypes.Crewmate;
+                            SetRoleType(target, RoleTypes.Crewmate);
+
+                        }
+                        setRole((byte)roleId, target.PlayerId);
+                    }
+                }
+                break;
+            case HostCommand.HostClearRole:
+                {
+                    var target = reader.ReadPlayer();
+                    Message("Clean Role:" + target.Data.PlayerName);
+                    erasePlayerRoles(target.PlayerId, false);
+                }
                 break;
             default:
                 break;

@@ -1147,6 +1147,20 @@ public static class ExilePlayerPatch
             Jailor.Jailed = null;
         }
 
+
+        if (__instance == Blackmailer.Player && Blackmailer.blackmailed != null && InMeeting)
+        {
+            foreach (var playerState in MeetingHud.Instance.playerStates)
+            {
+                var cell = playerState.transform.FindChild("JailCell");
+                cell?.gameObject?.Destroy();
+
+                var icon = playerState.transform.FindChild("JailTargetIcon");
+                icon?.gameObject?.Destroy();
+            }
+            Jailor.Jailed = null;
+        }
+
         if (Lawyer.lawyer != null && __instance == Lawyer.target)
         {
             if (AmongUsClient.Instance.AmHost && ((Lawyer.target != Jester.jester) || Lawyer.targetWasGuessed))

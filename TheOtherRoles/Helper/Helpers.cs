@@ -471,6 +471,30 @@ public static class Helpers
         RPCProcedure.turnToImpostor(player.PlayerId);
     }
 
+    public static void SetRoleType(PlayerControl player, RoleTypes roleType)
+    {
+        try
+        {
+            if (player == null || player.Data == null) return;
+            var data = player.Data;
+            if (data.Role)
+            {
+                data.Role.Deinitialize(player);
+                UObject.Destroy(data.Role.gameObject);
+            }
+            if (RoleManager.Instance == null) return;
+            var roleBehaviour = UObject.Instantiate(RoleManager.Instance.AllRoles.First(r => r.Role == roleType), GameData.Instance.transform);
+            roleBehaviour.Initialize(player);
+            player.Data.Role = roleBehaviour;
+            player.Data.RoleType = roleType;
+            roleBehaviour.AdjustTasks(player);
+        }
+        catch (Exception e)
+        {
+            Error(e);
+        }
+    }
+
     public static void turnToImpostor(PlayerControl player)
     {
         player.Data.Role.TeamType = RoleTeamTypes.Impostor;
@@ -484,33 +508,6 @@ public static class Helpers
                 player.cosmetics.nameText.color = Palette.ImpostorRed;
     }
 #nullable enable
-    public static void showTargetNameOnButton(this CustomButton button, PlayerControl? target, string defaultText = "")
-    {
-        var displayText = defaultText.IsNullOrWhiteSpace() ? button.buttonText : defaultText;
-
-        if (!CustomOptionHolder.showButtonTarget.GetBool())
-        {
-            button.SetButtonText(displayText);
-            return;
-        }
-
-        if (target != null && !(
-            Camouflager.camouflageTimer >= 0.1f || isCamoComms || isLightsActive ||
-            (Trickster.trickster != null && Trickster.lightsOutTimer > 0f) ||
-            (target == Ninja.ninja && Ninja.isInvisable) ||
-            (target == Swooper.swooper && Swooper.isInvisable) ||
-            (Jackal.jackal.Contains(target) && Jackal.isInvisable) ||
-            (Morphling.morphling != null && target == Morphling.morphling && Morphling.morphTimer > 0)))
-        {
-            displayText = target.Data.PlayerName;
-        }
-        else if (Morphling.morphling != null && target == Morphling.morphling && Morphling.morphTimer > 0)
-        {
-            displayText = Morphling.morphTarget?.Data.PlayerName ?? displayText;
-        }
-
-        button.SetButtonText(displayText);
-    }
 
     public static IEnumerable<DeadBody> AllDeadBodies()
     {

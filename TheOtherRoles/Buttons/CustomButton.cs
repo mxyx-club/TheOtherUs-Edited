@@ -310,11 +310,43 @@ public class CustomButton
         return this;
     }
 
+    public void showTargetNameOnButton(PlayerControl target, string defaultText = null, bool isDie = false)
+    {
+        var displayText = defaultText.IsNullOrWhiteSpace() ? buttonText : defaultText;
+
+        if (!CustomOptionHolder.showButtonTarget.GetBool() || target == null)
+        {
+            SetButtonText(displayText);
+            return;
+        }
+
+        if (isDie && target.Data.IsDead)
+        {
+            displayText = target.Data.PlayerName;
+        }
+        else if (!isLightsActive || isCamoComms ||
+            Camouflager.camouflageTimer >= 0.1f ||
+            (Trickster.trickster != null && Trickster.lightsOutTimer > 0f) ||
+            (target == Ninja.ninja && Ninja.isInvisable) ||
+            (target == Swooper.swooper && Swooper.isInvisable) ||
+            (Jackal.jackal.Contains(target) && Jackal.isInvisable) ||
+            (Morphling.morphling != null && target == Morphling.morphling && Morphling.morphTimer > 0))
+        {
+            displayText = target.Data.PlayerName;
+        }
+        else if (Morphling.morphling != null && target == Morphling.morphling && Morphling.morphTimer > 0)
+        {
+            displayText = Morphling.morphTarget?.Data.PlayerName ?? displayText;
+        }
+
+        SetButtonText(displayText);
+    }
+
     public void Update()
     {
-        var localPlayer = PlayerControl.LocalPlayer;
+        var local = PlayerControl.LocalPlayer;
 
-        if (localPlayer.Data == null || MeetingHud.Instance || ExileController.Instance || !HasButton())
+        if (local.Data == null || MeetingHud.Instance || ExileController.Instance || !HasButton())
         {
             setActive(false);
             return;
@@ -345,7 +377,7 @@ public class CustomButton
         {
             // This had to be reordered, so that the handcuffs do not stop the underlying timers from running
             if (HasEffect && isEffectActive) DeputyTimer -= Time.deltaTime;
-            else if (!localPlayer.inVent) DeputyTimer -= Time.deltaTime;
+            else if (!local.inVent) DeputyTimer -= Time.deltaTime;
         }
 
         if (DeputyTimer <= 0 && HasEffect && isEffectActive)
@@ -389,7 +421,7 @@ public class CustomButton
             actionButtonMat.SetFloat(Desat, 1f);
         }
 
-        if (Timer >= 0 && ((HasEffect && isEffectActive) || !localPlayer.inVent))
+        if (Timer >= 0 && ((HasEffect && isEffectActive) || !local.inVent))
             Timer -= Time.deltaTime;
 
         if (Timer <= 0 && HasEffect && isEffectActive)
@@ -406,7 +438,7 @@ public class CustomButton
             onClickEvent();
 
         // Deputy disable the button and display Handcuffs instead...
-        if (Sheriff.handcuffedPlayers.Contains(localPlayer.PlayerId))
+        if (Sheriff.handcuffedPlayers.Contains(local.PlayerId))
             OnClick = () => Sheriff.setHandcuffedKnows();
         else
             OnClick = InitialOnClick;

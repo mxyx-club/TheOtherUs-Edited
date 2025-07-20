@@ -1,3 +1,4 @@
+using AmongUs.GameOptions;
 using System.Text;
 
 namespace TheOtherRoles.Modules;
@@ -337,6 +338,11 @@ public static class ChatCommands
         {
             if (PlayerControl.LocalPlayer.IsDead() || ModOption.DebugMode || AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
             {
+                if (args == null || args.Length == 0)
+                {
+                    chat.AddChat(PlayerControl.LocalPlayer, "Usage: /tp {player}");
+                    return;
+                }
                 var target = GetPlayer(args);
                 if (target != null)
                 {
@@ -357,6 +363,139 @@ public static class ChatCommands
             {
                 var roleText = RoleInfo.getRoleDescription(role);
                 if (roleText != null) chat.AddChat(PlayerControl.LocalPlayer, roleText);
+            }
+        });
+
+        ChatCommandRegistry.Register(["setrole", "sr"], (sender, args, chat) =>
+        {
+            if (!AmongUsClient.Instance.AmHost)
+            {
+                chat.AddChat(PlayerControl.LocalPlayer, "You Not Host Player!");
+                return;
+            }
+            if (!InGame)
+            {
+                chat.AddChat(PlayerControl.LocalPlayer, "NotInGame".Translate());
+                return;
+            }
+
+            if (args == null || args.Length == 0)
+            {
+                chat.AddChat(PlayerControl.LocalPlayer,
+                    "用来变更目标玩家职业的指令\n\n" +
+                    "格式: /sr <职业> <玩家>\n" +
+                    "• /sr <职业> - 设置自己的职业\n" +
+                    "• /sr <角色> <玩家ID> - 设置他人角色\n" +
+                    "• /sr ls - 显示可用职业列表与ID\n" +
+                    "• /sr 0 <玩家> 清除目标的职业");
+            }
+            else if (args.Length == 1 && args[0].Equals("ls", StringComparison.OrdinalIgnoreCase))
+            {
+                var crewmateSb = new StringBuilder();
+                crewmateSb.AppendLine("船员阵营:");
+                foreach (var info in RoleInfo.allRoleInfos.Where(x => x.roleType == RoleType.Crewmate))
+                {
+                    crewmateSb.AppendLine($"• {(int)info.roleId} - {info.Name}");
+                }
+                chat.AddChat(PlayerControl.LocalPlayer, crewmateSb.ToString());
+                var neutralSb = new StringBuilder();
+                neutralSb.AppendLine("独立阵营:");
+                foreach (var info in RoleInfo.allRoleInfos.Where(x => x.roleType == RoleType.Neutral))
+                {
+                    neutralSb.AppendLine($"• {(int)info.roleId} - {info.Name}");
+                }
+                chat.AddChat(PlayerControl.LocalPlayer, neutralSb.ToString());
+                var impostorSb = new StringBuilder();
+                impostorSb.AppendLine("伪装者阵营:");
+                foreach (var info in RoleInfo.allRoleInfos.Where(x => x.roleType == RoleType.Impostor))
+                {
+                    impostorSb.AppendLine($"• {(int)info.roleId} - {info.Name}");
+                }
+                chat.AddChat(PlayerControl.LocalPlayer, impostorSb.ToString());
+            }
+            else if (args.Length > 0 && args[0].Equals("0", StringComparison.OrdinalIgnoreCase))
+            {
+                var target = GetPlayer(args?.Skip(1)?.ToArray());
+                if (target != null)
+                {
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostControl);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                    writer.Write((byte)RPCProcedure.HostCommand.HostClearRole);
+                    writer.Write(target.PlayerId);
+                    writer.EndRPC();
+
+                    Message("Clean Role:" + target.Data.PlayerName);
+                    RPCProcedure.erasePlayerRoles(target.PlayerId, false);
+
+                    chat.AddChat(PlayerControl.LocalPlayer, $"Clear {target.Data.PlayerName} the Role!");
+                }
+            }
+            else if (AmongUsClient.Instance.AmHost && args.Length > 0)
+            {
+                var roleId = GetRoleId(args);
+                var target = GetPlayer(args?.Skip(1)?.ToArray());
+                if (target != null)
+                {
+                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostControl);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                    writer.Write((byte)RPCProcedure.HostCommand.HostSetRole);
+                    writer.Write(target.PlayerId);
+                    writer.Write((byte)roleId);
+                    writer.EndRPC();
+
+                    Message("Set Role:" + target.Data.PlayerName);
+                    if (target != null && RoleInfo.RoleInfoById.TryGetValue(roleId, out var info))
+                    {
+                        if (info.roleType == RoleType.Impostor)
+                        {
+                            target.Data.Role.TeamType = RoleTeamTypes.Impostor;
+                            SetRoleType(target, RoleTypes.Impostor);
+                        }
+                        else
+                        {
+                            target.Data.Role.TeamType = RoleTeamTypes.Crewmate;
+                            SetRoleType(target, RoleTypes.Crewmate);
+
+                        }
+                        RPCProcedure.setRole((byte)roleId, target.PlayerId);
+                    }
+
+                    chat.AddChat(PlayerControl.LocalPlayer, $"Set {target.Data.PlayerName} the role {roleId}");
+                }
+            }
+        });
+
+        ChatCommandRegistry.Register(["clearrole", "cr"], (sender, args, chat) =>
+        {
+            if (!AmongUsClient.Instance.AmHost || PlayerControl.LocalPlayer == null)
+            {
+                chat.AddChat(PlayerControl.LocalPlayer, "You Not Host Player!");
+                return;
+            }
+            else if (!InGame)
+            {
+                chat.AddChat(PlayerControl.LocalPlayer, "NotInGame".Translate());
+                return;
+            }
+            else if (args == null || args.Length == 0)
+            {
+                chat.AddChat(PlayerControl.LocalPlayer, "Usage: /cr <player>\nClear the target player role");
+                return;
+            }
+
+            var target = GetPlayer(args);
+            if (target != null)
+            {
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostControl);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write((byte)RPCProcedure.HostCommand.HostClearRole);
+                writer.Write(target.PlayerId);
+                writer.EndRPC();
+
+                Message("Clean Role:" + target.Data.PlayerName);
+                RPCProcedure.erasePlayerRoles(target.PlayerId, false);
+
+                chat.AddChat(PlayerControl.LocalPlayer, $"Clear {target.Data.PlayerName} the Role!");
             }
         });
 
@@ -392,11 +531,15 @@ public static class ChatCommands
             }
         });
 
-        ChatCommandRegistry.Register("room", (sender, args, chat) =>
+        ChatCommandRegistry.Register(["room", "size"], (sender, args, chat) =>
         {
-            if (!InGame && AmongUsClient.Instance.AmHost && args.Length > 0
-            && AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame)
+            if (!InGame && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame)
             {
+                if (args == null || args.Length == 0)
+                {
+                    chat.AddChat(PlayerControl.LocalPlayer, "Usage: /room {amount}\nSet the lobby size");
+                    return;
+                }
                 if (int.TryParse(args[0], out var LobbyLimit))
                 {
                     LobbyLimit = Math.Clamp(LobbyLimit, 4, CrowdedPlayer.MaxPlayer);
@@ -427,8 +570,13 @@ public static class ChatCommands
 
         ChatCommandRegistry.Register(["cleartask", "ct"], (sender, args, chat) =>
         {
-            if (AmongUsClient.Instance.AmHost && InGame && args.Length > 0)
+            if (AmongUsClient.Instance.AmHost && InGame)
             {
+                if (args == null || args.Length == 0)
+                {
+                    chat.AddChat(PlayerControl.LocalPlayer, "Usage: /ct <player>\nClear the target player tasks");
+                    return;
+                }
                 var target = GetPlayer(args);
                 if (target != null)
                 {
@@ -467,18 +615,43 @@ public static class ChatCommands
             }
         });
 
-        static PlayerControl GetPlayer(string[] args = null)
+        static RoleId GetRoleId(string[] args = null)
         {
             if (args == null || args.Length == 0)
             {
-                return PlayerControl.LocalPlayer;
+                return RoleId.DefaultRole;
             }
+            if (int.TryParse(args[0], out var roleId))
+            {
+                return (RoleId)roleId;
+            }
+            var infos = RoleInfo.allRoleInfos.Where(x => x.Name.StartsWith(args[0], StringComparison.OrdinalIgnoreCase));
+            if (infos.Count() == 1)
+            {
+                return infos.First().roleId;
+            }
+            else if (infos.Count() > 1)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine("Ambiguous Role Name:");
+                foreach (var info in infos)
+                {
+                    sb.AppendLine($"• {info.roleId} - {info.Name}");
+                }
+                Message(sb.ToString());
+                return RoleId.DefaultRole;
+            }
+            return RoleId.DefaultRole;
+        }
+
+        static PlayerControl GetPlayer(string[] args = null)
+        {
             if (string.IsNullOrEmpty(args[0]))
             {
                 return PlayerControl.LocalPlayer;
             }
 
-            var target = PlayerControl.AllPlayerControls.FirstOrDefault(x => x.Data.PlayerName.Equals(args[0]));
+            var target = PlayerControl.AllPlayerControls.FirstOrDefault(x => x.Data.PlayerName.Equals(args[0], StringComparison.OrdinalIgnoreCase));
 
             if (target == null && byte.TryParse(args[0], out var result))
             {

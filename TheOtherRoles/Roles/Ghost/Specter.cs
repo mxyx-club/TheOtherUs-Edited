@@ -4,6 +4,7 @@ public class Specter
 {
     public static PlayerControl Player;
     public static Color color = new Color32(154, 147, 80, byte.MaxValue);
+    public static PlayerControl Target;
 
     public static float duration;
     public static bool resetRole;
@@ -16,6 +17,7 @@ public class Specter
     public static void ClearAndReload()
     {
         Player = null;
+        Target = null;
         exiledBeginRevive = false;
         revived = false;
         remember = !CustomOptionHolder.specterAfterMeetingTakeRole.GetBool();

@@ -2417,7 +2417,8 @@ internal static class HudManagerStartPatch
             ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
-            abilityInput.keyCode
+            abilityInput.keyCode,
+            buttonText: GetString("EraserText")
         );
 
         partTimerButton = new CustomButton(
@@ -2895,6 +2896,8 @@ internal static class HudManagerStartPatch
 
                 SecurityGuard.ventTarget = target;
 
+                securityGuardButton.buttonText = target != null ? GetString("SealVentText") : GetString("PlaceCamText");
+
                 if (SecurityGuard.ventTarget != null)
                     return SecurityGuard.remainingScrews >= SecurityGuard.ventPrice &&
                            PlayerControl.LocalPlayer.CanMove;
@@ -3007,8 +3010,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
+                return Arsonist.arsonist.IsAlive() && Arsonist.arsonist == PlayerControl.LocalPlayer;
             },
             () =>
             {
@@ -3063,12 +3065,11 @@ internal static class HudManagerStartPatch
                         ModOption.playerIcons[p.PlayerId].setSemiTransparent(false);
 
                 // Ghost Info
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.ShareGhostInfo);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 writer.Write((byte)RPCProcedure.GhostInfoTypes.ArsonistDouse);
                 writer.Write(Arsonist.douseTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
 
                 Arsonist.douseTarget = null;
             },
@@ -3234,13 +3235,44 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                var array = Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(),
-                      PlayerControl.LocalPlayer.MaxReportDistance * 0.36f,
-                      Constants.PlayersOnlyMask).Where(collider => collider.tag == "DeadBody")
-                 .Select(collider => collider.GetComponent<DeadBody>())
-                 .Where(deadBody => deadBody != null);
+                /*var pos = PlayerControl.LocalPlayer.GetTruePosition();
+                var maxDistance = Mathf.Pow(PlayerControl.LocalPlayer.MaxReportDistance * 0.36f, 2);
 
-                return array.Any(db => db.ParentId != PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.CanMove;
+                DeadBody deadBody = null;
+                float closestDistSqr = float.MaxValue;
+
+                foreach (var collider in Physics2D.OverlapCircleAll(pos, Mathf.Sqrt(maxDistance), Constants.PlayersOnlyMask))
+                {
+                    if (!collider.CompareTag("DeadBody")) continue;
+
+                    var body = collider.GetComponent<DeadBody>();
+                    if (body == null) continue;
+
+                    var player = PlayerById(body.ParentId);
+                    if (player?.Data == null || !player.Data.IsDead || player.Data.Disconnected) continue;
+
+                    float distSqr = (body.TruePosition - pos).sqrMagnitude;
+                    if (distSqr < maxDistance && distSqr < closestDistSqr)
+                    {
+                        deadBody = body;
+                        closestDistSqr = distSqr;
+                    }
+                }*/
+
+                var pos = PlayerControl.LocalPlayer.GetTruePosition();
+                var maxDistance = PlayerControl.LocalPlayer.MaxReportDistance * 0.36f;
+
+                var deadBody = Physics2D.OverlapCircleAll(pos, Mathf.Sqrt(maxDistance), Constants.PlayersOnlyMask)
+                    .Where(x => x.CompareTag("DeadBody"))
+                    .Select(x => x.GetComponent<DeadBody>())
+                    .FirstOrDefault(db => db != null && PlayerById(db.ParentId)?.Data?.IsDead == true &&
+                                          !(PlayerById(db.ParentId)?.Data?.Disconnected == true));
+
+                Specter.Target = deadBody != null ? PlayerById(deadBody.ParentId) : null;
+
+                specterRememberButton.showTargetNameOnButton(Specter.Target);
+
+                return Specter.Target != null && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {
@@ -3255,31 +3287,12 @@ internal static class HudManagerStartPatch
             Specter.duration,
             () =>
             {
-                foreach (var collider2D in Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(),
-                             PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
-                    if (collider2D.tag == "DeadBody")
-                    {
-                        var component = collider2D.GetComponent<DeadBody>();
-                        if (component && !component.Reported)
-                        {
-                            var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                            var truePosition2 = component.TruePosition;
-                            if (Vector2.Distance(truePosition2, truePosition) <=
-                                PlayerControl.LocalPlayer.MaxReportDistance &&
-                                PlayerControl.LocalPlayer.CanMove &&
-                                !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
-                                    Constants.ShipAndObjectsMask, false) && component.ParentId != PlayerControl.LocalPlayer.PlayerId)
-                            {
-                                var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
-                                if (!Specter.afterMeetingRevive) PlayerControl.LocalPlayer.transform.position = PlayerControl.LocalPlayer.GetCloseSpawnPosition();
-                                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.SpecterTakeRole);
-                                writer.Write(playerInfo.PlayerId);
-                                writer.EndRPC();
-                                Specter.TakeRole(playerInfo.PlayerId);
-                                break;
-                            }
-                        }
-                    }
+                var target = Specter.Target;
+                if (!Specter.afterMeetingRevive) PlayerControl.LocalPlayer.transform.position = PlayerControl.LocalPlayer.GetCloseSpawnPosition();
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.SpecterTakeRole);
+                writer.Write(target.PlayerId);
+                writer.EndRPC();
+                Specter.TakeRole(target.PlayerId);
             },
             buttonText: GetString("ReviveButton")
         );
@@ -4199,7 +4212,6 @@ internal static class HudManagerStartPatch
                    __instance.InitMap();
                    MapBehaviour.Instance.ShowCountOverlay(allowedToMove: true, showLivePlayerPosition: true, includeDeadBodies: true);
                }
-               ;
            },
            () =>
            {

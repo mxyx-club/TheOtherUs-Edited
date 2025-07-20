@@ -3798,6 +3798,14 @@
         "0": "RECALL",
         "13": "回忆"
     },
+    "SealVentText": {
+        "0": "SEAL",
+        "13": "封锁"
+    },
+    "PlaceCamText": {
+        "0": "PLACE CAM",
+        "13": "放置监控"
+    },
     "CamButtonText": {
         "0": "CAM",
         "13": "查看监控"

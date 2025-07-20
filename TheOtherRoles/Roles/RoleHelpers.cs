@@ -43,7 +43,6 @@ public enum RoleId
     Grenadier,
     Gunsmith,
     Berserker,
-    Jailor,
 
     Survivor,
     Amnisiac,
@@ -96,6 +95,7 @@ public enum RoleId
     Trapper,
     Balancer,
     Redemptor,
+    Jailor,
 
     // Modifier ---
     Lover,
