@@ -1,3 +1,5 @@
+using PlayerData = TheOtherRoles.Modules.PlayerData;
+
 namespace TheOtherRoles.Roles;
 
 public class RoleInfo
@@ -478,16 +480,16 @@ public class RoleInfo
     {
         if (p.IsAlive() || !CanSeeGhostInfo) return "";
 
-        var deadPlayer = GameHistory.DeadPlayers.FirstOrDefault(x => x.Player.PlayerId == p.PlayerId);
+        var deadPlayer = PlayerData.AllPlayerData.Values.FirstOrDefault(x => x.Player.PlayerId == p.PlayerId);
         if (deadPlayer == null) return "";
 
         var reason = deadPlayer.DeathReason;
-        var killer = deadPlayer.KillerIfExisting;
-        var killerName = deadPlayer.KillerIfExisting?.Data.PlayerName ?? "NULL";
+        var killer = deadPlayer.KilledBy;
+        var killerName = deadPlayer.KilledBy?.Data.PlayerName ?? "NULL";
 
         Color killerColor = Palette.CrewmateBlue;
-        if (deadPlayer != null && deadPlayer.KillerIfExisting != null)
-            killerColor = getRoleInfoForPlayer(deadPlayer.KillerIfExisting, false).FirstOrDefault().color;
+        if (deadPlayer != null && deadPlayer.KilledBy != null)
+            killerColor = getRoleInfoForPlayer(deadPlayer.KilledBy, false).FirstOrDefault().color;
 
         killerName = Cs(killerColor, killerName);
         return string.Format(GetString($"DeathReason.{reason}"), killerName);

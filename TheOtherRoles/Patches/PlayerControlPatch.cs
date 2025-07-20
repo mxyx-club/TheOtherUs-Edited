@@ -1,7 +1,6 @@
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using TheOtherRoles.Objects;
-using static TheOtherRoles.GameHistory;
 
 namespace TheOtherRoles.Patches;
 
@@ -557,7 +556,14 @@ internal class PlayerControlRevivePatch
         else RoleManager.Instance.SetRole(__instance, RoleTypes.Crewmate);
 
         RPCProcedure.clearGhostRoles(__instance.PlayerId);
-        DeadPlayers.RemoveAll(x => x.Player == __instance);
+
+        var data = PlayerData.GetPlayerData(__instance);
+        if (data != null)
+        {
+            data.DeathReason = CustomDeathReason.Null;
+            data.KilledBy = null;
+            data.DeathTimer = DateTime.MinValue;
+        }
     }
 }
 
@@ -587,12 +593,12 @@ internal class BodyReportPatch
 
         if (isMedicReport || isDetectiveReport)
         {
-            var deadPlayer = DeadPlayers?.Where(x => x.Player?.PlayerId == target?.PlayerId)?.FirstOrDefault();
-            if (deadPlayer != null && deadPlayer.KillerIfExisting != null)
+            var deadPlayer = PlayerData.AllPlayerData.Values?.Where(x => x.PlayerId == target?.PlayerId && x.IsDead)?.FirstOrDefault();
+            if (deadPlayer != null && deadPlayer.KilledBy != null)
             {
-                var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
+                var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.DeathTimer).TotalMilliseconds;
                 var msg = "";
-                var killer = deadPlayer.KillerIfExisting;
+                var killer = deadPlayer.KilledBy;
                 float timer = (float)Math.Round(timeSinceDeath / 1000);
                 if (Vortox.Reversal)
                 {
@@ -654,7 +660,7 @@ internal class BodyReportPatch
 
         if (Witness.Player.IsAlive())
         {
-            var killer = DeadPlayers.Find(x => x.Player.PlayerId == target?.PlayerId)?.KillerIfExisting;
+            var killer = PlayerData.AllPlayerData.Values.FirstOrDefault(x => x.PlayerId == target?.PlayerId)?.KilledBy;
             var witnessTarget = Witness.DetermineKillerTarget(killer);
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WitnessReport);
             writer.Write(witnessTarget?.PlayerId ?? byte.MaxValue);
@@ -763,8 +769,7 @@ public static class MurderPlayerPatch
     {
         // Collect dead player info
         var deathReason = __instance == target ? CustomDeathReason.Suicide : CustomDeathReason.Kill;
-        var deadPlayer = new DeadPlayer(target, DateTime.UtcNow, deathReason, __instance);
-        DeadPlayers.Add(deadPlayer);
+        PlayerData.SetDeathReason(target, deathReason, __instance);
 
         // Remove fake tasks when player dies
         if (target.HasFakeTasks() || target == Lawyer.lawyer || Pursuer.Player.Contains(target) || target == Thief.thief)
@@ -790,7 +795,7 @@ public static class MurderPlayerPatch
             if (otherLover != null && !otherLover.Data.IsDead && Lovers.bothDie)
             {
                 otherLover.MurderPlayer(otherLover, MurderResultFlags.Succeeded);
-                OverrideDeathReasonAndKiller(otherLover, CustomDeathReason.LoverSuicide);
+                PlayerData.SetDeathReason(otherLover, CustomDeathReason.LoverSuicide);
             }
         }
 
@@ -844,8 +849,13 @@ public static class MurderPlayerPatch
             foreach (var player in Pelican.eatenPlayers.ToArray().Where(p => p != null))
             {
                 player.Revive();
-
-                DeadPlayers.RemoveAll(x => x.Player.PlayerId == player.PlayerId);
+                var data = PlayerData.GetPlayerData(player);
+                if (data != null)
+                {
+                    data.DeathReason = CustomDeathReason.Null;
+                    data.KilledBy = null;
+                    data.DeathTimer = DateTime.MinValue;
+                }
                 if (PlayerControl.LocalPlayer == player)
                 {
                     HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
@@ -876,10 +886,8 @@ public static class MurderPlayerPatch
         Tracker.deadBodyPositions?.Add(target.transform.position);
 
         // Medium add body
-        if (Medium.deadBodies != null)
-        {
-            Medium.futureDeadBodies.Add(new Tuple<DeadPlayer, Vector3>(deadPlayer, target.transform.position));
-        }
+        var deadPlayer = new Medium.DeadPlayer(target, DateTime.UtcNow, deathReason, __instance, target.transform.position);
+        Medium.futureDeadBodies.Add(new Tuple<Medium.DeadPlayer, Vector3>(deadPlayer, target.transform.position));
 
         // LastImpostor cooldown
         if (LastImpostor.lastImpostor != null && __instance == LastImpostor.lastImpostor && PlayerControl.LocalPlayer == __instance)
@@ -1005,7 +1013,7 @@ public static class MurderPlayerPatch
             if (akujoPartner != null && !akujoPartner.Data.IsDead)
             {
                 akujoPartner.MurderPlayer(akujoPartner, MurderResultFlags.Succeeded);
-                OverrideDeathReasonAndKiller(akujoPartner, CustomDeathReason.LoverSuicide);
+                PlayerData.SetDeathReason(akujoPartner, CustomDeathReason.LoverSuicide);
             }
         }
     }
@@ -1081,10 +1089,12 @@ public static class ExilePlayerPatch
     public static void Postfix(PlayerControl __instance)
     {
         // Collect dead player info
-        if (!DeadPlayers.Any(x => x.Player.PlayerId == __instance.PlayerId))
+        var data = PlayerData.GetPlayerData(__instance);
+        if (data != null && data.DeathReason == CustomDeathReason.Null)
         {
-            var deadPlayer = new DeadPlayer(__instance, DateTime.UtcNow, CustomDeathReason.Exile, null);
-            DeadPlayers.Add(deadPlayer);
+            data.DeathReason = CustomDeathReason.Exile;
+            data.KilledBy = null;
+            data.DeathTimer = DateTime.UtcNow;
         }
 
         if (MeetingHud.Instance)
@@ -1113,7 +1123,7 @@ public static class ExilePlayerPatch
             if (otherLover != null && !otherLover.Data.IsDead && Lovers.bothDie)
             {
                 otherLover.Exiled();
-                OverrideDeathReasonAndKiller(otherLover, CustomDeathReason.LoverSuicide);
+                PlayerData.SetDeathReason(otherLover, CustomDeathReason.LoverSuicide);
             }
         }
 
@@ -1187,7 +1197,7 @@ public static class ExilePlayerPatch
             if (akujoPartner != null && !akujoPartner.Data.IsDead)
             {
                 akujoPartner.Exiled();
-                OverrideDeathReasonAndKiller(akujoPartner, CustomDeathReason.LoverSuicide);
+                PlayerData.SetDeathReason(akujoPartner, CustomDeathReason.LoverSuicide);
             }
 
             if (MeetingHud.Instance && akujoPartner != null)
@@ -1230,7 +1240,7 @@ public static class DisconnectPatch
 
             if (player == BandLeader.Player) BandLeader.ClearAndReload();
 
-            if (player != null && !player.Data.IsDead) OverrideDeathReasonAndKiller(player, CustomDeathReason.Disconnect, null);
+            if (player != null && !player.Data.IsDead) PlayerData.SetDeathReason(player, CustomDeathReason.Disconnect, null);
 
             Sheriff.deputyCheckPromotion();
         }
@@ -1267,7 +1277,15 @@ public static class DisconnectPatch
                 if (p != null && p.Data.IsDead)
                 {
                     p.Revive();
-                    DeadPlayers.RemoveAll(x => x.Player.PlayerId == p.PlayerId);
+
+                    var data = PlayerData.GetPlayerData(p);
+                    if (data != null)
+                    {
+                        data.DeathReason = CustomDeathReason.Null;
+                        data.KilledBy = null;
+                        data.DeathTimer = DateTime.MinValue;
+                    }
+
                     if (p.AmOwner)
                     {
                         var pos = HudManager.Instance.PlayerCam.transform.position;

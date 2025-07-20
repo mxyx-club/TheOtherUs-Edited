@@ -1,7 +1,7 @@
-using System.Diagnostics;
-using System.Text;
 using BepInEx;
 using BepInEx.Logging;
+using System.Diagnostics;
+using System.Text;
 
 namespace TheOtherRoles.Modules;
 

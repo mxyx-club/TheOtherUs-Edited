@@ -1,6 +1,5 @@
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Patches;
-using static TheOtherRoles.GameHistory;
 
 namespace TheOtherRoles.Roles;
 
@@ -495,7 +494,7 @@ public static class Guesser
 
             Lawyer.lawyer.Exiled();
             lawyerDiedAdditionally = true;
-            OverrideDeathReasonAndKiller(Lawyer.lawyer, CustomDeathReason.LawyerSuicide, guesser);
+            PlayerData.SetDeathReason(Lawyer.lawyer, CustomDeathReason.LawyerSuicide, guesser);
         }
 
         byte partnerId = dyingPartner != null ? dyingPartner.PlayerId : dyingTargetId;
@@ -503,7 +502,7 @@ public static class Guesser
         dyingTarget.Exiled();
 
         var reason = dyingTarget == guesser ? CustomDeathReason.GuessFail : CustomDeathReason.GuessSuccess;
-        OverrideDeathReasonAndKiller(dyingTarget, reason, guesser);
+        PlayerData.SetDeathReason(dyingTarget, reason, guesser);
 
         if (dyingTarget == Balancer.currentTarget) Balancer.currentTarget = null;
 

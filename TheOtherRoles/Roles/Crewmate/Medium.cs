@@ -34,6 +34,29 @@ public static class Medium
         oneTimeUse = CustomOptionHolder.mediumOneTimeUse.GetBool();
         chanceAdditionalInfo = CustomOptionHolder.mediumChanceAdditionalInfo.GetSelection() / 10f;
     }
+
+
+    public class DeadPlayer
+    {
+        public CustomDeathReason DeathReason { get; set; }
+        public PlayerControl KilledBy { get; set; }
+        public PlayerControl Player { get; }
+        public DateTime TimeOfDeath { get; }
+        public bool wasCleaned { get; set; }
+        public Vector3 DeadPos { get; set; }
+
+        public DeadPlayer(PlayerControl Player, DateTime TimeOfDeath, CustomDeathReason DeathReason, PlayerControl KilledBy, Vector3 deadPos)
+        {
+            this.Player = Player;
+            this.TimeOfDeath = TimeOfDeath;
+            this.DeathReason = DeathReason;
+            this.KilledBy = KilledBy;
+            wasCleaned = false;
+            DeadPos = deadPos;
+        }
+    }
+
+
     public static string getInfo(PlayerControl target, PlayerControl killer)
     {
         var msg = "";
@@ -97,7 +120,7 @@ public static class Medium
         else
         {
             var randomNumber = rnd.Next(4);
-            var typeOfColor = IsLightColor(Medium.target.KillerIfExisting) ? GetString("Color.Light") : GetString("Color.Dark");
+            var typeOfColor = IsLightColor(Medium.target.KilledBy) ? GetString("Color.Light") : GetString("Color.Dark");
             var timeSinceDeath = (float)(meetingStartTime - Medium.target.TimeOfDeath).TotalMilliseconds;
             var roleString = RoleInfo.GetRolesString(Medium.target.Player, false, false, false, false);
             var seconds = Math.Round((meetingStartTime - Medium.target.TimeOfDeath).TotalSeconds);
@@ -117,7 +140,7 @@ public static class Medium
                     break;
 
                 default:
-                    msg = string.Format(GetString("MediumInfo.KillerRole"), RoleInfo.GetRolesString(Medium.target.KillerIfExisting, false, false, false));
+                    msg = string.Format(GetString("MediumInfo.KillerRole"), RoleInfo.GetRolesString(Medium.target.KilledBy, false, false, false));
                     break;
             }
         }

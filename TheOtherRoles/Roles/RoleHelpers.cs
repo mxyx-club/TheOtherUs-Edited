@@ -163,7 +163,7 @@ public static class RoleHelpers
         if (deathReason == CustomDeathReason.Null) deathReason = target == killer ? CustomDeathReason.Suicide : CustomDeathReason.Kill;
         KillAnimationCoPerformKillPatch.hideNextAnimation = !showAnimation;
         killer.MurderPlayer(target, MurderResultFlags.Succeeded);
-        GameHistory.OverrideDeathReasonAndKiller(target, deathReason, killer);
+        PlayerData.SetDeathReason(target, deathReason, killer);
     }
 
     public static bool RpcCustomMurderPlayer(

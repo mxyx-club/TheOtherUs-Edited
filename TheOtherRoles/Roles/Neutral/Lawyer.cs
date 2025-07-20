@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Neutral;
+namespace TheOtherRoles.Roles.Neutral;
 
 public static class Lawyer
 {
@@ -22,7 +22,7 @@ public static class Lawyer
         if (suicide)
         {
             player?.Exiled();
-            GameHistory.RpcOverrideDeathReasonAndKiller(player, CustomDeathReason.LawyerSuicide, player);
+            PlayerData.RpcSetDeathReason(player, CustomDeathReason.LawyerSuicide, player);
             return;
         }
 

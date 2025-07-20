@@ -9,11 +9,10 @@ public class Jailor
     public static PlayerControl currentTarget;
     public static PlayerControl Jailed;
 
-    public static bool JailorMessage;
     public static int usesCount;
     public static float cooldown = 10f;
 
-    public static Sprite buttonSpritr = new ResourceSprite("Jail.png");
+    public static Sprite buttonSprite = new ResourceSprite("Jail.png");
     public static Sprite jailedSprite = new ResourceSprite("InJail.png", 95);
     public static Sprite Jail = new ResourceSprite("JailCell.png", 105);
     public static Sprite TargetSprite = new ResourceSprite("TargetIcon.png", 150);
@@ -86,7 +85,7 @@ public class Jailor
         if (Guesser.guesserUI != null) Guesser.guesserUIExitButton.OnClick.Invoke();
 
         target.Exiled();
-        GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.Jailed, player);
+        PlayerData.SetDeathReason(target, CustomDeathReason.Jailed, player);
 
         foreach (var playerState in MeetingHud.Instance.playerStates)
         {
@@ -156,17 +155,15 @@ public class Jailor
 
     public static void JailorSendMessage(PlayerControl player, string message)
     {
-        JailorMessage = true;
+        ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.JailorChat;
         message = Cs(Color.red, message);
         if (PlayerControl.LocalPlayer == Jailed || CanSeeGhostInfo)
         {
             FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Jailed, message);
-            Message($"SendMessage: {message}");
         }
         else if (PlayerControl.LocalPlayer == Player)
         {
             FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Player, message);
-            Message($"SendMessage: {message}");
         }
     }
 
@@ -175,7 +172,6 @@ public class Jailor
         Player = null;
         currentTarget = null;
         Jailed = null;
-        JailorMessage = false;
         usesCount = CustomOptionHolder.jailorUseCount.GetInt();
         cooldown = CustomOptionHolder.jailorCooldown.GetFloat();
     }

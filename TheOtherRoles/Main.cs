@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
+using TheOtherRoles.Attributes;
 using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
@@ -95,7 +96,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
 
         SubmergedCompatibility.Initialize();
         AddToKillDistanceSetting.addKillDistance();
-        ChatCommands.Initialize();
+        PluginModuleInitializerAttribute.Invoke();
         LightPatch.Initialize();
         UpdateCPUProcessorAffinity();
         Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{Version}{VersionSuffix}\n---------------");
@@ -153,3 +154,31 @@ public static class ChatControllerAwakePatch
             DataManager.Settings.Multiplayer.ChatMode = QuickChatModes.FreeChatOrQuickChat;
     }
 }
+
+/*
+[HarmonyPatch(typeof(AmongUs.Data.Player.PlayerData), nameof(AmongUs.Data.Player.PlayerData.FileName), MethodType.Getter)]
+public class SaveManagerPatch
+{
+    public static void Postfix(ref string __result)
+    {
+        __result += "_TOUE";
+    }
+}
+[HarmonyPatch(typeof(AmongUs.Data.Legacy.LegacySaveManager), nameof(AmongUs.Data.Legacy.LegacySaveManager.GetPrefsName))]
+public class LegacySaveManagerPatch
+{
+    public static void Postfix(ref string __result)
+    {
+        __result += "_TOUE";
+    }
+}
+
+[HarmonyPatch(typeof(AmongUs.Data.Settings.SettingsData), nameof(AmongUs.Data.Settings.SettingsData.FileName), MethodType.Getter)]
+public class SettingsFilePatch
+{
+    public static void Postfix(ref string __result)
+    {
+        __result += "_TOUE";
+    }
+}
+ */

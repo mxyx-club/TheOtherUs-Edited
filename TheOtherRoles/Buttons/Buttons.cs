@@ -3315,7 +3315,7 @@ internal static class HudManagerStartPatch
             () =>
             {
 
-                DeadPlayer target = null;
+                Medium.DeadPlayer target = null;
                 var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
                 var closestDistance = float.MaxValue;
                 var usableDistance = MapUtilities.CachedShipStatus.AllVents.FirstOrDefault().UsableDistance;
@@ -3356,7 +3356,7 @@ internal static class HudManagerStartPatch
             {
                 mediumButton.Timer = mediumButton.MaxTimer;
                 if (Medium.target == null || Medium.target.Player == null) return;
-                var msg = Medium.getInfo(Medium.target.Player, Medium.target.KillerIfExisting);
+                var msg = Medium.getInfo(Medium.target.Player, Medium.target.KilledBy);
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msg);
 
                 // Ghost Info
@@ -4866,7 +4866,7 @@ internal static class HudManagerStartPatch
                 return PlayerControl.LocalPlayer.CanMove && Jailor.currentTarget != null;
             },
             () => { jailorButton.Timer = jailorButton.MaxTimer; },
-            Jailor.buttonSpritr,
+            Jailor.buttonSprite,
             ButtonPositions.upperRowRight,
             __instance,
             __instance.AbilityButton,

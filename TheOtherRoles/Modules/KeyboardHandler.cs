@@ -63,10 +63,10 @@ public class KeyboardHandler
 
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKeyDown(KeyCode.T) && InGame)
             {
-                ChatCommands.EnableChat.ForceEnableChat = !ChatCommands.EnableChat.ForceEnableChat;
-                Message($"强制设置聊天框状态为: {ChatCommands.EnableChat.ForceEnableChat}");
+                ChatControllerPatch.EnableChat.ForceEnableChat = !ChatControllerPatch.EnableChat.ForceEnableChat;
+                Message($"强制设置聊天框状态为: {ChatControllerPatch.EnableChat.ForceEnableChat}");
                 FastDestroyableSingleton<HudManager>.Instance.Chat
-                    .AddChat(PlayerControl.LocalPlayer, $"强制设置聊天框状态为: {ChatCommands.EnableChat.ForceEnableChat}");
+                    .AddChat(PlayerControl.LocalPlayer, $"强制设置聊天框状态为: {ChatControllerPatch.EnableChat.ForceEnableChat}");
             }
         }
     }

@@ -1,11 +1,22 @@
 using AmongUs.GameOptions;
 using System.Text;
+using TheOtherRoles.Attributes;
 
-namespace TheOtherRoles.Modules;
+namespace TheOtherRoles.Patches;
 
 [HarmonyPatch]
-public static class ChatCommands
+public static class ChatControllerPatch
 {
+    public enum ChatTypes
+    {
+        Default = 0,
+        HostChat,
+        LoverChat,
+        JailorChat,
+    }
+
+    public static ChatTypes CurrentChatType = ChatTypes.Default;
+
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.SendChat))]
     private static class SendChatPatch
     {
@@ -34,9 +45,7 @@ public static class ChatCommands
                 _ = new LateTask(() =>
                 {
                     if (__instance.myPlayer.IsAlive())
-                    {
                         FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(__instance.myPlayer, GetWelcomeMessage);
-                    }
                 }, 1f, "Welcome Chat");
             }
         }
@@ -70,41 +79,56 @@ public static class ChatCommands
         {
             var sourcePlayer = PlayerByName(playerName);
 
-            if (__instance != null && PlayerControl.LocalPlayer.IsImpostor(false, true)
-                 && sourcePlayer.IsImpostor(true, true))
+            if (__instance != null && PlayerControl.LocalPlayer.IsImpostor(false, true) && sourcePlayer.IsImpostor(true, true))
             {
                 __instance.NameText.color = Palette.ImpostorRed;
             }
 
-            if (PlayerControl.LocalPlayer == Jailor.Player && InMeeting)
+
+            if (InMeeting && Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive())
             {
-                if (Jailor.Jailed.IsAlive() && Jailor.Jailed == PlayerByName(playerName))
+                if (PlayerControl.LocalPlayer == Jailor.Player && Jailor.Jailed == PlayerByName(playerName))
                 {
                     __instance.NameText.color = Jailor.color;
                     __instance.NameText.text = playerName + GetString("Jailor.InJailSuffix");
                 }
-                else if (Jailor.JailorMessage)
+
+                if ((PlayerControl.LocalPlayer == Jailor.Jailed || CanSeeGhostInfo) && Jailor.Jailed == PlayerByName(playerName))
                 {
                     __instance.NameText.color = Jailor.color;
-                    __instance.NameText.text = GetString("Jailor");
-                    Jailor.JailorMessage = false;
+                    __instance.NameText.text = playerName + GetString("Jailor.InJailSuffix");
                 }
+
             }
 
-            if ((PlayerControl.LocalPlayer == Jailor.Jailed || CanSeeGhostInfo) && Jailor.Jailed.IsAlive() && MeetingHud.Instance)
+            switch (CurrentChatType)
             {
-                if (Jailor.JailorMessage)
-                {
-                    __instance.NameText.color = Jailor.color;
-                    __instance.NameText.text = GetString("Jailor");
-                    Jailor.JailorMessage = false;
-                }
-                else if (Jailor.Jailed.IsAlive() && Jailor.Jailed == PlayerByName(playerName) && Jailor.Player.IsAlive())
-                {
-                    __instance.NameText.color = Jailor.color;
-                    __instance.NameText.text = playerName + GetString("Jailor.InJailSuffix");
-                }
+                case ChatTypes.HostChat:
+                    __instance.NameText.color = Palette.Purple;
+                    __instance.NameText.text = "MessageFromTheHost".Translate();
+                    CurrentChatType = ChatTypes.Default;
+                    break;
+                case ChatTypes.JailorChat:
+                    if (InMeeting && Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive())
+                    {
+                        if (PlayerControl.LocalPlayer == Jailor.Jailed || CanSeeGhostInfo)
+                        {
+                            __instance.NameText.color = Jailor.color;
+                            __instance.NameText.text = $"({GetString("Jailor")})";
+                        }
+                        else if (PlayerControl.LocalPlayer == Jailor.Player)
+                        {
+                            __instance.NameText.color = Jailor.color;
+                            __instance.NameText.text = $"({GetString("Jailor")})";
+                        }
+                    }
+                    CurrentChatType = ChatTypes.Default;
+                    break;
+                default:
+                    CurrentChatType = ChatTypes.Default;
+                    break;
             }
+
         }
     }
 
@@ -166,14 +190,17 @@ public static class ChatCommands
         }
     }
 
-    [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
+    [HarmonyPatch(typeof(ChatController))]
     public static class ChatControllerAwakePatch
     {
-        public static void Prefix()
+        [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update)), HarmonyPrefix]
+        public static void Update_Prefix()
         {
             DataManager.Settings.Multiplayer.ChatMode = QuickChatModes.FreeChatOrQuickChat;
         }
-        public static void Postfix(ChatController __instance)
+
+        [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update)), HarmonyPostfix]
+        public static void Update_Postfix(ChatController __instance)
         {
             __instance.freeChatField.textArea.AllowPaste = true;
             __instance.chatBubblePool.Prefab.Cast<ChatBubble>().TextArea.overrideColorTags = false;
@@ -184,12 +211,11 @@ public static class ChatCommands
                 __instance.Toggle();
             }
             if (__instance.IsOpenOrOpening)
-            {
                 __instance.banButton.MenuButton.enabled = !__instance.IsAnimating;
-            }
         }
     }
 
+    [PluginModuleInitializer]
     public static void Initialize()
     {
         ChatCommandRegistry.Register("end", (sender, args, chat) =>
@@ -206,12 +232,12 @@ public static class ChatCommands
             if (AmongUsClient.Instance.AmHost && InGame && args.Length > 0)
             {
                 var message = string.Join(' ', args);
-                message = $"{Cs(Palette.Purple, "MessageFromTheHost").Translate()}\n{message}";
                 var writer = StartRPC(CustomRPC.HostControl);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 writer.Write((byte)RPCProcedure.HostCommand.HostSay);
                 writer.Write(message);
                 writer.EndRPC();
+                CurrentChatType = ChatTypes.HostChat;
                 chat.AddChat(GetHostPlayer, message);
                 return;
             }
@@ -220,9 +246,7 @@ public static class ChatCommands
         ChatCommandRegistry.Register("cmd", (sender, args, chat) =>
         {
             if (AmongUsClient.Instance.AmHost)
-            {
                 chat.AddChat(PlayerControl.LocalPlayer, "CommandsInHost".Translate());
-            }
             chat.AddChat(PlayerControl.LocalPlayer, "CommandsInPlayer".Translate());
         });
 
@@ -240,7 +264,7 @@ public static class ChatCommands
                     writer.EndRPC();
 
                     target.Exiled();
-                    GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.HostKill, PlayerControl.LocalPlayer);
+                    PlayerData.SetDeathReason(target, CustomDeathReason.HostKill, PlayerControl.LocalPlayer);
 
                     DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
                     foreach (var body in array)
@@ -251,9 +275,7 @@ public static class ChatCommands
                     }
 
                     if (InMeeting)
-                    {
                         MeetingHud.Instance.CheckForEndVoting();
-                    }
                     return;
                 }
             }
@@ -273,9 +295,7 @@ public static class ChatCommands
                     writer.EndRPC();
 
                     if (InMeeting)
-                    {
                         MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), target.Data, false);
-                    }
                 }
                 return;
             }
@@ -286,9 +306,7 @@ public static class ChatCommands
             if (AmongUsClient.Instance.AmHost && InGame)
             {
                 if (InMeeting)
-                {
                     MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), null, false);
-                }
                 else
                 {
                     var writer = StartRPC(CustomRPC.NoCheckStartMeeting);
@@ -391,20 +409,6 @@ public static class ChatCommands
             }
             else if (args.Length == 1 && args[0].Equals("ls", StringComparison.OrdinalIgnoreCase))
             {
-                var crewmateSb = new StringBuilder();
-                crewmateSb.AppendLine("船员阵营:");
-                foreach (var info in RoleInfo.allRoleInfos.Where(x => x.roleType == RoleType.Crewmate))
-                {
-                    crewmateSb.AppendLine($"• {(int)info.roleId} - {info.Name}");
-                }
-                chat.AddChat(PlayerControl.LocalPlayer, crewmateSb.ToString());
-                var neutralSb = new StringBuilder();
-                neutralSb.AppendLine("独立阵营:");
-                foreach (var info in RoleInfo.allRoleInfos.Where(x => x.roleType == RoleType.Neutral))
-                {
-                    neutralSb.AppendLine($"• {(int)info.roleId} - {info.Name}");
-                }
-                chat.AddChat(PlayerControl.LocalPlayer, neutralSb.ToString());
                 var impostorSb = new StringBuilder();
                 impostorSb.AppendLine("伪装者阵营:");
                 foreach (var info in RoleInfo.allRoleInfos.Where(x => x.roleType == RoleType.Impostor))
@@ -412,10 +416,26 @@ public static class ChatCommands
                     impostorSb.AppendLine($"• {(int)info.roleId} - {info.Name}");
                 }
                 chat.AddChat(PlayerControl.LocalPlayer, impostorSb.ToString());
+
+                var neutralSb = new StringBuilder();
+                neutralSb.AppendLine("独立阵营:");
+                foreach (var info in RoleInfo.allRoleInfos.Where(x => x.roleType == RoleType.Neutral))
+                {
+                    neutralSb.AppendLine($"• {(int)info.roleId} - {info.Name}");
+                }
+                chat.AddChat(PlayerControl.LocalPlayer, neutralSb.ToString());
+
+                var crewmateSb = new StringBuilder();
+                crewmateSb.AppendLine("船员阵营:");
+                foreach (var info in RoleInfo.allRoleInfos.Where(x => x.roleType == RoleType.Crewmate))
+                {
+                    crewmateSb.AppendLine($"• {(int)info.roleId} - {info.Name}");
+                }
+                chat.AddChat(PlayerControl.LocalPlayer, crewmateSb.ToString());
             }
             else if (args.Length > 0 && args[0].Equals("0", StringComparison.OrdinalIgnoreCase))
             {
-                var target = GetPlayer(args?.Skip(1)?.ToArray());
+                var target = GetPlayer(args.Length > 1 ? args.Skip(1).ToArray() : null);
                 if (target != null)
                 {
                     var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostControl);
@@ -433,7 +453,7 @@ public static class ChatCommands
             else if (AmongUsClient.Instance.AmHost && args.Length > 0)
             {
                 var roleId = GetRoleId(args);
-                var target = GetPlayer(args?.Skip(1)?.ToArray());
+                var target = GetPlayer(args.Length > 1 ? args.Skip(1).ToArray() : null);
                 if (target != null)
                 {
                     var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.HostControl);
@@ -618,18 +638,12 @@ public static class ChatCommands
         static RoleId GetRoleId(string[] args = null)
         {
             if (args == null || args.Length == 0)
-            {
                 return RoleId.DefaultRole;
-            }
             if (int.TryParse(args[0], out var roleId))
-            {
                 return (RoleId)roleId;
-            }
             var infos = RoleInfo.allRoleInfos.Where(x => x.Name.StartsWith(args[0], StringComparison.OrdinalIgnoreCase));
             if (infos.Count() == 1)
-            {
                 return infos.First().roleId;
-            }
             else if (infos.Count() > 1)
             {
                 var sb = new StringBuilder();
@@ -647,67 +661,63 @@ public static class ChatCommands
         static PlayerControl GetPlayer(string[] args = null)
         {
             if (string.IsNullOrEmpty(args[0]))
-            {
                 return PlayerControl.LocalPlayer;
-            }
 
             var target = PlayerControl.AllPlayerControls.FirstOrDefault(x => x.Data.PlayerName.Equals(args[0], StringComparison.OrdinalIgnoreCase));
 
             if (target == null && byte.TryParse(args[0], out var result))
-            {
                 target = PlayerById(result);
-            }
 
             return target;
         }
     }
-}
 
-public delegate void ChatCommandHandler(PlayerControl sender, string[] args, ChatController chat);
-public static class ChatCommandRegistry
-{
-    private static readonly Dictionary<string, ChatCommandHandler> _commands = new(StringComparer.OrdinalIgnoreCase);
-
-    public static void Register(string command, ChatCommandHandler handler)
+    public delegate void ChatCommandHandler(PlayerControl sender, string[] args, ChatController chat);
+    public static class ChatCommandRegistry
     {
-        _commands[command] = handler;
-    }
+        private static readonly Dictionary<string, ChatCommandHandler> _commands = new(StringComparer.OrdinalIgnoreCase);
 
-    public static void Register(IEnumerable<string> commands, ChatCommandHandler handler)
-    {
-        foreach (var cmd in commands)
+        public static void Register(string command, ChatCommandHandler handler)
         {
-            _commands[cmd] = handler;
+            _commands[command] = handler;
         }
-    }
 
-    public static bool TryHandle(string input, PlayerControl sender, ChatController chat)
-    {
-        if (!input.StartsWith("/")) return false;
-        var parts = input.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length == 0) return false;
-        var cmd = parts[0][1..];
-        var args = parts.Skip(1).ToArray();
-
-        if (_commands.TryGetValue(cmd, out var handler))
+        public static void Register(IEnumerable<string> commands, ChatCommandHandler handler)
         {
-            handler(sender, args, chat);
+            foreach (var cmd in commands)
+            {
+                _commands[cmd] = handler;
+            }
+        }
+
+        public static bool TryHandle(string input, PlayerControl sender, ChatController chat)
+        {
+            if (!input.StartsWith("/")) return false;
+            var parts = input.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 0) return false;
+            var cmd = parts[0][1..];
+            var args = parts.Skip(1).ToArray();
+
+            if (_commands.TryGetValue(cmd, out var handler))
+            {
+                handler(sender, args, chat);
+                return true;
+            }
+
+            var matches = _commands.Keys.Where(k => k.StartsWith(cmd, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (matches.Count == 1)
+            {
+                _commands[matches[0]](sender, args, chat);
+                return true;
+            }
+            else if (matches.Count > 1)
+            {
+                chat.AddChat(sender, string.Format(GetString("Command.Ambiguous"), cmd, string.Join(", ", matches)));
+                return true;
+            }
+
+            chat.AddChat(sender, string.Format(GetString("Command.Unknown"), cmd));
             return true;
         }
-
-        var matches = _commands.Keys.Where(k => k.StartsWith(cmd, StringComparison.OrdinalIgnoreCase)).ToList();
-        if (matches.Count == 1)
-        {
-            _commands[matches[0]](sender, args, chat);
-            return true;
-        }
-        else if (matches.Count > 1)
-        {
-            chat.AddChat(sender, string.Format(GetString("Command.Ambiguous"), cmd, string.Join(", ", matches)));
-            return true;
-        }
-
-        chat.AddChat(sender, string.Format(GetString("Command.Unknown"), cmd));
-        return true;
     }
 }

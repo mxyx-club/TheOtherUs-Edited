@@ -105,6 +105,7 @@ public class OnGameEndPatch
     {
         gameOverReason = endGameResult.GameOverReason;
         if ((int)endGameResult.GameOverReason >= 10) endGameResult.GameOverReason = GameOverReason.ImpostorByKill;
+        PlayerData.GlobalInfo.EndTime = DateTime.UtcNow;
 
         // Reset zoomed out ghosts
         toggleZoom(true);
@@ -142,7 +143,7 @@ public class OnGameEndPatch
 
             var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p.Data);
             var taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({tasksCompleted}/{tasksTotal})</color>" : "";
-            if (p.IsKiller()) taskInfo += $" <color=#FF0000FF>击杀:{GameHistory.GetKillCount(p)}</color>";
+            if (p.IsKiller()) taskInfo += $" <color=#FF0000FF>击杀:{PlayerData.GetKillCount(p)}</color>";
 
             var status = p.IsAlive()
                 ? "<color=#00FF00FF>存活</color>"
@@ -157,7 +158,7 @@ public class OnGameEndPatch
             var roles = RoleInfo.getRoleInfoForPlayer(player);
             var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(player.Data);
             var isGuesser = HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(player.PlayerId);
-            int? killCount = GameHistory.GetKillCount(player);
+            int? killCount = PlayerData.GetKillCount(player);
             if (killCount == 0 &&
                 !(killRole.Contains(RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault())
                  || player.Data.Role.IsImpostor)) killCount = null;
@@ -590,19 +591,18 @@ public class OnGameEndPatch
         try
         {
             if (!AmongUsClient.Instance.AmHost) return;
-            PlayerData.WinCondition = AdditionalTempData.winCondition;
-            PlayerData.EndTime = DateTime.UtcNow;
-            foreach (var data in PlayerData.AllPlayerData)
+            PlayerData.GlobalInfo.WinCondition = AdditionalTempData.winCondition;
+            foreach (var data in PlayerData.AllPlayerData.Values)
             {
                 if (data?.Player?.Data == null) continue;
                 var info = RoleInfo.getRoleInfoForPlayer(data.Player);
-                data.AllRole = info.ToArray();
-                data.Role = info.FirstOrDefault(x => x.roleType is not RoleType.Modifier and not RoleType.Ghost)?.roleId ?? RoleId.DefaultRole;
+                data.Role = info.FirstOrDefault(x => x.roleType is RoleType.Crewmate or RoleType.Neutral or RoleType.Impostor)?.roleId ?? RoleId.DefaultRole;
+                data.Modifiers = info.Where(x => x.roleType == RoleType.Modifier).Select(x => x.roleId).ToList();
                 data.RoleType = info.FirstOrDefault().roleType;
                 data.IsWinner = winners.Any(x => x.PlayerId == data.PlayerId);
                 data.TaskCount = TasksHandler.taskInfo(data.Player.Data);
             }
-            PlayerData.SaveAllPlayerDataToJson();
+            PlayerData.GlobalInfo.SaveAllPlayerDataToJson();
         }
         catch (Exception e)
         {

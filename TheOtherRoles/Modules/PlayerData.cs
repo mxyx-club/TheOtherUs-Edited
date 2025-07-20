@@ -13,23 +13,39 @@ namespace TheOtherRoles.Modules;
 
 public class PlayerData
 {
-    private const string ApiUrl = "http://localhost:6997/game-data";
-    private static readonly HttpClient httpClient = new();
-    public static List<PlayerDataInfo> AllPlayerData = new();
-
+    public static PlayerData Local { get; private set; }
+    public static Dictionary<byte, PlayerData> AllPlayerData { get; private set; } = new();
     public static Dictionary<byte, string> AllFriendCode = new();
+    public PlayerControl Player { get; private set; }
+    public byte PlayerId { get; private set; }
 
-    public static string HostPlayer;
-    public static DateTime StartTime;
-    public static DateTime EndTime;
-    internal static WinCondition WinCondition { get; set; } = WinCondition.Default;
-    public static string RoomCode { get => field.IsNullOrWhiteSpace() ? "Loacl" : field; set; }
-    public static string HostCode { get; set; }
-    public static int PlayerCount { get; set; }
+    public bool IsWinner;
+    public bool IsDisconnected;
+    public bool IsDead => Player.IsDead();
+    public int KillCount;
+    public Tuple<int, int> TaskCount;
 
-    public static PlayerDataInfo GetPlayerData(PlayerControl player)
+    public RoleType RoleType { get; set; }
+    public List<RoleId> RoleHistory { get; set; } = new();
+    public RoleId Role { get; set; }
+    public List<RoleId> Modifiers { get; set; } = new();
+
+    public string PlayerName { get; private set; }
+    public string FriendCode { get; set; }
+    public string PlayerColor { get; set; }
+
+    public CustomDeathReason DeathReason { get; set; } = CustomDeathReason.Null;
+    public DateTime DeathTimer { get; set; } = DateTime.MinValue;
+    public PlayerControl KilledBy { get; set; }
+
+    public static PlayerData GetPlayerData(PlayerControl player)
     {
-        return AllPlayerData.FirstOrDefault(p => p.Player == player);
+        if (player?.Data == null) return null;
+        if (AllPlayerData.TryGetValue(player.PlayerId, out var data))
+        {
+            return data;
+        }
+        return null;
     }
 
     public static string GetPlayerCode(PlayerControl player)
@@ -38,10 +54,10 @@ public class PlayerData
     }
 
     [OnGameStart]
-    public static void Start()
+    public static void Init()
     {
-        AllPlayerData.Clear();
-        AllFriendCode.Clear();
+        AllPlayerData = new();
+        AllFriendCode = new();
 
         var code = EOSManager.Instance?.FriendCode ?? "";
 
@@ -50,6 +66,57 @@ public class PlayerData
         writer.Write(code);
         writer.EndRPC();
         ShareFriendCode(PlayerControl.LocalPlayer.PlayerId, code);
+
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            var data = new PlayerData
+            {
+                Player = player,
+                PlayerId = player.PlayerId,
+                PlayerName = player.Data.PlayerName,
+                FriendCode = player.Data.FriendCode,
+                PlayerColor = GetPlayerCode(player),
+            };
+            AllPlayerData[player.PlayerId] = data;
+        }
+    }
+
+    public static int GetKillCount(PlayerControl killer)
+    {
+        if (killer == null) return 0;
+
+        return AllPlayerData.Values.Count(data => data.KilledBy == killer && data.Player != killer);
+    }
+
+    public static PlayerControl GetLastKiller()
+    {
+        var data = AllPlayerData.Values
+            .Where(x => x.IsDead && x.Player != x.KilledBy && x.KilledBy.IsAlive())?
+            .OrderByDescending(dp => dp.DeathTimer)?
+            .FirstOrDefault();
+        return data?.KilledBy;
+    }
+
+    public static void SetDeathReason(PlayerControl player, CustomDeathReason deathReason, PlayerControl killer = null)
+    {
+        if (player.IsAlive()) return;
+        if (!AllPlayerData.TryGetValue(player.PlayerId, out var target)) return;
+
+        byte playerId = player.PlayerId;
+
+        target.DeathReason = deathReason;
+        target.DeathTimer = DateTime.UtcNow;
+        if (killer != null) target.KilledBy = killer;
+    }
+
+    public static void RpcSetDeathReason(PlayerControl player, CustomDeathReason deathReason, PlayerControl killer)
+    {
+        var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareDeathReasonAndKiller);
+        writer.Write(player.PlayerId);
+        writer.Write((byte)deathReason);
+        writer.Write(killer.PlayerId);
+        writer.EndRPC();
+        SetDeathReason(player, deathReason, killer);
     }
 
     public static void ShareFriendCode(byte playerId, string code)
@@ -60,207 +127,183 @@ public class PlayerData
             GameData.Instance?.GetPlayerById(playerId)?.FriendCode = code;
         }
         catch (Exception e) { Message($"Error reading friend code: {e.Message}", "ShareFriendCode"); }
-
     }
 
-    public static void Initialize()
+    public static implicit operator PlayerControl(PlayerData data) => data.Player;
+
+    public class GlobalInfo
     {
-        try
+        private const string ApiUrl = "http://localhost:6997/game-data";
+        private static readonly HttpClient httpClient = new();
+
+        public static string HostPlayer;
+        public static DateTime StartTime;
+        public static DateTime EndTime;
+        internal static WinCondition WinCondition { get; set; } = WinCondition.Default;
+        public static string RoomCode { get => field.IsNullOrWhiteSpace() ? "Local" : field; set; }
+        public static string HostCode { get; set; }
+        public static int PlayerCount { get; set; }
+
+        [OnGameStart]
+        public static void Init()
         {
+            EndTime = DateTime.MinValue;
             StartTime = DateTime.UtcNow;
-            WinCondition = WinCondition.Default;
-            EndTime = DateTime.UtcNow;
-            HostCode = GetHostPlayer?.Data?.FriendCode ?? "ERROR";
-            HostPlayer = GetHostPlayer?.Data?.PlayerName ?? "ERROR";
-            PlayerCount = PlayerControl.AllPlayerControls.Count;
-            RoomCode = GameStartManagerPatch.RoomCode;
-            foreach (var player in PlayerControl.AllPlayerControls)
-            {
-                var playerData = new PlayerDataInfo
-                {
-                    Player = player,
-                    PlayerId = player.PlayerId,
-                    PlayerCode = AllFriendCode[player.PlayerId],
-                    PlayerColor = player.Data.ColorName ?? "Default",
-                    OriginRole = RoleInfo.getRoleInfoForPlayer(player, false, false)
-                                 .FirstOrDefault(x => x.roleType is not RoleType.Modifier)?.roleId ?? RoleId.DefaultRole,
+            HostPlayer = GetHostPlayer.Data.PlayerName;
+        }
 
-                };
-                AllPlayerData.Add(playerData);
+        public static string GetGameId()
+        {
+            var timePart = StartTime.ToString("HH:mm");
+            var rawData = $"{HostCode}:{timePart}";
+
+            using (var sha256 = SHA256.Create())
+            {
+                var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+                var hexHash = BitConverter.ToString(hashBytes, 0, 4)
+                    .Replace("-", "")
+                    .ToLowerInvariant();
+                return $"{RoomCode}_{hexHash}";
             }
         }
-        catch (Exception e)
+
+        public static void SaveAllPlayerDataToJson()
         {
-            Error($"initializing Error: {e.Message}\n{e.StackTrace}", "PlayerData");
-        }
-    }
-
-    public static string GetGameId()
-    {
-        var timePart = StartTime.ToString("HH:mm");
-        var rawData = $"{HostCode}:{timePart}";
-
-        using (var sha256 = SHA256.Create())
-        {
-            var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
-
-            var hexHash = BitConverter.ToString(hashBytes, 0, 4)
-                .Replace("-", "")
-                .ToLowerInvariant();
-            return $"{RoomCode}_{hexHash}";
-        }
-    }
-
-    public static void SaveAllPlayerDataToJson()
-    {
-        foreach (var data in AllFriendCode)
-        {
-            Message($"{data.Key}: {data.Value}");
-        }
-
-        var directoryPath = Path.Combine(Paths.GameRootPath, Main.Name, "GameData");
-        var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-        var filePath = Path.Combine(directoryPath, $"GameSession_{timestamp}.json");
-        Directory.CreateDirectory(directoryPath);
-
-        var jsonOptions = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            Converters = { new JsonStringEnumConverter() }
-        };
-
-        var gameSession = new
-        {
-            Global = new
+            foreach (var data in AllFriendCode)
             {
-                ModVersion = $"{Main.Name} - {Main.Version}{Main.VersionSuffix}",
-                GameVersion = Application.version,
-                GameId = GetGameId(),
-                HostPlayer,
-                StartTime = StartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                EndTime = EndTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                Duration = (EndTime - StartTime).ToString(@"hh\:mm\:ss"),
-                WinCondition = WinCondition.ToString(),
-                RoomCode,
-                PlayerCount,
-                HostCode,
-                GameMode = ModOption.gameMode.ToString(),
-                DeBugMode = ModOption.DebugMode,
-                RoleDraftMode = CustomOptionHolder.isDraftMode.GetBool(),
-            },
+                Message($"{data.Key}: {data.Value}");
+            }
 
-            Players = AllPlayerData.Select(p => new
+            var directoryPath = Path.Combine(Paths.GameRootPath, Main.Name, "GameData");
+            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            var filePath = Path.Combine(directoryPath, $"GameSession_{timestamp}.json");
+            Directory.CreateDirectory(directoryPath);
+
+            var jsonOptions = new JsonSerializerOptions
             {
-                p.PlayerId,
-                p.PlayerName,
-                p.PlayerColor,
-                p.PlayerCode,
-                RoleInfo = new
+                WriteIndented = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                Converters = { new JsonStringEnumConverter() }
+            };
+
+            var gameSession = new
+            {
+                Global = new
                 {
-                    OriginRole = p.OriginRole.ToString(),
-                    MainRole = p.Role.ToString(),
-                    RoleDetails = p.AllRole.Select(r => r.roleId.ToString()).ToArray(),
-                    RoleType = p.RoleType.ToString(),
+                    ModVersion = $"{Main.Name} - {Main.Version}{Main.VersionSuffix}",
+                    GameVersion = Application.version,
+                    GameId = GetGameId(),
+                    HostPlayer,
+                    StartTime = StartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    EndTime = EndTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    Duration = (EndTime - StartTime).ToString(@"hh\:mm\:ss"),
+                    WinCondition = WinCondition.ToString(),
+                    RoomCode,
+                    PlayerCount,
+                    HostCode,
+                    GameMode = ModOption.gameMode.ToString(),
+                    DeBugMode = ModOption.DebugMode,
+                    RoleDraftMode = CustomOptionHolder.isDraftMode.GetBool(),
                 },
-                GameplayStats = new
+
+                Players = AllPlayerData.Values.Select(p => new
                 {
-                    p.IsWinner,
-                    p.IsDead,
-                    p.IsDisconnected,
-                    p.KillCount,
-                    Tasks = p.TaskCount != null ? new
+                    p.PlayerId,
+                    p.PlayerName,
+                    p.PlayerColor,
+                    p.FriendCode,
+                    RoleInfo = new
                     {
-                        Completed = p.TaskCount.Item1,
-                        Total = p.TaskCount.Item2,
-                        Progress = $"{p.TaskCount.Item1 / (double)p.TaskCount.Item2:P0}"
-                    } : null,
-                    p.DeathReason,
-                    p.KilledBy,
-                    DeathTimer = p.DeathTimer.ToString("yyyy-MM-ddTHH:mm:ss"),
-                },
-            }).ToList()
-        };
+                        OriginRole = p.Role.ToString(),
+                        MainRole = p.Role.ToString(),
+                        //Modifiers = string.Join("|", p.Modifiers),
+                        Modifiers = p.Modifiers.Select(x => x.ToString()),
+                        //RoleHistory = string.Join(" => ", p.RoleHistory.Select(r => r.ToString())),
+                        RoleHistory = p.RoleHistory.Select(x => x.ToString()),
+                        RoleType = p.RoleType.ToString(),
+                    },
+                    GameplayStats = new
+                    {
+                        p.IsWinner,
+                        p.IsDead,
+                        p.IsDisconnected,
+                        p.KillCount,
+                        Tasks = p.TaskCount != null ? new
+                        {
+                            Completed = p.TaskCount.Item1,
+                            Total = p.TaskCount.Item2,
+                            Progress = $"{p.TaskCount.Item1 / (double)p.TaskCount.Item2:P0}"
+                        } : null,
+                        p.DeathReason,
+                        p.KilledBy,
+                        DeathTimer = p.DeathTimer.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    },
+                }).ToList()
+            };
 
-        var jsonContent = JsonSerializer.Serialize(gameSession, jsonOptions);
-        File.WriteAllText(filePath, jsonContent);
+            var jsonContent = JsonSerializer.Serialize(gameSession, jsonOptions);
+            File.WriteAllText(filePath, jsonContent);
 
-        UploadPlayerDataToApi(jsonContent).ContinueWith(task =>
-        {
-            if (task.IsFaulted)
+            UploadPlayerDataToApi(jsonContent).ContinueWith(task =>
             {
-                Error($"Upload failed: {task.Exception?.InnerException?.Message}", "PlayerData");
-            }
-            else
-            {
-                Info("Data uploaded successfully!", "PlayerData");
-            }
-        });
-    }
-
-    private static async Task UploadPlayerDataToApi(string jsonContent)
-    {
-        try
-        {
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(ApiUrl, content).ConfigureAwait(false);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                Error($"API returned {response.StatusCode}: {errorContent}");
-            }
-        }
-        catch (Exception ex)
-        {
-            Error("API upload error: " + ex.Message);
-        }
-    }
-
-    public class PlayerDataInfo
-    {
-        public PlayerControl Player { get; set; }
-        public string PlayerName => Player?.Data?.PlayerName ?? "Unknown";
-        public string PlayerCode { get; set; }
-        public string PlayerColor { get; set; }
-        public byte PlayerId { get; set; }
-        public Tuple<int, int> TaskCount { get; set; }
-        public RoleId Role { get; set; } = RoleId.DefaultRole;
-        public RoleId OriginRole { get; set; } = RoleId.DefaultRole;
-        public RoleInfo[] AllRole { get; set; } = [];
-        public RoleType RoleType { get; set; } = RoleType.Special;
-        public bool IsDead => Player.IsDead();
-        public bool IsWinner { get => !IsDisconnected && field; set; }
-        public int KillCount => GameHistory.GetKillCount(Player);
-        public bool IsDisconnected => Player?.Data?.Disconnected ?? true;
-
-        public string DeathReason
-        {
-            get
-            {
-                if (!IsDead || GameHistory.DeadPlayers == null || GameHistory.DeadPlayers.Count == 0) return "Alive";
-                return GameHistory.GetDeadPlayer(PlayerId)?.DeathReason.ToString() ?? "Unknown";
-            }
+                if (task.IsFaulted)
+                {
+                    Error($"Upload failed: {task.Exception?.InnerException?.Message}", "PlayerData");
+                }
+                else
+                {
+                    Info("Data uploaded successfully!", "PlayerData");
+                }
+            });
         }
 
-        public DateTime DeathTimer
+        private static async Task UploadPlayerDataToApi(string jsonContent)
         {
-            get
+            try
             {
-                if (!IsDead) return DateTime.MinValue;
-                return GameHistory.GetDeadPlayer(PlayerId)?.TimeOfDeath ?? DateTime.MinValue;
-            }
-        }
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync(ApiUrl, content).ConfigureAwait(false);
 
-        public string KilledBy
-        {
-            get
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Error($"API returned {response.StatusCode}: {errorContent}");
+                }
+            }
+            catch (Exception ex)
             {
-                if (!IsDead) return "Unknown";
-                var killer = GameHistory.GetDeadPlayer(PlayerId)?.KillerIfExisting;
-                return killer != null ? killer?.Data?.PlayerName ?? "Error" : "Unknown";
+                Error("API upload error: " + ex.Message);
             }
         }
     }
+}
 
+public enum CustomDeathReason
+{
+    Null,
+
+    HostKill,
+    Exile,
+    Kill,
+    Disconnect,
+    GuessFail,
+    GuessSuccess,
+    Shift,
+    LawyerSuicide,
+    LoverSuicide,
+    WitchExile,
+    Bomb,
+    Veteran,
+    LoveStolen,
+    Loneliness,
+    Arson,
+    FakeSK,
+    SheriffKill,
+    SheriffSuicide,
+    SheriffMisfire,
+    Suicide,
+    BombVictim,
+    Eaten,
+    Jailed,
 }

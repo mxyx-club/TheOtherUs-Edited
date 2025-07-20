@@ -27,7 +27,7 @@ public class WolfLord
 
         Killed = true;
         target.Exiled();
-        GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.Kill, Player);
+        PlayerData.SetDeathReason(target, CustomDeathReason.Kill, Player);
         if (target == Balancer.currentTarget) Balancer.currentTarget = null;
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(target.KillSfx, false, 0.8f);
 

@@ -147,6 +147,7 @@ public enum CustomRPC : byte
 
     // Other functionality
     ShareGhostInfo,
+    ShareDeathReasonAndKiller,
 
     NetworkTransform = 250,
 }
@@ -191,7 +192,7 @@ public static class RPCProcedure
         GameStartManagerPatch.GameStartManagerUpdatePatch.startingTimer = 0;
         SurveillanceMinigamePatch.nightVisionOverlays = null;
         MeetingHudPatch.MeetingCount = 0;
-        ChatCommands.EnableChat.ForceEnableChat = false;
+        ChatControllerPatch.EnableChat.ForceEnableChat = false;
         Message($"ClearAndReload", "RPC");
     }
 
@@ -485,6 +486,13 @@ public static class RPCProcedure
                 break;
         }
 
+        var data = PlayerData.GetPlayerData(player);
+
+        if (data != null)
+        {
+            data.RoleHistory.Add((RoleId)roleId);
+        }
+
         /*if (AmongUsClient.Instance.AmHost && Helpers.RoleCanUseVents(player) && !player.Data.Role.IsImpostor)
         {
             player.RpcSetRole(RoleTypes.Engineer);
@@ -611,6 +619,7 @@ public static class RPCProcedure
         switch (command)
         {
             case HostCommand.HostSay:
+                ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.HostChat;
                 HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, reader.ReadString());
                 break;
             case HostCommand.HostKill:
@@ -619,7 +628,7 @@ public static class RPCProcedure
                     if (target.IsDead()) return;
 
                     target.Exiled();
-                    GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.HostKill, controller);
+                    PlayerData.SetDeathReason(target, CustomDeathReason.HostKill, controller);
 
                     DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
                     foreach (var body in array)
@@ -882,7 +891,7 @@ public static class RPCProcedure
         {
             Message($"Target Is Neutral: {Shifter.NotShift(target)}", "Shifter");
             player.Exiled();
-            GameHistory.OverrideDeathReasonAndKiller(player, CustomDeathReason.Shift, target);
+            PlayerData.SetDeathReason(player, CustomDeathReason.Shift, target);
             if (player == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null)
             {
                 var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
@@ -1498,7 +1507,7 @@ public static class RPCProcedure
         if (akujo != null)
         {
             akujo.Exiled();
-            GameHistory.OverrideDeathReasonAndKiller(akujo, CustomDeathReason.Loneliness);
+            PlayerData.SetDeathReason(akujo, CustomDeathReason.Loneliness);
 
             if (InMeeting && Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(akujo.KillSfx, false, 0.8f);
             if (PlayerControl.LocalPlayer == Akujo.akujo)
@@ -1909,7 +1918,7 @@ public static class RPCProcedure
                 vampireKillButton.Timer = reader.ReadInt32();
                 break;
             case GhostInfoTypes.DeathReasonAndKiller:
-                GameHistory.OverrideDeathReasonAndKiller(PlayerById(reader.ReadByte()), (CustomDeathReason)reader.ReadByte(), PlayerById(reader.ReadByte()));
+                PlayerData.SetDeathReason(PlayerById(reader.ReadByte()), (CustomDeathReason)reader.ReadByte(), PlayerById(reader.ReadByte()));
                 break;
         }
     }
@@ -2456,7 +2465,9 @@ internal class RPCHandlerPatch
             case CustomRPC.ShareFriendCode:
                 PlayerData.ShareFriendCode(reader.ReadByte(), reader.ReadString());
                 break;
-
+            case CustomRPC.ShareDeathReasonAndKiller:
+                PlayerData.SetDeathReason(reader.ReadPlayer(), (CustomDeathReason)reader.ReadByte(), reader.ReadPlayer());
+                break;
         }
 
         return false;

@@ -1,0 +1,3 @@
+namespace TheOtherRoles.Attributes;
+
+internal class PluginModuleInitializerAttribute : InitializerAttribute<PluginModuleInitializerAttribute>;

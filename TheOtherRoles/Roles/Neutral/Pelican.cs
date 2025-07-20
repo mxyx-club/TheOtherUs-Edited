@@ -39,7 +39,7 @@ public class Pelican
                 }, 0.25f);
             }
 
-            GameHistory.OverrideDeathReasonAndKiller(target, CustomDeathReason.Eaten, Player);
+            PlayerData.SetDeathReason(target, CustomDeathReason.Eaten, Player);
             eatenPlayers.Add(target);
             target.NetTransform.RpcSnapTo(new Vector2(-10f, 10f));
         }

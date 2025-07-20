@@ -89,7 +89,7 @@ public class Bomb
                 {
                     Terrorist.clearBomb();
                     return;
-                };
+                }
 
                 RpcCustomMurderPlayer(Terrorist.terrorist, PlayerControl.LocalPlayer, false);
 
@@ -101,7 +101,7 @@ public class Bomb
                 writer.Write((byte)CustomDeathReason.Bomb);
                 writer.Write(Terrorist.terrorist.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                GameHistory.OverrideDeathReasonAndKiller(PlayerControl.LocalPlayer, CustomDeathReason.Bomb,
+                PlayerData.SetDeathReason(PlayerControl.LocalPlayer, CustomDeathReason.Bomb,
                     Terrorist.terrorist);
             }
             try

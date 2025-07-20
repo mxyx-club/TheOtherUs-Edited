@@ -1,5 +1,3 @@
-using static TheOtherRoles.GameHistory;
-
 namespace TheOtherRoles.Patches;
 
 [Harmony]
@@ -106,15 +104,17 @@ public class VitalsPatch
 
                     // Hacker update
                     if (!vitalsPanel.IsDead) continue;
-                    var deadPlayer = DeadPlayers?.Where(x => x.Player?.PlayerId == player?.PlayerId)?.FirstOrDefault();
+                    var deadPlayer = PlayerData.GetPlayerData(player?.Object);
                     if (deadPlayer == null || k >= hackerTexts.Count || hackerTexts[k] == null) continue;
-                    var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
+                    var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.DeathTimer).TotalMilliseconds;
                     hackerTexts[k].gameObject.SetActive(true);
                     hackerTexts[k].text = Math.Round(timeSinceDeath / 1000) + "s";
                 }
             else
+            {
                 foreach (var text in hackerTexts.Where(text => text != null && text.gameObject != null))
                     text.gameObject.SetActive(false);
+            }
         }
     }
 }

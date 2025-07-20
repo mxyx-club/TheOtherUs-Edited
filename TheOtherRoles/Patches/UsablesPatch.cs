@@ -1,7 +1,5 @@
 using AmongUs.GameOptions;
-using Mono.Cecil;
 using PowerTools;
-using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.Options.ModOption;
 
 namespace TheOtherRoles.Patches;
@@ -494,10 +492,10 @@ internal class VitalsMinigamePatch
                     // Hacker update
                     if (vitalsPanel.IsDead)
                     {
-                        var deadPlayer = DeadPlayers?.Where(x => x.Player?.PlayerId == player?.PlayerId)?.FirstOrDefault();
+                        var deadPlayer = PlayerData.AllPlayerData.Values?.Where(x => x.PlayerId == player?.PlayerId)?.FirstOrDefault();
                         if (deadPlayer != null && k < hackerTexts.Count && hackerTexts[k] != null)
                         {
-                            var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
+                            var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.DeathTimer).TotalMilliseconds;
                             hackerTexts[k].gameObject.SetActive(true);
                             hackerTexts[k].text = Math.Round(timeSinceDeath / 1000) + "s";
                         }

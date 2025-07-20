@@ -478,7 +478,7 @@ internal class ExileControllerWrapUpPatch
                     writer.EndRPC();
                     RPCProcedure.uncheckedExilePlayer(target.PlayerId);
 
-                    GameHistory.RpcOverrideDeathReasonAndKiller(target, CustomDeathReason.WitchExile, Witch.witch);
+                    PlayerData.RpcSetDeathReason(target, CustomDeathReason.WitchExile, Witch.witch);
                 }
             }
         }
@@ -517,7 +517,7 @@ internal class ExileControllerWrapUpPatch
                 }
 
                 Medium.deadBodies = Medium.futureDeadBodies;
-                Medium.futureDeadBodies = new List<Tuple<DeadPlayer, Vector3>>();
+                Medium.futureDeadBodies = new List<Tuple<Medium.DeadPlayer, Vector3>>();
             }
         }
 

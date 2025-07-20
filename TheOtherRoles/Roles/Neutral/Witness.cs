@@ -44,15 +44,15 @@ public class Witness
     {
         if (target.IsDead())
         {
-            return GameHistory.GetLastKiller();
+            return PlayerData.GetLastKiller();
         }
 
-        var deadPlayer = GameHistory.DeadPlayers?
-            .Where(dp => dp.Player?.PlayerId == target.PlayerId && dp.KillerIfExisting != null && dp.KillerIfExisting.IsAlive())
-            .OrderByDescending(dp => dp.TimeOfDeath)
+        var deadPlayer = PlayerData.AllPlayerData.Values?
+            .Where(dp => dp.PlayerId == target.PlayerId && dp.IsDead && dp.KilledBy != null && dp.KilledBy.IsAlive())
+            .OrderByDescending(dp => dp.DeathTimer)
             .FirstOrDefault();
 
-        return deadPlayer?.KillerIfExisting ?? GameHistory.GetLastKiller();
+        return deadPlayer?.KilledBy ?? PlayerData.GetLastKiller();
     }
 
     [HarmonyPatch]
