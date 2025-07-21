@@ -124,6 +124,13 @@ public class CustomButton
         ButtonTitle.transform.localScale = Vector3.one * 0.5f;
         ButtonTitle.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
+        var gridContent = actionButton.gameObject.GetComponent<HudContent>();
+        gridContent.UpdateSubPriority();
+        gridContent.MarkAsKillButtonContent(false);
+        gridContent.SetPriority(0);
+        gridContent.IsStaticContent = false;
+        HudGrid.Instance?.RegisterContent(gridContent, mirror);
+
         buttons.Add(this);
     }
 
@@ -407,7 +414,7 @@ public class CustomButton
                 var xpos = 0.05f - (safeOrthographicSize * aspect * 1.70f);
                 pos = new Vector3(xpos, pos.y, pos.z);
             }
-            actionButton.transform.localPosition = pos + PositionOffset;
+            //actionButton.transform.localPosition = pos + PositionOffset;
         }
 
         if (CouldUse() || (isEffectActive && OnEffectCouldUse?.Invoke() == true))

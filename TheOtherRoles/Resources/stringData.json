@@ -2704,6 +2704,18 @@
         "0": "Show FPS",
         "13": "在游戏内显示帧率"
     },
+    "ButtonArrangement": {
+        "13": "按键位置"
+    },
+    "ButtonArrangement.1": {
+        "13": "默认"
+    },
+    "ButtonArrangement.2": {
+        "13": "仅在左侧"
+    },
+    "ButtonArrangement.3": {
+        "13": "总体加高"
+    },
     "ShowKeyReminder": {
         "0": "Show Keybinds",
         "13": "游戏内显示键位提醒"

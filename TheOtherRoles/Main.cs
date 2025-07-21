@@ -34,6 +34,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> ShowKeyReminder { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
+    public static ConfigEntry<int> ButtonArrangement { get; set; }
 
     // This is part of the Mini.RegionInstaller, Licensed under GPLv3
     // file="RegionInstallPlugin.cs" company="miniduikboot">
@@ -80,6 +81,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
         ShowFPS = Config.Bind("Custom", "Show FPS", true);
         ShowKeyReminder = Config.Bind("Custom", "ShowKeyReminder", true);
         LocalHats = Config.Bind("Custom", "Load Local Hats", false);
+        ButtonArrangement = Config.Bind("Custom", "Button Arrangement", 1);
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);

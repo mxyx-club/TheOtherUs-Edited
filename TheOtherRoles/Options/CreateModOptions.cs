@@ -69,7 +69,7 @@ public static class StartOptionMenuPatch
         var button = UObject.Instantiate(toggleButtonTemplate, null);
         button.transform.SetParent(nebulaTab.transform);
         button.transform.localScale = new Vector3(1f, 1f, 1f);
-        button.transform.localPosition = new Vector3(1.3f * (index % 2 * 2 - 1), 1.6f - 0.5f * (index / 2), 0f);
+        button.transform.localPosition = new Vector3(1.3f * ((index % 2 * 2) - 1), 1.6f - (0.5f * (index / 2)), 0f);
         button.name = name;
         var result = button.GetComponent<ToggleButtonBehaviour>();
         var passiveButton = button.GetComponent<PassiveButton>();
@@ -81,6 +81,7 @@ public static class StartOptionMenuPatch
     private static ToggleButtonBehaviour processorAffinityMask;
     private static ToggleButtonBehaviour toggleCursor;
     private static ToggleButtonBehaviour enableSoundEffects;
+    private static ToggleButtonBehaviour ButtonArrangement;
     private static ToggleButtonBehaviour showKeyReminder;
     private static ToggleButtonBehaviour showFPS;
     private static ToggleButtonBehaviour localHats;
@@ -164,6 +165,14 @@ public static class StartOptionMenuPatch
             Main.ShowFPS.Value = showFPS.onState;
         }, nebulaTab, toggleButtonTemplate);
 
+        //ButtonArrangement
+        ButtonArrangement = AddButton(buttonIndex++, "ButtonArrangement", () =>
+        {
+            var next = (Main.ButtonArrangement.Value % 3) + 1;
+            Main.ButtonArrangement.Value = next;
+            ButtonArrangement.UpdateButtonText(GetString($"ButtonArrangement.{next}"), GetString("ButtonArrangement"), next != 1);
+        }, nebulaTab, toggleButtonTemplate);
+
         //ShowKeyReminder
         showKeyReminder = AddButton(buttonIndex++, "ShowKeyReminder", () =>
         {
@@ -217,7 +226,7 @@ public static class StartOptionMenuPatch
             var inputButton = UObject.Instantiate(toggleButtonTemplate, null);
             inputButton.transform.SetParent(keyBindingTab.transform);
             inputButton.transform.localScale = new Vector3(1f, 1f, 1f);
-            inputButton.transform.localPosition = new Vector3(1.3f * (index % 2 * 2 - 1), 1.5f - 0.5f * (index / 2), 0f);
+            inputButton.transform.localPosition = new Vector3(1.3f * ((index % 2 * 2) - 1), 1.5f - (0.5f * (index / 2)), 0f);
             inputButton.name = input.identifier;
             var inputToggleButton = inputButton.GetComponent<ToggleButtonBehaviour>();
             inputToggleButton.BaseText = 0;
@@ -329,6 +338,7 @@ public static class StartOptionMenuPatch
             processorAffinityMask.UpdateButtonText(GetCPUAffinityMaskText(), GetString("ProcessorAffinityMask"), Main.ProcessorAffinityMask.Value != 0UL);
             showFPS.UpdateToggleText(Main.ShowFPS.Value, GetString("ShowFPS"));
             enableSoundEffects.UpdateToggleText(Main.EnableSoundEffects.Value, GetString("EnableSoundEffectsText"));
+            ButtonArrangement.UpdateButtonText(GetString($"ButtonArrangement.{Main.ButtonArrangement.Value}"), GetString("ButtonArrangement"), Main.ButtonArrangement.Value != 1);
             showKeyReminder.UpdateToggleText(Main.ShowKeyReminder.Value, GetString("ShowKeyReminder"));
             toggleCursor.UpdateToggleText(Main.ToggleCursor.Value, GetString("ToggleCursorText"));
             localHats.UpdateToggleText(Main.LocalHats.Value, GetString("LocalHatsText"));

@@ -117,6 +117,10 @@ internal static class HudManagerStartPatch
         {
             try
             {
+                if (HudGrid.Instance == null)
+                {
+                    HudGrid.Instance = HudManager.Instance.gameObject.AddComponent<HudGrid>();
+                }
                 createButtonsPostfix(HudManager.Instance);
             }
             catch
@@ -1751,7 +1755,8 @@ internal static class HudManagerStartPatch
             ButtonPositions.upperRowRight,
             __instance,
             __instance.KillButton,
-            modKillInput.keyCode
+            modKillInput.keyCode,
+            buttonText: GetString("killButtonText")
         );
 
         // Jackal Sidekick Button
