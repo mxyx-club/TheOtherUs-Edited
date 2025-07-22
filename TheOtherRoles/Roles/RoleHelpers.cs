@@ -4,7 +4,8 @@ namespace TheOtherRoles.Roles;
 
 public enum RoleType
 {
-    Crewmate,
+    Error = -1,
+    Crewmate = 0,
     Impostor,
     Neutral,
     Modifier,

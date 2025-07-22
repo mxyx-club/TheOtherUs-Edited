@@ -1,6 +1,6 @@
 using UnityEngine.UI;
 
-namespace TheOtherRoles.Patches;
+namespace TheOtherRoles.Modules;
 
 public static class LobbyRoleInfo
 {
@@ -29,7 +29,7 @@ public static class LobbyRoleInfo
     {
         if (RolesSummaryUI != null) return;
 
-        SpriteRenderer container = new GameObject("RoleSummaryMenuContainer").AddComponent<SpriteRenderer>();
+        var container = new GameObject("RoleSummaryMenuContainer").AddComponent<SpriteRenderer>();
         container.sprite = new ResourceSprite("LobbyRoleInfo.TeamScreen.png", 110f);
         container.transform.SetParent(HudManager.Instance.transform);
         container.gameObject.transform.SetLocalZ(-200);
@@ -39,10 +39,10 @@ public static class LobbyRoleInfo
 
         RolesSummaryUI = container.gameObject;
 
-        Transform buttonTemplate = HudManager.Instance.SettingsButton.transform;
-        TextMeshPro textTemplate = HudManager.Instance.TaskPanel.taskText;
+        var buttonTemplate = HudManager.Instance.SettingsButton.transform;
+        var textTemplate = HudManager.Instance.TaskPanel.taskText;
 
-        TextMeshPro newtitle = UObject.Instantiate(textTemplate, container.transform);
+        var newtitle = UObject.Instantiate(textTemplate, container.transform);
         newtitle.text = GetString("lobbyInfoSummary");
         newtitle.color = Color.white;
         newtitle.outlineWidth = 0.05f;
@@ -50,15 +50,15 @@ public static class LobbyRoleInfo
         newtitle.transform.localScale = Vector3.one * 2.5f;
 
         // 添加退出按钮
-        Transform exitButtonTransform = UObject.Instantiate(buttonTemplate, container.transform);
+        var exitButtonTransform = UObject.Instantiate(buttonTemplate, container.transform);
         exitButtonTransform.name = "RolesSummaryUIExit";
         exitButtonTransform.GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
         exitButtonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("ExitButton.png", 135f);
         exitButtonTransform.localPosition = new Vector3(4.4f, 1.3f, -5);
         exitButtonTransform.localScale = new Vector3(1f, 1.05f, 1f);
 
-        PassiveButton exitButton = exitButtonTransform.GetComponent<PassiveButton>();
-        Button.ButtonClickedEvent exitOnClick = exitButton.OnClick = new Button.ButtonClickedEvent();
+        var exitButton = exitButtonTransform.GetComponent<PassiveButton>();
+        var exitOnClick = exitButton.OnClick = new Button.ButtonClickedEvent();
         exitOnClick.AddListener((Action)(() =>
         {
             UObject.Destroy(RolesSummaryUI);
@@ -68,25 +68,25 @@ public static class LobbyRoleInfo
 
         foreach (RoleType teamId in Enum.GetValues(typeof(RoleType)))
         {
-            if (teamId == RoleType.Special) continue;
+            if (teamId is RoleType.Special or RoleType.Error) continue;
 
-            Transform buttonTransform = UObject.Instantiate(buttonTemplate, container.transform);
+            var buttonTransform = UObject.Instantiate(buttonTemplate, container.transform);
             buttonTransform.name = teamId.ToString() + "Button";
             buttonTransform.GetComponent<BoxCollider2D>().size = new Vector2(2.5f, 0.55f);
             buttonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("TheOtherRoles.Resources.LobbyRoleInfo.RolePlate.png", 215f);
             buttons.Add(buttonTransform);
-            buttonTransform.localPosition = new Vector3(0, 2.2f - (buttons.Count - 1) * 1f, -5);
+            buttonTransform.localPosition = new Vector3(0, 2.2f - ((buttons.Count - 1) * 1f), -5);
             buttonTransform.localScale = new Vector3(2f, 1.5f, 1f);
 
-            TextMeshPro label = UObject.Instantiate(textTemplate, buttonTransform);
+            var label = UObject.Instantiate(textTemplate, buttonTransform);
             label.text = Cs(getTeamColor(teamId), GetString(teamId.ToString() + "RolesText"));
             label.alignment = TextAlignmentOptions.Center;
             label.transform.localPosition = new Vector3(0, 0, label.transform.localPosition.z);
             label.transform.localScale = new Vector3(1.4f, 2.2f, 1f);
 
-            PassiveButton button = buttonTransform.GetComponent<PassiveButton>();
+            var button = buttonTransform.GetComponent<PassiveButton>();
             button.OnClick.RemoveAllListeners();
-            Button.ButtonClickedEvent onClick = button.OnClick = new Button.ButtonClickedEvent();
+            var onClick = button.OnClick = new Button.ButtonClickedEvent();
             onClick.AddListener((Action)(() =>
             {
                 UObject.Destroy(container.gameObject);
@@ -109,7 +109,7 @@ public static class LobbyRoleInfo
 
     public static void roleInfosOnclick(RoleType teamId)
     {
-        SpriteRenderer container = new GameObject("RoleListMenuContainer").AddComponent<SpriteRenderer>();
+        var container = new GameObject("RoleListMenuContainer").AddComponent<SpriteRenderer>();
         container.sprite = new ResourceSprite("LobbyRoleInfo.RoleListScreen.png", 110f);
         container.transform.SetParent(HudManager.Instance.transform);
         container.transform.localPosition = new Vector3(0, 0.12f, -75f);
@@ -117,40 +117,40 @@ public static class LobbyRoleInfo
         container.gameObject.layer = 5;
         RolesSummaryUI = container.gameObject;
 
-        Transform buttonTemplate = HudManager.Instance.SettingsButton.transform;
-        TextMeshPro textTemplate = HudManager.Instance.TaskPanel.taskText;
+        var buttonTemplate = HudManager.Instance.SettingsButton.transform;
+        var textTemplate = HudManager.Instance.TaskPanel.taskText;
 
-        TextMeshPro newtitle = UObject.Instantiate(textTemplate, container.transform);
+        var newtitle = UObject.Instantiate(textTemplate, container.transform);
         newtitle.text = GetString(teamId.ToString() + "RolesText");
         newtitle.outlineWidth = 0.01f;
         newtitle.transform.localPosition = new Vector3(0f, 2.8f, -2f);
         newtitle.transform.localScale = Vector3.one * 2.5f;
 
         // 添加退出按钮
-        Transform exitButtonTransform = UObject.Instantiate(buttonTemplate, container.transform);
+        var exitButtonTransform = UObject.Instantiate(buttonTemplate, container.transform);
         exitButtonTransform.name = "RoleListExit";
         exitButtonTransform.GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
         exitButtonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("ExitButton.png", 135f);
         exitButtonTransform.localPosition = new Vector3(5.8f, 0.5f, -5);
         exitButtonTransform.localScale = new Vector3(1f, 1f, 1f);
 
-        PassiveButton exitButton = exitButtonTransform.GetComponent<PassiveButton>();
-        Button.ButtonClickedEvent exitOnClick = exitButton.OnClick = new Button.ButtonClickedEvent();
+        var exitButton = exitButtonTransform.GetComponent<PassiveButton>();
+        var exitOnClick = exitButton.OnClick = new Button.ButtonClickedEvent();
         exitOnClick.AddListener((Action)(() =>
         {
             UObject.Destroy(RolesSummaryUI);
         }));
 
         // 添加返回按钮
-        Transform backButtonTransform = UObject.Instantiate(buttonTemplate, container.transform);
+        var backButtonTransform = UObject.Instantiate(buttonTemplate, container.transform);
         backButtonTransform.name = "RoleListBack";
         backButtonTransform.GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
         backButtonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("BackButton.png", 135f);
         backButtonTransform.localPosition = new Vector3(5.8f, 1.5f, -5);
         backButtonTransform.localScale = new Vector3(1f, 1f, 1f);
 
-        PassiveButton backButton = backButtonTransform.GetComponent<PassiveButton>();
-        Button.ButtonClickedEvent backOnClick = backButton.OnClick = new Button.ButtonClickedEvent();
+        var backButton = backButtonTransform.GetComponent<PassiveButton>();
+        var backOnClick = backButton.OnClick = new Button.ButtonClickedEvent();
         backOnClick.AddListener((Action)(() =>
         {
             UObject.Destroy(container.gameObject);
@@ -158,9 +158,9 @@ public static class LobbyRoleInfo
         }));
 
         List<Transform> buttons = new();
-        int count = 0;
-        bool gameStarted = AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started;
-        foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
+        var count = 0;
+        var gameStarted = AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started;
+        foreach (var roleInfo in RoleInfo.allRoleInfos)
         {
             if (roleInfo.roleType == RoleType.Modifier && teamId != RoleType.Modifier) continue;
             else if (roleInfo.roleType == RoleType.Neutral && teamId != RoleType.Neutral) continue;
@@ -168,10 +168,10 @@ public static class LobbyRoleInfo
             else if (roleInfo.roleType == RoleType.Crewmate && teamId != RoleType.Crewmate) continue;
             else if (roleInfo.roleType == RoleType.Ghost && teamId != RoleType.Ghost) continue;
 
-            Transform buttonTransform = UObject.Instantiate(buttonTemplate, container.transform);
+            var buttonTransform = UObject.Instantiate(buttonTemplate, container.transform);
             buttonTransform.name = Cs(roleInfo.color, roleInfo.Name) + " Button";
             buttonTransform.GetComponent<BoxCollider2D>().size = new Vector2(2.5f, 0.55f);
-            TextMeshPro label = UObject.Instantiate(textTemplate, buttonTransform);
+            var label = UObject.Instantiate(textTemplate, buttonTransform);
             buttonTransform.GetComponent<SpriteRenderer>().sprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.LobbyRoleInfo.RolePlate2.png", 215f);
             buttons.Add(buttonTransform);
             int row = count / 3, col = count % 3;
@@ -181,9 +181,9 @@ public static class LobbyRoleInfo
             label.alignment = TextAlignmentOptions.Center;
             label.transform.localPosition = new Vector3(0, 0, label.transform.localPosition.z);
             label.transform.localScale *= 1.5f;
-            PassiveButton button = buttonTransform.GetComponent<PassiveButton>();
+            var button = buttonTransform.GetComponent<PassiveButton>();
             button.OnClick.RemoveAllListeners();
-            Button.ButtonClickedEvent onClick = button.OnClick = new Button.ButtonClickedEvent();
+            var onClick = button.OnClick = new Button.ButtonClickedEvent();
             onClick.AddListener((Action)(() =>
             {
                 UObject.Destroy(container.gameObject);
@@ -205,42 +205,42 @@ public static class LobbyRoleInfo
 
     public static void AddInfoCard(RoleInfo roleInfo)
     {
-        string roleSettingDescription = roleInfo.FullDescription != "" ? roleInfo.FullDescription : roleInfo.ShortDescription;
-        string coloredHelp = Cs(Color.white, roleSettingDescription);
+        var roleSettingDescription = roleInfo.FullDescription != "" ? roleInfo.FullDescription : roleInfo.ShortDescription;
+        var coloredHelp = Cs(Color.white, roleSettingDescription);
 
-        Transform buttonTemplate = HudManager.Instance.SettingsButton.transform;
-        GameObject roleCard = UObject.Instantiate(new GameObject("RoleCard"), HudManager.Instance.transform);
-        SpriteRenderer roleCardRend = roleCard.AddComponent<SpriteRenderer>();
+        var buttonTemplate = HudManager.Instance.SettingsButton.transform;
+        var roleCard = UObject.Instantiate(new GameObject("RoleCard"), HudManager.Instance.transform);
+        var roleCardRend = roleCard.AddComponent<SpriteRenderer>();
         roleCard.layer = 5;
         roleCard.transform.localPosition = new Vector3(0f, 0f, -150f);
         roleCard.transform.localScale = new Vector3(0.68f, 0.68f, 1f);
         RolesSummaryUI = roleCard.gameObject;
 
         // 添加退出按钮
-        Transform exitButtonTransform = UObject.Instantiate(buttonTemplate, roleCardRend.transform);
+        var exitButtonTransform = UObject.Instantiate(buttonTemplate, roleCardRend.transform);
         exitButtonTransform.name = "RoleCardExit";
         exitButtonTransform.GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
         exitButtonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("ExitButton.png", 135f);
         exitButtonTransform.localPosition = new Vector3(5.35f, 0.5f, -5);
         exitButtonTransform.localScale = new Vector3(1f, 1f, 1f);
 
-        PassiveButton exitButton = exitButtonTransform.GetComponent<PassiveButton>();
-        Button.ButtonClickedEvent exitOnClick = exitButton.OnClick = new Button.ButtonClickedEvent();
+        var exitButton = exitButtonTransform.GetComponent<PassiveButton>();
+        var exitOnClick = exitButton.OnClick = new Button.ButtonClickedEvent();
         exitOnClick.AddListener((Action)(() =>
         {
             UObject.Destroy(RolesSummaryUI);
         }));
 
         // 添加返回按钮
-        Transform backButtonTransform = UObject.Instantiate(buttonTemplate, roleCardRend.transform);
+        var backButtonTransform = UObject.Instantiate(buttonTemplate, roleCardRend.transform);
         backButtonTransform.name = "RoleCardBack";
         backButtonTransform.GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
         backButtonTransform.GetComponent<SpriteRenderer>().sprite = new ResourceSprite("BackButton.png", 135f);
         backButtonTransform.localPosition = new Vector3(5.35f, 1.5f, -5);
         backButtonTransform.localScale = new Vector3(1f, 1f, 1f);
 
-        PassiveButton backButton = backButtonTransform.GetComponent<PassiveButton>();
-        Button.ButtonClickedEvent backOnClick = backButton.OnClick = new Button.ButtonClickedEvent();
+        var backButton = backButtonTransform.GetComponent<PassiveButton>();
+        var backOnClick = backButton.OnClick = new Button.ButtonClickedEvent();
         backOnClick.AddListener((Action)(() =>
         {
             UObject.Destroy(roleCardRend.gameObject);

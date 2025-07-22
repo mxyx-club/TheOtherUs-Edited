@@ -73,9 +73,8 @@ internal class HudManagerUpdatePatch
 
     private static void updateBlindReport()
     {
-        if (Blind.blind != null && PlayerControl.LocalPlayer == Blind.blind)
-            DestroyableSingleton<HudManager>.Instance.ReportButton.SetActive(false);
-        // Sadly the report button cannot be hidden due to preventing R to report
+        if (InGame && Blind.blind.IsAlive() && PlayerControl.LocalPlayer == Blind.blind && HudManager.Instance)
+            HudManager.Instance.ReportButton.SetActive(false);
     }
 
     public static void updatePlayerInfo()
@@ -658,79 +657,19 @@ internal class HudManagerUpdatePatch
 
         Mini.mini.cosmetics.nameText.text += suffix;
         if (MeetingHud.Instance != null)
+        {
             foreach (var player in MeetingHud.Instance.playerStates)
                 if (player.NameText != null && Mini.mini.PlayerId == player.TargetPlayerId)
                     player.NameText.text += suffix;
+        }
 
         if (Morphling.morphling != null && Morphling.morphTarget == Mini.mini && Morphling.morphTimer > 0f)
             Morphling.morphling.cosmetics.nameText.text += suffix;
     }
 
-    private static void updateImpostorKillButton(HudManager __instance)
+    private static bool HandCuffed()
     {
-        if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor) return;
-        if (MeetingHud.Instance)
-        {
-            __instance.KillButton.Hide();
-            return;
-        }
-
-        var enabled = true;
-        if (Vampire.vampire.IsAlive() && Vampire.vampire == PlayerControl.LocalPlayer)
-            enabled = false;
-        if (Berserker.Player.IsAlive() && Berserker.Player == PlayerControl.LocalPlayer)
-            enabled = false;
-
-        if (enabled) __instance.KillButton.Show();
-        else __instance.KillButton.Hide();
-
-        if (Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) &&
-            Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0) __instance.KillButton.Hide();
-    }
-
-    private static void updateReportButton(HudManager __instance)
-    {
-        if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
-        if ((Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) &&
-             Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0) ||
-            MeetingHud.Instance) __instance.ReportButton.Hide();
-        else if (!__instance.ReportButton.isActiveAndEnabled) __instance.ReportButton.Show();
-    }
-
-    private static void updateVentButton(HudManager __instance)
-    {
-        if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
-        if ((Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) &&
-             Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0) ||
-            MeetingHud.Instance) __instance.ImpostorVentButton.Hide();
-        else if (PlayerControl.LocalPlayer.RoleCanUseVents() && !__instance.ImpostorVentButton.isActiveAndEnabled)
-        {
-            __instance.ImpostorVentButton.Show();
-
-        }
-        if (ReInput.players.GetPlayer(0).GetButtonDown(RewiredConsts.Action.UseVent) &&
-            !PlayerControl.LocalPlayer.Data.Role.IsImpostor && PlayerControl.LocalPlayer.RoleCanUseVents())
-        {
-            __instance.ImpostorVentButton.DoClick();
-        }
-
-    }
-
-    private static void updateUseButton(HudManager __instance)
-    {
-        if (MeetingHud.Instance) __instance.UseButton.Hide();
-    }
-
-    private static void updateSabotageButton(HudManager __instance)
-    {
-        if (PlayerControl.LocalPlayer.IsDead() && CustomOptionHolder.deadImpsBlockSabotage.GetBool()) __instance.SabotageButton.Hide();
-    }
-
-    private static void updateMapButton(HudManager __instance)
-    {
-        if (Trapper.trapper == null || !(PlayerControl.LocalPlayer.PlayerId == Trapper.trapper.PlayerId) ||
-            __instance == null || __instance.MapButton.HeldButtonSprite == null) return;
-        __instance.MapButton.HeldButtonSprite.color = Trapper.playersOnMap.Any() ? Trapper.color : Color.white;
+        return Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) && Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0;
     }
 
     public static void updateGiantSize(HudManager __instance)
@@ -1354,6 +1293,85 @@ internal class HudManagerUpdatePatch
         }
         FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(ImpostorSetTarget());
     }
+
+
+    private static void updateImpostorKillButton(HudManager __instance)
+    {
+        if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor) return;
+        if (!ShowButtons)
+        {
+            __instance.KillButton.Hide();
+            return;
+        }
+
+        var enabled = true;
+        if (Vampire.vampire.IsAlive() && Vampire.vampire == PlayerControl.LocalPlayer)
+            enabled = false;
+        if (Berserker.Player.IsAlive() && Berserker.Player == PlayerControl.LocalPlayer)
+            enabled = false;
+
+        if (enabled) __instance.KillButton.Show();
+        else __instance.KillButton.Hide();
+
+        if (HandCuffed())
+        {
+            __instance.KillButton.Hide();
+        }
+    }
+
+    private static void updateReportButton(HudManager __instance)
+    {
+        if (IsHideNSeek) return;
+        if (HandCuffed() || !ShowButtons)
+        {
+            __instance.ReportButton.Hide();
+        }
+        else if (!__instance.ReportButton.isActiveAndEnabled) __instance.ReportButton.Show();
+    }
+
+    private static void updateVentButton(HudManager __instance)
+    {
+        if (IsHideNSeek) return;
+
+        if (HandCuffed() || !ShowButtons)
+        {
+            __instance.ImpostorVentButton.Hide();
+        }
+        else if (PlayerControl.LocalPlayer.RoleCanUseVents() && !__instance.ImpostorVentButton.isActiveAndEnabled)
+        {
+            __instance.ImpostorVentButton.Show();
+
+        }
+        if (ReInput.players.GetPlayer(0).GetButtonDown(RewiredConsts.Action.UseVent) &&
+            !PlayerControl.LocalPlayer.Data.Role.IsImpostor && PlayerControl.LocalPlayer.RoleCanUseVents())
+        {
+            __instance.ImpostorVentButton.DoClick();
+        }
+
+    }
+
+    private static void updateUseButton(HudManager __instance)
+    {
+        if (!ShowButtons)
+            __instance.UseButton.Hide();
+    }
+
+    private static void updateSabotageButton(HudManager __instance)
+    {
+        if (!ShowButtons)
+            __instance.SabotageButton.Hide();
+
+        if (PlayerControl.LocalPlayer.IsDead() && PlayerControl.LocalPlayer.IsImpostor() && CustomOptionHolder.deadImpsBlockSabotage.GetBool())
+            __instance.SabotageButton.Hide();
+
+        if (PlayerControl.LocalPlayer.roleCanSabotage())
+        {
+            __instance.SabotageButton.Show();
+            __instance.SabotageButton.gameObject.SetActive(true);
+        }
+    }
+
+
     private static void Postfix(HudManager __instance)
     {
         var player = PlayerControl.LocalPlayer;
@@ -1378,7 +1396,6 @@ internal class HudManagerUpdatePatch
         updateShielded();
         setNameTags();
 
-        impostorSetTarget();
         akujoSetTarget();
 
         // Swooper
@@ -1444,7 +1461,6 @@ internal class HudManagerUpdatePatch
         updateUseButton(__instance);
         updateGiantSize(__instance);
         updateBlindReport();
-        updateMapButton(__instance);
 
         if (!MeetingHud.Instance) __instance.AbilityButton?.Update();
 

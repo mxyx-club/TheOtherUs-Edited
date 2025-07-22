@@ -28,14 +28,12 @@ public static class Mimic
             case RoleId.BodyGuard:
                 if (Amnisiac.resetRole) BodyGuard.clearAndReload();
                 BodyGuard.bodyguard = mimic;
-                bodyGuardGuardButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
             case RoleId.Mayor:
                 if (Amnisiac.resetRole) Mayor.clearAndReload();
                 Mayor.mayor = mimic;
-                mayorMeetingButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
 
                 hasMimic = true;
                 break;
@@ -55,29 +53,24 @@ public static class Mimic
             case RoleId.Trapper:
                 if (Amnisiac.resetRole) Trapper.clearAndReload();
                 Trapper.trapper = mimic;
-                trapperButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
             case RoleId.Portalmaker:
                 if (Amnisiac.resetRole) Portalmaker.clearAndReload();
                 Portalmaker.portalmaker = mimic;
-                portalmakerPlacePortalButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
             case RoleId.Engineer:
                 if (Amnisiac.resetRole) Engineer.clearAndReload();
                 Engineer.engineer = mimic;
-                engineerRepairButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
             case RoleId.Jumper:
                 if (Amnisiac.resetRole) Jumper.clearAndReload();
                 Jumper.jumper = mimic;
-                jumperMarkButton.PositionOffset = CustomButton.ButtonPositions.lowerRowCenter;
-                jumperJumpButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
@@ -90,14 +83,12 @@ public static class Mimic
             case RoleId.Veteran:
                 if (Amnisiac.resetRole) Veteran.clearAndReload();
                 Veteran.veteran = mimic;
-                veteranAlertButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
             case RoleId.Medic:
                 if (Amnisiac.resetRole) Medic.clearAndReload();
                 Medic.medic = mimic;
-                medicShieldButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
@@ -116,31 +107,24 @@ public static class Mimic
             case RoleId.Hacker:
                 if (Amnisiac.resetRole) Hacker.clearAndReload();
                 Hacker.hacker = mimic;
-                hackerAdminTableButton.PositionOffset = CustomButton.ButtonPositions.upperRowFarLeft;
-                hackerVitalsButton.PositionOffset = CustomButton.ButtonPositions.lowerRowFarLeft;
-                hackerButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
             case RoleId.Tracker:
                 if (Amnisiac.resetRole) Tracker.clearAndReload();
                 Tracker.tracker = mimic;
-                trackerTrackPlayerButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
             case RoleId.SecurityGuard:
                 if (Amnisiac.resetRole) SecurityGuard.clearAndReload();
                 SecurityGuard.securityGuard = mimic;
-                securityGuardButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
-                securityGuardCamButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
             case RoleId.Medium:
                 if (Amnisiac.resetRole) Medium.clearAndReload();
                 Medium.medium = mimic;
-                mediumButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
@@ -153,7 +137,6 @@ public static class Mimic
             case RoleId.Prophet:
                 if (Amnisiac.resetRole) Prophet.clearAndReload();
                 Prophet.prophet = mimic;
-                prophetButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
@@ -161,15 +144,12 @@ public static class Mimic
                 if (Amnisiac.resetRole) Jailor.ClearAndReload();
                 Jailor.Player = mimic;
                 Jailor.usesCount = 1;
-                jailorButton.PositionOffset = CustomButton.ButtonPositions.upperRowLeft;
                 hasMimic = true;
                 break;
 
             case RoleId.Redemptor:
                 if (Amnisiac.resetRole) Redemptor.ClearAndReload();
                 Redemptor.Player = mimic;
-                redemptorReviveButton.PositionOffset = CustomButton.ButtonPositions.lowerRowFarLeft;
-                redemptorPrayerButton.PositionOffset = CustomButton.ButtonPositions.upperRowFarLeft;
                 hasMimic = true;
                 break;
         }

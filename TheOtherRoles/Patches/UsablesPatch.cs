@@ -10,7 +10,7 @@ public static class VentCanUsePatch
     public static bool Prefix(Vent __instance, ref float __result, [HarmonyArgument(0)] GameData.PlayerInfo pc,
         [HarmonyArgument(1)] ref bool canUse, [HarmonyArgument(2)] ref bool couldUse)
     {
-        if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return true;
+        if (IsHideNSeek) return true;
         var num = float.MaxValue;
         var @object = pc.Object;
 
@@ -123,7 +123,7 @@ public static class VentUsePatch
 {
     public static bool Prefix(Vent __instance)
     {
-        if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return true;
+        if (IsHideNSeek) return true;
         // Deputy handcuff disables the vents
         if (Sheriff.handcuffedPlayers.Contains(PlayerControl.LocalPlayer.PlayerId))
         {
@@ -171,31 +171,6 @@ public static class MoveToVentPatch
     }
 }
 
-[HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
-internal class VentButtonVisibilityPatch
-{
-    private static void Postfix(HudManager __instance)
-    {
-        if (PlayerControl.LocalPlayer?.AmOwner == true && ShowButtons)
-        {
-            __instance.ImpostorVentButton.Hide();
-            __instance.SabotageButton.Hide();
-
-            if (ShowButtons)
-            {
-                if (PlayerControl.LocalPlayer.RoleCanUseVents())
-                    __instance.ImpostorVentButton.Show();
-
-                if (PlayerControl.LocalPlayer.roleCanSabotage())
-                {
-                    __instance.SabotageButton.Show();
-                    __instance.SabotageButton.gameObject.SetActive(true);
-                }
-            }
-        }
-    }
-}
-
 [HarmonyPatch(typeof(VentButton), nameof(VentButton.SetTarget))]
 internal class VentButtonSetTargetPatch
 {
@@ -212,9 +187,6 @@ internal class VentButtonSetTargetPatch
             __instance.graphic.sprite = isSpecialVent ? Trickster.tricksterVentButtonSprite : defaultVentSprite;
             __instance.buttonLabelText.enabled = !isSpecialVent;
         }
-
-        if (Tunneler.tunneler != null && Tunneler.tunneler == PlayerControl.LocalPlayer)
-            __instance.graphic.transform.localPosition = new Vector3(0, 2, 0);
     }
 }
 
@@ -275,12 +247,53 @@ internal class VisibleVentPatches
     }
 }
 
+
+[HarmonyPatch(typeof(AbilityButton), nameof(AbilityButton.Update))]
+public class AbilityUpdate
+{
+    public static void Postfix(AbilityButton __instance)
+    {
+        if (PlayerControl.LocalPlayer.IsAlive() && __instance.commsDown.active)
+        {
+            __instance.commsDown.SetActive(false);
+        }
+    }
+}
+
+[HarmonyPatch(typeof(KillButton), nameof(KillButton.SetTarget))]
+public static class KillButtonPatch
+{
+    public static bool Prefix(KillButton __instance)
+    {
+        if (!PlayerControl.LocalPlayer.IsImpostor() || !PlayerControl.LocalPlayer.CanMove || PlayerControl.LocalPlayer.IsDead())
+        {
+            __instance.currentTarget = null;
+            __instance.SetDisabled();
+            return false;
+        }
+        var target = ImpostorSetTarget();
+        if (target.IsAlive())
+        {
+            target = ImpostorSetTarget();
+            __instance.currentTarget = target;
+            __instance.currentTarget.ToggleHighlight(true, PlayerControl.LocalPlayer.Data.Role.TeamType);
+            __instance.SetEnabled();
+        }
+        else
+        {
+            __instance.currentTarget = null;
+            __instance.SetDisabled();
+        }
+        return false;
+    }
+}
+
 [HarmonyPatch(typeof(KillButton), nameof(KillButton.DoClick))]
 internal class KillButtonDoClickPatch
 {
     public static bool Prefix(KillButton __instance)
     {
-        if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown &&
+        if (__instance.isActiveAndEnabled && __instance.currentTarget.IsAlive() && !__instance.isCoolingDown &&
             PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer.CanMove)
         {
             // Deputy handcuff update.

@@ -1,7 +1,6 @@
 using Reactor.Networking;
 using TheOtherRoles.Attributes;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Patches;
 using static TheOtherRoles.Buttons.CustomButton;
 using static TheOtherRoles.Modules.ModInputManager;
 
@@ -117,10 +116,6 @@ internal static class HudManagerStartPatch
         {
             try
             {
-                if (HudGrid.Instance == null)
-                {
-                    HudGrid.Instance = HudManager.Instance.gameObject.AddComponent<HudGrid>();
-                }
                 createButtonsPostfix(HudManager.Instance);
             }
             catch
@@ -252,46 +247,16 @@ internal static class HudManagerStartPatch
         zoomOutButton.MaxTimer = zoomOutButton.Timer = 0f;
     }
 
-    /// <summary>
-    /// 化形按钮显示目标模型
-    /// </summary>
-    private static void setButtonTargetDisplay(PlayerControl target, CustomButton button = null, Vector3? offset = null)
-    {
-        if (target == null || button == null)
-        {
-            if (targetDisplay != null)
-            {
-                // Reset the poolable player
-                targetDisplay.gameObject.SetActive(false);
-                UObject.Destroy(targetDisplay.gameObject);
-                targetDisplay = null;
-            }
-
-            return;
-        }
-
-        // Add poolable player to the button so that the target outfit is shown
-        button.actionButton.cooldownTimerText.transform.localPosition =
-            new Vector3(0, 0, -1f); // Before the poolable player
-        targetDisplay = UObject.Instantiate(IntroCutsceneOnDestroyPatch.playerPrefab, button.actionButton.transform);
-        var data = target.Data;
-        target.SetPlayerMaterialColors(targetDisplay.cosmetics.currentBodySprite.BodySprite);
-        targetDisplay.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
-        targetDisplay.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
-        targetDisplay.cosmetics.nameText.text = ""; // Hide the name!
-        targetDisplay.transform.localPosition = new Vector3(0f, 0.22f, -0.01f);
-        if (offset != null) targetDisplay.transform.localPosition += (Vector3)offset;
-        targetDisplay.transform.localScale = Vector3.one * 0.33f;
-        targetDisplay.setSemiTransparent(false);
-        targetDisplay.gameObject.SetActive(true);
-    }
-
     public static void Postfix(HudManager __instance)
     {
         initialized = false;
 
         try
         {
+            if (HudGrid.Instance == null)
+            {
+                HudGrid.Instance = HudManager.Instance.gameObject.AddComponent<HudGrid>();
+            }
             createButtonsPostfix(__instance);
         }
         catch { }
@@ -324,10 +289,11 @@ internal static class HudManagerStartPatch
             },
             () => { },
             new ResourceSprite("HelpButton.png", 85f),
-            new Vector3(0.4f, 3f, 0),
             __instance,
             __instance.AbilityButton,
-            null
+            null,
+            PositionOffset: new Vector3(0.4f, 3f, 0),
+            useGrid: false
         );
 
         gameModeButton = new CustomButton(
@@ -339,7 +305,6 @@ internal static class HudManagerStartPatch
             () => { return true; },
             () => { },
             new ResourceSprite("Swap.png", 135f),
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.AbilityButton,
             null,
@@ -360,10 +325,11 @@ internal static class HudManagerStartPatch
             () => { return true; },
             () => { },
             UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.ZoomOut.png", 85f), // Invisible button!
-            new Vector3(0.4f, 2.35f, 0f),
             __instance,
             __instance.AbilityButton,
-            KeyCode.KeypadPlus
+            KeyCode.KeypadPlus,
+            PositionOffset: new Vector3(0.4f, 2.35f, 0f),
+            useGrid: false
         )
         { Timer = 0f };
 
@@ -425,7 +391,6 @@ internal static class HudManagerStartPatch
                 if (Engineer.resetFixAfterMeeting) Engineer.resetFixes();
             },
             Engineer.buttonSprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -486,7 +451,6 @@ internal static class HudManagerStartPatch
             },
             () => { },
             Engineer.buttonSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
@@ -542,7 +506,6 @@ internal static class HudManagerStartPatch
             },
             () => { sheriffKillButton.Timer = sheriffKillButton.MaxTimer; },
             Sheriff.killButtonSprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode,
@@ -582,7 +545,6 @@ internal static class HudManagerStartPatch
             },
             () => { deputyHandcuffButton.Timer = deputyHandcuffButton.MaxTimer; },
             Sheriff.handcuffSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -611,7 +573,6 @@ internal static class HudManagerStartPatch
                 veteranAlertButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Veteran.buttonSprite,
-            ButtonPositions.lowerRowRight, //brb
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -662,7 +623,6 @@ internal static class HudManagerStartPatch
                 if (Medic.reset) Medic.resetShielded();
             },
             Medic.buttonSprite,
-            ButtonPositions.lowerRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -691,7 +651,6 @@ internal static class HudManagerStartPatch
             },
             () => { doomsayerButton.Timer = doomsayerButton.MaxTimer; },
             Doomsayer.buttonSprite,
-            ButtonPositions.lowerRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -739,7 +698,6 @@ internal static class HudManagerStartPatch
             },
             () => { akujoHonmeiButton.Timer = akujoHonmeiButton.MaxTimer; },
             Akujo.honmeiSprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -770,7 +728,6 @@ internal static class HudManagerStartPatch
             },
             () => { akujoBackupButton.Timer = akujoBackupButton.MaxTimer; },
             Akujo.keepSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             KeyCode.C,
@@ -797,7 +754,6 @@ internal static class HudManagerStartPatch
                 evilTrapperSetTrapButton.Timer = evilTrapperSetTrapButton.MaxTimer;
             },
             EvilTrapper.trapButtonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -834,7 +790,6 @@ internal static class HudManagerStartPatch
             },
             () => { },
             Shifter.buttonSprite,
-            new Vector3(0, 1f, 0),
             __instance,
             __instance.AbilityButton,
             modifierAbilityInput.keyCode,
@@ -858,7 +813,6 @@ internal static class HudManagerStartPatch
             () => { return Disperser.remainingDisperses > 0 && PlayerControl.LocalPlayer.CanMove; },
             () => { if (Disperser.remainingDisperses > 0) disperserDisperseButton.Timer = disperserDisperseButton.MaxTimer; },
             Disperser.buttonSprite,
-            new Vector3(0, 1f, 0),
             __instance,
             __instance.AbilityButton,
             modifierAbilityInput.keyCode,
@@ -901,7 +855,6 @@ internal static class HudManagerStartPatch
             },
             () => { mayorMeetingButton.Timer = mayorMeetingButton.MaxTimer; },
             Mayor.emergencySprite,
-            ButtonPositions.lowerRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -943,7 +896,6 @@ internal static class HudManagerStartPatch
             },
             () => { buttonBarryButton.Timer = buttonBarryButton.MaxTimer; },
             ButtonBarry.buttonSprite,
-            new Vector3(0, 1f, 0),
             __instance,
             __instance.AbilityButton,
             modifierAbilityInput.keyCode,
@@ -1004,7 +956,6 @@ internal static class HudManagerStartPatch
                 setButtonTargetDisplay(null);
             },
             Morphling.sampleSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -1050,7 +1001,6 @@ internal static class HudManagerStartPatch
                 camouflagerButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Camouflager.buttonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -1084,7 +1034,6 @@ internal static class HudManagerStartPatch
                 hackerButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Hacker.buttonSprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.AbilityButton,
             modKillInput.keyCode,
@@ -1124,7 +1073,6 @@ internal static class HudManagerStartPatch
                 hackerAdminTableButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Hacker.getAdminSprite(),
-            ButtonPositions.lowerRowRight,
             __instance,
             __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
@@ -1211,7 +1159,6 @@ internal static class HudManagerStartPatch
                 hackerVitalsButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Hacker.getVitalsSprite(),
-            ButtonPositions.lowerRowCenter,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -1298,7 +1245,6 @@ internal static class HudManagerStartPatch
                 if (Tracker.resetTargetAfterMeeting) Tracker.resetTracked();
             },
             Tracker.buttonSprite,
-            ButtonPositions.lowerRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -1327,7 +1273,6 @@ internal static class HudManagerStartPatch
                 trackerTrackCorpsesButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Tracker.trackCorpsesButtonSprite,
-            ButtonPositions.lowerRowCenter,
             __instance,
             __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
@@ -1369,7 +1314,6 @@ internal static class HudManagerStartPatch
                 if (BodyGuard.reset) BodyGuard.resetGuarded();
             },
             BodyGuard.guardButtonSprite,
-            ButtonPositions.lowerRowRight, //brb
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -1482,7 +1426,6 @@ internal static class HudManagerStartPatch
                 vampireKillButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Vampire.buttonSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode,
@@ -1519,7 +1462,6 @@ internal static class HudManagerStartPatch
             },
             () => { },
             Vampire.garlicButtonSprite,
-            new Vector3(0, 0f, 0),
             __instance,
             __instance.AbilityButton,
             null,
@@ -1555,9 +1497,8 @@ internal static class HudManagerStartPatch
                 },
                 () => { prophetButton.Timer = prophetButton.MaxTimer; },
                 Prophet.buttonSprite,
-                ButtonPositions.lowerRowRight,
                 __instance,
-            __instance.AbilityButton,
+                __instance.AbilityButton,
                 abilityInput.keyCode,
                 buttonText: GetString("ProphetText")
             );
@@ -1587,7 +1528,6 @@ internal static class HudManagerStartPatch
             () => { return PlayerControl.LocalPlayer.CanMove && Portal.secondPortal == null; },
             () => { portalmakerPlacePortalButton.Timer = portalmakerPlacePortalButton.MaxTimer; },
             Portalmaker.placePortalButtonSprite,
-            ButtonPositions.lowerRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -1659,7 +1599,6 @@ internal static class HudManagerStartPatch
             },
             () => { usePortalButton.Timer = usePortalButton.MaxTimer; },
             Portalmaker.usePortalButtonSprite,
-            new Vector3(1f, 0f, 0),
             __instance,
             __instance.AbilityButton,
             null,
@@ -1715,7 +1654,6 @@ internal static class HudManagerStartPatch
             },
             () => { portalmakerMoveToPortalButton.Timer = usePortalButton.MaxTimer; },
             Portalmaker.usePortalButtonSprite,
-            new Vector3(1f, 1f, 0),
             __instance,
             __instance.AbilityButton,
             null,
@@ -1752,7 +1690,6 @@ internal static class HudManagerStartPatch
             },
             () => { jackalKillButton.Timer = jackalKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode,
@@ -1801,7 +1738,6 @@ internal static class HudManagerStartPatch
             },
             () => { jackalCreateSidekickButton.Timer = jackalCreateSidekickButton.MaxTimer; },
             Jackal.SidekickButton,
-            ButtonPositions.lowerRowCenter,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -1834,7 +1770,6 @@ internal static class HudManagerStartPatch
                 Jackal.isInvisable = false;
             },
             Swooper.SwoopButtonSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
@@ -1868,7 +1803,6 @@ internal static class HudManagerStartPatch
             },
             () => { swooperKillButton.Timer = swooperKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowRight,
             //new Vector3(0, 1f, 0),
             __instance,
             __instance.KillButton,
@@ -1898,7 +1832,6 @@ internal static class HudManagerStartPatch
                 Swooper.isInvisable = false;
             },
             Swooper.SwoopButtonSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -1966,7 +1899,6 @@ internal static class HudManagerStartPatch
                 pavlovsdogsKillButton.Timer = pavlovsdogsKillButton.MaxTimer;
             },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode,
@@ -1977,10 +1909,9 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (CheckUseAbility(PlayerControl.LocalPlayer, Pavlovsdogs.currentTarget)) return;
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.PavlovsCreateDog, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.PavlovsCreateDog);
                 writer.Write(Pavlovsdogs.currentTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.pavlovsCreateDog(Pavlovsdogs.currentTarget.PlayerId);
                 SoundEffectsManager.play("jackalSidekick");
 
@@ -1988,9 +1919,8 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Pavlovsdogs.pavlovsowner != null
+                return Pavlovsdogs.pavlovsowner.IsAlive()
                     && Pavlovsdogs.pavlovsowner == PlayerControl.LocalPlayer
-                    && !PlayerControl.LocalPlayer.Data.IsDead
                     && Pavlovsdogs.canCreateDog;
             },
             () =>
@@ -2008,7 +1938,6 @@ internal static class HudManagerStartPatch
             },
             () => { pavlovsownerCreateDogButton.Timer = pavlovsownerCreateDogButton.MaxTimer; },
             Pavlovsdogs.CreateDogButton,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -2062,7 +1991,6 @@ internal static class HudManagerStartPatch
                 minerMineButton.Timer = minerMineButton.MaxTimer;
             },
             Miner.buttonSprite,
-            ButtonPositions.upperRowLeft, //brb
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -2108,7 +2036,6 @@ internal static class HudManagerStartPatch
                 Bomber.hasBombPlayer = null;
             },
             Bomber.buttonSprite,
-            ButtonPositions.upperRowLeft, //brb
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -2171,10 +2098,11 @@ internal static class HudManagerStartPatch
             },
             Bomber.buttonSprite,
             //          0, -0.06f, 0
-            new Vector3(-4.5f, 1.5f, 0),
             __instance,
             __instance.AbilityButton,
             hotkey: null,
+            PositionOffset: new Vector3(-4.5f, 1.5f, 0),
+            useGrid: false,
             buttonText: "giveBombText".Translate()
         );
 
@@ -2212,7 +2140,6 @@ internal static class HudManagerStartPatch
                 grenadierFlashButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Grenadier.ButtonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -2252,7 +2179,6 @@ internal static class HudManagerStartPatch
             },
             () => { werewolfKillButton.Timer = werewolfKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode,
@@ -2287,18 +2213,15 @@ internal static class HudManagerStartPatch
                 Werewolf.canKill = false;
                 //  Werewolf.canUseVents = false;
                 Werewolf.hasImpostorVision = false;
-                werewolfRampageButton.PositionOffset = ButtonPositions.upperRowRight;
             },
             Werewolf.buttonSprite,
-            ButtonPositions.upperRowRight,
             __instance,
-            __instance.KillButton,
+            __instance.AbilityButton,
             modKillInput.keyCode,
             true,
             Werewolf.rampageDuration,
             () =>
             {
-                werewolfRampageButton.PositionOffset = ButtonPositions.upperRowRight;
                 werewolfRampageButton.Timer = werewolfRampageButton.MaxTimer;
                 Werewolf.canKill = false;
                 Werewolf.hasImpostorVision = false;
@@ -2336,7 +2259,6 @@ internal static class HudManagerStartPatch
             },
             () => { juggernautKillButton.Timer = juggernautKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode,
@@ -2380,7 +2302,6 @@ internal static class HudManagerStartPatch
                 pelicanKillButton.Timer = pelicanKillButton.MaxTimer;
             },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode,
@@ -2419,7 +2340,6 @@ internal static class HudManagerStartPatch
             },
             () => { eraserButton.Timer = eraserButton.MaxTimer; },
             Eraser.buttonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -2455,7 +2375,6 @@ internal static class HudManagerStartPatch
             },
             () => { partTimerButton.Timer = partTimerButton.MaxTimer; },
             PartTimer.buttonSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -2490,7 +2409,6 @@ internal static class HudManagerStartPatch
             },
             () => { placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer; },
             Trickster.placeBoxButtonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -2524,7 +2442,6 @@ internal static class HudManagerStartPatch
                 lightsOutButton.actionButton.graphic.color = Palette.EnabledColor;
             },
             Trickster.lightOutButtonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -2587,7 +2504,6 @@ internal static class HudManagerStartPatch
             },
             () => { cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer; },
             Cleaner.buttonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -2609,7 +2525,6 @@ internal static class HudManagerStartPatch
             },
             () => { butcherDissectionButton.Timer = butcherDissectionButton.MaxTimer; },
             Butcher.ButtonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -2688,7 +2603,6 @@ internal static class HudManagerStartPatch
             },
             () => { },
             Undertaker.buttonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -2732,7 +2646,6 @@ internal static class HudManagerStartPatch
             },
             () => { },
             Undertaker.buttonSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -2808,7 +2721,7 @@ internal static class HudManagerStartPatch
                 }
                 else
                 {
-                    Warlock.curseVictimTarget = SetTarget(targetingPlayer: Warlock.curseVictim);
+                    Warlock.curseVictimTarget = SetTarget(targetingPlayer: Warlock.curseVictim, distances: 0.75f);
                     SetPlayerOutline(Warlock.curseVictimTarget, Warlock.color);
                 }
 
@@ -2828,7 +2741,6 @@ internal static class HudManagerStartPatch
                 Warlock.curseVictimTarget = null;
             },
             Warlock.curseButtonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.KillButton,
             abilityInput.keyCode,
@@ -2912,7 +2824,6 @@ internal static class HudManagerStartPatch
             },
             () => { securityGuardButton.Timer = securityGuardButton.MaxTimer; },
             SecurityGuard.placeCameraButtonSprite,
-            ButtonPositions.lowerRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode
@@ -2988,7 +2899,6 @@ internal static class HudManagerStartPatch
                 securityGuardCamButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             SecurityGuard.getCamSprite(),
-            ButtonPositions.lowerRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3053,7 +2963,6 @@ internal static class HudManagerStartPatch
                 Arsonist.douseTarget = null;
             },
             Arsonist.douseSprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3118,7 +3027,6 @@ internal static class HudManagerStartPatch
                 else arsonistKillButton.Timer = arsonistKillButton.MaxTimer = arsonistButton.MaxTimer;
             },
             Arsonist.igniteSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             modKillInput.keyCode,
@@ -3174,7 +3082,6 @@ internal static class HudManagerStartPatch
             },
             () => { vultureEatButton.Timer = vultureEatButton.MaxTimer; },
             Vulture.buttonSprite,
-            ButtonPositions.lowerRowCenter,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3219,12 +3126,10 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return __instance.ReportButton.graphic.color == Palette.EnabledColor &&
-                       PlayerControl.LocalPlayer.CanMove;
+                return __instance.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
             },
             () => { amnisiacRememberButton.Timer = 0f; },
             Amnisiac.buttonSprite,
-            ButtonPositions.lowerRowRight, //brb
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3284,7 +3189,6 @@ internal static class HudManagerStartPatch
                 specterRememberButton.Timer = 10f;
             },
             Amnisiac.buttonSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
@@ -3351,7 +3255,6 @@ internal static class HudManagerStartPatch
                 Medium.soulTarget = null;
             },
             Medium.question,
-            ButtonPositions.lowerRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3454,7 +3357,6 @@ internal static class HudManagerStartPatch
             },
             () => { pursuerButton.Timer = pursuerButton.MaxTimer; },
             Pursuer.buttonSprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3487,7 +3389,6 @@ internal static class HudManagerStartPatch
                 survivorVestButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Survivor.VestButtonSprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3536,7 +3437,6 @@ internal static class HudManagerStartPatch
             },
             () => { survivorBlanksButton.Timer = survivorBlanksButton.MaxTimer; },
             Pursuer.buttonSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             KeyCode.C,
@@ -3591,7 +3491,6 @@ internal static class HudManagerStartPatch
                 Witch.spellCastingTarget = null;
             },
             Witch.buttonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3646,7 +3545,6 @@ internal static class HudManagerStartPatch
                 jumperMarkButton.Timer = jumperMarkButton.MaxTimer;
             },
             Jumper.jumpMarkButtonSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
@@ -3679,7 +3577,6 @@ internal static class HudManagerStartPatch
                 if (Jumper.Charges > 0) jumperJumpButton.Timer = jumperJumpButton.MaxTimer;
             },
             Jumper.jumpJumpButtonSprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3709,7 +3606,6 @@ internal static class HudManagerStartPatch
                 escapistMarkButton.Timer = escapistMarkButton.MaxTimer;
             },
             Escapist.escapeEscapeButtonSprite,
-            ButtonPositions.lowerRowCenter, //brb
             __instance,
             __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
@@ -3738,7 +3634,6 @@ internal static class HudManagerStartPatch
                 escapistEscapeButton.Timer = escapistEscapeButton.MaxTimer;
             },
             Escapist.escapeEscapeButtonSprite,
-            ButtonPositions.upperRowLeft, //brb
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3761,7 +3656,6 @@ internal static class HudManagerStartPatch
             },
             () => { bountyHunterChangeTarget.Timer = bountyHunterChangeTarget.MaxTimer; },
             BountyHunter.buttonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3851,7 +3745,6 @@ internal static class HudManagerStartPatch
                 Ninja.ninjaMarked = null;
             },
             Ninja.markButtonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.KillButton,
             abilityInput.keyCode,
@@ -3889,7 +3782,6 @@ internal static class HudManagerStartPatch
             },
             () => { blackmailerButton.Timer = blackmailerButton.MaxTimer; },
             Blackmailer.blackmailButtonSprite,
-            ButtonPositions.upperRowLeft, //brb
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3929,7 +3821,6 @@ internal static class HudManagerStartPatch
             },
             () => { trapperButton.Timer = trapperButton.MaxTimer; },
             Trapper.trapButtonSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -3971,7 +3862,6 @@ internal static class HudManagerStartPatch
                 terroristButton.Timer = terroristButton.MaxTimer;
             },
             Terrorist.buttonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -4008,7 +3898,6 @@ internal static class HudManagerStartPatch
                 defuseButton.isEffectActive = false;
             },
             Bomb.defuseSprite,
-            new Vector3(4f, 1f, 0),
             __instance,
             __instance.AbilityButton,
             hotkey: null,
@@ -4016,15 +3905,16 @@ internal static class HudManagerStartPatch
             Terrorist.defuseDuration,
             () =>
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.DefuseBomb, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var writer = StartRPC(CustomRPC.DefuseBomb);
+                writer.EndRPC();
                 RPCProcedure.defuseBomb();
 
                 defuseButton.Timer = 0f;
                 Bomb.canDefuse = false;
             },
             true,
+            PositionOffset: new Vector3(4f, 1f, 0),
+            useGrid: false,
             buttonText: GetString("defuseBombText")
         );
 
@@ -4070,7 +3960,6 @@ internal static class HudManagerStartPatch
             },
             () => { thiefKillButton.Timer = thiefKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode,
@@ -4134,7 +4023,6 @@ internal static class HudManagerStartPatch
                 }
             },
             Yoyo.markButtonSprite,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -4202,7 +4090,6 @@ internal static class HudManagerStartPatch
                yoyoAdminTableButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
            },
            Hacker.getAdminSprite(),
-           ButtonPositions.lowerRowCenter,
            __instance,
             __instance.AbilityButton,
            KeyCode.G,
@@ -4238,7 +4125,6 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                redemptorRevelationButton.PositionOffset = Redemptor.prayer ? ButtonPositions.upperRowLeft : ButtonPositions.upperRowCenter;
                 return PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -4249,7 +4135,6 @@ internal static class HudManagerStartPatch
                 redemptorRevelationButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Tracker.trackCorpsesButtonSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
@@ -4291,7 +4176,6 @@ internal static class HudManagerStartPatch
                 redemptorPrayerButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Redemptor.reviveButton,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             modKillInput.keyCode,
@@ -4363,7 +4247,6 @@ internal static class HudManagerStartPatch
                 redemptorReviveButton.Timer = 10f;
             },
             Redemptor.reviveButton,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -4422,7 +4305,6 @@ internal static class HudManagerStartPatch
                 bandLeaderKeyboardistButton.Timer = bandLeaderKeyboardistButton.MaxTimer = BandLeader.createCoolDown;
             },
             BandLeader.keyboardButton,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.AbilityButton,
             null,
@@ -4478,7 +4360,6 @@ internal static class HudManagerStartPatch
                 bandLeaderBassistButton.Timer = bandLeaderBassistButton.MaxTimer = BandLeader.createCoolDown;
             },
             BandLeader.bassButton,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             null,
@@ -4534,7 +4415,6 @@ internal static class HudManagerStartPatch
                 bandLeaderDrummerButton.Timer = bandLeaderDrummerButton.MaxTimer = BandLeader.createCoolDown;
             },
             BandLeader.drumButton,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             null,
@@ -4569,7 +4449,6 @@ internal static class HudManagerStartPatch
                 bandLeaderKillButton.Timer = bandLeaderKillButton.MaxTimer;
             },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode,
@@ -4640,7 +4519,6 @@ internal static class HudManagerStartPatch
                 schrodingersCatKillButton.Timer = schrodingersCatKillButton.MaxTimer;
             },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode,
@@ -4667,7 +4545,6 @@ internal static class HudManagerStartPatch
             },
             () => { },
             Gunsmith.GetButton,
-            ButtonPositions.upperRowLeft,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -4693,7 +4570,6 @@ internal static class HudManagerStartPatch
             },
             () => { },
             Gunsmith.AddButton,
-            ButtonPositions.lowerRowCenter,
             __instance,
             __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
@@ -4742,7 +4618,6 @@ internal static class HudManagerStartPatch
                 berserkerKillButton.Timer = berserkerKillButton.MaxTimer;
             },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode,
@@ -4798,7 +4673,6 @@ internal static class HudManagerStartPatch
             },
             () => { poltergeistButton.Timer = poltergeistButton.MaxTimer; },
             Poltergeist.ButtonSprite,
-            ButtonPositions.upperRowCenter,
             __instance,
             __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
@@ -4832,7 +4706,6 @@ internal static class HudManagerStartPatch
             },
             () => { InfectedKillButton.Timer = InfectedKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode,
@@ -4872,7 +4745,6 @@ internal static class HudManagerStartPatch
             },
             () => { jailorButton.Timer = jailorButton.MaxTimer; },
             Jailor.buttonSprite,
-            ButtonPositions.upperRowRight,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,

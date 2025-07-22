@@ -1,4 +1,5 @@
 using Rewired;
+using TheOtherRoles.Patches;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using static TheOtherRoles.Buttons.HudManagerStartPatch;
@@ -32,13 +33,14 @@ public class CustomButton
     public bool HasEffect;
     public bool isEffectActive;
     public bool isHandcuffed;
-    public Vector3 PositionOffset;
+    public Vector3? PositionOffset;
 
     public KeyCode? hotkey;
     public KeyCode? originalHotkey;
     public TMP_Text ButtonTitle;
     public string buttonText;
     public bool mirror;
+    public bool UseGrid;
     public bool showButtonText;
     public float DeputyTimer;
     public float Timer;
@@ -65,7 +67,7 @@ public class CustomButton
     private int _lastUsesCount = int.MinValue;
     public int UsesCount = -1;
     public bool IsKillButton;
-    public bool isCoolingDown => Timer <= 0 && !isEffectActive;
+    public bool IsCoolingDown => Timer <= 0 && !isEffectActive;
 
     public CustomButton(
         Action OnClick,
@@ -73,7 +75,6 @@ public class CustomButton
         Func<bool> CouldUse,
         Action OnMeetingEnds,
         Sprite Sprite,
-        Vector3 PositionOffset,
         HudManager hudManager,
         ActionButton textTemplate,
         KeyCode? hotkey,
@@ -83,7 +84,9 @@ public class CustomButton
         Action onEffectClick,
         Action OnEffectEnd,
         bool mirror = false,
-        string buttonText = "")
+        string buttonText = "",
+        Vector3? PositionOffset = null,
+        bool useGrid = true)
     {
         this.hudManager = hudManager;
         this.OnClick = OnClick;
@@ -100,6 +103,7 @@ public class CustomButton
         this.hotkey = hotkey;
         this.buttonText = buttonText;
         this.textTemplate = textTemplate;
+        UseGrid = useGrid;
 
         IsKillButton = textTemplate is KillButton;
         actionButton = UObject.Instantiate(textTemplate, textTemplate.transform.parent);
@@ -107,8 +111,8 @@ public class CustomButton
         actionButtonRenderer = actionButton.graphic;
         actionButtonMat = actionButtonRenderer.material;
         actionButtonLabelText = actionButton.buttonLabelText;
-        var button = actionButton.GetComponent<PassiveButton>();
         showButtonText = actionButtonRenderer.sprite == Sprite || buttonText != "";
+        var button = actionButton.GetComponent<PassiveButton>();
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityAction)onClickEvent);
         originalHotkey = GetHotKeys(hotkey);
@@ -124,12 +128,15 @@ public class CustomButton
         ButtonTitle.transform.localScale = Vector3.one * 0.5f;
         ButtonTitle.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
-        var gridContent = actionButton.gameObject.GetComponent<HudContent>();
-        gridContent.UpdateSubPriority();
-        gridContent.MarkAsKillButtonContent(false);
-        gridContent.SetPriority(0);
-        gridContent.IsStaticContent = false;
-        HudGrid.Instance?.RegisterContent(gridContent, mirror);
+        if (useGrid)
+        {
+            var gridContent = actionButton.gameObject.GetComponent<HudContent>();
+            gridContent.UpdateSubPriority();
+            gridContent.MarkAsKillButtonContent(IsKillButton);
+            gridContent.SetPriority(IsKillButton ? 40 : 25);
+            gridContent.IsStaticContent = false;
+            HudGrid.Instance?.RegisterContent(gridContent, mirror);
+        }
 
         buttons.Add(this);
     }
@@ -139,14 +146,15 @@ public class CustomButton
         Func<bool> CouldUse,
         Action OnMeetingEnds,
         Sprite Sprite,
-        Vector3 PositionOffset,
         HudManager hudManager,
         ActionButton textTemplate,
         KeyCode? hotkey,
         bool mirror = false,
-        string buttonText = "")
-        : this(OnClick, HasButton, CouldUse, OnMeetingEnds, Sprite, PositionOffset, hudManager, textTemplate, hotkey, false, 0f,
-            null, null, null, mirror, buttonText)
+        string buttonText = "",
+        Vector3? PositionOffset = null,
+        bool useGrid = true)
+        : this(OnClick, HasButton, CouldUse, OnMeetingEnds, Sprite, hudManager, textTemplate, hotkey, false, 0f,
+            null, null, null, mirror, buttonText, PositionOffset, useGrid)
     { }
 
     public CustomButton(Action OnClick,
@@ -154,7 +162,6 @@ public class CustomButton
         Func<bool> CouldUse,
         Action OnMeetingEnds,
         Sprite Sprite,
-        Vector3 PositionOffset,
         HudManager hudManager,
         ActionButton textTemplate,
         KeyCode? hotkey,
@@ -162,9 +169,11 @@ public class CustomButton
         float EffectDuration,
         Action OnEffectEnds,
         bool mirror = false,
-        string buttonText = "")
-        : this(OnClick, HasButton, CouldUse, OnMeetingEnds, Sprite, PositionOffset, hudManager, textTemplate, hotkey, HasEffect, EffectDuration,
-            () => true, null, OnEffectEnds, mirror, buttonText)
+        string buttonText = "",
+        Vector3? PositionOffset = null,
+        bool useGrid = true)
+        : this(OnClick, HasButton, CouldUse, OnMeetingEnds, Sprite, hudManager, textTemplate, hotkey, HasEffect, EffectDuration,
+            () => true, null, OnEffectEnds, mirror, buttonText, PositionOffset, useGrid)
     { }
 
     public void Destroy()
@@ -414,7 +423,7 @@ public class CustomButton
                 var xpos = 0.05f - (safeOrthographicSize * aspect * 1.70f);
                 pos = new Vector3(xpos, pos.y, pos.z);
             }
-            //actionButton.transform.localPosition = pos + PositionOffset;
+            if (!UseGrid && PositionOffset != null) actionButton.transform.localPosition = pos + PositionOffset.Value;
         }
 
         if (CouldUse() || (isEffectActive && OnEffectCouldUse?.Invoke() == true))
@@ -486,20 +495,17 @@ public class CustomButton
             // Non Custom (Vanilla) Buttons. The Originals are disabled / hidden in UpdatePatch.cs already, just need to replace them. Can use any button, as we replace onclick etc anyways.
             // Kill Button if enabled for the Role
             if (FastDestroyableSingleton<HudManager>.Instance.KillButton.isActiveAndEnabled)
-                addReplacementHandcuffedButton(arsonistButton, ButtonPositions.upperRowRight,
+                addReplacementHandcuffedButton(arsonistButton,
                     () => { return FastDestroyableSingleton<HudManager>.Instance.KillButton.currentTarget != null; });
             // Vent Button if enabled
             if (PlayerControl.LocalPlayer.RoleCanUseVents())
-                addReplacementHandcuffedButton(arsonistButton, ButtonPositions.upperRowCenter,
+                addReplacementHandcuffedButton(arsonistButton,
                     () =>
                     {
                         return FastDestroyableSingleton<HudManager>.Instance.ImpostorVentButton.currentTarget != null;
                     });
             // Report Button
             addReplacementHandcuffedButton(arsonistButton,
-                !PlayerControl.LocalPlayer.Data.Role.IsImpostor
-                    ? new Vector3(-1f, -0.06f, 0)
-                    : ButtonPositions.lowerRowRight,
                 () =>
                 {
                     return FastDestroyableSingleton<HudManager>.Instance.ReportButton.graphic.color ==
@@ -521,14 +527,12 @@ public class CustomButton
             foreach (var button in buttons) button.isHandcuffed = false;
         }
 
-        static void addReplacementHandcuffedButton(CustomButton button, Vector3? positionOffset = null, Func<bool> couldUse = null)
+        static void addReplacementHandcuffedButton(CustomButton button, Func<bool> couldUse = null)
         {
             // For non custom buttons, we can set these manually.
-            var positionOffsetValue = positionOffset ?? button.PositionOffset;
-            positionOffsetValue.z = -0.1f;
             couldUse ??= button.CouldUse;
             var replacementHandcuffedButton = new CustomButton(() => { }, () => { return true; }, couldUse, () => { },
-                Sheriff.handcuffedSprite, positionOffsetValue, button.hudManager, button.textTemplate, null,
+                Sheriff.handcuffedSprite, button.hudManager, button.textTemplate, null,
                 true, Sheriff.handcuffDuration, null, null, null, button.mirror);
             replacementHandcuffedButton.Timer = replacementHandcuffedButton.EffectDuration;
             replacementHandcuffedButton.actionButton.cooldownTimerText.color = new Color32(0, 204, 0, 255);
@@ -629,31 +633,37 @@ public class CustomButton
     }
     #endregion
 
-    public static class ButtonPositions
+    /// <summary>
+    /// 化形按钮显示目标模型
+    /// </summary>
+    public static void setButtonTargetDisplay(PlayerControl target, CustomButton button = null, Vector3? offset = null)
     {
-        public static readonly Vector3 lowerRowRight = new(-2f, -0.06f, 0); // Not usable for imps beacuse of new button positions!
-        public static readonly Vector3 lowerRowCenter = new(-3f, -0.06f, 0);
-        public static readonly Vector3 lowerRowLeft = new(-4f, -0.06f, 0);
-        public static readonly Vector3 lowerRowFarLeft = new(-3f, -0.06f, 0f);
-        public static readonly Vector3 upperRowRight = new(0f, 1f, 0f); // Not usable for imps beacuse of new button positions!
-        public static readonly Vector3 upperRowCenter = new(-1f, 1f, 0f); // Not usable for imps beacuse of new button positions!
-        public static readonly Vector3 upperRowLeft = new(-2f, 1f, 0f);
-        public static readonly Vector3 upperRowFarLeft = new(-3f, 1f, 0f);
-        public static readonly Vector3 highRowRight = new(0f, 2.06f, 0f);
-
-        public static readonly Vector3 LeftOffset = new(1f, 0f, 0f);
-        public static readonly Vector3 UpOffset = new(0f, 1.06f, 0f);
-    }
-}
-
-[HarmonyPatch(typeof(AbilityButton), nameof(AbilityButton.Update))]
-public class AbilityUpdate
-{
-    public static void Postfix(AbilityButton __instance)
-    {
-        if (PlayerControl.LocalPlayer.IsAlive() && __instance.commsDown.active)
+        if (target == null || button == null)
         {
-            __instance.commsDown.SetActive(false);
+            if (targetDisplay != null)
+            {
+                // Reset the poolable player
+                targetDisplay.gameObject.SetActive(false);
+                UObject.Destroy(targetDisplay.gameObject);
+                targetDisplay = null;
+            }
+
+            return;
         }
+
+        // Add poolable player to the button so that the target outfit is shown
+        button.actionButton.cooldownTimerText.transform.localPosition =
+            new Vector3(0, 0, -1f); // Before the poolable player
+        targetDisplay = UObject.Instantiate(IntroCutsceneOnDestroyPatch.playerPrefab, button.actionButton.transform);
+        var data = target.Data;
+        target.SetPlayerMaterialColors(targetDisplay.cosmetics.currentBodySprite.BodySprite);
+        targetDisplay.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
+        targetDisplay.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
+        targetDisplay.cosmetics.nameText.text = ""; // Hide the name!
+        targetDisplay.transform.localPosition = new Vector3(0f, 0.22f, -0.01f);
+        if (offset != null) targetDisplay.transform.localPosition += (Vector3)offset;
+        targetDisplay.transform.localScale = Vector3.one * 0.33f;
+        targetDisplay.setSemiTransparent(false);
+        targetDisplay.gameObject.SetActive(true);
     }
 }

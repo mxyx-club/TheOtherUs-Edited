@@ -68,7 +68,7 @@ public class HudGrid : MonoBehaviour
             foreach (var c in Contents[i])
             {
                 if (!c.Value.IsActive) continue;
-                if (MeetingHud.Instance && !c.Value.gameObject.active) continue; //会議中はstaticContents以外除外する
+                if (InMeeting && !c.Value.gameObject.active) continue; //会議中はstaticContents以外除外する
 
                 if (!killButtonPosArranged && c.Value.MarkedAsKillButtonContent)
                 {
@@ -80,7 +80,9 @@ public class HudGrid : MonoBehaviour
                 c.Value.CurrentPos = new Vector2(column, row);
 
                 if (column < 2 && !c.Value.OccupiesLine)
+                {
                     column++;
+                }
                 else
                 {
                     row++;
@@ -100,7 +102,7 @@ public class HudGrid : MonoBehaviour
         Contents[toLeft ? 0 : 1].Add(content);
         content.Value.SetSide(toLeft);
 
-        if (content.Value.IsStaticContent) content.Value.transform.SetParent(HudGrid.Instance?.StaticButtonsHolder);
+        if (content.Value.IsStaticContent) content.Value.transform.SetParent(Instance?.StaticButtonsHolder);
     }
 
     private int availableSubPriority = 0;
@@ -117,22 +119,25 @@ public class HudContent : MonoBehaviour
     public Vector2 CurrentPos { get; set; }
 
     //Priorityの大きいものから配置される
-    public int Priority { get => (OccupiesLine ? 20000 : onKillButtonPos ? 10000 : 0) + priority; }
-    public int SubPriority => subPriority;
-    private int priority;
-    private int subPriority;
-    private bool onKillButtonPos;
+    public int Priority { get => (OccupiesLine ? 20000 : MarkedAsKillButtonContent ? 10000 : 0) + field; private set; }
+    public int SubPriority { get; private set; }
+
     private bool isLeftSide;
     private bool isDirty = true;
-    public bool OccupiesLine = false;
-    public bool IsStaticContent = false;
-    public Func<bool> ActiveFunc = null;
+    public bool OccupiesLine;
+    public bool IsStaticContent;
+    public Func<bool> ActiveFunc;
     public bool IsActive => ActiveFunc?.Invoke() ?? gameObject.activeSelf;
     public Vector3 ToLocalPos
     {
         get
         {
-            var pos = new Vector3((4.5f - CurrentPos.x) * (isLeftSide ? -1 : 1), -2.3f + CurrentPos.y, 0f);
+            float zoomFactor = Camera.main.orthographicSize / 3f;
+            var pos = new Vector3(
+                      ((4.5f * zoomFactor) - CurrentPos.x) * (isLeftSide ? -1 : 1),
+                      (-2.3f * zoomFactor) + CurrentPos.y,
+                      0f
+            );
 
             var arrangement = Main.ButtonArrangement.Value;
             if (!MeetingHud.Instance && ((arrangement == 1 && isLeftSide) || arrangement == 2)) pos.y += 0.85f;
@@ -140,19 +145,19 @@ public class HudContent : MonoBehaviour
             return pos;
         }
     }
-    public bool MarkedAsKillButtonContent => onKillButtonPos;
+    public bool MarkedAsKillButtonContent { get; private set; }
     public void MarkAsKillButtonContent(bool mark = true)
     {
-        onKillButtonPos = mark;
+        MarkedAsKillButtonContent = mark;
     }
     public HudContent SetPriority(int priority)
     {
-        this.priority = priority;
+        this.Priority = priority;
         return this;
     }
     public HudContent UpdateSubPriority()
     {
-        subPriority = HudGrid.Instance?.AvailableSubPriority ?? 0;
+        SubPriority = HudGrid.Instance?.AvailableSubPriority ?? 0;
         return this;
     }
 
