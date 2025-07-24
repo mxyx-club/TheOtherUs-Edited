@@ -960,7 +960,7 @@ public class CustomOptionHolder
 
         terroristSpawnRate = Create(102700, Types.Impostor, Cs(Terrorist.color, "Terrorist"), rates, null, true);
         terroristBombDestructionTime = Create(102701, Types.Impostor, "terroristBombDestructionTime", 0f, 0f, 120f, 0.5f, terroristSpawnRate);
-        terroristBombDestructionRange = Create(102702, Types.Impostor, "terroristBombDestructionRange", 30f, 5f, 250f, 5f, terroristSpawnRate);
+        terroristBombDestructionRange = Create(102702, Types.Impostor, "terroristBombDestructionRange", 35f, 5f, 250f, 5f, terroristSpawnRate);
         terroristBombHearRange = Create(102703, Types.Impostor, "terroristBombHearRange", 60f, 5f, 250f, 5f, terroristSpawnRate);
         terroristDefuseDuration = Create(102704, Types.Impostor, "terroristDefuseDuration", 2f, 0f, 30f, 0.5f, terroristSpawnRate);
         terroristBombCooldown = Create(102705, Types.Impostor, "terroristBombCooldown", 0f, 5f, 60f, 2.5f, terroristSpawnRate);
@@ -1056,9 +1056,9 @@ public class CustomOptionHolder
 
         jackalSpawnRate = Create(201300, Types.Neutral, Cs(Jackal.color, "Jackal"), rates, null, true);
         jackalChanceSwoop = Create(201301, Types.Neutral, Cs(Swooper.color, "jackalChanceSwoop"), rates, jackalSpawnRate);
-        jackalKillCooldown = Create(201302, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, jackalSpawnRate);
         jackalSwooperCooldown = Create(201303, Types.Neutral, "jackalSwooperCooldown", 25f, 10f, 60f, 2.5f, jackalChanceSwoop);
         jackalSwooperDuration = Create(201304, Types.Neutral, "jackalSwooperDuration", 12.5f, 1f, 20f, 0.5f, jackalChanceSwoop);
+        jackalKillCooldown = Create(201302, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, jackalSpawnRate);
         jackalCanUseVents = Create(201305, Types.Neutral, "jackalCanUseVents", true, jackalSpawnRate);
         jackalCanUseSabo = Create(201306, Types.Neutral, "jackalCanUseSabo", false, jackalSpawnRate);
         jackalAndSidekickHaveImpostorVision = Create(201307, Types.Neutral, "jackalAndSidekickHaveImpostorVision", true, jackalSpawnRate);
@@ -1365,7 +1365,7 @@ public class CustomOptionHolder
         trapperCooldown = Create(303501, Types.Crewmate, "trapperCooldown", 20f, 5f, 120f, 2.5f, trapperSpawnRate);
         trapperMaxCharges = Create(303502, Types.Crewmate, "trapperMaxCharges", 5f, 1f, 15f, 1f, trapperSpawnRate);
         trapperRechargeTasksNumber = Create(303503, Types.Crewmate, "trapperRechargeTasksNumber", 2f, 1f, 15f, 1f, trapperSpawnRate);
-        trapperTrapNeededTriggerToReveal = Create(303504, Types.Crewmate, "trapperTrapNeededTriggerToReveal", 2f, 1f, 10f, 1f, trapperSpawnRate);
+        trapperTrapNeededTriggerToReveal = Create(303504, Types.Crewmate, "trapperTrapNeededTriggerToReveal", 1, 1, 5, 1, trapperSpawnRate);
         trapperInfoType = Create(303505, Types.Crewmate, "trapperInfoType", ["Role", "trapperInfoType2", "Name"], trapperSpawnRate);
         trapperTrapDuration = Create(303506, Types.Crewmate, "trapperTrapDuration", 5f, 1f, 15f, 0.5f, trapperSpawnRate);
 

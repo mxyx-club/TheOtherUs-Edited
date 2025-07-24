@@ -16,45 +16,37 @@
         "0": "Very Short",
         "13": "非常短"
     },
-    "theOtherRolesSettings": {
+    "TabGroup.General": {
         "0": "The Other Us Settings",
         "13": "模组设置"
     },
-    "impostorRolesSettings": {
+    "TabGroup.Impostor": {
         "0": "Impostor Roles Settings",
         "13": "伪装者职业设置"
     },
-    "neutralRolesSettings": {
+    "TabGroup.Neutral": {
         "0": "Neutral Roles Settings",
         "13": "中立职业设置"
     },
-    "crewmateRolesSettings": {
+    "TabGroup.Crewmate": {
         "0": "Crewmate Roles Settings",
         "13": "船员职业设置"
     },
-    "modifierSettings": {
+    "TabGroup.Modifier": {
         "0": "Modifiers Settings",
         "13": "附加能力设置"
     },
-    "ghostSettings": {
+    "TabGroup.GhostRole": {
         "0": "Ghost Roles Settings",
         "13": "幽灵职业设置"
     },
-    "advancedSettings": {
+    "TabGroup.Advanced": {
         "0": "Advanced Settings",
         "13": "高级设置"
     },
-    "guesserSettings": {
+    "TabGroup.Guesser": {
         "0": "Guesser Mode Settings",
         "13": "赌怪模式设置"
-    },
-    "hideNSeekSettings": {
-        "0": "Hide 'N Seek Settings",
-        "13": "躲猫猫模式设置"
-    },
-    "PropHuntSettings": {
-        "0": "Prop Hunt Settings",
-        "13": "道具躲猫猫模式设置"
     },
     "CrewmateRolesText": {
         "0": "Crewmate Roles",
@@ -689,6 +681,10 @@
     },
     "logRpcSend": {
         "13": "记录RPC请求"
+    },
+    "guesserEnabled": {
+        "0": "Guesser Mode",
+        "13": "赌怪模式"
     },
     "guesserGamemodeCrewNumber": {
         "0": "Number of Crewmate Guessers",
@@ -2580,17 +2576,17 @@
         "0": "<size=75%>Modified by <color=#FFB793>mxyx.club</color>\nBased on TheOtherUs</size>",
         "13": "<size=80%>模组修改：<color=#FFB793>沫夏悠轩</color> </size>"
     },
-    "isHideNSeekGM": {
-        "0": "HideNSeek",
-        "13": "猎杀模式"
+    "GameMode.Classic": {
+        "0": "[BLANK]",
+        "13": "[BLANK]"
     },
-    "isGuesserGm": {
+    "GameMode.Guesser": {
         "0": "Guesser",
         "13": "赌怪模式"
     },
-    "isPropHuntGM": {
-        "0": "PropHunt",
-        "13": "道具躲猫猫"
+    "GameMode.Anonymous": {
+        "0": "Anonymous",
+        "13": "匿名模式"
     },
     "Credits": {
         "0": "TOU Credits",
@@ -2609,8 +2605,8 @@
         "13": "<size=80%> <color=#FCCE03FF>特别感谢：Spex & 善良的好人 & 天寸梦初 & Imp11</color></size>"
     },
     "creditsString1": {
-        "0": "<align=\"center\"><b>Main Developers</b>\nmxyx0412\n\n<b>GitHub Contributors:</b>\nTianMengLucky, Imp11, FangkuaiYa\n\n<b>Art Team:</b>\nFangkuaiYa, DetLimu, Amen's Grape\n\n<b>Translations:</b>\nZH (Chinese): mxyx0412, Conscience\nEN (English): MamoruKun, Hydra\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles, SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n",
-        "13": "<align=\"center\"><b>The Other Us - Edited贡献者:</b>\n<b>开发组:</b>\n沫夏悠轩    善良的好人\n\n<b>美术组:</b>\n方块    Det黎木   阿门的葡萄\n\n<b>翻译:</b>\nEN：九头蛇\nZH：沫夏悠轩\n\n<b>GitHub贡献者:</b>\n天寸梦初    Imp11\n\n本模组使用了部分[https://github.com/dabao40/TheOtherRolesGMIA]TheOtherRolesGMIA[]的代码，感谢Imp11的支持！\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
+        "0": "<align=\"center\"><b>Main Developers</b>\nmxyx0412, Li-JunHeng, Diamond_hoe123\n\n<b>GitHub Contributors:</b>\nTianMengLucky, Imp11\n\n<b>Art Team:</b>\nFangkuaiYa, DetLimu, Amen's Grape\n\n<b>Translations:</b>\nZH (Chinese): mxyx0412, Conscience\nEN (English): MamoruKun, Hydra\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles, SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n",
+        "13": "<align=\"center\"><b>The Other Us - Edited贡献者:</b>\n<b>开发组:</b>\n沫夏悠轩    冷月潇潇    Diamond_hoe123\n\n<b>美术组:</b>\n方块    Det黎木   阿门的葡萄\n\n<b>翻译:</b>\nEN：MamoruKun, 九头蛇\nZH：沫夏悠轩\n\n<b>GitHub贡献者:</b>\n天寸梦初    Imp11\n\n<b>技术指导</b>\n善良的好人    Slok7565\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
     },
     "WelcomeText": {
         "0": "Welcome to <color=#ff351f><size=120%>TheOtherUs-Edited</size></color>!\n\nCommands (a space is required after the command):\n/r [Role Name] : Get a description of the specified role  \n/m : Use in-game to view the description of your current role\n\nTo view other commands, type: /cmd",
