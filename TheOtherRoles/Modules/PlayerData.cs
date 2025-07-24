@@ -14,7 +14,7 @@ namespace TheOtherRoles.Modules;
 public class PlayerData
 {
     public static PlayerData Local { get; private set; }
-    public static Dictionary<byte, PlayerData> AllPlayerData { get; private set; } = new();
+    public static Dictionary<byte, PlayerData> AllPlayerData = new();
     public static Dictionary<byte, string> AllFriendCode = new();
     public PlayerControl Player { get; private set; }
     public byte PlayerId { get; private set; }
@@ -25,9 +25,9 @@ public class PlayerData
     public int KillCount;
     public Tuple<int, int> TaskCount;
 
-    public RoleType RoleType { get; set; }
+    public RoleType RoleType { get; set; } = RoleType.Crewmate;
     public List<RoleId> RoleHistory { get; set; } = new();
-    public RoleId Role { get; set; }
+    public RoleId Role { get; set; } = RoleId.DefaultRole;
     public List<RoleId> Modifiers { get; set; } = new();
 
     public string PlayerName { get; private set; }
@@ -37,12 +37,27 @@ public class PlayerData
     public CustomDeathReason DeathReason { get; set; } = CustomDeathReason.Null;
     public DateTime DeathTimer { get; set; } = DateTime.MinValue;
     public PlayerControl KilledBy { get; set; }
+    //public string KilledName { get; set; }
 
     public static PlayerData GetPlayerData(PlayerControl player)
     {
         if (player?.Data == null) return null;
         if (AllPlayerData.TryGetValue(player.PlayerId, out var data))
         {
+            return data;
+        }
+        else if (player?.Data != null)
+        {
+            data = new PlayerData
+            {
+                Player = player,
+                PlayerId = player.PlayerId,
+                PlayerName = player.Data.PlayerName,
+                FriendCode = player.Data.FriendCode,
+                PlayerColor = player.Data.ColorName,
+            };
+            AllPlayerData[player.PlayerId] = data;
+            if (player == PlayerControl.LocalPlayer) Local = data;
             return data;
         }
         return null;
@@ -53,7 +68,7 @@ public class PlayerData
         return AllFriendCode.TryGetValue(player.PlayerId, out var code) ? code : "";
     }
 
-    [OnGameStart]
+    [OnGameStart(Attributes.Priority.VeryHigh)]
     public static void Init()
     {
         AllPlayerData = new();
@@ -75,7 +90,7 @@ public class PlayerData
                 PlayerId = player.PlayerId,
                 PlayerName = player.Data.PlayerName,
                 FriendCode = player.Data.FriendCode,
-                PlayerColor = GetPlayerCode(player),
+                PlayerColor = player.Data.ColorName,
             };
             AllPlayerData[player.PlayerId] = data;
         }
@@ -100,13 +115,14 @@ public class PlayerData
     public static void SetDeathReason(PlayerControl player, CustomDeathReason deathReason, PlayerControl killer = null)
     {
         if (player.IsAlive()) return;
-        if (!AllPlayerData.TryGetValue(player.PlayerId, out var target)) return;
+        if (!AllPlayerData.TryGetValue(player.PlayerId, out var data)) return;
 
-        byte playerId = player.PlayerId;
-
-        target.DeathReason = deathReason;
-        target.DeathTimer = DateTime.UtcNow;
-        if (killer != null) target.KilledBy = killer;
+        data.DeathReason = deathReason;
+        data.DeathTimer = DateTime.UtcNow;
+        if (killer != null)
+        {
+            data.KilledBy = killer;
+        }
     }
 
     public static void RpcSetDeathReason(PlayerControl player, CustomDeathReason deathReason, PlayerControl killer)
@@ -133,7 +149,8 @@ public class PlayerData
 
     public class GlobalInfo
     {
-        private const string ApiUrl = "http://localhost:6997/game-data";
+        private const string Web = "https://toue.mxyx.club";
+        private const string ApiUrl = Web;
         private static readonly HttpClient httpClient = new();
 
         public static string HostPlayer;
@@ -150,6 +167,8 @@ public class PlayerData
             EndTime = DateTime.MinValue;
             StartTime = DateTime.UtcNow;
             HostPlayer = GetHostPlayer.Data.PlayerName;
+            RoomCode = GameStartManagerPatch.RoomCode;
+            HostCode = GetHostPlayer.Data.FriendCode;
         }
 
         public static string GetGameId()
@@ -157,15 +176,13 @@ public class PlayerData
             var timePart = StartTime.ToString("HH:mm");
             var rawData = $"{HostCode}:{timePart}";
 
-            using (var sha256 = SHA256.Create())
-            {
-                var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+            using var sha256 = SHA256.Create();
+            var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
 
-                var hexHash = BitConverter.ToString(hashBytes, 0, 4)
-                    .Replace("-", "")
-                    .ToLowerInvariant();
-                return $"{RoomCode}_{hexHash}";
-            }
+            var hexHash = BitConverter.ToString(hashBytes, 0, 4)
+                .Replace("-", "")
+                .ToLowerInvariant();
+            return $"{RoomCode}_{hexHash}";
         }
 
         public static void SaveAllPlayerDataToJson()
@@ -236,7 +253,7 @@ public class PlayerData
                             Progress = $"{p.TaskCount.Item1 / (double)p.TaskCount.Item2:P0}"
                         } : null,
                         p.DeathReason,
-                        p.KilledBy,
+                        KilledBy = p.KilledBy?.Data?.PlayerName ?? "null",
                         DeathTimer = p.DeathTimer.ToString("yyyy-MM-ddTHH:mm:ss"),
                     },
                 }).ToList()
@@ -262,6 +279,7 @@ public class PlayerData
         {
             try
             {
+                if (RoomCode == "Local" || ModOption.DebugMode || EndTime == DateTime.MinValue) return;
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
                 var response = await httpClient.PostAsync(ApiUrl, content).ConfigureAwait(false);
 

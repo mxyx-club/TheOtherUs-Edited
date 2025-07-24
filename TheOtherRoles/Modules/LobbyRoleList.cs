@@ -16,8 +16,8 @@ public static class LobbyRoleInfo
             if (!LobbyBehaviour.Instance || AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started) return;
             try
             {
-                //if (HudManagerStartPatch.roleSummaryButton == null) HudManagerStartPatch.createRoleSummaryButton(__instance);
-                if (HudManagerStartPatch.roleSummaryButton.Timer > 0f) HudManagerStartPatch.roleSummaryButton.Timer = 0f;
+                if (HudManagerStartPatch.roleSummaryButton == null) HudManagerStartPatch.createRoleSummaryButton(__instance);
+                //if (HudManagerStartPatch.roleSummaryButton.Timer > 0f) HudManagerStartPatch.roleSummaryButton.Timer = 0f;
                 HudManagerStartPatch.roleSummaryButton.Update();
                 HudManagerStartPatch.gameModeButton.Update();
             }
@@ -27,7 +27,12 @@ public static class LobbyRoleInfo
 
     public static void RoleSummaryOnClick()
     {
-        if (RolesSummaryUI != null) return;
+        if (RolesSummaryUI != null)
+        {
+            UObject.Destroy(RolesSummaryUI);
+            RolesSummaryUI = null;
+            return;
+        }
 
         var container = new GameObject("RoleSummaryMenuContainer").AddComponent<SpriteRenderer>();
         container.sprite = new ResourceSprite("LobbyRoleInfo.TeamScreen.png", 110f);

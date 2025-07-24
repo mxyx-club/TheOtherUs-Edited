@@ -595,18 +595,25 @@ public class OnGameEndPatch
             foreach (var data in PlayerData.AllPlayerData.Values)
             {
                 if (data?.Player?.Data == null) continue;
-                var info = RoleInfo.getRoleInfoForPlayer(data.Player);
-                data.Role = info.FirstOrDefault(x => x.roleType is RoleType.Crewmate or RoleType.Neutral or RoleType.Impostor)?.roleId ?? RoleId.DefaultRole;
-                data.Modifiers = info.Where(x => x.roleType == RoleType.Modifier).Select(x => x.roleId).ToList();
-                data.RoleType = info.FirstOrDefault().roleType;
                 data.IsWinner = winners.Any(x => x.PlayerId == data.PlayerId);
                 data.TaskCount = TasksHandler.taskInfo(data.Player.Data);
+                var info = RoleInfo.getRoleInfoForPlayer(data.Player);
+                if (info == null || info.Count == 0)
+                {
+                    data.Role = RoleId.DefaultRole;
+                    data.RoleType = RoleType.Error;
+                    data.Modifiers = [];
+                    continue;
+                }
+                data.Role = info.FirstOrDefault(x => x.roleType is RoleType.Crewmate or RoleType.Neutral or RoleType.Impostor)?.roleId ?? RoleId.DefaultRole;
+                data.Modifiers = info.Where(x => x.roleType == RoleType.Modifier).Select(x => x.roleId).ToList();
+                data.RoleType = info.FirstOrDefault()?.roleType ?? RoleType.Crewmate;
             }
             PlayerData.GlobalInfo.SaveAllPlayerDataToJson();
         }
         catch (Exception e)
         {
-            Error($"Failed to set PlayerData: {e.Message}");
+            Error($"Failed to set PlayerData: {e.Message}\n{e.StackTrace}");
         }
 
         Message($"游戏结束 {AdditionalTempData.winCondition}", "OnGameEnd");

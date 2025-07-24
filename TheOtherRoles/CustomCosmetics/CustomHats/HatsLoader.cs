@@ -145,7 +145,7 @@ public class HatsLoader : MonoBehaviour
 
         if (www.isNetworkError || www.isHttpError)
         {
-            Error(www.error);
+            Error($"download {fileName}: {www.error}");
             yield break;
         }
 

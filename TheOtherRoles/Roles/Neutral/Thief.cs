@@ -57,6 +57,9 @@ public static class Thief
         var target = PlayerById(playerId);
         var thief = Thief.thief;
         if (target == null) return;
+
+        if (target.Data.Role.IsImpostor) turnToImpostor(thief);
+
         if (Sheriff.Player.Any(x => x == target)) Sheriff.Player.Add(thief);
         if (Sheriff.formerDeputy == target) Sheriff.formerDeputy = thief;
         if (target == Sheriff.Deputy) Sheriff.Deputy = thief;
@@ -123,12 +126,6 @@ public static class Thief
         {
             Yoyo.yoyo = thief;
             Yoyo.markedLocation = null;
-        }
-        if (target.Data.Role.IsImpostor)
-        {
-            RoleManager.Instance.SetRole(Thief.thief, RoleTypes.Impostor);
-            FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(Thief.thief.killTimer,
-                GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown);
         }
 
         if (target == Werewolf.werewolf)

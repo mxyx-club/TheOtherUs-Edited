@@ -477,7 +477,7 @@ public static class ChatControllerPatch
                             SetRoleType(target, RoleTypes.Crewmate);
 
                         }
-                        RPCProcedure.setRole((byte)roleId, target.PlayerId);
+                        RPCProcedure.setRole(target.PlayerId, (byte)roleId);
                     }
 
                     chat.AddChat(PlayerControl.LocalPlayer, $"Set {target.Data.PlayerName} the role {roleId}");
@@ -660,6 +660,8 @@ public static class ChatControllerPatch
 
         static PlayerControl GetPlayer(string[] args = null)
         {
+            if (args == null || args.Length == 0)
+                return PlayerControl.LocalPlayer;
             if (string.IsNullOrEmpty(args[0]))
                 return PlayerControl.LocalPlayer;
 

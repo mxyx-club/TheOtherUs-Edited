@@ -44,7 +44,7 @@ public enum CustomRPC : byte
     MedicSetShielded,
     ShowBodyGuardFlash,
     ShieldedMurderAttempt,
-    TurnToImpostor,
+    CursedTurn,
     BodyGuardGuardPlayer,
     VeteranAlert,
     ShifterShift,
@@ -236,7 +236,7 @@ public static class RPCProcedure
             var roleId = (byte)reader.ReadPackedUInt32();
             try
             {
-                setRole(roleId, playerId);
+                setRole(playerId, roleId);
             }
             catch (Exception e)
             {
@@ -245,7 +245,7 @@ public static class RPCProcedure
         }
     }
 
-    public static void setRole(byte roleId, byte playerId)
+    public static void setRole(byte playerId, byte roleId)
     {
         var player = PlayerById(playerId);
         switch ((RoleId)roleId)
@@ -490,6 +490,7 @@ public static class RPCProcedure
 
         if (data != null)
         {
+            data.Role = (RoleId)roleId;
             data.RoleHistory.Add((RoleId)roleId);
         }
 
@@ -500,7 +501,7 @@ public static class RPCProcedure
         }*/
     }
 
-    public static void setModifier(byte modifierId, byte playerId, byte flag)
+    public static void setModifier(byte playerId, byte modifierId, byte flag)
     {
         var player = PlayerById(playerId);
         switch ((RoleId)modifierId)
@@ -612,6 +613,11 @@ public static class RPCProcedure
                 Poltergeist.Player = player;
                 break;
         }
+        var data = PlayerData.GetPlayerData(player);
+        if (data != null)
+        {
+            data.RoleHistory.Add((RoleId)roleId);
+        }
     }
 
     public static void HostControl(PlayerControl controller, HostCommand command, MessageReader reader)
@@ -680,7 +686,7 @@ public static class RPCProcedure
                             SetRoleType(target, RoleTypes.Crewmate);
 
                         }
-                        setRole((byte)roleId, target.PlayerId);
+                        setRole(target.PlayerId, (byte)roleId);
                     }
                 }
                 break;
@@ -813,14 +819,6 @@ public static class RPCProcedure
         var target = PlayerById(targetId);
         if (target == null) return;
         LastImpostor.lastImpostor = target;
-    }
-
-    public static void turnToImpostor(byte targetId)
-    {
-        var player = PlayerById(targetId);
-        erasePlayerRoles(player.PlayerId);
-        if (player == Cursed.cursed) Cursed.clearAndReload();
-        Helpers.turnToImpostor(player);
     }
 
     public static void veteranAlert()
@@ -1047,7 +1045,7 @@ public static class RPCProcedure
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
 
         erasePlayerRoles(target.PlayerId);
-        Jackal.Sidekick = target;
+        setRole(targetId, (byte)RoleId.Sidekick);
 
         if (target == PlayerControl.LocalPlayer) SoundEffectsManager.play("jackalSidekick");
         if (HandleGuesser.isGuesserGm && GuesserGM.guesserGamemodeSidekickIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
@@ -1087,7 +1085,8 @@ public static class RPCProcedure
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
 
         erasePlayerRoles(targetId);
-        Pavlovsdogs.pavlovsdogs.Add(target);
+        setRole(targetId, (byte)RoleId.Pavlovsdogs);
+
         if (targetId == PlayerControl.LocalPlayer.PlayerId)
             PlayerControl.LocalPlayer.moveable = true;
         if (target == PlayerControl.LocalPlayer) SoundEffectsManager.play("jackalSidekick");
@@ -2286,8 +2285,8 @@ internal class RPCHandlerPatch
                 RPCProcedure.Mine(reader.ReadInt32(), reader.ReadBytesAndSize(), (float)reader.ReadSingle());
                 break;
 
-            case CustomRPC.TurnToImpostor:
-                RPCProcedure.turnToImpostor(reader.ReadByte());
+            case CustomRPC.CursedTurn:
+                Cursed.TurnToImpostor(reader.ReadByte());
                 break;
 
             case CustomRPC.ThiefStealsRole:
@@ -2396,7 +2395,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.JackalCanSwooper:
-                Jackal.jackalCanSwooper(reader.ReadBoolean());
+                Jackal.canSwoop = reader.ReadBoolean();
                 break;
 
             case CustomRPC.InfoSleuthSetTarget:

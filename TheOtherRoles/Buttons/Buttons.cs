@@ -262,20 +262,12 @@ internal static class HudManagerStartPatch
         catch { }
     }
 
-    public static void createButtonsPostfix(HudManager __instance)
+    public static void createRoleSummaryButton(HudManager __instance)
     {
-        // get map id, or raise error to wait...
-        var mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
-
         roleSummaryButton = new CustomButton(
             () =>
             {
-                if (LobbyRoleInfo.RolesSummaryUI == null) LobbyRoleInfo.RoleSummaryOnClick();
-                else
-                {
-                    UObject.Destroy(LobbyRoleInfo.RolesSummaryUI);
-                    LobbyRoleInfo.RolesSummaryUI = null;
-                }
+                LobbyRoleInfo.RoleSummaryOnClick();
             },
             () => { return PlayerControl.LocalPlayer != null && LobbyBehaviour.Instance; },
             () =>
@@ -294,7 +286,20 @@ internal static class HudManagerStartPatch
             null,
             PositionOffset: new Vector3(0.4f, 3f, 0),
             useGrid: false
-        );
+        )
+        {
+            Timer = 0f,
+            MaxTimer = 0f
+        };
+
+    }
+
+    public static void createButtonsPostfix(HudManager __instance)
+    {
+        // get map id, or raise error to wait...
+        var mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
+
+        createRoleSummaryButton(__instance);
 
         gameModeButton = new CustomButton(
             () =>

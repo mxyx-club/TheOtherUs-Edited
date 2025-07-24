@@ -35,15 +35,13 @@ public class Jackal
     {
         if (AmongUsClient.Instance?.AmHost == true)
         {
-            var chance = canSwoop = rnd.NextDouble() < chanceSwoop;
+            var chance = rnd.NextDouble() < chanceSwoop;
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.JackalCanSwooper);
             writer.Write(chance);
             writer.EndRPC();
-            jackalCanSwooper(chance);
+            canSwoop = chance;
         }
     }
-
-    public static void jackalCanSwooper(bool chance) => canSwoop = chance;
 
     public static void clearAndReload()
     {

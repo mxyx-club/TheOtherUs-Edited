@@ -654,7 +654,7 @@ internal class RoleManagerSelectRolesPatch
         var neutralPlayer = PlayerControl.AllPlayerControls.ToArray().OrderBy(x => Guid.NewGuid()).ToList();
         var crewPlayer = PlayerControl.AllPlayerControls.ToArray().OrderBy(x => Guid.NewGuid()).ToList();
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
-        neutralPlayer.RemoveAll(x => !x.IsNeutral() || x == Doomsayer.doomsayer);
+        neutralPlayer.RemoveAll(x => !x.IsNeutral() || x == Akujo.akujo || x == Doomsayer.doomsayer);
         crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.IsNeutral());
         assignGuesserGamemodeToPlayers(crewPlayer,
             GuesserGM.guesserGamemodeCrewNumber.GetInt());
@@ -722,12 +722,11 @@ internal class RoleManagerSelectRolesPatch
 
         playerRoleMap.Add(new Tuple<byte, byte>(playerId, roleId));
 
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-            (byte)CustomRPC.SetRole, SendOption.Reliable);
-        writer.Write(roleId);
+        var writer = StartRPC(CustomRPC.SetRole);
         writer.Write(playerId);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.setRole(roleId, playerId);
+        writer.Write(roleId);
+        writer.EndRPC();
+        RPCProcedure.setRole(playerId, roleId);
         return playerId;
     }
 
@@ -738,13 +737,12 @@ internal class RoleManagerSelectRolesPatch
         var playerId = playerList[index].PlayerId;
         playerList.RemoveAt(index);
 
-        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-            (byte)CustomRPC.SetModifier, SendOption.Reliable);
-        writer.Write(modifierId);
+        var writer = StartRPC(CustomRPC.SetModifier);
         writer.Write(playerId);
+        writer.Write(modifierId);
         writer.Write(flag);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.setModifier(modifierId, playerId, flag);
+        writer.EndRPC();
+        RPCProcedure.setModifier(playerId, modifierId, flag);
         return playerId;
     }
 

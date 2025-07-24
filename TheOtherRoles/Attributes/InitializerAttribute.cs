@@ -54,18 +54,18 @@ internal class InitializerAttribute<T> : Attribute
         // 見つかった初期化メソッドをpriority順に並べ替えて配列に変換
         allInitializers = initializers.OrderBy(initializer => initializer.priority).Select(initializer => initializer.targetMethod).ToArray();
     }
+}
 
-    public enum Priority
-    {
-        /// <summary>一番最初に実行される</summary>
-        VeryHigh,
-        /// <summary>既定値より前に実行される</summary>
-        High,
-        /// <summary>既定値</summary>
-        Normal,
-        /// <summary>既定値より後に実行される</summary>
-        Low,
-        /// <summary>一番最後に実行される</summary>
-        VeryLow,
-    }
+public enum Priority
+{
+    /// <summary>一番最初に実行される</summary>
+    VeryHigh,
+    /// <summary>既定値より前に実行される</summary>
+    High,
+    /// <summary>既定値</summary>
+    Normal,
+    /// <summary>既定値より後に実行される</summary>
+    Low,
+    /// <summary>一番最後に実行される</summary>
+    VeryLow,
 }

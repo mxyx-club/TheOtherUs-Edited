@@ -1,6 +1,7 @@
 using BepInEx;
 using BepInEx.Logging;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace TheOtherRoles.Modules;
@@ -15,22 +16,20 @@ internal static class Logger
         logSource = Source;
     }
 
-    public static void Info(object text, string Tag = "") => SendLog(text.ToString(), Tag, LogLevel.Info);
-    public static void Message(object text, string Tag = "") => SendLog(text.ToString(), Tag, LogLevel.Message);
-    public static void Warn(object text, string Tag = "") => SendLog(text.ToString(), Tag, LogLevel.Warning);
-    public static void Error(object text, string Tag = "") => SendLog(text.ToString(), Tag, LogLevel.Error);
-    public static void Debug(object text, string Tag = "") => SendLog(text.ToString(), Tag, LogLevel.Debug);
-    public static void Fatal(object text, string Tag = "") => SendLog(text.ToString(), Tag, LogLevel.Fatal);
+    public static void Info(object text, [CallerMemberName] string Tag = "") => SendLog(text.ToString(), Tag, LogLevel.Info);
+    public static void Message(object text, [CallerMemberName] string Tag = "") => SendLog(text.ToString(), Tag, LogLevel.Message);
+    public static void Warn(object text, [CallerMemberName] string Tag = "") => SendLog(text.ToString(), Tag, LogLevel.Warning);
+    public static void Error(object text, [CallerMemberName] string Tag = "") => SendLog(text.ToString(), Tag, LogLevel.Error);
+    public static void Debug(object text, [CallerMemberName] string Tag = "") => SendLog(text.ToString(), Tag, LogLevel.Debug);
+    public static void Fatal(object text, [CallerMemberName] string Tag = "") => SendLog(text.ToString(), Tag, LogLevel.Fatal);
 
     public static void SendLog(string text, string tag = "", LogLevel logLevel = LogLevel.Info)
     {
         if (logSource == null) return;
 
         var time = DateTime.Now.ToString("HH:mm:ss");
-        var prefix = string.IsNullOrEmpty(tag)
-            ? new StackTrace(2, false).GetFrame(0)?.GetMethod()?.Name is string name ? $"[{time}] [{name}]" : $"[{time}]"
-            : $"[{time}] [{tag}]";
-        var logMessage = $"{prefix} {text}";
+        var prefix = string.IsNullOrWhiteSpace(tag) ? "" : $" [{tag}]";
+        var logMessage = $"[{time}]{prefix} {text}";
 
         switch (logLevel)
         {
@@ -44,38 +43,37 @@ internal static class Logger
         }
     }
 
+    public static void FastLog(object @object)
+    {
+        FastLog(LogLevel.Error, @object);
+    }
+
     public static void FastLog(LogLevel errorLevel, object @object)
     {
-        var Logger = logSource;
         var Message = @object as string;
         switch (errorLevel)
         {
             case LogLevel.Message:
-                Logger.LogMessage(Message);
+                logSource.LogMessage(Message);
                 break;
             case LogLevel.Error:
-                Logger.LogError(Message);
+                logSource.LogError(Message);
                 break;
             case LogLevel.Warning:
-                Logger.LogWarning(Message);
+                logSource.LogWarning(Message);
                 break;
             case LogLevel.Fatal:
-                Logger.LogFatal(Message);
+                logSource.LogFatal(Message);
                 break;
             case LogLevel.Info:
-                Logger.LogInfo(Message);
+                logSource.LogInfo(Message);
                 break;
             case LogLevel.Debug:
-                Logger.LogDebug(Message);
+                logSource.LogDebug(Message);
                 break;
             default:
                 System.Console.WriteLine($"[Error] {Message}");
                 break;
         }
-    }
-
-    public static void LogObject(object @object)
-    {
-        FastLog(LogLevel.Error, @object);
     }
 }

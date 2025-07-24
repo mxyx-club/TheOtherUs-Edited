@@ -18,6 +18,7 @@ public enum SabotageTypes
 public enum CustomGamemodes
 {
     Classic,
+    Anonymous
 }
 
 public static class Helpers
@@ -304,7 +305,7 @@ public static class Helpers
 
     public static PlayerControl ImpostorSetTarget()
     {
-        PlayerControl target;
+        PlayerControl target = null;
 
         List<PlayerControl> untargetablePlayers = [];
 
@@ -376,9 +377,9 @@ public static class Helpers
     {
         var roleCouldUse = false;
         if (ModOption.disableSabotage) return false;
-        if (Jackal.canSabotage && (Jackal.jackal.Contains(player) || player == Jackal.Sidekick) && !ModOption.disableSabotage)
+        if (Jackal.canSabotage && (Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) || player == Jackal.Sidekick))
             roleCouldUse = true;
-        if (Pavlovsdogs.canSabotage && (player == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(p => p == player)) && !ModOption.disableSabotage)
+        if (Pavlovsdogs.canSabotage && (player == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(p => p == player)))
             roleCouldUse = true;
         if (player.Data?.Role != null && player.Data.Role.IsImpostor)
             roleCouldUse = true;
@@ -463,14 +464,6 @@ public static class Helpers
         }
     }
 
-    public static void turnToImpostorRPC(PlayerControl player)
-    {
-        var writer = StartRPC(CustomRPC.TurnToImpostor);
-        writer.Write(player.PlayerId);
-        writer.EndRPC();
-        RPCProcedure.turnToImpostor(player.PlayerId);
-    }
-
     public static void SetRoleType(PlayerControl player, RoleTypes roleType)
     {
         try
@@ -498,7 +491,7 @@ public static class Helpers
     public static void turnToImpostor(PlayerControl player)
     {
         player.Data.Role.TeamType = RoleTeamTypes.Impostor;
-        RoleManager.Instance.SetRole(player, RoleTypes.Impostor);
+        SetRoleType(player, RoleTypes.Impostor);
         player.SetKillTimer(ModOption.KillCooldown);
 
         Message("PROOF I AM IMP VANILLA ROLE: " + player.Data.Role.IsImpostor);
@@ -671,25 +664,6 @@ public static class Helpers
         return textStreamReader.ReadToEnd();
     }
 
-    public static List<RoleInfo> allRoleInfos()
-    {
-        var allRoleInfo = new List<RoleInfo>();
-        foreach (var role in RoleInfo.allRoleInfos)
-        {
-            if (role.roleType is RoleType.Modifier or RoleType.Ghost or RoleType.Special) continue;
-            allRoleInfo.Add(role);
-        }
-        return allRoleInfo;
-    }
-
-    public static List<RoleInfo> onlineRoleInfos()
-    {
-        var role = new List<RoleInfo>();
-        role.AddRange(PlayerControl.AllPlayerControls.ToList()
-            .Select(n => RoleInfo.getRoleInfoForPlayer(n, false, false)).SelectMany(x => x));
-        return role;
-    }
-
     public static PlayerControl PlayerById(byte? id)
     {
         if (id == null) return null;
@@ -709,7 +683,7 @@ public static class Helpers
     public static CustomGamemodes SetNextGameMode()
     {
 
-        ModOption.gameMode = (CustomGamemodes)((int)(ModOption.gameMode + 1) % Enum.GetNames(typeof(CustomGamemodes)).Length);
+        ModOption.gameMode = (CustomGamemodes)((int)(ModOption.gameMode + 1) % Enum.GetValues(typeof(CustomGamemodes)).Length);
         MessageWriter writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.ShareGameMode);
         writer.Write((byte)ModOption.gameMode);
         writer.EndRPC();

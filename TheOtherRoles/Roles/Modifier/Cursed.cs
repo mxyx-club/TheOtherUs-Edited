@@ -1,3 +1,5 @@
+using static UnityEngine.GraphicsBuffer;
+
 namespace TheOtherRoles.Roles.Modifier;
 
 public static class Cursed
@@ -10,5 +12,13 @@ public static class Cursed
     {
         cursed = null;
         hideModifier = CustomOptionHolder.modifierHideCursed.GetBool();
+    }
+
+    public static void TurnToImpostor(byte playerId)
+    {
+        var player = PlayerById(playerId);
+        RPCProcedure.erasePlayerRoles(playerId);
+        if (player == cursed) clearAndReload();
+        turnToImpostor(player);
     }
 }

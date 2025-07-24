@@ -29,7 +29,7 @@ public static class CredentialsPatch
             var position = __instance.GetComponent<AspectPosition>();
 
 
-            var gameModeText = ModOption.gameMode.ToString().Translate();
+            var gameModeText = $"GameMode.{ModOption.gameMode}".Translate();
 
             if (ModOption.DebugMode) gameModeText += "(Debug Mode)";
             if (gameModeText != "") gameModeText = Cs(Color.yellow, gameModeText) + "\n";

@@ -61,6 +61,29 @@ public static class Doomsayer
         }
     }
 
+    public static List<RoleInfo> allRoleInfos()
+    {
+        var allRoleInfo = new List<RoleInfo>();
+        foreach (var role in RoleInfo.allRoleInfos)
+        {
+            if (role.roleType is RoleType.Modifier or RoleType.Ghost or RoleType.Special) continue;
+            allRoleInfo.Add(role);
+        }
+        return allRoleInfo;
+    }
+
+    public static List<RoleInfo> onlineRoleInfos()
+    {
+        var role = new List<RoleInfo>();
+        role.AddRange(PlayerControl.AllPlayerControls.ToList()
+            .Select(n => RoleInfo.getRoleInfoForPlayer(n, false, false)).SelectMany(x => x));
+        return role;
+    }
+
+    public static List<RoleInfo> selectRoleType()
+    {
+        return null;
+    }
     public static void clearAndReload()
     {
         doomsayer = null;

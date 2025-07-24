@@ -258,7 +258,10 @@ public static class RoleHelpers
 
         if (Cursed.cursed != null && Cursed.cursed == target && killer.Data.Role.IsImpostor)
         {
-            turnToImpostorRPC(target);
+            var writer = StartRPC(CustomRPC.CursedTurn);
+            writer.Write(target.PlayerId);
+            writer.EndRPC();
+            Cursed.TurnToImpostor(target.PlayerId);
 
             CustomButton.SetKillTimer();
             return false;

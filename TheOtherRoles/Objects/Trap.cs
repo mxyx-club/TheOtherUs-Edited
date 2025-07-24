@@ -71,40 +71,40 @@ public class Trap
         }
     }
 
-    public static void triggerTrap(byte playerId, byte trapId)
+    public static void triggerTrap(byte targetId, byte trapId)
     {
         var t = traps.FirstOrDefault(x => x.instanceId == trapId);
-        var player = PlayerById(playerId);
-        if (Trapper.trapper == null || t == null || player == null) return;
+        var target = PlayerById(targetId);
+        if (Trapper.trapper == null || t == null || t.trappedPlayer.Contains(target) || target == null) return;
         var localIsTrapper = PlayerControl.LocalPlayer.PlayerId == Trapper.trapper.PlayerId;
-        trapPlayerIdMap.TryAdd(playerId, t);
+        trapPlayerIdMap.TryAdd(targetId, t);
         t.usedCount++;
         t.triggerable = false;
-        if (playerId == PlayerControl.LocalPlayer.PlayerId || playerId == Trapper.trapper.PlayerId)
+        if (targetId == PlayerControl.LocalPlayer.PlayerId || targetId == Trapper.trapper.PlayerId)
         {
             t.trap.SetActive(true);
             SoundEffectsManager.play("trapperTrap");
         }
 
-        player.moveable = false;
-        player.NetTransform.Halt();
-        Trapper.playersOnMap.Add(player);
+        target.moveable = false;
+        target.NetTransform.Halt();
+        Trapper.playersOnMap.Add(target);
         if (localIsTrapper) t.arrow.arrow.SetActive(true);
 
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Trapper.trapDuration, new Action<float>(p =>
         {
             if (p == 1f)
             {
-                player.moveable = true;
-                Trapper.playersOnMap.RemoveAll(x => x == player);
-                if (trapPlayerIdMap.ContainsKey(playerId)) trapPlayerIdMap.Remove(playerId);
+                target.moveable = true;
+                Trapper.playersOnMap.RemoveAll(x => x == target);
+                if (trapPlayerIdMap.ContainsKey(targetId)) trapPlayerIdMap.Remove(targetId);
                 t.arrow.arrow.SetActive(false);
             }
         })));
 
         if (t.usedCount == t.neededCount) t.revealed = true;
 
-        t.trappedPlayer.Add(player);
+        t.trappedPlayer.Add(target);
         t.triggerable = true;
 
         // Add trapped Info into Trapper chat

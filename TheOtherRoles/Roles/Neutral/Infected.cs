@@ -60,7 +60,7 @@ public class Infected
             }
         }
         RPCProcedure.erasePlayerRoles(targetId);
-        Player.Add(target);
+        RPCProcedure.setRole(targetId, (byte)RoleId.Infected);
         CreatedCount = count;
     }
 

@@ -32,7 +32,7 @@ internal class RoleDraft
     private class ShowRolePatch
     {
         [HarmonyPostfix]
-        public static void Postfix(IntroCutscene __instance, ref Il2CppSystem.Collections.IEnumerator __result)
+        public static void ShowTeamPostfix(IntroCutscene __instance, ref Il2CppSystem.Collections.IEnumerator __result)
         {
             if (!isEnabled) return;
             var newEnumerator = new PatchedEnumerator()
@@ -427,7 +427,7 @@ internal class RoleDraft
     public static void receivePick(byte playerId, byte roleId, byte flag = 0)
     {
         if (!isEnabled) return;
-        RPCProcedure.setRole(roleId, playerId);
+        RPCProcedure.setRole(playerId, roleId);
         alreadyPicked.Add(roleId);
         playerRoles.TryAdd(playerId, roleId);
         var isRandom = flag > 0;

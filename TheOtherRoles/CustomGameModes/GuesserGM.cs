@@ -63,7 +63,7 @@ internal class GuesserGM
     public static void AddOptions()
     {
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
-        guesserEnabled = CustomOption.Create(2000, CustomOptionType.Guesser, "isGuesserGm", false, null, true);
+        guesserEnabled = CustomOption.Create(2000, CustomOptionType.Guesser, "guesserEnabled", false, null, true);
         guesserGamemodeCrewNumber = CustomOption.Create(2001, CustomOptionType.Guesser, Cs(Color.yellow, "guesserGamemodeCrewNumber"), 2f, 0f, 15f, 1f, guesserEnabled, true);
         guesserGamemodeNeutralNumber = CustomOption.Create(2002, CustomOptionType.Guesser, Cs(Color.yellow, "guesserGamemodeNeutralNumber"), 2f, 0f, 15f, 1f, guesserEnabled);
         guesserGamemodeImpNumber = CustomOption.Create(2003, CustomOptionType.Guesser, Cs(Color.yellow, "guesserGamemodeImpNumber"), 2f, 0f, 15f, 1f, guesserEnabled);

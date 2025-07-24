@@ -724,7 +724,7 @@ public static class MurderPlayerPatch
                 writer.Write((byte)state);
                 writer.EndRPC();
                 SchrodingersCat.State = state;
-                HudManagerStartPatch.schrodingersCatKillButton.Timer = HudManagerStartPatch.schrodingersCatKillButton.MaxTimer;
+                HudManagerStartPatch.schrodingersCatKillButton.Timer = HudManagerStartPatch.schrodingersCatKillButton.MaxTimer * 0.66f;
             }
 
             if (PlayerControl.LocalPlayer == __instance)
