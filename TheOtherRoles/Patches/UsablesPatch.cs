@@ -1,4 +1,3 @@
-using AmongUs.GameOptions;
 using PowerTools;
 using static TheOtherRoles.Options.ModOption;
 
@@ -351,6 +350,14 @@ internal class EmergencyMinigameUpdatePatch
     private static bool CanCallEmergency(out string statusText)
     {
         statusText = string.Empty;
+
+        if (CustomOptionHolder.TheFungleMushroomMixupOption.GetBool() &&
+            CustomOptionHolder.TheFungleMushroomMixupCantOpenMeeting.GetBool() &&
+            PlayerControl.LocalPlayer.IsMushroomMixupActive())
+        {
+            statusText = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.EmergencyDuringCrisis);
+            return false;
+        }
 
         if (Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer && !Swapper.canCallEmergency)
         {

@@ -1,5 +1,3 @@
-using static UnityEngine.GraphicsBuffer;
-
 namespace TheOtherRoles.Roles.Modifier;
 
 public static class Cursed

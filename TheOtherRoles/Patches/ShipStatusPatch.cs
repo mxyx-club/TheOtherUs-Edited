@@ -3,8 +3,23 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch(typeof(ShipStatus))]
 public class ShipStatusPatch
 {
+    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Start)), HarmonyPostfix]
+    public static void ShipStatusStartPrefix(ShipStatus __instance)
+    {
+        if (LobbyRoleInfo.RolesSummaryUI != null) LobbyRoleInfo.RolesSummaryUI.SetActive(false);
+
+        if (isFungle)
+        {
+            var fungleShipStatus = __instance.CastFast<FungleShipStatus>();
+            if (CustomOptionHolder.TheFungleMushroomMixupOption.GetBool())
+            {
+                fungleShipStatus.specialSabotage.secondsForAutoHeal = CustomOptionHolder.TheFungleMushroomMixupTime.GetFloat();
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius)), HarmonyPrefix]
-    public static bool Prefix(ref float __result, ShipStatus __instance, [HarmonyArgument(0)] GameData.PlayerInfo player)
+    public static bool CalculateLightPrefix(ref float __result, ShipStatus __instance, [HarmonyArgument(0)] GameData.PlayerInfo player)
     {
         if (!__instance.Systems.ContainsKey(SystemTypes.Electrical) || IsHideNSeek) return true;
 
@@ -96,7 +111,7 @@ public class ShipStatusPatch
     }
 
     [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.IsGameOverDueToDeath)), HarmonyPostfix]
-    public static void Postfix2(ShipStatus __instance, ref bool __result)
+    public static void IsGameOverDueToDeathPostfix(ShipStatus __instance, ref bool __result)
     {
         __result = false;
     }

@@ -1,5 +1,6 @@
 using AmongUs.GameOptions;
 using TheOtherRoles.Attributes;
+using TheOtherRoles.Mode;
 using static TheOtherRoles.Modules.SimpleTable;
 
 namespace TheOtherRoles.Patches;
@@ -70,29 +71,13 @@ internal static class AdditionalTempData
     // Should be implemented using a proper GameOverReason in the future
     public static WinCondition winCondition = WinCondition.Default;
     public static List<WinCondition> additionalWinConditions = new();
-    public static List<PlayerRoleInfo> playerRoles = new();
-    public static float timer;
     public static string GameEndString = "";
 
     public static void clear()
     {
         GameEndString = "";
-        playerRoles.Clear();
         additionalWinConditions.Clear();
         winCondition = WinCondition.Default;
-        timer = 0;
-    }
-
-    internal class PlayerRoleInfo
-    {
-        public string PlayerName { get; set; }
-        public List<RoleInfo> Roles { get; set; }
-        public string RoleNames { get; set; }
-        public int TasksCompleted { get; set; }
-        public int TasksTotal { get; set; }
-        public bool IsGuesser { get; set; }
-        public int? Kills { get; set; }
-        public bool IsAlive { get; set; }
     }
 }
 
@@ -137,7 +122,9 @@ public class OnGameEndPatch
 
         foreach (var p in AllPlayers)
         {
-            var playerName = Cs(p.IsAlive() ? Color.white : new Color(.7f, .7f, .7f), p.Data.PlayerName);
+            var data = PlayerData.GetPlayerData(p);
+            var playerName = Cs(p.IsAlive() ? Color.white : new Color(0.7f, 0.7f, 0.7f), data.PlayerName);
+            if (Anonymous.IsEnabled) playerName += data.PlayerColor;
 
             var roles = RoleInfo.GetRolesString(p, true, true, true);
 
@@ -152,29 +139,6 @@ public class OnGameEndPatch
             table.AddRow(playerName, roles, taskInfo, status);
         }
         AdditionalTempData.GameEndString = table.ToString();
-
-        foreach (var player in AllPlayers)
-        {
-            var roles = RoleInfo.getRoleInfoForPlayer(player);
-            var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(player.Data);
-            var isGuesser = HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(player.PlayerId);
-            int? killCount = PlayerData.GetKillCount(player);
-            if (killCount == 0 &&
-                !(killRole.Contains(RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault())
-                 || player.Data.Role.IsImpostor)) killCount = null;
-            var roleString = RoleInfo.GetRolesString(player, true, true, true, false);
-            AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo
-            {
-                PlayerName = player.Data.PlayerName,
-                Roles = roles,
-                RoleNames = roleString,
-                TasksTotal = tasksTotal,
-                TasksCompleted = tasksCompleted,
-                IsGuesser = isGuesser,
-                Kills = killCount,
-                IsAlive = player.IsAlive()
-            });
-        }
 
         // Remove Jester, Arsonist, Vulture, Jackal, former Jackals and Sidekick from winners (if they win, they'll be readded)
         var notWinners = new List<PlayerControl>();
@@ -214,7 +178,7 @@ public class OnGameEndPatch
             notWinners.Add(Akujo.honmei);
 
         var isCanceled = gameOverReason == (GameOverReason)CustomGameOverReason.Canceled;
-        var everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
+        var everyoneDead = PlayerData.AllPlayerData.Values.All(x => x.IsDead);
         var miniLose = gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
         var jesterWin = gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
         var witnessWin = gameOverReason == (GameOverReason)CustomGameOverReason.WitnessWin;
@@ -590,26 +554,28 @@ public class OnGameEndPatch
 
         try
         {
-            if (!AmongUsClient.Instance.AmHost) return;
-            PlayerData.GlobalInfo.WinCondition = AdditionalTempData.winCondition;
-            foreach (var data in PlayerData.AllPlayerData.Values)
+            if (AmongUsClient.Instance.AmHost)
             {
-                if (data?.Player?.Data == null) continue;
-                data.IsWinner = winners.Any(x => x.PlayerId == data.PlayerId);
-                data.TaskCount = TasksHandler.taskInfo(data.Player.Data);
-                var info = RoleInfo.getRoleInfoForPlayer(data.Player);
-                if (info == null || info.Count == 0)
+                PlayerData.GlobalInfo.WinCondition = AdditionalTempData.winCondition;
+                foreach (var data in PlayerData.AllPlayerData.Values)
                 {
-                    data.Role = RoleId.DefaultRole;
-                    data.RoleType = RoleType.Error;
-                    data.Modifiers = [];
-                    continue;
+                    if (data?.Player?.Data == null) continue;
+                    data.IsWinner = winners.Any(x => x.PlayerId == data.PlayerId);
+                    data.TaskCount = TasksHandler.taskInfo(data.Player.Data);
+                    var info = RoleInfo.getRoleInfoForPlayer(data.Player);
+                    if (info == null || info.Count == 0)
+                    {
+                        data.RoleId = RoleId.DefaultRole;
+                        data.RoleType = RoleType.Error;
+                        data.Modifiers = [];
+                        continue;
+                    }
+                    data.RoleId = info.FirstOrDefault(x => x.roleType is RoleType.Crewmate or RoleType.Neutral or RoleType.Impostor)?.roleId ?? RoleId.DefaultRole;
+                    data.Modifiers = info.Where(x => x.roleType == RoleType.Modifier).Select(x => x.roleId).ToList();
+                    data.RoleType = info.FirstOrDefault()?.roleType ?? RoleType.Crewmate;
                 }
-                data.Role = info.FirstOrDefault(x => x.roleType is RoleType.Crewmate or RoleType.Neutral or RoleType.Impostor)?.roleId ?? RoleId.DefaultRole;
-                data.Modifiers = info.Where(x => x.roleType == RoleType.Modifier).Select(x => x.roleId).ToList();
-                data.RoleType = info.FirstOrDefault()?.roleType ?? RoleType.Crewmate;
+                PlayerData.GlobalInfo.SaveAllPlayerDataToJson();
             }
-            PlayerData.GlobalInfo.SaveAllPlayerDataToJson();
         }
         catch (Exception e)
         {
@@ -665,10 +631,10 @@ public class EndGameManagerSetUpPatch
             poolablePlayer.cosmetics.nameText.transform.localPosition = localPosition;
             poolablePlayer.cosmetics.nameText.text = winningPlayerData2.PlayerName;
 
-            foreach (var roles in from data in AdditionalTempData.playerRoles
+            foreach (var roles in from data in PlayerData.AllPlayerData.Values
                                   where data.PlayerName == winningPlayerData2.PlayerName
                                   select poolablePlayer.cosmetics.nameText.text +=
-                         $"\n{string.Join("\n", data.Roles.Select(x => Cs(x.color, x.Name)))}")
+                         $"\n{Cs(data?.RoleInfo?.color ?? Color.white, data?.RoleInfo?.Name ?? "NULL")}")
             {
             }
         }

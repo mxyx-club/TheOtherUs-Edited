@@ -1,4 +1,5 @@
 using AmongUs.GameOptions;
+using TheOtherRoles.Mode;
 
 namespace TheOtherRoles.Modules;
 
@@ -271,7 +272,25 @@ public static class CrowdedPlayer
         internal MeetingHud meetingHud = null!;
 
         [HideFromIl2Cpp]
-        public IEnumerable<PlayerVoteArea> Targets => meetingHud.playerStates.OrderBy(p => p.AmDead).ThenBy(p => p.TargetPlayerId);
+        public IEnumerable<PlayerVoteArea> Targets => GetSortedPlayerStates();
+
+        private IEnumerable<PlayerVoteArea> GetSortedPlayerStates()
+        {
+            var states = meetingHud.playerStates;
+
+            if (Anonymous.IsEnabled)
+            {
+                return states
+                    .OrderBy(p => p.AmDead)
+                    .ThenBy(p => PlayerData.ModId.TryGetValue(p.TargetPlayerId, out var uid) ? uid : 24);
+            }
+            else
+            {
+                return states
+                    .OrderBy(p => p.AmDead)
+                    .ThenBy(p => p.TargetPlayerId);
+            }
+        }
 
         public override int MaxPageIndex => (Targets.Count() - 1) / MaxPerPage;
 

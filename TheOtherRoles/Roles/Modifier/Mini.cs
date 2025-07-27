@@ -9,29 +9,52 @@ public static class Mini
 
     public static float growingUpDuration = 400f;
     public static bool isGrowingUpInMeeting = true;
-    public static DateTime timeOfGrowthStart = DateTime.UtcNow;
-    public static DateTime timeOfMeetingStart = DateTime.UtcNow;
-    public static float ageOnMeetingStart;
     public static bool triggerMiniLose;
 
-    public static float Multiplier => mini != null && PlayerControl.LocalPlayer == mini ? isGrownUp() ? 0.66f : 2f : 1f;
+    public static float accumulatedGrowthTime;
+    private static float lastUpdateTime = -1f;
+
+    public static bool isGrownUp => growingProgress == 1f;
+    public static float Age => Mathf.Clamp01(growingProgress) * 18f;
+    public static float Multiplier => mini != null && PlayerControl.LocalPlayer == mini ? isGrownUp ? 0.66f : 2f : 1f;
+    public static float growingProgress => Mathf.Clamp01(accumulatedGrowthTime / growingUpDuration);
+
     public static void clearAndReload()
     {
         mini = null;
         triggerMiniLose = false;
         growingUpDuration = CustomOptionHolder.modifierMiniGrowingUpDuration.GetFloat();
         isGrowingUpInMeeting = CustomOptionHolder.modifierMiniGrowingUpInMeeting.GetBool();
-        timeOfGrowthStart = DateTime.UtcNow;
+        accumulatedGrowthTime = 0f;
+        lastUpdateTime = -1f;
     }
 
-    public static float growingProgress()
+    public static void Update()
     {
-        var timeSinceStart = (float)(DateTime.UtcNow - timeOfGrowthStart).TotalMilliseconds;
-        return Mathf.Clamp(timeSinceStart / (growingUpDuration * 1000), 0f, 1f);
-    }
+        if (mini == null) return;
+        float currentTime = Time.time;
 
-    public static bool isGrownUp()
-    {
-        return growingProgress() == 1f;
+        if (lastUpdateTime < 0f)
+        {
+            lastUpdateTime = currentTime;
+            return;
+        }
+
+        if (!isGrowingUpInMeeting && InMeeting)
+        {
+            lastUpdateTime = currentTime;
+            return;
+        }
+
+        float delta = currentTime - lastUpdateTime;
+        lastUpdateTime = currentTime;
+
+        accumulatedGrowthTime += delta;
+
+        if (accumulatedGrowthTime > growingUpDuration)
+        {
+            accumulatedGrowthTime = growingUpDuration;
+        }
+
     }
 }

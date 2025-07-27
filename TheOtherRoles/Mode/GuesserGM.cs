@@ -1,4 +1,4 @@
-namespace TheOtherRoles.CustomGameModes;
+namespace TheOtherRoles.Mode;
 
 internal class GuesserGM
 {

@@ -2,7 +2,7 @@
 using AmongUs.GameOptions;
 using PowerTools;
 using TheOtherRoles.Attributes;
-using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Mode;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 using static TheOtherRoles.Buttons.HudManagerStartPatch;
@@ -204,7 +204,7 @@ public static class RPCProcedure
             {
                 var optionId = reader.ReadPackedUInt32();
                 var selection = reader.ReadPackedUInt32();
-                var option = CustomOption.options.First(option => option.id == (int)optionId);
+                var option = CustomOption.Options.First(option => option.Id == (int)optionId);
                 option.updateSelection((int)selection);
             }
         }
@@ -216,7 +216,7 @@ public static class RPCProcedure
 
     public static void shareGameMode(byte gm)
     {
-        gameMode = (CustomGamemodes)gm;
+        GameMode = (CustomGameModes)gm;
     }
 
     public static void stopStart(byte playerId)
@@ -490,7 +490,7 @@ public static class RPCProcedure
 
         if (data != null)
         {
-            data.Role = (RoleId)roleId;
+            data.RoleId = (RoleId)roleId;
             data.RoleHistory.Add((RoleId)roleId);
         }
 
@@ -575,7 +575,7 @@ public static class RPCProcedure
                 break;
             case RoleId.Mini:
                 Mini.mini = player;
-                Mini.timeOfGrowthStart = DateTime.UtcNow;
+                Mini.accumulatedGrowthTime = 0;
                 break;
             case RoleId.Giant:
                 Giant.giant = player;

@@ -9,7 +9,7 @@ public class HudGrid : MonoBehaviour
         ClassInjector.RegisterTypeInIl2Cpp<HudGrid>();
     }
 
-    public List<Il2CppArgument<HudContent>>[] Contents = { new(), new() };
+    public List<Il2CppArgument<HudContent>>[] Contents = [new(), new()];
     //private Transform ButtonsHolder = null!;
     private Transform StaticButtonsHolder = null!;
 
@@ -35,15 +35,15 @@ public class HudGrid : MonoBehaviour
 
         AddVanillaButtons(HudManager.Instance.UseButton.gameObject, 1000);
         AddVanillaButtons(HudManager.Instance.PetButton.gameObject, 1000);
-        AddVanillaButtons(HudManager.Instance.ImpostorVentButton.gameObject, 997);
-        AddVanillaButtons(HudManager.Instance.ReportButton.gameObject, 999);
-        AddVanillaButtons(HudManager.Instance.SabotageButton.gameObject, 998);
-        AddVanillaButtons(HudManager.Instance.AbilityButton.gameObject, 30);
-        AddVanillaButtons(HudManager.Instance.KillButton.gameObject, 50).MarkAsKillButtonContent();
-
+        AddVanillaButtons(HudManager.Instance.ReportButton.gameObject, 995);
+        AddVanillaButtons(HudManager.Instance.SabotageButton.gameObject, 990);
+        AddVanillaButtons(HudManager.Instance.ImpostorVentButton.gameObject, 980);
+        AddVanillaButtons(HudManager.Instance.AbilityButton.gameObject, 300);
+        AddVanillaButtons(HudManager.Instance.KillButton.gameObject, 500).MarkAsKillButtonContent();
 
         //ベントボタンにクールダウンテキストを設定
-        HudManager.Instance.ImpostorVentButton.cooldownTimerText = Instantiate(HudManager.Instance.KillButton.cooldownTimerText, HudManager.Instance.ImpostorVentButton.transform);
+        /*HudManager.Instance.ImpostorVentButton.cooldownTimerText =
+            Instantiate(HudManager.Instance.KillButton.cooldownTimerText, HudManager.Instance.ImpostorVentButton.transform);*/
     }
 
     public void LateUpdate()
@@ -123,7 +123,7 @@ public class HudContent : MonoBehaviour
     public int SubPriority { get; private set; }
 
     private bool isLeftSide;
-    private bool isDirty = true;
+    //private bool isDirty = true;
     public bool OccupiesLine;
     public bool IsStaticContent;
     public Func<bool> ActiveFunc;
@@ -152,7 +152,7 @@ public class HudContent : MonoBehaviour
     }
     public HudContent SetPriority(int priority)
     {
-        this.Priority = priority;
+        Priority = priority;
         return this;
     }
     public HudContent UpdateSubPriority()
@@ -169,7 +169,7 @@ public class HudContent : MonoBehaviour
     public void OnDisable()
     {
         CurrentPos = new Vector2(-1, -1);
-        isDirty = true;
+        //isDirty = true;
     }
 
     public void Start()
@@ -180,7 +180,7 @@ public class HudContent : MonoBehaviour
     public void LateUpdate()
     {
         if (CurrentPos.x < 0) return;
-        if (isDirty)
+        /*if (isDirty)
         {
             transform.localPosition = ToLocalPos;
             isDirty = false;
@@ -189,7 +189,9 @@ public class HudContent : MonoBehaviour
         {
             var diff = ToLocalPos - transform.localPosition;
             transform.localPosition += diff * Time.deltaTime * 5.2f;
-        }
+        }*/
+        transform.localPosition = ToLocalPos;
+        //isDirty = false;
     }
 
     public static HudContent InstantiateContent(string name, bool isLeftSide = true, bool occupiesLine = false, bool asKillButtonContent = false, bool isStaticContent = false)

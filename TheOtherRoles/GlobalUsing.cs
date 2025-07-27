@@ -37,5 +37,6 @@ global using static TheOtherRoles.Modules.ModTranslation;
 global using static TheOtherRoles.Roles.RoleHelpers;
 global using ISystem = Il2CppSystem.Collections.Generic;
 global using Main = TheOtherRoles.TheOtherRolesPlugin;
+global using SRandom = System.Random;
 global using UObject = UnityEngine.Object;
 global using URandom = UnityEngine.Random;

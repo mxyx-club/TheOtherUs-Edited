@@ -1,5 +1,4 @@
-using AmongUs.GameOptions;
-using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Mode;
 
 namespace TheOtherRoles.Roles.Neutral;
 

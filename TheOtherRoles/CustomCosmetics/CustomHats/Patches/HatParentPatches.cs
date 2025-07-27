@@ -1,4 +1,4 @@
-﻿#if !MXYX_CLUB
+#if !MXYX_CLUB
 using System.IO;
 using PowerTools;
 

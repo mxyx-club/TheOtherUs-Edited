@@ -852,6 +852,9 @@ internal static class HudManagerStartPatch
                 {
                     if ((task.TaskType is TaskTypes.FixLights or TaskTypes.RestoreOxy or TaskTypes.ResetReactor
                             or TaskTypes.ResetSeismic or TaskTypes.FixComms or TaskTypes.StopCharles)
+                            || (CustomOptionHolder.TheFungleMushroomMixupOption.GetBool() &&
+                                CustomOptionHolder.TheFungleMushroomMixupCantOpenMeeting.GetBool() &&
+                                PlayerControl.LocalPlayer.IsMushroomMixupActive())
                             || (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
                         sabotageActive = true;
                 }
@@ -894,6 +897,9 @@ internal static class HudManagerStartPatch
                 {
                     if (((task.TaskType is TaskTypes.FixLights or TaskTypes.RestoreOxy or TaskTypes.ResetReactor
                             or TaskTypes.ResetSeismic or TaskTypes.FixComms or TaskTypes.StopCharles)
+                            || (CustomOptionHolder.TheFungleMushroomMixupOption.GetBool() &&
+                                CustomOptionHolder.TheFungleMushroomMixupCantOpenMeeting.GetBool() &&
+                                PlayerControl.LocalPlayer.IsMushroomMixupActive())
                             || (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)) && !ButtonBarry.SabotageRemoteMeetings)
                         sabotageActive = true;
                 }
@@ -1733,7 +1739,7 @@ internal static class HudManagerStartPatch
                 var untargetablePlayers = new List<PlayerControl>();
                 untargetablePlayers.AddRange(Jackal.jackal);
                 if (Jackal.Sidekick != null) untargetablePlayers.Add(Jackal.Sidekick);
-                if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
+                if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
                 Jackal.currentTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
 
@@ -1797,7 +1803,7 @@ internal static class HudManagerStartPatch
             {
 
                 var untargetablePlayers = new List<PlayerControl>();
-                if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
+                if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
                 if (SchrodingersCat.State == SchrodingersCat.CatState.Swooper && SchrodingersCat.Player.IsAlive())
                     untargetablePlayers.Add(SchrodingersCat.Player);
                 Swooper.currentTarget = SetTarget(untarget: untargetablePlayers);
@@ -1883,7 +1889,7 @@ internal static class HudManagerStartPatch
                     untargetablePlayers.Add(Pavlovsdogs.pavlovsowner);
                 if (SchrodingersCat.State == SchrodingersCat.CatState.Pavlovsowner && SchrodingersCat.Player.IsAlive())
                     untargetablePlayers.Add(SchrodingersCat.Player);
-                if (Mini.mini != null && !Mini.isGrownUp())
+                if (Mini.mini != null && !Mini.isGrownUp)
                     untargetablePlayers.Add(Mini.mini);
 
                 untargetablePlayers.AddRange(Pavlovsdogs.pavlovsdogs);
@@ -1932,7 +1938,7 @@ internal static class HudManagerStartPatch
             {
                 pavlovsownerCreateDogButton.UsesCount = Pavlovsdogs.createDogNum;
                 var untargetablePlayers = new List<PlayerControl>();
-                if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
+                if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
                 untargetablePlayers.AddRange(Pavlovsdogs.pavlovsdogs);
                 Pavlovsdogs.currentTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Pavlovsdogs.currentTarget, Palette.ImpostorRed);
@@ -2294,7 +2300,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var untargetablePlayers = new List<PlayerControl>();
-                if (Mini.mini != null && !Mini.isGrownUp()) untargetablePlayers.Add(Mini.mini);
+                if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
                 Pelican.currentTarget = SetTarget(untarget: untargetablePlayers);
                 SetPlayerOutline(Pelican.currentTarget, Palette.ImpostorRed);
 
@@ -3957,7 +3963,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var untargetables = new List<PlayerControl>();
-                if (Mini.mini != null && !Mini.isGrownUp()) untargetables.Add(Mini.mini);
+                if (Mini.mini != null && !Mini.isGrownUp) untargetables.Add(Mini.mini);
                 Thief.currentTarget = SetTarget(untarget: untargetables);
                 SetPlayerOutline(Thief.currentTarget, Thief.color);
 
@@ -4690,7 +4696,7 @@ internal static class HudManagerStartPatch
                 var target = Infected.currentTarget;
                 if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
 
-                if (target == Mini.mini && !Mini.isGrownUp()) return;
+                if (target == Mini.mini && !Mini.isGrownUp) return;
 
                 Infected.KillPlayer(PlayerControl.LocalPlayer, target);
 

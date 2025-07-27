@@ -1,5 +1,3 @@
-using static TheOtherRoles.Buttons.HudManagerStartPatch;
-
 namespace TheOtherRoles.Roles.Impostor;
 
 public static class Mimic

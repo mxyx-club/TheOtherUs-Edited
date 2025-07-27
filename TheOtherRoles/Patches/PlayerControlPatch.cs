@@ -70,7 +70,7 @@ public static class PlayerControlFixedUpdatePatch
         if (Mini.mini == null || isCamoComms || Camouflager.camouflageTimer > 0f ||
         MushroomSabotageActive || (Mini.mini == Morphling.morphling && Morphling.morphTimer > 0)) return;
 
-        var growingProgress = Mini.growingProgress();
+        var growingProgress = Mini.growingProgress;
         var scale = (growingProgress * 0.35f) + 0.35f;
         var correctedColliderRadius = Mini.defaultColliderRadius * 0.7f / scale;
         // scale / 0.7f is the factor by which we decrease the player size, hence we need to increase the collider size by 0.7f / scale
@@ -396,25 +396,6 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
-    private static void bloodyUpdate()
-    {
-        if (!Bloody.active.Any()) return;
-        foreach (var entry in new Dictionary<byte, float>(Bloody.active))
-        {
-            var player = PlayerById(entry.Key);
-            var bloodyPlayer = PlayerById(Bloody.bloodyKillerMap[player.PlayerId]);
-
-            Bloody.active[entry.Key] = entry.Value - Time.fixedDeltaTime;
-            if (entry.Value <= 0 || player.Data.IsDead)
-            {
-                Bloody.active.Remove(entry.Key);
-                continue; // Skip the creation of the next blood drop, if the killer is dead or the time is up
-            }
-
-            _ = new Bloodytrail(player, bloodyPlayer);
-        }
-    }
-
 
     public static void trapperUpdate()
     {
@@ -500,8 +481,6 @@ public static class PlayerControlFixedUpdatePatch
             trapperUpdate();
             // Akojo
             akujoUpdate();
-            // Bloody
-            bloodyUpdate();
             // Chameleon (invis stuff, timers)
             Chameleon.update();
         }
@@ -524,7 +503,7 @@ internal class PlayerPhysicsWalkPlayerToPatch
         correctOffset = correctOffset && !(Mini.mini == Morphling.morphling && Morphling.morphTimer > 0f);
         if (correctOffset)
         {
-            var currentScaling = (Mini.growingProgress() + 1) * 0.5f;
+            var currentScaling = (Mini.growingProgress + 1) * 0.5f;
             __instance.myPlayer.Collider.offset = currentScaling * Mini.defaultColliderOffset * Vector2.down;
         }
     }
@@ -538,6 +517,7 @@ internal class PlayerControlRevivePatch
         if (PlayerControl.LocalPlayer == __instance)
         {
             CanSeeGhostInfo = false;
+            CustomButton.ResetAllCooldowns(ModOption.KillCooldown / 2);
         }
 
         if (__instance.isLover() && Lovers.otherLover(__instance)?.IsDead() == true)
@@ -573,6 +553,12 @@ internal class BodyReportPatch
     public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
     {
         if (ModOption.DisableMeeting) return false;
+
+        if (target == null && CustomOptionHolder.TheFungleMushroomMixupOption.GetBool() &&
+            CustomOptionHolder.TheFungleMushroomMixupCantOpenMeeting.GetBool() &&
+            __instance.IsMushroomMixupActive())
+            return false;
+
         handleVampireBiteOnBodyReport();
         handleBomberExplodeOnBodyReport();
         return true;
@@ -690,7 +676,7 @@ public static class PlayerDiePatch
             Prosecutor.StartProsecute = false;
             Prosecutor.ProsecuteThisMeeting = false;
         }
-        if (ModOption.gameMode is CustomGamemodes.Classic) return;
+        if (ModOption.GameMode is CustomGameModes.Classic or CustomGameModes.Anonymous) return;
         _ = new LateTask(() => { CanSeeGhostInfo = true; }, 1f, "CanSeeRoleInfo");
     }
 }
@@ -724,7 +710,7 @@ public static class MurderPlayerPatch
                 writer.Write((byte)state);
                 writer.EndRPC();
                 SchrodingersCat.State = state;
-                HudManagerStartPatch.schrodingersCatKillButton.Timer = HudManagerStartPatch.schrodingersCatKillButton.MaxTimer * 0.66f;
+                HudManagerStartPatch.schrodingersCatKillButton.Timer = HudManagerStartPatch.schrodingersCatKillButton.MaxTimer / 2;
             }
 
             if (PlayerControl.LocalPlayer == __instance)
@@ -921,7 +907,7 @@ public static class MurderPlayerPatch
         {
             var multiplier = 1f;
             if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini)
-                multiplier = Mini.isGrownUp() ? 0.66f : 2f;
+                multiplier = Mini.isGrownUp ? 0.66f : 2f;
             Mini.mini.SetKillTimer(__instance.killTimer * multiplier);
         }
 
@@ -1030,7 +1016,7 @@ internal class PlayerControlSetCoolDownPatch
         var addition = 0f;
 
         if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini)
-            multiplier = Mini.isGrownUp() ? 0.66f : 2f;
+            multiplier = Mini.isGrownUp ? 0.66f : 2f;
         if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter)
             addition = BountyHunter.punishmentTime;
         if (Gambler.gambler != null && PlayerControl.LocalPlayer == Gambler.gambler)

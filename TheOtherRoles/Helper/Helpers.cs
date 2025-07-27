@@ -15,7 +15,7 @@ public enum SabotageTypes
     None
 }
 
-public enum CustomGamemodes
+public enum CustomGameModes
 {
     Classic,
     Anonymous
@@ -39,7 +39,7 @@ public static class Helpers
 
     public static string previousEndGameSummary = "";
     public static PlayerControl GetHostPlayer => GameData.Instance.GetHost().Object;
-    public static System.Random rnd => new(Guid.NewGuid().GetHashCode());
+    public static SRandom rnd => new(Guid.NewGuid().GetHashCode());
 
     public static Sprite ZoomIn = new ResourceSprite("ZoomIn.png", 21f);
     public static Sprite ZoomOut = new ResourceSprite("ZoomOut.png", 85f);
@@ -115,6 +115,19 @@ public static class Helpers
                || (Pelican.Player != null && Pelican.Player.PlayerId == player.PlayerId && Pelican.hasImpVision)
                || (SchrodingersCat.Player != null && SchrodingersCat.Player.PlayerId == player.PlayerId && SchrodingersCat.hasImpVision)
                || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId && Werewolf.hasImpostorVision);
+    }
+
+    public static bool CanUseSabotage(this PlayerControl player)
+    {
+        var roleCouldUse = false;
+        if (ModOption.disableSabotage) return false;
+        else if (Jackal.canSabotage && (Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) || player == Jackal.Sidekick))
+            roleCouldUse = true;
+        else if (Pavlovsdogs.canSabotage && (player == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(p => p == player)))
+            roleCouldUse = true;
+        else if (player.Data?.Role != null && player.Data.Role.IsImpostor)
+            roleCouldUse = true;
+        return roleCouldUse;
     }
 
     /// <summary>
@@ -371,19 +384,6 @@ public static class Helpers
             var sprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.Cursor.png", 115f);
             Cursor.SetCursor(sprite.texture, Vector2.zero, CursorMode.Auto);
         }
-    }
-
-    public static bool roleCanSabotage(this PlayerControl player)
-    {
-        var roleCouldUse = false;
-        if (ModOption.disableSabotage) return false;
-        if (Jackal.canSabotage && (Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) || player == Jackal.Sidekick))
-            roleCouldUse = true;
-        if (Pavlovsdogs.canSabotage && (player == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(p => p == player)))
-            roleCouldUse = true;
-        if (player.Data?.Role != null && player.Data.Role.IsImpostor)
-            roleCouldUse = true;
-        return roleCouldUse;
     }
 
     public static SabotageTypes GetActiveSabo()
@@ -650,6 +650,38 @@ public static class Helpers
         return count;
     }
 
+    public static void Shuffle<T>(List<T> list)
+    {
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rnd.Next(n + 1);
+            (list[k], list[n]) = (list[n], list[k]);
+        }
+    }
+
+    public static T RandomAndRemove<T>(List<T> list)
+    {
+        if (list.Count == 0) return default;
+        int index = rnd.Next(list.Count);
+        T item = list[index];
+        list.RemoveAt(index);
+        return item;
+    }
+
+    public static T RandomOrEmpty<T>(List<T> list, T emptyValue, float emptyChance = 0.33f)
+    {
+        if (list.Count == 0) return default;
+        if (rnd.NextSingle() < emptyChance)
+            return emptyValue;
+
+        int index = rnd.Next(list.Count);
+        T item = list[index];
+        list.RemoveAt(index);
+        return item;
+    }
+
     public static Color HexToColor(string hex)
     {
         _ = ColorUtility.TryParseHtmlString("#" + hex, out var color);
@@ -680,15 +712,15 @@ public static class Helpers
         return null;
     }
 
-    public static CustomGamemodes SetNextGameMode()
+    public static CustomGameModes SetNextGameMode()
     {
 
-        ModOption.gameMode = (CustomGamemodes)((int)(ModOption.gameMode + 1) % Enum.GetValues(typeof(CustomGamemodes)).Length);
+        ModOption.GameMode = (CustomGameModes)((int)(ModOption.GameMode + 1) % Enum.GetValues(typeof(CustomGameModes)).Length);
         MessageWriter writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.ShareGameMode);
-        writer.Write((byte)ModOption.gameMode);
+        writer.Write((byte)ModOption.GameMode);
         writer.EndRPC();
-        RPCProcedure.shareGameMode((byte)ModOption.gameMode);
-        return ModOption.gameMode;
+        RPCProcedure.shareGameMode((byte)ModOption.GameMode);
+        return ModOption.GameMode;
     }
 
     public static bool isSabotageActive()

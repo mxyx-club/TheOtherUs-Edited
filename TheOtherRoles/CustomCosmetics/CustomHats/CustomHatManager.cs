@@ -76,7 +76,7 @@ public static class CustomHatManager
 
         hat.name = ch.Name;
         hat.displayOrder = 99;
-        hat.ProductId = "hat_" + ch.Name.Replace(' ', '_');
+        hat.ProductId = "tor_" + ch.Name.Replace(' ', '_');
         hat.InFront = !ch.Behind;
         hat.NoBounce = !ch.Bounce;
         hat.ChipOffset = new Vector2(0f, 0.2f);

@@ -1,4 +1,4 @@
-using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Mode;
 using static TheOtherRoles.Options.CustomOption;
 using Types = TheOtherRoles.Options.CustomOptionType;
 
@@ -103,6 +103,9 @@ public class CustomOptionHolder
     public static CustomOption airshipLadder;
     public static CustomOption enableFungleModify;
     public static CustomOption fungleElectrical;
+    public static CustomOption TheFungleMushroomMixupOption;
+    public static CustomOption TheFungleMushroomMixupCantOpenMeeting;
+    public static CustomOption TheFungleMushroomMixupTime;
     public static CustomOption dynamicMap;
     public static CustomOption dynamicMapEnableSkeld;
     public static CustomOption dynamicMapEnableMira;
@@ -729,32 +732,36 @@ public class CustomOptionHolder
 
     public static void Load()
     {
-        vanillaSettings = Main.Instance.Config.Bind("Preset0", "VanillaOptions", "");
+        VanillaSettings = Main.Instance.Config.Bind("Preset0", "VanillaOptions", "");
 
         //-------------------------- Role options 0 - 99 -------------------------- //
         presetSelection = Create(0, Types.General, Cs(new Color32(204, 204, 0, 255), "presetSelection"), presets, null, true);
         anyPlayerCanStopStart = Create(3, Types.General, Cs(new Color32(204, 204, 0, 255), "anyPlayerCanStopStart"), false);
 
-        isDraftMode = Create(900, Types.General, Cs(Color.yellow, "isDraftMode"), false, null, true, onChange: () =>
-        {
-            neutralRolesCountMax.isHeader = isDraftMode.GetBool();
-        });
-        draftModeAmountOfChoices = Create(901, Types.General, Cs(Color.yellow, "draftModeAmountOfChoices"), 3f, 2f, 6f, 1f, isDraftMode, false);
-        draftModeTimeToChoose = Create(902, Types.General, Cs(Color.yellow, "draftModeTimeToChoose"), 5f, 3f, 20f, 1f, isDraftMode);
+        isDraftMode = Create(900, Types.General, Cs(Color.yellow, "isDraftMode"), false, null, true,
+            onChange: (x) => neutralRolesCountMax.IsHeader = isDraftMode.GetBool());
+        draftModeAmountOfChoices = Create(901, Types.General, Cs(Color.yellow, "draftModeAmountOfChoices"), 3, 2, 6, 1, isDraftMode, false);
+        draftModeTimeToChoose = Create(902, Types.General, Cs(Color.yellow, "draftModeTimeToChoose"), 5, 3, 20, 1, isDraftMode);
         draftModeShowRoles = Create(903, Types.General, Cs(Color.yellow, "draftModeShowRoles"), false, isDraftMode, false);
         draftModeHideImpRoles = Create(904, Types.General, Cs(Color.yellow, "draftModeHideImpRoles"), false, draftModeShowRoles, false);
         draftModeHideNeutralRoles = Create(905, Types.General, Cs(Color.yellow, "draftModeHideNeutralRoles"), false, draftModeShowRoles, false);
         draftModeHideCrewmateRoles = Create(906, Types.General, Cs(Color.yellow, "draftModeHideCrewmateRoles"), false, draftModeShowRoles, false);
 
-        neutralRolesCountMin = Create(8, Types.General, Cs(new Color32(204, 204, 0, 255), "neutralRolesCountMin"), 2f, 0f, 15f, 1f, null, true,
-            isHidden: () => isDraftMode.GetBool());
-        neutralRolesCountMax = Create(9, Types.General, Cs(new Color32(204, 204, 0, 255), "neutralRolesCountMax"), 2f, 0f, 15f, 1f,
-            isHeader: isDraftMode.GetBool());
+        neutralRolesCountMin = Create(8, Types.General, Cs(new Color32(204, 204, 0, 255), "neutralRolesCountMin"), 2, 0, 15, 1, null, true,
+            isHidden: () => isDraftMode.GetBool(),
+            onChange: (x) => x.SyncMinMax(false, neutralRolesCountMax));
+        neutralRolesCountMax = Create(9, Types.General, Cs(new Color32(204, 204, 0, 255), "neutralRolesCountMax"), 2, 0, 15, 1,
+            isHeader: isDraftMode.GetBool(),
+            onChange: (x) => x.SyncMinMax(true, neutralRolesCountMin, killerNeutralRolesCountMax));
         killerNeutralRolesCountMin = Create(10, Types.General, Cs(new Color32(204, 204, 0, 255), "killerNeutralRolesCountMin"), ratesRandom,
-            isHidden: () => isDraftMode.GetBool());
-        killerNeutralRolesCountMax = Create(11, Types.General, Cs(new Color32(204, 204, 0, 255), "killerNeutralRolesCountMax"), ratesRandom);
-        modifiersCountMin = Create(12, Types.General, Cs(new Color32(204, 204, 0, 255), "modifiersCountMin"), 15f, 0f, 30f, 1f);
-        modifiersCountMax = Create(13, Types.General, Cs(new Color32(204, 204, 0, 255), "modifiersCountMax"), 15f, 0f, 30f, 1f);
+            isHidden: () => isDraftMode.GetBool(),
+            onChange: (x) => x.SyncMinMax(false, killerNeutralRolesCountMax));
+        killerNeutralRolesCountMax = Create(11, Types.General, Cs(new Color32(204, 204, 0, 255), "killerNeutralRolesCountMax"), ratesRandom,
+            onChange: (x) => { x.SyncMinMax(true, killerNeutralRolesCountMin); x.SyncMinMax(false, neutralRolesCountMax); });
+        modifiersCountMin = Create(12, Types.General, Cs(new Color32(204, 204, 0, 255), "modifiersCountMin"), 15, 0, 30, 1,
+            onChange: (x) => x.SyncMinMax(false, modifiersCountMax));
+        modifiersCountMax = Create(13, Types.General, Cs(new Color32(204, 204, 0, 255), "modifiersCountMax"), 15, 0, 30, 1,
+            onChange: (x) => x.SyncMinMax(true, modifiersCountMin));
 
         NetworkTransformLowLevel = Create(15, Types.General, "NetworkTransformLowLevel", ["optionOff", "NetworkTransformLowLevel.On"], null, true);
         NetworkTransformType = Create(16, Types.General, "NetworkTransformType", [
@@ -845,6 +852,9 @@ public class CustomOptionHolder
         //Fungle
         enableFungleModify = Create(550, Types.General, Cs(Color.yellow, "Fungle"), false, MapOptions);
         fungleElectrical = Create(551, Types.General, "fungleElectrical", false, enableFungleModify);
+        TheFungleMushroomMixupOption = Create(552, Types.General, "TheFungleMushroomMixupOption", false, enableFungleModify);
+        TheFungleMushroomMixupTime = Create(553, Types.General, "TheFungleMushroomMixupTime", 10f, 1f, 30f, 0.5f, TheFungleMushroomMixupOption);
+        TheFungleMushroomMixupCantOpenMeeting = Create(554, Types.General, "TheFungleMushroomMixupCantOpenMeeting", false, TheFungleMushroomMixupOption);
         //dynamicMap options
         dynamicMap = Create(580, Types.General, "dynamicMap", false, MapOptions, true);
         dynamicMapEnableSkeld = Create(581, Types.General, "Skeld", rates, dynamicMap);
@@ -905,8 +915,8 @@ public class CustomOptionHolder
         eraserCanEraseAnyone = Create(101602, Types.Impostor, "eraserCanEraseAnyone", false, eraserSpawnRate);
         erasercanEraseGuess = Create(101603, Types.Impostor, "erasercanEraseGuess", false, eraserSpawnRate);
 
-        poucherSpawnRate = Create(103200, Types.Impostor, Cs(Palette.ImpostorRed, "Poucher"), rates, null, true, onChange: () =>
-            { if (modifierPoucher.selection > 0) poucherSpawnRate.selection = 0; });
+        poucherSpawnRate = Create(103200, Types.Impostor, Cs(Palette.ImpostorRed, "Poucher"), rates, null, true,
+            onChange: (x) => { if (modifierPoucher.Selection > 0 && poucherSpawnRate.Selection > 0) poucherSpawnRate.updateSelection(0); });
 
         butcherSpawnRate = Create(103100, Types.Impostor, Cs(Palette.ImpostorRed, "Butcher"), rates, null, true);
         butcherDissectionCooldown = Create(103101, Types.Impostor, "butcherDissectionCooldown", 25f, 10f, 60f, 2.5f, butcherSpawnRate);
@@ -1231,23 +1241,23 @@ public class CustomOptionHolder
         mayorSpawnRate = Create(301100, Types.Crewmate, Cs(Mayor.color, "Mayor"), rates, null, true);
         mayorMode = Create(301101, Types.Crewmate, "mayorMode", ["mayorMode0", "mayorMode1", "mayorMode2"], mayorSpawnRate);
         mayorVote = Create(301102, Types.Crewmate, "mayorVote", 2, 1, 5, 1, mayorSpawnRate, false,
-            isHidden: () => mayorMode.selection == 2);
+            isHidden: () => mayorMode.Selection == 2);
         mayorMultiVoting = Create(301103, Types.Crewmate, "mayorMultiVoting", true, mayorSpawnRate, false,
-            isHidden: () => mayorMode.selection != 0);
+            isHidden: () => mayorMode.Selection != 0);
         mayorRevealVision = Create(301104, Types.Crewmate, "mayorRevealVision", ["-20%", "-30%", "-40%", "-50%"], mayorSpawnRate, false,
-            isHidden: () => mayorMode.selection != 1);
+            isHidden: () => mayorMode.Selection != 1);
         mayorInitialVotes = Create(301105, Types.Crewmate, "mayorInitialVotes", 3f, 1f, 3f, 0.5f, mayorSpawnRate, false,
-            isHidden: () => mayorMode.selection != 2);
+            isHidden: () => mayorMode.Selection != 2);
         mayorAddVotes = Create(301106, Types.Crewmate, "mayorAddVotes", 1f, 1f, 2.5f, 0.25f, mayorSpawnRate, false,
-            isHidden: () => mayorMode.selection != 2);
+            isHidden: () => mayorMode.Selection != 2);
         mayorMaxVotes = Create(301107, Types.Crewmate, "mayorMaxVoteCount", 5, 1, 15, 1, mayorSpawnRate, false,
-            isHidden: () => mayorMode.selection != 2);
+            isHidden: () => mayorMode.Selection != 2);
         mayorVoteLimit = Create(301108, Types.Crewmate, "mayorOneUseVotes", 4, 2, 9, 1, mayorSpawnRate, false,
-            isHidden: () => mayorMode.selection != 2);
+            isHidden: () => mayorMode.Selection != 2);
         /*mayorSaveVoteAnime = Create(301130, Types.Crewmate, "mayorSaveVoteAnime", true, mayorSpawnRate, false,
             isHidden: () => mayorMode.selection != 2);*/
         mayorAnonymousVote = Create(301131, Types.Crewmate, "mayorAnonymousVote", true, mayorSpawnRate, false,
-            isHidden: () => mayorMode.selection == 1);
+            isHidden: () => mayorMode.Selection == 1);
         mayorMeetingButton = Create(301109, Types.Crewmate, "mayorMeetingButton", false, mayorSpawnRate);
 
         prosecutorSpawnRate = Create(303700, Types.Crewmate, Cs(Prosecutor.color, "Prosecutor"), rates, null, true);
@@ -1430,8 +1440,8 @@ public class CustomOptionHolder
         modifierDisperser = Create(401000, Types.Modifier, Cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
         modifierDisperserDispersesToVent = Create(401001, Types.Modifier, "modifierDisperserDispersesToVent", true, modifierDisperser);
 
-        modifierPoucher = Create(403700, Types.Modifier, Cs(Palette.ImpostorRed, "Poucher"), rates, null, true, null, onChange: () =>
-            { poucherSpawnRate.selection = 0; });
+        modifierPoucher = Create(403700, Types.Modifier, Cs(Palette.ImpostorRed, "Poucher"), rates, null, true, null,
+            onChange: (x) => { if (poucherSpawnRate.Selection > 0) poucherSpawnRate.updateSelection(0); });
 
         modifierVortox = Create(403800, Types.Modifier, Cs(Vortox.color, "Vortox"), rates, null, true);
         modifierVortoxReversal = Create(403801, Types.Modifier, "modifierVortoxReversal", true, modifierVortox);

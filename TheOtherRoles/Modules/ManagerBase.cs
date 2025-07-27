@@ -3,7 +3,7 @@ namespace TheOtherRoles.Modules;
 
 public interface IManagerBase
 {
-    public virtual void Load()
+    virtual void Load()
     {
     }
 };

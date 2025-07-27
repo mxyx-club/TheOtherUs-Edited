@@ -531,20 +531,32 @@
         "13": "优化地图"
     },
     "addAirShipVents": {
-        "0": "Additional Vents\n(Meeting Room-Electrical)",
-        "13": "添加新管道\n (会议室-配电室)"
+        "0": "Additional Vents  (Meeting Room-Electrical)",
+        "13": "添加新管道 (会议室-配电室)"
     },
     "airshipLadder": {
-        "0": "Additional Ladder\n(Meeting Room-Gap Room)",
-        "13": "增加额外梯子\n (会议室-间隙室)"
+        "0": "Additional Ladder  (Meeting Room-Gap Room)",
+        "13": "增加额外梯子 (会议室-间隙室)"
     },
     "enableFungleModify": {
         "0": "Fungle",
         "13": "Fungle"
     },
     "fungleElectrical": {
-        "0": "Additional Electrical\n(Cafeteria-Lab-Upper Engine)",
-        "13": "添加电力系统\n (食堂-实验室-上引擎)"
+        "0": "Additional Electrical  (Cafeteria-Lab-Upper Engine)",
+        "13": "添加电力系统 (食堂-实验室-上引擎)"
+    },
+    "TheFungleMushroomMixupOption": {
+        "0": "Mushroom Mixup Options",
+        "13": "迷乱蘑菇破坏设置"
+    },
+    "TheFungleMushroomMixupCantOpenMeeting": {
+        "0": "Mushroom Mixup Can't Open Meeting",
+        "13": "破坏持续时不能召开会议"
+    },
+    "TheFungleMushroomMixupTime": {
+        "0": "Mushroom Mixup Seconds",
+        "13": "持续时间"
     },
     "WireTaskIsRandomOption": {
         "0": "Randomize Wire Task Locations",
@@ -2458,7 +2470,7 @@
     },
     "modifierSpecoalityIsGlobal": {
         "0": "Professional Is Global Modifier (Requires Guesser Mode)",
-        "13": "更改为公共附加能力\n(仅赌怪模式生效)"
+        "13": "更改为公共附加能力 (仅赌怪模式生效)"
     },
     "modifierLastImpostorDeduce": {
         "0": "Last Imposter Kill Cooldown Is Reduced",
@@ -2541,8 +2553,8 @@
         "13": "可交换部分中立不带刀职业"
     },
     "modifierShiftALLNeutral": {
-        "0": "Shifter Can Swap with All Neutral Non-Jackal Roles\nNeutral Roles May Spawn with This Modifier",
-        "13": "可交换除豺狼阵营中立\n中立阵营可以成为交换师"
+        "0": "Neutral Roles May Spawn with This Modifier",
+        "13": "中立阵营可以成为交换师"
     },
     "infectedMaxPlayer": {
         "0": "Max Number of Infecteds",

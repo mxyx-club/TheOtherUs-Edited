@@ -29,7 +29,7 @@ public class Poltergeist
             if (!(p < 1f)) break;
 
             float pp = p * p;
-            Vector3 currentPos = beginPos * (1 - pp) + pos * pp;
+            Vector3 currentPos = (beginPos * (1 - pp)) + (pos * pp);
             currentPos.z = currentPos.y / 1000f;
             deadBody.transform.position = currentPos;
 

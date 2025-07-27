@@ -204,8 +204,8 @@ public class Balancer
                     if (BackObject.transform.localPosition.x <= -10)
                     {
                         CurrentState = BalancerState.WaitVote;
-                        MeetingHud.Instance.HostIcon.gameObject.SetActive(false);
-                        MeetingHudPatch.ShowHost.Text.gameObject.SetActive(false);
+                        MeetingHud.Instance.HostIcon?.gameObject?.SetActive(false);
+                        MeetingHudPatch.ShowHost.Text?.gameObject?.SetActive(false);
                         MeetingHud.Instance.transform.FindChild("MeetingContents/PhoneUI/baseGlass").transform.localPosition = new(0.012f, 0, 0);
                         MeetingHud.Instance.TitleText.GetComponent<TextTranslatorTMP>().enabled = false;
                         MeetingHud.Instance.TitleText.transform.localPosition = new(0, 2, -1);

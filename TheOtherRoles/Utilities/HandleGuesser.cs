@@ -1,4 +1,4 @@
-using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Mode;
 
 namespace TheOtherRoles.Utilities;
 

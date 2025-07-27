@@ -273,12 +273,3 @@ public static class LobbyRoleInfo
         infoTitleText.fontStyle = FontStyles.Bold;
     }
 }
-
-[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Start))]
-internal class GameStartPatch
-{
-    public static void Prefix(ShipStatus __instance)
-    {
-        if (LobbyRoleInfo.RolesSummaryUI != null) LobbyRoleInfo.RolesSummaryUI.SetActive(false);
-    }
-}

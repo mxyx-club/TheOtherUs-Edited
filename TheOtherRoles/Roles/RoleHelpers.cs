@@ -193,7 +193,7 @@ public static class RoleHelpers
         if (killer == target) return true;
         if (IsHideNSeek) return true;
         // Block impostor not fully grown mini kill
-        if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp()) return false;
+        if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp) return false;
 
         // Handle first kill attempt
         if (ModOption.shieldFirstKill && ModOption.firstKillPlayer == target)

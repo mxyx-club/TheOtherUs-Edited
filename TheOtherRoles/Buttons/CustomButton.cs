@@ -8,7 +8,8 @@ namespace TheOtherRoles.Buttons;
 
 public class CustomButton
 {
-    public static List<CustomButton> buttons = new();
+    public static IReadOnlyList<CustomButton> Buttons => _buttons;
+    private static List<CustomButton> _buttons = new(200);
     private static readonly int Desat = Shader.PropertyToID("_Desat");
 
     private Action OnClick;
@@ -52,13 +53,10 @@ public class CustomButton
         {
             if (!IsKillButton) return _MaxTimer;
             var time = _MaxTimer;
-            var local = PlayerControl.LocalPlayer;
-            if (IsKillButton)
-            {
-                time *= Mini.Multiplier;
-                if (local.IsImpostor() && local == LastImpostor.lastImpostor)
-                    time -= LastImpostor.deduce;
-            }
+
+            time *= Mini.Multiplier;
+            if (PlayerControl.LocalPlayer.IsImpostor() && PlayerControl.LocalPlayer == LastImpostor.lastImpostor)
+                time -= LastImpostor.deduce;
             return time;
         }
         set => _MaxTimer = value;
@@ -138,7 +136,7 @@ public class CustomButton
             HudGrid.Instance?.RegisterContent(gridContent, mirror);
         }
 
-        buttons.Add(this);
+        _buttons.Add(this);
     }
 
     public CustomButton(Action OnClick,
@@ -187,7 +185,7 @@ public class CustomButton
             UObject.Destroy(actionButton.gameObject);
         }
         actionButton = null;
-        buttons.Remove(this);
+        _buttons.Remove(this);
     }
 
     public void SetButtonText(string text)
@@ -223,15 +221,15 @@ public class CustomButton
         }
 
         // Deputy skip onClickEvent if handcuffed
-        if (Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) && Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0f)
+        if (Sheriff.handcuffedKnows.TryGetValue(PlayerControl.LocalPlayer.PlayerId, out var val) && val > 0f)
             return;
 
     }
 
     public static void HudUpdate()
     {
-        buttons.RemoveAll(item => item.actionButton == null);
-        foreach (var t in buttons.ToArray())
+        _buttons.RemoveAll(b => b == null || b.actionButton == null);
+        foreach (var t in Buttons)
         {
             try
             {
@@ -244,10 +242,10 @@ public class CustomButton
         }
     }
 
-    public static void MeetingEndedUpdate()
+    public static void OnMeetingEnd()
     {
-        buttons.RemoveAll(item => item.actionButton == null);
-        buttons.Do(t =>
+        _buttons.RemoveAll(item => item.actionButton == null);
+        Buttons.Do(t =>
         {
             try
             {
@@ -266,7 +264,7 @@ public class CustomButton
     {
         var time = Time == -1 ? ModOption.KillCooldown : Time;
 
-        buttons.Where(x => x.HasButton() && x.actionButton != null).Do(t =>
+        Buttons.Where(x => x.HasButton() && x.actionButton != null).Do(t =>
         {
             var maxTime = Time == -1 ? t.MaxTimer : Time;
             try
@@ -287,7 +285,7 @@ public class CustomButton
 
     public static void SetKillTimer(float time = -1f)
     {
-        foreach (var t in buttons.Where(x => x.IsKillButton))
+        foreach (var t in Buttons.Where(x => x.IsKillButton))
         {
             var newTimer = time == -1f ? t.MaxTimer : time;
             if (!t.isEffectActive)
@@ -360,9 +358,7 @@ public class CustomButton
 
     public void Update()
     {
-        var local = PlayerControl.LocalPlayer;
-
-        if (local.Data == null || MeetingHud.Instance || ExileController.Instance || !HasButton())
+        if (PlayerControl.LocalPlayer.Data == null || MeetingHud.Instance || ExileController.Instance || !HasButton())
         {
             setActive(false);
             return;
@@ -393,7 +389,7 @@ public class CustomButton
         {
             // This had to be reordered, so that the handcuffs do not stop the underlying timers from running
             if (HasEffect && isEffectActive) DeputyTimer -= Time.deltaTime;
-            else if (!local.inVent) DeputyTimer -= Time.deltaTime;
+            else if (!PlayerControl.LocalPlayer.inVent) DeputyTimer -= Time.deltaTime;
         }
 
         if (DeputyTimer <= 0 && HasEffect && isEffectActive)
@@ -416,13 +412,6 @@ public class CustomButton
         if (hudManager.UseButton != null)
         {
             var pos = hudManager.UseButton.transform.localPosition;
-            if (mirror)
-            {
-                var aspect = Camera.main.aspect;
-                var safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
-                var xpos = 0.05f - (safeOrthographicSize * aspect * 1.70f);
-                pos = new Vector3(xpos, pos.y, pos.z);
-            }
             if (!UseGrid && PositionOffset != null) actionButton.transform.localPosition = pos + PositionOffset.Value;
         }
 
@@ -437,7 +426,7 @@ public class CustomButton
             actionButtonMat.SetFloat(Desat, 1f);
         }
 
-        if (Timer >= 0 && ((HasEffect && isEffectActive) || !local.inVent))
+        if (Timer >= 0 && ((HasEffect && isEffectActive) || !PlayerControl.LocalPlayer.inVent))
             Timer -= Time.deltaTime;
 
         if (Timer <= 0 && HasEffect && isEffectActive)
@@ -454,7 +443,7 @@ public class CustomButton
             onClickEvent();
 
         // Deputy disable the button and display Handcuffs instead...
-        if (Sheriff.handcuffedPlayers.Contains(local.PlayerId))
+        if (Sheriff.handcuffedPlayers.Contains(PlayerControl.LocalPlayer.PlayerId))
             OnClick = () => Sheriff.setHandcuffedKnows();
         else
             OnClick = InitialOnClick;
@@ -475,15 +464,15 @@ public class CustomButton
 
         if (handcuffed && !deputyHandcuffedButtons.ContainsKey(PlayerControl.LocalPlayer.PlayerId))
         {
-            var maxI = buttons.Count;
+            var maxI = Buttons.Count;
             for (var i = 0; i < maxI; i++)
             {
                 try
                 {
-                    if (buttons[i].HasButton()) // For each custombutton the player has
-                        addReplacementHandcuffedButton(buttons[i]);
+                    if (Buttons[i].HasButton()) // For each custombutton the player has
+                        addReplacementHandcuffedButton(Buttons[i]);
                     // The new buttons are the only non-handcuffed buttons now!
-                    buttons[i].isHandcuffed = true;
+                    Buttons[i].isHandcuffed = true;
                 }
                 catch (Exception e)
                 {
@@ -519,12 +508,12 @@ public class CustomButton
             {
                 replacementButton.HasButton = () => { return false; };
                 replacementButton.Update(); // To make it disappear properly.
-                buttons.Remove(replacementButton);
+                _buttons.Remove(replacementButton);
             }
 
             deputyHandcuffedButtons.Remove(PlayerControl.LocalPlayer.PlayerId);
 
-            foreach (var button in buttons) button.isHandcuffed = false;
+            foreach (var button in _buttons) button.isHandcuffed = false;
         }
 
         static void addReplacementHandcuffedButton(CustomButton button, Func<bool> couldUse = null)

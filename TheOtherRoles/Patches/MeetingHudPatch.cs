@@ -1,5 +1,6 @@
 using AmongUs.QuickChat;
 using System.Text;
+using TheOtherRoles.Mode;
 using TheOtherRoles.Objects;
 using UnityEngine.UI;
 using static MeetingHud;
@@ -366,6 +367,7 @@ internal class MeetingHudPatch
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start)), HarmonyPostfix]
         public static void Setup(MeetingHud __instance)
         {
+            if (Anonymous.IsEnabled) return;
             if (AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame || Balancer.currentAbilityUser != null) return;
             __instance.ProceedButton.gameObject.transform.localPosition = new(-2.5f, 2.2f, 0);
             __instance.ProceedButton.gameObject.GetComponent<SpriteRenderer>().enabled = false;
@@ -377,6 +379,7 @@ internal class MeetingHudPatch
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update)), HarmonyPostfix]
         public static void Postfix(MeetingHud __instance)
         {
+            if (Anonymous.IsEnabled) return;
             if (Balancer.currentAbilityUser != null) return;
             var host = GameData.Instance.GetHost();
 
@@ -384,6 +387,7 @@ internal class MeetingHudPatch
             {
                 PlayerMaterial.SetColors(host.DefaultOutfit.ColorId, __instance.HostIcon);
                 if (Text == null) Text = __instance.ProceedButton.gameObject.GetComponentInChildren<TextMeshPro>();
+                Text.rectTransform.sizeDelta *= new Vector2(2.4f, 1f);
                 Text.text = $"{"Host".Translate()}: {host.PlayerName}";
             }
         }
@@ -739,10 +743,6 @@ internal class MeetingHudPatch
 
             Camouflager.camoComms = false;
 
-            // Mini
-            if (!Mini.isGrowingUpInMeeting)
-                Mini.timeOfGrowthStart = Mini.timeOfGrowthStart.Add(DateTime.UtcNow.Subtract(Mini.timeOfMeetingStart)).AddSeconds(10);
-
             // Snitch
             if (Snitch.snitch != null && !Snitch.needsUpdate && Snitch.snitch.Data.IsDead && Snitch.text != null) UObject.Destroy(Snitch.text);
 
@@ -812,9 +812,6 @@ internal class MeetingHudPatch
 
             // Medium meeting start time
             Medium.meetingStartTime = DateTime.UtcNow;
-            // Mini
-            Mini.timeOfMeetingStart = DateTime.UtcNow;
-            Mini.ageOnMeetingStart = Mathf.FloorToInt(Mini.growingProgress() * 18);
             // Count meetings
             if (meetingTarget == null) meetingsCount++;
             // Reset vampire bitten
@@ -961,20 +958,6 @@ internal class MeetingHudPatch
             Jester.dragedBody = null;
             KillTrap.OnMeetingStart();
             Jailor.MeetingStart(__instance);
-
-            if (Pelican.Player != null)
-            {
-                foreach (var player in Pelican.eatenPlayers)
-                {
-                    if (player.AmOwner)
-                    {
-                        HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
-                        PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Pelican.Player.transform.position);
-                    }
-                    player.Die(DeathReason.Kill, true);
-                }
-                Pelican.eatenPlayers = new();
-            }
 
             foreach (var playerState in Instance?.playerStates ?? Enumerable.Empty<PlayerVoteArea>())
             {

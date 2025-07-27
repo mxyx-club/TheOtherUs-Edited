@@ -161,12 +161,6 @@ internal class ExileControllerBeginPatch
         confirmImpostorSecondText.text = changeStringBuilder.ToString();
         confirmImpostorSecondText.gameObject.SetActive(true);
 
-        if (Pelican.DieOnExile)
-        {
-            Pelican.Player.Exiled();
-            Pelican.DieOnExile = false;
-        }
-
         if (ForceExile)
         {
             __instance.completeString = string.Format(GetString("ExileController.ForceExile"), exiled?.PlayerName ?? "NULL");
@@ -275,7 +269,7 @@ internal class ExileControllerWrapUpPatch
             return;
         }
         // Mini exile lose condition
-        else if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() &&
+        else if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp &&
                  !Mini.mini.Data.Role.IsImpostor && !Mini.mini.IsNeutral())
         {
             Mini.triggerMiniLose = true;
@@ -325,7 +319,7 @@ internal class ExileControllerWrapUpPatch
         Jailor.Jailed = null;
 
         // Reset custom button timers where necessary
-        CustomButton.MeetingEndedUpdate();
+        CustomButton.OnMeetingEnd();
 
         // Clear all traps
         KillTrap.ClearAndReload();
@@ -333,7 +327,7 @@ internal class ExileControllerWrapUpPatch
         // Mini set adapted cooldown
         if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor)
         {
-            var multiplier = Mini.isGrownUp() ? 0.66f : 2f;
+            var multiplier = Mini.isGrownUp ? 0.66f : 2f;
             Mini.mini.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * multiplier);
         }
 

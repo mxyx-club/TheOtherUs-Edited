@@ -7,7 +7,6 @@ public class Pelican
     public static PlayerControl Player;
     public static PlayerControl currentTarget;
     public static List<PlayerControl> eatenPlayers = new();
-    public static bool DieOnExile;
     public static Color color = new Color32(240, 120, 200, byte.MaxValue);
     public static float cooldown = 25f;
     public static float reduceCooldown = 25f;
@@ -51,16 +50,15 @@ public class Pelican
         player ??= Player;
         if (clear || player?.Data.IsDead == true)
         {
-            if (eatenPlayers.Any(x => x == PlayerControl.LocalPlayer))
+            foreach (var p in eatenPlayers)
             {
-                HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
-                _ = new LateTask(() =>
+                if (p == PlayerControl.LocalPlayer)
                 {
                     HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
-                }, 0.25f);
-                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(player.transform.position);
+                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(player.transform.position);
+                }
             }
-            Message($"Pelican Player {Player?.Data.PlayerName ?? "null"}", "Pelican");
+            eatenPlayers = new();
             if (clear) clearAndReload(true);
         }
     }
@@ -69,7 +67,6 @@ public class Pelican
     {
         Player = null;
         currentTarget = null;
-        DieOnExile = false;
         if (clear) eatenPlayers = new();
         cooldown = CustomOptionHolder.pelicanCooldown.GetFloat();
         reduceCooldown = CustomOptionHolder.pelicanReduceCooldown.GetFloat();
@@ -78,18 +75,38 @@ public class Pelican
     }
 
     [HarmonyPatch]
-    public class Pelican_Patch
+    public static class Pelican_Patch
     {
-
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update)), HarmonyPostfix]
-        public static void HudUpdate()
+        public static void HudUpdate(HudManager __instance)
         {
-            if (Player == null) return;
-            if (Player.IsAlive() && eatenPlayers.Any(x => x == PlayerControl.LocalPlayer) && !InMeeting)
+            if (Player.IsDead() || InMeeting) return;
+            foreach (var p in eatenPlayers)
             {
-                HudManager.Instance.ShadowQuad?.gameObject?.SetActive(true);
-                PlayerControl.LocalPlayer.transform.position = new(-10f, 10f, 0f);
+                if (p == PlayerControl.LocalPlayer)
+                {
+                    HudManager.Instance.ShadowQuad?.gameObject?.SetActive(true);
+                    PlayerControl.LocalPlayer.transform.position = new(-10f, 10f, 0f);
+                }
             }
+            eatenPlayers = new();
+        }
+
+        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start)), HarmonyPostfix]
+        public static void MeetingStart(MeetingHud __instance)
+        {
+            if (Player.IsDead()) return;
+            foreach (var p in eatenPlayers)
+            {
+                if (p == PlayerControl.LocalPlayer)
+                {
+                    HudManager.Instance.ShadowQuad?.gameObject?.SetActive(false);
+                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Player.GetTruePosition());
+                    HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                }
+                p.Die(DeathReason.Kill, true);
+            }
+            eatenPlayers = new();
         }
     }
 }

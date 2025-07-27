@@ -2,15 +2,12 @@ using AmongUs.GameOptions;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using Il2CppSystem.Linq;
-using Rewired;
+using System.Globalization;
 using System.IO;
 using System.Text;
-using TheOtherRoles.CustomGameModes;
-using UnityEngine;
+using TheOtherRoles.Mode;
 using UnityEngine.UI;
-using static Il2CppSystem.Uri;
 using static TheOtherRoles.Options.CustomOption;
-using static UnityEngine.RemoteConfigSettingsHelper;
 
 namespace TheOtherRoles.Options;
 
@@ -30,61 +27,62 @@ public enum CustomOptionType
 
 public class CustomOption
 {
+    private static List<CustomOption> _options = new(1024);
+    public static IReadOnlyList<CustomOption> Options => _options;
+    public static int Preset;
+    public static ConfigEntry<string> VanillaSettings;
 
-    public static List<CustomOption> options = new();
-    public static int preset;
-    public static ConfigEntry<string> vanillaSettings;
+    public int DefaultSelection;
+    public ConfigEntry<int> Entry;
 
-    public int defaultSelection;
-    public ConfigEntry<int> entry;
-
-    public int id;
-    public bool isHeader;
-    public string name;
-    public Action onChange;
-    public OptionBehaviour optionBehaviour;
-    public CustomOption parent;
-    public int selection;
-    public object[] selections;
-    public CustomOptionType type;
-    public Func<bool> isHidden;
+    public int Id;
+    public bool IsHeader;
+    public string Name;
+    public Action<CustomOption> OnChange;
+    public OptionBehaviour OptionBehaviour;
+    public CustomOption Parent;
+    public int Selection;
+    public object[] Selections;
+    public CustomOptionType Type;
+    public Func<bool> IsHiddenFunc;
     public bool IsText;
+    public CustomGameModes GameMode = CustomGameModes.Classic;
 
     public RoleId RoleId;
     // Option creation
 
     public CustomOption(int id, CustomOptionType type, string name, object[] selections, object defaultValue,
-        CustomOption parent, bool isHeader, Func<bool> isHidden = null, Action onChange = null)
+        CustomOption parent, bool isHeader, Func<bool> isHidden = null, Action<CustomOption> onChange = null)
     {
-        this.id = id;
-        //this.name = parent == null ? name : " - " + name;
-        this.name = name;
-        this.selections = selections;
+        Id = id;
+        Name = name;
+        Selections = selections;
         var index = Array.IndexOf(selections, defaultValue);
-        defaultSelection = index >= 0 ? index : 0;
-        this.parent = parent;
-        this.isHeader = isHeader;
-        this.type = type;
-        this.onChange = onChange;
-        this.isHidden = isHidden;
-        selection = 0;
+        DefaultSelection = index >= 0 ? index : 0;
+        Parent = parent;
+        IsHeader = isHeader;
+        Type = type;
+        OnChange = onChange;
+        IsText = false;
+        IsHiddenFunc = isHidden;
+        Selection = 0;
         if (id != 0)
         {
-            entry = Main.Instance.Config.Bind($"Preset{preset}", id.ToString(), defaultSelection);
-            selection = Mathf.Clamp(entry.Value, 0, selections.Length - 1);
+            Entry = Main.Instance.Config.Bind($"Preset{Preset}", id.ToString(), DefaultSelection);
+            Selection = Mathf.Clamp(Entry.Value, 0, selections.Length - 1);
         }
 
-        options.Add(this);
+        _options.Add(this);
     }
 
     public static CustomOption Create(int id, CustomOptionType type, string name, string[] selections,
-        CustomOption parent = null, bool isHeader = false, Func<bool> isHidden = null, Action onChange = null)
+        CustomOption parent = null, bool isHeader = false, Func<bool> isHidden = null, Action<CustomOption> onChange = null)
     {
         return new CustomOption(id, type, name, selections, "", parent, isHeader, isHidden, onChange);
     }
 
     public static CustomOption Create(int id, CustomOptionType type, string name, float defaultValue, float min,
-        float max, float step, CustomOption parent = null, bool isHeader = false, Func<bool> isHidden = null, Action onChange = null)
+        float max, float step, CustomOption parent = null, bool isHeader = false, Func<bool> isHidden = null, Action<CustomOption> onChange = null)
     {
         List<object> selections = new();
         for (var s = min; s <= max; s += step) selections.Add(s);
@@ -92,30 +90,48 @@ public class CustomOption
     }
 
     public static CustomOption Create(int id, CustomOptionType type, string name, bool defaultValue,
-        CustomOption parent = null, bool isHeader = false, Func<bool> isHidden = null, Action onChange = null)
+        CustomOption parent = null, bool isHeader = false, Func<bool> isHidden = null, Action<CustomOption> onChange = null)
     {
-        var selections = name.Contains("Options") ? new[] { "ExpandOptions", "CollapseOptions" } : new[] { "optionOff", "optionOn" };
+        string[] selections = name.Contains("Options") ? ["ExpandOptions", "CollapseOptions"] : ["optionOff", "optionOn"];
         var defaultSelection = defaultValue ? selections[1] : selections[0];
         return new CustomOption(id, type, name, selections, defaultSelection, parent, isHeader, isHidden, onChange);
     }
 
     // Static behaviour
 
+    public void SyncMinMax(bool isMax, params CustomOption[] opts)
+    {
+        foreach (var opt in opts)
+        {
+
+            if (!isMax && Selection > opt.Selection)
+            {
+                opt.updateSelection(Selection);
+
+            }
+            else if (isMax && Selection < opt.Selection)
+            {
+                opt.updateSelection(Selection);
+
+            }
+        }
+    }
+
     public static void switchPreset(int newPreset)
     {
         saveVanillaOptions();
-        preset = newPreset;
-        vanillaSettings = Main.Instance.Config.Bind($"Preset{preset}", "GameOptions", "");
+        Preset = newPreset;
+        VanillaSettings = Main.Instance.Config.Bind($"Preset{Preset}", "GameOptions", "");
         loadVanillaOptions();
-        foreach (var option in options)
+        foreach (var option in Options)
         {
-            if (option.id == 0) continue;
+            if (option.Id == 0) continue;
 
-            option.entry = Main.Instance.Config.Bind($"Preset{preset}", option.id.ToString(), option.defaultSelection);
-            option.selection = Mathf.Clamp(option.entry.Value, 0, option.selections.Length - 1);
-            if (option.optionBehaviour is not null and StringOption stringOption)
+            option.Entry = Main.Instance.Config.Bind($"Preset{Preset}", option.Id.ToString(), option.DefaultSelection);
+            option.Selection = Mathf.Clamp(option.Entry.Value, 0, option.Selections.Length - 1);
+            if (option.OptionBehaviour is not null and StringOption stringOption)
             {
-                stringOption.oldValue = stringOption.Value = option.selection;
+                stringOption.oldValue = stringOption.Value = option.Selection;
                 stringOption.ValueText.text = option.GetString();
             }
         }
@@ -123,7 +139,7 @@ public class CustomOption
 
     public static void saveVanillaOptions()
     {
-        vanillaSettings.Value =
+        VanillaSettings.Value =
             Convert.ToBase64String(
 #if MXYX_CLUB
                 GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameManager.Instance.LogicOptions.currentGameOptions));
@@ -134,7 +150,7 @@ public class CustomOption
 
     public static void loadVanillaOptions()
     {
-        var optionsString = vanillaSettings.Value;
+        var optionsString = VanillaSettings.Value;
         if (optionsString == "") return;
         GameOptionsManager.Instance.GameHostOptions =
             GameOptionsManager.Instance.gameOptionsFactory.FromBytes(Convert.FromBase64String(optionsString));
@@ -145,12 +161,12 @@ public class CustomOption
 
     public static void ShareOptionChange(uint optionId)
     {
-        var option = options.FirstOrDefault(x => x.id == optionId);
+        var option = Options.FirstOrDefault(x => x.Id == optionId);
         if (option == null) return;
         var writer = StartRPC(CustomRPC.ShareOptions);
         writer.Write((byte)1);
-        writer.WritePacked((uint)option.id);
-        writer.WritePacked(Convert.ToUInt32(option.selection));
+        writer.WritePacked((uint)option.Id);
+        writer.WritePacked(Convert.ToUInt32(option.Selection));
         writer.EndRPC();
     }
 
@@ -158,7 +174,7 @@ public class CustomOption
     {
         if (PlayerControl.AllPlayerControls.ToList().Count <= 1 ||
             (!AmongUsClient.Instance!.AmHost && PlayerControl.LocalPlayer == null)) return;
-        var optionsList = new List<CustomOption>(options);
+        var optionsList = new List<CustomOption>(Options);
         while (optionsList.Any())
         {
             var amount = (byte)Math.Min(optionsList.Count, 200); // takes less than 3 bytes per option on average
@@ -169,8 +185,8 @@ public class CustomOption
             {
                 var option = optionsList[0];
                 optionsList.RemoveAt(0);
-                writer.WritePacked((uint)option.id);
-                writer.WritePacked(Convert.ToUInt32(option.selection));
+                writer.WritePacked((uint)option.Id);
+                writer.WritePacked(Convert.ToUInt32(option.Selection));
             }
 
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -181,17 +197,17 @@ public class CustomOption
 
     public int GetSelection()
     {
-        return selection;
+        return Selection;
     }
 
     public bool GetBool()
     {
-        return selection > 0;
+        return Selection > 0;
     }
 
     public float GetFloat()
     {
-        return (float)selections[selection];
+        return (float)Selections[Selection];
     }
 
     public int GetInt()
@@ -201,22 +217,22 @@ public class CustomOption
 
     public int GetQuantity()
     {
-        return selection + 1;
+        return Selection + 1;
     }
 
     public bool IsHidden()
     {
-        return isHidden != null && isHidden.Invoke();
+        return IsHiddenFunc != null && IsHiddenFunc.Invoke();
     }
 
     public bool IsEnbaled()
     {
         var enabled = true;
-        var parent = this.parent;
+        var parent = Parent;
         while (parent != null && enabled)
         {
-            enabled = parent.selection != 0;
-            parent = parent.parent;
+            enabled = parent.Selection != 0;
+            parent = parent.Parent;
         }
 
         return !IsHidden() && enabled;
@@ -224,8 +240,8 @@ public class CustomOption
 
     public string GetString()
     {
-        var sel = selections[selection].ToString();
-
+        var selObj = Selections[Selection];
+        var sel = selObj is float f ? Math.Round(f, 2).ToString("0.##", CultureInfo.InvariantCulture) : selObj.ToString();
         return sel switch
         {
             "optionOn" => "<color=#FFFF00FF>" + sel.Translate() + "</color>",
@@ -238,42 +254,42 @@ public class CustomOption
 
     public string GetName()
     {
-        return name.Translate();
+        return Name.Translate();
     }
 
     // Option changes
     public void updateSelection(int newSelection)
     {
-        selection = Mathf.Clamp((newSelection + selections.Length) % selections.Length, 0, selections.Length - 1);
+        Selection = Mathf.Clamp((newSelection + Selections.Length) % Selections.Length, 0, Selections.Length - 1);
         try
         {
-            onChange?.Invoke();
+            OnChange?.Invoke(this);
         }
         catch
         {
             // ignored
         }
 
-        if (optionBehaviour is not null and StringOption stringOption)
+        if (OptionBehaviour is not null and StringOption stringOption)
         {
-            stringOption.oldValue = stringOption.Value = selection;
+            stringOption.oldValue = stringOption.Value = Selection;
             stringOption.ValueText.text = GetString();
             if (AmongUsClient.Instance?.AmHost != true || !PlayerControl.LocalPlayer) return;
-            if (id == 0 && selection != preset)
+            if (Id == 0 && Selection != Preset)
             {
-                switchPreset(selection); // Switch presets
+                switchPreset(Selection); // Switch presets
                 ShareOptionSelections();
             }
-            else if (entry != null)
+            else if (Entry != null)
             {
-                entry.Value = selection; // Save selection to config
-                ShareOptionChange((uint)id); // Share single selection
+                Entry.Value = Selection; // Save selection to config
+                ShareOptionChange((uint)Id); // Share single selection
             }
         }
-        else if (id == 0 && AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)
+        else if (Id == 0 && AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)
         {
             // Share the preset switch for random maps, even if the menu isnt open!
-            switchPreset(selection);
+            switchPreset(Selection);
             ShareOptionSelections(); // Share all selections
         }
         if (AmongUsClient.Instance?.AmHost == true) GameOptionsMenuUpdatePatch.update = true;
@@ -286,29 +302,22 @@ public class CustomOption
             using (var binaryWriter = new BinaryWriter(memoryStream))
             {
                 var lastId = -1;
-                foreach (var option in options.OrderBy(x => x.id))
+                foreach (var option in Options.OrderBy(x => x.Id))
                 {
-                    if (option.id == 0) continue;
+                    if (option.Id == 0) continue;
 
-                    // 计算ID增量
-                    int idDelta = option.id - lastId - 1;
-                    lastId = option.id;
+                    int idDelta = option.Id - lastId - 1;
+                    lastId = option.Id;
 
-                    // 判断是否使用连续模式
                     bool consecutive = idDelta == 0;
 
-                    // VarInt编码选择值和ID信息
-                    uint value = (uint)option.selection;
+                    uint value = (uint)option.Selection;
                     if (!consecutive)
                     {
-                        // 设置最高位标记非连续ID
                         value |= 0x80;
-
-                        // 将ID增量添加到value中
                         value |= (uint)idDelta << 8;
                     }
 
-                    // 写入VarInt编码的值
                     while (value > 0x7F)
                     {
                         binaryWriter.Write((byte)((value & 0x7F) | 0x80));
@@ -332,7 +341,6 @@ public class CustomOption
 
             while (reader.BaseStream.Position < inputValues.Length)
             {
-                // 读取VarInt编码的值
                 uint value = 0;
                 int shift = 0;
                 byte b;
@@ -343,11 +351,9 @@ public class CustomOption
                     shift += 7;
                 } while ((b & 0x80) != 0);
 
-                // 解析连续标志和选择值
                 bool consecutive = (value & 0x80) == 0;
                 int selection = (int)(value & 0x7F);
 
-                // 计算当前ID
                 int currentId;
                 if (consecutive)
                 {
@@ -355,22 +361,16 @@ public class CustomOption
                 }
                 else
                 {
-                    // 提取ID增量
                     int idDelta = (int)((value >> 8) & 0x7FFFFF);
                     currentId = lastId + idDelta + 1;
                 }
 
                 lastId = currentId;
 
-                // 查找并更新选项
-                var option = options.FirstOrDefault(x => x.id == currentId);
+                var option = Options.FirstOrDefault(x => x.Id == currentId);
                 if (option != null)
                 {
                     option.updateSelection(selection);
-                }
-                else
-                {
-                    Warn($"找不到选项 ID={currentId}");
                 }
             }
         }
@@ -384,7 +384,7 @@ public class CustomOption
     // Copy to or paste from clipboard (as string)
     public static void copyToClipboard()
     {
-        GUIUtility.systemCopyBuffer = $"{Main.Version}!{Convert.ToBase64String(serializeOptions())}!{vanillaSettings.Value}";
+        GUIUtility.systemCopyBuffer = $"{Main.Version}!{Convert.ToBase64String(serializeOptions())}!{VanillaSettings.Value}";
     }
 
     public static bool pasteFromClipboard()
@@ -398,7 +398,7 @@ public class CustomOption
             var vanillaSettingsSub = settingsSplit[2];
             deserializeOptions(Convert.FromBase64String(torSettings));
 
-            vanillaSettings.Value = vanillaSettingsSub;
+            VanillaSettings.Value = vanillaSettingsSub;
             loadVanillaOptions();
             return true;
         }
@@ -417,9 +417,9 @@ internal class GameOptionsMenuStartPatch
 {
     public static void Postfix(GameOptionsMenu __instance)
     {
-        switch (ModOption.gameMode)
+        switch (ModOption.GameMode)
         {
-            case CustomGamemodes.Classic:
+            case CustomGameModes.Classic or CustomGameModes.Anonymous:
                 createClassicTabs(__instance);
                 break;
         }
@@ -453,7 +453,7 @@ internal class GameOptionsMenuStartPatch
         pasteButton.name = "PasteButton";
         var pasteButtonPassive = pasteButton.GetComponent<PassiveButton>();
         var pasteButtonRenderer = pasteButton.GetComponent<SpriteRenderer>();
-        pasteButtonRenderer.sprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.PasteButton.png", 175f);
+        pasteButtonRenderer.sprite = new ResourceSprite("PasteButton.png", 175f);
         pasteButtonPassive.OnClick.RemoveAllListeners();
         pasteButtonPassive.OnClick = new Button.ButtonClickedEvent();
         pasteButtonPassive.OnClick.AddListener((Action)(() =>
@@ -500,7 +500,7 @@ internal class GameOptionsMenuStartPatch
         var gameSettings = GameObject.Find("Game Settings");
         if (gameSettings == null) return;
 
-        gameSettings.transform.FindChild("GameGroup").GetComponent<Scroller>().ScrollWheelSpeed = 1.3f;
+        gameSettings.transform.FindChild("GameGroup").GetComponent<Scroller>().ScrollWheelSpeed = 1f;
         var gameSettingMenu = UObject.FindObjectsOfType<GameSettingMenu>().FirstOrDefault();
         if (gameSettingMenu == null) return;
 
@@ -518,7 +518,7 @@ internal class GameOptionsMenuStartPatch
             var obj = gameSettings.transform.parent.Find(type + "Tab");
             if (obj != null)
             {
-                obj.transform.FindChild("../../GameGroup/Text").GetComponent<TMPro.TextMeshPro>().SetText(GetString("TabGroup." + type));
+                obj.transform.FindChild("../../GameGroup/Text").GetComponent<TextMeshPro>().SetText(GetString("TabGroup." + type));
                 continue;
             }
 
@@ -541,21 +541,21 @@ internal class GameOptionsMenuStartPatch
             menu.GetComponentsInChildren<OptionBehaviour>().Do(x => UObject.Destroy(x.gameObject));
 
             var stringOptions = new List<OptionBehaviour>();
-            foreach (var option in options)
+            foreach (var option in CustomOption.Options)
             {
-                if (option.type != type) continue;
-                if (option.optionBehaviour == null)
+                if (option.Type != type) continue;
+                if (option.OptionBehaviour == null)
                 {
                     var stringOption = UObject.Instantiate(template, menu.transform);
                     stringOptions.Add(stringOption);
                     //optionBehaviours[(int)option.type].Add(stringOption);
                     stringOption.OnValueChanged = new Action<OptionBehaviour>(o => { });
                     stringOption.TitleText.text = option.GetName();
-                    stringOption.Value = stringOption.oldValue = option.selection;
+                    stringOption.Value = stringOption.oldValue = option.Selection;
                     stringOption.ValueText.text = option.GetString();
-                    stringOption.name = "Option_" + option.id.ToString();
+                    stringOption.name = "Option_" + option.Id.ToString();
 
-                    option.optionBehaviour = stringOption;
+                    option.OptionBehaviour = stringOption;
 
                     float yoffset = option.IsText ? 100f : 0f;
                     stringOption.transform.FindChild("Background").localScale = new Vector3(1.6f, 1f, 1f);
@@ -567,7 +567,7 @@ internal class GameOptionsMenuStartPatch
                     stringOption.transform.FindChild("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(5.5f, 0.37f);
                 }
 
-                option.optionBehaviour.gameObject.SetActive(true);
+                option.OptionBehaviour.gameObject.SetActive(true);
             }
             menu.Children = stringOptions.ToArray();
             menuObj.gameObject.SetActive(false);
@@ -631,12 +631,12 @@ public class StringOptionEnablePatch
 {
     public static bool Prefix(StringOption __instance)
     {
-        var option = options.FirstOrDefault(option => option.optionBehaviour == __instance);
+        var option = CustomOption.Options.FirstOrDefault(option => option.OptionBehaviour == __instance);
         if (option == null) return true;
 
         __instance.OnValueChanged = new Action<OptionBehaviour>(o => { });
         __instance.TitleText.text = option.GetName();
-        __instance.Value = __instance.oldValue = option.selection;
+        __instance.Value = __instance.oldValue = option.Selection;
         __instance.ValueText.text = option.GetString();
 
         return false;
@@ -648,9 +648,9 @@ public class StringOptionIncreasePatch
 {
     public static bool Prefix(StringOption __instance)
     {
-        var option = options.FirstOrDefault(option => option.optionBehaviour == __instance);
+        var option = CustomOption.Options.FirstOrDefault(option => option.OptionBehaviour == __instance);
         if (option == null) return true;
-        option.updateSelection(option.selection + 1);
+        option.updateSelection(option.Selection + 1);
         return false;
     }
 }
@@ -660,9 +660,9 @@ public class StringOptionDecreasePatch
 {
     public static bool Prefix(StringOption __instance)
     {
-        var option = options.FirstOrDefault(option => option.optionBehaviour == __instance);
+        var option = CustomOption.Options.FirstOrDefault(option => option.OptionBehaviour == __instance);
         if (option == null) return true;
-        option.updateSelection(option.selection - 1);
+        option.updateSelection(option.Selection - 1);
         return false;
     }
 }
@@ -673,17 +673,17 @@ public class StringOptionFixedUpdate
     public static void Postfix(StringOption __instance)
     {
         if (!IL2CPPChainloader.Instance.Plugins.TryGetValue("com.DigiWorm.LevelImposter", out var _)) return;
-        var option = options.FirstOrDefault(option => option.optionBehaviour == __instance);
+        var option = CustomOption.Options.FirstOrDefault(option => option.OptionBehaviour == __instance);
         if (option == null) return;
         if (GameOptionsManager.Instance.CurrentGameOptions.MapId == 6)
-            if (option.optionBehaviour is not null and StringOption stringOption)
+            if (option.OptionBehaviour is not null and StringOption stringOption)
             {
-                stringOption.ValueText.text = option.selections[option.selection].ToString();
+                stringOption.ValueText.text = option.Selections[option.Selection].ToString();
             }
-            else if (option.optionBehaviour is not null and StringOption stringOptionToo)
+            else if (option.OptionBehaviour is not null and StringOption stringOptionToo)
             {
-                stringOptionToo.oldValue = stringOptionToo.Value = option.selection;
-                stringOptionToo.ValueText.text = option.selections[option.selection].ToString();
+                stringOptionToo.oldValue = stringOptionToo.Value = option.Selection;
+                stringOptionToo.ValueText.text = option.Selections[option.Selection].ToString();
             }
     }
 }
@@ -731,67 +731,67 @@ internal class GameOptionsMenuUpdatePatch
             float numItems = __instance.Children.Length;
             var offset = 2.7f;
 
-            foreach (var option in options)
+            foreach (var option in CustomOption.Options)
             {
-                if (tab != option.type)
+                if (tab != option.Type)
                 {
                     continue;
                 }
-                if (option?.optionBehaviour != null && option.optionBehaviour.gameObject != null)
+                if (option?.OptionBehaviour != null && option.OptionBehaviour.gameObject != null)
                 {
                     var enabled = option.IsEnbaled();
-                    var parent = option.parent;
-                    option.optionBehaviour.gameObject.SetActive(enabled);
+                    var parent = option.Parent;
+                    option.OptionBehaviour.gameObject.SetActive(enabled);
 
-                    var opt = option.optionBehaviour.transform.Find("Background").GetComponent<SpriteRenderer>();
+                    var opt = option.OptionBehaviour.transform.Find("Background").GetComponent<SpriteRenderer>();
                     opt.size = new(5.0f, 0.45f);
 
                     while (parent != null && enabled)
                     {
                         enabled = parent.IsEnbaled();
-                        parent = parent.parent;
+                        parent = parent.Parent;
 
                         opt.color = new(0f, 1f, 0f);
                         opt.size = new(4.8f, 0.45f);
                         opt.transform.localPosition = new Vector3(0.11f, 0f);
-                        option.optionBehaviour.transform.Find("Title_TMP").transform.localPosition = new Vector3(-1.08f, 0f);
-                        option.optionBehaviour.transform.FindChild("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(5.1f, 0.28f);
+                        option.OptionBehaviour.transform.Find("Title_TMP").transform.localPosition = new Vector3(-1.08f, 0f);
+                        option.OptionBehaviour.transform.FindChild("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(5.1f, 0.28f);
 
-                        if (option.parent?.parent != null)
+                        if (option.Parent?.Parent != null)
                         {
                             opt.color = new(0f, 0f, 1f);
                             opt.size = new(4.6f, 0.45f);
                             opt.transform.localPosition = new Vector3(0.24f, 0f);
-                            option.optionBehaviour.transform.Find("Title_TMP").transform.localPosition = new Vector3(-0.88f, 0f);
-                            option.optionBehaviour.transform.FindChild("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(4.9f, 0.28f);
+                            option.OptionBehaviour.transform.Find("Title_TMP").transform.localPosition = new Vector3(-0.88f, 0f);
+                            option.OptionBehaviour.transform.FindChild("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(4.9f, 0.28f);
 
-                            if (option.parent?.parent?.parent != null)
+                            if (option.Parent?.Parent?.Parent != null)
                             {
                                 opt.color = new(1f, 0f, 0f);
                                 opt.size = new(4.4f, 0.45f);
                                 opt.transform.localPosition = new Vector3(0.37f, 0f);
-                                option.optionBehaviour.transform.Find("Title_TMP").transform.localPosition = new Vector3(-0.68f, 0f);
-                                option.optionBehaviour.transform.FindChild("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(4.7f, 0.28f);
+                                option.OptionBehaviour.transform.Find("Title_TMP").transform.localPosition = new Vector3(-0.68f, 0f);
+                                option.OptionBehaviour.transform.FindChild("Title_TMP").GetComponent<RectTransform>().sizeDelta = new Vector2(4.7f, 0.28f);
                             }
                         }
                     }
 
-                    /*if (option.IsText)
+                    if (option.IsText)
                     {
                         opt.color = new(0, 0, 0);
                         opt.transform.localPosition = new(100f, 100f, 100f);
-                    }*/
+                    }
 
-                    option.optionBehaviour.gameObject.SetActive(enabled);
+                    option.OptionBehaviour.gameObject.SetActive(enabled);
                     if (enabled)
                     {
-                        offset -= option.isHeader ? 0.7f : 0.5f;
-                        option.optionBehaviour.transform.localPosition = new Vector3(
-                            option.optionBehaviour.transform.localPosition.x,
+                        offset -= option.IsHeader ? 0.7f : 0.5f;
+                        option.OptionBehaviour.transform.localPosition = new Vector3(
+                            option.OptionBehaviour.transform.localPosition.x,
                             offset,
-                            option.optionBehaviour.transform.localPosition.z);
+                            option.OptionBehaviour.transform.localPosition.z);
 
-                        if (option.isHeader)
+                        if (option.IsHeader)
                         {
                             numItems += 0.3f;
                         }
@@ -829,8 +829,8 @@ internal class GameOptionsDataPatch
     private static string buildModifierExtras(CustomOption customOption)
     {
         // find options children with quantity
-        var children = options.Where(o => o.parent == customOption);
-        var quantity = children.Where(o => o.name.Contains("Quantity")).ToList();
+        var children = CustomOption.Options.Where(o => o.Parent == customOption);
+        var quantity = children.Where(o => o.Name.Contains("Quantity")).ToList();
         if (customOption.GetSelection() == 0) return "";
         if (quantity.Count == 1) return $" ({quantity[0].GetQuantity()})";
         if (customOption == CustomOptionHolder.modifierLover)
@@ -841,30 +841,30 @@ internal class GameOptionsDataPatch
     private static string buildOptionsOfType(CustomOptionType type, bool headerOnly)
     {
         var sb = new StringBuilder("\n");
-        var options = CustomOption.options.Where(o => o.type == type && o.IsEnbaled());
+        var options = CustomOption.Options.Where(o => o.Type == type && o.IsEnbaled());
         if (GuesserGM.Enabled)
         {
-            if (type == CustomOptionType.General) options = CustomOption.options.Where(o => o.type == type || o.type == CustomOptionType.Guesser);
+            if (type == CustomOptionType.General) options = CustomOption.Options.Where(o => o.Type == type || o.Type == CustomOptionType.Guesser);
         }
-        else if (ModOption.gameMode == CustomGamemodes.Classic)
+        else if (ModOption.GameMode is CustomGameModes.Classic or CustomGameModes.Anonymous)
         {
-            options = options.Where(x => !(x.type == CustomOptionType.Guesser));
+            options = options.Where(x => !(x.Type == CustomOptionType.Guesser));
         }
 
         foreach (var option in options)
-            if (option.parent == null)
+            if (option.Parent == null)
             {
                 var line = $"{option.GetName()}: {option.GetString()}";
                 if (type == CustomOptionType.Modifier) line += buildModifierExtras(option);
                 sb.AppendLine(line);
             }
-            else if (option.parent.GetSelection() > 0)
+            else if (option.Parent.GetSelection() > 0)
             {
-                if (option.id == 30170) //Deputy
+                if (option.Id == 30170) //Deputy
                     sb.AppendLine($"- {Cs(Sheriff.color, "Deputy".Translate())}: {option.GetString()}");
-                else if (option.id == 20142)
+                else if (option.Id == 20142)
                     sb.AppendLine($"- {Cs(Jackal.color, "jackalSwoopChance".Translate())}: {option.GetString()}");
-                else if (option.id == 20135) //Sidekick
+                else if (option.Id == 20135) //Sidekick
                     sb.AppendLine($"- {Cs(Jackal.color, "Sidekick".Translate())}: {option.GetString()}");
             }
 
@@ -873,10 +873,10 @@ internal class GameOptionsDataPatch
 
         foreach (var option in options)
         {
-            if (option.parent != null)
+            if (option.Parent != null)
             {
-                var isIrrelevant = option.parent.GetSelection() == 0 ||
-                    (option.parent.parent != null && option.parent.parent.GetSelection() == 0);
+                var isIrrelevant = option.Parent.GetSelection() == 0 ||
+                    (option.Parent.Parent != null && option.Parent.Parent.GetSelection() == 0);
 
                 var c = isIrrelevant ? Color.grey : Color.white; // No use for now
                 if (isIrrelevant) continue;
@@ -884,7 +884,7 @@ internal class GameOptionsDataPatch
             }
             else
             {
-                if (option == CustomOptionHolder.neutralRolesCountMin)
+                if (option == CustomOptionHolder.modifiersCountMin)
                 {
                     var optionName = Cs(new Color32(204, 204, 0, 255), "CrewmateRolesText".Translate());
                     var neutralMin = CustomOptionHolder.neutralRolesCountMin.GetSelection();
@@ -921,7 +921,7 @@ internal class GameOptionsDataPatch
                     var optionName = Cs(new Color32(204, 204, 0, 255), "ImpostorRolesText".Translate());
                     sb.AppendLine($"{optionName}: {ModOption.NumImpostors}");
                 }
-                else if (option == CustomOptionHolder.modifiersCountMin)
+                else if (option == CustomOptionHolder.modifiersCountMax)
                 {
                     var optionName = Cs(new Color32(204, 204, 0, 255), "ModifierRolesText".Translate());
                     var min = CustomOptionHolder.modifiersCountMin.GetSelection();
@@ -930,7 +930,7 @@ internal class GameOptionsDataPatch
                     var optionValue = min == max ? $"{max}" : $"{min} ~ {max}";
                     sb.AppendLine($"{optionName}: {optionValue}");
                 }
-                else if (option == CustomOptionHolder.modifiersCountMax ||
+                else if (option == CustomOptionHolder.neutralRolesCountMin ||
                          option == CustomOptionHolder.killerNeutralRolesCountMin)
                 {
                 }

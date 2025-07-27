@@ -1,4 +1,3 @@
-using AmongUs.GameOptions;
 using Rewired;
 using TheOtherRoles.Objects;
 
@@ -618,6 +617,25 @@ internal class HudManagerUpdatePatch
         }
     }
 
+    private static void bloodyUpdate()
+    {
+        if (!Bloody.active.Any()) return;
+        foreach (var entry in Bloody.active)
+        {
+            var player = PlayerById(entry.Key);
+            var bloodyPlayer = PlayerById(Bloody.bloodyKillerMap[player.PlayerId]);
+
+            Bloody.active[entry.Key] = entry.Value - Time.fixedDeltaTime;
+            if (entry.Value <= 0 || player.Data.IsDead)
+            {
+                Bloody.active.Remove(entry.Key);
+                continue; // Skip the creation of the next blood drop, if the killer is dead or the time is up
+            }
+
+            _ = new Bloodytrail(player, bloodyPlayer);
+        }
+    }
+
     private static void updateShielded()
     {
         if (Medic.shielded == null) return;
@@ -646,14 +664,13 @@ internal class HudManagerUpdatePatch
             (Mini.mini == Swooper.swooper && Swooper.isInvisable) ||
             (Jackal.jackal.Any(x => x == Mini.mini) && Jackal.isInvisable) || isActiveCamoComms) return;
 
-        var growingProgress = Mini.growingProgress();
+        var growingProgress = Mini.growingProgress;
         var scale = (growingProgress * 0.35f) + 0.35f;
         var suffix = "";
         if (growingProgress != 1f)
             suffix = " <color=#FAD934FF>(" + Mathf.FloorToInt(growingProgress * 18) + ")</color>";
-        if (!Mini.isGrowingUpInMeeting && MeetingHud.Instance != null && Mini.ageOnMeetingStart != 0 &&
-            !(Mini.ageOnMeetingStart >= 18))
-            suffix = " <color=#FAD934FF>(" + Mini.ageOnMeetingStart + ")</color>";
+        if (!Mini.isGrowingUpInMeeting && MeetingHud.Instance != null && Mini.Age != 0 && !(Mini.Age >= 18))
+            suffix = " <color=#FAD934FF>(" + (int)Mini.Age + ")</color>";
 
         Mini.mini.cosmetics.nameText.text += suffix;
         if (MeetingHud.Instance != null)
@@ -669,7 +686,7 @@ internal class HudManagerUpdatePatch
 
     private static bool HandCuffed()
     {
-        return Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) && Sheriff.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0;
+        return Sheriff.handcuffedKnows.TryGetValue(PlayerControl.LocalPlayer.PlayerId, out var val) && val > 0f;
     }
 
     public static void updateGiantSize(HudManager __instance)
@@ -715,7 +732,7 @@ internal class HudManagerUpdatePatch
             BountyHunter.bountyUpdateTimer = BountyHunter.bountyDuration;
             var possibleTargets = new List<PlayerControl>();
             foreach (PlayerControl p in PlayerControl.AllPlayerControls.ToArray().Where(x => x.IsAlive() && !x.IsImpostor(true)))
-                if ((p != Mini.mini || Mini.isGrownUp()) && p != Lovers.otherLover(BountyHunter.bountyHunter))
+                if ((p != Mini.mini || Mini.isGrownUp) && p != Lovers.otherLover(BountyHunter.bountyHunter))
                     possibleTargets.Add(p);
             if (possibleTargets.Count == 0) return;
             BountyHunter.bounty = possibleTargets[rnd.Next(0, possibleTargets.Count)];
@@ -1322,10 +1339,7 @@ internal class HudManagerUpdatePatch
     private static void updateReportButton(HudManager __instance)
     {
         if (IsHideNSeek) return;
-        if (HandCuffed() || !ShowButtons)
-        {
-            __instance.ReportButton.Hide();
-        }
+        if (HandCuffed() || !ShowButtons) __instance.ReportButton.Hide();
         else if (!__instance.ReportButton.isActiveAndEnabled) __instance.ReportButton.Show();
     }
 
@@ -1340,7 +1354,6 @@ internal class HudManagerUpdatePatch
         else if (PlayerControl.LocalPlayer.RoleCanUseVents() && !__instance.ImpostorVentButton.isActiveAndEnabled)
         {
             __instance.ImpostorVentButton.Show();
-
         }
         if (ReInput.players.GetPlayer(0).GetButtonDown(RewiredConsts.Action.UseVent) &&
             !PlayerControl.LocalPlayer.Data.Role.IsImpostor && PlayerControl.LocalPlayer.RoleCanUseVents())
@@ -1358,16 +1371,22 @@ internal class HudManagerUpdatePatch
 
     private static void updateSabotageButton(HudManager __instance)
     {
-        if (!ShowButtons)
+        if (!ShowButtons || ModOption.disableSabotage)
+        {
             __instance.SabotageButton.Hide();
-
-        if (PlayerControl.LocalPlayer.IsDead() && PlayerControl.LocalPlayer.IsImpostor() && CustomOptionHolder.deadImpsBlockSabotage.GetBool())
+        }
+        else if (PlayerControl.LocalPlayer.IsDead() && PlayerControl.LocalPlayer.IsImpostor() && CustomOptionHolder.deadImpsBlockSabotage.GetBool())
+        {
             __instance.SabotageButton.Hide();
-
-        if (PlayerControl.LocalPlayer.roleCanSabotage())
+        }
+        else if (PlayerControl.LocalPlayer.CanUseSabotage())
         {
             __instance.SabotageButton.Show();
             __instance.SabotageButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            __instance.SabotageButton.Hide();
         }
     }
 
@@ -1421,7 +1440,10 @@ internal class HudManagerUpdatePatch
         timerUpdate();
         // Mini
         miniUpdate();
+        Mini.Update();
 
+        // Bloody
+        bloodyUpdate();
         // Update player outlines
         setBasePlayerOutlines();
 

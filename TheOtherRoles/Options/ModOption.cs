@@ -52,7 +52,7 @@ internal class ModOption
     public static bool fungleDisableCamoComms;
     public static bool randomGameStartPosition;
     public static bool allowModGuess;
-    public static CustomGamemodes gameMode = CustomGamemodes.Classic;
+    public static CustomGameModes GameMode = CustomGameModes.Classic;
 
     // Updating values
     public static int meetingsCount;

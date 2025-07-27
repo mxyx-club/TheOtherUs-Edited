@@ -78,7 +78,7 @@ public static class Sheriff
 
     public static bool sheriffCanKill(PlayerControl target)
     {
-        return (target != Mini.mini || Mini.isGrownUp()) &&
+        return (target != Mini.mini || Mini.isGrownUp) &&
                (target.IsImpostor(CustomOptionHolder.spyCanDieToSheriff.GetBool()) || target.IsImpostor(AndCat: true) ||
                 (canKillNeutrals &&
                  (isKillerNeutral(target) ||

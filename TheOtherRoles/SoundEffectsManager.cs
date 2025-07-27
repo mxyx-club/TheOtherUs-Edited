@@ -69,7 +69,7 @@ public static class SoundEffectsManager
                 float distance, volume;
                 distance = Vector2.Distance(position, PlayerControl.LocalPlayer.GetTruePosition());
                 if (distance < range)
-                    volume = 1f - distance / range;
+                    volume = 1f - (distance / range);
                 else
                     volume = 0f;
                 source.volume = volume;

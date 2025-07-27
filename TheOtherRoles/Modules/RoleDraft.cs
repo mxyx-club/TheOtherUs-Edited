@@ -1,6 +1,6 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using TheOtherRoles.Attributes;
-using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Mode;
 using static TheOtherRoles.Patches.RoleManagerSelectRolesPatch;
 
 namespace TheOtherRoles.Modules;
@@ -8,7 +8,8 @@ namespace TheOtherRoles.Modules;
 [HarmonyPatch]
 internal class RoleDraft
 {
-    public static bool isEnabled => CustomOptionHolder.isDraftMode.GetBool() && (ModOption.gameMode is CustomGamemodes.Classic);
+    public static bool isEnabled => CustomOptionHolder.isDraftMode.GetBool() &&
+        (ModOption.GameMode is CustomGameModes.Classic or CustomGameModes.Anonymous);
     public static bool isRunning;
 
     public static List<byte> pickOrder = new();

@@ -13,9 +13,11 @@ namespace TheOtherRoles.Modules;
 
 public class PlayerData
 {
-    public static PlayerData Local { get; private set; }
+    public static PlayerData Local { get => field ??= GetPlayerData(PlayerControl.LocalPlayer); private set; }
     public static Dictionary<byte, PlayerData> AllPlayerData = new();
     public static Dictionary<byte, string> AllFriendCode = new();
+    public static Dictionary<byte, ushort> ModId = new();
+
     public PlayerControl Player { get; private set; }
     public byte PlayerId { get; private set; }
 
@@ -25,19 +27,25 @@ public class PlayerData
     public int KillCount;
     public Tuple<int, int> TaskCount;
 
-    public RoleType RoleType { get; set; } = RoleType.Crewmate;
-    public List<RoleId> RoleHistory { get; set; } = new();
-    public RoleId Role { get; set; } = RoleId.DefaultRole;
-    public List<RoleId> Modifiers { get; set; } = new();
+    public RoleInfo RoleInfo => RoleInfo.RoleInfoById[RoleId];
+    public RoleType RoleType = RoleType.Crewmate;
+    public List<RoleId> RoleHistory = new();
+    public RoleId RoleId = RoleId.DefaultRole;
+    public List<RoleId> Modifiers = new();
 
     public string PlayerName { get; private set; }
-    public string FriendCode { get; set; }
-    public string PlayerColor { get; set; }
+    public string FriendCode { get; private set; }
+    public string PlayerColor { get; private set; }
 
     public CustomDeathReason DeathReason { get; set; } = CustomDeathReason.Null;
     public DateTime DeathTimer { get; set; } = DateTime.MinValue;
     public PlayerControl KilledBy { get; set; }
-    //public string KilledName { get; set; }
+
+    public int ColorId => Player.CurrentOutfit.ColorId;
+    public string HatId => Player.CurrentOutfit.HatId;
+    public string SkinId => Player.CurrentOutfit.SkinId;
+    public string NamePlateId => Player.CurrentOutfit.NamePlateId;
+    public string PetId => Player.CurrentOutfit.PetId;
 
     public static PlayerData GetPlayerData(PlayerControl player)
     {
@@ -46,7 +54,7 @@ public class PlayerData
         {
             return data;
         }
-        else if (player?.Data != null)
+        else
         {
             data = new PlayerData
             {
@@ -60,7 +68,6 @@ public class PlayerData
             if (player == PlayerControl.LocalPlayer) Local = data;
             return data;
         }
-        return null;
     }
 
     public static string GetPlayerCode(PlayerControl player)
@@ -90,7 +97,7 @@ public class PlayerData
                 PlayerId = player.PlayerId,
                 PlayerName = player.Data.PlayerName,
                 FriendCode = player.Data.FriendCode,
-                PlayerColor = player.Data.ColorName,
+                PlayerColor = player.Data.GetPlayerColorString(),
             };
             AllPlayerData[player.PlayerId] = data;
         }
@@ -149,9 +156,11 @@ public class PlayerData
 
     public class GlobalInfo
     {
-        private const string Web = "https://toue.mxyx.club";
+        private const string Web = "http://localhost:5000/api/games";
         private const string ApiUrl = Web;
         private static readonly HttpClient httpClient = new();
+
+        public static string GameId { get; private set; }
 
         public static string HostPlayer;
         public static DateTime StartTime;
@@ -169,6 +178,18 @@ public class PlayerData
             HostPlayer = GetHostPlayer.Data.PlayerName;
             RoomCode = GameStartManagerPatch.RoomCode;
             HostCode = GetHostPlayer.Data.FriendCode;
+            GameId = GetGameId();
+
+            int seed = BitConverter.ToInt32(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(GameId)), 0);
+            var rnd = new SRandom(seed);
+
+            byte modUid = 1;
+            foreach (var player in PlayerControl.AllPlayerControls.ToArray().OrderBy(_ => rnd.Next()))
+            {
+                var id = modUid++;
+                ModId[player.PlayerId] = id;
+                Message($"Set {player.PlayerId} Is {id}", "SetUid");
+            }
         }
 
         public static string GetGameId()
@@ -210,7 +231,7 @@ public class PlayerData
                 {
                     ModVersion = $"{Main.Name} - {Main.Version}{Main.VersionSuffix}",
                     GameVersion = Application.version,
-                    GameId = GetGameId(),
+                    GameId,
                     HostPlayer,
                     StartTime = StartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
                     EndTime = EndTime.ToString("yyyy-MM-ddTHH:mm:ss"),
@@ -219,7 +240,7 @@ public class PlayerData
                     RoomCode,
                     PlayerCount,
                     HostCode,
-                    GameMode = ModOption.gameMode.ToString(),
+                    GameMode = ModOption.GameMode.ToString(),
                     DeBugMode = ModOption.DebugMode,
                     RoleDraftMode = CustomOptionHolder.isDraftMode.GetBool(),
                 },
@@ -229,11 +250,11 @@ public class PlayerData
                     p.PlayerId,
                     p.PlayerName,
                     p.PlayerColor,
-                    p.FriendCode,
+                    PlayerCode = p.FriendCode,
                     RoleInfo = new
                     {
-                        OriginRole = p.Role.ToString(),
-                        MainRole = p.Role.ToString(),
+                        OriginRole = p.RoleId.ToString(),
+                        MainRole = p.RoleId.ToString(),
                         //Modifiers = string.Join("|", p.Modifiers),
                         Modifiers = p.Modifiers.Select(x => x.ToString()),
                         //RoleHistory = string.Join(" => ", p.RoleHistory.Select(r => r.ToString())),
@@ -279,19 +300,21 @@ public class PlayerData
         {
             try
             {
-                if (RoomCode == "Local" || ModOption.DebugMode || EndTime == DateTime.MinValue) return;
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var response = await httpClient.PostAsync(ApiUrl, content).ConfigureAwait(false);
+                var response = await httpClient.PostAsync(ApiUrl, content);
+
+                Message($"Status Code: {response.StatusCode}");
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Message($"Response: {responseContent}");
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    Error($"API returned {response.StatusCode}: {errorContent}");
+                    Error($"Error: {responseContent}");
                 }
             }
             catch (Exception ex)
             {
-                Error("API upload error: " + ex.Message);
+                Error(ex);
             }
         }
     }
