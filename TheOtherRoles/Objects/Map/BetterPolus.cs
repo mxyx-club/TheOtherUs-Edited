@@ -1,7 +1,7 @@
 namespace TheOtherRoles.Objects.Map;
 
 [HarmonyPatch(typeof(ShipStatus))]
-public static class ShipStatusPatch2
+public static class BetterPolus
 {
     // Scales
     public const float DvdScreenNewScale = 0.75f;
@@ -244,7 +244,6 @@ public static class ShipStatusPatch2
     public static class ShipStatusBeginPatch
     {
         [HarmonyPrefix]
-        [HarmonyPatch]
         public static void Prefix(ShipStatus __instance)
         {
             ApplyChanges(__instance);
@@ -255,7 +254,6 @@ public static class ShipStatusPatch2
     public static class ShipStatusAwakePatch
     {
         [HarmonyPrefix]
-        [HarmonyPatch]
         public static void Prefix(ShipStatus __instance)
         {
             ApplyChanges(__instance);
@@ -266,7 +264,6 @@ public static class ShipStatusPatch2
     public static class ShipStatusFixedUpdatePatch
     {
         [HarmonyPrefix]
-        [HarmonyPatch]
         public static void Prefix(ShipStatus __instance)
         {
             if (!IsObjectsFetched || !IsAdjustmentsDone) ApplyChanges(__instance);

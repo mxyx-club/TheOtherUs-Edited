@@ -5,7 +5,6 @@ using Reactor.Networking;
 using Reactor.Networking.Attributes;
 using TheOtherRoles.Attributes;
 using TheOtherRoles.CustomCosmetics;
-using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 
 namespace TheOtherRoles;
@@ -92,7 +91,6 @@ public partial class TheOtherRolesPlugin : BasePlugin
         Harmony.PatchAll();
         CosmeticsManager.Load();
         CustomOptionHolder.Load();
-        KillTrap.LoadAudioAssets();
         ModInputManager.Load();
         if (ToggleCursor.Value) enableCursor(true);
 

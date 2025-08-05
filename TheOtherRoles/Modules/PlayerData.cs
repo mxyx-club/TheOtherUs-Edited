@@ -27,15 +27,16 @@ public class PlayerData
     public int KillCount;
     public Tuple<int, int> TaskCount;
 
-    public RoleInfo RoleInfo => RoleInfo.RoleInfoById[RoleId];
+    public RoleInfo RoleInfo => RoleInfo.RoleInfoById.GetValueOrDefault(RoleId, RoleInfo.crewmate);
     public RoleType RoleType = RoleType.Crewmate;
     public List<RoleId> RoleHistory = new();
     public RoleId RoleId = RoleId.DefaultRole;
+    public RoleId? GhostRole;
     public List<RoleId> Modifiers = new();
 
     public string PlayerName { get; private set; }
     public string FriendCode { get; private set; }
-    public string PlayerColor { get; private set; }
+    public string ColorName { get; private set; }
 
     public CustomDeathReason DeathReason { get; set; } = CustomDeathReason.Null;
     public DateTime DeathTimer { get; set; } = DateTime.MinValue;
@@ -44,6 +45,7 @@ public class PlayerData
     public int ColorId => Player.CurrentOutfit.ColorId;
     public string HatId => Player.CurrentOutfit.HatId;
     public string SkinId => Player.CurrentOutfit.SkinId;
+    public string VisorId => Player.CurrentOutfit.VisorId;
     public string NamePlateId => Player.CurrentOutfit.NamePlateId;
     public string PetId => Player.CurrentOutfit.PetId;
 
@@ -62,7 +64,7 @@ public class PlayerData
                 PlayerId = player.PlayerId,
                 PlayerName = player.Data.PlayerName,
                 FriendCode = player.Data.FriendCode,
-                PlayerColor = player.Data.ColorName,
+                ColorName = player.Data.ColorName,
             };
             AllPlayerData[player.PlayerId] = data;
             if (player == PlayerControl.LocalPlayer) Local = data;
@@ -97,7 +99,7 @@ public class PlayerData
                 PlayerId = player.PlayerId,
                 PlayerName = player.Data.PlayerName,
                 FriendCode = player.Data.FriendCode,
-                PlayerColor = player.Data.GetPlayerColorString(),
+                ColorName = player.Data.GetPlayerColorString(),
             };
             AllPlayerData[player.PlayerId] = data;
         }
@@ -152,11 +154,9 @@ public class PlayerData
         catch (Exception e) { Message($"Error reading friend code: {e.Message}", "ShareFriendCode"); }
     }
 
-    public static implicit operator PlayerControl(PlayerData data) => data.Player;
-
     public class GlobalInfo
     {
-        private const string Web = "http://localhost:5000/api/games";
+        private const string Web = "https://api.toue.mxyx.club/api/games";
         private const string ApiUrl = Web;
         private static readonly HttpClient httpClient = new();
 
@@ -249,7 +249,7 @@ public class PlayerData
                 {
                     p.PlayerId,
                     p.PlayerName,
-                    p.PlayerColor,
+                    p.ColorName,
                     PlayerCode = p.FriendCode,
                     RoleInfo = new
                     {
@@ -285,14 +285,7 @@ public class PlayerData
 
             UploadPlayerDataToApi(jsonContent).ContinueWith(task =>
             {
-                if (task.IsFaulted)
-                {
-                    Error($"Upload failed: {task.Exception?.InnerException?.Message}", "PlayerData");
-                }
-                else
-                {
-                    Info("Data uploaded successfully!", "PlayerData");
-                }
+                Info("Data uploaded successfully!", "PlayerData");
             });
         }
 

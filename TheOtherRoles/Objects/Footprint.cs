@@ -11,16 +11,14 @@ public class FootprintHolder : MonoBehaviour
 
     public FootprintHolder(IntPtr ptr) : base(ptr) { }
 
-    private static FootprintHolder _instance;
     public static FootprintHolder Instance
     {
-        get => _instance ? _instance : _instance = new GameObject("FootprintHolder").AddComponent<FootprintHolder>();
-        set => _instance = value;
+        get => field ? field : field = new GameObject("FootprintHolder").AddComponent<FootprintHolder>();
+        set;
 
     }
 
-    private static Sprite _footprintSprite;
-    private static Sprite FootprintSprite => _footprintSprite ??= UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.Footprint.png", 600f);
+    private static Sprite FootprintSprite => field ??= new ResourceSprite("Footprint.png", 600f);
 
     private static bool AnonymousFootprints => Detective.anonymousFootprints == 2;
     private static bool SabotageActive => (isActiveCamoComms || MushroomSabotageActive) && Detective.anonymousFootprints == 1;
@@ -71,7 +69,7 @@ public class FootprintHolder : MonoBehaviour
         _activeFootprints.Add(print);
     }
 
-    private static float updateDt = 0.10f;
+    private static float updateDt = 0.5f;
 
     public void Start()
     {

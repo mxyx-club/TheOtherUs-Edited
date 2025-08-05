@@ -145,20 +145,7 @@ public class SimpleTable
                 visualWidth = GetVisualWidth(cleanText);
             }
 
-            switch (_columns[i].Alignment)
-            {
-                case Alignment.Left:
-                    sb.Append(cell).Append(' ', targetWidth - visualWidth);
-                    break;
-                case Alignment.Right:
-                    sb.Append(' ', targetWidth - visualWidth).Append(cell);
-                    break;
-                case Alignment.Center:
-                    int leftSpaces = (targetWidth - visualWidth) / 2;
-                    int rightSpaces = targetWidth - visualWidth - leftSpaces;
-                    sb.Append(' ', leftSpaces).Append(cell).Append(' ', rightSpaces);
-                    break;
-            }
+            sb.Append(PadRichText(cell, targetWidth, _columns[i].Alignment));
 
             if (i < _columns.Count - 1) sb.Append(' ');
         }
@@ -192,5 +179,28 @@ public class SimpleTable
         }
 
         return sb.ToString();
+    }
+
+    private static string PadRichText(string richText, int totalWidth, Alignment alignment)
+    {
+        string clean = StripRichText(richText);
+        int visualWidth = GetVisualWidth(clean);
+
+        int leftSpaces = 0, rightSpaces = 0;
+        switch (alignment)
+        {
+            case Alignment.Left:
+                rightSpaces = totalWidth - visualWidth;
+                break;
+            case Alignment.Right:
+                leftSpaces = totalWidth - visualWidth;
+                break;
+            case Alignment.Center:
+                leftSpaces = (totalWidth - visualWidth) / 2;
+                rightSpaces = totalWidth - visualWidth - leftSpaces;
+                break;
+        }
+
+        return new string(' ', leftSpaces) + richText + new string(' ', rightSpaces);
     }
 }

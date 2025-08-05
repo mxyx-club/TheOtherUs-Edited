@@ -120,23 +120,21 @@ public class OnGameEndPatch
 
         var AllPlayers = PlayerControl.AllPlayerControls.ToArray();
 
-        foreach (var p in AllPlayers)
+        foreach (var data in PlayerData.AllPlayerData.Values)
         {
-            var data = PlayerData.GetPlayerData(p);
-            var playerName = Cs(p.IsAlive() ? Color.white : new Color(0.7f, 0.7f, 0.7f), data.PlayerName);
-            if (Anonymous.IsEnabled) playerName += data.PlayerColor;
+            var playerName = Cs(data.IsDead ? new Color(0.7f, 0.7f, 0.7f) : Color.white, data.PlayerName);
+            if (Anonymous.IsEnabled) playerName += $"<size=80%><color=#FFFFFF99> ({data.ColorName})</size></color>";
 
-            var roles = RoleInfo.GetRolesString(p, true, true, true);
-
-            var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p.Data);
+            var role = RoleInfo.GetRolesString(data.Player, true);
+            var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(data.Player.Data);
             var taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({tasksCompleted}/{tasksTotal})</color>" : "";
-            if (p.IsKiller()) taskInfo += $" <color=#FF0000FF>击杀:{PlayerData.GetKillCount(p)}</color>";
+            if (data.Player.IsKiller()) taskInfo += $" <color=#FF0000FF>击杀:{PlayerData.GetKillCount(data.Player)}</color>";
 
-            var status = p.IsAlive()
+            var status = data.Player.IsAlive()
                 ? "<color=#00FF00FF>存活</color>"
-                : $"<color=#AAAAAAFF>{RoleInfo.GetDeathReasonString(p)}</color>";
+                : $"<color=#AAAAAAFF>{RoleInfo.GetDeathReasonString(data.Player)}</color>";
 
-            table.AddRow(playerName, roles, taskInfo, status);
+            table.AddRow(playerName, role, taskInfo, status);
         }
         AdditionalTempData.GameEndString = table.ToString();
 
@@ -559,20 +557,8 @@ public class OnGameEndPatch
                 PlayerData.GlobalInfo.WinCondition = AdditionalTempData.winCondition;
                 foreach (var data in PlayerData.AllPlayerData.Values)
                 {
-                    if (data?.Player?.Data == null) continue;
                     data.IsWinner = winners.Any(x => x.PlayerId == data.PlayerId);
                     data.TaskCount = TasksHandler.taskInfo(data.Player.Data);
-                    var info = RoleInfo.getRoleInfoForPlayer(data.Player);
-                    if (info == null || info.Count == 0)
-                    {
-                        data.RoleId = RoleId.DefaultRole;
-                        data.RoleType = RoleType.Error;
-                        data.Modifiers = [];
-                        continue;
-                    }
-                    data.RoleId = info.FirstOrDefault(x => x.roleType is RoleType.Crewmate or RoleType.Neutral or RoleType.Impostor)?.roleId ?? RoleId.DefaultRole;
-                    data.Modifiers = info.Where(x => x.roleType == RoleType.Modifier).Select(x => x.roleId).ToList();
-                    data.RoleType = info.FirstOrDefault()?.roleType ?? RoleType.Crewmate;
                 }
                 PlayerData.GlobalInfo.SaveAllPlayerDataToJson();
             }
@@ -634,7 +620,7 @@ public class EndGameManagerSetUpPatch
             foreach (var roles in from data in PlayerData.AllPlayerData.Values
                                   where data.PlayerName == winningPlayerData2.PlayerName
                                   select poolablePlayer.cosmetics.nameText.text +=
-                         $"\n{Cs(data?.RoleInfo?.color ?? Color.white, data?.RoleInfo?.Name ?? "NULL")}")
+                         $"\n{Cs(data.RoleInfo.color, data.RoleInfo.Name)}")
             {
             }
         }
@@ -735,7 +721,6 @@ public class EndGameManagerSetUpPatch
                 roleSummaryTextMesh.text = roleSummaryText.ToString();
             }
         }
-
 
         AdditionalTempData.clear();
     }

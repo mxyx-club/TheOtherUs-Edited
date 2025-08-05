@@ -83,15 +83,17 @@ public static class HauntMenuPatch
     [HarmonyPatch(typeof(AbilityButton), nameof(AbilityButton.Update))]
     public static void showOrHideAbilityButtonPostfix(AbilityButton __instance)
     {
-        var isHideNSeek = GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek;
-
-        if (isHideNSeek) HudManager.Instance.AbilityButton.gameObject.SetActive(PlayerControl.LocalPlayer.IsDead());
+        if (IsHideNSeek)
+        {
+            HudManager.Instance.AbilityButton.gameObject.SetActive(PlayerControl.LocalPlayer.IsDead());
+            return;
+        }
 
         // player has haunt button.
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
         var numberOfLeftTasks = playerTotal - playerCompleted;
 
-        if (!InGame || InMeeting || !CanSeeGhostInfo)
+        if (!InGame || !ShowButtons || !CanSeeGhostInfo)
         {
             HudManager.Instance.AbilityButton?.gameObject.SetActive(false);
             return;
@@ -101,7 +103,7 @@ public static class HauntMenuPatch
             HudManager.Instance.AbilityButton.gameObject.SetActive(false);
             return;
         }
-        HudManager.Instance.AbilityButton.gameObject.SetActive(PlayerControl.LocalPlayer.IsDead());
+        HudManager.Instance.AbilityButton.gameObject.SetActive(CanSeeGhostInfo);
     }
 }
 

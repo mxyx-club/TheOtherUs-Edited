@@ -4,22 +4,25 @@ namespace TheOtherRoles.Objects;
 
 public class Trap
 {
-    public static List<Trap> traps = new();
-    public static Dictionary<byte, Trap> trapPlayerIdMap = new();
+    public static List<Trap> AllTraps = new();
 
-    private static int instanceCounter;
+    public GameObject trap;
+
+    public int trapId;
+    private static int maxId;
+
+    public PlayerControl trapper;
+    public List<PlayerControl> trapped = new();
 
     private static Sprite trapSprite = new ResourceSprite("Trapper_Trap_Ingame.png", 300);
     private Arrow arrow = new(Color.blue);
     private int neededCount = Trapper.trapCountToReveal;
-    public int instanceId;
     public bool revealed;
-    public GameObject trap;
-    public List<PlayerControl> trappedPlayer = new();
     public bool triggerable;
     private int usedCount;
+    private string room;
 
-    public Trap(Vector2 p)
+    public Trap(PlayerControl player, Vector2 p)
     {
         trap = new GameObject("Trap") { layer = 11 };
         trap.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
@@ -29,139 +32,141 @@ public class Trap
 
         var trapRenderer = trap.AddComponent<SpriteRenderer>();
         trapRenderer.sprite = trapSprite;
-        trap.SetActive(false);
-        if (PlayerControl.LocalPlayer.PlayerId == Trapper.trapper.PlayerId) trap.SetActive(true);
         trapRenderer.color = Color.white * new Vector4(1, 1, 1, 0.5f);
-        instanceId = ++instanceCounter;
-        traps.Add(this);
+        trapId = ++maxId;
+        trapper = player;
         arrow.Update(position);
         arrow.arrow.SetActive(false);
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(5, new Action<float>(x =>
+        trap.SetActive(false);
+        if (PlayerControl.LocalPlayer == player) trap.SetActive(true);
+
+        var lastRoom = FastDestroyableSingleton<HudManager>.Instance?.roomTracker?.LastRoom?.RoomId ?? null;
+        room = lastRoom != null ? FastDestroyableSingleton<TranslationController>.Instance.GetString((SystemTypes)lastRoom) : "室外";
+
+        _ = new LateTask(() =>
         {
-            if (x == 1f)
-            {
-                triggerable = true;
-                trapRenderer.color = Color.white;
-            }
-        })));
+            triggerable = true;
+            trapRenderer.color = Color.white;
+        }, 5f);
+
+        AllTraps.Add(this);
+    }
+
+    public void Destroy()
+    {
+        try
+        {
+
+            if (arrow != null) UObject.Destroy(arrow.arrow);
+            if (trap != null) UObject.Destroy(trap);
+        }
+        catch { }
+        AllTraps.Remove(this);
     }
 
     [OnGameStart, OnGameEnd]
-    public static void clearTraps()
+    public static void ClearAndReload()
     {
-        foreach (var t in traps)
+        foreach (var t in AllTraps.ToArray())
         {
-            UObject.Destroy(t.arrow.arrow);
-            UObject.Destroy(t.trap);
+            t.Destroy();
         }
 
-        traps = new();
-        trapPlayerIdMap = new Dictionary<byte, Trap>();
-        instanceCounter = 0;
+        AllTraps = new();
+        maxId = 0;
     }
 
     public static void clearRevealedTraps()
     {
-        var trapsToClear = traps.FindAll(x => x.revealed);
-
+        var trapsToClear = AllTraps.FindAll(x => x.revealed);
         foreach (var t in trapsToClear)
         {
-            traps.Remove(t);
-            UObject.Destroy(t.trap);
+            t.Destroy();
         }
     }
 
-    public static void triggerTrap(byte targetId, byte trapId)
+    public static void ClearAllTraps(PlayerControl trapper, bool active)
     {
-        var t = traps.FirstOrDefault(x => x.instanceId == trapId);
+        var traps = AllTraps.Where(x => x.trapper == trapper && (active || !x.revealed));
+        foreach (var t in traps)
+        {
+            t?.Destroy();
+        }
+    }
+
+    public static void triggerTrap(byte targetId, int trapId)
+    {
+        var t = AllTraps.FirstOrDefault(x => x.trapId == trapId);
         var target = PlayerById(targetId);
-        if (Trapper.trapper == null || t == null || t.trappedPlayer.Contains(target) || target == null) return;
-        var localIsTrapper = PlayerControl.LocalPlayer.PlayerId == Trapper.trapper.PlayerId;
-        trapPlayerIdMap.TryAdd(targetId, t);
+        if (Trapper.trapper == null || t == null || t.trapped.Contains(target) || target == null) return;
+
         t.usedCount++;
         t.triggerable = false;
         if (targetId == PlayerControl.LocalPlayer.PlayerId || targetId == Trapper.trapper.PlayerId)
         {
-            t.trap.SetActive(true);
             SoundEffectsManager.play("trapperTrap");
         }
 
         target.moveable = false;
         target.NetTransform.Halt();
-        Trapper.playersOnMap.Add(target);
-        if (localIsTrapper) t.arrow.arrow.SetActive(true);
+        if (PlayerControl.LocalPlayer.PlayerId == t.trapper.PlayerId) t.arrow.arrow.SetActive(true);
 
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Trapper.trapDuration, new Action<float>(p =>
+        _ = new LateTask(() =>
         {
-            if (p == 1f)
-            {
-                target.moveable = true;
-                Trapper.playersOnMap.RemoveAll(x => x == target);
-                if (trapPlayerIdMap.ContainsKey(targetId)) trapPlayerIdMap.Remove(targetId);
-                t.arrow.arrow.SetActive(false);
-            }
-        })));
+            target.moveable = true;
+            t.arrow.arrow.SetActive(false);
+            t.triggerable = true;
+        }, Trapper.trapDuration);
+
+        t.trapped.Add(target);
 
         if (t.usedCount == t.neededCount) t.revealed = true;
 
-        t.trappedPlayer.Add(target);
-        t.triggerable = true;
-
-        // Add trapped Info into Trapper chat
-        if (Trapper.trapper.IsAlive() && (PlayerControl.LocalPlayer == Trapper.trapper || CanSeeGhostInfo))
+        if (t.revealed && (PlayerControl.LocalPlayer == t.trapper || CanSeeGhostInfo))
         {
-            foreach (var trap in traps)
+            var message = $"陷阱 {t.room} {t.trapId} 日志: \n";
+            t.trapped = t.trapped.OrderBy(x => rnd.Next()).ToList();
+            message = t.trapped.Aggregate(message, (current, p) => current + Trapper.infoType switch
             {
-                if (!trap.revealed) continue;
-                var message = $"陷阱 {trap.instanceId}日志: \n";
-                trap.trappedPlayer = trap.trappedPlayer.OrderBy(x => rnd.Next()).ToList();
-                message = trap.trappedPlayer.Aggregate(message, (current, p) => current + Trapper.infoType switch
-                {
-                    0 => RoleInfo.GetRolesString(p, false, false, false).FirstOrDefault() + "\n",
-                    1 when (isEvilNeutral(p) || isKillerNeutral(p) || p.IsImpostor()) ^ Vortox.Reversal => "邪恶职业 \n",
-                    1 => "善良职业 \n",
-                    _ => p.Data.PlayerName + "\n"
-                });
+                0 => RoleInfo.GetRolesString(p, false, false, false) + "\n",
+                1 when (isEvilNeutral(p) || isKillerNeutral(p) || p.IsImpostor()) ^ Vortox.Reversal => "邪恶职业 \n",
+                1 => "善良职业 \n",
+                _ => p.Data.PlayerName + "\n"
+            });
 
-                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, $"{message}");
-            }
+            FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, $"{message}");
         }
-        Trapper.playersOnMap = new List<PlayerControl>();
     }
 
-    public static void Update()
+    public static void UpdateTrap()
     {
-        if (Trapper.trapper == null) return;
-        var player = PlayerControl.LocalPlayer;
-        var vent = MapUtilities.CachedShipStatus.AllVents[0];
-        var closestDistance = float.MaxValue;
-
-        if (vent == null || player == null) return;
-        var ud = vent.UsableDistance / 2;
-        Trap target = null;
-        foreach (var trap in traps)
+        foreach (var trap in AllTraps)
         {
-            if (trap.arrow.arrow.active) trap.arrow.Update();
-            if (trap.revealed || !trap.triggerable || trap.trappedPlayer.Contains(player)) continue;
-            if (player.inVent || !player.CanMove) continue;
-            var distance = Vector2.Distance(trap.trap.transform.position, player.GetTruePosition());
-            if (distance <= ud && distance < closestDistance)
+            trap.Update(PlayerControl.LocalPlayer);
+        }
+    }
+
+    public void Update(PlayerControl player)
+    {
+        if (arrow.arrow.active) arrow.Update();
+
+        var canSee = CanSeeGhostInfo || PlayerControl.LocalPlayer == trapper || trapped.Any(x => x.PlayerId == player.PlayerId);
+        trap.SetActive(canSee);
+
+        if (revealed || !triggerable || trapped.Any(x => x.PlayerId == player.PlayerId)) return;
+
+        if (player.inVent || !player.CanMove) return;
+        var distance = Vector2.Distance(trap.transform.position, player.GetTruePosition());
+        if (distance < 0.8f)
+        {
+            if (!revealed && player.PlayerId != trapper.PlayerId && player.IsAlive())
             {
-                closestDistance = distance;
-                target = trap;
+                var writer = StartRPC(CustomRPC.TriggerTrap);
+                writer.Write(player.PlayerId);
+                writer.Write(trapId);
+                writer.EndRPC();
+                triggerTrap(player.PlayerId, trapId);
             }
         }
-        if (target?.revealed == false && player.PlayerId != Trapper.trapper.PlayerId && player.IsAlive())
-        {
-            var writer = StartRPC(CustomRPC.TriggerTrap);
-            writer.Write(player.PlayerId);
-            writer.Write(target.instanceId);
-            writer.EndRPC();
-            RPCProcedure.triggerTrap(player.PlayerId, (byte)target.instanceId);
-        }
-
-        if (!CanSeeGhostInfo || player.PlayerId == Trapper.trapper.PlayerId) return;
-        foreach (var trap in traps.Where(trap => !trap.trap.active))
-            trap.trap.SetActive(true);
     }
 }

@@ -26,16 +26,258 @@ public class Specter
         duration = CustomOptionHolder.specterDuration.GetFloat();
     }
 
+
+    public static void ReloadRole(RoleId roleId, PlayerControl target)
+    {
+
+        switch (roleId)
+        {
+            case RoleId.Impostor:
+                break;
+            case RoleId.Morphling:
+                if (resetRole) Morphling.clearAndReload();
+                break;
+            case RoleId.WolfLord:
+                if (resetRole) WolfLord.ClearAndReload();
+                break;
+            case RoleId.Bomber:
+                if (resetRole) Bomber.clearAndReload();
+                break;
+            case RoleId.Mimic:
+                if (resetRole) Mimic.clearAndReload(false);
+                break;
+            case RoleId.Camouflager:
+                if (resetRole) Camouflager.clearAndReload();
+                break;
+            case RoleId.Miner:
+                if (resetRole) Miner.clearAndReload();
+                break;
+            case RoleId.Eraser:
+                if (resetRole) Eraser.clearAndReload();
+                break;
+            case RoleId.Vampire:
+                if (resetRole) Vampire.clearAndReload();
+                break;
+            case RoleId.Undertaker:
+                if (resetRole) Undertaker.clearAndReload();
+                break;
+            case RoleId.Escapist:
+                if (resetRole) Escapist.clearAndReload();
+                break;
+            case RoleId.Warlock:
+                if (resetRole) Warlock.clearAndReload();
+                break;
+            case RoleId.Trickster:
+                if (resetRole) Trickster.clearAndReload();
+                break;
+            case RoleId.BountyHunter:
+                if (resetRole) BountyHunter.clearAndReload();
+                break;
+            case RoleId.Cleaner:
+                if (resetRole) Cleaner.clearAndReload();
+                break;
+            case RoleId.Terrorist:
+                if (resetRole) Terrorist.clearAndReload();
+                break;
+            case RoleId.Blackmailer:
+                if (resetRole) Blackmailer.clearAndReload();
+                break;
+            case RoleId.Witch:
+                if (resetRole) Witch.clearAndReload();
+                break;
+            case RoleId.Ninja:
+                if (resetRole) Ninja.clearAndReload();
+                break;
+            case RoleId.Yoyo:
+                if (resetRole) Yoyo.clearAndReload();
+                break;
+            case RoleId.EvilTrapper:
+                if (resetRole) EvilTrapper.clearAndReload();
+                break;
+            case RoleId.Grenadier:
+                if (resetRole) Grenadier.clearAndReload();
+                break;
+
+            case RoleId.Amnisiac:
+                break;
+            case RoleId.Survivor:
+                break;
+            case RoleId.Jester:
+                if (resetRole) Jester.clearAndReload();
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Vulture:
+                if (resetRole) Vulture.clearAndReload();
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Lawyer:
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Executioner:
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Pursuer:
+                if (resetRole) Pursuer.clearAndReload();
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.PartTimer:
+                if (resetRole) PartTimer.clearAndReload();
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Witness:
+                if (resetRole) Witness.ClearAndReload();
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Doomsayer:
+                if (resetRole) Doomsayer.clearAndReload();
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Arsonist:
+                if (resetRole) Arsonist.clearAndReload();
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Jackal:
+                break;
+            case RoleId.Sidekick:
+                Jackal.jackal.Add(target);
+                break;
+            case RoleId.Pavlovsowner:
+                Pavlovsdogs.pavlovsdogs.Add(Pavlovsdogs.pavlovsowner);
+                break;
+            case RoleId.Pavlovsdogs:
+                break;
+            case RoleId.Werewolf:
+                if (resetRole) Werewolf.clearAndReload();
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Swooper:
+                if (resetRole) Swooper.clearAndReload();
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Juggernaut:
+                if (resetRole) Juggernaut.clearAndReload();
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Pelican:
+                if (resetRole) Pelican.clearAndReload(false);
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Akujo:
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.Thief:
+                if (resetRole) Thief.clearAndReload();
+                Survivor.Player.Add(target);
+                break;
+            case RoleId.BandLeader:
+                Survivor.Player.Add(target);
+                break;
+
+            case RoleId.Crewmate:
+                break;
+            case RoleId.Vigilante:
+                if (resetRole) Vigilante.clearAndReload();
+                break;
+            case RoleId.Mayor:
+                if (resetRole) Mayor.clearAndReload();
+                break;
+            case RoleId.Prosecutor:
+                if (resetRole) Prosecutor.clearAndReload();
+                break;
+            case RoleId.Portalmaker:
+                if (resetRole) Portalmaker.clearAndReload();
+                break;
+            case RoleId.Engineer:
+                if (resetRole) Engineer.clearAndReload();
+                break;
+            case RoleId.Sheriff:
+                break;
+            case RoleId.Deputy:
+                if (resetRole) Sheriff.Reload();
+                break;
+            case RoleId.BodyGuard:
+                if (resetRole) BodyGuard.clearAndReload();
+                break;
+            case RoleId.Jumper:
+                if (resetRole) Jumper.clearAndReload();
+                break;
+            case RoleId.Detective:
+                if (resetRole) Detective.clearAndReload();
+                break;
+            case RoleId.Veteran:
+                if (resetRole) Veteran.clearAndReload();
+                break;
+            case RoleId.Medic:
+                if (resetRole) Medic.clearAndReload();
+                break;
+            case RoleId.Swapper:
+                if (resetRole) Swapper.clearAndReload();
+                break;
+            case RoleId.Seer:
+                if (resetRole) Seer.clearAndReload();
+                break;
+            case RoleId.Hacker:
+                if (resetRole) Hacker.clearAndReload();
+                break;
+            case RoleId.Tracker:
+                if (resetRole) Tracker.clearAndReload();
+                break;
+            case RoleId.Snitch:
+                if (resetRole) Snitch.clearAndReload();
+                break;
+            case RoleId.Prophet:
+                if (resetRole) Prophet.clearAndReload();
+                break;
+            case RoleId.InfoSleuth:
+                break;
+            case RoleId.Spy:
+                if (resetRole) Spy.clearAndReload();
+                break;
+            case RoleId.SecurityGuard:
+                if (resetRole) SecurityGuard.clearAndReload();
+                break;
+            case RoleId.Medium:
+                if (resetRole) Medium.clearAndReload();
+                break;
+            case RoleId.Trapper:
+                if (resetRole) Trapper.clearAndReload();
+                break;
+            case RoleId.Balancer:
+                if (resetRole) Balancer.clearAndReload();
+                break;
+            case RoleId.Redemptor:
+                if (resetRole) Redemptor.ClearAndReload();
+                break;
+            case RoleId.SchrodingersCat:
+                if (resetRole) SchrodingersCat.ClearAndReload();
+                break;
+            case RoleId.Gunsmith:
+                if (resetRole) Gunsmith.ClearAndReload();
+                break;
+            case RoleId.Berserker:
+                if (resetRole) Berserker.ClearAndReload();
+                break;
+            case RoleId.Jailor:
+                if (resetRole) Jailor.ClearAndReload();
+                break;
+            case RoleId.Infected:
+                break;
+        }
+
+    }
+
+
     public static void TakeRole(byte targetId)
     {
         var local = Player;
         var target = PlayerById(targetId);
         if (local == null || target == null) return;
 
-        RPCProcedure.erasePlayerRoles(local.PlayerId);
-        var roleInfo = RoleInfo.getRoleInfoForPlayer(target).FirstOrDefault(x => x.roleType is not RoleType.Modifier and not RoleType.Ghost);
-        if (target.IsImpostor()) turnToImpostor(local);
+        var role = RoleInfo.getRoleInfoForPlayer(target, false, false).FirstOrDefault();
+        if (role == null) return;
+        ReloadRole(role.roleId, target);
 
+        RPCProcedure.erasePlayerRoles(local.PlayerId);
         revived = true;
 
         DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
@@ -48,316 +290,8 @@ public class Specter
             }
         }
 
-        if (roleInfo != null)
-        {
-            switch (roleInfo.roleId)
-            {
-                case RoleId.Amnisiac:
-                    Amnisiac.Player.Add(local);
-                    break;
-                case RoleId.Impostor:
-                    break;
-                case RoleId.Morphling:
-                    if (resetRole) Morphling.clearAndReload();
-                    Morphling.morphling = local;
-                    break;
-                case RoleId.Bomber:
-                    if (resetRole) Bomber.clearAndReload();
-                    Bomber.bomber = local;
-                    break;
-                case RoleId.Poucher:
-                    if (resetRole) Poucher.clearAndReload();
-                    Poucher.poucher = local;
-                    break;
-                case RoleId.Butcher:
-                    if (resetRole) Butcher.clearAndReload();
-                    Butcher.butcher = local;
-                    break;
-                case RoleId.Mimic:
-                    if (Mimic.mimic != null) RPCProcedure.erasePlayerRoles(Mimic.mimic.PlayerId);
-                    if (resetRole) Mimic.clearAndReload();
-                    Mimic.mimic = local;
-                    break;
-                case RoleId.Camouflager:
-                    if (resetRole) Camouflager.clearAndReload();
-                    Camouflager.camouflager = local;
-                    break;
-                case RoleId.Miner:
-                    if (resetRole) Miner.clearAndReload();
-                    Miner.miner = local;
-                    break;
-                case RoleId.Eraser:
-                    if (resetRole) Eraser.clearAndReload();
-                    Eraser.eraser = local;
-                    break;
-                case RoleId.Vampire:
-                    if (resetRole) Vampire.clearAndReload();
-                    Vampire.vampire = local;
-                    break;
-                case RoleId.Undertaker:
-                    if (resetRole) Undertaker.clearAndReload();
-                    Undertaker.undertaker = local;
-                    break;
-                case RoleId.WolfLord:
-                    if (resetRole) WolfLord.ClearAndReload();
-                    WolfLord.Player = local;
-                    break;
-                case RoleId.Escapist:
-                    if (resetRole) Escapist.clearAndReload();
-                    Escapist.escapist = local;
-                    break;
-                case RoleId.Warlock:
-                    if (resetRole) Warlock.clearAndReload();
-                    Warlock.warlock = local;
-                    break;
-                case RoleId.Trickster:
-                    if (resetRole) Trickster.clearAndReload();
-                    Trickster.trickster = local;
-                    break;
-                case RoleId.BountyHunter:
-                    if (resetRole) BountyHunter.clearAndReload();
-                    BountyHunter.bountyHunter = local;
-                    break;
-                case RoleId.Cleaner:
-                    if (resetRole) Cleaner.clearAndReload();
-                    Cleaner.cleaner = local;
-                    break;
-                case RoleId.Terrorist:
-                    if (resetRole) Terrorist.clearAndReload();
-                    Terrorist.terrorist = local;
-                    break;
-                case RoleId.Blackmailer:
-                    if (resetRole) Blackmailer.clearAndReload();
-                    Blackmailer.Player = local;
-                    break;
-                case RoleId.Witch:
-                    if (resetRole) Witch.clearAndReload();
-                    Witch.witch = local;
-                    break;
-                case RoleId.Ninja:
-                    if (resetRole) Ninja.clearAndReload();
-                    Ninja.ninja = local;
-                    break;
-                case RoleId.Yoyo:
-                    if (resetRole) Yoyo.clearAndReload();
-                    Yoyo.yoyo = local;
-                    break;
-                case RoleId.EvilTrapper:
-                    if (resetRole) EvilTrapper.clearAndReload();
-                    EvilTrapper.evilTrapper = local;
-                    break;
-                case RoleId.Gambler:
-                    if (resetRole) Gambler.clearAndReload();
-                    Gambler.gambler = local;
-                    break;
-                case RoleId.Grenadier:
-                    if (resetRole) Grenadier.clearAndReload();
-                    Grenadier.Player = local;
-                    break;
-                case RoleId.Survivor:
-                    Survivor.Player.Add(local);
-                    break;
-                case RoleId.Jester:
-                    Jester.jester = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Vulture:
-                    Vulture.vulture = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Lawyer:
-                    Lawyer.lawyer = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Executioner:
-                    Executioner.executioner = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Pursuer:
-                    Pursuer.Player.Add(local);
-                    break;
-                case RoleId.PartTimer:
-                    PartTimer.partTimer = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Witness:
-                    Witness.Player = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Doomsayer:
-                    Doomsayer.doomsayer = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Arsonist:
-                    Arsonist.arsonist = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Jackal:
-                    Jackal.jackal.Add(local);
-                    break;
-                case RoleId.Sidekick:
-                    Jackal.Sidekick = local;
-                    Jackal.jackal.Add(target);
-                    break;
-                case RoleId.Pavlovsowner:
-                    Pavlovsdogs.pavlovsowner = local;
-                    Pavlovsdogs.pavlovsdogs.Add(target);
-                    break;
-                case RoleId.Pavlovsdogs:
-                    Pavlovsdogs.pavlovsdogs.Add(local);
-                    break;
-                case RoleId.Werewolf:
-                    Werewolf.werewolf = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Swooper:
-                    Swooper.swooper = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Juggernaut:
-                    Juggernaut.juggernaut = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Pelican:
-                    Pelican.clearAndReload(false);
-                    Pelican.Player = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Akujo:
-                    Akujo.akujo = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Thief:
-                    Thief.thief = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.BandLeader:
-                    BandLeader.Player = local;
-                    Amnisiac.Player.Add(target);
-                    break;
-                case RoleId.Crewmate:
-                    break;
-                case RoleId.Vigilante:
-                    if (resetRole) Vigilante.clearAndReload();
-                    Vigilante.vigilante = local;
-                    break;
-                case RoleId.Mayor:
-                    if (resetRole) Mayor.clearAndReload();
-                    Mayor.mayor = local;
-                    break;
-                case RoleId.Prosecutor:
-                    if (resetRole) Prosecutor.clearAndReload();
-                    Prosecutor.prosecutor = local;
-                    break;
-                case RoleId.Portalmaker:
-                    if (resetRole) Portalmaker.clearAndReload();
-                    Portalmaker.portalmaker = local;
-                    break;
-                case RoleId.Engineer:
-                    if (resetRole) Engineer.clearAndReload();
-                    Engineer.engineer = local;
-                    break;
-                case RoleId.Sheriff:
-                    Sheriff.Player.Add(local);
-                    if (Sheriff.formerDeputy == target) Sheriff.formerDeputy = local;
-                    break;
-                case RoleId.Deputy:
-                    if (resetRole) Sheriff.Reload();
-                    Sheriff.Deputy = local;
-                    break;
-                case RoleId.BodyGuard:
-                    if (resetRole) BodyGuard.clearAndReload();
-                    BodyGuard.bodyguard = local;
-                    break;
-                case RoleId.Jumper:
-                    if (resetRole) Jumper.clearAndReload();
-                    Jumper.jumper = local;
-                    break;
-                case RoleId.Detective:
-                    if (resetRole) Detective.clearAndReload();
-                    Detective.detective = local;
-                    break;
-                case RoleId.Veteran:
-                    if (resetRole) Veteran.clearAndReload();
-                    Veteran.veteran = local;
-                    break;
-                case RoleId.Medic:
-                    if (resetRole) Medic.clearAndReload();
-                    Medic.medic = local;
-                    break;
-                case RoleId.Swapper:
-                    if (resetRole) Swapper.clearAndReload();
-                    Swapper.swapper = local;
-                    break;
-                case RoleId.Seer:
-                    if (resetRole) Seer.clearAndReload();
-                    Seer.seer = local;
-                    break;
-                case RoleId.Hacker:
-                    if (resetRole) Hacker.clearAndReload();
-                    Hacker.hacker = local;
-                    break;
-                case RoleId.Tracker:
-                    if (resetRole) Tracker.clearAndReload();
-                    Tracker.tracker = local;
-                    break;
-                case RoleId.Snitch:
-                    if (resetRole) Snitch.clearAndReload();
-                    Snitch.snitch = local;
-                    break;
-                case RoleId.Prophet:
-                    if (resetRole) Prophet.clearAndReload();
-                    Prophet.prophet = local;
-                    break;
-                case RoleId.InfoSleuth:
-                    if (resetRole) InfoSleuth.clearAndReload();
-                    InfoSleuth.infoSleuth = local;
-                    break;
-                case RoleId.Spy:
-                    if (resetRole) Spy.clearAndReload();
-                    Spy.spy = local;
-                    break;
-                case RoleId.SecurityGuard:
-                    if (resetRole) SecurityGuard.clearAndReload();
-                    SecurityGuard.securityGuard = local;
-                    break;
-                case RoleId.Medium:
-                    if (resetRole) Medium.clearAndReload();
-                    Medium.medium = local;
-                    break;
-                case RoleId.Trapper:
-                    if (resetRole) Trapper.clearAndReload();
-                    Trapper.trapper = local;
-                    break;
-                case RoleId.Balancer:
-                    if (resetRole) Balancer.clearAndReload();
-                    Balancer.balancer = local;
-                    break;
-                case RoleId.Redemptor:
-                    if (resetRole) Redemptor.ClearAndReload();
-                    Redemptor.Player = local;
-                    break;
-                case RoleId.SchrodingersCat:
-                    if (resetRole) SchrodingersCat.ClearAndReload();
-                    SchrodingersCat.Player = local;
-                    break;
-                case RoleId.Gunsmith:
-                    if (resetRole) Gunsmith.ClearAndReload();
-                    Gunsmith.Player = local;
-                    break;
-                case RoleId.Berserker:
-                    if (resetRole) Berserker.ClearAndReload();
-                    Berserker.Player = local;
-                    break;
-                case RoleId.Jailor:
-                    if (resetRole) Jailor.ClearAndReload();
-                    Jailor.Player = local;
-                    break;
-                case RoleId.Infected:
-                    Infected.Player.Add(local);
-                    break;
-            }
-        }
+        if (target.IsImpostor()) turnToImpostor(local);
+        RPCProcedure.setRole(local.PlayerId, (byte)role.roleId);
 
         if (afterMeetingRevive)
         {

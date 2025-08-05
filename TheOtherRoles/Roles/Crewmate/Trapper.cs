@@ -26,7 +26,6 @@ public static class Trapper
         rechargedTasks = CustomOptionHolder.trapperRechargeTasksNumber.GetInt();
         charges = CustomOptionHolder.trapperMaxCharges.GetInt() / 2;
         trapCountToReveal = CustomOptionHolder.trapperTrapNeededTriggerToReveal.GetInt();
-        playersOnMap = new List<PlayerControl>();
         infoType = CustomOptionHolder.trapperInfoType.GetSelection();
         trapDuration = CustomOptionHolder.trapperTrapDuration.GetFloat();
     }

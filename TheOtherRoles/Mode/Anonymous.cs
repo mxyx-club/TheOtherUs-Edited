@@ -25,17 +25,11 @@ internal class Anonymous
 
         if (!AmongUsClient.Instance.AmHost) return;
 
-        var colors = Enumerable.Range(1, 56).Select(i => (byte)i).ToList();
-        var hats = AllHats.ToList();
-        var skins = AllSkins.ToList();
-        var visors = AllVisors.ToList();
-        var nameplates = AllNamePlates.ToList();
-
-        Shuffle(colors);
-        Shuffle(hats);
-        Shuffle(skins);
-        Shuffle(visors);
-        Shuffle(nameplates);
+        var colors = Enumerable.Range(1, 56).Select(i => (byte)i).ToList().Shuffle();
+        var hats = AllHats.ToList().Shuffle();
+        var skins = AllSkins.ToList().Shuffle();
+        var visors = AllVisors.ToList().Shuffle();
+        var nameplates = AllNamePlates.ToList().Shuffle();
 
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {

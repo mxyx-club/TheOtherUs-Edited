@@ -35,7 +35,6 @@ public class SchrodingersCat
     public static bool hasImpVision;
     public static bool TeamChanges;
     public static int MaxChangeCount;
-    public static bool IsGuessable;
 
     public static void ClearAndReload()
     {
@@ -48,7 +47,6 @@ public class SchrodingersCat
         TeamChanges = CustomOptionHolder.schrodingersCatTeamChanges.GetBool();
         MaxChangeCount = CustomOptionHolder.schrodingersCatMaxChangeCount.GetInt();
         MaxChangeCount = TeamChanges ? MaxChangeCount : 1;
-        IsGuessable = CustomOptionHolder.schrodingersCatIsGuessable.GetBool();
     }
 
     public static bool InTeam(PlayerControl player, out Color color)
@@ -72,7 +70,7 @@ public class SchrodingersCat
 
     public enum CatState
     {
-        None,
+        None = 220,
         Crewmate,
         Impostor,
         Jackal,
@@ -84,4 +82,21 @@ public class SchrodingersCat
         Arsonist,
         Pelican,
     }
+
+    public static Color getColor(CatState state) => state switch
+    {
+        CatState.None => Color.gray,
+        CatState.Crewmate => Palette.CrewmateBlue,
+        CatState.Jackal => Jackal.color,
+        CatState.Pavlovsowner => Pavlovsdogs.color,
+        CatState.Werewolf => Werewolf.color,
+        CatState.Juggernaut => Juggernaut.color,
+        CatState.Pelican => Pelican.color,
+        CatState.Swooper => Swooper.color,
+        CatState.Infected => Infected.color,
+        CatState.Arsonist => Arsonist.color,
+        CatState.Impostor => Palette.ImpostorRed,
+        _ => Color.gray,
+    };
+
 }

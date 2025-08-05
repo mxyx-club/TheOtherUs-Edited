@@ -42,7 +42,6 @@ public class CustomOptionHolder
     public static CustomOption blockGameEnd;
     public static CustomOption randomLigherPlayer;
     //public static CustomOption showVentsOnMap;
-    public static CustomOption allowModGuess;
     public static CustomOption randomGameStartPosition;
     public static CustomOption randomGameStartToVents;
     public static CustomOption ghostSpeed;
@@ -784,7 +783,6 @@ public class CustomOptionHolder
         impostorSeeRoles = Create(106, Types.General, Cs(Palette.ImpostorRed, "impostorSeeRoles"), false);
         blockGameEnd = Create(107, Types.General, Cs(Color.yellow, "blockGameEnd"), true);
         randomLigherPlayer = Create(108, Types.General, "randomLigherPlayer", true);
-        allowModGuess = Create(109, Types.General, "allowModGuess", false);
         //showVentsOnMap = Create(115, Types.General, "ShowVentsOnMap", ["optionOff", "ShowVentsOnMeetingMap", "optionOn"]);
         randomGameStartPosition = Create(110, Types.General, "randomGameStartPosition", false);
         randomGameStartToVents = Create(111, Types.General, "randomGameStartToVents", true, randomGameStartPosition);
@@ -821,13 +819,13 @@ public class CustomOptionHolder
         deadImpsBlockSabotage = Create(402, Types.General, Cs(Palette.ImpostorRed, "deadImpsBlockSabotage"), false, SaboOptions);
         enableCamoComms = Create(403, Types.General, Cs(Palette.ImpostorRed, "enableCamoComms"), false, SaboOptions);
         IsReactorDurationSetting = Create(410, Types.General, "IsReactorDurationSetting", false, SaboOptions);
-        SkeldReactorTimeLimit = Create(411, Types.General, "SkeldReactorTimeLimit", 30f, 0f, 30f, 2.5f, IsReactorDurationSetting);
-        SkeldLifeSuppTimeLimit = Create(412, Types.General, "SkeldLifeSuppTimeLimit", 30f, 0f, 30f, 2.5f, IsReactorDurationSetting);
-        MiraLifeSuppTimeLimit = Create(413, Types.General, "MiraLifeSuppTimeLimit", 30f, 0f, 45f, 2.5f, IsReactorDurationSetting);
-        MiraReactorTimeLimit = Create(414, Types.General, "MiraReactorTimeLimit", 30f, 0f, 45f, 2.5f, IsReactorDurationSetting);
-        PolusReactorTimeLimit = Create(415, Types.General, "PolusReactorTimeLimit", 60f, 0f, 60f, 2.5f, IsReactorDurationSetting);
-        AirshipReactorTimeLimit = Create(416, Types.General, "AirshipReactorTimeLimit", 75f, 0f, 90f, 2.5f, IsReactorDurationSetting);
-        FungleReactorTimeLimit = Create(417, Types.General, "FungleReactorTimeLimit", 45f, 0f, 60f, 2.5f, IsReactorDurationSetting);
+        SkeldReactorTimeLimit = Create(411, Types.General, "SkeldReactorTimeLimit", 30f, 0f, 120f, 2.5f, IsReactorDurationSetting);
+        SkeldLifeSuppTimeLimit = Create(412, Types.General, "SkeldLifeSuppTimeLimit", 30f, 0f, 120f, 2.5f, IsReactorDurationSetting);
+        MiraLifeSuppTimeLimit = Create(413, Types.General, "MiraLifeSuppTimeLimit", 30f, 0f, 120f, 2.5f, IsReactorDurationSetting);
+        MiraReactorTimeLimit = Create(414, Types.General, "MiraReactorTimeLimit", 30f, 0f, 120f, 2.5f, IsReactorDurationSetting);
+        PolusReactorTimeLimit = Create(415, Types.General, "PolusReactorTimeLimit", 60f, 0f, 120f, 2.5f, IsReactorDurationSetting);
+        AirshipReactorTimeLimit = Create(416, Types.General, "AirshipReactorTimeLimit", 75f, 0f, 120f, 2.5f, IsReactorDurationSetting);
+        FungleReactorTimeLimit = Create(417, Types.General, "FungleReactorTimeLimit", 45f, 0f, 120f, 2.5f, IsReactorDurationSetting);
 
         //Map options
         MapOptions = Create(500, Types.General, Cs(new Color32(223, 157, 192, byte.MaxValue), "MapOptions"), false, null, true);
@@ -949,7 +947,6 @@ public class CustomOptionHolder
         bountyHunterArrowUpdateIntervall = Create(102305, Types.Impostor, "bountyHunterArrowUpdateIntervall", 0.5f, 0f, 15f, 0.5f, bountyHunterShowArrow);
         bountyHunterChangeTargetCooldown = Create(102306, Types.Impostor, "bountyHunterChangeTargetCooldown", 30f, 15f, 90f, 2.5f, bountyHunterSpawnRate);
 
-
         witchSpawnRate = Create(102400, Types.Impostor, Cs(Witch.color, "Witch"), rates, null, true);
         witchCooldown = Create(102401, Types.Impostor, "witchCooldown", 20f, 10f, 60, 2.5f, witchSpawnRate);
         witchAdditionalCooldown = Create(102402, Types.Impostor, "witchAdditionalCooldown", 5f, 0f, 60f, 2.5f, witchSpawnRate);
@@ -992,7 +989,7 @@ public class CustomOptionHolder
         evilTrapperExtensionTime = Create(103002, Types.Impostor, "evilTrapperExtensionTime", 5f, 2f, 10f, 0.5f, evilTrapperSpawnRate);
         evilTrapperCooldown = Create(103003, Types.Impostor, "evilTrapperCooldown", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
         evilTrapperKillTimer = Create(103004, Types.Impostor, "evilTrapperKillTimer", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
-        evilTrapperTrapRange = Create(103005, Types.Impostor, "evilTrapperTrapRange", 1f, 0.25f, 2f, 0.125f, evilTrapperSpawnRate);
+        evilTrapperTrapRange = Create(103005, Types.Impostor, "evilTrapperTrapRange", 1f, 0.2f, 1.5f, 0.1f, evilTrapperSpawnRate);
         evilTrapperMaxDistance = Create(103006, Types.Impostor, "evilTrapperMaxDistance", 10f, 0f, 20f, 0.25f, evilTrapperSpawnRate);
         evilTrapperPenaltyTime = Create(103007, Types.Impostor, "evilTrapperPenaltyTime", 0f, 0f, 30f, 0.5f, evilTrapperSpawnRate);
         evilTrapperBonusTime = Create(103008, Types.Impostor, "evilTrapperBonusTime", 10f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
@@ -1164,7 +1161,7 @@ public class CustomOptionHolder
         doomsayerKillToWin = Create(202207, Types.Neutral, "doomsayerKillToWin", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
 
         schrodingersCatSpawnRate = Create(203300, Types.Neutral, Cs(SchrodingersCat.color, "SchrodingersCat"), rates, null, true);
-        schrodingersCatIsGuessable = Create(203301, Types.Neutral, "schrodingersCatIsGuessable", true, schrodingersCatSpawnRate);
+        schrodingersCatIsGuessable = Create(203301, Types.Neutral, "schrodingersCatIsGuessable", ["optionOff", "schrodingersCatIsGuessable1", "optionOn"], schrodingersCatSpawnRate);
         schrodingersCatCanKill = Create(203302, Types.Neutral, "schrodingersCatCanKill", true, schrodingersCatSpawnRate);
         schrodingersCatCooldown = Create(203303, Types.Neutral, "killCooldown", 20f, 2.5f, 60f, 2.5f, schrodingersCatCanKill);
         schrodingersCatHasImpVision = Create(203304, Types.Neutral, "hasImpVision", true, schrodingersCatSpawnRate);

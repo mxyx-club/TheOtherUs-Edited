@@ -63,7 +63,7 @@ public class GhostRole
             if (otherNeutral(player)) AssignRole(player, AssignType.otherNeutral);
         }
 
-        public static bool otherNeutral(PlayerControl player)
+        private static bool otherNeutral(PlayerControl player)
         {
             if ((PartTimer.partTimer == player && PartTimer.target != null) ||
                 (Lawyer.lawyer == player && Lawyer.target.IsAlive()) ||

@@ -617,25 +617,6 @@ internal class HudManagerUpdatePatch
         }
     }
 
-    private static void bloodyUpdate()
-    {
-        if (!Bloody.active.Any()) return;
-        foreach (var entry in Bloody.active)
-        {
-            var player = PlayerById(entry.Key);
-            var bloodyPlayer = PlayerById(Bloody.bloodyKillerMap[player.PlayerId]);
-
-            Bloody.active[entry.Key] = entry.Value - Time.fixedDeltaTime;
-            if (entry.Value <= 0 || player.Data.IsDead)
-            {
-                Bloody.active.Remove(entry.Key);
-                continue; // Skip the creation of the next blood drop, if the killer is dead or the time is up
-            }
-
-            _ = new Bloodytrail(player, bloodyPlayer);
-        }
-    }
-
     private static void updateShielded()
     {
         if (Medic.shielded == null) return;
@@ -1442,8 +1423,6 @@ internal class HudManagerUpdatePatch
         miniUpdate();
         Mini.Update();
 
-        // Bloody
-        bloodyUpdate();
         // Update player outlines
         setBasePlayerOutlines();
 
@@ -1468,7 +1447,7 @@ internal class HudManagerUpdatePatch
         // EvilTrapper
         KillTrap.UpdateTrap();
         // Trapper
-        Trap.Update();
+        Trap.UpdateTrap();
         // Bomber
         Bomb.update();
         // Vampire

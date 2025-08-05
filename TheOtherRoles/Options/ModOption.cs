@@ -51,7 +51,6 @@ internal class ModOption
     //public static bool ShowVentsOnMeetingMap;
     public static bool fungleDisableCamoComms;
     public static bool randomGameStartPosition;
-    public static bool allowModGuess;
     public static CustomGameModes GameMode = CustomGameModes.Classic;
 
     // Updating values
@@ -116,7 +115,6 @@ internal class ModOption
         disableCamsRoundOne = CustomOptionHolder.disableCamsRound1.GetBool();
         randomGameStartPosition = CustomOptionHolder.randomGameStartPosition.GetBool();
         randomLigherPlayer = CustomOptionHolder.randomLigherPlayer.GetBool();
-        allowModGuess = CustomOptionHolder.allowModGuess.GetBool();
         disableSabotage = CustomOptionHolder.disableSabotage.GetBool();
         //ShowVentsOnMap = CustomOptionHolder.showVentsOnMap.GetBool();
         //ShowVentsOnMeetingMap = CustomOptionHolder.showVentsOnMap.GetQuantity() == 1;

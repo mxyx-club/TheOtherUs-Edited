@@ -201,13 +201,13 @@ public static class RoleHelpers
 
         if (CheckUseAbility(killer, target)) return false;
 
-        if (Pursuer.blankedList.Any(x => x.PlayerId == killer.PlayerId))
+        if (Pursuer.blankedList.Any(x => x == killer.PlayerId))
         {
             var writer = StartRPC(CustomRPC.SetBlanked);
             writer.Write(killer.PlayerId);
-            writer.Write(false);
+            writer.Write(true);
             writer.EndRPC();
-            RPCProcedure.SetBlanked(killer.PlayerId, false);
+            RPCProcedure.SetBlanked(killer.PlayerId, true);
             CustomButton.SetKillTimer();
             return false;
         }

@@ -13,6 +13,7 @@ public static class ChatControllerPatch
         HostChat,
         LoverChat,
         JailorChat,
+        GuesserMessage,
     }
 
     public static ChatTypes CurrentChatType = ChatTypes.Default;
@@ -122,6 +123,15 @@ public static class ChatControllerPatch
                             __instance.NameText.text = $"({GetString("Jailor")})";
                         }
                     }
+                    CurrentChatType = ChatTypes.Default;
+                    break;
+                case ChatTypes.Default:
+                    break;
+                case ChatTypes.LoverChat:
+                    break;
+                case ChatTypes.GuesserMessage:
+                    __instance.NameText.color = Color.yellow;
+                    __instance.NameText.text = "MessageFromTheGuesser".Translate();
                     CurrentChatType = ChatTypes.Default;
                     break;
                 default:

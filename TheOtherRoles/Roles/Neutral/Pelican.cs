@@ -81,6 +81,7 @@ public class Pelican
         public static void HudUpdate(HudManager __instance)
         {
             if (Player.IsDead() || InMeeting) return;
+
             foreach (var p in eatenPlayers)
             {
                 if (p == PlayerControl.LocalPlayer)
@@ -89,7 +90,6 @@ public class Pelican
                     PlayerControl.LocalPlayer.transform.position = new(-10f, 10f, 0f);
                 }
             }
-            eatenPlayers = new();
         }
 
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start)), HarmonyPostfix]
@@ -100,11 +100,14 @@ public class Pelican
             {
                 if (p == PlayerControl.LocalPlayer)
                 {
-                    HudManager.Instance.ShadowQuad?.gameObject?.SetActive(false);
-                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Player.GetTruePosition());
-                    HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                    _ = new LateTask(() =>
+                    {
+                        HudManager.Instance.ShadowQuad?.gameObject?.SetActive(false);
+                        PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Player.GetTruePosition());
+                        HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                        p.Die(DeathReason.Kill, true);
+                    }, 0.25f);
                 }
-                p.Die(DeathReason.Kill, true);
             }
             eatenPlayers = new();
         }

@@ -274,6 +274,7 @@ public static class CrowdedPlayer
         [HideFromIl2Cpp]
         public IEnumerable<PlayerVoteArea> Targets => GetSortedPlayerStates();
 
+        [HideFromIl2Cpp]
         private IEnumerable<PlayerVoteArea> GetSortedPlayerStates()
         {
             var states = meetingHud.playerStates;

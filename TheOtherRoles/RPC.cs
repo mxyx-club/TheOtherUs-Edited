@@ -95,7 +95,6 @@ public enum CustomRPC : byte
     UseVitalsTime,
     UnblackmailPlayer,
     SetBlanked,
-    Bloody,
     SetFirstKill,
     SetInvisibleGen,
     SetSwoop,
@@ -115,6 +114,7 @@ public enum CustomRPC : byte
     SyncGunsmithChange,
     InfectedTarget,
     JailorSendMessage,
+    GuesserMessage,
     JailorJail,
     ExiledJailed,
 
@@ -164,7 +164,6 @@ public static class RPCProcedure
         WarlockTarget,
         GhostChat,
         BlankUsed,
-        VampireTimer,
         DeathReasonAndKiller
     }
 
@@ -250,6 +249,10 @@ public static class RPCProcedure
         var player = PlayerById(playerId);
         switch ((RoleId)roleId)
         {
+            case RoleId.DefaultRole:
+            case RoleId.Crewmate:
+            case RoleId.Impostor:
+                break;
             case RoleId.Jester:
                 Jester.jester = player;
                 break;
@@ -493,15 +496,9 @@ public static class RPCProcedure
             data.RoleId = (RoleId)roleId;
             data.RoleHistory.Add((RoleId)roleId);
         }
-
-        /*if (AmongUsClient.Instance.AmHost && Helpers.RoleCanUseVents(player) && !player.Data.Role.IsImpostor)
-        {
-            player.RpcSetRole(RoleTypes.Engineer);
-            player.SetRole(RoleTypes.Engineer);
-        }*/
     }
 
-    public static void setModifier(byte playerId, byte modifierId, byte flag)
+    public static void setModifier(byte playerId, byte modifierId, byte flag = 0)
     {
         var player = PlayerById(playerId);
         switch ((RoleId)modifierId)
@@ -580,6 +577,9 @@ public static class RPCProcedure
             case RoleId.Giant:
                 Giant.giant = player;
                 break;
+            case RoleId.LastImpostor:
+                LastImpostor.lastImpostor = player;
+                break;
             case RoleId.Vip:
                 Vip.vip.Add(player);
                 break;
@@ -595,6 +595,12 @@ public static class RPCProcedure
             default:
                 Warn("Unknown role ID: " + modifierId, "SetModifier");
                 break;
+        }
+
+        var data = PlayerData.GetPlayerData(player);
+        if (data != null)
+        {
+            data.Modifiers.Add((RoleId)modifierId);
         }
     }
 
@@ -613,9 +619,11 @@ public static class RPCProcedure
                 Poltergeist.Player = player;
                 break;
         }
+
         var data = PlayerData.GetPlayerData(player);
         if (data != null)
         {
+            data.GhostRole = (RoleId)roleId;
             data.RoleHistory.Add((RoleId)roleId);
         }
     }
@@ -710,7 +718,7 @@ public static class RPCProcedure
         GameStartManagerPatch.playerVersions[clientId] = new GameStartManagerPatch.PlayerVersion(ver, guid);
     }
 
-    public static void useUncheckedVent(int ventId, byte playerId, byte isEnter)
+    public static void useUncheckedVent(int ventId, byte playerId, bool isEnter)
     {
         var player = PlayerById(playerId);
         if (player == null) return;
@@ -723,7 +731,7 @@ public static class RPCProcedure
         reader.Length = bytes.Length;
 
         JackInTheBox.startAnimation(ventId);
-        player.MyPhysics.HandleRpc(isEnter != 0 ? (byte)19 : (byte)20, reader);
+        player.MyPhysics.HandleRpc(isEnter ? (byte)19 : (byte)20, reader);
     }
 
     public static void uncheckedExilePlayer(byte targetId)
@@ -818,7 +826,7 @@ public static class RPCProcedure
     {
         var target = PlayerById(targetId);
         if (target == null) return;
-        LastImpostor.lastImpostor = target;
+        setModifier(target.PlayerId, (byte)RoleId.LastImpostor);
     }
 
     public static void veteranAlert()
@@ -971,9 +979,9 @@ public static class RPCProcedure
             player.setLook("", 6, "", "", "", "");
     }
 
-    public static void vampireSetBitten(byte targetId, bool reset)
+    public static void vampireSetBitten(byte targetId = byte.MaxValue)
     {
-        if (reset)
+        if (targetId == byte.MaxValue)
         {
             Vampire.bitten = null;
             return;
@@ -1031,18 +1039,19 @@ public static class RPCProcedure
         {
             if (Lawyer.lawyer == null && Executioner.promotesToLawyer)
             {
+                setRole(Executioner.executioner.PlayerId, (byte)RoleId.Lawyer);
                 Lawyer.lawyer = Executioner.executioner;
                 Lawyer.target = Executioner.target;
                 Executioner.clearAndReload();
             }
-            else if (!Executioner.promotesToLawyer)
+            else
             {
-                Pursuer.Player.Add(Executioner.executioner);
+                setRole(Executioner.executioner.PlayerId, (byte)RoleId.Pursuer);
                 Executioner.clearAndReload();
             }
         }
 
-        FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
+        SetRoleType(target, RoleTypes.Crewmate);
 
         erasePlayerRoles(target.PlayerId);
         setRole(targetId, (byte)RoleId.Sidekick);
@@ -1058,7 +1067,7 @@ public static class RPCProcedure
     {
         var player = PlayerById(playerId);
         if (player == null) return;
-        Jackal.jackal.Add(player);
+        setRole(playerId, (byte)RoleId.Jackal);
         Jackal.Sidekick = null;
         Jackal.canCreateSidekick = Jackal.jackalPromotedFromSidekickCanCreateSidekick;
     }
@@ -1071,13 +1080,13 @@ public static class RPCProcedure
         {
             if (Lawyer.lawyer == null && Executioner.promotesToLawyer)
             {
-                Lawyer.lawyer = Executioner.executioner;
+                setRole(Executioner.executioner.PlayerId, (byte)RoleId.Lawyer);
                 Lawyer.target = Executioner.target;
                 Executioner.clearAndReload();
             }
-            else if (!Executioner.promotesToLawyer)
+            else
             {
-                Pursuer.Player.Add(Executioner.executioner);
+                setRole(Executioner.executioner.PlayerId, (byte)RoleId.Pursuer);
                 Executioner.clearAndReload();
             }
         }
@@ -1235,6 +1244,12 @@ public static class RPCProcedure
         if (player == Poltergeist.Player) Poltergeist.ClearAndReload();
         if (player == GhostEngineer.Player) GhostEngineer.ClearAndReload();
         if (player == Specter.Player) Specter.ClearAndReload();
+
+        var data = PlayerData.GetPlayerData(player);
+        if (data != null)
+        {
+            data.GhostRole = null;
+        }
     }
 
     public static void infoSleuthSetTarget(byte playerId)
@@ -1839,17 +1854,12 @@ public static class RPCProcedure
 
     public static void SetBlanked(byte playerId, bool reset)
     {
-        var target = PlayerById(playerId);
-        if (target == null) return;
-        Pursuer.blankedList.RemoveAll(x => x.PlayerId == playerId);
-        if (!reset) Pursuer.blankedList.Add(target);
-    }
+        if (PlayerById(playerId) == null) return;
 
-    public static void bloody(byte killerPlayerId, byte bloodyPlayerId)
-    {
-        if (Bloody.active.ContainsKey(killerPlayerId)) return;
-        Bloody.active.TryAdd(killerPlayerId, Bloody.duration);
-        Bloody.bloodyKillerMap.TryAdd(killerPlayerId, bloodyPlayerId);
+        if (reset)
+            Pursuer.blankedList.Remove(playerId);
+        else
+            Pursuer.blankedList.Add(playerId);
     }
 
     public static void setFirstKill(byte playerId)
@@ -1859,19 +1869,15 @@ public static class RPCProcedure
         firstKillPlayer = target;
     }
 
-    public static void setTrap(byte[] buff)
+    public static void setTrap(byte playerId, byte[] buff)
     {
-        if (Trapper.trapper == null) return;
+        var player = PlayerById(playerId);
+        if (player == null) return;
         Trapper.charges -= 1;
         var position = Vector3.zero;
         position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
         position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
-        _ = new Trap(position);
-    }
-
-    public static void triggerTrap(byte playerId, byte trapId)
-    {
-        Trap.triggerTrap(playerId, trapId);
+        _ = new Trap(player, position);
     }
 
     public static void setGuesserGm(byte playerId)
@@ -1911,10 +1917,7 @@ public static class RPCProcedure
                 if (CanSeeGhostInfo) FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(sender, chat);
                 break;
             case GhostInfoTypes.BlankUsed:
-                Pursuer.blankedList.Remove(sender);
-                break;
-            case GhostInfoTypes.VampireTimer:
-                vampireKillButton.Timer = reader.ReadInt32();
+                Pursuer.blankedList.Remove(senderId);
                 break;
             case GhostInfoTypes.DeathReasonAndKiller:
                 PlayerData.SetDeathReason(PlayerById(reader.ReadByte()), (CustomDeathReason)reader.ReadByte(), PlayerById(reader.ReadByte()));
@@ -2029,7 +2032,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.UseUncheckedVent:
-                RPCProcedure.useUncheckedVent(reader.ReadPackedInt32(), reader.ReadByte(), reader.ReadByte());
+                RPCProcedure.useUncheckedVent(reader.ReadPackedInt32(), reader.ReadByte(), reader.ReadBoolean());
                 break;
 
             case CustomRPC.CustomMurderPlayer:
@@ -2134,7 +2137,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.VampireSetBitten:
-                RPCProcedure.vampireSetBitten(reader.ReadByte(), reader.ReadBoolean());
+                RPCProcedure.vampireSetBitten(reader.ReadByte());
                 break;
 
             case CustomRPC.PlaceGarlic:
@@ -2253,10 +2256,6 @@ internal class RPCHandlerPatch
                 RPCProcedure.setFutureSpelled(reader.ReadByte());
                 break;
 
-            case CustomRPC.Bloody:
-                RPCProcedure.bloody(reader.ReadByte(), reader.ReadByte());
-                break;
-
             case CustomRPC.SetFirstKill:
                 RPCProcedure.setFirstKill(reader.ReadByte());
                 break;
@@ -2294,11 +2293,11 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.SetTrap:
-                RPCProcedure.setTrap(reader.ReadBytesAndSize());
+                RPCProcedure.setTrap(reader.ReadByte(), reader.ReadBytesAndSize());
                 break;
 
             case CustomRPC.TriggerTrap:
-                RPCProcedure.triggerTrap(reader.ReadByte(), reader.ReadByte());
+                Trap.triggerTrap(reader.ReadByte(), reader.ReadInt32());
                 break;
 
             case CustomRPC.PlaceBomb:
@@ -2466,6 +2465,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.ShareDeathReasonAndKiller:
                 PlayerData.SetDeathReason(reader.ReadPlayer(), (CustomDeathReason)reader.ReadByte(), reader.ReadPlayer());
+                break;
+            case CustomRPC.GuesserMessage:
+                Guesser.seedGuessChat(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadByte(), false);
                 break;
         }
 

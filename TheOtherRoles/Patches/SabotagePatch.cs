@@ -1,123 +1,86 @@
-// 参考 => https://github.com/Koke1024/Town-Of-Moss/blob/main/TownOfMoss/Patches/MeltDownBoost.cs
-// 来源 => https://github.com/SuperNewRoles/SuperNewRoles/blob/master/SuperNewRoles/MapOption/MapOption.cs
-
 using TheOtherRoles.Attributes;
 
 namespace TheOtherRoles.Patches;
 
-public static class ElectricPatch
+[HarmonyPatch]
+public static class SabotagePatch
 {
     public static bool IsReactorDurationSetting;
-    public static bool onTask;
-    public static bool done;
-    public static DateTime lastUpdate;
-
-    [OnGameStart, OnGameEnd]
+    [OnGameStart]
     public static void Reset()
     {
-        onTask = false;
         IsReactorDurationSetting = CustomOptionHolder.IsReactorDurationSetting.GetBool();
     }
 
-    [HarmonyPatch(typeof(SwitchMinigame), nameof(SwitchMinigame.Begin))]
-    private class VitalsMinigameStartPatch
+    private static void ModifySkeld()
     {
-        private static void Postfix(VitalsMinigame __instance)
+        ShipStatus.Instance.Systems[SystemTypes.LifeSupp].Cast<LifeSuppSystemType>().LifeSuppDuration = CustomOptionHolder.SkeldLifeSuppTimeLimit.GetFloat();
+        ShipStatus.Instance.Systems[SystemTypes.Reactor].Cast<ReactorSystemType>().ReactorDuration = CustomOptionHolder.SkeldReactorTimeLimit.GetFloat();
+    }
+
+    private static void ModifyMira()
+    {
+        ShipStatus.Instance.Systems[SystemTypes.LifeSupp].Cast<LifeSuppSystemType>().LifeSuppDuration = CustomOptionHolder.MiraLifeSuppTimeLimit.GetFloat();
+        ShipStatus.Instance.Systems[SystemTypes.Reactor].Cast<ReactorSystemType>().ReactorDuration = CustomOptionHolder.MiraReactorTimeLimit.GetFloat();
+    }
+    private static void ModifyPolus()
+    {
+        ShipStatus.Instance.Systems[SystemTypes.Laboratory].Cast<ReactorSystemType>().ReactorDuration = CustomOptionHolder.PolusReactorTimeLimit.GetFloat();
+    }
+
+    private static void ModifyFungle()
+    {
+        ShipStatus.Instance.Systems[SystemTypes.Reactor].Cast<ReactorSystemType>().ReactorDuration = CustomOptionHolder.FungleReactorTimeLimit.GetFloat();
+    }
+
+    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.FixedUpdate)), HarmonyPrefix]
+    public static void ShipStatusAwake(ShipStatus __instance)
+    {
+        if (__instance.Type == (ShipStatus.MapType)6) return;
+
+        if (!IsReactorDurationSetting) return;
+        switch (GameOptionsManager.Instance.CurrentGameOptions.MapId)
         {
-            onTask = true;
-            done = false;
+            case 0: ModifySkeld(); break;
+            case 1: ModifyMira(); break;
+            case 2: ModifyPolus(); break;
+            case 5: ModifyFungle(); break;
+            default: break;
         }
     }
-    [HarmonyPatch(typeof(SwitchMinigame), nameof(SwitchMinigame.FixedUpdate))]
-    private class SwitchMinigameClosePatch
+
+    [HarmonyPatch(typeof(HeliSabotageSystem), nameof(HeliSabotageSystem.UpdateSystem))]
+    private class HeliSabotageSystemPatch
     {
-        private static void Postfix(SwitchMinigame __instance)
+        private static void Postfix(HeliSabotageSystem __instance, [HarmonyArgument(1)] MessageReader msgReader)
         {
-            lastUpdate = DateTime.UtcNow;
-            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(1f, new Action<float>((p) =>
+            if (!IsReactorDurationSetting) return;
+            if ((PeekByte(msgReader, -1) & 240) == (int)HeliSabotageSystem.Tags.DamageBit)
             {
-                if (p == 1f)
+                __instance.Countdown = CustomOptionHolder.AirshipReactorTimeLimit.GetFloat();
+            }
+        }
+        public static byte PeekByte(MessageReader reader, int offset = 0)
+        {
+            return reader.Buffer[reader.readHead + offset];
+        }
+    }
+
+    [HarmonyPatch(typeof(HeliSabotageSystem), nameof(HeliSabotageSystem.Deteriorate))]
+    public static class HeliMeltdownBooster
+    {
+        public static void Prefix(HeliSabotageSystem __instance)
+        {
+            if (IsReactorDurationSetting)
+            {
+                if (!__instance.IsActive)
+                    return;
+
+                if (MapUtilities.CachedShipStatus != null)
                 {
-                    var diff = (float)(DateTime.UtcNow - lastUpdate).TotalMilliseconds;
-                    if (diff > 100 && !done)
-                    {
-                        done = true;
-                        onTask = false;
-                    }
+                    if (__instance.Countdown >= CustomOptionHolder.AirshipReactorTimeLimit.GetFloat())
+                        __instance.Countdown = CustomOptionHolder.AirshipReactorTimeLimit.GetFloat();
                 }
-            })));
-        }
-    }
-}
-[HarmonyPatch(typeof(LifeSuppSystemType), nameof(LifeSuppSystemType.Deteriorate))]
-public static class LifeSuppBooster
-{
-    public static void Prefix(LifeSuppSystemType __instance, float deltaTime)
-    {
-        if (ElectricPatch.IsReactorDurationSetting)
-        {
-            if (!__instance.IsActive)
-                return;
-            switch (MapUtilities.CachedShipStatus.Type)
-            {
-                case ShipStatus.MapType.Ship when __instance.Countdown >= CustomOptionHolder.SkeldLifeSuppTimeLimit.GetFloat():
-                    __instance.Countdown = CustomOptionHolder.SkeldLifeSuppTimeLimit.GetFloat();
-                    return;
-                case ShipStatus.MapType.Hq when __instance.Countdown >= CustomOptionHolder.MiraLifeSuppTimeLimit.GetFloat():
-                    __instance.Countdown = CustomOptionHolder.MiraLifeSuppTimeLimit.GetFloat();
-                    return;
-                default:
-                    return;
-            }
-        }
-    }
-}
-
-
-[HarmonyPatch(typeof(ReactorSystemType), nameof(ReactorSystemType.Deteriorate))]
-public static class MeltdownBooster
-{
-    public static void Prefix(ReactorSystemType __instance, float deltaTime)
-    {
-        if (ElectricPatch.IsReactorDurationSetting)
-        {
-            if (!__instance.IsActive) return;
-            switch (MapUtilities.CachedShipStatus.Type)
-            {
-                case ShipStatus.MapType.Ship when __instance.Countdown >= CustomOptionHolder.SkeldReactorTimeLimit.GetFloat():
-                    __instance.Countdown = CustomOptionHolder.SkeldReactorTimeLimit.GetFloat();
-                    return;
-                case ShipStatus.MapType.Hq when __instance.Countdown >= CustomOptionHolder.MiraReactorTimeLimit.GetFloat():
-                    __instance.Countdown = CustomOptionHolder.MiraReactorTimeLimit.GetFloat();
-                    return;
-                case ShipStatus.MapType.Pb when __instance.Countdown >= CustomOptionHolder.PolusReactorTimeLimit.GetFloat():
-                    __instance.Countdown = CustomOptionHolder.PolusReactorTimeLimit.GetFloat();
-                    return;
-                case ShipStatus.MapType.Fungle when __instance.Countdown >= CustomOptionHolder.FungleReactorTimeLimit.GetFloat():
-                    __instance.Countdown = CustomOptionHolder.FungleReactorTimeLimit.GetFloat();
-                    return;
-                default:
-                    return;
-            }
-        }
-    }
-}
-
-
-[HarmonyPatch(typeof(HeliSabotageSystem), nameof(HeliSabotageSystem.Deteriorate))]
-public static class HeliMeltdownBooster
-{
-    public static void Prefix(HeliSabotageSystem __instance)
-    {
-        if (CustomOptionHolder.IsReactorDurationSetting.GetBool())
-        {
-            if (!__instance.IsActive)
-                return;
-
-            if (MapUtilities.CachedShipStatus != null)
-            {
-                if (__instance.Countdown >= CustomOptionHolder.AirshipReactorTimeLimit.GetFloat())
-                    __instance.Countdown = CustomOptionHolder.AirshipReactorTimeLimit.GetFloat();
             }
         }
     }

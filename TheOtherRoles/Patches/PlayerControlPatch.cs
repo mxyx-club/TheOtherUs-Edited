@@ -684,8 +684,6 @@ public static class PlayerDiePatch
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
 public static class MurderPlayerPatch
 {
-    //public static bool resetToCrewmate;
-    //public static bool resetToDead;
 
     public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
@@ -730,12 +728,6 @@ public static class MurderPlayerPatch
 
             return false;
         }
-
-        // Allow everyone to murder players
-        //resetToCrewmate = !__instance.Data.Role.IsImpostor;
-        //resetToDead = __instance.Data.IsDead;
-        //__instance.Data.Role.TeamType = RoleTeamTypes.Impostor;
-        //__instance.Data.IsDead = false;
 
         return true;
     }
@@ -786,9 +778,9 @@ public static class MurderPlayerPatch
         }
 
         // Bait
-        if (Bait.bait.FindAll(x => x.PlayerId == target.PlayerId).Count > 0)
+        if (Bait.bait.Any(x => x.PlayerId == target.PlayerId))
         {
-            float reportDelay = (float)rnd.NextDouble(Bait.reportDelayMin, Bait.reportDelayMax);
+            var reportDelay = (float)rnd.NextDouble(Bait.reportDelayMin, Bait.reportDelayMax);
             reportDelay = Math.Max(reportDelay, 0.12f);
 
             if (__instance.AmOwner)
@@ -802,6 +794,11 @@ public static class MurderPlayerPatch
 
             if (Bait.showKillFlash && __instance == PlayerControl.LocalPlayer)
                 showFlash(new Color(204f / 255f, 102f / 255f, 0f / 255f));
+        }
+
+        if (Bloody.bloody.Any(x => x.PlayerId == target.PlayerId))
+        {
+            Bloodytrail.StartBloodTrail(__instance, target);
         }
 
         if (Aftermath.aftermath != null && Aftermath.aftermath == target && PlayerControl.LocalPlayer == __instance)
@@ -830,18 +827,11 @@ public static class MurderPlayerPatch
             Executioner.PromotesRole();
         }
 
-        if (target.PlayerId == Pelican.Player?.PlayerId && Pelican.eatenPlayers?.Count > 0)
+        if (target == Pelican.Player && Pelican.eatenPlayers?.Count > 0)
         {
-            foreach (var player in Pelican.eatenPlayers.ToArray().Where(p => p != null))
+            foreach (var player in Pelican.eatenPlayers.Where(x => x.Data?.IsDead == true))
             {
                 player.Revive();
-                var data = PlayerData.GetPlayerData(player);
-                if (data != null)
-                {
-                    data.DeathReason = CustomDeathReason.Null;
-                    data.KilledBy = null;
-                    data.DeathTimer = DateTime.MinValue;
-                }
                 if (PlayerControl.LocalPlayer == player)
                 {
                     HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
@@ -850,6 +840,13 @@ public static class MurderPlayerPatch
                         HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
                     }, 0.25f);
                     PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Pelican.Player.transform.position);
+                }
+                var data = PlayerData.GetPlayerData(player);
+                if (data != null)
+                {
+                    data.DeathReason = CustomDeathReason.Null;
+                    data.KilledBy = null;
+                    data.DeathTimer = DateTime.MinValue;
                 }
                 continue;
             }
@@ -965,17 +962,6 @@ public static class MurderPlayerPatch
                 RPCProcedure.clearTrap();
             }
             EvilTrapper.isTrapKill = false;
-        }
-
-        // Add Bloody Modifier
-        if (Bloody.bloody.FindAll(x => x.PlayerId == target.PlayerId).Count > 0)
-        {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.Bloody, SendOption.Reliable);
-            writer.Write(__instance.PlayerId);
-            writer.Write(target.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.bloody(__instance.PlayerId, target.PlayerId);
         }
 
         // VIP Modifier

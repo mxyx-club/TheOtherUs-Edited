@@ -1034,8 +1034,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
+                return Hacker.hacker.IsAlive() && Hacker.hacker == PlayerControl.LocalPlayer;
             },
             () => { return true; },
             () =>
@@ -1352,39 +1351,22 @@ internal static class HudManagerStartPatch
                     writer.Write(Vampire.bitten.PlayerId);
                     writer.Write(false);
                     writer.EndRPC();
-                    RPCProcedure.vampireSetBitten(Vampire.bitten.PlayerId, false);
+                    RPCProcedure.vampireSetBitten(Vampire.bitten.PlayerId);
 
-                    var lastTimer = Vampire.delay;
-                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Vampire.delay,
-                        new Action<float>(p =>
+                    _ = new LateTask(() =>
+                    {
+                        if (Vampire.vampire.IsAlive())
                         {
-                            // Delayed action
-                            if (p <= 1f)
-                            {
-                                var timer = vampireKillButton.Timer;
-                                if ((int)timer != (int)lastTimer)
-                                {
-                                    lastTimer = timer;
-                                    var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareGhostInfo);
-                                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                                    writer.Write((byte)RPCProcedure.GhostInfoTypes.VampireTimer);
-                                    writer.Write((int)timer);
-                                    writer.EndRPC();
-                                }
-                            }
+                            RpcCustomMurderPlayer(Vampire.vampire, target, false);
 
-                            if (p == 1f)
-                            {
-                                if (PlayerControl.LocalPlayer.IsDead()) return;
-                                RpcCustomMurderPlayer(Vampire.vampire, target, false);
+                            var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
+                            writer.Write(byte.MaxValue);
+                            writer.Write(true);
+                            writer.EndRPC();
+                            RPCProcedure.vampireSetBitten(byte.MaxValue);
+                        }
+                    }, Vampire.delay);
 
-                                var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
-                                writer.Write(byte.MaxValue);
-                                writer.Write(true);
-                                writer.EndRPC();
-                                RPCProcedure.vampireSetBitten(byte.MaxValue, true);
-                            }
-                        })));
                     SoundEffectsManager.play("vampireBite");
 
                     vampireKillButton.HasEffect = true; // Trigger effect on this click
@@ -2685,7 +2667,7 @@ internal static class HudManagerStartPatch
                 }
                 else if (Warlock.curseVictim != null && Warlock.curseVictimTarget != null)
                 {
-                    if (!RpcCustomMurderPlayer(Warlock.warlock, Warlock.curseVictimTarget)) return;
+                    if (!RpcCustomMurderPlayer(Warlock.warlock, Warlock.curseVictimTarget, false)) return;
 
                     // If blanked or killed
                     if (Warlock.rootTime > 0)
@@ -3813,9 +3795,10 @@ internal static class HudManagerStartPatch
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
                 var writer = StartRPC(CustomRPC.SetTrap);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 writer.WriteBytesAndSize(buff);
                 writer.EndRPC();
-                RPCProcedure.setTrap(buff);
+                RPCProcedure.setTrap(PlayerControl.LocalPlayer.PlayerId, buff);
 
                 SoundEffectsManager.play("trapperTrap");
                 trapperButton.Timer = trapperButton.MaxTimer;
@@ -4675,9 +4658,9 @@ internal static class HudManagerStartPatch
             {
                 var array = Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(),
                       PlayerControl.LocalPlayer.MaxReportDistance * Poltergeist.radius, Constants.PlayersOnlyMask)
-                 .Where(collider => collider.tag == "DeadBody")
-                 .Select(collider => collider.GetComponent<DeadBody>())
-                 .Where(deadBody => deadBody != null);
+                    .Where(collider => collider.tag == "DeadBody")
+                    .Select(collider => collider.GetComponent<DeadBody>())
+                    .Where(deadBody => deadBody != null);
 
                 Poltergeist.targetBody = array.FirstOrDefault();
                 return Poltergeist.targetBody && PlayerControl.LocalPlayer.CanMove;
@@ -4737,8 +4720,6 @@ internal static class HudManagerStartPatch
                 Jailor.JailPlayer(PlayerControl.LocalPlayer, target);
 
                 SoundEffectsManager.play("deputyHandcuff");
-
-                jailorButton.Timer = jailorButton.MaxTimer;
                 Jailor.currentTarget = null;
             },
             () =>
@@ -4750,7 +4731,7 @@ internal static class HudManagerStartPatch
                 jailorButton.UsesCount = Jailor.usesCount;
                 Jailor.currentTarget = SetTarget();
                 SetPlayerOutline(Jailor.currentTarget, Jailor.color);
-                jailorButton.showTargetNameOnButton(Jailor.currentTarget);
+                jailorButton.showTargetNameOnButton(Jailor.currentTarget, Jailor.Jailed?.Data?.PlayerName);
 
                 return PlayerControl.LocalPlayer.CanMove && Jailor.currentTarget != null;
             },
@@ -4759,6 +4740,9 @@ internal static class HudManagerStartPatch
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
+            true,
+            1f,
+            () => { },
             buttonText: GetString("jailButtonText")
         );
 

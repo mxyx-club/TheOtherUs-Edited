@@ -277,8 +277,6 @@ internal class RoleDraft
                         availableRoles.TryAdd(roleInfo);
                     }
 
-                    availableRoles = availableRoles.OrderBy(_ => Guid.NewGuid()).ToList();
-
                     // Fallback for if all roles are somehow removed. (This is only the case if there is a bug, hence print a warning
                     if (availableRoles.Count == 0)
                     {
@@ -287,7 +285,7 @@ internal class RoleDraft
                             : RoleInfo.crewmate);
                     }
 
-                    var originalAvailable = availableRoles.ToList();
+                    var originalAvailable = availableRoles.Shuffle().ToArray();
 
                     // remove some roles, so that you can't always get the same roles:
                     if (availableRoles.Count > CustomOptionHolder.draftModeAmountOfChoices.GetFloat())
@@ -295,18 +293,22 @@ internal class RoleDraft
                         int countToRemove = availableRoles.Count - (int)CustomOptionHolder.draftModeAmountOfChoices.GetFloat();
                         while (countToRemove-- > 0)
                         {
-                            var toRemove = availableRoles.OrderBy(_ => Guid.NewGuid()).First();
+                            var toRemove = availableRoles.Random();
                             availableRoles.Remove(toRemove);
                         }
                     }
 
                     if (timer >= maxTimer)
                     {
-                        sendPick((byte)originalAvailable.OrderBy(_ => Guid.NewGuid()).First().roleId, SelectFlags.Random);
+                        sendPick((byte)originalAvailable.Random().roleId, SelectFlags.Random);
                     }
 
                     if (GameObject.Find("RoleButton") == null)
                     {
+                        Message("----------------------------------------");
+                        Message(string.Join(" ", originalAvailable.Select(x => x.Name)));
+                        Message("----------------------------------------");
+
                         SoundEffectsManager.play("timemasterShield");
 
                         int totalButtons = availableRoles.Count + 1;
@@ -352,7 +354,7 @@ internal class RoleDraft
                                 var button = renderer.gameObject.SetUpButton();
                                 button.OnClick.AddListener(() =>
                                 {
-                                    sendPick((byte)originalAvailable.OrderBy(_ => Guid.NewGuid()).First().roleId, SelectFlags.Random);
+                                    sendPick((byte)originalAvailable.Random().roleId, SelectFlags.Random);
                                 });
 
                             }

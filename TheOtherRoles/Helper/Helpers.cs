@@ -327,7 +327,7 @@ public static class Helpers
         {
             if (Spy.impostorsCanKillAnyone)
             {
-                target = SetTarget(untargetablePlayers, false, true);
+                target = SetTarget(null, false, true);
             }
             else
             {
@@ -361,6 +361,7 @@ public static class Helpers
 
     public static void SetTargetWithLight(this FollowerCamera camera, MonoBehaviour target)
     {
+        Message("SetCam");
         camera.Target = target;
         PlayerControl.LocalPlayer.lightSource?.transform?.SetParent(target.transform, false);
         if (target != PlayerControl.LocalPlayer) PlayerControl.LocalPlayer.NetTransform.Halt();
@@ -492,6 +493,7 @@ public static class Helpers
     {
         player.Data.Role.TeamType = RoleTeamTypes.Impostor;
         SetRoleType(player, RoleTypes.Impostor);
+        RPCProcedure.setRole(player.PlayerId, (byte)RoleId.Impostor);
         player.SetKillTimer(ModOption.KillCooldown);
 
         Message("PROOF I AM IMP VANILLA ROLE: " + player.Data.Role.IsImpostor);
@@ -650,7 +652,7 @@ public static class Helpers
         return count;
     }
 
-    public static void Shuffle<T>(List<T> list)
+    public static List<T> Shuffle<T>(this List<T> list)
     {
         int n = list.Count;
         while (n > 1)
@@ -659,6 +661,7 @@ public static class Helpers
             int k = rnd.Next(n + 1);
             (list[k], list[n]) = (list[n], list[k]);
         }
+        return list;
     }
 
     public static T RandomAndRemove<T>(List<T> list)
@@ -737,14 +740,14 @@ public static class Helpers
     public static void handleVampireBiteOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        if (Vampire.vampire != null && Vampire.bitten != null)
+        if (Vampire.vampire.IsAlive() && Vampire.bitten != null)
         {
-            RpcCustomMurderPlayer(Vampire.vampire, Vampire.bitten, false);
+            if (Vampire.bitten.IsAlive()) RpcCustomMurderPlayer(Vampire.vampire, Vampire.bitten, false);
             var writer = StartRPC(CustomRPC.VampireSetBitten);
             writer.Write(byte.MaxValue);
             writer.Write(true);
             writer.EndRPC();
-            RPCProcedure.vampireSetBitten(byte.MaxValue, true);
+            RPCProcedure.vampireSetBitten(byte.MaxValue);
         }
     }
 
@@ -753,7 +756,7 @@ public static class Helpers
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
         if (Bomber.bomber != null && Bomber.hasBombPlayer != null)
         {
-            RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
+            if (Bomber.hasBombPlayer.IsAlive()) RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
             var writer = StartRPC(CustomRPC.GiveBomb);
             writer.Write(byte.MaxValue);
             writer.Write(false);

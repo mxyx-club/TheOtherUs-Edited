@@ -5,7 +5,7 @@ public static class Pursuer
     public static List<PlayerControl> Player = new();
     public static PlayerControl target;
     public static Color color = new Color32(145, 164, 30, byte.MaxValue);
-    public static List<PlayerControl> blankedList = new();
+    public static HashSet<byte> blankedList = new();
     public static int blanks;
 
     public static float cooldown = 30f;

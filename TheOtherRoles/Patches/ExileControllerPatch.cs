@@ -557,10 +557,10 @@ internal class ExileControllerWrapUpPatch
 
         Chameleon.lastMoved.Clear();
 
-        foreach (var trap in Trap.traps) trap.triggerable = false;
+        foreach (var trap in Trap.AllTraps) trap.triggerable = false;
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(
             (GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown / 2) + 2, new Action<float>(p =>
-            { if (p == 1f) foreach (var trap in Trap.traps) trap.triggerable = true; })));
+            { if (p == 1f) foreach (var trap in Trap.AllTraps) trap.triggerable = true; })));
 
         if (!Yoyo.markStaysOverMeeting) Silhouette.clearSilhouettes();
 

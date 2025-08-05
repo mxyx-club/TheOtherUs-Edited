@@ -27,8 +27,10 @@ public static class Mini
         isGrowingUpInMeeting = CustomOptionHolder.modifierMiniGrowingUpInMeeting.GetBool();
         accumulatedGrowthTime = 0f;
         lastUpdateTime = -1f;
+        _hasGrownUp = false;
     }
 
+    private static bool _hasGrownUp;
     public static void Update()
     {
         if (mini == null) return;
@@ -56,5 +58,21 @@ public static class Mini
             accumulatedGrowthTime = growingUpDuration;
         }
 
+        if (isGrownUp && !_hasGrownUp && !InMeeting)
+        {
+            _hasGrownUp = true;
+
+            foreach (var button in CustomButton.Buttons)
+            {
+                if (button?.actionButton == null || !button.HasButton.Invoke()) continue;
+
+                float originalMaxTimer = button._MaxTimer; // 未折算值
+                if (originalMaxTimer <= 0f) continue;
+
+                float percentage = button.Timer / originalMaxTimer;
+                float adjustedTimer = button.MaxTimer * percentage;
+                button.SetTimer(adjustedTimer);
+            }
+        }
     }
 }

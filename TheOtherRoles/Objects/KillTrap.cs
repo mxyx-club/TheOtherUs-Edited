@@ -235,7 +235,6 @@ public class KillTrap
             if (DateTime.UtcNow.Subtract(placedTime).TotalSeconds < EvilTrapper.extensionTime) return;
             if (isActive || PlayerControl.LocalPlayer.IsDead() || PlayerControl.LocalPlayer.inVent || isDisabled || InMeeting) return;
             var p1 = PlayerControl.LocalPlayer.transform.localPosition;
-            Dictionary<GameObject, byte> listActivate = new();
             var p2 = killtrap.transform.localPosition;
             var distance = Vector3.Distance(p1, p2);
             if (distance < EvilTrapper.trapRange)
@@ -317,6 +316,7 @@ public class KillTrap
 
 
     private static readonly Assembly dll = Assembly.GetExecutingAssembly();
+    [PluginModuleInitializer]
     public static void LoadAudioAssets()
     {
         var resourceAudioAssetBundleStream = dll.GetManifestResourceStream("TheOtherRoles.Resources.AssetsBundle.audiobundle");

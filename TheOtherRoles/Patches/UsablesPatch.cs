@@ -130,11 +130,9 @@ public static class VentUsePatch
             return false;
         }
 
-        if (Trapper.playersOnMap.Contains(PlayerControl.LocalPlayer)) return false;
+        __instance.CanUse(PlayerControl.LocalPlayer.Data, out var canUse, out _);
+        var canMoveInVents = PlayerControl.LocalPlayer != Spy.spy && PlayerControl.LocalPlayer.CanMove;
 
-        __instance.CanUse(PlayerControl.LocalPlayer.Data, out var canUse, out var couldUse);
-        var canMoveInVents = PlayerControl.LocalPlayer != Spy.spy &&
-                             !Trapper.playersOnMap.Contains(PlayerControl.LocalPlayer);
         if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
 
         var isEnter = !PlayerControl.LocalPlayer.inVent;
@@ -147,7 +145,7 @@ public static class VentUsePatch
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write(isEnter ? byte.MaxValue : (byte)0);
             writer.EndRPC();
-            RPCProcedure.useUncheckedVent(__instance.Id, PlayerControl.LocalPlayer.PlayerId, isEnter ? byte.MaxValue : (byte)0);
+            RPCProcedure.useUncheckedVent(__instance.Id, PlayerControl.LocalPlayer.PlayerId, isEnter);
             SoundEffectsManager.play("tricksterUseBoxVent");
             return false;
         }
@@ -158,15 +156,6 @@ public static class VentUsePatch
             PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(__instance.Id);
         __instance.SetButtons(isEnter && canMoveInVents);
         return false;
-    }
-}
-
-[HarmonyPatch(typeof(Vent), nameof(Vent.TryMoveToVent))]
-public static class MoveToVentPatch
-{
-    public static bool Prefix(Vent otherVent)
-    {
-        return !Trapper.playersOnMap.Contains(PlayerControl.LocalPlayer);
     }
 }
 

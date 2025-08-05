@@ -14,15 +14,13 @@ public class RoleInfo
     public Color color;
     public RoleId roleId;
     public RoleType roleType;
-    public bool isGuessable;
     public string nameKey;
 
-    public RoleInfo(string name, Color color, RoleId roleId, RoleType roleType, bool isGuessable = false)
+    public RoleInfo(string name, Color color, RoleId roleId, RoleType roleType)
     {
         this.color = color;
         this.roleId = roleId;
         this.roleType = roleType;
-        this.isGuessable = isGuessable;
         nameKey = name;
         RoleInfoById.TryAdd(roleId, this);
     }
@@ -110,31 +108,31 @@ public class RoleInfo
 
     // Modifier
     public static RoleInfo assassin = new("Assassin", Assassin.color, RoleId.Assassin, RoleType.Modifier);
-    public static RoleInfo lover = new("Lover", Lovers.color, RoleId.Lover, RoleType.Modifier, true);
-    public static RoleInfo disperser = new("Disperser", Disperser.color, RoleId.Disperser, RoleType.Modifier, true);
+    public static RoleInfo lover = new("Lover", Lovers.color, RoleId.Lover, RoleType.Modifier);
+    public static RoleInfo disperser = new("Disperser", Disperser.color, RoleId.Disperser, RoleType.Modifier);
     public static RoleInfo specoality = new("Specoality", Specoality.color, RoleId.Specoality, RoleType.Modifier);
-    public static RoleInfo vortox = new("Vortox", Vortox.color, RoleId.Vortox, RoleType.Modifier, true);
-    public static RoleInfo poucherModifier = new("Poucher", Poucher.color, RoleId.PoucherModifier, RoleType.Modifier, true);
+    public static RoleInfo vortox = new("Vortox", Vortox.color, RoleId.Vortox, RoleType.Modifier);
+    public static RoleInfo poucherModifier = new("Poucher", Poucher.color, RoleId.PoucherModifier, RoleType.Modifier);
     public static RoleInfo lastImpostor = new("LastImpostor", LastImpostor.color, RoleId.LastImpostor, RoleType.Modifier);
-    public static RoleInfo bloody = new("Bloody", Color.yellow, RoleId.Bloody, RoleType.Modifier, true);
+    public static RoleInfo bloody = new("Bloody", Color.yellow, RoleId.Bloody, RoleType.Modifier);
     public static RoleInfo antiTeleport = new("AntiTeleport", Color.yellow, RoleId.AntiTeleport, RoleType.Modifier);
-    public static RoleInfo tiebreaker = new("TieBreaker", Color.yellow, RoleId.Tiebreaker, RoleType.Modifier, true);
-    public static RoleInfo aftermath = new("Aftermath", Color.yellow, RoleId.Aftermath, RoleType.Modifier, true);
-    public static RoleInfo bait = new("Bait", Color.yellow, RoleId.Bait, RoleType.Modifier, true);
+    public static RoleInfo tiebreaker = new("TieBreaker", Color.yellow, RoleId.Tiebreaker, RoleType.Modifier);
+    public static RoleInfo aftermath = new("Aftermath", Color.yellow, RoleId.Aftermath, RoleType.Modifier);
+    public static RoleInfo bait = new("Bait", Color.yellow, RoleId.Bait, RoleType.Modifier);
     public static RoleInfo sunglasses = new("Sunglasses", Color.yellow, RoleId.Sunglasses, RoleType.Modifier);
-    public static RoleInfo torch = new("Torch", Color.yellow, RoleId.Torch, RoleType.Modifier, true);
+    public static RoleInfo torch = new("Torch", Color.yellow, RoleId.Torch, RoleType.Modifier);
     public static RoleInfo flash = new("Flash", Color.yellow, RoleId.Flash, RoleType.Modifier);
-    public static RoleInfo multitasker = new("Multitasker", Color.yellow, RoleId.Multitasker, RoleType.Modifier, true);
+    public static RoleInfo multitasker = new("Multitasker", Color.yellow, RoleId.Multitasker, RoleType.Modifier);
     public static RoleInfo giant = new("Giant", Color.yellow, RoleId.Giant, RoleType.Modifier);
     public static RoleInfo mini = new("Mini", Color.yellow, RoleId.Mini, RoleType.Modifier);
     public static RoleInfo vip = new("Vip", Color.yellow, RoleId.Vip, RoleType.Modifier);
     public static RoleInfo indomitable = new("Indomitable", Color.yellow, RoleId.Indomitable, RoleType.Modifier);
-    public static RoleInfo slueth = new("Slueth", Color.yellow, RoleId.Slueth, RoleType.Modifier, true);
-    public static RoleInfo cursed = new("Cursed", Color.yellow, RoleId.Cursed, RoleType.Modifier, true);
+    public static RoleInfo slueth = new("Slueth", Color.yellow, RoleId.Slueth, RoleType.Modifier);
+    public static RoleInfo cursed = new("Cursed", Color.yellow, RoleId.Cursed, RoleType.Modifier);
     public static RoleInfo blind = new("Blind", Color.yellow, RoleId.Blind, RoleType.Modifier);
-    public static RoleInfo watcher = new("Watcher", Color.yellow, RoleId.Watcher, RoleType.Modifier, true);
-    public static RoleInfo radar = new("Radar", Color.yellow, RoleId.Radar, RoleType.Modifier, true);
-    public static RoleInfo tunneler = new("Tunneler", Color.yellow, RoleId.Tunneler, RoleType.Modifier, true);
+    public static RoleInfo watcher = new("Watcher", Color.yellow, RoleId.Watcher, RoleType.Modifier);
+    public static RoleInfo radar = new("Radar", Color.yellow, RoleId.Radar, RoleType.Modifier);
+    public static RoleInfo tunneler = new("Tunneler", Color.yellow, RoleId.Tunneler, RoleType.Modifier);
     public static RoleInfo buttonBarry = new("ButtonBarry", Color.yellow, RoleId.ButtonBarry, RoleType.Modifier);
     public static RoleInfo chameleon = new("Chameleon", Color.yellow, RoleId.Chameleon, RoleType.Modifier);
     public static RoleInfo shifter = new("Shifter", Color.yellow, RoleId.Shifter, RoleType.Modifier);
@@ -183,7 +181,6 @@ public class RoleInfo
         partTimer,
         witness,
         bandLeader,
-        schrodingersCat,
         doomsayer,
         arsonist,
         jackal,
@@ -197,6 +194,7 @@ public class RoleInfo
         juggernaut,
         akujo,
         thief,
+        schrodingersCat,
 
         crewmate,
         vigilante,
@@ -456,7 +454,7 @@ public class RoleInfo
                     roleName = Cs(Ninja.color, "(被标记) ") + roleName;
                 if (p == Thief.formerThief)
                     roleName += Cs(Thief.color, " (窃)");
-                if (Pursuer.blankedList.Contains(p))
+                if (Pursuer.blankedList.Any(x => x == p.PlayerId))
                     roleName = Cs(Pursuer.color, "(被塞空包弹) ") + roleName;
                 if (Witch.futureSpelled.Any(x => x == p) && !MeetingHud.Instance) // This is already displayed in meetings!
                     roleName = Cs(Witch.color, "☆ ") + roleName;

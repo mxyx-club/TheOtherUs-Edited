@@ -11,7 +11,7 @@ public static class Prosecutor
     public static bool Prosecuted;
     public static bool StartProsecute;
     public static bool ProsecuteThisMeeting;
-    public static PlayerVoteArea Prosecute;
+    public static PlayerVoteArea PlayerVote;
 
     public static bool CanSeeVoteColors
     {
@@ -40,13 +40,13 @@ public static class Prosecutor
     {
         public static void UpdateButton(PlayerControl p, MeetingHud __instance)
         {
-            if (p != prosecutor || !prosecutor.CanUseMeetingAbility() || Prosecute == null) return;
+            if (p != prosecutor || !prosecutor.CanUseMeetingAbility() || PlayerVote == null) return;
 
             var skip = __instance.SkipVoteButton;
-            Prosecute?.gameObject.SetActive(skip.gameObject.active && !Prosecuted);
-            Prosecute?.voteComplete = skip.voteComplete;
-            Prosecute?.GetComponent<SpriteRenderer>().enabled = skip.GetComponent<SpriteRenderer>().enabled;
-            Prosecute?.GetComponentsInChildren<TextMeshPro>()[0].text = "Prosecutor.Button".Translate();
+            PlayerVote?.gameObject.SetActive(skip.gameObject.active && !Prosecuted);
+            PlayerVote?.voteComplete = skip.voteComplete;
+            PlayerVote?.GetComponent<SpriteRenderer>().enabled = skip.GetComponent<SpriteRenderer>().enabled;
+            PlayerVote?.GetComponentsInChildren<TextMeshPro>()[0].text = "Prosecutor.Button".Translate();
         }
 
         [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.StartMeeting)), HarmonyPrefix]
@@ -64,10 +64,10 @@ public static class Prosecutor
             if (prosecutor != PlayerControl.LocalPlayer || !prosecutor.CanUseMeetingAbility()) return;
 
             var skip = __instance.SkipVoteButton;
-            Prosecute = UObject.Instantiate(skip, skip.transform.parent);
-            Prosecute.Parent = __instance;
-            Prosecute.SetTargetPlayerId(251);
-            Prosecute.transform.localPosition = skip.transform.localPosition + new Vector3(0f, -0.15f, 0f);
+            PlayerVote = UObject.Instantiate(skip, skip.transform.parent);
+            PlayerVote.Parent = __instance;
+            PlayerVote.SetTargetPlayerId(251);
+            PlayerVote.transform.localPosition = skip.transform.localPosition + new Vector3(0f, -0.15f, 0f);
             skip.transform.localPosition += new Vector3(0f, 0.20f, 0f);
             UpdateButton(prosecutor, __instance);
         }
@@ -83,7 +83,7 @@ public static class Prosecutor
         public static void MeetingConfirmPostfix(MeetingHud __instance)
         {
             if (PlayerControl.LocalPlayer != prosecutor || !prosecutor.CanUseMeetingAbility()) return;
-            Prosecute.ClearButtons();
+            PlayerVote.ClearButtons();
             UpdateButton(prosecutor, __instance);
         }
 
@@ -91,9 +91,9 @@ public static class Prosecutor
         public static void MeetingSelectPostfix(MeetingHud __instance, int __0)
         {
             if (PlayerControl.LocalPlayer != prosecutor || !prosecutor.CanUseMeetingAbility()) return;
-            Prosecute.ClearButtons();
+            PlayerVote.ClearButtons();
             UpdateButton(prosecutor, __instance);
-            if (__0 != 251) Prosecute.ClearButtons();
+            if (__0 != 251) PlayerVote.ClearButtons();
             UpdateButton(prosecutor, __instance);
         }
 
@@ -113,10 +113,10 @@ public static class Prosecutor
                 case MeetingHud.VoteStates.Discussion:
                     if (__instance.discussionTimer < GameOptionsManager.Instance.currentNormalGameOptions.DiscussionTime)
                     {
-                        Prosecute.SetDisabled();
+                        PlayerVote.SetDisabled();
                         break;
                     }
-                    Prosecute.SetEnabled();
+                    PlayerVote.SetEnabled();
                     break;
             }
             UpdateButton(prosecutor, __instance);
@@ -130,7 +130,7 @@ public static class Prosecutor
             if (__instance.Parent.state is MeetingHud.VoteStates.Proceeding or MeetingHud.VoteStates.Results)
                 return false;
 
-            if (__instance != Prosecute)
+            if (__instance != PlayerVote)
             {
                 if (StartProsecute)
                 {

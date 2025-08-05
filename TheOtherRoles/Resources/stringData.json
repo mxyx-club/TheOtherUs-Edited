@@ -1750,6 +1750,9 @@
         "0": "Schrödinger's Cat Can Be Guessed",
         "13": "可以被赌怪猜测而死"
     },
+    "schrodingersCatIsGuessable1": {
+        "13": "无阵营时无法被猜测"
+    },
     "schrodingersCatCanKill": {
         "0": "Schrödinger's Cat Can Kill When Non-Crewmate",
         "13": "非船员阵营时允许击杀玩家"
@@ -2413,8 +2416,8 @@
         "13": "需要跳过的会议次数"
     },
     "modifierBloodyQuantity": {
-        "0": "Number of Bloodies",
-        "13": "溅血数量"
+        "0": "Number of Bloody",
+        "13": "溅血者数量"
     },
     "modifierBloodyDuration": {
         "0": "Bloody Trail Duration",
@@ -2651,6 +2654,9 @@
     "MessageFromTheHost": {
         "0": "【 ★ Host message ★ 】",
         "13": "【 ★ 房主消息 ★ 】"
+    },
+    "MessageFromTheGuesser": {
+        "13": "【 ★ 赌怪消息 ★ 】"
     },
     "Host": {
         "0": "Host",

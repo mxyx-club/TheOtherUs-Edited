@@ -386,8 +386,10 @@ internal class MeetingHudPatch
             if (host != null)
             {
                 PlayerMaterial.SetColors(host.DefaultOutfit.ColorId, __instance.HostIcon);
-                if (Text == null) Text = __instance.ProceedButton.gameObject.GetComponentInChildren<TextMeshPro>();
-                Text.rectTransform.sizeDelta *= new Vector2(2.4f, 1f);
+                if (Text == null)
+                {
+                    Text = __instance.ProceedButton.gameObject.GetComponentInChildren<TextMeshPro>();
+                }
                 Text.text = $"{"Host".Translate()}: {host.PlayerName}";
             }
         }
@@ -814,8 +816,6 @@ internal class MeetingHudPatch
             Medium.meetingStartTime = DateTime.UtcNow;
             // Count meetings
             if (meetingTarget == null) meetingsCount++;
-            // Reset vampire bitten
-            Vampire.bitten = null;
             // Count meetings
             if (meetingTarget == null) meetingsCount++;
             // Save the meeting target
@@ -931,7 +931,6 @@ internal class MeetingHudPatch
             // Remove first kill shield
             if (!PlayerControl.AllPlayerControls.ToList().All(x => x.IsAlive())) firstKillPlayer = null;
 
-            Trapper.playersOnMap = new List<PlayerControl>();
             if (Witch.witch.IsDead()) Witch.futureSpelled.Clear();
 
             //Nothing here for now. What to do when local player who is blackmailed starts meeting

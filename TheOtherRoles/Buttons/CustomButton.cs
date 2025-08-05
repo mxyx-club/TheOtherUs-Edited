@@ -9,7 +9,7 @@ namespace TheOtherRoles.Buttons;
 public class CustomButton
 {
     public static IReadOnlyList<CustomButton> Buttons => _buttons;
-    private static List<CustomButton> _buttons = new(200);
+    private static List<CustomButton> _buttons = new(80);
     private static readonly int Desat = Shader.PropertyToID("_Desat");
 
     private Action OnClick;
