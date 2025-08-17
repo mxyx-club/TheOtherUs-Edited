@@ -23,7 +23,7 @@ public class CosmeticsManager : ManagerBase<CosmeticsManager>
         hasCosmetics = CustomCosmeticsFlags.Hat
     };
 
-    internal static string RepositoryUrl => "https://hats.mxyx.club/master";
+    internal static string RepositoryUrl => "https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherHats/master".GithubUrl();
 
     public static void Load()
     {
