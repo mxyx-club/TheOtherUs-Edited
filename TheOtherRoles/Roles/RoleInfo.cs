@@ -441,33 +441,31 @@ public class RoleInfo
             if (CanSeeGhostInfo)
             {
                 if (Eraser.futureErased.Any(x => x == p))
-                    roleName = Cs(Color.gray, "(被抹除) ") + roleName;
-                if (Vampire.vampire != null && !Vampire.vampire.Data.IsDead && Vampire.bitten == p && !p.Data.IsDead)
-                    roleName = Cs(Vampire.color, $"(被吸血 {(int)HudManagerStartPatch.vampireKillButton.Timer + 1}) ") + roleName;
+                    roleName = Cs(Color.gray, "roleInfo.erased".Translate()) + roleName;
                 if (Sheriff.handcuffedPlayers.Any(x => x == p.PlayerId))
-                    roleName = Cs(Color.gray, "(被上拷) ") + roleName;
-                if (Sheriff.handcuffedKnows.ContainsKey(p.PlayerId)) // Active cuff
-                    roleName = Cs(Sheriff.color, "(被上拷) ") + roleName;
+                    roleName = Cs(Color.gray, "roleInfo.cuffed".Translate()) + roleName;
+                if (Sheriff.handcuffedKnows.ContainsKey(p.PlayerId))
+                    roleName = Cs(Sheriff.color, "roleInfo.cuffed".Translate()) + roleName;
                 if (p == Warlock.curseVictim)
-                    roleName = Cs(Warlock.color, "(被下咒) ") + roleName;
+                    roleName = Cs(Warlock.color, "roleInfo.cursed".Translate()) + roleName;
                 if (p == Ninja.ninjaMarked)
-                    roleName = Cs(Ninja.color, "(被标记) ") + roleName;
+                    roleName = Cs(Ninja.color, "roleInfo.marked".Translate()) + roleName;
                 if (p == Thief.formerThief)
-                    roleName += Cs(Thief.color, " (窃)");
+                    roleName += Cs(Thief.color, "roleInfo.thief".Translate());
                 if (Pursuer.blankedList.Any(x => x == p.PlayerId))
-                    roleName = Cs(Pursuer.color, "(被塞空包弹) ") + roleName;
-                if (Witch.futureSpelled.Any(x => x == p) && !MeetingHud.Instance) // This is already displayed in meetings!
+                    roleName = Cs(Pursuer.color, "roleInfo.blanked".Translate()) + roleName;
+                if (Witch.futureSpelled.Any(x => x == p) && !MeetingHud.Instance)
                     roleName = Cs(Witch.color, "☆ ") + roleName;
                 if (BountyHunter.bounty == p && BountyHunter.bountyHunter.IsAlive())
-                    roleName = Cs(BountyHunter.color, "(被悬赏) ") + roleName;
+                    roleName = Cs(BountyHunter.color, "roleInfo.bounty".Translate()) + roleName;
                 if (p == Arsonist.arsonist)
-                    roleName += Cs(Arsonist.color, $" (剩余 {PlayerControl.AllPlayerControls
-                        .Count(x => x != Arsonist.arsonist && x.IsAlive() &&
-                        !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId))} )");
+                    roleName += Cs(Arsonist.color, string.Format("roleInfoRemaining".Translate(),
+                        PlayerControl.AllPlayerControls.Count(x => x != Arsonist.arsonist && x.IsAlive()
+                        && !Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId))));
                 if (Akujo.keeps.Any(x => x.PlayerId == p.PlayerId))
-                    roleName = Cs(Color.gray, "(备胎) ") + roleName;
+                    roleName = Cs(Color.gray, "roleInfo.akujoKeeps".Translate()) + roleName;
                 if (p == Akujo.honmei)
-                    roleName = Cs(Akujo.color, "(真爱) ") + roleName;
+                    roleName = Cs(Akujo.color, "roleInfo.akujoHommei".Translate()) + roleName;
             }
         }
 

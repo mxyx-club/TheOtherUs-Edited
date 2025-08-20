@@ -1562,6 +1562,10 @@
         "0": "Kill Cooldown during Rampage",
         "13": "击杀冷却"
     },
+    "werewolfCanUseVents1": {
+        "0": "Only In Rampage",
+        "13": "仅狂暴时可用"
+    },
     "juggernautReducedkillEach": {
         "0": "Kill Cooldown Reduction Per Kill",
         "13": "每次击杀后减少的cd"
@@ -2880,8 +2884,44 @@
         "13": "破坏 : ({0}/{1})"
     },
     "roleInfoRemaining": {
-        "0": "{0} left",
+        "0": " {0} left ",
         "13": " 剩余 {0} "
+    },
+    "roleInfo.marked": {
+        "0": "(marked) ",
+        "13": "(被标记) "
+    },
+    "roleInfo.cursed": {
+        "0": "(cursed) ",
+        "13": "(被下咒) "
+    },
+    "roleInfo.erased": {
+        "0": "(erased) ",
+        "13": "(被抹除) "
+    },
+    "roleInfo.cuffed": {
+        "0": "(cuffed) ",
+        "13": "(被上铐) "
+    },
+    "roleInfo.blanked": {
+        "0": "(blanked) ",
+        "13": "(空包弹) "
+    },
+    "roleInfo.thief": {
+        "0": " (thief)",
+        "13": " (窃)"
+    },
+    "roleInfo.bounty": {
+        "0": "(bounty) ",
+        "13": "(被悬赏) "
+    },
+    "roleInfo.akujoHommei": {
+        "0": "(hommei) ",
+        "13": "(真爱) "
+    },
+    "roleInfo.akujoKeeps": {
+        "0": "(keeps) ",
+        "13": "(备胎) "
     },
     "ExileController.ForceExile": {
         "0": "The Host Forcibly Ejected {0}",

@@ -3014,7 +3014,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                var count = PlayerControl.AllPlayerControls.ToList().Count(p => p.IsAlive() && p.IsKiller() && p != Arsonist.arsonist);
+                var count = PlayerControl.AllPlayerControls.Count(p => p.IsAlive() && p.IsKiller() && p != Arsonist.arsonist);
 
                 if (count == 0 && Arsonist.igniteCooldownRemoved) arsonistKillButton.Timer = arsonistKillButton.MaxTimer = 0f;
                 else arsonistKillButton.Timer = arsonistKillButton.MaxTimer = arsonistButton.MaxTimer;

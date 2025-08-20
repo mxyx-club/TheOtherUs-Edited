@@ -198,6 +198,11 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
+        else if (Werewolf.werewolf != null && Werewolf.werewolf == player)
+        {
+            if (CustomOptionHolder.werewolfCanUseVents.GetSelection() == 2) roleCouldUse = true;
+            else if (CustomOptionHolder.werewolfCanUseVents.GetSelection() == 1 && Werewolf.canKill) roleCouldUse = true;
+        }
         else if (player.Data?.Role != null && player.Data.Role.CanVent)
         {
             roleCouldUse = true;

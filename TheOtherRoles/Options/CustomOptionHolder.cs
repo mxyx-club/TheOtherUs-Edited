@@ -363,6 +363,7 @@ public class CustomOptionHolder
     public static CustomOption werewolfRampageCooldown;
     public static CustomOption werewolfRampageDuration;
     public static CustomOption werewolfKillCooldown;
+    public static CustomOption werewolfCanUseVents;
 
     public static CustomOption juggernautSpawnRate;
     public static CustomOption juggernautCooldown;
@@ -1121,6 +1122,7 @@ public class CustomOptionHolder
         werewolfRampageCooldown = Create(202001, Types.Neutral, "werewolfRampageCooldown", 25f, 10f, 60f, 2.5f, werewolfSpawnRate);
         werewolfRampageDuration = Create(202002, Types.Neutral, "werewolfRampageDuration", 15f, 0.5f, 20f, 0.5f, werewolfSpawnRate);
         werewolfKillCooldown = Create(202003, Types.Neutral, "werewolfKillCooldown", 3f, 1f, 60f, 0.5f, werewolfSpawnRate);
+        werewolfCanUseVents = Create(202004, Types.Neutral, "canUseVents", ["optionOff", "werewolfCanUseVents1", "optionOn"], werewolfSpawnRate);
 
         juggernautSpawnRate = Create(202100, Types.Neutral, Cs(Juggernaut.color, "Juggernaut"), rates, null, true);
         juggernautCooldown = Create(202101, Types.Neutral, "killCooldown", 25f, 2.5f, 60f, 2.5f, juggernautSpawnRate);

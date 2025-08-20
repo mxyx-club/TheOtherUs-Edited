@@ -105,6 +105,7 @@ public class CustomButton
 
         IsKillButton = textTemplate is KillButton;
         actionButton = UObject.Instantiate(textTemplate, textTemplate.transform.parent);
+        actionButton.name = "CustomButton";
         actionButtonGameObject = actionButton.gameObject;
         actionButtonRenderer = actionButton.graphic;
         actionButtonMat = actionButtonRenderer.material;

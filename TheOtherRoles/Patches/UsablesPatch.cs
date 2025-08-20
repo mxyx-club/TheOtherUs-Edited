@@ -241,7 +241,7 @@ public class AbilityUpdate
 {
     public static void Postfix(AbilityButton __instance)
     {
-        if (PlayerControl.LocalPlayer.IsAlive() && __instance.commsDown.active)
+        if (__instance.commsDown.active)
         {
             __instance.commsDown.SetActive(false);
         }

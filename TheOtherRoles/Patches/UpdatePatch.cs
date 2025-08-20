@@ -1463,8 +1463,6 @@ internal class HudManagerUpdatePatch
         updateGiantSize(__instance);
         updateBlindReport();
 
-        if (!MeetingHud.Instance) __instance.AbilityButton?.Update();
-
         if (Specter.Player != null && PlayerControl.LocalPlayer == Specter.Player && InGame && !InMeeting)
         {
             __instance.ShadowQuad?.gameObject?.SetActive(true);

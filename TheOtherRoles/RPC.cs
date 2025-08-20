@@ -1321,12 +1321,12 @@ public static class RPCProcedure
             if (Disperser.DispersesToVent)
             {
                 local.NetTransform.RpcSnapTo
-                (MapData.FindVentSpawnPositions()[rnd.Next(MapData.FindVentSpawnPositions().Count)]);
+                    (MapData.FindVentSpawnPositions()[rnd.Next(MapData.FindVentSpawnPositions().Count)]);
             }
             else
             {
                 local.NetTransform.RpcSnapTo
-                (MapData.MapSpawnPosition()[rnd.Next(MapData.MapSpawnPosition().Count)]);
+                    (MapData.MapSpawnPosition()[rnd.Next(MapData.MapSpawnPosition().Count)]);
             }
         }
         Disperser.remainingDisperses--;

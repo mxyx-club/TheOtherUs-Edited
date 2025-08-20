@@ -24,10 +24,9 @@ public static class Vulture
         triggerVultureWin = false;
         canUseVents = CustomOptionHolder.vultureCanUseVents.GetBool();
         showArrows = CustomOptionHolder.vultureShowArrows.GetBool();
-        if (localArrows != null)
-            foreach (var arrow in localArrows)
-                if (arrow?.arrow != null)
-                    UObject.Destroy(arrow.arrow);
+        foreach (var arrow in localArrows)
+            if (arrow?.arrow != null)
+                UObject.Destroy(arrow.arrow);
         localArrows.Clear();
     }
 }
