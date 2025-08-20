@@ -1,4 +1,3 @@
-using BepInEx;
 using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -6,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using BepInEx;
 using TheOtherRoles.Attributes;
 using TheOtherRoles.Patches;
 
@@ -156,7 +156,7 @@ public class PlayerData
 
     public class GlobalInfo
     {
-        private const string Web = "https://api.toue.mxyx.club/api/games";
+        private const string Web = "https://api.toue.mxyx.club/";
         private const string ApiUrl = Web;
         private static readonly HttpClient httpClient = new();
 
@@ -294,7 +294,7 @@ public class PlayerData
             try
             {
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var response = await httpClient.PostAsync(ApiUrl, content);
+                var response = await httpClient.PostAsync(ApiUrl + "/api/games", content);
 
                 Message($"Status Code: {response.StatusCode}");
                 var responseContent = await response.Content.ReadAsStringAsync();

@@ -1,5 +1,5 @@
-using AmongUs.GameOptions;
 using System.IO;
+using AmongUs.GameOptions;
 using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Patches;
 

@@ -1378,7 +1378,8 @@ public class CustomOptionHolder
         trapperInfoType = Create(303505, Types.Crewmate, "trapperInfoType", ["Role", "trapperInfoType2", "Name"], trapperSpawnRate);
         trapperTrapDuration = Create(303506, Types.Crewmate, "trapperTrapDuration", 5f, 1f, 15f, 0.5f, trapperSpawnRate);
 
-        spySpawnRate = Create(302800, Types.Crewmate, Cs(Spy.color, "Spy"), rates, null, true);
+        spySpawnRate = Create(302800, Types.Crewmate, Cs(Spy.color, "Spy"), rates, null, true,
+            isHidden: () => isDraftMode.GetBool());
         spyCanDieToSheriff = Create(302801, Types.Crewmate, "spyCanDieToSheriff", false, spySpawnRate);
         spyImpostorsCanKillAnyone = Create(302802, Types.Crewmate, "spyImpostorsCanKillAnyone", true, spySpawnRate);
         spyCanEnterVents = Create(302803, Types.Crewmate, "canUseVents", true, spySpawnRate);

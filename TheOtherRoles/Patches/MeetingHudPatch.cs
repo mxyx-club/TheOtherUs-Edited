@@ -1,5 +1,5 @@
-using AmongUs.QuickChat;
 using System.Text;
+using AmongUs.QuickChat;
 using TheOtherRoles.Mode;
 using TheOtherRoles.Objects;
 using UnityEngine.UI;
@@ -160,7 +160,7 @@ internal class MeetingHudPatch
             && PlayerControl.LocalPlayer.CanUseMeetingAbility();
 
         var addMayorButton = Mayor.mayor.IsAlive() && PlayerControl.LocalPlayer == Mayor.mayor
-            && (Mayor.Mode == Mayor.MayorMode.Revealed || (Mayor.Mode == Mayor.MayorMode.Regular && Mayor.VoteCountToggle))
+            && ((Mayor.Mode == Mayor.MayorMode.Revealed && !Mayor.Revealed) || (Mayor.Mode == Mayor.MayorMode.Regular && Mayor.VoteCountToggle))
             && PlayerControl.LocalPlayer.CanUseMeetingAbility();
 
         if (addSwapperButtons)
@@ -710,10 +710,18 @@ internal class MeetingHudPatch
         }
     }
 
-    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CastVote))]
+    [HarmonyPatch]
     private class MeetingHudCastVotePatch
     {
-        private static bool Prefix(MeetingHud __instance, [HarmonyArgument(0)] byte srcPlayerId)
+        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Confirm)), HarmonyPrefix]
+        private static bool ConfirmFix(MeetingHud __instance)
+        {
+            if (!PlayerControl.LocalPlayer.CanUseMeetingAbility()) return false;
+            return true;
+        }
+
+        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CmdCastVote)), HarmonyPrefix]
+        private static bool CastVoteFix(MeetingHud __instance, [HarmonyArgument(0)] byte srcPlayerId)
         {
             var voter = PlayerById(srcPlayerId);
             if (!voter.CanUseMeetingAbility()) return false;

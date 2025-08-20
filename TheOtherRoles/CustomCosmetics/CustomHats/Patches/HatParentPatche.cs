@@ -1,6 +1,6 @@
 #if MXYX_CLUB
-using PowerTools;
 using System.IO;
+using PowerTools;
 
 namespace TheOtherRoles.CustomCosmetics.CustomHats.Patches;
 

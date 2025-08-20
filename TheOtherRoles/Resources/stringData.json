@@ -619,34 +619,43 @@
         "13": "使用随机地图设置预设"
     },
     "NetworkTransformLowLevel": {
+        "0": "Low-Latency Mode",
         "13": "低延迟模式"
     },
     "NetworkTransformLowLevel.On": {
+        "0": "On (Private Servers Only)",
         "13": "开启 (仅限私服)"
     },
     "NetworkTransformType": {
+        "0": "Low-Latency Mode Level (Higher is Better)",
         "13": "低延迟模式等级 (越高越好)"
     },
     "NetworkTransformType.Bad": {
+        "0": "Lowest (High Latency)",
         "13": "最低 (延迟高)"
     },
     "NetworkTransformType.SuperLow": {
+        "0": "Very Low",
         "13": "超低"
     },
     "NetworkTransformType.Low": {
+        "0": "Low",
         "13": "低"
     },
     "NetworkTransformType.Medium": {
+        "0": "Medium (Recommended)",
         "13": "中等 (推荐)"
     },
     "NetworkTransformType.High": {
+        "0": "High",
         "13": "高"
     },
     "NetworkTransformType.Max": {
+        "0": "Max (Higher Load)",
         "13": "最高 (负载较高)"
     },
     "guessReVote": {
-        "0": "Votes Are Returned on Successful Guess",
+        "0": "Return Votes on Correct Guess",
         "13": "赌怪猜测时返还所有投票"
     },
     "guessExtendmeetingTime": {
@@ -654,9 +663,11 @@
         "13": "赌怪猜测时延长会议时间"
     },
     "playerDieReducedTime": {
+        "0": "Shorten Voting Time When a Player Dies",
         "13": "每当玩家死亡投票时间缩减"
     },
     "minMeetingTime": {
+        "0": "Minimum Meeting Duration",
         "13": "会议时长下限"
     },
     "exileController": {
@@ -672,15 +683,19 @@
         "13": "驱逐后显示各阵营人数"
     },
     "exiledShowTeamSelect": {
+        "0": "Factions to Show",
         "13": "显示的阵营"
     },
     "ShowTeamSelect0": {
+        "0": "Show Impostor Faction Only",
         "13": "仅显示伪装者阵营"
     },
     "ShowTeamSelect1": {
+        "0": "Show Neutral Faction Only",
         "13": "仅显示中立阵营"
     },
     "ShowTeamSelect2": {
+        "0": "Show Both Factions",
         "13": "同时显示两种阵营"
     },
     "debugMode": {
@@ -692,6 +707,7 @@
         "13": "阻止游戏结束"
     },
     "logRpcSend": {
+        "0": "Log RPC Requests",
         "13": "记录RPC请求"
     },
     "guesserEnabled": {
@@ -1550,6 +1566,10 @@
         "0": "Speed Boost While Invisible",
         "13": "隐身时移速增加"
     },
+    "werewolfCanUseVents1": {
+        "0": "Only In Rampage",
+        "13": "仅狂暴时可用"
+    },
     "werewolfRampageCooldown": {
         "0": "Rampage Cooldown",
         "13": "狂暴冷却"
@@ -1561,10 +1581,6 @@
     "werewolfKillCooldown": {
         "0": "Kill Cooldown during Rampage",
         "13": "击杀冷却"
-    },
-    "werewolfCanUseVents1": {
-        "0": "Only In Rampage",
-        "13": "仅狂暴时可用"
     },
     "juggernautReducedkillEach": {
         "0": "Kill Cooldown Reduction Per Kill",
@@ -1802,33 +1818,43 @@
         "13": "猜测无视法医护盾保护"
     },
     "mayorMode": {
+        "0": "Mayor Mode",
         "13": "市长模式"
     },
     "mayorMode0": {
+        "0": "Fixed Votes",
         "13": "固定票数"
     },
     "mayorMode1": {
+        "0": "Reveal Mode",
         "13": "揭示模式"
     },
     "mayorMode2": {
+        "0": "Vote Bank",
         "13": "存票模式"
     },
     "mayorInitialVotes": {
+        "0": "Initial Votes in First Meeting",
         "13": "第一轮会议会获得多少票数"
     },
     "mayorAddVotes": {
+        "0": "Votes Added Each Meeting",
         "13": "每轮会议会获得的票数"
     },
     "mayorMaxVoteCount": {
+        "0": "Max Stored Votes",
         "13": "最大可存储的票数"
     },
     "mayorOneUseVotes": {
+        "0": "Max Votes Usable per Cast",
         "13": "单次会议最多可投的票数"
     },
     "mayorMultiVoting": {
+        "0": "Allow Switching Vote Amounts",
         "13": "允许切换投票数量"
     },
     "mayorAnonymousVote": {
+        "0": "Mayor's Votes Are Anonymous",
         "13": "市长的票视为匿名投票"
     },
     "mayorCanSeeVoteColors": {
@@ -2656,10 +2682,11 @@
         "13": "当前并未在游戏内。"
     },
     "MessageFromTheHost": {
-        "0": "【 ★ Host message ★ 】",
+        "0": "【 ★ Host Message ★ 】",
         "13": "【 ★ 房主消息 ★ 】"
     },
     "MessageFromTheGuesser": {
+        "0": "【 ★ Guesser Message ★ 】",
         "13": "【 ★ 赌怪消息 ★ 】"
     },
     "Host": {
@@ -2723,15 +2750,19 @@
         "13": "在游戏内显示帧率"
     },
     "ButtonArrangement": {
+        "0": "Button Position",
         "13": "按键位置"
     },
     "ButtonArrangement.1": {
+        "0": "Default",
         "13": "默认"
     },
     "ButtonArrangement.2": {
+        "0": "Left Only",
         "13": "仅在左侧"
     },
     "ButtonArrangement.3": {
+        "0": "Raised",
         "13": "总体加高"
     },
     "ShowKeyReminder": {
@@ -3008,13 +3039,15 @@
         "13": "揭示身份"
     },
     "Mayor.MultiVote.On": {
+        "0": "Cast {0} votes",
         "13": "投 {0} 票"
     },
     "Mayor.MultiVote.Off": {
+        "0": "Cast 1 vote",
         "13": "投 1 票"
     },
     "Snitch.IsAlive": {
-        "0": "The Snitch is still alive: ",
+        "0": "The Snitch is still alive: {0}",
         "13": "告密者还活着: {0}"
     },
     "Redemptor.Prayering": {
@@ -3373,40 +3406,51 @@
         "13": "无"
     },
     "DeathReason.HostKill": {
+        "0": "Eliminated by {0}",
         "13": "被 {0} 制裁"
     },
     "DeathReason.Exile": {
+        "0": "Ejected",
         "13": "被驱逐"
     },
     "DeathReason.Kill": {
+        "0": "Killed by {0}",
         "13": "被击杀于 {0}"
     },
     "DeathReason.Disconnect": {
+        "0": "Disconnected",
         "13": "断开连接"
     },
     "DeathReason.GuessSuccess": {
+        "0": "Guessed Correctly by {0}",
         "13": "被猜测于 {0}"
     },
     "DeathReason.GuessFail": {
+        "0": "Incorrect Guess",
         "13": "猜测错误"
     },
     "DeathReason.Shift": {
+        "0": "Failed to Swap with {0}",
         "13": "交换 {0} 失败"
     },
     "DeathReason.LawyerSuicide": {
+        "0": "Defense Failed",
         "13": "辩护失败"
     },
     "DeathReason.LoverSuicide": {
+        "0": "Suicide Pact",
         "13": "殉情"
     },
     "DeathReason.WitchExile": {
+        "0": "Hexed by {0}",
         "13": "被咒杀于 {0}"
     },
     "DeathReason.Bomb": {
+        "0": "Bombed by {0}",
         "13": "被恐袭于 {0}"
     },
     "DeathReason.LoveStolen": {
-        "0": "Love Stolen",
+        "0": "Lover Stolen",
         "13": "爱人被夺"
     },
     "DeathReason.Loneliness": {
@@ -3414,33 +3458,43 @@
         "13": "精力衰竭"
     },
     "DeathReason.Arson": {
+        "0": "Burned by {0}",
         "13": "被烧死于 {0}"
     },
     "DeathReason.FakeSK": {
+        "0": "Failed Recruitment by {0}",
         "13": "招募失败 {0}"
     },
     "DeathReason.WrongVerdict": {
+        "0": "Prosecution Backfired",
         "13": "裁决错误"
     },
     "DeathReason.SheriffKill": {
+        "0": "Killed by Sheriff {0}",
         "13": "出警 {0}"
     },
     "DeathReason.SheriffSuicide": {
+        "0": "Sheriff Misfire",
         "13": "警长走火"
     },
     "DeathReason.SheriffMisfire": {
+        "0": "Killed on Accident by {0}",
         "13": "被误杀于 {0}"
     },
     "DeathReason.Suicide": {
+        "0": "Suicide",
         "13": "自杀"
     },
     "DeathReason.BombVictim": {
+        "0": "Terrorist Attack",
         "13": "恐袭"
     },
     "DeathReason.Eaten": {
+        "0": "Devoured by {0}",
         "13": "被吞食于 {0}"
     },
     "DeathReason.Jailed": {
+        "0": "Executed by {0}",
         "13": "被处决于 {0}"
     },
     "colorSalmon": {

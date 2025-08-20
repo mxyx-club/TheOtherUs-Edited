@@ -34,7 +34,10 @@ public class KeyboardHandler
             {
                 if (InMeeting)
                 {
-                    MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), null, false);
+                    // 如果同时按下左Shift将强制退出会议
+                    if (Input.GetKey(KeyCode.LeftShift)) MeetingHud.Instance.RpcClose();
+                    // 否则提前0票结算会议
+                    else MeetingHud.Instance.RpcVotingComplete(Array.Empty<MeetingHud.VoterState>(), null, false);
                 }
                 else
                 {

@@ -1,6 +1,6 @@
+using System.Text;
 using AmongUs.GameOptions;
 using PowerTools;
-using System.Text;
 using TheOtherRoles.Objects;
 
 namespace TheOtherRoles.Patches;

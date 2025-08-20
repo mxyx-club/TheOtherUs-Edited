@@ -2209,7 +2209,7 @@ internal static class HudManagerStartPatch
             },
             Werewolf.buttonSprite,
             __instance,
-            __instance.AbilityButton,
+            __instance.KillButton,
             modKillInput.keyCode,
             true,
             Werewolf.rampageDuration,

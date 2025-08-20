@@ -1,10 +1,10 @@
+using System.Globalization;
+using System.IO;
+using System.Text;
 using AmongUs.GameOptions;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using Il2CppSystem.Linq;
-using System.Globalization;
-using System.IO;
-using System.Text;
 using TheOtherRoles.Mode;
 using UnityEngine.UI;
 using static TheOtherRoles.Options.CustomOption;

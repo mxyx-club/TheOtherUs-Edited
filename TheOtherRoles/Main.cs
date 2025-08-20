@@ -80,7 +80,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
         ShowFPS = Config.Bind("Custom", "Show FPS", true);
         ShowKeyReminder = Config.Bind("Custom", "ShowKeyReminder", true);
         LocalHats = Config.Bind("Custom", "Load Local Hats", false);
-        ButtonArrangement = Config.Bind("Custom", "Button Arrangement", 1);
+        ButtonArrangement = Config.Bind("Custom", "Button Arrangement", 3);
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);

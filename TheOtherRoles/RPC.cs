@@ -637,34 +637,34 @@ public static class RPCProcedure
                 HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, reader.ReadString());
                 break;
             case HostCommand.HostKill:
+            {
+                var target = reader.ReadPlayer();
+                if (target.IsDead()) return;
+
+                target.Exiled();
+                PlayerData.SetDeathReason(target, CustomDeathReason.HostKill, controller);
+
+                DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
+                foreach (var body in array)
                 {
-                    var target = reader.ReadPlayer();
-                    if (target.IsDead()) return;
-
-                    target.Exiled();
-                    PlayerData.SetDeathReason(target, CustomDeathReason.HostKill, controller);
-
-                    DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
-                    foreach (var body in array)
-                    {
-                        if (body.ParentId != target.PlayerId) continue;
-                        UObject.Destroy(body.gameObject);
-                        break;
-                    }
+                    if (body.ParentId != target.PlayerId) continue;
+                    UObject.Destroy(body.gameObject);
+                    break;
                 }
-                break;
+            }
+            break;
             case HostCommand.HostRevive:
-                {
-                    var target = reader.ReadPlayer();
-                    target?.ModRevive(true, true);
-                }
-                break;
+            {
+                var target = reader.ReadPlayer();
+                target?.ModRevive(true, true);
+            }
+            break;
             case HostCommand.HostClearTasks:
-                {
-                    var target = reader.ReadPlayer();
-                    target.clearAllTasks();
-                }
-                break;
+            {
+                var target = reader.ReadPlayer();
+                target.clearAllTasks();
+            }
+            break;
             case HostCommand.HostExile:
                 ExileControllerBeginPatch.ForceExile = true;
                 break;
@@ -677,34 +677,34 @@ public static class RPCProcedure
                 MeetingHud.Instance.ClearVote();
                 break;
             case HostCommand.HostSetRole:
+            {
+                var target = reader.ReadPlayer();
+                var roleId = (RoleId)reader.ReadByte();
+                Message("SetRole Role:" + target.Data.PlayerName);
+                if (target != null && RoleInfo.RoleInfoById.TryGetValue(roleId, out var info))
                 {
-                    var target = reader.ReadPlayer();
-                    var roleId = (RoleId)reader.ReadByte();
-                    Message("SetRole Role:" + target.Data.PlayerName);
-                    if (target != null && RoleInfo.RoleInfoById.TryGetValue(roleId, out var info))
+                    if (info.roleType == RoleType.Impostor)
                     {
-                        if (info.roleType == RoleType.Impostor)
-                        {
-                            target.Data.Role.TeamType = RoleTeamTypes.Impostor;
-                            SetRoleType(target, RoleTypes.Impostor);
-                        }
-                        else
-                        {
-                            target.Data.Role.TeamType = RoleTeamTypes.Crewmate;
-                            SetRoleType(target, RoleTypes.Crewmate);
-
-                        }
-                        setRole(target.PlayerId, (byte)roleId);
+                        target.Data.Role.TeamType = RoleTeamTypes.Impostor;
+                        SetRoleType(target, RoleTypes.Impostor);
                     }
+                    else
+                    {
+                        target.Data.Role.TeamType = RoleTeamTypes.Crewmate;
+                        SetRoleType(target, RoleTypes.Crewmate);
+
+                    }
+                    setRole(target.PlayerId, (byte)roleId);
                 }
-                break;
+            }
+            break;
             case HostCommand.HostClearRole:
-                {
-                    var target = reader.ReadPlayer();
-                    Message("Clean Role:" + target.Data.PlayerName);
-                    erasePlayerRoles(target.PlayerId, false);
-                }
-                break;
+            {
+                var target = reader.ReadPlayer();
+                Message("Clean Role:" + target.Data.PlayerName);
+                erasePlayerRoles(target.PlayerId, false);
+            }
+            break;
             default:
                 break;
         }

@@ -235,7 +235,6 @@ internal class VisibleVentPatches
     }
 }
 
-
 [HarmonyPatch(typeof(AbilityButton), nameof(AbilityButton.Update))]
 public class AbilityUpdate
 {

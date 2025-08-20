@@ -63,7 +63,7 @@ public class CustomColors
         {ColorType.SignalOrange, (new Color32(247, 68, 23, byte.MaxValue), new Color32(155, 46, 15, byte.MaxValue), true)},
         {ColorType.Teal, (new Color32(37, 184, 191, byte.MaxValue), new Color32(18, 137, 134, byte.MaxValue), true)},
         {ColorType.Sunrise, (new Color32(255, 202, 25, byte.MaxValue), new Color32(219, 68, 66, byte.MaxValue), true)},
-        {ColorType.Ice, (new Color32(0xA8, 0xDF, 0xFF, byte.MaxValue), new Color32(0x59, 0x9F, 0xC8, byte.MaxValue), true)},
+        {ColorType.Ice, (new Color32(168, 223, 255, byte.MaxValue), new Color32(89, 159, 200, byte.MaxValue), true)},
         {ColorType.Snow, (new Color32(229, 249, 255, byte.MaxValue), new Color32(135, 226, 255, byte.MaxValue), true)},
         {ColorType.SkyBlue, (new Color32(89, 210, 255, byte.MaxValue), new Color32(37, 169, 232, byte.MaxValue), true)},
         {ColorType.Pitchwhite, (new Color32(255, 255, 255, byte.MaxValue), new Color32(255, 255, 255, byte.MaxValue), true)},

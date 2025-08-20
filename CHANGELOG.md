@@ -1,10 +1,29 @@
+## What's New?
+
+- Added **Anonymous Mode** : Randomizes all players' cosmetics, names, and colors to default upon joining the game.
+
 ## Changes
 
-- 
+- Improved **Role Draft** UI.
+- Updated Options Menu with reference to **TOH** mods (V7).
+- Buttons now dynamically align based on the number of active buttons instead of fixed positions.
+- Made emergency sabotage duration adjustable from 0s to 120s.
+- Mayor: Reworked — host can now toggle between three modes.
+- Mini: Improved growth timer — cooldown resets immediately upon growing up (consistent with Impostor’s kill button).
+- Schrödinger's Cat: Guessing logic improved — must guess the correct current faction to succeed.
+- Jailer: Skill cooldown now reduces to 1s after selecting a target (similar to **Blackmailer**).
+- Werewolf: Added option to allow vent usage during Rampage
 
 ## Bug Fixes
 
-- 
+- Trapper: Fixed issue where traps could snare the same player twice under default settings.
+- Trapper: Fixed display errors in the trap log.
+- Thief: Fixed inability to steal the Infector’s role.
+- Warlock: Fixed curse teleporting to the killed player’s location.
+- Medic: Fixed incorrect "Kill Attempt on Shielded Player Blocked" message when guessing Indomitable.
+- Vampire: Fixed issue where bitten targets would still die after the Vampire’s death.
+- Jailer: Fixed jailed players occasionally getting stuck during voting.
+- Blackmailer: Fixed minor icon display issues.
 
 ———————————————————————————————————————————
 
@@ -32,3 +51,5 @@
 - 术士：修复咒杀会瞬移到被击杀玩家位置的问题。
 - 法医：修复了在赌怪猜测不屈者时法医会错误显示“尝试击杀被保护玩家”提示的问题。
 - 吸血鬼：修复了在 [吸血鬼] 死亡前撕咬了目标，在 [吸血鬼] 死亡后撕咬目标仍然会死亡的问题。
+- 典狱长：修复部分情况下被监禁玩家会被卡票的问题。
+- 勒索者：修复部分图标显示错误的问题。
