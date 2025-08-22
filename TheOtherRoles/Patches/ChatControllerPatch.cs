@@ -1,5 +1,5 @@
-using System.Text;
 using AmongUs.GameOptions;
+using System.Text;
 using TheOtherRoles.Attributes;
 
 namespace TheOtherRoles.Patches;

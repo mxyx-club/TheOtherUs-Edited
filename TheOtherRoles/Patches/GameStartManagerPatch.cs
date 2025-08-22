@@ -82,35 +82,39 @@ public class GameStartManagerPatch
             string message = "";
             foreach (ClientData client in AmongUsClient.Instance.allClients.ToArray())
             {
-                if (client.Character == null) continue;
+                if (client?.Character == null) continue;
                 var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
-                if (dummyComponent != null && dummyComponent.enabled) continue;
-                else if (!playerVersions.ContainsKey(client.Id))
+                try
                 {
-                    versionMismatch = true;
-                    message += $"<color=#FF0000FF>{string.Format(GetString("errorNotInstalled"), $"{client.Character.Data.PlayerName}")}\n</color>";
+                    if (dummyComponent != null && dummyComponent.enabled) continue;
+                    else if (!playerVersions.ContainsKey(client.Id))
+                    {
+                        versionMismatch = true;
+                        message += $"<color=#FF0000FF>{string.Format(GetString("errorNotInstalled"), $"{client.Character.Data.PlayerName}")}\n</color>";
+                    }
+                    else
+                    {
+                        PlayerVersion PV = playerVersions[client.Id];
+                        int diff = Main.version.CompareTo(PV.version);
+                        if (diff > 0)
+                        {
+                            message += $"<color=#FF0000FF>{string.Format(GetString("errorOlderVersion"), $"{client.Character.Data.PlayerName}")} (v{playerVersions[client.Id].version})\n</color>";
+                            versionMismatch = true;
+                        }
+                        else if (diff < 0)
+                        {
+                            message += $"<color=#FF0000FF>{string.Format(GetString("errorNewerVersion"), $"{client.Character.Data.PlayerName}")} (v{playerVersions[client.Id].version})\n</color>";
+                            versionMismatch = true;
+                        }
+                        else if (!PV.GuidMatches())
+                        {
+                            // version presumably matches, check if Guid matches
+                            message += $"<color=#FF0000FF>{string.Format(GetString("errorWrongVersion"), $"{client.Character.Data.PlayerName}")} v{playerVersions[client.Id].version} <size=30%>({PV.guid})</size>\n</color>";
+                            versionMismatch = true;
+                        }
+                    }
                 }
-                else
-                {
-                    PlayerVersion PV = playerVersions[client.Id];
-                    int diff = Main.version.CompareTo(PV.version);
-                    if (diff > 0)
-                    {
-                        message += $"<color=#FF0000FF>{string.Format(GetString("errorOlderVersion"), $"{client.Character.Data.PlayerName}")} (v{playerVersions[client.Id].version})\n</color>";
-                        versionMismatch = true;
-                    }
-                    else if (diff < 0)
-                    {
-                        message += $"<color=#FF0000FF>{string.Format(GetString("errorNewerVersion"), $"{client.Character.Data.PlayerName}")} (v{playerVersions[client.Id].version})\n</color>";
-                        versionMismatch = true;
-                    }
-                    else if (!PV.GuidMatches())
-                    {
-                        // version presumably matches, check if Guid matches
-                        message += $"<color=#FF0000FF>{string.Format(GetString("errorWrongVersion"), $"{client.Character.Data.PlayerName}")} v{playerVersions[client.Id].version} <size=30%>({PV.guid})</size>\n</color>";
-                        versionMismatch = true;
-                    }
-                }
+                catch { }
             }
             // Display message to the host
             if (AmongUsClient.Instance.AmHost)

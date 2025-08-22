@@ -1,7 +1,7 @@
-using System.Runtime.CompilerServices;
-using System.Text;
 using BepInEx;
 using BepInEx.Logging;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace TheOtherRoles.Modules;
 

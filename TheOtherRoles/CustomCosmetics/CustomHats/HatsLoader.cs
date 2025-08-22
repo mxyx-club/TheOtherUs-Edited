@@ -1,6 +1,6 @@
+using BepInEx.Unity.IL2CPP.Utils;
 using System.IO;
 using System.Text.Json;
-using BepInEx.Unity.IL2CPP.Utils;
 using UnityEngine.Networking;
 using static TheOtherRoles.CustomCosmetics.CustomHats.CustomHatManager;
 

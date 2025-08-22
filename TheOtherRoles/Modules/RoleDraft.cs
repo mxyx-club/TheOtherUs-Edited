@@ -305,10 +305,6 @@ internal class RoleDraft
 
                     if (GameObject.Find("RoleButton") == null)
                     {
-                        Message("----------------------------------------");
-                        Message(string.Join(" ", originalAvailable.Select(x => x.Name)));
-                        Message("----------------------------------------");
-
                         SoundEffectsManager.play("timemasterShield");
 
                         int totalButtons = availableRoles.Count + 1;
@@ -452,7 +448,7 @@ internal class RoleDraft
 
             _pickTable.AddRow(prefix, roleString);
 
-            feedText.text = GetString("RoleDraft.FeedText") + _pickTable.ToString();
+            feedText?.text = GetString("RoleDraft.FeedText") + _pickTable.ToString();
 
             SoundEffectsManager.play("select");
         }
