@@ -1,7 +1,8 @@
-using System.IO;
 using AmongUs.GameOptions;
+using System.IO;
 using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Patches;
+using UnityEngine;
 
 namespace TheOtherRoles.Helper;
 
@@ -509,6 +510,22 @@ public static class Helpers
     }
 #nullable enable
 
+    public static PlayerControl? PlayerById(byte? id)
+    {
+        if (id == null) return null;
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            if (player.PlayerId == id) return player;
+        return null;
+    }
+
+    public static PlayerControl? PlayerByName(string name)
+    {
+        if (name.IsNullOrWhiteSpace()) return null;
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            if (player?.Data?.PlayerName == name) return player;
+        return null;
+    }
+
     public static IEnumerable<DeadBody> AllDeadBodies()
     {
         //Componentで探すよりタグで探す方が相当はやい
@@ -520,12 +537,47 @@ public static class Helpers
     {
         return AllDeadBodies().FirstOrDefault((p) => p.ParentId == id);
     }
-#nullable disable
 
-    public static void AddUnique<T>(this ISystem.List<T> self, T item) where T : IDisconnectHandler
+    public static DeadBody? GetDeadBody(PlayerControl player)
     {
-        if (!self.Contains(item)) self.Add(item);
+        if (player == null) return null;
+        return AllDeadBodies().FirstOrDefault((p) => p.ParentId == player.PlayerId);
     }
+
+    public static DeadBody? GetDeadBody(Vector2 pos, float distance = 3f)
+    {
+        DeadBody? deadBody = null;
+        float closestDistSqr = float.MaxValue;
+
+        foreach (var collider in Physics2D.OverlapCircleAll(pos, Mathf.Sqrt(distance), Constants.PlayersOnlyMask))
+        {
+            if (!collider.CompareTag("DeadBody")) continue;
+
+            var body = collider.GetComponent<DeadBody>();
+            if (body == null) continue;
+
+            var player = PlayerById(body.ParentId);
+            if (player?.Data == null || !player.Data.IsDead || player.Data.Disconnected) continue;
+
+            float distSqr = (body.TruePosition - pos).sqrMagnitude;
+            if (distSqr < distance && distSqr < closestDistSqr)
+            {
+                deadBody = body;
+                closestDistSqr = distSqr;
+            }
+        }
+
+        if (deadBody == null) return null;
+        return deadBody;
+    }
+
+    public static PlayerControl? GetDeadPlayer(Vector2 pos, float distance = 3f)
+    {
+        var db = GetDeadBody(pos, distance);
+        if (db == null) return null;
+        return PlayerById(db?.ParentId);
+    }
+#nullable disable
 
     public static T GetRandom<T>(this T[] list)
     {
@@ -702,22 +754,6 @@ public static class Helpers
         var stream = assembly.GetManifestResourceStream(path);
         var textStreamReader = new StreamReader(stream);
         return textStreamReader.ReadToEnd();
-    }
-
-    public static PlayerControl PlayerById(byte? id)
-    {
-        if (id == null) return null;
-        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
-            if (player.PlayerId == id) return player;
-        return null;
-    }
-
-    public static PlayerControl PlayerByName(string name)
-    {
-        if (name.IsNullOrWhiteSpace()) return null;
-        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
-            if (player?.Data?.PlayerName == name) return player;
-        return null;
     }
 
     public static CustomGameModes SetNextGameMode()

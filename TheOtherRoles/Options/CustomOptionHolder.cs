@@ -1,4 +1,5 @@
 using TheOtherRoles.Mode;
+using TheOtherRoles.Roles.Impostor;
 using static TheOtherRoles.Options.CustomOption;
 using Types = TheOtherRoles.Options.CustomOptionType;
 
@@ -169,9 +170,14 @@ public class CustomOptionHolder
 
     public static CustomOption mimicSpawnRate;
 
-    public static CustomOption escapistSpawnRate;
-    public static CustomOption escapistEscapeTime;
-    public static CustomOption escapistResetPlaceAfterMeeting;
+    public static CustomOption marionetteSpawnRate;
+    public static CustomOption marionettePlaceCooldown;
+    public static CustomOption marionetteDecoyDelayedDisplay;
+    public static CustomOption marionetteDecoyPermanent;
+    public static CustomOption marionetteResetPlaceAfterMeeting;
+    public static CustomOption marionetteDecoyDuration;
+    public static CustomOption marionetteSwapCooldown;
+    public static CustomOption marionetteShowDecoy;
 
     public static CustomOption tricksterSpawnRate;
     public static CustomOption tricksterPlaceBoxCooldown;
@@ -924,9 +930,15 @@ public class CustomOptionHolder
 
         mimicSpawnRate = Create(101700, Types.Impostor, Cs(Mimic.color, "Mimic"), rates, null, true);
 
-        escapistSpawnRate = Create(101800, Types.Impostor, Cs(Escapist.color, "Escapist"), rates, null, true);
-        escapistEscapeTime = Create(101801, Types.Impostor, "escapistEscapeTime", 15f, 0f, 60f, 2.5f, escapistSpawnRate);
-        escapistResetPlaceAfterMeeting = Create(101802, Types.Impostor, "escapistResetPlaceAfterMeeting", false, escapistSpawnRate);
+        marionetteSpawnRate = Create(101800, Types.Impostor, Cs(Marionette.color, "Marionette"), rates, null, true);
+        marionettePlaceCooldown = Create(101801, Types.Impostor, "marionettePlaceCooldown", 12.5f, 5f, 30f, 2.5f, marionetteSpawnRate);
+        marionetteDecoyDelayedDisplay = Create(101802, Types.Impostor, "marionetteDecoyDelayedDisplay", 12.5f, 5f, 30f, 2.5f, marionetteSpawnRate);
+        marionetteDecoyPermanent = Create(101803, Types.Impostor, "marionetteDecoyPermanent", false, marionetteSpawnRate);
+        marionetteResetPlaceAfterMeeting = Create(101804, Types.Impostor, "marionetteResetPlaceAfterMeeting", false, marionetteDecoyPermanent);
+        marionetteDecoyDuration = Create(101805, Types.Impostor, "marionetteDecoyDuration", 60f, 25f, 120f, 5f, marionetteSpawnRate,
+            isHidden: () => marionetteDecoyPermanent.GetBool());
+        marionetteSwapCooldown = Create(101806, Types.Impostor, "marionetteSwapCooldown", 10f, 5f, 45f, 2.5f, marionetteSpawnRate);
+        marionetteShowDecoy = Create(101807, Types.Impostor, "marionetteShowDecoy", ["marionetteShowDecoy1", "marionetteShowDecoy2", "marionetteShowDecoy3"], marionetteSpawnRate);
 
         tricksterSpawnRate = Create(102000, Types.Impostor, Cs(Trickster.color, "Trickster"), rates, null, true);
         tricksterPlaceBoxCooldown = Create(102001, Types.Impostor, "tricksterPlaceBoxCooldown", 20f, 2.5f, 30f, 2.5f, tricksterSpawnRate);

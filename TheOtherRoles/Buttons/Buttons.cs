@@ -67,8 +67,6 @@ internal static class HudManagerStartPatch
     public static CustomButton witchSpellButton;
     public static CustomButton jumperMarkButton;
     public static CustomButton jumperJumpButton;
-    public static CustomButton escapistMarkButton;
-    public static CustomButton escapistEscapeButton;
     public static CustomButton ninjaButton;
     public static CustomButton werewolfRampageButton;
     public static CustomButton werewolfKillButton;
@@ -105,6 +103,10 @@ internal static class HudManagerStartPatch
     public static CustomButton poltergeistButton;
     public static CustomButton InfectedKillButton;
     public static CustomButton jailorButton;
+
+    public static CustomButton marionetteButton;
+    public static CustomButton marionettePlaceButton;
+    public static CustomButton marionetteCameraButton;
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
@@ -154,8 +156,6 @@ internal static class HudManagerStartPatch
         trackerTrackPlayerButton.MaxTimer = 0f;
         jumperMarkButton.MaxTimer = Jumper.JumpTime;
         jumperJumpButton.MaxTimer = Jumper.JumpTime;
-        escapistMarkButton.MaxTimer = Escapist.EscapeTime;
-        escapistEscapeButton.MaxTimer = Escapist.EscapeTime;
         bountyHunterChangeTarget.MaxTimer = BountyHunter.changeTargetCooldown;
         bodyGuardGuardButton.MaxTimer = 0f;
         garlicButton.MaxTimer = 0f;
@@ -212,12 +212,15 @@ internal static class HudManagerStartPatch
         bandLeaderDrummerButton.MaxTimer = 0f;
         bandLeaderKillButton.MaxTimer = BandLeader.killCooldown;
         schrodingersCatKillButton.MaxTimer = SchrodingersCat.Cooldown;
-        gunsmithAddBullets.MaxTimer = 0f;
-        gunsmithGetBullets.MaxTimer = 0f;
+        gunsmithAddBullets.MaxTimer = 0;
+        gunsmithGetBullets.MaxTimer = 0;
         berserkerKillButton.MaxTimer = Berserker.KillCooldown;
         poltergeistButton.MaxTimer = Poltergeist.cooldown;
         InfectedKillButton.MaxTimer = Infected.cooldown;
         jailorButton.MaxTimer = Jailor.cooldown;
+        marionettePlaceButton.MaxTimer = Marionette.PlaceCooldown;
+        marionetteButton.MaxTimer = Marionette.SwapCooldown;
+        marionetteCameraButton.MaxTimer = 0;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
@@ -2452,38 +2455,16 @@ internal static class HudManagerStartPatch
         cleanerCleanButton = new CustomButton(
             () =>
             {
-                foreach (var collider2D in Physics2D.OverlapCircleAll(
-                             PlayerControl.LocalPlayer.GetTruePosition(),
-                             PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
-                    if (collider2D.tag == "DeadBody")
-                    {
-                        var component = collider2D.GetComponent<DeadBody>();
-                        if (component && !component.Reported)
-                        {
-                            var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                            var truePosition2 = component.TruePosition;
-                            if (Vector2.Distance(truePosition2, truePosition) <=
-                                PlayerControl.LocalPlayer.MaxReportDistance &&
-                                PlayerControl.LocalPlayer.CanMove &&
-                                !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
-                                    Constants.ShipAndObjectsMask, false))
-                            {
-                                var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
 
-                                var writer = AmongUsClient.Instance.StartRpcImmediately(
-                                    PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.CleanBody,
-                                    SendOption.Reliable);
-                                writer.Write(playerInfo.PlayerId);
-                                writer.Write(Cleaner.cleaner.PlayerId);
-                                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                                RPCProcedure.cleanBody(playerInfo.PlayerId, Cleaner.cleaner.PlayerId);
+                var writer = StartRPC(CustomRPC.CleanBody);
+                writer.Write(db.ParentId);
+                writer.Write(Cleaner.cleaner.PlayerId);
+                writer.EndRPC();
+                RPCProcedure.cleanBody(db.ParentId, Cleaner.cleaner.PlayerId);
 
-                                Cleaner.cleaner.killTimer = cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer;
-                                SoundEffectsManager.play("cleanerClean");
-                                break;
-                            }
-                        }
-                    }
+                Cleaner.cleaner.killTimer = cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer;
+                SoundEffectsManager.play("cleanerClean");
             },
             () =>
             {
@@ -2492,8 +2473,8 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return __instance.ReportButton.graphic.color == Palette.EnabledColor &&
-                       PlayerControl.LocalPlayer.CanMove;
+                var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
+                return db != null && PlayerControl.LocalPlayer.CanMove;
             },
             () => { cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer; },
             Cleaner.buttonSprite,
@@ -2525,37 +2506,16 @@ internal static class HudManagerStartPatch
             Butcher.dissectionDuration,
             () =>
             {
-                foreach (var collider2D in Physics2D.OverlapCircleAll(
-                             PlayerControl.LocalPlayer.GetTruePosition(),
-                             PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
-                    if (collider2D.tag == "DeadBody")
-                    {
-                        var component = collider2D.GetComponent<DeadBody>();
-                        if (component && !component.Reported)
-                        {
-                            var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                            var truePosition2 = component.TruePosition;
-                            if (Vector2.Distance(truePosition2, truePosition) <=
-                                PlayerControl.LocalPlayer.MaxReportDistance &&
-                                PlayerControl.LocalPlayer.CanMove &&
-                                !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
-                                    Constants.ShipAndObjectsMask, false))
-                            {
-                                var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
 
-                                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                                    (byte)CustomRPC.DissectionBody, SendOption.Reliable);
-                                writer.Write(playerInfo.PlayerId);
-                                writer.Write(Butcher.butcher.PlayerId);
-                                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                                RPCProcedure.dissectionBody(playerInfo.PlayerId, Butcher.butcher.PlayerId);
+                var writer = StartRPC(CustomRPC.DissectionBody);
+                writer.Write(db.ParentId);
+                writer.Write(Butcher.butcher.PlayerId);
+                writer.EndRPC();
+                RPCProcedure.dissectionBody(db.ParentId, Butcher.butcher.PlayerId);
 
-                                Butcher.canDissection = false;
-                                SoundEffectsManager.play("cleanerClean");
-                                break;
-                            }
-                        }
-                    }
+                Butcher.canDissection = false;
+                SoundEffectsManager.play("cleanerClean");
             },
             buttonText: GetString("DissectionText")
         );
@@ -2585,13 +2545,9 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                var array = Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(),
-                      PlayerControl.LocalPlayer.MaxReportDistance * 0.5f, Constants.PlayersOnlyMask)
-                 .Where(collider => collider.tag == "DeadBody")
-                 .Select(collider => collider.GetComponent<DeadBody>())
-                 .Where(deadBody => deadBody != null);
+                var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
 
-                Undertaker.targetBody = array.FirstOrDefault(db => db.ParentId != PlayerControl.LocalPlayer.PlayerId);
+                Undertaker.targetBody = db;
                 return (Undertaker.targetBody || Undertaker.dragedBody) && PlayerControl.LocalPlayer.CanMove;
             },
             () => { },
@@ -2627,13 +2583,9 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                var array = Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(),
-                      PlayerControl.LocalPlayer.MaxReportDistance * 0.5f, Constants.PlayersOnlyMask)
-                 .Where(collider => collider.tag == "DeadBody")
-                 .Select(collider => collider.GetComponent<DeadBody>())
-                 .Where(deadBody => deadBody != null);
+                var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
 
-                Jester.targetBody = array.FirstOrDefault(db => db.ParentId != PlayerControl.LocalPlayer.PlayerId);
+                Jester.targetBody = db;
 
                 return (Jester.targetBody || Jester.dragedBody) && PlayerControl.LocalPlayer.CanMove;
             },
@@ -3030,48 +2982,26 @@ internal static class HudManagerStartPatch
         vultureEatButton = new CustomButton(
             () =>
             {
-                foreach (var collider2D in Physics2D.OverlapCircleAll(
-                             PlayerControl.LocalPlayer.GetTruePosition(),
-                             PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
-                    if (collider2D.tag == "DeadBody")
-                    {
-                        var component = collider2D.GetComponent<DeadBody>();
-                        if (component && !component.Reported)
-                        {
-                            var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                            var truePosition2 = component.TruePosition;
-                            if (Vector2.Distance(truePosition2, truePosition) <=
-                                PlayerControl.LocalPlayer.MaxReportDistance &&
-                                PlayerControl.LocalPlayer.CanMove &&
-                                !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
-                                    Constants.ShipAndObjectsMask, false))
-                            {
-                                var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
+                var writer = AmongUsClient.Instance.StartRpcImmediately(
+                    PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.CleanBody,
+                    SendOption.Reliable);
+                writer.Write(db.ParentId);
+                writer.Write(Vulture.vulture.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.cleanBody(db.ParentId, Vulture.vulture.PlayerId);
 
-                                var writer = AmongUsClient.Instance.StartRpcImmediately(
-                                    PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.CleanBody,
-                                    SendOption.Reliable);
-                                writer.Write(playerInfo.PlayerId);
-                                writer.Write(Vulture.vulture.PlayerId);
-                                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                                RPCProcedure.cleanBody(playerInfo.PlayerId, Vulture.vulture.PlayerId);
-
-                                Vulture.cooldown = vultureEatButton.Timer = vultureEatButton.MaxTimer;
-                                SoundEffectsManager.play("vultureEat");
-                                break;
-                            }
-                        }
-                    }
+                Vulture.cooldown = vultureEatButton.Timer = vultureEatButton.MaxTimer;
+                SoundEffectsManager.play("vultureEat");
             },
             () =>
             {
-                return Vulture.vulture != null && Vulture.vulture == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
+                return Vulture.vulture.IsAlive() && Vulture.vulture == PlayerControl.LocalPlayer;
             },
             () =>
             {
-                return __instance.ReportButton.graphic.color == Palette.EnabledColor &&
-                       PlayerControl.LocalPlayer.CanMove;
+                var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
+                return db != null && PlayerControl.LocalPlayer.CanMove;
             },
             () => { vultureEatButton.Timer = vultureEatButton.MaxTimer; },
             Vulture.buttonSprite,
@@ -3084,33 +3014,13 @@ internal static class HudManagerStartPatch
         amnisiacRememberButton = new CustomButton(
             () =>
             {
-                foreach (var collider2D in Physics2D.OverlapCircleAll(
-                             PlayerControl.LocalPlayer.GetTruePosition(),
-                             PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
-                    if (collider2D.tag == "DeadBody")
-                    {
-                        var component = collider2D.GetComponent<DeadBody>();
-                        if (component && !component.Reported)
-                        {
-                            var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                            var truePosition2 = component.TruePosition;
-                            if (Vector2.Distance(truePosition2, truePosition) <=
-                                PlayerControl.LocalPlayer.MaxReportDistance &&
-                                PlayerControl.LocalPlayer.CanMove &&
-                                !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
-                                    Constants.ShipAndObjectsMask, false))
-                            {
-                                var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
 
-                                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.AmnisiacTakeRole);
-                                writer.Write(playerInfo.PlayerId);
-                                writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                                writer.EndRPC();
-                                Amnisiac.TakeRole(playerInfo.PlayerId, PlayerControl.LocalPlayer.PlayerId);
-                                break;
-                            }
-                        }
-                    }
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.AmnisiacTakeRole);
+                writer.Write(db.ParentId);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.EndRPC();
+                Amnisiac.TakeRole(db.ParentId, PlayerControl.LocalPlayer.PlayerId);
             },
             () =>
             {
@@ -3119,7 +3029,8 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return __instance.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
+                var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
+                return db != null && PlayerControl.LocalPlayer.CanMove;
             },
             () => { amnisiacRememberButton.Timer = 0f; },
             Amnisiac.buttonSprite,
@@ -3138,44 +3049,13 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                /*var pos = PlayerControl.LocalPlayer.GetTruePosition();
-                var maxDistance = Mathf.Pow(PlayerControl.LocalPlayer.MaxReportDistance * 0.36f, 2);
-
-                DeadBody deadBody = null;
-                float closestDistSqr = float.MaxValue;
-
-                foreach (var collider in Physics2D.OverlapCircleAll(pos, Mathf.Sqrt(maxDistance), Constants.PlayersOnlyMask))
-                {
-                    if (!collider.CompareTag("DeadBody")) continue;
-
-                    var body = collider.GetComponent<DeadBody>();
-                    if (body == null) continue;
-
-                    var player = PlayerById(body.ParentId);
-                    if (player?.Data == null || !player.Data.IsDead || player.Data.Disconnected) continue;
-
-                    float distSqr = (body.TruePosition - pos).sqrMagnitude;
-                    if (distSqr < maxDistance && distSqr < closestDistSqr)
-                    {
-                        deadBody = body;
-                        closestDistSqr = distSqr;
-                    }
-                }*/
-
                 var pos = PlayerControl.LocalPlayer.GetTruePosition();
                 var maxDistance = PlayerControl.LocalPlayer.MaxReportDistance * 0.36f;
-
-                var deadBody = Physics2D.OverlapCircleAll(pos, Mathf.Sqrt(maxDistance), Constants.PlayersOnlyMask)
-                    .Where(x => x.CompareTag("DeadBody"))
-                    .Select(x => x.GetComponent<DeadBody>())
-                    .FirstOrDefault(db => db != null && PlayerById(db.ParentId)?.Data?.IsDead == true &&
-                                          !(PlayerById(db.ParentId)?.Data?.Disconnected == true));
-
-                Specter.Target = deadBody != null ? PlayerById(deadBody.ParentId) : null;
+                var target = GetDeadPlayer(pos, maxDistance);
+                Specter.Target = target;
 
                 specterRememberButton.showTargetNameOnButton(Specter.Target);
-
-                return Specter.Target != null && PlayerControl.LocalPlayer.CanMove;
+                return target != null && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {
@@ -3570,63 +3450,6 @@ internal static class HudManagerStartPatch
                 if (Jumper.Charges > 0) jumperJumpButton.Timer = jumperJumpButton.MaxTimer;
             },
             Jumper.jumpJumpButtonSprite,
-            __instance,
-            __instance.AbilityButton,
-            abilityInput.keyCode,
-            buttonText: "jumperJumpText".Translate()
-        );
-
-        // Escapist Escape
-        escapistMarkButton = new CustomButton(
-            () =>
-            {
-                //set location
-                Escapist.escapeLocation = PlayerControl.LocalPlayer.transform.localPosition;
-                escapistMarkButton.Timer = escapistMarkButton.MaxTimer;
-                //escapistEscapeButton.Timer = escapistMarkButton.MaxTimer;
-            },
-            () =>
-            {
-                return Escapist.escapist != null && Escapist.escapist == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.IsAlive();
-            },
-            () =>
-            {
-                return PlayerControl.LocalPlayer.CanMove;
-            },
-            () =>
-            {
-                if (Escapist.resetPlaceAfterMeeting) Escapist.escapeLocation = Vector3.zero;
-                escapistMarkButton.Timer = escapistMarkButton.MaxTimer;
-            },
-            Escapist.escapeEscapeButtonSprite,
-            __instance,
-            __instance.AbilityButton,
-            secondaryAbilityInput.keyCode,
-            buttonText: "jumperMarkText".Translate()
-        );
-
-        // Escapist Escape
-        escapistEscapeButton = new CustomButton(
-            () =>
-            {
-                //set location
-                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Escapist.escapeLocation);
-                escapistEscapeButton.Timer = escapistEscapeButton.MaxTimer;
-                //escapistMarkButton.Timer = escapistEscapeButton.MaxTimer;
-            },
-            () =>
-            {
-                return Escapist.escapist != null && Escapist.escapist == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.IsAlive();
-            },
-            () =>
-            {
-                return Escapist.escapeLocation != Vector3.zero && PlayerControl.LocalPlayer.CanMove;
-            },
-            () =>
-            {
-                escapistEscapeButton.Timer = escapistEscapeButton.MaxTimer;
-            },
-            Escapist.escapeEscapeButtonSprite,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
@@ -4222,18 +4045,14 @@ internal static class HudManagerStartPatch
                 var pos = PlayerControl.LocalPlayer.GetTruePosition();
                 var maxDistance = PlayerControl.LocalPlayer.MaxReportDistance * 0.21f;
 
-                var deadBody = Physics2D.OverlapCircleAll(pos, maxDistance, Constants.PlayersOnlyMask)
-                    .Where(collider => collider.CompareTag("DeadBody"))
-                    .Select(collider => collider.GetComponent<DeadBody>())
-                    .FirstOrDefault(db => db != null && PlayerById(db.ParentId)?.Data?.IsDead == true &&
-                                          !(PlayerById(db.ParentId)?.Data?.Disconnected == true));
+                var db = GetDeadBody(pos, maxDistance);
 
                 if (Redemptor.target != null)
                 {
                     redemptorReviveButton.showTargetNameOnButton(Redemptor.target);
                 }
 
-                Redemptor.target = PlayerById(deadBody?.ParentId);
+                Redemptor.target = PlayerById(db?.ParentId);
                 return Redemptor.target && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -4656,13 +4475,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                var array = Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(),
-                      PlayerControl.LocalPlayer.MaxReportDistance * Poltergeist.radius, Constants.PlayersOnlyMask)
-                    .Where(collider => collider.tag == "DeadBody")
-                    .Select(collider => collider.GetComponent<DeadBody>())
-                    .Where(deadBody => deadBody != null);
-
-                Poltergeist.targetBody = array.FirstOrDefault();
+                Poltergeist.targetBody = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
                 return Poltergeist.targetBody && PlayerControl.LocalPlayer.CanMove;
             },
             () => { poltergeistButton.Timer = poltergeistButton.MaxTimer; },
@@ -4744,6 +4557,114 @@ internal static class HudManagerStartPatch
             1f,
             () => { },
             buttonText: GetString("jailButtonText")
+        );
+
+        marionettePlaceButton = new(
+            () =>
+            {
+                var writer = StartRPC(CustomRPC.PlaceDecoy);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(PlayerControl.LocalPlayer.transform.position);
+                writer.EndRPC();
+                RPCProcedure.PlaceDecoy(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.transform.position);
+                marionettePlaceButton.Timer = marionettePlaceButton.MaxTimer;
+
+                Marionette.marionetteMode = 0;
+
+                Marionette.SetMarionetteMode(0);
+                marionetteButton.Timer = marionetteButton.MaxTimer;
+            },
+            () => { return !PlayerControl.LocalPlayer.Data.IsDead && Marionette.decoy == null; },
+            () => { return PlayerControl.LocalPlayer.CanMove || HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer; },
+            () =>
+            {
+                marionettePlaceButton.Timer = marionettePlaceButton.MaxTimer = Marionette.PlaceCooldown;
+            },
+            Marionette.decoyButtonSprite,
+            __instance,
+            __instance.AbilityButton,
+            abilityInput.keyCode,
+            buttonText: GetString("decoyButtonText")
+        );
+
+        marionetteButton = new(
+            () =>
+            {
+                if (Marionette.marionetteMode == 0)
+                {
+                    var writer = StartRPC(CustomRPC.DecoySwap);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                    writer.Write(Marionette.decoy.Id);
+                    writer.Write(PlayerControl.LocalPlayer.transform.position);
+                    writer.Write(Marionette.decoy.gameObject.transform.position);
+                    writer.EndRPC();
+                    RPCProcedure.DecoySwap(PlayerControl.LocalPlayer, Marionette.decoy.Id, PlayerControl.LocalPlayer.transform.position, Marionette.decoy.gameObject.transform.position);
+
+                    if (HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer) HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                }
+                else
+                {
+
+                    var writer = StartRPC(CustomRPC.DecoyDestroy);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                    writer.Write(Marionette.decoy.Id);
+                    writer.EndRPC();
+                    RPCProcedure.DecoyDestroy(Marionette.Player, Marionette.decoy.Id);
+                    marionettePlaceButton.Timer = marionettePlaceButton.MaxTimer;
+                }
+                marionetteButton.Timer = marionetteButton.MaxTimer;
+            },
+            () =>
+            {
+                return Marionette.Player.IsAlive() && PlayerControl.LocalPlayer == Marionette.Player && Marionette.decoy != null && Marionette.decoy.gameObject != null; ;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove || HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer; ;
+            },
+            () =>
+            {
+                marionetteButton.Timer = 10f;
+                if (!Decoy.DecoyPermanent) Marionette.SetMarionetteMode(0);
+            },
+            Marionette.decoyButtonSprite,
+            __instance,
+            __instance.AbilityButton,
+            abilityInput.keyCode,
+            buttonText: GetString("swapButtonText")
+        );
+        marionetteButton.SetAidAction(changeAbilityInput.keyCode, true, () => { Marionette.SetMarionetteMode((Marionette.marionetteMode + 1) % 2); });
+
+        marionetteCameraButton = new(
+            () =>
+            {
+                if (HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer) HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                else HudManager.Instance.PlayerCam.SetTargetWithLight(Marionette.decoy.behaviour);
+            },
+            () =>
+            {
+                return Marionette.Player.IsAlive() && PlayerControl.LocalPlayer == Marionette.Player && Marionette.decoy != null;
+            },
+            () =>
+            {
+                if (hackerVitalsButton.ButtonTitle != null && Marionette.decoy != null)
+                {
+                    marionetteCameraButton.ButtonTitle.text = Decoy.DecoyPermanent
+                    ? $"持续存在{(Decoy.ResetPlaceAfterMeeting ? "|会议重置" : "")}"
+                    : (Decoy.DecoyDuration - Marionette.decoy.elapsedTime).ToString("00");
+                }
+
+                return PlayerControl.LocalPlayer.CanMove || HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer;
+            },
+            () =>
+            {
+                marionetteButton.Timer = marionetteButton.MaxTimer;
+            },
+            Marionette.monitorButtonSprite,
+            __instance,
+            __instance.AbilityButton,
+            secondaryAbilityInput.keyCode,
+            buttonText: GetString("monitorButtonText")
         );
 
         // Set the default (or settings from the previous game) timers / durations when spawning the buttons

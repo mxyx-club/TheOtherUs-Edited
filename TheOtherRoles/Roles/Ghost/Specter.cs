@@ -61,8 +61,8 @@ public class Specter
             case RoleId.Undertaker:
                 if (resetRole) Undertaker.clearAndReload();
                 break;
-            case RoleId.Escapist:
-                if (resetRole) Escapist.clearAndReload();
+            case RoleId.Marionette:
+                if (resetRole) Marionette.ClearAndReload();
                 break;
             case RoleId.Warlock:
                 if (resetRole) Warlock.clearAndReload();

@@ -24,10 +24,9 @@ public class Aftermath
         {
             var target = killer;
             if (Blackmailer.currentTarget != null) target = Blackmailer.currentTarget;
-            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                (byte)CustomRPC.BlackmailPlayer, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.BlackmailPlayer);
             writer.Write(target.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             blackmailPlayer(target.PlayerId);
             blackmailerButton.Timer = blackmailerButton.MaxTimer;
         }
@@ -62,10 +61,9 @@ public class Aftermath
         }
         else if (Morphling.morphling == killer)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                (byte)CustomRPC.MorphlingMorph, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.MorphlingMorph);
             writer.Write(player.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             morphlingMorph(player.PlayerId);
             Morphling.sampledTarget = null;
             morphlingButton.Timer = Morphling.duration;
@@ -73,49 +71,24 @@ public class Aftermath
         }
         else if (Butcher.butcher == killer)
         {
+            var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
 
-            foreach (var collider2D in Physics2D.OverlapCircleAll(
-                         PlayerControl.LocalPlayer.GetTruePosition(),
-                         PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
-            {
-                if (collider2D.tag == "DeadBody")
-                {
-                    var component = collider2D.GetComponent<DeadBody>();
-                    if (component && !component.Reported)
-                    {
-                        var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                        var truePosition2 = component.TruePosition;
-                        if (Vector2.Distance(truePosition2, truePosition) <=
-                            PlayerControl.LocalPlayer.MaxReportDistance &&
-                            PlayerControl.LocalPlayer.CanMove &&
-                            !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
-                                Constants.ShipAndObjectsMask, false))
-                        {
-                            var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+            var writer = StartRPC(CustomRPC.DissectionBody);
+            writer.Write(db.ParentId);
+            writer.Write(Butcher.butcher.PlayerId);
+            writer.EndRPC();
+            dissectionBody(db.ParentId, Butcher.butcher.PlayerId);
 
-                            var writer = AmongUsClient.Instance.StartRpcImmediately(Butcher.butcher.NetId,
-                                (byte)CustomRPC.DissectionBody, SendOption.Reliable);
-                            writer.Write(playerInfo.PlayerId);
-                            writer.Write(Butcher.butcher.PlayerId);
-                            AmongUsClient.Instance.FinishRpcImmediately(writer);
-                            dissectionBody(playerInfo.PlayerId, Butcher.butcher.PlayerId);
-
-                            Butcher.canDissection = false;
-                            SoundEffectsManager.play("cleanerClean");
-                            break;
-                        }
-                    }
-                }
-            }
+            Butcher.canDissection = false;
+            SoundEffectsManager.play("cleanerClean");
         }
         else if (Witch.witch == killer)
         {
             var target = killer;
             if (Witch.currentTarget != null) target = Witch.currentTarget;
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.SetFutureSpelled, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.SetFutureSpelled);
             writer.Write(target.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             setFutureSpelled(target.PlayerId);
             SoundEffectsManager.play("witchSpell");
             witchSpellButton.Timer = witchSpellButton.MaxTimer;
@@ -126,8 +99,7 @@ public class Aftermath
         }*/
         else if (Miner.miner == killer)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                (byte)CustomRPC.Mine, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.Mine);
             var pos = killer.transform.position;
             var buff = new byte[sizeof(float) * 2];
             Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
@@ -137,22 +109,9 @@ public class Aftermath
             writer.Write(killer.PlayerId);
             writer.WriteBytesAndSize(buff);
             writer.Write(0.01f);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             Mine(id, buff, 0.01f);
             minerMineButton.Timer = minerMineButton.MaxTimer;
-        }
-        else if (Escapist.escapist == killer)
-        {
-            if (Escapist.escapeLocation != Vector3.zero)
-            {
-                killer.NetTransform.RpcSnapTo(Escapist.escapeLocation);
-            }
-            else
-            {
-                Escapist.escapeLocation = PlayerControl.LocalPlayer.transform.localPosition;
-            }
-            escapistMarkButton.Timer = escapistMarkButton.MaxTimer;
-            escapistEscapeButton.Timer = escapistEscapeButton.MaxTimer;
         }
         else if (Yoyo.yoyo == killer)
         {
@@ -164,7 +123,7 @@ public class Aftermath
             if (Yoyo.markedLocation == null)
             {
                 Message($"marked location is null in button press");
-                var writer = StartRPC(killer.NetId, CustomRPC.YoyoMarkLocation);
+                var writer = StartRPC(CustomRPC.YoyoMarkLocation);
                 writer.WriteBytesAndSize(buff);
                 writer.EndRPC();
                 yoyoMarkLocation(buff);
@@ -221,7 +180,7 @@ public class Aftermath
             {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                     (byte)CustomRPC.LightsOut, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 lightsOut();
                 SoundEffectsManager.play("lighterLight");
                 lightsOutButton.Timer = lightsOutButton.MaxTimer;
@@ -246,92 +205,91 @@ public class Aftermath
         }
         else if (Cleaner.cleaner == killer)
         {
-            foreach (var collider2D in Physics2D.OverlapCircleAll(
-                PlayerControl.LocalPlayer.GetTruePosition(),
-                PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
-            {
-                if (collider2D.tag == "DeadBody")
-                {
-                    var component = collider2D.GetComponent<DeadBody>();
-                    if (component && !component.Reported)
-                    {
-                        var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                        var truePosition2 = component.TruePosition;
-                        if (Vector2.Distance(truePosition2, truePosition) <=
-                            PlayerControl.LocalPlayer.MaxReportDistance &&
-                            PlayerControl.LocalPlayer.CanMove &&
-                            !PhysicsHelpers.AnythingBetween(truePosition, truePosition2,
-                                Constants.ShipAndObjectsMask, false))
-                        {
-                            var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+            var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
 
-                            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                                (byte)CustomRPC.CleanBody, SendOption.Reliable);
-                            writer.Write(playerInfo.PlayerId);
-                            writer.Write(Cleaner.cleaner.PlayerId);
-                            AmongUsClient.Instance.FinishRpcImmediately(writer);
-                            cleanBody(playerInfo.PlayerId, Cleaner.cleaner.PlayerId);
-
-                            Cleaner.cleaner.killTimer = cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer;
-                            SoundEffectsManager.play("cleanerClean");
-                            break;
-                        }
-                    }
-                }
-            }
-
+            var writer = StartRPC(CustomRPC.CleanBody);
+            writer.Write(db.ParentId);
+            writer.Write(Cleaner.cleaner.PlayerId);
+            writer.EndRPC();
+            cleanBody(db.ParentId, Cleaner.cleaner.PlayerId);
+            SoundEffectsManager.play("cleanerClean");
             cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer;
         }
         else if (Eraser.eraser == killer)
         {
             var target = killer;
             if (Eraser.currentTarget != null) target = Eraser.currentTarget;
-            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                (byte)CustomRPC.SetFutureErased, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.SetFutureErased);
             writer.Write(target.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             setFutureErased(target.PlayerId);
             SoundEffectsManager.play("eraserErase");
             eraserButton.Timer = eraserButton.MaxTimer;
         }
         else if (Camouflager.camouflager == killer)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                (byte)CustomRPC.CamouflagerCamouflage, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.CamouflagerCamouflage);
             writer.Write(1);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             camouflagerCamouflage(1);
             SoundEffectsManager.play("morphlingMorph");
             camouflagerButton.Timer = camouflagerButton.MaxTimer;
         }
         else if (Grenadier.Player == killer)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                (byte)CustomRPC.GrenadierFlash, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.GrenadierFlash);
             writer.Write(false);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             grenadierFlash(false);
             grenadierFlashButton.Timer = grenadierFlashButton.MaxTimer + Grenadier.duration;
         }
         else if (Swooper.swooper == killer)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                (byte)CustomRPC.SetSwoop, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.SetSwoop);
             writer.Write(killer.PlayerId);
             writer.Write(byte.MinValue);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             setSwoop(Swooper.swooper.PlayerId, byte.MinValue);
             swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer + Swooper.duration;
         }
         else if (Jackal.jackal.Any(x => x == killer) && Jackal.canSwoop)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                (byte)CustomRPC.SetJackalSwoop, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.SetJackalSwoop);
             writer.Write(killer.PlayerId);
             writer.Write(byte.MinValue);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             setJackalSwoop(killer.PlayerId, byte.MinValue);
             jackalSwoopButton.Timer = jackalSwoopButton.MaxTimer + Jackal.duration;
+        }
+        else if (Marionette.Player == killer)
+        {
+            if (Marionette.decoy == null)
+            {
+                var writer = StartRPC(CustomRPC.PlaceDecoy);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(PlayerControl.LocalPlayer.transform.position);
+                writer.EndRPC();
+                PlaceDecoy(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.transform.position);
+                marionettePlaceButton.Timer = marionettePlaceButton.MaxTimer;
+
+                Marionette.marionetteMode = 0;
+
+                Marionette.SetMarionetteMode(0);
+                marionetteButton.Timer = marionetteButton.MaxTimer;
+            }
+            else
+            {
+
+                var writer = StartRPC(CustomRPC.DecoySwap);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(Marionette.decoy.Id);
+                writer.Write(PlayerControl.LocalPlayer.transform.position);
+                writer.Write(Marionette.decoy.gameObject.transform.position);
+                writer.EndRPC();
+                DecoySwap(PlayerControl.LocalPlayer, Marionette.decoy.Id, PlayerControl.LocalPlayer.transform.position, Marionette.decoy.gameObject.transform.position);
+
+                if (HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer) HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+            }
         }
     }
 }

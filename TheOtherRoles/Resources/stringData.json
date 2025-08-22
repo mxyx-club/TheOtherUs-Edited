@@ -1122,17 +1122,35 @@
         "0": "Number of New Bodies",
         "13": "新增的尸体数量"
     },
-    "escapistMaxCharges": {
-        "0": "Number of Markers",
-        "13": "可传送次数"
+    "marionettePlaceCooldown": {
+        "13": "放置木偶冷却"
     },
-    "escapistEscapeTime": {
-        "0": "Mark/Jump Cooldown",
-        "13": "标记/逃逸冷却"
+    "marionetteDecoyDelayedDisplay": {
+        "13": "延迟几秒激活木偶"
     },
-    "escapistResetPlaceAfterMeeting": {
-        "0": "Marked Spot Resets after Meeting",
-        "13": "会议后重置目标地点"
+    "marionetteDecoyPermanent": {
+        "13": "木偶可以持续存在"
+    },
+    "marionetteResetPlaceAfterMeeting": {
+        "13": "会议后会重置木偶"
+    },
+    "marionetteDecoyDuration": {
+        "13": "木偶可存在的持续时间"
+    },
+    "marionetteSwapCooldown": {
+        "13": "与木偶交换位置的冷却时间"
+    },
+    "marionetteShowDecoy": {
+        "13": "哪些玩家可以看到木偶"
+    },
+    "marionetteShowDecoy1": {
+        "13": "仅木偶师可见"
+    },
+    "marionetteShowDecoy2": {
+        "13": "仅伪装者可见"
+    },
+    "marionetteShowDecoy3": {
+        "13": "全部玩家可见"
     },
     "tricksterPlaceBoxCooldown": {
         "0": "Trickster Box Cooldown",
@@ -2793,6 +2811,10 @@
         "0": "Ability",
         "13": "使用技能"
     },
+    "keyBinding.changeAbility": {
+        "0": "Change Ability",
+        "13": "更换技能"
+    },
     "keyBinding.secondaryAbility": {
         "0": "Secondary Ability",
         "13": "使用第二技能"
@@ -4062,6 +4084,18 @@
     "bandKickButton": {
         "0": "KICK",
         "13": "踢出乐队"
+    },
+    "decoyButtonText": {
+        "13": "放置木偶"
+    },
+    "swapButtonText": {
+        "13": "交换位置"
+    },
+    "monitorButtonText": {
+        "13": "查看木偶"
+    },
+    "destroyButtonText": {
+        "13": "回收木偶"
     },
     "GuessserGMInfo": {
         "0": " (Guesser)",
@@ -5407,6 +5441,15 @@
         "0": "Put suspicious players in jail.",
         "13": "囚禁可疑的玩家"
     },
+    "Marionette": {
+        "13": "木偶师"
+    },
+    "MarionetteIntroDesc": {
+        "13": "利用木偶欺诈船员"
+    },
+    "MarionetteShortDesc": {
+        "13": "放置木偶，并可以随时交换位置"
+    },
     "ImpostorFullDesc": {
         "0": "An ordinary Imposter, deadly but otherwise unassuming.",
         "13": "哈哈~白板红狼!"
@@ -5854,5 +5897,8 @@
     "JailorFullDesc": {
         "0": "The Jailor can choose a player to Jail during the action phase, taking effect once the next meeting starts.\n\nMessages sent by the jailed player during the meeting will only be visible to the Jailor; other players cannot see them.\nThe Jailor can PM the jailed player using the [/jail text] command.\n\nThe Jailor can execute the jailed player during the meeting, but if they execute a Crewmate, they will permanently lose their ability.",
         "13": "你可以在行动阶段选择一位玩家监禁，进入会议后会将目标玩家监禁。\n\n目标在会议中发送的消息只会被典狱长接收，其他玩家无法看到，\n但典狱长可以使用 [/jail text] 指令与被监禁者私聊。\n\n典狱长可以在会议中处决被监禁玩家，但如果处决了船员，将永久失去技能。"
+    },
+    "MarionetteFullDesc": {
+        "13": "木偶师可以放置一个木偶，木偶的可见性由房主设置。\n\n按左边的shift键可以切换功能键\n在木偶有效时间内，\n木偶师可以随时查看木偶的周围情况，并可以交换自己与木偶的位置。"
     }
 }

@@ -1422,6 +1422,7 @@ internal class HudManagerUpdatePatch
         // Mini
         miniUpdate();
         Mini.Update();
+        Decoy.UpdateAll();
 
         // Update player outlines
         setBasePlayerOutlines();

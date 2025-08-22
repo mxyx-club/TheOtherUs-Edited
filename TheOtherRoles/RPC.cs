@@ -142,6 +142,10 @@ public enum CustomRPC : byte
     YoyoBlink,
     BalancerBalance,
 
+    PlaceDecoy,
+    DecoyDestroy,
+    DecoySwap,
+
     // Gamemode
     SetGuesserGm,
 
@@ -223,7 +227,7 @@ public static class RPCProcedure
         if (AmongUsClient.Instance.AmHost && CustomOptionHolder.anyPlayerCanStopStart.GetBool())
         {
             GameStartManager.Instance.ResetStartState();
-            PlayerControl.LocalPlayer.RpcSendChat($"{PlayerById(playerId).Data.PlayerName} 阻止游戏开始");
+            PlayerControl.LocalPlayer.RpcSendChat($"{PlayerById(playerId)?.Data?.PlayerName} 阻止游戏开始");
         }
     }
 
@@ -433,8 +437,8 @@ public static class RPCProcedure
             case RoleId.Balancer:
                 Balancer.balancer = player;
                 break;
-            case RoleId.Escapist:
-                Escapist.escapist = player;
+            case RoleId.Marionette:
+                Marionette.Player = player;
                 break;
             case RoleId.Thief:
                 Thief.thief = player;
@@ -637,34 +641,34 @@ public static class RPCProcedure
                 HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, reader.ReadString());
                 break;
             case HostCommand.HostKill:
-            {
-                var target = reader.ReadPlayer();
-                if (target.IsDead()) return;
-
-                target.Exiled();
-                PlayerData.SetDeathReason(target, CustomDeathReason.HostKill, controller);
-
-                DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
-                foreach (var body in array)
                 {
-                    if (body.ParentId != target.PlayerId) continue;
-                    UObject.Destroy(body.gameObject);
-                    break;
+                    var target = reader.ReadPlayer();
+                    if (target.IsDead()) return;
+
+                    target.Exiled();
+                    PlayerData.SetDeathReason(target, CustomDeathReason.HostKill, controller);
+
+                    DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
+                    foreach (var body in array)
+                    {
+                        if (body.ParentId != target.PlayerId) continue;
+                        UObject.Destroy(body.gameObject);
+                        break;
+                    }
                 }
-            }
-            break;
+                break;
             case HostCommand.HostRevive:
-            {
-                var target = reader.ReadPlayer();
-                target?.ModRevive(true, true);
-            }
-            break;
+                {
+                    var target = reader.ReadPlayer();
+                    target?.ModRevive(true, true);
+                }
+                break;
             case HostCommand.HostClearTasks:
-            {
-                var target = reader.ReadPlayer();
-                target.clearAllTasks();
-            }
-            break;
+                {
+                    var target = reader.ReadPlayer();
+                    target.clearAllTasks();
+                }
+                break;
             case HostCommand.HostExile:
                 ExileControllerBeginPatch.ForceExile = true;
                 break;
@@ -677,34 +681,34 @@ public static class RPCProcedure
                 MeetingHud.Instance.ClearVote();
                 break;
             case HostCommand.HostSetRole:
-            {
-                var target = reader.ReadPlayer();
-                var roleId = (RoleId)reader.ReadByte();
-                Message("SetRole Role:" + target.Data.PlayerName);
-                if (target != null && RoleInfo.RoleInfoById.TryGetValue(roleId, out var info))
                 {
-                    if (info.roleType == RoleType.Impostor)
+                    var target = reader.ReadPlayer();
+                    var roleId = (RoleId)reader.ReadByte();
+                    Message("SetRole Role:" + target.Data.PlayerName);
+                    if (target != null && RoleInfo.RoleInfoById.TryGetValue(roleId, out var info))
                     {
-                        target.Data.Role.TeamType = RoleTeamTypes.Impostor;
-                        SetRoleType(target, RoleTypes.Impostor);
-                    }
-                    else
-                    {
-                        target.Data.Role.TeamType = RoleTeamTypes.Crewmate;
-                        SetRoleType(target, RoleTypes.Crewmate);
+                        if (info.roleType == RoleType.Impostor)
+                        {
+                            target.Data.Role.TeamType = RoleTeamTypes.Impostor;
+                            SetRoleType(target, RoleTypes.Impostor);
+                        }
+                        else
+                        {
+                            target.Data.Role.TeamType = RoleTeamTypes.Crewmate;
+                            SetRoleType(target, RoleTypes.Crewmate);
 
+                        }
+                        setRole(target.PlayerId, (byte)roleId);
                     }
-                    setRole(target.PlayerId, (byte)roleId);
                 }
-            }
-            break;
+                break;
             case HostCommand.HostClearRole:
-            {
-                var target = reader.ReadPlayer();
-                Message("Clean Role:" + target.Data.PlayerName);
-                erasePlayerRoles(target.PlayerId, false);
-            }
-            break;
+                {
+                    var target = reader.ReadPlayer();
+                    Message("Clean Role:" + target.Data.PlayerName);
+                    erasePlayerRoles(target.PlayerId, false);
+                }
+                break;
             default:
                 break;
         }
@@ -806,7 +810,7 @@ public static class RPCProcedure
         var killer = PlayerById(killerId);
         for (var num = 0; num < Butcher.dissectedBodyCount; num++)
         {
-            player.MyPhysics.StartCoroutine(player.KillAnimations.First().CoPerformKill(killer, player));
+            player?.MyPhysics.StartCoroutine(player.KillAnimations.First().CoPerformKill(killer, player));
         }
         Butcher.dissected = player;
 
@@ -993,7 +997,7 @@ public static class RPCProcedure
     public static void partTimerSet(byte targetId)
     {
         if (targetId == byte.MaxValue) PartTimer.target = null;
-        PlayerControl target = PlayerById(targetId);
+        PlayerControl? target = PlayerById(targetId);
         if (target == null) return;
         PartTimer.target = target;
         PartTimer.deathTurn = PartTimer.DeathDefaultTurn;
@@ -1155,7 +1159,6 @@ public static class RPCProcedure
         if (player == Warlock.warlock) Warlock.clearAndReload();
         if (player == Butcher.butcher) Butcher.clearAndReload();
         if (player == Witch.witch) Witch.clearAndReload();
-        if (player == Escapist.escapist) Escapist.clearAndReload();
         if (player == Ninja.ninja) Ninja.clearAndReload();
         if (player == Yoyo.yoyo) Yoyo.clearAndReload();
         if (player == EvilTrapper.evilTrapper) EvilTrapper.clearAndReload();
@@ -1263,12 +1266,39 @@ public static class RPCProcedure
         InfoSleuth.target = player;
     }
 
+    public static void PlaceDecoy(PlayerControl player, Vector3 pos)
+    {
+        Marionette.decoy = new Decoy(player, pos);
+    }
+
+    public static void DecoyDestroy(PlayerControl player, int? decoyId)
+    {
+        var decoy = Decoy.Decoys.FirstOrDefault(x => x.Id == decoyId);
+        decoy?.Destroy();
+        Marionette.decoy = null;
+    }
+
+    public static void DecoySwap(PlayerControl player, int? decoyId, Vector3 playerPos, Vector3 decoyPos)
+    {
+        var decoy = Decoy.Decoys.FirstOrDefault(x => x.Id == decoyId);
+        if (decoy == null) return;
+
+        bool playerFlip = player.cosmetics.FlipX;
+        bool decoyFlip = decoy.renderer.flipX;
+
+        player.NetTransform.SnapTo(decoyPos);
+        decoy.gameObject.transform.position = playerPos;
+
+        player.cosmetics.SetFlipX(decoyFlip);
+        decoy.renderer.flipX = playerFlip;
+    }
+
     public static void balancerBalance(byte sourceId, byte player1Id, byte player2Id)
     {
         Balancer.IsAbilityUsed--;
-        PlayerControl source = PlayerById(sourceId);
-        PlayerControl player1 = PlayerById(player1Id);
-        PlayerControl player2 = PlayerById(player2Id);
+        PlayerControl? source = PlayerById(sourceId);
+        PlayerControl? player1 = PlayerById(player1Id);
+        PlayerControl? player2 = PlayerById(player2Id);
         if (source is null || player1 is null || player2 is null) return;
         Balancer.StartAbility(source, player1, player2);
 
@@ -1491,8 +1521,8 @@ public static class RPCProcedure
 
     public static void akujoSetHonmei(byte akujoId, byte targetId)
     {
-        PlayerControl akujo = PlayerById(akujoId);
-        PlayerControl target = PlayerById(targetId);
+        PlayerControl? akujo = PlayerById(akujoId);
+        PlayerControl? target = PlayerById(targetId);
 
         if (akujo != null && Akujo.honmei == null)
         {
@@ -1504,7 +1534,7 @@ public static class RPCProcedure
     public static void akujoSetKeep(byte akujoId, byte targetId)
     {
         var akujo = PlayerById(akujoId);
-        PlayerControl target = PlayerById(targetId);
+        PlayerControl? target = PlayerById(targetId);
 
         if (akujo != null && Akujo.keepsLeft > 0)
         {
@@ -2468,6 +2498,15 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.GuesserMessage:
                 Guesser.seedGuessChat(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadByte(), false);
+                break;
+            case CustomRPC.PlaceDecoy:
+                RPCProcedure.PlaceDecoy(reader.ReadPlayer(), reader.ReadVector3());
+                break;
+            case CustomRPC.DecoyDestroy:
+                RPCProcedure.DecoyDestroy(reader.ReadPlayer(), reader.ReadInt32());
+                break;
+            case CustomRPC.DecoySwap:
+                RPCProcedure.DecoySwap(reader.ReadPlayer(), reader.ReadInt32(), reader.ReadVector3(), reader.ReadVector3());
                 break;
         }
 

@@ -38,7 +38,7 @@ public class RoleInfo
     public static RoleInfo vampire = new("Vampire", Vampire.color, RoleId.Vampire, RoleType.Impostor);
     public static RoleInfo cleaner = new("Cleaner", Cleaner.color, RoleId.Cleaner, RoleType.Impostor);
     public static RoleInfo undertaker = new("Undertaker", Undertaker.color, RoleId.Undertaker, RoleType.Impostor);
-    public static RoleInfo escapist = new("Escapist", Escapist.color, RoleId.Escapist, RoleType.Impostor);
+    public static RoleInfo marionette = new("Marionette", Marionette.color, RoleId.Marionette, RoleType.Impostor);
     public static RoleInfo warlock = new("Warlock", Warlock.color, RoleId.Warlock, RoleType.Impostor);
     public static RoleInfo trickster = new("Trickster", Trickster.color, RoleId.Trickster, RoleType.Impostor);
     public static RoleInfo bountyHunter = new("BountyHunter", BountyHunter.color, RoleId.BountyHunter, RoleType.Impostor);
@@ -155,7 +155,7 @@ public class RoleInfo
         eraser,
         vampire,
         undertaker,
-        escapist,
+        marionette,
         warlock,
         trickster,
         bountyHunter,
@@ -324,7 +324,7 @@ public class RoleInfo
         if (p == Undertaker.undertaker) infos.Add(undertaker);
         if (p == Warlock.warlock) infos.Add(warlock);
         if (p == Witch.witch) infos.Add(witch);
-        if (p == Escapist.escapist) infos.Add(escapist);
+        if (p == Marionette.Player) infos.Add(marionette);
         if (p == Gambler.gambler) infos.Add(gambler);
         if (p == Gunsmith.Player) infos.Add(gunsmith);
         if (p == Ninja.ninja) infos.Add(ninja);

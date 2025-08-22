@@ -1,4 +1,5 @@
 namespace TheOtherRoles.Roles.Impostor;
+
 public class Gunsmith
 {
     public static PlayerControl Player;

@@ -13,6 +13,7 @@ public class ModInputManager
     public static ModInput abilityInput;
     public static ModInput secondaryAbilityInput;
     public static ModInput modifierAbilityInput;
+    public static ModInput changeAbilityInput;
     public static ModInput modKillInput;
     public static ModInput showOptionPageInput;
     public static ModInput helpInput;
@@ -129,8 +130,9 @@ public class ModInputManager
 
         modKillInput = new ModInput("kill", KeyCode.Q);
         abilityInput = new ModInput("ability", KeyCode.F);
-        modifierAbilityInput = new ModInput("modifierAbility", KeyCode.Z);
         secondaryAbilityInput = new ModInput("secondaryAbility", KeyCode.G);
+        modifierAbilityInput = new ModInput("modifierAbility", KeyCode.Z);
+        changeAbilityInput = new ModInput("changeAbility", KeyCode.LeftShift);
         showOptionPageInput = new ModInput("showOptionPage", KeyCode.F1);
         helpInput = new ModInput("help", KeyCode.H);
         toggleChat = new ModInput("toggleChat", KeyCode.F2);

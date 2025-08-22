@@ -19,10 +19,10 @@ public class Amnisiac
         Player.Clear();
         showArrows = CustomOptionHolder.amnisiacShowArrows.GetBool();
         resetRole = CustomOptionHolder.amnisiacResetRole.GetBool();
-        if (localArrows != null)
-            foreach (var arrow in localArrows)
-                if (arrow?.arrow != null)
-                    UObject.Destroy(arrow.arrow);
+
+        foreach (var arrow in localArrows)
+            if (arrow?.arrow != null)
+                UObject.Destroy(arrow.arrow);
         localArrows.Clear();
     }
 
@@ -60,8 +60,8 @@ public class Amnisiac
             case RoleId.Undertaker:
                 if (resetRole) Undertaker.clearAndReload();
                 break;
-            case RoleId.Escapist:
-                if (resetRole) Escapist.clearAndReload();
+            case RoleId.Marionette:
+                if (resetRole) Marionette.ClearAndReload();
                 break;
             case RoleId.Warlock:
                 if (resetRole) Warlock.clearAndReload();

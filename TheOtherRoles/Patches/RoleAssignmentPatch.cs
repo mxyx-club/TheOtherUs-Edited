@@ -119,7 +119,7 @@ internal class RoleManagerSelectRolesPatch
         impSettings.Add((byte)RoleId.Warlock, CustomOptionHolder.warlockSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.BountyHunter, CustomOptionHolder.bountyHunterSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Witch, CustomOptionHolder.witchSpawnRate.GetSelection());
-        impSettings.Add((byte)RoleId.Escapist, CustomOptionHolder.escapistSpawnRate.GetSelection());
+        impSettings.Add((byte)RoleId.Marionette, CustomOptionHolder.marionetteSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Ninja, CustomOptionHolder.ninjaSpawnRate.GetSelection());
         if (!Poucher.spawnModifier) impSettings.Add((byte)RoleId.Poucher, CustomOptionHolder.poucherSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Mimic, CustomOptionHolder.mimicSpawnRate.GetSelection());

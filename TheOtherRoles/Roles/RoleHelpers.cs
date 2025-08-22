@@ -29,7 +29,7 @@ public enum RoleId
     Eraser,
     Vampire,
     Undertaker,
-    Escapist,
+    Marionette,
     Warlock,
     Trickster,
     BountyHunter,
@@ -348,7 +348,7 @@ public static class RoleHelpers
             { RoleId.Camouflager, CustomOptionHolder.camouflagerSpawnRate.GetSelection() },
             { RoleId.Cleaner, CustomOptionHolder.cleanerSpawnRate.GetSelection() },
             { RoleId.Eraser, CustomOptionHolder.eraserSpawnRate.GetSelection() },
-            { RoleId.Escapist, CustomOptionHolder.escapistSpawnRate.GetSelection() },
+            { RoleId.Marionette, CustomOptionHolder.marionetteSpawnRate.GetSelection() },
             { RoleId.EvilTrapper, CustomOptionHolder.evilTrapperSpawnRate.GetSelection() },
             { RoleId.Gambler, CustomOptionHolder.gamblerSpawnRate.GetSelection() },
             { RoleId.Mimic, CustomOptionHolder.mimicSpawnRate.GetSelection() },
@@ -473,7 +473,7 @@ public static class RoleHelpers
         Witch.clearAndReload();
         Jumper.clearAndReload();
         Prophet.clearAndReload();
-        Escapist.clearAndReload();
+        Marionette.ClearAndReload();
         Ninja.clearAndReload();
         Blackmailer.clearAndReload();
         Thief.clearAndReload();

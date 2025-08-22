@@ -21,6 +21,9 @@ public class CustomButton
     private readonly Action OnEffectClick;
     private readonly Action OnEffectEnd;
 
+    private Action AidAction;
+    private KeyCode? aidHotkey;
+
     public Sprite Sprite;
     public HudManager hudManager;
     public ActionButton actionButton;
@@ -319,13 +322,20 @@ public class CustomButton
         }
     }
 
+    public void SetAidAction(KeyCode key, bool requireChangeOption, Action aidAction)
+    {
+        SetKeyGuide(key, new Vector2(0.48f, 0.13f), requireChangeOption);
+        AidAction = aidAction;
+        aidHotkey = key;
+    }
+
     public CustomButton SetTimer(float timer)
     {
         Timer = timer;
         return this;
     }
 
-    public void showTargetNameOnButton(PlayerControl target, string defaultText = null, bool isDie = false)
+    public void showTargetNameOnButton(PlayerControl target, string defaultText = null)
     {
         var displayText = defaultText.IsNullOrWhiteSpace() ? buttonText : defaultText;
 
@@ -335,19 +345,13 @@ public class CustomButton
             return;
         }
 
-        if (isDie && target.Data.IsDead)
-        {
-            displayText = target.Data.PlayerName;
-        }
-        else if (!isLightsActive || isCamoComms ||
-            Camouflager.camouflageTimer >= 0.1f ||
+        if (isLightsActive || isCamoComms || Camouflager.camouflageTimer >= 0.1f ||
             (Trickster.trickster != null && Trickster.lightsOutTimer > 0f) ||
             (target == Ninja.ninja && Ninja.isInvisable) ||
             (target == Swooper.swooper && Swooper.isInvisable) ||
-            (Jackal.jackal.Contains(target) && Jackal.isInvisable) ||
-            (Morphling.morphling != null && target == Morphling.morphling && Morphling.morphTimer > 0))
+            (Jackal.jackal.Contains(target) && Jackal.isInvisable))
         {
-            displayText = target.Data.PlayerName;
+            displayText = buttonText;
         }
         else if (Morphling.morphling != null && target == Morphling.morphling && Morphling.morphTimer > 0)
         {
@@ -404,6 +408,12 @@ public class CustomButton
         {
             setActive(false);
             return;
+        }
+
+        if (AidAction != null && aidHotkey.HasValue && Input.GetKeyDown(aidHotkey.Value))
+        {
+            Message("AidAction OnClick");
+            AidAction.Invoke();
         }
 
         actionButtonRenderer.sprite = Sprite;
