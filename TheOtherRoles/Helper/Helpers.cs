@@ -526,11 +526,17 @@ public static class Helpers
         return null;
     }
 
-    public static IEnumerable<DeadBody> AllDeadBodies()
+    public static DeadBody[] AllDeadBodies()
     {
         //Componentで探すよりタグで探す方が相当はやい
-        var bodies = GameObject.FindGameObjectsWithTag("DeadBody");
-        for (int i = 0; i < bodies.Count; i++) yield return bodies[i].GetComponent<DeadBody>();
+        var bodyObjects = GameObject.FindGameObjectsWithTag("DeadBody");
+        var deadBodies = new DeadBody[bodyObjects.Length];
+
+        for (int i = 0; i < bodyObjects.Length; i++)
+        {
+            deadBodies[i] = bodyObjects[i].GetComponent<DeadBody>();
+        }
+        return deadBodies;
     }
 
     public static DeadBody? GetDeadBody(byte id)

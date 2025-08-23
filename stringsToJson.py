@@ -3,6 +3,25 @@ import re
 import sys
 import copy
 import json
+
+required_packages = ['openpyxl']
+
+def install(package):
+    try:
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', package])
+    except subprocess.CalledProcessError as e:
+        print(f"安装包 {package} 时出错: {e}")
+
+def check_and_install_packages():
+    for package in required_packages:
+        try:
+            __import__(package)
+        except ImportError:
+            print(f"{package} 依赖不存在，尝试下载中...")
+            install(package)
+
+check_and_install_packages()
+
 from openpyxl import load_workbook
 
 WORKING_DIR = os.path.dirname(os.path.realpath(__file__))

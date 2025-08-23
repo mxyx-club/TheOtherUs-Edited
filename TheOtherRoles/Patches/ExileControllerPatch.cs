@@ -321,6 +321,13 @@ internal class ExileControllerWrapUpPatch
         // Reset custom button timers where necessary
         CustomButton.OnMeetingEnd();
 
+        if (Decoy.ResetPlaceAfterMeeting)
+        {
+
+            Marionette.decoy.Destroy();
+            Marionette.decoy = null;
+        }
+
         // Clear all traps
         KillTrap.ClearAndReload();
         Balancer.WrapUp(exiled == null ? null : exiled.Object);

@@ -4574,8 +4574,14 @@ internal static class HudManagerStartPatch
                 Marionette.SetMarionetteMode(0);
                 marionetteButton.Timer = marionetteButton.MaxTimer;
             },
-            () => { return !PlayerControl.LocalPlayer.Data.IsDead && Marionette.decoy == null; },
-            () => { return PlayerControl.LocalPlayer.CanMove || HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer; },
+            () =>
+            {
+                return Marionette.Player.IsAlive() && PlayerControl.LocalPlayer == Marionette.Player && Marionette.decoy == null;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove || HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer;
+            },
             () =>
             {
                 marionettePlaceButton.Timer = marionettePlaceButton.MaxTimer = Marionette.PlaceCooldown;
@@ -4616,7 +4622,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Marionette.Player.IsAlive() && PlayerControl.LocalPlayer == Marionette.Player && Marionette.decoy != null && Marionette.decoy.gameObject != null; ;
+                return Marionette.Player.IsAlive() && PlayerControl.LocalPlayer == Marionette.Player && Marionette.decoy != null; ;
             },
             () =>
             {

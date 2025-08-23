@@ -857,6 +857,258 @@ internal class HudManagerUpdatePatch
         }
     }
 
+    private static void vultureUpdate()
+    {
+        if (Vulture.vulture == null || PlayerControl.LocalPlayer != Vulture.vulture || Vulture.localArrows == null || !Vulture.showArrows) return;
+        if (Vulture.vulture.Data.IsDead)
+        {
+            foreach (var arrow in Vulture.localArrows) UObject.Destroy(arrow.arrow);
+            Vulture.localArrows = new();
+            return;
+        }
+
+        DeadBody[] deadBodies = AllDeadBodies();
+        var arrowUpdate = Vulture.localArrows.Count != deadBodies.Length;
+        var index = 0;
+
+        if (arrowUpdate)
+        {
+            foreach (var arrow in Vulture.localArrows) UObject.Destroy(arrow.arrow);
+            Vulture.localArrows = new();
+        }
+
+        foreach (var db in deadBodies)
+        {
+            if (arrowUpdate)
+            {
+                Vulture.localArrows.Add(new Arrow(Color.blue));
+                Vulture.localArrows[index].arrow.SetActive(true);
+            }
+
+            if (Vulture.localArrows[index] != null) Vulture.localArrows[index].Update(db.transform.position);
+            index++;
+        }
+    }
+
+    private static void amnisiacUpdate()
+    {
+        if (Amnisiac.Player?.Count == 0 || Amnisiac.localArrows == null || !Amnisiac.showArrows || InMeeting) return;
+
+        foreach (var p in Amnisiac.Player.ToList())
+        {
+            if (p.Data.IsDead)
+            {
+                foreach (var arrow in Amnisiac.localArrows)
+                    UObject.Destroy(arrow.arrow);
+                Amnisiac.localArrows.Clear();
+            }
+        }
+        if (Amnisiac.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId && x.IsAlive()))
+        {
+            DeadBody[] deadBodies = AllDeadBodies();
+            bool arrowUpdate = Amnisiac.localArrows.Count != deadBodies.Length;
+            int index = 0;
+
+            if (arrowUpdate)
+            {
+                foreach (var arrow in Amnisiac.localArrows)
+                    UObject.Destroy(arrow.arrow);
+
+                Amnisiac.localArrows.Clear();
+            }
+
+            foreach (var db in deadBodies)
+            {
+                if (arrowUpdate)
+                {
+                    Amnisiac.localArrows.Add(new Arrow(Amnisiac.color));
+                    Amnisiac.localArrows[index].arrow.SetActive(true);
+                }
+
+                Amnisiac.localArrows[index]?.Update(db.transform.position);
+                index++;
+            }
+        }
+    }
+
+    private static void radarUpdate()
+    {
+        if (Radar.radar == null || PlayerControl.LocalPlayer != Radar.radar || InMeeting)
+            return;
+
+        if (Radar.radar.Data.IsDead)
+        {
+            if (Radar.localArrow.arrow != null)
+                UObject.Destroy(Radar.localArrow.arrow);
+            Radar.localArrow = null;
+            return;
+        }
+
+        PlayerControl closestPlayer = null;
+        float closestDistance = float.MaxValue;
+        Vector2 refPosition = PlayerControl.LocalPlayer.GetTruePosition();
+
+        foreach (var player in PlayerControl.AllPlayerControls)
+        {
+            if (player.Data.IsDead || player.PlayerId == PlayerControl.LocalPlayer.PlayerId || !player.Collider.enabled)
+                continue;
+
+            float distance = Vector2.Distance(refPosition, player.GetTruePosition());
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestPlayer = player;
+            }
+        }
+
+        if (closestPlayer != null)
+        {
+            if (Radar.localArrow == null)
+            {
+                Radar.localArrow = new Arrow(Radar.color);
+                Radar.localArrow.arrow.SetActive(true);
+            }
+            Radar.localArrow.Update(closestPlayer.transform.position);
+        }
+        else
+        {
+            if (Radar.localArrow != null && Radar.localArrow.arrow != null)
+            {
+                Radar.localArrow.arrow.SetActive(false);
+            }
+        }
+    }
+
+    public static void lawyerUpdate()
+    {
+        if (Lawyer.lawyer == null || Lawyer.lawyer != PlayerControl.LocalPlayer) return;
+
+        // Promote to Pursuer
+        if (Lawyer.target != null && Lawyer.target.Data.Disconnected && !Lawyer.lawyer.Data.IsDead)
+        {
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
+                (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            Lawyer.PromotesToPursuer();
+        }
+    }
+
+    public static void executionerUpdate()
+    {
+        if (Executioner.executioner == null || Executioner.executioner != PlayerControl.LocalPlayer) return;
+
+        // Promote to Pursuer
+        if (Executioner.target != null && Executioner.target.Data.Disconnected && !Executioner.executioner.Data.IsDead)
+        {
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
+                (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            Executioner.PromotesRole();
+        }
+    }
+
+    private static void partTimerUpdate()
+    {
+        if (PartTimer.partTimer.IsDead() || PlayerControl.LocalPlayer != PartTimer.partTimer) return;
+
+        if (PartTimer.target != null && PartTimer.target.IsDead())
+        {
+            var playerInfoTransform = PartTimer.target?.cosmetics.nameText.transform.parent.FindChild("Info");
+            var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
+            if (playerInfo != null) playerInfo.text = "";
+
+            var writer = StartRPC(CustomRPC.PartTimerSet);
+            writer.Write(byte.MaxValue);
+            writer.EndRPC();
+            RPCProcedure.partTimerSet(byte.MaxValue);
+        }
+    }
+
+    public static void hackerUpdate()
+    {
+        if (Hacker.hacker == null || PlayerControl.LocalPlayer != Hacker.hacker ||
+            Hacker.hacker.Data.IsDead) return;
+        var (playerCompleted, _) = TasksHandler.taskInfo(Hacker.hacker.Data);
+        if (playerCompleted == Hacker.rechargedTasks)
+        {
+            Hacker.rechargedTasks += Hacker.rechargeTasksNumber;
+            if (Hacker.toolsNumber > Hacker.chargesVitals) Hacker.chargesVitals++;
+            if (Hacker.toolsNumber > Hacker.chargesAdminTable) Hacker.chargesAdminTable++;
+        }
+    }
+
+    // For swapper swap charges        
+    public static void swapperUpdate()
+    {
+        if (Swapper.swapper == null || PlayerControl.LocalPlayer != Swapper.swapper ||
+            PlayerControl.LocalPlayer.Data.IsDead) return;
+        var (playerCompleted, _) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
+        if (playerCompleted == Swapper.rechargedTasks)
+        {
+            Swapper.rechargedTasks += Swapper.rechargeTasksNumber;
+            Swapper.charges++;
+        }
+    }
+
+
+    public static void trapperUpdate()
+    {
+        if (Trapper.trapper.IsDead() || PlayerControl.LocalPlayer != Trapper.trapper) return;
+        var (playerCompleted, _) = TasksHandler.taskInfo(Trapper.trapper.Data);
+        if (playerCompleted == Trapper.rechargedTasks)
+        {
+            Trapper.rechargedTasks += Trapper.rechargeTasksNumber;
+            if (Trapper.maxCharges > Trapper.charges) Trapper.charges++;
+        }
+    }
+
+    public static void akujoUpdate()
+    {
+        if (Akujo.akujo.IsDead() || PlayerControl.LocalPlayer != Akujo.akujo) return;
+        Akujo.timeLeft = (int)Math.Ceiling(Akujo.timeLimit - (DateTime.UtcNow - Akujo.startTime).TotalSeconds);
+        if (Akujo.timeLeft > 0)
+        {
+            if (Akujo.honmei == null)
+            {
+                if (HudManagerStartPatch.akujoHonmeiButton.ButtonTitle != null)
+                {
+                    HudManagerStartPatch.akujoHonmeiButton.ButtonTitle.text = TimeSpan.FromSeconds(Akujo.timeLeft).ToString(@"mm\:ss");
+                }
+            }
+            else HudManagerStartPatch.akujoHonmeiButton.ButtonTitle.enabled = false;
+        }
+        else if (Akujo.timeLeft <= 0)
+        {
+            if (Akujo.honmei == null || (Akujo.keeps?.Count < 1 && Akujo.forceKeeps))
+            {
+                var writer = StartRPC(CustomRPC.AkujoSuicide);
+                writer.Write(Akujo.akujo.PlayerId);
+                writer.EndRPC();
+                RPCProcedure.akujoSuicide(Akujo.akujo.PlayerId);
+            }
+        }
+    }
+
+    private static void undertakerDragBodyUpdate()
+    {
+        if (Undertaker.undertaker.IsDead() || InMeeting) return;
+
+        if (Undertaker.dragedBody != null)
+        {
+            Undertaker.dragedBody.transform.position = Undertaker.undertaker.transform.position;
+        }
+    }
+
+    private static void jesterDragBodyUpdate()
+    {
+        if (Jester.jester.IsDead() || InMeeting) return;
+
+        if (Jester.dragedBody != null)
+        {
+            Jester.dragedBody.transform.position = Jester.jester.transform.position;
+        }
+    }
+
     private static void ninjaUpdate()
     {
         if (Ninja.isInvisable && Ninja.invisibleTimer <= 0 && Ninja.ninja == PlayerControl.LocalPlayer)
@@ -1398,6 +1650,32 @@ internal class HudManagerUpdatePatch
 
         akujoSetTarget();
 
+        //Balancer
+        Balancer.FixedUpdate();
+
+        // undertaker
+        undertakerDragBodyUpdate();
+        // Jester
+        jesterDragBodyUpdate();
+        swapperUpdate();
+        // Hacker
+        hackerUpdate();
+        // Trapper
+        trapperUpdate();
+        // Akojo
+        akujoUpdate();
+        // Amnisiac
+        amnisiacUpdate();
+        // Vulture
+        vultureUpdate();
+        // Radar
+        radarUpdate();
+        // Lawyer
+        lawyerUpdate();
+        // Executioner
+        executionerUpdate();
+        // PartTimer
+        partTimerUpdate();
         // Swooper
         swooperUpdate();
         // Prophet

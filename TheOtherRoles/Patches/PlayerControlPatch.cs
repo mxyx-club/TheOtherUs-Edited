@@ -13,47 +13,45 @@ public static class PlayerControlFixedUpdatePatch
         IEnumerable<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, float KillDistances = 0f)
     {
         PlayerControl result = null;
-        var num = GameOptionsData.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentNormalGameOptions.KillDistance, 0, 3)];
-        if (!MapUtilities.CachedShipStatus) return result;
+        var num = GameOptionsData.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentNormalGameOptions.KillDistance, 0, 3)]+ KillDistances;
+        if (!MapUtilities.CachedShipStatus) return null;
         if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
-        if (targetingPlayer.Data.IsDead) return result;
-        num += KillDistances;
+        if (targetingPlayer.Data.IsDead) return null;
 
         var truePosition = targetingPlayer.GetTruePosition();
-        foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
-            if (!playerInfo.Disconnected && playerInfo.PlayerId != targetingPlayer.PlayerId && !playerInfo.IsDead &&
-                (!onlyCrewmates || !playerInfo.Role.IsImpostor))
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            if (player.IsAlive() && player.PlayerId != targetingPlayer.PlayerId && (!onlyCrewmates || !player.IsImpostor(true, true)))
             {
-                var @object = playerInfo.Object;
-                if (untargetablePlayers != null && untargetablePlayers.Any(x => x == @object))
-                    // if that player is not targetable: skip check
+                var target = player;
+                // if that player is not targetable: skip check
+                if (untargetablePlayers != null && untargetablePlayers.Any(x => x == target))
                     continue;
 
-                if (@object && (!@object.inVent || targetPlayersInVents))
+                if (target && (!target.inVent || targetPlayersInVents))
                 {
-                    var vector = @object.GetTruePosition() - truePosition;
+                    var vector = target.GetTruePosition() - truePosition;
                     var magnitude = vector.magnitude;
-                    if (magnitude <= num && !PhysicsHelpers.AnyNonTriggersBetween(truePosition, vector.normalized,
-                            magnitude, Constants.ShipAndObjectsMask))
+                    if (magnitude <= num && !PhysicsHelpers.AnyNonTriggersBetween(truePosition, vector.normalized, magnitude, Constants.ShipAndObjectsMask))
                     {
-                        result = @object;
+                        result = target;
                         num = magnitude;
                     }
                 }
             }
+        }
+
         return result;
     }
 
     // Update functions
 
-    private static void setPetVisibility()
+    private static void setPetVisibility(PlayerControl player)
     {
-        var localalive = !PlayerControl.LocalPlayer.Data.IsDead;
-        foreach (var player in PlayerControl.AllPlayerControls)
-        {
-            var playeralive = !player.Data.IsDead;
-            player.cosmetics.SetPetVisible((localalive && playeralive) || !localalive);
-        }
+        var localAlive = PlayerControl.LocalPlayer.IsAlive();
+        var playerAlive = player.IsAlive();
+        var shouldShowPet = (localAlive && playerAlive) || !localAlive;
+        player.cosmetics.SetPetVisible(shouldShowPet);
     }
 
     private static void MiniSizeUpdate(PlayerControl p)
@@ -108,178 +106,6 @@ public static class PlayerControlFixedUpdatePatch
         {
             p.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
         }
-    }
-
-    private static void partTimerUpdate()
-    {
-        if (PartTimer.partTimer == null
-            || PlayerControl.LocalPlayer != PartTimer.partTimer
-            || PartTimer.partTimer.IsDead()) return;
-
-        if (PartTimer.target != null && PartTimer.target.IsDead())
-        {
-            var playerInfoTransform = PartTimer.target?.cosmetics.nameText.transform.parent.FindChild("Info");
-            var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
-            if (playerInfo != null) playerInfo.text = "";
-
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.PartTimerSet, SendOption.Reliable);
-            writer.Write(byte.MaxValue);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.partTimerSet(byte.MaxValue);
-        }
-    }
-
-    private static void undertakerDragBodyUpdate()
-    {
-        if (Undertaker.undertaker.IsDead() || InMeeting) return;
-
-        if (Undertaker.dragedBody != null)
-        {
-            Undertaker.dragedBody.transform.position = Undertaker.undertaker.transform.position;
-        }
-    }
-
-    private static void jesterDragBodyUpdate()
-    {
-        if (Jester.jester.IsDead() || InMeeting) return;
-
-        if (Jester.dragedBody != null)
-        {
-            Jester.dragedBody.transform.position = Jester.jester.transform.position;
-        }
-    }
-
-    private static void vultureUpdate()
-    {
-        if (Vulture.vulture == null || PlayerControl.LocalPlayer != Vulture.vulture ||
-            Vulture.localArrows == null || !Vulture.showArrows) return;
-        if (Vulture.vulture.Data.IsDead)
-        {
-            foreach (var arrow in Vulture.localArrows) UObject.Destroy(arrow.arrow);
-            Vulture.localArrows = new();
-            return;
-        }
-
-        DeadBody[] deadBodies = UObject.FindObjectsOfType<DeadBody>();
-        var arrowUpdate = Vulture.localArrows.Count != deadBodies.Length;
-        var index = 0;
-
-        if (arrowUpdate)
-        {
-            foreach (var arrow in Vulture.localArrows) UObject.Destroy(arrow.arrow);
-            Vulture.localArrows = new();
-        }
-
-        foreach (var db in deadBodies)
-        {
-            if (arrowUpdate)
-            {
-                Vulture.localArrows.Add(new Arrow(Color.blue));
-                Vulture.localArrows[index].arrow.SetActive(true);
-            }
-
-            if (Vulture.localArrows[index] != null) Vulture.localArrows[index].Update(db.transform.position);
-            index++;
-        }
-    }
-
-    private static void amnisiacUpdate()
-    {
-        if (Amnisiac.Player?.Count == 0 || Amnisiac.localArrows == null || !Amnisiac.showArrows || InMeeting) return;
-
-        foreach (var p in Amnisiac.Player.ToList())
-        {
-            if (p.Data.IsDead)
-            {
-                foreach (var arrow in Amnisiac.localArrows)
-                    UObject.Destroy(arrow.arrow);
-                Amnisiac.localArrows.Clear();
-            }
-        }
-        if (Amnisiac.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId && x.IsAlive()))
-        {
-            DeadBody[] deadBodies = UObject.FindObjectsOfType<DeadBody>();
-            bool arrowUpdate = Amnisiac.localArrows.Count != deadBodies.Length;
-            int index = 0;
-
-            if (arrowUpdate)
-            {
-                foreach (var arrow in Amnisiac.localArrows)
-                    UObject.Destroy(arrow.arrow);
-
-                Amnisiac.localArrows.Clear();
-            }
-
-            foreach (var db in deadBodies)
-            {
-                if (arrowUpdate)
-                {
-                    Amnisiac.localArrows.Add(new Arrow(Amnisiac.color));
-                    Amnisiac.localArrows[index].arrow.SetActive(true);
-                }
-
-                Amnisiac.localArrows[index]?.Update(db.transform.position);
-                index++;
-            }
-        }
-    }
-
-    private static void radarUpdate()
-    {
-        if (Radar.radar == null || PlayerControl.LocalPlayer != Radar.radar || Radar.localArrows == null || InMeeting) return;
-        if (Radar.radar.Data.IsDead)
-        {
-            foreach (var arrow in Radar.localArrows) UObject.Destroy(arrow.arrow);
-            Radar.localArrows = new();
-            return;
-        }
-
-        var arrowUpdate = true;
-        var index = 0;
-
-        if (arrowUpdate && !PlayerControl.LocalPlayer.Data.IsDead)
-        {
-            foreach (var arrow in Radar.localArrows) UObject.Destroy(arrow.arrow);
-            Radar.ClosestPlayer = GetClosestPlayer(PlayerControl.LocalPlayer,
-                PlayerControl.AllPlayerControls.ToArray().ToList());
-            Radar.localArrows = new();
-        }
-
-
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-        {
-            if (arrowUpdate && !PlayerControl.LocalPlayer.Data.IsDead)
-            {
-                Radar.localArrows.Add(new Arrow(Radar.color));
-                Radar.localArrows[index].arrow.SetActive(true);
-            }
-
-            Radar.localArrows[index]?.Update(Radar.ClosestPlayer.transform.position);
-            index++;
-        }
-    }
-
-    public static PlayerControl GetClosestPlayer(PlayerControl refPlayer, List<PlayerControl> AllPlayers)
-    {
-        var num = double.MaxValue;
-        var refPosition = refPlayer.GetTruePosition();
-        PlayerControl result = null;
-        foreach (var player in AllPlayers)
-        {
-            if (player.Data.IsDead || player.PlayerId == refPlayer.PlayerId || !player.Collider.enabled) continue;
-            var playerPosition = player.GetTruePosition();
-            var distBetweenPlayers = Vector2.Distance(refPosition, playerPosition);
-            var isClosest = distBetweenPlayers < num;
-            if (!isClosest) continue;
-            var vector = playerPosition - refPosition;
-            //if (PhysicsHelpers.AnyNonTriggersBetween(
-            //   refPosition, vector.normalized, vector.magnitude, Constants.ShipAndObjectsMask)) continue;
-            num = distBetweenPlayers;
-            result = player;
-        }
-
-        return result;
     }
 
     private static void morphlingAndCamouflagerUpdate()
@@ -342,99 +168,6 @@ public static class PlayerControlFixedUpdatePatch
         mushroomSaboWasActive = false;
     }
 
-    public static void lawyerUpdate()
-    {
-        if (Lawyer.lawyer == null || Lawyer.lawyer != PlayerControl.LocalPlayer) return;
-
-        // Promote to Pursuer
-        if (Lawyer.target != null && Lawyer.target.Data.Disconnected && !Lawyer.lawyer.Data.IsDead)
-        {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            Lawyer.PromotesToPursuer();
-        }
-    }
-
-    public static void executionerUpdate()
-    {
-        if (Executioner.executioner == null || Executioner.executioner != PlayerControl.LocalPlayer) return;
-
-        // Promote to Pursuer
-        if (Executioner.target != null && Executioner.target.Data.Disconnected && !Executioner.executioner.Data.IsDead)
-        {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            Executioner.PromotesRole();
-        }
-    }
-
-    public static void hackerUpdate()
-    {
-        if (Hacker.hacker == null || PlayerControl.LocalPlayer != Hacker.hacker ||
-            Hacker.hacker.Data.IsDead) return;
-        var (playerCompleted, _) = TasksHandler.taskInfo(Hacker.hacker.Data);
-        if (playerCompleted == Hacker.rechargedTasks)
-        {
-            Hacker.rechargedTasks += Hacker.rechargeTasksNumber;
-            if (Hacker.toolsNumber > Hacker.chargesVitals) Hacker.chargesVitals++;
-            if (Hacker.toolsNumber > Hacker.chargesAdminTable) Hacker.chargesAdminTable++;
-        }
-    }
-
-    // For swapper swap charges        
-    public static void swapperUpdate()
-    {
-        if (Swapper.swapper == null || PlayerControl.LocalPlayer != Swapper.swapper ||
-            PlayerControl.LocalPlayer.Data.IsDead) return;
-        var (playerCompleted, _) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
-        if (playerCompleted == Swapper.rechargedTasks)
-        {
-            Swapper.rechargedTasks += Swapper.rechargeTasksNumber;
-            Swapper.charges++;
-        }
-    }
-
-
-    public static void trapperUpdate()
-    {
-        if (Trapper.trapper.IsDead() || PlayerControl.LocalPlayer != Trapper.trapper) return;
-        var (playerCompleted, _) = TasksHandler.taskInfo(Trapper.trapper.Data);
-        if (playerCompleted == Trapper.rechargedTasks)
-        {
-            Trapper.rechargedTasks += Trapper.rechargeTasksNumber;
-            if (Trapper.maxCharges > Trapper.charges) Trapper.charges++;
-        }
-    }
-
-    public static void akujoUpdate()
-    {
-        if (Akujo.akujo.IsDead() || PlayerControl.LocalPlayer != Akujo.akujo) return;
-        Akujo.timeLeft = (int)Math.Ceiling(Akujo.timeLimit - (DateTime.UtcNow - Akujo.startTime).TotalSeconds);
-        if (Akujo.timeLeft > 0)
-        {
-            if (Akujo.honmei == null)
-            {
-                if (HudManagerStartPatch.akujoHonmeiButton.ButtonTitle != null)
-                {
-                    HudManagerStartPatch.akujoHonmeiButton.ButtonTitle.text = TimeSpan.FromSeconds(Akujo.timeLeft).ToString(@"mm\:ss");
-                }
-            }
-            else HudManagerStartPatch.akujoHonmeiButton.ButtonTitle.enabled = false;
-        }
-        else if (Akujo.timeLeft <= 0)
-        {
-            if (Akujo.honmei == null || (Akujo.keeps?.Count < 1 && Akujo.forceKeeps))
-            {
-                var writer = StartRPC(CustomRPC.AkujoSuicide);
-                writer.Write(Akujo.akujo.PlayerId);
-                writer.EndRPC();
-                RPCProcedure.akujoSuicide(Akujo.akujo.PlayerId);
-            }
-        }
-    }
-
     public static void Postfix(PlayerControl __instance)
     {
         if (!InGame || IsHideNSeek) return;
@@ -449,38 +182,13 @@ public static class PlayerControlFixedUpdatePatch
             refreshRoleDescription(__instance);
 
             //Update pet visibility
-            setPetVisibility();
+            setPetVisibility(__instance);
 
             if (!InGame) return;
 
-            // undertaker
-            undertakerDragBodyUpdate();
-            // Jester
-            jesterDragBodyUpdate();
-            // Amnisiac
-            amnisiacUpdate();
-            // Vulture
-            vultureUpdate();
-            // Radar
-            radarUpdate();
             // Morphling and Camouflager
             morphlingAndCamouflagerUpdate();
-            // Lawyer
-            lawyerUpdate();
-            // Executioner
-            executionerUpdate();
-            // PartTimer
-            partTimerUpdate();
-            //Balancer
-            Balancer.FixedUpdate();
 
-            swapperUpdate();
-            // Hacker
-            hackerUpdate();
-            // Trapper
-            trapperUpdate();
-            // Akojo
-            akujoUpdate();
             // Chameleon (invis stuff, timers)
             Chameleon.update();
         }

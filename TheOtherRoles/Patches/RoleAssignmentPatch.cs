@@ -67,10 +67,9 @@ internal class RoleManagerSelectRolesPatch
     public static RoleAssignmentData getRoleAssignmentData()
     {
         // Get the players that we want to assign the roles to. Crewmate and Neutral roles are assigned to natural crewmates. Impostor roles to impostors.
-        var crewmates = PlayerControl.AllPlayerControls.ToList().OrderBy(x => Guid.NewGuid()).ToList();
-        crewmates.RemoveAll(x => x.Data.Role.IsImpostor);
-        var impostors = PlayerControl.AllPlayerControls.ToList().OrderBy(x => Guid.NewGuid()).ToList();
-        impostors.RemoveAll(x => !x.Data.Role.IsImpostor);
+        var allPlayers = PlayerControl.AllPlayerControls.ToArray();
+        var crewmates = allPlayers.Where(x => !x.Data.Role.IsImpostor).ToList().Shuffle();
+        var impostors = allPlayers.Where(x => x.Data.Role.IsImpostor).ToList().Shuffle();
 
         var neutralMin = CustomOptionHolder.neutralRolesCountMin.GetSelection();
         var neutralMax = CustomOptionHolder.neutralRolesCountMax.GetSelection();
@@ -198,6 +197,11 @@ internal class RoleManagerSelectRolesPatch
             crewSettings.Add((byte)RoleId.Spy, CustomOptionHolder.spySpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.SecurityGuard, CustomOptionHolder.securityGuardSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Jumper, CustomOptionHolder.jumperSpawnRate.GetSelection());
+
+        impSettings = impSettings.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
+        neutralSettings = neutralSettings.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
+        killerNeutralSettings = killerNeutralSettings.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
+        crewSettings = crewSettings.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
 
         Message("----------------------------------------------");
         Message($"impostors {impostors.Count}");
@@ -347,7 +351,7 @@ internal class RoleManagerSelectRolesPatch
         var isSheriff = !sheriffFlag;
 
         // --- Simulate Crew & Imp ticket system ---
-        while (crew > 0 && !isSheriff /* || (!isEvilGuesser && !isGuesser)*/)
+        while (crew > 0 && !isSheriff)
         {
             if (!isSheriff && rnd.Next(crewValues) < CustomOptionHolder.sheriffSpawnRate.GetSelection())
                 isSheriff = true;
@@ -356,8 +360,7 @@ internal class RoleManagerSelectRolesPatch
         }
 
         // --- Assign Main Roles if they won the lottery ---
-        if (isSheriff && Sheriff.Player == null && data.crewmates.Count > 0 && data.maxCrewmateRoles > 0 &&
-            sheriffFlag)
+        if (isSheriff && Sheriff.Player == null && data.crewmates.Count > 0 && data.maxCrewmateRoles > 0 && sheriffFlag)
         {
             // Set Sheriff cause he won the lottery
             var sheriff = setRoleToRandomPlayer((byte)RoleId.Sheriff, data.crewmates);
@@ -377,8 +380,7 @@ internal class RoleManagerSelectRolesPatch
                 data.crewmates.ToList().RemoveAll(x => x.PlayerId == deputy);
                 data.maxCrewmateRoles--;
             }
-            else if (CustomOptionHolder.deputySpawnRate.GetSelection() <
-                     10) // Dont force, add Deputy to the ticket system
+            else if (CustomOptionHolder.deputySpawnRate.GetSelection() < 10) // Dont force, add Deputy to the ticket system
             {
                 data.crewSettings.Add((byte)RoleId.Deputy, CustomOptionHolder.deputySpawnRate.GetSelection());
             }
@@ -463,7 +465,7 @@ internal class RoleManagerSelectRolesPatch
             var possibleTargets = new List<PlayerControl>();
             // Lawyer
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
-                if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 &&
+                if (p.IsAlive() && p != Lovers.lover1 && p != Lovers.lover2 &&
                     (p.Data.Role.IsImpostor || p == Swooper.swooper || Jackal.jackal.Any(x => x == p) || p == Juggernaut.juggernaut ||
                      p == Werewolf.werewolf || (Lawyer.targetCanBeJester && p == Jester.jester)))
                     possibleTargets.Add(p);
@@ -650,12 +652,11 @@ internal class RoleManagerSelectRolesPatch
 
     public static void assignGuesserGamemode()
     {
-        var impPlayer = PlayerControl.AllPlayerControls.ToArray().OrderBy(x => Guid.NewGuid()).ToList();
-        var neutralPlayer = PlayerControl.AllPlayerControls.ToArray().OrderBy(x => Guid.NewGuid()).ToList();
-        var crewPlayer = PlayerControl.AllPlayerControls.ToArray().OrderBy(x => Guid.NewGuid()).ToList();
-        impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
-        neutralPlayer.RemoveAll(x => !x.IsNeutral() || x == Akujo.akujo || x == Doomsayer.doomsayer);
-        crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.IsNeutral());
+        var allPlayer = PlayerControl.AllPlayerControls.ToArray();
+        var impPlayer = allPlayer.Where(x => x.Data.Role.IsImpostor).ToList().Shuffle();
+        var neutralPlayer = allPlayer.Where(x => x.IsNeutral() && x != Akujo.akujo && x != Doomsayer.doomsayer).ToList().Shuffle();
+        var crewPlayer = allPlayer.Where(x => !x.Data.Role.IsImpostor && !x.IsNeutral()).ToList().Shuffle();
+
         assignGuesserGamemodeToPlayers(crewPlayer,
             GuesserGM.guesserGamemodeCrewNumber.GetInt());
         assignGuesserGamemodeToPlayers(neutralPlayer,
