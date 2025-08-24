@@ -140,12 +140,7 @@ public class CustomOption
     public static void saveVanillaOptions()
     {
         VanillaSettings.Value =
-            Convert.ToBase64String(
-#if MXYX_CLUB
-                GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameManager.Instance.LogicOptions.currentGameOptions));
-#else
-            GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameManager.Instance.LogicOptions.currentGameOptions, false));
-#endif
+            Convert.ToBase64String(GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameManager.Instance.LogicOptions.currentGameOptions));
     }
 
     public static void loadVanillaOptions()

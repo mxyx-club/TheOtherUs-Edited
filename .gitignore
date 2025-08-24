@@ -358,9 +358,9 @@ Among Us/*/*
 TheOtherRoles/obj
 TheOtherRoles/bin
 TheOtherRoles/Properties/
+TheOtherRoles/packages.lock.json
 
 .idea/
 .vs/
 .vscode/
 packages.lock.json
-/TheOtherRoles/CustomCosmetics/CosmeticsManager.cs

@@ -578,12 +578,7 @@ public static class ChatControllerPatch
                         GameOptionsManager.Instance.currentNormalGameOptions.MaxPlayers = LobbyLimit;
                         FastDestroyableSingleton<GameStartManager>.Instance.LastPlayerCount = LobbyLimit;
                         // TODO Maybe simpler?? 
-                        PlayerControl.LocalPlayer.RpcSyncSettings(
-#if MXYX_CLUB
-                            GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameOptionsManager.Instance.currentGameOptions));
-#else
-                            GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameOptionsManager.Instance.currentGameOptions, false));
-#endif
+                        PlayerControl.LocalPlayer.RpcSyncSettings(GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameOptionsManager.Instance.currentGameOptions));
                         chat.AddChat(PlayerControl.LocalPlayer, $"Lobby Size changed to {LobbyLimit} players");
                     }
                     else

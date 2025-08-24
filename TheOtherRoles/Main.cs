@@ -89,7 +89,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
         UpdateRegions();
         CrowdedPlayer.Start();
         Harmony.PatchAll();
-        CosmeticsManager.Load();
+        CustomColors.Load();
         CustomOptionHolder.Load();
         ModInputManager.Load();
         if (ToggleCursor.Value) enableCursor(true);
