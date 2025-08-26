@@ -1152,6 +1152,9 @@
     "marionetteShowDecoy3": {
         "13": "全部玩家可见"
     },
+    "marionetteMonitoringCanMove": {
+        "13": "监视木偶时玩家还可以移动"
+    },
     "tricksterPlaceBoxCooldown": {
         "0": "Trickster Box Cooldown",
         "13": "放置惊吓盒冷却"

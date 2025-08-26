@@ -212,15 +212,15 @@ internal static class HudManagerStartPatch
         bandLeaderDrummerButton.MaxTimer = 0f;
         bandLeaderKillButton.MaxTimer = BandLeader.killCooldown;
         schrodingersCatKillButton.MaxTimer = SchrodingersCat.Cooldown;
-        gunsmithAddBullets.MaxTimer = 0;
-        gunsmithGetBullets.MaxTimer = 0;
+        gunsmithAddBullets.MaxTimer = 0f;
+        gunsmithGetBullets.MaxTimer = 0f;
         berserkerKillButton.MaxTimer = Berserker.KillCooldown;
         poltergeistButton.MaxTimer = Poltergeist.cooldown;
         InfectedKillButton.MaxTimer = Infected.cooldown;
         jailorButton.MaxTimer = Jailor.cooldown;
         marionettePlaceButton.MaxTimer = Marionette.PlaceCooldown;
         marionetteButton.MaxTimer = Marionette.SwapCooldown;
-        marionetteCameraButton.MaxTimer = 0;
+        marionetteCameraButton.MaxTimer = 0f;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
@@ -4630,7 +4630,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                marionetteButton.Timer = 10f;
+                marionetteButton.Timer = marionetteButton.MaxTimer;
                 if (!Decoy.DecoyPermanent) Marionette.SetMarionetteMode(0);
             },
             Marionette.decoyButtonSprite,
@@ -4644,8 +4644,17 @@ internal static class HudManagerStartPatch
         marionetteCameraButton = new(
             () =>
             {
-                if (HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer) HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
-                else HudManager.Instance.PlayerCam.SetTargetWithLight(Marionette.decoy.behaviour);
+                if (HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer)
+                {
+                    HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                    if (!Marionette.MonitoringCanMove) PlayerControl.LocalPlayer.moveable = true;
+                }
+                else
+                {
+                    HudManager.Instance.PlayerCam.SetTargetWithLight(Marionette.decoy.behaviour);
+                    PlayerControl.LocalPlayer.NetTransform.Halt();
+                    if (!Marionette.MonitoringCanMove) PlayerControl.LocalPlayer.moveable = false;
+                }
             },
             () =>
             {
@@ -4664,7 +4673,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                marionetteButton.Timer = marionetteButton.MaxTimer;
+                marionetteCameraButton.Timer = 0f;
             },
             Marionette.monitorButtonSprite,
             __instance,

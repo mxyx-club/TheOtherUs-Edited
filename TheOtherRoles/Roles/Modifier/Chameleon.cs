@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Roles.Modifier;
+namespace TheOtherRoles.Roles.Modifier;
 
 public static class Chameleon
 {
@@ -6,11 +6,11 @@ public static class Chameleon
     public static float minVisibility = 0.2f;
     public static float holdDuration = 1f;
     public static float fadeDuration = 0.5f;
-    public static Dictionary<byte, float> lastMoved;
+    public static Dictionary<byte, float> lastMoved = new();
 
     public static void clearAndReload()
     {
-        chameleon.Clear();
+        chameleon = new();
         lastMoved = new();
         holdDuration = CustomOptionHolder.modifierChameleonHoldDuration.GetFloat();
         fadeDuration = CustomOptionHolder.modifierChameleonFadeDuration.GetFloat();
@@ -38,20 +38,22 @@ public static class Chameleon
 
     public static void update()
     {
-        foreach (var chameleonPlayer in chameleon)
+        foreach (var player in chameleon)
         {
-            if ((chameleonPlayer == Ninja.ninja && Ninja.isInvisable) ||
-                (chameleonPlayer == Swooper.swooper && Swooper.isInvisable) ||
-                (Jackal.jackal.Any(x => x == chameleonPlayer) && Jackal.isInvisable)) continue; // Dont make Ninja visible...
+            if (player?.Data == null) continue;
+            if ((player == Ninja.ninja && Ninja.isInvisable) ||
+                (player == Swooper.swooper && Swooper.isInvisable) ||
+                (Jackal.jackal.Any(x => x == player) && Jackal.isInvisable))
+                continue; // Dont make Ninja visible...
             // check movement by animation
-            var playerPhysics = chameleonPlayer.MyPhysics;
+            var playerPhysics = player.MyPhysics;
+            if (playerPhysics) continue;
             var currentPhysicsAnim = playerPhysics.Animations.Animator.GetCurrentAnimation();
-            if (currentPhysicsAnim != playerPhysics.Animations.group.IdleAnim)
-                lastMoved[chameleonPlayer.PlayerId] = Time.time;
+            if (currentPhysicsAnim != playerPhysics.Animations.group.IdleAnim) lastMoved[player.PlayerId] = Time.time;
             // calculate and set visibility
-            var visibility = Chameleon.visibility(chameleonPlayer.PlayerId);
+            var visibility = Chameleon.visibility(player.PlayerId);
             var petVisibility = visibility;
-            if (chameleonPlayer.Data.IsDead)
+            if (player.Data.IsDead)
             {
                 visibility = 0.5f;
                 petVisibility = 1f;
@@ -60,19 +62,19 @@ public static class Chameleon
             try
             {
                 // Sometimes renderers are missing for weird reasons. Try catch to avoid exceptions
-                chameleonPlayer.cosmetics.currentBodySprite.BodySprite.color =
-                    chameleonPlayer.cosmetics.currentBodySprite.BodySprite.color.SetAlpha(visibility);
+                player.cosmetics.currentBodySprite.BodySprite.color =
+                    player.cosmetics.currentBodySprite.BodySprite.color.SetAlpha(visibility);
                 if (DataManager.Settings.Accessibility.ColorBlindMode)
-                    chameleonPlayer.cosmetics.colorBlindText.color =
-                        chameleonPlayer.cosmetics.colorBlindText.color.SetAlpha(visibility);
-                chameleonPlayer.SetHatAndVisorAlpha(visibility);
-                chameleonPlayer.cosmetics.skin.layer.color =
-                    chameleonPlayer.cosmetics.skin.layer.color.SetAlpha(visibility);
-                chameleonPlayer.cosmetics.nameText.color =
-                    chameleonPlayer.cosmetics.nameText.color.SetAlpha(visibility);
-                foreach (var rend in chameleonPlayer.cosmetics.currentPet.renderers)
+                    player.cosmetics.colorBlindText.color =
+                        player.cosmetics.colorBlindText.color.SetAlpha(visibility);
+                player.SetHatAndVisorAlpha(visibility);
+                player.cosmetics.skin.layer.color =
+                    player.cosmetics.skin.layer.color.SetAlpha(visibility);
+                player.cosmetics.nameText.color =
+                    player.cosmetics.nameText.color.SetAlpha(visibility);
+                foreach (var rend in player.cosmetics.currentPet.renderers)
                     rend.color = rend.color.SetAlpha(petVisibility);
-                foreach (var shadowRend in chameleonPlayer.cosmetics.currentPet.shadows)
+                foreach (var shadowRend in player.cosmetics.currentPet.shadows)
                     shadowRend.color = shadowRend.color.SetAlpha(petVisibility);
             }
             catch { }

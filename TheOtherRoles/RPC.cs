@@ -749,14 +749,6 @@ public static class RPCProcedure
         GameOptionsManager.Instance.currentNormalGameOptions.MapId = mapId;
     }
 
-    public static void setCrewmate(PlayerControl player)
-    {
-        FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
-        if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
-            PlayerControl.LocalPlayer.moveable = true;
-    }
-
-
     public static void setGameStarting()
     {
         GameStartManagerPatch.GameStartManagerUpdatePatch.startingTimer = 5f;

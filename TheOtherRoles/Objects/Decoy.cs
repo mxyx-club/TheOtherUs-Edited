@@ -34,7 +34,7 @@ public class Decoy
         gameObject.SetActive(false);
         gameObject.transform.position = pos;
         renderer.sprite = decoySprite;
-        renderer.color = Color.white * new Vector4(1, 1, 1, 0.5f);
+        renderer.color = Color.white * new Vector4(1, 1, 1, 0.66f);
         placedTime = DateTime.Now;
         elapsedTime = 0f;
         Decoys.Add(this);
@@ -50,6 +50,13 @@ public class Decoy
 
     public void Destroy()
     {
+        if (player.AmOwner && !Marionette.MonitoringCanMove)
+        {
+            if (HudManager.Instance.PlayerCam == behaviour)
+            {
+                player.moveable = true;
+            }
+        }
         behaviour?.Destroy();
         renderer?.Destroy();
         gameObject?.Destroy();
@@ -80,11 +87,6 @@ public class Decoy
             return;
         }
 
-        if (!Active && (DateTime.Now - placedTime).TotalSeconds >= 5f)
-        {
-            Active = true;
-        }
-
         var canSee = PlayerControl.LocalPlayer == Marionette.Player || CanSeeGhostInfo
                   || (Active && ((Marionette.ShowDecoy == 2 && PlayerControl.LocalPlayer.IsImpostor())
                                || Marionette.ShowDecoy == 3));
@@ -101,8 +103,7 @@ public class Decoy
         DecoyDelayedDisplay = CustomOptionHolder.marionetteDecoyDelayedDisplay.GetFloat();
 
         maxId = 0;
-        var list = Decoys;
-        foreach (var x in list)
+        foreach (var x in Decoys.ToArray())
         {
             x?.Destroy();
         }
@@ -111,8 +112,7 @@ public class Decoy
 
     public static void UpdateAll()
     {
-        var list = Decoys;
-        foreach (var x in list)
+        foreach (var x in Decoys.ToArray())
         {
             x?.Update();
         }

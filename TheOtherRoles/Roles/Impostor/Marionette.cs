@@ -18,6 +18,7 @@ public class Marionette
     public static float PlaceCooldown;
     public static float SwapCooldown;
     public static int ShowDecoy;
+    public static bool MonitoringCanMove;
 
     public static void SetMarionetteMode(int mode)
     {
@@ -41,5 +42,6 @@ public class Marionette
         PlaceCooldown = CustomOptionHolder.marionettePlaceCooldown.GetFloat();
         SwapCooldown = CustomOptionHolder.marionetteSwapCooldown.GetFloat();
         ShowDecoy = CustomOptionHolder.marionetteShowDecoy.GetQuantity();
+        MonitoringCanMove = CustomOptionHolder.marionetteMonitoringCanMove.GetBool();
     }
 }

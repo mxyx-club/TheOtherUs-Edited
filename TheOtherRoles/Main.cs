@@ -29,7 +29,6 @@ public partial class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> EnableSoundEffects { get; set; }
     public static ConfigEntry<bool> ToggleCursor { get; set; }
     public static ConfigEntry<bool> ShowFPS { get; set; }
-    public static ConfigEntry<bool> LocalHats { get; set; }
     public static ConfigEntry<bool> ShowKeyReminder { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
@@ -79,7 +78,6 @@ public partial class TheOtherRolesPlugin : BasePlugin
         EnableSoundEffects = Config.Bind("Custom", "Enable Sound Effects", true);
         ShowFPS = Config.Bind("Custom", "Show FPS", true);
         ShowKeyReminder = Config.Bind("Custom", "ShowKeyReminder", true);
-        LocalHats = Config.Bind("Custom", "Load Local Hats", false);
         ButtonArrangement = Config.Bind("Custom", "Buttons Arrangement", 3);
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");

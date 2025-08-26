@@ -843,14 +843,11 @@ internal class MeetingHudPatch
 
                     if (Portalmaker.logShowsTime)
                     {
-                        msg.AppendFormat(GetString("Portalmaker.LogEntry"),
-                                      timeBeforeMeeting,
-                                      entry.name);
+                        msg.AppendFormat(GetString("Portalmaker.LogEntry"), timeBeforeMeeting, entry.name);
                     }
                     else
                     {
-                        msg.AppendFormat(GetString("Portalmaker.LogEntryNoTime"),
-                                      entry.name);
+                        msg.AppendFormat(GetString("Portalmaker.LogEntryNoTime"), entry.name);
                     }
                 }
 

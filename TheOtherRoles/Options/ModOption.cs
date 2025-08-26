@@ -13,7 +13,6 @@ internal class ModOption
     public static NormalGameOptionsV07 NormalOptions => GameOptionsManager.Instance.currentNormalGameOptions;
 
     public static bool showFPS => Main.ShowFPS.Value;
-    public static bool localHats => Main.LocalHats.Value;
     public static bool toggleCursor => Main.ToggleCursor.Value;
     public static bool enableSoundEffects => Main.EnableSoundEffects.Value;
     public static bool showKeyReminder => Main.ShowKeyReminder.Value;

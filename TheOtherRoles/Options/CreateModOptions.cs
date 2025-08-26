@@ -84,7 +84,6 @@ public static class StartOptionMenuPatch
     private static ToggleButtonBehaviour ButtonArrangement;
     private static ToggleButtonBehaviour showKeyReminder;
     private static ToggleButtonBehaviour showFPS;
-    private static ToggleButtonBehaviour localHats;
 
     public static void Postfix(OptionsMenuBehaviour __instance)
     {
@@ -178,13 +177,6 @@ public static class StartOptionMenuPatch
         {
             showKeyReminder.UpdateToggleText(!showKeyReminder.onState, GetString("ShowKeyReminder"));
             Main.ShowKeyReminder.Value = showKeyReminder.onState;
-        }, nebulaTab, toggleButtonTemplate);
-
-        //LocalHats
-        localHats = AddButton(buttonIndex++, "LocalHats", () =>
-        {
-            localHats.UpdateToggleText(!localHats.onState, GetString("LocalHatsText"));
-            Main.LocalHats.Value = localHats.onState;
         }, nebulaTab, toggleButtonTemplate);
 
         //キー割り当てボタン
@@ -341,7 +333,6 @@ public static class StartOptionMenuPatch
             ButtonArrangement.UpdateButtonText(GetString($"ButtonArrangement.{Main.ButtonArrangement.Value}"), GetString("ButtonArrangement"), Main.ButtonArrangement.Value != 1);
             showKeyReminder.UpdateToggleText(Main.ShowKeyReminder.Value, GetString("ShowKeyReminder"));
             toggleCursor.UpdateToggleText(Main.ToggleCursor.Value, GetString("ToggleCursorText"));
-            localHats.UpdateToggleText(Main.LocalHats.Value, GetString("LocalHatsText"));
 
             passiveButton.OnMouseOver.Invoke();
         }

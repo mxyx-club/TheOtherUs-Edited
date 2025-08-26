@@ -178,7 +178,7 @@ public class CustomOptionHolder
     public static CustomOption marionetteDecoyDuration;
     public static CustomOption marionetteSwapCooldown;
     public static CustomOption marionetteShowDecoy;
-    public static CustomOption marionetteNoMove;
+    public static CustomOption marionetteMonitoringCanMove;
 
     public static CustomOption tricksterSpawnRate;
     public static CustomOption tricksterPlaceBoxCooldown;
@@ -940,7 +940,7 @@ public class CustomOptionHolder
             isHidden: () => marionetteDecoyPermanent.GetBool());
         marionetteSwapCooldown = Create(101806, Types.Impostor, "marionetteSwapCooldown", 10f, 5f, 45f, 2.5f, marionetteSpawnRate);
         marionetteShowDecoy = Create(101807, Types.Impostor, "marionetteShowDecoy", ["marionetteShowDecoy1", "marionetteShowDecoy2", "marionetteShowDecoy3"], marionetteSpawnRate);
-        marionetteNoMove = Create(101808, Types.Impostor, "marionetteNoMove", true, marionetteSpawnRate);
+        marionetteMonitoringCanMove = Create(101808, Types.Impostor, "marionetteMonitoringCanMove", true, marionetteSpawnRate);
 
         tricksterSpawnRate = Create(102000, Types.Impostor, Cs(Trickster.color, "Trickster"), rates, null, true);
         tricksterPlaceBoxCooldown = Create(102001, Types.Impostor, "tricksterPlaceBoxCooldown", 20f, 2.5f, 30f, 2.5f, tricksterSpawnRate);
