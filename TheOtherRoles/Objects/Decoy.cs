@@ -59,24 +59,35 @@ public class Decoy
 
     public void Update()
     {
-        elapsedTime += Time.deltaTime;
-        if (!DecoyPermanent && elapsedTime >= DecoyDuration)
+        if (!InMeeting)
+        {
+            elapsedTime += Time.deltaTime;
+            if (!DecoyPermanent && elapsedTime >= DecoyDuration)
+            {
+                RPCProcedure.DecoyDestroy(player, Id);
+                return;
+            }
+        }
+
+        if (!DecoyPermanent && InMeeting)
         {
             RPCProcedure.DecoyDestroy(player, Id);
             return;
         }
-
-        if (!DecoyPermanent && InMeeting) { RPCProcedure.DecoyDestroy(player, Id); return; }
-        else if (InMeeting) { gameObject.SetActive(false); return; }
+        else if (InMeeting)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
 
         if (!Active && (DateTime.Now - placedTime).TotalSeconds >= 5f)
         {
             Active = true;
         }
 
-        bool canSee = PlayerControl.LocalPlayer == Marionette.Player || CanSeeGhostInfo
-                 || (Active && ((Marionette.ShowDecoy == 2 && PlayerControl.LocalPlayer.IsImpostor())
-                              || Marionette.ShowDecoy == 3));
+        var canSee = PlayerControl.LocalPlayer == Marionette.Player || CanSeeGhostInfo
+                  || (Active && ((Marionette.ShowDecoy == 2 && PlayerControl.LocalPlayer.IsImpostor())
+                               || Marionette.ShowDecoy == 3));
 
         gameObject.SetActive(canSee);
     }
@@ -93,7 +104,7 @@ public class Decoy
         var list = Decoys;
         foreach (var x in list)
         {
-            x.Destroy();
+            x?.Destroy();
         }
         Decoys = new();
     }
@@ -103,7 +114,7 @@ public class Decoy
         var list = Decoys;
         foreach (var x in list)
         {
-            x.Update();
+            x?.Update();
         }
     }
 }

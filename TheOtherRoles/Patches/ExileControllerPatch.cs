@@ -321,10 +321,9 @@ internal class ExileControllerWrapUpPatch
         // Reset custom button timers where necessary
         CustomButton.OnMeetingEnd();
 
-        if (Decoy.ResetPlaceAfterMeeting)
+        if ((Decoy.ResetPlaceAfterMeeting && Decoy.DecoyPermanent) || !Decoy.DecoyPermanent)
         {
-
-            Marionette.decoy.Destroy();
+            Marionette.decoy?.Destroy();
             Marionette.decoy = null;
         }
 

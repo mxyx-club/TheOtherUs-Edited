@@ -38,7 +38,7 @@ internal class InitializerAttribute<T> : Attribute
         foreach (var type in types)
         {
             // 全メソッドについて
-            var methods = type.GetMethods();
+            var methods = type.GetMethods(BindingFlags.Static);
             foreach (var method in methods)
             {
                 // InitializerAttributeを取得
