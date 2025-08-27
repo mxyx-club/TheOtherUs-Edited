@@ -47,7 +47,7 @@ public static class Chameleon
                 continue; // Dont make Ninja visible...
             // check movement by animation
             var playerPhysics = player.MyPhysics;
-            if (playerPhysics) continue;
+            if (playerPhysics == null) continue;
             var currentPhysicsAnim = playerPhysics.Animations.Animator.GetCurrentAnimation();
             if (currentPhysicsAnim != playerPhysics.Animations.group.IdleAnim) lastMoved[player.PlayerId] = Time.time;
             // calculate and set visibility
