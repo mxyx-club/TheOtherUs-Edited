@@ -1,5 +1,4 @@
 using TheOtherRoles.Mode;
-using TheOtherRoles.Roles.Impostor;
 using static TheOtherRoles.Options.CustomOption;
 using Types = TheOtherRoles.Options.CustomOptionType;
 

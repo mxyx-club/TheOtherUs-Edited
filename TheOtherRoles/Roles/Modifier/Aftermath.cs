@@ -178,8 +178,7 @@ public class Aftermath
             }
             else
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
-                    (byte)CustomRPC.LightsOut, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.LightsOut);
                 writer.EndRPC();
                 lightsOut();
                 SoundEffectsManager.play("lighterLight");

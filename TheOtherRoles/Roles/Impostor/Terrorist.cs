@@ -47,6 +47,5 @@ public static class Terrorist
         defuseDuration = CustomOptionHolder.terroristDefuseDuration.GetFloat();
         bombCooldown = CustomOptionHolder.terroristBombCooldown.GetFloat();
         bombActiveAfter = CustomOptionHolder.terroristBombActiveAfter.GetFloat();
-        Bomb.clearBackgroundSprite();
     }
 }

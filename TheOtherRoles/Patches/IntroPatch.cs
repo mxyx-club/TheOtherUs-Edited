@@ -24,8 +24,7 @@ internal class IntroCutsceneOnDestroyPatch
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
                 var data = p.Data;
-                var player = UObject.Instantiate(__instance.PlayerPrefab,
-                    FastDestroyableSingleton<HudManager>.Instance.transform);
+                var player = UObject.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 playerPrefab = __instance.PlayerPrefab;
                 p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
                 player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
@@ -71,10 +70,9 @@ internal class IntroCutsceneOnDestroyPatch
         if (AmongUsClient.Instance.AmHost)
         {
             var mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
-            var writerS = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.DynamicMapOption, SendOption.Reliable);
+            var writerS = StartRPC(CustomRPC.DynamicMapOption);
             writerS.Write(mapId);
-            AmongUsClient.Instance.FinishRpcImmediately(writerS);
+            writerS.EndRPC();
 
             // First kill
             if (ModOption.shieldFirstKill && ModOption.firstKillName != "")
@@ -82,10 +80,9 @@ internal class IntroCutsceneOnDestroyPatch
                 var target = PlayerControl.AllPlayerControls.ToList().FirstOrDefault(x => x.Data.PlayerName.Equals(ModOption.firstKillName));
                 if (target != null)
                 {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.SetFirstKill, SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.SetFirstKill);
                     writer.Write(target.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                     RPCProcedure.setFirstKill(target.PlayerId);
                 }
             }

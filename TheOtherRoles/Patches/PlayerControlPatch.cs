@@ -13,7 +13,7 @@ public static class PlayerControlFixedUpdatePatch
         IEnumerable<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, float KillDistances = 0f)
     {
         PlayerControl result = null;
-        var num = GameOptionsData.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentNormalGameOptions.KillDistance, 0, 3)]+ KillDistances;
+        var num = GameOptionsData.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentNormalGameOptions.KillDistance, 0, 3)] + KillDistances;
         if (!MapUtilities.CachedShipStatus) return null;
         if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
         if (targetingPlayer.Data.IsDead) return null;
@@ -115,10 +115,9 @@ public static class PlayerControlFixedUpdatePatch
 
         if (isCamoComms && !isActiveCamoComms)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.CamouflagerCamouflage, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.CamouflagerCamouflage);
             writer.Write(0);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             RPCProcedure.camouflagerCamouflage(0);
         }
 
@@ -521,17 +520,15 @@ public static class MurderPlayerPatch
         // Pursuer promotion trigger on murder (the host sends the call such that everyone recieves the update before a possible game End)
         if (target == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
+            writer.EndRPC();
             Lawyer.PromotesToPursuer();
         }
 
         if (target == Executioner.target && AmongUsClient.Instance.AmHost && Executioner.executioner != null)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            var writer = StartRPC(CustomRPC.ExecutionerPromotesRole);
+            writer.EndRPC();
             Executioner.PromotesRole();
         }
 
@@ -664,9 +661,8 @@ public static class MurderPlayerPatch
             if (!EvilTrapper.isTrapKill)
             {
                 MessageWriter writer;
-                writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.ClearTrap, SendOption.Reliable, -1);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer = StartRPC(CustomRPC.ClearTrap);
+                writer.EndRPC();
                 RPCProcedure.clearTrap();
             }
             EvilTrapper.isTrapKill = false;

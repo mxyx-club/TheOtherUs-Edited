@@ -79,10 +79,9 @@ internal class ExileControllerBeginPatch
         if (Medic.medic != null && AmongUsClient.Instance.AmHost && Medic.futureShielded != null && !Medic.medic.Data.IsDead)
         {
             // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.MedicSetShielded, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.MedicSetShielded);
             writer.Write(Medic.futureShielded.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             RPCProcedure.medicSetShielded(Medic.futureShielded.PlayerId);
         }
 
@@ -283,9 +282,8 @@ internal class ExileControllerWrapUpPatch
         }
         else if (Executioner.executioner != null && Executioner.executioner == PlayerControl.LocalPlayer && Executioner.target.IsDead())
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            var writer = StartRPC(CustomRPC.ExecutionerPromotesRole);
+            writer.EndRPC();
             Executioner.PromotesRole();
         }
         if (Witness.target != null)
@@ -376,9 +374,8 @@ internal class ExileControllerWrapUpPatch
         if (Blackmailer.Player != null && Blackmailer.blackmailed != null)
         {
             // Blackmailer reset blackmailed
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.UnblackmailPlayer, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            var writer = StartRPC(CustomRPC.UnblackmailPlayer);
+            writer.EndRPC();
             RPCProcedure.unblackmailPlayer();
         }
 

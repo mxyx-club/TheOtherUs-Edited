@@ -563,9 +563,8 @@ internal static class HudManagerStartPatch
         veteranAlertButton = new CustomButton(
             () =>
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.VeteranAlert, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var writer = StartRPC(CustomRPC.VeteranAlert);
+                writer.EndRPC();
                 RPCProcedure.veteranAlert();
             },
             () =>
@@ -598,11 +597,9 @@ internal static class HudManagerStartPatch
 
                 medicShieldButton.Timer = 0f;
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    Medic.setShieldAfterMeeting ? (byte)CustomRPC.SetFutureShielded : (byte)CustomRPC.MedicSetShielded,
-                    SendOption.Reliable);
+                var writer = StartRPC(Medic.setShieldAfterMeeting ? CustomRPC.SetFutureShielded : CustomRPC.MedicSetShielded);
                 writer.Write(Medic.currentTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 if (Medic.setShieldAfterMeeting)
                     RPCProcedure.setFutureShielded(Medic.currentTarget.PlayerId);
                 else
@@ -671,12 +668,11 @@ internal static class HudManagerStartPatch
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"{msg}");
 
                 // Ghost Info
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.ShareGhostInfo);
                 writer.Write(Doomsayer.doomsayer.PlayerId);
                 writer.Write((byte)RPCProcedure.GhostInfoTypes.GhostChat);
                 writer.Write(msg);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
             },
             buttonText: GetString("doomsayerText")
         );
@@ -718,11 +714,10 @@ internal static class HudManagerStartPatch
             {
                 if (CheckUseAbility(PlayerControl.LocalPlayer, Akujo.currentTarget)) return;
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.AkujoSetKeep, SendOption.Reliable, -1);
+                var writer = StartRPC(CustomRPC.AkujoSetKeep);
                 writer.Write(Akujo.akujo.PlayerId);
                 writer.Write(Akujo.currentTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.akujoSetKeep(PlayerControl.LocalPlayer.PlayerId, Akujo.currentTarget.PlayerId);
             },
             () =>
@@ -774,10 +769,9 @@ internal static class HudManagerStartPatch
             {
                 if (CheckUseAbility(PlayerControl.LocalPlayer, Shifter.currentTarget)) return;
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.SetFutureShifted, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.SetFutureShifted);
                 writer.Write(Shifter.currentTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.setFutureShifted(Shifter.currentTarget.PlayerId);
                 SoundEffectsManager.play("shifterShift");
             },
@@ -924,11 +918,9 @@ internal static class HudManagerStartPatch
                 if (Morphling.sampledTarget != null)
                 {
                     if (CheckUseAbility(PlayerControl.LocalPlayer, Morphling.currentTarget)) return;
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.MorphlingMorph,
-                        SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.MorphlingMorph);
                     writer.Write(Morphling.sampledTarget.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                     RPCProcedure.morphlingMorph(Morphling.sampledTarget.PlayerId);
                     Morphling.sampledTarget = null;
                     morphlingButton.EffectDuration = Morphling.duration;
@@ -994,10 +986,9 @@ internal static class HudManagerStartPatch
         camouflagerButton = new CustomButton(
             () =>
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.CamouflagerCamouflage, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.CamouflagerCamouflage);
                 writer.Write(1);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.camouflagerCamouflage(1);
                 SoundEffectsManager.play("morphlingMorph");
             },
@@ -1230,10 +1221,9 @@ internal static class HudManagerStartPatch
             {
                 if (CheckUseAbility(PlayerControl.LocalPlayer, Tracker.currentTarget)) return;
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.TrackerUsedTracker, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.TrackerUsedTracker);
                 writer.Write(Tracker.currentTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.trackerUsedTracker(Tracker.currentTarget.PlayerId);
                 SoundEffectsManager.play("trackerTrackPlayer");
             },
@@ -1299,10 +1289,9 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (CheckUseAbility(PlayerControl.LocalPlayer, BodyGuard.currentTarget)) return;
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.BodyGuardGuardPlayer, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.BodyGuardGuardPlayer);
                 writer.Write(BodyGuard.currentTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.bodyGuardGuardPlayer(BodyGuard.currentTarget.PlayerId);
                 // SoundEffectsManager.play("trackerTrackPlayer");
             },
@@ -1471,9 +1460,9 @@ internal static class HudManagerStartPatch
                     if (CheckUseAbility(PlayerControl.LocalPlayer, Prophet.currentTarget)) return;
                     if (Prophet.currentTarget != null)
                     {
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ProphetExamine, SendOption.Reliable, -1);
+                        var writer = StartRPC(CustomRPC.ProphetExamine);
                         writer.Write(Prophet.currentTarget.PlayerId);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        writer.EndRPC();
                         RPCProcedure.prophetExamine(Prophet.currentTarget.PlayerId);
                         prophetButton.Timer = prophetButton.MaxTimer;
                     }
@@ -1549,11 +1538,10 @@ internal static class HudManagerStartPatch
                 if (!PlayerControl.LocalPlayer.Data.IsDead)
                 {
                     // Ghosts can portal too, but non-blocking and only with a local animation
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UsePortal, SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.UsePortal);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
                     writer.Write(portalMakerSoloTeleport ? (byte)1 : (byte)0);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                 }
 
                 RPCProcedure.usePortal(PlayerControl.LocalPlayer.PlayerId, portalMakerSoloTeleport ? (byte)1 : (byte)0);
@@ -1611,11 +1599,10 @@ internal static class HudManagerStartPatch
                 if (!PlayerControl.LocalPlayer.Data.IsDead)
                 {
                     // Ghosts can portal too, but non-blocking and only with a local animation
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UsePortal, SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.UsePortal);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
                     writer.Write((byte)2);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                 }
 
                 RPCProcedure.usePortal(PlayerControl.LocalPlayer.PlayerId, 2);
@@ -1946,23 +1933,18 @@ internal static class HudManagerStartPatch
                 /* On Use */
                 minerMineButton.Timer = minerMineButton.MaxTimer;
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.Mine, SendOption.Reliable);
                 var pos = PlayerControl.LocalPlayer.transform.position;
                 var buff = new byte[sizeof(float) * 2];
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
-
                 var id = getAvailableId();
+
+                var writer = StartRPC(CustomRPC.Mine);
                 writer.Write(id);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
-
-
                 writer.WriteBytesAndSize(buff);
-
-
                 writer.Write(0.01f);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.Mine(id, buff, 0.01f);
             },
             () =>
@@ -1998,11 +1980,10 @@ internal static class HudManagerStartPatch
             {
                 /* On Use */
                 if (CheckUseAbility(PlayerControl.LocalPlayer, Bomber.currentTarget)) return;
-                var bombWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.GiveBomb, SendOption.Reliable);
+                var bombWriter = StartRPC(CustomRPC.GiveBomb);
                 bombWriter.Write(Bomber.currentTarget.PlayerId);
                 bombWriter.Write(false);
-                AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
+                bombWriter.EndRPC();
                 RPCProcedure.giveBomb(Bomber.currentTarget.PlayerId);
                 if (Bomber.triggerBothCooldowns)
                 {
@@ -2106,10 +2087,9 @@ internal static class HudManagerStartPatch
             () =>
             {
                 /* On Use */
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.GrenadierFlash, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.GrenadierFlash);
                 writer.Write(false);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.grenadierFlash(false);
             },
             () =>
@@ -2312,10 +2292,9 @@ internal static class HudManagerStartPatch
                 eraserButton.MaxTimer += 10;
                 eraserButton.Timer = eraserButton.MaxTimer;
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.SetFutureErased, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.SetFutureErased);
                 writer.Write(Eraser.currentTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.setFutureErased(Eraser.currentTarget.PlayerId);
                 SoundEffectsManager.play("eraserErase");
             },
@@ -2414,9 +2393,8 @@ internal static class HudManagerStartPatch
         lightsOutButton = new CustomButton(
             () =>
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.LightsOut, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var writer = StartRPC(CustomRPC.LightsOut);
+                writer.EndRPC();
                 RPCProcedure.lightsOut();
                 SoundEffectsManager.play("lighterLight");
             },
@@ -2983,12 +2961,10 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
-                var writer = AmongUsClient.Instance.StartRpcImmediately(
-                    PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.CleanBody,
-                    SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.CleanBody);
                 writer.Write(db.ParentId);
                 writer.Write(Vulture.vulture.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.cleanBody(db.ParentId, Vulture.vulture.PlayerId);
 
                 Vulture.cooldown = vultureEatButton.Timer = vultureEatButton.MaxTimer;
@@ -3141,12 +3117,11 @@ internal static class HudManagerStartPatch
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msg);
 
                 // Ghost Info
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.ShareGhostInfo);
                 writer.Write(Medium.target.Player.PlayerId);
                 writer.Write((byte)RPCProcedure.GhostInfoTypes.GhostChat);
                 writer.Write(msg);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
 
                 // Remove soul
                 if (Medium.oneTimeUse)
@@ -3200,11 +3175,10 @@ internal static class HudManagerStartPatch
                 if (Pursuer.target != null)
                 {
                     if (CheckUseAbility(PlayerControl.LocalPlayer, Pursuer.target)) return;
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetBlanked, SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.SetBlanked);
                     writer.Write(Pursuer.target.PlayerId);
                     writer.Write(true);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                     RPCProcedure.SetBlanked(Pursuer.target.PlayerId, true);
 
                     Pursuer.target = null;
@@ -3239,9 +3213,8 @@ internal static class HudManagerStartPatch
         survivorVestButton = new CustomButton(
             () =>
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.SurvivorVestActive, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var writer = StartRPC(CustomRPC.SurvivorVestActive);
+                writer.EndRPC();
                 RPCProcedure.survivorVestActive();
                 Survivor.vestUsed++;
             },
@@ -3278,11 +3251,10 @@ internal static class HudManagerStartPatch
                 if (Survivor.target != null)
                 {
                     if (CheckUseAbility(PlayerControl.LocalPlayer, Survivor.target)) return;
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(
-                        PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetBlanked, SendOption.Reliable);
+                    var writer = StartRPC(CustomRPC.SetBlanked);
                     writer.Write(Survivor.target.PlayerId);
                     writer.Write(true);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                     RPCProcedure.SetBlanked(Survivor.target.PlayerId, true);
 
                     Survivor.target = null;

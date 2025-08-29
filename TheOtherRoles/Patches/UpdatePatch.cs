@@ -986,9 +986,8 @@ internal class HudManagerUpdatePatch
         // Promote to Pursuer
         if (Lawyer.target != null && Lawyer.target.Data.Disconnected && !Lawyer.lawyer.Data.IsDead)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
+            writer.EndRPC();
             Lawyer.PromotesToPursuer();
         }
     }
@@ -1000,9 +999,8 @@ internal class HudManagerUpdatePatch
         // Promote to Pursuer
         if (Executioner.target != null && Executioner.target.Data.Disconnected && !Executioner.executioner.Data.IsDead)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            var writer = StartRPC(CustomRPC.ExecutionerPromotesRole);
+            writer.EndRPC();
             Executioner.PromotesRole();
         }
     }

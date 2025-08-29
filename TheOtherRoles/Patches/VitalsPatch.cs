@@ -23,10 +23,9 @@ public class VitalsPatch
         if (ModOption.restrictDevices > 0 && ModOption.restrictVitalsTime > 0f &&
             PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer != Hacker.hacker)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.UseVitalsTime, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.UseVitalsTime);
             writer.Write(vitalsTimer);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             RPCProcedure.useVitalsTime(vitalsTimer);
         }
 

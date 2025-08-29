@@ -39,11 +39,11 @@ public static class Akujo
         return null;
     }
 
-    public static void breakLovers(PlayerControl lover)
+    public static void breakLovers(PlayerControl target)
     {
-        if ((Lovers.lover1 != null && lover == Lovers.lover1) || (Lovers.lover2 != null && lover == Lovers.lover2))
+        if (Lovers.isLover(target))
         {
-            PlayerControl otherLover = Lovers.otherLover(lover);
+            var otherLover = Lovers.otherLover(target);
             if (otherLover != null)
             {
                 Lovers.clearAndReload();

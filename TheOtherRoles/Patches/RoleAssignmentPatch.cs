@@ -472,18 +472,16 @@ internal class RoleManagerSelectRolesPatch
 
             if (possibleTargets.Count == 0)
             {
-                var w = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.LawyerPromotesToPursuer, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(w);
+                var w = StartRPC(CustomRPC.LawyerPromotesToPursuer);
+                w.EndRPC();
                 Lawyer.PromotesToPursuer();
             }
             else
             {
                 var target = possibleTargets[rnd.Next(0, possibleTargets.Count)];
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.LawyerSetTarget, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.LawyerSetTarget);
                 writer.Write(target.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.lawyerSetTarget(target.PlayerId);
             }
         }
@@ -500,18 +498,16 @@ internal class RoleManagerSelectRolesPatch
 
             if (possibleTargets.Count == 0)
             {
-                var w = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.ExecutionerPromotesRole, SendOption.Reliable);
-                AmongUsClient.Instance.FinishRpcImmediately(w);
+                var w = StartRPC(CustomRPC.ExecutionerPromotesRole);
+                w.EndRPC();
                 Executioner.PromotesRole();
             }
             else
             {
                 var target = possibleTargets[rnd.Next(0, possibleTargets.Count)];
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.ExecutionerSetTarget, SendOption.Reliable);
+                var writer = StartRPC(CustomRPC.ExecutionerSetTarget);
                 writer.Write(target.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndRPC();
                 RPCProcedure.executionerSetTarget(target.PlayerId);
             }
         }
@@ -707,10 +703,9 @@ internal class RoleManagerSelectRolesPatch
                 playerList.Remove(player2);
             }
 
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.SetGuesserGm, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.SetGuesserGm);
             writer.Write(playerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             RPCProcedure.setGuesserGm(playerId);
         }
     }
@@ -1112,8 +1107,7 @@ internal class RoleManagerSelectRolesPatch
         while (playerRoleMap.Any())
         {
             var amount = (byte)Math.Min(playerRoleMap.Count, 20);
-            var writer = AmongUsClient.Instance!.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.WorkaroundSetRoles, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.WorkaroundSetRoles);
             writer.Write(amount);
             for (var i = 0; i < amount; i++)
             {
@@ -1123,7 +1117,7 @@ internal class RoleManagerSelectRolesPatch
                 writer.WritePacked((uint)option.Item2);
             }
 
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
         }
     }
 

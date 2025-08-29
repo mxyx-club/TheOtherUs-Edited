@@ -35,11 +35,10 @@ public static class Sheriff
 
         if (active && playerId == PlayerControl.LocalPlayer.PlayerId)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.ShareGhostInfo);
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write((byte)RPCProcedure.GhostInfoTypes.HandcuffNoticed);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
         }
 
         if (active)

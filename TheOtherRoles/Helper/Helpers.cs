@@ -2,7 +2,6 @@ using AmongUs.GameOptions;
 using System.IO;
 using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Patches;
-using UnityEngine;
 
 namespace TheOtherRoles.Helper;
 

@@ -151,13 +151,13 @@ public static class ModdedNetworkTransform
                 // Send remaining buffer if any
                 SendMovementBuffer(player);
 
-                var writer = AmongUsClient.Instance.StartRpcImmediately(player.NetId, (byte)CustomRPC.NetworkTransform, SendOption.Reliable);
+                var writer = AmongUsClient.Instance.StartRpc(player.NetId, (byte)CustomRPC.NetworkTransform, SendOption.Reliable);
                 writer.Write((byte)MovementRpcType.StopMovement);
                 writer.Write(player.PlayerId);
                 writer.Write(player.transform.position.x);
                 writer.Write(player.transform.position.y);
                 writer.Write(player.transform.position.z);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                writer.EndMessage();
                 stopDetectionCounter.Remove(player.PlayerId); // Reset counter
                 // --- End Confirmed Stop ---
             }
@@ -236,7 +236,7 @@ public static class ModdedNetworkTransform
     {
         if (movementBuffer.Count > 0)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(player.NetId, (byte)CustomRPC.NetworkTransform, SendOption.Reliable);
+            var writer = AmongUsClient.Instance.StartRpc(player.NetId, (byte)CustomRPC.NetworkTransform, SendOption.Reliable);
             writer.Write((byte)MovementRpcType.BatchMovement);
             writer.Write(player.PlayerId);
             writer.Write(movementBuffer.Count); // List の Count を送信
@@ -249,7 +249,7 @@ public static class ModdedNetworkTransform
                 writer.Write(data.velocity.x);
                 writer.Write(data.velocity.y);
             }
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndMessage();
 
             movementBuffer.Clear();
         }

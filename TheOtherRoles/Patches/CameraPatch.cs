@@ -20,10 +20,9 @@ public class CameraPatch
             PlayerControl.LocalPlayer != Hacker.hacker &&
             PlayerControl.LocalPlayer != SecurityGuard.securityGuard)
         {
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.UseCameraTime, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.UseCameraTime);
             writer.Write(cameraTimer);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
             RPCProcedure.useCameraTime(cameraTimer);
         }
 

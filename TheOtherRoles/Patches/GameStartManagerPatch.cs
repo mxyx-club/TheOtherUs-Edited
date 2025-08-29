@@ -351,10 +351,9 @@ public class GameStartManagerPatch
                         CustomOptionHolder.presetSelection.updateSelection(chosenMapId + 3);
                     if (chosenMapId >= 3) chosenMapId++; // Skip dlekS
 
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                        (byte)CustomRPC.DynamicMapOption, SendOption.Reliable, -1);
+                    var writer = StartRPC(CustomRPC.DynamicMapOption);
                     writer.Write(chosenMapId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    writer.EndRPC();
                     RPCProcedure.dynamicMapOption(chosenMapId);
                 }
             }

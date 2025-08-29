@@ -173,8 +173,7 @@ public class CustomOption
         while (optionsList.Any())
         {
             var amount = (byte)Math.Min(optionsList.Count, 200); // takes less than 3 bytes per option on average
-            var writer = AmongUsClient.Instance!.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                (byte)CustomRPC.ShareOptions, SendOption.Reliable);
+            var writer = StartRPC(CustomRPC.ShareOptions);
             writer.Write(amount);
             for (var i = 0; i < amount; i++)
             {
@@ -184,7 +183,7 @@ public class CustomOption
                 writer.WritePacked(Convert.ToUInt32(option.Selection));
             }
 
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            writer.EndRPC();
         }
     }
 

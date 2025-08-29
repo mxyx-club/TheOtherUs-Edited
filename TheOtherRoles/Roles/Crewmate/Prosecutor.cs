@@ -137,9 +137,8 @@ public static class Prosecutor
                     ProsecuteThisMeeting = true;
                     StartProsecute = false;
 
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(prosecutor.NetId,
-                        (byte)CustomRPC.Prosecute, SendOption.Reliable, -1);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    var writer = StartRPC(CustomRPC.Prosecute);
+                    writer.EndRPC();
                 }
                 return true;
             }
@@ -150,8 +149,8 @@ public static class Prosecutor
                 UpdateButton(prosecutor, MeetingHud.Instance);
                 if (!AmongUsClient.Instance.AmHost)
                 {
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(prosecutor.NetId, (byte)CustomRPC.Prosecute, SendOption.Reliable, -1);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    var writer = StartRPC(CustomRPC.Prosecute);
+                    writer.EndRPC();
                 }
                 return false;
             }

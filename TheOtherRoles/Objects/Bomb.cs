@@ -2,12 +2,14 @@ namespace TheOtherRoles.Objects;
 
 public class Bomb
 {
-    private static Sprite bombSprite;
-    private static Sprite backgroundSprite;
     public static Sprite defuseSprite = new ResourceSprite("Bomb_Button_Defuse.png");
     public static bool canDefuse;
-    public readonly GameObject background;
-    public readonly GameObject bomb;
+
+    public GameObject background;
+    public GameObject bomb;
+
+    private static Sprite bombSprite => new ResourceSprite("Bomb.png", 300f);
+    private static Sprite backgroundSprite => new ResourceSprite("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.hearRange);
 
     public Bomb(Vector2 p)
     {
@@ -22,9 +24,9 @@ public class Bomb
         background.transform.position = position;
 
         var bombRenderer = bomb.AddComponent<SpriteRenderer>();
-        bombRenderer.sprite = getBombSprite();
+        bombRenderer.sprite = bombSprite;
         var backgroundRenderer = background.AddComponent<SpriteRenderer>();
-        backgroundRenderer.sprite = getBackgroundSprite();
+        backgroundRenderer.sprite = backgroundSprite;
 
         bomb.SetActive(false);
         background.SetActive(false);
@@ -55,25 +57,17 @@ public class Bomb
             })));
     }
 
-    public static Sprite getBombSprite()
+    public void Destroy()
     {
-        if (bombSprite) return bombSprite;
-        bombSprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.Bomb.png", 300f);
-        return bombSprite;
-    }
-
-    public static Sprite getBackgroundSprite()
-    {
-        if (backgroundSprite) return backgroundSprite;
-        backgroundSprite =
-            UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.hearRange);
-        return backgroundSprite;
+        background?.Destroy();
+        bomb?.Destroy();
     }
 
     public static void explode(Bomb b)
     {
         if (b?.bomb == null)
         {
+            b?.Destroy();
             Error("Bomb or bomb GameObject is null.");
             return;
         }
@@ -91,18 +85,7 @@ public class Bomb
                     return;
                 }
 
-                RpcCustomMurderPlayer(Terrorist.terrorist, PlayerControl.LocalPlayer, false);
-
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                    (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
-                writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                writer.Write((byte)RPCProcedure.GhostInfoTypes.DeathReasonAndKiller);
-                writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                writer.Write((byte)CustomDeathReason.Bomb);
-                writer.Write(Terrorist.terrorist.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                PlayerData.SetDeathReason(PlayerControl.LocalPlayer, CustomDeathReason.Bomb,
-                    Terrorist.terrorist);
+                RpcCustomMurderPlayer(Terrorist.terrorist, PlayerControl.LocalPlayer, false, false, CustomDeathReason.Bomb);
             }
             try
             {
@@ -131,13 +114,6 @@ public class Bomb
 
         if (MeetingHud.Instance && Terrorist.bomb != null) Terrorist.clearBomb();
 
-        if (Vector2.Distance(PlayerControl.LocalPlayer.GetTruePosition(),
-                Terrorist.bomb.bomb.transform.position) > 1f) canDefuse = false;
-        else canDefuse = true;
-    }
-
-    public static void clearBackgroundSprite()
-    {
-        backgroundSprite = null;
+        canDefuse = Vector2.Distance(PlayerControl.LocalPlayer.GetTruePosition(), Terrorist.bomb.bomb.transform.position) <= 1f;
     }
 }
