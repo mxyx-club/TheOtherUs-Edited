@@ -791,7 +791,6 @@ public static class Helpers
             if (Vampire.bitten.IsAlive()) RpcCustomMurderPlayer(Vampire.vampire, Vampire.bitten, false);
             var writer = StartRPC(CustomRPC.VampireSetBitten);
             writer.Write(byte.MaxValue);
-            writer.Write(true);
             writer.EndRPC();
             RPCProcedure.vampireSetBitten(byte.MaxValue);
         }

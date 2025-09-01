@@ -9,8 +9,9 @@ namespace TheOtherRoles.Buttons;
 public class CustomButton
 {
     public static IReadOnlyList<CustomButton> Buttons => _buttons;
-    private static List<CustomButton> _buttons = new(80);
+    private static List<CustomButton> _buttons = new(55);
     private static readonly int Desat = Shader.PropertyToID("_Desat");
+    private static bool Started;
 
     private Action OnClick;
     private readonly Action InitialOnClick;
@@ -47,7 +48,7 @@ public class CustomButton
     public bool UseGrid;
     public bool showButtonText;
     public float DeputyTimer;
-    public float Timer;
+    public float Timer = 15;
 
     public float _MaxTimer;
     public float MaxTimer
@@ -264,6 +265,12 @@ public class CustomButton
         });
     }
 
+    public static void Initialize()
+    {
+        Started = true;
+        ResetAllCooldowns(ModOption.ButtonCooldown);
+    }
+
     public static void ResetAllCooldowns(float Time = -1)
     {
         var time = Time == -1 ? ModOption.KillCooldown : Time;
@@ -412,7 +419,6 @@ public class CustomButton
 
         if (AidAction != null && aidHotkey.HasValue && Input.GetKeyDown(aidHotkey.Value))
         {
-            Message("AidAction OnClick");
             AidAction.Invoke();
         }
 
@@ -437,7 +443,7 @@ public class CustomButton
             actionButtonMat.SetFloat(Desat, 1f);
         }
 
-        if (Timer >= 0 && ((HasEffect && isEffectActive) || !PlayerControl.LocalPlayer.inVent))
+        if (Started && Timer >= 0 && ((HasEffect && isEffectActive) || !PlayerControl.LocalPlayer.inVent))
             Timer -= Time.deltaTime;
 
         if (Timer <= 0 && HasEffect && isEffectActive)
@@ -454,10 +460,7 @@ public class CustomButton
             onClickEvent();
 
         // Deputy disable the button and display Handcuffs instead...
-        if (Sheriff.handcuffedPlayers.Contains(PlayerControl.LocalPlayer.PlayerId))
-            OnClick = () => Sheriff.setHandcuffedKnows();
-        else
-            OnClick = InitialOnClick;
+        OnClick = Sheriff.handcuffedPlayers.Contains(PlayerControl.LocalPlayer.PlayerId) ? (() => Sheriff.setHandcuffedKnows()) : InitialOnClick;
     }
 
     /// <summary>

@@ -1310,8 +1310,8 @@ public class CustomOptionHolder
         medicResetTargetAfterMeeting = Create(302005, Types.Crewmate, "medicResetTargetAfterMeeting", false, medicSpawnRate);
         medicSetOrShowShieldAfterMeeting = Create(302006, Types.Crewmate, "medicSetOrShowShieldAfterMeeting",
             ["medicSetOrShowShieldAfterMeeting1", "medicSetOrShowShieldAfterMeeting2", "medicSetOrShowShieldAfterMeeting3"], medicSpawnRate);
-        medicReportNameDuration = Create(302007, Types.Crewmate, "medicReportNameDuration", 5f, 0f, 60f, 2.5f, medicBreakShield);
-        medicReportColorDuration = Create(302008, Types.Crewmate, "medicReportColorDuration", 30f, 0f, 120f, 2.5f, medicBreakShield);
+        medicReportNameDuration = Create(302007, Types.Crewmate, "medicReportNameDuration", 5f, 0f, 60f, 2.5f, medicSpawnRate);
+        medicReportColorDuration = Create(302008, Types.Crewmate, "medicReportColorDuration", 30f, 0f, 120f, 2.5f, medicSpawnRate);
 
         detectiveSpawnRate = Create(301900, Types.Crewmate, Cs(Detective.color, "Detective"), rates, null, true);
         detectiveAnonymousFootprints = Create(301901, Types.Crewmate, "detectiveAnonymousFootprints",

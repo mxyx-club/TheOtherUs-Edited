@@ -1326,7 +1326,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var target = Vampire.currentTarget;
-                if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
+                if (!CheckMurderPlayer(PlayerControl.LocalPlayer, target)) return;
 
                 if (Vampire.targetNearGarlic)
                 {
@@ -1341,19 +1341,17 @@ internal static class HudManagerStartPatch
                     // Notify players about bitten
                     var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
                     writer.Write(Vampire.bitten.PlayerId);
-                    writer.Write(false);
                     writer.EndRPC();
                     RPCProcedure.vampireSetBitten(Vampire.bitten.PlayerId);
 
                     _ = new LateTask(() =>
                     {
-                        if (Vampire.vampire.IsAlive())
+                        if (Vampire.vampire.IsAlive() && Vampire.bitten.IsAlive())
                         {
-                            RpcCustomMurderPlayer(Vampire.vampire, target, false);
+                            RpcCustomMurderPlayer(Vampire.vampire, Vampire.bitten, false);
 
                             var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
                             writer.Write(byte.MaxValue);
-                            writer.Write(true);
                             writer.EndRPC();
                             RPCProcedure.vampireSetBitten(byte.MaxValue);
                         }
@@ -1361,6 +1359,7 @@ internal static class HudManagerStartPatch
 
                     SoundEffectsManager.play("vampireBite");
 
+                    vampireKillButton.EffectDuration = Vampire.delay;
                     vampireKillButton.HasEffect = true; // Trigger effect on this click
                 }
 
@@ -4310,6 +4309,31 @@ internal static class HudManagerStartPatch
             buttonText: GetString("killButtonText")
         );
 
+        gunsmithAddBullets = new CustomButton(
+            () =>
+            {
+                PlayerControl.LocalPlayer.SetKillTimer(ModOption.KillCooldown * Mini.Multiplier);
+                Gunsmith.remainingChange++;
+                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.SyncGunsmithChange);
+                writer.Write(Gunsmith.remainingChange);
+                writer.EndRPC();
+            },
+            () =>
+            {
+                return Gunsmith.Player.IsAlive() && Gunsmith.Player == PlayerControl.LocalPlayer;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove && !FastDestroyableSingleton<HudManager>.Instance.KillButton.isCoolingDown && Gunsmith.remainingChange < Gunsmith.maxChangeCount;
+            },
+            () => { },
+            Gunsmith.AddButton,
+            __instance,
+            __instance.AbilityButton,
+            secondaryAbilityInput.keyCode,
+            buttonText: GetString("gunsmithAddBullets")
+        );
+
         gunsmithGetBullets = new CustomButton(
             () =>
             {
@@ -4334,31 +4358,6 @@ internal static class HudManagerStartPatch
             __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: GetString("gunsmithGetBullets")
-        );
-
-        gunsmithAddBullets = new CustomButton(
-            () =>
-            {
-                PlayerControl.LocalPlayer.SetKillTimer(ModOption.KillCooldown * Mini.Multiplier);
-                Gunsmith.remainingChange++;
-                var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.SyncGunsmithChange);
-                writer.Write(Gunsmith.remainingChange);
-                writer.EndRPC();
-            },
-            () =>
-            {
-                return Gunsmith.Player.IsAlive() && Gunsmith.Player == PlayerControl.LocalPlayer;
-            },
-            () =>
-            {
-                return PlayerControl.LocalPlayer.CanMove && !FastDestroyableSingleton<HudManager>.Instance.KillButton.isCoolingDown && Gunsmith.remainingChange < Gunsmith.maxChangeCount;
-            },
-            () => { },
-            Gunsmith.AddButton,
-            __instance,
-            __instance.AbilityButton,
-            secondaryAbilityInput.keyCode,
-            buttonText: GetString("gunsmithAddBullets")
         );
 
         berserkerKillButton = new CustomButton(

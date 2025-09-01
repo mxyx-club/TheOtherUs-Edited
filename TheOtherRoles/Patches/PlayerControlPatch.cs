@@ -221,7 +221,7 @@ internal class PlayerControlRevivePatch
 {
     public static void Postfix(PlayerControl __instance)
     {
-        if (PlayerControl.LocalPlayer == __instance)
+        if (__instance.AmOwner == true)
         {
             CanSeeGhostInfo = false;
             CustomButton.ResetAllCooldowns(ModOption.KillCooldown / 2);
@@ -702,6 +702,7 @@ internal class PlayerControlSetCoolDownPatch
     {
         if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return true;
 
+        var cooldown = ModOption.KillCooldown;
         var multiplier = 1f;
         var addition = 0f;
 
@@ -712,13 +713,13 @@ internal class PlayerControlSetCoolDownPatch
         if (Gambler.gambler != null && PlayerControl.LocalPlayer == Gambler.gambler)
             addition = Gambler.maxCooldown - ModOption.KillCooldown;
         if (Gunsmith.Player != null && PlayerControl.LocalPlayer == Gunsmith.Player)
-            addition = Gunsmith.KillCooldown;
+            cooldown = Gunsmith.KillCooldown;
 
         if (LastImpostor.lastImpostor != null && PlayerControl.LocalPlayer == LastImpostor.lastImpostor)
             addition -= LastImpostor.deduce;
 
-        __instance.killTimer = Mathf.Clamp(time, 0f, (ModOption.KillCooldown * multiplier) + addition);
-        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, (ModOption.KillCooldown * multiplier) + addition);
+        __instance.killTimer = Mathf.Clamp(time, 0f, (cooldown * multiplier) + addition);
+        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, (cooldown * multiplier) + addition);
         return false;
     }
 }

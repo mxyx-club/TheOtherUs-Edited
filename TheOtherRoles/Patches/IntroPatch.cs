@@ -63,7 +63,7 @@ internal class IntroCutsceneOnDestroyPatch
         Sheriff.deputyCheckPromotion();
 
         //游戏开始时重置cd
-        CustomButton.ResetAllCooldowns(ModOption.ButtonCooldown);
+        CustomButton.Initialize();
 
         if (CustomOptionHolder.randomGameStartPosition.GetBool()) MapData.RandomSpawnPlayers();
 
