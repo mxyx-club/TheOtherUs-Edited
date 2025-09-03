@@ -1768,8 +1768,7 @@ public static class RPCProcedure
         camera.transform.position = new Vector3(position.x, position.y, referenceCamera.transform.position.z - 1f);
         camera.CamName = $"Security Camera {SecurityGuard.placedCameras}";
         camera.Offset = new Vector3(0f, 0f, camera.Offset.z);
-        if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 2 ||
-            GameOptionsManager.Instance.currentNormalGameOptions.MapId == 4)
+        if (GameOptionsManager.Instance.currentNormalGameOptions.MapId is 2 or 4)
             camera.transform.localRotation = new Quaternion(0, 0, 1, 1); // Polus and Airship 
 
         if (SubmergedCompatibility.IsSubmerged)

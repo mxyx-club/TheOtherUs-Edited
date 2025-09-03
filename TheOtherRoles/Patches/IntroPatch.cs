@@ -77,7 +77,7 @@ internal class IntroCutsceneOnDestroyPatch
             // First kill
             if (ModOption.shieldFirstKill && ModOption.firstKillName != "")
             {
-                var target = PlayerControl.AllPlayerControls.ToList().FirstOrDefault(x => x.Data.PlayerName.Equals(ModOption.firstKillName));
+                var target = PlayerByName(ModOption.firstKillName);
                 if (target != null)
                 {
                     var writer = StartRPC(CustomRPC.SetFirstKill);

@@ -3,6 +3,24 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch]
 public static class PlayerPhysicsPatches
 {
+    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.CoSpawnPlayer))]
+    public class PlayerPhysicsCoSpawnPatch
+    {
+        public static void Postfix(PlayerPhysics __instance)
+        {
+            if (PlayerControl.LocalPlayer == __instance.myPlayer && AmongUsClient.Instance.NetworkMode != NetworkModes.FreePlay)
+            {
+                _ = new LateTask(() =>
+                {
+                    if (__instance.myPlayer.IsAlive())
+                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(__instance.myPlayer, GetWelcomeMessage);
+                }, 1f, "Welcome Chat");
+            }
+        }
+
+        private static string GetWelcomeMessage => "WelcomeText".Translate();
+    }
+
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.FixedUpdate)), HarmonyPostfix]
     public static void PlayerPhysicsUpdatePatch(PlayerPhysics __instance)
     {

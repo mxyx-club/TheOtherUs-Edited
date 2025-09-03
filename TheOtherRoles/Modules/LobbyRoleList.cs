@@ -16,12 +16,17 @@ public static class LobbyRoleInfo
             if (!LobbyBehaviour.Instance || AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started) return;
             try
             {
-                if (HudManagerStartPatch.roleSummaryButton == null) HudManagerStartPatch.createRoleSummaryButton(__instance);
-                //if (HudManagerStartPatch.roleSummaryButton.Timer > 0f) HudManagerStartPatch.roleSummaryButton.Timer = 0f;
+                if (HudManagerStartPatch.roleSummaryButton?.actionButton == null
+                    || HudManagerStartPatch.gameModeButton?.actionButton == null)
+                {
+                    HudManagerStartPatch.roleSummaryButton?.Destroy();
+                    HudManagerStartPatch.gameModeButton?.Destroy();
+                    HudManagerStartPatch.createRoleSummaryButton(__instance);
+                }
                 HudManagerStartPatch.roleSummaryButton.Update();
                 HudManagerStartPatch.gameModeButton.Update();
             }
-            catch { }
+            catch (Exception e) { Message(e); }
         }
     }
 

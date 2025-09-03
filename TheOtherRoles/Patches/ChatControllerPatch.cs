@@ -36,25 +36,6 @@ public static class ChatControllerPatch
         }
     }
 
-    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.CoSpawnPlayer))]
-    public class AmongUsClientOnPlayerJoinedPatch
-    {
-        public static void Postfix(PlayerPhysics __instance)
-        {
-            if (PlayerControl.LocalPlayer == __instance.myPlayer && AmongUsClient.Instance.NetworkMode != NetworkModes.FreePlay)
-            {
-                _ = new LateTask(() =>
-                {
-                    if (__instance.myPlayer.IsAlive())
-                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(__instance.myPlayer, GetWelcomeMessage);
-                }, 1f, "Welcome Chat");
-            }
-        }
-
-        private static string GetWelcomeMessage => "WelcomeText".Translate();
-    }
-
-
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static class EnableChat
     {

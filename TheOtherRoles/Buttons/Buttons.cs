@@ -295,15 +295,6 @@ internal static class HudManagerStartPatch
             MaxTimer = 0f
         };
 
-    }
-
-    public static void createButtonsPostfix(HudManager __instance)
-    {
-        // get map id, or raise error to wait...
-        var mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
-
-        createRoleSummaryButton(__instance);
-
         gameModeButton = new CustomButton(
             () =>
             {
@@ -319,6 +310,15 @@ internal static class HudManagerStartPatch
             buttonText: GetString("gameModeButton")
         )
         { Timer = 0f };
+        Message("Create");
+    }
+
+    public static void createButtonsPostfix(HudManager __instance)
+    {
+        // get map id, or raise error to wait...
+        var mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
+
+        createRoleSummaryButton(__instance);
 
         zoomOutButton = new CustomButton(
             () => { toggleZoom(); },
@@ -1099,14 +1099,14 @@ internal static class HudManagerStartPatch
                 if (!hackerVitalsButton.isEffectActive) PlayerControl.LocalPlayer.moveable = true;
                 if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
             },
-            GameOptionsManager.Instance.currentNormalGameOptions.MapId == 3,
+            mapId == 3,
             GetString("AdminMapText")
         );
 
         hackerVitalsButton = new CustomButton(
             () =>
             {
-                if (GameOptionsManager.Instance.currentNormalGameOptions.MapId != 1)
+                if (mapId != 1)
                 {
                     if (Hacker.vitals == null)
                     {
@@ -1142,10 +1142,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead &&
-                       GameOptionsManager.Instance.currentGameOptions.MapId != 0 &&
-                       GameOptionsManager.Instance.currentNormalGameOptions.MapId != 3;
+                return Hacker.hacker.IsAlive() && Hacker.hacker == PlayerControl.LocalPlayer && mapId != 0 && mapId != 3;
             },
             () =>
             {
@@ -1171,7 +1168,7 @@ internal static class HudManagerStartPatch
             () => true,
             () =>
             {
-                if (GameOptionsManager.Instance.currentNormalGameOptions.MapId != 1)
+                if (mapId != 1)
                 {
                     if (Hacker.vitals == null)
                     {
@@ -2758,7 +2755,6 @@ internal static class HudManagerStartPatch
                 {
                     if (SecurityGuard.minigame == null)
                     {
-                        var mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
                         var e = UObject.FindObjectsOfType<SystemConsole>().FirstOrDefault(x =>
                             x.gameObject.name.Contains("Surv_Panel") || x.name.Contains("Cam") ||
                             x.name.Contains("BinocularsSecurityConsole"));
@@ -3898,7 +3894,7 @@ internal static class HudManagerStartPatch
                yoyoAdminTableButton.Timer = yoyoAdminTableButton.MaxTimer;
                if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
            },
-           GameOptionsManager.Instance.currentNormalGameOptions.MapId == 3,
+           mapId == 3,
            "AdminMapText".Translate()
        );
 

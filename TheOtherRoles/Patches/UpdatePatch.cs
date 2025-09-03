@@ -933,13 +933,13 @@ internal class HudManagerUpdatePatch
 
     private static void radarUpdate()
     {
-        if (Radar.radar == null || PlayerControl.LocalPlayer != Radar.radar || InMeeting)
+        if (Radar.radar == null || PlayerControl.LocalPlayer != Radar.radar || MeetingHud.Instance)
             return;
 
-        if (Radar.radar.Data.IsDead)
+        if (Radar.radar?.Data.IsDead == true)
         {
-            if (Radar.localArrow.arrow != null)
-                UObject.Destroy(Radar.localArrow.arrow);
+            if (Radar.localArrow?.arrow != null)
+                UObject.Destroy(Radar.localArrow?.arrow);
             Radar.localArrow = null;
             return;
         }

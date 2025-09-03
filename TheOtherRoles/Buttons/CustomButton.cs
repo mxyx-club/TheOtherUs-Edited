@@ -426,10 +426,10 @@ public class CustomButton
         if (showButtonText && buttonText != "") actionButton.OverrideText(buttonText);
         actionButtonLabelText.enabled = showButtonText; // Only show the text if it's a kill button
 
-        if (hudManager.UseButton != null)
+        if (!UseGrid && hudManager.UseButton != null)
         {
             var pos = hudManager.UseButton.transform.localPosition;
-            if (!UseGrid && PositionOffset != null) actionButton.transform.localPosition = pos + PositionOffset.Value;
+            if (PositionOffset != null) actionButton.transform.localPosition = pos + PositionOffset.Value;
         }
 
         if (CouldUse() || (isEffectActive && OnEffectCouldUse?.Invoke() == true))
