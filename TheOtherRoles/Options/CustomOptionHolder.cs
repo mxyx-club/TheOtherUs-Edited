@@ -101,6 +101,7 @@ public class CustomOptionHolder
     public static CustomOption addAirShipVents;
     public static CustomOption airshipLadder;
     public static CustomOption enableFungleModify;
+    public static CustomOption funglSpawnType;
     public static CustomOption fungleElectrical;
     public static CustomOption TheFungleMushroomMixupOption;
     public static CustomOption TheFungleMushroomMixupCantOpenMeeting;
@@ -856,6 +857,7 @@ public class CustomOptionHolder
         airshipLadder = Create(543, Types.General, "airshipLadder", false, enableAirShipModify);
         //Fungle
         enableFungleModify = Create(550, Types.General, Cs(Color.yellow, "Fungle"), false, MapOptions);
+        funglSpawnType = Create(555, Types.General, "funglSpawnType", ["Random", "Select"], enableFungleModify);
         fungleElectrical = Create(551, Types.General, "fungleElectrical", false, enableFungleModify);
         TheFungleMushroomMixupOption = Create(552, Types.General, "TheFungleMushroomMixupOption", false, enableFungleModify);
         TheFungleMushroomMixupTime = Create(553, Types.General, "TheFungleMushroomMixupTime", 10f, 1f, 30f, 0.5f, TheFungleMushroomMixupOption);

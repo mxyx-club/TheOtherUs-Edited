@@ -1123,36 +1123,47 @@
         "13": "新增的尸体数量"
     },
     "marionettePlaceCooldown": {
+        "0": "Place Cooldown",
         "13": "放置木偶冷却"
     },
     "marionetteDecoyDelayedDisplay": {
+        "0": "Decoy Delayed Activation",
         "13": "延迟几秒激活木偶"
     },
     "marionetteDecoyPermanent": {
+        "0": "Decoy Permanence",
         "13": "木偶可以持续存在"
     },
     "marionetteResetPlaceAfterMeeting": {
+        "0": "Reset Marionette After Meeting",
         "13": "会议后会重置木偶"
     },
     "marionetteDecoyDuration": {
+        "0": "Decoy Duration",
         "13": "木偶可存在的持续时间"
     },
     "marionetteSwapCooldown": {
+        "0": "Marionette Swap Cooldown",
         "13": "与木偶交换位置的冷却时间"
     },
     "marionetteShowDecoy": {
+        "0": "Who Can See the Decoy",
         "13": "哪些玩家可以看到木偶"
     },
     "marionetteShowDecoy1": {
+        "0": "Only Marionette",
         "13": "仅木偶师可见"
     },
     "marionetteShowDecoy2": {
+        "0": "Only Impostor",
         "13": "仅伪装者可见"
     },
     "marionetteShowDecoy3": {
+        "0": "All Players",
         "13": "全部玩家可见"
     },
     "marionetteMonitoringCanMove": {
+        "0": "Can Move While Monitoring Marionette",
         "13": "监视木偶时玩家还可以移动"
     },
     "tricksterPlaceBoxCooldown": {

@@ -1374,8 +1374,8 @@ internal static class HudManagerStartPatch
                 bool targetNearGarlic = false;
                 if (Vampire.currentTarget != null)
                 {
-                    foreach (var garlic in Garlic.garlics)
-                        if (Vector2.Distance(garlic.garlic.transform.position, Vampire.currentTarget.transform.position) <= 1.95f)
+                    foreach (var garlic in Garlic.AllGarlics)
+                        if (Vector2.Distance(garlic.GameObject.transform.position, Vampire.currentTarget.transform.position) <= 1.95f)
                             targetNearGarlic = true;
                 }
 
@@ -1420,14 +1420,11 @@ internal static class HudManagerStartPatch
             {
                 Vampire.localPlacedGarlic = true;
                 var pos = PlayerControl.LocalPlayer.transform.position;
-                var buff = new byte[sizeof(float) * 2];
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
                 var writer = StartRPC(CustomRPC.PlaceGarlic);
-                writer.WriteBytesAndSize(buff);
+                writer.Write(pos);
                 writer.EndRPC();
-                RPCProcedure.placeGarlic(buff);
+                RPCProcedure.placeGarlic(pos);
                 SoundEffectsManager.play("garlic");
             },
             () =>
@@ -2358,14 +2355,12 @@ internal static class HudManagerStartPatch
                 placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer;
 
                 var pos = PlayerControl.LocalPlayer.transform.position;
-                var buff = new byte[sizeof(float) * 2];
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
                 var writer = StartRPC(CustomRPC.PlaceJackInTheBox);
-                writer.WriteBytesAndSize(buff);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(pos);
                 writer.EndRPC();
-                RPCProcedure.placeJackInTheBox(buff);
+                RPCProcedure.placeJackInTheBox(PlayerControl.LocalPlayer, pos);
                 SoundEffectsManager.play("tricksterPlaceBox");
             },
             () =>
@@ -3453,14 +3448,11 @@ internal static class HudManagerStartPatch
                 {
                     // Create first trace before killing
                     var pos = PlayerControl.LocalPlayer.transform.position;
-                    var buff = new byte[sizeof(float) * 2];
-                    Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                    Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
                     writer = StartRPC(CustomRPC.PlaceNinjaTrace);
-                    writer.WriteBytesAndSize(buff);
+                    writer.Write(pos);
                     writer.EndRPC();
-                    RPCProcedure.placeNinjaTrace(buff);
+                    RPCProcedure.placeNinjaTrace(pos);
 
                     var invisibleWriter = StartRPC(CustomRPC.SetInvisible);
                     invisibleWriter.Write(Ninja.ninja.PlayerId);
@@ -3477,14 +3469,11 @@ internal static class HudManagerStartPatch
 
                     // Create Second trace after killing
                     pos = Ninja.ninjaMarked.transform.position;
-                    buff = new byte[sizeof(float) * 2];
-                    Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                    Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
                     var writer3 = StartRPC(CustomRPC.PlaceNinjaTrace);
-                    writer3.WriteBytesAndSize(buff);
+                    writer3.Write(pos);
                     writer3.EndRPC();
-                    RPCProcedure.placeNinjaTrace(buff);
+                    RPCProcedure.placeNinjaTrace(pos);
 
                     Ninja.ninjaMarked = null;
                     return;
@@ -3615,14 +3604,12 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var pos = PlayerControl.LocalPlayer.transform.position;
-                var buff = new byte[sizeof(float) * 2];
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
                 var writer = StartRPC(CustomRPC.PlaceBomb);
-                writer.WriteBytesAndSize(buff);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(pos);
                 writer.EndRPC();
-                RPCProcedure.placeBomb(buff);
+                RPCProcedure.placeBomb(PlayerControl.LocalPlayer, pos);
 
                 if (Terrorist.selfExplosion)
                 {
@@ -3632,14 +3619,12 @@ internal static class HudManagerStartPatch
                 SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
 
                 terroristButton.Timer = terroristButton.MaxTimer;
-                Terrorist.isPlanted = true;
             },
             () =>
             {
-                return Terrorist.terrorist != null && Terrorist.terrorist == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
+                return Terrorist.terrorist.IsAlive() && Terrorist.terrorist == PlayerControl.LocalPlayer;
             },
-            () => { return PlayerControl.LocalPlayer.CanMove && !Terrorist.isPlanted; },
+            () => { return PlayerControl.LocalPlayer.CanMove; },
             () =>
             {
                 terroristButton.Timer = terroristButton.MaxTimer;
@@ -3660,19 +3645,23 @@ internal static class HudManagerStartPatch
         );
 
         defuseButton = new CustomButton(
-            () => { defuseButton.HasEffect = true; },
             () =>
             {
-                return Terrorist.bomb != null && Bomb.canDefuse && !PlayerControl.LocalPlayer.Data.IsDead;
+                defuseButton.EffectDuration = Terrorist.defuseDuration;
+                defuseButton.HasEffect = true;
             },
             () =>
             {
-                if (defuseButton.isEffectActive && !Bomb.canDefuse)
+                if (Bomb.AllBombs.Count == 0)
                 {
-                    defuseButton.Timer = 0f;
-                    defuseButton.isEffectActive = false;
+                    Bomb.TargetBomb = null;
+                    return false;
                 }
-
+                Bomb.TargetBomb = CustomObject.FindWithInRange(Bomb.AllBombs, PlayerControl.LocalPlayer.GetTruePosition(), 1f);
+                return Bomb.TargetBomb != null && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
                 return PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -3689,14 +3678,14 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var writer = StartRPC(CustomRPC.DefuseBomb);
+                writer.Write(Bomb.TargetBomb.Id);
                 writer.EndRPC();
-                RPCProcedure.defuseBomb();
+                RPCProcedure.defuseBomb(Bomb.TargetBomb.Id);
 
                 defuseButton.Timer = 0f;
-                Bomb.canDefuse = false;
             },
             true,
-            PositionOffset: new Vector3(4f, 1f, 0),
+            PositionOffset: new Vector3(-4.5f, 1.5f, 0),
             useGrid: false,
             buttonText: GetString("defuseBombText")
         );
@@ -3754,17 +3743,14 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var pos = PlayerControl.LocalPlayer.transform.position;
-                var buff = new byte[sizeof(float) * 2];
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
                 if (Yoyo.markedLocation == null)
                 {
                     Message($"marked location is null in button press");
                     var writer = StartRPC(CustomRPC.YoyoMarkLocation);
-                    writer.WriteBytesAndSize(buff);
+                    writer.Write(pos);
                     writer.EndRPC();
-                    RPCProcedure.yoyoMarkLocation(buff);
+                    RPCProcedure.yoyoMarkLocation(pos);
                     SoundEffectsManager.play("tricksterPlaceBox");
                     yoyoButton.Sprite = Yoyo.blinkButtonSprite;
                     yoyoButton.Timer = 10f;
@@ -3780,10 +3766,10 @@ internal static class HudManagerStartPatch
                     if (SubmergedCompatibility.IsSubmerged)
                         SubmergedCompatibility.ChangeFloor(exit.y > -7);
                     var writer = StartRPC(CustomRPC.YoyoBlink);
-                    writer.Write(byte.MaxValue);
-                    writer.WriteBytesAndSize(buff);
+                    writer.Write(true);
+                    writer.Write(pos);
                     writer.EndRPC();
-                    RPCProcedure.yoyoBlink(true, buff);
+                    RPCProcedure.yoyoBlink(true, pos);
                     yoyoButton.EffectDuration = Yoyo.blinkDuration;
                     yoyoButton.Timer = 10f;
                     yoyoButton.HasEffect = true;
@@ -3827,17 +3813,13 @@ internal static class HudManagerStartPatch
                 }
                 // jump back!
                 var pos = PlayerControl.LocalPlayer.transform.position;
-                var buff = new byte[sizeof(float) * 2];
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
                 var exit = (Vector3)Yoyo.markedLocation;
-                if (SubmergedCompatibility.IsSubmerged)
-                    SubmergedCompatibility.ChangeFloor(exit.y > -7);
+                if (SubmergedCompatibility.IsSubmerged) SubmergedCompatibility.ChangeFloor(exit.y > -7);
                 var writer = StartRPC(CustomRPC.YoyoBlink);
-                writer.Write((byte)0);
-                writer.WriteBytesAndSize(buff);
+                writer.Write(false);
+                writer.Write(pos);
                 writer.EndRPC();
-                RPCProcedure.yoyoBlink(false, buff);
+                RPCProcedure.yoyoBlink(false, pos);
                 yoyoButton.Timer = yoyoButton.MaxTimer;
                 yoyoButton.isEffectActive = false;
                 yoyoButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
@@ -4562,15 +4544,15 @@ internal static class HudManagerStartPatch
             {
                 if (Marionette.marionetteMode == 0)
                 {
+                    if (HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer) HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+
                     var writer = StartRPC(CustomRPC.DecoySwap);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
                     writer.Write(Marionette.decoy.Id);
                     writer.Write(PlayerControl.LocalPlayer.transform.position);
-                    writer.Write(Marionette.decoy.gameObject.transform.position);
+                    writer.Write(Marionette.decoy.GameObject.transform.position);
                     writer.EndRPC();
-                    RPCProcedure.DecoySwap(PlayerControl.LocalPlayer, Marionette.decoy.Id, PlayerControl.LocalPlayer.transform.position, Marionette.decoy.gameObject.transform.position);
-
-                    if (HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer) HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+                    RPCProcedure.DecoySwap(PlayerControl.LocalPlayer, Marionette.decoy.Id, PlayerControl.LocalPlayer.transform.position, Marionette.decoy.GameObject.transform.position);
                 }
                 else
                 {

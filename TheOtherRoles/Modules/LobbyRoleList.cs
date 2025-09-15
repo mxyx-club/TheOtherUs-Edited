@@ -23,8 +23,9 @@ public static class LobbyRoleInfo
                     HudManagerStartPatch.gameModeButton?.Destroy();
                     HudManagerStartPatch.createRoleSummaryButton(__instance);
                 }
-                HudManagerStartPatch.roleSummaryButton.Update();
-                HudManagerStartPatch.gameModeButton.Update();
+
+                HudManagerStartPatch.roleSummaryButton?.Update();
+                HudManagerStartPatch.gameModeButton?.Update();
             }
             catch (Exception e) { Message(e); }
         }

@@ -1,71 +1,71 @@
 namespace TheOtherRoles.Objects;
 
-public class Bomb
+public class Bomb : CustomObject
 {
+    public static List<Bomb> AllBombs = new();
     public static Sprite defuseSprite = new ResourceSprite("Bomb_Button_Defuse.png");
-    public static bool canDefuse;
-
-    public GameObject background;
-    public GameObject bomb;
+    public static Bomb TargetBomb;
+    public GameObject Background;
+    public PlayerControl Player;
 
     private static Sprite bombSprite => new ResourceSprite("Bomb.png", 300f);
     private static Sprite backgroundSprite => new ResourceSprite("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.hearRange);
 
-    public Bomb(Vector2 p)
+    public Bomb(PlayerControl player, Vector3 pos)
     {
-        bomb = new GameObject("Bomb") { layer = 11 };
-        bomb.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-        var position = new Vector3(p.x, p.y, (p.y / 1000) + 0.001f); // just behind player
-        bomb.transform.position = position;
+        GameObject.name = "Bomb " + Id;
+        GameObject.layer = 11;
+        var position = new Vector3(pos.x, pos.y, pos.z - 0.001f); // just behind player
+        GameObject.transform.position = position;
+        Renderer.sprite = bombSprite;
 
-        background = new GameObject("Background") { layer = 11 };
-        background.transform.SetParent(bomb.transform);
-        background.transform.localPosition = new Vector3(0, 0, -1f); // before player
-        background.transform.position = position;
+        Background = new GameObject("Background") { layer = 11 };
+        Background.transform.SetParent(GameObject.transform);
+        Background.transform.localPosition = new Vector3(0, 0, -0.01f);
 
-        var bombRenderer = bomb.AddComponent<SpriteRenderer>();
-        bombRenderer.sprite = bombSprite;
-        var backgroundRenderer = background.AddComponent<SpriteRenderer>();
+        var backgroundRenderer = Background.AddComponent<SpriteRenderer>();
         backgroundRenderer.sprite = backgroundSprite;
 
-        bomb.SetActive(false);
-        background.SetActive(false);
-        if (PlayerControl.LocalPlayer == Terrorist.terrorist) bomb.SetActive(true);
-        Terrorist.bomb = this;
+        GameObject.SetActive(false);
+        Background.SetActive(false);
+        if (PlayerControl.LocalPlayer == Terrorist.terrorist) GameObject.SetActive(true);
         var c = Color.white;
         var g = Color.red;
         backgroundRenderer.color = Color.white;
-        Terrorist.isActive = false;
+        IsActive = false;
+        Player = player;
+        AllBombs.Add(this);
 
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Terrorist.bombActiveAfter,
-            new Action<float>(x =>
-            {
-                if ((int)x != 1) return;
-                bomb.SetActive(true);
-                background.SetActive(true);
-                SoundEffectsManager.playAtPosition("bombFuseBurning", p, Terrorist.destructionTime, Terrorist.hearRange, true);
-                Terrorist.isActive = true;
+        _ = new LateTask(() =>
+        {
+            GameObject.SetActive(!Terrorist.selfExplosion);
+            Background.SetActive(!Terrorist.selfExplosion);
+            IsActive = true;
+            SoundEffectsManager.playAtPosition("bombFuseBurning", pos, Terrorist.destructionTime, Terrorist.hearRange, true);
 
-                FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Terrorist.destructionTime,
-                    new Action<float>(f =>
-                    {
-                        // can you feel the pain?
-                        var combinedColor = (Mathf.Clamp01(f) * g) + (Mathf.Clamp01(1 - f) * c);
-                        if (backgroundRenderer) backgroundRenderer.color = combinedColor;
-                        if ((int)f == 1) explode(this);
-                    })));
-            })));
+            HudManager.Instance.StartCoroutine(Effects.Lerp(Terrorist.destructionTime,
+                new Action<float>(f =>
+                {
+                    // can you feel the pain?
+                    var combinedColor = (Mathf.Clamp01(f) * g) + (Mathf.Clamp01(1 - f) * c);
+                    if (backgroundRenderer) backgroundRenderer.color = combinedColor;
+                    if ((int)f == 1) explode(this);
+                })));
+        }, Terrorist.bombActiveAfter);
     }
 
-    public void Destroy()
+    public override void Destroy()
     {
-        background?.Destroy();
-        bomb?.Destroy();
+        Background?.Destroy();
+        Background = null;
+        SoundEffectsManager.stop("bombFuseBurning");
+        AllBombs.Remove(this);
+        base.Destroy();
     }
 
     public static void explode(Bomb b)
     {
-        if (b?.bomb == null)
+        if (b?.GameObject == null)
         {
             b?.Destroy();
             Error("Bomb or bomb GameObject is null.");
@@ -73,18 +73,13 @@ public class Bomb
         }
         if (Terrorist.terrorist != null)
         {
-            var position = b.bomb.transform.position;
+            var position = b.GameObject.transform.position;
             // every player only checks that for their own client (desynct with positions sucks)
+
             var distance = Vector2.Distance(position, PlayerControl.LocalPlayer.transform.position);
 
-            if (distance <= Terrorist.destructionRange && !PlayerControl.LocalPlayer.Data.IsDead)
+            if (distance <= Terrorist.destructionRange && PlayerControl.LocalPlayer.IsAlive())
             {
-                if (Terrorist.selfExplosion && PlayerControl.LocalPlayer == Terrorist.terrorist)
-                {
-                    Terrorist.clearBomb();
-                    return;
-                }
-
                 RpcCustomMurderPlayer(Terrorist.terrorist, PlayerControl.LocalPlayer, false, false, CustomDeathReason.Bomb);
             }
             try
@@ -97,23 +92,16 @@ public class Bomb
             }
         }
 
-        Terrorist.clearBomb();
-        canDefuse = false;
-        Terrorist.isActive = false;
+        b.Destroy();
     }
 
-    public static void update()
+    public override void OnMeetingStart()
     {
-        if (Terrorist.bomb == null || !Terrorist.isActive)
-        {
-            canDefuse = false;
-            return;
-        }
+        this?.Destroy();
+    }
 
-        Terrorist.bomb.background.transform.Rotate(Vector3.forward * 50 * Time.fixedDeltaTime);
-
-        if (MeetingHud.Instance && Terrorist.bomb != null) Terrorist.clearBomb();
-
-        canDefuse = Vector2.Distance(PlayerControl.LocalPlayer.GetTruePosition(), Terrorist.bomb.bomb.transform.position) <= 1f;
+    public override void Update()
+    {
+        Background?.transform?.Rotate(Vector3.forward * 50 * Time.fixedDeltaTime);
     }
 }

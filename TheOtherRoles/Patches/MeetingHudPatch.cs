@@ -857,7 +857,7 @@ internal class MeetingHudPatch
             // Remove revealed traps
             Trap.clearRevealedTraps();
 
-            Terrorist.clearBomb();
+            CustomObject.StartMeeting();
 
             // Reset zoomed out ghosts
             toggleZoom(true);
@@ -927,7 +927,7 @@ internal class MeetingHudPatch
         [HarmonyPostfix, HarmonyPriority(Priority.First)]
         public static void MeetingStartPatch(MeetingHud __instance)
         {
-            Message("会议开始");
+            Message("Start", "Meeting");
             shookAlready = false;
             MeetingCount++;
 
@@ -960,7 +960,6 @@ internal class MeetingHudPatch
             Redemptor.RevivedPlayer = null;
             Undertaker.dragedBody = null;
             Jester.dragedBody = null;
-            KillTrap.OnMeetingStart();
             Jailor.MeetingStart(__instance);
 
             foreach (var playerState in Instance?.playerStates ?? Enumerable.Empty<PlayerVoteArea>())
@@ -981,18 +980,23 @@ internal class MeetingHudPatch
 
                 if (BandLeader.Members.Length == 3 && (allNeutral || allCrew || allImpostor))
                 {
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(BandLeader.Player, "BandLeader.formed".Translate());
                     BandLeader.Formed = true;
                     if (allCrew) BandLeader.winnerFlags = BandLeader.WinnerFlags.Crewmate;
-                    if (allImpostor) BandLeader.winnerFlags = BandLeader.WinnerFlags.Impostor;
-                    if (allNeutral) BandLeader.winnerFlags = BandLeader.WinnerFlags.Neutral;
-                    var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.BandLeaderFormed);
+                    else if (allImpostor) BandLeader.winnerFlags = BandLeader.WinnerFlags.Impostor;
+                    else if (allNeutral) BandLeader.winnerFlags = BandLeader.WinnerFlags.Neutral;
+                    var writer = StartRPC(CustomRPC.BandLeaderFormed);
                     writer.Write((byte)BandLeader.winnerFlags);
+                    writer.Write(true);
                     writer.EndRPC();
+                    BandLeader.BandLeaderFormed((byte)BandLeader.winnerFlags, true);
                 }
                 else if (BandLeader.Members.Length == 3)
                 {
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(BandLeader.Player, "BandLeader.bad".Translate());
+                    var writer = StartRPC(CustomRPC.BandLeaderFormed);
+                    writer.Write((byte)0);
+                    writer.Write(false);
+                    writer.EndRPC();
+                    BandLeader.BandLeaderFormed(0, false);
                 }
             }
 
@@ -1017,6 +1021,17 @@ internal class MeetingHudPatch
                 newButton.transform.parent = colorButton.transform.parent.parent;
                 newButton.GetComponent<PassiveButton>().OnClick = new Button.ButtonClickedEvent();
             }
+        }
+    }
+
+
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.OnDestroy))]
+    public class MeetingHudEnd
+    {
+        private static void Postfix(MeetingHud __instance)
+        {
+            Message("Destroy", "Meeting");
+            CustomObject.EndMeeting();
         }
     }
 }

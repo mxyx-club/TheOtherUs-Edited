@@ -1,20 +1,11 @@
-using TheOtherRoles.Attributes;
-
 namespace TheOtherRoles.Objects;
 
-public class Decoy
+public class Decoy : CustomObject
 {
     public static List<Decoy> Decoys = new();
-    public GameObject gameObject;
-    public SpriteRenderer renderer;
-    public PlayerControl player;
-    public DateTime placedTime;
-    public bool Active;
+    public PlayerControl Player;
     public MonoBehaviour behaviour;
     public float elapsedTime;
-
-    public int Id;
-    private static int maxId;
 
     public static bool ResetPlaceAfterMeeting;
     public static float DecoyDelayedDisplay;
@@ -25,96 +16,74 @@ public class Decoy
 
     public Decoy(PlayerControl player, Vector3 pos)
     {
-        this.player = player;
-        Id = ++maxId;
-        gameObject = new GameObject("Trap");
-        renderer = gameObject.AddComponent<SpriteRenderer>();
-        behaviour = gameObject.AddComponent<CustomObjectBehaviour>();
-        gameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-        gameObject.SetActive(false);
-        gameObject.transform.position = pos;
-        renderer.sprite = decoySprite;
-        renderer.color = Color.white * new Vector4(1, 1, 1, 0.66f);
-        placedTime = DateTime.Now;
+        ResetPlaceAfterMeeting = CustomOptionHolder.marionetteResetPlaceAfterMeeting.GetBool();
+        DecoyDuration = CustomOptionHolder.marionetteDecoyDuration.GetFloat();
+        DecoyPermanent = CustomOptionHolder.marionetteDecoyPermanent.GetBool();
+        DecoyDelayedDisplay = CustomOptionHolder.marionetteDecoyDelayedDisplay.GetFloat();
+
+        Player = player;
+        GameObject.name = "Decoy " + Id;
+        behaviour = GameObject.AddComponent<CustomObjectBehaviour>();
+        GameObject.SetActive(false);
+        GameObject.transform.position = pos;
+        Renderer.sprite = decoySprite;
+        Renderer.color = Color.white * new Vector4(1, 1, 1, 0.66f);
         elapsedTime = 0f;
         Decoys.Add(this);
 
         _ = new LateTask(() =>
         {
-            if (gameObject == null) return;
-            Active = true;
-            renderer.color = Color.white;
+            if (GameObject == null) return;
+            IsActive = true;
+            Renderer.color = Color.white;
         }, DecoyDelayedDisplay);
 
     }
 
-    public void Destroy()
+    public override void Destroy()
     {
-        if (player.AmOwner && !Marionette.MonitoringCanMove)
+        if (Player.AmOwner && !Marionette.MonitoringCanMove)
         {
             if (HudManager.Instance.PlayerCam == behaviour)
             {
-                player.moveable = true;
+                Player.moveable = true;
             }
         }
         behaviour?.Destroy();
-        renderer?.Destroy();
-        gameObject?.Destroy();
-        gameObject = null;
+        Renderer?.Destroy();
+        GameObject?.Destroy();
+        GameObject = null;
         Decoys.Remove(this);
+        base.Destroy();
     }
 
-    public void Update()
+    public override void Update()
     {
         if (!InMeeting)
         {
             elapsedTime += Time.deltaTime;
             if (!DecoyPermanent && elapsedTime >= DecoyDuration)
             {
-                RPCProcedure.DecoyDestroy(player, Id);
+                RPCProcedure.DecoyDestroy(Player, Id);
                 return;
             }
         }
 
         if (!DecoyPermanent && InMeeting)
         {
-            RPCProcedure.DecoyDestroy(player, Id);
+            RPCProcedure.DecoyDestroy(Player, Id);
             return;
         }
         else if (InMeeting)
         {
-            gameObject.SetActive(false);
+            GameObject.SetActive(false);
             return;
         }
 
         var canSee = PlayerControl.LocalPlayer == Marionette.Player || CanSeeGhostInfo
-                  || (Active && ((Marionette.ShowDecoy == 2 && PlayerControl.LocalPlayer.IsImpostor())
+                  || (IsActive && ((Marionette.ShowDecoy == 2 && PlayerControl.LocalPlayer.IsImpostor())
                                || Marionette.ShowDecoy == 3));
 
-        gameObject.SetActive(canSee);
-    }
-
-    [OnGameStart, OnGameEnd]
-    public static void ClearAndReload()
-    {
-        ResetPlaceAfterMeeting = CustomOptionHolder.marionetteResetPlaceAfterMeeting.GetBool();
-        DecoyDuration = CustomOptionHolder.marionetteDecoyDuration.GetFloat();
-        DecoyPermanent = CustomOptionHolder.marionetteDecoyPermanent.GetBool();
-        DecoyDelayedDisplay = CustomOptionHolder.marionetteDecoyDelayedDisplay.GetFloat();
-
-        maxId = 0;
-        foreach (var x in Decoys.ToArray())
-        {
-            x?.Destroy();
-        }
-        Decoys = new();
-    }
-
-    public static void UpdateAll()
-    {
-        foreach (var x in Decoys.ToArray())
-        {
-            x?.Update();
-        }
+        GameObject.SetActive(canSee);
     }
 }

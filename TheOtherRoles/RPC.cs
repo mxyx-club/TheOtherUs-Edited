@@ -120,7 +120,6 @@ public enum CustomRPC : byte
 
     TrapperKill,
     PlaceTrap,
-    ClearTrap,
     ActivateTrap,
     DisableTrap,
     Prosecute,
@@ -1005,12 +1004,9 @@ public static class RPCProcedure
         if ((Prophet.examineNum - Prophet.examinesLeft >= Prophet.examinesToBeRevealed) && Prophet.revealProphet) Prophet.isRevealed = true;
     }
 
-    public static void placeGarlic(byte[] buff)
+    public static void placeGarlic(Vector3 pos)
     {
-        var position = Vector3.zero;
-        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
-        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
-        new Garlic(position);
+        _ = new Garlic(pos);
     }
 
     public static void trackerUsedTracker(byte targetId)
@@ -1273,16 +1269,16 @@ public static class RPCProcedure
     public static void DecoySwap(PlayerControl player, int? decoyId, Vector3 playerPos, Vector3 decoyPos)
     {
         var decoy = Decoy.Decoys.FirstOrDefault(x => x.Id == decoyId);
-        if (decoy == null) return;
+        if (decoy?.GameObject == null || decoy?.Renderer == null) return;
 
         bool playerFlip = player.cosmetics.FlipX;
-        bool decoyFlip = decoy.renderer.flipX;
+        bool decoyFlip = decoy.Renderer.flipX;
 
         player.NetTransform.SnapTo(decoyPos);
-        decoy.gameObject.transform.position = playerPos;
+        decoy.GameObject.transform.position = playerPos;
 
         player.cosmetics.SetFlipX(decoyFlip);
-        decoy.renderer.flipX = playerFlip;
+        decoy.Renderer.flipX = playerFlip;
     }
 
     public static void balancerBalance(byte sourceId, byte player1Id, byte player2Id)
@@ -1435,12 +1431,9 @@ public static class RPCProcedure
         if (player != null) Witch.futureSpelled.Add(player);
     }
 
-    public static void placeNinjaTrace(byte[] buff)
+    public static void placeNinjaTrace(Vector3 pos)
     {
-        var position = Vector3.zero;
-        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
-        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
-        new NinjaTrace(position, Ninja.traceTime);
+        _ = new NinjaTrace(pos, Ninja.traceTime);
         if (PlayerControl.LocalPlayer != Ninja.ninja)
             Ninja.ninjaMarked = null;
     }
@@ -1472,39 +1465,33 @@ public static class RPCProcedure
         Ninja.isInvisable = true;
     }
 
-    public static void yoyoMarkLocation(byte[] buff)
+    public static void yoyoMarkLocation(Vector3 pos)
     {
         if (Yoyo.yoyo == null) return;
-        Vector3 position = Vector3.zero;
-        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
-        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
-        Yoyo.markLocation(position);
-        new Silhouette(position, -1, false);
+        Yoyo.markLocation(pos);
+        new Silhouette(pos, -1, false);
     }
 
-    public static void yoyoBlink(bool isFirstJump, byte[] buff)
+    public static void yoyoBlink(bool isFirstJump, Vector3 pos)
     {
         Message($"blink fistjumpo: {isFirstJump}");
         if (Yoyo.yoyo == null || Yoyo.markedLocation == null) return;
         var markedPos = (Vector3)Yoyo.markedLocation;
         Yoyo.yoyo.NetTransform.SnapTo(markedPos);
 
-        var markedSilhouette = Silhouette.silhouettes.FirstOrDefault(s => s.gameObject.transform.position.x == markedPos.x && s.gameObject.transform.position.y == markedPos.y);
+        var markedSilhouette = Silhouette.Silhouettes.FirstOrDefault(s => s.GameObject!.transform.position.x == markedPos.x && s.GameObject.transform.position.y == markedPos.y);
         if (markedSilhouette != null)
             markedSilhouette.permanent = false;
 
-        Vector3 position = Vector3.zero;
-        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
-        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
         // Create Silhoutte At Start Position:
         if (isFirstJump)
         {
-            Yoyo.markLocation(position);
-            new Silhouette(position, Yoyo.blinkDuration, true);
+            Yoyo.markLocation(pos);
+            new Silhouette(pos, Yoyo.blinkDuration, true);
         }
         else
         {
-            new Silhouette(position, 5, true);
+            new Silhouette(pos, 5, true);
             Yoyo.markedLocation = null;
         }
         if (Chameleon.chameleon.Any(x => x.PlayerId == Yoyo.yoyo.PlayerId)) // Make the Yoyo visible if chameleon!
@@ -1675,30 +1662,10 @@ public static class RPCProcedure
         Jackal.isInvisable = true;
     }
 
-    public static void placeTrap(byte playerId, byte[] buff)
+    public static void placeTrap(byte playerId, Vector3 pos)
     {
         var player = PlayerById(playerId);
-        var pos = Vector3.zero;
-        pos.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
-        pos.y = BitConverter.ToSingle(buff, 1 * sizeof(float)) - 0.2f;
         _ = new KillTrap(player, pos);
-    }
-
-    public static void clearTrap()
-    {
-        KillTrap.ClearAndReload();
-    }
-
-    public static void activateTrap(byte trapperId, byte targetId, int trapId)
-    {
-        var trapper = PlayerById(trapperId);
-        var target = PlayerById(targetId);
-        KillTrap.activateTrap(trapper, target, trapId);
-    }
-
-    public static void disableTrap(byte trapId)
-    {
-        KillTrap.disableTrap(trapId);
     }
 
     public static void setInvisibleGen(byte playerId, byte flag)
@@ -1736,12 +1703,9 @@ public static class RPCProcedure
         Portal.startTeleport(playerId, exit);
     }
 
-    public static void placeJackInTheBox(byte[] buff)
+    public static void placeJackInTheBox(PlayerControl player, Vector3 pos)
     {
-        var position = Vector3.zero;
-        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
-        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
-        new JackInTheBox(position);
+        _ = new JackInTheBox(player, pos);
     }
 
     public static void lightsOut()
@@ -1946,27 +1910,24 @@ public static class RPCProcedure
         }
     }
 
-    public static void placeBomb(byte[] buff)
+    public static void placeBomb(PlayerControl player, Vector3 pos)
     {
-        if (Terrorist.terrorist == null) return;
-        var position = Vector3.zero;
-        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
-        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
-        new Bomb(position);
+        _ = new Bomb(player, pos);
     }
 
-    public static void defuseBomb()
+    public static void defuseBomb(int id)
     {
+        var bomb = Bomb.AllBombs.FirstOrDefault(x => x.Id == id);
+        if (bomb?.GameObject == null) return;
         try
         {
-            SoundEffectsManager.playAtPosition("bombDefused", Terrorist.bomb.bomb.transform.position,
-                range: Terrorist.hearRange);
+            SoundEffectsManager.playAtPosition("bombDefused", bomb.GameObject.transform.position, range: Terrorist.hearRange);
         }
         catch
         {
         }
 
-        Terrorist.clearBomb();
+        bomb.Destroy();
         terroristButton.Timer = terroristButton.MaxTimer;
         terroristButton.isEffectActive = false;
         terroristButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
@@ -2162,7 +2123,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.PlaceGarlic:
-                RPCProcedure.placeGarlic(reader.ReadBytesAndSize());
+                RPCProcedure.placeGarlic(reader.ReadVector3());
                 break;
 
             case CustomRPC.TrackerUsedTracker:
@@ -2218,7 +2179,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.PlaceNinjaTrace:
-                RPCProcedure.placeNinjaTrace(reader.ReadBytesAndSize());
+                RPCProcedure.placeNinjaTrace(reader.ReadVector3());
                 break;
 
             case CustomRPC.PlacePortal:
@@ -2230,7 +2191,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.PlaceJackInTheBox:
-                RPCProcedure.placeJackInTheBox(reader.ReadBytesAndSize());
+                RPCProcedure.placeJackInTheBox(reader.ReadPlayer(), reader.ReadVector3());
                 break;
 
             case CustomRPC.LightsOut:
@@ -2322,11 +2283,11 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.PlaceBomb:
-                RPCProcedure.placeBomb(reader.ReadBytesAndSize());
+                RPCProcedure.placeBomb(reader.ReadPlayer(), reader.ReadVector3());
                 break;
 
             case CustomRPC.DefuseBomb:
-                RPCProcedure.defuseBomb();
+                RPCProcedure.defuseBomb(reader.ReadInt32());
                 break;
 
             case CustomRPC.ShareGameMode:
@@ -2364,7 +2325,7 @@ internal class RPCHandlerPatch
                 RPCProcedure.prophetExamine(reader.ReadByte());
                 break;
             case CustomRPC.YoyoMarkLocation:
-                RPCProcedure.yoyoMarkLocation(reader.ReadBytesAndSize());
+                RPCProcedure.yoyoMarkLocation(reader.ReadVector3());
                 break;
             case CustomRPC.GrenadierFlash:
                 RPCProcedure.grenadierFlash(reader.ReadBoolean());
@@ -2382,7 +2343,7 @@ internal class RPCHandlerPatch
                 Pelican.PelicanKill(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.YoyoBlink:
-                RPCProcedure.yoyoBlink(reader.ReadByte() == byte.MaxValue, reader.ReadBytesAndSize());
+                RPCProcedure.yoyoBlink(reader.ReadBoolean(), reader.ReadVector3());
                 break;
             case CustomRPC.SetFutureReveal:
                 break;
@@ -2390,16 +2351,13 @@ internal class RPCHandlerPatch
                 KillTrap.trapKill(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadInt32());
                 break;
             case CustomRPC.PlaceTrap:
-                RPCProcedure.placeTrap(reader.ReadByte(), reader.ReadBytesAndSize());
-                break;
-            case CustomRPC.ClearTrap:
-                RPCProcedure.clearTrap();
+                RPCProcedure.placeTrap(reader.ReadByte(), reader.ReadVector3());
                 break;
             case CustomRPC.ActivateTrap:
-                RPCProcedure.activateTrap(reader.ReadByte(), reader.ReadByte(), reader.ReadInt32());
+                KillTrap.activateTrap(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadInt32());
                 break;
             case CustomRPC.DisableTrap:
-                RPCProcedure.disableTrap(reader.ReadByte());
+                KillTrap.disableTrap(reader.ReadByte());
                 break;
             case CustomRPC.Prosecute:
                 Prosecutor.ProsecuteThisMeeting = true;
@@ -2435,9 +2393,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.BandLeaderFormed:
-                BandLeader.Formed = true;
-                BandLeader.winnerFlags = (BandLeader.WinnerFlags)reader.ReadByte();
-                Message($"Band Leader Formed {(BandLeader.WinnerFlags)reader.ReadByte()}");
+                BandLeader.BandLeaderFormed(reader.ReadByte(), reader.ReadBoolean());
                 break;
 
             case CustomRPC.CreateBandMember:

@@ -2,7 +2,7 @@ using TheOtherRoles.Attributes;
 
 namespace TheOtherRoles.Objects;
 
-public class KillTrap
+public class KillTrap : CustomObject
 {
     public static List<KillTrap> AllTraps = new();
 
@@ -14,16 +14,11 @@ public class KillTrap
     public static AudioClip countdown;
     public static AudioClip kill;
     public static AudioRolloffMode rollOffMode = AudioRolloffMode.Linear;
-    public GameObject killtrap;
     public AudioSource audioSource;
-    public bool isActive;
     public bool isDisabled;
+    public bool isTriggered;
     public PlayerControl trapper;
     public PlayerControl target;
-    public DateTime placedTime;
-
-    private static int maxId;
-    private int Id;
 
     public KillTrap(PlayerControl trapper, Vector3 pos)
     {
@@ -36,21 +31,28 @@ public class KillTrap
         }
 
         // 罠を設置
-        killtrap = new GameObject("Trap");
-        var trapRenderer = killtrap.AddComponent<SpriteRenderer>();
-        killtrap.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-        trapRenderer.sprite = trapSprite;
-        Vector3 position = new(pos.x, pos.y, (pos.y / 1000) + 0.001f);
-        killtrap.transform.position = position;
-        // this.trap.transform.localPosition = pos;
-        killtrap.SetActive(true);
+        GameObject.name = "KillTrap " + Id;
+        Renderer.sprite = trapSprite;
+        Renderer.color = Color.white * new Vector4(1, 1, 1, 0.5f);
+        Vector3 position = new(pos.x, pos.y, pos.z + 0.001f);
+        GameObject.transform.position = position;
+        GameObject.SetActive(true);
         isDisabled = false;
+        IsActive = false;
+        isTriggered = false;
+
+        _ = new LateTask(() =>
+        {
+            IsActive = true;
+            Renderer.color = Color.white;
+
+        }, EvilTrapper.extensionTime);
 
         // 音を鳴らす
-        audioSource = killtrap.gameObject.AddComponent<AudioSource>();
+        audioSource = GameObject.gameObject.AddComponent<AudioSource>();
         audioSource.priority = 0;
         audioSource.spatialBlend = 1;
-        audioSource.volume = 0.75f;
+        audioSource.volume = 0.6f;
         audioSource.clip = place;
         audioSource.loop = false;
         audioSource.playOnAwake = false;
@@ -59,43 +61,29 @@ public class KillTrap
         audioSource.rolloffMode = rollOffMode;
         audioSource.PlayOneShot(place);
         this.trapper = trapper;
-        Id = ++maxId;
-        // 設置時刻を設定
-        placedTime = DateTime.UtcNow;
 
         AllTraps.Add(this);
     }
 
-    public void Destroy()
-    {
-        try { if (audioSource != null) audioSource.Stop(); } catch { }
-        if (killtrap != null) UObject.Destroy(killtrap);
-        AllTraps.Remove(this);
-
-    }
-
-
-    [OnGameStart, OnGameEnd]
-    public static void ClearAndReload()
+    public override void Destroy()
     {
         try
         {
-            foreach (var t in AllTraps.ToArray())
-            {
-                t?.Destroy();
-            }
-            AllTraps = new();
-            maxId = 0;
+            if (audioSource != null) audioSource?.Stop();
         }
-        catch (Exception e)
-        {
-            Error(e);
-        }
+        catch { }
+        AllTraps.Remove(this);
+        base.Destroy();
+    }
+
+    public override void OnMeetingEnd()
+    {
+        this?.Destroy();
     }
 
     public static void ClearAllTraps(PlayerControl trapper, bool active)
     {
-        var traps = AllTraps.Where(x => x.trapper == trapper && (active || !x.isActive)).ToArray();
+        var traps = AllTraps.Where(x => x.trapper == trapper && (active || !x.isTriggered)).ToArray();
         foreach (var t in traps)
         {
             t?.Destroy();
@@ -108,9 +96,9 @@ public class KillTrap
         if (trap == null || trap.isDisabled) return;
         // 有効にする
 
-        trap.isActive = true;
+        trap.isTriggered = true;
         trap.target = target;
-        var spriteRenderer = trap.killtrap.gameObject.GetComponent<SpriteRenderer>();
+        var spriteRenderer = trap.GameObject.gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = trapActiveSprite;
 
         ClearAllTraps(trapper, false);
@@ -148,12 +136,12 @@ public class KillTrap
         target.NetTransform.Halt();
 
         var moveableFlag = false;
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(EvilTrapper.killTimer, new Action<float>((p) =>
+        HudManager.Instance.StartCoroutine(Effects.Lerp(EvilTrapper.killTimer, new Action<float>((p) =>
         {
             try
             {
                 if (InMeeting) return;
-                if (trap == null || trap.killtrap == null || !trap.isActive) //　解除された場合の処理
+                if (trap == null || trap.GameObject == null || !trap.isTriggered) //　解除された場合の処理
                 {
                     if (!moveableFlag)
                     {
@@ -180,7 +168,7 @@ public class KillTrap
                 { // カウントダウン中の処理
                     target.moveable = false;
                     target.NetTransform.Halt();
-                    target.transform.position = trap.killtrap.transform.position + new Vector3(0, 0.3f, 0);
+                    target.transform.position = trap.GameObject.transform.position + new Vector3(0, 0.3f, 0);
                 }
             }
             catch (Exception e)
@@ -194,33 +182,24 @@ public class KillTrap
     public static void disableTrap(int trapId)
     {
         var trap = AllTraps.FirstOrDefault(x => x.Id == trapId);
-        trap.isActive = false;
+        trap.isTriggered = false;
         trap.isDisabled = true;
         trap.audioSource.Stop();
         trap.audioSource.PlayOneShot(disable);
-        _ = new LateTask(trap.Destroy, disable.length, "Destroy KillTrap");
+        _ = new LateTask(trap.Destroy, disable.length + 1f, "Destroy KillTrap");
     }
 
-    public static void UpdateTrap()
+    public override void Update()
     {
-        foreach (var t in AllTraps.ToArray())
-        {
-            t.Update();
-            bool canSee = t.isActive || PlayerControl.LocalPlayer.IsImpostor() || CanSeeGhostInfo;
-            var opacity = canSee ? 1.0f : 0.0f;
+        bool canSee = isTriggered || PlayerControl.LocalPlayer.IsImpostor() || CanSeeGhostInfo;
+        var opacity = canSee ? 1.0f : 0.0f;
 
-            if (t.killtrap != null)
-                t.killtrap.GetComponent<SpriteRenderer>().material.color = Color.Lerp(Palette.ClearWhite, Palette.White, opacity);
-        }
-    }
+        if (Renderer != null)
+            Renderer.material.color = Color.Lerp(Palette.ClearWhite, Palette.White, opacity);
 
-    public void Update()
-    {
-        if (killtrap != null && isActive && !InMeeting)
+        if (GameObject != null && isTriggered && !InMeeting)
         {
-            Vector3 p1 = killtrap.transform.position;
-            Vector3 p2 = PlayerControl.LocalPlayer.transform.position;
-            float distance = Vector3.Distance(p1, p2);
+            var distance = Vector2.Distance(GameObject.transform.position, PlayerControl.LocalPlayer.GetTruePosition());
             if (PlayerControl.LocalPlayer != target && PlayerControl.LocalPlayer.IsAlive() && distance < 0.5)
             {
                 var writer = StartRPC(CustomRPC.DisableTrap);
@@ -232,11 +211,9 @@ public class KillTrap
 
         if (!hasTrappedPlayer() && !InMeeting)
         {
-            if (DateTime.UtcNow.Subtract(placedTime).TotalSeconds < EvilTrapper.extensionTime) return;
-            if (isActive || PlayerControl.LocalPlayer.IsDead() || PlayerControl.LocalPlayer.inVent || isDisabled || InMeeting) return;
-            var p1 = PlayerControl.LocalPlayer.transform.localPosition;
-            var p2 = killtrap.transform.localPosition;
-            var distance = Vector3.Distance(p1, p2);
+            if (!IsActive || isTriggered || PlayerControl.LocalPlayer.IsDead() || PlayerControl.LocalPlayer.inVent || isDisabled || InMeeting) return;
+
+            var distance = Vector2.Distance(GameObject.transform.position, PlayerControl.LocalPlayer.GetTruePosition());
             if (distance < EvilTrapper.trapRange)
             {
                 target = PlayerControl.LocalPlayer;
@@ -247,13 +224,13 @@ public class KillTrap
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
                     writer.Write(Id);
                     writer.EndRPC();
-                    RPCProcedure.activateTrap(trapper.PlayerId, PlayerControl.LocalPlayer.PlayerId, Id);
+                    activateTrap(trapper, PlayerControl.LocalPlayer, Id);
                 }
             }
         }
     }
 
-    public static void OnMeetingStart()
+    public override void OnMeetingStart()
     {
         try
         {
@@ -314,8 +291,8 @@ public class KillTrap
         EvilTrapper.isTrapKill = true;
     }
 
-
     private static readonly Assembly dll = Assembly.GetExecutingAssembly();
+
     [PluginModuleInitializer]
     public static void LoadAudioAssets()
     {

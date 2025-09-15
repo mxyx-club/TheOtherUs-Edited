@@ -26,6 +26,26 @@ public class BandLeader
     public static Sprite drumButton = new ResourceSprite("BandLeader.Drum.png");
     public static Sprite drumDel = new ResourceSprite("BandLeader.DrumDel.png");
 
+    public static void BandLeaderFormed(byte winner, bool formed)
+    {
+        if (formed)
+        {
+            Formed = true;
+            winnerFlags = (WinnerFlags)winner;
+            Message($"Band Leader Formed {(WinnerFlags)winner}");
+
+            if (Members.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) || Player.AmOwner)
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Player, "BandLeader.formed".Translate());
+        }
+        else
+        {
+            if (Members.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) || Player.AmOwner)
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Player, "BandLeader.bad".Translate());
+        }
+
+
+    }
+
     public static void CreateBandMember(byte playerId, int role)
     {
         Message($"playerId: {playerId}, role: {role}");

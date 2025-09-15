@@ -22,14 +22,11 @@ public static class EvilTrapper
     public static void setTrap()
     {
         var pos = PlayerControl.LocalPlayer.transform.position;
-        byte[] buff = new byte[sizeof(float) * 2];
-        Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-        Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
         var writer = StartRPC(CustomRPC.PlaceTrap);
         writer.Write(PlayerControl.LocalPlayer.PlayerId);
-        writer.WriteBytesAndSize(buff);
+        writer.Write(pos);
         writer.EndRPC();
-        RPCProcedure.placeTrap(PlayerControl.LocalPlayer.PlayerId, buff);
+        RPCProcedure.placeTrap(PlayerControl.LocalPlayer.PlayerId, pos);
         placedTime = DateTime.UtcNow;
     }
 

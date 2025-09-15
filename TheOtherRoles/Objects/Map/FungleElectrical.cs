@@ -1,6 +1,7 @@
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace TheOtherRoles.Objects.Map;
+
 public static class FungleAdditionalElectrical
 {
     public static void CreateElectrical()

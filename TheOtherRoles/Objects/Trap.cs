@@ -1,15 +1,8 @@
-using TheOtherRoles.Attributes;
-
 namespace TheOtherRoles.Objects;
 
-public class Trap
+public class Trap : CustomObject
 {
     public static List<Trap> AllTraps = new();
-
-    public GameObject trap;
-
-    public int trapId;
-    private static int maxId;
 
     public PlayerControl trapper;
     public List<PlayerControl> trapped = new();
@@ -22,23 +15,21 @@ public class Trap
     private int usedCount;
     private string room;
 
-    public Trap(PlayerControl player, Vector2 p)
+    public Trap(PlayerControl player, Vector3 pos)
     {
-        trap = new GameObject("Trap") { layer = 11 };
-        trap.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-        var position = new Vector3(p.x, p.y, (p.y / 1000) + 0.001f); // just behind player
-        trap.transform.position = position;
+        GameObject.layer = 11;
+        GameObject.name = "Trap " + Id;
+        var position = new Vector3(pos.x, pos.y, pos.y + 0.001f);
+        GameObject.transform.position = position;
         neededCount = Trapper.trapCountToReveal;
 
-        var trapRenderer = trap.AddComponent<SpriteRenderer>();
-        trapRenderer.sprite = trapSprite;
-        trapRenderer.color = Color.white * new Vector4(1, 1, 1, 0.5f);
-        trapId = ++maxId;
+        Renderer.sprite = trapSprite;
+        Renderer.color = Color.white * new Vector4(1, 1, 1, 0.5f);
         trapper = player;
         arrow.Update(position);
         arrow.arrow.SetActive(false);
-        trap.SetActive(false);
-        if (PlayerControl.LocalPlayer == player) trap.SetActive(true);
+        GameObject.SetActive(false);
+        if (PlayerControl.LocalPlayer == player) GameObject.SetActive(true);
 
         var lastRoom = FastDestroyableSingleton<HudManager>.Instance?.roomTracker?.LastRoom?.RoomId ?? null;
         room = lastRoom != null ? FastDestroyableSingleton<TranslationController>.Instance.GetString((SystemTypes)lastRoom) : "室外";
@@ -46,34 +37,21 @@ public class Trap
         _ = new LateTask(() =>
         {
             triggerable = true;
-            trapRenderer.color = Color.white;
+            Renderer.color = Color.white;
         }, 5f);
 
         AllTraps.Add(this);
     }
 
-    public void Destroy()
+    public override void Destroy()
     {
         try
         {
-
-            if (arrow != null) UObject.Destroy(arrow.arrow);
-            if (trap != null) UObject.Destroy(trap);
+            arrow?.arrow?.Destroy();
         }
         catch { }
         AllTraps.Remove(this);
-    }
-
-    [OnGameStart, OnGameEnd]
-    public static void ClearAndReload()
-    {
-        foreach (var t in AllTraps.ToArray())
-        {
-            t.Destroy();
-        }
-
-        AllTraps = new();
-        maxId = 0;
+        base.Destroy();
     }
 
     public static void clearRevealedTraps()
@@ -96,7 +74,7 @@ public class Trap
 
     public static void triggerTrap(byte targetId, int trapId)
     {
-        var t = AllTraps.FirstOrDefault(x => x.trapId == trapId);
+        var t = AllTraps.FirstOrDefault(x => x.Id == trapId);
         var target = PlayerById(targetId);
         if (Trapper.trapper == null || t == null || t.trapped.Contains(target) || target == null) return;
 
@@ -124,7 +102,7 @@ public class Trap
 
         if (t.revealed && (PlayerControl.LocalPlayer == t.trapper || CanSeeGhostInfo))
         {
-            var message = $"陷阱 {t.room} {t.trapId} 日志: \n";
+            var message = $"陷阱 {t.room} 日志: \n";
             t.trapped = t.trapped.OrderBy(x => rnd.Next()).ToList();
             message = t.trapped.Aggregate(message, (current, p) => current + Trapper.infoType switch
             {
@@ -151,21 +129,21 @@ public class Trap
         if (arrow.arrow.active) arrow.Update();
 
         var canSee = CanSeeGhostInfo || PlayerControl.LocalPlayer == trapper || trapped.Any(x => x.PlayerId == player.PlayerId);
-        trap.SetActive(canSee);
+        GameObject.SetActive(canSee);
 
         if (revealed || !triggerable || trapped.Any(x => x.PlayerId == player.PlayerId)) return;
 
         if (player.inVent || !player.CanMove) return;
-        var distance = Vector2.Distance(trap.transform.position, player.GetTruePosition());
-        if (distance < 0.8f)
+        var distance = Vector2.Distance(GameObject.transform.position, player.GetTruePosition());
+        if (distance < 0.6f)
         {
             if (!revealed && player.PlayerId != trapper.PlayerId && player.IsAlive())
             {
                 var writer = StartRPC(CustomRPC.TriggerTrap);
                 writer.Write(player.PlayerId);
-                writer.Write(trapId);
+                writer.Write(Id);
                 writer.EndRPC();
-                triggerTrap(player.PlayerId, trapId);
+                triggerTrap(player.PlayerId, Id);
             }
         }
     }

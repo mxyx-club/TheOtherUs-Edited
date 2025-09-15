@@ -1,44 +1,35 @@
-using TheOtherRoles.Attributes;
-
 namespace TheOtherRoles.Objects;
 
-internal class NinjaTrace
+internal class NinjaTrace : CustomObject
 {
     public static List<NinjaTrace> traces = new();
 
-    private readonly GameObject trace;
     private float timeRemaining;
 
-    public NinjaTrace(Vector2 p, float duration = 1f)
+    public NinjaTrace(Vector3 p, float duration = 1f)
     {
-        trace = new GameObject("NinjaTrace");
-        trace.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-        //Vector3 position = new Vector3(p.x, p.y, PlayerControl.LocalPlayer.transform.localPosition.z + 0.001f); // just behind player
-        var position = new Vector3(p.x, p.y, (p.y / 1000f) + 0.01f);
-        trace.transform.position = position;
-        trace.transform.localPosition = position;
+        GameObject.name = "NinjaTrace " + Id;
+        var position = new Vector3(p.x, p.y, p.z + 0.001f);
+        GameObject.transform.position = position;
+        GameObject.transform.localPosition = position;
 
-        var traceRenderer = trace.AddComponent<SpriteRenderer>();
-        traceRenderer.sprite = new ResourceSprite("NinjaTraceW.png", 225f);
+        Renderer.sprite = new ResourceSprite("NinjaTraceW.png", 225f);
 
         timeRemaining = duration;
 
         // display the ninjas color in the trace
         var colorDuration = CustomOptionHolder.ninjaTraceColorTime.GetFloat();
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(colorDuration, new Action<float>(p =>
+        HudManager.Instance.StartCoroutine(Effects.Lerp(colorDuration, new Action<float>(p =>
         {
             Color c = Palette.PlayerColors[Ninja.ninja.Data.DefaultOutfit.ColorId];
-            if (IsLightColor(Ninja.ninja)) c = Color.white;
-            else c = Palette.PlayerColors[6];
-            //if (Camouflager.camouflageTimer > 0) {
-            //    c = Palette.PlayerColors[6];
-            //}
+
+            c = IsLightColor(Ninja.ninja) ? Color.white : (Color)Palette.PlayerColors[6];
 
             var g = Color.green; // Usual display color.
 
             var combinedColor = (Mathf.Clamp01(p) * g) + (Mathf.Clamp01(1 - p) * c);
 
-            if (traceRenderer) traceRenderer.color = combinedColor;
+            Renderer.color = combinedColor;
         })));
 
         var fadeOutDuration = 1f;
@@ -49,31 +40,21 @@ internal class NinjaTrace
             if (p < (duration - fadeOutDuration) / duration)
                 interP = 0f;
             else interP = ((p * duration) + fadeOutDuration - duration) / fadeOutDuration;
-            if (!traceRenderer) return;
-            var color = traceRenderer.color;
-            traceRenderer.color = new Color(color.r, color.g, color.b,
-                Mathf.Clamp01(1 - interP));
+            if (!Renderer) return;
+            var color = Renderer.color;
+            Renderer.color = new Color(color.r, color.g, color.b, Mathf.Clamp01(1 - interP));
         })));
 
-        trace.SetActive(true);
+        GameObject.SetActive(true);
         traces.Add(this);
     }
 
-    [OnGameStart, OnGameEnd]
-    public static void clearTraces()
+    public override void Update()
     {
-        traces = new();
-    }
-
-    public static void UpdateAll()
-    {
-        foreach (var traceCurrent in new List<NinjaTrace>(traces))
-        {
-            traceCurrent.timeRemaining -= Time.fixedDeltaTime;
-            if (!(traceCurrent.timeRemaining < 0)) continue;
-            traceCurrent.trace.SetActive(false);
-            UObject.Destroy(traceCurrent.trace);
-            traces.Remove(traceCurrent);
-        }
+        timeRemaining -= Time.fixedDeltaTime;
+        if (!(timeRemaining < 0)) return;
+        GameObject.SetActive(false);
+        UObject.Destroy(GameObject);
+        traces.Remove(this);
     }
 }

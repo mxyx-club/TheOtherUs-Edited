@@ -658,13 +658,6 @@ public static class MurderPlayerPatch
                 EvilTrapper.evilTrapper.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + EvilTrapper.penaltyTime;
                 HudManagerStartPatch.evilTrapperSetTrapButton.Timer = EvilTrapper.cooldown + EvilTrapper.penaltyTime;
             }
-            if (!EvilTrapper.isTrapKill)
-            {
-                MessageWriter writer;
-                writer = StartRPC(CustomRPC.ClearTrap);
-                writer.EndRPC();
-                RPCProcedure.clearTrap();
-            }
             EvilTrapper.isTrapKill = false;
         }
 

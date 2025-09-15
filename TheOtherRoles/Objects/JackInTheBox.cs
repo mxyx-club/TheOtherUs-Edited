@@ -3,36 +3,32 @@ using TheOtherRoles.Attributes;
 
 namespace TheOtherRoles.Objects;
 
-public class JackInTheBox
+public class JackInTheBox : CustomObject
 {
     public static List<JackInTheBox> AllJackInTheBoxes = new();
     public static readonly int JackInTheBoxLimit = 3;
     public static bool boxesConvertedToVents;
     public static ResourceSpriteArray boxAnimationSprites;
-    private readonly SpriteRenderer boxRenderer;
 
-    private readonly GameObject gameObject;
     private readonly SpriteRenderer ventRenderer;
     public readonly Vent vent;
 
-    public JackInTheBox(Vector2 p)
+    public JackInTheBox(PlayerControl player, Vector3 pos)
     {
-        gameObject = new GameObject("JackInTheBox") { layer = 11 };
-        gameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-        var position = new Vector3(p.x, p.y, (p.y / 1000f) + 0.01f);
+        GameObject.layer = 11;
+        GameObject.name = "JackInTheBox " + Id;
         // Add collider offset that DoMove moves the player up at a valid position
-        position += (Vector3)PlayerControl.LocalPlayer.Collider.offset;
+        pos += (Vector3)PlayerControl.LocalPlayer.Collider.offset;
         // Create the marker
-        gameObject.transform.position = position;
-        boxRenderer = gameObject.AddComponent<SpriteRenderer>();
-        boxRenderer.sprite = getBoxAnimationSprite(0);
-        boxRenderer.color = boxRenderer.color.SetAlpha(0.5f);
+        GameObject.transform.position = pos;
+        Renderer.sprite = getBoxAnimationSprite(0);
+        Renderer.color = Renderer.color.SetAlpha(0.5f);
 
         // Create the vent
         var referenceVent = UObject.FindObjectOfType<Vent>();
         vent = UObject.Instantiate(referenceVent);
         vent.gameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-        vent.transform.position = gameObject.transform.position;
+        vent.transform.position = GameObject.transform.position;
         vent.Left = null;
         vent.Right = null;
         vent.Center = null;
@@ -60,9 +56,16 @@ public class JackInTheBox
 
         // Only render the box for the Trickster and for Ghosts
         var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster || CanSeeGhostInfo;
-        gameObject.SetActive(showBoxToLocalPlayer);
+        GameObject.SetActive(showBoxToLocalPlayer);
 
         AllJackInTheBoxes.Add(this);
+    }
+
+    public override void Destroy()
+    {
+        AllJackInTheBoxes.Remove(this);
+        vent?.Destroy();
+        base.Destroy();
     }
 
     public static Sprite getBoxAnimationSprite(int index)
@@ -88,10 +91,10 @@ public class JackInTheBox
         int frameCount = boxAnimationSprites.Sprites.Length;
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.6f, new Action<float>(p =>
         {
-            if (box.boxRenderer == null) return;
+            if (box.Renderer == null) return;
             int frameIndex = (int)(p * frameCount);
-            box.boxRenderer.sprite = getBoxAnimationSprite(frameIndex);
-            if ((int)p == 1) box.boxRenderer.sprite = getBoxAnimationSprite(0);
+            box.Renderer.sprite = getBoxAnimationSprite(frameIndex);
+            if ((int)p == 1) box.Renderer.sprite = getBoxAnimationSprite(0);
         })));
     }
 
@@ -101,15 +104,15 @@ public class JackInTheBox
         foreach (var box in AllJackInTheBoxes)
         {
             var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster || CanSeeGhostInfo;
-            box.gameObject?.SetActive(showBoxToLocalPlayer);
+            box.GameObject?.SetActive(showBoxToLocalPlayer);
         }
     }
 
     public void convertToVent()
     {
-        gameObject.SetActive(true);
+        GameObject.SetActive(true);
         vent.gameObject.SetActive(true);
-        boxRenderer.color = boxRenderer.color.SetAlpha(1f);
+        Renderer.color = Renderer.color.SetAlpha(1f);
         ventRenderer.sprite = null;
     }
 

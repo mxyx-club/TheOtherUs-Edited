@@ -1698,7 +1698,6 @@ internal class HudManagerUpdatePatch
         // Mini
         miniUpdate();
         Mini.Update();
-        Decoy.UpdateAll();
 
         // Update player outlines
         setBasePlayerOutlines();
@@ -1715,20 +1714,10 @@ internal class HudManagerUpdatePatch
         snitchTextUpdate();
         // Engineer
         engineerUpdate();
-        // Ninja
-        NinjaTrace.UpdateAll();
-        // yoyo
-        Silhouette.UpdateAll();
         // BountyHunter
         bountyHunterUpdate();
-        // EvilTrapper
-        KillTrap.UpdateTrap();
         // Trapper
         Trap.UpdateTrap();
-        // Bomber
-        Bomb.update();
-        // Vampire
-        Garlic.UpdateAll();
         // Multitasker
         multitaskerUpdate();
         // Deputy Sabotage, Use and Vent Button Disabling
@@ -1739,6 +1728,8 @@ internal class HudManagerUpdatePatch
         updateUseButton(__instance);
         updateGiantSize(__instance);
         updateBlindReport();
+
+        CustomObject.UpdateAll();
 
         if (Specter.Player != null && PlayerControl.LocalPlayer == Specter.Player && InGame && !InMeeting)
         {

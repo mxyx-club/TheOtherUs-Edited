@@ -44,19 +44,20 @@ public class Aftermath
         else if (Terrorist.terrorist == killer)
         {
             var pos = killer.transform.position;
-            var buff = new byte[sizeof(float) * 2];
-            Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-            Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
-            var writer = StartRPC(killer.NetId, CustomRPC.PlaceBomb);
-            writer.WriteBytesAndSize(buff);
+
+            var writer = StartRPC(CustomRPC.PlaceBomb);
+            writer.Write(killer.PlayerId);
+            writer.Write(pos);
             writer.EndRPC();
-            placeBomb(buff);
-            SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
+            placeBomb(killer, pos);
 
             if (Terrorist.selfExplosion)
             {
                 RpcCustomMurderPlayer(Terrorist.terrorist, Terrorist.terrorist, false);
             }
+
+            SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
+
             terroristButton.Timer = terroristButton.MaxTimer;
         }
         else if (Morphling.morphling == killer)
@@ -116,17 +117,14 @@ public class Aftermath
         else if (Yoyo.yoyo == killer)
         {
             var pos = PlayerControl.LocalPlayer.transform.position;
-            byte[] buff = new byte[sizeof(float) * 2];
-            Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-            Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
             if (Yoyo.markedLocation == null)
             {
                 Message($"marked location is null in button press");
                 var writer = StartRPC(CustomRPC.YoyoMarkLocation);
-                writer.WriteBytesAndSize(buff);
+                writer.Write(pos);
                 writer.EndRPC();
-                yoyoMarkLocation(buff);
+                yoyoMarkLocation(pos);
                 SoundEffectsManager.play("tricksterPlaceBox");
                 yoyoButton.Sprite = Yoyo.blinkButtonSprite;
                 yoyoButton.Timer = 10f;
@@ -144,10 +142,10 @@ public class Aftermath
                     SubmergedCompatibility.ChangeFloor(exit.y > -7);
                 }
                 var writer = StartRPC(killer.NetId, CustomRPC.YoyoBlink);
-                writer.Write(byte.MaxValue);
-                writer.WriteBytesAndSize(buff);
+                writer.Write(true);
+                writer.Write(pos);
                 writer.EndRPC();
-                yoyoBlink(true, buff);
+                yoyoBlink(true, pos);
                 yoyoButton.EffectDuration = Yoyo.blinkDuration;
                 yoyoButton.Timer = 10f;
                 yoyoButton.HasEffect = true;
@@ -164,15 +162,13 @@ public class Aftermath
         {
             if (!JackInTheBox.hasJackInTheBoxLimitReached())
             {
-                var pos = PlayerControl.LocalPlayer.transform.position;
-                var buff = new byte[sizeof(float) * 2];
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+                var pos = Trickster.trickster.transform.position;
 
                 var writer = StartRPC(killer.NetId, CustomRPC.PlaceJackInTheBox);
-                writer.WriteBytesAndSize(buff);
+                writer.Write(Trickster.trickster.PlayerId);
+                writer.Write(pos);
                 writer.EndRPC();
-                placeJackInTheBox(buff);
+                placeJackInTheBox(Trickster.trickster, pos);
                 SoundEffectsManager.play("tricksterPlaceBox");
                 placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer;
             }
@@ -283,9 +279,9 @@ public class Aftermath
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 writer.Write(Marionette.decoy.Id);
                 writer.Write(PlayerControl.LocalPlayer.transform.position);
-                writer.Write(Marionette.decoy.gameObject.transform.position);
+                writer.Write(Marionette.decoy.GameObject.transform.position);
                 writer.EndRPC();
-                DecoySwap(PlayerControl.LocalPlayer, Marionette.decoy.Id, PlayerControl.LocalPlayer.transform.position, Marionette.decoy.gameObject.transform.position);
+                DecoySwap(PlayerControl.LocalPlayer, Marionette.decoy.Id, PlayerControl.LocalPlayer.transform.position, Marionette.decoy.GameObject.transform.position);
 
                 if (HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer) HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
             }

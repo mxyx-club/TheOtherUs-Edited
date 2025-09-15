@@ -18,6 +18,7 @@ public class Infected
     public static void KillPlayer(PlayerControl player, PlayerControl target)
     {
         if (player == null || target == null) return;
+        if (!CheckMurderPlayer(player, target)) return;
 
         if (SchrodingersCat.Player != null && target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
         {
@@ -25,7 +26,6 @@ public class Infected
             return;
         }
 
-        if (!CheckMurderPlayer(player, target)) return;
         if (CreatedCount >= MaxPlayer || Player.Count(x => x.IsAlive()) >= ActiveLimit || target.IsKiller())
         {
             RpcCustomMurderPlayer(player, target, true);

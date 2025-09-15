@@ -15,6 +15,7 @@ internal class ExileControllerBeginPatch
     public static bool ForceExile;
     public static bool Prefix(ExileController __instance, [HarmonyArgument(0)] ref GameData.PlayerInfo exiled, [HarmonyArgument(1)] bool tie)
     {
+        Message("Begin", "ExileController");
         lastExiled = exiled;
         Message($"开始放逐: {exiled?.PlayerName ?? "null"}");
         if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && !IsSec)
@@ -325,8 +326,6 @@ internal class ExileControllerWrapUpPatch
             Marionette.decoy = null;
         }
 
-        // Clear all traps
-        KillTrap.ClearAndReload();
         Balancer.WrapUp(exiled == null ? null : exiled.Object);
         // Mini set adapted cooldown
         if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor)
@@ -565,7 +564,7 @@ internal class ExileControllerWrapUpPatch
             (GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown / 2) + 2, new Action<float>(p =>
             { if (p == 1f) foreach (var trap in Trap.AllTraps) trap.triggerable = true; })));
 
-        if (!Yoyo.markStaysOverMeeting) Silhouette.clearSilhouettes();
+        if (!Yoyo.markStaysOverMeeting) Silhouette.Silhouettes.ForEach(x => x.Destroy());
 
         // AntiTeleport set position
         AntiTeleport.setPosition();

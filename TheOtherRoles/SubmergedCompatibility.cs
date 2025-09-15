@@ -106,8 +106,7 @@ public static class SubmergedCompatibility
 
         Types = AccessTools.GetTypesFromAssembly(Assembly);
 
-        InjectedTypes = (Dictionary<string, Type>)AccessTools.PropertyGetter(Types.FirstOrDefault(t => t.Name == "ComponentExtensions"), "RegisteredTypes")
-            .Invoke(null, Array.Empty<object>());
+        InjectedTypes = (Dictionary<string, Type>)AccessTools.PropertyGetter(Types.FirstOrDefault(t => t.Name == "ComponentExtensions"), "RegisteredTypes").Invoke(null, []);
 
         SubmarineStatusType = Types.First(t => t.Name == "SubmarineStatus");
         CalculateLightRadiusMethod = AccessTools.Method(SubmarineStatusType, "CalculateLightRadius");
