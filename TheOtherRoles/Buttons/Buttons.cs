@@ -310,7 +310,6 @@ internal static class HudManagerStartPatch
             buttonText: GetString("gameModeButton")
         )
         { Timer = 0f };
-        Message("Create");
     }
 
     public static void createButtonsPostfix(HudManager __instance)
@@ -4458,8 +4457,6 @@ internal static class HudManagerStartPatch
             {
                 var target = Infected.currentTarget;
                 if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
-
-                if (target == Mini.mini && !Mini.isGrownUp) return;
 
                 Infected.KillPlayer(PlayerControl.LocalPlayer, target);
 

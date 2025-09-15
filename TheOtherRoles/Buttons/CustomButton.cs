@@ -14,7 +14,7 @@ public class CustomButton
     private static bool Started;
 
     private Action OnClick;
-    private readonly Action InitialOnClick;
+    private readonly Action InitialOnClick ;
     public Func<bool> HasButton;
     public Func<bool> CouldUse;
     private readonly Action OnMeetingEnds;
@@ -443,7 +443,7 @@ public class CustomButton
             actionButtonMat.SetFloat(Desat, 1f);
         }
 
-        if (Started && Timer >= 0 && ((HasEffect && isEffectActive) || !PlayerControl.LocalPlayer.inVent))
+        if ((!InGame || Started) && Timer >= 0 && ((HasEffect && isEffectActive) || !PlayerControl.LocalPlayer.inVent))
             Timer -= Time.deltaTime;
 
         if (Timer <= 0 && HasEffect && isEffectActive)

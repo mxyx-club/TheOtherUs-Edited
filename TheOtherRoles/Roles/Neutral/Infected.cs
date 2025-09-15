@@ -25,9 +25,10 @@ public class Infected
             return;
         }
 
+        if (!CheckMurderPlayer(player, target)) return;
         if (CreatedCount >= MaxPlayer || Player.Count(x => x.IsAlive()) >= ActiveLimit || target.IsKiller())
         {
-            RpcCustomMurderPlayer(player, target);
+            RpcCustomMurderPlayer(player, target, true);
         }
         else
         {
