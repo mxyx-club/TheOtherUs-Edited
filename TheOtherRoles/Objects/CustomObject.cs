@@ -6,110 +6,106 @@ namespace TheOtherRoles.Objects;
 public interface ICustomObject
 {
     GameObject? GameObject { get; set; }
+    bool IsActive { get; set; }
+
+    void OnMeetingStart();
+    void OnMeetingEnd();
+    void Update();
+    void OnDestroy();
 }
 
-public abstract class CustomObject : IDisposable, ICustomObject
+public abstract class CustomObject : ICustomObject
 {
-    public static List<CustomObject> AllObject = new();
+    public static IEnumerable<CustomObject> AllCustomObject => _AllCustomObject.AsReadOnly();
+    public static List<CustomObject> _AllCustomObject = new();
+
     public GameObject? GameObject { get; set; }
     public SpriteRenderer? Renderer { get; set; }
+    public MonoBehaviour? Behaviour { get; set; }
     public bool IsActive { get; set; }
 
-    public DateTime placedTime;
+    public int Id { get; private set; }
+    protected static int maxId;
+    protected DateTime placedTime;
 
-    public int Id;
-    private static int maxId;
-
-    public virtual void Destroy()
+    protected CustomObject()
     {
-        GameObject?.Destroy();
-        GameObject = null;
-        Renderer?.Destroy();
-        Renderer = null;
-        AllObject.Remove(this);
-    }
-
-    public virtual void OnMeetingStart()
-    {
-    }
-
-    public virtual void OnMeetingEnd()
-    {
-    }
-
-    public virtual void Update()
-    {
-    }
-
-    public void Dispose()
-    {
-        Destroy();
-    }
-
-    public CustomObject()
-    {
+        placedTime = DateTime.Now;
         Id = maxId++;
         GameObject = new GameObject("Custom Object " + Id);
         Renderer = GameObject.AddComponent<SpriteRenderer>();
+        Behaviour = GameObject.AddComponent<CustomObjectBehaviour>();
         GameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-        placedTime = DateTime.Now;
-        AllObject.Add(this);
+        GameObject.SetActive(false);
+        IsActive = false;
+        _AllCustomObject.Add(this);
     }
+
+    public void Destroy()
+    {
+        OnDestroy();
+        GameObject?.Destroy();
+        GameObject = null;
+        Renderer = null;
+        Behaviour = null;
+        _AllCustomObject.Remove(this);
+    }
+
+    public virtual void OnMeetingStart() { }
+    public virtual void OnMeetingEnd() { }
+    public virtual void Update() { }
+    public virtual void OnDestroy() { }
 
     [OnGameStart, OnGameEnd]
     public static void DestroyAll()
     {
-        foreach (var obj in AllObject.ToArray())
+        var list = AllCustomObject.ToArray();
+        foreach (var obj in list)
         {
             obj?.Destroy();
         }
-        AllObject.Clear();
+        _AllCustomObject = new();
         maxId = 0;
-    }
-
-    public static void EndMeeting()
-    {
-        foreach (var obj in AllObject.ToArray())
-        {
-            obj?.OnMeetingEnd();
-        }
     }
 
     public static void StartMeeting()
     {
-        foreach (var obj in AllObject.ToArray())
+        foreach (var obj in AllCustomObject.ToArray())
         {
             obj?.OnMeetingStart();
         }
     }
 
+    public static void EndMeeting()
+    {
+        foreach (var obj in AllCustomObject.ToArray())
+        {
+            obj?.OnMeetingEnd();
+        }
+    }
+
     public static void UpdateAll()
     {
-        foreach (var obj in AllObject.ToArray())
+        foreach (var obj in AllCustomObject.ToArray())
         {
             obj?.Update();
         }
     }
+}
 
-    public static T? FindWithInRange<T>(List<T> list, Vector3 pos, float maxDistance = 3f, bool onlyActive = true) where T : CustomObject
+public abstract class CustomObjectBase<T> : CustomObject where T : CustomObjectBase<T>
+{
+    public static List<T> AllObjects = new();
+
+    protected CustomObjectBase() : base()
     {
-        T? nearestObject = null;
-        float closestDistance = maxDistance;
+        AllObjects.Add((T)this);
+    }
 
-        foreach (var obj in list)
-        {
-            if (obj.GameObject == null || (onlyActive && obj.IsActive)) continue;
-
-            float distance = Vector3.Distance(pos, obj.GameObject.transform.position);
-
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                nearestObject = obj;
-            }
-        }
-
-        return nearestObject;
+    public override void OnDestroy()
+    {
+        AllObjects.Remove((T)this);
+        base.OnDestroy();
     }
 }
 
@@ -122,9 +118,44 @@ public class CustomObjectBehaviour : MonoBehaviour
 
     public void OnDestroy()
     {
-        if (HudManager.Instance.PlayerCam.Target == this)
+        if (HudManager.Instance != null && HudManager.Instance.PlayerCam.Target == this)
         {
             HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
         }
+    }
+}
+
+public static class CustomObjectExtensions
+{
+    public static void SetActive(this CustomObject obj, bool active)
+    {
+        if (obj.GameObject != null)
+        {
+            obj.GameObject.SetActive(active);
+            obj.IsActive = active;
+        }
+    }
+
+    public static T? FindWithInRange<T>(this IEnumerable<T> list, Vector3 pos, float maxDistance = 3f, bool onlyActive = true) where T : CustomObject
+    {
+        T? @object = null;
+        float closestSqr = maxDistance * maxDistance;
+
+        foreach (var obj in list)
+        {
+            if (obj.GameObject == null) continue;
+            if (onlyActive && !obj.IsActive) continue;
+
+            Vector3 offset = obj.GameObject.transform.position - pos;
+            float distSqr = offset.sqrMagnitude;
+
+            if (distSqr < closestSqr)
+            {
+                closestSqr = distSqr;
+                @object = obj;
+            }
+        }
+
+        return @object;
     }
 }

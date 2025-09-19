@@ -219,11 +219,13 @@ public class CustomOptionHolder
     public static CustomOption blackmailerCooldown;
 
     public static CustomOption terroristSpawnRate;
+    public static CustomOption terroristMode;
+    public static CustomOption terroristBombCooldown;
     public static CustomOption terroristBombDestructionTime;
     public static CustomOption terroristBombDestructionRange;
     public static CustomOption terroristBombHearRange;
     public static CustomOption terroristDefuseDuration;
-    public static CustomOption terroristBombCooldown;
+    public static CustomOption terroristBombCanDefuse;
     public static CustomOption terroristBombActiveAfter;
 
     public static CustomOption minerSpawnRate;
@@ -982,12 +984,17 @@ public class CustomOptionHolder
         blackmailerCooldown = Create(102601, Types.Impostor, "blackmailerCooldown", 15f, 5f, 120f, 2.5f, blackmailerSpawnRate);
 
         terroristSpawnRate = Create(102700, Types.Impostor, Cs(Terrorist.color, "Terrorist"), rates, null, true);
-        terroristBombDestructionTime = Create(102701, Types.Impostor, "terroristBombDestructionTime", 0f, 0f, 120f, 0.5f, terroristSpawnRate);
-        terroristBombDestructionRange = Create(102702, Types.Impostor, "terroristBombDestructionRange", 35f, 5f, 250f, 5f, terroristSpawnRate);
-        terroristBombHearRange = Create(102703, Types.Impostor, "terroristBombHearRange", 60f, 5f, 250f, 5f, terroristSpawnRate);
-        terroristDefuseDuration = Create(102704, Types.Impostor, "terroristDefuseDuration", 2f, 0f, 30f, 0.5f, terroristSpawnRate);
-        terroristBombCooldown = Create(102705, Types.Impostor, "terroristBombCooldown", 0f, 5f, 60f, 2.5f, terroristSpawnRate);
-        terroristBombActiveAfter = Create(102706, Types.Impostor, "terroristBombActiveAfter", 0f, 0f, 15f, 0.5f, terroristSpawnRate);
+        terroristMode = Create(102701, Types.Impostor, "terroristMode", ["terroristMode1", "terroristMode2"], terroristSpawnRate);
+        terroristBombCooldown = Create(102702, Types.Impostor, "terroristBombCooldown", 15f, 5f, 60f, 2.5f, terroristSpawnRate);
+        terroristBombActiveAfter = Create(102703, Types.Impostor, "terroristBombActiveAfter", 15f, 1f, 15f, 0.5f, terroristSpawnRate,
+            isHidden: () => { return terroristMode.Selection == 0; });
+        terroristBombDestructionTime = Create(102704, Types.Impostor, "terroristBombDestructionTime", 0f, 0f, 120f, 0.5f, terroristSpawnRate,
+            isHidden: () => { return terroristMode.Selection == 0; });
+        terroristBombDestructionRange = Create(102705, Types.Impostor, "terroristBombDestructionRange", 35f, 5f, 250f, 5f, terroristSpawnRate);
+        terroristBombHearRange = Create(102706, Types.Impostor, "terroristBombHearRange", 60f, 5f, 250f, 5f, terroristSpawnRate);
+        terroristBombCanDefuse = Create(102707, Types.Impostor, "terroristBombCanDefuse", true, terroristSpawnRate,
+            isHidden: () => { return terroristMode.Selection == 0; });
+        terroristDefuseDuration = Create(102708, Types.Impostor, "terroristDefuseDuration", 2f, 0f, 30f, 0.5f, terroristBombCanDefuse);
 
         minerSpawnRate = Create(102800, Types.Impostor, Cs(Miner.color, "Miner"), rates, null, true);
         minerCooldown = Create(102801, Types.Impostor, "minerCooldown", 20f, 10f, 60f, 2.5f, minerSpawnRate);

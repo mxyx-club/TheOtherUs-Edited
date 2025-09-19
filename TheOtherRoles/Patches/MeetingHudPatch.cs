@@ -22,6 +22,9 @@ internal class MeetingHudPatch
     private static PlayerVoteArea swapped1;
     private static PlayerVoteArea swapped2;
 
+    private static Sprite LightColorSprite = new ResourceSprite("ColorLight.png", 75);
+    private static Sprite DarkColorSprite = new ResourceSprite("ColorDark.png", 75);
+
     private static void swapperOnClick(int i, MeetingHud __instance)
     {
         if (Swapper.charges <= 0 || __instance.state == VoteStates.Results || __instance.playerStates[i].AmDead) return;
@@ -999,9 +1002,6 @@ internal class MeetingHudPatch
                     BandLeader.BandLeaderFormed(0, false);
                 }
             }
-
-            var LightColorSprite = new ResourceSprite("ColorLight.png", 75);
-            var DarkColorSprite = new ResourceSprite("ColorDark.png", 75);
 
             foreach (var pva in __instance.playerStates)
             {

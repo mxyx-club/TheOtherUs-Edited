@@ -1,98 +1,139 @@
+using BepInEx.Unity.IL2CPP.Utils.Collections;
+
 namespace TheOtherRoles.Objects;
 
-public class Bomb : CustomObject
+public class Bomb : CustomObjectBase<Bomb>
 {
-    public static List<Bomb> AllBombs = new();
     public static Sprite defuseSprite = new ResourceSprite("Bomb_Button_Defuse.png");
+    private static Sprite bombSprite = new ResourceSprite("Bomb.png", 300f);
+    private static Sprite backgroundSprite => new ResourceSprite("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.hearRange);
+
     public static Bomb TargetBomb;
     public GameObject Background;
-    public PlayerControl Player;
+    public SpriteRenderer BackgroundRenderer;
 
-    private static Sprite bombSprite => new ResourceSprite("Bomb.png", 300f);
-    private static Sprite backgroundSprite => new ResourceSprite("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.hearRange);
+    public PlayerControl Player;
 
     public Bomb(PlayerControl player, Vector3 pos)
     {
-        GameObject.name = "Bomb " + Id;
-        GameObject.layer = 11;
-        var position = new Vector3(pos.x, pos.y, pos.z - 0.001f); // just behind player
-        GameObject.transform.position = position;
-        Renderer.sprite = bombSprite;
-
-        Background = new GameObject("Background") { layer = 11 };
-        Background.transform.SetParent(GameObject.transform);
-        Background.transform.localPosition = new Vector3(0, 0, -0.01f);
-
-        var backgroundRenderer = Background.AddComponent<SpriteRenderer>();
-        backgroundRenderer.sprite = backgroundSprite;
-
-        GameObject.SetActive(false);
-        Background.SetActive(false);
-        if (PlayerControl.LocalPlayer == Terrorist.terrorist) GameObject.SetActive(true);
-        var c = Color.white;
-        var g = Color.red;
-        backgroundRenderer.color = Color.white;
         IsActive = false;
         Player = player;
-        AllBombs.Add(this);
 
-        _ = new LateTask(() =>
+        GameObject.name = "Bomb " + Id;
+        GameObject.layer = 11;
+        GameObject.transform.position = new Vector3(pos.x, pos.y, pos.z - 0.001f);
+        Renderer.sprite = bombSprite;
+
+        if (!Terrorist.selfExplosion)
         {
-            GameObject.SetActive(!Terrorist.selfExplosion);
-            Background.SetActive(!Terrorist.selfExplosion);
+            Background = new GameObject("Background") { layer = 11 };
+            Background.transform.SetParent(GameObject.transform);
+            Background.transform.localPosition = new Vector3(0, 0, -0.01f);
+
+            BackgroundRenderer = Background.AddComponent<SpriteRenderer>();
+            BackgroundRenderer.sprite = backgroundSprite;
+            BackgroundRenderer.color = Color.white;
+        }
+
+        bool canSee = !Terrorist.selfExplosion && (player.AmOwner || PlayerControl.LocalPlayer.IsImpostor(AndCat: true) || CanSeeGhostInfo);
+        GameObject.SetActive(canSee);
+        Background?.SetActive(false);
+
+        if (Terrorist.selfExplosion)
+        {
             IsActive = true;
-            SoundEffectsManager.playAtPosition("bombFuseBurning", pos, Terrorist.destructionTime, Terrorist.hearRange, true);
-
-            HudManager.Instance.StartCoroutine(Effects.Lerp(Terrorist.destructionTime,
-                new Action<float>(f =>
-                {
-                    // can you feel the pain?
-                    var combinedColor = (Mathf.Clamp01(f) * g) + (Mathf.Clamp01(1 - f) * c);
-                    if (backgroundRenderer) backgroundRenderer.color = combinedColor;
-                    if ((int)f == 1) explode(this);
-                })));
-        }, Terrorist.bombActiveAfter);
-    }
-
-    public override void Destroy()
-    {
-        Background?.Destroy();
-        Background = null;
-        SoundEffectsManager.stop("bombFuseBurning");
-        AllBombs.Remove(this);
-        base.Destroy();
-    }
-
-    public static void explode(Bomb b)
-    {
-        if (b?.GameObject == null)
+            _ = new LateTask(explode, 0.1f);
+        }
+        else
         {
-            b?.Destroy();
+            _ = new LateTask(() => ActivateBomb(pos), Terrorist.bombActiveAfter);
+        }
+    }
+
+    private void ActivateBomb(Vector3 pos)
+    {
+        GameObject.SetActive(!Terrorist.selfExplosion);
+        Background.SetActive(!Terrorist.selfExplosion);
+        IsActive = true;
+
+        SoundEffectsManager.playAtPosition("bombFuseBurning", pos, Terrorist.destructionTime, Terrorist.hearRange, true);
+
+        Behaviour.StartCoroutine(ExplosionCountdown().WrapToIl2Cpp());
+    }
+
+    private IEnumerator ExplosionCountdown()
+    {
+        float timer = 0f;
+        Color startColor = Color.white;
+        Color endColor = Color.red;
+
+        while (timer < Terrorist.destructionTime && BackgroundRenderer != null)
+        {
+            timer += Time.deltaTime;
+            float progress = timer / Terrorist.destructionTime;
+
+            BackgroundRenderer.color = Color.Lerp(startColor, endColor, progress);
+
+            yield return null;
+        }
+
+        if (timer >= Terrorist.destructionTime)
+        {
+            explode();
+        }
+    }
+
+    public void explode()
+    {
+        if (GameObject == null)
+        {
+            Destroy();
             Error("Bomb or bomb GameObject is null.");
             return;
         }
-        if (Terrorist.terrorist != null)
+
+        try
         {
-            var position = b.GameObject.transform.position;
-            // every player only checks that for their own client (desynct with positions sucks)
+            var position = GameObject.transform.position;
 
-            var distance = Vector2.Distance(position, PlayerControl.LocalPlayer.transform.position);
+            if (!Terrorist.selfExplosion || !(Player == PlayerControl.LocalPlayer))
+            {
+                if (Player != null && PlayerControl.LocalPlayer.IsAlive())
+                {
+                    float distance = Vector2.Distance(position, PlayerControl.LocalPlayer.transform.position);
+                    if (distance <= Terrorist.destructionRange)
+                        RpcCustomMurderPlayer(Player, PlayerControl.LocalPlayer, false, false, CustomDeathReason.Bomb);
+                }
+            }
 
-            if (distance <= Terrorist.destructionRange && PlayerControl.LocalPlayer.IsAlive())
+            if (Terrorist.selfExplosion && Player == PlayerControl.LocalPlayer && Player.IsAlive())
             {
-                RpcCustomMurderPlayer(Terrorist.terrorist, PlayerControl.LocalPlayer, false, false, CustomDeathReason.Bomb);
+                RpcCustomMurderPlayer(Player, Player, false, true, CustomDeathReason.BombVictim);
             }
-            try
-            {
-                SoundEffectsManager.playAtPosition("bombExplosion", position, maxDuration: 1.6f, range: Terrorist.hearRange);
-            }
-            catch (Exception e)
-            {
-                Warn($"Exception in Sound Effect for Bomb explosion: {e}");
-            }
+
+            SoundEffectsManager.playAtPosition("bombExplosion", position, maxDuration: 1.6f, range: Terrorist.hearRange);
+        }
+        catch (Exception e)
+        {
+            Warn($"Exception in Bomb explosion: {e}");
+        }
+        finally
+        {
+            Destroy();
+        }
+    }
+
+    public override void OnDestroy()
+    {
+        SoundEffectsManager.stop("bombFuseBurning");
+
+        if (Background != null)
+        {
+            Background.Destroy();
+            Background = null;
         }
 
-        b.Destroy();
+        base.OnDestroy();
     }
 
     public override void OnMeetingStart()
@@ -102,6 +143,9 @@ public class Bomb : CustomObject
 
     public override void Update()
     {
-        Background?.transform?.Rotate(Vector3.forward * 50 * Time.fixedDeltaTime);
+        if (!Terrorist.selfExplosion && Background != null && Background.transform != null)
+        {
+            Background.transform.Rotate(Vector3.forward * 50 * Time.fixedDeltaTime);
+        }
     }
 }

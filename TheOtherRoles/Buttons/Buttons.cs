@@ -1374,7 +1374,7 @@ internal static class HudManagerStartPatch
                 bool targetNearGarlic = false;
                 if (Vampire.currentTarget != null)
                 {
-                    foreach (var garlic in Garlic.AllGarlics)
+                    foreach (var garlic in Garlic.AllObjects)
                         if (Vector2.Distance(garlic.GameObject.transform.position, Vampire.currentTarget.transform.position) <= 1.95f)
                             targetNearGarlic = true;
                 }
@@ -3605,18 +3605,21 @@ internal static class HudManagerStartPatch
             {
                 var pos = PlayerControl.LocalPlayer.transform.position;
 
+                if (Terrorist.selfExplosion)
+                {
+                    terroristButton.HasEffect = false;
+                }
+                else
+                {
+                    SoundEffectsManager.play("trapperTrap");
+                    terroristButton.HasEffect = true;
+                }
+
                 var writer = StartRPC(CustomRPC.PlaceBomb);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 writer.Write(pos);
                 writer.EndRPC();
                 RPCProcedure.placeBomb(PlayerControl.LocalPlayer, pos);
-
-                if (Terrorist.selfExplosion)
-                {
-                    RpcCustomMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer, false);
-                }
-
-                SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
 
                 terroristButton.Timer = terroristButton.MaxTimer;
             },
@@ -3624,7 +3627,11 @@ internal static class HudManagerStartPatch
             {
                 return Terrorist.terrorist.IsAlive() && Terrorist.terrorist == PlayerControl.LocalPlayer;
             },
-            () => { return PlayerControl.LocalPlayer.CanMove; },
+            () =>
+            {
+                terroristButton.buttonText = Terrorist.selfExplosion ? GetString("TerroristBombText2") : GetString("TerroristBombText1");
+                return PlayerControl.LocalPlayer.CanMove;
+            },
             () =>
             {
                 terroristButton.Timer = terroristButton.MaxTimer;
@@ -3652,12 +3659,13 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (Bomb.AllBombs.Count == 0)
+
+                if (Bomb.AllObjects.Count == 0 || Terrorist.selfExplosion)
                 {
                     Bomb.TargetBomb = null;
                     return false;
                 }
-                Bomb.TargetBomb = CustomObject.FindWithInRange(Bomb.AllBombs, PlayerControl.LocalPlayer.GetTruePosition(), 1f);
+                Bomb.TargetBomb = Bomb.AllObjects.FindWithInRange(PlayerControl.LocalPlayer.GetTruePosition(), 1f);
                 return Bomb.TargetBomb != null && PlayerControl.LocalPlayer.IsAlive();
             },
             () =>
@@ -4597,7 +4605,7 @@ internal static class HudManagerStartPatch
                 }
                 else
                 {
-                    HudManager.Instance.PlayerCam.SetTargetWithLight(Marionette.decoy.behaviour);
+                    HudManager.Instance.PlayerCam.SetTargetWithLight(Marionette.decoy.Behaviour);
                     PlayerControl.LocalPlayer.NetTransform.Halt();
                     if (!Marionette.MonitoringCanMove) PlayerControl.LocalPlayer.moveable = false;
                 }

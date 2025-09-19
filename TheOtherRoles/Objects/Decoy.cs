@@ -1,10 +1,8 @@
 namespace TheOtherRoles.Objects;
 
-public class Decoy : CustomObject
+public class Decoy : CustomObjectBase<Decoy>
 {
-    public static List<Decoy> Decoys = new();
     public PlayerControl Player;
-    public MonoBehaviour behaviour;
     public float elapsedTime;
 
     public static bool ResetPlaceAfterMeeting;
@@ -23,13 +21,11 @@ public class Decoy : CustomObject
 
         Player = player;
         GameObject.name = "Decoy " + Id;
-        behaviour = GameObject.AddComponent<CustomObjectBehaviour>();
         GameObject.SetActive(false);
         GameObject.transform.position = pos;
         Renderer.sprite = decoySprite;
         Renderer.color = Color.white * new Vector4(1, 1, 1, 0.66f);
         elapsedTime = 0f;
-        Decoys.Add(this);
 
         _ = new LateTask(() =>
         {
@@ -40,21 +36,20 @@ public class Decoy : CustomObject
 
     }
 
-    public override void Destroy()
+    public override void OnDestroy()
     {
         if (Player.AmOwner && !Marionette.MonitoringCanMove)
         {
-            if (HudManager.Instance.PlayerCam == behaviour)
+            if (HudManager.Instance.PlayerCam == Behaviour)
             {
                 Player.moveable = true;
             }
         }
-        behaviour?.Destroy();
+        Behaviour?.Destroy();
         Renderer?.Destroy();
         GameObject?.Destroy();
         GameObject = null;
-        Decoys.Remove(this);
-        base.Destroy();
+        base.OnDestroy();
     }
 
     public override void Update()

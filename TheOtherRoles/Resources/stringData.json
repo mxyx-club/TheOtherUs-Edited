@@ -1262,6 +1262,26 @@
         "0": "Blackmail Cooldown",
         "13": "勒索冷却"
     },
+    "terroristMode": {
+        "0": "Bomb Mode",
+        "13": "爆炸模式"
+    },
+    "terroristMode1": {
+        "0": "Suicide Mode",
+        "13": "自爆模式"
+    },
+    "terroristMode2": {
+        "0": "Placement Mode",
+        "13": "放置模式"
+    },
+    "terroristBombCooldown": {
+        "0": "Bomb Placement Cooldown",
+        "13": "技能冷却"
+    },
+    "terroristBombActiveAfter": {
+        "0": "Bomb Activation Delay",
+        "13": "炸弹激活时间"
+    },
     "terroristBombDestructionTime": {
         "0": "Bomb Timer",
         "13": "炸弹引爆时间"
@@ -1272,19 +1292,15 @@
     },
     "terroristBombHearRange": {
         "0": "Bomb Warning Sound Range",
-        "13": "爆炸前预警范围\n声音传播距离"
+        "13": "爆炸预警范围和声音传播距离"
+    },
+    "terroristBombCanDefuse": {
+        "0": "Bomb Can Be Defused",
+        "13": "炸弹可以被拆除"
     },
     "terroristDefuseDuration": {
         "0": "Bomb Defuse Duration",
         "13": "拆除炸弹所需时间"
-    },
-    "terroristBombCooldown": {
-        "0": "Bomb Placement Cooldown",
-        "13": "炸弹放置冷却"
-    },
-    "terroristBombActiveAfter": {
-        "0": "Bomb Activation Delay",
-        "13": "炸弹激活时间"
     },
     "minerCooldown": {
         "0": "Dig Cooldown",
@@ -3523,7 +3539,7 @@
     },
     "DeathReason.BombVictim": {
         "0": "Terrorist Attack",
-        "13": "恐袭"
+        "13": "自爆"
     },
     "DeathReason.Eaten": {
         "0": "Devoured by {0}",

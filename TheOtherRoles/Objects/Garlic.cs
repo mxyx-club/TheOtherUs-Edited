@@ -1,8 +1,7 @@
 namespace TheOtherRoles.Objects;
 #nullable enable
-internal class Garlic : CustomObject
+internal class Garlic : CustomObjectBase<Garlic>
 {
-    public static List<Garlic> AllGarlics = new();
     private static Sprite garlicSprite = new ResourceSprite("Garlic.png", 300);
     private static Sprite backgroundSprite = new ResourceSprite("GarlicBackground.png", 60);
     private readonly GameObject Background;
@@ -21,14 +20,12 @@ internal class Garlic : CustomObject
         backgroundRenderer.sprite = backgroundSprite;
 
         GameObject.SetActive(true);
-        AllGarlics.Add(this);
     }
 
-    public override void Destroy()
+    public override void OnDestroy()
     {
         Background?.Destroy();
-        AllGarlics.Remove(this);
-        base.Destroy();
+        base.OnDestroy();
     }
 
     public override void Update()

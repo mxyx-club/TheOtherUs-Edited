@@ -3,9 +3,8 @@ using TheOtherRoles.Attributes;
 
 namespace TheOtherRoles.Objects;
 
-public class JackInTheBox : CustomObject
+public class JackInTheBox : CustomObjectBase<JackInTheBox>
 {
-    public static List<JackInTheBox> AllJackInTheBoxes = new();
     public static readonly int JackInTheBoxLimit = 3;
     public static bool boxesConvertedToVents;
     public static ResourceSpriteArray boxAnimationSprites;
@@ -57,15 +56,12 @@ public class JackInTheBox : CustomObject
         // Only render the box for the Trickster and for Ghosts
         var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster || CanSeeGhostInfo;
         GameObject.SetActive(showBoxToLocalPlayer);
-
-        AllJackInTheBoxes.Add(this);
     }
 
-    public override void Destroy()
+    public override void OnDestroy()
     {
-        AllJackInTheBoxes.Remove(this);
         vent?.Destroy();
-        base.Destroy();
+        base.OnDestroy();
     }
 
     public static Sprite getBoxAnimationSprite(int index)
@@ -85,7 +81,7 @@ public class JackInTheBox : CustomObject
 
     public static void startAnimation(int ventId)
     {
-        var box = AllJackInTheBoxes.FirstOrDefault(x => x?.vent != null && x.vent.Id == ventId);
+        var box = AllObjects.FirstOrDefault(x => x?.vent != null && x.vent.Id == ventId);
         if (box == null) return;
 
         int frameCount = boxAnimationSprites.Sprites.Length;
@@ -101,7 +97,7 @@ public class JackInTheBox : CustomObject
     public static void UpdateStates()
     {
         if (boxesConvertedToVents) return;
-        foreach (var box in AllJackInTheBoxes)
+        foreach (var box in AllObjects)
         {
             var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster || CanSeeGhostInfo;
             box.GameObject?.SetActive(showBoxToLocalPlayer);
@@ -118,36 +114,35 @@ public class JackInTheBox : CustomObject
 
     public static void convertToVents()
     {
-        foreach (var box in AllJackInTheBoxes) box.convertToVent();
+        foreach (var box in AllObjects) box.convertToVent();
         connectVents();
         boxesConvertedToVents = true;
     }
 
     public static bool hasJackInTheBoxLimitReached()
     {
-        return AllJackInTheBoxes.Count >= JackInTheBoxLimit;
+        return AllObjects.Count >= JackInTheBoxLimit;
     }
 
     private static void connectVents()
     {
-        for (var i = 0; i < AllJackInTheBoxes.Count - 1; i++)
+        for (var i = 0; i < AllObjects.Count - 1; i++)
         {
-            var a = AllJackInTheBoxes[i];
-            var b = AllJackInTheBoxes[i + 1];
+            var a = AllObjects[i];
+            var b = AllObjects[i + 1];
             a.vent.Right = b.vent;
             b.vent.Left = a.vent;
         }
 
         // Connect first with last
-        AllJackInTheBoxes.First().vent.Left = AllJackInTheBoxes.Last().vent;
-        AllJackInTheBoxes.Last().vent.Right = AllJackInTheBoxes.First().vent;
+        AllObjects.First().vent.Left = AllObjects.Last().vent;
+        AllObjects.Last().vent.Right = AllObjects.First().vent;
     }
 
     [OnGameStart, OnGameEnd]
     public static void clearJackInTheBoxes()
     {
         boxesConvertedToVents = false;
-        AllJackInTheBoxes = new();
         preloadBoxAnimationSprites();
     }
 }

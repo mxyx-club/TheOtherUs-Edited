@@ -1,12 +1,10 @@
 namespace TheOtherRoles.Objects;
 
-public class Silhouette : CustomObject
+public class Silhouette : CustomObjectBase<Silhouette>
 {
     public float timeRemaining;
     public bool permanent;
     private bool visibleForEveryOne;
-
-    public static List<Silhouette> Silhouettes = new();
 
     private static Sprite SilhouetteSprite = new ResourceSprite("Silhouette.png", 225f);
 
@@ -32,12 +30,6 @@ public class Silhouette : CustomObject
         bool visible = visibleForEveryOne || PlayerControl.LocalPlayer == Yoyo.yoyo || PlayerControl.LocalPlayer.Data.IsDead;
 
         GameObject.SetActive(visible);
-        Silhouettes.Add(this);
-    }
-
-    public override void Destroy()
-    {
-        Silhouettes.Remove(this);
     }
 
     public override void Update()
@@ -56,8 +48,7 @@ public class Silhouette : CustomObject
         {
             Message($"update: permanent: {permanent}, time: {timeRemaining}");
             GameObject.SetActive(false);
-            UObject.Destroy(GameObject);
-            Silhouettes.Remove(this);
+            Destroy();
         }
     }
 }

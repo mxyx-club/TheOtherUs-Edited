@@ -11,18 +11,22 @@ public static class Terrorist
     public static float defuseDuration = 3f;
     public static float bombCooldown = 15f;
     public static float bombActiveAfter = 3f;
-    public static bool selfExplosion => destructionTime + bombActiveAfter <= 0.5f;
+    public static bool selfExplosion;
+    public static bool canDefuse;
 
     public static Sprite buttonSprite = new ResourceSprite("Bomb_Button_Plant.png");
 
     public static void clearAndReload()
     {
         terrorist = null;
+        selfExplosion = !CustomOptionHolder.terroristMode.GetBool();
+
         destructionTime = CustomOptionHolder.terroristBombDestructionTime.GetFloat();
         destructionRange = CustomOptionHolder.terroristBombDestructionRange.GetFloat() / 10;
         hearRange = CustomOptionHolder.terroristBombHearRange.GetFloat() / 10;
         defuseDuration = CustomOptionHolder.terroristDefuseDuration.GetFloat();
         bombCooldown = CustomOptionHolder.terroristBombCooldown.GetFloat();
+        canDefuse = CustomOptionHolder.terroristBombCanDefuse.GetBool();
         bombActiveAfter = CustomOptionHolder.terroristBombActiveAfter.GetFloat();
     }
 }

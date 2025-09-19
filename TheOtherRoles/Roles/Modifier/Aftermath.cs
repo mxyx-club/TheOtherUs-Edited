@@ -43,20 +43,15 @@ public class Aftermath
         }
         else if (Terrorist.terrorist == killer)
         {
-            var pos = killer.transform.position;
+            var pos = PlayerControl.LocalPlayer.transform.position;
+
+            terroristButton.HasEffect = !Terrorist.selfExplosion;
 
             var writer = StartRPC(CustomRPC.PlaceBomb);
-            writer.Write(killer.PlayerId);
+            writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write(pos);
             writer.EndRPC();
-            placeBomb(killer, pos);
-
-            if (Terrorist.selfExplosion)
-            {
-                RpcCustomMurderPlayer(Terrorist.terrorist, Terrorist.terrorist, false);
-            }
-
-            SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
+            placeBomb(PlayerControl.LocalPlayer, pos);
 
             terroristButton.Timer = terroristButton.MaxTimer;
         }

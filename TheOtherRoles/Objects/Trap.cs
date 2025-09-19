@@ -1,9 +1,7 @@
 namespace TheOtherRoles.Objects;
 
-public class Trap : CustomObject
+public class Trap : CustomObjectBase<Trap>
 {
-    public static List<Trap> AllTraps = new();
-
     public PlayerControl trapper;
     public List<PlayerControl> trapped = new();
 
@@ -39,24 +37,21 @@ public class Trap : CustomObject
             triggerable = true;
             Renderer.color = Color.white;
         }, 5f);
-
-        AllTraps.Add(this);
     }
 
-    public override void Destroy()
+    public override void OnDestroy()
     {
         try
         {
             arrow?.arrow?.Destroy();
         }
         catch { }
-        AllTraps.Remove(this);
-        base.Destroy();
+        base.OnDestroy();
     }
 
     public static void clearRevealedTraps()
     {
-        var trapsToClear = AllTraps.FindAll(x => x.revealed);
+        var trapsToClear = AllObjects.FindAll(x => x.revealed);
         foreach (var t in trapsToClear)
         {
             t.Destroy();
@@ -65,7 +60,7 @@ public class Trap : CustomObject
 
     public static void ClearAllTraps(PlayerControl trapper, bool active)
     {
-        var traps = AllTraps.Where(x => x.trapper == trapper && (active || !x.revealed));
+        var traps = AllObjects.Where(x => x.trapper == trapper && (active || !x.revealed));
         foreach (var t in traps)
         {
             t?.Destroy();
@@ -74,7 +69,7 @@ public class Trap : CustomObject
 
     public static void triggerTrap(byte targetId, int trapId)
     {
-        var t = AllTraps.FirstOrDefault(x => x.Id == trapId);
+        var t = AllObjects.FirstOrDefault(x => x.Id == trapId);
         var target = PlayerById(targetId);
         if (Trapper.trapper == null || t == null || t.trapped.Contains(target) || target == null) return;
 
@@ -118,7 +113,7 @@ public class Trap : CustomObject
 
     public static void UpdateTrap()
     {
-        foreach (var trap in AllTraps)
+        foreach (var trap in AllObjects.ToArray())
         {
             trap.Update(PlayerControl.LocalPlayer);
         }

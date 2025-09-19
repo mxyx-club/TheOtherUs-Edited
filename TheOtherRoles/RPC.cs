@@ -1261,14 +1261,14 @@ public static class RPCProcedure
 
     public static void DecoyDestroy(PlayerControl player, int? decoyId)
     {
-        var decoy = Decoy.Decoys.FirstOrDefault(x => x.Id == decoyId);
+        var decoy = Decoy.AllObjects.FirstOrDefault(x => x.Id == decoyId);
         decoy?.Destroy();
         Marionette.decoy = null;
     }
 
     public static void DecoySwap(PlayerControl player, int? decoyId, Vector3 playerPos, Vector3 decoyPos)
     {
-        var decoy = Decoy.Decoys.FirstOrDefault(x => x.Id == decoyId);
+        var decoy = Decoy.AllObjects.FirstOrDefault(x => x.Id == decoyId);
         if (decoy?.GameObject == null || decoy?.Renderer == null) return;
 
         bool playerFlip = player.cosmetics.FlipX;
@@ -1479,7 +1479,7 @@ public static class RPCProcedure
         var markedPos = (Vector3)Yoyo.markedLocation;
         Yoyo.yoyo.NetTransform.SnapTo(markedPos);
 
-        var markedSilhouette = Silhouette.Silhouettes.FirstOrDefault(s => s.GameObject!.transform.position.x == markedPos.x && s.GameObject.transform.position.y == markedPos.y);
+        var markedSilhouette = Silhouette.AllObjects.FirstOrDefault(s => s.GameObject!.transform.position.x == markedPos.x && s.GameObject.transform.position.y == markedPos.y);
         if (markedSilhouette != null)
             markedSilhouette.permanent = false;
 
@@ -1917,7 +1917,7 @@ public static class RPCProcedure
 
     public static void defuseBomb(int id)
     {
-        var bomb = Bomb.AllBombs.FirstOrDefault(x => x.Id == id);
+        var bomb = Bomb.AllObjects.FirstOrDefault(x => x.Id == id);
         if (bomb?.GameObject == null) return;
         try
         {

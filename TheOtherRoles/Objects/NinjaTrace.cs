@@ -1,9 +1,7 @@
 namespace TheOtherRoles.Objects;
 
-internal class NinjaTrace : CustomObject
+internal class NinjaTrace : CustomObjectBase<NinjaTrace>
 {
-    public static List<NinjaTrace> traces = new();
-
     private float timeRemaining;
 
     public NinjaTrace(Vector3 p, float duration = 1f)
@@ -46,7 +44,6 @@ internal class NinjaTrace : CustomObject
         })));
 
         GameObject.SetActive(true);
-        traces.Add(this);
     }
 
     public override void Update()
@@ -55,6 +52,5 @@ internal class NinjaTrace : CustomObject
         if (!(timeRemaining < 0)) return;
         GameObject.SetActive(false);
         UObject.Destroy(GameObject);
-        traces.Remove(this);
     }
 }
