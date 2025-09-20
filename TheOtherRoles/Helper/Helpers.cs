@@ -216,20 +216,6 @@ public static class Helpers
         return roleCouldUse;
     }
 
-    /// <summary>
-    /// 触发老兵反弹
-    /// </summary>
-    public static bool CheckUseAbility(PlayerControl killer, PlayerControl target)
-    {
-        if (Veteran.veteran == target && Veteran.alertActive)
-        {
-            RpcCustomMurderPlayer(target, killer);
-            return true;
-        }
-
-        return false;
-    }
-
     public static bool IsNeutral(this PlayerControl player)
     {
         var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false, false).FirstOrDefault();

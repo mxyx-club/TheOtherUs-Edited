@@ -187,6 +187,17 @@ public static class RoleHelpers
         return true;
     }
 
+    public static bool CheckUseAbility(PlayerControl player, PlayerControl target)
+    {
+        if (Veteran.veteran == target && Veteran.alertActive)
+        {
+            RpcCustomMurderPlayer(target, player);
+            return true;
+        }
+
+        return false;
+    }
+
     public static bool CheckMurderPlayer(PlayerControl killer, PlayerControl target)
     {
         if (killer == null || target == null) return false;
@@ -195,11 +206,11 @@ public static class RoleHelpers
         // Block impostor not fully grown mini kill
         if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp) return false;
 
+        if (CheckUseAbility(killer, target)) return false;
+
         // Handle first kill attempt
         if (ModOption.shieldFirstKill && ModOption.firstKillPlayer == target)
             return false;
-
-        if (CheckUseAbility(killer, target)) return false;
 
         if (Pursuer.blankedList.Any(x => x == killer.PlayerId))
         {

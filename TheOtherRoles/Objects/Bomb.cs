@@ -77,10 +77,7 @@ public class Bomb : CustomObjectBase<Bomb>
             yield return null;
         }
 
-        if (timer >= Terrorist.destructionTime)
-        {
-            explode();
-        }
+        if (timer >= Terrorist.destructionTime) explode();
     }
 
     public void explode()
@@ -96,6 +93,8 @@ public class Bomb : CustomObjectBase<Bomb>
         {
             var position = GameObject.transform.position;
 
+            SoundEffectsManager.playAtPosition("bombExplosion", position, maxDuration: 1.6f, range: Terrorist.hearRange);
+
             if (!Terrorist.selfExplosion || !(Player == PlayerControl.LocalPlayer))
             {
                 if (Player != null && PlayerControl.LocalPlayer.IsAlive())
@@ -106,16 +105,14 @@ public class Bomb : CustomObjectBase<Bomb>
                 }
             }
 
-            if (Terrorist.selfExplosion && Player == PlayerControl.LocalPlayer && Player.IsAlive())
+            if (Player.IsAlive() && Terrorist.selfExplosion && Player == PlayerControl.LocalPlayer)
             {
                 RpcCustomMurderPlayer(Player, Player, false, true, CustomDeathReason.BombVictim);
             }
-
-            SoundEffectsManager.playAtPosition("bombExplosion", position, maxDuration: 1.6f, range: Terrorist.hearRange);
         }
         catch (Exception e)
         {
-            Warn($"Exception in Bomb explosion: {e}");
+            Error($"Exception in Bomb explosion: {e}");
         }
         finally
         {

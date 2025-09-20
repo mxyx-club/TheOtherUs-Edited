@@ -118,9 +118,16 @@ public class CustomObjectBehaviour : MonoBehaviour
 
     public void OnDestroy()
     {
-        if (HudManager.Instance != null && HudManager.Instance.PlayerCam.Target == this)
+        try
         {
-            HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+            if (HudManager.Instance != null && HudManager.Instance?.PlayerCam?.Target == this)
+            {
+                HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+            }
+        }
+        catch (Exception e)
+        {
+            Error("\n" + e, "CustomObjectBehaviour");
         }
     }
 }

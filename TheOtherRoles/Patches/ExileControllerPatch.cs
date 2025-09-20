@@ -255,6 +255,8 @@ internal class ExileControllerWrapUpPatch
         Message("WrapUp Postfix");
         if (PlayerControl.LocalPlayer.IsDead()) CanSeeGhostInfo = true;
 
+        if (CustomOptionHolder.randomGameStartPosition.GetBool()) MapData.RandomSpawnPlayers();
+
         DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)
         {
@@ -564,13 +566,10 @@ internal class ExileControllerWrapUpPatch
             (GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown / 2) + 2, new Action<float>(p =>
             { if (p == 1f) foreach (var trap in Trap.AllObjects) trap.triggerable = true; })));
 
-        if (!Yoyo.markStaysOverMeeting) Silhouette.AllObjects.Do(x => x.Destroy());
+        if (!Yoyo.markStaysOverMeeting) Silhouette.AllObjects.ToArray().Do(x => x.Destroy());
 
         // AntiTeleport set position
         AntiTeleport.setPosition();
-
-        if (CustomOptionHolder.randomGameStartPosition.GetBool()) MapData.RandomSpawnPlayers();
-
     }
 
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.WrapUp))]
