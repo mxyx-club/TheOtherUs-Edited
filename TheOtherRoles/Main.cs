@@ -30,9 +30,9 @@ public partial class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> ToggleCursor { get; set; }
     public static ConfigEntry<bool> ShowFPS { get; set; }
     public static ConfigEntry<bool> ShowKeyReminder { get; set; }
+    public static ConfigEntry<int> ButtonArrangement { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
-    public static ConfigEntry<int> ButtonArrangement { get; set; }
 
     // This is part of the Mini.RegionInstaller, Licensed under GPLv3
     // file="RegionInstallPlugin.cs" company="miniduikboot">

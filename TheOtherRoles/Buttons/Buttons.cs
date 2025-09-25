@@ -1486,14 +1486,11 @@ internal static class HudManagerStartPatch
                 portalmakerPlacePortalButton.Timer = portalmakerPlacePortalButton.MaxTimer;
 
                 var pos = PlayerControl.LocalPlayer.transform.position;
-                var buff = new byte[sizeof(float) * 2];
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
                 var writer = StartRPC(CustomRPC.PlacePortal);
-                writer.WriteBytesAndSize(buff);
+                writer.Write(pos);
                 writer.EndRPC();
-                RPCProcedure.placePortal(buff);
+                RPCProcedure.placePortal(pos);
                 SoundEffectsManager.play("tricksterPlaceBox");
             },
             () =>
@@ -4616,7 +4613,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (hackerVitalsButton.ButtonTitle != null && Marionette.decoy != null)
+                if (marionetteCameraButton.ButtonTitle != null && Marionette.decoy != null)
                 {
                     marionetteCameraButton.ButtonTitle.text = Decoy.DecoyPermanent
                     ? $"持续存在{(Decoy.ResetPlaceAfterMeeting ? "|会议重置" : "")}"

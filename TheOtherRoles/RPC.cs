@@ -1690,12 +1690,9 @@ public static class RPCProcedure
         //target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(canSee ? 0.1f : 0f);
     }
 
-    public static void placePortal(byte[] buff)
+    public static void placePortal(Vector3 pos)
     {
-        Vector3 position = Vector2.zero;
-        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
-        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
-        _ = new Portal(position);
+        _ = new Portal(pos);
     }
 
     public static void usePortal(byte playerId, byte exit)
@@ -1954,11 +1951,15 @@ internal class RPCHandlerPatch
     private static bool HandleRpcPatch([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
     {
         var packetId = (CustomRPC)callId;
-        if (callId < 250 && CustomOptionHolder.logRpcSend.GetBool())
+        try
         {
-            string type = callId < 80 ? "Vanilla" : "Custom";
-            Info($"RpcId: {callId} Type: {type} Name: {RpcName(callId)} Size: {reader.Length}", "RECV");
+            if (callId < 250 && CustomOptionHolder.logRpcSend.GetBool())
+            {
+                string type = callId < 80 ? "Vanilla" : "Custom";
+                Info($"RpcId: {callId} Type: {type} Name: {RpcName(callId)} Size: {reader.Length}", "RECV");
+            }
         }
+        catch { }
 
         if (callId < 80) return true;
 
@@ -2183,7 +2184,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.PlacePortal:
-                RPCProcedure.placePortal(reader.ReadBytesAndSize());
+                RPCProcedure.placePortal(reader.ReadVector3());
                 break;
 
             case CustomRPC.UsePortal:
