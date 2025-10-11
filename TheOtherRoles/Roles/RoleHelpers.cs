@@ -69,6 +69,7 @@ public enum RoleId
     Thief,
     BandLeader,
     SchrodingersCat,
+    Avenger,
 
     Crewmate,
     Vigilante,

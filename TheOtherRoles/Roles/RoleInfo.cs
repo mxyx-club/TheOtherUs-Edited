@@ -77,6 +77,7 @@ public class RoleInfo
     public static RoleInfo pelican = new("Pelican", Pelican.color, RoleId.Pelican, RoleType.Neutral);
     public static RoleInfo bandLeader = new("BandLeader", BandLeader.color, RoleId.BandLeader, RoleType.Neutral);
     public static RoleInfo schrodingersCat = new("SchrodingersCat", SchrodingersCat.color, RoleId.SchrodingersCat, RoleType.Neutral);
+    public static RoleInfo avenger = new("Avenger", Avenger.color, RoleId.Avenger, RoleType.Neutral);
 
     public static RoleInfo crewmate = new("Crewmate", Palette.CrewmateBlue, RoleId.Crewmate, RoleType.Crewmate);
     public static RoleInfo vigilante = new("Vigilante", Vigilante.color, RoleId.Vigilante, RoleType.Crewmate);
@@ -223,6 +224,7 @@ public class RoleInfo
         trapper,
         balancer,
         redemptor,
+        avenger,
 
         lover,
         assassin,

@@ -473,7 +473,7 @@ internal static class HudManagerStartPatch
                 {
                     if (Sheriff.sheriffCanKill(target))
                     {
-                        RpcCustomMurderPlayer(PlayerControl.LocalPlayer, target, true, false, CustomDeathReason.SheriffKill);
+                        if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, target, true, false, CustomDeathReason.SheriffKill)) return;
 
                         sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                         Sheriff.currentTarget = null;
@@ -493,7 +493,6 @@ internal static class HudManagerStartPatch
                                 RpcCustomMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer, true, true, CustomDeathReason.SheriffSuicide);
                                 break;
                         }
-
                         sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                         Sheriff.currentTarget = null;
                     }
