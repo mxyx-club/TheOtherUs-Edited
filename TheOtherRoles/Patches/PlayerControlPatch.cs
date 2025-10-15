@@ -9,26 +9,32 @@ public static class PlayerControlFixedUpdatePatch
 {
     private static bool mushroomSaboWasActive;
 
-    public static PlayerControl SetTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false,
-        IEnumerable<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, float KillDistances = 0f)
+    public static PlayerControl SetTarget(bool onlyCrew = false,
+        bool InVents = false,
+        IEnumerable<PlayerControl> untarget = null,
+        PlayerControl targetingPlayer = null,
+        IEnumerable<PlayerControl> targetPlayers = null,
+        float range = 0f)
     {
         PlayerControl result = null;
-        var num = GameOptionsData.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentNormalGameOptions.KillDistance, 0, 3)] + KillDistances;
+        var num = GameOptionsData.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentNormalGameOptions.KillDistance, 0, 3)] * (1 + range);
         if (!MapUtilities.CachedShipStatus) return null;
         if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
         if (targetingPlayer.Data.IsDead) return null;
 
+        var candidates = targetPlayers ?? PlayerControl.AllPlayerControls.GetFastEnumerator();
+
         var truePosition = targetingPlayer.GetTruePosition();
-        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var player in candidates)
         {
-            if (player.IsAlive() && player.PlayerId != targetingPlayer.PlayerId && (!onlyCrewmates || !player.IsImpostor(true, true)))
+            if (player.IsAlive() && player.PlayerId != targetingPlayer.PlayerId && (!onlyCrew || !player.IsImpostor(true, true)))
             {
                 var target = player;
                 // if that player is not targetable: skip check
-                if (untargetablePlayers != null && untargetablePlayers.Any(x => x == target))
+                if (untarget != null && untarget.Any(x => x == target))
                     continue;
 
-                if (target && (!target.inVent || targetPlayersInVents))
+                if (target && (!target.inVent || InVents))
                 {
                     var vector = target.GetTruePosition() - truePosition;
                     var magnitude = vector.magnitude;
@@ -477,7 +483,7 @@ public static class MurderPlayerPatch
         if ((Lovers.lover1 != null && target == Lovers.lover1) || (Lovers.lover2 != null && target == Lovers.lover2))
         {
             var otherLover = target == Lovers.lover1 ? Lovers.lover2 : Lovers.lover1;
-            if (otherLover != null && !otherLover.Data.IsDead && Lovers.bothDie)
+            if (otherLover != null && !otherLover.Data.IsDead)
             {
                 otherLover.MurderPlayer(otherLover, MurderResultFlags.Succeeded);
                 PlayerData.SetDeathReason(otherLover, CustomDeathReason.LoverSuicide);
@@ -790,7 +796,7 @@ public static class ExilePlayerPatch
         if (__instance.isLover() && Lovers.otherLover(__instance) != null)
         {
             var otherLover = Lovers.otherLover(__instance);
-            if (otherLover != null && !otherLover.Data.IsDead && Lovers.bothDie)
+            if (otherLover != null && !otherLover.Data.IsDead)
             {
                 otherLover.Exiled();
                 PlayerData.SetDeathReason(otherLover, CustomDeathReason.LoverSuicide);
@@ -843,7 +849,7 @@ public static class ExilePlayerPatch
 
         if (Lawyer.lawyer != null && __instance == Lawyer.target)
         {
-            if (AmongUsClient.Instance.AmHost && ((Lawyer.target != Jester.jester) || Lawyer.targetWasGuessed))
+            if (AmongUsClient.Instance.AmHost && (Jester.Player.Any(x => x.PlayerId != Lawyer.target?.PlayerId) || Lawyer.targetWasGuessed))
             {
                 var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
                 writer.EndRPC();

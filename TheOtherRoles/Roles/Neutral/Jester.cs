@@ -1,8 +1,11 @@
+using TheOtherRoles.Attributes;
+
 namespace TheOtherRoles.Roles.Neutral;
 
 public static class Jester
 {
-    public static PlayerControl jester;
+    public static List<PlayerControl> Player = new();
+    public static Dictionary<byte, DeadBody> dragedBodys = new();
     public static Color color = new Color32(236, 98, 165, byte.MaxValue);
 
     public static bool canCallEmergency = true;
@@ -12,25 +15,24 @@ public static class Jester
     public static float velocity;
 
     public static bool triggerJesterWin;
+    public static PlayerControl WinnerPlayer;
     public static DeadBody targetBody;
-    public static DeadBody dragedBody;
 
-    public static void DragBody(byte targetId)
+    public static void DragBody(PlayerControl player, byte targetId)
     {
         if (targetId == byte.MaxValue)
         {
-            dragedBody = null;
+            dragedBodys.Remove(player.PlayerId);
             return;
         }
-        dragedBody = GetDeadBody(targetId);
-        Message($"Rpc JesterDragBody target: {targetId}, body: {dragedBody?.ParentId.ToString() ?? "NULL"}");
+        dragedBodys[player.PlayerId] = GetDeadBody(targetId);
     }
 
     public static void clearAndReload()
     {
-        jester = null;
+        Player = new();
         triggerJesterWin = false;
-        dragedBody = null;
+        dragedBodys = new();
         targetBody = null;
         canCallEmergency = CustomOptionHolder.jesterCanCallEmergency.GetBool();
         canUseVents = CustomOptionHolder.jesterCanVent.GetBool();
@@ -38,4 +40,7 @@ public static class Jester
         canDragDeadBody = CustomOptionHolder.jesterCanDragDeadBody.GetBool();
         velocity = CustomOptionHolder.jesterDragingVelocity.GetFloat();
     }
+
+    [OnGameStart] public static void ClearWinner() => WinnerPlayer = null;
+    [OnMeetingStart] public static void ClearDraggers() => dragedBodys = new();
 }

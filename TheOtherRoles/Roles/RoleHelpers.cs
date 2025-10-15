@@ -403,6 +403,7 @@ public static class RoleHelpers
             { RoleId.SchrodingersCat, CustomOptionHolder.schrodingersCatSpawnRate.GetSelection() },
             { RoleId.Pursuer, CustomOptionHolder.lawyerSpawnRate.GetSelection() + CustomOptionHolder.executionerSpawnRate.GetSelection() },
             { RoleId.Infected, CustomOptionHolder.infectedSpawnRate.GetSelection() },
+            { RoleId.Avenger, CustomOptionHolder.modifierLover.GetSelection()  },
 
             { RoleId.Lover, CustomOptionHolder.modifierLover.GetSelection() },
             { RoleId.Aftermath, CustomOptionHolder.modifierAftermath.GetSelection() },
@@ -510,6 +511,7 @@ public static class RoleHelpers
         SchrodingersCat.ClearAndReload();
         Gunsmith.ClearAndReload();
         Berserker.ClearAndReload();
+        Avenger.ClearAndReload();
 
         // Modifier
         Assassin.clearAndReload();

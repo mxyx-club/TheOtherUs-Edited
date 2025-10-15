@@ -465,10 +465,12 @@ internal class RoleManagerSelectRolesPatch
             var possibleTargets = new List<PlayerControl>();
             // Lawyer
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            {
                 if (p.IsAlive() && p != Lovers.lover1 && p != Lovers.lover2 &&
                     (p.Data.Role.IsImpostor || p == Swooper.swooper || Jackal.jackal.Any(x => x == p) || p == Juggernaut.juggernaut ||
-                     p == Werewolf.werewolf || (Lawyer.targetCanBeJester && p == Jester.jester)))
+                     p == Werewolf.werewolf || (Lawyer.targetCanBeJester && Jester.Player.Any(x => x.PlayerId == p.PlayerId))))
                     possibleTargets.Add(p);
+            }
 
             if (possibleTargets.Count == 0)
             {
@@ -520,16 +522,19 @@ internal class RoleManagerSelectRolesPatch
         var modifierMax = CustomOptionHolder.modifiersCountMax.GetSelection() + addMaxNum;
         if (modifierMin > modifierMax) modifierMin = modifierMax;
         var modifierCountSettings = rnd.Next(modifierMin, modifierMax);
-        var players = PlayerControl.AllPlayerControls.ToArray().ToList();
+        var players = PlayerControl.AllPlayerControls.ToList();
         if (GuesserGM.Enabled && !GuesserGM.guesserGamemodeHaveModifier.GetBool())
             players.RemoveAll(x => GuesserGM.isGuesser(x.PlayerId));
 
         var impPlayer = new List<PlayerControl>(players);
         var impPlayerL = new List<PlayerControl>(players);
         var crewPlayer = new List<PlayerControl>(players);
+        var neutralPlayer = new List<PlayerControl>(players);
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
         impPlayerL.RemoveAll(x => !x.Data.Role.IsImpostor);
         crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.IsNeutral());
+        neutralPlayer.RemoveAll(x => !x.IsNeutral());
+
 
         var modifierCount = Mathf.Min(players.Count + addMaxNum, modifierCountSettings);
 
@@ -579,16 +584,49 @@ internal class RoleManagerSelectRolesPatch
 
         if (rnd.Next(1, 101) <= CustomOptionHolder.modifierLover.GetSelection() * 10)
         {
-            // Assign lover
-            var isEvilLover = rnd.Next(1, 101) <= CustomOptionHolder.modifierLoverImpLoverRate.GetSelection() * 10;
-            byte firstLoverId;
+            var impLover = CustomOptionHolder.modifierLoverImpLoverRate.GetBool();
+            var neutralLover = CustomOptionHolder.modifierLoverNeutraValid.GetBool() && impLover;
+            var neutral = neutralPlayer.ToList();
+            neutral.RemoveAll(x => x == Akujo.akujo || BandLeader.Player);
 
-            if (isEvilLover) firstLoverId = setModifierToRandomPlayer((byte)RoleId.Lover, impPlayerL);
-            else firstLoverId = setModifierToRandomPlayer((byte)RoleId.Lover, crewPlayer);
-            var secondLoverId = setModifierToRandomPlayer((byte)RoleId.Lover, crewPlayer, 1);
+            var firstCandidates = new List<PlayerControl>(crewPlayer);
+            if (neutralLover) firstCandidates.AddRange(neutral);
 
-            players.RemoveAll(x => x.PlayerId == firstLoverId || x.PlayerId == secondLoverId);
-            modifierCount--;
+            if (firstCandidates.Count == 0) return;
+
+            var firstLover = firstCandidates[rnd.Next(firstCandidates.Count)];
+            var secondCandidates = new List<PlayerControl>();
+
+            if (firstLover.IsNeutral())
+            {
+                secondCandidates.AddRange(impPlayer);
+            }
+            else
+            {
+                if (impLover) secondCandidates.AddRange(impPlayer);
+                if (neutralLover)
+                {
+                    var tempNeutrals = new List<PlayerControl>(neutral);
+                    tempNeutrals.RemoveAll(p => p.PlayerId == firstLover.PlayerId);
+                    secondCandidates.AddRange(tempNeutrals);
+                }
+            }
+
+            secondCandidates.RemoveAll(p => p.PlayerId == firstLover.PlayerId);
+
+            if (secondCandidates.Count != 0)
+            {
+                var secondLover = secondCandidates.Random();
+
+                setModifierToPlayer((byte)RoleId.Lover, firstLover);
+                setModifierToPlayer((byte)RoleId.Lover, secondLover);
+
+                if (!CustomOptionHolder.modifierLoverCanGetModifiers.GetBool())
+                {
+                    players.RemoveAll(x => x.PlayerId == firstLover.PlayerId || x.PlayerId == secondLover.PlayerId);
+                }
+                modifierCount--;
+            }
         }
 
         foreach (var m in allModifiers)
@@ -712,11 +750,11 @@ internal class RoleManagerSelectRolesPatch
 
     private static byte setRoleToRandomPlayer(byte roleId, List<PlayerControl> playerList, bool removePlayer = true)
     {
-        var index = rnd.Next(0, playerList.Count);
-        var playerId = playerList[index].PlayerId;
-        if (removePlayer) playerList.RemoveAt(index);
-
-        playerRoleMap.Add(new Tuple<byte, byte>(playerId, roleId));
+        if (playerList == null || playerList.Count == 0) return byte.MaxValue;
+        int index = rnd.Next(0, playerList.Count);
+        PlayerControl player = playerList[index];
+        byte playerId = player.PlayerId;
+        playerList.RemoveAt(index);
 
         var writer = StartRPC(CustomRPC.SetRole);
         writer.Write(playerId);
@@ -728,9 +766,11 @@ internal class RoleManagerSelectRolesPatch
 
     private static byte setModifierToRandomPlayer(byte modifierId, List<PlayerControl> playerList, byte flag = 0)
     {
-        if (playerList.Count == 0) return byte.MaxValue;
-        var index = rnd.Next(0, playerList.Count);
-        var playerId = playerList[index].PlayerId;
+        if (playerList == null || playerList.Count == 0)
+            return byte.MaxValue;
+        int index = rnd.Next(0, playerList.Count);
+        PlayerControl player = playerList[index];
+        byte playerId = player.PlayerId;
         playerList.RemoveAt(index);
 
         var writer = StartRPC(CustomRPC.SetModifier);
@@ -740,6 +780,38 @@ internal class RoleManagerSelectRolesPatch
         writer.EndRPC();
         RPCProcedure.setModifier(playerId, modifierId, flag);
         return playerId;
+    }
+
+    public static bool setRoleToPlayer(byte roleId, PlayerControl player)
+    {
+        if (player == null) return false;
+        byte playerId = player.PlayerId;
+
+        if (playerRoleMap.Any(t => t.Item1 == playerId))
+            playerRoleMap.RemoveAll(t => t.Item1 == playerId);
+
+        playerRoleMap.Add(new Tuple<byte, byte>(playerId, roleId));
+
+        var writer = StartRPC(CustomRPC.SetRole);
+        writer.Write(playerId);
+        writer.Write(roleId);
+        writer.EndRPC();
+        RPCProcedure.setRole(playerId, roleId);
+        return true;
+    }
+
+    public static bool setModifierToPlayer(byte modifierId, PlayerControl player, byte flag = 0)
+    {
+        if (player == null) return false;
+        byte playerId = player.PlayerId;
+
+        var writer = StartRPC(CustomRPC.SetModifier);
+        writer.Write(playerId);
+        writer.Write(modifierId);
+        writer.Write(flag);
+        writer.EndRPC();
+        RPCProcedure.setModifier(playerId, modifierId, flag);
+        return true;
     }
 
     private static void assignModifiersToPlayers(List<RoleId> modifiers, List<PlayerControl> playerList, int modifierCount)

@@ -143,7 +143,6 @@ public class OnGameEndPatch
 
         notWinners.AddRange(
         [
-            Jester.jester,
             Jackal.Sidekick,
             Arsonist.arsonist,
             Swooper.swooper,
@@ -164,6 +163,7 @@ public class OnGameEndPatch
         ]);
         notWinners.RemoveAll(x => x?.Data == null);
         notWinners.AddRange(Amnisiac.Player.Where(p => p != null));
+        notWinners.AddRange(Jester.Player.Where(p => p != null));
         notWinners.AddRange(Pavlovsdogs.pavlovsdogs.Where(p => p != null));
         notWinners.AddRange(Jackal.jackal.Where(p => p != null));
         notWinners.AddRange(Pursuer.Player.Where(p => p != null));
@@ -202,8 +202,8 @@ public class OnGameEndPatch
                        (GameManager.Instance.DidHumansWin(gameOverReason) && !Akujo.IsKillerLover()));
         var bandLeaderWin = gameOverReason == (GameOverReason)CustomGameOverReason.BandLeaderTeamWin;
 
-        var bandLeaderAddCrewWin = BandLeader.Player != null && BandLeader.winnerFlags == BandLeader.WinnerFlags.Crewmate && crewmateWin;
-        var bandLeaderAddImpWin = BandLeader.Player != null && BandLeader.winnerFlags == BandLeader.WinnerFlags.Impostor && impostorWin;
+        var bandLeaderAddCrewWin = BandLeader.Player != null && BandLeader.WinCondition == BandLeader.WinnerFlags.Crewmate && crewmateWin;
+        var bandLeaderAddImpWin = BandLeader.Player != null && BandLeader.WinCondition == BandLeader.WinnerFlags.Impostor && impostorWin;
 
         bool isPursurerLose = jesterWin || witnessWin || arsonistWin || miniLose || isCanceled || executionerWin;
 
@@ -232,7 +232,7 @@ public class OnGameEndPatch
         // Jester win
         if (jesterWin)
         {
-            winners.Add(Jester.jester);
+            winners.Add(Jester.WinnerPlayer);
             AdditionalTempData.winCondition = WinCondition.JesterWin;
         }
 
@@ -481,7 +481,7 @@ public class OnGameEndPatch
 
         // Possible Additional winner: Lawyer
         if (!lawyerSoloWin && Lawyer.lawyer != null && Lawyer.target != null &&
-            (!Lawyer.target.Data.IsDead || Lawyer.target == Jester.jester) && !Lawyer.notAckedExiled)
+            (!Lawyer.target.Data.IsDead || Lawyer.target == Jester.WinnerPlayer) && !Lawyer.notAckedExiled)
         {
             PlayerControl winningClient = null;
             foreach (var winner in winners)
@@ -535,7 +535,7 @@ public class OnGameEndPatch
             AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalPartTimerWin);
         }
 
-        if (BandLeader.Player != null && BandLeader.winnerFlags == BandLeader.WinnerFlags.Neutral)
+        if (BandLeader.Player != null && BandLeader.WinCondition == BandLeader.WinnerFlags.Neutral)
         {
             if (winners.Any(x => BandLeader.Members.Select(c => c.Data.PlayerName).Contains(x.Data.PlayerName)))
             {
@@ -888,7 +888,7 @@ internal class CheckEndCriteriaPatch
 
     private static bool CheckAndEndGameForBandLeaderWin(ShipStatus __instance, PlayerStatistics statistics)
     {
-        if (statistics.TeamBandLeaderAlive >= statistics.TotalAlive && BandLeader.winnerFlags == BandLeader.WinnerFlags.Neutral && BandLeader.Formed)
+        if (statistics.TeamBandLeaderAlive >= statistics.TotalAlive && BandLeader.WinCondition == BandLeader.WinnerFlags.Neutral && BandLeader.Formed)
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BandLeaderTeamWin, false);

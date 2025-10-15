@@ -16,7 +16,7 @@ public class BandLeader
     public static float killCooldown;
     public static float createCoolDown;
 
-    public static WinnerFlags winnerFlags = WinnerFlags.None;
+    public static WinnerFlags WinCondition = WinnerFlags.None;
     public static bool Formed;
 
     public static Sprite keyboardButton = new ResourceSprite("BandLeader.Keyboard.png");
@@ -31,7 +31,7 @@ public class BandLeader
         if (formed)
         {
             Formed = true;
-            winnerFlags = (WinnerFlags)winner;
+            WinCondition = (WinnerFlags)winner;
             Message($"Band Leader Formed {(WinnerFlags)winner}");
 
             if (Members.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) || Player.AmOwner)
@@ -80,7 +80,7 @@ public class BandLeader
         Bassist = null;
         Drummer = null;
         Formed = false;
-        winnerFlags = WinnerFlags.None;
+        WinCondition = WinnerFlags.None;
         killCooldown = CustomOptionHolder.bandLeaderKillCooldown.GetFloat();
         createCoolDown = CustomOptionHolder.bandLeaderCreateCooldown.GetFloat();
     }

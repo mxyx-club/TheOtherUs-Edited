@@ -57,7 +57,7 @@ internal class ExileControllerBeginPatch
                 Helpers.SetActiveAllObject(controller.gameObject.GetChildren(), "RaftAnimation", false);
                 controller.transform.localPosition = new(-3.75f, -0.2f, -60f);
             }
-            if (Lawyer.lawyer != null && exiled?.Object.PlayerId == Lawyer.target.PlayerId && Lawyer.target != Jester.jester)
+            if (Lawyer.lawyer != null && exiled?.Object.PlayerId == Lawyer.target.PlayerId && Jester.Player.Any(x => x.PlayerId != Lawyer.target?.PlayerId))
             {
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.LawyerPromotesToPursuer);
                 writer.Write(true);
@@ -68,7 +68,7 @@ internal class ExileControllerBeginPatch
             if (!IsSec) return true;
         }
 
-        if (Lawyer.lawyer != null && exiled?.Object.PlayerId == Lawyer.target.PlayerId && Lawyer.target != Jester.jester)
+        if (Lawyer.lawyer != null && exiled?.Object.PlayerId == Lawyer.target.PlayerId && Jester.Player.Any(x => x.PlayerId != Lawyer.target?.PlayerId))
         {
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.LawyerPromotesToPursuer);
             writer.Write(true);
@@ -278,9 +278,10 @@ internal class ExileControllerWrapUpPatch
             return;
         }
         // Jester win condition
-        else if (exiled != null && Jester.jester != null && Jester.jester.PlayerId == exiled.PlayerId)
+        else if (exiled != null && Jester.Player != null && Jester.Player.Any(x => x.PlayerId == exiled.PlayerId))
         {
             Jester.triggerJesterWin = true;
+            Jester.WinnerPlayer = PlayerById(exiled.PlayerId);
             return;
         }
         else if (Executioner.executioner != null && Executioner.executioner == PlayerControl.LocalPlayer && Executioner.target.IsDead())

@@ -351,7 +351,7 @@ internal class MeetingHudPatch
         }
         else if (PlayerControl.LocalPlayer == BandLeader.Player)
         {
-            if (BandLeader.Formed) meetingInfoText = string.Format(GetString("BandLeaderFormed"), $"{$"{BandLeader.winnerFlags}Team".Translate()}");
+            if (BandLeader.Formed) meetingInfoText = string.Format(GetString("BandLeaderFormed"), $"{$"{BandLeader.WinCondition}Team".Translate()}");
             else meetingInfoText = GetString("BandLeaderBad");
         }
         else if (Infected.Player.Any(x => x == PlayerControl.LocalPlayer) && Infected.IsGuesser)
@@ -751,7 +751,7 @@ internal class MeetingHudPatch
                                                (Lovers.lover2 != null && Lovers.lover2.PlayerId == exiled.PlayerId);
                 Lawyer.notAckedExiled = (Pursuer.Player != null && Pursuer.Player.Any(id => id.PlayerId == exiled.PlayerId)) ||
                                          (Lawyer.lawyer != null && Lawyer.target != null &&
-                                          Lawyer.target.PlayerId == exiled.PlayerId && Lawyer.target != Jester.jester);
+                                          Lawyer.target.PlayerId == exiled.PlayerId && Jester.Player.Any(x => x.PlayerId != Lawyer.target?.PlayerId));
             }
 
             Camouflager.camoComms = false;
@@ -934,6 +934,8 @@ internal class MeetingHudPatch
             shookAlready = false;
             MeetingCount++;
 
+            Attributes.OnMeetingStartAttribute.Invoke();
+
             if (PlayerControl.LocalPlayer.IsDead()) CanSeeGhostInfo = true;
 
             // Remove first kill shield
@@ -962,7 +964,6 @@ internal class MeetingHudPatch
 
             Redemptor.RevivedPlayer = null;
             Undertaker.dragedBody = null;
-            Jester.dragedBody = null;
             Jailor.MeetingStart(__instance);
 
             foreach (var playerState in Instance?.playerStates ?? Enumerable.Empty<PlayerVoteArea>())
@@ -984,14 +985,14 @@ internal class MeetingHudPatch
                 if (BandLeader.Members.Length == 3 && (allNeutral || allCrew || allImpostor))
                 {
                     BandLeader.Formed = true;
-                    if (allCrew) BandLeader.winnerFlags = BandLeader.WinnerFlags.Crewmate;
-                    else if (allImpostor) BandLeader.winnerFlags = BandLeader.WinnerFlags.Impostor;
-                    else if (allNeutral) BandLeader.winnerFlags = BandLeader.WinnerFlags.Neutral;
+                    if (allCrew) BandLeader.WinCondition = BandLeader.WinnerFlags.Crewmate;
+                    else if (allImpostor) BandLeader.WinCondition = BandLeader.WinnerFlags.Impostor;
+                    else if (allNeutral) BandLeader.WinCondition = BandLeader.WinnerFlags.Neutral;
                     var writer = StartRPC(CustomRPC.BandLeaderFormed);
-                    writer.Write((byte)BandLeader.winnerFlags);
+                    writer.Write((byte)BandLeader.WinCondition);
                     writer.Write(true);
                     writer.EndRPC();
-                    BandLeader.BandLeaderFormed((byte)BandLeader.winnerFlags, true);
+                    BandLeader.BandLeaderFormed((byte)BandLeader.WinCondition, true);
                 }
                 else if (BandLeader.Members.Length == 3)
                 {

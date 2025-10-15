@@ -1099,12 +1099,12 @@ internal class HudManagerUpdatePatch
 
     private static void jesterDragBodyUpdate()
     {
-        if (Jester.jester.IsDead() || InMeeting) return;
+        if (InMeeting) return;
 
-        if (Jester.dragedBody != null)
+        Jester.Player.ForEach(x =>
         {
-            Jester.dragedBody.transform.position = Jester.jester.transform.position;
-        }
+            Jester.dragedBodys.GetValueOrDefault(x.PlayerId)?.transform.position = x.transform.position;
+        });
     }
 
     private static void ninjaUpdate()

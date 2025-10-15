@@ -23,8 +23,6 @@ internal class GuesserGM
     public static CustomOption guesserGamemodeNumberOfShots;
     public static CustomOption guesserGamemodeHasMultipleShotsPerMeeting;
     public static CustomOption guesserGamemodeKillsThroughShield;
-    public static CustomOption guesserGamemodeEvilCanKillSpy;
-    public static CustomOption guesserGamemodeCantGuessSnitchIfTaksDone;
 
     public GuesserGM(PlayerControl player)
     {
@@ -76,7 +74,5 @@ internal class GuesserGM
         guesserGamemodeNumberOfShots = CustomOption.Create(2005, CustomOptionType.Guesser, "guesserGamemodeNumberOfShots", 3f, 1f, 15f, 1f, guesserEnabled);
         guesserGamemodeHasMultipleShotsPerMeeting = CustomOption.Create(2006, CustomOptionType.Guesser, "guesserGamemodeHasMultipleShotsPerMeeting", true, guesserEnabled);
         guesserGamemodeKillsThroughShield = CustomOption.Create(2008, CustomOptionType.Guesser, "guesserGamemodeKillsThroughShield", true, guesserEnabled);
-        guesserGamemodeEvilCanKillSpy = CustomOption.Create(2009, CustomOptionType.Guesser, "guesserGamemodeEvilCanKillSpy", true, guesserEnabled);
-        guesserGamemodeCantGuessSnitchIfTaksDone = CustomOption.Create(2010, CustomOptionType.Guesser, "guesserGamemodeCantGuessSnitchIfTaksDone", true, guesserEnabled);
     }
 }

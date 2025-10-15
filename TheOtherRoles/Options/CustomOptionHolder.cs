@@ -401,7 +401,7 @@ public class CustomOptionHolder
     public static CustomOption executionerSpawnRate;
     public static CustomOption executionerCanCallEmergency;
     public static CustomOption executionerPromotesToLawyer;
-    //public static CustomOption executionerOnTargetDead;
+    public static CustomOption executionerOnTargetDead;
 
     public static CustomOption doomsayerSpawnRate;
     public static CustomOption doomsayerCooldown;
@@ -575,6 +575,7 @@ public class CustomOptionHolder
     public static CustomOption snitchSeeMeeting;
     public static CustomOption snitchIncludeNeutralTeam;
     public static CustomOption snitchTeamNeutraUseDifferentArrowColor;
+    public static CustomOption snitchCanGuessIfTaksDone;
 
     public static CustomOption prophetSpawnRate;
     public static CustomOption prophetCooldown;
@@ -596,9 +597,7 @@ public class CustomOptionHolder
     public static CustomOption mediumOneTimeUse;
     public static CustomOption mediumChanceAdditionalInfo;
 
-    public static CustomOption guesserEvilCanKillSpy;
     public static CustomOption guesserEvilCanKillCrewmate;
-    public static CustomOption guesserCantGuessSnitchIfTaksDone;
 
     public static CustomOption portalmakerSpawnRate;
     public static CustomOption portalmakerCooldown;
@@ -608,6 +607,7 @@ public class CustomOptionHolder
     public static CustomOption portalmakerCanPortalFromAnywhere;
 
     public static CustomOption spySpawnRate;
+    public static CustomOption spyEvilCanKillSpy;
     public static CustomOption spyCanDieToSheriff;
     public static CustomOption spyImpostorsCanKillAnyone;
     public static CustomOption spyCanEnterVents;
@@ -668,8 +668,21 @@ public class CustomOptionHolder
 
     public static CustomOption modifierLover;
     public static CustomOption modifierLoverImpLoverRate;
-    public static CustomOption modifierLoverBothDie;
+    public static CustomOption modifierLoverNeutraValid;
+    public static CustomOption modifierLoverCanGetModifiers;
+    public static CustomOption modifierLoverAvengerChance;
     public static CustomOption modifierLoverEnableChat;
+
+    public static CustomOption avengerIsGuessable;
+    public static CustomOption avengerKillCooldown;
+    public static CustomOption avengerCanFreeKill;
+    public static CustomOption avengerShowArrows;
+    public static CustomOption avengerUpdateIntervall;
+    public static CustomOption avengerHasImpVision;
+    public static CustomOption avengerCanUseVents;
+    public static CustomOption avengerWinCondition;
+    public static CustomOption avengerTargetWasKilledByOther;
+    public static CustomOption avengerTargetWasExiled;
 
     public static CustomOption modifierBloody;
     public static CustomOption modifierBloodyQuantity;
@@ -1173,7 +1186,7 @@ public class CustomOptionHolder
         executionerSpawnRate = Create(201900, Types.Neutral, Cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(201901, Types.Neutral, "canCallEmergency", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(201902, Types.Neutral, "executionerPromotesToLawyer", true, executionerSpawnRate);
-        //executionerOnTargetDead = Create(201903, Types.Neutral, "目标死亡后变为", [cs(Pursuer.color, "Pursuer"), cs(Jester.color, "Jester"), cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
+        executionerOnTargetDead = Create(201903, Types.Neutral, "目标死亡后变为", [Cs(Pursuer.color, "Pursuer"), Cs(Jester.color, "Jester"), Cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
 
         doomsayerSpawnRate = Create(202200, Types.Neutral, Cs(Doomsayer.color, "Doomsayer"), rates, null, true);
         doomsayerCooldown = Create(202201, Types.Neutral, "doomsayerCooldown", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
@@ -1370,6 +1383,7 @@ public class CustomOptionHolder
         snitchIncludeNeutralTeam = Create(302703, Types.Crewmate, "snitchIncludeNeutralTeam",
             ["optionOff", "snitchIncludeNeutralTeam2", "snitchIncludeNeutralTeam3", "snitchIncludeNeutralTeam4"], snitchSpawnRate);
         snitchTeamNeutraUseDifferentArrowColor = Create(302704, Types.Crewmate, "snitchTeamNeutraUseDifferentArrowColor", true, snitchIncludeNeutralTeam);
+        snitchCanGuessIfTaksDone = Create(302705, Types.Crewmate, "snitchCanGuessIfTaksDone", false, snitchSpawnRate);
 
         prophetSpawnRate = Create(303600, Types.Crewmate, Cs(Prophet.color, "Prophet"), rates, null, true);
         prophetCooldown = Create(303601, Types.Crewmate, "prophetCooldown", 20f, 5f, 60f, 2.5f, prophetSpawnRate);
@@ -1402,6 +1416,7 @@ public class CustomOptionHolder
 
         spySpawnRate = Create(302800, Types.Crewmate, Cs(Spy.color, "Spy"), rates, null, true,
             isHidden: () => isDraftMode.GetBool());
+        spyEvilCanKillSpy = Create(302805, Types.Crewmate, "spyEvilCanShootSpy", false, spySpawnRate);
         spyCanDieToSheriff = Create(302801, Types.Crewmate, "spyCanDieToSheriff", false, spySpawnRate);
         spyImpostorsCanKillAnyone = Create(302802, Types.Crewmate, "spyImpostorsCanKillAnyone", true, spySpawnRate);
         spyCanEnterVents = Create(302803, Types.Crewmate, "canUseVents", true, spySpawnRate);
@@ -1436,8 +1451,25 @@ public class CustomOptionHolder
 
         modifierLover = Create(401600, Types.Modifier, Cs(Lovers.color, "Lover"), rates, null, true);
         modifierLoverImpLoverRate = Create(401601, Types.Modifier, "modifierLoverImpLoverRate", rates, modifierLover);
-        modifierLoverBothDie = Create(401602, Types.Modifier, "modifierLoverBothDie", true, modifierLover);
-        modifierLoverEnableChat = Create(401603, Types.Modifier, "modifierLoverEnableChat", true, modifierLover);
+        modifierLoverNeutraValid = Create(401602, Types.Modifier, "modifierLoverNeutraValid", true, modifierLoverImpLoverRate);
+        modifierLoverCanGetModifiers = Create(401603, Types.Modifier, "modifierLoverCanGetModifiers", false, modifierLover);
+        modifierLoverEnableChat = Create(401604, Types.Modifier, "modifierLoverEnableChat", true, modifierLover);
+        modifierLoverAvengerChance = Create(401605, Types.Modifier, "modifierLoverAvengerChance", rates, modifierLover);
+
+        avengerIsGuessable = Create(401651, Types.Modifier, "avengerIsGuessable", false, modifierLoverAvengerChance);
+        avengerKillCooldown = Create(401652, Types.Modifier, "killCooldown", 25f, 10f, 60f, 2.5f, modifierLoverAvengerChance);
+        avengerCanFreeKill = Create(401653, Types.Modifier, "avengerCanFreeKill",
+            ["avengerCanFreeKill.1", "avengerCanFreeKill.2"], modifierLoverAvengerChance);
+        avengerShowArrows = Create(401654, Types.Modifier, "avengerShowArrows", true, modifierLoverAvengerChance);
+        avengerUpdateIntervall = Create(401655, Types.Modifier, "avengerUpdateIntervall", 5f, 0.5f, 15f, 0.5f, avengerShowArrows);
+        avengerHasImpVision = Create(401656, Types.Modifier, "hasImpVision", true, modifierLoverAvengerChance);
+        avengerCanUseVents = Create(401657, Types.Modifier, "canUseVents", false, modifierLoverAvengerChance);
+        avengerWinCondition = Create(401658, Types.Modifier, "avengerWinCondition",
+            ["avengerWinCondition.1", "avengerWinCondition.2", "avengerWinCondition.3"], modifierLoverAvengerChance);
+        avengerTargetWasKilledByOther = Create(401659, Types.Modifier, "avengerTargetWasKilledByOther",
+            ["DeathReason.Suicide", "Jester", "Amnisiac", "Survivor"], modifierLoverAvengerChance);
+        avengerTargetWasExiled = Create(401660, Types.Modifier, "avengerTargetWasExiled",
+            ["DeathReason.Suicide", GetString("", Cs(Jester.color, "Jester")), GetString("", Cs(Amnisiac.color, "Amnisiac")), GetString("", Cs(Survivor.color, "Survivor"))], modifierLoverAvengerChance);
 
         modifierAssassin = Create(100000, Types.Modifier, Cs(Assassin.color, "modifierAssassin"), rates, null, true,
             isHidden: () => GuesserGM.Enabled);
@@ -1447,11 +1479,7 @@ public class CustomOptionHolder
             isHidden: () => GuesserGM.Enabled);
         modifierAssassinMultipleShotsPerMeeting = Create(100003, Types.Modifier, "modifierAssassinMultipleShotsPerMeeting", true, modifierAssassin,
             isHidden: () => GuesserGM.Enabled);
-        guesserEvilCanKillSpy = Create(100004, Types.Modifier, "guesserEvilCanKillSpy", true, modifierAssassin,
-            isHidden: () => GuesserGM.Enabled);
         guesserEvilCanKillCrewmate = Create(100005, Types.Modifier, "guesserEvilCanKillCrewmate", true, modifierAssassin,
-            isHidden: () => GuesserGM.Enabled);
-        guesserCantGuessSnitchIfTaksDone = Create(100006, Types.Modifier, "guesserCantGuessSnitchIfTaksDone", true, modifierAssassin,
             isHidden: () => GuesserGM.Enabled);
         modifierAssassinKillsThroughShield = Create(100007, Types.Modifier, "modifierAssassinKillsThroughShield", false, modifierAssassin,
             isHidden: () => GuesserGM.Enabled);

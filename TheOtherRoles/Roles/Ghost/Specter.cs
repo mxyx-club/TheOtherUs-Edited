@@ -257,6 +257,12 @@ public class Specter
             case RoleId.Berserker:
                 if (resetRole) Berserker.ClearAndReload();
                 break;
+            case RoleId.Avenger:
+                if (Player.isLover()) break;
+                if (Target == Lovers.lover1) Lovers.lover1 = Player;
+                else if (Target == Lovers.lover2) Lovers.lover1 = Player;
+                Avenger.Player = Player;
+                break;
             case RoleId.Jailor:
                 if (resetRole) Jailor.ClearAndReload();
                 break;

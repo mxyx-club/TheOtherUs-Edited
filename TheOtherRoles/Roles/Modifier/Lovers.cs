@@ -7,27 +7,14 @@ public static class Lovers
     public static Color color = new Color32(232, 57, 185, byte.MaxValue);
 
     public static bool bothDie = true;
-
-    public static bool enableChat = true;
-
-    // Lovers save if next to be exiled is a lover, because RPC of ending game comes before RPC of exiled
     public static bool notAckedExiledIsLover;
+    public static bool enableChat = true;
+    public static bool neutraValid;
 
-    public static bool isLover(this PlayerControl player)
-    {
-        return player != null && (player == lover1 || player == lover2);
-    }
-
-    public static bool IsAlive()
-    {
-        // ADD NOT ACKED IS LOVER
-        return lover1.IsAlive() && lover2.IsAlive() && !notAckedExiledIsLover;
-    }
-
-    public static bool isKillerLover()
-    {
-        return lover1.IsKiller() || lover2.IsKiller();
-    }
+    public static bool isLover(this PlayerControl player) => player != null && (player == lover1 || player == lover2);
+    public static bool IsAlive() => lover1.IsAlive() && lover2.IsAlive() && !notAckedExiledIsLover;
+    public static bool isKillerLover() => lover1.IsKiller() || lover2.IsKiller();
+    public static bool hasAliveKillingLover(this PlayerControl player) => player.isLover() && IsAlive() && isKillerLover();
 
     public static PlayerControl otherLover(PlayerControl player)
     {
@@ -37,17 +24,12 @@ public static class Lovers
         return null;
     }
 
-    public static bool hasAliveKillingLover(this PlayerControl player)
-    {
-        return player.isLover() && IsAlive() && isKillerLover();
-    }
-
     public static void clearAndReload()
     {
         lover1 = null;
         lover2 = null;
         notAckedExiledIsLover = false;
-        bothDie = CustomOptionHolder.modifierLoverBothDie.GetBool();
         enableChat = CustomOptionHolder.modifierLoverEnableChat.GetBool();
+        neutraValid = CustomOptionHolder.modifierLoverNeutraValid.GetBool();
     }
 }

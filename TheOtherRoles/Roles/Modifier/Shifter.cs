@@ -1,4 +1,5 @@
 namespace TheOtherRoles.Roles.Modifier;
+
 public static class Shifter
 {
     public static PlayerControl shifter;
@@ -22,6 +23,7 @@ public static class Shifter
             {
                 return player == Jackal.Sidekick ||
                        player == Pavlovsdogs.pavlovsowner ||
+                       player == Avenger.Player ||
                        Jackal.jackal.Any(x => x == player) ||
                        Pavlovsdogs.pavlovsdogs.Any(x => x == player) ||
                        player == Akujo.akujo ||
@@ -32,6 +34,7 @@ public static class Shifter
                 return player == Jackal.Sidekick ||
                        player == Werewolf.werewolf ||
                        player == Lawyer.lawyer ||
+                       player == Avenger.Player ||
                        player == Juggernaut.juggernaut ||
                        player == Akujo.akujo ||
                        player == Pelican.Player ||
@@ -175,10 +178,11 @@ public static class Shifter
             Amnisiac.Player.RemoveAll(p => p.PlayerId == player2.PlayerId);
             Amnisiac.Player.Add(player1);
         }
-        else if (Jester.jester != null && Jester.jester == player2)
+        else if (Jester.Player != null && Jester.Player.Any(x => x.PlayerId == player2.PlayerId))
         {
             if (repeat) shiftRole(player2, player1, false);
-            Jester.jester = player1;
+            Jester.Player.RemoveAll(p => p.PlayerId == player2.PlayerId);
+            Jester.Player.Add(player1);
         }
         else if (Vulture.vulture != null && Vulture.vulture == player2)
         {

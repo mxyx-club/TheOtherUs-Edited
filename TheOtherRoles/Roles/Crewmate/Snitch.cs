@@ -13,6 +13,7 @@ public static class Snitch
     //public static bool canSeeRoles;
     public static bool teamNeutraUseDifferentArrowColor = true;
     public static bool needsUpdate = true;
+    public static bool CanGuessIfTaksDone;
 
     public enum includeNeutralTeam
     {
@@ -43,6 +44,7 @@ public static class Snitch
         //canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();
         Team = (includeNeutralTeam)CustomOptionHolder.snitchIncludeNeutralTeam.GetSelection();
         teamNeutraUseDifferentArrowColor = CustomOptionHolder.snitchTeamNeutraUseDifferentArrowColor.GetBool();
+        CanGuessIfTaksDone = CustomOptionHolder.snitchCanGuessIfTaksDone.GetBool();
         snitch = null;
     }
 }

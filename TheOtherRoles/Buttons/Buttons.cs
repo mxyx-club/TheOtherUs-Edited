@@ -107,6 +107,8 @@ internal static class HudManagerStartPatch
     public static CustomButton marionetteButton;
     public static CustomButton marionettePlaceButton;
     public static CustomButton marionetteCameraButton;
+    public static CustomButton avengerKillButton;
+
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
     public static PoolablePlayer targetDisplay;
@@ -221,6 +223,7 @@ internal static class HudManagerStartPatch
         marionettePlaceButton.MaxTimer = Marionette.PlaceCooldown;
         marionetteButton.MaxTimer = Marionette.SwapCooldown;
         marionetteCameraButton.MaxTimer = 0f;
+        avengerKillButton.MaxTimer = Avenger.killCooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
@@ -2526,24 +2529,27 @@ internal static class HudManagerStartPatch
         JesterDragButton = new CustomButton(
             () =>
             {
-                if (Jester.dragedBody != null)
+                if (Jester.dragedBodys.GetValueOrDefault(PlayerControl.LocalPlayer.PlayerId) != null)
                 {
                     var writer = StartRPC(CustomRPC.jesterDragBody);
+                    writer.Write(PlayerControl.LocalPlayer);
                     writer.Write(byte.MaxValue);
                     writer.EndRPC();
-                    Jester.DragBody(byte.MaxValue);
+                    Jester.DragBody(PlayerControl.LocalPlayer, byte.MaxValue);
                 }
                 else if (Jester.targetBody != null)
                 {
                     var writer = StartRPC(CustomRPC.jesterDragBody);
+                    writer.Write(PlayerControl.LocalPlayer);
                     writer.Write(Jester.targetBody.ParentId);
                     writer.EndRPC();
-                    Jester.DragBody(Jester.targetBody.ParentId);
+                    Jester.DragBody(PlayerControl.LocalPlayer, Jester.targetBody.ParentId);
                 }
             },
             () =>
             {
-                return Jester.jester.IsAlive() && Jester.canDragDeadBody && PlayerControl.LocalPlayer == Jester.jester;
+                return Jester.Player != null && Jester.canDragDeadBody && Jester.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+                       && PlayerControl.LocalPlayer.IsAlive();
             },
             () =>
             {
@@ -2551,7 +2557,7 @@ internal static class HudManagerStartPatch
 
                 Jester.targetBody = db;
 
-                return (Jester.targetBody || Jester.dragedBody) && PlayerControl.LocalPlayer.CanMove;
+                return (Jester.targetBody || Jester.dragedBodys.GetValueOrDefault(PlayerControl.LocalPlayer.PlayerId)) && PlayerControl.LocalPlayer.CanMove;
             },
             () => { },
             Undertaker.buttonSprite,
@@ -4198,11 +4204,11 @@ internal static class HudManagerStartPatch
             () =>
             {
                 return BandLeader.Player.IsAlive() && BandLeader.Player == PlayerControl.LocalPlayer && BandLeader.Formed
-                       && BandLeader.winnerFlags == BandLeader.WinnerFlags.Impostor;
+                       && BandLeader.WinCondition == BandLeader.WinnerFlags.Impostor;
             },
             () =>
             {
-                BandLeader.currentTarget = SetTarget(BandLeader.Members, BandLeader.winnerFlags == BandLeader.WinnerFlags.Impostor);
+                BandLeader.currentTarget = SetTarget(BandLeader.Members, BandLeader.WinCondition == BandLeader.WinnerFlags.Impostor);
                 SetPlayerOutline(BandLeader.currentTarget, BandLeader.color);
 
                 bandLeaderKillButton.showTargetNameOnButton(BandLeader.currentTarget);
@@ -4631,6 +4637,41 @@ internal static class HudManagerStartPatch
             secondaryAbilityInput.keyCode,
             buttonText: GetString("monitorButtonText")
         );
+
+
+        avengerKillButton = new CustomButton(
+            () =>
+            {
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Avenger.currentTarget)) return;
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Avenger.currentTarget)) return;
+
+                avengerKillButton.Timer = avengerKillButton.MaxTimer;
+                Avenger.currentTarget = null;
+            },
+            () =>
+            {
+                return Avenger.Player.IsAlive() && Avenger.Player == PlayerControl.LocalPlayer;
+            },
+            () =>
+            {
+                Avenger.currentTarget = Avenger.CanFreeKill ? SetTarget() : SetTarget(targetPlayers: [Avenger.Target]);
+                SetPlayerOutline(Avenger.currentTarget, Avenger.color);
+
+                avengerKillButton.showTargetNameOnButton(Avenger.currentTarget);
+
+                return PlayerControl.LocalPlayer.CanMove && Avenger.currentTarget != null;
+            },
+            () =>
+            {
+                avengerKillButton.Timer = avengerKillButton.MaxTimer;
+            },
+            __instance.KillButton.graphic.sprite,
+            __instance,
+            __instance.KillButton,
+            modKillInput.keyCode,
+            buttonText: GetString("killButtonText")
+        );
+
 
         // Set the default (or settings from the previous game) timers / durations when spawning the buttons
         initialized = true;

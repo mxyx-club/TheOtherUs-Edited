@@ -252,7 +252,7 @@ public static class Guesser
                     continue;
                 case RoleId.Crewmate when !Assassin.evilGuesserCanGuessCrewmate && guesserRole == RoleId.Assassin:
                     continue;
-                case RoleId.Spy when PlayerControl.LocalPlayer.IsImpostor() && !HandleGuesser.evilGuesserCanGuessSpy:
+                case RoleId.Spy when PlayerControl.LocalPlayer.IsImpostor() && !Spy.EvilCanKillSpy:
                     continue;
                 case RoleId.Mayor when Mayor.Revealed:
                     continue;
@@ -264,13 +264,15 @@ public static class Guesser
                     continue;
                 case RoleId.BandLeader:
                     continue;
+                case RoleId.Avenger when !Avenger.IsGuessable:
+                    continue;
                 case RoleId.SchrodingersCat when !CustomOptionHolder.schrodingersCatIsGuessable.GetBool():
                     continue;
                 case RoleId.Doomsayer when PlayerControl.LocalPlayer.PlayerId == Doomsayer.doomsayer?.PlayerId:
                     continue;
             }
 
-            if (Snitch.snitch != null && HandleGuesser.guesserCantGuessSnitch)
+            if (Snitch.snitch != null && Snitch.CanGuessIfTaksDone)
             {
                 var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
                 var numberOfLeftTasks = playerTotal - playerCompleted;

@@ -39,7 +39,7 @@ public static class Helpers
 
     public static string previousEndGameSummary = "";
     public static PlayerControl GetHostPlayer => GameData.Instance.GetHost().Object;
-    public static SRandom rnd => new(Guid.NewGuid().GetHashCode());
+    public static SRandom rnd => new(DateTime.Now.Millisecond);
 
     public static Sprite ZoomIn = new ResourceSprite("ZoomIn.png", 21f);
     public static Sprite ZoomOut = new ResourceSprite("ZoomOut.png", 85f);
@@ -54,7 +54,6 @@ public static class Helpers
         return player == Werewolf.werewolf ||
                player == Doomsayer.doomsayer ||
                player == Juggernaut.juggernaut ||
-               player == Jester.jester ||
                player == Arsonist.arsonist ||
                player == Witness.Player ||
                player == PartTimer.partTimer ||
@@ -69,6 +68,7 @@ public static class Helpers
                player == SchrodingersCat.Player ||
                player == Jackal.Sidekick ||
                player == Pavlovsdogs.pavlovsowner ||
+               Jester.Player.Any(x => x == player) ||
                Jackal.jackal.Any(x => x == player) ||
                Pursuer.Player.Any(x => x == player) ||
                Survivor.Player.Any(x => x == player) ||
@@ -109,7 +109,7 @@ public static class Helpers
                || (Infected.Player.Any(p => p.PlayerId == player.PlayerId) && Infected.hasImpostorVision)
                || (Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision)
                || (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == player.PlayerId && Juggernaut.hasImpostorVision)
-               || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
+               || (Jester.Player.Any(p => p.PlayerId == player.PlayerId) && Jester.hasImpostorVision)
                || (Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision)
                || (Swooper.swooper != null && Swooper.swooper.PlayerId == player.PlayerId && Swooper.hasImpVision)
                || (Pelican.Player != null && Pelican.Player.PlayerId == player.PlayerId && Pelican.hasImpVision)
@@ -178,7 +178,7 @@ public static class Helpers
         {
             roleCouldUse = true;
         }
-        else if (Jester.jester != null && Jester.jester == player && Jester.canUseVents)
+        else if (Jester.Player != null && Jester.Player.Any(p => p == player) && Jester.canUseVents)
         {
             roleCouldUse = true;
         }
@@ -218,6 +218,7 @@ public static class Helpers
 
     public static bool IsNeutral(this PlayerControl player)
     {
+        if (player == null) return false;
         var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false, false).FirstOrDefault();
         return roleInfo != null && roleInfo.roleType == RoleType.Neutral;
     }
@@ -241,14 +242,14 @@ public static class Helpers
 
     public static bool isEvilNeutral(PlayerControl player)
     {
-        return IsNeutral(player) && (
-                player == Jester.jester ||
+        return player != null && IsNeutral(player) && (
+                player == Jester.Player.Any(x => x.PlayerId == player.PlayerId) ||
                 player == Vulture.vulture ||
                 player == Lawyer.lawyer ||
                 player == Executioner.executioner ||
                 player == Witness.Player ||
-                player == Doomsayer.doomsayer ||
                 player == Akujo.akujo ||
+                player == Doomsayer.doomsayer ||
                 player == Thief.thief ||
                 (player == SchrodingersCat.Player && SchrodingersCat.IsEvil)
                 );
@@ -292,9 +293,9 @@ public static class Helpers
     }
 
     public static PlayerControl SetTarget(IEnumerable<PlayerControl> untarget = null, bool onlyCrewmates = false,
-        bool targetInVents = false, float distances = 0f, PlayerControl targetingPlayer = null)
+        bool targetInVents = false, float distances = 0f, IEnumerable<PlayerControl> targetPlayers = null, PlayerControl targetingPlayer = null)
     {
-        return PlayerControlFixedUpdatePatch.SetTarget(onlyCrewmates, targetInVents, untarget, KillDistances: distances, targetingPlayer: targetingPlayer);
+        return PlayerControlFixedUpdatePatch.SetTarget(onlyCrewmates, targetInVents, untarget, range: distances, targetingPlayer: targetingPlayer, targetPlayers: targetPlayers);
     }
 
     public static void SetPlayerOutline(PlayerControl target, Color color)
@@ -569,6 +570,12 @@ public static class Helpers
         return PlayerById(db?.ParentId);
     }
 #nullable disable
+    public static bool Chance(this SRandom rnd, float rate = 50f)
+    {
+        double value = rnd.NextDouble() * 100.0;
+
+        return value < rate;
+    }
 
     public static T GetRandom<T>(this T[] list)
     {
@@ -1234,7 +1241,7 @@ public static class Helpers
 
     public static PlayerControl GetPartner(this PlayerControl player)
     {
-        return Akujo.otherLover(player) ?? (Lovers.bothDie ? Lovers.otherLover(player) : null);
+        return Akujo.otherLover(player) ?? Lovers.otherLover(player);
     }
 
     public static void toggleZoom(bool reset = false)

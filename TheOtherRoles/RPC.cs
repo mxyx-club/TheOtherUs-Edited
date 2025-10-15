@@ -257,7 +257,7 @@ public static class RPCProcedure
             case RoleId.Impostor:
                 break;
             case RoleId.Jester:
-                Jester.jester = player;
+                Jester.Player.Add(player);
                 break;
             case RoleId.Werewolf:
                 Werewolf.werewolf = player;
@@ -486,6 +486,9 @@ public static class RPCProcedure
                 break;
             case RoleId.Jailor:
                 Jailor.Player = player;
+                break;
+            case RoleId.Avenger:
+                Avenger.Player = player;
                 break;
             default:
                 Warn("Unknown role ID: " + roleId, "SetRole");
@@ -1158,7 +1161,7 @@ public static class RPCProcedure
         if (player == Berserker.Player) Berserker.ClearAndReload();
 
         // Other roles
-        if (player == Jester.jester) Jester.clearAndReload();
+        Jester.Player.RemoveAll(x => x.PlayerId == player.PlayerId);
         if (player == Werewolf.werewolf) Werewolf.clearAndReload();
         if (player == Miner.miner) Miner.clearAndReload();
         if (player == Pelican.Player) { Pelican.PelicanDie(true, playerId); }
@@ -1186,6 +1189,11 @@ public static class RPCProcedure
         if (player == Vortox.Player) Vortox.ClearAndReload();
         if (player == BandLeader.Player) BandLeader.ClearAndReload();
         if (player == SchrodingersCat.Player) SchrodingersCat.ClearAndReload();
+        if (player == Avenger.Player)
+        {
+            Avenger.ClearAndReload();
+            Lovers.clearAndReload();
+        }
 
         if (player == Shifter.shifter) Shifter.clearAndReload();
 
@@ -2414,7 +2422,7 @@ internal class RPCHandlerPatch
                 Poltergeist.MoveDeadBody(reader.ReadByte(), reader.ReadVector2());
                 break;
             case CustomRPC.jesterDragBody:
-                Jester.DragBody(reader.ReadByte());
+                Jester.DragBody(reader.ReadPlayer(), reader.ReadByte());
                 break;
             case CustomRPC.InfectedTarget:
                 Infected.InfectedTarget(reader.ReadByte(), reader.ReadByte(), reader.ReadInt32());

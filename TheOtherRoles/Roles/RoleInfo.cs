@@ -309,7 +309,6 @@ public class RoleInfo
 
         // Special roles
         if (p == Mimic.mimic) infos.Add(mimic);
-        if (p == Jester.jester) infos.Add(jester);
         if (p == Swooper.swooper) infos.Add(swooper);
         if (p == Werewolf.werewolf) infos.Add(werewolf);
         if (p == Miner.miner) infos.Add(miner);
@@ -378,6 +377,7 @@ public class RoleInfo
         if (p == Redemptor.Player) infos.Add(redemptor);
         if (p == BandLeader.Player) infos.Add(bandLeader);
         if (p == SchrodingersCat.Player) infos.Add(schrodingersCat);
+        if (Jester.Player.Any(x => x != null && x.PlayerId == p.PlayerId)) infos.Add(jester);
         if (Jackal.jackal.Any(x => x != null && x.PlayerId == p.PlayerId)) infos.Add(jackal);
         if (Amnisiac.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(amnisiac);
         if (Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == p.PlayerId)) infos.Add(pavlovsdogs);

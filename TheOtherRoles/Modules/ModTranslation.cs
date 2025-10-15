@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 namespace TheOtherRoles.Modules;
+
 public class ModTranslation
 {
     public static int defaultLanguage = (int)SupportedLangs.SChinese;
@@ -72,12 +73,17 @@ public class ModTranslation
 
         return key;
     }
+
+    public static string GetString(params string[] key)
+    {
+        return GetString(string.Join(" ", key));
+    }
 }
 
 internal static class LanguageExtension
 {
-    internal static string Translate(this string key)
+    internal static string Translate(this string key, string def = null)
     {
-        return GetString(key);
+        return GetString(key, def);
     }
 }

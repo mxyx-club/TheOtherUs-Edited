@@ -104,7 +104,7 @@ public static class JesterEnterVent
 {
     public static bool Prefix(Vent __instance)
     {
-        return Jester.jester != PlayerControl.LocalPlayer || !Jester.canUseVents;
+        return Jester.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) || !Jester.canUseVents;
     }
 }
 
@@ -353,7 +353,7 @@ internal class EmergencyMinigameUpdatePatch
             return false;
         }
 
-        if (Jester.jester != null && Jester.jester == PlayerControl.LocalPlayer && !Jester.canCallEmergency)
+        if (Jester.Player != null && Jester.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) && !Jester.canCallEmergency)
         {
             statusText = GetString("jesterMeetingButton");
             return false;

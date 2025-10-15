@@ -2253,6 +2253,9 @@
         "0": "Use Different Colors for Neutral Roles",
         "13": "为中立阵营使用不同颜色的提醒"
     },
+    "snitchCanGuessIfTaksDone": {
+        "13": "赌怪不可猜测已完成任务的告密者"
+    },
     "prophetCooldown": {
         "0": "Prophet Reveal Cooldown",
         "13": "冷却时间"
@@ -2523,15 +2526,61 @@
     },
     "modifierLoverImpLoverRate": {
         "0": "Chance that One Lover Is Impostor",
-        "13": "恋人中有内鬼的概率"
+        "13": "恋人中存在伪装者的概率"
     },
-    "modifierLoverBothDie": {
-        "0": "Both Lovers Die",
-        "13": "恋人共死"
+    "modifierLoverNeutraValid": {
+        "13": "恋人中允许存在中立阵营"
+    },
+    "modifierLoverCanGetModifiers": {
+        "13": "恋人可以获得其它附加能力"
     },
     "modifierLoverEnableChat": {
         "0": "Enable Lover Chat",
         "13": "启用私密聊天文字频道"
+    },
+    "modifierLoverAvengerChance": {
+        "13": "恋人死亡后另一方会变成复仇者的概率"
+    },
+    "avengerIsGuessable": {
+        "13": "可以被赌怪猜测"
+    },
+    "avengerCanFreeKill": {
+        "13": "可以击杀的玩家"
+    },
+    "avengerCanFreeKill.1": {
+        "0": "Only Target",
+        "13": "仅复仇目标"
+    },
+    "avengerCanFreeKill.2": {
+        "0": "All Players",
+        "13": "所有玩家"
+    },
+    "avengerShowArrows": {
+        "13": "指向目标的箭头"
+    },
+    "avengerUpdateIntervall": {
+        "13": "箭头更新间隔"
+    },
+    "avengerWinCondition": {
+        "13": "复仇完成后的胜利模式"
+    },
+    "avengerWinCondition.1": {
+        "0": "Follow Win",
+        "13": "跟随胜利"
+    },
+    "avengerWinCondition.2": {
+        "0": "Steal Win",
+        "13": "抢夺胜利"
+    },
+    "avengerWinCondition.3": {
+        "0": "Revenge Win",
+        "13": "复仇后直接胜利"
+    },
+    "avengerTargetWasKilledByOther": {
+        "13": "复仇目标被其它玩家击杀时"
+    },
+    "avengerTargetWasExiled": {
+        "13": "复仇目标被驱逐时"
     },
     "modifierSunglassesQuantity": {
         "0": "Number of Sunglasses",

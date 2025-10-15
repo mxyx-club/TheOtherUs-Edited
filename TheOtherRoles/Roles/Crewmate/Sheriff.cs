@@ -88,7 +88,7 @@ public static class Sheriff
                   (Amnisiac.Player.Any(p => p == target) && CustomOptionHolder.sheriffCanKillAmnesiac.GetBool()) ||
                   (Survivor.Player.Any(p => p == target) && CustomOptionHolder.sheriffCanKillSurvivor.GetBool()) ||
                   (Pursuer.Player.Any(p => p == target) && CustomOptionHolder.sheriffCanKillPursuer.GetBool()) ||
-                  (Jester.jester == target && CustomOptionHolder.sheriffCanKillJester.GetBool()) ||
+                  (Jester.Player.Any(p => p == target) && CustomOptionHolder.sheriffCanKillJester.GetBool()) ||
                   (Vulture.vulture == target && CustomOptionHolder.sheriffCanKillVulture.GetBool()) ||
                   (Thief.thief == target && CustomOptionHolder.sheriffCanKillThief.GetBool()) ||
                   (PartTimer.partTimer == target && CustomOptionHolder.sheriffCanKillPartTimer.GetBool()) ||
