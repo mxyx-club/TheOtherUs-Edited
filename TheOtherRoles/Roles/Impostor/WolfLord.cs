@@ -26,7 +26,10 @@ public class WolfLord
         if (target == null) return;
 
         Killed = true;
-        target.Exiled();
+
+        target.SetDie();
+        Avenger.OnPlayerDeath(Player, target);
+
         PlayerData.SetDeathReason(target, CustomDeathReason.Kill, Player);
         if (target == Balancer.currentTarget) Balancer.currentTarget = null;
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(target.KillSfx, false, 0.8f);

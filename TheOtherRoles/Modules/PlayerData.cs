@@ -340,4 +340,5 @@ public enum CustomDeathReason
     BombVictim,
     Eaten,
     Jailed,
+    AvengerFail,
 }

@@ -297,6 +297,11 @@ internal class HudManagerUpdatePatch
             setPlayerNameColor(Lawyer.target, RoleInfo.getRoleInfoForPlayer(Lawyer.target, false)?.FirstOrDefault()?.color ?? Color.white);
         }
 
+        if (Avenger.Player.IsAlive() && local == Avenger.Player && Avenger.Target != null)
+        {
+            setPlayerNameColor(Avenger.Target, Avenger.color);
+        }
+
         if (Mayor.mayor != null && Mayor.Revealed)
         {
             setPlayerNameColor(Mayor.mayor, Mayor.color);

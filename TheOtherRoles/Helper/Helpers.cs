@@ -44,38 +44,6 @@ public static class Helpers
     public static Sprite ZoomIn = new ResourceSprite("ZoomIn.png", 21f);
     public static Sprite ZoomOut = new ResourceSprite("ZoomOut.png", 85f);
 
-    public static bool isUsingTransportation(this PlayerControl pc) => pc.inMovingPlat || pc.onLadder;
-
-    /// <summary>
-    /// 假任务
-    /// </summary>
-    public static bool HasFakeTasks(this PlayerControl player)
-    {
-        return player == Werewolf.werewolf ||
-               player == Doomsayer.doomsayer ||
-               player == Juggernaut.juggernaut ||
-               player == Arsonist.arsonist ||
-               player == Witness.Player ||
-               player == PartTimer.partTimer ||
-               player == Akujo.akujo ||
-               player == Pelican.Player ||
-               player == Specter.Player ||
-               player == BandLeader.Player ||
-               player == Swooper.swooper ||
-               player == Lawyer.lawyer ||
-               player == Executioner.executioner ||
-               player == Vulture.vulture ||
-               player == SchrodingersCat.Player ||
-               player == Jackal.Sidekick ||
-               player == Pavlovsdogs.pavlovsowner ||
-               Jester.Player.Any(x => x == player) ||
-               Jackal.jackal.Any(x => x == player) ||
-               Pursuer.Player.Any(x => x == player) ||
-               Survivor.Player.Any(x => x == player) ||
-               Infected.Player.Any(x => x == player) ||
-               Pavlovsdogs.pavlovsdogs.Any(x => x == player);
-    }
-
     /// <summary>
     /// 强力船员判定
     /// </summary>
@@ -117,115 +85,9 @@ public static class Helpers
                || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId && Werewolf.hasImpostorVision);
     }
 
-    public static bool CanUseSabotage(this PlayerControl player)
-    {
-        var roleCouldUse = false;
-        if (ModOption.disableSabotage) return false;
-        else if (Jackal.canSabotage && (Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) || player == Jackal.Sidekick))
-            roleCouldUse = true;
-        else if (Pavlovsdogs.canSabotage && (player == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(p => p == player)))
-            roleCouldUse = true;
-        else if (player.Data?.Role != null && player.Data.Role.IsImpostor)
-            roleCouldUse = true;
-        return roleCouldUse;
-    }
-
-    /// <summary>
-    /// 管道技能相关
-    /// </summary>
-    public static bool RoleCanUseVents(this PlayerControl player)
-    {
-        var roleCouldUse = false;
-        if (player.inVent) return true;
-
-        if (Engineer.engineer != null && Engineer.engineer == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (Werewolf.canUseVents && Werewolf.werewolf != null && Werewolf.werewolf == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (Jackal.canUseVents && Jackal.jackal != null && Jackal.jackal.Any(x => x == player))
-        {
-            roleCouldUse = true;
-        }
-        else if (Jackal.canUseVents && Jackal.Sidekick != null && Jackal.Sidekick == player)
-        {
-            roleCouldUse = true;
-        }
-        else if ((Pavlovsdogs.canUseVents is 1 or 2) && Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner == player)
-        {
-            roleCouldUse = true;
-        }
-        else if ((Pavlovsdogs.canUseVents is 0 or 2) && Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p == player))
-        {
-            roleCouldUse = true;
-        }
-        else if (Spy.canEnterVents && Spy.spy != null && Spy.spy == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (Vulture.canUseVents && Vulture.vulture != null && Vulture.vulture == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (Undertaker.dragedBody != null && !Undertaker.canDragAndVent && Undertaker.undertaker == player)
-        {
-            roleCouldUse = false;
-        }
-        else if (Thief.canUseVents && Thief.thief != null && Thief.thief == player)
-        {
-            roleCouldUse = true;
-        }
-        else if (Jester.Player != null && Jester.Player.Any(p => p == player) && Jester.canUseVents)
-        {
-            roleCouldUse = true;
-        }
-        else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player && Juggernaut.canUseVents)
-        {
-            roleCouldUse = true;
-        }
-        else if (Pelican.Player != null && Pelican.Player == player && Pelican.CanUseVent)
-        {
-            roleCouldUse = true;
-        }
-        else if (Swooper.swooper != null && Swooper.swooper == player && Swooper.canUseVents)
-        {
-            roleCouldUse = true;
-        }
-        else if (Infected.Player != null && Infected.Player.Any(x => x == player) && Infected.canUseVents)
-        {
-            roleCouldUse = true;
-        }
-        else if (Werewolf.werewolf != null && Werewolf.werewolf == player)
-        {
-            if (CustomOptionHolder.werewolfCanUseVents.GetSelection() == 2) roleCouldUse = true;
-            else if (CustomOptionHolder.werewolfCanUseVents.GetSelection() == 1 && Werewolf.canKill) roleCouldUse = true;
-        }
-        else if (player.Data?.Role != null && player.Data.Role.CanVent)
-        {
-            roleCouldUse = true;
-        }
-        if (Tunneler.tunneler != null && Tunneler.tunneler == player)
-        {
-            var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Tunneler.tunneler.Data);
-            if (playerTotal - playerCompleted == 0 || Tunneler.NoTask) roleCouldUse = true;
-        }
-
-        return roleCouldUse;
-    }
-
-    public static bool IsNeutral(this PlayerControl player)
-    {
-        if (player == null) return false;
-        var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false, false).FirstOrDefault();
-        return roleInfo != null && roleInfo.roleType == RoleType.Neutral;
-    }
-
     public static bool isKillerNeutral(PlayerControl player)
     {
-        return IsNeutral(player) && (
+        return player.IsNeutral() && (
                 player == Juggernaut.juggernaut ||
                 player == Werewolf.werewolf ||
                 player == Swooper.swooper ||
@@ -242,7 +104,7 @@ public static class Helpers
 
     public static bool isEvilNeutral(PlayerControl player)
     {
-        return player != null && IsNeutral(player) && (
+        return player != null && player.IsNeutral() && (
                 player == Jester.Player.Any(x => x.PlayerId == player.PlayerId) ||
                 player == Vulture.vulture ||
                 player == Lawyer.lawyer ||
@@ -255,41 +117,13 @@ public static class Helpers
                 );
     }
 
-    public static bool IsKiller(this PlayerControl player)
-    {
-        return player != null && (player.IsImpostor() || isKillerNeutral(player));
-    }
-
-    public static bool IsCrew(this PlayerControl player, bool AndCat = false)
-    {
-        if (player == null) return false;
-        return (!player.IsImpostor() && !IsNeutral(player))
-            || (AndCat && SchrodingersCat.Player == player && SchrodingersCat.State == SchrodingersCat.CatState.Crewmate);
-    }
-
-    public static bool IsImpostor(this PlayerControl player, bool AndSpy = false, bool AndCat = false)
-    {
-        if (player == null) return false;
-        return player.Data.Role.IsImpostor
-            || (AndSpy && Spy.spy == player)
-            || (AndCat && SchrodingersCat.Player == player && SchrodingersCat.State == SchrodingersCat.CatState.Impostor);
-    }
-
     public static string teamString(PlayerControl player)
     {
         var killerTeam = "";
-        if (IsNeutral(player)) killerTeam = "NeutralRolesText".Translate();
+        if (player.IsNeutral()) killerTeam = "NeutralRolesText".Translate();
         else if (player.IsImpostor()) killerTeam = "ImpostorRolesText".Translate();
         else if (player.IsCrew()) killerTeam = "CrewmateRolesText".Translate();
         return killerTeam;
-    }
-
-    public static bool CanUseMeetingAbility(this PlayerControl player)
-    {
-        if (player.IsDead()) return true;
-        if (Blackmailer.Player.IsAlive() && Blackmailer.blackmailed == player) return false;
-        if (Jailor.Player.IsAlive() && Jailor.Jailed == player) return false;
-        return true;
     }
 
     public static PlayerControl SetTarget(IEnumerable<PlayerControl> untarget = null, bool onlyCrewmates = false,
@@ -334,21 +168,6 @@ public static class Helpers
 
         SetPlayerOutline(target, Palette.ImpostorRed);
         return target;
-    }
-
-    public static void NoCheckStartMeeting(this PlayerControl reporter, GameData.PlayerInfo target, bool force = false)
-    {
-        if (InMeeting) return;
-
-        if (AmongUsClient.Instance.AmHost)
-        {
-            handleVampireBiteOnBodyReport();
-            handleBomberExplodeOnBodyReport();
-
-            MeetingRoomManager.Instance.AssignSelf(reporter, target);
-            DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(reporter);
-            reporter.RpcStartMeeting(target);
-        }
     }
 
     public static void SetTargetWithLight(this FollowerCamera camera, MonoBehaviour target)
@@ -840,25 +659,6 @@ public static class Helpers
         }
     }
 
-    public static void ModRevive(this PlayerControl target, bool cleanBody = true, bool setPos = true)
-    {
-        if (target == null) return;
-
-        DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
-
-        for (var i = 0; i < array.Length; i++)
-        {
-            if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == target.PlayerId)
-            {
-                if (setPos) target.NetTransform.RpcSnapTo(array[i].transform.position);
-                if (cleanBody) UObject.Destroy(array[i].gameObject);
-                break;
-            }
-        }
-
-        target?.Revive();
-    }
-
     internal static string getRoleString(RoleInfo roleInfo)
     {
         return Cs(roleInfo.color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
@@ -893,16 +693,6 @@ public static class Helpers
             RoleType.Ghost => new Color32(159, 127, 209, byte.MaxValue),
             _ => Palette.White
         };
-    }
-
-    public static bool IsAlive(this PlayerControl player)
-    {
-        return player != null && !player.Data.Disconnected && !player.Data.IsDead;
-    }
-
-    public static bool IsDead(this PlayerControl player)
-    {
-        return player == null || player.Data.Disconnected || player.Data.IsDead;
     }
 
     public static void setInvisable(PlayerControl player)
@@ -942,21 +732,6 @@ public static class Helpers
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
         var numberOfLeftTasks = playerTotal - playerCompleted;
         return !CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.GetBool() || (numberOfLeftTasks <= 0);
-    }
-
-    public static void clearAllTasks(this PlayerControl player)
-    {
-        if (player == null) return;
-        foreach (var playerTask in player.myTasks.GetFastEnumerator())
-        {
-            playerTask.OnRemove();
-            UObject.Destroy(playerTask.gameObject);
-        }
-
-        player.myTasks.Clear();
-
-        if (player.Data != null && player.Data.Tasks != null)
-            player.Data.Tasks.Clear();
     }
 
     public static void shareGameVersion()
@@ -1064,10 +839,9 @@ public static class Helpers
         if (!ModOption.hidePlayerNames) return false; // All names are visible
         if (source == null || target == null) return true;
         if (source == target) return false; // Player sees his own name
-        if (source.Data.Role.IsImpostor && (target.Data.Role.IsImpostor || target == Spy.spy))
+        if (source.IsImpostor(AndCat: true) && target.IsImpostor(true, true))
             return false; // Members of team Impostors see the names of Impostors/Spies
-        if ((source == Lovers.lover1 || source == Lovers.lover2) &&
-            (target == Lovers.lover1 || target == Lovers.lover2))
+        if (source.isLover() && Lovers.otherLover(target))
             return false; // Members of team Lovers see the names of each other
         if ((Jackal.jackal.Any(p => p == source) || source == Jackal.Sidekick)
             && (Jackal.jackal.Any(p => p == target) || target == Jackal.Sidekick))
@@ -1225,23 +999,10 @@ public static class Helpers
         return playerControlList;
     }
 
-    public static void SetKillTimerUnchecked(this PlayerControl player, float time, float max = float.NegativeInfinity)
-    {
-        if (max == float.NegativeInfinity) max = time;
-
-        player.killTimer = time;
-        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(time, max);
-    }
-
     public static bool isRoleAlive(PlayerControl player)
     {
         if (Mimic.mimic != null && player == Mimic.mimic) return false;
         return player != null && player.IsAlive();
-    }
-
-    public static PlayerControl GetPartner(this PlayerControl player)
-    {
-        return Akujo.otherLover(player) ?? Lovers.otherLover(player);
     }
 
     public static void toggleZoom(bool reset = false)

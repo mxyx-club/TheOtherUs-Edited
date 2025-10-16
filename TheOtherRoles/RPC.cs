@@ -27,9 +27,9 @@ public enum CustomRPC : byte
     DraftModePick,
     ShareGameMode,
     ShareFriendCode,
+    Exiled,
 
     CustomMurderPlayer,
-    UncheckedExilePlayer,
     RevivePlayer,
     HostControl,
 
@@ -117,6 +117,8 @@ public enum CustomRPC : byte
     GuesserMessage,
     JailorJail,
     ExiledJailed,
+    SetAvengerLover,
+    WitchSpelledKill,
 
     TrapperKill,
     PlaceTrap,
@@ -740,12 +742,6 @@ public static class RPCProcedure
         player.MyPhysics.HandleRpc(isEnter ? (byte)19 : (byte)20, reader);
     }
 
-    public static void uncheckedExilePlayer(byte targetId)
-    {
-        var target = PlayerById(targetId);
-        target?.Exiled();
-    }
-
     public static void dynamicMapOption(byte mapId)
     {
         GameOptionsManager.Instance.currentNormalGameOptions.MapId = mapId;
@@ -1342,7 +1338,7 @@ public static class RPCProcedure
             local.MyPhysics.RpcExitVent(Vent.currentVent.Id);
             local.MyPhysics.ExitAllVents();
         }
-        if (local.IsAlive() && !AntiTeleport.antiTeleport.Any(x => x == local) && !local.isUsingTransportation())
+        if (local.IsAlive() && !AntiTeleport.antiTeleport.Any(x => x == local) && !local.IsUsingTransportation())
         {
             if (Disperser.DispersesToVent)
             {
@@ -1362,6 +1358,12 @@ public static class RPCProcedure
     {
         Medic.futureShielded = PlayerById(playerId);
         Medic.usedShield = true;
+    }
+
+    public static void WitchSpelledKill(PlayerControl player, PlayerControl target)
+    {
+        target.SetDie(CustomDeathReason.WitchExile, player);
+        Avenger.OnPlayerDeath(player, target);
     }
 
     public static void giveBomb(byte playerId, bool bomb = false)
@@ -2030,10 +2032,6 @@ internal class RPCHandlerPatch
                 CustomMurderPlayer(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadBoolean(), (CustomDeathReason)reader.ReadByte());
                 break;
 
-            case CustomRPC.UncheckedExilePlayer:
-                RPCProcedure.uncheckedExilePlayer(reader.ReadByte());
-                break;
-
             case CustomRPC.DynamicMapOption:
                 RPCProcedure.dynamicMapOption(reader.ReadByte());
                 break;
@@ -2328,7 +2326,7 @@ internal class RPCHandlerPatch
                 RPCProcedure.receiveGhostInfo(reader.ReadByte(), reader);
                 break;
             case CustomRPC.NoCheckStartMeeting:
-                Helpers.NoCheckStartMeeting(reader.ReadPlayer(), reader.ReadPlayer()?.Data, reader.ReadBoolean());
+                reader.ReadPlayer().NoCheckStartMeeting(reader.ReadPlayer()?.Data, reader.ReadBoolean());
                 break;
             case CustomRPC.ProphetExamine:
                 RPCProcedure.prophetExamine(reader.ReadByte());
@@ -2463,6 +2461,15 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.DecoySwap:
                 RPCProcedure.DecoySwap(reader.ReadPlayer(), reader.ReadInt32(), reader.ReadVector3(), reader.ReadVector3());
+                break;
+            case CustomRPC.SetAvengerLover:
+                Lovers.IsAvengerLover = reader.ReadBoolean();
+                break;
+            case CustomRPC.Exiled:
+                reader.ReadPlayer()?.Exiled();
+                break;
+            case CustomRPC.WitchSpelledKill:
+                RPCProcedure.WitchSpelledKill(reader.ReadPlayer(), reader.ReadPlayer());
                 break;
         }
 

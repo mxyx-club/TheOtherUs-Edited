@@ -1,6 +1,7 @@
 using TheOtherRoles.Patches;
 
 namespace TheOtherRoles.Roles.Crewmate;
+
 public class Jailor
 {
     public static PlayerControl Player;
@@ -84,7 +85,9 @@ public class Jailor
 
         if (Guesser.guesserUI != null) Guesser.guesserUIExitButton.OnClick.Invoke();
 
-        target.Exiled();
+        target.SetDie();
+        Avenger.OnPlayerDeath(player, target);
+
         PlayerData.SetDeathReason(target, CustomDeathReason.Jailed, player);
 
         foreach (var playerState in MeetingHud.Instance.playerStates)

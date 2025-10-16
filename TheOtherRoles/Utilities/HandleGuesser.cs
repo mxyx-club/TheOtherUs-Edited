@@ -6,7 +6,6 @@ public static class HandleGuesser
 {
     public static bool isGuesserGm => GuesserGM.Enabled;
     public static bool hasMultipleShotsPerMeeting;
-    public static bool killsThroughShield = true;
 
     public static Sprite targetSprite = new ResourceSprite("TargetIcon.png", 150f);
 
@@ -75,12 +74,10 @@ public static class HandleGuesser
         if (isGuesserGm)
         {
             hasMultipleShotsPerMeeting = GuesserGM.guesserGamemodeHasMultipleShotsPerMeeting.GetBool();
-            killsThroughShield = GuesserGM.guesserGamemodeKillsThroughShield.GetBool();
         }
         else
         {
             hasMultipleShotsPerMeeting = CustomOptionHolder.guesserHasMultipleShotsPerMeeting.GetBool();
-            killsThroughShield = CustomOptionHolder.guesserKillsThroughShield.GetBool();
         }
     }
 }

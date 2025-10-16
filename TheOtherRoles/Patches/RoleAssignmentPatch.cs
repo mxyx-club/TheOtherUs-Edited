@@ -527,11 +527,9 @@ internal class RoleManagerSelectRolesPatch
             players.RemoveAll(x => GuesserGM.isGuesser(x.PlayerId));
 
         var impPlayer = new List<PlayerControl>(players);
-        var impPlayerL = new List<PlayerControl>(players);
         var crewPlayer = new List<PlayerControl>(players);
         var neutralPlayer = new List<PlayerControl>(players);
         impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
-        impPlayerL.RemoveAll(x => !x.Data.Role.IsImpostor);
         crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || x.IsNeutral());
         neutralPlayer.RemoveAll(x => !x.IsNeutral());
 
@@ -617,9 +615,12 @@ internal class RoleManagerSelectRolesPatch
             if (secondCandidates.Count != 0)
             {
                 var secondLover = secondCandidates.Random();
+                Message($"secondCandidates {secondCandidates.Count}");
 
-                setModifierToPlayer((byte)RoleId.Lover, firstLover);
-                setModifierToPlayer((byte)RoleId.Lover, secondLover);
+                setModifierToPlayer((byte)RoleId.Lover, firstLover, 0);
+                Message($"firstLover {firstLover?.Data?.PlayerName}");
+                setModifierToPlayer((byte)RoleId.Lover, secondLover, 1);
+                Message($"secondLover {secondLover?.Data?.PlayerName}");
 
                 if (!CustomOptionHolder.modifierLoverCanGetModifiers.GetBool())
                 {

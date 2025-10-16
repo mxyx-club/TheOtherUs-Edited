@@ -1,4 +1,5 @@
-﻿namespace TheOtherRoles.Roles.Crewmate;
+namespace TheOtherRoles.Roles.Crewmate;
+
 public class Vigilante
 {
     public static PlayerControl vigilante;
@@ -6,7 +7,6 @@ public class Vigilante
 
     public static int remainingShotsNiceGuesser = 2;
     public static bool hasMultipleShotsPerMeeting;
-    public static bool killsThroughShield = true;
 
     public static void clearAndReload()
     {
@@ -14,6 +14,5 @@ public class Vigilante
 
         remainingShotsNiceGuesser = CustomOptionHolder.guesserNumberOfShots.GetInt();
         hasMultipleShotsPerMeeting = CustomOptionHolder.guesserHasMultipleShotsPerMeeting.GetBool();
-        killsThroughShield = CustomOptionHolder.guesserKillsThroughShield.GetBool();
     }
 }

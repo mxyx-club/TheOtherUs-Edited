@@ -1,5 +1,6 @@
 using TheOtherRoles.Mode;
 using TheOtherRoles.Patches;
+using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles.Roles;
 
@@ -341,7 +342,7 @@ public static class Guesser
                     else
                     {
                         var focusedTarget = PlayerById(__instance.playerStates[buttonTarget].TargetPlayerId);
-                        guesserShootPre(focusedTarget, (byte)catState, __instance);
+                        CheckGuesserShoot(focusedTarget, (byte)catState, __instance);
                     }
 
                 }));
@@ -383,7 +384,7 @@ public static class Guesser
                 else
                 {
                     var focusedTarget = PlayerById(__instance.playerStates[buttonTarget].TargetPlayerId);
-                    guesserShootPre(focusedTarget, (byte)roleInfo.roleId, __instance);
+                    CheckGuesserShoot(focusedTarget, (byte)roleInfo.roleId, __instance);
                 }
             }));
             i[(int)team]++;
@@ -394,7 +395,7 @@ public static class Guesser
     }
 
 
-    public static void guesserShootPre(PlayerControl target, byte roleId, MeetingHud __instance)
+    public static void CheckGuesserShoot(PlayerControl target, byte roleId, MeetingHud __instance)
     {
         var dyingTarget = PlayerControl.LocalPlayer;
         var mainRoleInfo = RoleInfo.getRoleInfoForPlayer(target, true);
@@ -408,7 +409,7 @@ public static class Guesser
 
         if (!PlayerControl.LocalPlayer.CanUseMeetingAbility() || dyingTarget == Jailor.Jailed) return;
 
-        if (!HandleGuesser.killsThroughShield && target == Medic.shielded)
+        if (!Medic.GuessShield && target == Medic.shielded)
         {
             // Depending on the options, shooting the shielded player will not allow the guess, notifiy everyone about the kill attempt and close the window
             __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
@@ -476,8 +477,8 @@ public static class Guesser
         var writer = StartRPC(CustomRPC.GuesserShoot);
         writer.Write(PlayerControl.LocalPlayer.PlayerId);   // 猜测者
         writer.Write(dyingTarget.PlayerId);                 // 实际死亡玩家
-        writer.Write(target.PlayerId);                      // 猜测目标
-        writer.Write(roleId);                               // 猜测职业
+        writer.Write(target.PlayerId);                      // 猜测的玩家
+        writer.Write(roleId);                               // 猜测的职业
         writer.EndRPC();
         guesserShoot(PlayerControl.LocalPlayer.PlayerId, dyingTarget.PlayerId, target.PlayerId, roleId);
 
@@ -565,7 +566,8 @@ public static class Guesser
 
         byte partnerId = dyingPartner != null ? dyingPartner.PlayerId : dyingTargetId;
 
-        dyingTarget.Exiled();
+        dyingTarget.SetDie();
+        Avenger.OnPlayerDeath(guesser, dyingTarget);
 
         var reason = dyingTarget == guesser ? CustomDeathReason.GuessFail : CustomDeathReason.GuessSuccess;
         PlayerData.SetDeathReason(dyingTarget, reason, guesser);

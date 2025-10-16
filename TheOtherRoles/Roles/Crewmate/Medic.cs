@@ -19,6 +19,7 @@ public static class Medic
     public static bool reset;
     public static float ReportNameDuration;
     public static float ReportColorDuration;
+    public static bool GuessShield;
 
     public static Color shieldedColor = new Color32(0, 221, 255, byte.MaxValue);
     public static PlayerControl currentTarget;
@@ -60,6 +61,7 @@ public static class Medic
         currentTarget = null;
         usedShield = false;
         reset = CustomOptionHolder.medicResetTargetAfterMeeting.GetBool();
+        GuessShield = CustomOptionHolder.medicGuessShield.GetBool();
         showShielded = CustomOptionHolder.medicShowShielded.GetSelection();
         showAttemptToShielded = CustomOptionHolder.medicShowAttemptToShielded.GetBool();
         unbreakableShield = CustomOptionHolder.medicBreakShield.GetBool();

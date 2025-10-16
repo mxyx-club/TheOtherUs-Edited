@@ -2045,6 +2045,9 @@
         "0": "Time before which Detective Autopsies Reveal the Killer's Faction",
         "13": "以下时间内报告可得知凶手阵营"
     },
+    "medicGuessShield": {
+        "13": "护盾可以防止赌怪刺杀"
+    },
     "medicShowShielded": {
         "0": "Show Shielded Player to",
         "13": "可见医生护盾的玩家"
@@ -2312,6 +2315,9 @@
         "0": "Impostors Can Kill Teammates if Spy Is Present",
         "13": "卧底在场时伪装者可击杀队友"
     },
+    "spyEvilCanShootSpy": {
+        "13": "邪恶赌怪可以猜测卧底"
+    },
     "portalmakerCooldown": {
         "0": "Place Portal Cooldown",
         "13": "构建星门冷却"
@@ -2560,6 +2566,9 @@
     },
     "avengerUpdateIntervall": {
         "13": "箭头更新间隔"
+    },
+    "avengerOnlyAliveWin": {
+        "13": "需要存活到最后才能胜利"
     },
     "avengerWinCondition": {
         "13": "复仇完成后的胜利模式"
@@ -4175,6 +4184,10 @@
     },
     "destroyButtonText": {
         "13": "回收木偶"
+    },
+    "AvengeButtonText": {
+        "0": "KILL",
+        "13": "复仇"
     },
     "GuessserGMInfo": {
         "0": " (Guesser)",

@@ -31,7 +31,7 @@ public class Jackal
 
     public static Sprite SidekickButton = new ResourceSprite("SidekickButton.png");
 
-    public static void setSwoop()
+    public static void SetSwoop()
     {
         if (AmongUsClient.Instance?.AmHost == true)
         {
@@ -46,7 +46,6 @@ public class Jackal
     public static void clearAndReload()
     {
         jackal.Clear();
-        setSwoop();
         Sidekick = null;
         currentTarget = null;
         killTarget = null;

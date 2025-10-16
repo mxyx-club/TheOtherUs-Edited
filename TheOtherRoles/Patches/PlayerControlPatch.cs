@@ -479,16 +479,7 @@ public static class MurderPlayerPatch
             Mimic.MimicRole(target.PlayerId);
         }
 
-        // Lover suicide trigger on murder
-        if ((Lovers.lover1 != null && target == Lovers.lover1) || (Lovers.lover2 != null && target == Lovers.lover2))
-        {
-            var otherLover = target == Lovers.lover1 ? Lovers.lover2 : Lovers.lover1;
-            if (otherLover != null && !otherLover.Data.IsDead)
-            {
-                otherLover.MurderPlayer(otherLover, MurderResultFlags.Succeeded);
-                PlayerData.SetDeathReason(otherLover, CustomDeathReason.LoverSuicide);
-            }
-        }
+        Avenger.OnPlayerDeath(__instance, target);
 
         // Bait
         if (Bait.bait.Any(x => x.PlayerId == target.PlayerId))
@@ -786,22 +777,14 @@ public static class ExilePlayerPatch
             }
         }
 
-        _ = new LateTask(() => { if (__instance == PlayerControl.LocalPlayer) CanSeeGhostInfo = true; }, 0.5f, "CanSeeRoleInfo");
+        if (__instance == PlayerControl.LocalPlayer) _ = new LateTask(() => { CanSeeGhostInfo = true; }, 0.5f, "CanSeeRoleInfo");
 
         // Remove fake tasks when player dies
         if (__instance.HasFakeTasks() || __instance == Pursuer.Player.Contains(__instance) || __instance == Thief.thief)
             __instance.clearAllTasks();
 
         // Lover suicide trigger on exile
-        if (__instance.isLover() && Lovers.otherLover(__instance) != null)
-        {
-            var otherLover = Lovers.otherLover(__instance);
-            if (otherLover != null && !otherLover.Data.IsDead)
-            {
-                otherLover.Exiled();
-                PlayerData.SetDeathReason(otherLover, CustomDeathReason.LoverSuicide);
-            }
-        }
+        if (Lovers.isLover(__instance)) Avenger.OnPlayerDeath(null, __instance, true);
 
         if (__instance.PlayerId == Pelican.Player?.PlayerId && Pelican.eatenPlayers?.Count > 0)
         {

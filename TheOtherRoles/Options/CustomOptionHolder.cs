@@ -447,7 +447,6 @@ public class CustomOptionHolder
     public static CustomOption guesserNumberOfShots;
     public static CustomOption guesserHasMultipleShotsPerMeeting;
     public static CustomOption guesserShowInfoInGhostChat;
-    public static CustomOption guesserKillsThroughShield;
 
     public static CustomOption sheriffSpawnRate;
     public static CustomOption sheriffCooldown;
@@ -522,6 +521,7 @@ public class CustomOptionHolder
     public static CustomOption medicSpawnRate;
     public static CustomOption medicShowShielded;
     public static CustomOption medicBreakShield;
+    public static CustomOption medicGuessShield;
     public static CustomOption medicShowAttemptToMedic;
     public static CustomOption medicShowAttemptToShielded;
     public static CustomOption medicResetTargetAfterMeeting;
@@ -573,6 +573,7 @@ public class CustomOptionHolder
     public static CustomOption snitchSpawnRate;
     public static CustomOption snitchLeftTasksForReveal;
     public static CustomOption snitchSeeMeeting;
+    public static CustomOption snitchCanSeeRoles;
     public static CustomOption snitchIncludeNeutralTeam;
     public static CustomOption snitchTeamNeutraUseDifferentArrowColor;
     public static CustomOption snitchCanGuessIfTaksDone;
@@ -680,6 +681,7 @@ public class CustomOptionHolder
     public static CustomOption avengerUpdateIntervall;
     public static CustomOption avengerHasImpVision;
     public static CustomOption avengerCanUseVents;
+    public static CustomOption avengerOnlyAliveWin;
     public static CustomOption avengerWinCondition;
     public static CustomOption avengerTargetWasKilledByOther;
     public static CustomOption avengerTargetWasExiled;
@@ -1238,8 +1240,6 @@ public class CustomOptionHolder
             isHidden: () => GuesserGM.Enabled);
         guesserShowInfoInGhostChat = Create(301003, Types.Crewmate, "guesserShowInfoInGhostChat", true, guesserSpawnRate,
             isHidden: () => GuesserGM.Enabled);
-        guesserKillsThroughShield = Create(301004, Types.Crewmate, "guesserKillsThroughShield", false, guesserSpawnRate,
-            isHidden: () => GuesserGM.Enabled);
 
         sheriffSpawnRate = Create(301400, Types.Crewmate, Cs(Sheriff.color, "Sheriff"), rates, null, true);
         sheriffCooldown = Create(301401, Types.Crewmate, "sheriffCooldown", 25f, 10f, 60f, 2.5f, sheriffSpawnRate);
@@ -1329,6 +1329,7 @@ public class CustomOptionHolder
         medicBreakShield = Create(302002, Types.Crewmate, "medicBreakShield", true, medicSpawnRate);
         medicShowAttemptToMedic = Create(302003, Types.Crewmate, "medicShowAttemptToMedic", true, medicBreakShield);
         medicShowAttemptToShielded = Create(302004, Types.Crewmate, "medicShowAttemptToShielded", false, medicBreakShield);
+        medicGuessShield = Create(302009, Types.Crewmate, "medicGuessShield", false, medicSpawnRate);
         medicResetTargetAfterMeeting = Create(302005, Types.Crewmate, "medicResetTargetAfterMeeting", false, medicSpawnRate);
         medicSetOrShowShieldAfterMeeting = Create(302006, Types.Crewmate, "medicSetOrShowShieldAfterMeeting",
             ["medicSetOrShowShieldAfterMeeting1", "medicSetOrShowShieldAfterMeeting2", "medicSetOrShowShieldAfterMeeting3"], medicSpawnRate);
@@ -1380,6 +1381,7 @@ public class CustomOptionHolder
         snitchSpawnRate = Create(302700, Types.Crewmate, Cs(Snitch.color, "Snitch"), rates, null, true);
         snitchLeftTasksForReveal = Create(302701, Types.Crewmate, "snitchLeftTasksForReveal", 1, 0, 10, 1, snitchSpawnRate);
         snitchSeeMeeting = Create(302702, Types.Crewmate, "snitchSeeMeeting", true, snitchSpawnRate);
+        //snitchCanSeeRoles = Create(302706, Types.Crewmate, "snitchCanSeeRoles", false, snitchSeeMeeting);
         snitchIncludeNeutralTeam = Create(302703, Types.Crewmate, "snitchIncludeNeutralTeam",
             ["optionOff", "snitchIncludeNeutralTeam2", "snitchIncludeNeutralTeam3", "snitchIncludeNeutralTeam4"], snitchSpawnRate);
         snitchTeamNeutraUseDifferentArrowColor = Create(302704, Types.Crewmate, "snitchTeamNeutraUseDifferentArrowColor", true, snitchIncludeNeutralTeam);
@@ -1464,10 +1466,11 @@ public class CustomOptionHolder
         avengerUpdateIntervall = Create(401655, Types.Modifier, "avengerUpdateIntervall", 5f, 0.5f, 15f, 0.5f, avengerShowArrows);
         avengerHasImpVision = Create(401656, Types.Modifier, "hasImpVision", true, modifierLoverAvengerChance);
         avengerCanUseVents = Create(401657, Types.Modifier, "canUseVents", false, modifierLoverAvengerChance);
+        avengerOnlyAliveWin = Create(401661, Types.Modifier, "avengerOnlyAliveWin", true, modifierLoverAvengerChance);
         avengerWinCondition = Create(401658, Types.Modifier, "avengerWinCondition",
             ["avengerWinCondition.1", "avengerWinCondition.2", "avengerWinCondition.3"], modifierLoverAvengerChance);
         avengerTargetWasKilledByOther = Create(401659, Types.Modifier, "avengerTargetWasKilledByOther",
-            ["DeathReason.Suicide", "Jester", "Amnisiac", "Survivor"], modifierLoverAvengerChance);
+            ["DeathReason.Suicide", GetString("", Cs(Jester.color, "Jester")), GetString("", Cs(Amnisiac.color, "Amnisiac")), GetString("", Cs(Survivor.color, "Survivor"))], modifierLoverAvengerChance);
         avengerTargetWasExiled = Create(401660, Types.Modifier, "avengerTargetWasExiled",
             ["DeathReason.Suicide", GetString("", Cs(Jester.color, "Jester")), GetString("", Cs(Amnisiac.color, "Amnisiac")), GetString("", Cs(Survivor.color, "Survivor"))], modifierLoverAvengerChance);
 

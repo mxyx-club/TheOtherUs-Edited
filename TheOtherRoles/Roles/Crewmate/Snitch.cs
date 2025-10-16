@@ -41,7 +41,7 @@ public static class Snitch
         text = null;
         needsUpdate = true;
 
-        //canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();
+        //canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.GetBool();
         Team = (includeNeutralTeam)CustomOptionHolder.snitchIncludeNeutralTeam.GetSelection();
         teamNeutraUseDifferentArrowColor = CustomOptionHolder.snitchTeamNeutraUseDifferentArrowColor.GetBool();
         CanGuessIfTaksDone = CustomOptionHolder.snitchCanGuessIfTaksDone.GetBool();

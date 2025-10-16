@@ -29,6 +29,7 @@ internal enum CustomGameOverReason
     AkujoWin,
     BandLeaderWin,
     BandLeaderTeamWin,
+    AvengerTeamWin,
 }
 
 internal enum WinCondition
@@ -64,6 +65,8 @@ internal enum WinCondition
     DoomsayerWin,
     AkujoSoloWin,
     AkujoTeamWin,
+    AvengerTeamWin,
+    AdditionalAvengerTeamWin,
 }
 
 internal static class AdditionalTempData
@@ -201,6 +204,8 @@ public class OnGameEndPatch
         var akujoWin = Akujo.akujo.IsAlive() && Akujo.honmei.IsAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.AkujoWin ||
                        (GameManager.Instance.DidHumansWin(gameOverReason) && !Akujo.IsKillerLover()));
         var bandLeaderWin = gameOverReason == (GameOverReason)CustomGameOverReason.BandLeaderTeamWin;
+        var avengerAndLoveWin = Avenger.Player != null && Avenger.WinFlag && (!Avenger.OnlyAliveWin || Avenger.Player.IsAlive()) &&
+                                (gameOverReason == (GameOverReason)CustomGameOverReason.AvengerTeamWin || Avenger.WinCondition == Avenger.WinnerFlags.StealWin);
 
         var bandLeaderAddCrewWin = BandLeader.Player != null && BandLeader.WinCondition == BandLeader.WinnerFlags.Crewmate && crewmateWin;
         var bandLeaderAddImpWin = BandLeader.Player != null && BandLeader.WinCondition == BandLeader.WinnerFlags.Impostor && impostorWin;
@@ -236,6 +241,13 @@ public class OnGameEndPatch
             AdditionalTempData.winCondition = WinCondition.JesterWin;
         }
 
+        else if (avengerAndLoveWin && Avenger.WinCondition is Avenger.WinnerFlags.StealWin or Avenger.WinnerFlags.RevengeWin)
+        {
+            if (Avenger.Player != null) winners.Add(Avenger.Player);
+            if (Avenger.Lover != null) winners.Add(Avenger.Lover);
+            AdditionalTempData.winCondition = WinCondition.AvengerTeamWin;
+        }
+
         // Witness win
         else if (witnessWin)
         {
@@ -256,7 +268,6 @@ public class OnGameEndPatch
             winners.Add(Executioner.executioner);
             AdditionalTempData.winCondition = WinCondition.ExecutionerWin;
         }
-
         // Akujo win
         else if (akujoWin)
         {
@@ -528,6 +539,13 @@ public class OnGameEndPatch
             AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalAliveSurvivorWin);
         }
 
+        if (Avenger.Player != null && Avenger.WinFlag && Avenger.WinCondition == Avenger.WinnerFlags.FollowWin)
+        {
+            if (Avenger.Player != null) winners.Add(Avenger.Player);
+            if (Avenger.Lover != null) winners.Add(Avenger.Lover);
+            AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalAvengerTeamWin);
+        }
+
         if (PartTimer.partTimer != null && PartTimer.target != null &&
             winners.ToArray().Any(x => x.Data.PlayerName == PartTimer.target.Data.PlayerName))
         {
@@ -650,7 +668,8 @@ public class EndGameManagerSetUpPatch
             { WinCondition.MiniLose, (Mini.color, "MiniLose") },
             { WinCondition.CrewmateWin, (Palette.CrewmateBlue, "CrewmateWin") },
             { WinCondition.ImpostorWin, (Palette.ImpostorRed, "ImpostorWin") },
-            { WinCondition.BandLeaderWin, (BandLeader.color, "BandLeaderWin") }
+            { WinCondition.BandLeaderWin, (BandLeader.color, "BandLeaderWin") },
+            { WinCondition.AvengerTeamWin, (Avenger.color, "复仇者胜利") }
         };
 
         var winConditionMappings = new Dictionary<WinCondition, (Color, string)>
@@ -660,6 +679,7 @@ public class EndGameManagerSetUpPatch
             { WinCondition.AdditionalPartTimerWin, (PartTimer.color, "PartTimerWin") },
             { WinCondition.AdditionalAlivePursuerWin, (Pursuer.color, "起诉人存活") },
             { WinCondition.AdditionalAliveSurvivorWin, (Survivor.color, "幸存者存活") },
+            { WinCondition.AdditionalAvengerTeamWin, (Survivor.color, "复仇者胜利") },
             { WinCondition.BandLeaderWin, (BandLeader.color, "BandLeaderWin") }
         };
 

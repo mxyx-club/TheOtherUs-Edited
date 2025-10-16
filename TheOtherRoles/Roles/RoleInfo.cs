@@ -1,3 +1,4 @@
+using static Il2CppSystem.Xml.Schema.XsdDuration;
 using PlayerData = TheOtherRoles.Modules.PlayerData;
 
 namespace TheOtherRoles.Roles;
@@ -328,6 +329,7 @@ public class RoleInfo
         if (p == Marionette.Player) infos.Add(marionette);
         if (p == Gambler.gambler) infos.Add(gambler);
         if (p == Gunsmith.Player) infos.Add(gunsmith);
+        if (p == Avenger.Player) infos.Add(avenger);
         if (p == Ninja.ninja) infos.Add(ninja);
         if (p == Yoyo.yoyo) infos.Add(yoyo);
         if (p == EvilTrapper.evilTrapper) infos.Add(evilTrapper);
@@ -452,6 +454,8 @@ public class RoleInfo
                     roleName = Cs(Warlock.color, "roleInfo.cursed".Translate()) + roleName;
                 if (p == Ninja.ninjaMarked)
                     roleName = Cs(Ninja.color, "roleInfo.marked".Translate()) + roleName;
+                if (p == Avenger.Target)
+                    roleName = Cs(Avenger.color, "X ") + roleName;
                 if (p == Thief.formerThief)
                     roleName += Cs(Thief.color, "roleInfo.thief".Translate());
                 if (Pursuer.blankedList.Any(x => x == p.PlayerId))

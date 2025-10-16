@@ -1,3 +1,4 @@
+using Mono.Cecil.Cil;
 using TheOtherRoles.Patches;
 
 namespace TheOtherRoles.Roles;
@@ -134,6 +135,315 @@ public enum RoleId
     Specter,
     Poltergeist,
 }
+
+public static class PlayerControlExtensions
+{
+    extension(PlayerControl player)
+    {
+        public bool IsUsingTransportation() => player.inMovingPlat || player.onLadder;
+
+        /// <summary>
+        /// 假任务
+        /// </summary>
+        public bool HasFakeTasks()
+        {
+            return player == Werewolf.werewolf ||
+                   player == Doomsayer.doomsayer ||
+                   player == Juggernaut.juggernaut ||
+                   player == Arsonist.arsonist ||
+                   player == Witness.Player ||
+                   player == PartTimer.partTimer ||
+                   player == Akujo.akujo ||
+                   player == Pelican.Player ||
+                   player == Specter.Player ||
+                   player == BandLeader.Player ||
+                   player == Swooper.swooper ||
+                   player == Lawyer.lawyer ||
+                   player == Executioner.executioner ||
+                   player == Vulture.vulture ||
+                   player == SchrodingersCat.Player ||
+                   player == Jackal.Sidekick ||
+                   player == Pavlovsdogs.pavlovsowner ||
+                   Jester.Player.Any(x => x == player) ||
+                   Jackal.jackal.Any(x => x == player) ||
+                   Pursuer.Player.Any(x => x == player) ||
+                   Survivor.Player.Any(x => x == player) ||
+                   Infected.Player.Any(x => x == player) ||
+                   Pavlovsdogs.pavlovsdogs.Any(x => x == player);
+        }
+
+        public bool CanUseSabotage()
+        {
+            var roleCouldUse = false;
+            if (ModOption.disableSabotage) return false;
+            else if (Jackal.canSabotage && (Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) || player == Jackal.Sidekick))
+                roleCouldUse = true;
+            else if (Pavlovsdogs.canSabotage && (player == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(p => p == player)))
+                roleCouldUse = true;
+            else if (player.Data?.Role != null && player.Data.Role.IsImpostor)
+                roleCouldUse = true;
+            return roleCouldUse;
+        }
+
+        /// <summary>
+        /// 管道技能相关
+        /// </summary>
+        public bool RoleCanUseVents()
+        {
+            var roleCouldUse = false;
+            if (player.inVent) return true;
+
+            if (Engineer.engineer != null && Engineer.engineer == player)
+            {
+                roleCouldUse = true;
+            }
+            else if (Werewolf.canUseVents && Werewolf.werewolf != null && Werewolf.werewolf == player)
+            {
+                roleCouldUse = true;
+            }
+            else if (Jackal.canUseVents && Jackal.jackal != null && Jackal.jackal.Any(x => x == player))
+            {
+                roleCouldUse = true;
+            }
+            else if (Jackal.canUseVents && Jackal.Sidekick != null && Jackal.Sidekick == player)
+            {
+                roleCouldUse = true;
+            }
+            else if ((Pavlovsdogs.canUseVents is 1 or 2) && Pavlovsdogs.pavlovsowner != null && Pavlovsdogs.pavlovsowner == player)
+            {
+                roleCouldUse = true;
+            }
+            else if ((Pavlovsdogs.canUseVents is 0 or 2) && Pavlovsdogs.pavlovsdogs != null && Pavlovsdogs.pavlovsdogs.Any(p => p == player))
+            {
+                roleCouldUse = true;
+            }
+            else if (Spy.canEnterVents && Spy.spy != null && Spy.spy == player)
+            {
+                roleCouldUse = true;
+            }
+            else if (Vulture.canUseVents && Vulture.vulture != null && Vulture.vulture == player)
+            {
+                roleCouldUse = true;
+            }
+            else if (Undertaker.dragedBody != null && !Undertaker.canDragAndVent && Undertaker.undertaker == player)
+            {
+                roleCouldUse = false;
+            }
+            else if (Thief.canUseVents && Thief.thief != null && Thief.thief == player)
+            {
+                roleCouldUse = true;
+            }
+            else if (Jester.Player != null && Jester.Player.Any(p => p == player) && Jester.canUseVents)
+            {
+                roleCouldUse = true;
+            }
+            else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player && Juggernaut.canUseVents)
+            {
+                roleCouldUse = true;
+            }
+            else if (Pelican.Player != null && Pelican.Player == player && Pelican.CanUseVent)
+            {
+                roleCouldUse = true;
+            }
+            else if (Swooper.swooper != null && Swooper.swooper == player && Swooper.canUseVents)
+            {
+                roleCouldUse = true;
+            }
+            else if (Infected.Player != null && Infected.Player.Any(x => x == player) && Infected.canUseVents)
+            {
+                roleCouldUse = true;
+            }
+            else if (Werewolf.werewolf != null && Werewolf.werewolf == player)
+            {
+                if (CustomOptionHolder.werewolfCanUseVents.GetSelection() == 2) roleCouldUse = true;
+                else if (CustomOptionHolder.werewolfCanUseVents.GetSelection() == 1 && Werewolf.canKill) roleCouldUse = true;
+            }
+            else if (player.Data?.Role != null && player.Data.Role.CanVent)
+            {
+                roleCouldUse = true;
+            }
+            if (Tunneler.tunneler != null && Tunneler.tunneler == player)
+            {
+                var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Tunneler.tunneler.Data);
+                if (playerTotal - playerCompleted == 0 || Tunneler.NoTask) roleCouldUse = true;
+            }
+
+            return roleCouldUse;
+        }
+
+        public bool IsNeutral()
+        {
+            if (player == null) return false;
+            var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false, false).FirstOrDefault();
+            return roleInfo != null && roleInfo.roleType == RoleType.Neutral;
+        }
+
+        public bool IsKiller()
+        {
+            return player != null && (player.IsImpostor() || isKillerNeutral(player));
+        }
+
+        public bool IsCrew(bool AndCat = false)
+        {
+            if (player == null) return false;
+            return (!player.IsImpostor() && !IsNeutral(player))
+                || (AndCat && SchrodingersCat.Player == player && SchrodingersCat.State == SchrodingersCat.CatState.Crewmate);
+        }
+
+        public bool IsImpostor(bool AndSpy = false, bool AndCat = false)
+        {
+            if (player == null) return false;
+            return player.Data.Role.IsImpostor
+                || (AndSpy && Spy.spy == player)
+                || (AndCat && SchrodingersCat.Player == player && SchrodingersCat.State == SchrodingersCat.CatState.Impostor);
+        }
+
+        public bool CanUseMeetingAbility()
+        {
+            if (player.IsDead()) return true;
+            if (Blackmailer.Player.IsAlive() && Blackmailer.blackmailed == player) return false;
+            if (Jailor.Player.IsAlive() && Jailor.Jailed == player) return false;
+            return true;
+        }
+
+        public bool IsAlive()
+        {
+            return player != null && !player.Data.Disconnected && !player.Data.IsDead;
+        }
+
+        public bool IsDead()
+        {
+            return player == null || player.Data.Disconnected || player.Data.IsDead;
+        }
+
+        public void clearAllTasks()
+        {
+            if (player == null) return;
+            foreach (var playerTask in player.myTasks.GetFastEnumerator())
+            {
+                playerTask.OnRemove();
+                UObject.Destroy(playerTask.gameObject);
+            }
+
+            player.myTasks.Clear();
+
+            if (player.Data != null && player.Data.Tasks != null)
+                player.Data.Tasks.Clear();
+        }
+
+        public void SetKillTimerUnchecked(float time, float max = float.NegativeInfinity)
+        {
+            if (max == float.NegativeInfinity) max = time;
+
+            player.killTimer = time;
+            FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(time, max);
+        }
+
+        public PlayerControl GetPartner()
+        {
+            return Akujo.otherLover(player) ?? Lovers.otherLover(player);
+        }
+
+        public void NoCheckStartMeeting(GameData.PlayerInfo target, bool force = false)
+        {
+            if (InMeeting) return;
+
+            if (AmongUsClient.Instance.AmHost)
+            {
+                handleVampireBiteOnBodyReport();
+                handleBomberExplodeOnBodyReport();
+
+                MeetingRoomManager.Instance.AssignSelf(player, target);
+                DestroyableSingleton<HudManager>.Instance.OpenMeetingRoom(player);
+                player.RpcStartMeeting(target);
+            }
+        }
+
+        public void ModRevive(bool cleanBody = true, bool setPos = true)
+        {
+            if (player == null) return;
+
+            DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
+
+            for (var i = 0; i < array.Length; i++)
+            {
+                if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == player.PlayerId)
+                {
+                    if (setPos) player.NetTransform.RpcSnapTo(array[i].transform.position);
+                    if (cleanBody) UObject.Destroy(array[i].gameObject);
+                    break;
+                }
+            }
+
+            player?.Revive();
+        }
+
+        public void SetDie(CustomDeathReason deathReason = CustomDeathReason.Exile, PlayerControl killer = null, bool assignGhostRole = true)
+        {
+            player?.Die(DeathReason.Kill, assignGhostRole);
+            PlayerData.SetDeathReason(player, deathReason, killer);
+
+            if (player.AmOwner) _ = new LateTask(() => { CanSeeGhostInfo = true; }, 0.5f, "CanSeeRoleInfo");
+
+            if (player == Jailor.Player && Jailor.Jailed != null && InMeeting)
+            {
+                foreach (var playerState in MeetingHud.Instance.playerStates)
+                {
+                    var cell = playerState.transform.FindChild("JailCell");
+                    cell?.gameObject?.Destroy();
+
+                    var icon = playerState.transform.FindChild("JailTargetIcon");
+                    icon?.gameObject?.Destroy();
+                }
+                Jailor.Jailed = null;
+            }
+
+            if (player == Blackmailer.Player && Blackmailer.blackmailed != null && InMeeting)
+            {
+                foreach (var playerState in MeetingHud.Instance.playerStates)
+                {
+                    var cell = playerState.transform.FindChild("JailCell");
+                    cell?.gameObject?.Destroy();
+
+                    var icon = playerState.transform.FindChild("JailTargetIcon");
+                    icon?.gameObject?.Destroy();
+                }
+                Jailor.Jailed = null;
+            }
+
+            if (Lawyer.lawyer != null && player == Lawyer.target)
+            {
+                if (AmongUsClient.Instance.AmHost && (Jester.Player.Any(x => x.PlayerId != Lawyer.target?.PlayerId) || Lawyer.targetWasGuessed))
+                {
+                    var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
+                    writer.EndRPC();
+                    Lawyer.PromotesToPursuer();
+                }
+            }
+            if (Executioner.executioner != null && player == Executioner.target)
+            {
+                if (AmongUsClient.Instance.AmHost && Executioner.targetWasGuessed)
+                {
+                    var writer = StartRPC(CustomRPC.ExecutionerPromotesRole);
+                    writer.EndRPC();
+                    Executioner.PromotesRole();
+                }
+            }
+
+
+        }
+
+        public void RpcExiled()
+        {
+            var writer = StartRPC(CustomRPC.Exiled);
+            writer.Write(player.PlayerId);
+            writer.EndRPC();
+            player.Exiled();
+        }
+    }
+}
+
+
 
 public static class RoleHelpers
 {
@@ -279,13 +589,11 @@ public static class RoleHelpers
             return false;
         }
 
-        if (target.isUsingTransportation())
+        if (target.IsUsingTransportation())
             return false;
 
         return true;
     }
-
-
 
     public static List<RoleId[]> blockedRolePairings = new();
 
@@ -547,6 +855,9 @@ public static class RoleHelpers
 
         // Gamemodes
         HandleGuesser.clearAndReload();
+
+        Lovers.SetAvengerLover();
+        Jackal.SetSwoop();
 
         blockRole();
         ResetRoleSelection();
