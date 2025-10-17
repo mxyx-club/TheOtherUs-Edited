@@ -104,7 +104,7 @@ public static class JesterEnterVent
 {
     public static bool Prefix(Vent __instance)
     {
-        return Jester.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) || !Jester.canUseVents;
+        return !Jester.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) || !Jester.canUseVents;
     }
 }
 

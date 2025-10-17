@@ -1032,7 +1032,7 @@ internal class MeetingHudPatch
         private static void Postfix(MeetingHud __instance)
         {
             Message("Destroy", "Meeting");
-            CustomObject.EndMeeting();
+            CustomObject.EndMeeting(__instance);
         }
     }
 }

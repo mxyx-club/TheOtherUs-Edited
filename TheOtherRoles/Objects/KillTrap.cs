@@ -71,7 +71,7 @@ public class KillTrap : CustomObjectBase<KillTrap>
         base.OnDestroy();
     }
 
-    public override void OnMeetingEnd()
+    public override void OnMeetingEnd(MeetingHud __instance)
     {
         this?.Destroy();
     }

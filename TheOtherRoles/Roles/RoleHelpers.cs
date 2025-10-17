@@ -1,4 +1,3 @@
-using Mono.Cecil.Cil;
 using TheOtherRoles.Patches;
 
 namespace TheOtherRoles.Roles;
@@ -384,6 +383,27 @@ public static class PlayerControlExtensions
             PlayerData.SetDeathReason(player, deathReason, killer);
 
             if (player.AmOwner) _ = new LateTask(() => { CanSeeGhostInfo = true; }, 0.5f, "CanSeeRoleInfo");
+
+            var data = PlayerData.GetPlayerData(player);
+            if (data != null && data.DeathReason == CustomDeathReason.Null)
+            {
+                data.DeathReason = CustomDeathReason.Exile;
+                data.KilledBy = null;
+                data.DeathTimer = DateTime.UtcNow;
+            }
+
+            if (MeetingHud.Instance)
+            {
+                foreach (var p in MeetingHud.Instance.playerStates)
+                {
+                    if (p.TargetPlayerId == player.PlayerId)
+                    {
+                        p.SetDead(p.DidReport, true);
+                        p.Overlay.gameObject.SetActive(true);
+                        break;
+                    }
+                }
+            }
 
             if (player == Jailor.Player && Jailor.Jailed != null && InMeeting)
             {

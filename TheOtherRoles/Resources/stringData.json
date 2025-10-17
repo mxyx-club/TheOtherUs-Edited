@@ -3463,6 +3463,18 @@
         "0": "The Band Wins",
         "13": "好想成为人类啊"
     },
+    "AvengerTeamWin": {
+        "13": "复仇者胜利"
+    },
+    "AdditionalAvengerTeamWin": {
+        "13": "复仇者胜利"
+    },
+    "AdditionalAliveSurvivorWin": {
+        "13": "幸存者存活"
+    },
+    "AdditionalAlivePursuerWin": {
+        "13": "起诉人存活"
+    },
     "RoleDraft.FeedText": {
         "0": "<size=200%>Ready Players:</size>\n\n",
         "13": "<size=200%>已选择的玩家:</size>\n\n"
@@ -3606,6 +3618,9 @@
     "DeathReason.Jailed": {
         "0": "Executed by {0}",
         "13": "被处决于 {0}"
+    },
+    "DeathReason.AvengerFail": {
+        "13": "复仇失败"
     },
     "colorSalmon": {
         "0": "Salmon",
@@ -5534,6 +5549,7 @@
         "13": "囚禁可疑的玩家"
     },
     "Marionette": {
+        "0": "Marionette",
         "13": "木偶师"
     },
     "MarionetteIntroDesc": {
@@ -5541,6 +5557,10 @@
     },
     "MarionetteShortDesc": {
         "13": "放置木偶，并可以随时交换位置"
+    },
+    "Avenger": {
+        "0": "Avenger",
+        "13": "复仇者"
     },
     "ImpostorFullDesc": {
         "0": "An ordinary Imposter, deadly but otherwise unassuming.",

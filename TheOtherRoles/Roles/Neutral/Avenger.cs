@@ -25,6 +25,7 @@ public class Avenger
     public static AvengerTargetWasDead TargetWasExiled;
 
     public static Arrow Arrow;
+    public static float ArrowTimer;
 
     public static PlayerControl Target;
     public static PlayerControl currentTarget;
@@ -34,6 +35,7 @@ public class Avenger
         Player = Lover = null;
         Target = currentTarget = null;
         WinFlag = false;
+        ArrowTimer = 0f;
         DeathEventHandled.Clear();
         IsGuessable = CustomOptionHolder.avengerIsGuessable.GetBool();
         CanFreeKill = CustomOptionHolder.avengerCanFreeKill.GetBool();
@@ -61,6 +63,7 @@ public class Avenger
             {
                 ClearAndReload();
                 RPCProcedure.erasePlayerRoles(otherLover.PlayerId);
+
                 RPCProcedure.setRole(otherLover.PlayerId, (byte)RoleId.Avenger);
                 Player = otherLover;
                 Lover = target;
@@ -73,8 +76,8 @@ public class Avenger
             {
                 if (otherLover.IsAlive())
                 {
-                    if (exile) Player.Die(DeathReason.Exile, true);
-                    else Player.MurderPlayer(Player, MurderResultFlags.Succeeded);
+                    if (exile) otherLover.SetDie(CustomDeathReason.LoverSuicide);
+                    else otherLover.MurderPlayer(otherLover, MurderResultFlags.Succeeded);
                     PlayerData.SetDeathReason(otherLover, CustomDeathReason.LoverSuicide);
                 }
             }
@@ -119,7 +122,6 @@ public class Avenger
                 Player.Die(DeathReason.Exile, true);
                 PlayerData.SetDeathReason(Player, CustomDeathReason.AvengerFail);
             }
-            ClearAndReload();
         }
     }
 

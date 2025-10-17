@@ -9,7 +9,7 @@ public interface ICustomObject
     bool IsActive { get; set; }
 
     void OnMeetingStart();
-    void OnMeetingEnd();
+    void OnMeetingEnd(MeetingHud __instance);
     void Update();
     void OnDestroy();
 }
@@ -52,7 +52,7 @@ public abstract class CustomObject : ICustomObject
     }
 
     public virtual void OnMeetingStart() { }
-    public virtual void OnMeetingEnd() { }
+    public virtual void OnMeetingEnd(MeetingHud __instance) { }
     public virtual void Update() { }
     public virtual void OnDestroy() { }
 
@@ -76,11 +76,11 @@ public abstract class CustomObject : ICustomObject
         }
     }
 
-    public static void EndMeeting()
+    public static void EndMeeting(MeetingHud __instance)
     {
         foreach (var obj in AllCustomObject.ToArray())
         {
-            obj?.OnMeetingEnd();
+            obj?.OnMeetingEnd(__instance);
         }
     }
 

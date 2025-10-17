@@ -669,7 +669,7 @@ public class EndGameManagerSetUpPatch
             { WinCondition.CrewmateWin, (Palette.CrewmateBlue, "CrewmateWin") },
             { WinCondition.ImpostorWin, (Palette.ImpostorRed, "ImpostorWin") },
             { WinCondition.BandLeaderWin, (BandLeader.color, "BandLeaderWin") },
-            { WinCondition.AvengerTeamWin, (Avenger.color, "复仇者胜利") }
+            { WinCondition.AvengerTeamWin, (Avenger.color, "AvengerTeamWin") }
         };
 
         var winConditionMappings = new Dictionary<WinCondition, (Color, string)>
@@ -677,9 +677,9 @@ public class EndGameManagerSetUpPatch
             { WinCondition.AdditionalLawyerStolenWin, (Lawyer.color, "LawyerStolenWin") },
             { WinCondition.AdditionalLawyerBonusWin, (Lawyer.color, "LawyerBonusWin") },
             { WinCondition.AdditionalPartTimerWin, (PartTimer.color, "PartTimerWin") },
-            { WinCondition.AdditionalAlivePursuerWin, (Pursuer.color, "起诉人存活") },
-            { WinCondition.AdditionalAliveSurvivorWin, (Survivor.color, "幸存者存活") },
-            { WinCondition.AdditionalAvengerTeamWin, (Survivor.color, "复仇者胜利") },
+            { WinCondition.AdditionalAlivePursuerWin, (Pursuer.color, "AdditionalAlivePursuerWin") },
+            { WinCondition.AdditionalAliveSurvivorWin, (Survivor.color, "AdditionalAliveSurvivorWin") },
+            { WinCondition.AdditionalAvengerTeamWin, (Survivor.color, "AdditionalAvengerTeamWin") },
             { WinCondition.BandLeaderWin, (BandLeader.color, "BandLeaderWin") }
         };
 

@@ -79,6 +79,7 @@ public static class Helpers
                || (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == player.PlayerId && Juggernaut.hasImpostorVision)
                || (Jester.Player.Any(p => p.PlayerId == player.PlayerId) && Jester.hasImpostorVision)
                || (Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision)
+               || (Avenger.Player != null && Avenger.Player.PlayerId == player.PlayerId && Avenger.hasImpostorVision)
                || (Swooper.swooper != null && Swooper.swooper.PlayerId == player.PlayerId && Swooper.hasImpVision)
                || (Pelican.Player != null && Pelican.Player.PlayerId == player.PlayerId && Pelican.hasImpVision)
                || (SchrodingersCat.Player != null && SchrodingersCat.Player.PlayerId == player.PlayerId && SchrodingersCat.hasImpVision)
@@ -92,6 +93,7 @@ public static class Helpers
                 player == Werewolf.werewolf ||
                 player == Swooper.swooper ||
                 player == Arsonist.arsonist ||
+                (player == Avenger.Player && Avenger.CanFreeKill) ||
                 player == Pelican.Player ||
                 player == Jackal.Sidekick ||
                 player == Pavlovsdogs.pavlovsowner ||
@@ -110,6 +112,7 @@ public static class Helpers
                 player == Lawyer.lawyer ||
                 player == Executioner.executioner ||
                 player == Witness.Player ||
+                (player == Avenger.Player && !Avenger.CanFreeKill) ||
                 player == Akujo.akujo ||
                 player == Doomsayer.doomsayer ||
                 player == Thief.thief ||

@@ -534,6 +534,25 @@ internal class HudManagerUpdatePatch
                         player.NameText.text += suffix;
         }
 
+        if (Avenger.Player != null && Avenger.Target != null && (local == Avenger.Player || local.isLover() || CanSeeGhostInfo))
+        {
+            var suffix = Cs(Avenger.color, " X");
+            var suffix2 = Cs(Lovers.color, " ♥");
+            Avenger.Target.cosmetics.nameText.text += suffix;
+            Avenger.Lover?.cosmetics?.nameText?.text += suffix2;
+
+            if (MeetingHud.Instance != null)
+            {
+                foreach (var player in allPlayerStates)
+                {
+                    if (Avenger.Target.PlayerId == player.TargetPlayerId)
+                        player.NameText.text += suffix;
+                    if (Avenger.Lover?.PlayerId == player.TargetPlayerId)
+                        player.NameText.text += suffix2;
+                }
+            }
+        }
+
         if (BandLeader.Player != null)
         {
             var suffix1 = Cs(BandLeader.color, "(K)");
@@ -1489,6 +1508,30 @@ internal class HudManagerUpdatePatch
         }
     }
 
+    public static void avengerUpdate()
+    {
+        if (Avenger.Player.IsDead() || Avenger.Player != PlayerControl.LocalPlayer) return;
+        if (Avenger.Target != null && Avenger.Target.IsAlive() || InMeeting)
+        {
+            if (Avenger.ArrowTimer < Avenger.UpdateIntervall)
+            {
+                Avenger.ArrowTimer += Time.fixedDeltaTime;
+                return;
+            }
+            Avenger.Arrow ??= new Arrow(Avenger.color);
+            if (Avenger.Arrow != null)
+            {
+                Avenger.Arrow.arrow.SetActive(true);
+                Avenger.Arrow.Update(Avenger.Target.transform.position);
+            }
+        }
+        else
+        {
+            Avenger.Arrow?.arrow?.Destroy();
+            Avenger.Arrow = null;
+        }
+    }
+
     private static void redemptorTextUpdate()
     {
         if (Redemptor.Player == null && Redemptor.RevivedPlayer == null) return;
@@ -1655,7 +1698,7 @@ internal class HudManagerUpdatePatch
 
         //Balancer
         Balancer.FixedUpdate();
-
+        avengerUpdate();
         // undertaker
         undertakerDragBodyUpdate();
         // Jester

@@ -1,4 +1,3 @@
-using static Il2CppSystem.Xml.Schema.XsdDuration;
 using PlayerData = TheOtherRoles.Modules.PlayerData;
 
 namespace TheOtherRoles.Roles;
@@ -454,8 +453,6 @@ public class RoleInfo
                     roleName = Cs(Warlock.color, "roleInfo.cursed".Translate()) + roleName;
                 if (p == Ninja.ninjaMarked)
                     roleName = Cs(Ninja.color, "roleInfo.marked".Translate()) + roleName;
-                if (p == Avenger.Target)
-                    roleName = Cs(Avenger.color, "X ") + roleName;
                 if (p == Thief.formerThief)
                     roleName += Cs(Thief.color, "roleInfo.thief".Translate());
                 if (Pursuer.blankedList.Any(x => x == p.PlayerId))
