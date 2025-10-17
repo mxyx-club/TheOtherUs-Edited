@@ -11,6 +11,8 @@ public class Avenger
     public static PlayerControl Lover;
     public static Color color = new Color32(141, 111, 131, byte.MaxValue);
 
+    public static bool EndGame => WinFlag || Player.IsDead();
+
     public static float killCooldown = 30f;
     public static bool IsGuessable;
     public static bool CanFreeKill;
@@ -18,12 +20,12 @@ public class Avenger
     public static bool hasImpostorVision;
     public static bool ShowArrows;
     public static float UpdateIntervall;
-    public static bool WinFlag;
     public static bool OnlyAliveWin;
     public static WinnerFlags WinCondition;
     public static AvengerTargetWasDead TargetWasKilledByOther;
     public static AvengerTargetWasDead TargetWasExiled;
 
+    public static bool WinFlag;
     public static Arrow Arrow;
     public static float ArrowTimer;
 

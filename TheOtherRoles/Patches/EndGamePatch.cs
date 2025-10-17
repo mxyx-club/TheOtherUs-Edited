@@ -192,7 +192,7 @@ public class OnGameEndPatch
         var arsonistWin = Arsonist.arsonist != null && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
         var doomsayerWin = Doomsayer.doomsayer != null && gameOverReason == (GameOverReason)CustomGameOverReason.DoomsayerWin;
         var loversWin = Lovers.IsAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin ||
-                         (GameManager.Instance.DidHumansWin(gameOverReason) && !Lovers.isKillerLover()));
+                        (GameManager.Instance.DidHumansWin(gameOverReason) && Lovers.isCrewLover()));
         var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin;
         var teamInfectedWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamInfectedWin;
         var teamPavlovsWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamPavlovsWin;
@@ -296,10 +296,23 @@ public class OnGameEndPatch
         }
 
         // Lovers win conditions
-        else if (loversWin)
+        else if (loversWin && (Lovers.isCrewLover() || Lovers.isKillerLover()))
         {
             // Double win for lovers, crewmates also win
-            if (!Lovers.isKillerLover())
+            if (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin)
+            {
+                winners.Add(Lovers.lover1);
+                winners.Add(Lovers.lover2);
+                AdditionalTempData.winCondition = WinCondition.LoversSoloWin;
+            }
+            else if (Lovers.isKillerLover())
+            {
+                winners.Add(Lovers.lover1);
+                winners.Add(Lovers.lover2);
+                AdditionalTempData.winCondition = WinCondition.LoversSoloWin;
+            }
+            // Lovers solo win
+            else
             {
                 foreach (var p in AllPlayers)
                 {
@@ -322,13 +335,6 @@ public class OnGameEndPatch
                     }
                 }
                 AdditionalTempData.winCondition = WinCondition.LoversTeamWin;
-            }
-            // Lovers solo win
-            else
-            {
-                winners.Add(Lovers.lover1);
-                winners.Add(Lovers.lover2);
-                AdditionalTempData.winCondition = WinCondition.LoversSoloWin;
             }
         }
 
@@ -526,6 +532,13 @@ public class OnGameEndPatch
                 winners.Add(player);
             }
             AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalAlivePursuerWin);
+        }
+
+        if (Lovers.IsAlive() && !Lovers.isCrewLover() && !Lovers.isKillerLover())
+        {
+            winners.Add(Lovers.lover1);
+            winners.Add(Lovers.lover2);
+            AdditionalTempData.additionalWinConditions.Add(WinCondition.LoversTeamWin);
         }
 
         // Possible Additional winner: Survivor
@@ -920,7 +933,7 @@ internal class CheckEndCriteriaPatch
     private static bool CheckAndEndGameForArsonistWin(ShipStatus __instance, PlayerStatistics statistics)
     {
         if (statistics.TeamArsonistAlive >= statistics.TotalAlive - statistics.TeamArsonistAlive &&
-            statistics.TeamImpostorsAlive == 0 &&
+            statistics.TeamImpostorsAlive == 0 && Avenger.EndGame &&
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamJackalAlive == 0 &&
@@ -941,7 +954,7 @@ internal class CheckEndCriteriaPatch
     private static bool CheckAndEndGameForAkujoWin(ShipStatus __instance, PlayerStatistics statistics)
     {
         if ((statistics.TeamAkujoAlive == 2 && statistics.TotalAlive <= 3) || (statistics.TeamAkujoAlive == 2 &&
-            statistics.TeamImpostorsAlive == 0 &&
+            statistics.TeamImpostorsAlive == 0 && Avenger.EndGame &&
             statistics.TeamArsonistAlive == 0 &&
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamInfectedAlive == 0 &&
@@ -961,7 +974,7 @@ internal class CheckEndCriteriaPatch
     private static bool CheckAndEndGameForJackalWin(ShipStatus __instance, PlayerStatistics statistics)
     {
         if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive &&
-            statistics.TeamImpostorsAlive == 0 &&
+            statistics.TeamImpostorsAlive == 0 && Avenger.EndGame &&
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
@@ -983,7 +996,7 @@ internal class CheckEndCriteriaPatch
     private static bool CheckAndEndGameForInfectedWin(ShipStatus __instance, PlayerStatistics statistics)
     {
         if (statistics.TeamInfectedAlive >= statistics.TotalAlive - statistics.TeamInfectedAlive &&
-            statistics.TeamImpostorsAlive == 0 &&
+            statistics.TeamImpostorsAlive == 0 && Avenger.EndGame &&
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&
@@ -1005,7 +1018,7 @@ internal class CheckEndCriteriaPatch
     private static bool CheckAndEndGameForPavlovsWin(ShipStatus __instance, PlayerStatistics statistics)
     {
         if (statistics.TeamPavlovsAlive >= statistics.TotalAlive - statistics.TeamPavlovsAlive &&
-            statistics.TeamImpostorsAlive == 0 &&
+            statistics.TeamImpostorsAlive == 0 && Avenger.EndGame &&
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
@@ -1026,7 +1039,7 @@ internal class CheckEndCriteriaPatch
     private static bool CheckAndEndGameForSwooperWin(ShipStatus __instance, PlayerStatistics statistics)
     {
         if (statistics.TeamSwooperAlive >= statistics.TotalAlive - statistics.TeamSwooperAlive &&
-            statistics.TeamImpostorsAlive == 0 &&
+            statistics.TeamImpostorsAlive == 0 && Avenger.EndGame &&
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
@@ -1045,7 +1058,7 @@ internal class CheckEndCriteriaPatch
     private static bool CheckAndEndGameForPelicanWin(ShipStatus __instance, PlayerStatistics statistics)
     {
         if (statistics.TeamPelicanAlive >= statistics.TotalAlive - statistics.TeamPelicanAlive &&
-            statistics.TeamImpostorsAlive == 0 &&
+            statistics.TeamImpostorsAlive == 0 && Avenger.EndGame &&
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
@@ -1065,7 +1078,7 @@ internal class CheckEndCriteriaPatch
     {
         if (
             statistics.TeamWerewolfAlive >= statistics.TotalAlive - statistics.TeamWerewolfAlive &&
-            statistics.TeamImpostorsAlive == 0 &&
+            statistics.TeamImpostorsAlive == 0 && Avenger.EndGame &&
             statistics.TeamJuggernautAlive == 0 &&
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamInfectedAlive == 0 &&
@@ -1088,7 +1101,7 @@ internal class CheckEndCriteriaPatch
     {
         if (
             statistics.TeamJuggernautAlive >= statistics.TotalAlive - statistics.TeamJuggernautAlive &&
-            statistics.TeamImpostorsAlive == 0 &&
+            statistics.TeamImpostorsAlive == 0 && Avenger.EndGame &&
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamInfectedAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
@@ -1110,7 +1123,7 @@ internal class CheckEndCriteriaPatch
     private static bool CheckAndEndGameForImpostorWin(ShipStatus __instance, PlayerStatistics statistics)
     {
         if (Vortox.triggerImpWin || (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive &&
-            statistics.TeamJackalAlive == 0 &&
+            statistics.TeamJackalAlive == 0 && Avenger.EndGame &&
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamWerewolfAlive == 0 &&
             statistics.TeamSwooperAlive == 0 &&
@@ -1145,7 +1158,7 @@ internal class CheckEndCriteriaPatch
 
     private static bool CheckAndEndGameForCrewmateWin(ShipStatus __instance, PlayerStatistics statistics)
     {
-        if (statistics.TeamImpostorsAlive == 0 &&
+        if (statistics.TeamImpostorsAlive == 0 && Avenger.EndGame &&
             statistics.TeamJackalAlive == 0 &&
             statistics.TeamPavlovsAlive == 0 &&
             statistics.TeamArsonistAlive == 0 &&

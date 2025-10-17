@@ -536,10 +536,11 @@ internal class HudManagerUpdatePatch
 
         if (Avenger.Player != null && Avenger.Target != null && (local == Avenger.Player || local.isLover() || CanSeeGhostInfo))
         {
-            var suffix = Cs(Avenger.color, " X");
+            var suffix = Cs(Avenger.color, " ψ");
             var suffix2 = Cs(Lovers.color, " ♥");
             Avenger.Target.cosmetics.nameText.text += suffix;
             Avenger.Lover?.cosmetics?.nameText?.text += suffix2;
+            Avenger.Player?.cosmetics?.nameText?.text += suffix2;
 
             if (MeetingHud.Instance != null)
             {
@@ -548,6 +549,8 @@ internal class HudManagerUpdatePatch
                     if (Avenger.Target.PlayerId == player.TargetPlayerId)
                         player.NameText.text += suffix;
                     if (Avenger.Lover?.PlayerId == player.TargetPlayerId)
+                        player.NameText.text += suffix2;
+                    if (Avenger.Player?.PlayerId == player.TargetPlayerId)
                         player.NameText.text += suffix2;
                 }
             }
@@ -1508,30 +1511,6 @@ internal class HudManagerUpdatePatch
         }
     }
 
-    public static void avengerUpdate()
-    {
-        if (Avenger.Player.IsDead() || Avenger.Player != PlayerControl.LocalPlayer) return;
-        if (Avenger.Target != null && Avenger.Target.IsAlive() || InMeeting)
-        {
-            if (Avenger.ArrowTimer < Avenger.UpdateIntervall)
-            {
-                Avenger.ArrowTimer += Time.fixedDeltaTime;
-                return;
-            }
-            Avenger.Arrow ??= new Arrow(Avenger.color);
-            if (Avenger.Arrow != null)
-            {
-                Avenger.Arrow.arrow.SetActive(true);
-                Avenger.Arrow.Update(Avenger.Target.transform.position);
-            }
-        }
-        else
-        {
-            Avenger.Arrow?.arrow?.Destroy();
-            Avenger.Arrow = null;
-        }
-    }
-
     private static void redemptorTextUpdate()
     {
         if (Redemptor.Player == null && Redemptor.RevivedPlayer == null) return;
@@ -1567,6 +1546,26 @@ internal class HudManagerUpdatePatch
         {
             Redemptor.text.Destroy();
             Redemptor.text = null;
+        }
+    }
+
+    public static void avengerUpdate()
+    {
+        if (Avenger.Player.IsDead() || Avenger.Player != PlayerControl.LocalPlayer) return;
+        if (Avenger.Target != null && Avenger.Target.IsAlive() && !InMeeting)
+        {
+            Avenger.ArrowTimer += Time.fixedDeltaTime;
+            if (Avenger.ArrowTimer < Avenger.UpdateIntervall) return;
+            Avenger.ArrowTimer = 0;
+
+            Avenger.Arrow ??= new Arrow(Avenger.color);
+            Avenger.Arrow.arrow.SetActive(true);
+            Avenger.Arrow.Update(Avenger.Target.transform.position);
+        }
+        else
+        {
+            Avenger.Arrow?.arrow?.Destroy();
+            Avenger.Arrow = null;
         }
     }
 
