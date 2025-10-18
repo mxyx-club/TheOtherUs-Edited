@@ -518,8 +518,9 @@ public static class MurderPlayerPatch
         if (target == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null)
         {
             var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
+            writer.Write(false);
             writer.EndRPC();
-            Lawyer.PromotesToPursuer();
+            Lawyer.PromotesToPursuer(false);
         }
 
         if (target == Executioner.target && AmongUsClient.Instance.AmHost && Executioner.executioner != null)
@@ -832,11 +833,12 @@ public static class ExilePlayerPatch
 
         if (Lawyer.lawyer != null && __instance == Lawyer.target)
         {
-            if (AmongUsClient.Instance.AmHost && (Jester.Player.Any(x => x.PlayerId != Lawyer.target?.PlayerId) || Lawyer.targetWasGuessed))
+            if (AmongUsClient.Instance.AmHost && (!Jester.Player.Any(x => x.PlayerId == Lawyer.target?.PlayerId) || Lawyer.targetWasGuessed))
             {
                 var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
+                writer.Write(false);
                 writer.EndRPC();
-                Lawyer.PromotesToPursuer();
+                Lawyer.PromotesToPursuer(false);
             }
         }
         if (Executioner.executioner != null && __instance == Executioner.target)
@@ -889,7 +891,7 @@ public static class DisconnectPatch
         {
             if (player.isLover()) Lovers.clearAndReload();
 
-            if (Lawyer.lawyer != null && Lawyer.target == player) Lawyer.PromotesToPursuer();
+            if (Lawyer.lawyer != null && Lawyer.target == player) Lawyer.PromotesToPursuer(false);
 
             if (Executioner.executioner != null && Executioner.target == player) Executioner.PromotesRole();
 

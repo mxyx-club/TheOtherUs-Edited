@@ -9,23 +9,26 @@ public class Avenger
     public static HashSet<byte> DeathEventHandled = new();
     public static PlayerControl Player;
     public static PlayerControl Lover;
+    public static RoleId originRole;
     public static Color color = new Color32(141, 111, 131, byte.MaxValue);
 
     public static bool EndGame => WinFlag || Player.IsDead();
 
     public static float killCooldown = 30f;
     public static bool IsGuessable;
-    public static bool CanFreeKill;
+    public static bool CanFreeKill { get => !KnowTarget || field; set => field = value; }
     public static bool canUseVents;
     public static bool hasImpostorVision;
-    public static bool ShowArrows;
+    public static bool ShowArrows { get => field && KnowTarget; set => field = value; }
+    public static bool KnowTarget;
     public static float UpdateIntervall;
     public static bool OnlyAliveWin;
+    public static bool TargetKnowPlayer;
     public static WinnerFlags WinCondition;
     public static AvengerTargetWasDead TargetWasKilledByOther;
     public static AvengerTargetWasDead TargetWasExiled;
 
-    public static bool WinFlag;
+    public static bool WinFlag { get => (!OnlyAliveWin || Player.IsAlive()) && field; set => field = value; }
     public static Arrow Arrow;
     public static float ArrowTimer;
 
@@ -43,9 +46,11 @@ public class Avenger
         CanFreeKill = CustomOptionHolder.avengerCanFreeKill.GetBool();
         canUseVents = CustomOptionHolder.avengerCanUseVents.GetBool();
         hasImpostorVision = CustomOptionHolder.avengerHasImpVision.GetBool();
+        KnowTarget = CustomOptionHolder.avengerKnowTarget.GetBool();
         killCooldown = CustomOptionHolder.avengerKillCooldown.GetFloat();
         ShowArrows = CustomOptionHolder.avengerShowArrows.GetBool();
         UpdateIntervall = CustomOptionHolder.avengerUpdateIntervall.GetFloat();
+        TargetKnowPlayer = CustomOptionHolder.avengerTargetKnowPlayer.GetBool();
         OnlyAliveWin = CustomOptionHolder.avengerOnlyAliveWin.GetBool();
         WinCondition = (WinnerFlags)CustomOptionHolder.avengerWinCondition.GetSelection();
         TargetWasKilledByOther = (AvengerTargetWasDead)CustomOptionHolder.avengerTargetWasKilledByOther.GetSelection();
@@ -73,6 +78,8 @@ public class Avenger
 
                 SetRoleType(Player, RoleTypes.Crewmate);
                 Lovers.clearAndReload();
+
+                if ((Target != null && Target.AmOwner) || Player.AmOwner) Coroutines.Start(showFlashCoroutine(color, 1.25f, 0.4f));
             }
             else
             {
@@ -95,7 +102,7 @@ public class Avenger
         if (killer == Player)
         {
             WinFlag = true;
-            Message("Avenger Win!");
+            Message("Avenger Win!", "Avenger");
             if (AmongUsClient.Instance.AmHost && WinCondition == WinnerFlags.RevengeWin)
             {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.AvengerTeamWin, false);
@@ -121,7 +128,8 @@ public class Avenger
         {
             if (Player.IsAlive())
             {
-                Player.Die(DeathReason.Exile, true);
+                if (exile) Player.Die(DeathReason.Exile, true);
+                else Player.MurderPlayer(Player, MurderResultFlags.Succeeded);
                 PlayerData.SetDeathReason(Player, CustomDeathReason.AvengerFail);
             }
         }

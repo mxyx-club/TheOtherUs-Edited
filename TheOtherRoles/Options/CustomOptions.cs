@@ -494,7 +494,7 @@ internal class GameOptionsMenuStartPatch
         var gameSettings = GameObject.Find("Game Settings");
         if (gameSettings == null) return;
 
-        gameSettings.transform.FindChild("GameGroup").GetComponent<Scroller>().ScrollWheelSpeed = 1f;
+        gameSettings.transform.FindChild("GameGroup").GetComponent<Scroller>().ScrollWheelSpeed = 0.7f;
         var gameSettingMenu = UObject.FindObjectsOfType<GameSettingMenu>().FirstOrDefault();
         if (gameSettingMenu == null) return;
 

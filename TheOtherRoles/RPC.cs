@@ -93,7 +93,6 @@ public enum CustomRPC : byte
     BlackmailPlayer,
     UseCameraTime,
     UseVitalsTime,
-    UnblackmailPlayer,
     SetBlanked,
     SetFirstKill,
     SetInvisibleGen,
@@ -119,6 +118,7 @@ public enum CustomRPC : byte
     ExiledJailed,
     SetAvengerLover,
     WitchSpelledKill,
+    JesterWinner,
 
     TrapperKill,
     PlaceTrap,
@@ -154,7 +154,7 @@ public enum CustomRPC : byte
     ShareGhostInfo,
     ShareDeathReasonAndKiller,
 
-    NetworkTransform = 250,
+    NetworkTransform = 240,
 }
 
 public static class RPCProcedure
@@ -895,8 +895,9 @@ public static class RPCProcedure
             if (player == Lawyer.target && AmongUsClient.Instance.AmHost && Lawyer.lawyer != null)
             {
                 var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
+                writer.Write(false);
                 writer.EndRPC();
-                Lawyer.PromotesToPursuer();
+                Lawyer.PromotesToPursuer(false);
             }
             else if (player == Executioner.target && AmongUsClient.Instance.AmHost && Executioner.executioner != null)
             {
@@ -1123,6 +1124,7 @@ public static class RPCProcedure
         if (player == Snitch.snitch) Snitch.clearAndReload();
         if (player == Swapper.swapper) Swapper.clearAndReload();
         if (player == Spy.spy) Spy.clearAndReload();
+        if (player == Marionette.Player) Marionette.ClearAndReload();
         if (player == SecurityGuard.securityGuard) SecurityGuard.clearAndReload();
         if (player == Medium.medium) Medium.clearAndReload();
         if (player == InfoSleuth.infoSleuth) InfoSleuth.clearAndReload();
@@ -1838,12 +1840,6 @@ public static class RPCProcedure
         BodyGuard.guarded = target;
     }
 
-    public static void unblackmailPlayer()
-    {
-        Blackmailer.blackmailed = null;
-        Blackmailer.alreadyShook = false;
-    }
-
     public static void SetBlanked(byte playerId, bool reset)
     {
         if (PlayerById(playerId) == null) return;
@@ -2067,10 +2063,6 @@ internal class RPCHandlerPatch
 
             case CustomRPC.BlackmailPlayer:
                 RPCProcedure.blackmailPlayer(reader.ReadByte());
-                break;
-
-            case CustomRPC.UnblackmailPlayer:
-                RPCProcedure.unblackmailPlayer();
                 break;
 
             case CustomRPC.UndertakerDragAction:
@@ -2470,6 +2462,10 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.WitchSpelledKill:
                 RPCProcedure.WitchSpelledKill(reader.ReadPlayer(), reader.ReadPlayer());
+                break;
+            case CustomRPC.JesterWinner:
+                Jester.WinnerPlayer = reader.ReadPlayer();
+                Jester.triggerJesterWin = true;
                 break;
         }
 

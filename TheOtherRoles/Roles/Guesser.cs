@@ -1,6 +1,5 @@
 using TheOtherRoles.Mode;
 using TheOtherRoles.Patches;
-using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles.Roles;
 
@@ -409,7 +408,7 @@ public static class Guesser
 
         if (!PlayerControl.LocalPlayer.CanUseMeetingAbility() || dyingTarget == Jailor.Jailed) return;
 
-        if (!Medic.GuessShield && target == Medic.shielded)
+        if (Medic.GuessShield && target == Medic.shielded)
         {
             // Depending on the options, shooting the shielded player will not allow the guess, notifiy everyone about the kill attempt and close the window
             __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));

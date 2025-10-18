@@ -87,7 +87,7 @@ public static class ChatControllerPatch
             {
                 case ChatTypes.HostChat:
                     __instance.NameText.color = Palette.Purple;
-                    __instance.NameText.text = "MessageFromTheHost".Translate();
+                    __instance.NameText.text = "MessageFromTheHost".Translate() + (GameData.Instance?.GetHost()?.PlayerName ?? "");
                     CurrentChatType = ChatTypes.Default;
                     break;
                 case ChatTypes.JailorChat:

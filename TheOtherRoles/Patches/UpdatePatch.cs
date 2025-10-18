@@ -297,7 +297,7 @@ internal class HudManagerUpdatePatch
             setPlayerNameColor(Lawyer.target, RoleInfo.getRoleInfoForPlayer(Lawyer.target, false)?.FirstOrDefault()?.color ?? Color.white);
         }
 
-        if (Avenger.Player.IsAlive() && local == Avenger.Player && Avenger.Target != null)
+        if (Avenger.Player.IsAlive() && local == Avenger.Player && Avenger.Target != null && Avenger.KnowTarget)
         {
             setPlayerNameColor(Avenger.Target, Avenger.color);
         }
@@ -534,24 +534,26 @@ internal class HudManagerUpdatePatch
                         player.NameText.text += suffix;
         }
 
-        if (Avenger.Player != null && Avenger.Target != null && (local == Avenger.Player || local.isLover() || CanSeeGhostInfo))
+        if (Avenger.Player != null && Avenger.Target != null &&
+            (local == Avenger.Player || local == Avenger.Lover || CanSeeGhostInfo ||
+            (local == Avenger.Target && Avenger.TargetKnowPlayer)))
         {
             var suffix = Cs(Avenger.color, " ψ");
-            var suffix2 = Cs(Lovers.color, " ♥");
-            Avenger.Target.cosmetics.nameText.text += suffix;
+            var suffix2 = Cs(Avenger.color, " ♥");
             Avenger.Lover?.cosmetics?.nameText?.text += suffix2;
-            Avenger.Player?.cosmetics?.nameText?.text += suffix2;
+            if (Avenger.KnowTarget) Avenger.Target?.cosmetics.nameText.text += suffix;
+            if (local != Avenger.Target) Avenger.Player?.cosmetics?.nameText?.text += suffix2;
 
             if (MeetingHud.Instance != null)
             {
                 foreach (var player in allPlayerStates)
                 {
-                    if (Avenger.Target.PlayerId == player.TargetPlayerId)
-                        player.NameText.text += suffix;
+                    if (Avenger.Target.PlayerId == player.TargetPlayerId && Avenger.KnowTarget)
+                        player?.NameText.text += suffix;
                     if (Avenger.Lover?.PlayerId == player.TargetPlayerId)
-                        player.NameText.text += suffix2;
-                    if (Avenger.Player?.PlayerId == player.TargetPlayerId)
-                        player.NameText.text += suffix2;
+                        player?.NameText.text += suffix2;
+                    if (Avenger.Player?.PlayerId == player.TargetPlayerId && local != Avenger.Target)
+                        player?.NameText.text += suffix2;
                 }
             }
         }
@@ -1014,8 +1016,9 @@ internal class HudManagerUpdatePatch
         if (Lawyer.target != null && Lawyer.target.Data.Disconnected && !Lawyer.lawyer.Data.IsDead)
         {
             var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
+            writer.Write(false);
             writer.EndRPC();
-            Lawyer.PromotesToPursuer();
+            Lawyer.PromotesToPursuer(false);
         }
     }
 
@@ -1551,7 +1554,7 @@ internal class HudManagerUpdatePatch
 
     public static void avengerUpdate()
     {
-        if (Avenger.Player.IsDead() || Avenger.Player != PlayerControl.LocalPlayer) return;
+        if (Avenger.Player.IsDead() || Avenger.Player != PlayerControl.LocalPlayer || !Avenger.ShowArrows) return;
         if (Avenger.Target != null && Avenger.Target.IsAlive() && !InMeeting)
         {
             Avenger.ArrowTimer += Time.fixedDeltaTime;

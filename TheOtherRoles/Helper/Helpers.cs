@@ -924,22 +924,20 @@ public static class Helpers
 
     public static void showFlash(Color color, float duration = 1f, string message = "", float alpha = 0.75f)
     {
-        if (FastDestroyableSingleton<HudManager>.Instance == null ||
-            FastDestroyableSingleton<HudManager>.Instance.FullScreen == null) return;
+        if (HudManager.Instance == null || HudManager.Instance.FullScreen == null) return;
         if (Grenadier.controls.ToList().Any(x => x == PlayerControl.LocalPlayer)) return;
-        FastDestroyableSingleton<HudManager>.Instance.FullScreen.gameObject.SetActive(true);
-        FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = true;
+        HudManager.Instance.FullScreen.gameObject.SetActive(true);
+        HudManager.Instance.FullScreen.enabled = true;
         // Message Text
-        var messageText = UObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText,
-            FastDestroyableSingleton<HudManager>.Instance.transform);
+        var messageText = UObject.Instantiate(HudManager.Instance.KillButton.cooldownTimerText, HudManager.Instance.transform);
         messageText.text = message;
         messageText.enableWordWrapping = false;
         messageText.transform.localScale = Vector3.one * 0.5f;
         messageText.transform.localPosition += new Vector3(0f, 2f, -69f);
         messageText.gameObject.SetActive(true);
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(duration, new Action<float>(p =>
+        HudManager.Instance.StartCoroutine(Effects.Lerp(duration, new Action<float>(p =>
         {
-            var renderer = FastDestroyableSingleton<HudManager>.Instance.FullScreen;
+            var renderer = HudManager.Instance.FullScreen;
 
             if (p < 0.5)
             {
@@ -961,7 +959,7 @@ public static class Helpers
         color.a = alpha;
         if (HudManager.InstanceExists && HudManager.Instance.FullScreen)
         {
-            var fullscreen = DestroyableSingleton<HudManager>.Instance.FullScreen;
+            var fullscreen = HudManager.Instance.FullScreen;
             fullscreen.enabled = true;
             fullscreen.gameObject.active = true;
             fullscreen.color = color;
@@ -971,7 +969,7 @@ public static class Helpers
 
         if (HudManager.InstanceExists && HudManager.Instance.FullScreen)
         {
-            var fullscreen = DestroyableSingleton<HudManager>.Instance.FullScreen;
+            var fullscreen = HudManager.Instance.FullScreen;
             if (fullscreen.color.Equals(color))
             {
                 fullscreen.color = new Color(1f, 0f, 0f, 0.37254903f);

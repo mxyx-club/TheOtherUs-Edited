@@ -691,8 +691,8 @@ public class EndGameManagerSetUpPatch
             { WinCondition.AdditionalLawyerBonusWin, (Lawyer.color, "LawyerBonusWin") },
             { WinCondition.AdditionalPartTimerWin, (PartTimer.color, "PartTimerWin") },
             { WinCondition.AdditionalAlivePursuerWin, (Pursuer.color, "AdditionalAlivePursuerWin") },
-            { WinCondition.AdditionalAliveSurvivorWin, (Survivor.color, "AdditionalAliveSurvivorWin") },
-            { WinCondition.AdditionalAvengerTeamWin, (Survivor.color, "AdditionalAvengerTeamWin") },
+            { WinCondition.AdditionalAliveSurvivorWin, (Avenger.color, "AdditionalAliveSurvivorWin") },
+            { WinCondition.AdditionalAvengerTeamWin, (Avenger.color, "AdditionalAvengerTeamWin") },
             { WinCondition.BandLeaderWin, (BandLeader.color, "BandLeaderWin") }
         };
 

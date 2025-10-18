@@ -57,7 +57,7 @@ internal class ExileControllerBeginPatch
                 Helpers.SetActiveAllObject(controller.gameObject.GetChildren(), "RaftAnimation", false);
                 controller.transform.localPosition = new(-3.75f, -0.2f, -60f);
             }
-            if (Lawyer.lawyer != null && exiled?.Object.PlayerId == Lawyer.target.PlayerId && Jester.Player.Any(x => x.PlayerId != Lawyer.target?.PlayerId))
+            if (Lawyer.lawyer != null && exiled?.Object.PlayerId == Lawyer.target.PlayerId && !Jester.Player.Any(x => x.PlayerId == Lawyer.target?.PlayerId))
             {
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.LawyerPromotesToPursuer);
                 writer.Write(true);
@@ -68,7 +68,7 @@ internal class ExileControllerBeginPatch
             if (!IsSec) return true;
         }
 
-        if (Lawyer.lawyer != null && exiled?.Object.PlayerId == Lawyer.target.PlayerId && Jester.Player.Any(x => x.PlayerId != Lawyer.target?.PlayerId))
+        if (Lawyer.lawyer != null && exiled?.Object.PlayerId == Lawyer.target?.PlayerId && !Jester.Player.Any(x => x.PlayerId == Lawyer.target?.PlayerId))
         {
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.LawyerPromotesToPursuer);
             writer.Write(true);
@@ -280,8 +280,11 @@ internal class ExileControllerWrapUpPatch
         // Jester win condition
         else if (exiled != null && Jester.Player != null && Jester.Player.Any(x => x.PlayerId == exiled.PlayerId))
         {
-            Jester.triggerJesterWin = true;
             Jester.WinnerPlayer = PlayerById(exiled.PlayerId);
+            var writer = StartRPC(CustomRPC.JesterWinner);
+            writer.Write(exiled.PlayerId);
+            writer.EndRPC();
+            Jester.triggerJesterWin = true;
             return;
         }
         else if (Executioner.executioner != null && Executioner.executioner == PlayerControl.LocalPlayer && Executioner.target.IsDead())
@@ -373,14 +376,6 @@ internal class ExileControllerWrapUpPatch
         // Tracker reset deadBodyPositions
         Tracker.deadBodyPositions = new List<Vector3>();
 
-        if (Blackmailer.Player != null && Blackmailer.blackmailed != null)
-        {
-            // Blackmailer reset blackmailed
-            var writer = StartRPC(CustomRPC.UnblackmailPlayer);
-            writer.EndRPC();
-            RPCProcedure.unblackmailPlayer();
-        }
-
         // Arsonist deactivate dead poolable players
         if (Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer)
         {
@@ -434,6 +429,12 @@ internal class ExileControllerWrapUpPatch
             }
         }
 
+        if (Blackmailer.Player != null && Blackmailer.blackmailed != null)
+        {
+            Blackmailer.blackmailed = null;
+            Blackmailer.alreadyShook = false;
+        }
+
         if (AmongUsClient.Instance.AmHost)
         {
             // Shifter shift
@@ -461,8 +462,9 @@ internal class ExileControllerWrapUpPatch
                     if (Lawyer.lawyer != null && target == Lawyer.target)
                     {
                         var writer2 = StartRPC(PlayerControl.LocalPlayer, CustomRPC.LawyerPromotesToPursuer);
+                        writer2.Write(false);
                         writer2.EndRPC();
-                        Lawyer.PromotesToPursuer();
+                        Lawyer.PromotesToPursuer(false);
                     }
 
                     if (Executioner.executioner.IsAlive() && target == Executioner.target)

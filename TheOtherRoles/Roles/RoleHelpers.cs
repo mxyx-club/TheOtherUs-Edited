@@ -433,11 +433,12 @@ public static class PlayerControlExtensions
 
             if (Lawyer.lawyer != null && player == Lawyer.target)
             {
-                if (AmongUsClient.Instance.AmHost && (Jester.Player.Any(x => x.PlayerId != Lawyer.target?.PlayerId) || Lawyer.targetWasGuessed))
+                if (AmongUsClient.Instance.AmHost && (!Jester.Player.Any(x => x.PlayerId == Lawyer.target?.PlayerId) || Lawyer.targetWasGuessed))
                 {
                     var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
+                    writer.Write(false);
                     writer.EndRPC();
-                    Lawyer.PromotesToPursuer();
+                    Lawyer.PromotesToPursuer(false);
                 }
             }
             if (Executioner.executioner != null && player == Executioner.target)
@@ -449,8 +450,6 @@ public static class PlayerControlExtensions
                     Executioner.PromotesRole();
                 }
             }
-
-
         }
 
         public void RpcExiled()

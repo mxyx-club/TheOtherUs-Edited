@@ -424,7 +424,7 @@ public static class ConsoleCanUsePatch
         canUse = couldUse = false;
         if (Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer &&
             !Swapper.canFixSabotages)
-            return !__instance.TaskTypes.Any(x => x == TaskTypes.FixLights || x == TaskTypes.FixComms);
+            return !__instance.TaskTypes.Any(x => x is TaskTypes.FixLights or TaskTypes.FixComms);
         if (__instance.AllowImpostor) return true;
         if (!pc.Object.HasFakeTasks()) return true;
         __result = float.MaxValue;

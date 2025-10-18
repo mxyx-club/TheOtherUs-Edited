@@ -401,7 +401,7 @@ public class CustomOptionHolder
     public static CustomOption executionerSpawnRate;
     public static CustomOption executionerCanCallEmergency;
     public static CustomOption executionerPromotesToLawyer;
-    public static CustomOption executionerOnTargetDead;
+    //public static CustomOption executionerOnTargetDead;
 
     public static CustomOption doomsayerSpawnRate;
     public static CustomOption doomsayerCooldown;
@@ -677,6 +677,8 @@ public class CustomOptionHolder
     public static CustomOption avengerIsGuessable;
     public static CustomOption avengerKillCooldown;
     public static CustomOption avengerCanFreeKill;
+    public static CustomOption avengerKnowTarget;
+    public static CustomOption avengerTargetKnowPlayer;
     public static CustomOption avengerShowArrows;
     public static CustomOption avengerUpdateIntervall;
     public static CustomOption avengerHasImpVision;
@@ -1188,7 +1190,7 @@ public class CustomOptionHolder
         executionerSpawnRate = Create(201900, Types.Neutral, Cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(201901, Types.Neutral, "canCallEmergency", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(201902, Types.Neutral, "executionerPromotesToLawyer", true, executionerSpawnRate);
-        executionerOnTargetDead = Create(201903, Types.Neutral, "目标死亡后变为", [Cs(Pursuer.color, "Pursuer"), Cs(Jester.color, "Jester"), Cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
+        //executionerOnTargetDead = Create(201903, Types.Neutral, "目标死亡后变为", [Cs(Pursuer.color, "Pursuer"), Cs(Jester.color, "Jester"), Cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
 
         doomsayerSpawnRate = Create(202200, Types.Neutral, Cs(Doomsayer.color, "Doomsayer"), rates, null, true);
         doomsayerCooldown = Create(202201, Types.Neutral, "doomsayerCooldown", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
@@ -1460,10 +1462,12 @@ public class CustomOptionHolder
 
         avengerIsGuessable = Create(401651, Types.Modifier, "avengerIsGuessable", false, modifierLoverAvengerChance);
         avengerKillCooldown = Create(401652, Types.Modifier, "killCooldown", 25f, 10f, 60f, 2.5f, modifierLoverAvengerChance);
-        avengerCanFreeKill = Create(401653, Types.Modifier, "avengerCanFreeKill",
-            ["avengerCanFreeKill.1", "avengerCanFreeKill.2"], modifierLoverAvengerChance);
-        avengerShowArrows = Create(401654, Types.Modifier, "avengerShowArrows", true, modifierLoverAvengerChance);
+        avengerTargetKnowPlayer = Create(401662, Types.Modifier, "avengerTargetKnowPlayer", true, modifierLoverAvengerChance);
+        avengerKnowTarget = Create(401663, Types.Modifier, "avengerKnowTarget", true, modifierLoverAvengerChance);
+        avengerShowArrows = Create(401654, Types.Modifier, "avengerShowArrows", true, avengerKnowTarget);
         avengerUpdateIntervall = Create(401655, Types.Modifier, "avengerUpdateIntervall", 5f, 0.5f, 15f, 0.5f, avengerShowArrows);
+        avengerCanFreeKill = Create(401653, Types.Modifier, "avengerCanFreeKill",
+            ["avengerCanFreeKill.1", "avengerCanFreeKill.2"], avengerKnowTarget);
         avengerHasImpVision = Create(401656, Types.Modifier, "hasImpVision", true, modifierLoverAvengerChance);
         avengerCanUseVents = Create(401657, Types.Modifier, "canUseVents", false, modifierLoverAvengerChance);
         avengerOnlyAliveWin = Create(401661, Types.Modifier, "avengerOnlyAliveWin", true, modifierLoverAvengerChance);

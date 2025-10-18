@@ -2567,6 +2567,9 @@
     "avengerUpdateIntervall": {
         "13": "箭头更新间隔"
     },
+    "avengerTargetKnowPlayer": {
+        "13": "复仇目标可以得知复仇者的存在"
+    },
     "avengerOnlyAliveWin": {
         "13": "需要存活到最后才能胜利"
     },
@@ -3464,10 +3467,10 @@
         "13": "好想成为人类啊"
     },
     "AvengerTeamWin": {
-        "13": "复仇者胜利"
+        "13": "捅死你们喵！！！"
     },
     "AdditionalAvengerTeamWin": {
-        "13": "复仇者胜利"
+        "13": "复仇者跟随胜利"
     },
     "AdditionalAliveSurvivorWin": {
         "13": "幸存者存活"
@@ -5562,6 +5565,12 @@
         "0": "Avenger",
         "13": "复仇者"
     },
+    "AvengerIntroDesc": {
+        "13": "为你的恋人复仇！"
+    },
+    "AvengerShortDesc": {
+        "13": "为你的恋人复仇！"
+    },
     "ImpostorFullDesc": {
         "0": "An ordinary Imposter, deadly but otherwise unassuming.",
         "13": "哈哈~白板红狼!"
@@ -6012,5 +6021,8 @@
     },
     "MarionetteFullDesc": {
         "13": "木偶师可以放置一个木偶，木偶的可见性由房主设置。\n\n按左边的shift键可以切换功能键\n在木偶有效时间内，\n木偶师可以随时查看木偶的周围情况，并可以交换自己与木偶的位置。"
+    },
+    "AvengerFullDesc": {
+        "13": "两位恋人中如果其中一位恋人被其它玩家击杀时，另一位有概率会变为复仇者。\n变为复仇者之后需要为恋人复仇后才能带死去的恋人胜利！\n如果复仇期间目标死亡时，复仇者可能会自杀或者变为 ( 小丑 | 失忆者 | 幸存者 )"
     }
 }

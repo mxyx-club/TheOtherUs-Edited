@@ -475,8 +475,9 @@ internal class RoleManagerSelectRolesPatch
             if (possibleTargets.Count == 0)
             {
                 var w = StartRPC(CustomRPC.LawyerPromotesToPursuer);
+                w.Write(false);
                 w.EndRPC();
-                Lawyer.PromotesToPursuer();
+                Lawyer.PromotesToPursuer(false);
             }
             else
             {
@@ -580,9 +581,9 @@ internal class RoleManagerSelectRolesPatch
             RoleId.Assassin
         ]);
 
-        if (rnd.Next(1, 101) <= CustomOptionHolder.modifierLover.GetSelection() * 10)
+        if (rnd.Chance(CustomOptionHolder.modifierLover.GetSelection() * 10))
         {
-            var impLover = CustomOptionHolder.modifierLoverImpLoverRate.GetBool();
+            var impLover = rnd.Chance(CustomOptionHolder.modifierLoverImpLoverRate.GetSelection() * 10);
             var neutralLover = CustomOptionHolder.modifierLoverNeutraValid.GetBool() && impLover;
             var neutral = neutralPlayer.ToList();
             neutral.RemoveAll(x => x == Akujo.akujo || BandLeader.Player);
@@ -598,15 +599,18 @@ internal class RoleManagerSelectRolesPatch
             if (firstLover.IsNeutral())
             {
                 secondCandidates.AddRange(impPlayer);
+                secondCandidates.AddRange(crewPlayer);
             }
             else
             {
-                if (impLover) secondCandidates.AddRange(impPlayer);
-                if (neutralLover)
+                if (impLover)
                 {
-                    var tempNeutrals = new List<PlayerControl>(neutral);
-                    tempNeutrals.RemoveAll(p => p.PlayerId == firstLover.PlayerId);
-                    secondCandidates.AddRange(tempNeutrals);
+                    secondCandidates.AddRange(impPlayer);
+                    if (neutralLover) secondCandidates.AddRange(neutral);
+                }
+                else
+                {
+                    secondCandidates.AddRange(crewPlayer);
                 }
             }
 
