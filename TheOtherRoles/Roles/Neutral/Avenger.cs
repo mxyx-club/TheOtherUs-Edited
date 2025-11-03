@@ -12,7 +12,7 @@ public class Avenger
     public static RoleId originRole;
     public static Color color = new Color32(141, 111, 131, byte.MaxValue);
 
-    public static bool EndGame => WinFlag || Player.IsDead();
+    public static bool EndGame => WinFlag || Player.IsDead() || Target.IsDead();
 
     public static float killCooldown = 30f;
     public static bool IsGuessable;
@@ -128,7 +128,7 @@ public class Avenger
         {
             if (Player.IsAlive())
             {
-                if (exile) Player.Die(DeathReason.Exile, true);
+                if (exile) Player.SetDie(CustomDeathReason.AvengerFail);
                 else Player.MurderPlayer(Player, MurderResultFlags.Succeeded);
                 PlayerData.SetDeathReason(Player, CustomDeathReason.AvengerFail);
             }

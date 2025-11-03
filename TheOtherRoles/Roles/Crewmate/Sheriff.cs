@@ -78,11 +78,12 @@ public static class Sheriff
     public static bool sheriffCanKill(PlayerControl target)
     {
         return (target != Mini.mini || Mini.isGrownUp) &&
-               (target.IsImpostor(CustomOptionHolder.spyCanDieToSheriff.GetBool()) || target.IsImpostor(AndCat: true) ||
+               (target.IsImpostor(CustomOptionHolder.spyCanDieToSheriff.GetBool(), true) ||
                 (canKillNeutrals &&
                  (isKillerNeutral(target) ||
                   Akujo.akujo == target ||
                   SchrodingersCat.Player == target ||
+                  Avenger.Player == target ||
                   (BandLeader.Player == target && CustomOptionHolder.sheriffCanKillBandLeader.GetBool()) ||
                   (Witness.Player == target && CustomOptionHolder.sheriffCanKillWitness.GetBool()) ||
                   (Amnisiac.Player.Any(p => p == target) && CustomOptionHolder.sheriffCanKillAmnesiac.GetBool()) ||

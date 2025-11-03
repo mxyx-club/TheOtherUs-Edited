@@ -2570,6 +2570,9 @@
     "avengerTargetKnowPlayer": {
         "13": "复仇目标可以得知复仇者的存在"
     },
+    "avengerKnowTarget": {
+        "13": "复仇者可以得知复仇目标"
+    },
     "avengerOnlyAliveWin": {
         "13": "需要存活到最后才能胜利"
     },

@@ -458,7 +458,7 @@ public class RoleInfo
                 if (p == Avenger.Target)
                     roleName = Cs(Thief.color, "ψ ") + roleName;
                 if (p == Avenger.Player || p == Avenger.Lover)
-                    roleName = Cs(Thief.color, "♥ ") + roleName;
+                    roleName = Cs(Lovers.color, "♥ ") + roleName;
                 if (Pursuer.blankedList.Any(x => x == p.PlayerId))
                     roleName = Cs(Pursuer.color, "roleInfo.blanked".Translate()) + roleName;
                 if (Witch.futureSpelled.Any(x => x == p) && !MeetingHud.Instance)

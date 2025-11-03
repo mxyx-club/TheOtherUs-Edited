@@ -249,10 +249,14 @@ public static class Helpers
 
     public static void ExtendMeetingTime(float time)
     {
-        if (MeetingHud.Instance && MeetingHud.Instance.state is not MeetingHud.VoteStates.Discussion and not MeetingHud.VoteStates.Results)
+        if (MeetingHud.Instance == null) return;
+        if (!CustomOptionHolder.guessReVote.GetBool()) return;
+        if (MeetingHud.Instance.state is not MeetingHud.VoteStates.Discussion and not MeetingHud.VoteStates.Results)
         {
-            var currentTime = MeetingHud.Instance.discussionTimer - ModOption.NormalOptions.DiscussionTime;
-            MeetingHud.Instance.discussionTimer = Math.Max(currentTime, MeetingHud.Instance.discussionTimer - time);
+            var maxTime = ModOption.NormalOptions.VotingTime - GetPenaltyVotingTime();
+            var newTime = Mathf.Max(0f, MeetingHud.Instance.discussionTimer - time);
+
+            MeetingHud.Instance.discussionTimer = Math.Min(newTime, maxTime);
         }
     }
 
@@ -856,6 +860,15 @@ public static class Helpers
             (Sheriff.Player.Any(x => x == target) || target == Sheriff.Deputy))
             return false; // Sheriff & Deputy see the names of each other
         return true;
+    }
+
+    public static void ShowNotification(string message)
+    {
+        var instance = FastDestroyableSingleton<HudManager>.Instance;
+        if (instance?.Notifier != null && !string.IsNullOrEmpty(message))
+        {
+            instance.Notifier.AddItem(message);
+        }
     }
 
     public static void setDefaultLook(this PlayerControl target, bool enforceNightVisionUpdate = true)

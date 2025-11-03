@@ -195,7 +195,7 @@ public class KillTrap : CustomObjectBase<KillTrap>
         if (GameObject != null && isTriggered && !InMeeting)
         {
             var distance = Vector2.Distance(GameObject.transform.position, PlayerControl.LocalPlayer.GetTruePosition());
-            if (PlayerControl.LocalPlayer != target && PlayerControl.LocalPlayer.IsAlive() && distance < 0.5)
+            if (PlayerControl.LocalPlayer != target && PlayerControl.LocalPlayer.IsAlive() && distance < 0.75f)
             {
                 var writer = StartRPC(CustomRPC.DisableTrap);
                 writer.Write(Id);

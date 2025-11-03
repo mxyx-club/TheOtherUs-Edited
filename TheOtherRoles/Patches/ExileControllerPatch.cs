@@ -101,9 +101,6 @@ internal class ExileControllerBeginPatch
             Butcher.canDissection = true;
         }
 
-        // Trickster boxes
-        if (Trickster.trickster != null && JackInTheBox.hasJackInTheBoxLimitReached()) JackInTheBox.convertToVents();
-
         // Activate portals.
         Portal.meetingEndsUpdate();
 

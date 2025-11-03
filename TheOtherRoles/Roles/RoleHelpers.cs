@@ -418,19 +418,6 @@ public static class PlayerControlExtensions
                 Jailor.Jailed = null;
             }
 
-            if (player == Blackmailer.Player && Blackmailer.blackmailed != null && InMeeting)
-            {
-                foreach (var playerState in MeetingHud.Instance.playerStates)
-                {
-                    var cell = playerState.transform.FindChild("JailCell");
-                    cell?.gameObject?.Destroy();
-
-                    var icon = playerState.transform.FindChild("JailTargetIcon");
-                    icon?.gameObject?.Destroy();
-                }
-                Jailor.Jailed = null;
-            }
-
             if (Lawyer.lawyer != null && player == Lawyer.target)
             {
                 if (AmongUsClient.Instance.AmHost && (!Jester.Player.Any(x => x.PlayerId == Lawyer.target?.PlayerId) || Lawyer.targetWasGuessed))

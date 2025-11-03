@@ -265,7 +265,7 @@ public static class MapData
                 closeDistance = distance;
             }
         }
-        Message($"Revive Player {player.Data.PlayerName} To Vector3 {closePos}");
+        Message($"Set Player {player.Data.PlayerName} To Vector3 {closePos}");
         return closePos;
     }
 

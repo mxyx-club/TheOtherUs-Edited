@@ -538,8 +538,8 @@ internal class HudManagerUpdatePatch
             (local == Avenger.Player || local == Avenger.Lover || CanSeeGhostInfo ||
             (local == Avenger.Target && Avenger.TargetKnowPlayer)))
         {
-            var suffix = Cs(Avenger.color, " ψ");
-            var suffix2 = Cs(Avenger.color, " ♥");
+            var suffix = Cs(Lovers.color, " ψ");
+            var suffix2 = Cs(Lovers.color, " ♥");
             Avenger.Lover?.cosmetics?.nameText?.text += suffix2;
             if (Avenger.KnowTarget) Avenger.Target?.cosmetics.nameText.text += suffix;
             if (local != Avenger.Target) Avenger.Player?.cosmetics?.nameText?.text += suffix2;

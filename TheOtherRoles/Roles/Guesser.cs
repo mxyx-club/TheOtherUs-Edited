@@ -566,7 +566,8 @@ public static class Guesser
         byte partnerId = dyingPartner != null ? dyingPartner.PlayerId : dyingTargetId;
 
         dyingTarget.SetDie();
-        Avenger.OnPlayerDeath(guesser, dyingTarget);
+        if (dyingTarget.isLover()) Avenger.OnPlayerDeath(guesser, dyingTarget);
+        else dyingPartner?.SetDie();
 
         var reason = dyingTarget == guesser ? CustomDeathReason.GuessFail : CustomDeathReason.GuessSuccess;
         PlayerData.SetDeathReason(dyingTarget, reason, guesser);

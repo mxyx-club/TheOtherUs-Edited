@@ -159,6 +159,7 @@ public class OnGameEndPatch
             Pelican.Player,
             BandLeader.Player,
             Juggernaut.juggernaut,
+            Avenger.Player,
             Doomsayer.doomsayer,
             PartTimer.partTimer,
             Akujo.akujo,
@@ -213,14 +214,14 @@ public class OnGameEndPatch
         bool isPursurerLose = jesterWin || witnessWin || arsonistWin || miniLose || isCanceled || executionerWin;
 
         TempData.winners = new();
-        var winners = new HashSet<PlayerControl>();
+        var winners = new List<PlayerControl>();
 
         // Mini lose
         if (miniLose)
         {
             // If "no one is the Mini", it will display the Mini, but also show defeat to everyone
-            //var wpd = new WinningPlayerData(Mini.mini.Data) { IsYou = false };
-            //TempData.winners.Add(wpd);
+            var wpd = new WinningPlayerData(Mini.mini.Data) { IsYou = false };
+            TempData.winners.Add(wpd);
             AdditionalTempData.winCondition = WinCondition.MiniLose;
         }
         else if (isCanceled)
@@ -235,7 +236,7 @@ public class OnGameEndPatch
         }
 
         // Jester win
-        if (jesterWin)
+        else if (jesterWin)
         {
             winners.Add(Jester.WinnerPlayer);
             AdditionalTempData.winCondition = WinCondition.JesterWin;
@@ -579,7 +580,7 @@ public class OnGameEndPatch
             }
         }
 
-        TempData.winners = winners.Where(x => x?.Data != null && !x.Data.Disconnected).Select(x => new WinningPlayerData(x.Data)).ToIl2CppList();
+        if (!miniLose) TempData.winners = winners.DistinctBy(x => x.PlayerId).Select(x => new WinningPlayerData(x.Data)).ToIl2CppList();
 
         try
         {
@@ -691,7 +692,7 @@ public class EndGameManagerSetUpPatch
             { WinCondition.AdditionalLawyerBonusWin, (Lawyer.color, "LawyerBonusWin") },
             { WinCondition.AdditionalPartTimerWin, (PartTimer.color, "PartTimerWin") },
             { WinCondition.AdditionalAlivePursuerWin, (Pursuer.color, "AdditionalAlivePursuerWin") },
-            { WinCondition.AdditionalAliveSurvivorWin, (Avenger.color, "AdditionalAliveSurvivorWin") },
+            { WinCondition.AdditionalAliveSurvivorWin, (Survivor.color, "AdditionalAliveSurvivorWin") },
             { WinCondition.AdditionalAvengerTeamWin, (Avenger.color, "AdditionalAvengerTeamWin") },
             { WinCondition.BandLeaderWin, (BandLeader.color, "BandLeaderWin") }
         };

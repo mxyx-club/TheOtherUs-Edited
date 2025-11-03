@@ -15,7 +15,7 @@ public class JackInTheBox : CustomObjectBase<JackInTheBox>
     public JackInTheBox(PlayerControl player, Vector3 pos)
     {
         GameObject.layer = 11;
-        GameObject.name = "JackInTheBox " + Id;
+        GameObject.name = "JackInTheBoxVent_" + Id;
         // Add collider offset that DoMove moves the player up at a valid position
         pos += (Vector3)PlayerControl.LocalPlayer.Collider.offset;
         // Create the marker
@@ -52,7 +52,6 @@ public class JackInTheBox : CustomObjectBase<JackInTheBox>
         MapUtilities.CachedShipStatus.AllVents = allVentsList.ToArray();
         vent.gameObject.SetActive(false);
         vent.name = "JackInTheBoxVent_" + vent.Id;
-
         // Only render the box for the Trickster and for Ghosts
         var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster || CanSeeGhostInfo;
         GameObject.SetActive(showBoxToLocalPlayer);
@@ -112,7 +111,7 @@ public class JackInTheBox : CustomObjectBase<JackInTheBox>
         ventRenderer.sprite = null;
     }
 
-    public static void convertToVents()
+    public override void OnMeetingEnd(MeetingHud __instance)
     {
         foreach (var box in AllObjects) box.convertToVent();
         connectVents();

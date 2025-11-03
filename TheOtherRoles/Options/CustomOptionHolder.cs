@@ -952,9 +952,9 @@ public class CustomOptionHolder
         mimicSpawnRate = Create(101700, Types.Impostor, Cs(Mimic.color, "Mimic"), rates, null, true);
 
         marionetteSpawnRate = Create(101800, Types.Impostor, Cs(Marionette.color, "Marionette"), rates, null, true);
-        marionettePlaceCooldown = Create(101801, Types.Impostor, "marionettePlaceCooldown", 12.5f, 5f, 30f, 2.5f, marionetteSpawnRate);
-        marionetteDecoyDelayedDisplay = Create(101802, Types.Impostor, "marionetteDecoyDelayedDisplay", 12.5f, 5f, 30f, 2.5f, marionetteSpawnRate);
-        marionetteDecoyPermanent = Create(101803, Types.Impostor, "marionetteDecoyPermanent", false, marionetteSpawnRate);
+        marionettePlaceCooldown = Create(101801, Types.Impostor, "marionettePlaceCooldown", 10f, 5f, 30f, 2.5f, marionetteSpawnRate);
+        marionetteDecoyDelayedDisplay = Create(101802, Types.Impostor, "marionetteDecoyDelayedDisplay", 10f, 5f, 30f, 2.5f, marionetteSpawnRate);
+        marionetteDecoyPermanent = Create(101803, Types.Impostor, "marionetteDecoyPermanent", true, marionetteSpawnRate);
         marionetteResetPlaceAfterMeeting = Create(101804, Types.Impostor, "marionetteResetPlaceAfterMeeting", false, marionetteDecoyPermanent);
         marionetteDecoyDuration = Create(101805, Types.Impostor, "marionetteDecoyDuration", 60f, 25f, 120f, 5f, marionetteSpawnRate,
             isHidden: () => marionetteDecoyPermanent.GetBool());
@@ -1029,7 +1029,7 @@ public class CustomOptionHolder
         evilTrapperExtensionTime = Create(103002, Types.Impostor, "evilTrapperExtensionTime", 5f, 2f, 10f, 0.5f, evilTrapperSpawnRate);
         evilTrapperCooldown = Create(103003, Types.Impostor, "evilTrapperCooldown", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
         evilTrapperKillTimer = Create(103004, Types.Impostor, "evilTrapperKillTimer", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
-        evilTrapperTrapRange = Create(103005, Types.Impostor, "evilTrapperTrapRange", 1f, 0.2f, 1.5f, 0.1f, evilTrapperSpawnRate);
+        evilTrapperTrapRange = Create(103005, Types.Impostor, "evilTrapperTrapRange", 0.5f, 0.2f, 1.5f, 0.1f, evilTrapperSpawnRate);
         evilTrapperMaxDistance = Create(103006, Types.Impostor, "evilTrapperMaxDistance", 10f, 0f, 20f, 0.25f, evilTrapperSpawnRate);
         evilTrapperPenaltyTime = Create(103007, Types.Impostor, "evilTrapperPenaltyTime", 0f, 0f, 30f, 0.5f, evilTrapperSpawnRate);
         evilTrapperBonusTime = Create(103008, Types.Impostor, "evilTrapperBonusTime", 10f, 0f, 15f, 0.5f, evilTrapperSpawnRate);

@@ -12,9 +12,9 @@ internal class IntroCutsceneOnDestroyPatch
     {
         Message($"游戏开始 MapId: {GameOptionsManager.Instance.CurrentGameOptions.MapId}");
         // Generate and initialize player icons
-        var playerCounter = 0;
-        if (PlayerControl.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null)
+        if (PlayerControl.LocalPlayer != null && HudManager.Instance != null)
         {
+            var playerCounter = 0;
             var aspect = Camera.main.aspect;
             var safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
             var xpos = 1.75f - (safeOrthographicSize * aspect * 1.70f);
@@ -24,7 +24,7 @@ internal class IntroCutsceneOnDestroyPatch
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
                 var data = p.Data;
-                var player = UObject.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
+                var player = UObject.Instantiate(__instance.PlayerPrefab, HudManager.Instance.transform);
                 playerPrefab = __instance.PlayerPrefab;
                 p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
                 player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
@@ -36,8 +36,7 @@ internal class IntroCutsceneOnDestroyPatch
 
                 if (PlayerControl.LocalPlayer == Arsonist.arsonist && p != Arsonist.arsonist)
                 {
-                    player.transform.localPosition = bottomLeft + new Vector3(-0.25f, -0.25f, 0) +
-                                                     (Vector3.right * playerCounter++ * 0.35f);
+                    player.transform.localPosition = bottomLeft + new Vector3(-0.25f, -0.25f, 0) + (Vector3.right * playerCounter++ * 0.35f);
                     player.transform.localScale = Vector3.one * 0.2f;
                     player.setSemiTransparent(true);
                     player.gameObject.SetActive(true);
@@ -94,9 +93,7 @@ internal class IntroCutsceneOnDestroyPatch
             BountyHunter.bountyUpdateTimer = 0f;
             if (FastDestroyableSingleton<HudManager>.Instance != null)
             {
-                BountyHunter.cooldownText =
-                    UObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText,
-                        FastDestroyableSingleton<HudManager>.Instance.transform);
+                BountyHunter.cooldownText = UObject.Instantiate(HudManager.Instance.KillButton.cooldownTimerText, HudManager.Instance.transform);
                 BountyHunter.cooldownText.alignment = TextAlignmentOptions.Center;
                 BountyHunter.cooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -0.35f, -62f);
                 BountyHunter.cooldownText.transform.localScale = Vector3.one * 0.4f;

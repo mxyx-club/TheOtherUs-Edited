@@ -683,6 +683,20 @@ public static class MurderPlayerPatch
                 PlayerData.SetDeathReason(akujoPartner, CustomDeathReason.LoverSuicide);
             }
         }
+
+        if (MeetingHud.Instance)
+        {
+            foreach (var p in MeetingHud.Instance.playerStates)
+            {
+                if (p.TargetPlayerId == target.PlayerId)
+                {
+                    p.SetDead(p.DidReport, true);
+                    p.Overlay.gameObject.SetActive(true);
+                    break;
+                }
+            }
+        }
+
     }
 }
 
@@ -805,20 +819,6 @@ public static class ExilePlayerPatch
         }
 
         if (__instance == Jailor.Player && Jailor.Jailed != null && InMeeting)
-        {
-            foreach (var playerState in MeetingHud.Instance.playerStates)
-            {
-                var cell = playerState.transform.FindChild("JailCell");
-                cell?.gameObject?.Destroy();
-
-                var icon = playerState.transform.FindChild("JailTargetIcon");
-                icon?.gameObject?.Destroy();
-            }
-            Jailor.Jailed = null;
-        }
-
-
-        if (__instance == Blackmailer.Player && Blackmailer.blackmailed != null && InMeeting)
         {
             foreach (var playerState in MeetingHud.Instance.playerStates)
             {

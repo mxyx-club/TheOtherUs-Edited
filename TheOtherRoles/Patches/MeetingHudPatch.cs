@@ -902,7 +902,7 @@ internal class MeetingHudPatch
             {
                 __instance.discussionTimer += GetPenaltyVotingTime();
             }
-
+            Message($"discussionTimer: {__instance.discussionTimer}", "Update");
             // Deactivate skip Button if skipping on emergency meetings is disabled
             if (target == null && blockSkippingInEmergencyMeetings)
                 __instance.SkipVoteButton.gameObject.SetActive(false);
