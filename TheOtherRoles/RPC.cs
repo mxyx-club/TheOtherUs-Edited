@@ -131,6 +131,7 @@ public enum CustomRPC : byte
     SurvivorVestActive,
     PoltergeistMove,
     jesterDragBody,
+    PlaceClogGhost,
 
     //SetSwooper,
     SetInvisible,
@@ -617,6 +618,9 @@ public static class RPCProcedure
         var player = PlayerById(playerId);
         switch ((RoleId)roleId)
         {
+            case RoleId.Clog:
+                Clog.Player = player;
+                break;
             case RoleId.GhostEngineer:
                 GhostEngineer.Player = player;
                 break;
@@ -1240,6 +1244,7 @@ public static class RPCProcedure
 
         if (player == Poltergeist.Player) Poltergeist.ClearAndReload();
         if (player == GhostEngineer.Player) GhostEngineer.ClearAndReload();
+        if (player == Clog.Player) Clog.ClearAndReload();
         if (player == Specter.Player) Specter.ClearAndReload();
 
         var data = PlayerData.GetPlayerData(player);
@@ -1448,6 +1453,11 @@ public static class RPCProcedure
         _ = new NinjaTrace(pos, Ninja.traceTime);
         if (PlayerControl.LocalPlayer != Ninja.ninja)
             Ninja.ninjaMarked = null;
+    }
+
+    public static void PlaceClogGhost(PlayerControl player, Vector3 pos)
+    {
+        _ = new GhostObject(player, pos);
     }
 
     public static void setInvisible(byte playerId, byte flag)
@@ -2466,6 +2476,9 @@ internal class RPCHandlerPatch
             case CustomRPC.JesterWinner:
                 Jester.WinnerPlayer = reader.ReadPlayer();
                 Jester.triggerJesterWin = true;
+                break;
+            case CustomRPC.PlaceClogGhost:
+                RPCProcedure.PlaceClogGhost(reader.ReadPlayer(), reader.ReadVector3());
                 break;
         }
 

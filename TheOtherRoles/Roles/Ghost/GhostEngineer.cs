@@ -1,4 +1,5 @@
-﻿namespace TheOtherRoles.Roles.Ghost;
+namespace TheOtherRoles.Roles.Ghost;
+
 public class GhostEngineer
 {
     public static PlayerControl Player;

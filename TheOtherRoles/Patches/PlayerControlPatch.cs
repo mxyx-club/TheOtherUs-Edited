@@ -912,6 +912,7 @@ public static class DisconnectPatch
             {
                 if (pva.TargetPlayerId == player.PlayerId)
                 {
+                    pva.SetDead(pva.DidReport, true);
                     pva.Overlay.gameObject.SetActive(true);
 
                     pva.UnsetVote();

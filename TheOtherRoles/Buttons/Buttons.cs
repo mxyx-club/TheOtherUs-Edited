@@ -108,6 +108,7 @@ internal static class HudManagerStartPatch
     public static CustomButton marionettePlaceButton;
     public static CustomButton marionetteCameraButton;
     public static CustomButton avengerKillButton;
+    public static CustomButton clogPlaceGhost;
 
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
@@ -224,6 +225,7 @@ internal static class HudManagerStartPatch
         marionetteButton.MaxTimer = Marionette.SwapCooldown;
         marionetteCameraButton.MaxTimer = 0f;
         avengerKillButton.MaxTimer = Avenger.killCooldown;
+        clogPlaceGhost.MaxTimer = Clog.GhostCooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
@@ -248,6 +250,7 @@ internal static class HudManagerStartPatch
         terroristButton.EffectDuration = Terrorist.destructionTime + Terrorist.bombActiveAfter;
         redemptorRevelationButton.EffectDuration = Redemptor.revelationDuration;
         redemptorPrayerButton.EffectDuration = Redemptor.prayerDuration;
+        clogPlaceGhost.EffectDuration = Clog.GhostDuration;
         berserkerKillButton.EffectDuration = 0.5f;
 
         zoomOutButton.MaxTimer = zoomOutButton.Timer = 0f;
@@ -4672,6 +4675,38 @@ internal static class HudManagerStartPatch
             buttonText: GetString("AvengeButtonText")
         );
 
+        clogPlaceGhost = new CustomButton(
+            () =>
+            {
+                var writer = StartRPC(CustomRPC.PlaceClogGhost);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(PlayerControl.LocalPlayer.transform.position);
+                writer.EndRPC();
+                RPCProcedure.PlaceClogGhost(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.transform.position);
+            },
+            () => { return Clog.Player != null && PlayerControl.LocalPlayer == Clog.Player && PlayerControl.LocalPlayer.Data.IsDead; },
+            () =>
+            {
+                clogPlaceGhost.UsesCount = Clog.CanUseNum - Clog.UsedNum;
+                return (!Clog.IsUsed || !Clog.OnlyUsedOnce) && (Clog.CanUseNum - Clog.UsedNum > 0) && PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                clogPlaceGhost.Timer = clogPlaceGhost.MaxTimer;
+            },
+            Clog.ButtonSprite,
+            __instance,
+            __instance.AbilityButton,
+            abilityInput.keyCode,
+            true,
+            Clog.GhostDuration,
+            () =>
+            {
+                clogPlaceGhost.isEffectActive = false;
+                clogPlaceGhost.Timer = clogPlaceGhost.MaxTimer;
+            },
+            buttonText: GetString("clogPlaceGhost")
+        );
 
         // Set the default (or settings from the previous game) timers / durations when spawning the buttons
         initialized = true;

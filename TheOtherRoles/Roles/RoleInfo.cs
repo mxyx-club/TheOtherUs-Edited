@@ -138,6 +138,7 @@ public class RoleInfo
     public static RoleInfo chameleon = new("Chameleon", Color.yellow, RoleId.Chameleon, RoleType.Modifier);
     public static RoleInfo shifter = new("Shifter", Color.yellow, RoleId.Shifter, RoleType.Modifier);
 
+    public static RoleInfo clog = new("Clog", Clog.color, RoleId.Clog, RoleType.Ghost);
     public static RoleInfo ghostEngineer = new("GhostEngineer", GhostEngineer.color, RoleId.GhostEngineer, RoleType.Ghost);
     public static RoleInfo specter = new("Specter", Specter.color, RoleId.Specter, RoleType.Ghost);
     public static RoleInfo poltergeist = new("Poltergeist", Poltergeist.color, RoleId.Poltergeist, RoleType.Ghost);
@@ -256,6 +257,7 @@ public class RoleInfo
         chameleon,
         shifter,
 
+        clog,
         ghostEngineer,
         specter,
         poltergeist,
@@ -389,6 +391,7 @@ public class RoleInfo
         if (showGhost)
         {
             if (p == GhostEngineer.Player) infos.Add(ghostEngineer);
+            if (p == Clog.Player) infos.Add(clog);
             if (p == Specter.Player) infos.Add(specter);
             if (p == Poltergeist.Player) infos.Add(poltergeist);
         }
@@ -457,7 +460,7 @@ public class RoleInfo
                     roleName += Cs(Thief.color, "roleInfo.thief".Translate());
                 if (p == Avenger.Target)
                     roleName = Cs(Thief.color, "ψ ") + roleName;
-                if (p == Avenger.Player || p == Avenger.Lover)
+                if ((p == Avenger.Player || p == Avenger.Lover) && !InGame)
                     roleName = Cs(Lovers.color, "♥ ") + roleName;
                 if (Pursuer.blankedList.Any(x => x == p.PlayerId))
                     roleName = Cs(Pursuer.color, "roleInfo.blanked".Translate()) + roleName;

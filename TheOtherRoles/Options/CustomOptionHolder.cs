@@ -270,12 +270,6 @@ public class CustomOptionHolder
     public static CustomOption berserkerRampageCooldown;
     public static CustomOption berserkerRampageDuration;
 
-    public static CustomOption specterSpawnRate;
-    public static CustomOption specterResetRole;
-    public static CustomOption specterDuration;
-    public static CustomOption specterAfterMeetingTakeRole;
-    public static CustomOption specterAfterMeetingRevived;
-
     public static CustomOption survivorSpawnRate;
     public static CustomOption survivorVestEnable;
     public static CustomOption survivorVestNumber;
@@ -436,12 +430,6 @@ public class CustomOptionHolder
     public static CustomOption thiefHasImpVision;
     public static CustomOption thiefCanUseVents;
     public static CustomOption thiefCanStealWithGuess;
-
-    public static CustomOption ghostEngineerSpawnRate;
-
-    public static CustomOption poltergeistSpawnRate;
-    public static CustomOption poltergeistCooldown;
-    public static CustomOption poltergeistRadius;
 
     public static CustomOption guesserSpawnRate;
     public static CustomOption guesserNumberOfShots;
@@ -756,6 +744,29 @@ public class CustomOptionHolder
     public static CustomOption modifierShiftALLNeutral;
     public static CustomOption modifierShiftReload;
 
+
+    public static CustomOption clogSpawnRate;
+    public static CustomOption clogGhostRange;
+    public static CustomOption clogUseNum;
+    public static CustomOption clogOnlyUsedOnce;
+    public static CustomOption clogGhostCooldown;
+    public static CustomOption clogGhostDuration;
+
+
+    public static CustomOption specterSpawnRate;
+    public static CustomOption specterResetRole;
+    public static CustomOption specterDuration;
+    public static CustomOption specterAfterMeetingTakeRole;
+    public static CustomOption specterAfterMeetingRevived;
+
+
+    public static CustomOption ghostEngineerSpawnRate;
+
+    public static CustomOption poltergeistSpawnRate;
+    public static CustomOption poltergeistCooldown;
+    public static CustomOption poltergeistRadius;
+
+
     public static void Load()
     {
         VanillaSettings = Main.Instance.Config.Bind("Preset0", "VanillaOptions", "");
@@ -1057,12 +1068,6 @@ public class CustomOptionHolder
 
         //-------------------------- Neutral Options 200000 -------------------------- //
 
-        specterSpawnRate = Create(500200, Types.GhostRole, Cs(Specter.color, "SpecterOption"), rates, null, true);
-        specterDuration = Create(500201, Types.GhostRole, "specterDuration", 1.5f, 0.25f, 5f, 0.25f, specterSpawnRate);
-        specterResetRole = Create(500202, Types.GhostRole, "amnisiacResetRole", true, specterSpawnRate);
-        specterAfterMeetingTakeRole = Create(500203, Types.GhostRole, "specterAfterMeetingTakeRole", false, specterSpawnRate);
-        specterAfterMeetingRevived = Create(500204, Types.GhostRole, "specterAfterMeetingRevived", false, specterSpawnRate);
-
         survivorSpawnRate = Create(202800, Types.Neutral, Cs(Survivor.color, "Survivor"), rates, null, true);
         survivorVestEnable = Create(202801, Types.Neutral, "survivorVestEnable", true, survivorSpawnRate);
         survivorVestNumber = Create(202802, Types.Neutral, "survivorVestNumber", 5f, 1f, 20f, 1f, survivorVestEnable);
@@ -1227,12 +1232,6 @@ public class CustomOptionHolder
         thiefCanStealWithGuess = Create(202407, Types.Neutral, "thiefCanStealWithGuess", true, thiefSpawnRate);
 
         //-------------------------- Crewmate Options 300000 -------------------------- //
-
-        ghostEngineerSpawnRate = Create(500100, Types.GhostRole, Cs(GhostEngineer.color, "GhostEngineerOptions"), rates, null, true);
-
-        poltergeistSpawnRate = Create(500300, Types.GhostRole, Cs(Poltergeist.color, "PoltergeistOptions"), rates, null, true);
-        poltergeistCooldown = Create(500301, Types.GhostRole, "poltergeistCooldown", 5f, 2.5f, 60f, 2.5f, poltergeistSpawnRate);
-        poltergeistRadius = Create(500302, Types.GhostRole, "poltergeistRadius", 0.75f, 0.5f, 2f, 0.125f, poltergeistSpawnRate);
 
         guesserSpawnRate = Create(301000, Types.Crewmate, Cs(Vigilante.color, "Vigilante"), rates, null, true,
             isHidden: () => GuesserGM.Enabled);
@@ -1580,6 +1579,27 @@ public class CustomOptionHolder
         modifierShiftNeutral = Create(403401, Types.Modifier, "modifierShiftNeutral", false, modifierShifter);
         modifierShiftALLNeutral = Create(403402, Types.Modifier, "modifierShiftALLNeutral", false, modifierShiftNeutral);
         modifierShiftReload = Create(403403, Types.Modifier, "modifierShiftReload", true, modifierShifter);
+
+        //-------------------------- Ghost Role 50000 - 59999 -------------------------- //
+
+        clogSpawnRate = Create(500400, Types.GhostRole, Cs(Clog.color, "ClogOptions"), rates, null, true);
+        clogGhostCooldown = Create(500401, Types.GhostRole, "clogGhostCooldown", 15f, 5f, 120f, 2.5f, clogSpawnRate);
+        clogGhostDuration = Create(500402, Types.GhostRole, "clogGhostDuration", 10f, 2f, 18f, 0.5f, clogSpawnRate);
+        clogGhostRange = Create(500403, Types.GhostRole, "clogGhostRange", 0.5f, 0.125f, 2.5f, 0.125f, clogSpawnRate);
+        clogUseNum = Create(500404, Types.GhostRole, "clogUseNum", 3, 1, 20, 1, clogSpawnRate);
+        clogOnlyUsedOnce = Create(500405, Types.GhostRole, "clogOnlyUsedOnce", false, clogSpawnRate);
+
+        specterSpawnRate = Create(500200, Types.GhostRole, Cs(Specter.color, "SpecterOption"), rates, null, true);
+        specterDuration = Create(500201, Types.GhostRole, "specterDuration", 1.5f, 0.25f, 5f, 0.25f, specterSpawnRate);
+        specterResetRole = Create(500202, Types.GhostRole, "amnisiacResetRole", true, specterSpawnRate);
+        specterAfterMeetingTakeRole = Create(500203, Types.GhostRole, "specterAfterMeetingTakeRole", false, specterSpawnRate);
+        specterAfterMeetingRevived = Create(500204, Types.GhostRole, "specterAfterMeetingRevived", false, specterSpawnRate);
+
+        ghostEngineerSpawnRate = Create(500100, Types.GhostRole, Cs(GhostEngineer.color, "GhostEngineerOptions"), rates, null, true);
+
+        poltergeistSpawnRate = Create(500300, Types.GhostRole, Cs(Poltergeist.color, "PoltergeistOptions"), rates, null, true);
+        poltergeistCooldown = Create(500301, Types.GhostRole, "poltergeistCooldown", 5f, 2.5f, 60f, 2.5f, poltergeistSpawnRate);
+        poltergeistRadius = Create(500302, Types.GhostRole, "poltergeistRadius", 0.75f, 0.5f, 2f, 0.125f, poltergeistSpawnRate);
 
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
 

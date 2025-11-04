@@ -102,6 +102,12 @@ public abstract class CustomObjectBase<T> : CustomObject where T : CustomObjectB
         AllObjects.Add((T)this);
     }
 
+    public CustomObjectBase(string name) : base()
+    {
+        GameObject!.name = name;
+        AllObjects.Add((T)this);
+    }
+
     public override void OnDestroy()
     {
         AllObjects.Remove((T)this);

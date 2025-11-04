@@ -30,6 +30,11 @@ public class GhostRole
         {
             new(RoleId.Specter, CustomOptionHolder.specterSpawnRate.GetSelection())
         };
+
+        GhostRoles[AssignType.Impostor] = new List<Assignment>
+        {
+            new(RoleId.Clog, CustomOptionHolder.clogSpawnRate.GetSelection())
+        };
     }
 
     public class Assignment
@@ -59,8 +64,9 @@ public class GhostRole
             if (GhostPlayer.Contains(player)) return;
 
             if (player.IsCrew()) AssignRole(player, AssignType.Crewmate);
-
-            if (otherNeutral(player)) AssignRole(player, AssignType.otherNeutral);
+            else if (otherNeutral(player)) AssignRole(player, AssignType.otherNeutral);
+            else if (player.IsImpostor()) AssignRole(player, AssignType.Impostor);
+            else if (player.IsNeutral()) AssignRole(player, AssignType.Neutral);
         }
 
         private static bool otherNeutral(PlayerControl player)

@@ -1430,22 +1430,6 @@
         "0": "Kill Cooldown",
         "13": "击杀冷却"
     },
-    "SpecterOption": {
-        "0": "Specter (Neutral)",
-        "13": "怨灵 (中立)"
-    },
-    "specterDuration": {
-        "0": "Delay before Revival",
-        "13": "复活前摇"
-    },
-    "specterAfterMeetingTakeRole": {
-        "0": "Can Find Corpses Only after Next Meeting",
-        "13": "本轮会议结束后才可拾取尸体"
-    },
-    "specterAfterMeetingRevived": {
-        "0": "Revives Only after Next Meeting",
-        "13": "拾取尸体后本轮会议结束才可复活"
-    },
     "jesterCanVent": {
         "0": "Jester Can Use Vents",
         "13": "小丑可使用管道"
@@ -1832,22 +1816,6 @@
     "schrodingersCatMaxChangeCount": {
         "0": "Max Number of Faction Changes",
         "13": "可以变更阵营的次数"
-    },
-    "GhostEngineerOptions": {
-        "0": "Ghost Mechanic (Crewmate)",
-        "13": "灵魂工程师 (船员)"
-    },
-    "PoltergeistOptions": {
-        "0": "Poltergeist (Crewmate)",
-        "13": "捣蛋鬼 (船员)"
-    },
-    "poltergeistCooldown": {
-        "0": "Poltergeist Drag Cooldown",
-        "13": "技能冷却"
-    },
-    "poltergeistRadius": {
-        "0": "Poltergeist Drag Radius",
-        "13": "技能使用范围"
     },
     "guesserNumberOfShots": {
         "0": "Vigilante Number of Guesses",
@@ -2700,6 +2668,57 @@
     "modifierShiftALLNeutral": {
         "0": "Neutral Roles May Spawn with This Modifier",
         "13": "中立阵营可以成为交换师"
+    },
+    "SpecterOption": {
+        "0": "Specter (Neutral)",
+        "13": "怨灵 (中立)"
+    },
+    "specterDuration": {
+        "0": "Delay before Revival",
+        "13": "复活前摇"
+    },
+    "specterAfterMeetingTakeRole": {
+        "0": "Can Find Corpses Only after Next Meeting",
+        "13": "本轮会议结束后才可拾取尸体"
+    },
+    "specterAfterMeetingRevived": {
+        "0": "Revives Only after Next Meeting",
+        "13": "拾取尸体后本轮会议结束才可复活"
+    },
+    "GhostEngineerOptions": {
+        "0": "Ghost Mechanic (Crewmate)",
+        "13": "灵魂工程师 (船员)"
+    },
+    "PoltergeistOptions": {
+        "0": "Poltergeist (Crewmate)",
+        "13": "捣蛋鬼 (船员)"
+    },
+    "poltergeistCooldown": {
+        "0": "Poltergeist Drag Cooldown",
+        "13": "技能冷却"
+    },
+    "poltergeistRadius": {
+        "0": "Poltergeist Drag Radius",
+        "13": "技能使用范围"
+    },
+    "ClogOptions": {
+        "0": "Clong (Impostor)",
+        "13": "阻挠鬼 (伪装者)"
+    },
+    "clogGhostRange": {
+        "13": "放置的障碍物大小"
+    },
+    "clogUseNum": {
+        "13": "最大使用次数"
+    },
+    "clogOnlyUsedOnce": {
+        "13": "每轮只能使用一次"
+    },
+    "clogGhostCooldown": {
+        "13": "放置冷却"
+    },
+    "clogGhostDuration": {
+        "13": "物体持续在场时间"
     },
     "infectedMaxPlayer": {
         "0": "Max Number of Infecteds",
@@ -4210,6 +4229,10 @@
         "0": "KILL",
         "13": "复仇"
     },
+    "clogPlaceGhost": {
+        "0": "PLACE",
+        "13": "放置"
+    },
     "GuessserGMInfo": {
         "0": " (Guesser)",
         "13": " (赌怪)"
@@ -5574,6 +5597,15 @@
     "AvengerShortDesc": {
         "13": "为你的恋人复仇！"
     },
+    "Clog": {
+        "13": "阻挠鬼"
+    },
+    "ClogIntroDesc": {
+        "13": "让船员动弹不得!"
+    },
+    "ClogShortDesc": {
+        "13": "让船员动弹不得!"
+    },
     "ImpostorFullDesc": {
         "0": "An ordinary Imposter, deadly but otherwise unassuming.",
         "13": "哈哈~白板红狼!"
@@ -6027,5 +6059,8 @@
     },
     "AvengerFullDesc": {
         "13": "两位恋人中如果其中一位恋人被其它玩家击杀时，另一位有概率会变为复仇者。\n变为复仇者之后需要为恋人复仇后才能带死去的恋人胜利！\n如果复仇期间目标死亡时，复仇者可能会自杀或者变为 ( 小丑 | 失忆者 | 幸存者 )"
+    },
+    "ClogFullDesc": {
+        "13": "分配阵营：伪装者\n\n可以放置鬼魂阻挠船员行进，障碍物会持续一段时间后消失。"
     }
 }

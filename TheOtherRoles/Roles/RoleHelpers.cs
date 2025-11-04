@@ -132,6 +132,7 @@ public enum RoleId
 
     GhostEngineer = 200,
     Specter,
+    Clog,
     Poltergeist,
 }
 
@@ -857,6 +858,7 @@ public static class RoleHelpers
 
         Poltergeist.ClearAndReload();
         GhostEngineer.ClearAndReload();
+        Clog.ClearAndReload();
         Specter.ClearAndReload();
 
         // Gamemodes
