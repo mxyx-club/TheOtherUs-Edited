@@ -648,13 +648,6 @@ public class EndGameManagerSetUpPatch
             localPosition = new Vector3(localPosition.x, localPosition.y, -15f);
             poolablePlayer.cosmetics.nameText.transform.localPosition = localPosition;
             poolablePlayer.cosmetics.nameText.text = winningPlayerData2.PlayerName;
-
-            foreach (var roles in from data in PlayerData.AllPlayerData.Values
-                                  where data.PlayerName == winningPlayerData2.PlayerName
-                                  select poolablePlayer.cosmetics.nameText.text +=
-                         $"\n{Cs(data.RoleInfo.color, data.RoleInfo.Name)}")
-            {
-            }
         }
 
         // Create a dictionary for win conditions

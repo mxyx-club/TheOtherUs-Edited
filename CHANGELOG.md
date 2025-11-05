@@ -1,13 +1,9 @@
-## What's New?
+## v1.2.3.0
 
-- Remake Custom Game Object.
-- Terrorist: Rebuilt Bomb ability; added Suicide Mode and Placement Mode under Bomb Mode. Suicide Mode kills nearby players first, then the terrorist suicides.
-- Fixed various bugs
+### 更新内容：
 
-———————————————————————————————————————————
-
-### 更新
-
-- 重做游戏内自定义物品
-- 恐怖分子：重做炸弹技能，区分自爆模式与放置模式，自爆模式会优先击杀附近的玩家后再自杀
-- 修复了若干bug
+- 新增伪装者主职业/附加能力：专业杀手（击杀玩家后隐藏尸体，船员走到尸体附进后自动报警）
+- 新增伪装者幽灵职业：阻挠鬼（可以放置鬼魂阻挡存活的玩家行动，障碍物会持续一段时间后消失）
+- 恋人：新增复仇者恋人模式，当其中一方被杀害时，另一方会存活并变为复仇者
+- 恋人：允许中立职业成为恋人
+- 修复大量已知BUG！

@@ -3511,7 +3511,7 @@ internal static class HudManagerStartPatch
                     ? Ninja.killButtonSprite
                     : Ninja.markButtonSprite;
                 return (Ninja.currentTarget != null || (Ninja.ninjaMarked != null
-                        && !Ninja.ninjaMarked.IsUsingTransportation()))
+                        && !Ninja.ninjaMarked.IsUsingTransportation))
                         && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -3812,7 +3812,7 @@ internal static class HudManagerStartPatch
             Yoyo.blinkDuration,
             () =>
             {
-                if (Yoyo.yoyo.IsUsingTransportation())
+                if (Yoyo.yoyo.IsUsingTransportation)
                 {
                     yoyoButton.Timer = 0.5f;
                     yoyoButton.DeputyTimer = 0.5f;
@@ -4697,7 +4697,7 @@ internal static class HudManagerStartPatch
             Clog.ButtonSprite,
             __instance,
             __instance.AbilityButton,
-            abilityInput.keyCode,
+            secondaryAbilityInput.keyCode,
             true,
             Clog.GhostDuration,
             () =>

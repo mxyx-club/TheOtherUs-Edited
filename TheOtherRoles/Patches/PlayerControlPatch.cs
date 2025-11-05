@@ -436,6 +436,7 @@ public static class MurderPlayerPatch
             else if (PlayerControl.LocalPlayer == target)
             {
                 //target.SetPlayerMaterialColors(deadBody.bloodSplatter);
+                SchrodingersCat.Player.NetTransform.Halt();
                 DestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(__instance.Data, target.Data);
             }
 
@@ -752,6 +753,7 @@ internal class KillAnimationMoveNextPatch
                 }
 
                 _ = new DeadBodyReporter(source, db);
+                Message("已创建报警器！");
                 break;
             }
         }
@@ -766,14 +768,11 @@ internal class KillAnimationCoPerformKillPatch
 
     public static void Prefix(KillAnimation __instance, [HarmonyArgument(0)] ref PlayerControl source, [HarmonyArgument(1)] ref PlayerControl target)
     {
-        if (hideNextAnimation) source = target;
-        hideNextAnimation = false;
-    }
-
-    public static void Postfix(KillAnimation __instance, [HarmonyArgument(0)] PlayerControl source, [HarmonyArgument(1)] PlayerControl target)
-    {
         KillAnimationMoveNextPatch.Source = source;
         KillAnimationMoveNextPatch.Target = target;
+
+        if (hideNextAnimation) source = target;
+        hideNextAnimation = false;
     }
 }
 

@@ -11,7 +11,7 @@ public static class Lovers
     public static bool neutraValid;
     public static bool IsAvengerLover;
 
-    public static bool isLover(this PlayerControl player) => player != null && (player == lover1 || player == lover2);
+    public static bool isLover(this PlayerControl player) => player != null && (player == lover1 || player == lover2 || player == Avenger.Player || player == Avenger.Lover);
     public static bool IsAlive() => lover1.IsAlive() && lover2.IsAlive() && !notAckedExiledIsLover;
     public static bool isKillerLover() => lover1.IsKiller() || lover2.IsKiller();
     public static bool isCrewLover() => lover1.IsCrew() && lover2.IsCrew();

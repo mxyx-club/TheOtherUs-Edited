@@ -341,15 +341,7 @@ public static class Helpers
 
     public static DeadBody[] AllDeadBodies()
     {
-        //Componentで探すよりタグで探す方が相当はやい
-        var bodyObjects = GameObject.FindGameObjectsWithTag("DeadBody");
-        var deadBodies = new DeadBody[bodyObjects.Length];
-
-        for (int i = 0; i < bodyObjects.Length; i++)
-        {
-            deadBodies[i] = bodyObjects[i].GetComponent<DeadBody>();
-        }
-        return deadBodies;
+        return UObject.FindObjectsOfType<DeadBody>();
     }
 
     public static DeadBody? GetDeadBody(byte id)

@@ -250,6 +250,8 @@ public static class Guesser
                     continue;
                 case RoleId.Poucher when Poucher.spawnModifier:
                     continue;
+                case RoleId.Professional when Professional.spawnModifier:
+                    continue;
                 case RoleId.Crewmate when !Assassin.evilGuesserCanGuessCrewmate && guesserRole == RoleId.Assassin:
                     continue;
                 case RoleId.Spy when PlayerControl.LocalPlayer.IsImpostor() && !Spy.EvilCanKillSpy:
@@ -510,7 +512,7 @@ public static class Guesser
         var guesser = PlayerById(killerId);
         if (dyingTarget == null) return;
 
-        var dyingPartner = dyingTarget.GetPartner();
+        var dyingPartner = Akujo.otherLover(dyingTarget);
 
         // Lawyer shouldn't be exiled with the client for guesses
         if (Lawyer.target != null && (dyingTarget == Lawyer.target || dyingPartner == Lawyer.target))
@@ -566,8 +568,8 @@ public static class Guesser
         byte partnerId = dyingPartner != null ? dyingPartner.PlayerId : dyingTargetId;
 
         dyingTarget.SetDie();
-        if (dyingTarget.isLover()) Avenger.OnPlayerDeath(guesser, dyingTarget);
-        else dyingPartner?.SetDie();
+        Avenger.OnPlayerDeath(guesser, dyingTarget);
+        dyingPartner?.SetDie();
 
         var reason = dyingTarget == guesser ? CustomDeathReason.GuessFail : CustomDeathReason.GuessSuccess;
         PlayerData.SetDeathReason(dyingTarget, reason, guesser);

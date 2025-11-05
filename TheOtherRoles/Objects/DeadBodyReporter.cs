@@ -8,16 +8,17 @@ public class DeadBodyReporter : CustomObjectBase<DeadBodyReporter>
     public DeadBody DeadBody;
     public GameObject Background;
     public bool Reported;
-    public bool LocalCanSeeBodies;
     public static float ReportDistance = 1.5f;
 
     public DeadBodyReporter(PlayerControl player, DeadBody deadBody)
     {
         Killer = player;
         Target = PlayerById(deadBody.ParentId);
+        DeadBody = deadBody;
         GameObject.name = "DeadBodyReporter " + Id;
+        GameObject.transform.SetParent(DeadBody.transform);
 
-        var pos = deadBody.TruePosition;
+        var pos = DeadBody.TruePosition;
         var vector = new Vector3(pos.x, pos.y, (pos.y / 1000f) + 0.001f);
         GameObject.transform.position = vector;
         GameObject.layer = 11;
@@ -28,7 +29,7 @@ public class DeadBodyReporter : CustomObjectBase<DeadBodyReporter>
         spriteRenderer.sprite = BackgroundSprite;
         spriteRenderer.color = new Color(1f, 1f, 1f, 0f);
 
-        LocalCanSeeBodies = Professional.CanSeeBodies switch
+        var localCanSeeBodies = Professional.CanSeeBodies switch
         {
             Professional.CanSeeBody.Impostors => PlayerControl.LocalPlayer.IsImpostor(),
             Professional.CanSeeBody.KillNeutral => PlayerControl.LocalPlayer.IsImpostor() || isKillerNeutral(PlayerControl.LocalPlayer),
@@ -38,20 +39,19 @@ public class DeadBodyReporter : CustomObjectBase<DeadBodyReporter>
 
         if (Killer != null && Killer == PlayerControl.LocalPlayer)
         {
-            LocalCanSeeBodies = true;
+            localCanSeeBodies = true;
         }
 
-        if (!LocalCanSeeBodies)
+        if (!localCanSeeBodies)
         {
-            deadBody.myCollider.tag = "Untagged";
-            deadBody.bodyRenderers[0].color = Color.clear;
+            DeadBody.myCollider.tag = "Untagged";
         }
 
-        deadBody.bloodSplatter.color = Color.clear;
+        deadBody.bodyRenderers[0].color = new(1, 1, 1, 0.3f);
+        DeadBody.bloodSplatter.color = Color.clear;
         GameObject.SetActive(true);
-        DeadBody = deadBody;
 
-        deadBody.gameObject.AddComponent<DeadBodyReporterMarker>();
+        DeadBody.gameObject.AddComponent<DeadBodyReporterMarker>();
     }
 
     public override void Update()
@@ -74,6 +74,7 @@ public class DeadBodyReporter : CustomObjectBase<DeadBodyReporter>
         }
 
         Background.SetActive(skipAutoReport);
+        DeadBody.bodyRenderers[0].color = skipAutoReport ? new(1, 1, 1, 0.3f) : Color.clear;
         if (skipAutoReport) return;
 
         var distance = Vector2.Distance(GameObject.transform.position, PlayerControl.LocalPlayer.GetTruePosition());
@@ -102,6 +103,4 @@ public class DeadBodyReporter : CustomObjectBase<DeadBodyReporter>
             ClassInjector.RegisterTypeInIl2Cpp<DeadBodyReporterMarker>();
         }
     }
-
-
 }

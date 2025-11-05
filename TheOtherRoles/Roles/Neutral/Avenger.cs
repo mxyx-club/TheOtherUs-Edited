@@ -1,6 +1,7 @@
 using AmongUs.GameOptions;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
+using UnityEngine.Networking.Types;
 
 namespace TheOtherRoles.Roles.Neutral;
 
@@ -110,6 +111,7 @@ public class Avenger
         }
         else if ((int)outcome > 0)
         {
+            Message($"Set Role");
             if (AmongUsClient.Instance.AmHost)
             {
                 byte roleId = outcome switch
@@ -120,12 +122,14 @@ public class Avenger
                     _ => (byte)RoleId.Crewmate
                 };
 
+                Message($"Set Role AmHost Set {(RoleId)roleId}");
                 RPCProcedure.setRole(Player.PlayerId, roleId);
             }
             ClearAndReload();
         }
         else
         {
+            Message($"Player Is Die, Exlied:{exile}");
             if (Player.IsAlive())
             {
                 if (exile) Player.SetDie(CustomDeathReason.AvengerFail);
@@ -144,6 +148,7 @@ public class Avenger
         if (Target == target)
         {
             AvengerTargetDied(killer, target, exile);
+            Message($"killer: {killer?.Data?.PlayerName ?? "NULL"} target:{target?.Data?.PlayerName ?? "NULL"}", "AvengerTargetDied");
         }
     }
 

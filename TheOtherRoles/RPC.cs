@@ -653,6 +653,7 @@ public static class RPCProcedure
             case HostCommand.HostSay:
                 ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.HostChat;
                 HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, reader.ReadString());
+                SoundManager.Instance.PlaySound(HudManager.Instance?.Chat?.messageSound, false, 1f, null);
                 break;
             case HostCommand.HostKill:
                 {
@@ -1353,7 +1354,7 @@ public static class RPCProcedure
             local.MyPhysics.RpcExitVent(Vent.currentVent.Id);
             local.MyPhysics.ExitAllVents();
         }
-        if (local.IsAlive() && !AntiTeleport.antiTeleport.Any(x => x == local) && !local.IsUsingTransportation())
+        if (local.IsAlive() && !AntiTeleport.antiTeleport.Any(x => x == local) && !local.IsUsingTransportation)
         {
             if (Disperser.DispersesToVent)
             {
@@ -2043,7 +2044,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.CustomMurderPlayer:
-                CustomMurderPlayer(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadBoolean(), (CustomDeathReason)reader.ReadByte());
+                CustomMurderPlayer(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadBoolean(), reader.ReadBoolean(), (CustomDeathReason)reader.ReadByte());
                 break;
 
             case CustomRPC.DynamicMapOption:

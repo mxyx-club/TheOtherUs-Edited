@@ -16,7 +16,6 @@ public class Clog
 
     public static Sprite ButtonSprite = new ResourceSprite("GhostButton.png");
 
-
     public static void ClearAndReload()
     {
         Player = null;

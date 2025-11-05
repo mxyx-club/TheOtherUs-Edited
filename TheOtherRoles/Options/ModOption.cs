@@ -51,6 +51,7 @@ internal class ModOption
     public static bool fungleDisableCamoComms;
     public static bool randomGameStartPosition;
     public static CustomGameModes GameMode = CustomGameModes.Classic;
+    public static bool EnableOtherLog;
 
     // Updating values
     public static int meetingsCount;
@@ -115,6 +116,7 @@ internal class ModOption
         randomGameStartPosition = CustomOptionHolder.randomGameStartPosition.GetBool();
         randomLigherPlayer = CustomOptionHolder.randomLigherPlayer.GetBool();
         disableSabotage = CustomOptionHolder.disableSabotage.GetBool();
+        EnableOtherLog = CustomOptionHolder.enableOtherLog.GetBool();
         //ShowVentsOnMap = CustomOptionHolder.showVentsOnMap.GetBool();
         //ShowVentsOnMeetingMap = CustomOptionHolder.showVentsOnMap.GetQuantity() == 1;
         firstKillPlayer = null;

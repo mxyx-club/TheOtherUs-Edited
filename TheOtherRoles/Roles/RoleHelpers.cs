@@ -142,7 +142,7 @@ public static class PlayerControlExtensions
 {
     extension(PlayerControl player)
     {
-        public bool IsUsingTransportation() => player.inMovingPlat || player.onLadder;
+        public bool IsUsingTransportation => player.inMovingPlat || player.onLadder;
 
         /// <summary>
         /// 假任务
@@ -467,18 +467,23 @@ public static class RoleHelpers
             else return field;
         }
         set => field = !PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer != Specter.Player && Specter.Player.GetPartner() != PlayerControl.LocalPlayer && value;
-        }
+    }
 
-    public static void CustomMurderPlayer(
+    public static bool CustomMurderPlayer(
         PlayerControl killer,
         PlayerControl target,
         bool showAnimation = true,
+        bool force = false,
         CustomDeathReason deathReason = CustomDeathReason.Null)
     {
+        if (!InGame) return false;
+        if (!force && !CheckMurderPlayer(killer, target)) return false;
+
         if (deathReason == CustomDeathReason.Null) deathReason = target == killer ? CustomDeathReason.Suicide : CustomDeathReason.Kill;
         KillAnimationCoPerformKillPatch.hideNextAnimation = !showAnimation;
         killer.MurderPlayer(target, MurderResultFlags.Succeeded);
         PlayerData.SetDeathReason(target, deathReason, killer);
+        return true;
     }
 
     public static bool RpcCustomMurderPlayer(
@@ -488,16 +493,17 @@ public static class RoleHelpers
         bool force = false,
         CustomDeathReason deathReason = CustomDeathReason.Null)
     {
-        if (!force && !CheckMurderPlayer(killer, target))
-            return false;
+        if (!InGame) return false;
+        if (!force && !CheckMurderPlayer(killer, target)) return false;
 
         var writer = StartRPC(CustomRPC.CustomMurderPlayer);
         writer.Write(killer.PlayerId);
         writer.Write(target.PlayerId);
         writer.Write(showAnimation);
+        writer.Write(true);
         writer.Write((byte)deathReason);
         writer.EndRPC();
-        CustomMurderPlayer(killer, target, showAnimation, deathReason);
+        CustomMurderPlayer(killer, target, showAnimation, true, deathReason);
         return true;
     }
 
@@ -505,6 +511,7 @@ public static class RoleHelpers
     {
         if (Veteran.veteran == target && Veteran.alertActive)
         {
+            if (ModOption.EnableOtherLog) Message(" [Kill Fail] Veteran Active!", "CheckMurderPlayer");
             RpcCustomMurderPlayer(target, player);
             return true;
         }
@@ -534,26 +541,17 @@ public static class RoleHelpers
             writer.EndRPC();
             RPCProcedure.SetBlanked(killer.PlayerId, true);
             CustomButton.SetKillTimer();
+            if (ModOption.EnableOtherLog) Message(" [Kill Fail] Blanked");
             return false;
         }
 
         if (BodyGuard.bodyguard != null && target == BodyGuard.guarded && BodyGuard.bodyguard.IsAlive())
         {
             // Kill the Killer
-            var writer = StartRPC(CustomRPC.CustomMurderPlayer);
-            writer.Write(BodyGuard.bodyguard.PlayerId);
-            writer.Write(killer.PlayerId);
-            writer.Write(false);
-            writer.EndRPC();
-            CustomMurderPlayer(BodyGuard.bodyguard, killer, false);
+            RpcCustomMurderPlayer(BodyGuard.bodyguard, killer, false, true);
 
             // Kill the BodyGuard
-            var writer2 = StartRPC(CustomRPC.CustomMurderPlayer);
-            writer2.Write(killer.PlayerId);
-            writer2.Write(BodyGuard.bodyguard.PlayerId);
-            writer2.Write(false);
-            writer2.EndRPC();
-            CustomMurderPlayer(killer, BodyGuard.bodyguard, false);
+            RpcCustomMurderPlayer(killer, BodyGuard.bodyguard, false, true);
 
             var writer3 = StartRPC(CustomRPC.ShowBodyGuardFlash);
             writer3.EndRPC();
@@ -570,6 +568,7 @@ public static class RoleHelpers
 
             CustomButton.SetKillTimer();
             SoundEffectsManager.play("fail");
+            if (ModOption.EnableOtherLog) Message(" [Kill Fail] Medic Shielded!");
             return false;
         }
 
@@ -578,6 +577,7 @@ public static class RoleHelpers
         {
             CustomButton.SetKillTimer(Survivor.vestResetCooldown);
             SoundEffectsManager.play("fail");
+            if (ModOption.EnableOtherLog) Message(" [Kill Fail] Survivor Vest!");
             return false;
         }
 
@@ -589,10 +589,11 @@ public static class RoleHelpers
             Cursed.TurnToImpostor(target.PlayerId);
 
             CustomButton.SetKillTimer();
+            if (ModOption.EnableOtherLog) Message(" [Kill Fail] Cursed TurnToImpostor!");
             return false;
         }
 
-        if (target.IsUsingTransportation())
+        if (target.IsUsingTransportation)
             return false;
 
         return true;
