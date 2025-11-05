@@ -169,6 +169,7 @@ internal class RoleDraft
                         if (PlayerControl.LocalPlayer.IsImpostor() && roleInfo.roleType != RoleType.Impostor) continue;
                         if (!PlayerControl.LocalPlayer.IsImpostor() && roleInfo.roleType == RoleType.Impostor) continue;
                         if (roleInfo.roleId == RoleId.Poucher && Poucher.spawnModifier) continue;
+                        if (roleInfo.roleId == RoleId.Professional && Professional.spawnModifier) continue;
 
                         // 跳过概率为0的职业
                         if (roleData.neutralSettings.ContainsKey((byte)roleInfo.roleId) && roleData.neutralSettings[(byte)roleInfo.roleId] == 0)

@@ -121,6 +121,7 @@ internal class RoleManagerSelectRolesPatch
         impSettings.Add((byte)RoleId.Marionette, CustomOptionHolder.marionetteSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Ninja, CustomOptionHolder.ninjaSpawnRate.GetSelection());
         if (!Poucher.spawnModifier) impSettings.Add((byte)RoleId.Poucher, CustomOptionHolder.poucherSpawnRate.GetSelection());
+        if (!Professional.spawnModifier) impSettings.Add((byte)RoleId.Professional, CustomOptionHolder.professionalSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Mimic, CustomOptionHolder.mimicSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Terrorist, CustomOptionHolder.terroristSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Bomber, CustomOptionHolder.bomberSpawnRate.GetSelection());
@@ -567,6 +568,7 @@ internal class RoleManagerSelectRolesPatch
             RoleId.Blind,
             RoleId.Watcher,
             RoleId.Radar,
+            RoleId.ProfessionalModifier,
             RoleId.Disperser,
             RoleId.Specoality,
             RoleId.Vortox,
@@ -857,6 +859,14 @@ internal class RoleManagerSelectRolesPatch
             modifiers.RemoveAll(x => x == RoleId.Disperser);
         }
 
+        if (modifiers.Contains(RoleId.ProfessionalModifier))
+        {
+            playerId = setModifierToRandomPlayer((byte)RoleId.ProfessionalModifier, impPlayer);
+            impPlayer.RemoveAll(x => x.PlayerId == playerId);
+            playerList.RemoveAll(x => x.PlayerId == playerId);
+            modifiers.RemoveAll(x => x == RoleId.ProfessionalModifier);
+        }
+
         if (modifiers.Contains(RoleId.Specoality))
         {
             var GuesserList = new List<PlayerControl>();
@@ -1108,6 +1118,9 @@ internal class RoleManagerSelectRolesPatch
                 break;
             case RoleId.PoucherModifier:
                 if (Poucher.spawnModifier) selection = CustomOptionHolder.modifierPoucher.GetSelection();
+                break;
+            case RoleId.ProfessionalModifier:
+                if (Professional.spawnModifier) selection = CustomOptionHolder.modifierProfessional.GetSelection();
                 break;
             case RoleId.Vortox:
                 selection = CustomOptionHolder.modifierVortox.GetSelection();

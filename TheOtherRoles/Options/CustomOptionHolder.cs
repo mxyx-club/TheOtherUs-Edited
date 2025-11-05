@@ -129,6 +129,11 @@ public class CustomOptionHolder
 
     public static CustomOption wolfLordSpawnRate;
 
+    public static CustomOption poucherSpawnRate;
+
+    public static CustomOption professionalSpawnRate;
+    public static CustomOption professionalWhoCanSeeBodies;
+
     public static CustomOption morphlingSpawnRate;
     public static CustomOption morphlingCooldown;
     public static CustomOption morphlingDuration;
@@ -160,8 +165,6 @@ public class CustomOptionHolder
     public static CustomOption eraserCooldown;
     public static CustomOption eraserCanEraseAnyone;
     public static CustomOption erasercanEraseGuess;
-
-    public static CustomOption poucherSpawnRate;
 
     public static CustomOption butcherSpawnRate;
     public static CustomOption butcherDissectionCooldown;
@@ -634,15 +637,18 @@ public class CustomOptionHolder
     public static CustomOption modifierAssassinMultipleShotsPerMeeting;
     public static CustomOption modifierAssassinKillsThroughShield;
 
-    public static CustomOption modifierSpecoality;
-    public static CustomOption modifierSpecoalityIsGlobal;
-
     public static CustomOption modifierVortox;
     public static CustomOption modifierVortoxReversal;
     public static CustomOption modifierVortoxSkipMeeting;
     public static CustomOption modifierVortoxSkipNum;
 
     public static CustomOption modifierPoucher;
+
+    public static CustomOption modifierProfessional;
+    public static CustomOption modifierProfessionalWhoCanSeeBodies;
+
+    public static CustomOption modifierSpecoality;
+    public static CustomOption modifierSpecoalityIsGlobal;
 
     public static CustomOption modifierLastImpostor;
     public static CustomOption modifierLastImpostorDeduce;
@@ -920,6 +926,15 @@ public class CustomOptionHolder
 
         wolfLordSpawnRate = Create(101000, Types.Impostor, Cs(WolfLord.color, "WolfLord"), rates, null, true);
 
+        poucherSpawnRate = Create(103200, Types.Impostor, Cs(Palette.ImpostorRed, "Poucher"), rates, null, true,
+            onChange: (x) => { if (modifierPoucher.Selection > 0 && x.Selection > 0) x.updateSelection(0); });
+
+        professionalSpawnRate = Create(103700, Types.Impostor, Cs(Palette.ImpostorRed, "Professional"), rates, null, true,
+            onChange: (x) => { if (modifierProfessional.Selection > 0 && x.Selection > 0) x.updateSelection(0); });
+        professionalWhoCanSeeBodies = Create(103701, Types.Impostor, "professionalWhoCanSeeBodies",
+            ["professionalWhoCanSeeBodies.1", "professionalWhoCanSeeBodies.2", "professionalWhoCanSeeBodies.3"], professionalSpawnRate,
+            onChange: (x) => { if (modifierProfessionalWhoCanSeeBodies.Selection != x.Selection) modifierProfessionalWhoCanSeeBodies.updateSelection(x.Selection); });
+
         morphlingSpawnRate = Create(101100, Types.Impostor, Cs(Morphling.color, "Morphling"), rates, null, true);
         morphlingCooldown = Create(101101, Types.Impostor, "morphlingCooldown", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);
         morphlingDuration = Create(101102, Types.Impostor, "morphlingDuration", 15f, 1f, 20f, 0.5f, morphlingSpawnRate);
@@ -951,9 +966,6 @@ public class CustomOptionHolder
         eraserCooldown = Create(101601, Types.Impostor, "eraserCooldown", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
         eraserCanEraseAnyone = Create(101602, Types.Impostor, "eraserCanEraseAnyone", false, eraserSpawnRate);
         erasercanEraseGuess = Create(101603, Types.Impostor, "erasercanEraseGuess", false, eraserSpawnRate);
-
-        poucherSpawnRate = Create(103200, Types.Impostor, Cs(Palette.ImpostorRed, "Poucher"), rates, null, true,
-            onChange: (x) => { if (modifierPoucher.Selection > 0 && poucherSpawnRate.Selection > 0) poucherSpawnRate.updateSelection(0); });
 
         butcherSpawnRate = Create(103100, Types.Impostor, Cs(Palette.ImpostorRed, "Butcher"), rates, null, true);
         butcherDissectionCooldown = Create(103101, Types.Impostor, "butcherDissectionCooldown", 25f, 10f, 60f, 2.5f, butcherSpawnRate);
@@ -1188,14 +1200,14 @@ public class CustomOptionHolder
         lawyerStolenWin = Create(201806, Types.Neutral, "lawyerStolenWin", false, lawyerSpawnRate);
         lawyerTargetCanBeJester = Create(201807, Types.Neutral, "lawyerTargetCanBeJester", false, lawyerSpawnRate);
 
-        //pursuerSpawnRate = Create(202700, Types.Neutral, cs(Pursuer.color, "Pursuer"), rates, null, true);
-        pursuerBlanksCooldown = Create(202701, Types.Neutral, "pursuerBlanksCooldown", 20f, 5f, 60f, 2.5f, lawyerSpawnRate);
-        pursuerBlanksNumber = Create(202702, Types.Neutral, "pursuerBlanksNumber", 6f, 1f, 20f, 1f, lawyerSpawnRate);
-
         executionerSpawnRate = Create(201900, Types.Neutral, Cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(201901, Types.Neutral, "canCallEmergency", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(201902, Types.Neutral, "executionerPromotesToLawyer", true, executionerSpawnRate);
         //executionerOnTargetDead = Create(201903, Types.Neutral, "目标死亡后变为", [Cs(Pursuer.color, "Pursuer"), Cs(Jester.color, "Jester"), Cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
+
+        //pursuerSpawnRate = Create(202700, Types.Neutral, cs(Pursuer.color, "Pursuer"), rates, null, true);
+        pursuerBlanksCooldown = Create(202701, Types.Neutral, "pursuerBlanksCooldown", 20f, 5f, 60f, 2.5f, lawyerSpawnRate);
+        pursuerBlanksNumber = Create(202702, Types.Neutral, "pursuerBlanksNumber", 6f, 1f, 20f, 1f, lawyerSpawnRate);
 
         doomsayerSpawnRate = Create(202200, Types.Neutral, Cs(Doomsayer.color, "Doomsayer"), rates, null, true);
         doomsayerCooldown = Create(202201, Types.Neutral, "doomsayerCooldown", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
@@ -1490,14 +1502,20 @@ public class CustomOptionHolder
         modifierAssassinKillsThroughShield = Create(100007, Types.Modifier, "modifierAssassinKillsThroughShield", false, modifierAssassin,
             isHidden: () => GuesserGM.Enabled);
 
-        modifierSpecoality = Create(403500, Types.Modifier, Cs(Palette.ImpostorRed, "Specoality"), rates, null, true);
-        modifierSpecoalityIsGlobal = Create(403501, Types.Modifier, "modifierSpecoalityIsGlobal", false, modifierSpecoality);
-
         modifierDisperser = Create(401000, Types.Modifier, Cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
         modifierDisperserDispersesToVent = Create(401001, Types.Modifier, "modifierDisperserDispersesToVent", true, modifierDisperser);
 
         modifierPoucher = Create(403700, Types.Modifier, Cs(Palette.ImpostorRed, "Poucher"), rates, null, true, null,
             onChange: (x) => { if (poucherSpawnRate.Selection > 0) poucherSpawnRate.updateSelection(0); });
+
+        modifierProfessional = Create(403900, Types.Modifier, Cs(Palette.ImpostorRed, "Professional"), rates, null, true, null,
+            onChange: (x) => { if (professionalSpawnRate.Selection > 0) professionalSpawnRate.updateSelection(0); });
+        modifierProfessionalWhoCanSeeBodies = Create(403901, Types.Modifier, "professionalWhoCanSeeBodies",
+            ["professionalWhoCanSeeBodies.1", "professionalWhoCanSeeBodies.2", "professionalWhoCanSeeBodies.3"], modifierProfessional,
+            onChange: (x) => { if (professionalWhoCanSeeBodies.Selection != x.Selection) professionalWhoCanSeeBodies.updateSelection(x.Selection); });
+
+        modifierSpecoality = Create(403500, Types.Modifier, Cs(Palette.ImpostorRed, "Specoality"), rates, null, true);
+        modifierSpecoalityIsGlobal = Create(403501, Types.Modifier, "modifierSpecoalityIsGlobal", false, modifierSpecoality);
 
         modifierVortox = Create(403800, Types.Modifier, Cs(Vortox.color, "Vortox"), rates, null, true);
         modifierVortoxReversal = Create(403801, Types.Modifier, "modifierVortoxReversal", true, modifierVortox);

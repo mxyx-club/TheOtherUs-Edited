@@ -39,7 +39,8 @@ public static class Helpers
 
     public static string previousEndGameSummary = "";
     public static PlayerControl GetHostPlayer => GameData.Instance.GetHost().Object;
-    public static SRandom rnd => new(DateTime.Now.Millisecond);
+
+    public static SRandom rnd { get; } = new(Environment.TickCount);
 
     public static Sprite ZoomIn = new ResourceSprite("ZoomIn.png", 21f);
     public static Sprite ZoomOut = new ResourceSprite("ZoomOut.png", 85f);

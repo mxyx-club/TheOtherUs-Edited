@@ -255,6 +255,7 @@ public class CustomOption
     public void updateSelection(int newSelection)
     {
         Selection = Mathf.Clamp((newSelection + Selections.Length) % Selections.Length, 0, Selections.Length - 1);
+
         try
         {
             OnChange?.Invoke(this);

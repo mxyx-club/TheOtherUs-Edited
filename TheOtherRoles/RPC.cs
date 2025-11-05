@@ -277,6 +277,9 @@ public static class RPCProcedure
             case RoleId.Poucher:
                 Poucher.poucher = player;
                 break;
+            case RoleId.Professional:
+                Professional.Player = player;
+                break;
             case RoleId.Mayor:
                 Mayor.mayor = player;
                 break;
@@ -548,6 +551,9 @@ public static class RPCProcedure
                 break;
             case RoleId.PoucherModifier:
                 Poucher.poucher = player;
+                break;
+            case RoleId.ProfessionalModifier:
+                Professional.Player = player;
                 break;
             case RoleId.Cursed:
                 Cursed.cursed = player;
@@ -1142,6 +1148,7 @@ public static class RPCProcedure
         if (player == Bomber.bomber) Bomber.clearAndReload();
         if (player == Camouflager.camouflager) Camouflager.clearAndReload();
         if (player == Poucher.poucher && !Poucher.spawnModifier) Poucher.clearAndReload();
+        if (player == Professional.Player && !Professional.spawnModifier) Professional.clearAndReload();
         if (player == Vampire.vampire) Vampire.clearAndReload();
         if (player == Eraser.eraser) Eraser.clearAndReload();
         if (player == Trickster.trickster) Trickster.clearAndReload();
@@ -1228,6 +1235,7 @@ public static class RPCProcedure
             if (player == Watcher.watcher) Watcher.clearAndReload();
             if (player == Radar.radar) Radar.clearAndReload();
             if (player == Poucher.poucher && Poucher.spawnModifier) Poucher.clearAndReload();
+            if (player == Professional.Player && Professional.spawnModifier) Professional.clearAndReload();
             if (player == ButtonBarry.buttonBarry) ButtonBarry.clearAndReload();
             if (player == Disperser.disperser) Disperser.clearAndReload();
             if (player == Indomitable.indomitable) Indomitable.clearAndReload();

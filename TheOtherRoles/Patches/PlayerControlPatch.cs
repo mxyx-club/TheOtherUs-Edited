@@ -71,8 +71,8 @@ public static class PlayerControlFixedUpdatePatch
         collider.offset = Mini.defaultColliderOffset * Vector2.down;
 
         // Set adapted player size to Mini and Morphling
-        if (Mini.mini == null || isCamoComms || Camouflager.camouflageTimer > 0f ||
-        MushroomSabotageActive || (Mini.mini == Morphling.morphling && Morphling.morphTimer > 0)) return;
+        if (Mini.mini == null || isCamoComms || Camouflager.camouflageTimer > 0f || MushroomSabotageActive || (Mini.mini == Morphling.morphling && Morphling.morphTimer > 0))
+            return;
 
         var growingProgress = Mini.growingProgress;
         var scale = (growingProgress * 0.35f) + 0.35f;
@@ -227,7 +227,7 @@ internal class PlayerControlRevivePatch
 {
     public static void Postfix(PlayerControl __instance)
     {
-        if (__instance.AmOwner == true)
+        if (__instance?.AmOwner == true)
         {
             CanSeeGhostInfo = false;
             CustomButton.ResetAllCooldowns(ModOption.KillCooldown / 2);
@@ -729,17 +729,51 @@ internal class PlayerControlSetCoolDownPatch
     }
 }
 
+[HarmonyPatch(typeof(KillAnimation._CoPerformKill_d__2), nameof(KillAnimation._CoPerformKill_d__2.MoveNext))]
+internal class KillAnimationMoveNextPatch
+{
+    internal static PlayerControl Source;
+    internal static PlayerControl Target;
+    public static void Postfix(KillAnimation __instance)
+    {
+        var source = Source;
+        var target = Target;
+        Source = null;
+        Target = null;
+        if (target?.Data == null) return;
+        if (Professional.Player.IsAlive() && source.PlayerId == Professional.Player.PlayerId)
+        {
+            DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
+            foreach (var db in array.Where(x => x.ParentId == target.PlayerId))
+            {
+                if (db.gameObject.GetComponent<DeadBodyReporter.DeadBodyReporterMarker>() != null)
+                {
+                    continue;
+                }
+
+                _ = new DeadBodyReporter(source, db);
+                break;
+            }
+        }
+    }
+}
+
+
 [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.CoPerformKill))]
 internal class KillAnimationCoPerformKillPatch
 {
     public static bool hideNextAnimation;
 
-    public static void Prefix(KillAnimation __instance, [HarmonyArgument(0)] ref PlayerControl source,
-        [HarmonyArgument(1)] ref PlayerControl target)
+    public static void Prefix(KillAnimation __instance, [HarmonyArgument(0)] ref PlayerControl source, [HarmonyArgument(1)] ref PlayerControl target)
     {
-        if (hideNextAnimation)
-            source = target;
+        if (hideNextAnimation) source = target;
         hideNextAnimation = false;
+    }
+
+    public static void Postfix(KillAnimation __instance, [HarmonyArgument(0)] PlayerControl source, [HarmonyArgument(1)] PlayerControl target)
+    {
+        KillAnimationMoveNextPatch.Source = source;
+        KillAnimationMoveNextPatch.Target = target;
     }
 }
 
@@ -799,7 +833,7 @@ public static class ExilePlayerPatch
             __instance.clearAllTasks();
 
         // Lover suicide trigger on exile
-        if (Lovers.isLover(__instance)) Avenger.OnPlayerDeath(null, __instance, true);
+        Avenger.OnPlayerDeath(null, __instance, true);
 
         if (__instance.PlayerId == Pelican.Player?.PlayerId && Pelican.eatenPlayers?.Count > 0)
         {

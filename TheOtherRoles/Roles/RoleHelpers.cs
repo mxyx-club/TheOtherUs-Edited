@@ -22,6 +22,7 @@ public enum RoleId
     WolfLord,
     Bomber,
     Poucher,
+    Professional,
     Butcher,
     Mimic,
     Camouflager,
@@ -104,6 +105,7 @@ public enum RoleId
     Assassin,
     Disperser,
     PoucherModifier,
+    ProfessionalModifier,
     Vortox,
     Specoality,
     LastImpostor,
@@ -464,14 +466,8 @@ public static class RoleHelpers
             else if (Specter.Player.GetPartner() == PlayerControl.LocalPlayer) return false;
             else return field;
         }
-        set
-        {
-            if (PlayerControl.LocalPlayer.IsAlive()) field = false;
-            else if (PlayerControl.LocalPlayer == Specter.Player) field = false;
-            else if (Specter.Player.GetPartner() == PlayerControl.LocalPlayer) field = false;
-            else field = value;
+        set => field = !PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer != Specter.Player && Specter.Player.GetPartner() != PlayerControl.LocalPlayer && value;
         }
-    }
 
     public static void CustomMurderPlayer(
         PlayerControl killer,
@@ -759,6 +755,7 @@ public static class RoleHelpers
         Jailor.ClearAndReload();
         Infected.clearAndReload();
         Poucher.clearAndReload();
+        Professional.clearAndReload();
         Mimic.clearAndReload();
         Engineer.clearAndReload();
         Sheriff.clearAndReload();

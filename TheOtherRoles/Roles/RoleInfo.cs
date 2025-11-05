@@ -30,6 +30,7 @@ public class RoleInfo
     public static RoleInfo wolfLord = new("WolfLord", WolfLord.color, RoleId.WolfLord, RoleType.Impostor);
     public static RoleInfo bomber = new("Bomber", Bomber.color, RoleId.Bomber, RoleType.Impostor);
     public static RoleInfo poucher = new("Poucher", Poucher.color, RoleId.Poucher, RoleType.Impostor);
+    public static RoleInfo professional = new("Professional", Professional.color, RoleId.Professional, RoleType.Impostor);
     public static RoleInfo butcher = new("Butcher", Eraser.color, RoleId.Butcher, RoleType.Impostor);
     public static RoleInfo mimic = new("Mimic", Mimic.color, RoleId.Mimic, RoleType.Impostor);
     public static RoleInfo camouflager = new("Camouflager", Camouflager.color, RoleId.Camouflager, RoleType.Impostor);
@@ -111,9 +112,10 @@ public class RoleInfo
     public static RoleInfo assassin = new("Assassin", Assassin.color, RoleId.Assassin, RoleType.Modifier);
     public static RoleInfo lover = new("Lover", Lovers.color, RoleId.Lover, RoleType.Modifier);
     public static RoleInfo disperser = new("Disperser", Disperser.color, RoleId.Disperser, RoleType.Modifier);
-    public static RoleInfo specoality = new("Specoality", Specoality.color, RoleId.Specoality, RoleType.Modifier);
     public static RoleInfo vortox = new("Vortox", Vortox.color, RoleId.Vortox, RoleType.Modifier);
     public static RoleInfo poucherModifier = new("Poucher", Poucher.color, RoleId.PoucherModifier, RoleType.Modifier);
+    public static RoleInfo professionalModifier = new("Professional", Professional.color, RoleId.ProfessionalModifier, RoleType.Modifier);
+    public static RoleInfo specoality = new("Specoality", Specoality.color, RoleId.Specoality, RoleType.Modifier);
     public static RoleInfo lastImpostor = new("LastImpostor", LastImpostor.color, RoleId.LastImpostor, RoleType.Modifier);
     public static RoleInfo bloody = new("Bloody", Color.yellow, RoleId.Bloody, RoleType.Modifier);
     public static RoleInfo antiTeleport = new("AntiTeleport", Color.yellow, RoleId.AntiTeleport, RoleType.Modifier);
@@ -150,6 +152,7 @@ public class RoleInfo
         morphling,
         bomber,
         poucher,
+        professional,
         butcher,
         mimic,
         camouflager,
@@ -229,9 +232,10 @@ public class RoleInfo
 
         lover,
         assassin,
-        poucherModifier,
         disperser,
         specoality,
+        professionalModifier,
+        poucherModifier,
         vortox,
         lastImpostor,
         bloody,
@@ -300,6 +304,7 @@ public class RoleInfo
             if (p == Disperser.disperser) infos.Add(disperser);
             if (p == Specoality.specoality) infos.Add(specoality);
             if (p == Poucher.poucher && Poucher.spawnModifier) infos.Add(poucherModifier);
+            if (p == Professional.Player && Professional.spawnModifier) infos.Add(professionalModifier);
             if (p == Giant.giant) infos.Add(giant);
             if (p == Vortox.Player) infos.Add(vortox);
             if (Chameleon.chameleon.Any(x => x.PlayerId == p.PlayerId)) infos.Add(chameleon);
@@ -315,6 +320,7 @@ public class RoleInfo
         if (p == Werewolf.werewolf) infos.Add(werewolf);
         if (p == Miner.miner) infos.Add(miner);
         if (p == Poucher.poucher && !Poucher.spawnModifier) infos.Add(poucher);
+        if (p == Professional.Player && !Professional.spawnModifier) infos.Add(professional);
         if (p == Butcher.butcher) infos.Add(butcher);
         if (p == WolfLord.Player) infos.Add(wolfLord);
         if (p == Morphling.morphling) infos.Add(morphling);

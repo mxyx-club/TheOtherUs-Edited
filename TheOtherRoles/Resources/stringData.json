@@ -710,6 +710,9 @@
         "0": "Log RPC Requests",
         "13": "记录RPC请求"
     },
+    "enableOtherLog": {
+        "13": "记录其它日志"
+    },
     "guesserEnabled": {
         "0": "Guesser Mode",
         "13": "赌怪模式"
@@ -1109,6 +1112,18 @@
     "poucherSpawnModifier": {
         "0": "Is Modifier",
         "13": "生成为附加能力"
+    },
+    "professionalWhoCanSeeBodies": {
+        "13": "什么阵营可以看见尸体且不触发效果"
+    },
+    "professionalWhoCanSeeBodies.1": {
+        "13": "仅伪装者"
+    },
+    "professionalWhoCanSeeBodies.2": {
+        "13": "伪装者+杀手中立"
+    },
+    "professionalWhoCanSeeBodies.3": {
+        "13": "伪装者+邪恶中立"
     },
     "butcherDissectionCooldown": {
         "0": "Dismember Cooldown",
@@ -5606,6 +5621,15 @@
     "ClogShortDesc": {
         "13": "让船员动弹不得!"
     },
+    "Professional": {
+        "13": "专业杀手"
+    },
+    "ProfessionalIntroDesc": {
+        "13": "听着，所谓杀手…"
+    },
+    "ProfessionalShortDesc": {
+        "13": "击杀玩家时会隐藏尸体"
+    },
     "ImpostorFullDesc": {
         "0": "An ordinary Imposter, deadly but otherwise unassuming.",
         "13": "哈哈~白板红狼!"
@@ -6062,5 +6086,8 @@
     },
     "ClogFullDesc": {
         "13": "分配阵营：伪装者\n\n可以放置鬼魂阻挠船员行进，障碍物会持续一段时间后消失。"
+    },
+    "ProfessionalFullDesc": {
+        "13": "击杀玩家时不会留下尸体，但是船员经过尸体位置时会自动报警。"
     }
 }
