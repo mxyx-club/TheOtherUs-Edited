@@ -1134,6 +1134,9 @@
     "professionalWhoCanSeeBodies.3": {
         "13": "伪装者+邪恶中立"
     },
+    "professionalBaitKiller": {
+        "13": "击杀诱饵时不强制进入会议"
+    },
     "butcherDissectionCooldown": {
         "0": "Dismember Cooldown",
         "13": "肢解冷却时间"

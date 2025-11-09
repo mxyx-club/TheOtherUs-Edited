@@ -143,7 +143,7 @@ public static class ChatControllerPatch
             try
             {
                 var text = GetString($"ChatChannel.{Enum.GetName(CurrentChannel)}");
-                if (PlayerControl.LocalPlayer == Jailor.Jailed) text = $"{GetString("ChatChannel.JailorJailed")}";
+                if (PlayerControl.LocalPlayer == Jailor.Jailed) text = $"{GetString("ChatChannel.Jailor")}";
                 text += $"{string.Format(GetString("ChannelSwitchNotice"), ModInputManager.nextChatChannel.keyCode.ToString())}";
                 ChannelShower?.GetComponent<TextMeshPro>().SetText(text);
                 ChannelShower?.SetActive(!ChannelShower.transform.parent.parent.FindChild("RateMessage (TMP)").gameObject.activeSelf);
@@ -254,7 +254,7 @@ public static class ChatControllerPatch
             {
                 case ChatTypes.HostChat:
                     __instance.NameText.color = Palette.Purple;
-                    __instance.NameText.text = "MessageFromTheHost".Translate() + __instance.NameText.text;
+                    __instance.NameText.text = $"{__instance.NameText.text} {"MessageFromTheHost".Translate()}";
                     CurrentChatType = ChatTypes.Default;
                     break;
                 case ChatTypes.JailorChat:

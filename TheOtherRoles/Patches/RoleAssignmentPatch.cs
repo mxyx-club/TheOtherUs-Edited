@@ -621,12 +621,9 @@ internal class RoleManagerSelectRolesPatch
             if (secondCandidates.Count != 0)
             {
                 var secondLover = secondCandidates.Random();
-                Message($"secondCandidates {secondCandidates.Count}");
 
                 setModifierToPlayer((byte)RoleId.Lover, firstLover, 0);
-                Message($"firstLover {firstLover?.Data?.PlayerName}");
                 setModifierToPlayer((byte)RoleId.Lover, secondLover, 1);
-                Message($"secondLover {secondLover?.Data?.PlayerName}");
 
                 if (!CustomOptionHolder.modifierLoverCanGetModifiers.GetBool())
                 {

@@ -103,7 +103,6 @@ public class CustomOptionHolder
     public static CustomOption addAirShipVents;
     public static CustomOption airshipLadder;
     public static CustomOption enableFungleModify;
-    public static CustomOption funglSpawnType;
     public static CustomOption fungleElectrical;
     public static CustomOption TheFungleMushroomMixupOption;
     public static CustomOption TheFungleMushroomMixupCantOpenMeeting;
@@ -136,6 +135,7 @@ public class CustomOptionHolder
 
     public static CustomOption professionalSpawnRate;
     public static CustomOption professionalWhoCanSeeBodies;
+    public static CustomOption professionalBaitKiller;
 
     public static CustomOption morphlingSpawnRate;
     public static CustomOption morphlingCooldown;
@@ -649,6 +649,7 @@ public class CustomOptionHolder
 
     public static CustomOption modifierProfessional;
     public static CustomOption modifierProfessionalWhoCanSeeBodies;
+    public static CustomOption modifierProfessionalBaitKiller;
 
     public static CustomOption modifierSpecoality;
     public static CustomOption modifierSpecoalityIsGlobal;
@@ -899,7 +900,6 @@ public class CustomOptionHolder
         airshipLadder = Create(543, Types.General, "airshipLadder", false, enableAirShipModify);
         //Fungle
         enableFungleModify = Create(550, Types.General, Cs(Color.yellow, "Fungle"), false, MapOptions);
-        funglSpawnType = Create(555, Types.General, "funglSpawnType", ["Random", "Select"], enableFungleModify);
         fungleElectrical = Create(551, Types.General, "fungleElectrical", false, enableFungleModify);
         TheFungleMushroomMixupOption = Create(552, Types.General, "TheFungleMushroomMixupOption", false, enableFungleModify);
         TheFungleMushroomMixupTime = Create(553, Types.General, "TheFungleMushroomMixupTime", 10f, 1f, 30f, 0.5f, TheFungleMushroomMixupOption);
@@ -941,6 +941,8 @@ public class CustomOptionHolder
         professionalWhoCanSeeBodies = Create(103701, Types.Impostor, "professionalWhoCanSeeBodies",
             ["professionalWhoCanSeeBodies.1", "professionalWhoCanSeeBodies.2", "professionalWhoCanSeeBodies.3"], professionalSpawnRate,
             onChange: (x) => { if (modifierProfessionalWhoCanSeeBodies.Selection != x.Selection) modifierProfessionalWhoCanSeeBodies.updateSelection(x.Selection); });
+        professionalBaitKiller = Create(103702, Types.Impostor, "professionalBaitKiller", true, professionalSpawnRate,
+            onChange: (x) => { if (modifierProfessionalBaitKiller.Selection != x.Selection) modifierProfessionalBaitKiller.updateSelection(x.Selection); });
 
         morphlingSpawnRate = Create(101100, Types.Impostor, Cs(Morphling.color, "Morphling"), rates, null, true);
         morphlingCooldown = Create(101101, Types.Impostor, "morphlingCooldown", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);
@@ -1520,6 +1522,8 @@ public class CustomOptionHolder
         modifierProfessionalWhoCanSeeBodies = Create(403901, Types.Modifier, "professionalWhoCanSeeBodies",
             ["professionalWhoCanSeeBodies.1", "professionalWhoCanSeeBodies.2", "professionalWhoCanSeeBodies.3"], modifierProfessional,
             onChange: (x) => { if (professionalWhoCanSeeBodies.Selection != x.Selection) professionalWhoCanSeeBodies.updateSelection(x.Selection); });
+        modifierProfessionalBaitKiller = Create(403902, Types.Modifier, "professionalBaitKiller", true, modifierProfessional,
+            onChange: (x) => { if (professionalBaitKiller.Selection != x.Selection) professionalBaitKiller.updateSelection(x.Selection); });
 
         modifierSpecoality = Create(403500, Types.Modifier, Cs(Palette.ImpostorRed, "Specoality"), rates, null, true);
         modifierSpecoalityIsGlobal = Create(403501, Types.Modifier, "modifierSpecoalityIsGlobal", false, modifierSpecoality);

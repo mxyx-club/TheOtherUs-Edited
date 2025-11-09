@@ -6,6 +6,7 @@ public class Professional
     public static Color color = Palette.ImpostorRed;
 
     public static bool spawnModifier;
+    public static bool baitKiller;
 
     public static List<PlayerControl> killed = new();
 
@@ -19,8 +20,9 @@ public class Professional
         CanSeeBodies = spawnModifier
             ? (CanSeeBody)CustomOptionHolder.modifierProfessionalWhoCanSeeBodies.GetSelection()
             : (CanSeeBody)CustomOptionHolder.professionalWhoCanSeeBodies.GetSelection();
-
-        Message($"spawnModifier: {spawnModifier}, CanSeeBodies: {CanSeeBodies}");
+        baitKiller = spawnModifier
+            ? CustomOptionHolder.modifierProfessionalBaitKiller.GetBool()
+            : CustomOptionHolder.professionalBaitKiller.GetBool();
     }
 
 

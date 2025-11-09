@@ -483,7 +483,7 @@ public static class MurderPlayerPatch
         Avenger.OnPlayerDeath(__instance, target);
 
         // Bait
-        if (Bait.bait.Any(x => x.PlayerId == target.PlayerId))
+        if (Bait.bait.Any(x => x.PlayerId == target.PlayerId) && !(__instance == Professional.Player && Professional.baitKiller))
         {
             var reportDelay = (float)rnd.NextDouble(Bait.reportDelayMin, Bait.reportDelayMax);
             reportDelay = Math.Max(reportDelay, 0.12f);
@@ -753,7 +753,6 @@ internal class KillAnimationMoveNextPatch
                 }
 
                 _ = new DeadBodyReporter(source, db);
-                Message("已创建报警器！");
                 break;
             }
         }

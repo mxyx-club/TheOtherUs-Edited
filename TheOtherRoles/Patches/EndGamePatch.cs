@@ -297,7 +297,7 @@ public class OnGameEndPatch
         }
 
         // Lovers win conditions
-        else if (loversWin && (Lovers.isCrewLover() || Lovers.isKillerLover()))
+        else if (loversWin && (Lovers.isCrewLover() || Lovers.isKillerLover() || gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin))
         {
             // Double win for lovers, crewmates also win
             if (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin)
