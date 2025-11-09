@@ -51,6 +51,7 @@ internal class ModOption
     public static bool fungleDisableCamoComms;
     public static bool randomGameStartPosition;
     public static CustomGameModes GameMode = CustomGameModes.Classic;
+    public static int ImpostorChatChannel;
     public static bool EnableOtherLog;
 
     // Updating values
@@ -117,6 +118,7 @@ internal class ModOption
         randomLigherPlayer = CustomOptionHolder.randomLigherPlayer.GetBool();
         disableSabotage = CustomOptionHolder.disableSabotage.GetBool();
         EnableOtherLog = CustomOptionHolder.enableOtherLog.GetBool();
+        ImpostorChatChannel = CustomOptionHolder.impostorChatChannel.GetSelection();
         //ShowVentsOnMap = CustomOptionHolder.showVentsOnMap.GetBool();
         //ShowVentsOnMeetingMap = CustomOptionHolder.showVentsOnMap.GetQuantity() == 1;
         firstKillPlayer = null;

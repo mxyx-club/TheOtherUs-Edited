@@ -46,6 +46,8 @@ public class CustomOptionHolder
     public static CustomOption randomGameStartToVents;
     public static CustomOption ghostSpeed;
 
+    public static CustomOption impostorChatChannel;
+
     public static CustomOption MeetingOptions;
     public static CustomOption disableMeeting;
     public static CustomOption maxNumberOfMeetings;
@@ -832,6 +834,9 @@ public class CustomOptionHolder
         randomGameStartPosition = Create(110, Types.General, "randomGameStartPosition", false);
         randomGameStartToVents = Create(111, Types.General, "randomGameStartToVents", true, randomGameStartPosition);
         ghostSpeed = Create(112, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
+
+        impostorChatChannel = Create(701, Types.General, Cs(Palette.ImpostorRed, "ImpostorChatChannel"),
+            ["optionOff", "ImpostorChatChannel.1", "ImpostorChatChannel.2", "optionOn"], null, true);
 
         //Meeting options
         MeetingOptions = Create(200, Types.General, Cs(new Color32(255, 85, 234, byte.MaxValue), "MeetingOptions"), false, null, true);

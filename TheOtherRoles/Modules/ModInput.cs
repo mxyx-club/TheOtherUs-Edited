@@ -22,6 +22,7 @@ public class ModInputManager
     public static ModInput endGameInput;
     public static ModInput meetingInput;
     public static ModInput screenResolution;
+    public static ModInput nextChatChannel;
 
     public class ModInput
     {
@@ -137,8 +138,9 @@ public class ModInputManager
         helpInput = new ModInput("help", KeyCode.H);
         toggleChat = new ModInput("toggleChat", KeyCode.F2);
         screenResolution = new ModInput("screenResolution", KeyCode.F11);
+        nextChatChannel = new ModInput("nextChatChannel", KeyCode.Tab);
         metaControlInput = new ModInput("metaControl", KeyCode.LeftControl);
         endGameInput = new ModInput("endGame", KeyCode.F5);
-        meetingInput = new ModInput("meeting", KeyCode.F6);
+        meetingInput = new ModInput("meeting", KeyCode.M);
     }
 }

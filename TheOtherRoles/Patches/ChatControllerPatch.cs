@@ -1,4 +1,5 @@
 using AmongUs.GameOptions;
+using Il2CppInterop.Generator.Runners;
 using System.Text;
 using TheOtherRoles.Attributes;
 
@@ -13,29 +14,45 @@ public static class ChatControllerPatch
         HostChat,
         LoverChat,
         JailorChat,
+        ImpostorChat,
         GuesserMessage,
     }
 
     public enum ChannelType
     {
-        All = 0,
-        Crew,
+        Default = 0,
+        HostAll,
         Impostor,
         Lover,
         Jailor,
     }
 
     public static ChatTypes CurrentChatType = ChatTypes.Default;
-    public static List<ChannelType> ActiveChannels = new();
-    public static ChannelType CurrentChannel = ChannelType.All;
+    public static HashSet<ChannelType> ActiveChannels = new() { ChannelType.Default };
+    public static ChannelType CurrentChannel = ChannelType.Default;
+    public static GameObject ChannelShower;
 
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.SendChat))]
     private static class SendChatPatch
     {
         private static bool Prefix(ChatController __instance)
         {
-            var text = __instance.freeChatField.Text;
+            var text = __instance.freeChatField.textArea.text;
             var handled = ChatCommandRegistry.TryHandle(text, PlayerControl.LocalPlayer, __instance);
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return false;
+            }
+
+            __instance.timeSinceLastMessage = 5f;
+
+            if (CurrentChannel != ChannelType.Default && CurrentChatType == ChatTypes.Default)
+            {
+                SendChatToChannel(__instance, CurrentChannel, text);
+                __instance.freeChatField.textArea.Clear();
+                return false;
+            }
 
             if (handled)
             {
@@ -44,6 +61,144 @@ public static class ChatControllerPatch
             }
 
             return !handled;
+        }
+
+        public static void SendChatToChannel(ChatController chat, ChannelType type, string text)
+        {
+            switch (type)
+            {
+                case ChannelType.HostAll:
+                    {
+                        var writer = StartRPC(CustomRPC.HostControl);
+                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                        writer.Write((byte)RPCProcedure.HostCommand.HostSay);
+                        writer.Write(text);
+                        writer.EndRPC();
+                        CurrentChatType = ChatTypes.HostChat;
+                        chat.AddChat(GetHostPlayer, text);
+                    }
+                    break;
+                case ChannelType.Impostor:
+                    {
+                        var writer = StartRPC(CustomRPC.SendChatToChannel);
+                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                        writer.Write((byte)ChannelType.Impostor);
+                        writer.Write(text);
+                        writer.EndRPC();
+                        RPCProcedure.sendChatToChannel(PlayerControl.LocalPlayer, ChannelType.Impostor, text);
+                    }
+                    break;
+                case ChannelType.Lover:
+                    {
+                        var writer = StartRPC(CustomRPC.SendChatToChannel);
+                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                        writer.Write((byte)ChannelType.Lover);
+                        writer.Write(text);
+                        writer.EndRPC();
+                        RPCProcedure.sendChatToChannel(PlayerControl.LocalPlayer, ChannelType.Lover, text);
+                    }
+                    break;
+                case ChannelType.Jailor:
+                    {
+                        var writer = StartRPC(CustomRPC.JailorSendMessage);
+                        writer.Write(Jailor.Player.PlayerId);
+                        writer.Write(text);
+                        writer.EndRPC();
+                        Jailor.JailorSendMessage(Jailor.Player, text);
+                    }
+                    break;
+            }
+        }
+
+    }
+
+    [HarmonyPatch]
+    public class ChannelPatch
+    {
+
+        [HarmonyPatch(typeof(ChatController), nameof(ChatController.Awake)), HarmonyPostfix]
+        public static void ChatControllerAwake_Postfix(ChatController __instance)
+        {
+            __instance.freeChatField.textArea.SetText("");
+            __instance.timeSinceLastMessage = 0;
+            if (ChannelShower != null) return;
+            ChannelShower = UObject.Instantiate(__instance.freeChatField.charCountText.gameObject, __instance.freeChatField.charCountText.transform.parent);
+            ChannelShower.name = "Channel Shower";
+            ChannelShower.transform.localPosition = new Vector3(1.95f, 0.5f, 0f);
+            ChannelShower.GetComponent<RectTransform>().sizeDelta = new Vector2(5f, 0.1f);
+            var tmp = ChannelShower.GetComponent<TextMeshPro>();
+            tmp.alignment = TextAlignmentOptions.Left;
+            tmp.color = Color.black;
+            tmp.outlineColor = Color.white;
+            tmp.outlineWidth = 0.1f;
+            tmp.fontSize *= 1.25f;
+        }
+
+        [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update)), HarmonyPostfix]
+        public static void ChatControllerUpdate_Postfix(ChatController __instance)
+        {
+            UpdateChatChannels();
+            KeyboardInput();
+            if (ChannelShower == null) return;
+            try
+            {
+                var text = GetString($"ChatChannel.{Enum.GetName(CurrentChannel)}");
+                if (PlayerControl.LocalPlayer == Jailor.Jailed) text = $"{GetString("ChatChannel.JailorJailed")}";
+                text += $"{string.Format(GetString("ChannelSwitchNotice"), ModInputManager.nextChatChannel.keyCode.ToString())}";
+                ChannelShower?.GetComponent<TextMeshPro>().SetText(text);
+                ChannelShower?.SetActive(!ChannelShower.transform.parent.parent.FindChild("RateMessage (TMP)").gameObject.activeSelf);
+            }
+            catch { }
+        }
+
+        public static void UpdateChatChannels()
+        {
+            var channelConditions = new Dictionary<ChannelType, Func<PlayerControl, bool>>
+            {
+                [ChannelType.Default] = (x) => EnableChat.ForceEnableChat || AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay || ModOption.DebugMode || InMeeting,
+                [ChannelType.HostAll] = (x) => AmongUsClient.Instance.AmHost && InGame,
+                [ChannelType.Lover] = (x) => x.isLover() && Lovers.IsAlive(),
+                [ChannelType.Jailor] = (x) => x == Jailor.Player && Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive(),
+                [ChannelType.Impostor] = (x) =>
+                {
+                    if (!x.IsImpostor() || !x.IsAlive()) return false;
+                    return ModOption.ImpostorChatChannel switch
+                    {
+                        1 => InMeeting,
+                        2 => !InMeeting,
+                        3 => true,
+                        _ => false
+                    };
+                },
+            };
+
+            foreach (var (channelType, condition) in channelConditions)
+            {
+                if (condition(PlayerControl.LocalPlayer))
+                {
+                    ActiveChannels.Add(channelType);
+                }
+                else if (ActiveChannels.Contains(channelType) || CurrentChannel == channelType)
+                {
+                    ActiveChannels.Remove(channelType);
+                    if (CurrentChannel == channelType)
+                    {
+                        CurrentChannel = ActiveChannels.FirstOrDefault();
+                    }
+                }
+            }
+        }
+
+        public static void KeyboardInput()
+        {
+            if (Jailor.Player.IsAlive() && PlayerControl.LocalPlayer == Jailor.Jailed) { CurrentChannel = ChannelType.Default; return; }
+            if (Input.GetKeyDown(ModInputManager.nextChatChannel.keyCode))
+            {
+                var channels = ActiveChannels.ToList();
+                var currentIndex = channels.IndexOf(CurrentChannel);
+                var nextIndex = (currentIndex + 1) % channels.Count;
+                CurrentChannel = channels[nextIndex];
+            }
         }
     }
 
@@ -56,6 +211,7 @@ public static class ChatControllerPatch
             if (!__instance.Chat.isActiveAndEnabled && (ModOption.DebugMode
                     || AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay
                     || ForceEnableChat
+                    || (ModOption.ImpostorChatChannel >= 2 && PlayerControl.LocalPlayer.IsImpostor())
                     || (PlayerControl.LocalPlayer.isLover() && Lovers.enableChat)))
                 __instance.Chat.SetVisible(true);
 
@@ -98,7 +254,7 @@ public static class ChatControllerPatch
             {
                 case ChatTypes.HostChat:
                     __instance.NameText.color = Palette.Purple;
-                    __instance.NameText.text = "MessageFromTheHost".Translate() + (GameData.Instance?.GetHost()?.PlayerName ?? "");
+                    __instance.NameText.text = "MessageFromTheHost".Translate() + __instance.NameText.text;
                     CurrentChatType = ChatTypes.Default;
                     break;
                 case ChatTypes.JailorChat:
@@ -109,7 +265,7 @@ public static class ChatControllerPatch
                             __instance.NameText.color = Jailor.color;
                             __instance.NameText.text = $"({GetString("Jailor")})";
                         }
-                        else if (PlayerControl.LocalPlayer == Jailor.Player)
+                        else if (PlayerControl.LocalPlayer == Jailor.Player || CanSeeGhostInfo)
                         {
                             __instance.NameText.color = Jailor.color;
                             __instance.NameText.text = $"({GetString("Jailor")})";
@@ -120,10 +276,18 @@ public static class ChatControllerPatch
                 case ChatTypes.Default:
                     break;
                 case ChatTypes.LoverChat:
+                    __instance.NameText.color = Lovers.color;
+                    __instance.NameText.text = $"{__instance.NameText.text} {"MessageFromTheLover".Translate()}";
+                    CurrentChatType = ChatTypes.Default;
                     break;
                 case ChatTypes.GuesserMessage:
                     __instance.NameText.color = Color.yellow;
                     __instance.NameText.text = "MessageFromTheGuesser".Translate();
+                    CurrentChatType = ChatTypes.Default;
+                    break;
+                case ChatTypes.ImpostorChat:
+                    __instance.NameText.color = Palette.ImpostorRed;
+                    __instance.NameText.text = $"{__instance.NameText.text} {"MessageFromTheImpostor".Translate()}";
                     CurrentChatType = ChatTypes.Default;
                     break;
                 default:
@@ -137,7 +301,7 @@ public static class ChatControllerPatch
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.AddChat))] //test
     private static class AddChatPatch
     {
-        private static bool Prefix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer, ref bool __state)
+        private static bool Prefix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer, [HarmonyArgument(1)] string chatText, ref bool __state)
         {
             var local = PlayerControl.LocalPlayer;
             if (sourcePlayer == local) return true;
@@ -190,15 +354,18 @@ public static class ChatControllerPatch
                 Message("Chat Notification Overlay is Detected");
             }
         }
+
     }
 
     [HarmonyPatch(typeof(ChatController))]
     public static class ChatControllerAwakePatch
     {
         [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update)), HarmonyPrefix]
-        public static void Update_Prefix()
+        public static void Update_Prefix(ChatController __instance)
         {
             DataManager.Settings.Multiplayer.ChatMode = QuickChatModes.FreeChatOrQuickChat;
+
+            __instance.timeSinceLastMessage = 5f;
         }
 
         [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update)), HarmonyPostfix]

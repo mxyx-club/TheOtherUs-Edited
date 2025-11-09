@@ -32,6 +32,7 @@ public enum CustomRPC : byte
     CustomMurderPlayer,
     RevivePlayer,
     HostControl,
+    SendChatToChannel,
 
     // Role functionality
     FixLights = 110,
@@ -725,6 +726,37 @@ public static class RPCProcedure
                 }
                 break;
             default:
+                break;
+        }
+    }
+
+    public static void sendChatToChannel(PlayerControl player, ChatControllerPatch.ChannelType channel, string message)
+    {
+        switch (channel)
+        {
+            case ChatControllerPatch.ChannelType.Default:
+                break;
+            case ChatControllerPatch.ChannelType.Impostor:
+                if (CanSeeGhostInfo || PlayerControl.LocalPlayer.IsImpostor(AndCat: true))
+                {
+                    ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.ImpostorChat;
+                    HudManager.Instance.Chat.AddChat(player, message);
+                }
+                break;
+            case ChatControllerPatch.ChannelType.Lover:
+                if (Lovers.isLover(PlayerControl.LocalPlayer) || CanSeeGhostInfo)
+                {
+                    ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.LoverChat;
+                    HudManager.Instance.Chat.AddChat(player, message);
+                }
+                break;
+            case ChatControllerPatch.ChannelType.Jailor:
+                if (PlayerControl.LocalPlayer == Jailor.Player || PlayerControl.LocalPlayer == Jailor.Jailed || CanSeeGhostInfo)
+                {
+                    ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.JailorChat;
+                    HudManager.Instance.Chat.AddChat(player, message);
+                    SoundManager.Instance.PlaySound(HudManager.Instance?.Chat?.messageSound, false, 1f, null);
+                }
                 break;
         }
     }
@@ -2488,6 +2520,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.PlaceClogGhost:
                 RPCProcedure.PlaceClogGhost(reader.ReadPlayer(), reader.ReadVector3());
+                break;
+            case CustomRPC.SendChatToChannel:
+                RPCProcedure.sendChatToChannel(reader.ReadPlayer(), (ChatControllerPatch.ChannelType)reader.ReadByte(), reader.ReadString());
                 break;
         }
 

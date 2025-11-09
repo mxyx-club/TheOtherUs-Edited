@@ -330,6 +330,15 @@
         "0": "Hide Crewmate Roles",
         "13": "隐藏船员阵营职业"
     },
+    "ImpostorChatChannel": {
+        "13": "启用伪装者文字私聊频道"
+    },
+    "ImpostorChatChannel.1": {
+        "13": "仅会议内"
+    },
+    "ImpostorChatChannel.2": {
+        "13": "仅会议外"
+    },
     "MeetingOptions": {
         "0": "Meeting Options",
         "13": "会议设置"
@@ -2829,11 +2838,35 @@
     },
     "MessageFromTheHost": {
         "0": "【 ★ Host Message ★ 】",
-        "13": "【 ★ 房主消息 ★ 】"
+        "13": "【房主消息】"
     },
     "MessageFromTheGuesser": {
         "0": "【 ★ Guesser Message ★ 】",
         "13": "【 ★ 赌怪消息 ★ 】"
+    },
+    "MessageFromTheLover": {
+        "13": "【恋人频道】"
+    },
+    "MessageFromTheImpostor": {
+        "13": "【伪装者频道】"
+    },
+    "ChatChannel.Default": {
+        "13": "当前频道：默认"
+    },
+    "ChatChannel.HostAll": {
+        "13": "当前频道：房主消息"
+    },
+    "ChatChannel.Impostor": {
+        "13": "当前频道：伪装者"
+    },
+    "ChatChannel.Lover": {
+        "13": "当前频道：恋人"
+    },
+    "ChatChannel.Jailor": {
+        "13": "当前频道：典狱长"
+    },
+    "ChannelSwitchNotice": {
+        "13": " ( 按下 {0} 键更换聊天频道 )"
     },
     "Host": {
         "0": "Host",
@@ -2970,6 +3003,9 @@
     "keyBinding.screenResolution": {
         "0": "Change Screen Resolution",
         "13": "快速修改屏幕分辨率"
+    },
+    "keyBinding.nextChatChannel": {
+        "13": "更改聊天频道"
     },
     "keyBinding.metaControl": {
         "0": "Meta Control",
