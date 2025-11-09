@@ -163,6 +163,7 @@ public class Jailor
         if (PlayerControl.LocalPlayer == Jailed || CanSeeGhostInfo)
         {
             FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Jailed, message);
+            SoundManager.Instance.PlaySound(HudManager.Instance?.Chat?.messageSound, false, 1f, null);
         }
         else if (PlayerControl.LocalPlayer == Player)
         {

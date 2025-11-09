@@ -1,6 +1,7 @@
 using TheOtherRoles.Objects;
 
 namespace TheOtherRoles.Roles.Crewmate;
+
 public class Redemptor
 {
     public static PlayerControl Player;

@@ -27,7 +27,7 @@ public enum CustomOptionType
 
 public class CustomOption
 {
-    private static List<CustomOption> _options = new(1024);
+    private static List<CustomOption> _options = new();
     public static IReadOnlyList<CustomOption> Options => _options;
     public static int Preset;
     public static ConfigEntry<string> VanillaSettings;

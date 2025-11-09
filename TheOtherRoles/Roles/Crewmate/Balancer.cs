@@ -2,6 +2,7 @@ using TheOtherRoles.Patches;
 using UnityEngine.Events;
 
 namespace TheOtherRoles.Roles.Crewmate;
+
 public class Balancer
 {
     public static PlayerControl balancer;

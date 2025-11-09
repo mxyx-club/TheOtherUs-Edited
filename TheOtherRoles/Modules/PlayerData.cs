@@ -72,6 +72,12 @@ public class PlayerData
         }
     }
 
+    public static PlayerData GetPlayerData(string name)
+    {
+        if (name.IsNullOrWhiteSpace()) return null;
+        return AllPlayerData.Values.FirstOrDefault(data => data.PlayerName.Equals(name, StringComparison.OrdinalIgnoreCase));
+    }
+
     public static string GetPlayerCode(PlayerControl player)
     {
         return AllFriendCode.TryGetValue(player.PlayerId, out var code) ? code : "";

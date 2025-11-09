@@ -1,4 +1,5 @@
-﻿namespace TheOtherRoles.Roles.Impostor;
+namespace TheOtherRoles.Roles.Impostor;
+
 public class Gambler
 {
     public static PlayerControl gambler;

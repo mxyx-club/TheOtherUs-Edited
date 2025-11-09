@@ -1,4 +1,5 @@
-﻿namespace TheOtherRoles.Roles.Neutral;
+namespace TheOtherRoles.Roles.Neutral;
+
 public static class Executioner
 {
     public static PlayerControl executioner;

@@ -1,4 +1,5 @@
 namespace TheOtherRoles.Roles.Ghost;
+
 public class Poltergeist
 {
     public static Color color = new Color32(210, 220, 234, byte.MaxValue);

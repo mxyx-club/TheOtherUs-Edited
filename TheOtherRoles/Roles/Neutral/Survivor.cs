@@ -1,4 +1,5 @@
 namespace TheOtherRoles.Roles.Neutral;
+
 public class Survivor
 {
     public static List<PlayerControl> Player = new();

@@ -16,7 +16,18 @@ public static class ChatControllerPatch
         GuesserMessage,
     }
 
+    public enum ChannelType
+    {
+        All = 0,
+        Crew,
+        Impostor,
+        Lover,
+        Jailor,
+    }
+
     public static ChatTypes CurrentChatType = ChatTypes.Default;
+    public static List<ChannelType> ActiveChannels = new();
+    public static ChannelType CurrentChannel = ChannelType.All;
 
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.SendChat))]
     private static class SendChatPatch

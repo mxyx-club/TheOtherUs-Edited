@@ -1,7 +1,7 @@
 using AmongUs.Data.Legacy;
 using Object = Il2CppSystem.Object;
 
-namespace TheOtherRoles.CustomCosmetics;
+namespace TheOtherRoles.Modules;
 
 public class CustomColors
 {

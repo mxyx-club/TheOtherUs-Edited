@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace TheOtherRoles.Objects;
 
 public class GhostObject : CustomObjectBase<GhostObject>

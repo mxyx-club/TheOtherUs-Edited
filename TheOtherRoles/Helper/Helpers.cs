@@ -1,6 +1,5 @@
 using AmongUs.GameOptions;
 using System.IO;
-using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Patches;
 
 namespace TheOtherRoles.Helper;

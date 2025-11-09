@@ -1,7 +1,6 @@
 using AmongUs.GameOptions;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
-using UnityEngine.Networking.Types;
 
 namespace TheOtherRoles.Roles.Neutral;
 
@@ -67,7 +66,7 @@ public class Avenger
         var otherLover = Lovers.otherLover(target);
         if (Lovers.isLover(target) && Lovers.otherLover(target) != null)
         {
-            if (!exile && killer != null && Lovers.IsAvengerLover && killer != target && killer != otherLover)
+            if (!exile && killer != null && Lovers.IsAvengerLover && killer != target && killer != otherLover && killer.IsAlive())
             {
                 ClearAndReload();
                 RPCProcedure.erasePlayerRoles(otherLover.PlayerId);
@@ -111,7 +110,6 @@ public class Avenger
         }
         else if ((int)outcome > 0)
         {
-            Message($"Set Role");
             if (AmongUsClient.Instance.AmHost)
             {
                 byte roleId = outcome switch
@@ -122,7 +120,10 @@ public class Avenger
                     _ => (byte)RoleId.Crewmate
                 };
 
-                Message($"Set Role AmHost Set {(RoleId)roleId}");
+                var writer = StartRPC(CustomRPC.SetRole);
+                writer.Write(Player.PlayerId);
+                writer.Write(roleId);
+                writer.EndRPC();
                 RPCProcedure.setRole(Player.PlayerId, roleId);
             }
             ClearAndReload();

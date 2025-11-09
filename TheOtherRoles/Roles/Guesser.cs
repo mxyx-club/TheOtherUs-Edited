@@ -589,7 +589,7 @@ public static class Guesser
                     || pva.VotedFor == dyingTargetId || pva.VotedFor == partnerId
                     || (lawyerDiedAdditionally && Lawyer.lawyer?.PlayerId == pva.TargetPlayerId);
 
-                if (shouldClearVote)
+                if (shouldClearVote || Jailor.Jailed?.AmOwner == true || Blackmailer.blackmailed?.AmOwner == true)
                 {
                     pva.UnsetVote();
                     var voteAreaPlayer = PlayerById(pva.TargetPlayerId);

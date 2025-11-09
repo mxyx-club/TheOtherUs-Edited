@@ -1,4 +1,5 @@
 namespace TheOtherRoles.Roles.Impostor;
+
 public class Berserker
 {
     public static PlayerControl Player;

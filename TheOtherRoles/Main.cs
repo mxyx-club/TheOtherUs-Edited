@@ -4,7 +4,6 @@ using BepInEx.Unity.IL2CPP;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
 using TheOtherRoles.Attributes;
-using TheOtherRoles.CustomCosmetics;
 using TheOtherRoles.Patches;
 
 namespace TheOtherRoles;
