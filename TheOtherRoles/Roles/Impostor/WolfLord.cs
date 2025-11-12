@@ -1,3 +1,4 @@
+using TheOtherRoles.Mode;
 using TheOtherRoles.Patches;
 
 namespace TheOtherRoles.Roles.Impostor;
@@ -29,6 +30,7 @@ public class WolfLord
 
         target.SetDie();
         Avenger.OnPlayerDeath(Player, target);
+        Akujo.otherLover(target)?.SetDie();
 
         PlayerData.SetDeathReason(target, CustomDeathReason.Kill, Player);
         if (target == Balancer.currentTarget) Balancer.currentTarget = null;

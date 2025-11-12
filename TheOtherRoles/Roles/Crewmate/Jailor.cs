@@ -87,6 +87,7 @@ public class Jailor
 
         target.SetDie();
         Avenger.OnPlayerDeath(player, target);
+        Akujo.otherLover(target)?.SetDie();
 
         PlayerData.SetDeathReason(target, CustomDeathReason.Jailed, player);
 

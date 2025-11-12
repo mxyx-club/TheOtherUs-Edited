@@ -4683,6 +4683,7 @@ internal static class HudManagerStartPatch
                 writer.Write(PlayerControl.LocalPlayer.transform.position);
                 writer.EndRPC();
                 RPCProcedure.PlaceClogGhost(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.transform.position);
+                Clog.UsedNum++;
                 Clog.IsUsed = true;
             },
             () => { return Clog.Player != null && PlayerControl.LocalPlayer == Clog.Player && PlayerControl.LocalPlayer.Data.IsDead; },

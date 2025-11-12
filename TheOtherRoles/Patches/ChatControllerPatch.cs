@@ -2,6 +2,7 @@ using AmongUs.GameOptions;
 using Il2CppInterop.Generator.Runners;
 using System.Text;
 using TheOtherRoles.Attributes;
+using static TheOtherRoles.Patches.ChatControllerPatch;
 
 namespace TheOtherRoles.Patches;
 
@@ -21,14 +22,14 @@ public static class ChatControllerPatch
     public enum ChannelType
     {
         Default = 0,
-        HostAll,
+        //HostAll,
         Impostor,
         Lover,
         Jailor,
     }
 
     public static ChatTypes CurrentChatType = ChatTypes.Default;
-    public static HashSet<ChannelType> ActiveChannels = new() { ChannelType.Default };
+    public static List<ChannelType> ActiveChannels = new() { ChannelType.Default };
     public static ChannelType CurrentChannel = ChannelType.Default;
     public static GameObject ChannelShower;
 
@@ -67,7 +68,7 @@ public static class ChatControllerPatch
         {
             switch (type)
             {
-                case ChannelType.HostAll:
+                /*case ChannelType.HostAll:
                     {
                         var writer = StartRPC(CustomRPC.HostControl);
                         writer.Write(PlayerControl.LocalPlayer.PlayerId);
@@ -77,7 +78,7 @@ public static class ChatControllerPatch
                         CurrentChatType = ChatTypes.HostChat;
                         chat.AddChat(GetHostPlayer, text);
                     }
-                    break;
+                    break;*/
                 case ChannelType.Impostor:
                     {
                         var writer = StartRPC(CustomRPC.SendChatToChannel);
@@ -132,6 +133,7 @@ public static class ChatControllerPatch
             tmp.outlineColor = Color.white;
             tmp.outlineWidth = 0.1f;
             tmp.fontSize *= 1.25f;
+            Message($"初始频道: {CurrentChannel}");
         }
 
         [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update)), HarmonyPostfix]
@@ -155,8 +157,8 @@ public static class ChatControllerPatch
         {
             var channelConditions = new Dictionary<ChannelType, Func<PlayerControl, bool>>
             {
-                [ChannelType.Default] = (x) => EnableChat.ForceEnableChat || AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay || ModOption.DebugMode || InMeeting,
-                [ChannelType.HostAll] = (x) => AmongUsClient.Instance.AmHost && InGame,
+                [ChannelType.Default] = (x) => EnableChat.ForceEnableChat || AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay || AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started || ModOption.DebugMode || InMeeting,
+                //[ChannelType.HostAll] = (x) => AmongUsClient.Instance.AmHost && InGame,
                 [ChannelType.Lover] = (x) => x.isLover() && Lovers.IsAlive(),
                 [ChannelType.Jailor] = (x) => x == Jailor.Player && Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive(),
                 [ChannelType.Impostor] = (x) =>
@@ -174,16 +176,19 @@ public static class ChatControllerPatch
 
             foreach (var (channelType, condition) in channelConditions)
             {
-                if (condition(PlayerControl.LocalPlayer))
+                if (condition(PlayerControl.LocalPlayer) && !ActiveChannels.Contains(channelType))
                 {
                     ActiveChannels.Add(channelType);
+                    Message($"添加频道: {channelType}");
                 }
-                else if (ActiveChannels.Contains(channelType) || CurrentChannel == channelType)
+                else if (!condition(PlayerControl.LocalPlayer) && (ActiveChannels.Contains(channelType) || CurrentChannel == channelType))
                 {
                     ActiveChannels.Remove(channelType);
+                    Message($"删除频道: {channelType}");
                     if (CurrentChannel == channelType)
                     {
                         CurrentChannel = ActiveChannels.FirstOrDefault();
+                        Message($"复原频道至: {CurrentChannel}");
                     }
                 }
             }
@@ -195,9 +200,11 @@ public static class ChatControllerPatch
             if (Input.GetKeyDown(ModInputManager.nextChatChannel.keyCode))
             {
                 var channels = ActiveChannels.ToList();
+                if (channels.Count == 0) { CurrentChannel = ChannelType.Default; return; }
                 var currentIndex = channels.IndexOf(CurrentChannel);
                 var nextIndex = (currentIndex + 1) % channels.Count;
                 CurrentChannel = channels[nextIndex];
+                Message($"切换频道至: {CurrentChannel}");
             }
         }
     }
@@ -254,7 +261,7 @@ public static class ChatControllerPatch
             {
                 case ChatTypes.HostChat:
                     __instance.NameText.color = Palette.Purple;
-                    __instance.NameText.text = $"{__instance.NameText.text} {"MessageFromTheHost".Translate()}";
+                    __instance.NameText.text = $"{GameData.Instance?.GetHost()?.PlayerName ?? ""} {"MessageFromTheHost".Translate()}";
                     CurrentChatType = ChatTypes.Default;
                     break;
                 case ChatTypes.JailorChat:

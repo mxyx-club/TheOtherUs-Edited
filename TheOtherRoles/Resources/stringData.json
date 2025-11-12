@@ -417,7 +417,7 @@
     },
     "randomLigherPlayer": {
         "0": "Randomly Classify Players as Light or Dark Color\n(Does not affect appearance)",
-        "13": "随机判断玩家深浅色\n( 不会影响角色外观)"
+        "13": "随机判断玩家深浅色 (不会影响角色外观)"
     },
     "allowModGuess": {
         "0": "Allow Guessing Certain Modifiers",
@@ -457,7 +457,7 @@
     },
     "randomGameStartToVents": {
         "0": "Spawnpoints on Vents",
-        "13": "随机出生在通风口上\n(建议开启)"
+        "13": "随机出生在通风口上 (建议开启)"
     },
     "ShowVentsOnMapText": {
         "0": "Show Vent Locations on Minimap",

@@ -50,7 +50,7 @@ internal class NinjaTrace : CustomObjectBase<NinjaTrace>
     {
         timeRemaining -= Time.fixedDeltaTime;
         if (!(timeRemaining < 0)) return;
-        GameObject.SetActive(false);
-        UObject.Destroy(GameObject);
+        GameObject?.SetActive(false);
+        Destroy();
     }
 }

@@ -91,7 +91,7 @@ public class DeadBodyReporter : CustomObjectBase<DeadBodyReporter>
 
     }
 
-    public override void OnMeetingStart()
+    public override void OnMeetingEnd(MeetingHud __instance)
     {
         Destroy();
     }
