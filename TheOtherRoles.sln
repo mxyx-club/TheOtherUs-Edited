@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheOtherRoles", "TheOtherRoles\TheOtherRoles.csproj", "{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other Files", "Other Files", "{3001A2DD-334B-4483-A9AF-0B64F733CDBC}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.github\workflows\build.yml = .github\workflows\build.yml
+		CHANGELOG.md = CHANGELOG.md
+		README.md = README.md
+		README_EN.md = README_EN.md
+		stringsToJson.py = stringsToJson.py
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Beta|Any CPU = Beta|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		mxyx-club|Any CPU = mxyx-club|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.Beta|Any CPU.ActiveCfg = Beta|Any CPU
+		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.Beta|Any CPU.Build.0 = Beta|Any CPU
+		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.mxyx-club|Any CPU.ActiveCfg = mxyx-club|Any CPU
+		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.mxyx-club|Any CPU.Build.0 = mxyx-club|Any CPU
+		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11FBC798-BAF5-4EE5-9511-BE6DB0592F99}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BB62BA8F-8537-46D7-A0B9-F10BF8610DD7}
+	EndGlobalSection
+EndGlobal

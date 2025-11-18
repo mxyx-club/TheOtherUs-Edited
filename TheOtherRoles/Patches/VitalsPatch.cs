@@ -1,0 +1,115 @@
+namespace TheOtherRoles.Patches;
+
+[Harmony]
+public class VitalsPatch
+{
+    private static float vitalsTimer;
+    private static TextMeshPro TimeRemaining;
+    private static List<TextMeshPro> hackerTexts = new();
+
+    public static void ResetData()
+    {
+        vitalsTimer = 0f;
+        if (TimeRemaining != null)
+        {
+            UObject.Destroy(TimeRemaining);
+            TimeRemaining = null;
+        }
+    }
+
+    private static void UseVitalsTime()
+    {
+        // Don't waste network traffic if we're out of time.
+        if (ModOption.restrictDevices > 0 && ModOption.restrictVitalsTime > 0f && PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer.Is(RoleId.Hacker))
+        {
+            var writer = StartRPC(CustomRPC.UseVitalsTime);
+            writer.Write(vitalsTimer);
+            writer.EndRPC();
+            RPCProcedure.useVitalsTime(vitalsTimer);
+        }
+
+        vitalsTimer = 0f;
+    }
+
+    [HarmonyPatch(typeof(VitalsMinigame), nameof(VitalsMinigame.Begin))]
+    private class VitalsMinigameStartPatch
+    {
+        private static void Postfix(VitalsMinigame __instance)
+        {
+            vitalsTimer = 0f;
+
+            if (PlayerControl.LocalPlayer.Is(RoleId.Hacker))
+            {
+                hackerTexts = new List<TextMeshPro>();
+                foreach (var panel in __instance.vitals)
+                {
+                    var text = UObject.Instantiate(__instance.SabText, panel.transform);
+                    hackerTexts.Add(text);
+                    UObject.DestroyImmediate(text.GetComponent<AlphaBlink>());
+                    text.gameObject.SetActive(false);
+                    text.transform.localScale = Vector3.one * 0.75f;
+                    text.transform.localPosition = new Vector3(-0.75f, -0.23f, 0f);
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(VitalsMinigame), nameof(VitalsMinigame.Update))]
+    private class VitalsMinigameUpdatePatch
+    {
+        private static bool Prefix(VitalsMinigame __instance)
+        {
+            vitalsTimer += Time.deltaTime;
+            if (vitalsTimer > 0.1f)
+                UseVitalsTime();
+
+            if (ModOption.restrictDevices > 0)
+            {
+                if (TimeRemaining == null)
+                {
+                    TimeRemaining = UObject.Instantiate(HudManager.Instance.TaskPanel.taskText, __instance.transform);
+                    TimeRemaining.alignment = TextAlignmentOptions.BottomRight;
+                    TimeRemaining.transform.position = Vector3.zero;
+                    TimeRemaining.transform.localPosition = new Vector3(1.7f, 4.45f);
+                    TimeRemaining.transform.localScale *= 1.8f;
+                    TimeRemaining.color = Palette.White;
+                }
+
+                if (ModOption.restrictVitalsTime <= 0f && PlayerControl.LocalPlayer.Is(RoleId.Hacker) &&
+                    !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    __instance.Close();
+                    return false;
+                }
+
+                var timeString = TimeSpan.FromSeconds(ModOption.restrictVitalsTime).ToString(@"mm\:ss\.ff");
+                TimeRemaining.text = string.Format("Remaining: {0}", timeString);
+                TimeRemaining.gameObject.SetActive(true);
+            }
+
+            return true;
+        }
+
+        private static void Postfix(VitalsMinigame __instance)
+        {
+            // Hacker show time since death
+            if (PlayerControl.LocalPlayer.TryGetRole<Hacker>(out var hacker) && hacker.hackerTimer > 0)
+                for (var k = 0; k < __instance.vitals.Length; k++)
+                {
+                    var vitalsPanel = __instance.vitals[k];
+                    var player = GameData.Instance.AllPlayers.Get(k);
+
+                    // Hacker update
+                    if (!vitalsPanel.IsDead) continue;
+                    var deadPlayer = PlayerData.AllPlayerData.Values?.Where(x => x.Player?.PlayerId == player?.PlayerId)?.FirstOrDefault();
+                    if (deadPlayer == null || k >= hackerTexts.Count || hackerTexts[k] == null) continue;
+                    var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.DeathTimer).TotalMilliseconds;
+                    hackerTexts[k].gameObject.SetActive(true);
+                    hackerTexts[k].text = Math.Round(timeSinceDeath / 1000) + "s";
+                }
+            else
+                foreach (var text in hackerTexts.Where(text => text != null && text.gameObject != null))
+                    text.gameObject.SetActive(false);
+        }
+    }
+}

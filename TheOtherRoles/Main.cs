@@ -1,0 +1,256 @@
+using BepInEx;
+using BepInEx.Configuration;
+using BepInEx.Unity.IL2CPP;
+using Reactor.Networking;
+using Reactor.Networking.Attributes;
+using TheOtherRoles.Attributes;
+using TheOtherRoles.CustomCosmetics;
+using TheOtherRoles.Objects;
+
+namespace TheOtherRoles;
+
+[BepInAutoPlugin("mxyx.TheOtherUs.v4")]
+[BepInDependency(SubmergedCompatibility.SUBMERGED_GUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInProcess("Among Us.exe")]
+[ReactorModFlags(ModFlags.RequireOnAllClients)]
+public partial class Main : BasePlugin
+{
+    public static Version version => System.Version.Parse(Version);
+
+    public static Main Instance;
+
+    public static int optionsPage = 2;
+
+    public static IRegionInfo[] defaultRegions;
+    public Harmony Harmony { get; } = new(Id);
+
+    public const string VersionSuffix = "NEXT";
+
+    public static ConfigEntry<bool> IsCPUProcessorAffinity { get; set; }
+    public static ConfigEntry<ulong> ProcessorAffinityMask { get; set; }
+    public static ConfigEntry<bool> EnableSoundEffects { get; set; }
+    public static ConfigEntry<bool> ToggleCursor { get; set; }
+    public static ConfigEntry<bool> ShowFPS { get; set; }
+    public static ConfigEntry<bool> ShowKeyReminder { get; set; }
+    public static ConfigEntry<int> ButtonArrangement { get; set; }
+    public static ConfigEntry<string> Ip { get; set; }
+    public static ConfigEntry<ushort> Port { get; set; }
+
+    // This is part of the Mini.RegionInstaller, Licensed under GPLv3
+    // file="RegionInstallPlugin.cs" company="miniduikboot">
+    public static void UpdateRegions()
+    {
+        var serverManager = FastDestroyableSingleton<ServerManager>.Instance;
+        var regions = new[]
+        {
+            new StaticHttpRegionInfo("Custom", StringNames.NoTranslation, Ip.Value,
+                    new Il2CppReferenceArray<ServerInfo>([new("Custom", Ip.Value, Port.Value, false)]))
+                .CastFast<IRegionInfo>()
+        };
+
+        var currentRegion = serverManager.CurrentRegion;
+        Info($"Adding {regions.Length} regions");
+        foreach (var region in regions)
+            if (region == null)
+            {
+                Error("Could not add region");
+            }
+            else
+            {
+                if (currentRegion != null && region.Name.Equals(currentRegion.Name, StringComparison.OrdinalIgnoreCase))
+                    currentRegion = region;
+                serverManager.AddOrUpdateRegion(region);
+            }
+
+        // AU remembers the previous region that was set, so we need to restore it
+        if (currentRegion == null) return;
+        Debug("Resetting previous region");
+        serverManager.SetRegion(currentRegion);
+    }
+
+    public override void Load()
+    {
+        SetLogSource(Log);
+        ModTranslation.Load();
+        Instance = this;
+
+        IsCPUProcessorAffinity = Config.Bind("Custom", "CPUAffinity", false);
+        ProcessorAffinityMask = Config.Bind("Custom", "CPUAffinityMask", (ulong)0);
+        ToggleCursor = Config.Bind("Custom", "Better Cursor", true);
+        EnableSoundEffects = Config.Bind("Custom", "Enable Sound Effects", true);
+        ShowFPS = Config.Bind("Custom", "Show FPS", true);
+        ShowKeyReminder = Config.Bind("Custom", "ShowKeyReminder", true);
+        ButtonArrangement = Config.Bind("Custom", "Buttons Arrangement", 3);
+
+        Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
+        Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
+        defaultRegions = ServerManager.DefaultRegions;
+
+        Harmony.PatchAll();
+        UpdateRegions();
+        InitializeRole();
+        CrowdedPlayer.Start();
+        CustomColors.Load();
+        CustomOptionHolder.Load();
+        KillTrap.LoadAudioAssets();
+        ModInputManager.Load();
+        enableCursor(ToggleCursor.Value);
+
+        RemoteProcessBase.Load();
+
+        SubmergedCompatibility.Initialize();
+        AddToKillDistanceSetting.addKillDistance();
+        PluginModuleInitializerAttribute.Invoke();
+
+        UpdateCPUProcessorAffinity();
+        Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{Version} -{VersionSuffix}\n---------------");
+    }
+
+    private static Sprite CursorSprite = new ResourceSprite("TheOtherRoles.Resources.Cursor.png", 115f);
+    public static void enableCursor(bool state)
+    {
+        if (state)
+        {
+            Cursor.SetCursor(CursorSprite.texture, Vector2.zero, CursorMode.Auto);
+        }
+        else
+        {
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        }
+
+    }
+
+    // CPUの割当を変更する
+    public static void UpdateCPUProcessorAffinity()
+    {
+        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux()) return;
+
+        if (!IsCPUProcessorAffinity.Value || ProcessorAffinityMask.Value == 0)
+        {
+            try
+            {
+                ulong allCores = (1UL << Environment.ProcessorCount) - 1;
+                System.Diagnostics.Process.GetCurrentProcess().ProcessorAffinity = (IntPtr)allCores;
+                Info("CPU Processor Affinity disabled, using all cores.", "CPUAffinity");
+            }
+            catch (Exception ex)
+            {
+                Error($"Failed to reset CPU affinity: {ex}", "CPUAffinity");
+            }
+            return;
+        }
+
+        ulong affinity = ProcessorAffinityMask.Value;
+        try
+        {
+            System.Diagnostics.Process.GetCurrentProcess().ProcessorAffinity = (IntPtr)affinity;
+            Info($"UpdatedCPUProcessorAffinity To: {affinity}", "CPUAffinity");
+        }
+        catch (Exception ex)
+        {
+            Error($"Failed to set CPU affinity: {ex}", "CPUAffinity");
+        }
+    }
+
+    private static void InitializeRole()
+    {
+        try
+        {
+            foreach (var type in Assembly.GetAssembly(typeof(RoleBase)).GetTypes().Where(t => t.IsSubclassOf(typeof(RoleBase)) && !t.IsAbstract))
+            {
+                System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+
+                var roleInfoField = type.GetField("roleinfo", BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase);
+
+                if (roleInfoField != null && roleInfoField.FieldType == typeof(RoleInfo))
+                {
+                    var roleInfo = roleInfoField.GetValue(null) as RoleInfo;
+                }
+            }
+            Info($"已注册职业: {RoleInfo.AllRoleInfo.Count}");
+        }
+        catch (Exception e) { Error($"职业初始化失败\n{e}"); }
+
+        try
+        {
+            foreach (var type in Assembly.GetAssembly(typeof(ModifierBase)).GetTypes().Where(t => t.IsSubclassOf(typeof(ModifierBase)) && !t.IsAbstract))
+            {
+                System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+
+                var roleInfoField = type.GetField("roleinfo", BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase);
+
+                if (roleInfoField != null && roleInfoField.FieldType == typeof(RoleInfo))
+                {
+                    var roleInfo = roleInfoField.GetValue(null) as RoleInfo;
+                }
+            }
+            Info($"已注册附加能力: {RoleInfo.AllRoleInfo.Count(x => x.RoleType == RoleType.Modifier)}");
+        }
+        catch (Exception e) { Error($"附加能力初始化失败\n{e}"); }
+
+        try
+        {
+            foreach (var type in Assembly.GetAssembly(typeof(ModifierBase)).GetTypes().Where(t => t.IsSubclassOf(typeof(GhostBase)) && !t.IsAbstract))
+            {
+                System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+
+                var roleInfoField = type.GetField("roleinfo", BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase);
+
+                if (roleInfoField != null && roleInfoField.FieldType == typeof(RoleInfo))
+                {
+                    var roleInfo = roleInfoField.GetValue(null) as RoleInfo;
+                }
+            }
+            Info($"已注册幽灵职业: {RoleInfo.AllRoleInfo.Count(x => x.RoleType == RoleType.Ghost)}");
+        }
+        catch (Exception e) { Error($"附加能力初始化失败\n{e}"); }
+
+    }
+}
+
+// Deactivate bans, since I always leave my local testing game and ban myself
+[HarmonyPatch(typeof(StatsManager), nameof(StatsManager.AmBanned), MethodType.Getter)]
+public static class AmBannedPatch
+{
+    public static void Postfix(out bool __result)
+    {
+        __result = false;
+    }
+}
+
+[HarmonyPatch(typeof(ChatController), nameof(ChatController.Awake))]
+public static class ChatControllerAwakePatch
+{
+    private static void Prefix()
+    {
+        if (!EOSManager.Instance.isKWSMinor) DataManager.Settings.Multiplayer.ChatMode = QuickChatModes.FreeChatOrQuickChat;
+    }
+}
+
+/*
+[HarmonyPatch(typeof(AmongUs.Data.Player.PlayerData), nameof(AmongUs.Data.Player.PlayerData.FileName), MethodType.Getter)]
+public class SaveManagerPatch
+{
+    public static void Postfix(ref string __result)
+    {
+        __result += "_TOUE";
+    }
+}
+[HarmonyPatch(typeof(AmongUs.Data.Legacy.LegacySaveManager), nameof(AmongUs.Data.Legacy.LegacySaveManager.GetPrefsName))]
+public class LegacySaveManagerPatch
+{
+    public static void Postfix(ref string __result)
+    {
+        __result += "_TOUE";
+    }
+}
+
+[HarmonyPatch(typeof(AmongUs.Data.Settings.SettingsData), nameof(AmongUs.Data.Settings.SettingsData.FileName), MethodType.Getter)]
+public class SettingsFilePatch
+{
+    public static void Postfix(ref string __result)
+    {
+        __result += "_TOUE";
+    }
+}
+ */
