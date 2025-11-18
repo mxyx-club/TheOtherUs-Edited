@@ -34,9 +34,9 @@ public class PlayerData
     public RoleId? GhostRole;
     public List<RoleId> Modifiers = new();
 
-    public string PlayerName { get; private set; }
-    public string FriendCode { get; private set; }
-    public string ColorName { get; private set; }
+    public string PlayerName { get; set; }
+    public string FriendCode { get; set; }
+    public string ColorName { get; set; }
 
     public CustomDeathReason DeathReason { get; set; } = CustomDeathReason.Null;
     public DateTime DeathTimer { get; set; } = DateTime.MinValue;
@@ -83,7 +83,7 @@ public class PlayerData
         return AllFriendCode.TryGetValue(player.PlayerId, out var code) ? code : "";
     }
 
-    [OnGameStart(Attributes.Priority.VeryHigh)]
+    [OnGameStart(Attributes.Priority.High)]
     public static void Init()
     {
         AllPlayerData = new();

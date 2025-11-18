@@ -79,7 +79,7 @@ public class Avenger
                 SetRoleType(Player, RoleTypes.Crewmate);
                 Lovers.clearAndReload();
 
-                if ((Target != null && Target.AmOwner) || Player.AmOwner) Coroutines.Start(showFlashCoroutine(color, 1.25f, 0.4f));
+                if ((TargetKnowPlayer && Target != null && Target.AmOwner) || Player.AmOwner) Coroutines.Start(showFlashCoroutine(color, 1.25f, 0.4f));
             }
             else
             {

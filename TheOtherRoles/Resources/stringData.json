@@ -333,10 +333,10 @@
     "ImpostorChatChannel": {
         "13": "启用伪装者文字私聊频道"
     },
-    "ImpostorChatChannel.1": {
+    "chatChannelOpt.1": {
         "13": "仅会议内"
     },
-    "ImpostorChatChannel.2": {
+    "chatChannelOpt.2": {
         "13": "仅会议外"
     },
     "MeetingOptions": {
@@ -2543,10 +2543,10 @@
         "13": "恋人死亡后另一方会变成复仇者的概率"
     },
     "avengerIsGuessable": {
-        "13": "可以被赌怪猜测"
+        "13": "复仇者可以被赌怪猜测"
     },
     "avengerCanFreeKill": {
-        "13": "可以击杀的玩家"
+        "13": "复仇者可以击杀的玩家"
     },
     "avengerCanFreeKill.1": {
         "0": "Only Target",
@@ -2757,7 +2757,7 @@
     },
     "infectedCanUseGuess": {
         "0": "Infected Can Guess",
-        "13": "可以使用赌怪能力"
+        "13": "拥有团队共享的赌怪能力"
     },
     "infectedGuessCount": {
         "0": "Total Number of Infected Guesses (shared)",

@@ -233,17 +233,17 @@ public class CustomButton
 
     public static void HudUpdate()
     {
-        _buttons.RemoveAll(b => b == null || b.actionButton == null);
-        foreach (var t in Buttons)
+        try
         {
-            try
+            _buttons.RemoveAll(b => b == null || b.actionButton == null);
+            foreach (var t in Buttons)
             {
                 t.Update();
             }
-            catch (Exception e)
-            {
-                Warn($"NullReferenceException from HudUpdate().HasButton(), if theres only one warning its fine\n{e}");
-            }
+        }
+        catch (Exception e)
+        {
+            Warn($"NullReferenceException from HudUpdate().HasButton(), if theres only one warning its fine\n{e}");
         }
     }
 

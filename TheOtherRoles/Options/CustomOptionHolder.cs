@@ -47,6 +47,9 @@ public class CustomOptionHolder
     public static CustomOption ghostSpeed;
 
     public static CustomOption impostorChatChannel;
+    /*public static CustomOption jackalChatChannel;
+    public static CustomOption pavlovsChatChannel;
+    public static CustomOption infectedChatChannel;*/
 
     public static CustomOption MeetingOptions;
     public static CustomOption disableMeeting;
@@ -837,7 +840,13 @@ public class CustomOptionHolder
         ghostSpeed = Create(112, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
 
         impostorChatChannel = Create(701, Types.General, Cs(Palette.ImpostorRed, "ImpostorChatChannel"),
-            ["optionOff", "ImpostorChatChannel.1", "ImpostorChatChannel.2", "optionOn"], null, true);
+            ["optionOff", "chatChannelOpt.1", "chatChannelOpt.2", "optionOn"], null, true);
+        /*jackalChatChannel = Create(702, Types.General, Cs(Jackal.color, "jackalChatChannel"),
+            ["optionOff", "chatChannelOpt.1", "chatChannelOpt.2", "optionOn"], null);
+        pavlovsChatChannel = Create(703, Types.General, Cs(Pavlovsdogs.color, "pavlovsChatChannel"),
+            ["optionOff", "chatChannelOpt.1", "chatChannelOpt.2", "optionOn"], null);
+        infectedChatChannel = Create(704, Types.General, Cs(Infected.color, "infectedChatChannel"),
+            ["optionOff", "chatChannelOpt.1", "chatChannelOpt.2", "optionOn"], null);*/
 
         //Meeting options
         MeetingOptions = Create(200, Types.General, Cs(new Color32(255, 85, 234, byte.MaxValue), "MeetingOptions"), false, null, true);
@@ -1478,17 +1487,17 @@ public class CustomOptionHolder
         modifierLoverNeutraValid = Create(401602, Types.Modifier, "modifierLoverNeutraValid", true, modifierLoverImpLoverRate);
         modifierLoverCanGetModifiers = Create(401603, Types.Modifier, "modifierLoverCanGetModifiers", false, modifierLover);
         modifierLoverEnableChat = Create(401604, Types.Modifier, "modifierLoverEnableChat", true, modifierLover);
-        modifierLoverAvengerChance = Create(401605, Types.Modifier, "modifierLoverAvengerChance", rates, modifierLover);
+        modifierLoverAvengerChance = Create(401605, Types.Modifier, Cs(Avenger.color, "modifierLoverAvengerChance"), rates, modifierLover);
 
         avengerIsGuessable = Create(401651, Types.Modifier, "avengerIsGuessable", false, modifierLoverAvengerChance);
         avengerKillCooldown = Create(401652, Types.Modifier, "killCooldown", 25f, 10f, 60f, 2.5f, modifierLoverAvengerChance);
         avengerTargetKnowPlayer = Create(401662, Types.Modifier, "avengerTargetKnowPlayer", true, modifierLoverAvengerChance);
         avengerKnowTarget = Create(401663, Types.Modifier, "avengerKnowTarget", true, modifierLoverAvengerChance);
-        avengerShowArrows = Create(401654, Types.Modifier, "avengerShowArrows", true, avengerKnowTarget);
+        avengerShowArrows = Create(401654, Types.Modifier, "avengerShowArrows", false, avengerKnowTarget);
         avengerUpdateIntervall = Create(401655, Types.Modifier, "avengerUpdateIntervall", 5f, 0.5f, 15f, 0.5f, avengerShowArrows);
         avengerCanFreeKill = Create(401653, Types.Modifier, "avengerCanFreeKill",
             ["avengerCanFreeKill.1", "avengerCanFreeKill.2"], avengerKnowTarget);
-        avengerHasImpVision = Create(401656, Types.Modifier, "hasImpVision", true, modifierLoverAvengerChance);
+        avengerHasImpVision = Create(401656, Types.Modifier, "hasImpVision", false, modifierLoverAvengerChance);
         avengerCanUseVents = Create(401657, Types.Modifier, "canUseVents", false, modifierLoverAvengerChance);
         avengerOnlyAliveWin = Create(401661, Types.Modifier, "avengerOnlyAliveWin", true, modifierLoverAvengerChance);
         avengerWinCondition = Create(401658, Types.Modifier, "avengerWinCondition",

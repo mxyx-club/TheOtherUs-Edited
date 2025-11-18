@@ -3,9 +3,11 @@
 ![mod banner](./Images/TOU_Banner.png)
 
 <p align="center">
-<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/release/mxyx-club/TheOtherUs-Edited"></a>    
-<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/assets-dl/mxyx-club/TheOtherUs-Edited"></a>    
-<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://badgen.net/github/watchers/mxyx-club/TheOtherUs-Edited"></a></p>
+<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://img.shields.io/github/v/release/mxyx-club/TheOtherUs-Edited"></a>    
+<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://img.shields.io/github/downloads/mxyx-club/TheOtherUs-Edited/total"></a>    
+<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://img.shields.io/github/downloads/mxyx-club/TheOtherUs-Edited/latest/total"></a>
+<a href="https://github.com/mxyx-club/TheOtherUs-Edited/releases/"><img src="https://img.shields.io/github/stars/mxyx-club/TheOtherUs-Edited"></a>
+</p>
 
 本模组不隶属于 Among Us 或 Innersloth LLC，其包含的内容也未得到 Innersloth LLC 的认可或以其他方式赞助。此处包含的部分材料是Innersloth LLC的财产。
 
@@ -25,8 +27,7 @@
 
 | 游戏版本            | 模组版本 | 发布日期  | 链接                                                         |
 | ------------------- | -------- | --------- | ------------------------------------------------------------ |
-| 2024.8.13 ~ 2024.10.29 | v2.0 | 暂缓开发     |         |
-| 2024.3.5 ~ 2024.6.4 | v1.2 Next | 开发中     |         |
+| 2024.8.13 ~ 2024.10.29 | v2.0 NEXT | 缓慢开发中...     |         |
 | 2024.3.5 ~ 2024.6.4 | v1.1 | 2024.12.9 | [下载](https://github.com/mxyx-club/TheOtherUs-Edited/releases) |
 | 2024.3.5 ~ 2024.6.4 | v1.0 | 2024.3.3 | \[古老版本已删除\] |
 

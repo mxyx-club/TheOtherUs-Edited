@@ -86,9 +86,16 @@ public abstract class CustomObject : ICustomObject
 
     public static void UpdateAll()
     {
-        foreach (var obj in AllCustomObject.ToArray())
+        try
         {
-            obj?.Update();
+            foreach (var obj in AllCustomObject.ToArray())
+            {
+                obj?.Update();
+            }
+        }
+        catch (Exception e)
+        {
+            Error("\n" + e, "CustomObject");
         }
     }
 }
