@@ -38,7 +38,7 @@ public enum CustomRPC : byte
     FixLights = 110,
     FixSubmergedOxygen,
     CleanBody,
-    DissectionBody,
+    CreateDeadBody,
     Mine,
     ShowIndomitableFlash,
     UndertakerDragAction,
@@ -133,6 +133,8 @@ public enum CustomRPC : byte
     PoltergeistMove,
     jesterDragBody,
     PlaceClogGhost,
+    SetConfesser,
+    SendOracleReport,
 
     //SetSwooper,
     SetInvisible,
@@ -497,6 +499,9 @@ public static class RPCProcedure
             case RoleId.Avenger:
                 Avenger.Player = player;
                 break;
+            case RoleId.Oracle:
+                Oracle.Player = player;
+                break;
             default:
                 Warn("Unknown role ID: " + roleId, "SetRole");
                 break;
@@ -654,6 +659,7 @@ public static class RPCProcedure
             case HostCommand.HostSay:
                 ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.HostChat;
                 HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, reader.ReadString());
+                HudManager.Instance.Chat.StartCoroutine(HudManager.Instance.Chat.BounceDot());
                 SoundManager.Instance.PlaySound(HudManager.Instance?.Chat?.messageSound, false, 1f, null);
                 break;
             case HostCommand.HostKill:
@@ -755,10 +761,12 @@ public static class RPCProcedure
                 {
                     ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.JailorChat;
                     HudManager.Instance.Chat.AddChat(player, message);
+                    if (PlayerControl.LocalPlayer == Jailor.Jailed) HudManager.Instance.Chat.StartCoroutine(HudManager.Instance.Chat.BounceDot());
                     SoundManager.Instance.PlaySound(HudManager.Instance?.Chat?.messageSound, false, 1f, null);
                 }
                 break;
         }
+        ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.Default;
     }
 
     public static void versionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId)
@@ -837,27 +845,30 @@ public static class RPCProcedure
         }
     }
 
-    public static void dissectionBody(byte playerId, byte killerId)
+    public static void CreateDeadBody(byte targetId, Vector3 pos, int id)
     {
-        var player = PlayerById(playerId);
-        var killer = PlayerById(killerId);
-        for (var num = 0; num < Butcher.dissectedBodyCount; num++)
+        var target = PlayerById(targetId);
+        if (target == null) return;
+        var deadBody = UObject.Instantiate(GameManager.Instance.DeadBodyPrefab);
+        deadBody.transform.position = pos;
+        deadBody.ParentId = targetId;
+        deadBody.enabled = true;
+        deadBody.bodyRenderers.ForEach(delegate (SpriteRenderer b)
         {
-            player?.MyPhysics.StartCoroutine(player.KillAnimations.First().CoPerformKill(killer, player));
-        }
-        Butcher.dissected = player;
+            target.SetPlayerMaterialColors(b);
+        });
+        target.SetPlayerMaterialColors(deadBody.bloodSplatter);
 
-        DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
-
-        var list = new List<Vector3>();
-        list.AddRange(MapData.MapSpawnPosition(false));
-        list.AddRange(MapData.FindVentSpawnPositions(false));
-
-        for (var i = 1; i < array.Length && array[i].ParentId == playerId; i++)
+        if (Professional.Player.IsAlive() && Butcher.butcher?.PlayerId == Professional.Player.PlayerId)
         {
-            array[i].transform.position = list.Random();
+            if (deadBody.gameObject.GetComponent<DeadBodyReporter.DeadBodyReporterMarker>() == null)
+            {
+                _ = new DeadBodyReporter(Butcher.butcher, deadBody);
+            }
         }
-    }
+        deadBody.gameObject.name = $"DeadBody ({target.Data.PlayerName}) {id}";
+        Message($"Create DeadBody {id}");
+        }
 
     public static void impostorPromotesToLastImpostor(byte targetId)
     {
@@ -1094,6 +1105,8 @@ public static class RPCProcedure
         if (target == PlayerControl.LocalPlayer) SoundEffectsManager.play("jackalSidekick");
         if (HandleGuesser.isGuesserGm && GuesserGM.guesserGamemodeSidekickIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
             setGuesserGm(targetId);
+        if (target.AmOwner)
+            jackalKillButton.Timer = jackalKillButton.MaxTimer * 0.66f;
 
         Jackal.canCreateSidekick = false;
     }
@@ -1133,9 +1146,12 @@ public static class RPCProcedure
 
         if (targetId == PlayerControl.LocalPlayer.PlayerId)
             PlayerControl.LocalPlayer.moveable = true;
-        if (target == PlayerControl.LocalPlayer) SoundEffectsManager.play("jackalSidekick");
+        if (target == PlayerControl.LocalPlayer)
+            SoundEffectsManager.play("jackalSidekick");
         if (HandleGuesser.isGuesserGm && GuesserGM.guesserGamemodePavlovsdogIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
             setGuesserGm(targetId);
+        if (target.AmOwner)
+            pavlovsdogsKillButton.Timer = pavlovsdogsKillButton.MaxTimer * 0.66f;
         Pavlovsdogs.createDogNum -= 1;
     }
 
@@ -1173,6 +1189,7 @@ public static class RPCProcedure
         if (player == InfoSleuth.infoSleuth) InfoSleuth.clearAndReload();
         if (player == Jumper.jumper) Jumper.clearAndReload();
         if (player == Trapper.trapper) Trapper.clearAndReload();
+        if (player == Oracle.Player) Oracle.ClearAndReload();
         if (player == Prophet.prophet) Prophet.clearAndReload();
         if (player == Vigilante.vigilante) Vigilante.clearAndReload();
 
@@ -1975,7 +1992,7 @@ public static class RPCProcedure
         if (bomb?.GameObject == null) return;
         try
         {
-            SoundEffectsManager.playAtPosition("bombDefused", bomb.GameObject.transform.position, range: Terrorist.hearRange);
+            SoundEffectsManager.playAtPosition("bombDefused", bomb.GameObject.transform.position, range: Terrorist.soundRange);
         }
         catch
         {
@@ -2108,8 +2125,8 @@ internal class RPCHandlerPatch
                 RPCProcedure.cleanBody(reader.ReadByte(), reader.ReadByte());
                 break;
 
-            case CustomRPC.DissectionBody:
-                RPCProcedure.dissectionBody(reader.ReadByte(), reader.ReadByte());
+            case CustomRPC.CreateDeadBody:
+                RPCProcedure.CreateDeadBody(reader.ReadByte(), reader.ReadVector3(), reader.ReadInt32());
                 break;
 
             case CustomRPC.BlackmailPlayer:
@@ -2523,6 +2540,25 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.SendChatToChannel:
                 RPCProcedure.sendChatToChannel(reader.ReadPlayer(), (ChatControllerPatch.ChannelType)reader.ReadByte(), reader.ReadString());
+                break;
+            case CustomRPC.SetConfesser:
+                {
+                    var confesser = reader.ReadPlayer();
+                    var roleType = (Oracle.CRoleType)reader.ReadInt32();
+                    Oracle.Confesser = confesser;
+                    Oracle.ConfesserType = roleType;
+                }
+                break;
+            case CustomRPC.SendOracleReport:
+                {
+                    var confesser = reader.ReadPlayer();
+                    var text = reader.ReadString();
+                    if (Oracle.Player == null) break;
+                    if (Oracle.Player.AmOwner)
+                        HudManager.Instance.Chat.AddChat(confesser, text);
+                    else if (CanSeeGhostInfo)
+                        HudManager.Instance.Chat.AddChat(Oracle.Player, text);
+                }
                 break;
         }
 

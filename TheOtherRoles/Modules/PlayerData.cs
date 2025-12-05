@@ -194,7 +194,6 @@ public class PlayerData
             {
                 var id = modUid++;
                 ModId[player.PlayerId] = id;
-                Message($"Set {player.PlayerId} Is {id}", "SetUid");
             }
         }
 

@@ -154,7 +154,7 @@ public static class Medium
             {
                 case 0:
                     count = alivePlayersList.Count(pc =>
-                        pc.Data.Role.IsImpostor || isKillerNeutral(pc) ||
+                        pc.Data.Role.IsImpostor || pc.IsKillerNeutral() ||
                         new List<RoleInfo> { RoleInfo.sheriff, RoleInfo.veteran, RoleInfo.thief }
                             .Contains(RoleInfo.getRoleInfoForPlayer(pc, false).FirstOrDefault()));
                     condition = "个杀手" + (count == 1 ? "" : "");
@@ -164,7 +164,7 @@ public static class Medium
                     condition = "个可以使用管道的玩家" + (count == 1 ? "" : "");
                     break;
                 case 2:
-                    count = alivePlayersList.Count(pc => pc.IsNeutral() && !isKillerNeutral(pc));
+                    count = alivePlayersList.Count(pc => pc.IsNeutral() && !pc.IsKillerNeutral());
                     condition = $"名玩家{(count == 1 ? "" : "")}{(count == 1 ? "是" : "是")}非击杀型中立";
                     break;
             }

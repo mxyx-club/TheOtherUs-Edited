@@ -1,5 +1,3 @@
-using static Il2CppSystem.Xml.Schema.NamespaceList;
-
 namespace TheOtherRoles.Patches;
 
 [HarmonyPatch]
@@ -64,9 +62,51 @@ public static class ChatControllerPatch
             CurrentHistorySelection = SentHistory.Count;
             Info(text, "SendChat");
 
-            if (!handled && CurrentChannel != ChannelType.Default && CurrentChatType == ChatTypes.Default)
+            if (!handled && CurrentChannel != ChannelType.Default)
             {
-                SendChatToChannel(__instance, CurrentChannel, text);
+                switch (CurrentChannel)
+                {
+                    case ChannelType.HostAll:
+                        {
+                            var writer = StartRPC(CustomRPC.HostControl);
+                            writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                            writer.Write((byte)RPCProcedure.HostCommand.HostSay);
+                            writer.Write(text);
+                            writer.EndRPC();
+                            CurrentChatType = ChatTypes.HostChat;
+                            __instance.AddChat(GetHostPlayer, text);
+                        }
+                        break;
+                    case ChannelType.Impostor:
+                        {
+                            var writer = StartRPC(CustomRPC.SendChatToChannel);
+                            writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                            writer.Write((byte)ChannelType.Impostor);
+                            writer.Write(text);
+                            writer.EndRPC();
+                            RPCProcedure.sendChatToChannel(PlayerControl.LocalPlayer, ChannelType.Impostor, text);
+                        }
+                        break;
+                    case ChannelType.Lover:
+                        {
+                            var writer = StartRPC(CustomRPC.SendChatToChannel);
+                            writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                            writer.Write((byte)ChannelType.Lover);
+                            writer.Write(text);
+                            writer.EndRPC();
+                            RPCProcedure.sendChatToChannel(PlayerControl.LocalPlayer, ChannelType.Lover, text);
+                        }
+                        break;
+                    case ChannelType.Jailor:
+                        {
+                            var writer = StartRPC(CustomRPC.JailorSendMessage);
+                            writer.Write(Jailor.Player.PlayerId);
+                            writer.Write(text);
+                            writer.EndRPC();
+                            Jailor.JailorSendMessage(Jailor.Player, text);
+                        }
+                        break;
+                }
                 __instance.freeChatField.textArea.Clear();
                 return false;
             }
@@ -79,54 +119,6 @@ public static class ChatControllerPatch
 
             return !handled;
         }
-
-        public static void SendChatToChannel(ChatController chat, ChannelType type, string text)
-        {
-            switch (type)
-            {
-                case ChannelType.HostAll:
-                    {
-                        var writer = StartRPC(CustomRPC.HostControl);
-                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                        writer.Write((byte)RPCProcedure.HostCommand.HostSay);
-                        writer.Write(text);
-                        writer.EndRPC();
-                        CurrentChatType = ChatTypes.HostChat;
-                        chat.AddChat(GetHostPlayer, text);
-                    }
-                    break;
-                case ChannelType.Impostor:
-                    {
-                        var writer = StartRPC(CustomRPC.SendChatToChannel);
-                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                        writer.Write((byte)ChannelType.Impostor);
-                        writer.Write(text);
-                        writer.EndRPC();
-                        RPCProcedure.sendChatToChannel(PlayerControl.LocalPlayer, ChannelType.Impostor, text);
-                    }
-                    break;
-                case ChannelType.Lover:
-                    {
-                        var writer = StartRPC(CustomRPC.SendChatToChannel);
-                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                        writer.Write((byte)ChannelType.Lover);
-                        writer.Write(text);
-                        writer.EndRPC();
-                        RPCProcedure.sendChatToChannel(PlayerControl.LocalPlayer, ChannelType.Lover, text);
-                    }
-                    break;
-                case ChannelType.Jailor:
-                    {
-                        var writer = StartRPC(CustomRPC.JailorSendMessage);
-                        writer.Write(Jailor.Player.PlayerId);
-                        writer.Write(text);
-                        writer.EndRPC();
-                        Jailor.JailorSendMessage(Jailor.Player, text);
-                    }
-                    break;
-            }
-        }
-
     }
 
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
@@ -160,7 +152,6 @@ public static class ChatControllerPatch
                 __instance.NameText.color = Palette.ImpostorRed;
             }
 
-
             if (InMeeting && Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive())
             {
                 if (PlayerControl.LocalPlayer == Jailor.Player && Jailor.Jailed == PlayerByName(playerName))
@@ -177,12 +168,14 @@ public static class ChatControllerPatch
 
             }
 
-            switch (CurrentChatType)
+            var currentType = CurrentChatType;
+            CurrentChatType = ChatTypes.Default;
+
+            switch (currentType)
             {
                 case ChatTypes.HostChat:
                     __instance.NameText.color = Palette.Purple;
                     __instance.NameText.text = $"{GameData.Instance?.GetHost()?.PlayerName ?? ""} {"MessageFromTheHost".Translate()}";
-                    CurrentChatType = ChatTypes.Default;
                     break;
                 case ChatTypes.JailorChat:
                     if (InMeeting && Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive())
@@ -198,27 +191,22 @@ public static class ChatControllerPatch
                             __instance.NameText.text = $"({GetString("Jailor")})";
                         }
                     }
-                    CurrentChatType = ChatTypes.Default;
                     break;
                 case ChatTypes.Default:
                     break;
                 case ChatTypes.LoverChat:
                     __instance.NameText.color = Lovers.color;
                     __instance.NameText.text = $"{__instance.NameText.text} {"MessageFromTheLover".Translate()}";
-                    CurrentChatType = ChatTypes.Default;
                     break;
                 case ChatTypes.GuesserMessage:
                     __instance.NameText.color = Color.yellow;
                     __instance.NameText.text = "MessageFromTheGuesser".Translate();
-                    CurrentChatType = ChatTypes.Default;
                     break;
                 case ChatTypes.ImpostorChat:
                     __instance.NameText.color = Palette.ImpostorRed;
                     __instance.NameText.text = $"{__instance.NameText.text} {"MessageFromTheImpostor".Translate()}";
-                    CurrentChatType = ChatTypes.Default;
                     break;
                 default:
-                    CurrentChatType = ChatTypes.Default;
                     break;
             }
 

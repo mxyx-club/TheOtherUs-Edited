@@ -26,13 +26,13 @@ public static class Prophet
     public static Sprite buttonSprite = new ResourceSprite("SeerButton.png");
     public static bool IsRed(PlayerControl p)
     {
-        if (p.Data.Role.IsImpostor || isKillerNeutral(p)) return true;
+        if (p.Data.Role.IsImpostor || p.IsKillerNeutral()) return true;
 
         if (killCrewAsRed && (Sheriff.Player.Any(x => x == p) || p == Sheriff.Deputy || p == Veteran.veteran)) return true;
 
         if (benignNeutralAsRed && p.IsNeutral() && (Amnisiac.Player.Contains(p) || Pursuer.Player.Contains(p) || Survivor.Player.Contains(p))) return true;
 
-        return evilNeutralAsRed && isEvilNeutral(p);
+        return evilNeutralAsRed && p.IsEvilNeutral();
     }
 
     public static void clearAndReload()

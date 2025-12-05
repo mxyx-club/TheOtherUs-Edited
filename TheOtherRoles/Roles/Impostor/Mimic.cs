@@ -138,6 +138,12 @@ public static class Mimic
                 hasMimic = true;
                 break;
 
+            case RoleId.Oracle:
+                if (Amnisiac.resetRole) Oracle.ClearAndReload();
+                Oracle.Player = mimic;
+                hasMimic = true;
+                break;
+
             case RoleId.Jailor:
                 if (Amnisiac.resetRole) Jailor.ClearAndReload();
                 Jailor.Player = mimic;

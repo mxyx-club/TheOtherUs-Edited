@@ -1217,6 +1217,9 @@
         "0": "Root Duration After Kill",
         "13": "使用术法击杀后定身持续时间"
     },
+    "warlockFriendlyFire": {
+        "13": "咒杀是否可以击杀队友"
+    },
     "bountyHunterBountyDuration": {
         "0": "Bounty Duration Before Changing",
         "13": "赏金目标更换间隔"
@@ -1317,9 +1320,13 @@
         "0": "Bomb Explosion Range",
         "13": "炸弹爆炸范围"
     },
-    "terroristBombHearRange": {
-        "0": "Bomb Warning Sound Range",
-        "13": "爆炸预警范围和声音传播距离"
+    "terroristBombAlertRange": {
+        "0": "Bomb Warning Range",
+        "13": "爆炸预警范围 (m)"
+    },
+    "terroristBombSoundRange": {
+        "0": "Bomb Sound Range",
+        "13": "爆炸声音传播范围 (m)"
     },
     "terroristBombCanDefuse": {
         "0": "Bomb Can Be Defused",
@@ -1377,17 +1384,13 @@
         "0": "Trap Capture Range",
         "13": "陷阱有效范围"
     },
-    "evilTrapperMaxDistance": {
-        "0": "Trap Kill Announcement Range",
-        "13": "陷阱击杀声音播放有效范围"
+    "evilTrapperKillSoundRange": {
+        "0": "Trap Kill Sound Range",
+        "13": "陷阱击杀声音传播范围 (m)"
     },
-    "evilTrapperPenaltyTime": {
-        "0": "Cooldown Penalty for Normal Kills",
-        "13": "普通击杀会追加冷却"
-    },
-    "evilTrapperBonusTime": {
-        "0": "Cooldown Reduction for Killing Trapped Players",
-        "13": "击杀落入陷阱的玩家缩减冷却"
+    "evilTrapperPlaceSoundRange": {
+        "0": "Trap Placec Sound Range",
+        "13": "陷阱放置声音传播范围 (m)"
     },
     "gamblerMinCooldown": {
         "0": "Kill Cooldown on Success",
@@ -2771,6 +2774,15 @@
         "0": "Max Number of Jail Uses",
         "13": "技能最大使用次数"
     },
+    "oracleConfessCooldown": {
+        "13": "招募信徒的冷却时间"
+    },
+    "oracleRevealAccuracyRate": {
+        "13": "神谕者死亡后阵营信息准确率 (%)"
+    },
+    "oracleCanNotGuessConfess": {
+        "13": "保护信徒不会被猜测"
+    },
     "TouTitle": {
         "0": "<color=#ff351f>TheOtherUs-Edited</color>",
         "13": "<color=#ff351f>我们的超多职业</color>"
@@ -3261,7 +3273,7 @@
     },
     "Jailor.JailorChat": {
         "0": "Use /jail [text] to PM the jailed player.",
-        "13": "你可以使用 /jail [文字]  指令来与被监禁玩家私聊。\n\n并且对方本轮会议内只能向你发送消息，其它玩家无法看到。"
+        "13": "你可以按Tab切换聊天频道来与被监禁玩家私聊。\n\n并且对方本轮会议内只能向你发送消息，其它玩家无法看到。"
     },
     "MediumInfo.SheriffSuicide": {
         "0": "Oops, misfired!\n[Sheriff Suicide]",
@@ -3342,6 +3354,18 @@
     "InfoSleuth.Team": {
         "0": "s faction is {0}.",
         "13": "的阵营是 {0}"
+    },
+    "Oracle.Impostor": {
+        "0": "Imp",
+        "13": "伪装者"
+    },
+    "Oracle.Neutral": {
+        "0": "Neut",
+        "13": "中立"
+    },
+    "Oracle.Crewmate": {
+        "0": "Crew",
+        "13": "船员"
     },
     "Prosecutor.Button": {
         "0": "Prosecute",
@@ -4286,6 +4310,9 @@
     "clogPlaceGhost": {
         "0": "PLACE",
         "13": "放置"
+    },
+    "oracleButton": {
+        "13": "选择信徒"
     },
     "GuessserGMInfo": {
         "0": " (Guesser)",
@@ -5669,6 +5696,24 @@
     "ProfessionalShortDesc": {
         "13": "击杀玩家时会隐藏尸体"
     },
+    "Oracle": {
+        "13": "神谕者"
+    },
+    "OracleIntroDesc": {
+        "13": "请问您今天要来点赎罪券吗？"
+    },
+    "OracleShortDesc": {
+        "13": "招募信徒，在会议时保护他并获得信息"
+    },
+    "SoulSight": {
+        "13": "窥天者"
+    },
+    "SoulSightIntroDesc": {
+        "13": "自刎归天！"
+    },
+    "SoulSightShortDesc": {
+        "13": "以自杀的状态进入会议得分"
+    },
     "ImpostorFullDesc": {
         "0": "An ordinary Imposter, deadly but otherwise unassuming.",
         "13": "哈哈~白板红狼!"
@@ -6128,5 +6173,8 @@
     },
     "ProfessionalFullDesc": {
         "13": "击杀玩家时不会留下尸体，但是船员经过尸体位置时会自动报警。\n\n注：附加能力的专业杀手与主职业的专业杀手冲突，\n当附加能力的专业杀手开启时，自动禁用主职业的专业杀手"
+    },
+    "OracleFullDesc": {
+        "13": "会议外选定一位信徒，每次进会议时都会获得邪恶阵营的信息。\n神谕者会在会议中保护信徒，使其不会在会议中被驱逐。\n神谕者死亡后会揭示信徒的阵营，有概率是错误的。（设置）"
     }
 }

@@ -190,6 +190,7 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Prophet, CustomOptionHolder.prophetSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Redemptor, CustomOptionHolder.redemptorSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Jailor, CustomOptionHolder.jailorSpawnRate.GetSelection());
+        crewSettings.Add((byte)RoleId.Oracle, CustomOptionHolder.oracleSpawnRate.GetSelection());
         if (!GuesserGM.Enabled)
             crewSettings.Add((byte)RoleId.Vigilante, CustomOptionHolder.guesserSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Trapper, CustomOptionHolder.trapperSpawnRate.GetSelection());
@@ -858,6 +859,7 @@ internal class RoleManagerSelectRolesPatch
 
         if (modifiers.Contains(RoleId.ProfessionalModifier))
         {
+            var LPlayerList = impPlayer.RemoveAll(x => x == Berserker.Player || x == Gambler.gambler || x == BountyHunter.bountyHunter);
             playerId = setModifierToRandomPlayer((byte)RoleId.ProfessionalModifier, impPlayer);
             impPlayer.RemoveAll(x => x.PlayerId == playerId);
             playerList.RemoveAll(x => x.PlayerId == playerId);

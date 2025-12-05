@@ -261,7 +261,7 @@ internal class PlayerControlRevivePatch
 }
 
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
-internal class BodyReportPatch
+internal class CmdReportDeadPatch
 {
     public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
     {
@@ -287,8 +287,6 @@ internal class BodyReportPatch
         var isDetectiveReport = Detective.detective != null &&
                                 Detective.detective == PlayerControl.LocalPlayer &&
                                 __instance.PlayerId == Detective.detective.PlayerId;
-        var isSluethReport = Slueth.slueth != null && Slueth.slueth == PlayerControl.LocalPlayer &&
-                             __instance.PlayerId == Slueth.slueth.PlayerId;
 
         if (isMedicReport || isDetectiveReport)
         {
@@ -366,12 +364,6 @@ internal class BodyReportPatch
             writer.EndRPC();
             Witness.WitnessReport(witnessTarget?.PlayerId ?? byte.MaxValue);
         }
-
-        if (isSluethReport)
-        {
-            var reported = PlayerById(target?.PlayerId);
-            Slueth.reported.TryAdd(reported);
-        }
     }
 }
 
@@ -394,10 +386,26 @@ public static class PlayerDiePatch
     }
 }
 
+[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.ReportDeadBody))]
+public class ReportDeadPatch
+{
+    public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
+    {
+        Message($"报告玩家 {__instance.Data.PlayerName} 被报告尸体 {target?.PlayerName ?? "null"}", "ReportDeadBody");
+
+        var isSluethReport = Slueth.slueth != null && Slueth.slueth == PlayerControl.LocalPlayer && __instance.PlayerId == Slueth.slueth.PlayerId;
+
+        if (isSluethReport)
+        {
+            var reported = PlayerById(target?.PlayerId);
+            Slueth.reported.TryAdd(reported);
+        }
+    }
+}
+
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
 public static class MurderPlayerPatch
 {
-
     public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
         if (SchrodingersCat.Player != null && target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
@@ -421,7 +429,7 @@ public static class MurderPlayerPatch
                 writer.Write((byte)state);
                 writer.EndRPC();
                 SchrodingersCat.State = state;
-                HudManagerStartPatch.schrodingersCatKillButton.Timer = HudManagerStartPatch.schrodingersCatKillButton.MaxTimer / 2;
+                HudManagerStartPatch.schrodingersCatKillButton.Timer = HudManagerStartPatch.schrodingersCatKillButton.MaxTimer * 0.66f;
             }
 
             if (PlayerControl.LocalPlayer == __instance)
@@ -462,6 +470,8 @@ public static class MurderPlayerPatch
         // Collect dead player info
         var deathReason = __instance == target ? CustomDeathReason.Suicide : CustomDeathReason.Kill;
         PlayerData.SetDeathReason(target, deathReason, __instance);
+
+        if (target.PlayerId == Oracle.Player?.PlayerId) Oracle.CheckConfesserTeam();
 
         // Remove fake tasks when player dies
         if (target.HasFakeTasks() || target == Lawyer.lawyer || Pursuer.Player.Contains(target) || target == Thief.thief)
@@ -642,20 +652,10 @@ public static class MurderPlayerPatch
         // EvilTrapper peforms normal kills
         if (EvilTrapper.evilTrapper != null && PlayerControl.LocalPlayer == EvilTrapper.evilTrapper && __instance == EvilTrapper.evilTrapper)
         {
-            if (KillTrap.isTrapped(target) && !EvilTrapper.isTrapKill)  // トラップにかかっている対象をキルした場合のボーナス
-            {
-                EvilTrapper.evilTrapper.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - EvilTrapper.bonusTime;
-                HudManagerStartPatch.evilTrapperSetTrapButton.Timer = EvilTrapper.cooldown - EvilTrapper.bonusTime;
-            }
-            else if (KillTrap.isTrapped(target) && EvilTrapper.isTrapKill)  // トラップキルした場合のペナルティ
+            if (KillTrap.isTrapped(target) && EvilTrapper.isTrapKill)  // トラップキルした場合のペナルティ
             {
                 EvilTrapper.evilTrapper.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
                 HudManagerStartPatch.evilTrapperSetTrapButton.Timer = EvilTrapper.cooldown;
-            }
-            else // トラップにかかっていない対象を通常キルした場合はペナルティーを受ける
-            {
-                EvilTrapper.evilTrapper.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + EvilTrapper.penaltyTime;
-                HudManagerStartPatch.evilTrapperSetTrapButton.Timer = EvilTrapper.cooldown + EvilTrapper.penaltyTime;
             }
             EvilTrapper.isTrapKill = false;
         }
@@ -735,26 +735,35 @@ internal class KillAnimationMoveNextPatch
 {
     internal static PlayerControl Source;
     internal static PlayerControl Target;
-    public static void Postfix(KillAnimation __instance)
+    public static bool Showblood = true;
+
+    public static void Postfix(KillAnimation._CoPerformKill_d__2 __instance)
     {
-        var source = Source;
-        var target = Target;
-        Source = null;
-        Target = null;
-        if (target?.Data == null) return;
-        if (Professional.Player.IsAlive() && source.PlayerId == Professional.Player.PlayerId)
+        if (Target?.Data == null) return;
+        try
         {
             DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
-            foreach (var db in array.Where(x => x.ParentId == target.PlayerId))
+            foreach (var db in array.Where(x => x.ParentId == Target.PlayerId))
             {
-                if (db.gameObject.GetComponent<DeadBodyReporter.DeadBodyReporterMarker>() != null)
-                {
-                    continue;
-                }
+                if (!Showblood) db.bloodSplatter.color = Color.clear;
 
-                _ = new DeadBodyReporter(source, db);
-                break;
+                if (Professional.Player.IsAlive() && Source.PlayerId == Professional.Player.PlayerId)
+                {
+                    if (db.gameObject.GetComponent<DeadBodyReporter.DeadBodyReporterMarker>() != null)
+                    {
+                        continue;
+                    }
+
+                    _ = new DeadBodyReporter(Source, db);
+                }
+                continue;
             }
+        }
+        finally
+        {
+            Source = null;
+            Target = null;
+            Showblood = true;
         }
     }
 }
@@ -832,6 +841,8 @@ public static class ExilePlayerPatch
 
         // Lover suicide trigger on exile
         Avenger.OnPlayerDeath(null, __instance, true);
+
+        if (__instance.PlayerId == Oracle.Player?.PlayerId) Oracle.CheckConfesserTeam();
 
         if (__instance.PlayerId == Pelican.Player?.PlayerId && Pelican.eatenPlayers?.Count > 0)
         {

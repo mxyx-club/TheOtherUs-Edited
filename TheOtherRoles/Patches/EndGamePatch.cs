@@ -1369,6 +1369,9 @@ internal class PlayerStatistics
                             case SchrodingersCat.CatState.Pelican:
                                 numPelicanAlive++;
                                 break;
+                            case SchrodingersCat.CatState.Infected:
+                                numInfectedAlive++;
+                                break;
                             case SchrodingersCat.CatState.Crewmate:
                                 break;
                             case SchrodingersCat.CatState.None:

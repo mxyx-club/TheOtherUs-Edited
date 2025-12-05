@@ -102,7 +102,7 @@ public class Trap : CustomObjectBase<Trap>
             message = t.trapped.Aggregate(message, (current, p) => current + Trapper.infoType switch
             {
                 0 => RoleInfo.GetRolesString(p, false, false, false) + "\n",
-                1 when (isEvilNeutral(p) || isKillerNeutral(p) || p.IsImpostor()) ^ Vortox.Reversal => "邪恶职业 \n",
+                1 when (p.IsEvilNeutral() || p.IsKillerNeutral() || p.IsImpostor()) ^ Vortox.Reversal => "邪恶职业 \n",
                 1 => "善良职业 \n",
                 _ => p.Data.PlayerName + "\n"
             });

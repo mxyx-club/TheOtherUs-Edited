@@ -9,8 +9,9 @@ public static class Warlock
     public static PlayerControl curseVictim;
     public static PlayerControl curseVictimTarget;
 
-    public static float cooldown = 30f;
-    public static float rootTime = 5f;
+    public static float Cooldown = 30f;
+    public static float RootTime = 5f;
+    public static bool FriendlyFire;
 
     public static Sprite curseButtonSprite = new ResourceSprite("CurseButton.png");
     public static Sprite curseKillButtonSprite = new ResourceSprite("CurseKillButton.png");
@@ -21,8 +22,9 @@ public static class Warlock
         currentTarget = null;
         curseVictim = null;
         curseVictimTarget = null;
-        cooldown = CustomOptionHolder.warlockCooldown.GetFloat();
-        rootTime = CustomOptionHolder.warlockRootTime.GetFloat();
+        Cooldown = CustomOptionHolder.warlockCooldown.GetFloat();
+        RootTime = CustomOptionHolder.warlockRootTime.GetFloat();
+        FriendlyFire = CustomOptionHolder.warlockFriendlyFire.GetBool();
     }
 
     public static void resetCurse()

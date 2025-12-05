@@ -80,7 +80,7 @@ public static class Sheriff
         return (target != Mini.mini || Mini.isGrownUp) &&
                (target.IsImpostor(CustomOptionHolder.spyCanDieToSheriff.GetBool(), true) ||
                 (canKillNeutrals &&
-                 (isKillerNeutral(target) ||
+                 (target.IsKillerNeutral() ||
                   Akujo.akujo == target ||
                   SchrodingersCat.Player == target ||
                   Avenger.Player == target ||

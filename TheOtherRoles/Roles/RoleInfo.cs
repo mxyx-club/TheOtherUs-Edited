@@ -107,6 +107,7 @@ public class RoleInfo
     public static RoleInfo trapper = new("Trapper", Trapper.color, RoleId.Trapper, RoleType.Crewmate);
     public static RoleInfo balancer = new("Balancer", Balancer.color, RoleId.Balancer, RoleType.Crewmate);
     public static RoleInfo redemptor = new("Redemptor", Redemptor.color, RoleId.Redemptor, RoleType.Crewmate);
+    public static RoleInfo oracle = new("Oracle", Oracle.color, RoleId.Oracle, RoleType.Crewmate);
 
     // Modifier
     public static RoleInfo assassin = new("Assassin", Assassin.color, RoleId.Assassin, RoleType.Modifier);
@@ -229,6 +230,7 @@ public class RoleInfo
         balancer,
         redemptor,
         avenger,
+        oracle,
 
         lover,
         assassin,
@@ -393,6 +395,7 @@ public class RoleInfo
         if (Pursuer.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(pursuer);
         if (Survivor.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(survivor);
         if (Infected.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(infected);
+        if (p == Oracle.Player) infos.Add(oracle);
 
         if (showGhost)
         {

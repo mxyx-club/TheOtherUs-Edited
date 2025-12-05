@@ -14,15 +14,15 @@ internal class TaskCount
         {
             if (__instance.TaskType != TaskTypes.FixWiring || !WireTaskIsRandom) return;
             List<Console> orgList = MapUtilities.CachedShipStatus.AllConsoles.Where((Console t) => t.TaskTypes.Contains(__instance.TaskType)).ToList();
-            List<Console> list = new(orgList);
+            List<Console> list = orgList.ToArray().ToList();
 
             __instance.MaxStep = WireTaskNum;
             __instance.Data = new byte[WireTaskNum];
             for (int i = 0; i < __instance.Data.Length; i++)
             {
                 if (list.Count == 0)
-                    list = new List<Console>(orgList);
-                int index = GetRandom(list);
+                    list = orgList.ToArray().ToList();
+                int index = list.GetRandomIndex();
                 __instance.Data[i] = (byte)list[index].ConsoleId;
                 list.RemoveAt(index);
             }

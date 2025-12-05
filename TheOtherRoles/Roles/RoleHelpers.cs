@@ -1,3 +1,4 @@
+using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 
 namespace TheOtherRoles.Roles;
@@ -99,6 +100,7 @@ public enum RoleId
     Balancer,
     Redemptor,
     Jailor,
+    Oracle,
 
     // Modifier ---
     Lover,
@@ -282,7 +284,41 @@ public static class PlayerControlExtensions
 
         public bool IsKiller()
         {
-            return player != null && (player.IsImpostor() || isKillerNeutral(player));
+            return player != null && (player.IsImpostor() || player.IsKillerNeutral());
+        }
+
+        public bool IsKillerNeutral()
+        {
+            return player.IsNeutral() && (
+                    player == Juggernaut.juggernaut ||
+                    player == Werewolf.werewolf ||
+                    player == Swooper.swooper ||
+                    player == Arsonist.arsonist ||
+                    (player == Avenger.Player && Avenger.CanFreeKill) ||
+                    player == Pelican.Player ||
+                    player == Jackal.Sidekick ||
+                    player == Pavlovsdogs.pavlovsowner ||
+                    Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) ||
+                    Infected.Player.Any(x => x.PlayerId == player.PlayerId) ||
+                    Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId) ||
+                    (player == SchrodingersCat.Player && SchrodingersCat.IsKiller)
+                    );
+        }
+
+        public bool IsEvilNeutral()
+        {
+            return player != null && player.IsNeutral() && (
+                    player == Jester.Player.Any(x => x.PlayerId == player.PlayerId) ||
+                    player == Vulture.vulture ||
+                    player == Lawyer.lawyer ||
+                    player == Executioner.executioner ||
+                    player == Witness.Player ||
+                    (player == Avenger.Player && !Avenger.CanFreeKill) ||
+                    player == Akujo.akujo ||
+                    player == Doomsayer.doomsayer ||
+                    player == Thief.thief ||
+                    (player == SchrodingersCat.Player && SchrodingersCat.IsEvil)
+                    );
         }
 
         public bool IsCrew(bool AndCat = false)
@@ -385,7 +421,11 @@ public static class PlayerControlExtensions
             player?.Die(DeathReason.Kill, assignGhostRole);
             PlayerData.SetDeathReason(player, deathReason, killer);
 
+            if (player.AmOwner) CanSeeGhostInfo = true;
+
             if (player.AmOwner) _ = new LateTask(() => { CanSeeGhostInfo = true; }, 0.5f, "CanSeeRoleInfo");
+
+            if (player.PlayerId == Oracle.Player?.PlayerId) Oracle.CheckConfesserTeam();
 
             var data = PlayerData.GetPlayerData(player);
             if (data != null && data.DeathReason == CustomDeathReason.Null)
@@ -572,7 +612,6 @@ public static class RoleHelpers
             return false;
         }
 
-
         if (Survivor.Player != null && Survivor.Player.Any(x => x.PlayerId == target.PlayerId) && Survivor.vestActive)
         {
             CustomButton.SetKillTimer(Survivor.vestResetCooldown);
@@ -595,6 +634,11 @@ public static class RoleHelpers
 
         if (target.IsUsingTransportation)
             return false;
+
+        if (killer == EvilTrapper.evilTrapper)
+        {
+            KillTrap.ClearAllTraps(killer, false);
+        }
 
         return true;
     }
@@ -628,6 +672,8 @@ public static class RoleHelpers
         blockedRolePairings.Add([RoleId.Gunsmith, RoleId.Berserker, RoleId.BountyHunter, RoleId.WolfLord]);
 
         blockedRolePairings.Add([RoleId.Mayor, RoleId.Prosecutor]);
+
+        blockedRolePairings.Add([RoleId.Prophet, RoleId.Oracle]);
     }
 
     public static Dictionary<RoleId, int> RoleRate = new();
@@ -825,6 +871,7 @@ public static class RoleHelpers
         Gunsmith.ClearAndReload();
         Berserker.ClearAndReload();
         Avenger.ClearAndReload();
+        Oracle.ClearAndReload();
 
         // Modifier
         Assassin.clearAndReload();

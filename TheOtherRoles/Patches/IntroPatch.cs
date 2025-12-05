@@ -11,6 +11,7 @@ internal class IntroCutsceneOnDestroyPatch
     public static void Prefix(IntroCutscene __instance)
     {
         Message($"游戏开始 MapId: {GameOptionsManager.Instance.CurrentGameOptions.MapId}");
+        if (ModOption.isCanceled) return;
         // Generate and initialize player icons
         if (PlayerControl.LocalPlayer != null && HudManager.Instance != null)
         {
@@ -115,6 +116,7 @@ internal class IntroCutsceneOnDestroyPatch
 
     public static void Postfix(IntroCutscene __instance)
     {
+        if (ModOption.isCanceled) return;
         // 显示按键提示
         Rewired.KeyboardMap keyboardMap = Rewired.ReInput.mapping.GetKeyboardMapInstance(0, 0);
         Il2CppReferenceArray<Rewired.ActionElementMap> actionArray;

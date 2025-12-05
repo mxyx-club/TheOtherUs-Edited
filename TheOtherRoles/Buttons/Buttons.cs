@@ -109,6 +109,7 @@ internal static class HudManagerStartPatch
     public static CustomButton marionetteCameraButton;
     public static CustomButton avengerKillButton;
     public static CustomButton clogPlaceGhost;
+    public static CustomButton oracleButton;
 
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
@@ -170,7 +171,7 @@ internal static class HudManagerStartPatch
         lightsOutButton.MaxTimer = Trickster.lightsOutCooldown;
         cleanerCleanButton.MaxTimer = Cleaner.cooldown;
         undertakerDragButton.MaxTimer = 0f;
-        warlockCurseButton.MaxTimer = Warlock.cooldown;
+        warlockCurseButton.MaxTimer = Warlock.Cooldown;
         securityGuardButton.MaxTimer = SecurityGuard.cooldown;
         securityGuardCamButton.MaxTimer = SecurityGuard.cooldown;
         arsonistButton.MaxTimer = arsonistKillButton.MaxTimer = Arsonist.cooldown;
@@ -226,6 +227,7 @@ internal static class HudManagerStartPatch
         marionetteCameraButton.MaxTimer = 0f;
         avengerKillButton.MaxTimer = Avenger.killCooldown;
         clogPlaceGhost.MaxTimer = Clog.GhostCooldown;
+        oracleButton.MaxTimer = Oracle.ConfessCooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
@@ -1020,7 +1022,7 @@ internal static class HudManagerStartPatch
                 camouflagerButton.Timer = camouflagerButton.MaxTimer;
                 SoundEffectsManager.play("morphlingMorph");
             },
-            buttonText: GetString("CamouflageText")
+            buttonText: GetString("CamoText")
         );
 
         // Hacker button
@@ -2464,8 +2466,9 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return __instance.ReportButton.graphic.color == Palette.EnabledColor &&
-                       PlayerControl.LocalPlayer.CanMove;
+                var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
+                Butcher.dissectedId = db?.ParentId ?? byte.MaxValue;
+                return db != null && PlayerControl.LocalPlayer.CanMove;
             },
             () => { butcherDissectionButton.Timer = butcherDissectionButton.MaxTimer; },
             Butcher.ButtonSprite,
@@ -2476,14 +2479,25 @@ internal static class HudManagerStartPatch
             Butcher.dissectionDuration,
             () =>
             {
-                var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
+                if (Butcher.dissectedId == byte.MaxValue) return;
+                var list = new List<Vector3>();
+                list.AddRange(MapData.MapSpawnPosition(false));
+                list.AddRange(MapData.FindVentSpawnPositions(false));
+                list.Shuffle();
 
-                var writer = StartRPC(CustomRPC.DissectionBody);
-                writer.Write(db.ParentId);
-                writer.Write(Butcher.butcher.PlayerId);
-                writer.EndRPC();
-                RPCProcedure.dissectionBody(db.ParentId, Butcher.butcher.PlayerId);
+                for (var i = 0; i < Butcher.dissectedBodyCount; i++)
+                {
+                    var pos = list.RandomTake();
+                    var writer = StartRPC(CustomRPC.CreateDeadBody);
+                    writer.Write(Butcher.dissectedId);
+                    writer.Write(pos);
+                    writer.Write(i);
+                    writer.EndRPC();
+                    RPCProcedure.CreateDeadBody(Butcher.dissectedId, pos, i);
+                    list.Remove(pos);
+                }
 
+                Butcher.dissectedId = byte.MaxValue;
                 Butcher.canDissection = false;
                 SoundEffectsManager.play("cleanerClean");
             },
@@ -2595,13 +2609,13 @@ internal static class HudManagerStartPatch
                     if (!RpcCustomMurderPlayer(Warlock.warlock, Warlock.curseVictimTarget, false)) return;
 
                     // If blanked or killed
-                    if (Warlock.rootTime > 0)
+                    if (Warlock.RootTime > 0)
                     {
                         AntiTeleport.position = PlayerControl.LocalPlayer.transform.position;
                         PlayerControl.LocalPlayer.moveable = false;
                         // Stop current movement so the warlock is not just running straight into the next object
                         PlayerControl.LocalPlayer.NetTransform.Halt();
-                        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Warlock.rootTime,
+                        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Warlock.RootTime,
                             new Action<float>(p =>
                             {
                                 // Delayed action
@@ -2639,7 +2653,7 @@ internal static class HudManagerStartPatch
                 }
                 else
                 {
-                    Warlock.curseVictimTarget = SetTarget(targetingPlayer: Warlock.curseVictim, distances: 0.75f);
+                    Warlock.curseVictimTarget = SetTarget(targetingPlayer: Warlock.curseVictim, distances: 0.75f, onlyCrewmates: !Warlock.FriendlyFire);
                     SetPlayerOutline(Warlock.curseVictimTarget, Warlock.color);
                 }
 
@@ -2663,7 +2677,8 @@ internal static class HudManagerStartPatch
             __instance.KillButton,
             abilityInput.keyCode,
             buttonText: GetString("CurseText")
-        );
+        )
+        { UseGridPriority = 26 };
 
         // Security Guard button
         securityGuardButton = new CustomButton(
@@ -3449,7 +3464,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 MessageWriter writer;
-                if (Ninja.ninjaMarked != null)
+                if (Ninja.ninjaMarked.IsAlive())
                 {
                     // Create first trace before killing
                     var pos = PlayerControl.LocalPlayer.transform.position;
@@ -3481,10 +3496,8 @@ internal static class HudManagerStartPatch
                     RPCProcedure.placeNinjaTrace(pos);
 
                     Ninja.ninjaMarked = null;
-                    return;
                 }
-
-                if (Ninja.currentTarget != null)
+                else
                 {
                     if (CheckUseAbility(PlayerControl.LocalPlayer, Ninja.currentTarget)) return;
                     Ninja.ninjaMarked = Ninja.currentTarget;
@@ -3507,7 +3520,7 @@ internal static class HudManagerStartPatch
             {
                 Ninja.currentTarget = ImpostorSetTarget();
                 ninjaButton.showTargetNameOnButton(Ninja.currentTarget);
-                ninjaButton.Sprite = Ninja.ninjaMarked != null
+                ninjaButton.Sprite = Ninja.ninjaMarked.IsAlive()
                     ? Ninja.killButtonSprite
                     : Ninja.markButtonSprite;
                 return (Ninja.currentTarget != null || (Ninja.ninjaMarked != null
@@ -4641,7 +4654,6 @@ internal static class HudManagerStartPatch
             buttonText: GetString("monitorButtonText")
         );
 
-
         avengerKillButton = new CustomButton(
             () =>
             {
@@ -4710,6 +4722,45 @@ internal static class HudManagerStartPatch
             },
             buttonText: GetString("clogPlaceGhost")
         );
+
+        oracleButton = new CustomButton(
+            () =>
+            {
+                if (CheckUseAbility(PlayerControl.LocalPlayer, Oracle.CurrentTarget)) return;
+
+                var writer = StartRPC(CustomRPC.SetConfesser);
+                writer.Write(Oracle.CurrentTarget.PlayerId);
+                writer.Write((int)Oracle.CRoleType.None);
+                writer.EndRPC();
+                Oracle.Confesser = Oracle.CurrentTarget;
+
+                oracleButton.Timer = oracleButton.MaxTimer;
+            },
+            () =>
+            {
+                return Oracle.Player.IsAlive() && Oracle.Player == PlayerControl.LocalPlayer;
+            },
+            () =>
+            {
+                Oracle.CurrentTarget = SetTarget();
+                SetPlayerOutline(Oracle.CurrentTarget, Oracle.color);
+
+                oracleButton.showTargetNameOnButton(Oracle.CurrentTarget, Oracle.Confesser?.Data?.PlayerName ?? "");
+
+                return PlayerControl.LocalPlayer.CanMove && Oracle.CurrentTarget != null;
+            },
+            () =>
+            {
+                oracleButton.Timer = oracleButton.MaxTimer;
+            },
+            Oracle.ConfessSprite,
+            __instance,
+            __instance.AbilityButton,
+            modKillInput.keyCode,
+            buttonText: GetString("oracleButton")
+        );
+
+
 
         // Set the default (or settings from the previous game) timers / durations when spawning the buttons
         initialized = true;

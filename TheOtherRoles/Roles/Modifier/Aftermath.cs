@@ -67,14 +67,23 @@ public class Aftermath
         }
         else if (Butcher.butcher == killer)
         {
-            var db = GetDeadBody(PlayerControl.LocalPlayer.GetTruePosition());
+            if (Butcher.dissectedId == byte.MaxValue) return;
+            var list = new List<Vector3>();
+            list.AddRange(MapData.MapSpawnPosition(false));
+            list.AddRange(MapData.FindVentSpawnPositions(false));
+            list.Shuffle();
 
-            var writer = StartRPC(CustomRPC.DissectionBody);
-            writer.Write(db.ParentId);
-            writer.Write(Butcher.butcher.PlayerId);
-            writer.EndRPC();
-            dissectionBody(db.ParentId, Butcher.butcher.PlayerId);
+            foreach (var (pos, i) in list.Select((pvae, i) => (pvae, i)))
+            {
+                var writer = StartRPC(CustomRPC.CreateDeadBody);
+                writer.Write(Butcher.dissectedId);
+                writer.Write(pos);
+                writer.Write(i);
+                writer.EndRPC();
+                CreateDeadBody(Butcher.dissectedId, pos, i);
+            }
 
+            Butcher.dissectedId = byte.MaxValue;
             Butcher.canDissection = false;
             SoundEffectsManager.play("cleanerClean");
         }

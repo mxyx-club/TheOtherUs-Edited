@@ -165,10 +165,12 @@ public class Jailor
         {
             FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Jailed, message);
             SoundManager.Instance.PlaySound(HudManager.Instance?.Chat?.messageSound, false, 1f, null);
+            ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.Default;
         }
         else if (PlayerControl.LocalPlayer == Player)
         {
             FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Player, message);
+            ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.Default;
         }
     }
 

@@ -42,6 +42,7 @@ public static class Shifter
                        player == SchrodingersCat.Player ||
                        player == Pavlovsdogs.pavlovsowner ||
                        Jackal.jackal.Any(x => x == player) ||
+                       Infected.Player.Any(x => x == player) ||
                        Pavlovsdogs.pavlovsdogs.Any(x => x == player);
             }
         }

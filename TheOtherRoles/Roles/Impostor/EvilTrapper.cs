@@ -5,15 +5,13 @@ public static class EvilTrapper
     public static PlayerControl evilTrapper;
     public static Color color = Palette.ImpostorRed;
 
-    public static float minDistance;
-    public static float maxDistance;
+    public static float placeSoundRange;
+    public static float killSoundRange;
     public static int numTrap;
     public static float extensionTime;
     public static float killTimer;
     public static float cooldown;
     public static float trapRange;
-    public static float penaltyTime;
-    public static float bonusTime;
     public static bool isTrapKill;
 
     public static Sprite trapButtonSprite = new ResourceSprite("TrapperButton.png");
@@ -37,9 +35,8 @@ public static class EvilTrapper
         extensionTime = CustomOptionHolder.evilTrapperExtensionTime.GetFloat();
         killTimer = CustomOptionHolder.evilTrapperKillTimer.GetFloat();
         cooldown = CustomOptionHolder.evilTrapperCooldown.GetFloat();
-        maxDistance = CustomOptionHolder.evilTrapperMaxDistance.GetFloat();
+        killSoundRange = CustomOptionHolder.evilTrapperKillSoundRange.GetFloat() / 10;
+        placeSoundRange = CustomOptionHolder.evilTrapperPlaceSoundRange.GetFloat() / 10;
         trapRange = CustomOptionHolder.evilTrapperTrapRange.GetFloat();
-        penaltyTime = CustomOptionHolder.evilTrapperPenaltyTime.GetFloat();
-        bonusTime = CustomOptionHolder.evilTrapperBonusTime.GetFloat();
     }
 }

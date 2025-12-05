@@ -7,7 +7,8 @@ public static class Terrorist
 
     public static float destructionTime = 20f;
     public static float destructionRange = 2f;
-    public static float hearRange = 30f;
+    public static float alertRange = 30f;
+    public static float soundRange = 30f;
     public static float defuseDuration = 3f;
     public static float bombCooldown = 15f;
     public static float bombActiveAfter = 3f;
@@ -23,7 +24,8 @@ public static class Terrorist
 
         destructionTime = CustomOptionHolder.terroristBombDestructionTime.GetFloat();
         destructionRange = CustomOptionHolder.terroristBombDestructionRange.GetFloat() / 10;
-        hearRange = CustomOptionHolder.terroristBombHearRange.GetFloat() / 10;
+        alertRange = CustomOptionHolder.terroristBombAlertRange.GetFloat() / 10;
+        soundRange = CustomOptionHolder.terroristBombSoundRange.GetFloat() / 10;
         defuseDuration = CustomOptionHolder.terroristDefuseDuration.GetFloat();
         bombCooldown = CustomOptionHolder.terroristBombCooldown.GetFloat();
         canDefuse = CustomOptionHolder.terroristBombCanDefuse.GetBool();

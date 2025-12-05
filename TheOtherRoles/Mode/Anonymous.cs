@@ -33,11 +33,11 @@ internal class Anonymous
 
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            var color = RandomAndRemove(colors);
-            var hat = RandomOrEmpty(hats, EmptyHat);
-            var skin = RandomOrEmpty(skins, EmptySkin);
-            var visor = RandomOrEmpty(visors, EmptyVisor);
-            var namePlate = RandomOrEmpty(nameplates, EmptyNameplate, 0.55f);
+            var color = colors.RandomTake();
+            var hat = hats.RandomOrEmpty(EmptyHat);
+            var skin = skins.RandomOrEmpty(EmptySkin);
+            var visor = visors.RandomOrEmpty(EmptyVisor);
+            var namePlate = nameplates.RandomOrEmpty(EmptyNameplate, 55);
 
             player.RpcSetColor(color);                // 随机颜色
             player.RpcSetHat(hat);                    // 随机原版帽子

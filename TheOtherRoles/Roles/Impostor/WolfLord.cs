@@ -1,4 +1,3 @@
-using TheOtherRoles.Mode;
 using TheOtherRoles.Patches;
 
 namespace TheOtherRoles.Roles.Impostor;

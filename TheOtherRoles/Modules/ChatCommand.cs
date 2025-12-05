@@ -449,6 +449,28 @@ public static class ChatCommandRegistry
             }
         });
 
+        Register(["setname", "sn"], (sender, args, chat) =>
+        {
+            if (AmongUsClient.Instance.AmHost || !InGame || ModOption.DebugMode)
+            {
+                if (AmongUsClient.Instance.AmHost && args.Length == 2)
+                {
+                    var player = GetPlayer(args);
+                    var text = string.Join(' ', args[1..]).Trim();
+                    player.RpcSetName(text);
+                }
+                else if (args.Length == 1)
+                {
+                    var text = string.Join(' ', args).Trim();
+                    sender.RpcSetName(text);
+                }
+                else
+                {
+                    chat.AddChat(sender, "/setname <new_name>");
+                }
+            }
+        });
+
         Register(["clearvote", "cv"], (sender, args, chat) =>
         {
             if (AmongUsClient.Instance.AmHost && InMeeting)

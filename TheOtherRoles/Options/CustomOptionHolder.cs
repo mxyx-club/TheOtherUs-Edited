@@ -200,6 +200,7 @@ public class CustomOptionHolder
     public static CustomOption warlockSpawnRate;
     public static CustomOption warlockCooldown;
     public static CustomOption warlockRootTime;
+    public static CustomOption warlockFriendlyFire;
 
     public static CustomOption bountyHunterSpawnRate;
     public static CustomOption bountyHunterBountyDuration;
@@ -232,7 +233,8 @@ public class CustomOptionHolder
     public static CustomOption terroristBombCooldown;
     public static CustomOption terroristBombDestructionTime;
     public static CustomOption terroristBombDestructionRange;
-    public static CustomOption terroristBombHearRange;
+    public static CustomOption terroristBombSoundRange;
+    public static CustomOption terroristBombAlertRange;
     public static CustomOption terroristDefuseDuration;
     public static CustomOption terroristBombCanDefuse;
     public static CustomOption terroristBombActiveAfter;
@@ -254,9 +256,10 @@ public class CustomOptionHolder
     public static CustomOption evilTrapperCooldown;
     public static CustomOption evilTrapperKillTimer;
     public static CustomOption evilTrapperTrapRange;
-    public static CustomOption evilTrapperMaxDistance;
-    public static CustomOption evilTrapperPenaltyTime;
-    public static CustomOption evilTrapperBonusTime;
+    public static CustomOption evilTrapperFriendlyFire;
+    public static CustomOption evilTrapperKillSoundRange;
+    public static CustomOption evilTrapperPlaceSoundRange;
+
 
     public static CustomOption gamblerSpawnRate;
     public static CustomOption gamblerMinCooldown;
@@ -541,6 +544,11 @@ public class CustomOptionHolder
     public static CustomOption redemptorPrayerCooldown;
     public static CustomOption redemptorPrayerDuration;
     public static CustomOption redemptorReviveDuration;
+
+    public static CustomOption oracleSpawnRate;
+    public static CustomOption oracleConfessCooldown;
+    public static CustomOption oracleRevealAccuracyRate;
+    public static CustomOption oracleCanNotGuessConfess;
 
     public static CustomOption bodyGuardSpawnRate;
     public static CustomOption bodyGuardResetTargetAfterMeeting;
@@ -1014,6 +1022,7 @@ public class CustomOptionHolder
         warlockSpawnRate = Create(102200, Types.Impostor, Cs(Warlock.color, "Warlock"), rates, null, true);
         warlockCooldown = Create(102201, Types.Impostor, "warlockCooldown", 20f, 10f, 60f, 2.5f, warlockSpawnRate);
         warlockRootTime = Create(102202, Types.Impostor, "warlockRootTime", 3f, 0f, 15f, 0.25f, warlockSpawnRate);
+        warlockFriendlyFire = Create(102203, Types.Impostor, "warlockFriendlyFire", true, warlockSpawnRate);
 
         bountyHunterSpawnRate = Create(102300, Types.Impostor, Cs(BountyHunter.color, "BountyHunter"), rates, null, true);
         bountyHunterBountyDuration = Create(102301, Types.Impostor, "bountyHunterBountyDuration", 60f, 10f, 180f, 5f, bountyHunterSpawnRate);
@@ -1048,8 +1057,9 @@ public class CustomOptionHolder
             isHidden: () => { return terroristMode.Selection == 0; });
         terroristBombDestructionTime = Create(102704, Types.Impostor, "terroristBombDestructionTime", 0f, 0f, 120f, 0.5f, terroristSpawnRate,
             isHidden: () => { return terroristMode.Selection == 0; });
-        terroristBombDestructionRange = Create(102705, Types.Impostor, "terroristBombDestructionRange", 35f, 5f, 250f, 5f, terroristSpawnRate);
-        terroristBombHearRange = Create(102706, Types.Impostor, "terroristBombHearRange", 60f, 5f, 250f, 5f, terroristSpawnRate);
+        terroristBombDestructionRange = Create(102705, Types.Impostor, "terroristBombDestructionRange", 35, 5, 200, 5, terroristSpawnRate);
+        terroristBombAlertRange = Create(102706, Types.Impostor, "terroristBombAlertRange", 0, 0, 200, 5, terroristSpawnRate);
+        terroristBombSoundRange = Create(102709, Types.Impostor, "terroristBombSoundRange", 90, 5, 200, 5, terroristSpawnRate);
         terroristBombCanDefuse = Create(102707, Types.Impostor, "terroristBombCanDefuse", true, terroristSpawnRate,
             isHidden: () => { return terroristMode.Selection == 0; });
         terroristDefuseDuration = Create(102708, Types.Impostor, "terroristDefuseDuration", 2f, 0f, 30f, 0.5f, terroristBombCanDefuse);
@@ -1071,9 +1081,9 @@ public class CustomOptionHolder
         evilTrapperCooldown = Create(103003, Types.Impostor, "evilTrapperCooldown", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
         evilTrapperKillTimer = Create(103004, Types.Impostor, "evilTrapperKillTimer", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
         evilTrapperTrapRange = Create(103005, Types.Impostor, "evilTrapperTrapRange", 0.5f, 0.2f, 1.5f, 0.1f, evilTrapperSpawnRate);
-        evilTrapperMaxDistance = Create(103006, Types.Impostor, "evilTrapperMaxDistance", 10f, 0f, 20f, 0.25f, evilTrapperSpawnRate);
-        evilTrapperPenaltyTime = Create(103007, Types.Impostor, "evilTrapperPenaltyTime", 0f, 0f, 30f, 0.5f, evilTrapperSpawnRate);
-        evilTrapperBonusTime = Create(103008, Types.Impostor, "evilTrapperBonusTime", 10f, 0f, 15f, 0.5f, evilTrapperSpawnRate);
+        evilTrapperFriendlyFire = Create(103006, Types.Impostor, "evilTrapperFriendlyFire", 10f, 5f, 60f, 5f, evilTrapperSpawnRate);
+        evilTrapperKillSoundRange = Create(103007, Types.Impostor, "evilTrapperKillSoundRange", 35f, 5f, 50f, 5f, evilTrapperSpawnRate);
+        evilTrapperPlaceSoundRange = Create(103008, Types.Impostor, "evilTrapperPlaceSoundRange", 10f, 5f, 60f, 5f, evilTrapperSpawnRate);
 
         gamblerSpawnRate = Create(103300, Types.Impostor, Cs(Gambler.color, "Gambler"), rates, null, true);
         gamblerMinCooldown = Create(103301, Types.Impostor, "gamblerMinCooldown", 2.5f, 0f, 45f, 0.5f, gamblerSpawnRate);
@@ -1352,7 +1362,7 @@ public class CustomOptionHolder
 
         balancerSpawnRate = Create(303300, Types.Crewmate, Cs(Balancer.color, "Balancer"), rates, null, true);
         balancerCount = Create(303301, Types.Crewmate, "balancerCount", 1, 1, 3, 1, balancerSpawnRate);
-        balancerVoteTime = Create(303302, Types.Crewmate, "balancerVoteTime", 60, 15, 150, 5, balancerSpawnRate);
+        balancerVoteTime = Create(303302, Types.Crewmate, "balancerVoteTime", 60, 15, 240, 15, balancerSpawnRate);
 
         medicSpawnRate = Create(302000, Types.Crewmate, Cs(Medic.color, "Medic"), rates, null, true);
         medicShowShielded = Create(302001, Types.Crewmate, "medicShowShielded",
@@ -1383,6 +1393,11 @@ public class CustomOptionHolder
         redemptorPrayerCooldown = Create(303905, Types.Crewmate, "redemptorPrayerCooldown", 25f, 10f, 60f, 2.5f, redemptorPrayer);
         redemptorPrayerDuration = Create(303906, Types.Crewmate, "redemptorPrayerDuration", 5f, 2f, 15f, 0.5f, redemptorPrayer);
         redemptorReviveDuration = Create(303907, Types.Crewmate, "redemptorReviveDuration", 1.5f, 0f, 15f, 0.5f, redemptorSpawnRate);
+
+        oracleSpawnRate = Create(304000, Types.Crewmate, Cs(Oracle.color, "Oracle"), rates, null, true);
+        oracleConfessCooldown = Create(304001, Types.Crewmate, "oracleConfessCooldown", 20f, 5f, 60f, 2.5f, oracleSpawnRate);
+        oracleRevealAccuracyRate = Create(304002, Types.Crewmate, "oracleRevealAccuracyRate", 80, 40, 100, 10, oracleSpawnRate);
+        oracleCanNotGuessConfess = Create(304003, Types.Crewmate, "oracleCanNotGuessConfess", false, oracleSpawnRate);
 
         bodyGuardSpawnRate = Create(303400, Types.Crewmate, Cs(BodyGuard.color, "BodyGuard"), rates, null, true);
         bodyGuardResetTargetAfterMeeting = Create(303401, Types.Crewmate, "bodyGuardResetTargetAfterMeeting", true, bodyGuardSpawnRate);

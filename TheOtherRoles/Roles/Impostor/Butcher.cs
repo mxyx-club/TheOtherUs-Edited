@@ -3,7 +3,7 @@ namespace TheOtherRoles.Roles.Impostor;
 public class Butcher
 {
     public static PlayerControl butcher;
-    public static PlayerControl dissected;
+    public static byte dissectedId;
     public static Color color = Palette.ImpostorRed;
 
     public static float dissectionCooldown = 30f;
@@ -17,7 +17,7 @@ public class Butcher
     public static void clearAndReload()
     {
         butcher = null;
-        dissected = null;
+        dissectedId = byte.MaxValue;
         canDissection = true;
         dissectionCooldown = CustomOptionHolder.butcherDissectionCooldown.GetFloat();
         dissectionDuration = CustomOptionHolder.butcherDissectionDuration.GetFloat();

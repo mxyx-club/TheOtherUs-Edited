@@ -6,7 +6,7 @@ public class Bomb : CustomObjectBase<Bomb>
 {
     public static Sprite defuseSprite = new ResourceSprite("Bomb_Button_Defuse.png");
     private static Sprite bombSprite = new ResourceSprite("Bomb.png", 300f);
-    private static Sprite backgroundSprite => new ResourceSprite("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.hearRange);
+    private static Sprite backgroundSprite => new ResourceSprite("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.alertRange);
 
     public static Bomb TargetBomb;
     public GameObject Background;
@@ -56,7 +56,7 @@ public class Bomb : CustomObjectBase<Bomb>
         Background.SetActive(!Terrorist.selfExplosion);
         IsActive = true;
 
-        SoundEffectsManager.playAtPosition("bombFuseBurning", pos, Terrorist.destructionTime, Terrorist.hearRange, true);
+        SoundEffectsManager.playAtPosition("bombFuseBurning", pos, Terrorist.destructionTime, Terrorist.soundRange, true);
 
         Behaviour.StartCoroutine(ExplosionCountdown().WrapToIl2Cpp());
     }
@@ -93,7 +93,7 @@ public class Bomb : CustomObjectBase<Bomb>
         {
             var position = GameObject.transform.position;
 
-            SoundEffectsManager.playAtPosition("bombExplosion", position, maxDuration: 1.6f, range: Terrorist.hearRange);
+            SoundEffectsManager.playAtPosition("bombExplosion", position, maxDuration: 1.6f, range: Terrorist.soundRange);
 
             if (!Terrorist.selfExplosion || !(Player == PlayerControl.LocalPlayer))
             {

@@ -283,8 +283,14 @@ internal class HudManagerUpdatePatch
 
         if (Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive())
         {
-            if (local == Jailor.Player || InMeeting)
+            if (local == Jailor.Player)
                 setPlayerNameColor(Jailor.Jailed, Jailor.color);
+        }
+
+        if (Oracle.Player.IsAlive() && Oracle.Confesser.IsAlive())
+        {
+            if (Oracle.Player.AmOwner)
+                setPlayerNameColor(Oracle.Confesser, Oracle.color);
         }
 
         if (Executioner.executioner != null && local == Executioner.executioner && Executioner.target != null)
@@ -420,8 +426,8 @@ internal class HudManagerUpdatePatch
             int numberOfTasks = playerTotal - playerCompleted;
 
             bool forImp = local.IsImpostor();
-            bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(local);
-            bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(local);
+            bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && local.IsKillerNeutral();
+            bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && local.IsEvilNeutral();
             bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && local.IsNeutral();
 
             if (numberOfTasks <= Snitch.taskCountForReveal && Snitch.snitch.IsAlive())
@@ -440,8 +446,8 @@ internal class HudManagerUpdatePatch
                 foreach (PlayerControl p in allPlayer)
                 {
                     bool TargetsImp = p.IsImpostor();
-                    bool TargetsKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(p);
-                    bool TargetsEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(p);
+                    bool TargetsKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && p.IsKillerNeutral();
+                    bool TargetsEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && p.IsEvilNeutral();
                     bool TargetsNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && p.IsNeutral();
                     var targetsRole = RoleInfo.getRoleInfoForPlayer(p, false, false).FirstOrDefault();
                     if (local == Snitch.snitch && (TargetsImp || TargetsKillerTeam || TargetsEvilTeam || TargetsNeutraTeam))
@@ -558,6 +564,30 @@ internal class HudManagerUpdatePatch
             }
         }
 
+        if (Oracle.Player.IsDead() && Oracle.Confesser != null && Oracle.ConfesserType != Oracle.CRoleType.None)
+        {
+            var color = Oracle.ConfesserType switch
+            {
+                Oracle.CRoleType.None => Oracle.color,
+                Oracle.CRoleType.Crewmate => new Color32(0, 255, 255, byte.MaxValue),
+                Oracle.CRoleType.Impostor => new Color32(255, 0, 0, 255),
+                Oracle.CRoleType.Neutral => new Color32(128, 128, 128, 255),
+                _ => Oracle.color,
+            };
+            var suffix = Cs(color, $"({GetString($"Oracle.{Oracle.ConfesserType}")}) ");
+
+            if (MeetingHud.Instance != null)
+            {
+                foreach (var states in allPlayerStates)
+                {
+                    if (Oracle.Confesser?.PlayerId == states.TargetPlayerId)
+                    {
+                        states.NameText.text = suffix + states.NameText.text;
+                    }
+                }
+            }
+        }
+
         if (BandLeader.Player != null)
         {
             var suffix1 = Cs(BandLeader.color, "(K)");
@@ -566,7 +596,7 @@ internal class HudManagerUpdatePatch
             var isKeyboardist = local == BandLeader.Player || BandLeader.Keyboardist == local || BandLeader.Formed || CanSeeGhostInfo;
             var isBassist = local == BandLeader.Player || BandLeader.Bassist == local || BandLeader.Formed || CanSeeGhostInfo;
             var isDrummer = local == BandLeader.Player || BandLeader.Drummer == local || BandLeader.Formed || CanSeeGhostInfo;
-            if (local == BandLeader.Player || local.IsDead() || BandLeader.Members.Any(x => x == local))
+            if (local == BandLeader.Player || CanSeeGhostInfo || BandLeader.Members.Any(x => x == local))
             {
                 if (BandLeader.Keyboardist != null && isKeyboardist)
                     BandLeader.Keyboardist.cosmetics.nameText.text += suffix1;
@@ -1193,7 +1223,7 @@ internal class HudManagerUpdatePatch
 
         var local = PlayerControl.LocalPlayer;
 
-        if (Prophet.isRevealed && (local.Data.Role.IsImpostor || isKillerNeutral(local)))
+        if (Prophet.isRevealed && (local.Data.Role.IsImpostor || local.IsKillerNeutral()))
         {
             if (Prophet.arrows.Count == 0) Prophet.arrows.Add(new Arrow(Prophet.color));
             if (Prophet.arrows.Count != 0 && Prophet.arrows[0] != null)
@@ -1275,8 +1305,8 @@ internal class HudManagerUpdatePatch
         var local = PlayerControl.LocalPlayer;
 
         var forImpTeam = local.Data.Role.IsImpostor;
-        var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(local);
-        var forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(local);
+        var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && local.IsKillerNeutral();
+        var forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && local.IsEvilNeutral();
         var forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && local.IsNeutral();
 
         if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam))
@@ -1295,8 +1325,8 @@ internal class HudManagerUpdatePatch
             {
                 var arrowForImp = p.Data.Role.IsImpostor;
                 if (Mimic.mimic == p) arrowForImp = true;
-                var arrowForKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(p);
-                var arrowForEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(p);
+                var arrowForKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && p.IsKillerNeutral();
+                var arrowForEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && local.IsEvilNeutral();
                 var arrowForNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && p.IsNeutral();
                 var targetsRole = RoleInfo.getRoleInfoForPlayer(p, false).FirstOrDefault();
 
@@ -1335,8 +1365,8 @@ internal class HudManagerUpdatePatch
 
         var isDead = local == Snitch.snitch || local.Data.IsDead;
         var forImpTeam = local.IsImpostor();
-        var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKillerNeutral(local);
-        var forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvilNeutral(local);
+        var forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && local.IsKillerNeutral();
+        var forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && local.IsEvilNeutral();
         var forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && local.IsNeutral();
 
         if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam || isDead))

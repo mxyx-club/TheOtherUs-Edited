@@ -86,40 +86,6 @@ public static class Helpers
                || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId && Werewolf.hasImpostorVision);
     }
 
-    public static bool isKillerNeutral(PlayerControl player)
-    {
-        return player.IsNeutral() && (
-                player == Juggernaut.juggernaut ||
-                player == Werewolf.werewolf ||
-                player == Swooper.swooper ||
-                player == Arsonist.arsonist ||
-                (player == Avenger.Player && Avenger.CanFreeKill) ||
-                player == Pelican.Player ||
-                player == Jackal.Sidekick ||
-                player == Pavlovsdogs.pavlovsowner ||
-                Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) ||
-                Infected.Player.Any(x => x.PlayerId == player.PlayerId) ||
-                Pavlovsdogs.pavlovsdogs.Any(x => x.PlayerId == player.PlayerId) ||
-                (player == SchrodingersCat.Player && SchrodingersCat.IsKiller)
-                );
-    }
-
-    public static bool isEvilNeutral(PlayerControl player)
-    {
-        return player != null && player.IsNeutral() && (
-                player == Jester.Player.Any(x => x.PlayerId == player.PlayerId) ||
-                player == Vulture.vulture ||
-                player == Lawyer.lawyer ||
-                player == Executioner.executioner ||
-                player == Witness.Player ||
-                (player == Avenger.Player && !Avenger.CanFreeKill) ||
-                player == Akujo.akujo ||
-                player == Doomsayer.doomsayer ||
-                player == Thief.thief ||
-                (player == SchrodingersCat.Player && SchrodingersCat.IsEvil)
-                );
-    }
-
     public static string teamString(PlayerControl player)
     {
         var killerTeam = "";
@@ -390,7 +356,7 @@ public static class Helpers
 #nullable disable
     public static bool Chance(this SRandom rnd, float rate = 50f)
     {
-        double value = rnd.NextDouble() * 100.0;
+        var value = rnd.NextSingle() * 100.0;
 
         return value < rate;
     }
@@ -401,46 +367,15 @@ public static class Helpers
         return list[indexData];
     }
 
-    public static int GetRandom<T>(List<T> list)
-    {
-        var indexData = URandom.Range(0, list.Count);
-        return indexData;
-    }
-
     public static void ForEach<T>(this Il2CppArrayBase<T> list, Action<T> func)
     {
         foreach (T obj in list) func(obj);
-    }
-
-    public static List<T> ToList<T>(this ISystem.List<T> list)
-    {
-        List<T> newList = new(list.Count);
-        foreach (T item in list)
-        {
-            newList.Add(item);
-        }
-        return newList;
     }
 
     public static T FirstOrDefault<T>(this Il2CppArrayBase<T> list)
     {
         foreach (T obj in list)
             return obj;
-        return default;
-    }
-
-    public static T FirstOrDefault<T>(this List<T> list)
-    {
-        if (list.Count > 0)
-            return list[0];
-        return default;
-    }
-
-    public static T FirstOrDefault<T>(this ISystem.List<T> list, Func<T, bool> func)
-    {
-        foreach (T obj in list)
-            if (func(obj))
-                return obj;
         return default;
     }
 
@@ -452,11 +387,6 @@ public static class Helpers
             newList.Add(item);
         }
         return newList;
-    }
-
-    public static T Find<T>(this ISystem.List<T> data, Predicate<T> match)
-    {
-        return data.ToList().Find(match);
     }
 
     public static KeyValuePair<TKey, TValue> FirstOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> list, Func<KeyValuePair<TKey, TValue>, bool> func)
@@ -475,31 +405,6 @@ public static class Helpers
         return false;
     }
 
-    public static bool Any<T>(this List<T> list, Func<T, bool> func)
-    {
-        if (list == null)
-            return false;
-        foreach (T obj in list)
-            if (func(obj))
-                return true;
-        return false;
-    }
-
-    public static bool TryAdd<T>(this List<T> list, T item)
-    {
-        if (list == null || item == null || list.Contains(item)) return false;
-        try
-        {
-            list.Add(item);
-            return true;
-        }
-        catch (Exception e)
-        {
-            Message(e);
-            return false;
-        }
-    }
-
     public static TKey GetKeyByValue<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TValue value, TKey defaultvalue = default)
     {
         foreach (var pair in dictionary)
@@ -515,47 +420,6 @@ public static class Helpers
     public static bool Contains<T, TKey>(this IEnumerable<T> list, T item, Func<T, TKey> keySelector)
     {
         return list.Any(x => keySelector(x).Equals(keySelector(item)));
-    }
-
-    public static int Count<T>(this ISystem.List<T> list, Func<T, bool> func = null)
-    {
-        int count = 0;
-        foreach (T obj in list)
-            if (func == null || func(obj)) count++;
-        return count;
-    }
-
-    public static List<T> Shuffle<T>(this List<T> list)
-    {
-        int n = list.Count;
-        while (n > 1)
-        {
-            n--;
-            int k = rnd.Next(n + 1);
-            (list[k], list[n]) = (list[n], list[k]);
-        }
-        return list;
-    }
-
-    public static T RandomAndRemove<T>(List<T> list)
-    {
-        if (list.Count == 0) return default;
-        int index = rnd.Next(list.Count);
-        T item = list[index];
-        list.RemoveAt(index);
-        return item;
-    }
-
-    public static T RandomOrEmpty<T>(List<T> list, T emptyValue, float emptyChance = 0.33f)
-    {
-        if (list.Count == 0) return default;
-        if (rnd.NextSingle() < emptyChance)
-            return emptyValue;
-
-        int index = rnd.Next(list.Count);
-        T item = list[index];
-        list.RemoveAt(index);
-        return item;
     }
 
     public static Color HexToColor(string hex)

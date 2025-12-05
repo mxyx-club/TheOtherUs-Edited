@@ -46,6 +46,7 @@ public class CustomButton
     public string buttonText;
     public bool mirror;
     public bool UseGrid;
+    public int UseGridPriority;
     public bool showButtonText;
     public float DeputyTimer;
     public float Timer = 15;
@@ -106,7 +107,6 @@ public class CustomButton
         this.buttonText = buttonText;
         this.textTemplate = textTemplate;
         UseGrid = useGrid;
-
         IsKillButton = textTemplate is KillButton;
         actionButton = UObject.Instantiate(textTemplate, textTemplate.transform.parent);
         actionButton.name = "CustomButton";
@@ -136,7 +136,7 @@ public class CustomButton
             var gridContent = actionButton.gameObject.GetComponent<HudContent>();
             gridContent.UpdateSubPriority();
             gridContent.MarkAsKillButtonContent(IsKillButton);
-            gridContent.SetPriority(IsKillButton ? 40 : 25);
+            gridContent.SetPriority(UseGridPriority == 0 ? IsKillButton ? 40 : 25 : UseGridPriority);
             gridContent.IsStaticContent = false;
             HudGrid.Instance?.RegisterContent(gridContent, mirror);
         }

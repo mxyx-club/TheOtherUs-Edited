@@ -54,8 +54,8 @@ public class KillTrap : CustomObjectBase<KillTrap>
         audioSource.clip = place;
         audioSource.loop = false;
         audioSource.playOnAwake = false;
-        audioSource.maxDistance = 2 * EvilTrapper.maxDistance / 3;
-        audioSource.minDistance = EvilTrapper.minDistance;
+        audioSource.maxDistance = EvilTrapper.placeSoundRange;
+        audioSource.minDistance = 0.5f;
         audioSource.rolloffMode = rollOffMode;
         audioSource.PlayOneShot(place);
         this.trapper = trapper;
@@ -123,7 +123,8 @@ public class KillTrap : CustomObjectBase<KillTrap>
         trap.audioSource.loop = true;
         trap.audioSource.priority = 0;
         trap.audioSource.spatialBlend = 1;
-        trap.audioSource.maxDistance = EvilTrapper.maxDistance;
+        trap.audioSource.maxDistance = EvilTrapper.killSoundRange;
+        trap.audioSource.minDistance = 0.5f;
         trap.audioSource.clip = countdown;
         trap.audioSource.Play();
 
@@ -271,7 +272,8 @@ public class KillTrap : CustomObjectBase<KillTrap>
         var audioSource = trap.audioSource;
         audioSource.Stop();
 
-        audioSource.maxDistance = EvilTrapper.maxDistance;
+        audioSource.minDistance = 0.5f;
+        audioSource.maxDistance = EvilTrapper.killSoundRange;
         audioSource.PlayOneShot(kill);
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(kill.length, new Action<float>((p) =>
         {

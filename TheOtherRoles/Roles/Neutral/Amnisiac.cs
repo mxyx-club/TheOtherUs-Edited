@@ -225,6 +225,9 @@ public class Amnisiac
             case RoleId.Prophet:
                 if (resetRole) Prophet.clearAndReload();
                 break;
+            case RoleId.Oracle:
+                if (resetRole) Oracle.ClearAndReload();
+                break;
             case RoleId.InfoSleuth:
                 break;
             case RoleId.Spy:

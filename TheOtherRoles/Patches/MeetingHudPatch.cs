@@ -317,7 +317,7 @@ internal class MeetingHudPatch
 
         var meetingInfoText = "";
         int numGuesses = HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId)
-            ? HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) : 0;
+                       ? HandleGuesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) : 0;
 
         if (numGuesses > 0)
         {
@@ -359,8 +359,20 @@ internal class MeetingHudPatch
             meetingInfoText = string.Format(GetString("InfectedGuesserCount"), Infected.GuessCount);
         }
 
-        if (meetingInfoText == "") return;
-        __instance.TimerText.text = $"{meetingInfoText}\n{__instance.TimerText.text}";
+        var meetingTimer = NormalOptions.DiscussionTime - __instance.discussionTimer;
+
+        __instance.TimerText.gameObject.SetActive(true);
+
+        if (NormalOptions.DiscussionTime != 0)
+        {
+            __instance.TimerText.text = $"{meetingInfoText}\n{__instance.TimerText.text}";
+        }
+        else
+        {
+            if (meetingInfoText.IsNullOrWhiteSpace()) __instance.TimerText.gameObject.SetActive(false);
+            __instance.TimerText.text = $"{meetingInfoText}";
+        }
+
     }
 
     [HarmonyPatch]
@@ -935,6 +947,8 @@ internal class MeetingHudPatch
             MeetingCount++;
 
             Attributes.OnMeetingStartAttribute.Invoke();
+
+            Oracle.SendOracleReport();
 
             if (PlayerControl.LocalPlayer.IsDead()) CanSeeGhostInfo = true;
 

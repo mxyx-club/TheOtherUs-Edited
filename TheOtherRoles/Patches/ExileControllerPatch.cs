@@ -1,4 +1,3 @@
-using AmongUs.GameOptions;
 using PowerTools;
 using System.Text;
 using TheOtherRoles.Objects;
@@ -13,51 +12,67 @@ internal class ExileControllerBeginPatch
     public static TextMeshPro confirmImpostorSecondText;
     private static bool IsSec;
     public static bool ForceExile;
+    public static bool OracleBlessed;
+
     public static bool Prefix(ExileController __instance, [HarmonyArgument(0)] ref GameData.PlayerInfo exiled, [HarmonyArgument(1)] bool tie)
     {
-        Message("Begin", "ExileController");
+        Message("Begin Prefix", "ExileController");
         lastExiled = exiled;
-        Message($"开始放逐: {exiled?.PlayerName ?? "null"}");
+        //OracleBlessed = false;
+
         if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && !IsSec)
         {
             IsSec = true;
-            __instance.exiled = null;
-            ExileController controller = UObject.Instantiate(__instance, __instance.transform.parent);
-            controller.exiled = Balancer.targetplayerright.Data;
-            controller.Begin(controller.exiled, false);
-            IsSec = false;
-            controller.completeString = string.Empty;
 
-            controller.Text.gameObject.SetActive(false);
-            controller.Player.UpdateFromEitherPlayerDataOrCache(controller.exiled, PlayerOutfitType.Default, PlayerMaterial.MaskType.Exile, includePet: false);
-            controller.Player.ToggleName(active: false);
-            SkinViewData skin = ShipStatus.Instance.CosmeticsCache.GetSkin(controller.exiled.Outfits[PlayerOutfitType.Default].SkinId);
-            controller.Player.FixSkinSprite(skin.EjectFrame);
-            AudioClip sound = null;
-            if (controller.EjectSound != null)
+            bool leftIsConfesser = Oracle.Player.IsAlive() && Balancer.targetplayerleft == Oracle.Confesser;
+            bool rightIsConfesser = Oracle.Player.IsAlive() && Balancer.targetplayerright == Oracle.Confesser;
+
+            if (leftIsConfesser || rightIsConfesser) OracleBlessed = true;
+            if (leftIsConfesser) lastExiled = exiled = null;
+            else __instance.exiled = exiled = Balancer.targetplayerleft?.Data;
+
+            if (Balancer.targetplayerright != null && !rightIsConfesser)
             {
-                sound = new(controller.EjectSound.Pointer);
+                __instance.exiled = null;
+                ExileController controller = UObject.Instantiate(__instance, __instance.transform.parent);
+                controller.exiled = Balancer.targetplayerright.Data;
+                controller.Begin(controller.exiled, false);
+                Message($"开始放逐: {controller.exiled?.PlayerName ?? "null"}");
+                IsSec = false;
+                controller.completeString = string.Empty;
+
+                controller.Text.gameObject.SetActive(false);
+                controller.Player.UpdateFromEitherPlayerDataOrCache(controller.exiled, PlayerOutfitType.Default, PlayerMaterial.MaskType.Exile, includePet: false);
+                controller.Player.ToggleName(active: false);
+                SkinViewData skin = ShipStatus.Instance.CosmeticsCache.GetSkin(controller.exiled.Outfits[PlayerOutfitType.Default].SkinId);
+                controller.Player.FixSkinSprite(skin.EjectFrame);
+                AudioClip sound = null;
+                if (controller.EjectSound != null)
+                {
+                    sound = new(controller.EjectSound.Pointer);
+                }
+                controller.EjectSound = null;
+                void createlate(int index)
+                {
+                    _ = new LateTask(() => { controller.StopAllCoroutines(); controller.StartCoroutine(controller.Animate()); }, 0.025f + (index * 0.025f));
+                }
+                _ = new LateTask(() => controller.StartCoroutine(controller.Animate()), 0f);
+                for (int i = 0; i < 23; i++)
+                {
+                    createlate(i);
+                }
+                _ = new LateTask(() => { controller.StopAllCoroutines(); controller.EjectSound = sound; controller.StartCoroutine(controller.Animate()); }, 0.6f);
+                ExileController.Instance = __instance;
+                //__instance.exiled = Balancer.targetplayerleft.Data;
+                //exiled = __instance.exiled;
+                if (isFungle)
+                {
+                    Helpers.SetActiveAllObject(controller.gameObject.GetChildren(), "RaftAnimation", false);
+                    controller.transform.localPosition = new(-3.75f, -0.2f, -60f);
+                }
             }
-            controller.EjectSound = null;
-            void createlate(int index)
-            {
-                _ = new LateTask(() => { controller.StopAllCoroutines(); controller.StartCoroutine(controller.Animate()); }, 0.025f + (index * 0.025f));
-            }
-            _ = new LateTask(() => controller.StartCoroutine(controller.Animate()), 0f);
-            for (int i = 0; i < 23; i++)
-            {
-                createlate(i);
-            }
-            _ = new LateTask(() => { controller.StopAllCoroutines(); controller.EjectSound = sound; controller.StartCoroutine(controller.Animate()); }, 0.6f);
-            ExileController.Instance = __instance;
-            __instance.exiled = Balancer.targetplayerleft.Data;
-            exiled = __instance.exiled;
-            if (isFungle)
-            {
-                Helpers.SetActiveAllObject(controller.gameObject.GetChildren(), "RaftAnimation", false);
-                controller.transform.localPosition = new(-3.75f, -0.2f, -60f);
-            }
-            if (Lawyer.lawyer != null && exiled?.Object.PlayerId == Lawyer.target.PlayerId && !Jester.Player.Any(x => x.PlayerId == Lawyer.target?.PlayerId))
+
+            if (Lawyer.lawyer != null && exiled?.Object.PlayerId == Lawyer.target?.PlayerId && !Jester.Player.Any(x => x.PlayerId == Lawyer.target?.PlayerId))
             {
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.LawyerPromotesToPursuer);
                 writer.Write(true);
@@ -65,8 +80,19 @@ internal class ExileControllerBeginPatch
                 Lawyer.PromotesToPursuer(true);
             }
 
-            if (!IsSec) return true;
+            IsSec = false;
+
+            HandleBeginPrefix();
+            return true;
         }
+
+        if (Oracle.Player.IsAlive() && exiled != null && exiled.Object == Oracle.Confesser)
+        {
+            lastExiled = exiled = null;
+            OracleBlessed = true;
+        }
+
+        Message($"开始放逐: {exiled?.PlayerName ?? "null"}");
 
         if (Lawyer.lawyer != null && exiled?.Object.PlayerId == Lawyer.target?.PlayerId && !Jester.Player.Any(x => x.PlayerId == Lawyer.target?.PlayerId))
         {
@@ -75,6 +101,23 @@ internal class ExileControllerBeginPatch
             writer.EndRPC();
             Lawyer.PromotesToPursuer(true);
         }
+
+        HandleBeginPrefix();
+        return true;
+    }
+
+    public static void HandleBeginPrefix()
+    {
+        if (Medic.usedShield) Medic.meetingAfterShielding = true; // Has to be after the setting of the shield
+
+        if (PartTimer.partTimer != null && PartTimer.partTimer.IsAlive())
+        {
+            if (PartTimer.deathTurn <= 0 && PartTimer.target == null) PartTimer.partTimer.Exiled();
+        }
+
+        if (Doomsayer.doomsayer != null && AmongUsClient.Instance.AmHost && !Doomsayer.canGuess) Doomsayer.canGuess = true;
+
+        if (Butcher.butcher != null) Butcher.canDissection = true;
 
         // Medic shield
         if (Medic.medic != null && AmongUsClient.Instance.AmHost && Medic.futureShielded != null && !Medic.medic.Data.IsDead)
@@ -86,24 +129,8 @@ internal class ExileControllerBeginPatch
             RPCProcedure.medicSetShielded(Medic.futureShielded.PlayerId);
         }
 
-        if (Medic.usedShield) Medic.meetingAfterShielding = true; // Has to be after the setting of the shield
-
-        if (PartTimer.partTimer != null && PartTimer.partTimer.IsAlive())
-        {
-            if (PartTimer.deathTurn <= 0 && PartTimer.target == null) PartTimer.partTimer.Exiled();
-        }
-
-        if (Doomsayer.doomsayer != null && AmongUsClient.Instance.AmHost && !Doomsayer.canGuess) Doomsayer.canGuess = true;
-
-        if (Butcher.butcher != null)
-        {
-            Butcher.dissected = null;
-            Butcher.canDissection = true;
-        }
-
         // Activate portals.
         Portal.meetingEndsUpdate();
-
         // SecurityGuard vents and cameras
         var allCameras = MapUtilities.CachedShipStatus.AllCameras.ToList();
         ModOption.camerasToAdd.ForEach(camera =>
@@ -142,33 +169,20 @@ internal class ExileControllerBeginPatch
         // 1 = reset per turn
         if (ModOption.restrictDevices == 1) ModOption.resetDeviceTimes();
 
-        return true;
     }
 
     public static void Postfix(ExileController __instance, [HarmonyArgument(0)] ref GameData.PlayerInfo exiled)
     {
+        Message("Begin Postfix", "ExileController");
         var player = exiled?.Object ?? null;
         confirmImpostorSecondText = UObject.Instantiate(__instance.ImpostorText, __instance.Text.transform);
         StringBuilder changeStringBuilder = new();
 
-        if (GameManager.Instance.LogicOptions.currentGameOptions.GetBool(BoolOptionNames.ConfirmImpostor))
-            confirmImpostorSecondText.transform.localPosition += new Vector3(0f, -0.4f, 0f);
+        if (ModOption.NormalOptions.ConfirmImpostor) confirmImpostorSecondText.transform.localPosition += new Vector3(0f, -0.4f, 0f);
         else confirmImpostorSecondText.transform.localPosition += new Vector3(0f, -0.2f, 0f);
 
         confirmImpostorSecondText.text = changeStringBuilder.ToString();
         confirmImpostorSecondText.gameObject.SetActive(true);
-
-        if (ForceExile)
-        {
-            __instance.completeString = string.Format(GetString("ExileController.ForceExile"), exiled?.PlayerName ?? "NULL");
-            ForceExile = false;
-        }
-
-        if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && __instance.exiled?.PlayerId == Balancer.targetplayerleft.PlayerId)
-        {
-            __instance.completeString = GetString("ExileController.Balancer");
-            return;
-        }
 
         if (CustomOptionHolder.exiledController.GetBool())
         {
@@ -180,8 +194,7 @@ internal class ExileControllerBeginPatch
                         __instance.completeString = TranslationController.Instance.GetString(StringNames.ExileTextNonConfirm, player?.Data.PlayerName);
                         break;
                     case 2:
-                        var roleName = RoleInfo.getRoleInfoForPlayer(player, false, false)
-                            .FirstOrDefault(x => x.roleType is not RoleType.Special).Name;
+                        var roleName = RoleInfo.getRoleInfoForPlayer(player, false, false)?.FirstOrDefault(x => x.roleType is not RoleType.Special)?.Name;
                         __instance.completeString = string.Format(GetString("ExileController.PlayerRole"), player.Data.PlayerName, roleName);
                         break;
                     case 3:
@@ -190,6 +203,12 @@ internal class ExileControllerBeginPatch
                     default:
                         break;
                 }
+            }
+
+            if (ForceExile)
+            {
+                __instance.completeString = string.Format(GetString("ExileController.ForceExile"), exiled?.PlayerName ?? "NULL");
+                ForceExile = false;
             }
 
             if (Prosecutor.ProsecuteThisMeeting && player != null) __instance.completeString += $" {GetString("ExileController.Prosecute")}";
@@ -207,6 +226,26 @@ internal class ExileControllerBeginPatch
                 __instance.ImpostorText.text = text;
             }
         }
+
+        if (Oracle.Player.IsAlive() && OracleBlessed)
+        {
+            __instance.completeString = $"神谕者拒绝放逐 {Oracle.Confesser.Data.PlayerName}！";
+        }
+
+        if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && OracleBlessed)
+        {
+            __instance.completeString = GetString("ExileController.Balancer");
+            if (Oracle.Player.IsAlive() && OracleBlessed)
+                __instance.completeString += $"，但 {Oracle.Confesser.Data.PlayerName} 拒绝了放逐！";
+            return;
+        }
+        else if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && __instance.exiled?.PlayerId == Balancer.targetplayerleft.PlayerId)
+        {
+            __instance.completeString = GetString("ExileController.Balancer");
+            return;
+        }
+
+        OracleBlessed = false;
     }
 
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.ReEnableGameplay))]
@@ -237,7 +276,7 @@ internal class ExileControllerWrapUpPatch
         if (!SubmergedCompatibility.IsSubmerged) return;
         if (obj.name.Contains("ExileCutscene"))
         {
-            Message("Object.Destroy", "WrapUpPostfix");
+            Message("Object.Destroy", "ExileController");
             WrapUpPostfix(ExileControllerBeginPatch.lastExiled);
         }
         else if (obj.name.Contains("SpawnInMinigame"))
@@ -249,7 +288,6 @@ internal class ExileControllerWrapUpPatch
 
     private static void WrapUpPostfix(GameData.PlayerInfo exiled)
     {
-        Message("WrapUp Postfix");
         if (PlayerControl.LocalPlayer.IsDead()) CanSeeGhostInfo = true;
 
         if (CustomOptionHolder.randomGameStartPosition.GetBool()) MapData.RandomSpawnPlayers();
@@ -575,7 +613,7 @@ internal class ExileControllerWrapUpPatch
     {
         public static void Postfix(ExileController __instance)
         {
-            Message("ExileController.WrapUp", "WrapUpPostfix");
+            Message("WrapUp Postfix", "ExileController");
             WrapUpPostfix(__instance.exiled);
         }
     }
@@ -585,7 +623,7 @@ internal class ExileControllerWrapUpPatch
     {
         public static void Postfix(AirshipExileController __instance)
         {
-            Message("AirshipExileController.WrapUpAndSpawn", "WrapUpPostfix");
+            Message("WrapUpAndSpawn", "AirshipExileController");
             WrapUpPostfix(__instance.exiled);
         }
 

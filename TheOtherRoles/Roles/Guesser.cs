@@ -424,7 +424,7 @@ public static class Guesser
         }
         if (target == Indomitable.indomitable)
         {
-            showFlash(new Color32(255, 197, 97, byte.MinValue));
+            Coroutines.Start(showFlashCoroutine(new(255, 197, 97), 1.25f, 0.4f));
             __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
             if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
             seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true);
@@ -452,6 +452,14 @@ public static class Guesser
             }
         }
 
+        if (target == Oracle.Confesser && Oracle.CanNotGuessConfess && Oracle.Player.IsAlive())
+        {
+            if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
+            Coroutines.Start(showFlashCoroutine(Oracle.color, 1.25f, 0.4f));
+            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true);
+            return;
+        }
+
         if (Specoality.specoality != null && PlayerControl.LocalPlayer == Specoality.specoality && Specoality.linearfunction > 0)
         {
             if (Specoality.specoality.IsAlive() && target != dyingTarget)
@@ -459,7 +467,7 @@ public static class Guesser
                 if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
                 seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true);
 
-                Coroutines.Start(showFlashCoroutine(Color.red, 1f, 0.3f));
+                Coroutines.Start(showFlashCoroutine(Color.red, 1.25f, 0.4f));
                 Specoality.linearfunction--;
                 SoundEffectsManager.play("fail");
 
@@ -648,7 +656,7 @@ public static class Guesser
         if (WolfLord.Player == guesser && !WolfLord.Revealed && PlayerControl.LocalPlayer == guesser) WolfLord.WolfLord_Patch.ClearButton();
     }
 
-    public static void seedGuessChat(PlayerControl guesser, PlayerControl guessedTarget, byte guessedRoleId, bool flag = false)
+    public static void seedGuessChat(PlayerControl guesser, PlayerControl guessedTarget, byte guessedRoleId, bool flag = false, string text = "")
     {
         if (CanSeeGhostInfo || PlayerControl.LocalPlayer == guesser || ModOption.DebugMode)
         {
@@ -667,6 +675,8 @@ public static class Guesser
                 var roleInfo = RoleInfo.RoleInfoById.GetValueOrDefault((RoleId)guessedRoleId);
                 msg = string.Format(GetString("GuesserUI.GuessChat"), guesser.Data.PlayerName, guessedTarget.Data.PlayerName, roleInfo?.Name);
             }
+
+            msg += text;
 
             if (FastDestroyableSingleton<HudManager>.Instance)
             {
