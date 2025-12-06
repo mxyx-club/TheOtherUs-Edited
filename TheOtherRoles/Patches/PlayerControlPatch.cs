@@ -10,31 +10,31 @@ public static class PlayerControlFixedUpdatePatch
     private static bool mushroomSaboWasActive;
 
     public static PlayerControl SetTarget(bool onlyCrew = false,
-        bool InVents = false,
-        IEnumerable<PlayerControl> untarget = null,
-        PlayerControl targetingPlayer = null,
+        bool inVented = false,
+        IEnumerable<PlayerControl> ignoreList = null,
+        PlayerControl sourcePlayer = null,
         IEnumerable<PlayerControl> targetPlayers = null,
         float range = 0f)
     {
         PlayerControl result = null;
         var num = GameOptionsData.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentNormalGameOptions.KillDistance, 0, 3)] * (1 + range);
         if (!MapUtilities.CachedShipStatus) return null;
-        if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
-        if (targetingPlayer.Data.IsDead) return null;
+        if (sourcePlayer == null) sourcePlayer = PlayerControl.LocalPlayer;
+        if (sourcePlayer.Data.IsDead) return null;
 
         var candidates = targetPlayers ?? PlayerControl.AllPlayerControls.GetFastEnumerator();
 
-        var truePosition = targetingPlayer.GetTruePosition();
+        var truePosition = sourcePlayer.GetTruePosition();
         foreach (var player in candidates)
         {
-            if (player.IsAlive() && player.PlayerId != targetingPlayer.PlayerId && (!onlyCrew || !player.IsImpostor(true, true)))
+            if (player.IsAlive() && player.PlayerId != sourcePlayer.PlayerId && (!onlyCrew || !player.IsImpostor(true, true)))
             {
                 var target = player;
                 // if that player is not targetable: skip check
-                if (untarget != null && untarget.Any(x => x == target))
+                if (ignoreList != null && ignoreList.Any(x => x == target))
                     continue;
 
-                if (target && (!target.inVent || InVents))
+                if (target && (!target.inVent || inVented))
                 {
                     var vector = target.GetTruePosition() - truePosition;
                     var magnitude = vector.magnitude;
@@ -287,6 +287,8 @@ internal class CmdReportDeadPatch
         var isDetectiveReport = Detective.detective != null &&
                                 Detective.detective == PlayerControl.LocalPlayer &&
                                 __instance.PlayerId == Detective.detective.PlayerId;
+        var isSluethReport = Slueth.slueth != null && Slueth.slueth == PlayerControl.LocalPlayer &&
+                             __instance.PlayerId == Slueth.slueth.PlayerId;
 
         if (isMedicReport || isDetectiveReport)
         {
@@ -364,6 +366,12 @@ internal class CmdReportDeadPatch
             writer.EndRPC();
             Witness.WitnessReport(witnessTarget?.PlayerId ?? byte.MaxValue);
         }
+
+        if (isSluethReport)
+        {
+            var reported = PlayerById(target?.PlayerId);
+            Slueth.reported.TryAdd(reported);
+        }
     }
 }
 
@@ -383,23 +391,6 @@ public static class PlayerDiePatch
         }
         if (ModOption.GameMode is CustomGameModes.Classic or CustomGameModes.Anonymous) return;
         _ = new LateTask(() => { CanSeeGhostInfo = true; }, 1f, "CanSeeRoleInfo");
-    }
-}
-
-[HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.ReportDeadBody))]
-public class ReportDeadPatch
-{
-    public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
-    {
-        Message($"报告玩家 {__instance.Data.PlayerName} 被报告尸体 {target?.PlayerName ?? "null"}", "ReportDeadBody");
-
-        var isSluethReport = Slueth.slueth != null && Slueth.slueth == PlayerControl.LocalPlayer && __instance.PlayerId == Slueth.slueth.PlayerId;
-
-        if (isSluethReport)
-        {
-            var reported = PlayerById(target?.PlayerId);
-            Slueth.reported.TryAdd(reported);
-        }
     }
 }
 
@@ -435,10 +426,9 @@ public static class MurderPlayerPatch
             if (PlayerControl.LocalPlayer == __instance)
             {
                 if (Constants.ShouldPlaySfx())
-                {
                     SoundManager.Instance.PlaySound(__instance.KillSfx, false, 0.8f, null);
-                }
-                if (!KillAnimationCoPerformKillPatch.hideNextAnimation) __instance.NetTransform.RpcSnapTo(target.transform.position);
+                if (!KillAnimationCoPerformKillPatch.hideNextAnimation)
+                    __instance.NetTransform.RpcSnapTo(target.transform.position);
                 __instance.SetKillTimer(ModOption.KillCooldown);
             }
             else if (PlayerControl.LocalPlayer == target)
@@ -493,12 +483,12 @@ public static class MurderPlayerPatch
         Avenger.OnPlayerDeath(__instance, target);
 
         // Bait
-        if (Bait.bait.Any(x => x.PlayerId == target.PlayerId) && !(__instance == Professional.Player && Professional.baitKiller))
+        if (Bait.bait.Any(x => x.PlayerId == target.PlayerId))
         {
             var reportDelay = (float)rnd.NextDouble(Bait.reportDelayMin, Bait.reportDelayMax);
             reportDelay = Math.Max(reportDelay, 0.12f);
 
-            if (__instance.AmOwner)
+            if (__instance.AmOwner && !(__instance == Professional.Player && Professional.baitKiller))
             {
                 _ = new LateTask(() =>
                 {
@@ -768,7 +758,6 @@ internal class KillAnimationMoveNextPatch
     }
 }
 
-
 [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.CoPerformKill))]
 internal class KillAnimationCoPerformKillPatch
 {
@@ -809,6 +798,8 @@ internal class KillAnimationSetMovementPatch
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Exiled))]
 public static class ExilePlayerPatch
 {
+    public static bool NoCheckLover;
+
     public static void Postfix(PlayerControl __instance)
     {
         // Collect dead player info
@@ -839,8 +830,11 @@ public static class ExilePlayerPatch
         if (__instance.HasFakeTasks() || __instance == Pursuer.Player.Contains(__instance) || __instance == Thief.thief)
             __instance.clearAllTasks();
 
+        var noCheckLover = NoCheckLover;
+        NoCheckLover = false;
+
         // Lover suicide trigger on exile
-        Avenger.OnPlayerDeath(null, __instance, true);
+        if (noCheckLover) Avenger.OnPlayerDeath(null, __instance, true);
 
         if (__instance.PlayerId == Oracle.Player?.PlayerId) Oracle.CheckConfesserTeam();
 

@@ -118,7 +118,6 @@ public enum CustomRPC : byte
     JailorJail,
     ExiledJailed,
     SetAvengerLover,
-    WitchSpelledKill,
     JesterWinner,
 
     TrapperKill,
@@ -1425,12 +1424,6 @@ public static class RPCProcedure
         Medic.usedShield = true;
     }
 
-    public static void WitchSpelledKill(PlayerControl player, PlayerControl target)
-    {
-        target.SetDie(CustomDeathReason.WitchExile, player);
-        Avenger.OnPlayerDeath(player, target);
-    }
-
     public static void giveBomb(byte playerId, bool bomb = false)
     {
         if (playerId == byte.MaxValue)
@@ -2527,9 +2520,6 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.Exiled:
                 reader.ReadPlayer()?.Exiled();
-                break;
-            case CustomRPC.WitchSpelledKill:
-                RPCProcedure.WitchSpelledKill(reader.ReadPlayer(), reader.ReadPlayer());
                 break;
             case CustomRPC.JesterWinner:
                 Jester.WinnerPlayer = reader.ReadPlayer();

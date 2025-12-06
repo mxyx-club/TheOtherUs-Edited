@@ -1661,7 +1661,7 @@ internal static class HudManagerStartPatch
                     untargetablePlayers.Add(Jackal.Sidekick);
                 if (SchrodingersCat.State == SchrodingersCat.CatState.Jackal && SchrodingersCat.Player.IsAlive())
                     untargetablePlayers.Add(SchrodingersCat.Player);
-                Jackal.killTarget = SetTarget(untarget: untargetablePlayers);
+                Jackal.killTarget = SetTarget(ignoreList: untargetablePlayers);
                 SetPlayerOutline(Jackal.killTarget, Palette.ImpostorRed);
 
                 jackalKillButton.showTargetNameOnButton(Jackal.killTarget);
@@ -1708,7 +1708,7 @@ internal static class HudManagerStartPatch
                 untargetablePlayers.AddRange(Jackal.jackal);
                 if (Jackal.Sidekick != null) untargetablePlayers.Add(Jackal.Sidekick);
                 if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
-                Jackal.currentTarget = SetTarget(untarget: untargetablePlayers);
+                Jackal.currentTarget = SetTarget(ignoreList: untargetablePlayers);
                 SetPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
 
                 // Show now text since the button already says sidekick
@@ -1774,7 +1774,7 @@ internal static class HudManagerStartPatch
                 if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
                 if (SchrodingersCat.State == SchrodingersCat.CatState.Swooper && SchrodingersCat.Player.IsAlive())
                     untargetablePlayers.Add(SchrodingersCat.Player);
-                Swooper.currentTarget = SetTarget(untarget: untargetablePlayers);
+                Swooper.currentTarget = SetTarget(ignoreList: untargetablePlayers);
                 SetPlayerOutline(Swooper.currentTarget, Palette.ImpostorRed);
                 swooperKillButton.showTargetNameOnButton(Swooper.currentTarget);
 
@@ -1861,7 +1861,7 @@ internal static class HudManagerStartPatch
                     untargetablePlayers.Add(Mini.mini);
 
                 untargetablePlayers.AddRange(Pavlovsdogs.pavlovsdogs);
-                Pavlovsdogs.killTarget = SetTarget(untarget: untargetablePlayers);
+                Pavlovsdogs.killTarget = SetTarget(ignoreList: untargetablePlayers);
                 SetPlayerOutline(Pavlovsdogs.killTarget, Palette.ImpostorRed);
 
                 pavlovsdogsKillButton.showTargetNameOnButton(Pavlovsdogs.killTarget);
@@ -1908,7 +1908,7 @@ internal static class HudManagerStartPatch
                 var untargetablePlayers = new List<PlayerControl>();
                 if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
                 untargetablePlayers.AddRange(Pavlovsdogs.pavlovsdogs);
-                Pavlovsdogs.currentTarget = SetTarget(untarget: untargetablePlayers);
+                Pavlovsdogs.currentTarget = SetTarget(ignoreList: untargetablePlayers);
                 SetPlayerOutline(Pavlovsdogs.currentTarget, Palette.ImpostorRed);
 
                 // Show now text since the button already says sidekick
@@ -2145,7 +2145,7 @@ internal static class HudManagerStartPatch
                 if (SchrodingersCat.State == SchrodingersCat.CatState.Werewolf && SchrodingersCat.Player.IsAlive())
                     untargetablePlayers.Add(SchrodingersCat.Player);
 
-                Werewolf.currentTarget = SetTarget(untarget: untargetablePlayers);
+                Werewolf.currentTarget = SetTarget(ignoreList: untargetablePlayers);
                 werewolfKillButton.showTargetNameOnButton(Werewolf.currentTarget);
                 return Werewolf.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
@@ -2225,7 +2225,7 @@ internal static class HudManagerStartPatch
                 if (SchrodingersCat.State == SchrodingersCat.CatState.Juggernaut && SchrodingersCat.Player.IsAlive())
                     untargetablePlayers.Add(SchrodingersCat.Player);
 
-                Juggernaut.currentTarget = SetTarget(untarget: untargetablePlayers);
+                Juggernaut.currentTarget = SetTarget(ignoreList: untargetablePlayers);
                 juggernautKillButton.showTargetNameOnButton(Juggernaut.currentTarget);
                 return Juggernaut.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
@@ -2262,7 +2262,7 @@ internal static class HudManagerStartPatch
             {
                 var untargetablePlayers = new List<PlayerControl>();
                 if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
-                Pelican.currentTarget = SetTarget(untarget: untargetablePlayers);
+                Pelican.currentTarget = SetTarget(ignoreList: untargetablePlayers);
                 SetPlayerOutline(Pelican.currentTarget, Palette.ImpostorRed);
 
                 pelicanKillButton.showTargetNameOnButton(Pelican.currentTarget);
@@ -2303,7 +2303,7 @@ internal static class HudManagerStartPatch
             {
                 var untargetables = new List<PlayerControl>();
                 if (Spy.spy != null) untargetables.Add(Spy.spy);
-                Eraser.currentTarget = SetTarget(untarget: Eraser.canEraseAnyone ? [] : untargetables, !Eraser.canEraseAnyone);
+                Eraser.currentTarget = SetTarget(ignoreList: Eraser.canEraseAnyone ? [] : untargetables, !Eraser.canEraseAnyone);
                 SetPlayerOutline(Eraser.currentTarget, Eraser.color);
 
                 eraserButton.showTargetNameOnButton(Eraser.currentTarget);
@@ -2653,7 +2653,7 @@ internal static class HudManagerStartPatch
                 }
                 else
                 {
-                    Warlock.curseVictimTarget = SetTarget(targetingPlayer: Warlock.curseVictim, distances: 0.75f, onlyCrewmates: !Warlock.FriendlyFire);
+                    Warlock.curseVictimTarget = SetTarget(sourcePlayer: Warlock.curseVictim, distances: 0.75f, onlyCrewmates: !Warlock.FriendlyFire);
                     SetPlayerOutline(Warlock.curseVictimTarget, Warlock.color);
                 }
 
@@ -2874,7 +2874,7 @@ internal static class HudManagerStartPatch
                     untargetables = Arsonist.dousedPlayers;
                 }
 
-                Arsonist.currentTarget = SetTarget(untarget: untargetables, distances: 0.5f);
+                Arsonist.currentTarget = SetTarget(ignoreList: untargetables, distances: 0.5f);
                 if (Arsonist.currentTarget != null) SetPlayerOutline(Arsonist.currentTarget, Arsonist.color);
 
                 arsonistButton.showTargetNameOnButton(Arsonist.currentTarget);
@@ -3751,7 +3751,7 @@ internal static class HudManagerStartPatch
             {
                 var untargetables = new List<PlayerControl>();
                 if (Mini.mini != null && !Mini.isGrownUp) untargetables.Add(Mini.mini);
-                Thief.currentTarget = SetTarget(untarget: untargetables);
+                Thief.currentTarget = SetTarget(ignoreList: untargetables);
                 SetPlayerOutline(Thief.currentTarget, Thief.color);
 
                 return Thief.currentTarget != null && PlayerControl.LocalPlayer.CanMove;
@@ -4477,7 +4477,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Infected.currentTarget = SetTarget(untarget: Infected.Player);
+                Infected.currentTarget = SetTarget(ignoreList: Infected.Player);
                 SetPlayerOutline(Infected.currentTarget, Infected.color);
                 InfectedKillButton.showTargetNameOnButton(Infected.currentTarget);
 
@@ -4669,7 +4669,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Avenger.currentTarget = Avenger.CanFreeKill ? SetTarget() : SetTarget(targetPlayers: [Avenger.Target]);
+                Avenger.currentTarget = Avenger.CanFreeKill ? SetTarget(inVented: true) : SetTarget(targetPlayers: [Avenger.Target], inVented: true);
                 SetPlayerOutline(Avenger.currentTarget, Avenger.color);
 
                 avengerKillButton.showTargetNameOnButton(Avenger.currentTarget);
@@ -4756,7 +4756,7 @@ internal static class HudManagerStartPatch
             Oracle.ConfessSprite,
             __instance,
             __instance.AbilityButton,
-            modKillInput.keyCode,
+            abilityInput.keyCode,
             buttonText: GetString("oracleButton")
         );
 

@@ -508,11 +508,9 @@ internal class ExileControllerWrapUpPatch
                         writer2.EndRPC();
                         Executioner.PromotesRole();
                     }
-                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WitchSpelledKill);
-                    writer.Write(Witch.witch);
-                    writer.Write(target.PlayerId);
-                    writer.EndRPC();
-                    RPCProcedure.WitchSpelledKill(Witch.witch, target);
+
+                    target.RpcExiled();
+                    PlayerData.RpcSetDeathReason(target, CustomDeathReason.WitchExile, Witch.witch);
                 }
             }
         }

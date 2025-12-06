@@ -370,6 +370,8 @@ public class CustomButton
 
     public void Update()
     {
+        if (ModOption.isCanceled) return;
+
         if (PlayerControl.LocalPlayer?.Data == null || MeetingHud.Instance || ExileController.Instance || !HasButton())
         {
             setActive(false);

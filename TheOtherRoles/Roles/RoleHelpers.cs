@@ -416,71 +416,11 @@ public static class PlayerControlExtensions
             player?.Revive();
         }
 
-        public void SetDie(CustomDeathReason deathReason = CustomDeathReason.Exile, PlayerControl killer = null, bool assignGhostRole = true)
+        public void CustomExiled(bool noCheckLover = false)
         {
-            player?.Die(DeathReason.Kill, assignGhostRole);
-            PlayerData.SetDeathReason(player, deathReason, killer);
-
-            if (player.AmOwner) CanSeeGhostInfo = true;
-
-            if (player.AmOwner) _ = new LateTask(() => { CanSeeGhostInfo = true; }, 0.5f, "CanSeeRoleInfo");
-
-            if (player.PlayerId == Oracle.Player?.PlayerId) Oracle.CheckConfesserTeam();
-
-            var data = PlayerData.GetPlayerData(player);
-            if (data != null && data.DeathReason == CustomDeathReason.Null)
-            {
-                data.DeathReason = CustomDeathReason.Exile;
-                data.KilledBy = null;
-                data.DeathTimer = DateTime.UtcNow;
+            if (noCheckLover) ExilePlayerPatch.NoCheckLover = true;
+            player.Exiled();
             }
-
-            if (MeetingHud.Instance)
-            {
-                foreach (var p in MeetingHud.Instance.playerStates)
-                {
-                    if (p.TargetPlayerId == player.PlayerId)
-                    {
-                        p.SetDead(p.DidReport, true);
-                        p.Overlay.gameObject.SetActive(true);
-                        break;
-                    }
-                }
-            }
-
-            if (player == Jailor.Player && Jailor.Jailed != null && InMeeting)
-            {
-                foreach (var playerState in MeetingHud.Instance.playerStates)
-                {
-                    var cell = playerState.transform.FindChild("JailCell");
-                    cell?.gameObject?.Destroy();
-
-                    var icon = playerState.transform.FindChild("JailTargetIcon");
-                    icon?.gameObject?.Destroy();
-                }
-                Jailor.Jailed = null;
-            }
-
-            if (Lawyer.lawyer != null && player == Lawyer.target)
-            {
-                if (AmongUsClient.Instance.AmHost && (!Jester.Player.Any(x => x.PlayerId == Lawyer.target?.PlayerId) || Lawyer.targetWasGuessed))
-                {
-                    var writer = StartRPC(CustomRPC.LawyerPromotesToPursuer);
-                    writer.Write(false);
-                    writer.EndRPC();
-                    Lawyer.PromotesToPursuer(false);
-                }
-            }
-            if (Executioner.executioner != null && player == Executioner.target)
-            {
-                if (AmongUsClient.Instance.AmHost && Executioner.targetWasGuessed)
-                {
-                    var writer = StartRPC(CustomRPC.ExecutionerPromotesRole);
-                    writer.EndRPC();
-                    Executioner.PromotesRole();
-                }
-            }
-        }
 
         public void RpcExiled()
         {

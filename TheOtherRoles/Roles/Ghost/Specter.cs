@@ -172,6 +172,10 @@ public class Specter
             case RoleId.BandLeader:
                 Survivor.Player.Add(target);
                 break;
+            /*case RoleId.Avenger:
+                Jester.Player.Add(Player);
+                Survivor.Player.Add(target);
+                break;*/
 
             case RoleId.Crewmate:
                 break;
@@ -260,12 +264,6 @@ public class Specter
             case RoleId.Berserker:
                 if (resetRole) Berserker.ClearAndReload();
                 break;
-            case RoleId.Avenger:
-                if (Player.isLover()) break;
-                if (Target == Lovers.lover1) Lovers.lover1 = Player;
-                else if (Target == Lovers.lover2) Lovers.lover1 = Player;
-                Avenger.Player = Player;
-                break;
             case RoleId.Jailor:
                 if (resetRole) Jailor.ClearAndReload();
                 break;
@@ -285,6 +283,7 @@ public class Specter
         var role = RoleInfo.getRoleInfoForPlayer(target, false, false).FirstOrDefault();
         if (role == null) return;
         ReloadRole(role.roleId, target);
+        if (role.roleId == RoleId.Avenger) role = RoleInfo.jester;
 
         RPCProcedure.erasePlayerRoles(local.PlayerId);
         revived = true;

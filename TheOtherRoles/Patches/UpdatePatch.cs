@@ -1608,7 +1608,7 @@ internal class HudManagerUpdatePatch
         var untargetables = new List<PlayerControl>();
         if (Akujo.honmei != null) untargetables.Add(Akujo.honmei);
         if (Akujo.keeps != null) untargetables.AddRange(Akujo.keeps);
-        Akujo.currentTarget = SetTarget(untarget: untargetables);
+        Akujo.currentTarget = SetTarget(ignoreList: untargetables);
         if (Akujo.honmei == null || Akujo.keepsLeft > 0) SetPlayerOutline(Akujo.currentTarget, Akujo.color);
     }
 

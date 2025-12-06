@@ -85,9 +85,9 @@ public class Jailor
 
         if (Guesser.guesserUI != null) Guesser.guesserUIExitButton.OnClick.Invoke();
 
-        target.SetDie();
-        Avenger.OnPlayerDeath(player, target);
-        Akujo.otherLover(target)?.SetDie();
+        target.CustomExiled(true);
+        Avenger.OnPlayerDeath(Player, target);
+        Akujo.otherLover(target)?.CustomExiled(true);
 
         PlayerData.SetDeathReason(target, CustomDeathReason.Jailed, player);
 

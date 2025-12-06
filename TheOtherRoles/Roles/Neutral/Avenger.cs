@@ -85,8 +85,15 @@ public class Avenger
             {
                 if (otherLover.IsAlive())
                 {
-                    if (exile) otherLover.SetDie(CustomDeathReason.LoverSuicide);
-                    else otherLover.MurderPlayer(otherLover, MurderResultFlags.Succeeded);
+                    if (exile)
+                    {
+                        otherLover.CustomExiled(true);
+                    }
+                    else
+                    {
+                        otherLover.MurderPlayer(otherLover, MurderResultFlags.Succeeded);
+                    }
+
                     PlayerData.SetDeathReason(otherLover, CustomDeathReason.LoverSuicide);
                 }
             }
@@ -133,8 +140,16 @@ public class Avenger
             Message($"Player Is Die, Exlied:{exile}");
             if (Player.IsAlive())
             {
-                if (exile) Player.SetDie(CustomDeathReason.AvengerFail);
-                else Player.MurderPlayer(Player, MurderResultFlags.Succeeded);
+                if (exile)
+                {
+                    ExilePlayerPatch.NoCheckLover = true;
+                    Player.CustomExiled(true);
+                }
+                else
+                {
+                    Player.MurderPlayer(Player, MurderResultFlags.Succeeded);
+                }
+
                 PlayerData.SetDeathReason(Player, CustomDeathReason.AvengerFail);
             }
         }

@@ -1081,7 +1081,7 @@ public class CustomOptionHolder
         evilTrapperCooldown = Create(103003, Types.Impostor, "evilTrapperCooldown", 15f, 10f, 60f, 2.5f, evilTrapperSpawnRate);
         evilTrapperKillTimer = Create(103004, Types.Impostor, "evilTrapperKillTimer", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
         evilTrapperTrapRange = Create(103005, Types.Impostor, "evilTrapperTrapRange", 0.5f, 0.2f, 1.5f, 0.1f, evilTrapperSpawnRate);
-        evilTrapperFriendlyFire = Create(103006, Types.Impostor, "evilTrapperFriendlyFire", 10f, 5f, 60f, 5f, evilTrapperSpawnRate);
+        evilTrapperFriendlyFire = Create(103006, Types.Impostor, "evilTrapperFriendlyFire", true, evilTrapperSpawnRate);
         evilTrapperKillSoundRange = Create(103007, Types.Impostor, "evilTrapperKillSoundRange", 35f, 5f, 50f, 5f, evilTrapperSpawnRate);
         evilTrapperPlaceSoundRange = Create(103008, Types.Impostor, "evilTrapperPlaceSoundRange", 10f, 5f, 60f, 5f, evilTrapperSpawnRate);
 

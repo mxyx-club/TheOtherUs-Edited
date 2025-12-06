@@ -1384,6 +1384,9 @@
         "0": "Trap Capture Range",
         "13": "陷阱有效范围"
     },
+    "evilTrapperFriendlyFire": {
+        "13": "陷阱可以击杀队友"
+    },
     "evilTrapperKillSoundRange": {
         "0": "Trap Kill Sound Range",
         "13": "陷阱击杀声音传播范围 (m)"

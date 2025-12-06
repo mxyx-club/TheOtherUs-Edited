@@ -63,7 +63,7 @@ public static class ChatCommandRegistry
         {
             if (AmongUsClient.Instance.AmHost && InGame)
             {
-                ModOption.isCanceled = true;
+                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.Canceled, false);
                 return;
             }
         });

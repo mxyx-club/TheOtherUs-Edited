@@ -95,10 +95,10 @@ public static class Helpers
         return killerTeam;
     }
 
-    public static PlayerControl SetTarget(IEnumerable<PlayerControl> untarget = null, bool onlyCrewmates = false,
-        bool targetInVents = false, float distances = 0f, IEnumerable<PlayerControl> targetPlayers = null, PlayerControl targetingPlayer = null)
+    public static PlayerControl SetTarget(IEnumerable<PlayerControl> ignoreList = null, bool onlyCrewmates = false,
+        bool inVented = false, float distances = 0f, IEnumerable<PlayerControl> targetPlayers = null, PlayerControl sourcePlayer = null)
     {
-        return PlayerControlFixedUpdatePatch.SetTarget(onlyCrewmates, targetInVents, untarget, range: distances, targetingPlayer: targetingPlayer, targetPlayers: targetPlayers);
+        return PlayerControlFixedUpdatePatch.SetTarget(onlyCrewmates, inVented, ignoreList, sourcePlayer, targetPlayers, distances);
     }
 
     public static void SetPlayerOutline(PlayerControl target, Color color)

@@ -208,6 +208,7 @@ public class KillTrap : CustomObjectBase<KillTrap>
         if (!hasTrappedPlayer() && !InMeeting)
         {
             if (!IsActive || isTriggered || PlayerControl.LocalPlayer.IsDead() || PlayerControl.LocalPlayer.inVent || isDisabled || InMeeting) return;
+            if (PlayerControl.LocalPlayer.IsImpostor() && !EvilTrapper.friendlyFire) return;
 
             var distance = Vector2.Distance(GameObject.transform.position, PlayerControl.LocalPlayer.GetTruePosition());
             if (distance < EvilTrapper.trapRange)

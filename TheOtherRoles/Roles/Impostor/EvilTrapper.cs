@@ -13,6 +13,7 @@ public static class EvilTrapper
     public static float cooldown;
     public static float trapRange;
     public static bool isTrapKill;
+    public static bool friendlyFire;
 
     public static Sprite trapButtonSprite = new ResourceSprite("TrapperButton.png");
     public static DateTime placedTime;
@@ -37,6 +38,7 @@ public static class EvilTrapper
         cooldown = CustomOptionHolder.evilTrapperCooldown.GetFloat();
         killSoundRange = CustomOptionHolder.evilTrapperKillSoundRange.GetFloat() / 10;
         placeSoundRange = CustomOptionHolder.evilTrapperPlaceSoundRange.GetFloat() / 10;
+        friendlyFire = CustomOptionHolder.evilTrapperFriendlyFire.GetBool();
         trapRange = CustomOptionHolder.evilTrapperTrapRange.GetFloat();
     }
 }

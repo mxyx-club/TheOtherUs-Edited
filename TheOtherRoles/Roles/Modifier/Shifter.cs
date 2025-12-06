@@ -251,6 +251,7 @@ public static class Shifter
         {
             if (repeat) shiftRole(player2, player1, false);
             PartTimer.partTimer = player1;
+            PartTimer.target = player2;
         }
         else if (Balancer.balancer != null && Balancer.balancer == player2)
         {
