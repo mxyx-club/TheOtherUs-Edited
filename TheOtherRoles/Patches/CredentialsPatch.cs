@@ -114,7 +114,7 @@ public static class CredentialsPatch
             else return;
 
             // fade in and out:
-            var alpha = Mathf.Clamp01(Mathf.Min(new[] { timer, maxTimer - timer }));
+            var alpha = Mathf.Clamp01(Mathf.Min([timer, maxTimer - timer]));
             if (motds.Count == 1) alpha = 1;
             LogoPatch.motdText.color = LogoPatch.motdText.color.SetAlpha(alpha);
             timer -= Time.deltaTime;

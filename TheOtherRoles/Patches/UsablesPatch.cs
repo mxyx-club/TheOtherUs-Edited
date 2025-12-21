@@ -280,8 +280,7 @@ internal class KillButtonDoClickPatch
 {
     public static bool Prefix(KillButton __instance)
     {
-        if (__instance.isActiveAndEnabled && __instance.currentTarget.IsAlive() && !__instance.isCoolingDown &&
-            PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer.CanMove)
+        if (__instance.isActiveAndEnabled && !__instance.isCoolingDown && PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer.CanMove)
         {
             // Deputy handcuff update.
             if (Sheriff.handcuffedPlayers.Contains(PlayerControl.LocalPlayer.PlayerId))

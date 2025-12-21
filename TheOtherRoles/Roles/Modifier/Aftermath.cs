@@ -73,14 +73,16 @@ public class Aftermath
             list.AddRange(MapData.FindVentSpawnPositions(false));
             list.Shuffle();
 
-            foreach (var (pos, i) in list.Select((pvae, i) => (pvae, i)))
+            for (var i = 0; i < Butcher.dissectedBodyCount; i++)
             {
+                var pos = list.RandomTake();
                 var writer = StartRPC(CustomRPC.CreateDeadBody);
                 writer.Write(Butcher.dissectedId);
                 writer.Write(pos);
                 writer.Write(i);
                 writer.EndRPC();
-                CreateDeadBody(Butcher.dissectedId, pos, i);
+                RPCProcedure.CreateDeadBody(Butcher.dissectedId, pos, i);
+                list.Remove(pos);
             }
 
             Butcher.dissectedId = byte.MaxValue;

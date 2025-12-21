@@ -59,6 +59,7 @@ internal enum WinCondition
     AdditionalAlivePursuerWin,
     AdditionalAliveSurvivorWin,
     AdditionalPartTimerWin,
+    AdditionalSoulSightWin,
     ExecutionerWin,
     WerewolfWin,
     JuggernautWin,
@@ -567,6 +568,12 @@ public class OnGameEndPatch
             AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalPartTimerWin);
         }
 
+        if (SoulSight.Player != null && SoulSight.TriggerWin && SoulSight.Player != null)
+        {
+            winners.Add(SoulSight.Player);
+            AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalSoulSightWin);
+        }
+
         if (BandLeader.Player != null && BandLeader.WinCondition == BandLeader.WinnerFlags.Neutral)
         {
             if (winners.Any(x => BandLeader.Members.Select(c => c.Data.PlayerName).Contains(x.Data.PlayerName)))
@@ -685,6 +692,7 @@ public class EndGameManagerSetUpPatch
             { WinCondition.CrewmateWin, (Palette.CrewmateBlue, "CrewmateWin") },
             { WinCondition.ImpostorWin, (Palette.ImpostorRed, "ImpostorWin") },
             { WinCondition.BandLeaderWin, (BandLeader.color, "BandLeaderWin") },
+            { WinCondition.InfectedWin, (BandLeader.color, "InfectedWin") },
             { WinCondition.AvengerTeamWin, (Avenger.color, "AvengerTeamWin") }
         };
 
@@ -696,6 +704,7 @@ public class EndGameManagerSetUpPatch
             { WinCondition.AdditionalAlivePursuerWin, (Pursuer.color, "AdditionalAlivePursuerWin") },
             { WinCondition.AdditionalAliveSurvivorWin, (Survivor.color, "AdditionalAliveSurvivorWin") },
             { WinCondition.AdditionalAvengerTeamWin, (Avenger.color, "AdditionalAvengerTeamWin") },
+            { WinCondition.AdditionalSoulSightWin, (Avenger.color, "AdditionalSoulSightWin") },
             { WinCondition.BandLeaderWin, (BandLeader.color, "BandLeaderWin") }
         };
 

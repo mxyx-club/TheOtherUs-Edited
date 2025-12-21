@@ -166,9 +166,17 @@ public class Amnisiac
                 if (resetRole) Thief.clearAndReload();
                 Survivor.Player.Add(target);
                 break;
+            case RoleId.SoulSight:
+                if (resetRole) SoulSight.ClearAndReload();
+                Survivor.Player.Add(target);
+                break;
             case RoleId.BandLeader:
                 Survivor.Player.Add(target);
                 break;
+
+            /*case RoleId.Avenger:
+                Survivor.Player.Add(target);
+                break;*/
 
             case RoleId.Crewmate:
                 break;
@@ -275,7 +283,7 @@ public class Amnisiac
         if (role == null) return;
 
         ReloadRole(role.roleId, target);
-
+        if (role.roleId == RoleId.Avenger) role = RoleInfo.jester;
 
         if (target.IsImpostor()) turnToImpostor(local);
         RPCProcedure.setRole(local.PlayerId, (byte)role.roleId);

@@ -256,6 +256,7 @@ public class CustomButton
             {
                 t.OnMeetingEnds();
                 t.isEffectActive = false;
+                t.actionButton.cooldownTimerText.color = new Color(1, 1, 1);
                 t.Update();
             }
             catch (NullReferenceException)

@@ -436,6 +436,8 @@ internal class ExileControllerWrapUpPatch
         // Deputy check Promotion, see if the sheriff still exists. The promotion will be after the meeting.
         Sheriff.deputyCheckPromotion(true);
 
+        SoulSight.SoulSight_Patch.EndMeeting(exiled);
+
         // Force Bounty Hunter Bounty Update
         if (BountyHunter.bountyHunter != null && BountyHunter.bountyHunter == PlayerControl.LocalPlayer)
             BountyHunter.bountyUpdateTimer = 0f;

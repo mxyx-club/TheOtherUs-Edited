@@ -122,17 +122,17 @@ public static class Helpers
         {
             if (Spy.impostorsCanKillAnyone)
             {
-                target = SetTarget(null, false, true);
+                target = SetTarget(null, false, inVented: ModOption.ImpCanKillInVent);
             }
             else
             {
                 untargetablePlayers.Add(Spy.spy);
-                target = SetTarget(untargetablePlayers, true, true);
+                target = SetTarget(untargetablePlayers, true, inVented: ModOption.ImpCanKillInVent);
             }
         }
         else
         {
-            target = SetTarget(untargetablePlayers, true, true);
+            target = SetTarget(untargetablePlayers, true, inVented: ModOption.ImpCanKillInVent);
         }
 
         SetPlayerOutline(target, Palette.ImpostorRed);

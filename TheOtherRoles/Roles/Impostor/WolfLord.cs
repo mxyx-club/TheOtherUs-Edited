@@ -27,9 +27,9 @@ public class WolfLord
 
         Killed = true;
 
-        target.CustomExiled(true);
+        target.CustomExiled(null, true);
         Avenger.OnPlayerDeath(Player, target);
-        Akujo.otherLover(target)?.CustomExiled(true);
+        Akujo.otherLover(target)?.CustomExiled(null, true);
 
         PlayerData.SetDeathReason(target, CustomDeathReason.Kill, Player);
         if (target == Balancer.currentTarget) Balancer.currentTarget = null;

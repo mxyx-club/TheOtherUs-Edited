@@ -79,6 +79,7 @@ public class RoleInfo
     public static RoleInfo bandLeader = new("BandLeader", BandLeader.color, RoleId.BandLeader, RoleType.Neutral);
     public static RoleInfo schrodingersCat = new("SchrodingersCat", SchrodingersCat.color, RoleId.SchrodingersCat, RoleType.Neutral);
     public static RoleInfo avenger = new("Avenger", Avenger.color, RoleId.Avenger, RoleType.Neutral);
+    public static RoleInfo soulSight = new("SoulSight", SoulSight.color, RoleId.SoulSight, RoleType.Neutral);
 
     public static RoleInfo crewmate = new("Crewmate", Palette.CrewmateBlue, RoleId.Crewmate, RoleType.Crewmate);
     public static RoleInfo vigilante = new("Vigilante", Vigilante.color, RoleId.Vigilante, RoleType.Crewmate);
@@ -201,6 +202,7 @@ public class RoleInfo
         akujo,
         thief,
         schrodingersCat,
+        soulSight,
 
         crewmate,
         vigilante,
@@ -352,6 +354,7 @@ public class RoleInfo
         if (p == Swapper.swapper) infos.Add(swapper);
         if (p == BodyGuard.bodyguard) infos.Add(bodyguard);
         if (p == Seer.seer) infos.Add(seer);
+        if (p == SoulSight.Player) infos.Add(soulSight);
         if (p == Hacker.hacker) infos.Add(hacker);
         if (p == Tracker.tracker) infos.Add(tracker);
         if (p == Snitch.snitch) infos.Add(snitch);

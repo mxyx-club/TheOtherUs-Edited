@@ -147,6 +147,7 @@ internal class RoleManagerSelectRolesPatch
         neutralSettings.Add((byte)RoleId.Akujo, CustomOptionHolder.akujoSpawnRate.GetSelection());
         neutralSettings.Add((byte)RoleId.SchrodingersCat, CustomOptionHolder.schrodingersCatSpawnRate.GetSelection());
         neutralSettings.Add((byte)RoleId.Thief, CustomOptionHolder.thiefSpawnRate.GetSelection());
+        neutralSettings.Add((byte)RoleId.SoulSight, CustomOptionHolder.soulSightSpawnRate.GetSelection());
         if (ModOption.NumImpostors >= 3 || ModOption.DebugMode)
             neutralSettings.Add((byte)RoleId.BandLeader, CustomOptionHolder.bandLeaderSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.GetSelection());
@@ -346,8 +347,12 @@ internal class RoleManagerSelectRolesPatch
         var imp = data.impostors.Count < data.maxImpostorRoles
             ? data.impostors.Count
             : data.maxImpostorRoles; // Max number of imp loops
-        var crewSteps = crew / data.crewSettings.Keys.Count; // Avarage crewvalues deducted after each loop 
-        var impSteps = imp / data.impSettings.Keys.Count; // Avarage impvalues deducted after each loop
+
+        int crewSettingsCount = data.crewSettings.Keys.Count;
+        int impSettingsCount = data.impSettings.Keys.Count;
+
+        var crewSteps = 0;
+        if (crewSettingsCount > 0) crewSteps = crew / crewSettingsCount;
 
         // set to false if needed, otherwise we can skip the loop
         var isSheriff = !sheriffFlag;
@@ -693,7 +698,7 @@ internal class RoleManagerSelectRolesPatch
     {
         var allPlayer = PlayerControl.AllPlayerControls.ToArray();
         var impPlayer = allPlayer.Where(x => x.Data.Role.IsImpostor).ToList().Shuffle();
-        var neutralPlayer = allPlayer.Where(x => x.IsNeutral() && x != Akujo.akujo && x != Doomsayer.doomsayer).ToList().Shuffle();
+        var neutralPlayer = allPlayer.Where(x => x.IsNeutral() && x != Akujo.akujo && x != SoulSight.Player && x != Doomsayer.doomsayer).ToList().Shuffle();
         var crewPlayer = allPlayer.Where(x => !x.Data.Role.IsImpostor && !x.IsNeutral()).ToList().Shuffle();
 
         assignGuesserGamemodeToPlayers(crewPlayer,
@@ -1008,6 +1013,7 @@ internal class RoleManagerSelectRolesPatch
         {
             var baitPlayer = new List<PlayerControl>(Bait.SwapCrewmate ? crewPlayer : playerList);
             baitPlayer.RemoveAll(x => x == SchrodingersCat.Player);
+            baitPlayer.RemoveAll(x => x == SoulSight.Player);
 
             playerId = setModifierToRandomPlayer((byte)RoleId.Bait, baitPlayer);
             crewPlayer.RemoveAll(x => x.PlayerId == playerId);

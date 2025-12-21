@@ -574,7 +574,7 @@ public static class Guesser
         }
 
         byte partnerId = dyingPartner != null ? dyingPartner.PlayerId : dyingTargetId;
-        dyingTarget.Exiled();
+        dyingTarget.CustomExiled(guesser);
 
         var reason = dyingTarget == guesser ? CustomDeathReason.GuessFail : CustomDeathReason.GuessSuccess;
         PlayerData.SetDeathReason(dyingTarget, reason, guesser);

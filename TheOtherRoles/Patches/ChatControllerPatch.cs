@@ -10,6 +10,7 @@ public static class ChatControllerPatch
         LoverChat,
         JailorChat,
         ImpostorChat,
+        JackalChat,
         GuesserMessage,
     }
 
@@ -20,8 +21,8 @@ public static class ChatControllerPatch
         Impostor,
         Lover,
         Jailor,
-        /*Jackal,
-        Pavlovs,
+        Jackal,
+        /*Pavlovs,
         Infected*/
     }
 
@@ -106,6 +107,22 @@ public static class ChatControllerPatch
                             Jailor.JailorSendMessage(Jailor.Player, text);
                         }
                         break;
+                    case ChannelType.Jackal:
+                        {
+                            var writer = StartRPC(CustomRPC.SendChatToChannel);
+                            writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                            writer.Write((byte)ChannelType.Jackal);
+                            writer.Write(text);
+                            writer.EndRPC();
+                            RPCProcedure.sendChatToChannel(PlayerControl.LocalPlayer, ChannelType.Jackal, text);
+                        }
+                        break;
+                    /*case ChannelType.Pavlovs:
+                        break;
+                    case ChannelType.Infected:
+                        break;*/
+                    case ChannelType.Default:
+                        break;
                 }
                 __instance.freeChatField.textArea.Clear();
                 return false;
@@ -131,6 +148,7 @@ public static class ChatControllerPatch
                     || AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay
                     || ForceEnableChat
                     || (ModOption.ImpostorChatChannel >= 2 && PlayerControl.LocalPlayer.IsImpostor())
+                    || (ModOption.JackalChatChannel >= 2 && (PlayerControl.LocalPlayer == Jackal.Sidekick || Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer)))
                     || (PlayerControl.LocalPlayer.isLover() && Lovers.enableChat)))
                 __instance.Chat.SetVisible(true);
 
@@ -205,6 +223,10 @@ public static class ChatControllerPatch
                 case ChatTypes.ImpostorChat:
                     __instance.NameText.color = Palette.ImpostorRed;
                     __instance.NameText.text = $"{__instance.NameText.text} {"MessageFromTheImpostor".Translate()}";
+                    break;
+                case ChatTypes.JackalChat:
+                    __instance.NameText.color = Jackal.color;
+                    __instance.NameText.text = $"{__instance.NameText.text} {"MessageFromTheJackal".Translate()}";
                     break;
                 default:
                     break;
@@ -353,6 +375,17 @@ public static class ChatControllerPatch
                 {
                     if (!x.IsImpostor() || !x.IsAlive()) return false;
                     return ModOption.ImpostorChatChannel switch
+                    {
+                        1 => InMeeting,
+                        2 => !InMeeting,
+                        3 => true,
+                        _ => false
+                    };
+                },
+                [ChannelType.Jackal] = (x) =>
+                {
+                    if (x != Jackal.Sidekick || !Jackal.jackal.Any(y => y == x) || !x.IsAlive()) return false;
+                    return ModOption.JackalChatChannel switch
                     {
                         1 => InMeeting,
                         2 => !InMeeting,

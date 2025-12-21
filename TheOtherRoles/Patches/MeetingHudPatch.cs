@@ -340,6 +340,12 @@ internal class MeetingHudPatch
         {
             meetingInfoText = string.Format(GetString("PartTimerMeetingInfo"), PartTimer.deathTurn);
         }
+        else if (PlayerControl.LocalPlayer == SoulSight.Player)
+        {
+            meetingInfoText = SoulSight.Score >= SoulSight.ScoreToWin
+                ? GetString("SoulSightMeetingInfo2")
+                : string.Format(GetString("SoulSightMeetingInfo1"), SoulSight.ScoreToWin - SoulSight.Score);
+        }
         else if (PlayerControl.LocalPlayer == Witness.Player)
         {
             if (Witness.timeLeft > 0 && Witness.killerTarget == null)
@@ -359,11 +365,9 @@ internal class MeetingHudPatch
             meetingInfoText = string.Format(GetString("InfectedGuesserCount"), Infected.GuessCount);
         }
 
-        var meetingTimer = NormalOptions.DiscussionTime - __instance.discussionTimer;
-
         __instance.TimerText.gameObject.SetActive(true);
 
-        if (NormalOptions.DiscussionTime != 0)
+        if (NormalOptions.VotingTime != 0)
         {
             __instance.TimerText.text = $"{meetingInfoText}\n{__instance.TimerText.text}";
         }

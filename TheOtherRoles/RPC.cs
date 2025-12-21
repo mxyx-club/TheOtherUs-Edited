@@ -119,6 +119,9 @@ public enum CustomRPC : byte
     ExiledJailed,
     SetAvengerLover,
     JesterWinner,
+    SoulSightSuicide,
+    SoulSightRevive,
+    SoulSightScore,
 
     TrapperKill,
     PlaceTrap,
@@ -501,6 +504,9 @@ public static class RPCProcedure
             case RoleId.Oracle:
                 Oracle.Player = player;
                 break;
+            case RoleId.SoulSight:
+                SoulSight.Player = player;
+                break;
             default:
                 Warn("Unknown role ID: " + roleId, "SetRole");
                 break;
@@ -748,6 +754,13 @@ public static class RPCProcedure
                     HudManager.Instance.Chat.AddChat(player, message);
                 }
                 break;
+            case ChatControllerPatch.ChannelType.Jackal:
+                if (CanSeeGhostInfo || player == Jackal.Sidekick || Jackal.jackal.Any(y => y == player))
+                {
+                    ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.ImpostorChat;
+                    HudManager.Instance.Chat.AddChat(player, message);
+                }
+                break;
             case ChatControllerPatch.ChannelType.Lover:
                 if (Lovers.isLover(PlayerControl.LocalPlayer) || CanSeeGhostInfo)
                 {
@@ -842,6 +855,11 @@ public static class RPCProcedure
             Vulture.eatenBodies++;
             if (Vulture.eatenBodies == Vulture.vultureNumberToWin) Vulture.triggerVultureWin = true;
         }
+        if (SoulSight.Player != null && SoulSight.Player.PlayerId == playerId && SoulSight.Reviveing)
+        {
+            SoulSight.Reviveing = false;
+            SoulSight.CanRevive = false;
+        }
     }
 
     public static void CreateDeadBody(byte targetId, Vector3 pos, int id)
@@ -867,7 +885,7 @@ public static class RPCProcedure
         }
         deadBody.gameObject.name = $"DeadBody ({target.Data.PlayerName}) {id}";
         Message($"Create DeadBody {id}");
-        }
+    }
 
     public static void impostorPromotesToLastImpostor(byte targetId)
     {
@@ -1240,6 +1258,7 @@ public static class RPCProcedure
         if (player == Lawyer.lawyer) Lawyer.clearAndReload();
         if (player == Thief.thief) Thief.clearAndReload();
         if (player == Juggernaut.juggernaut) Juggernaut.clearAndReload();
+        if (player == SoulSight.Player) SoulSight.ClearAndReload();
         if (player == Doomsayer.doomsayer) Doomsayer.clearAndReload();
         if (player == Akujo.akujo) Akujo.clearAndReload();
         if (player == Witness.Player) Witness.ClearAndReload();
@@ -2549,6 +2568,16 @@ internal class RPCHandlerPatch
                     else if (CanSeeGhostInfo)
                         HudManager.Instance.Chat.AddChat(Oracle.Player, text);
                 }
+                break;
+            case CustomRPC.SoulSightSuicide:
+                SoulSight.Suicide(reader.ReadPlayer());
+                break;
+            case CustomRPC.SoulSightRevive:
+                SoulSight.Player?.ModRevive(true, reader.ReadBoolean());
+                break;
+            case CustomRPC.SoulSightScore:
+                SoulSight.Score = reader.ReadInt32();
+                SoulSight.TriggerWin = reader.ReadBoolean();
                 break;
         }
 

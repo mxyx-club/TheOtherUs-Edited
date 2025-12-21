@@ -233,6 +233,12 @@ internal class PlayerControlRevivePatch
             CustomButton.ResetAllCooldowns(ModOption.KillCooldown / 2);
         }
 
+        if (__instance == SoulSight.Player)
+        {
+            SoulSight.CanRevive = true;
+            SoulSight.Reviveing = false;
+        }
+
         if (__instance.isLover() && Lovers.otherLover(__instance)?.IsDead() == true)
         {
             Lovers.otherLover(__instance)?.ModRevive();
@@ -504,6 +510,12 @@ public static class MurderPlayerPatch
         if (Bloody.bloody.Any(x => x.PlayerId == target.PlayerId))
         {
             Bloodytrail.StartBloodTrail(__instance, target);
+        }
+
+        if (SoulSight.Player != null && SoulSight.Player == target && __instance != Professional.Player)
+        {
+            SoulSight.Reviveing = true;
+            SoulSight.CanRevive = true;
         }
 
         if (Aftermath.aftermath != null && Aftermath.aftermath == target && PlayerControl.LocalPlayer == __instance)
@@ -799,6 +811,7 @@ internal class KillAnimationSetMovementPatch
 public static class ExilePlayerPatch
 {
     public static bool NoCheckLover;
+    public static PlayerControl Killer;
 
     public static void Postfix(PlayerControl __instance)
     {
@@ -830,11 +843,13 @@ public static class ExilePlayerPatch
         if (__instance.HasFakeTasks() || __instance == Pursuer.Player.Contains(__instance) || __instance == Thief.thief)
             __instance.clearAllTasks();
 
+        // Lover suicide trigger on exile
         var noCheckLover = NoCheckLover;
         NoCheckLover = false;
-
-        // Lover suicide trigger on exile
-        if (noCheckLover) Avenger.OnPlayerDeath(null, __instance, true);
+        var killer = Killer;
+        Killer = null;
+        Message($"NoCheckLover {noCheckLover}", "Exlied");
+        if (!noCheckLover) Avenger.OnPlayerDeath(killer, __instance, true);
 
         if (__instance.PlayerId == Oracle.Player?.PlayerId) Oracle.CheckConfesserTeam();
 

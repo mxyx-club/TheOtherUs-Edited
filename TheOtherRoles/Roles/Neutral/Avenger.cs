@@ -66,8 +66,9 @@ public class Avenger
         var otherLover = Lovers.otherLover(target);
         if (Lovers.isLover(target) && Lovers.otherLover(target) != null)
         {
-            if (!exile && killer != null && Lovers.IsAvengerLover && killer != target && killer != otherLover && killer.IsAlive())
+            if (killer != null && Lovers.IsAvengerLover && killer != target && killer != otherLover && killer.IsAlive())
             {
+                Message("Avenger Lover Kill Other Player");
                 ClearAndReload();
                 RPCProcedure.erasePlayerRoles(otherLover.PlayerId);
 
@@ -83,11 +84,12 @@ public class Avenger
             }
             else
             {
+                Message($"Lover Is Die, Exlied:{exile}");
                 if (otherLover.IsAlive())
                 {
                     if (exile)
                     {
-                        otherLover.CustomExiled(true);
+                        otherLover.CustomExiled(null, true);
                     }
                     else
                     {
@@ -104,7 +106,7 @@ public class Avenger
     {
         if (Player.IsDead() || target == null || target != Target || WinFlag) return;
 
-        var outcome = exile ? TargetWasExiled : TargetWasKilledByOther;
+        var outcome = killer == null ? TargetWasExiled : TargetWasKilledByOther;
 
         if (killer == Player)
         {
@@ -143,7 +145,7 @@ public class Avenger
                 if (exile)
                 {
                     ExilePlayerPatch.NoCheckLover = true;
-                    Player.CustomExiled(true);
+                    Player.CustomExiled(null, true);
                 }
                 else
                 {
@@ -158,7 +160,7 @@ public class Avenger
     public static void OnPlayerDeath(PlayerControl killer, PlayerControl target, bool exile = false)
     {
         if (target == null || !ShouldHandleDeath(target)) return;
-
+        Message($"killer: {killer?.Data?.PlayerName ?? "NULL"} target:{target?.Data?.PlayerName ?? "NULL"}", "Avenger_OnPlayerDeath");
         SetAvenger(killer, target, exile);
 
         if (Target == target)

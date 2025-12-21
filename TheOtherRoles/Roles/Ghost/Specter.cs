@@ -172,6 +172,10 @@ public class Specter
             case RoleId.BandLeader:
                 Survivor.Player.Add(target);
                 break;
+            case RoleId.SoulSight:
+                if (resetRole) SoulSight.ClearAndReload();
+                Survivor.Player.Add(target);
+                break;
             /*case RoleId.Avenger:
                 Jester.Player.Add(Player);
                 Survivor.Player.Add(target);

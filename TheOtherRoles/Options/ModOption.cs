@@ -52,7 +52,11 @@ internal class ModOption
     public static bool randomGameStartPosition;
     public static CustomGameModes GameMode = CustomGameModes.Classic;
     public static int ImpostorChatChannel;
+    public static int JackalChatChannel;
     public static bool EnableOtherLog;
+    public static bool ImpCanKillInVent;
+    public static bool NeutCanKillInVent;
+    public static bool CanKillInVent;
 
     // Updating values
     public static int meetingsCount;
@@ -119,11 +123,14 @@ internal class ModOption
         disableSabotage = CustomOptionHolder.disableSabotage.GetBool();
         EnableOtherLog = CustomOptionHolder.enableOtherLog.GetBool();
         ImpostorChatChannel = CustomOptionHolder.impostorChatChannel.GetSelection();
+        JackalChatChannel = CustomOptionHolder.jackalChatChannel.GetSelection();
+        ImpCanKillInVent = CustomOptionHolder.canKillPlayerInVent.GetSelection() >= 1;
+        NeutCanKillInVent = CustomOptionHolder.canKillPlayerInVent.GetSelection() >= 2;
+        CanKillInVent = CustomOptionHolder.canKillPlayerInVent.GetSelection() == 3;
         //ShowVentsOnMap = CustomOptionHolder.showVentsOnMap.GetBool();
         //ShowVentsOnMeetingMap = CustomOptionHolder.showVentsOnMap.GetQuantity() == 1;
         firstKillPlayer = null;
         isRoundOne = true;
-        isCanceled = false;
     }
 
     public static void resetDeviceTimes()

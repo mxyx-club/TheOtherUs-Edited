@@ -28,6 +28,11 @@ public class Pelican
         {
             target.Die(DeathReason.Kill, false);
             MurderPlayerPatch.HandleMurderPostfix(Player, target);
+            if (target == SoulSight.Player)
+            {
+                SoulSight.CanRevive = false;
+                SoulSight.Reviveing = false;
+            }
 
             if (target == PlayerControl.LocalPlayer)
             {

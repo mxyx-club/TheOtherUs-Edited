@@ -72,6 +72,7 @@ public enum RoleId
     BandLeader,
     SchrodingersCat,
     Avenger,
+    SoulSight,
 
     Crewmate,
     Vigilante,
@@ -167,6 +168,7 @@ public static class PlayerControlExtensions
                    player == Vulture.vulture ||
                    player == SchrodingersCat.Player ||
                    player == Jackal.Sidekick ||
+                   player == Avenger.Player ||
                    player == Pavlovsdogs.pavlovsowner ||
                    Jester.Player.Any(x => x == player) ||
                    Jackal.jackal.Any(x => x == player) ||
@@ -254,6 +256,10 @@ public static class PlayerControlExtensions
                 roleCouldUse = true;
             }
             else if (Infected.Player != null && Infected.Player.Any(x => x == player) && Infected.canUseVents)
+            {
+                roleCouldUse = true;
+            }
+            else if (Avenger.Player != null && Avenger.Player == player && Avenger.canUseVents)
             {
                 roleCouldUse = true;
             }
@@ -416,11 +422,13 @@ public static class PlayerControlExtensions
             player?.Revive();
         }
 
-        public void CustomExiled(bool noCheckLover = false)
+        public void CustomExiled(PlayerControl killer = null, bool noCheckLover = false)
         {
-            if (noCheckLover) ExilePlayerPatch.NoCheckLover = true;
+            ExilePlayerPatch.NoCheckLover = noCheckLover;
+            ExilePlayerPatch.Killer = killer;
+            Message($"NoCheckLover: {noCheckLover}", "Custom");
             player.Exiled();
-            }
+        }
 
         public void RpcExiled()
         {
@@ -793,6 +801,7 @@ public static class RoleHelpers
         Trapper.clearAndReload();
         Terrorist.clearAndReload();
         Juggernaut.clearAndReload();
+        SoulSight.ClearAndReload();
         Doomsayer.clearAndReload();
         Swooper.clearAndReload();
         Balancer.clearAndReload();

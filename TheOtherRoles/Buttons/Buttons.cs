@@ -110,6 +110,7 @@ internal static class HudManagerStartPatch
     public static CustomButton avengerKillButton;
     public static CustomButton clogPlaceGhost;
     public static CustomButton oracleButton;
+    public static CustomButton soulSightButton;
 
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
@@ -228,6 +229,7 @@ internal static class HudManagerStartPatch
         avengerKillButton.MaxTimer = Avenger.killCooldown;
         clogPlaceGhost.MaxTimer = Clog.GhostCooldown;
         oracleButton.MaxTimer = Oracle.ConfessCooldown;
+        soulSightButton.MaxTimer = SoulSight.Cooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
@@ -254,6 +256,7 @@ internal static class HudManagerStartPatch
         redemptorPrayerButton.EffectDuration = Redemptor.prayerDuration;
         clogPlaceGhost.EffectDuration = Clog.GhostDuration;
         berserkerKillButton.EffectDuration = 0.5f;
+        soulSightButton.EffectDuration = SoulSight.RespawnTimer;
 
         zoomOutButton.MaxTimer = zoomOutButton.Timer = 0f;
     }
@@ -512,7 +515,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Sheriff.currentTarget = SetTarget();
+                Sheriff.currentTarget = SetTarget(inVented: ModOption.CanKillInVent);
                 SetPlayerOutline(Sheriff.currentTarget, Sheriff.color);
 
                 sheriffKillButton.showTargetNameOnButton(Sheriff.currentTarget);
@@ -1661,7 +1664,7 @@ internal static class HudManagerStartPatch
                     untargetablePlayers.Add(Jackal.Sidekick);
                 if (SchrodingersCat.State == SchrodingersCat.CatState.Jackal && SchrodingersCat.Player.IsAlive())
                     untargetablePlayers.Add(SchrodingersCat.Player);
-                Jackal.killTarget = SetTarget(ignoreList: untargetablePlayers);
+                Jackal.killTarget = SetTarget(ignoreList: untargetablePlayers, inVented: ModOption.NeutCanKillInVent);
                 SetPlayerOutline(Jackal.killTarget, Palette.ImpostorRed);
 
                 jackalKillButton.showTargetNameOnButton(Jackal.killTarget);
@@ -1708,7 +1711,7 @@ internal static class HudManagerStartPatch
                 untargetablePlayers.AddRange(Jackal.jackal);
                 if (Jackal.Sidekick != null) untargetablePlayers.Add(Jackal.Sidekick);
                 if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
-                Jackal.currentTarget = SetTarget(ignoreList: untargetablePlayers);
+                Jackal.currentTarget = SetTarget(ignoreList: untargetablePlayers, inVented: ModOption.NeutCanKillInVent);
                 SetPlayerOutline(Jackal.currentTarget, Palette.ImpostorRed);
 
                 // Show now text since the button already says sidekick
@@ -1774,7 +1777,7 @@ internal static class HudManagerStartPatch
                 if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
                 if (SchrodingersCat.State == SchrodingersCat.CatState.Swooper && SchrodingersCat.Player.IsAlive())
                     untargetablePlayers.Add(SchrodingersCat.Player);
-                Swooper.currentTarget = SetTarget(ignoreList: untargetablePlayers);
+                Swooper.currentTarget = SetTarget(ignoreList: untargetablePlayers, inVented: ModOption.NeutCanKillInVent);
                 SetPlayerOutline(Swooper.currentTarget, Palette.ImpostorRed);
                 swooperKillButton.showTargetNameOnButton(Swooper.currentTarget);
 
@@ -1861,7 +1864,7 @@ internal static class HudManagerStartPatch
                     untargetablePlayers.Add(Mini.mini);
 
                 untargetablePlayers.AddRange(Pavlovsdogs.pavlovsdogs);
-                Pavlovsdogs.killTarget = SetTarget(ignoreList: untargetablePlayers);
+                Pavlovsdogs.killTarget = SetTarget(ignoreList: untargetablePlayers, inVented: ModOption.NeutCanKillInVent);
                 SetPlayerOutline(Pavlovsdogs.killTarget, Palette.ImpostorRed);
 
                 pavlovsdogsKillButton.showTargetNameOnButton(Pavlovsdogs.killTarget);
@@ -1908,7 +1911,7 @@ internal static class HudManagerStartPatch
                 var untargetablePlayers = new List<PlayerControl>();
                 if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
                 untargetablePlayers.AddRange(Pavlovsdogs.pavlovsdogs);
-                Pavlovsdogs.currentTarget = SetTarget(ignoreList: untargetablePlayers);
+                Pavlovsdogs.currentTarget = SetTarget(ignoreList: untargetablePlayers, inVented: ModOption.NeutCanKillInVent);
                 SetPlayerOutline(Pavlovsdogs.currentTarget, Palette.ImpostorRed);
 
                 // Show now text since the button already says sidekick
@@ -2145,7 +2148,7 @@ internal static class HudManagerStartPatch
                 if (SchrodingersCat.State == SchrodingersCat.CatState.Werewolf && SchrodingersCat.Player.IsAlive())
                     untargetablePlayers.Add(SchrodingersCat.Player);
 
-                Werewolf.currentTarget = SetTarget(ignoreList: untargetablePlayers);
+                Werewolf.currentTarget = SetTarget(ignoreList: untargetablePlayers, inVented: ModOption.NeutCanKillInVent);
                 werewolfKillButton.showTargetNameOnButton(Werewolf.currentTarget);
                 return Werewolf.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
@@ -2225,7 +2228,7 @@ internal static class HudManagerStartPatch
                 if (SchrodingersCat.State == SchrodingersCat.CatState.Juggernaut && SchrodingersCat.Player.IsAlive())
                     untargetablePlayers.Add(SchrodingersCat.Player);
 
-                Juggernaut.currentTarget = SetTarget(ignoreList: untargetablePlayers);
+                Juggernaut.currentTarget = SetTarget(ignoreList: untargetablePlayers, inVented: ModOption.NeutCanKillInVent);
                 juggernautKillButton.showTargetNameOnButton(Juggernaut.currentTarget);
                 return Juggernaut.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
@@ -2262,7 +2265,7 @@ internal static class HudManagerStartPatch
             {
                 var untargetablePlayers = new List<PlayerControl>();
                 if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
-                Pelican.currentTarget = SetTarget(ignoreList: untargetablePlayers);
+                Pelican.currentTarget = SetTarget(ignoreList: untargetablePlayers, inVented: ModOption.NeutCanKillInVent);
                 SetPlayerOutline(Pelican.currentTarget, Palette.ImpostorRed);
 
                 pelicanKillButton.showTargetNameOnButton(Pelican.currentTarget);
@@ -2874,7 +2877,7 @@ internal static class HudManagerStartPatch
                     untargetables = Arsonist.dousedPlayers;
                 }
 
-                Arsonist.currentTarget = SetTarget(ignoreList: untargetables, distances: 0.5f);
+                Arsonist.currentTarget = SetTarget(ignoreList: untargetables, distances: 0.5f, inVented: ModOption.NeutCanKillInVent);
                 if (Arsonist.currentTarget != null) SetPlayerOutline(Arsonist.currentTarget, Arsonist.color);
 
                 arsonistButton.showTargetNameOnButton(Arsonist.currentTarget);
@@ -2940,7 +2943,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Arsonist.currentTarget2 = SetTarget(distances: 0.5f);
+                Arsonist.currentTarget2 = SetTarget(distances: 0.5f, inVented: ModOption.NeutCanKillInVent);
                 var cankill = false;
                 if (Arsonist.currentTarget2 && Arsonist.dousedPlayers.Any(x => x == Arsonist.currentTarget2))
                 {
@@ -3751,7 +3754,7 @@ internal static class HudManagerStartPatch
             {
                 var untargetables = new List<PlayerControl>();
                 if (Mini.mini != null && !Mini.isGrownUp) untargetables.Add(Mini.mini);
-                Thief.currentTarget = SetTarget(ignoreList: untargetables);
+                Thief.currentTarget = SetTarget(ignoreList: untargetables, inVented: ModOption.NeutCanKillInVent);
                 SetPlayerOutline(Thief.currentTarget, Thief.color);
 
                 return Thief.currentTarget != null && PlayerControl.LocalPlayer.CanMove;
@@ -4464,9 +4467,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var target = Infected.currentTarget;
-                if (CheckUseAbility(PlayerControl.LocalPlayer, target)) return;
-
-                Infected.KillPlayer(PlayerControl.LocalPlayer, target);
+                if (!Infected.KillPlayer(PlayerControl.LocalPlayer, target)) return;
 
                 InfectedKillButton.Timer = InfectedKillButton.MaxTimer;
                 Infected.currentTarget = null;
@@ -4760,7 +4761,50 @@ internal static class HudManagerStartPatch
             buttonText: GetString("oracleButton")
         );
 
+        soulSightButton = new(
+            () =>
+            {
+                var writer = StartRPC(CustomRPC.SoulSightSuicide);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.EndRPC();
+                SoulSight.Suicide(PlayerControl.LocalPlayer);
 
+                soulSightButton.EffectDuration = 10f;
+            },
+            () =>
+            {
+                return SoulSight.Player?.AmOwner == true;
+            },
+            () =>
+            {
+                return SoulSight.CanRevive;
+            },
+            () =>
+            {
+                soulSightButton.Timer = soulSightButton.MaxTimer;
+            },
+            SoulSight.ButtonSprite,
+            __instance,
+            __instance.AbilityButton,
+            abilityInput.keyCode,
+            true,
+            SoulSight.RespawnTimer,
+            () => { return true; },
+            () => { },
+            () =>
+            {
+                if (!InMeeting && SoulSight.Player != null && SoulSight.Player.Data.IsDead && SoulSight.Reviveing)
+                {
+                    var writer = StartRPC(CustomRPC.SoulSightRevive);
+                    writer.Write(true);
+                    writer.EndRPC();
+                    PlayerControl.LocalPlayer.ModRevive(true, true);
+                    SoulSight.Reviveing = false;
+                }
+                soulSightButton.Timer = soulSightButton.MaxTimer;
+            },
+            buttonText: "自刎"
+        );
 
         // Set the default (or settings from the previous game) timers / durations when spawning the buttons
         initialized = true;

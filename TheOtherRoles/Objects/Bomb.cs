@@ -37,8 +37,7 @@ public class Bomb : CustomObjectBase<Bomb>
 
         bool canSee = !Terrorist.selfExplosion && (player.AmOwner || PlayerControl.LocalPlayer.IsImpostor(AndCat: true) || CanSeeGhostInfo);
         GameObject.SetActive(canSee);
-        Background?.SetActive(false);
-
+        Background?.SetActive(canSee);
         if (Terrorist.selfExplosion)
         {
             IsActive = true;

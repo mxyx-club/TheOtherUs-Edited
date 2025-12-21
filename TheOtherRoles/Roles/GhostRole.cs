@@ -74,6 +74,7 @@ public class GhostRole
             if ((PartTimer.partTimer == player && PartTimer.target != null) ||
                 (Lawyer.lawyer == player && Lawyer.target.IsAlive()) ||
                 player == Jackal.Sidekick ||
+                player == SoulSight.Player ||
                 player == Pavlovsdogs.pavlovsowner ||
                 (player == BandLeader.Player && BandLeader.Formed) ||
                 Jackal.jackal.Any(x => x.PlayerId == player.PlayerId) ||

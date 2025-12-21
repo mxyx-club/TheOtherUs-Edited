@@ -331,7 +331,10 @@
         "13": "隐藏船员阵营职业"
     },
     "ImpostorChatChannel": {
-        "13": "启用伪装者文字私聊频道"
+        "13": "伪装者文字私聊频道"
+    },
+    "jackalChatChannel": {
+        "13": "豺狼文字私聊频道"
     },
     "chatChannelOpt.1": {
         "13": "仅会议内"
@@ -446,6 +449,18 @@
     "disableTaskGameEnd": {
         "0": "Disable Crewmate Task Win",
         "13": "阻止任务完成结束游戏"
+    },
+    "canKillPlayerInVent": {
+        "13": "可以击杀在管道内的玩家"
+    },
+    "canKillPlayerInVent.1": {
+        "13": "仅伪装者"
+    },
+    "canKillPlayerInVent.2": {
+        "13": "所有邪恶玩家"
+    },
+    "canKillPlayerInVent.3": {
+        "13": "全部玩家"
     },
     "enableMapOptions": {
         "0": "Map Options",
@@ -1322,11 +1337,11 @@
     },
     "terroristBombAlertRange": {
         "0": "Bomb Warning Range",
-        "13": "爆炸预警范围 (m)"
+        "13": "爆炸预警范围"
     },
     "terroristBombSoundRange": {
         "0": "Bomb Sound Range",
-        "13": "爆炸声音传播范围 (m)"
+        "13": "爆炸声音传播范围"
     },
     "terroristBombCanDefuse": {
         "0": "Bomb Can Be Defused",
@@ -1389,11 +1404,11 @@
     },
     "evilTrapperKillSoundRange": {
         "0": "Trap Kill Sound Range",
-        "13": "陷阱击杀声音传播范围 (m)"
+        "13": "陷阱击杀声音传播范围"
     },
     "evilTrapperPlaceSoundRange": {
         "0": "Trap Placec Sound Range",
-        "13": "陷阱放置声音传播范围 (m)"
+        "13": "陷阱放置声音传播范围 "
     },
     "gamblerMinCooldown": {
         "0": "Kill Cooldown on Success",
@@ -2868,6 +2883,9 @@
     "MessageFromTheImpostor": {
         "13": "【伪装者频道】"
     },
+    "MessageFromTheJackal": {
+        "13": "【豺狼频道】"
+    },
     "ChatChannel.Default": {
         "13": "当前频道：默认"
     },
@@ -2876,6 +2894,9 @@
     },
     "ChatChannel.Impostor": {
         "13": "当前频道：伪装者"
+    },
+    "ChatChannel.Jackal": {
+        "13": "当前频道：豺狼"
     },
     "ChatChannel.Lover": {
         "13": "当前频道：恋人"
@@ -3445,6 +3466,12 @@
     "InfectedGuesserCount": {
         "13": "团队剩余猜测次数: {0}"
     },
+    "SoulSightMeetingInfo1": {
+        "13": "还需要得分 {0} 分"
+    },
+    "SoulSightMeetingInfo2": {
+        "13": "等待游戏结束中…"
+    },
     "BandLeader.bad": {
         "0": "Never really had fun playing band before\n",
         "13": "从没觉得玩乐队开心过"
@@ -3568,6 +3595,9 @@
     "BandLeaderWin": {
         "0": "The Band Wins",
         "13": "好想成为人类啊"
+    },
+    "InfectedWin": {
+        "13": "生 化 危 机"
     },
     "AvengerTeamWin": {
         "13": "捅死你们喵！！！"

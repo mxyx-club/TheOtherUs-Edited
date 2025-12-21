@@ -195,6 +195,8 @@ public class PlayerData
                 var id = modUid++;
                 ModId[player.PlayerId] = id;
             }
+
+            ModOption.isCanceled = false;
         }
 
         public static string GetGameId()

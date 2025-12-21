@@ -15,20 +15,19 @@ public class Infected
     public static bool IsGuesser;
     public static int GuessCount;
 
-    public static void KillPlayer(PlayerControl player, PlayerControl target)
+    public static bool KillPlayer(PlayerControl player, PlayerControl target)
     {
-        if (player == null || target == null) return;
-        if (!CheckMurderPlayer(player, target)) return;
+        if (player == null || target == null) return false;
+        if (!CheckMurderPlayer(player, target)) return false;
 
         if (SchrodingersCat.Player != null && target == SchrodingersCat.Player && SchrodingersCat.remainingChange > 0)
         {
-            RpcCustomMurderPlayer(player, target);
-            return;
+            return RpcCustomMurderPlayer(player, target); ;
         }
 
         if (CreatedCount >= MaxPlayer || Player.Count(x => x.IsAlive()) >= ActiveLimit || target.IsKiller())
         {
-            RpcCustomMurderPlayer(player, target, true);
+            return RpcCustomMurderPlayer(player, target, true);
         }
         else
         {
@@ -38,6 +37,7 @@ public class Infected
             writer.Write(CreatedCount + 1);
             writer.EndRPC();
             InfectedTarget(player.PlayerId, target.PlayerId, CreatedCount + 1);
+            return true;
         }
     }
 
