@@ -30,6 +30,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> ShowFPS { get; set; }
     public static ConfigEntry<bool> ShowKeyReminder { get; set; }
     public static ConfigEntry<int> ButtonArrangement { get; set; }
+    public static ConfigEntry<bool> UploadGameData { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
 
@@ -78,6 +79,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
         ShowFPS = Config.Bind("Custom", "Show FPS", true);
         ShowKeyReminder = Config.Bind("Custom", "ShowKeyReminder", true);
         ButtonArrangement = Config.Bind("Custom", "Buttons Arrangement", 3);
+        UploadGameData = Config.Bind("Custom", "UploadGameData", true);
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);

@@ -9,6 +9,15 @@ public static class Executioner
     public static bool triggerExecutionerWin;
     public static bool promotesToLawyer;
     public static bool targetWasGuessed;
+    public static OnTargetDead onTargetDead;
+
+    public enum OnTargetDead
+    {
+        Pursuer,
+        Jester,
+        Amnisiac,
+        Crewmate
+    }
 
     public static void PromotesRole()
     {
@@ -16,7 +25,21 @@ public static class Executioner
         var target = Executioner.target;
         if (player.IsAlive() && target.IsDead())
         {
-            Pursuer.Player.Add(player);
+            switch (onTargetDead)
+            {
+                case OnTargetDead.Pursuer:
+                    RPCProcedure.setRole(player.PlayerId, (byte)RoleId.Pursuer);
+                    break;
+                case OnTargetDead.Jester:
+                    RPCProcedure.setRole(player.PlayerId, (byte)RoleId.Jester);
+                    break;
+                case OnTargetDead.Amnisiac:
+                    RPCProcedure.setRole(player.PlayerId, (byte)RoleId.Amnisiac);
+                    break;
+                case OnTargetDead.Crewmate:
+                    RPCProcedure.setRole(player.PlayerId, (byte)RoleId.Crewmate);
+                    break;
+            }
             clearAndReload();
         }
     }
@@ -32,5 +55,7 @@ public static class Executioner
         triggerExecutionerWin = false;
         promotesToLawyer = CustomOptionHolder.executionerPromotesToLawyer.GetBool();
         canCallEmergency = CustomOptionHolder.executionerCanCallEmergency.GetBool();
+        onTargetDead = CustomOptionHolder.executionerOnTargetDead.GetSelection<OnTargetDead>();
+
     }
 }

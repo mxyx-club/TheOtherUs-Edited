@@ -16,6 +16,7 @@ internal class ModOption
     public static bool toggleCursor => Main.ToggleCursor.Value;
     public static bool enableSoundEffects => Main.EnableSoundEffects.Value;
     public static bool showKeyReminder => Main.ShowKeyReminder.Value;
+    public static bool uploadGameData => Main.UploadGameData.Value;
 
     // Set values
     public static int maxNumberOfMeetings = 10;

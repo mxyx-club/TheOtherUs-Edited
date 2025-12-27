@@ -18,8 +18,8 @@ public class Professional
         killed.Clear();
         spawnModifier = CustomOptionHolder.modifierProfessional.GetBool();
         CanSeeBodies = spawnModifier
-            ? (CanSeeBody)CustomOptionHolder.modifierProfessionalWhoCanSeeBodies.GetSelection()
-            : (CanSeeBody)CustomOptionHolder.professionalWhoCanSeeBodies.GetSelection();
+            ? CustomOptionHolder.modifierProfessionalWhoCanSeeBodies.GetSelection<CanSeeBody>()
+            : CustomOptionHolder.professionalWhoCanSeeBodies.GetSelection<CanSeeBody>();
         baitKiller = spawnModifier
             ? CustomOptionHolder.modifierProfessionalBaitKiller.GetBool()
             : CustomOptionHolder.professionalBaitKiller.GetBool();

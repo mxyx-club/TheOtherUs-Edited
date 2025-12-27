@@ -6,7 +6,7 @@ public class Bomb : CustomObjectBase<Bomb>
 {
     public static Sprite defuseSprite = new ResourceSprite("Bomb_Button_Defuse.png");
     private static Sprite bombSprite = new ResourceSprite("Bomb.png", 300f);
-    private static Sprite backgroundSprite => new ResourceSprite("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.alertRange);
+    private static Sprite backgroundSprite => new ResourceSprite("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.destructionRange);
 
     public static Bomb TargetBomb;
     public GameObject Background;

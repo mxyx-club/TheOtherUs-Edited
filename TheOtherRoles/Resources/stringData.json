@@ -2613,6 +2613,12 @@
     "avengerTargetWasExiled": {
         "13": "复仇目标被驱逐时"
     },
+    "avengerTargetWasDead.2": {
+        "13": "恢复原职业"
+    },
+    "avengerTargetWasDead.3": {
+        "13": "自杀并恢复原职业"
+    },
     "modifierSunglassesQuantity": {
         "0": "Number of Sunglasses",
         "13": "太阳镜数量"
@@ -2990,6 +2996,9 @@
     "LocalHatsText": {
         "0": "Load Local Hats",
         "13": "加载离线帽子"
+    },
+    "UploadGameData": {
+        "13": "共享游戏数据"
     },
     "EnableDebugLogModeText": {
         "0": "Enable Debug Log Mode",
@@ -6209,5 +6218,8 @@
     },
     "OracleFullDesc": {
         "13": "会议外选定一位信徒，每次进会议时都会获得邪恶阵营的信息。\n神谕者会在会议中保护信徒，使其不会在会议中被驱逐。\n神谕者死亡后会揭示信徒的阵营，有概率是错误的。（设置）"
+    },
+    "SoulSightFullDesc": {
+        "13": "窥天者可以自杀窥探天意一段时间，持续时间结束后会自动复活。\n在以死亡状态进入会议时得1分，得x分可以跟随场上阵营获胜。\n\n如果尸体被吃掉则无法复活和得分。"
     }
 }

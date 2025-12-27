@@ -235,7 +235,6 @@ public class CustomOptionHolder
     public static CustomOption terroristBombDestructionTime;
     public static CustomOption terroristBombDestructionRange;
     public static CustomOption terroristBombSoundRange;
-    public static CustomOption terroristBombAlertRange;
     public static CustomOption terroristDefuseDuration;
     public static CustomOption terroristBombCanDefuse;
     public static CustomOption terroristBombActiveAfter;
@@ -413,7 +412,7 @@ public class CustomOptionHolder
     public static CustomOption executionerSpawnRate;
     public static CustomOption executionerCanCallEmergency;
     public static CustomOption executionerPromotesToLawyer;
-    //public static CustomOption executionerOnTargetDead;
+    public static CustomOption executionerOnTargetDead;
 
     public static CustomOption doomsayerSpawnRate;
     public static CustomOption doomsayerCooldown;
@@ -1066,7 +1065,6 @@ public class CustomOptionHolder
         terroristBombDestructionTime = Create(102704, Types.Impostor, "terroristBombDestructionTime", 0f, 0f, 120f, 0.5f, terroristSpawnRate,
             isHidden: () => { return terroristMode.Selection == 0; });
         terroristBombDestructionRange = Create(102705, Types.Impostor, "terroristBombDestructionRange", 35, 5, 120, 5, terroristSpawnRate);
-        terroristBombAlertRange = Create(102706, Types.Impostor, "terroristBombAlertRange", 0, 0, 120, 5, terroristSpawnRate);
         terroristBombSoundRange = Create(102709, Types.Impostor, "terroristBombSoundRange", 90, 5, 120, 5, terroristSpawnRate);
         terroristBombCanDefuse = Create(102707, Types.Impostor, "terroristBombCanDefuse", true, terroristSpawnRate,
             isHidden: () => { return terroristMode.Selection == 0; });
@@ -1090,8 +1088,8 @@ public class CustomOptionHolder
         evilTrapperKillTimer = Create(103004, Types.Impostor, "evilTrapperKillTimer", 5f, 1f, 30f, 1f, evilTrapperSpawnRate);
         evilTrapperTrapRange = Create(103005, Types.Impostor, "evilTrapperTrapRange", 0.5f, 0.2f, 1.5f, 0.1f, evilTrapperSpawnRate);
         evilTrapperFriendlyFire = Create(103006, Types.Impostor, "evilTrapperFriendlyFire", true, evilTrapperSpawnRate);
-        evilTrapperKillSoundRange = Create(103007, Types.Impostor, "evilTrapperKillSoundRange", 35f, 5f, 120f, 5f, evilTrapperSpawnRate);
-        evilTrapperPlaceSoundRange = Create(103008, Types.Impostor, "evilTrapperPlaceSoundRange", 10f, 5f, 120f, 5f, evilTrapperSpawnRate);
+        evilTrapperKillSoundRange = Create(103007, Types.Impostor, "evilTrapperKillSoundRange", 50f, 5f, 120f, 5f, evilTrapperSpawnRate);
+        evilTrapperPlaceSoundRange = Create(103008, Types.Impostor, "evilTrapperPlaceSoundRange", 25f, 5f, 120f, 5f, evilTrapperSpawnRate);
 
         gamblerSpawnRate = Create(103300, Types.Impostor, Cs(Gambler.color, "Gambler"), rates, null, true);
         gamblerMinCooldown = Create(103301, Types.Impostor, "gamblerMinCooldown", 2.5f, 0f, 45f, 0.5f, gamblerSpawnRate);
@@ -1244,7 +1242,7 @@ public class CustomOptionHolder
         executionerSpawnRate = Create(201900, Types.Neutral, Cs(Executioner.color, "Executioner"), rates, null, true);
         executionerCanCallEmergency = Create(201901, Types.Neutral, "canCallEmergency", true, executionerSpawnRate);
         executionerPromotesToLawyer = Create(201902, Types.Neutral, "executionerPromotesToLawyer", true, executionerSpawnRate);
-        //executionerOnTargetDead = Create(201903, Types.Neutral, "目标死亡后变为", [Cs(Pursuer.color, "Pursuer"), Cs(Jester.color, "Jester"), Cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
+        executionerOnTargetDead = Create(201903, Types.Neutral, "executionerOnTargetDead", [Cs(Pursuer.color, "Pursuer"), Cs(Jester.color, "Jester"), Cs(Amnisiac.color, "Amnisiac"), "Crewmate"], executionerSpawnRate);
 
         //pursuerSpawnRate = Create(202700, Types.Neutral, cs(Pursuer.color, "Pursuer"), rates, null, true);
         pursuerBlanksCooldown = Create(202701, Types.Neutral, "pursuerBlanksCooldown", 20f, 5f, 60f, 2.5f, lawyerSpawnRate);
@@ -1531,9 +1529,9 @@ public class CustomOptionHolder
         avengerWinCondition = Create(401658, Types.Modifier, "avengerWinCondition",
             ["avengerWinCondition.1", "avengerWinCondition.2", "avengerWinCondition.3"], modifierLoverAvengerChance);
         avengerTargetWasKilledByOther = Create(401659, Types.Modifier, "avengerTargetWasKilledByOther",
-            ["DeathReason.Suicide", GetString("", Cs(Jester.color, "Jester")), GetString("", Cs(Amnisiac.color, "Amnisiac")), GetString("", Cs(Survivor.color, "Survivor"))], modifierLoverAvengerChance);
+            ["DeathReason.Suicide", GetString("avengerTargetWasDead.2"), GetString("avengerTargetWasDead.3"), GetString(Cs(Jester.color, "Jester")), GetString(Cs(Amnisiac.color, "Amnisiac")), GetString(Cs(Survivor.color, "Survivor"))], modifierLoverAvengerChance);
         avengerTargetWasExiled = Create(401660, Types.Modifier, "avengerTargetWasExiled",
-            ["DeathReason.Suicide", GetString("", Cs(Jester.color, "Jester")), GetString("", Cs(Amnisiac.color, "Amnisiac")), GetString("", Cs(Survivor.color, "Survivor"))], modifierLoverAvengerChance);
+            ["DeathReason.Suicide", GetString("avengerTargetWasDead.2"), GetString("avengerTargetWasDead.3"), GetString(Cs(Jester.color, "Jester")), GetString(Cs(Amnisiac.color, "Amnisiac")), GetString(Cs(Survivor.color, "Survivor"))], modifierLoverAvengerChance);
 
         modifierAssassin = Create(100000, Types.Modifier, Cs(Assassin.color, "modifierAssassin"), rates, null, true,
             isHidden: () => GuesserGM.Enabled);

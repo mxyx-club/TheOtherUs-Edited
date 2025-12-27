@@ -55,7 +55,7 @@ public static class Mayor
     public static void clearAndReload()
     {
         mayor = null;
-        Mode = (MayorMode)CustomOptionHolder.mayorMode.GetSelection();
+        Mode = CustomOptionHolder.mayorMode.GetSelection<MayorMode>();
         meetingButton = CustomOptionHolder.mayorMeetingButton.GetBool();
         UsedMeetingButton = false;
         MeetingCount = 0;

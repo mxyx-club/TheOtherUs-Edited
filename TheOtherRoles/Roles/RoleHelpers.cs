@@ -437,6 +437,16 @@ public static class PlayerControlExtensions
             writer.EndRPC();
             player.Exiled();
         }
+
+        public RoleType GetRoleType()
+        {
+            if (player == null) return RoleType.Error;
+
+            if (player.IsCrew(true)) return RoleType.Crewmate;
+            else if (player.IsImpostor(false, true)) return RoleType.Impostor;
+            else if (player.IsNeutral()) return RoleType.Neutral;
+            return RoleType.Error;
+        }
     }
 }
 

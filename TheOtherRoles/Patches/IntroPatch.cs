@@ -101,14 +101,23 @@ internal class IntroCutsceneOnDestroyPatch
                 BountyHunter.cooldownText.gameObject.SetActive(true);
             }
         }
-
-        PlayerData.AllPlayerData.Do(x =>
+        try
         {
-            var player = PlayerById(x.Key);
-            if (player?.Data == null) return;
+            PlayerData.AllPlayerData.Values.Do(x =>
+            {
+                var player = x.Player;
+                var role = RoleInfo.getRoleInfoForPlayer(player, false, false).FirstOrDefault();
+                if (player?.Data == null) return;
 
-            x.Value.ColorName = player.Data.GetPlayerColorString();
-        });
+                x.ColorName = player.Data.GetPlayerColorString();
+                x.OriginRole = role?.roleId ?? RoleId.DefaultRole;
+                x.RoleType = role?.roleType ?? RoleType.Error;
+            });
+        }
+        catch (Exception ex)
+        {
+            Error(ex, "PlayerData");
+        }
 
         Berserker.Timer = 0;
         ModOption.firstKillName = "";

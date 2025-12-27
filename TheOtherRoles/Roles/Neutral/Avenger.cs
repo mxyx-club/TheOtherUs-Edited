@@ -1,6 +1,7 @@
 using AmongUs.GameOptions;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
+using UnityEngine.Networking.Types;
 
 namespace TheOtherRoles.Roles.Neutral;
 
@@ -52,11 +53,28 @@ public class Avenger
         UpdateIntervall = CustomOptionHolder.avengerUpdateIntervall.GetFloat();
         TargetKnowPlayer = CustomOptionHolder.avengerTargetKnowPlayer.GetBool();
         OnlyAliveWin = CustomOptionHolder.avengerOnlyAliveWin.GetBool();
-        WinCondition = (WinnerFlags)CustomOptionHolder.avengerWinCondition.GetSelection();
-        TargetWasKilledByOther = (AvengerTargetWasDead)CustomOptionHolder.avengerTargetWasKilledByOther.GetSelection();
-        TargetWasExiled = (AvengerTargetWasDead)CustomOptionHolder.avengerTargetWasExiled.GetSelection();
+        WinCondition = CustomOptionHolder.avengerWinCondition.GetSelection<WinnerFlags>();
+        TargetWasKilledByOther = CustomOptionHolder.avengerTargetWasKilledByOther.GetSelection<AvengerTargetWasDead>();
+        TargetWasExiled = CustomOptionHolder.avengerTargetWasExiled.GetSelection<AvengerTargetWasDead>();
         Arrow?.arrow?.Destroy();
         Arrow = null;
+    }
+
+    private static void CommitSuicide(PlayerControl player, bool exile, CustomDeathReason reason)
+    {
+        if (!player.IsAlive()) return;
+
+        if (exile)
+        {
+            ExilePlayerPatch.NoCheckLover = true;
+            player.CustomExiled(null, true);
+        }
+        else
+        {
+            player.MurderPlayer(player, MurderResultFlags.Succeeded);
+        }
+
+        PlayerData.SetDeathReason(player, reason);
     }
 
     private static void SetAvenger(PlayerControl killer, PlayerControl target, bool exile = false)
@@ -64,40 +82,42 @@ public class Avenger
         if (target == null) return;
 
         var otherLover = Lovers.otherLover(target);
-        if (Lovers.isLover(target) && Lovers.otherLover(target) != null)
+        if (otherLover == null) return;
+
+        if (killer != null &&
+            Lovers.IsAvengerLover &&
+            killer != target &&
+            killer != otherLover &&
+            killer.IsAlive())
         {
-            if (killer != null && Lovers.IsAvengerLover && killer != target && killer != otherLover && killer.IsAlive())
+            Message("Avenger Lover Kill Other Player");
+
+            originRole = RoleInfo.getRoleInfoForPlayer(target, false, false)
+                        .FirstOrDefault()?.roleId ?? RoleId.DefaultRole;
+
+            RPCProcedure.erasePlayerRoles(otherLover.PlayerId);
+            RPCProcedure.setRole(otherLover.PlayerId, (byte)RoleId.Avenger);
+
+            Player = otherLover;
+            Lover = target;
+            Target = killer;
+            SetRoleType(Player, RoleTypes.Crewmate);
+            Lovers.clearAndReload();
+
+            if (otherLover == Lawyer.target && Lawyer.lawyer != null)
+                Lawyer.PromotesToPursuer(false);
+            if (otherLover == Executioner.target && Executioner.executioner != null)
+                Executioner.PromotesRole();
+
+            if ((TargetKnowPlayer && Target?.AmOwner == true) || Player.AmOwner)
+                Coroutines.Start(showFlashCoroutine(color, 1.25f, 0.4f));
+        }
+        else
+        {
+            Message($"Lover Is Die, Exiled: {exile}");
+            if (otherLover.IsAlive())
             {
-                Message("Avenger Lover Kill Other Player");
-                ClearAndReload();
-                RPCProcedure.erasePlayerRoles(otherLover.PlayerId);
-
-                RPCProcedure.setRole(otherLover.PlayerId, (byte)RoleId.Avenger);
-                Player = otherLover;
-                Lover = target;
-                Target = killer;
-
-                SetRoleType(Player, RoleTypes.Crewmate);
-                Lovers.clearAndReload();
-
-                if ((TargetKnowPlayer && Target != null && Target.AmOwner) || Player.AmOwner) Coroutines.Start(showFlashCoroutine(color, 1.25f, 0.4f));
-            }
-            else
-            {
-                Message($"Lover Is Die, Exlied:{exile}");
-                if (otherLover.IsAlive())
-                {
-                    if (exile)
-                    {
-                        otherLover.CustomExiled(null, true);
-                    }
-                    else
-                    {
-                        otherLover.MurderPlayer(otherLover, MurderResultFlags.Succeeded);
-                    }
-
-                    PlayerData.SetDeathReason(otherLover, CustomDeathReason.LoverSuicide);
-                }
+                CommitSuicide(otherLover, exile, CustomDeathReason.LoverSuicide);
             }
         }
     }
@@ -116,58 +136,50 @@ public class Avenger
             {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.AvengerTeamWin, false);
             }
+            return;
         }
-        else if ((int)outcome > 0)
-        {
-            if (AmongUsClient.Instance.AmHost)
-            {
-                byte roleId = outcome switch
-                {
-                    AvengerTargetWasDead.Jester => (byte)RoleId.Jester,
-                    AvengerTargetWasDead.Amnisiac => (byte)RoleId.Amnisiac,
-                    AvengerTargetWasDead.Survivor => (byte)RoleId.Survivor,
-                    _ => (byte)RoleId.Crewmate
-                };
 
+        if ((int)outcome > 2)
+        {
+            byte roleId = outcome switch
+            {
+                AvengerTargetWasDead.Jester => (byte)RoleId.Jester,
+                AvengerTargetWasDead.Amnisiac => (byte)RoleId.Amnisiac,
+                AvengerTargetWasDead.Survivor => (byte)RoleId.Survivor,
+                _ => (byte)RoleId.Crewmate
+            };
+            RPCProcedure.setRole(Player.PlayerId, roleId);
+            ClearAndReload();
+            return;
+        }
+
+        Message($"Player Is Die, Exiled: {exile}", "Avenger");
+
+        if (outcome is AvengerTargetWasDead.RestoreRole or AvengerTargetWasDead.SuicideRestore)
+        {
+            if (Player.AmOwner)
+            {
                 var writer = StartRPC(CustomRPC.SetRole);
                 writer.Write(Player.PlayerId);
-                writer.Write(roleId);
+                writer.Write((byte)originRole);
                 writer.EndRPC();
-                RPCProcedure.setRole(Player.PlayerId, roleId);
+                RPCProcedure.setRole(Player.PlayerId, (byte)originRole);
             }
             ClearAndReload();
         }
-        else
-        {
-            Message($"Player Is Die, Exlied:{exile}");
-            if (Player.IsAlive())
-            {
-                if (exile)
-                {
-                    ExilePlayerPatch.NoCheckLover = true;
-                    Player.CustomExiled(null, true);
-                }
-                else
-                {
-                    Player.MurderPlayer(Player, MurderResultFlags.Succeeded);
-                }
 
-                PlayerData.SetDeathReason(Player, CustomDeathReason.AvengerFail);
-            }
+        if (outcome is AvengerTargetWasDead.Suicide or AvengerTargetWasDead.SuicideRestore)
+        {
+            CommitSuicide(Player, exile, CustomDeathReason.AvengerFail);
         }
     }
 
     public static void OnPlayerDeath(PlayerControl killer, PlayerControl target, bool exile = false)
     {
         if (target == null || !ShouldHandleDeath(target)) return;
-        Message($"killer: {killer?.Data?.PlayerName ?? "NULL"} target:{target?.Data?.PlayerName ?? "NULL"}", "Avenger_OnPlayerDeath");
         SetAvenger(killer, target, exile);
 
-        if (Target == target)
-        {
-            AvengerTargetDied(killer, target, exile);
-            Message($"killer: {killer?.Data?.PlayerName ?? "NULL"} target:{target?.Data?.PlayerName ?? "NULL"}", "AvengerTargetDied");
-        }
+        if (Target == target) AvengerTargetDied(killer, target, exile);
     }
 
     public static bool ShouldHandleDeath(PlayerControl target)
@@ -192,6 +204,8 @@ public class Avenger
     public enum AvengerTargetWasDead
     {
         Suicide,
+        RestoreRole,
+        SuicideRestore,
         Jester,
         Amnisiac,
         Survivor

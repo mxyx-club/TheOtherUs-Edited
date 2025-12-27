@@ -953,7 +953,7 @@ public static class DisconnectPatch
 
             if (player == BandLeader.Player) BandLeader.ClearAndReload();
 
-            if (player != null && !player.Data.IsDead) PlayerData.SetDeathReason(player, CustomDeathReason.Disconnect, null);
+            if (PlayerData.GetPlayerData(player)?.DeathReason == CustomDeathReason.Null) PlayerData.SetDeathReason(player, CustomDeathReason.Disconnect, null);
 
             Sheriff.deputyCheckPromotion();
         }

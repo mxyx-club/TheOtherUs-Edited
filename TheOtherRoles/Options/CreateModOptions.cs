@@ -83,6 +83,7 @@ public static class StartOptionMenuPatch
     private static ToggleButtonBehaviour enableSoundEffects;
     private static ToggleButtonBehaviour ButtonArrangement;
     private static ToggleButtonBehaviour showKeyReminder;
+    private static ToggleButtonBehaviour uploadGameData;
     private static ToggleButtonBehaviour showFPS;
 
     public static void Postfix(OptionsMenuBehaviour __instance)
@@ -177,6 +178,13 @@ public static class StartOptionMenuPatch
         {
             showKeyReminder.UpdateToggleText(!showKeyReminder.onState, GetString("ShowKeyReminder"));
             Main.ShowKeyReminder.Value = showKeyReminder.onState;
+        }, nebulaTab, toggleButtonTemplate);
+
+        //UploadGameData
+        uploadGameData = AddButton(buttonIndex++, "UploadGameData", () =>
+        {
+            uploadGameData.UpdateToggleText(!uploadGameData.onState, GetString("UploadGameData"));
+            Main.UploadGameData.Value = uploadGameData.onState;
         }, nebulaTab, toggleButtonTemplate);
 
         //キー割り当てボタン
@@ -333,6 +341,7 @@ public static class StartOptionMenuPatch
             ButtonArrangement.UpdateButtonText(GetString($"ButtonArrangement.{Main.ButtonArrangement.Value}"), GetString("ButtonArrangement"), Main.ButtonArrangement.Value != 1);
             showKeyReminder.UpdateToggleText(Main.ShowKeyReminder.Value, GetString("ShowKeyReminder"));
             toggleCursor.UpdateToggleText(Main.ToggleCursor.Value, GetString("ToggleCursorText"));
+            uploadGameData.UpdateToggleText(Main.UploadGameData.Value, GetString("UploadGameData"));
 
             passiveButton.OnMouseOver.Invoke();
         }

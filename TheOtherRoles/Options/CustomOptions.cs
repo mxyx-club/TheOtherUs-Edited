@@ -194,6 +194,11 @@ public class CustomOption
         return Selection;
     }
 
+    public T GetSelection<T>() where T : Enum
+    {
+        return (T)Enum.ToObject(typeof(T), Selection);
+    }
+
     public bool GetBool()
     {
         return Selection > 0;

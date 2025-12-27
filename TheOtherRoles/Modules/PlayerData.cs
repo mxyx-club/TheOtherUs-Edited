@@ -16,7 +16,7 @@ public class PlayerData
     public static PlayerData Local { get => field ??= GetPlayerData(PlayerControl.LocalPlayer); private set; }
     public static Dictionary<byte, PlayerData> AllPlayerData = new();
     public static Dictionary<byte, string> AllFriendCode = new();
-    public static Dictionary<byte, ushort> ModId = new();
+    public static Dictionary<byte, ushort> ModUid = new();
 
     public PlayerControl Player { get; private set; }
     public byte PlayerId { get; private set; }
@@ -28,11 +28,12 @@ public class PlayerData
     public Tuple<int, int> TaskCount;
 
     public RoleInfo RoleInfo => RoleInfo.RoleInfoById.GetValueOrDefault(RoleId, RoleInfo.crewmate);
-    public RoleType RoleType = RoleType.Crewmate;
+    public RoleType RoleType { get; set => field = value == RoleType.Error ? field : value; } = RoleType.Crewmate;
     public List<RoleId> RoleHistory = new();
     public RoleId RoleId = RoleId.DefaultRole;
-    public RoleId? GhostRole;
+    public RoleId OriginRole = RoleId.DefaultRole;
     public List<RoleId> Modifiers = new();
+    public RoleId? GhostRole;
 
     public string PlayerName { get; set; }
     public string FriendCode { get; set; }
@@ -91,12 +92,6 @@ public class PlayerData
 
         var code = EOSManager.Instance?.FriendCode ?? "";
 
-        var writer = StartRPC(CustomRPC.ShareFriendCode);
-        writer.Write(PlayerControl.LocalPlayer.PlayerId);
-        writer.Write(code);
-        writer.EndRPC();
-        ShareFriendCode(PlayerControl.LocalPlayer.PlayerId, code);
-
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             var data = new PlayerData
@@ -104,11 +99,22 @@ public class PlayerData
                 Player = player,
                 PlayerId = player.PlayerId,
                 PlayerName = player.Data.PlayerName,
-                FriendCode = player.Data.FriendCode,
                 ColorName = player.Data.GetPlayerColorString(),
             };
             AllPlayerData[player.PlayerId] = data;
         }
+        _ = new LateTask(() =>
+        {
+            if (ModOption.uploadGameData)
+            {
+                var writer = StartRPC(CustomRPC.ShareFriendCode);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(code);
+                writer.EndRPC();
+                ShareFriendCode(PlayerControl.LocalPlayer.PlayerId, code);
+            }
+        }, 1f, "ShareFriendCode");
+
     }
 
     public static int GetKillCount(PlayerControl killer)
@@ -137,6 +143,11 @@ public class PlayerData
         if (killer != null)
         {
             data.KilledBy = killer;
+            var kd = GetPlayerData(killer);
+            if (kd != null)
+            {
+                kd.KillCount++;
+            }
         }
     }
 
@@ -155,6 +166,7 @@ public class PlayerData
         try
         {
             AllFriendCode[playerId] = code;
+            AllPlayerData[playerId].FriendCode = code;
             GameData.Instance?.GetPlayerById(playerId)?.FriendCode = code;
         }
         catch (Exception e) { Message($"Error reading friend code: {e.Message}", "ShareFriendCode"); }
@@ -162,7 +174,7 @@ public class PlayerData
 
     public class GlobalInfo
     {
-        private const string Web = "https://api.toue.mxyx.club/";
+        private const string Web = "https://api.toue.mxyx.club";
         private const string ApiUrl = Web;
         private static readonly HttpClient httpClient = new();
 
@@ -185,6 +197,7 @@ public class PlayerData
             RoomCode = GameStartManagerPatch.RoomCode;
             HostCode = GetHostPlayer.Data.FriendCode;
             GameId = GetGameId();
+            PlayerCount = PlayerControl.AllPlayerControls.Count;
 
             int seed = BitConverter.ToInt32(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(GameId)), 0);
             var rnd = new SRandom(seed);
@@ -193,7 +206,7 @@ public class PlayerData
             foreach (var player in PlayerControl.AllPlayerControls.ToArray().OrderBy(_ => rnd.Next()))
             {
                 var id = modUid++;
-                ModId[player.PlayerId] = id;
+                ModUid[player.PlayerId] = id;
             }
 
             ModOption.isCanceled = false;
@@ -215,11 +228,6 @@ public class PlayerData
 
         public static void SaveAllPlayerDataToJson()
         {
-            foreach (var data in AllFriendCode)
-            {
-                Message($"{data.Key}: {data.Value}");
-            }
-
             var directoryPath = Path.Combine(Paths.GameRootPath, Main.Name, "GameData");
             var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
             var filePath = Path.Combine(directoryPath, $"GameSession_{timestamp}.json");
@@ -260,7 +268,7 @@ public class PlayerData
                     PlayerCode = p.FriendCode,
                     RoleInfo = new
                     {
-                        OriginRole = p.RoleId.ToString(),
+                        OriginRole = p.OriginRole.ToString(),
                         MainRole = p.RoleId.ToString(),
                         //Modifiers = string.Join("|", p.Modifiers),
                         Modifiers = p.Modifiers.Select(x => x.ToString()),
@@ -290,10 +298,10 @@ public class PlayerData
             var jsonContent = JsonSerializer.Serialize(gameSession, jsonOptions);
             File.WriteAllText(filePath, jsonContent);
 
-            UploadPlayerDataToApi(jsonContent).ContinueWith(task =>
+            if (ModOption.uploadGameData)
             {
-                Info("Data uploaded successfully!", "PlayerData");
-            });
+                UploadPlayerDataToApi(jsonContent).ContinueWith(task => { Info("Data uploaded successfully!", "PlayerData"); });
+            }
         }
 
         private static async Task UploadPlayerDataToApi(string jsonContent)
@@ -302,10 +310,7 @@ public class PlayerData
             {
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
                 var response = await httpClient.PostAsync(ApiUrl + "/api/games", content);
-
-                Message($"Status Code: {response.StatusCode}");
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Message($"Response: {responseContent}");
 
                 if (!response.IsSuccessStatusCode)
                 {
