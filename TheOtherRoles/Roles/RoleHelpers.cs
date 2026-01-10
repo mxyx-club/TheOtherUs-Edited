@@ -1,3 +1,4 @@
+using AmongUs.GameOptions;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 
@@ -18,7 +19,7 @@ public enum RoleId
 {
     DefaultRole,
 
-    Impostor,
+    Impostor = 1,
     Morphling,
     WolfLord,
     Bomber,
@@ -47,7 +48,7 @@ public enum RoleId
     Gunsmith,
     Berserker,
 
-    Survivor,
+    Survivor = 50,
     Amnisiac,
     Jester,
     Vulture,
@@ -74,7 +75,7 @@ public enum RoleId
     Avenger,
     SoulSight,
 
-    Crewmate,
+    Crewmate = 100,
     Vigilante,
     Mayor,
     Prosecutor,
@@ -104,7 +105,7 @@ public enum RoleId
     Oracle,
 
     // Modifier ---
-    Lover,
+    Lover = 150,
     Assassin,
     Disperser,
     PoucherModifier,
@@ -168,7 +169,7 @@ public static class PlayerControlExtensions
                    player == Vulture.vulture ||
                    player == SchrodingersCat.Player ||
                    player == Jackal.Sidekick ||
-                   player == Avenger.Player ||
+                   //player == Avenger.Player ||
                    player == Pavlovsdogs.pavlovsowner ||
                    Jester.Player.Any(x => x == player) ||
                    Jackal.jackal.Any(x => x == player) ||
@@ -447,10 +448,33 @@ public static class PlayerControlExtensions
             else if (player.IsNeutral()) return RoleType.Neutral;
             return RoleType.Error;
         }
+
+        public void SetRoleType(RoleTypes roleType)
+        {
+            try
+            {
+                if (player == null || player.Data == null) return;
+                var data = player.Data;
+                if (data.Role)
+                {
+                    data.Role.Deinitialize(player);
+                    UObject.Destroy(data.Role.gameObject);
+                }
+                if (RoleManager.Instance == null) return;
+                var roleBehaviour = UObject.Instantiate(RoleManager.Instance.AllRoles.First(r => r.Role == roleType), GameData.Instance.transform);
+                roleBehaviour.Initialize(player);
+                player.Data.Role = roleBehaviour;
+                player.Data.RoleType = roleType;
+                roleBehaviour.AdjustTasks(player);
+            }
+            catch (Exception e)
+            {
+                Error(e);
+            }
+        }
+
     }
 }
-
-
 
 public static class RoleHelpers
 {
@@ -465,6 +489,35 @@ public static class RoleHelpers
             else return field;
         }
         set => field = !PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer != Specter.Player && Specter.Player.GetPartner() != PlayerControl.LocalPlayer && value;
+    }
+
+    public static PlayerControl ImpostorSetTarget()
+    {
+        List<PlayerControl> untargetablePlayers = [];
+
+        if (SchrodingersCat.Player.IsAlive() && SchrodingersCat.State == SchrodingersCat.CatState.Impostor) untargetablePlayers.Add(SchrodingersCat.Player);
+
+        PlayerControl target;
+
+        if (Spy.spy != null)
+        {
+            if (Spy.impostorsCanKillAnyone)
+            {
+                target = SetTarget(null, false, inVented: ModOption.ImpCanKillInVent);
+            }
+            else
+            {
+                untargetablePlayers.Add(Spy.spy);
+                target = SetTarget(untargetablePlayers, true, inVented: ModOption.ImpCanKillInVent);
+            }
+        }
+        else
+        {
+            target = SetTarget(untargetablePlayers, true, inVented: ModOption.ImpCanKillInVent);
+        }
+
+        SetPlayerOutline(target, Palette.ImpostorRed);
+        return target;
     }
 
     public static bool CustomMurderPlayer(

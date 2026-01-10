@@ -202,7 +202,7 @@ public class RoleInfo
         akujo,
         thief,
         schrodingersCat,
-        soulSight,
+        //soulSight,
 
         crewmate,
         vigilante,

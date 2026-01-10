@@ -512,6 +512,11 @@ public static class RPCProcedure
                 break;
         }
 
+        if (RoleInfo.RoleInfoById[(RoleId)roleId].roleType == RoleType.Impostor)
+            player.SetRoleType(RoleTypes.Impostor);
+        else
+            player.SetRoleType(RoleTypes.Crewmate);
+
         var data = PlayerData.GetPlayerData(player);
 
         if (data != null)
@@ -717,12 +722,12 @@ public static class RPCProcedure
                         if (info.roleType == RoleType.Impostor)
                         {
                             target.Data.Role.TeamType = RoleTeamTypes.Impostor;
-                            SetRoleType(target, RoleTypes.Impostor);
+                            target.SetRoleType(RoleTypes.Impostor);
                         }
                         else
                         {
                             target.Data.Role.TeamType = RoleTeamTypes.Crewmate;
-                            SetRoleType(target, RoleTypes.Crewmate);
+                            target.SetRoleType(RoleTypes.Crewmate);
 
                         }
                         setRole(target.PlayerId, (byte)roleId);
@@ -755,21 +760,35 @@ public static class RPCProcedure
                 }
                 break;
             case ChatControllerPatch.ChannelType.Jackal:
-                if (CanSeeGhostInfo || player == Jackal.Sidekick || Jackal.jackal.Any(y => y == player))
+                if (CanSeeGhostInfo || PlayerControl.LocalPlayer == Jackal.Sidekick || Jackal.jackal.Any(y => y == PlayerControl.LocalPlayer))
                 {
-                    ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.ImpostorChat;
+                    ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.JackalChat;
+                    HudManager.Instance.Chat.AddChat(player, message);
+                }
+                break;
+            case ChatControllerPatch.ChannelType.Pavlovs:
+                if (CanSeeGhostInfo || Pavlovsdogs.pavlovsowner == PlayerControl.LocalPlayer || Pavlovsdogs.pavlovsdogs.Any(y => y == PlayerControl.LocalPlayer))
+                {
+                    ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.PavlovsChat;
+                    HudManager.Instance.Chat.AddChat(player, message);
+                }
+                break;
+            case ChatControllerPatch.ChannelType.Infected:
+                if (CanSeeGhostInfo || Infected.Player.Any(y => y == PlayerControl.LocalPlayer))
+                {
+                    ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.InfectedChat;
                     HudManager.Instance.Chat.AddChat(player, message);
                 }
                 break;
             case ChatControllerPatch.ChannelType.Lover:
-                if (Lovers.isLover(PlayerControl.LocalPlayer) || CanSeeGhostInfo)
+                if (CanSeeGhostInfo || Lovers.isLover(PlayerControl.LocalPlayer))
                 {
                     ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.LoverChat;
                     HudManager.Instance.Chat.AddChat(player, message);
                 }
                 break;
             case ChatControllerPatch.ChannelType.Jailor:
-                if (PlayerControl.LocalPlayer == Jailor.Player || PlayerControl.LocalPlayer == Jailor.Jailed || CanSeeGhostInfo)
+                if (CanSeeGhostInfo || PlayerControl.LocalPlayer == Jailor.Player || PlayerControl.LocalPlayer == Jailor.Jailed)
                 {
                     ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.JailorChat;
                     HudManager.Instance.Chat.AddChat(player, message);
@@ -1113,8 +1132,6 @@ public static class RPCProcedure
                 Executioner.clearAndReload();
             }
         }
-
-        SetRoleType(target, RoleTypes.Crewmate);
 
         erasePlayerRoles(target.PlayerId);
         setRole(targetId, (byte)RoleId.Sidekick);

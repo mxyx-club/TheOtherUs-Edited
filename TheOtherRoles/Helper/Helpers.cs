@@ -111,34 +111,6 @@ public static class Helpers
         target.cosmetics.currentBodySprite.BodySprite.material.SetColor("_OutlineColor", color);
     }
 
-    public static PlayerControl ImpostorSetTarget()
-    {
-        PlayerControl target = null;
-
-        List<PlayerControl> untargetablePlayers = [];
-
-        if (SchrodingersCat.Player.IsAlive() && SchrodingersCat.State == SchrodingersCat.CatState.Impostor) untargetablePlayers.Add(SchrodingersCat.Player);
-        if (Spy.spy != null)
-        {
-            if (Spy.impostorsCanKillAnyone)
-            {
-                target = SetTarget(null, false, inVented: ModOption.ImpCanKillInVent);
-            }
-            else
-            {
-                untargetablePlayers.Add(Spy.spy);
-                target = SetTarget(untargetablePlayers, true, inVented: ModOption.ImpCanKillInVent);
-            }
-        }
-        else
-        {
-            target = SetTarget(untargetablePlayers, true, inVented: ModOption.ImpCanKillInVent);
-        }
-
-        SetPlayerOutline(target, Palette.ImpostorRed);
-        return target;
-    }
-
     public static void SetTargetWithLight(this FollowerCamera camera, MonoBehaviour target)
     {
         Message("SetCam");
@@ -249,43 +221,6 @@ public static class Helpers
         }
     }
 
-    public static void SetRoleType(PlayerControl player, RoleTypes roleType)
-    {
-        try
-        {
-            if (player == null || player.Data == null) return;
-            var data = player.Data;
-            if (data.Role)
-            {
-                data.Role.Deinitialize(player);
-                UObject.Destroy(data.Role.gameObject);
-            }
-            if (RoleManager.Instance == null) return;
-            var roleBehaviour = UObject.Instantiate(RoleManager.Instance.AllRoles.First(r => r.Role == roleType), GameData.Instance.transform);
-            roleBehaviour.Initialize(player);
-            player.Data.Role = roleBehaviour;
-            player.Data.RoleType = roleType;
-            roleBehaviour.AdjustTasks(player);
-        }
-        catch (Exception e)
-        {
-            Error(e);
-        }
-    }
-
-    public static void turnToImpostor(PlayerControl player)
-    {
-        player.Data.Role.TeamType = RoleTeamTypes.Impostor;
-        SetRoleType(player, RoleTypes.Impostor);
-        RPCProcedure.setRole(player.PlayerId, (byte)RoleId.Impostor);
-        player.SetKillTimer(ModOption.KillCooldown);
-
-        Message("PROOF I AM IMP VANILLA ROLE: " + player.Data.Role.IsImpostor);
-
-        foreach (var player2 in PlayerControl.AllPlayerControls)
-            if (player2.Data.Role.IsImpostor && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
-                player.cosmetics.nameText.color = Palette.ImpostorRed;
-    }
 #nullable enable
 
     public static PlayerControl? PlayerById(byte? id)

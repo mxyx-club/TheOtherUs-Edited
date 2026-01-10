@@ -113,7 +113,6 @@ public static class Thief
         if (Lawyer.lawyer != null && target == Lawyer.target) Lawyer.target = thief;
 
         // SetRole
-        if (target.Data.Role.IsImpostor) turnToImpostor(thief);
         RPCProcedure.setRole(thief.PlayerId, (byte)role.roleId);
 
         if (thief == PlayerControl.LocalPlayer) CustomButton.ResetAllCooldowns();

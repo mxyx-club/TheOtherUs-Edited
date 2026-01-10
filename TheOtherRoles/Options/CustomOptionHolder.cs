@@ -49,8 +49,8 @@ public class CustomOptionHolder
 
     public static CustomOption impostorChatChannel;
     public static CustomOption jackalChatChannel;
-    /*public static CustomOption pavlovsChatChannel;
-    public static CustomOption infectedChatChannel;*/
+    public static CustomOption pavlovsChatChannel;
+    public static CustomOption infectedChatChannel;
 
     public static CustomOption MeetingOptions;
     public static CustomOption disableMeeting;
@@ -308,10 +308,10 @@ public class CustomOptionHolder
     public static CustomOption partTimerDeathTurn;
     public static CustomOption partTimerKnowsRole;
 
-    public static CustomOption soulSightSpawnRate;
+    /*public static CustomOption soulSightSpawnRate;
     public static CustomOption soulSightCooldown;
     public static CustomOption soulSightRespawnTimer;
-    public static CustomOption soulSightScoreToWin;
+    public static CustomOption soulSightScoreToWin;*/
 
     public static CustomOption witnessSpawnRate;
     public static CustomOption witnessMarkTimer;
@@ -858,10 +858,10 @@ public class CustomOptionHolder
             ["optionOff", "chatChannelOpt.1", "chatChannelOpt.2", "optionOn"], null, true);
         jackalChatChannel = Create(702, Types.General, Cs(Jackal.color, "jackalChatChannel"),
             ["optionOff", "chatChannelOpt.1", "chatChannelOpt.2", "optionOn"], null);
-        /*pavlovsChatChannel = Create(703, Types.General, Cs(Pavlovsdogs.color, "pavlovsChatChannel"),
+        pavlovsChatChannel = Create(703, Types.General, Cs(Pavlovsdogs.color, "pavlovsChatChannel"),
             ["optionOff", "chatChannelOpt.1", "chatChannelOpt.2", "optionOn"], null);
         infectedChatChannel = Create(704, Types.General, Cs(Infected.color, "infectedChatChannel"),
-            ["optionOff", "chatChannelOpt.1", "chatChannelOpt.2", "optionOn"], null);*/
+            ["optionOff", "chatChannelOpt.1", "chatChannelOpt.2", "optionOn"], null);
 
         //Meeting options
         MeetingOptions = Create(200, Types.General, Cs(new Color32(255, 85, 234, byte.MaxValue), "MeetingOptions"), false, null, true);
@@ -1062,10 +1062,10 @@ public class CustomOptionHolder
         terroristBombCooldown = Create(102702, Types.Impostor, "terroristBombCooldown", 15f, 5f, 60f, 2.5f, terroristSpawnRate);
         terroristBombActiveAfter = Create(102703, Types.Impostor, "terroristBombActiveAfter", 15f, 1f, 15f, 0.5f, terroristSpawnRate,
             isHidden: () => { return terroristMode.Selection == 0; });
-        terroristBombDestructionTime = Create(102704, Types.Impostor, "terroristBombDestructionTime", 0f, 0f, 120f, 0.5f, terroristSpawnRate,
+        terroristBombDestructionTime = Create(102704, Types.Impostor, "terroristBombDestructionTime", 0f, 0f, 30f, 0.5f, terroristSpawnRate,
             isHidden: () => { return terroristMode.Selection == 0; });
-        terroristBombDestructionRange = Create(102705, Types.Impostor, "terroristBombDestructionRange", 35, 5, 120, 5, terroristSpawnRate);
-        terroristBombSoundRange = Create(102709, Types.Impostor, "terroristBombSoundRange", 90, 5, 120, 5, terroristSpawnRate);
+        terroristBombDestructionRange = Create(102705, Types.Impostor, "terroristBombDestructionRange", 35, 5, 150, 5, terroristSpawnRate);
+        terroristBombSoundRange = Create(102709, Types.Impostor, "terroristBombSoundRange", 90, 5, 150, 5, terroristSpawnRate);
         terroristBombCanDefuse = Create(102707, Types.Impostor, "terroristBombCanDefuse", true, terroristSpawnRate,
             isHidden: () => { return terroristMode.Selection == 0; });
         terroristDefuseDuration = Create(102708, Types.Impostor, "terroristDefuseDuration", 2f, 0f, 30f, 0.5f, terroristBombCanDefuse);
@@ -1135,10 +1135,10 @@ public class CustomOptionHolder
         jesterCanDragDeadBody = Create(201004, Types.Neutral, "jesterCanDragDeadBody", true, jesterSpawnRate);
         jesterDragingVelocity = Create(201005, Types.Neutral, "undertakerDragingAfterVelocity", 0.75f, 0.5f, 1.5f, 0.125f, jesterCanDragDeadBody);
 
-        soulSightSpawnRate = Create(203400, Types.Neutral, Cs(SoulSight.color, "SoulSight"), rates, null, true);
+        /*soulSightSpawnRate = Create(203400, Types.Neutral, Cs(SoulSight.color, "SoulSight"), rates, null, true);
         soulSightCooldown = Create(203401, Types.Neutral, "自杀冷却", 25f, 5f, 120f, 2.5f, soulSightSpawnRate);
         soulSightRespawnTimer = Create(203402, Types.Neutral, "自杀后强制复活的间隔时间", 30, 5, 120, 5, soulSightSpawnRate);
-        soulSightScoreToWin = Create(203403, Types.Neutral, "获胜需获得的分数", 3, 1, 6, 1, soulSightSpawnRate);
+        soulSightScoreToWin = Create(203403, Types.Neutral, "获胜需获得的分数", 3, 1, 6, 1, soulSightSpawnRate);*/
 
         partTimerSpawnRate = Create(202900, Types.Neutral, Cs(PartTimer.color, "PartTimer"), rates, null, true);
         partTimerCooldown = Create(202901, Types.Neutral, "partTimerCooldown", 20f, 2.5f, 60f, 2.5f, partTimerSpawnRate);
@@ -1512,7 +1512,8 @@ public class CustomOptionHolder
         modifierLoverImpLoverRate = Create(401601, Types.Modifier, "modifierLoverImpLoverRate", rates, modifierLover);
         modifierLoverNeutraValid = Create(401602, Types.Modifier, "modifierLoverNeutraValid", true, modifierLoverImpLoverRate);
         modifierLoverCanGetModifiers = Create(401603, Types.Modifier, "modifierLoverCanGetModifiers", false, modifierLover);
-        modifierLoverEnableChat = Create(401604, Types.Modifier, "modifierLoverEnableChat", true, modifierLover);
+        modifierLoverEnableChat = Create(401604, Types.Modifier, "modifierLoverEnableChat",
+            ["optionOff", "chatChannelOpt.1", "chatChannelOpt.2", "optionOn"], modifierLover);
         modifierLoverAvengerChance = Create(401605, Types.Modifier, Cs(Avenger.color, "modifierLoverAvengerChance"), rates, modifierLover);
 
         avengerIsGuessable = Create(401651, Types.Modifier, "avengerIsGuessable", false, modifierLoverAvengerChance);

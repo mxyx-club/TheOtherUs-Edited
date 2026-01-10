@@ -147,7 +147,7 @@ internal class RoleManagerSelectRolesPatch
         neutralSettings.Add((byte)RoleId.Akujo, CustomOptionHolder.akujoSpawnRate.GetSelection());
         neutralSettings.Add((byte)RoleId.SchrodingersCat, CustomOptionHolder.schrodingersCatSpawnRate.GetSelection());
         neutralSettings.Add((byte)RoleId.Thief, CustomOptionHolder.thiefSpawnRate.GetSelection());
-        neutralSettings.Add((byte)RoleId.SoulSight, CustomOptionHolder.soulSightSpawnRate.GetSelection());
+        //neutralSettings.Add((byte)RoleId.SoulSight, CustomOptionHolder.soulSightSpawnRate.GetSelection());
         if (ModOption.NumImpostors >= 3 || ModOption.DebugMode)
             neutralSettings.Add((byte)RoleId.BandLeader, CustomOptionHolder.bandLeaderSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.GetSelection());
@@ -701,10 +701,15 @@ internal class RoleManagerSelectRolesPatch
         var neutralPlayer = allPlayer.Where(x => x.IsNeutral() && x != Akujo.akujo && x != SoulSight.Player && x != Doomsayer.doomsayer).ToList().Shuffle();
         var crewPlayer = allPlayer.Where(x => !x.Data.Role.IsImpostor && !x.IsNeutral()).ToList().Shuffle();
 
+        var neutralNumber = GuesserGM.guesserGamemodeNeutralNumber.GetInt();
+        if (Infected.IsGuesser && Infected.Player != null)
+        {
+            neutralNumber--;
+        }
         assignGuesserGamemodeToPlayers(crewPlayer,
             GuesserGM.guesserGamemodeCrewNumber.GetInt());
         assignGuesserGamemodeToPlayers(neutralPlayer,
-            GuesserGM.guesserGamemodeNeutralNumber.GetInt(),
+            neutralNumber,
             GuesserGM.guesserForceJackalGuesser.GetBool(),
             GuesserGM.guesserForceThiefGuesser.GetBool(),
             GuesserGM.guesserForcePavlovsGuesser.GetBool());

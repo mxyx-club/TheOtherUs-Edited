@@ -311,12 +311,12 @@ public static class ChatCommandRegistry
                         if (info.roleType == RoleType.Impostor)
                         {
                             target.Data.Role.TeamType = RoleTeamTypes.Impostor;
-                            SetRoleType(target, RoleTypes.Impostor);
+                            target.SetRoleType(RoleTypes.Impostor);
                         }
                         else
                         {
                             target.Data.Role.TeamType = RoleTeamTypes.Crewmate;
-                            SetRoleType(target, RoleTypes.Crewmate);
+                            target.SetRoleType(RoleTypes.Crewmate);
 
                         }
                         RPCProcedure.setRole(target.PlayerId, (byte)roleId);

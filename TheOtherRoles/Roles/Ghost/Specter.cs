@@ -302,7 +302,6 @@ public class Specter
             }
         }
 
-        if (target.IsImpostor()) turnToImpostor(local);
         RPCProcedure.setRole(local.PlayerId, (byte)role.roleId);
 
         if (afterMeetingRevive)

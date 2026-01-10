@@ -71,6 +71,8 @@ public static class Guesser
     public static void guesserOnClick(int buttonTarget, MeetingHud __instance)
     {
         if (guesserUI != null || __instance.state is MeetingHud.VoteStates.Results or MeetingHud.VoteStates.Discussion) return;
+        var targetId = __instance.playerStates[buttonTarget].TargetPlayerId;
+        if (PlayerById(targetId) == Jailor.Jailed && Jailor.Player.IsAlive()) return;
 
         Page = 1;
         RoleButtons = new();
@@ -420,6 +422,7 @@ public static class Guesser
             murderAttemptWriter.EndRPC();
             RPCProcedure.shieldedMurderAttempt(0);
             SoundEffectsManager.play("fail");
+            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是对方被法医保护了！");
             return;
         }
         if (target == Indomitable.indomitable)
@@ -427,7 +430,7 @@ public static class Guesser
             Coroutines.Start(showFlashCoroutine(new(255, 197, 97), 1.25f, 0.4f));
             __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
             if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
-            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true);
+            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是对方是不屈者！");
             return;
         }
 
@@ -456,7 +459,7 @@ public static class Guesser
         {
             if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
             Coroutines.Start(showFlashCoroutine(Oracle.color, 1.25f, 0.4f));
-            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true);
+            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是对方被神谕者保护了！");
             return;
         }
 
@@ -465,7 +468,7 @@ public static class Guesser
             if (Specoality.specoality.IsAlive() && target != dyingTarget)
             {
                 if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
-                seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true);
+                seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但猜测错误");
 
                 Coroutines.Start(showFlashCoroutine(Color.red, 1.25f, 0.4f));
                 Specoality.linearfunction--;
@@ -653,7 +656,7 @@ public static class Guesser
         if (WolfLord.Player == guesser && !WolfLord.Revealed && PlayerControl.LocalPlayer == guesser) WolfLord.WolfLord_Patch.ClearButton();
     }
 
-    public static void seedGuessChat(PlayerControl guesser, PlayerControl guessedTarget, byte guessedRoleId, bool flag = false, string text = "")
+    public static void seedGuessChat(PlayerControl guesser, PlayerControl guessedTarget, byte guessedRoleId, bool rpcSend = false, string text = "")
     {
         if (CanSeeGhostInfo || PlayerControl.LocalPlayer == guesser || ModOption.DebugMode)
         {
@@ -673,7 +676,7 @@ public static class Guesser
                 msg = string.Format(GetString("GuesserUI.GuessChat"), guesser.Data.PlayerName, guessedTarget.Data.PlayerName, roleInfo?.Name);
             }
 
-            msg += text;
+            msg += $"\n{text}";
 
             if (FastDestroyableSingleton<HudManager>.Instance)
             {
@@ -685,7 +688,7 @@ public static class Guesser
                 }, 0.1f, "Guesser Chat");
             }
 
-            if (flag && PlayerControl.LocalPlayer == guesser)
+            if (rpcSend && PlayerControl.LocalPlayer == guesser)
             {
                 var writer = StartRPC(CustomRPC.GuesserMessage);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);

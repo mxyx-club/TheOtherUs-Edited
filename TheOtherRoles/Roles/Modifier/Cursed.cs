@@ -17,6 +17,6 @@ public static class Cursed
         var player = PlayerById(playerId);
         RPCProcedure.erasePlayerRoles(playerId);
         if (player == cursed) clearAndReload();
-        turnToImpostor(player);
+        RPCProcedure.setRole(playerId, (byte)RoleId.Impostor);
     }
 }

@@ -88,8 +88,8 @@ public class SoulSight
         Reviveing = false;
         TriggerWin = false;
         CanRevive = true;
-        Cooldown = CustomOptionHolder.soulSightCooldown.GetFloat();
+        /*Cooldown = CustomOptionHolder.soulSightCooldown.GetFloat();
         RespawnTimer = CustomOptionHolder.soulSightRespawnTimer.GetFloat();
-        ScoreToWin = CustomOptionHolder.soulSightScoreToWin.GetInt();
+        ScoreToWin = CustomOptionHolder.soulSightScoreToWin.GetInt();*/
     }
 }

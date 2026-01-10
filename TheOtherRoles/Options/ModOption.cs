@@ -54,6 +54,9 @@ internal class ModOption
     public static CustomGameModes GameMode = CustomGameModes.Classic;
     public static int ImpostorChatChannel;
     public static int JackalChatChannel;
+    public static int PavlovsChatChannel;
+    public static int InfectedChatChannel;
+    public static int LoverChatChannel;
     public static bool EnableOtherLog;
     public static bool ImpCanKillInVent;
     public static bool NeutCanKillInVent;
@@ -125,6 +128,9 @@ internal class ModOption
         EnableOtherLog = CustomOptionHolder.enableOtherLog.GetBool();
         ImpostorChatChannel = CustomOptionHolder.impostorChatChannel.GetSelection();
         JackalChatChannel = CustomOptionHolder.jackalChatChannel.GetSelection();
+        PavlovsChatChannel = CustomOptionHolder.pavlovsChatChannel.GetSelection();
+        InfectedChatChannel = CustomOptionHolder.infectedChatChannel.GetSelection();
+        LoverChatChannel = CustomOptionHolder.modifierLoverEnableChat.GetSelection();
         ImpCanKillInVent = CustomOptionHolder.canKillPlayerInVent.GetSelection() >= 1;
         NeutCanKillInVent = CustomOptionHolder.canKillPlayerInVent.GetSelection() >= 2;
         CanKillInVent = CustomOptionHolder.canKillPlayerInVent.GetSelection() == 3;

@@ -285,7 +285,6 @@ public class Amnisiac
         ReloadRole(role.roleId, target);
         if (role.roleId == RoleId.Avenger) role = RoleInfo.jester;
 
-        if (target.IsImpostor()) turnToImpostor(local);
         RPCProcedure.setRole(local.PlayerId, (byte)role.roleId);
 
 

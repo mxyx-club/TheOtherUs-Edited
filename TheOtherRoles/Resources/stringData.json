@@ -336,6 +336,12 @@
     "jackalChatChannel": {
         "13": "豺狼文字私聊频道"
     },
+    "pavlovsChatChannel": {
+        "13": "巴甫洛夫文字私聊频道"
+    },
+    "infectedChatChannel": {
+        "13": "感染者文字私聊频道"
+    },
     "chatChannelOpt.1": {
         "13": "仅会议内"
     },
@@ -2892,23 +2898,38 @@
     "MessageFromTheJackal": {
         "13": "【豺狼频道】"
     },
+    "MessageFromThePavlovs": {
+        "13": "【巴甫洛夫频道】"
+    },
+    "MessageFromTheInfected": {
+        "13": "【感染者频道】"
+    },
+    "ChatChannel.Text": {
+        "13": "当前频道：{0}"
+    },
     "ChatChannel.Default": {
-        "13": "当前频道：默认"
+        "13": "默认"
     },
     "ChatChannel.HostAll": {
-        "13": "当前频道：房主消息"
+        "13": "房主消息"
     },
     "ChatChannel.Impostor": {
-        "13": "当前频道：伪装者"
+        "13": "伪装者"
     },
     "ChatChannel.Jackal": {
-        "13": "当前频道：豺狼"
+        "13": "豺狼"
+    },
+    "ChatChannel.Pavlovs": {
+        "13": "巴甫洛夫"
+    },
+    "ChatChannel.Infected": {
+        "13": "感染者"
     },
     "ChatChannel.Lover": {
-        "13": "当前频道：恋人"
+        "13": "恋人"
     },
     "ChatChannel.Jailor": {
-        "13": "当前频道：典狱长"
+        "13": "典狱长"
     },
     "ChannelSwitchNotice": {
         "13": " ( 按下 {0} 键更换聊天频道 )"
@@ -5730,7 +5751,7 @@
         "13": "让船员动弹不得!"
     },
     "Professional": {
-        "13": "专业杀手"
+        "13": "职业杀手"
     },
     "ProfessionalIntroDesc": {
         "13": "听着，所谓杀手…"

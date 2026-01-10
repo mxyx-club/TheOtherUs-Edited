@@ -1,7 +1,5 @@
-using AmongUs.GameOptions;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
-using UnityEngine.Networking.Types;
 
 namespace TheOtherRoles.Roles.Neutral;
 
@@ -60,23 +58,6 @@ public class Avenger
         Arrow = null;
     }
 
-    private static void CommitSuicide(PlayerControl player, bool exile, CustomDeathReason reason)
-    {
-        if (!player.IsAlive()) return;
-
-        if (exile)
-        {
-            ExilePlayerPatch.NoCheckLover = true;
-            player.CustomExiled(null, true);
-        }
-        else
-        {
-            player.MurderPlayer(player, MurderResultFlags.Succeeded);
-        }
-
-        PlayerData.SetDeathReason(player, reason);
-    }
-
     private static void SetAvenger(PlayerControl killer, PlayerControl target, bool exile = false)
     {
         if (target == null) return;
@@ -92,7 +73,7 @@ public class Avenger
         {
             Message("Avenger Lover Kill Other Player");
 
-            originRole = RoleInfo.getRoleInfoForPlayer(target, false, false)
+            originRole = RoleInfo.getRoleInfoForPlayer(otherLover, false, false)
                         .FirstOrDefault()?.roleId ?? RoleId.DefaultRole;
 
             RPCProcedure.erasePlayerRoles(otherLover.PlayerId);
@@ -101,7 +82,6 @@ public class Avenger
             Player = otherLover;
             Lover = target;
             Target = killer;
-            SetRoleType(Player, RoleTypes.Crewmate);
             Lovers.clearAndReload();
 
             if (otherLover == Lawyer.target && Lawyer.lawyer != null)
@@ -115,9 +95,13 @@ public class Avenger
         else
         {
             Message($"Lover Is Die, Exiled: {exile}");
-            if (otherLover.IsAlive())
+            if (Player.IsAlive())
             {
-                CommitSuicide(otherLover, exile, CustomDeathReason.LoverSuicide);
+                if (exile)
+                    Player.CustomExiled(null, true);
+                else
+                    Player.MurderPlayer(Player, MurderResultFlags.Succeeded);
+                PlayerData.SetDeathReason(Player, CustomDeathReason.AvengerFail);
             }
         }
     }
@@ -170,7 +154,11 @@ public class Avenger
 
         if (outcome is AvengerTargetWasDead.Suicide or AvengerTargetWasDead.SuicideRestore)
         {
-            CommitSuicide(Player, exile, CustomDeathReason.AvengerFail);
+            if (exile)
+                Player.CustomExiled(null, true);
+            else
+                Player.MurderPlayer(Player, MurderResultFlags.Succeeded);
+            PlayerData.SetDeathReason(Player, CustomDeathReason.AvengerFail);
         }
     }
 
@@ -203,11 +191,11 @@ public class Avenger
 
     public enum AvengerTargetWasDead
     {
-        Suicide,
-        RestoreRole,
-        SuicideRestore,
-        Jester,
-        Amnisiac,
-        Survivor
+        Suicide,        // 自杀
+        RestoreRole,    // 恢复原职业
+        SuicideRestore, // 自杀并恢复原职业
+        Jester,         // 变为小丑
+        Amnisiac,       // 变为失忆者
+        Survivor        // 变为幸存者
     }
 }

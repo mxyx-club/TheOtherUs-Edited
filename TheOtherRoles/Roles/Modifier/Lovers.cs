@@ -7,7 +7,6 @@ public static class Lovers
     public static Color color = new Color32(232, 57, 185, byte.MaxValue);
 
     public static bool notAckedExiledIsLover;
-    public static bool enableChat = true;
     public static bool neutraValid;
     public static bool IsAvengerLover;
 
@@ -42,7 +41,6 @@ public static class Lovers
         lover1 = null;
         lover2 = null;
         notAckedExiledIsLover = false;
-        enableChat = CustomOptionHolder.modifierLoverEnableChat.GetBool();
         neutraValid = CustomOptionHolder.modifierLoverNeutraValid.GetBool();
     }
 }
