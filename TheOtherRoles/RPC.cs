@@ -14,7 +14,6 @@ public enum CustomRPC : byte
 {
     // Main Controls
     ShareOptions = 80,
-    WorkaroundSetRoles,
     SetRole,
     SetModifier,
     SetGhostRole,
@@ -235,23 +234,6 @@ public static class RPCProcedure
         {
             GameStartManager.Instance.ResetStartState();
             PlayerControl.LocalPlayer.RpcSendChat($"{PlayerById(playerId)?.Data?.PlayerName} 阻止游戏开始");
-        }
-    }
-
-    public static void workaroundSetRoles(byte numberOfRoles, MessageReader reader)
-    {
-        for (var i = 0; i < numberOfRoles; i++)
-        {
-            var playerId = (byte)reader.ReadPackedUInt32();
-            var roleId = (byte)reader.ReadPackedUInt32();
-            try
-            {
-                setRole(playerId, roleId);
-            }
-            catch (Exception e)
-            {
-                Error("Error while deserializing roles: " + e.Message);
-            }
         }
     }
 
@@ -2071,9 +2053,6 @@ internal class RPCHandlerPatch
             // Main Controls
             case CustomRPC.ShareOptions:
                 RPCProcedure.HandleShareOptions(reader.ReadByte(), reader);
-                break;
-            case CustomRPC.WorkaroundSetRoles:
-                RPCProcedure.workaroundSetRoles(reader.ReadByte(), reader);
                 break;
             case CustomRPC.SetRole:
                 RPCProcedure.setRole(reader.ReadByte(), reader.ReadByte());

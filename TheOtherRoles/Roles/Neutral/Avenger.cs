@@ -54,6 +54,8 @@ public class Avenger
         WinCondition = CustomOptionHolder.avengerWinCondition.GetSelection<WinnerFlags>();
         TargetWasKilledByOther = CustomOptionHolder.avengerTargetWasKilledByOther.GetSelection<AvengerTargetWasDead>();
         TargetWasExiled = CustomOptionHolder.avengerTargetWasExiled.GetSelection<AvengerTargetWasDead>();
+        Message($"TargetWasKilledByOther {TargetWasKilledByOther}");
+        Message($"TargetWasExiled {TargetWasExiled}");
         Arrow?.arrow?.Destroy();
         Arrow = null;
     }
@@ -95,13 +97,13 @@ public class Avenger
         else
         {
             Message($"Lover Is Die, Exiled: {exile}");
-            if (Player.IsAlive())
+            if (otherLover.IsAlive())
             {
                 if (exile)
-                    Player.CustomExiled(null, true);
+                    otherLover.CustomExiled(null, true);
                 else
-                    Player.MurderPlayer(Player, MurderResultFlags.Succeeded);
-                PlayerData.SetDeathReason(Player, CustomDeathReason.AvengerFail);
+                    otherLover.MurderPlayer(otherLover, MurderResultFlags.Succeeded);
+                PlayerData.SetDeathReason(otherLover, CustomDeathReason.AvengerFail);
             }
         }
     }
@@ -139,6 +141,16 @@ public class Avenger
 
         Message($"Player Is Die, Exiled: {exile}", "Avenger");
 
+        if (outcome is AvengerTargetWasDead.Suicide or AvengerTargetWasDead.SuicideRestore)
+        {
+            if (exile)
+                Player.CustomExiled(null, true);
+            else
+                Player.MurderPlayer(Player, MurderResultFlags.Succeeded);
+
+            PlayerData.SetDeathReason(Player, CustomDeathReason.AvengerFail);
+        }
+
         if (outcome is AvengerTargetWasDead.RestoreRole or AvengerTargetWasDead.SuicideRestore)
         {
             if (Player.AmOwner)
@@ -150,15 +162,6 @@ public class Avenger
                 RPCProcedure.setRole(Player.PlayerId, (byte)originRole);
             }
             ClearAndReload();
-        }
-
-        if (outcome is AvengerTargetWasDead.Suicide or AvengerTargetWasDead.SuicideRestore)
-        {
-            if (exile)
-                Player.CustomExiled(null, true);
-            else
-                Player.MurderPlayer(Player, MurderResultFlags.Succeeded);
-            PlayerData.SetDeathReason(Player, CustomDeathReason.AvengerFail);
         }
     }
 

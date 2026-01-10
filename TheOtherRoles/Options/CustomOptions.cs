@@ -81,6 +81,12 @@ public class CustomOption
         return new CustomOption(id, type, name, selections, "", parent, isHeader, isHidden, onChange);
     }
 
+    public static CustomOption Create(int id, CustomOptionType type, string name, string[] selections, int defaultIndex,
+        CustomOption parent = null, bool isHeader = false, Func<bool> isHidden = null, Action<CustomOption> onChange = null)
+    {
+        return new CustomOption(id, type, name, selections, selections[defaultIndex], parent, isHeader, isHidden, onChange);
+    }
+
     public static CustomOption Create(int id, CustomOptionType type, string name, float defaultValue, float min,
         float max, float step, CustomOption parent = null, bool isHeader = false, Func<bool> isHidden = null, Action<CustomOption> onChange = null)
     {
@@ -1095,7 +1101,7 @@ public static class GameOptionsNextPagePatch
     public static void Postfix(KeyboardJoystick __instance)
     {
         var page = Main.optionsPage;
-        if (Input.GetKeyDown(KeyCode.Tab)) Main.optionsPage = (Main.optionsPage + 1) % 7;
+        if (Input.GetKeyDown(KeyCode.Tab)) Main.optionsPage = (Main.optionsPage + 1) % 8;
         if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)) Main.optionsPage = 0;
         if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)) Main.optionsPage = 1;
         if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) Main.optionsPage = 2;

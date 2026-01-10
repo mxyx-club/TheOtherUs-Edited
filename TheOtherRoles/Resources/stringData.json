@@ -1198,15 +1198,15 @@
         "0": "Who Can See the Decoy",
         "13": "哪些玩家可以看到木偶"
     },
-    "marionetteShowDecoy1": {
+    "marionetteShowDecoy.0": {
         "0": "Only Marionette",
         "13": "仅木偶师可见"
     },
-    "marionetteShowDecoy2": {
+    "marionetteShowDecoy.1": {
         "0": "Only Impostor",
         "13": "仅伪装者可见"
     },
-    "marionetteShowDecoy3": {
+    "marionetteShowDecoy.2": {
         "0": "All Players",
         "13": "全部玩家可见"
     },
@@ -2074,15 +2074,15 @@
         "0": "Show Shielded Player to",
         "13": "可见医生护盾的玩家"
     },
-    "medicShowShielded1": {
+    "medicShowShielded.0": {
         "0": "Everyone",
         "13": "所有人"
     },
-    "medicShowShielded2": {
+    "medicShowShielded.1": {
         "0": "Shielded + Medic",
         "13": "被保护者+法医"
     },
-    "medicShowShielded3": {
+    "medicShowShielded.2": {
         "0": "Medic",
         "13": "法医"
     },
@@ -2106,15 +2106,15 @@
         "0": "Shield Will Be",
         "13": "护盾生效与可见时机"
     },
-    "medicSetOrShowShieldAfterMeeting1": {
+    "medicSetOrShowShieldAfterMeeting.0": {
         "0": "Effective and Visible Instantly",
         "13": "立即生效且可见"
     },
-    "medicSetOrShowShieldAfterMeeting2": {
+    "medicSetOrShowShieldAfterMeeting.1": {
         "0": "Effective Instantly, Visible after Meeting",
         "13": "立即生效且会议后可见"
     },
-    "medicSetOrShowShieldAfterMeeting3": {
+    "medicSetOrShowShieldAfterMeeting.2": {
         "0": "Effective and Visible after Meeting",
         "13": "会议后生效且可见"
     },
@@ -2262,15 +2262,15 @@
         "0": "Info Includes Neutral",
         "13": "可揭示中立阵营"
     },
-    "snitchIncludeNeutralTeam2": {
+    "snitchIncludeNeutralTeam.1": {
         "0": "Killer",
         "13": "仅杀手中立"
     },
-    "snitchIncludeNeutralTeam3": {
+    "snitchIncludeNeutralTeam.2": {
         "0": "Evil",
         "13": "所有邪恶中立"
     },
-    "snitchIncludeNeutralTeam4": {
+    "snitchIncludeNeutralTeam.3": {
         "0": "All",
         "13": "全部中立阵营"
     },
@@ -2601,15 +2601,15 @@
     "avengerWinCondition": {
         "13": "复仇完成后的胜利模式"
     },
-    "avengerWinCondition.1": {
+    "avengerWinCondition.0": {
         "0": "Follow Win",
         "13": "跟随胜利"
     },
-    "avengerWinCondition.2": {
+    "avengerWinCondition.1": {
         "0": "Steal Win",
         "13": "抢夺胜利"
     },
-    "avengerWinCondition.3": {
+    "avengerWinCondition.2": {
         "0": "Revenge Win",
         "13": "复仇后直接胜利"
     },
@@ -2619,10 +2619,10 @@
     "avengerTargetWasExiled": {
         "13": "复仇目标被驱逐时"
     },
-    "avengerTargetWasDead.2": {
+    "avengerTargetWasDead.1": {
         "13": "恢复原职业"
     },
-    "avengerTargetWasDead.3": {
+    "avengerTargetWasDead.2": {
         "13": "自杀并恢复原职业"
     },
     "modifierSunglassesQuantity": {

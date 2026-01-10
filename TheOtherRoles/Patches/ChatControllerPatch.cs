@@ -282,6 +282,7 @@ public static class ChatControllerPatch
             var flag = MeetingHud.Instance
                     || LobbyBehaviour.Instance
                     || CanSeeGhostInfo
+                    || CurrentChatType != ChatTypes.Default
                     || ModOption.DebugMode;
 
             __state = flag;
@@ -296,12 +297,13 @@ public static class ChatControllerPatch
             return flag;
         }
 
-        private static void Postfix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer, bool __state)
+        private static void Postfix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer, [HarmonyArgument(1)] string chatText, bool __state)
         {
             if (!__state) return;
             if (sourcePlayer.IsDead() || sourcePlayer == PlayerControl.LocalPlayer || !InMeeting) return;
             try
             {
+                Message($"{sourcePlayer?.Data?.PlayerName ?? "NULL"} : {chatText}", "AddChat");
                 var local = PlayerControl.LocalPlayer;
                 var targetId = sourcePlayer.PlayerId;
                 if (MeetingHud.Instance.state is MeetingHud.VoteStates.Proceeding) return;

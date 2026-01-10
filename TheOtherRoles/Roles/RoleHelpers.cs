@@ -338,7 +338,7 @@ public static class PlayerControlExtensions
         public bool IsImpostor(bool AndSpy = false, bool AndCat = false)
         {
             if (player == null) return false;
-            return player.Data.Role.IsImpostor
+            return player?.Data?.Role?.IsImpostor == true
                 || (AndSpy && Spy.spy == player)
                 || (AndCat && SchrodingersCat.Player == player && SchrodingersCat.State == SchrodingersCat.CatState.Impostor);
         }

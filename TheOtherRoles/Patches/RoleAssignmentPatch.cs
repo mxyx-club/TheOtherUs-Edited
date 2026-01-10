@@ -42,8 +42,6 @@ internal class RoleManagerSelectRolesPatch
 
     private static int impValues;
 
-    private static readonly List<Tuple<byte, byte>> playerRoleMap = new();
-
     public static void Postfix()
     {
         // Don't assign Roles in Hide N Seek
@@ -61,7 +59,6 @@ internal class RoleManagerSelectRolesPatch
         assignRoleTargets(data); // Assign targets for Lawyer & Prosecutor
         if (GuesserGM.Enabled) assignGuesserGamemode();
         assignModifiers(); // Assign modifier
-        setRolesAgain(); //brb
     }
 
     public static RoleAssignmentData getRoleAssignmentData()
@@ -702,10 +699,8 @@ internal class RoleManagerSelectRolesPatch
         var crewPlayer = allPlayer.Where(x => !x.Data.Role.IsImpostor && !x.IsNeutral()).ToList().Shuffle();
 
         var neutralNumber = GuesserGM.guesserGamemodeNeutralNumber.GetInt();
-        if (Infected.IsGuesser && Infected.Player != null)
-        {
-            neutralNumber--;
-        }
+
+        if (Infected.IsGuesser && Infected.Player.Any()) neutralNumber--;
         assignGuesserGamemodeToPlayers(crewPlayer,
             GuesserGM.guesserGamemodeCrewNumber.GetInt());
         assignGuesserGamemodeToPlayers(neutralPlayer,
@@ -795,24 +790,6 @@ internal class RoleManagerSelectRolesPatch
         writer.EndRPC();
         RPCProcedure.setModifier(playerId, modifierId, flag);
         return playerId;
-    }
-
-    public static bool setRoleToPlayer(byte roleId, PlayerControl player)
-    {
-        if (player == null) return false;
-        byte playerId = player.PlayerId;
-
-        if (playerRoleMap.Any(t => t.Item1 == playerId))
-            playerRoleMap.RemoveAll(t => t.Item1 == playerId);
-
-        playerRoleMap.Add(new Tuple<byte, byte>(playerId, roleId));
-
-        var writer = StartRPC(CustomRPC.SetRole);
-        writer.Write(playerId);
-        writer.Write(roleId);
-        writer.EndRPC();
-        RPCProcedure.setRole(playerId, roleId);
-        return true;
     }
 
     public static bool setModifierToPlayer(byte modifierId, PlayerControl player, byte flag = 0)
@@ -1200,25 +1177,6 @@ internal class RoleManagerSelectRolesPatch
         }
 
         return selection;
-    }
-
-    private static void setRolesAgain()
-    {
-        while (playerRoleMap.Any())
-        {
-            var amount = (byte)Math.Min(playerRoleMap.Count, 20);
-            var writer = StartRPC(CustomRPC.WorkaroundSetRoles);
-            writer.Write(amount);
-            for (var i = 0; i < amount; i++)
-            {
-                var option = playerRoleMap[0];
-                playerRoleMap.RemoveAt(0);
-                writer.WritePacked((uint)option.Item1);
-                writer.WritePacked((uint)option.Item2);
-            }
-
-            writer.EndRPC();
-        }
     }
 
     public class RoleAssignmentData

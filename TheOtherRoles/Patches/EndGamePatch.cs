@@ -1202,13 +1202,16 @@ internal class RPCEndGamePatch
     public static bool Prefix(GameOverReason endReason)
     {
         if (endReason == GameOverReason.HumansByTask && (ModOption.DisableGameEnd || ModOption.PreventTaskEnd)) return false;
+
+        if ((CustomGameOverReason)endReason == CustomGameOverReason.Canceled)
+        {
+            ModOption.isCanceled = true;
+        }
         return true;
     }
-
     public static void Postfix(ref GameOverReason endReason)
     {
-        if ((CustomGameOverReason)endReason == CustomGameOverReason.Canceled) ModOption.isCanceled = true;
-        Message($"游戏结束 {(CustomGameOverReason)endReason} {endReason}", "RpcEndGame");
+        Message($"游戏结束 {(CustomGameOverReason)endReason} {endReason}", "EndGame");
     }
 }
 
