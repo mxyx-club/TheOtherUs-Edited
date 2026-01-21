@@ -481,17 +481,21 @@ public static class ChatControllerPatch
         private static ChannelType LastType;
         public static void KeyboardInput(ChatController __instance)
         {
+            if (!__instance.IsOpenOrOpening) return;
+
             if (Input.GetKeyDown(KeyCode.UpArrow) && SentHistory.Count > 0)
             {
                 CurrentHistorySelection = Mathf.Clamp(--CurrentHistorySelection, 0, SentHistory.Count - 1);
                 __instance.freeChatField.textArea.SetText(SentHistory[CurrentHistorySelection]);
             }
+
             if (Input.GetKeyDown(KeyCode.DownArrow) && SentHistory.Count > 0)
             {
                 CurrentHistorySelection++;
                 if (CurrentHistorySelection < SentHistory.Count)
                     __instance.freeChatField.textArea.SetText(SentHistory[CurrentHistorySelection]);
-                else __instance.freeChatField.textArea.SetText("");
+                else
+                    __instance.freeChatField.textArea.SetText("");
             }
 
             if (AmongUsClient.Instance.AmHost && InGame && Input.GetKeyDown(KeyCode.LeftShift))
@@ -505,6 +509,7 @@ public static class ChatControllerPatch
             }
 
             if (Jailor.Player.IsAlive() && PlayerControl.LocalPlayer == Jailor.Jailed) { CurrentChannel = ChannelType.Default; return; }
+
             if (Input.GetKeyDown(ModInputManager.nextChatChannel.keyCode))
             {
                 var channels = ActiveChannels.ToList();

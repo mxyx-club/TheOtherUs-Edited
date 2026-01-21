@@ -870,6 +870,7 @@ public static class RPCProcedure
         var deadBody = UObject.Instantiate(GameManager.Instance.DeadBodyPrefab);
         deadBody.transform.position = pos;
         deadBody.ParentId = targetId;
+        //deadBody.tag = "Untagged";
         deadBody.enabled = true;
         deadBody.bodyRenderers.ForEach(delegate (SpriteRenderer b)
         {

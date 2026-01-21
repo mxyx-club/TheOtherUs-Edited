@@ -4227,7 +4227,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                BandLeader.currentTarget = SetTarget(BandLeader.Members, BandLeader.WinCondition == BandLeader.WinnerFlags.Impostor);
+                BandLeader.currentTarget = SetTarget(BandLeader.Members, true);
                 SetPlayerOutline(BandLeader.currentTarget, BandLeader.color);
 
                 bandLeaderKillButton.showTargetNameOnButton(BandLeader.currentTarget);
@@ -4478,7 +4478,9 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Infected.currentTarget = SetTarget(ignoreList: Infected.Player);
+                var ignoreList = new List<PlayerControl>(Infected.Player);
+                if (SchrodingersCat.Player != null && SchrodingersCat.State == SchrodingersCat.CatState.Infected) ignoreList.Add(SchrodingersCat.Player);
+                Infected.currentTarget = SetTarget(ignoreList: ignoreList);
                 SetPlayerOutline(Infected.currentTarget, Infected.color);
                 InfectedKillButton.showTargetNameOnButton(Infected.currentTarget);
 

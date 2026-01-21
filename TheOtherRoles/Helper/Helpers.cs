@@ -47,7 +47,7 @@ public static class Helpers
     /// <summary>
     /// 强力船员判定
     /// </summary>
-    public static bool PoowerCrewAlive()
+    public static bool PowerCrewAlive()
     {
         var powerCrewAlive = false;
         // This functions blocks the game from ending if specified crewmate roles are alive
@@ -57,7 +57,7 @@ public static class Helpers
         if (isRoleAlive(Sheriff.Deputy)) powerCrewAlive = true;
         if (isRoleAlive(Veteran.veteran)) powerCrewAlive = true;
         if (isRoleAlive(Mayor.mayor)) powerCrewAlive = true;
-        if (isRoleAlive(Swapper.swapper)) powerCrewAlive = true;
+        //if (isRoleAlive(Swapper.swapper)) powerCrewAlive = true;
         if (isRoleAlive(Prosecutor.prosecutor)) powerCrewAlive = true;
         if (isRoleAlive(Vigilante.vigilante)) powerCrewAlive = true;
 

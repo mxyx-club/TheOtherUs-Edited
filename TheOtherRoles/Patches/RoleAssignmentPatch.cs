@@ -70,8 +70,8 @@ internal class RoleManagerSelectRolesPatch
 
         var neutralMin = CustomOptionHolder.neutralRolesCountMin.GetSelection();
         var neutralMax = CustomOptionHolder.neutralRolesCountMax.GetSelection();
-        var killerNeutralMin = CustomOptionHolder.killerNeutralRolesCountMin.GetSelection();
-        var killerNeutralMax = CustomOptionHolder.killerNeutralRolesCountMax.GetSelection();
+        var killerNeutralMin = CustomOptionHolder.killerNeutralRolesCountMin.GetSelection() - 1;
+        var killerNeutralMax = CustomOptionHolder.killerNeutralRolesCountMax.GetSelection() - 1;
         var impostorNum = ModOption.NumImpostors;
 
         if (RoleDraft.isEnabled)
@@ -156,16 +156,19 @@ internal class RoleManagerSelectRolesPatch
         killerNeutralSettings.Add((byte)RoleId.Swooper, CustomOptionHolder.swooperSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Infected, CustomOptionHolder.infectedSpawnRate.GetSelection());
         // Check if killerNeutralMin and killerNeutralMax are 0
-        if (killerNeutralMin + killerNeutralMax == 0)
+        if (killerNeutralMin + killerNeutralMax < 0)
         {
-            // If both are 0, treat all killer neutrals as regular neutrals
             neutralSettings.AddRange(killerNeutralSettings);
+            killerNeutralCount = 0;
+            killerNeutralSettings.Clear();
+        }
+        else if (killerNeutralMin + killerNeutralMax == 0)
+        {
             killerNeutralCount = 0;
             killerNeutralSettings.Clear();
         }
         else
         {
-            // Adjust maxNeutralRoles by allocating killerNeutral roles
             maxNeutralRoles = Math.Min(maxNeutralRoles - killerNeutralCount, neutralMax);
         }
 

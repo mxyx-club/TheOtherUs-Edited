@@ -84,6 +84,7 @@ public static class Doomsayer
     {
         return null;
     }
+
     public static void clearAndReload()
     {
         doomsayer = null;

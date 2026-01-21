@@ -11,7 +11,7 @@ public class CustomOptionHolder
     public static string[] ratesCount =
         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"];
     public static string[] ratesRandom =
-        ["Random", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"];
+        ["Random", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"];
 
     public static string[] presets =
         ["preset1", "preset2", "preset3", "PresetSkeld", "PresetMira", "PresetPolus", "PresetAirship", "PresetFungle", "PresetCustomMap"];
@@ -815,12 +815,56 @@ public class CustomOptionHolder
             onChange: (x) => x.SyncMinMax(false, neutralRolesCountMax));
         neutralRolesCountMax = Create(9, Types.General, Cs(new Color32(204, 204, 0, 255), "neutralRolesCountMax"), 2, 0, 15, 1,
             isHeader: isDraftMode.GetBool(),
-            onChange: (x) => x.SyncMinMax(true, neutralRolesCountMin, killerNeutralRolesCountMax));
+            onChange: (x) =>
+            {
+                x.SyncMinMax(true, neutralRolesCountMin);
+
+                var neutralMaxValue = x.Selection;
+                var killerMaxActual = killerNeutralRolesCountMax.Selection - 1;
+                if (killerMaxActual > neutralMaxValue)
+                {
+                    killerNeutralRolesCountMax.updateSelection(neutralMaxValue + 1);
+                }
+            });
         killerNeutralRolesCountMin = Create(10, Types.General, Cs(new Color32(204, 204, 0, 255), "killerNeutralRolesCountMin"), ratesRandom,
             isHidden: () => isDraftMode.GetBool(),
-            onChange: (x) => x.SyncMinMax(false, killerNeutralRolesCountMax));
+            onChange: (x) =>
+            {
+                x.SyncMinMax(false, killerNeutralRolesCountMax);
+                if (x.Selection - 1 > neutralRolesCountMin.Selection)
+                {
+                    neutralRolesCountMin.updateSelection(x.Selection - 1);
+                }
+                if (x.Selection <= 1)
+                {
+                    if (killerNeutralRolesCountMax.Selection != x.Selection)
+                    {
+                        killerNeutralRolesCountMax.updateSelection(x.Selection);
+                    }
+                }
+            });
         killerNeutralRolesCountMax = Create(11, Types.General, Cs(new Color32(204, 204, 0, 255), "killerNeutralRolesCountMax"), ratesRandom,
-            onChange: (x) => { x.SyncMinMax(true, killerNeutralRolesCountMin); x.SyncMinMax(false, neutralRolesCountMax); });
+            onChange: (x) =>
+            {
+                x.SyncMinMax(true, killerNeutralRolesCountMin);
+                var currentSelection = x.Selection;
+                if (currentSelection <= 1)
+                {
+                    var minSelection = killerNeutralRolesCountMin.Selection;
+                    if (minSelection != currentSelection)
+                    {
+                        killerNeutralRolesCountMin.updateSelection(currentSelection);
+                    }
+                }
+
+                var killerMaxActual = currentSelection - 1;
+                var neutralMaxCurrent = neutralRolesCountMax.Selection;
+
+                if (killerMaxActual > 0 && killerMaxActual > neutralMaxCurrent)
+                {
+                    neutralRolesCountMax.updateSelection(killerMaxActual);
+                }
+            });
         modifiersCountMin = Create(12, Types.General, Cs(new Color32(204, 204, 0, 255), "modifiersCountMin"), 15, 0, 30, 1,
             onChange: (x) => x.SyncMinMax(false, modifiersCountMax));
         modifiersCountMax = Create(13, Types.General, Cs(new Color32(204, 204, 0, 255), "modifiersCountMax"), 15, 0, 30, 1,
@@ -1407,7 +1451,7 @@ public class CustomOptionHolder
 
         oracleSpawnRate = Create(304000, Types.Crewmate, Cs(Oracle.color, "Oracle"), rates, null, true);
         oracleConfessCooldown = Create(304001, Types.Crewmate, "oracleConfessCooldown", 20f, 5f, 60f, 2.5f, oracleSpawnRate);
-        oracleRevealAccuracyRate = Create(304002, Types.Crewmate, "oracleRevealAccuracyRate", 80, 40, 100, 10, oracleSpawnRate);
+        oracleRevealAccuracyRate = Create(304002, Types.Crewmate, "oracleRevealAccuracyRate", 80, 0, 100, 10, oracleSpawnRate);
         oracleCanNotGuessConfess = Create(304003, Types.Crewmate, "oracleCanNotGuessConfess", false, oracleSpawnRate);
 
         bodyGuardSpawnRate = Create(303400, Types.Crewmate, Cs(BodyGuard.color, "BodyGuard"), rates, null, true);

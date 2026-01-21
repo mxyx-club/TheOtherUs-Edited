@@ -1,4 +1,5 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
+using MoreLinq;
 using TheOtherRoles.Attributes;
 using TheOtherRoles.Mode;
 using static TheOtherRoles.Patches.RoleManagerSelectRolesPatch;

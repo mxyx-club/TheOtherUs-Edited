@@ -266,10 +266,6 @@
         "0": "Maximum Crewmate Roles",
         "13": "最大船员阵营职业数"
     },
-    "crewmateRolesFill": {
-        "0": "All Crewmates Have Roles\n(Overrides Min/Max Settings)",
-        "13": "所有船员必定拥有职业\n(无视最小/最大数量)"
-    },
     "neutralRolesCountMin": {
         "0": "Minimum Neutral Roles",
         "13": "最小独立阵营职业数"
@@ -538,7 +534,7 @@
     },
     "addPolusVents": {
         "0": "Additional Vents\n(Specimen Room-Office-Dropship)",
-        "13": "添加新管道\n (样本室-办公室-运输船)"
+        "13": "添加新管道 (样本室-办公室-运输船)"
     },
     "movePolusVitals": {
         "0": "Move Vitals To Lab",
@@ -1850,7 +1846,7 @@
     },
     "thiefCanStealWithGuess": {
         "0": "Parasite Can Guess to Steal a Role (Guesser Mode)",
-        "13": "身份窃贼可通过猜测窃取身份\n(赌怪模式)"
+        "13": "身份窃贼可通过猜测窃取身份 (赌怪模式)"
     },
     "schrodingersCatIsGuessable": {
         "0": "Schrödinger's Cat Can Be Guessed",
@@ -2728,6 +2724,9 @@
     "modifierShiftALLNeutral": {
         "0": "Neutral Roles May Spawn with This Modifier",
         "13": "中立阵营可以成为交换师"
+    },
+    "modifierShiftReload": {
+        "13": "交换后重置职业"
     },
     "SpecterOption": {
         "0": "Specter (Neutral)",

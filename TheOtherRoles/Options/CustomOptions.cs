@@ -118,7 +118,6 @@ public class CustomOption
             else if (isMax && Selection < opt.Selection)
             {
                 opt.updateSelection(Selection);
-
             }
         }
     }
@@ -236,7 +235,17 @@ public class CustomOption
         var parent = Parent;
         while (parent != null && enabled)
         {
-            enabled = parent.Selection != 0;
+            if (parent.Selection == 0)
+            {
+                enabled = false;
+                break;
+            }
+            if (parent.IsHidden())
+            {
+                enabled = false;
+                break;
+            }
+
             parent = parent.Parent;
         }
 
@@ -826,9 +835,9 @@ internal class GameOptionsDataPatch
         var impRoles = $"<size=150%><color=#ff1c1c>{"ImpostorRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Impostor, true)}\n";
         var neutralRoles = $"<size=150%><color=#50544c>{"NeutralRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Neutral, true)}\n";
         var crewRoles = $"<size=150%><color=#08fcfc>{"CrewmateRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Crewmate, true)}\n";
-        var modifiers = $"<size=150%><color=#ffec04>{"ModifierRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Modifier, true)}";
-        var ghostRole = $"<size=150%><color=#ffec04>{"GhostRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.GhostRole, true)}";
-        //var advancedSettingst = $"<size=150%><color=#ffec04>{"AdvancedSettingsText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Advanced, true)}";
+        var modifiers = $"<size=150%><color=#ffec04>{"ModifierRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Modifier, true)}\n";
+        var ghostRole = $"<size=150%><color=#ffec04>{"GhostRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.GhostRole, true)}\n";
+        //var advancedSettingst = $"<size=150%><color=#ffec04>{"AdvancedSettingsText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Advanced, true)}\n";
         return impRoles + neutralRoles + crewRoles + modifiers + ghostRole;
     }
 
@@ -911,14 +920,14 @@ internal class GameOptionsDataPatch
                     if (min > max) min = max;
                     var optionValue = min == max ? $"{min}" : $"{min} ~ {max}";
 
-                    var killerMin = CustomOptionHolder.killerNeutralRolesCountMin.GetSelection();
-                    var killerMax = CustomOptionHolder.killerNeutralRolesCountMax.GetSelection();
+                    var killerMin = CustomOptionHolder.killerNeutralRolesCountMin.GetSelection() - 1;
+                    var killerMax = CustomOptionHolder.killerNeutralRolesCountMax.GetSelection() - 1;
                     if (RoleDraft.isEnabled) killerMin = killerMax;
                     var min2 = Mathf.Min(killerMin, min);
                     var max2 = Mathf.Min(killerMax, max);
                     if (min2 > max2) min2 = max2;
                     var count = killerMin + killerMax;
-                    var optionValue2 = count == 0 ? "Random".Translate() : min2 == max2 ? $"{min2}" : $"{min2} ~ {max2}";
+                    var optionValue2 = count <= -1 ? "Random".Translate() : min2 == max2 ? $"{min2}" : $"{min2} ~ {max2}";
 
                     sb.AppendLine($"{optionName}: {optionValue}  ({"NeutralKillerRolesCount".Translate()}: {optionValue2})");
                 }

@@ -99,8 +99,6 @@ public class Jailor
         }
         Jailed = null;
 
-        HudManager.Instance.KillOverlay.ShowKillAnimation(target.Data, target.Data);
-
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(target.KillSfx, false, 0.8f);
 
         if (MeetingHud.Instance)
@@ -124,6 +122,16 @@ public class Jailor
                 }
             }
             if (AmongUsClient.Instance.AmHost) MeetingHud.Instance.CheckForEndVoting();
+        }
+
+        if (Player.AmOwner)
+        {
+            var color = target.IsCrew() ? Color.red : Color.green;
+            Coroutines.Start(showFlashCoroutine(color, 1, 0.5f));
+        }
+        else
+        {
+            HudManager.Instance.KillOverlay.ShowKillAnimation(target.Data, target.Data);
         }
 
         if (target.IsCrew())

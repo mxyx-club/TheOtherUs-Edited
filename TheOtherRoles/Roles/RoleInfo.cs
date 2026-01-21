@@ -455,6 +455,8 @@ public class RoleInfo
                 roleName += Cs(Witness.color, string.Format("roleInfoRemaining".Translate(), Witness.exileToWin - Witness.exiledCount));
             if (p == Gunsmith.Player && (PlayerControl.LocalPlayer == Gunsmith.Player || CanSeeGhostInfo))
                 roleName += Cs(Gunsmith.color, $" {Gunsmith.remainingChange}/{Gunsmith.maxChangeCount}");
+            if (p == SchrodingersCat.Player && SchrodingersCat.TeamChanges && (PlayerControl.LocalPlayer == SchrodingersCat.Player || CanSeeGhostInfo))
+                roleName += Cs(SchrodingersCat.color, $" {SchrodingersCat.remainingChange}/{SchrodingersCat.MaxChangeCount}");
 
             if (CanSeeGhostInfo)
             {
