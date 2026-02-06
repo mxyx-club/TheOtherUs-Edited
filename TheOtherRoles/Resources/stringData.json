@@ -1624,6 +1624,18 @@
         "0": "Both Owner and Dogs Can Use Vents",
         "13": "二者皆可"
     },
+    "pavlovsownerRing": {
+        "13": "巴甫洛夫拥有摇铃技能"
+    },
+    "pavlovsownerRingCooldown": {
+        "13": "摇铃冷却"
+    },
+    "pavlovsownerRingDuration": {
+        "13": "技能持续时间"
+    },
+    "pavlovsownerRingMultiplier": {
+        "13": "期间击杀冷却加速倍率"
+    },
     "pavlovsownerRampage": {
         "0": "Dog Goes Berserk When Pavlov (Owner) Dies",
         "13": "巴浦洛夫死亡后狗会狂化"
@@ -1951,17 +1963,20 @@
         "0": "Enable Remote Fix",
         "13": "可远程修理破坏"
     },
-    "engineerResetFixAfterMeeting": {
-        "0": "Reset Fixes after Meeting",
-        "13": "会议后重置修理次数"
-    },
     "engineerNumberOfFixes": {
         "0": "Number of Sabotage Fixes",
         "13": "远程修理可用次数"
     },
+    "engineerResetFixAfterMeeting": {
+        "0": "Reset Fixes after Meeting",
+        "13": "会议后重置修理次数为"
+    },
+    "engineerOneFixPerMeeting": {
+        "13": "每回合只能使用一次修复"
+    },
     "engineerExpertRepairs": {
         "0": "Advanced Sabotage Repair",
-        "13": "高级修复模式"
+        "13": "手动修复也可以直接修复破坏"
     },
     "engineerHighlightForImpostors": {
         "0": "Impostors See Vents Highlighted",
@@ -2854,7 +2869,7 @@
     },
     "WelcomeText": {
         "0": "Welcome to <color=#ff351f><size=120%>TheOtherUs-Edited</size></color>!\n\nCommands (a space is required after the command):\n/r [Role Name] : Get a description of the specified role  \n/m : Use in-game to view the description of your current role\n\nTo view other commands, type: /cmd",
-        "13": "欢迎游玩<color=#ff351f><size=120%>我们的超多职业</size></color> ！\n\n游戏指令 :\n/ls : 获取全部玩家的代号（PlayerId）\n/r [职业名称] ：获取该职业的介绍\n/m ：游戏内使用，获取自己已有职业的介绍\n\n如需查看其它指令请输入：/cmd"
+        "13": "欢迎游玩<color=#ff351f><size=120%>我们的超多职业</size></color> ！\n\n游戏指令 :\n/ls : 获取全部玩家的代号（PlayerId）\n/r [职业名称] ：获取该职业的介绍\n/m ：游戏内使用，获取自己已有职业的介绍\n\n如需查看其它指令请输入：/cmd\n如不需要使用指令可以使用 // 避免触发"
     },
     "BetaMessage": {
         "0": "The current Beta mod will expire in {0} days!\n\nYou won't be able to play after that. Please update!",

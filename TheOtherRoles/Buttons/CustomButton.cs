@@ -66,6 +66,7 @@ public class CustomButton
         }
         set => _MaxTimer = value;
     }
+    public float Multiplier = 1f;
 
     private int _lastUsesCount = int.MinValue;
     public int UsesCount = -1;
@@ -256,6 +257,7 @@ public class CustomButton
             {
                 t.OnMeetingEnds();
                 t.isEffectActive = false;
+                t.Multiplier = 1f;
                 t.actionButton.cooldownTimerText.color = new Color(1, 1, 1);
                 t.Update();
             }
@@ -446,8 +448,19 @@ public class CustomButton
             actionButtonMat.SetFloat(Desat, 1f);
         }
 
+        float progress = Time.deltaTime;
+
         if ((!InGame || Started) && Timer >= 0 && ((HasEffect && isEffectActive) || !PlayerControl.LocalPlayer.inVent))
-            Timer -= Time.deltaTime;
+        {
+            if (isEffectActive)
+            {
+                Timer -= progress;
+            }
+            else
+            {
+                Timer -= progress * Multiplier;
+            }
+        }
 
         if (Timer <= 0 && HasEffect && isEffectActive)
         {

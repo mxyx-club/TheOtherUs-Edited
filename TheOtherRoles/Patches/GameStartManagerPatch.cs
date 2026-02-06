@@ -218,7 +218,7 @@ public class GameStartManagerPatch
 
                     void StopStartFunc()
                     {
-                        var writer = StartRPC(CustomRPC.StopStart, GetHostPlayer);
+                        var writer = StartRPC(CustomRPC.StopStart, HostPlayer);
                         writer.Write(PlayerControl.LocalPlayer.PlayerId);
                         writer.EndRPC();
                         copiedStartButton.Destroy();

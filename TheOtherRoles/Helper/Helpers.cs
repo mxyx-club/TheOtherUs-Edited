@@ -37,7 +37,7 @@ public static class Helpers
     public static bool isFungle => GameOptionsManager.Instance.CurrentGameOptions.MapId == 5;
 
     public static string previousEndGameSummary = "";
-    public static PlayerControl GetHostPlayer => GameData.Instance.GetHost().Object;
+    public static PlayerControl HostPlayer => GameData.Instance.GetHost().Object;
 
     public static SRandom rnd { get; } = new(Environment.TickCount);
 
@@ -393,6 +393,54 @@ public static class Helpers
         return false;
     }
 
+    public static bool IsSabotage(TaskTypes taskType)
+    {
+        return taskType is TaskTypes.FixLights or TaskTypes.RestoreOxy or TaskTypes.ResetReactor or TaskTypes.StopCharles or TaskTypes.ResetSeismic or TaskTypes.FixComms or TaskTypes.MushroomMixupSabotage;
+    }
+    public static bool IsSabotage(SystemTypes systemType)
+    {
+        return systemType is SystemTypes.Electrical or SystemTypes.LifeSupp or SystemTypes.Reactor or SystemTypes.HeliSabotage or SystemTypes.Laboratory or SystemTypes.Comms;
+    }
+
+    public static void FixingSabotage(TaskTypes taskType)
+    {
+        switch (taskType)
+        {
+            case TaskTypes.FixLights:
+                var switchSystem = MapUtilities.Systems[SystemTypes.Electrical].CastFast<SwitchSystem>();
+                switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
+                break;
+            case TaskTypes.RestoreOxy: // (Skeld, Mira)
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.LifeSupp, 0 | 64);
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.LifeSupp, 1 | 64);
+                break;
+            case TaskTypes.ResetReactor: // (Skeld, Mira, Fungle)
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Reactor, 16);
+                break;
+            case TaskTypes.StopCharles: // (Airship)
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.HeliSabotage, 0 | 16);
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.HeliSabotage, 1 | 16);
+                break;
+            case TaskTypes.ResetSeismic: // (Polus)
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Laboratory, 16);
+                break;
+            case TaskTypes.FixComms:
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Comms, 16 | 0);
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Comms, 16 | 1);
+                break;
+            case TaskTypes.MushroomMixupSabotage:
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.MushroomMixupSabotage, 16 | 1);
+                break;
+            default:
+                Info($"リペア処理が異常な呼び出しを受けました。", "Repair Process");
+                break;
+        }
+
+        if (SubmergedCompatibility.IsSubmerged && taskType == SubmergedCompatibility.RetrieveOxygenMask)
+        {
+            SubmergedCompatibility.RepairOxygen();
+        }
+    }
     public static void handleVampireBiteOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)

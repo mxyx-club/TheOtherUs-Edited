@@ -13,6 +13,7 @@ public class Pavlovsdogs
     public static List<Arrow> arrow;
 
     public static float cooldown = 30f;
+    public static float ringCooldown = 30f;
     public static float createDogCooldown = 30f;
     public static int createDogNum;
     public static bool enableRampage;

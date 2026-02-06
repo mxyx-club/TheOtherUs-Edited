@@ -27,6 +27,7 @@ public enum CustomRPC : byte
     ShareGameMode,
     ShareFriendCode,
     Exiled,
+    EndGame,
 
     CustomMurderPlayer,
     RevivePlayer,
@@ -35,6 +36,7 @@ public enum CustomRPC : byte
 
     // Role functionality
     FixLights = 110,
+    FixingSabotage,
     FixSubmergedOxygen,
     CleanBody,
     CreateDeadBody,
@@ -822,6 +824,12 @@ public static class RPCProcedure
     {
         var switchSystem = MapUtilities.Systems[SystemTypes.Electrical].CastFast<SwitchSystem>();
         switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
+    }
+
+    public static void RpcFixingSabotage(TaskTypes taskType)
+    {
+        if (!AmongUsClient.Instance.AmHost) return;
+        FixingSabotage(taskType);
     }
 
     public static void FixSubmergedOxygen()
@@ -2118,6 +2126,16 @@ internal class RPCHandlerPatch
             case CustomRPC.FixLights:
                 RPCProcedure.FixLights();
                 break;
+
+            case CustomRPC.FixingSabotage:
+                RPCProcedure.RpcFixingSabotage((TaskTypes)reader.ReadByte());
+                break;
+
+            case CustomRPC.EndGame:
+                ModOption.isCanceled = true;
+                if (AmongUsClient.Instance.AmHost) GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.Canceled, false);
+                break;
+
             case CustomRPC.FixSubmergedOxygen:
                 RPCProcedure.FixSubmergedOxygen();
                 break;

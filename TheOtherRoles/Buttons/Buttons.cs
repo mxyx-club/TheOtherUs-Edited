@@ -1,5 +1,6 @@
 using Reactor.Networking;
 using TheOtherRoles.Attributes;
+using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
 using static TheOtherRoles.Buttons.CustomButton;
 using static TheOtherRoles.Modules.ModInputManager;
@@ -382,8 +383,8 @@ internal static class HudManagerStartPatch
                     }
                     else if (task.TaskType == TaskTypes.StopCharles)
                     {
-                        MapUtilities.CachedShipStatus.RpcRepairSystem(SystemTypes.Reactor, 0 | 16);
-                        MapUtilities.CachedShipStatus.RpcRepairSystem(SystemTypes.Reactor, 1 | 16);
+                        MapUtilities.CachedShipStatus.RpcRepairSystem(SystemTypes.HeliSabotage, 0 | 16);
+                        MapUtilities.CachedShipStatus.RpcRepairSystem(SystemTypes.HeliSabotage, 1 | 16);
                     }
                     else if (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
                     {
@@ -393,20 +394,22 @@ internal static class HudManagerStartPatch
                     }
                 SoundEffectsManager.play("engineerRepair");
                 Engineer.remainingFixes--;
+                Engineer.UsedFix = true;
                 engineerRepairButton.Timer = 0f;
             },
             () =>
             {
-                return Engineer.engineer != null && Engineer.engineer == PlayerControl.LocalPlayer &&
-                       Engineer.remainingFixes > 0 && Engineer.remoteFix && !PlayerControl.LocalPlayer.Data.IsDead;
+                return Engineer.engineer.IsAlive() && Engineer.engineer == PlayerControl.LocalPlayer && Engineer.remoteFix && Engineer.remainingFixes > 0;
             },
             () =>
             {
-                return isSabotageActive() && Engineer.remainingFixes > 0 && PlayerControl.LocalPlayer.CanMove;
+                engineerRepairButton.UsesCount = Engineer.remainingFixes;
+                return isSabotageActive() && Engineer.remainingFixes > 0 && (!Engineer.oneFixPerRound || !Engineer.UsedFix) && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {
-                if (Engineer.resetFixAfterMeeting) Engineer.resetFixes();
+                Engineer.UsedFix = false;
+                if (Engineer.remainingFixes < Engineer.resetFixAfterMeeting) Engineer.remainingFixes = Engineer.resetFixAfterMeeting;
             },
             Engineer.buttonSprite,
             __instance,
@@ -445,8 +448,8 @@ internal static class HudManagerStartPatch
                     }
                     else if (task.TaskType == TaskTypes.StopCharles)
                     {
-                        MapUtilities.CachedShipStatus.RpcRepairSystem(SystemTypes.Reactor, 0 | 16);
-                        MapUtilities.CachedShipStatus.RpcRepairSystem(SystemTypes.Reactor, 1 | 16);
+                        MapUtilities.CachedShipStatus.RpcRepairSystem(SystemTypes.HeliSabotage, 0 | 16);
+                        MapUtilities.CachedShipStatus.RpcRepairSystem(SystemTypes.HeliSabotage, 1 | 16);
                     }
                     else if (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
                     {

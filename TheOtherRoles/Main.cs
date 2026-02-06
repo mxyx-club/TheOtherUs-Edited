@@ -154,7 +154,7 @@ public static class ChatControllerAwakePatch
     }
 }
 
-/*
+
 [HarmonyPatch(typeof(AmongUs.Data.Player.PlayerData), nameof(AmongUs.Data.Player.PlayerData.FileName), MethodType.Getter)]
 public class SaveManagerPatch
 {
@@ -179,4 +179,4 @@ public class SettingsFilePatch
     {
         __result += "_TOUE";
     }
-} */
+}

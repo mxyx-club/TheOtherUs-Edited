@@ -347,6 +347,10 @@ public class CustomOptionHolder
     public static CustomOption pavlovsownerCanUseSabo;
     public static CustomOption pavlovsownerHasImpostorVision;
     public static CustomOption pavlovsownerCanUseVents;
+    public static CustomOption pavlovsownerRing;
+    public static CustomOption pavlovsownerRingCooldown;
+    public static CustomOption pavlovsownerRingDuration;
+    public static CustomOption pavlovsownerRingMultiplier;
     public static CustomOption pavlovsownerRampage;
     public static CustomOption pavlovsownerRampageKillCooldown;
     public static CustomOption pavlovsownerRampageDeathTime;
@@ -507,8 +511,10 @@ public class CustomOptionHolder
 
     public static CustomOption engineerSpawnRate;
     public static CustomOption engineerRemoteFix;
+    public static CustomOption engineerExpertRepairs;
     public static CustomOption engineerResetFixAfterMeeting;
     public static CustomOption engineerNumberOfFixes;
+    public static CustomOption engineerOneFixPerMeeting;
     public static CustomOption engineerHighlightForImpostors;
     public static CustomOption engineerHighlightForTeamJackal;
 
@@ -1225,6 +1231,10 @@ public class CustomOptionHolder
         pavlovsownerHasImpostorVision = Create(202505, Types.Neutral, "hasImpVision", true, pavlovsownerSpawnRate);
         pavlovsownerCanUseVents = Create(202506, Types.Neutral, "pavlovsownerCanUseVents",
             ["Pavlovsdogs", "Pavlovsowner", "pavlovsownerCanUseVents3"], 2, pavlovsownerSpawnRate);
+        pavlovsownerRing = Create(202510, Types.Neutral, "pavlovsownerRing", false, pavlovsownerSpawnRate);
+        pavlovsownerRingCooldown = Create(202511, Types.Neutral, "pavlovsownerRingCooldown", 20f, 5f, 60f, 2.5f, pavlovsownerRing);
+        pavlovsownerRingDuration = Create(202512, Types.Neutral, "pavlovsownerRingDuration", 15f, 0.5f, 30f, 1.25f, pavlovsownerRing);
+        pavlovsownerRingMultiplier = Create(202513, Types.Neutral, "pavlovsownerRingMultiplier", 2f, 1f, 5f, 0.25f, pavlovsownerRing);
         pavlovsownerRampage = Create(202507, Types.Neutral, "pavlovsownerRampage", true, pavlovsownerSpawnRate);
         pavlovsownerRampageKillCooldown = Create(202508, Types.Neutral, "pavlovsownerRampageKillCooldown", 15f, 5f, 60f, 2.5f, pavlovsownerRampage);
         pavlovsownerRampageDeathTime = Create(202509, Types.Neutral, "pavlovsownerRampageDeathTime", 60f, 30f, 180f, 2.5f, pavlovsownerRampageKillCooldown);
@@ -1402,11 +1412,12 @@ public class CustomOptionHolder
 
         engineerSpawnRate = Create(301200, Types.Crewmate, Cs(Engineer.color, "Engineer"), rates, null, true);
         engineerRemoteFix = Create(301201, Types.Crewmate, "engineerRemoteFix", true, engineerSpawnRate);
-        engineerResetFixAfterMeeting = Create(301202, Types.Crewmate, "engineerResetFixAfterMeeting", true, engineerRemoteFix);
-        engineerNumberOfFixes = Create(301203, Types.Crewmate, "engineerNumberOfFixes", 1f, 1f, 3f, 1f, engineerRemoteFix);
-        //engineerExpertRepairs = Create(301204, Types.Crewmate, "engineerExpertRepairs", false, engineerSpawnRate);
-        engineerHighlightForImpostors = Create(301205, Types.Crewmate, "engineerHighlightForImpostors", true, engineerSpawnRate);
-        engineerHighlightForTeamJackal = Create(301206, Types.Crewmate, "engineerHighlightForTeamJackal", true, engineerSpawnRate);
+        engineerNumberOfFixes = Create(301202, Types.Crewmate, "engineerNumberOfFixes", 5f, 1f, 10f, 1f, engineerRemoteFix);
+        engineerOneFixPerMeeting = Create(301203, Types.Crewmate, "engineerOneFixPerMeeting", true, engineerRemoteFix);
+        engineerResetFixAfterMeeting = Create(301204, Types.Crewmate, "engineerResetFixAfterMeeting", ["optionOff", "1", "2", "3"], engineerRemoteFix);
+        engineerExpertRepairs = Create(301205, Types.Crewmate, "engineerExpertRepairs", false, engineerSpawnRate);
+        engineerHighlightForImpostors = Create(301206, Types.Crewmate, "engineerHighlightForImpostors", true, engineerSpawnRate);
+        engineerHighlightForTeamJackal = Create(301207, Types.Crewmate, "engineerHighlightForTeamJackal", true, engineerSpawnRate);
 
         swapperSpawnRate = Create(302300, Types.Crewmate, Cs(Swapper.color, "Swapper"), rates, null, true);
         swapperCanCallEmergency = Create(302301, Types.Crewmate, "canCallEmergency", true, swapperSpawnRate);

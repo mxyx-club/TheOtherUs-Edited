@@ -193,14 +193,11 @@ public class PlayerData
         {
             EndTime = DateTime.MinValue;
             StartTime = DateTime.UtcNow;
-            HostPlayer = GetHostPlayer.Data.PlayerName;
+            HostPlayer = Helpers.HostPlayer.Data.PlayerName;
             RoomCode = GameStartManagerPatch.RoomCode;
-            HostCode = GetHostPlayer.Data.FriendCode;
+            HostCode = Helpers.HostPlayer.Data.FriendCode;
             GameId = GetGameId();
             PlayerCount = PlayerControl.AllPlayerControls.Count;
-
-            int seed = BitConverter.ToInt32(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(GameId)), 0);
-            var rnd = new SRandom(seed);
 
             byte modUid = 1;
             foreach (var player in PlayerControl.AllPlayerControls.ToArray().OrderBy(_ => rnd.Next()))
@@ -270,9 +267,7 @@ public class PlayerData
                     {
                         OriginRole = p.OriginRole.ToString(),
                         MainRole = p.RoleId.ToString(),
-                        //Modifiers = string.Join("|", p.Modifiers),
                         Modifiers = p.Modifiers.Select(x => x.ToString()),
-                        //RoleHistory = string.Join(" => ", p.RoleHistory.Select(r => r.ToString())),
                         RoleHistory = p.RoleHistory.Select(x => x.ToString()),
                         RoleType = p.RoleType.ToString(),
                     },

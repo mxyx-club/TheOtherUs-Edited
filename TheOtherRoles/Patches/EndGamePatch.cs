@@ -185,12 +185,10 @@ public class OnGameEndPatch
         var miniLose = gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
         var jesterWin = gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
         var witnessWin = gameOverReason == (GameOverReason)CustomGameOverReason.WitnessWin;
-        var impostorWin = (gameOverReason is GameOverReason.ImpostorByKill or GameOverReason.ImpostorBySabotage or GameOverReason.ImpostorByVote)
-            || Vortox.triggerImpWin;
-        var werewolfWin = gameOverReason == (GameOverReason)CustomGameOverReason.WerewolfWin && Werewolf.werewolf != null;
-        var juggernautWin = gameOverReason == (GameOverReason)CustomGameOverReason.JuggernautWin && Juggernaut.juggernaut != null;
-        var swooperWin = gameOverReason == (GameOverReason)CustomGameOverReason.SwooperWin && Swooper.swooper != null;
-        var pelicanWin = gameOverReason == (GameOverReason)CustomGameOverReason.PelicanWin && Pelican.Player != null;
+        var werewolfWin = gameOverReason == (GameOverReason)CustomGameOverReason.WerewolfWin;
+        var juggernautWin = gameOverReason == (GameOverReason)CustomGameOverReason.JuggernautWin;
+        var swooperWin = gameOverReason == (GameOverReason)CustomGameOverReason.SwooperWin;
+        var pelicanWin = gameOverReason == (GameOverReason)CustomGameOverReason.PelicanWin;
         var arsonistWin = Arsonist.arsonist != null && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
         var doomsayerWin = Doomsayer.doomsayer != null && gameOverReason == (GameOverReason)CustomGameOverReason.DoomsayerWin;
         var loversWin = Lovers.IsAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin ||
@@ -198,8 +196,8 @@ public class OnGameEndPatch
         var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin;
         var teamInfectedWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamInfectedWin;
         var teamPavlovsWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamPavlovsWin;
-        var crewmateWin = GameManager.Instance.DidHumansWin(gameOverReason) ||
-                          (gameOverReason is GameOverReason.HumansByVote or GameOverReason.HumansByTask);
+        var impostorWin = (gameOverReason is GameOverReason.ImpostorByKill or GameOverReason.ImpostorBySabotage or GameOverReason.ImpostorByVote) || Vortox.triggerImpWin;
+        var crewmateWin = GameManager.Instance.DidHumansWin(gameOverReason) || (gameOverReason is GameOverReason.HumansByVote or GameOverReason.HumansByTask);
         var vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
         var executionerWin = Executioner.executioner != null && gameOverReason == (GameOverReason)CustomGameOverReason.ExecutionerWin;
         var lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
@@ -212,7 +210,7 @@ public class OnGameEndPatch
         var bandLeaderAddCrewWin = BandLeader.Player != null && BandLeader.WinCondition == BandLeader.WinnerFlags.Crewmate && crewmateWin;
         var bandLeaderAddImpWin = BandLeader.Player != null && BandLeader.WinCondition == BandLeader.WinnerFlags.Impostor && impostorWin;
 
-        bool isPursurerLose = jesterWin || witnessWin || arsonistWin || miniLose || isCanceled || executionerWin;
+        bool isPursurerLose = jesterWin || witnessWin || miniLose || isCanceled || executionerWin;
 
         TempData.winners = new();
         var winners = new List<PlayerControl>();
@@ -554,7 +552,7 @@ public class OnGameEndPatch
             AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalAliveSurvivorWin);
         }
 
-        if (Avenger.Player != null && Avenger.WinFlag && Avenger.WinCondition == Avenger.WinnerFlags.FollowWin)
+        if (Avenger.Player != null && Avenger.WinFlag && Avenger.WinCondition == Avenger.WinnerFlags.FollowWin && !(miniLose || isCanceled))
         {
             if (Avenger.Player != null) winners.Add(Avenger.Player);
             if (Avenger.Lover != null) winners.Add(Avenger.Lover);

@@ -111,8 +111,9 @@ public class JackInTheBox : CustomObjectBase<JackInTheBox>
         ventRenderer.sprite = null;
     }
 
-    public override void OnMeetingEnd(MeetingHud __instance)
+    public static void MeetingEnd()
     {
+        if (!hasJackInTheBoxLimitReached()) return;
         foreach (var box in AllObjects) box.convertToVent();
         connectVents();
         boxesConvertedToVents = true;

@@ -79,7 +79,7 @@ public static class ChatCommandRegistry
                 writer.Write(message);
                 writer.EndRPC();
                 CurrentChatType = ChatTypes.HostChat;
-                chat.AddChat(GetHostPlayer, message);
+                chat.AddChat(HostPlayer, message);
                 return;
             }
         });

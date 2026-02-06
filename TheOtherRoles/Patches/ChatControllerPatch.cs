@@ -64,7 +64,15 @@ public static class ChatControllerPatch
         private static bool Prefix(ChatController __instance)
         {
             var text = __instance.freeChatField.textArea.text;
-            var handled = ChatCommandRegistry.TryHandle(text, PlayerControl.LocalPlayer, __instance);
+            var handled = false;
+            if (text.StartsWith("//"))
+            {
+                text = __instance.freeChatField.textArea.text = text[1..];
+            }
+            else
+            {
+                handled = ChatCommandRegistry.TryHandle(text, PlayerControl.LocalPlayer, __instance);
+            }
 
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -89,7 +97,7 @@ public static class ChatControllerPatch
                             writer.Write(text);
                             writer.EndRPC();
                             CurrentChatType = ChatTypes.HostChat;
-                            __instance.AddChat(GetHostPlayer, text);
+                            __instance.AddChat(HostPlayer, text);
                         }
                         break;
                     case ChannelType.Impostor:

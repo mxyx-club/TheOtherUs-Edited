@@ -665,12 +665,18 @@ public static class MurderPlayerPatch
         // VIP Modifier
         if (Vip.vip.FindAll(x => x.PlayerId == target.PlayerId).Count > 0)
         {
+            var role = RoleInfo.getRoleInfoForPlayer(target, false, false).FirstOrDefault();
+
             var color = Color.yellow;
             if (Vip.showColor)
             {
-                color = Color.white;
-                if (target.Data.Role.IsImpostor) color = Color.red;
-                else if (RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault().roleType == RoleType.Neutral) color = Color.blue;
+                color = role.roleType switch
+                {
+                    RoleType.Crewmate => Color.white,
+                    RoleType.Impostor => Color.red,
+                    RoleType.Neutral => Color.blue,
+                    _ => Color.yellow,
+                };
             }
 
             showFlash(color, 1.25f);

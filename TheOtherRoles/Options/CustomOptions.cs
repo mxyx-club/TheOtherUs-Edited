@@ -832,11 +832,11 @@ internal class GameOptionsDataPatch
 
     private static string buildRoleOptions()
     {
-        var impRoles = $"<size=150%><color=#ff1c1c>{"ImpostorRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Impostor, true)}\n";
-        var neutralRoles = $"<size=150%><color=#50544c>{"NeutralRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Neutral, true)}\n";
-        var crewRoles = $"<size=150%><color=#08fcfc>{"CrewmateRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Crewmate, true)}\n";
-        var modifiers = $"<size=150%><color=#ffec04>{"ModifierRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Modifier, true)}\n";
-        var ghostRole = $"<size=150%><color=#ffec04>{"GhostRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.GhostRole, true)}\n";
+        var impRoles = $"<size=150%><color=#ff1c1c>{"ImpostorRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Impostor, true)}\n\n";
+        var neutralRoles = $"<size=150%><color=#50544c>{"NeutralRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Neutral, true)}\n\n";
+        var crewRoles = $"<size=150%><color=#08fcfc>{"CrewmateRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Crewmate, true)}\n\n";
+        var modifiers = $"<size=150%><color=#ffec04>{"ModifierRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Modifier, true)}\n\n";
+        var ghostRole = $"<size=150%><color=#ffec04>{"GhostRolesText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.GhostRole, true)}\n\n";
         //var advancedSettingst = $"<size=150%><color=#ffec04>{"AdvancedSettingsText".Translate()}</color></size>{buildOptionsOfType(CustomOptionType.Advanced, true)}\n";
         return impRoles + neutralRoles + crewRoles + modifiers + ghostRole;
     }
@@ -890,12 +890,18 @@ internal class GameOptionsDataPatch
         {
             if (option.Parent != null)
             {
-                var isIrrelevant = option.Parent.GetSelection() == 0 ||
-                    (option.Parent.Parent != null && option.Parent.Parent.GetSelection() == 0);
+                if (!option.IsEnbaled()) continue;
 
-                var c = isIrrelevant ? Color.grey : Color.white; // No use for now
-                if (isIrrelevant) continue;
-                sb.AppendLine(Cs(c, $"{option.GetName()}: {option.GetString()}"));
+                var indentLevel = 0;
+                var currentParent = option.Parent;
+                while (currentParent != null)
+                {
+                    indentLevel++;
+                    currentParent = currentParent.Parent;
+                }
+
+                var indent = new string(' ', indentLevel * 3);
+                sb.AppendLine($"{indent} - {option.GetName()}: {option.GetString()}");
             }
             else
             {
@@ -951,7 +957,8 @@ internal class GameOptionsDataPatch
                 }
                 else
                 {
-                    sb.AppendLine($"\n{option.GetName()}: {option.GetString()}");
+                    if (option.IsHeader) sb.AppendLine();
+                    sb.AppendLine($"{option.GetName()}: {option.GetString()}");
                 }
             }
         }
@@ -1248,18 +1255,31 @@ public class HudManagerUpdate
         if (!settingsTMPs[0]) return;
         foreach (var tmp in settingsTMPs) tmp.text = "";
         var settingsString = GameOptionsDataPatch.buildAllOptions(hideExtras: true);
-        var blocks = settingsString.Split("\n\n", StringSplitOptions.RemoveEmptyEntries);
+        var blocks = settingsString.Split(["\n"], StringSplitOptions.None);
+
         var curString = "";
-        string curBlock;
         var j = 0;
+        var maxLines = IsCN() ? 36 : 40;
+        var consecutiveEmptyLines = 0;
 
         for (var i = 0; i < blocks.Length; i++)
         {
-            if (IsCN()) blocks[i] = $"<line-height=120%>{blocks[i]}</line-height>";
-            curBlock = blocks[i];
-            if (lineCount(curBlock) + lineCount(curString) < (IsCN() ? 40 : 43))
+            var curBlock = blocks[i];
+            bool isEmpty = string.IsNullOrEmpty(curBlock);
+
+            if (isEmpty) consecutiveEmptyLines++;
+            else consecutiveEmptyLines = 0;
+
+            int blockLines = isEmpty ? 1 : lineCount(curBlock);
+            bool overFlow = blockLines + lineCount(curString) > maxLines;
+            bool forceNewColumn = consecutiveEmptyLines >= 2;
+
+            if (!forceNewColumn && !overFlow)
             {
-                curString += curBlock + "\n\n";
+                if (IsCN() && !isEmpty)
+                    curBlock = $"<line-height=110%>{curBlock}</line-height>";
+
+                curString += curBlock + "\n";
             }
             else
             {
@@ -1267,8 +1287,14 @@ public class HudManagerUpdate
                     settingsTMPs[j].text = curString;
                 j++;
 
-                curString = "\n" + curBlock + "\n\n";
-                if (curString.Substring(0, 2) != "\n\n") curString = "\n" + curString;
+                curString = "";
+                consecutiveEmptyLines = 0;
+                if (!forceNewColumn)
+                {
+                    if (IsCN() && !isEmpty)
+                        curBlock = $"<line-height=110%>{curBlock}</line-height>";
+                    curString = curBlock + "\n";
+                }
             }
         }
 
@@ -1276,10 +1302,10 @@ public class HudManagerUpdate
             settingsTMPs[j].text = curString;
         var blockCount = 0;
         foreach (var tmp in settingsTMPs)
-            if (tmp.text != "")
-                blockCount++;
+            if (!string.IsNullOrEmpty(tmp.text)) blockCount++;
+
         for (var i = 0; i < blockCount; i++)
-            settingsTMPs[i].transform.localPosition = new Vector3((-blockCount * 1.2f) + (2.7f * i), 2.2f, -500f);
+            settingsTMPs[i].transform.localPosition = new Vector3((-blockCount * 1.2f) + (2.7f * i), 2.5f, -500f);
     }
 
     public static void OpenSettings(HudManager __instance)

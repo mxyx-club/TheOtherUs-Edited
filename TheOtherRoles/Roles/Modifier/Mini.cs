@@ -16,7 +16,7 @@ public static class Mini
 
     public static bool isGrownUp => growingProgress == 1f;
     public static float Age => Mathf.Clamp01(growingProgress) * 18f;
-    public static float Multiplier => mini != null && PlayerControl.LocalPlayer == mini ? isGrownUp ? 0.66f : 2f : 1f;
+    public static float Multiplier => mini != null && mini.AmOwner ? isGrownUp ? 0.66f : 2f : 1f;
     public static float growingProgress => Mathf.Clamp01(accumulatedGrowthTime / growingUpDuration);
 
     public static void clearAndReload()
