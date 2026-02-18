@@ -21,7 +21,7 @@ public static class SoundEffectsManager
             }
         }*/
 
-        var resourceBundle = assembly.GetManifestResourceStream("TheOtherRoles.Resources.SoundEffects.audio");
+        var resourceBundle = assembly.GetManifestResourceStream("TheOtherRoles.Resources.AssetsBundle.audio");
         var assetBundle = AssetBundle.LoadFromMemory(resourceBundle.ReadFully());
         foreach (var f in assetBundle.GetAllAssetNames())
         {

@@ -636,8 +636,7 @@ public static class Helpers
 
     public static string Cs(Color c, string s)
     {
-        return string.Format("<color=#{0:X2}{1:X2}{2:X2}{3:X2}>{4}</color>", ToByte(c.r), ToByte(c.g), ToByte(c.b),
-            ToByte(c.a), s);
+        return string.Format("<color=#{0:X2}{1:X2}{2:X2}{3:X2}>{4}</color>", ToByte(c.r), ToByte(c.g), ToByte(c.b), ToByte(c.a), s);
     }
 
     public static int lineCount(string text)
@@ -879,7 +878,7 @@ public static class Helpers
         ResolutionManager.ResolutionChanged.Invoke((float)Screen.width / Screen.height, Screen.width, Screen.height, Screen.fullScreen);
     }
 
-    private static long GetBuiltInTicks()
+    internal static long GetBuiltInTicks()
     {
         var assembly = Assembly.GetExecutingAssembly();
         var builtin = assembly.GetType("Builtin");
@@ -890,8 +889,8 @@ public static class Helpers
         return value == null ? 0 : (long)value;
     }
 
-    public static object TryCast(this Il2CppObjectBase self, Type type)
+    internal static DateTime GetCompileTime()
     {
-        return AccessTools.Method(self.GetType(), nameof(Il2CppObjectBase.TryCast)).MakeGenericMethod(type).Invoke(self, Array.Empty<object>());
+        return new DateTime(GetBuiltInTicks(), DateTimeKind.Utc);
     }
 }

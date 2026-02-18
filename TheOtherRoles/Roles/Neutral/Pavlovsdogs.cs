@@ -12,13 +12,17 @@ public class Pavlovsdogs
     public static PlayerControl killTarget;
     public static List<Arrow> arrow;
 
-    public static float cooldown = 30f;
-    public static float ringCooldown = 30f;
-    public static float createDogCooldown = 30f;
+    public static float cooldown;
+    public static float createDogCooldown;
     public static int createDogNum;
     public static bool enableRampage;
     public static float rampageKillCooldown;
     public static int rampageDeathTime;
+
+    public static bool ringEnable;
+    public static float ringCooldown;
+    public static float ringDuration;
+    public static float ringMultiplier;
 
     public static float canUseVents;
     public static bool canSabotage;
@@ -26,6 +30,7 @@ public class Pavlovsdogs
 
     public static float deathTime;
     public static Sprite CreateDogButton = new ResourceSprite("SidekickButton.png");
+    public static Sprite RingButton = new ResourceSprite("PavlovsRingButton.png");
 
     public static bool canCreateDog => (pavlovsdogs == null || pavlovsdogs.All(p => p.Data.IsDead || p.Data.Disconnected)) && createDogNum > 0;
     public static bool loser => pavlovsdogs.All(p => p.IsDead()) && createDogNum == 0;
@@ -54,5 +59,10 @@ public class Pavlovsdogs
         enableRampage = CustomOptionHolder.pavlovsownerRampage.GetBool();
         rampageKillCooldown = CustomOptionHolder.pavlovsownerRampageKillCooldown.GetFloat();
         rampageDeathTime = CustomOptionHolder.pavlovsownerRampageDeathTime.GetInt();
+
+        ringEnable = CustomOptionHolder.pavlovsownerRing.GetBool();
+        ringCooldown = CustomOptionHolder.pavlovsownerRingCooldown.GetFloat();
+        ringDuration = CustomOptionHolder.pavlovsownerRingDuration.GetFloat();
+        ringMultiplier = CustomOptionHolder.pavlovsownerRingMultiplier.GetFloat();
     }
 }

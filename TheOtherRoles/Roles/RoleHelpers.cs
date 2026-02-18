@@ -598,9 +598,9 @@ public static class RoleHelpers
 
         if (BodyGuard.bodyguard != null && target == BodyGuard.guarded && BodyGuard.bodyguard.IsAlive())
         {
+            target.ShowFailedMurder();
             // Kill the Killer
             RpcCustomMurderPlayer(BodyGuard.bodyguard, killer, false, true);
-
             // Kill the BodyGuard
             RpcCustomMurderPlayer(killer, BodyGuard.bodyguard, false, true);
 
@@ -618,15 +618,15 @@ public static class RoleHelpers
             RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
 
             CustomButton.SetKillTimer();
-            SoundEffectsManager.play("fail");
+            target.ShowFailedMurder();
             if (ModOption.EnableOtherLog) Message(" [Kill Fail] Medic Shielded!");
             return false;
         }
 
-        if (Survivor.Player != null && Survivor.Player.Any(x => x.PlayerId == target.PlayerId) && Survivor.vestActive)
+        if (Survivor.Player != null && Survivor.Player.Any(x => x.PlayerId == target.PlayerId) && Survivor.VestActive(target.PlayerId))
         {
             CustomButton.SetKillTimer(Survivor.vestResetCooldown);
-            SoundEffectsManager.play("fail");
+            target.ShowFailedMurder();
             if (ModOption.EnableOtherLog) Message(" [Kill Fail] Survivor Vest!");
             return false;
         }

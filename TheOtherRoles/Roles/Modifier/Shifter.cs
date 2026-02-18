@@ -25,6 +25,7 @@ public static class Shifter
                        player == Pavlovsdogs.pavlovsowner ||
                        player == Avenger.Player ||
                        Jackal.jackal.Any(x => x == player) ||
+                       Infected.Player.Any(x => x == player) ||
                        Pavlovsdogs.pavlovsdogs.Any(x => x == player) ||
                        player == Akujo.akujo ||
                        player == Lawyer.lawyer;
@@ -41,6 +42,7 @@ public static class Shifter
                        player == Swooper.swooper ||
                        player == SchrodingersCat.Player ||
                        player == Pavlovsdogs.pavlovsowner ||
+                       Infected.Player.Any(x => x == player) ||
                        Jackal.jackal.Any(x => x == player) ||
                        Infected.Player.Any(x => x == player) ||
                        Pavlovsdogs.pavlovsdogs.Any(x => x == player);

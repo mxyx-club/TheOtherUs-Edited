@@ -5,18 +5,19 @@ namespace TheOtherRoles.Objects;
 public class KillTrap : CustomObjectBase<KillTrap>
 {
     public static Sprite trapSprite = new ResourceSprite("Trap.png", 300);
-    public static Sprite trapActiveSprite = new ResourceSprite("TrapActive.png", 300);
-    public static AudioClip place;
-    public static AudioClip activate;
-    public static AudioClip disable;
-    public static AudioClip countdown;
-    public static AudioClip kill;
     public static AudioRolloffMode rollOffMode = AudioRolloffMode.Linear;
     public AudioSource audioSource;
     public bool isDisabled;
     public bool isTriggered;
     public PlayerControl trapper;
     public PlayerControl target;
+
+    public static Sprite trapActiveSprite = new ResourceSprite("TrapActive.png", 300);
+    public static AudioClip place => SoundEffectsManager.get("TrapperPlace");
+    public static AudioClip activate => SoundEffectsManager.get("TrapperActivate");
+    public static AudioClip disable => SoundEffectsManager.get("TrapperDisable");
+    public static AudioClip countdown => SoundEffectsManager.get("TrapperCountdown");
+    public static AudioClip kill => SoundEffectsManager.get("TrapperKill");
 
     public KillTrap(PlayerControl trapper, Vector3 pos)
     {
@@ -287,19 +288,5 @@ public class KillTrap : CustomObjectBase<KillTrap>
         if (PlayerControl.LocalPlayer == trapper) RpcCustomMurderPlayer(trapper, target, false);
 
         EvilTrapper.isTrapKill = true;
-    }
-
-    private static readonly Assembly dll = Assembly.GetExecutingAssembly();
-
-    [PluginModuleInitializer]
-    public static void LoadAudioAssets()
-    {
-        var resourceAudioAssetBundleStream = dll.GetManifestResourceStream("TheOtherRoles.Resources.AssetsBundle.audiobundle");
-        var assetBundleBundle = AssetBundle.LoadFromMemory(resourceAudioAssetBundleStream.ReadFully());
-        activate = assetBundleBundle.LoadAsset<AudioClip>("TrapperActivate.mp3").DontUnload();
-        countdown = assetBundleBundle.LoadAsset<AudioClip>("TrapperCountdown.mp3").DontUnload();
-        disable = assetBundleBundle.LoadAsset<AudioClip>("TrapperDisable.mp3").DontUnload();
-        kill = assetBundleBundle.LoadAsset<AudioClip>("TrapperKill.mp3").DontUnload();
-        place = assetBundleBundle.LoadAsset<AudioClip>("TrapperPlace.mp3").DontUnload();
     }
 }

@@ -164,3 +164,43 @@ public static class RegionMenuChooseOptionPatch
         return false;
     }
 }
+
+[HarmonyPatch(typeof(ControllerManager), nameof(ControllerManager.Update))]
+public static class RegionMenuMouseScrollPatch
+{
+    private static float scrollOffset = 0f;
+    private const float SCROLL_SPEED = 0.5f;
+    private const float BUTTON_HEIGHT = 0.5f;
+    private const float MAX_SCROLL_OFFSET = 2f;
+
+    public static void Postfix()
+    {
+        var regionMenu = UObject.FindObjectOfType<RegionMenu>();
+        if (regionMenu == null || regionMenu.ButtonPool == null) return;
+
+        var activeButtons = regionMenu.ButtonPool.activeChildren;
+        if (activeButtons == null || activeButtons.Count == 0) return;
+
+        float scrollDelta = Input.mouseScrollDelta.y;
+        if (scrollDelta == 0f) return;
+
+        int visibleButtonCount = 8;
+        if (activeButtons.Count <= visibleButtonCount) return;
+
+        scrollOffset -= scrollDelta * SCROLL_SPEED;
+
+        float maxOffset = (activeButtons.Count - visibleButtonCount) * BUTTON_HEIGHT;
+        scrollOffset = Mathf.Clamp(scrollOffset, 0f, maxOffset);
+
+        float baseY = 1.5f;
+        for (int i = 0; i < activeButtons.Count; i++)
+        {
+            var button = activeButtons[i];
+            if (button == null) continue;
+
+            Vector3 pos = button.transform.localPosition;
+            pos.y = baseY - i * BUTTON_HEIGHT + scrollOffset;
+            button.transform.localPosition = pos;
+        }
+    }
+}

@@ -132,6 +132,15 @@ public static class UnityHelper
         return CreateObject(objName, parent, localPosition, layer).AddComponent<T>();
     }
 
+    public static T FindAsset<T>(string name) where T : Il2CppObjectBase
+    {
+        foreach (var asset in UObject.FindObjectsOfTypeIncludingAssets(Il2CppType.Of<T>()))
+        {
+            if (asset.name == name) return asset.Cast<T>();
+        }
+        return null;
+    }
+
     public static PassiveButton SetUpButton(this GameObject gameObject, SpriteRenderer buttonRenderer = null, Color? defaultColor = null, Color? selectedColor = null)
         => SetUpButton(gameObject, buttonRenderer != null ? [buttonRenderer] : [], defaultColor, selectedColor);
 
@@ -152,6 +161,7 @@ public static class UnityHelper
 
         return button;
     }
+
     public static Sprite LoadSprite(this Stream stream, bool DontUnload, Vector2 pivot, float pixelsPerUnit)
     {
         var texture = stream.LoadTexture(DontUnload);

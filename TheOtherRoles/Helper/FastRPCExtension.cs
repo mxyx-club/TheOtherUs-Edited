@@ -21,6 +21,11 @@ public static class FastRPCExtension
         writer.Write(z);
     }
 
+    public static void Write(this MessageWriter writer, PlayerControl player)
+    {
+        writer.Write(player.PlayerId);
+    }
+
     public static Vector3 ReadVector3(this MessageReader reader)
     {
         var x = reader.ReadUInt16() / (float)ushort.MaxValue;

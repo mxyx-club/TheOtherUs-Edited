@@ -52,7 +52,10 @@ public class KeyboardHandler
             // 强制结束游戏
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKeyDown(ModInputManager.endGameInput.keyCode) && InGame)
             {
-                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.Canceled, false);
+                var writer = StartRPC(CustomRPC.NoCheckEndGame);
+                writer.Write((byte)CustomGameOverReason.Canceled);
+                writer.EndRPC();
+                RPCProcedure.NoCheckEndGame(CustomGameOverReason.Canceled);
             }
             if (Input.GetKey(ModInputManager.metaControlInput.keyCode) && Input.GetKey(KeyCode.C) && Input.GetKeyDown(KeyCode.Return) && ModOption.DebugMode && InGame)
             {

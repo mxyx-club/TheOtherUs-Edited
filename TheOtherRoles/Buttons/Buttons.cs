@@ -49,6 +49,7 @@ internal static class HudManagerStartPatch
     public static CustomButton swooperKillButton;
     public static CustomButton jackalCreateSidekickButton;
     public static CustomButton eraserButton;
+    public static CustomButton pavlovsdogsRingButton;
     public static CustomButton pavlovsdogsKillButton;
     public static CustomButton pavlovsownerCreateDogButton;
     public static CustomButton partTimerButton;
@@ -207,6 +208,7 @@ internal static class HudManagerStartPatch
         doomsayerButton.MaxTimer = Doomsayer.cooldown;
         akujoHonmeiButton.MaxTimer = 0f;
         akujoBackupButton.MaxTimer = 0f;
+        pavlovsdogsRingButton.MaxTimer = Pavlovsdogs.ringCooldown;
         pavlovsdogsKillButton.MaxTimer = Pavlovsdogs.cooldown;
         pavlovsownerCreateDogButton.MaxTimer = Pavlovsdogs.createDogCooldown;
         mayorMeetingButton.MaxTimer = 0f;
@@ -258,6 +260,7 @@ internal static class HudManagerStartPatch
         clogPlaceGhost.EffectDuration = Clog.GhostDuration;
         berserkerKillButton.EffectDuration = 0.5f;
         soulSightButton.EffectDuration = SoulSight.RespawnTimer;
+        pavlovsdogsRingButton.EffectDuration = Pavlovsdogs.ringDuration;
 
         zoomOutButton.MaxTimer = zoomOutButton.Timer = 0f;
     }
@@ -951,27 +954,33 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Morphling.morphling != null && Morphling.morphling == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
+                return Morphling.morphling.IsAlive() && Morphling.morphling == PlayerControl.LocalPlayer;
             },
             () =>
             {
                 Morphling.currentTarget = SetTarget();
                 SetPlayerOutline(Morphling.currentTarget, Morphling.color);
 
-                if (Morphling.sampledTarget == null)
+                if (Morphling.sampledTarget != null)
+                    morphlingButton.SetButtonText(Morphling.sampledTarget?.Data?.PlayerName ?? GetString("MorphText"));
+                else
                     morphlingButton.showTargetNameOnButton(Morphling.currentTarget, GetString("SampleText"));
+
                 return (Morphling.currentTarget || Morphling.sampledTarget) && !isActiveCamoComms &&
                        PlayerControl.LocalPlayer.CanMove && !MushroomSabotageActive;
             },
             () =>
             {
                 morphlingButton.Timer = morphlingButton.MaxTimer;
-                morphlingButton.Sprite = Morphling.sampleSprite;
                 morphlingButton.isEffectActive = false;
                 morphlingButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-                Morphling.sampledTarget = null;
-                setButtonTargetDisplay(null);
+
+                if (Morphling.ResetAfterMeeting)
+                {
+                    morphlingButton.Sprite = Morphling.sampleSprite;
+                    Morphling.sampledTarget = null;
+                    setButtonTargetDisplay(null);
+                }
             },
             Morphling.sampleSprite,
             __instance,
@@ -1840,9 +1849,8 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Pavlovsdogs.pavlovsdogs != null
-                       && Pavlovsdogs.pavlovsdogs.Any(x => x == PlayerControl.LocalPlayer)
-                       && !PlayerControl.LocalPlayer.Data.IsDead;
+                return PlayerControl.LocalPlayer.IsAlive()
+                    && Pavlovsdogs.pavlovsdogs.Any(x => x == PlayerControl.LocalPlayer);
             },
             () =>
             {
@@ -1929,6 +1937,44 @@ internal static class HudManagerStartPatch
             buttonText: GetString("pavlovsCreateDogText")
         );
 
+        pavlovsdogsRingButton = new CustomButton(
+            () =>
+            {
+                var writer = StartRPC(CustomRPC.PavlovsRing);
+                writer.Write(Pavlovsdogs.ringDuration);
+                writer.EndRPC();
+                RPCProcedure.pavlovsCreateDog(Pavlovsdogs.currentTarget.PlayerId);
+                SoundEffectsManager.play("ring");
+            },
+            () =>
+            {
+                return Pavlovsdogs.pavlovsowner.IsAlive()
+                    && Pavlovsdogs.pavlovsowner.AmOwner
+                    && Pavlovsdogs.pavlovsdogs.Any(x => x.IsAlive());
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                pavlovsdogsRingButton.isEffectActive = false;
+                pavlovsdogsRingButton.Timer = pavlovsdogsRingButton.MaxTimer;
+            },
+            Pavlovsdogs.RingButton,
+            __instance,
+            __instance.AbilityButton,
+            abilityInput.keyCode,
+            true,
+            Pavlovsdogs.ringDuration,
+            () =>
+            {
+                pavlovsdogsRingButton.isEffectActive = false;
+                pavlovsdogsRingButton.Timer = pavlovsdogsRingButton.MaxTimer;
+            },
+            buttonText: GetString("pavlovsRingText")
+        );
+
         minerMineButton = new CustomButton(
             () =>
             {
@@ -1952,8 +1998,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 /* Can See */
-                return Miner.miner != null && Miner.miner == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
+                return Miner.miner.IsAlive() && Miner.miner == PlayerControl.LocalPlayer;
             },
             () =>
             {
@@ -2411,6 +2456,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
+                JackInTheBox.MeetingEnd();
                 lightsOutButton.Timer = lightsOutButton.MaxTimer;
                 lightsOutButton.isEffectActive = false;
                 lightsOutButton.actionButton.graphic.color = Palette.EnabledColor;
@@ -3229,8 +3275,10 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var writer = StartRPC(CustomRPC.SurvivorVestActive);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(Survivor.vestDuration);
                 writer.EndRPC();
-                RPCProcedure.survivorVestActive();
+                RPCProcedure.survivorVestActive(PlayerControl.LocalPlayer.PlayerId, Survivor.vestDuration);
                 Survivor.vestUsed++;
             },
             () =>
@@ -3240,7 +3288,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (survivorVestButton.ButtonTitle != null) survivorVestButton.ButtonTitle.text = $"{Survivor.remainingVests} / {Survivor.vestNumber}";
+                survivorVestButton.UsesCount = Survivor.remainingVests;
                 return PlayerControl.LocalPlayer.CanMove && Survivor.remainingVests > 0;
             },
             () =>
@@ -3281,18 +3329,16 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Survivor.Player != null && Survivor.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) &&
-                       PlayerControl.LocalPlayer.IsAlive() && Survivor.blanksEnable/* && Survivor.remainingBlanks > 0*/;
+                return Survivor.Player != null && Survivor.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+                       && PlayerControl.LocalPlayer.IsAlive() && Survivor.blanksEnable/* && Survivor.remainingBlanks > 0*/;
             },
             () =>
             {
                 Survivor.target = SetTarget();
                 SetPlayerOutline(Survivor.target, Survivor.color);
-
                 survivorBlanksButton.showTargetNameOnButton(Survivor.target);
-                if (survivorBlanksButton.ButtonTitle != null)
-                    survivorBlanksButton.ButtonTitle.text = $"{Survivor.remainingBlanks} / {Survivor.blanksNumber}";
 
+                survivorBlanksButton.UsesCount = Survivor.remainingBlanks;
                 return Survivor.blanksNumber > Survivor.blanksUsed && PlayerControl.LocalPlayer.CanMove && Survivor.target != null;
             },
             () => { survivorBlanksButton.Timer = survivorBlanksButton.MaxTimer; },

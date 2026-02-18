@@ -421,12 +421,15 @@
         "13": "禁用破坏功能"
     },
     "randomLigherPlayer": {
-        "0": "Randomly Classify Players as Light or Dark Color\n(Does not affect appearance)",
+        "0": "Randomly Classify Players as Light or Dark Color (Does not affect appearance)",
         "13": "随机判断玩家深浅色 (不会影响角色外观)"
     },
-    "allowModGuess": {
+    "AllowGuessModifier": {
         "0": "Allow Guessing Certain Modifiers",
         "13": "允许猜测部分附加职业"
+    },
+    "modifierCanBeGuessed": {
+        "13": "<color=#FFFF00>可以被赌怪猜测</color>"
     },
     "ghostSpeed": {
         "0": "Ghost Movement Speed",
@@ -1062,6 +1065,9 @@
     "morphlingDuration": {
         "0": "Morph Duration",
         "13": "化形持续时间"
+    },
+    "morphlingResetAfterMeeting": {
+        "13": "会议后重置化形目标"
     },
     "bomberBombCooldown": {
         "0": "Plant Bomb Cooldown",
@@ -4012,8 +4018,7 @@
         "13": "关灯"
     },
     "MorphText": {
-        "0": "MORPH",
-        "13": "化形"
+        "13": "变换"
     },
     "PlaceCameraText": {
         "0": "CAM",
@@ -4326,7 +4331,7 @@
     },
     "RedemptorRevelation": {
         "0": "DIVINE",
-        "13": " 启示"
+        "13": "启示"
     },
     "RedemptorPrayer": {
         "0": "RESURRECT",
@@ -4390,6 +4395,9 @@
     },
     "oracleButton": {
         "13": "选择信徒"
+    },
+    "pavlovsRingText": {
+        "13": "摇铃"
     },
     "GuessserGMInfo": {
         "0": " (Guesser)",
@@ -5801,7 +5809,7 @@
     },
     "MorphlingFullDesc": {
         "0": "Can disguise as other players after sampling them.",
-        "13": "采样后可以伪装成其他人。"
+        "13": "采样后可以伪装成其他人。房主可以设定会议后重置化形目标。"
     },
     "BomberFullDesc": {
         "0": "Can plant a bomb on another player, which activates after a few seconds.\nThe holder must pass it on before a meeting is called or the timer runs out, otherwise they die.\nDepending on settings, the bomb may be passed back to the Demolitionist.",
@@ -5941,7 +5949,7 @@
     },
     "PavlovsownerFullDesc": {
         "0": "Can tame another player to become Pavlov's Dog and win by killing all other players.\nOnly one Dog may exist at once. After a Dog dies, Pavlov can tame another one, up to a set number of times (see settings).\nIf Pavlov dies, any surviving Dog goes berserk with reduced kill CD and suicide timer that refreshes on kills.",
-        "13": "巴甫洛夫可以驯化其他玩家为巴甫洛夫的狗。\n需要将所有其他玩家击杀才能胜利。\n在一局游戏中，只能同时存在一条狗，\n狗死亡后巴甫洛夫才能驯化下一位玩家。\n驯化有次数限制，详见房间设置。\n\n在巴甫洛夫死亡后，存活的狗有可能会获得狂化效果：\n击杀CD大幅减少，并且会在一段时间内自杀。"
+        "13": "巴甫洛夫可以驯化其他玩家为巴甫洛夫的狗。\n需要将所有其他玩家击杀才能胜利。\n在一局游戏中，只能同时存在一条狗，\n狗死亡后巴甫洛夫才能驯化下一位玩家，驯化有次数限制。\n\n巴甫洛夫还可以拥有摇铃技能：\n使用摇铃后游戏中的狗击杀技能会加快冷却。\n\n在巴甫洛夫死亡后，存活的狗有可能会获得狂化效果：\n击杀CD大幅减少，并且会在一段时间内自杀。"
     },
     "PavlovsdogsFullDesc": {
         "0": "Appears when recruited by Pavlov (Owner). Must cooperate with Pavlov to eliminate all other players.\nDepending on settings, may go berserk upon Pavlov's death with significantly reduced kill CD and a suicide timer that refreshes on kills.",
@@ -5985,11 +5993,11 @@
     },
     "BandLeaderFullDesc": {
         "0": "Must recruit three band members. Recruitment does not affect roles or factions.\nBefore the band forms, member status is only partially visible.\nAt each meeting, the Band Leader learns if the band can be formed.\nA valid band requires all three members to be from the same general faction (Crewmate, Imposter, or Neutral).\nBefore band formation, members can be removed at will outside meetings.\nIf the band never forms by the end of the game, the Band Leader cannot win.\nOnce formed, the band and its win condition become fixed (unless the Band Leader role no longer exists somehow).\n\nBand win conditions:\nCrewmate: Wins together if the Crewmates win\nImposter: The Band Leader gains a kill ability with a short CD and wins with the Imposters\nNeutral: If any band member wins independently, the entire band wins together\n\nConcept by: 尕丶天堂",
-        "13": "乐队主唱需要寻找三位乐队成员，招募不会影响玩家的职业与阵营。标记\n在成立之前不会向队员完全显示。每次进入会议时会进行判断是否能成立乐队。\n成立需要三位成员同属与一个类型（三位需同属与船员、红狼或中立）。\n\n在乐队成立之前，乐队主唱可以在会议外踢出成员，且游戏结束时仍然未成立\n乐队则无法胜利。乐队成立后固定胜利条件和成员，无法变更(除非主唱消失)\n\n乐队成立后，乐队的胜利条件变更为：\n船员阵营：船员胜利后乐队主唱跟随船员胜利\n红狼阵营：乐队主唱会获得极短cd的击杀，红狼胜利后乐队主唱跟随胜利\n中立阵营：如果乐队成员中有任何一人胜利，则全队独立获胜。\n\n职业创意来自：尕丶天堂"
+        "13": "乐队主唱需要寻找三位乐队成员，招募不会影响玩家的职业与阵营。标记\n在成立之前不会向队员完全显示。每次进入会议时会进行判断是否能成立乐队。\n成立需要三位成员同属与一个类型（三位需同属与船员、红狼或中立）。\n\n在乐队成立之前，乐队主唱可以在会议外踢出成员，且游戏结束时仍然未成立\n乐队则无法胜利。乐队成立后固定胜利条件和成员，无法变更(除非主唱消失)\n\n乐队成立后，乐队的胜利条件变更为：\n船员阵营：船员胜利后乐队主唱跟随船员胜利\n红狼阵营：乐队主唱会获得极短cd的击杀，红狼胜利后乐队主唱跟随胜利\n中立阵营：全队独立胜利。或乐队成员中有任何一人胜利，则全队跟随获胜。\n\n职业创意来自：尕丶天堂"
     },
     "SchrodingersCatFullDesc": {
         "0": "When killed, Schrödinger's Cat survives and joins the killer's faction.\nDepending on settings, the following options may apply:\n\nCannot be guessed by Guesser roles\nGains a kill ability if not aligned with the Crewmates\nMay be killed multiple times and continue joining new factions\n",
-        "13": "薛定谔的猫被其他玩家击杀后，可以加入对方阵营。\n\n以下职业功能将按照房间设置决定：\n\n薛定谔的猫不允许被赌怪猜测；\n非船员阵营的猫会获得击杀技能；\n允许猫被击杀多次且加入对方阵营。"
+        "13": "薛定谔的猫被其他玩家击杀后，可以加入对方阵营。\n\n以下职业功能将按照房间设置决定：\n\n薛定谔的猫不允许被赌怪猜测；\n非船员阵营会获得击杀技能；\n允许被击杀多次且加入对方阵营。"
     },
     "CrewmateFullDesc": {
         "0": "An ordinary Crewmate, contributes to the total task progress but otherwise unassuming.",
@@ -6249,12 +6257,12 @@
         "13": "分配阵营：伪装者\n\n可以放置鬼魂阻挠船员行进，障碍物会持续一段时间后消失。"
     },
     "ProfessionalFullDesc": {
-        "13": "击杀玩家时不会留下尸体，但是船员经过尸体位置时会自动报警。\n\n注：附加能力的专业杀手与主职业的专业杀手冲突，\n当附加能力的专业杀手开启时，自动禁用主职业的专业杀手"
+        "13": "分配阵营：伪装者\n\n击杀玩家时不会留下尸体，但是船员经过尸体位置时会自动报警。\n\n注：附加能力的专业杀手与主职业的专业杀手冲突，\n当附加能力的专业杀手开启时，自动禁用主职业的专业杀手"
     },
     "OracleFullDesc": {
-        "13": "会议外选定一位信徒，每次进会议时都会获得邪恶阵营的信息。\n神谕者会在会议中保护信徒，使其不会在会议中被驱逐。\n神谕者死亡后会揭示信徒的阵营，有概率是错误的。（设置）"
+        "13": "会议外选定一位信徒，每次进会议时都会获得邪恶阵营的信息。\n神谕者会在会议中保护信徒，使其不会在会议中被驱逐。\n神谕者死亡后会揭示信徒的阵营，有概率是错误的。"
     },
     "SoulSightFullDesc": {
-        "13": "窥天者可以自杀窥探天意一段时间，持续时间结束后会自动复活。\n在以死亡状态进入会议时得1分，得x分可以跟随场上阵营获胜。\n\n如果尸体被吃掉则无法复活和得分。"
+        "13": "窥天者可以自杀窥探天意一段时间，持续时间结束后会自动复活。\n在以死亡状态进入会议时得1分，得x分可以跟随场上阵营获胜。\n\n如果尸体被吃掉则无法复活和得分。\n\n职业创意：吃蛋挞的折棒"
     }
 }

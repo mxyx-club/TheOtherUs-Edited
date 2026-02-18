@@ -120,7 +120,7 @@ public static class Guesser
         Transform selectedButton = null;
 
         // From SuperNewRoles
-        var teamCount = /*ModOption.allowModGuess ? 4 : */3;
+        var teamCount = ModOption.AllowGuessModifier ? 4 : 3;
         for (int index = 0; index < teamCount; index++)
         {
             Transform TeambuttonParent = new GameObject().transform;
@@ -239,8 +239,69 @@ public static class Guesser
                     continue;
             }
 
-            if (roleInfo.roleType == RoleType.Modifier)
-                continue;
+            switch (roleInfo.roleId)
+            {
+                case RoleId.Lover when !CustomOptionHolder.lovesCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Disperser when !CustomOptionHolder.disperserCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.PoucherModifier when !CustomOptionHolder.poucherCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.ProfessionalModifier when !CustomOptionHolder.professionalCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Vortox when !CustomOptionHolder.vortoxCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Specoality when !CustomOptionHolder.specoalityCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Bloody when !CustomOptionHolder.bloodyCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Tiebreaker when !CustomOptionHolder.tieCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Bait when !CustomOptionHolder.baitCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Aftermath when !CustomOptionHolder.aftermathCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Torch when !CustomOptionHolder.torchCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Sunglasses when !CustomOptionHolder.sunglassesCanBeGuesser.GetBool():
+                    continue;
+                case RoleId.Multitasker when !CustomOptionHolder.multitaskerCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Vip when !CustomOptionHolder.vipCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Slueth when !CustomOptionHolder.sluethCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Cursed when !CustomOptionHolder.cursedCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Watcher when !CustomOptionHolder.watcherCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Radar when !CustomOptionHolder.radarCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Tunneler when !CustomOptionHolder.tunnelerCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.ButtonBarry when !CustomOptionHolder.buttonBarryCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Shifter when !CustomOptionHolder.shifterCanBeGuessed.GetBool():
+                    continue;
+                case RoleId.Assassin:
+                    continue;
+                case RoleId.LastImpostor:
+                    continue;
+                case RoleId.AntiTeleport:
+                    continue;
+                case RoleId.Flash:
+                    continue;
+                case RoleId.Mini:
+                    continue;
+                case RoleId.Giant:
+                    continue;
+                case RoleId.Blind:
+                    continue;
+                case RoleId.Indomitable:
+                    continue;
+                case RoleId.Chameleon:
+                    continue;
+            }
 
             if (roleInfo.roleType is not RoleType.Crewmate and not RoleType.Neutral and not RoleType.Impostor and not RoleType.Modifier)
                 continue;

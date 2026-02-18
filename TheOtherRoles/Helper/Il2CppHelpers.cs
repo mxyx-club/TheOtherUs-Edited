@@ -31,6 +31,11 @@ public static class Il2CppHelpers
         }
     }
 
+    public static object TryCast(this Il2CppObjectBase self, Type type)
+    {
+        return AccessTools.Method(self.GetType(), nameof(Il2CppObjectBase.TryCast)).MakeGenericMethod(type).Invoke(self, Array.Empty<object>());
+    }
+
     public static T CastFast<T>(this Il2CppObjectBase obj) where T : Il2CppObjectBase
     {
         if (obj is T casted) return casted;

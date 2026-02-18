@@ -73,11 +73,6 @@ public class ModTranslation
 
         return key;
     }
-
-    public static string GetString(params string[] key)
-    {
-        return GetString(string.Join(" ", key));
-    }
 }
 
 internal static class LanguageExtension

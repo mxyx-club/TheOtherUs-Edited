@@ -27,7 +27,7 @@ public enum CustomRPC : byte
     ShareGameMode,
     ShareFriendCode,
     Exiled,
-    EndGame,
+    NoCheckEndGame,
 
     CustomMurderPlayer,
     RevivePlayer,
@@ -68,6 +68,7 @@ public enum CustomRPC : byte
     DeputyPromotes,
     JackalCreatesSidekick,
     PavlovsCreateDog,
+    PavlovsRing,
     SidekickPromotes,
     ClearGhostRoles,
     SetFutureErased,
@@ -784,11 +785,17 @@ public static class RPCProcedure
         ChatControllerPatch.CurrentChatType = ChatControllerPatch.ChatTypes.Default;
     }
 
+    internal static void NoCheckEndGame(CustomGameOverReason reason)
+    {
+        isCanceled = true;
+        Message("Game Canceled by Host");
+        if (AmongUsClient.Instance.AmHost) GameManager.Instance.RpcEndGame((GameOverReason)reason, false);
+    }
+
+
     public static void versionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId)
     {
-        Version ver;
-        if (revision < 0) ver = new Version(major, minor, build);
-        else ver = new Version(major, minor, build, revision);
+        var ver = revision < 0 ? new Version(major, minor, build) : new Version(major, minor, build, revision);
         GameStartManagerPatch.playerVersions[clientId] = new GameStartManagerPatch.PlayerVersion(ver, guid);
     }
 
@@ -914,14 +921,13 @@ public static class RPCProcedure
             })));
     }
 
-    public static void survivorVestActive()
+    public static void survivorVestActive(byte playerId, float time)
     {
-        Survivor.vestActive = true;
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Survivor.vestDuration,
-            new Action<float>(p =>
-            {
-                if (p == 1f) Survivor.vestActive = false;
-            })));
+        Survivor.VestPlayer[playerId] = true;
+        _ = new LateTask(() =>
+        {
+            Survivor.VestPlayer[playerId] = false;
+        }, time);
     }
 
     public static void medicSetShielded(byte shieldedId)
@@ -1178,6 +1184,17 @@ public static class RPCProcedure
         if (target.AmOwner)
             pavlovsdogsKillButton.Timer = pavlovsdogsKillButton.MaxTimer * 0.66f;
         Pavlovsdogs.createDogNum -= 1;
+    }
+
+    public static void PavlovsRing(float duration)
+    {
+        if (!Pavlovsdogs.pavlovsdogs.Any(x => x.AmOwner)) return;
+        SoundEffectsManager.play("pavlovsRing");
+        pavlovsdogsKillButton.Multiplier = Pavlovsdogs.ringMultiplier;
+        _ = new LateTask(() =>
+        {
+            pavlovsdogsKillButton.Multiplier = 1f;
+        }, duration, "PavlovsRing");
     }
 
     /// <summary>
@@ -1918,6 +1935,7 @@ public static class RPCProcedure
 
     public static void showBodyGuardFlash()
     {
+        if (BodyGuard.guarded?.AmOwner == true) BodyGuard.guarded.ShowFailedMurder();
         if (CustomOptionHolder.bodyGuardFlash.GetBool()) showFlash(BodyGuard.color);
     }
 
@@ -2131,9 +2149,8 @@ internal class RPCHandlerPatch
                 RPCProcedure.RpcFixingSabotage((TaskTypes)reader.ReadByte());
                 break;
 
-            case CustomRPC.EndGame:
-                ModOption.isCanceled = true;
-                if (AmongUsClient.Instance.AmHost) GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.Canceled, false);
+            case CustomRPC.NoCheckEndGame:
+                RPCProcedure.NoCheckEndGame((CustomGameOverReason)reader.ReadByte());
                 break;
 
             case CustomRPC.FixSubmergedOxygen:
@@ -2242,6 +2259,10 @@ internal class RPCHandlerPatch
 
             case CustomRPC.PavlovsCreateDog:
                 RPCProcedure.pavlovsCreateDog(reader.ReadByte());
+                break;
+
+            case CustomRPC.PavlovsRing:
+                RPCProcedure.PavlovsRing(reader.ReadSingle());
                 break;
 
             case CustomRPC.SidekickPromotes:
@@ -2463,7 +2484,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.SurvivorVestActive:
-                RPCProcedure.survivorVestActive();
+                RPCProcedure.survivorVestActive(reader.ReadByte(), reader.ReadSingle());
                 break;
 
             case CustomRPC.JackalCanSwooper:

@@ -81,7 +81,7 @@ public class Aftermath
                 writer.Write(pos);
                 writer.Write(i);
                 writer.EndRPC();
-                RPCProcedure.CreateDeadBody(Butcher.dissectedId, pos, i);
+                CreateDeadBody(Butcher.dissectedId, pos, i);
                 list.Remove(pos);
             }
 

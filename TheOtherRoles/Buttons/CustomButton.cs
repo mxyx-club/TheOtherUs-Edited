@@ -188,7 +188,8 @@ public class CustomButton
             {
                 _ = GridArrange.currentChildren.Remove(actionButton.transform);
             }
-            UObject.Destroy(actionButton.gameObject);
+            UObject.Destroy(ButtonTitle?.gameObject);
+            UObject.Destroy(actionButton?.gameObject);
         }
         actionButton = null;
         _buttons.Remove(this);
@@ -387,33 +388,18 @@ public class CustomButton
         {
             var usesRemainingText = actionButton?.usesRemainingText;
             var usesRemainingSprite = actionButton?.usesRemainingSprite;
+            bool hasUses = UsesCount >= 0;
 
-            if (UsesCount == -1)
-            {
-                usesRemainingText?.gameObject?.SetActive(false);
-                usesRemainingSprite?.gameObject?.SetActive(false);
-            }
-            else if (UsesCount >= 0)
-            {
-                usesRemainingText?.gameObject?.SetActive(true);
-                usesRemainingSprite?.gameObject?.SetActive(true);
-                usesRemainingText.text = UsesCount.ToString();
-            }
+            usesRemainingText?.gameObject?.SetActive(hasUses);
+            usesRemainingSprite?.gameObject?.SetActive(hasUses);
+            if (hasUses) usesRemainingText.text = UsesCount.ToString();
+
             _lastUsesCount = UsesCount;
         }
 
-        if (DeputyTimer >= 0)
+        if (DeputyTimer >= 0 && !PlayerControl.LocalPlayer.inVent)
         {
-            // This had to be reordered, so that the handcuffs do not stop the underlying timers from running
-            if (HasEffect && isEffectActive) DeputyTimer -= Time.deltaTime;
-            else if (!PlayerControl.LocalPlayer.inVent) DeputyTimer -= Time.deltaTime;
-        }
-
-        if (DeputyTimer <= 0 && HasEffect && isEffectActive)
-        {
-            isEffectActive = false;
-            actionButton.cooldownTimerText.color = new Color(1, 1, 1); // Palette.EnabledColor
-            OnEffectEnd?.Invoke();
+            DeputyTimer -= Time.deltaTime * (HasEffect && isEffectActive ? 1f : 1f);
         }
 
         if (isHandcuffed)
@@ -429,54 +415,60 @@ public class CustomButton
 
         actionButtonRenderer.sprite = Sprite;
         if (showButtonText && buttonText != "") actionButton.OverrideText(buttonText);
-        actionButtonLabelText.enabled = showButtonText; // Only show the text if it's a kill button
+        actionButtonLabelText.enabled = showButtonText;
 
-        if (!UseGrid && hudManager.UseButton != null)
+        if (!UseGrid && hudManager.UseButton != null && PositionOffset != null)
         {
-            var pos = hudManager.UseButton.transform.localPosition;
-            if (PositionOffset != null) actionButton.transform.localPosition = pos + PositionOffset.Value;
+            actionButton.transform.localPosition = hudManager.UseButton.transform.localPosition + PositionOffset.Value;
         }
 
-        if (CouldUse() || (isEffectActive && OnEffectCouldUse?.Invoke() == true))
-        {
-            actionButtonRenderer.color = actionButtonLabelText.color = Palette.EnabledColor;
-            actionButtonMat.SetFloat(Desat, 0f);
-        }
-        else
-        {
-            actionButtonRenderer.color = actionButtonLabelText.color = Palette.DisabledClear;
-            actionButtonMat.SetFloat(Desat, 1f);
-        }
+        bool canUse = CouldUse() || (isEffectActive && OnEffectCouldUse?.Invoke() == true);
+        Color targetColor = canUse ? Palette.EnabledColor : Palette.DisabledClear;
+        float desatValue = canUse ? 0f : 1f;
+
+        actionButtonRenderer.color = actionButtonLabelText.color = targetColor;
+        actionButtonMat.SetFloat(Desat, desatValue);
+
 
         float progress = Time.deltaTime;
+        bool shouldCountdown = (!InGame || Started) && Timer >= 0 && ((HasEffect && isEffectActive) || !PlayerControl.LocalPlayer.inVent);
 
-        if ((!InGame || Started) && Timer >= 0 && ((HasEffect && isEffectActive) || !PlayerControl.LocalPlayer.inVent))
-        {
-            if (isEffectActive)
-            {
-                Timer -= progress;
-            }
-            else
-            {
-                Timer -= progress * Multiplier;
-            }
-        }
+        if (shouldCountdown) Timer -= progress * (isEffectActive ? 1f : Multiplier);
 
-        if (Timer <= 0 && HasEffect && isEffectActive)
+        bool effectShouldEnd = (DeputyTimer <= 0 || Timer <= 0) && HasEffect && isEffectActive;
+        if (effectShouldEnd)
         {
             isEffectActive = false;
-            actionButton.cooldownTimerText.color = new Color(1, 1, 1, 0.3f); // Palette.DisabledClear
-            OnEffectEnd();
+            OnEffectEnd?.Invoke();
         }
 
         actionButton.SetCoolDown(Timer, HasEffect && isEffectActive ? EffectDuration : MaxTimer);
 
-        // Trigger OnClickEvent if the hotkey is being pressed down
-        if ((hotkey.HasValue && Input.GetKeyDown(hotkey.Value)) || (originalHotkey.HasValue && Input.GetKeyDown(originalHotkey.Value)))
-            onClickEvent();
+        if (isEffectActive && DeputyTimer > 0)
+        {
+            actionButton.cooldownTimerText.color = new Color32(0, 204, 0, 255);
+        }
+        else if (Multiplier != 1f)
+        {
+            actionButton.cooldownTimerText.color = Multiplier > 1f
+                ? new Color32(0, 255, 0, 255)
+                : new Color32(255, 165, 0, 255);
+        }
+        else
+        {
+            actionButton.cooldownTimerText.color = effectShouldEnd
+                ? new Color(1, 1, 1, 0.3f)
+                : new Color(1, 1, 1);
+        }
 
-        // Deputy disable the button and display Handcuffs instead...
-        OnClick = Sheriff.handcuffedPlayers.Contains(PlayerControl.LocalPlayer.PlayerId) ? (() => Sheriff.setHandcuffedKnows()) : InitialOnClick;
+        if ((hotkey.HasValue && Input.GetKeyDown(hotkey.Value)) || (originalHotkey.HasValue && Input.GetKeyDown(originalHotkey.Value)))
+        {
+            onClickEvent();
+        }
+
+        OnClick = Sheriff.handcuffedPlayers.Contains(PlayerControl.LocalPlayer.PlayerId)
+            ? (() => Sheriff.setHandcuffedKnows())
+            : InitialOnClick;
     }
 
     /// <summary>
@@ -671,8 +663,7 @@ public class CustomButton
         }
 
         // Add poolable player to the button so that the target outfit is shown
-        button.actionButton.cooldownTimerText.transform.localPosition =
-            new Vector3(0, 0, -1f); // Before the poolable player
+        button.actionButton.cooldownTimerText.transform.localPosition = new Vector3(0, 0, -1f); // Before the poolable player
         targetDisplay = UObject.Instantiate(IntroCutsceneOnDestroyPatch.playerPrefab, button.actionButton.transform);
         var data = target.Data;
         target.SetPlayerMaterialColors(targetDisplay.cosmetics.currentBodySprite.BodySprite);

@@ -33,6 +33,7 @@ internal class ModOption
     public static bool randomLigherPlayer;
     public static bool disableMedscanWalking;
     public static bool DisableMeeting;
+    public static bool AllowGuessModifier;
     public static bool isCanceled;
 
     public static int restrictDevices;
@@ -134,6 +135,7 @@ internal class ModOption
         ImpCanKillInVent = CustomOptionHolder.canKillPlayerInVent.GetSelection() >= 1;
         NeutCanKillInVent = CustomOptionHolder.canKillPlayerInVent.GetSelection() >= 2;
         CanKillInVent = CustomOptionHolder.canKillPlayerInVent.GetSelection() == 3;
+        AllowGuessModifier = CustomOptionHolder.AllowGuessModifier.GetBool();
         //ShowVentsOnMap = CustomOptionHolder.showVentsOnMap.GetBool();
         //ShowVentsOnMeetingMap = CustomOptionHolder.showVentsOnMap.GetQuantity() == 1;
         firstKillPlayer = null;

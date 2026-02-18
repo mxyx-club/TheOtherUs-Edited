@@ -44,6 +44,7 @@ public class CustomOptionHolder
     //public static CustomOption showVentsOnMap;
     public static CustomOption randomGameStartPosition;
     public static CustomOption randomGameStartToVents;
+    public static CustomOption AllowGuessModifier;
     public static CustomOption ghostSpeed;
     public static CustomOption canKillPlayerInVent;
 
@@ -144,6 +145,7 @@ public class CustomOptionHolder
     public static CustomOption morphlingSpawnRate;
     public static CustomOption morphlingCooldown;
     public static CustomOption morphlingDuration;
+    public static CustomOption morphlingResetAfterMeeting;
 
     public static CustomOption bomberSpawnRate;
     public static CustomOption bomberBombCooldown;
@@ -663,31 +665,38 @@ public class CustomOptionHolder
     public static CustomOption modifierAssassinKillsThroughShield;
 
     public static CustomOption modifierVortox;
+    public static CustomOption vortoxCanBeGuessed;
     public static CustomOption modifierVortoxReversal;
     public static CustomOption modifierVortoxSkipMeeting;
     public static CustomOption modifierVortoxSkipNum;
 
     public static CustomOption modifierPoucher;
+    public static CustomOption poucherCanBeGuessed;
 
     public static CustomOption modifierProfessional;
+    public static CustomOption professionalCanBeGuessed;
     public static CustomOption modifierProfessionalWhoCanSeeBodies;
     public static CustomOption modifierProfessionalBaitKiller;
 
     public static CustomOption modifierSpecoality;
+    public static CustomOption specoalityCanBeGuessed;
     public static CustomOption modifierSpecoalityIsGlobal;
 
     public static CustomOption modifierLastImpostor;
     public static CustomOption modifierLastImpostorDeduce;
 
     public static CustomOption modifierBait;
+    public static CustomOption baitCanBeGuessed;
     public static CustomOption modifierBaitReportDelayMin;
     public static CustomOption modifierBaitReportDelayMax;
     public static CustomOption modifierBaitShowKillFlash;
     public static CustomOption modifierBaitSwapCrewmate;
 
     public static CustomOption modifierAftermath;
+    public static CustomOption aftermathCanBeGuessed;
 
     public static CustomOption modifierLover;
+    public static CustomOption lovesCanBeGuessed;
     public static CustomOption modifierLoverImpLoverRate;
     public static CustomOption modifierLoverNeutraValid;
     public static CustomOption modifierLoverCanGetModifiers;
@@ -709,6 +718,7 @@ public class CustomOptionHolder
     public static CustomOption avengerTargetWasExiled;
 
     public static CustomOption modifierBloody;
+    public static CustomOption bloodyCanBeGuessed;
     public static CustomOption modifierBloodyQuantity;
     public static CustomOption modifierBloodyDuration;
 
@@ -716,12 +726,15 @@ public class CustomOptionHolder
     public static CustomOption modifierAntiTeleportQuantity;
 
     public static CustomOption modifierTieBreaker;
+    public static CustomOption tieCanBeGuessed;
 
     public static CustomOption modifierSunglasses;
+    public static CustomOption sunglassesCanBeGuesser;
     public static CustomOption modifierSunglassesQuantity;
     public static CustomOption modifierSunglassesVision;
 
     public static CustomOption modifierTorch;
+    public static CustomOption torchCanBeGuessed;
     public static CustomOption modifierTorchVision;
     public static CustomOption modifierTorchQuantity;
 
@@ -730,9 +743,11 @@ public class CustomOptionHolder
     public static CustomOption modifierFlashSpeed;
 
     public static CustomOption modifierMultitasker;
+    public static CustomOption multitaskerCanBeGuessed;
     public static CustomOption modifierMultitaskerQuantity;
 
     public static CustomOption modifierDisperser;
+    public static CustomOption disperserCanBeGuessed;
     public static CustomOption modifierDisperserDispersesToVent;
 
     public static CustomOption modifierMini;
@@ -747,22 +762,29 @@ public class CustomOptionHolder
     public static CustomOption modifierBlind;
 
     public static CustomOption modifierTunneler;
+    public static CustomOption tunnelerCanBeGuessed;
     public static CustomOption modifierTunnelerNoTask;
 
     public static CustomOption modifierButtonBarry;
+    public static CustomOption buttonBarryCanBeGuessed;
     public static CustomOption modifierButtonSabotageRemoteMeetings;
 
     public static CustomOption modifierWatcher;
+    public static CustomOption watcherCanBeGuessed;
 
     public static CustomOption modifierRadar;
+    public static CustomOption radarCanBeGuessed;
 
     public static CustomOption modifierSlueth;
+    public static CustomOption sluethCanBeGuessed;
 
     public static CustomOption modifierCursed;
+    public static CustomOption cursedCanBeGuessed;
     public static CustomOption modifierHideCursed;
 
     public static CustomOption modifierVip;
     public static CustomOption modifierVipQuantity;
+    public static CustomOption vipCanBeGuessed;
     public static CustomOption modifierVipShowColor;
 
     public static CustomOption modifierChameleon;
@@ -772,6 +794,7 @@ public class CustomOptionHolder
     public static CustomOption modifierChameleonMinVisibility;
 
     public static CustomOption modifierShifter;
+    public static CustomOption shifterCanBeGuessed;
     public static CustomOption modifierShiftNeutral;
     public static CustomOption modifierShiftALLNeutral;
     public static CustomOption modifierShiftReload;
@@ -900,6 +923,7 @@ public class CustomOptionHolder
         //showVentsOnMap = Create(115, Types.General, "ShowVentsOnMap", ["optionOff", "ShowVentsOnMeetingMap", "optionOn"]);
         randomGameStartPosition = Create(110, Types.General, "randomGameStartPosition", false);
         randomGameStartToVents = Create(111, Types.General, "randomGameStartToVents", true, randomGameStartPosition);
+        AllowGuessModifier = Create(115, Types.General, Cs(new Color32(204, 204, 0, 255), "AllowGuessModifier"), false);
         ghostSpeed = Create(112, Types.General, "ghostSpeed", 1f, 0.75f, 5f, 0.125f);
         canKillPlayerInVent = Create(113, Types.General, "canKillPlayerInVent",
             ["optionOff", "canKillPlayerInVent.1", "canKillPlayerInVent.2", "canKillPlayerInVent.3"], 1);
@@ -1021,6 +1045,7 @@ public class CustomOptionHolder
         morphlingSpawnRate = Create(101100, Types.Impostor, Cs(Morphling.color, "Morphling"), rates, null, true);
         morphlingCooldown = Create(101101, Types.Impostor, "morphlingCooldown", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);
         morphlingDuration = Create(101102, Types.Impostor, "morphlingDuration", 15f, 1f, 20f, 0.5f, morphlingSpawnRate);
+        morphlingResetAfterMeeting = Create(101103, Types.Impostor, "morphlingResetAfterMeeting", false, morphlingSpawnRate);
 
         bomberSpawnRate = Create(101200, Types.Impostor, Cs(Bomber.color, "Bomber"), rates, null, true);
         bomberBombCooldown = Create(101201, Types.Impostor, "bomberBombCooldown", 25f, 10f, 60f, 2.5f, bomberSpawnRate);
@@ -1233,7 +1258,7 @@ public class CustomOptionHolder
             ["Pavlovsdogs", "Pavlovsowner", "pavlovsownerCanUseVents3"], 2, pavlovsownerSpawnRate);
         pavlovsownerRing = Create(202510, Types.Neutral, "pavlovsownerRing", false, pavlovsownerSpawnRate);
         pavlovsownerRingCooldown = Create(202511, Types.Neutral, "pavlovsownerRingCooldown", 20f, 5f, 60f, 2.5f, pavlovsownerRing);
-        pavlovsownerRingDuration = Create(202512, Types.Neutral, "pavlovsownerRingDuration", 15f, 0.5f, 30f, 1.25f, pavlovsownerRing);
+        pavlovsownerRingDuration = Create(202512, Types.Neutral, "pavlovsownerRingDuration", 15f, 5f, 30f, 1.25f, pavlovsownerRing);
         pavlovsownerRingMultiplier = Create(202513, Types.Neutral, "pavlovsownerRingMultiplier", 2f, 1f, 5f, 0.25f, pavlovsownerRing);
         pavlovsownerRampage = Create(202507, Types.Neutral, "pavlovsownerRampage", true, pavlovsownerSpawnRate);
         pavlovsownerRampageKillCooldown = Create(202508, Types.Neutral, "pavlovsownerRampageKillCooldown", 15f, 5f, 60f, 2.5f, pavlovsownerRampage);
@@ -1564,6 +1589,7 @@ public class CustomOptionHolder
         modifiersAreHidden = Create(400000, Types.Modifier, Cs(Color.yellow, "modifiersAreHidden"), false, null, true);
 
         modifierLover = Create(401600, Types.Modifier, Cs(Lovers.color, "Lover"), rates, null, true);
+        lovesCanBeGuessed = Create(400010, Types.Modifier, "modifierCanBeGuessed", true, modifierLover, isHidden: () => !AllowGuessModifier.GetBool());
         modifierLoverImpLoverRate = Create(401601, Types.Modifier, "modifierLoverImpLoverRate", rates, 5, modifierLover);
         modifierLoverNeutraValid = Create(401602, Types.Modifier, "modifierLoverNeutraValid", true, modifierLoverImpLoverRate);
         modifierLoverCanGetModifiers = Create(401603, Types.Modifier, "modifierLoverCanGetModifiers", false, modifierLover);
@@ -1603,13 +1629,16 @@ public class CustomOptionHolder
             isHidden: () => GuesserGM.Enabled);
 
         modifierDisperser = Create(401000, Types.Modifier, Cs(Palette.ImpostorRed, "Disperser"), rates, null, true);
+        disperserCanBeGuessed = Create(400011, Types.Modifier, "modifierCanBeGuessed", true, modifierDisperser, isHidden: () => !AllowGuessModifier.GetBool());
         modifierDisperserDispersesToVent = Create(401001, Types.Modifier, "modifierDisperserDispersesToVent", true, modifierDisperser);
 
         modifierPoucher = Create(403700, Types.Modifier, Cs(Palette.ImpostorRed, "Poucher"), rates, null, true, null,
             onChange: (x) => { if (poucherSpawnRate.Selection > 0) poucherSpawnRate.updateSelection(0); });
+        poucherCanBeGuessed = Create(400012, Types.Modifier, "modifierCanBeGuessed", true, modifierPoucher, isHidden: () => !AllowGuessModifier.GetBool());
 
         modifierProfessional = Create(403900, Types.Modifier, Cs(Palette.ImpostorRed, "Professional"), rates, null, true, null,
             onChange: (x) => { if (professionalSpawnRate.Selection > 0) professionalSpawnRate.updateSelection(0); });
+        professionalCanBeGuessed = Create(400013, Types.Modifier, "modifierCanBeGuessed", true, modifierProfessional, isHidden: () => !AllowGuessModifier.GetBool());
         modifierProfessionalWhoCanSeeBodies = Create(403901, Types.Modifier, "professionalWhoCanSeeBodies",
             ["professionalWhoCanSeeBodies.1", "professionalWhoCanSeeBodies.2", "professionalWhoCanSeeBodies.3"], modifierProfessional,
             onChange: (x) => { if (professionalWhoCanSeeBodies.Selection != x.Selection) professionalWhoCanSeeBodies.updateSelection(x.Selection); });
@@ -1617,9 +1646,11 @@ public class CustomOptionHolder
             onChange: (x) => { if (professionalBaitKiller.Selection != x.Selection) professionalBaitKiller.updateSelection(x.Selection); });
 
         modifierSpecoality = Create(403500, Types.Modifier, Cs(Palette.ImpostorRed, "Specoality"), rates, null, true);
+        specoalityCanBeGuessed = Create(400014, Types.Modifier, "modifierCanBeGuessed", true, modifierSpecoality, isHidden: () => !AllowGuessModifier.GetBool());
         modifierSpecoalityIsGlobal = Create(403501, Types.Modifier, "modifierSpecoalityIsGlobal", false, modifierSpecoality);
 
         modifierVortox = Create(403800, Types.Modifier, Cs(Vortox.color, "Vortox"), rates, null, true);
+        vortoxCanBeGuessed = Create(400015, Types.Modifier, "modifierCanBeGuessed", true, modifierVortox, isHidden: () => !AllowGuessModifier.GetBool());
         modifierVortoxReversal = Create(403801, Types.Modifier, "modifierVortoxReversal", true, modifierVortox);
         modifierVortoxSkipMeeting = Create(403802, Types.Modifier, "modifierVortoxSkipMeeting", true, modifierVortox);
         modifierVortoxSkipNum = Create(403803, Types.Modifier, "modifierVortoxSkipNum", 4, 1, 10, 1, modifierVortoxSkipMeeting);
@@ -1628,6 +1659,7 @@ public class CustomOptionHolder
         modifierLastImpostorDeduce = Create(401101, Types.Modifier, "modifierLastImpostorDeduce", 5f, 2.5f, 15f, 2.5f, modifierLastImpostor);
 
         modifierBloody = Create(401200, Types.Modifier, Cs(Color.yellow, "Bloody"), rates, null, true);
+        bloodyCanBeGuessed = Create(400016, Types.Modifier, "modifierCanBeGuessed", true, modifierBloody, isHidden: () => !AllowGuessModifier.GetBool());
         modifierBloodyQuantity = Create(401201, Types.Modifier, Cs(Color.yellow, "modifierBloodyQuantity"), ratesCount, modifierBloody);
         modifierBloodyDuration = Create(401202, Types.Modifier, "modifierBloodyDuration", 10f, 3f, 60f, 0.5f, modifierBloody);
 
@@ -1635,21 +1667,26 @@ public class CustomOptionHolder
         modifierAntiTeleportQuantity = Create(401301, Types.Modifier, Cs(Color.yellow, "modifierAntiTeleportQuantity"), ratesCount, modifierAntiTeleport);
 
         modifierTieBreaker = Create(401400, Types.Modifier, Cs(Color.yellow, "TieBreaker"), rates, null, true);
+        tieCanBeGuessed = Create(400017, Types.Modifier, "modifierCanBeGuessed", true, modifierTieBreaker, isHidden: () => !AllowGuessModifier.GetBool());
 
         modifierBait = Create(401500, Types.Modifier, Cs(Color.yellow, "Bait"), rates, null, true);
+        baitCanBeGuessed = Create(400018, Types.Modifier, "modifierCanBeGuessed", true, modifierBait, isHidden: () => !AllowGuessModifier.GetBool());
         modifierBaitSwapCrewmate = Create(401501, Types.Modifier, "modifierBaitSwapCrewmate", false, modifierBait);
         modifierBaitReportDelayMin = Create(401502, Types.Modifier, "modifierBaitReportDelayMin", 0f, 0f, 10f, 0.125f, modifierBait);
         modifierBaitReportDelayMax = Create(401503, Types.Modifier, "modifierBaitReportDelayMax", 0.5f, 0f, 10f, 0.5f, modifierBait);
         modifierBaitShowKillFlash = Create(401504, Types.Modifier, "modifierBaitShowKillFlash", true, modifierBait);
 
         modifierAftermath = Create(403600, Types.Modifier, Cs(Color.yellow, "Aftermath"), rates, null, true);
+        aftermathCanBeGuessed = Create(400019, Types.Modifier, "modifierCanBeGuessed", true, modifierAftermath, isHidden: () => !AllowGuessModifier.GetBool());
 
         modifierSunglasses = Create(401700, Types.Modifier, Cs(Color.yellow, "Sunglasses"), rates, null, true);
         modifierSunglassesQuantity = Create(401701, Types.Modifier, Cs(Color.yellow, "modifierSunglassesQuantity"), ratesCount, modifierSunglasses);
+        sunglassesCanBeGuesser = Create(400020, Types.Modifier, "modifierCanBeGuessed", true, modifierSunglasses, isHidden: () => !AllowGuessModifier.GetBool());
         modifierSunglassesVision = Create(401702, Types.Modifier, "modifierSunglassesVision", ["-10%", "-20%", "-30%", "-40%", "-50%"], modifierSunglasses);
 
         modifierTorch = Create(401800, Types.Modifier, Cs(Color.yellow, "Torch"), rates, null, true);
         modifierTorchQuantity = Create(401801, Types.Modifier, Cs(Color.yellow, "modifierTorchQuantity"), ratesCount, modifierTorch);
+        torchCanBeGuessed = Create(400021, Types.Modifier, "modifierCanBeGuessed", true, modifierTorch, isHidden: () => !AllowGuessModifier.GetBool());
         modifierTorchVision = Create(401802, Types.Modifier, "modifierTorchVision", 1.5f, 1f, 3f, 0.125f, modifierTorch);
 
         modifierFlash = Create(401900, Types.Modifier, Cs(Color.yellow, "Flash"), rates, null, true);
@@ -1658,6 +1695,7 @@ public class CustomOptionHolder
 
         modifierMultitasker = Create(402000, Types.Modifier, Cs(Color.yellow, "Multitasker"), rates, null, true);
         modifierMultitaskerQuantity = Create(402001, Types.Modifier, Cs(Color.yellow, "modifierMultitaskerQuantity"), ratesCount, modifierMultitasker);
+        multitaskerCanBeGuessed = Create(400022, Types.Modifier, "modifierCanBeGuessed", true, modifierMultitasker, isHidden: () => !AllowGuessModifier.GetBool());
 
         modifierMini = Create(402100, Types.Modifier, Cs(Color.yellow, "Mini"), rates, null, true);
         modifierMiniGrowingUpDuration = Create(402101, Types.Modifier, "modifierMiniGrowingUpDuration", 400f, 100f, 1500f, 25f, modifierMini);
@@ -1671,22 +1709,29 @@ public class CustomOptionHolder
         modifierBlind = Create(402400, Types.Modifier, Cs(Color.yellow, "Blind"), rates, null, true);
 
         modifierWatcher = Create(402500, Types.Modifier, Cs(Color.yellow, "Watcher"), rates, null, true);
+        watcherCanBeGuessed = Create(400023, Types.Modifier, "modifierCanBeGuessed", true, modifierWatcher, isHidden: () => !AllowGuessModifier.GetBool());
 
         modifierRadar = Create(402600, Types.Modifier, Cs(Color.yellow, "Radar"), rates, null, true);
+        radarCanBeGuessed = Create(400024, Types.Modifier, "modifierCanBeGuessed", true, modifierRadar, isHidden: () => !AllowGuessModifier.GetBool());
 
         modifierTunneler = Create(402700, Types.Modifier, Cs(Color.yellow, "Tunneler"), rates, null, true);
+        tunnelerCanBeGuessed = Create(400025, Types.Modifier, "modifierCanBeGuessed", true, modifierTunneler, isHidden: () => !AllowGuessModifier.GetBool());
         modifierTunnelerNoTask = Create(402701, Types.Modifier, "modifierTunnelerNoTask", false, modifierTunneler);
 
         modifierButtonBarry = Create(402800, Types.Modifier, Cs(Color.yellow, "ButtonBarry"), rates, null, true);
+        buttonBarryCanBeGuessed = Create(400026, Types.Modifier, "modifierCanBeGuessed", true, modifierButtonBarry, isHidden: () => !AllowGuessModifier.GetBool());
         modifierButtonSabotageRemoteMeetings = Create(402801, Types.Modifier, "modifierButtonSabotageRemoteMeetings", true, modifierButtonBarry);
 
         modifierSlueth = Create(402900, Types.Modifier, Cs(Color.yellow, "Slueth"), rates, null, true);
+        sluethCanBeGuessed = Create(400027, Types.Modifier, "modifierCanBeGuessed", true, modifierSlueth, isHidden: () => !AllowGuessModifier.GetBool());
 
         modifierCursed = Create(403000, Types.Modifier, Cs(Color.yellow, "Cursed"), rates, null, true);
+        cursedCanBeGuessed = Create(400028, Types.Modifier, "modifierCanBeGuessed", true, modifierCursed, isHidden: () => !AllowGuessModifier.GetBool());
         modifierHideCursed = Create(403001, Types.Modifier, "modifierShowCursed", false, modifierCursed);
 
         modifierVip = Create(403100, Types.Modifier, Cs(Color.yellow, "Vip"), rates, null, true);
         modifierVipQuantity = Create(403101, Types.Modifier, Cs(Color.yellow, "modifierVipQuantity"), ratesCount, modifierVip);
+        vipCanBeGuessed = Create(400029, Types.Modifier, "modifierCanBeGuessed", true, modifierVip, isHidden: () => !AllowGuessModifier.GetBool());
         modifierVipShowColor = Create(403102, Types.Modifier, "modifierVipShowColor", true, modifierVip);
 
         modifierChameleon = Create(403300, Types.Modifier, Cs(Color.yellow, "Chameleon"), rates, null, true);
@@ -1696,6 +1741,7 @@ public class CustomOptionHolder
         modifierChameleonMinVisibility = Create(403304, Types.Modifier, "modifierChameleonMinVisibility", ["0%", "10%", "20%", "30%", "40%", "50%"], modifierChameleon);
 
         modifierShifter = Create(403400, Types.Modifier, Cs(Color.yellow, "Shifter"), rates, null, true);
+        shifterCanBeGuessed = Create(400030, Types.Modifier, "modifierCanBeGuessed", true, modifierShifter, isHidden: () => !AllowGuessModifier.GetBool());
         modifierShiftNeutral = Create(403401, Types.Modifier, "modifierShiftNeutral", false, modifierShifter);
         modifierShiftALLNeutral = Create(403402, Types.Modifier, "modifierShiftALLNeutral", false, modifierShiftNeutral);
         modifierShiftReload = Create(403403, Types.Modifier, "modifierShiftReload", true, modifierShifter);

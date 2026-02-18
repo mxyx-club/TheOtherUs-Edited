@@ -698,12 +698,23 @@ internal class RoleManagerSelectRolesPatch
     {
         var allPlayer = PlayerControl.AllPlayerControls.ToArray();
         var impPlayer = allPlayer.Where(x => x.Data.Role.IsImpostor).ToList().Shuffle();
-        var neutralPlayer = allPlayer.Where(x => x.IsNeutral() && x != Akujo.akujo && x != SoulSight.Player && x != Doomsayer.doomsayer).ToList().Shuffle();
         var crewPlayer = allPlayer.Where(x => !x.Data.Role.IsImpostor && !x.IsNeutral()).ToList().Shuffle();
+
+        var excludedPlayers = new List<PlayerControl> { Akujo.akujo, SoulSight.Player, Doomsayer.doomsayer }
+                              .Concat(Infected.Player)
+                              .Where(p => p != null);
+
+        var neutralPlayer = allPlayer.Where(x => x.IsNeutral())
+            .Except(excludedPlayers)
+            .ToList()
+            .Shuffle();
+
+        neutralPlayer.Do(x => Message($"{x.Data.PlayerName}"));
 
         var neutralNumber = GuesserGM.guesserGamemodeNeutralNumber.GetInt();
 
-        if (Infected.IsGuesser && Infected.Player.Any()) neutralNumber--;
+        if ((Infected.IsGuesser && Infected.Player.Any()) || Doomsayer.doomsayer != null) neutralNumber--;
+
         assignGuesserGamemodeToPlayers(crewPlayer,
             GuesserGM.guesserGamemodeCrewNumber.GetInt());
         assignGuesserGamemodeToPlayers(neutralPlayer,

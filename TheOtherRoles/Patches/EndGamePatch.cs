@@ -1201,10 +1201,6 @@ internal class RPCEndGamePatch
     {
         if (endReason == GameOverReason.HumansByTask && (ModOption.DisableGameEnd || ModOption.PreventTaskEnd)) return false;
 
-        if ((CustomGameOverReason)endReason == CustomGameOverReason.Canceled)
-        {
-            ModOption.isCanceled = true;
-        }
         return true;
     }
     public static void Postfix(ref GameOverReason endReason)
