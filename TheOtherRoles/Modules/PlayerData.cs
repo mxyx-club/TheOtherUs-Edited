@@ -16,7 +16,7 @@ public class PlayerData
     public static PlayerData Local { get => field ??= GetPlayerData(PlayerControl.LocalPlayer); private set; }
     public static Dictionary<byte, PlayerData> AllPlayerData = new();
     public static Dictionary<byte, string> AllFriendCode = new();
-    public static Dictionary<byte, ushort> ModUid = new();
+    public static Dictionary<byte, ushort> AnonymousId = new();
 
     public PlayerControl Player { get; private set; }
     public byte PlayerId { get; private set; }
@@ -24,7 +24,7 @@ public class PlayerData
     public bool IsWinner;
     public bool IsDisconnected;
     public bool IsDead => Player.IsDead();
-    public int KillCount;
+    public int KillCount => GetKillCount(Player);
     public Tuple<int, int> TaskCount;
 
     public RoleInfo RoleInfo => RoleInfo.RoleInfoById.GetValueOrDefault(RoleId, RoleInfo.crewmate);
@@ -143,11 +143,6 @@ public class PlayerData
         if (killer != null)
         {
             data.KilledBy = killer;
-            var kd = GetPlayerData(killer);
-            if (kd != null)
-            {
-                kd.KillCount++;
-            }
         }
     }
 
@@ -203,7 +198,7 @@ public class PlayerData
             foreach (var player in PlayerControl.AllPlayerControls.ToArray().OrderBy(_ => rnd.Next()))
             {
                 var id = modUid++;
-                ModUid[player.PlayerId] = id;
+                AnonymousId[player.PlayerId] = id;
             }
 
             ModOption.isCanceled = false;
@@ -211,11 +206,10 @@ public class PlayerData
 
         public static string GetGameId()
         {
-            var timePart = StartTime.ToString("HH:mm");
-            var rawData = $"{HostCode}:{timePart}";
+            var timePart = StartTime.Ticks.ToString();
 
             using var sha256 = SHA256.Create();
-            var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+            var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(timePart));
 
             var hexHash = BitConverter.ToString(hashBytes, 0, 4)
                 .Replace("-", "")
@@ -295,16 +289,44 @@ public class PlayerData
 
             if (ModOption.uploadGameData)
             {
+                if (WinCondition == WinCondition.Canceled || (EndTime - StartTime).Seconds < 150)
+                {
+                    Info("Game was canceled, skipping data upload.", "PlayerData");
+                    return;
+                }
+
                 UploadPlayerDataToApi(jsonContent).ContinueWith(task => { Info("Data uploaded successfully!", "PlayerData"); });
             }
         }
+
+        private static string GetDynamicApiKey()
+        {
+            var datePart = DateTime.UtcNow.ToString("yyyyMMdd");
+            var salt = "toue-salt-v1";
+
+            using var sha256 = SHA256.Create();
+            var input = $"{GameId}.{datePart}.{salt}";
+            var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+            return BitConverter.ToString(hash).Replace("-", "").Substring(0, 32);
+        }
+
+
 
         private static async Task UploadPlayerDataToApi(string jsonContent)
         {
             try
             {
+                var apiKey = GetDynamicApiKey();
+                var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+                var signature = GenerateSignature(jsonContent, timestamp, apiKey);
+
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var response = await httpClient.PostAsync(ApiUrl + "/api/games", content);
+                content.Headers.Add("X-Timestamp", timestamp);
+                content.Headers.Add("X-Signature", signature);
+                content.Headers.Add("X-Game-Id", GameId);
+
+                var response = await httpClient.PostAsync(ApiUrl + "/api/games/v2", content);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
@@ -316,6 +338,14 @@ public class PlayerData
             {
                 Error(ex);
             }
+        }
+
+        private static string GenerateSignature(string data, string timestamp, string key)
+        {
+            using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(key));
+            var message = $"{timestamp}.{GameId}.{data}";
+            var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
+            return Convert.ToBase64String(hash);
         }
     }
 }

@@ -1,4 +1,6 @@
 using AmongUs.GameOptions;
+using BepInEx;
+using System.IO;
 using TheOtherRoles.Attributes;
 using TheOtherRoles.Mode;
 using static TheOtherRoles.Modules.SimpleTable;
@@ -765,7 +767,36 @@ public class EndGameManagerSetUpPatch
             }
         }
 
+        // 如果启用了自动截图，则执行截图
+        if (ModOption.autoScreenshot)
+        {
+            _ = new LateTask(() =>
+            {
+                try
+                {
+                    TakeGameEndScreenshot();
+                }
+                catch (Exception e)
+                {
+                    Error($"Failed to take screenshot: {e.Message}");
+                }
+            }, 0.88f, "GameEnd Screenshot");
+        }
+
         AdditionalTempData.clear();
+    }
+
+    private static void TakeGameEndScreenshot()
+    {
+        if (Camera.main == null) return;
+        var screenshotDirectory = Path.Combine(Paths.GameRootPath, Main.Name, "Screenshots");
+        Directory.CreateDirectory(screenshotDirectory);
+
+        var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        var winCondition = AdditionalTempData.winCondition.ToString();
+        var filename = $"GameEnd_{timestamp}_{winCondition}.png";
+        var filePath = Path.Combine(screenshotDirectory, filename);
+        ScreenCapture.CaptureScreenshot(filePath);
     }
 }
 

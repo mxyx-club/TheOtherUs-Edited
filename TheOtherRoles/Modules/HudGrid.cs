@@ -139,7 +139,7 @@ public class HudContent : MonoBehaviour
                       0f
             );
 
-            var arrangement = Main.ButtonArrangement.Value;
+            var arrangement = ModConfig.ButtonArrangement.Value;
             if (!MeetingHud.Instance && ((arrangement == 1 && isLeftSide) || arrangement == 2)) pos.y += 0.85f;
 
             return pos;

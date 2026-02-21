@@ -851,10 +851,10 @@ public static class ExilePlayerPatch
 
         // Lover suicide trigger on exile
         var noCheckLover = NoCheckLover;
-        NoCheckLover = false;
         var killer = Killer;
+        NoCheckLover = false;
         Killer = null;
-        Message($"NoCheckLover {noCheckLover}", "Exlied");
+
         if (!noCheckLover) Avenger.OnPlayerDeath(killer, __instance, true);
 
         if (__instance.PlayerId == Oracle.Player?.PlayerId) Oracle.CheckConfesserTeam();

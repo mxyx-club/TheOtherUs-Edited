@@ -38,9 +38,45 @@ public static class StartOptionMenuPatch
             button.Rollover.ChangeOutColor(color);
     }
 
+    private static int FindConflictIndex(KeyCode keyCode)
+    {
+        for (var i = 0; i < ModInputManager.allInputs.Count; i++)
+        {
+            if (ModInputManager.allInputs[i].keyCode == keyCode)
+                return i;
+        }
+        return -1;
+    }
+
+    private static string GetKeyBindingText(ModInputManager.ModInput input)
+    {
+        return GetString("keyBinding." + input.identifier) + ": " + (ModInputManager.allKeyCodes.ContainsKey(input.keyCode) ? ModInputManager.allKeyCodes[input.keyCode].displayKey : input.keyCode.ToString());
+    }
+
+    private static void ShowConflict(int index1, KeyCode keyCode)
+    {
+        conflictKeyBindingIndex = index1;
+
+        var input = ModInputManager.allInputs[index1];
+        var keyText = ModInputManager.allKeyCodes.ContainsKey(keyCode) ? ModInputManager.allKeyCodes[keyCode].displayKey : keyCode.ToString();
+
+        allKeyBindingButtons[index1].UpdateCustomText(Color.red, GetString("keyBinding." + input.identifier) + ": " + keyText);
+    }
+
+    private static void ClearConflict()
+    {
+        if (conflictKeyBindingIndex != -1 && conflictKeyBindingIndex < allKeyBindingButtons.Count)
+        {
+            var input = ModInputManager.allInputs[conflictKeyBindingIndex];
+            allKeyBindingButtons[conflictKeyBindingIndex].UpdateCustomText(Color.white, GetKeyBindingText(input));
+        }
+
+        conflictKeyBindingIndex = -1;
+    }
+
     private static string GetCPUAffinityMaskText()
     {
-        ulong mask = Main.ProcessorAffinityMask.Value;
+        ulong mask = ModConfig.ProcessorAffinityMask.Value;
         string showCore;
         switch (mask)
         {
@@ -78,13 +114,17 @@ public static class StartOptionMenuPatch
         return result;
     }
 
+    private static ToggleButtonBehaviour showFPS;
     private static ToggleButtonBehaviour processorAffinityMask;
     private static ToggleButtonBehaviour toggleCursor;
     private static ToggleButtonBehaviour enableSoundEffects;
     private static ToggleButtonBehaviour ButtonArrangement;
     private static ToggleButtonBehaviour showKeyReminder;
     private static ToggleButtonBehaviour uploadGameData;
-    private static ToggleButtonBehaviour showFPS;
+    private static ToggleButtonBehaviour autoScreenshot;
+    private static List<ToggleButtonBehaviour> allKeyBindingButtons = new();
+    private static int selectedKeyBinding = -1;
+    private static int conflictKeyBindingIndex = -1;
 
     public static void Postfix(OptionsMenuBehaviour __instance)
     {
@@ -112,12 +152,12 @@ public static class StartOptionMenuPatch
         //ProcessorAffinityMask
         processorAffinityMask = AddButton(buttonIndex++, "ProcessorAffinityMask", () =>
         {
-            ulong current = Main.ProcessorAffinityMask.Value;
+            ulong current = ModConfig.ProcessorAffinityMask.Value;
             ulong next;
             switch (current)
             {
                 case 0UL:
-                    Main.IsCPUProcessorAffinity.Value = true;
+                    ModConfig.IsCPUProcessorAffinity.Update(true);
                     next = 0b1UL;
                     break;
                 case 0b1UL:
@@ -131,12 +171,12 @@ public static class StartOptionMenuPatch
                     break;
                 case 0b1111UL:
                 default:
-                    Main.IsCPUProcessorAffinity.Value = false;
+                    ModConfig.IsCPUProcessorAffinity.Update(false);
                     next = 0UL;
                     break;
             }
 
-            Main.ProcessorAffinityMask.Value = next;
+            ModConfig.ProcessorAffinityMask.Update(next);
             Main.UpdateCPUProcessorAffinity();
             processorAffinityMask.UpdateButtonText(GetCPUAffinityMaskText(), GetString("ProcessorAffinityMask"), next != 0UL);
         }, nebulaTab, toggleButtonTemplate);
@@ -145,7 +185,7 @@ public static class StartOptionMenuPatch
         enableSoundEffects = AddButton(buttonIndex++, "EnableSoundEffects", () =>
         {
             enableSoundEffects.UpdateToggleText(!enableSoundEffects.onState, GetString("EnableSoundEffectsText"));
-            Main.EnableSoundEffects.Value = enableSoundEffects.onState;
+            ModConfig.EnableSoundEffects.Update(enableSoundEffects.onState);
             if (!ModOption.enableSoundEffects) SoundEffectsManager.stopAll();
         }, nebulaTab, toggleButtonTemplate);
 
@@ -154,7 +194,7 @@ public static class StartOptionMenuPatch
         {
             enableCursor(false);
             toggleCursor.UpdateToggleText(!toggleCursor.onState, GetString("ToggleCursorText"));
-            Main.ToggleCursor.Value = toggleCursor.onState;
+            ModConfig.ToggleCursor.Update(toggleCursor.onState);
             Message($"toggleCursor: {toggleCursor.onState}");
         }, nebulaTab, toggleButtonTemplate);
 
@@ -162,14 +202,14 @@ public static class StartOptionMenuPatch
         showFPS = AddButton(buttonIndex++, "ShowFPS", () =>
         {
             showFPS.UpdateToggleText(!showFPS.onState, GetString("ShowFPS"));
-            Main.ShowFPS.Value = showFPS.onState;
+            ModConfig.ShowFPS.Update(showFPS.onState);
         }, nebulaTab, toggleButtonTemplate);
 
         //ButtonArrangement
         ButtonArrangement = AddButton(buttonIndex++, "ButtonArrangement", () =>
         {
-            var next = (Main.ButtonArrangement.Value % 3) + 1;
-            Main.ButtonArrangement.Value = next;
+            var next = (ModConfig.ButtonArrangement.Value % 3) + 1;
+            ModConfig.ButtonArrangement.Update(next);
             ButtonArrangement.UpdateButtonText(GetString($"ButtonArrangement.{next}"), GetString("ButtonArrangement"), next != 1);
         }, nebulaTab, toggleButtonTemplate);
 
@@ -177,21 +217,29 @@ public static class StartOptionMenuPatch
         showKeyReminder = AddButton(buttonIndex++, "ShowKeyReminder", () =>
         {
             showKeyReminder.UpdateToggleText(!showKeyReminder.onState, GetString("ShowKeyReminder"));
-            Main.ShowKeyReminder.Value = showKeyReminder.onState;
+            ModConfig.ShowKeyReminder.Update(showKeyReminder.onState);
         }, nebulaTab, toggleButtonTemplate);
 
         //UploadGameData
         uploadGameData = AddButton(buttonIndex++, "UploadGameData", () =>
         {
             uploadGameData.UpdateToggleText(!uploadGameData.onState, GetString("UploadGameData"));
-            Main.UploadGameData.Value = uploadGameData.onState;
+            ModConfig.UploadGameData.Update(uploadGameData.onState);
+        }, nebulaTab, toggleButtonTemplate);
+
+        //AutoScreenshot
+        autoScreenshot = AddButton(buttonIndex++, "AutoScreenshot", () =>
+        {
+            autoScreenshot.UpdateToggleText(!autoScreenshot.onState, GetString("AutoScreenshot"));
+            ModConfig.AutoScreenshot.Update(autoScreenshot.onState);
         }, nebulaTab, toggleButtonTemplate);
 
         //キー割り当てボタン
         GameObject TextObject;
 
-        List<ToggleButtonBehaviour> allKeyBindingButtons = new();
-        var selectedKeyBinding = -1;
+        allKeyBindingButtons = new();
+        selectedKeyBinding = -1;
+        conflictKeyBindingIndex = -1;
 
         var defaultButton = UObject.Instantiate(applyButtonTemplate, null);
         defaultButton.transform.SetParent(keyBindingTab.transform);
@@ -208,13 +256,14 @@ public static class StartOptionMenuPatch
         passiveButton.OnClick.AddListener((UnityAction)(() =>
         {
             selectedKeyBinding = -1;
+            conflictKeyBindingIndex = -1;
             //_ = SoundManager.Instance.PlaySound(Module.MetaScreen.getSelectClip(), false, 0.8f);
 
             for (var i = 0; i < ModInputManager.allInputs.Count; i++)
             {
                 var input = ModInputManager.allInputs[i];
                 input.resetToDefault();
-                allKeyBindingButtons[i].UpdateCustomText(Color.white, GetString("keyBinding." + input.identifier) + ": " + ModInputManager.allKeyCodes[input.keyCode].displayKey);
+                allKeyBindingButtons[i].UpdateCustomText(Color.white, GetKeyBindingText(input));
             }
         }
         ));
@@ -230,11 +279,13 @@ public static class StartOptionMenuPatch
             inputButton.name = input.identifier;
             var inputToggleButton = inputButton.GetComponent<ToggleButtonBehaviour>();
             inputToggleButton.BaseText = 0;
-            inputToggleButton.Text.text = GetString("keyBinding." + input.identifier) + ": " + ModInputManager.allKeyCodes[input.keyCode].displayKey;
+            inputToggleButton.Text.text = GetKeyBindingText(input);
             passiveButton = inputButton.GetComponent<PassiveButton>();
             passiveButton.OnClick = new ButtonClickedEvent();
             passiveButton.OnClick.AddListener((UnityAction)(() =>
             {
+                ClearConflict();
+
                 if (selectedKeyBinding == index)
                 {
                     selectedKeyBinding = -1;
@@ -242,6 +293,11 @@ public static class StartOptionMenuPatch
                 }
                 else
                 {
+                    if (selectedKeyBinding != -1 && selectedKeyBinding < allKeyBindingButtons.Count)
+                    {
+                        allKeyBindingButtons[selectedKeyBinding].UpdateCustomText(Color.white, null);
+                    }
+
                     selectedKeyBinding = index;
                     allKeyBindingButtons[selectedKeyBinding].UpdateCustomText(Color.yellow,
                         GetString($"{GetString($"keyBinding.{input.identifier}")}: {GetString("keyBinding.recording")}"));
@@ -289,14 +345,26 @@ public static class StartOptionMenuPatch
                             continue;
 
                         var input = ModInputManager.allInputs[selectedKeyBinding];
-                        input.changeKeyCode(entry.Key);
-                        allKeyBindingButtons[selectedKeyBinding].UpdateCustomText(Color.white, GetString("keyBinding." + input.identifier) + ": " + ModInputManager.allKeyCodes[input.keyCode].displayKey);
-                        selectedKeyBinding = -1;
+
+                        var conflictIndex = FindConflictIndex(entry.Key);
+
+                        if (conflictIndex != -1 && conflictIndex != selectedKeyBinding)
+                        {
+                            ShowConflict(selectedKeyBinding, entry.Key);
+                        }
+                        else
+                        {
+                            ClearConflict();
+                            input.changeKeyCode(entry.Key);
+                            allKeyBindingButtons[selectedKeyBinding].UpdateCustomText(Color.white, GetKeyBindingText(input));
+                            selectedKeyBinding = -1;
+                        }
                         break;
                     }
                 }
                 else if (!keyBindingTab.gameObject.active && selectedKeyBinding != -1)
                 {
+                    ClearConflict();
                     allKeyBindingButtons[selectedKeyBinding].UpdateCustomText(Color.white, null);
                     selectedKeyBinding = -1;
                 }
@@ -335,13 +403,14 @@ public static class StartOptionMenuPatch
         {
             __instance.OpenTabGroup(tabs.Count - 2);
 
-            processorAffinityMask.UpdateButtonText(GetCPUAffinityMaskText(), GetString("ProcessorAffinityMask"), Main.ProcessorAffinityMask.Value != 0UL);
-            showFPS.UpdateToggleText(Main.ShowFPS.Value, GetString("ShowFPS"));
-            enableSoundEffects.UpdateToggleText(Main.EnableSoundEffects.Value, GetString("EnableSoundEffectsText"));
-            ButtonArrangement.UpdateButtonText(GetString($"ButtonArrangement.{Main.ButtonArrangement.Value}"), GetString("ButtonArrangement"), Main.ButtonArrangement.Value != 1);
-            showKeyReminder.UpdateToggleText(Main.ShowKeyReminder.Value, GetString("ShowKeyReminder"));
-            toggleCursor.UpdateToggleText(Main.ToggleCursor.Value, GetString("ToggleCursorText"));
-            uploadGameData.UpdateToggleText(Main.UploadGameData.Value, GetString("UploadGameData"));
+            processorAffinityMask.UpdateButtonText(GetCPUAffinityMaskText(), GetString("ProcessorAffinityMask"), ModConfig.ProcessorAffinityMask.Value != 0UL);
+            showFPS.UpdateToggleText(ModConfig.ShowFPS.Value, GetString("ShowFPS"));
+            enableSoundEffects.UpdateToggleText(ModConfig.EnableSoundEffects.Value, GetString("EnableSoundEffectsText"));
+            ButtonArrangement.UpdateButtonText(GetString($"ButtonArrangement.{ModConfig.ButtonArrangement.Value}"), GetString("ButtonArrangement"), ModConfig.ButtonArrangement.Value != 1);
+            showKeyReminder.UpdateToggleText(ModConfig.ShowKeyReminder.Value, GetString("ShowKeyReminder"));
+            toggleCursor.UpdateToggleText(ModConfig.ToggleCursor.Value, GetString("ToggleCursorText"));
+            uploadGameData.UpdateToggleText(ModConfig.UploadGameData.Value, GetString("UploadGameData"));
+            autoScreenshot.UpdateToggleText(ModConfig.AutoScreenshot.Value, GetString("AutoScreenshot"));
 
             passiveButton.OnMouseOver.Invoke();
         }

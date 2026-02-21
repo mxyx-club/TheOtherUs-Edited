@@ -181,17 +181,18 @@ public static class LobbyRoleInfo
 
             var buttonTransform = UObject.Instantiate(buttonTemplate, container.transform);
             buttonTransform.name = Cs(roleInfo.color, roleInfo.Name) + " Button";
-            buttonTransform.GetComponent<BoxCollider2D>().size = new Vector2(2.5f, 0.55f);
+            buttonTransform.GetComponent<BoxCollider2D>().size = new Vector2(2.5f, 0.48f);
             var label = UObject.Instantiate(textTemplate, buttonTransform);
             buttonTransform.GetComponent<SpriteRenderer>().sprite = UnityHelper.loadSpriteFromResources("TheOtherRoles.Resources.LobbyRoleInfo.RolePlate2.png", 215f);
             buttons.Add(buttonTransform);
-            int row = count / 3, col = count % 3;
-            buttonTransform.localPosition = new Vector3(-3.205f + (col * 3.2f), 2.9f - (row * 0.75f), -5);
-            buttonTransform.localScale = new Vector3(1.125f, 1.125f, 1f);
+            int row = count / 4, col = count % 4;
+            buttonTransform.localPosition = new Vector3(-3.381f + (col * 2.2275f), 2.9f - (row * 0.7f), -5);
+            buttonTransform.localScale = new Vector3(0.70875f, 0.9f, 1f);
             label.text = Cs(roleInfo.color, roleInfo.Name);
             label.alignment = TextAlignmentOptions.Center;
             label.transform.localPosition = new Vector3(0, 0, label.transform.localPosition.z);
-            label.transform.localScale *= 1.5f;
+            label.transform.localScale = new Vector3(1.66f, 1.5f, 1.5f);
+            label.fontStyle = FontStyles.Bold;
             var button = buttonTransform.GetComponent<PassiveButton>();
             button.OnClick.RemoveAllListeners();
             var onClick = button.OnClick = new Button.ButtonClickedEvent();

@@ -12,11 +12,12 @@ internal class ModOption
     public static bool DisableGameEnd => DebugMode && CustomOptionHolder.disableGameEnd.GetBool();
     public static NormalGameOptionsV07 NormalOptions => GameOptionsManager.Instance.currentNormalGameOptions;
 
-    public static bool showFPS => Main.ShowFPS.Value;
-    public static bool toggleCursor => Main.ToggleCursor.Value;
-    public static bool enableSoundEffects => Main.EnableSoundEffects.Value;
-    public static bool showKeyReminder => Main.ShowKeyReminder.Value;
-    public static bool uploadGameData => Main.UploadGameData.Value;
+    public static bool showFPS => ModConfig.ShowFPS.Value;
+    public static bool toggleCursor => ModConfig.ToggleCursor.Value;
+    public static bool enableSoundEffects => ModConfig.EnableSoundEffects.Value;
+    public static bool showKeyReminder => ModConfig.ShowKeyReminder.Value;
+    public static bool uploadGameData => ModConfig.UploadGameData.Value;
+    public static bool autoScreenshot => ModConfig.AutoScreenshot.Value;
 
     // Set values
     public static int maxNumberOfMeetings = 10;

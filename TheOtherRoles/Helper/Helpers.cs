@@ -128,7 +128,7 @@ public static class Helpers
             return;
         }
 
-        if (Main.ToggleCursor.Value)
+        if (ModConfig.ToggleCursor.Value)
         {
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         }

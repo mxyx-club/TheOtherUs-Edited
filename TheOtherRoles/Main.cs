@@ -23,14 +23,6 @@ public partial class TheOtherRolesPlugin : BasePlugin
     public static IRegionInfo[] defaultRegions;
     public Harmony Harmony { get; } = new(Id);
 
-    public static ConfigEntry<bool> IsCPUProcessorAffinity { get; set; }
-    public static ConfigEntry<ulong> ProcessorAffinityMask { get; set; }
-    public static ConfigEntry<bool> EnableSoundEffects { get; set; }
-    public static ConfigEntry<bool> ToggleCursor { get; set; }
-    public static ConfigEntry<bool> ShowFPS { get; set; }
-    public static ConfigEntry<bool> ShowKeyReminder { get; set; }
-    public static ConfigEntry<int> ButtonArrangement { get; set; }
-    public static ConfigEntry<bool> UploadGameData { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
 
@@ -72,14 +64,10 @@ public partial class TheOtherRolesPlugin : BasePlugin
         ModTranslation.Load();
         Instance = this;
 
-        IsCPUProcessorAffinity = Config.Bind("Custom", "CPUAffinity", false);
-        ProcessorAffinityMask = Config.Bind("Custom", "CPUAffinityMask", (ulong)0);
-        ToggleCursor = Config.Bind("Custom", "Better Cursor", true);
-        EnableSoundEffects = Config.Bind("Custom", "Enable Sound Effects", true);
-        ShowFPS = Config.Bind("Custom", "Show FPS", true);
-        ShowKeyReminder = Config.Bind("Custom", "ShowKeyReminder", true);
-        ButtonArrangement = Config.Bind("Custom", "Buttons Arrangement", 3);
-        UploadGameData = Config.Bind("Custom", "UploadGameData", true);
+        // 初始化Mod配置
+        ModConfig.Initialize();
+        ModConfig.Manager.Load();
+        ModInputManager.Load();
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
@@ -90,8 +78,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
         Harmony.PatchAll();
         CustomColors.Load();
         CustomOptionHolder.Load();
-        ModInputManager.Load();
-        if (ToggleCursor.Value) enableCursor(true);
+        if (ModConfig.ToggleCursor.Value) enableCursor(true);
 
         SubmergedCompatibility.Initialize();
         AddToKillDistanceSetting.addKillDistance();
@@ -106,7 +93,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
     {
         if (!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux()) return;
 
-        if (!IsCPUProcessorAffinity.Value || ProcessorAffinityMask.Value == 0)
+        if (!ModConfig.IsCPUProcessorAffinity.Value || ModConfig.ProcessorAffinityMask.Value == 0)
         {
             try
             {
@@ -121,7 +108,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
             return;
         }
 
-        ulong affinity = ProcessorAffinityMask.Value;
+        ulong affinity = ModConfig.ProcessorAffinityMask.Value;
         try
         {
             System.Diagnostics.Process.GetCurrentProcess().ProcessorAffinity = (IntPtr)affinity;
@@ -160,7 +147,7 @@ public class SaveManagerPatch
 {
     public static void Postfix(ref string __result)
     {
-        __result += "_TOUE";
+        __result = "TOUE/" + __result;
     }
 }
 [HarmonyPatch(typeof(AmongUs.Data.Legacy.LegacySaveManager), nameof(AmongUs.Data.Legacy.LegacySaveManager.GetPrefsName))]
@@ -168,7 +155,7 @@ public class LegacySaveManagerPatch
 {
     public static void Postfix(ref string __result)
     {
-        __result += "_TOUE";
+        __result = "TOUE/" + __result;
     }
 }
 
@@ -177,6 +164,6 @@ public class SettingsFilePatch
 {
     public static void Postfix(ref string __result)
     {
-        __result += "_TOUE";
+        __result = "TOUE/" + __result;
     }
 }

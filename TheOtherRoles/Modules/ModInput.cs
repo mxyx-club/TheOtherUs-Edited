@@ -1,12 +1,7 @@
-using BepInEx.Configuration;
-
 namespace TheOtherRoles.Modules;
-
-// From Nebula
 
 public class ModInputManager
 {
-
     public static List<ModInput> allInputs = new();
     public static Dictionary<KeyCode, KeyCodeData> allKeyCodes = new();
 
@@ -27,7 +22,7 @@ public class ModInputManager
     public class ModInput
     {
         public string identifier { get; private set; }
-        private readonly ConfigEntry<int> config;
+        private readonly ConfigOption<KeyCode> config;
         public KeyCode keyCode { get; private set; }
         private readonly KeyCode defaultKeyCode;
 
@@ -35,25 +30,29 @@ public class ModInputManager
         {
             this.identifier = identifier;
             this.defaultKeyCode = defaultKeyCode;
-            config = Main.Instance.Config.Bind($"KeyBinding", identifier, (int)defaultKeyCode);
-            keyCode = (KeyCode)config.Value;
+            config = ModConfig.Manager.CreateOption($"keybinding.{identifier}", defaultKeyCode, "");
+
+            var loadedKeyCode = config.Value;
+            keyCode = allKeyCodes.ContainsKey(loadedKeyCode) ? loadedKeyCode : defaultKeyCode;
+
             allInputs.Add(this);
         }
 
         public void changeKeyCode(KeyCode keyCode)
         {
-            if (this.keyCode == keyCode)
+            if (this.keyCode == keyCode && config.Value == keyCode)
             {
                 return;
             }
 
             this.keyCode = keyCode;
-            config.Value = (int)keyCode;
+            config.Update(keyCode);
         }
 
         public void resetToDefault()
         {
-            changeKeyCode(defaultKeyCode);
+            keyCode = defaultKeyCode;
+            config.Update(defaultKeyCode);
         }
 
     }

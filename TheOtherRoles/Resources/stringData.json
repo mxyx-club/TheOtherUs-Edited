@@ -3041,6 +3041,9 @@
     "UploadGameData": {
         "13": "共享游戏数据"
     },
+    "AutoScreenshot": {
+        "13": "游戏结束自动截图"
+    },
     "EnableDebugLogModeText": {
         "0": "Enable Debug Log Mode",
         "13": "收集Debug日志"

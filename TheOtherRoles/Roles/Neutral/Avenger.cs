@@ -54,8 +54,6 @@ public class Avenger
         WinCondition = CustomOptionHolder.avengerWinCondition.GetSelection<WinnerFlags>();
         TargetWasKilledByOther = CustomOptionHolder.avengerTargetWasKilledByOther.GetSelection<AvengerTargetWasDead>();
         TargetWasExiled = CustomOptionHolder.avengerTargetWasExiled.GetSelection<AvengerTargetWasDead>();
-        Message($"TargetWasKilledByOther {TargetWasKilledByOther}");
-        Message($"TargetWasExiled {TargetWasExiled}");
         Arrow?.arrow?.Destroy();
         Arrow = null;
     }
@@ -103,7 +101,7 @@ public class Avenger
                     otherLover.CustomExiled(null, true);
                 else
                     otherLover.MurderPlayer(otherLover, MurderResultFlags.Succeeded);
-                PlayerData.SetDeathReason(otherLover, CustomDeathReason.AvengerFail);
+                PlayerData.SetDeathReason(otherLover, CustomDeathReason.LoverSuicide);
             }
         }
     }
@@ -112,7 +110,7 @@ public class Avenger
     {
         if (Player.IsDead() || target == null || target != Target || WinFlag) return;
 
-        var outcome = killer == null ? TargetWasExiled : TargetWasKilledByOther;
+        var outcome = (killer == null || exile) ? TargetWasExiled : TargetWasKilledByOther;
 
         if (killer == Player)
         {
