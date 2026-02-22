@@ -65,9 +65,8 @@ public partial class TheOtherRolesPlugin : BasePlugin
         Instance = this;
 
         // 初始化Mod配置
-        ModConfig.Initialize();
-        ModConfig.Manager.Load();
         ModInputManager.Load();
+        ModConfig.Initialize();
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);

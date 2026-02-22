@@ -125,8 +125,7 @@ public static class RegionMenuOpenPatch
 
             void onEnterOrPortFieldChange()
             {
-                ushort port = 0;
-                if (ushort.TryParse(portField.text, out port))
+                if (ushort.TryParse(portField.text, out var port))
                 {
                     Main.Port.Value = port;
                     portField.outputText.color = Color.white;
@@ -150,9 +149,9 @@ public static class RegionMenuChooseOptionPatch
 {
     public static bool Prefix(RegionMenu __instance, IRegionInfo region)
     {
-        if (region.Name != "Custom" ||
-            FastDestroyableSingleton<ServerManager>.Instance.CurrentRegion.Name == "Custom") return true;
-        DestroyableSingleton<ServerManager>.Instance.SetRegion(region);
+        if (region.Name != "Custom" || FastDestroyableSingleton<ServerManager>.Instance.CurrentRegion.Name == "Custom")
+            return true;
+        FastDestroyableSingleton<ServerManager>.Instance.SetRegion(region);
         __instance.RegionText.text = "Custom";
         foreach (var Button in __instance.ButtonPool.activeChildren)
         {
@@ -168,7 +167,7 @@ public static class RegionMenuChooseOptionPatch
 [HarmonyPatch(typeof(ControllerManager), nameof(ControllerManager.Update))]
 public static class RegionMenuMouseScrollPatch
 {
-    private static float scrollOffset = 0f;
+    private static float scrollOffset;
     private const float SCROLL_SPEED = 0.5f;
     private const float BUTTON_HEIGHT = 0.5f;
     private const float MAX_SCROLL_OFFSET = 2f;

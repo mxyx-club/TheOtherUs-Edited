@@ -2,17 +2,23 @@ namespace TheOtherRoles.Modules;
 
 public static class ModConfig
 {
+    public static YamlConfigManager Settings = new("ModConfig.yml");
+    public static YamlConfigManager PlayerData = new("PlayerData.yml");
+
     public static void Initialize()
     {
-        IsCPUProcessorAffinity = Manager.GetOrCreate("cpu.affinity.enabled", false, "Enable CPU affinity");
-        ProcessorAffinityMask = Manager.GetOrCreate("cpu.affinity.mask", (ulong)0, "CPU affinity mask");
-        ToggleCursor = Manager.GetOrCreate("game.toggleCursor", true, "Toggle cursor");
-        EnableSoundEffects = Manager.GetOrCreate("game.enableSoundEffects", true, "Enable sound effects");
-        ShowFPS = Manager.GetOrCreate("game.showFPS", true, "Show FPS");
-        ShowKeyReminder = Manager.GetOrCreate("game.showKeyReminder", true, "Show key reminder");
-        ButtonArrangement = Manager.GetOrCreate("game.buttonArrangement", 3, "Button arrangement");
-        UploadGameData = Manager.GetOrCreate("game.uploadGameData", true, "Upload game data");
-        AutoScreenshot = Manager.GetOrCreate("game.autoScreenshot", true, "Auto screenshot");
+        IsCPUProcessorAffinity = Settings.GetOrCreate("cpu.affinity.enabled", false);
+        ProcessorAffinityMask = Settings.GetOrCreate("cpu.affinity.mask", (ulong)0);
+        ToggleCursor = Settings.GetOrCreate("game.toggleCursor", true);
+        EnableSoundEffects = Settings.GetOrCreate("game.enableSoundEffects", true);
+        ShowFPS = Settings.GetOrCreate("game.showFPS", true);
+        ShowKeyReminder = Settings.GetOrCreate("game.showKeyReminder", true);
+        UploadGameData = Settings.GetOrCreate("game.uploadGameData", true);
+        AutoScreenshot = Settings.GetOrCreate("game.autoScreenshot", true);
+
+        FriendCode = PlayerData.GetOrCreate("player.friendcode", string.Empty);
+        Settings.Load();
+        PlayerData.Load();
     }
 
     public static ConfigOption<bool> IsCPUProcessorAffinity { get; private set; }
@@ -21,11 +27,8 @@ public static class ModConfig
     public static ConfigOption<bool> EnableSoundEffects { get; private set; }
     public static ConfigOption<bool> ShowFPS { get; private set; }
     public static ConfigOption<bool> ShowKeyReminder { get; private set; }
-    public static ConfigOption<int> ButtonArrangement { get; private set; }
     public static ConfigOption<bool> UploadGameData { get; private set; }
     public static ConfigOption<bool> AutoScreenshot { get; private set; }
+    public static ConfigOption<string> FriendCode { get; private set; }
 
-    public static void Save() => Manager.Save();
-    public static void Reload() => Manager.Reload();
-    public static YamlConfigManager Manager => YamlConfigManager.Instance;
 }

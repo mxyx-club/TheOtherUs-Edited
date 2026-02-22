@@ -470,7 +470,7 @@ public static class MurderPlayerPatch
         if (target.PlayerId == Oracle.Player?.PlayerId) Oracle.CheckConfesserTeam();
 
         // Remove fake tasks when player dies
-        if (target.HasFakeTasks() || target == Lawyer.lawyer || Pursuer.Player.Contains(target) || target == Thief.thief)
+        if (target.HasFakeTasks() || target == Lawyer.lawyer || target == Avenger.Player || Pursuer.Player.Contains(target) || target == Thief.thief)
             target.clearAllTasks();
 
         // First kill (set before lover suicide)

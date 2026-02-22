@@ -9,6 +9,7 @@ public class KillTrap : CustomObjectBase<KillTrap>
     public AudioSource audioSource;
     public bool isDisabled;
     public bool isTriggered;
+    public bool IsKilled;
     public PlayerControl trapper;
     public PlayerControl target;
 
@@ -271,6 +272,8 @@ public class KillTrap : CustomObjectBase<KillTrap>
     public static void trapKill(PlayerControl trapper, PlayerControl target, int trapId)
     {
         var trap = AllObjects.FirstOrDefault(x => x.Id == trapId);
+        if (trap != null) trap.IsKilled = true;
+
         var audioSource = trap.audioSource;
         audioSource.Stop();
 
@@ -285,7 +288,7 @@ public class KillTrap : CustomObjectBase<KillTrap>
                 trap?.Destroy();
             }
         })));
-        if (PlayerControl.LocalPlayer == trapper) RpcCustomMurderPlayer(trapper, target, false);
+        CustomMurderPlayer(trapper, target, false);
 
         EvilTrapper.isTrapKill = true;
     }

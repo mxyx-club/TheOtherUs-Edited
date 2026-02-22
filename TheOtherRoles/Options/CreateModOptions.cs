@@ -118,7 +118,6 @@ public static class StartOptionMenuPatch
     private static ToggleButtonBehaviour processorAffinityMask;
     private static ToggleButtonBehaviour toggleCursor;
     private static ToggleButtonBehaviour enableSoundEffects;
-    private static ToggleButtonBehaviour ButtonArrangement;
     private static ToggleButtonBehaviour showKeyReminder;
     private static ToggleButtonBehaviour uploadGameData;
     private static ToggleButtonBehaviour autoScreenshot;
@@ -203,14 +202,6 @@ public static class StartOptionMenuPatch
         {
             showFPS.UpdateToggleText(!showFPS.onState, GetString("ShowFPS"));
             ModConfig.ShowFPS.Update(showFPS.onState);
-        }, nebulaTab, toggleButtonTemplate);
-
-        //ButtonArrangement
-        ButtonArrangement = AddButton(buttonIndex++, "ButtonArrangement", () =>
-        {
-            var next = (ModConfig.ButtonArrangement.Value % 3) + 1;
-            ModConfig.ButtonArrangement.Update(next);
-            ButtonArrangement.UpdateButtonText(GetString($"ButtonArrangement.{next}"), GetString("ButtonArrangement"), next != 1);
         }, nebulaTab, toggleButtonTemplate);
 
         //ShowKeyReminder
@@ -322,7 +313,6 @@ public static class StartOptionMenuPatch
         passiveButton.OnClick = new ButtonClickedEvent();
         passiveButton.OnClick.AddListener((UnityAction)(() =>
         {
-            //_ = SoundManager.Instance.PlaySound(Module.MetaScreen.getSelectClip(), false, 0.8f);
             __instance.OpenTabGroup(tabs.Count - 1);
         }
         ));
@@ -331,12 +321,6 @@ public static class StartOptionMenuPatch
         {
             while (true)
             {
-                /*
-                if (HudManager.InstanceExists && !GameStartManager.InstanceExists)
-                {
-                    keyBindingButton.gameObject.SetActive(false);
-                */
-
                 if (keyBindingTab.gameObject.active && Input.anyKeyDown && selectedKeyBinding != -1)
                 {
                     foreach (var entry in ModInputManager.allKeyCodes)
@@ -406,7 +390,6 @@ public static class StartOptionMenuPatch
             processorAffinityMask.UpdateButtonText(GetCPUAffinityMaskText(), GetString("ProcessorAffinityMask"), ModConfig.ProcessorAffinityMask.Value != 0UL);
             showFPS.UpdateToggleText(ModConfig.ShowFPS.Value, GetString("ShowFPS"));
             enableSoundEffects.UpdateToggleText(ModConfig.EnableSoundEffects.Value, GetString("EnableSoundEffectsText"));
-            ButtonArrangement.UpdateButtonText(GetString($"ButtonArrangement.{ModConfig.ButtonArrangement.Value}"), GetString("ButtonArrangement"), ModConfig.ButtonArrangement.Value != 1);
             showKeyReminder.UpdateToggleText(ModConfig.ShowKeyReminder.Value, GetString("ShowKeyReminder"));
             toggleCursor.UpdateToggleText(ModConfig.ToggleCursor.Value, GetString("ToggleCursorText"));
             uploadGameData.UpdateToggleText(ModConfig.UploadGameData.Value, GetString("UploadGameData"));

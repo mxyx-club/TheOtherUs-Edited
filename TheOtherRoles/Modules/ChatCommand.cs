@@ -1,7 +1,11 @@
 using AmongUs.GameOptions;
+using BepInEx.Unity.IL2CPP.Utils;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using System.Text;
+using System.Threading.Tasks;
 using TheOtherRoles.Attributes;
 using TheOtherRoles.Patches;
+using static TheOtherRoles.Modules.PlayerData;
 using static TheOtherRoles.Patches.ChatControllerPatch;
 
 namespace TheOtherRoles.Modules;
@@ -493,6 +497,54 @@ public static class ChatCommandRegistry
                 chat.AddChat(PlayerControl.LocalPlayer, "You are not the host or not in a meeting.");
             }
         });
+
+        Register(["verify", "验证"], (sender, args, chat) =>
+        {
+            chat.StartCoroutine(VerifyCoroutine(sender, args, chat).WrapToIl2Cpp());
+        });
+
+        static IEnumerator VerifyCoroutine(PlayerControl sender, string[] args, ChatController chat)
+        {
+            var friendCode = EOSManager.Instance.FriendCode;
+            bool success = false;
+            string message = "";
+            bool completed = false;
+
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    var result = await BindingVerifier.VerifyBinding(friendCode, args[0]);
+                    success = result.success;
+                    message = result.message;
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                }
+                finally
+                {
+                    completed = true;
+                }
+            });
+
+            while (!completed)
+            {
+                yield return null;
+            }
+
+            if (sender != null && chat != null)
+            {
+                if (success)
+                {
+                    chat.AddChat(sender, $"Verification successful! Bound to {message}");
+                }
+                else
+                {
+                    chat.AddChat(sender, $"Verification failed. {message}");
+                }
+            }
+        }
 
         static RoleId GetRoleId(string[] args = null)
         {

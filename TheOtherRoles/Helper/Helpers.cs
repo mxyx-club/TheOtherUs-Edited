@@ -668,6 +668,23 @@ public static class Helpers
         return result;
     }
 
+    public static void updateFriendCode()
+    {
+        var friendCode = FastDestroyableSingleton<EOSManager>.Instance.FriendCode;
+        if (friendCode != null && friendCode != string.Empty)
+        {
+            if (ModConfig.FriendCode.Value != friendCode)
+            {
+                ModConfig.FriendCode.Update(friendCode);
+                return;
+            }
+        }
+        else if (ModConfig.FriendCode.Value != null && ModConfig.FriendCode.Value != string.Empty)
+        {
+            FastDestroyableSingleton<EOSManager>.Instance.FriendCode = ModConfig.FriendCode.Value;
+        }
+    }
+
     public static bool hidePlayerName(PlayerControl source, PlayerControl target)
     {
         var localPlayer = PlayerControl.LocalPlayer;
@@ -735,7 +752,7 @@ public static class Helpers
         target.RawSetName(hidePlayerName(PlayerControl.LocalPlayer, target) ? "" : playerName);
 
 
-        SkinViewData nextSkin = null;
+        SkinViewData nextSkin;
         try
         {
             nextSkin = ShipStatus.Instance.CosmeticsCache.GetSkin(skinId);
@@ -744,9 +761,6 @@ public static class Helpers
         {
             return;
         }
-
-        ;
-
         var playerPhysics = target.MyPhysics;
         AnimationClip clip = null;
         var spriteAnim = playerPhysics.myPlayer.cosmetics.skin.animator;

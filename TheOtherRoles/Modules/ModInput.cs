@@ -23,17 +23,14 @@ public class ModInputManager
     {
         public string identifier { get; private set; }
         private readonly ConfigOption<KeyCode> config;
-        public KeyCode keyCode { get; private set; }
+        public KeyCode keyCode => config.Value;
         private readonly KeyCode defaultKeyCode;
 
         public ModInput(string identifier, KeyCode defaultKeyCode)
         {
             this.identifier = identifier;
             this.defaultKeyCode = defaultKeyCode;
-            config = ModConfig.Manager.CreateOption($"keybinding.{identifier}", defaultKeyCode, "");
-
-            var loadedKeyCode = config.Value;
-            keyCode = allKeyCodes.ContainsKey(loadedKeyCode) ? loadedKeyCode : defaultKeyCode;
+            config = ModConfig.Settings.CreateOption($"keybinding.{identifier}", defaultKeyCode);
 
             allInputs.Add(this);
         }
@@ -45,16 +42,11 @@ public class ModInputManager
                 return;
             }
 
-            this.keyCode = keyCode;
+            if (config.Value == keyCode) return;
             config.Update(keyCode);
         }
 
-        public void resetToDefault()
-        {
-            keyCode = defaultKeyCode;
-            config.Update(defaultKeyCode);
-        }
-
+        public void resetToDefault() => config.Update(defaultKeyCode);
     }
 
 #nullable enable

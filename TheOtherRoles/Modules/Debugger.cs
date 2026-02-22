@@ -1,13 +1,14 @@
+using HarmonyLib;
 using static TheOtherRoles.Options.ModOption;
 
 namespace TheOtherRoles.Modules;
 
 [HarmonyPatch]
 [HarmonyPriority(Priority.First)]
-public class Debugger
+internal class Debugger
 {
     [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
-    public static class CountdownPatch
+    private static class CountdownPatch
     {
         public static void Prefix(GameStartManager __instance)
         {
@@ -15,21 +16,41 @@ public class Debugger
         }
     }
 
-
-    [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.CheckEndCriteria)), HarmonyPrefix]
-    public static bool Prefix()
+    [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.CheckEndCriteria))]
+    private static class CheckEndCriteriaPatch
     {
-        return !DisableGameEnd;
+        public static bool Prefix()
+        {
+            return !DisableGameEnd;
+        }
     }
 
     [HarmonyPatch(typeof(EndGameNavigation), nameof(EndGameNavigation.ShowDefaultNavigation))]
-    internal static class AutoPlayAgainPatch
+    private static class AutoPlayAgainPatch
     {
         public static void Postfix(EndGameNavigation __instance)
         {
             if (!DebugMode) return;
             if (AmongUsClient.Instance.AmHost) return;
             __instance.NextGame();
+        }
+    }
+
+    [HarmonyPatch(typeof(FriendsListManager), nameof(FriendsListManager.CheckFriendCodeOnLogin))]
+    private static class FriendsListManager_CheckFriendCodeOnLogin
+    {
+        public static void Postfix()
+        {
+            updateFriendCode();
+        }
+    }
+
+    [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.OpenGameModeMenu))]
+    private static class MainMenuManager_OpenGameModeMenuPatch
+    {
+        public static void Postfix()
+        {
+            updateFriendCode();
         }
     }
 }

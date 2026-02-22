@@ -89,7 +89,6 @@ public class PlayerData
     {
         AllPlayerData = new();
         AllFriendCode = new();
-
         var code = EOSManager.Instance?.FriendCode ?? "";
 
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
@@ -169,8 +168,7 @@ public class PlayerData
 
     public class GlobalInfo
     {
-        private const string Web = "https://api.toue.mxyx.club";
-        private const string ApiUrl = Web;
+        public static string ApiUrl => "https://api.toue.mxyx.club";
         private static readonly HttpClient httpClient = new();
 
         public static string GameId { get; private set; }
@@ -178,6 +176,7 @@ public class PlayerData
         public static string HostPlayer;
         public static DateTime StartTime;
         public static DateTime EndTime;
+        public static string SessionToken { get; private set; }
         internal static WinCondition WinCondition { get; set; } = WinCondition.Default;
         public static string RoomCode { get => field.IsNullOrWhiteSpace() ? "Local" : field; set; }
         public static string HostCode { get; set; }
@@ -193,7 +192,7 @@ public class PlayerData
             HostCode = Helpers.HostPlayer.Data.FriendCode;
             GameId = GetGameId();
             PlayerCount = PlayerControl.AllPlayerControls.Count;
-
+            SessionToken = GetSessionToken();
             byte modUid = 1;
             foreach (var player in PlayerControl.AllPlayerControls.ToArray().OrderBy(_ => rnd.Next()))
             {
@@ -289,13 +288,20 @@ public class PlayerData
 
             if (ModOption.uploadGameData)
             {
-                if (WinCondition == WinCondition.Canceled || (EndTime - StartTime).Seconds < 150)
+                if (WinCondition == WinCondition.Canceled)
                 {
                     Info("Game was canceled, skipping data upload.", "PlayerData");
                     return;
                 }
 
-                UploadPlayerDataToApi(jsonContent).ContinueWith(task => { Info("Data uploaded successfully!", "PlayerData"); });
+                var compactJsonOptions = new JsonSerializerOptions
+                {
+                    WriteIndented = false,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                    Converters = { new JsonStringEnumConverter() }
+                };
+                var compactJsonContent = JsonSerializer.Serialize(gameSession, compactJsonOptions);
+                UploadPlayerData(compactJsonContent).ContinueWith(task => { Info("Data uploaded successfully!", "PlayerData"); });
             }
         }
 
@@ -311,9 +317,31 @@ public class PlayerData
             return BitConverter.ToString(hash).Replace("-", "").Substring(0, 32);
         }
 
+        private static string GetSessionToken()
+        {
+            try
+            {
+                var response = httpClient.GetAsync(ApiUrl + "/api/auth/get-session-token").Result;
+                var content = response.Content.ReadAsStringAsync().Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = JsonSerializer.Deserialize<JsonElement>(content);
+                    return result.GetProperty("session_token").GetString();
+                }
+                else
+                {
+                    Error($"Failed to get session token: {content}", "PlayerData");
+                    return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                Error($"Error getting session token: {ex.Message}", "PlayerData");
+                return "";
+            }
+        }
 
-
-        private static async Task UploadPlayerDataToApi(string jsonContent)
+        private static async Task UploadPlayerData(string jsonContent)
         {
             try
             {
@@ -322,6 +350,7 @@ public class PlayerData
                 var signature = GenerateSignature(jsonContent, timestamp, apiKey);
 
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                content.Headers.Add("X-Session-Token", SessionToken);
                 content.Headers.Add("X-Timestamp", timestamp);
                 content.Headers.Add("X-Signature", signature);
                 content.Headers.Add("X-Game-Id", GameId);
@@ -348,6 +377,63 @@ public class PlayerData
             return Convert.ToBase64String(hash);
         }
     }
+
+    public class BindingVerifier
+    {
+        private static readonly HttpClient httpClient = new();
+
+        public static async Task<(bool success, string message)> VerifyBinding(string playerCode, string verificationCode)
+        {
+            try
+            {
+                if (playerCode.IsNullOrWhiteSpace()) return (false, "还没有登录Among Us，无法验证");
+                else if (verificationCode.IsNullOrWhiteSpace()) return (false, "请输入验证码");
+                var requestData = new
+                {
+                    player_code = playerCode,
+                    verification_code = verificationCode
+                };
+
+                var jsonContent = JsonSerializer.Serialize(requestData);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                var apiUrl = GlobalInfo.ApiUrl + "/api/auth/verify-playercode-binding";
+
+                var response = await httpClient.PostAsync(apiUrl, content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = JsonSerializer.Deserialize<JsonElement>(responseContent);
+
+                    bool success = result.GetProperty("success").GetBoolean();
+                    string message = result.GetProperty("message").GetString();
+
+                    if (success)
+                    {
+                        Info($"PlayerCode绑定成功: {message}", "BindingVerifier");
+                        return (true, message);
+                    }
+                    else
+                    {
+                        Warn($"PlayerCode绑定失败: {message}", "BindingVerifier");
+                        return (false, message);
+                    }
+                }
+                else
+                {
+                    Error($"HTTP错误 {response.StatusCode}: {responseContent}", "BindingVerifier");
+                    return (false, $"服务器错误 ({response.StatusCode})");
+                }
+            }
+            catch (Exception ex)
+            {
+                Error($"验证绑定异常: {ex.Message}", "BindingVerifier");
+                return (false, "网络错误，请检查网络连接");
+            }
+        }
+    }
+
 }
 
 public enum CustomDeathReason

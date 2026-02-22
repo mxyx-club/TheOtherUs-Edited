@@ -9,8 +9,7 @@ namespace TheOtherRoles.Modules;
 [HarmonyPatch]
 internal class RoleDraft
 {
-    public static bool isEnabled => CustomOptionHolder.isDraftMode.GetBool() &&
-        (ModOption.GameMode is CustomGameModes.Classic or CustomGameModes.Anonymous);
+    public static bool isEnabled => CustomOptionHolder.isDraftMode.GetBool() && (ModOption.GameMode is CustomGameModes.Classic or CustomGameModes.Anonymous);
     public static bool isRunning;
 
     public static List<byte> pickOrder = new();

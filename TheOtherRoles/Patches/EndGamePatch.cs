@@ -767,7 +767,6 @@ public class EndGameManagerSetUpPatch
             }
         }
 
-        // 如果启用了自动截图，则执行截图
         if (ModOption.autoScreenshot)
         {
             _ = new LateTask(() =>
@@ -780,7 +779,7 @@ public class EndGameManagerSetUpPatch
                 {
                     Error($"Failed to take screenshot: {e.Message}");
                 }
-            }, 0.88f, "GameEnd Screenshot");
+            }, 1.6f, "GameEnd Screenshot");
         }
 
         AdditionalTempData.clear();

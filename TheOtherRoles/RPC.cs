@@ -2065,7 +2065,7 @@ internal class RPCHandlerPatch
         var packetId = (CustomRPC)callId;
         try
         {
-            if (callId < 250 && CustomOptionHolder.logRpcSend.GetBool())
+            if (callId < 240 && CustomOptionHolder.logRpcSend.GetBool())
             {
                 string type = callId < 80 ? "Vanilla" : "Custom";
                 Info($"RpcId: {callId} Type: {type} Name: {RpcName(callId)} Size: {reader.Length}", "RECV");

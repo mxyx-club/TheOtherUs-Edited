@@ -1943,7 +1943,6 @@ internal static class HudManagerStartPatch
                 var writer = StartRPC(CustomRPC.PavlovsRing);
                 writer.Write(Pavlovsdogs.ringDuration);
                 writer.EndRPC();
-                RPCProcedure.pavlovsCreateDog(Pavlovsdogs.currentTarget.PlayerId);
                 SoundEffectsManager.play("ring");
             },
             () =>
@@ -3784,16 +3783,13 @@ internal static class HudManagerStartPatch
                     return;
                 }
 
-                RpcCustomMurderPlayer(thief, target, true);
+                thiefKillButton.Timer = thiefKillButton.MaxTimer;
 
-                _ = new LateTask(() =>
-                {
-                    if (thief.IsDead()) return;
-                    var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.ThiefStealsRole);
-                    writer.Write(target.PlayerId);
-                    writer.EndRPC();
-                    Thief.StealsRole(target.PlayerId);
-                }, 0.5f);
+                RpcCustomMurderPlayer(thief, target, true);
+                var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.ThiefStealsRole);
+                writer.Write(target.PlayerId);
+                writer.EndRPC();
+                Thief.StealsRole(target.PlayerId);
             },
             () =>
             {

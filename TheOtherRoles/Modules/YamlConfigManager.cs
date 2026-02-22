@@ -4,16 +4,19 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace TheOtherRoles.Modules;
 
-public class YamlConfigManager : ManagerBase<YamlConfigManager>
+public class YamlConfigManager
 {
-    private const string ConfigFileName = "config.yaml";
+    public const string PathSeparator = ".";
+
+    private string ConfigFileName { get; set; }
     private readonly string _configFilePath;
     private readonly Dictionary<string, ConfigOptionBase> _options = new();
     private readonly ISerializer _serializer;
     private readonly IDeserializer _deserializer;
 
-    public YamlConfigManager()
+    public YamlConfigManager(string name = "config.yaml")
     {
+        ConfigFileName = name;
         _configFilePath = Path.Combine(Application.persistentDataPath, "TOUE", ConfigFileName);
 
         _serializer = new SerializerBuilder()
@@ -25,35 +28,36 @@ public class YamlConfigManager : ManagerBase<YamlConfigManager>
             .Build();
     }
 
-    public ConfigOption<T> CreateOption<T>(string key, T defaultValue, string description = "") where T : notnull
+    public ConfigOption<T> CreateOption<T>(string path, T defaultValue) where T : notnull
     {
-        if (_options.ContainsKey(key))
+        if (_options.ContainsKey(path))
         {
-            var existingOption = _options[key];
-            if (existingOption is ConfigOption<T> typedOption)
-            {
+            if (_options[path] is ConfigOption<T> typedOption)
                 return typedOption;
-            }
-            throw new InvalidOperationException($"Config key '{key}' already exists with different type");
+            throw new InvalidOperationException($"Config key '{path}' already exists with different type");
         }
 
-        var option = new ConfigOption<T>(key, defaultValue, description, UpdateAndSave);
-        _options[key] = option;
+        foreach (var key in _options.Keys)
+        {
+            if (key.StartsWith(path + PathSeparator) || path.StartsWith(key + PathSeparator))
+                throw new InvalidOperationException($"Path '{path}' conflicts with existing option '{key}'");
+        }
+
+        var option = new ConfigOption<T>(path, defaultValue, UpdateAndSave);
+        _options[path] = option;
         return option;
     }
 
-    public ConfigOption<T> GetOption<T>(string key) where T : notnull
+    public ConfigOption<T> GetOption<T>(string path) where T : notnull
     {
-        if (_options.TryGetValue(key, out var option) && option is ConfigOption<T> typedOption)
-        {
+        if (_options.TryGetValue(path, out var option) && option is ConfigOption<T> typedOption)
             return typedOption;
-        }
-        throw new KeyNotFoundException($"Config key '{key}' not found");
+        throw new KeyNotFoundException($"Config key '{path}' not found");
     }
 
-    public bool TryGetOption<T>(string key, out ConfigOption<T> option) where T : notnull
+    public bool TryGetOption<T>(string path, out ConfigOption<T> option) where T : notnull
     {
-        if (_options.TryGetValue(key, out var configOption) && configOption is ConfigOption<T> typedOption)
+        if (_options.TryGetValue(path, out var configOption) && configOption is ConfigOption<T> typedOption)
         {
             option = typedOption;
             return true;
@@ -61,6 +65,16 @@ public class YamlConfigManager : ManagerBase<YamlConfigManager>
         option = null;
         return false;
     }
+
+    public IEnumerable<ConfigOptionBase> GetOptionsInParent(string parentPath)
+    {
+        var prefix = parentPath + PathSeparator;
+        return _options.Where(kvp => kvp.Key.StartsWith(prefix)).Select(kvp => kvp.Value);
+    }
+
+    public bool HasOption(string path) => _options.ContainsKey(path);
+
+    public IEnumerable<string> GetAllKeys() => _options.Keys;
 
     public void Load()
     {
@@ -73,14 +87,13 @@ public class YamlConfigManager : ManagerBase<YamlConfigManager>
             }
 
             var yamlContent = File.ReadAllText(_configFilePath);
-            var configData = _deserializer.Deserialize<Dictionary<string, string>>(yamlContent);
+            var deserialized = _deserializer.Deserialize<object>(yamlContent);
+            var flatConfig = FlattenNested(deserialized);
 
-            foreach (var kvp in configData)
+            foreach (var kvp in flatConfig)
             {
                 if (_options.TryGetValue(kvp.Key, out var option))
-                {
                     option.LoadFromString(kvp.Value);
-                }
             }
         }
         catch { }
@@ -90,42 +103,103 @@ public class YamlConfigManager : ManagerBase<YamlConfigManager>
     {
         try
         {
-            var configData = new Dictionary<string, string>();
+            var currentFlat = new Dictionary<string, string>();
             foreach (var kvp in _options)
+                currentFlat[kvp.Key] = kvp.Value.SaveToString();
+
+            Dictionary<string, string> existingFlat = null;
+            if (File.Exists(_configFilePath))
             {
-                configData[kvp.Key] = kvp.Value.SaveToString();
+                var yamlContent = File.ReadAllText(_configFilePath);
+                var deserialized = _deserializer.Deserialize<object>(yamlContent);
+
+                if (deserialized is Dictionary<object, object>)
+                {
+                    existingFlat = FlattenNested(deserialized);
+                    existingFlat = existingFlat.Where(kvp => !string.IsNullOrEmpty(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                }
             }
 
+            var mergedFlat = existingFlat != null ? new Dictionary<string, string>(existingFlat) : new Dictionary<string, string>();
+            foreach (var kvp in currentFlat)
+                mergedFlat[kvp.Key] = kvp.Value;
+
+            var nestedConfig = ConvertToNested(mergedFlat);
             var directory = Path.GetDirectoryName(_configFilePath);
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-            {
                 Directory.CreateDirectory(directory);
-            }
 
-            var yamlContent = _serializer.Serialize(configData);
-            File.WriteAllText(_configFilePath, yamlContent);
+            var yaml = _serializer.Serialize(nestedConfig);
+            File.WriteAllText(_configFilePath, yaml);
         }
-        catch
-        {
-        }
+        catch { }
     }
+
+    public void Reload() => Load();
 
     private void UpdateAndSave(string key) => Save();
 
-    public IEnumerable<string> GetAllKeys() => _options.Keys;
+    private Dictionary<string, string> FlattenNested(object node, string currentPath = "")
+    {
+        var result = new Dictionary<string, string>();
+        if (node == null) return result;
 
-    public void Reload() => Load();
+        switch (node)
+        {
+            case Dictionary<object, object> dict:
+                foreach (var kvp in dict)
+                {
+                    var key = kvp.Key?.ToString() ?? "";
+                    var newPath = string.IsNullOrEmpty(currentPath) ? key : currentPath + PathSeparator + key;
+                    var childResult = FlattenNested(kvp.Value, newPath);
+                    foreach (var child in childResult)
+                        result[child.Key] = child.Value;
+                }
+                break;
+            case List<object>:
+                break;
+            default:
+                result[currentPath] = node?.ToString() ?? "";
+                break;
+        }
+        return result;
+    }
+
+    private object ConvertToNested(Dictionary<string, string> flat)
+    {
+        var root = new Dictionary<string, object>();
+        foreach (var kvp in flat)
+        {
+            var parts = kvp.Key.Split([PathSeparator], StringSplitOptions.None);
+            var current = root;
+            for (int i = 0; i < parts.Length - 1; i++)
+            {
+                var part = parts[i];
+                if (!current.TryGetValue(part, out var next))
+                {
+                    next = new Dictionary<string, object>();
+                    current[part] = next;
+                }
+                else if (next is not Dictionary<string, object>)
+                {
+                    next = new Dictionary<string, object>();
+                    current[part] = next;
+                }
+                current = (Dictionary<string, object>)next;
+            }
+            current[parts[^1]] = kvp.Value;
+        }
+        return root;
+    }
 }
 
 public abstract class ConfigOptionBase
 {
     public string Key { get; }
-    public string Description { get; }
 
-    protected ConfigOptionBase(string key, string description)
+    protected ConfigOptionBase(string key)
     {
         Key = key;
-        Description = description;
     }
 
     public abstract string SaveToString();
@@ -139,12 +213,20 @@ public class ConfigOption<T> : ConfigOptionBase where T : notnull
     public T Value { get; private set; }
     public T DefaultValue { get; }
 
+    public ConfigOption(string key, T defaultValue, Action<string> onUpdate) : base(key)
+    {
+        if (!IsValidType())
+            throw new NotSupportedException($"Type '{typeof(T).Name}' not supported");
+
+        DefaultValue = defaultValue;
+        Value = defaultValue;
+        _onUpdate = onUpdate;
+    }
+
     public void Update(T value)
     {
         if (!IsValidType())
-        {
             throw new NotSupportedException($"Type '{typeof(T).Name}' not supported");
-        }
 
         if (EqualityComparer<T>.Default.Equals(Value, value))
             return;
@@ -153,26 +235,7 @@ public class ConfigOption<T> : ConfigOptionBase where T : notnull
         _onUpdate?.Invoke(Key);
     }
 
-    public ConfigOption(string key, T defaultValue, string description, Action<string> onUpdate)
-        : base(key, description)
-    {
-        if (!IsValidType())
-        {
-            throw new NotSupportedException($"Type '{typeof(T).Name}' not supported");
-        }
-
-        DefaultValue = defaultValue;
-        Value = defaultValue;
-        _onUpdate = onUpdate;
-    }
-
-    public override string SaveToString()
-    {
-        if (Value == null)
-            return string.Empty;
-
-        return Value?.ToString() ?? string.Empty;
-    }
+    public override string SaveToString() => Value?.ToString() ?? string.Empty;
 
     public override void LoadFromString(string value)
     {
@@ -210,14 +273,10 @@ public class ConfigOption<T> : ConfigOptionBase where T : notnull
     {
         var type = typeof(T);
         return type == typeof(string) ||
-               type == typeof(short) ||
-               type == typeof(ushort) ||
-               type == typeof(int) ||
-               type == typeof(uint) ||
-               type == typeof(long) ||
-               type == typeof(ulong) ||
-               type == typeof(float) ||
-               type == typeof(double) ||
+               type == typeof(short) || type == typeof(ushort) ||
+               type == typeof(int) || type == typeof(uint) ||
+               type == typeof(long) || type == typeof(ulong) ||
+               type == typeof(float) || type == typeof(double) ||
                type == typeof(bool) ||
                type.IsEnum;
     }
@@ -226,28 +285,20 @@ public class ConfigOption<T> : ConfigOptionBase where T : notnull
     {
         var type = typeof(T);
         if (int.TryParse(value, out var intValue))
-        {
             return (T)Enum.ToObject(type, intValue);
-        }
         return (T)Enum.Parse(type, value, true);
     }
 
-    public void ResetToDefault()
-    {
-        Update(DefaultValue);
-    }
+    public void ResetToDefault() => Update(DefaultValue);
 
     public static implicit operator T(ConfigOption<T> option) => option.Value;
 }
 
 public static class ConfigOptionExtensions
 {
-    public static ConfigOption<T> GetOrCreate<T>(this YamlConfigManager manager, string key, T defaultValue, string description = "") where T : notnull
+    public static ConfigOption<T> GetOrCreate<T>(this YamlConfigManager manager, string path, T defaultValue) where T : notnull
     {
-        if (manager.TryGetOption<T>(key, out var option))
-        {
-            return option;
-        }
-        return manager.CreateOption(key, defaultValue, description);
+        if (manager.TryGetOption<T>(path, out var option)) return option;
+        return manager.CreateOption(path, defaultValue);
     }
 }
