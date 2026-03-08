@@ -519,7 +519,7 @@ public static class Guesser
         if (target == Oracle.Confesser && Oracle.CanNotGuessConfess && Oracle.Player.IsAlive())
         {
             if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
-            Coroutines.Start(showFlashCoroutine(Oracle.color, 1.25f, 0.4f));
+            Coroutines.Start(showFlashCoroutine(Oracle.color, 1.25f, 0.33f));
             seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是对方被神谕者保护了！");
             return;
         }
@@ -531,7 +531,7 @@ public static class Guesser
                 if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
                 seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但猜测错误");
 
-                Coroutines.Start(showFlashCoroutine(Color.red, 1.25f, 0.4f));
+                Coroutines.Start(showFlashCoroutine(Color.red, 1.25f, 0.33f));
                 Specoality.linearfunction--;
                 SoundEffectsManager.play("fail");
 

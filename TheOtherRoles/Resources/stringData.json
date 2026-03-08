@@ -327,21 +327,27 @@
         "13": "隐藏船员阵营职业"
     },
     "ImpostorChatChannel": {
+        "0": "Enable Impostor Channel",
         "13": "伪装者文字私聊频道"
     },
     "jackalChatChannel": {
+        "0": "Enable Jackal Channel",
         "13": "豺狼文字私聊频道"
     },
     "pavlovsChatChannel": {
+        "0": "Enable Pavlov's Channel",
         "13": "巴甫洛夫文字私聊频道"
     },
     "infectedChatChannel": {
+        "0": "Enable Infected Channel",
         "13": "感染者文字私聊频道"
     },
     "chatChannelOpt.1": {
+        "0": "During Meetings",
         "13": "仅会议内"
     },
     "chatChannelOpt.2": {
+        "0": "During Gameplay",
         "13": "仅会议外"
     },
     "MeetingOptions": {
@@ -456,15 +462,19 @@
         "13": "阻止任务完成结束游戏"
     },
     "canKillPlayerInVent": {
+        "0": "Allow Killing Players In Vent",
         "13": "可以击杀在管道内的玩家"
     },
     "canKillPlayerInVent.1": {
+        "0": "Impostors",
         "13": "仅伪装者"
     },
     "canKillPlayerInVent.2": {
+        "0": "All Evil Players",
         "13": "所有邪恶玩家"
     },
     "canKillPlayerInVent.3": {
+        "0": "Everyone",
         "13": "全部玩家"
     },
     "enableMapOptions": {
@@ -740,6 +750,7 @@
         "13": "记录RPC请求"
     },
     "enableOtherLog": {
+        "0": "Record Other Logs",
         "13": "记录其它日志"
     },
     "guesserEnabled": {
@@ -1067,6 +1078,7 @@
         "13": "化形持续时间"
     },
     "morphlingResetAfterMeeting": {
+        "0": "Reset Morph Target After Meeting",
         "13": "会议后重置化形目标"
     },
     "bomberBombCooldown": {
@@ -1146,18 +1158,23 @@
         "13": "生成为附加能力"
     },
     "professionalWhoCanSeeBodies": {
+        "0": "Teams That Can See Dead Bodies",
         "13": "什么阵营可以看见尸体且不触发效果"
     },
     "professionalWhoCanSeeBodies.1": {
+        "0": "Impostors",
         "13": "仅伪装者"
     },
     "professionalWhoCanSeeBodies.2": {
+        "0": "Impostors + Killing Neutral",
         "13": "伪装者+杀手中立"
     },
     "professionalWhoCanSeeBodies.3": {
+        "0": "Impostors + Evil Neutral",
         "13": "伪装者+邪恶中立"
     },
     "professionalBaitKiller": {
+        "0": "Block Bait Meeting",
         "13": "击杀诱饵时不强制进入会议"
     },
     "butcherDissectionCooldown": {
@@ -1241,6 +1258,7 @@
         "13": "使用术法击杀后定身持续时间"
     },
     "warlockFriendlyFire": {
+        "0": "Curse Can Kill Impostors",
         "13": "咒杀是否可以击杀队友"
     },
     "bountyHunterBountyDuration": {
@@ -1631,15 +1649,19 @@
         "13": "二者皆可"
     },
     "pavlovsownerRing": {
+        "0": "Pavlov's Owner Has Ring",
         "13": "巴甫洛夫拥有摇铃技能"
     },
     "pavlovsownerRingCooldown": {
+        "0": "Ring Cooldown",
         "13": "摇铃冷却"
     },
     "pavlovsownerRingDuration": {
+        "0": "Ring Duration",
         "13": "技能持续时间"
     },
     "pavlovsownerRingMultiplier": {
+        "0": "Cooldown Multiplier During Ring",
         "13": "期间击杀冷却加速倍率"
     },
     "pavlovsownerRampage": {
@@ -1871,6 +1893,7 @@
         "13": "可以被赌怪猜测而死"
     },
     "schrodingersCatIsGuessable1": {
+        "0": "Cannot Be Guessed When Teamless",
         "13": "无阵营时无法被猜测"
     },
     "schrodingersCatCanKill": {
@@ -2085,6 +2108,7 @@
         "13": "以下时间内报告可得知凶手阵营"
     },
     "medicGuessShield": {
+        "0": "Guesser Cant Shoot Players With Shield",
         "13": "护盾可以防止赌怪刺杀"
     },
     "medicShowShielded": {
@@ -2296,6 +2320,7 @@
         "13": "为中立阵营使用不同颜色的提醒"
     },
     "snitchCanGuessIfTaksDone": {
+        "0": "Guesser Cant Guess Snitch When Tasks Done",
         "13": "赌怪不可猜测已完成任务的告密者"
     },
     "prophetCooldown": {
@@ -2355,6 +2380,7 @@
         "13": "卧底在场时伪装者可击杀队友"
     },
     "spyEvilCanShootSpy": {
+        "0": "Evil Guesser Can Guess Spy",
         "13": "邪恶赌怪可以猜测卧底"
     },
     "portalmakerCooldown": {
@@ -2574,9 +2600,11 @@
         "13": "恋人中存在伪装者的概率"
     },
     "modifierLoverNeutraValid": {
+        "0": "Allow Neutrals In Lover",
         "13": "恋人中允许存在中立阵营"
     },
     "modifierLoverCanGetModifiers": {
+        "0": "Lovers Can Get Modifiers",
         "13": "恋人可以获得其它附加能力"
     },
     "modifierLoverEnableChat": {
@@ -2584,12 +2612,15 @@
         "13": "启用私密聊天文字频道"
     },
     "modifierLoverAvengerChance": {
+        "0": "Chance That The Lover Becomes An Avenger",
         "13": "恋人死亡后另一方会变成复仇者的概率"
     },
     "avengerIsGuessable": {
+        "0": "Avenger Can Be Guessed",
         "13": "复仇者可以被赌怪猜测"
     },
     "avengerCanFreeKill": {
+        "0": "Avevenger Kill Targets",
         "13": "复仇者可以击杀的玩家"
     },
     "avengerCanFreeKill.1": {
@@ -2601,21 +2632,27 @@
         "13": "所有玩家"
     },
     "avengerShowArrows": {
+        "0": "Show Arrows To Target",
         "13": "指向目标的箭头"
     },
     "avengerUpdateIntervall": {
+        "0": "Arrow Update Interval",
         "13": "箭头更新间隔"
     },
     "avengerTargetKnowPlayer": {
+        "0": "Avenger Target Knows",
         "13": "复仇目标可以得知复仇者的存在"
     },
     "avengerKnowTarget": {
+        "0": "Avenger Knows Target",
         "13": "复仇者可以得知复仇目标"
     },
     "avengerOnlyAliveWin": {
+        "0": "Avenger Wins When Alive",
         "13": "需要存活到最后才能胜利"
     },
     "avengerWinCondition": {
+        "0": "Avenger Win Mode",
         "13": "复仇完成后的胜利模式"
     },
     "avengerWinCondition.0": {
@@ -2631,15 +2668,19 @@
         "13": "复仇后直接胜利"
     },
     "avengerTargetWasKilledByOther": {
+        "0": "Avenge Target Killed",
         "13": "复仇目标被其它玩家击杀时"
     },
     "avengerTargetWasExiled": {
+        "0": "Avenge Target Exiled",
         "13": "复仇目标被驱逐时"
     },
     "avengerTargetWasDead.1": {
+        "0": "Becomes Original Role",
         "13": "恢复原职业"
     },
     "avengerTargetWasDead.2": {
+        "0": "Suicides And Becomes Original Role",
         "13": "自杀并恢复原职业"
     },
     "modifierSunglassesQuantity": {
@@ -2747,6 +2788,7 @@
         "13": "中立阵营可以成为交换师"
     },
     "modifierShiftReload": {
+        "0": "Reset Role After Shift",
         "13": "交换后重置职业"
     },
     "SpecterOption": {
@@ -2786,18 +2828,23 @@
         "13": "阻挠鬼 (伪装者)"
     },
     "clogGhostRange": {
+        "0": "Clog Range",
         "13": "放置的障碍物大小"
     },
     "clogUseNum": {
+        "0": "Number Of Uses",
         "13": "最大使用次数"
     },
     "clogOnlyUsedOnce": {
+        "0": "One Use Per Meeting",
         "13": "每轮只能使用一次"
     },
     "clogGhostCooldown": {
+        "0": "Place Cooldown",
         "13": "放置冷却"
     },
     "clogGhostDuration": {
+        "0": "Obstacle Visible Duration",
         "13": "物体持续在场时间"
     },
     "infectedMaxPlayer": {
@@ -2825,12 +2872,15 @@
         "13": "技能最大使用次数"
     },
     "oracleConfessCooldown": {
+        "0": "Confess Cooldown",
         "13": "招募信徒的冷却时间"
     },
     "oracleRevealAccuracyRate": {
+        "0": "Reveal Accuracy",
         "13": "神谕者死亡后阵营信息准确率 (%)"
     },
     "oracleCanNotGuessConfess": {
+        "0": "Confess Cannot Be Guessed",
         "13": "保护信徒不会被猜测"
     },
     "TouTitle": {
@@ -2910,48 +2960,63 @@
         "13": "【 ★ 赌怪消息 ★ 】"
     },
     "MessageFromTheLover": {
+        "0": "【 ★ Lover Message ★ 】",
         "13": "【恋人频道】"
     },
     "MessageFromTheImpostor": {
+        "0": "【 ★ Impostor Message ★ 】",
         "13": "【伪装者频道】"
     },
     "MessageFromTheJackal": {
+        "0": "【 ★ Jackal Message ★ 】",
         "13": "【豺狼频道】"
     },
     "MessageFromThePavlovs": {
+        "0": "【 ★ Pavlov's Message ★ 】",
         "13": "【巴甫洛夫频道】"
     },
     "MessageFromTheInfected": {
+        "0": "【 ★ Infected Message ★ 】",
         "13": "【感染者频道】"
     },
     "ChatChannel.Text": {
+        "0": "Current Channel: {0}",
         "13": "当前频道：{0}"
     },
     "ChatChannel.Default": {
+        "0": "Default",
         "13": "默认"
     },
     "ChatChannel.HostAll": {
+        "0": "Host Message",
         "13": "房主消息"
     },
     "ChatChannel.Impostor": {
+        "0": "Impostor",
         "13": "伪装者"
     },
     "ChatChannel.Jackal": {
+        "0": "Jackal",
         "13": "豺狼"
     },
     "ChatChannel.Pavlovs": {
+        "0": "Pavlov's",
         "13": "巴甫洛夫"
     },
     "ChatChannel.Infected": {
+        "0": "Infected",
         "13": "感染者"
     },
     "ChatChannel.Lover": {
+        "0": "Lover",
         "13": "恋人"
     },
     "ChatChannel.Jailor": {
+        "0": "Jailor",
         "13": "典狱长"
     },
     "ChannelSwitchNotice": {
+        "0": "(Press {0} to switch channels)",
         "13": " ( 按下 {0} 键更换聊天频道 )"
     },
     "Host": {
@@ -3039,9 +3104,11 @@
         "13": "加载离线帽子"
     },
     "UploadGameData": {
+        "0": "Share Game Data",
         "13": "共享游戏数据"
     },
     "AutoScreenshot": {
+        "0": "Screenshot On Game End",
         "13": "游戏结束自动截图"
     },
     "EnableDebugLogModeText": {
@@ -3517,12 +3584,15 @@
         "13": "乐队已成立 | 阵营: {0}"
     },
     "InfectedGuesserCount": {
+        "0": "Band remaining guesses: {0}",
         "13": "团队剩余猜测次数: {0}"
     },
     "SoulSightMeetingInfo1": {
+        "0": "Points remaining: {0}",
         "13": "还需要得分 {0} 分"
     },
     "SoulSightMeetingInfo2": {
+        "0": "Waiting for game end",
         "13": "等待游戏结束中…"
     },
     "BandLeader.bad": {
@@ -3650,18 +3720,22 @@
         "13": "好想成为人类啊"
     },
     "InfectedWin": {
+        "0": "Infected Wins",
         "13": "生 化 危 机"
     },
     "AvengerTeamWin": {
+        "0": "Avenger Wins",
         "13": "捅死你们喵！！！"
     },
     "AdditionalAvengerTeamWin": {
+        "0": "The Avenger wins along",
         "13": "复仇者跟随胜利"
     },
     "AdditionalAliveSurvivorWin": {
         "13": "幸存者存活"
     },
     "AdditionalAlivePursuerWin": {
+        "0": "The Pursuer survived",
         "13": "起诉人存活"
     },
     "RoleDraft.FeedText": {
@@ -3809,6 +3883,7 @@
         "13": "被处决于 {0}"
     },
     "DeathReason.AvengerFail": {
+        "0": "Avenge failed",
         "13": "复仇失败"
     },
     "colorSalmon": {
@@ -4021,6 +4096,7 @@
         "13": "关灯"
     },
     "MorphText": {
+        "0": "MORPH",
         "13": "变换"
     },
     "PlaceCameraText": {
@@ -4377,15 +4453,19 @@
         "13": "踢出乐队"
     },
     "decoyButtonText": {
+        "0": "DECOY",
         "13": "放置木偶"
     },
     "swapButtonText": {
+        "0": "SWAP",
         "13": "交换位置"
     },
     "monitorButtonText": {
+        "0": "MONITOR",
         "13": "查看木偶"
     },
     "destroyButtonText": {
+        "0": "DESTROY",
         "13": "回收木偶"
     },
     "AvengeButtonText": {
@@ -4397,9 +4477,11 @@
         "13": "放置"
     },
     "oracleButton": {
+        "0": "CONFESS",
         "13": "选择信徒"
     },
     "pavlovsRingText": {
+        "0": "RING",
         "13": "摇铃"
     },
     "GuessserGMInfo": {
@@ -5751,9 +5833,11 @@
         "13": "木偶师"
     },
     "MarionetteIntroDesc": {
+        "0": "Place decoys to conceive the Crew",
         "13": "利用木偶欺诈船员"
     },
     "MarionetteShortDesc": {
+        "0": "Place decoys",
         "13": "放置木偶，并可以随时交换位置"
     },
     "Avenger": {
@@ -5761,45 +5845,59 @@
         "13": "复仇者"
     },
     "AvengerIntroDesc": {
+        "0": "Avenge for your loved ones",
         "13": "为你的恋人复仇！"
     },
     "AvengerShortDesc": {
+        "0": "Avenge for your loved ones",
         "13": "为你的恋人复仇！"
     },
     "Clog": {
+        "0": "Clog",
         "13": "阻挠鬼"
     },
     "ClogIntroDesc": {
+        "0": "Place obstacles to block the Crew's movements",
         "13": "让船员动弹不得!"
     },
     "ClogShortDesc": {
+        "0": "Place obstacles",
         "13": "让船员动弹不得!"
     },
     "Professional": {
+        "0": "Professional",
         "13": "职业杀手"
     },
     "ProfessionalIntroDesc": {
+        "0": "Your dead bodies are not visible to the Crewmates",
         "13": "听着，所谓杀手…"
     },
     "ProfessionalShortDesc": {
+        "0": "Your dead bodies are not visible to the Crewmates",
         "13": "击杀玩家时会隐藏尸体"
     },
     "Oracle": {
+        "0": "Oracle",
         "13": "神谕者"
     },
     "OracleIntroDesc": {
+        "0": "Confess Crewmates and gain information",
         "13": "请问您今天要来点赎罪券吗？"
     },
     "OracleShortDesc": {
+        "0": "Confess Crewmates",
         "13": "招募信徒，在会议时保护他并获得信息"
     },
     "SoulSight": {
+        "0": "Soul Sight",
         "13": "窥天者"
     },
     "SoulSightIntroDesc": {
+        "0": "Commit suicide to get points",
         "13": "自刎归天！"
     },
     "SoulSightShortDesc": {
+        "0": "Commit suicide",
         "13": "以自杀的状态进入会议得分"
     },
     "ImpostorFullDesc": {
@@ -6251,6 +6349,7 @@
         "13": "你可以在行动阶段选择一位玩家监禁，进入会议后会将目标玩家监禁。\n\n目标在会议中发送的消息只会被典狱长接收，其他玩家无法看到，\n但典狱长可以使用 [/jail text] 指令与被监禁者私聊。\n\n典狱长可以在会议中处决被监禁玩家，但如果处决了船员，将永久失去技能。"
     },
     "MarionetteFullDesc": {
+        "0": "The Marionette can place a decoy, whose visibility is set depending on the options.\nPress [LShift] to switch the hotkeys of the abilities.\nWhile the decoy is active, the Marionette can monitor and swap positions with the decoy.",
         "13": "木偶师可以放置一个木偶，木偶的可见性由房主设置。\n\n按左边的shift键可以切换功能键\n在木偶有效时间内，\n木偶师可以随时查看木偶的周围情况，并可以交换自己与木偶的位置。"
     },
     "AvengerFullDesc": {

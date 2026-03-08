@@ -140,9 +140,6 @@ public class WolfLord
                 if (guesser != null) UObject.Destroy(guesser.gameObject);
             }
 
-            if (Guesser.guesserUI != null && Guesser.guesserUIExitButton != null)
-                Guesser.guesserUIExitButton.OnClick.Invoke();
-
             if (PlayerControl.LocalPlayer == Player && PlayerControl.LocalPlayer.IsAlive())
             {
                 foreach (var pva in __instance.playerStates)
@@ -175,6 +172,9 @@ public class WolfLord
             writer.Write(target.PlayerId);
             writer.EndRPC();
             WolfLordkilled(target.PlayerId);
+
+            if (Guesser.guesserUI != null && Guesser.guesserUIExitButton != null)
+                Guesser.guesserUIExitButton.OnClick.Invoke();
 
             foreach (var playerState in __instance.playerStates)
             {

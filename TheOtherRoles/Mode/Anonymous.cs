@@ -25,7 +25,7 @@ internal class Anonymous
 
         if (!AmongUsClient.Instance.AmHost) return;
 
-        var colors = Enumerable.Range(1, 56).Select(i => (byte)i).ToList().Shuffle();
+        var colors = Enumerable.Range(1, 56).ToList().Shuffle();
         var hats = AllHats.ToList().Shuffle();
         var skins = AllSkins.ToList().Shuffle();
         var visors = AllVisors.ToList().Shuffle();
@@ -39,7 +39,7 @@ internal class Anonymous
             var visor = visors.RandomOrEmpty(EmptyVisor);
             var namePlate = nameplates.RandomOrEmpty(EmptyNameplate, 55);
 
-            player.RpcSetColor(color);                // 随机颜色
+            player.RpcSetColor((byte)color);          // 随机颜色
             player.RpcSetHat(hat);                    // 随机原版帽子
             player.RpcSetSkin(skin);                  // 随机原版衣服
             player.RpcSetVisor(visor);                // 随机原版眼镜

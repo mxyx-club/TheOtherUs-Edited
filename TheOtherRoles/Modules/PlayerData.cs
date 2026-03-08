@@ -168,7 +168,7 @@ public class PlayerData
 
     public class GlobalInfo
     {
-        public static string ApiUrl => "https://api.toue.mxyx.club";
+        public static string ApiUrl => "https://toue.mxyx.club";
         private static readonly HttpClient httpClient = new();
 
         public static string GameId { get; private set; }
@@ -309,19 +309,26 @@ public class PlayerData
         {
             var datePart = DateTime.UtcNow.ToString("yyyyMMdd");
             var salt = "toue-salt-v1";
-
             using var sha256 = SHA256.Create();
             var input = $"{GameId}.{datePart}.{salt}";
             var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
-
-            return BitConverter.ToString(hash).Replace("-", "").Substring(0, 32);
+            return BitConverter.ToString(hash).Replace("-", "").ToLower().Substring(0, 32);
         }
 
         private static string GetSessionToken()
         {
             try
             {
-                var response = httpClient.GetAsync(ApiUrl + "/api/auth/get-session-token").Result;
+                var apiKey = GetDynamicApiKey();
+                var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+                var signature = GenerateSignature("", timestamp, apiKey);
+
+                var request = new HttpRequestMessage(HttpMethod.Get, ApiUrl + "/api/auth/get-session-token");
+                request.Headers.Add("X-Timestamp", timestamp);
+                request.Headers.Add("X-Signature", signature);
+                request.Headers.Add("X-Game-Id", GameId);
+
+                var response = httpClient.SendAsync(request).Result;
                 var content = response.Content.ReadAsStringAsync().Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -330,13 +337,13 @@ public class PlayerData
                 }
                 else
                 {
-                    Error($"Failed to get session token: {content}", "PlayerData");
+                    Error(content, "PlayerData");
                     return "";
                 }
             }
             catch (Exception ex)
             {
-                Error($"Error getting session token: {ex.Message}", "PlayerData");
+                Error(ex.Message, "PlayerData");
                 return "";
             }
         }
@@ -350,7 +357,6 @@ public class PlayerData
                 var signature = GenerateSignature(jsonContent, timestamp, apiKey);
 
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                content.Headers.Add("X-Session-Token", SessionToken);
                 content.Headers.Add("X-Timestamp", timestamp);
                 content.Headers.Add("X-Signature", signature);
                 content.Headers.Add("X-Game-Id", GameId);
