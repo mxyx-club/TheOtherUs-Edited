@@ -589,12 +589,13 @@ public class CustomOptionHolder
     public static CustomOption trackerCorpsesTrackingDuration;
 
     public static CustomOption snitchSpawnRate;
+    public static CustomOption snitchRevealTaskReduction;
     public static CustomOption snitchLeftTasksForReveal;
     public static CustomOption snitchSeeMeeting;
     public static CustomOption snitchCanSeeRoles;
     public static CustomOption snitchIncludeNeutralTeam;
-    public static CustomOption snitchTeamNeutraUseDifferentArrowColor;
-    public static CustomOption snitchCanGuessIfTaksDone;
+    public static CustomOption snitchTeamNeutralUseDifferentArrowColor;
+    public static CustomOption snitchCanGuessIfTasksDone;
 
     public static CustomOption prophetSpawnRate;
     public static CustomOption prophetCooldown;
@@ -1516,13 +1517,14 @@ public class CustomOptionHolder
         trackerCorpsesTrackingDuration = Create(302605, Types.Crewmate, "trackerCorpsesTrackingDuration", 7.5f, 2.5f, 30f, 2.5f, trackerCanTrackCorpses);
 
         snitchSpawnRate = Create(302700, Types.Crewmate, Cs(Snitch.color, "Snitch"), rates, null, true);
-        snitchLeftTasksForReveal = Create(302701, Types.Crewmate, "snitchLeftTasksForReveal", 1, 0, 10, 1, snitchSpawnRate);
-        snitchSeeMeeting = Create(302702, Types.Crewmate, "snitchSeeMeeting", true, snitchSpawnRate);
-        //snitchCanSeeRoles = Create(302706, Types.Crewmate, "snitchCanSeeRoles", false, snitchSeeMeeting);
-        snitchIncludeNeutralTeam = Create(302703, Types.Crewmate, "snitchIncludeNeutralTeam",
+        snitchRevealTaskReduction = Create(302701, Types.Crewmate, "snitchRevealTaskReduction", 1, 0, 5, 1, snitchSpawnRate);
+        snitchLeftTasksForReveal = Create(302702, Types.Crewmate, "snitchLeftTasksForReveal", 1, 0, 5, 1, snitchSpawnRate);
+        snitchSeeMeeting = Create(302703, Types.Crewmate, "snitchSeeMeeting", true, snitchSpawnRate);
+        snitchCanSeeRoles = Create(302704, Types.Crewmate, "snitchCanSeeRoles", false, snitchSeeMeeting);
+        snitchIncludeNeutralTeam = Create(302705, Types.Crewmate, "snitchIncludeNeutralTeam",
             ["optionOff", "snitchIncludeNeutralTeam.1", "snitchIncludeNeutralTeam.2", "snitchIncludeNeutralTeam.3"], 1, snitchSpawnRate);
-        snitchTeamNeutraUseDifferentArrowColor = Create(302704, Types.Crewmate, "snitchTeamNeutraUseDifferentArrowColor", true, snitchIncludeNeutralTeam);
-        snitchCanGuessIfTaksDone = Create(302705, Types.Crewmate, "snitchCanGuessIfTaksDone", false, snitchSpawnRate);
+        snitchTeamNeutralUseDifferentArrowColor = Create(302706, Types.Crewmate, "snitchTeamNeutralUseDifferentArrowColor", true, snitchIncludeNeutralTeam);
+        snitchCanGuessIfTasksDone = Create(302707, Types.Crewmate, "snitchCanGuessIfTasksDone", false, snitchSpawnRate);
 
         prophetSpawnRate = Create(303600, Types.Crewmate, Cs(Prophet.color, "Prophet"), rates, null, true);
         prophetCooldown = Create(303601, Types.Crewmate, "prophetCooldown", 20f, 5f, 60f, 2.5f, prophetSpawnRate);

@@ -191,10 +191,7 @@ public static class Helpers
         if (!CustomOptionHolder.guessReVote.GetBool()) return;
         if (MeetingHud.Instance.state is not MeetingHud.VoteStates.Discussion and not MeetingHud.VoteStates.Results)
         {
-            var maxTime = ModOption.NormalOptions.VotingTime - GetPenaltyVotingTime();
-            var newTime = Mathf.Max(0f, MeetingHud.Instance.discussionTimer - time);
-
-            MeetingHud.Instance.discussionTimer = Math.Min(newTime, maxTime);
+            MeetingHud.Instance.discussionTimer = Mathf.Max(ModOption.NormalOptions.DiscussionTime, MeetingHud.Instance.discussionTimer - time);
         }
     }
 

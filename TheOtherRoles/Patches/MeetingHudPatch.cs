@@ -1,4 +1,5 @@
 using AmongUs.QuickChat;
+using MoreLinq;
 using System.Text;
 using TheOtherRoles.Mode;
 using TheOtherRoles.Objects;
@@ -510,23 +511,26 @@ internal class MeetingHudPatch
 
             for (var i = 0; i < __instance.playerStates.Length; i++)
             {
-                var playerVoteArea = __instance.playerStates[i];
+                var pva = __instance.playerStates[i];
 
                 //バランサー処理
                 if (Balancer.currentAbilityUser != null)
                 {
-                    if (PlayerById(playerVoteArea.TargetPlayerId) != null &&
-                        playerVoteArea.VotedFor != Balancer.targetplayerright.PlayerId &&
-                        playerVoteArea.VotedFor != Balancer.targetplayerleft.PlayerId)
+                    if (PlayerById(pva.TargetPlayerId) != null &&
+                        pva.VotedFor != Balancer.targetplayerright.PlayerId &&
+                        pva.VotedFor != Balancer.targetplayerleft.PlayerId)
                     {
-                        playerVoteArea.VotedFor = Helpers.GetRandom((byte[])[Balancer.targetplayerright.PlayerId, Balancer.targetplayerleft.PlayerId]);
+                        bool chooseRight = rnd.Next(0, 2) == 0;
+                        pva.VotedFor = chooseRight
+                            ? Balancer.targetplayerright.PlayerId
+                            : Balancer.targetplayerleft.PlayerId;
                     }
                 }
 
                 statesList.Add(new VoterState()
                 {
-                    VoterId = playerVoteArea.TargetPlayerId,
-                    VotedForId = playerVoteArea.VotedFor
+                    VoterId = pva.TargetPlayerId,
+                    VotedForId = pva.VotedFor
                 });
             }
 

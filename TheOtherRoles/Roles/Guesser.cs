@@ -337,11 +337,10 @@ public static class Guesser
                     continue;
             }
 
-            if (Snitch.snitch != null && Snitch.CanGuessIfTaksDone)
+            if (Snitch.snitch != null && Snitch.CanGuessIfTasksDone)
             {
-                var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
-                var numberOfLeftTasks = playerTotal - playerCompleted;
-                if (numberOfLeftTasks <= Snitch.taskCountForReveal && roleInfo.roleId == RoleId.Snitch) continue;
+                var (remain, _) = Snitch.GetRevealTask();
+                if (remain <= Snitch.taskCountForReveal && roleInfo.roleId == RoleId.Snitch) continue;
             }
 
             CreateRole(roleInfo);

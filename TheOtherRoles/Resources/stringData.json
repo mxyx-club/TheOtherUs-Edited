@@ -2287,6 +2287,10 @@
         "0": "Arrow + Proximity Detection",
         "13": "两者皆有"
     },
+    "snitchRevealTaskReduction": {
+        "0": "Task Requirement Reduction for Ability",
+        "13": "告密者技能所需任务数减少量"
+    },
     "snitchLeftTasksForReveal": {
         "0": "Tasks Left before Snitch Is Revealed",
         "13": "剩余多少任务时可被发现"
@@ -2315,11 +2319,11 @@
         "0": "All",
         "13": "全部中立阵营"
     },
-    "snitchTeamNeutraUseDifferentArrowColor": {
+    "snitchTeamNeutralUseDifferentArrowColor": {
         "0": "Use Different Colors for Neutral Roles",
         "13": "为中立阵营使用不同颜色的提醒"
     },
-    "snitchCanGuessIfTaksDone": {
+    "snitchCanGuessIfTasksDone": {
         "0": "Guesser Cant Guess Snitch When Tasks Done",
         "13": "赌怪不可猜测已完成任务的告密者"
     },
