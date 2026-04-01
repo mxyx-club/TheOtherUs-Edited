@@ -114,12 +114,7 @@ internal class HudManagerUpdatePatch
 
                 if (canReveal && local == Snitch.snitch)
                 {
-                    bool isTarget = p.IsImpostor() ||
-                                   (Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && p.IsKillerNeutral()) ||
-                                   (Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && p.IsEvilNeutral()) ||
-                                   (Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && p.IsNeutral());
-
-                    snitchSeeRoles = isTarget;
+                    snitchSeeRoles = Snitch.IsEnemy(p);
                 }
             }
 

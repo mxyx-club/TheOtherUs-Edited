@@ -47,9 +47,10 @@ public static class Snitch
         if (player == null) return false;
 
         return player.IsImpostor() ||
+               (Team == includeNeutralTeam.AllNeutral && player.IsNeutral()) ||
                (Team == includeNeutralTeam.KillNeutral && player.IsKillerNeutral()) ||
-               (Team == includeNeutralTeam.EvilNeutral && player.IsEvilNeutral()) ||
-               (Team == includeNeutralTeam.AllNeutral && player.IsNeutral());
+               (Team == includeNeutralTeam.EvilNeutral && (player.IsEvilNeutral() || player.IsKillerNeutral()))
+               ;
     }
 
     public static bool CanRevealRole(PlayerControl local, PlayerControl target)
