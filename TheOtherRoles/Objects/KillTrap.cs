@@ -163,7 +163,8 @@ public class KillTrap : CustomObjectBase<KillTrap>
                     }
                 }
                 else
-                { // カウントダウン中の処理
+                {
+                    // カウントダウン中の処理
                     target.moveable = false;
                     target.NetTransform.Halt();
                     target.transform.position = trap.GameObject.transform.position + new Vector3(0, 0.3f, 0);
@@ -183,6 +184,7 @@ public class KillTrap : CustomObjectBase<KillTrap>
         trap.isTriggered = false;
         trap.isDisabled = true;
         trap.audioSource.Stop();
+        trap.audioSource.maxDistance = EvilTrapper.killSoundRange;
         trap.audioSource.PlayOneShot(disable);
         _ = new LateTask(trap.Destroy, disable.length + 1f, "Destroy KillTrap");
     }

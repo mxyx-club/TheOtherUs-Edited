@@ -516,10 +516,13 @@ internal class MeetingHudPatch
                 //バランサー処理
                 if (Balancer.currentAbilityUser != null)
                 {
-                    if (PlayerById(pva.TargetPlayerId) != null &&
-                        pva.VotedFor != Balancer.targetplayerright.PlayerId &&
-                        pva.VotedFor != Balancer.targetplayerleft.PlayerId)
+                    if (PlayerById(pva.TargetPlayerId) != null && pva.VotedFor != Balancer.targetplayerright.PlayerId && pva.VotedFor != Balancer.targetplayerleft.PlayerId)
                     {
+                        if (pva.TargetPlayerId == Balancer.currentAbilityUser.PlayerId)
+                        {
+                            pva.VotedFor = 254;
+                            continue;
+                        }
                         bool chooseRight = rnd.Next(0, 2) == 0;
                         pva.VotedFor = chooseRight
                             ? Balancer.targetplayerright.PlayerId

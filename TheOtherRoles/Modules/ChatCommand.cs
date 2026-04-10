@@ -200,7 +200,7 @@ public static class ChatCommandRegistry
 
         Register("tp", (sender, args, chat) =>
         {
-            if (PlayerControl.LocalPlayer.IsDead() || ModOption.DebugMode || AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
+            if (CanSeeGhostInfo || ModOption.DebugMode || AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
             {
                 if (args == null || args.Length == 0)
                 {

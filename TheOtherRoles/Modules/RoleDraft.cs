@@ -159,7 +159,6 @@ internal class RoleDraft
                             roleData.impSettings.Remove((byte)roleInfo.roleId);
                             roleData.neutralSettings.Remove((byte)roleInfo.roleId);
                             roleData.killerNeutralSettings.Remove((byte)roleInfo.roleId);
-                            //Message($"Blocked role: {roleInfo.Name} ({roleInfo.roleId})");
                             continue;
                         }
 

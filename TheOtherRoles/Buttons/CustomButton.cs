@@ -12,6 +12,10 @@ public class CustomButton
     private static List<CustomButton> _buttons = new(55);
     private static readonly int Desat = Shader.PropertyToID("_Desat");
     private static bool Started;
+    public static bool AllHandCuffedActive;
+
+    public bool HandCuffedActive;
+    public float HandCuffTime;
 
     private Action OnClick;
     private readonly Action InitialOnClick;

@@ -759,8 +759,11 @@ internal class HudManagerUpdatePatch
             BountyHunter.bountyUpdateTimer = BountyHunter.bountyDuration;
             var possibleTargets = new List<PlayerControl>();
             foreach (PlayerControl p in PlayerControl.AllPlayerControls.ToArray().Where(x => x.IsAlive() && !x.IsImpostor(true)))
-                if ((p != Mini.mini || Mini.isGrownUp) && p != Lovers.otherLover(BountyHunter.bountyHunter))
+            {
+                if ((p == Mini.mini && !Mini.isGrownUp) || p != Lovers.otherLover(BountyHunter.bountyHunter) || (SchrodingersCat.Player == p && SchrodingersCat.State != SchrodingersCat.CatState.Impostor))
                     possibleTargets.Add(p);
+            }
+
             if (possibleTargets.Count == 0) return;
             BountyHunter.bounty = possibleTargets[rnd.Next(0, possibleTargets.Count)];
             if (BountyHunter.bounty == null) return;

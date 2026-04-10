@@ -472,7 +472,6 @@ public static class PlayerControlExtensions
                 Error(e);
             }
         }
-
     }
 }
 

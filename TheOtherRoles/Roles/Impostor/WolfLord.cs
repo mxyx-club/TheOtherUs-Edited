@@ -23,6 +23,10 @@ public class WolfLord
     {
         var target = PlayerById(targetId);
         Revealed = true;
+
+        if (Guesser.guesserUI != null && Guesser.guesserUIExitButton != null)
+            Guesser.guesserUIExitButton.OnClick.Invoke();
+
         if (target == null) return;
 
         Killed = true;
@@ -172,9 +176,6 @@ public class WolfLord
             writer.Write(target.PlayerId);
             writer.EndRPC();
             WolfLordkilled(target.PlayerId);
-
-            if (Guesser.guesserUI != null && Guesser.guesserUIExitButton != null)
-                Guesser.guesserUIExitButton.OnClick.Invoke();
 
             foreach (var playerState in __instance.playerStates)
             {

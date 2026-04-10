@@ -85,8 +85,12 @@ public class Balancer
                     MeetingHud.Instance.ClearVote();
                     MeetingHud.Instance.TitleText.gameObject.SetActive(false);
                     MeetingHud.Instance.TimerText.gameObject.SetActive(false);
-                    MeetingHud.Instance.SkipVoteButton.gameObject.SetActive(false);
-                    MeetingHud.Instance.SkippedVoting.SetActive(false);
+
+                    if (currentAbilityUser.PlayerId != PlayerControl.LocalPlayer.PlayerId)
+                    {
+                        MeetingHud.Instance.SkipVoteButton.gameObject.SetActive(false);
+                        MeetingHud.Instance.SkippedVoting.SetActive(false);
+                    }
 
                     for (int i = 0; i <= animIndex; i++)
                     {
@@ -119,7 +123,7 @@ public class Balancer
                             textpleasetimer = 0.8f;
                             pleasevoteanimIndex = 0;
                             //なんか分からんけどピッチが変だから0.9倍にして解決！(無理やり)
-                            UnityHelper.PlaySound(MeetingHud.Instance.transform, UnityHelper.loadAudioClipFromResources("TheOtherRoles.Resources.Balancer.backsound.raw"), false).pitch = 0.9f;
+                            SoundEffectsManager.play("backsound");
                         }
                     }
                     break;
@@ -324,7 +328,7 @@ public class Balancer
         textpleasevote = createtext(new(0, -1f, -30f), GetString("BalancerVoteText"), 8);
         textpleasevote.enabled = false;
         textpleasetimer = 0.35f;
-        SoundManager.Instance.PlaySound(UnityHelper.loadAudioClipFromResources("TheOtherRoles.Resources.Balancer.chain.raw"), false);
+        SoundEffectsManager.play("chain");
     }
 
     private static TextMeshPro createtext(Vector3 pos, string text, float fontsize)
