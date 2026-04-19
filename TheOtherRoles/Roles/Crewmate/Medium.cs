@@ -16,6 +16,12 @@ public static class Medium
     public static bool oneTimeUse;
     public static float chanceAdditionalInfo;
 
+    public static int skillUseCount;
+    public static bool canUseKill;
+    public static int mediumRequiredUses = 3;
+    public static float mediumKillCooldown = 25f;
+    public static PlayerControl CurrentTarget;
+
     public static Sprite soulSprite = new ResourceSprite("Soul.png", 500f);
 
     public static Sprite question = new ResourceSprite("MediumButton.png");
@@ -33,6 +39,11 @@ public static class Medium
         duration = CustomOptionHolder.mediumDuration.GetFloat();
         oneTimeUse = CustomOptionHolder.mediumOneTimeUse.GetBool();
         chanceAdditionalInfo = CustomOptionHolder.mediumChanceAdditionalInfo.GetSelection() / 10f;
+
+        skillUseCount = 0;
+        canUseKill = false;
+        mediumRequiredUses = (int)CustomOptionHolder.mediumRequiredUses.GetFloat();
+        mediumKillCooldown = CustomOptionHolder.mediumKillCooldown.GetFloat();
     }
 
 

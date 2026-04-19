@@ -1309,6 +1309,10 @@
         "0": "Voting out the Witch Saves All Hexed Players",
         "13": "驱逐女巫可拯救被诅咒者"
     },
+    "witchSpellRangeExtension": {
+        "0": "Spelling Extension",
+        "13": "下咒距离延长"
+    },
     "ninjaCooldown": {
         "0": "Ninja Mark Cooldown",
         "13": "标记冷却"
@@ -2067,6 +2071,9 @@
         "0": "Sheriff and Deputy Know Each Other",
         "13": "警长/捕快可以互相确认"
     },
+    "deputyHandcuffsRangeExtension": {
+        "13": "上铐距离延长"
+    },
     "deputyGetsPromoted": {
         "0": "Deputy Gets Promoted to Sheriff",
         "13": "警长死后捕快可晋升"
@@ -2166,6 +2173,14 @@
     "medicReportColorDuration": {
         "0": "Time before which Medic Autopsies Reveal the Killer's Color Type",
         "13": "以下时间内报告可得知凶手颜色类型"
+    },
+    "mediumRequiredUses": {
+        "0": "The number of times required to obtain bullets",
+        "13": "得到子弹所需的通灵次数"
+    },
+    "mediumKillCooldown": {
+        "0": "Kill Cooldown",
+        "13": "子弹击杀冷却时间"
     },
     "timeMasterCooldown": {
         "0": "Time Shield Cooldown",
@@ -5372,15 +5387,15 @@
     },
     "Medium": {
         "0": "Medium",
-        "13": "通灵师"
+        "13": "炼金术师"
     },
     "MediumIntroDesc": {
         "0": "I see dead people.",
-        "13": "天清地灵,众鬼听令！"
+        "13": "亡者的低语，将化作对生者的裁决…"
     },
     "MediumShortDesc": {
         "0": "Commune with spirits of the deceased to gain information.",
-        "13": "对灵魂通灵获取信息"
+        "13": "对亡魂通灵，获取信息并凝练子弹"
     },
     "Trapper": {
         "0": "Trapper",
@@ -6168,7 +6183,7 @@
     },
     "MedicFullDesc": {
         "0": "The Medic can place a shield on another player, making them immune to kills.\nWhen reporting a body, the Medic receives an autopsy report:\nIf the body is reported shortly after death, the killer's name is revealed.\nIf reported within a longer time window, the killer's color type (lighter/darker) is revealed.",
-        "13": "法医可以给目标套盾，被套盾的人无法被击杀。\n此外，法医报警可以获得尸检报告，\n在尸体死亡极短时间内报警可以知道凶手名称，\n在尸体死亡的一段时间内报警可得知凶手颜色深浅。"
+        "13": "法医可以给目标套盾，被套盾的人无法被击杀。\n此外，法医报警可以获得尸检报告，\n在尸体死亡极短时间内报警可以知道凶手名称，\n在尸体死亡的一段时间内报警可得知凶手颜色深浅"
     },
     "SwapperFullDesc": {
         "0": "The Swapper can exchange the vote counts of two players during a meeting.\nAdditional swaps can be earned by completing tasks.",
@@ -6200,7 +6215,7 @@
     },
     "MediumFullDesc": {
         "0": "After a meeting ends, the Medium can commune with the spirit of a player who died in the previous round by visiting the location of their death.\nIn the following meeting, relevant information about the deceased will appear in the chatbox, with a chance of revealing additional details.",
-        "13": "会议结束后，可以在上轮死亡玩家的死亡地点，对灵魂通灵。\n进入会议后从对话框中得到死者相关信息。\n有一定概率会获得额外信息。"
+        "13": "会议结束后，可以在上轮死亡玩家的死亡地点对灵魂通灵。\n进入会议后可以在对话框中得到死者相关信息，有一定概率会获得额外信息。\n通灵一定次数后，可获得一次无责任击杀(不可积累）。"
     },
     "TrapperFullDesc": {
         "0": "The Trapper can place traps on the map.\nIf two players trigger the same trap, their role, faction, or name (based on settings) will be revealed in the next meeting's chat.\nWhen a trap is triggered, the Trapper receives an arrow pointing to the activated trap.",

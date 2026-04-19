@@ -20,6 +20,7 @@ public static class Sheriff
     public static float handcuffDuration;
     public static float remainingHandcuffs;
     public static float handcuffCooldown;
+    public static float handcuffRangeExtension;
     public static bool knowsSheriff;
     public static Dictionary<byte, float> handcuffedKnows = new();
 
@@ -127,5 +128,6 @@ public static class Sheriff
         keepsHandcuffsOnPromotion = CustomOptionHolder.deputyKeepsHandcuffs.GetBool();
         handcuffDuration = CustomOptionHolder.deputyHandcuffDuration.GetFloat();
         knowsSheriff = CustomOptionHolder.deputyKnowsSheriff.GetBool();
+        handcuffRangeExtension = CustomOptionHolder.deputyHandcuffsRange.GetFloat();
     }
 }

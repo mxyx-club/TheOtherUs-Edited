@@ -220,6 +220,7 @@ public class CustomOptionHolder
     public static CustomOption witchSpellCastingDuration;
     public static CustomOption witchTriggerBothCooldowns;
     public static CustomOption witchVoteSavesTargets;
+    public static CustomOption witchSpellRange;
 
     public static CustomOption ninjaSpawnRate;
     public static CustomOption ninjaCooldown;
@@ -481,6 +482,7 @@ public class CustomOptionHolder
     public static CustomOption deputyNumberOfHandcuffs;
     public static CustomOption deputyHandcuffCooldown;
     public static CustomOption deputyHandcuffDuration;
+    public static CustomOption deputyHandcuffsRange;
     public static CustomOption deputyGetsPromoted;
     public static CustomOption deputyKnowsSheriff;
     public static CustomOption deputyKeepsHandcuffs;
@@ -617,6 +619,8 @@ public class CustomOptionHolder
     public static CustomOption mediumDuration;
     public static CustomOption mediumOneTimeUse;
     public static CustomOption mediumChanceAdditionalInfo;
+    public static CustomOption mediumRequiredUses;
+    public static CustomOption mediumKillCooldown;
 
     public static CustomOption guesserEvilCanKillCrewmate;
 
@@ -1123,6 +1127,7 @@ public class CustomOptionHolder
         witchSpellCastingDuration = Create(102404, Types.Impostor, "witchSpellCastingDuration", 0.5f, 0f, 10f, 0.25f, witchSpawnRate);
         witchTriggerBothCooldowns = Create(102405, Types.Impostor, "witchTriggerBothCooldowns", false, witchSpawnRate);
         witchVoteSavesTargets = Create(102406, Types.Impostor, "witchVoteSavesTargets", true, witchSpawnRate);
+        witchSpellRange = Create(102407, Types.Impostor, "witchSpellRangeExtension", 0f, 0f, 2.5f, 0.125f, witchSpawnRate);
 
         ninjaSpawnRate = Create(102500, Types.Impostor, Cs(Ninja.color, "Ninja"), rates, null, true);
         ninjaCooldown = Create(102501, Types.Impostor, "ninjaCooldown", 20f, 10f, 60f, 2.5f, ninjaSpawnRate);
@@ -1397,6 +1402,7 @@ public class CustomOptionHolder
         deputyNumberOfHandcuffs = Create(301701, Types.Crewmate, "deputyNumberOfHandcuffs", 5f, 1f, 15f, 1f, deputySpawnRate);
         deputyHandcuffCooldown = Create(301702, Types.Crewmate, "deputyHandcuffCooldown", 20f, 10f, 60f, 2.5f, deputySpawnRate);
         deputyHandcuffDuration = Create(301703, Types.Crewmate, "deputyHandcuffDuration", 10f, 5f, 60f, 2.5f, deputySpawnRate);
+        deputyHandcuffsRange = Create(301707, Types.Crewmate, "deputyHandcuffsRangeExtension", 0f, 0f, 2.5f, 0.125f, deputySpawnRate);
         deputyGetsPromoted = Create(301704, Types.Crewmate, "deputyGetsPromoted",
             ["optionOff", "deputyGetsPromoted2", "deputyGetsPromoted3"], 1, deputySpawnRate);
         deputyKnowsSheriff = Create(301705, Types.Crewmate, "deputyKnowsSheriff", true, deputySpawnRate);
@@ -1548,6 +1554,8 @@ public class CustomOptionHolder
         mediumDuration = Create(303102, Types.Crewmate, "mediumDuration", 0.5f, 0f, 15f, 0.5f, mediumSpawnRate);
         mediumOneTimeUse = Create(303103, Types.Crewmate, "mediumOneTimeUse", false, mediumSpawnRate);
         mediumChanceAdditionalInfo = Create(303104, Types.Crewmate, "mediumChanceAdditionalInfo", rates, 3, mediumSpawnRate);
+        mediumRequiredUses = Create(304105, Types.Crewmate, "mediumRequiredUses", 3f, 1f, 5f, 1f, mediumSpawnRate);
+        mediumKillCooldown = Create(304106, Types.Crewmate, "mediumKillCooldown", 25f, 5f, 60f, 2.5f, mediumSpawnRate);
 
         trapperSpawnRate = Create(303500, Types.Crewmate, Cs(Trapper.color, "Trapper"), rates, null, true);
         trapperCooldown = Create(303501, Types.Crewmate, "trapperCooldown", 20f, 5f, 120f, 2.5f, trapperSpawnRate);

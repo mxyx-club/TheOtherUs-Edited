@@ -23,6 +23,7 @@ internal static class HudManagerStartPatch
     public static CustomButton specterRememberButton;
     public static CustomButton veteranAlertButton;
     public static CustomButton medicShieldButton;
+    public static CustomButton mediumKillButton;
     public static CustomButton shifterShiftButton;
     public static CustomButton bomberBombButton;
     public static CustomButton bomberGiveButton;
@@ -559,7 +560,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Sheriff.currentTarget = SetTarget();
+                Sheriff.currentTarget = SetTarget(distances: Sheriff.handcuffRangeExtension);
                 SetPlayerOutline(Sheriff.currentTarget, Sheriff.color);
 
                 deputyHandcuffButton.showTargetNameOnButton(Sheriff.currentTarget);
@@ -3183,6 +3184,15 @@ internal static class HudManagerStartPatch
                 writer.Write(msg);
                 writer.EndRPC();
 
+                if (!Medium.canUseKill)
+                {
+                    Medium.skillUseCount++;
+                    if (Medium.skillUseCount >= Medium.mediumRequiredUses)
+                    {
+                        Medium.canUseKill = true;
+                    }
+                }
+
                 // Remove soul
                 if (Medium.oneTimeUse)
                 {
@@ -3226,6 +3236,39 @@ internal static class HudManagerStartPatch
                 SoundEffectsManager.stop("mediumAsk");
             },
             buttonText: GetString("MediumText")
+        );
+
+        mediumKillButton = new CustomButton(
+            () =>
+            {
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Medium.CurrentTarget)) return;
+
+                Medium.canUseKill = false;
+                Medium.skillUseCount = 0;
+                mediumKillButton.Timer = mediumKillButton.MaxTimer;
+                Medium.CurrentTarget = null;
+            },
+             () =>
+             {
+                 return Medium.medium.IsAlive() && Medium.medium == PlayerControl.LocalPlayer && Medium.canUseKill;
+             },
+             () =>
+             {
+                 Medium.CurrentTarget = SetTarget(inVented: ModOption.CanKillInVent);
+                 SetPlayerOutline(Medium.CurrentTarget, Medium.color);
+                 mediumKillButton.showTargetNameOnButton(Medium.CurrentTarget);
+
+                 return PlayerControl.LocalPlayer.CanMove && Medium.CurrentTarget != null;
+             },
+              () =>
+              {
+                  mediumKillButton.Timer = mediumKillButton.MaxTimer;
+              },
+             __instance.KillButton.graphic.sprite,
+             __instance,
+             __instance.KillButton,
+              modKillInput.keyCode,
+             buttonText: GetString("killButtonText")
         );
 
         // Pursuer button
@@ -3361,8 +3404,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return Witch.witch != null && Witch.witch == PlayerControl.LocalPlayer &&
-                       !PlayerControl.LocalPlayer.Data.IsDead;
+                return Witch.witch.IsAlive() && Witch.witch == PlayerControl.LocalPlayer;
             },
             () =>
             {
@@ -3377,7 +3419,7 @@ internal static class HudManagerStartPatch
                     if (Spy.spy != null && !Witch.canSpellAnyone) untargetables.Add(Spy.spy);
                 }
 
-                Witch.currentTarget = SetTarget(untargetables, !Witch.canSpellAnyone);
+                Witch.currentTarget = SetTarget(untargetables, !Witch.canSpellAnyone, distances: Witch.spellRangeExtension);
                 SetPlayerOutline(Witch.currentTarget, Witch.color);
 
                 witchSpellButton.showTargetNameOnButton(Witch.currentTarget);

@@ -16,6 +16,7 @@ public static class Witch
     public static bool triggerBothCooldowns = true;
     public static bool witchVoteSavesTargets = true;
     public static bool witchWasGuessed;
+    public static float spellRangeExtension = 1f;
 
     public static Sprite buttonSprite = new ResourceSprite("SpellButton.png");
 
@@ -34,5 +35,6 @@ public static class Witch
         spellCastingDuration = CustomOptionHolder.witchSpellCastingDuration.GetFloat();
         triggerBothCooldowns = CustomOptionHolder.witchTriggerBothCooldowns.GetBool();
         witchVoteSavesTargets = CustomOptionHolder.witchVoteSavesTargets.GetBool();
+        spellRangeExtension = CustomOptionHolder.witchSpellRange.GetFloat();
     }
 }
