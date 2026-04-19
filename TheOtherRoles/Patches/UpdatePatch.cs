@@ -13,8 +13,8 @@ internal class HudManagerUpdatePatch
         var localPlayer = PlayerControl.LocalPlayer;
         var myData = PlayerControl.LocalPlayer.Data;
         var amImpostor = myData.Role.IsImpostor;
-        var morphTimerNotUp = Morphling.morphTimer > 0f;
-        var morphTargetNotNull = Morphling.morphTarget != null;
+        var morphTimerNotUp = Glitch.morphTimer > 0f;
+        var morphTargetNotNull = Glitch.morphTarget != null;
 
         var dict = TagColorDict;
         dict.Clear();
@@ -28,8 +28,8 @@ internal class HudManagerUpdatePatch
             {
                 var playerName = text;
                 var nameText = player.cosmetics.nameText;
-                if (morphTimerNotUp && morphTargetNotNull && Morphling.morphling == player)
-                    playerName = Morphling.morphTarget.Data.PlayerName;
+                if (morphTimerNotUp && morphTargetNotNull && Glitch.Player == player)
+                    playerName = Glitch.morphTarget.Data.PlayerName;
 
                 nameText.text = hidePlayerName(localPlayer, player) ? "" : playerName;
                 if (DataManager.Settings.Accessibility.ColorBlindMode)
@@ -216,12 +216,12 @@ internal class HudManagerUpdatePatch
         {
             if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) continue;
 
-            var isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
+            var isMorphedMorphling = target == Glitch.Player && Glitch.morphTarget != null && Glitch.morphTimer > 0f;
             var hasVisibleShield = false;
             var color = Medic.shieldedColor;
             if (!isCamoComms && Camouflager.camouflageTimer <= 0f && !MushroomSabotageActive &&
                 Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) ||
-                (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
+                (isMorphedMorphling && Glitch.morphTarget == Medic.shielded)))
             {
                 hasVisibleShield = Medic.showShielded == 0 || CanSeeGhostInfo // Everyone or Ghost info
                     || (Medic.showShielded == 1 && (local == Medic.shielded || local == Medic.medic)) // Shielded + Medic
@@ -242,7 +242,7 @@ internal class HudManagerUpdatePatch
             if (!isCamoComms && Camouflager.camouflageTimer <= 0f && !MushroomSabotageActive &&
                 ModOption.firstKillPlayer != null && ModOption.shieldFirstKill &&
                 ((target == ModOption.firstKillPlayer && !isMorphedMorphling) ||
-                 (isMorphedMorphling && Morphling.morphTarget == ModOption.firstKillPlayer)))
+                 (isMorphedMorphling && Glitch.morphTarget == ModOption.firstKillPlayer)))
             {
                 hasVisibleShield = true;
                 color = Color.blue;
@@ -686,7 +686,7 @@ internal class HudManagerUpdatePatch
     public static void miniUpdate()
     {
         if (Mini.mini == null || Camouflager.camouflageTimer > 0f || MushroomSabotageActive ||
-            (Mini.mini == Morphling.morphling && Morphling.morphTimer > 0f) ||
+            (Mini.mini == Glitch.Player && Glitch.morphTimer > 0f) ||
             (Mini.mini == Ninja.ninja && Ninja.isInvisable) || SurveillanceMinigamePatch.nightVisionIsActive ||
             (Mini.mini == Swooper.swooper && Swooper.isInvisable) ||
             (Jackal.jackal.Any(x => x == Mini.mini) && Jackal.isInvisable) || isActiveCamoComms) return;
@@ -707,8 +707,8 @@ internal class HudManagerUpdatePatch
                     player.NameText.text += suffix;
         }
 
-        if (Morphling.morphling != null && Morphling.morphTarget == Mini.mini && Morphling.morphTimer > 0f)
-            Morphling.morphling.cosmetics.nameText.text += suffix;
+        if (Glitch.Player != null && Glitch.morphTarget == Mini.mini && Glitch.morphTimer > 0f)
+            Glitch.Player.cosmetics.nameText.text += suffix;
     }
 
     private static bool HandCuffed()

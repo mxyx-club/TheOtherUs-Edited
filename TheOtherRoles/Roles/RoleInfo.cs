@@ -26,7 +26,7 @@ public class RoleInfo
     }
 
     public static RoleInfo impostor = new("Impostor", Palette.ImpostorRed, RoleId.Impostor, RoleType.Impostor);
-    public static RoleInfo morphling = new("Morphling", Morphling.color, RoleId.Morphling, RoleType.Impostor);
+    public static RoleInfo morphling = new("Morphling", Glitch.color, RoleId.Morphling, RoleType.Impostor);
     public static RoleInfo wolfLord = new("WolfLord", WolfLord.color, RoleId.WolfLord, RoleType.Impostor);
     public static RoleInfo bomber = new("Bomber", Bomber.color, RoleId.Bomber, RoleType.Impostor);
     public static RoleInfo poucher = new("Poucher", Poucher.color, RoleId.Poucher, RoleType.Impostor);
@@ -104,7 +104,7 @@ public class RoleInfo
     public static RoleInfo infoSleuth = new("InfoSleuth", InfoSleuth.color, RoleId.InfoSleuth, RoleType.Crewmate);
     public static RoleInfo spy = new("Spy", Spy.color, RoleId.Spy, RoleType.Crewmate);
     public static RoleInfo securityGuard = new("SecurityGuard", SecurityGuard.color, RoleId.SecurityGuard, RoleType.Crewmate);
-    public static RoleInfo medium = new("Medium", Medium.color, RoleId.Medium, RoleType.Crewmate);
+    public static RoleInfo medium = new("Medium", Alchemyst.color, RoleId.Medium, RoleType.Crewmate);
     public static RoleInfo trapper = new("Trapper", Trapper.color, RoleId.Trapper, RoleType.Crewmate);
     public static RoleInfo balancer = new("Balancer", Balancer.color, RoleId.Balancer, RoleType.Crewmate);
     public static RoleInfo redemptor = new("Redemptor", Redemptor.color, RoleId.Redemptor, RoleType.Crewmate);
@@ -327,7 +327,7 @@ public class RoleInfo
         if (p == Professional.Player && !Professional.spawnModifier) infos.Add(professional);
         if (p == Butcher.butcher) infos.Add(butcher);
         if (p == WolfLord.Player) infos.Add(wolfLord);
-        if (p == Morphling.morphling) infos.Add(morphling);
+        if (p == Glitch.Player) infos.Add(morphling);
         if (p == Bomber.bomber) infos.Add(bomber);
         if (p == Camouflager.camouflager) infos.Add(camouflager);
         if (p == Vampire.vampire) infos.Add(vampire);
@@ -369,7 +369,7 @@ public class RoleInfo
         if (p == Sheriff.Deputy) infos.Add(deputy);
         if (p == BountyHunter.bountyHunter) infos.Add(bountyHunter);
         if (p == Vulture.vulture) infos.Add(vulture);
-        if (p == Medium.medium) infos.Add(medium);
+        if (p == Alchemyst.Player) infos.Add(medium);
         if (p == Lawyer.lawyer) infos.Add(lawyer);
         if (p == Pelican.Player) infos.Add(pelican);
         if (p == Jailor.Player) infos.Add(jailor);

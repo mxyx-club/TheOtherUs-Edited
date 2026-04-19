@@ -36,8 +36,8 @@ public static class Medic
     {
         bool hasVisibleShield = false;
 
-        bool isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
-        if (shielded != null && ((target == shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == shielded)))
+        bool isMorphedMorphling = target == Glitch.Player && Glitch.morphTarget != null && Glitch.morphTimer > 0f;
+        if (shielded != null && ((target == shielded && !isMorphedMorphling) || (isMorphedMorphling && Glitch.morphTarget == shielded)))
         {
             // Everyone or Ghost info
             hasVisibleShield = showShielded == 0 || CanSeeGhostInfo

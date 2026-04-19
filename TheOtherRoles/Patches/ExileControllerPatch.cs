@@ -528,17 +528,17 @@ internal class ExileControllerWrapUpPatch
         }
 
         // Medium spawn souls
-        if (Medium.medium != null && PlayerControl.LocalPlayer == Medium.medium)
+        if (Alchemyst.Player != null && PlayerControl.LocalPlayer == Alchemyst.Player)
         {
-            if (Medium.souls != null)
+            if (Alchemyst.souls != null)
             {
-                foreach (var sr in Medium.souls) UObject.Destroy(sr.gameObject);
-                Medium.souls = new List<SpriteRenderer>();
+                foreach (var sr in Alchemyst.souls) UObject.Destroy(sr.gameObject);
+                Alchemyst.souls = new List<SpriteRenderer>();
             }
 
-            if (Medium.futureDeadBodies != null)
+            if (Alchemyst.futureDeadBodies != null)
             {
-                foreach (var (db, ps) in Medium.futureDeadBodies)
+                foreach (var (db, ps) in Alchemyst.futureDeadBodies)
                 {
                     var s = new GameObject();
                     //s.transform.position = ps;
@@ -546,12 +546,12 @@ internal class ExileControllerWrapUpPatch
                     s.layer = 5;
                     var rend = s.AddComponent<SpriteRenderer>();
                     s.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-                    rend.sprite = Medium.soulSprite;
-                    Medium.souls.Add(rend);
+                    rend.sprite = Alchemyst.soulSprite;
+                    Alchemyst.souls.Add(rend);
                 }
 
-                Medium.deadBodies = Medium.futureDeadBodies;
-                Medium.futureDeadBodies = new List<Tuple<Medium.DeadPlayer, Vector3>>();
+                Alchemyst.deadBodies = Alchemyst.futureDeadBodies;
+                Alchemyst.futureDeadBodies = new List<Tuple<Alchemyst.DeadPlayer, Vector3>>();
             }
         }
 

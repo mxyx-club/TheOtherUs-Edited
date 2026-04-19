@@ -1,8 +1,8 @@
 namespace TheOtherRoles.Roles.Impostor;
 
-public static class Morphling
+public static class Glitch
 {
-    public static PlayerControl morphling;
+    public static PlayerControl Player;
     public static Color color = Palette.ImpostorRed;
     public static Sprite sampleSprite = new ResourceSprite("SampleButton.png");
     public static Sprite morphSprite = new ResourceSprite("MorphButton.png");
@@ -20,14 +20,14 @@ public static class Morphling
     {
         morphTarget = null;
         morphTimer = 0f;
-        if (morphling == null) return;
-        morphling.setDefaultLook();
+        if (Player == null) return;
+        Player.setDefaultLook();
     }
 
     public static void clearAndReload()
     {
         resetMorph();
-        morphling = null;
+        Player = null;
         currentTarget = null;
         sampledTarget = null;
         morphTarget = null;

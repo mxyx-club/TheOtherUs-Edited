@@ -34,7 +34,7 @@ public class Amnisiac
             case RoleId.Impostor:
                 break;
             case RoleId.Morphling:
-                if (resetRole) Morphling.clearAndReload();
+                if (resetRole) Glitch.clearAndReload();
                 break;
             case RoleId.WolfLord:
                 if (resetRole) WolfLord.ClearAndReload();
@@ -245,7 +245,7 @@ public class Amnisiac
                 if (resetRole) SecurityGuard.clearAndReload();
                 break;
             case RoleId.Medium:
-                if (resetRole) Medium.clearAndReload();
+                if (resetRole) Alchemyst.clearAndReload();
                 break;
             case RoleId.Trapper:
                 if (resetRole) Trapper.clearAndReload();

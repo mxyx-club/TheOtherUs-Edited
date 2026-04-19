@@ -176,10 +176,10 @@ public static class Helpers
     public static void camoReset()
     {
         Camouflager.resetCamouflage();
-        if (Morphling.morphTimer > 0f && Morphling.morphling != null && Morphling.morphTarget != null)
+        if (Glitch.morphTimer > 0f && Glitch.Player != null && Glitch.morphTarget != null)
         {
-            var target = Morphling.morphTarget;
-            Morphling.morphling.setLook(target.Data.PlayerName, target.Data.DefaultOutfit.ColorId,
+            var target = Glitch.morphTarget;
+            Glitch.Player.setLook(target.Data.PlayerName, target.Data.DefaultOutfit.ColorId,
                 target.Data.DefaultOutfit.HatId, target.Data.DefaultOutfit.VisorId, target.Data.DefaultOutfit.SkinId,
                 target.Data.DefaultOutfit.PetId);
         }

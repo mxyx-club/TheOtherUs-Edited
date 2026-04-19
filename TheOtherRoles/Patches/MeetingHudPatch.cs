@@ -847,7 +847,7 @@ internal class MeetingHudPatch
             }
 
             // Medium meeting start time
-            Medium.meetingStartTime = DateTime.UtcNow;
+            Alchemyst.meetingStartTime = DateTime.UtcNow;
             // Count meetings
             if (meetingTarget == null) meetingsCount++;
             // Count meetings

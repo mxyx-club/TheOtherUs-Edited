@@ -805,10 +805,10 @@ internal class SurveillanceMinigamePatch
                 {
                     pc.setLook("", 6, "", "", "", "", false);
                 }
-                else if (pc == Morphling.morphling && Morphling.morphTimer > 0)
+                else if (pc == Glitch.Player && Glitch.morphTimer > 0)
                 {
-                    var target = Morphling.morphTarget;
-                    Morphling.morphling.setLook(target.Data.PlayerName, target.Data.DefaultOutfit.ColorId,
+                    var target = Glitch.morphTarget;
+                    Glitch.Player.setLook(target.Data.PlayerName, target.Data.DefaultOutfit.ColorId,
                         target.Data.DefaultOutfit.HatId, target.Data.DefaultOutfit.VisorId,
                         target.Data.DefaultOutfit.SkinId, target.Data.DefaultOutfit.PetId, false);
                 }

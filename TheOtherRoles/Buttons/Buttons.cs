@@ -150,7 +150,7 @@ internal static class HudManagerStartPatch
         shifterShiftButton.MaxTimer = 0f;
         disperserDisperseButton.MaxTimer = 0f;
         buttonBarryButton.MaxTimer = 0f;
-        morphlingButton.MaxTimer = Morphling.cooldown;
+        morphlingButton.MaxTimer = Glitch.cooldown;
         butcherDissectionButton.MaxTimer = Butcher.dissectionCooldown;
         bomberBombButton.MaxTimer = Bomber.cooldown;
         camouflagerButton.MaxTimer = Camouflager.cooldown;
@@ -184,7 +184,7 @@ internal static class HudManagerStartPatch
         grenadierFlashButton.MaxTimer = Grenadier.cooldown;
         bomberGiveButton.MaxTimer = bomberGiveButton.Timer = 0f;
         partTimerButton.MaxTimer = PartTimer.cooldown;
-        mediumButton.MaxTimer = Medium.cooldown;
+        mediumButton.MaxTimer = Alchemyst.cooldown;
         pursuerButton.MaxTimer = Pursuer.cooldown;
         trackerTrackCorpsesButton.MaxTimer = Tracker.corpsesTrackingCooldown;
         prophetButton.MaxTimer = Prophet.cooldown;
@@ -246,11 +246,11 @@ internal static class HudManagerStartPatch
         werewolfRampageButton.EffectDuration = Werewolf.rampageDuration;
         grenadierFlashButton.EffectDuration = Grenadier.duration;
         camouflagerButton.EffectDuration = Camouflager.duration;
-        morphlingButton.EffectDuration = Morphling.duration;
+        morphlingButton.EffectDuration = Glitch.duration;
         bomberBombButton.EffectDuration = Bomber.bombDelay + Bomber.bombTimer;
         lightsOutButton.EffectDuration = Trickster.lightsOutDuration;
         arsonistButton.EffectDuration = Arsonist.duration;
-        mediumButton.EffectDuration = Medium.duration;
+        mediumButton.EffectDuration = Alchemyst.duration;
         trackerTrackCorpsesButton.EffectDuration = Tracker.corpsesTrackingDuration;
         witchSpellButton.EffectDuration = Witch.spellCastingDuration;
         securityGuardCamButton.EffectDuration = SecurityGuard.duration;
@@ -931,43 +931,43 @@ internal static class HudManagerStartPatch
         morphlingButton = new CustomButton(
             () =>
             {
-                if (Morphling.sampledTarget != null)
+                if (Glitch.sampledTarget != null)
                 {
-                    if (CheckUseAbility(PlayerControl.LocalPlayer, Morphling.currentTarget)) return;
+                    if (CheckUseAbility(PlayerControl.LocalPlayer, Glitch.currentTarget)) return;
                     var writer = StartRPC(CustomRPC.MorphlingMorph);
-                    writer.Write(Morphling.sampledTarget.PlayerId);
+                    writer.Write(Glitch.sampledTarget.PlayerId);
                     writer.EndRPC();
-                    RPCProcedure.morphlingMorph(Morphling.sampledTarget.PlayerId);
-                    Morphling.sampledTarget = null;
-                    morphlingButton.EffectDuration = Morphling.duration;
+                    RPCProcedure.morphlingMorph(Glitch.sampledTarget.PlayerId);
+                    Glitch.sampledTarget = null;
+                    morphlingButton.EffectDuration = Glitch.duration;
                     SoundEffectsManager.play("morphlingMorph");
                 }
-                else if (Morphling.currentTarget != null)
+                else if (Glitch.currentTarget != null)
                 {
-                    Morphling.sampledTarget = Morphling.currentTarget;
-                    morphlingButton.Sprite = Morphling.morphSprite;
+                    Glitch.sampledTarget = Glitch.currentTarget;
+                    morphlingButton.Sprite = Glitch.morphSprite;
                     morphlingButton.EffectDuration = 1f;
                     SoundEffectsManager.play("morphlingSample");
 
                     // Add poolable player to the button so that the target outfit is shown
-                    setButtonTargetDisplay(Morphling.sampledTarget, morphlingButton);
+                    setButtonTargetDisplay(Glitch.sampledTarget, morphlingButton);
                 }
             },
             () =>
             {
-                return Morphling.morphling.IsAlive() && Morphling.morphling == PlayerControl.LocalPlayer;
+                return Glitch.Player.IsAlive() && Glitch.Player == PlayerControl.LocalPlayer;
             },
             () =>
             {
-                Morphling.currentTarget = SetTarget();
-                SetPlayerOutline(Morphling.currentTarget, Morphling.color);
+                Glitch.currentTarget = SetTarget();
+                SetPlayerOutline(Glitch.currentTarget, Glitch.color);
 
-                if (Morphling.sampledTarget != null)
-                    morphlingButton.SetButtonText(Morphling.sampledTarget?.Data?.PlayerName ?? GetString("MorphText"));
+                if (Glitch.sampledTarget != null)
+                    morphlingButton.SetButtonText(Glitch.sampledTarget?.Data?.PlayerName ?? GetString("MorphText"));
                 else
-                    morphlingButton.showTargetNameOnButton(Morphling.currentTarget, GetString("SampleText"));
+                    morphlingButton.showTargetNameOnButton(Glitch.currentTarget, GetString("SampleText"));
 
-                return (Morphling.currentTarget || Morphling.sampledTarget) && !isActiveCamoComms &&
+                return (Glitch.currentTarget || Glitch.sampledTarget) && !isActiveCamoComms &&
                        PlayerControl.LocalPlayer.CanMove && !MushroomSabotageActive;
             },
             () =>
@@ -976,25 +976,25 @@ internal static class HudManagerStartPatch
                 morphlingButton.isEffectActive = false;
                 morphlingButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
 
-                if (Morphling.ResetAfterMeeting)
+                if (Glitch.ResetAfterMeeting)
                 {
-                    morphlingButton.Sprite = Morphling.sampleSprite;
-                    Morphling.sampledTarget = null;
+                    morphlingButton.Sprite = Glitch.sampleSprite;
+                    Glitch.sampledTarget = null;
                     setButtonTargetDisplay(null);
                 }
             },
-            Morphling.sampleSprite,
+            Glitch.sampleSprite,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
             true,
-            Morphling.duration,
+            Glitch.duration,
             () =>
             {
-                if (Morphling.sampledTarget == null)
+                if (Glitch.sampledTarget == null)
                 {
                     morphlingButton.Timer = morphlingButton.MaxTimer;
-                    morphlingButton.Sprite = Morphling.sampleSprite;
+                    morphlingButton.Sprite = Glitch.sampleSprite;
                     SoundEffectsManager.play("morphlingMorph");
 
                     // Reset the poolable player
@@ -3120,25 +3120,25 @@ internal static class HudManagerStartPatch
         mediumButton = new CustomButton(
             () =>
             {
-                if (Medium.target != null)
+                if (Alchemyst.target != null)
                 {
-                    Medium.soulTarget = Medium.target;
+                    Alchemyst.soulTarget = Alchemyst.target;
                     mediumButton.HasEffect = true;
                     SoundEffectsManager.play("mediumAsk");
                 }
             },
             () =>
             {
-                return Medium.medium.IsAlive() && Medium.medium == PlayerControl.LocalPlayer;
+                return Alchemyst.Player.IsAlive() && Alchemyst.Player == PlayerControl.LocalPlayer;
             },
             () =>
             {
 
-                Medium.DeadPlayer target = null;
+                Alchemyst.DeadPlayer target = null;
                 var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
                 var closestDistance = float.MaxValue;
                 var usableDistance = MapUtilities.CachedShipStatus.AllVents.FirstOrDefault().UsableDistance;
-                foreach (var (dp, ps) in Medium.deadBodies)
+                foreach (var (dp, ps) in Alchemyst.deadBodies)
                 {
                     var distance = Vector2.Distance(ps, truePosition);
                     if (distance <= usableDistance && distance < closestDistance)
@@ -3147,67 +3147,67 @@ internal static class HudManagerStartPatch
                         target = dp;
                     }
                 }
-                Medium.target = target;
+                Alchemyst.target = target;
 
-                if (mediumButton.isEffectActive && Medium.target != Medium.soulTarget)
+                if (mediumButton.isEffectActive && Alchemyst.target != Alchemyst.soulTarget)
                 {
-                    Medium.soulTarget = null;
+                    Alchemyst.soulTarget = null;
                     mediumButton.Timer = 0f;
                     mediumButton.isEffectActive = false;
                 }
 
-                return Medium.target != null && PlayerControl.LocalPlayer.CanMove;
+                return Alchemyst.target != null && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {
                 mediumButton.Timer = mediumButton.MaxTimer;
                 mediumButton.isEffectActive = false;
-                Medium.soulTarget = null;
+                Alchemyst.soulTarget = null;
             },
-            Medium.question,
+            Alchemyst.question,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
             true,
-            Medium.duration,
+            Alchemyst.duration,
             () =>
             {
                 mediumButton.Timer = mediumButton.MaxTimer;
-                if (Medium.target == null || Medium.target.Player == null) return;
-                var msg = Medium.getInfo(Medium.target.Player, Medium.target.KilledBy);
+                if (Alchemyst.target == null || Alchemyst.target.Player == null) return;
+                var msg = Alchemyst.getInfo(Alchemyst.target.Player, Alchemyst.target.KilledBy);
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msg);
 
                 // Ghost Info
                 var writer = StartRPC(CustomRPC.ShareGhostInfo);
-                writer.Write(Medium.target.Player.PlayerId);
+                writer.Write(Alchemyst.target.Player.PlayerId);
                 writer.Write((byte)RPCProcedure.GhostInfoTypes.GhostChat);
                 writer.Write(msg);
                 writer.EndRPC();
 
-                if (!Medium.canUseKill)
+                if (!Alchemyst.canUseKill)
                 {
-                    Medium.skillUseCount++;
-                    if (Medium.skillUseCount >= Medium.mediumRequiredUses)
+                    Alchemyst.skillUseCount++;
+                    if (Alchemyst.skillUseCount >= Alchemyst.mediumRequiredUses)
                     {
-                        Medium.canUseKill = true;
+                        Alchemyst.canUseKill = true;
                     }
                 }
 
                 // Remove soul
-                if (Medium.oneTimeUse)
+                if (Alchemyst.oneTimeUse)
                 {
                     var closestDistance = float.MaxValue;
                     SpriteRenderer target = null;
 
-                    foreach (var (db, ps) in Medium.deadBodies)
-                        if (db == Medium.target)
+                    foreach (var (db, ps) in Alchemyst.deadBodies)
+                        if (db == Alchemyst.target)
                         {
                             var deadBody = Tuple.Create(db, ps);
-                            Medium.deadBodies.Remove(deadBody);
+                            Alchemyst.deadBodies.Remove(deadBody);
                             break;
                         }
 
-                    foreach (var rend in Medium.souls)
+                    foreach (var rend in Alchemyst.souls)
                     {
                         var distance = Vector2.Distance(rend.transform.position,
                             PlayerControl.LocalPlayer.GetTruePosition());
@@ -3230,7 +3230,7 @@ internal static class HudManagerStartPatch
                         if (p == 1f && target != null && target.gameObject != null) UObject.Destroy(target.gameObject);
                     })));
 
-                    Medium.souls.Remove(target);
+                    Alchemyst.souls.Remove(target);
                 }
 
                 SoundEffectsManager.stop("mediumAsk");
@@ -3241,24 +3241,24 @@ internal static class HudManagerStartPatch
         mediumKillButton = new CustomButton(
             () =>
             {
-                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Medium.CurrentTarget)) return;
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Alchemyst.CurrentTarget)) return;
 
-                Medium.canUseKill = false;
-                Medium.skillUseCount = 0;
+                Alchemyst.canUseKill = false;
+                Alchemyst.skillUseCount = 0;
                 mediumKillButton.Timer = mediumKillButton.MaxTimer;
-                Medium.CurrentTarget = null;
+                Alchemyst.CurrentTarget = null;
             },
              () =>
              {
-                 return Medium.medium.IsAlive() && Medium.medium == PlayerControl.LocalPlayer && Medium.canUseKill;
+                 return Alchemyst.Player.IsAlive() && Alchemyst.Player == PlayerControl.LocalPlayer && Alchemyst.canUseKill;
              },
              () =>
              {
-                 Medium.CurrentTarget = SetTarget(inVented: ModOption.CanKillInVent);
-                 SetPlayerOutline(Medium.CurrentTarget, Medium.color);
-                 mediumKillButton.showTargetNameOnButton(Medium.CurrentTarget);
+                 Alchemyst.CurrentTarget = SetTarget(inVented: ModOption.CanKillInVent);
+                 SetPlayerOutline(Alchemyst.CurrentTarget, Alchemyst.color);
+                 mediumKillButton.showTargetNameOnButton(Alchemyst.CurrentTarget);
 
-                 return PlayerControl.LocalPlayer.CanMove && Medium.CurrentTarget != null;
+                 return PlayerControl.LocalPlayer.CanMove && Alchemyst.CurrentTarget != null;
              },
               () =>
               {

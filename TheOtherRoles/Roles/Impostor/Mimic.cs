@@ -121,8 +121,8 @@ public static class Mimic
                 break;
 
             case RoleId.Medium:
-                if (Amnisiac.resetRole) Medium.clearAndReload();
-                Medium.medium = mimic;
+                if (Amnisiac.resetRole) Alchemyst.clearAndReload();
+                Alchemyst.Player = mimic;
                 hasMimic = true;
                 break;
 

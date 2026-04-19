@@ -829,7 +829,7 @@ public static class RoleHelpers
         Swapper.clearAndReload();
         Lovers.clearAndReload();
         Seer.clearAndReload();
-        Morphling.clearAndReload();
+        Glitch.clearAndReload();
         Camouflager.clearAndReload();
         Hacker.clearAndReload();
         Tracker.clearAndReload();
@@ -847,7 +847,7 @@ public static class RoleHelpers
         Arsonist.clearAndReload();
         BountyHunter.clearAndReload();
         Vulture.clearAndReload();
-        Medium.clearAndReload();
+        Alchemyst.clearAndReload();
         Bomber.clearAndReload();
         Lawyer.clearAndReload();
         Executioner.clearAndReload();

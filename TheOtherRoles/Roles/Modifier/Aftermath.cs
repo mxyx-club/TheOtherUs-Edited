@@ -55,14 +55,14 @@ public class Aftermath
 
             terroristButton.Timer = terroristButton.MaxTimer;
         }
-        else if (Morphling.morphling == killer)
+        else if (Glitch.Player == killer)
         {
             var writer = StartRPC(CustomRPC.MorphlingMorph);
             writer.Write(player.PlayerId);
             writer.EndRPC();
             morphlingMorph(player.PlayerId);
-            Morphling.sampledTarget = null;
-            morphlingButton.Timer = Morphling.duration;
+            Glitch.sampledTarget = null;
+            morphlingButton.Timer = Glitch.duration;
             SoundEffectsManager.play("morphlingMorph");
         }
         else if (Butcher.butcher == killer)

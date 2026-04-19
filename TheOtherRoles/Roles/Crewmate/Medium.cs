@@ -1,8 +1,8 @@
 namespace TheOtherRoles.Roles.Crewmate;
 
-public static class Medium
+public static class Alchemyst
 {
-    public static PlayerControl medium;
+    public static PlayerControl Player;
     public static DeadPlayer target;
     public static DeadPlayer soulTarget;
     public static Color color = new Color32(98, 120, 115, byte.MaxValue);
@@ -28,7 +28,7 @@ public static class Medium
 
     public static void clearAndReload()
     {
-        medium = null;
+        Player = null;
         target = null;
         soulTarget = null;
         deadBodies.Clear();
@@ -92,7 +92,7 @@ public static class Medium
         if (target == Jackal.Sidekick && Jackal.jackal.Any(x => x.PlayerId == killer.PlayerId))
             infos.Add(SpecialMediumInfo.JackalKillsSidekick);
         if (target == Lawyer.lawyer && killer == Lawyer.target) infos.Add(SpecialMediumInfo.LawyerKilledByClient);
-        if (Medium.target.wasCleaned) infos.Add(SpecialMediumInfo.BodyCleaned);
+        if (Alchemyst.target.wasCleaned) infos.Add(SpecialMediumInfo.BodyCleaned);
 
         if (infos.Count > 0)
         {
@@ -131,15 +131,15 @@ public static class Medium
         else
         {
             var randomNumber = rnd.Next(4);
-            var typeOfColor = IsLightColor(Medium.target.KilledBy) ? GetString("Color.Light") : GetString("Color.Dark");
-            var timeSinceDeath = (float)(meetingStartTime - Medium.target.TimeOfDeath).TotalMilliseconds;
-            var roleString = RoleInfo.GetRolesString(Medium.target.Player, false, false, false, false);
-            var seconds = Math.Round((meetingStartTime - Medium.target.TimeOfDeath).TotalSeconds);
+            var typeOfColor = IsLightColor(Alchemyst.target.KilledBy) ? GetString("Color.Light") : GetString("Color.Dark");
+            var timeSinceDeath = (float)(meetingStartTime - Alchemyst.target.TimeOfDeath).TotalMilliseconds;
+            var roleString = RoleInfo.GetRolesString(Alchemyst.target.Player, false, false, false, false);
+            var seconds = Math.Round((meetingStartTime - Alchemyst.target.TimeOfDeath).TotalSeconds);
 
             switch (randomNumber)
             {
                 case 0:
-                    msg = string.Format(GetString("MediumInfo.PlayerRole"), RoleInfo.GetRolesString(Medium.target.Player, false, false, false));
+                    msg = string.Format(GetString("MediumInfo.PlayerRole"), RoleInfo.GetRolesString(Alchemyst.target.Player, false, false, false));
                     break;
 
                 case 1:
@@ -151,7 +151,7 @@ public static class Medium
                     break;
 
                 default:
-                    msg = string.Format(GetString("MediumInfo.KillerRole"), RoleInfo.GetRolesString(Medium.target.KilledBy, false, false, false));
+                    msg = string.Format(GetString("MediumInfo.KillerRole"), RoleInfo.GetRolesString(Alchemyst.target.KilledBy, false, false, false));
                     break;
             }
         }
@@ -183,7 +183,7 @@ public static class Medium
             msg += $"\n你问我的时候,有{count} " + condition + (count == 1 ? "" : "") + " 还活着";
         }
 
-        return Medium.target.Player.Data.PlayerName + " 的灵魂说:\n" + msg;
+        return Alchemyst.target.Player.Data.PlayerName + " 的灵魂说:\n" + msg;
     }
 
     private enum SpecialMediumInfo

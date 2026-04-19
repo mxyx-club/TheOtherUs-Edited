@@ -31,12 +31,12 @@ public static class TransportationToolPatches
                 {
                     if (Camouflager.camouflageTimer <= 0 && !MushroomSabotageActive)
                     {
-                        if (player == Morphling.morphling && Morphling.morphTimer > 0)
+                        if (player == Glitch.Player && Glitch.morphTimer > 0)
                         {
-                            hand.SetPlayerColor(Morphling.morphTarget.CurrentOutfit, PlayerMaterial.MaskType.None);
+                            hand.SetPlayerColor(Glitch.morphTarget.CurrentOutfit, PlayerMaterial.MaskType.None);
                             // Also set hat color, cause the line destroys it...
-                            player.RawSetHat(Morphling.morphTarget.Data.DefaultOutfit.HatId,
-                                Morphling.morphTarget.Data.DefaultOutfit.ColorId);
+                            player.RawSetHat(Glitch.morphTarget.Data.DefaultOutfit.HatId,
+                                Glitch.morphTarget.Data.DefaultOutfit.ColorId);
                         }
                         else
                         {
@@ -68,9 +68,9 @@ public static class TransportationToolPatches
         __instance.StartCoroutine(Effects.Lerp(5.0f, new Action<float>(p =>
         {
             if (Camouflager.camouflageTimer <= 0 && !MushroomSabotageActive &&
-                player == Morphling.morphling && Morphling.morphTimer > 0.1f)
-                player.RawSetHat(Morphling.morphTarget.Data.DefaultOutfit.HatId,
-                    Morphling.morphTarget.Data.DefaultOutfit.ColorId);
+                player == Glitch.Player && Glitch.morphTimer > 0.1f)
+                player.RawSetHat(Glitch.morphTarget.Data.DefaultOutfit.HatId,
+                    Glitch.morphTarget.Data.DefaultOutfit.ColorId);
         })));
     }
 

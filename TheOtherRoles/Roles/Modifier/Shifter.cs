@@ -150,10 +150,10 @@ public static class Shifter
             if (repeat) shiftRole(player2, player1, false);
             SecurityGuard.securityGuard = player1;
         }
-        else if (Medium.medium != null && Medium.medium == player2)
+        else if (Alchemyst.Player != null && Alchemyst.Player == player2)
         {
             if (repeat) shiftRole(player2, player1, false);
-            Medium.medium = player1;
+            Alchemyst.Player = player1;
         }
         else if (Trapper.trapper != null && Trapper.trapper == player2)
         {

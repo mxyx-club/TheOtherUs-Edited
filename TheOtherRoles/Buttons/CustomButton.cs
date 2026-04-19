@@ -368,9 +368,9 @@ public class CustomButton
         {
             displayText = buttonText;
         }
-        else if (Morphling.morphling != null && target == Morphling.morphling && Morphling.morphTimer > 0)
+        else if (Glitch.Player != null && target == Glitch.Player && Glitch.morphTimer > 0)
         {
-            displayText = Morphling.morphTarget?.Data.PlayerName ?? displayText;
+            displayText = Glitch.morphTarget?.Data.PlayerName ?? displayText;
         }
 
         SetButtonText(displayText);

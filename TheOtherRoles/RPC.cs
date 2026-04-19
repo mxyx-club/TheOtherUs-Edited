@@ -322,7 +322,7 @@ public static class RPCProcedure
                 Seer.seer = player;
                 break;
             case RoleId.Morphling:
-                Morphling.morphling = player;
+                Glitch.Player = player;
                 break;
             case RoleId.Bomber:
                 Bomber.bomber = player;
@@ -400,7 +400,7 @@ public static class RPCProcedure
                 Vulture.vulture = player;
                 break;
             case RoleId.Medium:
-                Medium.medium = player;
+                Alchemyst.Player = player;
                 break;
             case RoleId.Trapper:
                 Trapper.trapper = player;
@@ -851,9 +851,9 @@ public static class RPCProcedure
 
     public static void cleanBody(byte playerId, byte cleaningPlayerId)
     {
-        if (Medium.futureDeadBodies != null)
+        if (Alchemyst.futureDeadBodies != null)
         {
-            var deadBody = Medium.futureDeadBodies.Find(x => x.Item1.Player.PlayerId == playerId)?.Item1;
+            var deadBody = Alchemyst.futureDeadBodies.Find(x => x.Item1.Player.PlayerId == playerId)?.Item1;
             if (deadBody != null) deadBody.wasCleaned = true;
         }
 
@@ -1040,12 +1040,12 @@ public static class RPCProcedure
     public static void morphlingMorph(byte playerId)
     {
         var target = PlayerById(playerId);
-        if (Morphling.morphling == null || target == null) return;
+        if (Glitch.Player == null || target == null) return;
 
-        Morphling.morphTimer = Morphling.duration;
-        Morphling.morphTarget = target;
+        Glitch.morphTimer = Glitch.duration;
+        Glitch.morphTarget = target;
         if (Camouflager.camouflageTimer <= 0f)
-            Morphling.morphling.setLook(target.Data.PlayerName, target.Data.DefaultOutfit.ColorId,
+            Glitch.Player.setLook(target.Data.PlayerName, target.Data.DefaultOutfit.ColorId,
                 target.Data.DefaultOutfit.HatId, target.Data.DefaultOutfit.VisorId, target.Data.DefaultOutfit.SkinId,
                 target.Data.DefaultOutfit.PetId);
     }
@@ -1227,7 +1227,7 @@ public static class RPCProcedure
         if (player == Spy.spy) Spy.clearAndReload();
         if (player == Marionette.Player) Marionette.ClearAndReload();
         if (player == SecurityGuard.securityGuard) SecurityGuard.clearAndReload();
-        if (player == Medium.medium) Medium.clearAndReload();
+        if (player == Alchemyst.Player) Alchemyst.clearAndReload();
         if (player == InfoSleuth.infoSleuth) InfoSleuth.clearAndReload();
         if (player == Jumper.jumper) Jumper.clearAndReload();
         if (player == Trapper.trapper) Trapper.clearAndReload();
@@ -1236,7 +1236,7 @@ public static class RPCProcedure
         if (player == Vigilante.vigilante) Vigilante.clearAndReload();
 
         // Impostor roles
-        if (player == Morphling.morphling) Morphling.clearAndReload();
+        if (player == Glitch.Player) Glitch.clearAndReload();
         if (player == Bomber.bomber) Bomber.clearAndReload();
         if (player == Camouflager.camouflager) Camouflager.clearAndReload();
         if (player == Poucher.poucher && !Poucher.spawnModifier) Poucher.clearAndReload();

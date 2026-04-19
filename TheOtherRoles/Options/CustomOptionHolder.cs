@@ -1048,7 +1048,7 @@ public class CustomOptionHolder
         professionalBaitKiller = Create(103702, Types.Impostor, "professionalBaitKiller", true, professionalSpawnRate,
             onChange: (x) => { if (modifierProfessionalBaitKiller.Selection != x.Selection) modifierProfessionalBaitKiller.updateSelection(x.Selection); });
 
-        morphlingSpawnRate = Create(101100, Types.Impostor, Cs(Morphling.color, "Morphling"), rates, null, true);
+        morphlingSpawnRate = Create(101100, Types.Impostor, Cs(Glitch.color, "Morphling"), rates, null, true);
         morphlingCooldown = Create(101101, Types.Impostor, "morphlingCooldown", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);
         morphlingDuration = Create(101102, Types.Impostor, "morphlingDuration", 15f, 1f, 20f, 0.5f, morphlingSpawnRate);
         morphlingResetAfterMeeting = Create(101103, Types.Impostor, "morphlingResetAfterMeeting", false, morphlingSpawnRate);
@@ -1549,7 +1549,7 @@ public class CustomOptionHolder
         infoSleuthInfoType = Create(303801, Types.Crewmate, "infoSleuthInfoType",
             ["infoSleuthInfoType1", "infoSleuthInfoType2", "infoSleuthInfoType3"], 2, infoSleuthSpawnRate);
 
-        mediumSpawnRate = Create(303100, Types.Crewmate, Cs(Medium.color, "Medium"), rates, null, true);
+        mediumSpawnRate = Create(303100, Types.Crewmate, Cs(Alchemyst.color, "Medium"), rates, null, true);
         mediumCooldown = Create(303101, Types.Crewmate, "mediumCooldown", 7.5f, 2.5f, 120f, 2.5f, mediumSpawnRate);
         mediumDuration = Create(303102, Types.Crewmate, "mediumDuration", 0.5f, 0f, 15f, 0.5f, mediumSpawnRate);
         mediumOneTimeUse = Create(303103, Types.Crewmate, "mediumOneTimeUse", false, mediumSpawnRate);
