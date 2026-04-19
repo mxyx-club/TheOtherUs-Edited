@@ -9,7 +9,9 @@ public class SoulSight
     public static float RespawnTimer;
     public static int ScoreToWin;
     public static float Cooldown;
+    public static bool SoloWin;
 
+    public static bool IsKilled;
     public static int Score;
     public static bool TriggerWin;
     public static bool Reviveing;
@@ -27,10 +29,10 @@ public class SoulSight
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update)), HarmonyPostfix]
         public static void Update(HudManager __instance)
         {
-            if (Player == null || !Player.AmOwner) return;
+            if (Player == null || Player != PlayerControl.LocalPlayer) return;
             if (CanRevive || Reviveing)
             {
-                if (Player.AmOwner) CanSeeGhostInfo = false;
+                CanSeeGhostInfo = false;
                 __instance.ShadowQuad?.gameObject?.SetActive(true);
                 __instance.AbilityButton.gameObject?.SetActive(false);
             }
@@ -40,7 +42,7 @@ public class SoulSight
         public static void StartMeeting()
         {
             if (Player == null) return;
-            if (Reviveing)
+            if (Reviveing && !IsKilled)
             {
                 Score++;
             }
@@ -58,7 +60,7 @@ public class SoulSight
         }
 
         [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Exiled)), HarmonyPostfix]
-        public static void Postfix(PlayerControl __instance)
+        public static void Exiled(PlayerControl __instance)
         {
             if (Player == null) return;
             if (__instance == Player)
@@ -76,6 +78,7 @@ public class SoulSight
 
             if (Reviveing) Player?.Revive();
             Reviveing = false;
+            IsKilled = false;
 
             Message($"Reviveing: {Reviveing}");
         }
@@ -83,12 +86,14 @@ public class SoulSight
 
     public static void ClearAndReload()
     {
-        Player = null;
+        /*Player = null;
         Score = 0;
         Reviveing = false;
         TriggerWin = false;
         CanRevive = true;
-        /*Cooldown = CustomOptionHolder.soulSightCooldown.GetFloat();
+        IsKilled = false;
+        SoloWin = CustomOptionHolder.soulSightSoloWin.GetBool();
+        Cooldown = CustomOptionHolder.soulSightCooldown.GetFloat();
         RespawnTimer = CustomOptionHolder.soulSightRespawnTimer.GetFloat();
         ScoreToWin = CustomOptionHolder.soulSightScoreToWin.GetInt();*/
     }

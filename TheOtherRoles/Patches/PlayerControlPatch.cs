@@ -516,6 +516,7 @@ public static class MurderPlayerPatch
         {
             SoulSight.Reviveing = true;
             SoulSight.CanRevive = true;
+            SoulSight.IsKilled = true;
         }
 
         if (Aftermath.aftermath != null && Aftermath.aftermath == target && PlayerControl.LocalPlayer == __instance)

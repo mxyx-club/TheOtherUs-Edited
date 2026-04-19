@@ -4820,7 +4820,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return SoulSight.Player != null && SoulSight.Player?.AmOwner == true;
+                return SoulSight.Player != null && SoulSight.Player == PlayerControl.LocalPlayer;
             },
             () =>
             {

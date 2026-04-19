@@ -32,6 +32,7 @@ internal enum CustomGameOverReason
     BandLeaderWin,
     BandLeaderTeamWin,
     AvengerTeamWin,
+    SoulSightWin,
 }
 
 internal enum WinCondition
@@ -56,6 +57,7 @@ internal enum WinCondition
     LawyerSoloWin,
     BandLeaderWin,
     InfectedWin,
+    SoulSightWin,
     AdditionalLawyerBonusWin,
     AdditionalLawyerStolenWin,
     AdditionalAlivePursuerWin,
@@ -241,6 +243,12 @@ public class OnGameEndPatch
         {
             winners.Add(Jester.WinnerPlayer);
             AdditionalTempData.winCondition = WinCondition.JesterWin;
+        }
+
+        else if (SoulSight.Player != null && gameOverReason == (GameOverReason)CustomGameOverReason.SoulSightWin)
+        {
+            winners.Add(SoulSight.Player);
+            AdditionalTempData.winCondition = WinCondition.SoulSightWin;
         }
 
         else if (avengerAndLoveWin && Avenger.WinCondition is Avenger.WinnerFlags.StealWin or Avenger.WinnerFlags.RevengeWin)
@@ -568,7 +576,7 @@ public class OnGameEndPatch
             AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalPartTimerWin);
         }
 
-        if (SoulSight.Player != null && SoulSight.TriggerWin && SoulSight.Player != null)
+        if (SoulSight.Player != null && SoulSight.TriggerWin && !SoulSight.SoloWin)
         {
             winners.Add(SoulSight.Player);
             AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalSoulSightWin);
@@ -693,7 +701,8 @@ public class EndGameManagerSetUpPatch
             { WinCondition.ImpostorWin, (Palette.ImpostorRed, "ImpostorWin") },
             { WinCondition.BandLeaderWin, (BandLeader.color, "BandLeaderWin") },
             { WinCondition.InfectedWin, (BandLeader.color, "InfectedWin") },
-            { WinCondition.AvengerTeamWin, (Avenger.color, "AvengerTeamWin") }
+            { WinCondition.AvengerTeamWin, (Avenger.color, "AvengerTeamWin") },
+            { WinCondition.SoulSightWin, (SoulSight.color, "SoulSightWin") }
         };
 
         var winConditionMappings = new Dictionary<WinCondition, (Color, string)>
@@ -821,6 +830,7 @@ internal class CheckEndCriteriaPatch
         if (CheckAndEndGameForAkujoWin(__instance, statistics)) return false;
         if (CheckAndEndGameForArsonistWin(__instance, statistics)) return false;
         if (CheckAndEndGameForWerewolfWin(__instance, statistics)) return false;
+        if (CheckAndEndGameForSoulSightWin(__instance)) return false;
         if (CheckAndEndGameForLoverWin(__instance, statistics)) return false;
         if (CheckAndEndGameForJackalWin(__instance, statistics)) return false;
         if (CheckAndEndGameForInfectedWin(__instance, statistics)) return false;
@@ -858,6 +868,17 @@ internal class CheckEndCriteriaPatch
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.WitnessWin, false);
+            return true;
+        }
+        return false;
+    }
+
+    private static bool CheckAndEndGameForSoulSightWin(ShipStatus __instance)
+    {
+        if (SoulSight.TriggerWin && SoulSight.SoloWin)
+        {
+            //__instance.enabled = false;
+            GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.SoulSightWin, false);
             return true;
         }
         return false;

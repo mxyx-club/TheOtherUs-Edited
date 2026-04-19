@@ -3742,6 +3742,12 @@
         "0": "The Pursuer survived",
         "13": "起诉人存活"
     },
+    "AdditionalSoulSightWin": {
+        "13": "窥天者胜利"
+    },
+    "SoulSightWin": {
+        "13": "窥天者胜利"
+    },
     "RoleDraft.FeedText": {
         "0": "<size=200%>Ready Players:</size>\n\n",
         "13": "<size=200%>已选择的玩家:</size>\n\n"

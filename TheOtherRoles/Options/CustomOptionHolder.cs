@@ -313,7 +313,8 @@ public class CustomOptionHolder
     /*public static CustomOption soulSightSpawnRate;
     public static CustomOption soulSightCooldown;
     public static CustomOption soulSightRespawnTimer;
-    public static CustomOption soulSightScoreToWin;*/
+    public static CustomOption soulSightScoreToWin;
+    public static CustomOption soulSightSoloWin;*/
 
     public static CustomOption witnessSpawnRate;
     public static CustomOption witnessMarkTimer;
@@ -1214,7 +1215,8 @@ public class CustomOptionHolder
         /*soulSightSpawnRate = Create(203400, Types.Neutral, Cs(SoulSight.color, "SoulSight"), rates, null, true);
         soulSightCooldown = Create(203401, Types.Neutral, "自杀冷却", 25f, 5f, 120f, 2.5f, soulSightSpawnRate);
         soulSightRespawnTimer = Create(203402, Types.Neutral, "自杀后强制复活的间隔时间", 30, 5, 120, 5, soulSightSpawnRate);
-        soulSightScoreToWin = Create(203403, Types.Neutral, "获胜需获得的分数", 3, 1, 6, 1, soulSightSpawnRate);*/
+        soulSightScoreToWin = Create(203403, Types.Neutral, "获胜需获得的分数", 3, 1, 6, 1, soulSightSpawnRate);
+        soulSightSoloWin = Create(203404, Types.Neutral, "是否独立获胜", false, soulSightSpawnRate);*/
 
         partTimerSpawnRate = Create(202900, Types.Neutral, Cs(PartTimer.color, "PartTimer"), rates, null, true);
         partTimerCooldown = Create(202901, Types.Neutral, "partTimerCooldown", 20f, 2.5f, 60f, 2.5f, partTimerSpawnRate);

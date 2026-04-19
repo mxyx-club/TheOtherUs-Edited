@@ -1,4 +1,4 @@
-﻿namespace TheOtherRoles.Patches;
+namespace TheOtherRoles.Patches;
 
 [HarmonyPatch]
 public static class TransportationToolPatches
