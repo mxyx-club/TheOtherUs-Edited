@@ -509,25 +509,38 @@ internal class MeetingHudPatch
             VoterState[] states;
             List<VoterState> statesList = new();
 
-            for (var i = 0; i < __instance.playerStates.Length; i++)
+            foreach (var pva in __instance.playerStates)
             {
-                var pva = __instance.playerStates[i];
-
+                var player = PlayerById(pva.TargetPlayerId);
                 //バランサー処理
                 if (Balancer.currentAbilityUser != null)
                 {
-                    if (PlayerById(pva.TargetPlayerId) != null && pva.VotedFor != Balancer.targetplayerright.PlayerId && pva.VotedFor != Balancer.targetplayerleft.PlayerId)
+                    if (player != null && pva.VotedFor != Balancer.targetplayerright.PlayerId && pva.VotedFor != Balancer.targetplayerleft.PlayerId)
                     {
                         if (pva.TargetPlayerId == Balancer.currentAbilityUser.PlayerId)
                         {
                             pva.VotedFor = 254;
-                            continue;
                         }
-                        bool chooseRight = rnd.Next(0, 2) == 0;
-                        pva.VotedFor = chooseRight
-                            ? Balancer.targetplayerright.PlayerId
-                            : Balancer.targetplayerleft.PlayerId;
+                        else
+                        {
+                            bool chooseRight = rnd.Next(0, 2) == 0;
+                            pva.VotedFor = chooseRight
+                                ? Balancer.targetplayerright.PlayerId
+                                : Balancer.targetplayerleft.PlayerId;
+                        }
                     }
+                }
+
+                if (Mayor.mayor != null && Mayor.mayor?.PlayerId == pva.TargetPlayerId && Mayor.CurrentVote == 0)
+                {
+                    pva.VotedFor = 254;
+                }
+
+                if (Prosecutor.prosecutor != null && Prosecutor.ProsecuteThisMeeting && pva.VotedFor > 250)
+                {
+                    Prosecutor.Prosecuted = false;
+                    Prosecutor.ProsecuteThisMeeting = false;
+                    Prosecutor.StartProsecute = false;
                 }
 
                 statesList.Add(new VoterState()

@@ -23,7 +23,7 @@ internal static class HudManagerStartPatch
     public static CustomButton specterRememberButton;
     public static CustomButton veteranAlertButton;
     public static CustomButton medicShieldButton;
-    public static CustomButton mediumKillButton;
+    public static CustomButton alchemystKillButton;
     public static CustomButton shifterShiftButton;
     public static CustomButton bomberBombButton;
     public static CustomButton bomberGiveButton;
@@ -65,7 +65,7 @@ internal static class HudManagerStartPatch
     public static CustomButton arsonistButton;
     public static CustomButton arsonistKillButton;
     public static CustomButton vultureEatButton;
-    public static CustomButton mediumButton;
+    public static CustomButton alchemystButton;
     public static CustomButton pursuerButton;
     public static CustomButton witchSpellButton;
     public static CustomButton jumperMarkButton;
@@ -184,7 +184,8 @@ internal static class HudManagerStartPatch
         grenadierFlashButton.MaxTimer = Grenadier.cooldown;
         bomberGiveButton.MaxTimer = bomberGiveButton.Timer = 0f;
         partTimerButton.MaxTimer = PartTimer.cooldown;
-        mediumButton.MaxTimer = Alchemyst.cooldown;
+        alchemystButton.MaxTimer = Alchemyst.cooldown;
+        alchemystKillButton.MaxTimer = Alchemyst.KillCooldown;
         pursuerButton.MaxTimer = Pursuer.cooldown;
         trackerTrackCorpsesButton.MaxTimer = Tracker.corpsesTrackingCooldown;
         prophetButton.MaxTimer = Prophet.cooldown;
@@ -250,7 +251,7 @@ internal static class HudManagerStartPatch
         bomberBombButton.EffectDuration = Bomber.bombDelay + Bomber.bombTimer;
         lightsOutButton.EffectDuration = Trickster.lightsOutDuration;
         arsonistButton.EffectDuration = Arsonist.duration;
-        mediumButton.EffectDuration = Alchemyst.duration;
+        alchemystButton.EffectDuration = Alchemyst.duration;
         trackerTrackCorpsesButton.EffectDuration = Tracker.corpsesTrackingDuration;
         witchSpellButton.EffectDuration = Witch.spellCastingDuration;
         securityGuardCamButton.EffectDuration = SecurityGuard.duration;
@@ -3117,13 +3118,13 @@ internal static class HudManagerStartPatch
         );
 
         // Medium button
-        mediumButton = new CustomButton(
+        alchemystButton = new CustomButton(
             () =>
             {
                 if (Alchemyst.target != null)
                 {
                     Alchemyst.soulTarget = Alchemyst.target;
-                    mediumButton.HasEffect = true;
+                    alchemystButton.HasEffect = true;
                     SoundEffectsManager.play("mediumAsk");
                 }
             },
@@ -3149,19 +3150,19 @@ internal static class HudManagerStartPatch
                 }
                 Alchemyst.target = target;
 
-                if (mediumButton.isEffectActive && Alchemyst.target != Alchemyst.soulTarget)
+                if (alchemystButton.isEffectActive && Alchemyst.target != Alchemyst.soulTarget)
                 {
                     Alchemyst.soulTarget = null;
-                    mediumButton.Timer = 0f;
-                    mediumButton.isEffectActive = false;
+                    alchemystButton.Timer = 0f;
+                    alchemystButton.isEffectActive = false;
                 }
 
                 return Alchemyst.target != null && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {
-                mediumButton.Timer = mediumButton.MaxTimer;
-                mediumButton.isEffectActive = false;
+                alchemystButton.Timer = alchemystButton.MaxTimer;
+                alchemystButton.isEffectActive = false;
                 Alchemyst.soulTarget = null;
             },
             Alchemyst.question,
@@ -3172,7 +3173,7 @@ internal static class HudManagerStartPatch
             Alchemyst.duration,
             () =>
             {
-                mediumButton.Timer = mediumButton.MaxTimer;
+                alchemystButton.Timer = alchemystButton.MaxTimer;
                 if (Alchemyst.target == null || Alchemyst.target.Player == null) return;
                 var msg = Alchemyst.getInfo(Alchemyst.target.Player, Alchemyst.target.KilledBy);
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msg);
@@ -3238,31 +3239,31 @@ internal static class HudManagerStartPatch
             buttonText: GetString("MediumText")
         );
 
-        mediumKillButton = new CustomButton(
+        alchemystKillButton = new CustomButton(
             () =>
             {
                 if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Alchemyst.CurrentTarget)) return;
 
                 Alchemyst.canUseKill = false;
                 Alchemyst.skillUseCount = 0;
-                mediumKillButton.Timer = mediumKillButton.MaxTimer;
+                alchemystKillButton.Timer = alchemystKillButton.MaxTimer;
                 Alchemyst.CurrentTarget = null;
             },
              () =>
              {
-                 return Alchemyst.Player.IsAlive() && Alchemyst.Player == PlayerControl.LocalPlayer && Alchemyst.canUseKill;
+                 return Alchemyst.Player.IsAlive() && Alchemyst.Player == PlayerControl.LocalPlayer;
              },
              () =>
              {
                  Alchemyst.CurrentTarget = SetTarget(inVented: ModOption.CanKillInVent);
                  SetPlayerOutline(Alchemyst.CurrentTarget, Alchemyst.color);
-                 mediumKillButton.showTargetNameOnButton(Alchemyst.CurrentTarget);
+                 alchemystKillButton.showTargetNameOnButton(Alchemyst.CurrentTarget);
 
-                 return PlayerControl.LocalPlayer.CanMove && Alchemyst.CurrentTarget != null;
+                 return PlayerControl.LocalPlayer.CanMove && Alchemyst.CurrentTarget != null && Alchemyst.canUseKill;
              },
               () =>
               {
-                  mediumKillButton.Timer = mediumKillButton.MaxTimer;
+                  alchemystKillButton.Timer = alchemystKillButton.MaxTimer;
               },
              __instance.KillButton.graphic.sprite,
              __instance,

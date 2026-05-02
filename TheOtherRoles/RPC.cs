@@ -506,7 +506,7 @@ public static class RPCProcedure
 
         if (data != null)
         {
-            data.RoleId = (RoleId)roleId;
+            data.MainRole = (RoleId)roleId;
             data.RoleHistory.Add((RoleId)roleId);
         }
     }
@@ -1189,7 +1189,7 @@ public static class RPCProcedure
     public static void PavlovsRing(float duration)
     {
         if (!Pavlovsdogs.pavlovsdogs.Any(x => x.AmOwner)) return;
-        SoundEffectsManager.play("pavlovsRing");
+        SoundEffectsManager.play("ring");
         pavlovsdogsKillButton.Multiplier = Pavlovsdogs.ringMultiplier;
         _ = new LateTask(() =>
         {
@@ -1472,6 +1472,7 @@ public static class RPCProcedure
     {
         if (playerId == byte.MaxValue)
         {
+            SoundEffectsManager.stop("timemasterShield");
             Bomber.hasBombPlayer = null;
             Bomber.bombActive = false;
             Bomber.hasAlerted = false;
@@ -1482,9 +1483,13 @@ public static class RPCProcedure
         if (bomb)
         {
             Bomber.hasBombPlayer = PlayerById(playerId);
-            Bomber.timeLeft += (int)0.5;
+            Bomber.timeLeft += 0.5f;
+
             return;
         }
+
+        SoundEffectsManager.stop("timemasterShield");
+        if (Bomber.hasBombPlayer.IsOwner) SoundEffectsManager.play("timemasterShield");
 
         Bomber.hasBombPlayer = PlayerById(playerId);
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombDelay,
@@ -1496,9 +1501,18 @@ public static class RPCProcedure
             new Action<float>(p =>
             {
                 // Delayed action
-                if (Bomber.bomber.IsDead() || Bomber.hasBombPlayer.IsDead()) return;
+                if (Bomber.bomber.IsDead() || Bomber.hasBombPlayer.IsDead())
+                {
+                    SoundEffectsManager.stop("timemasterShield");
+                    Bomber.hasBombPlayer = null;
+                    Bomber.bombActive = false;
+                    Bomber.hasAlerted = false;
+                    Bomber.timeLeft = 0;
+                    return;
+                }
                 if (p == 1f && Bomber.bombActive)
                 {
+                    SoundEffectsManager.stop("timemasterShield");
                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
                     if (PlayerControl.LocalPlayer == Bomber.bomber) RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
                     Bomber.hasBombPlayer = null;

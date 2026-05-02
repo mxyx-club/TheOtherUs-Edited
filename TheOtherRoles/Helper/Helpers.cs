@@ -60,6 +60,7 @@ public static class Helpers
         //if (isRoleAlive(Swapper.swapper)) powerCrewAlive = true;
         if (isRoleAlive(Prosecutor.prosecutor)) powerCrewAlive = true;
         if (isRoleAlive(Vigilante.vigilante)) powerCrewAlive = true;
+        if (isRoleAlive(Alchemyst.Player) && Alchemyst.canUseKill) powerCrewAlive = true;
 
         return powerCrewAlive;
     }
@@ -454,8 +455,9 @@ public static class Helpers
     public static void handleBomberExplodeOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        if (Bomber.bomber != null && Bomber.hasBombPlayer != null)
+        if (Bomber.bomber.IsAlive() && Bomber.hasBombPlayer != null)
         {
+            SoundEffectsManager.stop("timemasterShield");
             if (Bomber.hasBombPlayer.IsAlive()) RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
             var writer = StartRPC(CustomRPC.GiveBomb);
             writer.Write(byte.MaxValue);

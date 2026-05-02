@@ -7,35 +7,38 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using TheOtherRoles.Attributes;
+using TheOtherRoles.Mode;
 using TheOtherRoles.Patches;
 
 namespace TheOtherRoles.Modules;
 
 public class PlayerData
 {
-    public static PlayerData Local { get => field ??= GetPlayerData(PlayerControl.LocalPlayer); private set; }
-    public static Dictionary<byte, PlayerData> AllPlayerData = new();
-    public static Dictionary<byte, string> AllFriendCode = new();
-    public static Dictionary<byte, ushort> AnonymousId = new();
+    public static PlayerData LocalData { get => field ??= GetPlayerData(LocalPlayer); private set; }
+    public static PlayerControl LocalPlayer { get; private set; }
+
+    public static Dictionary<byte, PlayerData> AllPlayerData { get; private set; } = new();
+    public static Dictionary<byte, string> AllFriendCode { get; private set; } = new();
+    public static Dictionary<byte, ushort> AnonymousId { get; private set; } = new();
+    public static List<PlayerControl> AllPlayerControl { get; private set; } = new();
 
     public PlayerControl Player { get; private set; }
     public byte PlayerId { get; private set; }
-
-    public bool IsWinner;
-    public bool IsDisconnected;
     public bool IsDead => Player.IsDead();
     public int KillCount => GetKillCount(Player);
-    public Tuple<int, int> TaskCount;
+    public bool IsWinner;
+    public bool IsDisconnected;
 
-    public RoleInfo RoleInfo => RoleInfo.RoleInfoById.GetValueOrDefault(RoleId, RoleInfo.crewmate);
-    public RoleType RoleType { get; set => field = value == RoleType.Error ? field : value; } = RoleType.Crewmate;
+    public RoleInfo RoleInfo;
+    public RoleType RoleType = RoleType.Error;
     public List<RoleId> RoleHistory = new();
-    public RoleId RoleId = RoleId.DefaultRole;
+    public RoleId MainRole = RoleId.DefaultRole;
     public RoleId OriginRole = RoleId.DefaultRole;
     public List<RoleId> Modifiers = new();
     public RoleId? GhostRole;
+    public Tuple<int, int> TaskCount;
 
-    public string PlayerName { get; set; }
+    public string PlayerName { get; }
     public string FriendCode { get; set; }
     public string ColorName { get; set; }
 
@@ -50,6 +53,16 @@ public class PlayerData
     public string NamePlateId => Player.CurrentOutfit.NamePlateId;
     public string PetId => Player.CurrentOutfit.PetId;
 
+    public PlayerData(PlayerControl player)
+    {
+        Player = player;
+        PlayerId = player.PlayerId;
+        PlayerName = player.Data.PlayerName;
+        FriendCode = player.Data.FriendCode;
+        ColorName = player.Data.ColorName;
+        AllPlayerData[player.PlayerId] = this;
+    }
+
     public static PlayerData GetPlayerData(PlayerControl player)
     {
         if (player?.Data == null) return null;
@@ -59,16 +72,7 @@ public class PlayerData
         }
         else
         {
-            data = new PlayerData
-            {
-                Player = player,
-                PlayerId = player.PlayerId,
-                PlayerName = player.Data.PlayerName,
-                FriendCode = player.Data.FriendCode,
-                ColorName = player.Data.ColorName,
-            };
-            AllPlayerData[player.PlayerId] = data;
-            if (player == PlayerControl.LocalPlayer) Local = data;
+            data = new PlayerData(player);
             return data;
         }
     }
@@ -87,21 +91,21 @@ public class PlayerData
     [OnGameStart(Attributes.Priority.High)]
     public static void Init()
     {
-        AllPlayerData = new();
-        AllFriendCode = new();
+        AllPlayerData.Clear();
+        AllFriendCode.Clear();
+        AllPlayerControl.Clear();
+
         var code = EOSManager.Instance?.FriendCode ?? "";
 
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            var data = new PlayerData
-            {
-                Player = player,
-                PlayerId = player.PlayerId,
-                PlayerName = player.Data.PlayerName,
-                ColorName = player.Data.GetPlayerColorString(),
-            };
-            AllPlayerData[player.PlayerId] = data;
+            var data = new PlayerData(player);
+            AllPlayerControl.Add(player);
         }
+
+        LocalData = AllPlayerData[PlayerControl.LocalPlayer.PlayerId];
+        LocalPlayer = AllPlayerControl[PlayerControl.LocalPlayer.PlayerId];
+
         _ = new LateTask(() =>
         {
             if (ModOption.uploadGameData)
@@ -145,6 +149,14 @@ public class PlayerData
         }
     }
 
+    public static void ClearDeathReason(PlayerControl player)
+    {
+        if (!AllPlayerData.TryGetValue(player.PlayerId, out var data)) return;
+        data.DeathReason = CustomDeathReason.Null;
+        data.DeathTimer = DateTime.MinValue;
+        data.KilledBy = null;
+    }
+
     public static void RpcSetDeathReason(PlayerControl player, CustomDeathReason deathReason, PlayerControl killer)
     {
         var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareDeathReasonAndKiller);
@@ -185,6 +197,7 @@ public class PlayerData
         [OnGameStart]
         public static void Init()
         {
+            AnonymousId.Clear();
             EndTime = DateTime.MinValue;
             StartTime = DateTime.UtcNow;
             HostPlayer = Helpers.HostPlayer.Data.PlayerName;
@@ -259,7 +272,7 @@ public class PlayerData
                     RoleInfo = new
                     {
                         OriginRole = p.OriginRole.ToString(),
-                        MainRole = p.RoleId.ToString(),
+                        MainRole = p.MainRole.ToString(),
                         Modifiers = p.Modifiers.Select(x => x.ToString()),
                         RoleHistory = p.RoleHistory.Select(x => x.ToString()),
                         RoleType = p.RoleType.ToString(),

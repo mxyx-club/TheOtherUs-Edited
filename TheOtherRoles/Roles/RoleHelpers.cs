@@ -148,6 +148,8 @@ public static class PlayerControlExtensions
     {
         public bool IsUsingTransportation => player.inMovingPlat || player.onLadder;
 
+        public bool IsOwner => player != null && player == PlayerControl.LocalPlayer;
+
         /// <summary>
         /// 假任务
         /// </summary>
@@ -567,6 +569,16 @@ public static class RoleHelpers
         }
 
         return false;
+    }
+
+    public static bool AllCrewDead()
+    {
+        foreach (var player in PlayerControl.AllPlayerControls)
+        {
+            if (!player.IsDead() && player.IsCrew())
+                return false;
+        }
+        return true;
     }
 
     public static bool CheckMurderPlayer(PlayerControl killer, PlayerControl target)

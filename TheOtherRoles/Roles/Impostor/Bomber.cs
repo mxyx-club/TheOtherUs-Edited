@@ -15,7 +15,7 @@ public static class Bomber
     public static bool bombActive;
 
     public static bool hasAlerted;
-    public static int timeLeft;
+    public static float timeLeft;
     public static PlayerControl currentTarget;
     public static PlayerControl currentBombTarget;
     public static PlayerControl hasBombPlayer;

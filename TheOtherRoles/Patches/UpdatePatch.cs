@@ -999,7 +999,7 @@ internal class HudManagerUpdatePatch
 
         foreach (var player in PlayerControl.AllPlayerControls)
         {
-            if (player.Data.IsDead || player.PlayerId == PlayerControl.LocalPlayer.PlayerId || !player.Collider.enabled)
+            if (player.IsDead() || player.PlayerId == PlayerControl.LocalPlayer.PlayerId || !player.Collider.enabled)
                 continue;
 
             float distance = Vector2.Distance(refPosition, player.GetTruePosition());
@@ -1017,7 +1017,7 @@ internal class HudManagerUpdatePatch
                 Radar.localArrow = new Arrow(Radar.color);
                 Radar.localArrow.arrow.SetActive(true);
             }
-            Radar.localArrow.Update(closestPlayer.transform.position);
+            Radar.localArrow.Update(closestPlayer.GetTruePosition());
         }
         else
         {

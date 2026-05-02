@@ -19,7 +19,7 @@ public static class Alchemyst
     public static int skillUseCount;
     public static bool canUseKill;
     public static int mediumRequiredUses = 3;
-    public static float mediumKillCooldown = 25f;
+    public static float KillCooldown = 25f;
     public static PlayerControl CurrentTarget;
 
     public static Sprite soulSprite = new ResourceSprite("Soul.png", 500f);
@@ -43,7 +43,7 @@ public static class Alchemyst
         skillUseCount = 0;
         canUseKill = false;
         mediumRequiredUses = (int)CustomOptionHolder.mediumRequiredUses.GetFloat();
-        mediumKillCooldown = CustomOptionHolder.mediumKillCooldown.GetFloat();
+        KillCooldown = CustomOptionHolder.mediumKillCooldown.GetFloat();
     }
 
 

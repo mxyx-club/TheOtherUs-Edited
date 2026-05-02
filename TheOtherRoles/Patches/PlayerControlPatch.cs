@@ -256,13 +256,7 @@ internal class PlayerControlRevivePatch
 
         RPCProcedure.clearGhostRoles(__instance.PlayerId);
 
-        var data = PlayerData.GetPlayerData(__instance);
-        if (data != null)
-        {
-            data.DeathReason = CustomDeathReason.Null;
-            data.KilledBy = null;
-            data.DeathTimer = DateTime.MinValue;
-        }
+        PlayerData.ClearDeathReason(__instance);
     }
 }
 

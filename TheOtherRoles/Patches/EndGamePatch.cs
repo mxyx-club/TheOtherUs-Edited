@@ -309,19 +309,18 @@ public class OnGameEndPatch
         else if (loversWin && (Lovers.isCrewLover() || Lovers.isKillerLover() || gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin))
         {
             // Double win for lovers, crewmates also win
-            if (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin)
+            if (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin && Lovers.isKillerLover())
             {
                 winners.Add(Lovers.lover1);
                 winners.Add(Lovers.lover2);
                 AdditionalTempData.winCondition = WinCondition.LoversSoloWin;
             }
-            else if (Lovers.isKillerLover())
+            else if (Lovers.isKillerLover() || AllCrewDead())
             {
                 winners.Add(Lovers.lover1);
                 winners.Add(Lovers.lover2);
                 AdditionalTempData.winCondition = WinCondition.LoversSoloWin;
             }
-            // Lovers solo win
             else
             {
                 foreach (var p in AllPlayers)
@@ -638,7 +637,7 @@ public class EndGameManagerSetUpPatch
             var num4 = num3 / (float)num;
             var num5 = Mathf.Lerp(1f, 0.75f, num4);
             float num6 = i == 0 ? -8 : -1;
-            var role = PlayerData.GetPlayerData(wpd.PlayerName)?.RoleId;
+            var role = PlayerData.GetPlayerData(wpd.PlayerName)?.MainRole;
             var roleString = "";
             try
             {
@@ -970,7 +969,7 @@ internal class CheckEndCriteriaPatch
 
     private static bool CheckAndEndGameForLoverWin(ShipStatus __instance, PlayerStatistics statistics)
     {
-        if (statistics.TeamLoversAlive == 2 && statistics.TotalAlive <= 3)
+        if (statistics.TeamLoversAlive == 2 && statistics.TotalAlive <= 3 && !Lovers.isCrewLover())
         {
             //__instance.enabled = false;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.LoversWin, false);
@@ -1444,6 +1443,13 @@ internal class PlayerStatistics
                     {
                         numTotalAlive--;
                     }
+                }
+                if (AllCrewDead())
+                {
+                    if (Pursuer.Player.Any(x => x.PlayerId == playerData.PlayerId)) numTotalAlive--;
+                    if (Survivor.Player.Any(x => x.PlayerId == playerData.PlayerId)) numTotalAlive--;
+                    if (Avenger.Player != null && Avenger.Player.PlayerId == playerData.PlayerId) numTotalAlive--;
+
                 }
             }
         }

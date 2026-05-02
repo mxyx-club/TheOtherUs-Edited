@@ -40,6 +40,7 @@ public static class Thief
             target == Jackal.Sidekick ||
             target == Werewolf.werewolf ||
             target == Juggernaut.juggernaut ||
+            target == Arsonist.arsonist ||
             target == Pelican.Player ||
             target == Swooper.swooper ||
             target == Pavlovsdogs.pavlovsowner ||

@@ -3644,19 +3644,18 @@
     },
     "CrewmateWin": {
         "0": "Crewmates Win",
-        "13": "船员胜利"
+        "13": "我们安全了,暂时..."
     },
     "ImpostorWin": {
-        "0": "Imposters Win",
-        "13": "伪装者胜利"
+        "0": "Imposters Win"
     },
     "JesterWin": {
         "0": "Who's the Clown now?",
-        "13": "听我说谢谢你"
+        "13": "听我说谢谢你~"
     },
     "DoomsayerWin": {
         "0": "Doomsayer Wins",
-        "13": "末日预言家获胜!"
+        "13": "由我来诉说末日!"
     },
     "ArsonistWin": {
         "0": "All shall Burn!",
@@ -3668,15 +3667,15 @@
     },
     "LawyerSoloWin": {
         "0": "Lawyer Wins Solo",
-        "13": "律师单独获胜!"
+        "13": "风骚律师!"
     },
     "PelicanWin": {
         "0": "Pelican Wins",
-        "13": "鹈鹕胜利！"
+        "13": "无法满足的食欲！"
     },
     "WerewolfWin": {
         "0": "Werewolf Wins",
-        "13": "月下狼人获胜!"
+        "13": "为了你,我变成狼人模样~"
     },
     "WitnessWin": {
         "0": "There is always only one truth!",
@@ -3684,11 +3683,11 @@
     },
     "JuggernautWin": {
         "0": "Juggernaut Wins",
-        "13": "天启获胜!"
+        "13": "此乃,天启！"
     },
     "SwooperWin": {
         "0": "Phantom Win",
-        "13": "隐身人获胜!"
+        "13": "再看看你后面呢!"
     },
     "ExecutionerWin": {
         "0": "Gossip's out!",
@@ -3704,7 +3703,7 @@
     },
     "JackalWin": {
         "0": "Jackal family's here!",
-        "13": "豺狼的全家福.jpg"
+        "13": "正因家族仰慕强者,所以我们站在此处"
     },
     "PavlovsWin": {
         "0": "Reward for a Good Doggo!",
