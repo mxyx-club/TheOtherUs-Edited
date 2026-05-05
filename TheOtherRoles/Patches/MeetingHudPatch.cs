@@ -128,6 +128,37 @@ internal class MeetingHudPatch
         }
     }
 
+    private static void OnGaolerJailClick(PlayerVoteArea pva, MeetingHud __instance, byte targetId)
+    {
+        if (!Gaoler.CanUseAbility()) return;
+        if (Gaoler.endMeetingSelection) return;
+
+        PlayerControl target = PlayerById(targetId);
+        if (target == null) return;
+
+        // 再次检查连续监禁
+        if (!Gaoler.canJailSamePlayerConsecutively && Gaoler.lastJailedPlayerId == target.PlayerId) return;
+
+        // 发送 RPC
+        var writer = StartRPC(CustomRPC.GaolerMarkPrisoner);
+        writer.Write(target.PlayerId);
+        writer.EndRPC();
+        RPCProcedure.GaolerMarkPrisoner(target.PlayerId);
+
+        // 本地更新
+        Gaoler.remainingUses--;
+        Gaoler.hasSelectedThisMeeting = true;
+        Gaoler.lastJailedPlayerId = target.PlayerId;
+        Gaoler.currentPrisoner = target;
+
+        // 销毁所有监禁图标
+        foreach (var playerState in __instance.playerStates)
+        {
+            var icon = playerState.transform.FindChild("GaolerIcon");
+            if (icon != null) UObject.Destroy(icon.gameObject);
+        }
+    }
+
     private static void mayorToggleVoteTwice(MeetingHud __instance)
     {
         __instance.playerStates[0].Cancel(); // This will stop the underlying buttons of the template from showing up
@@ -365,6 +396,11 @@ internal class MeetingHudPatch
         {
             meetingInfoText = string.Format(GetString("InfectedGuesserCount"), Infected.GuessCount);
         }
+        else if (PlayerControl.LocalPlayer == Gaoler.Player && Gaoler.Player.IsAlive() && !Gaoler.hasSelectedThisMeeting && Gaoler.remainingUses > 0 && !Gaoler.endMeetingSelection)
+        {
+            int timeLeft = (int)(Gaoler.selectionWindow - (DateTime.UtcNow - Gaoler.meetingStartTime).TotalSeconds);
+            meetingInfoText = timeLeft > 0 ? string.Format(GetString("GaolerSelectTimeLeft"), timeLeft) : GetString("GaolerSelectTimeExpired");
+        }
 
         __instance.TimerText.gameObject.SetActive(true);
 
@@ -468,38 +504,36 @@ internal class MeetingHudPatch
             }
 
             // Swapper swap votes
-            if (Swapper.swapper.IsDead()) return dictionary;
+            if (Swapper.swapper.IsDead() || Gaoler.IsPrisoner(Swapper.swapper)) return dictionary;
+
+            swapped1 = null;
+            swapped2 = null;
+            foreach (var playerVoteArea in __instance.playerStates)
             {
-                swapped1 = null;
-                swapped2 = null;
-                foreach (var playerVoteArea in __instance.playerStates)
-                {
-                    if (playerVoteArea.TargetPlayerId == Swapper.playerId1) swapped1 = playerVoteArea;
-                    if (playerVoteArea.TargetPlayerId == Swapper.playerId2) swapped2 = playerVoteArea;
-                }
-
-                if (swapped1 == null || swapped2 == null) return dictionary;
-
-                dictionary.TryAdd(swapped1.TargetPlayerId, 0);
-                dictionary.TryAdd(swapped2.TargetPlayerId, 0);
-
-                (dictionary[swapped1.TargetPlayerId], dictionary[swapped2.TargetPlayerId]) =
-                (dictionary[swapped2.TargetPlayerId], dictionary[swapped1.TargetPlayerId]);
+                if (playerVoteArea.TargetPlayerId == Swapper.playerId1) swapped1 = playerVoteArea;
+                if (playerVoteArea.TargetPlayerId == Swapper.playerId2) swapped2 = playerVoteArea;
             }
+
+            if (swapped1 == null || swapped2 == null) return dictionary;
+
+            dictionary.TryAdd(swapped1.TargetPlayerId, 0);
+            dictionary.TryAdd(swapped2.TargetPlayerId, 0);
+
+            (dictionary[swapped1.TargetPlayerId], dictionary[swapped2.TargetPlayerId]) = (dictionary[swapped2.TargetPlayerId], dictionary[swapped1.TargetPlayerId]);
+
             return dictionary;
         }
 
 
         private static bool Prefix(MeetingHud __instance)
         {
-            if (!__instance.playerStates
-                .Where(x => PlayerById(x.TargetPlayerId).CanUseMeetingAbility())
-                .All(ps => ps.AmDead || ps.DidVote)) return false;
+            if (!__instance.playerStates.Where(x => PlayerById(x.TargetPlayerId).CanUseMeetingAbility()).All(ps => ps.AmDead || ps.DidVote))
+                return false;
             // If skipping is disabled, replace skipps/no-votes with self vote
             if (target == null && blockSkippingInEmergencyMeetings && noVoteIsSelfVote)
-                foreach (var playerVoteArea in __instance.playerStates)
-                    if (playerVoteArea.VotedFor == 254)
-                        playerVoteArea.VotedFor = playerVoteArea.TargetPlayerId; // TargetPlayerId
+                foreach (var pva in __instance.playerStates)
+                    if (pva.VotedFor == 254)
+                        pva.VotedFor = pva.TargetPlayerId;
 
             var self = CalculateVotes(__instance);
             //var max = self.MaxPair(out var tie);
@@ -531,12 +565,14 @@ internal class MeetingHudPatch
                     }
                 }
 
+                if (Gaoler.IsPrisoner(player)) pva.VotedFor = 254;
+
                 if (Mayor.mayor != null && Mayor.mayor?.PlayerId == pva.TargetPlayerId && Mayor.CurrentVote == 0)
                 {
                     pva.VotedFor = 254;
                 }
 
-                if (Prosecutor.prosecutor != null && Prosecutor.ProsecuteThisMeeting && pva.VotedFor > 250)
+                if (Prosecutor.prosecutor == player && Prosecutor.ProsecuteThisMeeting && pva.VotedFor > 250)
                 {
                     Prosecutor.Prosecuted = false;
                     Prosecutor.ProsecuteThisMeeting = false;
@@ -601,7 +637,7 @@ internal class MeetingHudPatch
     {
         public static void Prefix(MeetingHud __instance, Il2CppStructArray<VoterState> states, GameData.PlayerInfo exiled, bool tie)
         {
-            Info($"exiled: {exiled?.PlayerName}, states: {states?.Count(x => x.VotedForId == exiled?.PlayerId)}, tie: {tie}", "RpcVotingComplete");
+            Info($"exiled: {exiled?.PlayerName}, states: {states?.Count(x => x.VotedForId is < 250 or 253)}, stateFor: {states?.Count(x => x.VotedForId == exiled?.PlayerId)}, tie: {tie}", "RpcVotingComplete");
         }
     }
 
@@ -646,7 +682,7 @@ internal class MeetingHudPatch
                 if (playerVoteArea.TargetPlayerId == Swapper.playerId2) swapped2 = playerVoteArea;
             }
 
-            var doSwap = swapped1 != null && swapped2 != null && Swapper.swapper.IsAlive();
+            var doSwap = swapped1 != null && swapped2 != null && Swapper.swapper.IsAlive() && !Gaoler.IsPrisoner(Swapper.swapper);
             if (doSwap)
             {
                 var localPosition = swapped1.transform.localPosition;
@@ -1042,6 +1078,54 @@ internal class MeetingHudPatch
                 }
             }
 
+            // 狱卒：添加监禁图标
+            if (Gaoler.Player != null && Gaoler.Player == PlayerControl.LocalPlayer && Gaoler.Player.IsAlive() && !Gaoler.hasSelectedThisMeeting && Gaoler.remainingUses > 0)
+            {
+                bool jailedByJailor = Jailor.Jailed != null && Jailor.Jailed == Gaoler.Player;
+                bool blackmailed = Blackmailer.blackmailed != null && Blackmailer.blackmailed == Gaoler.Player;
+                if (jailedByJailor || blackmailed)
+                    return;  // 被限制，不创建图标
+
+                Gaoler.endMeetingSelection = false;
+                Gaoler.meetingStartTime = DateTime.UtcNow;
+
+                foreach (var pva in __instance.playerStates)
+                {
+                    var player = PlayerById(pva.TargetPlayerId);
+                    if (player == null || player == Gaoler.Player || player.Data.IsDead) continue;
+
+                    // 不可连续监禁同一玩家检查
+                    if (!Gaoler.canJailSamePlayerConsecutively && Gaoler.lastJailedPlayerId == player.PlayerId) continue;
+
+                    GameObject template = pva.Buttons.transform.Find("CancelButton").gameObject;
+                    GameObject jailBox = UObject.Instantiate(template, pva.transform);
+                    jailBox.name = "GaolerIcon";
+                    jailBox.transform.localPosition = new Vector3(1f, 0.03f, -1f); // 位置与 Witness 相同
+                    SpriteRenderer renderer = jailBox.GetComponent<SpriteRenderer>();
+                    renderer.sprite = Gaoler.TargetSprite ?? pva.Megaphone.sprite; // 临时用地形图标
+                    renderer.color = Color.white;
+                    PassiveButton button = jailBox.GetComponent<PassiveButton>();
+                    button.OnClick.RemoveAllListeners();
+                    byte targetId = player.PlayerId;
+                    button.OnClick.AddListener(() => OnGaolerJailClick(pva, __instance, targetId));
+                }
+            }
+
+            if (Gaoler.Player != null && Gaoler.Player == PlayerControl.LocalPlayer && !Gaoler.hasSelectedThisMeeting && Gaoler.remainingUses > 0 && !Gaoler.endMeetingSelection)
+            {
+                float timeLeft = Gaoler.selectionWindow - (float)(DateTime.UtcNow - Gaoler.meetingStartTime).TotalSeconds;
+                if (timeLeft <= 0f)
+                {
+                    Gaoler.endMeetingSelection = true;
+                    foreach (var playerState in __instance.playerStates)
+                    {
+                        var icon = playerState.transform.FindChild("GaolerIcon");
+                        if (icon != null) UObject.Destroy(icon.gameObject);
+                    }
+                }
+            }
+
+
             foreach (var pva in __instance.playerStates)
             {
                 var player = PlayerById(pva.TargetPlayerId);
@@ -1069,6 +1153,9 @@ internal class MeetingHudPatch
     {
         private static void Postfix(MeetingHud __instance)
         {
+            Gaoler.hasSelectedThisMeeting = false;
+            Gaoler.currentPrisoner = null;
+            Gaoler.endMeetingSelection = false;
             Message("Destroy", "Meeting");
             CustomObject.EndMeeting(__instance);
         }

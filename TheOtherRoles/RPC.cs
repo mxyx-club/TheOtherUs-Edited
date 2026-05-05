@@ -124,6 +124,7 @@ public enum CustomRPC : byte
     SoulSightSuicide,
     SoulSightRevive,
     SoulSightScore,
+    GaolerMarkPrisoner,
 
     TrapperKill,
     PlaceTrap,
@@ -491,6 +492,9 @@ public static class RPCProcedure
                 break;
             case RoleId.SoulSight:
                 SoulSight.Player = player;
+                break;
+            case RoleId.Gaoler:
+                Gaoler.Player = player;
                 break;
             default:
                 Warn("Unknown role ID: " + roleId, "SetRole");
@@ -1132,6 +1136,7 @@ public static class RPCProcedure
 
         erasePlayerRoles(target.PlayerId);
         setRole(targetId, (byte)RoleId.Sidekick);
+        Gaoler.OnImpostorDie(target);
 
         if (target == PlayerControl.LocalPlayer) SoundEffectsManager.play("jackalSidekick");
         if (HandleGuesser.isGuesserGm && GuesserGM.guesserGamemodeSidekickIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
@@ -1174,6 +1179,7 @@ public static class RPCProcedure
 
         erasePlayerRoles(targetId);
         setRole(targetId, (byte)RoleId.Pavlovsdogs);
+        Gaoler.OnImpostorDie(target);
 
         if (targetId == PlayerControl.LocalPlayer.PlayerId)
             PlayerControl.LocalPlayer.moveable = true;
@@ -1260,6 +1266,7 @@ public static class RPCProcedure
         if (player == Grenadier.Player) Grenadier.clearAndReload();
         if (player == Gunsmith.Player) Gunsmith.ClearAndReload();
         if (player == Berserker.Player) Berserker.ClearAndReload();
+        if (player == Gaoler.Player) Gaoler.ClearAndReload();
 
         // Other roles
         Jester.Player.RemoveAll(x => x.PlayerId == player.PlayerId);
@@ -1489,7 +1496,7 @@ public static class RPCProcedure
         }
 
         SoundEffectsManager.stop("timemasterShield");
-        if (Bomber.hasBombPlayer.IsOwner) SoundEffectsManager.play("timemasterShield");
+        if (Bomber.hasBombPlayer.IsLocalPlayer) SoundEffectsManager.play("timemasterShield");
 
         Bomber.hasBombPlayer = PlayerById(playerId);
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombDelay,
@@ -2054,6 +2061,12 @@ public static class RPCProcedure
         terroristButton.Timer = terroristButton.MaxTimer;
         terroristButton.isEffectActive = false;
         terroristButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+    }
+
+    public static void GaolerMarkPrisoner(byte prisonerId)
+    {
+        // 所有客户端收到此 RPC 后，设置当前囚犯
+        Gaoler.currentPrisoner = PlayerById(prisonerId);
     }
 }
 
@@ -2628,6 +2641,10 @@ internal class RPCHandlerPatch
             case CustomRPC.SoulSightScore:
                 SoulSight.Score = reader.ReadInt32();
                 SoulSight.TriggerWin = reader.ReadBoolean();
+                break;
+
+            case CustomRPC.GaolerMarkPrisoner:
+                RPCProcedure.GaolerMarkPrisoner(reader.ReadByte());
                 break;
         }
 

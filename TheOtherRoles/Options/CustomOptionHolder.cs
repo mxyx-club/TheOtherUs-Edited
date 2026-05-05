@@ -285,6 +285,12 @@ public class CustomOptionHolder
     public static CustomOption berserkerRampageCooldown;
     public static CustomOption berserkerRampageDuration;
 
+    public static CustomOption gaolerSpawnRate;
+    public static CustomOption gaolerSelectionWindow;
+    public static CustomOption gaolerMaxUses;
+    public static CustomOption gaolerCanPassMapAfterDeath;
+    public static CustomOption gaolerCanJailSamePlayerConsecutively;
+
     public static CustomOption survivorSpawnRate;
     public static CustomOption survivorVestEnable;
     public static CustomOption survivorVestNumber;
@@ -1193,6 +1199,12 @@ public class CustomOptionHolder
         berserkerKillCooldown = Create(103601, Types.Impostor, "killCooldown", 25f, 10f, 60f, 2.5f, berserkerSpawnRate);
         berserkerRampageCooldown = Create(103602, Types.Impostor, "berserkerRampageCooldown", 10f, 5f, 60f, 0.5f, berserkerSpawnRate);
         berserkerRampageDuration = Create(103603, Types.Impostor, "berserkerKillDuration", 3f, 0.5f, 10f, 0.25f, berserkerSpawnRate);
+
+        gaolerSpawnRate = Create(103800, Types.Impostor, Cs(Gaoler.color, "gaoler"), rates, null, true);
+        gaolerSelectionWindow = Create(103801, Types.Impostor, "狱卒会议开始后可选秒数", 60f, 30f, 120f, 5f, gaolerSpawnRate);
+        gaolerMaxUses = Create(103802, Types.Impostor, "狱卒最大监禁次数", 2f, 1f, 5f, 1f, gaolerSpawnRate);
+        gaolerCanPassMapAfterDeath = Create(103803, Types.Impostor, "死后可传递管理室地图", false, gaolerSpawnRate);
+        gaolerCanJailSamePlayerConsecutively = Create(103804, Types.Impostor, "可连续监禁同一玩家", false, gaolerSpawnRate);
 
         //-------------------------- Neutral Options 200000 -------------------------- //
 

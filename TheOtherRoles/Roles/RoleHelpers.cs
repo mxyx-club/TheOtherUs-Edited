@@ -47,6 +47,7 @@ public enum RoleId
     Grenadier,
     Gunsmith,
     Berserker,
+    Gaoler,
 
     Survivor = 50,
     Amnisiac,
@@ -148,7 +149,7 @@ public static class PlayerControlExtensions
     {
         public bool IsUsingTransportation => player.inMovingPlat || player.onLadder;
 
-        public bool IsOwner => player != null && player == PlayerControl.LocalPlayer;
+        public bool IsLocalPlayer => player != null && player == PlayerControl.LocalPlayer;
 
         /// <summary>
         /// 假任务
@@ -758,6 +759,7 @@ public static class RoleHelpers
             { RoleId.Grenadier, CustomOptionHolder.grenadierSpawnRate.GetSelection() },
             { RoleId.Gunsmith, CustomOptionHolder.gunsmithSpawnRate.GetSelection() },
             { RoleId.Berserker, CustomOptionHolder.berserkerSpawnRate.GetSelection() },
+            { RoleId.Gaoler,CustomOptionHolder.gaolerSpawnRate.GetSelection() },
 
             { RoleId.Akujo, CustomOptionHolder.akujoSpawnRate.GetSelection() },
             { RoleId.Amnisiac, CustomOptionHolder.amnisiacSpawnRate.GetSelection() },
@@ -895,6 +897,7 @@ public static class RoleHelpers
         Berserker.ClearAndReload();
         Avenger.ClearAndReload();
         Oracle.ClearAndReload();
+        Gaoler.ClearAndReload();
 
         // Modifier
         Assassin.clearAndReload();

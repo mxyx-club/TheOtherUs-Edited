@@ -106,6 +106,7 @@ internal static class HudManagerStartPatch
     public static CustomButton poltergeistButton;
     public static CustomButton InfectedKillButton;
     public static CustomButton jailorButton;
+    public static CustomButton gaolerAdminTableButton;
 
     public static CustomButton marionetteButton;
     public static CustomButton marionettePlaceButton;
@@ -3974,7 +3975,7 @@ internal static class HudManagerStartPatch
            Hacker.getAdminSprite(),
            __instance,
             __instance.AbilityButton,
-           KeyCode.G,
+           secondaryAbilityInput.keyCode,
            true,
            0f,
            () => PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer.CanMove,
@@ -3992,9 +3993,36 @@ internal static class HudManagerStartPatch
                yoyoAdminTableButton.Timer = yoyoAdminTableButton.MaxTimer;
                if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
            },
-           mapId == 3,
-           "AdminMapText".Translate()
+           buttonText: "AdminMapText".Translate()
        );
+
+        gaolerAdminTableButton = new CustomButton(
+            () =>
+            {
+                if (!MapBehaviour.Instance || !MapBehaviour.Instance.isActiveAndEnabled)
+                {
+                    var __instance = FastDestroyableSingleton<HudManager>.Instance;
+                    __instance.InitMap();
+                    MapBehaviour.Instance.ShowCountOverlay(allowedToMove: true, showLivePlayerPosition: true, includeDeadBodies: true);
+                }
+            },
+            () =>
+            {
+                if (Gaoler.Player == null || PlayerControl.LocalPlayer == null) return false;
+                return (Gaoler.Player.IsAlive() && Gaoler.Player == PlayerControl.LocalPlayer) || (Gaoler.Player.Data?.IsDead == true && Gaoler.hasMapPlayer.IsLocalPlayer);
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            { },
+            Hacker.getAdminSprite(),
+            __instance,
+             __instance.AbilityButton,
+            null,
+            buttonText: "AdminMapText".Translate()
+        );
 
         redemptorRevelationButton = new CustomButton(
             () =>

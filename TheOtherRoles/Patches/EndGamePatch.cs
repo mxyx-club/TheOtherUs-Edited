@@ -787,7 +787,7 @@ public class EndGameManagerSetUpPatch
                 {
                     Error($"Failed to take screenshot: {e.Message}");
                 }
-            }, 1.6f, "GameEnd Screenshot");
+            }, 1.2f, "GameEnd Screenshot");
         }
 
         AdditionalTempData.clear();

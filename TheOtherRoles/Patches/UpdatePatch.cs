@@ -551,6 +551,23 @@ internal class HudManagerUpdatePatch
             }
         }
 
+        // 狱卒：为内鬼玩家显示囚犯的灰色名字和 "#"
+        if (Gaoler.currentPrisoner != null)
+        {
+            bool isImpostor = PlayerControl.LocalPlayer.IsImpostor() || (Gaoler.Player != null && Gaoler.Player == PlayerControl.LocalPlayer);
+            if (isImpostor)
+            {
+                foreach (var pva in allPlayerStates)
+                {
+                    if (pva.TargetPlayerId == Gaoler.currentPrisoner.PlayerId)
+                    {
+                        if (!pva.NameText.text.Contains('#'))
+                            pva.NameText.text += " <color=#808080>#</color>";
+                    }
+                }
+            }
+        }
+
         if (Oracle.Player.IsDead() && Oracle.Confesser != null && Oracle.ConfesserType != Oracle.CRoleType.None)
         {
             var color = Oracle.ConfesserType switch

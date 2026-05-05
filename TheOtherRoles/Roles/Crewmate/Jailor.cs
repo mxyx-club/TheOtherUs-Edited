@@ -70,6 +70,14 @@ public class Jailor
         button.OnClick.AddListener(() =>
         {
             if (__instance.state is MeetingHud.VoteStates.Results or MeetingHud.VoteStates.Discussion) return;
+
+            // 如果典狱长是囚犯，则按钮隐藏且无事发生
+            if (Gaoler.IsPrisoner(PlayerControl.LocalPlayer))
+            {
+                targetBox?.Destroy();
+                return;
+            }
+
             var writer = StartRPC(CustomRPC.ExiledJailed);
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write(Jailed.PlayerId);

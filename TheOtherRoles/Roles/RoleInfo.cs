@@ -53,6 +53,7 @@ public class RoleInfo
     public static RoleInfo grenadier = new("Grenadier", Grenadier.color, RoleId.Grenadier, RoleType.Impostor);
     public static RoleInfo gunsmith = new("Gunsmith", Gunsmith.color, RoleId.Gunsmith, RoleType.Impostor);
     public static RoleInfo berserker = new("Berserker", Berserker.color, RoleId.Berserker, RoleType.Impostor);
+    public static RoleInfo gaoler = new("gaoler", Gaoler.color, RoleId.Gaoler, RoleType.Impostor);
 
     public static RoleInfo survivor = new("Survivor", Survivor.color, RoleId.Survivor, RoleType.Neutral);
     public static RoleInfo amnisiac = new("Amnisiac", Amnisiac.color, RoleId.Amnisiac, RoleType.Neutral);
@@ -177,6 +178,7 @@ public class RoleInfo
         grenadier,
         gunsmith,
         berserker,
+        gaoler,
 
         survivor,
         amnisiac,
@@ -348,6 +350,7 @@ public class RoleInfo
         if (p == Terrorist.terrorist) infos.Add(terrorist);
         if (p == Detective.detective) infos.Add(detective);
         if (p == Berserker.Player) infos.Add(berserker);
+        if (p == Gaoler.Player) infos.Add(gaoler);
         if (p == Veteran.veteran) infos.Add(veteran);
         if (p == Grenadier.Player) infos.Add(grenadier);
         if (p == Medic.medic) infos.Add(medic);

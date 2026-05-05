@@ -130,6 +130,7 @@ internal class RoleManagerSelectRolesPatch
         impSettings.Add((byte)RoleId.WolfLord, CustomOptionHolder.wolfLordSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Gunsmith, CustomOptionHolder.gunsmithSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Berserker, CustomOptionHolder.berserkerSpawnRate.GetSelection());
+        impSettings.Add((byte)RoleId.Gaoler, CustomOptionHolder.gaolerSpawnRate.GetSelection());
 
         neutralSettings.Add((byte)RoleId.Survivor, CustomOptionHolder.survivorSpawnRate.GetSelection());
         //neutralSettings.Add((byte)RoleId.Pursuer, CustomOptionHolder.pursuerSpawnRate.getSelection());

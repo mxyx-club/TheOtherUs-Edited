@@ -389,6 +389,22 @@ public class Balancer
             return;
         }
 
+        // 如果大神官本人是囚犯，则阻止发动特殊会议
+        if (Gaoler.IsPrisoner(PlayerControl.LocalPlayer))
+        {
+            // 清空已选中的目标
+            currentTarget = null;
+            // 销毁所有选择按钮，防止继续尝试
+            foreach (var pva in __instance.playerStates)
+            {
+                var btn = pva.transform.FindChild("BalancerButton");
+                if (btn != null) UObject.Destroy(btn.gameObject);
+            }
+            // 显示提示
+            FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, GetString("您已被狱卒关押 \n--这里可不是神权社会"));
+            return;
+        }
+
         if (balancer.IsDead() || Target.IsDead() || IsAbilityUsed <= 0) return;
 
         var writer = StartRPC(CustomRPC.BalancerBalance);

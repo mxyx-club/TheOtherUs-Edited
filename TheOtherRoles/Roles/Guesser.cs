@@ -545,6 +545,28 @@ public static class Guesser
             }
         }
 
+        // 如果猜测者（本地玩家）是囚犯
+        if (Gaoler.IsPrisoner(PlayerControl.LocalPlayer))
+        {
+            // 闪灰光
+            Coroutines.Start(showFlashCoroutine(Color.gray, 1f, 0.5f));
+            // 销毁自己本回合所有的猜测图标（所有玩家名旁的 ShootButton）
+            if (__instance != null)
+            {
+                foreach (var pva in __instance.playerStates)
+                {
+                    var shootBtn = pva.transform.FindChild("ShootButton");
+                    if (shootBtn != null) UObject.Destroy(shootBtn.gameObject);
+                }
+            }
+            // 关闭猜测界面
+            if (guesserUI != null && guesserUIExitButton != null)
+                guesserUIExitButton.OnClick.Invoke();
+            // 显示提示
+            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是您被关押了！"+ "\n--看来你还不明白现在自己的处境");
+            return;
+        }
+
         // Shoot player and send chat info if activated
         var writer = StartRPC(CustomRPC.GuesserShoot);
         writer.Write(PlayerControl.LocalPlayer.PlayerId);   // 猜测者

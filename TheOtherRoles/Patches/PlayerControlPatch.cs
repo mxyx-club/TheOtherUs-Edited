@@ -1,6 +1,7 @@
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using TheOtherRoles.Objects;
+using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles.Patches;
 
@@ -391,6 +392,8 @@ public static class PlayerDiePatch
         }
         if (ModOption.GameMode is CustomGameModes.Classic or CustomGameModes.Anonymous) return;
         _ = new LateTask(() => { CanSeeGhostInfo = true; }, 1f, "CanSeeRoleInfo");
+
+        Gaoler.OnImpostorDie(__instance);
     }
 }
 
@@ -957,6 +960,8 @@ public static class DisconnectPatch
             if (PlayerData.GetPlayerData(player)?.DeathReason == CustomDeathReason.Null) PlayerData.SetDeathReason(player, CustomDeathReason.Disconnect, null);
 
             Sheriff.deputyCheckPromotion();
+
+            Gaoler.OnImpostorDie(player);
         }
 
         if (InMeeting && MeetingHud.Instance)

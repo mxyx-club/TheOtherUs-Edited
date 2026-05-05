@@ -3554,6 +3554,14 @@
         "0": "{0} has been trapped!",
         "13": "{0} 掉进了陷阱里！"
     },
+    "GaolerSelectTimeExpired": {
+        "0": "Time up",
+        "13": "已无法监禁"
+    },
+    "GaolerSelectTimeLeft": {
+        "0": "{0} Seconds Left to Choose a target",
+        "13": "剩余 {0}  去选择你不顺眼的目标"
+    },
     "guesserGuessesLeft": {
         "0": "Guesses Left: {0}",
         "13": "剩余猜测次数：{0}"
@@ -3647,7 +3655,8 @@
         "13": "我们安全了,暂时..."
     },
     "ImpostorWin": {
-        "0": "Imposters Win"
+        "0": "Imposters Win",
+        "13": "MISSION COMPLETE"
     },
     "JesterWin": {
         "0": "Who's the Clown now?",
@@ -4850,11 +4859,23 @@
     },
     "BerserkerIntroDesc": {
         "0": "Berserker is the greatest!",
-        "13": "只懂的杀戮的好战机器"
+        "13": "只懂杀戮的好战机器"
     },
     "BerserkerShortDesc": {
         "0": "Charge up! Cleave them down!",
         "13": "蓄力！斩杀！"
+    },
+    "gaoler": {
+        "0": "Gaoler",
+        "13": "狱卒"
+    },
+    "gaolerIntroDesc": {
+        "0": "My prison,My rules",
+        "13": "你知道你在和谁说话吗"
+    },
+    "gaolerShortDesc": {
+        "0": "Imprison the enemy and protect your teammates",
+        "13": "囚禁敌人，保护队友"
     },
     "Survivor": {
         "0": "Survivor",
@@ -6032,6 +6053,10 @@
         "0": "Enters rage mode upon killing. During rage, you can kill multiple times within a short window.\n\nThe rage duration starts at 0.1s and increases the longer it is charged after regular kill CD is refreshed.",
         "13": "狂战士在击杀时会狂暴，击杀玩家后可在极短时间内无限制多次击杀。\n\n初始的持续时间为0.1s，在击杀冷却完毕后会开始蓄力，\n蓄力时间越长，击杀持续时间越长。"
     },
+    "gaolerFullDesc": {
+        "0": "The Gaoler can choose a player to imprison within a certain period after the meeting starts.\nThe imprisoned player does not know they are imprisoned; instead, from the Impostor faction's perspective,\na gray # indicates they are imprisoned, and the imprisoned player's voting power is fixed at 0.\nAdditionally, the meeting abilities of the following roles become invalid, and any activation not related to voting will prompt a notification:\nMayor, Prosecutor, Balancer, Swapper, Jailor, Witness,Guesser\n\nAdditionally, the Gaoler has a management map that can be viewed at any time outside of meetings. Depending on the settings,\nteammates can inherit it after the Gaoler's death.",
+        "13": "狱卒可以在会议开始时一段时间内选择一名玩家关押，\n被关押的玩家不知道自己被关押，反而在伪装者阵营视角\n有灰色的#提示其被关押，被关押者票权固定为0。\n同时，以下职业的会议能力失效，不与投票相关的发动会有提示\n市长，检察官，大神官，换票师，典狱长，污点证人\n\n同时其拥有一个可以在局外随时查看的管理地图，根据设置\n队友可在其死后继承\n"
+    },
     "SurvivorFullDesc": {
         "0": "Wins by surviving until the end of the game, joining the victory of another faction.\nDepending on settings, may have bulletproof vest and/or a blank bullet abilities.\nInvulnerable while the vest is active; attackers will enter a brief CD.\nBlank bullets prevent the target's next kill from taking effect.",
         "13": "存活到游戏结束即可跟随其它阵营胜利\n以房间设置为准，幸存者可能拥有防弹衣和空包弹技能。\n防弹衣在开启期间，无法被击杀，杀手击杀时会进入较短的冷却。\n空包弹可以让目标下一次无法正常击杀。"
@@ -6186,7 +6211,7 @@
     },
     "SwapperFullDesc": {
         "0": "The Swapper can exchange the vote counts of two players during a meeting.\nAdditional swaps can be earned by completing tasks.",
-        "13": "换票师属于强力船员，可以在会议期间交换两名玩家身上的票数。\n更多的换票次数可以通过做任务获得。"
+        "13": "换票师可以在会议期间交换两名玩家身上的票数。\n更多的换票次数可以通过做任务获得。"
     },
     "SeerFullDesc": {
         "0": "The Seer can sense death.\nWhen any player dies, the Seer's screen will flash.\nDepending on settings, the Seer may also be able to see a spirit at the location of death.",
@@ -6202,7 +6227,7 @@
     },
     "SnitchFullDesc": {
         "0": "After completing all tasks, the Snitch see arrows pointing to all players with evil roles in the game.\nWhen only one task remains, evil players will be notified and receive an arrow pointing to the Snitch.\nN.B.: Once revealed, the Snitch cannot be killed by Guessers.\nOptionally, evil players and their exact roles can be shown during meetings based on settings.",
-        "13": "告密者做完所有任务后，可以知晓场上所有邪恶阵营的方向。\n当告密者仅剩最后一个任务时将向被揭示的玩家发出警告，\n被揭示玩家将有箭头持续指向告密者。\n注：告密者被发现时无法被猜测死亡。\n可选是否在会议中查看邪恶阵营玩家与详细职业。"
+        "13": "告密者做完所有任务后，可以知晓场上所有邪恶阵营的方向。\n当告密者距离目标任务数仅剩最后一个任务时将向被揭示的玩家发出警告，\n被揭示玩家将有箭头持续指向告密者。\n根据设置，可以根据降降低自己的任务目标数\n注：告密者被发现时无法被猜测死亡。\n可选是否在会议中查看邪恶阵营玩家与详细职业。"
     },
     "SpyFullDesc": {
         "0": "From the Imposters' perspective, the Spy appears as a buddy Imposter and shows a red name just like other Imposters.\nIf a Spy is present in the game, Imposters are able to kill each other.",
@@ -6214,7 +6239,7 @@
     },
     "MediumFullDesc": {
         "0": "After a meeting ends, the Medium can commune with the spirit of a player who died in the previous round by visiting the location of their death.\nIn the following meeting, relevant information about the deceased will appear in the chatbox, with a chance of revealing additional details.",
-        "13": "会议结束后，可以在上轮死亡玩家的死亡地点对灵魂通灵。\n进入会议后可以在对话框中得到死者相关信息，有一定概率会获得额外信息。\n通灵一定次数后，可获得一次无责任击杀(不可积累）。"
+        "13": "会议结束后，可以在上轮死亡玩家的死亡地点对灵魂通灵。\n进入会议后可以在对话框中得到死者相关信息，有一定概率会获得额外信息。\n通灵一定次数后，可获得一次无责任击杀。\n\n该击杀只在当轮保留，但可通过存弹跨轮次保留。"
     },
     "TrapperFullDesc": {
         "0": "The Trapper can place traps on the map.\nIf two players trigger the same trap, their role, faction, or name (based on settings) will be revealed in the next meeting's chat.\nWhen a trap is triggered, the Trapper receives an arrow pointing to the activated trap.",

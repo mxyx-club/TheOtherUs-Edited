@@ -60,6 +60,17 @@ public class Witness
     {
         private static void MeetingOnClick(PlayerVoteArea pva, MeetingHud __instance)
         {
+            if (Gaoler.IsPrisoner(PlayerControl.LocalPlayer))
+            {
+                foreach (var playerState in __instance.playerStates)
+                {
+                    var icon = playerState.transform.FindChild("WitnessIcon");
+                    if (icon != null) UObject.Destroy(icon.gameObject);
+                }
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, "您已被狱卒关押 \n--现在想检举某人可不是时候");
+                return;
+            }
+
             if (Player == null) return;
             var Target = PlayerById(pva.TargetPlayerId);
 
