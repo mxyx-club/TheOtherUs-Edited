@@ -142,10 +142,10 @@ public class CustomOptionHolder
     public static CustomOption professionalWhoCanSeeBodies;
     public static CustomOption professionalBaitKiller;
 
-    public static CustomOption morphlingSpawnRate;
-    public static CustomOption morphlingCooldown;
-    public static CustomOption morphlingDuration;
-    public static CustomOption morphlingResetAfterMeeting;
+    public static CustomOption glitchSpawnRate;
+    public static CustomOption glitchCooldown;
+    public static CustomOption glitchDuration;
+    public static CustomOption glitchResetAfterMeeting;
 
     public static CustomOption bomberSpawnRate;
     public static CustomOption bomberBombCooldown;
@@ -620,13 +620,13 @@ public class CustomOptionHolder
     public static CustomOption infoSleuthSpawnRate;
     public static CustomOption infoSleuthInfoType;
 
-    public static CustomOption mediumSpawnRate;
-    public static CustomOption mediumCooldown;
-    public static CustomOption mediumDuration;
-    public static CustomOption mediumOneTimeUse;
-    public static CustomOption mediumChanceAdditionalInfo;
-    public static CustomOption mediumRequiredUses;
-    public static CustomOption mediumKillCooldown;
+    public static CustomOption alchemystSpawnRate;
+    public static CustomOption alchemystCooldown;
+    public static CustomOption alchemystDuration;
+    public static CustomOption alchemystOneTimeUse;
+    public static CustomOption alchemystChanceAdditionalInfo;
+    public static CustomOption alchemystRequiredUses;
+    public static CustomOption alchemystKillCooldown;
 
     public static CustomOption guesserEvilCanKillCrewmate;
 
@@ -1054,10 +1054,10 @@ public class CustomOptionHolder
         professionalBaitKiller = Create(103702, Types.Impostor, "professionalBaitKiller", true, professionalSpawnRate,
             onChange: (x) => { if (modifierProfessionalBaitKiller.Selection != x.Selection) modifierProfessionalBaitKiller.updateSelection(x.Selection); });
 
-        morphlingSpawnRate = Create(101100, Types.Impostor, Cs(Glitch.color, "Morphling"), rates, null, true);
-        morphlingCooldown = Create(101101, Types.Impostor, "morphlingCooldown", 15f, 10f, 60f, 2.5f, morphlingSpawnRate);
-        morphlingDuration = Create(101102, Types.Impostor, "morphlingDuration", 15f, 1f, 20f, 0.5f, morphlingSpawnRate);
-        morphlingResetAfterMeeting = Create(101103, Types.Impostor, "morphlingResetAfterMeeting", false, morphlingSpawnRate);
+        glitchSpawnRate = Create(101100, Types.Impostor, Cs(Glitch.color, "Morphling"), rates, null, true);
+        glitchCooldown = Create(101101, Types.Impostor, "morphlingCooldown", 15f, 10f, 60f, 2.5f, glitchSpawnRate);
+        glitchDuration = Create(101102, Types.Impostor, "morphlingDuration", 15f, 1f, 20f, 0.5f, glitchSpawnRate);
+        glitchResetAfterMeeting = Create(101103, Types.Impostor, "morphlingResetAfterMeeting", false, glitchSpawnRate);
 
         bomberSpawnRate = Create(101200, Types.Impostor, Cs(Bomber.color, "Bomber"), rates, null, true);
         bomberBombCooldown = Create(101201, Types.Impostor, "bomberBombCooldown", 25f, 10f, 60f, 2.5f, bomberSpawnRate);
@@ -1561,13 +1561,13 @@ public class CustomOptionHolder
         infoSleuthInfoType = Create(303801, Types.Crewmate, "infoSleuthInfoType",
             ["infoSleuthInfoType1", "infoSleuthInfoType2", "infoSleuthInfoType3"], 2, infoSleuthSpawnRate);
 
-        mediumSpawnRate = Create(303100, Types.Crewmate, Cs(Alchemyst.color, "Medium"), rates, null, true);
-        mediumCooldown = Create(303101, Types.Crewmate, "mediumCooldown", 7.5f, 2.5f, 120f, 2.5f, mediumSpawnRate);
-        mediumDuration = Create(303102, Types.Crewmate, "mediumDuration", 0.5f, 0f, 15f, 0.5f, mediumSpawnRate);
-        mediumOneTimeUse = Create(303103, Types.Crewmate, "mediumOneTimeUse", false, mediumSpawnRate);
-        mediumChanceAdditionalInfo = Create(303104, Types.Crewmate, "mediumChanceAdditionalInfo", rates, 3, mediumSpawnRate);
-        mediumRequiredUses = Create(304105, Types.Crewmate, "mediumRequiredUses", 3f, 1f, 5f, 1f, mediumSpawnRate);
-        mediumKillCooldown = Create(304106, Types.Crewmate, "mediumKillCooldown", 25f, 5f, 60f, 2.5f, mediumSpawnRate);
+        alchemystSpawnRate = Create(303100, Types.Crewmate, Cs(Alchemyst.color, "Alchemyst"), rates, null, true);
+        alchemystCooldown = Create(303101, Types.Crewmate, "alchemystCooldown", 7.5f, 2.5f, 120f, 2.5f, alchemystSpawnRate);
+        alchemystDuration = Create(303102, Types.Crewmate, "alchemystDuration", 0.5f, 0f, 15f, 0.5f, alchemystSpawnRate);
+        alchemystOneTimeUse = Create(303103, Types.Crewmate, "alchemystOneTimeUse", false, alchemystSpawnRate);
+        alchemystChanceAdditionalInfo = Create(303104, Types.Crewmate, "alchemystChanceAdditionalInfo", rates, 3, alchemystSpawnRate);
+        alchemystRequiredUses = Create(304105, Types.Crewmate, "alchemystRequiredUses", 3f, 1f, 5f, 1f, alchemystSpawnRate);
+        alchemystKillCooldown = Create(304106, Types.Crewmate, "alchemystKillCooldown", 25f, 5f, 60f, 2.5f, alchemystSpawnRate);
 
         trapperSpawnRate = Create(303500, Types.Crewmate, Cs(Trapper.color, "Trapper"), rates, null, true);
         trapperCooldown = Create(303501, Types.Crewmate, "trapperCooldown", 20f, 5f, 120f, 2.5f, trapperSpawnRate);

@@ -3188,7 +3188,7 @@ internal static class HudManagerStartPatch
                 if (!Alchemyst.canUseKill)
                 {
                     Alchemyst.skillUseCount++;
-                    if (Alchemyst.skillUseCount >= Alchemyst.mediumRequiredUses)
+                    if (Alchemyst.skillUseCount >= Alchemyst.requiredUses)
                     {
                         Alchemyst.canUseKill = true;
                     }
@@ -3259,7 +3259,7 @@ internal static class HudManagerStartPatch
                  SetPlayerOutline(Alchemyst.CurrentTarget, Alchemyst.color);
                  alchemystKillButton.showTargetNameOnButton(Alchemyst.CurrentTarget);
 
-                 if (alchemystKillButton.buttonText != null) alchemystKillButton.buttonText = $"{Alchemyst.skillUseCount} / {Alchemyst.mediumRequiredUses}";
+                 if (alchemystKillButton.buttonText != null) alchemystKillButton.buttonText = $"{Alchemyst.skillUseCount} / {Alchemyst.requiredUses}";
 
                  return PlayerControl.LocalPlayer.CanMove && Alchemyst.CurrentTarget != null && Alchemyst.canUseKill;
              },

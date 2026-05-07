@@ -103,7 +103,7 @@ internal class RoleManagerSelectRolesPatch
         var killerNeutralSettings = new Dictionary<byte, int>();
         var crewSettings = new Dictionary<byte, int>();
 
-        impSettings.Add((byte)RoleId.Morphling, CustomOptionHolder.morphlingSpawnRate.GetSelection());
+        impSettings.Add((byte)RoleId.Morphling, CustomOptionHolder.glitchSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Camouflager, CustomOptionHolder.camouflagerSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Vampire, CustomOptionHolder.vampireSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Eraser, CustomOptionHolder.eraserSpawnRate.GetSelection());
@@ -188,7 +188,7 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Balancer, CustomOptionHolder.balancerSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Tracker, CustomOptionHolder.trackerSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Snitch, CustomOptionHolder.snitchSpawnRate.GetSelection());
-        crewSettings.Add((byte)RoleId.Medium, CustomOptionHolder.mediumSpawnRate.GetSelection());
+        crewSettings.Add((byte)RoleId.Alchemyst, CustomOptionHolder.alchemystSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Prophet, CustomOptionHolder.prophetSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Redemptor, CustomOptionHolder.redemptorSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Jailor, CustomOptionHolder.jailorSpawnRate.GetSelection());

@@ -73,7 +73,7 @@ public class GameDataManager : ManagerBase<GameDataManager>
     [OnGameEnd(Attributes.Priority.VeryLow)]
     public static void OnGameEnd()
     {
-        if (Instance._isInitialized) Instance.SaveAllPlayerDataToJson();
+        if (Instance._isInitialized && AmongUsClient.Instance.AmHost) Instance.SaveAllPlayerDataToJson();
         Instance.Reset();
     }
 

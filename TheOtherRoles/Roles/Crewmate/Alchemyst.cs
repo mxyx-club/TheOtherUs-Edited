@@ -18,7 +18,7 @@ public static class Alchemyst
 
     public static int skillUseCount;
     public static bool canUseKill;
-    public static int mediumRequiredUses = 3;
+    public static int requiredUses = 3;
     public static float KillCooldown = 25f;
     public static PlayerControl CurrentTarget;
 
@@ -35,15 +35,15 @@ public static class Alchemyst
         futureDeadBodies.Clear();
         souls.Clear();
         meetingStartTime = DateTime.UtcNow;
-        cooldown = CustomOptionHolder.mediumCooldown.GetFloat();
-        duration = CustomOptionHolder.mediumDuration.GetFloat();
-        oneTimeUse = CustomOptionHolder.mediumOneTimeUse.GetBool();
-        chanceAdditionalInfo = CustomOptionHolder.mediumChanceAdditionalInfo.GetSelection() / 10f;
+        cooldown = CustomOptionHolder.alchemystCooldown.GetFloat();
+        duration = CustomOptionHolder.alchemystDuration.GetFloat();
+        oneTimeUse = CustomOptionHolder.alchemystOneTimeUse.GetBool();
+        chanceAdditionalInfo = CustomOptionHolder.alchemystChanceAdditionalInfo.GetSelection() / 10f;
 
         skillUseCount = 0;
         canUseKill = false;
-        mediumRequiredUses = (int)CustomOptionHolder.mediumRequiredUses.GetFloat();
-        KillCooldown = CustomOptionHolder.mediumKillCooldown.GetFloat();
+        requiredUses = (int)CustomOptionHolder.alchemystRequiredUses.GetFloat();
+        KillCooldown = CustomOptionHolder.alchemystKillCooldown.GetFloat();
     }
 
 
@@ -72,58 +72,58 @@ public static class Alchemyst
     {
         var msg = "";
 
-        var infos = new List<SpecialMediumInfo>();
+        var infos = new List<SpecialInfo>();
         // collect fitting death info types.
         // suicides:
         if (killer == target)
         {
-            if (Sheriff.Player.Any(x => x == target)) infos.Add(SpecialMediumInfo.SheriffSuicide);
-            if (target == Lovers.lover1 || target == Lovers.lover2) infos.Add(SpecialMediumInfo.PassiveLoverSuicide);
-            if (target == Thief.thief) infos.Add(SpecialMediumInfo.ThiefSuicide);
-            if (target == Warlock.warlock) infos.Add(SpecialMediumInfo.WarlockSuicide);
+            if (Sheriff.Player.Any(x => x == target)) infos.Add(SpecialInfo.SheriffSuicide);
+            if (target == Lovers.lover1 || target == Lovers.lover2) infos.Add(SpecialInfo.PassiveLoverSuicide);
+            if (target == Thief.thief) infos.Add(SpecialInfo.ThiefSuicide);
+            if (target == Warlock.warlock) infos.Add(SpecialInfo.WarlockSuicide);
         }
         else
         {
-            if (target == Lovers.lover1 || target == Lovers.lover2) infos.Add(SpecialMediumInfo.ActiveLoverDies);
+            if (target == Lovers.lover1 || target == Lovers.lover2) infos.Add(SpecialInfo.ActiveLoverDies);
             if (target.Data.Role.IsImpostor && killer.Data.Role.IsImpostor && Thief.formerThief != killer)
-                infos.Add(SpecialMediumInfo.ImpostorTeamkill);
+                infos.Add(SpecialInfo.ImpostorTeamkill);
         }
 
         if (target == Jackal.Sidekick && Jackal.jackal.Any(x => x.PlayerId == killer.PlayerId))
-            infos.Add(SpecialMediumInfo.JackalKillsSidekick);
-        if (target == Lawyer.lawyer && killer == Lawyer.target) infos.Add(SpecialMediumInfo.LawyerKilledByClient);
-        if (Alchemyst.target.wasCleaned) infos.Add(SpecialMediumInfo.BodyCleaned);
+            infos.Add(SpecialInfo.JackalKillsSidekick);
+        if (target == Lawyer.lawyer && killer == Lawyer.target) infos.Add(SpecialInfo.LawyerKilledByClient);
+        if (Alchemyst.target.wasCleaned) infos.Add(SpecialInfo.BodyCleaned);
 
         if (infos.Count > 0)
         {
             var selectedInfo = infos[rnd.Next(infos.Count)];
             switch (selectedInfo)
             {
-                case SpecialMediumInfo.SheriffSuicide:
+                case SpecialInfo.SheriffSuicide:
                     msg = GetString("MediumInfo.SheriffSuicide");
                     break;
-                case SpecialMediumInfo.WarlockSuicide:
+                case SpecialInfo.WarlockSuicide:
                     msg = GetString("MediumInfo.WarlockSuicide");
                     break;
-                case SpecialMediumInfo.ThiefSuicide:
+                case SpecialInfo.ThiefSuicide:
                     msg = GetString("MediumInfo.ThiefSuicide");
                     break;
-                case SpecialMediumInfo.ActiveLoverDies:
+                case SpecialInfo.ActiveLoverDies:
                     msg = GetString("MediumInfo.ActiveLoverDies");
                     break;
-                case SpecialMediumInfo.PassiveLoverSuicide:
+                case SpecialInfo.PassiveLoverSuicide:
                     msg = GetString("MediumInfo.PassiveLoverSuicide");
                     break;
-                case SpecialMediumInfo.LawyerKilledByClient:
+                case SpecialInfo.LawyerKilledByClient:
                     msg = GetString("MediumInfo.LawyerKilledByClient");
                     break;
-                case SpecialMediumInfo.JackalKillsSidekick:
+                case SpecialInfo.JackalKillsSidekick:
                     msg = GetString("MediumInfo.JackalKillsSidekick");
                     break;
-                case SpecialMediumInfo.ImpostorTeamkill:
+                case SpecialInfo.ImpostorTeamkill:
                     msg = GetString("MediumInfo.ImpostorTeamkill");
                     break;
-                case SpecialMediumInfo.BodyCleaned:
+                case SpecialInfo.BodyCleaned:
                     msg = GetString("MediumInfo.BodyCleaned");
                     break;
             }
@@ -186,7 +186,7 @@ public static class Alchemyst
         return Alchemyst.target.Player.Data.PlayerName + " 的灵魂说:\n" + msg;
     }
 
-    private enum SpecialMediumInfo
+    private enum SpecialInfo
     {
         SheriffSuicide,
         ThiefSuicide,

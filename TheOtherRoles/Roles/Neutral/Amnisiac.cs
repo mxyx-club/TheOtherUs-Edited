@@ -244,7 +244,7 @@ public class Amnisiac
             case RoleId.SecurityGuard:
                 if (resetRole) SecurityGuard.clearAndReload();
                 break;
-            case RoleId.Medium:
+            case RoleId.Alchemyst:
                 if (resetRole) Alchemyst.clearAndReload();
                 break;
             case RoleId.Trapper:

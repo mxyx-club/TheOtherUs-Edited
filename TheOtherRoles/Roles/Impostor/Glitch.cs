@@ -32,8 +32,8 @@ public static class Glitch
         sampledTarget = null;
         morphTarget = null;
         morphTimer = 0f;
-        cooldown = CustomOptionHolder.morphlingCooldown.GetFloat();
-        duration = CustomOptionHolder.morphlingDuration.GetFloat();
-        ResetAfterMeeting = CustomOptionHolder.morphlingResetAfterMeeting.GetBool();
+        cooldown = CustomOptionHolder.glitchCooldown.GetFloat();
+        duration = CustomOptionHolder.glitchDuration.GetFloat();
+        ResetAfterMeeting = CustomOptionHolder.glitchResetAfterMeeting.GetBool();
     }
 }

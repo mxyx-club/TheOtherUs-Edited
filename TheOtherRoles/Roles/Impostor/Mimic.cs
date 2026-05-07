@@ -120,7 +120,7 @@ public static class Mimic
                 hasMimic = true;
                 break;
 
-            case RoleId.Medium:
+            case RoleId.Alchemyst:
                 if (Amnisiac.resetRole) Alchemyst.clearAndReload();
                 Alchemyst.Player = mimic;
                 hasMimic = true;

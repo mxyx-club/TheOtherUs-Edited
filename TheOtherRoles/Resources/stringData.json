@@ -2174,14 +2174,6 @@
         "0": "Time before which Medic Autopsies Reveal the Killer's Color Type",
         "13": "以下时间内报告可得知凶手颜色类型"
     },
-    "mediumRequiredUses": {
-        "0": "The number of times required to obtain bullets",
-        "13": "得到子弹所需的通灵次数"
-    },
-    "mediumKillCooldown": {
-        "0": "Kill Cooldown",
-        "13": "子弹击杀冷却时间"
-    },
     "timeMasterCooldown": {
         "0": "Time Shield Cooldown",
         "13": "时光之盾冷却"
@@ -2454,21 +2446,29 @@
         "0": "Security Guard Unable to Move while viewing Portable Cam",
         "13": "看监控时无法移动"
     },
-    "mediumCooldown": {
-        "0": "Medium Query Cooldown",
+    "alchemystCooldown": {
+        "0": "Query Cooldown",
         "13": "通灵冷却"
     },
-    "mediumDuration": {
-        "0": "Medium Query Duration",
+    "alchemystDuration": {
+        "0": "Query Duration",
         "13": "通灵所需时间"
     },
-    "mediumOneTimeUse": {
+    "alchemystOneTimeUse": {
         "0": "Each Spirit Can Only Be Questioned Once",
         "13": "每个灵魂只能被通灵一次"
     },
-    "mediumChanceAdditionalInfo": {
+    "alchemystChanceAdditionalInfo": {
         "0": "Chance for the Answer to Contain Additional Information",
         "13": "回答包含其他信息的可能性"
+    },
+    "alchemystRequiredUses": {
+        "0": "The number of times required to obtain bullets",
+        "13": "得到子弹所需的通灵次数"
+    },
+    "alchemystKillCooldown": {
+        "0": "Kill Cooldown",
+        "13": "子弹击杀冷却时间"
     },
     "jumperJumpTime": {
         "0": "Mark/Jump Cooldown",
@@ -5405,15 +5405,15 @@
         "0": "Seal off vents and set up additional Cameras.",
         "13": "封锁管道并安放监控"
     },
-    "Medium": {
-        "0": "Medium",
+    "Alchemyst": {
+        "0": "Alchemyst",
         "13": "炼金术师"
     },
-    "MediumIntroDesc": {
+    "AlchemystIntroDesc": {
         "0": "I see dead people.",
         "13": "亡者的低语，将化作对生者的裁决…"
     },
-    "MediumShortDesc": {
+    "AlchemystShortDesc": {
         "0": "Commune with spirits of the deceased to gain information.",
         "13": "对亡魂通灵，获取信息并凝练子弹"
     },
@@ -6237,8 +6237,8 @@
         "0": "The Security Guard can seal off vents and set up cameras.\nThese become active after the next meeting ends.\nAll players can see these devices once placed.\nCompleting tasks increases the number of uses available.",
         "13": "保安可以封锁通风管道，和放置监控。\n在下轮会议结束后生效，\n且所有人都能看见封锁装置和监控装置。\n做任务能够提升保安使用技能的次数。"
     },
-    "MediumFullDesc": {
-        "0": "After a meeting ends, the Medium can commune with the spirit of a player who died in the previous round by visiting the location of their death.\nIn the following meeting, relevant information about the deceased will appear in the chatbox, with a chance of revealing additional details.",
+    "AlchemystFullDesc": {
+        "0": "After a meeting ends, the Alchemyst can commune with the spirit of a player who died in the previous round by visiting the location of their death.\nIn the following meeting, relevant information about the deceased will appear in the chatbox, with a chance of revealing additional details.",
         "13": "会议结束后，可以在上轮死亡玩家的死亡地点对灵魂通灵。\n进入会议后可以在对话框中得到死者相关信息，有一定概率会获得额外信息。\n通灵一定次数后，可获得一次无责任击杀。\n\n该击杀只在当轮保留，但可通过存弹跨轮次保留。"
     },
     "TrapperFullDesc": {

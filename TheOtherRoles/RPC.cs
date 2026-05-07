@@ -400,7 +400,7 @@ public static class RPCProcedure
             case RoleId.Vulture:
                 Vulture.vulture = player;
                 break;
-            case RoleId.Medium:
+            case RoleId.Alchemyst:
                 Alchemyst.Player = player;
                 break;
             case RoleId.Trapper:

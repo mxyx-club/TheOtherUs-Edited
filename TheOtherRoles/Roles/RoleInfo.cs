@@ -105,7 +105,7 @@ public class RoleInfo
     public static RoleInfo infoSleuth = new("InfoSleuth", InfoSleuth.color, RoleId.InfoSleuth, RoleType.Crewmate);
     public static RoleInfo spy = new("Spy", Spy.color, RoleId.Spy, RoleType.Crewmate);
     public static RoleInfo securityGuard = new("SecurityGuard", SecurityGuard.color, RoleId.SecurityGuard, RoleType.Crewmate);
-    public static RoleInfo medium = new("Medium", Alchemyst.color, RoleId.Medium, RoleType.Crewmate);
+    public static RoleInfo alchemyst = new("Alchemyst", Alchemyst.color, RoleId.Alchemyst, RoleType.Crewmate);
     public static RoleInfo trapper = new("Trapper", Trapper.color, RoleId.Trapper, RoleType.Crewmate);
     public static RoleInfo balancer = new("Balancer", Balancer.color, RoleId.Balancer, RoleType.Crewmate);
     public static RoleInfo redemptor = new("Redemptor", Redemptor.color, RoleId.Redemptor, RoleType.Crewmate);
@@ -229,7 +229,7 @@ public class RoleInfo
         infoSleuth,
         spy,
         securityGuard,
-        medium,
+        alchemyst,
         trapper,
         balancer,
         redemptor,
@@ -372,7 +372,7 @@ public class RoleInfo
         if (p == Sheriff.Deputy) infos.Add(deputy);
         if (p == BountyHunter.bountyHunter) infos.Add(bountyHunter);
         if (p == Vulture.vulture) infos.Add(vulture);
-        if (p == Alchemyst.Player) infos.Add(medium);
+        if (p == Alchemyst.Player) infos.Add(alchemyst);
         if (p == Lawyer.lawyer) infos.Add(lawyer);
         if (p == Pelican.Player) infos.Add(pelican);
         if (p == Jailor.Player) infos.Add(jailor);
