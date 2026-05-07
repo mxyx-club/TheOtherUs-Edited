@@ -1,5 +1,3 @@
-using Steamworks;
-
 namespace TheOtherRoles.Roles.Impostor;
 
 public class Gaoler
@@ -49,7 +47,7 @@ public class Gaoler
 
         if (Player.IsAlive() || (hasMapPlayer.IsAlive() && hasMapPlayer.IsImpostor())) return;
 
-        var allImpostor = PlayerData.AllPlayerControl.Where(x => x.IsImpostor() && x.IsAlive() && x != Yoyo.yoyo);
+        var allImpostor = GameDataManager.Instance.AllPlayerControl.Where(x => x.IsImpostor() && x.IsAlive() && x != Yoyo.yoyo);
         if (allImpostor.Any() && (player == Player || hasMapPlayer.IsDead() || !hasMapPlayer.IsImpostor()))
         {
             hasMapPlayer = allImpostor.Random();

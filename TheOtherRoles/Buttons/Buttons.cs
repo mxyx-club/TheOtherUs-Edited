@@ -1,6 +1,5 @@
 using Reactor.Networking;
 using TheOtherRoles.Attributes;
-using TheOtherRoles.Helper;
 using TheOtherRoles.Objects;
 using static TheOtherRoles.Buttons.CustomButton;
 using static TheOtherRoles.Modules.ModInputManager;
@@ -3259,6 +3258,8 @@ internal static class HudManagerStartPatch
                  Alchemyst.CurrentTarget = SetTarget(inVented: ModOption.CanKillInVent);
                  SetPlayerOutline(Alchemyst.CurrentTarget, Alchemyst.color);
                  alchemystKillButton.showTargetNameOnButton(Alchemyst.CurrentTarget);
+
+                 if (alchemystKillButton.buttonText != null) alchemystKillButton.buttonText = $"{Alchemyst.skillUseCount} / {Alchemyst.mediumRequiredUses}";
 
                  return PlayerControl.LocalPlayer.CanMove && Alchemyst.CurrentTarget != null && Alchemyst.canUseKill;
              },

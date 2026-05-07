@@ -1,7 +1,6 @@
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using TheOtherRoles.Objects;
-using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles.Patches;
 

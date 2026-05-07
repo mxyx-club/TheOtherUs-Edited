@@ -2580,7 +2580,7 @@ internal class RPCHandlerPatch
                 Mayor.MyVotes = reader.ReadSingle();
                 break;
             case CustomRPC.ShareFriendCode:
-                PlayerData.ShareFriendCode(reader.ReadByte(), reader.ReadString());
+                GameDataManager.Instance.ShareFriendCode(reader.ReadByte(), reader.ReadString());
                 break;
             case CustomRPC.ShareDeathReasonAndKiller:
                 PlayerData.SetDeathReason(reader.ReadPlayer(), (CustomDeathReason)reader.ReadByte(), reader.ReadPlayer());
@@ -2642,7 +2642,6 @@ internal class RPCHandlerPatch
                 SoulSight.Score = reader.ReadInt32();
                 SoulSight.TriggerWin = reader.ReadBoolean();
                 break;
-
             case CustomRPC.GaolerMarkPrisoner:
                 RPCProcedure.GaolerMarkPrisoner(reader.ReadByte());
                 break;

@@ -288,7 +288,7 @@ public class CustomButton
             var maxTime = Time == -1 ? t.MaxTimer : Time;
             try
             {
-                t.Timer = t.MaxTimer == 0 ? 0 : maxTime;
+                t.Timer = t.MaxTimer < 1 ? 0 : maxTime;
                 t.DeputyTimer = maxTime;
                 t.isEffectActive = false;
                 t.Update();

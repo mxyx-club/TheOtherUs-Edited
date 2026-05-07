@@ -36,6 +36,7 @@ public class GameStartManagerPatch
     {
         public static void Postfix(GameStartManager __instance)
         {
+            ModOption.isCanceled = false;
             // Trigger version refresh
             versionSent = false;
             // Reset lobby countdown timer

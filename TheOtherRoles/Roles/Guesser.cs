@@ -563,7 +563,7 @@ public static class Guesser
             if (guesserUI != null && guesserUIExitButton != null)
                 guesserUIExitButton.OnClick.Invoke();
             // 显示提示
-            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是您被关押了！"+ "\n--看来你还不明白现在自己的处境");
+            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是您被关押了！" + "\n--看来你还不明白现在自己的处境");
             return;
         }
 

@@ -98,7 +98,7 @@ public class OnGameEndPatch
     {
         gameOverReason = endGameResult.GameOverReason;
         if ((int)endGameResult.GameOverReason >= 10) endGameResult.GameOverReason = GameOverReason.ImpostorByKill;
-        PlayerData.GlobalInfo.EndTime = DateTime.UtcNow;
+        GameDataManager.Instance.EndTime = DateTime.UtcNow;
 
         // Reset zoomed out ghosts
         toggleZoom(true);
@@ -600,13 +600,15 @@ public class OnGameEndPatch
         {
             if (AmongUsClient.Instance.AmHost)
             {
-                PlayerData.GlobalInfo.WinCondition = AdditionalTempData.winCondition;
+                GameDataManager.Instance.WinCondition = AdditionalTempData.winCondition;
+                GameDataManager.Instance.EndTime = DateTime.UtcNow;
+
                 foreach (var data in PlayerData.AllPlayerData.Values)
                 {
                     data.IsWinner = winners.Any(x => x.PlayerId == data.PlayerId);
                     data.TaskCount = TasksHandler.taskInfo(data.Player.Data);
                 }
-                PlayerData.GlobalInfo.SaveAllPlayerDataToJson();
+
             }
         }
         catch (Exception e)

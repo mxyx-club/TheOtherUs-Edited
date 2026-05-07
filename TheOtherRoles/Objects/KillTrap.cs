@@ -1,5 +1,3 @@
-using TheOtherRoles.Attributes;
-
 namespace TheOtherRoles.Objects;
 
 public class KillTrap : CustomObjectBase<KillTrap>

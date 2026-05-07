@@ -1,4 +1,3 @@
-using HarmonyLib;
 using static TheOtherRoles.Options.ModOption;
 
 namespace TheOtherRoles.Modules;

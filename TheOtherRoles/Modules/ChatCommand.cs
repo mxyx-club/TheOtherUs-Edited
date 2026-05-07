@@ -1,11 +1,9 @@
 using AmongUs.GameOptions;
-using BepInEx.Unity.IL2CPP.Utils;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using System.Text;
 using System.Threading.Tasks;
 using TheOtherRoles.Attributes;
 using TheOtherRoles.Patches;
-using static TheOtherRoles.Modules.PlayerData;
 using static TheOtherRoles.Patches.ChatControllerPatch;
 
 namespace TheOtherRoles.Modules;
@@ -514,7 +512,7 @@ public static class ChatCommandRegistry
             {
                 try
                 {
-                    var result = await BindingVerifier.VerifyBinding(friendCode, args[0]);
+                    var result = await GameDataManager.BindingVerifier.VerifyBinding(friendCode, args[0]);
                     success = result.success;
                     message = result.message;
                 }

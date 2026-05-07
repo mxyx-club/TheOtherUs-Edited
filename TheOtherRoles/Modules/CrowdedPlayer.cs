@@ -283,7 +283,7 @@ public static class CrowdedPlayer
             {
                 return states
                     .OrderBy(p => p.AmDead)
-                    .ThenBy(p => PlayerData.AnonymousId.TryGetValue(p.TargetPlayerId, out var uid) ? uid : 24);
+                    .ThenBy(p => GameDataManager.Instance.AnonymousId.TryGetValue(p.TargetPlayerId, out var uid) ? uid : 24);
             }
             else
             {
