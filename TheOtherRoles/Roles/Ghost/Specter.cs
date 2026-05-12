@@ -34,7 +34,7 @@ public class Specter
         {
             case RoleId.Impostor:
                 break;
-            case RoleId.Morphling:
+            case RoleId.Glitch:
                 if (resetRole) Glitch.clearAndReload();
                 break;
             case RoleId.WolfLord:

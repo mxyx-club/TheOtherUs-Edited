@@ -62,7 +62,8 @@ public class Aftermath
             writer.EndRPC();
             morphlingMorph(player.PlayerId);
             Glitch.sampledTarget = null;
-            morphlingButton.Timer = Glitch.duration;
+            glitchMimicButton.IsEffectActive = true;
+            glitchMimicButton.EffectDuration = Glitch.duration;
             SoundEffectsManager.play("morphlingMorph");
         }
         else if (Butcher.butcher == killer)

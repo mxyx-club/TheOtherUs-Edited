@@ -20,7 +20,7 @@ public enum RoleId
     DefaultRole,
 
     Impostor = 1,
-    Morphling,
+    Glitch,
     WolfLord,
     Bomber,
     Poucher,
@@ -746,7 +746,7 @@ public static class RoleHelpers
             { RoleId.Gambler, CustomOptionHolder.gamblerSpawnRate.GetSelection() },
             { RoleId.Mimic, CustomOptionHolder.mimicSpawnRate.GetSelection() },
             { RoleId.Miner, CustomOptionHolder.minerSpawnRate.GetSelection() },
-            { RoleId.Morphling, CustomOptionHolder.glitchSpawnRate.GetSelection() },
+            { RoleId.Glitch, CustomOptionHolder.glitchSpawnRate.GetSelection() },
             { RoleId.Ninja, CustomOptionHolder.ninjaSpawnRate.GetSelection() },
             { RoleId.Poucher, CustomOptionHolder.poucherSpawnRate.GetSelection() },
             { RoleId.Terrorist, CustomOptionHolder.terroristSpawnRate.GetSelection() },

@@ -29,7 +29,7 @@ internal static class HudManagerStartPatch
     public static CustomButton bountyHunterChangeTarget;
     public static CustomButton disperserDisperseButton;
     public static CustomButton buttonBarryButton;
-    public static CustomButton morphlingButton;
+    public static CustomButton glitchMimicButton;
     public static CustomButton butcherDissectionButton;
     public static CustomButton camouflagerButton;
     public static CustomButton portalmakerPlacePortalButton;
@@ -150,7 +150,7 @@ internal static class HudManagerStartPatch
         shifterShiftButton.MaxTimer = 0f;
         disperserDisperseButton.MaxTimer = 0f;
         buttonBarryButton.MaxTimer = 0f;
-        morphlingButton.MaxTimer = Glitch.cooldown;
+        glitchMimicButton.MaxTimer = Glitch.cooldown;
         butcherDissectionButton.MaxTimer = Butcher.dissectionCooldown;
         bomberBombButton.MaxTimer = Bomber.cooldown;
         camouflagerButton.MaxTimer = Camouflager.cooldown;
@@ -247,7 +247,7 @@ internal static class HudManagerStartPatch
         werewolfRampageButton.EffectDuration = Werewolf.rampageDuration;
         grenadierFlashButton.EffectDuration = Grenadier.duration;
         camouflagerButton.EffectDuration = Camouflager.duration;
-        morphlingButton.EffectDuration = Glitch.duration;
+        glitchMimicButton.EffectDuration = Glitch.duration;
         bomberBombButton.EffectDuration = Bomber.bombDelay + Bomber.bombTimer;
         lightsOutButton.EffectDuration = Trickster.lightsOutDuration;
         arsonistButton.EffectDuration = Arsonist.duration;
@@ -593,7 +593,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 veteranAlertButton.Timer = veteranAlertButton.MaxTimer;
-                veteranAlertButton.isEffectActive = false;
+                veteranAlertButton.IsEffectActive = false;
                 veteranAlertButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Veteran.buttonSprite,
@@ -928,31 +928,42 @@ internal static class HudManagerStartPatch
             buttonText: "buttonBarryText".Translate()
         );
 
-        // Morphling morphs
-        morphlingButton = new CustomButton(
+        glitchMimicButton = new CustomButton(
             () =>
             {
-                if (Glitch.sampledTarget != null)
+                var mimicTargets = new List<byte>();
+                foreach (var target in GameDataManager.Instance.AllPlayerControl)
                 {
-                    if (CheckUseAbility(PlayerControl.LocalPlayer, Glitch.currentTarget)) return;
-                    var writer = StartRPC(CustomRPC.MorphlingMorph);
-                    writer.Write(Glitch.sampledTarget.PlayerId);
-                    writer.EndRPC();
-                    RPCProcedure.morphlingMorph(Glitch.sampledTarget.PlayerId);
-                    Glitch.sampledTarget = null;
-                    morphlingButton.EffectDuration = Glitch.duration;
-                    SoundEffectsManager.play("morphlingMorph");
+                    if (target != Glitch.Player && !target.Data.Disconnected)
+                    {
+                        if (!target.Data.IsDead)
+                        {
+                            mimicTargets.Add(target.PlayerId);
+                        }
+                        else
+                        {
+                            foreach (var body in UObject.FindObjectsOfType<DeadBody>())
+                            {
+                                if (body.ParentId == target.PlayerId) mimicTargets.Add(target.PlayerId);
+                            }
+                        }
+                    }
                 }
-                else if (Glitch.currentTarget != null)
-                {
-                    Glitch.sampledTarget = Glitch.currentTarget;
-                    morphlingButton.Sprite = Glitch.morphSprite;
-                    morphlingButton.EffectDuration = 1f;
-                    SoundEffectsManager.play("morphlingSample");
 
-                    // Add poolable player to the button so that the target outfit is shown
-                    setButtonTargetDisplay(Glitch.sampledTarget, morphlingButton);
-                }
+                var pk = new PlayerMenu((x) =>
+                {
+                    var writer = StartRPC(CustomRPC.MorphlingMorph);
+                    writer.Write(x.PlayerId);
+                    writer.EndRPC();
+                    RPCProcedure.morphlingMorph(x.PlayerId);
+                    glitchMimicButton.EffectDuration = Glitch.duration;
+                    SoundEffectsManager.play("morphlingMorph");
+                }, (y) =>
+                {
+                    return mimicTargets.ToArray().Contains(y.PlayerId);
+                });
+                PlayerControl.LocalPlayer.NetTransform.Halt();
+                Coroutines.Start(pk.Open(0f, true));
             },
             () =>
             {
@@ -960,29 +971,13 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Glitch.currentTarget = SetTarget();
-                SetPlayerOutline(Glitch.currentTarget, Glitch.color);
-
-                if (Glitch.sampledTarget != null)
-                    morphlingButton.SetButtonText(Glitch.sampledTarget?.Data?.PlayerName ?? GetString("MorphText"));
-                else
-                    morphlingButton.showTargetNameOnButton(Glitch.currentTarget, GetString("SampleText"));
-
-                return (Glitch.currentTarget || Glitch.sampledTarget) && !isActiveCamoComms &&
-                       PlayerControl.LocalPlayer.CanMove && !MushroomSabotageActive;
+                return PlayerControl.LocalPlayer.CanMove && !isActiveCamoComms && !MushroomSabotageActive;
             },
             () =>
             {
-                morphlingButton.Timer = morphlingButton.MaxTimer;
-                morphlingButton.isEffectActive = false;
-                morphlingButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-
-                if (Glitch.ResetAfterMeeting)
-                {
-                    morphlingButton.Sprite = Glitch.sampleSprite;
-                    Glitch.sampledTarget = null;
-                    setButtonTargetDisplay(null);
-                }
+                glitchMimicButton.Timer = glitchMimicButton.MaxTimer;
+                glitchMimicButton.IsEffectActive = false;
+                glitchMimicButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Glitch.sampleSprite,
             __instance,
@@ -992,15 +987,8 @@ internal static class HudManagerStartPatch
             Glitch.duration,
             () =>
             {
-                if (Glitch.sampledTarget == null)
-                {
-                    morphlingButton.Timer = morphlingButton.MaxTimer;
-                    morphlingButton.Sprite = Glitch.sampleSprite;
-                    SoundEffectsManager.play("morphlingMorph");
-
-                    // Reset the poolable player
-                    setButtonTargetDisplay(null);
-                }
+                glitchMimicButton.Timer = glitchMimicButton.MaxTimer;
+                SoundEffectsManager.play("morphlingMorph");
             },
             buttonText: GetString("SampleText")
         );
@@ -1025,7 +1013,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 camouflagerButton.Timer = camouflagerButton.MaxTimer;
-                camouflagerButton.isEffectActive = false;
+                camouflagerButton.IsEffectActive = false;
                 camouflagerButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Camouflager.buttonSprite,
@@ -1057,7 +1045,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 hackerButton.Timer = hackerButton.MaxTimer;
-                hackerButton.isEffectActive = false;
+                hackerButton.IsEffectActive = false;
                 hackerButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Hacker.buttonSprite,
@@ -1096,7 +1084,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 hackerAdminTableButton.Timer = hackerAdminTableButton.MaxTimer;
-                hackerAdminTableButton.isEffectActive = false;
+                hackerAdminTableButton.IsEffectActive = false;
                 hackerAdminTableButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Hacker.getAdminSprite(),
@@ -1119,7 +1107,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 hackerAdminTableButton.Timer = hackerAdminTableButton.MaxTimer;
-                if (!hackerVitalsButton.isEffectActive) PlayerControl.LocalPlayer.moveable = true;
+                if (!hackerVitalsButton.IsEffectActive) PlayerControl.LocalPlayer.moveable = true;
                 if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
             },
             mapId == 3,
@@ -1179,7 +1167,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 hackerVitalsButton.Timer = hackerVitalsButton.MaxTimer;
-                hackerVitalsButton.isEffectActive = false;
+                hackerVitalsButton.IsEffectActive = false;
                 hackerVitalsButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Hacker.getVitalsSprite(),
@@ -1224,7 +1212,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 hackerVitalsButton.Timer = hackerVitalsButton.MaxTimer;
-                if (!hackerAdminTableButton.isEffectActive) PlayerControl.LocalPlayer.moveable = true;
+                if (!hackerAdminTableButton.IsEffectActive) PlayerControl.LocalPlayer.moveable = true;
                 if (Minigame.Instance)
                 {
                     if (isMira) Hacker.doorLog.ForceClose();
@@ -1292,7 +1280,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 trackerTrackCorpsesButton.Timer = trackerTrackCorpsesButton.MaxTimer;
-                trackerTrackCorpsesButton.isEffectActive = false;
+                trackerTrackCorpsesButton.IsEffectActive = false;
                 trackerTrackCorpsesButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Tracker.trackCorpsesButtonSprite,
@@ -1426,7 +1414,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 vampireKillButton.Timer = vampireKillButton.MaxTimer;
-                vampireKillButton.isEffectActive = false;
+                vampireKillButton.IsEffectActive = false;
                 vampireKillButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Vampire.buttonSprite,
@@ -1761,7 +1749,7 @@ internal static class HudManagerStartPatch
             () =>
             {  /* On Meeting End */
                 jackalSwoopButton.Timer = jackalSwoopButton.MaxTimer;
-                jackalSwoopButton.isEffectActive = false;
+                jackalSwoopButton.IsEffectActive = false;
                 jackalSwoopButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                 Jackal.isInvisable = false;
             },
@@ -1823,7 +1811,7 @@ internal static class HudManagerStartPatch
             () =>
             {  /* On Meeting End */
                 swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer;
-                swooperSwoopButton.isEffectActive = false;
+                swooperSwoopButton.IsEffectActive = false;
                 swooperSwoopButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                 Swooper.isInvisable = false;
             },
@@ -1959,7 +1947,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                pavlovsdogsRingButton.isEffectActive = false;
+                pavlovsdogsRingButton.IsEffectActive = false;
                 pavlovsdogsRingButton.Timer = pavlovsdogsRingButton.MaxTimer;
             },
             Pavlovsdogs.RingButton,
@@ -1970,7 +1958,7 @@ internal static class HudManagerStartPatch
             Pavlovsdogs.ringDuration,
             () =>
             {
-                pavlovsdogsRingButton.isEffectActive = false;
+                pavlovsdogsRingButton.IsEffectActive = false;
                 pavlovsdogsRingButton.Timer = pavlovsdogsRingButton.MaxTimer;
             },
             buttonText: GetString("pavlovsRingText")
@@ -2056,7 +2044,7 @@ internal static class HudManagerStartPatch
             {
                 /* On Meeting End */
                 bomberBombButton.Timer = bomberBombButton.MaxTimer;
-                bomberBombButton.isEffectActive = false;
+                bomberBombButton.IsEffectActive = false;
                 bomberBombButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                 Bomber.hasBombPlayer = null;
             },
@@ -2160,7 +2148,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 grenadierFlashButton.Timer = grenadierFlashButton.MaxTimer;
-                grenadierFlashButton.isEffectActive = false;
+                grenadierFlashButton.IsEffectActive = false;
                 grenadierFlashButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Grenadier.ButtonSprite,
@@ -2232,7 +2220,7 @@ internal static class HudManagerStartPatch
             {
                 /* On Meeting End */
                 werewolfRampageButton.Timer = werewolfRampageButton.MaxTimer;
-                werewolfRampageButton.isEffectActive = false;
+                werewolfRampageButton.IsEffectActive = false;
                 werewolfRampageButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                 Werewolf.canKill = false;
                 //  Werewolf.canUseVents = false;
@@ -2459,7 +2447,7 @@ internal static class HudManagerStartPatch
             {
                 JackInTheBox.MeetingEnd();
                 lightsOutButton.Timer = lightsOutButton.MaxTimer;
-                lightsOutButton.isEffectActive = false;
+                lightsOutButton.IsEffectActive = false;
                 lightsOutButton.actionButton.graphic.color = Palette.EnabledColor;
             },
             Trickster.lightOutButtonSprite,
@@ -2880,7 +2868,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 securityGuardCamButton.Timer = securityGuardCamButton.MaxTimer;
-                securityGuardCamButton.isEffectActive = false;
+                securityGuardCamButton.IsEffectActive = false;
                 securityGuardCamButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             SecurityGuard.getCamSprite(),
@@ -2932,11 +2920,11 @@ internal static class HudManagerStartPatch
 
                 arsonistButton.showTargetNameOnButton(Arsonist.currentTarget);
 
-                if (arsonistButton.isEffectActive && Arsonist.douseTarget != Arsonist.currentTarget)
+                if (arsonistButton.IsEffectActive && Arsonist.douseTarget != Arsonist.currentTarget)
                 {
                     Arsonist.douseTarget = null;
                     arsonistButton.Timer = 0f;
-                    arsonistButton.isEffectActive = false;
+                    arsonistButton.IsEffectActive = false;
                 }
 
                 return PlayerControl.LocalPlayer.CanMove && Arsonist.currentTarget != null;
@@ -2944,7 +2932,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 arsonistButton.Timer = arsonistButton.MaxTimer;
-                arsonistButton.isEffectActive = false;
+                arsonistButton.IsEffectActive = false;
                 Arsonist.douseTarget = null;
             },
             Arsonist.douseSprite,
@@ -3150,11 +3138,11 @@ internal static class HudManagerStartPatch
                 }
                 Alchemyst.target = target;
 
-                if (alchemystButton.isEffectActive && Alchemyst.target != Alchemyst.soulTarget)
+                if (alchemystButton.IsEffectActive && Alchemyst.target != Alchemyst.soulTarget)
                 {
                     Alchemyst.soulTarget = null;
                     alchemystButton.Timer = 0f;
-                    alchemystButton.isEffectActive = false;
+                    alchemystButton.IsEffectActive = false;
                 }
 
                 return Alchemyst.target != null && PlayerControl.LocalPlayer.CanMove;
@@ -3162,7 +3150,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 alchemystButton.Timer = alchemystButton.MaxTimer;
-                alchemystButton.isEffectActive = false;
+                alchemystButton.IsEffectActive = false;
                 Alchemyst.soulTarget = null;
             },
             Alchemyst.question,
@@ -3259,7 +3247,7 @@ internal static class HudManagerStartPatch
                  SetPlayerOutline(Alchemyst.CurrentTarget, Alchemyst.color);
                  alchemystKillButton.showTargetNameOnButton(Alchemyst.CurrentTarget);
 
-                 if (alchemystKillButton.buttonText != null) alchemystKillButton.buttonText = $"{Alchemyst.skillUseCount} / {Alchemyst.requiredUses}";
+                 if (alchemystKillButton.ButtonTitle != null) alchemystKillButton.ButtonTitle.text = $"{Alchemyst.skillUseCount} / {Alchemyst.requiredUses}";
 
                  return PlayerControl.LocalPlayer.CanMove && Alchemyst.CurrentTarget != null && Alchemyst.canUseKill;
              },
@@ -3339,7 +3327,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 survivorVestButton.Timer = survivorVestButton.MaxTimer;
-                survivorVestButton.isEffectActive = false;
+                survivorVestButton.IsEffectActive = false;
                 survivorVestButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Survivor.VestButtonSprite,
@@ -3426,18 +3414,18 @@ internal static class HudManagerStartPatch
                 SetPlayerOutline(Witch.currentTarget, Witch.color);
 
                 witchSpellButton.showTargetNameOnButton(Witch.currentTarget);
-                if (witchSpellButton.isEffectActive && Witch.spellCastingTarget != Witch.currentTarget)
+                if (witchSpellButton.IsEffectActive && Witch.spellCastingTarget != Witch.currentTarget)
                 {
                     Witch.spellCastingTarget = null;
                     witchSpellButton.Timer = 0f;
-                    witchSpellButton.isEffectActive = false;
+                    witchSpellButton.IsEffectActive = false;
                 }
                 return PlayerControl.LocalPlayer.CanMove && Witch.currentTarget != null;
             },
             () =>
             {
                 witchSpellButton.Timer = witchSpellButton.MaxTimer;
-                witchSpellButton.isEffectActive = false;
+                witchSpellButton.IsEffectActive = false;
                 Witch.spellCastingTarget = null;
             },
             Witch.buttonSprite,
@@ -3759,7 +3747,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 terroristButton.Timer = terroristButton.MaxTimer;
-                terroristButton.isEffectActive = false;
+                terroristButton.IsEffectActive = false;
                 terroristButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             buttonText: Terrorist.selfExplosion ? GetString("TerroristBombText2") : GetString("TerroristBombText1")
@@ -3789,7 +3777,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 defuseButton.Timer = 0f;
-                defuseButton.isEffectActive = false;
+                defuseButton.IsEffectActive = false;
             },
             Bomb.defuseSprite,
             __instance,
@@ -3921,8 +3909,8 @@ internal static class HudManagerStartPatch
                 if (Yoyo.yoyo.IsUsingTransportation)
                 {
                     yoyoButton.Timer = 0.5f;
-                    yoyoButton.DeputyTimer = 0.5f;
-                    yoyoButton.isEffectActive = true;
+                    yoyoButton.EffectTimer = 0.5f;
+                    yoyoButton.IsEffectActive = true;
                     yoyoButton.actionButton.cooldownTimerText.color = new Color(0F, 0.8F, 0F);
                     return;
                 }
@@ -3940,7 +3928,7 @@ internal static class HudManagerStartPatch
                 writer.EndRPC();
                 RPCProcedure.yoyoBlink(false, pos);
                 yoyoButton.Timer = yoyoButton.MaxTimer;
-                yoyoButton.isEffectActive = false;
+                yoyoButton.IsEffectActive = false;
                 yoyoButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                 yoyoButton.HasEffect = false;
                 yoyoButton.Sprite = Yoyo.markButtonSprite;
@@ -3970,7 +3958,7 @@ internal static class HudManagerStartPatch
            () =>
            {
                yoyoAdminTableButton.Timer = yoyoAdminTableButton.MaxTimer;
-               yoyoAdminTableButton.isEffectActive = false;
+               yoyoAdminTableButton.IsEffectActive = false;
                yoyoAdminTableButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
            },
            Hacker.getAdminSprite(),
@@ -4042,7 +4030,7 @@ internal static class HudManagerStartPatch
             {
                 Redemptor.Revelating = false;
                 redemptorRevelationButton.Timer = redemptorRevelationButton.MaxTimer;
-                redemptorRevelationButton.isEffectActive = false;
+                redemptorRevelationButton.IsEffectActive = false;
                 redemptorRevelationButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Tracker.trackCorpsesButtonSprite,
@@ -4083,7 +4071,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 redemptorPrayerButton.Timer = redemptorPrayerButton.MaxTimer;
-                redemptorPrayerButton.isEffectActive = false;
+                redemptorPrayerButton.IsEffectActive = false;
                 redemptorPrayerButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             Redemptor.reviveButton,
@@ -4504,7 +4492,7 @@ internal static class HudManagerStartPatch
 
                 if (berserkerKillButton.ButtonTitle != null)
                 {
-                    berserkerKillButton.ButtonTitle.text = !berserkerKillButton.isEffectActive
+                    berserkerKillButton.ButtonTitle.text = !berserkerKillButton.IsEffectActive
                         ? $"{(int)(Berserker.GetDurationPercentage() * 100)} % | {Berserker.GetDuration():0.00}s"
                         : $"{berserkerKillButton.Timer:0.00}";
                 }
@@ -4544,7 +4532,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 berserkerKillButton.Timer = berserkerKillButton.MaxTimer;
-                berserkerKillButton.isEffectActive = false;
+                berserkerKillButton.IsEffectActive = false;
                 Berserker.Timer = 0f;
             },
             buttonText: GetString("killButtonText")
@@ -4837,7 +4825,7 @@ internal static class HudManagerStartPatch
             Clog.GhostDuration,
             () =>
             {
-                clogPlaceGhost.isEffectActive = false;
+                clogPlaceGhost.IsEffectActive = false;
                 clogPlaceGhost.Timer = clogPlaceGhost.MaxTimer;
             },
             buttonText: GetString("clogPlaceGhost")

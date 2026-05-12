@@ -5,11 +5,11 @@ public static class Glitch
     public static PlayerControl Player;
     public static Color color = Palette.ImpostorRed;
     public static Sprite sampleSprite = new ResourceSprite("SampleButton.png");
-    public static Sprite morphSprite = new ResourceSprite("MorphButton.png");
 
     public static float cooldown = 30f;
     public static float duration = 10f;
-    public static bool ResetAfterMeeting;
+    public static float HackCooldown = 30f;
+    public static float HackDuration = 10f;
 
     public static PlayerControl currentTarget;
     public static PlayerControl sampledTarget;
@@ -32,8 +32,9 @@ public static class Glitch
         sampledTarget = null;
         morphTarget = null;
         morphTimer = 0f;
-        cooldown = CustomOptionHolder.glitchCooldown.GetFloat();
-        duration = CustomOptionHolder.glitchDuration.GetFloat();
-        ResetAfterMeeting = CustomOptionHolder.glitchResetAfterMeeting.GetBool();
+        cooldown = CustomOptionHolder.glitchMimicCooldown.GetFloat();
+        duration = CustomOptionHolder.glitchMimicDuration.GetFloat();
+        HackCooldown = CustomOptionHolder.glitchHackCooldown.GetFloat();
+        HackDuration = CustomOptionHolder.glitchHackDuration.GetFloat();
     }
 }

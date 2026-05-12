@@ -26,7 +26,7 @@ public class RoleInfo
     }
 
     public static RoleInfo impostor = new("Impostor", Palette.ImpostorRed, RoleId.Impostor, RoleType.Impostor);
-    public static RoleInfo morphling = new("Morphling", Glitch.color, RoleId.Morphling, RoleType.Impostor);
+    public static RoleInfo glitch = new("Glitch", Glitch.color, RoleId.Glitch, RoleType.Impostor);
     public static RoleInfo wolfLord = new("WolfLord", WolfLord.color, RoleId.WolfLord, RoleType.Impostor);
     public static RoleInfo bomber = new("Bomber", Bomber.color, RoleId.Bomber, RoleType.Impostor);
     public static RoleInfo poucher = new("Poucher", Poucher.color, RoleId.Poucher, RoleType.Impostor);
@@ -152,7 +152,7 @@ public class RoleInfo
     [
         impostor,
         wolfLord,
-        morphling,
+        glitch,
         bomber,
         poucher,
         professional,
@@ -329,7 +329,7 @@ public class RoleInfo
         if (p == Professional.Player && !Professional.spawnModifier) infos.Add(professional);
         if (p == Butcher.butcher) infos.Add(butcher);
         if (p == WolfLord.Player) infos.Add(wolfLord);
-        if (p == Glitch.Player) infos.Add(morphling);
+        if (p == Glitch.Player) infos.Add(glitch);
         if (p == Bomber.bomber) infos.Add(bomber);
         if (p == Camouflager.camouflager) infos.Add(camouflager);
         if (p == Vampire.vampire) infos.Add(vampire);

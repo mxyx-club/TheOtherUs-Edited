@@ -52,7 +52,7 @@ public class Bomb : CustomObjectBase<Bomb>
     private void ActivateBomb(Vector3 pos)
     {
         GameObject.SetActive(!Terrorist.selfExplosion);
-        Background.SetActive(!Terrorist.selfExplosion);
+        Background?.SetActive(!Terrorist.selfExplosion);
         IsActive = true;
 
         SoundEffectsManager.playAtPosition("bombFuseBurning", pos, Terrorist.destructionTime, Terrorist.soundRange, true);

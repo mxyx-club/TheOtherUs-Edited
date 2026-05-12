@@ -103,7 +103,7 @@ internal class RoleManagerSelectRolesPatch
         var killerNeutralSettings = new Dictionary<byte, int>();
         var crewSettings = new Dictionary<byte, int>();
 
-        impSettings.Add((byte)RoleId.Morphling, CustomOptionHolder.glitchSpawnRate.GetSelection());
+        impSettings.Add((byte)RoleId.Glitch, CustomOptionHolder.glitchSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Camouflager, CustomOptionHolder.camouflagerSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Vampire, CustomOptionHolder.vampireSpawnRate.GetSelection());
         impSettings.Add((byte)RoleId.Eraser, CustomOptionHolder.eraserSpawnRate.GetSelection());

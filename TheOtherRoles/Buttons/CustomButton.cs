@@ -12,7 +12,10 @@ public class CustomButton
     private static List<CustomButton> _buttons = new(55);
     private static readonly int Desat = Shader.PropertyToID("_Desat");
     private static bool Started;
-    public static bool AllHandCuffedActive;
+
+    public static Sprite HandcuffedSprite = new ResourceSprite("DeputyHandcuffed.png");
+    public static Sprite LockedSprite = HandcuffedSprite;
+    public static bool IsLocked;
 
     public bool HandCuffedActive;
     public float HandCuffTime;
@@ -40,8 +43,9 @@ public class CustomButton
 
     public float EffectDuration;
     public bool HasEffect;
-    public bool isEffectActive;
+    public bool IsEffectActive;
     public bool isHandcuffed;
+    public float EffectTimer;
     public Vector3? PositionOffset;
 
     public KeyCode? hotkey;
@@ -52,7 +56,6 @@ public class CustomButton
     public bool UseGrid;
     public int UseGridPriority;
     public bool showButtonText;
-    public float DeputyTimer;
     public float Timer = 15;
 
     public float _MaxTimer;
@@ -75,7 +78,7 @@ public class CustomButton
     private int _lastUsesCount = int.MinValue;
     public int UsesCount = -1;
     public bool IsKillButton;
-    public bool IsCoolingDown => Timer <= 0 && !isEffectActive;
+    public bool IsCoolingDown => Timer <= 0 && !IsEffectActive;
 
     public CustomButton(
         Action OnClick,
@@ -211,22 +214,22 @@ public class CustomButton
 
         actionButtonRenderer.color = new Color(1f, 1f, 1f, 0.3f);
 
-        if (!isEffectActive && Timer < 0 && CouldUse())
+        if (!IsEffectActive && Timer < 0 && CouldUse())
         {
             OnClick();
-            if (HasEffect && !isEffectActive)
+            if (HasEffect && !IsEffectActive)
             {
-                DeputyTimer = EffectDuration;
+                EffectTimer = EffectDuration;
                 Timer = EffectDuration;
                 actionButton.cooldownTimerText.color = new Color32(0, 204, 0, 255);
-                isEffectActive = true;
+                IsEffectActive = true;
             }
         }
-        else if (!isEffectActive && Timer >= 0)
+        else if (!IsEffectActive && Timer >= 0)
         {
             return;
         }
-        else if (isEffectActive && Timer >= 0 && OnEffectCouldUse?.Invoke() == true)
+        else if (IsEffectActive && Timer >= 0 && OnEffectCouldUse?.Invoke() == true)
         {
             OnEffectClick?.Invoke();
         }
@@ -261,7 +264,7 @@ public class CustomButton
             try
             {
                 t.OnMeetingEnds();
-                t.isEffectActive = false;
+                t.IsEffectActive = false;
                 t.Multiplier = 1f;
                 t.actionButton.cooldownTimerText.color = new Color(1, 1, 1);
                 t.Update();
@@ -289,8 +292,8 @@ public class CustomButton
             try
             {
                 t.Timer = t.MaxTimer < 1 ? 0 : maxTime;
-                t.DeputyTimer = maxTime;
-                t.isEffectActive = false;
+                t.EffectTimer = maxTime;
+                t.IsEffectActive = false;
                 t.Update();
             }
             catch (Exception e)
@@ -307,7 +310,7 @@ public class CustomButton
         foreach (var t in Buttons.Where(x => x.IsKillButton))
         {
             var newTimer = time == -1f ? t.MaxTimer : time;
-            if (!t.isEffectActive)
+            if (!t.IsEffectActive)
             {
                 t.Timer = newTimer;
                 t.Update();
@@ -401,9 +404,9 @@ public class CustomButton
             _lastUsesCount = UsesCount;
         }
 
-        if (DeputyTimer >= 0 && !PlayerControl.LocalPlayer.inVent)
+        if (EffectTimer >= 0 && !PlayerControl.LocalPlayer.inVent)
         {
-            DeputyTimer -= Time.deltaTime * (HasEffect && isEffectActive ? 1f : 1f);
+            EffectTimer -= Time.deltaTime * (HasEffect && IsEffectActive ? 1f : 1f);
         }
 
         if (isHandcuffed)
@@ -426,7 +429,7 @@ public class CustomButton
             actionButton.transform.localPosition = hudManager.UseButton.transform.localPosition + PositionOffset.Value;
         }
 
-        bool canUse = CouldUse() || (isEffectActive && OnEffectCouldUse?.Invoke() == true);
+        bool canUse = CouldUse() || (IsEffectActive && OnEffectCouldUse?.Invoke() == true);
         Color targetColor = canUse ? Palette.EnabledColor : Palette.DisabledClear;
         float desatValue = canUse ? 0f : 1f;
 
@@ -435,20 +438,20 @@ public class CustomButton
 
 
         float progress = Time.deltaTime;
-        bool shouldCountdown = (!InGame || Started) && Timer >= 0 && ((HasEffect && isEffectActive) || !PlayerControl.LocalPlayer.inVent);
+        bool shouldCountdown = (!InGame || Started) && Timer >= 0 && ((HasEffect && IsEffectActive) || !PlayerControl.LocalPlayer.inVent);
 
-        if (shouldCountdown) Timer -= progress * (isEffectActive ? 1f : Multiplier);
+        if (shouldCountdown) Timer -= progress * (IsEffectActive ? 1f : Multiplier);
 
-        bool effectShouldEnd = (DeputyTimer <= 0 || Timer <= 0) && HasEffect && isEffectActive;
+        bool effectShouldEnd = (EffectTimer <= 0 || Timer <= 0) && HasEffect && IsEffectActive;
         if (effectShouldEnd)
         {
-            isEffectActive = false;
+            IsEffectActive = false;
             OnEffectEnd?.Invoke();
         }
 
-        actionButton.SetCoolDown(Timer, HasEffect && isEffectActive ? EffectDuration : MaxTimer);
+        actionButton.SetCoolDown(Timer, HasEffect && IsEffectActive ? EffectDuration : MaxTimer);
 
-        if (isEffectActive && DeputyTimer > 0)
+        if (IsEffectActive && EffectTimer > 0)
         {
             actionButton.cooldownTimerText.color = new Color32(0, 204, 0, 255);
         }
@@ -547,11 +550,11 @@ public class CustomButton
             // For non custom buttons, we can set these manually.
             couldUse ??= button.CouldUse;
             var replacementHandcuffedButton = new CustomButton(() => { }, () => { return true; }, couldUse, () => { },
-                Sheriff.handcuffedSprite, button.hudManager, button.textTemplate, null,
+                IsLocked ? LockedSprite : HandcuffedSprite, button.hudManager, button.textTemplate, null,
                 true, Sheriff.handcuffDuration, null, null, null, button.mirror);
             replacementHandcuffedButton.Timer = replacementHandcuffedButton.EffectDuration;
             replacementHandcuffedButton.actionButton.cooldownTimerText.color = new Color32(0, 204, 0, 255);
-            replacementHandcuffedButton.isEffectActive = true;
+            replacementHandcuffedButton.IsEffectActive = true;
             if (deputyHandcuffedButtons.ContainsKey(PlayerControl.LocalPlayer.PlayerId))
                 deputyHandcuffedButtons[PlayerControl.LocalPlayer.PlayerId].Add(replacementHandcuffedButton);
             else

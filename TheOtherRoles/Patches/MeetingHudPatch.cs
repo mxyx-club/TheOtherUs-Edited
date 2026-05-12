@@ -887,9 +887,9 @@ internal class MeetingHudPatch
             // Save AntiTeleport position, if the player is able to move (i.e. not on a ladder or a gap thingy)
             if (PlayerControl.LocalPlayer.MyPhysics.enabled && !PlayerControl.LocalPlayer.inMovingPlat && (PlayerControl.LocalPlayer.moveable
                 || PlayerControl.LocalPlayer.inVent
-                || HudManagerStartPatch.hackerVitalsButton.isEffectActive
-                || HudManagerStartPatch.hackerAdminTableButton.isEffectActive
-                || HudManagerStartPatch.securityGuardCamButton.isEffectActive
+                || HudManagerStartPatch.hackerVitalsButton.IsEffectActive
+                || HudManagerStartPatch.hackerAdminTableButton.IsEffectActive
+                || HudManagerStartPatch.securityGuardCamButton.IsEffectActive
                 || (Portal.isTeleporting && Portal.teleportedPlayers.Last().playerId == PlayerControl.LocalPlayer.PlayerId)))
             {
                 AntiTeleport.position = PlayerControl.LocalPlayer.transform.position;

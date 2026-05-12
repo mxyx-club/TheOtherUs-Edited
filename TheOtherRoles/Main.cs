@@ -129,22 +129,3 @@ public static class AmBannedPatch
         __result = false;
     }
 }
-
-[HarmonyPatch(typeof(ChatController), nameof(ChatController.Awake))]
-public static class ChatControllerAwakePatch
-{
-    private static void Prefix()
-    {
-        if (!EOSManager.Instance.isKWSMinor)
-            DataManager.Settings.Multiplayer.ChatMode = QuickChatModes.FreeChatOrQuickChat;
-    }
-}
-
-[HarmonyPatch(typeof(AmongUs.Data.Settings.SettingsData), nameof(AmongUs.Data.Settings.SettingsData.FileName), MethodType.Getter)]
-public class SettingsFilePatch
-{
-    public static void Postfix(ref string __result)
-    {
-        __result = "TOUE/" + __result;
-    }
-}

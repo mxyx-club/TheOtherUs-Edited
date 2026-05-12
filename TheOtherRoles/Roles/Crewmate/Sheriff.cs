@@ -26,7 +26,6 @@ public static class Sheriff
 
     public static Sprite killButtonSprite = new ResourceSprite("SheriffKillButton.png");
     public static Sprite handcuffSprite = new ResourceSprite("DeputyHandcuffButton.png");
-    public static Sprite handcuffedSprite = new ResourceSprite("DeputyHandcuffed.png");
 
     // Can be used to enable / disable the handcuff effect on the target's buttons
     public static void setHandcuffedKnows(bool active = true, byte playerId = byte.MaxValue)
@@ -50,7 +49,6 @@ public static class Sheriff
 
         if (playerId == PlayerControl.LocalPlayer.PlayerId)
         {
-            CustomButton.setAllButtonsHandcuffedStatus(active);
             SoundEffectsManager.play("deputyHandcuff");
         }
     }
@@ -106,7 +104,6 @@ public static class Sheriff
         {
             handcuffedPlayers = new();
             handcuffedKnows = new();
-            CustomButton.setAllButtonsHandcuffedStatus(false, true);
         }
         Player = new();
         currentTarget = null;

@@ -143,9 +143,10 @@ public class CustomOptionHolder
     public static CustomOption professionalBaitKiller;
 
     public static CustomOption glitchSpawnRate;
-    public static CustomOption glitchCooldown;
-    public static CustomOption glitchDuration;
-    public static CustomOption glitchResetAfterMeeting;
+    public static CustomOption glitchMimicCooldown;
+    public static CustomOption glitchMimicDuration;
+    public static CustomOption glitchHackCooldown;
+    public static CustomOption glitchHackDuration;
 
     public static CustomOption bomberSpawnRate;
     public static CustomOption bomberBombCooldown;
@@ -1054,10 +1055,11 @@ public class CustomOptionHolder
         professionalBaitKiller = Create(103702, Types.Impostor, "professionalBaitKiller", true, professionalSpawnRate,
             onChange: (x) => { if (modifierProfessionalBaitKiller.Selection != x.Selection) modifierProfessionalBaitKiller.updateSelection(x.Selection); });
 
-        glitchSpawnRate = Create(101100, Types.Impostor, Cs(Glitch.color, "Morphling"), rates, null, true);
-        glitchCooldown = Create(101101, Types.Impostor, "morphlingCooldown", 15f, 10f, 60f, 2.5f, glitchSpawnRate);
-        glitchDuration = Create(101102, Types.Impostor, "morphlingDuration", 15f, 1f, 20f, 0.5f, glitchSpawnRate);
-        glitchResetAfterMeeting = Create(101103, Types.Impostor, "morphlingResetAfterMeeting", false, glitchSpawnRate);
+        glitchSpawnRate = Create(101100, Types.Impostor, Cs(Glitch.color, "Glitch"), rates, null, true);
+        glitchMimicCooldown = Create(101101, Types.Impostor, "glitchMimicCooldown", 15f, 10f, 60f, 2.5f, glitchSpawnRate);
+        glitchMimicDuration = Create(101102, Types.Impostor, "glitchMimicDuration", 15f, 1f, 20f, 0.5f, glitchSpawnRate);
+        glitchHackCooldown = Create(101103, Types.Impostor, "glitchHackCooldown", 15f, 10f, 60f, 2.5f, glitchSpawnRate);
+        glitchHackDuration = Create(101104, Types.Impostor, "glitchHackDuration", 15f, 1f, 20f, 0.5f, glitchSpawnRate);
 
         bomberSpawnRate = Create(101200, Types.Impostor, Cs(Bomber.color, "Bomber"), rates, null, true);
         bomberBombCooldown = Create(101201, Types.Impostor, "bomberBombCooldown", 25f, 10f, 60f, 2.5f, bomberSpawnRate);

@@ -322,7 +322,7 @@ public static class RPCProcedure
             case RoleId.Seer:
                 Seer.seer = player;
                 break;
-            case RoleId.Morphling:
+            case RoleId.Glitch:
                 Glitch.Player = player;
                 break;
             case RoleId.Bomber:
@@ -1110,6 +1110,7 @@ public static class RPCProcedure
 
     public static void deputyUsedHandcuffs(byte targetId)
     {
+        //var target = PlayerById(targetId);
         Sheriff.remainingHandcuffs--;
         Sheriff.handcuffedPlayers.Add(targetId);
     }
@@ -2059,7 +2060,7 @@ public static class RPCProcedure
 
         bomb.Destroy();
         terroristButton.Timer = terroristButton.MaxTimer;
-        terroristButton.isEffectActive = false;
+        terroristButton.IsEffectActive = false;
         terroristButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
     }
 

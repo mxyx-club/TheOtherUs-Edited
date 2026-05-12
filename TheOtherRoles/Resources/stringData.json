@@ -1069,17 +1069,19 @@
         "0": "Madmate Gains the Ability to Guess",
         "13": "新信徒可成为刺客"
     },
-    "morphlingCooldown": {
+    "glitchMimicCooldown": {
         "0": "Morph Cooldown",
-        "13": "化形冷却"
+        "13": "变形冷却"
     },
-    "morphlingDuration": {
+    "glitchMimicDuration": {
         "0": "Morph Duration",
-        "13": "化形持续时间"
+        "13": "变形持续时间"
     },
-    "morphlingResetAfterMeeting": {
-        "0": "Reset Morph Target After Meeting",
-        "13": "会议后重置化形目标"
+    "glitchHackCooldown": {
+        "13": "骇入冷却"
+    },
+    "glitchHackDuration": {
+        "13": "骇入持续时间"
     },
     "bomberBombCooldown": {
         "0": "Plant Bomb Cooldown",
@@ -4577,6 +4579,10 @@
         "0": "Change your look to not get caught",
         "13": "变换你的外形"
     },
+    "Glitch": {
+        "0": "Glitch",
+        "13": "混沌"
+    },
     "Bomber": {
         "0": "Demolitionist",
         "13": "炸弹狂"
@@ -5955,7 +5961,10 @@
     },
     "MorphlingFullDesc": {
         "0": "Can disguise as other players after sampling them.",
-        "13": "采样后可以伪装成其他人。房主可以设定会议后重置化形目标。"
+        "13": "采样后可以伪装成其他人。"
+    },
+    "GlitchFullDesc": {
+        "13": "在行动阶段可以直接变形为某位玩家。\n还可以骇入封锁目标的技能，持续一段时间。"
     },
     "BomberFullDesc": {
         "0": "Can plant a bomb on another player, which activates after a few seconds.\nThe holder must pass it on before a meeting is called or the timer runs out, otherwise they die.\nDepending on settings, the bomb may be passed back to the Demolitionist.",

@@ -341,6 +341,13 @@ public static class ChatControllerPatch
     [HarmonyPatch(typeof(ChatController))]
     public static class ChatControllerAwakePatch
     {
+        [HarmonyPatch(typeof(ChatController), nameof(ChatController.Awake)), HarmonyPrefix]
+        private static void Awake_Prefix()
+        {
+            if (!EOSManager.Instance.isKWSMinor)
+                DataManager.Settings.Multiplayer.ChatMode = QuickChatModes.FreeChatOrQuickChat;
+        }
+
         [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update)), HarmonyPrefix]
         public static void Update_Prefix(ChatController __instance)
         {

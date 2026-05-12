@@ -301,7 +301,7 @@ public class GameDataManager : ManagerBase<GameDataManager>
                 var jsonContent = JsonSerializer.Serialize(requestData);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-                var apiUrl = GameDataManager.ApiUrl + "/api/auth/verify-playercode-binding";
+                var apiUrl = ApiUrl + "/api/auth/verify-playercode-binding";
 
                 var response = await httpClient.PostAsync(apiUrl, content);
                 var responseContent = await response.Content.ReadAsStringAsync();
