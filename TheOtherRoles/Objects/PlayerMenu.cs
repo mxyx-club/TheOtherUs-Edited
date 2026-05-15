@@ -1,4 +1,3 @@
-
 using AmongUs.GameOptions;
 
 namespace TheOtherRoles.Objects;
@@ -68,7 +67,7 @@ public class PlayerMenu
                 return true;
 
             __instance.potentialVictims = new();
-            var list2 = new Il2CppSystem.Collections.Generic.List<UiElement>();
+            var list2 = new ISystem.List<UiElement>();
 
             for (var i = 0; i < menu.Targets.Count; i++)
             {

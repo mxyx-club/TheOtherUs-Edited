@@ -22,8 +22,6 @@ public class Oracle
         Neutral,
     }
 
-    public static IEnumerable<PlayerControl> AlivePlayers => PlayerControl.AllPlayerControls.ToArray().Where(x => x.IsAlive());
-
     public static void ClearAndReload()
     {
         Player = null;
@@ -71,41 +69,64 @@ public class Oracle
         HudManager.Instance.Chat.AddChat(Player, text);
     }
 
+    public static IEnumerable<PlayerControl> AlivePlayers => PlayerControl.AllPlayerControls.ToArray().Where(x => x.IsAlive());
 
     public static string BuildReport()
     {
-        if (Confesser.IsDead()) return "你的信徒已经死亡，你无法获得信息！";
-
+        if (Confesser.IsDead()) return GetString("Oracle.ConfesserDead");
 
         var alivePlayers = AlivePlayers.Where(x => x != PlayerControl.LocalPlayer && x != Confesser).ToList().Shuffle();
         var evilPlayers = AlivePlayers.Where(x => x.IsImpostor() || x.IsKillerNeutral() || x.IsEvilNeutral()).ToList().Shuffle();
 
-        if (alivePlayers.Count <= 2) return "剩余人数太少，无法获得信息！";
+        if (alivePlayers.Count <= 2) return GetString("Oracle.TooFewPlayers");
 
-        if (evilPlayers.Count == 0) return $"你的信徒 {Confesser.Data.PlayerName} 得知场上没有邪恶的玩家了！";
+        if (evilPlayers.Count == 0) return string.Format(GetString("Oracle.NoEvilPlayers"), Confesser.Data.PlayerName);
 
         alivePlayers.Shuffle();
         evilPlayers.Shuffle();
 
         try
         {
-
-            var flag = rnd.Chance(80);
+            var flag = rnd.Chance(75);
 
             if (flag)
             {
-                var secondPlayer = alivePlayers[0];
+                var availablePlayers = Vortox.Reversal
+                    ? alivePlayers.Where(x => !x.IsImpostor() && !x.IsKillerNeutral() && !x.IsEvilNeutral()).ToList()
+                    : alivePlayers.ToList();
+
+                if (Vortox.Reversal && availablePlayers.Count < 2)
+                {
+                    return string.Format(GetString("Oracle.ReversalInsufficientPlayers"), Confesser.Data.PlayerName);
+                }
+
+                availablePlayers.Shuffle();
+
+                var secondPlayer = availablePlayers[0];
+
                 var firstTwoEvil = evilPlayers.Any(plr => plr == Confesser || plr == secondPlayer);
 
                 if (firstTwoEvil)
                 {
-                    var thirdPlayer = alivePlayers[1];
-                    return $"你的信徒 {Confesser.Data.PlayerName} 坦白得知自己、{secondPlayer.Data.PlayerName} 、{thirdPlayer.Data.PlayerName} 至少有一位是邪恶阵营的！";
+                    var thirdPlayer = Vortox.Reversal
+                        ? availablePlayers.FirstOrDefault(x => x != secondPlayer) ?? availablePlayers[0]
+                        : alivePlayers[1];
+
+                    return string.Format(GetString("Oracle.AtLeastOneEvil"),
+                        Confesser.Data.PlayerName,
+                        secondPlayer.Data.PlayerName,
+                        thirdPlayer.Data.PlayerName);
                 }
                 else
                 {
-                    var thirdPlayer = evilPlayers[0];
-                    return $"你的信徒 {Confesser.Data.PlayerName} 坦白得知自己、{secondPlayer.Data.PlayerName} 、{thirdPlayer.Data.PlayerName} 至少有一位是邪恶阵营的！";
+                    var thirdPlayer = Vortox.Reversal
+                        ? availablePlayers.FirstOrDefault(x => x != secondPlayer) ?? availablePlayers[0]
+                        : evilPlayers[0];
+
+                    return string.Format(GetString("Oracle.AtLeastOneEvil"),
+                        Confesser.Data.PlayerName,
+                        secondPlayer.Data.PlayerName,
+                        thirdPlayer.Data.PlayerName);
                 }
             }
             else
@@ -114,13 +135,19 @@ public class Oracle
                 players.Add(Confesser);
 
                 var uniformTeam = players.All(x => x.IsNeutral()) || players.All(x => x.IsCrew(AndCat: true)) || players.All(x => x.IsImpostor(AndCat: true));
-                if (uniformTeam)
+                if (uniformTeam ^ Vortox.Reversal)
                 {
-                    return $"你的信徒 {Confesser.Data.PlayerName} 坦白得知自己、{players[0].Data.PlayerName} 、{players[1].Data.PlayerName} 的阵营是一致的！";
+                    return string.Format(GetString("Oracle.ConsistentAlignment"),
+                        Confesser.Data.PlayerName,
+                        players[0].Data.PlayerName,
+                        players[1].Data.PlayerName);
                 }
                 else
                 {
-                    return $"你的信徒 {Confesser.Data.PlayerName} 坦白得知自己、{players[0].Data.PlayerName} 、{players[1].Data.PlayerName} 的阵营是不一致的！";
+                    return string.Format(GetString("Oracle.InconsistentAlignment"),
+                        Confesser.Data.PlayerName,
+                        players[0].Data.PlayerName,
+                        players[1].Data.PlayerName);
                 }
             }
         }
@@ -128,18 +155,7 @@ public class Oracle
         {
             Error(ex);
 
-            var players = alivePlayers.OrderBy(x => rnd.Next()).Take(1).ToList();
-            players.Add(Confesser);
-
-            var uniformTeam = players.All(x => x.IsNeutral()) || players.All(x => x.IsCrew(AndCat: true)) || players.All(x => x.IsImpostor(AndCat: true));
-            if (uniformTeam)
-            {
-                return $"你的信徒 {Confesser.Data.PlayerName} 坦白得知自己、{players[0].Data.PlayerName} 的阵营是一致的！";
-            }
-            else
-            {
-                return $"你的信徒 {Confesser.Data.PlayerName} 坦白得知自己、{players[0].Data.PlayerName} 的阵营是不一致的！";
-            }
+            return string.Format(GetString("Oracle.ReversalInsufficientPlayers"), Confesser.Data.PlayerName);
         }
     }
 }

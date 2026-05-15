@@ -2110,7 +2110,6 @@ internal static class HudManagerStartPatch
                 /* On Meeting End */
             },
             Bomber.buttonSprite,
-            //          0, -0.06f, 0
             __instance,
             __instance.AbilityButton,
             hotkey: null,
@@ -2906,9 +2905,9 @@ internal static class HudManagerStartPatch
                 if (Arsonist.douseTarget != null)
                 {
                     untargetables = new();
-                    foreach (var cachedPlayer in PlayerControl.AllPlayerControls)
-                        if (cachedPlayer.PlayerId != Arsonist.douseTarget.PlayerId)
-                            untargetables.Add(cachedPlayer);
+                    foreach (var player in PlayerControl.AllPlayerControls)
+                        if (player.PlayerId != Arsonist.douseTarget.PlayerId)
+                            untargetables.Add(player);
                 }
                 else
                 {

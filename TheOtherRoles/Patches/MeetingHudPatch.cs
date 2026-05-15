@@ -128,37 +128,6 @@ internal class MeetingHudPatch
         }
     }
 
-    private static void OnGaolerJailClick(PlayerVoteArea pva, MeetingHud __instance, byte targetId)
-    {
-        if (!Gaoler.CanUseAbility()) return;
-        if (Gaoler.endMeetingSelection) return;
-
-        PlayerControl target = PlayerById(targetId);
-        if (target == null) return;
-
-        // 再次检查连续监禁
-        if (!Gaoler.canJailSamePlayerConsecutively && Gaoler.lastJailedPlayerId == target.PlayerId) return;
-
-        // 发送 RPC
-        var writer = StartRPC(CustomRPC.GaolerMarkPrisoner);
-        writer.Write(target.PlayerId);
-        writer.EndRPC();
-        RPCProcedure.GaolerMarkPrisoner(target.PlayerId);
-
-        // 本地更新
-        Gaoler.remainingUses--;
-        Gaoler.hasSelectedThisMeeting = true;
-        Gaoler.lastJailedPlayerId = target.PlayerId;
-        Gaoler.currentPrisoner = target;
-
-        // 销毁所有监禁图标
-        foreach (var playerState in __instance.playerStates)
-        {
-            var icon = playerState.transform.FindChild("GaolerIcon");
-            if (icon != null) UObject.Destroy(icon.gameObject);
-        }
-    }
-
     private static void mayorToggleVoteTwice(MeetingHud __instance)
     {
         __instance.playerStates[0].Cancel(); // This will stop the underlying buttons of the template from showing up
@@ -399,7 +368,7 @@ internal class MeetingHudPatch
         else if (PlayerControl.LocalPlayer == Gaoler.Player && Gaoler.Player.IsAlive() && !Gaoler.hasSelectedThisMeeting && Gaoler.remainingUses > 0 && !Gaoler.endMeetingSelection)
         {
             int timeLeft = (int)(Gaoler.selectionWindow - (DateTime.UtcNow - Gaoler.meetingStartTime).TotalSeconds);
-            meetingInfoText = timeLeft > 0 ? string.Format(GetString("GaolerSelectTimeLeft"), timeLeft) : GetString("GaolerSelectTimeExpired");
+            meetingInfoText = timeLeft > 0 ? string.Format(GetString("GaolerSelectTimeLeft"), timeLeft) : "";
         }
 
         __instance.TimerText.gameObject.SetActive(true);
@@ -524,7 +493,6 @@ internal class MeetingHudPatch
             return dictionary;
         }
 
-
         private static bool Prefix(MeetingHud __instance)
         {
             if (!__instance.playerStates.Where(x => PlayerById(x.TargetPlayerId).CanUseMeetingAbility()).All(ps => ps.AmDead || ps.DidVote))
@@ -617,7 +585,6 @@ internal class MeetingHudPatch
         }
     }
 
-
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.ClearVote))]
     public static class MeetingHudClearVotePatch
     {
@@ -630,7 +597,6 @@ internal class MeetingHudPatch
             Prosecutor.StartProsecute = false;
         }
     }
-
 
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.RpcVotingComplete))]
     public static class MeetingHudRpcVotingCompletePatch
@@ -1077,54 +1043,6 @@ internal class MeetingHudPatch
                     BandLeader.BandLeaderFormed(0, false);
                 }
             }
-
-            // 狱卒：添加监禁图标
-            if (Gaoler.Player != null && Gaoler.Player == PlayerControl.LocalPlayer && Gaoler.Player.IsAlive() && !Gaoler.hasSelectedThisMeeting && Gaoler.remainingUses > 0)
-            {
-                bool jailedByJailor = Jailor.Jailed != null && Jailor.Jailed == Gaoler.Player;
-                bool blackmailed = Blackmailer.blackmailed != null && Blackmailer.blackmailed == Gaoler.Player;
-                if (jailedByJailor || blackmailed)
-                    return;  // 被限制，不创建图标
-
-                Gaoler.endMeetingSelection = false;
-                Gaoler.meetingStartTime = DateTime.UtcNow;
-
-                foreach (var pva in __instance.playerStates)
-                {
-                    var player = PlayerById(pva.TargetPlayerId);
-                    if (player == null || player == Gaoler.Player || player.Data.IsDead) continue;
-
-                    // 不可连续监禁同一玩家检查
-                    if (!Gaoler.canJailSamePlayerConsecutively && Gaoler.lastJailedPlayerId == player.PlayerId) continue;
-
-                    GameObject template = pva.Buttons.transform.Find("CancelButton").gameObject;
-                    GameObject jailBox = UObject.Instantiate(template, pva.transform);
-                    jailBox.name = "GaolerIcon";
-                    jailBox.transform.localPosition = new Vector3(1f, 0.03f, -1f); // 位置与 Witness 相同
-                    SpriteRenderer renderer = jailBox.GetComponent<SpriteRenderer>();
-                    renderer.sprite = Gaoler.TargetSprite ?? pva.Megaphone.sprite; // 临时用地形图标
-                    renderer.color = Color.white;
-                    PassiveButton button = jailBox.GetComponent<PassiveButton>();
-                    button.OnClick.RemoveAllListeners();
-                    byte targetId = player.PlayerId;
-                    button.OnClick.AddListener(() => OnGaolerJailClick(pva, __instance, targetId));
-                }
-            }
-
-            if (Gaoler.Player != null && Gaoler.Player == PlayerControl.LocalPlayer && !Gaoler.hasSelectedThisMeeting && Gaoler.remainingUses > 0 && !Gaoler.endMeetingSelection)
-            {
-                float timeLeft = Gaoler.selectionWindow - (float)(DateTime.UtcNow - Gaoler.meetingStartTime).TotalSeconds;
-                if (timeLeft <= 0f)
-                {
-                    Gaoler.endMeetingSelection = true;
-                    foreach (var playerState in __instance.playerStates)
-                    {
-                        var icon = playerState.transform.FindChild("GaolerIcon");
-                        if (icon != null) UObject.Destroy(icon.gameObject);
-                    }
-                }
-            }
-
 
             foreach (var pva in __instance.playerStates)
             {

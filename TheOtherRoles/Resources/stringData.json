@@ -2941,8 +2941,8 @@
         "13": "<size=80%> <color=#FCCE03FF>特别感谢：Spex & 善良的好人 & 天寸梦初 & Imp11</color></size>"
     },
     "creditsString1": {
-        "0": "<align=\"center\"><b>Main Developers</b>\nmxyx0412, Li-JunHeng, Diamond_hoe123\n\n<b>GitHub Contributors:</b>\nTianMengLucky, Imp11\n\n<b>Art Team:</b>\nFangkuaiYa, DetLimu, Amen's Grape\n\n<b>Translations:</b>\nZH (Chinese): mxyx0412, Conscience\nEN (English): MamoruKun, Hydra\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles, SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n",
-        "13": "<align=\"center\"><b>The Other Us - Edited贡献者:</b>\n<b>开发组:</b>\n沫夏悠轩    冷月潇潇    Diamond_hoe123\n\n<b>美术组:</b>\n方块    Det黎木   阿门的葡萄\n\n<b>翻译:</b>\nEN：MamoruKun, 九头蛇\nZH：沫夏悠轩\n\n<b>GitHub贡献者:</b>\n天寸梦初    Imp11\n\n<b>技术指导</b>\n善良的好人    Slok7565\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
+        "0": "<align=\"center\"><b>Main Developers</b>\nmxyx0412, Li-JunHeng, Diamond_hoe123\nxuangouatu\n\n<b>GitHub Contributors:</b>\nTianMengLucky, Imp11\n\n<b>Art Team:</b>\nFangkuaiYa, DetLimu, Amen's Grape\n\n<b>Translations:</b>\nZH (Chinese): mxyx0412, Conscience\nEN (English): MamoruKun, Hydra\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles, SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n",
+        "13": "<align=\"center\"><b>The Other Us - Edited贡献者:</b>\n<b>开发组:</b>\n沫夏悠轩    冷月潇潇    Diamond_hoe123\n炫狗阿兔\n\n<b>美术组:</b>\nDet黎木   阿门的葡萄\n\n<b>翻译:</b>\nEN：MamoruKun, 九头蛇\nZH：沫夏悠轩，Conscience\n\n<b>GitHub贡献者:</b>\n天寸梦初    Imp11\n\n<b>技术指导</b>\n善良的好人    Slok7565    凛\n\nThanks to The Other Roles, The Other Roles CE, The Other Roles GM IA, Town of Us, Stellar Roles , SuperNewRoles!\n\nThanks to miniduikboot & GD for hosting modded servers (and so much more)\n"
     },
     "WelcomeText": {
         "0": "Welcome to <color=#ff351f><size=120%>TheOtherUs-Edited</size></color>!\n\nCommands (a space is required after the command):\n/r [Role Name] : Get a description of the specified role  \n/m : Use in-game to view the description of your current role\n\nTo view other commands, type: /cmd",
@@ -3439,6 +3439,34 @@
     "Jailor.JailorChat": {
         "0": "Use /jail [text] to PM the jailed player.",
         "13": "你可以按Tab切换聊天频道来与被监禁玩家私聊。\n\n并且对方本轮会议内只能向你发送消息，其它玩家无法看到。"
+    },
+    "Oracle.ConfesserDead": {
+        "0": "Your confessor is dead, you cannot receive information!",
+        "13": "你的信徒已经死亡，你无法获得信息！"
+    },
+    "Oracle.TooFewPlayers": {
+        "0": "Too few players remaining to obtain information!",
+        "13": "剩余人数太少，无法获得信息！"
+    },
+    "Oracle.NoEvilPlayers": {
+        "0": "Your confessor {0} learns that there are no evil players left!",
+        "13": "你的信徒 {0} 得知场上没有邪恶的玩家了！"
+    },
+    "Oracle.ReversalInsufficientPlayers": {
+        "0": "Your confessor {0} confesses that due to the overwhelming evil forces, accurate information cannot be obtained!",
+        "13": "你的信徒 {0} 坦白得知，由于场上邪恶势力过于强大，无法获得准确信息！"
+    },
+    "Oracle.AtLeastOneEvil": {
+        "0": "Your confessor {0} confesses that at least one among themselves, {1}, and {2} is from the evil!",
+        "13": "你的信徒 {0} 坦白得知自己、{1} 、{2} 至少有一位是邪恶阵营的！"
+    },
+    "Oracle.ConsistentAlignment": {
+        "0": "Your confessor {0} confesses that the alignments of themselves, {1}, and {2} are consistent!",
+        "13": "你的信徒 {0} 坦白得知自己、{1} 、{2} 的阵营是一致的！"
+    },
+    "Oracle.InconsistentAlignment": {
+        "0": "Your confessor {0} confesses that the alignments of themselves, {1}, and {2} are inconsistent!",
+        "13": "你的信徒 {0} 坦白得知自己、{1} 、{2} 的阵营是不一致的！"
     },
     "MediumInfo.SheriffSuicide": {
         "0": "Oops, misfired!\n[Sheriff Suicide]",

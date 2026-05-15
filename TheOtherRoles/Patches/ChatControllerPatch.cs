@@ -419,7 +419,7 @@ public static class ChatControllerPatch
                 };
                 string text = string.Format(GetString("ChatChannel.Text"), Cs(color, GetString($"ChatChannel.{CurrentChannel}")));
 
-                if (PlayerControl.LocalPlayer == Jailor.Jailed) text = GetString("ChatChannel.Jailor");
+                if (PlayerControl.LocalPlayer == Jailor.Jailed) text = string.Format(GetString("ChatChannel.Text"), Cs(color, GetString("ChatChannel.Jailor")));
                 text += $"{string.Format(GetString("ChannelSwitchNotice"), ModInputManager.nextChatChannel.keyCode.ToString())}";
                 ChannelShower?.GetComponent<TextMeshPro>().SetText(text);
                 ChannelShower?.SetActive(!ChannelShower.transform.parent.parent.FindChild("RateMessage (TMP)").gameObject.activeSelf);

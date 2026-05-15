@@ -49,7 +49,7 @@ public static class Il2CppHelpers
 
     public static ISystem.List<T> ToIl2CppList<T>(this IReadOnlyList<T> list)
     {
-        Il2CppSystem.Collections.Generic.List<T> result = new(list.Count);
+        ISystem.List<T> result = new(list.Count);
         foreach (var elem in list) result.Add(elem);
         return result;
     }

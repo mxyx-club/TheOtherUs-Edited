@@ -1029,6 +1029,8 @@ public static class DisconnectPatch
                 RoleDraft.picked = true;
             }
         }
+
+        GameDataManager.Instance.AllPlayerControl.Remove(player);
     }
 
     [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.DisconnectInternal)), HarmonyPrefix]

@@ -25,7 +25,7 @@ public class VanillaAsset
     }
 
     public static Sprite CloseButtonSprite { get; private set; } = null!;
-    public static TMPro.TextMeshPro StandardTextPrefab { get; private set; } = null!;
+    public static TextMeshPro StandardTextPrefab { get; private set; } = null!;
     public static PlayerCustomizationMenu PlayerOptionsMenuPrefab { get; private set; } = null!;
     public static Sprite PopUpBackSprite { get; private set; } = null!;
     public static Sprite FullScreenSprite { get; private set; } = null!;
@@ -113,7 +113,7 @@ public class VanillaAsset
         CloseButtonSprite = UnityHelper.FindAsset<Sprite>("closeButton")!;
         TextButtonSprite = twitchPopUp.GetChild(2).GetComponent<SpriteRenderer>().sprite;
 
-        StandardTextPrefab = UObject.Instantiate(twitchPopUp.GetChild(1).GetComponent<TMPro.TextMeshPro>(), null);
+        StandardTextPrefab = UObject.Instantiate(twitchPopUp.GetChild(1).GetComponent<TextMeshPro>(), null);
         StandardTextPrefab.gameObject.hideFlags = HideFlags.HideAndDontSave;
         UObject.Destroy(StandardTextPrefab.spriteAnimator);
         UObject.DontDestroyOnLoad(StandardTextPrefab.gameObject);

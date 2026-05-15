@@ -527,6 +527,7 @@ internal class RoleManagerSelectRolesPatch
     public static void assignModifiers()
     {
         var addMaxNum = Cursed.hideModifier ? 1 : 0;
+        addMaxNum += CustomOptionHolder.modifierLoverCanGetModifiers.GetBool() ? 2 : 0;
         var modifierMin = CustomOptionHolder.modifiersCountMin.GetSelection();
         var modifierMax = CustomOptionHolder.modifiersCountMax.GetSelection() + addMaxNum;
         if (modifierMin > modifierMax) modifierMin = modifierMax;
