@@ -67,9 +67,6 @@ public class CustomOptionHolder
     public static CustomOption playerDieReducedTime;
     public static CustomOption minMeetingTime;
 
-    public static CustomOption NetworkTransformLowLevel;
-    public static CustomOption NetworkTransformType;
-
     public static CustomOption TaskOptions;
     public static CustomOption WireTaskIsRandomOption;
     public static CustomOption WireTaskNumOption;
@@ -263,7 +260,6 @@ public class CustomOptionHolder
     public static CustomOption evilTrapperFriendlyFire;
     public static CustomOption evilTrapperKillSoundRange;
     public static CustomOption evilTrapperPlaceSoundRange;
-
 
     public static CustomOption gamblerSpawnRate;
     public static CustomOption gamblerMinCooldown;
@@ -911,15 +907,6 @@ public class CustomOptionHolder
             onChange: (x) => x.SyncMinMax(false, modifiersCountMax));
         modifiersCountMax = Create(13, Types.General, Cs(new Color32(204, 204, 0, 255), "modifiersCountMax"), 15, 0, 30, 1,
             onChange: (x) => x.SyncMinMax(true, modifiersCountMin));
-
-        NetworkTransformLowLevel = Create(15, Types.General, "NetworkTransformLowLevel", ["optionOff", "NetworkTransformLowLevel.On"], null, true);
-        NetworkTransformType = Create(16, Types.General, "NetworkTransformType", [
-            "NetworkTransformType.Bad",
-            "NetworkTransformType.SuperLow",
-            "NetworkTransformType.Low",
-            "NetworkTransformType.Medium",
-            "NetworkTransformType.High",
-            "NetworkTransformType.Max"], NetworkTransformLowLevel);
 
         //-------------------------- Other options 100 - 999 -------------------------- //
 

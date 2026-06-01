@@ -162,8 +162,6 @@ public enum CustomRPC : byte
     // Other functionality
     ShareGhostInfo,
     ShareDeathReasonAndKiller,
-
-    NetworkTransform = 240,
 }
 
 public static class RPCProcedure
@@ -2569,9 +2567,6 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.ExiledJailed:
                 Jailor.ExiledJailed(reader.ReadPlayer(), reader.ReadPlayer());
-                break;
-            case CustomRPC.NetworkTransform:
-                ModdedNetworkTransform.ReceivedNetworkTransform(reader);
                 break;
             case CustomRPC.MayorMultiVote:
                 Mayor.MultiVote = reader.ReadBoolean();
