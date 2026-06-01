@@ -2501,7 +2501,7 @@ internal class RPCHandlerPatch
                 KillTrap.disableTrap(reader.ReadByte());
                 break;
             case CustomRPC.Prosecute:
-                Prosecutor.ProsecuteThisMeeting = true;
+                Prosecutor.ProsecuteThisMeeting = reader.ReadBoolean();
                 break;
 
             case CustomRPC.MayorRevealed:

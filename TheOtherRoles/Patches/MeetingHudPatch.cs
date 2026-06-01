@@ -533,9 +533,22 @@ internal class MeetingHudPatch
                     }
                 }
 
-                if (Gaoler.IsPrisoner(player)) pva.VotedFor = 254;
+                bool isPrisoner = Gaoler.IsPrisoner(player);
+                if (Mayor.mayor != null && Mayor.mayor.PlayerId == pva.TargetPlayerId && Mayor.Mode == Mayor.MayorMode.StoreVotes && isPrisoner)
+                {
+                    pva.VotedFor = 254;
+                    Mayor.CurrentVote = 0;
+                    var writer = StartRPC(CustomRPC.MayorSetVoteCount);
+                    writer.Write(0);
+                    writer.Write(Mayor.MyVotes);
+                    writer.EndRPC();
+                }
+                else if (isPrisoner)
+                {
+                    pva.VotedFor = 254;
+                }
 
-                if (Mayor.mayor != null && Mayor.mayor?.PlayerId == pva.TargetPlayerId && Mayor.CurrentVote == 0)
+                if (Mayor.mayor != null && Mayor.mayor.PlayerId == pva.TargetPlayerId && Mayor.Mode == Mayor.MayorMode.StoreVotes && Mayor.CurrentVote == 0)
                 {
                     pva.VotedFor = 254;
                 }
@@ -545,6 +558,9 @@ internal class MeetingHudPatch
                     Prosecutor.Prosecuted = false;
                     Prosecutor.ProsecuteThisMeeting = false;
                     Prosecutor.StartProsecute = false;
+                    var writer = StartRPC(CustomRPC.Prosecute);
+                    writer.Write(false);
+                    writer.EndRPC();
                 }
 
                 statesList.Add(new VoterState()
@@ -947,18 +963,6 @@ internal class MeetingHudPatch
 
             updateMeetingText(__instance);
             Balancer.UpdateButton(__instance);
-            if (Blackmailer.Player.IsAlive() && Blackmailer.blackmailed.IsAlive())
-            {
-                // Blackmailer show overlay
-                var playerState = __instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == Blackmailer.blackmailed.PlayerId);
-                playerState.Overlay.gameObject.SetActive(true);
-                playerState.Overlay.sprite = Blackmailer.overlaySprite;
-                if (__instance.state != VoteStates.Animating && !Blackmailer.alreadyShook)
-                {
-                    Blackmailer.alreadyShook = true;
-                    __instance.StartCoroutine(Effects.SwayX(playerState.transform));
-                }
-            }
         }
     }
 
@@ -983,17 +987,7 @@ internal class MeetingHudPatch
 
             if (Witch.witch.IsDead()) Witch.futureSpelled.Clear();
 
-            //Nothing here for now. What to do when local player who is blackmailed starts meeting
-            // Blackmail target
-            if (Blackmailer.blackmailed.IsAlive() && Blackmailer.blackmailed.IsAlive() && Blackmailer.blackmailed == PlayerControl.LocalPlayer)
-            {
-                Coroutines.Start(Blackmailer.BlackmailShhh());
-            }
 
-            else if (Blackmailer.Player.IsDead())
-            {
-                Blackmailer.blackmailed = null;
-            }
 
             if (PartTimer.partTimer.IsAlive() && PartTimer.target == null) PartTimer.deathTurn--;
 

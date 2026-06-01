@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace TheOtherRoles.Roles.Impostor;
 
 public static class Bomber

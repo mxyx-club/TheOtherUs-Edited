@@ -389,6 +389,7 @@ public static class PlayerDiePatch
             Prosecutor.StartProsecute = false;
             Prosecutor.ProsecuteThisMeeting = false;
         }
+
         if (ModOption.GameMode is CustomGameModes.Classic or CustomGameModes.Anonymous) return;
         _ = new LateTask(() => { CanSeeGhostInfo = true; }, 1f, "CanSeeRoleInfo");
 

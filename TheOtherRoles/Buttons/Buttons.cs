@@ -1,7 +1,6 @@
 using Reactor.Networking;
 using TheOtherRoles.Attributes;
 using TheOtherRoles.Objects;
-using static TheOtherRoles.Buttons.CustomButton;
 using static TheOtherRoles.Modules.ModInputManager;
 
 namespace TheOtherRoles.Buttons;

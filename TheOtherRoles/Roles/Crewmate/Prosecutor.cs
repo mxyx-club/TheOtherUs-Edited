@@ -138,6 +138,7 @@ public static class Prosecutor
                     StartProsecute = false;
 
                     var writer = StartRPC(CustomRPC.Prosecute);
+                    writer.Write(true);
                     writer.EndRPC();
                 }
                 return true;
@@ -150,6 +151,7 @@ public static class Prosecutor
                 if (!AmongUsClient.Instance.AmHost)
                 {
                     var writer = StartRPC(CustomRPC.Prosecute);
+                    writer.Write(true);
                     writer.EndRPC();
                 }
                 return false;

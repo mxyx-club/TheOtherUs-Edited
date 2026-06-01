@@ -1,5 +1,3 @@
-using static UnityEngine.GraphicsBuffer;
-
 namespace TheOtherRoles.Roles.Impostor;
 
 public class Gaoler
@@ -140,7 +138,7 @@ public class Gaoler
                     jailBox.transform.localPosition = new Vector3(1f, 0.03f, -1f); // 位置与 Witness 相同
                     SpriteRenderer renderer = jailBox.GetComponent<SpriteRenderer>();
                     renderer.sprite = TargetSprite ?? pva.Megaphone.sprite; // 临时用地形图标
-                    renderer.color = Color.white;
+                    renderer.color = Color.red;
                     PassiveButton button = jailBox.GetComponent<PassiveButton>();
                     button.OnClick.RemoveAllListeners();
                     byte targetId = player.PlayerId;
