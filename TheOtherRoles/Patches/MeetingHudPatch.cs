@@ -136,6 +136,12 @@ internal class MeetingHudPatch
 
         if (Mayor.Mode == Mayor.MayorMode.Revealed)
         {
+            if (Gaoler.IsPrisoner(Mayor.mayor))
+            {
+                UObject.Destroy(MeetingExtraButton);
+                return;
+            }
+
             Mayor.Revealed = true;
             var writer = StartRPC(CustomRPC.MayorRevealed);
             writer.EndRPC();
@@ -183,8 +189,7 @@ internal class MeetingHudPatch
                 var checkbox = UObject.Instantiate(template, playerVoteArea.transform, true);
                 checkbox.transform.position = template.transform.position;
                 checkbox.transform.localPosition = new Vector3(-0.95f, 0.03f, -1.3f);
-                if ((HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId))
-                    || (Mimic.mimic?.PlayerId == PlayerControl.LocalPlayer.PlayerId))
+                if ((HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(PlayerControl.LocalPlayer.PlayerId)) || (Mimic.mimic?.PlayerId == PlayerControl.LocalPlayer.PlayerId))
                     checkbox.transform.localPosition = new Vector3(-0.5f, 0.03f, -1.3f);
                 var renderer = checkbox.GetComponent<SpriteRenderer>();
                 renderer.sprite = Swapper.spriteCheck;
