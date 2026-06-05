@@ -57,7 +57,7 @@ public class CustomOptionHolder
     public static CustomOption disableMeeting;
     public static CustomOption maxNumberOfMeetings;
     public static CustomOption blockSkippingInEmergencyMeetings;
-    public static CustomOption noVoteIsSelfVote;
+    public static CustomOption blockSkippingInGeneralMeetings;
     public static CustomOption guessReVote;
     public static CustomOption guessExtendmeetingTime;
     public static CustomOption exiledController;
@@ -941,8 +941,8 @@ public class CustomOptionHolder
         MeetingOptions = Create(200, Types.General, Cs(new Color32(255, 85, 234, byte.MaxValue), "MeetingOptions"), false, null, true);
         disableMeeting = Create(201, Types.General, "disableMeeting", false, MeetingOptions);
         maxNumberOfMeetings = Create(202, Types.General, "maxNumberOfMeetings", 10, 0, 15, 1, MeetingOptions);
-        blockSkippingInEmergencyMeetings = Create(203, Types.General, "blockSkippingInEmergencyMeetings", false, MeetingOptions);
-        noVoteIsSelfVote = Create(204, Types.General, "noVoteIsSelfVote", false, blockSkippingInEmergencyMeetings);
+        blockSkippingInGeneralMeetings = Create(203, Types.General, "blockSkippingInGeneralMeetings", ["optionOff", "optionOn", "skipAsSelfVote", "skipAsAbstain", "skipOrAbstainAsSelfVote"], MeetingOptions);
+        blockSkippingInEmergencyMeetings = Create(204, Types.General, "blockSkippingInEmergencyMeetings", ["optionOff", "optionOn", "skipAsSelfVote", "skipAsAbstain", "skipOrAbstainAsSelfVote"], MeetingOptions);
         guessReVote = Create(205, Types.General, "guessReVote", false, MeetingOptions);
         guessExtendmeetingTime = Create(206, Types.General, "guessExtendmeetingTime", 15f, 0f, 60f, 5f, guessReVote);
         playerDieReducedTime = Create(210, Types.General, "playerDieReducedTime", 0f, 0f, 30f, 2.5f, MeetingOptions);
@@ -1268,7 +1268,7 @@ public class CustomOptionHolder
         pavlovsownerRing = Create(202510, Types.Neutral, "pavlovsownerRing", false, pavlovsownerSpawnRate);
         pavlovsownerRingCooldown = Create(202511, Types.Neutral, "pavlovsownerRingCooldown", 20f, 5f, 60f, 2.5f, pavlovsownerRing);
         pavlovsownerRingDuration = Create(202512, Types.Neutral, "pavlovsownerRingDuration", 15f, 5f, 30f, 1.25f, pavlovsownerRing);
-        pavlovsownerRingMultiplier = Create(202513, Types.Neutral, "pavlovsownerRingMultiplier", 2f, 1f, 5f, 0.25f, pavlovsownerRing);
+        pavlovsownerRingMultiplier = Create(202513, Types.Neutral, "pavlovsownerRingMultiplier", 2f, 1f, 8f, 0.25f, pavlovsownerRing);
         pavlovsownerRampage = Create(202507, Types.Neutral, "pavlovsownerRampage", true, pavlovsownerSpawnRate);
         pavlovsownerRampageKillCooldown = Create(202508, Types.Neutral, "pavlovsownerRampageKillCooldown", 15f, 5f, 60f, 2.5f, pavlovsownerRampage);
         pavlovsownerRampageDeathTime = Create(202509, Types.Neutral, "pavlovsownerRampageDeathTime", 60f, 30f, 180f, 2.5f, pavlovsownerRampageKillCooldown);
@@ -1763,10 +1763,10 @@ public class CustomOptionHolder
 
         clogSpawnRate = Create(500400, Types.GhostRole, Cs(Clog.color, "ClogOptions"), rates, null, true);
         clogGhostCooldown = Create(500401, Types.GhostRole, "clogGhostCooldown", 15f, 5f, 120f, 2.5f, clogSpawnRate);
-        clogGhostDuration = Create(500402, Types.GhostRole, "clogGhostDuration", 10f, 2f, 18f, 0.5f, clogSpawnRate);
-        clogGhostRange = Create(500403, Types.GhostRole, "clogGhostRange", 0.5f, 0.125f, 2.5f, 0.125f, clogSpawnRate);
+        clogGhostDuration = Create(500402, Types.GhostRole, "clogGhostDuration", 12f, 5f, 30f, 0.5f, clogSpawnRate);
+        clogGhostRange = Create(500403, Types.GhostRole, "clogGhostRange", 1f, 0.5f, 3f, 0.125f, clogSpawnRate);
         clogUseNum = Create(500404, Types.GhostRole, "clogUseNum", 3, 1, 20, 1, clogSpawnRate);
-        clogOnlyUsedOnce = Create(500405, Types.GhostRole, "clogOnlyUsedOnce", false, clogSpawnRate);
+        clogOnlyUsedOnce = Create(500405, Types.GhostRole, "clogOnlyUsedOnce", true, clogSpawnRate);
 
         specterSpawnRate = Create(500200, Types.GhostRole, Cs(Specter.color, "SpecterOption"), rates, null, true);
         specterDuration = Create(500201, Types.GhostRole, "specterDuration", 1.5f, 0.25f, 5f, 0.25f, specterSpawnRate);

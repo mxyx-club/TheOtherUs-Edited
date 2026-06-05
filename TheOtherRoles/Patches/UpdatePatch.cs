@@ -70,12 +70,6 @@ internal class HudManagerUpdatePatch
         }
     }
 
-    private static void updateBlindReport()
-    {
-        if (InGame && Blind.blind.IsAlive() && PlayerControl.LocalPlayer == Blind.blind && HudManager.Instance)
-            HudManager.Instance.ReportButton.SetActive(false);
-    }
-
     public static void updatePlayerInfo()
     {
         if (!InGame) return;
@@ -1642,6 +1636,12 @@ internal class HudManagerUpdatePatch
         {
             __instance.KillButton.Hide();
         }
+    }
+
+    private static void updateBlindReport()
+    {
+        if (InGame && Blind.blind.IsAlive() && PlayerControl.LocalPlayer == Blind.blind && HudManager.Instance)
+            HudManager.Instance.ReportButton.SetActive(false);
     }
 
     private static void updateReportButton(HudManager __instance)

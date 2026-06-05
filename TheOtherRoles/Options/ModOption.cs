@@ -21,8 +21,8 @@ internal class ModOption
 
     // Set values
     public static int maxNumberOfMeetings = 10;
-    public static bool blockSkippingInEmergencyMeetings;
-    public static bool noVoteIsSelfVote;
+    public static NoVoteBehavior blockSkippingInGeneralMeetings;
+    public static NoVoteBehavior blockSkippingInEmergencyMeetings;
     public static bool hidePlayerNames;
     public static bool allowParallelMedBayScans;
     public static bool showLighterDarker = true;
@@ -105,9 +105,8 @@ internal class ModOption
 
         NormalOptions.ConfirmImpostor = CustomOptionHolder.exiledController.GetBool() && CustomOptionHolder.exiledShowTeamNum.GetBool();
         maxNumberOfMeetings = CustomOptionHolder.maxNumberOfMeetings.GetInt();
-        blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.GetBool();
-        blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.GetBool();
-        noVoteIsSelfVote = CustomOptionHolder.noVoteIsSelfVote.GetBool();
+        blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.GetSelection<NoVoteBehavior>();
+        blockSkippingInGeneralMeetings = CustomOptionHolder.blockSkippingInGeneralMeetings.GetSelection<NoVoteBehavior>();
         hidePlayerNames = CustomOptionHolder.hidePlayerNames.GetBool();
         hideOutOfSightNametags = CustomOptionHolder.hideOutOfSightNametags.GetBool();
         hideVentAnim = CustomOptionHolder.hideVentAnimOnShadows.GetBool();
@@ -148,5 +147,14 @@ internal class ModOption
         //restrictAdminTime = restrictAdminTimeMax;
         restrictCamerasTime = restrictCamerasTimeMax;
         restrictVitalsTime = restrictVitalsTimeMax;
+    }
+
+    public enum NoVoteBehavior
+    {
+        Disable,
+        Enable,
+        SkipAsSelfVote,
+        SkipAsAbstain,
+        skipOrAbstainAsSelfVote
     }
 }

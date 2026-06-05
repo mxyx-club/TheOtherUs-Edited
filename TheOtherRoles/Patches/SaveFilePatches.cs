@@ -3,10 +3,13 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch]
 public static class SaveFilePatches
 {
-    [HarmonyPatch(typeof(AmongUs.Data.Player.PlayerData), nameof(AmongUs.Data.Player.PlayerData.FileName), MethodType.Getter)]
-    public static void Postfix(ref string __result)
+    [HarmonyPatch(typeof(AmongUs.Data.Settings.SettingsData), nameof(AmongUs.Data.Player.PlayerData.FileName), MethodType.Getter)]
+    public class SettingsFilePatch
     {
-        __result += "_TOUE";
+        public static void Postfix(ref string __result)
+        {
+            __result += "_TOUE";
+        }
     }
 
     [HarmonyPatch(typeof(AmongUs.Data.Player.PlayerData), nameof(AmongUs.Data.Player.PlayerData.FileName), MethodType.Getter)]

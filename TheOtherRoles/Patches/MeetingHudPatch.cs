@@ -12,10 +12,12 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch]
 internal class MeetingHudPatch
 {
+    public static bool IsEmergencyMeetings;
+    private static GameData.PlayerInfo ReportTarget;
+
     public static int MeetingCount;
     private static bool[] selections;
     private static SpriteRenderer[] renderers;
-    private static GameData.PlayerInfo target;
     private static PassiveButton[] swapperButtonList;
     private static TextMeshPro meetingExtraButtonLabel;
     public static GameObject MeetingExtraButton;
@@ -502,11 +504,24 @@ internal class MeetingHudPatch
         {
             if (!__instance.playerStates.Where(x => PlayerById(x.TargetPlayerId).CanUseMeetingAbility()).All(ps => ps.AmDead || ps.DidVote))
                 return false;
-            // If skipping is disabled, replace skipps/no-votes with self vote
-            if (target == null && blockSkippingInEmergencyMeetings && noVoteIsSelfVote)
-                foreach (var pva in __instance.playerStates)
-                    if (pva.VotedFor == 254)
-                        pva.VotedFor = pva.TargetPlayerId;
+
+            var behavior = IsEmergencyMeetings ? blockSkippingInEmergencyMeetings : blockSkippingInGeneralMeetings;
+
+            foreach (var pva in __instance.playerStates)
+            {
+                switch (behavior)
+                {
+                    case NoVoteBehavior.SkipAsSelfVote:
+                        if (pva.VotedFor == 253) pva.VotedFor = pva.TargetPlayerId;
+                        break;
+                    case NoVoteBehavior.SkipAsAbstain:
+                        if (pva.VotedFor == 253) pva.VotedFor = 254;
+                        break;
+                    case NoVoteBehavior.skipOrAbstainAsSelfVote:
+                        if (pva.VotedFor is 253 or 254) pva.VotedFor = pva.TargetPlayerId;
+                        break;
+                }
+            }
 
             var self = CalculateVotes(__instance);
             //var max = self.MaxPair(out var tie);
@@ -543,6 +558,7 @@ internal class MeetingHudPatch
                 {
                     pva.VotedFor = 254;
                     Mayor.CurrentVote = 0;
+                    Mayor.MyVotes -= Mayor.AddVotes;
                     var writer = StartRPC(CustomRPC.MayorSetVoteCount);
                     writer.Write(0);
                     writer.Write(Mayor.MyVotes);
@@ -558,7 +574,7 @@ internal class MeetingHudPatch
                     pva.VotedFor = 254;
                 }
 
-                if (Prosecutor.prosecutor == player && Prosecutor.ProsecuteThisMeeting && pva.VotedFor > 250)
+                if (Prosecutor.prosecutor?.PlayerId == pva.TargetPlayerId && Prosecutor.ProsecuteThisMeeting && pva.VotedFor > 250)
                 {
                     Prosecutor.Prosecuted = false;
                     Prosecutor.ProsecuteThisMeeting = false;
@@ -889,7 +905,8 @@ internal class MeetingHudPatch
             // Count meetings
             if (meetingTarget == null) meetingsCount++;
             // Save the meeting target
-            target = meetingTarget;
+            ReportTarget = meetingTarget;
+            IsEmergencyMeetings = meetingTarget == null;
             isRoundOne = false;
 
             // Add Portal info into Portalmaker Chat:
@@ -963,8 +980,15 @@ internal class MeetingHudPatch
             }
 
             // Deactivate skip Button if skipping on emergency meetings is disabled
-            if (target == null && blockSkippingInEmergencyMeetings)
+            if (ReportTarget == null && blockSkippingInEmergencyMeetings == NoVoteBehavior.Enable)
+            {
                 __instance.SkipVoteButton.gameObject.SetActive(false);
+            }
+
+            if (ReportTarget != null && blockSkippingInGeneralMeetings == NoVoteBehavior.Enable)
+            {
+                __instance.SkipVoteButton.gameObject.SetActive(false);
+            }
 
             updateMeetingText(__instance);
             Balancer.UpdateButton(__instance);

@@ -1786,7 +1786,6 @@ internal static class HudManagerStartPatch
             },
             () => { swooperKillButton.Timer = swooperKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
-            //new Vector3(0, 1f, 0),
             __instance,
             __instance.KillButton,
             modKillInput.keyCode
@@ -1938,6 +1937,7 @@ internal static class HudManagerStartPatch
             {
                 return Pavlovsdogs.pavlovsowner.IsAlive()
                     && Pavlovsdogs.pavlovsowner.AmOwner
+                    && Pavlovsdogs.ringEnable
                     && Pavlovsdogs.pavlovsdogs.Any(x => x.IsAlive());
             },
             () =>

@@ -380,15 +380,27 @@
     },
     "blockSkippingInEmergencyMeetings": {
         "0": "Disable Skipping in Emergency Meetings",
-        "13": "紧急会议禁止跳过"
+        "13": "在紧急会议时不允许跳过"
+    },
+    "blockSkippingInGeneralMeetings": {
+        "0": "Disable Skipping in General Meetings",
+        "13": "在普通会议时不允许跳过"
+    },
+    "SkipAsSelfVote": {
+        "0": "No Vote Defaults to Self-Vote",
+        "13": "跳过视为投自己"
+    },
+    "skipAsAbstain": {
+        "0": "Skip is considered as Abstain",
+        "13": "跳过视为弃权"
+    },
+    "skipOrAbstainAsSelfVote": {
+        "0": "Skip or Abstain counts as Self-Vote",
+        "13": "跳过/弃权视为投自己"
     },
     "disableMeeting": {
         "0": "Disable Body Reporting",
         "13": "禁用报告功能"
-    },
-    "noVoteIsSelfVote": {
-        "0": "No Vote Defaults to Self-Vote",
-        "13": "不投票默认投自己"
     },
     "shieldFirstKill": {
         "0": "First Kill Protection for Returning Players",

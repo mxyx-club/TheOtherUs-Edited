@@ -4,6 +4,7 @@ public class GhostObject : CustomObjectBase<GhostObject>
 {
     public PlayerControl Player;
     private float timer;
+    private CircleCollider2D collider;
     public static Sprite GhostSprite = new ResourceSprite("Ghost.png", 160);
 
     public GhostObject(PlayerControl player, Vector3 pos)
@@ -15,8 +16,17 @@ public class GhostObject : CustomObjectBase<GhostObject>
         Renderer.gameObject.layer = CanSeeGhostInfo ? LayerExpansion.GetObjectsLayer() : LayerExpansion.GetDefaultLayer();
         Renderer.sprite = GhostSprite;
         Renderer.color = Color.white * new Color(1, 1, 1, 1f);
-        var collider = UnityHelper.CreateObject<CircleCollider2D>("Collider", Renderer.transform, Vector3.zero);
+        collider = UnityHelper.CreateObject<CircleCollider2D>("Collider", Renderer.transform, Vector3.zero);
         collider.radius = Clog.GhostRange;
+
+        var local = PlayerData.LocalPlayer;
+        float distance = Vector2.Distance(local.GetTruePosition(), GameObject.transform.position);
+
+        if (local.IsAlive() && local.Collider.enabled && distance <= Clog.GhostRange + 0.24f)
+        {
+            collider.radius = 0f;
+        }
+
         timer = 0f;
         GameObject.SetActive(true);
     }
@@ -30,6 +40,15 @@ public class GhostObject : CustomObjectBase<GhostObject>
         {
             Destroy();
             return;
+        }
+
+
+        var local = PlayerData.LocalPlayer;
+        float distance = Vector2.Distance(local.GetTruePosition(), GameObject.transform.position);
+
+        if (local.IsAlive() && local.Collider.enabled && distance > Clog.GhostRange + 0.12f)
+        {
+            collider.radius = Clog.GhostRange;
         }
 
 
