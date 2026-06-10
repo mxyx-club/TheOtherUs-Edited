@@ -14,10 +14,10 @@ public enum CustomRPC : byte
 {
     // Main Controls
     ShareOptions = 80,
+    VersionHandshake,
     SetRole,
     SetModifier,
     SetGhostRole,
-    VersionHandshake,
     UseUncheckedVent,
     DynamicMapOption,
     SetGameStarting,
@@ -26,6 +26,7 @@ public enum CustomRPC : byte
     DraftModePick,
     ShareGameMode,
     ShareFriendCode,
+    ShareGameId,
     Exiled,
     NoCheckEndGame,
 
@@ -35,11 +36,24 @@ public enum CustomRPC : byte
     SendChatToChannel,
 
     // Role functionality
-    FixLights = 110,
+    SetFutureErased = 110,
+    SetFutureReveal,
+    SetFutureShifted,
+    FixLights,
     FixingSabotage,
     FixSubmergedOxygen,
+    LawyerSetTarget,
+    ExecutionerSetTarget,
+    ExecutionerPromotesRole,
+    LawyerPromotesToPursuer,
+    SetFutureShielded,
+    SetFutureSpelled,
     CleanBody,
     CreateDeadBody,
+    AkujoSetHonmei,
+    AkujoSetKeep,
+    AkujoSuicide,
+    AkujoSetUnifiedVote,
     Mine,
     ShowIndomitableFlash,
     UndertakerDragAction,
@@ -53,13 +67,13 @@ public enum CustomRPC : byte
     SwapperSwap,
     MorphlingMorph,
     CamouflagerCamouflage,
-    AkujoSetHonmei,
-    AkujoSetKeep,
-    AkujoSuicide,
     NoCheckStartMeeting,
     ProphetExamine,
     ImpostorPromotesToLastImpostor,
     //CamoComms,
+    MayorRevealed,
+    MayorMultiVote,
+    MayorSetVoteCount,
     TrackerUsedTracker,
     VampireSetBitten,
     PlaceGarlic,
@@ -71,12 +85,7 @@ public enum CustomRPC : byte
     PavlovsRing,
     SidekickPromotes,
     ClearGhostRoles,
-    SetFutureErased,
-    SetFutureReveal,
-    SetFutureShifted,
     Disperse,
-    SetFutureShielded,
-    SetFutureSpelled,
     PlaceNinjaTrace,
     PlacePortal,
     AmnisiacTakeRole,
@@ -89,10 +98,6 @@ public enum CustomRPC : byte
     SealVent,
     PartTimerSet,
     GuesserShoot,
-    LawyerSetTarget,
-    ExecutionerSetTarget,
-    ExecutionerPromotesRole,
-    LawyerPromotesToPursuer,
     BlackmailPlayer,
     UseCameraTime,
     UseVitalsTime,
@@ -121,9 +126,6 @@ public enum CustomRPC : byte
     ExiledJailed,
     SetAvengerLover,
     JesterWinner,
-    SoulSightSuicide,
-    SoulSightRevive,
-    SoulSightScore,
     GaolerMarkPrisoner,
 
     TrapperKill,
@@ -131,15 +133,15 @@ public enum CustomRPC : byte
     ActivateTrap,
     DisableTrap,
     Prosecute,
-    MayorRevealed,
-    MayorMultiVote,
-    MayorSetVoteCount,
     SurvivorVestActive,
     PoltergeistMove,
     jesterDragBody,
     PlaceClogGhost,
     SetConfesser,
     SendOracleReport,
+    SoulSightSuicide,
+    SoulSightRevive,
+    SoulSightScore,
 
     //SetSwooper,
     SetInvisible,
@@ -166,6 +168,8 @@ public enum CustomRPC : byte
 
 public static class RPCProcedure
 {
+    public const byte CustomRpcId = 80;
+
     public enum GhostInfoTypes
     {
         HandcuffNoticed,
@@ -1660,6 +1664,11 @@ public static class RPCProcedure
         }
     }
 
+    public static void AkujoSetUnifiedVote(bool used)
+    {
+        Akujo.hasUsedUnifiedVote = used;
+        Akujo.isUnifiedVoteActiveThisMeeting = used;
+    }
     public static void akujoSuicide(byte akujoId)
     {
         var akujo = PlayerById(akujoId);
@@ -2078,9 +2087,9 @@ internal class RPCHandlerPatch
     [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.StartRpcImmediately)), HarmonyPostfix]
     private static void LogSentRpc([HarmonyArgument(1)] byte callId)
     {
-        if (callId < 250 && CustomOptionHolder.logRpcSend.GetBool())
+        if (CustomOptionHolder.logRpcSend.GetBool())
         {
-            string type = callId < 80 ? "Vanilla" : "Custom";
+            string type = callId < RPCProcedure.CustomRpcId ? "Vanilla" : "Custom";
             Info($"RpcId: {callId} Type: {type} Name: {RpcName(callId)}", "SEND");
         }
     }
@@ -2091,15 +2100,15 @@ internal class RPCHandlerPatch
         var packetId = (CustomRPC)callId;
         try
         {
-            if (callId < 240 && CustomOptionHolder.logRpcSend.GetBool())
+            if (CustomOptionHolder.logRpcSend.GetBool())
             {
-                string type = callId < 80 ? "Vanilla" : "Custom";
+                string type = callId < RPCProcedure.CustomRpcId ? "Vanilla" : "Custom";
                 Info($"RpcId: {callId} Type: {type} Name: {RpcName(callId)} Size: {reader.Length}", "RECV");
             }
         }
         catch { }
 
-        if (callId < 80) return true;
+        if (callId < RPCProcedure.CustomRpcId) return true;
 
         switch (packetId)
         {
@@ -2163,6 +2172,10 @@ internal class RPCHandlerPatch
 
             case CustomRPC.SetGameStarting:
                 RPCProcedure.setGameStarting();
+                break;
+
+            case CustomRPC.ShareGameId:
+                GameDataManager.Instance.GameId = reader.ReadString();
                 break;
 
             // Role functionality
@@ -2640,6 +2653,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.GaolerMarkPrisoner:
                 RPCProcedure.GaolerMarkPrisoner(reader.ReadByte());
+                break;
+            case CustomRPC.AkujoSetUnifiedVote:
+                RPCProcedure.AkujoSetUnifiedVote(reader.ReadBoolean());
                 break;
         }
 

@@ -564,7 +564,6 @@ public static class RoleHelpers
     {
         if (Veteran.veteran == target && Veteran.alertActive)
         {
-            if (ModOption.EnableOtherLog) Message(" [Kill Fail] Veteran Active!", "CheckMurderPlayer");
             RpcCustomMurderPlayer(target, player);
             return true;
         }
@@ -604,7 +603,6 @@ public static class RoleHelpers
             writer.EndRPC();
             RPCProcedure.SetBlanked(killer.PlayerId, true);
             CustomButton.SetKillTimer();
-            if (ModOption.EnableOtherLog) Message(" [Kill Fail] Blanked");
             return false;
         }
 
@@ -631,7 +629,6 @@ public static class RoleHelpers
 
             CustomButton.SetKillTimer();
             target.ShowFailedMurder();
-            if (ModOption.EnableOtherLog) Message(" [Kill Fail] Medic Shielded!");
             return false;
         }
 
@@ -639,7 +636,6 @@ public static class RoleHelpers
         {
             CustomButton.SetKillTimer(Survivor.vestResetCooldown);
             target.ShowFailedMurder();
-            if (ModOption.EnableOtherLog) Message(" [Kill Fail] Survivor Vest!");
             return false;
         }
 
@@ -651,7 +647,6 @@ public static class RoleHelpers
             Cursed.TurnToImpostor(target.PlayerId);
 
             CustomButton.SetKillTimer();
-            if (ModOption.EnableOtherLog) Message(" [Kill Fail] Cursed TurnToImpostor!");
             return false;
         }
 

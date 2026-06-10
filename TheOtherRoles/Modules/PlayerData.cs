@@ -70,7 +70,7 @@ public class PlayerData
         return AllPlayerData.Values.FirstOrDefault(data => data.PlayerName.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 
-    [OnGameStart(Attributes.Priority.High)]
+    [OnGameStart(-40)]
     public static void Init()
     {
         AllPlayerData.Clear();

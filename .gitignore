@@ -364,3 +364,4 @@ TheOtherRoles/packages.lock.json
 .vs/
 .vscode/
 packages.lock.json
+/TheOtherRoles/GameSession.cs

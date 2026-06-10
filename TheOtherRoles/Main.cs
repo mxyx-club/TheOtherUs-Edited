@@ -84,7 +84,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
         PluginModuleInitializerAttribute.Invoke();
         LightPatch.Initialize();
         UpdateCPUProcessorAffinity();
-        Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{Version}{VersionSuffix}\r\n Build Date: {GetCompileTime():yyyy-MM-dd HH:mm:ss}\n---------------");
+        Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{Version}{VersionSuffix}\n Build Date: {GetCompileTime():yyyy-MM-dd HH:mm:ss}\n Mods: {IL2CPPChainloader.Instance.Plugins.Count}\n---------------");
     }
 
     // CPUの割当を変更する

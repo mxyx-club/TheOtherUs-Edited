@@ -129,7 +129,6 @@ public class CustomOptionHolder
     public static CustomOption debugMode;
     public static CustomOption disableGameEnd;
     public static CustomOption logRpcSend;
-    public static CustomOption enableOtherLog;
 
     public static CustomOption wolfLordSpawnRate;
 
@@ -1025,7 +1024,6 @@ public class CustomOptionHolder
         debugMode = Create(950, Types.General, "debugMode", false, null, true);
         disableGameEnd = Create(951, Types.General, "DisableGameEnd", false, debugMode);
         logRpcSend = Create(952, Types.General, "logRpcSend", false);
-        enableOtherLog = Create(953, Types.General, "enableOtherLog", false);
 
         //-------------------------- Impostor Options 100000 -------------------------- //
 

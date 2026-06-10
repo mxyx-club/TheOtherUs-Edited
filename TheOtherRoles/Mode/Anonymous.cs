@@ -18,7 +18,7 @@ internal class Anonymous
     public const string EmptyNameplate = "nameplate_NoPlate";
     public const string EmptyPet = "pet_EmptyPet";
 
-    [OnGameStart(Attributes.Priority.VeryLow)]
+    [OnGameStart(100)]
     public static void OnGameStart()
     {
         if (!IsEnabled) return;

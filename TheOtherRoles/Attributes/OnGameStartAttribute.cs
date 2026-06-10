@@ -3,5 +3,5 @@ namespace TheOtherRoles.Attributes;
 internal class OnGameStartAttribute : InitializerAttribute<OnGameStartAttribute>
 {
     public OnGameStartAttribute() : base() { }
-    public OnGameStartAttribute(Priority priority) : base(priority) { }
+    public OnGameStartAttribute(int priority) : base(priority) { }
 }

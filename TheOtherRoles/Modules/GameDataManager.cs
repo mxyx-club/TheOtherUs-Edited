@@ -11,13 +11,13 @@ using TheOtherRoles.Patches;
 
 namespace TheOtherRoles.Modules;
 
-public class GameDataManager : ManagerBase<GameDataManager>
+public partial class GameDataManager : ManagerBase<GameDataManager>
 {
     public Dictionary<byte, string> AllFriendCode { get; private set; } = new();
     public Dictionary<byte, ushort> AnonymousId { get; private set; } = new();
     public List<PlayerControl> AllPlayerControl { get; private set; } = new();
 
-    public string GameId { get; private set; }
+    public string GameId { get; set; }
     public string HostPlayer { get; private set; }
     public DateTime StartTime { get; private set; }
     public DateTime EndTime { get; set; }
@@ -45,8 +45,15 @@ public class GameDataManager : ManagerBase<GameDataManager>
         HostPlayer = Helpers.HostPlayer?.Data?.PlayerName ?? "Unknown";
         RoomCode = GameStartManagerPatch.RoomCode;
         HostCode = Helpers.HostPlayer?.Data?.FriendCode ?? "";
-        GameId = GenerateGameId();
         PlayerCount = PlayerControl.AllPlayerControls.Count;
+
+        if (AmongUsClient.Instance.AmHost)
+        {
+            GameId = GenerateGameId();
+            var writer = StartRPC(CustomRPC.ShareGameId);
+            writer.Write(GameId);
+            writer.EndRPC();
+        }
 
         byte modUid = 1;
         foreach (var player in PlayerControl.AllPlayerControls.ToArray().OrderBy(_ => rnd.Next()))
@@ -64,13 +71,13 @@ public class GameDataManager : ManagerBase<GameDataManager>
         _isInitialized = true;
     }
 
-    [OnGameStart(Attributes.Priority.High)]
+    [OnGameStart(-50)]
     public static void OnGameStart()
     {
         Instance.Initialize();
     }
 
-    [OnGameEnd(Attributes.Priority.VeryLow)]
+    [OnGameEnd(50)]
     public static void OnGameEnd()
     {
         if (Instance._isInitialized && AmongUsClient.Instance.AmHost) Instance.SaveAllPlayerDataToJson();

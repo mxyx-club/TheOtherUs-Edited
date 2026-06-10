@@ -523,6 +523,19 @@ internal class MeetingHudPatch
                 }
             }
 
+            byte akujoVoteTarget = byte.MaxValue;
+            if (Akujo.akujo != null && Akujo.isUnifiedVoteActiveThisMeeting && !Akujo.akujo.Data.IsDead)
+            {
+                foreach (var pva in __instance.playerStates)
+                {
+                    if (pva.TargetPlayerId == Akujo.akujo.PlayerId && pva.DidVote)
+                    {
+                        akujoVoteTarget = pva.VotedFor;
+                        break;
+                    }
+                }
+            }
+
             var self = CalculateVotes(__instance);
             //var max = self.MaxPair(out var tie);
             GameData.PlayerInfo exiled = null;

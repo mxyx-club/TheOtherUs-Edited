@@ -49,6 +49,7 @@ public static class Sheriff
 
         if (playerId == PlayerControl.LocalPlayer.PlayerId)
         {
+            CustomButton.setAllButtonsHandcuffedStatus(active);
             SoundEffectsManager.play("deputyHandcuff");
         }
     }
