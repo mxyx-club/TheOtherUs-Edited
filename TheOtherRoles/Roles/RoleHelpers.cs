@@ -692,6 +692,8 @@ public static class RoleHelpers
         blockedRolePairings.Add([RoleId.Mayor, RoleId.Prosecutor]);
 
         blockedRolePairings.Add([RoleId.Prophet, RoleId.Oracle]);
+
+        blockedRolePairings.Add([RoleId.Medic, RoleId.BodyGuard]);
     }
 
     public static Dictionary<RoleId, int> RoleRate = new();

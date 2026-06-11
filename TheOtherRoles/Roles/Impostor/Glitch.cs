@@ -5,6 +5,7 @@ public static class Glitch
     public static PlayerControl Player;
     public static Color color = Palette.ImpostorRed;
     public static Sprite sampleSprite = new ResourceSprite("SampleButton.png");
+    public static Sprite morphSprite = new ResourceSprite("MorphButton.png");
 
     public static float cooldown = 30f;
     public static float duration = 10f;

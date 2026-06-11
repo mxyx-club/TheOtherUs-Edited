@@ -231,6 +231,7 @@ internal class PlayerControlRevivePatch
         {
             CanSeeGhostInfo = false;
             CustomButton.ResetAllCooldowns(ModOption.KillCooldown / 2);
+            HudManager.Instance.PlayerCam.SetTargetWithLight(__instance);
         }
 
         if (__instance == SoulSight.Player)
@@ -247,6 +248,11 @@ internal class PlayerControlRevivePatch
         if (Akujo.isAkujoTeam(__instance) && Akujo.otherLover(__instance)?.IsDead() == true)
         {
             Akujo.otherLover(__instance)?.ModRevive();
+        }
+
+        if (Pelican.eatenPlayers.Remove(__instance, out var pos))
+        {
+            __instance.NetTransform.RpcSnapTo(pos);
         }
 
         if (__instance == Specter.Player) Specter.Player.clearAllTasks();
@@ -543,8 +549,9 @@ public static class MurderPlayerPatch
 
         if (target == Pelican.Player && Pelican.eatenPlayers?.Count > 0)
         {
-            foreach (var player in Pelican.eatenPlayers.Where(x => x.Data?.IsDead == true))
+            foreach (var player in Pelican.eatenPlayers.Keys)
             {
+                if (player.IsAlive()) continue;
                 player.Revive();
                 if (PlayerControl.LocalPlayer == player)
                 {
@@ -859,8 +866,9 @@ public static class ExilePlayerPatch
 
         if (__instance.PlayerId == Pelican.Player?.PlayerId && Pelican.eatenPlayers?.Count > 0)
         {
-            foreach (var player in Pelican.eatenPlayers.Where(p => p != null && p.Data.IsDead))
+            foreach (var player in Pelican.eatenPlayers.Keys)
             {
+                if (player == null || !player.Data.IsDead) continue;
                 if (PlayerControl.LocalPlayer == player)
                 {
                     HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
@@ -868,7 +876,7 @@ public static class ExilePlayerPatch
                 }
                 continue;
             }
-            foreach (var p in Pelican.eatenPlayers) p.Die(DeathReason.Kill, true);
+            foreach (var p in Pelican.eatenPlayers.Keys) p.Die(DeathReason.Kill, true);
             Pelican.eatenPlayers = new();
 
             Pelican.PelicanDie();
@@ -992,7 +1000,7 @@ public static class DisconnectPatch
 
         if (player == Pelican.Player && Pelican.eatenPlayers?.Count > 0)
         {
-            foreach (var p in Pelican.eatenPlayers.ToArray())
+            foreach (var p in Pelican.eatenPlayers.Keys)
             {
                 if (p != null && p.Data.IsDead)
                 {

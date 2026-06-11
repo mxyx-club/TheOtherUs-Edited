@@ -1,5 +1,6 @@
 namespace TheOtherRoles.Roles.Neutral;
 
+// Phantom
 public static class Swooper
 {
     public static PlayerControl swooper;
@@ -18,6 +19,16 @@ public static class Swooper
 
     public static void clearAndReload()
     {
+        if (isInvisable)
+        {
+            isInvisable = false;
+            var writer = StartRPC(CustomRPC.SetSwoop);
+            writer.Write(swooper.PlayerId);
+            writer.Write(false);
+            writer.EndRPC();
+            RPCProcedure.setSwoop(swooper.PlayerId, false);
+        }
+
         swooper = null;
         isInvisable = false;
         cooldown = CustomOptionHolder.swooperKillCooldown.GetFloat();

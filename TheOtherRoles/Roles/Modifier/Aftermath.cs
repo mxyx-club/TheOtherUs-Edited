@@ -57,10 +57,11 @@ public class Aftermath
         }
         else if (Glitch.Player == killer)
         {
-            var writer = StartRPC(CustomRPC.MorphlingMorph);
+            var writer = StartRPC(CustomRPC.GlitchMimic);
             writer.Write(player.PlayerId);
+            writer.Write(true);
             writer.EndRPC();
-            morphlingMorph(player.PlayerId);
+            GlitchMimic(player.PlayerId, true);
             Glitch.sampledTarget = null;
             glitchMimicButton.IsEffectActive = true;
             glitchMimicButton.EffectDuration = Glitch.duration;
@@ -249,18 +250,18 @@ public class Aftermath
         {
             var writer = StartRPC(CustomRPC.SetSwoop);
             writer.Write(killer.PlayerId);
-            writer.Write(byte.MinValue);
+            writer.Write(true);
             writer.EndRPC();
-            setSwoop(Swooper.swooper.PlayerId, byte.MinValue);
+            setSwoop(Swooper.swooper.PlayerId, true);
             swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer + Swooper.duration;
         }
         else if (Jackal.jackal.Any(x => x == killer) && Jackal.canSwoop)
         {
             var writer = StartRPC(CustomRPC.SetJackalSwoop);
             writer.Write(killer.PlayerId);
-            writer.Write(byte.MinValue);
+            writer.Write(true);
             writer.EndRPC();
-            setJackalSwoop(killer.PlayerId, byte.MinValue);
+            setJackalSwoop(killer.PlayerId, true);
             jackalSwoopButton.Timer = jackalSwoopButton.MaxTimer + Jackal.duration;
         }
         else if (Marionette.Player == killer)

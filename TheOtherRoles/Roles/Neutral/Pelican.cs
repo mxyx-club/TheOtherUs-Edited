@@ -6,7 +6,7 @@ public class Pelican
 {
     public static PlayerControl Player;
     public static PlayerControl currentTarget;
-    public static List<PlayerControl> eatenPlayers = new();
+    public static Dictionary<PlayerControl, Vector2> eatenPlayers = new();
     public static Color color = new Color32(240, 120, 200, byte.MaxValue);
     public static float cooldown = 25f;
     public static float reduceCooldown = 25f;
@@ -26,6 +26,7 @@ public class Pelican
         }
         else
         {
+            var tpos = target.GetTruePosition();
             target.Die(DeathReason.Kill, false);
             MurderPlayerPatch.HandleMurderPostfix(Player, target);
             if (target == SoulSight.Player)
@@ -44,7 +45,7 @@ public class Pelican
             }
 
             PlayerData.SetDeathReason(target, CustomDeathReason.Eaten, Player);
-            eatenPlayers.Add(target);
+            eatenPlayers.Add(target, tpos);
             target.NetTransform.RpcSnapTo(new Vector2(-10f, 10f));
         }
     }
@@ -55,7 +56,7 @@ public class Pelican
         player ??= Player;
         if (clear || player?.Data.IsDead == true)
         {
-            foreach (var p in eatenPlayers)
+            foreach (var p in eatenPlayers.Keys)
             {
                 if (p == PlayerControl.LocalPlayer)
                 {
@@ -87,7 +88,7 @@ public class Pelican
         {
             if (Player.IsDead() || InMeeting) return;
 
-            foreach (var p in eatenPlayers)
+            foreach (var p in eatenPlayers.Keys)
             {
                 if (p == PlayerControl.LocalPlayer)
                 {
@@ -101,7 +102,7 @@ public class Pelican
         public static void MeetingStart(MeetingHud __instance)
         {
             if (Player.IsDead()) return;
-            foreach (var p in eatenPlayers)
+            foreach (var p in eatenPlayers.Keys)
             {
                 if (p == PlayerControl.LocalPlayer)
                 {

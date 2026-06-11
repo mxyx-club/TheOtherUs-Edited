@@ -45,6 +45,16 @@ public class Jackal
 
     public static void clearAndReload()
     {
+        if (isInvisable)
+        {
+            isInvisable = false;
+            var invisibleWriter = StartRPC(CustomRPC.SetJackalSwoop);
+            invisibleWriter.Write(PlayerControl.LocalPlayer.PlayerId);
+            invisibleWriter.Write(false);
+            invisibleWriter.EndRPC();
+            RPCProcedure.setJackalSwoop(PlayerControl.LocalPlayer.PlayerId, false);
+        }
+
         jackal.Clear();
         Sidekick = null;
         currentTarget = null;

@@ -540,15 +540,6 @@ public static class Helpers
         };
     }
 
-    public static void setInvisable(PlayerControl player)
-    {
-        var invisibleWriter = StartRPC(CustomRPC.SetInvisibleGen);
-        invisibleWriter.Write(player.PlayerId);
-        invisibleWriter.Write(byte.MinValue);
-        invisibleWriter.EndRPC();
-        RPCProcedure.setInvisibleGen(player.PlayerId, byte.MinValue);
-    }
-
     public static void SetActiveAllObject(this GameObject[] trans, string notdelete, bool IsActive)
     {
         foreach (GameObject tran in trans)

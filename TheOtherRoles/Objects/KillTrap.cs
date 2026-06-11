@@ -237,6 +237,7 @@ public class KillTrap : CustomObjectBase<KillTrap>
             {
                 if (trap.target.IsAlive() && PlayerControl.LocalPlayer == trap.target)
                 {
+                    trap.audioSource.Stop();
                     RpcCustomMurderPlayer(trap.trapper, trap.target, false);
                 }
                 else
@@ -280,7 +281,9 @@ public class KillTrap : CustomObjectBase<KillTrap>
         audioSource.minDistance = 0.5f;
         audioSource.maxDistance = EvilTrapper.killSoundRange;
         audioSource.PlayOneShot(kill);
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(kill.length, new Action<float>((p) =>
+        CustomMurderPlayer(trapper, target, false);
+        EvilTrapper.isTrapKill = true;
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(kill.length + 0.1f, new Action<float>((p) =>
         {
             if (p == 1f)
             {
@@ -288,8 +291,5 @@ public class KillTrap : CustomObjectBase<KillTrap>
                 trap?.Destroy();
             }
         })));
-        CustomMurderPlayer(trapper, target, false);
-
-        EvilTrapper.isTrapKill = true;
     }
 }

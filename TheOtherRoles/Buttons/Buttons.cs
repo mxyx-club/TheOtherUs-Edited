@@ -930,39 +930,61 @@ internal static class HudManagerStartPatch
         glitchMimicButton = new CustomButton(
             () =>
             {
-                var mimicTargets = new List<byte>();
-                foreach (var target in GameDataManager.Instance.AllPlayerControl)
+                if (Glitch.sampledTarget != null)
                 {
-                    if (target != Glitch.Player && !target.Data.Disconnected)
+                    var writer = StartRPC(CustomRPC.GlitchMimic);
+                    writer.Write(Glitch.sampledTarget.PlayerId);
+                    writer.Write(true);
+                    writer.EndRPC();
+                    RPCProcedure.GlitchMimic(Glitch.sampledTarget.PlayerId, true);
+                    Glitch.sampledTarget = null;
+                    glitchMimicButton.EffectDuration = Glitch.duration;
+                    SoundEffectsManager.play("morphlingSample");
+                }
+                else
+                {
+                    var mimicTargets = new List<byte>();
+                    foreach (var target in GameDataManager.Instance.AllPlayerControl)
                     {
-                        if (!target.Data.IsDead)
+                        if (target != Glitch.Player && !target.Data.Disconnected)
                         {
-                            mimicTargets.Add(target.PlayerId);
-                        }
-                        else
-                        {
-                            foreach (var body in UObject.FindObjectsOfType<DeadBody>())
+                            if (!target.Data.IsDead)
                             {
-                                if (body.ParentId == target.PlayerId) mimicTargets.Add(target.PlayerId);
+                                mimicTargets.Add(target.PlayerId);
+                            }
+                            else
+                            {
+                                foreach (var body in UObject.FindObjectsOfType<DeadBody>())
+                                {
+                                    if (body.ParentId == target.PlayerId) mimicTargets.Add(target.PlayerId);
+                                }
                             }
                         }
                     }
-                }
 
-                var pk = new PlayerMenu((x) =>
-                {
-                    var writer = StartRPC(CustomRPC.MorphlingMorph);
-                    writer.Write(x.PlayerId);
-                    writer.EndRPC();
-                    RPCProcedure.morphlingMorph(x.PlayerId);
-                    glitchMimicButton.EffectDuration = Glitch.duration;
-                    SoundEffectsManager.play("morphlingMorph");
-                }, (y) =>
-                {
-                    return mimicTargets.ToArray().Contains(y.PlayerId);
-                });
-                PlayerControl.LocalPlayer.NetTransform.Halt();
-                Coroutines.Start(pk.Open(0f, true));
+                    var pk = new PlayerMenu((x) =>
+                    {
+                        var writer = StartRPC(CustomRPC.GlitchMimic);
+                        writer.Write(x.PlayerId);
+                        writer.Write(false);
+                        writer.EndRPC();
+                        RPCProcedure.GlitchMimic(x.PlayerId, false);
+                        glitchMimicButton.Sprite = Glitch.morphSprite;
+
+                        CustomButton.setButtonTargetDisplay(Glitch.sampledTarget, glitchMimicButton);
+                        SoundEffectsManager.play("morphlingMorph");
+                    }, (y) =>
+                    {
+                        return mimicTargets.ToArray().Contains(y.PlayerId);
+                    });
+                    PlayerControl.LocalPlayer.NetTransform.Halt();
+                    Coroutines.Start(pk.Open(0f, true));
+
+                    glitchMimicButton.IsEffectActive = false;
+                    glitchMimicButton.EffectDuration = 0f;
+                    glitchMimicButton.Timer = 0f;
+                    _ = new LateTask(() => { glitchMimicButton.Timer = 0f; }, 0.5f, "Glitch");
+                }
             },
             () =>
             {
@@ -974,6 +996,10 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
+                glitchMimicButton.Sprite = Glitch.sampleSprite;
+                Glitch.sampledTarget = null;
+                CustomButton.setButtonTargetDisplay(null);
+
                 glitchMimicButton.Timer = glitchMimicButton.MaxTimer;
                 glitchMimicButton.IsEffectActive = false;
                 glitchMimicButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
@@ -986,8 +1012,13 @@ internal static class HudManagerStartPatch
             Glitch.duration,
             () =>
             {
-                glitchMimicButton.Timer = glitchMimicButton.MaxTimer;
-                SoundEffectsManager.play("morphlingMorph");
+                if (Glitch.sampledTarget == null)
+                {
+                    glitchMimicButton.Timer = glitchMimicButton.MaxTimer;
+                    glitchMimicButton.Sprite = Glitch.sampleSprite;
+                    SoundEffectsManager.play("morphlingMorph");
+                    CustomButton.setButtonTargetDisplay(null);
+                }
             },
             buttonText: GetString("SampleText")
         );
@@ -1732,9 +1763,9 @@ internal static class HudManagerStartPatch
             { /* On Use */
                 var invisibleWriter = StartRPC(CustomRPC.SetJackalSwoop);
                 invisibleWriter.Write(PlayerControl.LocalPlayer.PlayerId);
-                invisibleWriter.Write(byte.MinValue);
+                invisibleWriter.Write(true);
                 invisibleWriter.EndRPC();
-                RPCProcedure.setJackalSwoop(PlayerControl.LocalPlayer.PlayerId, byte.MinValue);
+                RPCProcedure.setJackalSwoop(PlayerControl.LocalPlayer.PlayerId, true);
             },
             () =>
             {   /* Can See */
@@ -1796,9 +1827,9 @@ internal static class HudManagerStartPatch
             { /* On Use */
                 var invisibleWriter = StartRPC(CustomRPC.SetSwoop);
                 invisibleWriter.Write(Swooper.swooper.PlayerId);
-                invisibleWriter.Write(byte.MinValue);
+                invisibleWriter.Write(true);
                 invisibleWriter.EndRPC();
-                RPCProcedure.setSwoop(Swooper.swooper.PlayerId, byte.MinValue);
+                RPCProcedure.setSwoop(Swooper.swooper.PlayerId, true);
             },
             () => { /* Can See */ return Swooper.swooper != null && Swooper.swooper == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
             () =>
@@ -2913,7 +2944,7 @@ internal static class HudManagerStartPatch
                     untargetables = Arsonist.dousedPlayers;
                 }
 
-                Arsonist.currentTarget = SetTarget(ignoreList: untargetables, distances: 0.5f, inVented: ModOption.NeutCanKillInVent);
+                Arsonist.currentTarget = SetTarget(ignoreList: untargetables, distances: 0.75f, inVented: ModOption.NeutCanKillInVent);
                 if (Arsonist.currentTarget != null) SetPlayerOutline(Arsonist.currentTarget, Arsonist.color);
 
                 arsonistButton.showTargetNameOnButton(Arsonist.currentTarget);
@@ -2979,7 +3010,7 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                Arsonist.currentTarget2 = SetTarget(distances: 0.5f, inVented: ModOption.NeutCanKillInVent);
+                Arsonist.currentTarget2 = SetTarget(distances: 0.75f, inVented: ModOption.NeutCanKillInVent);
                 var cankill = false;
                 if (Arsonist.currentTarget2 && Arsonist.dousedPlayers.Any(x => x == Arsonist.currentTarget2))
                 {
@@ -4426,6 +4457,7 @@ internal static class HudManagerStartPatch
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.SyncGunsmithChange);
                 writer.Write(Gunsmith.remainingChange);
                 writer.EndRPC();
+                SoundEffectsManager.play("SniperEquip");
             },
             () =>
             {

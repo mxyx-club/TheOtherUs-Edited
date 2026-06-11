@@ -548,15 +548,13 @@ internal class HudManagerUpdatePatch
         // 狱卒：为内鬼玩家显示囚犯的灰色名字和 "#"
         if (Gaoler.currentPrisoner != null)
         {
-            bool isImpostor = PlayerControl.LocalPlayer.IsImpostor() || (Gaoler.Player != null && Gaoler.Player == PlayerControl.LocalPlayer);
-            if (isImpostor)
+            if (PlayerControl.LocalPlayer.IsImpostor() || CanSeeGhostInfo)
             {
                 foreach (var pva in allPlayerStates)
                 {
                     if (pva.TargetPlayerId == Gaoler.currentPrisoner.PlayerId)
                     {
-                        if (!pva.NameText.text.Contains('#'))
-                            pva.NameText.text += " <color=#808080>#</color>";
+                        pva.NameText.text += " <color=#808080>#</color>";
                     }
                 }
             }
@@ -884,17 +882,17 @@ internal class HudManagerUpdatePatch
         {
             var invisibleWriter = StartRPC(CustomRPC.SetSwoop);
             invisibleWriter.Write(Swooper.swooper.PlayerId);
-            invisibleWriter.Write(byte.MaxValue);
+            invisibleWriter.Write(false);
             invisibleWriter.EndRPC();
-            RPCProcedure.setSwoop(Swooper.swooper.PlayerId, byte.MaxValue);
+            RPCProcedure.setSwoop(Swooper.swooper.PlayerId, false);
         }
         if (Jackal.isInvisable && Jackal.swoopTimer <= 0 && Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer))
         {
             var invisibleWriter = StartRPC(CustomRPC.SetJackalSwoop);
             invisibleWriter.Write(PlayerControl.LocalPlayer.PlayerId);
-            invisibleWriter.Write(byte.MaxValue);
+            invisibleWriter.Write(false);
             invisibleWriter.EndRPC();
-            RPCProcedure.setJackalSwoop(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
+            RPCProcedure.setJackalSwoop(PlayerControl.LocalPlayer.PlayerId, false);
         }
     }
 

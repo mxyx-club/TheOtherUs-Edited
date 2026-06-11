@@ -65,7 +65,7 @@ public enum CustomRPC : byte
     VeteranAlert,
     ShifterShift,
     SwapperSwap,
-    MorphlingMorph,
+    GlitchMimic,
     CamouflagerCamouflage,
     NoCheckStartMeeting,
     ProphetExamine,
@@ -1043,17 +1043,24 @@ public static class RPCProcedure
         }
     }
 
-    public static void morphlingMorph(byte playerId)
+    public static void GlitchMimic(byte playerId, bool mimic)
     {
         var target = PlayerById(playerId);
-        if (Glitch.Player == null || target == null) return;
+        if (mimic)
+        {
+            if (Glitch.Player == null || target == null) return;
 
-        Glitch.morphTimer = Glitch.duration;
-        Glitch.morphTarget = target;
-        if (Camouflager.camouflageTimer <= 0f)
-            Glitch.Player.setLook(target.Data.PlayerName, target.Data.DefaultOutfit.ColorId,
-                target.Data.DefaultOutfit.HatId, target.Data.DefaultOutfit.VisorId, target.Data.DefaultOutfit.SkinId,
-                target.Data.DefaultOutfit.PetId);
+            Glitch.morphTimer = Glitch.duration;
+            Glitch.morphTarget = target;
+            if (Camouflager.camouflageTimer <= 0f)
+                Glitch.Player.setLook(target.Data.PlayerName, target.Data.DefaultOutfit.ColorId,
+                    target.Data.DefaultOutfit.HatId, target.Data.DefaultOutfit.VisorId, target.Data.DefaultOutfit.SkinId,
+                    target.Data.DefaultOutfit.PetId);
+        }
+        else
+        {
+            Glitch.sampledTarget = target;
+        }
     }
 
     public static void camouflagerCamouflage(byte setTimer)
@@ -1755,11 +1762,11 @@ public static class RPCProcedure
         }
     }
 
-    public static void setSwoop(byte playerId, byte flag)
+    public static void setSwoop(byte playerId, bool flag)
     {
         var target = PlayerById(playerId);
         if (target == null) return;
-        if (flag == byte.MaxValue)
+        if (!flag)
         {
             target.cosmetics.currentBodySprite.BodySprite.color = Color.white;
             target.cosmetics.colorBlindText.gameObject.SetActive(DataManager.Settings.Accessibility.ColorBlindMode);
@@ -1781,11 +1788,11 @@ public static class RPCProcedure
         Swooper.isInvisable = true;
     }
 
-    public static void setJackalSwoop(byte playerId, byte flag)
+    public static void setJackalSwoop(byte playerId, bool flag)
     {
         var target = PlayerById(playerId);
         if (target == null) return;
-        if (flag == byte.MaxValue)
+        if (!flag)
         {
             target.cosmetics.currentBodySprite.BodySprite.color = Color.white;
             target.cosmetics.colorBlindText.gameObject.SetActive(DataManager.Settings.Accessibility.ColorBlindMode);
@@ -2260,8 +2267,8 @@ internal class RPCHandlerPatch
                 RPCProcedure.swapperSwap(reader.ReadByte(), reader.ReadByte());
                 break;
 
-            case CustomRPC.MorphlingMorph:
-                RPCProcedure.morphlingMorph(reader.ReadByte());
+            case CustomRPC.GlitchMimic:
+                RPCProcedure.GlitchMimic(reader.ReadByte(), reader.ReadBoolean());
                 break;
 
             case CustomRPC.CamouflagerCamouflage:
@@ -2405,11 +2412,11 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.SetSwoop:
-                RPCProcedure.setSwoop(reader.ReadByte(), reader.ReadByte());
+                RPCProcedure.setSwoop(reader.ReadByte(), reader.ReadBoolean());
                 break;
 
             case CustomRPC.SetJackalSwoop:
-                RPCProcedure.setJackalSwoop(reader.ReadByte(), reader.ReadByte());
+                RPCProcedure.setJackalSwoop(reader.ReadByte(), reader.ReadBoolean());
                 break;
 
             case CustomRPC.SetInvisibleGen:

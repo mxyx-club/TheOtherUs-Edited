@@ -292,6 +292,8 @@ internal class ExileControllerWrapUpPatch
 
         if (CustomOptionHolder.randomGameStartPosition.GetBool()) MapData.RandomSpawnPlayers();
 
+        HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
+
         DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)
         {

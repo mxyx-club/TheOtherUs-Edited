@@ -4623,6 +4623,14 @@
         "0": "Glitch",
         "13": "混沌"
     },
+    "GlitchIntroDesc": {
+        "0": "Shapeshift, blend in.",
+        "13": "变换你的外形不被抓到"
+    },
+    "GlitchShortDesc": {
+        "0": "Change your look to not get caught",
+        "13": "变换你的外形"
+    },
     "Bomber": {
         "0": "Demolitionist",
         "13": "炸弹狂"
@@ -6004,7 +6012,7 @@
         "13": "采样后可以伪装成其他人。"
     },
     "GlitchFullDesc": {
-        "13": "在行动阶段可以直接变形为某位玩家。\n还可以骇入封锁目标的技能，持续一段时间。"
+        "13": "在行动阶段可以选择玩家并变形为对方一段时间。\n还可以骇入封锁目标的技能，持续一段时间。"
     },
     "BomberFullDesc": {
         "0": "Can plant a bomb on another player, which activates after a few seconds.\nThe holder must pass it on before a meeting is called or the timer runs out, otherwise they die.\nDepending on settings, the bomb may be passed back to the Demolitionist.",
@@ -6184,7 +6192,7 @@
     },
     "AkujoFullDesc": {
         "0": "Must recruit a True Love and a Backup within a time limit, or the Mesmer will die.\nWhen a Mesmer recruits a lover (either True Love or Backup), the recruited player's previous lover will die due to the bond being broken.\n\nShares the same win condition as Lovers.\nDepending on settings, True Love may:\n\nNo longer follow the original faction's win condition\nStill win with Crewmates if originally from that faction\n\nN.B.: The game cannot end while a Mesmer is alive, unless the Crewmates win by completing tasks.\n",
-        "13": "需要在限定时间内招募真爱与备胎，否则会自杀。\n\n魅魔如果招募了恋人（无论真爱或备胎）都会改变恋人关系，\n而恋人的另一方会因为恋人被夺而自杀。\n\n魅魔的胜利条件与恋人一致，\n真爱可设置为不跟随原有阵营获胜，\n或可设置为真爱为船员时可跟随船员胜利\n\n注：魅魔在场时无法结束游戏（除非任务胜利）"
+        "13": "需要在限定时间内招募真爱与备胎，否则会自杀。\n\n魅魔如果招募了恋人（无论真爱或备胎）都会改变恋人关系，\n而恋人的另一方会因为恋人被夺而自杀。\n会议中可以使用“号召”技能，强制本轮投票时真爱与备胎和魅魔投同一位玩家\n全局一次性技能，真爱和备胎不会知道本轮投票已被号召。\n\n魅魔的胜利条件与恋人一致，\n真爱可设置为不跟随原有阵营获胜，\n或可设置为真爱为船员时可跟随船员胜利"
     },
     "WitnessFullDesc": {
         "0": "Upon entering a meeting, the Witness learns the identity of the killer of the reported body.\nWithin the first 30 seconds (adjustable) of a meeting, the Witness can mark a player as the killer for all players.\nAfter the meeting, points are awarded based on the outcome. A certain score is required to win independently.\n1 point is earned under either of the two following conditions:\n\nMarked player was not the killer but was voted out by others,\nOr, the Marked player was the killer but was not voted out.\nDepending on settings, points may also be granted if the marked player dies unexpectedly during the meeting.\n\nConcept by: 尕丶天堂",

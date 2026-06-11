@@ -23,7 +23,7 @@ public class ShipStatusPatch
     {
         if (!__instance.Systems.ContainsKey(SystemTypes.Electrical) || IsHideNSeek) return true;
 
-        if (Pelican.eatenPlayers.Count > 0 && Pelican.eatenPlayers.Any(x => x.PlayerId == player.PlayerId))
+        if (Pelican.eatenPlayers.Count > 0 && Pelican.eatenPlayers.Any(x => x.Key.PlayerId == player.PlayerId))
         {
             __result = __instance.MinLightRadius * 1.25f;
             return false;
