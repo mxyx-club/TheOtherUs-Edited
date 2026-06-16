@@ -113,6 +113,7 @@ internal static class HudManagerStartPatch
     public static CustomButton clogPlaceGhost;
     public static CustomButton oracleButton;
     public static CustomButton soulSightButton;
+    public static CustomButton dreamcatcherButton;
 
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
@@ -233,6 +234,7 @@ internal static class HudManagerStartPatch
         avengerKillButton.MaxTimer = Avenger.killCooldown;
         clogPlaceGhost.MaxTimer = Clog.GhostCooldown;
         oracleButton.MaxTimer = Oracle.ConfessCooldown;
+        dreamcatcherButton.MaxTimer = Dreamcatcher.DreamCooldown;
         soulSightButton.MaxTimer = SoulSight.Cooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
@@ -4658,7 +4660,13 @@ internal static class HudManagerStartPatch
 
                 return PlayerControl.LocalPlayer.CanMove && Jailor.currentTarget != null;
             },
-            () => { jailorButton.Timer = jailorButton.MaxTimer; },
+            () =>
+            {
+                // Reset the jailed player
+                Jailor.Jailed = null;
+
+                jailorButton.Timer = jailorButton.MaxTimer;
+            },
             Jailor.buttonSprite,
             __instance,
             __instance.AbilityButton,
@@ -4897,6 +4905,56 @@ internal static class HudManagerStartPatch
             abilityInput.keyCode,
             buttonText: GetString("oracleButton")
         );
+
+        dreamcatcherButton = new(
+            () =>
+            {
+                if (CheckUseAbility(Dreamcatcher.Player, Dreamcatcher.CurrentTarget)) return;
+                var killed = false;
+                if (Dreamcatcher.LastDreamed == Dreamcatcher.CurrentTarget)
+                {
+                    RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Dreamcatcher.CurrentTarget, true, false, CustomDeathReason.Dreamcrush);
+                    killed = true;
+                }
+
+                var write = StartRPC(CustomRPC.DreamcatcherSetDreamer);
+                write.Write(Dreamcatcher.CurrentTarget.PlayerId);
+                write.Write(killed);
+                write.EndRPC();
+                Dreamcatcher.SetDreamer(Dreamcatcher.CurrentTarget, killed);
+                dreamcatcherButton.Timer = dreamcatcherButton.MaxTimer;
+            },
+            () =>
+            {
+                return Dreamcatcher.Player.IsAlive() && Dreamcatcher.Player == PlayerControl.LocalPlayer;
+            },
+            () =>
+            {
+                if (Dreamcatcher.Dreamed != null) return false;
+                Dreamcatcher.CurrentTarget = SetTarget();
+                dreamcatcherButton.Sprite = Dreamcatcher.CurrentTarget != null && Dreamcatcher.CurrentTarget == Dreamcatcher.LastDreamed
+                    ? Dreamcatcher.killButtonSprite
+                    : Dreamcatcher.dreamButtonSprite;
+                oracleButton.showTargetNameOnButton(Dreamcatcher.CurrentTarget, Dreamcatcher.Dreamed?.Data?.PlayerName ?? "");
+                return PlayerControl.LocalPlayer.CanMove && Dreamcatcher.CurrentTarget != null;
+            },
+            () =>
+            {
+                Dreamcatcher.LastDreamed = Dreamcatcher.Dreamed ?? null;
+                Dreamcatcher.Dreamed = null;
+                Dreamcatcher.CurrentTarget = null;
+                Dreamcatcher.ShieldUsed = false;
+
+                dreamcatcherButton.Sprite = Dreamcatcher.dreamButtonSprite;
+                dreamcatcherButton.Timer = dreamcatcherButton.MaxTimer;
+            },
+            Dreamcatcher.dreamButtonSprite,
+            __instance,
+            __instance.AbilityButton,
+            abilityInput.keyCode,
+            buttonText: "dreamButtonText".Translate()
+        );
+
 
         soulSightButton = new(
             () =>

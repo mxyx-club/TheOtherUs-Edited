@@ -35,6 +35,19 @@ public class WolfLord
         Avenger.OnPlayerDeath(Player, target);
         Akujo.otherLover(target)?.CustomExiled(null, true);
 
+        bool dreamlinkDead = false;
+        if (Dreamcatcher.Player != null && Dreamcatcher.Dreamed.IsAlive() && Dreamcatcher.Player.PlayerId == target.PlayerId)
+        {
+            if (PlayerControl.LocalPlayer == Dreamcatcher.Dreamed)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(Dreamcatcher.Dreamed.Data, Dreamcatcher.Dreamed.Data);
+            }
+
+            Dreamcatcher.Dreamed.Exiled();
+            PlayerData.SetDeathReason(Dreamcatcher.Dreamed, CustomDeathReason.Dreamlink, Dreamcatcher.Player);
+            dreamlinkDead = true;
+        }
+
         PlayerData.SetDeathReason(target, CustomDeathReason.Kill, Player);
         if (target == Balancer.currentTarget) Balancer.currentTarget = null;
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(target.KillSfx, false, 0.8f);
@@ -51,7 +64,10 @@ public class WolfLord
             {
                 var dyingPartner = target.GetPartner();
                 byte partnerId = dyingPartner != null ? dyingPartner.PlayerId : targetId;
-                bool shouldClearVote = CustomOptionHolder.guessReVote.GetBool() || pva.VotedFor == targetId || pva.VotedFor == partnerId;
+                bool shouldClearVote = CustomOptionHolder.guessReVote.GetBool()
+                                    || pva.VotedFor == targetId
+                                    || pva.VotedFor == partnerId
+                                    || (dreamlinkDead && pva.VotedFor == Dreamcatcher.Dreamed?.PlayerId);
 
                 if (shouldClearVote)
                 {

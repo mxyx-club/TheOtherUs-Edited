@@ -12,7 +12,25 @@ internal class ExileControllerBeginPatch
     public static TextMeshPro confirmImpostorSecondText;
     private static bool IsSec;
     public static bool ForceExile;
-    public static bool OracleBlessed;
+    public static bool ProtectedBlessed;
+    public static PlayerControl BlessedPlayer;
+
+    private static bool IsProtected(GameData.PlayerInfo player)
+    {
+        if (player == null) return false;
+
+        if (Oracle.Player.IsAlive() && Oracle.Confesser != null && player.Object == Oracle.Confesser)
+        {
+            return true;
+        }
+
+        if (Dreamcatcher.Player.IsAlive() && Dreamcatcher.Dreamed != null && player.Object == Dreamcatcher.Dreamed)
+        {
+            return true;
+        }
+
+        return false;
+    }
 
     public static bool Prefix(ExileController __instance, [HarmonyArgument(0)] ref GameData.PlayerInfo exiled, [HarmonyArgument(1)] bool tie)
     {
@@ -24,14 +42,18 @@ internal class ExileControllerBeginPatch
         {
             IsSec = true;
 
-            bool leftIsConfesser = Oracle.Player.IsAlive() && Balancer.targetplayerleft == Oracle.Confesser;
-            bool rightIsConfesser = Oracle.Player.IsAlive() && Balancer.targetplayerright == Oracle.Confesser;
+            bool leftIsProtected = IsProtected(Balancer.targetplayerleft?.Data);
+            bool rightIsProtected = IsProtected(Balancer.targetplayerright?.Data);
 
-            if (leftIsConfesser || rightIsConfesser) OracleBlessed = true;
-            if (leftIsConfesser) lastExiled = exiled = null;
+            if (leftIsProtected)
+            {
+                ProtectedBlessed = true;
+                BlessedPlayer = exiled?.Object;
+                lastExiled = exiled = null;
+            }
             else __instance.exiled = exiled = Balancer.targetplayerleft?.Data;
 
-            if (Balancer.targetplayerright != null && !rightIsConfesser)
+            if (Balancer.targetplayerright != null && !rightIsProtected)
             {
                 __instance.exiled = null;
                 ExileController controller = UObject.Instantiate(__instance, __instance.transform.parent);
@@ -86,10 +108,11 @@ internal class ExileControllerBeginPatch
             return true;
         }
 
-        if (Oracle.Player.IsAlive() && exiled != null && exiled.Object == Oracle.Confesser)
+        if (IsProtected(exiled))
         {
+            BlessedPlayer = exiled?.Object;
             lastExiled = exiled = null;
-            OracleBlessed = true;
+            ProtectedBlessed = true;
         }
 
         Message($"开始放逐: {exiled?.PlayerName ?? "null"}");
@@ -109,11 +132,6 @@ internal class ExileControllerBeginPatch
     public static void HandleBeginPrefix()
     {
         if (Medic.usedShield) Medic.meetingAfterShielding = true; // Has to be after the setting of the shield
-
-        if (PartTimer.partTimer != null && PartTimer.partTimer.IsAlive())
-        {
-            if (PartTimer.deathTurn <= 0 && PartTimer.target == null) PartTimer.partTimer.Exiled();
-        }
 
         if (Doomsayer.doomsayer != null && AmongUsClient.Instance.AmHost && !Doomsayer.canGuess) Doomsayer.canGuess = true;
 
@@ -175,6 +193,11 @@ internal class ExileControllerBeginPatch
     {
         Message("Begin Postfix", "ExileController");
         var player = exiled?.Object ?? null;
+        if (Dreamcatcher.Player != null && player == Dreamcatcher.Player && Dreamcatcher.Dreamed.IsAlive() && Dreamcatcher.Player == PlayerControl.LocalPlayer)
+        {
+            Dreamcatcher.Dreamed.RpcExiled();
+            PlayerData.RpcSetDeathReason(Dreamcatcher.Dreamed, CustomDeathReason.Dreamlink, null);
+        }
         confirmImpostorSecondText = UObject.Instantiate(__instance.ImpostorText, __instance.Text.transform);
         StringBuilder changeStringBuilder = new();
 
@@ -227,25 +250,28 @@ internal class ExileControllerBeginPatch
             }
         }
 
-        if (Oracle.Player.IsAlive() && OracleBlessed)
+        if (ProtectedBlessed && BlessedPlayer != null)
         {
-            __instance.completeString = $"神谕者拒绝放逐 {Oracle.Confesser.Data.PlayerName}！";
+            if (BlessedPlayer == Oracle.Confesser)
+            {
+                __instance.completeString = $"神谕者拒绝放逐 {Oracle.Confesser?.Data?.PlayerName ?? "null"} ！";
+            }
+            else if (BlessedPlayer == Dreamcatcher.Dreamed)
+            {
+                __instance.completeString = $"摄梦人守护了 {Dreamcatcher.Player?.Data?.PlayerName ?? "null"} ！";
+            }
         }
 
-        if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && OracleBlessed)
+        if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && ProtectedBlessed && exiled != null)
         {
             __instance.completeString = GetString("ExileController.Balancer");
-            if (Oracle.Player.IsAlive() && OracleBlessed)
-                __instance.completeString += $"，但 {Oracle.Confesser.Data.PlayerName} 拒绝了放逐！";
-            return;
+            if (Oracle.Player.IsAlive() && Oracle.Confesser != null && exiled.Object == Oracle.Confesser)
+                __instance.completeString += $"，但 {Oracle.Confesser.Data.PlayerName} 拒绝了放逐 ！";
+            else if (Dreamcatcher.Player.IsAlive() && Dreamcatcher.Dreamed != null && exiled.Object == Dreamcatcher.Dreamed)
+                __instance.completeString += $"，但 {exiled.PlayerName} 被守护了 ！";
         }
-        else if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && __instance.exiled?.PlayerId == Balancer.targetplayerleft.PlayerId)
-        {
-            __instance.completeString = GetString("ExileController.Balancer");
-            return;
-        }
-
-        OracleBlessed = false;
+        ProtectedBlessed = false;
+        BlessedPlayer = null;
     }
 
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.ReEnableGameplay))]
@@ -298,6 +324,12 @@ internal class ExileControllerWrapUpPatch
         for (var i = 0; i < array.Length; i++)
         {
             UObject.Destroy(array[i].gameObject);
+        }
+
+        if (PartTimer.partTimer != null && PartTimer.partTimer.IsAlive() && PartTimer.deathTurn <= 0 && PartTimer.target == null)
+        {
+            PartTimer.partTimer.Exiled();
+            PlayerData.SetDeathReason(PartTimer.partTimer, CustomDeathReason.Poverty);
         }
 
         // Prosecutor win condition
@@ -356,12 +388,6 @@ internal class ExileControllerWrapUpPatch
         }
 
         if (Specter.Player == PlayerControl.LocalPlayer) Specter.remember = true;
-
-        // Reset the jailed player
-        Jailor.Jailed = null;
-
-        // Reset custom button timers where necessary
-        CustomButton.OnMeetingEnd();
 
         if ((Decoy.ResetPlaceAfterMeeting && Decoy.DecoyPermanent) || !Decoy.DecoyPermanent)
         {
@@ -608,6 +634,8 @@ internal class ExileControllerWrapUpPatch
 
         // AntiTeleport set position
         AntiTeleport.setPosition();
+        // Reset custom button timers where necessary
+        CustomButton.OnMeetingEnd();
     }
 
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.WrapUp))]

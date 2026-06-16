@@ -138,10 +138,11 @@ public class PlayerData
 
     public static void RpcSetDeathReason(PlayerControl player, CustomDeathReason deathReason, PlayerControl killer)
     {
-        var writer = StartRPC(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareDeathReasonAndKiller);
+        var killerId = killer == null ? byte.MaxValue : killer.PlayerId;
+        var writer = StartRPC(CustomRPC.ShareDeathReasonAndKiller);
         writer.Write(player.PlayerId);
         writer.Write((byte)deathReason);
-        writer.Write(killer.PlayerId);
+        writer.Write(killerId);
         writer.EndRPC();
         SetDeathReason(player, deathReason, killer);
     }
@@ -176,4 +177,7 @@ public enum CustomDeathReason
     Eaten,
     Jailed,
     AvengerFail,
+    Poverty,
+    Dreamcrush,
+    Dreamlink
 }

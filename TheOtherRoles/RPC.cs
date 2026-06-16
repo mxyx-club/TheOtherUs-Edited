@@ -142,6 +142,7 @@ public enum CustomRPC : byte
     SoulSightSuicide,
     SoulSightRevive,
     SoulSightScore,
+    DreamcatcherSetDreamer,
 
     //SetSwooper,
     SetInvisible,
@@ -491,6 +492,9 @@ public static class RPCProcedure
                 break;
             case RoleId.Oracle:
                 Oracle.Player = player;
+                break;
+            case RoleId.Dreamcatcher:
+                Dreamcatcher.Player = player;
                 break;
             case RoleId.SoulSight:
                 SoulSight.Player = player;
@@ -976,7 +980,6 @@ public static class RPCProcedure
         var target = PlayerById(targetId);
         if (target == null || player == null) return;
 
-        Shifter.futureShift = null;
         Shifter.clearAndReload();
 
         // Suicide (exile) when impostor or impostor variants
@@ -1248,6 +1251,7 @@ public static class RPCProcedure
         if (player == Jumper.jumper) Jumper.clearAndReload();
         if (player == Trapper.trapper) Trapper.clearAndReload();
         if (player == Oracle.Player) Oracle.ClearAndReload();
+        if (player == Dreamcatcher.Player) Dreamcatcher.ClearAndReload();
         if (player == Prophet.prophet) Prophet.clearAndReload();
         if (player == Vigilante.vigilante) Vigilante.clearAndReload();
 
@@ -2050,7 +2054,7 @@ public static class RPCProcedure
                 Pursuer.blankedList.Remove(senderId);
                 break;
             case GhostInfoTypes.DeathReasonAndKiller:
-                PlayerData.SetDeathReason(PlayerById(reader.ReadByte()), (CustomDeathReason)reader.ReadByte(), PlayerById(reader.ReadByte()));
+                PlayerData.SetDeathReason(PlayerById(reader.ReadByte()), (CustomDeathReason)reader.ReadByte(), reader.ReadPlayer());
                 break;
         }
     }
@@ -2657,6 +2661,9 @@ internal class RPCHandlerPatch
             case CustomRPC.SoulSightScore:
                 SoulSight.Score = reader.ReadInt32();
                 SoulSight.TriggerWin = reader.ReadBoolean();
+                break;
+            case CustomRPC.DreamcatcherSetDreamer:
+                Dreamcatcher.SetDreamer(reader.ReadPlayer(), reader.ReadBoolean());
                 break;
             case CustomRPC.GaolerMarkPrisoner:
                 RPCProcedure.GaolerMarkPrisoner(reader.ReadByte());

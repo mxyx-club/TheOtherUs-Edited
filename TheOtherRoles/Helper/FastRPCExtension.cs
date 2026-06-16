@@ -47,7 +47,10 @@ public static class FastRPCExtension
     public static PlayerControl ReadPlayer(this MessageReader reader)
     {
         var id = reader.ReadByte();
-        return PlayerControl.AllPlayerControls.FirstOrDefault(n => n.PlayerId == id);
+        if (id == byte.MaxValue) return null;
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            if (player.PlayerId == id) return player;
+        return null;
     }
 
     public static Il2CppStructArray<byte> ReadBytesFormLength(this MessageReader reader)

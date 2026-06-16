@@ -97,6 +97,20 @@ public class Jailor
         Avenger.OnPlayerDeath(Player, target);
         Akujo.otherLover(target)?.CustomExiled(null, true);
 
+
+        bool dreamlinkDead = false;
+        if (Dreamcatcher.Player != null && Dreamcatcher.Dreamed.IsAlive() && Dreamcatcher.Player.PlayerId == target.PlayerId)
+        {
+            if (PlayerControl.LocalPlayer == Dreamcatcher.Dreamed)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(Dreamcatcher.Dreamed.Data, Dreamcatcher.Dreamed.Data);
+            }
+
+            Dreamcatcher.Dreamed.Exiled();
+            PlayerData.SetDeathReason(Dreamcatcher.Dreamed, CustomDeathReason.Dreamlink, Dreamcatcher.Player);
+            dreamlinkDead = true;
+        }
+
         PlayerData.SetDeathReason(target, CustomDeathReason.Jailed, player);
 
         foreach (var playerState in MeetingHud.Instance.playerStates)
@@ -119,6 +133,7 @@ public class Jailor
             {
                 bool shouldClearVote = CustomOptionHolder.guessReVote.GetBool()
                     || (target != null && pva.VotedFor == target.PlayerId)
+                    || (dreamlinkDead && pva.VotedFor == Dreamcatcher.Dreamed?.PlayerId)
                     || (partner != null && pva.VotedFor == partner.PlayerId);
 
                 if (shouldClearVote)

@@ -239,6 +239,9 @@ public class Specter
             case RoleId.Oracle:
                 if (resetRole) Oracle.ClearAndReload();
                 break;
+            case RoleId.Dreamcatcher:
+                if (resetRole) Dreamcatcher.ClearAndReload();
+                break;
             case RoleId.InfoSleuth:
                 break;
             case RoleId.Spy:

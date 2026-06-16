@@ -2188,6 +2188,15 @@
         "0": "Time before which Medic Autopsies Reveal the Killer's Color Type",
         "13": "以下时间内报告可得知凶手颜色类型"
     },
+    "dreamcatcherDreamCooldown": {
+        "13": "梦游冷却"
+    },
+    "dreamcatcherDreamShieldOnce": {
+        "13": "会议外一次性护盾"
+    },
+    "dreamcatcherCheckDreamTargetAbility": {
+        "13": "可见被梦游目标是否使用了技能"
+    },
     "timeMasterCooldown": {
         "0": "Time Shield Cooldown",
         "13": "时光之盾冷却"
@@ -3901,6 +3910,10 @@
         "0": "Suicide Pact",
         "13": "殉情"
     },
+    "DeathReason.Poverty": {
+        "0": "Poverty",
+        "13": "穷死"
+    },
     "DeathReason.WitchExile": {
         "0": "Hexed by {0}",
         "13": "被咒杀于 {0}"
@@ -3960,6 +3973,14 @@
     "DeathReason.AvengerFail": {
         "0": "Avenge failed",
         "13": "复仇失败"
+    },
+    "DeathReason.Dreamcrush": {
+        "0": "Shattered by {0}",
+        "13": "被 {0} 梦碎击杀"
+    },
+    "DeathReason.Dreamlink": {
+        "0": "Dragged by {0}",
+        "13": "被 {0} 拖入梦渊"
     },
     "colorSalmon": {
         "0": "Salmon",
@@ -4558,6 +4579,10 @@
     "pavlovsRingText": {
         "0": "RING",
         "13": "摇铃"
+    },
+    "dreamButtonText": {
+        "0": "DREAM",
+        "13": "入梦"
     },
     "GuessserGMInfo": {
         "0": " (Guesser)",
@@ -5374,6 +5399,15 @@
     "MedicShortDesc": {
         "0": "Protect Crewmates with Shield and report bodies for precise time of murder.",
         "13": "保护船员"
+    },
+    "Dreamcatcher": {
+        "13": "摄梦人"
+    },
+    "DreamcatcherIntroDesc": {
+        "13": "长夜深谙，我在梦里，触摸你"
+    },
+    "DreamcatcherShortDesc": {
+        "13": "让玩家进入梦里，保护对方"
     },
     "Swapper": {
         "0": "Swapper",
@@ -6317,6 +6351,9 @@
     "RedemptorFullDesc": {
         "0": "The Priest can find and revive dead players. When a revival is in progress, all evil players are notified of the location.\nAfter revival, evil players will receive an arrow pointing to the revived player.\n\nThe Redemptor has three abilities (the first two can be disabled by the host):\nDivine: Randomly points to a corpse on the map. If none exist, no arrow appears.\nResurrect: Must be used next to a body. Takes time to complete, during which all evil players are alerted to the Priest's location. If interrupted, the revival fails. Usable once per round.\nSacrifice: Must also be used next to a body. The Priest sacrifices themselves, and after a short delay, the dead player is revived. If a meeting begins during this process, the revival fails.\n",
         "13": "牧师可以寻找尸体并复活该玩家，且复活时会向所有坏人通知复活位置。\n该玩家复活后，所有坏人会有箭头指向该玩家。\n\n牧师拥有三个技能（房主可以禁用前两个技能）：\n启示：使用后会随机指向场上的一个尸体，没有尸体则没有箭头。\n\n祈祷：需要在尸体旁使用，祈祷需要持续一定的时间，且会向所有坏人\n通知牧师的位置，祈祷完成后会将该尸体所属的玩家复活。\n如果祈祷被打断则复活失败！每回合只能使用一次。\n\n殉道：需要在尸体旁使用：使用技能后会自杀，技能持续时间(一般很短)\n结束后完成后会将该尸体所属的玩家复活。\n复活过程中如果进入会议则复活失败！\n"
+    },
+    "DreamcatcherFullDesc": {
+        "13": "摄梦人可以使用梦游技能保护玩家 。会议结束后梦游状态失效。\n被梦游的玩家会议外可以抵挡击杀，会议内可以防止赌怪刺杀和驱逐。\n但是如果摄梦人在梦游期间死亡，会连带被梦游的玩家一起死亡。\n\n如果摄梦人连续两回合梦游同一位玩家，第二次梦游会直接击杀目标。\n\n可选项：会议外一次性保护（只可以抵挡一次击杀，会议内不变）\n"
     },
     "LoverFullDesc": {
         "0": "If one of the Lovers is killed, the other dies as well.\nIf one of the Lovers is not a Crewmate and both remain alive, their task progress will not be counted.\n\nWhen only 3 players remain and 2 of them are Lovers, the Lovers win by themselves immediately.",

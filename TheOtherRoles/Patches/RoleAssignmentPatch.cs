@@ -192,6 +192,7 @@ internal class RoleManagerSelectRolesPatch
         crewSettings.Add((byte)RoleId.Prophet, CustomOptionHolder.prophetSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Redemptor, CustomOptionHolder.redemptorSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Jailor, CustomOptionHolder.jailorSpawnRate.GetSelection());
+        crewSettings.Add((byte)RoleId.Dreamcatcher, CustomOptionHolder.dreamcatcherSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Oracle, CustomOptionHolder.oracleSpawnRate.GetSelection());
         if (!GuesserGM.Enabled)
             crewSettings.Add((byte)RoleId.Vigilante, CustomOptionHolder.guesserSpawnRate.GetSelection());

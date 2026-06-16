@@ -599,6 +599,11 @@ public static class MurderPlayerPatch
             LastImpostor.lastImpostor.SetKillTimer(Mathf.Max(0f, ModOption.KillCooldown - LastImpostor.deduce));
         }
 
+        if (Dreamcatcher.Player != null && Dreamcatcher.Player.PlayerId == target.PlayerId && Dreamcatcher.Dreamed.IsAlive() && __instance == PlayerControl.LocalPlayer)
+        {
+            RpcCustomMurderPlayer(Dreamcatcher.Dreamed, Dreamcatcher.Dreamed, true, true, CustomDeathReason.Dreamlink);
+        }
+
         // Set Gambler cooldown
         if (Gambler.gambler != null && __instance == Gambler.gambler && PlayerControl.LocalPlayer == __instance)
         {

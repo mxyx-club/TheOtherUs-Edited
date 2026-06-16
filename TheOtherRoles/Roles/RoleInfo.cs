@@ -91,6 +91,7 @@ public class RoleInfo
     public static RoleInfo sheriff = new("Sheriff", Sheriff.color, RoleId.Sheriff, RoleType.Crewmate);
     public static RoleInfo deputy = new("Deputy", Sheriff.color, RoleId.Deputy, RoleType.Crewmate);
     public static RoleInfo jailor = new("Jailor", Jailor.color, RoleId.Jailor, RoleType.Crewmate);
+    public static RoleInfo dreamcatcher = new("Dreamcatcher", Dreamcatcher.color, RoleId.Dreamcatcher, RoleType.Crewmate);
     public static RoleInfo bodyguard = new("BodyGuard", BodyGuard.color, RoleId.BodyGuard, RoleType.Crewmate);
     public static RoleInfo jumper = new("Jumper", Jumper.color, RoleId.Jumper, RoleType.Crewmate);
     public static RoleInfo detective = new("Detective", Detective.color, RoleId.Detective, RoleType.Crewmate);
@@ -235,6 +236,7 @@ public class RoleInfo
         redemptor,
         avenger,
         oracle,
+        dreamcatcher,
 
         lover,
         assassin,
@@ -393,6 +395,7 @@ public class RoleInfo
         if (p == Pavlovsdogs.pavlovsowner) infos.Add(pavlovsowner);
         if (p == Redemptor.Player) infos.Add(redemptor);
         if (p == BandLeader.Player) infos.Add(bandLeader);
+        if (p == Dreamcatcher.Player) infos.Add(dreamcatcher);
         if (p == SchrodingersCat.Player) infos.Add(schrodingersCat);
         if (Jester.Player.Any(x => x != null && x.PlayerId == p.PlayerId)) infos.Add(jester);
         if (Jackal.jackal.Any(x => x != null && x.PlayerId == p.PlayerId)) infos.Add(jackal);

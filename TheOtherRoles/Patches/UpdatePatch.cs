@@ -296,6 +296,12 @@ internal class HudManagerUpdatePatch
                 setPlayerNameColor(Oracle.Confesser, Oracle.color);
         }
 
+        /*if (Dreamcatcher.Player.IsAlive() && Dreamcatcher.Dreamed.IsAlive())
+        {
+            if (Dreamcatcher.Player.AmOwner)
+                setPlayerNameColor(Dreamcatcher.Dreamed, Dreamcatcher.color);
+        }*/
+
         if (Executioner.executioner != null && local == Executioner.executioner && Executioner.target != null)
         {
             setPlayerNameColor(Executioner.target, Executioner.color);
@@ -555,6 +561,23 @@ internal class HudManagerUpdatePatch
                     if (pva.TargetPlayerId == Gaoler.currentPrisoner.PlayerId)
                     {
                         pva.NameText.text += " <color=#808080>#</color>";
+                    }
+                }
+            }
+        }
+
+        // 狱卒：为内鬼玩家显示囚犯的灰色名字和 "#"
+        if (Dreamcatcher.Dreamed != null)
+        {
+            if (PlayerControl.LocalPlayer == Dreamcatcher.Player || CanSeeGhostInfo)
+            {
+                var suffix = Cs(Dreamcatcher.color, " ✽");
+                Dreamcatcher.Dreamed?.cosmetics?.nameText?.text += suffix;
+                foreach (var pva in allPlayerStates)
+                {
+                    if (pva.TargetPlayerId == Dreamcatcher.Dreamed.PlayerId)
+                    {
+                        pva.NameText.text += suffix;
                     }
                 }
             }

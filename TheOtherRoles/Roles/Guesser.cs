@@ -472,6 +472,27 @@ public static class Guesser
 
         if (!PlayerControl.LocalPlayer.CanUseMeetingAbility() || dyingTarget == Jailor.Jailed) return;
 
+        if (target.IsDead()) return;
+
+        if (mainRoleInfo == null) return;
+
+        foreach (var role in mainRoleInfo)
+        {
+            if (roleId >= (byte)SchrodingersCat.CatState.None && role.roleId == RoleId.SchrodingersCat)
+            {
+                if ((byte)SchrodingersCat.State == roleId)
+                {
+                    dyingTarget = target;
+                }
+                continue;
+            }
+            else if (role.roleId == (RoleId)roleId)
+            {
+                dyingTarget = target;
+                continue;
+            }
+        }
+
         if (Medic.GuessShield && target == Medic.shielded)
         {
             // Depending on the options, shooting the shielded player will not allow the guess, notifiy everyone about the kill attempt and close the window
@@ -494,32 +515,19 @@ public static class Guesser
             return;
         }
 
-        if (target.IsDead()) return;
-
-        if (mainRoleInfo == null) return;
-
-        foreach (var role in mainRoleInfo)
-        {
-            if (roleId >= (byte)SchrodingersCat.CatState.None && role.roleId == RoleId.SchrodingersCat)
-            {
-                if ((byte)SchrodingersCat.State == roleId)
-                {
-                    dyingTarget = target;
-                }
-                continue;
-            }
-            else if (role.roleId == (RoleId)roleId)
-            {
-                dyingTarget = target;
-                continue;
-            }
-        }
-
         if (target == Oracle.Confesser && Oracle.CanNotGuessConfess && Oracle.Player.IsAlive())
         {
             if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
             Coroutines.Start(showFlashCoroutine(Oracle.color, 1.25f, 0.33f));
             seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是对方被神谕者保护了！");
+            return;
+        }
+
+        if (target == Dreamcatcher.Dreamed && Dreamcatcher.Player.IsAlive())
+        {
+            if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
+            Coroutines.Start(showFlashCoroutine(Dreamcatcher.color, 1.25f, 0.33f));
+            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是对方被摄梦人保护了！");
             return;
         }
 
@@ -530,6 +538,7 @@ public static class Guesser
                 if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
                 seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但猜测错误");
 
+                if (PlayerControl.LocalPlayer == WolfLord.Player && !WolfLord.Revealed) WolfLord.WolfLord_Patch.ClearButton();
                 Coroutines.Start(showFlashCoroutine(Color.red, 1.25f, 0.33f));
                 Specoality.linearfunction--;
                 SoundEffectsManager.play("fail");
@@ -545,12 +554,9 @@ public static class Guesser
             }
         }
 
-        // 如果猜测者（本地玩家）是囚犯
         if (Gaoler.IsPrisoner(PlayerControl.LocalPlayer))
         {
-            // 闪灰光
             Coroutines.Start(showFlashCoroutine(Color.gray, 1f, 0.5f));
-            // 销毁自己本回合所有的猜测图标（所有玩家名旁的 ShootButton）
             if (__instance != null)
             {
                 foreach (var pva in __instance.playerStates)
@@ -559,10 +565,7 @@ public static class Guesser
                     if (shootBtn != null) UObject.Destroy(shootBtn.gameObject);
                 }
             }
-            // 关闭猜测界面
-            if (guesserUI != null && guesserUIExitButton != null)
-                guesserUIExitButton.OnClick.Invoke();
-            // 显示提示
+            if (guesserUI != null && guesserUIExitButton != null) guesserUIExitButton.OnClick.Invoke();
             seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是您被关押了！" + "\n--看来你还不明白现在自己的处境");
             return;
         }
@@ -598,6 +601,13 @@ public static class Guesser
         }
     }
 
+    /// <summary>
+    /// 赌怪猜测
+    /// </summary>
+    /// <param name="killerId">猜测者</param>
+    /// <param name="dyingTargetId">实际死亡玩家</param>
+    /// <param name="guessedTargetId">猜测的玩家</param>
+    /// <param name="guessedRoleId">猜测的职业</param>
     public static void guesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleId)
     {
         var dyingTarget = PlayerById(dyingTargetId);
@@ -658,6 +668,19 @@ public static class Guesser
             PlayerData.SetDeathReason(Lawyer.lawyer, CustomDeathReason.LawyerSuicide, guesser);
         }
 
+        bool dreamlinkDead = false;
+        if (Dreamcatcher.Player != null && Dreamcatcher.Dreamed.IsAlive() && Dreamcatcher.Player.PlayerId == dyingTargetId)
+        {
+            if (PlayerControl.LocalPlayer == Dreamcatcher.Dreamed)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(Dreamcatcher.Dreamed.Data, Dreamcatcher.Dreamed.Data);
+            }
+
+            Dreamcatcher.Dreamed.Exiled();
+            PlayerData.SetDeathReason(Dreamcatcher.Dreamed, CustomDeathReason.Dreamlink, Dreamcatcher.Player);
+            dreamlinkDead = true;
+        }
+
         byte partnerId = dyingPartner != null ? dyingPartner.PlayerId : dyingTargetId;
         dyingTarget.CustomExiled(guesser);
 
@@ -677,7 +700,8 @@ public static class Guesser
             {
                 bool shouldClearVote = CustomOptionHolder.guessReVote.GetBool()
                     || pva.VotedFor == dyingTargetId || pva.VotedFor == partnerId
-                    || (lawyerDiedAdditionally && Lawyer.lawyer?.PlayerId == pva.TargetPlayerId);
+                    || (lawyerDiedAdditionally && Lawyer.lawyer?.PlayerId == pva.TargetPlayerId)
+                    || (dreamlinkDead && Dreamcatcher.Dreamed?.PlayerId == pva.TargetPlayerId);
 
                 if (shouldClearVote || Jailor.Jailed?.AmOwner == true || Blackmailer.blackmailed?.AmOwner == true)
                 {

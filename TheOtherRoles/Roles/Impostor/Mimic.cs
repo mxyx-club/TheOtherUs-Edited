@@ -144,6 +144,12 @@ public static class Mimic
                 hasMimic = true;
                 break;
 
+            case RoleId.Dreamcatcher:
+                if (Amnisiac.resetRole) Dreamcatcher.ClearAndReload();
+                Dreamcatcher.Player = mimic;
+                hasMimic = true;
+                break;
+
             case RoleId.Jailor:
                 if (Amnisiac.resetRole) Jailor.ClearAndReload();
                 Jailor.Player = mimic;

@@ -554,6 +554,12 @@ public class CustomOptionHolder
     public static CustomOption detectiveReportNameDuration;
     public static CustomOption detectiveReportColorDuration;
 
+    public static CustomOption dreamcatcherSpawnRate;
+    public static CustomOption dreamcatcherDreamCooldown;
+    public static CustomOption dreamcatcherDreamShieldOnce;
+    public static CustomOption dreamcatcherDreamForceKill;
+    public static CustomOption dreamcatcherCheckDreamTargetAbility;
+
     public static CustomOption redemptorSpawnRate;
     public static CustomOption redemptorRevelation;
     public static CustomOption redemptorRevelationCooldown;
@@ -1483,6 +1489,12 @@ public class CustomOptionHolder
         detectiveFootprintDuration = Create(301903, Types.Crewmate, "detectiveFootprintDuration", 12.5f, 0.5f, 30f, 0.5f, detectiveSpawnRate);
         detectiveReportNameDuration = Create(301904, Types.Crewmate, "detectiveReportNameDuration", 10f, 0f, 60f, 2.5f, detectiveSpawnRate);
         detectiveReportColorDuration = Create(301905, Types.Crewmate, "detectiveReportColorDuration", 30f, 0f, 120f, 2.5f, detectiveSpawnRate);
+
+        dreamcatcherSpawnRate = Create(304200, Types.Crewmate, Cs(Dreamcatcher.color, "Dreamcatcher"), rates, null, true);
+        dreamcatcherDreamCooldown = Create(304201, Types.Crewmate, "dreamcatcherDreamCooldown", 20f, 5f, 60f, 2.5f, dreamcatcherSpawnRate);
+        dreamcatcherDreamShieldOnce = Create(304202, Types.Crewmate, "dreamcatcherDreamShieldOnce", false, dreamcatcherSpawnRate);
+        dreamcatcherDreamForceKill = Create(304203, Types.Crewmate, "dreamcatcherDreamForceKill", false, dreamcatcherSpawnRate);
+        //dreamcatcherCheckDreamTargetAbility = Create(304203, Types.Crewmate, "dreamcatcherCheckDreamTargetAbility", false, dreamcatcherSpawnRate);
 
         redemptorSpawnRate = Create(303900, Types.Crewmate, Cs(Redemptor.color, "Redemptor"), rates, null, true);
         redemptorRevelation = Create(303901, Types.Crewmate, "redemptorRevelation", false, redemptorSpawnRate);

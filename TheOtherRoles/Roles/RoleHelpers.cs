@@ -103,6 +103,7 @@ public enum RoleId
     Balancer,
     Redemptor,
     Jailor,
+    Dreamcatcher,
     Oracle,
 
     // Modifier ---
@@ -606,7 +607,7 @@ public static class RoleHelpers
             return false;
         }
 
-        if (BodyGuard.bodyguard != null && target == BodyGuard.guarded && BodyGuard.bodyguard.IsAlive())
+        if (BodyGuard.bodyguard.IsAlive() && target == BodyGuard.guarded)
         {
             target.ShowFailedMurder();
             // Kill the Killer
@@ -620,7 +621,7 @@ public static class RoleHelpers
             return false;
         }
 
-        if (Medic.shielded != null && Medic.shielded == target)
+        if (Medic.medic.IsAlive() && Medic.shielded != null && Medic.shielded == target)
         {
             var writer = StartRPC(CustomRPC.ShieldedMurderAttempt);
             writer.Write(killer.PlayerId);
@@ -629,6 +630,14 @@ public static class RoleHelpers
 
             CustomButton.SetKillTimer();
             target.ShowFailedMurder();
+            return false;
+        }
+
+        if (Dreamcatcher.Player.IsAlive() && Dreamcatcher.Dreamed == target && !Dreamcatcher.ShieldUsed)
+        {
+            CustomButton.SetKillTimer();
+            target.ShowFailedMurder();
+            if (Dreamcatcher.DreamShieldOnce) Dreamcatcher.ShieldUsed = true;
             return false;
         }
 
@@ -668,6 +677,13 @@ public static class RoleHelpers
         blockedRolePairings.Clear();
 
         blockedRolePairings.Add([RoleId.Vampire, RoleId.Warlock, RoleId.Witch]);
+        blockedRolePairings.Add([RoleId.Vulture, RoleId.Cleaner, RoleId.Pelican]);
+        blockedRolePairings.Add([RoleId.Ninja, RoleId.Swooper]);
+        blockedRolePairings.Add([RoleId.Gunsmith, RoleId.Berserker, RoleId.BountyHunter, RoleId.WolfLord]);
+        blockedRolePairings.Add([RoleId.Mayor, RoleId.Prosecutor]);
+        blockedRolePairings.Add([RoleId.Prophet, RoleId.Oracle]);
+        blockedRolePairings.Add([RoleId.Medic, RoleId.BodyGuard]);
+        blockedRolePairings.Add([RoleId.Dreamcatcher, RoleId.Oracle]);
 
         if (CustomOptionHolder.onlyOneNeutralTeam.GetBool())
         {
@@ -683,17 +699,20 @@ public static class RoleHelpers
             blockedRolePairings.Add([RoleId.Jester, RoleId.Undertaker]);
         }
 
-        blockedRolePairings.Add([RoleId.Vulture, RoleId.Cleaner, RoleId.Pelican]);
+        if (CustomOptionHolder.onlyOneNeutralTeam.GetBool())
+        {
+            blockedRolePairings.Add([RoleId.Jackal, RoleId.Pavlovsowner, RoleId.Infected]);
+        }
+        if (Executioner.promotesToLawyer)
+        {
+            blockedRolePairings.Add([RoleId.Executioner, RoleId.Lawyer]);
+        }
 
-        blockedRolePairings.Add([RoleId.Ninja, RoleId.Swooper]);
+        if (Jester.canDragDeadBody)
+        {
+            blockedRolePairings.Add([RoleId.Jester, RoleId.Undertaker]);
+        }
 
-        blockedRolePairings.Add([RoleId.Gunsmith, RoleId.Berserker, RoleId.BountyHunter, RoleId.WolfLord]);
-
-        blockedRolePairings.Add([RoleId.Mayor, RoleId.Prosecutor]);
-
-        blockedRolePairings.Add([RoleId.Prophet, RoleId.Oracle]);
-
-        blockedRolePairings.Add([RoleId.Medic, RoleId.BodyGuard]);
     }
 
     public static Dictionary<RoleId, int> RoleRate = new();
@@ -894,6 +913,7 @@ public static class RoleHelpers
         Berserker.ClearAndReload();
         Avenger.ClearAndReload();
         Oracle.ClearAndReload();
+        Dreamcatcher.ClearAndReload();
         Gaoler.ClearAndReload();
 
         // Modifier
