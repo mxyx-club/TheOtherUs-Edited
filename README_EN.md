@@ -33,35 +33,36 @@ Please refer to [Github releases](https://github.com/mxyx-club/TheOtherUs-Edited
 
 ## Roles
 
-|    Impostor    |      Neutral      |   Crewmate    |   Modifier    |   Ghost Role   |
-| :------------: | :---------------: | :-----------: | :-----------: | :------------: |
-|   Morphling    |     Survivor      |   Vigilante   |     Lover     | Ghost Engineer |
-|    WolfLord    |     Amnisiac      |     Mayor     |   Assassin    |  Poltergeist   |
-|    Poucher     |     PartTimer     |  Prosecutor   |   Disperser   |    Specter     |
-|     Mimic      |    Band Leader    |    Sheriff    |  Specoality   |                |
-|  Camouflager   |      Jester       |    Deputy     |    Vortox     |                |
-|     Miner      |      Lawyer       |   Engineer    | Last Impostor |                |
-|     Eraser     |    Executioner    |  Portalmaker  |     Torch     |                |
-|    Vampire     |      Pursuer      |   BodyGuard   |  Sunglasses   |                |
-|    Cleaner     |      Vulture      |     Medic     |     Bait      |                |
-|     Bomber     |       Akujo       |   Detective   |   Aftermath   |                |
-|   Undertaker   |     Doomsayer     |   Redemptor   |    Bloody     |                |
-|    Escapist    |       Thief       |    Veteran    | AntiTeleport  |                |
-|    Warlock     |     Arsonist      |    Swapper    |  Tiebreaker   |                |
-|   Trickster    |     Werewolf      |    Hacker     |     Flash     |                |
-| Bounty Hunter  |      Pelican      |     Seer      |  Multitasker  |                |
-|   Terrorist    |    Juggernaut     |    Jumper     |     Giant     |                |
-|  Blackmailer   |      Phantom      |    Tracker    |     Mini      |                |
-|     Witch      |      Jackal       |    Snitch     |      Vip      |                |
-|     Ninja      |     Sidekick      |      Spy      |  Indomitable  |                |
-|     Yo-Yo      |  Pavlov's owner   | SecurityGuard |    Slueth     |                |
-|  Evil Trapper  |   Pavlov's dogs   |    Medium     |    Cursed     |                |
-| Butcher [Beta] | Schrodinger's Cat |    Trapper    |     Blind     |                |
-|    Gambler     |                   |    Prophet    |    Watcher    |                |
-|   Grenadier    |                   |  Info Sleuth  |     Radar     |                |
-|    Gunsmith    |                   |   Balancer    | Button Barry  |                |
-|   Berserker    |                   |               |   Chameleon   |                |
-|                |                   |               |    Shifter    |                |
+|   Impostor    |      Neutral      |   Crewmate    |   Modifier    |   Ghost Role   |
+| :-----------: | :---------------: | :-----------: | :-----------: | :------------: |
+|    Glitch     |     Survivor      |   Vigilante   |     Lover     | Ghost Engineer |
+|   WolfLord    |     Amnisiac      |     Mayor     |   Assassin    |  Poltergeist   |
+|    Poucher    |     PartTimer     |  Prosecutor   |   Disperser   |    Specter     |
+| Professional  |    Band Leader    |    Sheriff    |  Specoality   |      Clog      |
+|     Mimic     |      Jester       |    Deputy     | Professional  |                |
+|  Camouflager  |      Lawyer       |   Engineer    |    Vortox     |                |
+|     Miner     |    Executioner    |  Portalmaker  | Last Impostor |                |
+|    Eraser     |      Pursuer      |   BodyGuard   |     Bait      |                |
+|    Vampire    |      Vulture      |     Medic     |   Aftermath   |                |
+|    Cleaner    |       Akujo       |   Detective   |     Torch     |                |
+|    Bomber     |     Doomsayer     |   Redemptor   |  Sunglasses   |                |
+|  Undertaker   |       Thief       |    Veteran    |    Bloody     |                |
+|    Warlock    |     Arsonist      |    Swapper    | AntiTeleport  |                |
+|   Trickster   |     Werewolf      |    Hacker     |  Tiebreaker   |                |
+| Bounty Hunter |      Pelican      |     Seer      |     Flash     |                |
+|   Terrorist   |    Juggernaut     |    Jumper     |  Multitasker  |                |
+|  Blackmailer  |      Phantom      |    Tracker    |     Giant     |                |
+|     Witch     |      Jackal       |    Snitch     |     Mini      |                |
+|     Ninja     |     Sidekick      |      Spy      |      Vip      |                |
+|     Yo-Yo     |  Pavlov's owner   | SecurityGuard |  Indomitable  |                |
+| Evil Trapper  |   Pavlov's dogs   |    Medium     |    Cursed     |                |
+|    Butcher    |     Infected      |    Trapper    |   Tunneler    |                |
+|    Gambler    | Schrodinger's Cat |    Prophet    |     Blind     |                |
+|   Grenadier   |                   |    Oracle     |    Watcher    |                |
+|   Gunsmith    |                   | Dreamcatcher  |     Radar     |                |
+|   Berserker   |                   |  Info Sleuth  | Button Barry  |                |
+|  Marionette   |                   |   Balancer    |   Chameleon   |                |
+|    Gaoler     |                   |    Jailor     |    Shifter    |                |
 
 ## Credits & Resources
 
