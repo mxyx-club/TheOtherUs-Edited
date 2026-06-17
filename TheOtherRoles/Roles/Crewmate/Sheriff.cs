@@ -69,7 +69,7 @@ public static class Sheriff
     public static void replaceCurrentSheriff()
     {
         formerDeputy = Deputy;
-        Player.TryAdd(Deputy);
+        RPCProcedure.setRole(Deputy.PlayerId, (byte)RoleId.Sheriff);
         Deputy = null;
         currentTarget = null;
         cooldown = CustomOptionHolder.sheriffCooldown.GetFloat();

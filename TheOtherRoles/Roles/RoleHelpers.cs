@@ -707,12 +707,6 @@ public static class RoleHelpers
         {
             blockedRolePairings.Add([RoleId.Executioner, RoleId.Lawyer]);
         }
-
-        if (Jester.canDragDeadBody)
-        {
-            blockedRolePairings.Add([RoleId.Jester, RoleId.Undertaker]);
-        }
-
     }
 
     public static Dictionary<RoleId, int> RoleRate = new();

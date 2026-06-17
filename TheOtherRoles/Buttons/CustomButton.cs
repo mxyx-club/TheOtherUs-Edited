@@ -210,7 +210,7 @@ public class CustomButton
 
     public void onClickEvent()
     {
-        if (!HasButton()) return;
+        if (!HasButton() || (!InGame && !Started)) return;
 
         actionButtonRenderer.color = new Color(1f, 1f, 1f, 0.3f);
 

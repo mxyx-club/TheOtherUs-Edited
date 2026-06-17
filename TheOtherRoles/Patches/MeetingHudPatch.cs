@@ -286,7 +286,9 @@ internal class MeetingHudPatch
             && PlayerControl.LocalPlayer.IsAlive()
             && GuesserRemainingShots > 0
             && PlayerControl.LocalPlayer.CanUseMeetingAbility()
-            && (PlayerControl.LocalPlayer != WolfLord.Player || !WolfLord.Revealed || WolfLord.Killed))
+            && (PlayerControl.LocalPlayer != WolfLord.Player
+                || !WolfLord.Revealed
+                || (WolfLord.Revealed && WolfLord.Killed)))
         {
             Doomsayer.CanShoot = true;
             //int i = 0;
@@ -506,9 +508,19 @@ internal class MeetingHudPatch
                 return false;
 
             var behavior = IsEmergencyMeetings ? blockSkippingInEmergencyMeetings : blockSkippingInGeneralMeetings;
+            byte akujoVoteTarget = byte.MaxValue;
 
             foreach (var pva in __instance.playerStates)
             {
+                if (Akujo.akujo != null && Akujo.isUnifiedVoteActiveThisMeeting && !Akujo.akujo.Data.IsDead)
+                {
+                    if (pva.TargetPlayerId == Akujo.akujo.PlayerId && pva.DidVote)
+                    {
+                        akujoVoteTarget = pva.VotedFor;
+                        break;
+                    }
+                }
+
                 switch (behavior)
                 {
                     case NoVoteBehavior.SkipAsSelfVote:
@@ -523,24 +535,8 @@ internal class MeetingHudPatch
                 }
             }
 
-            byte akujoVoteTarget = byte.MaxValue;
-            if (Akujo.akujo != null && Akujo.isUnifiedVoteActiveThisMeeting && !Akujo.akujo.Data.IsDead)
-            {
-                foreach (var pva in __instance.playerStates)
-                {
-                    if (pva.TargetPlayerId == Akujo.akujo.PlayerId && pva.DidVote)
-                    {
-                        akujoVoteTarget = pva.VotedFor;
-                        break;
-                    }
-                }
-            }
-
-            var self = CalculateVotes(__instance);
-            //var max = self.MaxPair(out var tie);
             GameData.PlayerInfo exiled = null;
             bool tie = false;
-
             VoterState[] states;
             List<VoterState> statesList = new();
 
@@ -563,6 +559,14 @@ internal class MeetingHudPatch
                                 ? Balancer.targetplayerright.PlayerId
                                 : Balancer.targetplayerleft.PlayerId;
                         }
+                    }
+                }
+
+                if (Akujo.isUnifiedVoteActiveThisMeeting)
+                {
+                    if ((Akujo.honmei.IsAlive() && pva.TargetPlayerId == Akujo.honmei.PlayerId) || Akujo.keeps.Any(x => x.IsAlive() && x.PlayerId == pva.TargetPlayerId))
+                    {
+                        pva.VotedFor = akujoVoteTarget;
                     }
                 }
 

@@ -396,6 +396,15 @@ public static class PlayerDiePatch
             Prosecutor.ProsecuteThisMeeting = false;
         }
 
+        if (InMeeting && __instance == PlayerControl.LocalPlayer)
+        {
+            foreach (var pva in MeetingHud.Instance.playerStates)
+            {
+                var guessbutton = pva.transform.FindChild("ShootButton");
+                if (guessbutton != null) UObject.Destroy(guessbutton.gameObject);
+            }
+        }
+
         if (ModOption.GameMode is CustomGameModes.Classic or CustomGameModes.Anonymous) return;
         _ = new LateTask(() => { CanSeeGhostInfo = true; }, 1f, "CanSeeRoleInfo");
 

@@ -137,6 +137,20 @@ public class WolfLord
             }
         }
 
+        [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Die)), HarmonyPostfix]
+        public static void PlayerDiePostfix(PlayerControl __instance)
+        {
+            if (Player == null || __instance != Player || Player != PlayerControl.LocalPlayer) return;
+            if (Revealed && InMeeting && __instance == Player)
+            {
+                foreach (var pva in MeetingHud.Instance.playerStates)
+                {
+                    var icon = pva.transform.FindChild("WolfLordIcon");
+                    if (icon != null) UObject.Destroy(icon.gameObject);
+                }
+            }
+        }
+
         public static void ClearButton()
         {
             if (MeetingExtraButton != null) UObject.Destroy(MeetingExtraButton);
@@ -185,7 +199,7 @@ public class WolfLord
         private static void WolfLordOnClick(PlayerVoteArea pva, MeetingHud __instance)
         {
             var target = PlayerById(pva.TargetPlayerId);
-            if (Player == null || !Revealed || Killed || target == null) return;
+            if (Player.IsDead() || !Revealed || Killed || target == null) return;
             if (__instance.state is MeetingHud.VoteStates.Discussion or MeetingHud.VoteStates.Results) return;
 
             var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.WolfLordkilled);

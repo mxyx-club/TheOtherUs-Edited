@@ -669,7 +669,7 @@ public static class Guesser
         }
 
         bool dreamlinkDead = false;
-        if (Dreamcatcher.Player != null && Dreamcatcher.Dreamed.IsAlive() && Dreamcatcher.Player.PlayerId == dyingTargetId)
+        if (Dreamcatcher.Player != null && Dreamcatcher.Dreamed.IsAlive() && Dreamcatcher.Player.PlayerId == dyingTargetId && Dreamcatcher.Player != guesser)
         {
             if (PlayerControl.LocalPlayer == Dreamcatcher.Dreamed)
             {
