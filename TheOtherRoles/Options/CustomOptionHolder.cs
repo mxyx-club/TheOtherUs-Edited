@@ -381,13 +381,13 @@ public class CustomOptionHolder
     public static CustomOption pelicanHasImpVision;
     public static CustomOption pelicanCanUseVents;
 
-    public static CustomOption swooperSpawnRate;
-    public static CustomOption swooperKillCooldown;
-    public static CustomOption swooperCooldown;
-    public static CustomOption swooperDuration;
-    public static CustomOption swooperSpeed;
-    public static CustomOption swooperCanUseVents;
-    public static CustomOption swooperHasImpVision;
+    public static CustomOption phantomSpawnRate;
+    public static CustomOption phantomKillCooldown;
+    public static CustomOption phantomCooldown;
+    public static CustomOption phantomDuration;
+    public static CustomOption phantomSpeed;
+    public static CustomOption phantomCanUseVents;
+    public static CustomOption phantomHasImpVision;
 
     public static CustomOption werewolfSpawnRate;
     public static CustomOption werewolfRampageCooldown;
@@ -1246,7 +1246,7 @@ public class CustomOptionHolder
         onlyOneNeutralTeam = Create(200000, Types.Neutral, "onlyOneNeutralTeam", true, null, true);
 
         jackalSpawnRate = Create(201300, Types.Neutral, Cs(Jackal.color, "Jackal"), rates, null, true);
-        jackalChanceSwoop = Create(201301, Types.Neutral, Cs(Swooper.color, "jackalChanceSwoop"), rates, jackalSpawnRate);
+        jackalChanceSwoop = Create(201301, Types.Neutral, Cs(Phantom.color, "jackalChanceSwoop"), rates, jackalSpawnRate);
         jackalSwooperCooldown = Create(201303, Types.Neutral, "jackalSwooperCooldown", 25f, 10f, 60f, 2.5f, jackalChanceSwoop);
         jackalSwooperDuration = Create(201304, Types.Neutral, "jackalSwooperDuration", 12.5f, 1f, 20f, 0.5f, jackalChanceSwoop);
         jackalKillCooldown = Create(201302, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, jackalSpawnRate);
@@ -1297,13 +1297,13 @@ public class CustomOptionHolder
         pelicanCanUseVents = Create(203103, Types.Neutral, "canUseVents", true, pelicanSpawnRate);
         pelicanHasImpVision = Create(203104, Types.Neutral, "hasImpVision", true, pelicanSpawnRate);
 
-        swooperSpawnRate = Create(201500, Types.Neutral, Cs(Swooper.color, "Swooper"), rates, null, true);
-        swooperKillCooldown = Create(201501, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, swooperSpawnRate);
-        swooperCooldown = Create(201502, Types.Neutral, "swooperCooldown", 20f, 10f, 60f, 2.5f, swooperSpawnRate);
-        swooperDuration = Create(201503, Types.Neutral, "swooperDuration", 15f, 1f, 20f, 0.5f, swooperSpawnRate);
-        swooperSpeed = Create(201504, Types.Neutral, "swooperSpeed", 1.5f, 1f, 3f, 0.125f, swooperSpawnRate);
-        swooperCanUseVents = Create(201505, Types.Neutral, "canUseVents", true, swooperSpawnRate);
-        swooperHasImpVision = Create(201506, Types.Neutral, "hasImpVision", true, swooperSpawnRate);
+        phantomSpawnRate = Create(201500, Types.Neutral, Cs(Phantom.color, "Phantom"), rates, null, true);
+        phantomKillCooldown = Create(201501, Types.Neutral, "killCooldown", 25f, 10f, 60f, 2.5f, phantomSpawnRate);
+        phantomCooldown = Create(201502, Types.Neutral, "phantomCooldown", 20f, 10f, 60f, 2.5f, phantomSpawnRate);
+        phantomDuration = Create(201503, Types.Neutral, "phantomDuration", 15f, 1f, 20f, 0.5f, phantomSpawnRate);
+        phantomSpeed = Create(201504, Types.Neutral, "phantomSpeed", 1.5f, 1f, 3f, 0.125f, phantomSpawnRate);
+        phantomCanUseVents = Create(201505, Types.Neutral, "canUseVents", true, phantomSpawnRate);
+        phantomHasImpVision = Create(201506, Types.Neutral, "hasImpVision", true, phantomSpawnRate);
 
         werewolfSpawnRate = Create(202000, Types.Neutral, Cs(Werewolf.color, "Werewolf"), rates, null, true);
         werewolfRampageCooldown = Create(202001, Types.Neutral, "werewolfRampageCooldown", 25f, 10f, 60f, 2.5f, werewolfSpawnRate);

@@ -1,9 +1,9 @@
 namespace TheOtherRoles.Roles.Neutral;
 
 // Phantom
-public static class Swooper
+public static class Phantom
 {
-    public static PlayerControl swooper;
+    public static PlayerControl Player;
     public static PlayerControl currentTarget;
     public static float cooldown = 30f;
     public static bool isInvisable;
@@ -23,19 +23,19 @@ public static class Swooper
         {
             isInvisable = false;
             var writer = StartRPC(CustomRPC.SetSwoop);
-            writer.Write(swooper.PlayerId);
+            writer.Write(Player.PlayerId);
             writer.Write(false);
             writer.EndRPC();
-            RPCProcedure.setSwoop(swooper.PlayerId, false);
+            RPCProcedure.setSwoop(Player.PlayerId, false);
         }
 
-        swooper = null;
+        Player = null;
         isInvisable = false;
-        cooldown = CustomOptionHolder.swooperKillCooldown.GetFloat();
-        swoopCooldown = CustomOptionHolder.swooperCooldown.GetFloat();
-        duration = CustomOptionHolder.swooperDuration.GetFloat();
-        hasImpVision = CustomOptionHolder.swooperHasImpVision.GetBool();
-        swoopSpeed = CustomOptionHolder.swooperSpeed.GetFloat();
-        canUseVents = CustomOptionHolder.swooperCanUseVents.GetBool();
+        cooldown = CustomOptionHolder.phantomKillCooldown.GetFloat();
+        swoopCooldown = CustomOptionHolder.phantomCooldown.GetFloat();
+        duration = CustomOptionHolder.phantomDuration.GetFloat();
+        hasImpVision = CustomOptionHolder.phantomHasImpVision.GetBool();
+        swoopSpeed = CustomOptionHolder.phantomSpeed.GetFloat();
+        canUseVents = CustomOptionHolder.phantomCanUseVents.GetBool();
     }
 }

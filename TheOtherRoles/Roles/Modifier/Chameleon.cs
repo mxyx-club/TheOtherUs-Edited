@@ -42,7 +42,7 @@ public static class Chameleon
         {
             if (player?.Data == null) continue;
             if ((player == Ninja.ninja && Ninja.isInvisable) ||
-                (player == Swooper.swooper && Swooper.isInvisable) ||
+                (player == Phantom.Player && Phantom.isInvisable) ||
                 (Jackal.jackal.Any(x => x == player) && Jackal.isInvisable))
                 continue; // Dont make Ninja visible...
             // check movement by animation

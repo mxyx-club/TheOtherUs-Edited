@@ -39,7 +39,7 @@ public static class Shifter
                        player == Juggernaut.juggernaut ||
                        player == Akujo.akujo ||
                        player == Pelican.Player ||
-                       player == Swooper.swooper ||
+                       player == Phantom.Player ||
                        player == SchrodingersCat.Player ||
                        player == Pavlovsdogs.pavlovsowner ||
                        Infected.Player.Any(x => x == player) ||

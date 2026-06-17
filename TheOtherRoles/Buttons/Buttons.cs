@@ -44,8 +44,8 @@ internal static class HudManagerStartPatch
     public static CustomButton garlicButton;
     public static CustomButton jackalKillButton;
     public static CustomButton jackalSwoopButton;
-    public static CustomButton swooperSwoopButton;
-    public static CustomButton swooperKillButton;
+    public static CustomButton phantomSwoopButton;
+    public static CustomButton phantomKillButton;
     public static CustomButton jackalCreateSidekickButton;
     public static CustomButton eraserButton;
     public static CustomButton pavlovsdogsRingButton;
@@ -191,9 +191,9 @@ internal static class HudManagerStartPatch
         prophetButton.MaxTimer = Prophet.cooldown;
         witchSpellButton.MaxTimer = Witch.cooldown;
         ninjaButton.MaxTimer = Ninja.cooldown;
-        swooperSwoopButton.MaxTimer = Swooper.swoopCooldown;
-        swooperSwoopButton.MaxTimer = Swooper.swoopCooldown;
-        swooperSwoopButton.EffectDuration = Swooper.duration;
+        phantomSwoopButton.MaxTimer = Phantom.swoopCooldown;
+        phantomSwoopButton.MaxTimer = Phantom.swoopCooldown;
+        phantomSwoopButton.EffectDuration = Phantom.duration;
         jackalSwoopButton.MaxTimer = Jackal.swoopCooldown;
         jackalSwoopButton.MaxTimer = Jackal.swoopCooldown;
         jackalSwoopButton.EffectDuration = Jackal.duration;
@@ -202,7 +202,7 @@ internal static class HudManagerStartPatch
         pelicanKillButton.MaxTimer = Pelican.cooldown;
         thiefKillButton.MaxTimer = Thief.cooldown;
         juggernautKillButton.MaxTimer = Juggernaut.cooldown;
-        swooperKillButton.MaxTimer = Swooper.cooldown;
+        phantomKillButton.MaxTimer = Phantom.cooldown;
         evilTrapperSetTrapButton.MaxTimer = EvilTrapper.cooldown;
         redemptorReviveButton.MaxTimer = 10f;
         redemptorRevelationButton.MaxTimer = Redemptor.revelationCooldown;
@@ -1785,7 +1785,7 @@ internal static class HudManagerStartPatch
                 jackalSwoopButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                 Jackal.isInvisable = false;
             },
-            Swooper.SwoopButtonSprite,
+            Phantom.SwoopButtonSprite,
             __instance,
             __instance.AbilityButton,
             secondaryAbilityInput.keyCode,
@@ -1795,45 +1795,44 @@ internal static class HudManagerStartPatch
             buttonText: GetString("SwoopText")
         );
 
-        // Swooper Kill
-        swooperKillButton = new CustomButton(
+        phantomKillButton = new CustomButton(
             () =>
             {
-                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Swooper.currentTarget)) return;
-                swooperKillButton.Timer = swooperKillButton.MaxTimer;
-                Swooper.currentTarget = null;
+                if (!RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Phantom.currentTarget)) return;
+                phantomKillButton.Timer = phantomKillButton.MaxTimer;
+                Phantom.currentTarget = null;
             },
-            () => { return Swooper.swooper != null && Swooper.swooper == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () => { return Phantom.Player != null && Phantom.Player == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
             () =>
             {
 
                 var untargetablePlayers = new List<PlayerControl>();
                 if (Mini.mini != null && !Mini.isGrownUp) untargetablePlayers.Add(Mini.mini);
-                if (SchrodingersCat.State == SchrodingersCat.CatState.Swooper && SchrodingersCat.Player.IsAlive())
+                if (SchrodingersCat.State == SchrodingersCat.CatState.Phantom && SchrodingersCat.Player.IsAlive())
                     untargetablePlayers.Add(SchrodingersCat.Player);
-                Swooper.currentTarget = SetTarget(ignoreList: untargetablePlayers, inVented: ModOption.NeutCanKillInVent);
-                SetPlayerOutline(Swooper.currentTarget, Palette.ImpostorRed);
-                swooperKillButton.showTargetNameOnButton(Swooper.currentTarget);
+                Phantom.currentTarget = SetTarget(ignoreList: untargetablePlayers, inVented: ModOption.NeutCanKillInVent);
+                SetPlayerOutline(Phantom.currentTarget, Palette.ImpostorRed);
+                phantomKillButton.showTargetNameOnButton(Phantom.currentTarget);
 
-                return Swooper.currentTarget && PlayerControl.LocalPlayer.CanMove;
+                return Phantom.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
-            () => { swooperKillButton.Timer = swooperKillButton.MaxTimer; },
+            () => { phantomKillButton.Timer = phantomKillButton.MaxTimer; },
             __instance.KillButton.graphic.sprite,
             __instance,
             __instance.KillButton,
             modKillInput.keyCode
         );
 
-        swooperSwoopButton = new CustomButton(
+        phantomSwoopButton = new CustomButton(
             () =>
             { /* On Use */
                 var invisibleWriter = StartRPC(CustomRPC.SetSwoop);
-                invisibleWriter.Write(Swooper.swooper.PlayerId);
+                invisibleWriter.Write(Phantom.Player.PlayerId);
                 invisibleWriter.Write(true);
                 invisibleWriter.EndRPC();
-                RPCProcedure.setSwoop(Swooper.swooper.PlayerId, true);
+                RPCProcedure.setSwoop(Phantom.Player.PlayerId, true);
             },
-            () => { /* Can See */ return Swooper.swooper != null && Swooper.swooper == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () => { /* Can See */ return Phantom.Player != null && Phantom.Player == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
             () =>
             {
                 /* On Click */
@@ -1841,18 +1840,18 @@ internal static class HudManagerStartPatch
             },
             () =>
             {  /* On Meeting End */
-                swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer;
-                swooperSwoopButton.IsEffectActive = false;
-                swooperSwoopButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-                Swooper.isInvisable = false;
+                phantomSwoopButton.Timer = phantomSwoopButton.MaxTimer;
+                phantomSwoopButton.IsEffectActive = false;
+                phantomSwoopButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+                Phantom.isInvisable = false;
             },
-            Swooper.SwoopButtonSprite,
+            Phantom.SwoopButtonSprite,
             __instance,
             __instance.AbilityButton,
             abilityInput.keyCode,
             true,
-            Swooper.duration,
-            () => { swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer; },
+            Phantom.duration,
+            () => { phantomSwoopButton.Timer = phantomSwoopButton.MaxTimer; },
             buttonText: GetString("SwoopText")
         );
 
@@ -4417,8 +4416,8 @@ internal static class HudManagerStartPatch
                     case SchrodingersCat.CatState.Juggernaut:
                         untargetablePlayers.Add(Juggernaut.juggernaut);
                         break;
-                    case SchrodingersCat.CatState.Swooper:
-                        untargetablePlayers.Add(Swooper.swooper);
+                    case SchrodingersCat.CatState.Phantom:
+                        untargetablePlayers.Add(Phantom.Player);
                         break;
                     case SchrodingersCat.CatState.Arsonist:
                         untargetablePlayers.Add(Arsonist.arsonist);

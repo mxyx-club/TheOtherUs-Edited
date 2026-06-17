@@ -246,14 +246,14 @@ public class Aftermath
             grenadierFlash(false);
             grenadierFlashButton.Timer = grenadierFlashButton.MaxTimer + Grenadier.duration;
         }
-        else if (Swooper.swooper == killer)
+        else if (Phantom.Player == killer)
         {
             var writer = StartRPC(CustomRPC.SetSwoop);
             writer.Write(killer.PlayerId);
             writer.Write(true);
             writer.EndRPC();
-            setSwoop(Swooper.swooper.PlayerId, true);
-            swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer + Swooper.duration;
+            setSwoop(Phantom.Player.PlayerId, true);
+            phantomSwoopButton.Timer = phantomSwoopButton.MaxTimer + Phantom.duration;
         }
         else if (Jackal.jackal.Any(x => x == killer) && Jackal.canSwoop)
         {

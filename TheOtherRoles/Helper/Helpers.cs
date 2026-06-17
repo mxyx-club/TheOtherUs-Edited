@@ -81,7 +81,7 @@ public static class Helpers
                || (Jester.Player.Any(p => p.PlayerId == player.PlayerId) && Jester.hasImpostorVision)
                || (Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision)
                || (Avenger.Player != null && Avenger.Player.PlayerId == player.PlayerId && Avenger.hasImpostorVision)
-               || (Swooper.swooper != null && Swooper.swooper.PlayerId == player.PlayerId && Swooper.hasImpVision)
+               || (Phantom.Player != null && Phantom.Player.PlayerId == player.PlayerId && Phantom.hasImpVision)
                || (Pelican.Player != null && Pelican.Player.PlayerId == player.PlayerId && Pelican.hasImpVision)
                || (SchrodingersCat.Player != null && SchrodingersCat.Player.PlayerId == player.PlayerId && SchrodingersCat.hasImpVision)
                || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId && Werewolf.hasImpostorVision);
@@ -683,7 +683,7 @@ public static class Helpers
         if (SurveillanceMinigamePatch.nightVisionIsActive) return true;
         if (Ninja.isInvisable && Ninja.ninja == target) return true;
         if (Jackal.isInvisable && Jackal.jackal.Any(p => p == target)) return true;
-        if (Swooper.isInvisable && Swooper.swooper == target) return true;
+        if (Phantom.isInvisable && Phantom.Player == target) return true;
         if (ModOption.hideOutOfSightNametags && InGame && source.IsAlive() && !isFungle
             && PhysicsHelpers.AnythingBetween(localPlayer.GetTruePosition(), target.GetTruePosition(), Constants.ShadowMask, false))
             return true;

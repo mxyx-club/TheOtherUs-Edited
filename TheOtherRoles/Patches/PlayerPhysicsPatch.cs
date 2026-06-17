@@ -32,8 +32,8 @@ public static class PlayerPhysicsPatches
                     __instance.body.velocity *= Flash.speed;
                 if (Giant.giant != null && Giant.giant == PlayerControl.LocalPlayer && !MushroomSabotageActive && !isCamoComms && Camouflager.camouflageTimer <= 0f)
                     __instance.body.velocity *= Giant.speed;
-                if (Swooper.swooper != null && Swooper.swooper == PlayerControl.LocalPlayer && Swooper.isInvisable)
-                    __instance.body.velocity *= Swooper.swoopSpeed;
+                if (Phantom.Player != null && Phantom.Player == PlayerControl.LocalPlayer && Phantom.isInvisable)
+                    __instance.body.velocity *= Phantom.swoopSpeed;
                 if (Undertaker.undertaker.IsAlive() && Undertaker.undertaker == PlayerControl.LocalPlayer && Undertaker.dragedBody != null)
                     __instance.body.velocity *= Undertaker.velocity;
                 if (Jester.Player.Any(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.IsAlive() && Jester.dragedBodys.GetValueOrDefault(PlayerControl.LocalPlayer.PlayerId) != null)

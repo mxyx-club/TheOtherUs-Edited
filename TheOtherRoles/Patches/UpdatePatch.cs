@@ -395,10 +395,10 @@ internal class HudManagerUpdatePatch
                 setPlayerNameColor(SchrodingersCat.Player, Pelican.color);
         }
 
-        if (Swooper.swooper != null && Swooper.swooper == local)
+        if (Phantom.Player != null && Phantom.Player == local)
         {
-            if (SchrodingersCat.State == SchrodingersCat.CatState.Swooper)
-                setPlayerNameColor(SchrodingersCat.Player, Swooper.color);
+            if (SchrodingersCat.State == SchrodingersCat.CatState.Phantom)
+                setPlayerNameColor(SchrodingersCat.Player, Phantom.color);
         }
 
         if (Arsonist.arsonist != null && Arsonist.arsonist == local)
@@ -710,7 +710,7 @@ internal class HudManagerUpdatePatch
         Tracker.corpsesTrackingTimer -= dt;
         Ninja.invisibleTimer -= dt;
         Jackal.swoopTimer -= dt;
-        Swooper.swoopTimer -= dt;
+        Phantom.swoopTimer -= dt;
         foreach (var key in Sheriff.handcuffedKnows.Keys)
             Sheriff.handcuffedKnows[key] -= dt;
     }
@@ -720,7 +720,7 @@ internal class HudManagerUpdatePatch
         if (Mini.mini == null || Camouflager.camouflageTimer > 0f || MushroomSabotageActive ||
             (Mini.mini == Glitch.Player && Glitch.morphTimer > 0f) ||
             (Mini.mini == Ninja.ninja && Ninja.isInvisable) || SurveillanceMinigamePatch.nightVisionIsActive ||
-            (Mini.mini == Swooper.swooper && Swooper.isInvisable) ||
+            (Mini.mini == Phantom.Player && Phantom.isInvisable) ||
             (Jackal.jackal.Any(x => x == Mini.mini) && Jackal.isInvisable) || isActiveCamoComms) return;
 
         var growingProgress = Mini.growingProgress;
@@ -899,15 +899,15 @@ internal class HudManagerUpdatePatch
         }
     }
 
-    private static void swooperUpdate()
+    private static void phantomUpdate()
     {
-        if (Swooper.isInvisable && Swooper.swoopTimer <= 0 && Swooper.swooper == PlayerControl.LocalPlayer)
+        if (Phantom.isInvisable && Phantom.swoopTimer <= 0 && Phantom.Player == PlayerControl.LocalPlayer)
         {
             var invisibleWriter = StartRPC(CustomRPC.SetSwoop);
-            invisibleWriter.Write(Swooper.swooper.PlayerId);
+            invisibleWriter.Write(Phantom.Player.PlayerId);
             invisibleWriter.Write(false);
             invisibleWriter.EndRPC();
-            RPCProcedure.setSwoop(Swooper.swooper.PlayerId, false);
+            RPCProcedure.setSwoop(Phantom.Player.PlayerId, false);
         }
         if (Jackal.isInvisable && Jackal.swoopTimer <= 0 && Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer))
         {
@@ -1772,8 +1772,8 @@ internal class HudManagerUpdatePatch
         executionerUpdate();
         // PartTimer
         partTimerUpdate();
-        // Swooper
-        swooperUpdate();
+        // Phantom
+        phantomUpdate();
         // Prophet
         prophetUpdate();
         // Deputy

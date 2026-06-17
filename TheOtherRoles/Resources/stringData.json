@@ -3748,7 +3748,7 @@
         "0": "Juggernaut Wins",
         "13": "此乃,天启！"
     },
-    "SwooperWin": {
+    "PhantomWin": {
         "0": "Phantom Win",
         "13": "再看看你后面呢!"
     },
@@ -5127,15 +5127,15 @@
         "0": "Where's a good doggo? Here's a good doggo!",
         "13": "乖狗狗在哪？乖狗狗在这！"
     },
-    "Swooper": {
+    "Phantom": {
         "0": "Phantom",
         "13": "隐身人"
     },
-    "SwooperIntroDesc": {
+    "PhantomIntroDesc": {
         "0": "Hello there! Your cutie has just appeared out of nowhere!",
         "13": "嘿！你的小可爱突然出现啦"
     },
-    "SwooperShortDesc": {
+    "PhantomShortDesc": {
         "0": "Hello there! Your cutie has just appeared out of nowhere!",
         "13": "嘿！你的小可爱突然出现啦"
     },
@@ -5224,7 +5224,7 @@
         "13": "观察其他玩家，并在会议时刺杀他们"
     },
     "Akujo": {
-        "0": "Mesmer",
+        "0": "Akujo",
         "13": "魅魔"
     },
     "AkujoIntroDesc": {
@@ -5557,7 +5557,7 @@
         "13": "审判他人罪孽的轻重"
     },
     "Redemptor": {
-        "0": "Priest",
+        "0": "Redemptor",
         "13": "牧师"
     },
     "RedemptorIntroDesc": {

@@ -154,7 +154,7 @@ internal class RoleManagerSelectRolesPatch
         killerNeutralSettings.Add((byte)RoleId.Pavlovsowner, CustomOptionHolder.pavlovsownerSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Werewolf, CustomOptionHolder.werewolfSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Juggernaut, CustomOptionHolder.juggernautSpawnRate.GetSelection());
-        killerNeutralSettings.Add((byte)RoleId.Swooper, CustomOptionHolder.swooperSpawnRate.GetSelection());
+        killerNeutralSettings.Add((byte)RoleId.Phantom, CustomOptionHolder.phantomSpawnRate.GetSelection());
         killerNeutralSettings.Add((byte)RoleId.Infected, CustomOptionHolder.infectedSpawnRate.GetSelection());
         // Check if killerNeutralMin and killerNeutralMax are 0
         if (killerNeutralMin + killerNeutralMax < 0)
@@ -476,7 +476,7 @@ internal class RoleManagerSelectRolesPatch
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
                 if (p.IsAlive() && p != Lovers.lover1 && p != Lovers.lover2 &&
-                    (p.Data.Role.IsImpostor || p == Swooper.swooper || Jackal.jackal.Any(x => x == p) || p == Juggernaut.juggernaut ||
+                    (p.Data.Role.IsImpostor || p == Phantom.Player || Jackal.jackal.Any(x => x == p) || p == Juggernaut.juggernaut ||
                      p == Werewolf.werewolf || (Lawyer.targetCanBeJester && Jester.Player.Any(x => x.PlayerId == p.PlayerId))))
                     possibleTargets.Add(p);
             }

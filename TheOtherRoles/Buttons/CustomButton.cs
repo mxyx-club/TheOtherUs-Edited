@@ -366,7 +366,7 @@ public class CustomButton
         if (isLightsActive || isCamoComms || Camouflager.camouflageTimer >= 0.1f ||
             (Trickster.trickster != null && Trickster.lightsOutTimer > 0f) ||
             (target == Ninja.ninja && Ninja.isInvisable) ||
-            (target == Swooper.swooper && Swooper.isInvisable) ||
+            (target == Phantom.Player && Phantom.isInvisable) ||
             (Jackal.jackal.Contains(target) && Jackal.isInvisable))
         {
             displayText = buttonText;

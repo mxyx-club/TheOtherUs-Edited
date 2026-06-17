@@ -364,8 +364,8 @@ public static class RPCProcedure
             case RoleId.Pavlovsdogs:
                 Pavlovsdogs.pavlovsdogs.Add(player);
                 break;
-            case RoleId.Swooper:
-                Swooper.swooper = player;
+            case RoleId.Phantom:
+                Phantom.Player = player;
                 break;
             case RoleId.Eraser:
                 Eraser.eraser = player;
@@ -864,8 +864,8 @@ public static class RPCProcedure
                 if (reset) Werewolf.clearAndReload();
                 setRole(target.PlayerId, (byte)RoleId.Survivor);
                 break;
-            case RoleId.Swooper:
-                if (reset) Swooper.clearAndReload();
+            case RoleId.Phantom:
+                if (reset) Phantom.clearAndReload();
                 setRole(target.PlayerId, (byte)RoleId.Survivor);
                 break;
             case RoleId.Juggernaut:
@@ -1478,7 +1478,7 @@ public static class RPCProcedure
         if (player == null) return;
 
         // Crewmate roles
-        if (player == Swooper.swooper) Swooper.clearAndReload();
+        if (player == Phantom.Player) Phantom.clearAndReload();
         if (player == Mayor.mayor) Mayor.clearAndReload();
         if (player == Prosecutor.prosecutor) Prosecutor.clearAndReload();
         if (player == Portalmaker.portalmaker) Portalmaker.clearAndReload();
@@ -2030,19 +2030,19 @@ public static class RPCProcedure
             target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(1f);
             if (Camouflager.camouflageTimer <= 0 && !MushroomSabotageActive & !isCamoComms)
                 target.setDefaultLook();
-            Swooper.isInvisable = false;
+            Phantom.isInvisable = false;
             return;
         }
 
         target.setLook("", 6, "", "", "", "");
         var color = Color.clear;
-        var canSee = Swooper.swooper == PlayerControl.LocalPlayer || CanSeeGhostInfo;
+        var canSee = Phantom.Player == PlayerControl.LocalPlayer || CanSeeGhostInfo;
         if (canSee) color.a = 0.1f;
         target.cosmetics.currentBodySprite.BodySprite.color = color;
         target.cosmetics.colorBlindText.gameObject.SetActive(false);
         target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(canSee ? 0.1f : 0f);
-        Swooper.swoopTimer = Swooper.duration;
-        Swooper.isInvisable = true;
+        Phantom.swoopTimer = Phantom.duration;
+        Phantom.isInvisable = true;
     }
 
     public static void setJackalSwoop(byte playerId, bool flag)

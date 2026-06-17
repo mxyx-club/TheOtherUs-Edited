@@ -19,7 +19,7 @@ public static class Camouflager
         foreach (PlayerControl p in PlayerControl.AllPlayerControls)
         {
             if ((p == Ninja.ninja && Ninja.isInvisable)
-                || (p == Swooper.swooper && Swooper.isInvisable)
+                || (p == Phantom.Player && Phantom.isInvisable)
                 || (Jackal.jackal.Any(x => x == p) && Jackal.isInvisable))
                 continue;
             p.setDefaultLook();

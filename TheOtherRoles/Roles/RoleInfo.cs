@@ -69,7 +69,7 @@ public class RoleInfo
     public static RoleInfo pavlovsdogs = new("Pavlovsdogs", Pavlovsdogs.color, RoleId.Pavlovsdogs, RoleType.Neutral);
     public static RoleInfo infected = new("Infected", Infected.color, RoleId.Infected, RoleType.Neutral);
     public static RoleInfo witness = new("Witness", Witness.color, RoleId.Witness, RoleType.Neutral);
-    public static RoleInfo swooper = new("Swooper", Swooper.color, RoleId.Swooper, RoleType.Neutral);
+    public static RoleInfo phantom = new("Phantom", Phantom.color, RoleId.Phantom, RoleType.Neutral);
     public static RoleInfo arsonist = new("Arsonist", Arsonist.color, RoleId.Arsonist, RoleType.Neutral);
     public static RoleInfo werewolf = new("Werewolf", Werewolf.color, RoleId.Werewolf, RoleType.Neutral);
     public static RoleInfo thief = new("Thief", Thief.color, RoleId.Thief, RoleType.Neutral);
@@ -199,7 +199,7 @@ public class RoleInfo
         pavlovsdogs,
         infected,
         werewolf,
-        swooper,
+        phantom,
         pelican,
         juggernaut,
         akujo,
@@ -324,7 +324,7 @@ public class RoleInfo
 
         // Special roles
         if (p == Mimic.mimic) infos.Add(mimic);
-        if (p == Swooper.swooper) infos.Add(swooper);
+        if (p == Phantom.Player) infos.Add(phantom);
         if (p == Werewolf.werewolf) infos.Add(werewolf);
         if (p == Miner.miner) infos.Add(miner);
         if (p == Poucher.poucher && !Poucher.spawnModifier) infos.Add(poucher);

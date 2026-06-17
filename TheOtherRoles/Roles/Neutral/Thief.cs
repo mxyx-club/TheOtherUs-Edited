@@ -42,7 +42,7 @@ public static class Thief
             target == Juggernaut.juggernaut ||
             target == Arsonist.arsonist ||
             target == Pelican.Player ||
-            target == Swooper.swooper ||
+            target == Phantom.Player ||
             target == Pavlovsdogs.pavlovsowner ||
             Infected.Player.Any(p => p == target) ||
             Pavlovsdogs.pavlovsdogs.Any(p => p == target) ||
@@ -95,7 +95,7 @@ public static class Thief
         if (target == Werewolf.werewolf
             || target == Arsonist.arsonist
             || target == Juggernaut.juggernaut
-            || target == Swooper.swooper
+            || target == Phantom.Player
             || target == Pelican.Player)
         {
             RPCProcedure.setRole(targetId, (byte)RoleId.Survivor);

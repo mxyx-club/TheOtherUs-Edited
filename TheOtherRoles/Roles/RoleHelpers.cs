@@ -66,7 +66,7 @@ public enum RoleId
     Pavlovsdogs,
     Infected,
     Werewolf,
-    Swooper,
+    Phantom,
     Juggernaut,
     Pelican,
     Akujo,
@@ -167,7 +167,7 @@ public static class PlayerControlExtensions
                    player == Pelican.Player ||
                    player == Specter.Player ||
                    player == BandLeader.Player ||
-                   player == Swooper.swooper ||
+                   player == Phantom.Player ||
                    player == Lawyer.lawyer ||
                    player == Executioner.executioner ||
                    player == Vulture.vulture ||
@@ -256,7 +256,7 @@ public static class PlayerControlExtensions
             {
                 roleCouldUse = true;
             }
-            else if (Swooper.swooper != null && Swooper.swooper == player && Swooper.canUseVents)
+            else if (Phantom.Player != null && Phantom.Player == player && Phantom.canUseVents)
             {
                 roleCouldUse = true;
             }
@@ -303,7 +303,7 @@ public static class PlayerControlExtensions
             return player.IsNeutral() && (
                     player == Juggernaut.juggernaut ||
                     player == Werewolf.werewolf ||
-                    player == Swooper.swooper ||
+                    player == Phantom.Player ||
                     player == Arsonist.arsonist ||
                     (player == Avenger.Player && Avenger.CanFreeKill) ||
                     player == Pelican.Player ||
@@ -678,7 +678,7 @@ public static class RoleHelpers
 
         blockedRolePairings.Add([RoleId.Vampire, RoleId.Warlock, RoleId.Witch]);
         blockedRolePairings.Add([RoleId.Vulture, RoleId.Cleaner, RoleId.Pelican]);
-        blockedRolePairings.Add([RoleId.Ninja, RoleId.Swooper]);
+        blockedRolePairings.Add([RoleId.Ninja, RoleId.Phantom]);
         blockedRolePairings.Add([RoleId.Gunsmith, RoleId.Berserker, RoleId.BountyHunter, RoleId.WolfLord]);
         blockedRolePairings.Add([RoleId.Mayor, RoleId.Prosecutor]);
         blockedRolePairings.Add([RoleId.Prophet, RoleId.Oracle]);
@@ -786,7 +786,7 @@ public static class RoleHelpers
             { RoleId.Pavlovsowner, CustomOptionHolder.pavlovsownerSpawnRate.GetSelection() },
             { RoleId.Pavlovsdogs, CustomOptionHolder.pavlovsownerSpawnRate.GetSelection() },
             { RoleId.Survivor, CustomOptionHolder.survivorSpawnRate.GetSelection() },
-            { RoleId.Swooper, CustomOptionHolder.swooperSpawnRate.GetSelection() },
+            { RoleId.Phantom, CustomOptionHolder.phantomSpawnRate.GetSelection() },
             { RoleId.Thief, CustomOptionHolder.thiefSpawnRate.GetSelection() },
             { RoleId.Vulture, CustomOptionHolder.vultureSpawnRate.GetSelection() },
             { RoleId.Witness, CustomOptionHolder.witnessSpawnRate.GetSelection() },
@@ -889,7 +889,7 @@ public static class RoleHelpers
         Juggernaut.clearAndReload();
         SoulSight.ClearAndReload();
         Doomsayer.clearAndReload();
-        Swooper.clearAndReload();
+        Phantom.clearAndReload();
         Balancer.clearAndReload();
         Akujo.clearAndReload();
         Yoyo.clearAndReload();
