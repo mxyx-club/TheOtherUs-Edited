@@ -817,7 +817,6 @@ public static class RPCProcedure
             case RoleId.Survivor:
                 break;
             case RoleId.Jester:
-                if (reset) Jester.clearAndReload();
                 setRole(target.PlayerId, (byte)RoleId.Survivor);
                 break;
             case RoleId.Vulture:

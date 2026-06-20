@@ -1498,6 +1498,18 @@
         "0": "Max Number of Stored Bullets",
         "13": "弹匣中能存下的子弹上限"
     },
+    "gaolerSelectionWindow": {
+        "13": "狱卒会议开始后可选秒数"
+    },
+    "gaolerMaxUses": {
+        "13": "狱卒最大监禁次数"
+    },
+    "gaolerCanPassMapAfterDeath": {
+        "13": "死后可传递管理室地图"
+    },
+    "gaolerCanJailSamePlayerConsecutively": {
+        "13": "可连续监禁同一玩家"
+    },
     "berserkerRampageCooldown": {
         "0": "Rage Mode Charge Time",
         "13": "狂暴蓄力时间"
@@ -1694,15 +1706,15 @@
         "0": "Berserk Dog Self-Destruct Timer",
         "13": "狂化后自杀时限"
     },
-    "swooperCooldown": {
+    "phantomCooldown": {
         "0": "Invisibility Cooldown",
         "13": "隐身冷却"
     },
-    "swooperDuration": {
+    "phantomDuration": {
         "0": "Invisibility Duration",
         "13": "隐身持续时间"
     },
-    "swooperSpeed": {
+    "phantomSpeed": {
         "0": "Speed Boost While Invisible",
         "13": "隐身时移速增加"
     },
@@ -6147,6 +6159,10 @@
         "0": "Enters rage mode upon killing. During rage, you can kill multiple times within a short window.\n\nThe rage duration starts at 0.1s and increases the longer it is charged after regular kill CD is refreshed.",
         "13": "狂战士在击杀时会狂暴，击杀玩家后可在极短时间内无限制多次击杀。\n\n初始的持续时间为0.1s，在击杀冷却完毕后会开始蓄力，\n蓄力时间越长，击杀持续时间越长。"
     },
+    "MarionetteFullDesc": {
+        "0": "The Marionette can place a decoy, whose visibility is set depending on the options.\nPress [LShift] to switch the hotkeys of the abilities.\nWhile the decoy is active, the Marionette can monitor and swap positions with the decoy.",
+        "13": "木偶师可以放置一个木偶，木偶的可见性由房主设置。\n\n按左边的shift键可以切换功能键\n在木偶有效时间内，\n木偶师可以随时查看木偶的周围情况，并可以交换自己与木偶的位置。"
+    },
     "gaolerFullDesc": {
         "0": "The Gaoler can choose a player to imprison within a certain period after the meeting starts.\nThe imprisoned player does not know they are imprisoned; instead, from the Impostor faction's perspective,\na gray # indicates they are imprisoned, and the imprisoned player's voting power is fixed at 0.\nAdditionally, the meeting abilities of the following roles become invalid, and any activation not related to voting will prompt a notification:\nMayor, Prosecutor, Balancer, Swapper, Jailor, Witness,Guesser\n\nAdditionally, the Gaoler has a management map that can be viewed at any time outside of meetings. Depending on the settings,\nteammates can inherit it after the Gaoler's death.",
         "13": "狱卒可以在会议开始时一段时间内选择一名玩家关押，\n被关押的玩家不知道自己被关押，反而在伪装者阵营视角\n有灰色的#提示其被关押，被关押者票权固定为0。\n同时，以下职业的会议能力失效，不与投票相关的发动会有提示\n市长，检察官，大神官，换票师，典狱长，污点证人\n\n同时其拥有一个可以在局外随时查看的管理地图，根据设置\n队友可在其死后继承\n"
@@ -6198,6 +6214,10 @@
     "PavlovsdogsFullDesc": {
         "0": "Appears when recruited by Pavlov (Owner). Must cooperate with Pavlov to eliminate all other players.\nDepending on settings, may go berserk upon Pavlov's death with significantly reduced kill CD and a suicide timer that refreshes on kills.",
         "13": "被巴甫洛夫招募而出现的职业，需要配合巴甫洛夫击杀所有玩家才能胜利。\n\n根据房间设置：在巴甫洛夫死亡后，存活的狗有可能会获得狂化效果：\n击杀CD大幅减少，并且会在一段时间内自杀。"
+    },
+    "InfectedFullDesc": {
+        "0": "When Infected uses Kill on another player, if said player is a killer role, they will be killed directly; if the target is a Crewmate or a non-killer role, they will be converted into an Infected.\n\nN.B.: There is a limit to the number of Infecteds in total and to the number of Infecteds simultaneously alive.\nIf the number of Infecteds reaches the limit, using Kill will simply kill the target.",
+        "13": "感染者击杀玩家时，如果对方为击杀相关职业会直接击杀对方，如果对方为\n船员或非击杀相关职业则会将目标变为感染者。\n\n感染者有最大数量和同时存在数量的限制，请注意！\n如果感染者数量达到最大时，使用击杀技能时都会击杀对方。"
     },
     "SwooperFullDesc": {
         "0": "Has the abilities to kill and become invisible, and moves faster while invisible.\nWins by killing all other players.",
@@ -6303,6 +6323,10 @@
         "0": "The Medic can place a shield on another player, making them immune to kills.\nWhen reporting a body, the Medic receives an autopsy report:\nIf the body is reported shortly after death, the killer's name is revealed.\nIf reported within a longer time window, the killer's color type (lighter/darker) is revealed.",
         "13": "法医可以给目标套盾，被套盾的人无法被击杀。\n此外，法医报警可以获得尸检报告，\n在尸体死亡极短时间内报警可以知道凶手名称，\n在尸体死亡的一段时间内报警可得知凶手颜色深浅"
     },
+    "JailorFullDesc": {
+        "0": "The Jailor can choose a player to Jail during the action phase, taking effect once the next meeting starts.\n\nMessages sent by the jailed player during the meeting will only be visible to the Jailor; other players cannot see them.\nThe Jailor can PM the jailed player using the [/jail text] command.\n\nThe Jailor can execute the jailed player during the meeting, but if they execute a Crewmate, they will permanently lose their ability.",
+        "13": "你可以在行动阶段选择一位玩家监禁，进入会议后会将目标玩家监禁。\n\n目标在会议中发送的消息只会被典狱长接收，其他玩家无法看到，\n但典狱长可以使用 [/jail text] 指令与被监禁者私聊。\n\n典狱长可以在会议中处决被监禁玩家，但如果处决了船员，将永久失去技能。"
+    },
     "SwapperFullDesc": {
         "0": "The Swapper can exchange the vote counts of two players during a meeting.\nAdditional swaps can be earned by completing tasks.",
         "13": "换票师可以在会议期间交换两名玩家身上的票数。\n更多的换票次数可以通过做任务获得。"
@@ -6343,6 +6367,9 @@
         "0": "During the action phase, the Prophet can reveal a player's faction.\nA green name indicates a good role, while a red name signals an evil role or a crewmate killing role, like Sheriff or Veteran (based on settings).\nThe host can configure whether Crewmates killing, Neutral benign, Neutral evil, or Neutral killing roles are considered red.",
         "13": "可以在行动阶段揭示玩家的阵营，绿名则代表善良，\n红名则代表邪恶或者为带刀船员（可设置）。\n房主可调整 击杀型船员、善良中立、邪恶中立、杀手中立 是否为红名。"
     },
+    "OracleFullDesc": {
+        "13": "会议外选定一位信徒，每次进会议时都会获得邪恶阵营的信息。\n神谕者会在会议中保护信徒，使其不会在会议中被驱逐。\n神谕者死亡后会揭示信徒的阵营，有概率是错误的。"
+    },
     "InfoSleuthFullDesc": {
         "0": "The Informant can select a target by voting for them in a meeting.\nAt the start of the next meeting, they will receive information about that player's faction.",
         "13": "在会议中投票给查验目标，\n下一轮会议开始时即可获得投票目标的阵营信息。"
@@ -6362,6 +6389,9 @@
         "0": "If one of the Lovers is killed, the other dies as well.\nIf one of the Lovers is not a Crewmate and both remain alive, their task progress will not be counted.\n\nWhen only 3 players remain and 2 of them are Lovers, the Lovers win by themselves immediately.",
         "13": "执子之手，与子共生。\n恋人如果有任何一方被击杀，另一方也会一起死亡。\n当恋人中有一方并非船员时并且恋人存活，\n则不会计算该玩家的任务进度。\n\n剩余3名玩家时并且两名玩家为恋人时，\n恋人将直接独自获胜。"
     },
+    "AvengerFullDesc": {
+        "13": "两位恋人中如果其中一位恋人被其它玩家击杀时，另一位有概率会变为复仇者。\n变为复仇者之后需要为恋人复仇后才能带死去的恋人胜利！\n如果复仇期间目标死亡时，复仇者可能会自杀或者变为 ( 小丑 | 失忆者 | 幸存者 )"
+    },
     "AssassinFullDesc": {
         "0": "Impostor Modifier\nThe Assassin grants Impostors the ability to guess other players' roles during meetings.\nAll Assassins share a common usage pool of guesses.\n\nN.B.: Vigilantes and Assassins will not appear in Guesser Mode (as Guesser roles are assigned separately).",
         "13": "分配阵营：伪装者\n刺客使红狼具有会议上猜测别人职业的能力。\n所有刺客拥有共享的猜测次数。\n\n注：赌怪模式中不会出现侠客与刺客"
@@ -6373,6 +6403,9 @@
     "SpecoalityFullDesc": {
         "0": "Imposter Modifier (Guesser)\n\nAllows one incorrect role guess. If a guess is wrong, that target cannot be guessed again during the current meeting.",
         "13": "分配阵营：伪装者（赌怪）\n\n可以猜错一次职业，对目标猜测错误后，本次会议无法再次猜测该玩家。"
+    },
+    "ProfessionalFullDesc": {
+        "13": "分配阵营：伪装者\n\n击杀玩家时不会留下尸体，但是船员经过尸体位置时会自动报警。\n\n注：附加能力的专业杀手与主职业的专业杀手冲突，\n当附加能力的专业杀手开启时，自动禁用主职业的专业杀手"
     },
     "LastImpostorFullDesc": {
         "0": "Imposter Modifier\n\nWhen only one Impostor remains, their kill cooldown is reduced.\nDoes not affect Bounty Hunters and Gamblers.",
@@ -6486,31 +6519,11 @@
         "0": "Crewmate Modifier\n\nCrewmates have a chance to become a Poltergeist after death. Poltergeists can move a nearby corpse to their current location.\nDefault range: 0.75× normal report radius.",
         "13": "分配阵营：船员\n\n死亡后有概率成为捣蛋鬼。捣蛋鬼可以移动附近的某一具尸体到自己脚下。\n默认范围 x 0.75 (1倍为正常报告范围)"
     },
-    "InfectedFullDesc": {
-        "0": "When Infected uses Kill on another player, if said player is a killer role, they will be killed directly; if the target is a Crewmate or a non-killer role, they will be converted into an Infected.\n\nN.B.: There is a limit to the number of Infecteds in total and to the number of Infecteds simultaneously alive.\nIf the number of Infecteds reaches the limit, using Kill will simply kill the target.",
-        "13": "感染者击杀玩家时，如果对方为击杀相关职业会直接击杀对方，如果对方为\n船员或非击杀相关职业则会将目标变为感染者。\n\n感染者有最大数量和同时存在数量的限制，请注意！\n如果感染者数量达到最大时，使用击杀技能时都会击杀对方。"
-    },
-    "JailorFullDesc": {
-        "0": "The Jailor can choose a player to Jail during the action phase, taking effect once the next meeting starts.\n\nMessages sent by the jailed player during the meeting will only be visible to the Jailor; other players cannot see them.\nThe Jailor can PM the jailed player using the [/jail text] command.\n\nThe Jailor can execute the jailed player during the meeting, but if they execute a Crewmate, they will permanently lose their ability.",
-        "13": "你可以在行动阶段选择一位玩家监禁，进入会议后会将目标玩家监禁。\n\n目标在会议中发送的消息只会被典狱长接收，其他玩家无法看到，\n但典狱长可以使用 [/jail text] 指令与被监禁者私聊。\n\n典狱长可以在会议中处决被监禁玩家，但如果处决了船员，将永久失去技能。"
-    },
-    "MarionetteFullDesc": {
-        "0": "The Marionette can place a decoy, whose visibility is set depending on the options.\nPress [LShift] to switch the hotkeys of the abilities.\nWhile the decoy is active, the Marionette can monitor and swap positions with the decoy.",
-        "13": "木偶师可以放置一个木偶，木偶的可见性由房主设置。\n\n按左边的shift键可以切换功能键\n在木偶有效时间内，\n木偶师可以随时查看木偶的周围情况，并可以交换自己与木偶的位置。"
-    },
-    "AvengerFullDesc": {
-        "13": "两位恋人中如果其中一位恋人被其它玩家击杀时，另一位有概率会变为复仇者。\n变为复仇者之后需要为恋人复仇后才能带死去的恋人胜利！\n如果复仇期间目标死亡时，复仇者可能会自杀或者变为 ( 小丑 | 失忆者 | 幸存者 )"
-    },
     "ClogFullDesc": {
         "13": "分配阵营：伪装者\n\n可以放置鬼魂阻挠船员行进，障碍物会持续一段时间后消失。"
     },
-    "ProfessionalFullDesc": {
-        "13": "分配阵营：伪装者\n\n击杀玩家时不会留下尸体，但是船员经过尸体位置时会自动报警。\n\n注：附加能力的专业杀手与主职业的专业杀手冲突，\n当附加能力的专业杀手开启时，自动禁用主职业的专业杀手"
-    },
-    "OracleFullDesc": {
-        "13": "会议外选定一位信徒，每次进会议时都会获得邪恶阵营的信息。\n神谕者会在会议中保护信徒，使其不会在会议中被驱逐。\n神谕者死亡后会揭示信徒的阵营，有概率是错误的。"
-    },
     "SoulSightFullDesc": {
+        "0": "[BLANK]",
         "13": "窥天者可以自杀窥探天意一段时间，持续时间结束后会自动复活。\n在以死亡状态进入会议时得1分，得x分可以跟随场上阵营获胜。\n\n如果尸体被吃掉则无法复活和得分。\n\n职业创意：吃蛋挞的折棒"
     }
 }

@@ -610,7 +610,7 @@ public static class MurderPlayerPatch
 
         if (Dreamcatcher.Player != null && Dreamcatcher.Player.PlayerId == target.PlayerId && Dreamcatcher.Dreamed.IsAlive() && __instance == PlayerControl.LocalPlayer)
         {
-            RpcCustomMurderPlayer(Dreamcatcher.Dreamed, Dreamcatcher.Dreamed, true, true, CustomDeathReason.Dreamlink);
+            RpcCustomMurderPlayer(Dreamcatcher.Player, Dreamcatcher.Dreamed, true, true, CustomDeathReason.Dreamlink);
         }
 
         // Set Gambler cooldown

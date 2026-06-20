@@ -226,7 +226,7 @@ public static class Guesser
 
             if (RoleRate.TryGetValue(roleInfo.roleId, out int isEnabled) && isEnabled == 0)
             {
-                continue;
+                if (roleInfo.roleId is not RoleId.Amnisiac and not RoleId.Survivor and not RoleId.Jester) continue;
             }
 
             var guesserRole = PlayerControl.LocalPlayer.PlayerId == Vigilante.vigilante?.PlayerId ? RoleId.Vigilante : RoleId.Assassin;

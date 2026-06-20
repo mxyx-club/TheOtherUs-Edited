@@ -111,7 +111,7 @@ public class Pelican
                         HudManager.Instance.ShadowQuad?.gameObject?.SetActive(false);
                         PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Player.GetTruePosition());
                         HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
-                        p.Die(DeathReason.Kill, true);
+                        p.Exiled();
                     }, 0.25f);
                 }
             }

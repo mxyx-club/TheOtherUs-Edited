@@ -25,6 +25,12 @@ public static class SoundEffectsManager
         var assetBundle = AssetBundle.LoadFromMemory(resourceBundle.ReadFully());
         foreach (var f in assetBundle.GetAllAssetNames())
         {
+            /*AudioClip clip = assetBundle.LoadAsset<AudioClip>(f);
+            if (clip != null)
+            {
+                clip.LoadAudioData();
+                soundEffects.Add(f, clip.DontUnload());
+            }*/
             soundEffects.Add(f, assetBundle.LoadAsset<AudioClip>(f).DontUnload());
         }
         assetBundle.Unload(false);

@@ -196,7 +196,7 @@ internal class ExileControllerBeginPatch
         if (Dreamcatcher.Player != null && player == Dreamcatcher.Player && Dreamcatcher.Dreamed.IsAlive() && Dreamcatcher.Player == PlayerControl.LocalPlayer)
         {
             Dreamcatcher.Dreamed.RpcExiled();
-            PlayerData.RpcSetDeathReason(Dreamcatcher.Dreamed, CustomDeathReason.Dreamlink, null);
+            PlayerData.RpcSetDeathReason(Dreamcatcher.Dreamed, CustomDeathReason.Dreamlink, Dreamcatcher.Player);
         }
         confirmImpostorSecondText = UObject.Instantiate(__instance.ImpostorText, __instance.Text.transform);
         StringBuilder changeStringBuilder = new();
@@ -258,11 +258,11 @@ internal class ExileControllerBeginPatch
             }
             else if (BlessedPlayer == Dreamcatcher.Dreamed)
             {
-                __instance.completeString = $"摄梦人守护了 {Dreamcatcher.Player?.Data?.PlayerName ?? "null"} ！";
+                __instance.completeString = $"摄梦人守护了 {Dreamcatcher.Dreamed?.Data?.PlayerName ?? "null"} ！";
             }
         }
 
-        if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && ProtectedBlessed && exiled != null)
+        if (Balancer.currentAbilityUser != null && Balancer.IsDoubleExile && exiled != null)
         {
             __instance.completeString = GetString("ExileController.Balancer");
             if (Oracle.Player.IsAlive() && Oracle.Confesser != null && exiled.Object == Oracle.Confesser)

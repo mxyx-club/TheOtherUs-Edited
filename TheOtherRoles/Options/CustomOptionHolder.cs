@@ -811,8 +811,7 @@ public class CustomOptionHolder
     public static CustomOption shifterCanBeGuessed;
     public static CustomOption modifierShiftNeutral;
     public static CustomOption modifierShiftALLNeutral;
-    public static CustomOption modifierShiftReload;
-
+    //public static CustomOption modifierShiftReload;
 
     public static CustomOption clogSpawnRate;
     public static CustomOption clogGhostRange;
@@ -1194,10 +1193,10 @@ public class CustomOptionHolder
         berserkerRampageDuration = Create(103603, Types.Impostor, "berserkerKillDuration", 3f, 0.5f, 10f, 0.25f, berserkerSpawnRate);
 
         gaolerSpawnRate = Create(103800, Types.Impostor, Cs(Gaoler.color, "gaoler"), rates, null, true);
-        gaolerSelectionWindow = Create(103801, Types.Impostor, "狱卒会议开始后可选秒数", 60f, 30f, 120f, 5f, gaolerSpawnRate);
-        gaolerMaxUses = Create(103802, Types.Impostor, "狱卒最大监禁次数", 2f, 1f, 5f, 1f, gaolerSpawnRate);
-        gaolerCanPassMapAfterDeath = Create(103803, Types.Impostor, "死后可传递管理室地图", false, gaolerSpawnRate);
-        gaolerCanJailSamePlayerConsecutively = Create(103804, Types.Impostor, "可连续监禁同一玩家", false, gaolerSpawnRate);
+        gaolerSelectionWindow = Create(103801, Types.Impostor, "gaolerSelectionWindow", 60f, 30f, 120f, 5f, gaolerSpawnRate);
+        gaolerMaxUses = Create(103802, Types.Impostor, "gaolerMaxUses", 2f, 1f, 5f, 1f, gaolerSpawnRate);
+        gaolerCanPassMapAfterDeath = Create(103803, Types.Impostor, "gaolerCanPassMapAfterDeath", false, gaolerSpawnRate);
+        gaolerCanJailSamePlayerConsecutively = Create(103804, Types.Impostor, "gaolerCanJailSamePlayerConsecutively", false, gaolerSpawnRate);
 
         //-------------------------- Neutral Options 200000 -------------------------- //
 
@@ -1767,7 +1766,7 @@ public class CustomOptionHolder
         shifterCanBeGuessed = Create(400030, Types.Modifier, "modifierCanBeGuessed", true, modifierShifter, isHidden: () => !AllowGuessModifier.GetBool());
         modifierShiftNeutral = Create(403401, Types.Modifier, "modifierShiftNeutral", false, modifierShifter);
         modifierShiftALLNeutral = Create(403402, Types.Modifier, "modifierShiftALLNeutral", false, modifierShiftNeutral);
-        modifierShiftReload = Create(403403, Types.Modifier, "modifierShiftReload", true, modifierShifter);
+        //modifierShiftReload = Create(403403, Types.Modifier, "modifierShiftReload", true, modifierShifter);
 
         //-------------------------- Ghost Role 50000 - 59999 -------------------------- //
 

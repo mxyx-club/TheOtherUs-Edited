@@ -91,11 +91,7 @@ public class WolfLord
         private static void MeetingStartPostfix(MeetingHud __instance)
         {
             if (!PlayerControl.LocalPlayer.CanUseMeetingAbility()) return;
-            if (__instance && !Killed && Revealed)
-            {
-                ButtonToggle(__instance);
-                return;
-            }
+            if (__instance && !Killed && Revealed) return;
             if (Player.IsAlive() && PlayerControl.LocalPlayer == Player && !Revealed)
             {
                 var meetingUI = UObject.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
@@ -196,9 +192,9 @@ public class WolfLord
             }
         }
 
-        private static void WolfLordOnClick(PlayerVoteArea pva, MeetingHud __instance)
+        private static void WolfLordOnClick(PlayerVoteArea playerVoteArea, MeetingHud __instance)
         {
-            var target = PlayerById(pva.TargetPlayerId);
+            var target = PlayerById(playerVoteArea.TargetPlayerId);
             if (Player.IsDead() || !Revealed || Killed || target == null) return;
             if (__instance.state is MeetingHud.VoteStates.Discussion or MeetingHud.VoteStates.Results) return;
 
@@ -207,17 +203,14 @@ public class WolfLord
             writer.EndRPC();
             WolfLordkilled(target.PlayerId);
 
-            foreach (var playerState in __instance.playerStates)
+            foreach (var pva in __instance.playerStates)
             {
-                var icon = playerState.transform.FindChild("WolfLordIcon");
+                var icon = pva.transform.FindChild("WolfLordIcon");
                 if (icon != null) UObject.Destroy(icon.gameObject);
 
-                var guesser = playerState.transform.FindChild("ShootButton");
+                var guesser = pva.transform.FindChild("ShootButton");
                 if (guesser != null) UObject.Destroy(guesser.gameObject);
             }
-
-            if (Guesser.guesserUI != null && Guesser.guesserUIExitButton != null)
-                Guesser.guesserUIExitButton.OnClick.Invoke();
         }
     }
 }

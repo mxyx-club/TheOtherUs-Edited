@@ -7,13 +7,11 @@ public static class Mimic
     public static Color color = Palette.ImpostorRed;
     public static List<PlayerControl> killed = new();
 
-
     public static void clearAndReload(bool clearList = true)
     {
         mimic = null;
         if (clearList) hasMimic = false;
     }
-
 
     public static void MimicRole(byte targetId)
     {

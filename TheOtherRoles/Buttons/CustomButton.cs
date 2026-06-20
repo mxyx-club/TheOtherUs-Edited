@@ -65,10 +65,9 @@ public class CustomButton
         {
             if (!IsKillButton) return _MaxTimer;
             var time = _MaxTimer;
-
-            time *= Mini.Multiplier;
             if (PlayerControl.LocalPlayer.IsImpostor() && PlayerControl.LocalPlayer == LastImpostor.lastImpostor)
                 time -= LastImpostor.deduce;
+            time *= Mini.Multiplier;
             return time;
         }
         set => _MaxTimer = value;
