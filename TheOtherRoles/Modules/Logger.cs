@@ -1,4 +1,3 @@
-using BepInEx;
 using BepInEx.Logging;
 using System.Runtime.CompilerServices;
 using System.Text;

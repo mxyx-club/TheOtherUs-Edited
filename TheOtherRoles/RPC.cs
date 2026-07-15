@@ -165,6 +165,7 @@ public enum CustomRPC : byte
     // Other functionality
     ShareGhostInfo,
     ShareDeathReasonAndKiller,
+    RecordEvent,
 }
 
 public static class RPCProcedure
@@ -329,7 +330,7 @@ public static class RPCProcedure
                 Glitch.Player = player;
                 break;
             case RoleId.Bomber:
-                Bomber.bomber = player;
+                Bomber.Player = player;
                 break;
             case RoleId.Camouflager:
                 Camouflager.camouflager = player;
@@ -1255,12 +1256,14 @@ public static class RPCProcedure
             }
             return;
         }
+        else
+        {
+            Shifter.shiftRole(player, target);
 
-        Shifter.shiftRole(player, target);
-
-        // Set cooldowns to max for both players
-        if (PlayerControl.LocalPlayer == player || PlayerControl.LocalPlayer == target)
-            CustomButton.ResetAllCooldowns();
+            // Set cooldowns to max for both players
+            if (PlayerControl.LocalPlayer == player || PlayerControl.LocalPlayer == target)
+                CustomButton.ResetAllCooldowns();
+        }
     }
 
     public static void swapperSwap(byte playerId1, byte playerId2)
@@ -1509,7 +1512,7 @@ public static class RPCProcedure
 
         // Impostor roles
         if (player == Glitch.Player) Glitch.clearAndReload();
-        if (player == Bomber.bomber) Bomber.clearAndReload();
+        if (player == Bomber.Player) Bomber.clearAndReload();
         if (player == Camouflager.camouflager) Camouflager.clearAndReload();
         if (player == Poucher.poucher && !Poucher.spawnModifier) Poucher.clearAndReload();
         if (player == Professional.Player && !Professional.spawnModifier) Professional.clearAndReload();
@@ -1739,88 +1742,6 @@ public static class RPCProcedure
     {
         Medic.futureShielded = PlayerById(playerId);
         Medic.usedShield = true;
-    }
-
-    public static void giveBomb(byte playerId, bool bomb = false)
-    {
-        if (playerId == byte.MaxValue)
-        {
-            SoundEffectsManager.stop("timemasterShield");
-            Bomber.hasBombPlayer = null;
-            Bomber.bombActive = false;
-            Bomber.hasAlerted = false;
-            Bomber.timeLeft = 0;
-            return;
-        }
-
-        if (bomb)
-        {
-            Bomber.hasBombPlayer = PlayerById(playerId);
-            Bomber.timeLeft += 0.5f;
-
-            return;
-        }
-
-        SoundEffectsManager.stop("timemasterShield");
-        if (Bomber.hasBombPlayer.IsLocalPlayer) SoundEffectsManager.play("timemasterShield");
-
-        Bomber.hasBombPlayer = PlayerById(playerId);
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombDelay,
-            new Action<float>(p =>
-            {
-                if (p == 1f) Bomber.bombActive = true;
-            })));
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombDelay + Bomber.bombTimer,
-            new Action<float>(p =>
-            {
-                // Delayed action
-                if (Bomber.bomber.IsDead() || Bomber.hasBombPlayer.IsDead())
-                {
-                    SoundEffectsManager.stop("timemasterShield");
-                    Bomber.hasBombPlayer = null;
-                    Bomber.bombActive = false;
-                    Bomber.hasAlerted = false;
-                    Bomber.timeLeft = 0;
-                    return;
-                }
-                if (p == 1f && Bomber.bombActive)
-                {
-                    SoundEffectsManager.stop("timemasterShield");
-                    // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                    if (PlayerControl.LocalPlayer == Bomber.bomber) RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
-                    Bomber.hasBombPlayer = null;
-                    Bomber.bombActive = false;
-                    Bomber.hasAlerted = false;
-                    Bomber.timeLeft = 0;
-                }
-
-                if (PlayerControl.LocalPlayer == Bomber.hasBombPlayer)
-                {
-                    var totalTime = (int)(Bomber.bombDelay + Bomber.bombTimer);
-                    var timeLeft = (int)(totalTime - (totalTime * p));
-                    if (timeLeft <= Bomber.bombTimer)
-                    {
-                        if (Bomber.timeLeft != timeLeft)
-                        {
-                            _ = new CustomMessage("你手中的炸弹将在 " + timeLeft + " 秒后引爆!", 1f);
-                            Bomber.timeLeft = timeLeft;
-                        }
-
-                        if (timeLeft % 5 == 0)
-                        {
-                            if (!Bomber.hasAlerted)
-                            {
-                                Coroutines.Start(showFlashCoroutine(Palette.ImpostorRed, 0.75f));
-                                Bomber.hasAlerted = true;
-                            }
-                        }
-                        else
-                        {
-                            Bomber.hasAlerted = false;
-                        }
-                    }
-                }
-            })));
     }
 
     public static void setFutureSpelled(byte playerId)
@@ -2245,7 +2166,10 @@ public static class RPCProcedure
         if (reset)
             Pursuer.blankedList.Remove(playerId);
         else
+        {
             Pursuer.blankedList.Add(playerId);
+            GameDataManager.RecordEvent("SetBlanked");
+        }
     }
 
     public static void setFirstKill(byte playerId)
@@ -2381,6 +2305,7 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.SetRole:
                 RPCProcedure.setRole(reader.ReadByte(), reader.ReadByte());
+                GameDataManager.RecordEvent("SetRole", reader.ReadByte(), null, (RoleId)reader.ReadByte());
                 break;
             case CustomRPC.SetModifier:
                 RPCProcedure.setModifier(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
@@ -2648,7 +2573,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.GiveBomb:
-                RPCProcedure.giveBomb(reader.ReadByte(), reader.ReadBoolean());
+                Bomber.giveBomb(reader.ReadByte(), reader.ReadByte(), reader.ReadBoolean());
                 break;
 
             case CustomRPC.SetFutureSpelled:
@@ -2857,8 +2782,11 @@ internal class RPCHandlerPatch
             case CustomRPC.ShareDeathReasonAndKiller:
                 PlayerData.SetDeathReason(reader.ReadPlayer(), (CustomDeathReason)reader.ReadByte(), reader.ReadPlayer());
                 break;
+            case CustomRPC.RecordEvent:
+                GameDataManager.HandleRpcRecordEvent(reader);
+                break;
             case CustomRPC.GuesserMessage:
-                Guesser.seedGuessChat(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadByte(), false);
+                Guesser.seedGuessChat(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadByte(), false, reader.ReadString());
                 break;
             case CustomRPC.PlaceDecoy:
                 RPCProcedure.PlaceDecoy(reader.ReadPlayer(), reader.ReadVector3());

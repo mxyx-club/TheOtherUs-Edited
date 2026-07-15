@@ -1,4 +1,5 @@
 global using AmongUs.Data;
+global using BepInEx;
 global using HarmonyLib;
 global using Hazel;
 global using Il2CppInterop.Runtime;

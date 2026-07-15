@@ -1,4 +1,3 @@
-using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using Reactor.Networking;
@@ -72,9 +71,9 @@ public partial class TheOtherRolesPlugin : BasePlugin
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
         defaultRegions = ServerManager.DefaultRegions;
 
+        Harmony.PatchAll();
         UpdateRegions();
         CrowdedPlayer.Start();
-        Harmony.PatchAll();
         CustomColors.Load();
         CustomOptionHolder.Load();
         if (ModConfig.ToggleCursor.Value) enableCursor(true);

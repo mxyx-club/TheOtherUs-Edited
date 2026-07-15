@@ -332,7 +332,7 @@ public class RoleInfo
         if (p == Butcher.butcher) infos.Add(butcher);
         if (p == WolfLord.Player) infos.Add(wolfLord);
         if (p == Glitch.Player) infos.Add(glitch);
-        if (p == Bomber.bomber) infos.Add(bomber);
+        if (p == Bomber.Player) infos.Add(bomber);
         if (p == Camouflager.camouflager) infos.Add(camouflager);
         if (p == Vampire.vampire) infos.Add(vampire);
         if (p == Eraser.eraser) infos.Add(eraser);

@@ -232,19 +232,18 @@ public static class MapData
 
     public static void RandomSpawnPlayers()
     {
+        if (IsHideNSeek) return;
         if (AntiTeleport.antiTeleport.Any(x => x == PlayerControl.LocalPlayer)) return;
-        Vector3 newPosition;
-        if (CustomOptionHolder.randomGameStartToVents.GetBool())
-        {
-            newPosition = FindVentSpawnPositions()[rnd.Next(FindVentSpawnPositions().Count)];
-            PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(FindVentSpawnPositions()[rnd.Next(FindVentSpawnPositions().Count)]);
-        }
-        else
-        {
-            newPosition = MapSpawnPosition()[rnd.Next(MapSpawnPosition().Count)];
-            PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(MapSpawnPosition()[rnd.Next(MapSpawnPosition().Count)]);
-        }
-        Message($"Span to Vector3: {newPosition.x}, {newPosition.y}, {newPosition.z}");
+
+        var positions = CustomOptionHolder.randomGameStartToVents.GetBool()
+            ? FindVentSpawnPositions()
+            : MapSpawnPosition();
+
+        if (positions.Count == 0) return;
+
+        var pos = positions[rnd.Next(positions.Count)];
+        PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(pos);
+        Message($"Span to Vector3: {pos.x}, {pos.y}, {pos.z}");
     }
 
     public static Vector3 GetCloseSpawnPosition(this PlayerControl player)

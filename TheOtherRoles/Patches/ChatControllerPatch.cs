@@ -36,8 +36,13 @@ public static class ChatControllerPatch
         set
         {
             field = value;
-            if (!ActiveChannels.Contains(value) && value != ChannelType.HostAll)
+            if (value != ChannelType.HostAll)
             {
+                var channels = ActiveChannels;
+                for (int i = 0; i < channels.Count; i++)
+                {
+                    if (channels[i] == value) return;
+                }
                 field = ChannelType.Default;
             }
         }
@@ -50,11 +55,39 @@ public static class ChatControllerPatch
     {
         if (ModOption.DebugMode) return true;
         if (AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay) return true;
-        if (ModOption.ImpostorChatChannel >= 2 && PlayerControl.LocalPlayer.IsImpostor()) return true;
-        if (ModOption.JackalChatChannel >= 2 && (PlayerControl.LocalPlayer == Jackal.Sidekick || Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer))) return true;
-        if (ModOption.PavlovsChatChannel >= 2 && (PlayerControl.LocalPlayer == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(x => x == PlayerControl.LocalPlayer))) return true;
-        if (ModOption.InfectedChatChannel >= 2 && Infected.Player.Any(x => x == PlayerControl.LocalPlayer)) return true;
-        if (ModOption.LoverChatChannel >= 2 && PlayerControl.LocalPlayer.isLover()) return true;
+        var player = PlayerControl.LocalPlayer;
+        if (player == null) return false;
+        if (ModOption.ImpostorChatChannel >= 2 && player.IsImpostor()) return true;
+        if (ModOption.JackalChatChannel >= 2 && isPlayerJackal(player)) return true;
+        if (ModOption.PavlovsChatChannel >= 2 && isPlayerPavlovs(player)) return true;
+        if (ModOption.InfectedChatChannel >= 2 && isPlayerInfected(player)) return true;
+        if (ModOption.LoverChatChannel >= 2 && player.isLover()) return true;
+        return false;
+    }
+
+    private static bool isPlayerJackal(PlayerControl player)
+    {
+        if (player == Jackal.Sidekick) return true;
+        var jackals = Jackal.jackal;
+        for (int i = 0; i < jackals.Count; i++)
+            if (jackals[i] == player) return true;
+        return false;
+    }
+
+    private static bool isPlayerPavlovs(PlayerControl player)
+    {
+        if (player == Pavlovsdogs.pavlovsowner) return true;
+        var pavlovs = Pavlovsdogs.pavlovsdogs;
+        for (int i = 0; i < pavlovs.Count; i++)
+            if (pavlovs[i] == player) return true;
+        return false;
+    }
+
+    private static bool isPlayerInfected(PlayerControl player)
+    {
+        var infected = Infected.Player;
+        for (int i = 0; i < infected.Count; i++)
+            if (infected[i] == player) return true;
         return false;
     }
 
@@ -65,9 +98,9 @@ public static class ChatControllerPatch
         {
             var text = __instance.freeChatField.textArea.text;
             var handled = false;
-            if (text.StartsWith("//"))
+            if (text.Length > 1 && text[0] == '/' && text[1] == '/')
             {
-                text = __instance.freeChatField.textArea.text = text[1..];
+                text = __instance.freeChatField.textArea.text = text.Substring(1);
             }
             else
             {
@@ -185,12 +218,12 @@ public static class ChatControllerPatch
             if (!__instance.Chat.isActiveAndEnabled && (ModOption.DebugMode
                     || AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay
                     || ForceEnableChat
+                    || RoleDraft.isRunning
                     || CanEnableChat()))
                 __instance.Chat.SetVisible(true);
 
             if (!InMeeting && !ModOption.DebugMode && Specter.Player != null && PlayerControl.LocalPlayer == Specter.Player)
                 __instance.Chat?.SetVisible(false);
-
         }
     }
 
@@ -429,71 +462,56 @@ public static class ChatControllerPatch
 
         public static void UpdateChatChannels()
         {
-            var channelConditions = new Dictionary<ChannelType, Func<PlayerControl, bool>>
+            var player = PlayerControl.LocalPlayer;
+            if (player == null) return;
+
+            bool inGameOrMeeting = !InGame || InMeeting || CanSeeGhostInfo || ModOption.DebugMode;
+            bool jailorActive = player == Jailor.Player && Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive();
+            bool loverActive = player.isLover() && Lovers.IsAlive() && (ModOption.LoverChatChannel switch { 1 => InMeeting, 2 => !InMeeting, 3 => true, _ => false });
+            bool impostorActive = player.IsImpostor() && player.IsAlive() && (ModOption.ImpostorChatChannel switch { 1 => InMeeting, 2 => !InMeeting, 3 => true, _ => false });
+            bool jackalActive = isPlayerJackal(player) && player.IsAlive() && (ModOption.JackalChatChannel switch { 1 => InMeeting, 2 => !InMeeting, 3 => true, _ => false });
+            bool pavlovsActive = isPlayerPavlovs(player) && player.IsAlive() && (ModOption.PavlovsChatChannel switch { 1 => InMeeting, 2 => !InMeeting, 3 => true, _ => false });
+            bool infectedActive = isPlayerInfected(player) && player.IsAlive() && (ModOption.InfectedChatChannel switch { 1 => InMeeting, 2 => !InMeeting, 3 => true, _ => false });
+
+            var channels = ActiveChannels;
+            bool hasDefault = false, hasJailor = false, hasLover = false, hasImpostor = false, hasJackal = false, hasPavlovs = false, hasInfected = false;
+            for (int i = 0; i < channels.Count; i++)
             {
-                [ChannelType.Default] = (x) => !InGame || InMeeting || CanSeeGhostInfo || ModOption.DebugMode,
-                //[ChannelType.HostAll] = (x) => AmongUsClient.Instance.AmHost && InGame,
-                [ChannelType.Jailor] = (x) => x == Jailor.Player && Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive(),
-
-                [ChannelType.Lover] = (x) => x.isLover() && Lovers.IsAlive() && (ModOption.LoverChatChannel switch
+                switch (channels[i])
                 {
-                    1 => InMeeting,
-                    2 => !InMeeting,
-                    3 => true,
-                    _ => false
-                }),
-
-                [ChannelType.Impostor] = (x) => x.IsImpostor() && x.IsAlive() && (ModOption.ImpostorChatChannel switch
-                {
-                    1 => InMeeting,
-                    2 => !InMeeting,
-                    3 => true,
-                    _ => false
-                }),
-
-                [ChannelType.Jackal] = (x) => (Jackal.jackal.Any(y => y == x) || x == Jackal.Sidekick) && x.IsAlive() && (ModOption.JackalChatChannel switch
-                {
-                    1 => InMeeting,
-                    2 => !InMeeting,
-                    3 => true,
-                    _ => false
-                }),
-
-                [ChannelType.Pavlovs] = (x) => (Pavlovsdogs.pavlovsdogs.Any(y => y == x) || x == Pavlovsdogs.pavlovsowner) && x.IsAlive() && (ModOption.PavlovsChatChannel switch
-                {
-                    1 => InMeeting,
-                    2 => !InMeeting,
-                    3 => true,
-                    _ => false
-                }),
-
-                [ChannelType.Infected] = (x) => Infected.Player.Any(y => y == x) && x.IsAlive() && (ModOption.InfectedChatChannel switch
-                {
-                    1 => InMeeting,
-                    2 => !InMeeting,
-                    3 => true,
-                    _ => false
-                }),
-            };
-
-            foreach (var (channelType, condition) in channelConditions)
-            {
-                if (condition(PlayerControl.LocalPlayer) && !ActiveChannels.Contains(channelType))
-                {
-                    ActiveChannels.Add(channelType);
-                }
-                else if (!condition(PlayerControl.LocalPlayer) && (ActiveChannels.Contains(channelType) || CurrentChannel == channelType))
-                {
-                    ActiveChannels.Remove(channelType);
-                    if (CurrentChannel == channelType)
-                    {
-                        CurrentChannel = ActiveChannels.FirstOrDefault();
-                    }
+                    case ChannelType.Default: hasDefault = true; break;
+                    case ChannelType.Jailor: hasJailor = true; break;
+                    case ChannelType.Lover: hasLover = true; break;
+                    case ChannelType.Impostor: hasImpostor = true; break;
+                    case ChannelType.Jackal: hasJackal = true; break;
+                    case ChannelType.Pavlovs: hasPavlovs = true; break;
+                    case ChannelType.Infected: hasInfected = true; break;
                 }
             }
+
+            if (inGameOrMeeting && !hasDefault) channels.Add(ChannelType.Default);
+            else if (!inGameOrMeeting && hasDefault) channels.Remove(ChannelType.Default);
+
+            if (jailorActive && !hasJailor) channels.Add(ChannelType.Jailor);
+            else if (!jailorActive && hasJailor) { channels.Remove(ChannelType.Jailor); if (CurrentChannel == ChannelType.Jailor) CurrentChannel = channels[0]; }
+
+            if (loverActive && !hasLover) channels.Add(ChannelType.Lover);
+            else if (!loverActive && hasLover) { channels.Remove(ChannelType.Lover); if (CurrentChannel == ChannelType.Lover) CurrentChannel = channels[0]; }
+
+            if (impostorActive && !hasImpostor) channels.Add(ChannelType.Impostor);
+            else if (!impostorActive && hasImpostor) { channels.Remove(ChannelType.Impostor); if (CurrentChannel == ChannelType.Impostor) CurrentChannel = channels[0]; }
+
+            if (jackalActive && !hasJackal) channels.Add(ChannelType.Jackal);
+            else if (!jackalActive && hasJackal) { channels.Remove(ChannelType.Jackal); if (CurrentChannel == ChannelType.Jackal) CurrentChannel = channels[0]; }
+
+            if (pavlovsActive && !hasPavlovs) channels.Add(ChannelType.Pavlovs);
+            else if (!pavlovsActive && hasPavlovs) { channels.Remove(ChannelType.Pavlovs); if (CurrentChannel == ChannelType.Pavlovs) CurrentChannel = channels[0]; }
+
+            if (infectedActive && !hasInfected) channels.Add(ChannelType.Infected);
+            else if (!infectedActive && hasInfected) { channels.Remove(ChannelType.Infected); if (CurrentChannel == ChannelType.Infected) CurrentChannel = channels[0]; }
         }
 
-        private static ChannelType LastType;
+        private static ChannelType LastType = ChannelType.Default;
         public static void KeyboardInput(ChatController __instance)
         {
             if (!__instance.IsOpenOrOpening) return;

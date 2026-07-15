@@ -6,7 +6,6 @@ public class PlayerData
 {
     public static PlayerData LocalData { get => field ??= GetPlayerData(LocalPlayer); private set; }
     public static PlayerControl LocalPlayer { get; private set; }
-
     public static Dictionary<byte, PlayerData> AllPlayerData { get; private set; } = new();
 
     public PlayerControl Player { get; private set; }
@@ -29,9 +28,11 @@ public class PlayerData
     public string FriendCode { get; set; }
     public string ColorName { get; set; }
 
-    public CustomDeathReason DeathReason { get; set; } = CustomDeathReason.Null;
-    public DateTime DeathTimer { get; set; } = DateTime.MinValue;
-    public PlayerControl KilledBy { get; set; }
+    public CustomDeathReason DeathReason { get; private set; } = CustomDeathReason.Null;
+    public DateTime DeathTimer { get; private set; } = DateTime.MinValue;
+    public PlayerControl KilledBy { get; private set; }
+
+    public readonly List<DeathRecord> DeathHistory = new();
 
     public int ColorId => Player.CurrentOutfit.ColorId;
     public string HatId => Player.CurrentOutfit.HatId;
@@ -53,15 +54,11 @@ public class PlayerData
     public static PlayerData GetPlayerData(PlayerControl player)
     {
         if (player?.Data == null) return null;
-        if (AllPlayerData.TryGetValue(player.PlayerId, out var data))
-        {
-            return data;
-        }
-        else
+        if (!AllPlayerData.TryGetValue(player.PlayerId, out var data))
         {
             data = new PlayerData(player);
-            return data;
         }
+        return data;
     }
 
     public static PlayerData GetPlayerData(string name)
@@ -103,7 +100,8 @@ public class PlayerData
     {
         if (killer == null) return 0;
 
-        return AllPlayerData.Values.Count(data => data.KilledBy == killer && data.Player != killer);
+        return AllPlayerData.Values.Sum(data =>
+            data.DeathHistory.Count(r => r.Killer == killer && r.Killer != data.Player));
     }
 
     public static PlayerControl GetLastKiller()
@@ -120,12 +118,13 @@ public class PlayerData
         if (player.IsAlive()) return;
         if (!AllPlayerData.TryGetValue(player.PlayerId, out var data)) return;
 
+        var timestamp = DateTime.UtcNow;
+
+        data.DeathHistory.Add(new DeathRecord(data.Player, deathReason, timestamp, killer));
+
         data.DeathReason = deathReason;
-        data.DeathTimer = DateTime.UtcNow;
-        if (killer != null)
-        {
-            data.KilledBy = killer;
-        }
+        data.DeathTimer = timestamp;
+        data.KilledBy = killer;
     }
 
     public static void ClearDeathReason(PlayerControl player)
@@ -180,4 +179,20 @@ public enum CustomDeathReason
     Poverty,
     Dreamcrush,
     Dreamlink
+}
+
+public readonly struct DeathRecord
+{
+    public PlayerControl Victim { get; }
+    public CustomDeathReason Reason { get; }
+    public DateTime Timestamp { get; }
+    public PlayerControl Killer { get; }
+
+    public DeathRecord(PlayerControl victim, CustomDeathReason reason, DateTime timestamp, PlayerControl killer)
+    {
+        Victim = victim;
+        Reason = reason;
+        Timestamp = timestamp;
+        Killer = killer;
+    }
 }

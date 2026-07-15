@@ -1,4 +1,4 @@
-using BepInEx;
+#nullable enable
 using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -17,20 +17,22 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
     public Dictionary<byte, ushort> AnonymousId { get; private set; } = new();
     public List<PlayerControl> AllPlayerControl { get; private set; } = new();
 
-    public string GameId { get; set; }
-    public string HostPlayer { get; private set; }
+    public string? GameId { get; set; }
+    public string? HostPlayer { get; private set; }
     public DateTime StartTime { get; private set; }
     public DateTime EndTime { get; set; }
-    public string SessionToken { get; private set; }
+    public string? SessionToken { get; private set; }
     internal WinCondition WinCondition { get; set; } = WinCondition.Default;
-    public string RoomCode { get => field.IsNullOrWhiteSpace() ? "Local" : field; set; }
-    public string HostCode { get; set; }
+    public string? RoomCode { get => field.IsNullOrWhiteSpace() ? "Local" : field; set; }
+    public string? HostCode { get; set; }
     public int PlayerCount { get; set; }
+    public byte? MapId { get; set; }
 
     private bool _isInitialized;
 
     public const string ApiUrl = "https://toue.mxyx.club";
     private static readonly HttpClient _httpClient = new();
+    private static readonly HttpClient _tokenClient = new();
 
     public void Initialize()
     {
@@ -39,13 +41,16 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
         AllFriendCode.Clear();
         AnonymousId.Clear();
         AllPlayerControl.Clear();
+        ClearEvents();
 
         EndTime = DateTime.MinValue;
         StartTime = DateTime.UtcNow;
+
         HostPlayer = Helpers.HostPlayer?.Data?.PlayerName ?? "Unknown";
         RoomCode = GameStartManagerPatch.RoomCode;
         HostCode = Helpers.HostPlayer?.Data?.FriendCode ?? "";
-        PlayerCount = PlayerControl.AllPlayerControls.Count;
+        PlayerCount = PlayerControl.AllPlayerControls?.Count ?? 0;
+        MapId = GameOptionsManager.Instance?.currentNormalGameOptions?.MapId;
 
         if (AmongUsClient.Instance.AmHost)
         {
@@ -56,7 +61,7 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
         }
 
         byte modUid = 1;
-        foreach (var player in PlayerControl.AllPlayerControls.ToArray().OrderBy(_ => rnd.Next()))
+        foreach (var player in PlayerControl.AllPlayerControls!.ToArray().OrderBy(_ => rnd.Next()))
         {
             AnonymousId[player.PlayerId] = modUid++;
             AllPlayerControl.Add(player);
@@ -69,6 +74,7 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
 
         ModOption.isCanceled = false;
         _isInitialized = true;
+        RecordEvent("GameIntro");
     }
 
     [OnGameStart(-50)]
@@ -112,16 +118,6 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
         return $"{RoomCode}_{hexHash}";
     }
 
-    private string GetDynamicApiKey()
-    {
-        var datePart = DateTime.UtcNow.ToString("yyyyMMdd");
-        var salt = "toue-salt-v1";
-        using var sha256 = SHA256.Create();
-        var input = $"{GameId}.{datePart}.{salt}";
-        var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
-        return BitConverter.ToString(hash).Replace("-", "").ToLower().Substring(0, 32);
-    }
-
     public void SaveAllPlayerDataToJson()
     {
         var directoryPath = Path.Combine(Paths.GameRootPath, Main.Name, "GameData");
@@ -154,6 +150,7 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
                 GameMode = ModOption.GameMode.ToString(),
                 DeBugMode = ModOption.DebugMode,
                 RoleDraftMode = CustomOptionHolder.isDraftMode.GetBool(),
+                MapId,
             },
 
             Players = PlayerData.AllPlayerData.Values.Select(p => new
@@ -186,6 +183,16 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
                     KilledBy = p.KilledBy?.Data?.PlayerName ?? "null",
                     DeathTimer = p.DeathTimer.ToString("yyyy-MM-ddTHH:mm:ss"),
                 },
+            }).ToList(),
+
+            Events = EventLog.Select(e => new object?[]
+            {
+                e.EventType,
+                e.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                e.GameTime,
+                e.SourcePlayerId,
+                e.TargetPlayerId,
+                e.Extra,
             }).ToList()
         };
 
@@ -215,22 +222,16 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
     {
         try
         {
-            var apiKey = GetDynamicApiKey();
-            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-            var signature = GenerateSignature("", timestamp, apiKey);
-
             using var request = new HttpRequestMessage(HttpMethod.Get, ApiUrl + "/api/auth/get-session-token");
-            request.Headers.Add("X-Timestamp", timestamp);
-            request.Headers.Add("X-Signature", signature);
             request.Headers.Add("X-Game-Id", GameId);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _tokenClient.SendAsync(request);
             var content = await response.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode)
             {
                 var result = JsonSerializer.Deserialize<JsonElement>(content);
-                return result.GetProperty("session_token").GetString();
+                return result.GetProperty("session_token").GetString() ?? "";
             }
 
             Error(content, nameof(GameDataManager));
@@ -247,13 +248,8 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
     {
         try
         {
-            var apiKey = GetDynamicApiKey();
-            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-            var signature = GenerateSignature(jsonContent, timestamp, apiKey);
-
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            content.Headers.Add("X-Timestamp", timestamp);
-            content.Headers.Add("X-Signature", signature);
+            content.Headers.Add("X-Session-Token", SessionToken);
             content.Headers.Add("X-Game-Id", GameId);
 
             var response = await _httpClient.PostAsync(ApiUrl + "/api/games/v2", content);
@@ -270,14 +266,6 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
         }
     }
 
-    private string GenerateSignature(string data, string timestamp, string key)
-    {
-        using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(key));
-        var message = $"{timestamp}.{GameId}.{data}";
-        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
-        return Convert.ToBase64String(hash);
-    }
-
 
     public void Reset()
     {
@@ -285,6 +273,7 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
         AllFriendCode.Clear();
         AnonymousId.Clear();
         AllPlayerControl.Clear();
+        ClearEvents();
         WinCondition = WinCondition.Default;
         EndTime = DateTime.MinValue;
     }
@@ -293,7 +282,7 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
     {
         private static readonly HttpClient httpClient = new();
 
-        public static async Task<(bool success, string message)> VerifyBinding(string playerCode, string verificationCode)
+        public static async Task<(bool success, string? message)> VerifyBinding(string playerCode, string verificationCode)
         {
             try
             {
@@ -318,7 +307,7 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
                     var result = JsonSerializer.Deserialize<JsonElement>(responseContent);
 
                     bool success = result.GetProperty("success").GetBoolean();
-                    string message = result.GetProperty("message").GetString();
+                    var message = result.GetProperty("message").GetString();
 
                     if (success)
                     {

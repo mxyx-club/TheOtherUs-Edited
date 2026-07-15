@@ -32,7 +32,7 @@ public class AdditionalVents
 
     public static void AddAdditionalVents()
     {
-        if (flag) return;
+        if (flag || IsHideNSeek) return;
         flag = true;
         if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
         Info("Additional Vents");

@@ -1,4 +1,7 @@
 [*.cs]
+end_of_line = lf
+
+[*.cs]
 charset = utf-8
 encoding = utf-8 
 dotnet_diagnostic.IDE0007.severity = silent

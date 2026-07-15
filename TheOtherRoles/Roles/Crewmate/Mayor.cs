@@ -4,8 +4,8 @@ public static class Mayor
 {
     public static PlayerControl mayor;
     public static Color color = new Color32(32, 77, 66, byte.MaxValue);
-    public static Sprite emergencySprite = new ResourceSprite("EmergencyButton.png", 550f);
 
+    public static Sprite emergencySprite = new ResourceSprite("EmergencyButton.png", 550f);
     public static Sprite MeetingLeft = new ResourceSprite("MeetingButtonLeft.png", 110f);
     public static Sprite MeetingRight = new ResourceSprite("MeetingButtonRight.png", 110f);
 

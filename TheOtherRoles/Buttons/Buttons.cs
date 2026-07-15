@@ -2048,27 +2048,28 @@ internal static class HudManagerStartPatch
                 /* On Use */
                 if (CheckUseAbility(PlayerControl.LocalPlayer, Bomber.currentTarget)) return;
                 var bombWriter = StartRPC(CustomRPC.GiveBomb);
+                bombWriter.Write(PlayerControl.LocalPlayer.PlayerId);
                 bombWriter.Write(Bomber.currentTarget.PlayerId);
                 bombWriter.Write(false);
                 bombWriter.EndRPC();
-                RPCProcedure.giveBomb(Bomber.currentTarget.PlayerId);
+                Bomber.giveBomb(PlayerControl.LocalPlayer.PlayerId, Bomber.currentTarget.PlayerId);
                 if (Bomber.triggerBothCooldowns)
                 {
-                    Bomber.bomber.killTimer = bomberBombButton.MaxTimer * Mini.Multiplier;
+                    Bomber.Player.killTimer = bomberBombButton.MaxTimer * Mini.Multiplier;
                 }
                 bomberBombButton.Timer = bomberBombButton.MaxTimer;
             },
             () =>
             {
                 /* Can See */
-                return Bomber.bomber != null && Bomber.bomber == PlayerControl.LocalPlayer &&
+                return Bomber.Player != null && Bomber.Player == PlayerControl.LocalPlayer &&
                        !PlayerControl.LocalPlayer.Data.IsDead;
             },
             () =>
             {
                 /* On Click */
                 Bomber.currentTarget = SetTarget();
-                if (Bomber.hasBombPlayer == null) SetPlayerOutline(Bomber.currentTarget, Bomber.color);
+                if (Bomber.ActiveBomb?.HasBombPlayer == null) SetPlayerOutline(Bomber.currentTarget, Bomber.color);
                 return Bomber.currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -2077,7 +2078,8 @@ internal static class HudManagerStartPatch
                 bomberBombButton.Timer = bomberBombButton.MaxTimer;
                 bomberBombButton.IsEffectActive = false;
                 bomberBombButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-                Bomber.hasBombPlayer = null;
+                Bomber.ActiveBomb?.Destroy();
+                Bomber.ActiveBomb = null;
             },
             Bomber.buttonSprite,
             __instance,
@@ -2092,48 +2094,52 @@ internal static class HudManagerStartPatch
                 /* On Use */
                 if (CheckUseAbility(PlayerControl.LocalPlayer, Bomber.currentBombTarget)) return;
 
-                if (!Bomber.canGiveToBomber && Bomber.currentBombTarget == Bomber.bomber)
+                if (!Bomber.canGiveToBomber && Bomber.currentBombTarget == Bomber.Player)
                 {
-
-                    RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
+                    var bombPlayer = Bomber.ActiveBomb?.HasBombPlayer;
+                    if (bombPlayer != null) RpcCustomMurderPlayer(Bomber.Player, bombPlayer, false);
 
                     var clearWriter = StartRPC(CustomRPC.GiveBomb);
+                    clearWriter.Write(PlayerControl.LocalPlayer.PlayerId);
                     clearWriter.Write(byte.MaxValue);
                     clearWriter.Write(false);
                     clearWriter.EndRPC();
-                    RPCProcedure.giveBomb(byte.MaxValue);
+                    Bomber.giveBomb(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
                     return;
                 }
 
                 if (Bomber.hotPotatoMode)
                 {
                     var bombWriter = StartRPC(CustomRPC.GiveBomb);
+                    bombWriter.Write(PlayerControl.LocalPlayer.PlayerId);
                     bombWriter.Write(Bomber.currentBombTarget.PlayerId);
                     bombWriter.Write(true);
                     bombWriter.EndRPC();
-                    RPCProcedure.giveBomb(Bomber.currentBombTarget.PlayerId, true);
+                    Bomber.giveBomb(PlayerControl.LocalPlayer.PlayerId, Bomber.currentBombTarget.PlayerId, true);
                 }
                 else
                 {
-                    RpcCustomMurderPlayer(Bomber.hasBombPlayer, Bomber.currentBombTarget, false);
+                    var bombPlayer = Bomber.ActiveBomb?.HasBombPlayer;
+                    if (bombPlayer != null) RpcCustomMurderPlayer(bombPlayer, Bomber.currentBombTarget, false);
                     var bombWriter = StartRPC(CustomRPC.GiveBomb);
+                    bombWriter.Write(PlayerControl.LocalPlayer.PlayerId);
                     bombWriter.Write(byte.MaxValue);
                     bombWriter.Write(false);
                     bombWriter.EndRPC();
-                    RPCProcedure.giveBomb(byte.MaxValue);
+                    Bomber.giveBomb(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
                 }
             },
             () =>
             {
                 /* Can See */
-                return Bomber.bomber != null && Bomber.hasBombPlayer == PlayerControl.LocalPlayer &&
-                       Bomber.bombActive && !PlayerControl.LocalPlayer.Data.IsDead;
+                return Bomber.Player != null && Bomber.ActiveBomb?.HasBombPlayer == PlayerControl.LocalPlayer &&
+                       Bomber.ActiveBomb.IsActive && !PlayerControl.LocalPlayer.Data.IsDead;
             },
             () =>
             {
                 /* Can Click */
                 Bomber.currentBombTarget = SetTarget();
-                if (Bomber.hasBombPlayer == null) SetPlayerOutline(Bomber.currentTarget, Bomber.color);
+                if (Bomber.ActiveBomb?.HasBombPlayer == null) SetPlayerOutline(Bomber.currentTarget, Bomber.color);
                 return Bomber.currentBombTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () =>

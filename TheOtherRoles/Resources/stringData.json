@@ -3616,6 +3616,18 @@
         "0": "The Guesser {0} guessed that {1}'s role is {2}!",
         "13": "赌怪 {0} 猜测 {1} 的职业是 {2} !"
     },
+    "GuessChat.Gaoler": {
+        "13": "但是您被关押了"
+    },
+    "GuessChat.Indomitable": {
+        "13": "对方是不屈者"
+    },
+    "GuessChat.Shielded": {
+        "13": "对方被保护了"
+    },
+    "GuessChat.Specoality": {
+        "13": "猜测错误"
+    },
     "trapperGotTrapText": {
         "0": "{0} has been trapped!",
         "13": "{0} 掉进了陷阱里！"

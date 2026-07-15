@@ -37,6 +37,7 @@ public class GameStartManagerPatch
             string code = GameCode.IntToGameName(AmongUsClient.Instance.GameId);
             GUIUtility.systemCopyBuffer = code;
             RoomCode = code;
+            CustomButton.Started = false;
         }
     }
 

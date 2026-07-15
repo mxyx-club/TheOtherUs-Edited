@@ -1797,6 +1797,9 @@ internal class HudManagerUpdatePatch
         miniUpdate();
         Mini.Update();
 
+        // Bomber
+        Bomber.Update();
+
         // Update player outlines
         setBasePlayerOutlines();
 

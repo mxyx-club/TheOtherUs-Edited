@@ -503,7 +503,7 @@ public static class Guesser
             murderAttemptWriter.EndRPC();
             RPCProcedure.shieldedMurderAttempt(0);
             SoundEffectsManager.play("fail");
-            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是对方被法医保护了！");
+            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "GuessChat.Shielded");
             return;
         }
         if (target == Indomitable.indomitable)
@@ -511,7 +511,7 @@ public static class Guesser
             Coroutines.Start(showFlashCoroutine(new(255, 197, 97), 1.25f, 0.4f));
             __instance.playerStates.ForEach(x => x.gameObject.SetActive(true));
             if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
-            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是对方是不屈者！");
+            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "GuessChat.Indomitable");
             return;
         }
 
@@ -519,7 +519,7 @@ public static class Guesser
         {
             if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
             Coroutines.Start(showFlashCoroutine(Oracle.color, 1.25f, 0.33f));
-            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是对方被神谕者保护了！");
+            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "GuessChat.Shielded");
             return;
         }
 
@@ -527,7 +527,7 @@ public static class Guesser
         {
             if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
             Coroutines.Start(showFlashCoroutine(Dreamcatcher.color, 1.25f, 0.33f));
-            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是对方被摄梦人保护了！");
+            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "GuessChat.Shielded");
             return;
         }
 
@@ -536,7 +536,7 @@ public static class Guesser
             if (Specoality.specoality.IsAlive() && target != dyingTarget)
             {
                 if (guesserUI != null) guesserUIExitButton.OnClick.Invoke();
-                seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但猜测错误");
+                seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "GuessChat.Specoality");
 
                 if (PlayerControl.LocalPlayer == WolfLord.Player && !WolfLord.Revealed) WolfLord.WolfLord_Patch.ClearButton();
                 Coroutines.Start(showFlashCoroutine(Color.red, 1.25f, 0.33f));
@@ -566,7 +566,7 @@ public static class Guesser
                 }
             }
             if (guesserUI != null && guesserUIExitButton != null) guesserUIExitButton.OnClick.Invoke();
-            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "但是您被关押了！" + "\n--看来你还不明白现在自己的处境");
+            seedGuessChat(PlayerControl.LocalPlayer, target, roleId, true, "Gaoler");
             return;
         }
 
@@ -782,7 +782,8 @@ public static class Guesser
                 msg = string.Format(GetString("GuesserUI.GuessChat"), guesser.Data.PlayerName, guessedTarget.Data.PlayerName, roleInfo?.Name);
             }
 
-            msg += $"\n{text}";
+            msg += $"\n{text.Translate()}";
+            GameDataManager.RecordEvent("GuesserShoot", guesser.PlayerId, guessedTarget.PlayerId, (RoleId)guessedRoleId);
 
             if (FastDestroyableSingleton<HudManager>.Instance)
             {
@@ -800,6 +801,7 @@ public static class Guesser
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 writer.Write(guessedTarget.PlayerId);
                 writer.Write(guessedRoleId);
+                writer.Write(text);
                 writer.EndRPC();
             }
         }

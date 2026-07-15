@@ -125,4 +125,72 @@ public static class FastRPCExtension
     {
         return player.GetClient() == null ? -1 : player.GetClient().Id;
     }
+
+#nullable enable
+    public static void WriteExtra(this MessageWriter writer, object?[]? extra)
+    {
+        if (extra == null || extra.Length == 0)
+        {
+            writer.Write((byte)0);
+            return;
+        }
+
+        writer.Write((byte)extra.Length);
+        foreach (var item in extra)
+        {
+            switch (item)
+            {
+                case null:
+                    writer.Write((byte)0);
+                    break;
+                case string s:
+                    writer.Write((byte)1);
+                    writer.Write(s);
+                    break;
+                case int i:
+                    writer.Write((byte)2);
+                    writer.Write(i);
+                    break;
+                case float f:
+                    writer.Write((byte)3);
+                    writer.Write(f);
+                    break;
+                case bool b:
+                    writer.Write((byte)4);
+                    writer.Write(b);
+                    break;
+                case byte bv:
+                    writer.Write((byte)5);
+                    writer.Write(bv);
+                    break;
+                default:
+                    writer.Write((byte)1);
+                    writer.Write(item.ToString() ?? "");
+                    break;
+            }
+        }
+    }
+
+    public static object?[]? ReadExtra(this MessageReader reader)
+    {
+        var count = reader.ReadByte();
+        if (count == 0) return null;
+
+        var result = new object?[count];
+        for (int i = 0; i < count; i++)
+        {
+            var type = reader.ReadByte();
+            result[i] = type switch
+            {
+                0 => null,
+                1 => reader.ReadString(),
+                2 => reader.ReadInt32(),
+                3 => reader.ReadSingle(),
+                4 => reader.ReadBoolean(),
+                5 => reader.ReadByte(),
+                _ => null,
+            };
+        }
+        return result;
+    }
 }

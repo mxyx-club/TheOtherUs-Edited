@@ -8,8 +8,12 @@ internal class OptimizeMapPatch
 
     public static void Postfix(ShipStatus __instance)
     {
-        addLadder(GameOptionsManager.Instance.currentNormalGameOptions.MapId);
-        optimizeMap(GameOptionsManager.Instance.currentNormalGameOptions.MapId);
+        try
+        {
+            addLadder(GameOptionsManager.Instance.currentNormalGameOptions.MapId);
+            optimizeMap(GameOptionsManager.Instance.currentNormalGameOptions.MapId);
+        }
+        catch { }
     }
 
     public static void optimizeMap(int mapId)

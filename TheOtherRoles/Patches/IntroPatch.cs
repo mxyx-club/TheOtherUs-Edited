@@ -11,6 +11,7 @@ internal class IntroCutsceneOnDestroyPatch
     public static void Prefix(IntroCutscene __instance)
     {
         Message($"游戏开始 MapId: {GameOptionsManager.Instance.CurrentGameOptions.MapId}");
+        GameDataManager.RecordEvent("GameStart");
         if (ModOption.isCanceled) return;
         // Generate and initialize player icons
         if (PlayerControl.LocalPlayer != null && HudManager.Instance != null)
@@ -117,6 +118,16 @@ internal class IntroCutsceneOnDestroyPatch
         catch (Exception ex)
         {
             Error(ex, "PlayerData");
+        }
+
+        if (!ModOption.DebugMode
+                    && AmongUsClient.Instance.NetworkMode != NetworkModes.FreePlay
+                    && !ChatControllerPatch.EnableChat.ForceEnableChat
+                    && !RoleDraft.isRunning
+                    && !ChatControllerPatch.CanEnableChat())
+        {
+            HudManager.Instance.Chat.Close();
+            HudManager.Instance.Chat.SetVisible(false);
         }
 
         Berserker.Timer = 0;

@@ -57,6 +57,7 @@ internal class RoleDraft
         aspectPosition.DistanceFromEdge = new Vector2(1.62f, 1.2f);
         aspectPosition.AdjustPosition();
         feedText.transform.localScale = new Vector3(0.6f, 0.6f, 1);
+        feedText.name = "FeedText";
         feedText.transform.position += new Vector3(0f, 0.6f);
         feedText.text = GetString("RoleDraft.FeedText");
         feedText.alignment = TextAlignmentOptions.TopLeft;
@@ -81,6 +82,19 @@ internal class RoleDraft
             }
         }
         __instance.FrontMost.gameObject.SetActive(false);
+
+        var chat = HudManager.Instance.Chat;
+        if (chat != null)
+        {
+            var pos = chat.transform.localPosition;
+            chat.transform.localPosition = new Vector3(pos.x, pos.y, -330f);
+        }
+
+        bool scrollEnabled = PlayerControl.AllPlayerControls.Count >= 14;
+        int extraPlayers = Mathf.Max(0, PlayerControl.AllPlayerControls.Count - 14);
+        float baseFeedY = feedText.transform.localPosition.y;
+        float scrollOffsetY = 0f;
+        const float scrollSpeed = 8f;
 
         if (AmongUsClient.Instance.AmHost)
         {
@@ -395,6 +409,19 @@ internal class RoleDraft
                 }
 
                 __instance.TeamTitle.text += string.Format(GetString("RoleDraft.TeamTitle3"), (int)(maxTimer + 1 - timer));
+
+                if (scrollEnabled)
+                {
+                    float scroll = -Input.mouseScrollDelta.y;
+                    if (Mathf.Abs(scroll) > 0.01f)
+                    {
+                        float offset = scroll * scrollSpeed * Time.deltaTime;
+                        scrollOffsetY = Mathf.Clamp(scrollOffsetY + offset, 0f, extraPlayers * 0.66f);
+                        var fp = feedText.transform.localPosition;
+                        feedText.transform.localPosition = new Vector3(fp.x, baseFeedY + scrollOffsetY, fp.z);
+                    }
+                }
+
                 yield return null;
             }
         }
@@ -431,6 +458,8 @@ internal class RoleDraft
         playerRoles.TryAdd(playerId, roleId);
         var isRandom = flag > 0;
         var reasons = ((SelectFlags)flag).ToString();
+
+        GameDataManager.RecordEvent("DraftModePick", playerId, null, (RoleId)roleId, (SelectFlags)flag);
 
         try
         {

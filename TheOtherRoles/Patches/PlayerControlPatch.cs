@@ -262,6 +262,7 @@ internal class PlayerControlRevivePatch
 
         RPCProcedure.clearGhostRoles(__instance.PlayerId);
 
+        GameDataManager.RecordEvent("Revive", __instance?.PlayerId);
         PlayerData.ClearDeathReason(__instance);
     }
 }
@@ -286,6 +287,7 @@ internal class CmdReportDeadPatch
     private static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
     {
         Message($"报告玩家 {__instance.Data.PlayerName} 被报告尸体 {target?.PlayerName ?? "null"}", "CmdReportDeadBody");
+        GameDataManager.RecordEvent("ReportDeadBody", __instance?.PlayerId, target?.PlayerId);
 
         // Medic or Detective report
         var isMedicReport = Medic.medic != null && Medic.medic == PlayerControl.LocalPlayer &&
@@ -571,13 +573,8 @@ public static class MurderPlayerPatch
                     }, 0.25f);
                     PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Pelican.Player.transform.position);
                 }
-                var data = PlayerData.GetPlayerData(player);
-                if (data != null)
-                {
-                    data.DeathReason = CustomDeathReason.Null;
-                    data.KilledBy = null;
-                    data.DeathTimer = DateTime.MinValue;
-                }
+                PlayerData.ClearDeathReason(player);
+
                 continue;
             }
             Pelican.eatenPlayers = new();
@@ -655,8 +652,8 @@ public static class MurderPlayerPatch
             HudManagerStartPatch.witchSpellButton.Timer = HudManagerStartPatch.witchSpellButton.MaxTimer;
 
         // Bomber Button Sync
-        if (Bomber.triggerBothCooldowns && Bomber.bomber != null &&
-            PlayerControl.LocalPlayer == Bomber.bomber && __instance == Bomber.bomber &&
+        if (Bomber.triggerBothCooldowns && Bomber.Player != null &&
+            PlayerControl.LocalPlayer == Bomber.Player && __instance == Bomber.Player &&
             HudManagerStartPatch.bomberBombButton != null)
             HudManagerStartPatch.bomberBombButton.Timer = HudManagerStartPatch.bomberBombButton.MaxTimer;
 
@@ -841,13 +838,8 @@ public static class ExilePlayerPatch
     public static void Postfix(PlayerControl __instance)
     {
         // Collect dead player info
-        var data = PlayerData.GetPlayerData(__instance);
-        if (data != null && data.DeathReason == CustomDeathReason.Null)
-        {
-            data.DeathReason = CustomDeathReason.Exile;
-            data.KilledBy = null;
-            data.DeathTimer = DateTime.UtcNow;
-        }
+        if (__instance?.PlayerData?.DeathReason == CustomDeathReason.Null)
+            PlayerData.SetDeathReason(__instance, CustomDeathReason.Exile);
 
         if (MeetingHud.Instance)
         {
@@ -1019,14 +1011,6 @@ public static class DisconnectPatch
                 if (p != null && p.Data.IsDead)
                 {
                     p.Revive();
-
-                    var data = PlayerData.GetPlayerData(p);
-                    if (data != null)
-                    {
-                        data.DeathReason = CustomDeathReason.Null;
-                        data.KilledBy = null;
-                        data.DeathTimer = DateTime.MinValue;
-                    }
 
                     if (p.AmOwner)
                     {

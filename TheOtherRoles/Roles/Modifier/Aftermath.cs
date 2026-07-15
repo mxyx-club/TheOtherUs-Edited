@@ -30,15 +30,16 @@ public class Aftermath
             blackmailPlayer(target.PlayerId);
             blackmailerButton.Timer = blackmailerButton.MaxTimer;
         }
-        else if (Bomber.bomber == killer)
+        else if (Bomber.Player == killer)
         {
             var target = killer;
             if (Bomber.currentTarget != null) target = Bomber.currentTarget;
             var bombWriter = StartRPC(killer.NetId, CustomRPC.GiveBomb);
+            bombWriter.Write(killerId);
             bombWriter.Write(target.PlayerId);
             bombWriter.Write(false);
             bombWriter.EndRPC();
-            giveBomb(target.PlayerId);
+            Bomber.giveBomb(killerId, target.PlayerId, false);
             bomberBombButton.Timer = bomberBombButton.MaxTimer;
         }
         else if (Terrorist.terrorist == killer)

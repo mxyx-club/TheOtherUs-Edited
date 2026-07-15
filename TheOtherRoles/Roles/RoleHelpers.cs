@@ -152,6 +152,8 @@ public static class PlayerControlExtensions
 
         public bool IsLocalPlayer => player != null && player == PlayerControl.LocalPlayer;
 
+        public PlayerData PlayerData => PlayerData.GetPlayerData(player);
+
         /// <summary>
         /// 假任务
         /// </summary>
@@ -537,6 +539,7 @@ public static class RoleHelpers
         KillAnimationCoPerformKillPatch.hideNextAnimation = !showAnimation;
         killer.MurderPlayer(target, MurderResultFlags.Succeeded);
         PlayerData.SetDeathReason(target, deathReason, killer);
+        GameDataManager.RecordEvent("CustomMurderPlayer", killer?.PlayerId, target?.PlayerId, deathReason);
         return true;
     }
 

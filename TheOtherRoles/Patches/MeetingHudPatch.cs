@@ -646,6 +646,7 @@ internal class MeetingHudPatch
         {
             Info("ClearVote");
             swapperCheckAndReturnSwap(__instance, byte.MaxValue - 1);
+            GameDataManager.RecordEvent("ClearVote");
 
             Prosecutor.ProsecuteThisMeeting = false;
             Prosecutor.StartProsecute = false;
@@ -1102,6 +1103,8 @@ internal class MeetingHudPatch
                 newButton.transform.parent = colorButton.transform.parent.parent;
                 newButton.GetComponent<PassiveButton>().OnClick = new Button.ButtonClickedEvent();
             }
+
+            GameDataManager.RecordEvent("MeetingStart", null, null, MeetingCount, IsEmergencyMeetings);
         }
     }
 

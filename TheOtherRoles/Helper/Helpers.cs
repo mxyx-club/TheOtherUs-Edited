@@ -455,15 +455,16 @@ public static class Helpers
     public static void handleBomberExplodeOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        if (Bomber.bomber.IsAlive() && Bomber.hasBombPlayer != null)
+        var bomb = Bomber.ActiveBomb;
+        if (Bomber.Player.IsAlive() && bomb?.HasBombPlayer != null)
         {
-            SoundEffectsManager.stop("timemasterShield");
-            if (Bomber.hasBombPlayer.IsAlive()) RpcCustomMurderPlayer(Bomber.bomber, Bomber.hasBombPlayer, false);
+            if (bomb.HasBombPlayer.IsAlive()) RpcCustomMurderPlayer(Bomber.Player, bomb.HasBombPlayer, false);
             var writer = StartRPC(CustomRPC.GiveBomb);
+            writer.Write(byte.MaxValue);
             writer.Write(byte.MaxValue);
             writer.Write(false);
             writer.EndRPC();
-            RPCProcedure.giveBomb(byte.MaxValue);
+            Bomber.giveBomb(byte.MaxValue, byte.MaxValue);
         }
     }
 
@@ -472,7 +473,7 @@ public static class Helpers
         var infos = RoleInfo.getRoleInfoForPlayer(player);
         List<string> taskTexts = new(infos.Count);
 
-        foreach (var roleInfo in infos) taskTexts.Add(getRoleString(roleInfo));
+        foreach (var roleInfo in infos) taskTexts.Add(Cs(roleInfo.color, $"{roleInfo.Name}: {roleInfo.ShortDescription}"));
 
         var toRemove = new List<PlayerTask>();
         foreach (var t in player.myTasks.GetFastEnumerator())
@@ -502,11 +503,6 @@ public static class Helpers
             task.Text = title;
             player.myTasks.Insert(0, task);
         }
-    }
-
-    internal static string getRoleString(RoleInfo roleInfo)
-    {
-        return Cs(roleInfo.color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
     }
 
     public static bool isDark(byte playerId)

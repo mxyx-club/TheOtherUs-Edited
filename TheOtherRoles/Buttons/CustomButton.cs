@@ -11,7 +11,7 @@ public class CustomButton
     public static IReadOnlyList<CustomButton> Buttons => _buttons;
     private static List<CustomButton> _buttons = new(55);
     private static readonly int Desat = Shader.PropertyToID("_Desat");
-    private static bool Started;
+    public static bool Started;
 
     public static Sprite HandcuffedSprite = new ResourceSprite("DeputyHandcuffed.png");
     public static Sprite LockedSprite = HandcuffedSprite;
@@ -209,7 +209,7 @@ public class CustomButton
 
     public void onClickEvent()
     {
-        if (!HasButton() || (!InGame && !Started)) return;
+        if (!HasButton()) return;
 
         actionButtonRenderer.color = new Color(1f, 1f, 1f, 0.3f);
 

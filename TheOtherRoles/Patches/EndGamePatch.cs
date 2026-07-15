@@ -1,5 +1,4 @@
 using AmongUs.GameOptions;
-using BepInEx;
 using System.IO;
 using TheOtherRoles.Attributes;
 using TheOtherRoles.Mode;
@@ -614,6 +613,7 @@ public class OnGameEndPatch
             Error($"Failed to set PlayerData: {e.Message}\n{e.StackTrace}");
         }
 
+        GameDataManager.RecordEvent("GameEnd", null, null, AdditionalTempData.winCondition, winners.Select(x => x?.PlayerData?.PlayerName).ToArray());
         Message($"游戏结束 {AdditionalTempData.winCondition}", "OnGameEnd");
         // Reset Settings
         OnGameEndAttribute.Invoke();

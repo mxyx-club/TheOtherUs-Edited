@@ -126,6 +126,7 @@ internal class ExileControllerBeginPatch
         }
 
         HandleBeginPrefix();
+
         return true;
     }
 
@@ -193,6 +194,9 @@ internal class ExileControllerBeginPatch
     {
         Message("Begin Postfix", "ExileController");
         var player = exiled?.Object ?? null;
+
+        GameDataManager.RecordEvent("Exile", player?.PlayerId ?? byte.MaxValue);
+
         if (Dreamcatcher.Player != null && player == Dreamcatcher.Player && Dreamcatcher.Dreamed.IsAlive() && Dreamcatcher.Player == PlayerControl.LocalPlayer)
         {
             Dreamcatcher.Dreamed.RpcExiled();
