@@ -1035,6 +1035,8 @@ internal class RoleManagerSelectRolesPatch
         {
             var buttonPlayer = new List<PlayerControl>(playerList);
             buttonPlayer.RemoveAll(x => x == Mayor.mayor);
+            if (!CustomOptionHolder.buttonBarryCanBeJester.GetBool())
+                buttonPlayer.RemoveAll(x => Jester.Player.Any(jester => jester.PlayerId == x.PlayerId));
 
             playerId = setModifierToRandomPlayer((byte)RoleId.ButtonBarry, buttonPlayer);
             crewPlayer.RemoveAll(x => x.PlayerId == playerId);
