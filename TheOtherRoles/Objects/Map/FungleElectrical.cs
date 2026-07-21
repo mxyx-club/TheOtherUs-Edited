@@ -14,9 +14,12 @@ public static class FungleAdditionalElectrical
             FungleShipStatus fungleShipStatus = ShipStatus.Instance.CastFast<FungleShipStatus>();
             SwitchSystem system = new();
             fungleShipStatus.Systems[SystemTypes.Electrical] = system.TryCast<ISystemType>();
+            MapUtilities.RefreshSystems(fungleShipStatus);
             fungleShipStatus.Systems[SystemTypes.Sabotage].TryCast<SabotageSystemType>().specials.Add(system.TryCast<IActivatable>());
-            List<PlayerTask> Tasks = VanillaAsset.MapAsset[3].SpecialTasks.ToList();
-            Tasks.Add(MapLoader.Airship?.SpecialTasks?.FirstOrDefault(x => x.TaskType == TaskTypes.FixLights) ?? Tasks.FirstOrDefault(x => x.TaskType == TaskTypes.FixLights));
+            List<PlayerTask> Tasks = ShipStatus.Instance.SpecialTasks.ToList();
+            PlayerTask fixLightsTask = MapLoader.Airship?.SpecialTasks?.FirstOrDefault(x => x.TaskType == TaskTypes.FixLights);
+            if (fixLightsTask != null && !Tasks.Any(x => x.TaskType == TaskTypes.FixLights))
+                Tasks.Add(fixLightsTask);
             ShipStatus.Instance.SpecialTasks = new(Tasks.ToArray());
 
             Console console1 = UObject.Instantiate(VanillaAsset.MapAsset[3].transform.FindChild("Storage/task_lightssabotage (cargo)"), fungleShipStatus.transform).GetComponent<Console>();

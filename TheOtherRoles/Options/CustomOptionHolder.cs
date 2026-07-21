@@ -782,6 +782,7 @@ public class CustomOptionHolder
     public static CustomOption modifierButtonBarry;
     public static CustomOption buttonBarryCanBeGuessed;
     public static CustomOption modifierButtonSabotageRemoteMeetings;
+    public static CustomOption buttonBarryCanBeJester;
 
     public static CustomOption modifierWatcher;
     public static CustomOption watcherCanBeGuessed;
@@ -1743,6 +1744,7 @@ public class CustomOptionHolder
         modifierButtonBarry = Create(402800, Types.Modifier, Cs(Color.yellow, "ButtonBarry"), rates, null, true);
         buttonBarryCanBeGuessed = Create(400026, Types.Modifier, "modifierCanBeGuessed", true, modifierButtonBarry, isHidden: () => !AllowGuessModifier.GetBool());
         modifierButtonSabotageRemoteMeetings = Create(402801, Types.Modifier, "modifierButtonSabotageRemoteMeetings", true, modifierButtonBarry);
+        buttonBarryCanBeJester = Create(402802, Types.Modifier, "buttonBarryCanBeJester", false, modifierButtonBarry);
 
         modifierSlueth = Create(402900, Types.Modifier, Cs(Color.yellow, "Slueth"), rates, null, true);
         sluethCanBeGuessed = Create(400027, Types.Modifier, "modifierCanBeGuessed", true, modifierSlueth, isHidden: () => !AllowGuessModifier.GetBool());

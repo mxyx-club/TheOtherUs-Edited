@@ -2796,6 +2796,10 @@
         "0": "Can Call Emergency Meetings during Sabotages",
         "13": "可在破坏时使用"
     },
+    "buttonBarryCanBeJester": {
+        "0": "Jester Can Be Button Barry",
+        "13": "小丑可以获得执钮人"
+    },
     "modifierAutoJoin": {
         "0": "Auto-joins the Imposters if the Impostor Team Gains Majority",
         "13": "在伪装者人数占优时自动加入"

@@ -15,6 +15,13 @@ public static class MapUtilities
         }
     }
 
+    public static void RefreshSystems(ShipStatus shipStatus)
+    {
+        CachedShipStatus = shipStatus;
+        _systems.Clear();
+        GetSystems();
+    }
+
     public static void MapDestroyed()
     {
         CachedShipStatus = ShipStatus.Instance;
