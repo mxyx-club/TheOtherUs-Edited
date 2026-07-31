@@ -116,7 +116,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: "TheOtherUs-Edited v${{ env.VERSION }}"
+          name: "v${{ env.VERSION }}"
           body_path: CHANGELOG.md
           files: |
             TheOtherUs.dll
