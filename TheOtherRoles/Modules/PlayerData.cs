@@ -120,7 +120,17 @@ public class PlayerData
 
         var timestamp = DateTime.UtcNow;
 
-        data.DeathHistory.Add(new DeathRecord(data.Player, deathReason, timestamp, killer));
+        var record = new DeathRecord(data.Player, deathReason, timestamp, killer);
+
+        // MurderPlayer's Harmony postfix records the death before callers can
+        // replace the generic reason with a role-specific one. Treat that
+        // second call as an update to the same death instead of another kill.
+        // ClearDeathReason resets DeathReason on revive, so a later death still
+        // appends a new history entry.
+        if (data.DeathReason == CustomDeathReason.Null || data.DeathHistory.Count == 0)
+            data.DeathHistory.Add(record);
+        else
+            data.DeathHistory[^1] = record;
 
         data.DeathReason = deathReason;
         data.DeathTimer = timestamp;
