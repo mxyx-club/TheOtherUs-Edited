@@ -112,13 +112,13 @@ public static class Bomber
             HasBombPlayer = player;
         }
 
-        private static void OnBombPlayerChanged(PlayerControl oldPlayer, PlayerControl newPlayer)
+        private void OnBombPlayerChanged(PlayerControl oldPlayer, PlayerControl newPlayer)
         {
             if (oldPlayer == PlayerControl.LocalPlayer)
             {
                 SoundEffectsManager.stop("timemasterShield");
             }
-            else if (newPlayer == PlayerControl.LocalPlayer)
+            if (newPlayer == PlayerControl.LocalPlayer && IsActive)
             {
                 SoundEffectsManager.play("timemasterShield");
             }
@@ -133,6 +133,8 @@ public static class Bomber
             if (!IsActive && _elapsedTime >= _bombDelay)
             {
                 IsActive = true;
+                if (HasBombPlayer == PlayerControl.LocalPlayer)
+                    SoundEffectsManager.play("timemasterShield");
             }
 
             if (Player.IsDead() || HasBombPlayer.IsDead())

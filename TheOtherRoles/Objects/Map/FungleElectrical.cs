@@ -98,12 +98,13 @@ public static class MapLoader
                     Airship = VanillaAsset.MapAsset[mapAssetIndex];
                 else if (mapName.Contains("Polus") || mapAssetIndex == 2)
                     Polus = VanillaAsset.MapAsset[mapAssetIndex];
+
+                mapAssetIndex++;
             }
             else
             {
                 Error($"Failed to load map at ShipPrefabs[{i}]");
             }
-            mapAssetIndex++;
         }
     }
 }

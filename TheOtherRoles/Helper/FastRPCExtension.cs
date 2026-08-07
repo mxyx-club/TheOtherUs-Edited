@@ -129,13 +129,15 @@ public static class FastRPCExtension
 #nullable enable
     public static void WriteExtra(this MessageWriter writer, object?[]? extra)
     {
-        if (extra == null || extra.Length == 0)
+        if (extra == null)
         {
-            writer.Write((byte)0);
+            writer.Write(-1);
             return;
         }
 
-        writer.Write((byte)extra.Length);
+        writer.Write(extra.Length);
+        if (extra.Length == 0) return;
+
         foreach (var item in extra)
         {
             switch (item)
@@ -173,8 +175,9 @@ public static class FastRPCExtension
 
     public static object?[]? ReadExtra(this MessageReader reader)
     {
-        var count = reader.ReadByte();
-        if (count == 0) return null;
+        var count = reader.ReadInt32();
+        if (count == -1) return null;
+        if (count == 0) return Array.Empty<object?>();
 
         var result = new object?[count];
         for (int i = 0; i < count; i++)
