@@ -674,6 +674,8 @@ public static class Helpers
     public static bool hidePlayerName(PlayerControl source, PlayerControl target)
     {
         var localPlayer = PlayerControl.LocalPlayer;
+        if (Aurial.ShouldHideWorldIdentity(source, target))
+            return true;
         if (Camouflager.camouflageTimer > 0f || MushroomSabotageActive || isCamoComms)
             return true; // No names are visible
         if (SurveillanceMinigamePatch.nightVisionIsActive) return true;

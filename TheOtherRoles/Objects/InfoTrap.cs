@@ -6,10 +6,17 @@ namespace TheOtherRoles.Objects;
 /// </summary>
 public sealed class InfoTrap : CustomObjectBase<InfoTrap>
 {
-    private static Sprite trapSprite = new ResourceSprite("TrapperPlus_Trap_Ingame.png", 300f);
+    private static Sprite trapSprite = new ResourceSprite("Trapper_Trap_Ingame.png", 300f);
+    private const float MarkerDiameter = 0.35f;
+    private const float MarkerAlpha = 0.55f;
+    private const float RingAlpha = 0.35f;
+    private const float RingWidth = 0.035f;
+    private const int RingSegments = 96;
 
     private readonly Dictionary<byte, float> dwellSeconds = new();
     private readonly HashSet<byte> completedTargets = new();
+    private readonly LineRenderer rangeRenderer;
+    private Material rangeMaterial;
 
     public PlayerControl Owner { get; }
     public byte OwnerId { get; }
@@ -28,8 +35,9 @@ public sealed class InfoTrap : CustomObjectBase<InfoTrap>
         GameObject.transform.position = new Vector3(position.x, position.y, position.y + 0.001f);
 
         Renderer.sprite = trapSprite;
-        Renderer.color = Color.white;
-        ResizeSpriteToRadius();
+        Renderer.color = Color.white.SetAlpha(MarkerAlpha);
+        ResizeMarker();
+        rangeRenderer = CreateRangeRenderer();
         RefreshVisibility();
     }
 
@@ -63,6 +71,17 @@ public sealed class InfoTrap : CustomObjectBase<InfoTrap>
     public override void OnMeetingStart()
     {
         ResetForNextRound();
+    }
+
+    public override void OnDestroy()
+    {
+        if (rangeMaterial != null)
+        {
+            UObject.Destroy(rangeMaterial);
+            rangeMaterial = null;
+        }
+
+        base.OnDestroy();
     }
 
     public override void Update()
@@ -125,19 +144,59 @@ public sealed class InfoTrap : CustomObjectBase<InfoTrap>
             GameObject.SetActive(true);
         if (Renderer != null)
             Renderer.enabled = canSee;
+        if (rangeRenderer != null)
+            rangeRenderer.enabled = canSee;
         IsActive = canSee;
     }
 
-    private void ResizeSpriteToRadius()
+    private void ResizeMarker()
     {
         var sprite = Renderer.sprite;
         if (sprite == null)
             return;
 
         var bounds = sprite.bounds.size;
-        var diameter = Radius * 2f;
-        var x = bounds.x > 0f ? diameter / bounds.x : 1f;
-        var y = bounds.y > 0f ? diameter / bounds.y : x;
+        var x = bounds.x > 0f ? MarkerDiameter / bounds.x : 1f;
+        var y = bounds.y > 0f ? MarkerDiameter / bounds.y : x;
         GameObject.transform.localScale = new Vector3(x, y, 1f);
+    }
+
+    private LineRenderer CreateRangeRenderer()
+    {
+        var ringObject = new GameObject("InfoTrap Range") { layer = 11 };
+        ringObject.transform.SetParent(GameObject.transform, false);
+        ringObject.transform.localPosition = new Vector3(0f, 0f, -0.01f);
+        // The marker root is scaled to a fixed visual size; cancel that scale so
+        // ring coordinates remain exact world units and match the host radius.
+        var rootScale = GameObject.transform.localScale;
+        ringObject.transform.localScale = new Vector3(
+            rootScale.x > 0f ? 1f / rootScale.x : 1f,
+            rootScale.y > 0f ? 1f / rootScale.y : 1f,
+            1f);
+
+        var line = ringObject.AddComponent<LineRenderer>();
+        var spriteShader = Shader.Find("Sprites/Default");
+        if (spriteShader != null)
+        {
+            rangeMaterial = new Material(spriteShader);
+            line.sharedMaterial = rangeMaterial;
+        }
+        line.useWorldSpace = false;
+        line.loop = true;
+        line.positionCount = RingSegments;
+        line.startWidth = RingWidth;
+        line.endWidth = RingWidth;
+        line.numCornerVertices = 2;
+        line.numCapVertices = 2;
+        line.startColor = Color.yellow.SetAlpha(RingAlpha);
+        line.endColor = Color.yellow.SetAlpha(RingAlpha);
+
+        for (var index = 0; index < RingSegments; index++)
+        {
+            var angle = index * Mathf.PI * 2f / RingSegments;
+            line.SetPosition(index, new Vector3(Mathf.Cos(angle) * Radius, Mathf.Sin(angle) * Radius, 0f));
+        }
+
+        return line;
     }
 }

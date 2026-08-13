@@ -4082,12 +4082,12 @@
         "13": "无法效仿该玩家。"
     },
     "Aurial.RadiationProgress": {
-        "0": "Radiation: {0} ({1}/{2})",
-        "13": "辐射进度：{0}（{1}/{2}）"
+        "0": "Radiation hit ({0}/{1}).",
+        "13": "辐射命中（{0}/{1}）。"
     },
     "Aurial.RadiationUnlocked": {
-        "0": "Faction revealed for {0} ({1}/{2}).",
-        "13": "已解锁 {0} 的阵营信息（{1}/{2}）。"
+        "0": "Faction color revealed ({0}/{1}).",
+        "13": "????????{0}/{1}??"
     },
     "colorSalmon": {
         "0": "Salmon",
@@ -6177,12 +6177,12 @@
         "13": "灵光师"
     },
     "AurialIntroDesc": {
-        "0": "Let their factions glow.",
-        "13": "让他们的阵营显现灵光。"
+        "0": "See the glow beneath their identities.",
+        "13": "越过身份，只见灵光。"
     },
     "AurialShortDesc": {
-        "0": "Radiate nearby players repeatedly to reveal their factions.",
-        "13": "反复辐射附近玩家以识别其阵营。"
+        "0": "See others as anonymous silhouettes and radiate them repeatedly to reveal faction colors.",
+        "13": "??????????????????????"
     },
     "ImpostorFullDesc": {
         "0": "An ordinary Imposter, deadly but otherwise unassuming.",
@@ -6671,7 +6671,7 @@
         "13": "陷阱师可放置隐藏的信息陷阱。玩家在范围内停留足够久后，每轮会被记录一次。若记录人数达到要求，下一次会议将收到随机排序且不含身份的职业列表。"
     },
     "AurialFullDesc": {
-        "0": "The Aurial has poor vision but can radiate all nearby players. After a player is hit enough times, their current faction is shown by name color: green crew, gray neutral, or red impostor. Exact roles are never revealed.",
-        "13": "灵光师视野较差，但可辐射附近所有玩家。玩家累计被命中足够次数后，其当前阵营会以姓名颜色显示：绿色船员、灰色中立、红色内鬼；不会显示具体职业。"
+        "0": "The Aurial has poor vision and sees other players only as anonymous black silhouettes, without names or cosmetics. Radiate nearby players repeatedly; after enough hits, their entire silhouette changes to their current faction color: green crew, gray neutral, or red impostor. Exact roles are never revealed.",
+        "13": "???????????????????????????????????????????????????????????????????????????????????????"
     }
 }

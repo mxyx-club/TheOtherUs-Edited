@@ -87,12 +87,9 @@ internal class RoleManagerSelectRolesPatch
         // Get the maximum allowed count of each role type based on the minimum and maximum option
         var neutralCountSettings = rnd.Next(neutralMin, neutralMax + 1);
         var killerNeutralCount = rnd.Next(killerNeutralMin, killerNeutralMax + 1);
-        var crewCountSettings = PlayerControl.AllPlayerControls.Count - neutralCountSettings - impostorNum;
-
         killerNeutralCount = Math.Min(killerNeutralCount, neutralCountSettings);
 
         // Potentially lower the actual maximum to the assignable players
-        var maxCrewmateRoles = Mathf.Min(crewmates.Count, crewCountSettings);
         var maxNeutralRoles = Mathf.Min(crewmates.Count, neutralCountSettings);
         var maxKillerNeutralRoles = Mathf.Min(crewmates.Count, killerNeutralCount);
         var maxImpostorRoles = Mathf.Min(impostors.Count, impostorNum);
@@ -210,6 +207,17 @@ internal class RoleManagerSelectRolesPatch
         neutralSettings = neutralSettings.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
         killerNeutralSettings = killerNeutralSettings.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
         crewSettings = crewSettings.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
+
+        // RoleManager has already split the actual players into vanilla crew and impostors.
+        // Base the custom-role capacity on those real factions instead of the configured
+        // impostor count: forced/debug starts can legitimately have fewer actual impostors.
+        // Also do not reserve neutral slots for an empty role pool. Otherwise a solo test
+        // with neutral-count defaults can produce a negative crew capacity and prevent even
+        // a 100% crewmate role from ever being assigned.
+        maxNeutralRoles = Mathf.Clamp(maxNeutralRoles, 0, Math.Min(crewmates.Count, neutralSettings.Count));
+        maxKillerNeutralRoles = Mathf.Clamp(maxKillerNeutralRoles, 0,
+            Math.Min(crewmates.Count - maxNeutralRoles, killerNeutralSettings.Count));
+        var maxCrewmateRoles = Mathf.Max(0, crewmates.Count - maxNeutralRoles - maxKillerNeutralRoles);
 
         Message("----------------------------------------------");
         Message($"impostors {impostors.Count}");

@@ -42,6 +42,9 @@ public static class Aurial
     public static readonly Dictionary<byte, int> hitCounts = new();
     public static readonly HashSet<byte> revealedPlayers = new();
 
+    private static readonly HashSet<byte> anonymousPlayers = new();
+    private static int anonymousAppearanceSignature = int.MinValue;
+
     public static Sprite buttonSprite = new ResourceSprite("AurialRadiateButton.png");
 
     /// <summary>
@@ -136,6 +139,7 @@ public static class Aurial
     /// </summary>
     public static SessionSnapshot BeginImitation(PlayerControl imitator)
     {
+        RestoreAnonymousWorldView();
         var snapshot = new SessionSnapshot { Holder = aurial };
         foreach (var pair in hitCounts)
             snapshot.HitCounts[pair.Key] = pair.Value;
@@ -154,6 +158,7 @@ public static class Aurial
     /// </summary>
     public static void EndImitation(SessionSnapshot snapshot, bool restoreHolder = true)
     {
+        RestoreAnonymousWorldView();
         aurial = restoreHolder ? snapshot?.Holder : null;
         hitCounts.Clear();
         revealedPlayers.Clear();
@@ -240,26 +245,184 @@ public static class Aurial
     }
 
     /// <summary>
-    /// Applies colours only to world-space nameplates. Meeting vote rows are
-    /// intentionally untouched. Call this after the normal name-colour pass.
+    /// The anonymous view is entirely local. It never changes the player's
+    /// network outfit or GameData snapshot, and is disabled in meetings.
+    /// </summary>
+    public static bool HasAnonymousWorldView
+    {
+        get
+        {
+            var local = PlayerControl.LocalPlayer;
+            return InGame && !InMeeting && ExileController.Instance == null &&
+                   local != null && aurial != null && local.PlayerId == aurial.PlayerId && aurial.IsAlive();
+        }
+    }
+
+    public static bool ShouldHideWorldIdentity(PlayerControl source, PlayerControl target)
+    {
+        return HasAnonymousWorldView && source != null && target != null &&
+               source.PlayerId == PlayerControl.LocalPlayer.PlayerId && target.PlayerId != source.PlayerId;
+    }
+
+    /// <summary>
+    /// Restores locally anonymised players before the normal HUD name, shield
+    /// and tag passes run. This is intentionally separate from applying the
+    /// view so meetings and role loss recover their current visual state in the
+    /// same frame.
+    /// </summary>
+    public static void RestoreAnonymousWorldViewIfInactive()
+    {
+        if (HasAnonymousWorldView)
+            return;
+
+        RestoreAnonymousWorldView();
+    }
+
+    /// <summary>
+    /// Applies outfit-free silhouettes after all ordinary world HUD rendering.
+    /// Unrevealed players are black; revealed players are recoloured as a whole
+    /// using their current faction colour.
+    /// </summary>
+    public static void ApplyAnonymousWorldView()
+    {
+        if (!HasAnonymousWorldView)
+            return;
+
+        var local = PlayerControl.LocalPlayer;
+        var appearanceSignature = GetAppearanceSignature();
+        var refreshFullLook = appearanceSignature != anonymousAppearanceSignature;
+        anonymousAppearanceSignature = appearanceSignature;
+
+        var visibleTargets = new HashSet<byte>();
+        foreach (var target in PlayerControl.AllPlayerControls.ToArray())
+        {
+            if (target == null || target.Data == null || target.PlayerId == local.PlayerId ||
+                target.Data.Disconnected || !target.IsAlive())
+                continue;
+
+            // Never turn an actually invisible player into an opaque silhouette.
+            if (IsInvisible(target))
+            {
+                anonymousPlayers.Remove(target.PlayerId);
+                continue;
+            }
+
+            visibleTargets.Add(target.PlayerId);
+            var firstFrame = anonymousPlayers.Add(target.PlayerId);
+            if (firstFrame || refreshFullLook)
+                target.setLook(string.Empty, 6, string.Empty, string.Empty, string.Empty, string.Empty, false);
+
+            if (target.cosmetics?.nameText != null)
+                target.cosmetics.nameText.text = string.Empty;
+            if (target.cosmetics?.colorBlindText != null)
+                target.cosmetics.colorBlindText.gameObject.SetActive(false);
+
+            ApplyAnonymousMaterial(target.cosmetics?.currentBodySprite?.BodySprite, target);
+        }
+
+        foreach (var playerId in anonymousPlayers.Where(id => !visibleTargets.Contains(id)).ToArray())
+        {
+            RestoreAnonymousPlayer(PlayerById(playerId));
+            anonymousPlayers.Remove(playerId);
+        }
+    }
+
+    /// <summary>
+    /// Recolours an anonymous player renderer without changing network outfit
+    /// data. This is also used by temporary transportation renderers so the
+    /// revealed faction colour remains consistent while riding a zipline.
+    /// </summary>
+    public static void ApplyAnonymousMaterial(SpriteRenderer renderer, PlayerControl target)
+    {
+        if (renderer == null || target == null)
+            return;
+
+        var revealed = revealedPlayers.Contains(target.PlayerId);
+        Color bodyColor = revealed ? GetFactionColor(target) : Palette.PlayerColors[6];
+        Color backColor = revealed
+            ? new Color(bodyColor.r * 0.55f, bodyColor.g * 0.55f, bodyColor.b * 0.55f, bodyColor.a)
+            : Palette.ShadowColors[6];
+        Color visorColor = revealed ? bodyColor : Palette.PlayerColors[6];
+
+        renderer.material.SetColor("_BodyColor", bodyColor);
+        renderer.material.SetColor("_BackColor", backColor);
+        renderer.material.SetColor("_VisorColor", visorColor);
+        renderer.material.SetFloat("_Outline", 0f);
+        renderer.color = renderer.color.SetAlpha(Chameleon.visibility(target.PlayerId));
+    }
+
+    public static void RestoreAnonymousWorldView()
+    {
+        foreach (var playerId in anonymousPlayers.ToArray())
+            RestoreAnonymousPlayer(PlayerById(playerId));
+
+        anonymousPlayers.Clear();
+        anonymousAppearanceSignature = int.MinValue;
+    }
+
+    private static bool IsInvisible(PlayerControl target)
+    {
+        return (target == Ninja.ninja && Ninja.isInvisable) ||
+               (target == Phantom.Player && Phantom.isInvisable) ||
+               (Jackal.jackal.Any(player => player == target) && Jackal.isInvisable);
+    }
+
+    private static int GetAppearanceSignature()
+    {
+        unchecked
+        {
+            var signature = MushroomSabotageActive ? 1 : 0;
+            signature = signature * 31 + (Camouflager.camouflageTimer > 0f ? 1 : 0);
+            signature = signature * 31 + (isCamoComms ? 1 : 0);
+            signature = signature * 31 + (TheOtherRoles.Patches.SurveillanceMinigamePatch.nightVisionIsActive ? 1 : 0);
+            signature = signature * 31 + (Glitch.morphTimer > 0f ? 1 : 0);
+            signature = signature * 31 + (Glitch.morphTarget?.PlayerId ?? byte.MaxValue);
+            return signature;
+        }
+    }
+
+    private static void RestoreAnonymousPlayer(PlayerControl target)
+    {
+        if (target == null || target.Data == null || IsInvisible(target))
+            return;
+
+        if (MushroomSabotageActive)
+        {
+            target.setDefaultLook(false);
+            return;
+        }
+
+        if (Camouflager.camouflageTimer > 0f || isCamoComms)
+        {
+            target.setLook(string.Empty, 6, string.Empty, string.Empty, string.Empty, string.Empty, false);
+            return;
+        }
+
+        if (TheOtherRoles.Patches.SurveillanceMinigamePatch.nightVisionIsActive)
+        {
+            target.setLook(string.Empty, 11, string.Empty, string.Empty, string.Empty, string.Empty, false);
+            return;
+        }
+
+        if (target == Glitch.Player && Glitch.morphTimer > 0f && Glitch.morphTarget?.Data != null)
+        {
+            var outfit = Glitch.morphTarget.Data.DefaultOutfit;
+            target.setLook(Glitch.morphTarget.Data.PlayerName, outfit.ColorId, outfit.HatId,
+                outfit.VisorId, outfit.SkinId, outfit.PetId, false);
+            return;
+        }
+
+        target.setDefaultLook(false);
+    }
+
+    /// <summary>
+    /// Backwards-compatible entry point retained for callers from older builds.
+    /// Anonymous silhouettes now change their whole body colour instead of
+    /// changing world-space names.
     /// </summary>
     public static void ApplyWorldNameColors()
     {
-        var local = PlayerControl.LocalPlayer;
-        if (local == null || aurial == null || local.PlayerId != aurial.PlayerId ||
-            !aurial.IsAlive() || MeetingHud.Instance != null)
-            return;
-
-        foreach (var playerId in revealedPlayers)
-        {
-            var target = PlayerById(playerId);
-            if (target == null || target.Data == null || !target.IsAlive() ||
-                target.PlayerId == aurial.PlayerId || target.cosmetics?.nameText == null)
-                continue;
-
-            target.cosmetics.nameText.color = GetFactionColor(target)
-                .SetAlpha(Chameleon.visibility(target.PlayerId));
-        }
+        ApplyAnonymousWorldView();
     }
 
     public static void ShowLocalPulse()
@@ -294,12 +457,15 @@ public static class Aurial
             var target = PlayerById(targetId);
             if (target == null) continue;
             var key = unlocked.Contains(targetId) ? "Aurial.RadiationUnlocked" : "Aurial.RadiationProgress";
-            ShowNotification(string.Format(GetString(key), target.Data.PlayerName, GetHitCount(targetId), hitsToReveal));
+            // Do not leak an anonymous target's identity through private HUD
+            // feedback. The newly coloured silhouette is the spatial identifier.
+            ShowNotification(string.Format(GetString(key), GetHitCount(targetId), hitsToReveal));
         }
     }
 
     public static void clearAndReload()
     {
+        RestoreAnonymousWorldView();
         aurial = null;
         hitCounts.Clear();
         revealedPlayers.Clear();
