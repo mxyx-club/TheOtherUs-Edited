@@ -32,6 +32,8 @@ public class FootprintHolder : MonoBehaviour
         public PlayerControl Owner;
         public int ColorId = 6;
         public float Lifetime;
+        public byte ImitatorOwnerId = byte.MaxValue;
+        public uint ImitationGeneration;
 
         public Footprint()
         {
@@ -66,6 +68,16 @@ public class FootprintHolder : MonoBehaviour
         print.GameObject.SetActive(true);
         print.Owner = player;
         print.ColorId = player.Data.DefaultOutfit.ColorId;
+        if (Imitator.TryGetSessionGeneration(Detective.detective, RoleId.Detective, out var generation))
+        {
+            print.ImitatorOwnerId = Detective.detective.PlayerId;
+            print.ImitationGeneration = generation;
+        }
+        else
+        {
+            print.ImitatorOwnerId = byte.MaxValue;
+            print.ImitationGeneration = 0;
+        }
         _activeFootprints.Add(print);
     }
 
@@ -115,6 +127,32 @@ public class FootprintHolder : MonoBehaviour
             _activeFootprints.Remove(footprint);
             _pool.Add(footprint);
         }
+    }
+
+    [HideFromIl2Cpp]
+    public void ClearActiveFootprints()
+    {
+        foreach (var footprint in _activeFootprints.ToArray())
+        {
+            footprint.GameObject.SetActive(false);
+            _activeFootprints.Remove(footprint);
+            _pool.Add(footprint);
+        }
+        _toRemove.Clear();
+    }
+
+    [HideFromIl2Cpp]
+    public void ClearSessionFootprints(byte ownerId, uint generation)
+    {
+        foreach (var footprint in _activeFootprints
+                     .Where(print => print.ImitatorOwnerId == ownerId && print.ImitationGeneration == generation)
+                     .ToArray())
+        {
+            footprint.GameObject.SetActive(false);
+            _activeFootprints.Remove(footprint);
+            _pool.Add(footprint);
+        }
+        _toRemove.RemoveAll(print => print.ImitatorOwnerId == ownerId && print.ImitationGeneration == generation);
     }
 
     public void OnDestroy()

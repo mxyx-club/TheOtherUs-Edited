@@ -17,8 +17,16 @@ public static class Mimic
     {
         var target = PlayerById(targetId);
         if (target == null || mimic == null) return;
+        if (target == Imitator.Player)
+        {
+            if (Imitator.IsActive)
+                Imitator.Abort(target.PlayerId);
+            return;
+        }
         var targetInfo = RoleInfo.getRoleInfoForPlayer(target);
         var roleInfo = targetInfo.FirstOrDefault(info => info.roleType != RoleType.Modifier);
+        if (roleInfo == null) return;
+        Imitator.NotifyRoleConsumed(roleInfo.roleId, targetId);
         switch (roleInfo!.roleId)
         {
             case RoleId.BodyGuard:

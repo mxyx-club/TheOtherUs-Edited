@@ -61,14 +61,16 @@ public class Portal
     public static void startTeleport(byte playerId, byte exit)
     {
         if (firstPortal == null || secondPortal == null) return;
-        isTeleporting = true;
+
+        var entryPortal = firstPortal;
+        var exitPortal = secondPortal;
 
         // Generate log info
         var playerControl = PlayerById(playerId);
+        if (playerControl == null) return;
+        var instantTeleport = isInstantTeleport(playerControl);
         var flip = playerControl.cosmetics.currentBodySprite.BodySprite
-            .flipX; // use the original player control here, not the morhpTarget.
-        firstPortal.animationFgRenderer.flipX = flip;
-        secondPortal.animationFgRenderer.flipX = flip;
+            .flipX; // use the original player control here, not the morph target.
         if (Glitch.Player != null && Glitch.morphTimer > 0)
             playerControl = Glitch.morphTarget; // Will output info of morph-target instead
         var playerNameDisplay = Portalmaker.logOnlyHasColors
@@ -83,21 +85,88 @@ public class Portal
         if (!playerControl.Data.IsDead)
             teleportedPlayers.Add(new tpLogEntry(playerId, playerNameDisplay, DateTime.UtcNow));
 
+        // Portalmaker teleports have no animation and must not occupy the global portal lock.
+        if (instantTeleport) return;
+
+        isTeleporting = true;
+        entryPortal.animationFgRenderer.flipX = flip;
+        exitPortal.animationFgRenderer.flipX = flip;
+
+        var cancelled = false;
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(teleportDuration,
             new Action<float>(p =>
             {
-                if (firstPortal == null || firstPortal.animationFgRenderer == null || secondPortal == null ||
-                    secondPortal.animationFgRenderer == null) return;
+                if (cancelled) return;
+                var portalsReplaced = firstPortal != entryPortal || secondPortal != exitPortal;
+                if (portalsReplaced || entryPortal.animationFgRenderer == null || exitPortal.animationFgRenderer == null)
+                {
+                    cancelled = true;
+                    if (!portalsReplaced) isTeleporting = false;
+                    return;
+                }
                 if (exit is 0 or 1)
-                    firstPortal.animationFgRenderer.sprite = getFgAnimationSprite((int)(p * portalFgAnimationSprites.Sprites.Length));
+                    entryPortal.animationFgRenderer.sprite = getFgAnimationSprite((int)(p * portalFgAnimationSprites.Sprites.Length));
                 if (exit is 0 or 2)
-                    secondPortal.animationFgRenderer.sprite = getFgAnimationSprite((int)(p * portalFgAnimationSprites.Sprites.Length));
-                playerControl.SetPlayerMaterialColors(firstPortal.animationFgRenderer);
-                playerControl.SetPlayerMaterialColors(secondPortal.animationFgRenderer);
+                    exitPortal.animationFgRenderer.sprite = getFgAnimationSprite((int)(p * portalFgAnimationSprites.Sprites.Length));
+                playerControl.SetPlayerMaterialColors(entryPortal.animationFgRenderer);
+                playerControl.SetPlayerMaterialColors(exitPortal.animationFgRenderer);
                 if ((int)p != 1) return;
-                firstPortal.animationFgRenderer.sprite = null;
-                secondPortal.animationFgRenderer.sprite = null;
+                entryPortal.animationFgRenderer.sprite = null;
+                exitPortal.animationFgRenderer.sprite = null;
                 isTeleporting = false;
+                cancelled = true;
+            })));
+    }
+
+    public static bool isInstantTeleport(PlayerControl player)
+    {
+        return player != null && player == Portalmaker.portalmaker;
+    }
+
+    public static void teleportLocalPlayer(Vector3 exit, Vector3? entry = null)
+    {
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (isInstantTeleport(localPlayer))
+        {
+            if (SubmergedCompatibility.IsSubmerged) SubmergedCompatibility.ChangeFloor(exit.y > -7);
+            localPlayer.NetTransform.RpcSnapTo(exit);
+            return;
+        }
+
+        if (entry.HasValue) localPlayer.NetTransform.RpcSnapTo(entry.Value);
+
+        var entryPortal = firstPortal;
+        var exitPortal = secondPortal;
+        var didTeleport = false;
+        var cancelled = false;
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(teleportDuration,
+            new Action<float>(p =>
+            {
+                if (cancelled) return;
+                if (localPlayer == null || PlayerControl.LocalPlayer != localPlayer || MeetingHud.Instance != null ||
+                    firstPortal != entryPortal || secondPortal != exitPortal ||
+                    entryPortal?.portalGameObject == null || exitPortal?.portalGameObject == null)
+                {
+                    cancelled = true;
+                    if (localPlayer != null) localPlayer.moveable = true;
+                    return;
+                }
+
+                // Preserve the original animated and movement-locking path for every non-Portalmaker user.
+                localPlayer.moveable = false;
+                localPlayer.NetTransform.Halt();
+                if (p >= 0.5f && p <= 0.53f && !didTeleport && !MeetingHud.Instance)
+                {
+                    if (SubmergedCompatibility.IsSubmerged) SubmergedCompatibility.ChangeFloor(exit.y > -7);
+                    localPlayer.NetTransform.RpcSnapTo(exit);
+                    didTeleport = true;
+                }
+
+                if (p == 1f)
+                {
+                    localPlayer.moveable = true;
+                    cancelled = true;
+                }
             })));
     }
 
@@ -142,6 +211,17 @@ public class Portal
 
         // reset teleported players
         teleportedPlayers = new List<tpLogEntry>();
+    }
+
+    public static void EnablePlacedPortals()
+    {
+        if (firstPortal == null || secondPortal == null)
+            return;
+        firstPortal.portalGameObject?.SetActive(true);
+        secondPortal.portalGameObject?.SetActive(true);
+        bothPlacedAndEnabled = true;
+        if (HudManagerStartPatch.portalmakerMoveToPortalButton?.ButtonTitle != null)
+            HudManagerStartPatch.portalmakerMoveToPortalButton.ButtonTitle.text = "2. " + secondPortal.room;
     }
     private static void preloadSprites()
     {

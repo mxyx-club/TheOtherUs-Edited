@@ -2,8 +2,12 @@ namespace TheOtherRoles.Objects;
 
 public class Trap : CustomObjectBase<Trap>
 {
+    private static readonly Dictionary<byte, int> activeFreezeCounts = new();
+    private static readonly Dictionary<byte, bool> moveableBeforeTrapFreeze = new();
+
     public PlayerControl trapper;
     public List<PlayerControl> trapped = new();
+    private readonly HashSet<byte> activeFrozenTargets = new();
 
     private static Sprite trapSprite = new ResourceSprite("Trapper_Trap_Ingame.png", 300);
     private Arrow arrow = new(Color.blue);
@@ -12,6 +16,8 @@ public class Trap : CustomObjectBase<Trap>
     public bool triggerable;
     private int usedCount;
     private string room;
+
+    public GameObject ArrowObject => arrow?.arrow;
 
     public Trap(PlayerControl player, Vector3 pos)
     {
@@ -34,6 +40,7 @@ public class Trap : CustomObjectBase<Trap>
 
         _ = new LateTask(() =>
         {
+            if (GameObject == null || Renderer == null) return;
             triggerable = true;
             Renderer.color = Color.white;
         }, 5f);
@@ -43,6 +50,9 @@ public class Trap : CustomObjectBase<Trap>
     {
         try
         {
+            foreach (var playerId in activeFrozenTargets.ToArray())
+                ReleaseTarget(playerId);
+            trapped.Clear();
             arrow?.arrow?.Destroy();
         }
         catch { }
@@ -60,7 +70,7 @@ public class Trap : CustomObjectBase<Trap>
 
     public static void ClearAllTraps(PlayerControl trapper, bool active)
     {
-        var traps = AllObjects.Where(x => x.trapper == trapper && (active || !x.revealed));
+        var traps = AllObjects.Where(x => x.trapper == trapper && (active || !x.revealed)).ToArray();
         foreach (var t in traps)
         {
             t?.Destroy();
@@ -71,7 +81,7 @@ public class Trap : CustomObjectBase<Trap>
     {
         var t = AllObjects.FirstOrDefault(x => x.Id == trapId);
         var target = PlayerById(targetId);
-        if (Trapper.trapper == null || t == null || t.trapped.Contains(target) || target == null) return;
+        if (Trapper.trapper == null || t == null || target == null || t.trapped.Contains(target)) return;
 
         t.usedCount++;
         t.triggerable = false;
@@ -80,13 +90,18 @@ public class Trap : CustomObjectBase<Trap>
             SoundEffectsManager.play("trapperTrap");
         }
 
-        target.moveable = false;
+        t.FreezeTarget(target);
         target.NetTransform.Halt();
         if (PlayerControl.LocalPlayer.PlayerId == t.trapper.PlayerId) t.arrow.arrow.SetActive(true);
 
         _ = new LateTask(() =>
         {
-            target.moveable = true;
+            // The trap may have been destroyed by a meeting/role restore. Its
+            // OnDestroy owns the release in that case; this stale callback must
+            // never unlock the player (or another trap's active freeze).
+            if (t.GameObject == null || !t.activeFrozenTargets.Contains(targetId)) return;
+            t.ReleaseTarget(targetId);
+            if (t.arrow?.arrow == null) return;
             t.arrow.arrow.SetActive(false);
             t.triggerable = true;
         }, Trapper.trapDuration);
@@ -121,6 +136,12 @@ public class Trap : CustomObjectBase<Trap>
 
     public void Update(PlayerControl player)
     {
+        if (Imitator.IsImitating(Trapper.trapper, RoleId.Trapper) && trapper != Trapper.trapper)
+        {
+            GameObject.SetActive(false);
+            return;
+        }
+
         if (arrow.arrow.active) arrow.Update();
 
         var canSee = CanSeeGhostInfo || PlayerControl.LocalPlayer == trapper || trapped.Any(x => x.PlayerId == player.PlayerId);
@@ -141,5 +162,42 @@ public class Trap : CustomObjectBase<Trap>
                 triggerTrap(player.PlayerId, Id);
             }
         }
+    }
+
+    private void FreezeTarget(PlayerControl target)
+    {
+        if (target == null || !activeFrozenTargets.Add(target.PlayerId))
+            return;
+
+        if (activeFreezeCounts.TryGetValue(target.PlayerId, out var count))
+        {
+            activeFreezeCounts[target.PlayerId] = count + 1;
+        }
+        else
+        {
+            activeFreezeCounts[target.PlayerId] = 1;
+            moveableBeforeTrapFreeze[target.PlayerId] = target.moveable;
+        }
+
+        target.moveable = false;
+    }
+
+    private void ReleaseTarget(byte playerId)
+    {
+        if (!activeFrozenTargets.Remove(playerId) || !activeFreezeCounts.TryGetValue(playerId, out var count))
+            return;
+
+        if (count > 1)
+        {
+            activeFreezeCounts[playerId] = count - 1;
+            return;
+        }
+
+        activeFreezeCounts.Remove(playerId);
+        var restoreMoveable = moveableBeforeTrapFreeze.TryGetValue(playerId, out var wasMoveable) && wasMoveable;
+        moveableBeforeTrapFreeze.Remove(playerId);
+        var player = PlayerById(playerId);
+        if (player != null)
+            player.moveable = restoreMoveable;
     }
 }

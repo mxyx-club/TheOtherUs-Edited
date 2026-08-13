@@ -94,7 +94,7 @@ public class Jailor
         if (Guesser.guesserUI != null) Guesser.guesserUIExitButton.OnClick.Invoke();
 
         target.CustomExiled(null, true);
-        Avenger.OnPlayerDeath(Player, target);
+        Avenger.OnPlayerDeath(player, target);
         Akujo.otherLover(target)?.CustomExiled(null, true);
 
 
@@ -119,7 +119,8 @@ public class Jailor
             playerState.transform.FindChild("JailCell")?.gameObject?.Destroy();
             playerState.transform.FindChild("JailTargetIcon")?.gameObject?.Destroy();
         }
-        Jailed = null;
+        if (Jailed == target)
+            Jailed = null;
 
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(target.KillSfx, false, 0.8f);
 
@@ -147,7 +148,7 @@ public class Jailor
             if (AmongUsClient.Instance.AmHost) MeetingHud.Instance.CheckForEndVoting();
         }
 
-        if (Player.AmOwner)
+        if (player.AmOwner)
         {
             var color = target.IsCrew() ? Color.red : Color.green;
             Coroutines.Start(showFlashCoroutine(color, 1, 0.5f));
@@ -159,7 +160,8 @@ public class Jailor
 
         if (target.IsCrew())
         {
-            usesCount = 0;
+            if (Player == player)
+                usesCount = 0;
         }
     }
 

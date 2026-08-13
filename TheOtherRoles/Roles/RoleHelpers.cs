@@ -105,6 +105,9 @@ public enum RoleId
     Jailor,
     Dreamcatcher,
     Oracle,
+    Imitator = 129,
+    TrapperPlus = 130,
+    Aurial = 131,
 
     // Modifier ---
     Lover = 150,
@@ -745,6 +748,9 @@ public static class RoleHelpers
             { RoleId.Vigilante, CustomOptionHolder.guesserSpawnRate.GetSelection() },
             { RoleId.Redemptor, CustomOptionHolder.redemptorSpawnRate.GetSelection() },
             { RoleId.Jailor, CustomOptionHolder.jailorSpawnRate.GetSelection() },
+            { RoleId.Imitator, CustomOptionHolder.imitatorSpawnRate.GetSelection() },
+            { RoleId.TrapperPlus, CustomOptionHolder.trapperPlusSpawnRate.GetSelection() },
+            { RoleId.Aurial, CustomOptionHolder.aurialSpawnRate.GetSelection() },
 
             { RoleId.WolfLord, CustomOptionHolder.wolfLordSpawnRate.GetSelection() },
             { RoleId.Blackmailer, CustomOptionHolder.blackmailerSpawnRate.GetSelection() },
@@ -912,6 +918,16 @@ public static class RoleHelpers
         Oracle.ClearAndReload();
         Dreamcatcher.ClearAndReload();
         Gaoler.ClearAndReload();
+        Imitator.clearAndReload();
+        TrapperPlus.Configure(
+            CustomOptionHolder.trapperPlusCooldown.GetFloat(),
+            CustomOptionHolder.trapperPlusMinDwellTime.GetFloat(),
+            CustomOptionHolder.trapperPlusRemoveTrapsEachRound.GetBool(),
+            CustomOptionHolder.trapperPlusMaxTraps.GetInt(),
+            CustomOptionHolder.trapperPlusTrapSize.GetFloat(),
+            CustomOptionHolder.trapperPlusMinPlayersToReport.GetInt());
+        TrapperPlus.clearAndReload();
+        Aurial.clearAndReload();
 
         // Modifier
         Assassin.clearAndReload();

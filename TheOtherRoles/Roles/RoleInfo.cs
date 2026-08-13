@@ -111,6 +111,9 @@ public class RoleInfo
     public static RoleInfo balancer = new("Balancer", Balancer.color, RoleId.Balancer, RoleType.Crewmate);
     public static RoleInfo redemptor = new("Redemptor", Redemptor.color, RoleId.Redemptor, RoleType.Crewmate);
     public static RoleInfo oracle = new("Oracle", Oracle.color, RoleId.Oracle, RoleType.Crewmate);
+    public static RoleInfo imitator = new("Imitator", Imitator.color, RoleId.Imitator, RoleType.Crewmate);
+    public static RoleInfo trapperPlus = new("TrapperPlus", TrapperPlus.color, RoleId.TrapperPlus, RoleType.Crewmate);
+    public static RoleInfo aurial = new("Aurial", Aurial.color, RoleId.Aurial, RoleType.Crewmate);
 
     // Modifier
     public static RoleInfo assassin = new("Assassin", Assassin.color, RoleId.Assassin, RoleType.Modifier);
@@ -237,6 +240,9 @@ public class RoleInfo
         avenger,
         oracle,
         dreamcatcher,
+        imitator,
+        trapperPlus,
+        aurial,
 
         lover,
         assassin,
@@ -320,8 +326,21 @@ public class RoleInfo
             if (p == LastImpostor.lastImpostor) infos.Add(lastImpostor);
         }
 
+        // Imitator always keeps its canonical role, faction and victory condition;
+        // borrowed static holders are ability implementation details only.
+        var hasCanonicalImitatorRole = p == Imitator.Player;
+        RoleInfo borrowedSourceInfo = null;
+        var hasBorrowedSourceRole = Imitator.TryGetBorrowedSourceRole(p, out var borrowedSourceRole) &&
+                                    RoleInfoById.TryGetValue(borrowedSourceRole, out borrowedSourceInfo);
+        if (hasCanonicalImitatorRole) infos.Add(imitator);
+        else if (hasBorrowedSourceRole) infos.Add(borrowedSourceInfo);
+
         var count = infos.Count; // Save count after modifiers are added so that the role count can be checked
 
+        // Canonical Imitator/source snapshots suppress the temporarily borrowed
+        // static primary holder. Modifiers and ghost roles are still appended.
+        if (!hasCanonicalImitatorRole && !hasBorrowedSourceRole)
+        {
         // Special roles
         if (p == Mimic.mimic) infos.Add(mimic);
         if (p == Phantom.Player) infos.Add(phantom);
@@ -405,6 +424,9 @@ public class RoleInfo
         if (Survivor.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(survivor);
         if (Infected.Player.Any(x => x.PlayerId == p.PlayerId)) infos.Add(infected);
         if (p == Oracle.Player) infos.Add(oracle);
+        if (p == TrapperPlus.Player) infos.Add(trapperPlus);
+        if (p == Aurial.aurial) infos.Add(aurial);
+        }
 
         if (showGhost)
         {
@@ -414,7 +436,7 @@ public class RoleInfo
             if (p == Poltergeist.Player) infos.Add(poltergeist);
         }
 
-        if (infos.Count == count)
+        if (infos.Count == count && !hasCanonicalImitatorRole && !hasBorrowedSourceRole)
         {
             if (p.Data.Role.IsImpostor) infos.Add(impostor);
             else infos.Add(crewmate);

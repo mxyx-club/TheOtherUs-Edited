@@ -454,6 +454,9 @@ internal class HudManagerUpdatePatch
 
         // No else if here, as the Impostors need the Spy name to be colored
         if (Spy.spy != null && local.Data.Role.IsImpostor) setPlayerNameColor(Spy.spy, Spy.color);
+
+        // Aurial information is a private, action-phase-only final override.
+        Aurial.ApplyWorldNameColors();
     }
 
     private static void setNameTags()

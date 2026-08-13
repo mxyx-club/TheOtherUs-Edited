@@ -574,6 +574,23 @@ public class CustomOptionHolder
     public static CustomOption oracleRevealAccuracyRate;
     public static CustomOption oracleCanNotGuessConfess;
 
+    public static CustomOption imitatorSpawnRate;
+
+    public static CustomOption trapperPlusSpawnRate;
+    public static CustomOption trapperPlusCooldown;
+    public static CustomOption trapperPlusMinDwellTime;
+    public static CustomOption trapperPlusRemoveTrapsEachRound;
+    public static CustomOption trapperPlusMaxTraps;
+    public static CustomOption trapperPlusTrapSize;
+    public static CustomOption trapperPlusMinPlayersToReport;
+
+    public static CustomOption aurialSpawnRate;
+    public static CustomOption aurialCooldown;
+    public static CustomOption aurialRadius;
+    public static CustomOption aurialHitsToReveal;
+    public static CustomOption aurialVision;
+    public static CustomOption aurialAffectedByVortox;
+
     public static CustomOption bodyGuardSpawnRate;
     public static CustomOption bodyGuardResetTargetAfterMeeting;
     public static CustomOption bodyGuardShowShielded;
@@ -1509,6 +1526,24 @@ public class CustomOptionHolder
         oracleConfessCooldown = Create(304001, Types.Crewmate, "oracleConfessCooldown", 20f, 5f, 60f, 2.5f, oracleSpawnRate);
         oracleRevealAccuracyRate = Create(304002, Types.Crewmate, "oracleRevealAccuracyRate", 80, 0, 100, 10, oracleSpawnRate);
         oracleCanNotGuessConfess = Create(304003, Types.Crewmate, "oracleCanNotGuessConfess", false, oracleSpawnRate);
+
+        imitatorSpawnRate = Create(304300, Types.Crewmate, Cs(Imitator.color, "Imitator"), rates, null, true);
+
+        trapperPlusSpawnRate = Create(304400, Types.Crewmate, Cs(TrapperPlus.color, "TrapperPlus"), rates, null, true);
+        trapperPlusMinDwellTime = Create(304401, Types.Crewmate, "trapperPlusMinDwellTime", 1f, 0f, 15f, 0.5f, trapperPlusSpawnRate);
+        trapperPlusCooldown = Create(304402, Types.Crewmate, "trapperPlusCooldown", 10f, 1f, 15f, 1f, trapperPlusSpawnRate);
+        trapperPlusRemoveTrapsEachRound = Create(304403, Types.Crewmate, "trapperPlusRemoveTrapsEachRound", true, trapperPlusSpawnRate);
+        trapperPlusMaxTraps = Create(304404, Types.Crewmate, "trapperPlusMaxTraps", 5f, 1f, 15f, 1f, trapperPlusSpawnRate);
+        trapperPlusTrapSize = Create(304405, Types.Crewmate, "trapperPlusTrapSize", 0.25f, 0.05f, 1f, 0.05f, trapperPlusSpawnRate);
+        trapperPlusMinPlayersToReport = Create(304406, Types.Crewmate, "trapperPlusMinPlayersToReport", 3f, 1f, 5f, 1f, trapperPlusSpawnRate);
+
+        aurialSpawnRate = Create(304500, Types.Crewmate, Cs(Aurial.color, "Aurial"), rates, null, true);
+        aurialCooldown = Create(304501, Types.Crewmate, "aurialCooldown", 20f, 5f, 60f, 2.5f, aurialSpawnRate);
+        aurialRadius = Create(304502, Types.Crewmate, "aurialRadius", 2.5f, 0.5f, 5f, 0.25f, aurialSpawnRate);
+        aurialHitsToReveal = Create(304503, Types.Crewmate, "aurialHitsToReveal", 3f, 1f, 10f, 1f, aurialSpawnRate);
+        aurialVision = Create(304504, Types.Crewmate, "aurialVision",
+            Enumerable.Range(2, 19).Select(value => $"{value * 5}%").ToArray(), 5, aurialSpawnRate);
+        aurialAffectedByVortox = Create(304505, Types.Crewmate, "aurialAffectedByVortox", false, aurialSpawnRate);
 
         bodyGuardSpawnRate = Create(303400, Types.Crewmate, Cs(BodyGuard.color, "BodyGuard"), rates, null, true);
         bodyGuardResetTargetAfterMeeting = Create(303401, Types.Crewmate, "bodyGuardResetTargetAfterMeeting", true, bodyGuardSpawnRate);

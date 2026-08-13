@@ -65,6 +65,7 @@ internal class IntroCutsceneOnDestroyPatch
 
         //游戏开始时重置cd
         CustomButton.Initialize();
+        NewCrewmateRoleIntegration.ResetLocalInitialCooldowns();
 
         if (CustomOptionHolder.randomGameStartPosition.GetBool()) MapData.RandomSpawnPlayers();
 

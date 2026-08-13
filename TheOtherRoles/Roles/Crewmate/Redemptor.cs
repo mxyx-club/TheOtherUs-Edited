@@ -25,16 +25,20 @@ public class Redemptor
 
     public static void RevivePlayer(byte targetId)
     {
+        RevivePlayerForCaster(Player, targetId);
         var player = PlayerById(targetId);
-        player?.ModRevive();
         RevivedPlayer = player;
         target = null;
+    }
 
-
-        DeadBody[] array = UObject.FindObjectsOfType<DeadBody>();
+    public static void RevivePlayerForCaster(PlayerControl caster, byte targetId)
+    {
+        var player = PlayerById(targetId);
+        player?.ModRevive();
+        var array = UObject.FindObjectsOfType<DeadBody>();
         for (var i = 0; i < array.Length; i++)
         {
-            if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == Player.PlayerId)
+            if (array[i] != null && caster != null && array[i].ParentId == caster.PlayerId)
             {
                 UObject.Destroy(array[i].gameObject);
                 break;

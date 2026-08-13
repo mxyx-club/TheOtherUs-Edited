@@ -91,6 +91,17 @@ public static class ChatControllerPatch
         return false;
     }
 
+    private static bool TryGetJailContext(PlayerControl participant, out PlayerControl owner, out PlayerControl jailed)
+    {
+        if (Imitator.TryGetCarriedJail(participant, out owner, out jailed))
+            return true;
+
+        owner = Jailor.Player;
+        jailed = Jailor.Jailed;
+        return InMeeting && participant != null && owner.IsAlive() && jailed.IsAlive() &&
+               (participant == owner || participant == jailed);
+    }
+
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.SendChat))]
     private static class SendChatPatch
     {
@@ -155,11 +166,15 @@ public static class ChatControllerPatch
                         break;
                     case ChannelType.Jailor:
                         {
+                            if (!TryGetJailContext(PlayerControl.LocalPlayer, out var jailOwner, out _) ||
+                                PlayerControl.LocalPlayer != jailOwner)
+                                break;
+
                             var writer = StartRPC(CustomRPC.JailorSendMessage);
-                            writer.Write(Jailor.Player.PlayerId);
+                            writer.Write(jailOwner.PlayerId);
                             writer.Write(text);
                             writer.EndRPC();
-                            Jailor.JailorSendMessage(Jailor.Player, text);
+                            Jailor.JailorSendMessage(jailOwner, text);
                         }
                         break;
                     case ChannelType.Jackal:
@@ -227,6 +242,45 @@ public static class ChatControllerPatch
         }
     }
 
+    [HarmonyPatch(typeof(Jailor), nameof(Jailor.JailorSendMessage))]
+    private static class CarriedJailMessagePatch
+    {
+        private static bool Prefix(PlayerControl player, string message)
+        {
+            if (!Imitator.TryGetCarriedJail(player, out var owner, out var jailed) || player != owner)
+                return player != null && player == Jailor.Player;
+
+            CurrentChatType = ChatTypes.JailorChat;
+            message = Cs(Color.red, message);
+            if (PlayerControl.LocalPlayer == jailed || CanSeeGhostInfo)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(jailed, message);
+                SoundManager.Instance.PlaySound(HudManager.Instance?.Chat?.messageSound, false, 1f, null);
+            }
+            else if (PlayerControl.LocalPlayer == owner)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(owner, message);
+            }
+            CurrentChatType = ChatTypes.Default;
+            return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(Jailor), nameof(Jailor.ExiledJailed))]
+    private static class CarriedJailExecutionPatch
+    {
+        private static void Prefix(PlayerControl player, PlayerControl target, out bool __state)
+        {
+            __state = Imitator.CanExecuteCarriedJail(player, target);
+        }
+
+        private static void Postfix(PlayerControl player, PlayerControl target, bool __state)
+        {
+            if (__state)
+                Imitator.ClearCarriedJail(player.PlayerId, target.PlayerId);
+        }
+    }
+
     [HarmonyPatch(typeof(ChatBubble), nameof(ChatBubble.SetName))]
     public static class SetBubbleName
     {
@@ -239,15 +293,16 @@ public static class ChatControllerPatch
                 __instance.NameText.color = Palette.ImpostorRed;
             }
 
-            if (InMeeting && Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive())
+            if (TryGetJailContext(sourcePlayer, out var jailOwner, out var jailedPlayer) &&
+                sourcePlayer == jailedPlayer)
             {
-                if (PlayerControl.LocalPlayer == Jailor.Player && Jailor.Jailed == PlayerByName(playerName))
+                if (PlayerControl.LocalPlayer == jailOwner)
                 {
                     __instance.NameText.color = Jailor.color;
                     __instance.NameText.text = playerName + GetString("Jailor.InJailSuffix");
                 }
 
-                if ((PlayerControl.LocalPlayer == Jailor.Jailed || CanSeeGhostInfo) && Jailor.Jailed == PlayerByName(playerName))
+                if (PlayerControl.LocalPlayer == jailedPlayer || CanSeeGhostInfo)
                 {
                     __instance.NameText.color = Jailor.color;
                     __instance.NameText.text = playerName + GetString("Jailor.InJailSuffix");
@@ -265,14 +320,14 @@ public static class ChatControllerPatch
                     __instance.NameText.text = $"{GameData.Instance?.GetHost()?.PlayerName ?? ""} {"MessageFromTheHost".Translate()}";
                     break;
                 case ChatTypes.JailorChat:
-                    if (InMeeting && Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive())
+                    if (TryGetJailContext(sourcePlayer, out jailOwner, out jailedPlayer))
                     {
-                        if (PlayerControl.LocalPlayer == Jailor.Jailed || CanSeeGhostInfo)
+                        if (PlayerControl.LocalPlayer == jailedPlayer || CanSeeGhostInfo)
                         {
                             __instance.NameText.color = Jailor.color;
                             __instance.NameText.text = $"({GetString("Jailor")})";
                         }
-                        else if (PlayerControl.LocalPlayer == Jailor.Player || CanSeeGhostInfo)
+                        else if (PlayerControl.LocalPlayer == jailOwner)
                         {
                             __instance.NameText.color = Jailor.color;
                             __instance.NameText.text = $"({GetString("Jailor")})";
@@ -332,7 +387,8 @@ public static class ChatControllerPatch
                 return true;
             if (sourcePlayer == Blackmailer.blackmailed && Blackmailer.Player.IsAlive() && Blackmailer.blackmailed.IsAlive())
             { __state = false; return false; }
-            if (sourcePlayer == Jailor.Jailed && Jailor.Jailed.IsAlive() && Jailor.Player.IsAlive() && local != Jailor.Player && !CanSeeGhostInfo)
+            if (TryGetJailContext(sourcePlayer, out var jailOwner, out var jailedPlayer) &&
+                sourcePlayer == jailedPlayer && local != jailOwner && !CanSeeGhostInfo)
             { __state = false; return false; }
 
             return flag;
@@ -452,7 +508,9 @@ public static class ChatControllerPatch
                 };
                 string text = string.Format(GetString("ChatChannel.Text"), Cs(color, GetString($"ChatChannel.{CurrentChannel}")));
 
-                if (PlayerControl.LocalPlayer == Jailor.Jailed) text = string.Format(GetString("ChatChannel.Text"), Cs(color, GetString("ChatChannel.Jailor")));
+                if (TryGetJailContext(PlayerControl.LocalPlayer, out _, out var jailedPlayer) &&
+                    PlayerControl.LocalPlayer == jailedPlayer)
+                    text = string.Format(GetString("ChatChannel.Text"), Cs(Jailor.color, GetString("ChatChannel.Jailor")));
                 text += $"{string.Format(GetString("ChannelSwitchNotice"), ModInputManager.nextChatChannel.keyCode.ToString())}";
                 ChannelShower?.GetComponent<TextMeshPro>().SetText(text);
                 ChannelShower?.SetActive(!ChannelShower.transform.parent.parent.FindChild("RateMessage (TMP)").gameObject.activeSelf);
@@ -466,7 +524,7 @@ public static class ChatControllerPatch
             if (player == null) return;
 
             bool inGameOrMeeting = !InGame || InMeeting || CanSeeGhostInfo || ModOption.DebugMode;
-            bool jailorActive = player == Jailor.Player && Jailor.Player.IsAlive() && Jailor.Jailed.IsAlive();
+            bool jailorActive = TryGetJailContext(player, out var jailOwner, out _) && player == jailOwner;
             bool loverActive = player.isLover() && Lovers.IsAlive() && (ModOption.LoverChatChannel switch { 1 => InMeeting, 2 => !InMeeting, 3 => true, _ => false });
             bool impostorActive = player.IsImpostor() && player.IsAlive() && (ModOption.ImpostorChatChannel switch { 1 => InMeeting, 2 => !InMeeting, 3 => true, _ => false });
             bool jackalActive = isPlayerJackal(player) && player.IsAlive() && (ModOption.JackalChatChannel switch { 1 => InMeeting, 2 => !InMeeting, 3 => true, _ => false });
@@ -541,7 +599,9 @@ public static class ChatControllerPatch
                 CurrentChannel = LastType;
             }
 
-            if (Jailor.Player.IsAlive() && PlayerControl.LocalPlayer == Jailor.Jailed) { CurrentChannel = ChannelType.Default; return; }
+            if (TryGetJailContext(PlayerControl.LocalPlayer, out _, out var jailedPlayer) &&
+                PlayerControl.LocalPlayer == jailedPlayer)
+            { CurrentChannel = ChannelType.Default; return; }
 
             if (Input.GetKeyDown(ModInputManager.nextChatChannel.keyCode))
             {

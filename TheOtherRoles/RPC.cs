@@ -166,6 +166,14 @@ public enum CustomRPC : byte
     ShareGhostInfo,
     ShareDeathReasonAndKiller,
     RecordEvent,
+
+    // Roles added after the legacy RPC range. Keep these explicit and never reorder.
+    SetImitatorTarget = 231,
+    StartImitation = 232,
+    EndImitation = 233,
+    PlaceInfoTrap = 234,
+    TriggerInfoTrap = 235,
+    AurialRadiate = 236,
 }
 
 public static class RPCProcedure
@@ -248,6 +256,17 @@ public static class RPCProcedure
     public static void setRole(byte playerId, byte roleId)
     {
         var player = PlayerById(playerId);
+        if (player == null) return;
+
+        var currentRole = PlayerData.GetPlayerData(player)?.MainRole ?? RoleId.DefaultRole;
+        if (Imitator.IsActiveFor(playerId) || (currentRole != RoleId.DefaultRole && currentRole != (RoleId)roleId))
+            Imitator.NotifyPlayerStateChanged(playerId);
+
+        Imitator.NotifyRoleAssigned((RoleId)roleId, playerId);
+
+        if ((RoleId)roleId == RoleId.Imitator && Imitator.HasAnyActiveSession)
+            Imitator.EndAll(false);
+
         switch ((RoleId)roleId)
         {
             case RoleId.DefaultRole:
@@ -503,6 +522,16 @@ public static class RPCProcedure
             case RoleId.Gaoler:
                 Gaoler.Player = player;
                 break;
+            case RoleId.Imitator:
+                Imitator.Player = player;
+                break;
+            case RoleId.TrapperPlus:
+                TrapperPlus.Player = player;
+                TrapperPlus.ResetOwnerState(player, false);
+                break;
+            case RoleId.Aurial:
+                Aurial.aurial = player;
+                break;
             default:
                 Warn("Unknown role ID: " + roleId, "SetRole");
                 break;
@@ -744,6 +773,13 @@ public static class RPCProcedure
 
     public static void ResetRole(RoleId roleId, PlayerControl target, bool reset)
     {
+        if (target == null) return;
+
+        // Taking/resetting the role of the corpse whose static holder is
+        // currently borrowed must end that imitation before the shared role
+        // singleton is mutated. Otherwise the later session restore would
+        // overwrite the newly assigned Amnisiac/Specter state.
+        Imitator.NotifyRoleConsumed(roleId, target.PlayerId);
 
         switch (roleId)
         {
@@ -955,6 +991,15 @@ public static class RPCProcedure
                 break;
             case RoleId.Dreamcatcher:
                 if (reset) Dreamcatcher.ClearAndReload();
+                break;
+            case RoleId.Imitator:
+                if (reset) Imitator.clearAndReload();
+                break;
+            case RoleId.TrapperPlus:
+                if (reset) TrapperPlus.clearAndReload();
+                break;
+            case RoleId.Aurial:
+                if (reset) Aurial.clearAndReload();
                 break;
             case RoleId.InfoSleuth:
                 break;
@@ -1174,13 +1219,17 @@ public static class RPCProcedure
         setModifier(target.PlayerId, (byte)RoleId.LastImpostor);
     }
 
-    public static void veteranAlert()
+    public static void veteranAlert(PlayerControl owner, uint imitationGeneration)
     {
+        if (owner == null) return;
+        var borrowedAlert = imitationGeneration != 0;
         Veteran.alertActive = true;
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Veteran.alertDuration,
             new Action<float>(p =>
             {
-                if (p == 1f) Veteran.alertActive = false;
+                if (p != 1f) return;
+                if (!borrowedAlert || Imitator.IsSessionCurrent(owner, RoleId.Veteran, imitationGeneration))
+                    Veteran.alertActive = false;
             })));
     }
 
@@ -1509,6 +1558,9 @@ public static class RPCProcedure
         if (player == Dreamcatcher.Player) Dreamcatcher.ClearAndReload();
         if (player == Prophet.prophet) Prophet.clearAndReload();
         if (player == Vigilante.vigilante) Vigilante.clearAndReload();
+        if (player == Imitator.Player) Imitator.clearAndReload();
+        if (player == TrapperPlus.Player) TrapperPlus.clearAndReload();
+        if (player == Aurial.aurial) Aurial.clearAndReload();
 
         // Impostor roles
         if (player == Glitch.Player) Glitch.clearAndReload();
@@ -2020,9 +2072,10 @@ public static class RPCProcedure
         //target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(canSee ? 0.1f : 0f);
     }
 
-    public static void placePortal(Vector3 pos)
+    public static void placePortal(PlayerControl placer, Vector3 pos)
     {
         _ = new Portal(pos);
+        Imitator.EnableBorrowedPortals(placer);
     }
 
     public static void usePortal(byte playerId, byte exit)
@@ -2282,7 +2335,7 @@ internal class RPCHandlerPatch
     }
 
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc)), HarmonyPrefix]
-    private static bool HandleRpcPatch([HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
+    private static bool HandleRpcPatch(PlayerControl __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
     {
         var packetId = (CustomRPC)callId;
         try
@@ -2429,8 +2482,16 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.VeteranAlert:
-                RPCProcedure.veteranAlert();
+            {
+                var imitationGeneration = (uint)reader.ReadInt32();
+                var senderRole = PlayerData.GetPlayerData(__instance)?.MainRole ?? RoleId.DefaultRole;
+                var canonicalVeteran = senderRole == RoleId.Veteran && Veteran.veteran == __instance && imitationGeneration == 0;
+                var borrowedVeteran = senderRole == RoleId.Imitator &&
+                                      Imitator.IsSessionCurrent(__instance, RoleId.Veteran, imitationGeneration);
+                if (canonicalVeteran || borrowedVeteran)
+                    RPCProcedure.veteranAlert(__instance, imitationGeneration);
                 break;
+            }
 
             case CustomRPC.MedicSetShielded:
                 RPCProcedure.medicSetShielded(reader.ReadByte());
@@ -2525,7 +2586,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.PlacePortal:
-                RPCProcedure.placePortal(reader.ReadVector3());
+                RPCProcedure.placePortal(__instance, reader.ReadVector3());
                 break;
 
             case CustomRPC.UsePortal:
@@ -2727,8 +2788,32 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.RedemptorRevive:
-                Redemptor.RevivePlayer(reader.ReadByte());
+            {
+                var phase = reader.ReadByte();
+                var targetId = reader.ReadByte();
+                var generation = (uint)reader.ReadInt32();
+                var senderRole = PlayerData.GetPlayerData(__instance)?.MainRole ?? RoleId.DefaultRole;
+                if (phase == 1)
+                {
+                    if (senderRole == RoleId.Imitator)
+                        Imitator.PrepareBorrowedRedemption(__instance, targetId, generation);
+                }
+                else if (phase == 2)
+                {
+                    if (senderRole == RoleId.Imitator)
+                        Imitator.TryCompleteBorrowedRedemption(__instance, targetId, generation);
+                }
+                else if (generation != 0)
+                {
+                    if (senderRole == RoleId.Imitator)
+                        Imitator.TryCompleteBorrowedPrayer(__instance, targetId, generation);
+                }
+                else if (__instance == Redemptor.Player)
+                {
+                    Redemptor.RevivePlayer(targetId);
+                }
                 break;
+            }
 
             case CustomRPC.RedemptorPrayer:
                 Redemptor.RedemptorPrayer(reader.ReadBoolean());
@@ -2850,6 +2935,35 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.AkujoSetUnifiedVote:
                 RPCProcedure.AkujoSetUnifiedVote(reader.ReadBoolean());
+                break;
+            case CustomRPC.SetImitatorTarget:
+                ImitatorPatches.HandleSelectionRpc(__instance, reader);
+                break;
+            case CustomRPC.StartImitation:
+                {
+                    var imitatorId = reader.ReadByte();
+                    var copiedRole = (RoleId)reader.ReadByte();
+                    var meetingGeneration = (uint)reader.ReadInt32();
+                    if (__instance == HostPlayer)
+                        Imitator.StartAuthorized(imitatorId, copiedRole, meetingGeneration);
+                }
+                break;
+            case CustomRPC.EndImitation:
+                {
+                    var imitatorId = reader.ReadByte();
+                    var sessionGeneration = (uint)reader.ReadInt32();
+                    if (__instance?.PlayerId == imitatorId)
+                        Imitator.EndAuthorized(imitatorId, sessionGeneration);
+                }
+                break;
+            case CustomRPC.PlaceInfoTrap:
+                NewCrewmateRoleIntegration.HandleInfoTrapPlacementRpc(__instance, reader);
+                break;
+            case CustomRPC.TriggerInfoTrap:
+                NewCrewmateRoleIntegration.HandleInfoTrapTriggerRpc(__instance, reader);
+                break;
+            case CustomRPC.AurialRadiate:
+                NewCrewmateRoleIntegration.HandleRadiationRpc(__instance, reader);
                 break;
         }
 

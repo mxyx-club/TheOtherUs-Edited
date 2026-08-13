@@ -114,6 +114,8 @@ internal static class HudManagerStartPatch
     public static CustomButton oracleButton;
     public static CustomButton soulSightButton;
     public static CustomButton dreamcatcherButton;
+    public static CustomButton trapperPlusButton;
+    public static CustomButton aurialRadiateButton;
 
 
     public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons;
@@ -236,6 +238,8 @@ internal static class HudManagerStartPatch
         oracleButton.MaxTimer = Oracle.ConfessCooldown;
         dreamcatcherButton.MaxTimer = Dreamcatcher.DreamCooldown;
         soulSightButton.MaxTimer = SoulSight.Cooldown;
+        trapperPlusButton.MaxTimer = TrapperPlus.cooldown;
+        aurialRadiateButton.MaxTimer = Aurial.cooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
@@ -520,7 +524,9 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return PlayerControl.LocalPlayer.IsAlive() && Sheriff.Player.Any(x => x == PlayerControl.LocalPlayer);
+                var local = PlayerControl.LocalPlayer;
+                return local.IsAlive() && (Imitator.IsImitating(local, RoleId.Sheriff) ||
+                       (!Imitator.IsImitating(local) && Sheriff.Player.Any(x => x == local)));
             },
             () =>
             {
@@ -557,8 +563,15 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                return PlayerControl.LocalPlayer.IsAlive() && (PlayerControl.LocalPlayer == Sheriff.Deputy
-                       || Sheriff.Player.Any(x => x == PlayerControl.LocalPlayer && x == Sheriff.formerDeputy));
+                var local = PlayerControl.LocalPlayer;
+                if (!local.IsAlive()) return false;
+                if (Imitator.IsImitating(local, RoleId.Deputy)) return true;
+                // Deputy's RPC carries only a target id and mutates global static
+                // collections. While an imitation owns those fresh collections,
+                // suppress the canonical Deputy so their resources cannot mix.
+                if (Imitator.HasActiveRole(RoleId.Deputy)) return false;
+                if (Imitator.IsImitating(local)) return false;
+                return local == Sheriff.Deputy || Sheriff.Player.Any(x => x == local && x == Sheriff.formerDeputy);
             },
             () =>
             {
@@ -581,9 +594,13 @@ internal static class HudManagerStartPatch
         veteranAlertButton = new CustomButton(
             () =>
             {
+                var localPlayer = PlayerControl.LocalPlayer;
+                uint imitationGeneration = 0;
+                Imitator.TryGetSessionGeneration(localPlayer, RoleId.Veteran, out imitationGeneration);
                 var writer = StartRPC(CustomRPC.VeteranAlert);
+                writer.Write((int)imitationGeneration);
                 writer.EndRPC();
-                RPCProcedure.veteranAlert();
+                RPCProcedure.veteranAlert(localPlayer, imitationGeneration);
             },
             () =>
             {
@@ -615,10 +632,13 @@ internal static class HudManagerStartPatch
 
                 medicShieldButton.Timer = 0f;
 
-                var writer = StartRPC(Medic.setShieldAfterMeeting ? CustomRPC.SetFutureShielded : CustomRPC.MedicSetShielded);
+                var immediateBorrowedShield = Imitator.IsImitating(PlayerControl.LocalPlayer, RoleId.Medic);
+                var writer = StartRPC(Medic.setShieldAfterMeeting && !immediateBorrowedShield
+                    ? CustomRPC.SetFutureShielded
+                    : CustomRPC.MedicSetShielded);
                 writer.Write(Medic.currentTarget.PlayerId);
                 writer.EndRPC();
-                if (Medic.setShieldAfterMeeting)
+                if (Medic.setShieldAfterMeeting && !immediateBorrowedShield)
                     RPCProcedure.setFutureShielded(Medic.currentTarget.PlayerId);
                 else
                     RPCProcedure.medicSetShielded(Medic.currentTarget.PlayerId);
@@ -1534,7 +1554,7 @@ internal static class HudManagerStartPatch
                 var writer = StartRPC(CustomRPC.PlacePortal);
                 writer.Write(pos);
                 writer.EndRPC();
-                RPCProcedure.placePortal(pos);
+                RPCProcedure.placePortal(PlayerControl.LocalPlayer, pos);
                 SoundEffectsManager.play("tricksterPlaceBox");
             },
             () =>
@@ -1555,7 +1575,6 @@ internal static class HudManagerStartPatch
         usePortalButton = new CustomButton(
             () =>
             {
-                var didTeleport = false;
                 Vector3 exit = Portal.findExit(PlayerControl.LocalPlayer.transform.position);
                 Vector3 entry = Portal.findEntry(PlayerControl.LocalPlayer.transform.position);
 
@@ -1565,8 +1584,6 @@ internal static class HudManagerStartPatch
                     exit = Portal.firstPortal.portalGameObject.transform.position;
                     entry = PlayerControl.LocalPlayer.transform.position;
                 }
-
-                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(entry);
 
                 if (!PlayerControl.LocalPlayer.Data.IsDead)
                 {
@@ -1581,21 +1598,7 @@ internal static class HudManagerStartPatch
                 usePortalButton.Timer = usePortalButton.MaxTimer;
                 portalmakerMoveToPortalButton.Timer = usePortalButton.MaxTimer;
                 SoundEffectsManager.play("portalUse");
-                FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Portal.teleportDuration,
-                    new Action<float>(p =>
-                    {
-                        // Delayed action
-                        PlayerControl.LocalPlayer.moveable = false;
-                        PlayerControl.LocalPlayer.NetTransform.Halt();
-                        if (p >= 0.5f && p <= 0.53f && !didTeleport && !MeetingHud.Instance)
-                        {
-                            if (SubmergedCompatibility.IsSubmerged) SubmergedCompatibility.ChangeFloor(exit.y > -7);
-                            PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(exit);
-                            didTeleport = true;
-                        }
-
-                        if (p == 1f) PlayerControl.LocalPlayer.moveable = true;
-                    })));
+                Portal.teleportLocalPlayer(exit, entry);
             },
             () =>
             {
@@ -1612,7 +1615,8 @@ internal static class HudManagerStartPatch
                 return PlayerControl.LocalPlayer.CanMove &&
                        (Portal.locationNearEntry(PlayerControl.LocalPlayer.transform.position) ||
                         (Portalmaker.canPortalFromAnywhere &&
-                         PlayerControl.LocalPlayer == Portalmaker.portalmaker)) && !Portal.isTeleporting;
+                         PlayerControl.LocalPlayer == Portalmaker.portalmaker)) &&
+                       (PlayerControl.LocalPlayer == Portalmaker.portalmaker || !Portal.isTeleporting);
             },
             () => { usePortalButton.Timer = usePortalButton.MaxTimer; },
             Portalmaker.usePortalButtonSprite,
@@ -1626,7 +1630,6 @@ internal static class HudManagerStartPatch
         portalmakerMoveToPortalButton = new CustomButton(
             () =>
             {
-                var didTeleport = false;
                 var exit = Portal.secondPortal.portalGameObject.transform.position;
 
                 if (!PlayerControl.LocalPlayer.Data.IsDead)
@@ -1642,21 +1645,7 @@ internal static class HudManagerStartPatch
                 usePortalButton.Timer = usePortalButton.MaxTimer;
                 portalmakerMoveToPortalButton.Timer = usePortalButton.MaxTimer;
                 SoundEffectsManager.play("portalUse");
-                FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Portal.teleportDuration,
-                    new Action<float>(p =>
-                    {
-                        // Delayed action
-                        PlayerControl.LocalPlayer.moveable = false;
-                        PlayerControl.LocalPlayer.NetTransform.Halt();
-                        if (p >= 0.5f && p <= 0.53f && !didTeleport && !MeetingHud.Instance)
-                        {
-                            if (SubmergedCompatibility.IsSubmerged) SubmergedCompatibility.ChangeFloor(exit.y > -7);
-                            PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(exit);
-                            didTeleport = true;
-                        }
-
-                        if (p == 1f) PlayerControl.LocalPlayer.moveable = true;
-                    })));
+                Portal.teleportLocalPlayer(exit);
             },
             () =>
             {
@@ -1666,7 +1655,7 @@ internal static class HudManagerStartPatch
             () =>
             {
                 return PlayerControl.LocalPlayer.CanMove &&
-                       !Portal.locationNearEntry(PlayerControl.LocalPlayer.transform.position) && !Portal.isTeleporting;
+                       !Portal.locationNearEntry(PlayerControl.LocalPlayer.transform.position);
             },
             () => { portalmakerMoveToPortalButton.Timer = usePortalButton.MaxTimer; },
             Portalmaker.usePortalButtonSprite,
@@ -3199,6 +3188,11 @@ internal static class HudManagerStartPatch
             {
                 alchemystButton.Timer = alchemystButton.MaxTimer;
                 if (Alchemyst.target == null || Alchemyst.target.Player == null) return;
+                // Normal Alchemyst souls are settled after a meeting, whose start
+                // establishes this timestamp. Imitated souls are usable immediately
+                // in the same action round, so measure their age at query time.
+                if (Imitator.IsImitating(PlayerControl.LocalPlayer, RoleId.Alchemyst))
+                    Alchemyst.meetingStartTime = DateTime.UtcNow;
                 var msg = Alchemyst.getInfo(Alchemyst.target.Player, Alchemyst.target.KilledBy);
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msg);
 
@@ -4125,10 +4119,18 @@ internal static class HudManagerStartPatch
 
                 if (Redemptor.target != null)
                 {
+                    var caster = PlayerControl.LocalPlayer;
+                    uint generation = 0;
+                    Imitator.TryGetSessionGeneration(caster, RoleId.Redemptor, out generation);
                     var writer2 = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RedemptorRevive);
+                    writer2.Write((byte)0); // prayer/current-session completion
                     writer2.Write(Redemptor.target.PlayerId);
+                    writer2.Write((int)generation);
                     writer2.EndRPC();
-                    Redemptor.RevivePlayer(Redemptor.target.PlayerId);
+                    if (generation != 0)
+                        Imitator.TryCompleteBorrowedPrayer(caster, Redemptor.target.PlayerId, generation);
+                    else
+                        Redemptor.RevivePlayer(Redemptor.target.PlayerId);
 
                     redemptorPrayerButton.Timer = redemptorPrayerButton.MaxTimer;
                 }
@@ -4142,15 +4144,36 @@ internal static class HudManagerStartPatch
                 var target = Redemptor.target;
                 if (target == null) return;
 
-                RpcCustomMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer, false);
+                var caster = PlayerControl.LocalPlayer;
+                var targetId = target.PlayerId;
+                var borrowed = Imitator.IsImitating(caster, RoleId.Redemptor);
+                uint generation = 0;
+                if (borrowed)
+                {
+                    if (!Imitator.TryGetSessionGeneration(caster, RoleId.Redemptor, out generation) ||
+                        !Imitator.PrepareBorrowedRedemption(caster, targetId, generation))
+                        return;
+
+                    var prepareWriter = StartRPC(caster, CustomRPC.RedemptorRevive);
+                    prepareWriter.Write((byte)1); // lock this session/target before self-sacrifice
+                    prepareWriter.Write(targetId);
+                    prepareWriter.Write((int)generation);
+                    prepareWriter.EndRPC();
+                }
+                RpcCustomMurderPlayer(caster, caster, false);
 
                 _ = new LateTask(() =>
                 {
                     if (InMeeting) { Message("复活失败", "ReviveTask"); return; }
-                    var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.RedemptorRevive);
-                    writer.Write(target.PlayerId);
+                    var writer = StartRPC(caster, CustomRPC.RedemptorRevive);
+                    writer.Write(borrowed ? (byte)2 : (byte)0);
+                    writer.Write(targetId);
+                    writer.Write((int)generation);
                     writer.EndRPC();
-                    Redemptor.RevivePlayer(target.PlayerId);
+                    if (borrowed)
+                        Imitator.TryCompleteBorrowedRedemption(caster, targetId, generation);
+                    else
+                        Redemptor.RevivePlayer(targetId);
 
                 }, Redemptor.reviveDuration, "RedemptorRevive");
             },
@@ -4914,10 +4937,15 @@ internal static class HudManagerStartPatch
         dreamcatcherButton = new(
             () =>
             {
+                if (!Dreamcatcher.CurrentTarget.IsAlive()) return;
                 if (CheckUseAbility(Dreamcatcher.Player, Dreamcatcher.CurrentTarget)) return;
                 var killed = false;
-                if (Dreamcatcher.LastDreamed == Dreamcatcher.CurrentTarget)
+                var localPlayer = PlayerControl.LocalPlayer;
+                var borrowedSecondStage = Imitator.IsImitating(localPlayer, RoleId.Dreamcatcher) &&
+                                          Dreamcatcher.Dreamed == Dreamcatcher.CurrentTarget;
+                if (Dreamcatcher.LastDreamed == Dreamcatcher.CurrentTarget || borrowedSecondStage)
                 {
+                    if (borrowedSecondStage && !Imitator.TryConsumeDreamKill(localPlayer)) return;
                     RpcCustomMurderPlayer(PlayerControl.LocalPlayer, Dreamcatcher.CurrentTarget, true, false, CustomDeathReason.Dreamcrush);
                     killed = true;
                 }
@@ -4935,13 +4963,18 @@ internal static class HudManagerStartPatch
             },
             () =>
             {
-                if (Dreamcatcher.Dreamed != null) return false;
-                Dreamcatcher.CurrentTarget = SetTarget();
-                dreamcatcherButton.Sprite = Dreamcatcher.CurrentTarget != null && Dreamcatcher.CurrentTarget == Dreamcatcher.LastDreamed
+                var borrowedSecondStage = Imitator.IsImitating(PlayerControl.LocalPlayer, RoleId.Dreamcatcher) &&
+                                          Dreamcatcher.Dreamed != null;
+                Dreamcatcher.CurrentTarget = borrowedSecondStage ? Dreamcatcher.Dreamed : SetTarget();
+                if (Dreamcatcher.Dreamed != null && !borrowedSecondStage) return false;
+                if (borrowedSecondStage && !Imitator.IsDreamKillAvailable(PlayerControl.LocalPlayer)) return false;
+                dreamcatcherButton.Sprite = Dreamcatcher.CurrentTarget != null &&
+                                            (Dreamcatcher.CurrentTarget == Dreamcatcher.LastDreamed ||
+                                             (borrowedSecondStage && Dreamcatcher.CurrentTarget == Dreamcatcher.Dreamed))
                     ? Dreamcatcher.killButtonSprite
                     : Dreamcatcher.dreamButtonSprite;
                 oracleButton.showTargetNameOnButton(Dreamcatcher.CurrentTarget, Dreamcatcher.Dreamed?.Data?.PlayerName ?? "");
-                return PlayerControl.LocalPlayer.CanMove && Dreamcatcher.CurrentTarget != null;
+                return PlayerControl.LocalPlayer.CanMove && Dreamcatcher.CurrentTarget.IsAlive();
             },
             () =>
             {
@@ -4958,6 +4991,41 @@ internal static class HudManagerStartPatch
             __instance.AbilityButton,
             abilityInput.keyCode,
             buttonText: "dreamButtonText".Translate()
+        );
+
+        trapperPlusButton = new CustomButton(
+            () =>
+            {
+                NewCrewmateRoleIntegration.PlaceLocalInfoTrap();
+            },
+            () => TrapperPlus.Player.IsAlive() && TrapperPlus.Player == PlayerControl.LocalPlayer,
+            () =>
+            {
+                if (trapperPlusButton.ButtonTitle != null)
+                    trapperPlusButton.ButtonTitle.text = $"{TrapperPlus.charges} / {TrapperPlus.maxTraps}";
+                return PlayerControl.LocalPlayer.CanMove && TrapperPlus.CanPlaceTrap(PlayerControl.LocalPlayer);
+            },
+            () => trapperPlusButton.Timer = trapperPlusButton.MaxTimer,
+            TrapperPlus.trapButtonSprite,
+            __instance,
+            __instance.AbilityButton,
+            abilityInput.keyCode,
+            buttonText: GetString("trapperPlusPlaceTrapText")
+        );
+
+        aurialRadiateButton = new CustomButton(
+            () =>
+            {
+                NewCrewmateRoleIntegration.RequestRadiation();
+            },
+            () => Aurial.aurial.IsAlive() && Aurial.aurial == PlayerControl.LocalPlayer,
+            () => PlayerControl.LocalPlayer.CanMove,
+            () => aurialRadiateButton.Timer = aurialRadiateButton.MaxTimer,
+            Aurial.buttonSprite,
+            __instance,
+            __instance.AbilityButton,
+            abilityInput.keyCode,
+            buttonText: GetString("aurialRadiateText")
         );
 
 

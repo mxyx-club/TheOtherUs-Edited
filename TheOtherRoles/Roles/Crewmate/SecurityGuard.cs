@@ -79,3 +79,23 @@ public static class SecurityGuard
         cantMove = CustomOptionHolder.securityGuardNoMove.GetBool();
     }
 }
+
+[HarmonyPatch(typeof(DoorConsole), nameof(DoorConsole.Use))]
+public static class SecurityGuardDoorConsolePatch
+{
+    public static bool Prefix(DoorConsole __instance)
+    {
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer == null || localPlayer != SecurityGuard.securityGuard || localPlayer.Data == null ||
+            localPlayer.Data.IsDead || !isAirship || __instance.MinigamePrefab == null ||
+            __instance.MinigamePrefab.TryCast<DoorCardSwipeGame>() == null)
+            return true;
+
+        __instance.CanUse(localPlayer.Data, out var canUse, out _);
+        if (!canUse || __instance.MyDoor == null || __instance.MyDoor.IsOpen) return false;
+
+        var doorCommand = (byte)(DoorsSystemType.OpenDoor | (__instance.MyDoor.Id & 0x1F));
+        ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Doors, doorCommand);
+        return false;
+    }
+}

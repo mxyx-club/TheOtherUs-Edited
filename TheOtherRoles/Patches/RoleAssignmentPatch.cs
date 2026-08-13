@@ -202,6 +202,9 @@ internal class RoleManagerSelectRolesPatch
             crewSettings.Add((byte)RoleId.Spy, CustomOptionHolder.spySpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.SecurityGuard, CustomOptionHolder.securityGuardSpawnRate.GetSelection());
         crewSettings.Add((byte)RoleId.Jumper, CustomOptionHolder.jumperSpawnRate.GetSelection());
+        crewSettings.Add((byte)RoleId.Imitator, CustomOptionHolder.imitatorSpawnRate.GetSelection());
+        crewSettings.Add((byte)RoleId.TrapperPlus, CustomOptionHolder.trapperPlusSpawnRate.GetSelection());
+        crewSettings.Add((byte)RoleId.Aurial, CustomOptionHolder.aurialSpawnRate.GetSelection());
 
         impSettings = impSettings.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
         neutralSettings = neutralSettings.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);

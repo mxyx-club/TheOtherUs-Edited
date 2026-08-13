@@ -227,6 +227,8 @@ internal class PlayerControlRevivePatch
 {
     public static void Postfix(PlayerControl __instance)
     {
+        Imitator.NotifyPlayerRevived(__instance.PlayerId);
+
         if (__instance?.AmOwner == true)
         {
             CanSeeGhostInfo = false;
@@ -390,6 +392,9 @@ public static class PlayerDiePatch
     {
         Sheriff.deputyCheckPromotion();
 
+        if (__instance == Imitator.Player && Imitator.IsActive)
+            Imitator.Abort(__instance.PlayerId);
+
         if (!InGame || PlayerControl.LocalPlayer != __instance) return;
         if (Prosecutor.prosecutor == __instance)
         {
@@ -480,6 +485,15 @@ public static class MurderPlayerPatch
         // Collect dead player info
         var deathReason = __instance == target ? CustomDeathReason.Suicide : CustomDeathReason.Kill;
         PlayerData.SetDeathReason(target, deathReason, __instance);
+
+        if (target == Imitator.Player && Imitator.IsActive)
+        {
+            if (__instance == target)
+                Imitator.AuthorizeBorrowedRedemptionDeath(target);
+            Imitator.Abort(target.PlayerId);
+        }
+
+        Imitator.RecordLocalDeath(target, __instance, deathReason);
 
         if (target.PlayerId == Oracle.Player?.PlayerId) Oracle.CheckConfesserTeam();
 
@@ -837,6 +851,9 @@ public static class ExilePlayerPatch
 
     public static void Postfix(PlayerControl __instance)
     {
+        if (__instance == Imitator.Player && Imitator.IsActive)
+            Imitator.Abort(__instance.PlayerId);
+
         // Collect dead player info
         if (__instance?.PlayerData?.DeathReason == CustomDeathReason.Null)
             PlayerData.SetDeathReason(__instance, CustomDeathReason.Exile);
@@ -956,6 +973,29 @@ public static class DisconnectPatch
     public static void DisconnectPostfix(PlayerControl player, DisconnectReasons reason)
     {
         Message($"玩家 {player?.Data?.PlayerName ?? "null"} 断开连接 {reason}", "HandleDisconnect");
+
+        if (player != null)
+        {
+            var wasTrapperPlusHolder = player == TrapperPlus.Player;
+            var wasAurialHolder = player == Aurial.aurial;
+            Imitator.NotifyPlayerStateChanged(player.PlayerId);
+
+            // The original TrapperPlus holder is temporarily hidden behind the
+            // Imitator's static holder. If that original player disconnects,
+            // remove their private evidence and world traps immediately as well.
+            // This is owner-scoped and therefore cannot disturb a restored live
+            // TrapperPlus or another active imitation session.
+            TrapperPlus.RemoveOwnerState(player, true);
+
+            // Imitator temporarily owns these static holders while borrowing a
+            // role, so let its session restore the original state first. A
+            // disconnected canonical holder has no session and can be cleared
+            // immediately together with its private evidence/world objects.
+            if (wasTrapperPlusHolder && player == TrapperPlus.Player)
+                TrapperPlus.clearAndReload();
+            if (wasAurialHolder && player == Aurial.aurial)
+                Aurial.clearAndReload();
+        }
 
         if (InGame)
         {

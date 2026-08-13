@@ -36,6 +36,8 @@ public class Dreamcatcher
         {
             LastDreamed = null;
             Dreamed = null;
+            CurrentTarget = null;
+            return;
         }
         LastDreamed = Dreamed;
         Dreamed = playerControl;
