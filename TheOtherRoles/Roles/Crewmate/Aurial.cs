@@ -42,8 +42,15 @@ public static class Aurial
     public static readonly Dictionary<byte, int> hitCounts = new();
     public static readonly HashSet<byte> revealedPlayers = new();
 
-    private static readonly HashSet<byte> anonymousPlayers = new();
-    private static int anonymousAppearanceSignature = int.MinValue;
+    private sealed class AnonymousVisualState
+    {
+        internal Vector3 LocalScale;
+        internal float ColliderRadius;
+        internal Vector2 ColliderOffset;
+        internal bool HasCollider;
+    }
+
+    private static readonly Dictionary<byte, AnonymousVisualState> anonymousPlayers = new();
 
     public static Sprite buttonSprite = new ResourceSprite("AurialRadiateButton.png");
 
@@ -289,10 +296,6 @@ public static class Aurial
             return;
 
         var local = PlayerControl.LocalPlayer;
-        var appearanceSignature = GetAppearanceSignature();
-        var refreshFullLook = appearanceSignature != anonymousAppearanceSignature;
-        anonymousAppearanceSignature = appearanceSignature;
-
         var visibleTargets = new HashSet<byte>();
         foreach (var target in PlayerControl.AllPlayerControls.ToArray())
         {
@@ -300,17 +303,20 @@ public static class Aurial
                 target.Data.Disconnected || !target.IsAlive())
                 continue;
 
-            // Never turn an actually invisible player into an opaque silhouette.
-            if (IsInvisible(target))
-            {
-                anonymousPlayers.Remove(target.PlayerId);
-                continue;
-            }
-
             visibleTargets.Add(target.PlayerId);
-            var firstFrame = anonymousPlayers.Add(target.PlayerId);
-            if (firstFrame || refreshFullLook)
-                target.setLook(string.Empty, 6, string.Empty, string.Empty, string.Empty, string.Empty, false);
+            if (!anonymousPlayers.ContainsKey(target.PlayerId))
+                anonymousPlayers[target.PlayerId] = CaptureVisualState(target);
+
+            // Keep tracking the original visual state, but never turn an
+            // actually invisible player into an opaque silhouette.
+            if (IsInvisible(target))
+                continue;
+
+            // Reapply the same blank base-crewmate look every frame. Several
+            // skin/animation paths can otherwise restore a distinctive skin
+            // after the first anonymous frame.
+            target.setLook(string.Empty, 6, string.Empty, string.Empty, string.Empty, string.Empty, false);
+            ApplyUniformPlayerSize(target);
 
             if (target.cosmetics?.nameText != null)
                 target.cosmetics.nameText.text = string.Empty;
@@ -320,7 +326,7 @@ public static class Aurial
             ApplyAnonymousMaterial(target.cosmetics?.currentBodySprite?.BodySprite, target);
         }
 
-        foreach (var playerId in anonymousPlayers.Where(id => !visibleTargets.Contains(id)).ToArray())
+        foreach (var playerId in anonymousPlayers.Keys.Where(id => !visibleTargets.Contains(id)).ToArray())
         {
             RestoreAnonymousPlayer(PlayerById(playerId));
             anonymousPlayers.Remove(playerId);
@@ -353,11 +359,58 @@ public static class Aurial
 
     public static void RestoreAnonymousWorldView()
     {
-        foreach (var playerId in anonymousPlayers.ToArray())
+        foreach (var playerId in anonymousPlayers.Keys.ToArray())
             RestoreAnonymousPlayer(PlayerById(playerId));
 
         anonymousPlayers.Clear();
-        anonymousAppearanceSignature = int.MinValue;
+    }
+
+    private static AnonymousVisualState CaptureVisualState(PlayerControl target)
+    {
+        var state = new AnonymousVisualState { LocalScale = target.transform.localScale };
+        var collider = target.Collider?.CastFast<CircleCollider2D>();
+        if (collider != null)
+        {
+            state.HasCollider = true;
+            state.ColliderRadius = collider.radius;
+            state.ColliderOffset = collider.offset;
+        }
+
+        return state;
+    }
+
+    private static void ApplyUniformPlayerSize(PlayerControl target)
+    {
+        target.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
+        var collider = target.Collider?.CastFast<CircleCollider2D>();
+        if (collider == null)
+            return;
+
+        collider.radius = Mini.defaultColliderRadius;
+        collider.offset = Mini.defaultColliderOffset * Vector2.down;
+    }
+
+    private static void RestoreAnonymousPlayerSize(PlayerControl target)
+    {
+        if (target == null || !anonymousPlayers.TryGetValue(target.PlayerId, out var state))
+            return;
+
+        // Global camouflage already enforces the same standard body size. Do
+        // not reveal Mini/Giant while that effect remains active; their normal
+        // fixed update restores the correct size when camouflage ends.
+        if (Camouflager.camouflageTimer > 0f || isCamoComms || MushroomSabotageActive)
+            return;
+
+        target.transform.localScale = state.LocalScale;
+        if (!state.HasCollider)
+            return;
+
+        var collider = target.Collider?.CastFast<CircleCollider2D>();
+        if (collider != null)
+        {
+            collider.radius = state.ColliderRadius;
+            collider.offset = state.ColliderOffset;
+        }
     }
 
     private static bool IsInvisible(PlayerControl target)
@@ -367,52 +420,38 @@ public static class Aurial
                (Jackal.jackal.Any(player => player == target) && Jackal.isInvisable);
     }
 
-    private static int GetAppearanceSignature()
-    {
-        unchecked
-        {
-            var signature = MushroomSabotageActive ? 1 : 0;
-            signature = signature * 31 + (Camouflager.camouflageTimer > 0f ? 1 : 0);
-            signature = signature * 31 + (isCamoComms ? 1 : 0);
-            signature = signature * 31 + (TheOtherRoles.Patches.SurveillanceMinigamePatch.nightVisionIsActive ? 1 : 0);
-            signature = signature * 31 + (Glitch.morphTimer > 0f ? 1 : 0);
-            signature = signature * 31 + (Glitch.morphTarget?.PlayerId ?? byte.MaxValue);
-            return signature;
-        }
-    }
-
     private static void RestoreAnonymousPlayer(PlayerControl target)
     {
-        if (target == null || target.Data == null || IsInvisible(target))
+        if (target == null || target.Data == null)
             return;
 
-        if (MushroomSabotageActive)
+        if (IsInvisible(target))
+        {
+            RestoreAnonymousPlayerSize(target);
+            return;
+        }
+        else if (MushroomSabotageActive)
         {
             target.setDefaultLook(false);
-            return;
         }
-
-        if (Camouflager.camouflageTimer > 0f || isCamoComms)
+        else if (Camouflager.camouflageTimer > 0f || isCamoComms)
         {
             target.setLook(string.Empty, 6, string.Empty, string.Empty, string.Empty, string.Empty, false);
-            return;
         }
-
-        if (TheOtherRoles.Patches.SurveillanceMinigamePatch.nightVisionIsActive)
+        else if (TheOtherRoles.Patches.SurveillanceMinigamePatch.nightVisionIsActive)
         {
             target.setLook(string.Empty, 11, string.Empty, string.Empty, string.Empty, string.Empty, false);
-            return;
         }
-
-        if (target == Glitch.Player && Glitch.morphTimer > 0f && Glitch.morphTarget?.Data != null)
+        else if (target == Glitch.Player && Glitch.morphTimer > 0f && Glitch.morphTarget?.Data != null)
         {
             var outfit = Glitch.morphTarget.Data.DefaultOutfit;
             target.setLook(Glitch.morphTarget.Data.PlayerName, outfit.ColorId, outfit.HatId,
                 outfit.VisorId, outfit.SkinId, outfit.PetId, false);
-            return;
         }
+        else
+            target.setDefaultLook(false);
 
-        target.setDefaultLook(false);
+        RestoreAnonymousPlayerSize(target);
     }
 
     /// <summary>
