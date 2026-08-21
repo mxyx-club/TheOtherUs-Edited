@@ -322,6 +322,7 @@ public static class ChatControllerPatch
 
             var flag = MeetingHud.Instance
                     || LobbyBehaviour.Instance
+                    || RoleDraft.isRunning
                     || CanSeeGhostInfo
                     || CurrentChatType != ChatTypes.Default
                     || ModOption.DebugMode;
