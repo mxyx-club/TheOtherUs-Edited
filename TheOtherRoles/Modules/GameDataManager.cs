@@ -114,7 +114,7 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
         var timePart = StartTime.Ticks.ToString();
         using var sha256 = SHA256.Create();
         var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(timePart));
-        var hexHash = BitConverter.ToString(hashBytes, 0, 4).Replace("-", "").ToLowerInvariant();
+        var hexHash = BitConverter.ToString(hashBytes, 0, 5).Replace("-", "").ToLowerInvariant();
         return $"{RoomCode}_{hexHash}";
     }
 
@@ -182,6 +182,13 @@ public partial class GameDataManager : ManagerBase<GameDataManager>
                     p.DeathReason,
                     KilledBy = p.KilledBy?.Data?.PlayerName ?? "null",
                     DeathTimer = p.DeathTimer.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    DeathHistory = p.DeathHistory.Select(x => new
+                    {
+                        Victim = x.Victim.PlayerId,
+                        Reason = x.Reason.ToString(),
+                        Timestamp = x.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                        Killer = x.Killer?.PlayerId,
+                    }),
                 },
             }).ToList(),
 

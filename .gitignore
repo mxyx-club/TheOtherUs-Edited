@@ -365,3 +365,5 @@ TheOtherRoles/packages.lock.json
 .vscode/
 packages.lock.json
 /TheOtherRoles/GameSession.cs
+/.workbuddy/memory
+/.workbuddy/memory

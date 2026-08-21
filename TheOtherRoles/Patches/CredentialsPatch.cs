@@ -68,7 +68,7 @@ public static class CredentialsPatch
             instance = __instance;
             var credentialObject = new GameObject("credentialsTOR");
             var credentials = credentialObject.AddComponent<TextMeshPro>();
-            credentials.SetText($"<size=90%>TheOtherUs-Edited v{Main.Version}{Main.VersionSuffix}</size>\n<size=30%>\n</size>{mainMenuCredentials}\n<size=30%>\n</size>{contributorsCredentials}");
+            credentials.SetText($"<size=90%>TheOtherUs-Edited v{Main.Version}{Main.VersionSuffix}<size=75%> (Build {Main.BuildNumber}) </size></size>\n<size=30%>\n</size>{mainMenuCredentials}\n<size=30%>\n</size>{contributorsCredentials}");
             credentials.alignment = TextAlignmentOptions.Center;
             credentials.fontSize *= 0.05f;
 

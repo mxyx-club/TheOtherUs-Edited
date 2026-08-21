@@ -15,8 +15,8 @@ public partial class TheOtherRolesPlugin : BasePlugin
 {
     public static TheOtherRolesPlugin Instance;
     public const string VersionSuffix = "";
-    public static Version version => System.Version.Parse(Version);
-
+    public static Version version = System.Version.Parse(Version);
+    public static string BuildNumber = GetBuildNumber();
     public static int optionsPage = 2;
 
     public static IRegionInfo[] defaultRegions;
@@ -83,7 +83,7 @@ public partial class TheOtherRolesPlugin : BasePlugin
         PluginModuleInitializerAttribute.Invoke();
         LightPatch.Initialize();
         UpdateCPUProcessorAffinity();
-        Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{Version}{VersionSuffix}\n Build Date: {GetCompileTime():yyyy-MM-dd HH:mm:ss}\n Mods: {IL2CPPChainloader.Instance.Plugins.Count}\n---------------");
+        Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{Version}{VersionSuffix}\n Build Number: {BuildNumber}\n Build Date: {GetCompileTime():yyyy-MM-dd HH:mm:ss}\n Mods: {IL2CPPChainloader.Instance.Plugins.Count}\n---------------");
     }
 
     // CPUの割当を変更する
@@ -116,6 +116,19 @@ public partial class TheOtherRolesPlugin : BasePlugin
         {
             Error($"Failed to set CPU affinity: {ex}", "CPUAffinity");
         }
+    }
+
+    public static string GetBuildNumber()
+    {
+        try
+        {
+            var f = System.Reflection.Assembly.GetExecutingAssembly().GetType("Builtin")
+                ?.GetField("BuildNumber", BindingFlags.Public | BindingFlags.Static);
+            if (f?.GetValue(null) is int n && n > 0) return n.ToString();
+        }
+        catch { }
+        var mvid = System.Reflection.Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToString();
+        return mvid.Length >= 6 ? mvid[..6] : mvid;
     }
 }
 
