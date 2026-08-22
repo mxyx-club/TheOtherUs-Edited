@@ -166,6 +166,11 @@ public class CustomOptionHolder
     public static CustomOption vampireCooldown;
     public static CustomOption vampireGarlicButton;
     public static CustomOption vampireCanKillNearGarlics;
+    public static CustomOption vampireCanRecruit;
+    public static CustomOption vampireRecruitCooldown;
+    public static CustomOption vampireRecruitRange;
+
+
 
     public static CustomOption eraserSpawnRate;
     public static CustomOption eraserCooldown;
@@ -523,7 +528,7 @@ public class CustomOptionHolder
     public static CustomOption engineerNumberOfFixes;
     public static CustomOption engineerOneFixPerMeeting;
     public static CustomOption engineerHighlightForImpostors;
-    public static CustomOption engineerHighlightForTeamJackal;
+    public static CustomOption engineerHighlightForTeamNeutral;
 
     public static CustomOption swapperSpawnRate;
     public static CustomOption swapperCanCallEmergency;
@@ -1074,6 +1079,9 @@ public class CustomOptionHolder
         vampireCooldown = Create(101502, Types.Impostor, "vampireCooldown", 25f, 10f, 60f, 2.5f, vampireSpawnRate);
         vampireGarlicButton = Create(101503, Types.Impostor, "vampireGarlicButton", true, vampireSpawnRate);
         vampireCanKillNearGarlics = Create(101504, Types.Impostor, "vampireCanKillNearGarlics", true, vampireGarlicButton);
+        vampireCanRecruit = CustomOption.Create(101505, Types.Impostor,"吸血鬼可招募眷属", true, vampireSpawnRate);
+        vampireRecruitCooldown = CustomOption.Create(101506, Types.Impostor, "招募冷却时间", 15f, 5f, 30f, 5f, vampireCanRecruit);
+        vampireRecruitRange = CustomOption.Create(101507, Types.Impostor, "招募距离", 1.5f, 0.5f, 3f, 0.5f, vampireCanRecruit);
 
         eraserSpawnRate = Create(101600, Types.Impostor, Cs(Eraser.color, "Eraser"), rates, null, true);
         eraserCooldown = Create(101601, Types.Impostor, "eraserCooldown", 25f, 10f, 120f, 2.5f, eraserSpawnRate);
@@ -1456,7 +1464,7 @@ public class CustomOptionHolder
         engineerResetFixAfterMeeting = Create(301204, Types.Crewmate, "engineerResetFixAfterMeeting", ["optionOff", "1", "2", "3"], engineerRemoteFix);
         engineerExpertRepairs = Create(301205, Types.Crewmate, "engineerExpertRepairs", false, engineerSpawnRate);
         engineerHighlightForImpostors = Create(301206, Types.Crewmate, "engineerHighlightForImpostors", true, engineerSpawnRate);
-        engineerHighlightForTeamJackal = Create(301207, Types.Crewmate, "engineerHighlightForTeamJackal", true, engineerSpawnRate);
+        engineerHighlightForTeamNeutral = Create(301207, Types.Crewmate, "engineerHighlightForTeamNeutral", true, engineerSpawnRate);
 
         swapperSpawnRate = Create(302300, Types.Crewmate, Cs(Swapper.color, "Swapper"), rates, null, true);
         swapperCanCallEmergency = Create(302301, Types.Crewmate, "canCallEmergency", true, swapperSpawnRate);

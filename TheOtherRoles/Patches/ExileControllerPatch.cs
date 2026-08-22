@@ -1,6 +1,7 @@
 using PowerTools;
 using System.Text;
 using TheOtherRoles.Objects;
+using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles.Patches;
 
@@ -202,6 +203,17 @@ internal class ExileControllerBeginPatch
             Dreamcatcher.Dreamed.RpcExiled();
             PlayerData.RpcSetDeathReason(Dreamcatcher.Dreamed, CustomDeathReason.Dreamlink, Dreamcatcher.Player);
         }
+
+        if (Vampire.vampire != null && player == Vampire.vampire && Vampire.currentThrall.IsAlive() && Vampire.vampire == PlayerControl.LocalPlayer)
+        {
+
+            var writer = StartRPC(CustomRPC.ThrallPromotes);
+            writer.Write(Vampire.currentThrall.PlayerId);
+            writer.EndRPC();
+            RPCProcedure.ThrallPromotes(Vampire.currentThrall.PlayerId);
+
+        }
+
         confirmImpostorSecondText = UObject.Instantiate(__instance.ImpostorText, __instance.Text.transform);
         StringBuilder changeStringBuilder = new();
 

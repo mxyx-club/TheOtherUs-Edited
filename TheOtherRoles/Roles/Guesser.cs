@@ -627,6 +627,9 @@ public static class Guesser
         if (Witch.witch != null && (dyingTarget == Witch.witch || dyingPartner == Witch.witch))
             Witch.witchWasGuessed = true;
 
+
+
+
         if (Thief.thief != null && Thief.thief.PlayerId == killerId && Thief.canStealWithGuess)
         {
             if (Thief.thief.IsAlive() && Thief.tiefCanKill(dyingTarget))
@@ -666,6 +669,14 @@ public static class Guesser
             Lawyer.lawyer.Exiled();
             lawyerDiedAdditionally = true;
             PlayerData.SetDeathReason(Lawyer.lawyer, CustomDeathReason.LawyerSuicide, guesser);
+        }
+
+        if (Vampire.vampire != null && Vampire.currentThrall != null && Vampire.vampire.PlayerId == dyingTargetId)
+        {
+            var writer = StartRPC(CustomRPC.ThrallPromotes);
+            writer.Write(Vampire.currentThrall.PlayerId);
+            writer.EndRPC();
+            RPCProcedure.ThrallPromotes(Vampire.currentThrall.PlayerId);
         }
 
         bool dreamlinkDead = false;

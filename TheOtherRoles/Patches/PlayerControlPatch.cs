@@ -558,6 +558,9 @@ public static class MurderPlayerPatch
             Executioner.PromotesRole();
         }
 
+
+
+
         if (target == Pelican.Player && Pelican.eatenPlayers?.Count > 0)
         {
             foreach (var player in Pelican.eatenPlayers.Keys)
@@ -608,6 +611,14 @@ public static class MurderPlayerPatch
         if (Dreamcatcher.Player != null && Dreamcatcher.Player.PlayerId == target.PlayerId && Dreamcatcher.Dreamed.IsAlive() && __instance == PlayerControl.LocalPlayer)
         {
             RpcCustomMurderPlayer(Dreamcatcher.Player, Dreamcatcher.Dreamed, true, true, CustomDeathReason.Dreamlink);
+        }
+
+        if (Vampire.vampire != null && Vampire.vampire.PlayerId == target.PlayerId && Vampire.currentThrall.IsAlive() && __instance == PlayerControl.LocalPlayer)
+        {
+                var writer = StartRPC(CustomRPC.ThrallPromotes);
+                writer.Write(Vampire.currentThrall.PlayerId);
+                writer.EndRPC();
+                RPCProcedure.ThrallPromotes(Vampire.currentThrall.PlayerId);
         }
 
         // Set Gambler cooldown

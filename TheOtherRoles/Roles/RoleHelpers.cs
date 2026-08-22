@@ -295,6 +295,7 @@ public static class PlayerControlExtensions
             return roleInfo != null && roleInfo.roleType == RoleType.Neutral;
         }
 
+
         public bool IsKiller()
         {
             return player != null && (player.IsImpostor() || player.IsKillerNeutral());
@@ -688,6 +689,7 @@ public static class RoleHelpers
         blockedRolePairings.Add([RoleId.Medic, RoleId.BodyGuard]);
         blockedRolePairings.Add([RoleId.Dreamcatcher, RoleId.Oracle]);
 
+
         if (CustomOptionHolder.onlyOneNeutralTeam.GetBool())
         {
             blockedRolePairings.Add([RoleId.Jackal, RoleId.Pavlovsowner, RoleId.Infected]);
@@ -709,6 +711,11 @@ public static class RoleHelpers
         if (Executioner.promotesToLawyer)
         {
             blockedRolePairings.Add([RoleId.Executioner, RoleId.Lawyer]);
+        }
+
+        if(Vampire.canRecruit)
+            {
+            blockedRolePairings.Add([RoleId.Vampire, RoleId.Mimic]);
         }
     }
 

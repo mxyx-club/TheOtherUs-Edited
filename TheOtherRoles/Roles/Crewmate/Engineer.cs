@@ -14,7 +14,7 @@ public class Engineer
     public static bool remoteFix;
     public static int remainingFixes;
     public static bool highlightForImpostors;
-    public static bool highlightForTeamJackal;
+    public static bool highlightForTeamNeutral;
 
     public static void clearAndReload()
     {
@@ -25,7 +25,7 @@ public class Engineer
         oneFixPerRound = CustomOptionHolder.engineerOneFixPerMeeting.GetBool();
         remainingFixes = CustomOptionHolder.engineerNumberOfFixes.GetInt();
         highlightForImpostors = CustomOptionHolder.engineerHighlightForImpostors.GetBool();
-        highlightForTeamJackal = CustomOptionHolder.engineerHighlightForTeamJackal.GetBool();
+        highlightForTeamNeutral = CustomOptionHolder.engineerHighlightForTeamNeutral.GetBool();
     }
 
     [HarmonyPatch]

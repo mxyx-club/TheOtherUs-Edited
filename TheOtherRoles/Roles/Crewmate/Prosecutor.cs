@@ -25,6 +25,13 @@ public static class Prosecutor
 
     public static void clearAndReload()
     {
+
+        if (PlayerVote != null)
+        {
+            UObject.Destroy(PlayerVote.gameObject);
+            PlayerVote = null;
+        }
+
         prosecutor = null;
         ProsecuteThisMeeting = false;
         StartProsecute = false;
