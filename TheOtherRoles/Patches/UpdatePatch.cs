@@ -581,7 +581,7 @@ internal class HudManagerUpdatePatch
             }
         }
 
-        
+
 
         if (Oracle.Player.IsDead() && Oracle.Confesser != null && Oracle.ConfesserType != Oracle.CRoleType.None)
         {
@@ -915,7 +915,7 @@ internal class HudManagerUpdatePatch
     }
 
 
-   
+
     private static void deputyUpdate()
     {
         if (PlayerControl.LocalPlayer == null || !Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId)) return;

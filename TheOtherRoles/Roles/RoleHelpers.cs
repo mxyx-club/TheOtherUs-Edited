@@ -713,8 +713,8 @@ public static class RoleHelpers
             blockedRolePairings.Add([RoleId.Executioner, RoleId.Lawyer]);
         }
 
-        if(Vampire.canRecruit)
-            {
+        if (Vampire.canRecruit)
+        {
             blockedRolePairings.Add([RoleId.Vampire, RoleId.Mimic]);
         }
     }

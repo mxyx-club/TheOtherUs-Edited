@@ -2,7 +2,6 @@ using Reactor.Networking;
 using TheOtherRoles.Attributes;
 using TheOtherRoles.Objects;
 using static TheOtherRoles.Modules.ModInputManager;
-using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles.Buttons;
 
@@ -1463,37 +1462,37 @@ internal static class HudManagerStartPatch
         );
 
 
-            vampireRecruitButton = new CustomButton(
-                () =>
-                {
-                    var target = SetTarget();
-                    if (target == null) return;
-                    if (target.IsImpostor() || target == Vampire.currentThrall) return;
-                    if (Vampire.currentThrall != null) return;
+        vampireRecruitButton = new CustomButton(
+            () =>
+            {
+                var target = SetTarget();
+                if (target == null) return;
+                if (target.IsImpostor() || target == Vampire.currentThrall) return;
+                if (Vampire.currentThrall != null) return;
 
-                    Vampire.currentThrall = target;
+                Vampire.currentThrall = target;
 
-                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VampireRecruit, Hazel.SendOption.Reliable, -1);
-                    writer.Write(target.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VampireRecruit, Hazel.SendOption.Reliable, -1);
+                writer.Write(target.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
 
-                    Vampire.hasRecruited = true;
-                },
-                () => Vampire.vampire != null && Vampire.vampire == PlayerControl.LocalPlayer && !Vampire.hasRecruited,
-                () =>
-                {
-                    // 可用条件：可移动，目标可招募，冷却结束
-                    var target = SetTarget();
-                    return PlayerControl.LocalPlayer.CanMove && target != null && !target.IsImpostor() && target != Vampire.currentThrall;
-                },
-                () => { vampireRecruitButton.Timer = vampireRecruitButton.MaxTimer; },
-                Vampire.recruitButtonSprite,
-                __instance,
-                __instance.AbilityButton,
-                abilityInput.keyCode,
-                buttonText: "招募"
-            );
-       
+                Vampire.hasRecruited = true;
+            },
+            () => Vampire.vampire != null && Vampire.vampire == PlayerControl.LocalPlayer && !Vampire.hasRecruited,
+            () =>
+            {
+                // 可用条件：可移动，目标可招募，冷却结束
+                var target = SetTarget();
+                return PlayerControl.LocalPlayer.CanMove && target != null && !target.IsImpostor() && target != Vampire.currentThrall;
+            },
+            () => { vampireRecruitButton.Timer = vampireRecruitButton.MaxTimer; },
+            Vampire.recruitButtonSprite,
+            __instance,
+            __instance.AbilityButton,
+            abilityInput.keyCode,
+            buttonText: "招募"
+        );
+
         garlicButton = new CustomButton(
             () =>
             {

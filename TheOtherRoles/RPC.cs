@@ -815,7 +815,7 @@ public static class RPCProcedure
             case RoleId.Grenadier:
                 if (reset) Grenadier.clearAndReload();
                 break;
-                
+
             case RoleId.Amnisiac:
                 break;
             case RoleId.Survivor:
@@ -1447,14 +1447,14 @@ public static class RPCProcedure
         }
         if (Vampire.message == false)
         {
-        Vampire.message = true;
-        Vampire.thrallNotified = true;
-        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, GetString("VampireThrallNotify"));
+            Vampire.message = true;
+            Vampire.thrallNotified = true;
+            FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, GetString("VampireThrallNotify"));
 
         }
 
         setRole(playerId, (byte)RoleId.Impostor);
-        
+
     }
     public static void pavlovsCreateDog(byte targetId)
     {
@@ -2305,7 +2305,7 @@ public static class RPCProcedure
         Vampire.hasRecruited = true;
         Vampire.message = false;
 
-            HudManagerStartPatch.vampireRecruitButton.setActive(false);
+        HudManagerStartPatch.vampireRecruitButton.setActive(false);
     }
 
     public static void VampireSyncThrall(byte thrallId, bool hasRecruited)
@@ -2316,7 +2316,7 @@ public static class RPCProcedure
         if (HudManagerStartPatch.vampireRecruitButton != null)
             HudManagerStartPatch.vampireRecruitButton.setActive(!hasRecruited);
     }
-} 
+}
 
 
 

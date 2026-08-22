@@ -114,7 +114,6 @@ public static class Helpers
 
     public static void SetTargetWithLight(this FollowerCamera camera, MonoBehaviour target)
     {
-        Message("SetCam");
         camera.Target = target;
         PlayerControl.LocalPlayer.lightSource?.transform?.SetParent(target.transform, false);
         if (target != PlayerControl.LocalPlayer) PlayerControl.LocalPlayer.NetTransform.Halt();
@@ -748,11 +747,11 @@ public static class Helpers
             return;
         }
         var playerPhysics = target.MyPhysics;
-        AnimationClip clip = null;
         var spriteAnim = playerPhysics.myPlayer.cosmetics.skin.animator;
         var currentPhysicsAnim = playerPhysics.Animations.Animator.GetCurrentAnimation();
 
 
+        AnimationClip clip;
         if (currentPhysicsAnim == playerPhysics.Animations.group.RunAnim) clip = nextSkin.RunAnim;
         else if (currentPhysicsAnim == playerPhysics.Animations.group.SpawnAnim) clip = nextSkin.SpawnAnim;
         else if (currentPhysicsAnim == playerPhysics.Animations.group.EnterVentAnim) clip = nextSkin.EnterVentAnim;

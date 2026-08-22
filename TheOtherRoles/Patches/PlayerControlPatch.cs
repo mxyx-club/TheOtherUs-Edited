@@ -615,10 +615,10 @@ public static class MurderPlayerPatch
 
         if (Vampire.vampire != null && Vampire.vampire.PlayerId == target.PlayerId && Vampire.currentThrall.IsAlive() && __instance == PlayerControl.LocalPlayer)
         {
-                var writer = StartRPC(CustomRPC.ThrallPromotes);
-                writer.Write(Vampire.currentThrall.PlayerId);
-                writer.EndRPC();
-                RPCProcedure.ThrallPromotes(Vampire.currentThrall.PlayerId);
+            var writer = StartRPC(CustomRPC.ThrallPromotes);
+            writer.Write(Vampire.currentThrall.PlayerId);
+            writer.EndRPC();
+            RPCProcedure.ThrallPromotes(Vampire.currentThrall.PlayerId);
         }
 
         // Set Gambler cooldown

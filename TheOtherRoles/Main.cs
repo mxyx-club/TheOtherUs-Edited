@@ -83,7 +83,14 @@ public partial class TheOtherRolesPlugin : BasePlugin
         PluginModuleInitializerAttribute.Invoke();
         LightPatch.Initialize();
         UpdateCPUProcessorAffinity();
-        Info($"\n---------------\n Loading TheOtherUs completed!\n TheOtherUs-Edited v{Version}{VersionSuffix}\n Build Number: {BuildNumber}\n Build Date: {GetCompileTime():yyyy-MM-dd HH:mm:ss}\n Mods: {IL2CPPChainloader.Instance.Plugins.Count}\n---------------");
+        Info($@"
+---------------
+ Loading TheOtherUs completed!
+ TheOtherUs-Edited v{Version}{VersionSuffix}
+ Build Number: {BuildNumber}
+ Build Date: {GetCompileTime():yyyy-MM-dd HH:mm:ss}
+ Mods: {IL2CPPChainloader.Instance.Plugins.Count}
+---------------");
     }
 
     // CPUの割当を変更する
@@ -122,12 +129,11 @@ public partial class TheOtherRolesPlugin : BasePlugin
     {
         try
         {
-            var f = System.Reflection.Assembly.GetExecutingAssembly().GetType("Builtin")
-                ?.GetField("BuildNumber", BindingFlags.Public | BindingFlags.Static);
+            var f = Assembly.GetExecutingAssembly().GetType("Builtin")?.GetField("BuildNumber", BindingFlags.Public | BindingFlags.Static);
             if (f?.GetValue(null) is int n && n > 0) return n.ToString();
         }
         catch { }
-        var mvid = System.Reflection.Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToString();
+        var mvid = Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToString();
         return mvid.Length >= 6 ? mvid[..6] : mvid;
     }
 }
