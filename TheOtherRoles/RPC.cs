@@ -127,6 +127,9 @@ public enum CustomRPC : byte
     SetAvengerLover,
     JesterWinner,
     GaolerMarkPrisoner,
+    ThrallPromotes,
+    VampireRecruit,
+    VampireSyncThrall,     // 同步状态
 
     TrapperKill,
     PlaceTrap,
@@ -812,7 +815,7 @@ public static class RPCProcedure
             case RoleId.Grenadier:
                 if (reset) Grenadier.clearAndReload();
                 break;
-
+                
             case RoleId.Amnisiac:
                 break;
             case RoleId.Survivor:
@@ -1402,6 +1405,7 @@ public static class RPCProcedure
             }
         }
 
+
         erasePlayerRoles(target.PlayerId);
         setRole(targetId, (byte)RoleId.Sidekick);
         Gaoler.OnImpostorDie(target);
@@ -1424,6 +1428,34 @@ public static class RPCProcedure
         Jackal.canCreateSidekick = Jackal.jackalPromotedFromSidekickCanCreateSidekick;
     }
 
+    public static void ThrallPromotes(byte playerId)
+    {
+        var player = PlayerById(playerId);
+        if (player == null || Vampire.currentThrall == null || Vampire.currentThrall.IsDead()) return;
+
+        bool shouldErase =
+            player.IsNeutral() ||
+            Vampire.currentThrall == Sheriff.Deputy ||    // 或者比较 ID/引用，视类型而定
+            Vampire.currentThrall == Mayor.mayor ||
+            Vampire.currentThrall == Veteran.veteran ||
+            Vampire.currentThrall == Prosecutor.prosecutor ||
+            Sheriff.Player.Any(x => x == Vampire.currentThrall);
+
+        if (shouldErase)
+        {
+            erasePlayerRoles(playerId);
+        }
+        if (Vampire.message == false)
+        {
+        Vampire.message = true;
+        Vampire.thrallNotified = true;
+        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, GetString("VampireThrallNotify"));
+
+        }
+
+        setRole(playerId, (byte)RoleId.Impostor);
+        
+    }
     public static void pavlovsCreateDog(byte targetId)
     {
         var target = PlayerById(targetId);
@@ -1442,6 +1474,7 @@ public static class RPCProcedure
                 Executioner.clearAndReload();
             }
         }
+
 
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
 
@@ -2263,7 +2296,28 @@ public static class RPCProcedure
         // 所有客户端收到此 RPC 后，设置当前囚犯
         Gaoler.currentPrisoner = PlayerById(prisonerId);
     }
-}
+
+    public static void VampireRecruit(byte targetId)
+    {
+        var target = PlayerById(targetId);
+        if (target == null) return;
+        Vampire.currentThrall = target;
+        Vampire.hasRecruited = true;
+        Vampire.message = false;
+
+            HudManagerStartPatch.vampireRecruitButton.setActive(false);
+    }
+
+    public static void VampireSyncThrall(byte thrallId, bool hasRecruited)
+    {
+        Vampire.currentThrall = PlayerById(thrallId);
+        Vampire.hasRecruited = hasRecruited;
+        // 更新UI（如按钮状态）
+        if (HudManagerStartPatch.vampireRecruitButton != null)
+            HudManagerStartPatch.vampireRecruitButton.setActive(!hasRecruited);
+    }
+} 
+
 
 
 [HarmonyPatch]
@@ -2651,6 +2705,19 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.HostControl:
                 RPCProcedure.HostControl(reader.ReadPlayer(), (RPCProcedure.HostCommand)reader.ReadByte(), reader);
+                break;
+
+            case CustomRPC.VampireRecruit:
+                byte targetId = reader.ReadByte();
+                RPCProcedure.VampireRecruit(targetId);
+                break;
+            case CustomRPC.VampireSyncThrall:
+                byte thrallId = reader.ReadByte();
+                bool recruited = reader.ReadBoolean();
+                RPCProcedure.VampireSyncThrall(thrallId, recruited);
+                break;
+            case CustomRPC.ThrallPromotes:
+                RPCProcedure.ThrallPromotes(reader.ReadByte());
                 break;
 
             // Game mode

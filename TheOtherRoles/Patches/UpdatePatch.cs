@@ -565,8 +565,6 @@ internal class HudManagerUpdatePatch
                 }
             }
         }
-
-        // 狱卒：为内鬼玩家显示囚犯的灰色名字和 "#"
         if (Dreamcatcher.Dreamed != null)
         {
             if (PlayerControl.LocalPlayer == Dreamcatcher.Player || CanSeeGhostInfo)
@@ -582,6 +580,8 @@ internal class HudManagerUpdatePatch
                 }
             }
         }
+
+        
 
         if (Oracle.Player.IsDead() && Oracle.Confesser != null && Oracle.ConfesserType != Oracle.CRoleType.None)
         {
@@ -693,6 +693,37 @@ internal class HudManagerUpdatePatch
                     // player.HighlightedFX.enabled = true;
                 }
         }
+
+        if (Vampire.currentThrall != null)
+        {
+            if (PlayerControl.LocalPlayer == Vampire.vampire
+                || (PlayerControl.LocalPlayer == Vampire.currentThrall && Vampire.vampire.IsDead())
+                || CanSeeGhostInfo)
+            {
+                var suffix = Cs(Vampire.color, " V");
+
+                var thrallName = Vampire.currentThrall?.cosmetics?.nameText;
+                if (thrallName != null && !thrallName.text.Contains(suffix))
+                {
+                    thrallName.text += suffix;
+                }
+
+                if (MeetingHud.Instance != null)
+                {
+                    foreach (var pva in allPlayerStates)
+                    {
+                        if (pva == null) continue;
+                        var pText = pva.NameText;
+                        if (pText != null && pva.TargetPlayerId == Vampire.currentThrall.PlayerId && !pText.text.Contains(suffix))
+                        {
+                            pText.text += suffix;
+                        }
+                    }
+                }
+            }
+        }
+
+
     }
 
     private static void updateShielded()
@@ -843,8 +874,10 @@ internal class HudManagerUpdatePatch
 
     private static void engineerUpdate()
     {
-        var jackalHighlight = Engineer.highlightForTeamJackal &&
-                              (Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer) || PlayerControl.LocalPlayer == Jackal.Sidekick);
+        var jackalHighlight = Engineer.highlightForTeamNeutral &&
+                              (Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer) || PlayerControl.LocalPlayer == Jackal.Sidekick
+                              || PlayerControl.LocalPlayer == Pavlovsdogs.pavlovsowner || PlayerControl.LocalPlayer == Pavlovsdogs.pavlovsdogs.Any(x => x == PlayerControl.LocalPlayer)
+                              || PlayerControl.LocalPlayer == Infected.Player.Any(x => x == PlayerControl.LocalPlayer));
         var impostorHighlight = Engineer.highlightForImpostors && PlayerControl.LocalPlayer.IsImpostor();
         if ((jackalHighlight || impostorHighlight) && MapUtilities.CachedShipStatus?.AllVents != null)
             foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
@@ -881,6 +914,8 @@ internal class HudManagerUpdatePatch
         }
     }
 
+
+   
     private static void deputyUpdate()
     {
         if (PlayerControl.LocalPlayer == null || !Sheriff.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId)) return;

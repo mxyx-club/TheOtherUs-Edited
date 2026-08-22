@@ -2,6 +2,7 @@ using Reactor.Networking;
 using TheOtherRoles.Attributes;
 using TheOtherRoles.Objects;
 using static TheOtherRoles.Modules.ModInputManager;
+using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles.Buttons;
 
@@ -41,6 +42,7 @@ internal static class HudManagerStartPatch
     public static CustomButton bodyGuardGuardButton;
     public static CustomButton trackerTrackCorpsesButton;
     public static CustomButton vampireKillButton;
+    public static CustomButton vampireRecruitButton;
     public static CustomButton garlicButton;
     public static CustomButton jackalKillButton;
     public static CustomButton jackalSwoopButton;
@@ -236,6 +238,7 @@ internal static class HudManagerStartPatch
         oracleButton.MaxTimer = Oracle.ConfessCooldown;
         dreamcatcherButton.MaxTimer = Dreamcatcher.DreamCooldown;
         soulSightButton.MaxTimer = SoulSight.Cooldown;
+        vampireRecruitButton.MaxTimer = Vampire.recruitCooldown;
 
         butcherDissectionButton.EffectDuration = Butcher.dissectionDuration;
         veteranAlertButton.EffectDuration = Veteran.alertDuration;
@@ -1459,6 +1462,38 @@ internal static class HudManagerStartPatch
             buttonText: "VampireText".Translate()
         );
 
+
+            vampireRecruitButton = new CustomButton(
+                () =>
+                {
+                    var target = SetTarget();
+                    if (target == null) return;
+                    if (target.IsImpostor() || target == Vampire.currentThrall) return;
+                    if (Vampire.currentThrall != null) return;
+
+                    Vampire.currentThrall = target;
+
+                    var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VampireRecruit, Hazel.SendOption.Reliable, -1);
+                    writer.Write(target.PlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+
+                    Vampire.hasRecruited = true;
+                },
+                () => Vampire.vampire != null && Vampire.vampire == PlayerControl.LocalPlayer && !Vampire.hasRecruited,
+                () =>
+                {
+                    // 可用条件：可移动，目标可招募，冷却结束
+                    var target = SetTarget();
+                    return PlayerControl.LocalPlayer.CanMove && target != null && !target.IsImpostor() && target != Vampire.currentThrall;
+                },
+                () => { vampireRecruitButton.Timer = vampireRecruitButton.MaxTimer; },
+                Vampire.recruitButtonSprite,
+                __instance,
+                __instance.AbilityButton,
+                abilityInput.keyCode,
+                buttonText: "招募"
+            );
+       
         garlicButton = new CustomButton(
             () =>
             {
@@ -1727,6 +1762,7 @@ internal static class HudManagerStartPatch
                     return;
                 }
 
+
                 var writer = StartRPC(CustomRPC.JackalCreatesSidekick);
                 writer.Write(target.PlayerId);
                 writer.EndRPC();
@@ -1922,6 +1958,8 @@ internal static class HudManagerStartPatch
             () =>
             {
                 if (CheckUseAbility(PlayerControl.LocalPlayer, Pavlovsdogs.currentTarget)) return;
+
+
                 var writer = StartRPC(CustomRPC.PavlovsCreateDog);
                 writer.Write(Pavlovsdogs.currentTarget.PlayerId);
                 writer.EndRPC();
@@ -4940,7 +4978,7 @@ internal static class HudManagerStartPatch
                 dreamcatcherButton.Sprite = Dreamcatcher.CurrentTarget != null && Dreamcatcher.CurrentTarget == Dreamcatcher.LastDreamed
                     ? Dreamcatcher.killButtonSprite
                     : Dreamcatcher.dreamButtonSprite;
-                oracleButton.showTargetNameOnButton(Dreamcatcher.CurrentTarget, Dreamcatcher.Dreamed?.Data?.PlayerName ?? "");
+                dreamcatcherButton.showTargetNameOnButton(Dreamcatcher.CurrentTarget, Dreamcatcher.Dreamed?.Data?.PlayerName ?? "");
                 return PlayerControl.LocalPlayer.CanMove && Dreamcatcher.CurrentTarget != null;
             },
             () =>

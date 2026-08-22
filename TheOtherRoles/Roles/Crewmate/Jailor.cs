@@ -111,6 +111,14 @@ public class Jailor
             dreamlinkDead = true;
         }
 
+        if (Vampire.vampire != null && Vampire.currentThrall != null && Vampire.vampire.PlayerId == target.PlayerId)
+        {
+            var writer = StartRPC(CustomRPC.ThrallPromotes);
+            writer.Write(Vampire.currentThrall.PlayerId);
+            writer.EndRPC();
+            RPCProcedure.ThrallPromotes(Vampire.currentThrall.PlayerId);
+        }
+
         PlayerData.SetDeathReason(target, CustomDeathReason.Jailed, player);
 
         foreach (var playerState in MeetingHud.Instance.playerStates)
