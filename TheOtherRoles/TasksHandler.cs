@@ -29,6 +29,7 @@ public static class TasksHandler
                  && playerInfo.PlayerId != Thief.thief?.PlayerId
                  && playerInfo.PlayerId != Specter.Player?.PlayerId
                  && playerInfo.PlayerId != Avenger.Player?.PlayerId
+                 && playerInfo.PlayerId != Vampire.Thrall?.PlayerId
                  && !PlayerById(playerInfo.PlayerId).IsNeutral()
                  && !Amnisiac.Player.Any(x => x.PlayerId == playerInfo.PlayerId)
                  && playerInfo.PlayerId != Akujo.honmei?.PlayerId;

@@ -4,7 +4,7 @@ public static class Vampire
 {
     public static PlayerControl vampire;
     public static Color color = Palette.ImpostorRed;
-    public static PlayerControl currentThrall;
+    public static PlayerControl Thrall;
 
     public static float delay = 10f;
     public static float cooldown = 30f;
@@ -17,6 +17,7 @@ public static class Vampire
     public static bool thrallNotified;        // 眷属是否已得知转变
     public static bool message;
     public static float recruitCooldown = 25f;
+    public static float recruitRange = 1.5f;
     public static bool canRecruit = true;
 
     public static PlayerControl currentTarget;
@@ -41,8 +42,9 @@ public static class Vampire
         garlicButton = CustomOptionHolder.vampireGarlicButton.GetBool();
         canRecruit = CustomOptionHolder.vampireCanRecruit.GetBool();
         recruitCooldown = CustomOptionHolder.vampireRecruitCooldown.GetFloat();
+        recruitRange = CustomOptionHolder.vampireRecruitRange.GetFloat();
 
-        currentThrall = null;
+        Thrall = null;
         hasRecruited = false;
         thrallNotified = false;
         message = false;

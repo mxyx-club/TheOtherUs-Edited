@@ -694,15 +694,15 @@ internal class HudManagerUpdatePatch
                 }
         }
 
-        if (Vampire.currentThrall != null)
+        if (Vampire.Thrall != null)
         {
             if (PlayerControl.LocalPlayer == Vampire.vampire
-                || (PlayerControl.LocalPlayer == Vampire.currentThrall && Vampire.vampire.IsDead())
+                || (PlayerControl.LocalPlayer == Vampire.Thrall && Vampire.vampire.IsDead())
                 || CanSeeGhostInfo)
             {
                 var suffix = Cs(Vampire.color, " V");
 
-                var thrallName = Vampire.currentThrall?.cosmetics?.nameText;
+                var thrallName = Vampire.Thrall?.cosmetics?.nameText;
                 if (thrallName != null && !thrallName.text.Contains(suffix))
                 {
                     thrallName.text += suffix;
@@ -714,7 +714,7 @@ internal class HudManagerUpdatePatch
                     {
                         if (pva == null) continue;
                         var pText = pva.NameText;
-                        if (pText != null && pva.TargetPlayerId == Vampire.currentThrall.PlayerId && !pText.text.Contains(suffix))
+                        if (pText != null && pva.TargetPlayerId == Vampire.Thrall.PlayerId && !pText.text.Contains(suffix))
                         {
                             pText.text += suffix;
                         }
@@ -1854,8 +1854,6 @@ internal class HudManagerUpdatePatch
         engineerUpdate();
         // BountyHunter
         bountyHunterUpdate();
-        // Trapper
-        Trap.UpdateTrap();
         // Multitasker
         multitaskerUpdate();
         // Deputy Sabotage, Use and Vent Button Disabling

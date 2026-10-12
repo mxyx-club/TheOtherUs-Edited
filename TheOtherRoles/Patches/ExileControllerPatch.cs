@@ -203,13 +203,13 @@ internal class ExileControllerBeginPatch
             PlayerData.RpcSetDeathReason(Dreamcatcher.Dreamed, CustomDeathReason.Dreamlink, Dreamcatcher.Player);
         }
 
-        if (Vampire.vampire != null && player == Vampire.vampire && Vampire.currentThrall.IsAlive() && Vampire.vampire == PlayerControl.LocalPlayer)
+        if (Vampire.vampire != null && player == Vampire.vampire && Vampire.Thrall.IsAlive() && Vampire.vampire == PlayerControl.LocalPlayer)
         {
 
             var writer = StartRPC(CustomRPC.ThrallPromotes);
-            writer.Write(Vampire.currentThrall.PlayerId);
+            writer.Write(Vampire.Thrall.PlayerId);
             writer.EndRPC();
-            RPCProcedure.ThrallPromotes(Vampire.currentThrall.PlayerId);
+            RPCProcedure.ThrallPromotes(Vampire.Thrall.PlayerId);
 
         }
 
@@ -640,10 +640,10 @@ internal class ExileControllerWrapUpPatch
 
         Chameleon.lastMoved.Clear();
 
-        foreach (var trap in Trap.AllObjects) trap.triggerable = false;
+        foreach (var trap in Trap.AllObjects.OfType<Trap>()) trap.triggerable = false;
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(
             (GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown / 2) + 2, new Action<float>(p =>
-            { if (p == 1f) foreach (var trap in Trap.AllObjects) trap.triggerable = true; })));
+            { if (p == 1f) foreach (var trap in Trap.AllObjects.OfType<Trap>()) trap.triggerable = true; })));
 
         if (!Yoyo.markStaysOverMeeting) Silhouette.AllObjects.ToArray().Do(x => x.Destroy());
 

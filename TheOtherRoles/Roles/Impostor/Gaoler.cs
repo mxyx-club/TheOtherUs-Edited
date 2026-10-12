@@ -37,27 +37,17 @@ public class Gaoler
         canJailSamePlayerConsecutively = CustomOptionHolder.gaolerCanJailSamePlayerConsecutively.GetBool();
     }
 
-    public static void OnImpostorDie(PlayerControl player)
-    {
-        if (!canPassMapAfterDeath) return;
-        if (Player == null && hasMapPlayer != null)
-        {
-            hasMapPlayer = null;
-            return;
-        }
-
-        if (Player.IsAlive() || (hasMapPlayer.IsAlive() && hasMapPlayer.IsImpostor())) return;
-
-        var allImpostor = GameDataManager.Instance.AllPlayerControl.Where(x => x.IsImpostor() && x.IsAlive() && x != Yoyo.yoyo);
-        if (allImpostor.Any() && (player == Player || hasMapPlayer.IsDead() || !hasMapPlayer.IsImpostor()))
-        {
-            hasMapPlayer = allImpostor.Random();
-        }
-    }
-
     public static bool IsPrisoner(PlayerControl player)
     {
         return player != null && currentPrisoner != null && player.PlayerId == currentPrisoner.PlayerId;
+    }
+
+    public static void SyncMapPlayer(byte playerId)
+    {
+        var writer = StartRPC(CustomRPC.GaolerSyncMapPlayer);
+        writer.Write(playerId);
+        writer.EndRPC();
+        RPCProcedure.GaolerSyncMapPlayer(playerId);
     }
 
     public static bool CanUseAbility()
@@ -97,6 +87,26 @@ public class Gaoler
                 var icon = playerState.transform.FindChild("GaolerIcon");
                 if (icon != null) UObject.Destroy(icon.gameObject);
             }
+        }
+
+        // 狱卒死亡但职业保留时，把管理室地图交给其它存活的队友
+        [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
+        [HarmonyPostfix]
+        public static void HudUpdate(HudManager __instance)
+        {
+            if (!canPassMapAfterDeath || !Player.IsLocalPlayer) return;
+            if (Player.IsAlive() || hasMapPlayer.IsAlive()) return;
+
+            var aliveImpostor = GameDataManager.Instance.AllPlayerControl
+                .Where(x => x.IsImpostor() && x.IsAlive() && x != Yoyo.yoyo);
+
+            if (!aliveImpostor.Any())
+            {
+                if (hasMapPlayer != null) SyncMapPlayer(byte.MaxValue);
+                return;
+            }
+
+            SyncMapPlayer(aliveImpostor.Random().PlayerId);
         }
 
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]

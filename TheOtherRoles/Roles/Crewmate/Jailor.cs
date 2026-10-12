@@ -111,12 +111,12 @@ public class Jailor
             dreamlinkDead = true;
         }
 
-        if (Vampire.vampire != null && Vampire.currentThrall != null && Vampire.vampire.PlayerId == target.PlayerId)
+        if (Vampire.vampire != null && Vampire.Thrall != null && Vampire.vampire.PlayerId == target.PlayerId)
         {
             var writer = StartRPC(CustomRPC.ThrallPromotes);
-            writer.Write(Vampire.currentThrall.PlayerId);
+            writer.Write(Vampire.Thrall.PlayerId);
             writer.EndRPC();
-            RPCProcedure.ThrallPromotes(Vampire.currentThrall.PlayerId);
+            RPCProcedure.ThrallPromotes(Vampire.Thrall.PlayerId);
         }
 
         PlayerData.SetDeathReason(target, CustomDeathReason.Jailed, player);

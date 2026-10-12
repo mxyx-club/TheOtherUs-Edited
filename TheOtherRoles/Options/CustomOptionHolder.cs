@@ -168,6 +168,7 @@ public class CustomOptionHolder
     public static CustomOption vampireCanKillNearGarlics;
     public static CustomOption vampireCanRecruit;
     public static CustomOption vampireRecruitCooldown;
+    public static CustomOption vampireRecruitRange;
 
     public static CustomOption eraserSpawnRate;
     public static CustomOption eraserCooldown;
@@ -1078,6 +1079,7 @@ public class CustomOptionHolder
         vampireCanKillNearGarlics = Create(101504, Types.Impostor, "vampireCanKillNearGarlics", true, vampireGarlicButton);
         vampireCanRecruit = Create(101505, Types.Impostor, "吸血鬼可招募眷属", true, vampireSpawnRate);
         vampireRecruitCooldown = Create(101506, Types.Impostor, "招募冷却时间", 15f, 5f, 30f, 5f, vampireCanRecruit);
+        vampireRecruitRange = Create(101507, Types.Impostor, "招募距离", 1.5f, 0.5f, 3f, 0.5f, vampireCanRecruit);
 
         eraserSpawnRate = Create(101600, Types.Impostor, Cs(Eraser.color, "Eraser"), rates, null, true);
         eraserCooldown = Create(101601, Types.Impostor, "eraserCooldown", 25f, 10f, 120f, 2.5f, eraserSpawnRate);

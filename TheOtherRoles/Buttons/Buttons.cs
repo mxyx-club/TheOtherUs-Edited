@@ -1465,25 +1465,23 @@ internal static class HudManagerStartPatch
         vampireRecruitButton = new CustomButton(
             () =>
             {
-                var target = SetTarget();
+                if (!Vampire.canRecruit) return;
+                var target = SetTarget(distances: Vampire.recruitRange);
                 if (target == null) return;
-                if (target.IsImpostor() || target == Vampire.currentThrall) return;
-                if (Vampire.currentThrall != null) return;
+                if (target.IsImpostor() || target == Vampire.Thrall) return;
+                if (Vampire.Thrall != null) return;
 
-                Vampire.currentThrall = target;
-
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VampireRecruit, Hazel.SendOption.Reliable, -1);
+                var writer = StartRPC(CustomRPC.VampireRecruit);
                 writer.Write(target.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-
-                Vampire.hasRecruited = true;
+                writer.EndRPC();
+                RPCProcedure.VampireRecruit(target.PlayerId);
+                vampireRecruitButton.Timer = vampireRecruitButton.MaxTimer;
             },
-            () => Vampire.vampire != null && Vampire.vampire == PlayerControl.LocalPlayer && !Vampire.hasRecruited,
+            () => Vampire.canRecruit && Vampire.vampire != null && Vampire.vampire == PlayerControl.LocalPlayer && !Vampire.hasRecruited,
             () =>
             {
-                // 可用条件：可移动，目标可招募，冷却结束
-                var target = SetTarget();
-                return PlayerControl.LocalPlayer.CanMove && target != null && !target.IsImpostor() && target != Vampire.currentThrall;
+                var target = SetTarget(distances: Vampire.recruitRange);
+                return Vampire.canRecruit && PlayerControl.LocalPlayer.CanMove && target != null && !target.IsImpostor() && target != Vampire.Thrall;
             },
             () => { vampireRecruitButton.Timer = vampireRecruitButton.MaxTimer; },
             Vampire.recruitButtonSprite,
@@ -3344,9 +3342,9 @@ internal static class HudManagerStartPatch
                     if (CheckUseAbility(PlayerControl.LocalPlayer, Pursuer.target)) return;
                     var writer = StartRPC(CustomRPC.SetBlanked);
                     writer.Write(Pursuer.target.PlayerId);
-                    writer.Write(true);
+                    writer.Write(false);
                     writer.EndRPC();
-                    RPCProcedure.SetBlanked(Pursuer.target.PlayerId, true);
+                    RPCProcedure.SetBlanked(Pursuer.target.PlayerId, false);
 
                     Pursuer.target = null;
 
@@ -3422,9 +3420,9 @@ internal static class HudManagerStartPatch
                     if (CheckUseAbility(PlayerControl.LocalPlayer, Survivor.target)) return;
                     var writer = StartRPC(CustomRPC.SetBlanked);
                     writer.Write(Survivor.target.PlayerId);
-                    writer.Write(true);
+                    writer.Write(false);
                     writer.EndRPC();
-                    RPCProcedure.SetBlanked(Survivor.target.PlayerId, true);
+                    RPCProcedure.SetBlanked(Survivor.target.PlayerId, false);
 
                     Survivor.target = null;
 
@@ -3835,12 +3833,12 @@ internal static class HudManagerStartPatch
             () =>
             {
 
-                if (Bomb.AllObjects.Count == 0 || Terrorist.selfExplosion)
+                if (!Bomb.AllObjects.OfType<Bomb>().Any() || Terrorist.selfExplosion)
                 {
                     Bomb.TargetBomb = null;
                     return false;
                 }
-                Bomb.TargetBomb = Bomb.AllObjects.FindWithInRange(PlayerControl.LocalPlayer.GetTruePosition(), 1f);
+                Bomb.TargetBomb = Bomb.AllObjects.OfType<Bomb>().FindWithInRange(PlayerControl.LocalPlayer.GetTruePosition(), 1f);
                 return Bomb.TargetBomb != null && PlayerControl.LocalPlayer.IsAlive();
             },
             () =>
@@ -3861,9 +3859,9 @@ internal static class HudManagerStartPatch
             () =>
             {
                 var writer = StartRPC(CustomRPC.DefuseBomb);
-                writer.Write(Bomb.TargetBomb.Id);
+                writer.Write(Bomb.TargetBomb.NetworkId);
                 writer.EndRPC();
-                RPCProcedure.defuseBomb(Bomb.TargetBomb.Id);
+                RPCProcedure.defuseBomb(Bomb.TargetBomb.NetworkId);
 
                 defuseButton.Timer = 0f;
             },
@@ -4496,7 +4494,7 @@ internal static class HudManagerStartPatch
         gunsmithAddBullets = new CustomButton(
             () =>
             {
-                PlayerControl.LocalPlayer.SetKillTimer(ModOption.KillCooldown * Mini.Multiplier);
+                PlayerControl.LocalPlayer.SetKillTimer(Gunsmith.KillCooldown * Mini.Multiplier);
                 Gunsmith.remainingChange++;
                 var writer = StartRPC(PlayerControl.LocalPlayer, CustomRPC.SyncGunsmithChange);
                 writer.Write(Gunsmith.remainingChange);
@@ -4762,20 +4760,20 @@ internal static class HudManagerStartPatch
 
                     var writer = StartRPC(CustomRPC.DecoySwap);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                    writer.Write(Marionette.decoy.Id);
+                    writer.Write(Marionette.decoy.NetworkId);
                     writer.Write(PlayerControl.LocalPlayer.transform.position);
                     writer.Write(Marionette.decoy.GameObject.transform.position);
                     writer.EndRPC();
-                    RPCProcedure.DecoySwap(PlayerControl.LocalPlayer, Marionette.decoy.Id, PlayerControl.LocalPlayer.transform.position, Marionette.decoy.GameObject.transform.position);
+                    RPCProcedure.DecoySwap(PlayerControl.LocalPlayer, Marionette.decoy.NetworkId, PlayerControl.LocalPlayer.transform.position, Marionette.decoy.GameObject.transform.position);
                 }
                 else
                 {
 
                     var writer = StartRPC(CustomRPC.DecoyDestroy);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                    writer.Write(Marionette.decoy.Id);
+                    writer.Write(Marionette.decoy.NetworkId);
                     writer.EndRPC();
-                    RPCProcedure.DecoyDestroy(Marionette.Player, Marionette.decoy.Id);
+                    RPCProcedure.DecoyDestroy(Marionette.Player, Marionette.decoy.NetworkId);
                     marionettePlaceButton.Timer = marionettePlaceButton.MaxTimer;
                 }
                 marionetteButton.Timer = marionetteButton.MaxTimer;

@@ -286,11 +286,11 @@ public class Aftermath
 
                 var writer = StartRPC(CustomRPC.DecoySwap);
                 writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                writer.Write(Marionette.decoy.Id);
+                writer.Write(Marionette.decoy.NetworkId);
                 writer.Write(PlayerControl.LocalPlayer.transform.position);
                 writer.Write(Marionette.decoy.GameObject.transform.position);
                 writer.EndRPC();
-                DecoySwap(PlayerControl.LocalPlayer, Marionette.decoy.Id, PlayerControl.LocalPlayer.transform.position, Marionette.decoy.GameObject.transform.position);
+                DecoySwap(PlayerControl.LocalPlayer, Marionette.decoy.NetworkId, PlayerControl.LocalPlayer.transform.position, Marionette.decoy.GameObject.transform.position);
 
                 if (HudManager.Instance.PlayerCam.Target != PlayerControl.LocalPlayer) HudManager.Instance.PlayerCam.SetTargetWithLight(PlayerControl.LocalPlayer);
             }

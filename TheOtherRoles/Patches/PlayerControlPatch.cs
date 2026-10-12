@@ -406,8 +406,6 @@ public static class PlayerDiePatch
                 if (guessbutton != null) UObject.Destroy(guessbutton.gameObject);
             }
         }
-
-        Gaoler.OnImpostorDie(__instance);
     }
 }
 
@@ -610,12 +608,12 @@ public static class MurderPlayerPatch
             RpcCustomMurderPlayer(Dreamcatcher.Player, Dreamcatcher.Dreamed, true, true, CustomDeathReason.Dreamlink);
         }
 
-        if (Vampire.vampire != null && Vampire.vampire.PlayerId == target.PlayerId && Vampire.currentThrall.IsAlive() && __instance == PlayerControl.LocalPlayer)
+        if (Vampire.vampire != null && Vampire.vampire.PlayerId == target.PlayerId && Vampire.Thrall.IsAlive() && __instance == PlayerControl.LocalPlayer)
         {
             var writer = StartRPC(CustomRPC.ThrallPromotes);
-            writer.Write(Vampire.currentThrall.PlayerId);
+            writer.Write(Vampire.Thrall.PlayerId);
             writer.EndRPC();
-            RPCProcedure.ThrallPromotes(Vampire.currentThrall.PlayerId);
+            RPCProcedure.ThrallPromotes(Vampire.Thrall.PlayerId);
         }
 
         // Set Gambler cooldown
@@ -982,8 +980,6 @@ public static class DisconnectPatch
             if (PlayerData.GetPlayerData(player)?.DeathReason == CustomDeathReason.Null) PlayerData.SetDeathReason(player, CustomDeathReason.Disconnect, null);
 
             Sheriff.deputyCheckPromotion();
-
-            Gaoler.OnImpostorDie(player);
         }
 
         if (InMeeting && MeetingHud.Instance)

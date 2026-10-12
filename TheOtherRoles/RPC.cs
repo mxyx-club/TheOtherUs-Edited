@@ -127,9 +127,9 @@ public enum CustomRPC : byte
     SetAvengerLover,
     JesterWinner,
     GaolerMarkPrisoner,
+    GaolerSyncMapPlayer,
     ThrallPromotes,
     VampireRecruit,
-    VampireSyncThrall,     // 同步状态
 
     TrapperKill,
     PlaceTrap,
@@ -169,6 +169,9 @@ public enum CustomRPC : byte
     ShareGhostInfo,
     ShareDeathReasonAndKiller,
     RecordEvent,
+
+    NetworkObjectSpawn,
+    NetworkObjectDespawn,
 }
 
 public static class RPCProcedure
@@ -1408,7 +1411,6 @@ public static class RPCProcedure
 
         erasePlayerRoles(target.PlayerId);
         setRole(targetId, (byte)RoleId.Sidekick);
-        Gaoler.OnImpostorDie(target);
 
         if (target == PlayerControl.LocalPlayer) SoundEffectsManager.play("jackalSidekick");
         if (HandleGuesser.isGuesserGm && GuesserGM.guesserGamemodeSidekickIsAlwaysGuesser.GetBool() && !HandleGuesser.isGuesser(targetId))
@@ -1431,30 +1433,29 @@ public static class RPCProcedure
     public static void ThrallPromotes(byte playerId)
     {
         var player = PlayerById(playerId);
-        if (player == null || Vampire.currentThrall == null || Vampire.currentThrall.IsDead()) return;
+        if (player == null || player.IsDead()) return;
 
         bool shouldErase =
             player.IsNeutral() ||
-            Vampire.currentThrall == Sheriff.Deputy ||    // 或者比较 ID/引用，视类型而定
-            Vampire.currentThrall == Mayor.mayor ||
-            Vampire.currentThrall == Veteran.veteran ||
-            Vampire.currentThrall == Prosecutor.prosecutor ||
-            Sheriff.Player.Any(x => x == Vampire.currentThrall);
+            player == Sheriff.Deputy ||
+            player == Mayor.mayor ||
+            player == Veteran.veteran ||
+            player == Snitch.snitch ||
+            player == Prosecutor.prosecutor ||
+            Sheriff.Player.Any(x => x == player);
 
         if (shouldErase)
         {
             erasePlayerRoles(playerId);
         }
-        if (Vampire.message == false)
+        if (!Vampire.message)
         {
             Vampire.message = true;
             Vampire.thrallNotified = true;
             FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, GetString("VampireThrallNotify"));
-
         }
 
         setRole(playerId, (byte)RoleId.Impostor);
-
     }
     public static void pavlovsCreateDog(byte targetId)
     {
@@ -1480,7 +1481,6 @@ public static class RPCProcedure
 
         erasePlayerRoles(targetId);
         setRole(targetId, (byte)RoleId.Pavlovsdogs);
-        Gaoler.OnImpostorDie(target);
 
         if (targetId == PlayerControl.LocalPlayer.PlayerId)
             PlayerControl.LocalPlayer.moveable = true;
@@ -1677,19 +1677,22 @@ public static class RPCProcedure
 
     public static void PlaceDecoy(PlayerControl player, Vector3 pos)
     {
-        Marionette.decoy = new Decoy(player, pos);
+        if (!AmongUsClient.Instance.AmHost) return;
+        var decoy = new Decoy(player, pos);
+        Marionette.decoy = decoy;
+        NetworkCustomObject.NetworkSpawn(decoy, [player.PlayerId]);
     }
 
-    public static void DecoyDestroy(PlayerControl player, int? decoyId)
+    public static void DecoyDestroy(PlayerControl player, ushort? decoyId)
     {
-        var decoy = Decoy.AllObjects.FirstOrDefault(x => x.Id == decoyId);
+        var decoy = decoyId.HasValue ? Decoy.Find<Decoy>(decoyId.Value) : null;
         decoy?.Destroy();
         Marionette.decoy = null;
     }
 
-    public static void DecoySwap(PlayerControl player, int? decoyId, Vector3 playerPos, Vector3 decoyPos)
+    public static void DecoySwap(PlayerControl player, ushort? decoyId, Vector3 playerPos, Vector3 decoyPos)
     {
-        var decoy = Decoy.AllObjects.FirstOrDefault(x => x.Id == decoyId);
+        var decoy = decoyId.HasValue ? Decoy.Find<Decoy>(decoyId.Value) : null;
         if (decoy?.GameObject == null || decoy?.Renderer == null) return;
 
         bool playerFlip = player.cosmetics.FlipX;
@@ -2028,7 +2031,10 @@ public static class RPCProcedure
     public static void placeTrap(byte playerId, Vector3 pos)
     {
         var player = PlayerById(playerId);
-        _ = new KillTrap(player, pos);
+        if (player == null) return;
+        if (!AmongUsClient.Instance.AmHost) return;
+        var killTrap = new KillTrap(player, pos);
+        NetworkCustomObject.NetworkSpawn(killTrap, [playerId]);
     }
 
     public static void setInvisibleGen(byte playerId, byte flag)
@@ -2065,7 +2071,9 @@ public static class RPCProcedure
 
     public static void placeJackInTheBox(PlayerControl player, Vector3 pos)
     {
-        _ = new JackInTheBox(player, pos);
+        if (!AmongUsClient.Instance.AmHost) return;
+        var box = new JackInTheBox(player, pos);
+        NetworkCustomObject.NetworkSpawn(box, [player.PlayerId]);
     }
 
     public static void lightsOut()
@@ -2217,10 +2225,12 @@ public static class RPCProcedure
         var player = PlayerById(playerId);
         if (player == null) return;
         Trapper.charges -= 1;
+        if (!AmongUsClient.Instance.AmHost) return;
         var position = Vector3.zero;
         position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
         position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
-        _ = new Trap(player, position);
+        var trap = new Trap(player, position);
+        NetworkCustomObject.NetworkSpawn(trap, [playerId]);
     }
 
     public static void setGuesserGm(byte playerId)
@@ -2270,12 +2280,14 @@ public static class RPCProcedure
 
     public static void placeBomb(PlayerControl player, Vector3 pos)
     {
-        _ = new Bomb(player, pos);
+        if (!AmongUsClient.Instance.AmHost) return;
+        var bomb = new Bomb(player, pos);
+        NetworkCustomObject.NetworkSpawn(bomb, [player.PlayerId]);
     }
 
-    public static void defuseBomb(int id)
+    public static void defuseBomb(ushort id)
     {
-        var bomb = Bomb.AllObjects.FirstOrDefault(x => x.Id == id);
+        var bomb = NetworkCustomObject.Find<Bomb>(id);
         if (bomb?.GameObject == null) return;
         try
         {
@@ -2293,28 +2305,22 @@ public static class RPCProcedure
 
     public static void GaolerMarkPrisoner(byte prisonerId)
     {
-        // 所有客户端收到此 RPC 后，设置当前囚犯
         Gaoler.currentPrisoner = PlayerById(prisonerId);
+    }
+
+    public static void GaolerSyncMapPlayer(byte playerId)
+    {
+        Gaoler.hasMapPlayer = playerId == byte.MaxValue ? null : PlayerById(playerId);
     }
 
     public static void VampireRecruit(byte targetId)
     {
         var target = PlayerById(targetId);
         if (target == null) return;
-        Vampire.currentThrall = target;
+        Vampire.Thrall = target;
         Vampire.hasRecruited = true;
         Vampire.message = false;
-
-        HudManagerStartPatch.vampireRecruitButton.setActive(false);
-    }
-
-    public static void VampireSyncThrall(byte thrallId, bool hasRecruited)
-    {
-        Vampire.currentThrall = PlayerById(thrallId);
-        Vampire.hasRecruited = hasRecruited;
-        // 更新UI（如按钮状态）
-        if (HudManagerStartPatch.vampireRecruitButton != null)
-            HudManagerStartPatch.vampireRecruitButton.setActive(!hasRecruited);
+        vampireRecruitButton.setActive(false);
     }
 }
 
@@ -2675,7 +2681,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.TriggerTrap:
-                Trap.triggerTrap(reader.ReadByte(), reader.ReadInt32());
+                Trap.triggerTrap(reader.ReadByte(), reader.ReadUInt16());
                 break;
 
             case CustomRPC.PlaceBomb:
@@ -2683,7 +2689,7 @@ internal class RPCHandlerPatch
                 break;
 
             case CustomRPC.DefuseBomb:
-                RPCProcedure.defuseBomb(reader.ReadInt32());
+                RPCProcedure.defuseBomb(reader.ReadUInt16());
                 break;
 
             case CustomRPC.ShareGameMode:
@@ -2710,11 +2716,6 @@ internal class RPCHandlerPatch
             case CustomRPC.VampireRecruit:
                 byte targetId = reader.ReadByte();
                 RPCProcedure.VampireRecruit(targetId);
-                break;
-            case CustomRPC.VampireSyncThrall:
-                byte thrallId = reader.ReadByte();
-                bool recruited = reader.ReadBoolean();
-                RPCProcedure.VampireSyncThrall(thrallId, recruited);
                 break;
             case CustomRPC.ThrallPromotes:
                 RPCProcedure.ThrallPromotes(reader.ReadByte());
@@ -2757,16 +2758,16 @@ internal class RPCHandlerPatch
             case CustomRPC.SetFutureReveal:
                 break;
             case CustomRPC.TrapperKill:
-                KillTrap.trapKill(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadInt32());
+                KillTrap.trapKill(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadUInt16());
                 break;
             case CustomRPC.PlaceTrap:
                 RPCProcedure.placeTrap(reader.ReadByte(), reader.ReadVector3());
                 break;
             case CustomRPC.ActivateTrap:
-                KillTrap.activateTrap(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadInt32());
+                KillTrap.activateTrap(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadUInt16());
                 break;
             case CustomRPC.DisableTrap:
-                KillTrap.disableTrap(reader.ReadByte());
+                KillTrap.disableTrap(reader.ReadUInt16());
                 break;
             case CustomRPC.Prosecute:
                 Prosecutor.ProsecuteThisMeeting = reader.ReadBoolean();
@@ -2852,6 +2853,12 @@ internal class RPCHandlerPatch
             case CustomRPC.RecordEvent:
                 GameDataManager.HandleRpcRecordEvent(reader);
                 break;
+            case CustomRPC.NetworkObjectSpawn:
+                NetworkCustomObject.HandleSpawn(reader.ReadString(), reader.ReadUInt16(), reader.ReadVector3(), reader.ReadBytesAndSize());
+                break;
+            case CustomRPC.NetworkObjectDespawn:
+                NetworkCustomObject.HandleDespawn(reader.ReadUInt16());
+                break;
             case CustomRPC.GuesserMessage:
                 Guesser.seedGuessChat(reader.ReadPlayer(), reader.ReadPlayer(), reader.ReadByte(), false, reader.ReadString());
                 break;
@@ -2859,10 +2866,10 @@ internal class RPCHandlerPatch
                 RPCProcedure.PlaceDecoy(reader.ReadPlayer(), reader.ReadVector3());
                 break;
             case CustomRPC.DecoyDestroy:
-                RPCProcedure.DecoyDestroy(reader.ReadPlayer(), reader.ReadInt32());
+                RPCProcedure.DecoyDestroy(reader.ReadPlayer(), reader.ReadUInt16());
                 break;
             case CustomRPC.DecoySwap:
-                RPCProcedure.DecoySwap(reader.ReadPlayer(), reader.ReadInt32(), reader.ReadVector3(), reader.ReadVector3());
+                RPCProcedure.DecoySwap(reader.ReadPlayer(), reader.ReadUInt16(), reader.ReadVector3(), reader.ReadVector3());
                 break;
             case CustomRPC.SetAvengerLover:
                 Lovers.IsAvengerLover = reader.ReadBoolean();
@@ -2914,6 +2921,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.GaolerMarkPrisoner:
                 RPCProcedure.GaolerMarkPrisoner(reader.ReadByte());
+                break;
+            case CustomRPC.GaolerSyncMapPlayer:
+                RPCProcedure.GaolerSyncMapPlayer(reader.ReadByte());
                 break;
             case CustomRPC.AkujoSetUnifiedVote:
                 RPCProcedure.AkujoSetUnifiedVote(reader.ReadBoolean());

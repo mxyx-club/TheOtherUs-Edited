@@ -671,12 +671,12 @@ public static class Guesser
             PlayerData.SetDeathReason(Lawyer.lawyer, CustomDeathReason.LawyerSuicide, guesser);
         }
 
-        if (Vampire.vampire != null && Vampire.currentThrall != null && Vampire.vampire.PlayerId == dyingTargetId)
+        if (Vampire.vampire != null && Vampire.Thrall != null && Vampire.vampire.PlayerId == dyingTargetId)
         {
             var writer = StartRPC(CustomRPC.ThrallPromotes);
-            writer.Write(Vampire.currentThrall.PlayerId);
+            writer.Write(Vampire.Thrall.PlayerId);
             writer.EndRPC();
-            RPCProcedure.ThrallPromotes(Vampire.currentThrall.PlayerId);
+            RPCProcedure.ThrallPromotes(Vampire.Thrall.PlayerId);
         }
 
         bool dreamlinkDead = false;

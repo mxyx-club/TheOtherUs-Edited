@@ -469,7 +469,7 @@ internal class MeetingHudPatch
                     additionalVotes = Mayor.GetVotes();
 
                 if (Tiebreaker.tiebreaker.IsAlive() && Tiebreaker.tiebreaker.PlayerId == playerVoteArea.TargetPlayerId)
-                    additionalVotes = 1.5f;
+                    additionalVotes += 0.5f;
 
                 if (Prosecutor.prosecutor.IsAlive() && Prosecutor.ProsecuteThisMeeting && Prosecutor.prosecutor.PlayerId != playerVoteArea.TargetPlayerId)
                     additionalVotes = 0;
