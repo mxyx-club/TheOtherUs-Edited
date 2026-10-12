@@ -80,14 +80,14 @@ public class Trap : NetworkCustomObject
 
         t.usedCount++;
         t.triggerable = false;
-        if (targetId == PlayerControl.LocalPlayer.PlayerId || targetId == Trapper.trapper.PlayerId)
+        if (targetId == PlayerControl.LocalPlayer.PlayerId || targetId == Trapper.trapper?.PlayerId)
         {
             SoundEffectsManager.play("trapperTrap");
         }
 
         target.moveable = false;
         target.NetTransform.Halt();
-        if (PlayerControl.LocalPlayer.PlayerId == t.trapper.PlayerId) t.arrow.arrow.SetActive(true);
+        if (PlayerControl.LocalPlayer.PlayerId == t.trapper?.PlayerId) t.arrow.arrow.SetActive(true);
 
         _ = new LateTask(() =>
         {

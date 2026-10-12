@@ -11,7 +11,6 @@ public static class Trapper
     public static int rechargedTasks = 3;
     public static int charges = 1;
     public static int trapCountToReveal = 2;
-    public static List<PlayerControl> playersOnMap = new();
     public static int infoType; // 0 = Role, 1 = Good/Evil, 2 = Name
     public static float trapDuration = 5f;
 

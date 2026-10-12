@@ -61,7 +61,7 @@ def stringToJson(in_files):
                 if data:
                     stringData[name] = data
   
-    with open(OUT_FILE, "w", encoding='utf-8', newline="\n") as f:
+    with open(OUT_FILE, "w", encoding='utf-8', newline="\r\n") as f:
         # json.dump(stringData, f, indent=4)
         json.dump(stringData, f, ensure_ascii=False, indent=4)
 

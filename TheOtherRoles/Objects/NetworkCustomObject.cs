@@ -25,13 +25,19 @@ public abstract class NetworkCustomObject : CustomObjectBase<NetworkCustomObject
     public delegate NetworkCustomObject Factory(Vector3 position, byte[] payload);
 
     private static readonly Dictionary<string, Factory> factories = new();
-    private static ushort nextNetworkId;
+    private static ushort nextNetworkId = 1;
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (InGame && NetworkId != 0) NetworkDespawn(this);
+    }
 
     public static NetworkCustomObject Find(ushort networkId)
-        => AllObjects.FirstOrDefault(obj => obj.NetworkId == networkId);
+        => networkId == 0 ? null : AllObjects.FirstOrDefault(obj => obj.NetworkId == networkId);
 
     public static T Find<T>(ushort networkId) where T : NetworkCustomObject
-        => AllObjects.OfType<T>().FirstOrDefault(obj => obj.NetworkId == networkId);
+        => networkId == 0 ? null : AllObjects.OfType<T>().FirstOrDefault(obj => obj.NetworkId == networkId);
 
     protected static void Register<T>(Factory factory) where T : NetworkCustomObject
     {
@@ -91,5 +97,5 @@ public abstract class NetworkCustomObject : CustomObjectBase<NetworkCustomObject
     }
 
     [OnGameStart, OnGameEnd]
-    public static void ResetNetworkIds() => nextNetworkId = 0;
+    public static void ResetNetworkIds() => nextNetworkId = 1;
 }

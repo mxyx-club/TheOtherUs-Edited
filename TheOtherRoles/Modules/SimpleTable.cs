@@ -28,7 +28,7 @@ public class SimpleTable
 
     public SimpleTable AddRow(params string[] cells)
     {
-        _rows.Add(cells ?? Array.Empty<string>());
+        _rows.Add(cells ?? []);
         return this;
     }
 

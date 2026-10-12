@@ -1066,10 +1066,9 @@ public class AddToKillDistanceSetting
     {
         if (__instance.Title == StringNames.GameKillDistance && __instance.Values.Count == 3)
             __instance.Values = new Il2CppStructArray<StringNames>(
-                new[]
-                {
+                [
                     (StringNames)49999, StringNames.SettingShort, StringNames.SettingMedium, StringNames.SettingLong
-                });
+                ]);
     }
 
     [HarmonyPatch(typeof(IGameOptionsExtensions), nameof(IGameOptionsExtensions.AppendItem),

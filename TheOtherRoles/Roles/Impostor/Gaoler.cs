@@ -92,21 +92,23 @@ public class Gaoler
         // 狱卒死亡但职业保留时，把管理室地图交给其它存活的队友
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
         [HarmonyPostfix]
-        public static void HudUpdate(HudManager __instance)
+        public static void HudManagerUpdate(HudManager __instance)
         {
-            if (!canPassMapAfterDeath || !Player.IsLocalPlayer) return;
+            if (!InGame || !canPassMapAfterDeath || !AmongUsClient.Instance.AmHost) return;
             if (Player.IsAlive() || hasMapPlayer.IsAlive()) return;
 
-            var aliveImpostor = GameDataManager.Instance.AllPlayerControl
-                .Where(x => x.IsImpostor() && x.IsAlive() && x != Yoyo.yoyo);
+            var aliveImpostor = Player == null
+                ? Array.Empty<PlayerControl>()
+                : GameDataManager.Instance.AllPlayerControl
+                    .Where(x => x.IsImpostor() && x.IsAlive() && x != Yoyo.yoyo).ToArray();
 
-            if (!aliveImpostor.Any())
+            if (aliveImpostor.Length > 0)
             {
-                if (hasMapPlayer != null) SyncMapPlayer(byte.MaxValue);
+                SyncMapPlayer(aliveImpostor.Random().PlayerId);
                 return;
             }
 
-            SyncMapPlayer(aliveImpostor.Random().PlayerId);
+            if (hasMapPlayer != null) SyncMapPlayer(byte.MaxValue);
         }
 
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]

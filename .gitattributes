@@ -1,0 +1,21 @@
+* text=auto eol=crlf
+
+*.cs    text eol=crlf
+*.json  text eol=crlf
+*.csproj text eol=crlf
+*.py    text eol=crlf
+*.yml   text eol=crlf
+*.yaml  text eol=crlf
+*.md    text eol=crlf
+
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.xlsx  binary
+*.xls   binary
+*.dll   binary
+*.so    binary
+*.dylib binary
+*.pdb   binary
+*.zip   binary

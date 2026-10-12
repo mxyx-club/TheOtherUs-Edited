@@ -322,7 +322,7 @@ public static class PlayerControlExtensions
         public bool IsEvilNeutral()
         {
             return player != null && player.IsNeutral() && (
-                    player == Jester.Player.Any(x => x.PlayerId == player.PlayerId) ||
+                    Jester.Player.Any(x => x.PlayerId == player.PlayerId) ||
                     player == Vulture.vulture ||
                     player == Lawyer.lawyer ||
                     player == Executioner.executioner ||

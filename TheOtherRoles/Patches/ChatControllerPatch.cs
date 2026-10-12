@@ -494,22 +494,25 @@ public static class ChatControllerPatch
             else if (!inGameOrMeeting && hasDefault) channels.Remove(ChannelType.Default);
 
             if (jailorActive && !hasJailor) channels.Add(ChannelType.Jailor);
-            else if (!jailorActive && hasJailor) { channels.Remove(ChannelType.Jailor); if (CurrentChannel == ChannelType.Jailor) CurrentChannel = channels[0]; }
+            else if (!jailorActive && hasJailor) channels.Remove(ChannelType.Jailor);
 
             if (loverActive && !hasLover) channels.Add(ChannelType.Lover);
-            else if (!loverActive && hasLover) { channels.Remove(ChannelType.Lover); if (CurrentChannel == ChannelType.Lover) CurrentChannel = channels[0]; }
+            else if (!loverActive && hasLover) channels.Remove(ChannelType.Lover);
 
             if (impostorActive && !hasImpostor) channels.Add(ChannelType.Impostor);
-            else if (!impostorActive && hasImpostor) { channels.Remove(ChannelType.Impostor); if (CurrentChannel == ChannelType.Impostor) CurrentChannel = channels[0]; }
+            else if (!impostorActive && hasImpostor) channels.Remove(ChannelType.Impostor);
 
             if (jackalActive && !hasJackal) channels.Add(ChannelType.Jackal);
-            else if (!jackalActive && hasJackal) { channels.Remove(ChannelType.Jackal); if (CurrentChannel == ChannelType.Jackal) CurrentChannel = channels[0]; }
+            else if (!jackalActive && hasJackal) channels.Remove(ChannelType.Jackal);
 
             if (pavlovsActive && !hasPavlovs) channels.Add(ChannelType.Pavlovs);
-            else if (!pavlovsActive && hasPavlovs) { channels.Remove(ChannelType.Pavlovs); if (CurrentChannel == ChannelType.Pavlovs) CurrentChannel = channels[0]; }
+            else if (!pavlovsActive && hasPavlovs) channels.Remove(ChannelType.Pavlovs);
 
             if (infectedActive && !hasInfected) channels.Add(ChannelType.Infected);
-            else if (!infectedActive && hasInfected) { channels.Remove(ChannelType.Infected); if (CurrentChannel == ChannelType.Infected) CurrentChannel = channels[0]; }
+            else if (!infectedActive && hasInfected) channels.Remove(ChannelType.Infected);
+
+            if (CurrentChannel != ChannelType.HostAll && !channels.Contains(CurrentChannel))
+                CurrentChannel = channels.Count > 0 ? channels[^1] : ChannelType.Default;
         }
 
         private static ChannelType LastType = ChannelType.Default;

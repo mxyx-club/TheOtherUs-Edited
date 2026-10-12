@@ -177,7 +177,7 @@ public static class FastRPCExtension
     {
         var count = reader.ReadInt32();
         if (count == -1) return null;
-        if (count == 0) return Array.Empty<object?>();
+        if (count == 0) return [];
 
         var result = new object?[count];
         for (int i = 0; i < count; i++)

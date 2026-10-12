@@ -2944,6 +2944,10 @@
         "0": "Confess Cannot Be Guessed",
         "13": "保护信徒不会被猜测"
     },
+    "engineerHighlightForTeamNeutral": {
+        "0": "Neutral Teams See Vents Highlighted",
+        "13": "中立阵营可见工程师管道高光"
+    },
     "TouTitle": {
         "0": "<color=#ff351f>TheOtherUs-Edited</color>",
         "13": "<color=#ff351f>我们的超多职业</color>"
@@ -4215,8 +4219,7 @@
     },
     "LighterText": {
         "0": "LIGHT",
-        "13": "点灯",
-        "15": " "
+        "13": "点灯"
     },
     "LightsOutText": {
         "0": "BLACKOUT",
@@ -4460,8 +4463,7 @@
     },
     "AdminMapText": {
         "0": "ADMIN TABLE",
-        "13": "管理地图",
-        "15": " "
+        "13": "管理地图"
     },
     "hackerButtonText": {
         "0": "HACK",

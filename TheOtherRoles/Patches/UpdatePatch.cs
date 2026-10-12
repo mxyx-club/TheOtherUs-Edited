@@ -879,7 +879,7 @@ internal class HudManagerUpdatePatch
         var jackalHighlight = Engineer.highlightForTeamNeutral &&
                               (Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer) || PlayerControl.LocalPlayer == Jackal.Sidekick
                               || PlayerControl.LocalPlayer == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(x => x == PlayerControl.LocalPlayer)
-                              || PlayerControl.LocalPlayer == Infected.Player.Any(x => x == PlayerControl.LocalPlayer));
+                              || Infected.Player.Any(x => x == PlayerControl.LocalPlayer));
         var impostorHighlight = Engineer.highlightForImpostors && PlayerControl.LocalPlayer.IsImpostor();
         if ((jackalHighlight || impostorHighlight) && MapUtilities.CachedShipStatus?.AllVents != null)
             foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
