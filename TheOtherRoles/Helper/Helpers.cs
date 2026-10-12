@@ -146,7 +146,7 @@ public static class Helpers
                 return SabotageTypes.Lights;
             else if (task.TaskType == TaskTypes.RestoreOxy)
                 return SabotageTypes.O2;
-            else if (task.TaskType is TaskTypes.ResetReactor or TaskTypes.StopCharles or TaskTypes.StopCharles)
+            else if (task.TaskType is TaskTypes.ResetReactor or TaskTypes.StopCharles or TaskTypes.ResetSeismic)
                 return SabotageTypes.Reactor;
             else if (task.TaskType == TaskTypes.FixComms)
                 return SabotageTypes.Comms;

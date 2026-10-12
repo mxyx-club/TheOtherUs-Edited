@@ -823,8 +823,10 @@ internal class HudManagerUpdatePatch
             var possibleTargets = new List<PlayerControl>();
             foreach (PlayerControl p in PlayerControl.AllPlayerControls.ToArray().Where(x => x.IsAlive() && !x.IsImpostor(true)))
             {
-                if ((p == Mini.mini && !Mini.isGrownUp) || p != Lovers.otherLover(BountyHunter.bountyHunter) || (SchrodingersCat.Player == p && SchrodingersCat.State != SchrodingersCat.CatState.Impostor))
-                    possibleTargets.Add(p);
+                if (p == Mini.mini && !Mini.isGrownUp) continue;
+                if (p == Lovers.otherLover(BountyHunter.bountyHunter)) continue;
+                if (SchrodingersCat.Player == p && SchrodingersCat.State != SchrodingersCat.CatState.Impostor) continue;
+                possibleTargets.Add(p);
             }
 
             if (possibleTargets.Count == 0) return;
@@ -876,7 +878,7 @@ internal class HudManagerUpdatePatch
     {
         var jackalHighlight = Engineer.highlightForTeamNeutral &&
                               (Jackal.jackal.Any(x => x == PlayerControl.LocalPlayer) || PlayerControl.LocalPlayer == Jackal.Sidekick
-                              || PlayerControl.LocalPlayer == Pavlovsdogs.pavlovsowner || PlayerControl.LocalPlayer == Pavlovsdogs.pavlovsdogs.Any(x => x == PlayerControl.LocalPlayer)
+                              || PlayerControl.LocalPlayer == Pavlovsdogs.pavlovsowner || Pavlovsdogs.pavlovsdogs.Any(x => x == PlayerControl.LocalPlayer)
                               || PlayerControl.LocalPlayer == Infected.Player.Any(x => x == PlayerControl.LocalPlayer));
         var impostorHighlight = Engineer.highlightForImpostors && PlayerControl.LocalPlayer.IsImpostor();
         if ((jackalHighlight || impostorHighlight) && MapUtilities.CachedShipStatus?.AllVents != null)

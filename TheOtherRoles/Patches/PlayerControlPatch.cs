@@ -332,7 +332,7 @@ internal class CmdReportDeadPatch
                 {
                     if (timer <= Detective.reportNameDuration)
                     {
-                        var roleName = RoleInfo.getRoleInfoForPlayer(killer, false, false).First().Name;
+                        var roleName = RoleInfo.getRoleInfoForPlayer(killer, false, false).FirstOrDefault()?.Name;
                         msg = string.Format(GetString("DetectiveReport.ReportRole"), roleName, timer);
                     }
                     else if (timer <= Detective.reportColorDuration)
@@ -406,9 +406,6 @@ public static class PlayerDiePatch
                 if (guessbutton != null) UObject.Destroy(guessbutton.gameObject);
             }
         }
-
-        if (ModOption.GameMode is CustomGameModes.Classic or CustomGameModes.Anonymous) return;
-        _ = new LateTask(() => { CanSeeGhostInfo = true; }, 1f, "CanSeeRoleInfo");
 
         Gaoler.OnImpostorDie(__instance);
     }
@@ -949,7 +946,7 @@ public static class ExilePlayerPatch
                     if (pva.VotedFor != akujoPartner.PlayerId) continue;
                     pva.UnsetVote();
                     var voteAreaPlayer = PlayerById(pva.TargetPlayerId);
-                    if (!voteAreaPlayer.AmOwner) continue;
+                    if (voteAreaPlayer?.AmOwner == false) continue;
                     MeetingHud.Instance.ClearVote();
                 }
 

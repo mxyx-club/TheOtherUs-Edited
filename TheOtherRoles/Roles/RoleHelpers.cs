@@ -704,15 +704,6 @@ public static class RoleHelpers
             blockedRolePairings.Add([RoleId.Jester, RoleId.Undertaker]);
         }
 
-        if (CustomOptionHolder.onlyOneNeutralTeam.GetBool())
-        {
-            blockedRolePairings.Add([RoleId.Jackal, RoleId.Pavlovsowner, RoleId.Infected]);
-        }
-        if (Executioner.promotesToLawyer)
-        {
-            blockedRolePairings.Add([RoleId.Executioner, RoleId.Lawyer]);
-        }
-
         if (Vampire.canRecruit)
         {
             blockedRolePairings.Add([RoleId.Vampire, RoleId.Mimic]);

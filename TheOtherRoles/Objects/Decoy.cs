@@ -1,7 +1,17 @@
 namespace TheOtherRoles.Objects;
 
-public class Decoy : CustomObjectBase<Decoy>
+public class Decoy : NetworkCustomObject
 {
+    static Decoy()
+    {
+        Register<Decoy>((pos, payload) =>
+        {
+            var decoy = new Decoy(PlayerById(payload[0]), pos);
+            Marionette.decoy = decoy;
+            return decoy;
+        });
+    }
+
     public PlayerControl Player;
     public float elapsedTime;
 
@@ -59,14 +69,14 @@ public class Decoy : CustomObjectBase<Decoy>
             elapsedTime += Time.deltaTime;
             if (!DecoyPermanent && elapsedTime >= DecoyDuration)
             {
-                RPCProcedure.DecoyDestroy(Player, Id);
+                RPCProcedure.DecoyDestroy(Player, NetworkId);
                 return;
             }
         }
 
         if (!DecoyPermanent && InMeeting)
         {
-            RPCProcedure.DecoyDestroy(Player, Id);
+            RPCProcedure.DecoyDestroy(Player, NetworkId);
             return;
         }
         else if (InMeeting)

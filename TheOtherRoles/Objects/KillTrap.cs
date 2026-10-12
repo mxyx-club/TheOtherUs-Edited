@@ -1,7 +1,12 @@
 namespace TheOtherRoles.Objects;
 
-public class KillTrap : CustomObjectBase<KillTrap>
+public class KillTrap : NetworkCustomObject
 {
+    static KillTrap()
+    {
+        Register<KillTrap>((pos, payload) => new KillTrap(PlayerById(payload[0]), pos));
+    }
+
     public static Sprite trapSprite = new ResourceSprite("Trap.png", 300);
     public static AudioRolloffMode rollOffMode = AudioRolloffMode.Linear;
     public AudioSource audioSource;
@@ -20,11 +25,11 @@ public class KillTrap : CustomObjectBase<KillTrap>
 
     public KillTrap(PlayerControl trapper, Vector3 pos)
     {
-        var traps = AllObjects.Where(x => x.trapper == trapper);
+        var traps = AllObjects.OfType<KillTrap>().Where(x => x.trapper == trapper);
         // 最初の罠を消す
         if (traps.Count() >= EvilTrapper.numTrap)
         {
-            var oldestTrap = traps.OrderBy(t => t.Id).FirstOrDefault();
+            var oldestTrap = traps.OrderBy(t => t.NetworkId).FirstOrDefault();
             oldestTrap?.Destroy();
         }
 
@@ -78,16 +83,16 @@ public class KillTrap : CustomObjectBase<KillTrap>
 
     public static void ClearAllTraps(PlayerControl trapper, bool active)
     {
-        var traps = AllObjects.Where(x => x.trapper == trapper && (active || !x.isTriggered)).ToArray();
+        var traps = AllObjects.OfType<KillTrap>().Where(x => x.trapper == trapper && (active || !x.isTriggered)).ToArray();
         foreach (var t in traps)
         {
             t?.Destroy();
         }
     }
 
-    public static void activateTrap(PlayerControl trapper, PlayerControl target, int trapId)
+    public static void activateTrap(PlayerControl trapper, PlayerControl target, ushort trapId)
     {
-        var trap = AllObjects.FirstOrDefault(x => x.Id == trapId);
+        var trap = Find<KillTrap>(trapId);
         if (trap == null || trap.isDisabled) return;
         // 有効にする
 
@@ -176,9 +181,10 @@ public class KillTrap : CustomObjectBase<KillTrap>
         })));
     }
 
-    public static void disableTrap(int trapId)
+    public static void disableTrap(ushort trapId)
     {
-        var trap = AllObjects.FirstOrDefault(x => x.Id == trapId);
+        var trap = Find<KillTrap>(trapId);
+        if (trap == null) return;
         trap.isTriggered = false;
         trap.isDisabled = true;
         trap.audioSource.Stop();
@@ -201,9 +207,9 @@ public class KillTrap : CustomObjectBase<KillTrap>
             if (PlayerControl.LocalPlayer != target && PlayerControl.LocalPlayer.IsAlive() && distance < 0.75f)
             {
                 var writer = StartRPC(CustomRPC.DisableTrap);
-                writer.Write(Id);
+                writer.Write(NetworkId);
                 writer.EndRPC();
-                disableTrap(Id);
+                disableTrap(NetworkId);
             }
         }
 
@@ -221,9 +227,9 @@ public class KillTrap : CustomObjectBase<KillTrap>
                     var writer = StartRPC(CustomRPC.ActivateTrap);
                     writer.Write(trapper.PlayerId);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                    writer.Write(Id);
+                    writer.Write(NetworkId);
                     writer.EndRPC();
-                    activateTrap(trapper, PlayerControl.LocalPlayer, Id);
+                    activateTrap(trapper, PlayerControl.LocalPlayer, NetworkId);
                 }
             }
         }
@@ -233,7 +239,7 @@ public class KillTrap : CustomObjectBase<KillTrap>
     {
         try
         {
-            foreach (var trap in AllObjects.ToArray())
+            foreach (var trap in AllObjects.OfType<KillTrap>().ToArray())
             {
                 if (trap.target.IsAlive() && PlayerControl.LocalPlayer == trap.target)
                 {
@@ -254,7 +260,7 @@ public class KillTrap : CustomObjectBase<KillTrap>
 
     public static bool hasTrappedPlayer()
     {
-        foreach (var trap in AllObjects.ToArray())
+        foreach (var trap in AllObjects.OfType<KillTrap>().ToArray())
         {
             if (trap.target != null) return true;
         }
@@ -263,17 +269,18 @@ public class KillTrap : CustomObjectBase<KillTrap>
 
     public static bool isTrapped(PlayerControl p)
     {
-        foreach (var trap in AllObjects)
+        foreach (var trap in AllObjects.OfType<KillTrap>())
         {
             if (trap.target == p) return true;
         }
         return false;
     }
 
-    public static void trapKill(PlayerControl trapper, PlayerControl target, int trapId)
+    public static void trapKill(PlayerControl trapper, PlayerControl target, ushort trapId)
     {
-        var trap = AllObjects.FirstOrDefault(x => x.Id == trapId);
-        if (trap != null) trap.IsKilled = true;
+        var trap = Find<KillTrap>(trapId);
+        if (trap == null) return;
+        trap.IsKilled = true;
 
         var audioSource = trap.audioSource;
         audioSource.Stop();

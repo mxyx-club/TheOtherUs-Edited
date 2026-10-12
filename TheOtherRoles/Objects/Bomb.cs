@@ -2,8 +2,13 @@ using BepInEx.Unity.IL2CPP.Utils.Collections;
 
 namespace TheOtherRoles.Objects;
 
-public class Bomb : CustomObjectBase<Bomb>
+public class Bomb : NetworkCustomObject
 {
+    static Bomb()
+    {
+        Register<Bomb>((pos, payload) => new Bomb(PlayerById(payload[0]), pos));
+    }
+
     public static Sprite defuseSprite = new ResourceSprite("Bomb_Button_Defuse.png");
     private static Sprite bombSprite = new ResourceSprite("Bomb.png", 300f);
     private static Sprite backgroundSprite => new ResourceSprite("TheOtherRoles.Resources.BombBackground.png", 110f / Terrorist.destructionRange);

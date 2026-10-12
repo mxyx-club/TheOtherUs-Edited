@@ -27,6 +27,7 @@ public abstract class CustomObject : ICustomObject
     public int Id { get; private set; }
     protected static int maxId;
     protected DateTime placedTime;
+    private bool destroyed;
 
     protected CustomObject()
     {
@@ -43,12 +44,24 @@ public abstract class CustomObject : ICustomObject
 
     public void Destroy()
     {
-        OnDestroy();
-        GameObject?.Destroy();
-        GameObject = null;
-        Renderer = null;
-        Behaviour = null;
-        _AllCustomObject.Remove(this);
+        if (destroyed) return;
+        destroyed = true;
+        try
+        {
+            OnDestroy();
+        }
+        catch (Exception e)
+        {
+            Error($"CustomObject #{Id} ({GetType().Name}) destroy: {e}", "CustomObject");
+        }
+        finally
+        {
+            GameObject?.Destroy();
+            GameObject = null;
+            Renderer = null;
+            Behaviour = null;
+            _AllCustomObject.Remove(this);
+        }
     }
 
     public virtual void OnMeetingStart() { }
@@ -86,16 +99,18 @@ public abstract class CustomObject : ICustomObject
 
     public static void UpdateAll()
     {
-        try
+        for (var i = _AllCustomObject.Count - 1; i >= 0; i--)
         {
-            foreach (var obj in AllCustomObject.ToArray())
+            var obj = _AllCustomObject[i];
+            if (obj == null) continue;
+            try
             {
-                obj?.Update();
+                obj.Update();
             }
-        }
-        catch (Exception e)
-        {
-            Error("\n" + e, "CustomObject");
+            catch (Exception e)
+            {
+                Error($"{obj.GetType().Name} #{obj.Id} update: {e}", "CustomObject");
+            }
         }
     }
 }

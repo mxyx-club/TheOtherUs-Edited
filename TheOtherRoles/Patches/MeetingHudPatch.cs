@@ -920,8 +920,6 @@ internal class MeetingHudPatch
             Alchemyst.meetingStartTime = DateTime.UtcNow;
             // Count meetings
             if (meetingTarget == null) meetingsCount++;
-            // Count meetings
-            if (meetingTarget == null) meetingsCount++;
             // Save the meeting target
             ReportTarget = meetingTarget;
             IsEmergencyMeetings = meetingTarget == null;

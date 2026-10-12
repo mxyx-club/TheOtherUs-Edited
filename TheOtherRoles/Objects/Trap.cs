@@ -1,7 +1,12 @@
 namespace TheOtherRoles.Objects;
 
-public class Trap : CustomObjectBase<Trap>
+public class Trap : NetworkCustomObject
 {
+    static Trap()
+    {
+        Register<Trap>((pos, payload) => new Trap(PlayerById(payload[0]), pos));
+    }
+
     public PlayerControl trapper;
     public List<PlayerControl> trapped = new();
 
@@ -51,7 +56,7 @@ public class Trap : CustomObjectBase<Trap>
 
     public static void clearRevealedTraps()
     {
-        var trapsToClear = AllObjects.FindAll(x => x.revealed);
+        var trapsToClear = AllObjects.OfType<Trap>().Where(x => x.revealed).ToArray();
         foreach (var t in trapsToClear)
         {
             t.Destroy();
@@ -60,16 +65,16 @@ public class Trap : CustomObjectBase<Trap>
 
     public static void ClearAllTraps(PlayerControl trapper, bool active)
     {
-        var traps = AllObjects.Where(x => x.trapper == trapper && (active || !x.revealed));
+        var traps = AllObjects.OfType<Trap>().Where(x => x.trapper == trapper && (active || !x.revealed));
         foreach (var t in traps)
         {
             t?.Destroy();
         }
     }
 
-    public static void triggerTrap(byte targetId, int trapId)
+    public static void triggerTrap(byte targetId, ushort trapId)
     {
-        var t = AllObjects.FirstOrDefault(x => x.Id == trapId);
+        var t = Find<Trap>(trapId);
         var target = PlayerById(targetId);
         if (Trapper.trapper == null || t == null || t.trapped.Contains(target) || target == null) return;
 
@@ -111,19 +116,12 @@ public class Trap : CustomObjectBase<Trap>
         }
     }
 
-    public static void UpdateTrap()
+    public override void Update()
     {
-        foreach (var trap in AllObjects.ToArray())
-        {
-            trap.Update(PlayerControl.LocalPlayer);
-        }
-    }
-
-    public void Update(PlayerControl player)
-    {
+        var player = PlayerControl.LocalPlayer;
         if (arrow.arrow.active) arrow.Update();
 
-        var canSee = CanSeeGhostInfo || PlayerControl.LocalPlayer == trapper || trapped.Any(x => x.PlayerId == player.PlayerId);
+        var canSee = CanSeeGhostInfo || player == trapper || trapped.Any(x => x.PlayerId == player.PlayerId);
         GameObject.SetActive(canSee);
 
         if (revealed || !triggerable || trapped.Any(x => x.PlayerId == player.PlayerId)) return;
@@ -136,9 +134,9 @@ public class Trap : CustomObjectBase<Trap>
             {
                 var writer = StartRPC(CustomRPC.TriggerTrap);
                 writer.Write(player.PlayerId);
-                writer.Write(Id);
+                writer.Write(NetworkId);
                 writer.EndRPC();
-                triggerTrap(player.PlayerId, Id);
+                triggerTrap(player.PlayerId, NetworkId);
             }
         }
     }

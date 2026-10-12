@@ -3,8 +3,13 @@ using TheOtherRoles.Attributes;
 
 namespace TheOtherRoles.Objects;
 
-public class JackInTheBox : CustomObjectBase<JackInTheBox>
+public class JackInTheBox : NetworkCustomObject
 {
+    static JackInTheBox()
+    {
+        Register<JackInTheBox>((pos, payload) => new JackInTheBox(PlayerById(payload[0]), pos));
+    }
+
     public static readonly int JackInTheBoxLimit = 3;
     public static bool boxesConvertedToVents;
     public static ResourceSpriteArray boxAnimationSprites;
@@ -80,7 +85,7 @@ public class JackInTheBox : CustomObjectBase<JackInTheBox>
 
     public static void startAnimation(int ventId)
     {
-        var box = AllObjects.FirstOrDefault(x => x?.vent != null && x.vent.Id == ventId);
+        var box = AllObjects.OfType<JackInTheBox>().FirstOrDefault(x => x?.vent != null && x.vent.Id == ventId);
         if (box == null) return;
 
         int frameCount = boxAnimationSprites.Sprites.Length;
@@ -96,7 +101,7 @@ public class JackInTheBox : CustomObjectBase<JackInTheBox>
     public static void UpdateStates()
     {
         if (boxesConvertedToVents) return;
-        foreach (var box in AllObjects)
+        foreach (var box in AllObjects.OfType<JackInTheBox>())
         {
             var showBoxToLocalPlayer = PlayerControl.LocalPlayer == Trickster.trickster || CanSeeGhostInfo;
             box.GameObject?.SetActive(showBoxToLocalPlayer);
@@ -114,29 +119,30 @@ public class JackInTheBox : CustomObjectBase<JackInTheBox>
     public static void MeetingEnd()
     {
         if (!hasJackInTheBoxLimitReached()) return;
-        foreach (var box in AllObjects) box.convertToVent();
+        foreach (var box in AllObjects.OfType<JackInTheBox>()) box.convertToVent();
         connectVents();
         boxesConvertedToVents = true;
     }
 
     public static bool hasJackInTheBoxLimitReached()
     {
-        return AllObjects.Count >= JackInTheBoxLimit;
+        return AllObjects.OfType<JackInTheBox>().Count() >= JackInTheBoxLimit;
     }
 
     private static void connectVents()
     {
-        for (var i = 0; i < AllObjects.Count - 1; i++)
+        var boxes = AllObjects.OfType<JackInTheBox>().ToList();
+        for (var i = 0; i < boxes.Count - 1; i++)
         {
-            var a = AllObjects[i];
-            var b = AllObjects[i + 1];
+            var a = boxes[i];
+            var b = boxes[i + 1];
             a.vent.Right = b.vent;
             b.vent.Left = a.vent;
         }
 
         // Connect first with last
-        AllObjects.First().vent.Left = AllObjects.Last().vent;
-        AllObjects.Last().vent.Right = AllObjects.First().vent;
+        boxes.First().vent.Left = boxes.Last().vent;
+        boxes.Last().vent.Right = boxes.First().vent;
     }
 
     [OnGameStart, OnGameEnd]
